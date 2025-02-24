@@ -15301,7 +15301,6 @@ void main () {
   _Core.moduleState = null;
   var Core = _Core;
   init_define_process();
-  init_define_process();
   var import_core4 = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
   var import_react2 = __toESM(__require("react"), 1);
@@ -15338,13 +15337,12 @@ void main () {
   var import_geom3 = __toESM(require_geom3(), 1);
   var import_mat4 = __toESM(require_mat4(), 1);
   var import_transforms = __toESM(require_transforms(), 1);
+  init_define_process();
   function hexToColor(hex) {
-    var _a;
-    const regex = new RegExp("^#?(?<red>[\\da-f]{2})(?<green>[\\da-f]{2})(?<blue>[\\da-f]{2})$", "iu");
-    const potentialGroups = (_a = hex.match(regex)) == null ? void 0 : _a.groups;
-    if (potentialGroups === void 0) return [0, 0, 0];
-    const groups = potentialGroups;
-    return [parseInt(groups.red, 16) / 255, parseInt(groups.green, 16) / 255, parseInt(groups.blue, 16) / 255];
+    const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
+    const groups = regex.exec(hex);
+    if (groups == void 0) return [0, 0, 0];
+    return [parseInt(groups[1], 16) / 255, parseInt(groups[2], 16) / 255, parseInt(groups[3], 16) / 255];
   }
   function colorToAlphaColor(color, opacity = 1) {
     return [...color, opacity];

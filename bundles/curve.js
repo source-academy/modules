@@ -2023,6 +2023,7 @@ void main() {
         return curveDrawn;
       };
       func.is3D = space === "3D";
+      func.toString = () => `<${space === "3D" ? "3D" : ""}RenderFunction(${numPoints})>`;
       return func;
     };
   }

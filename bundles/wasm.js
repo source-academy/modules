@@ -474,14 +474,14 @@ export default require => {
               return true;
             }
             function arrayFilter(array, predicate) {
-              var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result = [];
+              var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result2 = [];
               while (++index < length) {
                 var value = array[index];
                 if (predicate(value, index, array)) {
-                  result[resIndex++] = value;
+                  result2[resIndex++] = value;
                 }
               }
-              return result;
+              return result2;
             }
             function arrayIncludes(array, value) {
               var length = array == null ? 0 : array.length;
@@ -497,11 +497,11 @@ export default require => {
               return false;
             }
             function arrayMap(array, iteratee) {
-              var index = -1, length = array == null ? 0 : array.length, result = Array(length);
+              var index = -1, length = array == null ? 0 : array.length, result2 = Array(length);
               while (++index < length) {
-                result[index] = iteratee(array[index], index, array);
+                result2[index] = iteratee(array[index], index, array);
               }
-              return result;
+              return result2;
             }
             function arrayPush(array, values) {
               var index = -1, length = values.length, offset = array.length;
@@ -547,14 +547,14 @@ export default require => {
               return string.match(reAsciiWord) || [];
             }
             function baseFindKey(collection, predicate, eachFunc) {
-              var result;
+              var result2;
               eachFunc(collection, function (value, key, collection2) {
                 if (predicate(value, key, collection2)) {
-                  result = key;
+                  result2 = key;
                   return false;
                 }
               });
-              return result;
+              return result2;
             }
             function baseFindIndex(array, predicate, fromIndex, fromRight) {
               var length = array.length, index = fromIndex + (fromRight ? 1 : -1);
@@ -609,21 +609,21 @@ export default require => {
               return array;
             }
             function baseSum(array, iteratee) {
-              var result, index = -1, length = array.length;
+              var result2, index = -1, length = array.length;
               while (++index < length) {
                 var current = iteratee(array[index]);
                 if (current !== undefined2) {
-                  result = result === undefined2 ? current : result + current;
+                  result2 = result2 === undefined2 ? current : result2 + current;
                 }
               }
-              return result;
+              return result2;
             }
             function baseTimes(n, iteratee) {
-              var index = -1, result = Array(n);
+              var index = -1, result2 = Array(n);
               while (++index < n) {
-                result[index] = iteratee(index);
+                result2[index] = iteratee(index);
               }
-              return result;
+              return result2;
             }
             function baseToPairs(object, props) {
               return arrayMap(props, function (key) {
@@ -657,13 +657,13 @@ export default require => {
               return index;
             }
             function countHolders(array, placeholder) {
-              var length = array.length, result = 0;
+              var length = array.length, result2 = 0;
               while (length--) {
                 if (array[length] === placeholder) {
-                  ++result;
+                  ++result2;
                 }
               }
-              return result;
+              return result2;
             }
             var deburrLetter = basePropertyOf(deburredLetters);
             var escapeHtmlChar = basePropertyOf(htmlEscapes);
@@ -680,18 +680,18 @@ export default require => {
               return reHasUnicodeWord.test(string);
             }
             function iteratorToArray(iterator) {
-              var data, result = [];
+              var data, result2 = [];
               while (!(data = iterator.next()).done) {
-                result.push(data.value);
+                result2.push(data.value);
               }
-              return result;
+              return result2;
             }
             function mapToArray(map) {
-              var index = -1, result = Array(map.size);
+              var index = -1, result2 = Array(map.size);
               map.forEach(function (value, key) {
-                result[++index] = [key, value];
+                result2[++index] = [key, value];
               });
-              return result;
+              return result2;
             }
             function overArg(func, transform) {
               return function (arg) {
@@ -699,29 +699,29 @@ export default require => {
               };
             }
             function replaceHolders(array, placeholder) {
-              var index = -1, length = array.length, resIndex = 0, result = [];
+              var index = -1, length = array.length, resIndex = 0, result2 = [];
               while (++index < length) {
                 var value = array[index];
                 if (value === placeholder || value === PLACEHOLDER) {
                   array[index] = PLACEHOLDER;
-                  result[resIndex++] = index;
+                  result2[resIndex++] = index;
                 }
               }
-              return result;
+              return result2;
             }
             function setToArray(set) {
-              var index = -1, result = Array(set.size);
+              var index = -1, result2 = Array(set.size);
               set.forEach(function (value) {
-                result[++index] = value;
+                result2[++index] = value;
               });
-              return result;
+              return result2;
             }
             function setToPairs(set) {
-              var index = -1, result = Array(set.size);
+              var index = -1, result2 = Array(set.size);
               set.forEach(function (value) {
-                result[++index] = [value, value];
+                result2[++index] = [value, value];
               });
-              return result;
+              return result2;
             }
             function strictIndexOf(array, value, fromIndex) {
               var index = fromIndex - 1, length = array.length;
@@ -754,11 +754,11 @@ export default require => {
             }
             var unescapeHtmlChar = basePropertyOf(htmlUnescapes);
             function unicodeSize(string) {
-              var result = reUnicode.lastIndex = 0;
+              var result2 = reUnicode.lastIndex = 0;
               while (reUnicode.test(string)) {
-                ++result;
+                ++result2;
               }
-              return result;
+              return result2;
             }
             function unicodeToArray(string) {
               return string.match(reUnicode) || [];
@@ -818,9 +818,9 @@ export default require => {
                     return objectCreate(proto);
                   }
                   object.prototype = proto;
-                  var result2 = new object();
+                  var result3 = new object();
                   object.prototype = undefined2;
-                  return result2;
+                  return result3;
                 };
               })();
               function baseLodash() {}
@@ -854,32 +854,32 @@ export default require => {
                 this.__views__ = [];
               }
               function lazyClone() {
-                var result2 = new LazyWrapper(this.__wrapped__);
-                result2.__actions__ = copyArray(this.__actions__);
-                result2.__dir__ = this.__dir__;
-                result2.__filtered__ = this.__filtered__;
-                result2.__iteratees__ = copyArray(this.__iteratees__);
-                result2.__takeCount__ = this.__takeCount__;
-                result2.__views__ = copyArray(this.__views__);
-                return result2;
+                var result3 = new LazyWrapper(this.__wrapped__);
+                result3.__actions__ = copyArray(this.__actions__);
+                result3.__dir__ = this.__dir__;
+                result3.__filtered__ = this.__filtered__;
+                result3.__iteratees__ = copyArray(this.__iteratees__);
+                result3.__takeCount__ = this.__takeCount__;
+                result3.__views__ = copyArray(this.__views__);
+                return result3;
               }
               function lazyReverse() {
                 if (this.__filtered__) {
-                  var result2 = new LazyWrapper(this);
-                  result2.__dir__ = -1;
-                  result2.__filtered__ = true;
+                  var result3 = new LazyWrapper(this);
+                  result3.__dir__ = -1;
+                  result3.__filtered__ = true;
                 } else {
-                  result2 = this.clone();
-                  result2.__dir__ *= -1;
+                  result3 = this.clone();
+                  result3.__dir__ *= -1;
                 }
-                return result2;
+                return result3;
               }
               function lazyValue() {
                 var array = this.__wrapped__.value(), dir = this.__dir__, isArr = isArray(array), isRight = dir < 0, arrLength = isArr ? array.length : 0, view = getView(0, arrLength, this.__views__), start = view.start, end = view.end, length = end - start, index = isRight ? end : start - 1, iteratees = this.__iteratees__, iterLength = iteratees.length, resIndex = 0, takeCount = nativeMin(length, this.__takeCount__);
                 if (!isArr || !isRight && arrLength == length && takeCount == length) {
                   return baseWrapperValue(array, this.__actions__);
                 }
-                var result2 = [];
+                var result3 = [];
                 outer: while (length-- && resIndex < takeCount) {
                   index += dir;
                   var iterIndex = -1, value = array[index];
@@ -895,9 +895,9 @@ export default require => {
                       }
                     }
                   }
-                  result2[resIndex++] = value;
+                  result3[resIndex++] = value;
                 }
-                return result2;
+                return result3;
               }
               LazyWrapper.prototype = baseCreate(baseLodash.prototype);
               LazyWrapper.prototype.constructor = LazyWrapper;
@@ -914,15 +914,15 @@ export default require => {
                 this.size = 0;
               }
               function hashDelete(key) {
-                var result2 = this.has(key) && delete this.__data__[key];
-                this.size -= result2 ? 1 : 0;
-                return result2;
+                var result3 = this.has(key) && delete this.__data__[key];
+                this.size -= result3 ? 1 : 0;
+                return result3;
               }
               function hashGet(key) {
                 var data = this.__data__;
                 if (nativeCreate) {
-                  var result2 = data[key];
-                  return result2 === HASH_UNDEFINED ? undefined2 : result2;
+                  var result3 = data[key];
+                  return result3 === HASH_UNDEFINED ? undefined2 : result3;
                 }
                 return hasOwnProperty.call(data, key) ? data[key] : undefined2;
               }
@@ -1006,9 +1006,9 @@ export default require => {
                 };
               }
               function mapCacheDelete(key) {
-                var result2 = getMapData(this, key)["delete"](key);
-                this.size -= result2 ? 1 : 0;
-                return result2;
+                var result3 = getMapData(this, key)["delete"](key);
+                this.size -= result3 ? 1 : 0;
+                return result3;
               }
               function mapCacheGet(key) {
                 return getMapData(this, key).get(key);
@@ -1052,9 +1052,9 @@ export default require => {
                 this.size = 0;
               }
               function stackDelete(key) {
-                var data = this.__data__, result2 = data["delete"](key);
+                var data = this.__data__, result3 = data["delete"](key);
                 this.size = data.size;
-                return result2;
+                return result3;
               }
               function stackGet(key) {
                 return this.__data__.get(key);
@@ -1083,13 +1083,13 @@ export default require => {
               Stack.prototype.has = stackHas;
               Stack.prototype.set = stackSet;
               function arrayLikeKeys(value, inherited) {
-                var isArr = isArray(value), isArg = !isArr && isArguments(value), isBuff = !isArr && !isArg && isBuffer(value), isType = !isArr && !isArg && !isBuff && isTypedArray(value), skipIndexes = isArr || isArg || isBuff || isType, result2 = skipIndexes ? baseTimes(value.length, String) : [], length = result2.length;
+                var isArr = isArray(value), isArg = !isArr && isArguments(value), isBuff = !isArr && !isArg && isBuffer(value), isType = !isArr && !isArg && !isBuff && isTypedArray(value), skipIndexes = isArr || isArg || isBuff || isType, result3 = skipIndexes ? baseTimes(value.length, String) : [], length = result3.length;
                 for (var key in value) {
                   if ((inherited || hasOwnProperty.call(value, key)) && !(skipIndexes && (key == "length" || isBuff && (key == "offset" || key == "parent") || isType && (key == "buffer" || key == "byteLength" || key == "byteOffset") || isIndex(key, length)))) {
-                    result2.push(key);
+                    result3.push(key);
                   }
                 }
-                return result2;
+                return result3;
               }
               function arraySample(array) {
                 var length = array.length;
@@ -1146,11 +1146,11 @@ export default require => {
                 }
               }
               function baseAt(object, paths) {
-                var index = -1, length = paths.length, result2 = Array2(length), skip = object == null;
+                var index = -1, length = paths.length, result3 = Array2(length), skip = object == null;
                 while (++index < length) {
-                  result2[index] = skip ? undefined2 : get(object, paths[index]);
+                  result3[index] = skip ? undefined2 : get(object, paths[index]);
                 }
-                return result2;
+                return result3;
               }
               function baseClamp(number, lower, upper) {
                 if (number === number) {
@@ -1164,21 +1164,21 @@ export default require => {
                 return number;
               }
               function baseClone(value, bitmask, customizer, key, object, stack) {
-                var result2, isDeep = bitmask & CLONE_DEEP_FLAG, isFlat = bitmask & CLONE_FLAT_FLAG, isFull = bitmask & CLONE_SYMBOLS_FLAG;
+                var result3, isDeep = bitmask & CLONE_DEEP_FLAG, isFlat = bitmask & CLONE_FLAT_FLAG, isFull = bitmask & CLONE_SYMBOLS_FLAG;
                 if (customizer) {
-                  result2 = object ? customizer(value, key, object, stack) : customizer(value);
+                  result3 = object ? customizer(value, key, object, stack) : customizer(value);
                 }
-                if (result2 !== undefined2) {
-                  return result2;
+                if (result3 !== undefined2) {
+                  return result3;
                 }
                 if (!isObject(value)) {
                   return value;
                 }
                 var isArr = isArray(value);
                 if (isArr) {
-                  result2 = initCloneArray(value);
+                  result3 = initCloneArray(value);
                   if (!isDeep) {
-                    return copyArray(value, result2);
+                    return copyArray(value, result3);
                   }
                 } else {
                   var tag = getTag(value), isFunc = tag == funcTag || tag == genTag;
@@ -1186,15 +1186,15 @@ export default require => {
                     return cloneBuffer(value, isDeep);
                   }
                   if (tag == objectTag || tag == argsTag || isFunc && !object) {
-                    result2 = isFlat || isFunc ? {} : initCloneObject(value);
+                    result3 = isFlat || isFunc ? {} : initCloneObject(value);
                     if (!isDeep) {
-                      return isFlat ? copySymbolsIn(value, baseAssignIn(result2, value)) : copySymbols(value, baseAssign(result2, value));
+                      return isFlat ? copySymbolsIn(value, baseAssignIn(result3, value)) : copySymbols(value, baseAssign(result3, value));
                     }
                   } else {
                     if (!cloneableTags[tag]) {
                       return object ? value : {};
                     }
-                    result2 = initCloneByTag(value, tag, isDeep);
+                    result3 = initCloneByTag(value, tag, isDeep);
                   }
                 }
                 stack || (stack = new Stack());
@@ -1202,14 +1202,14 @@ export default require => {
                 if (stacked) {
                   return stacked;
                 }
-                stack.set(value, result2);
+                stack.set(value, result3);
                 if (isSet(value)) {
                   value.forEach(function (subValue) {
-                    result2.add(baseClone(subValue, bitmask, customizer, subValue, value, stack));
+                    result3.add(baseClone(subValue, bitmask, customizer, subValue, value, stack));
                   });
                 } else if (isMap(value)) {
                   value.forEach(function (subValue, key2) {
-                    result2.set(key2, baseClone(subValue, bitmask, customizer, key2, value, stack));
+                    result3.set(key2, baseClone(subValue, bitmask, customizer, key2, value, stack));
                   });
                 }
                 var keysFunc = isFull ? isFlat ? getAllKeysIn : getAllKeys : isFlat ? keysIn : keys;
@@ -1219,9 +1219,9 @@ export default require => {
                     key2 = subValue;
                     subValue = value[key2];
                   }
-                  assignValue(result2, key2, baseClone(subValue, bitmask, customizer, key2, value, stack));
+                  assignValue(result3, key2, baseClone(subValue, bitmask, customizer, key2, value, stack));
                 });
-                return result2;
+                return result3;
               }
               function baseConforms(source) {
                 var props = keys(source);
@@ -1252,9 +1252,9 @@ export default require => {
                 }, wait);
               }
               function baseDifference(array, values2, iteratee2, comparator) {
-                var index = -1, includes2 = arrayIncludes, isCommon = true, length = array.length, result2 = [], valuesLength = values2.length;
+                var index = -1, includes2 = arrayIncludes, isCommon = true, length = array.length, result3 = [], valuesLength = values2.length;
                 if (!length) {
-                  return result2;
+                  return result3;
                 }
                 if (iteratee2) {
                   values2 = arrayMap(values2, baseUnary(iteratee2));
@@ -1277,40 +1277,40 @@ export default require => {
                         continue outer;
                       }
                     }
-                    result2.push(value);
+                    result3.push(value);
                   } else if (!includes2(values2, computed, comparator)) {
-                    result2.push(value);
+                    result3.push(value);
                   }
                 }
-                return result2;
+                return result3;
               }
               var baseEach = createBaseEach(baseForOwn);
               var baseEachRight = createBaseEach(baseForOwnRight, true);
               function baseEvery(collection, predicate) {
-                var result2 = true;
+                var result3 = true;
                 baseEach(collection, function (value, index, collection2) {
-                  result2 = !!predicate(value, index, collection2);
-                  return result2;
+                  result3 = !!predicate(value, index, collection2);
+                  return result3;
                 });
-                return result2;
+                return result3;
               }
               function baseExtremum(array, iteratee2, comparator) {
                 var index = -1, length = array.length;
                 while (++index < length) {
                   var value = array[index], current = iteratee2(value);
                   if (current != null && (computed === undefined2 ? current === current && !isSymbol(current) : comparator(current, computed))) {
-                    var computed = current, result2 = value;
+                    var computed = current, result3 = value;
                   }
                 }
-                return result2;
+                return result3;
               }
               function baseFill(array, value, start, end) {
                 var length = array.length;
-                start = toInteger(start);
+                start = toInteger3(start);
                 if (start < 0) {
                   start = -start > length ? 0 : length + start;
                 }
-                end = end === undefined2 || end > length ? length : toInteger(end);
+                end = end === undefined2 || end > length ? length : toInteger3(end);
                 if (end < 0) {
                   end += length;
                 }
@@ -1321,31 +1321,31 @@ export default require => {
                 return array;
               }
               function baseFilter(collection, predicate) {
-                var result2 = [];
+                var result3 = [];
                 baseEach(collection, function (value, index, collection2) {
                   if (predicate(value, index, collection2)) {
-                    result2.push(value);
+                    result3.push(value);
                   }
                 });
-                return result2;
+                return result3;
               }
-              function baseFlatten(array, depth, predicate, isStrict, result2) {
+              function baseFlatten(array, depth, predicate, isStrict, result3) {
                 var index = -1, length = array.length;
                 predicate || (predicate = isFlattenable);
-                result2 || (result2 = []);
+                result3 || (result3 = []);
                 while (++index < length) {
                   var value = array[index];
                   if (depth > 0 && predicate(value)) {
                     if (depth > 1) {
-                      baseFlatten(value, depth - 1, predicate, isStrict, result2);
+                      baseFlatten(value, depth - 1, predicate, isStrict, result3);
                     } else {
-                      arrayPush(result2, value);
+                      arrayPush(result3, value);
                     }
                   } else if (!isStrict) {
-                    result2[result2.length] = value;
+                    result3[result3.length] = value;
                   }
                 }
-                return result2;
+                return result3;
               }
               var baseFor = createBaseFor();
               var baseForRight = createBaseFor(true);
@@ -1369,8 +1369,8 @@ export default require => {
                 return index && index == length ? object : undefined2;
               }
               function baseGetAllKeys(object, keysFunc, symbolsFunc) {
-                var result2 = keysFunc(object);
-                return isArray(object) ? result2 : arrayPush(result2, symbolsFunc(object));
+                var result3 = keysFunc(object);
+                return isArray(object) ? result3 : arrayPush(result3, symbolsFunc(object));
               }
               function baseGetTag(value) {
                 if (value == null) {
@@ -1391,7 +1391,7 @@ export default require => {
                 return number >= nativeMin(start, end) && number < nativeMax(start, end);
               }
               function baseIntersection(arrays, iteratee2, comparator) {
-                var includes2 = comparator ? arrayIncludesWith : arrayIncludes, length = arrays[0].length, othLength = arrays.length, othIndex = othLength, caches = Array2(othLength), maxLength = Infinity, result2 = [];
+                var includes2 = comparator ? arrayIncludesWith : arrayIncludes, length = arrays[0].length, othLength = arrays.length, othIndex = othLength, caches = Array2(othLength), maxLength = Infinity, result3 = [];
                 while (othIndex--) {
                   var array = arrays[othIndex];
                   if (othIndex && iteratee2) {
@@ -1402,10 +1402,10 @@ export default require => {
                 }
                 array = arrays[0];
                 var index = -1, seen = caches[0];
-                outer: while (++index < length && result2.length < maxLength) {
+                outer: while (++index < length && result3.length < maxLength) {
                   var value = array[index], computed = iteratee2 ? iteratee2(value) : value;
                   value = comparator || value !== 0 ? value : 0;
-                  if (!(seen ? cacheHas(seen, computed) : includes2(result2, computed, comparator))) {
+                  if (!(seen ? cacheHas(seen, computed) : includes2(result3, computed, comparator))) {
                     othIndex = othLength;
                     while (--othIndex) {
                       var cache = caches[othIndex];
@@ -1416,10 +1416,10 @@ export default require => {
                     if (seen) {
                       seen.push(computed);
                     }
-                    result2.push(value);
+                    result3.push(value);
                   }
                 }
-                return result2;
+                return result3;
               }
               function baseInverter(object, setter, iteratee2, accumulator) {
                 baseForOwn(object, function (value, key, object2) {
@@ -1429,7 +1429,7 @@ export default require => {
               }
               function baseInvoke(object, path, args) {
                 path = castPath(path, object);
-                object = parent(object, path);
+                object = parent2(object, path);
                 var func = object == null ? object : object[toKey(last(path))];
                 return func == null ? undefined2 : apply(func, object, args);
               }
@@ -1506,9 +1506,9 @@ export default require => {
                   } else {
                     var stack = new Stack();
                     if (customizer) {
-                      var result2 = customizer(objValue, srcValue, key, object, source, stack);
+                      var result3 = customizer(objValue, srcValue, key, object, source, stack);
                     }
-                    if (!(result2 === undefined2 ? baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG, customizer, stack) : result2)) {
+                    if (!(result3 === undefined2 ? baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG, customizer, stack) : result3)) {
                       return false;
                     }
                   }
@@ -1547,35 +1547,35 @@ export default require => {
                 if (!isPrototype(object)) {
                   return nativeKeys(object);
                 }
-                var result2 = [];
+                var result3 = [];
                 for (var key in Object2(object)) {
                   if (hasOwnProperty.call(object, key) && key != "constructor") {
-                    result2.push(key);
+                    result3.push(key);
                   }
                 }
-                return result2;
+                return result3;
               }
               function baseKeysIn(object) {
                 if (!isObject(object)) {
                   return nativeKeysIn(object);
                 }
-                var isProto = isPrototype(object), result2 = [];
+                var isProto = isPrototype(object), result3 = [];
                 for (var key in object) {
                   if (!(key == "constructor" && (isProto || !hasOwnProperty.call(object, key)))) {
-                    result2.push(key);
+                    result3.push(key);
                   }
                 }
-                return result2;
+                return result3;
               }
               function baseLt(value, other) {
                 return value < other;
               }
               function baseMap(collection, iteratee2) {
-                var index = -1, result2 = isArrayLike(collection) ? Array2(collection.length) : [];
+                var index = -1, result3 = isArrayLike(collection) ? Array2(collection.length) : [];
                 baseEach(collection, function (value, key, collection2) {
-                  result2[++index] = iteratee2(value, key, collection2);
+                  result3[++index] = iteratee2(value, key, collection2);
                 });
-                return result2;
+                return result3;
               }
               function baseMatches(source) {
                 var matchData = getMatchData(source);
@@ -1678,7 +1678,7 @@ export default require => {
                 }
                 var index = -1;
                 iteratees = arrayMap(iteratees, baseUnary(getIteratee()));
-                var result2 = baseMap(collection, function (value, key, collection2) {
+                var result3 = baseMap(collection, function (value, key, collection2) {
                   var criteria = arrayMap(iteratees, function (iteratee2) {
                     return iteratee2(value);
                   });
@@ -1688,7 +1688,7 @@ export default require => {
                     "value": value
                   };
                 });
-                return baseSortBy(result2, function (object, other) {
+                return baseSortBy(result3, function (object, other) {
                   return compareMultiple(object, other, orders);
                 });
               }
@@ -1698,14 +1698,14 @@ export default require => {
                 });
               }
               function basePickBy(object, paths, predicate) {
-                var index = -1, length = paths.length, result2 = {};
+                var index = -1, length = paths.length, result3 = {};
                 while (++index < length) {
                   var path = paths[index], value = baseGet(object, path);
                   if (predicate(value, path)) {
-                    baseSet(result2, castPath(path, object), value);
+                    baseSet(result3, castPath(path, object), value);
                   }
                 }
-                return result2;
+                return result3;
               }
               function basePropertyDeep(path) {
                 return function (object) {
@@ -1750,28 +1750,28 @@ export default require => {
                 return lower + nativeFloor(nativeRandom() * (upper - lower + 1));
               }
               function baseRange(start, end, step, fromRight) {
-                var index = -1, length = nativeMax(nativeCeil((end - start) / (step || 1)), 0), result2 = Array2(length);
+                var index = -1, length = nativeMax(nativeCeil((end - start) / (step || 1)), 0), result3 = Array2(length);
                 while (length--) {
-                  result2[fromRight ? length : ++index] = start;
+                  result3[fromRight ? length : ++index] = start;
                   start += step;
                 }
-                return result2;
+                return result3;
               }
               function baseRepeat(string, n) {
-                var result2 = "";
+                var result3 = "";
                 if (!string || n < 1 || n > MAX_SAFE_INTEGER) {
-                  return result2;
+                  return result3;
                 }
                 do {
                   if (n % 2) {
-                    result2 += string;
+                    result3 += string;
                   }
                   n = nativeFloor(n / 2);
                   if (n) {
                     string += string;
                   }
                 } while (n);
-                return result2;
+                return result3;
               }
               function baseRest(func, start) {
                 return setToString(overRest(func, start, identity), func + "");
@@ -1832,19 +1832,19 @@ export default require => {
                 }
                 length = start > end ? 0 : end - start >>> 0;
                 start >>>= 0;
-                var result2 = Array2(length);
+                var result3 = Array2(length);
                 while (++index < length) {
-                  result2[index] = array[index + start];
+                  result3[index] = array[index + start];
                 }
-                return result2;
+                return result3;
               }
               function baseSome(collection, predicate) {
-                var result2;
+                var result3;
                 baseEach(collection, function (value, index, collection2) {
-                  result2 = predicate(value, index, collection2);
-                  return !result2;
+                  result3 = predicate(value, index, collection2);
+                  return !result3;
                 });
-                return !!result2;
+                return !!result3;
               }
               function baseSortedIndex(array, value, retHighest) {
                 var low = 0, high = array == null ? low : array.length;
@@ -1892,15 +1892,15 @@ export default require => {
                 return nativeMin(high, MAX_ARRAY_INDEX);
               }
               function baseSortedUniq(array, iteratee2) {
-                var index = -1, length = array.length, resIndex = 0, result2 = [];
+                var index = -1, length = array.length, resIndex = 0, result3 = [];
                 while (++index < length) {
                   var value = array[index], computed = iteratee2 ? iteratee2(value) : value;
                   if (!index || !eq(computed, seen)) {
                     var seen = computed;
-                    result2[resIndex++] = value === 0 ? 0 : value;
+                    result3[resIndex++] = value === 0 ? 0 : value;
                   }
                 }
-                return result2;
+                return result3;
               }
               function baseToNumber(value) {
                 if (typeof value == "number") {
@@ -1921,11 +1921,11 @@ export default require => {
                 if (isSymbol(value)) {
                   return symbolToString ? symbolToString.call(value) : "";
                 }
-                var result2 = value + "";
-                return result2 == "0" && 1 / value == -INFINITY ? "-0" : result2;
+                var result3 = value + "";
+                return result3 == "0" && 1 / value == -INFINITY ? "-0" : result3;
               }
               function baseUniq(array, iteratee2, comparator) {
-                var index = -1, includes2 = arrayIncludes, length = array.length, isCommon = true, result2 = [], seen = result2;
+                var index = -1, includes2 = arrayIncludes, length = array.length, isCommon = true, result3 = [], seen = result3;
                 if (comparator) {
                   isCommon = false;
                   includes2 = arrayIncludesWith;
@@ -1938,7 +1938,7 @@ export default require => {
                   includes2 = cacheHas;
                   seen = new SetCache();
                 } else {
-                  seen = iteratee2 ? [] : result2;
+                  seen = iteratee2 ? [] : result3;
                 }
                 outer: while (++index < length) {
                   var value = array[index], computed = iteratee2 ? iteratee2(value) : value;
@@ -1953,19 +1953,19 @@ export default require => {
                     if (iteratee2) {
                       seen.push(computed);
                     }
-                    result2.push(value);
+                    result3.push(value);
                   } else if (!includes2(seen, computed, comparator)) {
-                    if (seen !== result2) {
+                    if (seen !== result3) {
                       seen.push(computed);
                     }
-                    result2.push(value);
+                    result3.push(value);
                   }
                 }
-                return result2;
+                return result3;
               }
               function baseUnset(object, path) {
                 path = castPath(path, object);
-                object = parent(object, path);
+                object = parent2(object, path);
                 return object == null || delete object[toKey(last(path))];
               }
               function baseUpdate(object, path, updater, customizer) {
@@ -1977,37 +1977,37 @@ export default require => {
                 return isDrop ? baseSlice(array, fromRight ? 0 : index, fromRight ? index + 1 : length) : baseSlice(array, fromRight ? index + 1 : 0, fromRight ? length : index);
               }
               function baseWrapperValue(value, actions) {
-                var result2 = value;
-                if (result2 instanceof LazyWrapper) {
-                  result2 = result2.value();
+                var result3 = value;
+                if (result3 instanceof LazyWrapper) {
+                  result3 = result3.value();
                 }
-                return arrayReduce(actions, function (result3, action) {
-                  return action.func.apply(action.thisArg, arrayPush([result3], action.args));
-                }, result2);
+                return arrayReduce(actions, function (result4, action) {
+                  return action.func.apply(action.thisArg, arrayPush([result4], action.args));
+                }, result3);
               }
               function baseXor(arrays, iteratee2, comparator) {
                 var length = arrays.length;
                 if (length < 2) {
                   return length ? baseUniq(arrays[0]) : [];
                 }
-                var index = -1, result2 = Array2(length);
+                var index = -1, result3 = Array2(length);
                 while (++index < length) {
                   var array = arrays[index], othIndex = -1;
                   while (++othIndex < length) {
                     if (othIndex != index) {
-                      result2[index] = baseDifference(result2[index] || array, arrays[othIndex], iteratee2, comparator);
+                      result3[index] = baseDifference(result3[index] || array, arrays[othIndex], iteratee2, comparator);
                     }
                   }
                 }
-                return baseUniq(baseFlatten(result2, 1), iteratee2, comparator);
+                return baseUniq(baseFlatten(result3, 1), iteratee2, comparator);
               }
               function baseZipObject(props, values2, assignFunc) {
-                var index = -1, length = props.length, valsLength = values2.length, result2 = {};
+                var index = -1, length = props.length, valsLength = values2.length, result3 = {};
                 while (++index < length) {
                   var value = index < valsLength ? values2[index] : undefined2;
-                  assignFunc(result2, props[index], value);
+                  assignFunc(result3, props[index], value);
                 }
-                return result2;
+                return result3;
               }
               function castArrayLikeObject(value) {
                 return isArrayLikeObject(value) ? value : [];
@@ -2034,23 +2034,23 @@ export default require => {
                 if (isDeep) {
                   return buffer.slice();
                 }
-                var length = buffer.length, result2 = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);
-                buffer.copy(result2);
-                return result2;
+                var length = buffer.length, result3 = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);
+                buffer.copy(result3);
+                return result3;
               }
               function cloneArrayBuffer(arrayBuffer) {
-                var result2 = new arrayBuffer.constructor(arrayBuffer.byteLength);
-                new Uint8Array2(result2).set(new Uint8Array2(arrayBuffer));
-                return result2;
+                var result3 = new arrayBuffer.constructor(arrayBuffer.byteLength);
+                new Uint8Array2(result3).set(new Uint8Array2(arrayBuffer));
+                return result3;
               }
               function cloneDataView(dataView, isDeep) {
                 var buffer = isDeep ? cloneArrayBuffer(dataView.buffer) : dataView.buffer;
                 return new dataView.constructor(buffer, dataView.byteOffset, dataView.byteLength);
               }
               function cloneRegExp(regexp) {
-                var result2 = new regexp.constructor(regexp.source, reFlags.exec(regexp));
-                result2.lastIndex = regexp.lastIndex;
-                return result2;
+                var result3 = new regexp.constructor(regexp.source, reFlags.exec(regexp));
+                result3.lastIndex = regexp.lastIndex;
+                return result3;
               }
               function cloneSymbol(symbol) {
                 return symbolValueOf ? Object2(symbolValueOf.call(symbol)) : {};
@@ -2075,47 +2075,47 @@ export default require => {
               function compareMultiple(object, other, orders) {
                 var index = -1, objCriteria = object.criteria, othCriteria = other.criteria, length = objCriteria.length, ordersLength = orders.length;
                 while (++index < length) {
-                  var result2 = compareAscending(objCriteria[index], othCriteria[index]);
-                  if (result2) {
+                  var result3 = compareAscending(objCriteria[index], othCriteria[index]);
+                  if (result3) {
                     if (index >= ordersLength) {
-                      return result2;
+                      return result3;
                     }
                     var order = orders[index];
-                    return result2 * (order == "desc" ? -1 : 1);
+                    return result3 * (order == "desc" ? -1 : 1);
                   }
                 }
                 return object.index - other.index;
               }
               function composeArgs(args, partials, holders, isCurried) {
-                var argsIndex = -1, argsLength = args.length, holdersLength = holders.length, leftIndex = -1, leftLength = partials.length, rangeLength = nativeMax(argsLength - holdersLength, 0), result2 = Array2(leftLength + rangeLength), isUncurried = !isCurried;
+                var argsIndex = -1, argsLength = args.length, holdersLength = holders.length, leftIndex = -1, leftLength = partials.length, rangeLength = nativeMax(argsLength - holdersLength, 0), result3 = Array2(leftLength + rangeLength), isUncurried = !isCurried;
                 while (++leftIndex < leftLength) {
-                  result2[leftIndex] = partials[leftIndex];
+                  result3[leftIndex] = partials[leftIndex];
                 }
                 while (++argsIndex < holdersLength) {
                   if (isUncurried || argsIndex < argsLength) {
-                    result2[holders[argsIndex]] = args[argsIndex];
+                    result3[holders[argsIndex]] = args[argsIndex];
                   }
                 }
                 while (rangeLength--) {
-                  result2[leftIndex++] = args[argsIndex++];
+                  result3[leftIndex++] = args[argsIndex++];
                 }
-                return result2;
+                return result3;
               }
               function composeArgsRight(args, partials, holders, isCurried) {
-                var argsIndex = -1, argsLength = args.length, holdersIndex = -1, holdersLength = holders.length, rightIndex = -1, rightLength = partials.length, rangeLength = nativeMax(argsLength - holdersLength, 0), result2 = Array2(rangeLength + rightLength), isUncurried = !isCurried;
+                var argsIndex = -1, argsLength = args.length, holdersIndex = -1, holdersLength = holders.length, rightIndex = -1, rightLength = partials.length, rangeLength = nativeMax(argsLength - holdersLength, 0), result3 = Array2(rangeLength + rightLength), isUncurried = !isCurried;
                 while (++argsIndex < rangeLength) {
-                  result2[argsIndex] = args[argsIndex];
+                  result3[argsIndex] = args[argsIndex];
                 }
                 var offset = argsIndex;
                 while (++rightIndex < rightLength) {
-                  result2[offset + rightIndex] = partials[rightIndex];
+                  result3[offset + rightIndex] = partials[rightIndex];
                 }
                 while (++holdersIndex < holdersLength) {
                   if (isUncurried || argsIndex < argsLength) {
-                    result2[offset + holders[holdersIndex]] = args[argsIndex++];
+                    result3[offset + holders[holdersIndex]] = args[argsIndex++];
                   }
                 }
-                return result2;
+                return result3;
               }
               function copyArray(source, array) {
                 var index = -1, length = source.length;
@@ -2245,8 +2245,8 @@ export default require => {
                     case 7:
                       return new Ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
                   }
-                  var thisBinding = baseCreate(Ctor.prototype), result2 = Ctor.apply(thisBinding, args);
-                  return isObject(result2) ? result2 : thisBinding;
+                  var thisBinding = baseCreate(Ctor.prototype), result3 = Ctor.apply(thisBinding, args);
+                  return isObject(result3) ? result3 : thisBinding;
                 };
               }
               function createCurry(func, bitmask, arity) {
@@ -2310,11 +2310,11 @@ export default require => {
                     if (wrapper && args.length == 1 && isArray(value)) {
                       return wrapper.plant(value).value();
                     }
-                    var index2 = 0, result2 = length ? funcs[index2].apply(this, args) : value;
+                    var index2 = 0, result3 = length ? funcs[index2].apply(this, args) : value;
                     while (++index2 < length) {
-                      result2 = funcs[index2].call(this, result2);
+                      result3 = funcs[index2].call(this, result3);
                     }
-                    return result2;
+                    return result3;
                   };
                 });
               }
@@ -2363,15 +2363,15 @@ export default require => {
               }
               function createMathOperation(operator, defaultValue) {
                 return function (value, other) {
-                  var result2;
+                  var result3;
                   if (value === undefined2 && other === undefined2) {
                     return defaultValue;
                   }
                   if (value !== undefined2) {
-                    result2 = value;
+                    result3 = value;
                   }
                   if (other !== undefined2) {
-                    if (result2 === undefined2) {
+                    if (result3 === undefined2) {
                       return other;
                     }
                     if (typeof value == "string" || typeof other == "string") {
@@ -2381,9 +2381,9 @@ export default require => {
                       value = baseToNumber(value);
                       other = baseToNumber(other);
                     }
-                    result2 = operator(value, other);
+                    result3 = operator(value, other);
                   }
-                  return result2;
+                  return result3;
                 };
               }
               function createOver(arrayFunc) {
@@ -2403,8 +2403,8 @@ export default require => {
                 if (charsLength < 2) {
                   return charsLength ? baseRepeat(chars, length) : chars;
                 }
-                var result2 = baseRepeat(chars, nativeCeil(length / stringSize(chars)));
-                return hasUnicode(chars) ? castSlice(stringToArray(result2), 0, length).join("") : result2.slice(0, length);
+                var result3 = baseRepeat(chars, nativeCeil(length / stringSize(chars)));
+                return hasUnicode(chars) ? castSlice(stringToArray(result3), 0, length).join("") : result3.slice(0, length);
               }
               function createPartial(func, bitmask, thisArg, partials) {
                 var isBind = bitmask & WRAP_BIND_FLAG, Ctor = createCtor(func);
@@ -2453,18 +2453,18 @@ export default require => {
                   bitmask &= ~(WRAP_BIND_FLAG | WRAP_BIND_KEY_FLAG);
                 }
                 var newData = [func, bitmask, thisArg, newPartials, newHolders, newPartialsRight, newHoldersRight, argPos, ary2, arity];
-                var result2 = wrapFunc.apply(undefined2, newData);
+                var result3 = wrapFunc.apply(undefined2, newData);
                 if (isLaziable(func)) {
-                  setData(result2, newData);
+                  setData(result3, newData);
                 }
-                result2.placeholder = placeholder;
-                return setWrapToString(result2, func, bitmask);
+                result3.placeholder = placeholder;
+                return setWrapToString(result3, func, bitmask);
               }
               function createRound(methodName) {
                 var func = Math2[methodName];
                 return function (number, precision) {
                   number = toNumber(number);
-                  precision = precision == null ? 0 : nativeMin(toInteger(precision), 292);
+                  precision = precision == null ? 0 : nativeMin(toInteger3(precision), 292);
                   if (precision && nativeIsFinite(number)) {
                     var pair = (toString(number) + "e").split("e"), value = func(pair[0] + "e" + (+pair[1] + precision));
                     pair = (toString(value) + "e").split("e");
@@ -2498,8 +2498,8 @@ export default require => {
                   bitmask &= ~(WRAP_PARTIAL_FLAG | WRAP_PARTIAL_RIGHT_FLAG);
                   partials = holders = undefined2;
                 }
-                ary2 = ary2 === undefined2 ? ary2 : nativeMax(toInteger(ary2), 0);
-                arity = arity === undefined2 ? arity : toInteger(arity);
+                ary2 = ary2 === undefined2 ? ary2 : nativeMax(toInteger3(ary2), 0);
+                arity = arity === undefined2 ? arity : toInteger3(arity);
                 length -= holders ? holders.length : 0;
                 if (bitmask & WRAP_PARTIAL_RIGHT_FLAG) {
                   var partialsRight = partials, holdersRight = holders;
@@ -2520,16 +2520,16 @@ export default require => {
                   bitmask &= ~(WRAP_CURRY_FLAG | WRAP_CURRY_RIGHT_FLAG);
                 }
                 if (!bitmask || bitmask == WRAP_BIND_FLAG) {
-                  var result2 = createBind(func, bitmask, thisArg);
+                  var result3 = createBind(func, bitmask, thisArg);
                 } else if (bitmask == WRAP_CURRY_FLAG || bitmask == WRAP_CURRY_RIGHT_FLAG) {
-                  result2 = createCurry(func, bitmask, arity);
+                  result3 = createCurry(func, bitmask, arity);
                 } else if ((bitmask == WRAP_PARTIAL_FLAG || bitmask == (WRAP_BIND_FLAG | WRAP_PARTIAL_FLAG)) && !holders.length) {
-                  result2 = createPartial(func, bitmask, thisArg, partials);
+                  result3 = createPartial(func, bitmask, thisArg, partials);
                 } else {
-                  result2 = createHybrid.apply(undefined2, newData);
+                  result3 = createHybrid.apply(undefined2, newData);
                 }
                 var setter = data ? baseSetData : setData;
-                return setWrapToString(setter(result2, newData), func, bitmask);
+                return setWrapToString(setter(result3, newData), func, bitmask);
               }
               function customDefaultsAssignIn(objValue, srcValue, key, object) {
                 if (objValue === undefined2 || eq(objValue, objectProto[key]) && !hasOwnProperty.call(object, key)) {
@@ -2558,7 +2558,7 @@ export default require => {
                 if (arrStacked && othStacked) {
                   return arrStacked == other && othStacked == array;
                 }
-                var index = -1, result2 = true, seen = bitmask & COMPARE_UNORDERED_FLAG ? new SetCache() : undefined2;
+                var index = -1, result3 = true, seen = bitmask & COMPARE_UNORDERED_FLAG ? new SetCache() : undefined2;
                 stack.set(array, other);
                 stack.set(other, array);
                 while (++index < arrLength) {
@@ -2570,7 +2570,7 @@ export default require => {
                     if (compared) {
                       continue;
                     }
-                    result2 = false;
+                    result3 = false;
                     break;
                   }
                   if (seen) {
@@ -2579,17 +2579,17 @@ export default require => {
                         return seen.push(othIndex);
                       }
                     })) {
-                      result2 = false;
+                      result3 = false;
                       break;
                     }
                   } else if (!(arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) {
-                    result2 = false;
+                    result3 = false;
                     break;
                   }
                 }
                 stack["delete"](array);
                 stack["delete"](other);
-                return result2;
+                return result3;
               }
               function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
                 switch (tag) {
@@ -2627,9 +2627,9 @@ export default require => {
                     }
                     bitmask |= COMPARE_UNORDERED_FLAG;
                     stack.set(object, other);
-                    var result2 = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
+                    var result3 = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
                     stack["delete"](object);
-                    return result2;
+                    return result3;
                   case symbolTag:
                     if (symbolValueOf) {
                       return symbolValueOf.call(object) == symbolValueOf.call(other);
@@ -2654,7 +2654,7 @@ export default require => {
                 if (objStacked && othStacked) {
                   return objStacked == other && othStacked == object;
                 }
-                var result2 = true;
+                var result3 = true;
                 stack.set(object, other);
                 stack.set(other, object);
                 var skipCtor = isPartial;
@@ -2665,20 +2665,20 @@ export default require => {
                     var compared = isPartial ? customizer(othValue, objValue, key, other, object, stack) : customizer(objValue, othValue, key, object, other, stack);
                   }
                   if (!(compared === undefined2 ? objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack) : compared)) {
-                    result2 = false;
+                    result3 = false;
                     break;
                   }
                   skipCtor || (skipCtor = key == "constructor");
                 }
-                if (result2 && !skipCtor) {
+                if (result3 && !skipCtor) {
                   var objCtor = object.constructor, othCtor = other.constructor;
                   if (objCtor != othCtor && (("constructor" in object) && ("constructor" in other)) && !(typeof objCtor == "function" && objCtor instanceof objCtor && typeof othCtor == "function" && othCtor instanceof othCtor)) {
-                    result2 = false;
+                    result3 = false;
                   }
                 }
                 stack["delete"](object);
                 stack["delete"](other);
-                return result2;
+                return result3;
               }
               function flatRest(func) {
                 return setToString(overRest(func, undefined2, flatten), func + "");
@@ -2693,35 +2693,35 @@ export default require => {
                 return metaMap.get(func);
               };
               function getFuncName(func) {
-                var result2 = func.name + "", array = realNames[result2], length = hasOwnProperty.call(realNames, result2) ? array.length : 0;
+                var result3 = func.name + "", array = realNames[result3], length = hasOwnProperty.call(realNames, result3) ? array.length : 0;
                 while (length--) {
                   var data = array[length], otherFunc = data.func;
                   if (otherFunc == null || otherFunc == func) {
                     return data.name;
                   }
                 }
-                return result2;
+                return result3;
               }
               function getHolder(func) {
                 var object = hasOwnProperty.call(lodash, "placeholder") ? lodash : func;
                 return object.placeholder;
               }
               function getIteratee() {
-                var result2 = lodash.iteratee || iteratee;
-                result2 = result2 === iteratee ? baseIteratee : result2;
-                return arguments.length ? result2(arguments[0], arguments[1]) : result2;
+                var result3 = lodash.iteratee || iteratee;
+                result3 = result3 === iteratee ? baseIteratee : result3;
+                return arguments.length ? result3(arguments[0], arguments[1]) : result3;
               }
               function getMapData(map2, key) {
                 var data = map2.__data__;
                 return isKeyable(key) ? data[typeof key == "string" ? "string" : "hash"] : data.map;
               }
               function getMatchData(object) {
-                var result2 = keys(object), length = result2.length;
+                var result3 = keys(object), length = result3.length;
                 while (length--) {
-                  var key = result2[length], value = object[key];
-                  result2[length] = [key, value, isStrictComparable(value)];
+                  var key = result3[length], value = object[key];
+                  result3[length] = [key, value, isStrictComparable(value)];
                 }
-                return result2;
+                return result3;
               }
               function getNative(object, key) {
                 var value = getValue(object, key);
@@ -2733,7 +2733,7 @@ export default require => {
                   value[symToStringTag] = undefined2;
                   var unmasked = true;
                 } catch (e) {}
-                var result2 = nativeObjectToString.call(value);
+                var result3 = nativeObjectToString.call(value);
                 if (unmasked) {
                   if (isOwn) {
                     value[symToStringTag] = tag;
@@ -2741,7 +2741,7 @@ export default require => {
                     delete value[symToStringTag];
                   }
                 }
-                return result2;
+                return result3;
               }
               var getSymbols = !nativeGetSymbols ? stubArray : function (object) {
                 if (object == null) {
@@ -2753,17 +2753,17 @@ export default require => {
                 });
               };
               var getSymbolsIn = !nativeGetSymbols ? stubArray : function (object) {
-                var result2 = [];
+                var result3 = [];
                 while (object) {
-                  arrayPush(result2, getSymbols(object));
+                  arrayPush(result3, getSymbols(object));
                   object = getPrototype(object);
                 }
-                return result2;
+                return result3;
               };
               var getTag = baseGetTag;
               if (DataView2 && getTag(new DataView2(new ArrayBuffer(1))) != dataViewTag || Map2 && getTag(new Map2()) != mapTag || Promise2 && getTag(Promise2.resolve()) != promiseTag || Set2 && getTag(new Set2()) != setTag || WeakMap2 && getTag(new WeakMap2()) != weakMapTag) {
                 getTag = function (value) {
-                  var result2 = baseGetTag(value), Ctor = result2 == objectTag ? value.constructor : undefined2, ctorString = Ctor ? toSource(Ctor) : "";
+                  var result3 = baseGetTag(value), Ctor = result3 == objectTag ? value.constructor : undefined2, ctorString = Ctor ? toSource(Ctor) : "";
                   if (ctorString) {
                     switch (ctorString) {
                       case dataViewCtorString:
@@ -2778,7 +2778,7 @@ export default require => {
                         return weakMapTag;
                     }
                   }
-                  return result2;
+                  return result3;
                 };
               }
               function getView(start, end, transforms) {
@@ -2811,27 +2811,27 @@ export default require => {
               }
               function hasPath(object, path, hasFunc) {
                 path = castPath(path, object);
-                var index = -1, length = path.length, result2 = false;
+                var index = -1, length = path.length, result3 = false;
                 while (++index < length) {
                   var key = toKey(path[index]);
-                  if (!(result2 = object != null && hasFunc(object, key))) {
+                  if (!(result3 = object != null && hasFunc(object, key))) {
                     break;
                   }
                   object = object[key];
                 }
-                if (result2 || ++index != length) {
-                  return result2;
+                if (result3 || ++index != length) {
+                  return result3;
                 }
                 length = object == null ? 0 : object.length;
                 return !!length && isLength(length) && isIndex(key, length) && (isArray(object) || isArguments(object));
               }
               function initCloneArray(array) {
-                var length = array.length, result2 = new array.constructor(length);
+                var length = array.length, result3 = new array.constructor(length);
                 if (length && typeof array[0] == "string" && hasOwnProperty.call(array, "index")) {
-                  result2.index = array.index;
-                  result2.input = array.input;
+                  result3.index = array.index;
+                  result3.input = array.input;
                 }
-                return result2;
+                return result3;
               }
               function initCloneObject(object) {
                 return typeof object.constructor == "function" && !isPrototype(object) ? baseCreate(getPrototype(object)) : {};
@@ -2942,14 +2942,14 @@ export default require => {
                 };
               }
               function memoizeCapped(func) {
-                var result2 = memoize(func, function (key) {
+                var result3 = memoize(func, function (key) {
                   if (cache.size === MAX_MEMOIZE_SIZE) {
                     cache.clear();
                   }
                   return key;
                 });
-                var cache = result2.cache;
-                return result2;
+                var cache = result3.cache;
+                return result3;
               }
               function mergeData(data, source) {
                 var bitmask = data[1], srcBitmask = source[1], newBitmask = bitmask | srcBitmask, isCommon = newBitmask < (WRAP_BIND_FLAG | WRAP_BIND_KEY_FLAG | WRAP_ARY_FLAG);
@@ -2988,13 +2988,13 @@ export default require => {
                 return data;
               }
               function nativeKeysIn(object) {
-                var result2 = [];
+                var result3 = [];
                 if (object != null) {
                   for (var key in Object2(object)) {
-                    result2.push(key);
+                    result3.push(key);
                   }
                 }
-                return result2;
+                return result3;
               }
               function objectToString(value) {
                 return nativeObjectToString.call(value);
@@ -3015,7 +3015,7 @@ export default require => {
                   return apply(func, this, otherArgs);
                 };
               }
-              function parent(object, path) {
+              function parent2(object, path) {
                 return path.length < 2 ? object : baseGet(object, baseSlice(path, 0, -1));
               }
               function reorder(array, indexes) {
@@ -3071,21 +3071,21 @@ export default require => {
                 return array;
               }
               var stringToPath = memoizeCapped(function (string) {
-                var result2 = [];
+                var result3 = [];
                 if (string.charCodeAt(0) === 46) {
-                  result2.push("");
+                  result3.push("");
                 }
                 string.replace(rePropName, function (match, number, quote, subString) {
-                  result2.push(quote ? subString.replace(reEscapeChar, "$1") : number || match);
+                  result3.push(quote ? subString.replace(reEscapeChar, "$1") : number || match);
                 });
-                return result2;
+                return result3;
               });
               function toKey(value) {
                 if (typeof value == "string" || isSymbol(value)) {
                   return value;
                 }
-                var result2 = value + "";
-                return result2 == "0" && 1 / value == -INFINITY ? "-0" : result2;
+                var result3 = value + "";
+                return result3 == "0" && 1 / value == -INFINITY ? "-0" : result3;
               }
               function toSource(func) {
                 if (func != null) {
@@ -3111,37 +3111,37 @@ export default require => {
                 if (wrapper instanceof LazyWrapper) {
                   return wrapper.clone();
                 }
-                var result2 = new LodashWrapper(wrapper.__wrapped__, wrapper.__chain__);
-                result2.__actions__ = copyArray(wrapper.__actions__);
-                result2.__index__ = wrapper.__index__;
-                result2.__values__ = wrapper.__values__;
-                return result2;
+                var result3 = new LodashWrapper(wrapper.__wrapped__, wrapper.__chain__);
+                result3.__actions__ = copyArray(wrapper.__actions__);
+                result3.__index__ = wrapper.__index__;
+                result3.__values__ = wrapper.__values__;
+                return result3;
               }
               function chunk(array, size2, guard) {
                 if (guard ? isIterateeCall(array, size2, guard) : size2 === undefined2) {
                   size2 = 1;
                 } else {
-                  size2 = nativeMax(toInteger(size2), 0);
+                  size2 = nativeMax(toInteger3(size2), 0);
                 }
                 var length = array == null ? 0 : array.length;
                 if (!length || size2 < 1) {
                   return [];
                 }
-                var index = 0, resIndex = 0, result2 = Array2(nativeCeil(length / size2));
+                var index = 0, resIndex = 0, result3 = Array2(nativeCeil(length / size2));
                 while (index < length) {
-                  result2[resIndex++] = baseSlice(array, index, index += size2);
+                  result3[resIndex++] = baseSlice(array, index, index += size2);
                 }
-                return result2;
+                return result3;
               }
               function compact(array) {
-                var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result2 = [];
+                var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result3 = [];
                 while (++index < length) {
                   var value = array[index];
                   if (value) {
-                    result2[resIndex++] = value;
+                    result3[resIndex++] = value;
                   }
                 }
-                return result2;
+                return result3;
               }
               function concat() {
                 var length = arguments.length;
@@ -3176,7 +3176,7 @@ export default require => {
                 if (!length) {
                   return [];
                 }
-                n = guard || n === undefined2 ? 1 : toInteger(n);
+                n = guard || n === undefined2 ? 1 : toInteger3(n);
                 return baseSlice(array, n < 0 ? 0 : n, length);
               }
               function dropRight(array, n, guard) {
@@ -3184,7 +3184,7 @@ export default require => {
                 if (!length) {
                   return [];
                 }
-                n = guard || n === undefined2 ? 1 : toInteger(n);
+                n = guard || n === undefined2 ? 1 : toInteger3(n);
                 n = length - n;
                 return baseSlice(array, 0, n < 0 ? 0 : n);
               }
@@ -3210,7 +3210,7 @@ export default require => {
                 if (!length) {
                   return -1;
                 }
-                var index = fromIndex == null ? 0 : toInteger(fromIndex);
+                var index = fromIndex == null ? 0 : toInteger3(fromIndex);
                 if (index < 0) {
                   index = nativeMax(length + index, 0);
                 }
@@ -3223,7 +3223,7 @@ export default require => {
                 }
                 var index = length - 1;
                 if (fromIndex !== undefined2) {
-                  index = toInteger(fromIndex);
+                  index = toInteger3(fromIndex);
                   index = fromIndex < 0 ? nativeMax(length + index, 0) : nativeMin(index, length - 1);
                 }
                 return baseFindIndex(array, getIteratee(predicate, 3), index, true);
@@ -3241,16 +3241,16 @@ export default require => {
                 if (!length) {
                   return [];
                 }
-                depth = depth === undefined2 ? 1 : toInteger(depth);
+                depth = depth === undefined2 ? 1 : toInteger3(depth);
                 return baseFlatten(array, depth);
               }
               function fromPairs(pairs) {
-                var index = -1, length = pairs == null ? 0 : pairs.length, result2 = {};
+                var index = -1, length = pairs == null ? 0 : pairs.length, result3 = {};
                 while (++index < length) {
                   var pair = pairs[index];
-                  result2[pair[0]] = pair[1];
+                  result3[pair[0]] = pair[1];
                 }
-                return result2;
+                return result3;
               }
               function head(array) {
                 return array && array.length ? array[0] : undefined2;
@@ -3260,7 +3260,7 @@ export default require => {
                 if (!length) {
                   return -1;
                 }
-                var index = fromIndex == null ? 0 : toInteger(fromIndex);
+                var index = fromIndex == null ? 0 : toInteger3(fromIndex);
                 if (index < 0) {
                   index = nativeMax(length + index, 0);
                 }
@@ -3305,13 +3305,13 @@ export default require => {
                 }
                 var index = length;
                 if (fromIndex !== undefined2) {
-                  index = toInteger(fromIndex);
+                  index = toInteger3(fromIndex);
                   index = index < 0 ? nativeMax(length + index, 0) : nativeMin(index, length - 1);
                 }
                 return value === value ? strictLastIndexOf(array, value, index) : baseFindIndex(array, baseIsNaN, index, true);
               }
               function nth(array, n) {
-                return array && array.length ? baseNth(array, toInteger(n)) : undefined2;
+                return array && array.length ? baseNth(array, toInteger3(n)) : undefined2;
               }
               var pull = baseRest(pullAll);
               function pullAll(array, values2) {
@@ -3324,28 +3324,28 @@ export default require => {
                 return array && array.length && values2 && values2.length ? basePullAll(array, values2, undefined2, comparator) : array;
               }
               var pullAt = flatRest(function (array, indexes) {
-                var length = array == null ? 0 : array.length, result2 = baseAt(array, indexes);
+                var length = array == null ? 0 : array.length, result3 = baseAt(array, indexes);
                 basePullAt(array, arrayMap(indexes, function (index) {
                   return isIndex(index, length) ? +index : index;
                 }).sort(compareAscending));
-                return result2;
+                return result3;
               });
               function remove(array, predicate) {
-                var result2 = [];
+                var result3 = [];
                 if (!(array && array.length)) {
-                  return result2;
+                  return result3;
                 }
                 var index = -1, indexes = [], length = array.length;
                 predicate = getIteratee(predicate, 3);
                 while (++index < length) {
                   var value = array[index];
                   if (predicate(value, index, array)) {
-                    result2.push(value);
+                    result3.push(value);
                     indexes.push(index);
                   }
                 }
                 basePullAt(array, indexes);
-                return result2;
+                return result3;
               }
               function reverse(array) {
                 return array == null ? array : nativeReverse.call(array);
@@ -3359,8 +3359,8 @@ export default require => {
                   start = 0;
                   end = length;
                 } else {
-                  start = start == null ? 0 : toInteger(start);
-                  end = end === undefined2 ? length : toInteger(end);
+                  start = start == null ? 0 : toInteger3(start);
+                  end = end === undefined2 ? length : toInteger3(end);
                 }
                 return baseSlice(array, start, end);
               }
@@ -3410,7 +3410,7 @@ export default require => {
                 if (!(array && array.length)) {
                   return [];
                 }
-                n = guard || n === undefined2 ? 1 : toInteger(n);
+                n = guard || n === undefined2 ? 1 : toInteger3(n);
                 return baseSlice(array, 0, n < 0 ? 0 : n);
               }
               function takeRight(array, n, guard) {
@@ -3418,7 +3418,7 @@ export default require => {
                 if (!length) {
                   return [];
                 }
-                n = guard || n === undefined2 ? 1 : toInteger(n);
+                n = guard || n === undefined2 ? 1 : toInteger3(n);
                 n = length - n;
                 return baseSlice(array, n < 0 ? 0 : n, length);
               }
@@ -3472,11 +3472,11 @@ export default require => {
                 if (!(array && array.length)) {
                   return [];
                 }
-                var result2 = unzip(array);
+                var result3 = unzip(array);
                 if (iteratee2 == null) {
-                  return result2;
+                  return result3;
                 }
-                return arrayMap(result2, function (group) {
+                return arrayMap(result3, function (group) {
                   return apply(iteratee2, undefined2, group);
                 });
               }
@@ -3511,9 +3511,9 @@ export default require => {
                 return unzipWith(arrays, iteratee2);
               });
               function chain(value) {
-                var result2 = lodash(value);
-                result2.__chain__ = true;
-                return result2;
+                var result3 = lodash(value);
+                result3.__chain__ = true;
+                return result3;
               }
               function tap(value, interceptor) {
                 interceptor(value);
@@ -3562,21 +3562,21 @@ export default require => {
                 return this;
               }
               function wrapperPlant(value) {
-                var result2, parent2 = this;
-                while (parent2 instanceof baseLodash) {
-                  var clone2 = wrapperClone(parent2);
+                var result3, parent3 = this;
+                while (parent3 instanceof baseLodash) {
+                  var clone2 = wrapperClone(parent3);
                   clone2.__index__ = 0;
                   clone2.__values__ = undefined2;
-                  if (result2) {
+                  if (result3) {
                     previous.__wrapped__ = clone2;
                   } else {
-                    result2 = clone2;
+                    result3 = clone2;
                   }
                   var previous = clone2;
-                  parent2 = parent2.__wrapped__;
+                  parent3 = parent3.__wrapped__;
                 }
                 previous.__wrapped__ = value;
-                return result2;
+                return result3;
               }
               function wrapperReverse() {
                 var value = this.__wrapped__;
@@ -3598,11 +3598,11 @@ export default require => {
               function wrapperValue() {
                 return baseWrapperValue(this.__wrapped__, this.__actions__);
               }
-              var countBy = createAggregator(function (result2, value, key) {
-                if (hasOwnProperty.call(result2, key)) {
-                  ++result2[key];
+              var countBy = createAggregator(function (result3, value, key) {
+                if (hasOwnProperty.call(result3, key)) {
+                  ++result3[key];
                 } else {
-                  baseAssignValue(result2, key, 1);
+                  baseAssignValue(result3, key, 1);
                 }
               });
               function every(collection, predicate, guard) {
@@ -3625,7 +3625,7 @@ export default require => {
                 return baseFlatten(map(collection, iteratee2), INFINITY);
               }
               function flatMapDepth(collection, iteratee2, depth) {
-                depth = depth === undefined2 ? 1 : toInteger(depth);
+                depth = depth === undefined2 ? 1 : toInteger3(depth);
                 return baseFlatten(map(collection, iteratee2), depth);
               }
               function forEach(collection, iteratee2) {
@@ -3636,16 +3636,16 @@ export default require => {
                 var func = isArray(collection) ? arrayEachRight : baseEachRight;
                 return func(collection, getIteratee(iteratee2, 3));
               }
-              var groupBy = createAggregator(function (result2, value, key) {
-                if (hasOwnProperty.call(result2, key)) {
-                  result2[key].push(value);
+              var groupBy = createAggregator(function (result3, value, key) {
+                if (hasOwnProperty.call(result3, key)) {
+                  result3[key].push(value);
                 } else {
-                  baseAssignValue(result2, key, [value]);
+                  baseAssignValue(result3, key, [value]);
                 }
               });
               function includes(collection, value, fromIndex, guard) {
                 collection = isArrayLike(collection) ? collection : values(collection);
-                fromIndex = fromIndex && !guard ? toInteger(fromIndex) : 0;
+                fromIndex = fromIndex && !guard ? toInteger3(fromIndex) : 0;
                 var length = collection.length;
                 if (fromIndex < 0) {
                   fromIndex = nativeMax(length + fromIndex, 0);
@@ -3653,14 +3653,14 @@ export default require => {
                 return isString(collection) ? fromIndex <= length && collection.indexOf(value, fromIndex) > -1 : !!length && baseIndexOf(collection, value, fromIndex) > -1;
               }
               var invokeMap = baseRest(function (collection, path, args) {
-                var index = -1, isFunc = typeof path == "function", result2 = isArrayLike(collection) ? Array2(collection.length) : [];
+                var index = -1, isFunc = typeof path == "function", result3 = isArrayLike(collection) ? Array2(collection.length) : [];
                 baseEach(collection, function (value) {
-                  result2[++index] = isFunc ? apply(path, value, args) : baseInvoke(value, path, args);
+                  result3[++index] = isFunc ? apply(path, value, args) : baseInvoke(value, path, args);
                 });
-                return result2;
+                return result3;
               });
-              var keyBy = createAggregator(function (result2, value, key) {
-                baseAssignValue(result2, key, value);
+              var keyBy = createAggregator(function (result3, value, key) {
+                baseAssignValue(result3, key, value);
               });
               function map(collection, iteratee2) {
                 var func = isArray(collection) ? arrayMap : baseMap;
@@ -3679,8 +3679,8 @@ export default require => {
                 }
                 return baseOrderBy(collection, iteratees, orders);
               }
-              var partition = createAggregator(function (result2, value, key) {
-                result2[key ? 0 : 1].push(value);
+              var partition = createAggregator(function (result3, value, key) {
+                result3[key ? 0 : 1].push(value);
               }, function () {
                 return [[], []];
               });
@@ -3704,7 +3704,7 @@ export default require => {
                 if (guard ? isIterateeCall(collection, n, guard) : n === undefined2) {
                   n = 1;
                 } else {
-                  n = toInteger(n);
+                  n = toInteger3(n);
                 }
                 var func = isArray(collection) ? arraySampleSize : baseSampleSize;
                 return func(collection, n);
@@ -3752,7 +3752,7 @@ export default require => {
                 if (typeof func != "function") {
                   throw new TypeError2(FUNC_ERROR_TEXT);
                 }
-                n = toInteger(n);
+                n = toInteger3(n);
                 return function () {
                   if (--n < 1) {
                     return func.apply(this, arguments);
@@ -3765,19 +3765,19 @@ export default require => {
                 return createWrap(func, WRAP_ARY_FLAG, undefined2, undefined2, undefined2, undefined2, n);
               }
               function before(n, func) {
-                var result2;
+                var result3;
                 if (typeof func != "function") {
                   throw new TypeError2(FUNC_ERROR_TEXT);
                 }
-                n = toInteger(n);
+                n = toInteger3(n);
                 return function () {
                   if (--n > 0) {
-                    result2 = func.apply(this, arguments);
+                    result3 = func.apply(this, arguments);
                   }
                   if (n <= 1) {
                     func = undefined2;
                   }
-                  return result2;
+                  return result3;
                 };
               }
               var bind = baseRest(function (func, thisArg, partials) {
@@ -3798,18 +3798,18 @@ export default require => {
               });
               function curry(func, arity, guard) {
                 arity = guard ? undefined2 : arity;
-                var result2 = createWrap(func, WRAP_CURRY_FLAG, undefined2, undefined2, undefined2, undefined2, undefined2, arity);
-                result2.placeholder = curry.placeholder;
-                return result2;
+                var result3 = createWrap(func, WRAP_CURRY_FLAG, undefined2, undefined2, undefined2, undefined2, undefined2, arity);
+                result3.placeholder = curry.placeholder;
+                return result3;
               }
               function curryRight(func, arity, guard) {
                 arity = guard ? undefined2 : arity;
-                var result2 = createWrap(func, WRAP_CURRY_RIGHT_FLAG, undefined2, undefined2, undefined2, undefined2, undefined2, arity);
-                result2.placeholder = curryRight.placeholder;
-                return result2;
+                var result3 = createWrap(func, WRAP_CURRY_RIGHT_FLAG, undefined2, undefined2, undefined2, undefined2, undefined2, arity);
+                result3.placeholder = curryRight.placeholder;
+                return result3;
               }
               function debounce(func, wait, options) {
-                var lastArgs, lastThis, maxWait, result2, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
+                var lastArgs, lastThis, maxWait, result3, timerId, lastCallTime, lastInvokeTime = 0, leading = false, maxing = false, trailing = true;
                 if (typeof func != "function") {
                   throw new TypeError2(FUNC_ERROR_TEXT);
                 }
@@ -3824,13 +3824,13 @@ export default require => {
                   var args = lastArgs, thisArg = lastThis;
                   lastArgs = lastThis = undefined2;
                   lastInvokeTime = time;
-                  result2 = func.apply(thisArg, args);
-                  return result2;
+                  result3 = func.apply(thisArg, args);
+                  return result3;
                 }
                 function leadingEdge(time) {
                   lastInvokeTime = time;
                   timerId = setTimeout(timerExpired, wait);
-                  return leading ? invokeFunc(time) : result2;
+                  return leading ? invokeFunc(time) : result3;
                 }
                 function remainingWait(time) {
                   var timeSinceLastCall = time - lastCallTime, timeSinceLastInvoke = time - lastInvokeTime, timeWaiting = wait - timeSinceLastCall;
@@ -3853,7 +3853,7 @@ export default require => {
                     return invokeFunc(time);
                   }
                   lastArgs = lastThis = undefined2;
-                  return result2;
+                  return result3;
                 }
                 function cancel() {
                   if (timerId !== undefined2) {
@@ -3863,7 +3863,7 @@ export default require => {
                   lastArgs = lastCallTime = lastThis = timerId = undefined2;
                 }
                 function flush() {
-                  return timerId === undefined2 ? result2 : trailingEdge(now());
+                  return timerId === undefined2 ? result3 : trailingEdge(now());
                 }
                 function debounced() {
                   var time = now(), isInvoking = shouldInvoke(time);
@@ -3883,7 +3883,7 @@ export default require => {
                   if (timerId === undefined2) {
                     timerId = setTimeout(timerExpired, wait);
                   }
-                  return result2;
+                  return result3;
                 }
                 debounced.cancel = cancel;
                 debounced.flush = flush;
@@ -3907,9 +3907,9 @@ export default require => {
                   if (cache.has(key)) {
                     return cache.get(key);
                   }
-                  var result2 = func.apply(this, args);
-                  memoized.cache = cache.set(key, result2) || cache;
-                  return result2;
+                  var result3 = func.apply(this, args);
+                  memoized.cache = cache.set(key, result3) || cache;
+                  return result3;
                 };
                 memoized.cache = new (memoize.Cache || MapCache)();
                 return memoized;
@@ -3963,14 +3963,14 @@ export default require => {
                 if (typeof func != "function") {
                   throw new TypeError2(FUNC_ERROR_TEXT);
                 }
-                start = start === undefined2 ? start : toInteger(start);
+                start = start === undefined2 ? start : toInteger3(start);
                 return baseRest(func, start);
               }
               function spread(func, start) {
                 if (typeof func != "function") {
                   throw new TypeError2(FUNC_ERROR_TEXT);
                 }
-                start = start == null ? 0 : nativeMax(toInteger(start), 0);
+                start = start == null ? 0 : nativeMax(toInteger3(start), 0);
                 return baseRest(function (args) {
                   var array = args[start], otherArgs = castSlice(args, 0, start);
                   if (array) {
@@ -4078,8 +4078,8 @@ export default require => {
               }
               function isEqualWith(value, other, customizer) {
                 customizer = typeof customizer == "function" ? customizer : undefined2;
-                var result2 = customizer ? customizer(value, other) : undefined2;
-                return result2 === undefined2 ? baseIsEqual(value, other, undefined2, customizer) : !!result2;
+                var result3 = customizer ? customizer(value, other) : undefined2;
+                return result3 === undefined2 ? baseIsEqual(value, other, undefined2, customizer) : !!result3;
               }
               function isError(value) {
                 if (!isObjectLike(value)) {
@@ -4099,7 +4099,7 @@ export default require => {
                 return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
               }
               function isInteger(value) {
-                return typeof value == "number" && value == toInteger(value);
+                return typeof value == "number" && value == toInteger3(value);
               }
               function isLength(value) {
                 return typeof value == "number" && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
@@ -4197,12 +4197,12 @@ export default require => {
                 }
                 return value === value ? value : 0;
               }
-              function toInteger(value) {
-                var result2 = toFinite(value), remainder = result2 % 1;
-                return result2 === result2 ? remainder ? result2 - remainder : result2 : 0;
+              function toInteger3(value) {
+                var result3 = toFinite(value), remainder = result3 % 1;
+                return result3 === result3 ? remainder ? result3 - remainder : result3 : 0;
               }
               function toLength(value) {
-                return value ? baseClamp(toInteger(value), 0, MAX_ARRAY_LENGTH) : 0;
+                return value ? baseClamp(toInteger3(value), 0, MAX_ARRAY_LENGTH) : 0;
               }
               function toNumber(value) {
                 if (typeof value == "number") {
@@ -4226,7 +4226,7 @@ export default require => {
                 return copyObject(value, keysIn(value));
               }
               function toSafeInteger(value) {
-                return value ? baseClamp(toInteger(value), -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER) : value === 0 ? value : 0;
+                return value ? baseClamp(toInteger3(value), -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER) : value === 0 ? value : 0;
               }
               function toString(value) {
                 return value == null ? "" : baseToString(value);
@@ -4253,8 +4253,8 @@ export default require => {
               });
               var at = flatRest(baseAt);
               function create(prototype, properties) {
-                var result2 = baseCreate(prototype);
-                return properties == null ? result2 : baseAssign(result2, properties);
+                var result3 = baseCreate(prototype);
+                return properties == null ? result3 : baseAssign(result3, properties);
               }
               var defaults = baseRest(function (object, sources) {
                 object = Object2(object);
@@ -4308,8 +4308,8 @@ export default require => {
                 return object == null ? [] : baseFunctions(object, keysIn(object));
               }
               function get(object, path, defaultValue) {
-                var result2 = object == null ? undefined2 : baseGet(object, path);
-                return result2 === undefined2 ? defaultValue : result2;
+                var result3 = object == null ? undefined2 : baseGet(object, path);
+                return result3 === undefined2 ? defaultValue : result3;
               }
               function has(object, path) {
                 return object != null && hasPath(object, path, baseHas);
@@ -4317,20 +4317,20 @@ export default require => {
               function hasIn(object, path) {
                 return object != null && hasPath(object, path, baseHasIn);
               }
-              var invert = createInverter(function (result2, value, key) {
+              var invert = createInverter(function (result3, value, key) {
                 if (value != null && typeof value.toString != "function") {
                   value = nativeObjectToString.call(value);
                 }
-                result2[value] = key;
+                result3[value] = key;
               }, constant(identity));
-              var invertBy = createInverter(function (result2, value, key) {
+              var invertBy = createInverter(function (result3, value, key) {
                 if (value != null && typeof value.toString != "function") {
                   value = nativeObjectToString.call(value);
                 }
-                if (hasOwnProperty.call(result2, value)) {
-                  result2[value].push(key);
+                if (hasOwnProperty.call(result3, value)) {
+                  result3[value].push(key);
                 } else {
-                  result2[value] = [key];
+                  result3[value] = [key];
                 }
               }, getIteratee);
               var invoke = baseRest(baseInvoke);
@@ -4341,20 +4341,20 @@ export default require => {
                 return isArrayLike(object) ? arrayLikeKeys(object, true) : baseKeysIn(object);
               }
               function mapKeys(object, iteratee2) {
-                var result2 = {};
+                var result3 = {};
                 iteratee2 = getIteratee(iteratee2, 3);
                 baseForOwn(object, function (value, key, object2) {
-                  baseAssignValue(result2, iteratee2(value, key, object2), value);
+                  baseAssignValue(result3, iteratee2(value, key, object2), value);
                 });
-                return result2;
+                return result3;
               }
               function mapValues(object, iteratee2) {
-                var result2 = {};
+                var result3 = {};
                 iteratee2 = getIteratee(iteratee2, 3);
                 baseForOwn(object, function (value, key, object2) {
-                  baseAssignValue(result2, key, iteratee2(value, key, object2));
+                  baseAssignValue(result3, key, iteratee2(value, key, object2));
                 });
-                return result2;
+                return result3;
               }
               var merge = createAssigner(function (object, source, srcIndex) {
                 baseMerge(object, source, srcIndex);
@@ -4363,9 +4363,9 @@ export default require => {
                 baseMerge(object, source, srcIndex, customizer);
               });
               var omit = flatRest(function (object, paths) {
-                var result2 = {};
+                var result3 = {};
                 if (object == null) {
-                  return result2;
+                  return result3;
                 }
                 var isDeep = false;
                 paths = arrayMap(paths, function (path) {
@@ -4373,15 +4373,15 @@ export default require => {
                   isDeep || (isDeep = path.length > 1);
                   return path;
                 });
-                copyObject(object, getAllKeysIn(object), result2);
+                copyObject(object, getAllKeysIn(object), result3);
                 if (isDeep) {
-                  result2 = baseClone(result2, CLONE_DEEP_FLAG | CLONE_FLAT_FLAG | CLONE_SYMBOLS_FLAG, customOmitClone);
+                  result3 = baseClone(result3, CLONE_DEEP_FLAG | CLONE_FLAT_FLAG | CLONE_SYMBOLS_FLAG, customOmitClone);
                 }
                 var length = paths.length;
                 while (length--) {
-                  baseUnset(result2, paths[length]);
+                  baseUnset(result3, paths[length]);
                 }
-                return result2;
+                return result3;
               });
               function omitBy(object, predicate) {
                 return pickBy(object, negate(getIteratee(predicate)));
@@ -4401,7 +4401,7 @@ export default require => {
                   return predicate(value, path[0]);
                 });
               }
-              function result(object, path, defaultValue) {
+              function result2(object, path, defaultValue) {
                 path = castPath(path, object);
                 var index = -1, length = path.length;
                 if (!length) {
@@ -4523,9 +4523,9 @@ export default require => {
                 }
                 return baseRandom(lower, upper);
               }
-              var camelCase = createCompounder(function (result2, word, index) {
+              var camelCase = createCompounder(function (result3, word, index) {
                 word = word.toLowerCase();
-                return result2 + (index ? capitalize(word) : word);
+                return result3 + (index ? capitalize(word) : word);
               });
               function capitalize(string) {
                 return upperFirst(toString(string).toLowerCase());
@@ -4538,7 +4538,7 @@ export default require => {
                 string = toString(string);
                 target = baseToString(target);
                 var length = string.length;
-                position = position === undefined2 ? length : baseClamp(toInteger(position), 0, length);
+                position = position === undefined2 ? length : baseClamp(toInteger3(position), 0, length);
                 var end = position;
                 position -= target.length;
                 return position >= 0 && string.slice(position, end) == target;
@@ -4551,16 +4551,16 @@ export default require => {
                 string = toString(string);
                 return string && reHasRegExpChar.test(string) ? string.replace(reRegExpChar, "\\$&") : string;
               }
-              var kebabCase = createCompounder(function (result2, word, index) {
-                return result2 + (index ? "-" : "") + word.toLowerCase();
+              var kebabCase = createCompounder(function (result3, word, index) {
+                return result3 + (index ? "-" : "") + word.toLowerCase();
               });
-              var lowerCase = createCompounder(function (result2, word, index) {
-                return result2 + (index ? " " : "") + word.toLowerCase();
+              var lowerCase = createCompounder(function (result3, word, index) {
+                return result3 + (index ? " " : "") + word.toLowerCase();
               });
               var lowerFirst = createCaseFirst("toLowerCase");
               function pad(string, length, chars) {
                 string = toString(string);
-                length = toInteger(length);
+                length = toInteger3(length);
                 var strLength = length ? stringSize(string) : 0;
                 if (!length || strLength >= length) {
                   return string;
@@ -4570,13 +4570,13 @@ export default require => {
               }
               function padEnd(string, length, chars) {
                 string = toString(string);
-                length = toInteger(length);
+                length = toInteger3(length);
                 var strLength = length ? stringSize(string) : 0;
                 return length && strLength < length ? string + createPadding(length - strLength, chars) : string;
               }
               function padStart(string, length, chars) {
                 string = toString(string);
-                length = toInteger(length);
+                length = toInteger3(length);
                 var strLength = length ? stringSize(string) : 0;
                 return length && strLength < length ? createPadding(length - strLength, chars) + string : string;
               }
@@ -4592,7 +4592,7 @@ export default require => {
                 if (guard ? isIterateeCall(string, n, guard) : n === undefined2) {
                   n = 1;
                 } else {
-                  n = toInteger(n);
+                  n = toInteger3(n);
                 }
                 return baseRepeat(toString(string), n);
               }
@@ -4600,8 +4600,8 @@ export default require => {
                 var args = arguments, string = toString(args[0]);
                 return args.length < 3 ? string : string.replace(args[1], args[2]);
               }
-              var snakeCase = createCompounder(function (result2, word, index) {
-                return result2 + (index ? "_" : "") + word.toLowerCase();
+              var snakeCase = createCompounder(function (result3, word, index) {
+                return result3 + (index ? "_" : "") + word.toLowerCase();
               });
               function split(string, separator, limit) {
                 if (limit && typeof limit != "number" && isIterateeCall(string, separator, limit)) {
@@ -4620,12 +4620,12 @@ export default require => {
                 }
                 return string.split(separator, limit);
               }
-              var startCase = createCompounder(function (result2, word, index) {
-                return result2 + (index ? " " : "") + upperFirst(word);
+              var startCase = createCompounder(function (result3, word, index) {
+                return result3 + (index ? " " : "") + upperFirst(word);
               });
               function startsWith(string, target, position) {
                 string = toString(string);
-                position = position == null ? 0 : baseClamp(toInteger(position), 0, string.length);
+                position = position == null ? 0 : baseClamp(toInteger3(position), 0, string.length);
                 target = baseToString(target);
                 return string.slice(position, position + target.length) == target;
               }
@@ -4666,14 +4666,14 @@ export default require => {
                 }
                 source = (isEvaluating ? source.replace(reEmptyStringLeading, "") : source).replace(reEmptyStringMiddle, "$1").replace(reEmptyStringTrailing, "$1;");
                 source = "function(" + (variable || "obj") + ") {\n" + (variable ? "" : "obj || (obj = {});\n") + "var __t, __p = ''" + (isEscaping ? ", __e = _.escape" : "") + (isEvaluating ? ", __j = Array.prototype.join;\nfunction print() { __p += __j.call(arguments, '') }\n" : ";\n") + source + "return __p\n}";
-                var result2 = attempt(function () {
+                var result3 = attempt(function () {
                   return Function2(importsKeys, sourceURL + "return " + source).apply(undefined2, importsValues);
                 });
-                result2.source = source;
-                if (isError(result2)) {
-                  throw result2;
+                result3.source = source;
+                if (isError(result3)) {
+                  throw result3;
                 }
-                return result2;
+                return result3;
               }
               function toLower(value) {
                 return toString(value).toLowerCase();
@@ -4718,7 +4718,7 @@ export default require => {
                 var length = DEFAULT_TRUNC_LENGTH, omission = DEFAULT_TRUNC_OMISSION;
                 if (isObject(options)) {
                   var separator = ("separator" in options) ? options.separator : separator;
-                  length = ("length" in options) ? toInteger(options.length) : length;
+                  length = ("length" in options) ? toInteger3(options.length) : length;
                   omission = ("omission" in options) ? baseToString(options.omission) : omission;
                 }
                 string = toString(string);
@@ -4734,16 +4734,16 @@ export default require => {
                 if (end < 1) {
                   return omission;
                 }
-                var result2 = strSymbols ? castSlice(strSymbols, 0, end).join("") : string.slice(0, end);
+                var result3 = strSymbols ? castSlice(strSymbols, 0, end).join("") : string.slice(0, end);
                 if (separator === undefined2) {
-                  return result2 + omission;
+                  return result3 + omission;
                 }
                 if (strSymbols) {
-                  end += result2.length - end;
+                  end += result3.length - end;
                 }
                 if (isRegExp(separator)) {
                   if (string.slice(end).search(separator)) {
-                    var match, substring = result2;
+                    var match, substring = result3;
                     if (!separator.global) {
                       separator = RegExp2(separator.source, toString(reFlags.exec(separator)) + "g");
                     }
@@ -4751,22 +4751,22 @@ export default require => {
                     while (match = separator.exec(substring)) {
                       var newEnd = match.index;
                     }
-                    result2 = result2.slice(0, newEnd === undefined2 ? end : newEnd);
+                    result3 = result3.slice(0, newEnd === undefined2 ? end : newEnd);
                   }
                 } else if (string.indexOf(baseToString(separator), end) != end) {
-                  var index = result2.lastIndexOf(separator);
+                  var index = result3.lastIndexOf(separator);
                   if (index > -1) {
-                    result2 = result2.slice(0, index);
+                    result3 = result3.slice(0, index);
                   }
                 }
-                return result2 + omission;
+                return result3 + omission;
               }
               function unescape(string) {
                 string = toString(string);
                 return string && reHasEscapedHtml.test(string) ? string.replace(reEscapedHtml, unescapeHtmlChar) : string;
               }
-              var upperCase = createCompounder(function (result2, word, index) {
-                return result2 + (index ? " " : "") + word.toUpperCase();
+              var upperCase = createCompounder(function (result3, word, index) {
+                return result3 + (index ? " " : "") + word.toUpperCase();
               });
               var upperFirst = createCaseFirst("toUpperCase");
               function words(string, pattern, guard) {
@@ -4860,14 +4860,14 @@ export default require => {
                     object.prototype[methodName] = function () {
                       var chainAll = this.__chain__;
                       if (chain2 || chainAll) {
-                        var result2 = object(this.__wrapped__), actions = result2.__actions__ = copyArray(this.__actions__);
+                        var result3 = object(this.__wrapped__), actions = result3.__actions__ = copyArray(this.__actions__);
                         actions.push({
                           "func": func,
                           "args": arguments,
                           "thisArg": object
                         });
-                        result2.__chain__ = chainAll;
-                        return result2;
+                        result3.__chain__ = chainAll;
+                        return result3;
                       }
                       return func.apply(object, arrayPush([this.value()], arguments));
                     };
@@ -4883,7 +4883,7 @@ export default require => {
               }
               function noop() {}
               function nthArg(n) {
-                n = toInteger(n);
+                n = toInteger3(n);
                 return baseRest(function (args) {
                   return baseNth(args, n);
                 });
@@ -4917,18 +4917,18 @@ export default require => {
                 return true;
               }
               function times(n, iteratee2) {
-                n = toInteger(n);
+                n = toInteger3(n);
                 if (n < 1 || n > MAX_SAFE_INTEGER) {
                   return [];
                 }
                 var index = MAX_ARRAY_LENGTH, length = nativeMin(n, MAX_ARRAY_LENGTH);
                 iteratee2 = getIteratee(iteratee2);
                 n -= MAX_ARRAY_LENGTH;
-                var result2 = baseTimes(length, iteratee2);
+                var result3 = baseTimes(length, iteratee2);
                 while (++index < n) {
                   iteratee2(index);
                 }
-                return result2;
+                return result3;
               }
               function toPath(value) {
                 if (isArray(value)) {
@@ -4948,7 +4948,7 @@ export default require => {
                 return dividend / divisor;
               }, 1);
               var floor = createRound("floor");
-              function max(array) {
+              function max2(array) {
                 return array && array.length ? baseExtremum(array, identity, baseGt) : undefined2;
               }
               function maxBy(array, iteratee2) {
@@ -5221,7 +5221,7 @@ export default require => {
               lodash.lowerFirst = lowerFirst;
               lodash.lt = lt;
               lodash.lte = lte;
-              lodash.max = max;
+              lodash.max = max2;
               lodash.maxBy = maxBy;
               lodash.mean = mean;
               lodash.meanBy = meanBy;
@@ -5246,7 +5246,7 @@ export default require => {
               lodash.reduceRight = reduceRight;
               lodash.repeat = repeat;
               lodash.replace = replace;
-              lodash.result = result;
+              lodash.result = result2;
               lodash.round = round;
               lodash.runInContext = runInContext2;
               lodash.sample = sample;
@@ -5267,7 +5267,7 @@ export default require => {
               lodash.template = template;
               lodash.times = times;
               lodash.toFinite = toFinite;
-              lodash.toInteger = toInteger;
+              lodash.toInteger = toInteger3;
               lodash.toLength = toLength;
               lodash.toLower = toLower;
               lodash.toNumber = toNumber;
@@ -5302,17 +5302,17 @@ export default require => {
               });
               arrayEach(["drop", "take"], function (methodName, index) {
                 LazyWrapper.prototype[methodName] = function (n) {
-                  n = n === undefined2 ? 1 : nativeMax(toInteger(n), 0);
-                  var result2 = this.__filtered__ && !index ? new LazyWrapper(this) : this.clone();
-                  if (result2.__filtered__) {
-                    result2.__takeCount__ = nativeMin(n, result2.__takeCount__);
+                  n = n === undefined2 ? 1 : nativeMax(toInteger3(n), 0);
+                  var result3 = this.__filtered__ && !index ? new LazyWrapper(this) : this.clone();
+                  if (result3.__filtered__) {
+                    result3.__takeCount__ = nativeMin(n, result3.__takeCount__);
                   } else {
-                    result2.__views__.push({
+                    result3.__views__.push({
                       "size": nativeMin(n, MAX_ARRAY_LENGTH),
-                      "type": methodName + (result2.__dir__ < 0 ? "Right" : "")
+                      "type": methodName + (result3.__dir__ < 0 ? "Right" : "")
                     });
                   }
-                  return result2;
+                  return result3;
                 };
                 LazyWrapper.prototype[methodName + "Right"] = function (n) {
                   return this.reverse()[methodName](n).reverse();
@@ -5321,13 +5321,13 @@ export default require => {
               arrayEach(["filter", "map", "takeWhile"], function (methodName, index) {
                 var type = index + 1, isFilter = type == LAZY_FILTER_FLAG || type == LAZY_WHILE_FLAG;
                 LazyWrapper.prototype[methodName] = function (iteratee2) {
-                  var result2 = this.clone();
-                  result2.__iteratees__.push({
+                  var result3 = this.clone();
+                  result3.__iteratees__.push({
                     "iteratee": getIteratee(iteratee2, 3),
                     "type": type
                   });
-                  result2.__filtered__ = result2.__filtered__ || isFilter;
-                  return result2;
+                  result3.__filtered__ = result3.__filtered__ || isFilter;
+                  return result3;
                 };
               });
               arrayEach(["head", "last"], function (methodName, index) {
@@ -5363,21 +5363,21 @@ export default require => {
                 return this.filter(negate(getIteratee(predicate)));
               };
               LazyWrapper.prototype.slice = function (start, end) {
-                start = toInteger(start);
-                var result2 = this;
-                if (result2.__filtered__ && (start > 0 || end < 0)) {
-                  return new LazyWrapper(result2);
+                start = toInteger3(start);
+                var result3 = this;
+                if (result3.__filtered__ && (start > 0 || end < 0)) {
+                  return new LazyWrapper(result3);
                 }
                 if (start < 0) {
-                  result2 = result2.takeRight(-start);
+                  result3 = result3.takeRight(-start);
                 } else if (start) {
-                  result2 = result2.drop(start);
+                  result3 = result3.drop(start);
                 }
                 if (end !== undefined2) {
-                  end = toInteger(end);
-                  result2 = end < 0 ? result2.dropRight(-end) : result2.take(end - start);
+                  end = toInteger3(end);
+                  result3 = end < 0 ? result3.dropRight(-end) : result3.take(end - start);
                 }
-                return result2;
+                return result3;
               };
               LazyWrapper.prototype.takeRightWhile = function (predicate) {
                 return this.reverse().takeWhile(predicate).reverse();
@@ -5393,8 +5393,8 @@ export default require => {
                 lodash.prototype[methodName] = function () {
                   var value = this.__wrapped__, args = isTaker ? [1] : arguments, isLazy = value instanceof LazyWrapper, iteratee2 = args[0], useLazy = isLazy || isArray(value);
                   var interceptor = function (value2) {
-                    var result3 = lodashFunc.apply(lodash, arrayPush([value2], args));
-                    return isTaker && chainAll ? result3[0] : result3;
+                    var result4 = lodashFunc.apply(lodash, arrayPush([value2], args));
+                    return isTaker && chainAll ? result4[0] : result4;
                   };
                   if (useLazy && checkIteratee && typeof iteratee2 == "function" && iteratee2.length != 1) {
                     isLazy = useLazy = false;
@@ -5402,19 +5402,19 @@ export default require => {
                   var chainAll = this.__chain__, isHybrid = !!this.__actions__.length, isUnwrapped = retUnwrapped && !chainAll, onlyLazy = isLazy && !isHybrid;
                   if (!retUnwrapped && useLazy) {
                     value = onlyLazy ? value : new LazyWrapper(this);
-                    var result2 = func.apply(value, args);
-                    result2.__actions__.push({
+                    var result3 = func.apply(value, args);
+                    result3.__actions__.push({
                       "func": thru,
                       "args": [interceptor],
                       "thisArg": undefined2
                     });
-                    return new LodashWrapper(result2, chainAll);
+                    return new LodashWrapper(result3, chainAll);
                   }
                   if (isUnwrapped && onlyLazy) {
                     return func.apply(this, args);
                   }
-                  result2 = this.thru(interceptor);
-                  return isUnwrapped ? isTaker ? result2.value()[0] : result2.value() : result2;
+                  result3 = this.thru(interceptor);
+                  return isUnwrapped ? isTaker ? result3.value()[0] : result3.value() : result3;
                 };
               });
               arrayEach(["pop", "push", "shift", "sort", "splice", "unshift"], function (methodName) {
@@ -5480,697 +5480,11 @@ export default require => {
       });
       var src_exports = {};
       __export2(src_exports, {
-        compile: () => compile22,
-        compileParseTree: () => compileParseTree,
-        getStringParseTree: () => getStringParseTree,
+        compile: () => compile2,
+        getIR: () => getIR2,
         parse: () => parse
       });
       module.exports = __toCommonJS2(src_exports);
-      var Reflect2;
-      (function (Reflect3) {
-        (function (factory) {
-          var root = typeof global === "object" ? global : typeof self === "object" ? self : typeof this === "object" ? this : Function("return this;")();
-          var exporter = makeExporter(Reflect3);
-          if (typeof root.Reflect === "undefined") {
-            root.Reflect = Reflect3;
-          } else {
-            exporter = makeExporter(root.Reflect, exporter);
-          }
-          factory(exporter);
-          function makeExporter(target, previous) {
-            return function (key, value) {
-              if (typeof target[key] !== "function") {
-                Object.defineProperty(target, key, {
-                  configurable: true,
-                  writable: true,
-                  value
-                });
-              }
-              if (previous) previous(key, value);
-            };
-          }
-        })(function (exporter) {
-          var hasOwn = Object.prototype.hasOwnProperty;
-          var supportsSymbol = typeof Symbol === "function";
-          var toPrimitiveSymbol = supportsSymbol && typeof Symbol.toPrimitive !== "undefined" ? Symbol.toPrimitive : "@@toPrimitive";
-          var iteratorSymbol = supportsSymbol && typeof Symbol.iterator !== "undefined" ? Symbol.iterator : "@@iterator";
-          var supportsCreate = typeof Object.create === "function";
-          var supportsProto = ({
-            __proto__: []
-          }) instanceof Array;
-          var downLevel = !supportsCreate && !supportsProto;
-          var HashMap = {
-            create: supportsCreate ? function () {
-              return MakeDictionary(Object.create(null));
-            } : supportsProto ? function () {
-              return MakeDictionary({
-                __proto__: null
-              });
-            } : function () {
-              return MakeDictionary({});
-            },
-            has: downLevel ? function (map, key) {
-              return hasOwn.call(map, key);
-            } : function (map, key) {
-              return (key in map);
-            },
-            get: downLevel ? function (map, key) {
-              return hasOwn.call(map, key) ? map[key] : void 0;
-            } : function (map, key) {
-              return map[key];
-            }
-          };
-          var functionPrototype = Object.getPrototypeOf(Function);
-          var usePolyfill = typeof define_process_default === "object" && define_process_default.env && define_process_default.env["REFLECT_METADATA_USE_MAP_POLYFILL"] === "true";
-          var _Map = !usePolyfill && typeof Map === "function" && typeof Map.prototype.entries === "function" ? Map : CreateMapPolyfill();
-          var _Set = !usePolyfill && typeof Set === "function" && typeof Set.prototype.entries === "function" ? Set : CreateSetPolyfill();
-          var _WeakMap = !usePolyfill && typeof WeakMap === "function" ? WeakMap : CreateWeakMapPolyfill();
-          var Metadata = new _WeakMap();
-          function decorate(decorators, target, propertyKey, attributes) {
-            if (!IsUndefined(propertyKey)) {
-              if (!IsArray(decorators)) throw new TypeError();
-              if (!IsObject(target)) throw new TypeError();
-              if (!IsObject(attributes) && !IsUndefined(attributes) && !IsNull(attributes)) throw new TypeError();
-              if (IsNull(attributes)) attributes = void 0;
-              propertyKey = ToPropertyKey(propertyKey);
-              return DecorateProperty(decorators, target, propertyKey, attributes);
-            } else {
-              if (!IsArray(decorators)) throw new TypeError();
-              if (!IsConstructor(target)) throw new TypeError();
-              return DecorateConstructor(decorators, target);
-            }
-          }
-          exporter("decorate", decorate);
-          function metadata(metadataKey, metadataValue) {
-            function decorator(target, propertyKey) {
-              if (!IsObject(target)) throw new TypeError();
-              if (!IsUndefined(propertyKey) && !IsPropertyKey(propertyKey)) throw new TypeError();
-              OrdinaryDefineOwnMetadata(metadataKey, metadataValue, target, propertyKey);
-            }
-            return decorator;
-          }
-          exporter("metadata", metadata);
-          function defineMetadata(metadataKey, metadataValue, target, propertyKey) {
-            if (!IsObject(target)) throw new TypeError();
-            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
-            return OrdinaryDefineOwnMetadata(metadataKey, metadataValue, target, propertyKey);
-          }
-          exporter("defineMetadata", defineMetadata);
-          function hasMetadata(metadataKey, target, propertyKey) {
-            if (!IsObject(target)) throw new TypeError();
-            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
-            return OrdinaryHasMetadata(metadataKey, target, propertyKey);
-          }
-          exporter("hasMetadata", hasMetadata);
-          function hasOwnMetadata(metadataKey, target, propertyKey) {
-            if (!IsObject(target)) throw new TypeError();
-            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
-            return OrdinaryHasOwnMetadata(metadataKey, target, propertyKey);
-          }
-          exporter("hasOwnMetadata", hasOwnMetadata);
-          function getMetadata(metadataKey, target, propertyKey) {
-            if (!IsObject(target)) throw new TypeError();
-            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
-            return OrdinaryGetMetadata(metadataKey, target, propertyKey);
-          }
-          exporter("getMetadata", getMetadata);
-          function getOwnMetadata(metadataKey, target, propertyKey) {
-            if (!IsObject(target)) throw new TypeError();
-            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
-            return OrdinaryGetOwnMetadata(metadataKey, target, propertyKey);
-          }
-          exporter("getOwnMetadata", getOwnMetadata);
-          function getMetadataKeys(target, propertyKey) {
-            if (!IsObject(target)) throw new TypeError();
-            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
-            return OrdinaryMetadataKeys(target, propertyKey);
-          }
-          exporter("getMetadataKeys", getMetadataKeys);
-          function getOwnMetadataKeys(target, propertyKey) {
-            if (!IsObject(target)) throw new TypeError();
-            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
-            return OrdinaryOwnMetadataKeys(target, propertyKey);
-          }
-          exporter("getOwnMetadataKeys", getOwnMetadataKeys);
-          function deleteMetadata(metadataKey, target, propertyKey) {
-            if (!IsObject(target)) throw new TypeError();
-            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
-            var metadataMap = GetOrCreateMetadataMap(target, propertyKey, false);
-            if (IsUndefined(metadataMap)) return false;
-            if (!metadataMap.delete(metadataKey)) return false;
-            if (metadataMap.size > 0) return true;
-            var targetMetadata = Metadata.get(target);
-            targetMetadata.delete(propertyKey);
-            if (targetMetadata.size > 0) return true;
-            Metadata.delete(target);
-            return true;
-          }
-          exporter("deleteMetadata", deleteMetadata);
-          function DecorateConstructor(decorators, target) {
-            for (var i = decorators.length - 1; i >= 0; --i) {
-              var decorator = decorators[i];
-              var decorated = decorator(target);
-              if (!IsUndefined(decorated) && !IsNull(decorated)) {
-                if (!IsConstructor(decorated)) throw new TypeError();
-                target = decorated;
-              }
-            }
-            return target;
-          }
-          function DecorateProperty(decorators, target, propertyKey, descriptor) {
-            for (var i = decorators.length - 1; i >= 0; --i) {
-              var decorator = decorators[i];
-              var decorated = decorator(target, propertyKey, descriptor);
-              if (!IsUndefined(decorated) && !IsNull(decorated)) {
-                if (!IsObject(decorated)) throw new TypeError();
-                descriptor = decorated;
-              }
-            }
-            return descriptor;
-          }
-          function GetOrCreateMetadataMap(O, P, Create) {
-            var targetMetadata = Metadata.get(O);
-            if (IsUndefined(targetMetadata)) {
-              if (!Create) return void 0;
-              targetMetadata = new _Map();
-              Metadata.set(O, targetMetadata);
-            }
-            var metadataMap = targetMetadata.get(P);
-            if (IsUndefined(metadataMap)) {
-              if (!Create) return void 0;
-              metadataMap = new _Map();
-              targetMetadata.set(P, metadataMap);
-            }
-            return metadataMap;
-          }
-          function OrdinaryHasMetadata(MetadataKey, O, P) {
-            var hasOwn2 = OrdinaryHasOwnMetadata(MetadataKey, O, P);
-            if (hasOwn2) return true;
-            var parent = OrdinaryGetPrototypeOf(O);
-            if (!IsNull(parent)) return OrdinaryHasMetadata(MetadataKey, parent, P);
-            return false;
-          }
-          function OrdinaryHasOwnMetadata(MetadataKey, O, P) {
-            var metadataMap = GetOrCreateMetadataMap(O, P, false);
-            if (IsUndefined(metadataMap)) return false;
-            return ToBoolean(metadataMap.has(MetadataKey));
-          }
-          function OrdinaryGetMetadata(MetadataKey, O, P) {
-            var hasOwn2 = OrdinaryHasOwnMetadata(MetadataKey, O, P);
-            if (hasOwn2) return OrdinaryGetOwnMetadata(MetadataKey, O, P);
-            var parent = OrdinaryGetPrototypeOf(O);
-            if (!IsNull(parent)) return OrdinaryGetMetadata(MetadataKey, parent, P);
-            return void 0;
-          }
-          function OrdinaryGetOwnMetadata(MetadataKey, O, P) {
-            var metadataMap = GetOrCreateMetadataMap(O, P, false);
-            if (IsUndefined(metadataMap)) return void 0;
-            return metadataMap.get(MetadataKey);
-          }
-          function OrdinaryDefineOwnMetadata(MetadataKey, MetadataValue, O, P) {
-            var metadataMap = GetOrCreateMetadataMap(O, P, true);
-            metadataMap.set(MetadataKey, MetadataValue);
-          }
-          function OrdinaryMetadataKeys(O, P) {
-            var ownKeys = OrdinaryOwnMetadataKeys(O, P);
-            var parent = OrdinaryGetPrototypeOf(O);
-            if (parent === null) return ownKeys;
-            var parentKeys = OrdinaryMetadataKeys(parent, P);
-            if (parentKeys.length <= 0) return ownKeys;
-            if (ownKeys.length <= 0) return parentKeys;
-            var set = new _Set();
-            var keys = [];
-            for (var _i = 0, ownKeys_1 = ownKeys; _i < ownKeys_1.length; _i++) {
-              var key = ownKeys_1[_i];
-              var hasKey = set.has(key);
-              if (!hasKey) {
-                set.add(key);
-                keys.push(key);
-              }
-            }
-            for (var _a = 0, parentKeys_1 = parentKeys; _a < parentKeys_1.length; _a++) {
-              var key = parentKeys_1[_a];
-              var hasKey = set.has(key);
-              if (!hasKey) {
-                set.add(key);
-                keys.push(key);
-              }
-            }
-            return keys;
-          }
-          function OrdinaryOwnMetadataKeys(O, P) {
-            var keys = [];
-            var metadataMap = GetOrCreateMetadataMap(O, P, false);
-            if (IsUndefined(metadataMap)) return keys;
-            var keysObj = metadataMap.keys();
-            var iterator = GetIterator(keysObj);
-            var k = 0;
-            while (true) {
-              var next = IteratorStep(iterator);
-              if (!next) {
-                keys.length = k;
-                return keys;
-              }
-              var nextValue = IteratorValue(next);
-              try {
-                keys[k] = nextValue;
-              } catch (e) {
-                try {
-                  IteratorClose(iterator);
-                } finally {
-                  throw e;
-                }
-              }
-              k++;
-            }
-          }
-          function Type(x) {
-            if (x === null) return 1;
-            switch (typeof x) {
-              case "undefined":
-                return 0;
-              case "boolean":
-                return 2;
-              case "string":
-                return 3;
-              case "symbol":
-                return 4;
-              case "number":
-                return 5;
-              case "object":
-                return x === null ? 1 : 6;
-              default:
-                return 6;
-            }
-          }
-          function IsUndefined(x) {
-            return x === void 0;
-          }
-          function IsNull(x) {
-            return x === null;
-          }
-          function IsSymbol(x) {
-            return typeof x === "symbol";
-          }
-          function IsObject(x) {
-            return typeof x === "object" ? x !== null : typeof x === "function";
-          }
-          function ToPrimitive(input, PreferredType) {
-            switch (Type(input)) {
-              case 0:
-                return input;
-              case 1:
-                return input;
-              case 2:
-                return input;
-              case 3:
-                return input;
-              case 4:
-                return input;
-              case 5:
-                return input;
-            }
-            var hint = PreferredType === 3 ? "string" : PreferredType === 5 ? "number" : "default";
-            var exoticToPrim = GetMethod(input, toPrimitiveSymbol);
-            if (exoticToPrim !== void 0) {
-              var result = exoticToPrim.call(input, hint);
-              if (IsObject(result)) throw new TypeError();
-              return result;
-            }
-            return OrdinaryToPrimitive(input, hint === "default" ? "number" : hint);
-          }
-          function OrdinaryToPrimitive(O, hint) {
-            if (hint === "string") {
-              var toString_1 = O.toString;
-              if (IsCallable(toString_1)) {
-                var result = toString_1.call(O);
-                if (!IsObject(result)) return result;
-              }
-              var valueOf = O.valueOf;
-              if (IsCallable(valueOf)) {
-                var result = valueOf.call(O);
-                if (!IsObject(result)) return result;
-              }
-            } else {
-              var valueOf = O.valueOf;
-              if (IsCallable(valueOf)) {
-                var result = valueOf.call(O);
-                if (!IsObject(result)) return result;
-              }
-              var toString_2 = O.toString;
-              if (IsCallable(toString_2)) {
-                var result = toString_2.call(O);
-                if (!IsObject(result)) return result;
-              }
-            }
-            throw new TypeError();
-          }
-          function ToBoolean(argument) {
-            return !!argument;
-          }
-          function ToString(argument) {
-            return "" + argument;
-          }
-          function ToPropertyKey(argument) {
-            var key = ToPrimitive(argument, 3);
-            if (IsSymbol(key)) return key;
-            return ToString(key);
-          }
-          function IsArray(argument) {
-            return Array.isArray ? Array.isArray(argument) : argument instanceof Object ? argument instanceof Array : Object.prototype.toString.call(argument) === "[object Array]";
-          }
-          function IsCallable(argument) {
-            return typeof argument === "function";
-          }
-          function IsConstructor(argument) {
-            return typeof argument === "function";
-          }
-          function IsPropertyKey(argument) {
-            switch (Type(argument)) {
-              case 3:
-                return true;
-              case 4:
-                return true;
-              default:
-                return false;
-            }
-          }
-          function GetMethod(V, P) {
-            var func = V[P];
-            if (func === void 0 || func === null) return void 0;
-            if (!IsCallable(func)) throw new TypeError();
-            return func;
-          }
-          function GetIterator(obj) {
-            var method = GetMethod(obj, iteratorSymbol);
-            if (!IsCallable(method)) throw new TypeError();
-            var iterator = method.call(obj);
-            if (!IsObject(iterator)) throw new TypeError();
-            return iterator;
-          }
-          function IteratorValue(iterResult) {
-            return iterResult.value;
-          }
-          function IteratorStep(iterator) {
-            var result = iterator.next();
-            return result.done ? false : result;
-          }
-          function IteratorClose(iterator) {
-            var f = iterator["return"];
-            if (f) f.call(iterator);
-          }
-          function OrdinaryGetPrototypeOf(O) {
-            var proto = Object.getPrototypeOf(O);
-            if (typeof O !== "function" || O === functionPrototype) return proto;
-            if (proto !== functionPrototype) return proto;
-            var prototype = O.prototype;
-            var prototypeProto = prototype && Object.getPrototypeOf(prototype);
-            if (prototypeProto == null || prototypeProto === Object.prototype) return proto;
-            var constructor = prototypeProto.constructor;
-            if (typeof constructor !== "function") return proto;
-            if (constructor === O) return proto;
-            return constructor;
-          }
-          function CreateMapPolyfill() {
-            var cacheSentinel = {};
-            var arraySentinel = [];
-            var MapIterator = (function () {
-              function MapIterator2(keys, values, selector) {
-                this._index = 0;
-                this._keys = keys;
-                this._values = values;
-                this._selector = selector;
-              }
-              MapIterator2.prototype["@@iterator"] = function () {
-                return this;
-              };
-              MapIterator2.prototype[iteratorSymbol] = function () {
-                return this;
-              };
-              MapIterator2.prototype.next = function () {
-                var index = this._index;
-                if (index >= 0 && index < this._keys.length) {
-                  var result = this._selector(this._keys[index], this._values[index]);
-                  if (index + 1 >= this._keys.length) {
-                    this._index = -1;
-                    this._keys = arraySentinel;
-                    this._values = arraySentinel;
-                  } else {
-                    this._index++;
-                  }
-                  return {
-                    value: result,
-                    done: false
-                  };
-                }
-                return {
-                  value: void 0,
-                  done: true
-                };
-              };
-              MapIterator2.prototype.throw = function (error) {
-                if (this._index >= 0) {
-                  this._index = -1;
-                  this._keys = arraySentinel;
-                  this._values = arraySentinel;
-                }
-                throw error;
-              };
-              MapIterator2.prototype.return = function (value) {
-                if (this._index >= 0) {
-                  this._index = -1;
-                  this._keys = arraySentinel;
-                  this._values = arraySentinel;
-                }
-                return {
-                  value,
-                  done: true
-                };
-              };
-              return MapIterator2;
-            })();
-            return (function () {
-              function Map2() {
-                this._keys = [];
-                this._values = [];
-                this._cacheKey = cacheSentinel;
-                this._cacheIndex = -2;
-              }
-              Object.defineProperty(Map2.prototype, "size", {
-                get: function () {
-                  return this._keys.length;
-                },
-                enumerable: true,
-                configurable: true
-              });
-              Map2.prototype.has = function (key) {
-                return this._find(key, false) >= 0;
-              };
-              Map2.prototype.get = function (key) {
-                var index = this._find(key, false);
-                return index >= 0 ? this._values[index] : void 0;
-              };
-              Map2.prototype.set = function (key, value) {
-                var index = this._find(key, true);
-                this._values[index] = value;
-                return this;
-              };
-              Map2.prototype.delete = function (key) {
-                var index = this._find(key, false);
-                if (index >= 0) {
-                  var size = this._keys.length;
-                  for (var i = index + 1; i < size; i++) {
-                    this._keys[i - 1] = this._keys[i];
-                    this._values[i - 1] = this._values[i];
-                  }
-                  this._keys.length--;
-                  this._values.length--;
-                  if (key === this._cacheKey) {
-                    this._cacheKey = cacheSentinel;
-                    this._cacheIndex = -2;
-                  }
-                  return true;
-                }
-                return false;
-              };
-              Map2.prototype.clear = function () {
-                this._keys.length = 0;
-                this._values.length = 0;
-                this._cacheKey = cacheSentinel;
-                this._cacheIndex = -2;
-              };
-              Map2.prototype.keys = function () {
-                return new MapIterator(this._keys, this._values, getKey);
-              };
-              Map2.prototype.values = function () {
-                return new MapIterator(this._keys, this._values, getValue);
-              };
-              Map2.prototype.entries = function () {
-                return new MapIterator(this._keys, this._values, getEntry);
-              };
-              Map2.prototype["@@iterator"] = function () {
-                return this.entries();
-              };
-              Map2.prototype[iteratorSymbol] = function () {
-                return this.entries();
-              };
-              Map2.prototype._find = function (key, insert) {
-                if (this._cacheKey !== key) {
-                  this._cacheIndex = this._keys.indexOf(this._cacheKey = key);
-                }
-                if (this._cacheIndex < 0 && insert) {
-                  this._cacheIndex = this._keys.length;
-                  this._keys.push(key);
-                  this._values.push(void 0);
-                }
-                return this._cacheIndex;
-              };
-              return Map2;
-            })();
-            function getKey(key, _) {
-              return key;
-            }
-            function getValue(_, value) {
-              return value;
-            }
-            function getEntry(key, value) {
-              return [key, value];
-            }
-          }
-          function CreateSetPolyfill() {
-            return (function () {
-              function Set2() {
-                this._map = new _Map();
-              }
-              Object.defineProperty(Set2.prototype, "size", {
-                get: function () {
-                  return this._map.size;
-                },
-                enumerable: true,
-                configurable: true
-              });
-              Set2.prototype.has = function (value) {
-                return this._map.has(value);
-              };
-              Set2.prototype.add = function (value) {
-                return (this._map.set(value, value), this);
-              };
-              Set2.prototype.delete = function (value) {
-                return this._map.delete(value);
-              };
-              Set2.prototype.clear = function () {
-                this._map.clear();
-              };
-              Set2.prototype.keys = function () {
-                return this._map.keys();
-              };
-              Set2.prototype.values = function () {
-                return this._map.values();
-              };
-              Set2.prototype.entries = function () {
-                return this._map.entries();
-              };
-              Set2.prototype["@@iterator"] = function () {
-                return this.keys();
-              };
-              Set2.prototype[iteratorSymbol] = function () {
-                return this.keys();
-              };
-              return Set2;
-            })();
-          }
-          function CreateWeakMapPolyfill() {
-            var UUID_SIZE = 16;
-            var keys = HashMap.create();
-            var rootKey = CreateUniqueKey();
-            return (function () {
-              function WeakMap2() {
-                this._key = CreateUniqueKey();
-              }
-              WeakMap2.prototype.has = function (target) {
-                var table = GetOrCreateWeakMapTable(target, false);
-                return table !== void 0 ? HashMap.has(table, this._key) : false;
-              };
-              WeakMap2.prototype.get = function (target) {
-                var table = GetOrCreateWeakMapTable(target, false);
-                return table !== void 0 ? HashMap.get(table, this._key) : void 0;
-              };
-              WeakMap2.prototype.set = function (target, value) {
-                var table = GetOrCreateWeakMapTable(target, true);
-                table[this._key] = value;
-                return this;
-              };
-              WeakMap2.prototype.delete = function (target) {
-                var table = GetOrCreateWeakMapTable(target, false);
-                return table !== void 0 ? delete table[this._key] : false;
-              };
-              WeakMap2.prototype.clear = function () {
-                this._key = CreateUniqueKey();
-              };
-              return WeakMap2;
-            })();
-            function CreateUniqueKey() {
-              var key;
-              do key = "@@WeakMap@@" + CreateUUID(); while (HashMap.has(keys, key));
-              keys[key] = true;
-              return key;
-            }
-            function GetOrCreateWeakMapTable(target, create) {
-              if (!hasOwn.call(target, rootKey)) {
-                if (!create) return void 0;
-                Object.defineProperty(target, rootKey, {
-                  value: HashMap.create()
-                });
-              }
-              return target[rootKey];
-            }
-            function FillRandomBytes(buffer, size) {
-              for (var i = 0; i < size; ++i) buffer[i] = Math.random() * 255 | 0;
-              return buffer;
-            }
-            function GenRandomBytes(size) {
-              if (typeof Uint8Array === "function") {
-                if (typeof crypto !== "undefined") return crypto.getRandomValues(new Uint8Array(size));
-                if (typeof msCrypto !== "undefined") return msCrypto.getRandomValues(new Uint8Array(size));
-                return FillRandomBytes(new Uint8Array(size), size);
-              }
-              return FillRandomBytes(new Array(size), size);
-            }
-            function CreateUUID() {
-              var data = GenRandomBytes(UUID_SIZE);
-              data[6] = data[6] & 79 | 64;
-              data[8] = data[8] & 191 | 128;
-              var result = "";
-              for (var offset = 0; offset < UUID_SIZE; ++offset) {
-                var byte = data[offset];
-                if (offset === 4 || offset === 6 || offset === 8) result += "-";
-                if (byte < 16) result += "0";
-                result += byte.toString(16).toLowerCase();
-              }
-              return result;
-            }
-          }
-          function MakeDictionary(obj) {
-            obj.__ = void 0;
-            delete obj.__;
-            return obj;
-          }
-        });
-      })(Reflect2 || (Reflect2 = {}));
-      var Tree = class extends Array {};
-      (Tree2 => {
-        function treeMap(tree, func) {
-          return tree.map(node => node instanceof Array ? treeMap(node, func) : func(node));
-        }
-        Tree2.treeMap = treeMap;
-      })(Tree || (Tree = {}));
-      var ParseTree = class extends Tree {};
-      (ParseTree2 => {
-        function getStringArrayRepr(tree) {
-          return Tree.treeMap(tree, token => token.lexeme);
-        }
-        ParseTree2.getStringArrayRepr = getStringArrayRepr;
-      })(ParseTree || (ParseTree = {}));
       var ValueType = (ValueType2 => {
         ValueType2[ValueType2["I32"] = 0] = "I32";
         ValueType2[ValueType2["I64"] = 1] = "I64";
@@ -6853,6 +6167,9 @@ export default require => {
         isOpcodeToken() {
           return isTokenTypeOpcode(this.type);
         }
+        isTextToken() {
+          return this.type === "TEXT";
+        }
         isOpcodeType(opcodeType) {
           return isTokenTypeOpcode(this.type) && this.opcodeType === opcodeType;
         }
@@ -6862,6 +6179,12 @@ export default require => {
         isReference() {
           return isTokenTypeRefKind(this.type);
         }
+        isBlock() {
+          return isTokenTypeBlock(this.type);
+        }
+        isMemoryOpcodeToken() {
+          return this.isOpcodeToken() && (this.type === "STORE" || this.type === "LOAD" || this.type === "memory.grow" || this.type === "memory.size");
+        }
         getOpcodeParamLength() {
           assert(this.opcodeType !== null);
           return Opcode.getParamLength(this.opcodeType);
@@ -6870,7 +6193,7 @@ export default require => {
           assert(this.opcodeType !== null);
           return Opcode.getCode(this.opcodeType);
         }
-        extractText() {
+        extractName() {
           assert(this.type === "TEXT");
           return this.lexeme.slice(1, this.lexeme.length - 1);
         }
@@ -6899,6 +6222,10 @@ export default require => {
         if (token_type === null) return false;
         return token_type === "func" || token_type === "extern" || token_type === "exn";
       }
+      function isTokenTypeBlock(token_type) {
+        if (token_type === null) return false;
+        return token_type === "block" || token_type === "if" || token_type === "loop";
+      }
       var ExportType = (ExportType2 => {
         ExportType2[ExportType2["Func"] = 0] = "Func";
         ExportType2[ExportType2["Table"] = 1] = "Table";
@@ -6923,242 +6250,805 @@ export default require => {
         }
         ExportType2.getEncoding = getEncoding;
       })(ExportType || (ExportType = {}));
-      var SectionCode;
-      (SectionCode2 => {
-        SectionCode2.Type = 1;
-        SectionCode2.Import = 2;
-        SectionCode2.Function = 3;
-        SectionCode2.Table = 4;
-        SectionCode2.Memory = 5;
-        SectionCode2.Global = 6;
-        SectionCode2.Export = 7;
-        SectionCode2.Start = 8;
-        SectionCode2.Element = 9;
-        SectionCode2.Code = 10;
-        SectionCode2.Data = 11;
-      })(SectionCode || (SectionCode = {}));
-      var BinaryWriter = class {
-        constructor(module2) {
-          this.module = module2;
-        }
-        encode() {
-          return new Uint8Array([...[0, ("a").charCodeAt(0), ("s").charCodeAt(0), ("m").charCodeAt(0)], ...[1, 0, 0, 0], ...this.encodeTypeSection(), ...this.encodeImportSection(), ...this.encodeFunctionSection(), ...this.encodeTableSection(), ...this.encodeMemorySection(), ...this.encodeGlobalSection(), ...this.encodeExportSection(), ...this.encodeStartSection(), ...this.encodeElementSection(), ...this.encodeCodeSection(), ...this.encodeDataSection()]);
-        }
-        encodeTypeSection() {
-          const types = this.module.getGlobalTypes();
-          const numTypes = types.length;
-          let funcSignatureEncodings = [];
-          types.map(func => this.encodeFunctionSignature(func)).forEach(arr => {
-            funcSignatureEncodings = funcSignatureEncodings.concat(...arr);
-          });
-          const sectionSize = funcSignatureEncodings.length + 1;
-          return new Uint8Array([SectionCode.Type, sectionSize, numTypes, ...funcSignatureEncodings]);
-        }
-        encodeImportSection() {
-          return new Uint8Array([]);
-        }
-        encodeFunctionSection() {
-          const functions = this.module.getFunctionSignatures();
-          const num_fns = functions.length;
-          const section_size = num_fns + 1;
-          const function_indices = functions.map(funcSig => this.module.resolveGlobalTypeIndex(funcSig));
-          return new Uint8Array([SectionCode.Function, section_size, num_fns, ...function_indices]);
-        }
-        encodeTableSection() {
-          return new Uint8Array([]);
-        }
-        encodeMemorySection() {
-          return new Uint8Array([]);
-        }
-        encodeGlobalSection() {
-          return new Uint8Array([]);
-        }
-        encodeExportSection() {
-          const {exportExpressions: exportDeclarations} = this.module;
-          if (typeof exportDeclarations === "undefined") {
-            return new Uint8Array([]);
+      var import_lodash = __toESM2(require_lodash());
+      var Reflect2;
+      (function (Reflect3) {
+        (function (factory) {
+          var root = typeof global === "object" ? global : typeof self === "object" ? self : typeof this === "object" ? this : Function("return this;")();
+          var exporter = makeExporter(Reflect3);
+          if (typeof root.Reflect === "undefined") {
+            root.Reflect = Reflect3;
+          } else {
+            exporter = makeExporter(root.Reflect, exporter);
           }
-          const exportEncoding = this.encodeExportExpressions(exportDeclarations);
-          const sectionLength = exportEncoding.length;
-          if (sectionLength === 0) {
-            return new Uint8Array();
+          factory(exporter);
+          function makeExporter(target, previous) {
+            return function (key, value) {
+              if (typeof target[key] !== "function") {
+                Object.defineProperty(target, key, {
+                  configurable: true,
+                  writable: true,
+                  value
+                });
+              }
+              if (previous) previous(key, value);
+            };
           }
-          return new Uint8Array([SectionCode.Export, sectionLength, ...exportEncoding]);
-        }
-        encodeStartSection() {
-          return new Uint8Array([]);
-        }
-        encodeElementSection() {
-          return new Uint8Array([]);
-        }
-        encodeCodeSection() {
-          const fnExps = this.module.functions;
-          const fnBodyEncodings = [];
-          fnExps.forEach(body => {
-            fnBodyEncodings.push(...this.encodeFunctionBody(body));
-          });
-          const sectionSize = fnBodyEncodings.length + 1;
-          const fnNumber = fnExps.length;
-          return new Uint8Array([SectionCode.Code, sectionSize, fnNumber, ...fnBodyEncodings]);
-        }
-        encodeDataSection() {
-          return new Uint8Array([]);
-        }
-        encodeFunctionSignature(ir) {
-          const FUNCTION_SIG_PREFIX = 96;
-          const param_encoding = ir.paramTypes.map(type => ValueType.getValue(type));
-          const param_len = param_encoding.length;
-          const result_encoding = ir.returnTypes.map(type => ValueType.getValue(type));
-          const result_len = result_encoding.length;
-          return new Uint8Array([FUNCTION_SIG_PREFIX, param_len, ...param_encoding, result_len, ...result_encoding]);
-        }
-        encodeFunctionBody(fnExp) {
-          const fnBody = fnExp.functionBody;
-          const unfoldedBody = fnBody.body.unfold();
-          for (let i = 0; i < unfoldedBody.tokens.length; i++) {
-            const token = unfoldedBody.tokens[i];
-            if (token.type === "VAR") {
-              unfoldedBody.tokens[i] = this.convertVarToIndexToken(token, fnExp.resolveVariableIndex(token.lexeme));
+        })(function (exporter) {
+          var hasOwn = Object.prototype.hasOwnProperty;
+          var supportsSymbol = typeof Symbol === "function";
+          var toPrimitiveSymbol = supportsSymbol && typeof Symbol.toPrimitive !== "undefined" ? Symbol.toPrimitive : "@@toPrimitive";
+          var iteratorSymbol = supportsSymbol && typeof Symbol.iterator !== "undefined" ? Symbol.iterator : "@@iterator";
+          var supportsCreate = typeof Object.create === "function";
+          var supportsProto = ({
+            __proto__: []
+          }) instanceof Array;
+          var downLevel = !supportsCreate && !supportsProto;
+          var HashMap = {
+            create: supportsCreate ? function () {
+              return MakeDictionary(Object.create(null));
+            } : supportsProto ? function () {
+              return MakeDictionary({
+                __proto__: null
+              });
+            } : function () {
+              return MakeDictionary({});
+            },
+            has: downLevel ? function (map, key) {
+              return hasOwn.call(map, key);
+            } : function (map, key) {
+              return (key in map);
+            },
+            get: downLevel ? function (map, key) {
+              return hasOwn.call(map, key) ? map[key] : void 0;
+            } : function (map, key) {
+              return map[key];
             }
-          }
-          const encodedLocals = this.encodeFunctionBodyLocalTypeCount(fnExp);
-          const encodedBody = this.encodePureUnfoldedTokenExpression(unfoldedBody);
-          const sectionLength = encodedLocals.length + encodedBody.length + 1;
-          const FUNCTION_END = 11;
-          return new Uint8Array([sectionLength, ...encodedLocals, ...encodedBody, FUNCTION_END]);
-        }
-        encodeFunctionBodyLocalTypeCount(fnExp) {
-          const localTypes = fnExp.localTypes;
-          let uniqueConsecutiveType = null;
-          let uniqueConsecutiveTypeCount = 0;
-          let total_types = 0;
-          const encoding = [];
-          for (const type of localTypes) {
-            if (uniqueConsecutiveType === type) {
-              uniqueConsecutiveTypeCount++;
-              continue;
-            }
-            if (uniqueConsecutiveType !== null) {
-              encoding.push(uniqueConsecutiveTypeCount, ValueType.getValue(uniqueConsecutiveType));
-            }
-            uniqueConsecutiveType = type;
-            uniqueConsecutiveTypeCount = 1;
-            total_types++;
-          }
-          if (uniqueConsecutiveType !== null) {
-            encoding.push(uniqueConsecutiveTypeCount, ValueType.getValue(uniqueConsecutiveType));
-          }
-          return Uint8Array.from([total_types, ...encoding]);
-        }
-        encodePureUnfoldedTokenExpression(ir) {
-          const binary = [];
-          for (const [index, token] of ir.tokens.entries()) {
-            if (!this.isLiteralToken(token)) {
-              binary.push(...this.encodeNonLiteralToken(token));
+          };
+          var functionPrototype = Object.getPrototypeOf(Function);
+          var usePolyfill = typeof define_process_default === "object" && define_process_default.env && define_process_default.env["REFLECT_METADATA_USE_MAP_POLYFILL"] === "true";
+          var _Map = !usePolyfill && typeof Map === "function" && typeof Map.prototype.entries === "function" ? Map : CreateMapPolyfill();
+          var _Set = !usePolyfill && typeof Set === "function" && typeof Set.prototype.entries === "function" ? Set : CreateSetPolyfill();
+          var _WeakMap = !usePolyfill && typeof WeakMap === "function" ? WeakMap : CreateWeakMapPolyfill();
+          var Metadata = new _WeakMap();
+          function decorate(decorators, target, propertyKey, attributes) {
+            if (!IsUndefined(propertyKey)) {
+              if (!IsArray(decorators)) throw new TypeError();
+              if (!IsObject(target)) throw new TypeError();
+              if (!IsObject(attributes) && !IsUndefined(attributes) && !IsNull(attributes)) throw new TypeError();
+              if (IsNull(attributes)) attributes = void 0;
+              propertyKey = ToPropertyKey(propertyKey);
+              return DecorateProperty(decorators, target, propertyKey, attributes);
             } else {
-              const prevToken = ir.tokens[index - 1];
-              binary.push(...this.encodeLiteralToken(prevToken, token));
+              if (!IsArray(decorators)) throw new TypeError();
+              if (!IsConstructor(target)) throw new TypeError();
+              return DecorateConstructor(decorators, target);
             }
           }
-          return new Uint8Array(binary);
-        }
-        encodeExportExpressions(exportExpressions) {
-          if (exportExpressions.length === 0) {
-            return new Uint8Array();
-          }
-          const exportNum = exportExpressions.length;
-          const exportEncodings = [];
-          for (const exportExp of exportExpressions) {
-            let {exportReferenceIndex, exportName, exportType, exportReferenceName} = exportExp;
-            const exportNameEncoding = [];
-            for (let i = 0; i < exportName.length; i++) {
-              exportNameEncoding.push(exportName.charCodeAt(i));
+          exporter("decorate", decorate);
+          function metadata(metadataKey, metadataValue) {
+            function decorator(target, propertyKey) {
+              if (!IsObject(target)) throw new TypeError();
+              if (!IsUndefined(propertyKey) && !IsPropertyKey(propertyKey)) throw new TypeError();
+              OrdinaryDefineOwnMetadata(metadataKey, metadataValue, target, propertyKey);
             }
-            exportEncodings.push(exportName.length);
-            exportEncodings.push(...exportNameEncoding);
-            if (exportReferenceIndex === null && exportReferenceName === null) {
-              throw new Error(`Both export reference index and name cannot be null: ${exportExp}`);
+            return decorator;
+          }
+          exporter("metadata", metadata);
+          function defineMetadata(metadataKey, metadataValue, target, propertyKey) {
+            if (!IsObject(target)) throw new TypeError();
+            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
+            return OrdinaryDefineOwnMetadata(metadataKey, metadataValue, target, propertyKey);
+          }
+          exporter("defineMetadata", defineMetadata);
+          function hasMetadata(metadataKey, target, propertyKey) {
+            if (!IsObject(target)) throw new TypeError();
+            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
+            return OrdinaryHasMetadata(metadataKey, target, propertyKey);
+          }
+          exporter("hasMetadata", hasMetadata);
+          function hasOwnMetadata(metadataKey, target, propertyKey) {
+            if (!IsObject(target)) throw new TypeError();
+            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
+            return OrdinaryHasOwnMetadata(metadataKey, target, propertyKey);
+          }
+          exporter("hasOwnMetadata", hasOwnMetadata);
+          function getMetadata(metadataKey, target, propertyKey) {
+            if (!IsObject(target)) throw new TypeError();
+            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
+            return OrdinaryGetMetadata(metadataKey, target, propertyKey);
+          }
+          exporter("getMetadata", getMetadata);
+          function getOwnMetadata(metadataKey, target, propertyKey) {
+            if (!IsObject(target)) throw new TypeError();
+            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
+            return OrdinaryGetOwnMetadata(metadataKey, target, propertyKey);
+          }
+          exporter("getOwnMetadata", getOwnMetadata);
+          function getMetadataKeys(target, propertyKey) {
+            if (!IsObject(target)) throw new TypeError();
+            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
+            return OrdinaryMetadataKeys(target, propertyKey);
+          }
+          exporter("getMetadataKeys", getMetadataKeys);
+          function getOwnMetadataKeys(target, propertyKey) {
+            if (!IsObject(target)) throw new TypeError();
+            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
+            return OrdinaryOwnMetadataKeys(target, propertyKey);
+          }
+          exporter("getOwnMetadataKeys", getOwnMetadataKeys);
+          function deleteMetadata(metadataKey, target, propertyKey) {
+            if (!IsObject(target)) throw new TypeError();
+            if (!IsUndefined(propertyKey)) propertyKey = ToPropertyKey(propertyKey);
+            var metadataMap = GetOrCreateMetadataMap(target, propertyKey, false);
+            if (IsUndefined(metadataMap)) return false;
+            if (!metadataMap.delete(metadataKey)) return false;
+            if (metadataMap.size > 0) return true;
+            var targetMetadata = Metadata.get(target);
+            targetMetadata.delete(propertyKey);
+            if (targetMetadata.size > 0) return true;
+            Metadata.delete(target);
+            return true;
+          }
+          exporter("deleteMetadata", deleteMetadata);
+          function DecorateConstructor(decorators, target) {
+            for (var i = decorators.length - 1; i >= 0; --i) {
+              var decorator = decorators[i];
+              var decorated = decorator(target);
+              if (!IsUndefined(decorated) && !IsNull(decorated)) {
+                if (!IsConstructor(decorated)) throw new TypeError();
+                target = decorated;
+              }
             }
-            if (exportReferenceIndex === null) {
-              exportReferenceIndex = this.module.resolveGlobalExpressionIndex(exportReferenceName);
+            return target;
+          }
+          function DecorateProperty(decorators, target, propertyKey, descriptor) {
+            for (var i = decorators.length - 1; i >= 0; --i) {
+              var decorator = decorators[i];
+              var decorated = decorator(target, propertyKey, descriptor);
+              if (!IsUndefined(decorated) && !IsNull(decorated)) {
+                if (!IsObject(decorated)) throw new TypeError();
+                descriptor = decorated;
+              }
             }
-            exportEncodings.push(ExportType.getEncoding(exportType));
-            exportEncodings.push(exportReferenceIndex);
+            return descriptor;
           }
-          return new Uint8Array([exportNum, ...exportEncodings]);
+          function GetOrCreateMetadataMap(O, P, Create) {
+            var targetMetadata = Metadata.get(O);
+            if (IsUndefined(targetMetadata)) {
+              if (!Create) return void 0;
+              targetMetadata = new _Map();
+              Metadata.set(O, targetMetadata);
+            }
+            var metadataMap = targetMetadata.get(P);
+            if (IsUndefined(metadataMap)) {
+              if (!Create) return void 0;
+              metadataMap = new _Map();
+              targetMetadata.set(P, metadataMap);
+            }
+            return metadataMap;
+          }
+          function OrdinaryHasMetadata(MetadataKey, O, P) {
+            var hasOwn2 = OrdinaryHasOwnMetadata(MetadataKey, O, P);
+            if (hasOwn2) return true;
+            var parent2 = OrdinaryGetPrototypeOf(O);
+            if (!IsNull(parent2)) return OrdinaryHasMetadata(MetadataKey, parent2, P);
+            return false;
+          }
+          function OrdinaryHasOwnMetadata(MetadataKey, O, P) {
+            var metadataMap = GetOrCreateMetadataMap(O, P, false);
+            if (IsUndefined(metadataMap)) return false;
+            return ToBoolean(metadataMap.has(MetadataKey));
+          }
+          function OrdinaryGetMetadata(MetadataKey, O, P) {
+            var hasOwn2 = OrdinaryHasOwnMetadata(MetadataKey, O, P);
+            if (hasOwn2) return OrdinaryGetOwnMetadata(MetadataKey, O, P);
+            var parent2 = OrdinaryGetPrototypeOf(O);
+            if (!IsNull(parent2)) return OrdinaryGetMetadata(MetadataKey, parent2, P);
+            return void 0;
+          }
+          function OrdinaryGetOwnMetadata(MetadataKey, O, P) {
+            var metadataMap = GetOrCreateMetadataMap(O, P, false);
+            if (IsUndefined(metadataMap)) return void 0;
+            return metadataMap.get(MetadataKey);
+          }
+          function OrdinaryDefineOwnMetadata(MetadataKey, MetadataValue, O, P) {
+            var metadataMap = GetOrCreateMetadataMap(O, P, true);
+            metadataMap.set(MetadataKey, MetadataValue);
+          }
+          function OrdinaryMetadataKeys(O, P) {
+            var ownKeys = OrdinaryOwnMetadataKeys(O, P);
+            var parent2 = OrdinaryGetPrototypeOf(O);
+            if (parent2 === null) return ownKeys;
+            var parentKeys = OrdinaryMetadataKeys(parent2, P);
+            if (parentKeys.length <= 0) return ownKeys;
+            if (ownKeys.length <= 0) return parentKeys;
+            var set = new _Set();
+            var keys = [];
+            for (var _i = 0, ownKeys_1 = ownKeys; _i < ownKeys_1.length; _i++) {
+              var key = ownKeys_1[_i];
+              var hasKey = set.has(key);
+              if (!hasKey) {
+                set.add(key);
+                keys.push(key);
+              }
+            }
+            for (var _a = 0, parentKeys_1 = parentKeys; _a < parentKeys_1.length; _a++) {
+              var key = parentKeys_1[_a];
+              var hasKey = set.has(key);
+              if (!hasKey) {
+                set.add(key);
+                keys.push(key);
+              }
+            }
+            return keys;
+          }
+          function OrdinaryOwnMetadataKeys(O, P) {
+            var keys = [];
+            var metadataMap = GetOrCreateMetadataMap(O, P, false);
+            if (IsUndefined(metadataMap)) return keys;
+            var keysObj = metadataMap.keys();
+            var iterator = GetIterator(keysObj);
+            var k = 0;
+            while (true) {
+              var next = IteratorStep(iterator);
+              if (!next) {
+                keys.length = k;
+                return keys;
+              }
+              var nextValue = IteratorValue(next);
+              try {
+                keys[k] = nextValue;
+              } catch (e) {
+                try {
+                  IteratorClose(iterator);
+                } finally {
+                  throw e;
+                }
+              }
+              k++;
+            }
+          }
+          function Type(x) {
+            if (x === null) return 1;
+            switch (typeof x) {
+              case "undefined":
+                return 0;
+              case "boolean":
+                return 2;
+              case "string":
+                return 3;
+              case "symbol":
+                return 4;
+              case "number":
+                return 5;
+              case "object":
+                return x === null ? 1 : 6;
+              default:
+                return 6;
+            }
+          }
+          function IsUndefined(x) {
+            return x === void 0;
+          }
+          function IsNull(x) {
+            return x === null;
+          }
+          function IsSymbol(x) {
+            return typeof x === "symbol";
+          }
+          function IsObject(x) {
+            return typeof x === "object" ? x !== null : typeof x === "function";
+          }
+          function ToPrimitive(input, PreferredType) {
+            switch (Type(input)) {
+              case 0:
+                return input;
+              case 1:
+                return input;
+              case 2:
+                return input;
+              case 3:
+                return input;
+              case 4:
+                return input;
+              case 5:
+                return input;
+            }
+            var hint = PreferredType === 3 ? "string" : PreferredType === 5 ? "number" : "default";
+            var exoticToPrim = GetMethod(input, toPrimitiveSymbol);
+            if (exoticToPrim !== void 0) {
+              var result2 = exoticToPrim.call(input, hint);
+              if (IsObject(result2)) throw new TypeError();
+              return result2;
+            }
+            return OrdinaryToPrimitive(input, hint === "default" ? "number" : hint);
+          }
+          function OrdinaryToPrimitive(O, hint) {
+            if (hint === "string") {
+              var toString_1 = O.toString;
+              if (IsCallable(toString_1)) {
+                var result2 = toString_1.call(O);
+                if (!IsObject(result2)) return result2;
+              }
+              var valueOf = O.valueOf;
+              if (IsCallable(valueOf)) {
+                var result2 = valueOf.call(O);
+                if (!IsObject(result2)) return result2;
+              }
+            } else {
+              var valueOf = O.valueOf;
+              if (IsCallable(valueOf)) {
+                var result2 = valueOf.call(O);
+                if (!IsObject(result2)) return result2;
+              }
+              var toString_2 = O.toString;
+              if (IsCallable(toString_2)) {
+                var result2 = toString_2.call(O);
+                if (!IsObject(result2)) return result2;
+              }
+            }
+            throw new TypeError();
+          }
+          function ToBoolean(argument) {
+            return !!argument;
+          }
+          function ToString(argument) {
+            return "" + argument;
+          }
+          function ToPropertyKey(argument) {
+            var key = ToPrimitive(argument, 3);
+            if (IsSymbol(key)) return key;
+            return ToString(key);
+          }
+          function IsArray(argument) {
+            return Array.isArray ? Array.isArray(argument) : argument instanceof Object ? argument instanceof Array : Object.prototype.toString.call(argument) === "[object Array]";
+          }
+          function IsCallable(argument) {
+            return typeof argument === "function";
+          }
+          function IsConstructor(argument) {
+            return typeof argument === "function";
+          }
+          function IsPropertyKey(argument) {
+            switch (Type(argument)) {
+              case 3:
+                return true;
+              case 4:
+                return true;
+              default:
+                return false;
+            }
+          }
+          function GetMethod(V, P) {
+            var func = V[P];
+            if (func === void 0 || func === null) return void 0;
+            if (!IsCallable(func)) throw new TypeError();
+            return func;
+          }
+          function GetIterator(obj) {
+            var method = GetMethod(obj, iteratorSymbol);
+            if (!IsCallable(method)) throw new TypeError();
+            var iterator = method.call(obj);
+            if (!IsObject(iterator)) throw new TypeError();
+            return iterator;
+          }
+          function IteratorValue(iterResult) {
+            return iterResult.value;
+          }
+          function IteratorStep(iterator) {
+            var result2 = iterator.next();
+            return result2.done ? false : result2;
+          }
+          function IteratorClose(iterator) {
+            var f = iterator["return"];
+            if (f) f.call(iterator);
+          }
+          function OrdinaryGetPrototypeOf(O) {
+            var proto = Object.getPrototypeOf(O);
+            if (typeof O !== "function" || O === functionPrototype) return proto;
+            if (proto !== functionPrototype) return proto;
+            var prototype = O.prototype;
+            var prototypeProto = prototype && Object.getPrototypeOf(prototype);
+            if (prototypeProto == null || prototypeProto === Object.prototype) return proto;
+            var constructor = prototypeProto.constructor;
+            if (typeof constructor !== "function") return proto;
+            if (constructor === O) return proto;
+            return constructor;
+          }
+          function CreateMapPolyfill() {
+            var cacheSentinel = {};
+            var arraySentinel = [];
+            var MapIterator = (function () {
+              function MapIterator2(keys, values, selector) {
+                this._index = 0;
+                this._keys = keys;
+                this._values = values;
+                this._selector = selector;
+              }
+              MapIterator2.prototype["@@iterator"] = function () {
+                return this;
+              };
+              MapIterator2.prototype[iteratorSymbol] = function () {
+                return this;
+              };
+              MapIterator2.prototype.next = function () {
+                var index = this._index;
+                if (index >= 0 && index < this._keys.length) {
+                  var result2 = this._selector(this._keys[index], this._values[index]);
+                  if (index + 1 >= this._keys.length) {
+                    this._index = -1;
+                    this._keys = arraySentinel;
+                    this._values = arraySentinel;
+                  } else {
+                    this._index++;
+                  }
+                  return {
+                    value: result2,
+                    done: false
+                  };
+                }
+                return {
+                  value: void 0,
+                  done: true
+                };
+              };
+              MapIterator2.prototype.throw = function (error) {
+                if (this._index >= 0) {
+                  this._index = -1;
+                  this._keys = arraySentinel;
+                  this._values = arraySentinel;
+                }
+                throw error;
+              };
+              MapIterator2.prototype.return = function (value) {
+                if (this._index >= 0) {
+                  this._index = -1;
+                  this._keys = arraySentinel;
+                  this._values = arraySentinel;
+                }
+                return {
+                  value,
+                  done: true
+                };
+              };
+              return MapIterator2;
+            })();
+            return (function () {
+              function Map2() {
+                this._keys = [];
+                this._values = [];
+                this._cacheKey = cacheSentinel;
+                this._cacheIndex = -2;
+              }
+              Object.defineProperty(Map2.prototype, "size", {
+                get: function () {
+                  return this._keys.length;
+                },
+                enumerable: true,
+                configurable: true
+              });
+              Map2.prototype.has = function (key) {
+                return this._find(key, false) >= 0;
+              };
+              Map2.prototype.get = function (key) {
+                var index = this._find(key, false);
+                return index >= 0 ? this._values[index] : void 0;
+              };
+              Map2.prototype.set = function (key, value) {
+                var index = this._find(key, true);
+                this._values[index] = value;
+                return this;
+              };
+              Map2.prototype.delete = function (key) {
+                var index = this._find(key, false);
+                if (index >= 0) {
+                  var size = this._keys.length;
+                  for (var i = index + 1; i < size; i++) {
+                    this._keys[i - 1] = this._keys[i];
+                    this._values[i - 1] = this._values[i];
+                  }
+                  this._keys.length--;
+                  this._values.length--;
+                  if (key === this._cacheKey) {
+                    this._cacheKey = cacheSentinel;
+                    this._cacheIndex = -2;
+                  }
+                  return true;
+                }
+                return false;
+              };
+              Map2.prototype.clear = function () {
+                this._keys.length = 0;
+                this._values.length = 0;
+                this._cacheKey = cacheSentinel;
+                this._cacheIndex = -2;
+              };
+              Map2.prototype.keys = function () {
+                return new MapIterator(this._keys, this._values, getKey);
+              };
+              Map2.prototype.values = function () {
+                return new MapIterator(this._keys, this._values, getValue);
+              };
+              Map2.prototype.entries = function () {
+                return new MapIterator(this._keys, this._values, getEntry);
+              };
+              Map2.prototype["@@iterator"] = function () {
+                return this.entries();
+              };
+              Map2.prototype[iteratorSymbol] = function () {
+                return this.entries();
+              };
+              Map2.prototype._find = function (key, insert) {
+                if (this._cacheKey !== key) {
+                  this._cacheIndex = this._keys.indexOf(this._cacheKey = key);
+                }
+                if (this._cacheIndex < 0 && insert) {
+                  this._cacheIndex = this._keys.length;
+                  this._keys.push(key);
+                  this._values.push(void 0);
+                }
+                return this._cacheIndex;
+              };
+              return Map2;
+            })();
+            function getKey(key, _) {
+              return key;
+            }
+            function getValue(_, value) {
+              return value;
+            }
+            function getEntry(key, value) {
+              return [key, value];
+            }
+          }
+          function CreateSetPolyfill() {
+            return (function () {
+              function Set2() {
+                this._map = new _Map();
+              }
+              Object.defineProperty(Set2.prototype, "size", {
+                get: function () {
+                  return this._map.size;
+                },
+                enumerable: true,
+                configurable: true
+              });
+              Set2.prototype.has = function (value) {
+                return this._map.has(value);
+              };
+              Set2.prototype.add = function (value) {
+                return (this._map.set(value, value), this);
+              };
+              Set2.prototype.delete = function (value) {
+                return this._map.delete(value);
+              };
+              Set2.prototype.clear = function () {
+                this._map.clear();
+              };
+              Set2.prototype.keys = function () {
+                return this._map.keys();
+              };
+              Set2.prototype.values = function () {
+                return this._map.values();
+              };
+              Set2.prototype.entries = function () {
+                return this._map.entries();
+              };
+              Set2.prototype["@@iterator"] = function () {
+                return this.keys();
+              };
+              Set2.prototype[iteratorSymbol] = function () {
+                return this.keys();
+              };
+              return Set2;
+            })();
+          }
+          function CreateWeakMapPolyfill() {
+            var UUID_SIZE = 16;
+            var keys = HashMap.create();
+            var rootKey = CreateUniqueKey();
+            return (function () {
+              function WeakMap2() {
+                this._key = CreateUniqueKey();
+              }
+              WeakMap2.prototype.has = function (target) {
+                var table = GetOrCreateWeakMapTable(target, false);
+                return table !== void 0 ? HashMap.has(table, this._key) : false;
+              };
+              WeakMap2.prototype.get = function (target) {
+                var table = GetOrCreateWeakMapTable(target, false);
+                return table !== void 0 ? HashMap.get(table, this._key) : void 0;
+              };
+              WeakMap2.prototype.set = function (target, value) {
+                var table = GetOrCreateWeakMapTable(target, true);
+                table[this._key] = value;
+                return this;
+              };
+              WeakMap2.prototype.delete = function (target) {
+                var table = GetOrCreateWeakMapTable(target, false);
+                return table !== void 0 ? delete table[this._key] : false;
+              };
+              WeakMap2.prototype.clear = function () {
+                this._key = CreateUniqueKey();
+              };
+              return WeakMap2;
+            })();
+            function CreateUniqueKey() {
+              var key;
+              do key = "@@WeakMap@@" + CreateUUID(); while (HashMap.has(keys, key));
+              keys[key] = true;
+              return key;
+            }
+            function GetOrCreateWeakMapTable(target, create) {
+              if (!hasOwn.call(target, rootKey)) {
+                if (!create) return void 0;
+                Object.defineProperty(target, rootKey, {
+                  value: HashMap.create()
+                });
+              }
+              return target[rootKey];
+            }
+            function FillRandomBytes(buffer, size) {
+              for (var i = 0; i < size; ++i) buffer[i] = Math.random() * 255 | 0;
+              return buffer;
+            }
+            function GenRandomBytes(size) {
+              if (typeof Uint8Array === "function") {
+                if (typeof crypto !== "undefined") return crypto.getRandomValues(new Uint8Array(size));
+                if (typeof msCrypto !== "undefined") return msCrypto.getRandomValues(new Uint8Array(size));
+                return FillRandomBytes(new Uint8Array(size), size);
+              }
+              return FillRandomBytes(new Array(size), size);
+            }
+            function CreateUUID() {
+              var data = GenRandomBytes(UUID_SIZE);
+              data[6] = data[6] & 79 | 64;
+              data[8] = data[8] & 191 | 128;
+              var result2 = "";
+              for (var offset = 0; offset < UUID_SIZE; ++offset) {
+                var byte = data[offset];
+                if (offset === 4 || offset === 6 || offset === 8) result2 += "-";
+                if (byte < 16) result2 += "0";
+                result2 += byte.toString(16).toLowerCase();
+              }
+              return result2;
+            }
+          }
+          function MakeDictionary(obj) {
+            obj.__ = void 0;
+            delete obj.__;
+            return obj;
+          }
+        });
+      })(Reflect2 || (Reflect2 = {}));
+      var Tree = class extends Array {};
+      (Tree2 => {
+        function treeMap(tree, func) {
+          return tree.map(node => node instanceof Array ? treeMap(node, func) : func(node));
         }
-        convertVarToIndexToken(varToken, index) {
-          assert(Number.isInteger(index));
-          assert(index >= 0);
-          return new Token("NAT", index.toString(), varToken.line, varToken.col, varToken.indexInSource, null, null);
+        Tree2.treeMap = treeMap;
+      })(Tree || (Tree = {}));
+      var ParseTree = class extends Tree {};
+      (ParseTree2 => {
+        function getStringArrayRepr(tree) {
+          return Tree.treeMap(tree, token => token.lexeme);
         }
-        isLiteralToken(token) {
-          return token.type === "NAT" || token.type === "FLOAT";
+        ParseTree2.getStringArrayRepr = getStringArrayRepr;
+      })(ParseTree || (ParseTree = {}));
+      var IntermediateRepresentation = class {};
+      var SignatureType = class {
+        constructor(paramTypes, returnTypes) {
+          this._paramTypes = paramTypes;
+          this._returnTypes = returnTypes;
         }
-        encodeNonLiteralToken(token) {
-          if (token.isValueToken()) {
-            return new Uint8Array([ValueType.getValue(token.valueType)]);
-          }
-          if (token.isOpcodeToken()) {
-            return new Uint8Array([Opcode.getCode(token.opcodeType)]);
-          }
-          throw new Error(`Unexpected token: ${token}`);
+        isEmpty() {
+          return this.paramTypes.length === 0 && this.returnTypes.length === 0;
         }
-        encodeLiteralToken(prevToken, token) {
-          if (prevToken.isOpcodeType(58)) {
-            return NumberEncoder.encodeF64Const((/^\d+$/u).test(token.lexeme) ? Number.parseInt(token.lexeme) : Number.parseFloat(token.lexeme));
-          }
-          if (prevToken.type === "local.get") {
-            assert(token.type === "NAT");
-            return new Uint8Array([Number.parseInt(token.lexeme)]);
-          }
-          throw new Error(`Unsuppored literal token type: [${JSON.stringify(prevToken, void 0, 2)}, ${JSON.stringify(token, void 0, 2)}]`);
+        get paramTypes() {
+          return this._paramTypes;
+        }
+        get returnTypes() {
+          return this._returnTypes;
+        }
+        toString() {
+          return `Signature: ${this._paramTypes.map(x => ValueType[x])} ${this._returnTypes.map(x => ValueType[x])}`;
         }
       };
-      var NumberEncoder;
-      (NumberEncoder2 => {
-        function encodeF64Const(n) {
-          let buffer = new ArrayBuffer(8);
-          new DataView(buffer).setFloat64(0, n);
-          let bytes = new Uint8Array(buffer);
-          return bytes.reverse();
-        }
-        NumberEncoder2.encodeF64Const = encodeF64Const;
-      })(NumberEncoder || (NumberEncoder = {}));
-      var import_lodash = __toESM2(require_lodash());
-      var Unfoldable;
-      (Unfoldable2 => {
-        function instanceOf(obj) {
-          return ("unfold" in obj);
-        }
-        Unfoldable2.instanceOf = instanceOf;
-      })(Unfoldable || (Unfoldable = {}));
-      var IntermediateRepresentation = class {};
       var ModuleExpression = class extends IntermediateRepresentation {
-        constructor(...childNodes) {
-          super();
+        constructor() {
+          super(...arguments);
           this.globalTypes = [];
           this.functions = [];
+          this.start = null;
+          this.memory = null;
           this.globals = [];
+          this.imports = [];
+          this.exportableFuncs = [];
+          this.exportableGlobals = [];
+          this.exportableMems = [];
+          this.exportableTables = [];
+          this.elementSection = [];
           this.exportExpressions = [];
-          for (const child of childNodes) {
-            if (child instanceof FunctionExpression) {
-              this.addFunctionExpression(child);
-            } else if (child instanceof ExportExpression) {
-              this.addExportExpression(child);
-            }
+        }
+        addIntermediateRepresentation(ir) {
+          if (ir instanceof FunctionExpression) {
+            this.addFunctionExpression(ir);
+            return;
           }
+          if (ir instanceof ExportExpression) {
+            this.addExportExpression(ir);
+            return;
+          }
+          if (ir instanceof StartExpression) {
+            this.addStartExpression(ir);
+            return;
+          }
+          if (ir instanceof MemoryExpression) {
+            this.addMemoryExpression(ir);
+            return;
+          }
+          if (ir instanceof GlobalExpression) {
+            this.addGlobalExpression(ir);
+            return;
+          }
+          if (ir instanceof ImportExpression) {
+            this.addImportExpression(ir);
+            return;
+          }
+          if (ir instanceof ElementExpression) {
+            this.addElementExpression(ir);
+            return;
+          }
+          if (ir instanceof TableExpression) {
+            this.addTableExpression(ir);
+            return;
+          }
+          throw new Error(`Unsupported intermediate representation ${ir.constructor.name}`);
         }
         addFunctionExpression(functionExpression) {
           this.functions.push(functionExpression);
-          this.addGlobalType(functionExpression.functionSignature);
-          this.globals.push(functionExpression);
-          if (functionExpression.hasInlineExport) {
-            this.addExportExpression(new ExportExpression(functionExpression.inlineExportName, 0, this.functions.length - 1));
+          this.addGlobalType(functionExpression.getSignatureType());
+          this.exportableFuncs.push(functionExpression);
+          if (functionExpression.hasInlineExport()) {
+            this.addExportExpression(new ExportExpression(functionExpression.getInlineExportName(), 0, this.functions.length + this.getImportLength("func") - 1));
           }
         }
         addExportExpression(exportExpression) {
           this.exportExpressions.push(exportExpression);
+        }
+        addStartExpression(startExp) {
+          this.start = startExp;
+        }
+        addMemoryExpression(memoryExp) {
+          this.memory = memoryExp;
+          this.exportableMems.push(memoryExp);
+        }
+        addGlobalExpression(globalExp) {
+          this.globals.push(globalExp);
+          this.exportableGlobals.push(globalExp);
+        }
+        addImportExpression(importExp) {
+          this.imports.push(importExp);
+          switch (importExp.importType) {
+            case "func":
+              this.addGlobalType(importExp.functionSignature.signatureType);
+              break;
+            case "memory":
+              break;
+            case "global":
+              break;
+            case "table":
+              break;
+            default:
+              throw new Error(`Import type ${importExp.importType} not supported yet!`);
+          }
+        }
+        addElementExpression(elementExp) {
+          this.elementSection.push(elementExp);
+        }
+        addTableExpression(tableExp) {
+          this.exportableTables.push(tableExp);
         }
         addGlobalType(type) {
           for (const existingType of this.globalTypes) {
@@ -7178,11 +7068,27 @@ export default require => {
             }
           }
           assert(false, `Global type not found! This is an error that should be raised to the developer.
-      Please help raise an issue on GitHub.`);
+      Please help raise an issue on GitHub. Got: ${JSON.stringify(type, void 0, 2)}.
+      Global types available are: ${JSON.stringify(this.globalTypes.entries(), void 0, 2)}`);
           return -1;
         }
-        resolveGlobalExpressionIndex(name) {
-          for (const [i, existing_type] of this.globals.entries()) {
+        resolveExportableExpressionIndexByName(name, exportType) {
+          let exportArrayToQuery = null;
+          switch (exportType) {
+            case 0:
+              exportArrayToQuery = this.exportableFuncs;
+              break;
+            case 1:
+              exportArrayToQuery = this.exportableTables;
+              break;
+            case 2:
+              exportArrayToQuery = this.exportableMems;
+              break;
+            case 3:
+              exportArrayToQuery = this.exportableGlobals;
+              break;
+          }
+          for (const [i, existing_type] of exportArrayToQuery.entries()) {
             if (existing_type.getID() === name) {
               return i;
             }
@@ -7190,11 +7096,28 @@ export default require => {
           assert(false, "Global not found!");
           return -1;
         }
-        getFunctionSignatures() {
-          return this.functions.map(func => func.functionSignature);
+        getFunctionSignatureTypes() {
+          return this.functions.map(func => func.getSignatureType());
         }
         getFunctionBodies() {
-          return this.functions.map(func => func.functionBody);
+          return this.functions.map(func => func.getBody());
+        }
+        toString() {
+          return `IR: Module {
+      Global Types: ${this.globalTypes.map(x => x.toString()).join("\n")}
+      Functions: ${this.functions.map(x => x.toString()).join("\n")}
+      Globals ${this.globals.map(x => x.toString()).join("\n")}
+      Export Expressions: ${this.exportExpressions.map(x => x.toString()).join("\n")}
+    }`;
+        }
+        getImportLength(importType) {
+          return this.imports.filter(x => x.importType === importType).length;
+        }
+        get parent() {
+          return null;
+        }
+        set parent(parentExpression) {
+          throw new Error("Module Expression should not have parent.");
         }
       };
       var ExportExpression = class extends IntermediateRepresentation {
@@ -7222,13 +7145,17 @@ export default require => {
           if (exportName.type !== "TEXT") {
             throw new Error(`unexpected export name: ${exportName}`);
           }
-          return exportName.extractText();
+          return exportName.extractName();
         }
         getExportType(exportType) {
-          if (exportType.type !== "func") {
-            throw new Error(`unexpected export type: ${exportType}`);
+          switch (exportType.type) {
+            case "func":
+              return 0;
+            case "memory":
+              return 2;
+            default:
+              throw new Error(`unexpected export type: ${exportType.lexeme}`);
           }
-          return 0;
         }
         getExportReference(exportReference) {
           switch (exportReference.type) {
@@ -7240,337 +7167,2226 @@ export default require => {
               throw new Error(`unexpected export ID: ${JSON.stringify(exportReference, void 0, 2)}.`);
           }
         }
+        get parent() {
+          if (typeof this._parent === "undefined") {
+            throw new Error(`Parent Expression for this Function Expression not set ${this}`);
+          }
+          return this._parent;
+        }
+        set parent(parent2) {
+          this._parent = parent2;
+        }
+        toString() {
+          return `Export: ${this.exportName}`;
+        }
+      };
+      var ImportExpression = class extends IntermediateRepresentation {
+        constructor(importModule, importName, importType) {
+          super();
+          this._parent = null;
+          this.functionSignature = null;
+          this.memoryExpression = null;
+          this.globalExpression = null;
+          this.tableExpression = null;
+          this.importModule = importModule;
+          this.importName = importName;
+          this.importType = importType;
+        }
+        getID() {
+          if (this.importType === "func") {
+            return this.functionSignature.functionName;
+          }
+          throw new Error("getID not implemented for memory, global or tables");
+        }
+        static functionImport(importModule, importName, functionSignature) {
+          const importExp = new ImportExpression(importModule, importName, "func");
+          importExp.functionSignature = functionSignature;
+          return importExp;
+        }
+        static tableImport(importModule, importName, tableExpression) {
+          const importExp = new ImportExpression(importModule, importName, "table");
+          importExp.tableExpression = tableExpression;
+          return importExp;
+        }
+        static memoryImport(importModule, importName, memoryExpression) {
+          const importExp = new ImportExpression(importModule, importName, "memory");
+          importExp.memoryExpression = memoryExpression;
+          return importExp;
+        }
+        static globalImport(importModule, importName, globalExpression) {
+          const importExp = new ImportExpression(importModule, importName, "global");
+          importExp.globalExpression = globalExpression;
+          return importExp;
+        }
+        get parent() {
+          return this._parent;
+        }
+        set parent(parentExpression) {
+          this._parent = parent;
+        }
+        toString() {
+          return "import";
+        }
+      };
+      var StartExpression = class extends IntermediateRepresentation {
+        constructor(startToken, identifier) {
+          super();
+          this._parent = null;
+          this._identifier = new IRToken(identifier, this, startToken);
+        }
+        get parent() {
+          return this._parent;
+        }
+        set parent(parentExpression) {
+          this._parent = parentExpression;
+        }
+        get identifier() {
+          return this._identifier;
+        }
+        toString() {
+          return `Start: ${this._identifier.lexeme}`;
+        }
+      };
+      var MemoryExpression = class extends IntermediateRepresentation {
+        constructor(startToken, memoryLength, memoryLimit, name) {
+          super();
+          this._parent = null;
+          this._startToken = new IRToken(startToken, this);
+          this._memoryLength = memoryLength;
+          this._memoryLimit = memoryLimit;
+          this._name = name;
+        }
+        get parent() {
+          return this._parent;
+        }
+        set parent(parentExpression) {
+          this._parent = parentExpression;
+        }
+        get memoryLength() {
+          return this._memoryLength;
+        }
+        get memoryLimit() {
+          return this._memoryLimit;
+        }
+        get name() {
+          return this._name;
+        }
+        getID() {
+          return this.name;
+        }
+        toString() {
+          return `Memory: ${this._memoryLength}`;
+        }
+      };
+      var ImportGlobalExpression = class extends IntermediateRepresentation {
+        constructor(headerToken, typeToken, name = null) {
+          super();
+          this._parent = null;
+          this.headerToken = new IRToken(headerToken, this);
+          this.typeToken = new IRToken(typeToken, this, headerToken);
+          this.name = name;
+        }
+        getID() {
+          return this.name;
+        }
+        get parent() {
+          return this._parent;
+        }
+        set parent(parentExpression) {
+          this._parent = parentExpression;
+        }
+        toString() {
+          return "import global expression";
+        }
+      };
+      var GlobalExpression = class extends IntermediateRepresentation {
+        constructor(headerToken, type, mutability, globalType, globalValue, name) {
+          super();
+          this._parent = null;
+          this.headerToken = new IRToken(headerToken, this);
+          this.type = type;
+          this.globalType = new IRToken(globalType, this);
+          this.mutability = mutability;
+          this.globalValue = new IRToken(globalValue, this);
+          this.name = name;
+        }
+        get parent() {
+          return this._parent;
+        }
+        set parent(parentExpression) {
+          this._parent = parentExpression;
+        }
+        toString() {
+          return `Global: ${this.name}`;
+        }
+        getID() {
+          return this.name;
+        }
+      };
+      var ElementExpression = class extends IntermediateRepresentation {
+        constructor(headerToken, elementType, mode, name = null, items = []) {
+          super();
+          this._parent = null;
+          this.linkedTableIfActive = null;
+          this.linkedTableOffset = null;
+          this.headerToken = new IRToken(headerToken, this);
+          this.elementType = elementType;
+          this.mode = mode;
+          this.name = name;
+          this.items = items;
+          this.items.forEach(item => {
+            item.parent = this;
+          });
+        }
+        static Passive(headerToken, elementType, name = null, items = []) {
+          return new ElementExpression(headerToken, elementType, "passive", name, items);
+        }
+        static Active(headerToken, elementType, name, linkedTableExpression, offsetExpression, items = []) {
+          const exp = new ElementExpression(headerToken, elementType, "active", name, items);
+          exp.linkedTableIfActive = linkedTableExpression instanceof Token ? new IRToken(linkedTableExpression, exp) : linkedTableExpression;
+          exp.linkedTableOffset = offsetExpression;
+          return exp;
+        }
+        static Declarative(headerToken, name, declareToken, elementType, items = []) {
+          return new ElementExpression(headerToken, elementType, "declarative", name, items);
+        }
+        isEmpty() {
+          return this.elementType === null && this.items.length === 0 && this.mode === "passive" && this.linkedTableIfActive === null && this.linkedTableOffset === null;
+        }
+        getFlag() {
+          if (this.mode === "passive") {
+            switch (this.elementType) {
+              case 7:
+              case null:
+                return 1;
+              case 8:
+                return 5;
+              default:
+                throw new Error();
+            }
+          }
+          if (this.mode === "active") {
+            switch (this.elementType) {
+              case 7:
+              case null:
+                if (this.linkedTableIfActive === 0 || this.linkedTableIfActive instanceof IRToken && this.linkedTableIfActive.type === "NAT" && this.linkedTableIfActive.lexeme === "0") {
+                  return 0;
+                }
+                return 2;
+              case 8:
+                return 4;
+              default:
+                throw new Error();
+            }
+          }
+          if (this.mode === "declarative") {
+            switch (this.elementType) {
+              case 7:
+              case null:
+                return 3;
+              case 8:
+                return 7;
+              default:
+                throw new Error();
+            }
+          }
+          throw new Error();
+        }
+        getID() {
+          return this.name;
+        }
+        get parent() {
+          return this._parent;
+        }
+        set parent(parentExpression) {
+          this._parent = parentExpression;
+        }
+        toString() {
+          return `element expression: ${this.headerToken.lexeme}`;
+        }
+      };
+      var ElementItemExpression = class extends IntermediateRepresentation {
+        constructor(itemType, itemToken) {
+          super();
+          this._parent = null;
+          this.itemType = itemType;
+          if (itemToken.type === "VAR") {
+            this.itemVarName = itemToken.lexeme;
+          } else {
+            this.itemIndex = parseInt(itemToken.lexeme);
+          }
+        }
+        get parent() {
+          return this._parent;
+        }
+        set parent(parentExpression) {
+          this._parent = parentExpression;
+        }
+        toString() {
+          throw new Error("Method not implemented.");
+        }
+      };
+      var TableExpression = class extends IntermediateRepresentation {
+        constructor(headerToken, tableName, minFlag, maxFlag, tableType) {
+          super();
+          this._parent = null;
+          this.headerToken = new IRToken(headerToken, this);
+          this.tableName = tableName;
+          this.minFlag = minFlag;
+          this.maxFlag = maxFlag;
+          this.tableType = tableType;
+        }
+        getID() {
+          return this.tableName;
+        }
+        get parent() {
+          return this._parent;
+        }
+        set parent(parentExpression) {
+          this._parent = parentExpression;
+        }
+        toString() {
+          return `table expression: ${this.headerToken.lexeme}`;
+        }
       };
       var FunctionExpression = class extends IntermediateRepresentation {
-        constructor(functionName, inlineExportName, paramTypes, paramNames, returnTypes, localTypes, localNames, body) {
+        constructor(signature, body) {
           super();
+          this.signature = signature;
+          this.body = body;
+          body.parent = this;
+        }
+        getID() {
+          return this.signature.functionName;
+        }
+        getParamNames() {
+          return this.signature.paramNames;
+        }
+        getSignatureType() {
+          return this.signature.signatureType;
+        }
+        getLocalTypes() {
+          return this.signature.localTypes;
+        }
+        getLocalNames() {
+          return this.signature.localNames;
+        }
+        getInlineExportName() {
+          return this.signature.inlineExportName;
+        }
+        hasInlineExport() {
+          return this.signature.inlineExportName !== null;
+        }
+        getBody() {
+          return this.body;
+        }
+        get parent() {
+          if (typeof this._parent === "undefined") {
+            throw new Error(`Parent Expression for this Function Expression not set ${this}`);
+          }
+          return this._parent;
+        }
+        set parent(parent2) {
+          this._parent = parent2;
+        }
+        toString() {
+          return `Function: ${this.signature.toString()}, ${this.body.toString()}`;
+        }
+      };
+      var FunctionSignature = class {
+        constructor(functionName, inlineExportName, paramTypes, paramNames, returnTypes, localTypes, localNames) {
           assert(paramTypes.length === paramNames.length, `Function param types and names must have same length: [${paramTypes}], [${paramNames}]`);
           assert(localTypes.length === localNames.length, `Function local types and names must have same length: [${localTypes}], [${localNames}]`);
           this.functionName = functionName;
-          this.inlineExportName = inlineExportName;
-          this.hasInlineExport = inlineExportName !== null;
-          this.functionSignature = new FunctionSignature(paramTypes, returnTypes);
-          this.functionBody = new FunctionBody(body);
+          this.signatureType = new SignatureType(paramTypes, returnTypes);
           this.paramNames = paramNames;
           this.localTypes = localTypes;
           this.localNames = localNames;
+          this.inlineExportName = inlineExportName;
         }
-        getID() {
-          return this.functionName;
+      };
+      var Unfoldable;
+      (Unfoldable2 => {
+        function instanceOf(o) {
+          return ("unfold" in o) && typeof o.unfold === "function";
         }
-        resolveVariableIndex(nameToResolve) {
-          for (const [i, name] of [...this.paramNames, ...this.localNames].entries()) {
+        Unfoldable2.instanceOf = instanceOf;
+      })(Unfoldable || (Unfoldable = {}));
+      var TokenExpression = class extends IntermediateRepresentation {};
+      var OperationTree = class extends TokenExpression {
+        constructor(operator, operands) {
+          super();
+          this.operator = new IRToken(operator, this, null);
+          this.operands = [];
+          for (let i = 0; i < operands.length; i++) {
+            const operand = operands[i];
+            let prevOperand = i === 0 ? null : operands[i - 1];
+            prevOperand = prevOperand instanceof TokenExpression ? null : prevOperand;
+            if (operand instanceof TokenExpression) {
+              operand.parent = this;
+              this.operands.push(operand);
+            } else {
+              this.operands.push(new IRToken(operand, this, prevOperand));
+            }
+          }
+        }
+        unfold() {
+          if (typeof this.parent === "undefined") {
+            throw new Error(`Parent Expression for this Function Expression not set for ${this}`);
+          }
+          const unfoldedOperands = this.operands.map(operand => {
+            if (operand instanceof IRToken) {
+              return operand;
+            }
+            return operand;
+          });
+          const unfoldedExpression = new UnfoldedTokenExpression([...unfoldedOperands, this.operator]);
+          unfoldedExpression.parent = this.parent;
+          return unfoldedExpression;
+        }
+        get parent() {
+          if (typeof this._parent === "undefined") {
+            throw new Error(`Parent Expression for this Function Expression not set ${this}`);
+          }
+          return this._parent;
+        }
+        set parent(parent2) {
+          this._parent = parent2;
+        }
+        toString() {
+          return `OperationTree: (${this.operator.toString()}, ${Tree.treeMap(this.operands, x => x.toString())}`;
+        }
+      };
+      var UnfoldedTokenExpression = class extends TokenExpression {
+        constructor(expr) {
+          super();
+          this.expr = [];
+          for (let i = 0; i < expr.length; i++) {
+            const exp = expr[i];
+            let prevExp = i === 0 ? null : expr[i - 1];
+            prevExp = prevExp instanceof TokenExpression ? null : prevExp;
+            if (exp instanceof TokenExpression) {
+              exp.parent = this;
+              this.expr.push(exp);
+            } else {
+              this.expr.push(new IRToken(exp, this, prevExp));
+            }
+          }
+        }
+        get parent() {
+          if (typeof this._parent === "undefined") {
+            throw new Error(`Parent Expression for this Function Expression not set ${this}`);
+          }
+          return this._parent;
+        }
+        set parent(parent2) {
+          this._parent = parent2;
+        }
+        toString() {
+          return `UnfoldedTokenExpression:, ${this.expr.toString()}`;
+        }
+      };
+      var EmptyTokenExpression = class extends TokenExpression {
+        unfold() {
+          if (typeof this.parent === "undefined") {
+            throw new Error(`Parent Expression for this Function Expression not set ${this}`);
+          }
+          const unfoldedExpression = new UnfoldedTokenExpression([]);
+          unfoldedExpression.parent = this.parent;
+          return unfoldedExpression;
+        }
+        get parent() {
+          if (typeof this._parent === "undefined") {
+            throw new Error(`Parent Expression for this Function Expression not set ${this}`);
+          }
+          return this._parent;
+        }
+        set parent(parent2) {
+          this._parent = parent2;
+        }
+        toString() {
+          return "[Empty]";
+        }
+      };
+      var UnfoldedBlockExpression = class extends UnfoldedTokenExpression {
+        constructor(signature, name, tokens) {
+          super(tokens);
+          this.signature = signature;
+          this.name = name;
+          this.expr = [];
+          for (let i = 0; i < tokens.length; i++) {
+            const token = tokens[i];
+            let prevToken = i === 0 ? null : tokens[i - 1];
+            prevToken = prevToken instanceof TokenExpression ? null : prevToken;
+            if (token instanceof TokenExpression) {
+              token.parent = this;
+              this.expr.push(token);
+            } else {
+              this.expr.push(new IRToken(token, this, prevToken));
+            }
+          }
+        }
+        get parent() {
+          if (typeof this._parent === "undefined") {
+            throw new Error(`Parent Expression for this Function Expression not set ${this}`);
+          }
+          return this._parent;
+        }
+        set parent(parent2) {
+          this._parent = parent2;
+        }
+        toString() {
+          var _a;
+          return `UnfoldedBlockExpression: ${(_a = this.name) == null ? void 0 : _a.toString()} ${this.signature.toString()} ${this.expr.map(x => x.toString())}`;
+        }
+      };
+      var BlockExpression = class extends OperationTree {
+        constructor(headerToken, name, paramTypes, returnTypes) {
+          super(headerToken, []);
+          this.signature = new BlockSignature(headerToken.type, name, paramTypes, returnTypes);
+          this._headerToken = new IRToken(headerToken, this, null);
+        }
+        createEndToken() {
+          const token = new Token("end", "end", this._headerToken.line, this._headerToken.col, this._headerToken.indexInSource, 10, null);
+          return new IRToken(token, this, this._headerToken.prevToken);
+        }
+        get headerToken() {
+          return this._headerToken;
+        }
+        getSignatureType() {
+          return this.signature.signatureType;
+        }
+        getBlockType() {
+          return this.signature.blockType;
+        }
+        getName() {
+          return this.signature.name;
+        }
+        hasName() {
+          return this.signature.name !== null;
+        }
+        getParamTypes() {
+          return this.signature.signatureType.paramTypes;
+        }
+        getReturnTypes() {
+          return this.signature.signatureType.returnTypes;
+        }
+        get parent() {
+          if (typeof this._parent === "undefined") {
+            throw new Error(`Parent Expression for this Function Expression not set ${this}`);
+          }
+          return this._parent;
+        }
+        set parent(parent2) {
+          this._parent = parent2;
+        }
+        toString() {
+          return `BlockExpression:
+    ${this.signature.toString()}, ${this._headerToken.toString()}`;
+        }
+      };
+      var BlockBlockExpression = class extends BlockExpression {
+        constructor(headerToken, name, paramTypes, returnTypes, blockExpression) {
+          super(headerToken, name, paramTypes, returnTypes);
+          this._body = blockExpression;
+          blockExpression.parent = this;
+        }
+        unfold() {
+          if (typeof this.parent === "undefined") {
+            throw new Error(`Parent Expression for this Function Expression not set ${this}`);
+          }
+          if (this._body instanceof UnfoldedTokenExpression && this._body.expr.at(-1) instanceof Token && this._body.expr.at(-1).type === "end") {
+            const unfoldedExpression2 = new UnfoldedBlockExpression(this.getSignatureType(), this.getName(), [this.headerToken, this._body]);
+            unfoldedExpression2.parent = this.parent;
+            return unfoldedExpression2;
+          }
+          const unfoldedExpression = new UnfoldedBlockExpression(this.getSignatureType(), this.getName(), [this.headerToken, this._body, this.createEndToken()]);
+          unfoldedExpression.parent = this.parent;
+          return unfoldedExpression;
+        }
+        get body() {
+          return this._body;
+        }
+        toString() {
+          return `${super.toString()} Block: ${this._body.toString()}`;
+        }
+      };
+      var BlockIfExpression = class extends BlockExpression {
+        constructor(headerToken, name, paramTypes, returnTypes, body) {
+          super(headerToken, name, paramTypes, returnTypes);
+          this._body = body;
+        }
+        get body() {
+          return this._body;
+        }
+        unfold() {
+          if (typeof this.parent === "undefined") {
+            throw new Error(`Parent Expression for this Function Expression not set ${this}`);
+          }
+          const unfoldedExpression = new UnfoldedBlockExpression(this.getSignatureType(), this.getName(), [this.headerToken, this._body, this.createEndToken()]);
+          unfoldedExpression.parent = this.parent;
+          return unfoldedExpression;
+        }
+        toString() {
+          return `${super.toString()} If: ${this._body.toString()}`;
+        }
+      };
+      var SelectExpression = class extends UnfoldedTokenExpression {
+        constructor(tokens) {
+          super(tokens);
+          if (tokens.length !== 3 && tokens.length !== 1) {
+            throw new Error(`Cannot be select expression: ${tokens}`);
+          }
+          this.headerToken = new IRToken(tokens[0], this, null);
+          this.hasExplicitResult = !(typeof tokens[2] === "undefined");
+          if (typeof tokens[2] === "undefined") {
+            this.explicitResultType = null;
+          } else {
+            this.explicitResultType = new IRToken(tokens[2], this, tokens[1]);
+            this.headerToken.opcodeType = 24;
+          }
+        }
+        toString() {
+          var _a;
+          return `[Select (return) ${(_a = this.explicitResultType) == null ? void 0 : _a.toString()}]`;
+        }
+      };
+      var BlockSignature = class {
+        constructor(blockType, name, paramTypes, returnTypes) {
+          assert(blockType === "block" || blockType === "loop" || blockType === "if", `block type must be Block, Loop or If, but got: ${blockType}. Please report this bug to the developer.`);
+          this.blockType = blockType;
+          this.name = name;
+          this.signatureType = new SignatureType(paramTypes, returnTypes);
+        }
+        toString() {
+          var _a, _b, _c;
+          return `BlockSignature: ${(_a = this.name) == null ? void 0 : _a.toString()} ${(_b = this.blockType) == null ? void 0 : _b.toString()} ${(_c = this.signatureType) == null ? void 0 : _c.toString()}`;
+        }
+      };
+      var IRToken = class extends Token {
+        constructor(token, parent2, prevToken = null) {
+          super(token.type, token.lexeme, token.line, token.col, token.indexInSource, token.opcodeType, token.valueType);
+          this._prevToken = null;
+          this._prevToken = prevToken;
+          this._parent = parent2;
+        }
+        get prevToken() {
+          return this._prevToken;
+        }
+        get parent() {
+          if (typeof this._parent === "undefined" || this._parent === null) {
+            throw new Error(`Parent Expression for this Function Expression not set ${this}`);
+          }
+          return this._parent;
+        }
+        set parent(parent2) {
+          this._parent = parent2;
+        }
+        toString() {
+          return `(${this.lexeme})`;
+        }
+      };
+      var UINT32_LIMITS = [0, BigInt(4294967295)];
+      var INT32_LIMITS = [-2147483647, 2147483647];
+      var UINT64_LIMITS = [0, (BigInt(2) << BigInt(64)) - BigInt(1)];
+      var INT64_LIMITS = [BigInt(1) - (BigInt(2) << BigInt(63)), (BigInt(2) << BigInt(63)) - BigInt(1)];
+      function signed_number_to_leb128(value) {
+        const negative = value < 0;
+        const result2 = [];
+        while (true) {
+          let byte = value & 127;
+          value >>= 7;
+          if (value === 0 && (byte & 64) === 0 || value === -1 && (byte & 64) !== 0) {
+            result2.push(byte);
+            break;
+          }
+          byte |= 128;
+          result2.push(byte);
+        }
+        return new Uint8Array(result2);
+      }
+      function signed_bigint_to_leb128(value) {
+        const result2 = [];
+        while (true) {
+          let byte = Number(value & BigInt(127));
+          value >>= BigInt(7);
+          if (value === BigInt(0) && (byte & 64) === 0 || value === BigInt(-1) && (byte & 64) !== 0) {
+            result2.push(byte);
+            break;
+          }
+          byte |= 128;
+          result2.push(byte);
+        }
+        return new Uint8Array(result2);
+      }
+      function i32_to_leb128(value) {
+        assert(value >= INT32_LIMITS[0] && value <= INT32_LIMITS[1], `number is out of range: ${value}`);
+        return typeof value === "number" ? signed_number_to_leb128(value) : signed_bigint_to_leb128(value);
+      }
+      function i64_to_leb128(value) {
+        assert(BigInt(value) >= INT64_LIMITS[0] && BigInt(value) <= INT64_LIMITS[1], `number is out of range: ${value}`);
+        return typeof value === "number" ? signed_number_to_leb128(value) : signed_bigint_to_leb128(value);
+      }
+      var import_lodash2 = __toESM2(require_lodash());
+      var ParseTreeException = class extends Error {
+        constructor(errorMsg, parseTree = null) {
+          super(`${errorMsg}: ${parseTree === null ? "" : Tree.treeMap(parseTree, token => token.lexeme)}`);
+        }
+      };
+      var IllegalStartSection = class extends ParseTreeException {};
+      var IllegalMemorySection = class extends ParseTreeException {};
+      var SectionCode;
+      (SectionCode2 => {
+        SectionCode2.Type = 1;
+        SectionCode2.Import = 2;
+        SectionCode2.Function = 3;
+        SectionCode2.Table = 4;
+        SectionCode2.Memory = 5;
+        SectionCode2.Global = 6;
+        SectionCode2.Export = 7;
+        SectionCode2.Start = 8;
+        SectionCode2.Element = 9;
+        SectionCode2.Code = 10;
+        SectionCode2.Data = 11;
+      })(SectionCode || (SectionCode = {}));
+      var BinaryWriter = class {
+        constructor(module2) {
+          this.module = module2;
+        }
+        encode() {
+          return new Uint8Array([...[0, ("a").charCodeAt(0), ("s").charCodeAt(0), ("m").charCodeAt(0)], ...[1, 0, 0, 0], ...this.encodeTypeSection(), ...this.encodeImportSection(), ...this.encodeFunctionSection(), ...this.encodeTableSection(), ...this.encodeMemorySection(), ...this.encodeGlobalSection(), ...this.encodeExportSection(), ...this.encodeStartSection(), ...this.encodeElementSection(), ...this.encodeCodeSection(), ...this.encodeDataSection()]);
+        }
+        encodeTypeSection() {
+          if (this.module.getGlobalTypes().length === 0) {
+            return new Uint8Array([]);
+          }
+          const types = this.module.getGlobalTypes();
+          const numTypes = types.length;
+          let funcSignatureEncodings = [];
+          types.map(func => this.encodeFunctionSignature(func)).forEach(arr => {
+            funcSignatureEncodings = funcSignatureEncodings.concat(...arr);
+          });
+          const sectionSize = funcSignatureEncodings.length + 1;
+          return new Uint8Array([SectionCode.Type, sectionSize, numTypes, ...funcSignatureEncodings]);
+        }
+        encodeImportSection() {
+          if (this.module.imports.length === 0) {
+            return new Uint8Array([]);
+          }
+          const importExpressionEncoding = this.module.imports.flatMap(importExpression => Array.from(this.encodeImportExpression(importExpression)));
+          return new Uint8Array([SectionCode.Import, importExpressionEncoding.length + 1, this.module.imports.length, ...importExpressionEncoding]);
+        }
+        encodeFunctionSection() {
+          const functions = this.module.getFunctionSignatureTypes();
+          const num_fns = functions.length;
+          if (num_fns === 0) {
+            return new Uint8Array([]);
+          }
+          const section_size = num_fns + 1;
+          const function_indices = functions.map(funcSig => this.module.resolveGlobalTypeIndex(funcSig));
+          return new Uint8Array([SectionCode.Function, section_size, num_fns, ...function_indices]);
+        }
+        encodeTableSection() {
+          if (this.module.exportableTables.length === 0) {
+            return new Uint8Array([]);
+          }
+          const tableNum = this.module.exportableTables.length;
+          const tableEncoding = this.module.exportableTables.flatMap(table => Array.from(this.encodeTableExpression(table)));
+          return new Uint8Array([SectionCode.Table, tableEncoding.length + 1, tableNum, ...tableEncoding]);
+        }
+        encodeTableExpression(tableExp) {
+          const {minFlag, maxFlag, tableType} = tableExp;
+          const hasMaxFlag = maxFlag === null ? 0 : 1;
+          const tableTypeEncoding = tableType === 7 ? 112 : 111;
+          if (maxFlag === null) {
+            return [tableTypeEncoding, hasMaxFlag, minFlag];
+          }
+          return [tableTypeEncoding, hasMaxFlag, minFlag, maxFlag];
+        }
+        encodeMemorySection() {
+          if (this.module.memory === null) {
+            return new Uint8Array([]);
+          }
+          const memorySectionEncoding = this.encodeMemoryExpression(this.module.memory);
+          return new Uint8Array([SectionCode.Memory, memorySectionEncoding.length + 1, 1, ...memorySectionEncoding]);
+        }
+        encodeGlobalSection() {
+          if (this.module.globals.length === 0) {
+            return new Uint8Array([]);
+          }
+          const globalEncoding = [];
+          let n_globals = 0;
+          this.module.globals.forEach(g => {
+            globalEncoding.push(...this.encodeGlobalExpression(g));
+            n_globals++;
+          });
+          return new Uint8Array([SectionCode.Global, globalEncoding.length + 1, n_globals, ...globalEncoding]);
+        }
+        encodeExportSection() {
+          const {exportExpressions: exportDeclarations} = this.module;
+          if (typeof exportDeclarations === "undefined") {
+            return new Uint8Array([]);
+          }
+          const exportEncoding = this.encodeExportExpressions(exportDeclarations);
+          const sectionLength = exportEncoding.length;
+          if (sectionLength === 0) {
+            return new Uint8Array();
+          }
+          return new Uint8Array([SectionCode.Export, sectionLength, ...exportEncoding]);
+        }
+        encodeStartSection() {
+          if (this.module.start === null) {
+            return new Uint8Array([]);
+          }
+          if (this.module.start.identifier.type === "NAT") {
+            const startFunctionIndex = (0, import_lodash2.toInteger)(this.module.start.identifier.lexeme);
+            if (startFunctionIndex >= this.module.functions.length) {
+              throw new IllegalStartSection(`Start function index ${startFunctionIndex} is out of bounds.There are only ${this.module.functions.length} functions.`);
+            }
+            return new Uint8Array([SectionCode.Start, 1, startFunctionIndex]);
+          }
+          if (this.module.start.identifier.type === "VAR") {
+            const startFunctionIndex = this.module.resolveExportableExpressionIndexByName(this.module.start.identifier.lexeme, 0);
+            return new Uint8Array([SectionCode.Start, 1, startFunctionIndex]);
+          }
+          throw new IllegalStartSection(`Start function identifier is not a valid type.Got ${this.module.start.identifier.lexeme}`);
+        }
+        encodeElementSection() {
+          if (this.module.elementSection.length === 0) {
+            return new Uint8Array([]);
+          }
+          const elemSize = this.module.elementSection.length;
+          const elementEncoding = this.module.elementSection.flatMap(elem => this.encodeElementExpression(elem));
+          const sectionSize = elementEncoding.length + 1;
+          return new Uint8Array([SectionCode.Element, sectionSize, elemSize, ...elementEncoding]);
+        }
+        encodeElementExpression(elementExp) {
+          switch (elementExp.mode) {
+            case "active":
+              return this.encodeActiveElementExpression(elementExp);
+            case "passive":
+              return this.encodePassiveElementExpression(elementExp);
+            case "declarative":
+              return this.encodeDeclarativeElementExpression(elementExp);
+          }
+        }
+        encodeElementType(elementType) {
+          switch (elementType) {
+            case 7:
+            case null:
+              return 0;
+            case 8:
+              return 111;
+            default:
+              throw new Error(`Invalid element type: ${elementType}`);
+          }
+        }
+        encodeActiveElementExpression(elementExp) {
+          const elementFlag = elementExp.getFlag();
+          const elementItems = elementExp.items;
+          const elementTableOffset = elementExp.linkedTableOffset;
+          const elementItemEncoding = elementItems.flatMap(item => this.encodeElementItemExpression(item));
+          const linkedTable = elementExp.linkedTableIfActive;
+          let linkedTableIndex;
+          if (linkedTable instanceof IRToken && linkedTable.type === "VAR") {
+            linkedTableIndex = this.module.resolveExportableExpressionIndexByName(linkedTable.lexeme, 1);
+          } else if (linkedTable instanceof IRToken) {
+            linkedTableIndex = (0, import_lodash2.toInteger)(linkedTable.lexeme);
+          } else {
+            linkedTableIndex = linkedTable;
+          }
+          const elementType = elementExp.elementType;
+          const elementTypeEncoding = this.encodeElementType(elementType);
+          if (elementFlag === 0 || elementFlag === 4) {
+            return [elementFlag, ...this.encodeFunctionBodyExpression(elementTableOffset, null), 11, elementItems.length, ...elementItemEncoding];
+          }
+          return [elementFlag, linkedTableIndex != null ? linkedTableIndex : 0, ...this.encodeFunctionBodyExpression(elementTableOffset, null), 11, elementTypeEncoding, elementItems.length, ...elementItemEncoding];
+        }
+        encodePassiveElementExpression(elementExp) {
+          const elementItems = elementExp.items;
+          const elementItemEncoding = elementItems.flatMap(item => this.encodeElementItemExpression(item));
+          const elementTypeEncoding = this.encodeElementType(elementExp.elementType);
+          return [elementExp.getFlag(), elementTypeEncoding, elementItems.length, ...elementItemEncoding];
+        }
+        encodeDeclarativeElementExpression(elementExp) {
+          const elementFlag = elementExp.getFlag();
+          const elementType = elementExp.elementType;
+          const elementItems = elementExp.items;
+          const elementItemEncoding = elementItems.flatMap(item => this.encodeElementItemExpression(item));
+          const elementTypeEncoding = this.encodeElementType(elementType);
+          return [elementFlag, elementTypeEncoding, elementItems.length, ...elementItemEncoding];
+        }
+        encodeElementItemExpression(itemExp) {
+          const itemType = itemExp.itemType;
+          let itemIndex = itemExp.itemIndex;
+          if (itemIndex === void 0 && itemType === "ref.func") {
+            itemIndex = this.module.resolveExportableExpressionIndexByName(itemExp.itemVarName, 0);
+          } else if (itemIndex === void 0) {
+            throw new Error(`Element item type is undefined. ${itemType}`);
+          }
+          return [itemIndex];
+        }
+        encodeCodeSection() {
+          const fnExps = this.module.functions;
+          if (fnExps.length === 0) {
+            return new Uint8Array([]);
+          }
+          const fnBodyEncodings = [];
+          fnExps.forEach(body => {
+            fnBodyEncodings.push(...this.encodeFunctionBody(body));
+          });
+          const sectionSize = fnBodyEncodings.length + 1;
+          const fnNumber = fnExps.length;
+          return new Uint8Array([SectionCode.Code, sectionSize, fnNumber, ...fnBodyEncodings]);
+        }
+        encodeDataSection() {
+          return new Uint8Array([]);
+        }
+        encodeMemoryExpression(ir) {
+          if (ir.memoryLimit === null) {
+            return new Uint8Array([0, ir.memoryLength]);
+          }
+          return new Uint8Array([1, ir.memoryLength, ir.memoryLimit]);
+        }
+        encodeGlobalExpression(ir) {
+          const type = ir.type;
+          const globalType = ir.globalType;
+          const globalValue = ir.globalValue;
+          const mutability = ir.mutability;
+          let literal;
+          switch (type) {
+            case 0:
+              literal = NumberEncoder.encodeI32Const((0, import_lodash2.toInteger)(globalValue.lexeme));
+              break;
+            case 1:
+              literal = NumberEncoder.encodeI64Const((0, import_lodash2.toInteger)(globalValue.lexeme));
+              break;
+            case 2:
+              literal = NumberEncoder.encodeF32Const((0, import_lodash2.toInteger)(globalValue.lexeme));
+              break;
+            case 3:
+              literal = NumberEncoder.encodeF64Const((0, import_lodash2.toInteger)(globalValue.lexeme));
+              break;
+            case 7:
+              if (globalValue.type === "VAR") {
+                literal = new Uint8Array([this.module.resolveExportableExpressionIndexByName(globalValue.lexeme, 0)]);
+              } else if (globalValue.type === "NAT") {
+                literal = new Uint8Array([(0, import_lodash2.toInteger)(globalValue.lexeme)]);
+              } else {
+                literal = this.encodeToken(globalValue, null);
+              }
+              break;
+            case 8:
+              literal = this.encodeToken(globalValue, null);
+              break;
+            default:
+              throw new Error(`Invalid global type ${globalValue}`);
+          }
+          return new Uint8Array([ValueType.getValue(type), (0, import_lodash2.toInteger)(mutability), ...this.encodeToken(globalType, null), ...literal, 11]);
+        }
+        encodeImportGlobalExpression(ir) {
+          const mutability = 0;
+          const globalType = ir.typeToken;
+          return new Uint8Array([...this.encodeToken(globalType, null), mutability]);
+        }
+        encodeImportExpression(importExpression) {
+          const importModuleEncoding = this.encodeTextLiteral(importExpression.importModule);
+          const importNameEncoding = this.encodeTextLiteral(importExpression.importName);
+          let importTypeEncoding;
+          let importDescEncoding;
+          switch (importExpression.importType) {
+            case "func":
+              importTypeEncoding = 0;
+              importDescEncoding = new Uint8Array([this.module.resolveGlobalTypeIndex(importExpression.functionSignature.signatureType)]);
+              break;
+            case "memory":
+              importTypeEncoding = 2;
+              importDescEncoding = this.encodeMemoryExpression(importExpression.memoryExpression);
+              break;
+            case "global":
+              importTypeEncoding = 3;
+              importDescEncoding = this.encodeImportGlobalExpression(importExpression.globalExpression);
+              break;
+            case "table":
+              importTypeEncoding = 1;
+              importDescEncoding = this.encodeTableExpression(importExpression.tableExpression);
+              break;
+            default:
+              throw new Error(`Invalid import type ${importExpression.importType}`);
+          }
+          return new Uint8Array([...importModuleEncoding, ...importNameEncoding, importTypeEncoding, ...importDescEncoding]);
+        }
+        encodeFunctionSignature(ir) {
+          const FUNCTION_SIG_PREFIX = 96;
+          const param_encoding = ir.paramTypes.map(type => ValueType.getValue(type));
+          const param_len = param_encoding.length;
+          const result_encoding = ir.returnTypes.map(type => ValueType.getValue(type));
+          const result_len = result_encoding.length;
+          return new Uint8Array([FUNCTION_SIG_PREFIX, param_len, ...param_encoding, result_len, ...result_encoding]);
+        }
+        encodeFunctionBody(fnExp) {
+          let fnBody = fnExp.getBody();
+          const encodedBody = this.encodeFunctionBodyExpression(fnBody, fnExp);
+          const encodedLocals = this.encodeFunctionBodyLocalTypeCount(fnExp);
+          const sectionLength = encodedLocals.length + encodedBody.length + 1;
+          const FUNCTION_END = 11;
+          return new Uint8Array([sectionLength, ...encodedLocals, ...encodedBody, FUNCTION_END]);
+        }
+        encodeFunctionBodyExpression(expr, fn) {
+          if (expr instanceof OperationTree) {
+            expr = expr.unfold();
+          }
+          if (expr instanceof EmptyTokenExpression) {
+            return new Uint8Array([]);
+          }
+          if (expr instanceof UnfoldedTokenExpression) {
+            if (expr instanceof UnfoldedBlockExpression) {
+              return this.encodeUnfoldedBlockExpression(expr, fn);
+            }
+            if (expr instanceof SelectExpression) {
+              return this.encodeSelectExpression(expr);
+            }
+            return this.encodeUnfoldedTokenExpression(expr, fn);
+          }
+          throw new Error(`${expr.toString()}`);
+        }
+        encodeUnfoldedTokenExpression(unfoldedTokenExpr, fnExpr) {
+          var _a;
+          const result2 = [];
+          for (let i = 0; i < unfoldedTokenExpr.expr.length; i++) {
+            let currentExpr = unfoldedTokenExpr.expr[i];
+            let prevExpr = (_a = unfoldedTokenExpr.expr[i - 1]) != null ? _a : null;
+            if (currentExpr instanceof IRToken) {
+              if (currentExpr.type === "VAR") {
+                result2.push(this.encodeVarToken(currentExpr, fnExpr, prevExpr));
+              } else {
+                result2.push(...this.encodeToken(currentExpr, prevExpr));
+              }
+              continue;
+            } else {
+              result2.push(...this.encodeFunctionBodyExpression(currentExpr, fnExpr));
+            }
+          }
+          return new Uint8Array(result2);
+        }
+        encodeVarToken(token, fnExpr, prevToken) {
+          var _a, _b, _c;
+          switch ((_a = token.prevToken) == null ? void 0 : _a.type) {
+            case "local.set":
+            case "local.get":
+            case "local.tee":
+              return this.encodeFunctionLocalVarToken(token, fnExpr);
+            case "br":
+            case "br_if":
+              return this.encodeFunctionBrVarToken(token);
+            case "global.set":
+            case "global.get":
+              return this.encodeFunctionGlobalVarToken(token, fnExpr);
+            case "table.get":
+            case "table.set":
+            case "table.size":
+            case "table.copy":
+            case "table.grow":
+            case "table.full":
+            case "table.init":
+              return this.encodeTableVarToken(token);
+            case "ref.func":
+            case "call":
+              return this.encodeFuncRefToken(token);
+            case "elem.drop":
+              return this.encodeElementVarToken(token);
+          }
+          switch ((_b = prevToken == null ? void 0 : prevToken.prevToken) == null ? void 0 : _b.type) {
+            case "table.copy":
+              return this.encodeTableVarToken(token);
+            case "table.init":
+              return this.encodeElementVarToken(token);
+          }
+          console.log(prevToken);
+          throw new Error(`Unable to resolve var token ${(_c = token.prevToken) == null ? void 0 : _c.lexeme} ${token.lexeme}`);
+        }
+        encodeFunctionBrVarToken(token) {
+          let parent2 = token;
+          let stack_count = 0;
+          while (parent2 !== null) {
+            if (parent2 instanceof BlockExpression && parent2.getName() === token.lexeme || parent2 instanceof UnfoldedBlockExpression && parent2.name === token.lexeme) {
+              return stack_count;
+            }
+            if (parent2 instanceof BlockExpression || parent2 instanceof UnfoldedBlockExpression) {
+              stack_count++;
+            }
+            parent2 = parent2.parent;
+          }
+          throw new Error(`Br ${token.lexeme} not found.`);
+        }
+        encodeFunctionLocalVarToken(token, fnExpr) {
+          const nameToResolve = token.lexeme;
+          for (const [i, name] of [...fnExpr.getParamNames(), ...fnExpr.getLocalNames()].entries()) {
             if (name === nameToResolve) {
               return i;
             }
           }
-          throw new Error(`Parameter name ${nameToResolve} not found in function. Parameter names available: ${[this.paramNames]}, Local Names available: ${this.localNames}`);
+          throw new Error(`Parameter name ${nameToResolve} not found in function. Parameter names available: ${[fnExpr.getParamNames()]}, Local Names available: ${fnExpr.getLocalNames()}`);
         }
-      };
-      var FunctionSignature = class {
-        constructor(paramTypes, returnTypes) {
-          this.paramTypes = paramTypes;
-          this.returnTypes = returnTypes;
-        }
-      };
-      var FunctionBody = class {
-        constructor(body) {
-          this.body = body;
-        }
-      };
-      var OperationTree = class extends IntermediateRepresentation {
-        constructor(operator, operands) {
-          super();
-          this.operator = operator;
-          this.operands = operands;
-        }
-        unfold() {
-          const unfoldedOperands = this.operands.flatMap(operand => {
-            if (operand instanceof Token) {
-              return [operand];
+        encodeFunctionGlobalVarToken(token, fnExpr) {
+          const nameToResolve = token.lexeme;
+          for (const [i, global2] of this.module.globals.entries()) {
+            if (global2.getID() === nameToResolve) {
+              return i;
             }
-            return operand.unfold().tokens;
-          });
-          return new PureUnfoldedTokenExpression([...unfoldedOperands, this.operator]);
+          }
+          throw new Error(`Parameter name ${nameToResolve} not found in function. Parameter names available: ${[fnExpr.getParamNames()]}, Local Names available: ${fnExpr.getLocalNames()}`);
         }
-      };
-      var UnfoldedTokenExpression = class extends IntermediateRepresentation {
-        constructor(tokens) {
-          super();
-          this.tokens = tokens;
-        }
-        unfold() {
-          const unfoldedOperands = this.tokens.flatMap(token => {
-            if (token instanceof Token) {
-              return [token];
+        encodeTableVarToken(token) {
+          const nameToResolve = token.lexeme;
+          for (const [i, table] of this.module.exportableTables.entries()) {
+            if (table.getID() === nameToResolve) {
+              return i;
             }
-            return token.unfold().tokens;
-          });
-          return new PureUnfoldedTokenExpression(unfoldedOperands);
+          }
+          throw new Error(`Table name ${nameToResolve} not found in modules. Table names available: ${this.module.exportableTables.map(table => table.tableName).filter(x => x !== null)}`);
         }
-      };
-      var EmptyTokenExpression = class extends IntermediateRepresentation {
-        unfold() {
-          return new PureUnfoldedTokenExpression([]);
+        encodeFuncRefToken(token) {
+          const nameToResolve = token.lexeme;
+          const functions = this.module.imports.filter(x => x.importType === "func").concat(this.module.functions);
+          for (const [i, fn] of functions.entries()) {
+            if (fn.getID() === nameToResolve) {
+              return i;
+            }
+          }
+          throw new Error(`Function name ${nameToResolve} not found in modules. Function names available: ${functions.map(fn => fn.getID()).filter(name => name !== null)}`);
         }
-      };
-      var PureUnfoldedTokenExpression = class extends IntermediateRepresentation {
-        constructor(tokens) {
-          super();
-          this.tokens = tokens;
+        encodeElementVarToken(token) {
+          const nameToResolve = token.lexeme;
+          for (const [i, fn] of this.module.elementSection.entries()) {
+            if (fn.getID() === nameToResolve) {
+              return i;
+            }
+          }
+          throw new Error(`Function name ${nameToResolve} not found in modules. Function names available: ${this.module.functions.map(fn => fn.getID()).filter(name => name !== null)}`);
         }
-      };
-      function getIR(parseTree) {
-        if (isSExpression(parseTree) || isStackExpression(parseTree)) {
-          return parseExpression(parseTree);
+        encodeFunctionBodyLocalTypeCount(fnExp) {
+          const localTypes = fnExp.getLocalTypes();
+          let uniqueConsecutiveType = null;
+          let uniqueConsecutiveTypeCount = 0;
+          let total_types = 0;
+          const encoding = [];
+          for (const type of localTypes) {
+            if (uniqueConsecutiveType === type) {
+              uniqueConsecutiveTypeCount++;
+              continue;
+            }
+            if (uniqueConsecutiveType !== null) {
+              encoding.push(uniqueConsecutiveTypeCount, ValueType.getValue(uniqueConsecutiveType));
+            }
+            uniqueConsecutiveType = type;
+            uniqueConsecutiveTypeCount = 1;
+            total_types++;
+          }
+          if (uniqueConsecutiveType !== null) {
+            encoding.push(uniqueConsecutiveTypeCount, ValueType.getValue(uniqueConsecutiveType));
+          }
+          return Uint8Array.from([total_types, ...encoding]);
         }
-        if (isFunctionExpression(parseTree)) {
-          return parseFunctionExpression(parseTree);
+        encodeToken(token, prevToken) {
+          if (!this.isLiteralToken(token)) {
+            return this.encodeNonLiteralToken(token);
+          }
+          if (token.prevToken === null) {
+            throw new Error(`Unable to encode ${token}`);
+          }
+          return this.encodeLiteralToken(token, prevToken);
         }
-        if (isModuleDeclaration(parseTree)) {
-          return parseModuleExpression(parseTree);
-        }
-        if (isExportDeclaration(parseTree)) {
-          return parseExportDeclaration(parseTree);
-        }
-        throw new Error(`Unexpected token type to parse: ${JSON.stringify(parseTree, void 0, 2)}`);
-      }
-      function parseExpression(parseTree) {
-        if (parseTree.length === 0 || typeof parseTree === "undefined") {
-          return new EmptyTokenExpression();
-        }
-        if (isSExpression(parseTree)) {
-          return parseSExpression(parseTree);
-        }
-        if (isStackExpression(parseTree)) {
-          return parseStackExpression(parseTree);
-        }
-        throw new Error(`Cannot parse into function expression: ${JSON.stringify(parseTree, void 0, 2)}`);
-      }
-      function parseSExpression(parseTree) {
-        let head = parseTree[0];
-        assert(head instanceof Token);
-        head = head;
-        const body = [];
-        for (let i = 1; i < parseTree.length; i++) {
-          const token = parseTree[i];
-          if (token instanceof Token) {
-            body.push(token);
+        encodeUnfoldedBlockExpression(ir, fnExpr) {
+          const binary = [...this.encodeUnfoldedTokenExpression(ir, fnExpr)];
+          const signature = ir.signature;
+          if (signature.isEmpty()) {
+            binary.splice(1, 0, 64);
+          } else if (ir.signature.paramTypes.length === 0 && ir.signature.returnTypes.length === 1) {
+            binary.splice(1, 0, ValueType.getValue(ir.signature.returnTypes[0]));
           } else {
-            const irNode = getIR(token);
-            if (!(irNode instanceof Token || irNode instanceof OperationTree || irNode instanceof UnfoldedTokenExpression)) {
+            binary.splice(1, 0, this.module.resolveGlobalTypeIndex(ir.signature));
+          }
+          return new Uint8Array(binary);
+        }
+        encodeSelectExpression(ir) {
+          var _a, _b;
+          if (!ir.hasExplicitResult) {
+            return this.encodeNonLiteralToken(ir.headerToken);
+          }
+          const valueType = (_b = (_a = ir.explicitResultType) == null ? void 0 : _a.valueType) != null ? _b : null;
+          if (valueType === null) {
+            throw new Error();
+          }
+          return new Uint8Array([...this.encodeNonLiteralToken(ir.headerToken), 1, ValueType.getValue(valueType)]);
+        }
+        encodeExportExpressions(exportExpressions) {
+          if (exportExpressions.length === 0) {
+            return new Uint8Array();
+          }
+          const exportNum = exportExpressions.length;
+          const exportEncodings = [];
+          for (const exportExp of exportExpressions) {
+            let {exportReferenceIndex, exportName, exportType, exportReferenceName} = exportExp;
+            const exportNameEncoding = [];
+            for (let i = 0; i < exportName.length; i++) {
+              exportNameEncoding.push(exportName.charCodeAt(i));
+            }
+            exportEncodings.push(exportName.length);
+            exportEncodings.push(...exportNameEncoding);
+            if (exportReferenceIndex === null && exportReferenceName === null) {
+              throw new Error(`Both export reference index and name cannot be null: ${exportExp}`);
+            }
+            if (exportReferenceIndex === null) {
+              exportReferenceIndex = this.module.resolveExportableExpressionIndexByName(exportReferenceName, exportType);
+            }
+            exportEncodings.push(ExportType.getEncoding(exportType));
+            exportEncodings.push(exportReferenceIndex);
+          }
+          return new Uint8Array([exportNum, ...exportEncodings]);
+        }
+        convertVarToIndexToken(varToken, index) {
+          assert(Number.isInteger(index));
+          assert(index >= 0);
+          varToken.type = "NAT";
+          varToken.lexeme = index.toString();
+          return varToken;
+        }
+        isLiteralToken(token) {
+          return token.type === "NAT" || token.type === "FLOAT";
+        }
+        encodeNonLiteralToken(token) {
+          if (token.isValueToken()) {
+            return new Uint8Array([ValueType.getValue(token.valueType)]);
+          }
+          if (token.isMemoryOpcodeToken()) {
+            return this.encodeMemoryOperationToken(token);
+          }
+          if (token.isOpcodeToken()) {
+            return this.encodeOpcodeToken(token);
+          }
+          if (token.valueType !== null) {
+            return new Uint8Array([ValueType.getValue(token.valueType)]);
+          }
+          throw new Error(`Unexpected token: ${token.toString()}`);
+        }
+        encodeLiteralToken(token, prevToken) {
+          var _a, _b, _c;
+          if (prevToken === null) {
+            throw new Error(`A literal token must have a previous token: ${token.toString()}`);
+          }
+          if (prevToken.isOpcodeType(58)) {
+            return NumberEncoder.encodeF64Const((/^\d+$/u).test(token.lexeme) ? Number.parseInt(token.lexeme) : Number.parseFloat(token.lexeme));
+          }
+          if (prevToken.isOpcodeType(57)) {
+            return NumberEncoder.encodeF32Const((/^\d+$/u).test(token.lexeme) ? Number.parseInt(token.lexeme) : Number.parseFloat(token.lexeme));
+          }
+          if (prevToken.isOpcodeType(56)) {
+            return NumberEncoder.encodeI64Const(BigInt(token.lexeme));
+          }
+          if (prevToken.isOpcodeType(55)) {
+            return NumberEncoder.encodeI32Const((/^\d+$/u).test(token.lexeme) ? Number.parseInt(token.lexeme) : Number.parseFloat(token.lexeme));
+          }
+          if (prevToken.type === "local.get" || prevToken.type === "local.set" || prevToken.type === "table.get" || prevToken.type === "table.set" || prevToken.type === "table.size" || prevToken.type === "table.copy" || prevToken.type === "table.grow" || prevToken.type === "table.full" || prevToken.type === "table.init" || prevToken.type === "ref.func" || prevToken.type === "elem.drop" || ((_a = prevToken.prevToken) == null ? void 0 : _a.type) === "elem.drop" || ((_b = prevToken.prevToken) == null ? void 0 : _b.type) === "table.copy" || ((_c = prevToken.prevToken) == null ? void 0 : _c.type) === "table.init") {
+            assert(token.type === "NAT");
+            return new Uint8Array([Number.parseInt(token.lexeme)]);
+          }
+          if (prevToken.type === "br") {
+            assert(token.type === "NAT");
+            return new Uint8Array([Number.parseInt(token.lexeme)]);
+          }
+          console.log(prevToken);
+          throw new Error(`Unsuppored literal token type: [${prevToken.lexeme}, ${token.lexeme}]`);
+        }
+        encodeOpcodeToken(token) {
+          const encoding = [Opcode.getCode(token.opcodeType)];
+          switch (token.opcodeType) {
+            case 206:
+            case 207:
+            case 208:
+            case 211:
+            case 212:
+            case 213:
+              encoding.unshift(252);
+              break;
+          }
+          return new Uint8Array(encoding);
+        }
+        encodeTextLiteral(text) {
+          const length = text.length;
+          const encoding = [];
+          for (let i = 0; i < length; i++) {
+            encoding.push(text.charCodeAt(i));
+          }
+          return new Uint8Array([length, ...encoding]);
+        }
+        encodeMemoryOperationToken(token) {
+          if (token.type === "STORE") {
+            return this.encodeMemoryStoreToken(token);
+          }
+          if (token.type === "LOAD") {
+            return this.encodeMemoryLoadToken(token);
+          }
+          if (token.type === "memory.grow") {
+            return this.encodeMemoryGrowToken(token);
+          }
+          if (token.type === "memory.size") {
+            return this.encodeMemorySizeToken(token);
+          }
+          throw new Error();
+        }
+        encodeMemoryStoreToken(token) {
+          let alignment = null;
+          const storeOffset = 0;
+          switch (token.opcodeType) {
+            case 48:
+            case 50:
+              alignment = 0;
+              break;
+            case 49:
+            case 51:
+              alignment = 1;
+              break;
+            case 46:
+            case 44:
+            case 52:
+              alignment = 2;
+              break;
+            case 47:
+            case 45:
+              alignment = 3;
+              break;
+            default:
+              throw new Error(`Unexpected opcode: ${token.lexeme}`);
+          }
+          return new Uint8Array([...this.encodeOpcodeToken(token), alignment, storeOffset]);
+        }
+        encodeMemoryLoadToken(token) {
+          let alignment = null;
+          const storeOffset = 0;
+          switch (token.opcodeType) {
+            case 34:
+            case 35:
+            case 38:
+            case 39:
+              alignment = 0;
+              break;
+            case 36:
+            case 40:
+            case 37:
+            case 41:
+              alignment = 1;
+              break;
+            case 32:
+            case 30:
+            case 42:
+            case 43:
+              alignment = 2;
+              break;
+            case 33:
+            case 31:
+              alignment = 3;
+              break;
+            default:
+              throw new Error(`Unexpected opcode: ${token.lexeme}`);
+          }
+          return new Uint8Array([...this.encodeOpcodeToken(token), alignment, storeOffset]);
+        }
+        encodeMemoryGrowToken(token) {
+          const memidx = 0;
+          return new Uint8Array([...this.encodeOpcodeToken(token), memidx]);
+        }
+        encodeMemorySizeToken(token) {
+          const memidx = 0;
+          return new Uint8Array([...this.encodeOpcodeToken(token), memidx]);
+        }
+      };
+      var NumberEncoder;
+      (NumberEncoder2 => {
+        function encodeF64Const(n) {
+          let buffer = new ArrayBuffer(8);
+          new DataView(buffer).setFloat64(0, n, true);
+          return new Uint8Array(buffer);
+        }
+        NumberEncoder2.encodeF64Const = encodeF64Const;
+        function encodeF32Const(n) {
+          let buffer = new ArrayBuffer(8);
+          new DataView(buffer).setFloat32(0, n, true);
+          return new Uint8Array(buffer.slice(0, 4));
+        }
+        NumberEncoder2.encodeF32Const = encodeF32Const;
+        function encodeI64Const(n) {
+          return i64_to_leb128(n);
+        }
+        NumberEncoder2.encodeI64Const = encodeI64Const;
+        function encodeI32Const(n) {
+          return i32_to_leb128(n);
+        }
+        NumberEncoder2.encodeI32Const = encodeI32Const;
+      })(NumberEncoder || (NumberEncoder = {}));
+      var import_lodash3 = __toESM2(require_lodash());
+      function getIR(parseTree) {
+        const ir = new IRWriter(parseTree).parse();
+        return ir;
+      }
+      var IRWriter = class {
+        constructor(parseTree) {
+          this.module = new ModuleExpression();
+          this.parseTree = parseTree;
+        }
+        parse() {
+          this.parseModuleExpression(this.parseTree);
+          return this.module;
+        }
+        parseModuleExpression(parseTree) {
+          assert(isModuleExpression(parseTree));
+          for (let i = 1; i < parseTree.length; i++) {
+            const parseTreeNode = parseTree[i];
+            if (parseTreeNode instanceof Token) {
               throw new Error();
             }
-            body.push(irNode);
+            if (isFunctionExpression(parseTreeNode)) {
+              this.module.addIntermediateRepresentation(this.parseFunctionExpression(parseTreeNode));
+              continue;
+            }
+            if (isExportExpression(parseTreeNode)) {
+              this.parseExportExpression(parseTreeNode).forEach(exp => {
+                this.module.addIntermediateRepresentation(exp);
+              });
+              continue;
+            }
+            if (isStartExpression(parseTreeNode)) {
+              const startExp = this.parseStartExpression(parseTreeNode);
+              this.module.addIntermediateRepresentation(startExp);
+              continue;
+            }
+            if (isMemoryExpression(parseTreeNode)) {
+              const moduleExp = this.parseMemoryExpression(parseTreeNode);
+              this.module.addIntermediateRepresentation(moduleExp);
+              continue;
+            }
+            if (isGlobalExpression(parseTreeNode)) {
+              const globalExp = this.parseGlobalExpression(parseTreeNode);
+              this.module.addIntermediateRepresentation(globalExp);
+              continue;
+            }
+            if (isImportExpression(parseTreeNode)) {
+              const importExp = this.parseImportExpression(parseTreeNode);
+              this.module.addIntermediateRepresentation(importExp);
+              continue;
+            }
+            if (isElementExpression(parseTreeNode)) {
+              const elemExp = this.parseElementExpression(parseTreeNode);
+              this.module.addIntermediateRepresentation(elemExp);
+              continue;
+            }
+            if (isTableExpression(parseTreeNode)) {
+              this.parseTableExpression(parseTreeNode).forEach(exp => this.module.addIntermediateRepresentation(exp));
+              continue;
+            }
+            console.log(parseTreeNode);
+            throw new Error(`Unrecognised Expression: ${Tree.treeMap(parseTreeNode, t => t.lexeme)}`);
           }
         }
-        assert(Opcode.getParamLength(head.opcodeType) === body.length);
-        return new OperationTree(head, body);
-      }
-      function parseStackExpression(parseTree) {
-        const nodes = [];
-        parseTree.forEach(tokenNode => {
-          if (tokenNode instanceof Token) {
-            nodes.push(tokenNode);
-          } else {
-            const temp = getIR(tokenNode);
-            if (!(temp instanceof Token || temp instanceof OperationTree)) {
+        parseExportExpression(parseTree) {
+          assert(isExportExpression(parseTree));
+          const exportExpressions = [];
+          for (let i = 1; i < parseTree.length; i += 2) {
+            const exportName = parseTree[i];
+            if (!(exportName instanceof Token)) {
               throw new Error();
             }
+            const exportInfo = parseTree[i + 1];
+            if (!(exportInfo instanceof Array)) {
+              throw new Error();
+            }
+            const [exportType, exportIndex] = exportInfo;
+            if (!(exportType instanceof Token && exportIndex instanceof Token)) {
+              throw new Error();
+            }
+            exportExpressions.push(new ExportExpression(exportName, exportType, exportIndex));
+          }
+          return exportExpressions;
+        }
+        parseStartExpression(parseTree) {
+          if (parseTree.length !== 2) {
+            throw new IllegalStartSection("Illegal Start Section", parseTree);
+          }
+          const [first2, second] = parseTree;
+          if (!(first2 instanceof Token && second instanceof Token)) {
+            throw new IllegalStartSection("Illegal Start Section", parseTree);
+          }
+          return new StartExpression(first2, second);
+        }
+        parseMemoryExpression(parseTree) {
+          assert(isMemoryExpression(parseTree));
+          let memorySize = null;
+          let memoryLimit = null;
+          let memoryName = null;
+          for (let i = 1; i < parseTree.length; i++) {
+            const token = parseTree[i];
+            if (!(token instanceof Token)) {
+              throw new IllegalMemorySection("Illegal Memory Section", parseTree);
+            }
+            if (memorySize === null && token.type === "VAR") {
+              memoryName = token.lexeme;
+              continue;
+            }
+            if (memorySize === null && token.type === "NAT") {
+              memorySize = (0, import_lodash3.toInteger)(token.lexeme);
+              continue;
+            }
+            if (memorySize !== null && token.type === "NAT") {
+              memoryLimit = (0, import_lodash3.toInteger)(token.lexeme);
+              continue;
+            }
+            throw new IllegalMemorySection("Illegal Memory Section", parseTree);
+          }
+          if (memorySize === null) {
+            throw new IllegalMemorySection("Illegal Memory Section", parseTree);
+          }
+          return new MemoryExpression(parseTree[0], memorySize, memoryLimit, memoryName);
+        }
+        parseGlobalExpression(parseTree) {
+          let name = null;
+          let type = null;
+          let type_mutability = false;
+          let expr = null;
+          for (const [i, token] of parseTree.entries()) {
+            if (token instanceof Token && token.type === "VAR") {
+              name = token.lexeme;
+              continue;
+            }
+            if (token instanceof Token && token.type === "VALUETYPE") {
+              type = token.valueType;
+              continue;
+            }
+            if (token instanceof Array && token[0] instanceof Token && token[0].type === "mut" && token[1] instanceof Token && token[1].type === "VALUETYPE") {
+              type = token[1].valueType;
+              type_mutability = true;
+              continue;
+            }
+            if (type !== null && token instanceof Array) {
+              expr = token;
+            }
+          }
+          if (parseTree[0] instanceof Array) {
+            throw new Error(`Expected Global Expression to start with token: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          if (type === null) {
+            throw new Error(`Expected type in Global Expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          if (!(expr instanceof Array && expr.length === 2 && expr[0] instanceof Token && expr[1] instanceof Token)) {
+            throw new Error(`Expected expression in Global Expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          return new GlobalExpression(parseTree[0], type, type_mutability, expr[0], expr[1], name);
+        }
+        parseImportExpression(parseTree) {
+          if (parseTree.length !== 4) {
+            throw new Error(`Expected 4 tokens in import expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          const importModule = parseTree[1];
+          const importName = parseTree[2];
+          if (!(importModule instanceof Token) || importModule.type !== "TEXT") {
+            throw new Error(`Expected module name to be a string in import expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          if (!(importName instanceof Token) || importName.type !== "TEXT") {
+            throw new Error(`Expected import name to be a string in import expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          const importdesc = parseTree[3];
+          if (!(importdesc instanceof Array) || !(importdesc[0] instanceof Token)) {
+            throw new Error(`Expected import description to be a sequence of tokens in import expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          const importModuleName = importModule.extractName();
+          const importNameName = importName.extractName();
+          switch (importdesc[0].type) {
+            case "func":
+              return ImportExpression.functionImport(importModuleName, importNameName, this.parseFunctionExpressionSignature(importdesc)[0]);
+            case "table":
+              throw new Error("Table expressions are not supported yet.");
+              break;
+            case "memory":
+              return ImportExpression.memoryImport(importModuleName, importNameName, this.parseMemoryExpression(importdesc));
+            case "global":
+              return ImportExpression.globalImport(importModuleName, importNameName, this.parseImportGlobalExpression(importdesc));
+              break;
+            default:
+              throw new Error(`Unrecognised import description: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          throw new Error(`Unrecognised Expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+        }
+        parseImportGlobalExpression(parseTree) {
+          const headerToken = parseTree[0];
+          const typeToken = parseTree[1];
+          if (parseTree.length !== 2) {
+            throw new Error(`Expected 2 tokens in import global expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          if (!(headerToken instanceof Token)) {
+            throw new Error(`Expected header token in import global expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          if (!(typeToken instanceof Token)) {
+            throw new Error(`Expected type token in import global expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          return new ImportGlobalExpression(headerToken, typeToken);
+        }
+        parseElementExpression(parseTree) {
+          assert(isElementExpression(parseTree));
+          if (parseTree.length === 1) {
+            return ElementExpression.Passive(parseTree[0], null, null, []);
+          }
+          let cursor = 1;
+          let currentToken = parseTree[cursor];
+          if (currentToken instanceof Token && currentToken.type === "VAR") {
+            cursor++;
+            currentToken = parseTree[cursor];
+          }
+          if (currentToken instanceof Array && (currentToken[0] instanceof Token && currentToken[0].type === "table" || isElementOffsetExpression(currentToken))) {
+            return this.parseActiveElementExpression(parseTree);
+          }
+          if (currentToken instanceof Token && currentToken.type === "declare") {
+            return this.parseDeclarativeElementExpression(parseTree);
+          }
+          return this.parsePassiveElementExpression(parseTree);
+        }
+        parsePassiveElementExpression(parseTree) {
+          let cursor = 1;
+          let currentToken = parseTree[cursor];
+          let name = null;
+          let elementType = 7;
+          if (currentToken instanceof Token && currentToken.type === "VAR") {
+            name = currentToken.lexeme;
+            currentToken = parseTree[++cursor];
+          }
+          if (cursor < parseTree.length && !(currentToken instanceof Token)) {
+            throw new Error(`Expected token in passive element expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          if (currentToken instanceof Token && currentToken.valueType !== null) {
+            elementType = currentToken.valueType;
+          }
+          currentToken = parseTree[++cursor];
+          const items = parseTree.slice(cursor).map(x => this.parseElementItemExpression(x));
+          return ElementExpression.Passive(parseTree[0], elementType, name, items);
+        }
+        parseActiveElementExpression(parseTree) {
+          let cursor = 0;
+          let currentToken = parseTree[cursor];
+          const headerToken = currentToken;
+          currentToken = parseTree[++cursor];
+          let name = null;
+          let elementType = null;
+          let linkedTableExpression = 0;
+          let offsetExpression;
+          if (currentToken instanceof Token && currentToken.type === "VAR") {
+            name = currentToken.lexeme;
+            currentToken = parseTree[++cursor];
+          }
+          if (currentToken instanceof Array && currentToken[0] instanceof Token && currentToken[1] instanceof Token && currentToken[0].type === "table") {
+            if (currentToken.length !== 2) {
+              throw new Error(`Expected 2 tokens in linked table expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+            }
+            linkedTableExpression = currentToken[1];
+            currentToken = parseTree[++cursor];
+          }
+          offsetExpression = this.parseElementOffsetExpression(currentToken);
+          currentToken = parseTree[++cursor];
+          if (currentToken instanceof Token) {
+            elementType = currentToken.valueType;
+          }
+          currentToken = parseTree[++cursor];
+          const items = parseTree.slice(cursor).map(x => this.parseElementItemExpression(x));
+          return ElementExpression.Active(headerToken, elementType, name, linkedTableExpression, offsetExpression, items);
+        }
+        parseDeclarativeElementExpression(parseTree) {
+          var _a, _b;
+          let cursor = 0;
+          const headerToken = parseTree[cursor++];
+          let name = null;
+          if (parseTree[cursor] instanceof Token && parseTree[cursor].type === "VAR") {
+            name = parseTree[cursor++].lexeme;
+          }
+          const declarationToken = parseTree[cursor++];
+          const elementType = (_b = (_a = parseTree[cursor++]) == null ? void 0 : _a.valueType) != null ? _b : null;
+          const items = parseTree.slice(cursor).map(x => this.parseElementItemExpression(x));
+          return ElementExpression.Declarative(headerToken, name, declarationToken, elementType, items);
+        }
+        parseElementOffsetExpression(parseTree) {
+          assert(isElementOffsetExpression(parseTree));
+          const header = parseTree[0];
+          if (header instanceof Token && header.type === "offset") {
+            return this.parseElementOffsetExpression(parseTree.slice(1));
+          }
+          parseTree = parseTree.flat();
+          return this.parseFunctionBodyExpression(parseTree, true);
+        }
+        parseElementItemExpression(itemExpression) {
+          assert(isElementItemExpression(itemExpression));
+          if (itemExpression.length === 2 && itemExpression[0] instanceof Token && itemExpression[1] instanceof Token && itemExpression[0].type !== "item") {
+            const itemType = itemExpression[0];
+            const itemToken = itemExpression[1];
+            return new ElementItemExpression(itemType.type, itemToken);
+          }
+          if (itemExpression.length === 2 && itemExpression[0] instanceof Token && itemExpression[1] instanceof Array && itemExpression[0].type === "item") {
+            const itemType = itemExpression[1][0];
+            const itemToken = itemExpression[1][1];
+            return new ElementItemExpression(itemType.type, itemToken);
+          }
+          if (itemExpression.length === 3 && itemExpression[1] instanceof Token && itemExpression[2] instanceof Token) {
+            const itemType = itemExpression[1];
+            const itemToken = itemExpression[2];
+            return new ElementItemExpression(itemType.type, itemToken);
+          }
+          throw new Error(`Unrecognised element item expression: ${Tree.treeMap(itemExpression, t => t.lexeme)}`);
+        }
+        parseTableExpression(parseTree) {
+          assert(isTableExpression(parseTree));
+          if (tableExpressionHasInlineElementExpression(parseTree)) {
+            return this.parseTableWithInlineElementExpression(parseTree);
+          }
+          const headerToken = parseTree[0];
+          let tableName = null;
+          let minFlag = null;
+          let maxFlag = null;
+          let tableType = null;
+          let linkedImportExpression = null;
+          let linkedExportExpression = null;
+          let cursor = 1;
+          let currentToken = parseTree[cursor];
+          if (currentToken instanceof Token && currentToken.type === "VAR") {
+            tableName = currentToken.lexeme;
+            currentToken = parseTree[++cursor];
+          }
+          if (currentToken instanceof Array) {
+            const firstToken = currentToken[0];
+            if (firstToken instanceof Token && firstToken.type === "import") {
+              linkedImportExpression = this.parseInlineTableImportExpression(currentToken);
+            } else if (firstToken instanceof Token && firstToken.type === "export") {
+              linkedExportExpression = this.parseInlineTableExportExpression(currentToken);
+              linkedExportExpression.exportType = 1;
+            }
+            currentToken = parseTree[++cursor];
+          }
+          if (!(currentToken instanceof Token) || currentToken.type !== "NAT") {
+            throw new Error(`Expected min flag in table expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          minFlag = parseInt(currentToken.lexeme);
+          currentToken = parseTree[++cursor];
+          if (currentToken instanceof Token && currentToken.type === "NAT") {
+            maxFlag = parseInt(currentToken.lexeme);
+            currentToken = parseTree[++cursor];
+          }
+          if (currentToken instanceof Token && (currentToken.valueType === 7 || currentToken.valueType === 8)) {
+            tableType = currentToken.valueType;
+            currentToken = parseTree[++cursor];
+          }
+          if (minFlag === null) {
+            throw new Error(`Expected min flag in table expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          if (tableType === null) {
+            throw new Error(`Expected table type in table expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          const result2 = new TableExpression(headerToken, tableName, minFlag, maxFlag, tableType);
+          if (linkedExportExpression !== null) {
+            this.module.addExportExpression(linkedExportExpression);
+          }
+          if (linkedImportExpression !== null) {
+            return [linkedImportExpression(result2)];
+          }
+          return [result2];
+        }
+        parseTableWithInlineElementExpression(parseTree) {
+          let cursor = 0;
+          let currentToken = parseTree[cursor];
+          let headerToken = null;
+          let name = null;
+          let reftype = null;
+          if (!(currentToken instanceof Token) || currentToken.type !== "table") {
+            throw new Error(`Invalid table expression: Expected to start with table token: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          headerToken = currentToken;
+          currentToken = parseTree[++cursor];
+          if (currentToken instanceof Token && currentToken.type === "VAR") {
+            name = currentToken.lexeme;
+            currentToken = parseTree[++cursor];
+          }
+          if (currentToken instanceof Array || currentToken.valueType !== 7 && currentToken.valueType !== 8) {
+            throw new Error(`Invalid table expression: Expected table type (funcref or externref): ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          reftype = currentToken.valueType;
+          currentToken = parseTree[++cursor];
+          const elemTokenTree = currentToken;
+          if (elemTokenTree instanceof Token || !(elemTokenTree[0] instanceof Token) || elemTokenTree[0].type !== "elem") {
+            throw new Error(`Invalid table expression: Expected elem token: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          const elemExpression = this.parseInlineTableElemExpression(elemTokenTree);
+          const tableExpression = new TableExpression(headerToken, name, elemExpression.items.length, elemExpression.items.length, reftype);
+          return [tableExpression, elemExpression];
+        }
+        parseInlineTableElemExpression(elemParseTree) {
+          const flatTree = elemParseTree.flat();
+          let cursor = 0;
+          let currentToken = flatTree[cursor];
+          const headerToken = currentToken;
+          currentToken = flatTree[++cursor];
+          const itemType = "ref.func";
+          const elementType = 7;
+          const name = null;
+          const linkedTableExpression = new Token("NAT", `${this.module.exportableTables.length}`, -1, -1, -1, null, null);
+          let offsetExpression = new UnfoldedTokenExpression([new Token("CONST", "i32.const", -1, -1, -1, 55, null), new Token("NAT", "0", -1, -1, -1, null, null)]);
+          const items = flatTree.slice(cursor).filter(x => x.type !== "item").map(x => new ElementItemExpression(itemType, x));
+          return ElementExpression.Active(headerToken, elementType, name, linkedTableExpression, offsetExpression, items);
+        }
+        parseInlineTableImportExpression(parseTree) {
+          if (parseTree.length !== 3) {
+            throw new Error(`Expected 3 tokens in inline table import expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          for (const token of parseTree) {
+            if (!(token instanceof Token)) {
+              throw new Error(`Invalid inline table import expression (No nested expression): ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+            }
+          }
+          parseTree = parseTree;
+          const importModuleName = parseTree[1];
+          const importEntityName = parseTree[2];
+          return tableExpression => ImportExpression.tableImport(importModuleName.extractName(), importEntityName.extractName(), tableExpression);
+        }
+        parseInlineTableExportExpression(parseTree) {
+          if (parseTree.length !== 2) {
+            throw new Error(`Expected 2 tokens in inline table export expression: ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+          }
+          for (const token of parseTree) {
+            if (!(token instanceof Token)) {
+              throw new Error(`Invalid inline table export expression (No nested expression): ${Tree.treeMap(parseTree, t => t.lexeme)}`);
+            }
+          }
+          parseTree = parseTree;
+          const exportName = parseTree[1].extractName();
+          return new ExportExpression(exportName, 1, this.module.exportableTables.length);
+        }
+        parseFunctionExpression(parseTree) {
+          assert(isFunctionExpression(parseTree));
+          const [functionSignature, cursor] = this.parseFunctionExpressionSignature(parseTree);
+          let remainingTree = parseTree.slice(cursor);
+          let isStart = false;
+          if (remainingTree.length === 1 && !(remainingTree[0] instanceof Token)) {
+            remainingTree = remainingTree[0];
+            isStart = true;
+          }
+          this.module.addGlobalType(functionSignature.signatureType);
+          const ir = this.parseFunctionBodyExpression(remainingTree, isStart);
+          return new FunctionExpression(functionSignature, ir);
+        }
+        parseFunctionExpressionSignature(parseTree) {
+          let functionName = null;
+          let inlineExportName = null;
+          const paramTypes = [];
+          const paramNames = [];
+          const resultTypes = [];
+          const localTypes = [];
+          const localNames = [];
+          let cursor = 1;
+          let token = parseTree[cursor];
+          if (token instanceof Token && token.type === "VAR") {
+            functionName = token.lexeme;
+            cursor += 1;
+          }
+          token = parseTree[cursor];
+          if (token instanceof Array && token[0] instanceof Token && token[0].type === "export" && token[1] instanceof Token) {
+            inlineExportName = token[1].extractName();
+            cursor++;
+          }
+          for (; cursor < parseTree.length; cursor++) {
+            const parseTreeNode = parseTree[cursor];
+            if (parseTreeNode instanceof Token || !isFunctionSignatureParamExpression(parseTreeNode)) {
+              break;
+            }
+            const {types, names} = this.parseFunctionSignatureParamExpression(parseTreeNode);
+            paramTypes.push(...types);
+            paramNames.push(...names);
+          }
+          for (; cursor < parseTree.length; cursor++) {
+            const parseTreeNode = parseTree[cursor];
+            if (parseTreeNode instanceof Token || !isFunctionSignatureResultExpression(parseTreeNode)) {
+              break;
+            }
+            const types = this.parseFunctionSignatureResultExpression(parseTreeNode);
+            resultTypes.push(...types);
+          }
+          for (; cursor < parseTree.length; cursor++) {
+            const parseTreeNode = parseTree[cursor];
+            if (parseTreeNode instanceof Token || !isFunctionSignatureLocalExpression(parseTreeNode)) {
+              break;
+            }
+            const {types, names} = this.parseFunctionSignatureLocalExpression(parseTreeNode);
+            localTypes.push(...types);
+            localNames.push(...names);
+          }
+          const functionSignature = new FunctionSignature(functionName, inlineExportName, paramTypes, paramNames, resultTypes, localTypes, localNames);
+          return [functionSignature, cursor];
+        }
+        parseFunctionBodyExpression(parseTree, isStart) {
+          if (parseTree.length === 0 || typeof parseTree === "undefined") {
+            return new EmptyTokenExpression();
+          }
+          if (isFunctionBodyBlockExpression(parseTree, isStart)) {
+            return this.parseFunctionBodyBlockExpression(parseTree, isStart);
+          }
+          if (isFunctionBodyStackExpression(parseTree, isStart)) {
+            return this.parseFunctionBodyStackExpression(parseTree, isStart);
+          }
+          if (isFunctionBodySExpression(parseTree, isStart)) {
+            return this.parseFunctionBodySExpression(parseTree, isStart);
+          }
+          throw new Error(`Cannot parse into function body expression: ${JSON.stringify(parseTree, void 0, 2)}`);
+        }
+        parseFunctionBodySExpression(parseTree, isStart) {
+          let head = parseTree[0];
+          assert(head instanceof Token);
+          head = head;
+          const body = [];
+          for (let i = 1; i < parseTree.length; i++) {
+            const token = parseTree[i];
+            if (token instanceof Token) {
+              body.push(token);
+            } else {
+              const irNode = this.parseFunctionBodyExpression(token, false);
+              if (!(irNode instanceof Token || irNode instanceof OperationTree || irNode instanceof UnfoldedTokenExpression)) {
+                throw new Error();
+              }
+              body.push(irNode);
+            }
+          }
+          assert(Opcode.getParamLength(head.opcodeType) === body.length);
+          return new OperationTree(head, body);
+        }
+        parseFunctionBodyStackExpression(parseTree, isStart) {
+          const nodes = [];
+          for (let i = 0; i < parseTree.length; i++) {
+            const tokenNode = parseTree[i];
+            const isStart2 = i === 0;
+            if (isFunctionBodySelectExpression(tokenNode, parseTree[i + 1], isStart2)) {
+              nodes.push(this.parseFunctionBodySelectExpression(tokenNode, parseTree[i + 1], isStart2));
+              i++;
+              continue;
+            }
+            if (isFunctionBodyStackBlockExpression(parseTree.slice(i))) {
+              const [node, consumed] = this.parseFunctionBodyStackBlockExprssion(parseTree.slice(i), isStart2);
+              i += consumed;
+              nodes.push(node);
+              continue;
+            }
+            if (tokenNode instanceof Token) {
+              nodes.push(tokenNode);
+              continue;
+            }
+            const temp = this.parseFunctionBodyExpression(tokenNode, true);
             nodes.push(temp);
           }
-        });
-        return new UnfoldedTokenExpression(nodes);
-      }
-      function parseFunctionExpression(parseTree) {
-        assert(isFunctionExpression(parseTree));
-        let functionName = null;
-        let inlineExportName = null;
-        const paramTypes = [];
-        const paramNames = [];
-        const resultTypes = [];
-        const localTypes = [];
-        const localNames = [];
-        let cursor = 1;
-        let token = parseTree[cursor];
-        if (token instanceof Token && token.type === "VAR") {
-          functionName = token.lexeme;
-          cursor += 1;
+          return new UnfoldedTokenExpression(nodes);
         }
-        token = parseTree[cursor];
-        if (token instanceof Array && token[0] instanceof Token && token[0].type === "export" && token[1] instanceof Token) {
-          inlineExportName = token[1].extractText();
+        parseFunctionBodySelectExpression(headerToken, nextToken, isStart) {
+          if (typeof nextToken === "undefined") {
+            if (!(headerToken instanceof Token)) {
+              throw new Error();
+            }
+            return new SelectExpression([headerToken]);
+          }
+          if (!(headerToken instanceof Token && nextToken instanceof Array && nextToken[0] instanceof Token && nextToken[1] instanceof Token && nextToken.length === 2)) {
+            throw new Error(`Cannot convert into Select Expression: [${JSON.stringify(headerToken, void 0, 2)}, ${JSON.stringify(nextToken, void 0, 2)}]`);
+          }
+          return new SelectExpression([headerToken, nextToken[0], nextToken[1]]);
+        }
+        parseFunctionBodyBlockExpression(parseTree, isStart) {
+          let cursor = 0;
+          let current;
+          let firstToken;
+          let blockLabel = null;
+          const paramTypes = [];
+          const resultTypes = [];
+          current = parseTree[cursor];
+          if (!(current instanceof Token) || !current.isBlock()) {
+            throw new Error(`First token of a block expression is not block! Got: ${current}`);
+          }
+          firstToken = current;
           cursor++;
+          current = parseTree[cursor];
+          if (current instanceof Token && current.type === "VAR") {
+            blockLabel = current.lexeme;
+            cursor++;
+          }
+          for (; cursor < parseTree.length; cursor++) {
+            const parseTreeNode = parseTree[cursor];
+            if (parseTreeNode instanceof Token || !isFunctionSignatureParamExpression(parseTreeNode)) {
+              break;
+            }
+            const {types, names} = this.parseFunctionSignatureParamExpression(parseTreeNode);
+            paramTypes.push(...types);
+          }
+          for (; cursor < parseTree.length; cursor++) {
+            const parseTreeNode = parseTree[cursor];
+            if (parseTreeNode instanceof Token || !isFunctionSignatureResultExpression(parseTreeNode)) {
+              break;
+            }
+            const types = this.parseFunctionSignatureResultExpression(parseTreeNode);
+            resultTypes.push(...types);
+          }
+          const signature = new SignatureType(paramTypes, resultTypes);
+          if (!signature.isEmpty() && !(signature.paramTypes.length === 0 && signature.returnTypes.length === 1)) {
+            this.module.addGlobalType(signature);
+          }
+          if (firstToken.type === "block" || firstToken.type === "loop") {
+            return this.parseFunctionBodyBlockBlockBodyExpression(firstToken, blockLabel, paramTypes, resultTypes, parseTree.slice(cursor), isStart);
+          }
+          if (firstToken.type === "if") {
+            return this.parseFunctionBodyBlockIfBodyExpression(firstToken, blockLabel, paramTypes, resultTypes, parseTree.slice(cursor));
+          }
+          throw new Error();
         }
-        for (; cursor < parseTree.length; cursor++) {
-          const parseTreeNode = parseTree[cursor];
-          if (parseTreeNode instanceof Token || !isFunctionParamDeclaration(parseTreeNode)) {
-            break;
+        parseFunctionBodyStackBlockExprssion(parseTree, isStart) {
+          let cursor = 0;
+          let current;
+          let firstToken;
+          let blockLabel = null;
+          const paramTypes = [];
+          const resultTypes = [];
+          current = parseTree[cursor];
+          if (!(current instanceof Token) || !current.isBlock()) {
+            throw new Error(`First token of a block expression is not block! Got: ${current}`);
           }
-          const {types, names} = parseFunctionParamExpression(parseTreeNode);
-          paramTypes.push(...types);
-          paramNames.push(...names);
+          firstToken = current;
+          cursor++;
+          current = parseTree[cursor];
+          if (current instanceof Token && current.type === "VAR") {
+            blockLabel = current.lexeme;
+            cursor++;
+          }
+          for (; cursor < parseTree.length; cursor++) {
+            const parseTreeNode = parseTree[cursor];
+            if (parseTreeNode instanceof Token || !isFunctionSignatureParamExpression(parseTreeNode)) {
+              break;
+            }
+            const {types, names} = this.parseFunctionSignatureParamExpression(parseTreeNode);
+            paramTypes.push(...types);
+          }
+          for (; cursor < parseTree.length; cursor++) {
+            const parseTreeNode = parseTree[cursor];
+            if (parseTreeNode instanceof Token || !isFunctionSignatureResultExpression(parseTreeNode)) {
+              break;
+            }
+            const types = this.parseFunctionSignatureResultExpression(parseTreeNode);
+            resultTypes.push(...types);
+          }
+          const signature = new SignatureType(paramTypes, resultTypes);
+          if (!signature.isEmpty() && !(signature.paramTypes.length === 0 && signature.returnTypes.length === 1)) {
+            this.module.addGlobalType(signature);
+          }
+          const body_start_cursor = cursor;
+          let block_depth = 1;
+          for (; cursor < parseTree.length; cursor++) {
+            current = parseTree[cursor];
+            if (current instanceof Token && current.isBlock()) {
+              block_depth++;
+            }
+            if (current instanceof Token && current.type === "end") {
+              block_depth--;
+            }
+            if (block_depth === 0) {
+              break;
+            }
+          }
+          const exp = new BlockBlockExpression(firstToken, blockLabel, paramTypes, resultTypes, this.parseFunctionBodyExpression(parseTree.slice(body_start_cursor, cursor), false));
+          return [exp, cursor];
         }
-        for (; cursor < parseTree.length; cursor++) {
-          const parseTreeNode = parseTree[cursor];
-          if (parseTreeNode instanceof Token || !isFunctionResultDeclaration(parseTreeNode)) {
-            break;
-          }
-          const types = parseFunctionResultExpression(parseTreeNode);
-          resultTypes.push(...types);
+        parseFunctionBodyBlockBlockBodyExpression(firstToken, blockLabel, paramTypes, resultTypes, body, isStart) {
+          return new BlockBlockExpression(firstToken, blockLabel, paramTypes, resultTypes, this.parseFunctionBodyExpression(body, isStart));
         }
-        for (; cursor < parseTree.length; cursor++) {
-          const parseTreeNode = parseTree[cursor];
-          if (parseTreeNode instanceof Token || !isFunctionLocalDeclaration(parseTreeNode)) {
-            break;
+        parseFunctionBodyBlockIfBodyExpression(firstToken, blockLabel, paramTypes, resultTypes, body) {
+          var _a;
+          const thenExpression = body[0];
+          const elseExpression = (_a = body[1]) != null ? _a : null;
+          if (typeof thenExpression === "undefined") {
+            throw new Error("If 'then' expression cannot be null!");
           }
-          const {types, names} = parseFunctionLocalExpression(parseTreeNode);
-          localTypes.push(...types);
-          localNames.push(...names);
+          if (thenExpression instanceof Token || elseExpression instanceof Token) {
+            throw new Error(`Unexpected tokens: ${thenExpression}, ${elseExpression}`);
+          }
+          if (elseExpression === null) {
+            return new BlockIfExpression(firstToken, blockLabel, paramTypes, resultTypes, this.parseFunctionBodyExpression(thenExpression.slice(1), false));
+          }
+          return new BlockIfExpression(firstToken, blockLabel, paramTypes, resultTypes, this.parseFunctionBodyExpression([...thenExpression.slice(1), ...elseExpression], false));
         }
-        let remainingTree = parseTree.slice(cursor);
-        if (remainingTree.length === 1 && !(remainingTree[0] instanceof Token)) {
-          remainingTree = remainingTree[0];
+        parseFunctionSignatureParamExpression(parseTree) {
+          const types = [];
+          const names = [];
+          for (let i = 1; i < parseTree.length; i++) {
+            const parseTreeNode = parseTree[i];
+            if (!(parseTreeNode instanceof Token)) {
+              throw new Error();
+            }
+            if (parseTreeNode.type === "VALUETYPE") {
+              types.push(parseTreeNode.valueType);
+              names.push(null);
+            } else if (parseTreeNode.type === "VAR") {
+              names.push(parseTreeNode.lexeme);
+              const nextToken = parseTree[++i];
+              assert(nextToken instanceof Token && nextToken.type === "VALUETYPE", `Expected Token Type to be a value type: ${nextToken}`);
+              types.push(nextToken.valueType);
+            } else {
+              throw new Error(`Unexpected token, bla bla ${parseTreeNode}`);
+            }
+          }
+          return {
+            types,
+            names
+          };
         }
-        const ir = parseExpression(remainingTree);
-        return new FunctionExpression(functionName, inlineExportName, paramTypes, paramNames, resultTypes, localTypes, localNames, ir);
-      }
-      function parseFunctionParamExpression(parseTree) {
-        const types = [];
-        const names = [];
-        for (let i = 1; i < parseTree.length; i++) {
-          const parseTreeNode = parseTree[i];
-          if (!(parseTreeNode instanceof Token)) {
-            throw new Error();
+        parseFunctionSignatureResultExpression(parseTree) {
+          const types = [];
+          for (let i = 1; i < parseTree.length; i++) {
+            const parseTreeNode = parseTree[i];
+            if (!(parseTreeNode instanceof Token)) {
+              throw new Error();
+            }
+            if (parseTreeNode.type === "VALUETYPE") {
+              types.push(parseTreeNode.valueType);
+            } else {
+              throw new Error(`Unexpected token, bla bla ${parseTreeNode}`);
+            }
           }
-          if (parseTreeNode.type === "VALUETYPE") {
-            types.push(parseTreeNode.valueType);
-            names.push(null);
-          } else if (parseTreeNode.type === "VAR") {
-            names.push(parseTreeNode.lexeme);
-            const nextToken = parseTree[++i];
-            assert(nextToken instanceof Token && nextToken.type === "VALUETYPE", `Expected Token Type to be a value type: ${nextToken}`);
-            types.push(nextToken.valueType);
-          } else {
-            throw new Error(`Unexpected token, bla bla ${parseTreeNode}`);
-          }
+          return types;
         }
-        return {
-          types,
-          names
-        };
-      }
-      function parseFunctionResultExpression(parseTree) {
-        const types = [];
-        for (let i = 1; i < parseTree.length; i++) {
-          const parseTreeNode = parseTree[i];
-          if (!(parseTreeNode instanceof Token)) {
-            throw new Error();
+        parseFunctionSignatureLocalExpression(parseTree) {
+          const types = [];
+          const names = [];
+          for (let i = 1; i < parseTree.length; i++) {
+            const parseTreeNode = parseTree[i];
+            if (!(parseTreeNode instanceof Token)) {
+              throw new Error();
+            }
+            if (parseTreeNode.type === "VALUETYPE") {
+              types.push(parseTreeNode.valueType);
+              names.push(null);
+            } else if (parseTreeNode.type === "VAR") {
+              names.push(parseTreeNode.lexeme);
+              const nextToken = parseTree[++i];
+              assert(nextToken instanceof Token && nextToken.type === "VALUETYPE", `Expected Token Type to be a value type: ${nextToken}`);
+              types.push(nextToken.valueType);
+            } else {
+              throw new Error(`Unexpected token, bla bla ${parseTreeNode}`);
+            }
           }
-          if (parseTreeNode.type === "VALUETYPE") {
-            types.push(parseTreeNode.valueType);
-          } else {
-            throw new Error(`Unexpected token, bla bla ${parseTreeNode}`);
-          }
+          return {
+            types,
+            names
+          };
         }
-        return types;
-      }
-      function parseFunctionLocalExpression(parseTree) {
-        const types = [];
-        const names = [];
-        for (let i = 1; i < parseTree.length; i++) {
-          const parseTreeNode = parseTree[i];
-          if (!(parseTreeNode instanceof Token)) {
-            throw new Error();
-          }
-          if (parseTreeNode.type === "VALUETYPE") {
-            types.push(parseTreeNode.valueType);
-            names.push(null);
-          } else if (parseTreeNode.type === "VAR") {
-            names.push(parseTreeNode.lexeme);
-            const nextToken = parseTree[++i];
-            assert(nextToken instanceof Token && nextToken.type === "VALUETYPE", `Expected Token Type to be a value type: ${nextToken}`);
-            types.push(nextToken.valueType);
-          } else {
-            throw new Error(`Unexpected token, bla bla ${parseTreeNode}`);
-          }
-        }
-        return {
-          types,
-          names
-        };
-      }
-      function parseModuleExpression(parseTree) {
-        assert(isModuleDeclaration(parseTree));
-        const functionExps = [];
-        const exportExps = [];
-        for (let i = 1; i < parseTree.length; i++) {
-          const parseTreeNode = parseTree[i];
-          if (parseTreeNode instanceof Token) {
-            throw new Error();
-          }
-          if (isFunctionExpression(parseTreeNode)) {
-            functionExps.push(parseFunctionExpression(parseTreeNode));
-          }
-          if (isExportDeclaration(parseTreeNode)) {
-            exportExps.push(...parseExportDeclaration(parseTreeNode));
-          }
-        }
-        return new ModuleExpression(...functionExps, ...exportExps);
-      }
-      function parseExportDeclaration(parseTree) {
-        assert(isExportDeclaration(parseTree));
-        const exportExpressions = [];
-        for (let i = 1; i < parseTree.length; i += 2) {
-          const exportName = parseTree[i];
-          if (!(exportName instanceof Token)) {
-            throw new Error();
-          }
-          const exportInfo = parseTree[i + 1];
-          if (!(exportInfo instanceof Array)) {
-            throw new Error();
-          }
-          const [exportType, exportIndex] = exportInfo;
-          if (!(exportType instanceof Token && exportIndex instanceof Token)) {
-            throw new Error();
-          }
-          exportExpressions.push(new ExportExpression(exportName, exportType, exportIndex));
-        }
-        return exportExpressions;
-      }
-      function isSExpression(parseTree) {
+      };
+      function isFunctionBodySExpression(parseTree, isStart) {
         const tokenHeader = parseTree[0];
-        assert(tokenHeader instanceof Token, `first token of ${parseTree} is not a Token type`);
-        return tokenHeader instanceof Token && tokenHeader.isOpcodeToken() && Opcode.getParamLength(tokenHeader.opcodeType) > 0;
+        return isStart && tokenHeader instanceof Token && tokenHeader.isOpcodeToken() && Opcode.getParamLength(tokenHeader.opcodeType) > 0;
       }
-      function isStackExpression(parseTree) {
+      function isFunctionBodyStackExpression(parseTree, isStart) {
         const tokenHeader = parseTree[0];
-        assert(tokenHeader instanceof Token, `first token of ${parseTree} is not a Token type`);
-        return tokenHeader instanceof Token && tokenHeader.isOpcodeToken() && !isFunctionExpression(parseTree) && !isSExpression(parseTree);
+        return !(tokenHeader instanceof Token) || tokenHeader.isOpcodeToken() && !isFunctionExpression(parseTree) && !isFunctionBodySExpression(parseTree, isStart);
+      }
+      function isFunctionBodySelectExpression(token, nextToken, isStart) {
+        if (!(token instanceof Token) || token.type !== "select") {
+          return false;
+        }
+        if (typeof nextToken === "undefined") {
+          return true;
+        }
+        if (nextToken instanceof Array && nextToken.length === 2 && nextToken[0] instanceof Token && nextToken[1] instanceof Token && isFunctionSignatureResultExpression(nextToken)) {
+          return true;
+        }
+        return false;
       }
       function isFunctionExpression(parseTree) {
         const tokenHeader = parseTree[0];
         return tokenHeader instanceof Token && tokenHeader.type === "func";
       }
-      function isFunctionParamDeclaration(parseTree) {
+      function isFunctionSignatureParamExpression(parseTree) {
         const tokenHeader = parseTree[0];
         return tokenHeader instanceof Token && tokenHeader.type === "param";
       }
-      function isFunctionResultDeclaration(parseTree) {
+      function isFunctionSignatureResultExpression(parseTree) {
         const tokenHeader = parseTree[0];
         return tokenHeader instanceof Token && tokenHeader.type === "result";
       }
-      function isFunctionLocalDeclaration(parseTree) {
+      function isFunctionSignatureLocalExpression(parseTree) {
         const tokenHeader = parseTree[0];
         return tokenHeader instanceof Token && tokenHeader.type === "local";
       }
-      function isModuleDeclaration(parseTree) {
+      function isModuleExpression(parseTree) {
         const tokenHeader = parseTree[0];
         return tokenHeader instanceof Token && tokenHeader.type === "module";
       }
-      function isExportDeclaration(parseTree) {
+      function isExportExpression(parseTree) {
         const tokenHeader = parseTree[0];
         return tokenHeader instanceof Token && tokenHeader.type === "export";
+      }
+      function isStartExpression(parseTree) {
+        const tokenHeader = parseTree[0];
+        return tokenHeader instanceof Token && tokenHeader.type === "start";
+      }
+      function isMemoryExpression(parseTree) {
+        const tokenHeader = parseTree[0];
+        return tokenHeader instanceof Token && tokenHeader.type === "memory";
+      }
+      function isGlobalExpression(parseTree) {
+        const tokenHeader = parseTree[0];
+        return tokenHeader instanceof Token && tokenHeader.type === "global";
+      }
+      function isImportExpression(parseTree) {
+        const tokenHeader = parseTree[0];
+        return tokenHeader instanceof Token && tokenHeader.type === "import";
+      }
+      function isElementExpression(parseTree) {
+        const tokenHeader = parseTree[0];
+        return tokenHeader instanceof Token && tokenHeader.type === "elem";
+      }
+      function isElementItemExpression(parseTree) {
+        const firstToken = parseTree[0];
+        if (!(firstToken instanceof Token)) {
+          return false;
+        }
+        if (parseTree.length === 3) {
+          return firstToken.type === "item" && parseTree[1] instanceof Token && parseTree[2] instanceof Token;
+        }
+        if (parseTree.length === 2 && firstToken.type === "item") {
+          return parseTree[1] instanceof Array && parseTree[1].length === 2 && parseTree[1][0] instanceof Token && (parseTree[1][0].type === "ref.func" || parseTree[1][0].type === "ref.extern");
+        }
+        if (parseTree.length === 2 && (firstToken.type === "ref.func" || firstToken.type === "ref.extern")) {
+          return parseTree[1] instanceof Token;
+        }
+        return false;
+      }
+      function isElementOffsetExpression(parseTree) {
+        const tokenHeader = parseTree[0];
+        if (tokenHeader instanceof Token && tokenHeader.type === "offset") {
+          return isElementOffsetExpression(parseTree.slice(1));
+        }
+        parseTree = parseTree.flat();
+        return parseTree.length === 2 && parseTree[0] instanceof Token && parseTree[1] instanceof Token && parseTree[0].opcodeType === 55 && parseTree[1].type === "NAT";
+      }
+      function isTableExpression(parseTree) {
+        const tokenHeader = parseTree[0];
+        return tokenHeader instanceof Token && tokenHeader.type === "table";
+      }
+      function tableExpressionHasInlineElementExpression(parseTree) {
+        for (const node of parseTree) {
+          if (node instanceof Array && node[0] instanceof Token && node[0].type === "elem") {
+            return true;
+          }
+        }
+        return false;
+      }
+      function isFunctionBodyBlockExpression(parseTree, isStart) {
+        const tokenHeader = parseTree[0];
+        return isStart && tokenHeader instanceof Token && tokenHeader.isBlock();
+      }
+      function isFunctionBodyStackBlockExpression(parseTree) {
+        const tokenHeader = parseTree[0];
+        return tokenHeader instanceof Token && tokenHeader.isBlock();
       }
       function parseHexdigit(c) {
         assert(c.length === 1);
@@ -8215,9 +10031,6 @@ export default require => {
       function tokenize(program) {
         return new Lexer(program).getAllTokens();
       }
-      function getSingleToken(token) {
-        return new Lexer(token).getToken();
-      }
       function isDigit(c) {
         assert(c.length === 1);
         return (/[0-9]/u).test(c);
@@ -8744,18 +10557,10 @@ export default require => {
         }
       };
       var parse = program => getParseTree(tokenize(program));
-      var compile2 = parseTree => {
-        const ir = getIR(parseTree);
+      var getIR2 = parseTree => getIR(parseTree);
+      var compile2 = ir => {
         const binaryWriter = new BinaryWriter(ir);
         return binaryWriter.encode();
-      };
-      var compile22 = program => compile2(parse(program));
-      var getStringParseTree = program => ParseTree.getStringArrayRepr(parse(program));
-      var compileParseTree = tree => {
-        if (!(tree instanceof ParseTree)) {
-          tree = Tree.treeMap(tree, getSingleToken);
-        }
-        return compile2(tree);
       };
     }
   });

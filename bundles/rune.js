@@ -2034,6 +2034,12 @@ void main(void) {
       };
     }
   };
+  function hexToColor(hex) {
+    const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
+    const groups = regex.exec(hex);
+    if (groups == void 0) return [0, 0, 0];
+    return [parseInt(groups[1], 16) / 255, parseInt(groups[2], 16) / 255, parseInt(groups[3], 16) / 255];
+  }
   function throwIfNotRune(name, ...runes) {
     runes.forEach(rune => {
       if (!(rune instanceof Rune)) {
@@ -2227,18 +2233,15 @@ void main(void) {
     });
   };
   var colorPalette = ["#F44336", "#E91E63", "#AA00FF", "#3F51B5", "#2196F3", "#4CAF50", "#FFEB3B", "#FF9800", "#795548"];
-  function hexToColor(hex) {
-    const result = new RegExp("^#?(?<red>[a-f\\d]{2})(?<green>[a-f\\d]{2})(?<blue>[a-f\\d]{2})$", "iu").exec(hex);
-    if (result === null || result.length < 4) {
-      return [0, 0, 0];
-    }
-    return [parseInt(result[1], 16) / 255, parseInt(result[2], 16) / 255, parseInt(result[3], 16) / 255, 1];
+  function hexToColor2(hex) {
+    const result = hexToColor(hex);
+    return [...result, 1];
   }
   function addColorFromHex(rune, hex) {
     throwIfNotRune(addColorFromHex.name, rune);
     return Rune.of({
       subRunes: [rune],
-      colors: new Float32Array(hexToColor(hex))
+      colors: new Float32Array(hexToColor2(hex))
     });
   }
   var square = getSquare();
@@ -2413,7 +2416,7 @@ void main(void) {
   }
   function random_color(rune) {
     throwIfNotRune(random_color.name, rune);
-    const randomColor = hexToColor(colorPalette[Math.floor(Math.random() * colorPalette.length)]);
+    const randomColor = hexToColor2(colorPalette[Math.floor(Math.random() * colorPalette.length)]);
     return Rune.of({
       colors: new Float32Array(randomColor),
       subRunes: [rune]

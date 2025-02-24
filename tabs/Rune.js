@@ -7349,6 +7349,13 @@ void main(void) {
   }
   `;
   init_define_process();
+  init_define_process();
+  function hexToColor(hex) {
+    const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
+    const groups = regex.exec(hex);
+    if (groups == void 0) return [0, 0, 0];
+    return [parseInt(groups[1], 16) / 255, parseInt(groups[2], 16) / 255, parseInt(groups[3], 16) / 255];
+  }
   function throwIfNotRune(name, ...runes) {
     runes.forEach(rune => {
       if (!(rune instanceof Rune)) {
@@ -7541,18 +7548,15 @@ void main(void) {
       colors: new Float32Array(colorList)
     });
   };
-  function hexToColor(hex) {
-    const result = new RegExp("^#?(?<red>[a-f\\d]{2})(?<green>[a-f\\d]{2})(?<blue>[a-f\\d]{2})$", "iu").exec(hex);
-    if (result === null || result.length < 4) {
-      return [0, 0, 0];
-    }
-    return [parseInt(result[1], 16) / 255, parseInt(result[2], 16) / 255, parseInt(result[3], 16) / 255, 1];
+  function hexToColor2(hex) {
+    const result = hexToColor(hex);
+    return [...result, 1];
   }
   function addColorFromHex(rune, hex) {
     throwIfNotRune(addColorFromHex.name, rune);
     return Rune.of({
       subRunes: [rune],
-      colors: new Float32Array(hexToColor(hex))
+      colors: new Float32Array(hexToColor2(hex))
     });
   }
   var square = getSquare();
@@ -8114,7 +8118,7 @@ void main(void) {
                 },
                 onConfirm: value => {
                   if (value) {
-                    const newStep = Number.parseFloat(value);
+                    const newStep = parseInt(value);
                     const clampedStep = (0, import_lodash.clamp)(newStep, 1, elements.length);
                     setCurrentStep(clampedStep - 1);
                     setStepEditorFocused(false);

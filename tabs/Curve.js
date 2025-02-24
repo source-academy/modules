@@ -5785,7 +5785,7 @@ export default require => {
                 },
                 onConfirm: value => {
                   if (value) {
-                    const newStep = Number.parseFloat(value);
+                    const newStep = parseInt(value);
                     const clampedStep = (0, import_lodash.clamp)(newStep, 1, elements.length);
                     setCurrentStep(clampedStep - 1);
                     setStepEditorFocused(false);
@@ -5838,7 +5838,6 @@ export default require => {
   var import_core7 = __require("@blueprintjs/core");
   var import_icons4 = __require("@blueprintjs/icons");
   var import_react6 = __toESM(__require("react"), 1);
-  init_define_process();
   var import_jsx_runtime7 = __require("react/jsx-runtime");
   var AnimationCanvas3dCurve = class extends import_react6.default.Component {
     constructor(props) {

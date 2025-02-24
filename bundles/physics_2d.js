@@ -11937,9 +11937,6 @@ export default require => {
   var import_core4 = __toESM(require_dist(), 1);
   var import_context = __toESM(__require("js-slang/context"), 1);
   init_define_process();
-  var import_core3 = __toESM(require_dist(), 1);
-  init_define_process();
-  init_define_process();
   var import_core2 = __toESM(require_dist(), 1);
   init_define_process();
   var import_core = __toESM(require_dist(), 1);
@@ -11965,100 +11962,6 @@ export default require => {
       return `${this.time.toFixed(4)}`;
     }
   };
-  var PhysicsWorld = class {
-    constructor() {
-      this.iterationsConfig = {
-        velocityIterations: 8,
-        positionIterations: 3
-      };
-      this.b2World = import_core2.b2World.Create(new import_core2.b2Vec2());
-      this.physicsObjects = [];
-      this.timer = new Timer();
-      this.touchingObjects = new Map();
-      const contactListener = new import_core2.b2ContactListener();
-      contactListener.BeginContact = contact => {
-        const m = this.touchingObjects.get(contact.GetFixtureA());
-        if (m === void 0) {
-          const newMap = new Map();
-          newMap.set(contact.GetFixtureB(), this.timer.getTime());
-          this.touchingObjects.set(contact.GetFixtureA(), newMap);
-        } else {
-          m.set(contact.GetFixtureB(), this.timer.getTime());
-        }
-      };
-      contactListener.EndContact = contact => {
-        const contacts = this.touchingObjects.get(contact.GetFixtureA());
-        if (contacts) {
-          contacts.delete(contact.GetFixtureB());
-        }
-      };
-      this.b2World.SetContactListener(contactListener);
-    }
-    setGravity(gravity) {
-      this.b2World.SetGravity(gravity);
-    }
-    addObject(obj) {
-      this.physicsObjects.push(obj);
-      return obj;
-    }
-    createBody(bodyDef) {
-      return this.b2World.CreateBody(bodyDef);
-    }
-    makeGround(height, friction) {
-      const groundBody = this.createBody({
-        type: import_core2.b2BodyType.b2_staticBody,
-        position: new import_core2.b2Vec2(0, height - 10)
-      });
-      const groundShape = new import_core2.b2PolygonShape().SetAsBox(1e4, 10);
-      groundBody.CreateFixture({
-        shape: groundShape,
-        density: 1,
-        friction
-      });
-    }
-    update(dt) {
-      for (const obj of this.physicsObjects) {
-        obj.applyForces(this.timer.getTime());
-      }
-      this.b2World.Step(dt, this.iterationsConfig);
-      this.timer.step(dt);
-    }
-    simulate(total_time) {
-      const dt = 0.01;
-      for (let i = 0; i < total_time; i += dt) {
-        this.update(dt);
-      }
-    }
-    getB2World() {
-      return this.b2World;
-    }
-    getWorldStatus() {
-      let world_status = `
-  World time: ${this.timer.toString()}
-  
-  Objects:
-      `;
-      this.physicsObjects.forEach(obj => {
-        world_status += `
-  ------------------------
-  ${obj.toReplString()}
-  ------------------------
-        `;
-      });
-      return world_status;
-    }
-    findImpact(obj1, obj2) {
-      const m = this.touchingObjects.get(obj1.getFixture());
-      if (m === void 0) {
-        return -1;
-      }
-      const time = m.get(obj2.getFixture());
-      if (time === void 0) {
-        return -1;
-      }
-      return time;
-    }
-  };
   var PhysicsObject = class {
     constructor(position, rotation, shape, isStatic, world2) {
       this.forcesCentered = [];
@@ -12071,7 +11974,7 @@ export default require => {
   Rotation: ${this.getRotation().toFixed(ACCURACY)}
   AngularVelocity: [${this.getAngularVelocity().toFixed(ACCURACY)}]`;
       this.body = world2.createBody({
-        type: isStatic ? import_core3.b2BodyType.b2_staticBody : import_core3.b2BodyType.b2_dynamicBody,
+        type: isStatic ? import_core2.b2BodyType.b2_staticBody : import_core2.b2BodyType.b2_dynamicBody,
         position,
         angle: rotation
       });
@@ -12130,7 +12033,7 @@ export default require => {
     }
     applyForcesToCenter(world_time) {
       this.forcesCentered = this.forcesCentered.filter(force => force.start_time + force.duration > world_time);
-      const resForce = this.forcesCentered.filter(force => force.start_time < world_time).reduce((res, force) => res.Add(force.direction.Scale(force.magnitude)), new import_core3.b2Vec2());
+      const resForce = this.forcesCentered.filter(force => force.start_time < world_time).reduce((res, force) => res.Add(force.direction.Scale(force.magnitude)), new import_core2.b2Vec2());
       this.body.ApplyForceToCenter(resForce);
     }
     applyForcesAtAPoint(world_time) {
@@ -12155,15 +12058,15 @@ export default require => {
       return false;
     }
     scale_size(scale) {
-      if (this.shape instanceof import_core3.b2CircleShape) {
+      if (this.shape instanceof import_core2.b2CircleShape) {
         this.shape.m_radius *= scale;
-      } else if (this.shape instanceof import_core3.b2PolygonShape) {
+      } else if (this.shape instanceof import_core2.b2PolygonShape) {
         const centroid = this.shape.m_centroid;
         const arr = [];
         this.shape.m_vertices.forEach(vec => {
-          arr.push(new import_core3.b2Vec2(centroid.x + scale * (vec.x - centroid.x), centroid.y + scale * (vec.y - centroid.y)));
+          arr.push(new import_core2.b2Vec2(centroid.x + scale * (vec.x - centroid.x), centroid.y + scale * (vec.y - centroid.y)));
         });
-        this.shape = new import_core3.b2PolygonShape().Set(arr);
+        this.shape = new import_core2.b2PolygonShape().Set(arr);
       }
       const f = this.fixture;
       this.body.DestroyFixture(this.fixture);
@@ -12172,6 +12075,102 @@ export default require => {
         density: f.GetDensity(),
         friction: f.GetFriction()
       });
+    }
+  };
+  init_define_process();
+  var import_core3 = __toESM(require_dist(), 1);
+  var PhysicsWorld = class {
+    constructor() {
+      this.iterationsConfig = {
+        velocityIterations: 8,
+        positionIterations: 3
+      };
+      this.b2World = import_core3.b2World.Create(new import_core3.b2Vec2());
+      this.physicsObjects = [];
+      this.timer = new Timer();
+      this.touchingObjects = new Map();
+      const contactListener = new import_core3.b2ContactListener();
+      contactListener.BeginContact = contact => {
+        const m = this.touchingObjects.get(contact.GetFixtureA());
+        if (m === void 0) {
+          const newMap = new Map();
+          newMap.set(contact.GetFixtureB(), this.timer.getTime());
+          this.touchingObjects.set(contact.GetFixtureA(), newMap);
+        } else {
+          m.set(contact.GetFixtureB(), this.timer.getTime());
+        }
+      };
+      contactListener.EndContact = contact => {
+        const contacts = this.touchingObjects.get(contact.GetFixtureA());
+        if (contacts) {
+          contacts.delete(contact.GetFixtureB());
+        }
+      };
+      this.b2World.SetContactListener(contactListener);
+    }
+    setGravity(gravity) {
+      this.b2World.SetGravity(gravity);
+    }
+    addObject(obj) {
+      this.physicsObjects.push(obj);
+      return obj;
+    }
+    createBody(bodyDef) {
+      return this.b2World.CreateBody(bodyDef);
+    }
+    makeGround(height, friction) {
+      const groundBody = this.createBody({
+        type: import_core3.b2BodyType.b2_staticBody,
+        position: new import_core3.b2Vec2(0, height - 10)
+      });
+      const groundShape = new import_core3.b2PolygonShape().SetAsBox(1e4, 10);
+      groundBody.CreateFixture({
+        shape: groundShape,
+        density: 1,
+        friction
+      });
+    }
+    update(dt) {
+      for (const obj of this.physicsObjects) {
+        obj.applyForces(this.timer.getTime());
+      }
+      this.b2World.Step(dt, this.iterationsConfig);
+      this.timer.step(dt);
+    }
+    simulate(total_time) {
+      const dt = 0.01;
+      for (let i = 0; i < total_time; i += dt) {
+        this.update(dt);
+      }
+    }
+    getB2World() {
+      return this.b2World;
+    }
+    getWorldStatus() {
+      let world_status = `
+  World time: ${this.timer.toString()}
+  
+  Objects:
+      `;
+      this.physicsObjects.forEach(obj => {
+        world_status += `
+  ------------------------
+  ${obj.toReplString()}
+  ------------------------
+        `;
+      });
+      return world_status;
+    }
+    findImpact(obj1, obj2) {
+      const m = this.touchingObjects.get(obj1.getFixture());
+      if (m === void 0) {
+        return -1;
+      }
+      const time = m.get(obj2.getFixture());
+      if (time === void 0) {
+        return -1;
+      }
+      return time;
     }
   };
   var world = null;

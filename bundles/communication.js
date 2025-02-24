@@ -14985,50 +14985,6 @@ export default require => {
   init_define_process();
   var import_context = __toESM(__require("js-slang/context"), 1);
   init_define_process();
-  init_define_process();
-  var MultiUserController = class {
-    constructor() {
-      this.controller = null;
-      this.connectionState = STATE_DISCONNECTED;
-      this.messageCallbacks = new Map();
-    }
-    setupController(address, port, user, password) {
-      let currentController = this.controller;
-      if (currentController) {
-        currentController.disconnect();
-        this.connectionState = STATE_DISCONNECTED;
-      } else {
-        currentController = new MqttController(status => {
-          this.connectionState = status;
-          console.log(status);
-        }, (topic, message) => {
-          this.handleIncomingMessage(topic, message);
-        });
-        this.controller = currentController;
-      }
-      currentController.address = address;
-      currentController.port = port;
-      currentController.user = user;
-      currentController.password = password;
-      currentController.connectClient();
-    }
-    handleIncomingMessage(topic, message) {
-      const splitTopic = topic.split("/");
-      this.messageCallbacks.forEach((callback, identifier) => {
-        const splitIdentifier = identifier.split("/");
-        if (splitTopic.length < splitIdentifier.length) return;
-        for (let i = 0; i < splitIdentifier.length; i++) {
-          if (splitIdentifier[i] !== splitTopic[i]) return;
-        }
-        callback(topic, message);
-      });
-    }
-    addMessageCallback(identifier, callback) {
-      var _a;
-      (_a = this.controller) == null ? void 0 : _a.subscribe(`${identifier}/#`);
-      this.messageCallbacks.set(identifier, callback);
-    }
-  };
   var GlobalStateController = class {
     constructor(topicHeader, multiUser, callback) {
       this.topicHeader = topicHeader;
@@ -15094,6 +15050,50 @@ export default require => {
       }
       topic += path;
       (_a = this.multiUser.controller) == null ? void 0 : _a.publish(topic, JSON.stringify(updatedState), false);
+    }
+  };
+  init_define_process();
+  var MultiUserController = class {
+    constructor() {
+      this.controller = null;
+      this.connectionState = STATE_DISCONNECTED;
+      this.messageCallbacks = new Map();
+    }
+    setupController(address, port, user, password) {
+      let currentController = this.controller;
+      if (currentController) {
+        currentController.disconnect();
+        this.connectionState = STATE_DISCONNECTED;
+      } else {
+        currentController = new MqttController(status => {
+          this.connectionState = status;
+          console.log(status);
+        }, (topic, message) => {
+          this.handleIncomingMessage(topic, message);
+        });
+        this.controller = currentController;
+      }
+      currentController.address = address;
+      currentController.port = port;
+      currentController.user = user;
+      currentController.password = password;
+      currentController.connectClient();
+    }
+    handleIncomingMessage(topic, message) {
+      const splitTopic = topic.split("/");
+      this.messageCallbacks.forEach((callback, identifier) => {
+        const splitIdentifier = identifier.split("/");
+        if (splitTopic.length < splitIdentifier.length) return;
+        for (let i = 0; i < splitIdentifier.length; i++) {
+          if (splitIdentifier[i] !== splitTopic[i]) return;
+        }
+        callback(topic, message);
+      });
+    }
+    addMessageCallback(identifier, callback) {
+      var _a;
+      (_a = this.controller) == null ? void 0 : _a.subscribe(`${identifier}/#`);
+      this.messageCallbacks.set(identifier, callback);
     }
   };
   init_define_process();

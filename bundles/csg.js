@@ -13572,6 +13572,16 @@ endfacet`;
   var import_geom3 = __toESM(require_geom3(), 1);
   var import_mat4 = __toESM(require_mat4(), 1);
   var import_transforms = __toESM(require_transforms(), 1);
+  init_define_process();
+  function degreesToRadians(degrees) {
+    return degrees / 360 * (2 * Math.PI);
+  }
+  function hexToColor(hex) {
+    const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
+    const groups = regex.exec(hex);
+    if (groups == void 0) return [0, 0, 0];
+    return [parseInt(groups[1], 16) / 255, parseInt(groups[2], 16) / 255, parseInt(groups[3], 16) / 255];
+  }
   var Group = class _Group {
     constructor(_children, transforms = import_mat4.default.create()) {
       this.transforms = transforms;
@@ -13686,14 +13696,6 @@ endfacet`;
     }, shape.solid);
     return new Shape(solid);
   }
-  function hexToColor(hex) {
-    var _a;
-    const regex = new RegExp("^#?(?<red>[\\da-f]{2})(?<green>[\\da-f]{2})(?<blue>[\\da-f]{2})$", "iu");
-    const potentialGroups = (_a = hex.match(regex)) == null ? void 0 : _a.groups;
-    if (potentialGroups === void 0) return [0, 0, 0];
-    const groups = potentialGroups;
-    return [parseInt(groups.red, 16) / 255, parseInt(groups.green, 16) / 255, parseInt(groups.blue, 16) / 255];
-  }
   init_define_process();
   var import_modeling = __toESM(require_src(), 1);
   var import_colors = __toESM(require_colors(), 1);
@@ -13704,10 +13706,6 @@ endfacet`;
   var import_stl_serializer = __toESM(require_stl_serializer(), 1);
   var import_list = __require("js-slang/dist/stdlib/list");
   var import_save_file = __toESM(require_browser(), 1);
-  init_define_process();
-  function degreesToRadians(degrees) {
-    return degrees / 360 * (2 * Math.PI);
-  }
   function listToArray(l) {
     const operables = [];
     while (l !== null) {

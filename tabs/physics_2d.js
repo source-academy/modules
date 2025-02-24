@@ -190,7 +190,7 @@ export default require => {
         return Math.round((hi - lo) * Math.random() + lo);
       }
       exports.b2RandomInt = b2RandomInt;
-      var b2Vec24 = class _b2Vec2 {
+      var b2Vec2 = class _b2Vec2 {
         constructor(x = 0, y = 0) {
           this.x = x;
           this.y = y;
@@ -438,14 +438,14 @@ export default require => {
           return out;
         }
       };
-      exports.b2Vec2 = b2Vec24;
-      b2Vec24.ZERO = new b2Vec24();
-      b2Vec24.UNITX = new b2Vec24(1, 0);
-      b2Vec24.UNITY = new b2Vec24(0, 1);
-      b2Vec24.s_t0 = new b2Vec24();
-      b2Vec24.s_t1 = new b2Vec24();
-      b2Vec24.s_t2 = new b2Vec24();
-      b2Vec24.s_t3 = new b2Vec24();
+      exports.b2Vec2 = b2Vec2;
+      b2Vec2.ZERO = new b2Vec2();
+      b2Vec2.UNITX = new b2Vec2(1, 0);
+      b2Vec2.UNITY = new b2Vec2(0, 1);
+      b2Vec2.s_t0 = new b2Vec2();
+      b2Vec2.s_t1 = new b2Vec2();
+      b2Vec2.s_t2 = new b2Vec2();
+      b2Vec2.s_t3 = new b2Vec2();
       var b2Vec3 = class _b2Vec3 {
         constructor(x = 0, y = 0, z = 0) {
           this.x = x;
@@ -530,8 +530,8 @@ export default require => {
       b2Vec3.s_t0 = new b2Vec3();
       var b2Mat22 = class _b2Mat22 {
         constructor() {
-          this.ex = new b2Vec24(1, 0);
-          this.ey = new b2Vec24(0, 1);
+          this.ex = new b2Vec2(1, 0);
+          this.ey = new b2Vec2(0, 1);
         }
         Clone() {
           return new _b2Mat22().Copy(this);
@@ -888,7 +888,7 @@ export default require => {
       b2Rot.IDENTITY = new b2Rot();
       var b2Transform = class _b2Transform {
         constructor() {
-          this.p = new b2Vec24();
+          this.p = new b2Vec2();
           this.q = new b2Rot();
         }
         Clone() {
@@ -960,7 +960,7 @@ export default require => {
         }
         static TransposeMultiply(A, B, out) {
           b2Rot.TransposeMultiply(A.q, B.q, out.q);
-          b2Rot.TransposeMultiplyVec2(A.q, b2Vec24.Subtract(B.p, A.p, out.p), out.p);
+          b2Rot.TransposeMultiplyVec2(A.q, b2Vec2.Subtract(B.p, A.p, out.p), out.p);
           return out;
         }
       };
@@ -968,9 +968,9 @@ export default require => {
       b2Transform.IDENTITY = new b2Transform();
       var b2Sweep = class _b2Sweep {
         constructor() {
-          this.localCenter = new b2Vec24();
-          this.c0 = new b2Vec24();
-          this.c = new b2Vec24();
+          this.localCenter = new b2Vec2();
+          this.c0 = new b2Vec2();
+          this.c = new b2Vec2();
           this.a0 = 0;
           this.a = 0;
           this.alpha0 = 0;
@@ -993,7 +993,7 @@ export default require => {
           xf.p.y = oneMinusBeta * this.c0.y + beta * this.c.y;
           const angle = oneMinusBeta * this.a0 + beta * this.a;
           xf.q.Set(angle);
-          xf.p.Subtract(b2Rot.MultiplyVec2(xf.q, this.localCenter, b2Vec24.s_t0));
+          xf.p.Subtract(b2Rot.MultiplyVec2(xf.q, this.localCenter, b2Vec2.s_t0));
           return xf;
         }
         Advance(alpha) {
@@ -2422,16 +2422,16 @@ export default require => {
       var b2_shape_1 = require_b2_shape();
       var b2_fixture_1 = require_b2_fixture();
       var b2_common_1 = require_b2_common();
-      var b2BodyType3;
-      (function (b2BodyType4) {
-        b2BodyType4[b2BodyType4["b2_staticBody"] = 0] = "b2_staticBody";
-        b2BodyType4[b2BodyType4["b2_kinematicBody"] = 1] = "b2_kinematicBody";
-        b2BodyType4[b2BodyType4["b2_dynamicBody"] = 2] = "b2_dynamicBody";
-      })(b2BodyType3 = exports.b2BodyType || (exports.b2BodyType = {}));
+      var b2BodyType;
+      (function (b2BodyType2) {
+        b2BodyType2[b2BodyType2["b2_staticBody"] = 0] = "b2_staticBody";
+        b2BodyType2[b2BodyType2["b2_kinematicBody"] = 1] = "b2_kinematicBody";
+        b2BodyType2[b2BodyType2["b2_dynamicBody"] = 2] = "b2_dynamicBody";
+      })(b2BodyType = exports.b2BodyType || (exports.b2BodyType = {}));
       var b2Body = class _b2Body {
         constructor(bd, world) {
           var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
-          this.m_type = b2BodyType3.b2_staticBody;
+          this.m_type = b2BodyType.b2_staticBody;
           this.m_islandFlag = false;
           this.m_awakeFlag = false;
           this.m_autoSleepFlag = false;
@@ -2464,7 +2464,7 @@ export default require => {
           this.m_bulletFlag = (_a = bd.bullet) !== null && _a !== void 0 ? _a : false;
           this.m_fixedRotationFlag = (_b = bd.fixedRotation) !== null && _b !== void 0 ? _b : false;
           this.m_autoSleepFlag = (_c = bd.allowSleep) !== null && _c !== void 0 ? _c : true;
-          if (((_d = bd.awake) !== null && _d !== void 0 ? _d : true) && ((_e = bd.type) !== null && _e !== void 0 ? _e : b2BodyType3.b2_staticBody) !== b2BodyType3.b2_staticBody) {
+          if (((_d = bd.awake) !== null && _d !== void 0 ? _d : true) && ((_e = bd.type) !== null && _e !== void 0 ? _e : b2BodyType.b2_staticBody) !== b2BodyType.b2_staticBody) {
             this.m_awakeFlag = true;
           }
           this.m_enabledFlag = (_f = bd.enabled) !== null && _f !== void 0 ? _f : true;
@@ -2484,7 +2484,7 @@ export default require => {
           this.m_force.SetZero();
           this.m_torque = 0;
           this.m_sleepTime = 0;
-          this.m_type = (_p = bd.type) !== null && _p !== void 0 ? _p : b2BodyType3.b2_staticBody;
+          this.m_type = (_p = bd.type) !== null && _p !== void 0 ? _p : b2BodyType.b2_staticBody;
           this.m_mass = 0;
           this.m_invMass = 0;
           this.m_I = 0;
@@ -2582,7 +2582,7 @@ export default require => {
           return this.m_sweep.localCenter;
         }
         SetLinearVelocity(v) {
-          if (this.m_type === b2BodyType3.b2_staticBody) {
+          if (this.m_type === b2BodyType.b2_staticBody) {
             return;
           }
           if (b2_math_1.b2Vec2.Dot(v, v) > 0) {
@@ -2594,7 +2594,7 @@ export default require => {
           return this.m_linearVelocity;
         }
         SetAngularVelocity(w) {
-          if (this.m_type === b2BodyType3.b2_staticBody) {
+          if (this.m_type === b2BodyType.b2_staticBody) {
             return;
           }
           if (w * w > 0) {
@@ -2606,7 +2606,7 @@ export default require => {
           return this.m_angularVelocity;
         }
         ApplyForce(force, point, wake = true) {
-          if (this.m_type !== b2BodyType3.b2_dynamicBody) {
+          if (this.m_type !== b2BodyType.b2_dynamicBody) {
             return;
           }
           if (wake && !this.m_awakeFlag) {
@@ -2619,7 +2619,7 @@ export default require => {
           }
         }
         ApplyForceToCenter(force, wake = true) {
-          if (this.m_type !== b2BodyType3.b2_dynamicBody) {
+          if (this.m_type !== b2BodyType.b2_dynamicBody) {
             return;
           }
           if (wake && !this.m_awakeFlag) {
@@ -2631,7 +2631,7 @@ export default require => {
           }
         }
         ApplyTorque(torque, wake = true) {
-          if (this.m_type !== b2BodyType3.b2_dynamicBody) {
+          if (this.m_type !== b2BodyType.b2_dynamicBody) {
             return;
           }
           if (wake && !this.m_awakeFlag) {
@@ -2642,7 +2642,7 @@ export default require => {
           }
         }
         ApplyLinearImpulse(impulse, point, wake = true) {
-          if (this.m_type !== b2BodyType3.b2_dynamicBody) {
+          if (this.m_type !== b2BodyType.b2_dynamicBody) {
             return;
           }
           if (wake && !this.m_awakeFlag) {
@@ -2655,7 +2655,7 @@ export default require => {
           }
         }
         ApplyLinearImpulseToCenter(impulse, wake = true) {
-          if (this.m_type !== b2BodyType3.b2_dynamicBody) {
+          if (this.m_type !== b2BodyType.b2_dynamicBody) {
             return;
           }
           if (wake && !this.m_awakeFlag) {
@@ -2667,7 +2667,7 @@ export default require => {
           }
         }
         ApplyAngularImpulse(impulse, wake = true) {
-          if (this.m_type !== b2BodyType3.b2_dynamicBody) {
+          if (this.m_type !== b2BodyType.b2_dynamicBody) {
             return;
           }
           if (wake && !this.m_awakeFlag) {
@@ -2691,7 +2691,7 @@ export default require => {
         }
         SetMassData(massData) {
           (0, b2_common_1.b2Assert)(!this.m_world.IsLocked());
-          if (this.m_type !== b2BodyType3.b2_dynamicBody) {
+          if (this.m_type !== b2BodyType.b2_dynamicBody) {
             return;
           }
           this.m_invMass = 0;
@@ -2718,7 +2718,7 @@ export default require => {
           this.m_I = 0;
           this.m_invI = 0;
           this.m_sweep.localCenter.SetZero();
-          if (this.m_type === b2BodyType3.b2_staticBody || this.m_type === b2BodyType3.b2_kinematicBody) {
+          if (this.m_type === b2BodyType.b2_staticBody || this.m_type === b2BodyType.b2_kinematicBody) {
             this.m_sweep.c0.Copy(this.m_xf.p);
             this.m_sweep.c.Copy(this.m_xf.p);
             this.m_sweep.a0 = this.m_sweep.a;
@@ -2794,7 +2794,7 @@ export default require => {
           }
           this.m_type = type;
           this.ResetMassData();
-          if (this.m_type === b2BodyType3.b2_staticBody) {
+          if (this.m_type === b2BodyType.b2_staticBody) {
             this.m_linearVelocity.SetZero();
             this.m_angularVelocity = 0;
             this.m_sweep.a0 = this.m_sweep.a;
@@ -2838,7 +2838,7 @@ export default require => {
           return this.m_autoSleepFlag;
         }
         SetAwake(flag) {
-          if (this.m_type === b2BodyType3.b2_staticBody) {
+          if (this.m_type === b2BodyType.b2_staticBody) {
             return;
           }
           if (flag) {
@@ -2938,7 +2938,7 @@ export default require => {
           b2_math_1.b2Vec2.Subtract(this.m_sweep.c, this.m_xf.p, this.m_xf.p);
         }
         ShouldCollide(other) {
-          if (this.m_type !== b2BodyType3.b2_dynamicBody && other.m_type !== b2BodyType3.b2_dynamicBody) {
+          if (this.m_type !== b2BodyType.b2_dynamicBody && other.m_type !== b2BodyType.b2_dynamicBody) {
             return false;
           }
           return this.ShouldCollideConnected(other);
@@ -4689,7 +4689,7 @@ export default require => {
       var b2_common_1 = require_b2_common();
       var b2_math_1 = require_b2_math();
       var b2_shape_1 = require_b2_shape();
-      var b2CircleShape2 = class _b2CircleShape extends b2_shape_1.b2Shape {
+      var b2CircleShape = class _b2CircleShape extends b2_shape_1.b2Shape {
         constructor(radius = 0) {
           super(b2_shape_1.b2ShapeType.e_circle, radius);
           this.m_p = new b2_math_1.b2Vec2();
@@ -4759,13 +4759,13 @@ export default require => {
           draw.DrawSolidCircle(center, radius, axis, color);
         }
       };
-      exports.b2CircleShape = b2CircleShape2;
-      b2CircleShape2.TestPoint_s_center = new b2_math_1.b2Vec2();
-      b2CircleShape2.TestPoint_s_d = new b2_math_1.b2Vec2();
-      b2CircleShape2.RayCast_s_position = new b2_math_1.b2Vec2();
-      b2CircleShape2.RayCast_s_s = new b2_math_1.b2Vec2();
-      b2CircleShape2.RayCast_s_r = new b2_math_1.b2Vec2();
-      b2CircleShape2.ComputeAABB_s_p = new b2_math_1.b2Vec2();
+      exports.b2CircleShape = b2CircleShape;
+      b2CircleShape.TestPoint_s_center = new b2_math_1.b2Vec2();
+      b2CircleShape.TestPoint_s_d = new b2_math_1.b2Vec2();
+      b2CircleShape.RayCast_s_position = new b2_math_1.b2Vec2();
+      b2CircleShape.RayCast_s_s = new b2_math_1.b2Vec2();
+      b2CircleShape.RayCast_s_r = new b2_math_1.b2Vec2();
+      b2CircleShape.ComputeAABB_s_p = new b2_math_1.b2Vec2();
     }
   });
   var require_b2_polygon_shape = __commonJS({
@@ -4843,7 +4843,7 @@ export default require => {
         c.y = f * c.y + s.y;
         return c;
       }
-      var b2PolygonShape3 = class _b2PolygonShape extends b2_shape_1.b2Shape {
+      var b2PolygonShape = class _b2PolygonShape extends b2_shape_1.b2Shape {
         constructor() {
           super(b2_shape_1.b2ShapeType.e_polygon, b2_common_1.b2_polygonRadius);
           this.m_centroid = new b2_math_1.b2Vec2();
@@ -5075,7 +5075,7 @@ export default require => {
           draw.DrawSolidPolygon(vertices, vertexCount, color);
         }
       };
-      exports.b2PolygonShape = b2PolygonShape3;
+      exports.b2PolygonShape = b2PolygonShape;
     }
   });
   var require_b2_edge_shape = __commonJS({
@@ -9346,14 +9346,14 @@ export default require => {
         }
       };
       exports.b2ContactImpulse = b2ContactImpulse;
-      var b2ContactListener2 = class {
+      var b2ContactListener = class {
         BeginContact(_contact) {}
         EndContact(_contact) {}
         PreSolve(_contact, _oldManifold) {}
         PostSolve(_contact, _impulse) {}
       };
-      exports.b2ContactListener = b2ContactListener2;
-      b2ContactListener2.b2_defaultListener = new b2ContactListener2();
+      exports.b2ContactListener = b2ContactListener;
+      b2ContactListener.b2_defaultListener = new b2ContactListener();
     }
   });
   var require_b2_contact_manager = __commonJS({
@@ -10466,7 +10466,7 @@ export default require => {
       var b2_contact_manager_1 = require_b2_contact_manager();
       var b2_island_1 = require_b2_island();
       var b2_time_step_1 = require_b2_time_step();
-      var b2World2 = class _b2World {
+      var b2World = class _b2World {
         constructor(gravity) {
           this.m_contactManager = new b2_contact_manager_1.b2ContactManager();
           this.m_bodyList = null;
@@ -11206,20 +11206,20 @@ export default require => {
           }
         }
       };
-      exports.b2World = b2World2;
-      b2World2.Step_s_step = b2_time_step_1.b2TimeStep.Create();
-      b2World2.Step_s_stepTimer = new b2_timer_1.b2Timer();
-      b2World2.Step_s_timer = new b2_timer_1.b2Timer();
-      b2World2.QueryFixtureShape_s_aabb = new b2_collision_1.b2AABB();
-      b2World2.RayCast_s_input = new b2_collision_1.b2RayCastInput();
-      b2World2.RayCast_s_output = new b2_collision_1.b2RayCastOutput();
-      b2World2.RayCast_s_point = new b2_math_1.b2Vec2();
-      b2World2.SolveTOI_s_subStep = b2_time_step_1.b2TimeStep.Create();
-      b2World2.SolveTOI_s_backup = new b2_math_1.b2Sweep();
-      b2World2.SolveTOI_s_backup1 = new b2_math_1.b2Sweep();
-      b2World2.SolveTOI_s_backup2 = new b2_math_1.b2Sweep();
-      b2World2.SolveTOI_s_toi_input = new b2_time_of_impact_1.b2TOIInput();
-      b2World2.SolveTOI_s_toi_output = new b2_time_of_impact_1.b2TOIOutput();
+      exports.b2World = b2World;
+      b2World.Step_s_step = b2_time_step_1.b2TimeStep.Create();
+      b2World.Step_s_stepTimer = new b2_timer_1.b2Timer();
+      b2World.Step_s_timer = new b2_timer_1.b2Timer();
+      b2World.QueryFixtureShape_s_aabb = new b2_collision_1.b2AABB();
+      b2World.RayCast_s_input = new b2_collision_1.b2RayCastInput();
+      b2World.RayCast_s_output = new b2_collision_1.b2RayCastOutput();
+      b2World.RayCast_s_point = new b2_math_1.b2Vec2();
+      b2World.SolveTOI_s_subStep = b2_time_step_1.b2TimeStep.Create();
+      b2World.SolveTOI_s_backup = new b2_math_1.b2Sweep();
+      b2World.SolveTOI_s_backup1 = new b2_math_1.b2Sweep();
+      b2World.SolveTOI_s_backup2 = new b2_math_1.b2Sweep();
+      b2World.SolveTOI_s_toi_input = new b2_time_of_impact_1.b2TOIInput();
+      b2World.SolveTOI_s_toi_output = new b2_time_of_impact_1.b2TOIOutput();
     }
   });
   var require_b2_rope = __commonJS({
@@ -12068,23 +12068,16 @@ export default require => {
   });
   init_define_process();
   init_define_process();
-  var import_core5 = __require("@blueprintjs/core");
+  var import_core2 = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
-  var import_core6 = __toESM(require_dist(), 1);
+  var import_core3 = __toESM(require_dist(), 1);
   var import_debug_draw = __toESM(require_dist2(), 1);
   var import_react2 = __toESM(__require("react"), 1);
   init_define_process();
-  var import_core3 = __toESM(require_dist(), 1);
-  init_define_process();
-  var import_core2 = __toESM(require_dist(), 1);
-  init_define_process();
-  init_define_process();
-  var import_core = __toESM(require_dist(), 1);
-  init_define_process();
   var import_react = __toESM(__require("react"), 1);
   init_define_process();
-  var import_core4 = __require("@blueprintjs/core");
-  var SA_TAB_ICON_SIZE = import_core4.IconSize.LARGE;
+  var import_core = __require("@blueprintjs/core");
+  var SA_TAB_ICON_SIZE = import_core.IconSize.LARGE;
   var CANVAS_MAX_WIDTH = "max(70vh, 30vw)";
   var import_jsx_runtime = __require("react/jsx-runtime");
   var defaultStyle = {
@@ -12116,7 +12109,7 @@ export default require => {
           }
           if (this.debugDraw && this.world) {
             this.debugDraw.Prepare(this.state.camX, 0, this.state.zoomLevel, true);
-            (0, import_core6.DrawShapes)(this.debugDraw, this.b2World);
+            (0, import_core3.DrawShapes)(this.debugDraw, this.b2World);
             this.debugDraw.Finish();
           }
         }
@@ -12204,11 +12197,11 @@ export default require => {
           style: {
             marginRight: "20px"
           },
-          children: (0, import_jsx_runtime2.jsx)(import_core5.Tooltip, {
+          children: (0, import_jsx_runtime2.jsx)(import_core2.Tooltip, {
             content: this.state.isPlaying ? "Pause" : "Play",
-            children: (0, import_jsx_runtime2.jsx)(import_core5.Button, {
+            children: (0, import_jsx_runtime2.jsx)(import_core2.Button, {
               onClick: this.onPlayButtonClick,
-              children: (0, import_jsx_runtime2.jsx)(import_core5.Icon, {
+              children: (0, import_jsx_runtime2.jsx)(import_core2.Icon, {
                 icon: this.state.isPlaying ? import_icons.IconNames.PAUSE : import_icons.IconNames.PLAY
               })
             })
@@ -12224,7 +12217,7 @@ export default require => {
           children: [(0, import_jsx_runtime2.jsxs)("div", {
             children: [(0, import_jsx_runtime2.jsxs)("p", {
               children: ["Zoom level: ", this.state.zoomLevel.toFixed(2)]
-            }), (0, import_jsx_runtime2.jsx)(import_core5.Slider, {
+            }), (0, import_jsx_runtime2.jsx)(import_core2.Slider, {
               value: this.state.zoomLevel,
               stepSize: 0.01,
               labelValues: [],
@@ -12239,7 +12232,7 @@ export default require => {
             },
             children: [(0, import_jsx_runtime2.jsxs)("p", {
               children: ["Camera X: ", this.state.camX.toFixed(2)]
-            }), (0, import_jsx_runtime2.jsx)(import_core5.Slider, {
+            }), (0, import_jsx_runtime2.jsx)(import_core2.Slider, {
               value: this.state.camX,
               stepSize: 10,
               labelValues: [],
@@ -12254,7 +12247,7 @@ export default require => {
             },
             children: [(0, import_jsx_runtime2.jsxs)("p", {
               children: ["Update step: ", this.state.updateStep.toFixed(4)]
-            }), (0, import_jsx_runtime2.jsx)(import_core5.Slider, {
+            }), (0, import_jsx_runtime2.jsx)(import_core2.Slider, {
               value: this.state.updateStep,
               stepSize: 1e-3,
               labelValues: [],

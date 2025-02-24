@@ -5464,7 +5464,7 @@ export default require => {
                 },
                 onConfirm: value => {
                   if (value) {
-                    const newStep = Number.parseFloat(value);
+                    const newStep = parseInt(value);
                     const clampedStep = (0, import_lodash.clamp)(newStep, 1, elements.length);
                     setCurrentStep(clampedStep - 1);
                     setStepEditorFocused(false);
