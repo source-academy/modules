@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { type Dimension, type Orientation } from '../../Math/Vector';
+import type { Dimension, Orientation } from '../../Math/Vector';
 
 export type RenderCuboidOptions = {
   orientation: Orientation;

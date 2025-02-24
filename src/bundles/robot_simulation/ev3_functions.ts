@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { type Motor } from './controllers/ev3/components/Motor';
+import type { Motor } from './controllers/ev3/components/Motor';
 import { motorConfig } from './controllers/ev3/ev3/default/config';
-import { type ColorSensor } from './controllers/ev3/sensor/ColorSensor';
-import { type UltrasonicSensor } from './controllers/ev3/sensor/UltrasonicSensor';
+import type { ColorSensor } from './controllers/ev3/sensor/ColorSensor';
+import type { UltrasonicSensor } from './controllers/ev3/sensor/UltrasonicSensor';
 import {
   program_controller_identifier,
   type Program,

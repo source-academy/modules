@@ -81,7 +81,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
                 }}
                 onConfirm={(value) => {
                   if (value) {
-                    const newStep = Number.parseFloat(value);
+                    const newStep = parseInt(value);
                     const clampedStep = clamp(newStep, 1, elements.length);
                     setCurrentStep(clampedStep - 1);
                     setStepEditorFocused(false);

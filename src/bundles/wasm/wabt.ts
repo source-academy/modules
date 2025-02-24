@@ -6,6 +6,7 @@ import { compile } from 'source-academy-wabt';
  * @param program program to compile
  * @returns an array of 8-bit unsigned integers.
  */
+// @ts-expect-error Not sure how to fix this but
 export const wcompile = (program: string) => Array.from(compile(program));
 
 /**

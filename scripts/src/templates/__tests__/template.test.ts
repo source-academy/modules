@@ -61,7 +61,7 @@ describe('Test adding new module', () => {
   });
 
   it('should require camel case for module names', async () => {
-    mockedAskQuestion.mockResolvedValueOnce('pascalCase');
+    mockedAskQuestion.mockResolvedValueOnce('camelCase');
     await expectCommandFailure('Module names must be in snake case. (eg. binary_tree)');
   });
 
