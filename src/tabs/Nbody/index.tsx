@@ -20,8 +20,7 @@ type Props = {
 /**
  * React component state for the viz tab.
  */
-type State = {
-};
+type State = {};
 
 /**
  * React component props for the control buttons.

@@ -37,7 +37,7 @@ describe('Wheel', () => {
         getMass: jest.fn().mockReturnValue(1),
         getCollider: jest.fn().mockReturnValue({}),
       }),
-    },
+    };
     mockConfig = {
       displacement: { x: 1, y: 0, z: 0 },
       pid: {

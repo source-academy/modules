@@ -18,5 +18,5 @@ testFunction(isSnakeCase, [
   ['snake_case', true],
   ['arcade_2d', true],
   ['PascalCase', false],
-  ['pascalCase', false]
+  ['camelCase', false]
 ]);

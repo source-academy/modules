@@ -1,8 +1,8 @@
-import { type IOptions } from 'js-slang';
+import type { IOptions } from 'js-slang';
 import context from 'js-slang/context';
 import type { DeepPartial } from '../../../../common/deepPartial';
 import { CallbackHandler } from '../../engine/Core/CallbackHandler';
-import { type Controller } from '../../engine/Core/Controller';
+import type { Controller } from '../../engine/Core/Controller';
 import type { PhysicsTimingInfo } from '../../engine/Physics';
 import { mergeConfig } from '../utils/mergeConfig';
 import { ProgramError } from './error';
