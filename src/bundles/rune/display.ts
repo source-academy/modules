@@ -117,6 +117,7 @@ class RuneDisplay {
 export const {show,
   anaglyph,
   hollusion,
+  hollusion_magnitude,
   animate_rune,
   animate_anaglyph,
 } = RuneDisplay;
