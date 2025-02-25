@@ -1,13 +1,16 @@
+import tsParser from '@typescript-eslint/parser';
 import { RuleTester } from 'eslint';
 import typeImportsPlugin from '../typeimports';
 
 describe('Test collateTypeImports', () => {
   const tester = new RuleTester({
-    parser: require.resolve('@typescript-eslint/parser'),
-    parserOptions: {
-      ecmaVersion: 6,
-      sourceType: 'module'
-    }
+    'languageOptions': {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: 6,
+        sourceType: 'module'
+      }
+    },
   });
 
   tester.run(
