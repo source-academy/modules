@@ -1,11 +1,8 @@
 import context from 'js-slang/context';
+import { functionDeclaration } from '../../typings/type_map';
 import { AnaglyphRune, HollusionRune } from './functions';
-import { type DrawnRune, AnimatedRune, type Rune, NormalRune, type RuneAnimation } from './rune';
+import { AnimatedRune, NormalRune, type DrawnRune, type Rune, type RuneAnimation } from './rune';
 import { throwIfNotRune } from './runes_ops';
-import {
-  functionDeclaration,
-  variableDeclaration,
-} from '../../typings/type_map';
 
 // =============================================================================
 // Drawing functions
