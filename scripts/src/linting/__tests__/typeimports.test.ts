@@ -1,11 +1,11 @@
-import tsParser from '@typescript-eslint/parser';
 import { RuleTester } from 'eslint';
 import typeImportsPlugin from '../typeimports';
 
 describe('Test collateTypeImports', () => {
   const tester = new RuleTester({
     'languageOptions': {
-      parser: tsParser,
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      parser: require('@typescript-eslint/parser'),
       parserOptions: {
         ecmaVersion: 6,
         sourceType: 'module'
