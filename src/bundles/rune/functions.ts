@@ -962,46 +962,48 @@ export class HollusionRune extends DrawnRune {
 /** @hidden */
 export const isHollusionRune = (rune: DrawnRune): rune is HollusionRune => rune.isHollusion;
 
-export const beside = RuneFunctions.beside;
-export const beside_frac = RuneFunctions.beside_frac;
-export const black = RuneFunctions.black;
-export const blank = RuneFunctions.blank;
-export const blue = RuneFunctions.blue;
-export const brown = RuneFunctions.brown;
-export const circle = RuneFunctions.circle;
-export const color = RuneFunctions.color;
-export const corner = RuneFunctions.corner;
-export const flip_horiz = RuneFunctions.flip_horiz;
-export const flip_vert = RuneFunctions.flip_vert;
-export const from_url = RuneFunctions.from_url;
-export const green = RuneFunctions.green;
-export const heart = RuneFunctions.heart;
-export const indigo = RuneFunctions.indigo;
-export const make_cross = RuneFunctions.make_cross;
-export const nova = RuneFunctions.nova;
-export const orange = RuneFunctions.orange;
-export const overlay = RuneFunctions.overlay;
-export const overlay_frac = RuneFunctions.overlay_frac;
-export const pentagram = RuneFunctions.pentagram;
-export const pink = RuneFunctions.pink;
-export const purple = RuneFunctions.purple;
-export const quarter_turn_left = RuneFunctions.quarter_turn_left;
-export const quarter_turn_right = RuneFunctions.quarter_turn_right;
-export const random_color = RuneFunctions.random_color;
-export const rcross = RuneFunctions.rcross;
-export const red = RuneFunctions.red;
-export const repeat_pattern = RuneFunctions.repeat_pattern;
-export const ribbon = RuneFunctions.ribbon;
-export const rotate = RuneFunctions.rotate;
-export const sail = RuneFunctions.sail;
-export const scale = RuneFunctions.scale;
-export const scale_independent = RuneFunctions.scale_independent;
-export const square = RuneFunctions.square;
-export const stack = RuneFunctions.stack;
-export const stack_frac = RuneFunctions.stack_frac;
-export const stackn = RuneFunctions.stackn;
-export const translate = RuneFunctions.translate;
-export const triangle = RuneFunctions.triangle;
-export const turn_upside_down = RuneFunctions.turn_upside_down;
-export const white = RuneFunctions.white;
-export const yellow = RuneFunctions.yellow;
+export const {
+  beside,
+  beside_frac,
+  black,
+  blank,
+  blue,
+  brown,
+  circle,
+  color,
+  corner,
+  flip_horiz,
+  flip_vert,
+  from_url,
+  green,
+  heart,
+  indigo,
+  make_cross,
+  nova,
+  orange,
+  overlay,
+  overlay_frac,
+  pentagram,
+  pink,
+  purple,
+  quarter_turn_left,
+  quarter_turn_right,
+  random_color,
+  rcross,
+  red,
+  repeat_pattern,
+  ribbon,
+  rotate,
+  sail,
+  scale,
+  scale_independent,
+  square,
+  stack,
+  stack_frac,
+  stackn,
+  translate,
+  triangle,
+  turn_upside_down,
+  white,
+  yellow
+} = RuneFunctions;

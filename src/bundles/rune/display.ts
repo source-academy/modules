@@ -114,8 +114,9 @@ class RuneDisplay {
   }
 }
 
-export const show = RuneDisplay.show;
-export const anaglyph = RuneDisplay.anaglyph;
-export const hollusion = RuneDisplay.hollusion;
-export const animate_rune = RuneDisplay.animate_rune;
-export const animate_anaglyph = RuneDisplay.animate_anaglyph;
+export const {show,
+  anaglyph,
+  hollusion,
+  animate_rune,
+  animate_anaglyph,
+} = RuneDisplay;
