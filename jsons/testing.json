@@ -1,0 +1,9 @@
+{
+  "default": {
+    "kind": "function",
+    "name": "default",
+    "description": "No description available",
+    "params": [],
+    "retType": "Object"
+  }
+}
