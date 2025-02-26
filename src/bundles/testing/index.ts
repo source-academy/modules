@@ -2,9 +2,6 @@ import {
   assert_equals,
   assert_not_equals,
   assert_contains,
-  assert_approx_equals,
-  assert_greater,
-  assert_greater_equals,
   assert_length,
 } from './asserts';
 import { it, describe } from './functions';
@@ -33,9 +30,6 @@ export default () => ({
   assert_equals,
   assert_not_equals,
   assert_contains,
-  assert_greater,
-  assert_greater_equals,
-  assert_approx_equals,
   assert_length,
   mock_fn,
 });
