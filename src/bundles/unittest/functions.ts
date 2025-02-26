@@ -22,7 +22,7 @@ export const testContext: TestContext = {
     this.called = true;
 
     const starttime = performance.now();
-    testContext.suiteResults = {
+    this.suiteResults = {
       name: msg,
       results: [],
       total: 0,
@@ -31,11 +31,11 @@ export const testContext: TestContext = {
 
     suite();
 
-    testContext.allResults.results.push(testContext.suiteResults);
+    this.allResults.results.push(this.suiteResults);
 
     const endtime = performance.now();
-    testContext.runtime += endtime - starttime;
-    return testContext.allResults;
+    this.runtime += endtime - starttime;
+    return this.allResults;
   },
 
   it(msg: string, test: Test) {

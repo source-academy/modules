@@ -2,7 +2,7 @@ import * as asserts from '../asserts';
 import * as testing from '../functions';
 import { list } from 'js-slang/dist/stdlib/list';
 
-beforeAll(() => {
+beforeEach(() => {
   testing.testContext.suiteResults = {
     name: '',
     results: [],
@@ -11,6 +11,7 @@ beforeAll(() => {
   };
   testing.testContext.allResults.results = [];
   testing.testContext.runtime = 0;
+  testing.testContext.called = false;
 });
 
 test('context is created correctly', () => {
