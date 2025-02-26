@@ -116,5 +116,10 @@
     "tabs": [
       "Nbody"
     ]
+  },
+  "testing": {
+    "tabs": [
+      "Testing"
+    ]
   }
 }
