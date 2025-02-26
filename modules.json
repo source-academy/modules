@@ -112,6 +112,11 @@
   "communication": {
     "tabs": []
   },
+  "nbody": {
+    "tabs": [
+      "Nbody"
+    ]
+  },
   "testing": {
     "tabs": [
       "Testing"

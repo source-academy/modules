@@ -3,12 +3,13 @@ import rapier from '@dimforge/rapier3d-compat';
 import type * as THREE from 'three';
 
 import { TypedEventTarget } from './Core/Events';
-import { type FrameTimingInfo } from './Core/Timer';
-import { type SimpleVector } from './Math/Vector';
+import type { FrameTimingInfo } from './Core/Timer';
+import type { SimpleVector } from './Math/Vector';
 
 export type PhysicsTimingInfo = FrameTimingInfo & {
   stepCount: number;
   timestep: number;
+  residualFactor: number;
 };
 
 export class TimeStampedEvent extends Event {
@@ -67,7 +68,7 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
     this.internals = {
       initialized: true,
       world,
-      accumulator: 0,
+      accumulator: world.timestep,
       stepCount: 0,
     };
   }
@@ -134,15 +135,16 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
 
     const maxFrameTime = 0.05;
     const frameDuration = timing.frameDuration / 1000;
-    this.internals.accumulator -= Math.min(frameDuration, maxFrameTime);
+    this.internals.accumulator += Math.min(frameDuration, maxFrameTime);
 
     const currentPhysicsTimingInfo = {
       ...timing,
       stepCount: this.internals.stepCount,
       timestep: this.configuration.timestep * 1000,
+      residualFactor: this.internals.accumulator / this.configuration.timestep,
     };
 
-    while (this.internals.accumulator <= 0) {
+    while (this.internals.accumulator >= this.configuration.timestep) {
       this.dispatchEvent(
         'beforePhysicsUpdate',
         new TimeStampedEvent('beforePhysicsUpdate', currentPhysicsTimingInfo),
@@ -158,7 +160,8 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
         new TimeStampedEvent('afterPhysicsUpdate', currentPhysicsTimingInfo),
       );
 
-      this.internals.accumulator += this.configuration.timestep;
+      this.internals.accumulator -= this.configuration.timestep;
+      currentPhysicsTimingInfo.residualFactor = this.internals.accumulator / this.configuration.timestep;
     }
 
     return currentPhysicsTimingInfo;

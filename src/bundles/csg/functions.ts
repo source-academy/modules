@@ -21,13 +21,12 @@ import {
   is_list
 } from 'js-slang/dist/stdlib/list';
 import save from 'save-file';
-import { degreesToRadians } from '../../common/utilities';
+import { degreesToRadians, hexToColor } from '../../common/utilities';
 import { Core } from './core';
 import type { Solid } from './jscad/types';
 import {
   Group,
   Shape,
-  hexToColor,
   type Operable,
   type RenderGroup,
   centerPrimitive
@@ -674,8 +673,7 @@ export function rgb(
     throw new Error('RGB values must be between 0 and 255 (inclusive)');
   }
 
-  return `#${redValue.toString(16)}${greenValue.toString(16)}
-    ${blueValue.toString(16)}`;
+  return `#${redValue.toString(16)}${greenValue.toString(16)}${blueValue.toString(16)}`;
 }
 
 /**

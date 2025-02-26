@@ -14,7 +14,7 @@ import {
   b2ContactListener,
   type b2Contact
 } from '@box2d/core';
-import { type PhysicsObject } from './PhysicsObject';
+import type { PhysicsObject } from './PhysicsObject';
 import { Timer } from './types';
 
 export class PhysicsWorld {
@@ -105,8 +105,8 @@ export class PhysicsWorld {
     return this.b2World;
   }
 
-  public getWorldStatus(): String {
-    let world_status: String = `
+  public getWorldStatus(): string {
+    let world_status: string = `
   World time: ${this.timer.toString()}
   
   Objects:

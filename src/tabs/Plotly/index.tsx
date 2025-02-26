@@ -1,6 +1,6 @@
 import React from 'react';
-import { type DrawnPlot } from '../../bundles/plotly/plotly';
-import { type DebuggerContext } from '../../typings/type_helpers';
+import type { DrawnPlot } from '../../bundles/plotly/plotly';
+import type { DebuggerContext } from '../../typings/type_helpers';
 import Modal from '../common/ModalDiv';
 
 type Props = {
@@ -60,7 +60,16 @@ class Plotly extends React.Component<Props, State> {
                 height: '80vh',
                 marginBottom: '5vh'
               }} key={divId}>
-                <div onClick={() => this.handleOpen(drawnPlot)}>Click here to open Modal</div>
+                <div onClick={() => this.handleOpen(drawnPlot)}
+                  style={{
+                    cursor: 'pointer',
+                    padding: '5px 10px',
+                    backgroundColor: '#474F5E',
+                    border: '1px solid #aaa',
+                    borderRadius: '4px',
+                    display: 'inline-block'
+                  }}
+                >Popout plot</div>
                 <div
                   id={divId}
                   style={{ height: '80vh' }}
@@ -85,6 +94,6 @@ export default {
     return drawnPlots.length > 0;
   },
   body: (debuggerContext: any) => <Plotly debuggerContext={debuggerContext} />,
-  label: 'Plotly Test Tab',
+  label: 'Plotly',
   iconName: 'scatter-plot'
 };

@@ -5,7 +5,7 @@
 
 import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
-import { type Sound } from '../sound/types';
+import type { Sound } from '../sound/types';
 import { generatePlot } from './curve_functions';
 import {
   type Curve,
@@ -325,9 +325,9 @@ export const draw_connected_2d = createPlotFunction(
     mode: 'lines'
   },
   {
-    xaxis: { visible: false },
+    xaxis: { visible: true },
     yaxis: {
-      visible: false,
+      visible: true,
       scaleanchor: 'x'
     }
   },
@@ -369,9 +369,9 @@ export const draw_points_2d = createPlotFunction(
   'scatter',
   { mode: 'markers' },
   {
-    xaxis: { visible: false },
+    xaxis: { visible: true },
     yaxis: {
-      visible: false,
+      visible: true,
       scaleanchor: 'x'
     }
   },

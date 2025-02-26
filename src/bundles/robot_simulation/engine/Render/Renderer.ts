@@ -1,12 +1,10 @@
-/* eslint-disable import/extensions */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-
 import {
   type GLTF,
   GLTFLoader,
 } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { type FrameTimingInfo } from '../Core/Timer';
+import type { FrameTimingInfo } from '../Core/Timer';
 
 type ControlType = 'none' | 'orbit';
 

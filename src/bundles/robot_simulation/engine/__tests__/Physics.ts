@@ -37,7 +37,7 @@ describe('Physics', () => {
     expect(rapier.init).toHaveBeenCalled();
     expect(physics.internals).toHaveProperty('initialized', true);
     expect(physics.internals).toHaveProperty('world');
-    expect(physics.internals).toHaveProperty('accumulator', 0);
+    expect(physics.internals).toHaveProperty('accumulator', physics.configuration.timestep);
   });
 
   test('createRigidBody throws if not initialized', () => {
