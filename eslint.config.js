@@ -4,8 +4,10 @@ import js from '@eslint/js';
 import stylePlugin from '@stylistic/eslint-plugin';
 import * as importPlugin from 'eslint-plugin-import';
 import jestPlugin from 'eslint-plugin-jest';
+import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import globals from 'globals';
+
 import tseslint from 'typescript-eslint';
 
 import typeImportsPlugin from './scripts/dist/typeimports.js';
@@ -96,7 +98,8 @@ export default tseslint.config(
     // global for TSX files
     files: ['**/*.tsx'],
     plugins: {
-      'react-hooks': reactHooksPlugin
+      'react-hooks': reactHooksPlugin,
+      'react': reactPlugin
     },
     rules: {
       'react-hooks/rules-of-hooks': 'error',
