@@ -16,7 +16,7 @@ export const testContext: TestContext = {
   called: false,
   describe(msg: string, suite: TestSuite) {
     if (this.called) {
-      throw new Error(`${describe.name} can only be called once per program!`)
+      throw new Error(`${describe.name} can only be called once per program!`);
     }
 
     this.called = true;
@@ -72,7 +72,7 @@ export const testContext: TestContext = {
   runtime: 0,
 };
 
-context.moduleContexts.unittest.state = testContext
+context.moduleContexts.unittest.state = testContext;
 
 /**
  * Defines a single test.

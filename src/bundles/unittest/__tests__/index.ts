@@ -1,6 +1,6 @@
+import { list } from 'js-slang/dist/stdlib/list';
 import * as asserts from '../asserts';
 import * as testing from '../functions';
-import { list } from 'js-slang/dist/stdlib/list';
 
 beforeEach(() => {
   testing.testContext.suiteResults = {

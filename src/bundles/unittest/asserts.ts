@@ -81,11 +81,11 @@ export function assert_length(list: any, len: number) {
 
 export function assert_greater(item: any, expected: number) {
   if (typeof item !== 'number') {
-    throw new Error(`${assert_greater.name} should be called with a numeric argument!`)
+    throw new Error(`${assert_greater.name} should be called with a numeric argument!`);
   }
 
   if (item <= expected) {
-    throw new Error(`Expected ${item} to be greater than ${expected}`)
+    throw new Error(`Expected ${item} to be greater than ${expected}`);
   }
 }
 
@@ -96,10 +96,10 @@ export function assert_greater(item: any, expected: number) {
  */
 export function assert_greater_equals(item: any, expected: number) {
   if (typeof item !== 'number') {
-    throw new Error(`${assert_greater.name} should be called with a numeric argument!`)
+    throw new Error(`${assert_greater.name} should be called with a numeric argument!`);
   }
 
   if (item < expected) {
-    throw new Error(`Expected ${item} to be greater than or equal to ${expected}`)
+    throw new Error(`Expected ${item} to be greater than or equal to ${expected}`);
   }
 }

@@ -9,7 +9,7 @@ import { getModuleState, type DebuggerContext } from '../../typings/type_helpers
 
 type Props = {
   context: TestContext;
-}
+};
 
 /**
  * Converts the results of a test suite run into a table format in its own div.
@@ -19,7 +19,7 @@ function suiteResultToDiv(suiteResult: SuiteResult) {
   if (results.length === 0) {
     return <div>
       Your test suite did not contain any tests!
-    </div>
+    </div>;
   }
 
   const colfixed = {
@@ -82,10 +82,10 @@ class TestSuitesTab extends React.PureComponent<Props> {
     if (!called) {
       return <div>
         Call <code>describe</code> at least once to be able to view the results of your tests
-      </div>
+      </div>;
     }
 
-    const block = suiteResultToDiv(suiteResults)
+    const block = suiteResultToDiv(suiteResults);
 
     return (
       <div>
@@ -106,7 +106,7 @@ export default {
    */
   // eslint-disable-next-line react/destructuring-assignment
   body: (context: DebuggerContext) => {
-    const moduleContext = getModuleState<TestContext>(context, 'unittest')
+    const moduleContext = getModuleState<TestContext>(context, 'unittest');
     return <TestSuitesTab context={moduleContext} />;
   },
 
