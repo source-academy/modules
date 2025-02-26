@@ -5,6 +5,7 @@ export type ErrorLogger = (
 export type Test = () => void;
 export type TestSuite = () => void;
 export type TestContext = {
+  called: boolean;
   describe: (msg: string, tests: TestSuite) => Results;
   it: (msg: string, test: Test) => void;
   // This holds the result of a single suite and is cleared on every run
