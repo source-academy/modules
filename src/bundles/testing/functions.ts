@@ -1,4 +1,4 @@
-import { TestContext, TestSuite, Test } from './types';
+import type { TestContext, TestSuite, Test } from './types';
 
 const handleErr = (err: any) => {
   if (err.error && err.error.message) {
