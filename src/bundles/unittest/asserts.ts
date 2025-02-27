@@ -38,6 +38,18 @@ export function assert_equals(expected: any, received: any) {
 }
 
 /**
+ * Asserts that two parameters are not equal (!==).
+ * @param expected The expected value.
+ * @param received The given value.
+ * @returns
+ */
+export function assert_not_equals(expected: any, received: any) {
+  if (expected === received) {
+    throw new Error(`Expected \`${expected}\` to not equal \`${received}\`!`);
+  }
+}
+
+/**
  * Asserts that `xs` contains `toContain`.
  * @param xs The list to assert.
  * @param toContain The element that `xs` is expected to contain.

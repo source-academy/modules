@@ -5,6 +5,7 @@
 
 import {
   assert_equals,
+  assert_not_equals,
   assert_contains,
   assert_greater,
   assert_greater_equals,
@@ -26,6 +27,7 @@ export default {
   it,
   describe,
   assert_equals,
+  assert_not_equals,
   assert_contains,
   assert_greater,
   assert_greater_equals,
