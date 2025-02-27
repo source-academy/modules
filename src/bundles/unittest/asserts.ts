@@ -90,10 +90,9 @@ export function assert_length(list: any, len: number) {
  * @param item The number to check
  * @param expected The value to check against
  */
-
 export function assert_greater(item: any, expected: number) {
-  if (typeof item !== 'number') {
-    throw new Error(`${assert_greater.name} should be called with a numeric argument!`);
+  if (typeof item !== 'number' || typeof expected !== 'number') {
+    throw new Error(`${assert_greater.name} should be called with numeric arguments!`);
   }
 
   if (item <= expected) {
@@ -107,8 +106,8 @@ export function assert_greater(item: any, expected: number) {
  * @param expected The value to check against
  */
 export function assert_greater_equals(item: any, expected: number) {
-  if (typeof item !== 'number') {
-    throw new Error(`${assert_greater.name} should be called with a numeric argument!`);
+  if (typeof item !== 'number' || typeof expected !== 'number') {
+    throw new Error(`${assert_greater.name} should be called with numeric arguments!`);
   }
 
   if (item < expected) {
