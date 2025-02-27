@@ -422,7 +422,7 @@ function get_flips(): number[] {
   return flips;
 }
 
-function get_types(): String[] {
+function get_types(): string[] {
   return typeTag;
 }
 

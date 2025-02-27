@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 
-import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { type Controller, type Renderer } from '../../../engine';
+import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import type { Controller, Renderer } from '../../../engine';
 import type { Dimension, SimpleQuaternion, SimpleVector } from '../../../engine/Math/Vector';
 import type { PhysicsTimingInfo } from '../../../engine/Physics';
 import { loadGLTF } from '../../../engine/Render/helpers/GLTF';
-import { type ChassisWrapper } from './Chassis';
+import type { ChassisWrapper } from './Chassis';
 
 export type MeshConfig = {
   url: string;

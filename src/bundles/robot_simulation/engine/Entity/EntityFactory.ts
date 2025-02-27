@@ -1,5 +1,5 @@
 import type { Dimension, Orientation } from '../Math/Vector';
-import { type Physics } from '../Physics';
+import type { Physics } from '../Physics';
 import { Entity } from './Entity';
 
 export const rigidBodyTypes = ['fixed', 'dynamic'] as const;

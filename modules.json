@@ -121,5 +121,10 @@
     "tabs": [
       "RobotMaze"
     ]
+  }, 
+  "testing": {
+    "tabs": [
+      "Testing"
+    ]
   }
 }
