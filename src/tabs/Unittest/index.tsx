@@ -97,7 +97,13 @@ class TestSuitesTab extends React.PureComponent<Props> {
 }
 
 export default {
-  toSpawn: (context: DebuggerContext): boolean => true,
+  /**
+   * This function will be called to determine if the component will be
+   * rendered.
+   * @param {DebuggerContext} context
+   * @returns {boolean}
+   */
+  toSpawn: (_context: DebuggerContext): boolean => true,
 
   /**
    * This function will be called to render the module tab in the side contents
