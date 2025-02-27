@@ -116,5 +116,10 @@
     "tabs": [
       "Nbody"
     ]
+  },
+  "robot_minigame": {
+    "tabs": [
+      "RobotMaze"
+    ]
   }
 }

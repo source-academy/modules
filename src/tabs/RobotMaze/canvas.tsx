@@ -1,31 +1,30 @@
 import React from 'react';
-import { type DebuggerContext } from '../../typings/type_helpers';
 
 /**
  * React Component props for the Tab.
  */
 type Props = {
-    children?: never;
-    className?: never;
-    state?: any;
-  };
-  
+  children?: never;
+  className?: never;
+  state?: any;
+};
+
 /**
  * React Component state for the Tab.
  */
 type State = {
-    isAnimationEnded: boolean;
+  isAnimationEnded: boolean;
 };
 
 type Point = {
-    x: number;
-    y: number;
-}
+  x: number;
+  y: number;
+};
 
 type Wall = {
   p1: Point;
   p2: Point
-}
+};
 
 export default class Canvas extends React.Component<Props, State> {
   private canvasRef: React.RefObject<HTMLCanvasElement>;
@@ -45,7 +44,7 @@ export default class Canvas extends React.Component<Props, State> {
     super(props);
     this.state = {
       isAnimationEnded: false
-    }
+    };
 
     // setting some variables in what may or may not be good practice
     this.CANVAS_WIDTH = this.props.state.width * this.GRID_SIZE;
@@ -69,7 +68,7 @@ export default class Canvas extends React.Component<Props, State> {
   setupCanvas = () => {
     const canvas = this.canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     canvas.width = this.CANVAS_WIDTH;
@@ -78,9 +77,9 @@ export default class Canvas extends React.Component<Props, State> {
     ctx.clearRect(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
     this.drawWalls(ctx);
     this.drawGrid(ctx);
-    ctx.fillStyle = "black";
+    ctx.fillStyle = 'black';
     ctx.fillRect(this.xPos, this.yPos, 20, 20);
-  }
+  };
 
   startAnimation = () => {
     this.animationFrameId = requestAnimationFrame(this.animate);
@@ -88,16 +87,16 @@ export default class Canvas extends React.Component<Props, State> {
 
   stopAnimation = () => {
     if (this.animationFrameId) {
-      this.setState({isAnimationEnded: true})
+      this.setState({isAnimationEnded: true});
       cancelAnimationFrame(this.animationFrameId);
     }
-  }
+  };
 
   animate = () => {
     const canvas = this.canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return; 
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
     if (this.pointIndex >= this.points.length) return;
 
     // Draw the moving square
@@ -110,7 +109,7 @@ export default class Canvas extends React.Component<Props, State> {
     const dx = targetPoint.x * this.GRID_SIZE - this.xPos;
     const dy = targetPoint.y * this.GRID_SIZE - this.yPos;
     const distance = Math.sqrt(dx * dx + dy * dy);
-      
+
     if (distance > 1) {
       this.xPos += (dx / distance) * this.speed;
       this.yPos += (dy / distance) * this.speed;
@@ -118,18 +117,18 @@ export default class Canvas extends React.Component<Props, State> {
 
     // if distance to target point is small
     if (distance <= 1) {
-        // snap to the target point
-        this.xPos = targetPoint.x * this.GRID_SIZE;
-        this.yPos = targetPoint.y * this.GRID_SIZE;
+      // snap to the target point
+      this.xPos = targetPoint.x * this.GRID_SIZE;
+      this.yPos = targetPoint.y * this.GRID_SIZE;
 
-        // set target to the next point in the array
-        this.pointIndex+= 1;
+      // set target to the next point in the array
+      this.pointIndex+= 1;
 
-        if (this.pointIndex >= this.points.length) {
-          this.stopAnimation();
-        }
+      if (this.pointIndex >= this.points.length) {
+        this.stopAnimation();
+      }
     }
-    ctx.fillStyle = "black";
+    ctx.fillStyle = 'black';
     ctx.fillRect(this.xPos, this.yPos, 20, 20);
 
     // Request the next frame
@@ -143,15 +142,15 @@ export default class Canvas extends React.Component<Props, State> {
       const p2 = this.walls[i].p2;
       const width = (p2.x - p1.x) * this.GRID_SIZE + this.GRID_SIZE;
       const height = (p2.y - p1.y) * this.GRID_SIZE + this.GRID_SIZE;
-      
-      ctx.fillStyle = "rgb(128, 128, 128)";
-      ctx.fillRect(p1.x * this.GRID_SIZE, p1.y * this.GRID_SIZE, width, height);  
+
+      ctx.fillStyle = 'rgb(128, 128, 128)';
+      ctx.fillRect(p1.x * this.GRID_SIZE, p1.y * this.GRID_SIZE, width, height);
     }
   }
 
   drawGrid(ctx: CanvasRenderingContext2D) {
     // Draw grid
-    ctx.strokeStyle = "gray";
+    ctx.strokeStyle = 'gray';
     ctx.lineWidth = 1;
 
     // Draw vertical lines
@@ -173,15 +172,14 @@ export default class Canvas extends React.Component<Props, State> {
 
   public render() {
     return (
-        <>
-            <button onClick={this.startAnimation}>Start</button>
-            <p>{this.state.isAnimationEnded ? this.props.state.message : <></>}</p>
-            <div style={{display: "flex", justifyContent: "center"}}>
-            <canvas ref={this.canvasRef}/>
-            </div>
-        </>
-      
-      
+      <>
+        <button onClick={this.startAnimation}>Start</button>
+        <p>{this.state.isAnimationEnded ? this.props.state.message : <></>}</p>
+        <div style={{display: 'flex', justifyContent: 'center'}}>
+          <canvas ref={this.canvasRef}/>
+        </div>
+      </>
+
     );
   }
 }

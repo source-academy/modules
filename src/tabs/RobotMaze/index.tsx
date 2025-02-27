@@ -1,6 +1,6 @@
 import React from 'react';
 import { type DebuggerContext } from '../../typings/type_helpers';
-import Canvas from "./canvas"
+import Canvas from './canvas';
 
 /**
  * <Brief description of the tab>
@@ -15,13 +15,6 @@ type Props = {
   children?: never;
   className?: never;
   context?: any;
-};
-
-/**
- * React Component state for the Tab.
- */
-type State = {
-  counter: number;
 };
 
 /**
@@ -48,9 +41,9 @@ export default {
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
-    toSpawn(context: DebuggerContext) {
-      return context.context?.moduleContexts?.robot_minigame.state.isInit;
-    },
+  toSpawn(context: DebuggerContext) {
+    return context.context?.moduleContexts?.robot_minigame.state.isInit;
+  },
 
   /**
    * This function will be called to render the module tab in the side contents

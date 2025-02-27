@@ -17,7 +17,4 @@ export {
   turn_right,
   getX,
   getY
-} from "./functions";
-
-
-
+} from './functions';
