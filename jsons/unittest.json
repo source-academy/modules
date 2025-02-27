@@ -1,9 +1,8 @@
 {
   "default": {
-    "kind": "function",
+    "kind": "variable",
     "name": "default",
     "description": "No description available",
-    "params": [],
-    "retType": "Object"
+    "type": "Object"
   }
 }
