@@ -26,6 +26,8 @@ type Wall = {
   p2: Point
 };
 
+type Polygon = Point[]
+
 export default class Canvas extends React.Component<Props, State> {
   private canvasRef: React.RefObject<HTMLCanvasElement>;
   private animationFrameId: number | null = null;
@@ -34,11 +36,10 @@ export default class Canvas extends React.Component<Props, State> {
   private xPos: number;
   private yPos: number;
   private pointIndex: number = 1;
-  private walls: Wall[];
+  private walls: Polygon[];
 
   private CANVAS_WIDTH: number = 500;
   private CANVAS_HEIGHT: number = 500;
-  private GRID_SIZE: number = 20;
 
   constructor(props) {
     super(props);
@@ -47,8 +48,8 @@ export default class Canvas extends React.Component<Props, State> {
     };
 
     // setting some variables in what may or may not be good practice
-    this.CANVAS_WIDTH = this.props.state.width * this.GRID_SIZE;
-    this.CANVAS_HEIGHT = this.props.state.height * this.GRID_SIZE;
+    this.CANVAS_WIDTH = this.props.state.width;
+    this.CANVAS_HEIGHT = this.props.state.height;
     this.points = this.props.state.movePoints; // a series of points is passed back from the modules which determines the path of robot
     this.walls = this.props.state.walls;
     this.xPos = this.points[0].x;
@@ -77,8 +78,7 @@ export default class Canvas extends React.Component<Props, State> {
     ctx.clearRect(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
     this.drawWalls(ctx);
     this.drawGrid(ctx);
-    ctx.fillStyle = 'black';
-    ctx.fillRect(this.xPos, this.yPos, 20, 20);
+    this.drawRobot(ctx, this.xPos, this.yPos)
   };
 
   startAnimation = () => {
@@ -99,15 +99,14 @@ export default class Canvas extends React.Component<Props, State> {
     if (!ctx) return;
     if (this.pointIndex >= this.points.length) return;
 
-    // Draw the moving square
     ctx.clearRect(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
     this.drawWalls(ctx);
     this.drawGrid(ctx);
 
     // Update position
     const targetPoint = this.points[this.pointIndex];
-    const dx = targetPoint.x * this.GRID_SIZE - this.xPos;
-    const dy = targetPoint.y * this.GRID_SIZE - this.yPos;
+    const dx = targetPoint.x - this.xPos;
+    const dy = targetPoint.y - this.yPos;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     if (distance > 1) {
@@ -118,8 +117,8 @@ export default class Canvas extends React.Component<Props, State> {
     // if distance to target point is small
     if (distance <= 1) {
       // snap to the target point
-      this.xPos = targetPoint.x * this.GRID_SIZE;
-      this.yPos = targetPoint.y * this.GRID_SIZE;
+      this.xPos = targetPoint.x;
+      this.yPos = targetPoint.y;
 
       // set target to the next point in the array
       this.pointIndex+= 1;
@@ -128,46 +127,54 @@ export default class Canvas extends React.Component<Props, State> {
         this.stopAnimation();
       }
     }
-    ctx.fillStyle = 'black';
-    ctx.fillRect(this.xPos, this.yPos, 20, 20);
 
+    this.drawRobot(ctx, this.xPos, this.yPos)
     // Request the next frame
     this.animationFrameId = requestAnimationFrame(this.animate);
   };
 
+  drawRobot(ctx: CanvasRenderingContext2D, x: number, y: number) {
+    ctx.beginPath(); // Begin a new path
+
+    ctx.arc(x, y, 20, 0, Math.PI * 2, false); // Full circle (0 to 2π radians)
+
+    ctx.fillStyle = "black"; // Set the fill color
+    ctx.fill(); // Fill the circle
+  }
+
   drawWalls(ctx: CanvasRenderingContext2D) {
     for (let i = 0; i < this.walls.length; i++) {
       // assumption is made that p1 is going to be the top left corner, might make some error checks for that later on
-      const p1 = this.walls[i].p1;
-      const p2 = this.walls[i].p2;
-      const width = (p2.x - p1.x) * this.GRID_SIZE + this.GRID_SIZE;
-      const height = (p2.y - p1.y) * this.GRID_SIZE + this.GRID_SIZE;
+      const wall: Polygon = this.walls[i];
 
-      ctx.fillStyle = 'rgb(128, 128, 128)';
-      ctx.fillRect(p1.x * this.GRID_SIZE, p1.y * this.GRID_SIZE, width, height);
+      ctx.beginPath();
+      ctx.moveTo(wall[0].x, wall[0].y)
+      for (let j = 1; j < wall.length; j++) {
+        ctx.lineTo(wall[j].x, wall[j].y);
+      }
+      ctx.closePath();
+
+      ctx.fillStyle = "rgba(169, 169, 169, 0.5)"; // Set the fill color
+      ctx.fill(); // Fill the polygon
+
+      ctx.strokeStyle = "rgb(53, 53, 53)"; // Set the stroke color
+      ctx.lineWidth = 2; // Set the border width
+      ctx.stroke(); // Stroke the polygon
     }
   }
 
   drawGrid(ctx: CanvasRenderingContext2D) {
     // Draw grid
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, this.CANVAS_HEIGHT);
+    ctx.lineTo(this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+    ctx.lineTo(this.CANVAS_WIDTH, 0)
+    ctx.closePath()
+
     ctx.strokeStyle = 'gray';
-    ctx.lineWidth = 1;
-
-    // Draw vertical lines
-    for (let x = 0; x <= this.CANVAS_WIDTH; x += this.GRID_SIZE) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, this.CANVAS_HEIGHT);
-      ctx.stroke();
-    }
-
-    // Draw horizontal lines
-    for (let y = 0; y <= this.CANVAS_HEIGHT; y += this.GRID_SIZE) {
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(this.CANVAS_WIDTH, y);
-      ctx.stroke();
-    }
+    ctx.lineWidth = 3;
+    ctx.stroke()
   }
 
   public render() {

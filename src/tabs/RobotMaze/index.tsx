@@ -26,10 +26,10 @@ class RobotMaze extends React.Component<Props> {
   }
 
   public render() {
-    const { context: { moduleContexts: { robot_minigame } } } = this.props.context;
+    const { context: { moduleContexts: { robot_minigame: {state} } } } = this.props.context;
 
     return (
-      <Canvas state={robot_minigame.state}></Canvas>
+      <Canvas state={state}></Canvas>
     );
   }
 }
@@ -42,6 +42,7 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
+    console.log(context.context?.moduleContexts?.robot_minigame.state);
     return context.context?.moduleContexts?.robot_minigame.state.isInit;
   },
 

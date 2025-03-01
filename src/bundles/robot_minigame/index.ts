@@ -11,7 +11,7 @@
 export {
   init,
   set_pos,
-  set_wall,
+  set_rect_wall,
   move_forward,
   turn_left,
   turn_right,
