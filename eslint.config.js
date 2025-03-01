@@ -10,7 +10,7 @@ import globals from 'globals';
 
 import tseslint from 'typescript-eslint';
 
-import typeImportsPlugin from './scripts/dist/typeimports.js';
+import typeImportsPlugin from './scripts/src/linting/typeimports.ts';
 
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
 const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
