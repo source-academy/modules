@@ -21,12 +21,7 @@ type Point = {
   y: number;
 };
 
-type Wall = {
-  p1: Point;
-  p2: Point
-};
-
-type Polygon = Point[]
+type Polygon = Point[];
 
 export default class Canvas extends React.Component<Props, State> {
   private canvasRef: React.RefObject<HTMLCanvasElement>;
@@ -78,7 +73,7 @@ export default class Canvas extends React.Component<Props, State> {
     ctx.clearRect(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
     this.drawWalls(ctx);
     this.drawGrid(ctx);
-    this.drawRobot(ctx, this.xPos, this.yPos)
+    this.drawRobot(ctx, this.xPos, this.yPos);
   };
 
   startAnimation = () => {
@@ -128,7 +123,7 @@ export default class Canvas extends React.Component<Props, State> {
       }
     }
 
-    this.drawRobot(ctx, this.xPos, this.yPos)
+    this.drawRobot(ctx, this.xPos, this.yPos);
     // Request the next frame
     this.animationFrameId = requestAnimationFrame(this.animate);
   };
@@ -138,7 +133,7 @@ export default class Canvas extends React.Component<Props, State> {
 
     ctx.arc(x, y, 20, 0, Math.PI * 2, false); // Full circle (0 to 2π radians)
 
-    ctx.fillStyle = "black"; // Set the fill color
+    ctx.fillStyle = 'black'; // Set the fill color
     ctx.fill(); // Fill the circle
   }
 
@@ -148,16 +143,16 @@ export default class Canvas extends React.Component<Props, State> {
       const wall: Polygon = this.walls[i];
 
       ctx.beginPath();
-      ctx.moveTo(wall[0].x, wall[0].y)
+      ctx.moveTo(wall[0].x, wall[0].y);
       for (let j = 1; j < wall.length; j++) {
         ctx.lineTo(wall[j].x, wall[j].y);
       }
       ctx.closePath();
 
-      ctx.fillStyle = "rgba(169, 169, 169, 0.5)"; // Set the fill color
+      ctx.fillStyle = 'rgba(169, 169, 169, 0.5)'; // Set the fill color
       ctx.fill(); // Fill the polygon
 
-      ctx.strokeStyle = "rgb(53, 53, 53)"; // Set the stroke color
+      ctx.strokeStyle = 'rgb(53, 53, 53)'; // Set the stroke color
       ctx.lineWidth = 2; // Set the border width
       ctx.stroke(); // Stroke the polygon
     }
@@ -169,12 +164,12 @@ export default class Canvas extends React.Component<Props, State> {
     ctx.moveTo(0, 0);
     ctx.lineTo(0, this.CANVAS_HEIGHT);
     ctx.lineTo(this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
-    ctx.lineTo(this.CANVAS_WIDTH, 0)
-    ctx.closePath()
+    ctx.lineTo(this.CANVAS_WIDTH, 0);
+    ctx.closePath();
 
     ctx.strokeStyle = 'gray';
     ctx.lineWidth = 3;
-    ctx.stroke()
+    ctx.stroke();
   }
 
   public render() {

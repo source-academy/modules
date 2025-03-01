@@ -6,7 +6,6 @@
 import context from 'js-slang/context';
 
 type Point = {x: number, y: number};
-type Wall = {p1: Point, p2: Point};
 
 type Polygon = Point[];
 
@@ -16,10 +15,10 @@ type StateData = {
   height: number,
   walls: Polygon[],
   movePoints: Point[],
-  message: String,
+  message: string,
   success: boolean,
-  messages: String[]
-}
+  messages: string[]
+};
 
 type Robot = {
   x: number; // the top left corner
@@ -27,9 +26,9 @@ type Robot = {
   dx: number;
   dy: number;
   radius: number
-}
+};
 
-let stateData: StateData = {
+const stateData: StateData = {
   isInit: false,
   width: 500,
   height: 500,
@@ -38,17 +37,17 @@ let stateData: StateData = {
   message: 'moved successfully',
   success: true,
   messages: []
-}
+};
 
-let robot: Robot = {
+const robot: Robot = {
   x: 25, // default start pos, puts it at the top left corner of canvas without colliding with the walls
   y: 25,
   dx: 1,
   dy: 0,
-  radius: 20 //give the robot a circular hitbox
-}
+  radius: 20 // give the robot a circular hitbox
+};
 
-let bounds: Point[] = []
+let bounds: Point[] = [];
 
 // default grid width and height is 25
 context.moduleContexts.robot_minigame.state = stateData;
@@ -78,7 +77,7 @@ export function init(width: number, height: number, posX: number, posY: number) 
     {x: width, y: 0},
     {x: width, y: height},
     {x: 0, y: height}
-  ]
+  ];
 
 }
 
@@ -108,7 +107,7 @@ export function set_rect_wall(x: number, y: number, width: number, height: numbe
     {x: x + width, y: y},
     {x: x+width, y: y+height},
     {x: x, y:y+height}
-  ]
+  ];
 
   stateData.walls.push(polygon);
 }
@@ -116,13 +115,13 @@ export function set_rect_wall(x: number, y: number, width: number, height: numbe
 export function move_forward(): void {
   if (alrCollided()) return;
 
-  const collisionPoint: Point | null = raycast(stateData.walls)
+  const collisionPoint: Point | null = raycast(stateData.walls);
   if (collisionPoint !== null) {
-    let nextPoint: Point = {
+    const nextPoint: Point = {
       x: collisionPoint.x - robot.dx * (robot.radius + 5),
       y: collisionPoint.y - robot.dy * (robot.radius + 5)
-    }
-    
+    };
+
     robot.x = nextPoint.x;
     robot.y = nextPoint.y;
     stateData.movePoints.push(nextPoint);
@@ -142,20 +141,20 @@ function raycast(polygons: Polygon[]): Point | null {
   let minDist = Infinity;
 
   for (const polygon of polygons) {
-      stateData.messages.push("checking polygon");
-      const numVertices = polygon.length;
-      
-      for (let i = 0; i < numVertices; i++) {
-          const x1 = polygon[i].x, y1 = polygon[i].y;
-          const x2 = polygon[(i + 1) % numVertices].x, y2 = polygon[(i + 1) % numVertices].y;
+    stateData.messages.push('checking polygon');
+    const numVertices = polygon.length;
 
-          const intersection = getIntersection(robot.x, robot.y, robot.dx + robot.x, robot.dy + robot.y, x1, y1, x2, y2);
-          
-          if (intersection.collided && intersection.dist < minDist) {
-              minDist = intersection.dist
-              nearest = {x: intersection.x, y: intersection.y};
-          }
+    for (let i = 0; i < numVertices; i++) {
+      const x1 = polygon[i].x, y1 = polygon[i].y;
+      const x2 = polygon[(i + 1) % numVertices].x, y2 = polygon[(i + 1) % numVertices].y;
+
+      const intersection = getIntersection(robot.x, robot.y, robot.dx + robot.x, robot.dy + robot.y, x1, y1, x2, y2);
+
+      if (intersection.collided && intersection.dist < minDist) {
+        minDist = intersection.dist;
+        nearest = {x: intersection.x, y: intersection.y};
       }
+    }
   }
 
   // if no collisions with obstacles, check the outer bounds of map
@@ -167,7 +166,7 @@ function raycast(polygons: Polygon[]): Point | null {
       const intersection = getIntersection(robot.x, robot.y, robot.dx + robot.x, robot.dy + robot.y, x1, y1, x2, y2);
 
       if (intersection.collided && intersection.dist < minDist) {
-        minDist = intersection.dist
+        minDist = intersection.dist;
         nearest = {x: intersection.x, y: intersection.y};
       }
     }
@@ -176,37 +175,35 @@ function raycast(polygons: Polygon[]): Point | null {
   return nearest; // Closest intersection point
 }
 
-//Determine if a ray and a line segment intersect, and if so, determine the collision point
+// Determine if a ray and a line segment intersect, and if so, determine the collision point
 function getIntersection(x1, y1, x2, y2, x3, y3, x4, y4){
-  var denom = ((x2 - x1)*(y4 - y3)-(y2 - y1)*(x4 - x3));
-  var r;
-  var s;
-  var x;
-  var y;
-  var b = false;
+  const denom = ((x2 - x1)*(y4 - y3)-(y2 - y1)*(x4 - x3));
+  let r;
+  let s;
+  let x;
+  let y;
+  let b = false;
 
-  //If lines not collinear or parallel
+  // If lines not collinear or parallel
   if(denom != 0){
-    //Intersection in ray "local" coordinates
+    // Intersection in ray "local" coordinates
     r = (((y1 - y3) * (x4 - x3)) - (x1 - x3) * (y4 - y3)) / denom;
 
-    //Intersection in segment "local" coordinates
+    // Intersection in segment "local" coordinates
     s = (((y1 - y3) * (x2 - x1)) - (x1 - x3) * (y2 - y1)) / denom;
 
-    //The algorithm gives the intersection of two infinite lines, determine if it lies on the side that the ray is defined on
-    if (r >= 0)
-    {
-      //If point along the line segment
-      if (s >= 0 && s <= 1)
-      {
+    // The algorithm gives the intersection of two infinite lines, determine if it lies on the side that the ray is defined on
+    if (r >= 0) {
+      // If point along the line segment
+      if (s >= 0 && s <= 1) {
         b = true;
-        //Get point coordinates (offset by r local units from start of ray)
+        // Get point coordinates (offset by r local units from start of ray)
         x = x1 + r * (x2 - x1);
         y = y1 + r * (y2 - y1);
       }
     }
   }
-  var p = {collided: b, x: x, y: y, dist: r};
+  const p = {collided: b, x: x, y: y, dist: r};
   return p;
 }
 

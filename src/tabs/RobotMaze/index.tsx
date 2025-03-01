@@ -1,5 +1,5 @@
 import React from 'react';
-import { type DebuggerContext } from '../../typings/type_helpers';
+import type { DebuggerContext } from '../../typings/type_helpers';
 import Canvas from './canvas';
 
 /**
