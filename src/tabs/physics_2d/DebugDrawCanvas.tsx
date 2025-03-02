@@ -1,7 +1,3 @@
-/* eslint-disable new-cap */
-// We have to disable linting rules since Box2D functions do not
-// follow the same guidelines as the rest of the codebase.
-
 import { Button, Icon, Slider, Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { DrawShapes, type b2World } from '@box2d/core';

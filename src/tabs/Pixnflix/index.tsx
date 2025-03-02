@@ -1,6 +1,5 @@
 import { Button, ButtonGroup, Divider, NumericInput } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-// eslint-disable-next-line @typescript-eslint/no-shadow
 import React, { type ChangeEvent, type DragEvent } from 'react';
 import {
   DEFAULT_FPS,

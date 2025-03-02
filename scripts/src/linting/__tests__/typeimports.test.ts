@@ -3,11 +3,14 @@ import typeImportsPlugin from '../typeimports';
 
 describe('Test collateTypeImports', () => {
   const tester = new RuleTester({
-    parser: require.resolve('@typescript-eslint/parser'),
-    parserOptions: {
-      ecmaVersion: 6,
-      sourceType: 'module'
-    }
+    'languageOptions': {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      parser: require('@typescript-eslint/parser'),
+      parserOptions: {
+        ecmaVersion: 6,
+        sourceType: 'module'
+      }
+    },
   });
 
   tester.run(

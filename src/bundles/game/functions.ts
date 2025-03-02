@@ -14,8 +14,6 @@
  * @author Gokul Rajiv
  */
 
-/* eslint-disable consistent-return, @typescript-eslint/default-param-last, @typescript-eslint/no-shadow, @typescript-eslint/no-unused-vars */
-
 import context from 'js-slang/context';
 import { type List, head, tail, is_pair, accumulate } from 'js-slang/dist/stdlib/list';
 import Phaser from 'phaser';
@@ -153,7 +151,6 @@ function set_type(
  * @hidden
  */
 function throw_error(message: string): never {
-  // eslint-disable-next-line no-caller
   throw new Error(`${arguments.callee.caller.name}: ${message}`);
 }
 

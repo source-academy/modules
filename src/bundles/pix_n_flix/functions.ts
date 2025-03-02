@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import {
   DEFAULT_WIDTH,
   DEFAULT_HEIGHT,
@@ -191,7 +190,6 @@ function draw(timestamp: number): void {
     prevTime = timestamp;
     totalElapsedTime += elapsed;
     if (toRunLateQueue) {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       lateQueue();
       toRunLateQueue = false;
     }

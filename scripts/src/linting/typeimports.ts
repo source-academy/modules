@@ -28,7 +28,6 @@ const typeImportsPlugin = {
       },
       create: context => ({
         ImportDeclaration(node) {
-          // @ts-expect-error import kind is unknown property
           if (node.importKind === 'type' || node.specifiers.length === 0) return;
 
           // @ts-expect-error import kind is unknown property

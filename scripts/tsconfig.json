@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",

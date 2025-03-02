@@ -1,9 +1,7 @@
 import fs from 'fs/promises';
-
 import type { Interface } from 'readline/promises';
 import { promiseAll } from '@src/commandUtils';
 import { type ModuleManifest, retrieveManifest } from '@src/manifest';
-
 import { askQuestion, success, warn } from './print';
 import { type Options, isSnakeCase } from './utilities';
 
@@ -12,7 +10,6 @@ export const check = (manifest: ModuleManifest, name: string) => Object.keys(man
 
 async function askModuleName(manifest: ModuleManifest, rl: Interface) {
   while (true) {
-    // eslint-disable-next-line no-await-in-loop
     const name = await askQuestion('What is the name of your new module? (eg. binary_tree)', rl);
     if (isSnakeCase(name) === false) {
       warn('Module names must be in snake case. (eg. binary_tree)');

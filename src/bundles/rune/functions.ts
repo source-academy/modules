@@ -945,7 +945,6 @@ export class HollusionRune extends DrawnRune {
           = Math.floor(timeInMs / (period / frameCount)) % frameCount;
       const fbObject = frameBuffer[framePos];
       gl.clearColor(1.0, 1.0, 1.0, 1.0); // Set clear color to white, fully opaque
-      // eslint-disable-next-line no-bitwise
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the viewport
 
       gl.activeTexture(gl.TEXTURE0);

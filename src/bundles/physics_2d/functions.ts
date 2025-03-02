@@ -1,7 +1,3 @@
-/* eslint-disable new-cap */
-// We have to disable linting rules since Box2D functions do not
-// follow the same guidelines as the rest of the codebase.
-
 /**
  * @module physics_2d
  * @author Muhammad Fikri Bin Abdul Kalam
