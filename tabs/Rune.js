@@ -59,6 +59,12 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
+  var __decorateClass = (decorators, target, key, kind) => {
+    var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
+    for (var i = decorators.length - 1, decorator; i >= 0; i--) if (decorator = decorators[i]) result = (kind ? decorator(target, key, result) : decorator(result)) || result;
+    if (kind && result) __defProp(target, key, result);
+    return result;
+  };
   var init_define_process = __esm({
     "<define:process>"() {}
   });
@@ -1093,10 +1099,10 @@ export default require => {
             }
             return number;
           }
-          function baseClone(value, bitmask, customizer, key, object, stack) {
+          function baseClone(value, bitmask, customizer, key, object, stack2) {
             var result2, isDeep = bitmask & CLONE_DEEP_FLAG, isFlat = bitmask & CLONE_FLAT_FLAG, isFull = bitmask & CLONE_SYMBOLS_FLAG;
             if (customizer) {
-              result2 = object ? customizer(value, key, object, stack) : customizer(value);
+              result2 = object ? customizer(value, key, object, stack2) : customizer(value);
             }
             if (result2 !== undefined2) {
               return result2;
@@ -1127,19 +1133,19 @@ export default require => {
                 result2 = initCloneByTag(value, tag, isDeep);
               }
             }
-            stack || (stack = new Stack());
-            var stacked = stack.get(value);
+            stack2 || (stack2 = new Stack());
+            var stacked = stack2.get(value);
             if (stacked) {
               return stacked;
             }
-            stack.set(value, result2);
+            stack2.set(value, result2);
             if (isSet(value)) {
               value.forEach(function (subValue) {
-                result2.add(baseClone(subValue, bitmask, customizer, subValue, value, stack));
+                result2.add(baseClone(subValue, bitmask, customizer, subValue, value, stack2));
               });
             } else if (isMap(value)) {
               value.forEach(function (subValue, key2) {
-                result2.set(key2, baseClone(subValue, bitmask, customizer, key2, value, stack));
+                result2.set(key2, baseClone(subValue, bitmask, customizer, key2, value, stack2));
               });
             }
             var keysFunc = isFull ? isFlat ? getAllKeysIn : getAllKeys : isFlat ? keysIn : keys;
@@ -1149,7 +1155,7 @@ export default require => {
                 key2 = subValue;
                 subValue = value[key2];
               }
-              assignValue(result2, key2, baseClone(subValue, bitmask, customizer, key2, value, stack));
+              assignValue(result2, key2, baseClone(subValue, bitmask, customizer, key2, value, stack2));
             });
             return result2;
           }
@@ -1372,16 +1378,16 @@ export default require => {
           function baseIsDate(value) {
             return isObjectLike(value) && baseGetTag(value) == dateTag;
           }
-          function baseIsEqual(value, other, bitmask, customizer, stack) {
+          function baseIsEqual(value, other, bitmask, customizer, stack2) {
             if (value === other) {
               return true;
             }
             if (value == null || other == null || !isObjectLike(value) && !isObjectLike(other)) {
               return value !== value && other !== other;
             }
-            return baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual, stack);
+            return baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual, stack2);
           }
-          function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
+          function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack2) {
             var objIsArr = isArray(object), othIsArr = isArray(other), objTag = objIsArr ? arrayTag : getTag(object), othTag = othIsArr ? arrayTag : getTag(other);
             objTag = objTag == argsTag ? objectTag : objTag;
             othTag = othTag == argsTag ? objectTag : othTag;
@@ -1394,22 +1400,22 @@ export default require => {
               objIsObj = false;
             }
             if (isSameTag && !objIsObj) {
-              stack || (stack = new Stack());
-              return objIsArr || isTypedArray(object) ? equalArrays(object, other, bitmask, customizer, equalFunc, stack) : equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
+              stack2 || (stack2 = new Stack());
+              return objIsArr || isTypedArray(object) ? equalArrays(object, other, bitmask, customizer, equalFunc, stack2) : equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack2);
             }
             if (!(bitmask & COMPARE_PARTIAL_FLAG)) {
               var objIsWrapped = objIsObj && hasOwnProperty.call(object, "__wrapped__"), othIsWrapped = othIsObj && hasOwnProperty.call(other, "__wrapped__");
               if (objIsWrapped || othIsWrapped) {
                 var objUnwrapped = objIsWrapped ? object.value() : object, othUnwrapped = othIsWrapped ? other.value() : other;
-                stack || (stack = new Stack());
-                return equalFunc(objUnwrapped, othUnwrapped, bitmask, customizer, stack);
+                stack2 || (stack2 = new Stack());
+                return equalFunc(objUnwrapped, othUnwrapped, bitmask, customizer, stack2);
               }
             }
             if (!isSameTag) {
               return false;
             }
-            stack || (stack = new Stack());
-            return equalObjects(object, other, bitmask, customizer, equalFunc, stack);
+            stack2 || (stack2 = new Stack());
+            return equalObjects(object, other, bitmask, customizer, equalFunc, stack2);
           }
           function baseIsMap(value) {
             return isObjectLike(value) && getTag(value) == mapTag;
@@ -1434,11 +1440,11 @@ export default require => {
                   return false;
                 }
               } else {
-                var stack = new Stack();
+                var stack2 = new Stack();
                 if (customizer) {
-                  var result2 = customizer(objValue, srcValue, key, object, source, stack);
+                  var result2 = customizer(objValue, srcValue, key, object, source, stack2);
                 }
-                if (!(result2 === undefined2 ? baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG, customizer, stack) : result2)) {
+                if (!(result2 === undefined2 ? baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG, customizer, stack2) : result2)) {
                   return false;
                 }
               }
@@ -1525,16 +1531,16 @@ export default require => {
               return objValue === undefined2 && objValue === srcValue ? hasIn(object, path) : baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG);
             };
           }
-          function baseMerge(object, source, srcIndex, customizer, stack) {
+          function baseMerge(object, source, srcIndex, customizer, stack2) {
             if (object === source) {
               return;
             }
             baseFor(source, function (srcValue, key) {
-              stack || (stack = new Stack());
+              stack2 || (stack2 = new Stack());
               if (isObject(srcValue)) {
-                baseMergeDeep(object, source, key, srcIndex, baseMerge, customizer, stack);
+                baseMergeDeep(object, source, key, srcIndex, baseMerge, customizer, stack2);
               } else {
-                var newValue = customizer ? customizer(safeGet(object, key), srcValue, key + "", object, source, stack) : undefined2;
+                var newValue = customizer ? customizer(safeGet(object, key), srcValue, key + "", object, source, stack2) : undefined2;
                 if (newValue === undefined2) {
                   newValue = srcValue;
                 }
@@ -1542,13 +1548,13 @@ export default require => {
               }
             }, keysIn);
           }
-          function baseMergeDeep(object, source, key, srcIndex, mergeFunc, customizer, stack) {
-            var objValue = safeGet(object, key), srcValue = safeGet(source, key), stacked = stack.get(srcValue);
+          function baseMergeDeep(object, source, key, srcIndex, mergeFunc, customizer, stack2) {
+            var objValue = safeGet(object, key), srcValue = safeGet(source, key), stacked = stack2.get(srcValue);
             if (stacked) {
               assignMergeValue(object, key, stacked);
               return;
             }
-            var newValue = customizer ? customizer(objValue, srcValue, key + "", object, source, stack) : undefined2;
+            var newValue = customizer ? customizer(objValue, srcValue, key + "", object, source, stack2) : undefined2;
             var isCommon = newValue === undefined2;
             if (isCommon) {
               var isArr = isArray(srcValue), isBuff = !isArr && isBuffer(srcValue), isTyped = !isArr && !isBuff && isTypedArray(srcValue);
@@ -1579,9 +1585,9 @@ export default require => {
               }
             }
             if (isCommon) {
-              stack.set(srcValue, newValue);
-              mergeFunc(newValue, srcValue, srcIndex, customizer, stack);
-              stack["delete"](srcValue);
+              stack2.set(srcValue, newValue);
+              mergeFunc(newValue, srcValue, srcIndex, customizer, stack2);
+              stack2["delete"](srcValue);
             }
             assignMergeValue(object, key, newValue);
           }
@@ -2467,34 +2473,34 @@ export default require => {
             }
             return objValue;
           }
-          function customDefaultsMerge(objValue, srcValue, key, object, source, stack) {
+          function customDefaultsMerge(objValue, srcValue, key, object, source, stack2) {
             if (isObject(objValue) && isObject(srcValue)) {
-              stack.set(srcValue, objValue);
-              baseMerge(objValue, srcValue, undefined2, customDefaultsMerge, stack);
-              stack["delete"](srcValue);
+              stack2.set(srcValue, objValue);
+              baseMerge(objValue, srcValue, undefined2, customDefaultsMerge, stack2);
+              stack2["delete"](srcValue);
             }
             return objValue;
           }
           function customOmitClone(value) {
             return isPlainObject(value) ? undefined2 : value;
           }
-          function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
+          function equalArrays(array, other, bitmask, customizer, equalFunc, stack2) {
             var isPartial = bitmask & COMPARE_PARTIAL_FLAG, arrLength = array.length, othLength = other.length;
             if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
               return false;
             }
-            var arrStacked = stack.get(array);
-            var othStacked = stack.get(other);
+            var arrStacked = stack2.get(array);
+            var othStacked = stack2.get(other);
             if (arrStacked && othStacked) {
               return arrStacked == other && othStacked == array;
             }
             var index = -1, result2 = true, seen = bitmask & COMPARE_UNORDERED_FLAG ? new SetCache() : undefined2;
-            stack.set(array, other);
-            stack.set(other, array);
+            stack2.set(array, other);
+            stack2.set(other, array);
             while (++index < arrLength) {
               var arrValue = array[index], othValue = other[index];
               if (customizer) {
-                var compared = isPartial ? customizer(othValue, arrValue, index, other, array, stack) : customizer(arrValue, othValue, index, array, other, stack);
+                var compared = isPartial ? customizer(othValue, arrValue, index, other, array, stack2) : customizer(arrValue, othValue, index, array, other, stack2);
               }
               if (compared !== undefined2) {
                 if (compared) {
@@ -2505,23 +2511,23 @@ export default require => {
               }
               if (seen) {
                 if (!arraySome(other, function (othValue2, othIndex) {
-                  if (!cacheHas(seen, othIndex) && (arrValue === othValue2 || equalFunc(arrValue, othValue2, bitmask, customizer, stack))) {
+                  if (!cacheHas(seen, othIndex) && (arrValue === othValue2 || equalFunc(arrValue, othValue2, bitmask, customizer, stack2))) {
                     return seen.push(othIndex);
                   }
                 })) {
                   result2 = false;
                   break;
                 }
-              } else if (!(arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) {
+              } else if (!(arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack2))) {
                 result2 = false;
                 break;
               }
             }
-            stack["delete"](array);
-            stack["delete"](other);
+            stack2["delete"](array);
+            stack2["delete"](other);
             return result2;
           }
-          function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
+          function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack2) {
             switch (tag) {
               case dataViewTag:
                 if (object.byteLength != other.byteLength || object.byteOffset != other.byteOffset) {
@@ -2551,14 +2557,14 @@ export default require => {
                 if (object.size != other.size && !isPartial) {
                   return false;
                 }
-                var stacked = stack.get(object);
+                var stacked = stack2.get(object);
                 if (stacked) {
                   return stacked == other;
                 }
                 bitmask |= COMPARE_UNORDERED_FLAG;
-                stack.set(object, other);
-                var result2 = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
-                stack["delete"](object);
+                stack2.set(object, other);
+                var result2 = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack2);
+                stack2["delete"](object);
                 return result2;
               case symbolTag:
                 if (symbolValueOf) {
@@ -2567,7 +2573,7 @@ export default require => {
             }
             return false;
           }
-          function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
+          function equalObjects(object, other, bitmask, customizer, equalFunc, stack2) {
             var isPartial = bitmask & COMPARE_PARTIAL_FLAG, objProps = getAllKeys(object), objLength = objProps.length, othProps = getAllKeys(other), othLength = othProps.length;
             if (objLength != othLength && !isPartial) {
               return false;
@@ -2579,22 +2585,22 @@ export default require => {
                 return false;
               }
             }
-            var objStacked = stack.get(object);
-            var othStacked = stack.get(other);
+            var objStacked = stack2.get(object);
+            var othStacked = stack2.get(other);
             if (objStacked && othStacked) {
               return objStacked == other && othStacked == object;
             }
             var result2 = true;
-            stack.set(object, other);
-            stack.set(other, object);
+            stack2.set(object, other);
+            stack2.set(other, object);
             var skipCtor = isPartial;
             while (++index < objLength) {
               key = objProps[index];
               var objValue = object[key], othValue = other[key];
               if (customizer) {
-                var compared = isPartial ? customizer(othValue, objValue, key, other, object, stack) : customizer(objValue, othValue, key, object, other, stack);
+                var compared = isPartial ? customizer(othValue, objValue, key, other, object, stack2) : customizer(objValue, othValue, key, object, other, stack2);
               }
-              if (!(compared === undefined2 ? objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack) : compared)) {
+              if (!(compared === undefined2 ? objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack2) : compared)) {
                 result2 = false;
                 break;
               }
@@ -2606,8 +2612,8 @@ export default require => {
                 result2 = false;
               }
             }
-            stack["delete"](object);
-            stack["delete"](other);
+            stack2["delete"](object);
+            stack2["delete"](other);
             return result2;
           }
           function flatRest(func) {
@@ -7063,6 +7069,48 @@ export default require => {
     };
   })();
   init_define_process();
+  var type_map = {};
+  var registerType = (name, declaration) => {
+    if (name == "prelude") {
+      type_map["prelude"] = type_map["prelude"] != void 0 ? type_map["prelude"] + "\n" + declaration : declaration;
+    } else {
+      type_map[name] = declaration;
+    }
+  };
+  var classDeclaration = name => {
+    return _target => {
+      registerType("prelude", `class ${name} {}`);
+    };
+  };
+  var functionDeclaration = (paramTypes, returnType) => {
+    return (_target, propertyKey, _descriptor) => {
+      let returnValue = "";
+      switch (returnType) {
+        case "number":
+          returnValue = "return 0";
+          break;
+        case "string":
+          returnValue = "return ''";
+          break;
+        case "boolean":
+          returnValue = "return false";
+          break;
+        case "void":
+          returnValue = "";
+          break;
+        default:
+          returnValue = `return ${returnType}`;
+          break;
+      }
+      registerType(propertyKey, `function ${propertyKey} (${paramTypes}) : ${returnType} { ${returnValue} }`);
+    };
+  };
+  var variableDeclaration = type => {
+    return (_target, propertyKey) => {
+      registerType(propertyKey, `const ${propertyKey}: ${type} = ${type}`);
+    };
+  };
+  init_define_process();
   init_define_process();
   var glAnimation = class {
     constructor(duration, fps) {
@@ -7188,7 +7236,7 @@ void main(void) {
   gl_FragColor.a = 1.0;
 }
 `;
-  var _Rune = class _Rune {
+  var Rune = class {
     constructor(vertices, colors, transformMatrix, subRunes, texture, hollusionDistance) {
       this.vertices = vertices;
       this.colors = colors;
@@ -7196,7 +7244,7 @@ void main(void) {
       this.subRunes = subRunes;
       this.texture = texture;
       this.hollusionDistance = hollusionDistance;
-      this.copy = () => new _Rune(this.vertices, this.colors, mat4_exports.clone(this.transformMatrix), this.subRunes, this.texture, this.hollusionDistance);
+      this.copy = () => new Rune(this.vertices, this.colors, mat4_exports.clone(this.transformMatrix), this.subRunes, this.texture, this.hollusionDistance);
       this.flatten = () => {
         const runeList = [];
         const runeTodoList = [this.copy()];
@@ -7221,11 +7269,11 @@ void main(void) {
       this.toReplString = () => "<Rune>";
     }
   };
-  _Rune.of = (params = {}) => {
+  Rune.of = (params = {}) => {
     const paramGetter = (name, defaultValue) => params[name] === void 0 ? defaultValue() : params[name];
-    return new _Rune(paramGetter("vertices", () => new Float32Array()), paramGetter("colors", () => null), paramGetter("transformMatrix", mat4_exports.create), paramGetter("subRunes", () => []), paramGetter("texture", () => null), paramGetter("hollusionDistance", () => 0.1));
+    return new Rune(paramGetter("vertices", () => new Float32Array()), paramGetter("colors", () => null), paramGetter("transformMatrix", mat4_exports.create), paramGetter("subRunes", () => []), paramGetter("texture", () => null), paramGetter("hollusionDistance", () => 0.1));
   };
-  var Rune = _Rune;
+  Rune = __decorateClass([classDeclaration("Rune")], Rune);
   function drawRunesToFrameBuffer(gl, runes, cameraMatrix, colorFilter, framebuffer = null, depthSwitch = false) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
     const shaderProgram = initShaderProgram(gl, normalVertexShader, normalFragmentShader);
@@ -7548,6 +7596,7 @@ void main(void) {
       colors: new Float32Array(colorList)
     });
   };
+  var colorPalette = ["#F44336", "#E91E63", "#AA00FF", "#3F51B5", "#2196F3", "#4CAF50", "#FFEB3B", "#FF9800", "#795548"];
   function hexToColor2(hex) {
     const result = hexToColor(hex);
     return [...result, 1];
@@ -7559,69 +7608,274 @@ void main(void) {
       colors: new Float32Array(hexToColor2(hex))
     });
   }
-  var square = getSquare();
-  var blank = getBlank();
-  var rcross = getRcross();
-  var sail = getSail();
-  var triangle = getTriangle();
-  var corner = getCorner();
-  var nova = getNova();
-  var circle = getCircle();
-  var heart = getHeart();
-  var pentagram = getPentagram();
-  var ribbon = getRibbon();
-  function scale_independent(ratio_x, ratio_y, rune) {
-    throwIfNotRune(scale_independent.name, rune);
-    const scaleVec = vec3_exports.fromValues(ratio_x, ratio_y, 1);
-    const scaleMat = mat4_exports.create();
-    mat4_exports.scale(scaleMat, scaleMat, scaleVec);
-    const wrapperMat = mat4_exports.create();
-    mat4_exports.multiply(wrapperMat, scaleMat, wrapperMat);
-    return Rune.of({
-      subRunes: [rune],
-      transformMatrix: wrapperMat
-    });
-  }
-  function scale3(ratio, rune) {
-    throwIfNotRune(scale3.name, rune);
-    return scale_independent(ratio, ratio, rune);
-  }
-  function overlay_frac(frac, rune1, rune2) {
-    throwIfNotRune(overlay_frac.name, rune1);
-    throwIfNotRune(overlay_frac.name, rune2);
-    if (!(frac >= 0 && frac <= 1)) {
-      throw Error("overlay_frac can only take fraction in [0,1].");
+  var _RuneFunctions = class _RuneFunctions {
+    static from_url(imageUrl) {
+      const rune = getSquare();
+      rune.texture = new Image();
+      rune.texture.crossOrigin = "anonymous";
+      rune.texture.src = imageUrl;
+      return rune;
     }
-    let useFrac = frac;
-    const minFrac = 1e-6;
-    const maxFrac = 1 - minFrac;
-    if (useFrac < minFrac) {
-      useFrac = minFrac;
+    static scale_independent(ratio_x, ratio_y, rune) {
+      throwIfNotRune(_RuneFunctions.scale_independent.name, rune);
+      const scaleVec = vec3_exports.fromValues(ratio_x, ratio_y, 1);
+      const scaleMat = mat4_exports.create();
+      mat4_exports.scale(scaleMat, scaleMat, scaleVec);
+      const wrapperMat = mat4_exports.create();
+      mat4_exports.multiply(wrapperMat, scaleMat, wrapperMat);
+      return Rune.of({
+        subRunes: [rune],
+        transformMatrix: wrapperMat
+      });
     }
-    if (useFrac > maxFrac) {
-      useFrac = maxFrac;
+    static scale(ratio, rune) {
+      throwIfNotRune(_RuneFunctions.scale.name, rune);
+      return _RuneFunctions.scale_independent(ratio, ratio, rune);
     }
-    const frontMat = mat4_exports.create();
-    mat4_exports.scale(frontMat, frontMat, vec3_exports.fromValues(1, 1, useFrac));
-    const front = Rune.of({
-      subRunes: [rune1],
-      transformMatrix: frontMat
-    });
-    const backMat = mat4_exports.create();
-    mat4_exports.translate(backMat, backMat, vec3_exports.fromValues(0, 0, -useFrac));
-    mat4_exports.scale(backMat, backMat, vec3_exports.fromValues(1, 1, 1 - useFrac));
-    const back = Rune.of({
-      subRunes: [rune2],
-      transformMatrix: backMat
-    });
-    return Rune.of({
-      subRunes: [front, back]
-    });
-  }
-  function white(rune) {
-    throwIfNotRune(white.name, rune);
-    return addColorFromHex(rune, "#FFFFFF");
-  }
+    static translate(x, y, rune) {
+      throwIfNotRune(_RuneFunctions.translate.name, rune);
+      const translateVec = vec3_exports.fromValues(x, -y, 0);
+      const translateMat = mat4_exports.create();
+      mat4_exports.translate(translateMat, translateMat, translateVec);
+      const wrapperMat = mat4_exports.create();
+      mat4_exports.multiply(wrapperMat, translateMat, wrapperMat);
+      return Rune.of({
+        subRunes: [rune],
+        transformMatrix: wrapperMat
+      });
+    }
+    static rotate(rad, rune) {
+      throwIfNotRune(_RuneFunctions.rotate.name, rune);
+      const rotateMat = mat4_exports.create();
+      mat4_exports.rotateZ(rotateMat, rotateMat, rad);
+      const wrapperMat = mat4_exports.create();
+      mat4_exports.multiply(wrapperMat, rotateMat, wrapperMat);
+      return Rune.of({
+        subRunes: [rune],
+        transformMatrix: wrapperMat
+      });
+    }
+    static stack_frac(frac, rune1, rune2) {
+      throwIfNotRune(_RuneFunctions.stack_frac.name, rune1);
+      throwIfNotRune(_RuneFunctions.stack_frac.name, rune2);
+      if (!(frac >= 0 && frac <= 1)) {
+        throw Error("stack_frac can only take fraction in [0,1].");
+      }
+      const upper = _RuneFunctions.translate(0, -(1 - frac), _RuneFunctions.scale_independent(1, frac, rune1));
+      const lower = _RuneFunctions.translate(0, frac, _RuneFunctions.scale_independent(1, 1 - frac, rune2));
+      return Rune.of({
+        subRunes: [upper, lower]
+      });
+    }
+    static stack(rune1, rune2) {
+      throwIfNotRune(_RuneFunctions.stack.name, rune1, rune2);
+      return _RuneFunctions.stack_frac(1 / 2, rune1, rune2);
+    }
+    static stackn(n, rune) {
+      throwIfNotRune(_RuneFunctions.stackn.name, rune);
+      if (n === 1) {
+        return rune;
+      }
+      return _RuneFunctions.stack_frac(1 / n, rune, _RuneFunctions.stackn(n - 1, rune));
+    }
+    static quarter_turn_right(rune) {
+      throwIfNotRune(_RuneFunctions.quarter_turn_right.name, rune);
+      return _RuneFunctions.rotate(-Math.PI / 2, rune);
+    }
+    static quarter_turn_left(rune) {
+      throwIfNotRune(_RuneFunctions.quarter_turn_left.name, rune);
+      return _RuneFunctions.rotate(Math.PI / 2, rune);
+    }
+    static turn_upside_down(rune) {
+      throwIfNotRune(_RuneFunctions.turn_upside_down.name, rune);
+      return _RuneFunctions.rotate(Math.PI, rune);
+    }
+    static beside_frac(frac, rune1, rune2) {
+      throwIfNotRune(_RuneFunctions.beside_frac.name, rune1, rune2);
+      if (!(frac >= 0 && frac <= 1)) {
+        throw Error("beside_frac can only take fraction in [0,1].");
+      }
+      const left = _RuneFunctions.translate(-(1 - frac), 0, _RuneFunctions.scale_independent(frac, 1, rune1));
+      const right = _RuneFunctions.translate(frac, 0, _RuneFunctions.scale_independent(1 - frac, 1, rune2));
+      return Rune.of({
+        subRunes: [left, right]
+      });
+    }
+    static beside(rune1, rune2) {
+      throwIfNotRune(_RuneFunctions.beside.name, rune1, rune2);
+      return _RuneFunctions.beside_frac(1 / 2, rune1, rune2);
+    }
+    static flip_vert(rune) {
+      throwIfNotRune(_RuneFunctions.flip_vert.name, rune);
+      return _RuneFunctions.scale_independent(1, -1, rune);
+    }
+    static flip_horiz(rune) {
+      throwIfNotRune(_RuneFunctions.flip_horiz.name, rune);
+      return _RuneFunctions.scale_independent(-1, 1, rune);
+    }
+    static make_cross(rune) {
+      throwIfNotRune(_RuneFunctions.make_cross.name, rune);
+      return _RuneFunctions.stack(_RuneFunctions.beside(_RuneFunctions.quarter_turn_right(rune), _RuneFunctions.rotate(Math.PI, rune)), _RuneFunctions.beside(rune, _RuneFunctions.rotate(Math.PI / 2, rune)));
+    }
+    static repeat_pattern(n, pattern, initial) {
+      if (n === 0) {
+        return initial;
+      }
+      return pattern(_RuneFunctions.repeat_pattern(n - 1, pattern, initial));
+    }
+    static overlay_frac(frac, rune1, rune2) {
+      throwIfNotRune(_RuneFunctions.overlay_frac.name, rune1);
+      throwIfNotRune(_RuneFunctions.overlay_frac.name, rune2);
+      if (!(frac >= 0 && frac <= 1)) {
+        throw Error("overlay_frac can only take fraction in [0,1].");
+      }
+      let useFrac = frac;
+      const minFrac = 1e-6;
+      const maxFrac = 1 - minFrac;
+      if (useFrac < minFrac) {
+        useFrac = minFrac;
+      }
+      if (useFrac > maxFrac) {
+        useFrac = maxFrac;
+      }
+      const frontMat = mat4_exports.create();
+      mat4_exports.scale(frontMat, frontMat, vec3_exports.fromValues(1, 1, useFrac));
+      const front = Rune.of({
+        subRunes: [rune1],
+        transformMatrix: frontMat
+      });
+      const backMat = mat4_exports.create();
+      mat4_exports.translate(backMat, backMat, vec3_exports.fromValues(0, 0, -useFrac));
+      mat4_exports.scale(backMat, backMat, vec3_exports.fromValues(1, 1, 1 - useFrac));
+      const back = Rune.of({
+        subRunes: [rune2],
+        transformMatrix: backMat
+      });
+      return Rune.of({
+        subRunes: [front, back]
+      });
+    }
+    static overlay(rune1, rune2) {
+      throwIfNotRune(_RuneFunctions.overlay.name, rune1);
+      throwIfNotRune(_RuneFunctions.overlay.name, rune2);
+      return _RuneFunctions.overlay_frac(0.5, rune1, rune2);
+    }
+    static color(rune, r, g, b) {
+      throwIfNotRune(_RuneFunctions.color.name, rune);
+      const colorVector = [r, g, b, 1];
+      return Rune.of({
+        colors: new Float32Array(colorVector),
+        subRunes: [rune]
+      });
+    }
+    static random_color(rune) {
+      throwIfNotRune(_RuneFunctions.random_color.name, rune);
+      const randomColor = hexToColor2(colorPalette[Math.floor(Math.random() * colorPalette.length)]);
+      return Rune.of({
+        colors: new Float32Array(randomColor),
+        subRunes: [rune]
+      });
+    }
+    static red(rune) {
+      throwIfNotRune(_RuneFunctions.red.name, rune);
+      return addColorFromHex(rune, "#F44336");
+    }
+    static pink(rune) {
+      throwIfNotRune(_RuneFunctions.pink.name, rune);
+      return addColorFromHex(rune, "#E91E63");
+    }
+    static purple(rune) {
+      throwIfNotRune(_RuneFunctions.purple.name, rune);
+      return addColorFromHex(rune, "#AA00FF");
+    }
+    static indigo(rune) {
+      throwIfNotRune(_RuneFunctions.indigo.name, rune);
+      return addColorFromHex(rune, "#3F51B5");
+    }
+    static blue(rune) {
+      throwIfNotRune(_RuneFunctions.blue.name, rune);
+      return addColorFromHex(rune, "#2196F3");
+    }
+    static green(rune) {
+      throwIfNotRune(_RuneFunctions.green.name, rune);
+      return addColorFromHex(rune, "#4CAF50");
+    }
+    static yellow(rune) {
+      throwIfNotRune(_RuneFunctions.yellow.name, rune);
+      return addColorFromHex(rune, "#FFEB3B");
+    }
+    static orange(rune) {
+      throwIfNotRune(_RuneFunctions.orange.name, rune);
+      return addColorFromHex(rune, "#FF9800");
+    }
+    static brown(rune) {
+      throwIfNotRune(_RuneFunctions.brown.name, rune);
+      return addColorFromHex(rune, "#795548");
+    }
+    static black(rune) {
+      throwIfNotRune(_RuneFunctions.black.name, rune);
+      return addColorFromHex(rune, "#000000");
+    }
+    static white(rune) {
+      throwIfNotRune(_RuneFunctions.white.name, rune);
+      return addColorFromHex(rune, "#FFFFFF");
+    }
+  };
+  _RuneFunctions.square = getSquare();
+  _RuneFunctions.blank = getBlank();
+  _RuneFunctions.rcross = getRcross();
+  _RuneFunctions.sail = getSail();
+  _RuneFunctions.triangle = getTriangle();
+  _RuneFunctions.corner = getCorner();
+  _RuneFunctions.nova = getNova();
+  _RuneFunctions.circle = getCircle();
+  _RuneFunctions.heart = getHeart();
+  _RuneFunctions.pentagram = getPentagram();
+  _RuneFunctions.ribbon = getRibbon();
+  __decorateClass([variableDeclaration("Rune")], _RuneFunctions, "square", 2);
+  __decorateClass([variableDeclaration("Rune")], _RuneFunctions, "blank", 2);
+  __decorateClass([variableDeclaration("Rune")], _RuneFunctions, "rcross", 2);
+  __decorateClass([variableDeclaration("Rune")], _RuneFunctions, "sail", 2);
+  __decorateClass([variableDeclaration("Rune")], _RuneFunctions, "triangle", 2);
+  __decorateClass([variableDeclaration("Rune")], _RuneFunctions, "corner", 2);
+  __decorateClass([variableDeclaration("Rune")], _RuneFunctions, "nova", 2);
+  __decorateClass([variableDeclaration("Rune")], _RuneFunctions, "circle", 2);
+  __decorateClass([variableDeclaration("Rune")], _RuneFunctions, "heart", 2);
+  __decorateClass([variableDeclaration("Rune")], _RuneFunctions, "pentagram", 2);
+  __decorateClass([variableDeclaration("Rune")], _RuneFunctions, "ribbon", 2);
+  __decorateClass([functionDeclaration("imageUrl: string", "Rune")], _RuneFunctions, "from_url", 1);
+  __decorateClass([functionDeclaration("ratio_x: number, ratio_y: number, rune: Rune", "Rune")], _RuneFunctions, "scale_independent", 1);
+  __decorateClass([functionDeclaration("ratio: number, rune: Rune", "Rune")], _RuneFunctions, "scale", 1);
+  __decorateClass([functionDeclaration("x: number, y: number, rune: Rune", "Rune")], _RuneFunctions, "translate", 1);
+  __decorateClass([functionDeclaration("rad: number, rune: Rune", "Rune")], _RuneFunctions, "rotate", 1);
+  __decorateClass([functionDeclaration("frac: number, rune1: Rune, rune2: Rune", "Rune")], _RuneFunctions, "stack_frac", 1);
+  __decorateClass([functionDeclaration("rune1: Rune, rune2: Rune", "Rune")], _RuneFunctions, "stack", 1);
+  __decorateClass([functionDeclaration("n: number, rune: Rune", "Rune")], _RuneFunctions, "stackn", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "quarter_turn_right", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "quarter_turn_left", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "turn_upside_down", 1);
+  __decorateClass([functionDeclaration("frac: number, rune1: Rune, rune2: Rune", "Rune")], _RuneFunctions, "beside_frac", 1);
+  __decorateClass([functionDeclaration("rune1: Rune, rune2: Rune", "Rune")], _RuneFunctions, "beside", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "flip_vert", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "flip_horiz", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "make_cross", 1);
+  __decorateClass([functionDeclaration("n: number, pattern: (a: Rune) => Rune, initial: Rune", "Rune")], _RuneFunctions, "repeat_pattern", 1);
+  __decorateClass([functionDeclaration("frac: number, rune1: Rune, rune2: Rune", "Rune")], _RuneFunctions, "overlay_frac", 1);
+  __decorateClass([functionDeclaration("rune1: Rune, rune2: Rune", "Rune")], _RuneFunctions, "overlay", 1);
+  __decorateClass([functionDeclaration("rune: Rune, r: number, g: number, b: number", "Rune")], _RuneFunctions, "color", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "random_color", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "red", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "pink", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "purple", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "indigo", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "blue", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "green", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "yellow", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "orange", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "brown", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "black", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "white", 1);
+  var RuneFunctions = _RuneFunctions;
   var _AnaglyphRune = class _AnaglyphRune extends DrawnRune {
     constructor(rune) {
       super(rune, false);
@@ -7755,6 +8009,7 @@ void main(void) {
     `;
   var HollusionRune = _HollusionRune;
   var isHollusionRune = rune => rune.isHollusion;
+  var {beside, beside_frac, black, blank, blue, brown, circle, color, corner, flip_horiz, flip_vert, from_url, green, heart, indigo, make_cross, nova, orange, overlay, overlay_frac, pentagram, pink, purple, quarter_turn_left, quarter_turn_right, random_color, rcross, red, repeat_pattern, ribbon, rotate: rotate2, sail, scale: scale3, scale_independent, square, stack, stack_frac, stackn, translate: translate2, triangle, turn_upside_down, white, yellow} = RuneFunctions;
   init_define_process();
   var getModuleState = ({context: {moduleContexts}}, moduleName) => moduleContexts[moduleName].state;
   init_define_process();

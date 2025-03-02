@@ -1,68 +1,71 @@
 {
+  "type_map": {
+    "kind": "unknown"
+  },
   "blank": {
     "kind": "variable",
     "name": "blank",
-    "description": "<p>Rune with the shape of a blank square</p>",
+    "description": "No description available",
     "type": "Rune"
   },
   "circle": {
     "kind": "variable",
     "name": "circle",
-    "description": "<p>Rune with the shape of a circle</p>",
+    "description": "No description available",
     "type": "Rune"
   },
   "corner": {
     "kind": "variable",
     "name": "corner",
-    "description": "<p>Rune with black triangle,\nfilling upper right corner</p>",
+    "description": "No description available",
     "type": "Rune"
   },
   "heart": {
     "kind": "variable",
     "name": "heart",
-    "description": "<p>Rune with the shape of a heart</p>",
+    "description": "No description available",
     "type": "Rune"
   },
   "nova": {
     "kind": "variable",
     "name": "nova",
-    "description": "<p>Rune with the shape of two overlapping\ntriangles, residing in the upper half\nof the shape</p>",
+    "description": "No description available",
     "type": "Rune"
   },
   "pentagram": {
     "kind": "variable",
     "name": "pentagram",
-    "description": "<p>Rune with the shape of a pentagram</p>",
+    "description": "No description available",
     "type": "Rune"
   },
   "rcross": {
     "kind": "variable",
     "name": "rcross",
-    "description": "<p>Rune with the shape of a\nsmall square inside a large square,\neach diagonally split into a\nblack and white half</p>",
+    "description": "No description available",
     "type": "Rune"
   },
   "ribbon": {
     "kind": "variable",
     "name": "ribbon",
-    "description": "<p>Rune with the shape of a ribbon\nwinding outwards in an anticlockwise spiral</p>",
+    "description": "No description available",
     "type": "Rune"
   },
   "sail": {
     "kind": "variable",
     "name": "sail",
-    "description": "<p>Rune with the shape of a sail</p>",
+    "description": "No description available",
     "type": "Rune"
   },
   "square": {
     "kind": "variable",
     "name": "square",
-    "description": "<p>Rune with the shape of a full square</p>",
+    "description": "No description available",
     "type": "Rune"
   },
   "triangle": {
     "kind": "variable",
     "name": "triangle",
-    "description": "<p>Rune with the shape of a triangle</p>",
+    "description": "No description available",
     "type": "Rune"
   },
   "anaglyph": {

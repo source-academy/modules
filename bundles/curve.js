@@ -33,6 +33,12 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
+  var __decorateClass = (decorators, target, key, kind) => {
+    var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
+    for (var i = decorators.length - 1, decorator; i >= 0; i--) if (decorator = decorators[i]) result = (kind ? decorator(target, key, result) : decorator(result)) || result;
+    if (kind && result) __defProp(target, key, result);
+    return result;
+  };
   var curve_exports = {};
   __export(curve_exports, {
     animate_3D_curve: () => animate_3D_curve,
@@ -65,6 +71,7 @@ export default require => {
     scale: () => scale3,
     scale_proportional: () => scale_proportional,
     translate: () => translate2,
+    type_map: () => type_map,
     unit_circle: () => unit_circle,
     unit_line: () => unit_line,
     unit_line_at: () => unit_line_at,
@@ -2186,5 +2193,145 @@ void main() {
     drawnCurves.push(anim);
     return anim;
   }
+  var type_map = {};
+  var registerType = (name, declaration) => {
+    if (name == "prelude") {
+      type_map["prelude"] = type_map["prelude"] != void 0 ? type_map["prelude"] + "\n" + declaration : declaration;
+    } else {
+      type_map[name] = declaration;
+    }
+  };
+  var classDeclaration = name => {
+    return _target => {
+      registerType("prelude", `class ${name} {}`);
+    };
+  };
+  var typeDeclaration = (type, declaration = null) => {
+    return _target => {
+      const typeAlias = `type ${_target.name} = ${type}`;
+      let variableDeclaration = `const ${_target.name} = ${declaration === null ? type : declaration}`;
+      switch (type) {
+        case "number":
+          variableDeclaration = `const ${_target.name} = 0`;
+          break;
+        case "string":
+          variableDeclaration = `const ${_target.name} = ''`;
+          break;
+        case "boolean":
+          variableDeclaration = `const ${_target.name} = false`;
+          break;
+        case "void":
+          variableDeclaration = "";
+          break;
+      }
+      registerType("prelude", `${typeAlias};
+${variableDeclaration};`);
+    };
+  };
+  var functionDeclaration = (paramTypes, returnType) => {
+    return (_target, propertyKey, _descriptor) => {
+      let returnValue = "";
+      switch (returnType) {
+        case "number":
+          returnValue = "return 0";
+          break;
+        case "string":
+          returnValue = "return ''";
+          break;
+        case "boolean":
+          returnValue = "return false";
+          break;
+        case "void":
+          returnValue = "";
+          break;
+        default:
+          returnValue = `return ${returnType}`;
+          break;
+      }
+      registerType(propertyKey, `function ${propertyKey} (${paramTypes}) : ${returnType} { ${returnValue} }`);
+    };
+  };
+  var Point2 = class {};
+  Point2 = __decorateClass([classDeclaration("Point")], Point2);
+  var AnimatedCurve2 = class {};
+  AnimatedCurve2 = __decorateClass([classDeclaration("AnimatedCurve")], AnimatedCurve2);
+  var Curve = class {};
+  Curve = __decorateClass([typeDeclaration("(u: number) => Point")], Curve);
+  var CurveAnimation = class {};
+  CurveAnimation = __decorateClass([typeDeclaration("(t: number) => Curve")], CurveAnimation);
+  var TypeInterface = class {
+    animate_3D_curve() {}
+    animate_curve() {}
+    arc() {}
+    b_of() {}
+    connect_ends() {}
+    connect_rigidly() {}
+    draw_3D_connected() {}
+    draw_3D_connected_full_view() {}
+    draw_3D_connected_full_view_proportional() {}
+    draw_3D_points() {}
+    draw_3D_points_full_view() {}
+    draw_3D_points_full_view_proportional() {}
+    draw_connected() {}
+    draw_connected_full_view() {}
+    draw_connected_full_view_proportional() {}
+    draw_points() {}
+    draw_points_full_view() {}
+    draw_points_full_view_proportional() {}
+    g_of() {}
+    invert() {}
+    make_3D_color_point() {}
+    make_3D_point() {}
+    make_color_point() {}
+    make_point() {}
+    put_in_standard_position() {}
+    r_of() {}
+    rotate_around_origin() {}
+    scale() {}
+    scale_proportional() {}
+    translate() {}
+    unit_circle() {}
+    unit_line() {}
+    unit_line_at() {}
+    x_of() {}
+    y_of() {}
+    z_of() {}
+  };
+  __decorateClass([functionDeclaration("duration: number, fps: number, drawer: (func: Curve) => Curve, func: (func: Curve) => Curve", "AnimatedCurve")], TypeInterface.prototype, "animate_3D_curve", 1);
+  __decorateClass([functionDeclaration("duration: number, fps: number, drawer: (func: Curve) => Curve, func: (func: Curve) => Curve", "AnimatedCurve")], TypeInterface.prototype, "animate_curve", 1);
+  __decorateClass([functionDeclaration("t: number", "number")], TypeInterface.prototype, "arc", 1);
+  __decorateClass([functionDeclaration("p: Point", "number")], TypeInterface.prototype, "b_of", 1);
+  __decorateClass([functionDeclaration("curve1: Curve, curve2: Curve", "Curve")], TypeInterface.prototype, "connect_ends", 1);
+  __decorateClass([functionDeclaration("curve1: Curve, curve2: Curve", "Curve")], TypeInterface.prototype, "connect_rigidly", 1);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_3D_connected", 1);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_3D_connected_full_view", 1);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_3D_connected_full_view_proportional", 1);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_3D_points", 1);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_3D_points_full_view", 1);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_3D_points_full_view_proportional", 1);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_connected", 1);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_connected_full_view", 1);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_connected_full_view_proportional", 1);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_points", 1);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_points_full_view", 1);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_points_full_view_proportional", 1);
+  __decorateClass([functionDeclaration("p: Point", "number")], TypeInterface.prototype, "g_of", 1);
+  __decorateClass([functionDeclaration("curve: Curve", "Curve")], TypeInterface.prototype, "invert", 1);
+  __decorateClass([functionDeclaration("x: number, y: number, z: number, r: number, g: number, b: number", "Point")], TypeInterface.prototype, "make_3D_color_point", 1);
+  __decorateClass([functionDeclaration("x: number, y: number, z: number", "Point")], TypeInterface.prototype, "make_3D_point", 1);
+  __decorateClass([functionDeclaration("x: number, y: number, r: number, g: number, b: number", "Point")], TypeInterface.prototype, "make_color_point", 1);
+  __decorateClass([functionDeclaration("x: number, y: number", "Point")], TypeInterface.prototype, "make_point", 1);
+  __decorateClass([functionDeclaration("curve: Curve", "Curve")], TypeInterface.prototype, "put_in_standard_position", 1);
+  __decorateClass([functionDeclaration("p: Point", "number")], TypeInterface.prototype, "r_of", 1);
+  __decorateClass([functionDeclaration("theta1: number, theta2: number, theta3: number", "(c: Curve) => Curve")], TypeInterface.prototype, "rotate_around_origin", 1);
+  __decorateClass([functionDeclaration("x: number, y: number", "(c: Curve) => Curve")], TypeInterface.prototype, "scale", 1);
+  __decorateClass([functionDeclaration("s: number", "(c: Curve) => Curve")], TypeInterface.prototype, "scale_proportional", 1);
+  __decorateClass([functionDeclaration("x0: number, y0: number, z0: number", "(c: Curve) => Curve")], TypeInterface.prototype, "translate", 1);
+  __decorateClass([functionDeclaration("t: number", "Point")], TypeInterface.prototype, "unit_circle", 1);
+  __decorateClass([functionDeclaration("t: number", "Point")], TypeInterface.prototype, "unit_line", 1);
+  __decorateClass([functionDeclaration("t: number", "Curve")], TypeInterface.prototype, "unit_line_at", 1);
+  __decorateClass([functionDeclaration("p: Point", "number")], TypeInterface.prototype, "x_of", 1);
+  __decorateClass([functionDeclaration("p: Point", "number")], TypeInterface.prototype, "y_of", 1);
+  __decorateClass([functionDeclaration("p: Point", "number")], TypeInterface.prototype, "z_of", 1);
   return __toCommonJS(curve_exports);
 };

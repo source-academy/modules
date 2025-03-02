@@ -1,4 +1,10 @@
 {
+  "type_map": {
+    "kind": "variable",
+    "name": "type_map",
+    "description": "No description available",
+    "type": "Record<string, string>"
+  },
   "animate_3D_curve": {
     "kind": "function",
     "name": "animate_3D_curve",
