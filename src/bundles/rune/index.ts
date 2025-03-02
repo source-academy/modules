@@ -59,3 +59,7 @@ export {
   hollusion_magnitude,
   show
 } from './display';
+
+export {
+  type_map
+} from '../../typings/type_map';
