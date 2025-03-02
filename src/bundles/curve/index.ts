@@ -73,6 +73,8 @@ export {
   z_of
 } from './functions';
 
+// This line explicitly imports the decorators in type_interface, so esbuild doesn't remove them during tree-shaking.
+// It preserves the type definitions by signaling to esbuild that the file is actively used.
 export {} from './type_interface';
 
 export {
