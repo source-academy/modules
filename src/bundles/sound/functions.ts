@@ -404,27 +404,58 @@ function nextPowerOf2(x: number): number {
  * Modify the given sound samples using FFT
  *
  * @param samples the sound samples of size 2^n
- * @return a Array(2^(n+1)) containing the modified samples
+ * @return a Array(2^n) containing the modified samples
  */
 function modifyFFT(samples: Array<number>): Array<number> {
-  console.log(`[DEBUG] samples.length = ${samples.length}`);
+  const n = samples.length;
 
-  const fft = new FFT(samples.length);
+  console.log(`[DEBUG] samples.length = ${n}`);
+  console.log(`[DEBUG] samples = ${samples}`);
+
+  const fft = new FFT(n);
   const frequencyDomain = fft.createComplexArray();
-  const finalSamples = fft.createComplexArray();
+  const invertedSamples = fft.createComplexArray();
+  const fullSamples = fft.createComplexArray();
 
-  fft.realTransform(frequencyDomain, samples);
+  fft.toComplexArray(samples, fullSamples);
+  fft.transform(frequencyDomain, fullSamples);
   console.log(`[DEBUG] frequencyDomain = ${frequencyDomain}`);
 
-  for (let i = 0; i < frequencyDomain.length; i += 1) {
-    frequencyDomain[i] /= 2;
+  // Transformation step
+
+  for (let i = 0; i < n; i += 1) {
+    // Filter out all values in the range [0,n/4] and [3n/4, n]
+    const lowerBound = n / 4;
+    const upperBound = 3 * n / 4;
+
+    if (i < lowerBound || i > upperBound) {
+      frequencyDomain[i * 2] = 0;
+      frequencyDomain[i * 2 + 1] = 0;
+    }
   }
 
   console.log(`[DEBUG] *modified* frequencyDomain = ${frequencyDomain}`);
 
-  fft.inverseTransform(finalSamples, frequencyDomain);
+  // Calculate magnitude
+  const magnitudes = new Array<number>;
+  for (let i = 0; i < n * 2; i += 2) {
+    const realPart = frequencyDomain[i];
+    const imagPart = frequencyDomain[i+1];
+    magnitudes[i/2] = Math.sqrt(realPart * realPart + imagPart * imagPart);
+  }
+
+  console.log(`[DEBUG] magnitudes = ${magnitudes}`);
+
+  fft.inverseTransform(invertedSamples, frequencyDomain);
+
+  console.log(`[DEBUG] invertedSamples.length = ${invertedSamples.length}`);
+  console.log(`[DEBUG] invertedSamples = ${invertedSamples}`);
+
+  const finalSamples = new Array<number>(samples.length);
+  fft.fromComplexArray(invertedSamples, finalSamples);
 
   console.log(`[DEBUG] finalSamples = ${finalSamples}`);
+
   return finalSamples;
 }
 
