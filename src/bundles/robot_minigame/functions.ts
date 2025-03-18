@@ -4,8 +4,15 @@
 */
 
 import context from 'js-slang/context';
+import {
+  accumulate,
+  head,
+  tail,
+  type List
+} from 'js-slang/dist/stdlib/list';
 
 type Point = {x: number, y: number};
+type Intersection = {x: number, y: number, dist: number}
 
 type Polygon = Point[];
 
@@ -17,7 +24,8 @@ type StateData = {
   movePoints: Point[],
   message: string,
   success: boolean,
-  messages: string[]
+  messages: string[],
+  rotations: Point[]
 };
 
 type Robot = {
@@ -36,7 +44,8 @@ const stateData: StateData = {
   movePoints: [],
   message: 'moved successfully',
   success: true,
-  messages: []
+  messages: [],
+  rotations: []
 };
 
 const robot: Robot = {
@@ -49,7 +58,6 @@ const robot: Robot = {
 
 let bounds: Point[] = [];
 
-// default grid width and height is 25
 context.moduleContexts.robot_minigame.state = stateData;
 
 export function set_pos(x: number, y: number): void {
@@ -82,23 +90,59 @@ export function init(width: number, height: number, posX: number, posY: number) 
 }
 
 export function turn_left() {
-  if (alrCollided()) return;
+  let currentAngle = Math.atan2(-robot.dy, robot.dx);
 
-  let currentAngle = Math.tan(robot.dy / robot.dx);
-  currentAngle -= Math.PI / 2;
-
-  robot.dx = Math.cos(currentAngle);
-  robot.dy = Math.sin(currentAngle);
-}
-
-export function turn_right() {
-  if (alrCollided()) return;
-
-  let currentAngle = Math.tan(robot.dy / robot.dx);
   currentAngle += Math.PI / 2;
 
   robot.dx = Math.cos(currentAngle);
-  robot.dy = Math.sin(currentAngle);
+  robot.dy = -Math.sin(currentAngle);
+
+  if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
+  if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
+
+  logCoordinates();
+}
+
+export function turn_right() {
+  let currentAngle = Math.atan2(-robot.dy, robot.dx);
+
+  currentAngle -= Math.PI / 2;
+
+  robot.dx = Math.cos(currentAngle);
+  robot.dy = -Math.sin(currentAngle);
+
+  if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
+  if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
+
+  logCoordinates();
+}
+
+export function rotate_right(angle: number) {
+  let currentAngle = Math.atan2(-robot.dy, robot.dx);
+
+  currentAngle -= angle;
+
+  robot.dx = Math.cos(currentAngle);
+  robot.dy = -Math.sin(currentAngle);
+
+  if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
+  if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
+
+  logCoordinates();
+}
+
+export function rotate_left(angle: number) {
+  let currentAngle = Math.atan2(-robot.dy, robot.dx);
+
+  currentAngle += angle;
+
+  robot.dx = Math.cos(currentAngle);
+  robot.dy = -Math.sin(currentAngle);
+
+  if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
+  if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
+
+  logCoordinates();
 }
 
 export function set_rect_wall(x: number, y: number, width: number, height: number) {
@@ -112,20 +156,15 @@ export function set_rect_wall(x: number, y: number, width: number, height: numbe
   stateData.walls.push(polygon);
 }
 
-export function move_forward(): void {
-  if (alrCollided()) return;
-
-  const collisionPoint: Point | null = raycast(stateData.walls);
-  if (collisionPoint !== null) {
-    const nextPoint: Point = {
-      x: collisionPoint.x - robot.dx * (robot.radius + 5),
-      y: collisionPoint.y - robot.dy * (robot.radius + 5)
-    };
-
-    robot.x = nextPoint.x;
-    robot.y = nextPoint.y;
-    stateData.movePoints.push(nextPoint);
+export function set_polygon_wall(vertices: List) {
+  const polygon: Polygon = []
+  while (vertices != null) {
+    const p = head(vertices);
+    polygon.push({x: head(p), y: tail(p)});
+    vertices = tail(vertices);
   }
+
+  stateData.walls.push(polygon);
 }
 
 export function getX():number {
@@ -136,47 +175,80 @@ export function getY():number {
   return robot.y;
 }
 
-function raycast(polygons: Polygon[]): Point | null {
+export function move_forward(): void {
+  if (alrCollided()) return;
+
+  let distance = findCollision();
+  distance = Math.max(distance - robot.radius - 5, 0)
+  
+  const nextPoint: Point = {
+    x: robot.x + distance * robot.dx,
+    y: robot.y + distance * robot.dy
+  }
+  
+
+  robot.x = nextPoint.x;
+  robot.y = nextPoint.y;
+  stateData.movePoints.push(nextPoint);
+  stateData.messages.push(`Distance is ${distance} Collision point at x: ${nextPoint.x}, y: ${nextPoint.y}`);
+}
+
+function findCollision(): number {
   let nearest: Point | null = null;
+  let minDist: number = Infinity;
+
+  for (const wall of stateData.walls) {
+    const intersection: Intersection | null = raycast(wall);
+    if (intersection !== null && intersection.dist < minDist) {
+      minDist = intersection.dist;
+      nearest = {x: intersection.x, y: intersection.y};
+    } 
+  }
+
+  // check outer bounds as well
+  const intersection: Intersection | null = raycast(bounds);
+  if (intersection !== null && intersection.dist < minDist) {
+    minDist = intersection.dist;
+    nearest = {x: intersection.x, y: intersection.y};
+  } 
+  
+  return minDist === Infinity ? 0 : minDist; // Closest intersection point
+}
+
+function raycast(polygon: Polygon): Intersection | null {
   let minDist = Infinity;
+  let nearest: Intersection | null = null;
 
-  for (const polygon of polygons) {
-    stateData.messages.push('checking polygon');
-    const numVertices = polygon.length;
+  for (let i = 0; i < polygon.length; i++) {
+    const x1 = polygon[i].x, y1 = polygon[i].y;
+    const x2 = polygon[(i + 1) % polygon.length].x, y2 = polygon[(i + 1) % polygon.length].y;
 
-    for (let i = 0; i < numVertices; i++) {
-      const x1 = polygon[i].x, y1 = polygon[i].y;
-      const x2 = polygon[(i + 1) % numVertices].x, y2 = polygon[(i + 1) % numVertices].y;
+    const topX = robot.x - robot.radius * robot.dy;
+    const topY = robot.y - robot.radius * robot.dx;
 
-      const intersection = getIntersection(robot.x, robot.y, robot.dx + robot.x, robot.dy + robot.y, x1, y1, x2, y2);
+    const bottomX = robot.x + robot.radius * robot.dy;
+    const bottomY = robot.y + robot.radius * robot.dx;
 
-      if (intersection.collided && intersection.dist < minDist) {
+    const raycast_sources: Point[] = [
+      {x: robot.x, y: robot.y},
+      {x: topX, y: topY},
+      {x: bottomX, y: bottomY}
+    ]
+
+    for (const source of raycast_sources) {
+      const intersection = getIntersection(source.x, source.y, robot.dx + source.x, robot.dy + source.y, x1, y1, x2, y2);
+      if (intersection !== null && intersection.dist < minDist) {
         minDist = intersection.dist;
-        nearest = {x: intersection.x, y: intersection.y};
+        nearest = intersection;
       }
     }
   }
-
-  // if no collisions with obstacles, check the outer bounds of map
-  if (nearest === null) {
-    for (let i = 0; i < bounds.length; i++) {
-      const x1 = bounds[i].x, y1 = bounds[i].y;
-      const x2 = bounds[(i + 1) % bounds.length].x, y2 = bounds[(i + 1) % bounds.length].y;
-
-      const intersection = getIntersection(robot.x, robot.y, robot.dx + robot.x, robot.dy + robot.y, x1, y1, x2, y2);
-
-      if (intersection.collided && intersection.dist < minDist) {
-        minDist = intersection.dist;
-        nearest = {x: intersection.x, y: intersection.y};
-      }
-    }
-  }
-
-  return nearest; // Closest intersection point
+      
+  return nearest;
 }
 
 // Determine if a ray and a line segment intersect, and if so, determine the collision point
-function getIntersection(x1, y1, x2, y2, x3, y3, x4, y4){
+function getIntersection(x1, y1, x2, y2, x3, y3, x4, y4): Intersection | null {
   const denom = ((x2 - x1)*(y4 - y3)-(y2 - y1)*(x4 - x3));
   let r;
   let s;
@@ -184,29 +256,36 @@ function getIntersection(x1, y1, x2, y2, x3, y3, x4, y4){
   let y;
   let b = false;
 
-  // If lines not collinear or parallel
-  if(denom != 0){
-    // Intersection in ray "local" coordinates
-    r = (((y1 - y3) * (x4 - x3)) - (x1 - x3) * (y4 - y3)) / denom;
+  // If lines are collinear or parallel
+  if (denom === 0) return null;
 
-    // Intersection in segment "local" coordinates
-    s = (((y1 - y3) * (x2 - x1)) - (x1 - x3) * (y2 - y1)) / denom;
+  // Intersection in ray "local" coordinates
+  r = (((y1 - y3) * (x4 - x3)) - (x1 - x3) * (y4 - y3)) / denom;
 
-    // The algorithm gives the intersection of two infinite lines, determine if it lies on the side that the ray is defined on
-    if (r >= 0) {
-      // If point along the line segment
-      if (s >= 0 && s <= 1) {
-        b = true;
-        // Get point coordinates (offset by r local units from start of ray)
-        x = x1 + r * (x2 - x1);
-        y = y1 + r * (y2 - y1);
-      }
+  // Intersection in segment "local" coordinates
+  s = (((y1 - y3) * (x2 - x1)) - (x1 - x3) * (y2 - y1)) / denom;
+
+  // The algorithm gives the intersection of two infinite lines, determine if it lies on the side that the ray is defined on
+  if (r >= 0) {
+    // If point along the line segment
+    if (s >= 0 && s <= 1) {
+      b = true;
+      // Get point coordinates (offset by r local units from start of ray)
+      x = x1 + r * (x2 - x1);
+      y = y1 + r * (y2 - y1);
     }
   }
-  const p = {collided: b, x: x, y: y, dist: r};
-  return p;
+
+  if (!b) return null
+  
+  return {x: x, y: y, dist: r}
 }
 
 function alrCollided() {
   return !stateData.success;
+}
+
+// debug
+function logCoordinates() {
+  stateData.messages.push(`x: ${robot.x}, y: ${robot.y}, dx: ${robot.dx}, dy: ${robot.dy}`)
 }

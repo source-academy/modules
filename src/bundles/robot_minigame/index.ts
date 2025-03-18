@@ -12,9 +12,12 @@ export {
   init,
   set_pos,
   set_rect_wall,
+  set_polygon_wall,
   move_forward,
   turn_left,
   turn_right,
+  rotate_right,
+  rotate_left,
   getX,
   getY
 } from './functions';
