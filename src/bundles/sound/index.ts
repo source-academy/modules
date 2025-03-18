@@ -60,5 +60,8 @@ export {
   stop,
   triangle_sound,
   trombone,
-  violin
+  violin,
+  // FFT
+  lowPassFilter,
+  playFFT
 } from './functions';

@@ -18,10 +18,10 @@ import type {
   Sound,
   SoundProducer,
   SoundTransformer,
-  AudioPlayed
+  AudioPlayed,
+  ComplexNumber,
+  FFTFilter
 } from './types';
-
-// Importing the FFT library
 
 // Global Constants and Variables
 const FS: number = 44100; // Output sample rate
@@ -401,16 +401,41 @@ function nextPowerOf2(x: number): number {
 }
 
 /**
+ * Make a simple low-pass filter.
+ *
+ * @param frequency the frequency threshold
+ * @return a low-pass filter
+ */
+export function lowPassFilter(frequency: number): FFTFilter {
+  return (frequencyDomain) => {
+    const length = frequencyDomain.length;
+    const ratio = frequency / FS;
+    const threshold = length * ratio;
+
+    console.log(`length = ${length}`);
+    console.log(`threshold = ${threshold}`);
+
+    const filteredDomain = new Array<ComplexNumber>(length);
+
+    for (let i = 0; i < length; i++) {
+      if (i < threshold) {
+        filteredDomain[i] = frequencyDomain[i];
+      } else {
+        filteredDomain[i] = pair(0, 0);
+      }
+    }
+    return filteredDomain;
+  };
+}
+
+/**
  * Modify the given sound samples using FFT
  *
  * @param samples the sound samples of size 2^n
  * @return a Array(2^n) containing the modified samples
  */
-function modifyFFT(samples: Array<number>): Array<number> {
+function modifyFFT(samples: Array<number>, filter: FFTFilter): Array<number> {
   const n = samples.length;
-
-  console.log(`[DEBUG] samples.length = ${n}`);
-  console.log(`[DEBUG] samples = ${samples}`);
 
   const fft = new FFT(n);
   const frequencyDomain = fft.createComplexArray();
@@ -419,22 +444,17 @@ function modifyFFT(samples: Array<number>): Array<number> {
 
   fft.toComplexArray(samples, fullSamples);
   fft.transform(frequencyDomain, fullSamples);
-  console.log(`[DEBUG] frequencyDomain = ${frequencyDomain}`);
 
-  // Transformation step
-
-  for (let i = 0; i < n; i += 1) {
-    // Filter out all values in the range [0,n/4] and [3n/4, n]
-    const lowerBound = n / 4;
-    const upperBound = 3 * n / 4;
-
-    if (i < lowerBound || i > upperBound) {
-      frequencyDomain[i * 2] = 0;
-      frequencyDomain[i * 2 + 1] = 0;
-    }
+  const values = new Array<ComplexNumber>(n);
+  for (let i = 0; i < n; i++) {
+    values[i] = pair(frequencyDomain[i * 2], frequencyDomain[i * 2 + 1]);
   }
+  const filtered = filter(values);
 
-  console.log(`[DEBUG] *modified* frequencyDomain = ${frequencyDomain}`);
+  for (let i = 0; i < n; i++) {
+    frequencyDomain[i * 2] = head(filtered[i]);
+    frequencyDomain[i * 2 + 1] = tail(filtered[i]);
+  }
 
   // Calculate magnitude
   const magnitudes = new Array<number>;
@@ -444,17 +464,10 @@ function modifyFFT(samples: Array<number>): Array<number> {
     magnitudes[i/2] = Math.sqrt(realPart * realPart + imagPart * imagPart);
   }
 
-  console.log(`[DEBUG] magnitudes = ${magnitudes}`);
-
   fft.inverseTransform(invertedSamples, frequencyDomain);
-
-  console.log(`[DEBUG] invertedSamples.length = ${invertedSamples.length}`);
-  console.log(`[DEBUG] invertedSamples = ${invertedSamples}`);
 
   const finalSamples = new Array<number>(samples.length);
   fft.fromComplexArray(invertedSamples, finalSamples);
-
-  console.log(`[DEBUG] finalSamples = ${finalSamples}`);
 
   return finalSamples;
 }
@@ -463,11 +476,14 @@ function modifyFFT(samples: Array<number>): Array<number> {
  * Plays the given Sound using the computer’s sound device
  * on top of any Sounds that are currently playing.
  *
+ * Takes in an filter for modifying using FFT.
+ *
  * @param sound the Sound to play
+ * @param filter the filter to use
  * @return the given Sound
- * @example play(sine_sound(440, 5));
+ * @example playFFT(sine_sound(440, 5), filter);
  */
-export function play(sound: Sound): Sound {
+export function playFFT(sound: Sound, filter: FFTFilter): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(
@@ -501,13 +517,82 @@ export function play(sound: Sound): Sound {
       originalSample[i] = wave(i / FS); // Assuming wave(t) for t > duration returns 0
     }
 
-    const newSample = modifyFFT(originalSample);
+    const newSample = modifyFFT(originalSample, filter);
 
     let temp: number;
     let prev_value = 0;
 
     for (let i = 0; i < channel.length; i += 1) {
       temp = newSample[i];
+      // clip amplitude
+      if (temp > 1) {
+        channel[i] = 1;
+      } else if (temp < -1) {
+        channel[i] = -1;
+      } else {
+        channel[i] = temp;
+      }
+
+      // smoothen out sudden cut-outs
+      if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
+        channel[i] = prev_value * 0.999;
+      }
+
+      prev_value = channel[i];
+    }
+
+    // Connect data to output destination
+    const source = audioplayer.createBufferSource();
+    source.buffer = theBuffer;
+    source.connect(audioplayer.destination);
+    isPlaying = true;
+    source.start();
+    source.onended = () => {
+      source.disconnect(audioplayer.destination);
+      isPlaying = false;
+    };
+    return sound;
+  }
+}
+
+/**
+ * Plays the given Sound using the computer’s sound device
+ * on top of any Sounds that are currently playing.
+ *
+ * @param sound the Sound to play
+ * @return the given Sound
+ * @example play(sine_sound(440, 5));
+ */
+export function play(sound: Sound): Sound {
+  // Type-check sound
+  if (!is_sound(sound)) {
+    throw new Error(
+      `${play.name} is expecting sound, but encountered ${sound}`
+    );
+  } else if (get_duration(sound) < 0) {
+    throw new Error(`${play.name}: duration of sound is negative`);
+  } else if (get_duration(sound) === 0) {
+    return sound;
+  } else {
+    // Instantiate audio context if it has not been instantiated.
+    if (!audioplayer) {
+      init_audioCtx();
+    }
+
+    // Create mono buffer
+    const theBuffer = audioplayer.createBuffer(
+      1,
+      Math.ceil(FS * get_duration(sound)),
+      FS
+    );
+    const channel = theBuffer.getChannelData(0);
+
+    let temp: number;
+    let prev_value = 0;
+
+    const wave = get_wave(sound);
+    for (let i = 0; i < channel.length; i += 1) {
+      temp = wave(i / FS);
       // clip amplitude
       if (temp > 1) {
         channel[i] = 1;

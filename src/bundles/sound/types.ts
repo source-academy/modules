@@ -16,3 +16,7 @@ export type AudioPlayed = {
 export type SoundModuleState = {
   audioPlayed: AudioPlayed[]
 };
+
+// FFT
+export type ComplexNumber = Pair<number, number>;
+export type FFTFilter = (frequencyDomain: Array<ComplexNumber>) => Array<ComplexNumber>;
