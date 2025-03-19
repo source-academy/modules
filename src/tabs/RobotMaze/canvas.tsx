@@ -130,7 +130,7 @@ export default class Canvas extends React.Component<Props, State> {
     const currentCommand: Command = this.commands[this.commandIndex];
 
     // checking for the 3 types of commands so far: move, rotate and sensor
-    if (currentCommand.type == "move") {
+    if (currentCommand.type == 'move') {
       const targetPoint = {x: currentCommand.position.x, y: currentCommand.position.y};
       const dx = targetPoint.x - this.xPos;
       const dy = targetPoint.y - this.yPos;
@@ -148,15 +148,14 @@ export default class Canvas extends React.Component<Props, State> {
         this.yPos = targetPoint.y;
 
         // set target to the next point in the array
-        this.commandIndex+= 1;  
+        this.commandIndex+= 1;
       }
-    } 
-    else if (currentCommand.type == "rotateLeft" || currentCommand.type == "rotateRight") {
+    } else if (currentCommand.type == 'rotateLeft' || currentCommand.type == 'rotateRight') {
       const targetRotation = currentCommand.position.rotation;
-      if (currentCommand.type == "rotateLeft") {
-        this.rotation += 0.1; 
+      if (currentCommand.type == 'rotateLeft') {
+        this.rotation += 0.1;
       } else {
-        this.rotation -= 0.1; 
+        this.rotation -= 0.1;
       }
 
       if (Math.abs(this.rotation - targetRotation) <= 0.1) {
@@ -166,21 +165,21 @@ export default class Canvas extends React.Component<Props, State> {
         if (this.rotation > Math.PI) {
           this.rotation -= 2 * Math.PI;
         }
-  
+
         if (this.rotation < -Math.PI) {
           this.rotation += 2 * Math.PI;
         }
-  
+
         if (Math.abs(this.rotation - targetRotation) <= 0.1) {
           this.rotation = targetRotation;
           this.commandIndex+= 1;
         }
       }
-    } else if (currentCommand.type === "sensor") {
+    } else if (currentCommand.type === 'sensor') {
       this.isPaused = true;
       this.unpauseTIme = Date.now() + 500;
     }
-    
+
     if (this.commandIndex >= this.commands.length) {
       this.stopAnimation();
     }
@@ -193,7 +192,7 @@ export default class Canvas extends React.Component<Props, State> {
   drawRobot(ctx: CanvasRenderingContext2D, x: number, y: number, rotation: number) {
     const centerX = x;
     const centerY = y;
-    
+
     ctx.save();
 
     // translates the origin of the canvas to the center of the robot, then rotate
@@ -208,8 +207,8 @@ export default class Canvas extends React.Component<Props, State> {
     ctx.fill(); // Fill the circle
     ctx.closePath();
 
-    ctx.strokeStyle = "white"; 
-    ctx.lineWidth = 2; 
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(this.robotSize, 0);
     ctx.lineTo(0, 0);

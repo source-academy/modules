@@ -70,7 +70,6 @@ export function set_rotation(rotation: number) {
   robot.dy = -Math.sin(rotation);
 }
 
-
 export function set_width(width: number) {
   stateData.width = width;
 }
@@ -88,7 +87,7 @@ export function init(width: number, height: number, posX: number, posY: number, 
   set_pos(posX, posY);
   set_rotation(rotation);
 
-  stateData.moveCommands.push({type: "begin", position: getPositionWithRotation()}); // push starting point to movepoints data
+  stateData.moveCommands.push({type: 'begin', position: getPositionWithRotation()}); // push starting point to movepoints data
   stateData.isInit = true;
 
   bounds = [
@@ -111,12 +110,11 @@ export function turn_left() {
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
-  stateData.moveCommands.push({type: "rotateLeft", position: getPositionWithRotation()});
+  stateData.moveCommands.push({type: 'rotateLeft', position: getPositionWithRotation()});
 
   // debug log
   logCoordinates();
 }
-
 
 export function turn_right() {
   let currentAngle = Math.atan2(-robot.dy, robot.dx);
@@ -129,7 +127,7 @@ export function turn_right() {
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
-  stateData.moveCommands.push({type: "rotateRight", position: getPositionWithRotation()});
+  stateData.moveCommands.push({type: 'rotateRight', position: getPositionWithRotation()});
 
   // debug log
   logCoordinates();
@@ -146,7 +144,7 @@ export function rotate_right(angle: number) {
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
-  stateData.moveCommands.push({type: "rotateRight", position: getPositionWithRotation()});
+  stateData.moveCommands.push({type: 'rotateRight', position: getPositionWithRotation()});
 
   // debug log
   logCoordinates();
@@ -163,7 +161,7 @@ export function rotate_left(angle: number) {
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
-  stateData.moveCommands.push({type: "rotateLeft", position: getPositionWithRotation()});
+  stateData.moveCommands.push({type: 'rotateLeft', position: getPositionWithRotation()});
 
   logCoordinates();
 }
@@ -218,7 +216,7 @@ export function move_forward_to_wall(): void {
 
   robot.x = nextPoint.x;
   robot.y = nextPoint.y;
-  stateData.moveCommands.push({type: "move", position: getPositionWithRotation()});
+  stateData.moveCommands.push({type: 'move', position: getPositionWithRotation()});
 
   // for debug
   stateData.messages.push(`Distance is ${distance} Collision point at x: ${nextPoint.x}, y: ${nextPoint.y}`);
@@ -229,9 +227,9 @@ export function move_forward(moveDist: number): void {
   // need to check for collision with wall
   const dist = findDistanceToWall();
   stateData.messages.push(`${dist}`);
-  
+
   if (dist < moveDist + robot.radius) {
-    stateData.message = "collided";
+    stateData.message = 'collided';
     stateData.success = false;
     moveDist = dist - robot.radius + 1; // move only until the wall
   }
@@ -243,7 +241,7 @@ export function move_forward(moveDist: number): void {
 
   robot.x = nextPoint.x;
   robot.y = nextPoint.y;
-  stateData.moveCommands.push({type: "move", position: getPositionWithRotation()});
+  stateData.moveCommands.push({type: 'move', position: getPositionWithRotation()});
 
   logCoordinates();
 }
@@ -252,7 +250,7 @@ export function move_forward(moveDist: number): void {
 // add as a command later
 export function sensor(): boolean {
   const dist = findDistanceToWall();
-  stateData.moveCommands.push({type: "sensor", position: getPositionWithRotation()})
+  stateData.moveCommands.push({type: 'sensor', position: getPositionWithRotation()});
   if (dist <= 10 + robot.radius) {
     return true;
   }
@@ -363,7 +361,7 @@ function alrCollided() {
 
 function getPositionWithRotation(): PointWithRotation {
   const angle = Math.atan2(-robot.dy, robot.dx);
-  return {x: robot.x, y: robot.y, rotation: angle}
+  return {x: robot.x, y: robot.y, rotation: angle};
 }
 
 // debug
