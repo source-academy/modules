@@ -11,6 +11,7 @@
 export {
   init,
   set_pos,
+  set_rotation,
   set_rect_wall,
   set_polygon_wall,
   move_forward,

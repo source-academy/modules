@@ -6,11 +6,11 @@ import {
 } from 'js-slang/dist/stdlib/list';
 
 type Point = {x: number, y: number};
-type PointWithRotation = {x: number, y: number, angle: number};
+type PointWithRotation = {x: number, y: number, rotation: number};
 
-type CommandData = {
+type Command = {
   type: string,
-  location: PointWithRotation
+  position: PointWithRotation
 };
 
 type Polygon = Point[];
@@ -20,10 +20,11 @@ type StateData = {
   width: number,
   height: number,
   walls: Polygon[],
-  movePoints: Point[],
+  moveCommands: Command[],
   message: string,
   success: boolean,
-  messages: string[]
+  messages: string[],
+  robotSize: number
 };
 
 type Robot = {
@@ -39,10 +40,11 @@ const stateData: StateData = {
   width: 500,
   height: 500,
   walls: [],
-  movePoints: [],
+  moveCommands: [],
   message: 'moved successfully',
   success: true,
-  messages: []
+  messages: [],
+  robotSize: 15
 };
 
 const robot: Robot = {
@@ -50,7 +52,7 @@ const robot: Robot = {
   y: 25,
   dx: 1,
   dy: 0,
-  radius: 20 // give the robot a circular hitbox
+  radius: 15 // give the robot a circular hitbox
 };
 
 let bounds: Point[] = [];
@@ -63,6 +65,12 @@ export function set_pos(x: number, y: number): void {
   robot.y = y;
 }
 
+export function set_rotation(rotation: number) {
+  robot.dx = Math.cos(rotation);
+  robot.dy = -Math.sin(rotation);
+}
+
+
 export function set_width(width: number) {
   stateData.width = width;
 }
@@ -72,14 +80,15 @@ export function set_height(height: number) {
 }
 
 // condenses setting the width and height of map, and the initial position of robot in one call
-export function init(width: number, height: number, posX: number, posY: number) {
+export function init(width: number, height: number, posX: number, posY: number, rotation: number) {
   if (stateData.isInit) return; // dont allow init more than once
 
   set_width(width);
   set_height(height);
   set_pos(posX, posY);
+  set_rotation(rotation);
 
-  stateData.movePoints.push({x: posX, y: posY}); // push starting point to movepoints data
+  stateData.moveCommands.push({type: "begin", position: getPositionWithRotation()}); // push starting point to movepoints data
   stateData.isInit = true;
 
   bounds = [
@@ -102,9 +111,12 @@ export function turn_left() {
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
+  stateData.moveCommands.push({type: "rotateLeft", position: getPositionWithRotation()});
+
   // debug log
   logCoordinates();
 }
+
 
 export function turn_right() {
   let currentAngle = Math.atan2(-robot.dy, robot.dx);
@@ -116,6 +128,8 @@ export function turn_right() {
 
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
+
+  stateData.moveCommands.push({type: "rotateRight", position: getPositionWithRotation()});
 
   // debug log
   logCoordinates();
@@ -132,6 +146,8 @@ export function rotate_right(angle: number) {
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
+  stateData.moveCommands.push({type: "rotateRight", position: getPositionWithRotation()});
+
   // debug log
   logCoordinates();
 }
@@ -146,6 +162,8 @@ export function rotate_left(angle: number) {
 
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
+
+  stateData.moveCommands.push({type: "rotateLeft", position: getPositionWithRotation()});
 
   logCoordinates();
 }
@@ -188,7 +206,7 @@ export function getY():number {
 export function move_forward_to_wall(): void {
   if (alrCollided()) return;
 
-  let distance = findMoveDistance(); // do the raycast, figure out how far the robot is from the nearest wall
+  let distance = findDistanceToWall(); // do the raycast, figure out how far the robot is from the nearest wall
 
   // a lil extra offset from wall
   distance = Math.max(distance - robot.radius - 5, 0);
@@ -200,34 +218,49 @@ export function move_forward_to_wall(): void {
 
   robot.x = nextPoint.x;
   robot.y = nextPoint.y;
-  stateData.movePoints.push(nextPoint);
+  stateData.moveCommands.push({type: "move", position: getPositionWithRotation()});
 
   // for debug
   stateData.messages.push(`Distance is ${distance} Collision point at x: ${nextPoint.x}, y: ${nextPoint.y}`);
 }
 
-// Moves forward by a small amount
+// Moves forward by a specified amount
 export function move_forward(moveDist: number): void {
+  // need to check for collision with wall
+  const dist = findDistanceToWall();
+  stateData.messages.push(`${dist}`);
+  
+  if (dist < moveDist + robot.radius) {
+    stateData.message = "collided";
+    stateData.success = false;
+    moveDist = dist - robot.radius + 1; // move only until the wall
+  }
+
   const nextPoint: Point = {
     x: robot.x + moveDist * robot.dx,
-    y: robot.y + moveDist + robot.dy
+    y: robot.y + moveDist * robot.dy
   };
-
-  // need to check for collision with wall
 
   robot.x = nextPoint.x;
   robot.y = nextPoint.y;
-  stateData.movePoints.push(nextPoint);
+  stateData.moveCommands.push({type: "move", position: getPositionWithRotation()});
 
   logCoordinates();
 }
 
+// detects if there are walls 10 units ahead of the robot
+// add as a command later
 export function sensor(): boolean {
+  const dist = findDistanceToWall();
+  stateData.moveCommands.push({type: "sensor", position: getPositionWithRotation()})
+  if (dist <= 10 + robot.radius) {
+    return true;
+  }
   return false;
 }
 
 // returns the distance from the nearest wall
-function findMoveDistance(): number {
+function findDistanceToWall(): number {
   let minDist: number = Infinity;
 
   // loop through all the walls
@@ -326,6 +359,11 @@ function getIntersection(x1, y1, x2, y2, x3, y3, x4, y4): number | null {
 
 function alrCollided() {
   return !stateData.success;
+}
+
+function getPositionWithRotation(): PointWithRotation {
+  const angle = Math.atan2(-robot.dy, robot.dx);
+  return {x: robot.x, y: robot.y, rotation: angle}
 }
 
 // debug
