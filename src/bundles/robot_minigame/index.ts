@@ -14,6 +14,8 @@ export {
   set_rect_wall,
   set_polygon_wall,
   move_forward,
+  sensor,
+  move_forward_to_wall,
   turn_left,
   turn_right,
   rotate_right,

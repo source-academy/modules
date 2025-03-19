@@ -1,18 +1,17 @@
-/*
-* Currently uses a grid based system, will upgrade to more fancy stuff later
-* The movement is simulated, then a series of movement points is passed to the module context, which the frontend then uses to render
-*/
-
 import context from 'js-slang/context';
 import {
-  accumulate,
   head,
   tail,
   type List
 } from 'js-slang/dist/stdlib/list';
 
 type Point = {x: number, y: number};
-type Intersection = {x: number, y: number, dist: number}
+type PointWithRotation = {x: number, y: number, angle: number}
+
+type CommandData = {
+  type: String,
+  location: PointWithRotation
+}
 
 type Polygon = Point[];
 
@@ -24,8 +23,7 @@ type StateData = {
   movePoints: Point[],
   message: string,
   success: boolean,
-  messages: string[],
-  rotations: Point[]
+  messages: string[]
 };
 
 type Robot = {
@@ -44,8 +42,7 @@ const stateData: StateData = {
   movePoints: [],
   message: 'moved successfully',
   success: true,
-  messages: [],
-  rotations: []
+  messages: []
 };
 
 const robot: Robot = {
@@ -58,6 +55,7 @@ const robot: Robot = {
 
 let bounds: Point[] = [];
 
+// sets the context to the statedata obj, mostly for convenience so i dont have to type context.... everytime
 context.moduleContexts.robot_minigame.state = stateData;
 
 export function set_pos(x: number, y: number): void {
@@ -73,11 +71,15 @@ export function set_height(height: number) {
   stateData.height = height;
 }
 
+// condenses setting the width and height of map, and the initial position of robot in one call
 export function init(width: number, height: number, posX: number, posY: number) {
+  if (stateData.isInit) return; // dont allow init more than once
+
   set_width(width);
   set_height(height);
   set_pos(posX, posY);
-  stateData.movePoints.push({x: posX, y: posY});
+
+  stateData.movePoints.push({x: posX, y: posY}); // push starting point to movepoints data
   stateData.isInit = true;
 
   bounds = [
@@ -86,7 +88,6 @@ export function init(width: number, height: number, posX: number, posY: number) 
     {x: width, y: height},
     {x: 0, y: height}
   ];
-
 }
 
 export function turn_left() {
@@ -97,9 +98,11 @@ export function turn_left() {
   robot.dx = Math.cos(currentAngle);
   robot.dy = -Math.sin(currentAngle);
 
+  // prevent floating point issues
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
+  // debug log
   logCoordinates();
 }
 
@@ -114,6 +117,7 @@ export function turn_right() {
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
+  // debug log
   logCoordinates();
 }
 
@@ -124,10 +128,11 @@ export function rotate_right(angle: number) {
 
   robot.dx = Math.cos(currentAngle);
   robot.dy = -Math.sin(currentAngle);
-
+  
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
+  // debug log
   logCoordinates();
 }
 
@@ -145,6 +150,7 @@ export function rotate_left(angle: number) {
   logCoordinates();
 }
 
+// easily set up a rectangular wall using the x and y of the top left corner, and width/height
 export function set_rect_wall(x: number, y: number, width: number, height: number) {
   const polygon: Polygon = [
     {x: x, y: y},
@@ -156,8 +162,11 @@ export function set_rect_wall(x: number, y: number, width: number, height: numbe
   stateData.walls.push(polygon);
 }
 
+// creates irregularly shaped wall
+// takes in a list of vertices as its argument 
 export function set_polygon_wall(vertices: List) {
   const polygon: Polygon = []
+
   while (vertices != null) {
     const p = head(vertices);
     polygon.push({x: head(p), y: tail(p)});
@@ -175,10 +184,13 @@ export function getY():number {
   return robot.y;
 }
 
-export function move_forward(): void {
+// moves robot to the nearest wall 
+export function move_forward_to_wall(): void {
   if (alrCollided()) return;
 
-  let distance = findCollision();
+  let distance = findMoveDistance(); // do the raycast, figure out how far the robot is from the nearest wall
+
+  // a lil extra offset from wall
   distance = Math.max(distance - robot.radius - 5, 0)
   
   const nextPoint: Point = {
@@ -186,49 +198,80 @@ export function move_forward(): void {
     y: robot.y + distance * robot.dy
   }
   
+  robot.x = nextPoint.x;
+  robot.y = nextPoint.y;
+  stateData.movePoints.push(nextPoint);
+
+  // for debug
+  stateData.messages.push(`Distance is ${distance} Collision point at x: ${nextPoint.x}, y: ${nextPoint.y}`);
+}
+
+// Moves forward by a small amount 
+export function move_forward(moveDist: number): void {
+  const nextPoint: Point = {
+    x: robot.x + moveDist * robot.dx,
+    y: robot.y + moveDist + robot.dy
+  }
+
+  // need to check for collision with wall
 
   robot.x = nextPoint.x;
   robot.y = nextPoint.y;
   stateData.movePoints.push(nextPoint);
-  stateData.messages.push(`Distance is ${distance} Collision point at x: ${nextPoint.x}, y: ${nextPoint.y}`);
+
+  logCoordinates();
 }
 
-function findCollision(): number {
-  let nearest: Point | null = null;
+export function sensor(): boolean {
+  return false;
+}
+
+// returns the distance from the nearest wall 
+function findMoveDistance(): number {
   let minDist: number = Infinity;
 
+  // loop through all the walls
   for (const wall of stateData.walls) {
-    const intersection: Intersection | null = raycast(wall);
-    if (intersection !== null && intersection.dist < minDist) {
-      minDist = intersection.dist;
-      nearest = {x: intersection.x, y: intersection.y};
+    const intersectionDist = raycast(wall); // do the raycast 
+
+    // if intersection is closer, update minDist
+    if (intersectionDist !== null && intersectionDist < minDist) {
+      minDist = intersectionDist;
     } 
   }
 
   // check outer bounds as well
-  const intersection: Intersection | null = raycast(bounds);
-  if (intersection !== null && intersection.dist < minDist) {
-    minDist = intersection.dist;
-    nearest = {x: intersection.x, y: intersection.y};
+  const intersectionDist = raycast(bounds);
+  if (intersectionDist !== null && intersectionDist < minDist) {
+    minDist = intersectionDist;
   } 
   
-  return minDist === Infinity ? 0 : minDist; // Closest intersection point
+  // Closest intersection point
+  // By all rights, there should always be an intersection point since the robot is always within the bounds 
+  // and the bounds should be a collision
+  // but something goes wrong, will just return 0
+  return minDist === Infinity ? 0 : minDist; 
 }
 
-function raycast(polygon: Polygon): Intersection | null {
+// does the raycast logic for one particular wall
+// three rays are cast: one from the center, one from the top and one from the bottom. the minimum dist is returned
+// return null if no collision
+function raycast(polygon: Polygon): number | null {
   let minDist = Infinity;
-  let nearest: Intersection | null = null;
 
   for (let i = 0; i < polygon.length; i++) {
+    // wall line segment
     const x1 = polygon[i].x, y1 = polygon[i].y;
     const x2 = polygon[(i + 1) % polygon.length].x, y2 = polygon[(i + 1) % polygon.length].y;
 
+    // calculate the top and bottom coordinates of the robot 
     const topX = robot.x - robot.radius * robot.dy;
     const topY = robot.y - robot.radius * robot.dx;
 
     const bottomX = robot.x + robot.radius * robot.dy;
     const bottomY = robot.y + robot.radius * robot.dx;
 
+    // raycast from 3 sources: top, middle, bottom
     const raycast_sources: Point[] = [
       {x: robot.x, y: robot.y},
       {x: topX, y: topY},
@@ -236,19 +279,19 @@ function raycast(polygon: Polygon): Intersection | null {
     ]
 
     for (const source of raycast_sources) {
-      const intersection = getIntersection(source.x, source.y, robot.dx + source.x, robot.dy + source.y, x1, y1, x2, y2);
-      if (intersection !== null && intersection.dist < minDist) {
-        minDist = intersection.dist;
-        nearest = intersection;
+      const intersectionDist = getIntersection(source.x, source.y, robot.dx + source.x, robot.dy + source.y, x1, y1, x2, y2);
+      if (intersectionDist !== null && intersectionDist < minDist) {
+        minDist = intersectionDist;
       }
     }
   }
       
-  return nearest;
+  return minDist === Infinity ? null : minDist;
 }
 
 // Determine if a ray and a line segment intersect, and if so, determine the collision point
-function getIntersection(x1, y1, x2, y2, x3, y3, x4, y4): Intersection | null {
+// returns null if there's no collision, or the distance to the line segment if collides
+function getIntersection(x1, y1, x2, y2, x3, y3, x4, y4): number | null {
   const denom = ((x2 - x1)*(y4 - y3)-(y2 - y1)*(x4 - x3));
   let r;
   let s;
@@ -276,9 +319,9 @@ function getIntersection(x1, y1, x2, y2, x3, y3, x4, y4): Intersection | null {
     }
   }
 
-  if (!b) return null
+  if (!b) return null;
   
-  return {x: x, y: y, dist: r}
+  return r;
 }
 
 function alrCollided() {
