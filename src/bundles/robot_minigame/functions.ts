@@ -40,7 +40,7 @@ interface StateData {
   success: boolean
   messages: string[]
   robotSize: number
-};
+}
 
 interface Robot {
   x: number // the top left corner
@@ -48,7 +48,7 @@ interface Robot {
   dx: number
   dy: number
   radius: number
-};
+}
 
 const stateData: StateData = {
   isInit: false,
