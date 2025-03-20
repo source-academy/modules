@@ -140,7 +140,7 @@ export function init(
  * @param isCollidable a boolean indicating if the area is a collidable obstacle or not
  * @param flags any additional flags the area may have
  */
-export function create_wall(
+export function create_area(
   vertices: List,
   isCollidable: boolean,
   flags: AreaFlags
@@ -351,7 +351,7 @@ export function turn_right() {
 /**
  * 
  */
-export function areasEntered(
+export function enteredAreas(
   check : (area : Area[]) => void
 ) : boolean {
   // TO BE IMPLEMENTED

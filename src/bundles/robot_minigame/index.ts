@@ -9,18 +9,8 @@
  */
 
 export {
-  init,
-  set_pos,
-  set_rotation,
-  set_rect_wall,
-  set_polygon_wall,
-  move_forward,
-  sensor,
-  move_forward_to_wall,
-  turn_left,
-  turn_right,
-  rotate_right,
-  rotate_left,
-  getX,
-  getY
+  init, create_area,
+  get_distance, get_flags, get_color,
+  move_forward, move_forward_to_wall, rotate, turn_left, turn_right,
+  enteredAreas
 } from './functions';
