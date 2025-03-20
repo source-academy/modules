@@ -5,7 +5,7 @@
  *
  * @module robot_minigame
  * @author Koh Wai Kei
- * @author Author Name
+ * @author Justin Cheng
  */
 
 export {

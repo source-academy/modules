@@ -1,37 +1,29 @@
 import React from 'react';
 import type { DebuggerContext } from '../../typings/type_helpers';
-import Canvas from './canvas';
+import RobotSimulation from './components/RobotSimulation';
 
 /**
- * <Brief description of the tab>
- * @author <Author Name>
- * @author <Author Name>
+ * Renders the robot minigame in the assessment workspace
+ * @author Koh Wai Kei
+ * @author Justin Cheng
  */
 
 /**
  * React Component props for the Tab.
  */
-type Props = {
-  children?: never;
-  className?: never;
-  context?: any;
+interface MainProps {
+  children?: never
+  className?: never
+  context?: DebuggerContext
 };
 
 /**
  * The main React Component of the Tab.
  */
-class RobotMaze extends React.Component<Props> {
-  constructor(props) {
-    super(props);
-  }
-
-  public render() {
-    const { context: { moduleContexts: { robot_minigame: {state} } } } = this.props.context;
-
-    return (
-      <Canvas state={state}></Canvas>
-    );
-  }
+const RobotMaze : React.FC<MainProps> = ({ context }) => {
+  return (
+    <RobotSimulation state={context?.context.moduleContexts.robot_minigame.state}></RobotSimulation>
+  );
 }
 
 export default {

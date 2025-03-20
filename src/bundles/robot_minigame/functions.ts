@@ -1,20 +1,23 @@
-import context from 'js-slang/context';
+// import context from 'js-slang/context'; NOT ALLOWED
 import {
   head,
   tail,
   type List
 } from 'js-slang/dist/stdlib/list';
 
+// A point (x, y)
 interface Point {
   x: number
   y: number
 }
 
-interface PointWithRotation extends Point {
+// A point (x, y) with rotation
+export interface PointWithRotation extends Point {
   rotation: number
 }
 
-interface Command {
+// A prior movement
+export interface Action {
   type: string
   position: PointWithRotation
 }
@@ -23,19 +26,19 @@ interface AreaFlags {
   [name: string]: boolean
 }
 
-interface Area {
+export interface Area {
   vertices: Point[]
   isCollidable: boolean
   flags: AreaFlags
 }
 
-interface StateData {
+export interface StateData {
   isInit: boolean
   width: number
   height: number
   areas: Area[]
-  areasEntered: number[]
-  moveCommands: Command[]
+  areaLog: number[]
+  actionLog: Action[]
   message: string
   success: boolean
   messages: string[]
@@ -55,8 +58,8 @@ const stateData: StateData = {
   width: 500,
   height: 500,
   areas: [],
-  areasEntered: [],
-  moveCommands: [],
+  areaLog: [],
+  actionLog: [],
   message: 'moved successfully',
   success: true,
   messages: [],
@@ -74,7 +77,7 @@ const robot: Robot = {
 let bounds: Point[] = [];
 
 // sets the context to the statedata obj, mostly for convenience so i dont have to type context.... everytime
-context.moduleContexts.robot_minigame.state = stateData;
+// context.moduleContexts.robot_minigame.state = stateData;
 
 export function set_pos(x: number, y: number): void {
   robot.x = x;
@@ -122,7 +125,7 @@ export function init(
   set_pos(posX, posY);
   set_rotation(rotation);
 
-  stateData.moveCommands.push({type: 'begin', position: getPositionWithRotation()}); // push starting point to movepoints data
+  stateData.actionLog.push({type: 'begin', position: getPositionWithRotation()}); // push starting point to movepoints data
   stateData.isInit = true;
 
   bounds = [
@@ -143,15 +146,43 @@ export function init(
 export function create_area(
   vertices: List,
   isCollidable: boolean,
-  flags: AreaFlags
+  flags: AreaFlags = {}
 ) {
-  // TO BE IMPLEMENTED
+  // Parse vertices list into a points array
+  const points : Point[] = [];
+
+  while (vertices != null) {
+    const p = head(vertices);
+    points.push({x: head(p), y: tail(p)});
+    vertices = tail(vertices);
+  }
+
+  // Store the new area
+  stateData.areas.push({
+    vertices: points,
+    isCollidable,
+    flags
+  });
 }
 
+/**
+ * Creates a new obstacle
+ * 
+ * @param vertices: List
+ */
+export function create_obstacle(
+  vertices: List
+) {
+  create_area(vertices, true);
+}
 
+/**
+ * Creates a new rectangular, axis-aligned obstacle
+ * 
+ * @param x top left corner of the 
+ */
 
-/* REFACTOR / REIMPLEMENT >>>
-
+/*
 // easily set up a rectangular wall using the x and y of the top left corner, and width/height
 export function set_rect_wall(x: number, y: number, width: number, height: number) {
   const polygon: Polygon = [
@@ -250,7 +281,7 @@ export function move_forward(distance: number) {
 
   robot.x = nextPoint.x;
   robot.y = nextPoint.y;
-  stateData.moveCommands.push({type: 'move', position: getPositionWithRotation()});
+  stateData.actionLog.push({type: 'move', position: getPositionWithRotation()});
 
   logCoordinates();
 }
@@ -276,7 +307,7 @@ export function move_forward_to_wall() {
 
   robot.x = nextPoint.x;
   robot.y = nextPoint.y;
-  stateData.moveCommands.push({type: 'move', position: getPositionWithRotation()});
+  stateData.actionLog.push({type: 'move', position: getPositionWithRotation()});
 
   // for debug
   stateData.messages.push(`Distance is ${distance} Collision point at x: ${nextPoint.x}, y: ${nextPoint.y}`);
@@ -297,7 +328,7 @@ export function rotate(angle: number) {
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
-  stateData.moveCommands.push({type: 'rotateRight', position: getPositionWithRotation()});
+  stateData.actionLog.push({type: 'rotate', position: getPositionWithRotation()});
 
   // debug log
   logCoordinates();
@@ -318,7 +349,7 @@ export function turn_left() {
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
-  stateData.moveCommands.push({type: 'rotateLeft', position: getPositionWithRotation()});
+  stateData.actionLog.push({type: 'rotateLeft', position: getPositionWithRotation()});
 
   // debug log
   logCoordinates();
@@ -338,7 +369,7 @@ export function turn_right() {
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
-  stateData.moveCommands.push({type: 'rotateRight', position: getPositionWithRotation()});
+  stateData.actionLog.push({type: 'rotateRight', position: getPositionWithRotation()});
 
   // debug log
   logCoordinates();
@@ -375,7 +406,7 @@ export function rotate_left(angle: number) {
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
-  stateData.moveCommands.push({type: 'rotateLeft', position: getPositionWithRotation()});
+  stateData.actionLog.push({type: 'rotateLeft', position: getPositionWithRotation()});
 
   logCoordinates();
 }
@@ -392,7 +423,7 @@ export function getY():number {
 // add as a command later
 export function sensor(): boolean {
   const dist = findDistanceToWall();
-  stateData.moveCommands.push({type: 'sensor', position: getPositionWithRotation()});
+  stateData.actionLog.push({type: 'sensor', position: getPositionWithRotation()});
   if (dist <= 10 + robot.radius) {
     return true;
   }
