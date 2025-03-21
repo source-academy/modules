@@ -161,8 +161,13 @@ const RobotSimulation : React.FC<MapProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    robot.current = actionLog[0].position;
+    // Reset current action
+    currentAction.current = 1;
 
+    // Reset robot position
+    robot.current = Object.assign({}, actionLog[0].position);
+
+    // Update canvas dimensions
     canvas.width = width;
     canvas.height = height;
 
@@ -250,13 +255,21 @@ const RobotSimulation : React.FC<MapProps> = ({
     return () => clearInterval(interval);
   }, [animationStatus, width, height, areas, robotSize]);
 
+  console.log(animationStatus);
+
   // Store a reference to the HTML canvas
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   return (
     <>
-      <button onClick={() => {setAnimationStatus(1);}}>Start</button>
-      <p>{animationStatus === 3 ? '' : message}</p>
+      {animationStatus === 0
+        ? <button onClick={() => {setAnimationStatus(1);}}>Start</button>
+        : animationStatus === 1
+          ? <button onClick={() => {setAnimationStatus(2);}}>Pause</button>
+          : animationStatus === 2
+            ? <button onClick={() => {setAnimationStatus(1);}}>Resume</button>
+            : <button onClick={() => {setAnimationStatus(0);}}>Restart</button>}
+      {animationStatus === 3 && <p>{message}</p>}
       <div style={{display: 'flex', justifyContent: 'center'}}>
         <canvas ref={canvasRef}/>
       </div>
