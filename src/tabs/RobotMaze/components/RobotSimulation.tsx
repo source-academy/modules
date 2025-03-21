@@ -1,7 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  type Area, type Action, type PointWithRotation, type StateData
-} from '../../../bundles/robot_minigame/functions';
+import type { Area, Action, PointWithRotation, StateData } from '../../../bundles/robot_minigame/functions';
+
+/**
+ * Calculate the acute angle between 2 angles
+ *
+ * @param target rotation
+ * @param current rotation
+ * @returns the acute angle between
+ */
+const smallestAngle = (target, current) => {
+  const dr = (target - current) % (2 * Math.PI);
+
+  if (dr > 0 && dr > Math.PI) return dr - (2 * Math.PI);
+
+  if (dr < 0 && dr < -Math.PI) return dr + (2 * Math.PI);
+
+  return dr;
+};
 
 /**
  * Draw the borders of the map
@@ -20,7 +35,7 @@ const drawBorders = (ctx: CanvasRenderingContext2D, width: number, height: numbe
   ctx.strokeStyle = 'gray';
   ctx.lineWidth = 3;
   ctx.stroke();
-}
+};
 
 // Draw the areas of the map
 const drawAreas = (ctx: CanvasRenderingContext2D, areas: Area[]) => {
@@ -39,7 +54,7 @@ const drawAreas = (ctx: CanvasRenderingContext2D, areas: Area[]) => {
     ctx.lineWidth = 2; // Set the border width
     ctx.stroke(); // Stroke the polygon
   }
-}
+};
 
 // Draw the robot
 const drawRobot = (ctx: CanvasRenderingContext2D, { x, y, rotation } : PointWithRotation, size: number) => {
@@ -69,6 +84,29 @@ const drawRobot = (ctx: CanvasRenderingContext2D, { x, y, rotation } : PointWith
 
   // restore state of the background
   ctx.restore();
+};
+
+/**
+ * Render the current game state
+ */
+const drawAll = (
+  ctx : CanvasRenderingContext2D,
+  width : number,
+  height : number,
+  areas: Area[],
+  {x, y, rotation} : Robot,
+  robotSize: number
+) => {
+  ctx.reset();
+  drawBorders(ctx, width, height);
+  drawAreas(ctx, areas);
+  drawRobot(ctx, {x, y, rotation}, robotSize);
+};
+
+interface Robot {
+  x: number
+  y: number
+  rotation: number
 }
 
 // The speed to move at
@@ -81,11 +119,11 @@ interface MapProps {
   children?: never
   className?: never
   state: StateData
-};
+}
 
 const RobotSimulation : React.FC<MapProps> = ({
   state: {
-    isInit,
+    // isInit,
     width,
     height,
     areas,
@@ -97,151 +135,133 @@ const RobotSimulation : React.FC<MapProps> = ({
     robotSize
   }
 }) => {
-  // Store the robot status
-  const [x, setX] = useState<number>(actionLog[0].position.x);
-  const [y, setY] = useState<number>(actionLog[0].position.y);
-  const [rotation, setRotation] = useState<number>(actionLog[0].position.rotation);
+  // Store animation status
+  // 0 => Loaded / Loading
+  // 1 => Running
+  // 2 => Paused
+  // 3 => Finished
+  const [animationStatus, setAnimationStatus] = useState<0 | 1 | 2 | 3>(0);
 
-  // Whether the animation has ended
-  const [isAnimationEnded, setAnimationEnded] = useState<boolean>(false);
+  // Store animation pause
+  const animationPauseUntil = useRef<number | null>(null);
 
-  // Whether the animation is paused
-  const [animationUnpauseTime, setAnimationUnpauseTime] = useState<number>(-1);
+  // Store current action id
+  const currentAction = useRef<number>(1);
 
-  // Store the animation frame
-  const [animationFrame, setAnimationFrame] = useState<number>();
+  // Store robot status
+  const robot = useRef<Robot>({x: 0, y: 0, rotation: 0});
 
-  // Store the next animation
-  const [currentAction, setCurrentAction] = useState<number>(1);
-
-  // Select the next action
-  const nextAction = () => setCurrentAction(a => a + 1);
-
-  // Animate the next frame
-  const nextFrame = () => setAnimationFrame(requestAnimationFrame(animate));
-
-  // Run the animation
-  const animate = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    if (currentAction >= actionLog.length) return;
-
-    // temporary pausing thing for the sensor
-    if (animationUnpauseTime < 0) {
-      if (Date.now() > animationUnpauseTime) {
-        setAnimationUnpauseTime(-1);
-        nextAction();
-      }
-      return nextFrame();
-    }
-
-    // Draw the map
-    ctx.reset();
-    drawBorders(ctx, width, height);
-    drawAreas(ctx, areas);
-
-    // Get current action
-    const { type, position }: Action = actionLog[currentAction];
-
-    switch(type) {
-      case 'move':
-        const targetPoint = {x: position.x, y: position.y};
-        const dx = targetPoint.x - x;
-        const dy = targetPoint.y - y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-  
-        if (distance > 1) {
-          setX(v => v + (dx / distance) * ANIMATION_SPEED);
-          setY(v => v + (dy / distance) * ANIMATION_SPEED);
-        }
-  
-        // if distance to target point is small
-        if (distance <= 1) {
-          // snap to the target point
-          setX(targetPoint.x);
-          setY(targetPoint.y);
-  
-          // set target to the next point in the array
-          nextAction();
-        }
-        break;
-      case 'rotate':
-        const targetRotation = position.rotation;
-        setRotation(v => v - 0.1);
-
-        if (Math.abs(rotation - targetRotation) <= 0.1) {
-          setRotation(targetRotation);
-          nextAction();
-        } else {
-          if (rotation > Math.PI) {
-            setRotation(v => v - 2 * Math.PI);
-          }
-
-          if (rotation < -Math.PI) {
-            setRotation(v => v + 2 * Math.PI);
-          }
-
-          if (Math.abs(rotation - targetRotation) <= 0.1) {
-            setRotation(targetRotation);
-            nextAction();
-          }
-        }
-        break;
-      case 'sensor':
-        setAnimationUnpauseTime(Date.now() + 500);
-        break;
-    }
-
-    if (currentAction >= actionLog.length) {
-      stopAnimation();
-    }
-
-    drawRobot(ctx, {x, y, rotation}, robotSize);
-
-    // Request the next frame
-    nextFrame();
-  };
-
-  // Stop the current animation
-  const stopAnimation = () => {
-    if (animationFrame) {
-      setAnimationEnded(true);
-      cancelAnimationFrame(animationFrame);
-    }
-  }
-
+  // Ensure canvas is preloaded correctly
   useEffect(() => {
+    // Only trigger if animationStatus is 0
+    if (animationStatus !== 0) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    robot.current = actionLog[0].position;
 
     canvas.width = width;
     canvas.height = height;
 
-    ctx.reset();
-    drawBorders(ctx, width, height);
-    drawAreas(ctx, areas);
-    drawRobot(ctx, {x, y, rotation}, robotSize);
+    drawAll(ctx, width, height, areas, robot.current, robotSize);
+  }, [animationStatus, width, height, areas, robotSize]);
 
-    return stopAnimation;
-  }, []);
+  // Handle animation
+  useEffect(() => {
+    if (animationStatus !== 1) return;
+
+    const interval = setInterval(() => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      // End animation after action log complete
+      if (currentAction.current >= actionLog.length) return setAnimationStatus(3);
+
+      // Skip animation if paused
+      if (animationPauseUntil.current !== null) {
+        if (Date.now() > animationPauseUntil.current) {
+          animationPauseUntil.current = null;
+          currentAction.current++;
+        }
+        return;
+      }
+
+      // Get current action
+      const { type, position: {x: tx, y: ty, rotation: targetRotation} }: Action = actionLog[currentAction.current];
+
+      switch(type) {
+        case 'move': {
+          // Calculate the distance to target point
+          const dx = tx - robot.current.x;
+          const dy = ty - robot.current.y;
+          const distance = Math.sqrt(
+            (tx - robot.current.x) ** 2 +
+            (ty - robot.current.y) ** 2);
+
+          // If distance to target point is small
+          if (distance <= ANIMATION_SPEED) {
+            // Snap to the target point
+            robot.current.x = tx;
+            robot.current.y = ty;
+
+            // Move on to next action
+            currentAction.current++;
+            break;
+          }
+
+          // Move the robot towards the target
+          robot.current.x += (dx / distance) * ANIMATION_SPEED;
+          robot.current.y += (dy / distance) * ANIMATION_SPEED;
+          break;
+        } case 'rotate': {
+          // If rotation is close to target rotation
+          if (Math.abs(targetRotation - robot.current.rotation) <= 0.1) {
+            // Snap to the target point
+            robot.current.rotation = targetRotation;
+
+            // Move on to next action
+            currentAction.current++;
+            break;
+          }
+
+          robot.current.rotation += smallestAngle(targetRotation, robot.current.rotation) > 0 ? 0.1 : -0.1;
+
+          if (robot.current.rotation > Math.PI) {
+            robot.current.rotation -= 2 * Math.PI;
+          }
+
+          if (robot.current.rotation < Math.PI) {
+            robot.current.rotation += 2 * Math.PI;
+          }
+          break;
+        } case 'sensor':
+          animationPauseUntil.current = Date.now() + 1000;
+          break;
+      }
+
+      drawAll(ctx, width, height, areas, robot.current, robotSize);
+    }, 10);
+
+    return () => clearInterval(interval);
+  }, [animationStatus, width, height, areas, robotSize]);
 
   // Store a reference to the HTML canvas
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   return (
     <>
-      <button onClick={nextFrame}>Start</button>
-      <p>{isAnimationEnded ? message : <></>}</p>
+      <button onClick={() => {setAnimationStatus(1);}}>Start</button>
+      <p>{animationStatus === 3 ? '' : message}</p>
       <div style={{display: 'flex', justifyContent: 'center'}}>
         <canvas ref={canvasRef}/>
       </div>
     </>
   );
-}
+};
 
 export default RobotSimulation;

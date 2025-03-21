@@ -15,7 +15,7 @@ interface MainProps {
   children?: never
   className?: never
   context?: DebuggerContext
-};
+}
 
 /**
  * The main React Component of the Tab.
@@ -24,7 +24,7 @@ const RobotMaze : React.FC<MainProps> = ({ context }) => {
   return (
     <RobotSimulation state={context?.context.moduleContexts.robot_minigame.state}></RobotSimulation>
   );
-}
+};
 
 export default {
   /**

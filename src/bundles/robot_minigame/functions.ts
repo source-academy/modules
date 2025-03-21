@@ -1,4 +1,4 @@
-// import context from 'js-slang/context'; NOT ALLOWED
+import context from 'js-slang/context';
 import {
   head,
   tail,
@@ -77,23 +77,23 @@ const robot: Robot = {
 let bounds: Point[] = [];
 
 // sets the context to the statedata obj, mostly for convenience so i dont have to type context.... everytime
-// context.moduleContexts.robot_minigame.state = stateData;
+context.moduleContexts.robot_minigame.state = stateData;
 
-export function set_pos(x: number, y: number): void {
+function set_pos(x: number, y: number): void {
   robot.x = x;
   robot.y = y;
 }
 
-export function set_rotation(rotation: number) {
+function set_rotation(rotation: number) {
   robot.dx = Math.cos(rotation);
   robot.dy = -Math.sin(rotation);
 }
 
-export function set_width(width: number) {
+function set_width(width: number) {
   stateData.width = width;
 }
 
-export function set_height(height: number) {
+function set_height(height: number) {
   stateData.height = height;
 }
 
@@ -104,13 +104,13 @@ export function set_height(height: number) {
 /**
  * Initializes a new simulation with a map of size width * height
  * Also sets the initial position an rotation of the robot
- * 
+ *
  * @param width of the map
  * @param height of the map
  * @param posX initial X coordinate of the robot
  * @param posY initial Y coordinate of the robot
  * @param rotation initial rotation of the robot
- */ 
+ */
 export function init(
   width: number,
   height: number,
@@ -138,28 +138,28 @@ export function init(
 
 /**
  * Creates a new area with the given vertices and flags
- * 
+ *
  * @param vertices of the area
  * @param isCollidable a boolean indicating if the area is a collidable obstacle or not
  * @param flags any additional flags the area may have
  */
 export function create_area(
-  vertices: List,
+  vertices: Point[],
   isCollidable: boolean,
   flags: AreaFlags = {}
 ) {
-  // Parse vertices list into a points array
-  const points : Point[] = [];
+  // // Parse vertices list into a points array
+  // const points : Point[] = [];
 
-  while (vertices != null) {
-    const p = head(vertices);
-    points.push({x: head(p), y: tail(p)});
-    vertices = tail(vertices);
-  }
+  // while (vertices != null) {
+  //   const p = head(vertices);
+  //   points.push({x: head(p), y: tail(p)});
+  //   vertices = tail(vertices);
+  // }
 
   // Store the new area
   stateData.areas.push({
-    vertices: points,
+    vertices,
     isCollidable,
     flags
   });
@@ -167,51 +167,36 @@ export function create_area(
 
 /**
  * Creates a new obstacle
- * 
- * @param vertices: List
+ *
+ * @param vertices of the obstacle
  */
 export function create_obstacle(
-  vertices: List
+  vertices: Point[]
 ) {
   create_area(vertices, true);
 }
 
 /**
  * Creates a new rectangular, axis-aligned obstacle
- * 
- * @param x top left corner of the 
+ *
+ * @param x top left corner of the rectangle
+ * @param y top right corner of the rectangle
+ * @param width of the rectangle
+ * @param height of the rectangle
  */
-
-/*
-// easily set up a rectangular wall using the x and y of the top left corner, and width/height
-export function set_rect_wall(x: number, y: number, width: number, height: number) {
-  const polygon: Polygon = [
-    {x: x, y: y},
-    {x: x + width, y: y},
-    {x: x+width, y: y+height},
-    {x: x, y:y+height}
-  ];
-
-  stateData.walls.push(polygon);
+export function create_rect_obstacle(
+  x: number,
+  y: number,
+  width: number,
+  height: number
+) {
+  create_obstacle([
+    {x, y},
+    {x: x + width, y},
+    {x: x + width, y: y + height},
+    {x, y:y + height}
+  ]);
 }
-
-// creates irregularly shaped wall
-// takes in a list of vertices as its argument
-export function set_polygon_wall(vertices: List) {
-  const polygon: Polygon = [];
-
-  while (vertices != null) {
-    const p = head(vertices);
-    polygon.push({x: head(p), y: tail(p)});
-    vertices = tail(vertices);
-  }
-
-  stateData.walls.push(polygon);
-}
-
-<<< REFACTOR / REIMPLEMENT */
-
-
 
 // ======= //
 // SENSORS //
@@ -219,7 +204,7 @@ export function set_polygon_wall(vertices: List) {
 
 /**
  * Get the distance to the closest collidable area
- * 
+ *
  * @returns the distance to the closest obstacle
  */
 export function get_distance() : number {
@@ -229,7 +214,7 @@ export function get_distance() : number {
 
 /**
  * Gets the flags of the area containing the point (x, y)
- * 
+ *
  * @param x coordinate
  * @param y coordinate
  * @returns the flags of the area containing (x, y)
@@ -244,15 +229,13 @@ export function get_flags(
 
 /**
  * Gets the color of the area under the robot
- * 
+ *
  * @returns the color of the area under the robot
  */
 export function get_color() : string {
   // TO BE IMPLEMENTED
-  return "";
+  return '';
 }
-
-
 
 // ======= //
 // ACTIONS //
@@ -260,7 +243,7 @@ export function get_color() : string {
 
 /**
  * Move the robot forward by the specified distance
- * 
+ *
  * @param distance to move forward
  */
 export function move_forward(distance: number) {
@@ -314,7 +297,7 @@ export function move_forward_to_wall() {
 }
 
 /**
- * 
+ *
  * @param angle the angle (in radians) to rotate right
  */
 export function rotate(angle: number) {
@@ -380,7 +363,7 @@ export function turn_right() {
 // ======= //
 
 /**
- * 
+ *
  */
 export function enteredAreas(
   check : (area : Area[]) => void
@@ -388,8 +371,6 @@ export function enteredAreas(
   // TO BE IMPLEMENTED
   return false;
 }
-
-
 
 // ==================== //
 // Unassigned / Helpers //

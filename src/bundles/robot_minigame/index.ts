@@ -9,7 +9,7 @@
  */
 
 export {
-  init, create_area,
+  init, create_area, create_obstacle, create_rect_obstacle,
   get_distance, get_flags, get_color,
   move_forward, move_forward_to_wall, rotate, turn_left, turn_right,
   enteredAreas
