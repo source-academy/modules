@@ -1,9 +1,9 @@
 import context from 'js-slang/context';
-import {
-  head,
-  tail,
-  type List
-} from 'js-slang/dist/stdlib/list';
+// import {
+//   head,
+//   tail,
+//   type List
+// } from 'js-slang/dist/stdlib/list';
 
 // A point (x, y)
 interface Point {
@@ -16,55 +16,63 @@ export interface PointWithRotation extends Point {
   rotation: number
 }
 
-// A prior movement
+// A line segment between p1 and p2
+interface LineSegment {
+  p1: Point
+  p2: Point
+}
+
+// A ray from origin towards target
+interface Ray {
+  origin: Point
+  target: Point
+}
+
+// A stored action
 export interface Action {
-  type: string
+  type: 'begin' | 'move' | 'rotate' | 'sensor'
   position: PointWithRotation
 }
 
 interface AreaFlags {
-  [name: string]: boolean
+  [name: string]: any
 }
 
 export interface Area {
   vertices: Point[]
-  isCollidable: boolean
+  isObstacle: boolean
   flags: AreaFlags
 }
 
-export interface StateData {
+export interface RobotMap {
   isInit: boolean
+  isComplete: boolean
   width: number
   height: number
+  robotSize: number
   areas: Area[]
-  areaLog: number[]
+  areaLog: Area[]
   actionLog: Action[]
   message: string
-  success: boolean
-  messages: string[]
-  robotSize: number
 }
 
-interface Robot {
-  x: number // the top left corner
-  y: number
+const state: RobotMap = {
+  isInit: false,
+  isComplete: false,
+  width: 500,
+  height: 500,
+  robotSize: 15,
+  areas: [],
+  areaLog: [],
+  actionLog: [],
+  message: 'moved successfully'
+};
+
+interface Robot extends Point {
   dx: number
   dy: number
   radius: number
 }
-
-const stateData: StateData = {
-  isInit: false,
-  width: 500,
-  height: 500,
-  areas: [],
-  areaLog: [],
-  actionLog: [],
-  message: 'moved successfully',
-  success: true,
-  messages: [],
-  robotSize: 15
-};
 
 const robot: Robot = {
   x: 25, // default start pos, puts it at the top left corner of canvas without colliding with the walls
@@ -74,27 +82,58 @@ const robot: Robot = {
   radius: 15 // give the robot a circular hitbox
 };
 
-let bounds: Point[] = [];
+let bounds: Point[];
 
-// sets the context to the statedata obj, mostly for convenience so i dont have to type context.... everytime
-context.moduleContexts.robot_minigame.state = stateData;
+// sets the context to the state obj, mostly for convenience so i dont have to type context.... everytime
+context.moduleContexts.robot_minigame.state = state;
 
-function set_pos(x: number, y: number): void {
+/**
+ * Teleport the robot
+ *
+ * @param x coordinate of the robot
+ * @param y coordinate of the robot
+ */
+function set_pos(
+  x: number,
+  y: number
+) {
+  // Init functions should not run after initialization
+  if (state.isInit) return;
+
   robot.x = x;
   robot.y = y;
 }
 
-function set_rotation(rotation: number) {
+/**
+ * Set the rotation of the robot
+ *
+ * @param rotation in radians
+ */
+function set_rotation(
+  rotation: number
+) {
+  // Init functions should not run after initialization
+  if (state.isInit) return;
+
   robot.dx = Math.cos(rotation);
   robot.dy = -Math.sin(rotation);
 }
 
-function set_width(width: number) {
-  stateData.width = width;
-}
+/**
+ * Set the width and height of the map
+ *
+ * @param width of the map
+ * @param height of the map
+ */
+function set_dimensions(
+  width: number,
+  height: number
+) {
+  // Init functions should not run after initialization
+  if (state.isInit) return;
 
-function set_height(height: number) {
-  stateData.height = height;
+  state.width = width;
+  state.height = height;
 }
 
 // ===== //
@@ -102,7 +141,7 @@ function set_height(height: number) {
 // ===== //
 
 /**
- * Initializes a new simulation with a map of size width * height
+ * Shorthand function that initializes a new simulation with a map of size width * height
  * Also sets the initial position an rotation of the robot
  *
  * @param width of the map
@@ -118,15 +157,15 @@ export function init(
   posY: number,
   rotation: number
 ) {
-  if (stateData.isInit) return; // dont allow init more than once
+  // Init functions should not run after initialization
+  if (state.isInit) return;
 
-  set_width(width);
-  set_height(height);
+  set_dimensions(width, height);
   set_pos(posX, posY);
   set_rotation(rotation);
 
-  stateData.actionLog.push({type: 'begin', position: getPositionWithRotation()}); // push starting point to movepoints data
-  stateData.isInit = true;
+  // Store the starting position in the actionLog
+  logAction('begin', getPositionWithRotation());
 
   bounds = [
     {x: 0, y: 0},
@@ -139,28 +178,35 @@ export function init(
 /**
  * Creates a new area with the given vertices and flags
  *
- * @param vertices of the area
- * @param isCollidable a boolean indicating if the area is a collidable obstacle or not
+ * @param vertices of the area in alternating x-y pairs
+ * @param isObstacle a boolean indicating if the area is an obstacle or not
  * @param flags any additional flags the area may have
  */
 export function create_area(
-  vertices: Point[],
-  isCollidable: boolean,
+  rawVertices: number[],
+  isObstacle: boolean,
   flags: AreaFlags = {}
 ) {
-  // // Parse vertices list into a points array
-  // const points : Point[] = [];
+  // Init functions should not run after initialization
+  if (state.isInit) return;
 
-  // while (vertices != null) {
-  //   const p = head(vertices);
-  //   points.push({x: head(p), y: tail(p)});
-  //   vertices = tail(vertices);
-  // }
+  if (rawVertices.length % 2 !== 0) throw new Error('Odd number of arguments given (expected even)');
+
+  // Store vertices as Point array
+  const vertices: Point[] = [];
+
+  // Parse x-y pairs into Points
+  for (let i = 0; i < rawVertices.length / 2; i++) {
+    vertices[i] = {
+      x: rawVertices[i * 2],
+      y: rawVertices[i * 2 + 1]
+    };
+  }
 
   // Store the new area
-  stateData.areas.push({
+  state.areas.push({
     vertices,
-    isCollidable,
+    isObstacle,
     flags
   });
 }
@@ -171,8 +217,11 @@ export function create_area(
  * @param vertices of the obstacle
  */
 export function create_obstacle(
-  vertices: Point[]
+  vertices: number[]
 ) {
+  // Init functions should not run after initialization
+  if (state.isInit) return;
+
   create_area(vertices, true);
 }
 
@@ -190,12 +239,22 @@ export function create_rect_obstacle(
   width: number,
   height: number
 ) {
+  // Init functions should not run after initialization
+  if (state.isInit) return;
+
   create_obstacle([
-    {x, y},
-    {x: x + width, y},
-    {x: x + width, y: y + height},
-    {x, y:y + height}
+    x, y,
+    x + width, y,
+    x + width, y + height,
+    x, y + height
   ]);
+}
+
+/**
+ * Inform the simulator that the initialisation phase is complete
+ */
+export function complete_init() {
+  state.isInit = true;
 }
 
 // ======= //
@@ -205,11 +264,23 @@ export function create_rect_obstacle(
 /**
  * Get the distance to the closest collidable area
  *
- * @returns the distance to the closest obstacle
+ * @returns the distance to the closest obstacle, or infinity (if robot is out of bounds)
  */
 export function get_distance() : number {
-  // TO BE IMPLEMENTED
-  return 0;
+  // Check for all obstacles in the robot's path
+  const obstacleCollisions: Collision[] = robot_raycast((area: Area) => area.isObstacle);
+
+  // If an obstacle is found, return its distance
+  if (obstacleCollisions.length > 0) return obstacleCollisions[0].distance;
+
+  // Find the distance to the bounds
+  const boundsCollision: Collision | null = robot_raycast_area({
+    vertices: bounds,
+    isObstacle: true,
+    flags: {}
+  });
+
+  return boundsCollision === null ? Infinity : boundsCollision.distance;
 }
 
 /**
@@ -223,8 +294,10 @@ export function get_flags(
   x: number,
   y: number
 ) : AreaFlags {
-  // TO BE IMPLEMENTED
-  return {};
+  // Find the area containing the point
+  const area: Area | null = area_of_point({x, y});
+
+  return area === null ? {} : area.flags;
 }
 
 /**
@@ -233,8 +306,7 @@ export function get_flags(
  * @returns the color of the area under the robot
  */
 export function get_color() : string {
-  // TO BE IMPLEMENTED
-  return '';
+  return get_flags(robot.x, robot.y).color;
 }
 
 // ======= //
@@ -246,61 +318,61 @@ export function get_color() : string {
  *
  * @param distance to move forward
  */
-export function move_forward(distance: number) {
-  // need to check for collision with wall
-  const dist = findDistanceToWall();
-  stateData.messages.push(`${dist}`);
+export function move_forward(
+  distance: number
+) {
+  // Check for all areas in the robot's path
+  const collisions: Collision[] = robot_raycast()
+    .filter(col => col.distance < distance + robot.radius);
 
-  if (dist < distance + robot.radius) {
-    stateData.message = 'collided';
-    stateData.success = false;
-    distance = dist - robot.radius + 1; // move only until the wall
+  for (const col of collisions) {
+    // Log the area
+    logArea(col.area);
+
+    // Handle a collision with an obstacle
+    if (col.area.isObstacle) {
+      // Calculate find distance
+      const finalDistance = (col.distance - robot.radius + 1);
+
+      // Move the robot to its final position
+      robot.x = robot.x + finalDistance * robot.dx;
+      robot.y = robot.y + finalDistance * robot.dy;
+
+      // Update the final message
+      state.message = `Collided with wall at (${robot.x + col.distance * robot.dx},${robot.y + col.distance * robot.dy})`;
+
+      // Throw an error to interrupt the simulation
+      throw new Error('Collided with wall');
+    }
   }
 
-  const nextPoint: Point = {
-    x: robot.x + distance * robot.dx,
-    y: robot.y + distance * robot.dy
-  };
+  // Move the robot to its end position
+  robot.x = robot.x + distance * robot.dx;
+  robot.y = robot.y + distance * robot.dy;
 
-  robot.x = nextPoint.x;
-  robot.y = nextPoint.y;
-  stateData.actionLog.push({type: 'move', position: getPositionWithRotation()});
-
-  logCoordinates();
+  // Store the action in the actionLog
+  logAction('move', getPositionWithRotation());
 }
 
 // The distance from a wall a move_forward_to_wall() command will stop
-const SAFE_DISTANCE_FROM_WALL : number = 5;
+const SAFE_DISTANCE_FROM_WALL : number = 10;
 
 /**
  * Move the robot forward to within a predefined distance of the wall
  */
 export function move_forward_to_wall() {
-  if (alrCollided()) return;
-
-  let distance = findDistanceToWall(); // do the raycast, figure out how far the robot is from the nearest wall
-
-  // a lil extra offset from wall
-  distance = Math.max(distance - robot.radius - SAFE_DISTANCE_FROM_WALL, 0);
-
-  const nextPoint: Point = {
-    x: robot.x + distance * robot.dx,
-    y: robot.y + distance * robot.dy
-  };
-
-  robot.x = nextPoint.x;
-  robot.y = nextPoint.y;
-  stateData.actionLog.push({type: 'move', position: getPositionWithRotation()});
-
-  // for debug
-  stateData.messages.push(`Distance is ${distance} Collision point at x: ${nextPoint.x}, y: ${nextPoint.y}`);
+  // Move forward the furthest possible safe distance + a lil extra offset
+  move_forward(Math.max(get_distance() - robot.radius - SAFE_DISTANCE_FROM_WALL, 0));
 }
 
 /**
+ * Rotates the robot clockwise by the given angle
  *
- * @param angle the angle (in radians) to rotate right
+ * @param angle the angle (in radians) to rotate clockwise
  */
-export function rotate(angle: number) {
+export function rotate(
+  angle: number
+) {
   let currentAngle = Math.atan2(-robot.dy, robot.dx);
 
   currentAngle -= angle;
@@ -311,10 +383,7 @@ export function rotate(angle: number) {
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
-  stateData.actionLog.push({type: 'rotate', position: getPositionWithRotation()});
-
-  // debug log
-  logCoordinates();
+  logAction('rotate', getPositionWithRotation());
 }
 
 /**
@@ -332,10 +401,7 @@ export function turn_left() {
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
-  stateData.actionLog.push({type: 'rotateLeft', position: getPositionWithRotation()});
-
-  // debug log
-  logCoordinates();
+  logAction('rotate', getPositionWithRotation());
 }
 
 /**
@@ -352,10 +418,7 @@ export function turn_right() {
   if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
   if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
 
-  stateData.actionLog.push({type: 'rotateRight', position: getPositionWithRotation()});
-
-  // debug log
-  logCoordinates();
+  logAction('rotate', getPositionWithRotation());
 }
 
 // ======= //
@@ -363,164 +426,284 @@ export function turn_right() {
 // ======= //
 
 /**
+ * Checks if the robot's entered areas satisfy the condition
  *
+ * @returns if the entered areas satisfy the condition
  */
-export function enteredAreas(
-  check : (area : Area[]) => void
+export function entered_areas(
+  callback : (areas : Area[]) => boolean
 ) : boolean {
-  // TO BE IMPLEMENTED
-  return false;
+  return callback(state.areaLog);
 }
 
-// ==================== //
-// Unassigned / Helpers //
-// ==================== //
+// ================= //
+// DATA READ HELPERS //
+// ================= //
 
-export function rotate_left(angle: number) {
-  let currentAngle = Math.atan2(-robot.dy, robot.dx);
-
-  currentAngle += angle;
-
-  robot.dx = Math.cos(currentAngle);
-  robot.dy = -Math.sin(currentAngle);
-
-  if (robot.dx < 0.00001 && robot.dx > -0.00001) robot.dx = 0;
-  if (robot.dy < 0.00001 && robot.dy > -0.00001) robot.dy = 0;
-
-  stateData.actionLog.push({type: 'rotateLeft', position: getPositionWithRotation()});
-
-  logCoordinates();
+/**
+ * Gets the position of the robot
+ *
+ * @returns the position of the robot
+ */
+function getPosition(): Point {
+  return {
+    x: robot.x,
+    y: robot.y
+  };
 }
 
-export function getX():number {
-  return robot.x;
-}
-
-export function getY():number {
-  return robot.y;
-}
-
-// detects if there are walls 10 units ahead of the robot
-// add as a command later
-export function sensor(): boolean {
-  const dist = findDistanceToWall();
-  stateData.actionLog.push({type: 'sensor', position: getPositionWithRotation()});
-  if (dist <= 10 + robot.radius) {
-    return true;
-  }
-  return false;
-}
-
-// returns the distance from the nearest wall
-function findDistanceToWall(): number {
-  let minDist: number = Infinity;
-
-  // loop through all the walls
-  for (const wall of stateData.areas) {
-    const intersectionDist = raycast(wall.vertices); // do the raycast
-
-    // if intersection is closer, update minDist
-    if (intersectionDist !== null && intersectionDist < minDist) {
-      minDist = intersectionDist;
-    }
-  }
-
-  // check outer bounds as well
-  const intersectionDist = raycast(bounds);
-  if (intersectionDist !== null && intersectionDist < minDist) {
-    minDist = intersectionDist;
-  }
-
-  // Closest intersection point
-  // By all rights, there should always be an intersection point since the robot is always within the bounds
-  // and the bounds should be a collision
-  // but something goes wrong, will just return 0
-  return minDist === Infinity ? 0 : minDist;
-}
-
-// does the raycast logic for one particular area
-// three rays are cast: one from the center, one from the top and one from the bottom. the minimum dist is returned
-// return null if no collision
-function raycast(
-  vertices: Point[]
-): number | null {
-  let minDist = Infinity;
-
-  for (let i = 0; i < vertices.length; i++) {
-    // wall line segment
-    const x1 = vertices[i].x, y1 = vertices[i].y;
-    const x2 = vertices[(i + 1) % vertices.length].x, y2 = vertices[(i + 1) % vertices.length].y;
-
-    // calculate the top and bottom coordinates of the robot
-    const topX = robot.x - robot.radius * robot.dy;
-    const topY = robot.y - robot.radius * robot.dx;
-
-    const bottomX = robot.x + robot.radius * robot.dy;
-    const bottomY = robot.y + robot.radius * robot.dx;
-
-    // raycast from 3 sources: top, middle, bottom
-    const raycast_sources: Point[] = [
-      {x: robot.x, y: robot.y},
-      {x: topX, y: topY},
-      {x: bottomX, y: bottomY}
-    ];
-
-    for (const source of raycast_sources) {
-      const intersectionDist = getIntersection(source.x, source.y, robot.dx + source.x, robot.dy + source.y, x1, y1, x2, y2);
-      if (intersectionDist !== null && intersectionDist < minDist) {
-        minDist = intersectionDist;
-      }
-    }
-  }
-
-  return minDist === Infinity ? null : minDist;
-}
-
-// Determine if a ray and a line segment intersect, and if so, determine the collision point
-// returns null if there's no collision, or the distance to the line segment if collides
-function getIntersection(x1, y1, x2, y2, x3, y3, x4, y4): number | null {
-  const denom = ((x2 - x1)*(y4 - y3)-(y2 - y1)*(x4 - x3));
-  let r;
-  let s;
-  let x;
-  let y;
-  let b = false;
-
-  // If lines are collinear or parallel
-  if (denom === 0) return null;
-
-  // Intersection in ray "local" coordinates
-  r = (((y1 - y3) * (x4 - x3)) - (x1 - x3) * (y4 - y3)) / denom;
-
-  // Intersection in segment "local" coordinates
-  s = (((y1 - y3) * (x2 - x1)) - (x1 - x3) * (y2 - y1)) / denom;
-
-  // The algorithm gives the intersection of two infinite lines, determine if it lies on the side that the ray is defined on
-  if (r >= 0) {
-    // If point along the line segment
-    if (s >= 0 && s <= 1) {
-      b = true;
-      // Get point coordinates (offset by r local units from start of ray)
-      x = x1 + r * (x2 - x1);
-      y = y1 + r * (y2 - y1);
-    }
-  }
-
-  if (!b) return null;
-
-  return r;
-}
-
-function alrCollided() {
-  return !stateData.success;
-}
-
+/**
+ * Gets the position of the robot (with rotation)
+ *
+ * @returns the position of the robot (with rotation)
+ */
 function getPositionWithRotation(): PointWithRotation {
   const angle = Math.atan2(-robot.dy, robot.dx);
   return {x: robot.x, y: robot.y, rotation: angle};
 }
 
-// debug
-function logCoordinates() {
-  stateData.messages.push(`x: ${robot.x}, y: ${robot.y}, dx: ${robot.dx}, dy: ${robot.dy}`);
+// ======================== //
+// RAYCAST AND AREA HELPERS //
+// ======================== //
+
+// A collision between a ray and an area
+interface Collision {
+  distance: number
+  area: Area
+}
+
+/**
+ * Get the distance between the robot and area, if the robot is facing the area
+ * Casts 3 rays from the robot's left, middle and right
+ *
+ * @param filter the given areas (optional)
+ * @returns the minimum distance, or null (if no collision)
+ */
+function robot_raycast(
+  filter: (area: Area) => boolean = () => true
+) : Collision[] {
+  return state.areas
+    .filter(filter) // Apply filter
+    .map(area => robot_raycast_area(area)) // Raycast each area on the map
+    .concat([
+      robot_raycast_area({vertices: bounds, isObstacle: true, flags: {}}) // Raycast map bounds as well
+    ])
+    .filter(col => col !== null) // Remove null collisions
+    .sort((a, b) => a.distance - b.distance); // Sort by distance
+}
+
+/**
+ * Get the distance between the robot and area, if the robot is facing the area
+ * Casts 3 rays from the robot's left, middle and right
+ *
+ * @param area to check
+ * @returns the minimum distance, or null (if no collision)
+ */
+function robot_raycast_area(
+  area: Area
+) : Collision | null {
+  // raycast from 3 sources: left, middle, right
+  const raycast_sources: Point[] = [-1, 0, 1]
+    .map(mult => ({
+      x: robot.x + mult * robot.radius * robot.dy,
+      y: robot.y + mult * robot.radius * robot.dx
+    }));
+
+  // Raycast 3 times, one for each source
+  const collisions: Collision[] = raycast_sources
+    .map(source => raycast(
+      {origin: source, target: {x: robot.dx + source.x, y: robot.dy + source.y}}, area))
+    .filter(col => col !== null);
+
+  // Return null if no intersection
+  return collisions.length > 0
+    ? collisions.reduce((acc, col) => acc.distance > col.distance ? col : acc)
+    : null;
+}
+
+/**
+ * Check which areas fall along a ray
+ *
+ * @param ray to cast
+ * @param areas to check
+ * @returns collisions between the ray and areas
+ */
+function raycast_multi(
+  ray: Ray,
+  areas: Area[]
+) : Collision[] {
+  return areas
+    .map(area => raycast(ray, area)) // Raycast each area
+    .filter(col => col !== null) // Remove null collisions
+    .sort((a, b) => a.distance - b.distance); // Sort by distance
+}
+
+/**
+ * Get the shortest distance between a ray and an area
+ *
+ * @param ray being cast
+ * @param area to check
+ * @returns the collision with the minimum distance, or null (if no collision)
+ */
+function raycast(
+  ray: Ray,
+  area: Area
+) : Collision | null {
+  const { vertices } = area;
+
+  // Store the minimum distance
+  let distance = Infinity;
+
+  for (let i = 0; i < vertices.length; i++) {
+    // Border line segment
+    const border: LineSegment = {
+      p1: {x: vertices[i].x, y: vertices[i].y},
+      p2: {x: vertices[(i + 1) % vertices.length].x, y: vertices[(i + 1) % vertices.length].y}
+    };
+
+    // Compute the minimum distance
+    const distanceToIntersection: number = getIntersection(ray, border);
+
+    // Save the new minimum, if necessary
+    if (distanceToIntersection < distance) distance = distanceToIntersection;
+  }
+
+  // Return null if no collision
+  return distance < Infinity
+    ? {distance, area}
+    : null;
+}
+
+/**
+ * Find the area the robot is in
+ *
+ * @returns if the robot is within the area
+ */
+function area_of_point(
+  point: Point
+) : Area | null {
+  // Return the first area the point is within
+  for (const area of state.areas) {
+    if (is_within_area(point, area)) return area;
+  }
+
+  // Otherwise return null
+  return null;
+}
+
+/**
+ * Check if the point is within the area
+ *
+ * @param point potentially within the area
+ * @param area to check
+ * @returns if the point is within the area
+ */
+function is_within_area(
+  point: Point,
+  area: Area
+) : boolean {
+  const { vertices } = area;
+
+  // Cast a ray to the right of the point
+  const ray = {
+    origin: point,
+    target: {x: point.x + 1, y: point.y + 0}
+  };
+
+  // Count the intersections
+  let intersections = 0;
+
+  for (let i = 0; i < vertices.length; i++) {
+    // Border line segment
+    const border: LineSegment = {
+      p1: {x: vertices[i].x, y: vertices[i].y},
+      p2: {x: vertices[(i + 1) % vertices.length].x, y: vertices[(i + 1) % vertices.length].y}
+    };
+
+    // Increment intersections if the ray intersects the border
+    if (getIntersection(ray, border) < Infinity) intersections++;
+  }
+
+  // Even => Outside; Odd => Inside
+  return intersections % 2 === 1;
+}
+
+/**
+ * Determine if a ray and a line segment intersect
+ * If they intersect, determine the distance from the ray's origin to the collision point
+ *
+ * @param ray being checked
+ * @param line to check intersection
+ * @returns the distance to the line segment, or infinity (if no collision)
+ */
+function getIntersection(
+  { origin, target }: Ray,
+  { p1, p2 }: LineSegment
+) : number {
+  const denom: number = ((target.x - origin.x)*(p2.y - p1.y)-(target.y - origin.y)*(p2.x - p1.x));
+
+  // If lines are collinear or parallel
+  if (denom === 0) return Infinity;
+
+  // Intersection in ray "local" coordinates
+  const r: number = (((origin.y - p1.y) * (p2.x - p1.x)) - (origin.x - p1.x) * (p2.y - p1.y)) / denom;
+
+  // Intersection in segment "local" coordinates
+  const s: number = (((origin.y - p1.y) * (target.x - origin.x)) - (origin.x - p1.x) * (target.y - origin.y)) / denom;
+
+  // Check if line segment is behind ray, or not on the line segment
+  if (r < 0 || s < 0 || s > 1) return Infinity;
+
+  return r;
+}
+
+// =============== //
+// LOGGING HELPERS //
+// =============== //
+
+/**
+ * Add a movement to the action log
+ *
+ * @param type of action
+ * @param position to move to
+ */
+function logAction(
+  type: 'begin' | 'move' | 'rotate' | 'sensor',
+  position: PointWithRotation
+) {
+  state.actionLog.push({type, position});
+}
+
+/**
+ * Add an area to the area log
+ *
+ * @param area to log
+ */
+function logArea(
+  area: Area
+) {
+  if (
+    state.areaLog.length > 0 // Check for empty area log
+    && areaEquals(area, state.areaLog[state.areaLog.length - 1]) // Check if same area repeated
+  ) return;
+
+  state.areaLog.push(area);
+}
+
+/**
+ * Compare two areas for equality
+ *
+ * @param a the first area to compare
+ * @param b the second area to compare
+ * @returns if a == b
+ */
+function areaEquals(a: Area, b: Area) {
+  if (
+    a.vertices.length !== b.vertices.length // a and b must have an equal number of vertices
+    || a.vertices.some((v, i) => v.x !== b.vertices[i].x || v.y !== b.vertices[i].y) // a and b's vertices must be the same
+    || a.isObstacle !== b.isObstacle // Either both a and b or neither a nor b are obstacles
+    || Object.keys(a.flags).length === Object.length
+  ) return false;
+
+  return true;
 }

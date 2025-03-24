@@ -9,8 +9,8 @@
  */
 
 export {
-  init, create_area, create_obstacle, create_rect_obstacle,
+  init, create_area, create_obstacle, create_rect_obstacle, complete_init,
   get_distance, get_flags, get_color,
   move_forward, move_forward_to_wall, rotate, turn_left, turn_right,
-  enteredAreas
+  entered_areas
 } from './functions';

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import type { Area, Action, PointWithRotation, StateData } from '../../../bundles/robot_minigame/functions';
+import type { Area, Action, PointWithRotation, RobotMap } from '../../../bundles/robot_minigame/functions';
 
 /**
  * Calculate the acute angle between 2 angles
@@ -118,7 +118,7 @@ const ANIMATION_SPEED : number = 2;
 interface MapProps {
   children?: never
   className?: never
-  state: StateData
+  state: RobotMap
 }
 
 const RobotSimulation : React.FC<MapProps> = ({
@@ -153,7 +153,7 @@ const RobotSimulation : React.FC<MapProps> = ({
 
   // Ensure canvas is preloaded correctly
   useEffect(() => {
-    // Only trigger if animationStatus is 0
+    // Only load if animationStatus is 0
     if (animationStatus !== 0) return;
 
     const canvas = canvasRef.current;
@@ -164,8 +164,8 @@ const RobotSimulation : React.FC<MapProps> = ({
     // Reset current action
     currentAction.current = 1;
 
-    // Reset robot position
-    robot.current = Object.assign({}, actionLog[0].position);
+    // Reset robot position if action log has actions
+    if (actionLog.length > 0) robot.current = Object.assign({}, actionLog[0].position);
 
     // Update canvas dimensions
     canvas.width = width;
@@ -197,22 +197,22 @@ const RobotSimulation : React.FC<MapProps> = ({
       }
 
       // Get current action
-      const { type, position: {x: tx, y: ty, rotation: targetRotation} }: Action = actionLog[currentAction.current];
+      const { type, position: target }: Action = actionLog[currentAction.current];
 
       switch(type) {
         case 'move': {
           // Calculate the distance to target point
-          const dx = tx - robot.current.x;
-          const dy = ty - robot.current.y;
+          const dx = target.x - robot.current.x;
+          const dy = target.y - robot.current.y;
           const distance = Math.sqrt(
-            (tx - robot.current.x) ** 2 +
-            (ty - robot.current.y) ** 2);
+            (target.x - robot.current.x) ** 2 +
+            (target.y - robot.current.y) ** 2);
 
           // If distance to target point is small
           if (distance <= ANIMATION_SPEED) {
             // Snap to the target point
-            robot.current.x = tx;
-            robot.current.y = ty;
+            robot.current.x = target.x;
+            robot.current.y = target.y;
 
             // Move on to next action
             currentAction.current++;
@@ -223,18 +223,18 @@ const RobotSimulation : React.FC<MapProps> = ({
           robot.current.x += (dx / distance) * ANIMATION_SPEED;
           robot.current.y += (dy / distance) * ANIMATION_SPEED;
           break;
-        } case 'rotate': {
+        } case 'rotate':
           // If rotation is close to target rotation
-          if (Math.abs(targetRotation - robot.current.rotation) <= 0.1) {
+          if (Math.abs(target.rotation - robot.current.rotation) <= 0.1) {
             // Snap to the target point
-            robot.current.rotation = targetRotation;
+            robot.current.rotation = target.rotation;
 
             // Move on to next action
             currentAction.current++;
             break;
           }
 
-          robot.current.rotation += smallestAngle(targetRotation, robot.current.rotation) > 0 ? 0.1 : -0.1;
+          robot.current.rotation += smallestAngle(target.rotation, robot.current.rotation) > 0 ? 0.1 : -0.1;
 
           if (robot.current.rotation > Math.PI) {
             robot.current.rotation -= 2 * Math.PI;
@@ -244,9 +244,11 @@ const RobotSimulation : React.FC<MapProps> = ({
             robot.current.rotation += 2 * Math.PI;
           }
           break;
-        } case 'sensor':
-          animationPauseUntil.current = Date.now() + 1000;
+        case 'sensor':
+          animationPauseUntil.current = Date.now() + 500;
           break;
+        default:
+          robot.current = Object.assign({}, target);
       }
 
       drawAll(ctx, width, height, areas, robot.current, robotSize);
@@ -254,8 +256,6 @@ const RobotSimulation : React.FC<MapProps> = ({
 
     return () => clearInterval(interval);
   }, [animationStatus, width, height, areas, robotSize]);
-
-  console.log(animationStatus);
 
   // Store a reference to the HTML canvas
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -268,7 +268,7 @@ const RobotSimulation : React.FC<MapProps> = ({
           ? <button onClick={() => {setAnimationStatus(2);}}>Pause</button>
           : animationStatus === 2
             ? <button onClick={() => {setAnimationStatus(1);}}>Resume</button>
-            : <button onClick={() => {setAnimationStatus(0);}}>Restart</button>}
+            : <button onClick={() => {setAnimationStatus(0);}}>Reset</button>}
       {animationStatus === 3 && <p>{message}</p>}
       <div style={{display: 'flex', justifyContent: 'center'}}>
         <canvas ref={canvasRef}/>
