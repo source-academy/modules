@@ -93,7 +93,7 @@ context.moduleContexts.robot_minigame.state = state;
 
 /**
  * Shorthand function that initializes a new simulation with a map of size width * height
- * Also sets the initial position an rotation of the robot
+ * Also sets the initial position and rotation of the robot
  *
  * @param width of the map
  * @param height of the map
@@ -127,7 +127,7 @@ export function init(
 }
 
 /**
- * Creates a new area with the given vertices and flags
+ * Create a new area with the given vertices and flags
  *
  * @param vertices of the area in alternating x-y pairs
  * @param isObstacle a boolean indicating if the area is an obstacle or not
@@ -180,10 +180,10 @@ export function create_area(
 }
 
 /**
- * Creates a new rectangular, axis-aligned area
+ * Create a new rectangular, axis-aligned area
  *
- * @param x top left corner of the rectangle
- * @param y top right corner of the rectangle
+ * @param x coordinate of the top left corner of the rectangle
+ * @param y coordinate of the top left corner of the rectangle
  * @param width of the rectangle
  * @param height of the rectangle
  * @param isObstacle a boolean indicating if the area is an obstacle or not
@@ -209,7 +209,7 @@ export function create_rect_area(
 }
 
 /**
- * Creates a new obstacle
+ * Create a new obstacle
  *
  * @param vertices of the obstacle
  */
@@ -223,10 +223,10 @@ export function create_obstacle(
 }
 
 /**
- * Creates a new rectangular, axis-aligned obstacle
+ * Create a new rectangular, axis-aligned obstacle
  *
- * @param x top left corner of the rectangle
- * @param y top right corner of the rectangle
+ * @param x coordinate of the top left corner of the rectangle
+ * @param y coordinate of the top left corner of the rectangle
  * @param width of the rectangle
  * @param height of the rectangle
  */
@@ -254,7 +254,7 @@ export function complete_init() {
 // ======= //
 
 /**
- * Get the distance to the closest collidable area
+ * Get the distance to the closest obstacle
  *
  * @returns the distance to the closest obstacle, or infinity (if robot is out of bounds)
  */
@@ -276,24 +276,7 @@ export function get_distance() : number {
 }
 
 /**
- * Gets the flags of the area containing the point (x, y)
- *
- * @param x coordinate
- * @param y coordinate
- * @returns the flags of the area containing (x, y)
- */
-export function get_flags(
-  x: number,
-  y: number
-) : AreaFlags {
-  // Find the area containing the point
-  const area: Area | null = area_of_point({x, y});
-
-  return area === null ? {} : area.flags;
-}
-
-/**
- * Gets the color of the area under the robot
+ * Get the color of the area under the robot
  *
  * @returns the color of the area under the robot
  */
@@ -358,9 +341,9 @@ export function move_forward_to_wall() {
 }
 
 /**
- * Rotates the robot clockwise by the given angle
+ * Rotate the robot clockwise by the given angle
  *
- * @param angle the angle (in radians) to rotate clockwise
+ * @param angle (in radians) to rotate clockwise
  */
 export function rotate(
   angle: number
@@ -379,7 +362,7 @@ export function rotate(
 }
 
 /**
- * Turns the robot 90 degrees to the left
+ * Turn the robot 90 degrees to the left
  */
 export function turn_left() {
   let currentAngle = Math.atan2(-robot.dy, robot.dx);
@@ -397,7 +380,7 @@ export function turn_left() {
 }
 
 /**
- * Turns the robot 90 degrees to the right
+ * Turn the robot 90 degrees to the right
  */
 export function turn_right() {
   let currentAngle = Math.atan2(-robot.dy, robot.dx);
@@ -427,9 +410,9 @@ export function start_testing() {
 }
 
 /**
- * Checks if the robot's entered areas satisfy the condition
+ * Checks if the robot's entered areas satisfy the callback
  *
- * @returns if the entered areas satisfy the condition
+ * @returns if the entered areas satisfy the callback
  */
 export function entered_areas(
   callback : (areas : Area[]) => boolean
@@ -443,7 +426,7 @@ export function entered_areas(
 /**
  * Check if the robot has entered different areas with the given colors in order
  *
- * @param colors in order
+ * @param colors in the order visited
  * @returns if the robot entered the given colors in order
  */
 export function entered_colors(
@@ -457,6 +440,12 @@ export function entered_colors(
     .filter(filterAdjacentDuplicateAreas) // Filter adjacent duplicates
     .every(({ flags: { color } }, i) => color === colors[i]); // Check if each area has the expected color
 }
+
+// ==================
+// ==================
+// PRIVATE FUNCTIONS:
+// ==================
+// ==================
 
 // ================== //
 // DATA WRITE HELPERS //
@@ -756,6 +745,10 @@ function logArea(
   state.areaLog.push(area);
 }
 
+// ============ //
+// AREA HELPERS //
+// ============ //
+
 /**
  * Compare two areas for equality
  *
@@ -785,3 +778,20 @@ function areaEquals(a: Area, b: Area) {
 const filterAdjacentDuplicateAreas = (area : Area, i : number, areas: Area[]) : boolean =>
   i === 0 // First one is always correct
   || !areaEquals(area, areas[i - 1]); // Otherwise check for equality against previous area
+
+/**
+ * Gets the flags of the area containing the point (x, y)
+ *
+ * @param x coordinate
+ * @param y coordinate
+ * @returns the flags of the area containing (x, y)
+ */
+function get_flags(
+  x: number,
+  y: number
+) : AreaFlags {
+  // Find the area containing the point
+  const area: Area | null = area_of_point({x, y});
+
+  return area === null ? {} : area.flags;
+}
