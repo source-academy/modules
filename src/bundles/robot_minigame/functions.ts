@@ -87,55 +87,6 @@ let bounds: Point[];
 // sets the context to the state obj, mostly for convenience so i dont have to type context.... everytime
 context.moduleContexts.robot_minigame.state = state;
 
-/**
- * Teleport the robot
- *
- * @param x coordinate of the robot
- * @param y coordinate of the robot
- */
-function set_pos(
-  x: number,
-  y: number
-) {
-  // Init functions should not run after initialization
-  if (state.isInit) return;
-
-  robot.x = x;
-  robot.y = y;
-}
-
-/**
- * Set the rotation of the robot
- *
- * @param rotation in radians
- */
-function set_rotation(
-  rotation: number
-) {
-  // Init functions should not run after initialization
-  if (state.isInit) return;
-
-  robot.dx = Math.cos(rotation);
-  robot.dy = -Math.sin(rotation);
-}
-
-/**
- * Set the width and height of the map
- *
- * @param width of the map
- * @param height of the map
- */
-function set_dimensions(
-  width: number,
-  height: number
-) {
-  // Init functions should not run after initialization
-  if (state.isInit) return;
-
-  state.width = width;
-  state.height = height;
-}
-
 // ===== //
 // SETUP //
 // ===== //
@@ -183,32 +134,78 @@ export function init(
  * @param flags any additional flags the area may have
  */
 export function create_area(
-  rawVertices: number[],
+  vertices: number[],
   isObstacle: boolean,
-  flags: AreaFlags = {}
+  flags: any[]
 ) {
   // Init functions should not run after initialization
   if (state.isInit) return;
 
-  if (rawVertices.length % 2 !== 0) throw new Error('Odd number of arguments given (expected even)');
+  if (vertices.length % 2 !== 0) throw new Error('Odd number of vertice x-y coordinates given (expected even)');
+
+  if (flags.length % 2 !== 0) throw new Error('Odd number of flag arguments given (expected even)');
 
   // Store vertices as Point array
-  const vertices: Point[] = [];
+  const parsedVertices: Point[] = [];
 
   // Parse x-y pairs into Points
-  for (let i = 0; i < rawVertices.length / 2; i++) {
-    vertices[i] = {
-      x: rawVertices[i * 2],
-      y: rawVertices[i * 2 + 1]
+  for (let i = 0; i < vertices.length / 2; i++) {
+    parsedVertices[i] = {
+      x: vertices[i * 2],
+      y: vertices[i * 2 + 1]
     };
+  }
+
+  // Store flags as an object
+  const parsedFlags = {};
+
+  // Parse flag-value pairs into flags
+  for (let i = 0; i < flags.length / 2; i++) {
+    // Retrieve flag
+    const flag = flags[i * 2];
+
+    // Check flag is string
+    if (typeof flag !== 'string') throw new Error(`Flag arguments must be strings (${flag} is a ${typeof flag})`);
+
+    // Add flag to object
+    parsedFlags[flag] = flags[i * 2 + 1];
   }
 
   // Store the new area
   state.areas.push({
-    vertices,
+    vertices: parsedVertices,
     isObstacle,
-    flags
+    flags: parsedFlags
   });
+}
+
+/**
+ * Creates a new rectangular, axis-aligned area
+ *
+ * @param x top left corner of the rectangle
+ * @param y top right corner of the rectangle
+ * @param width of the rectangle
+ * @param height of the rectangle
+ * @param isObstacle a boolean indicating if the area is an obstacle or not
+ * @param flags any additional flags the area may have
+ */
+export function create_rect_area(
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  isObstacle: boolean,
+  flags: any[]
+) {
+  // Init functions should not run after initialization
+  if (state.isInit) return;
+
+  create_area([
+    x, y,
+    x + width, y,
+    x + width, y + height,
+    x, y + height
+  ], isObstacle, flags);
 }
 
 /**
@@ -222,7 +219,7 @@ export function create_obstacle(
   // Init functions should not run after initialization
   if (state.isInit) return;
 
-  create_area(vertices, true);
+  create_area(vertices, true, []);
 }
 
 /**
@@ -242,12 +239,7 @@ export function create_rect_obstacle(
   // Init functions should not run after initialization
   if (state.isInit) return;
 
-  create_obstacle([
-    x, y,
-    x + width, y,
-    x + width, y + height,
-    x, y + height
-  ]);
+  create_rect_area(x, y, width, height, true, []);
 }
 
 /**
@@ -426,6 +418,15 @@ export function turn_right() {
 // ======= //
 
 /**
+ * Inform the simulator that the testing phase is starting
+ */
+export function start_testing() {
+  if (state.isComplete) throw new Error('May not start testing twice!');
+
+  state.isComplete = true;
+}
+
+/**
  * Checks if the robot's entered areas satisfy the condition
  *
  * @returns if the entered areas satisfy the condition
@@ -433,7 +434,72 @@ export function turn_right() {
 export function entered_areas(
   callback : (areas : Area[]) => boolean
 ) : boolean {
+  // Testing functions should only run after the simulation is complete
+  if (!state.isComplete) return false;
+
   return callback(state.areaLog);
+}
+
+/**
+ * Check if the robot has entered different areas with the given colors in order
+ *
+ * @param colors in order
+ * @returns if the robot entered the given colors in order
+ */
+export function entered_colors(
+  colors: string[]
+) : boolean {
+  // Testing functions should only run after the simulation is complete
+  if (!state.isComplete) return false;
+
+  return state.areaLog
+    .filter(area => colors.includes(area.flags.color)) // Filter relevant colors
+    .filter(filterAdjacentDuplicateAreas) // Filter adjacent duplicates
+    .every(({ flags: { color } }, i) => color === colors[i]); // Check if each area has the expected color
+}
+
+// ================== //
+// DATA WRITE HELPERS //
+// ================== //
+
+/**
+ * Teleport the robot
+ *
+ * @param x coordinate of the robot
+ * @param y coordinate of the robot
+ */
+function set_pos(
+  x: number,
+  y: number
+) {
+  robot.x = x;
+  robot.y = y;
+}
+
+/**
+ * Set the rotation of the robot
+ *
+ * @param rotation in radians
+ */
+function set_rotation(
+  rotation: number
+) {
+  robot.dx = Math.cos(rotation);
+  robot.dy = -Math.sin(rotation);
+}
+
+/**
+ * Set the width and height of the map
+ *
+ * @param width of the map
+ * @param height of the map
+ */
+function set_dimensions(
+  width: number,
+  height: number
+) {
+  state.width = width;
+  state.height = height;
 }
 
 // ================= //
@@ -707,3 +773,15 @@ function areaEquals(a: Area, b: Area) {
 
   return true;
 }
+
+/**
+ * Filter callback to remove adjacent duplicate areas
+ *
+ * @param area currently being checked
+ * @param i index of area
+ * @param areas the full array being filtered
+ * @returns if the current area is not a duplicate of the previous area
+ */
+const filterAdjacentDuplicateAreas = (area : Area, i : number, areas: Area[]) : boolean =>
+  i === 0 // First one is always correct
+  || !areaEquals(area, areas[i - 1]); // Otherwise check for equality against previous area

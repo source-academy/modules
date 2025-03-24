@@ -39,7 +39,7 @@ const drawBorders = (ctx: CanvasRenderingContext2D, width: number, height: numbe
 
 // Draw the areas of the map
 const drawAreas = (ctx: CanvasRenderingContext2D, areas: Area[]) => {
-  for (const { vertices } of areas) {
+  for (const { vertices, isObstacle, flags } of areas) {
     ctx.beginPath();
     ctx.moveTo(vertices[0].x, vertices[0].y);
     for (const vertex of vertices.slice(1)) {
@@ -47,7 +47,9 @@ const drawAreas = (ctx: CanvasRenderingContext2D, areas: Area[]) => {
     }
     ctx.closePath();
 
-    ctx.fillStyle = 'rgba(169, 169, 169, 0.5)'; // Set the fill color
+    ctx.fillStyle = isObstacle // Obstacles are gray
+      ? 'rgba(169, 169, 169, 0.5)'
+      : flags.color || 'none'; // Areas may have color
     ctx.fill(); // Fill the polygon
 
     ctx.strokeStyle = 'rgb(53, 53, 53)'; // Set the stroke color
@@ -225,7 +227,7 @@ const RobotSimulation : React.FC<MapProps> = ({
           break;
         } case 'rotate':
           // If rotation is close to target rotation
-          if (Math.abs(target.rotation - robot.current.rotation) <= 0.1) {
+          if (Math.abs((target.rotation - robot.current.rotation) % (2 * Math.PI)) < 0.1) {
             // Snap to the target point
             robot.current.rotation = target.rotation;
 

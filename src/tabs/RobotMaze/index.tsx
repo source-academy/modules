@@ -34,8 +34,10 @@ export default {
    * @returns {boolean}
    */
   toSpawn(context: DebuggerContext) {
+    // !!! TEMPORARY DEBUGGING FUNCTION, REMOVE ONCE MODULE IS COMPLETE !!!
     console.log(context.context?.moduleContexts?.robot_minigame.state);
-    return context.context?.moduleContexts?.robot_minigame.state.isInit;
+
+    return context.context?.moduleContexts?.robot_minigame.state.isComplete;
   },
 
   /**

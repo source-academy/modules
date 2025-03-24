@@ -1,7 +1,5 @@
 /**
- * A single sentence summarising the module (this sentence is displayed larger).
- *
- * Sentences describing the module. More sentences about the module.
+ * The robot_minigame module allows us to control a robot to complete various tasks
  *
  * @module robot_minigame
  * @author Koh Wai Kei
@@ -9,8 +7,8 @@
  */
 
 export {
-  init, create_area, create_obstacle, create_rect_obstacle, complete_init,
+  init, create_area, create_rect_area, create_obstacle, create_rect_obstacle, complete_init,
   get_distance, get_flags, get_color,
   move_forward, move_forward_to_wall, rotate, turn_left, turn_right,
-  entered_areas
+  start_testing, entered_areas, entered_colors
 } from './functions';
