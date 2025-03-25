@@ -8,5 +8,8 @@
  * @author Stuart
  */
 export {
-
+  //low_pass_filter,
+  //high_pass_filter,
+  //combine_filters,
+  play_filtered
 } from './functions';

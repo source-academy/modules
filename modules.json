@@ -47,6 +47,9 @@
       "Sound"
     ]
   },
+  "sound_fft": {
+    "tabs": []
+  },
   "scrabble": {
     "tabs": []
   },
