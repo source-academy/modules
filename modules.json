@@ -50,6 +50,9 @@
   "sound_fft": {
     "tabs": []
   },
+  "sound_fft_minimal": {
+    "tabs": []
+  },
   "scrabble": {
     "tabs": []
   },
