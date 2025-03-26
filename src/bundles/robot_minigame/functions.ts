@@ -54,6 +54,7 @@ export interface RobotMap {
   areaLog: Area[]
   actionLog: Action[]
   message: string
+  debugLog: string[]
 }
 
 const state: RobotMap = {
@@ -65,7 +66,8 @@ const state: RobotMap = {
   areas: [],
   areaLog: [],
   actionLog: [],
-  message: 'moved successfully'
+  message: 'moved successfully',
+  debugLog: []
 };
 
 interface Robot extends Point {
@@ -438,7 +440,7 @@ export function entered_colors(
   const coloredAreas = state.areaLog
     .filter(area => colors.includes(area.flags.color)) // Filter relevant colors
     .filter(filterAdjacentDuplicateAreas); // Filter adjacent duplicates
-
+    
   return coloredAreas.length === colors.length && coloredAreas.every(({ flags: { color } }, i) => color === colors[i]); // Check if each area has the expected color
 }
 
@@ -762,7 +764,8 @@ function areaEquals(a: Area, b: Area) {
     a.vertices.length !== b.vertices.length // a and b must have an equal number of vertices
     || a.vertices.some((v, i) => v.x !== b.vertices[i].x || v.y !== b.vertices[i].y) // a and b's vertices must be the same
     || a.isObstacle !== b.isObstacle // Either both a and b or neither a nor b are obstacles
-    || Object.keys(a.flags).length === Object.length
+    || Object.keys(a.flags).length !== Object.keys(b.flags).length // Check flags length equality
+    || Object.keys(a.flags).some(key => a.flags[key] !== b.flags[key]) // Check flag value equality
   ) return false;
 
   return true;

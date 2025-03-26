@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { Area, Action, PointWithRotation, RobotMap } from '../../../bundles/robot_minigame/functions';
+import { Properties } from '@blueprintjs/icons';
+import { State } from 'nbody';
 
 /**
  * Calculate the acute angle between 2 angles
@@ -134,7 +136,8 @@ const RobotSimulation : React.FC<MapProps> = ({
     message,
     // success,
     // messages,
-    robotSize
+    robotSize,
+    debugLog
   }
 }) => {
   // Store animation status
@@ -155,6 +158,9 @@ const RobotSimulation : React.FC<MapProps> = ({
 
   // Ensure canvas is preloaded correctly
   useEffect(() => {
+    // DEBUG LOG REMOVE LATER
+    console.log(debugLog);
+
     // Only load if animationStatus is 0
     if (animationStatus !== 0) return;
 
