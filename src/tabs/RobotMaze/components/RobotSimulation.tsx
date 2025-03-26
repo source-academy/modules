@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { Area, Action, PointWithRotation, RobotMap } from '../../../bundles/robot_minigame/functions';
-import { Properties } from '@blueprintjs/icons';
-import { State } from 'nbody';
 
 /**
  * Calculate the acute angle between 2 angles
