@@ -339,7 +339,7 @@ const SAFE_DISTANCE_FROM_WALL : number = 10;
  */
 export function move_forward_to_wall() {
   // Move forward the furthest possible safe distance + a lil extra offset
-  move_forward(Math.max(get_distance() - robot.radius - SAFE_DISTANCE_FROM_WALL, 0));
+  move_forward(Math.max(get_distance() - SAFE_DISTANCE_FROM_WALL, 0));
 }
 
 /**
