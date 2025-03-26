@@ -265,7 +265,7 @@ export function get_distance() : number {
   const obstacleCollisions: Collision[] = robot_raycast((area: Area) => area.isObstacle);
 
   // If an obstacle is found, return its distance
-  if (obstacleCollisions.length > 0) return obstacleCollisions[0].distance;
+  if (obstacleCollisions.length > 0) return obstacleCollisions[0].distance - robot.radius;
 
   // Find the distance to the bounds
   const boundsCollision: Collision | null = robot_raycast_area({
@@ -274,7 +274,7 @@ export function get_distance() : number {
     flags: {}
   });
 
-  return boundsCollision === null ? Infinity : boundsCollision.distance;
+  return boundsCollision === null ? Infinity : boundsCollision.distance - robot.radius;
 }
 
 /**
