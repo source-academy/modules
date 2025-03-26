@@ -435,10 +435,11 @@ export function entered_colors(
   // Testing functions should only run after the simulation is complete
   if (!state.isComplete) return false;
 
-  return state.areaLog
+  const coloredAreas = state.areaLog
     .filter(area => colors.includes(area.flags.color)) // Filter relevant colors
-    .filter(filterAdjacentDuplicateAreas) // Filter adjacent duplicates
-    .every(({ flags: { color } }, i) => color === colors[i]); // Check if each area has the expected color
+    .filter(filterAdjacentDuplicateAreas); // Filter adjacent duplicates
+
+  return coloredAreas.length === colors.length && coloredAreas.every(({ flags: { color } }, i) => color === colors[i]); // Check if each area has the expected color
 }
 
 // ==================
