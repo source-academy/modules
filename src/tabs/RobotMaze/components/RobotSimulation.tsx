@@ -115,7 +115,7 @@ interface MapProps {
 }
 
 const RobotSimulation : React.FC<MapProps> = ({
-  state: { 
+  state: {
     width,
     height,
     robot: {radius: robotSize},
@@ -252,7 +252,7 @@ const RobotSimulation : React.FC<MapProps> = ({
   return (
     <>
       <div>
-        
+
         {animationStatus === 0
           ? <button onClick={() => {setAnimationStatus(1);}}>Start</button>
           : animationStatus === 1

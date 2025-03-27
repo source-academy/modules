@@ -68,7 +68,7 @@ const state: RobotMinigame = {
   areas: [],
   areaLog: [],
   actionLog: [],
-  message: ""
+  message: ''
 };
 
 // sets the context to the state obj, mostly for convenience so i dont have to type context.... everytime
@@ -116,7 +116,7 @@ export function init(
   state.actionLog = [{type: 'begin', position: Object.assign({}, robot)}];
 
   // Update the success message
-  state.message = "Please run this in the assessments tab!";
+  state.message = 'Please run this in the assessments tab!';
 }
 
 /**
@@ -239,7 +239,7 @@ export function create_rect_obstacle(
  * Inform the simulator that the initialisation phase is complete
  */
 export function complete_init() {
-  if (state.actionLog.length === 0) throw new Error("May not complete initialization without first running init()");
+  if (state.actionLog.length === 0) throw new Error('May not complete initialization without first running init()');
 
   state.isInit = true;
 }
