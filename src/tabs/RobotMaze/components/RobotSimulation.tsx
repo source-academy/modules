@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import type { Area, Action, PointWithRotation, RobotMap } from '../../../bundles/robot_minigame/functions';
+import type { Area, Action, PointWithRotation, Robot, RobotMinigame } from '../../../bundles/robot_minigame/functions';
 
 /**
  * Calculate the acute angle between 2 angles
@@ -60,14 +60,12 @@ const drawAreas = (ctx: CanvasRenderingContext2D, areas: Area[]) => {
 
 // Draw the robot
 const drawRobot = (ctx: CanvasRenderingContext2D, { x, y, rotation } : PointWithRotation, size: number) => {
-  const centerX = x;
-  const centerY = y;
-
+  // Save the background state
   ctx.save();
 
   // translates the origin of the canvas to the center of the robot, then rotate
-  ctx.translate(centerX, centerY);
-  ctx.rotate(-rotation);
+  ctx.translate(x, y);
+  ctx.rotate(rotation);
 
   ctx.beginPath(); // Begin drawing robot
 
@@ -84,7 +82,7 @@ const drawRobot = (ctx: CanvasRenderingContext2D, { x, y, rotation } : PointWith
   ctx.lineTo(0, 0);
   ctx.stroke();
 
-  // restore state of the background
+  // Restore the background state
   ctx.restore();
 };
 
@@ -96,20 +94,13 @@ const drawAll = (
   width : number,
   height : number,
   areas: Area[],
-  {x, y, rotation} : Robot,
-  robotSize: number
+  {x, y, rotation, radius: robotSize} : Robot
 ) => {
   ctx.reset();
   drawBorders(ctx, width, height);
   drawAreas(ctx, areas);
   drawRobot(ctx, {x, y, rotation}, robotSize);
 };
-
-interface Robot {
-  x: number
-  y: number
-  rotation: number
-}
 
 // The speed to move at
 const ANIMATION_SPEED : number = 2;
@@ -120,24 +111,25 @@ const ANIMATION_SPEED : number = 2;
 interface MapProps {
   children?: never
   className?: never
-  state: RobotMap
+  state: RobotMinigame,
 }
 
 const RobotSimulation : React.FC<MapProps> = ({
-  state: {
-    // isInit,
+  state: { maps }
+}) => {
+  // Store the active map
+  const [active, setActive] = useState(0);
+
+  // Retrieve the relevant map
+  const {
     width,
     height,
+    robot: {radius: robotSize},
     areas,
-    // areaLog,
     actionLog,
-    message,
-    // success,
-    // messages,
-    robotSize,
-    debugLog
-  }
-}) => {
+    message
+  } = maps[active];
+
   // Store animation status
   // 0 => Loaded / Loading
   // 1 => Running
@@ -152,13 +144,10 @@ const RobotSimulation : React.FC<MapProps> = ({
   const currentAction = useRef<number>(1);
 
   // Store robot status
-  const robot = useRef<Robot>({x: 0, y: 0, rotation: 0});
+  const robot = useRef<Robot>({x: 0, y: 0, rotation: 0, radius: 1});
 
   // Ensure canvas is preloaded correctly
   useEffect(() => {
-    // DEBUG LOG REMOVE LATER
-    console.log(debugLog);
-
     // Only load if animationStatus is 0
     if (animationStatus !== 0) return;
 
@@ -171,14 +160,14 @@ const RobotSimulation : React.FC<MapProps> = ({
     currentAction.current = 1;
 
     // Reset robot position if action log has actions
-    if (actionLog.length > 0) robot.current = Object.assign({}, actionLog[0].position);
+    if (actionLog.length > 0) robot.current = Object.assign({}, {radius: robotSize}, actionLog[0].position);
 
     // Update canvas dimensions
     canvas.width = width;
     canvas.height = height;
 
-    drawAll(ctx, width, height, areas, robot.current, robotSize);
-  }, [animationStatus, width, height, areas, robotSize]);
+    drawAll(ctx, width, height, areas, robot.current);
+  }, [animationStatus]);
 
   // Handle animation
   useEffect(() => {
@@ -254,28 +243,31 @@ const RobotSimulation : React.FC<MapProps> = ({
           animationPauseUntil.current = Date.now() + 500;
           break;
         default:
-          robot.current = Object.assign({}, target);
+          robot.current = Object.assign({}, {radius: robot.current.radius}, target);
       }
 
-      drawAll(ctx, width, height, areas, robot.current, robotSize);
+      drawAll(ctx, width, height, areas, robot.current);
     }, 10);
 
     return () => clearInterval(interval);
-  }, [animationStatus, width, height, areas, robotSize]);
+  }, [animationStatus]);
 
   // Store a reference to the HTML canvas
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   return (
     <>
-      {animationStatus === 0
-        ? <button onClick={() => {setAnimationStatus(1);}}>Start</button>
-        : animationStatus === 1
-          ? <button onClick={() => {setAnimationStatus(2);}}>Pause</button>
-          : animationStatus === 2
-            ? <button onClick={() => {setAnimationStatus(1);}}>Resume</button>
-            : <button onClick={() => {setAnimationStatus(0);}}>Reset</button>}
-      {animationStatus === 3 && <p>{message}</p>}
+      <div>
+        <span style={{marginRight: '10px'}}>{maps.map((_, i) => <button onClick={() => {setActive(i); setAnimationStatus(0);}} key={i}>{i}</button>)}</span>
+        {animationStatus === 0
+          ? <button onClick={() => {setAnimationStatus(1);}}>Start</button>
+          : animationStatus === 1
+            ? <button onClick={() => {setAnimationStatus(2);}}>Pause</button>
+            : animationStatus === 2
+              ? <button onClick={() => {setAnimationStatus(1);}}>Resume</button>
+              : <button onClick={() => {setAnimationStatus(0);}}>Reset</button>}
+        {animationStatus === 3 && message}
+      </div>
       <div style={{display: 'flex', justifyContent: 'center'}}>
         <canvas ref={canvasRef}/>
       </div>

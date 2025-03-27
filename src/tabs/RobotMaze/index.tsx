@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import type { RobotMinigame } from '../../bundles/robot_minigame/functions';
 import type { DebuggerContext } from '../../typings/type_helpers';
 import RobotSimulation from './components/RobotSimulation';
 
