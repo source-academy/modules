@@ -115,21 +115,15 @@ interface MapProps {
 }
 
 const RobotSimulation : React.FC<MapProps> = ({
-  state: { maps }
-}) => {
-  // Store the active map
-  const [active, setActive] = useState(0);
-
-  // Retrieve the relevant map
-  const {
+  state: { 
     width,
     height,
     robot: {radius: robotSize},
     areas,
     actionLog,
     message
-  } = maps[active];
-
+  }
+}) => {
   // Store animation status
   // 0 => Loaded / Loading
   // 1 => Running
@@ -258,7 +252,7 @@ const RobotSimulation : React.FC<MapProps> = ({
   return (
     <>
       <div>
-        <span style={{marginRight: '10px'}}>{maps.map((_, i) => <button onClick={() => {setActive(i); setAnimationStatus(0);}} key={i}>{i}</button>)}</span>
+        
         {animationStatus === 0
           ? <button onClick={() => {setAnimationStatus(1);}}>Start</button>
           : animationStatus === 1
@@ -266,7 +260,7 @@ const RobotSimulation : React.FC<MapProps> = ({
             : animationStatus === 2
               ? <button onClick={() => {setAnimationStatus(1);}}>Resume</button>
               : <button onClick={() => {setAnimationStatus(0);}}>Reset</button>}
-        {animationStatus === 3 && message}
+        {animationStatus === 3 && <span style={{marginLeft: '5px'}}>{message}</span>}
       </div>
       <div style={{display: 'flex', justifyContent: 'center'}}>
         <canvas ref={canvasRef}/>

@@ -48,7 +48,8 @@ export interface Robot extends PointWithRotation {
   radius: number
 }
 
-export interface RobotMap {
+export interface RobotMinigame {
+  isInit: boolean
   width: number
   height: number
   robot: Robot
@@ -58,18 +59,16 @@ export interface RobotMap {
   message: string
 }
 
-export interface RobotMinigame {
-  isInit: boolean
-  isComplete: boolean
-  activeMap: number
-  maps: RobotMap[]
-}
-
+// Default state before initialisation
 const state: RobotMinigame = {
   isInit: false,
-  isComplete: false,
-  activeMap: -1,
-  maps: []
+  width: 500,
+  height: 500,
+  robot: {x: 250, y: 250, rotation: 0, radius: 15},
+  areas: [],
+  areaLog: [],
+  actionLog: [],
+  message: ""
 };
 
 // sets the context to the state obj, mostly for convenience so i dont have to type context.... everytime
@@ -106,16 +105,18 @@ export function init(
     radius: 15
   };
 
-  // Push the new map to state and make it the active map
-  state.activeMap = state.maps.push({
-    width,
-    height,
-    robot,
-    areas: [],
-    areaLog: [],
-    actionLog: [{type: 'begin', position: Object.assign({}, robot)}],
-    message: 'Moved successfully!'
-  }) - 1;
+  // Update the map's dimensions
+  state.width = width;
+  state.height = height;
+
+  // Update the robot
+  state.robot = robot;
+
+  // Update the action log with the robot's starting position
+  state.actionLog = [{type: 'begin', position: Object.assign({}, robot)}];
+
+  // Update the success message
+  state.message = "Please run this in the assessments tab!";
 }
 
 /**
@@ -164,7 +165,7 @@ export function create_area(
   }
 
   // Store the new area
-  getMap().areas.push({
+  state.areas.push({
     vertices: parsedVertices,
     isObstacle,
     flags: parsedFlags
@@ -238,6 +239,8 @@ export function create_rect_obstacle(
  * Inform the simulator that the initialisation phase is complete
  */
 export function complete_init() {
+  if (state.actionLog.length === 0) throw new Error("May not complete initialization without first running init()");
+
   state.isInit = true;
 }
 
@@ -300,7 +303,7 @@ export function move_forward(
       robot.y = robot.y + finalDistance * Math.sin(robot.rotation);
 
       // Update the final message
-      getMap().message = `Collided with wall at (${robot.x},${robot.y})`;
+      state.message = `Collided with wall at (${robot.x},${robot.y})`;
 
       // Throw an error to interrupt the simulation
       throw new Error('Collided with wall');
@@ -365,32 +368,6 @@ export function turn_right() {
 // ======= //
 
 /**
- * Inform the simulator that the testing phase is starting
- */
-export function start_testing() {
-  if (state.isComplete) throw new Error('May not start testing twice!');
-
-  state.isComplete = true;
-}
-
-/**
- * Set the given map as the active map
- *
- * @param id index of the map in the array
- */
-export function set_active_map(
-  id: number
-) {
-  // Testing functions should only run after the simulation is complete
-  if (!state.isComplete) throw new Error('May not use testing functions before starting testing! Use start_testing() first!');
-
-  // Confirm that map with the given id exists
-  if (id >= state.maps.length) throw new Error('Given map does not exist!');
-
-  state.activeMap = id;
-}
-
-/**
  * Checks if the robot's entered areas satisfy the callback
  *
  * @returns if the entered areas satisfy the callback
@@ -398,10 +375,7 @@ export function set_active_map(
 export function entered_areas(
   callback : (areas : Area[]) => boolean
 ) : boolean {
-  // Testing functions should only run after the simulation is complete
-  if (!state.isComplete) throw new Error('May not use testing functions before starting testing! Use start_testing() first!');
-
-  return callback(getMap().areaLog);
+  return callback(state.areaLog);
 }
 
 /**
@@ -413,9 +387,6 @@ export function entered_areas(
 export function entered_colors(
   colors: string[]
 ) : boolean {
-  // Testing functions should only run after the simulation is complete
-  if (!state.isComplete) throw new Error('May not use testing functions before starting testing! Use start_testing() first!');
-
   return entered_areas(areas => {
     const coloredAreas = areas
       .filter(area => colors.includes(area.flags.color)) // Filter relevant colors
@@ -436,21 +407,12 @@ export function entered_colors(
 // =========== //
 
 /**
- * Get the active map
- *
- * @returns the active map
- */
-function getMap() : RobotMap {
-  return state.maps[state.activeMap];
-}
-
-/**
  * Get the active robot
  *
  * @returns the active robot
  */
 function getRobot() : Robot {
-  return getMap().robot;
+  return state.robot;
 }
 
 /**
@@ -460,7 +422,7 @@ function getRobot() : Robot {
  */
 function getBounds() : Point[] {
   // Get active map
-  const { width, height } = getMap();
+  const { width, height } = state;
 
   return [
     {x: 0, y: 0},
@@ -503,7 +465,7 @@ interface Collision {
 function robot_raycast(
   filter: (area: Area) => boolean = () => true
 ) : Collision[] {
-  return getMap().areas
+  return state.areas
     .filter(filter) // Apply filter
     .map(area => robot_raycast_area(area)) // Raycast each area on the map
     .concat([
@@ -609,7 +571,7 @@ function area_of_point(
   point: Point
 ) : Area | null {
   // Return the first area the point is within
-  for (const area of getMap().areas) {
+  for (const area of state.areas) {
     if (is_within_area(point, area)) return area;
   }
 
@@ -697,7 +659,7 @@ function logAction(
   type: 'begin' | 'move' | 'rotate' | 'sensor',
   position: PointWithRotation
 ) {
-  getMap().actionLog.push({type, position});
+  state.actionLog.push({type, position});
 }
 
 /**
@@ -709,7 +671,7 @@ function logArea(
   area: Area
 ) {
   // Get the area log
-  const areaLog = getMap().areaLog;
+  const areaLog = state.areaLog;
 
   if (
     areaLog.length > 0 // Check for empty area log

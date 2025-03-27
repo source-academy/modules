@@ -38,7 +38,7 @@ export default {
     // !!! TEMPORARY DEBUGGING FUNCTION, REMOVE ONCE MODULE IS COMPLETE !!!
     console.log(context.context?.moduleContexts?.robot_minigame.state);
 
-    return context.context?.moduleContexts?.robot_minigame.state.isComplete;
+    return context.context?.moduleContexts?.robot_minigame.state.isInit;
   },
 
   /**
