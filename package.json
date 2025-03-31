@@ -86,7 +86,7 @@
     "sass": "^1.85.0",
     "ts-jest": "^29.1.2",
     "typedoc": "^0.25.12",
-    "typescript": "^5.7.3",
+    "typescript": "^5.8.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^5.4.12",
     "yarnhook": "^0.5.1"
