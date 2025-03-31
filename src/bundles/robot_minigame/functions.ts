@@ -5,20 +5,14 @@ import context from 'js-slang/context';
 //   type List
 // } from 'js-slang/dist/stdlib/list';
 
-// A point (x, y)
-interface Point {
-  x: number
-  y: number
-}
-
-// A point (x, y) with rotation
-interface PointWithRotation extends Point {
-  rotation: number
-}
-
-export interface Robot extends PointWithRotation {
-  radius: number
-}
+import { run_tests } from './tests';
+import type {
+  Point, PointWithRotation, Robot,
+  Action,
+  AreaFlags, Area,
+  AreaTest,
+  RobotMinigame
+} from './types';
 
 // A line segment between p1 and p2
 interface LineSegment {
@@ -30,44 +24,6 @@ interface LineSegment {
 interface Ray {
   origin: Point
   target: Point
-}
-
-// A stored action
-export interface Action {
-  type: 'begin' | 'move' | 'rotate' | 'sensor'
-  position: PointWithRotation
-}
-
-interface AreaFlags {
-  [name: string]: any
-}
-
-export interface Area {
-  vertices: Point[]
-  isObstacle: boolean
-  flags: AreaFlags
-}
-
-interface Test {
-  type: string
-  test: Function
-}
-
-interface AreaTest extends Test {
-  type: 'area'
-  test: (areas: Area[]) => boolean
-}
-
-export interface RobotMinigame {
-  isInit: boolean
-  width: number
-  height: number
-  robot: Robot
-  areas: Area[]
-  areaLog: Area[]
-  actionLog: Action[]
-  tests: Test[]
-  message: string
 }
 
 // Default state before initialisation
@@ -405,26 +361,8 @@ export function turn_right() {
  *
  * @returns if all tests pass
  */
-export function run_tests() : boolean {
-  // Run each test in order
-  for (const test of state.tests) {
-    // Store status in a variable
-    let success: boolean;
-
-    switch(test.type) {
-      case 'area':
-        success = test.test(state.areaLog);
-        break;
-      default:
-        success = true;
-    }
-
-    // If the test fails, return false
-    if (!success) return false;
-  }
-
-  // If all tests pass, return true
-  return true;
+export function run_all_tests() : boolean {
+  return run_tests(state);
 }
 
 // ==================
@@ -690,7 +628,7 @@ function logAction(
   type: 'begin' | 'move' | 'rotate' | 'sensor',
   position: PointWithRotation
 ) {
-  state.actionLog.push({type, position});
+  state.actionLog.push({type, position} as Action);
 }
 
 /**
