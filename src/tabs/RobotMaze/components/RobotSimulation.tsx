@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import type { Area, Action, PointWithRotation, Robot, RobotMinigame } from '../../../bundles/robot_minigame/functions';
+import type { Area, Action, Robot, RobotMinigame } from '../../../bundles/robot_minigame/functions';
 
 /**
  * Calculate the acute angle between 2 angles
@@ -8,7 +8,10 @@ import type { Area, Action, PointWithRotation, Robot, RobotMinigame } from '../.
  * @param current rotation
  * @returns the acute angle between
  */
-const smallestAngle = (target, current) => {
+const smallestAngle = (
+  target: number,
+  current: number
+) => {
   const dr = (target - current) % (2 * Math.PI);
 
   if (dr > 0 && dr > Math.PI) return dr - (2 * Math.PI);
@@ -24,7 +27,11 @@ const smallestAngle = (target, current) => {
  * @param width of the map
  * @param height of the map
  */
-const drawBorders = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+const drawBorders = (
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number
+) => {
   ctx.beginPath();
   ctx.moveTo(0, 0);
   ctx.lineTo(0, height);
@@ -38,7 +45,10 @@ const drawBorders = (ctx: CanvasRenderingContext2D, width: number, height: numbe
 };
 
 // Draw the areas of the map
-const drawAreas = (ctx: CanvasRenderingContext2D, areas: Area[]) => {
+const drawAreas = (
+  ctx: CanvasRenderingContext2D,
+  areas: Area[]
+) => {
   for (const { vertices, isObstacle, flags } of areas) {
     ctx.beginPath();
     ctx.moveTo(vertices[0].x, vertices[0].y);
@@ -59,7 +69,10 @@ const drawAreas = (ctx: CanvasRenderingContext2D, areas: Area[]) => {
 };
 
 // Draw the robot
-const drawRobot = (ctx: CanvasRenderingContext2D, { x, y, rotation } : PointWithRotation, size: number) => {
+const drawRobot = (
+  ctx: CanvasRenderingContext2D,
+  { x, y, rotation, radius }: Robot
+) => {
   // Save the background state
   ctx.save();
 
@@ -69,7 +82,7 @@ const drawRobot = (ctx: CanvasRenderingContext2D, { x, y, rotation } : PointWith
 
   ctx.beginPath(); // Begin drawing robot
 
-  ctx.arc(0, 0, size, 0, Math.PI * 2, false); // Full circle (0 to 2π radians)
+  ctx.arc(0, 0, radius, 0, Math.PI * 2, false); // Full circle (0 to 2π radians)
 
   ctx.fillStyle = 'black'; // Set the fill color
   ctx.fill(); // Fill the circle
@@ -78,7 +91,7 @@ const drawRobot = (ctx: CanvasRenderingContext2D, { x, y, rotation } : PointWith
   ctx.strokeStyle = 'white';
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(size, 0);
+  ctx.moveTo(radius, 0);
   ctx.lineTo(0, 0);
   ctx.stroke();
 
@@ -94,12 +107,12 @@ const drawAll = (
   width : number,
   height : number,
   areas: Area[],
-  {x, y, rotation, radius: robotSize} : Robot
+  robot : Robot
 ) => {
   ctx.reset();
   drawBorders(ctx, width, height);
   drawAreas(ctx, areas);
-  drawRobot(ctx, {x, y, rotation}, robotSize);
+  drawRobot(ctx, robot);
 };
 
 // The speed to move at

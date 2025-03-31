@@ -12,8 +12,12 @@ interface Point {
 }
 
 // A point (x, y) with rotation
-export interface PointWithRotation extends Point {
+interface PointWithRotation extends Point {
   rotation: number
+}
+
+export interface Robot extends PointWithRotation {
+  radius: number
 }
 
 // A line segment between p1 and p2
@@ -44,8 +48,14 @@ export interface Area {
   flags: AreaFlags
 }
 
-export interface Robot extends PointWithRotation {
-  radius: number
+interface Test {
+  type: string
+  test: Function
+}
+
+interface AreaTest extends Test {
+  type: 'area'
+  test: (areas: Area[]) => boolean
 }
 
 export interface RobotMinigame {
@@ -56,6 +66,7 @@ export interface RobotMinigame {
   areas: Area[]
   areaLog: Area[]
   actionLog: Action[]
+  tests: Test[]
   message: string
 }
 
@@ -68,6 +79,7 @@ const state: RobotMinigame = {
   areas: [],
   areaLog: [],
   actionLog: [],
+  tests: [],
   message: ''
 };
 
@@ -236,6 +248,27 @@ export function create_rect_obstacle(
 }
 
 /**
+ * Check if the robot has entered different areas with the given colors in order
+ *
+ * @param colors in the order visited
+ * @returns if the robot entered the given colors in order
+ */
+export function should_enter_colors(
+  colors: string[]
+) {
+  state.tests.push({
+    type: 'area',
+    test: (areas: Area[]) => {
+      const coloredAreas = areas
+        .filter((area: Area) => colors.includes(area.flags.color)) // Filter relevant colors
+        .filter(filterAdjacentDuplicateAreas); // Filter adjacent duplicates
+
+      return coloredAreas.length === colors.length && coloredAreas.every(({ flags: { color } }, i) => color === colors[i]); // Check if each area has the expected color
+    }
+  } as AreaTest);
+}
+
+/**
  * Inform the simulator that the initialisation phase is complete
  */
 export function complete_init() {
@@ -368,32 +401,30 @@ export function turn_right() {
 // ======= //
 
 /**
- * Checks if the robot's entered areas satisfy the callback
+ * Run the stored tests in state
  *
- * @returns if the entered areas satisfy the callback
+ * @returns if all tests pass
  */
-export function entered_areas(
-  callback : (areas : Area[]) => boolean
-) : boolean {
-  return callback(state.areaLog);
-}
+export function run_tests() : boolean {
+  // Run each test in order
+  for (const test of state.tests) {
+    // Store status in a variable
+    let success: boolean;
 
-/**
- * Check if the robot has entered different areas with the given colors in order
- *
- * @param colors in the order visited
- * @returns if the robot entered the given colors in order
- */
-export function entered_colors(
-  colors: string[]
-) : boolean {
-  return entered_areas(areas => {
-    const coloredAreas = areas
-      .filter(area => colors.includes(area.flags.color)) // Filter relevant colors
-      .filter(filterAdjacentDuplicateAreas); // Filter adjacent duplicates
+    switch(test.type) {
+      case 'area':
+        success = test.test(state.areaLog);
+        break;
+      default:
+        success = true;
+    }
 
-    return coloredAreas.length === colors.length && coloredAreas.every(({ flags: { color } }, i) => color === colors[i]); // Check if each area has the expected color
-  });
+    // If the test fails, return false
+    if (!success) return false;
+  }
+
+  // If all tests pass, return true
+  return true;
 }
 
 // ==================
