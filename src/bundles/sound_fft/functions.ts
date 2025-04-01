@@ -1,5 +1,6 @@
 import {
   pair,
+  tail,
   accumulate,
   type List
 } from 'js-slang/dist/stdlib/list';
@@ -28,7 +29,7 @@ export function low_pass_filter(frequency: number): Filter {
       if (i < threshold) {
         filteredDomain[i] = frequencyDomain[i];
       } else {
-        filteredDomain[i] = pair(0, 0);
+        filteredDomain[i] = pair(0, tail(frequencyDomain[i]));
       }
     }
     return filteredDomain;
@@ -47,7 +48,7 @@ export function high_pass_filter(frequency: number): Filter {
       if (i > threshold) {
         filteredDomain[i] = frequencyDomain[i];
       } else {
-        filteredDomain[i] = pair(0, 0);
+        filteredDomain[i] = pair(0, tail(frequencyDomain[i]));
       }
     }
     return filteredDomain;

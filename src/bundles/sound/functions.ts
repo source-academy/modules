@@ -421,21 +421,21 @@ function modifyFFT(samples: Array<number>, filter: Filter): Array<number> {
 
   const values = new Array<FrequencySample>(n);
   for (let i = 0; i < n; i++) {
-    values[i] = pair(frequencyDomain[i * 2], frequencyDomain[i * 2 + 1]);
+    const real = frequencyDomain[i * 2];
+    const imag = frequencyDomain[i * 2 + 1];
+    const magnitude = Math.sqrt(real * real + imag * imag);
+    const phase = Math.atan2(imag, real);
+    values[i] = pair(magnitude, phase);
   }
   const filtered = filter(values);
 
   for (let i = 0; i < n; i++) {
-    frequencyDomain[i * 2] = head(filtered[i]);
-    frequencyDomain[i * 2 + 1] = tail(filtered[i]);
-  }
-
-  // Calculate magnitude
-  const magnitudes = new Array<number>;
-  for (let i = 0; i < n * 2; i += 2) {
-    const realPart = frequencyDomain[i];
-    const imagPart = frequencyDomain[i+1];
-    magnitudes[i/2] = Math.sqrt(realPart * realPart + imagPart * imagPart);
+    const magnitude = head(filtered[i]);
+    const phase = tail(filtered[i]);
+    const real = magnitude * Math.cos(phase);
+    const imag = magnitude * Math.sin(phase);
+    frequencyDomain[i * 2] = real;
+    frequencyDomain[i * 2 + 1] = imag;
   }
 
   fft.inverseTransform(invertedSamples, frequencyDomain);
