@@ -19,8 +19,10 @@ import type {
   SoundProducer,
   SoundTransformer,
   AudioPlayed,
-  ComplexNumber,
-  FFTFilter
+  TimeSamples,
+  FrequencySample,
+  FrequencySamples,
+  Filter
 } from './types';
 
 // Global Constants and Variables
@@ -391,7 +393,7 @@ export function play_in_tab(sound: Sound): Sound {
  * @param x the lower bound
  * @return the smallest power of 2 greater than or equal to x
  */
-function nextPowerOf2(x: number): number {
+function next_power_of_2(x: number): number {
   const lowerPowerOf2: number = 1 << 31 - Math.clz32(x);
   if (lowerPowerOf2 == x) {
     return lowerPowerOf2;
@@ -401,40 +403,12 @@ function nextPowerOf2(x: number): number {
 }
 
 /**
- * Make a simple low-pass filter.
- *
- * @param frequency the frequency threshold
- * @return a low-pass filter
- */
-export function lowPassFilter(frequency: number): FFTFilter {
-  return (frequencyDomain) => {
-    const length = frequencyDomain.length;
-    const ratio = frequency / FS;
-    const threshold = length * ratio;
-
-    console.log(`length = ${length}`);
-    console.log(`threshold = ${threshold}`);
-
-    const filteredDomain = new Array<ComplexNumber>(length);
-
-    for (let i = 0; i < length; i++) {
-      if (i < threshold) {
-        filteredDomain[i] = frequencyDomain[i];
-      } else {
-        filteredDomain[i] = pair(0, 0);
-      }
-    }
-    return filteredDomain;
-  };
-}
-
-/**
  * Modify the given sound samples using FFT
  *
  * @param samples the sound samples of size 2^n
  * @return a Array(2^n) containing the modified samples
  */
-function modifyFFT(samples: Array<number>, filter: FFTFilter): Array<number> {
+function modifyFFT(samples: Array<number>, filter: Filter): Array<number> {
   const n = samples.length;
 
   const fft = new FFT(n);
@@ -445,7 +419,7 @@ function modifyFFT(samples: Array<number>, filter: FFTFilter): Array<number> {
   fft.toComplexArray(samples, fullSamples);
   fft.transform(frequencyDomain, fullSamples);
 
-  const values = new Array<ComplexNumber>(n);
+  const values = new Array<FrequencySample>(n);
   for (let i = 0; i < n; i++) {
     values[i] = pair(frequencyDomain[i * 2], frequencyDomain[i * 2 + 1]);
   }
@@ -472,6 +446,54 @@ function modifyFFT(samples: Array<number>, filter: FFTFilter): Array<number> {
   return finalSamples;
 }
 
+export function play_samples(samples: TimeSamples): TimeSamples {
+  if (!audioplayer) {
+    init_audioCtx();
+  }
+
+  const theBuffer = audioplayer.createBuffer(
+    1,
+    samples.length,
+    FS
+  );
+  const channel = theBuffer.getChannelData(0);
+
+  let temp: number;
+  let prev_value = 0;
+
+  for (let i = 0; i < channel.length; i += 1) {
+    temp = samples[i];
+    // clip amplitude
+    if (temp > 1) {
+      channel[i] = 1;
+    } else if (temp < -1) {
+      channel[i] = -1;
+    } else {
+      channel[i] = temp;
+    }
+
+    // smoothen out sudden cut-outs
+    if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
+      channel[i] = prev_value * 0.999;
+    }
+
+    prev_value = channel[i];
+
+  }
+
+  // Connect data to output destination
+  const source = audioplayer.createBufferSource();
+  source.buffer = theBuffer;
+  source.connect(audioplayer.destination);
+  isPlaying = true;
+  source.start();
+  source.onended = () => {
+    source.disconnect(audioplayer.destination);
+    isPlaying = false;
+  };
+  return samples;
+}
+
 /**
  * Plays the given Sound using the computer’s sound device
  * on top of any Sounds that are currently playing.
@@ -481,9 +503,9 @@ function modifyFFT(samples: Array<number>, filter: FFTFilter): Array<number> {
  * @param sound the Sound to play
  * @param filter the filter to use
  * @return the given Sound
- * @example playFFT(sine_sound(440, 5), filter);
+ * @example play_filtered(sine_sound(440, 5), filter);
  */
-export function playFFT(sound: Sound, filter: FFTFilter): Sound {
+export function play_filtered(sound: Sound, filter: Filter): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(
@@ -499,58 +521,18 @@ export function playFFT(sound: Sound, filter: FFTFilter): Sound {
       init_audioCtx();
     }
 
-    // Hijacking this function to implement some FFT stuff
-    let sampleSize = Math.ceil(FS * get_duration(sound));
-    sampleSize = nextPowerOf2(sampleSize);
-
-    // Create mono buffer
-    const theBuffer = audioplayer.createBuffer(
-      1,
-      Math.ceil(FS * get_duration(sound)),
-      FS
-    );
-    const channel = theBuffer.getChannelData(0);
+    const targetSize = Math.ceil(FS * get_duration(sound));
+    const sampleSize = next_power_of_2(targetSize);
     const wave = get_wave(sound);
 
     const originalSample = new Array(sampleSize);
     for (let i = 0; i < sampleSize; i += 1) {
-      originalSample[i] = wave(i / FS); // Assuming wave(t) for t > duration returns 0
+      originalSample[i] = wave(i / FS);
     }
-
     const newSample = modifyFFT(originalSample, filter);
 
-    let temp: number;
-    let prev_value = 0;
+    play_samples(newSample.slice(0, targetSize));
 
-    for (let i = 0; i < channel.length; i += 1) {
-      temp = newSample[i];
-      // clip amplitude
-      if (temp > 1) {
-        channel[i] = 1;
-      } else if (temp < -1) {
-        channel[i] = -1;
-      } else {
-        channel[i] = temp;
-      }
-
-      // smoothen out sudden cut-outs
-      if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
-        channel[i] = prev_value * 0.999;
-      }
-
-      prev_value = channel[i];
-    }
-
-    // Connect data to output destination
-    const source = audioplayer.createBufferSource();
-    source.buffer = theBuffer;
-    source.connect(audioplayer.destination);
-    isPlaying = true;
-    source.start();
-    source.onended = () => {
-      source.disconnect(audioplayer.destination);
-      isPlaying = false;
-    };
     return sound;
   }
 }

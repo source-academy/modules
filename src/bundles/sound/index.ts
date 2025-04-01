@@ -61,7 +61,6 @@ export {
   triangle_sound,
   trombone,
   violin,
-  // FFT
-  lowPassFilter,
-  playFFT
+  play_samples,
+  play_filtered
 } from './functions';
