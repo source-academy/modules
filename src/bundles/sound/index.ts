@@ -61,6 +61,7 @@ export {
   triangle_sound,
   trombone,
   violin,
+  sound_to_time_samples,
   play_samples,
   play_filtered
 } from './functions';

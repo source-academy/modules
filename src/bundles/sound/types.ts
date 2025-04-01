@@ -16,8 +16,3 @@ export type AudioPlayed = {
 export type SoundModuleState = {
   audioPlayed: AudioPlayed[]
 };
-
-export type TimeSamples = Array<number>;
-export type FrequencySample = Pair<number, number>;
-export type FrequencySamples = Array<FrequencySample>;
-export type Filter = (freq: FrequencySamples) => FrequencySamples;

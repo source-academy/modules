@@ -1,5 +1,4 @@
 /* eslint-disable new-cap, @typescript-eslint/naming-convention */
-import FFT from 'fft.js';
 import context from 'js-slang/context';
 import {
   pair,
@@ -12,6 +11,16 @@ import {
   accumulate,
   type List
 } from 'js-slang/dist/stdlib/list';
+import {
+  frequency_to_time,
+  time_to_frequency
+} from '../sound_fft/functions';
+import type {
+  TimeSamples,
+  FrequencySample,
+  FrequencySamples,
+  Filter
+} from '../sound_fft/types';
 import { RIFFWAVE } from './riffwave';
 import type {
   Wave,
@@ -19,10 +28,6 @@ import type {
   SoundProducer,
   SoundTransformer,
   AudioPlayed,
-  TimeSamples,
-  FrequencySample,
-  FrequencySamples,
-  Filter
 } from './types';
 
 // Global Constants and Variables
@@ -402,48 +407,31 @@ function next_power_of_2(x: number): number {
   }
 }
 
+// Pad to power-of-2
+export function sound_to_time_samples(sound: Sound): TimeSamples {
+  const baseSize = Math.ceil(FS * get_duration(sound));
+  const sampleSize = next_power_of_2(baseSize);
+  const wave = get_wave(sound);
+
+  const sample = new Array(sampleSize);
+  for (let i = 0; i < sampleSize; i += 1) {
+    sample[i] = wave(i / FS);
+  }
+
+  return sample;
+}
+
 /**
  * Modify the given sound samples using FFT
  *
  * @param samples the sound samples of size 2^n
  * @return a Array(2^n) containing the modified samples
  */
-function modifyFFT(samples: Array<number>, filter: Filter): Array<number> {
-  const n = samples.length;
-
-  const fft = new FFT(n);
-  const frequencyDomain = fft.createComplexArray();
-  const invertedSamples = fft.createComplexArray();
-  const fullSamples = fft.createComplexArray();
-
-  fft.toComplexArray(samples, fullSamples);
-  fft.transform(frequencyDomain, fullSamples);
-
-  const values = new Array<FrequencySample>(n);
-  for (let i = 0; i < n; i++) {
-    const real = frequencyDomain[i * 2];
-    const imag = frequencyDomain[i * 2 + 1];
-    const magnitude = Math.sqrt(real * real + imag * imag);
-    const phase = Math.atan2(imag, real);
-    values[i] = pair(magnitude, phase);
-  }
-  const filtered = filter(values);
-
-  for (let i = 0; i < n; i++) {
-    const magnitude = head(filtered[i]);
-    const phase = tail(filtered[i]);
-    const real = magnitude * Math.cos(phase);
-    const imag = magnitude * Math.sin(phase);
-    frequencyDomain[i * 2] = real;
-    frequencyDomain[i * 2 + 1] = imag;
-  }
-
-  fft.inverseTransform(invertedSamples, frequencyDomain);
-
-  const finalSamples = new Array<number>(samples.length);
-  fft.fromComplexArray(invertedSamples, finalSamples);
-
-  return finalSamples;
+function modifyFFT(samples: TimeSamples, filter: Filter): TimeSamples {
+  const frequencyDomain = time_to_frequency(samples);
+  const filtered = filter(frequencyDomain);
+  const timeSamples = frequency_to_time(filtered);
+  return timeSamples;
 }
 
 export function play_samples(samples: TimeSamples): TimeSamples {
@@ -522,13 +510,7 @@ export function play_filtered(sound: Sound, filter: Filter): Sound {
     }
 
     const targetSize = Math.ceil(FS * get_duration(sound));
-    const sampleSize = next_power_of_2(targetSize);
-    const wave = get_wave(sound);
-
-    const originalSample = new Array(sampleSize);
-    for (let i = 0; i < sampleSize; i += 1) {
-      originalSample[i] = wave(i / FS);
-    }
+    const originalSample = sound_to_time_samples(sound);
     const newSample = modifyFFT(originalSample, filter);
 
     play_samples(newSample.slice(0, targetSize));

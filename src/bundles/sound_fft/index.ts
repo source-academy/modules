@@ -11,4 +11,10 @@ export {
   low_pass_filter,
   high_pass_filter,
   combine_filters,
+
+  get_magnitude,
+  get_phase,
+
+  frequency_to_time,
+  time_to_frequency
 } from './functions';
