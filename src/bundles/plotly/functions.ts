@@ -6,6 +6,11 @@
 import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { type Sound } from '../sound/types';
+import type {
+  TimeSamples,
+  FrequencySample,
+  FrequencySamples,
+} from '../sound_fft/types';
 import { generatePlot } from './curve_functions';
 import {
   type Curve,
@@ -14,7 +19,7 @@ import {
   DrawnPlot,
   type ListOfPairs
 } from './plotly';
-import { get_duration, get_wave, is_sound } from './sound_functions';
+import { get_duration, get_wave, is_sound, get_magnitude } from './sound_functions';
 
 const drawnPlots: (CurvePlot | DrawnPlot)[] = [];
 
@@ -461,6 +466,104 @@ export const draw_sound_2d = (sound: Sound) => {
     );
     if (drawnPlots) drawnPlots.push(plot);
   }
+};
+
+/**
+ * Visualizes time-domain samples of a sound on a 2d line graph
+ * @param samples the time-domain samples of a sound to be visualized on plotly
+ */
+export const draw_sound_time_samples_2d = (samples: TimeSamples) => {
+  const FS: number = 44100; // Output sample rate
+  
+  const x_s: number[] = [];
+  const y_s: number[] = [];
+  const len: number = samples.length;
+
+  for (let i = 0; i < len; i += 1) {
+    x_s.push(i / FS);
+    y_s.push(samples[i]);
+  }
+
+  const plotlyData: Data = {
+    x: x_s,
+    y: y_s
+  };
+  const plot = new CurvePlot(
+    draw_new_curve,
+    {
+      ...plotlyData,
+      type: 'scattergl',
+      mode: 'lines',
+      line: { width: 0.5 }
+    } as Data,
+    {
+      xaxis: {
+        type: 'linear',
+        title: 'Time',
+        anchor: 'y',
+        position: 0,
+        rangeslider: { visible: true }
+      },
+      yaxis: {
+        type: 'linear',
+        visible: false
+      },
+      bargap: 0.2,
+      barmode: 'stack'
+    }
+  );
+  if (drawnPlots) drawnPlots.push(plot);
+};
+
+/**
+ * Visualizes frequency-domain samples of a sound on a 2d line graph
+ * @param samples the frequency-domain samples of a sound to be visualized on plotly
+ */
+export const draw_sound_frequency_samples_2d = (samples: FrequencySamples) => {
+  const FS: number = 44100; // Output sample rate
+  
+  const x_s: number[] = [];
+  const y_s: number[] = [];
+  const len: number = samples.length;
+
+  for (let i = 0; i < len / 2; i += 1) {
+    const bin_freq: number = i * FS / len;
+    const sample: FrequencySample = samples[i];
+    const magnitude: number = get_magnitude(sample);
+
+    x_s.push(bin_freq);
+    y_s.push(magnitude);
+  }
+
+  const plotlyData: Data = {
+    x: x_s,
+    y: y_s
+  };
+  const plot = new CurvePlot(
+    draw_new_curve,
+    {
+      ...plotlyData,
+      type: 'scattergl',
+      mode: 'lines',
+      line: { width: 0.5 }
+    } as Data,
+    {
+      xaxis: {
+        type: 'linear',
+        title: 'Frequency',
+        anchor: 'y',
+        position: 0,
+        rangeslider: { visible: true }
+      },
+      yaxis: {
+        type: 'linear',
+        visible: false
+      },
+      bargap: 0.2,
+      barmode: 'stack'
+    }
+  );
+  if (drawnPlots) drawnPlots.push(plot);
 };
 
 function draw_new_curve(divId: string, data: Data, layout: Partial<Layout>) {

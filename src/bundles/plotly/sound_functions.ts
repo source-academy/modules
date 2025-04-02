@@ -4,6 +4,7 @@ import {
   is_pair
 } from 'js-slang/dist/stdlib/list';
 import { type Sound, type Wave } from '../sound/types';
+import { type FrequencySample } from '../sound_fft/types';
 export function is_sound(x: any): x is Sound {
   return (
     is_pair(x)
@@ -30,4 +31,13 @@ export function get_wave(sound: Sound): Wave {
  */
 export function get_duration(sound: Sound): number {
   return tail(sound);
+}
+/**
+ * Accesses the magnitude of a given frequency sample.
+ *
+ * @param frequency_sample given frequency sample
+ * @return the magnitude of the frequency sample
+ */
+export function get_magnitude(frequency_sample: FrequencySample): number {
+  return head(frequency_sample);
 }
