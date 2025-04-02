@@ -1,3 +1,5 @@
+import context from 'js-slang/context';
+
 import type { TestContext, TestSuite, Test } from './types';
 
 const handleErr = (err: any) => {
@@ -10,10 +12,17 @@ const handleErr = (err: any) => {
   throw err;
 };
 
-export const context: TestContext = {
-  describe: (msg: string, suite: TestSuite) => {
+export const testContext: TestContext = {
+  called: false,
+  describe(msg: string, suite: TestSuite) {
+    if (this.called) {
+      throw new Error(`${describe.name} can only be called once per program!`);
+    }
+
+    this.called = true;
+
     const starttime = performance.now();
-    context.suiteResults = {
+    this.suiteResults = {
       name: msg,
       results: [],
       total: 0,
@@ -22,26 +31,26 @@ export const context: TestContext = {
 
     suite();
 
-    context.allResults.results.push(context.suiteResults);
+    this.allResults.results.push(this.suiteResults);
 
     const endtime = performance.now();
-    context.runtime += endtime - starttime;
-    return context.allResults;
+    this.runtime += endtime - starttime;
+    return this.allResults;
   },
 
-  it: (msg: string, test: Test) => {
+  it(msg: string, test: Test) {
     const name = `${msg}`;
     let error = '';
-    context.suiteResults.total += 1;
+    this.suiteResults.total += 1;
 
     try {
       test();
-      context.suiteResults.passed += 1;
+      this.suiteResults.passed += 1;
     } catch (err: any) {
       error = handleErr(err);
     }
 
-    context.suiteResults.results.push({
+    this.suiteResults.results.push({
       name,
       error,
     });
@@ -57,11 +66,13 @@ export const context: TestContext = {
   allResults: {
     results: [],
     toReplString: () =>
-      `${context.allResults.results.length} suites completed in ${context.runtime} ms.`,
+      `${testContext.allResults.results.length} suites completed in ${testContext.runtime} ms.`,
   },
 
   runtime: 0,
 };
+
+context.moduleContexts.unittest.state = testContext;
 
 /**
  * Defines a single test.
@@ -69,7 +80,7 @@ export const context: TestContext = {
  * @param func Function containing tests.
  */
 export function it(msg: string, func: Test) {
-  context.it(msg, func);
+  testContext.it(msg, func);
 }
 
 /**
@@ -78,5 +89,5 @@ export function it(msg: string, func: Test) {
  * @param func Function containing tests.
  */
 export function describe(msg: string, func: TestSuite) {
-  return context.describe(msg, func);
+  return testContext.describe(msg, func);
 }

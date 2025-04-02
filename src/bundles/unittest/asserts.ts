@@ -1,4 +1,4 @@
-import { is_pair, head, tail, is_list, is_null, member, length } from './list';
+import { is_pair, head, tail, is_list, is_null, length, type List, type Pair } from 'js-slang/dist/stdlib/list';
 
 /**
  * Asserts that a predicate returns true.
@@ -59,32 +59,21 @@ export function assert_contains(xs: any, toContain: any) {
     throw new Error(`Expected \`${xs}\` to contain \`${toContain}\`.`);
   };
 
-  if (is_null(xs)) {
-    fail();
-  } else if (is_list(xs)) {
-    if (is_null(member(toContain, xs))) {
-      fail();
-    }
-  } else if (is_pair(xs)) {
-    if (head(xs) === toContain || tail(xs) === toContain) {
-      return;
+  const member = (xs: List | Pair<any, any>, item: any) => {
+    if (is_null(xs)) return false;
+
+    if (is_list(xs)) {
+      if (head(xs) === item) return true;
+      return member(tail(xs), item);
     }
 
-    // check the head, if it fails, checks the tail, if that fails, fail.
-    try {
-      assert_contains(head(xs), toContain);
-      return;
-    } catch (_) {
-      try {
-        assert_contains(tail(xs), toContain);
-        return;
-      } catch (__) {
-        fail();
-      }
+    if (is_pair(xs)) {
+      return member(head(xs), item) || member(tail(xs), item);
     }
-  } else {
-    throw new Error(`First argument must be a list or a pair, got \`${xs}\`.`);
-  }
+
+    throw new Error(`First argument to ${assert_contains.name} must be a list or a pair, got \`${xs}\`.`);
+  };
+  if (!member(xs, toContain)) fail();
 }
 
 /**
@@ -94,4 +83,34 @@ export function assert_contains(xs: any, toContain: any) {
  */
 export function assert_length(list: any, len: number) {
   assert_equals(length(list), len);
+}
+
+/**
+ * Asserts that the given item is greater than `expected`
+ * @param item The number to check
+ * @param expected The value to check against
+ */
+export function assert_greater(item: any, expected: number) {
+  if (typeof item !== 'number' || typeof expected !== 'number') {
+    throw new Error(`${assert_greater.name} should be called with numeric arguments!`);
+  }
+
+  if (item <= expected) {
+    throw new Error(`Expected ${item} to be greater than ${expected}`);
+  }
+}
+
+/**
+ * Asserts that the given item is greater than or equal to `expected`
+ * @param item The number to check
+ * @param expected The value to check against
+ */
+export function assert_greater_equals(item: any, expected: number) {
+  if (typeof item !== 'number' || typeof expected !== 'number') {
+    throw new Error(`${assert_greater.name} should be called with numeric arguments!`);
+  }
+
+  if (item < expected) {
+    throw new Error(`Expected ${item} to be greater than or equal to ${expected}`);
+  }
 }

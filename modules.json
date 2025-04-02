@@ -122,9 +122,9 @@
       "RobotMaze"
     ]
   }, 
-  "testing": {
+  "unittest": {
     "tabs": [
-      "Testing"
+      "Unittest"
     ]
   }
 }
