@@ -250,6 +250,16 @@ export function get_distance() : number {
   return obstacleCollisions.length > 0 ? obstacleCollisions[0].distance - getRobot().radius : Infinity;
 }
 
+// The maximum distance the robot can detect obstacles at
+const SENSOR_RANGE: number = 15;
+
+/**
+ * Check if there is an obstacle within a predefined distance from the robot
+ */
+export function sense_obstacle() : boolean {
+  return get_distance() > SENSOR_RANGE;
+}
+
 /**
  * Get the color of the area under the robot
  *
