@@ -474,7 +474,7 @@ export const draw_sound_2d = (sound: Sound) => {
  */
 export const draw_sound_time_samples_2d = (samples: TimeSamples) => {
   const FS: number = 44100; // Output sample rate
-  
+
   const x_s: number[] = [];
   const y_s: number[] = [];
   const len: number = samples.length;
@@ -521,7 +521,7 @@ export const draw_sound_time_samples_2d = (samples: TimeSamples) => {
  */
 export const draw_sound_frequency_samples_2d = (samples: FrequencySamples) => {
   const FS: number = 44100; // Output sample rate
-  
+
   const x_s: number[] = [];
   const y_s: number[] = [];
   const len: number = samples.length;
