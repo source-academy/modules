@@ -2330,6 +2330,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/plotly.js@npm:^2.35.4":
+  version: 2.35.4
+  resolution: "@types/plotly.js@npm:2.35.4"
+  checksum: 10c0/bec3223df090f34326628e88b2243dd37f539834280f20a80ddc5fa5a54f0494af84bc473535bf5a2cd035693d7246c357361b8fa5f51ade964dc3dab506f994
+  languageName: node
+  linkType: hard
+
 "@types/prop-types@npm:*":
   version: 15.7.13
   resolution: "@types/prop-types@npm:15.7.13"
@@ -6088,7 +6095,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gl@npm:^5.0.3":
+"gl@npm:^8.1.6":
   version: 8.1.6
   resolution: "gl@npm:8.1.6"
   dependencies:
@@ -8808,6 +8815,7 @@ __metadata:
     "@types/jest": "npm:^27.4.1"
     "@types/lodash": "npm:^4.14.198"
     "@types/node": "npm:^20.12.12"
+    "@types/plotly.js": "npm:^2.35.4"
     "@types/react": "npm:^18.3.2"
     "@types/react-dom": "npm:^18.3.0"
     "@types/three": "npm:^0.163.0"

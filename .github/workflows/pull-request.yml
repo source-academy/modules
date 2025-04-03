@@ -13,6 +13,9 @@ jobs:
           uses: actions/checkout@v4
           with:
             submodules: recursive
+
+        - name: Enable Corepack
+          run: corepack enable
             
         - name: Use Node.js 💻
           uses: actions/setup-node@v4
@@ -21,7 +24,7 @@ jobs:
             cache: yarn
 
         - name: Install dependencies
-          run: yarn install --frozen-lockfile
+          run: yarn install --immutable
 
         - name: Build bundles and tabs
           run: yarn build --tsc --lint
