@@ -1,5 +1,4 @@
 import { pair, list, vector_to_list } from 'js-slang/dist/stdlib/list';
-/* eslint-disable import/prefer-default-export */
 
 /**
  * Mocks a function `fun`.

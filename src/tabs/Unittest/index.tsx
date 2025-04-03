@@ -34,7 +34,6 @@ function suiteResultToDiv(suiteResult: SuiteResult) {
   };
 
   const rows = results.map(({ name: testname, error }, index) => (
-    // eslint-disable-next-line react/no-array-index-key
     <tr key={index}>
       <td style={colfixed}>{testname}</td>
       <td style={colauto}>{error || 'Passed.'}</td>
@@ -110,7 +109,6 @@ export default {
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  // eslint-disable-next-line react/destructuring-assignment
   body: (context: DebuggerContext) => {
     const moduleContext = getModuleState<TestContext>(context, 'unittest');
     return <TestSuitesTab context={moduleContext} />;
