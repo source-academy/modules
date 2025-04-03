@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { run_tests } from '../../../bundles/robot_minigame/tests';
+import { run_tests } from '../../../bundles/robot_minigame/helpers/tests';
 import type { Area, Action, Robot, RobotMinigame } from '../../../bundles/robot_minigame/types';
 
 /**

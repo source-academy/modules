@@ -1,4 +1,4 @@
-import type { Area, Test } from './types';
+import type { Area, Test } from '../types';
 
 /**
  * Run the stored tests in state
