@@ -48,7 +48,7 @@
  * The suggested time step is 1/60 (seconds).
  *
  * Visualization of the physics world can also be seen in the display tab.
-*
+ *
  * The following example simulates a free fall of a circle object.
  *
  * ```
