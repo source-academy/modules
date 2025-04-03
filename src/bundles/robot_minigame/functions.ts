@@ -489,23 +489,6 @@ function robot_raycast_area(
 }
 
 /**
- * Check which areas fall along a ray
- *
- * @param ray to cast
- * @param areas to check
- * @returns collisions between the ray and areas
- */
-function raycast_multi(
-  ray: Ray,
-  areas: Area[]
-) : Collision[] {
-  return areas
-    .map(area => raycast(ray, area)) // Raycast each area
-    .filter(col => col !== null) // Remove null collisions
-    .sort((a, b) => a.distance - b.distance); // Sort by distance
-}
-
-/**
  * Get the shortest distance between a ray and an area
  *
  * @param ray being cast
