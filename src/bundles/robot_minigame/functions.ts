@@ -367,7 +367,7 @@ export function turn_right() {
  * @returns if all tests pass
  */
 export function run_all_tests() : boolean {
-  return run_tests(state);
+  return !state.hasCollided && run_tests(state);
 }
 
 // ==================

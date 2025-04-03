@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { run_tests } from '../../../bundles/robot_minigame/helpers/tests';
-import type { Area, Action, Robot, RobotMinigame } from '../../../bundles/robot_minigame/types';
+import { run_tests } from '../../bundles/robot_minigame/helpers/tests';
+import type { Area, Action, Robot, RobotMinigame } from '../../bundles/robot_minigame/types';
 
 /**
  * Calculate the acute angle between 2 angles
@@ -130,6 +130,7 @@ interface MapProps {
 
 const RobotSimulation : React.FC<MapProps> = ({
   state: {
+    hasCollided,
     width,
     height,
     robot: {radius: robotSize},
@@ -276,7 +277,7 @@ const RobotSimulation : React.FC<MapProps> = ({
             : animationStatus === 2
               ? <button onClick={() => {setAnimationStatus(1);}}>Resume</button>
               : <button onClick={() => {setAnimationStatus(0);}}>Reset</button>}
-        {animationStatus === 3 && <span style={{marginLeft: '5px'}}>{run_tests({tests, areaLog}) ? 'Success! 🎉' : message}</span>}
+        {animationStatus === 3 && <span style={{marginLeft: '5px'}}>{!hasCollided && run_tests({tests, areaLog}) ? 'Success! 🎉' : message}</span>}
       </div>
       <div style={{display: 'flex', justifyContent: 'center'}}>
         <canvas ref={canvasRef}/>

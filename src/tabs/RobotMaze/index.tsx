@@ -1,6 +1,6 @@
 import React from 'react';
 import type { DebuggerContext } from '../../typings/type_helpers';
-import RobotSimulation from './components/RobotSimulation';
+import RobotSimulation from './RobotSimulation';
 
 /**
  * Renders the robot minigame in the assessment workspace
