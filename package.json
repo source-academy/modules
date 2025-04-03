@@ -121,7 +121,7 @@
     "uniqid": "^5.4.0"
   },
   "resolutions": {
-    "**/gl@npm": "8.1.6"
+    "gl": "^8.1.6"
   },
   "jest": {
     "projects": [
