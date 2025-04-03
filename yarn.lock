@@ -8849,6 +8849,7 @@ __metadata:
     patch-package: "npm:^6.5.1"
     phaser: "npm:^3.54.0"
     plotly.js-dist: "npm:^2.17.1"
+    postinstall-postinstall: "npm:^2.1.0"
     re-resizable: "npm:^6.9.11"
     react: "npm:^18.3.1"
     react-ace: "npm:^10.1.0"
@@ -9698,6 +9699,13 @@ __metadata:
     picocolors: "npm:^1.1.0"
     source-map-js: "npm:^1.2.1"
   checksum: 10c0/929f68b5081b7202709456532cee2a145c1843d391508c5a09de2517e8c4791638f71dd63b1898dba6712f8839d7a6da046c72a5e44c162e908f5911f57b5f44
+  languageName: node
+  linkType: hard
+
+"postinstall-postinstall@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "postinstall-postinstall@npm:2.1.0"
+  checksum: 10c0/70488447292c712afa7806126824d6fe93362392cbe261ae60166d9119a350713e0dbf4deb2ca91637c1037bc030ed1de78d61d9041bf2504513070f1caacdfd
   languageName: node
   linkType: hard
 
