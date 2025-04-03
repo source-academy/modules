@@ -120,6 +120,9 @@
     "three": "^0.163.0",
     "uniqid": "^5.4.0"
   },
+  "resolutions": {
+    "gl@npm": "8.1.6"
+  },
   "jest": {
     "projects": [
       "src/jest.config.js",
