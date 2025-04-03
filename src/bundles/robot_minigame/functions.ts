@@ -29,6 +29,7 @@ interface Ray {
 // Default state before initialisation
 const state: RobotMinigame = {
   isInit: false,
+  hasCollided: false,
   width: 500,
   height: 500,
   robot: {x: 250, y: 250, rotation: 0, radius: 15},
@@ -281,6 +282,9 @@ export function get_color() : string {
 export function move_forward(
   distance: number
 ) {
+  // Ignore if robot has collided with an obstacle
+  if (state.hasCollided) return;
+
   // Get the robot
   const robot = getRobot();
 
@@ -295,17 +299,13 @@ export function move_forward(
     // Handle a collision with an obstacle
     if (col.area.isObstacle) {
       // Calculate find distance
-      const finalDistance = (col.distance - robot.radius + 1);
-
-      // Move the robot to its final position
-      robot.x = robot.x + finalDistance * Math.cos(robot.rotation);
-      robot.y = robot.y + finalDistance * Math.sin(robot.rotation);
+      distance = col.distance - robot.radius + 1;
 
       // Update the final message
-      state.message = `Collided with wall at (${robot.x},${robot.y})`;
+      state.message = `Collided with wall at (${robot.x + distance * Math.cos(robot.rotation)},${robot.y + distance * Math.sin(robot.rotation)})`;
 
-      // Throw an error to interrupt the simulation
-      throw new Error('Collided with wall');
+      // Update state to reflect that the robot has collided with an obstacle
+      state.hasCollided = true;
     }
   }
 
@@ -324,6 +324,9 @@ const SAFE_DISTANCE_FROM_WALL : number = 10;
  * Move the robot forward to within a predefined distance of the wall
  */
 export function move_forward_to_wall() {
+  // Ignore if robot has collided with an obstacle
+  if (state.hasCollided) return;
+
   // Move forward the furthest possible safe distance + a lil extra offset
   move_forward(Math.max(get_distance() - SAFE_DISTANCE_FROM_WALL, 0));
 }
@@ -336,6 +339,9 @@ export function move_forward_to_wall() {
 export function rotate(
   angle: number
 ) {
+  // Ignore if robot has collided with an obstacle
+  if (state.hasCollided) return;
+
   // Get the robot
   const robot = getRobot();
 

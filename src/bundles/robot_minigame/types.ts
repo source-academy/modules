@@ -42,6 +42,7 @@ export interface AreaTest extends Test {
 
 export interface RobotMinigame {
   isInit: boolean
+  hasCollided: boolean
   width: number
   height: number
   robot: Robot
