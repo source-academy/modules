@@ -252,7 +252,7 @@ const RobotSimulation : React.FC<MapProps> = ({
         case 'sensor':
           animationPauseUntil.current = Date.now() + 500;
           break;
-        default:
+        case 'begin':
           robot.current = Object.assign({}, {radius: robot.current.radius}, target);
       }
 
