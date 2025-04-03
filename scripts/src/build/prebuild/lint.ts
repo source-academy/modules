@@ -1,14 +1,7 @@
 import chalk from 'chalk';
-/*
-  Unfortunately, people like to leave parts of their API
-  undocumented, so using the FlatConfig linter with the
-  current version of eslint means we can't get any
-  typing for it
-*/
-// @ts-expect-error 2305
 import { loadESLint, type ESLint } from 'eslint';
 import { lintFixOption, retrieveBundlesAndTabs, wrapWithTimer } from '@src/commandUtils';
-import { findSeverity, divideAndRound, type Severity, type AwaitedReturn } from '../utils';
+import { divideAndRound, findSeverity, type AwaitedReturn, type Severity } from '../utils';
 import { createPrebuildCommand, createPrebuildCommandHandler, type PrebuildOptions } from './utils';
 
 interface LintResults {

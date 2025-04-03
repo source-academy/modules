@@ -131,7 +131,6 @@ export class PhaserScene extends Phaser.Scene {
     this.handleAudioUpdates();
 
     // Delay KeyUp events, so that low FPS can still detect KeyDown.
-    // eslint-disable-next-line array-callback-return
     this.delayedKeyUpEvents.forEach((event: Function) => event());
     this.delayedKeyUpEvents.clear();
 
@@ -316,7 +315,7 @@ export class PhaserScene extends Phaser.Scene {
         // Update the image of Phaser GameObject
         if (gameObject.hasRenderUpdates() || this.shouldRerenderGameObjects) {
           const color = gameObject.getColor();
-          // eslint-disable-next-line new-cap
+
           const intColor = Phaser.Display.Color.GetColor32(color[0], color[1], color[2], color[3]);
           const flip = gameObject.getFlipState();
           if (gameObject instanceof TextGameObject) {
