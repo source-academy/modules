@@ -11,6 +11,5 @@ export {
   draw_points_2d,
   draw_points_3d,
   draw_sound_2d,
-  draw_sound_time_samples_2d,
-  draw_sound_frequency_samples_2d
+  draw_sound_frequency_2d
 } from './functions';
