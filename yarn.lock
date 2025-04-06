@@ -536,21 +536,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/colors@npm:^5.1.2":
-  version: 5.1.2
-  resolution: "@blueprintjs/colors@npm:5.1.2"
+"@blueprintjs/colors@npm:^5.1.8":
+  version: 5.1.8
+  resolution: "@blueprintjs/colors@npm:5.1.8"
   dependencies:
     tslib: "npm:~2.6.2"
-  checksum: 10c0/f5c4968767e4a88c75b9a9f548e020dc0f67f459c69bffc3a1e27acb2a1e03bdfe0002c928875916fa5f42f1c4188a67627b448cc99033fded353967667b7b4d
+  checksum: 10c0/d0a3d500628f60415f830df872244370efb0268f43b03a5c7c27d473ea1be5b8c9fb35fbc47330d7c022f3ddecd7afefb6ee4ef94789fe98feb2be95b15753ac
   languageName: node
   linkType: hard
 
 "@blueprintjs/core@npm:^5.10.2":
-  version: 5.13.1
-  resolution: "@blueprintjs/core@npm:5.13.1"
+  version: 5.17.6
+  resolution: "@blueprintjs/core@npm:5.17.6"
   dependencies:
-    "@blueprintjs/colors": "npm:^5.1.2"
-    "@blueprintjs/icons": "npm:^5.13.0"
+    "@blueprintjs/colors": "npm:^5.1.8"
+    "@blueprintjs/icons": "npm:^5.20.0"
     "@popperjs/core": "npm:^2.11.8"
     classnames: "npm:^2.3.1"
     normalize.css: "npm:^8.0.1"
@@ -569,11 +569,29 @@ __metadata:
   bin:
     upgrade-blueprint-2.0.0-rename: scripts/upgrade-blueprint-2.0.0-rename.sh
     upgrade-blueprint-3.0.0-rename: scripts/upgrade-blueprint-3.0.0-rename.sh
-  checksum: 10c0/38e70ed0666d8d22e76baf244441ef223e5f1862a825f6a0ee4c555b60f0342e9a147d4ff5f0460ed8fb34ea4632bf522af030b8319f418d690cd437067f07c6
+  checksum: 10c0/d85c73d2338ccbd9412daf5939f685ec765b0e66c948e251e5f85dbebf15f74bf0714ca5697f8eb5b6a2f462fadac77bb8a1ac6852b8628bf22d0614681c957d
   languageName: node
   linkType: hard
 
-"@blueprintjs/icons@npm:^5.13.0, @blueprintjs/icons@npm:^5.9.0":
+"@blueprintjs/icons@npm:^5.20.0":
+  version: 5.20.0
+  resolution: "@blueprintjs/icons@npm:5.20.0"
+  dependencies:
+    change-case: "npm:^4.1.2"
+    classnames: "npm:^2.3.1"
+    tslib: "npm:~2.6.2"
+  peerDependencies:
+    "@types/react": ^16.14.41 || 17 || 18
+    react: ^16.8 || 17 || 18
+    react-dom: ^16.8 || 17 || 18
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/e95158f6cbdc8e588aaa219313a96e2f798253b4efde6a3bdfbd5bccb4b00a2158a68b846232efa5736a25e21e586670ed006a9795f3f7b5577c505f8e8128b0
+  languageName: node
+  linkType: hard
+
+"@blueprintjs/icons@npm:^5.9.0":
   version: 5.13.0
   resolution: "@blueprintjs/icons@npm:5.13.0"
   dependencies:
