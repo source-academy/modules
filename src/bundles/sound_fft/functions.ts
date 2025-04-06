@@ -4,14 +4,23 @@ import {
   head,
   tail,
   accumulate,
+  list_to_vector,
+  vector_to_list,
   type List
 } from 'js-slang/dist/stdlib/list';
 import type {
   TimeSamples,
   FrequencySample,
   FrequencySamples,
+  FrequencyList,
   Filter
 } from './types';
+import type { Sound } from '../sound/types';
+import {
+  make_sound,
+  get_wave,
+  get_duration
+} from './sound_functions';
 
 // TODO: Export FS from 'sound', then import it here.
 // We cannot import yet since we didn't export it.
@@ -62,6 +71,56 @@ export function frequency_to_time(frequency_samples: FrequencySamples): TimeSamp
   const timeSamples = new Array(n);
   fft.fromComplexArray(timeDomain, timeSamples);
   return timeSamples;
+}
+
+function next_power_of_2(x: number): number {
+  const lowerPowerOf2: number = 1 << 31 - Math.clz32(x);
+  if (lowerPowerOf2 == x) {
+    return lowerPowerOf2;
+  } else {
+    return lowerPowerOf2 * 2;
+  }
+}
+
+// Pad to power-of-2
+export function sound_to_time_samples(sound: Sound): TimeSamples {
+  const baseSize = Math.ceil(FS * get_duration(sound));
+  const sampleSize = next_power_of_2(baseSize);
+  const wave = get_wave(sound);
+
+  const sample = new Array(sampleSize);
+  for (let i = 0; i < sampleSize; i += 1) {
+    sample[i] = wave(i / FS);
+  }
+
+  return sample;
+}
+
+export function time_samples_to_sound(time_samples: TimeSamples): Sound {
+  const duration = time_samples.length / FS;
+  return make_sound((t) => {
+    const index = t * FS;
+    const lowerIndex = Math.floor(index);
+    const upperIndex = lowerIndex + 1;
+    const ratio = index - lowerIndex;
+    const upper = time_samples[upperIndex] ? time_samples[upperIndex] : 0;
+    const lower = time_samples[lowerIndex] ? time_samples[lowerIndex] : 0;
+    return lower * (1 - ratio) + upper * ratio;
+  }, duration);
+}
+
+export function sound_to_frequency(sound: Sound): FrequencyList {
+  const time_samples: TimeSamples = sound_to_time_samples(sound);
+  const frequency_samples: FrequencySamples = time_to_frequency(time_samples);
+  const frequency_list: FrequencyList = vector_to_list(frequency_samples);
+  return frequency_list;
+}
+
+export function frequency_to_sound(frequency_list: FrequencyList): Sound {
+  const frequency_samples: FrequencySamples = list_to_vector(frequency_list);
+  const time_samples: TimeSamples = frequency_to_time(frequency_samples);
+  const sound: Sound = time_samples_to_sound(time_samples);
+  return sound;
 }
 
 // MAGNITUDE and PHASE
