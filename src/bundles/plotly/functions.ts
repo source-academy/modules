@@ -5,11 +5,11 @@
 
 import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
+import { list_to_vector } from 'js-slang/dist/stdlib/list';
 import { type Sound } from '../sound/types';
 import type {
-  TimeSamples,
   FrequencySample,
-  FrequencySamples,
+  FrequencyList,
 } from '../sound_fft/types';
 import { generatePlot } from './curve_functions';
 import {
@@ -469,66 +469,20 @@ export const draw_sound_2d = (sound: Sound) => {
 };
 
 /**
- * Visualizes time-domain samples of a sound on a 2d line graph
- * @param samples the time-domain samples of a sound to be visualized on plotly
+ * Visualizes frequency-domain samples of a sound on a 2d line graph
+ * @param frequencies the frequency-domain samples of a sound to be visualized on plotly
  */
-export const draw_sound_time_samples_2d = (samples: TimeSamples) => {
+export const draw_sound_frequency_2d = (frequencies: FrequencyList) => {
   const FS: number = 44100; // Output sample rate
 
   const x_s: number[] = [];
   const y_s: number[] = [];
-  const len: number = samples.length;
+  const frequencies_arr: FrequencySample[] = list_to_vector(frequencies);
+  const len: number = frequencies_arr.length;
 
   for (let i = 0; i < len; i += 1) {
-    x_s.push(i / FS);
-    y_s.push(samples[i]);
-  }
-
-  const plotlyData: Data = {
-    x: x_s,
-    y: y_s
-  };
-  const plot = new CurvePlot(
-    draw_new_curve,
-    {
-      ...plotlyData,
-      type: 'scattergl',
-      mode: 'lines',
-      line: { width: 0.5 }
-    } as Data,
-    {
-      xaxis: {
-        type: 'linear',
-        title: 'Time',
-        anchor: 'y',
-        position: 0,
-        rangeslider: { visible: true }
-      },
-      yaxis: {
-        type: 'linear',
-        visible: false
-      },
-      bargap: 0.2,
-      barmode: 'stack'
-    }
-  );
-  if (drawnPlots) drawnPlots.push(plot);
-};
-
-/**
- * Visualizes frequency-domain samples of a sound on a 2d line graph
- * @param samples the frequency-domain samples of a sound to be visualized on plotly
- */
-export const draw_sound_frequency_samples_2d = (samples: FrequencySamples) => {
-  const FS: number = 44100; // Output sample rate
-
-  const x_s: number[] = [];
-  const y_s: number[] = [];
-  const len: number = samples.length;
-
-  for (let i = 0; i < len / 2; i += 1) {
     const bin_freq: number = i * FS / len;
-    const sample: FrequencySample = samples[i];
+    const sample: FrequencySample = frequencies_arr[i];
     const magnitude: number = get_magnitude(sample);
 
     x_s.push(bin_freq);
