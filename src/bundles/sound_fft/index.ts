@@ -15,6 +15,6 @@ export {
   get_magnitude,
   get_phase,
 
-  frequency_to_time,
-  time_to_frequency
+  frequency_to_sound,
+  sound_to_frequency
 } from './functions';
