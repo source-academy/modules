@@ -473,18 +473,18 @@ export function sound_to_time_samples(sound: Sound): TimeSamples {
   return sample;
 }
 
-/**
- * Modify the given sound samples using FFT
- *
- * @param samples the sound samples of size 2^n
- * @return a Array(2^n) containing the modified samples
- */
-function modifyFFT(samples: TimeSamples, filter: Filter): TimeSamples {
-  const frequencyDomain = time_to_frequency(samples);
-  const filtered = filter(frequencyDomain);
-  const timeSamples = frequency_to_time(filtered);
-  return timeSamples;
-}
+///**
+// * Modify the given sound samples using FFT
+// *
+// * @param samples the sound samples of size 2^n
+// * @return a Array(2^n) containing the modified samples
+// */
+//function modifyFFT(samples: TimeSamples, filter: Filter): TimeSamples {
+//  const frequencyDomain = time_to_frequency(samples);
+//  const filtered = filter(frequencyDomain);
+//  const timeSamples = frequency_to_time(filtered);
+//  return timeSamples;
+//}
 
 export function play_samples(samples: TimeSamples): TimeSamples {
   if (!audioplayer) {
@@ -545,31 +545,31 @@ export function play_samples(samples: TimeSamples): TimeSamples {
  * @return the given Sound
  * @example play_filtered(sine_sound(440, 5), filter);
  */
-export function play_filtered(sound: Sound, filter: Filter): Sound {
-  // Type-check sound
-  if (!is_sound(sound)) {
-    throw new Error(
-      `${play.name} is expecting sound, but encountered ${sound}`
-    );
-  } else if (get_duration(sound) < 0) {
-    throw new Error(`${play.name}: duration of sound is negative`);
-  } else if (get_duration(sound) === 0) {
-    return sound;
-  } else {
-    // Instantiate audio context if it has not been instantiated.
-    if (!audioplayer) {
-      init_audioCtx();
-    }
-
-    const targetSize = Math.ceil(FS * get_duration(sound));
-    const originalSample = sound_to_time_samples(sound);
-    const newSample = modifyFFT(originalSample, filter);
-
-    play_samples(newSample.slice(0, targetSize));
-
-    return sound;
-  }
-}
+//export function play_filtered(sound: Sound, filter: Filter): Sound {
+//  // Type-check sound
+//  if (!is_sound(sound)) {
+//    throw new Error(
+//      `${play.name} is expecting sound, but encountered ${sound}`
+//    );
+//  } else if (get_duration(sound) < 0) {
+//    throw new Error(`${play.name}: duration of sound is negative`);
+//  } else if (get_duration(sound) === 0) {
+//    return sound;
+//  } else {
+//    // Instantiate audio context if it has not been instantiated.
+//    if (!audioplayer) {
+//      init_audioCtx();
+//    }
+//
+//    const targetSize = Math.ceil(FS * get_duration(sound));
+//    const originalSample = sound_to_time_samples(sound);
+//    const newSample = modifyFFT(originalSample, filter);
+//
+//    play_samples(newSample.slice(0, targetSize));
+//
+//    return sound;
+//  }
+//}
 
 /**
  * Plays the given Sound using the computer’s sound device

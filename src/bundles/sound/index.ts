@@ -64,5 +64,5 @@ export {
   sound_to_time_samples,
   play_samples_in_tab,
   play_samples,
-  play_filtered
+  //play_filtered
 } from './functions';

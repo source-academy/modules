@@ -1,13 +1,31 @@
 import FFT from 'fft.js';
 import {
+  //pair,
+  //head,
+  //tail,
+  //length,
+  //list,
+  //accumulate,
+  //list_to_vector,
+  //vector_to_list,
+  type List
+} from 'js-slang/dist/stdlib/list';
+import {
   pair,
   head,
   tail,
+  length,
+  list,
   accumulate,
   list_to_vector,
-  vector_to_list,
-  type List
-} from 'js-slang/dist/stdlib/list';
+  vector_to_list
+} from './list';
+import type { Sound } from '../sound/types';
+import {
+  make_sound,
+  get_wave,
+  get_duration
+} from './sound_functions';
 import type {
   TimeSamples,
   FrequencySample,
@@ -15,12 +33,6 @@ import type {
   FrequencyList,
   Filter
 } from './types';
-import type { Sound } from '../sound/types';
-import {
-  make_sound,
-  get_wave,
-  get_duration
-} from './sound_functions';
 
 // TODO: Export FS from 'sound', then import it here.
 // We cannot import yet since we didn't export it.
@@ -136,47 +148,55 @@ export function get_phase(frequency_sample: FrequencySample): number {
 // FILTER CREATION
 
 export function low_pass_filter(frequency: number): Filter {
-  return (frequencyDomain) => {
-    const length = frequencyDomain.length;
-    const ratio = frequency / FS;
-    const threshold = length * ratio;
+  function filter(freqList: FrequencyList) {
+    const len = length(freqList);
+    const threshold = len * frequency / 44100;
 
-    const filteredDomain: FrequencySamples = new Array<FrequencySample>(length);
+    const val = accumulate(
+      (sample, acc) => pair(
+        head(acc) - 1,
+        pair(
+          head(acc) < threshold ? sample : pair(0, tail(sample)),
+          tail(acc)
+        )
+      ),
+      pair(len - 1, list()),
+      freqList
+    );
 
-    for (let i = 0; i < length; i++) {
-      if (i < threshold) {
-        filteredDomain[i] = frequencyDomain[i];
-      } else {
-        filteredDomain[i] = pair(0, tail(frequencyDomain[i]));
-      }
-    }
-    return filteredDomain;
-  };
+    return tail(val);
+  }
+
+  return filter;
 }
 
 export function high_pass_filter(frequency: number): Filter {
-  return (frequencyDomain) => {
-    const length = frequencyDomain.length;
-    const ratio = frequency / FS;
-    const threshold = length * ratio;
+  function filter(freqList: FrequencyList) {
+    const len = length(freqList);
+    const threshold = len * frequency / 44100;
 
-    const filteredDomain: FrequencySamples = new Array<FrequencySample>(length);
+    const val = accumulate(
+      (sample, acc) => pair(
+        head(acc) - 1,
+        pair(
+          head(acc) >= threshold ? sample : pair(0, tail(sample)),
+          tail(acc)
+        )
+      ),
+      pair(len - 1, list()),
+      freqList
+    );
 
-    for (let i = 0; i < length; i++) {
-      if (i > threshold) {
-        filteredDomain[i] = frequencyDomain[i];
-      } else {
-        filteredDomain[i] = pair(0, tail(frequencyDomain[i]));
-      }
-    }
-    return filteredDomain;
-  };
+    return tail(val);
+  }
+
+  return filter;
 }
 
 export function combine_filters(filters: List): Filter {
   const nullFilter = (x: any) => x;
   function combine(f1: Filter, f2: Filter) {
-    return (frequencyDomain: FrequencySamples) => f1(f2(frequencyDomain));
+    return (frequencyDomain: FrequencyList) => f1(f2(frequencyDomain));
   }
   return accumulate(combine, nullFilter, filters);
 }

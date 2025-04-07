@@ -4,4 +4,4 @@ export type TimeSamples = Array<number>;
 export type FrequencySample = Pair<number, number>;
 export type FrequencySamples = Array<FrequencySample>;
 export type FrequencyList = List;
-export type Filter = (freq: FrequencySamples) => FrequencySamples;
+export type Filter = (freq: FrequencyList) => FrequencyList;
