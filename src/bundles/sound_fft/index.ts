@@ -14,6 +14,8 @@ export {
 
   get_magnitude,
   get_phase,
+  get_frequency,
+  make_augmented_sample,
 
   frequency_to_sound,
   sound_to_frequency,

@@ -60,9 +60,5 @@ export {
   stop,
   triangle_sound,
   trombone,
-  violin,
-  sound_to_time_samples,
-  play_samples_in_tab,
-  play_samples,
-  //play_filtered
+  violin
 } from './functions';

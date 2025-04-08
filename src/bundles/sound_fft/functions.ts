@@ -18,6 +18,7 @@ import {
 import type {
   TimeSamples,
   FrequencySample,
+  AugmentedSample,
   FrequencySamples,
   FrequencyList,
   Filter
@@ -59,8 +60,8 @@ export function frequency_to_time(frequency_samples: FrequencySamples): TimeSamp
   const flatDomain = fft.createComplexArray();
 
   for (let i = 0; i < n; i++) {
-    const magnitude = get_magnitude(frequency_samples[i]);
-    const phase = get_phase(frequency_samples[i]);
+    const magnitude = get_magnitude_fs(frequency_samples[i]);
+    const phase = get_phase_fs(frequency_samples[i]);
     const real = magnitude * Math.cos(phase);
     const imag = magnitude * Math.sin(phase);
     flatDomain[i * 2] = real;
@@ -112,16 +113,16 @@ export function time_samples_to_sound(time_samples: TimeSamples): Sound {
 
 function frequency_to_list(frequency_samples: FrequencySamples): FrequencyList {
   const len = frequency_samples.length;
-  const augmented_samples: any[] = new Array(len);
+  const augmented_samples: AugmentedSample[] = new Array(len);
   for (let i = 0; i < len; i++) {
-    augmented_samples[i] = pair(pair(i * FS / len, (i+1) * FS / len), frequency_samples[i]);
+    augmented_samples[i] = pair(i * FS / len, frequency_samples[i]);
   }
   const frequency_list: FrequencyList = vector_to_list(augmented_samples);
   return frequency_list;
 }
 
 function list_to_frequency(frequency_list: FrequencyList): FrequencySamples {
-  const augmented_samples: any[] = list_to_vector(frequency_list);
+  const augmented_samples: AugmentedSample[] = list_to_vector(frequency_list);
   const frequency_samples: FrequencySamples = new Array(augmented_samples.length);
   for (let i = 0; i < augmented_samples.length; i++) {
     frequency_samples[i] = tail(augmented_samples[i]);
@@ -143,29 +144,43 @@ export function frequency_to_sound(frequency_list: FrequencyList): Sound {
   return sound;
 }
 
-// MAGNITUDE and PHASE
+// FREQUENCY, MAGNITUDE and PHASE
 
-export function get_magnitude(frequency_sample: FrequencySample): number {
+function get_magnitude_fs(frequency_sample: FrequencySample): number {
   return head(frequency_sample);
 }
 
-export function get_phase(frequency_sample: FrequencySample): number {
+function get_phase_fs(frequency_sample: FrequencySample): number {
   return tail(frequency_sample);
+}
+
+export function get_frequency(augmented_sample: AugmentedSample): number {
+  return head(augmented_sample);
+}
+
+export function get_magnitude(augmented_sample: AugmentedSample): number {
+  return get_magnitude_fs(tail(augmented_sample));
+}
+
+export function get_phase(augmented_sample: AugmentedSample): number {
+  return get_phase_fs(tail(augmented_sample));
+}
+
+export function make_augmented_sample(frequency: number, magnitude: number, phase: number): AugmentedSample {
+  return pair(frequency, pair(magnitude, phase));
 }
 
 // FILTER CREATION
 
 export function low_pass_filter(frequency: number): Filter {
   return (freqList: FrequencyList) => {
-    const freqDomain = list_to_vector(freqList);
+    const freqDomain: AugmentedSample[] = list_to_vector(freqList);
     for (let i = 0; i < freqDomain.length; i++) {
-      if (head(head(freqDomain[i])) > frequency) {
-        freqDomain[i] = pair(
-          head(freqDomain[i]), // Frequency range
-          pair(
-            0, // Magnitude
-            tail(tail(freqDomain[i])) // Phase
-          )
+      if (get_frequency(freqDomain[i]) > frequency) {
+        freqDomain[i] = make_augmented_sample(
+          get_frequency(freqDomain[i]),
+          0,
+          get_phase(freqDomain[i])
         );
       }
     }
@@ -175,15 +190,13 @@ export function low_pass_filter(frequency: number): Filter {
 
 export function high_pass_filter(frequency: number): Filter {
   return (freqList: FrequencyList) => {
-    const freqDomain = list_to_vector(freqList);
+    const freqDomain: AugmentedSample[] = list_to_vector(freqList);
     for (let i = 0; i < freqDomain.length; i++) {
-      if (tail(head(freqDomain[i])) < frequency) {
-        freqDomain[i] = pair(
-          head(freqDomain[i]), // Frequency range
-          pair(
-            0, // Magnitude
-            tail(tail(freqDomain[i])) // Phase
-          )
+      if (get_frequency(freqDomain[i]) < frequency) {
+        freqDomain[i] = make_augmented_sample(
+          get_frequency(freqDomain[i]),
+          0,
+          get_phase(freqDomain[i])
         );
       }
     }

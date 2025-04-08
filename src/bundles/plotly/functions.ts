@@ -4,11 +4,11 @@
  */
 
 import context from 'js-slang/context';
-import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { list_to_vector } from 'js-slang/dist/stdlib/list';
+import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { type Sound } from '../sound/types';
 import type {
-  FrequencySample,
+  AugmentedSample,
   FrequencyList,
 } from '../sound_fft/types';
 import { generatePlot } from './curve_functions';
@@ -477,12 +477,12 @@ export const draw_sound_frequency_2d = (frequencies: FrequencyList) => {
 
   const x_s: number[] = [];
   const y_s: number[] = [];
-  const frequencies_arr: FrequencySample[] = list_to_vector(frequencies);
+  const frequencies_arr: AugmentedSample[] = list_to_vector(frequencies);
   const len: number = frequencies_arr.length;
 
   for (let i = 0; i < len; i += 1) {
     const bin_freq: number = i * FS / len;
-    const sample: FrequencySample = frequencies_arr[i];
+    const sample: AugmentedSample = frequencies_arr[i];
     const magnitude: number = get_magnitude(sample);
 
     x_s.push(bin_freq);
