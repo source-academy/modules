@@ -11,16 +11,6 @@ import {
   accumulate,
   type List
 } from 'js-slang/dist/stdlib/list';
-import {
-  frequency_to_time,
-  time_to_frequency
-} from '../sound_fft/functions';
-import type {
-  TimeSamples,
-  FrequencySample,
-  FrequencySamples,
-  Filter
-} from '../sound_fft/types';
 import { RIFFWAVE } from './riffwave';
 import type {
   Wave,
@@ -317,58 +307,6 @@ export function play_wave(wave: Wave, duration: number): Sound {
   return play(make_sound(wave, duration));
 }
 
-export function play_samples_in_tab(samples: TimeSamples): TimeSamples {
-  // Instantiate audio context if it has not been instantiated.
-  if (!audioplayer) {
-    init_audioCtx();
-  }
-
-  // Create mono buffer
-  const channel: number[] = [];
-  const len = samples.length;
-
-  let temp: number;
-  let prev_value = 0;
-
-  for (let i = 0; i < len; i += 1) {
-    temp = samples[i];
-    // clip amplitude
-    // channel[i] = temp > 1 ? 1 : temp < -1 ? -1 : temp;
-    if (temp > 1) {
-      channel[i] = 1;
-    } else if (temp < -1) {
-      channel[i] = -1;
-    } else {
-      channel[i] = temp;
-    }
-
-    // smoothen out sudden cut-outs
-    if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
-      channel[i] = prev_value * 0.999;
-    }
-
-    prev_value = channel[i];
-  }
-
-  // quantize
-  for (let i = 0; i < channel.length; i += 1) {
-    channel[i] = Math.floor(channel[i] * 32767.999);
-  }
-
-  const riffwave = new RIFFWAVE([]);
-  riffwave.header.sampleRate = FS;
-  riffwave.header.numChannels = 1;
-  riffwave.header.bitsPerSample = 16;
-  riffwave.Make(channel);
-
-  const soundToPlay = {
-    toReplString: () => '<AudioPlayed>',
-    dataUri: riffwave.dataURI
-  };
-  audioPlayed.push(soundToPlay);
-  return samples;
-}
-
 /**
  * Plays the given Sound using the computer’s sound device.
  * The sound is added to a list of sounds to be played one-at-a-time
@@ -441,54 +379,6 @@ export function play_in_tab(sound: Sound): Sound {
     audioPlayed.push(soundToPlay);
     return sound;
   }
-}
-
-export function play_samples(samples: TimeSamples): TimeSamples {
-  if (!audioplayer) {
-    init_audioCtx();
-  }
-
-  const theBuffer = audioplayer.createBuffer(
-    1,
-    samples.length,
-    FS
-  );
-  const channel = theBuffer.getChannelData(0);
-
-  let temp: number;
-  let prev_value = 0;
-
-  for (let i = 0; i < channel.length; i += 1) {
-    temp = samples[i];
-    // clip amplitude
-    if (temp > 1) {
-      channel[i] = 1;
-    } else if (temp < -1) {
-      channel[i] = -1;
-    } else {
-      channel[i] = temp;
-    }
-
-    // smoothen out sudden cut-outs
-    if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
-      channel[i] = prev_value * 0.999;
-    }
-
-    prev_value = channel[i];
-
-  }
-
-  // Connect data to output destination
-  const source = audioplayer.createBufferSource();
-  source.buffer = theBuffer;
-  source.connect(audioplayer.destination);
-  isPlaying = true;
-  source.start();
-  source.onended = () => {
-    source.disconnect(audioplayer.destination);
-    isPlaying = false;
-  };
-  return samples;
 }
 
 /**
