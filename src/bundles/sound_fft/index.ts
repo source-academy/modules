@@ -16,5 +16,7 @@ export {
   get_phase,
 
   frequency_to_sound,
-  sound_to_frequency
+  sound_to_frequency,
+
+  filter_sound
 } from './functions';

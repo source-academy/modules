@@ -1,25 +1,14 @@
 import FFT from 'fft.js';
 import {
-  //pair,
-  //head,
-  //tail,
-  //length,
-  //list,
-  //accumulate,
-  //list_to_vector,
-  //vector_to_list,
-  type List
-} from 'js-slang/dist/stdlib/list';
-import {
   pair,
   head,
   tail,
-  length,
-  list,
+  set_tail,
   accumulate,
   list_to_vector,
-  vector_to_list
-} from './list';
+  vector_to_list,
+  type List
+} from 'js-slang/dist/stdlib/list';
 import type { Sound } from '../sound/types';
 import {
   make_sound,
@@ -121,15 +110,34 @@ export function time_samples_to_sound(time_samples: TimeSamples): Sound {
   }, duration);
 }
 
+function frequency_to_list(frequency_samples: FrequencySamples): FrequencyList {
+  const len = frequency_samples.length;
+  const augmented_samples: any[] = new Array(len);
+  for (let i = 0; i < len; i++) {
+    augmented_samples[i] = pair(pair(i * FS / len, (i+1) * FS / len), frequency_samples[i]);
+  }
+  const frequency_list: FrequencyList = vector_to_list(augmented_samples);
+  return frequency_list;
+}
+
+function list_to_frequency(frequency_list: FrequencyList): FrequencySamples {
+  const augmented_samples: any[] = list_to_vector(frequency_list);
+  const frequency_samples: FrequencySamples = new Array(augmented_samples.length);
+  for (let i = 0; i < augmented_samples.length; i++) {
+    frequency_samples[i] = tail(augmented_samples[i]);
+  }
+  return frequency_samples;
+}
+
 export function sound_to_frequency(sound: Sound): FrequencyList {
   const time_samples: TimeSamples = sound_to_time_samples(sound);
   const frequency_samples: FrequencySamples = time_to_frequency(time_samples);
-  const frequency_list: FrequencyList = vector_to_list(frequency_samples);
+  const frequency_list: FrequencyList = frequency_to_list(frequency_samples);
   return frequency_list;
 }
 
 export function frequency_to_sound(frequency_list: FrequencyList): Sound {
-  const frequency_samples: FrequencySamples = list_to_vector(frequency_list);
+  const frequency_samples: FrequencySamples = list_to_frequency(frequency_list);
   const time_samples: TimeSamples = frequency_to_time(frequency_samples);
   const sound: Sound = time_samples_to_sound(time_samples);
   return sound;
@@ -148,49 +156,39 @@ export function get_phase(frequency_sample: FrequencySample): number {
 // FILTER CREATION
 
 export function low_pass_filter(frequency: number): Filter {
-  function filter(freqList: FrequencyList) {
-    const len = length(freqList);
-    const threshold = len * frequency / 44100;
-
-    const val = accumulate(
-      (sample, acc) => pair(
-        head(acc) - 1,
-        pair(
-          head(acc) < threshold ? sample : pair(0, tail(sample)),
-          tail(acc)
-        )
-      ),
-      pair(len - 1, list()),
-      freqList
-    );
-
-    return tail(val);
-  }
-
-  return filter;
+  return (freqList: FrequencyList) => {
+    const freqDomain = list_to_vector(freqList);
+    for (let i = 0; i < freqDomain.length; i++) {
+      if (head(head(freqDomain[i])) > frequency) {
+        freqDomain[i] = pair(
+          head(freqDomain[i]), // Frequency range
+          pair(
+            0, // Magnitude
+            tail(tail(freqDomain[i])) // Phase
+          )
+        );
+      }
+    }
+    return vector_to_list(freqDomain);
+  };
 }
 
 export function high_pass_filter(frequency: number): Filter {
-  function filter(freqList: FrequencyList) {
-    const len = length(freqList);
-    const threshold = len * frequency / 44100;
-
-    const val = accumulate(
-      (sample, acc) => pair(
-        head(acc) - 1,
-        pair(
-          head(acc) >= threshold ? sample : pair(0, tail(sample)),
-          tail(acc)
-        )
-      ),
-      pair(len - 1, list()),
-      freqList
-    );
-
-    return tail(val);
-  }
-
-  return filter;
+  return (freqList: FrequencyList) => {
+    const freqDomain = list_to_vector(freqList);
+    for (let i = 0; i < freqDomain.length; i++) {
+      if (tail(head(freqDomain[i])) < frequency) {
+        freqDomain[i] = pair(
+          head(freqDomain[i]), // Frequency range
+          pair(
+            0, // Magnitude
+            tail(tail(freqDomain[i])) // Phase
+          )
+        );
+      }
+    }
+    return vector_to_list(freqDomain);
+  };
 }
 
 export function combine_filters(filters: List): Filter {
@@ -199,4 +197,23 @@ export function combine_filters(filters: List): Filter {
     return (frequencyDomain: FrequencyList) => f1(f2(frequencyDomain));
   }
   return accumulate(combine, nullFilter, filters);
+}
+
+// FILTER SOUND
+export function filter_sound(sound: Sound, filter: Filter): Sound {
+  const original_duration = get_duration(sound);
+  const original_size = Math.ceil(FS * original_duration);
+  const frequency_list_before = sound_to_frequency(sound);
+  const frequency_list_after = filter(frequency_list_before);
+  const frequency_samples = list_to_frequency(frequency_list_after);
+
+  for (let i = original_size; i < frequency_samples.length; i++) {
+    frequency_samples[i] = pair(0, 0);
+  }
+
+  const final_list = frequency_to_list(frequency_samples);
+  const final_sound = frequency_to_sound(final_list);
+  set_tail(final_sound, original_duration);
+
+  return final_sound;
 }

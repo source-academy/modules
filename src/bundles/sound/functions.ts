@@ -443,49 +443,6 @@ export function play_in_tab(sound: Sound): Sound {
   }
 }
 
-/**
- * Returns the smallest power of 2,
- * that is greater than or equal to a given number.
- *
- * @param x the lower bound
- * @return the smallest power of 2 greater than or equal to x
- */
-function next_power_of_2(x: number): number {
-  const lowerPowerOf2: number = 1 << 31 - Math.clz32(x);
-  if (lowerPowerOf2 == x) {
-    return lowerPowerOf2;
-  } else {
-    return lowerPowerOf2 * 2;
-  }
-}
-
-// Pad to power-of-2
-export function sound_to_time_samples(sound: Sound): TimeSamples {
-  const baseSize = Math.ceil(FS * get_duration(sound));
-  const sampleSize = next_power_of_2(baseSize);
-  const wave = get_wave(sound);
-
-  const sample = new Array(sampleSize);
-  for (let i = 0; i < sampleSize; i += 1) {
-    sample[i] = wave(i / FS);
-  }
-
-  return sample;
-}
-
-///**
-// * Modify the given sound samples using FFT
-// *
-// * @param samples the sound samples of size 2^n
-// * @return a Array(2^n) containing the modified samples
-// */
-//function modifyFFT(samples: TimeSamples, filter: Filter): TimeSamples {
-//  const frequencyDomain = time_to_frequency(samples);
-//  const filtered = filter(frequencyDomain);
-//  const timeSamples = frequency_to_time(filtered);
-//  return timeSamples;
-//}
-
 export function play_samples(samples: TimeSamples): TimeSamples {
   if (!audioplayer) {
     init_audioCtx();
@@ -533,43 +490,6 @@ export function play_samples(samples: TimeSamples): TimeSamples {
   };
   return samples;
 }
-
-/**
- * Plays the given Sound using the computer’s sound device
- * on top of any Sounds that are currently playing.
- *
- * Takes in an filter for modifying using FFT.
- *
- * @param sound the Sound to play
- * @param filter the filter to use
- * @return the given Sound
- * @example play_filtered(sine_sound(440, 5), filter);
- */
-//export function play_filtered(sound: Sound, filter: Filter): Sound {
-//  // Type-check sound
-//  if (!is_sound(sound)) {
-//    throw new Error(
-//      `${play.name} is expecting sound, but encountered ${sound}`
-//    );
-//  } else if (get_duration(sound) < 0) {
-//    throw new Error(`${play.name}: duration of sound is negative`);
-//  } else if (get_duration(sound) === 0) {
-//    return sound;
-//  } else {
-//    // Instantiate audio context if it has not been instantiated.
-//    if (!audioplayer) {
-//      init_audioCtx();
-//    }
-//
-//    const targetSize = Math.ceil(FS * get_duration(sound));
-//    const originalSample = sound_to_time_samples(sound);
-//    const newSample = modifyFFT(originalSample, filter);
-//
-//    play_samples(newSample.slice(0, targetSize));
-//
-//    return sound;
-//  }
-//}
 
 /**
  * Plays the given Sound using the computer’s sound device
