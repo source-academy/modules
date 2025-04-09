@@ -5,7 +5,7 @@
  *
  * @module sound_fft
  * @author Tran Gia Huy
- * @author Stuart
+ * @author Stuart Lim Yi Xiong
  */
 export {
   low_pass_filter,
