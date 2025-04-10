@@ -6,10 +6,10 @@ import {
   set_tail,
   accumulate,
   list_to_vector,
-  vector_to_list,
   type List
 } from 'js-slang/dist/stdlib/list';
 import type { Sound } from '../sound/types';
+import { vector_to_list } from './list';
 import {
   make_sound,
   get_wave,
