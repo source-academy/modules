@@ -2101,9 +2101,9 @@ __metadata:
   linkType: hard
 
 "@types/plotly.js@npm:^2.35.4":
-  version: 2.35.4
-  resolution: "@types/plotly.js@npm:2.35.4"
-  checksum: 10c0/bec3223df090f34326628e88b2243dd37f539834280f20a80ddc5fa5a54f0494af84bc473535bf5a2cd035693d7246c357361b8fa5f51ade964dc3dab506f994
+  version: 2.35.5
+  resolution: "@types/plotly.js@npm:2.35.5"
+  checksum: 10c0/02268e979c471a9dccd0e1a344ed69e8d71b3b1680c0f1dd08b9d421e2689315906d7010eb4011a6e0280929a9003efaad3319cd103a52f7ed2fc9807bc7bec1
   languageName: node
   linkType: hard
 
