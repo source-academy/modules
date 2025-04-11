@@ -858,7 +858,7 @@ export default require => {
           };
         };
         function is(token, type) {
-          return token.type.lastIndexOf(type + ".xml") > -1;
+          return token && token.type && token.type.lastIndexOf(type + ".xml") > -1;
         }
         (function () {
           this.getFoldWidget = function (session, foldStyle, row) {
@@ -2235,29 +2235,43 @@ export default require => {
               }
             });
             popup.renderer.on("afterRender", function () {
+              var t = popup.renderer.$textLayer;
+              for (var row = t.config.firstRow, l = t.config.lastRow; row <= l; row++) {
+                var popupRowElement = t.element.childNodes[row - t.config.firstRow];
+                popupRowElement.setAttribute("role", optionAriaRole);
+                popupRowElement.setAttribute("aria-roledescription", nls("autocomplete.popup.item.aria-roledescription", "item"));
+                popupRowElement.setAttribute("aria-setsize", popup.data.length);
+                popupRowElement.setAttribute("aria-describedby", "doc-tooltip");
+                popupRowElement.setAttribute("aria-posinset", row + 1);
+                var rowData = popup.getData(row);
+                if (rowData) {
+                  var ariaLabel = ("").concat(rowData.caption || rowData.value).concat(rowData.meta ? (", ").concat(rowData.meta) : "");
+                  popupRowElement.setAttribute("aria-label", ariaLabel);
+                }
+                var highlightedSpans = popupRowElement.querySelectorAll(".ace_completion-highlight");
+                highlightedSpans.forEach(function (span) {
+                  span.setAttribute("role", "mark");
+                });
+              }
+            });
+            popup.renderer.on("afterRender", function () {
               var row = popup.getRow();
               var t = popup.renderer.$textLayer;
               var selected = t.element.childNodes[row - t.config.firstRow];
               var el2 = document.activeElement;
               if (selected !== popup.selectedNode && popup.selectedNode) {
                 dom.removeCssClass(popup.selectedNode, "ace_selected");
-                el2.removeAttribute("aria-activedescendant");
                 popup.selectedNode.removeAttribute(ariaActiveState);
                 popup.selectedNode.removeAttribute("id");
               }
+              el2.removeAttribute("aria-activedescendant");
               popup.selectedNode = selected;
               if (selected) {
-                dom.addCssClass(selected, "ace_selected");
                 var ariaId = getAriaId(row);
+                dom.addCssClass(selected, "ace_selected");
                 selected.id = ariaId;
                 t.element.setAttribute("aria-activedescendant", ariaId);
                 el2.setAttribute("aria-activedescendant", ariaId);
-                selected.setAttribute("role", optionAriaRole);
-                selected.setAttribute("aria-roledescription", nls("autocomplete.popup.item.aria-roledescription", "item"));
-                selected.setAttribute("aria-label", popup.getData(row).caption || popup.getData(row).value);
-                selected.setAttribute("aria-setsize", popup.data.length);
-                selected.setAttribute("aria-posinset", row + 1);
-                selected.setAttribute("aria-describedby", "doc-tooltip");
                 selected.setAttribute(ariaActiveState, "true");
               }
             });
@@ -2384,8 +2398,9 @@ export default require => {
                 return true;
               }
               var el2 = this.container;
-              var screenHeight = window.innerHeight;
-              var screenWidth = window.innerWidth;
+              var scrollBarSize = this.renderer.scrollBar.width || 10;
+              var screenHeight = window.innerHeight - scrollBarSize;
+              var screenWidth = window.innerWidth - scrollBarSize;
               var renderer = this.renderer;
               var maxH = renderer.$maxLines * lineHeight * 1.4;
               var dims = {
@@ -2424,7 +2439,7 @@ export default require => {
               }
               if (anchor === "top") {
                 el2.style.top = "";
-                el2.style.bottom = screenHeight - dims.bottom + "px";
+                el2.style.bottom = screenHeight + scrollBarSize - dims.bottom + "px";
                 popup.isTopdown = false;
               } else {
                 el2.style.top = dims.top + "px";
@@ -3042,7 +3057,7 @@ export default require => {
           };
           Autocomplete2.prototype.updateDocTooltip = function () {
             var popup = this.popup;
-            var all = this.completions.filtered;
+            var all = this.completions && this.completions.filtered;
             var selected = all && (all[popup.getHoveredRow()] || all[popup.getRow()]);
             var doc = null;
             if (!selected || !this.editor || !this.popup.isOpen) return this.hideDocTooltip();
@@ -3085,29 +3100,46 @@ export default require => {
             if (!tooltipNode.parentNode) this.popup.container.appendChild(this.tooltipNode);
             var popup = this.popup;
             var rect = popup.container.getBoundingClientRect();
-            tooltipNode.style.top = popup.container.style.top;
-            tooltipNode.style.bottom = popup.container.style.bottom;
-            tooltipNode.style.display = "block";
-            if (window.innerWidth - rect.right < 320) {
-              if (rect.left < 320) {
-                if (popup.isTopdown) {
-                  tooltipNode.style.top = rect.bottom + "px";
-                  tooltipNode.style.left = rect.left + "px";
-                  tooltipNode.style.right = "";
-                  tooltipNode.style.bottom = "";
-                } else {
-                  tooltipNode.style.top = popup.container.offsetTop - tooltipNode.offsetHeight + "px";
-                  tooltipNode.style.left = rect.left + "px";
-                  tooltipNode.style.right = "";
-                  tooltipNode.style.bottom = "";
-                }
+            var targetWidth = 400;
+            var targetHeight = 300;
+            var scrollBarSize = popup.renderer.scrollBar.width || 10;
+            var leftSize = rect.left;
+            var rightSize = window.innerWidth - rect.right - scrollBarSize;
+            var topSize = popup.isTopdown ? rect.top : window.innerHeight - scrollBarSize - rect.bottom;
+            var scores = [Math.min(rightSize / targetWidth, 1), Math.min(leftSize / targetWidth, 1), Math.min(topSize / targetHeight * 0.9)];
+            var max = Math.max.apply(Math, scores);
+            var tooltipStyle = tooltipNode.style;
+            tooltipStyle.display = "block";
+            if (max == scores[0]) {
+              tooltipStyle.left = rect.right + 1 + "px";
+              tooltipStyle.right = "";
+              tooltipStyle.maxWidth = targetWidth * max + "px";
+              tooltipStyle.top = rect.top + "px";
+              tooltipStyle.bottom = "";
+              tooltipStyle.maxHeight = Math.min(window.innerHeight - scrollBarSize - rect.top, targetHeight) + "px";
+            } else if (max == scores[1]) {
+              tooltipStyle.right = window.innerWidth - rect.left + "px";
+              tooltipStyle.left = "";
+              tooltipStyle.maxWidth = targetWidth * max + "px";
+              tooltipStyle.top = rect.top + "px";
+              tooltipStyle.bottom = "";
+              tooltipStyle.maxHeight = Math.min(window.innerHeight - scrollBarSize - rect.top, targetHeight) + "px";
+            } else if (max == scores[2]) {
+              tooltipStyle.left = window.innerWidth - rect.left + "px";
+              tooltipStyle.maxWidth = Math.min(targetWidth, window.innerWidth) + "px";
+              if (popup.isTopdown) {
+                tooltipStyle.top = rect.bottom + "px";
+                tooltipStyle.left = rect.left + "px";
+                tooltipStyle.right = "";
+                tooltipStyle.bottom = "";
+                tooltipStyle.maxHeight = Math.min(window.innerHeight - scrollBarSize - rect.bottom, targetHeight) + "px";
               } else {
-                tooltipNode.style.right = window.innerWidth - rect.left + "px";
-                tooltipNode.style.left = "";
+                tooltipStyle.top = popup.container.offsetTop - tooltipNode.offsetHeight + "px";
+                tooltipStyle.left = rect.left + "px";
+                tooltipStyle.right = "";
+                tooltipStyle.bottom = "";
+                tooltipStyle.maxHeight = Math.min(popup.container.offsetTop, targetHeight) + "px";
               }
-            } else {
-              tooltipNode.style.left = rect.right + 1 + "px";
-              tooltipNode.style.right = "";
             }
           };
           Autocomplete2.prototype.hideDocTooltip = function () {
@@ -3141,6 +3173,23 @@ export default require => {
               this.editor.completer = null;
             }
             this.inlineRenderer = this.popup = this.editor = null;
+          };
+          Autocomplete2.for = function (editor) {
+            if (editor.completer instanceof Autocomplete2) {
+              return editor.completer;
+            }
+            if (editor.completer) {
+              editor.completer.destroy();
+              editor.completer = null;
+            }
+            if (config.get("sharedPopups")) {
+              if (!Autocomplete2["$sharedInstance"]) Autocomplete2["$sharedInstance"] = new Autocomplete2();
+              editor.completer = Autocomplete2["$sharedInstance"];
+            } else {
+              editor.completer = new Autocomplete2();
+              editor.once("destroy", destroyCompleter);
+            }
+            return editor.completer;
           };
           return Autocomplete2;
         })();
@@ -3183,23 +3232,6 @@ export default require => {
           "PageDown": function (editor) {
             editor.completer.popup.gotoPageDown();
           }
-        };
-        Autocomplete.for = function (editor) {
-          if (editor.completer instanceof Autocomplete) {
-            return editor.completer;
-          }
-          if (editor.completer) {
-            editor.completer.destroy();
-            editor.completer = null;
-          }
-          if (config.get("sharedPopups")) {
-            if (!Autocomplete["$sharedInstance"]) Autocomplete["$sharedInstance"] = new Autocomplete();
-            editor.completer = Autocomplete["$sharedInstance"];
-          } else {
-            editor.completer = new Autocomplete();
-            editor.once("destroy", destroyCompleter);
-          }
-          return editor.completer;
         };
         Autocomplete.startCommand = {
           name: "startAutocomplete",
@@ -3372,6 +3404,11 @@ export default require => {
             var upper = needle.toUpperCase();
             var lower = needle.toLowerCase();
             loop: for (var i = 0, item; item = items[i]; i++) {
+              if (item.skipFilter) {
+                item.$score = item.score;
+                results.push(item);
+                continue;
+              }
               var caption = !this.ignoreCaption && item.caption || item.value || item.snippet;
               if (!caption) continue;
               var lastIndex = -1;
