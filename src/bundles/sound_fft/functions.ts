@@ -173,34 +173,36 @@ export function make_augmented_sample(frequency: number, magnitude: number, phas
 // FILTER CREATION
 
 export function low_pass_filter(frequency: number): Filter {
-  return (freqList: FrequencyList) => {
-    const freqDomain: AugmentedSample[] = list_to_vector(freqList);
-    for (let i = 0; i < freqDomain.length; i++) {
-      if (get_frequency(freqDomain[i]) > frequency) {
-        freqDomain[i] = make_augmented_sample(
-          get_frequency(freqDomain[i]),
+  return (freq_list: FrequencyList) => {
+    const freq_domain: AugmentedSample[] = list_to_vector(freq_list);
+    for (let i = 0; i < freq_domain.length; i++) {
+      const sample_freq: number = get_frequency(freq_domain[i]);
+      if (sample_freq > frequency && sample_freq < FS - frequency) {
+        freq_domain[i] = make_augmented_sample(
+          sample_freq,
           0,
-          get_phase(freqDomain[i])
+          get_phase(freq_domain[i])
         );
       }
     }
-    return vector_to_list(freqDomain);
+    return vector_to_list(freq_domain);
   };
 }
 
 export function high_pass_filter(frequency: number): Filter {
-  return (freqList: FrequencyList) => {
-    const freqDomain: AugmentedSample[] = list_to_vector(freqList);
-    for (let i = 0; i < freqDomain.length; i++) {
-      if (get_frequency(freqDomain[i]) < frequency) {
-        freqDomain[i] = make_augmented_sample(
-          get_frequency(freqDomain[i]),
+  return (freq_list: FrequencyList) => {
+    const freq_domain: AugmentedSample[] = list_to_vector(freq_list);
+    for (let i = 0; i < freq_domain.length; i++) {
+      const sample_freq: number = get_frequency(freq_domain[i]);
+      if (sample_freq < frequency || sample_freq > FS - frequency) {
+        freq_domain[i] = make_augmented_sample(
+          sample_freq,
           0,
-          get_phase(freqDomain[i])
+          get_phase(freq_domain[i])
         );
       }
     }
-    return vector_to_list(freqDomain);
+    return vector_to_list(freq_domain);
   };
 }
 
