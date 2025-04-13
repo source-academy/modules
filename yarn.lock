@@ -7584,7 +7584,7 @@ __metadata:
     js-slang: "npm:^1.0.81"
     lodash: "npm:^4.17.21"
     mqtt: "npm:^4.3.7"
-    nbody: "npm:^0.1.1"
+    nbody: "npm:^0.2.0"
     patch-package: "npm:^6.5.1"
     phaser: "npm:^3.54.0"
     plotly.js-dist: "npm:^2.17.1"
@@ -7699,9 +7699,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nbody@npm:^0.1.1":
-  version: 0.1.1
-  resolution: "nbody@npm:0.1.1"
+"nbody@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "nbody@npm:0.2.0"
   dependencies:
     lil-gui: "npm:^0.19.2"
     stats.js: "npm:^0.17.0"
@@ -7710,7 +7710,7 @@ __metadata:
     "@types/three": ^0.163.0
     plotly.js-dist: ^2.30.1
     three: ^0.163.0
-  checksum: 10c0/be59d60dfdcf42643824cca60f145da69f098e53a75797532e7dbccdb696ec2b095ab21a04e2d6cb7427ea92d7f96ea7d6b6ce680257cd31f2d66daf72497dc1
+  checksum: 10c0/25f3070b4cec0dad385f9cddb306aac942cd4118f20a01fbd9b3a604214144d106b327d4afac89c5fd20f6873c27d5c6d491b9fa0b81ace1dc72f1a889dcbef7
   languageName: node
   linkType: hard
 
