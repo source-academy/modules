@@ -1313,6 +1313,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jscad/modeling@npm:2.12.5":
+  version: 2.12.5
+  resolution: "@jscad/modeling@npm:2.12.5"
+  checksum: 10c0/17d9f5a37b3ba108f3fdcbe44f997e68c3ad0e355fba016537dc985b268800a02a13d40e24f813e150334e9b6660e15d1d9160e0378f8faa14148faef33f8fcb
+  languageName: node
+  linkType: hard
+
 "@jscad/modeling@npm:2.9.6":
   version: 2.9.6
   resolution: "@jscad/modeling@npm:2.9.6"
@@ -7568,7 +7575,7 @@ __metadata:
     "@box2d/debug-draw": "npm:^0.10.0"
     "@commander-js/extra-typings": "npm:^12.0.0"
     "@dimforge/rapier3d-compat": "npm:^0.11.2"
-    "@jscad/modeling": "npm:2.9.6"
+    "@jscad/modeling": "npm:2.12.5"
     "@jscad/regl-renderer": "npm:^2.6.1"
     "@jscad/stl-serializer": "npm:2.1.11"
     "@stylistic/eslint-plugin": "npm:^4.2.0"
