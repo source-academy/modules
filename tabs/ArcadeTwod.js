@@ -1118,7 +1118,7 @@ export default require => {
                 },
                 getFirstTick: function (state) {
                   state.accumulator = 0;
-                  state.nextTick = state.currentFrame.duration ? state.currentFrame.duration : state.msPerFrame;
+                  state.nextTick = state.msPerFrame || state.currentFrame.duration;
                 },
                 getFrameAt: function (index) {
                   return this.frames[index];
@@ -1191,7 +1191,7 @@ export default require => {
                 },
                 getNextTick: function (state) {
                   state.accumulator -= state.nextTick;
-                  state.nextTick = state.currentFrame.duration ? state.currentFrame.duration : state.msPerFrame;
+                  state.nextTick = state.msPerFrame || state.currentFrame.duration;
                 },
                 getFrameByProgress: function (value) {
                   value = Clamp(value, 0, 1);
@@ -4545,7 +4545,8 @@ export default require => {
             },
             8054: (module2, __unused_webpack_exports, __webpack_require__2) => {
               var CONST = {
-                VERSION: "3.86.0",
+                VERSION: "3.88.2",
+                LOG_VERSION: "v388",
                 BlendModes: __webpack_require__2(10312),
                 ScaleModes: __webpack_require__2(29795),
                 AUTO: 0,
@@ -4606,7 +4607,7 @@ export default require => {
                   this.seed = GetValue(config, "seed", [(Date.now() * Math.random()).toString()]);
                   PhaserMath.RND = new PhaserMath.RandomDataGenerator(this.seed);
                   this.gameTitle = GetValue(config, "title", "");
-                  this.gameURL = GetValue(config, "url", "https://phaser.io/v385/");
+                  this.gameURL = GetValue(config, "url", "https://phaser.io/" + CONST.LOG_VERSION);
                   this.gameVersion = GetValue(config, "version", "");
                   this.autoFocus = GetValue(config, "autoFocus", true);
                   this.stableSort = GetValue(config, "stableSort", -1);
@@ -9056,6 +9057,7 @@ export default require => {
             },
             13699: (module2, __unused_webpack_exports, __webpack_require__2) => {
               var Linear = __webpack_require__2(28915);
+              var GetColor = __webpack_require__2(37589);
               var RGBWithRGB = function (r1, g1, b1, r2, g2, b2, length, index) {
                 if (length === void 0) {
                   length = 100;
@@ -9064,10 +9066,15 @@ export default require => {
                   index = 0;
                 }
                 var t = index / length;
+                var r = Linear(r1, r2, t);
+                var g = Linear(g1, g2, t);
+                var b = Linear(b1, b2, t);
                 return {
-                  r: Linear(r1, r2, t),
-                  g: Linear(g1, g2, t),
-                  b: Linear(b1, b2, t)
+                  r,
+                  g,
+                  b,
+                  a: 255,
+                  color: GetColor(r, g, b)
                 };
               };
               var ColorWithColor = function (color1, color2, length, index) {
@@ -10393,9 +10400,11 @@ export default require => {
                 },
                 shutdown: function () {
                   var list = this.list;
-                  while (list.length) {
-                    list[0].destroy(true);
+                  var i = list.length;
+                  while (i--) {
+                    list[i].destroy(true);
                   }
+                  list.length = 0;
                   this.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
                 },
                 destroy: function () {
@@ -10961,61 +10970,20 @@ export default require => {
                         if (textWidth <= maxWidth) {
                           lineToCheck = lineWithWord;
                         } else {
+                          wrappedLine = wrappedLine.slice(0, -1);
                           wrappedLine += (wrappedLine ? "\n" : "") + lineToCheck;
                           lineToCheck = word;
                         }
                         word = "";
                       }
                     }
+                    wrappedLine = wrappedLine.slice(0, -1);
                     wrappedLine += (wrappedLine ? "\n" : "") + lineToCheck;
                     wrappedLines.push(wrappedLine);
                   }
                   text = wrappedLines.join("\n");
-                  var prev;
-                  var offset = 0;
-                  var crs = [];
-                  for (i = 0; i < words.length; i++) {
-                    var entry = words[i];
-                    var left = entry.x;
-                    var right = entry.x + entry.w;
-                    if (left === 0) {
-                      offset = 0;
-                      prev = null;
-                    }
-                    if (prev) {
-                      var diff = left - (prev.x + prev.w);
-                      offset = left - (diff + prev.w);
-                      prev = null;
-                    }
-                    var checkLeft = left - offset;
-                    var checkRight = right - offset;
-                    if (checkLeft > maxWidth || checkRight > maxWidth) {
-                      crs.push(entry.i - 1);
-                      if (entry.cr) {
-                        crs.push(entry.i + entry.word.length);
-                        offset = 0;
-                        prev = null;
-                      } else {
-                        prev = entry;
-                      }
-                    } else if (entry.cr) {
-                      crs.push(entry.i + entry.word.length);
-                      offset = 0;
-                      prev = null;
-                    }
-                  }
-                  var stringInsert = function (str, index, value) {
-                    return str.substr(0, index) + value + str.substr(index + 1);
-                  };
-                  for (i = crs.length - 1; i >= 0; i--) {
-                    if (crs[i] > -1) {
-                      text = stringInsert(text, crs[i], "\n");
-                    }
-                  }
                   out.wrappedText = text;
                   textLength = text.length;
-                  words = [];
-                  current = null;
                 }
                 var charIndex = 0;
                 for (i = 0; i < textLength; i++) {
@@ -14220,14 +14188,19 @@ export default require => {
                   if (!parent) {
                     return this.getLocalTransformMatrix(tempMatrix);
                   }
+                  var destroyParentMatrix = false;
                   if (!parentMatrix) {
                     parentMatrix = new TransformMatrix();
+                    destroyParentMatrix = true;
                   }
                   tempMatrix.applyITRS(this.x, this.y, this._rotation, this._scaleX, this._scaleY);
                   while (parent) {
                     parentMatrix.applyITRS(parent.x, parent.y, parent._rotation, parent._scaleX, parent._scaleY);
                     parentMatrix.multiply(tempMatrix, tempMatrix);
                     parent = parent.parentContainer;
+                  }
+                  if (destroyParentMatrix) {
+                    parentMatrix.destroy();
                   }
                   return tempMatrix;
                 },
@@ -14251,6 +14224,21 @@ export default require => {
                     point.x += this._displayOriginX;
                     point.y += this._displayOriginY;
                   }
+                  return point;
+                },
+                getWorldPoint: function (point, tempMatrix, parentMatrix) {
+                  if (point === void 0) {
+                    point = new Vector2();
+                  }
+                  var parent = this.parentContainer;
+                  if (!parent) {
+                    point.x = this.x;
+                    point.y = this.y;
+                    return point;
+                  }
+                  var worldTransform = this.getWorldTransformMatrix(tempMatrix, parentMatrix);
+                  point.x = worldTransform.tx;
+                  point.y = worldTransform.ty;
                   return point;
                 },
                 getParentRotation: function () {
@@ -14558,7 +14546,7 @@ export default require => {
                   return ctx;
                 },
                 setToContext: function (ctx) {
-                  ctx.setTransform(this);
+                  ctx.setTransform(this.a, this.b, this.c, this.d, this.e, this.f);
                   return ctx;
                 },
                 copyToArray: function (out) {
@@ -15477,11 +15465,10 @@ export default require => {
                 },
                 updateSize: function () {
                   var node = this.node;
-                  var nodeBounds = node.getBoundingClientRect();
                   this.width = node.clientWidth;
                   this.height = node.clientHeight;
-                  this.displayWidth = nodeBounds.width || 0;
-                  this.displayHeight = nodeBounds.height || 0;
+                  this.displayWidth = this.width * this.scaleX;
+                  this.displayHeight = this.height * this.scaleY;
                   return this;
                 },
                 getChildByProperty: function (property, value) {
@@ -17636,6 +17623,15 @@ export default require => {
                   }
                   return this;
                 },
+                getDisplayList: function () {
+                  var list = null;
+                  if (this.parentContainer) {
+                    list = this.parentContainer.list;
+                  } else if (this.displayList) {
+                    list = this.displayList.list;
+                  }
+                  return list;
+                },
                 destroy: function (fromScene) {
                   if (!this.scene || this.ignoreDestroy) {
                     return;
@@ -19069,6 +19065,7 @@ export default require => {
                     case 3:
                       this._onEmit = value;
                       onEmit = this.proxyEmit;
+                      current = this.defaultValue;
                       break;
                     case 4:
                       this.start = value.start;
@@ -19109,6 +19106,7 @@ export default require => {
                       this._onUpdate = this.has(value, "onUpdate") ? value.onUpdate : this.defaultUpdate;
                       onEmit = this.proxyEmit;
                       onUpdate = this.proxyUpdate;
+                      current = this.defaultValue;
                       break;
                     case 9:
                       this.start = value.values;
@@ -19134,8 +19132,8 @@ export default require => {
                 hasEither: function (object, key1, key2) {
                   return object.hasOwnProperty(key1) || object.hasOwnProperty(key2);
                 },
-                defaultEmit: function (particle, key, value) {
-                  return value;
+                defaultEmit: function () {
+                  return this.defaultValue;
                 },
                 defaultUpdate: function (particle, key, t, value) {
                   return value;
@@ -19413,7 +19411,10 @@ export default require => {
                   };
                   this.isCropped = false;
                   this.scene = emitter.scene;
-                  this.anims = new AnimationState(this);
+                  this.anims = null;
+                  if (this.emitter.anims.length > 0) {
+                    this.anims = new AnimationState(this);
+                  }
                   this.bounds = new Rectangle();
                 },
                 emit: function (event, a1, a2, a3, a4, a5) {
@@ -19521,7 +19522,9 @@ export default require => {
                     this.delayCurrent -= delta;
                     return false;
                   }
-                  this.anims.update(0, delta);
+                  if (this.anims) {
+                    this.anims.update(0, delta);
+                  }
                   var emitter = this.emitter;
                   var ops = emitter.ops;
                   var t = 1 - this.lifeCurrent / this.life;
@@ -19616,7 +19619,9 @@ export default require => {
                   return bounds;
                 },
                 destroy: function () {
-                  this.anims.destroy();
+                  if (this.anims) {
+                    this.anims.destroy();
+                  }
                   this.anims = null;
                   this.emitter = null;
                   this.texture = null;
@@ -21180,7 +21185,8 @@ export default require => {
                   this.killOnEnter = killOnEnter;
                 },
                 willKill: function (particle) {
-                  var withinZone = this.source.contains(particle.x, particle.y);
+                  var pos = particle.worldPosition;
+                  var withinZone = this.source.contains(pos.x, pos.y);
                   return withinZone && this.killOnEnter || !withinZone && !this.killOnEnter;
                 }
               });
@@ -21713,7 +21719,7 @@ export default require => {
               var Image2 = __webpack_require__2(88571);
               var RenderTexture = new Class({
                 Extends: Image2,
-                initialize: function RenderTexture2(scene, x, y, width, height) {
+                initialize: function RenderTexture2(scene, x, y, width, height, forceEven) {
                   if (x === void 0) {
                     x = 0;
                   }
@@ -21726,7 +21732,10 @@ export default require => {
                   if (height === void 0) {
                     height = 32;
                   }
-                  var dynamicTexture = new DynamicTexture(scene.sys.textures, "", width, height);
+                  if (forceEven === void 0) {
+                    forceEven = true;
+                  }
+                  var dynamicTexture = new DynamicTexture(scene.sys.textures, "", width, height, forceEven);
                   Image2.call(this, scene, x, y, dynamicTexture);
                   this.type = "RenderTexture";
                   this.camera = this.texture.camera;
@@ -21735,7 +21744,6 @@ export default require => {
                 setSize: function (width, height) {
                   this.width = width;
                   this.height = height;
-                  this.texture.setSize(width, height);
                   this.updateDisplayOrigin();
                   var input = this.input;
                   if (input && !input.customHitArea) {
@@ -21744,8 +21752,9 @@ export default require => {
                   }
                   return this;
                 },
-                resize: function (width, height) {
-                  this.setSize(width, height);
+                resize: function (width, height, forceEven) {
+                  this.texture.setSize(width, height, forceEven);
+                  this.setSize(this.texture.width, this.texture.height);
                   return this;
                 },
                 saveTexture: function (key) {
@@ -25437,6 +25446,9 @@ export default require => {
                   if (style && style.lineSpacing) {
                     this.setLineSpacing(style.lineSpacing);
                   }
+                  if (style && style.letterSpacing) {
+                    this.setLetterSpacing(style.letterSpacing);
+                  }
                 },
                 initRTL: function () {
                   if (!this.style.rtl) {
@@ -25474,7 +25486,8 @@ export default require => {
                     var line = lines[i];
                     var out = "";
                     line = line.replace(/^ *|\s*$/gi, "");
-                    var lineWidth = context.measureText(line).width;
+                    var lineLetterSpacingWidth = line.length * this.letterSpacing;
+                    var lineWidth = context.measureText(line).width + lineLetterSpacingWidth;
                     if (lineWidth < wordWrapWidth) {
                       output += line + "\n";
                       continue;
@@ -25484,13 +25497,16 @@ export default require => {
                     for (var j = 0; j < words.length; j++) {
                       var word = words[j];
                       var wordWithSpace = word + " ";
-                      var wordWidth = context.measureText(wordWithSpace).width;
+                      var letterSpacingWidth = wordWithSpace.length * this.letterSpacing;
+                      var wordWidth = context.measureText(wordWithSpace).width + letterSpacingWidth;
+                      console.log(words.length, word);
                       if (wordWidth > currentLineWidth) {
                         if (j === 0) {
                           var newWord = wordWithSpace;
                           while (newWord.length) {
                             newWord = newWord.slice(0, -1);
-                            wordWidth = context.measureText(newWord).width;
+                            var newLetterSpacingWidth = newWord.length * this.letterSpacing;
+                            wordWidth = context.measureText(newWord).width + newLetterSpacingWidth;
                             if (wordWidth <= currentLineWidth) {
                               break;
                             }
@@ -25528,7 +25544,8 @@ export default require => {
                     var lastWordIndex = words.length - 1;
                     for (var j = 0; j <= lastWordIndex; j++) {
                       var word = words[j];
-                      var wordWidth = context.measureText(word).width;
+                      var letterSpacingWidth = word.length * this.letterSpacing;
+                      var wordWidth = context.measureText(word).width + letterSpacingWidth;
                       var wordWidthWithSpace = wordWidth;
                       if (j < lastWordIndex) {
                         wordWidthWithSpace += whiteSpaceWidth;
@@ -38488,6 +38505,79 @@ export default require => {
               });
               module2.exports = CompressedTextureFile;
             },
+            87674: (module2, __unused_webpack_exports, __webpack_require__2) => {
+              var Class = __webpack_require__2(83419);
+              var CONST = __webpack_require__2(23906);
+              var File = __webpack_require__2(41299);
+              var FileTypesManager = __webpack_require__2(74099);
+              var GetFastValue = __webpack_require__2(95540);
+              var GetURL = __webpack_require__2(98356);
+              var IsPlainObject = __webpack_require__2(41212);
+              var FontFile = new Class({
+                Extends: File,
+                initialize: function FontFile2(loader, key, url, format, descriptors, xhrSettings) {
+                  var extension = "ttf";
+                  if (IsPlainObject(key)) {
+                    var config = key;
+                    key = GetFastValue(config, "key");
+                    url = GetFastValue(config, "url");
+                    format = GetFastValue(config, "format", "truetype");
+                    descriptors = GetFastValue(config, "descriptors", null);
+                    xhrSettings = GetFastValue(config, "xhrSettings");
+                    extension = GetFastValue(config, "extension", extension);
+                  } else if (format === void 0) {
+                    format = "truetype";
+                  }
+                  var fileConfig = {
+                    type: "font",
+                    cache: false,
+                    extension,
+                    responseType: "text",
+                    key,
+                    url,
+                    xhrSettings
+                  };
+                  File.call(this, loader, fileConfig);
+                  this.data = {
+                    format,
+                    descriptors
+                  };
+                  this.state = CONST.FILE_POPULATED;
+                },
+                onProcess: function () {
+                  this.state = CONST.FILE_PROCESSING;
+                  this.src = GetURL(this, this.loader.baseURL);
+                  var font;
+                  var key = this.key;
+                  var source = "url(" + this.src + ') format("' + this.data.format + '")';
+                  if (this.data.descriptors) {
+                    font = new FontFace(key, source, this.data.descriptors);
+                  } else {
+                    font = new FontFace(key, source);
+                  }
+                  var _this = this;
+                  font.load().then(function () {
+                    document.fonts.add(font);
+                    document.body.classList.add("fonts-loaded");
+                    _this.onProcessComplete();
+                  }).catch(function () {
+                    console.warn("Font failed to load", source);
+                    _this.onProcessComplete();
+                  });
+                }
+              });
+              FileTypesManager.register("font", function (key, url, format, descriptors, xhrSettings) {
+                if (Array.isArray(key)) {
+                  for (var i = 0; i < key.length; i++) {
+                    this.addFile(new FontFile(this, key[i]));
+                  }
+                } else {
+                  this.addFile(new FontFile(this, key, url, format, descriptors, xhrSettings));
+                }
+                return this;
+              });
+              module2.exports = FontFile;
+            },
             47931: (module2, __unused_webpack_exports, __webpack_require__2) => {
               var Class = __webpack_require__2(83419);
               var CONST = __webpack_require__2(23906);
@@ -40148,6 +40238,7 @@ export default require => {
                 BitmapFontFile: __webpack_require__2(97025),
                 CompressedTextureFile: __webpack_require__2(69559),
                 CSSFile: __webpack_require__2(16024),
+                FontFile: __webpack_require__2(87674),
                 GLSLFile: __webpack_require__2(47931),
                 HTML5AudioFile: __webpack_require__2(89749),
                 HTMLFile: __webpack_require__2(88470),
@@ -44740,16 +44831,20 @@ export default require => {
                   if (enable === void 0) {
                     enable = true;
                   }
-                  this.world.remove(this);
+                  if (!gameObject || !gameObject.hasTransformComponent) {
+                    return this;
+                  }
+                  var world = this.world;
                   if (this.gameObject && this.gameObject.body) {
+                    world.disable(this.gameObject);
                     this.gameObject.body = null;
                   }
-                  this.gameObject = gameObject;
                   if (gameObject.body) {
-                    gameObject.body = this;
+                    world.disable(gameObject);
                   }
+                  this.gameObject = gameObject;
+                  gameObject.body = this;
                   this.setSize();
-                  this.world.add(this);
                   this.enable = enable;
                   return this;
                 },
@@ -46056,15 +46151,31 @@ export default require => {
                   this._dx = 0;
                   this._dy = 0;
                 },
-                setGameObject: function (gameObject, update) {
-                  if (gameObject && gameObject !== this.gameObject) {
-                    this.gameObject.body = null;
-                    gameObject.body = this;
-                    this.gameObject = gameObject;
+                setGameObject: function (gameObject, update, enable) {
+                  if (update === void 0) {
+                    update = true;
                   }
+                  if (enable === void 0) {
+                    enable = true;
+                  }
+                  if (!gameObject || !gameObject.hasTransformComponent) {
+                    return this;
+                  }
+                  var world = this.world;
+                  if (this.gameObject && this.gameObject.body) {
+                    world.disable(this.gameObject);
+                    this.gameObject.body = null;
+                  }
+                  if (gameObject.body) {
+                    world.disable(gameObject);
+                  }
+                  this.gameObject = gameObject;
+                  gameObject.body = this;
+                  this.setSize();
                   if (update) {
                     this.updateFromGameObject();
                   }
+                  this.enable = enable;
                   return this;
                 },
                 updateFromGameObject: function () {
@@ -46971,7 +47082,8 @@ export default require => {
                       body1.x -= overlapX;
                       body1.y -= overlapY;
                       body1.updateCenter();
-                    } else if (!body2Immovable || body2.pushable || deadlock) {
+                    }
+                    if (!body2Immovable || body2.pushable || deadlock) {
                       body2.x += overlapX;
                       body2.y += overlapY;
                       body2.updateCenter();
@@ -46982,7 +47094,8 @@ export default require => {
                       body1.x -= overlapX;
                       body1.y -= overlapY;
                       body1.updateCenter();
-                    } else if (!body2Immovable || body2.pushable || deadlock) {
+                    }
+                    if (!body2Immovable || body2.pushable || deadlock) {
                       body2.x += overlapX;
                       body2.y += overlapY;
                       body2.updateCenter();
@@ -49364,28 +49477,10 @@ export default require => {
                   this.getDelta = GetValue(config, "getDelta", this.update60Hz);
                   var runnerConfig = GetFastValue(config, "runner", {});
                   var hasFPS = GetFastValue(runnerConfig, "fps", false);
-                  var fps = GetFastValue(runnerConfig, "fps", 60);
-                  var delta = GetFastValue(runnerConfig, "delta", 1e3 / fps);
-                  var deltaMin = GetFastValue(runnerConfig, "deltaMin", 1e3 / fps);
-                  var deltaMax = GetFastValue(runnerConfig, "deltaMax", 1e3 / (fps * 0.5));
-                  if (!hasFPS) {
-                    fps = 1e3 / delta;
+                  if (hasFPS) {
+                    runnerConfig.delta = 1e3 / GetFastValue(runnerConfig, "fps", 60);
                   }
-                  this.runner = {
-                    fps,
-                    deltaSampleSize: GetFastValue(runnerConfig, "deltaSampleSize", 60),
-                    counterTimestamp: 0,
-                    frameCounter: 0,
-                    deltaHistory: [],
-                    timePrev: null,
-                    timeScalePrev: 1,
-                    frameRequestId: null,
-                    timeBuffer: 0,
-                    isFixed: GetFastValue(runnerConfig, "isFixed", false),
-                    delta,
-                    deltaMin,
-                    deltaMax
-                  };
+                  this.runner = MatterRunner.create(runnerConfig);
                   this.autoUpdate = GetValue(config, "autoUpdate", true);
                   var debugConfig = GetValue(config, "debug", false);
                   this.drawDebug = typeof debugConfig === "object" ? true : debugConfig;
@@ -50716,6 +50811,14 @@ export default require => {
                   set: function (value) {
                     this._tempVec2.set(this.x, value);
                     Body.setPosition(this.body, this._tempVec2);
+                  }
+                },
+                scale: {
+                  get: function () {
+                    return (this._scaleX + this._scaleY) / 2;
+                  },
+                  set: function (value) {
+                    this.setScale(value, value);
                   }
                 },
                 scaleX: {
@@ -53540,6 +53643,7 @@ export default require => {
                   }
                   return result / valuesLength || 0;
                 };
+                Runner._mean = _mean;
               })();
             },
             53614: (module2, __unused_webpack_exports, __webpack_require__2) => {
@@ -55100,6 +55204,7 @@ export default require => {
               var GetFastValue = __webpack_require__2(95540);
               var PluginCache = __webpack_require__2(37277);
               var Remove = __webpack_require__2(72905);
+              var CONST = __webpack_require__2(8054);
               var PluginManager = new Class({
                 Extends: EventEmitter,
                 initialize: function PluginManager2(game) {
@@ -55109,7 +55214,7 @@ export default require => {
                   this.scenePlugins = [];
                   this._pendingGlobal = [];
                   this._pendingScene = [];
-                  if (game.isBooted) {
+                  if (game.isBooted || game.config.renderType === CONST.HEADLESS) {
                     this.boot();
                   } else {
                     game.events.once(GameEvents.BOOT, this.boot, this);
@@ -55530,6 +55635,7 @@ export default require => {
               var GetBlendModes = __webpack_require__2(56373);
               var ScaleEvents = __webpack_require__2(97480);
               var TextureEvents = __webpack_require__2(69442);
+              var GameEvents = __webpack_require__2(8443);
               var TransformMatrix = __webpack_require__2(61340);
               var CanvasRenderer = new Class({
                 Extends: EventEmitter,
@@ -55540,7 +55646,8 @@ export default require => {
                     clearBeforeRender: gameConfig.clearBeforeRender,
                     backgroundColor: gameConfig.backgroundColor,
                     antialias: gameConfig.antialias,
-                    roundPixels: gameConfig.roundPixels
+                    roundPixels: gameConfig.roundPixels,
+                    transparent: gameConfig.transparent
                   };
                   this.game = game;
                   this.type = CONST.CANVAS;
@@ -55549,13 +55656,13 @@ export default require => {
                   this.height = 0;
                   this.gameCanvas = game.canvas;
                   var contextOptions = {
-                    alpha: game.config.transparent,
-                    desynchronized: game.config.desynchronized,
+                    alpha: gameConfig.transparent,
+                    desynchronized: gameConfig.desynchronized,
                     willReadFrequently: false
                   };
                   this.gameContext = gameConfig.context ? gameConfig.context : this.gameCanvas.getContext("2d", contextOptions);
                   this.currentContext = this.gameContext;
-                  this.antialias = game.config.antialias;
+                  this.antialias = gameConfig.antialias;
                   this.blendModes = GetBlendModes();
                   this.snapshotState = {
                     x: 0,
@@ -55574,7 +55681,17 @@ export default require => {
                   this.init();
                 },
                 init: function () {
-                  this.game.textures.once(TextureEvents.READY, this.boot, this);
+                  var game = this.game;
+                  game.events.once(GameEvents.BOOT, function () {
+                    var config = this.config;
+                    if (!config.transparent) {
+                      var ctx = this.gameContext;
+                      var gameCanvas = this.gameCanvas;
+                      ctx.fillStyle = config.backgroundColor.rgba;
+                      ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+                    }
+                  }, this);
+                  game.textures.once(TextureEvents.READY, this.boot, this);
                 },
                 boot: function () {
                   var game = this.game;
@@ -57787,6 +57904,7 @@ export default require => {
                   gl.disable(gl.CULL_FACE);
                   gl.enable(gl.BLEND);
                   gl.clearColor(clearColor.redGL, clearColor.greenGL, clearColor.blueGL, clearColor.alphaGL);
+                  gl.clear(gl.COLOR_BUFFER_BIT);
                   var validMipMaps = ["NEAREST", "LINEAR", "NEAREST_MIPMAP_NEAREST", "LINEAR_MIPMAP_NEAREST", "NEAREST_MIPMAP_LINEAR", "LINEAR_MIPMAP_LINEAR"];
                   if (validMipMaps.indexOf(config.mipmapFilter) !== -1) {
                     this.mipmapFilter = gl[config.mipmapFilter];
@@ -64409,10 +64527,11 @@ export default require => {
                   this.unlocked = false;
                   this.gameLostFocus = false;
                   this.listenerPosition = new Vector2();
-                  game.events.on(GameEvents.BLUR, this.onGameBlur, this);
-                  game.events.on(GameEvents.FOCUS, this.onGameFocus, this);
-                  game.events.on(GameEvents.PRE_STEP, this.update, this);
-                  game.events.once(GameEvents.DESTROY, this.destroy, this);
+                  var ee = game.events;
+                  ee.on(GameEvents.BLUR, this.onGameBlur, this);
+                  ee.on(GameEvents.FOCUS, this.onGameFocus, this);
+                  ee.on(GameEvents.PRE_STEP, this.update, this);
+                  ee.once(GameEvents.DESTROY, this.destroy, this);
                 },
                 add: NOOP,
                 addAudioSprite: function (key, config) {
@@ -65878,13 +65997,25 @@ export default require => {
                   this.masterMuteNode.connect(this.masterVolumeNode);
                   this.masterVolumeNode.connect(this.context.destination);
                   this.destination = this.masterMuteNode;
-                  this.locked = this.context.state === "suspended" && (("ontouchstart" in window) || ("onclick" in window));
+                  this.locked = this.context.state === "suspended";
                   BaseSoundManager.call(this, game);
-                  if (this.locked && game.isBooted) {
-                    this.unlock();
-                  } else {
-                    game.events.once(GameEvents.BOOT, this.unlock, this);
+                  if (this.locked) {
+                    if (game.isBooted) {
+                      this.unlock();
+                    } else {
+                      game.events.once(GameEvents.BOOT, this.unlock, this);
+                    }
                   }
+                  game.events.on(GameEvents.VISIBLE, this.onGameVisible, this);
+                },
+                onGameVisible: function () {
+                  var context = this.context;
+                  window.setTimeout(function () {
+                    if (context) {
+                      context.suspend();
+                      context.resume();
+                    }
+                  }, 100);
                 },
                 createAudioContext: function (game) {
                   var audioConfig = game.config.audio;
@@ -65977,13 +66108,15 @@ export default require => {
                       _this.context.resume().then(function () {
                         bodyRemove("touchstart", unlockHandler2);
                         bodyRemove("touchend", unlockHandler2);
-                        bodyRemove("click", unlockHandler2);
+                        bodyRemove("mousedown", unlockHandler2);
+                        bodyRemove("mouseup", unlockHandler2);
                         bodyRemove("keydown", unlockHandler2);
                         _this.unlocked = true;
                       }, function () {
                         bodyRemove("touchstart", unlockHandler2);
                         bodyRemove("touchend", unlockHandler2);
-                        bodyRemove("click", unlockHandler2);
+                        bodyRemove("mousedown", unlockHandler2);
+                        bodyRemove("mouseup", unlockHandler2);
                         bodyRemove("keydown", unlockHandler2);
                       });
                     }
@@ -65991,7 +66124,8 @@ export default require => {
                   if (body) {
                     body.addEventListener("touchstart", unlockHandler, false);
                     body.addEventListener("touchend", unlockHandler, false);
-                    body.addEventListener("click", unlockHandler, false);
+                    body.addEventListener("mousedown", unlockHandler, false);
+                    body.addEventListener("mouseup", unlockHandler, false);
                     body.addEventListener("keydown", unlockHandler, false);
                   }
                 },
@@ -66037,6 +66171,7 @@ export default require => {
                       _this.context = null;
                     });
                   }
+                  this.game.events.off(GameEvents.VISIBLE, this.onGameVisible, this);
                   BaseSoundManager.prototype.destroy.call(this);
                 },
                 setMute: function (value) {
@@ -67488,12 +67623,15 @@ export default require => {
               var Utils = __webpack_require__2(70554);
               var DynamicTexture = new Class({
                 Extends: Texture,
-                initialize: function DynamicTexture2(manager, key, width, height) {
+                initialize: function DynamicTexture2(manager, key, width, height, forceEven) {
                   if (width === void 0) {
                     width = 256;
                   }
                   if (height === void 0) {
                     height = 256;
+                  }
+                  if (forceEven === void 0) {
+                    forceEven = true;
                   }
                   this.type = "DynamicTexture";
                   var renderer = manager.game.renderer;
@@ -67515,11 +67653,24 @@ export default require => {
                   this.camera = new Camera(0, 0, width, height).setScene(manager.game.scene.systemScene, false);
                   this.renderTarget = !isCanvas ? new RenderTarget(renderer, width, height, 1, 0, false, false, true, false) : null;
                   this.pipeline = !isCanvas ? renderer.pipelines.get(PIPELINES.SINGLE_PIPELINE) : null;
-                  this.setSize(width, height);
+                  this.setSize(width, height, forceEven);
                 },
-                setSize: function (width, height) {
+                setSize: function (width, height, forceEven) {
                   if (height === void 0) {
                     height = width;
+                  }
+                  if (forceEven === void 0) {
+                    forceEven = true;
+                  }
+                  if (forceEven) {
+                    width = Math.floor(width);
+                    height = Math.floor(height);
+                    if (width % 2 !== 0) {
+                      width++;
+                    }
+                    if (height % 2 !== 0) {
+                      height++;
+                    }
                   }
                   var frame = this.get();
                   var source = frame.source;
@@ -68196,8 +68347,8 @@ export default require => {
                   var data = this.data;
                   if (data.trim) {
                     var ss = data.spriteSourceSize;
-                    width = Clamp(width, 0, cw - x);
-                    height = Clamp(height, 0, ch - y);
+                    width = Clamp(width, 0, ss.x + cw - x);
+                    height = Clamp(height, 0, ss.y + ch - y);
                     var cropRight = x + width;
                     var cropBottom = y + height;
                     var intersects = !(ss.r < x || ss.b < y || ss.x > cropRight || ss.y > cropBottom);
@@ -68667,6 +68818,9 @@ export default require => {
                     };
                     image.onload = function () {
                       var texture = _this.create(key, image);
+                      if (!texture) {
+                        return;
+                      }
                       Parser.Image(texture, 0);
                       _this.emit(Events.ADD, key, texture);
                       _this.emit(Events.ADD_KEY + key, texture);
@@ -70093,10 +70247,12 @@ export default require => {
                 containsImageIndex: function (imageIndex) {
                   return imageIndex >= this.firstgid && imageIndex < this.firstgid + this.total;
                 },
-                addImage: function (gid, image) {
+                addImage: function (gid, image, width, height) {
                   this.images.push({
                     gid,
-                    image
+                    image,
+                    width,
+                    height
                   });
                   this.total++;
                   return this;
@@ -70679,7 +70835,8 @@ export default require => {
                     tileHeight,
                     width,
                     height,
-                    orientation: this.orientation
+                    orientation: this.orientation,
+                    hexSideLength: this.hexSideLength
                   });
                   var row;
                   for (var tileY = 0; tileY < height; tileY++) {
@@ -72495,6 +72652,7 @@ export default require => {
               var Intersects = __webpack_require__2(91865);
               var NOOP = __webpack_require__2(29747);
               var Vector2 = __webpack_require__2(26099);
+              var CONST = __webpack_require__2(91907);
               var TriangleToRectangle = function (triangle, rect) {
                 return Intersects.RectangleToTriangle(rect, triangle);
               };
@@ -72502,6 +72660,10 @@ export default require => {
               var pointStart = new Vector2();
               var pointEnd = new Vector2();
               var GetTilesWithinShape = function (shape, filteringOptions, camera, layer) {
+                if (layer.orientation !== CONST.ORTHOGONAL) {
+                  console.warn("GetTilesWithinShape only works with orthogonal tilemaps");
+                  return [];
+                }
                 if (shape === void 0) {
                   return [];
                 }
@@ -73151,10 +73313,14 @@ export default require => {
                 graphics.scaleCanvas(layer.tilemapLayer.scaleX, layer.tilemapLayer.scaleY);
                 for (var i = 0; i < tiles.length; i++) {
                   var tile = tiles[i];
+                  var offset = tile.tileset ? tile.tileset.tileOffset : {
+                    x: 0,
+                    y: 0
+                  };
                   var tw = tile.width;
                   var th = tile.height;
-                  var x = tile.pixelX;
-                  var y = tile.pixelY;
+                  var x = tile.pixelX - offset.x;
+                  var y = tile.pixelY - offset.y;
                   var color = tile.collides ? collidingTileColor : tileColor;
                   if (color !== null) {
                     graphics.fillStyle(color.color, color.alpha / 255);
@@ -74234,8 +74400,12 @@ export default require => {
                   var images = collection.images;
                   for (var j = 0; j < images.length; j++) {
                     var image = images[j];
-                    set = new Tileset(image.image, image.gid, collection.imageWidth, collection.imageHeight, 0, 0);
-                    set.updateTileData(collection.imageWidth, collection.imageHeight);
+                    var offset = {
+                      x: 0,
+                      y: image.height - mapData.tileHeight
+                    };
+                    set = new Tileset(image.image, image.gid, image.width, image.height, 0, 0, null, null, offset);
+                    set.updateTileData(image.width, image.height);
                     mapData.tilesets.push(set);
                   }
                 }
@@ -74417,6 +74587,15 @@ export default require => {
                   mapData.hexSideLength = json.hexsidelength;
                   mapData.staggerAxis = json.staggeraxis;
                   mapData.staggerIndex = json.staggerindex;
+                  if (mapData.staggerAxis === "y") {
+                    var triangleHeight = (mapData.tileHeight - mapData.hexSideLength) / 2;
+                    mapData.widthInPixels = mapData.tileWidth * (mapData.width + 0.5);
+                    mapData.heightInPixels = mapData.height * (mapData.hexSideLength + triangleHeight) + triangleHeight;
+                  } else {
+                    var triangleWidth = (mapData.tileWidth - mapData.hexSideLength) / 2;
+                    mapData.widthInPixels = mapData.width * (mapData.hexSideLength + triangleWidth) + triangleWidth;
+                    mapData.heightInPixels = mapData.tileHeight * (mapData.height + 0.5);
+                  }
                 }
                 mapData.layers = ParseTileLayers(json, insertNull);
                 mapData.images = ParseImageLayers(json);
@@ -74570,6 +74749,8 @@ export default require => {
                   var gidInfo;
                   var tile;
                   var blankTile;
+                  var triangleHeight;
+                  var triangleWidth;
                   var output = [];
                   var x = 0;
                   if (infiniteMap) {
@@ -74593,6 +74774,15 @@ export default require => {
                       layerData.hexSideLength = json.hexsidelength;
                       layerData.staggerAxis = json.staggeraxis;
                       layerData.staggerIndex = json.staggerindex;
+                      if (layerData.staggerAxis === "y") {
+                        triangleHeight = (layerData.tileHeight - layerData.hexSideLength) / 2;
+                        layerData.widthInPixels = layerData.tileWidth * (layerData.width + 0.5);
+                        layerData.heightInPixels = layerData.height * (layerData.hexSideLength + triangleHeight) + triangleHeight;
+                      } else {
+                        triangleWidth = (layerData.tileWidth - layerData.hexSideLength) / 2;
+                        layerData.widthInPixels = layerData.width * (layerData.hexSideLength + triangleWidth) + triangleWidth;
+                        layerData.heightInPixels = layerData.tileHeight * (layerData.height + 0.5);
+                      }
                     }
                     for (var c = 0; c < curl.height; c++) {
                       output[c] = [null];
@@ -74644,6 +74834,15 @@ export default require => {
                       layerData.hexSideLength = json.hexsidelength;
                       layerData.staggerAxis = json.staggeraxis;
                       layerData.staggerIndex = json.staggerindex;
+                      if (layerData.staggerAxis === "y") {
+                        triangleHeight = (layerData.tileHeight - layerData.hexSideLength) / 2;
+                        layerData.widthInPixels = layerData.tileWidth * (layerData.width + 0.5);
+                        layerData.heightInPixels = layerData.height * (layerData.hexSideLength + triangleHeight) + triangleHeight;
+                      } else {
+                        triangleWidth = (layerData.tileWidth - layerData.hexSideLength) / 2;
+                        layerData.widthInPixels = layerData.width * (layerData.hexSideLength + triangleWidth) + triangleWidth;
+                        layerData.heightInPixels = layerData.tileHeight * (layerData.height + 0.5);
+                      }
                     }
                     var row = [];
                     for (var k = 0, len = curl.data.length; k < len; k++) {
@@ -74756,7 +74955,9 @@ export default require => {
                       var image = tile.image;
                       var tileId = parseInt(tile.id, 10);
                       var gid = set.firstgid + tileId;
-                      newCollection.addImage(gid, image);
+                      var width = tile.imagewidth;
+                      var height = tile.imageheight;
+                      newCollection.addImage(gid, image, width, height);
                       maxId = Math.max(tileId, maxId);
                     }
                     newCollection.maxId = maxId;
@@ -74895,6 +75096,9 @@ export default require => {
                     event.elapsed = event.startAt;
                     event.hasDispatched = false;
                     event.repeatCount = event.repeat === -1 || event.loop ? 999999999999 : event.repeat;
+                    if (event.delay <= 0 && event.repeatCount > 0) {
+                      throw new Error("TimerEvent infinite loop created via zero delay");
+                    }
                   } else {
                     event = new TimerEvent(config);
                   }
@@ -75306,7 +75510,7 @@ export default require => {
                   this.elapsed = this.startAt;
                   this.hasDispatched = false;
                   this.repeatCount = this.repeat === -1 || this.loop ? 999999999999 : this.repeat;
-                  if (this.delay === 0 && (this.repeat > 0 || this.loop)) {
+                  if (this.delay <= 0 && this.repeatCount > 0) {
                     throw new Error("TimerEvent infinite loop created via zero delay");
                   }
                   return this;
@@ -75974,6 +76178,7 @@ export default require => {
               var GetAdvancedValue = __webpack_require__2(23568);
               var GetBoolean = __webpack_require__2(57355);
               var GetEaseFunction = __webpack_require__2(6113);
+              var GetFastValue = __webpack_require__2(95540);
               var GetNewValue = __webpack_require__2(55292);
               var GetValue = __webpack_require__2(35154);
               var GetValueOp = __webpack_require__2(17777);
@@ -75989,17 +76194,17 @@ export default require => {
                 } else {
                   defaults = MergeRight(Defaults, defaults);
                 }
-                var from = GetValue(config, "from", 0);
-                var to = GetValue(config, "to", 1);
+                var from = GetFastValue(config, "from", 0);
+                var to = GetFastValue(config, "to", 1);
                 var targets = [{
                   value: from
                 }];
-                var delay = GetValue(config, "delay", defaults.delay);
-                var easeParams = GetValue(config, "easeParams", defaults.easeParams);
-                var ease = GetValue(config, "ease", defaults.ease);
+                var delay = GetFastValue(config, "delay", defaults.delay);
+                var easeParams = GetFastValue(config, "easeParams", defaults.easeParams);
+                var ease = GetFastValue(config, "ease", defaults.ease);
                 var ops = GetValueOp("value", to);
                 var tween = new Tween(parent, targets);
-                var tweenData = tween.add(0, "value", ops.getEnd, ops.getStart, ops.getActive, GetEaseFunction(GetValue(config, "ease", ease), GetValue(config, "easeParams", easeParams)), GetNewValue(config, "delay", delay), GetValue(config, "duration", defaults.duration), GetBoolean(config, "yoyo", defaults.yoyo), GetValue(config, "hold", defaults.hold), GetValue(config, "repeat", defaults.repeat), GetValue(config, "repeatDelay", defaults.repeatDelay), false, false);
+                var tweenData = tween.add(0, "value", ops.getEnd, ops.getStart, ops.getActive, GetEaseFunction(GetFastValue(config, "ease", ease), GetFastValue(config, "easeParams", easeParams)), GetNewValue(config, "delay", delay), GetFastValue(config, "duration", defaults.duration), GetBoolean(config, "yoyo", defaults.yoyo), GetFastValue(config, "hold", defaults.hold), GetFastValue(config, "repeat", defaults.repeat), GetFastValue(config, "repeatDelay", defaults.repeatDelay), false, false);
                 tweenData.start = from;
                 tweenData.current = from;
                 tween.completeDelay = GetAdvancedValue(config, "completeDelay", 0);
@@ -76007,6 +76212,7 @@ export default require => {
                 tween.loopDelay = Math.round(GetAdvancedValue(config, "loopDelay", 0));
                 tween.paused = GetBoolean(config, "paused", false);
                 tween.persist = GetBoolean(config, "persist", false);
+                tween.isNumberTween = true;
                 tween.callbackScope = GetValue(config, "callbackScope", tween);
                 var callbacks = BaseTween.TYPES;
                 for (var i = 0; i < callbacks.length; i++) {
@@ -76145,6 +76351,7 @@ export default require => {
               var GetAdvancedValue = __webpack_require__2(23568);
               var GetBoolean = __webpack_require__2(57355);
               var GetEaseFunction = __webpack_require__2(6113);
+              var GetFastValue = __webpack_require__2(95540);
               var GetInterpolationFunction = __webpack_require__2(91389);
               var GetNewValue = __webpack_require__2(55292);
               var GetProps = __webpack_require__2(82985);
@@ -76168,17 +76375,17 @@ export default require => {
                   targets = defaults.targets;
                 }
                 var props = GetProps(config);
-                var delay = GetValue(config, "delay", defaults.delay);
-                var duration = GetValue(config, "duration", defaults.duration);
-                var easeParams = GetValue(config, "easeParams", defaults.easeParams);
-                var ease = GetValue(config, "ease", defaults.ease);
-                var hold = GetValue(config, "hold", defaults.hold);
-                var repeat = GetValue(config, "repeat", defaults.repeat);
-                var repeatDelay = GetValue(config, "repeatDelay", defaults.repeatDelay);
+                var delay = GetFastValue(config, "delay", defaults.delay);
+                var duration = GetFastValue(config, "duration", defaults.duration);
+                var easeParams = GetFastValue(config, "easeParams", defaults.easeParams);
+                var ease = GetFastValue(config, "ease", defaults.ease);
+                var hold = GetFastValue(config, "hold", defaults.hold);
+                var repeat = GetFastValue(config, "repeat", defaults.repeat);
+                var repeatDelay = GetFastValue(config, "repeatDelay", defaults.repeatDelay);
                 var yoyo = GetBoolean(config, "yoyo", defaults.yoyo);
                 var flipX = GetBoolean(config, "flipX", defaults.flipX);
                 var flipY = GetBoolean(config, "flipY", defaults.flipY);
-                var interpolation = GetValue(config, "interpolation", defaults.interpolation);
+                var interpolation = GetFastValue(config, "interpolation", defaults.interpolation);
                 var addTarget = function (tween2, targetIndex2, key2, value2) {
                   if (key2 === "texture") {
                     var texture = value2;
@@ -76197,11 +76404,11 @@ export default require => {
                     } else if (typeof value2 === "string") {
                       texture = value2;
                     }
-                    tween2.addFrame(targetIndex2, texture, frame, GetNewValue(value2, "delay", delay), GetValue(value2, "duration", duration), GetValue(value2, "hold", hold), GetValue(value2, "repeat", repeat), GetValue(value2, "repeatDelay", repeatDelay), GetBoolean(value2, "flipX", flipX), GetBoolean(value2, "flipY", flipY));
+                    tween2.addFrame(targetIndex2, texture, frame, GetNewValue(value2, "delay", delay), GetFastValue(value2, "duration", duration), GetFastValue(value2, "hold", hold), GetFastValue(value2, "repeat", repeat), GetFastValue(value2, "repeatDelay", repeatDelay), GetBoolean(value2, "flipX", flipX), GetBoolean(value2, "flipY", flipY));
                   } else {
                     var ops = GetValueOp(key2, value2);
-                    var interpolationFunc = GetInterpolationFunction(GetValue(value2, "interpolation", interpolation));
-                    tween2.add(targetIndex2, key2, ops.getEnd, ops.getStart, ops.getActive, GetEaseFunction(GetValue(value2, "ease", ease), GetValue(value2, "easeParams", easeParams)), GetNewValue(value2, "delay", delay), GetValue(value2, "duration", duration), GetBoolean(value2, "yoyo", yoyo), GetValue(value2, "hold", hold), GetValue(value2, "repeat", repeat), GetValue(value2, "repeatDelay", repeatDelay), GetBoolean(value2, "flipX", flipX), GetBoolean(value2, "flipY", flipY), interpolationFunc, interpolationFunc ? value2 : null);
+                    var interpolationFunc = GetInterpolationFunction(GetFastValue(value2, "interpolation", interpolation));
+                    tween2.add(targetIndex2, key2, ops.getEnd, ops.getStart, ops.getActive, GetEaseFunction(GetFastValue(value2, "ease", ease), GetFastValue(value2, "easeParams", easeParams)), GetNewValue(value2, "delay", delay), GetFastValue(value2, "duration", duration), GetBoolean(value2, "yoyo", yoyo), GetFastValue(value2, "hold", hold), GetFastValue(value2, "repeat", repeat), GetFastValue(value2, "repeatDelay", repeatDelay), GetBoolean(value2, "flipX", flipX), GetBoolean(value2, "flipY", flipY), interpolationFunc, interpolationFunc ? value2 : null);
                   }
                 };
                 var tween = new Tween(parent, targets);
@@ -76222,7 +76429,7 @@ export default require => {
                 tween.loopDelay = Math.round(GetAdvancedValue(config, "loopDelay", 0));
                 tween.paused = GetBoolean(config, "paused", false);
                 tween.persist = GetBoolean(config, "persist", false);
-                tween.callbackScope = GetValue(config, "callbackScope", tween);
+                tween.callbackScope = GetFastValue(config, "callbackScope", tween);
                 var callbacks = BaseTween.TYPES;
                 for (var i = 0; i < callbacks.length; i++) {
                   var type = callbacks[i];
@@ -76580,7 +76787,7 @@ export default require => {
                 initialize: function BaseTweenData2(tween, targetIndex, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY) {
                   this.tween = tween;
                   this.targetIndex = targetIndex;
-                  this.duration = duration;
+                  this.duration = duration <= 0 ? 0.01 : duration;
                   this.totalDuration = 0;
                   this.delay = 0;
                   this.getDelay = delay;
@@ -76803,6 +77010,7 @@ export default require => {
                   this.progress = 0;
                   this.totalDuration = 0;
                   this.totalProgress = 0;
+                  this.isNumberTween = false;
                 },
                 add: function (targetIndex, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData) {
                   var tweenData = new TweenData(this, targetIndex, key, getEnd, getStart, getActive, ease, delay, duration, yoyo, hold, repeat, repeatDelay, flipX, flipY, interpolation, interpolationData);
@@ -76985,6 +77193,10 @@ export default require => {
                 },
                 update: function (delta) {
                   if (this.isPendingRemove() || this.isDestroyed()) {
+                    if (this.persist) {
+                      this.setFinishedState();
+                      return false;
+                    }
                     return true;
                   } else if (this.paused || this.isFinished()) {
                     return false;
@@ -77038,6 +77250,9 @@ export default require => {
                 dispatchEvent: function (event, callback) {
                   if (!this.isSeeking) {
                     this.emit(event, this, this.targets);
+                    if (!this.callbacks) {
+                      return;
+                    }
                     var handler = this.callbacks[callback];
                     if (handler) {
                       handler.func.apply(this.callbackScope, [this, this.targets].concat(handler.params));
@@ -77189,10 +77404,17 @@ export default require => {
                   delta *= this.parent.timeScale;
                   if (this.isLoopDelayed()) {
                     this.updateLoopCountdown(delta);
+                    return false;
                   } else if (this.isCompleteDelayed()) {
                     this.updateCompleteDelay(delta);
-                  } else if (this.isStartDelayed()) {
-                    delta = this.updateStartCountdown(delta);
+                    return false;
+                  } else if (!this.hasStarted) {
+                    this.startDelay -= delta;
+                    if (this.startDelay <= 0) {
+                      this.hasStarted = true;
+                      this.dispatchEvent(Events.TWEEN_START, "onStart");
+                      delta = 0;
+                    }
                   }
                   var remove = false;
                   if (this.isActive() && this.currentTween) {
@@ -77331,10 +77553,22 @@ export default require => {
                     this.elapsed = elapsed;
                     this.progress = progress;
                     this.previous = this.current;
+                    if (!forward) {
+                      progress = 1 - progress;
+                    }
+                    var v = this.ease(progress);
+                    if (this.interpolation) {
+                      this.current = this.interpolation(this.interpolationData, v);
+                    } else {
+                      this.current = this.start + (this.end - this.start) * v;
+                    }
+                    target[key] = this.current;
                     if (complete) {
                       if (forward) {
-                        this.current = this.end;
-                        target[key] = this.end;
+                        if (tween.isNumberTween) {
+                          this.current = this.end;
+                          target[key] = this.current;
+                        }
                         if (this.hold > 0) {
                           this.elapsed = this.hold;
                           this.setHoldState();
@@ -77342,21 +77576,12 @@ export default require => {
                           this.setStateFromEnd(diff);
                         }
                       } else {
-                        this.current = this.start;
-                        target[key] = this.start;
+                        if (tween.isNumberTween) {
+                          this.current = this.start;
+                          target[key] = this.current;
+                        }
                         this.setStateFromStart(diff);
                       }
-                    } else {
-                      if (!forward) {
-                        progress = 1 - progress;
-                      }
-                      var v = this.ease(progress);
-                      if (this.interpolation) {
-                        this.current = this.interpolation(this.interpolationData, v);
-                      } else {
-                        this.current = this.start + (this.end - this.start) * v;
-                      }
-                      target[key] = this.current;
                     }
                     this.dispatchEvent(Events.TWEEN_UPDATE, "onUpdate");
                   }
@@ -77896,11 +78121,22 @@ export default require => {
                 if (endIndex === void 0) {
                   endIndex = array.length;
                 }
-                if (SafeRange(array, startIndex, endIndex)) {
-                  for (var i = startIndex; i < endIndex; i++) {
-                    var child = array[i];
-                    if (!property || property && value === void 0 && child.hasOwnProperty(property) || property && value !== void 0 && child[property] === value) {
-                      return child;
+                if (startIndex !== -1) {
+                  if (SafeRange(array, startIndex, endIndex)) {
+                    for (var i = startIndex; i < endIndex; i++) {
+                      var child = array[i];
+                      if (!property || property && value === void 0 && child.hasOwnProperty(property) || property && value !== void 0 && child[property] === value) {
+                        return child;
+                      }
+                    }
+                  }
+                } else {
+                  if (SafeRange(array, 0, endIndex)) {
+                    for (var i = endIndex; i >= 0; i--) {
+                      var child = array[i];
+                      if (!property || property && value === void 0 && child.hasOwnProperty(property) || property && value !== void 0 && child[property] === value) {
+                        return child;
+                      }
                     }
                   }
                 }
@@ -78326,7 +78562,7 @@ export default require => {
             82011: module2 => {
               var SafeRange = function (array, startIndex, endIndex, throwError) {
                 var len = array.length;
-                if (startIndex < 0 || startIndex > len || startIndex >= endIndex || endIndex > len) {
+                if (startIndex < 0 || startIndex >= len || startIndex >= endIndex || endIndex > len) {
                   if (throwError) {
                     throw new Error("Range Error: Values outside acceptable range");
                   }
@@ -79127,7 +79363,7 @@ export default require => {
                 if (index === 0) {
                   return string.slice(1);
                 } else {
-                  return string.slice(0, index - 1) + string.slice(index);
+                  return string.slice(0, index) + string.slice(index + 1);
                 }
               };
               module2.exports = RemoveAt;
