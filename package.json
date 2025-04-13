@@ -61,7 +61,7 @@
     "@types/plotly.js": "^2.35.4",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
-    "@types/three": "^0.163.0",
+    "@types/three": "^0.175.0",
     "@vitejs/plugin-react": "^4.3.4",
     "acorn": "^8.8.1",
     "astring": "^1.8.6",
@@ -118,7 +118,7 @@
     "save-file": "^2.3.1",
     "source-academy-utils": "^1.0.0",
     "source-academy-wabt": "^1.0.4",
-    "three": "^0.163.0",
+    "three": "^0.175.0",
     "uniqid": "^5.4.0"
   },
   "jest": {
