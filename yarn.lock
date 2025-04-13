@@ -3995,20 +3995,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ecstatic@npm:^3.3.2":
-  version: 3.3.2
-  resolution: "ecstatic@npm:3.3.2"
-  dependencies:
-    he: "npm:^1.1.1"
-    mime: "npm:^1.6.0"
-    minimist: "npm:^1.1.0"
-    url-join: "npm:^2.0.5"
-  bin:
-    ecstatic: ./lib/ecstatic.js
-  checksum: 10c0/e94ca9331c5035d7d553a5f15ed40c47ed62a723a49aec6011628952f7cc9a24005bf737a0256e0c65f8a305fb99889fefbe9e5bc4760bd2cbe611f516b849ef
-  languageName: node
-  linkType: hard
-
 "ejs@npm:^3.1.10":
   version: 3.1.10
   resolution: "ejs@npm:3.1.10"
@@ -5398,7 +5384,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"he@npm:^1.1.1":
+"he@npm:^1.1.0":
   version: 1.2.0
   resolution: "he@npm:1.2.0"
   bin:
@@ -5489,24 +5475,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-server@npm:^0.12.3":
-  version: 0.12.3
-  resolution: "http-server@npm:0.12.3"
+"http-server@npm:^0.13.0":
+  version: 0.13.0
+  resolution: "http-server@npm:0.13.0"
   dependencies:
     basic-auth: "npm:^1.0.3"
     colors: "npm:^1.4.0"
     corser: "npm:^2.0.1"
-    ecstatic: "npm:^3.3.2"
+    he: "npm:^1.1.0"
     http-proxy: "npm:^1.18.0"
+    mime: "npm:^1.6.0"
     minimist: "npm:^1.2.5"
     opener: "npm:^1.5.1"
     portfinder: "npm:^1.0.25"
     secure-compare: "npm:3.0.1"
     union: "npm:~0.5.0"
+    url-join: "npm:^2.0.5"
   bin:
     hs: bin/http-server
     http-server: bin/http-server
-  checksum: 10c0/fa779a959119d9870fc738eaa689a8b9ea447bbac97ad656a29e4cd84f9c89e9257ef66a7e597d919dff81def2e796e575d8e128193dfd2780cdaf447f1a01ca
+  checksum: 10c0/e54485a55bd29ffdca8c54228fc415e10848e85d84986570d6cf663086213be27665dd12396ce6fefec814a8e8a63d47d9a943b6ebc921afe93aa8a7e46a0c94
   languageName: node
   linkType: hard
 
@@ -7588,7 +7576,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:^5.1.0"
     gl-matrix: "npm:^3.3.0"
     globals: "npm:^15.11.0"
-    http-server: "npm:^0.12.3"
+    http-server: "npm:^0.13.0"
     husky: "npm:^9.0.11"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.4.1"
