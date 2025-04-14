@@ -35,7 +35,7 @@
     "prepare": "husky",
     "postinstall": "patch-package && yarn scripts:build",
     "scripts": "node --max-old-space-size=4096 scripts/dist/bin.js",
-    "serve": "http-server '--cors=*' -c-1 -p 8022 ./build",
+    "serve": "http-server --cors=* -c-1 -p 8022 ./build",
     "template": "yarn scripts template",
     "test": "yarn scripts test",
     "test:all": "yarn test && yarn scripts:test",
