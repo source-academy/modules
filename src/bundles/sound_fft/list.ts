@@ -1,5 +1,3 @@
-/* eslint-disable no-else-return, no-lonely-if, operator-assignment, prefer-template */
-
 // list.js: Supporting lists in the Scheme style, using pairs made
 //          up of two-element JavaScript array (vector)
 

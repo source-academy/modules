@@ -14,12 +14,7 @@ import {
   TextGameObject,
   TriangleGameObject
 } from './gameobject';
-import {
-  type TransformProps,
-  type PositionXY,
-  type ExceptionError,
-  type PhaserGameObject
-} from './types';
+import type { TransformProps, PositionXY, ExceptionError, PhaserGameObject } from './types';
 
 // Game state information, that changes every frame.
 export const gameState = {
@@ -100,10 +95,10 @@ export class PhaserScene extends Phaser.Scene {
 
     // Handle keyboard inputs
     // Keyboard events can be detected inside the Source editor, which is not intended. #BUG
-    this.input.keyboard.on('keydown', (event: KeyboardEvent) => {
+    this.input.keyboard?.on('keydown', (event: KeyboardEvent) => {
       gameState.inputKeysDown.add(event.key);
     });
-    this.input.keyboard.on('keyup', (event: KeyboardEvent) => {
+    this.input.keyboard?.on('keyup', (event: KeyboardEvent) => {
       this.delayedKeyUpEvents.add(() => gameState.inputKeysDown.delete(event.key));
     });
 
@@ -136,7 +131,6 @@ export class PhaserScene extends Phaser.Scene {
     this.handleAudioUpdates();
 
     // Delay KeyUp events, so that low FPS can still detect KeyDown.
-    // eslint-disable-next-line array-callback-return
     this.delayedKeyUpEvents.forEach((event: Function) => event());
     this.delayedKeyUpEvents.clear();
 
@@ -321,7 +315,7 @@ export class PhaserScene extends Phaser.Scene {
         // Update the image of Phaser GameObject
         if (gameObject.hasRenderUpdates() || this.shouldRerenderGameObjects) {
           const color = gameObject.getColor();
-          // eslint-disable-next-line new-cap
+
           const intColor = Phaser.Display.Color.GetColor32(color[0], color[1], color[2], color[3]);
           const flip = gameObject.getFlipState();
           if (gameObject instanceof TextGameObject) {

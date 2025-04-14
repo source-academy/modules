@@ -1,0 +1,45 @@
+{
+  "compilerOptions": {
+    /* Allow JavaScript files to be imported inside your project, instead of just .ts and .tsx files. */
+    "allowJs": false,
+    /* When set to true, allowSyntheticDefaultImports allows you to write an import like "import React from "react";" */
+    "allowSyntheticDefaultImports": true,
+    /* See https://www.typescriptlang.org/tsconfig#esModuleInterop */
+    "esModuleInterop": true,
+    /* Controls how JSX constructs are emitted in JavaScript files. This only affects output of JS files that started in .tsx files. */
+    "jsx": "react-jsx",
+    /* See https://www.typescriptlang.org/tsconfig#lib */
+    "lib": ["es6", "dom", "es2016", "ESNext", "scripthost"],
+    /* Sets the module system for the program. See the Modules reference page for more information. */
+    "module": "esnext",
+    /* Specify the module resolution strategy: 'node' (Node.js) or 'classic' (used in TypeScript before the release of 1.6). */
+    "moduleResolution": "node",
+    /* Do not emit compiler output files like JavaScript source code, source-maps or declarations. */
+    "noEmit": true,
+    /* Allows importing modules with a ‘.json’ extension, which is a common practice in node projects. */
+    "resolveJsonModule": true,
+    /* The longest common path of all non-declaration input files. */
+    "rootDir": "./",
+    /* Enables the generation of sourcemap files. These files allow debuggers and other tools to display the original TypeScript source code when actually working with the emitted JavaScript files. */
+    "sourceMap": false,
+    /* Skip running typescript on declaration files. This option is needed due to a known bug in react-ace */
+    "skipLibCheck": true,
+    /* The strict flag enables a wide range of type checking behavior that results in stronger guarantees of program correctness. */
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    /* The target setting changes which JS features are downleveled and which are left intact. */
+    "target": "es6",
+    /* In some cases where no type annotations are present, TypeScript will fall back to a type of any for a variable when it cannot infer the type. */
+    /* *** TEMPORARILY ADDED UNTIL ALL MODULES HAVE BEEN REFACTORED!!!!!!!!!!! *** */
+    "noImplicitAny": false,
+    "verbatimModuleSyntax": true,
+    "paths": {
+      "js-slang/context": ["./typings/js-slang/context.d.ts"]
+    },
+    "ignoreDeprecations": "5.0"
+  },
+  /* Specifies an array of filenames or patterns to include in the program. These filenames are resolved relative to the directory containing the tsconfig.json file. */
+  "include": ["."],
+  /* Specifies an array of filenames or patterns that should be skipped when resolving include. */
+  "exclude": ["jest.config.js"]
+}

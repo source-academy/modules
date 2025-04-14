@@ -3,7 +3,7 @@ import { IconNames } from '@blueprintjs/icons';
 import type { ReactElement } from 'react';
 import { Core } from '../../bundles/csg/core';
 import type { CsgModuleState } from '../../bundles/csg/utilities';
-import { type DebuggerContext } from '../../typings/type_helpers';
+import type { DebuggerContext } from '../../typings/type_helpers';
 import CanvasHolder from './canvas_holder';
 
 /* [Exports] */

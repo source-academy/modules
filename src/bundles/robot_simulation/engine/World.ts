@@ -1,10 +1,10 @@
 import { ProgramError } from '../controllers/program/error';
 import { type Controller, ControllerGroup } from './Core/Controller';
 import { TypedEventTarget } from './Core/Events';
-import { type RobotConsole } from './Core/RobotConsole';
-import { type Timer } from './Core/Timer';
+import type { RobotConsole } from './Core/RobotConsole';
+import type { Timer } from './Core/Timer';
 import { TimeStampedEvent, type Physics } from './Physics';
-import { type Renderer } from './Render/Renderer';
+import type { Renderer } from './Render/Renderer';
 
 export const worldStates = [
   'unintialized',

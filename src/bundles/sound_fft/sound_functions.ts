@@ -4,7 +4,7 @@ import {
   pair,
   is_pair
 } from 'js-slang/dist/stdlib/list';
-import { type Sound, type Wave } from '../sound/types';
+import type { Sound, Wave } from '../sound/types';
 
 export function is_sound(x: any): x is Sound {
   return (

@@ -1,6 +1,7 @@
 import { mat4 } from 'gl-matrix';
 import { type AnimFrame, glAnimation } from '../../typings/anim_types';
 import type { ReplResult } from '../../typings/type_helpers';
+import { classDeclaration } from '../../typings/type_map';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
 
 const normalVertexShader = `
@@ -57,6 +58,7 @@ void main(void) {
  * @field transformMatrix - A mat4 that is applied to all the vertices and the sub runes
  * @field subRune - A (potentially empty) list of Runes
  */
+@classDeclaration('Rune')
 export class Rune {
   constructor(
     public vertices: Float32Array,
@@ -217,7 +219,6 @@ export function drawRunesToFrameBuffer(
     const texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
     function isPowerOf2(value) {
-      // eslint-disable-next-line no-bitwise
       return (value & (value - 1)) === 0;
     }
     // Because images have to be downloaded over the internet

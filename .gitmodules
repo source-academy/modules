@@ -1,3 +1,3 @@
 [submodule "src/java/java-packages"]
 	path = src/java/java-packages
-	url = https://github.com/source-academy/java-packages
+	url = ../../source-academy/java-packages.git

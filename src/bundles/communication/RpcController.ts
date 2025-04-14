@@ -1,5 +1,5 @@
 import uniqid from 'uniqid';
-import { type MultiUserController } from './MultiUserController';
+import type { MultiUserController } from './MultiUserController';
 
 type DeclaredFunction = {
   name: string;

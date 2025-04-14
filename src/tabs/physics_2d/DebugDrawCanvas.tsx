@@ -1,14 +1,10 @@
-/* eslint-disable new-cap */
-// We have to disable linting rules since Box2D functions do not
-// follow the same guidelines as the rest of the codebase.
-
 import { Button, Icon, Slider, Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { DrawShapes, type b2World } from '@box2d/core';
 import { DebugDraw } from '@box2d/debug-draw';
 import React from 'react';
 
-import { type PhysicsWorld } from '../../bundles/physics_2d/PhysicsWorld';
+import type { PhysicsWorld } from '../../bundles/physics_2d/PhysicsWorld';
 import WebGLCanvas from '../common/WebglCanvas';
 
 type DebugDrawCanvasProps = {

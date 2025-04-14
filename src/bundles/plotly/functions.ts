@@ -6,7 +6,7 @@
 import context from 'js-slang/context';
 import { list_to_vector } from 'js-slang/dist/stdlib/list';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
-import { type Sound } from '../sound/types';
+import type { Sound } from '../sound/types';
 import type {
   AugmentedSample,
   FrequencyList,
