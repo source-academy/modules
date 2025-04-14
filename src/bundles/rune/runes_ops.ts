@@ -1,6 +1,7 @@
 /**
  * This file contains the bundle's private functions for runes.
  */
+import { hexToColor as hexToColorUtil } from '../../common/utilities';
 import { Rune } from './rune';
 
 // =============================================================================
@@ -338,18 +339,8 @@ export const colorPalette = [
 ];
 
 export function hexToColor(hex: string): number[] {
-  const result = /^#?(?<red>[a-f\d]{2})(?<green>[a-f\d]{2})(?<blue>[a-f\d]{2})$/iu.exec(
-    hex
-  );
-  if (result === null || result.length < 4) {
-    return [0, 0, 0];
-  }
-  return [
-    parseInt(result[1], 16) / 255,
-    parseInt(result[2], 16) / 255,
-    parseInt(result[3], 16) / 255,
-    1
-  ];
+  const result = hexToColorUtil(hex);
+  return [ ...result, 1];
 }
 
 export function addColorFromHex(rune: Rune, hex: string) {

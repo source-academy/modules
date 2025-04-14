@@ -20,7 +20,7 @@ async function buildScripts({ dev }) {
     format: 'esm',
     logLevel: 'warning',
     minify: !dev,
-    outfile: pathlib.join(dirname, 'bin.js'),
+    outfile: pathlib.join(dirname, 'dist', 'bin.js'),
     packages: 'external',
     platform: 'node',
     treeShaking: true,

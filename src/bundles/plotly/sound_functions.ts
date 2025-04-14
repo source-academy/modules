@@ -3,8 +3,8 @@ import {
   tail,
   is_pair
 } from 'js-slang/dist/stdlib/list';
-import { type Sound, type Wave } from '../sound/types';
-import { type FrequencySample, type AugmentedSample } from '../sound_fft/types';
+import type { Sound, Wave } from '../sound/types';
+import type { FrequencySample, AugmentedSample } from '../sound_fft/types';
 export function is_sound(x: any): x is Sound {
   return (
     is_pair(x)

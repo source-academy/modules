@@ -4,11 +4,9 @@
 node_modules/
 devserver/node_modules
 build/*
-/package-lock.json
 coverage/
 
-scripts/build/database.json
-scripts/bin.js
+scripts/dist
 
 # Compiled source #
 ###################
