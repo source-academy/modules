@@ -360,10 +360,10 @@ export const draw_connected_3d = createPlotFunction(
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
- * Curve at num sample points. The Drawing consists of isolated points, and does not connect them.
- * When a program evaluates to a Drawing, the Source system displays it graphically, in a window,
+ * Curve at `num` sample points. The Drawing consists of isolated points, and does not connect them.
+ * When a program evaluates to a Drawing, the Source system displays it graphically, in a window.
  *
- * * @param num determines the number of points, lower than 65535, to be sampled.
+ * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type 2D Curve → Drawing
  * @example
@@ -385,10 +385,10 @@ export const draw_points_2d = createPlotFunction(
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling the
- * 3D Curve at num sample points. The Drawing consists of isolated points, and does not connect them.
- * When a program evaluates to a Drawing, the Source system displays it graphically, in a window,
+ * 3D Curve at `num` sample points. The Drawing consists of isolated points, and does not connect them.
+ * When a program evaluates to a Drawing, the Source system displays it graphically, in a window.
  *
- * * @param num determines the number of points, lower than 65535, to be sampled.
+ * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type 3D Curve → Drawing
  * @example
@@ -402,7 +402,7 @@ export const draw_points_3d = createPlotFunction(
 );
 
 /**
- * Visualizes the sound on a 2d line graph
+ * Visualizes the given sound on a 2D line graph (amplitude vs time).
  * @param sound the sound which is to be visualized on plotly
  */
 export const draw_sound_2d = (sound: Sound) => {
@@ -479,7 +479,8 @@ export const draw_sound_2d = (sound: Sound) => {
 };
 
 /**
- * Visualizes frequency-domain samples of a sound on a 2d line graph
+ * Visualizes the frequency-domain samples of the given sound on a 2D line graph
+ * (magnitude vs frequency).
  * @param frequencies the frequency-domain samples of a sound to be visualized on plotly
  */
 export const draw_sound_frequency_2d = (frequencies: FrequencyList) => {
