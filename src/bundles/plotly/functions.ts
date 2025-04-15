@@ -407,6 +407,7 @@ export const draw_points_3d = createPlotFunction(
  */
 export const draw_sound_2d = (sound: Sound) => {
   const FS: number = 44100; // Output sample rate
+  const POINT_LIMIT: number = 44100; // Maximum number of points to be plotted
   if (!is_sound(sound)) {
     throw new Error(
       `draw_sound_2d is expecting sound, but encountered ${sound}`
@@ -430,10 +431,19 @@ export const draw_sound_2d = (sound: Sound) => {
 
     const x_s: number[] = [];
     const y_s: number[] = [];
-
-    for (let i = 0; i < channel.length; i += 1) {
+    const insert_point = (i: number) => {
       x_s.push(time_stamps[i]);
       y_s.push(channel[i]);
+    };
+
+    if (channel.length <= POINT_LIMIT) {
+      for (let i = 0; i < channel.length; i += 1) {
+        insert_point(i);
+      }
+    } else {
+      for (let i = 0; i < POINT_LIMIT; i += 1) {
+        insert_point(Math.round(channel.length / POINT_LIMIT * i));
+      }
     }
 
     const plotlyData: Data = {
@@ -474,19 +484,30 @@ export const draw_sound_2d = (sound: Sound) => {
  */
 export const draw_sound_frequency_2d = (frequencies: FrequencyList) => {
   const FS: number = 44100; // Output sample rate
+  const POINT_LIMIT: number = 44100; // Maximum number of points to be plotted
 
   const x_s: number[] = [];
   const y_s: number[] = [];
   const frequencies_arr: AugmentedSample[] = list_to_vector(frequencies);
   const len: number = frequencies_arr.length;
 
-  for (let i = 0; i < len; i += 1) {
+  const insert_point = (i: number) => {
     const bin_freq: number = i * FS / len;
     const sample: AugmentedSample = frequencies_arr[i];
     const magnitude: number = get_magnitude(sample);
 
     x_s.push(bin_freq);
     y_s.push(magnitude);
+  }
+
+  if (len <= POINT_LIMIT) {
+    for (let i = 0; i < len; i += 1) {
+      insert_point(i);
+    }
+  } else {
+    for (let i = 0; i < POINT_LIMIT; i += 1) {
+      insert_point(Math.round(len / POINT_LIMIT * i));
+    }
   }
 
   const plotlyData: Data = {
