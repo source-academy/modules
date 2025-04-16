@@ -4896,7 +4896,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"find-parent-dir@npm:^0.3.0":
+"find-parent-dir@npm:^0.3.1":
   version: 0.3.1
   resolution: "find-parent-dir@npm:0.3.1"
   checksum: 10c0/4817c60ff382a989da31cfa63ac748e6add98433f00a6d236b91d5a23dba8cfc80723b43ff45f47a2dbb54032737dd8643fe12834a60cbee0512021e64bfbf00
@@ -7627,7 +7627,7 @@ __metadata:
     typescript-eslint: "npm:^8.24.1"
     uniqid: "npm:^5.4.0"
     vite: "npm:^6.2.5"
-    yarnhook: "npm:^0.5.1"
+    yarnhook: "npm:^0.6.0"
   languageName: unknown
   linkType: soft
 
@@ -10927,15 +10927,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yarnhook@npm:^0.5.1":
-  version: 0.5.3
-  resolution: "yarnhook@npm:0.5.3"
+"yarnhook@npm:^0.6.0":
+  version: 0.6.2
+  resolution: "yarnhook@npm:0.6.2"
   dependencies:
     execa: "npm:^4.0.3"
-    find-parent-dir: "npm:^0.3.0"
+    find-parent-dir: "npm:^0.3.1"
   bin:
     yarnhook: index.js
-  checksum: 10c0/4c8909b4a773abf2da6f8904e9e24de069d52682b60bf7bfae6c4f4e0c1b78ef887e47985a94dee6c58acacc926c2c72c613a1876765606a8286bd5d6636938b
+  checksum: 10c0/5109fbc9c073faed41bc252bb8257d867afb466588a2a09c8b2fbedf8c0b8998a3c72ad847b7f484b59272d40b3928812896c7844120ac365f11c61afd2d4c89
   languageName: node
   linkType: hard
 
