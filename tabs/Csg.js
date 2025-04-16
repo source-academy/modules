@@ -4945,7 +4945,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_regl = __commonJS({
-    "node_modules/regl/dist/regl.js"(exports, module) {
+    "node_modules/@jscad/regl-renderer/node_modules/regl/dist/regl.js"(exports, module) {
       "use strict";
       init_define_process();
       (function (global, factory) {
