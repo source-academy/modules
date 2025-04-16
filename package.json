@@ -55,7 +55,7 @@
     "@commander-js/extra-typings": "^13.0.0",
     "@stylistic/eslint-plugin": "^4.2.0",
     "@types/estree": "^1.0.0",
-    "@types/jest": "^27.4.1",
+    "@types/jest": "^29.0.0",
     "@types/lodash": "^4.14.198",
     "@types/node": "^20.12.12",
     "@types/plotly.js": "^2.35.4",
