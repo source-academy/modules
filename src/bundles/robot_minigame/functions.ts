@@ -247,7 +247,7 @@ const SENSOR_RANGE: number = 15;
  * Check if there is an obstacle within a predefined distance from the robot
  */
 export function sense_obstacle() : boolean {
-  return get_distance() > SENSOR_RANGE;
+  return get_distance() < SENSOR_RANGE;
 }
 
 /**
