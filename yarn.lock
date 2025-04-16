@@ -619,12 +619,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commander-js/extra-typings@npm:^12.0.0, @commander-js/extra-typings@npm:^12.0.1":
+"@commander-js/extra-typings@npm:^12.0.1":
   version: 12.1.0
   resolution: "@commander-js/extra-typings@npm:12.1.0"
   peerDependencies:
     commander: ~12.1.0
   checksum: 10c0/5d29eaa724b577e2a52a393ad54992924d2559931b8e493ab892477b7a4e878e475c6bf771260f8585d835f7d8e17ae4a2656c191e9595d210ae0b48291c0b3d
+  languageName: node
+  linkType: hard
+
+"@commander-js/extra-typings@npm:^13.0.0":
+  version: 13.1.0
+  resolution: "@commander-js/extra-typings@npm:13.1.0"
+  peerDependencies:
+    commander: ~13.1.0
+  checksum: 10c0/ff799f0641f68855aa73c976912a607c25d564df34fd8e262927a80b19f6cccd882fe7ce098a0e072a497fd0020cbd19fd1e4d5cc98a461cd6623abf8ed5f4e7
   languageName: node
   linkType: hard
 
@@ -7566,7 +7575,7 @@ __metadata:
     "@blueprintjs/icons": "npm:^5.9.0"
     "@box2d/core": "npm:^0.10.0"
     "@box2d/debug-draw": "npm:^0.10.0"
-    "@commander-js/extra-typings": "npm:^12.0.0"
+    "@commander-js/extra-typings": "npm:^13.0.0"
     "@dimforge/rapier3d-compat": "npm:^0.11.2"
     "@jscad/modeling": "npm:2.9.6"
     "@jscad/regl-renderer": "npm:^2.6.1"
