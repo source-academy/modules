@@ -30,10 +30,10 @@ jobs:
           run: yarn build --tsc --lint
 
         - name: Test bundles and tabs
-          run: yarn test
+          run: yarn test --color
 
         - name: Test and lint scripts
-          run: yarn scripts:tsc && yarn scripts:lint && yarn scripts:test
+          run: yarn scripts:tsc && yarn scripts:lint && yarn scripts:test --color
 
         - name: Check and Lint Devserver
           run: yarn devserver:tsc && yarn devserver:lint
