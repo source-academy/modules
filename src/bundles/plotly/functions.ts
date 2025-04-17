@@ -4,8 +4,13 @@
  */
 
 import context from 'js-slang/context';
+import { list_to_vector } from 'js-slang/dist/stdlib/list';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import type { Sound } from '../sound/types';
+import type {
+  AugmentedSample,
+  FrequencyList,
+} from '../sound_fft/types';
 import { generatePlot } from './curve_functions';
 import {
   type Curve,
@@ -14,7 +19,7 @@ import {
   DrawnPlot,
   type ListOfPairs
 } from './plotly';
-import { get_duration, get_wave, is_sound } from './sound_functions';
+import { get_duration, get_wave, is_sound, get_magnitude } from './sound_functions';
 
 const drawnPlots: (CurvePlot | DrawnPlot)[] = [];
 
@@ -355,10 +360,10 @@ export const draw_connected_3d = createPlotFunction(
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
- * Curve at num sample points. The Drawing consists of isolated points, and does not connect them.
- * When a program evaluates to a Drawing, the Source system displays it graphically, in a window,
+ * Curve at `num` sample points. The Drawing consists of isolated points, and does not connect them.
+ * When a program evaluates to a Drawing, the Source system displays it graphically, in a window.
  *
- * * @param num determines the number of points, lower than 65535, to be sampled.
+ * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type 2D Curve → Drawing
  * @example
@@ -380,10 +385,10 @@ export const draw_points_2d = createPlotFunction(
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling the
- * 3D Curve at num sample points. The Drawing consists of isolated points, and does not connect them.
- * When a program evaluates to a Drawing, the Source system displays it graphically, in a window,
+ * 3D Curve at `num` sample points. The Drawing consists of isolated points, and does not connect them.
+ * When a program evaluates to a Drawing, the Source system displays it graphically, in a window.
  *
- * * @param num determines the number of points, lower than 65535, to be sampled.
+ * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type 3D Curve → Drawing
  * @example
@@ -397,11 +402,12 @@ export const draw_points_3d = createPlotFunction(
 );
 
 /**
- * Visualizes the sound on a 2d line graph
+ * Visualizes the given sound on a 2D line graph (amplitude vs time).
  * @param sound the sound which is to be visualized on plotly
  */
 export const draw_sound_2d = (sound: Sound) => {
   const FS: number = 44100; // Output sample rate
+  const POINT_LIMIT: number = 44100; // Maximum number of points to be plotted
   if (!is_sound(sound)) {
     throw new Error(
       `draw_sound_2d is expecting sound, but encountered ${sound}`
@@ -425,10 +431,19 @@ export const draw_sound_2d = (sound: Sound) => {
 
     const x_s: number[] = [];
     const y_s: number[] = [];
-
-    for (let i = 0; i < channel.length; i += 1) {
+    const insert_point = (i: number) => {
       x_s.push(time_stamps[i]);
       y_s.push(channel[i]);
+    };
+
+    if (channel.length <= POINT_LIMIT) {
+      for (let i = 0; i < channel.length; i += 1) {
+        insert_point(i);
+      }
+    } else {
+      for (let i = 0; i < POINT_LIMIT; i += 1) {
+        insert_point(Math.round(channel.length / POINT_LIMIT * i));
+      }
     }
 
     const plotlyData: Data = {
@@ -461,6 +476,70 @@ export const draw_sound_2d = (sound: Sound) => {
     );
     if (drawnPlots) drawnPlots.push(plot);
   }
+};
+
+/**
+ * Visualizes the frequency-domain samples of the given sound on a 2D line graph
+ * (magnitude vs frequency).
+ * @param frequencies the frequency-domain samples of a sound to be visualized on plotly
+ */
+export const draw_sound_frequency_2d = (frequencies: FrequencyList) => {
+  const FS: number = 44100; // Output sample rate
+  const POINT_LIMIT: number = 44100; // Maximum number of points to be plotted
+
+  const x_s: number[] = [];
+  const y_s: number[] = [];
+  const frequencies_arr: AugmentedSample[] = list_to_vector(frequencies);
+  const len: number = frequencies_arr.length;
+
+  const insert_point = (i: number) => {
+    const bin_freq: number = i * FS / len;
+    const sample: AugmentedSample = frequencies_arr[i];
+    const magnitude: number = get_magnitude(sample);
+
+    x_s.push(bin_freq);
+    y_s.push(magnitude);
+  }
+
+  if (len <= POINT_LIMIT) {
+    for (let i = 0; i < len; i += 1) {
+      insert_point(i);
+    }
+  } else {
+    for (let i = 0; i < POINT_LIMIT; i += 1) {
+      insert_point(Math.round(len / POINT_LIMIT * i));
+    }
+  }
+
+  const plotlyData: Data = {
+    x: x_s,
+    y: y_s
+  };
+  const plot = new CurvePlot(
+    draw_new_curve,
+    {
+      ...plotlyData,
+      type: 'scattergl',
+      mode: 'lines',
+      line: { width: 0.5 }
+    } as Data,
+    {
+      xaxis: {
+        type: 'linear',
+        title: 'Frequency',
+        anchor: 'y',
+        position: 0,
+        rangeslider: { visible: true }
+      },
+      yaxis: {
+        type: 'linear',
+        visible: false
+      },
+      bargap: 0.2,
+      barmode: 'stack'
+    }
+  );
+  if (drawnPlots) drawnPlots.push(plot);
 };
 
 function draw_new_curve(divId: string, data: Data, layout: Partial<Layout>) {
