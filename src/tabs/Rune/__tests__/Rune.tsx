@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { RuneTab } from '..';
 import { animate_rune } from '../../../bundles/rune';
 import type { RuneModuleState } from '../../../bundles/rune/functions';

@@ -77,6 +77,7 @@ function runJest(patterns) {
 const testCommand = new Command('test')
   .description('Run tests for script files')
   .allowUnknownOption()
+  .allowExcessArguments()
   .action((_, command) => runJest(command.args));
 
 await new Command()

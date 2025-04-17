@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { make_sound, play, play_in_tab } from '../functions';
 
 describe('Test make_sound', () => {

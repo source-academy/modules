@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CurveTab } from '..';
 import { animate_3D_curve, animate_curve, draw_3D_connected, draw_connected } from '../../../bundles/curve';
 import type { CurveModuleState } from '../../../bundles/curve/types';
