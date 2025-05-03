@@ -12,6 +12,7 @@ export type TestCommandOptions = {
 const getTestCommand = () => new Command('test')
   .description('Run jest')
   .addOption(srcDirOption)
+  .allowExcessArguments()
   .allowUnknownOption()
   .action(({ srcDir }, command) => {
     const [args, filePatterns] = lodash.partition(command.args, arg => arg.startsWith('-'));
