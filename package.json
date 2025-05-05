@@ -94,7 +94,7 @@
   "dependencies": {
     "@blueprintjs/core": "^5.10.2",
     "@blueprintjs/icons": "^5.9.0",
-    "@box2d/core": "^0.10.0",
+    "@box2d/core": "^0.11.0",
     "@box2d/debug-draw": "^0.10.0",
     "@dimforge/rapier3d-compat": "^0.11.2",
     "@jscad/modeling": "2.9.6",
