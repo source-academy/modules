@@ -1,0 +1,9 @@
+{
+  "name": "game",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "js-slang": "^1.0.81",
+    "phaser": "^3.54.0"
+  }
+}

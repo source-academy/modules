@@ -1,0 +1,9 @@
+{
+  "name": "communication",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "mqtt": "^4.3.7",
+    "uniqid": "^5.4.0"
+  }
+}

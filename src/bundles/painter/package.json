@@ -1,0 +1,11 @@
+{
+  "name": "painter",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "plotly.js-dist": "^2.17.1"
+  },
+  "devDependencies": {
+    "@types/plotly.js": "^2.35.4"
+  }
+}

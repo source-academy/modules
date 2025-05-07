@@ -1,0 +1,11 @@
+{
+  "name": "robot_simulation",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "three": "^0.175.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.175.0"
+  }
+}

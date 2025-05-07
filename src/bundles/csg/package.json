@@ -1,0 +1,10 @@
+{
+  "name": "csg",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@jscad/modeling": "2.9.6",
+    "@jscad/regl-renderer": "^2.6.1",
+    "@jscad/stl-serializer": "2.1.11"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "nbody",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "nbody": "^0.2.0"
+  }
+}

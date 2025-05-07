@@ -1,0 +1,11 @@
+{
+  "name": "Unittest",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1"
+  }
+}
