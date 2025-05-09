@@ -1,5 +1,8 @@
 {
-  "name": "scrabble",
+  "name": "@sourceacademy/bundle-scrabble",
   "version": "1.0.0",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@sourceacademy/module-buildtools": "workspace:^"
+  }
 }

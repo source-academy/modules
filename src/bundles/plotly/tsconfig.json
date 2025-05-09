@@ -1,7 +1,4 @@
 {
-  "compilerOptions": {
-    "noEmit": true
-  },
   "extends": [
     "../tsconfig.json"
   ],
@@ -10,7 +7,7 @@
   ],
   "references": [
     {
-      "path": "../commons/tsconfig.json"
+      "path": "../../commons/tsconfig.json"
     }
   ]
 }

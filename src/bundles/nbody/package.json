@@ -1,8 +1,11 @@
 {
-  "name": "nbody",
+  "name": "@sourceacademy/bundle-nbody",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
     "nbody": "^0.2.0"
+  },
+  "devDependencies": {
+    "@sourceacademy/module-buildtools": "workspace:^"
   }
 }

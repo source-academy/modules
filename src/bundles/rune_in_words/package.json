@@ -1,5 +1,8 @@
 {
-  "name": "rune_in_words",
+  "name": "@sourceacademy/bundle-rune_in_words",
   "version": "1.0.0",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@sourceacademy/module-buildtools": "workspace:^"
+  }
 }

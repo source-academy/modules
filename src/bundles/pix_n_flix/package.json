@@ -1,5 +1,8 @@
 {
-  "name": "pix_n_flix",
+  "name": "@sourceacademy/bundle-pix_n_flix",
   "version": "1.0.0",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@sourceacademy/module-buildtools": "workspace:^"
+  }
 }

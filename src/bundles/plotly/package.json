@@ -1,9 +1,12 @@
 {
-  "name": "plotly",
+  "name": "@sourceacademy/bundle-plotly",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
     "js-slang": "^1.0.81",
     "sound": "workspace:^"
+  },
+  "devDependencies": {
+    "@sourceacademy/module-buildtools": "workspace:^"
   }
 }

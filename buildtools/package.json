@@ -1,0 +1,19 @@
+{
+  "name": "@sourceacademy/module-buildtools",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@commander-js/extra-typings": "^13.0.0",
+    "@types/node": "^20.12.12"
+  },
+  "bin": "./dist/commands/index.js",
+  "type": "module",
+  "dependencies": {
+    "acorn": "^8.8.1",
+    "astring": "^1.8.6",
+    "chalk": "^5.0.1",
+    "commander": "^13.0.0",
+    "console-table-printer": "^2.11.1",
+    "esbuild": "^0.25.0",
+    "typedoc": "^0.25.12"
+  }
+}

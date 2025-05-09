@@ -1,5 +1,8 @@
 {
-  "name": "sound",
+  "name": "@sourceacademy/bundle-sound",
   "version": "1.0.0",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@sourceacademy/module-buildtools": "workspace:^"
+  }
 }

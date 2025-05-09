@@ -1,8 +1,11 @@
 {
-  "name": "arcade_2d",
+  "name": "@sourceacademy/bundle-arcade_2d",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
     "phaser": "^3.54.0"
+  },
+  "devDependencies": {
+    "@sourceacademy/module-buildtools": "workspace:^"
   }
 }

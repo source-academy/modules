@@ -1,5 +1,8 @@
 {
-  "name": "mark_sweep",
+  "name": "@sourceacademy/bundle-mark_sweep",
   "version": "1.0.0",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@sourceacademy/module-buildtools": "workspace:^"
+  }
 }

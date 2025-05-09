@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "outDir": "dist",
+    "target": "ESNext",
+    "strict": false
+  },
+  "include": ["./src", "jest.setup.ts"],
+  "exclude": [
+    "./src/templates/templates/**",
+    "./src/build/docs/__tests__/test_mocks"
+  ]
+}

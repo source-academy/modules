@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "composite": true
+    "paths": {
+      "js-slang/context": ["../../buildtools/src/types/js-slang/context.d.ts"]
+    }
   },
-  "include": ["*/**/*.ts"]
+  "extends": ["../tsconfig.json"]
 }

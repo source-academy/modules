@@ -1,8 +1,11 @@
 {
-  "name": "ar",
+  "name": "@sourceacademy/bundle-ar",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
     "saar": "^1.0.4"
+  },
+  "devDependencies": {
+    "@sourceacademy/module-buildtools": "workspace:^"
   }
 }

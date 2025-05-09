@@ -1,8 +1,11 @@
 {
-  "name": "sound_matrix",
+  "name": "@sourceacademy/bundle-sound_matrix",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
     "js-slang": "^1.0.81"
+  },
+  "devDependencies": {
+    "@sourceacademy/module-buildtools": "workspace:^"
   }
 }

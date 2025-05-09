@@ -1,5 +1,8 @@
 {
-  "name": "binary_tree",
+  "name": "@sourceacademy/bundle-binary_tree",
   "version": "1.0.0",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "@sourceacademy/module-buildtools": "workspace:^"
+  }
 }

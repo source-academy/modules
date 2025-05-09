@@ -1,8 +1,11 @@
 {
-  "name": "physics_2d",
+  "name": "@sourceacademy/bundle-physics_2d",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@box2d/core": "^0.10.0"
+  },
+  "devDependencies": {
+    "@sourceacademy/module-buildtools": "workspace:^"
   }
 }

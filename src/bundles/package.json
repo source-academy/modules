@@ -1,7 +1,5 @@
 {
   "private": true,
   "name": "bundles",
-  "workspaces": [
-    "./*"
-  ]
+  "workspaces": ["./*"]
 }
