@@ -85,7 +85,7 @@
     "re-resizable": "^6.9.11",
     "sass": "^1.85.0",
     "ts-jest": "^29.1.2",
-    "typedoc": "^0.25.12",
+    "typedoc": "^0.28.0",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.3.4",
