@@ -1,0 +1,29 @@
+{
+  "name": "@sourceacademy/lint-plugin",
+  "version": "1.0.0",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "dependencies": {
+    "eslint": "^9.21.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build": "tsc --project ./tsconfig.json",
+    "test": "jest"
+  },
+  "jest": {
+    "displayName": "Lint Plugin",
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
+    "preset": "ts-jest/presets/default-esm",
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.test.ts"
+    ]
+  }
+}
