@@ -1,5 +1,5 @@
 {
-  "name": "SoundMatrix",
+  "name": "@sourceacademy/tab-SoundMatrix",
   "version": "1.0.0",
   "private": true,
   "dependencies": {

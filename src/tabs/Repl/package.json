@@ -1,9 +1,12 @@
 {
-  "name": "Repl",
+  "name": "@sourceacademy/tab-Repl",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "react": "^18.3.1"
+    "@sourceacademy/modules-lib": "workspace:^",
+    "ace-builds": "^1.25.1",
+    "react": "^18.3.1",
+    "react-ace": "^10.1.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.1"

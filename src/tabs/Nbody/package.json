@@ -1,8 +1,9 @@
 {
-  "name": "Nbody",
+  "name": "@sourceacademy/tab-Nbody",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "nbody": "^0.2.0",
     "react": "^18.3.1"
   },
   "devDependencies": {

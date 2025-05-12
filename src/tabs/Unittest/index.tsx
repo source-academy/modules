@@ -1,6 +1,7 @@
+import type { SuiteResult, TestContext } from '@sourceacademy/bundle-unittest/types';
+import { getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
+import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
 import React from 'react';
-import type { SuiteResult, TestContext } from '../../bundles/unittest/types';
-import { getModuleState, type DebuggerContext } from '../../typings/type_helpers';
 
 /**
  * Tab for unit tests.

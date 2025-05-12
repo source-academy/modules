@@ -1,5 +1,5 @@
+import { interrupt } from '@sourceacademy/modules-lib/specialErrors';
 import context from 'js-slang/context';
-import { interrupt } from '../../common/specialErrors';
 import { sceneConfig } from './config';
 import { Cuboid, type CuboidConfig } from './controllers/environment/Cuboid';
 import { Paper, type PaperConfig } from './controllers/environment/Paper';

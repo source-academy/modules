@@ -1,8 +1,10 @@
 {
-  "name": "Unittest",
+  "name": "@sourceacademy/tab-Unittest",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/bundle-unittest": "workspace:^",
+    "@sourceacademy/modules-lib": "workspace:^",
     "react": "^18.3.1"
   },
   "devDependencies": {

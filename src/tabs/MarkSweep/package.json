@@ -1,5 +1,5 @@
 {
-  "name": "MarkSweep",
+  "name": "@sourceacademy/tab-MarkSweep",
   "version": "1.0.0",
   "private": true,
   "dependencies": {

@@ -12,6 +12,7 @@ import {
 } from '@jscad/modeling/src/operations/booleans';
 import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { serialize } from '@jscad/stl-serializer';
+import { degreesToRadians, hexToColor } from '@sourceacademy/modules-lib/utilities';
 import {
   head,
   list,
@@ -20,7 +21,6 @@ import {
   is_list
 } from 'js-slang/dist/stdlib/list';
 import save from 'save-file';
-import { degreesToRadians, hexToColor } from '../../common/utilities';
 import { Core } from './core';
 import type { Solid } from './jscad/types';
 import {

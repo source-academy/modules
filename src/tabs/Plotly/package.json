@@ -1,8 +1,10 @@
 {
-  "name": "Plotly",
+  "name": "@sourceacademy/tab-Plotly",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/bundle-plotly": "workspace:^",
+    "@sourceacademy/modules-lib": "workspace:^",
     "react": "^18.3.1"
   },
   "devDependencies": {

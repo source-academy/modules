@@ -3,9 +3,21 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^",
     "gl-matrix": "^3.3.0"
   },
   "devDependencies": {
-    "@sourceacademy/module-buildtools": "workspace:^"
+    "@sourceacademy/module-buildtools": "workspace:^",
+    "typescript": "^5.8.2"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js",
+    "./*.js": "./dist/*.js"
+  },
+  "scripts": {
+    "tsc": "tsc --project ./tsconfig.json",
+    "build": "buildtools build-bundle ."
   }
 }

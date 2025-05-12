@@ -7,7 +7,18 @@
     "@jscad/regl-renderer": "^2.6.1",
     "@jscad/stl-serializer": "2.1.11"
   },
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js",
+    "./*.js": "./dist/*.js"
+  },
   "devDependencies": {
-    "@sourceacademy/module-buildtools": "workspace:^"
+    "@sourceacademy/module-buildtools": "workspace:^",
+    "typescript": "^5.8.2"
+  },
+  "type": "module",
+  "scripts": {
+    "tsc": "tsc --project ./tsconfig.json",
+    "build": "buildtools build-bundle ."
   }
 }

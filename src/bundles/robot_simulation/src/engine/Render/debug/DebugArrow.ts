@@ -1,6 +1,6 @@
+import type { DeepPartial } from '@sourceacademy/modules-lib/types';
 import * as THREE from 'three';
 
-import type { DeepPartial } from '../../../../../common/deepPartial';
 import {
   mergeConfig,
 } from '../../../controllers/utils/mergeConfig';

@@ -1,8 +1,11 @@
 {
-  "name": "UnityAcademy",
+  "name": "@sourceacademy/tab-UnityAcademy",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@blueprintjs/core": "^5.10.2",
+    "@blueprintjs/icons": "^5.9.0",
+    "@sourceacademy/bundle-unity_academy": "workspace:^",
     "react": "^18.3.1"
   },
   "devDependencies": {

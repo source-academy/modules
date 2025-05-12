@@ -1,13 +1,10 @@
 {
-  "extends": [
-    "../tsconfig.json"
+  "extends": "../tsconfig.json",
+  "include": [
+    "./src"
   ],
-  "includes": [
-    "./src/*"
-  ],
-  "references": [
-    {
-      "path": "../../commons/tsconfig.json"
-    }
-  ]
+  "compilerOptions": {
+    "outDir": "./dist",
+    "jsx": "react-jsx"
+  }
 }

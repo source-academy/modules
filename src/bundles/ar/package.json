@@ -1,11 +1,22 @@
 {
   "name": "@sourceacademy/bundle-ar",
   "version": "1.0.0",
+  "type": "module",
   "private": true,
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js",
+    "./*.js": "./dist/*.js"
+  },
   "dependencies": {
     "saar": "^1.0.4"
   },
   "devDependencies": {
-    "@sourceacademy/module-buildtools": "workspace:^"
+    "@sourceacademy/module-buildtools": "workspace:^",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "tsc": "tsc --project ./tsconfig.json",
+    "build": "buildtools build-bundle ."
   }
 }

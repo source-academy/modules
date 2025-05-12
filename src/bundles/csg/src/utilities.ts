@@ -9,8 +9,8 @@ import {
   scale as _scale,
   translate as _translate
 } from '@jscad/modeling/src/operations/transforms';
-import { hexToColor } from '../../common/utilities';
-import type { ReplResult } from '../../typings/type_helpers';
+import type { ReplResult } from '@sourceacademy/modules-lib/types';
+import { hexToColor } from '@sourceacademy/modules-lib/utilities';
 import { Core } from './core';
 import type { AlphaColor, Color, Solid } from './jscad/types';
 

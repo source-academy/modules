@@ -1,17 +1,6 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "strict": false,
-    "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "noEmit": true,
-    "paths": {
-      "@src/*": ["./src/*"]
-    },
-    "target": "ESNext",
-    "skipLibCheck": true,
-    "composite": true
-  },
-  "include": ["./src", "jest.setup.ts"]
+    "jsx": "react-jsx"
+  }
 }

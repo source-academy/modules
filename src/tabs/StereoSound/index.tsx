@@ -1,6 +1,7 @@
-import type { StereoSoundModuleState } from '../../bundles/stereo_sound/types';
-import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
-import MultiItemDisplay from '../common/MultItemDisplay';
+import type { StereoSoundModuleState } from '@sourceacademy/bundle-stereo_sound/types';
+import MultiItemDisplay from '@sourceacademy/modules-lib/tabs/MultItemDisplay';
+import { getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
+import type { DebuggerContext, ModuleTab } from '@sourceacademy/modules-lib/types';
 
 /**
  * Tab for Source Academy Sounds Module

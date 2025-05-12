@@ -3,10 +3,22 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "js-slang": "^1.0.81",
-    "sound": "workspace:^"
+    "@sourceacademy/bundle-sound": "workspace:^",
+    "js-slang": "^1.0.81"
   },
   "devDependencies": {
-    "@sourceacademy/module-buildtools": "workspace:^"
+    "@sourceacademy/module-buildtools": "workspace:^",
+    "@types/plotly.js": "^2.35.4",
+    "typescript": "^5.8.2"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js",
+    "./*.js": "./dist/*.js"
+  },
+  "scripts": {
+    "tsc": "tsc --project ./tsconfig.json",
+    "build": "buildtools build-bundle ."
   }
 }

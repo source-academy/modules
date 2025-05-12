@@ -1,11 +1,14 @@
 {
-  "name": "AugmentedReality",
+  "name": "@sourceacademy/tab-AugmentedReality",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "react": "^18.3.1"
+    "@sourceacademy/modules-lib": "workspace:^",
+    "react": "^18.3.1",
+    "saar": "^1.0.4"
   },
   "devDependencies": {
+    "@sourceacademy/bundle-ar": "workspace:^",
     "@types/react": "^18.3.1"
   }
 }

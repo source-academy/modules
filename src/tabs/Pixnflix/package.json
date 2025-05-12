@@ -1,8 +1,9 @@
 {
-  "name": "Pixnflix",
+  "name": "@sourceacademy/tab-Pixnflix",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/bundle-pix_n_flix": "workspace:^",
     "react": "^18.3.1"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
+import type { ReplResult } from '@sourceacademy/modules-lib/types';
 import { mat4, vec3 } from 'gl-matrix';
 import { stringify } from 'js-slang/dist/utils/stringify';
 
-import type { ReplResult } from '../../typings/type_helpers';
 import type { CurveSpace, DrawMode, ScaleMode } from './types';
 
 /** @hidden */

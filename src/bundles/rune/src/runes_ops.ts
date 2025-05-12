@@ -1,7 +1,7 @@
 /**
  * This file contains the bundle's private functions for runes.
  */
-import { hexToColor as hexToColorUtil } from '../../common/utilities';
+import { hexToColor as hexToColorUtil } from '@sourceacademy/modules-lib/utilities';
 import { Rune } from './rune';
 
 // =============================================================================

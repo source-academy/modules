@@ -1,6 +1,6 @@
+import type { DeepPartial } from '@sourceacademy/modules-lib/types';
 import type { IOptions } from 'js-slang';
 import context from 'js-slang/context';
-import type { DeepPartial } from '../../../../common/deepPartial';
 import { CallbackHandler } from '../../engine/Core/CallbackHandler';
 import type { Controller } from '../../engine/Core/Controller';
 import type { PhysicsTimingInfo } from '../../engine/Physics';

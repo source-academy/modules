@@ -3,9 +3,9 @@
  * @module plotly
  */
 
+import type { Sound } from '@sourceacademy/bundle-sound/types';
 import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
-import type { Sound } from '../sound/types';
 import { generatePlot } from './curve_functions';
 import {
   type Curve,

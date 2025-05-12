@@ -1,5 +1,4 @@
 {
-  "references": {
-    "modules": "../tsconfig.json"
-  }
+  "extends": "../tsconfig.json",
+  "include": ["./index.tsx" ]
 }

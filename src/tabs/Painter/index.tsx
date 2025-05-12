@@ -1,7 +1,7 @@
+import type { LinePlot } from '@sourceacademy/bundle-painter/painter';
+import Modal from '@sourceacademy/modules-lib/tabs/ModalDiv';
+import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
 import React from 'react';
-import type { LinePlot } from '../../bundles/painter/painter';
-import type { DebuggerContext } from '../../typings/type_helpers';
-import Modal from '../common/ModalDiv';
 
 type Props = {
   children?: never

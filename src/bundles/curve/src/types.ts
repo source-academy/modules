@@ -1,5 +1,4 @@
-import { glAnimation, type AnimFrame } from '../../typings/anim_types';
-import type { ReplResult } from '../../typings/type_helpers';
+import { glAnimation, type AnimFrame, type ReplResult } from '@sourceacademy/modules-lib/types';
 import type { Curve, CurveDrawn } from './curves_webgl';
 
 export type CurveModuleState = {

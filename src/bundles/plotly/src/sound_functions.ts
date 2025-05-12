@@ -1,9 +1,9 @@
+import type { Sound, Wave } from '@sourceacademy/bundle-sound/types';
 import {
   head,
   tail,
   is_pair
 } from 'js-slang/dist/stdlib/list';
-import type { Sound, Wave } from '../sound/types';
 export function is_sound(x: any): x is Sound {
   return (
     is_pair(x)

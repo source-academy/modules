@@ -1,7 +1,7 @@
+import type { DrawnPlot } from '@sourceacademy/bundle-plotly/plotly';
+import Modal from '@sourceacademy/modules-lib/tabs/ModalDiv';
+import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
 import React from 'react';
-import type { DrawnPlot } from '../../bundles/plotly/plotly';
-import type { DebuggerContext } from '../../typings/type_helpers';
-import Modal from '../common/ModalDiv';
 
 type Props = {
   children?: never

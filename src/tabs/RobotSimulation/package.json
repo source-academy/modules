@@ -1,8 +1,10 @@
 {
-  "name": "RobotSimulation",
+  "name": "@sourceacademy/tab-RobotSimulation",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/bundle-robot_simulation": "workspace:^",
+    "@sourceacademy/modules-lib": "workspace:^",
     "react": "^18.3.1"
   },
   "devDependencies": {

@@ -6,12 +6,12 @@
 
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
+
+import { FONT_MESSAGE, MINIMUM_EDITOR_HEIGHT } from '@sourceacademy/bundle-repl/config';
+import type { ProgrammableRepl } from '@sourceacademy/bundle-repl/programmable_repl';
+import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
 import React from 'react';
 import AceEditor from 'react-ace';
-
-import { FONT_MESSAGE, MINIMUM_EDITOR_HEIGHT } from '../../bundles/repl/config';
-import type { ProgrammableRepl } from '../../bundles/repl/programmable_repl';
-import type { DebuggerContext } from '../../typings/type_helpers';
 
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-twilight';
