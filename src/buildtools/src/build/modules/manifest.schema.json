@@ -1,0 +1,28 @@
+{
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Name of your bundle",
+        "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$"
+      },
+      "tabs": {
+        "description": "Tabs that will be loaded with this bundle",
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "version": {
+        "type": "string",
+        "description": "Version of your bundle"
+      },
+      "requires": {
+        "enum": [1, 2, 3, 4]
+      },
+      "additionalProperties": false
+    },
+    "required": ["name"]
+  }
+}
