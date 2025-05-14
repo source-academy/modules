@@ -1,7 +1,8 @@
 import fs from 'fs/promises';
 import { build as esbuild } from 'esbuild';
 import { commonEsbuildOptions, outputBundleOrTab } from './commons';
-import type { BundleManifest } from './manifest';
+import pathlib from 'path';
+import { getBundleManifest } from './manifest';
 
 export async function getBundleEntryPoint(bundleDir: string) {
   let bundlePath = `${bundleDir}/src/index.ts`
@@ -19,14 +20,22 @@ export async function getBundleEntryPoint(bundleDir: string) {
 /**
  * Build a bundle at the given directory
  */
-export async function buildBundle(bundleDir: string, manifest: BundleManifest, outDir: string) {
-  const entryPoint = await getBundleEntryPoint(bundleDir)
+export async function buildBundle(bundleDir: string, outDir: string) {
+  const fullyResolved = pathlib.resolve(bundleDir)
+  const manifest = await getBundleManifest(fullyResolved)
+  if (manifest === undefined) {
+    throw new Error(`Could not find a bundle at ${fullyResolved}`)
+  }
+
+  const entryPoint = await getBundleEntryPoint(fullyResolved)
+  const bundleName = pathlib.basename(fullyResolved)
+
   const { outputFiles: [result] } = await esbuild({
     ...commonEsbuildOptions,
     entryPoints: [entryPoint],
-    tsconfig: `${bundleDir}/tsconfig.json`,
-    outfile: `/bundle/${manifest.name}`,
+    tsconfig: `${fullyResolved}/tsconfig.json`,
+    outfile: `/bundle/${bundleName}`,
   });
 
-  await outputBundleOrTab(result, outDir);
+  await outputBundleOrTab(result, bundleName, 'bundle', outDir);
 }

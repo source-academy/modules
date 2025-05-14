@@ -2,11 +2,6 @@
   "schema": {
     "type": "object",
     "properties": {
-      "name": {
-        "type": "string",
-        "description": "Name of your bundle",
-        "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$"
-      },
       "tabs": {
         "description": "Tabs that will be loaded with this bundle",
         "type": "array",

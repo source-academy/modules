@@ -9,9 +9,9 @@ import { getBundleManifests } from './manifest';
  */
 export async function buildBundles(directory: string, outDir: string) {
   const manifests = await getBundleManifests(directory)
-  await Promise.all(Object.values(manifests).map(async manifest => {
-    const fullPath = pathlib.join(directory, manifest.name)
-    await buildBundle(fullPath, manifest, outDir);
+  await Promise.all(Object.keys(manifests).map(async name => {
+    const fullPath = pathlib.join(directory, name)
+    await buildBundle(fullPath, outDir);
   }))
 
   await fs.writeFile(`${outDir}/modules.json`, JSON.stringify(manifests));

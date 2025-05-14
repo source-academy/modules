@@ -1,5 +1,4 @@
 import fs from 'fs/promises';
-import pathlib from 'path';
 import { parse } from 'acorn';
 import { generate } from 'astring';
 import type { BuildOptions as ESBuildOptions, OutputFile } from 'esbuild';
@@ -22,8 +21,7 @@ export const commonEsbuildOptions: ESBuildOptions = {
   write: false
 };
 
-export async function outputBundleOrTab({ path, text }: OutputFile, outDir: string) {
-  const [, type, name] = path.split(pathlib.posix.sep)
+export async function outputBundleOrTab({ text }: OutputFile, name: string, type: 'bundle' | 'tab', outDir: string) {
   const parsed = parse(text, { ecmaVersion: 6 }) as es.Program;
 
   // Account for 'use strict'; directives

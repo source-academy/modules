@@ -6,7 +6,7 @@ import { commonEsbuildOptions, outputBundleOrTab } from './commons';
 const tabContextPlugin: ESBuildPlugin = {
   name: 'Tab Context',
   setup(build) {
-    build.onResolve({ filter: /^js-slang\/context/u }, () => ({
+    build.onResolve({ filter: /^js-slang\/context/ }, () => ({
       errors: [{
         text: 'If you see this message, it means that your tab code is importing js-slang/context directly or indirectly. Do not do this'
       }]
@@ -31,7 +31,8 @@ export async function getTabEntryPoint(tabDir: string) {
  */
 export async function buildTab(tabDir: string, outDir: string) {
   let tabPath = await getTabEntryPoint(tabDir)
-  const tabName = pathlib.basename(tabDir)
+  const fullyResolved = pathlib.resolve(tabDir)
+  const tabName = pathlib.basename(fullyResolved)
 
   const { outputFiles: [result]} = await esbuild({
     ...commonEsbuildOptions,
@@ -45,8 +46,8 @@ export async function buildTab(tabDir: string, outDir: string) {
       '@blueprintjs/*'
     ],
     outfile:`/tabs/${tabName}`,
-    tsconfig: `${tabDir}/tsconfig.json`,
+    tsconfig: `${fullyResolved}/tsconfig.json`,
     plugins: [tabContextPlugin]
   });
-  await outputBundleOrTab(result, outDir);
+  await outputBundleOrTab(result, tabName, 'tab', outDir);
 }
