@@ -1,16 +1,19 @@
+import fs from 'fs/promises'
 import pathlib from 'path'
 import { Command } from "@commander-js/extra-typings";
 import { buildBundle } from "../build/modules/bundle";
-import { getBundleManifest } from "../build/modules/manifest";
+import { getBundleManifests } from "../build/modules/manifest";
 import { buildTab } from '../build/modules/tab';
 import { getGitRoot } from '../utils';
 
-const outDir = pathlib.join(await getGitRoot(), 'build')
+const gitRoot = await getGitRoot()
+const bundlesDir = pathlib.join(gitRoot, 'src', 'bundles')
+const outDir = pathlib.join(gitRoot, 'build')
+
 export const getBuildBundleCommand = () => new Command('bundle')
   .argument('<bundle>', 'Directory in which the bundle\'s source files are located')
   .action(async bundleDir => {
-    const manifest = await getBundleManifest(`${bundleDir}/manifest.json`)
-    await buildBundle(bundleDir, manifest, outDir)
+    await buildBundle(bundleDir, outDir)
   })
 
 export const getBuildTabCommand = () => new Command('tab')
@@ -19,6 +22,14 @@ export const getBuildTabCommand = () => new Command('tab')
     await buildTab(tabDir, outDir)
   })
 
+export const getBuildManifestCommand = () => new Command('manifest')
+  .action(async () => {
+    const manifest = await getBundleManifests(bundlesDir)
+    await fs.mkdir(outDir, { recursive: true })
+    await fs.writeFile(`${outDir}/modules.json`, JSON.stringify(manifest, null, 2))
+  })
+
 export const getBuildCommand = () => new Command('build')
   .addCommand(getBuildBundleCommand())
   .addCommand(getBuildTabCommand())
+  .addCommand(getBuildManifestCommand())
