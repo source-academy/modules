@@ -1,4 +1,4 @@
-import { classDeclaration, typeDeclaration, functionDeclaration } from '../../typings/type_map';
+import { classDeclaration, typeDeclaration, functionDeclaration } from '@sourceacademy/modules-lib/type_map';
 
 @classDeclaration('Point')
 export class Point {}

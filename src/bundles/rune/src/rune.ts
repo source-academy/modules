@@ -1,6 +1,6 @@
 import { type AnimFrame, type ReplResult, glAnimation } from '@sourceacademy/modules-lib/types';
 import { mat4 } from 'gl-matrix';
-import { classDeclaration } from '../../typings/type_map';
+import { classDeclaration } from '@sourceacademy/modules-lib/type_map';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
 
 const normalVertexShader = `

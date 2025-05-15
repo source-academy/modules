@@ -1,4 +1,5 @@
 /**
+ * @module sound_matrix
  * @author Samyukta Sounderraman
  */
 

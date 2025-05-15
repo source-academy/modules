@@ -2,6 +2,9 @@
   "name": "@sourceacademy/bundle-unittest",
   "version": "1.0.0",
   "private": true,
+  "dependencies": {
+    "js-slang": "^1.0.81"
+  },
   "devDependencies": {
     "@sourceacademy/module-buildtools": "workspace:^",
     "typescript": "^5.8.2"
@@ -14,6 +17,6 @@
   },
   "scripts": {
     "tsc": "tsc --project ./tsconfig.json",
-    "build": "buildtools build-bundle ."
+    "build": "buildtools build bundle ."
   }
 }

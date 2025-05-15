@@ -2,7 +2,7 @@ import { mat4, vec3 } from 'gl-matrix';
 import {
   functionDeclaration,
   variableDeclaration,
-} from '../../typings/type_map';
+} from '@sourceacademy/modules-lib/type_map';
 import {
   Rune,
   DrawnRune,

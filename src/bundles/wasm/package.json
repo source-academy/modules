@@ -6,6 +6,10 @@
     "@sourceacademy/module-buildtools": "workspace:^",
     "typescript": "^5.8.2"
   },
+  "dependencies": {
+    "source-academy-utils": "^1.0.0",
+    "source-academy-wabt": "^1.0.4"
+  },
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
@@ -14,6 +18,6 @@
   },
   "scripts": {
     "tsc": "tsc --project ./tsconfig.json",
-    "build": "buildtools build-bundle ."
+    "build": "buildtools build bundle ."
   }
 }

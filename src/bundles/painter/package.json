@@ -18,6 +18,6 @@
   },
   "scripts": {
     "tsc": "tsc --project ./tsconfig.json",
-    "build": "buildtools build-bundle ."
+    "build": "buildtools build bundle ."
   }
 }

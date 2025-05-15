@@ -1,7 +1,6 @@
 // bundles tsconfig
 {
   "compilerOptions": {
-    "emitDeclarationOnly": true,
     "declaration": true,
     "paths": {
       "js-slang/context": ["../modules-lib/src/types/js-slang/context.d.ts"]

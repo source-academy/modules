@@ -79,4 +79,4 @@ export {} from './type_interface';
 
 export {
   type_map
-} from '../../typings/type_map';
+} from '@sourceacademy/modules-lib/type_map';

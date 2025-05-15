@@ -1,6 +1,7 @@
 /**
  * Bundle for Source Academy Plotly repository
  * @author Sourabh Raj Jaiswal
+ * @module plotly
  */
 
 export {

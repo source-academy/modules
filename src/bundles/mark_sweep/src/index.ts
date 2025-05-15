@@ -1,3 +1,7 @@
+/**
+ * @module mark_sweep
+ */
+
 import { type MemoryHeaps, type Memory, type Tag, COMMAND, type CommandHeapObject } from './types';
 
 // Global Variables

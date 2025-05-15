@@ -1,9 +1,10 @@
+// curve bundle tests
 {
   "extends": "../tsconfig.json",
   "include": [
     "./src"
   ],
   "compilerOptions": {
-    "outDir": "./dist"
+    "noEmit": true
   }
 }

@@ -5,10 +5,15 @@
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
     "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "saar": "^1.0.4"
   },
   "devDependencies": {
     "@sourceacademy/bundle-ar": "workspace:^",
+    "@sourceacademy/module-buildtools": "workspace:^",
     "@types/react": "^18.3.1"
+  },
+  "scripts": {
+    "build": "buildtools build tab ."
   }
 }

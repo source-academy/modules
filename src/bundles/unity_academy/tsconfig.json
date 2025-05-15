@@ -1,10 +1,11 @@
+// unity_academy bundle
 {
   "extends": "../tsconfig.json",
   "include": [
     "./src"
   ],
   "compilerOptions": {
-    "outDir": "./dist",
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "outDir": "./dist"
   }
 }

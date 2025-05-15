@@ -1,7 +1,7 @@
 /**
  * This file contains the bundle's representation of GameObjects.
  */
-import type { ReplResult } from '../../typings/type_helpers';
+import type { ReplResult } from '@sourceacademy/modules-lib/types';
 import { DEFAULT_INTERACTABLE_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_TRANSFORM_PROPS } from './constants';
 import type * as types from './types';
 

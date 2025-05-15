@@ -1,6 +1,7 @@
 /**
  * Scrabble words for Source Academy
  * @author Martin Henz
+ * @module scrabble
  */
 export {
   scrabble_words,

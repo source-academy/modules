@@ -5,11 +5,13 @@
   "dependencies": {
     "@blueprintjs/core": "^5.10.2",
     "@blueprintjs/icons": "^5.9.0",
-    "react": "^18.3.1"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@sourceacademy/module-buildtools": "workspace:^",
     "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
     "typescript": "^5.8.2"
   },
   "type": "module",
@@ -20,6 +22,6 @@
   },
   "scripts": {
     "tsc": "tsc --project ./tsconfig.json",
-    "build": "buildtools build-bundle ."
+    "build": "buildtools build bundle ."
   }
 }
