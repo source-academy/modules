@@ -637,10 +637,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dimforge/rapier3d-compat@npm:^0.11.2":
-  version: 0.11.2
-  resolution: "@dimforge/rapier3d-compat@npm:0.11.2"
-  checksum: 10c0/41cabb96219f493000a8785a003dd7dee007f8f2983bae4703c9862bb24328b2ec69255187f3d9a244ac28b390bddf55949f6dbf09db6a051a90d3db2915df3a
+"@dimforge/rapier3d-compat@npm:^0.17.0":
+  version: 0.17.0
+  resolution: "@dimforge/rapier3d-compat@npm:0.17.0"
+  checksum: 10c0/77e2ac9bdc83114a45588bb3c80a002d4e808edcd91a423c91dc997ff45db99d3215a595e30e7ae16f29db6a5d782bcdb2abc9b53c5d02e2f63182bad72b6fd2
   languageName: node
   linkType: hard
 
@@ -7843,7 +7843,7 @@ __metadata:
     "@box2d/core": "npm:^0.10.0"
     "@box2d/debug-draw": "npm:^0.10.0"
     "@commander-js/extra-typings": "npm:^13.0.0"
-    "@dimforge/rapier3d-compat": "npm:^0.11.2"
+    "@dimforge/rapier3d-compat": "npm:^0.17.0"
     "@jscad/modeling": "npm:2.9.6"
     "@jscad/regl-renderer": "npm:^2.6.1"
     "@jscad/stl-serializer": "npm:2.1.11"
