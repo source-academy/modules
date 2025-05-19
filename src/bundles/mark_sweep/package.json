@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "devDependencies": {
-    "@sourceacademy/module-buildtools": "workspace:^",
+    "@sourceacademy/modules-buildtools": "workspace:^",
     "typescript": "^5.8.2"
   },
   "type": "module",

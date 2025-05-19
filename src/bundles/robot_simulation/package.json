@@ -6,7 +6,7 @@
     "three": "^0.175.0"
   },
   "devDependencies": {
-    "@sourceacademy/module-buildtools": "workspace:^",
+    "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/three": "^0.175.0",
     "typescript": "^5.8.2"
   },

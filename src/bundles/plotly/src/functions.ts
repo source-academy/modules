@@ -311,6 +311,7 @@ function createPlotFunction(
  * Returns a function that turns a given Curve into a Drawing, by sampling the
  * Curve at `num` sample points and connecting each pair with a line.
  *
+ * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
@@ -338,6 +339,7 @@ export const draw_connected_2d = createPlotFunction(
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling the
  * 3D Curve at `num` sample points and connecting each pair with a line.
  *
+ * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type 3D Curve → Drawing
@@ -360,6 +362,7 @@ export const draw_connected_3d = createPlotFunction(
  *
  * * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @function
  * @return function of type 2D Curve → Drawing
  * @example
  * ```
@@ -385,6 +388,7 @@ export const draw_points_2d = createPlotFunction(
  *
  * * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @function
  * @return function of type 3D Curve → Drawing
  * @example
  * ```
@@ -400,7 +404,7 @@ export const draw_points_3d = createPlotFunction(
  * Visualizes the sound on a 2d line graph
  * @param sound the sound which is to be visualized on plotly
  */
-export const draw_sound_2d = (sound: Sound) => {
+export function draw_sound_2d(sound: Sound) {
   const FS: number = 44100; // Output sample rate
   if (!is_sound(sound)) {
     throw new Error(
@@ -411,7 +415,6 @@ export const draw_sound_2d = (sound: Sound) => {
     throw new Error('draw_sound_2d: duration of sound is negative');
   } else {
     // Instantiate audio context if it has not been instantiated.
-
     // Create mono buffer
     const channel: number[] = [];
     const time_stamps: number[] = [];
@@ -461,7 +464,7 @@ export const draw_sound_2d = (sound: Sound) => {
     );
     if (drawnPlots) drawnPlots.push(plot);
   }
-};
+}
 
 function draw_new_curve(divId: string, data: Data, layout: Partial<Layout>) {
   Plotly.react(divId, [data], layout);

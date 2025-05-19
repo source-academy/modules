@@ -22,7 +22,7 @@ export function throwIfNotRune(name: string, ...runes: any) {
 /**
  * primitive Rune in the rune of a full square
  * */
-export const getSquare: () => Rune = () => {
+export function getSquare() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
 
@@ -39,9 +39,11 @@ export const getSquare: () => Rune = () => {
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList)
   });
-};
+}
 
-export const getBlank: () => Rune = () => Rune.of();
+export function getBlank() {
+  return Rune.of();
+}
 
 /**
  * primitive Rune in the rune of a
@@ -49,7 +51,7 @@ export const getBlank: () => Rune = () => Rune.of();
  * each diagonally split into a
  * black and white half
  * */
-export const getRcross: () => Rune = () => {
+export function getRcross() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
   // lower small triangle
@@ -80,12 +82,12 @@ export const getRcross: () => Rune = () => {
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList)
   });
-};
+}
 
 /**
  * primitive Rune in the rune of a sail
  * */
-export const getSail: () => Rune = () => {
+export function getSail() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
 
@@ -99,12 +101,12 @@ export const getSail: () => Rune = () => {
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList)
   });
-};
+}
 
 /**
  * primitive Rune in the rune of a triangle
  * */
-export const getTriangle: () => Rune = () => {
+export function getTriangle() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
 
@@ -118,13 +120,13 @@ export const getTriangle: () => Rune = () => {
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList)
   });
-};
+}
 
 /**
  * primitive Rune with black triangle,
  * filling upper right corner
  * */
-export const getCorner: () => Rune = () => {
+export function getCorner() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
   vertexList.push(1, 0, 0, 1);
@@ -137,14 +139,14 @@ export const getCorner: () => Rune = () => {
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList)
   });
-};
+}
 
 /**
  * primitive Rune in the rune of two overlapping
  * triangles, residing in the upper half
  * of
  * */
-export const getNova: () => Rune = () => {
+export function getNova() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
   vertexList.push(0, 1, 0, 1);
@@ -161,12 +163,12 @@ export const getNova: () => Rune = () => {
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList)
   });
-};
+}
 
 /**
  * primitive Rune in the rune of a circle
  * */
-export const getCircle: () => Rune = () => {
+export function getCircle() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
   const circleDiv = 60;
@@ -183,12 +185,12 @@ export const getCircle: () => Rune = () => {
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList)
   });
-};
+}
 
 /**
  * primitive Rune in the rune of a heart
  * */
-export const getHeart: () => Rune = () => {
+export function getHeart() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
 
@@ -244,12 +246,12 @@ export const getHeart: () => Rune = () => {
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList)
   });
-};
+}
 
 /**
  * primitive Rune in the rune of a pentagram
  * */
-export const getPentagram: () => Rune = () => {
+export function getPentagram() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
 
@@ -278,13 +280,13 @@ export const getPentagram: () => Rune = () => {
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList)
   });
-};
+}
 
 /**
  * primitive Rune in the rune of a ribbon
  * winding outwards in an anticlockwise spiral
  * */
-export const getRibbon: () => Rune = () => {
+export function getRibbon() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
 
@@ -319,7 +321,7 @@ export const getRibbon: () => Rune = () => {
     vertices: new Float32Array(vertexList),
     colors: new Float32Array(colorList)
   });
-};
+}
 
 // =============================================================================
 // Coloring Functions

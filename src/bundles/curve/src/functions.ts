@@ -59,6 +59,7 @@ function createDrawFunction(
  * Curve at `num` sample points and connecting each pair with a line.
  * The parts between (0,0) and (1,1) of the resulting Drawing are shown in the window.
  *
+ * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
@@ -75,6 +76,7 @@ export const draw_connected = createDrawFunction('none', 'lines', '2D', false);
  * translated and stretched/shrunk to show the full curve and maximize its width
  * and height, with some padding.
  *
+ * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
@@ -96,6 +98,7 @@ export const draw_connected_full_view = createDrawFunction(
  * is translated and scaled proportionally to show the full curve and maximize
  * its size, with some padding.
  *
+ * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
@@ -117,6 +120,7 @@ export const draw_connected_full_view_proportional = createDrawFunction(
  * points, and does not connect them. The parts between (0,0) and (1,1) of the
  * resulting Drawing are shown in the window.
  *
+ * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1,there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
@@ -134,6 +138,7 @@ export const draw_points = createDrawFunction('none', 'points', '2D', false);
  * stretched/shrunk to show the full curve and maximize its width and height,
  * with some padding.
  *
+ * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
@@ -156,6 +161,7 @@ export const draw_points_full_view = createDrawFunction(
  * proportionally with its size maximized to fit entirely inside the window,
  * with some padding.
  *
+ * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
@@ -177,6 +183,7 @@ export const draw_points_full_view_proportional = createDrawFunction(
  * a line. The parts between (0,0,0) and (1,1,1) of the resulting Drawing are
  * shown within the unit cube.
  *
+ * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
@@ -198,6 +205,7 @@ export const draw_3D_connected = createDrawFunction(
  * a line. The Drawing is translated and stretched/shrunk to show the full
  * curve and maximize its width and height within the cube.
  *
+ * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
@@ -219,6 +227,7 @@ export const draw_3D_connected_full_view = createDrawFunction(
  * a line. The Drawing is translated and scaled proportionally with its size
  * maximized to fit entirely inside the cube.
  *
+ * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
@@ -240,6 +249,7 @@ export const draw_3D_connected_full_view_proportional = createDrawFunction(
  * isolated points, and does not connect them. The parts between (0,0,0)
  * and (1,1,1) of the resulting Drawing are shown within the unit cube.
  *
+ * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
@@ -256,6 +266,7 @@ export const draw_3D_points = createDrawFunction('none', 'points', '3D', false);
  * isolated points, and does not connect them. The Drawing is translated and
  * stretched/shrunk to maximize its size to fit entirely inside the cube.
  *
+ * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing
@@ -277,6 +288,7 @@ export const draw_3D_points_full_view = createDrawFunction(
  * isolated points, and does not connect them. The Drawing is translated and
  * scaled proportionally with its size maximized to fit entirely inside the cube.
  *
+ * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @return function of type Curve → Drawing

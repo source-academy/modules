@@ -7,13 +7,17 @@
     "gl-matrix": "^3.3.0"
   },
   "devDependencies": {
-    "@sourceacademy/module-buildtools": "workspace:^",
+    "@sourceacademy/modules-buildtools": "workspace:^",
     "typescript": "^5.8.2"
   },
   "type": "module",
   "exports": {
-    ".": "./dist/index.js",
-    "./*": "./dist/*.js"
+    ".": {
+      "default": "./dist/index.js"
+    },
+    "./*": {
+      "default": "./dist/*.js"
+    }
   },
   "scripts": {
     "tsc": "tsc --project ./tsconfig.prod.json",

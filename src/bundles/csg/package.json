@@ -13,7 +13,7 @@
     "./*.js": "./dist/*.js"
   },
   "devDependencies": {
-    "@sourceacademy/module-buildtools": "workspace:^",
+    "@sourceacademy/modules-buildtools": "workspace:^",
     "typescript": "^5.8.2"
   },
   "type": "module",

@@ -6,5 +6,8 @@
   ],
   "compilerOptions": {
     "noEmit": true
+  },
+  "typedocOptions": {
+    "name": "curve"
   }
 }
