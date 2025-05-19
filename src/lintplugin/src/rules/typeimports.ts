@@ -1,5 +1,6 @@
-import type { Rule } from 'eslint';
-import type es from 'estree';
+import { ESLintUtils, type TSESTree as es } from '@typescript-eslint/utils';
+
+const createRule = ESLintUtils.RuleCreator.withoutDocs
 
 function isImportSpecifier(spec: es.ImportDeclaration['specifiers'][number]): spec is es.ImportSpecifier {
   return spec.type === 'ImportSpecifier';
@@ -15,22 +16,26 @@ function specToString(spec: es.ImportSpecifier) {
   return '';
 }
 
-const collateTypeImports = {
+const collateTypeImports = createRule({
   meta: {
     type: 'suggestion',
+    messages: {
+      msg: 'Use a single type specifier',
+    },
+    schema: [],
+    hasSuggestions: true,
     fixable: 'code'
   },
+  defaultOptions: [],
   create: context => ({
     ImportDeclaration(node) {
-      // @ts-expect-error import kind is unknown property
       if (node.importKind === 'type' || node.specifiers.length === 0) return;
 
-      // @ts-expect-error import kind is unknown property
       if (node.specifiers.some(spec => !isImportSpecifier(spec) || spec.importKind !== 'type')) return;
 
       context.report({
         node,
-        message: 'Use a single type specifier',
+        messageId: 'msg',
         fix(fixer) {
           const regularSpecs = (node.specifiers as es.ImportSpecifier[]).map(specToString);
 
@@ -45,6 +50,6 @@ const collateTypeImports = {
       });
     }
   })
-} satisfies Rule.RuleModule;
+})
 
 export default collateTypeImports;

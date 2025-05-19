@@ -1,18 +1,8 @@
-import { RuleTester } from 'eslint';
+import { RuleTester } from '@typescript-eslint/rule-tester';
 import collateTypeImports from '../typeimports';
 
 describe('Test collateTypeImports', () => {
-  const tester = new RuleTester({
-    'languageOptions': {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      parser: require('@typescript-eslint/parser'),
-      parserOptions: {
-        ecmaVersion: 6,
-        sourceType: 'module'
-      }
-    },
-  });
-
+  const tester = new RuleTester();
   tester.run(
     'collate-type-imports',
     collateTypeImports,
@@ -29,15 +19,15 @@ describe('Test collateTypeImports', () => {
       ],
       invalid: [{
         code: 'import { type a, type b } from "wherever"',
-        errors: 1,
+        errors: [{ messageId: 'msg' }],
         output: 'import type { a, b } from \'wherever\''
       }, {
         code: 'import { type a } from "wherever"',
-        errors: 1,
+        errors: [{ messageId: 'msg' }],
         output: 'import type { a } from \'wherever\''
       }, {
         code: 'import { type a as b } from "wherever"',
-        errors: 1,
+        errors: [{ messageId: 'msg' }],
         output: "import type { a as b } from 'wherever'"
       }]
     }

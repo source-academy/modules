@@ -1,11 +1,12 @@
+// lintplugin with tests
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "declaration": true,
     "isolatedModules": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "outDir": "dist"
+    "noEmit": true,
+    "target": "ESNext"
   },
-  "include": ["./src"]
+  "include": ["./src"],
 }
