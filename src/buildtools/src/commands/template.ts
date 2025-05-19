@@ -4,8 +4,7 @@ import { Command } from '@commander-js/extra-typings';
 import { addNew as addNewModule } from '../templates/bundle';
 import { error as _error, askQuestion, getRl, info, warn } from '../templates/print';
 import { addNew as addNewTab } from '../templates/tab';
-import { getGitRoot } from '../utils';
-import path from 'path';
+import { getBundlesDir, getTabsDir } from '../utils';
 
 async function askMode(rl: Interface) {
   while (true) {
@@ -22,9 +21,10 @@ export default function getTemplateCommand() {
   return new Command('template')
     .description('Interactively create a new module or tab')
     .action(async () => {
-      const gitRoot = await getGitRoot()
-      const bundlesDir = path.join(gitRoot, 'src', 'bundles')
-      const tabsDir = path.join(gitRoot, 'src', 'tabs')
+      const [bundlesDir, tabsDir] = await Promise.all([
+        getBundlesDir(),
+        getTabsDir()
+      ])
 
       const rl = getRl();
       try {

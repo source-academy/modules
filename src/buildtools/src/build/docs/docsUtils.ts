@@ -1,17 +1,22 @@
 import * as td from 'typedoc';
-import type { ResolvedBundle } from '../modules/manifest';
+import type { ResolvedBundle } from '../manifest';
 import { getGitRoot } from '../../utils';
 import pathlib from 'path';
 
+const commonTypedocOptions: td.Configuration.TypeDocOptions = {
+  categorizeByGroup: true,
+  disableSources: true,
+  excludeInternal: true,
+  logLevel: 'Error',
+  skipErrorChecking: true,
+}
+
 export async function initTypedocForSingleBundle(bundle: ResolvedBundle) {
   const app = await td.Application.bootstrap({
+    ...commonTypedocOptions,
     name: bundle.name,
-    categorizeByGroup: true,
     entryPoints: [bundle.entryPoint],
-    excludeInternal: true,
-    logLevel: 'Error',
     tsconfig: `${bundle.directory}/tsconfig.json`,
-    skipErrorChecking: true,
   });
 
   const reflection = await app.convert()
@@ -25,21 +30,16 @@ export async function initTypedocForSingleBundle(bundle: ResolvedBundle) {
 export async function initTypedoc(manifest: Record<string, ResolvedBundle>) {
   const entryPoints = Object.values(manifest).map(({ entryPoint }) => entryPoint)
   const gitRoot = await getGitRoot()
-  const readme = pathlib.resolve(gitRoot, 'src', 'buildtools', 'src', 'build', 'docs', 'docsreadme.md')
   const tsconfigPath = pathlib.resolve(gitRoot, 'src', 'bundles', 'tsconfig.json')
 
   const app = await td.Application.bootstrap({
+    ...commonTypedocOptions,
     alwaysCreateEntryPointModule: true,
-    categorizeByGroup: true,
     entryPoints,
-    excludeInternal: true,
-    logLevel: 'Error',
     name: 'Source Academy Modules',
-    readme,
-    skipErrorChecking: true,
-    tsconfig: tsconfigPath
+    readme: `${import.meta.dirname}/docsreadme.md`,
+    tsconfig: tsconfigPath,
   });
-
 
   const project = await app.convert();
   if (!project) {

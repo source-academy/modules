@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
 import type { MockedFunction } from 'jest-mock';
 
-import getTemplateCommand from '..';
-import { askQuestion } from '../print';
+import getTemplateCommand from '../template';
+import { askQuestion } from '../../templates/print';
 
 jest.mock('../print', () => ({
   ...jest.requireActual('../print'),
@@ -140,7 +140,6 @@ describe('Test adding new tab', () => {
       ]
     );
 
-    const oldManifest = await retrieveManifest('modules.json');
     const [[manifestPath, newManifest]] = asMock(fs.writeFile).mock.calls;
     expect(manifestPath)
       .toEqual('modules.json');

@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import type { Interface } from 'readline/promises';
 import { askQuestion, success, warn } from './print';
 import { check, isSnakeCase } from './utilities';
-import { getBundleManifests, type BundleManifest, type ModulesManifest } from '../build/modules/manifest';
+import { getBundleManifests, type BundleManifest, type ModulesManifest } from '../build/manifest';
 
 async function askModuleName(manifest: ModulesManifest, rl: Interface) {
   while (true) {
@@ -21,14 +21,15 @@ export async function addNew(bundlesDir: string, rl: Interface) {
   const manifest = await getBundleManifests(bundlesDir)
   const moduleName = await askModuleName(manifest, rl);
   const bundleDestination = `${bundlesDir}/${moduleName}`;
-  await fs.cp('./src/templates/templates/bundle', bundleDestination)
+
+  await fs.cp(`${import.meta.dirname}/templates/bundle`, bundleDestination)
 
   const packageJson = {
     name: `@sourceacademy/bundle-${moduleName}`,
     private: true,
     version: "1.0.0",
     devDependencies: {
-      "@sourceacademy/module-buildtools": "workspace:^",
+      "@sourceacademy/modules-buildtools": "workspace:^",
       "typescript": "^5.8.2"
     },
     type: "module",
@@ -44,7 +45,6 @@ export async function addNew(bundlesDir: string, rl: Interface) {
   }
 
   const bundleManifest: BundleManifest = {
-    name: moduleName,
     tabs: []
   }
 

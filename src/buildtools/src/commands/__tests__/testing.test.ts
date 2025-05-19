@@ -10,7 +10,7 @@ const runCommand = (...args: string[]) => getTestCommand()
 const mockRunJest = runner.runJest as MockedFunction<typeof runner.runJest>;
 
 test('Check that the test command properly passes options to jest', async () => {
-  await runCommand('-u', '-w', '--srcDir', 'gg', './src/folder');
+  await runCommand('-u', '-w', './src/folder');
 
   const [call] = mockRunJest.mock.calls;
   expect(call[0])

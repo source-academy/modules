@@ -1,8 +1,9 @@
+import pathlib from 'path'
 import fs from 'fs/promises';
 import type { Interface } from 'readline/promises';
 import { askQuestion, success, warn } from './print';
 import { check, isPascalCase } from './utilities';
-import { getBundleManifest, getBundleManifests, type BundleManifest, type ModulesManifest } from '../build/modules/manifest';
+import { getBundleManifest, getBundleManifests, type BundleManifest, type ModulesManifest } from '../build/manifest';
 
 async function askModuleName(manifest: ModulesManifest, rl: Interface) {
   while (true) {
@@ -46,7 +47,7 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
     private: true,
     version: "1.0.0",
     devDependencies: {
-      "@sourceacademy/module-buildtools": "workspace:^",
+      "@sourceacademy/modules-buildtools": "workspace:^",
       "@types/react": "^18.3.1",
       "typescript": "^5.8.2"
     },
@@ -58,7 +59,7 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
     }
   }
 
-  await fs.cp('buildtools/src/templates/templates/tabs', tabDestination)
+  await fs.cp(`${import.meta.dirname}/templates/tabs`, tabDestination)
   await Promise.all([
     fs.writeFile(`${tabDestination}/package.json`, JSON.stringify(packageJson, null, 2)),
     getBundleManifest(`${bundlesDir}/${moduleName}`)

@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import pathlib from 'path'
 import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild';
 import { commonEsbuildOptions, outputBundleOrTab } from './commons';
+import { resolvePaths, type ResolvedBundle } from '../manifest';
 
 const tabContextPlugin: ESBuildPlugin = {
   name: 'Tab Context',
@@ -26,17 +27,40 @@ export async function getTabEntryPoint(tabDir: string) {
   }
 }
 
+interface ResolvedTab {
+  directory: string
+  entryPoint: string
+  name: string
+}
+
+export async function resolveSingleTab(tabDir: string): Promise<ResolvedTab> {
+  const fullyResolved = pathlib.resolve(tabDir)
+
+  const tabPath = await resolvePaths(
+    `${fullyResolved}/src/index.tsx`,
+    `${fullyResolved}/index.tsx`
+  )
+
+  if (tabPath === undefined) {
+    throw new Error(`No tab found at ${fullyResolved}!`)
+  }
+
+  return {
+    directory: fullyResolved,
+    entryPoint: tabPath,
+    name: pathlib.basename(fullyResolved)
+  }
+}
+
 /**
  * Build a tab at the given directory
  */
 export async function buildTab(tabDir: string, outDir: string) {
-  let tabPath = await getTabEntryPoint(tabDir)
-  const fullyResolved = pathlib.resolve(tabDir)
-  const tabName = pathlib.basename(fullyResolved)
+  const tab = await resolveSingleTab(tabDir)
 
   const { outputFiles: [result]} = await esbuild({
     ...commonEsbuildOptions,
-    entryPoints: [tabPath],
+    entryPoints: [tab.entryPoint],
     external: [
       ...commonEsbuildOptions.external,
       'react',
@@ -45,9 +69,18 @@ export async function buildTab(tabDir: string, outDir: string) {
       'react/jsx-runtime',
       '@blueprintjs/*'
     ],
-    outfile:`/tabs/${tabName}`,
-    tsconfig: `${fullyResolved}/tsconfig.json`,
-    plugins: [tabContextPlugin]
+    tsconfig: `${tab.directory}/tsconfig.json`,
+    plugins: [tabContextPlugin],
   });
-  await outputBundleOrTab(result, tabName, 'tab', outDir);
+  await outputBundleOrTab(result, tab.name, 'tab', outDir);
+}
+
+export async function buildTabs(manifest: Record<string, ResolvedBundle>, outDir: string) {
+  await Promise.all(Object.values(manifest).map(async ({ manifest: { tabs } }) => {
+    if (tabs) {
+      await Promise.all(tabs.map(async tabName => {
+        await buildTab(tabName, outDir)
+      }))
+    }
+  }))
 }

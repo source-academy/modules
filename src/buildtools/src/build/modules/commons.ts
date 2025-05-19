@@ -11,8 +11,9 @@ export const commonEsbuildOptions: ESBuildOptions = {
     process: JSON.stringify({
       env: {
         NODE_ENV: 'production'
-      }
-    })
+      },
+    }),
+    global: 'globalThis'
   },
   external: ['js-slang*'],
   globalName: 'module',
