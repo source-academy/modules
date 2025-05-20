@@ -1,0 +1,11 @@
+// Lib tsconfig.json
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "target": "ESNext",
+    "verbatimModuleSyntax": true
+  }
+}

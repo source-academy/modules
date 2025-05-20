@@ -1,0 +1,5 @@
+// lintplugin with tests
+{
+  "include": ["./src"],
+  "extends": "../tsconfig.json"
+}

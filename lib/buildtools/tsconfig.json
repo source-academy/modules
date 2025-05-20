@@ -1,0 +1,15 @@
+// buildtools tsconfig
+{
+  "compilerOptions": {
+    "isolatedModules": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true
+  },
+  "extends": "../tsconfig.json",
+  "include": ["./src", "jest.setup.ts"],
+  "exclude": [
+    "./bin",
+    "./src/build/__test_mocks__"
+  ]
+}
