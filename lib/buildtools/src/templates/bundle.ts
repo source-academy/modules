@@ -1,9 +1,9 @@
 import fs from 'fs/promises';
 import type { Interface } from 'readline/promises';
+import _package from '../../../../package.json' with { type: 'json' };
+import { getBundleManifests, type BundleManifest, type ModulesManifest } from '../build/manifest';
 import { askQuestion, success, warn } from './print';
 import { check, isSnakeCase } from './utilities';
-import { getBundleManifests, type BundleManifest, type ModulesManifest } from '../build/manifest';
-import _package from '../../../../package.json' with { type: 'json' }
 
 async function askModuleName(manifest: ModulesManifest, rl: Interface) {
   while (true) {
@@ -19,42 +19,42 @@ async function askModuleName(manifest: ModulesManifest, rl: Interface) {
 }
 
 export async function addNew(bundlesDir: string, rl: Interface) {
-  const manifest = await getBundleManifests(bundlesDir)
+  const manifest = await getBundleManifests(bundlesDir);
   const moduleName = await askModuleName(manifest, rl);
   const bundleDestination = `${bundlesDir}/${moduleName}`;
 
-  await fs.cp(`${__dirname}/templates/bundle`, bundleDestination)
+  await fs.mkdir(bundlesDir, { recursive: true });
+  await fs.cp(`${__dirname}/templates/bundle`, bundleDestination);
 
-  const typescriptVersion = _package.devDependencies.typescript
+  const typescriptVersion = _package.devDependencies.typescript;
 
   const packageJson = {
     name: `@sourceacademy/bundle-${moduleName}`,
     private: true,
-    version: "1.0.0",
+    version: '1.0.0',
     devDependencies: {
-      "@sourceacademy/modules-buildtools": "workspace:^",
+      '@sourceacademy/modules-buildtools': 'workspace:^',
       typescript: typescriptVersion,
     },
-    type: "module",
+    type: 'module',
     scripts: {
-      tsc: "tsc --project ./tsconfig.json",
+      tsc: 'tsc --project ./tsconfig.json',
       build: 'buildtools build bundle .'
     },
     exports: {
-      ".": "./dist/index.js",
-      "./*": "./dist/*.js",
-      "./*.js": "./dist/*.js"
+      '.': './dist/index.js',
+      './*': './dist/*.js'
     }
-  }
+  };
 
   const bundleManifest: BundleManifest = {
     tabs: []
-  }
+  };
 
   await Promise.all([
     fs.writeFile(`${bundleDestination}/package.json`, JSON.stringify(packageJson, null, 2)),
     fs.writeFile(`${bundleDestination}/manifest.json`, JSON.stringify(bundleManifest, null, 2))
-  ])
+  ]);
 
   success(`Bundle for module ${moduleName} created at ${bundleDestination}.`);
 }

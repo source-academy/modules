@@ -1,7 +1,7 @@
-import * as td from 'typedoc';
-import type { ResolvedBundle } from '../manifest';
-import { getBundlesDir } from '../../utils';
 import pathlib from 'path';
+import * as td from 'typedoc';
+import { getBundlesDir } from '../../utils';
+import type { ResolvedBundle } from '../manifest';
 
 const commonTypedocOptions: td.Configuration.TypeDocOptions = {
   categorizeByGroup: true,
@@ -9,8 +9,7 @@ const commonTypedocOptions: td.Configuration.TypeDocOptions = {
   excludeInternal: true,
   logLevel: 'Error',
   skipErrorChecking: true,
-}
-
+};
 
 /**
  * Initialize typedoc for a single bundle. Useful for building the JSON
@@ -25,24 +24,24 @@ export async function initTypedocForSingleBundle(bundle: ResolvedBundle) {
     tsconfig: `${bundle.directory}/tsconfig.json`,
   });
 
-  const reflection = await app.convert()
+  const reflection = await app.convert();
   if (!reflection) {
-    throw new Error(`Failed to generate reflection for ${bundle.name}, check that the bundle has no type errors!`)
+    throw new Error(`Failed to generate reflection for ${bundle.name}, check that the bundle has no type errors!`);
   }
 
-  return reflection
+  return reflection;
 }
 
 /**
  * Initialize typedoc for all bundles at once. Useful for building HTML documentation,
  * but can also be used to build the JSON documentation of every single bundle.
- * 
+ *
  * More efficient than having to initialize typedoc separately each time
  */
 export async function initTypedoc(manifest: Record<string, ResolvedBundle>) {
-  const entryPoints = Object.values(manifest).map(({ entryPoint }) => entryPoint)
-  const bundlesDir = await getBundlesDir()
-  const tsconfigPath = pathlib.resolve(bundlesDir, 'tsconfig.json')
+  const entryPoints = Object.values(manifest).map(({ entryPoint }) => entryPoint);
+  const bundlesDir = await getBundlesDir();
+  const tsconfigPath = pathlib.resolve(bundlesDir, 'tsconfig.json');
 
   const app = await td.Application.bootstrap({
     ...commonTypedocOptions,

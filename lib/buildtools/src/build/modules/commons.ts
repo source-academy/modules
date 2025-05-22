@@ -55,7 +55,7 @@ export async function outputBundleOrTab({ text }: OutputFile, name: string, type
     }
   };
 
-  await fs.mkdir(`${outDir}/${type}`, { recursive: true })
+  await fs.mkdir(`${outDir}/${type}`, { recursive: true });
   const file = await fs.open(`${outDir}/${type}/${name}.js`, 'w');
   const writeStream = file.createWriteStream();
   generate(output, { output: writeStream });

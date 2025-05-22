@@ -1,9 +1,9 @@
-import { Command } from "@commander-js/extra-typings";
-import { getBuildCommand } from "./build";
-import getTemplateCommand from "./template";
-import getTestCommand from "./testing";
-import { getLintCommand, getTscCommand } from "./prebuild";
-import { getListCommand } from "./list";
+import { Command } from '@commander-js/extra-typings';
+import { getBuildCommand } from './build';
+import { getListCommand } from './list';
+import { getLintCommand, getTscCommand } from './prebuild';
+import getTemplateCommand from './template';
+import getTestCommand from './testing';
 
 export const getMainCommand = () => new Command()
   .addCommand(getBuildCommand())
@@ -11,4 +11,4 @@ export const getMainCommand = () => new Command()
   .addCommand(getListCommand())
   .addCommand(getTemplateCommand())
   .addCommand(getTestCommand())
-  .addCommand(getTscCommand())
+  .addCommand(getTscCommand());

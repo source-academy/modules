@@ -1,4 +1,5 @@
 import React from 'react';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils'
 
 /**
  * <Brief description of the tab>
@@ -41,31 +42,12 @@ class Repeat extends React.Component<Props, State> {
   }
 }
 
-export default {
-  /**
-   * This function will be called to determine if the component will be
-   * rendered. Currently spawns when the result in the REPL is "test".
-   * @param {DebuggerContext} context
-   * @returns {boolean}
-   */
+export default defineTab({
   toSpawn: (context: any) => context.result.value === 'test',
 
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   * @param {DebuggerContext} context
-   */
   body: (context: any) => <Repeat context={context} />,
 
-  /**
-   * The Tab's icon tooltip in the side contents on Source Academy frontend.
-   */
   label: 'Sample Tab',
 
-  /**
-   * BlueprintJS IconName element's name, used to render the icon which will be
-   * displayed in the side contents panel.
-   * @see https://blueprintjs.com/docs/#icons
-   */
   iconName: 'build',
-};
+});

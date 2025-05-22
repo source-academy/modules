@@ -10,8 +10,8 @@ jest.mock('chalk', () => new Proxy({}, {
 jest.mock('fs/promises', () => ({
   copyFile: jest.fn(() => Promise.resolve()),
   cp: jest.fn(() => Promise.resolve()),
-  mkdir: jest.fn(() => Promise.resolve()),
   open: jest.fn(),
+  mkdir: jest.fn(() => Promise.resolve()),
   writeFile: jest.fn(() => Promise.resolve()),
 }));
 

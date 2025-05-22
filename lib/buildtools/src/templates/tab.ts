@@ -1,9 +1,9 @@
 import fs from 'fs/promises';
 import type { Interface } from 'readline/promises';
+import _package from '../../../../package.json' with { type: 'json' };
+import { getBundleManifests, type BundleManifest, type ModulesManifest } from '../build/manifest';
 import { askQuestion, success, warn } from './print';
 import { check, isPascalCase } from './utilities';
-import { getBundleManifests, type BundleManifest, type ModulesManifest } from '../build/manifest';
-import _package from '../../../../package.json' with { type: 'json' }
 
 async function askModuleName(manifest: ModulesManifest, rl: Interface) {
   while (true) {
@@ -17,7 +17,7 @@ async function askModuleName(manifest: ModulesManifest, rl: Interface) {
 }
 
 function checkTabExists(manifest: ModulesManifest, name: string) {
-  return Object.values(manifest).flatMap(x => x.tabs).includes(name)
+  return Object.values(manifest).flatMap(x => x.tabs).includes(name);
 }
 
 async function askTabName(manifest: ModulesManifest, rl: Interface) {
@@ -34,36 +34,34 @@ async function askTabName(manifest: ModulesManifest, rl: Interface) {
 }
 
 export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface) {
-  const manifest = await getBundleManifests(bundlesDir)
+  const manifest = await getBundleManifests(bundlesDir);
   const moduleName = await askModuleName(manifest, rl);
   const tabName = await askTabName(manifest, rl);
 
-  // Copy module tab template into correct destination and show success message
-  const tabDestination = `${tabsDir}/${tabName}`;
-  await fs.mkdir(tabDestination, { recursive: true });
+  await fs.mkdir(tabsDir, { recursive: true });
 
-  const reactVersion = _package.dependencies.react
+  const reactVersion = _package.dependencies.react;
   const {
-    "@types/react": reactTypesVersion,
+    '@types/react': reactTypesVersion,
     typescript: typescriptVersion
-  } = _package.devDependencies
+  } = _package.devDependencies;
 
   const packageJson = {
     name: `@sourceacademy/tab-${tabName}`,
     private: true,
-    version: "1.0.0",
+    version: '1.0.0',
     devDependencies: {
-      "@sourceacademy/modules-buildtools": "workspace:^",
-      "@types/react": reactTypesVersion,
-      "typescript": typescriptVersion,
+      '@sourceacademy/modules-buildtools': 'workspace:^',
+      '@types/react': reactTypesVersion,
+      'typescript': typescriptVersion,
     },
     dependencies: {
       react: reactVersion,
     },
     scripts: {
-      "build": "buildtools build tab ."
+      'build': 'buildtools build tab .'
     }
-  }
+  };
 
   const newManifest: BundleManifest = {
     ...manifest[moduleName],
@@ -71,13 +69,14 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
       ...manifest[moduleName].tabs,
       tabName
     ]
-  }
+  };
 
-  await fs.cp(`${__dirname}/templates/tabs`, tabDestination)
+  const tabDestination = `${tabsDir}/${tabName}`;
+  await fs.cp(`${__dirname}/templates/tabs`, tabDestination);
   await Promise.all([
     fs.writeFile(`${tabDestination}/package.json`, JSON.stringify(packageJson, null, 2)),
     fs.writeFile(`${bundlesDir}/${moduleName}/manifest.json`, JSON.stringify(newManifest, null, 2))
-  ])
+  ]);
 
   success(
     `Tab ${tabName} for module ${moduleName} created at ${tabDestination}.`

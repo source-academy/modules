@@ -8,7 +8,7 @@ const parsers = {
   [td.ReflectionKind.Function](obj) {
     // Functions should have only 1 signature
     if (obj.signatures.length > 1) {
-      console.warn(`${obj.name} has more than 1 signature; only using the first one`)
+      console.warn(`${obj.name} has more than 1 signature; only using the first one`);
     }
 
     const [signature] = obj.signatures;

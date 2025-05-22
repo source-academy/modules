@@ -1,17 +1,17 @@
-import { buildBundle } from "../bundle"
 import fs from 'fs/promises';
+import { buildBundle } from '../bundle';
 
-const testMocksDir = `${__dirname}/../../__test_mocks__`
+const testMocksDir = `${__dirname}/../../__test_mocks__`;
 
-const written = []
+const written = [];
 jest.spyOn(fs, 'open').mockResolvedValue({
   createWriteStream: () => ({
     write: data => {
-      written.push(data)
+      written.push(data);
     }
   }),
   close: jest.fn()
-} as any)
+} as any);
 
 test('esbuild transpilation', async () => {
   await buildBundle({
@@ -19,12 +19,12 @@ test('esbuild transpilation', async () => {
     name: 'test0',
     directory: `${testMocksDir}/bundles/test0`,
     entryPoint: `${testMocksDir}/bundles/test0/index.ts`,
-  }, 'build')
+  }, 'build');
 
-  const data = written.join('')
+  const data = written.join('');
 
   // Trim the export default
-  const trimmed = (data as string).slice('export default'.length)
+  const trimmed = (data as string).slice('export default'.length);
   const provider = jest.fn((p: string) => {
     if (p === 'js-slang/context') {
       return {
@@ -35,14 +35,14 @@ test('esbuild transpilation', async () => {
             }
           }
         }
-      }
+      };
     }
 
-    throw new Error(`Dynamic require of ${p} is not supported!`)
-  })
+    throw new Error(`Dynamic require of ${p} is not supported!`);
+  });
 
-  const bundle = eval(trimmed)(provider)
+  const bundle = eval(trimmed)(provider);
 
-  expect(provider).toHaveBeenCalledTimes(1)
-  expect(bundle.test_function2()).toEqual('foo')
-})
+  expect(provider).toHaveBeenCalledTimes(1);
+  expect(bundle.test_function2()).toEqual('foo');
+});

@@ -1,18 +1,18 @@
 import fs from 'fs/promises';
 import { build as esbuild } from 'esbuild';
-import { commonEsbuildOptions, outputBundleOrTab } from './commons';
 import type { ResolvedBundle } from '../manifest';
+import { commonEsbuildOptions, outputBundleOrTab } from './commons';
 
 export async function getBundleEntryPoint(bundleDir: string) {
-  let bundlePath = `${bundleDir}/src/index.ts`
+  let bundlePath = `${bundleDir}/src/index.ts`;
 
   try {
-    await fs.access(bundlePath, fs.constants.R_OK)
-    return bundlePath
-  } catch (error) {
-    bundlePath = `${bundleDir}/index.ts`
-    await fs.access(bundlePath, fs.constants.R_OK)
-    return bundlePath
+    await fs.access(bundlePath, fs.constants.R_OK);
+    return bundlePath;
+  } catch {
+    bundlePath = `${bundleDir}/index.ts`;
+    await fs.access(bundlePath, fs.constants.R_OK);
+    return bundlePath;
   }
 }
 

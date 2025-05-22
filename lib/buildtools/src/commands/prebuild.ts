@@ -1,49 +1,57 @@
-import { Command } from "@commander-js/extra-typings";
-import { runEslint } from "../prebuild/lint";
-import type { AwaitedReturn } from "../utils";
-import { runTsc } from "../prebuild/typecheck";
 import pathlib from 'path';
-import chalk from "chalk";
-import ts from 'typescript'
+import { Command } from '@commander-js/extra-typings';
+import chalk from 'chalk';
+import ts from 'typescript';
+import { runEslint } from '../prebuild/lint';
+import { runTsc } from '../prebuild/typecheck';
+import { getGitRoot } from '../utils';
 
 export const getLintCommand = () => new Command('lint')
-  .argument('<directory>')
+  .description('Run ESLint for the given directory, or the entire repository if no directory is specified')
+  .argument('[directory]')
   .option('--fix')
-  .action(async (directory, { fix }) => {
-    const results = await runEslint(directory, fix)
-    console.log(eslintResultsLogger(results))
-  })
+  .option('--ci')
+  .action(async (directory, { fix, ci }) => {
+    const fullyResolved = directory === undefined ? await getGitRoot() : pathlib.resolve(directory);
+    const { severity, formatted } = await runEslint(fullyResolved, fix);
+    let errStr: string;
 
-export const getTscCommand = () => new Command('typecheck')
-  .argument('<directory>')
-  .action(async directory => {
-    const results = await runTsc(directory)
-    console.log(tscResultsLogger(results))
-  })
+    if (severity === 'error') errStr = chalk.cyanBright('with ') + chalk.redBright('errors');
+    else if (severity === 'warn') errStr = chalk.cyanBright('with ') + chalk.yellowBright('warnings');
+    else errStr = chalk.greenBright('successfully');
 
-function tscResultsLogger(tscResult: AwaitedReturn<typeof runTsc>) {
-  if (tscResult.severity === 'error' && tscResult.error) {
-    return `${chalk.cyanBright(`tsc finished with ${chalk.redBright('errors')}: ${tscResult.error}`)}`;
-  }
+    console.log(`${chalk.cyanBright('Linting completed ')}${errStr}:\n${formatted}`);
 
-  const diagStr = ts.formatDiagnosticsWithColorAndContext(tscResult.results, {
-    getNewLine: () => '\n',
-    getCurrentDirectory: () => process.cwd(),
-    getCanonicalFileName: name => pathlib.basename(name)
+    switch (severity) {
+      case 'warn': {
+        if (!ci) return;
+      }
+      case 'error': {
+        process.exit(1);
+      }
+    }
   });
 
-  if (tscResult.severity === 'error') {
-    return `${diagStr}\n${chalk.cyanBright(`tsc finished with ${chalk.redBright('errors')}}`)}`;
-  }
-  return `${diagStr}\n${chalk.cyanBright(`tsc completed ${chalk.greenBright('successfully')}`)}`;
-}
+export const getTscCommand = () => new Command('typecheck')
+  .description('Run tsc for the given directory, or the entire repository if no directory is specified')
+  .argument('[directory]')
+  .action(async directory => {
+    const fullyResolved = directory === undefined ? await getGitRoot() : pathlib.resolve(directory);
+    const tscResult = await runTsc(fullyResolved);
+    if (tscResult.severity === 'error' && tscResult.error) {
+      console.log(`${chalk.cyanBright(`tsc finished with ${chalk.redBright('errors')}: ${tscResult.error}`)}`);
+      process.exit(1);
+    }
 
-function eslintResultsLogger({ formatted, severity }: AwaitedReturn<typeof runEslint>) {
-  let errStr: string;
+    const diagStr = ts.formatDiagnosticsWithColorAndContext(tscResult.results, {
+      getNewLine: () => '\n',
+      getCurrentDirectory: () => process.cwd(),
+      getCanonicalFileName: name => pathlib.basename(name)
+    });
 
-  if (severity === 'error') errStr = chalk.cyanBright('with ') + chalk.redBright('errors');
-  else if (severity === 'warn') errStr = chalk.cyanBright('with ') + chalk.yellowBright('warnings');
-  else errStr = chalk.greenBright('successfully');
-
-  return `${chalk.cyanBright(`Linting completed:`)}\n${formatted}`;
-}
+    if (tscResult.severity === 'error') {
+      console.log(`${diagStr}\n${chalk.cyanBright(`tsc finished with ${chalk.redBright('errors')}}`)}`);
+      process.exit(1);
+    }
+    console.log(`${diagStr}\n${chalk.cyanBright(`tsc completed ${chalk.greenBright('successfully')}`)}`);
+  });

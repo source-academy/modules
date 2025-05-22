@@ -1,20 +1,15 @@
 import fs from 'fs/promises';
-import type pathlib from 'path'
 import type { MockedFunction } from 'jest-mock';
 
-import getTemplateCommand from '../template';
+import * as manifest from '../../build/manifest';
 import { askQuestion } from '../../templates/print';
-import * as manifest from '../../build/manifest'
+import * as utils from '../../utils';
+import getTemplateCommand from '../template';
 
-jest.mock('path', () => {
-  const actualPath: typeof pathlib = jest.requireActual('path')
-  return {
-    ...actualPath,
-    resolve: (...args: string[]) => {
-      return actualPath.resolve('/', ...args)
-    }
-  }
-})
+jest.spyOn(utils, 'getGitRoot').mockResolvedValue('/');
+
+// Silence all the console logging
+jest.spyOn(console, 'log').mockImplementation(() => {});
 
 jest.mock('../../templates/print', () => ({
   ...jest.requireActual('../../templates/print'),
@@ -35,7 +30,7 @@ jest.mock('../../templates/print', () => ({
 jest.spyOn(manifest, 'getBundleManifests').mockResolvedValue({
   test0: { tabs: ['tab0'] },
   test1: {},
-})
+});
 
 const asMock = <T extends (...args: any[]) => any>(func: T) => func as MockedFunction<T>;
 
@@ -92,27 +87,33 @@ describe('Test adding new module', () => {
 
     expectCall(
       fs.mkdir,
-      ['src/bundles/new_module', { recursive: true }]
+      ['/src/bundles', { recursive: true }]
     );
 
     expectCall(
       fs.cp,
       [
-        './src/',
-        'src/bundles/new_module/index.ts'
+        expect.any(String),
+        '/src/bundles/new_module'
       ]
     );
 
-    const oldManifest = await retrieveManifest('modules.json');
-    const [[manifestPath, newManifest]] = asMock(fs.writeFile).mock.calls;
-    expect(manifestPath)
-      .toEqual('modules.json');
+    expect(fs.writeFile).toHaveBeenCalledTimes(2);
 
-    expect(JSON.parse(newManifest as string))
-      .toMatchObject({
-        ...oldManifest,
-        new_module: { tabs: [] }
-      });
+    const [
+      [packagePath, rawPackage],
+      [manifestPath, rawManifest]
+    ] = asMock(fs.writeFile).mock.calls;
+
+    expect(packagePath).toEqual('/src/bundles/new_module/package.json');
+    const packageJson = JSON.parse(rawPackage as string);
+    expect(packageJson.name).toEqual('@sourceacademy/bundle-new_module');
+
+    expect(manifestPath).toEqual('/src/bundles/new_module/manifest.json');
+    const manifest = JSON.parse(rawManifest as string);
+    expect(manifest).toMatchObject({
+      tabs: []
+    });
   });
 });
 
@@ -146,27 +147,27 @@ describe('Test adding new tab', () => {
 
     expectCall(
       fs.mkdir,
-      ['src/tabs/TabNew', { recursive: true }]
+      ['/src/tabs', { recursive: true }]
     );
 
-    expectCall(
-      fs.copyFile,
-      [
-        './scripts/src/templates/templates/__tab__.tsx',
-        'src/tabs/TabNew/index.tsx'
-      ]
-    );
+    // Expect the entire template directory to be copied over
+    expectCall(fs.cp, [expect.any(String), '/src/tabs/TabNew']);
 
-    const [[manifestPath, newManifest]] = asMock(fs.writeFile).mock.calls;
-    expect(manifestPath)
-      .toEqual('modules.json');
+    const [
+      [packagePath, packageJsonRaw],
+      [bundleManifestPath, manifestRaw]
+    ] = asMock(fs.writeFile).mock.calls;
 
-    expect(JSON.parse(newManifest as string))
-      .toMatchObject({
-        ...oldManifest,
-        test0: {
-          tabs: ['tab0', 'TabNew']
-        }
-      });
+    // Expect that a package json was created
+    expect(packagePath)
+      .toEqual('/src/tabs/TabNew/package.json');
+
+    const packageJson = JSON.parse(packageJsonRaw as string);
+    expect(packageJson.name).toEqual('@sourceacademy/tab-TabNew');
+
+    // Check that the corresponding bundle manifest was updated
+    expect(bundleManifestPath).toEqual('/src/bundles/test0/manifest.json');
+    const manifest = JSON.parse(manifestRaw as string);
+    expect(manifest.tabs).toContain('TabNew');
   });
 });

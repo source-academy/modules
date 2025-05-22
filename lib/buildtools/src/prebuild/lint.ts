@@ -1,5 +1,5 @@
-import { ESLint } from 'eslint'
-import { findSeverity, type Severity } from '../utils';
+import { ESLint } from 'eslint';
+import { findSeverity, getGitRoot, type Severity } from '../utils';
 
 interface LintResults {
   formatted: string
@@ -7,7 +7,10 @@ interface LintResults {
 }
 
 export async function runEslint(directory: string, fix: boolean): Promise<LintResults> {
-  const linter = new ESLint({ fix });
+  const linter = new ESLint({
+    fix,
+    cwd: await getGitRoot()
+  });
 
   try {
     const linterResults = await linter.lintFiles(directory);
@@ -17,12 +20,18 @@ export async function runEslint(directory: string, fix: boolean): Promise<LintRe
 
     const outputFormatter = await linter.loadFormatter('stylish');
     const formatted = await outputFormatter.format(linterResults);
-    const severity = findSeverity(linterResults, ({ warningCount, errorCount, fatalErrorCount }) => {
 
-      if (fatalErrorCount > 0) return 'error'
-      if (!fix && errorCount > 0) return 'error'
+    const severity = findSeverity(linterResults, ({ warningCount, errorCount, fatalErrorCount, fixableWarningCount }) => {
 
-      if (warningCount > 0) return 'warn';
+      if (fatalErrorCount > 0) return 'error';
+      if (!fix && errorCount > 0) return 'error';
+
+      if (warningCount > 0) {
+        if (fix && fixableWarningCount === warningCount) {
+          return 'success';
+        }
+        return 'warn';
+      }
       return 'success';
     });
 

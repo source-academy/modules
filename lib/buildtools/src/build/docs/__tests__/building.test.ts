@@ -1,12 +1,12 @@
 import fs from 'fs/promises';
 import type { MockedFunction } from 'jest-mock';
+import type { ProjectReflection } from 'typedoc';
 import { initTypedoc, initTypedocForSingleBundle } from '../docsUtils';
 import * as json from '../json';
-import type { ProjectReflection } from 'typedoc';
 
 jest.mock('../json', () => ({
   buildJson: jest.fn()
-}))
+}));
 
 const mockedWriteFile = fs.writeFile as MockedFunction<typeof fs.writeFile>;
 
@@ -31,7 +31,7 @@ function matchObj<T>(raw: string, expected: T) {
   expect(JSON.parse(raw)).toMatchObject(expected);
 }
 
-const testMocksDir = `${__dirname}/../../__test_mocks__`
+const testMocksDir = `${__dirname}/../../__test_mocks__`;
 
 test('Building the json documentation for a single bundle', async () => {
   const project = await initTypedocForSingleBundle({
@@ -61,16 +61,16 @@ test('initTypedoc for muiltiple bundles', async () => {
       directory: `${testMocksDir}/bundles/test1`,
       entryPoint: `${testMocksDir}/bundles/test1/index.ts`,
     }
-  })
+  });
 
-  const test0Reflection = project.getChildByName('test0') as ProjectReflection
-  await json.buildJson('test0', test0Reflection, 'build')
-  
-  const test1Reflection = project.getChildByName('test1') as ProjectReflection
-  await json.buildJson('test1', test1Reflection, 'build')
+  const test0Reflection = project.getChildByName('test0') as ProjectReflection;
+  await json.buildJson('test0', test0Reflection, 'build');
+
+  const test1Reflection = project.getChildByName('test1') as ProjectReflection;
+  await json.buildJson('test1', test1Reflection, 'build');
 
   expect(json.buildJson).toHaveBeenCalledTimes(2);
   const [[, test0str], [, test1str]] = mockedWriteFile.mock.calls;
   matchObj(test0str as string, test0Obj);
   matchObj(test1str as string, test1Obj);
-})
+});

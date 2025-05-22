@@ -24,7 +24,7 @@ export default function getTemplateCommand() {
       const [bundlesDir, tabsDir] = await Promise.all([
         getBundlesDir(),
         getTabsDir()
-      ])
+      ]);
 
       const rl = getRl();
       try {

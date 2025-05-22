@@ -4,14 +4,21 @@ the tsconfigs or package.jsons of all tabs and bundles at once
 (say if a new script needed to be added)
 """
 
+import asyncio as aio
 import os
 import json
 
-def get_tabs():
-  for name in os.listdir('./src/tabs'):
+async def get_git_root():
+  proc = await aio.create_subprocess_exec('git', 'rev-parse', '--show-toplevel', stdout=aio.subprocess.PIPE)
+  stdout, _ = await proc.communicate()
+  return stdout.decode()
+
+def get_tabs(git_root: str):
+  for name in os.listdir(f'{git_root}/src/tabs'):
+    full_path = os.path.join(git_root, 'src', 'tabs', name)
     if not os.path.isdir(f'./src/tabs/{name}'):
       continue
-    yield name
+    yield name, full_path
 
 def get_bundles():
   for name in os.listdir('./src/bundles'):
@@ -22,14 +29,11 @@ def get_bundles():
       continue
     yield name
 
-def update_tab_packages():
-  for name in get_tabs():
+def update_tab_packages(git_root: str):
+  for name, full_path in get_tabs(git_root):
     with open(f'./src/tabs/{name}/package.json') as file:
       original = json.load(file)
-
-      if '@sourceacademy/module-buildtools' in original['devDependencies']:
-        del original['devDependencies']['@sourceacademy/module-buildtools']
-        original['devDependencies']['@sourceacademy/modules-buildtools'] = "workspace:^"
+      original['dependencies']['@sourceacademy/modules-lib'] = 'workspace:^'
 
     with open(f'./src/tabs/{name}/package.json', 'w') as file:
       json.dump(original, file, indent=2)
@@ -88,10 +92,13 @@ def update_bundle_packages():
     with open(f'./src/bundles/{name}/package.json', 'w') as file:
       json.dump(original, file, indent=2)
 
+async def main():
+  git_root = await get_git_root()
+
 if __name__ == '__main__':
   # create_bundle_manifest()
-  update_bundle_packages()
+  # update_bundle_packages()
   # update_bundle_tsconfigs()
-  # update_tab_packages()
+  aio.run(main())
   # update_tab_tsconfigs()
       
