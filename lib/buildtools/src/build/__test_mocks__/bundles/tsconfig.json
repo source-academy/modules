@@ -34,7 +34,7 @@
     "noImplicitAny": false,
     "verbatimModuleSyntax": true,
     "paths": {
-      "js-slang/context": ["./typings/js-slang/context.d.ts"]
+      "js-slang/context": ["../../../../../../src/modules-lib/src/types/js-slang/context.d.ts"]
     },
     "ignoreDeprecations": "5.0"
   },

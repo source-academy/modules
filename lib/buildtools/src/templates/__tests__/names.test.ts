@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { isPascalCase, isSnakeCase } from '../utilities';
 
 function testFunction(

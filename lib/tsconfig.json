@@ -2,8 +2,10 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "noEmit": true,
     "resolveJsonModule": true,
     "target": "ESNext",
     "verbatimModuleSyntax": true

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { describe, expect, test } from 'vitest';
 
 import { CameraOptions, getCamera } from '../../../Render/helpers/Camera';
 

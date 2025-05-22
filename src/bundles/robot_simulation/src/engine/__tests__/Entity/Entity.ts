@@ -1,4 +1,5 @@
 import type Rapier from '@dimforge/rapier3d-compat';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { Entity } from '../../Entity/Entity';
 import { vec3 } from '../../Math/Convert';
 import { SimpleQuaternion, SimpleVector } from '../../Math/Vector';
@@ -8,21 +9,21 @@ const createRigidBodyMock = (
   rotation: SimpleQuaternion
 ) => {
   const rigidBodyMock = {
-    translation: jest.fn().mockReturnValue(translation),
-    rotation: jest.fn().mockReturnValue(rotation),
-    setTranslation: jest.fn(),
-    setRotation: jest.fn(),
-    applyImpulseAtPoint: jest.fn(),
-    linvel: jest.fn().mockReturnValue({ x: 0, y: 0, z: 0 }),
-    angvel: jest.fn().mockReturnValue({ x: 0, y: 0, z: 0 }),
+    translation: vi.fn().mockReturnValue(translation),
+    rotation: vi.fn().mockReturnValue(rotation),
+    setTranslation: vi.fn(),
+    setRotation: vi.fn(),
+    applyImpulseAtPoint: vi.fn(),
+    linvel: vi.fn().mockReturnValue({ x: 0, y: 0, z: 0 }),
+    angvel: vi.fn().mockReturnValue({ x: 0, y: 0, z: 0 }),
   };
   return rigidBodyMock as unknown as Rapier.RigidBody;
 };
 
 const createCollider = (mass: number) => {
   const colliderMock = {
-    mass: jest.fn().mockReturnValue(mass),
-    setMass: jest.fn(),
+    mass: vi.fn().mockReturnValue(mass),
+    setMass: vi.fn(),
   };
   return colliderMock as unknown as Rapier.Collider;
 };

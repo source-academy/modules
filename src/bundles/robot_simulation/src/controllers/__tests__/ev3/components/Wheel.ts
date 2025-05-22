@@ -1,19 +1,13 @@
 import * as THREE from 'three';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Wheel } from '../../../ev3/components/Wheel';
 
-jest.mock('../../../../engine/Render/debug/DebugArrow', () => ({
-  DebugArrow: jest.fn().mockImplementation(() => ({
-    getMesh: jest.fn().mockReturnValue({}),
-    update: jest.fn(),
+vi.mock('../../../../engine/Render/debug/DebugArrow', () => ({
+  DebugArrow: vi.fn().mockImplementation(() => ({
+    getMesh: vi.fn().mockReturnValue({}),
+    update: vi.fn(),
   })),
 }));
-
-jest.mock('three', () => {
-  const originalModule = jest.requireActual('three');
-  return {
-    ...originalModule,
-  };
-});
 
 describe('Wheel', () => {
   let wheel;
@@ -24,18 +18,18 @@ describe('Wheel', () => {
 
   beforeEach(() => {
     mockPhysics = {
-      castRay: jest.fn(),
+      castRay: vi.fn(),
     };
     mockRenderer = {
-      add: jest.fn(),
+      add: vi.fn(),
     };
     mockChassisWrapper = {
-      getEntity: jest.fn().mockReturnValue({
-        worldTranslation: jest.fn().mockImplementation(() => new THREE.Vector3()),
-        transformDirection: jest.fn().mockImplementation(() => new THREE.Vector3()),
-        applyImpulse: jest.fn(),
-        getMass: jest.fn().mockReturnValue(1),
-        getCollider: jest.fn().mockReturnValue({}),
+      getEntity: vi.fn().mockReturnValue({
+        worldTranslation: vi.fn().mockImplementation(() => new THREE.Vector3()),
+        transformDirection: vi.fn().mockImplementation(() => new THREE.Vector3()),
+        applyImpulse: vi.fn(),
+        getMass: vi.fn().mockReturnValue(1),
+        getCollider: vi.fn().mockReturnValue({}),
       }),
     };
     mockConfig = {

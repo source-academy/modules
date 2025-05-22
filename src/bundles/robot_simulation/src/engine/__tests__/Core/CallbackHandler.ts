@@ -1,3 +1,4 @@
+import { describe, expect, test, vi } from 'vitest';
 import { CallbackHandler } from '../../Core/CallbackHandler';
 import { PhysicsTimingInfo } from '../../Physics';
 
@@ -17,7 +18,7 @@ const createTimingInfo = ({
 describe('CallbackHandler', () => {
   test('adds callbacks correctly', () => {
     const handler = new CallbackHandler();
-    const mockCallback = jest.fn();
+    const mockCallback = vi.fn();
 
     handler.addCallback(mockCallback, 100);
 
@@ -27,9 +28,9 @@ describe('CallbackHandler', () => {
   });
 
   test('executes callback after correct delay', () => {
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     const handler = new CallbackHandler();
-    const mockCallback = jest.fn();
+    const mockCallback = vi.fn();
 
     handler.addCallback(mockCallback, 100);
     handler.checkCallbacks(createTimingInfo({ stepCount: 1, timestep: 100 }));
@@ -39,7 +40,7 @@ describe('CallbackHandler', () => {
 
   test('removes callback after execution', () => {
     const handler = new CallbackHandler();
-    const mockCallback = jest.fn();
+    const mockCallback = vi.fn();
 
     handler.addCallback(mockCallback, 100);
     handler.checkCallbacks(createTimingInfo({ stepCount: 1, timestep: 100 }));
@@ -49,8 +50,8 @@ describe('CallbackHandler', () => {
 
   test('handles multiple callbacks correctly', () => {
     const handler = new CallbackHandler();
-    const mockCallback1 = jest.fn();
-    const mockCallback2 = jest.fn();
+    const mockCallback1 = vi.fn();
+    const mockCallback2 = vi.fn();
 
     handler.addCallback(mockCallback1, 50);
     handler.addCallback(mockCallback2, 100);
@@ -65,7 +66,7 @@ describe('CallbackHandler', () => {
 
   test('does not execute callback before its time', () => {
     const handler = new CallbackHandler();
-    const mockCallback = jest.fn();
+    const mockCallback = vi.fn();
 
     handler.addCallback(mockCallback, 100);
     handler.checkCallbacks(createTimingInfo({ stepCount: 1, timestep: 50 }));
@@ -75,7 +76,7 @@ describe('CallbackHandler', () => {
 
   test('correctly handles step count changes', () => {
     const handler = new CallbackHandler();
-    const mockCallback = jest.fn();
+    const mockCallback = vi.fn();
 
     handler.addCallback(mockCallback, 100);
     // Simulate no step count change

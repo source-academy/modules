@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest';
 import { GlobalStateController } from '../GlobalStateController';
 import { MultiUserController } from '../MultiUserController';
 

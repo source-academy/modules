@@ -1,33 +1,34 @@
 import fs from 'fs/promises';
-import type { MockedFunction } from 'jest-mock';
+import { expect, describe, test, it, vi, beforeEach, type MockedFunction } from 'vitest';
 
 import * as manifest from '../../build/manifest';
 import { askQuestion } from '../../templates/print';
 import * as utils from '../../utils';
 import getTemplateCommand from '../template';
 
-jest.spyOn(utils, 'getGitRoot').mockResolvedValue('/');
+vi.spyOn(utils, 'getBundlesDir').mockResolvedValue('/src/bundles');
+vi.spyOn(utils, 'getTabsDir').mockResolvedValue('/src/tabs');
 
-// Silence all the console logging
-jest.spyOn(console, 'log').mockImplementation(() => {});
+vi.mock('../../templates/print', async importActual => {
+  const actualTemplates: any = await importActual();
+  return ({
+    ...actualTemplates,
+    askQuestion: vi.fn(),
+    error(x: string) {
+      // The command has a catch-all for errors,
+      // so we rethrow the error to observe the value
+      throw new Error(x);
+    },
+    // Because the functions run in perpetual while loops
+    // We need to throw an error to observe what value warn
+    // was called with
+    warn(x: string) {
+      throw new Error(x);
+    }
+  });
+});
 
-jest.mock('../../templates/print', () => ({
-  ...jest.requireActual('../../templates/print'),
-  askQuestion: jest.fn(),
-  error(x: string) {
-    // The command has a catch-all for errors,
-    // so we rethrow the error to observe the value
-    throw new Error(x);
-  },
-  // Because the functions run in perpetual while loops
-  // We need to throw an error to observe what value warn
-  // was called with
-  warn(x: string) {
-    throw new Error(x);
-  }
-}));
-
-jest.spyOn(manifest, 'getBundleManifests').mockResolvedValue({
+vi.spyOn(manifest, 'getBundleManifests').mockResolvedValue({
   test0: { tabs: ['tab0'] },
   test1: {},
 });
@@ -55,11 +56,10 @@ function expectCall<T extends(...args: any) => any>(
   });
 }
 
-async function expectCommandFailure(snapshot: string) {
+async function expectCommandFailure(msg: string) {
   await expect(runCommand())
     .rejects
-    // eslint-disable-next-line jest/no-interpolation-in-snapshots
-    .toMatchInlineSnapshot(`[Error: ERROR: ${snapshot}]`);
+    .toThrowError(`ERROR: ${msg}`);
 
   expect(fs.writeFile).not.toHaveBeenCalled();
   expect(fs.copyFile).not.toHaveBeenCalled();

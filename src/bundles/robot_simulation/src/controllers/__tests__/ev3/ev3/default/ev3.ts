@@ -1,3 +1,5 @@
+import { vi, describe, expect, it } from 'vitest';
+
 import { Physics, Renderer, ControllerMap } from '../../../../../engine';
 import { ChassisWrapper } from '../../../../ev3/components/Chassis';
 import { Mesh } from '../../../../ev3/components/Mesh';
@@ -8,37 +10,37 @@ import { createDefaultEv3 } from '../../../../ev3/ev3/default/ev3';
 import { ColorSensor } from '../../../../ev3/sensor/ColorSensor';
 import { UltrasonicSensor } from '../../../../ev3/sensor/UltrasonicSensor';
 
-jest.mock('../../../../ev3/components/Chassis', () => {
-  return { ChassisWrapper: jest.fn() };
+vi.mock('../../../../ev3/components/Chassis', () => {
+  return { ChassisWrapper: vi.fn() };
 });
-jest.mock('../../../../ev3/components/Mesh', () => {
-  return { Mesh: jest.fn() };
+vi.mock('../../../../ev3/components/Mesh', () => {
+  return { Mesh: vi.fn() };
 });
-jest.mock('../../../../ev3/components/Motor', () => {
-  return { Motor: jest.fn() };
+vi.mock('../../../../ev3/components/Motor', () => {
+  return { Motor: vi.fn() };
 });
-jest.mock('../../../../ev3/components/Wheel', () => {
-  return { Wheel: jest.fn() };
+vi.mock('../../../../ev3/components/Wheel', () => {
+  return { Wheel: vi.fn() };
 });
-jest.mock('../../../../ev3/sensor/ColorSensor', () => {
-  return { ColorSensor: jest.fn() };
+vi.mock('../../../../ev3/sensor/ColorSensor', () => {
+  return { ColorSensor: vi.fn() };
 });
-jest.mock('../../../../ev3/sensor/UltrasonicSensor', () => {
-  return { UltrasonicSensor: jest.fn() };
+vi.mock('../../../../ev3/sensor/UltrasonicSensor', () => {
+  return { UltrasonicSensor: vi.fn() };
 });
-jest.mock('../../../../../engine', () => {
+vi.mock('../../../../../engine', () => {
   return {
-    Physics: jest.fn(),
-    Renderer: jest.fn(),
-    ControllerMap: jest.fn().mockImplementation(() => {
-      return { add: jest.fn() };
+    Physics: vi.fn(),
+    Renderer: vi.fn(),
+    ControllerMap: vi.fn().mockImplementation(() => {
+      return { add: vi.fn() };
     })
   };
 });
 
 describe('createDefaultEv3', () => {
   const mockPhysics = new Physics({gravity:{x:0, y:-1, z:0}, timestep: 0.01});
-  const mockRenderer = jest.fn() as unknown as Renderer;
+  const mockRenderer = vi.fn() as unknown as Renderer;
   const mockConfig =ev3Config;
 
   it('should correctly create all components and return a controller map', () => {

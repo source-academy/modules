@@ -48,7 +48,7 @@ export async function initTypedoc(manifest: Record<string, ResolvedBundle>) {
     alwaysCreateEntryPointModule: true,
     entryPoints,
     name: 'Source Academy Modules',
-    readme: `${__dirname}/docsreadme.md`,
+    readme: `${import.meta.dirname}/docsreadme.md`,
     tsconfig: tsconfigPath,
   });
 

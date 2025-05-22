@@ -1,25 +1,23 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports['Curve 3D animations error gracefully 1'] = `
+exports[`Curve 3D animations error gracefully 1`] = `
 <CurveTab
   context={
     {
       "context": {
-        "moduleContexts": {
-          "curve": {
-            "state": {
-              "drawnCurves": [
-                AnimatedCurve {
-                  "angle": 0,
-                  "drawer": [Function],
-                  "duration": 1,
-                  "fps": 60,
-                  "func": [Function],
-                  "is3D": true,
-                  "toReplString": [Function],
-                },
-              ],
-            },
+        "curve": {
+          "state": {
+            "drawnCurves": [
+              AnimatedCurve {
+                "angle": 0,
+                "drawer": [Function],
+                "duration": 1,
+                "fps": 60,
+                "func": [Function],
+                "is3D": true,
+                "toReplString": [Function],
+              },
+            ],
           },
         },
       },
@@ -28,26 +26,24 @@ exports['Curve 3D animations error gracefully 1'] = `
 />
 `;
 
-exports['Curve animations error gracefully 1'] = `
+exports[`Curve animations error gracefully 1`] = `
 <CurveTab
   context={
     {
       "context": {
-        "moduleContexts": {
-          "curve": {
-            "state": {
-              "drawnCurves": [
-                AnimatedCurve {
-                  "angle": 0,
-                  "drawer": [Function],
-                  "duration": 1,
-                  "fps": 60,
-                  "func": [Function],
-                  "is3D": false,
-                  "toReplString": [Function],
-                },
-              ],
-            },
+        "curve": {
+          "state": {
+            "drawnCurves": [
+              AnimatedCurve {
+                "angle": 0,
+                "drawer": [Function],
+                "duration": 1,
+                "fps": 60,
+                "func": [Function],
+                "is3D": false,
+                "toReplString": [Function],
+              },
+            ],
           },
         },
       },

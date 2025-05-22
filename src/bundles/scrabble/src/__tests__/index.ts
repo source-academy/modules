@@ -1,3 +1,4 @@
+import { test, expect } from 'vitest';
 import {
   scrabble_letters,
   scrabble_letters_tiny,

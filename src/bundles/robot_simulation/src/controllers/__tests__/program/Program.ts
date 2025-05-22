@@ -1,12 +1,13 @@
+import { vi, beforeEach, describe, it, expect, type MockedFunction, type MockedClass } from 'vitest';
 import { CallbackHandler } from '../../../engine/Core/CallbackHandler';
 import { Program, program_controller_identifier } from '../../program/Program';
 import { runECEvaluator } from '../../program/evaluate';
 
-jest.mock('../../../engine/Core/CallbackHandler');
-jest.mock('../../program/evaluate');
+vi.mock('../../../engine/Core/CallbackHandler');
+vi.mock('../../program/evaluate');
 
-const mockedRunECEvaluator = runECEvaluator as jest.MockedFunction<typeof runECEvaluator>;
-const mockedCallbackHandler = CallbackHandler as jest.MockedClass<typeof CallbackHandler>;
+const mockedRunECEvaluator = runECEvaluator as MockedFunction<typeof runECEvaluator>;
+const mockedCallbackHandler = CallbackHandler as MockedClass<typeof CallbackHandler>;
 
 describe('Program', () => {
   let program: Program;
@@ -18,7 +19,7 @@ describe('Program', () => {
 
     program = new Program(mockCode);
 
-    jest.spyOn(console, 'error').mockImplementation(jest.fn());
+    vi.spyOn(console, 'error').mockImplementation(vi.fn());
   });
 
   it('should initialize with default configuration if none provided', () => {
@@ -33,7 +34,7 @@ describe('Program', () => {
   });
 
   it('should start the evaluator with correct options', () => {
-    const mockIterator = { next: jest.fn() } as any;
+    const mockIterator = { next: vi.fn() } as any;
     mockedRunECEvaluator.mockReturnValue(mockIterator);
 
     program.start();
@@ -43,7 +44,7 @@ describe('Program', () => {
   });
 
   it('should handle pause and resume correctly', () => {
-    const mockIterator = { next: jest.fn() } as any;
+    const mockIterator = { next: vi.fn() } as any;
     mockedRunECEvaluator.mockReturnValue(mockIterator);
 
     program.start();
@@ -58,7 +59,7 @@ describe('Program', () => {
   });
 
   it('should process fixed number of steps per tick', () => {
-    const mockIterator = { next: jest.fn() } as any;
+    const mockIterator = { next: vi.fn() } as any;
     mockedRunECEvaluator.mockReturnValue(mockIterator);
 
     program.start();

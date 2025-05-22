@@ -1,9 +1,10 @@
 import * as THREE from 'three';
+import { describe, expect, it, vi } from 'vitest';
 import { addCuboid } from '../../Render/helpers/MeshFactory';
 
 // Mock the necessary Three.js methods and classes
-jest.mock('three', () => {
-  const originalModule = jest.requireActual('three');
+vi.mock('three', async importOriginal => {
+  const originalModule: any = await importOriginal();
 
   class Vector3 {
     x: number;
@@ -47,9 +48,9 @@ jest.mock('three', () => {
 
   return {
     ...originalModule,
-    BoxGeometry: jest.fn(),
-    MeshPhysicalMaterial: jest.fn(),
-    Mesh: jest.fn().mockImplementation(function (this: any, geometry, material) {
+    BoxGeometry: vi.fn(),
+    MeshPhysicalMaterial: vi.fn(),
+    Mesh: vi.fn().mockImplementation(function (this: any, geometry, material) {
       this.geometry = geometry;
       this.material = material;
       this.position = new Vector3();
@@ -57,7 +58,7 @@ jest.mock('three', () => {
     }),
     Vector3: Vector3,
     Quaternion: Quaternion,
-    Color: jest.fn().mockImplementation(function (color) {
+    Color: vi.fn().mockImplementation(function (color) {
       return { color };
     }),
   };

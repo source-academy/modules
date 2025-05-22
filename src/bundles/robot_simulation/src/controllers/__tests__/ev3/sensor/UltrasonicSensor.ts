@@ -1,18 +1,19 @@
 import * as THREE from 'three';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { UltrasonicSensor } from '../../../ev3/sensor/UltrasonicSensor';
 
-jest.mock('three', () => ({
-  Vector3: jest.fn().mockImplementation(() => ({
-    clone: jest.fn().mockReturnThis(),
-    normalize: jest.fn().mockReturnThis(),
-    copy: jest.fn()
+vi.mock('three', () => ({
+  Vector3: vi.fn().mockImplementation(() => ({
+    clone: vi.fn().mockReturnThis(),
+    normalize: vi.fn().mockReturnThis(),
+    copy: vi.fn()
   })),
-  ArrowHelper: jest.fn().mockImplementation(() => ({
+  ArrowHelper: vi.fn().mockImplementation(() => ({
     visible: false,
     position: {
-      copy: jest.fn()
+      copy: vi.fn()
     },
-    setDirection: jest.fn()
+    setDirection: vi.fn()
   }))
 }));
 
@@ -25,17 +26,17 @@ describe('UltrasonicSensor', () => {
 
   beforeEach(() => {
     mockChassisWrapper = {
-      getEntity: jest.fn(() => ({
-        worldTranslation: jest.fn().mockReturnValue(new THREE.Vector3()),
-        transformDirection: jest.fn().mockReturnValue(new THREE.Vector3()),
-        getCollider: jest.fn()
+      getEntity: vi.fn(() => ({
+        worldTranslation: vi.fn().mockReturnValue(new THREE.Vector3()),
+        transformDirection: vi.fn().mockReturnValue(new THREE.Vector3()),
+        getCollider: vi.fn()
       }))
     };
     mockPhysics = {
-      castRay: jest.fn().mockReturnValue({ distance: 5 })
+      castRay: vi.fn().mockReturnValue({ distance: 5 })
     };
     mockRenderer = {
-      add: jest.fn()
+      add: vi.fn()
     };
     mockConfig = {
       displacement: { x: 1, y: 1, z: 1 },

@@ -2,6 +2,7 @@
 import { animate_3D_curve, animate_curve, draw_3D_connected, draw_connected } from '@sourceacademy/bundle-curve';
 import type { CurveModuleState } from '@sourceacademy/bundle-curve/types';
 import { mockDebuggerContext } from '@sourceacademy/modules-lib/utilities';
+import { expect, test } from 'vitest';
 import { CurveTab } from '..';
 
 test('Curve animations error gracefully', () => {

@@ -1,4 +1,5 @@
 import { list } from 'js-slang/dist/stdlib/list';
+import { test, expect, vi, beforeEach } from 'vitest';
 import * as asserts from '../asserts';
 import * as testing from '../functions';
 
@@ -15,7 +16,7 @@ beforeEach(() => {
 });
 
 test('context is created correctly', () => {
-  const mockTestFn = jest.fn();
+  const mockTestFn = vi.fn();
   testing.describe('Testing 321', () => {
     testing.it('Testing 123', mockTestFn);
   });

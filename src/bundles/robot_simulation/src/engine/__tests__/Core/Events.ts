@@ -1,3 +1,4 @@
+import { beforeEach, expect, describe, test, vi } from 'vitest';
 import { TypedEventTarget } from '../../Core/Events';
 
 class StringEvent extends Event {
@@ -31,7 +32,7 @@ describe('TypedEventTarget', () => {
   });
 
   test('addEventListener adds a listener for the specified event type', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     eventTarget.addEventListener('event1', listener);
     const event = new StringEvent('event1', 'Hello');
     eventTarget.dispatchEvent('event1', event);
@@ -39,8 +40,8 @@ describe('TypedEventTarget', () => {
   });
 
   test('addEventListener adds multiple listeners for the same event type', () => {
-    const listener1 = jest.fn();
-    const listener2 = jest.fn();
+    const listener1 = vi.fn();
+    const listener2 = vi.fn();
     eventTarget.addEventListener('event1', listener1);
     eventTarget.addEventListener('event1', listener2);
     const event = new StringEvent('event1', 'Hello');
@@ -50,8 +51,8 @@ describe('TypedEventTarget', () => {
   });
 
   test('addEventListener adds listeners for different event types', () => {
-    const listener1 = jest.fn();
-    const listener2 = jest.fn();
+    const listener1 = vi.fn();
+    const listener2 = vi.fn();
     eventTarget.addEventListener('event1', listener1);
     eventTarget.addEventListener('event2', listener2);
     const event1 = new StringEvent('event1', 'Hello');
@@ -63,8 +64,8 @@ describe('TypedEventTarget', () => {
   });
 
   test('dispatchEvent dispatches the event to the registered listeners', () => {
-    const listener1 = jest.fn();
-    const listener2 = jest.fn();
+    const listener1 = vi.fn();
+    const listener2 = vi.fn();
     eventTarget.addEventListener('event1', listener1);
     eventTarget.addEventListener('event2', listener2);
     const event1 = new StringEvent('event1', 'Hello');
@@ -76,7 +77,7 @@ describe('TypedEventTarget', () => {
   });
 
   test('dispatchEvent returns true if there are listeners for the event type', () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     eventTarget.addEventListener('event1', listener);
     const event = new StringEvent('event1', 'Hello');
     const result = eventTarget.dispatchEvent('event1', event);

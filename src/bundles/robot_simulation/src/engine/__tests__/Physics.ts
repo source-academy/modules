@@ -1,22 +1,25 @@
 // physics.test.js
 import rapier from '@dimforge/rapier3d-compat';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { Physics } from '../Physics';
 
 // Mock rapier
-jest.mock('@dimforge/rapier3d-compat', () => {
+vi.mock('@dimforge/rapier3d-compat', () => {
   return {
-    init: jest.fn(),
-    World: jest.fn().mockImplementation(() => ({
-      timestep: jest.fn(),
-      createRigidBody: jest.fn(),
-      createCollider: jest.fn(),
-      castRayAndGetNormal: jest.fn(),
-      step: jest.fn(),
-      castRay: jest.fn(),
-    })),
-    Ray: jest.fn(),
-    RigidBodyDesc: jest.fn(),
-    ColliderDesc: jest.fn(),
+    default: {
+      init: vi.fn(),
+      World: vi.fn().mockImplementation(() => ({
+        timestep: vi.fn(),
+        createRigidBody: vi.fn(),
+        createCollider: vi.fn(),
+        castRayAndGetNormal: vi.fn(),
+        step: vi.fn(),
+        castRay: vi.fn(),
+      })),
+      Ray: vi.fn(),
+      RigidBodyDesc: vi.fn(),
+      ColliderDesc: vi.fn(),
+    }
   };
 });
 

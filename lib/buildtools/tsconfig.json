@@ -7,7 +7,7 @@
     "noEmit": true
   },
   "extends": "../tsconfig.json",
-  "include": ["./src", "jest.setup.ts"],
+  "include": ["./src", "vitest.setup.ts"],
   "exclude": [
     "./bin",
     "./src/build/__test_mocks__"

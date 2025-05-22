@@ -24,7 +24,7 @@ export async function addNew(bundlesDir: string, rl: Interface) {
   const bundleDestination = `${bundlesDir}/${moduleName}`;
 
   await fs.mkdir(bundlesDir, { recursive: true });
-  await fs.cp(`${__dirname}/templates/bundle`, bundleDestination);
+  await fs.cp(`${import.meta.dirname}/templates/bundle`, bundleDestination);
 
   const typescriptVersion = _package.devDependencies.typescript;
 

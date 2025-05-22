@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { describe, expect, test } from 'vitest';
 import { make_sound, play, play_in_tab } from '../functions';
 
 describe('Test make_sound', () => {
   test('Should error gracefully when duration is negative', () => {
     expect(() => make_sound(() => 0, -1))
-      .toThrowErrorMatchingInlineSnapshot('"Sound duration must be greater than or equal to 0"');
+      .toThrow('Sound duration must be greater than or equal to 0');
   });
 
   test('Should not error when duration is zero', () => {
@@ -16,7 +17,7 @@ describe('Test play', () => {
   test('Should error gracefully when duration is negative', () => {
     const sound = [(t) => 0, -1];
     expect(() => play(sound as any))
-      .toThrowErrorMatchingInlineSnapshot('"play: duration of sound is negative"');
+      .toThrow('play: duration of sound is negative');
   });
 
   test('Should not error when duration is zero', () => {
@@ -29,7 +30,7 @@ describe('Test play_in_tab', () => {
   test('Should error gracefully when duration is negative', () => {
     const sound = [(t) => 0, -1];
     expect(() => play_in_tab(sound as any))
-      .toThrowErrorMatchingInlineSnapshot('"play_in_tab: duration of sound is negative"');
+      .toThrow('play_in_tab: duration of sound is negative');
   });
 
   test('Should not error when duration is zero', () => {

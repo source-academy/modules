@@ -1,16 +1,17 @@
 import fs from 'fs/promises';
+import { vi, test, expect } from 'vitest';
 import { buildBundle } from '../bundle';
 
 const testMocksDir = `${__dirname}/../../__test_mocks__`;
 
 const written = [];
-jest.spyOn(fs, 'open').mockResolvedValue({
+vi.spyOn(fs, 'open').mockResolvedValue({
   createWriteStream: () => ({
     write: data => {
       written.push(data);
     }
   }),
-  close: jest.fn()
+  close: vi.fn()
 } as any);
 
 test('esbuild transpilation', async () => {
@@ -25,7 +26,7 @@ test('esbuild transpilation', async () => {
 
   // Trim the export default
   const trimmed = (data as string).slice('export default'.length);
-  const provider = jest.fn((p: string) => {
+  const provider = vi.fn((p: string) => {
     if (p === 'js-slang/context') {
       return {
         moduleContexts: {

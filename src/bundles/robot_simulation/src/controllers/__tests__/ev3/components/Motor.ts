@@ -1,48 +1,42 @@
 import * as THREE from 'three';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Renderer, Physics } from '../../../../engine';
 import { loadGLTF } from '../../../../engine/Render/helpers/GLTF';
 import { ChassisWrapper } from '../../../ev3/components/Chassis';
 import { Motor } from '../../../ev3/components/Motor';
 import { ev3Config } from '../../../ev3/ev3/default/config';
 
-jest.mock('three', () => {
-  const originalModule = jest.requireActual('three');
-  return {
-    ...originalModule,
-  };
-});
-
-jest.mock('../../../../engine/Render/helpers/GLTF', () => ({
-  loadGLTF: jest.fn().mockResolvedValue({
+vi.mock('../../../../engine/Render/helpers/GLTF', () => ({
+  loadGLTF: vi.fn().mockResolvedValue({
     scene: {
       position: {
-        copy: jest.fn(),
+        copy: vi.fn(),
       },
       quaternion: {
-        copy: jest.fn(),
+        copy: vi.fn(),
       },
-      rotateX: jest.fn(),
-      rotateZ: jest.fn()
+      rotateX: vi.fn(),
+      rotateZ: vi.fn()
     }
   }),
 }));
 
-jest.mock('../../../../engine', () => ({
-  Physics: jest.fn(),
-  Renderer: jest.fn().mockImplementation(() => ({
-    add: jest.fn(),
+vi.mock('../../../../engine', () => ({
+  Physics: vi.fn(),
+  Renderer: vi.fn().mockImplementation(() => ({
+    add: vi.fn(),
   })),
 }));
 
-jest.mock('../../../ev3/components/Chassis', () => ({
-  ChassisWrapper: jest.fn().mockImplementation(() => ({
-    getEntity: jest.fn().mockReturnValue({
-      transformDirection: jest.fn().mockImplementation((v) => v),
-      worldVelocity: jest.fn().mockReturnValue(new THREE.Vector3()),
-      worldTranslation: jest.fn().mockReturnValue(new THREE.Vector3()),
-      applyImpulse: jest.fn(),
-      getMass: jest.fn().mockReturnValue(1),
-      getRotation: jest.fn(),
+vi.mock('../../../ev3/components/Chassis', () => ({
+  ChassisWrapper: vi.fn().mockImplementation(() => ({
+    getEntity: vi.fn().mockReturnValue({
+      transformDirection: vi.fn().mockImplementation((v) => v),
+      worldVelocity: vi.fn().mockReturnValue(new THREE.Vector3()),
+      worldTranslation: vi.fn().mockReturnValue(new THREE.Vector3()),
+      applyImpulse: vi.fn(),
+      getMass: vi.fn().mockReturnValue(1),
+      getRotation: vi.fn(),
     }),
   })),
 }));
@@ -56,9 +50,9 @@ describe('Motor', () => {
 
   beforeEach(() => {
     mockPhysics = {
-      applyImpulse: jest.fn(),
+      applyImpulse: vi.fn(),
     } as unknown as Physics;
-    mockRenderer = { add: jest.fn() } as unknown as Renderer;
+    mockRenderer = { add: vi.fn() } as unknown as Renderer;
     mockConfig = {
       displacement: { x: 1, y: 0, z: 0 },
       pid: {

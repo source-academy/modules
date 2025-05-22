@@ -1,3 +1,4 @@
+import { describe, expect, test, beforeEach } from 'vitest';
 import { RobotConsole } from '../../Core/RobotConsole'; // Adjust the import path as necessary
 
 describe('RobotConsole', () => {

@@ -1,12 +1,6 @@
 import * as THREE from 'three';
+import { beforeEach, describe, it, expect } from 'vitest';
 import { NumberPidController, VectorPidController } from '../../../ev3/feedback_control/PidController';
-
-jest.mock('three', () => {
-  const three = jest.requireActual('three');
-  return {
-    ...three,
-  };
-});
 
 const resetPid = (pidController:NumberPidController) => {
   pidController.errorsSum = 0;

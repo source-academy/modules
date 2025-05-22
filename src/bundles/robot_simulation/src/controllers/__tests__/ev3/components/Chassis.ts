@@ -1,31 +1,31 @@
 import * as THREE from 'three';
+import { beforeEach, describe, expect, it, vi, type Mocked } from 'vitest';
 import { Physics, Renderer, EntityFactory , MeshFactory } from '../../../../engine';
 
 import { ChassisWrapper } from '../../../ev3/components/Chassis';
 
-jest.mock('../../../../engine', () => ({
-  Physics: jest.fn(),
-  Renderer: jest.fn(),
-  EntityFactory: { addCuboid: jest.fn() },
-  MeshFactory: { addCuboid: jest.fn() }
+vi.mock('../../../../engine', () => ({
+  Physics: vi.fn(),
+  Renderer: vi.fn(),
+  EntityFactory: { addCuboid: vi.fn() },
+  MeshFactory: { addCuboid: vi.fn() }
 }));
-jest.mock('../../../../engine/Entity/EntityFactory');
+vi.mock('../../../../engine/Entity/EntityFactory');
 
-jest.mock('three', () => {
-  const three = jest.requireActual('three');
+vi.mock('three', async importOriginal => {
   return {
-    ...three,
-    Mesh: jest.fn().mockImplementation(() => ({
-      position: { copy: jest.fn() },
-      quaternion: { copy: jest.fn() },
+    ...await importOriginal(),
+    Mesh: vi.fn().mockImplementation(() => ({
+      position: { copy: vi.fn() },
+      quaternion: { copy: vi.fn() },
       visible: false,
     })),
-    Color: jest.fn()
+    Color: vi.fn()
   };
 });
 
-const mockedMeshFactory = MeshFactory as jest.Mocked<typeof MeshFactory>;
-const mockedEntityFactory = EntityFactory as jest.Mocked<typeof EntityFactory>;
+const mockedMeshFactory = MeshFactory as Mocked<typeof MeshFactory>;
+const mockedEntityFactory = EntityFactory as Mocked<typeof EntityFactory>;
 
 describe('ChassisWrapper', () => {
   let physicsMock;
@@ -34,8 +34,8 @@ describe('ChassisWrapper', () => {
   let config;
 
   beforeEach(() => {
-    physicsMock = jest.fn() as unknown as Physics;
-    rendererMock = {add:jest.fn()} as unknown as Renderer;
+    physicsMock = vi.fn() as unknown as Physics;
+    rendererMock = {add:vi.fn()} as unknown as Renderer;
     config = {
       dimension: { width: 1, height: 1, depth: 1 },
       orientation: { x: 0, y: 0, z: 0, w: 1 },
@@ -64,7 +64,7 @@ describe('ChassisWrapper', () => {
   });
 
   it('should correctly initialize the chassis entity on start', async () => {
-    const mockEntity = { getTranslation: jest.fn(), getRotation: jest.fn() };
+    const mockEntity = { getTranslation: vi.fn(), getRotation: vi.fn() };
     mockedEntityFactory.addCuboid.mockReturnValue(mockEntity as any);
     await chassisWrapper.start();
 
@@ -74,8 +74,8 @@ describe('ChassisWrapper', () => {
 
   it('should update the position and orientation of the debug mesh to match the chassis entity', () => {
     const mockEntity = {
-      getTranslation: jest.fn().mockReturnValue(new THREE.Vector3()),
-      getRotation: jest.fn().mockReturnValue(new THREE.Quaternion())
+      getTranslation: vi.fn().mockReturnValue(new THREE.Vector3()),
+      getRotation: vi.fn().mockReturnValue(new THREE.Quaternion())
     };
     mockedEntityFactory.addCuboid.mockReturnValue(mockEntity as any);
     chassisWrapper.chassis = mockEntity;

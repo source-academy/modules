@@ -1,3 +1,5 @@
+import { test, expect } from 'vitest';
+
 import { repeat, twice, thrice } from '../functions';
 
 // Test functions

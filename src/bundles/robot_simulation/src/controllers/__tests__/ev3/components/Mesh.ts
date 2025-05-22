@@ -1,44 +1,44 @@
 import * as THREE from 'three';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Renderer } from '../../../../engine';
 import { loadGLTF } from '../../../../engine/Render/helpers/GLTF';
 import { ChassisWrapper } from '../../../ev3/components/Chassis';
 import { Mesh } from '../../../ev3/components/Mesh';
 
-jest.mock('three', () => {
-  const three = jest.requireActual('three');
+vi.mock('three', async importOriginal => {
   return {
-    ...three,
-    GLTF: jest.fn().mockImplementation(() => ({
+    ...await importOriginal(),
+    GLTF: vi.fn().mockImplementation(() => ({
       scene: {},
     })),
   };
 });
 
-jest.mock('../../../../engine/Render/helpers/GLTF', () => ({
-  loadGLTF: jest.fn().mockResolvedValue({
+vi.mock('../../../../engine/Render/helpers/GLTF', () => ({
+  loadGLTF: vi.fn().mockResolvedValue({
     scene: {
       position: {
-        copy: jest.fn(),
+        copy: vi.fn(),
       },
       quaternion: {
-        copy: jest.fn(),
+        copy: vi.fn(),
       },
     },
   }),
 }));
 
-jest.mock('../../../ev3/components/Chassis', () => ({
-  ChassisWrapper: jest.fn().mockImplementation(() => ({
-    getEntity: jest.fn().mockReturnValue({
-      getTranslation: jest.fn().mockReturnValue(new THREE.Vector3()),
-      getRotation: jest.fn().mockReturnValue(new THREE.Quaternion()),
+vi.mock('../../../ev3/components/Chassis', () => ({
+  ChassisWrapper: vi.fn().mockImplementation(() => ({
+    getEntity: vi.fn().mockReturnValue({
+      getTranslation: vi.fn().mockReturnValue(new THREE.Vector3()),
+      getRotation: vi.fn().mockReturnValue(new THREE.Quaternion()),
     }),
   })),
 }));
 
-jest.mock('../../../../engine', () => ({
-  Renderer: jest.fn().mockImplementation(() => ({
-    add: jest.fn(),
+vi.mock('../../../../engine', () => ({
+  Renderer: vi.fn().mockImplementation(() => ({
+    add: vi.fn(),
   })),
 }));
 
@@ -49,11 +49,11 @@ describe('Mesh', () => {
   let mockConfig;
 
   beforeEach(() => {
-    mockRenderer = { add: jest.fn() } as unknown as Renderer;
+    mockRenderer = { add: vi.fn() } as unknown as Renderer;
     mockChassisWrapper = {
-      getEntity: jest.fn().mockReturnValue({
-        getTranslation: jest.fn().mockReturnValue(new THREE.Vector3()),
-        getRotation: jest.fn().mockReturnValue(new THREE.Quaternion()),
+      getEntity: vi.fn().mockReturnValue({
+        getTranslation: vi.fn().mockReturnValue(new THREE.Vector3()),
+        getRotation: vi.fn().mockReturnValue(new THREE.Quaternion()),
       }),
       config: {
         orientation: {

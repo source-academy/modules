@@ -1,3 +1,4 @@
+import { describe, expect, test, vi, type Mock } from 'vitest';
 import {
   Controller,
   ControllerGroup,
@@ -15,18 +16,18 @@ const createTimingInfo = () => {
 describe('ControllerMap methods', () => {
   // Define test cases in an array of arrays. Each inner array represents parameters for a single test case.
   const methodsTestData: Array<
-    [string, jest.Mock, { async: boolean; args?: any[] }]
+    [string, Mock, { async: boolean; args?: any[] }]
   > = [
-    ['start', jest.fn(), { async: true }],
-    ['update', jest.fn(), { async: false, args: [createTimingInfo()] }],
-    ['fixedUpdate', jest.fn(), { async: false, args: [createTimingInfo()] }],
-    ['onDestroy', jest.fn(), { async: false }],
+    ['start', vi.fn(), { async: true }],
+    ['update', vi.fn(), { async: false, args: [createTimingInfo()] }],
+    ['fixedUpdate', vi.fn(), { async: false, args: [createTimingInfo()] }],
+    ['onDestroy', vi.fn(), { async: false }],
   ];
 
   test.each(methodsTestData)(
     '%s calls %s on all contained controllers',
     async (methodName, mockMethod, { async, args = [] }) => {
-      const notCalledMethod = jest.fn();
+      const notCalledMethod = vi.fn();
       const controllerMap = new ControllerMap(
         {
           first: { [methodName]: mockMethod },
@@ -71,13 +72,13 @@ describe('ControllerMap methods', () => {
     // Setup: Create a couple of mock controllers
     const mockController1 = {
       name: 'Controller1',
-      start: jest.fn(),
-      update: jest.fn(),
+      start: vi.fn(),
+      update: vi.fn(),
     };
     const mockController2 = {
       name: 'Controller2',
-      start: jest.fn(),
-      update: jest.fn(),
+      start: vi.fn(),
+      update: vi.fn(),
     };
 
     const controllerMap = new ControllerMap({
@@ -105,8 +106,8 @@ describe('ControllerGroup', () => {
   test.each(methodsTestData)(
     '%s method behavior',
     async (methodName, { async, args }) => {
-      const mockMethod = jest.fn();
-      const notCalledMethod = jest.fn();
+      const mockMethod = vi.fn();
+      const notCalledMethod = vi.fn();
       const controller: Controller = {
         [methodName]: mockMethod,
         // @ts-expect-error This test checks for a method that does not exist
@@ -140,7 +141,7 @@ describe('ControllerGroup', () => {
   test.each(methodsTestData)(
     '%s no method calls if controller does not have method name',
     async (methodName, { async, args }) => {
-      const notCalledMethod = jest.fn();
+      const notCalledMethod = vi.fn();
       const controller: Controller = {
         // @ts-expect-error This test checks for a method that does not exist
         'notMethodName': notCalledMethod,

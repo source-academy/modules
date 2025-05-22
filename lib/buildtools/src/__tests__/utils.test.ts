@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest';
 import { findSeverity, type Severity } from '../utils';
 
 describe('test findSeverity', () => {

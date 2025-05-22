@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { mergeConfig } from '../../utils/mergeConfig'; // Update the path accordingly
 
 describe('mergeConfig function', () => {

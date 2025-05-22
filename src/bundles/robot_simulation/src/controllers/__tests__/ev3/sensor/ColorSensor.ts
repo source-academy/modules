@@ -1,23 +1,17 @@
 import * as THREE from 'three';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ColorSensor } from '../../../ev3/sensor/ColorSensor';
 
-jest.mock('three', () => {
-  const three = jest.requireActual('three');
-  return {
-    ...three,
-  };
-});
-
-jest.mock('../../../../engine', () => ({
-  Renderer: jest.fn().mockImplementation(() => ({
-    scene: jest.fn(),
-    render: jest.fn(),
-    getElement: jest.fn(() => document.createElement('canvas')),
+vi.mock('../../../../engine', () => ({
+  Renderer: vi.fn().mockImplementation(() => ({
+    scene: vi.fn(),
+    render: vi.fn(),
+    getElement: vi.fn(() => document.createElement('canvas')),
   })),
 }));
 
-jest.mock('../../../../engine/Render/helpers/Camera', () => ({
-  getCamera: jest.fn().mockImplementation(() => {
+vi.mock('../../../../engine/Render/helpers/Camera', () => ({
+  getCamera: vi.fn().mockImplementation(() => {
     return new THREE.PerspectiveCamera();
   }),
 }));
@@ -30,15 +24,15 @@ describe('ColorSensor', () => {
 
   beforeEach(() => {
     mockChassisWrapper = {
-      getEntity: jest.fn(() => ({
-        worldTranslation: jest.fn().mockReturnValue(new THREE.Vector3()),
+      getEntity: vi.fn(() => ({
+        worldTranslation: vi.fn().mockReturnValue(new THREE.Vector3()),
       })),
     };
     mockRenderer = {
-      add: jest.fn(),
-      scene: jest.fn(),
-      render: jest.fn(),
-      getElement: jest.fn(() => document.createElement('canvas')),
+      add: vi.fn(),
+      scene: vi.fn(),
+      render: vi.fn(),
+      getElement: vi.fn(() => document.createElement('canvas')),
     };
     mockConfig = {
       tickRateInSeconds: 0.1,
@@ -64,17 +58,17 @@ describe('ColorSensor', () => {
     sensor = new ColorSensor(mockChassisWrapper, mockRenderer, mockConfig);
 
     const mockCtx = {
-      getImageData: jest.fn(() => ({
+      getImageData: vi.fn(() => ({
         data: new Uint8ClampedArray([255, 255, 255, 255]),
       })),
-      putImageData: jest.fn(),
-      drawImage: jest.fn(),
-      fillRect: jest.fn(),
-      clearRect: jest.fn(),
+      putImageData: vi.fn(),
+      drawImage: vi.fn(),
+      fillRect: vi.fn(),
+      clearRect: vi.fn(),
       canvas: {},
     };
 
-    HTMLCanvasElement.prototype.getContext = jest
+    HTMLCanvasElement.prototype.getContext = vi
       .fn()
       .mockImplementation((_) => {
         return mockCtx;
