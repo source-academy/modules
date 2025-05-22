@@ -1,5 +1,5 @@
 {
-  "name": "tabs",
+  "name": "@sourceacademy/tabs",
   "private": true,
   "workspaces": [
     "./*"

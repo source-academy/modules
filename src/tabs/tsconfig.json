@@ -4,7 +4,5 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "noEmit": true
-  },
-  "exclude": [],
-  "include": ["**/__tests__"]
+  }
 }

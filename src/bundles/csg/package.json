@@ -5,7 +5,8 @@
   "dependencies": {
     "@jscad/modeling": "2.9.6",
     "@jscad/regl-renderer": "^2.6.1",
-    "@jscad/stl-serializer": "2.1.11"
+    "@jscad/stl-serializer": "2.1.11",
+    "save-file": "^2.3.1"
   },
   "exports": {
     ".": "./dist/index.js",

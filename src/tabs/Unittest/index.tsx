@@ -1,6 +1,5 @@
 import type { SuiteResult, TestContext } from '@sourceacademy/bundle-unittest/types';
-import { getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
-import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
+import { getModuleState, defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
 
 /**
@@ -96,34 +95,12 @@ class TestSuitesTab extends React.PureComponent<Props> {
   }
 }
 
-export default {
-  /**
-   * This function will be called to determine if the component will be
-   * rendered.
-   * @param {DebuggerContext} context
-   * @returns {boolean}
-   */
-  toSpawn: (_context: DebuggerContext): boolean => true,
-
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   * @param {DebuggerContext} context
-   */
-  body: (context: DebuggerContext) => {
+export default defineTab({
+  toSpawn: () => true,
+  body: context => {
     const moduleContext = getModuleState<TestContext>(context, 'unittest');
     return <TestSuitesTab context={moduleContext} />;
   },
-
-  /**
-   * The Tab's icon tooltip in the side contents on Source Academy frontend.
-   */
   label: 'Test suites',
-
-  /**
-   * BlueprintJS IconName element's name, used to render the icon which will be
-   * displayed in the side contents panel.
-   * @see https://blueprintjs.com/docs/#icons
-   */
   iconName: 'lab-test',
-};
+});

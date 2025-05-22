@@ -3,16 +3,18 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@box2d/debug-draw": "^0.10.0",
     "@sourceacademy/bundle-physics_2d": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@sourceacademy/module-buildtools": "workspace:^",
+    "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/react": "^18.3.1"
   },
   "scripts": {
-    "build": "buildtools build tab ."
+    "build": "buildtools build tab .",
+    "lint": "buildtools lint ."
   }
 }

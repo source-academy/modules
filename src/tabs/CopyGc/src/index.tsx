@@ -1,5 +1,6 @@
 import { Slider, Icon } from '@blueprintjs/core';
 import { COMMAND } from '@sourceacademy/bundle-copy_gc/types';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
 import { ThemeColor } from './style';
 
@@ -453,9 +454,9 @@ class CopyGC extends React.Component<Props, State> {
   }
 }
 
-export default {
+export default defineTab({
   toSpawn: () => true,
-  body: (debuggerContext: any) => <CopyGC debuggerContext={debuggerContext} />,
+  body: (debuggerContext) => <CopyGC debuggerContext={debuggerContext} />,
   label: 'Copying Garbage Collector',
   iconName: 'duplicate'
-};
+});

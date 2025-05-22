@@ -14,6 +14,6 @@ export default {
     './jest.polyfills.js'
   ],
   testMatch: [
-    "<rootDir>/**/__tests__/**/*.ts"
+    '<rootDir>/**/__tests__/**/*.ts'
   ]
 };

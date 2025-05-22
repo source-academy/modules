@@ -1,5 +1,5 @@
 import { b2Vec2 } from '@box2d/core';
-import type { ReplResult } from '../../typings/type_helpers';
+import type { ReplResult } from '@sourceacademy/modules-lib/types';
 
 export const ACCURACY = 2;
 export class Vector2 extends b2Vec2 implements ReplResult {

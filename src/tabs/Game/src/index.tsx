@@ -1,3 +1,4 @@
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
 import { Links } from './constants';
 
@@ -33,9 +34,9 @@ class Game extends React.PureComponent<Props> {
   }
 }
 
-export default {
+export default defineTab({
   toSpawn: () => true,
   body: (debuggerContext: any) => <Game debuggerContext={debuggerContext} />,
   label: 'Game Info Tab',
   iconName: 'info-sign'
-};
+});

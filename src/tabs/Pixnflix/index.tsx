@@ -18,6 +18,7 @@ import {
   InputFeed,
   type TabsPacket
 } from '@sourceacademy/bundle-pix_n_flix/types';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React, { type ChangeEvent, type DragEvent } from 'react';
 
 type Props = {
@@ -417,11 +418,11 @@ class PixNFlix extends React.Component<Props, State> {
   }
 }
 
-export default {
+export default defineTab({
   toSpawn: () => true,
   body: (debuggerContext: any) => (
     <PixNFlix debuggerContext={debuggerContext} />
   ),
   label: 'PixNFlix Live Feed',
   iconName: 'mobile-video'
-};
+});

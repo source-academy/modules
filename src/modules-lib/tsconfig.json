@@ -1,9 +1,7 @@
-// modules-lib
+// modules-lib with tests
 {
   "compilerOptions": {
-    "declaration": true,
-    "noEmit": false,
-    "outDir": "dist"
+    "noEmit": true
   },
   "extends": ["../tsconfig.json", "../tabs/tsconfig.json"],
   "include": ["./src"]

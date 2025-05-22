@@ -1,8 +1,8 @@
-import { mat4, vec3 } from 'gl-matrix';
 import {
   functionDeclaration,
   variableDeclaration,
 } from '@sourceacademy/modules-lib/type_map';
+import { mat4, vec3 } from 'gl-matrix';
 import {
   Rune,
   DrawnRune,

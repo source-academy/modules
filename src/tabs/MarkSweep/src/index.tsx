@@ -1,4 +1,5 @@
 import { Slider, Icon } from '@blueprintjs/core';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
 import { ThemeColor } from './style';
 
@@ -463,11 +464,11 @@ class MarkSweep extends React.Component<Props, State> {
   }
 }
 
-export default {
+export default defineTab({
   toSpawn: () => true,
   body: (debuggerContext: any) => (
     <MarkSweep debuggerContext={debuggerContext} />
   ),
   label: 'Mark Sweep Garbage Collector',
   iconName: 'heat-grid'
-};
+});

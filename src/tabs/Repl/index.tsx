@@ -9,7 +9,7 @@ import { IconNames } from '@blueprintjs/icons';
 
 import { FONT_MESSAGE, MINIMUM_EDITOR_HEIGHT } from '@sourceacademy/bundle-repl/config';
 import type { ProgrammableRepl } from '@sourceacademy/bundle-repl/programmable_repl';
-import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
 import AceEditor from 'react-ace';
 
@@ -146,35 +146,13 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
   }
 }
 
-export default {
-  /**
-   * This function will be called to determine if the component will be
-   * rendered.
-   * @param {DebuggerContext} context
-   * @returns {boolean}
-   */
-  toSpawn(_context: DebuggerContext) {
+export default defineTab({
+  toSpawn() {
     return true;
   },
-
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   * @param {DebuggerContext} context
-   */
-  body(context: DebuggerContext) {
+  body(context) {
     return <ProgrammableReplGUI programmableReplInstance={context.context.moduleContexts.repl.state} />;
   },
-
-  /**
-   * The Tab's icon tooltip in the side contents on Source Academy frontend.
-   */
   label: 'Programmable Repl Tab',
-
-  /**
-   * BlueprintJS IconName element's name, used to render the icon which will be
-   * displayed in the side contents panel.
-   * @see https://blueprintjs.com/docs/#icons
-   */
   iconName: 'code'
-};
+});

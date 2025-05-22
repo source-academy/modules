@@ -1,5 +1,6 @@
 import { Button, ButtonGroup, NumericInput } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import type { Simulation } from 'nbody';
 import React from 'react';
 
@@ -185,35 +186,13 @@ class Nbody extends React.Component<Props, State> {
   }
 }
 
-export default {
-  /**
-   * This function will be called to determine if the component will be
-   * rendered. Currently spawns when the result in the REPL is "test".
-   * @param {any} context
-   * @returns {boolean}
-   */
-  toSpawn(context: any) {
+export default defineTab({
+  toSpawn(context) {
     console.log('Nbody tospawn');
     const simulations = context.context?.moduleContexts?.nbody.state.simulations;
     return simulations.length > 0;
   },
-
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   * @param {DebuggerContext} context
-   */
-  body: (context: any) => <Nbody context={context} />,
-
-  /**
-   * The Tab's icon tooltip in the side contents on Source Academy frontend.
-   */
+  body: (context) => <Nbody context={context} />,
   label: 'Nbody Viz Tab',
-
-  /**
-   * BlueprintJS IconName element's name, used to render the icon which will be
-   * displayed in the side contents panel.
-   * @see https://blueprintjs.com/docs/#icons
-   */
   iconName: 'clean',
-};
+});

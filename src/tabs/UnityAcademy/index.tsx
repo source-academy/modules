@@ -8,7 +8,7 @@ import { Button, NumericInput, Checkbox } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { getInstance } from '@sourceacademy/bundle-unity_academy/UnityAcademy';
 import { UNITY_ACADEMY_BACKEND_URL } from '@sourceacademy/bundle-unity_academy/config';
-import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
 
 type Props = {};
@@ -160,35 +160,16 @@ class Unity3DTab extends React.Component<Props> {
   }
 }
 
-export default {
-  /**
-   * This function will be called to determine if the component will be
-   * rendered.
-   * @param {DebuggerContext} context
-   * @returns {boolean}
-   */
-  toSpawn(_context: DebuggerContext) {
+export default defineTab({
+  toSpawn() {
     return getInstance() !== undefined;
   },
 
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   * @param {DebuggerContext} context
-   */
-  body(_context: DebuggerContext) {
+  body() {
     return <Unity3DTab />;
   },
 
-  /**
-   * The Tab's icon tooltip in the side contents on Source Academy frontend.
-   */
   label: 'Unity Academy',
 
-  /**
-   * BlueprintJS IconName element's name, used to render the icon which will be
-   * displayed in the side contents panel.
-   * @see https://blueprintjs.com/docs/#icons
-   */
-  iconName: 'cube'
-};
+  iconName: IconNames.CUBE
+});

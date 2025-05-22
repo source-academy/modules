@@ -1,9 +1,10 @@
-// lintplugin build config
+// modules-lib build tsconfig
 {
   "compilerOptions": {
     "declaration": true,
     "noEmit": false,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "removeComments": false
   },
   "extends": "./tsconfig.json",
   "exclude": ["**/__tests__"]

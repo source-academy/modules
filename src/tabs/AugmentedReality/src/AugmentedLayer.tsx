@@ -1,6 +1,6 @@
+import type { ARState } from '@sourceacademy/bundle-ar/AR';
 import { PlayAreaContext } from 'saar/libraries/calibration_library/PlayAreaContext';
 import { ControlsContext } from 'saar/libraries/controls_library/ControlsContext';
-import type { ARState } from '@sourceacademy/bundle-ar/AR';
 import { AugmentedContent } from './AugmentedContent';
 
 /**

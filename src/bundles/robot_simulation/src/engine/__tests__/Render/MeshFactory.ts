@@ -49,7 +49,7 @@ jest.mock('three', () => {
     ...originalModule,
     BoxGeometry: jest.fn(),
     MeshPhysicalMaterial: jest.fn(),
-    Mesh: jest.fn().mockImplementation(function (geometry, material) {
+    Mesh: jest.fn().mockImplementation(function (this: any, geometry, material) {
       this.geometry = geometry;
       this.material = material;
       this.position = new Vector3();

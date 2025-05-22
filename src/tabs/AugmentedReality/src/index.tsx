@@ -1,4 +1,6 @@
+import { IconNames } from '@blueprintjs/icons';
 import { getModuleState } from '@sourceacademy/bundle-ar/AR';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
 import { ScreenStateContext } from 'saar/libraries/screen_state_library/ScreenStateContext';
 import { StartButton } from './StartButton';
@@ -31,31 +33,9 @@ class ARMainComponent extends React.Component<Props> {
   }
 }
 
-export default {
-  /**
-   * This function will be called to determine if the component will be
-   * rendered. Currently spawns when the result in the REPL is "test".
-   * @param {DebuggerContext} context
-   * @returns {boolean}
-   */
-  toSpawn: (_: any) => getModuleState() !== undefined,
-
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   * @param {DebuggerContext} context
-   */
-  body: (_context: any) => <ARMainComponent />,
-
-  /**
-   * The Tab's icon tooltip in the side contents on Source Academy frontend.
-   */
+export default defineTab({
+  toSpawn: () => getModuleState() !== undefined,
+  body: () => <ARMainComponent />,
   label: 'AR Tab',
-
-  /**
-   * BlueprintJS IconName element's name, used to render the icon which will be
-   * displayed in the side contents panel.
-   * @see https://blueprintjs.com/docs/#icons
-   */
-  iconName: 'intelligence',
-};
+  iconName: IconNames.Intelligence
+});

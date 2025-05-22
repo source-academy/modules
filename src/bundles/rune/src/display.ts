@@ -1,5 +1,5 @@
-import context from 'js-slang/context';
 import { functionDeclaration } from '@sourceacademy/modules-lib/type_map';
+import context from 'js-slang/context';
 import { AnaglyphRune, HollusionRune } from './functions';
 import { AnimatedRune, NormalRune, type DrawnRune, type Rune, type RuneAnimation } from './rune';
 import { throwIfNotRune } from './runes_ops';
