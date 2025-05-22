@@ -1,10 +1,8 @@
 import { Classes, Intent, OverlayToaster, type ToastProps } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { SourceDocumentation, getNames, runInContext, type Context } from 'js-slang';
-
 // Importing this straight from js-slang doesn't work for whatever reason
 import createContext from 'js-slang/dist/createContext';
-
 import { Chapter, Variant } from 'js-slang/dist/types';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import React, { useCallback } from 'react';
