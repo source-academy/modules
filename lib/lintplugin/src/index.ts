@@ -1,18 +1,22 @@
 import type { ESLint } from 'eslint';
-import collateTypeImports from './rules/typeimports.js';
-import { jsConfig, tsConfig } from './configs.js';
-import moduleTagPresent from './rules/moduleTag.js';
+import { jsConfig, tsConfig } from './configs';
+import moduleTagPresent from './rules/moduleTag';
+import tabType from './rules/tabType';
+import collateTypeImports from './rules/typeimports';
 
 const plugin: ESLint.Plugin = {
   name: 'Source Academy Lint Plugin',
   rules: {
+    // @ts-expect-error typescript-eslint rules are typed differently
     'collate-type-imports': collateTypeImports,
-    'module-tag-present': moduleTagPresent
+    'module-tag-present': moduleTagPresent,
+    'tab-type': tabType
   },
   configs: {
     js: jsConfig,
+    // @ts-expect-error tseslint doesn't play nice with eslint's typing
     ts: tsConfig
   }
-}
+};
 
 export default plugin;

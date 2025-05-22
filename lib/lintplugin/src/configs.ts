@@ -1,9 +1,9 @@
 import stylePlugin from '@stylistic/eslint-plugin';
-import type { Linter } from 'eslint'
+import type { Linter } from 'eslint';
 import * as importPlugin from 'eslint-plugin-import';
+import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import globals from 'globals'
-import saLintPlugin from '.'
+import saLintPlugin from '.';
 
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
 const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
@@ -48,7 +48,7 @@ export const jsConfig = {
       { markers: todoTreeKeywordsAll }
     ],
   }
-} satisfies Linter.Config
+} satisfies Linter.Config;
 
 export const tsConfig = {
   // Global typescript rules
@@ -75,4 +75,4 @@ export const tsConfig = {
 
     '@sourceacademy/collate-type-imports': 'warn'
   }
-} satisfies Linter.Config
+} satisfies Linter.Config;

@@ -3,12 +3,17 @@
   "version": "1.0.0",
   "type": "module",
   "exports": {
-    ".": "./dist/index.js"
+    ".": {
+      "import": "./dist.js",
+      "default": null
+    }
   },
   "dependencies": {
     "@es-joy/jsdoccomment": "^0.50.1",
+    "@stylistic/eslint-plugin": "^4.2.0",
     "@typescript-eslint/utils": "^8.32.1",
     "eslint-plugin-import": "^2.31.0",
+    "globals": "^15.11.0",
     "typescript-eslint": "^8.24.1"
   },
   "peerDependencies": {
@@ -21,9 +26,9 @@
     "typescript": "^5.8.2"
   },
   "scripts": {
-    "build": "tsc --project ./tsconfig.prod.json",
+    "build": "tsc --project ./tsconfig.prod.json && node ./build.js",
     "tsc": "tsc --project ./tsconfig.json",
-    "test": "jest"
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest)"
   },
   "jest": {
     "displayName": "Lint Plugin",

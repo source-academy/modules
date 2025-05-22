@@ -1,6 +1,6 @@
 import { ESLintUtils, type TSESTree as es } from '@typescript-eslint/utils';
 
-const createRule = ESLintUtils.RuleCreator.withoutDocs
+const createRule = ESLintUtils.RuleCreator.withoutDocs;
 
 function isImportSpecifier(spec: es.ImportDeclaration['specifiers'][number]): spec is es.ImportSpecifier {
   return spec.type === 'ImportSpecifier';
@@ -50,6 +50,6 @@ const collateTypeImports = createRule({
       });
     }
   })
-})
+});
 
 export default collateTypeImports;
