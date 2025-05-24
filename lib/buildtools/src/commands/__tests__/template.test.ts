@@ -9,8 +9,8 @@ import getTemplateCommand from '../template';
 vi.spyOn(utils, 'getBundlesDir').mockResolvedValue('/src/bundles');
 vi.spyOn(utils, 'getTabsDir').mockResolvedValue('/src/tabs');
 
-vi.mock('../../templates/print', async importActual => {
-  const actualTemplates: any = await importActual();
+vi.mock(import('../../templates/print'), async importActual => {
+  const actualTemplates = await importActual();
   return ({
     ...actualTemplates,
     askQuestion: vi.fn(),

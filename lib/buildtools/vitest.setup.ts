@@ -13,27 +13,25 @@ vi.mock('chalk', () => {
   };
 });
 
-vi.mock('fs/promises', () => ({
-  default: {
-    copyFile: vi.fn(() => Promise.resolve()),
-    cp: vi.fn(() => Promise.resolve()),
-    open: vi.fn(),
-    mkdir: vi.fn(() => Promise.resolve()),
-    writeFile: vi.fn(() => Promise.resolve()),
-  }
-}));
-
-vi.spyOn(process, 'exit').mockImplementation(code => {
-  throw new Error(`process.exit called with ${code}`);
-});
-
-vi.mock('lodash', async importOriginal => {
-  const lodash: any = await importOriginal();
+vi.mock(import('fs/promises'), async importOriginal => {
+  const { default: {
+    constants
+  }} = await importOriginal();
 
   return {
     default: {
-      ...lodash,
-      memoize: x => x
+      constants,
+      access: vi.fn(() => Promise.resolve()),
+      copyFile: vi.fn(() => Promise.resolve()),
+      cp: vi.fn(() => Promise.resolve()),
+      mkdir: vi.fn(() => Promise.resolve()),
+      open: vi.fn(),
+      readFile: vi.fn(),
+      writeFile: vi.fn(() => Promise.resolve()),
     }
-  };
+  } as any;
+});
+
+vi.spyOn(process, 'exit').mockImplementation(code => {
+  throw new Error(`process.exit called with ${code}`);
 });

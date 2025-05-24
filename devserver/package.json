@@ -10,6 +10,7 @@
     "@blueprintjs/icons": "^5.9.0",
     "ace-builds": "^1.25.1",
     "classnames": "^2.3.1",
+    "js-slang": "^1.0.81",
     "re-resizable": "^6.9.11",
     "react": "^18.3.1",
     "react-ace": "^10.1.0",
@@ -19,10 +20,15 @@
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/browser": "^3.1.4",
+    "playwright": "^1.52.0",
     "sass": "^1.85.0",
-    "vite": "^6.3.4"
+    "vite": "^6.3.4",
+    "vite-plugin-node-polyfills": "^0.23.0",
+    "vitest-browser-react": "^0.2.0"
   },
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "postinstall": "playwright install"
   }
 }

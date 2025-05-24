@@ -1,11 +1,15 @@
 // Buildtools Vitest config
-import { defineProject } from 'vitest/config';
+import { defineProject, mergeConfig } from 'vitest/config';
+import rootConfig from '../../vitest.config';
 
-export default defineProject({
-  test: {
-    clearMocks: true,
-    environment: 'node',
-    name: 'Build Tools',
-    setupFiles: ['./vitest.setup.ts'],
-  }
-});
+export default mergeConfig(
+  rootConfig,
+  defineProject({
+    test: {
+      clearMocks: true,
+      environment: 'node',
+      name: 'Build Tools',
+      setupFiles: ['./vitest.setup.ts'],
+    }
+  })
+);

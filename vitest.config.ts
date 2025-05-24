@@ -1,7 +1,6 @@
 // Root vitest config
-import { defineConfig } from 'vitest/config';
+import { defineConfig, coverageConfigDefaults } from 'vitest/config';
 
-// TODO: Migrate this configuration to vitest 3.2 when it becomes stable
 export default defineConfig({
   test: {
     workspace: [
@@ -9,6 +8,16 @@ export default defineConfig({
       './devserver/vite.config.ts',
       './src/bundles',
       './src/tabs'
-    ]
+    ],
+    coverage: {
+      provider: 'v8',
+      exclude: [
+        ...coverageConfigDefaults.exclude,
+        '**/__mocks__/**',
+        '**/__test_mocks__/**',
+        '**/bin/**',
+        '**/build.js'
+      ]
+    }
   }
 });

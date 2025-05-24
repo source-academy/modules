@@ -1,16 +1,15 @@
 // @ts-check
 
 import js from '@eslint/js';
+import saLintPlugin from '@sourceacademy/lint-plugin';
 import stylePlugin from '@stylistic/eslint-plugin';
 import * as importPlugin from 'eslint-plugin-import';
-import jestPlugin from 'eslint-plugin-jest';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import vitestPlugin from 'eslint-plugin-vitest';
 import globals from 'globals';
 
 import tseslint from 'typescript-eslint';
-
-import typeImportsPlugin from './scripts/dist/typeimports.js';
 
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
 const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
@@ -21,10 +20,12 @@ export default tseslint.config(
     ignores: [
       '**/*.snap',
       'build/**',
-      'scripts/**/templates/templates/**',
-      'scripts/src/build/docs/__tests__/test_mocks/**',
-      'scripts/dist',
-      'src/**/samples/**'
+      'lib/buildtools/bin',
+      'lib/buildtools/src/build/__test_mocks__',
+      'lib/lintplugin/dist.js',
+      '**/dist/**',
+      'src/**/samples/**',
+      '**/*.d.ts'
     ]
   },
   js.configs.recommended,
@@ -78,7 +79,7 @@ export default tseslint.config(
     },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
-      'typeImports': typeImportsPlugin
+      '@sourceacademy': saLintPlugin
     },
     rules: {
       'no-unused-vars': 'off', // Use the typescript eslint rule instead
@@ -91,7 +92,7 @@ export default tseslint.config(
       '@typescript-eslint/prefer-ts-expect-error': 'warn',
       '@typescript-eslint/sort-type-constituents': 'warn',
 
-      'typeImports/collate-type-imports': 'warn'
+      '@sourceacademy/collate-type-imports': 'warn'
     }
   },
   {
@@ -112,14 +113,23 @@ export default tseslint.config(
   },
   {
     // Rules for bundles and tabs
-    files: ['src/**/*.ts*'],
+    files: [
+      'src/bundles/**/*.ts*',
+      'src/tabs/**/*.ts*',
+    ],
     languageOptions: {
       globals: globals.browser,
       parserOptions: {
-        project: './src/tsconfig.json'
+        project: `${import.meta.dirname}/src/tsconfig.json`
       }
     },
     rules: {
+      'func-style': ['warn', 'declaration', {
+        allowArrowFunctions: true,
+        overrides: {
+          namedExports: 'declaration'
+        }
+      }],
       'prefer-const': 'warn', // Was 'error'
 
       '@typescript-eslint/no-empty-object-type': ['error', {
@@ -127,22 +137,20 @@ export default tseslint.config(
         allowWithName: '(?:Props)|(?:State)$'
       }],
       '@typescript-eslint/no-namespace': 'off', // Was 'error'
-      '@typescript-eslint/no-var-requires': 'warn', // Was 'error'
       '@typescript-eslint/no-unsafe-function-type': 'off',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
     },
   },
   {
     // Rules for scripts
-    files: ['scripts/**/*.ts'],
-    ignores: ['scripts/src/templates/templates/**/*.ts*'],
+    files: ['lib/**/*.ts'],
     languageOptions: {
-      parser: tseslint.parser,
       parserOptions: {
-        project: './scripts/tsconfig.json'
+        project: `${import.meta.dirname}/lib/tsconfig.json`
       }
     },
     rules: {
+      'func-style': 'off',
       'import/extensions': ['error', 'never', { json: 'always' }],
       'no-constant-condition': 'off', // Was 'error',
 
@@ -152,17 +160,14 @@ export default tseslint.config(
       '@typescript-eslint/require-await': 'error',
       '@typescript-eslint/return-await': ['error', 'in-try-catch']
     },
-    settings: {
-      'import/internal-regex': '^@src/',
-    },
   },
   {
     // Rules for devserver,
-    files: ['devserver/**/*.ts*'],
+    files: ['./devserver/**/*.ts*'],
     ignores: ['dist'],
     languageOptions: {
       parserOptions: {
-        project: './devserver/tsconfig.json'
+        project: `${import.meta.dirname}/devserver/tsconfig.json`
       },
       globals: {
         ...globals.browser,
@@ -172,20 +177,49 @@ export default tseslint.config(
   },
   {
     // Rules for tests
-    ...jestPlugin.configs['flat/recommended'],
+    plugins: {
+      'vitest': vitestPlugin,
+    },
     files: [
       '**/__tests__/**/*.ts*',
       '**/__mocks__/**/*.ts*',
-      '**/jest.setup.ts'
+      '**/vitest.*.ts'
     ],
     rules: {
-      ...jestPlugin.configs['flat/recommended'].rules,
-      'jest/expect-expect': ['error', { assertFunctionNames: ['expect*'] }],
-      'jest/no-alias-methods': 'off',
-      'jest/no-conditional-expect': 'off',
-      'jest/no-export': 'off',
-      'jest/require-top-level-describe': 'off',
-      'jest/valid-describe-callback': 'off'
+      ...vitestPlugin.configs.recommended.rules,
+      'vitest/expect-expect': ['error', { assertFunctionNames: ['expect*'] }],
+      'vitest/no-alias-methods': 'off',
+      'vitest/no-conditional-expect': 'off',
+      'vitest/no-export': 'off',
+      'vitest/require-top-level-describe': 'off',
+      'vitest/valid-describe-callback': 'off',
+
+      'import/extensions': ['error', 'never', {
+        config: 'ignore'
+      }]
+    }
+  },
+  {
+    // Rules for cjs files
+    files: ['**/*.cjs'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off', // Was 'error'
+    }
+  },
+  {
+    // Rules for scripts
+    rules: {
+      'no-fallthrough': 'off'
+    }
+  },
+  {
+    // Rules specifically for tabs
+    files: [
+      'src/tabs/*/index.tsx',
+      'src/tabs/*/src/index.tsx',
+    ],
+    rules: {
+      '@sourceacademy/tab-type': 'error'
     }
   }
 );

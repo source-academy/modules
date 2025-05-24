@@ -1,6 +1,11 @@
 import context from 'js-slang/context'
 
 /**
+ * This is a mocked module used for testing the buildtools
+ * @module test0
+ */
+
+/**
  * This is just some test function
  * @param _param0 Test parameter
  * @returns Zero

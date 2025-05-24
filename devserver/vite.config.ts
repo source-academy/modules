@@ -1,16 +1,41 @@
+/// <reference types="@vitest/browser/providers/playwright" />
+
 import pathlib from 'path';
 import react from '@vitejs/plugin-react';
-import { defineConfig, loadEnv } from 'vite';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import { loadEnv, defineConfig } from 'vite'
+import { defineProject, mergeConfig } from 'vitest/config';
+import type { BrowserCommand } from 'vitest/node';
+import rootConfig from '../vitest.config'
+
+const setLocalStorage: BrowserCommand<[key: string, value: any]> = async (ctx, key, value) => {
+  if (ctx.provider.name === 'playwright') {
+    await ctx.page.evaluate(([key, value]) => localStorage.setItem(key, value), [key, value])
+  }
+}
+
+declare module '@vitest/browser/context' {
+  interface BrowserCommands {
+    setLocalStorage: (key: string, value: string) => Promise<void>
+  }
+}
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
-  return {
-    plugins: [react()],
+  return mergeConfig(
+    rootConfig,
+    defineProject({
+    plugins: [
+      nodePolyfills({
+        include: ['path']
+      }),
+      react(),
+    ],
     resolve: {
       preserveSymlinks: true,
       alias:[{
         find: /^js-slang\/context/,
-        replacement: pathlib.resolve('./src/mockModuleContext')
+        replacement: pathlib.resolve(import.meta.dirname, 'src', 'mockModuleContext.ts')
       }]
     },
     define: {
@@ -21,8 +46,30 @@ export default defineConfig(({ mode }) => {
         // Node.js global to browser globalThis
         define: {
           global: 'globalThis'
-        },
-      }
+        }
+      },
+      include: [
+        "vite-plugin-node-polyfills/shims/buffer",
+        "vite-plugin-node-polyfills/shims/global",
+        "vite-plugin-node-polyfills/shims/process",
+      ]
     },
-  };
-});
+    test: {
+      name: 'devserver',
+      include: [
+        "**/__tests__/**/*.ts*"
+      ],
+      browser: {
+        enabled: true,
+        headless: false,
+        provider: 'playwright',
+        instances: [{
+          browser: 'chromium'
+        }],
+        commands: {
+          setLocalStorage
+        }
+      }
+    }
+  }));
+})

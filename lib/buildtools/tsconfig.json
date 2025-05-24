@@ -10,6 +10,6 @@
   "include": ["./src", "vitest.setup.ts"],
   "exclude": [
     "./bin",
-    "./src/build/__test_mocks__"
+    "src/__test_mocks__"
   ]
 }

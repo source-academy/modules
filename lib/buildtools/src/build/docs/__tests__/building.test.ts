@@ -2,9 +2,10 @@ import fs from 'fs/promises';
 import { resolve } from 'path';
 import type { ProjectReflection } from 'typedoc';
 import { expect, test, vi, type MockedFunction } from 'vitest';
-import * as utils from '../../../utils';
 import { initTypedoc, initTypedocForSingleBundle } from '../docsUtils';
 import { buildJson } from '../json';
+
+vi.mock(import('../../../utils'));
 
 const mockedWriteFile = fs.writeFile as MockedFunction<typeof fs.writeFile>;
 
@@ -25,12 +26,11 @@ const test1Obj = {
   }
 };
 
-function matchObj<T>(raw: string, expected: T) {
+function expectObj<T>(raw: string, expected: T) {
   expect(JSON.parse(raw)).toMatchObject(expected as any);
 }
 
-const testMocksDir = resolve(`${import.meta.dirname}/../../__test_mocks__`);
-vi.spyOn(utils, 'getBundlesDir').mockResolvedValue(`${testMocksDir}/bundles`);
+const testMocksDir = resolve(import.meta.dirname, '../../../__test_mocks__');
 
 test('Building the json documentation for a single bundle', async () => {
   const project = await initTypedocForSingleBundle({
@@ -39,10 +39,11 @@ test('Building the json documentation for a single bundle', async () => {
     directory: `${testMocksDir}/bundles/test0`,
     entryPoint: `${testMocksDir}/bundles/test0/index.ts`,
   });
-  await buildJson('test0', project, 'build');
+  await buildJson('test0', project, '/build');
 
-  const [[, test0str]] = mockedWriteFile.mock.calls;
-  matchObj(test0str as string, test0Obj);
+  const [[test0Path, test0str]] = mockedWriteFile.mock.calls;
+  expectObj(test0str as string, test0Obj);
+  expect(test0Path).toEqual('/build/jsons/test0.json');
 });
 
 test('initTypedoc for muiltiple bundles', async () => {
@@ -65,12 +66,15 @@ test('initTypedoc for muiltiple bundles', async () => {
   });
 
   const test0Reflection = project.getChildByName('test0') as ProjectReflection;
-  await buildJson('test0', test0Reflection, 'build');
+  await buildJson('test0', test0Reflection, '/build');
 
   const test1Reflection = project.getChildByName('test1') as ProjectReflection;
-  await buildJson('test1', test1Reflection, 'build');
+  await buildJson('test1', test1Reflection, '/build');
 
-  const [[, test0str], [, test1str]] = mockedWriteFile.mock.calls;
-  matchObj(test0str as string, test0Obj);
-  matchObj(test1str as string, test1Obj);
+  const [[test0Path, test0str], [test1Path, test1str]] = mockedWriteFile.mock.calls;
+  expectObj(test0str as string, test0Obj);
+  expect(test0Path).toEqual('/build/jsons/test0.json');
+
+  expectObj(test1str as string, test1Obj);
+  expect(test1Path).toEqual('/build/jsons/test1.json');
 });

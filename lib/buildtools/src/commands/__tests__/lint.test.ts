@@ -6,8 +6,8 @@ const lintFilesMock = vi.hoisted(() => vi.fn());
 
 vi.spyOn(utils, 'getGitRoot').mockResolvedValue('/');
 
-vi.mock('eslint', async importActual => {
-  const actualEslint: any = await importActual();
+vi.mock(import('eslint'), async importActual => {
+  const actualEslint = await importActual();
   return {
     ...actualEslint,
     ESLint: class {
@@ -22,7 +22,7 @@ vi.mock('eslint', async importActual => {
       loadFormatter = () => Promise.resolve({
         format: () => Promise.resolve('')
       });
-    }
+    } as any
   };
 });
 
