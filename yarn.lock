@@ -598,12 +598,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@box2d/debug-draw@npm:^0.10.0":
-  version: 0.10.0
-  resolution: "@box2d/debug-draw@npm:0.10.0"
+"@box2d/core@npm:^0.11.0":
+  version: 0.11.0
+  resolution: "@box2d/core@npm:0.11.0"
+  checksum: 10c0/69563dc93543ae0ac6877dfcc8268c2e5b58e909d4eb6ee04138a90d42a1a9f3453a59d0c51673bbec532d8de5946ea386e4c6a7c0d00309ef7860db6b505a26
+  languageName: node
+  linkType: hard
+
+"@box2d/debug-draw@npm:^0.11.0":
+  version: 0.11.0
+  resolution: "@box2d/debug-draw@npm:0.11.0"
   dependencies:
-    "@box2d/core": "npm:^0.10.0"
-  checksum: 10c0/32fd528cffed8f5575f4fd8021a8f171052af45f0935edea471275fdbb77e26762cd5efafa7e79c66f56f514c96cf30dacd3e2cefecd3cb5eebabfcee13d1726
+    "@box2d/core": "npm:^0.11.0"
+  checksum: 10c0/0d0a09a4aef076402ad7018db38a5bfbf20db3fa118af6e86d44a1fb545c5bd8a35e76a6e08c810f464e256a18acd361350fec77deac44c32a4b041192f28d9e
   languageName: node
   linkType: hard
 
@@ -7841,7 +7848,7 @@ __metadata:
     "@blueprintjs/core": "npm:^5.10.2"
     "@blueprintjs/icons": "npm:^5.9.0"
     "@box2d/core": "npm:^0.10.0"
-    "@box2d/debug-draw": "npm:^0.10.0"
+    "@box2d/debug-draw": "npm:^0.11.0"
     "@commander-js/extra-typings": "npm:^13.0.0"
     "@dimforge/rapier3d-compat": "npm:^0.11.2"
     "@jscad/modeling": "npm:2.9.6"
