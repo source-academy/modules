@@ -66,7 +66,7 @@
     "acorn": "^8.8.1",
     "astring": "^1.8.6",
     "chalk": "^5.0.1",
-    "commander": "^13.0.0",
+    "commander": "^14.0.0",
     "console-table-printer": "^2.11.1",
     "esbuild": "^0.25.0",
     "eslint": "^9.21.0",
