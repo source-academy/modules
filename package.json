@@ -99,7 +99,7 @@
     "@dimforge/rapier3d-compat": "^0.11.2",
     "@jscad/modeling": "2.9.6",
     "@jscad/regl-renderer": "^2.6.1",
-    "@jscad/stl-serializer": "2.1.11",
+    "@jscad/stl-serializer": "2.1.20",
     "ace-builds": "^1.25.1",
     "classnames": "^2.3.1",
     "gl-matrix": "^3.3.0",
