@@ -3676,11 +3676,11 @@ __metadata:
   linkType: hard
 
 "console-table-printer@npm:^2.11.1":
-  version: 2.13.0
-  resolution: "console-table-printer@npm:2.13.0"
+  version: 2.14.0
+  resolution: "console-table-printer@npm:2.14.0"
   dependencies:
     simple-wcswidth: "npm:^1.0.1"
-  checksum: 10c0/a97d2363f9eb258e10d47a9d0f7b3d906b30b5536fb119d027571e93bf97f7d06e28a9c15c6eb44cf59154397748d2d4a857e70c83ed43a09d241fb2e606afcd
+  checksum: 10c0/6dd4cc5db9e4d8098a292f2baae686e481eb62aaf27a349b45a4bf22cc998122dd6cca10af2d9812e2470a9d5a5d180371b163ec76e2e902a0c9257704134d04
   languageName: node
   linkType: hard
 
