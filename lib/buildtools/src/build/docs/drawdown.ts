@@ -1,7 +1,8 @@
-/* eslint-disable*/
+/* eslint-disable */
+// @ts-nocheck
 /**
- * Module to convert from markdown into HTML
- * drawdown.js
+ * Module to convert from markdown into HTML\
+ * drawdown.js\
  * (c) Adam Leggett
  */
 

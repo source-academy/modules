@@ -13,7 +13,7 @@ function specToString(spec: es.ImportSpecifier) {
     }
     return `${spec.imported.name} as ${spec.local.name}`;
   }
-  return '';
+  throw new Error(`Expected identifier, got ${spec.imported.type}`);
 }
 
 const collateTypeImports = createRule({
@@ -40,11 +40,7 @@ const collateTypeImports = createRule({
           const regularSpecs = (node.specifiers as es.ImportSpecifier[]).map(specToString);
 
           return [
-            fixer.remove(node),
-            fixer.insertTextAfter(
-              node,
-              `import type { ${regularSpecs.join(', ')} } from '${node.source.value}'`
-            )
+            fixer.replaceText(node, `import type { ${regularSpecs.join(', ')} } from '${node.source.value}'`)
           ];
         }
       });

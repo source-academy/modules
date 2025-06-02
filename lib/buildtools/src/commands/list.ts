@@ -2,7 +2,7 @@ import { Command } from '@commander-js/extra-typings';
 import chalk from 'chalk';
 import { resolveAllBundles, resolveSingleBundle } from '../build/manifest';
 import { resolveAllTabs, resolveSingleTab } from '../build/modules/tab';
-import { getBundlesDir, getTabsDir } from '../utils';
+import { getBundlesDir, getTabsDir } from '../getGitRoot';
 
 export const getListBundlesCommand = () => new Command('bundle')
   .description('Lists all the bundles present or the information for a specific bundle in a given directory')
@@ -21,7 +21,11 @@ export const getListBundlesCommand = () => new Command('bundle')
       }
     } else {
       const manifest = await resolveSingleBundle(directory);
-      console.log(chalk.magentaBright(`Bundle '${manifest.name}' found in ${directory}`));
+      if (!manifest) {
+        throw new Error(`No bundle found at ${directory}!`);
+      } else {
+        console.log(chalk.magentaBright(`Bundle '${manifest.name}' found in ${directory}`));
+      }
     }
   });
 

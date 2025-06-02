@@ -6,10 +6,10 @@ import { buildTab } from '../tab';
 
 const testMocksDir = resolve(import.meta.dirname, '../../../', '__test_mocks__');
 
-const written = [];
+const written: string[] = [];
 vi.spyOn(fs, 'open').mockResolvedValue({
   createWriteStream: () => ({
-    write: data => {
+    write: (data: string) => {
       written.push(data);
     }
   }),
@@ -31,6 +31,7 @@ test('build bundle', async () => {
   expect(fs.open).toHaveBeenCalledWith('/build/bundles/test0.js', 'w');
 
   const data = written.join('');
+  expect(data.startsWith('export default')).toEqual(true);
 
   // Trim the export default
   const trimmed = (data as string).slice('export default'.length);

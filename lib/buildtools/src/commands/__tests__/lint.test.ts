@@ -1,5 +1,5 @@
 import { vi, expect, describe, test } from 'vitest';
-import * as utils from '../../utils';
+import * as utils from '../../getGitRoot';
 import { getLintCommand } from '../lint';
 
 const lintFilesMock = vi.hoisted(() => vi.fn());
@@ -13,7 +13,7 @@ vi.mock(import('eslint'), async importActual => {
     ESLint: class {
       public fix: boolean;
 
-      constructor({ fix }) {
+      constructor({ fix }: { fix: boolean }) {
         this.fix = fix;
       }
 

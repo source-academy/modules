@@ -2,12 +2,7 @@
   "name": "@sourceacademy/lint-plugin",
   "version": "1.0.0",
   "type": "module",
-  "exports": {
-    ".": {
-      "import": "./dist.js",
-      "default": null
-    }
-  },
+  "exports": "./dist.js",
   "dependencies": {
     "@es-joy/jsdoccomment": "^0.50.1",
     "@stylistic/eslint-plugin": "^4.2.0",

@@ -1,5 +1,6 @@
 import { ESLint } from 'eslint';
-import { findSeverity, getGitRoot, type Severity } from '../utils';
+import { getGitRoot } from '../getGitRoot';
+import { findSeverity, type Severity } from '../utils';
 
 interface LintResults {
   formatted: string
@@ -42,7 +43,7 @@ export async function runEslint(directory: string, fix: boolean): Promise<LintRe
   } catch (error) {
     return {
       severity: 'error',
-      formatted: error.toString()
+      formatted: `${error}`
     };
   }
 }

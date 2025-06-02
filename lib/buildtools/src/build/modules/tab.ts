@@ -1,5 +1,7 @@
 import pathlib from 'path';
 import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild';
+import _ from 'lodash';
+import { collateResults, type BuildResult } from '../../utils';
 import { resolveAllBundles, resolvePaths, type ResolvedBundle } from '../manifest';
 import { commonEsbuildOptions, outputBundleOrTab } from './commons';
 
@@ -65,7 +67,7 @@ export async function resolveAllTabs(bundlesDir: string, tabsDir: string) {
 /**
  * Build a tab at the given directory
  */
-export async function buildTab(tabDir: string, outDir: string) {
+export async function buildTab(tabDir: string, outDir: string): Promise<BuildResult> {
   const tab = await resolveSingleTab(tabDir);
 
   const { outputFiles: [result]} = await esbuild({
@@ -82,15 +84,14 @@ export async function buildTab(tabDir: string, outDir: string) {
     tsconfig: `${tab.directory}/tsconfig.json`,
     plugins: [tabContextPlugin],
   });
-  await outputBundleOrTab(result, tab.name, 'tab', outDir);
+  return outputBundleOrTab(result, tab.name, 'tab', outDir);
 }
 
-export async function buildTabs(manifest: Record<string, ResolvedBundle>, outDir: string) {
-  await Promise.all(Object.values(manifest).map(async ({ manifest: { tabs } }) => {
-    if (tabs) {
-      await Promise.all(tabs.map(async tabName => {
-        await buildTab(tabName, outDir);
-      }));
-    }
-  }));
+/**
+ * Find all the tabs within the given directory and build them all at once
+ */
+export async function buildTabs(resolvedBundles: Record<string, ResolvedBundle>, tabsDir: string, outDir: string) {
+  const tabNames = _.uniq(Object.values(resolvedBundles).map(({ manifest: { tabs } }) => tabs ?? []));
+  const results = await Promise.all(tabNames.map(tabName => buildTab(`${tabsDir}/${tabName}`, outDir)));
+  return collateResults(results);
 }

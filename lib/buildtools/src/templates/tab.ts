@@ -66,7 +66,7 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
   const newManifest: BundleManifest = {
     ...manifest[moduleName],
     tabs: [
-      ...manifest[moduleName].tabs,
+      ...manifest[moduleName].tabs ?? [],
       tabName
     ]
   };

@@ -7,7 +7,7 @@ import { getBuildDocsCommand, getBuildJsonCommand } from '../build';
 
 vi.spyOn(manifest, 'resolveSingleBundle');
 vi.spyOn(manifest, 'resolveAllBundles');
-vi.mock(import('../../utils'));
+vi.mock(import('../../getGitRoot'));
 
 const testMocksDir = resolve(import.meta.dirname, '../../__test_mocks__');
 const mockedResolveSingleBundle = manifest.resolveSingleBundle as MockedFunction<typeof manifest.resolveSingleBundle>;

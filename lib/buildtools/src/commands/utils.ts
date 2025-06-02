@@ -63,9 +63,3 @@ export type EntriesOfRecord<T extends Record<any, any>> = ValuesOfRecord<{
 export function objectEntries<T extends Record<any, any>>(obj: T) {
   return Object.entries(obj) as EntriesOfRecord<T>[];
 }
-
-export interface BuildInputs {
-  bundles?: string[] | null;
-  tabs?: string[] | null;
-  modulesSpecified?: boolean;
-}

@@ -1,10 +1,11 @@
 import type { Interface } from 'readline/promises';
 import { Command } from '@commander-js/extra-typings';
 
+import { getBundlesDir, getTabsDir } from '../getGitRoot';
 import { addNew as addNewModule } from '../templates/bundle';
 import { error as _error, askQuestion, getRl, info, warn } from '../templates/print';
 import { addNew as addNewTab } from '../templates/tab';
-import { getBundlesDir, getTabsDir } from '../utils';
+import { isNodeError } from '../utils';
 
 async function askMode(rl: Interface) {
   while (true) {
@@ -32,7 +33,11 @@ export default function getTemplateCommand() {
         if (mode === 'module') await addNewModule(bundlesDir, rl);
         else if (mode === 'tab') await addNewTab(bundlesDir, tabsDir, rl);
       } catch (error) {
-        _error(`ERROR: ${error.message}`);
+        if (isNodeError(error)) {
+          _error(`ERROR: ${error.message}`);
+        } else {
+          _error(`ERROR: ${error}`);
+        }
         info('Terminating module app...');
       } finally {
         rl.close();

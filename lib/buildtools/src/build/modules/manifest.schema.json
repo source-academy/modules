@@ -16,8 +16,8 @@
       "requires": {
         "enum": [1, 2, 3, 4],
         "description": "Minimum Source version required to run this bundle"
-      },
-      "additionalProperties": false
-    }
+      }
+    },
+    "additionalProperties": false
   }
 }

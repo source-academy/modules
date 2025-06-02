@@ -6,19 +6,19 @@ export const getRl = () => createInterface({
   output: process.stdout
 });
 
-export function info(...args: any[]) {
+export function info(...args: string[]) {
   return console.log(...args.map(string => chalk.grey(string)));
 }
 
-export function error(...args) {
+export function error(...args: string[]) {
   return console.log(...args.map(string => chalk.red(string)));
 }
 
-export function warn(...args) {
+export function warn(...args: string[]) {
   return console.log(...args.map(string => chalk.yellow(string)));
 }
 
-export function success(...args) {
+export function success(...args: string[]) {
   return console.log(...args.map(string => chalk.green(string)));
 }
 

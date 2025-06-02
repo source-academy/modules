@@ -5,7 +5,7 @@ import { expect, test, vi, type MockedFunction } from 'vitest';
 import { initTypedoc, initTypedocForSingleBundle } from '../docsUtils';
 import { buildJson } from '../json';
 
-vi.mock(import('../../../utils'));
+vi.mock(import('../../../getGitRoot'));
 
 const mockedWriteFile = fs.writeFile as MockedFunction<typeof fs.writeFile>;
 
@@ -38,7 +38,7 @@ test('Building the json documentation for a single bundle', async () => {
     manifest: {},
     directory: `${testMocksDir}/bundles/test0`,
     entryPoint: `${testMocksDir}/bundles/test0/index.ts`,
-  });
+  }, false);
   await buildJson('test0', project, '/build');
 
   const [[test0Path, test0str]] = mockedWriteFile.mock.calls;
@@ -63,7 +63,7 @@ test('initTypedoc for muiltiple bundles', async () => {
       directory: `${testMocksDir}/bundles/test1`,
       entryPoint: `${testMocksDir}/bundles/test1/index.ts`,
     }
-  });
+  }, false);
 
   const test0Reflection = project.getChildByName('test0') as ProjectReflection;
   await buildJson('test0', test0Reflection, '/build');

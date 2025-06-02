@@ -4,16 +4,17 @@ import type es from 'estree';
 const tabType = {
   meta: {
     type: 'problem',
-    schema: [{
-      type: 'string',
+    docs: {
       description: 'Enforces typing for Source Academy tabs'
-    }],
+    },
+    schema: [{ type: 'string' }, { type: 'string' }],
     messages: {
       noExport: 'Your tab should export an object using the defineTab helper',
       useHelper: 'Use the defineTab helper from {{ source }}'
     },
     defaultOptions: [
-      '@sourceacademy/modules-lib/tabs/utils'
+      '@sourceacademy/modules-lib/tabs/utils',
+      'defineTab'
     ],
   },
   create: context => ({
@@ -27,12 +28,13 @@ const tabType = {
         return;
       }
 
+      const [expectedImportSource, expectedImportName] = context.options;
       const { declaration: exportDeclaration } = exportNode;
       if (exportDeclaration.type !== 'CallExpression') {
         context.report({
           messageId: 'useHelper',
           data: {
-            source: context.options[0]
+            source: expectedImportSource
           },
           node: exportDeclaration
         });
@@ -40,14 +42,14 @@ const tabType = {
       }
 
       const importDeclarations = program.body.filter((stmt): stmt is es.ImportDeclaration => {
-        return stmt.type === 'ImportDeclaration' && stmt.source.value === context.options[0];
+        return stmt.type === 'ImportDeclaration' && stmt.source.value === expectedImportSource;
       });
 
       if (importDeclarations.length === 0) {
         context.report({
           messageId: 'useHelper',
           data: {
-            source: context.options[0]
+            source: expectedImportSource
           },
           node: exportDeclaration
         });
@@ -55,7 +57,7 @@ const tabType = {
       }
 
       const specifiers = importDeclarations.flatMap(({ specifiers }) => specifiers)
-        .filter(spec => spec.type === 'ImportSpecifier' && spec.imported.type === 'Identifier' && spec.imported.name === 'defineTab');
+        .filter(spec => spec.type === 'ImportSpecifier' && spec.imported.type === 'Identifier' && spec.imported.name === expectedImportName);
 
       const defineNames = specifiers.map(spec => spec.local.name);
 
@@ -64,7 +66,7 @@ const tabType = {
         context.report({
           messageId: 'useHelper',
           data: {
-            source: context.options[0]
+            source: expectedImportSource
           },
           node: callee
         });

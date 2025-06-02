@@ -1,14 +1,32 @@
 import fs from 'fs/promises';
 import * as td from 'typedoc';
+import type { BuildResult } from '../../utils';
 import drawdown from './drawdown';
 
-const typeToName = (type?: td.SomeType) => type.stringify(td.TypeContext.none);
+const typeToName = (type: td.SomeType) => type.stringify(td.TypeContext.none);
 
-const parsers = {
+const parsers: {
+  [K in td.ReflectionKind]?: (obj: td.DeclarationReflection) => ({
+    error: any
+  } | {
+    obj: any,
+    meta: {
+      warnings: string[],
+    }
+  })
+} = {
   [td.ReflectionKind.Function](obj) {
-    // Functions should have only 1 signature
+    const warnings: string[] = [];
+
+    if (!obj.signatures) {
+      return {
+        error: `${obj.name} has 0 signatures!`
+      };
+    }
+
     if (obj.signatures.length > 1) {
-      console.warn(`${obj.name} has more than 1 signature; only using the first one`);
+      // Functions should have only 1 signature
+      warnings.push(`${obj.name} has more than 1 signature; only using the first one`);
     }
 
     const [signature] = obj.signatures;
@@ -21,14 +39,19 @@ const parsers = {
       description = 'No description available';
     }
 
-    const params = signature.parameters.map(({ type, name }) => [name, typeToName(type)] as [string, string]);
+    const params = signature.parameters!.map(({ type, name }) => [name, typeToName(type!)] as [string, string]);
 
     return {
-      kind: 'function',
-      name: obj.name,
-      description,
-      params,
-      retType: typeToName(signature.type)
+      obj: {
+        kind: 'function',
+        name: obj.name,
+        description,
+        params,
+        retType: typeToName(signature.type!)
+      },
+      meta: {
+        warnings: []
+      }
     };
   },
   [td.ReflectionKind.Variable](obj) {
@@ -41,33 +64,90 @@ const parsers = {
     }
 
     return {
-      kind: 'variable',
-      name: obj.name,
-      description,
-      type: typeToName(obj.type)
+      obj: {
+        kind: 'variable',
+        name: obj.name,
+        description,
+        type: typeToName(obj.type!)
+      },
+      meta: {
+        warnings: []
+      }
     };
   }
-} satisfies Partial<Record<td.ReflectionKind, (element: td.DeclarationReflection) => any>>;
+};
 
 /**
  * Build the JSON documentation for a single bundle using the output from
  * typedoc
  */
-export async function buildJson(bundleName: string, reflection: td.ProjectReflection, outDir: string) {
-  const jsonData = reflection.children.reduce((res, element) => {
-    // Ignore 'type_map' exports if they are present
+export async function buildJson(bundleName: string, reflection: td.ProjectReflection, outDir: string): Promise<BuildResult> {
+  const [jsonData, warnings, errors] = reflection.children!.reduce(([res, warnings, errors], element) => {
     if (element.name === 'type_map') {
-      return res;
+      // console.warn(`${chalk.yellowBright('[warning]')}: type_map present in output for ${bundleName}! Did you forget a @hidden tag?`);
+      return [
+        res,
+        [
+          ...warnings,
+          `type_map present in output for ${bundleName}! Did you forget a @hidden tag?`
+        ],
+        errors
+      ];
     }
 
     const parser = parsers[element.kind];
-    return {
-      ...res,
-      [element.name]: parser
-        ? parser(element)
-        : { kind: 'unknown' }
-    };
-  }, {});
+    if (parser) {
+      const result = parser(element);
+      if ('error' in result) {
+        return [res, warnings, [...errors, result.error]];
+      }
 
-  await fs.writeFile(`${outDir}/json/${bundleName}.json`, JSON.stringify(jsonData, null, 2));
+      const { obj, meta } = result;
+
+      return [
+        {
+          ...res,
+          [element.name]: obj
+        },
+        [
+          ...warnings,
+          ...meta.warnings
+        ],
+        errors
+      ];
+    } else {
+      return [
+        {
+          ...res,
+          [element.name]: { kind: 'unknown' }
+        }, [
+          ...warnings,
+          `No parser found for ${element.name} which is of type ${element.kind}.`
+        ], errors];
+    }
+  }, [{}, [], []] as [Record<string, any>, string[], string[]]);
+
+  await fs.writeFile(`${outDir}/jsons/${bundleName}.json`, JSON.stringify(jsonData, null, 2));
+
+  if (errors.length > 0) {
+    return {
+      severity: 'error',
+      errors,
+      warnings
+    };
+  }
+
+  if (warnings.length > 0) {
+    return {
+      severity: 'warn',
+      warnings,
+      errors
+    };
+  }
+
+  return {
+    severity: 'success',
+    warnings: [],
+    errors: []
+  };
 }

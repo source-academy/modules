@@ -23,6 +23,6 @@
   "scripts": {
     "build": "tsc --project ./tsconfig.prod.json",
     "tsc": "tsc --project ./tsconfig.json",
-    "test": "vitest --config ./vitest.config.ts"
+    "test": "vitest --config ./vitest.config.ts --project \"Modules Library\""
   }
 }

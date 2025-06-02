@@ -2,8 +2,8 @@ import fs from 'fs/promises';
 import { expect, describe, test, it, vi, beforeEach, type MockedFunction } from 'vitest';
 
 import * as manifest from '../../build/manifest';
+import * as utils from '../../getGitRoot';
 import { askQuestion } from '../../templates/print';
-import * as utils from '../../utils';
 import getTemplateCommand from '../template';
 
 vi.spyOn(utils, 'getBundlesDir').mockResolvedValue('/src/bundles');

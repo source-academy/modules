@@ -7,7 +7,6 @@ export default mergeConfig(
   defineProject({
     test: {
       name: 'Modules Library',
-      globals: true
     }
   })
 );

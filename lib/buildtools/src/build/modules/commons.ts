@@ -3,8 +3,9 @@ import { parse } from 'acorn';
 import { generate } from 'astring';
 import type { BuildOptions as ESBuildOptions, OutputFile } from 'esbuild';
 import type es from 'estree';
+import type { BuildResult } from '../../utils';
 
-export const commonEsbuildOptions: ESBuildOptions = {
+export const commonEsbuildOptions = {
   bundle: true,
   format: 'iife',
   define: {
@@ -20,9 +21,9 @@ export const commonEsbuildOptions: ESBuildOptions = {
   platform: 'browser',
   target: 'es6',
   write: false
-};
+} satisfies ESBuildOptions;
 
-export async function outputBundleOrTab({ text }: OutputFile, name: string, type: 'bundle' | 'tab', outDir: string) {
+export async function outputBundleOrTab({ text }: OutputFile, name: string, type: 'bundle' | 'tab', outDir: string): Promise<BuildResult> {
   const parsed = parse(text, { ecmaVersion: 6 }) as es.Program;
 
   // Account for 'use strict'; directives
@@ -34,14 +35,22 @@ export async function outputBundleOrTab({ text }: OutputFile, name: string, type
   }
 
   const { init: callExpression } = declStatement.declarations[0];
-  if (callExpression.type !== 'CallExpression') {
-    throw new Error(`Expected a CallExpression, got ${callExpression.type}`);
+  if (callExpression?.type !== 'CallExpression') {
+    return {
+      severity: 'error',
+      warnings: [],
+      errors: [`${type} ${name} parse failure: Expected a CallExpression, got ${callExpression?.type ?? callExpression}`],
+    };
   }
 
   const moduleCode = callExpression.callee;
 
   if (moduleCode.type !== 'FunctionExpression' && moduleCode.type !== 'ArrowFunctionExpression') {
-    throw new Error(`Expected a function, got ${moduleCode.type}`);
+    return {
+      severity: 'error',
+      warnings: [],
+      errors: [`${type} ${name} parse failure: Expected a function, got ${moduleCode.type}`]
+    };
   }
 
   const output: es.ExportDefaultDeclaration = {
@@ -55,8 +64,19 @@ export async function outputBundleOrTab({ text }: OutputFile, name: string, type
     }
   };
 
-  await fs.mkdir(`${outDir}/${type}`, { recursive: true });
-  const file = await fs.open(`${outDir}/${type}/${name}.js`, 'w');
-  const writeStream = file.createWriteStream();
-  generate(output, { output: writeStream });
+  await fs.mkdir(`${outDir}/${type}s`, { recursive: true });
+  let file: fs.FileHandle | null = null;
+  try {
+    file = await fs.open(`${outDir}/${type}s/${name}.js`, 'w');
+    const writeStream = file.createWriteStream();
+    generate(output, { output: writeStream });
+
+    return {
+      severity: 'success',
+      warnings: [],
+      errors: []
+    };
+  } finally {
+    await file?.close();
+  }
 }

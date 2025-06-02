@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { hexToColor } from '../utilities';
 
 describe('Test hexToColor', () => {

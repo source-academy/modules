@@ -1,7 +1,7 @@
-// Tabs tsconfig
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "declaration": false,
     "jsx": "react-jsx",
     "noEmit": true
   }

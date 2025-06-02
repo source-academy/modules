@@ -1,6 +1,6 @@
 import pathlib from 'path';
 import * as td from 'typedoc';
-import { getBundlesDir } from '../../utils';
+import { getBundlesDir } from '../../getGitRoot';
 import type { ResolvedBundle } from '../manifest';
 
 const commonTypedocOptions: td.Configuration.TypeDocOptions = {
@@ -8,7 +8,7 @@ const commonTypedocOptions: td.Configuration.TypeDocOptions = {
   disableSources: true,
   excludeInternal: true,
   logLevel: 'Error',
-  skipErrorChecking: true,
+  visibilityFilters: {}
 };
 
 /**
@@ -16,11 +16,12 @@ const commonTypedocOptions: td.Configuration.TypeDocOptions = {
  * documentation for a single bundle without having to process every other
  * bundle
  */
-export async function initTypedocForSingleBundle(bundle: ResolvedBundle) {
+export async function initTypedocForSingleBundle(bundle: ResolvedBundle, errorChecking: boolean) {
   const app = await td.Application.bootstrap({
     ...commonTypedocOptions,
     name: bundle.name,
     entryPoints: [bundle.entryPoint],
+    skipErrorChecking: !errorChecking,
     tsconfig: `${bundle.directory}/tsconfig.json`,
   });
 
@@ -38,7 +39,7 @@ export async function initTypedocForSingleBundle(bundle: ResolvedBundle) {
  *
  * More efficient than having to initialize typedoc separately each time
  */
-export async function initTypedoc(manifest: Record<string, ResolvedBundle>) {
+export async function initTypedoc(manifest: Record<string, ResolvedBundle>, errorChecking: boolean) {
   const entryPoints = Object.values(manifest).map(({ entryPoint }) => entryPoint);
   const bundlesDir = await getBundlesDir();
   const tsconfigPath = pathlib.resolve(bundlesDir, 'tsconfig.json');
@@ -49,6 +50,7 @@ export async function initTypedoc(manifest: Record<string, ResolvedBundle>) {
     entryPoints,
     name: 'Source Academy Modules',
     readme: `${import.meta.dirname}/docsreadme.md`,
+    skipErrorChecking: !errorChecking,
     tsconfig: tsconfigPath,
   });
 

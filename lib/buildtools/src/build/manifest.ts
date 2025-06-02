@@ -1,8 +1,11 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
 import { validate } from 'jsonschema';
+import { getTabsDir } from '../getGitRoot';
+import { isNodeError } from '../utils';
 import { getBundleEntryPoint } from './modules/bundle';
 import manifestSchema from './modules/manifest.schema.json' with { type: 'json' };
+import { resolveSingleTab } from './modules/tab';
 
 export interface BundleManifest {
   version?: string
@@ -22,22 +25,21 @@ export async function getBundleManifest(manifestFile: string, tabCheck?: boolean
   try {
     rawManifest = await fs.readFile(manifestFile, 'utf-8');
   } catch (error) {
-    if (error.code === 'ENOENT') {
+    if (isNodeError(error) && error.code === 'ENOENT') {
       return undefined;
     }
     throw error;
   }
 
   const data = JSON.parse(rawManifest) as BundleManifest;
-  const { valid, errors } = validate(data, manifestSchema);
-
-  if (!valid) throw errors;
+  validate(data, manifestSchema.schema, { throwError: true });
 
   // Make sure that all the tabs specified exist
   if (tabCheck && data.tabs) {
+    const tabsDir = await getTabsDir();
     await Promise.all(data.tabs.map(async tabName => {
       try {
-        await fs.access(`./src/tabs/${tabName}`, fs.constants.R_OK);
+        await resolveSingleTab(`${tabsDir}/${tabName}`);
       } catch {
         throw new Error(`Failed to find tab with name '${tabName}'!`);
       }
@@ -51,7 +53,17 @@ export async function getBundleManifest(manifestFile: string, tabCheck?: boolean
  * Get all bundle manifests
  */
 export async function getBundleManifests(bundlesDir: string): Promise<ModulesManifest> {
-  const subdirs = await fs.readdir(bundlesDir);
+  let subdirs: string[] | null = null;
+  try {
+    subdirs = await fs.readdir(bundlesDir);
+  } catch (error) {
+    if (isNodeError(error) && error.code === 'ENOENT') {
+      return {};
+    }
+
+    throw error;
+  }
+
   const manifests = await Promise.all(subdirs.map(async fileName => {
     const fullPath = pathlib.join(bundlesDir, fileName);
     const stats = await fs.stat(fullPath);
@@ -92,9 +104,10 @@ export async function resolveSingleBundle(bundleDir: string): Promise<ResolvedBu
   const manifest = await getBundleManifest(`${fullyResolved}/manifest.json`);
   if (!manifest) return undefined;
 
-  const bundleName = pathlib.basename(fullyResolved);
   const entryPoint = await getBundleEntryPoint(fullyResolved);
+  if (!entryPoint) return undefined;
 
+  const bundleName = pathlib.basename(fullyResolved);
   return {
     name: bundleName,
     manifest,
@@ -119,13 +132,14 @@ export async function resolveAllBundles(bundlesDir: string) {
     };
   }, {} as Record<string, ResolvedBundle>);
 }
+
 export async function resolvePaths(...paths: string[]) {
   for (const path of paths) {
     try {
       await fs.access(path, fs.constants.R_OK);
       return path;
     } catch (error) {
-      if (error.code !== 'ENOENT') throw error;
+      if (isNodeError(error) && error.code !== 'ENOENT') throw error;
     }
   }
 

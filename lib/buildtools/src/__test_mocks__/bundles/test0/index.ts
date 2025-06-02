@@ -18,5 +18,5 @@ export function test_function(_param0: string) {
  * @internal
  */
 export function test_function2() {
-  return context.moduleContexts.test0.state.data
+  return context.moduleContexts.test0.state.data;
 }
