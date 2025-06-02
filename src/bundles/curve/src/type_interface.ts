@@ -1,18 +1,22 @@
-import { classDeclaration, typeDeclaration, functionDeclaration } from '@sourceacademy/modules-lib/type_map';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import createTypeMap from '@sourceacademy/modules-lib/type_map';
+
+const typeMapCreator = createTypeMap();
+const { classDeclaration, functionDeclaration, typeDeclaration } = typeMapCreator;
 
 @classDeclaration('Point')
-export class Point {}
+class Point {}
 
 @classDeclaration('AnimatedCurve')
-export class AnimatedCurve{}
+class AnimatedCurve{}
 
 @typeDeclaration('(u: number) => Point')
-export class Curve {}
+class Curve {}
 
 @typeDeclaration('(t: number) => Curve')
-export class CurveAnimation {}
+class CurveAnimation {}
 
-export class TypeInterface {
+class TypeInterface {
   @functionDeclaration('duration: number, fps: number, drawer: (func: Curve) => Curve, func: (func: Curve) => Curve', 'AnimatedCurve')
   animate_3D_curve() {}
 
@@ -121,3 +125,6 @@ export class TypeInterface {
   @functionDeclaration('p: Point', 'number')
   z_of() {}
 }
+
+/** @hidden */
+export const type_map = typeMapCreator.type_map;

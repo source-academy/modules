@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { describe, expect, test } from 'vitest';
 
-import { CameraOptions, getCamera } from '../../../Render/helpers/Camera';
+import { type CameraOptions, getCamera } from '../../../Render/helpers/Camera';
 
 describe('getCamera', () => {
   test('returns a PerspectiveCamera when type is "perspective"', () => {

@@ -4,7 +4,8 @@
   "private": true,
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
-    "gl-matrix": "^3.3.0"
+    "gl-matrix": "^3.3.0",
+    "js-slang": "^1.0.81"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
@@ -12,15 +13,11 @@
   },
   "type": "module",
   "exports": {
-    ".": {
-      "default": "./dist/index.js"
-    },
-    "./*": {
-      "default": "./dist/*.js"
-    }
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
   },
   "scripts": {
-    "tsc": "tsc --project ./tsconfig.prod.json",
-    "build": "buildtools build bundle ."
+    "build": "buildtools build bundle .",
+    "tsc": "tsc --project ./tsconfig.prod.json"
   }
 }

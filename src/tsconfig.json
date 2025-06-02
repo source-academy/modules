@@ -29,7 +29,9 @@
     /* *** TEMPORARILY ADDED UNTIL ALL MODULES HAVE BEEN REFACTORED!!!!!!!!!!! *** */
     "noImplicitAny": false,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true
   },
   /* Specifies an array of filenames or patterns that should be skipped when resolving include. */
   "exclude": ["**/dist"]

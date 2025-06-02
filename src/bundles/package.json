@@ -9,6 +9,6 @@
     "vitest": "^3.1.4"
   },
   "scripts": {
-    "test": "vitest --config ./vitest.config.ts"
+    "test": "vitest --config ./vitest.config.ts --project Bundles"
   }
 }

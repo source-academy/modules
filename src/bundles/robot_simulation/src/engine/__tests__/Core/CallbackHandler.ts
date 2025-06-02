@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from 'vitest';
 import { CallbackHandler } from '../../Core/CallbackHandler';
-import { PhysicsTimingInfo } from '../../Physics';
+import type { PhysicsTimingInfo } from '../../Physics';
 
 // Helper function to create a PhysicsTimingInfo object
 // CallbackHandler only uses the stepCount and timestep properties

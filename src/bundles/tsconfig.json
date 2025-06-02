@@ -1,9 +1,8 @@
-// bundles tsconfig
 {
   "compilerOptions": {
     "declaration": true,
     "paths": {
-      "js-slang/context": ["../modules-lib/src/types/js-slang/context.d.ts"]
+      "js-slang/context": ["../../lib/modules-lib/src/types/js-slang/context.d.ts"]
     }
   },
   "extends": ["../tsconfig.json"]

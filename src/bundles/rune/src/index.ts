@@ -51,6 +51,8 @@ export {
   yellow
 } from './functions';
 
+export { type_map } from './type_map';
+
 export {
   anaglyph,
   animate_anaglyph,
@@ -59,7 +61,3 @@ export {
   hollusion_magnitude,
   show
 } from './display';
-
-export {
-  type_map
-} from '@sourceacademy/modules-lib/type_map';

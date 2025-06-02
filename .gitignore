@@ -4,9 +4,12 @@
 node_modules/
 devserver/node_modules
 build/*
+**/dist/**
 coverage/
 
-scripts/dist
+.yarn/*
+!.yarn/
+!.yarn/patches
 
 # Compiled source #
 ###################

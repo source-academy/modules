@@ -2,7 +2,7 @@ import type Rapier from '@dimforge/rapier3d-compat';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { Entity } from '../../Entity/Entity';
 import { vec3 } from '../../Math/Convert';
-import { SimpleQuaternion, SimpleVector } from '../../Math/Vector';
+import type { SimpleQuaternion, SimpleVector } from '../../Math/Vector';
 
 const createRigidBodyMock = (
   translation: SimpleVector,

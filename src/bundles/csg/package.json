@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@jscad/modeling": "2.9.6",
+    "@jscad/modeling": "patch:@jscad/modeling@npm%3A2.9.6#~/.yarn/patches/@jscad-modeling-npm-2.9.6-71e6aa3a91.patch",
     "@jscad/regl-renderer": "^2.6.1",
     "@jscad/stl-serializer": "2.1.11",
     "save-file": "^2.3.1"

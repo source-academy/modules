@@ -1,7 +1,3 @@
-import {
-  functionDeclaration,
-  variableDeclaration,
-} from '@sourceacademy/modules-lib/type_map';
 import { mat4, vec3 } from 'gl-matrix';
 import {
   Rune,
@@ -32,6 +28,7 @@ import {
   initFramebufferObject,
   initShaderProgram
 } from './runes_webgl';
+import { functionDeclaration, variableDeclaration } from './type_map';
 
 export type RuneModuleState = {
   drawnRunes: (AnimatedRune | DrawnRune)[]
@@ -42,102 +39,44 @@ export type RuneModuleState = {
 // =============================================================================
 
 class RuneFunctions {
-  /**
-   * Rune with the shape of a full square
-   *
-   * @category Primitive
-   */
+
   @variableDeclaration('Rune')
   static square: Rune = getSquare();
-  /**
-   * Rune with the shape of a blank square
-   *
-   * @category Primitive
-   */
+
   @variableDeclaration('Rune')
   static blank: Rune = getBlank();
-  /**
-   * Rune with the shape of a
-   * small square inside a large square,
-   * each diagonally split into a
-   * black and white half
-   *
-   * @category Primitive
-   */
+
   @variableDeclaration('Rune')
   static rcross: Rune = getRcross();
-  /**
-   * Rune with the shape of a sail
-   *
-   * @category Primitive
-   */
+
   @variableDeclaration('Rune')
   static sail: Rune = getSail();
-  /**
-   * Rune with the shape of a triangle
-   *
-   * @category Primitive
-   */
+
   @variableDeclaration('Rune')
   static triangle: Rune = getTriangle();
-  /**
-   * Rune with black triangle,
-   * filling upper right corner
-   *
-   * @category Primitive
-   */
+
   @variableDeclaration('Rune')
   static corner: Rune = getCorner();
-  /**
-   * Rune with the shape of two overlapping
-   * triangles, residing in the upper half
-   * of the shape
-   *
-   * @category Primitive
-   */
+
   @variableDeclaration('Rune')
   static nova: Rune = getNova();
-  /**
-   * Rune with the shape of a circle
-   *
-   * @category Primitive
-   */
+
   @variableDeclaration('Rune')
   static circle: Rune = getCircle();
-  /**
-   * Rune with the shape of a heart
-   *
-   * @category Primitive
-   */
+
   @variableDeclaration('Rune')
   static heart: Rune = getHeart();
-  /**
-   * Rune with the shape of a pentagram
-   *
-   * @category Primitive
-   */
+
   @variableDeclaration('Rune')
   static pentagram: Rune = getPentagram();
-  /**
-   * Rune with the shape of a ribbon
-   * winding outwards in an anticlockwise spiral
-   *
-   * @category Primitive
-   */
+
   @variableDeclaration('Rune')
   static ribbon: Rune = getRibbon();
 
   // =============================================================================
   // Textured Runes
   // =============================================================================
-  /**
-   * Create a rune using the image provided in the url
-   * @param {string} imageUrl URL to the image that is used to create the rune.
-   * Note that the url must be from a domain that allows CORS.
-   * @returns {Rune} Rune created using the image.
-   *
-   * @category Main
-   */
+
   @functionDeclaration('imageUrl: string', 'Rune')
   static from_url(imageUrl: string): Rune {
     const rune = getSquare();
@@ -151,15 +90,6 @@ class RuneFunctions {
   // XY-axis Transformation functions
   // =============================================================================
 
-  /**
-   * Scales a given Rune by separate factors in x and y direction
-   * @param {number} ratio_x - Scaling factor in x direction
-   * @param {number} ratio_y - Scaling factor in y direction
-   * @param {Rune} rune - Given Rune
-   * @return {Rune} Resulting scaled Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('ratio_x: number, ratio_y: number, rune: Rune', 'Rune')
   static scale_independent(
     ratio_x: number,
@@ -179,29 +109,12 @@ class RuneFunctions {
     });
   }
 
-  /**
-   * Scales a given Rune by a given factor in both x and y direction
-   * @param {number} ratio - Scaling factor
-   * @param {Rune} rune - Given Rune
-   * @return {Rune} Resulting scaled Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('ratio: number, rune: Rune', 'Rune')
   static scale(ratio: number, rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.scale.name, rune);
     return RuneFunctions.scale_independent(ratio, ratio, rune);
   }
 
-  /**
-   * Translates a given Rune by given values in x and y direction
-   * @param {number} x - Translation in x direction
-   * @param {number} y - Translation in y direction
-   * @param {Rune} rune - Given Rune
-   * @return {Rune} Resulting translated Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('x: number, y: number, rune: Rune', 'Rune')
   static translate(x: number, y: number, rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.translate.name, rune);
@@ -217,17 +130,6 @@ class RuneFunctions {
     });
   }
 
-  /**
-   * Rotates a given Rune by a given angle,
-   * given in radians, in anti-clockwise direction.
-   * Note that parts of the Rune
-   * may be cropped as a result.
-   * @param {number} rad - Angle in radians
-   * @param {Rune} rune - Given Rune
-   * @return {Rune} Rotated Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('rad: number, rune: Rune', 'Rune')
   static rotate(rad: number, rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.rotate.name, rune);
@@ -242,19 +144,6 @@ class RuneFunctions {
     });
   }
 
-  /**
-   * Makes a new Rune from two given Runes by
-   * placing the first on top of the second
-   * such that the first one occupies frac
-   * portion of the height of the result and
-   * the second the rest
-   * @param {number} frac - Fraction between 0 and 1 (inclusive)
-   * @param {Rune} rune1 - Given Rune
-   * @param {Rune} rune2 - Given Rune
-   * @return {Rune} Resulting Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('frac: number, rune1: Rune, rune2: Rune', 'Rune')
   static stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
     throwIfNotRune(RuneFunctions.stack_frac.name, rune1);
@@ -271,32 +160,12 @@ class RuneFunctions {
     });
   }
 
-  /**
-   * Makes a new Rune from two given Runes by
-   * placing the first on top of the second, each
-   * occupying equal parts of the height of the
-   * result
-   * @param {Rune} rune1 - Given Rune
-   * @param {Rune} rune2 - Given Rune
-   * @return {Rune} Resulting Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   static stack(rune1: Rune, rune2: Rune): Rune {
     throwIfNotRune(RuneFunctions.stack.name, rune1, rune2);
     return RuneFunctions.stack_frac(1 / 2, rune1, rune2);
   }
 
-  /**
-   * Makes a new Rune from a given Rune
-   * by vertically stacking n copies of it
-   * @param {number} n - Positive integer
-   * @param {Rune} rune - Given Rune
-   * @return {Rune} Resulting Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('n: number, rune: Rune', 'Rune')
   static stackn(n: number, rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.stackn.name, rune);
@@ -306,63 +175,24 @@ class RuneFunctions {
     return RuneFunctions.stack_frac(1 / n, rune, RuneFunctions.stackn(n - 1, rune));
   }
 
-  /**
-   * Makes a new Rune from a given Rune
-   * by turning it a quarter-turn around the centre in
-   * clockwise direction.
-   * @param {Rune} rune - Given Rune
-   * @return {Rune} Resulting Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static quarter_turn_right(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.quarter_turn_right.name, rune);
     return RuneFunctions.rotate(-Math.PI / 2, rune);
   }
 
-  /**
-   * Makes a new Rune from a given Rune
-   * by turning it a quarter-turn in
-   * anti-clockwise direction.
-   * @param {Rune} rune - Given Rune
-   * @return {Rune} Resulting Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static quarter_turn_left(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.quarter_turn_left.name, rune);
     return RuneFunctions.rotate(Math.PI / 2, rune);
   }
 
-  /**
-   * Makes a new Rune from a given Rune
-   * by turning it upside-down
-   * @param {Rune} rune - Given Rune
-   * @return {Rune} Resulting Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static turn_upside_down(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.turn_upside_down.name, rune);
     return RuneFunctions.rotate(Math.PI, rune);
   }
 
-  /**
-   * Makes a new Rune from two given Runes by
-   * placing the first on the left of the second
-   * such that the first one occupies frac
-   * portion of the width of the result and
-   * the second the rest
-   * @param {number} frac - Fraction between 0 and 1 (inclusive)
-   * @param {Rune} rune1 - Given Rune
-   * @param {Rune} rune2 - Given Rune
-   * @return {Rune} Resulting Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('frac: number, rune1: Rune, rune2: Rune', 'Rune')
   static beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
     throwIfNotRune(RuneFunctions.beside_frac.name, rune1, rune2);
@@ -378,62 +208,24 @@ class RuneFunctions {
     });
   }
 
-  /**
-   * Makes a new Rune from two given Runes by
-   * placing the first on the left of the second,
-   * both occupying equal portions of the width
-   * of the result
-   * @param {Rune} rune1 - Given Rune
-   * @param {Rune} rune2 - Given Rune
-   * @return {Rune} Resulting Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   static beside(rune1: Rune, rune2: Rune): Rune {
     throwIfNotRune(RuneFunctions.beside.name, rune1, rune2);
     return RuneFunctions.beside_frac(1 / 2, rune1, rune2);
   }
 
-  /**
-   * Makes a new Rune from a given Rune by
-   * flipping it around a horizontal axis,
-   * turning it upside down
-   * @param {Rune} rune - Given Rune
-   * @return {Rune} Resulting Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static flip_vert(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.flip_vert.name, rune);
     return RuneFunctions.scale_independent(1, -1, rune);
   }
 
-  /**
-   * Makes a new Rune from a given Rune by
-   * flipping it around a vertical axis,
-   * creating a mirror image
-   * @param {Rune} rune - Given Rune
-   * @return {Rune} Resulting Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static flip_horiz(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.flip_horiz.name, rune);
     return RuneFunctions.scale_independent(-1, 1, rune);
   }
 
-  /**
-   * Makes a new Rune from a given Rune by
-   * arranging into a square for copies of the
-   * given Rune in different orientations
-   * @param {Rune} rune - Given Rune
-   * @return {Rune} Resulting Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static make_cross(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.make_cross.name, rune);
@@ -443,16 +235,6 @@ class RuneFunctions {
     );
   }
 
-  /**
-   * Applies a given function n times to an initial value
-   * @param {number} n - A non-negative integer
-   * @param {function} pattern - Unary function from Rune to Rune
-   * @param {Rune} initial - The initial Rune
-   * @return {Rune} - Result of n times application of pattern to initial:
-   * pattern(pattern(...pattern(pattern(initial))...))
-   *
-   * @category Main
-   */
   @functionDeclaration('n: number, pattern: (a: Rune) => Rune, initial: Rune', 'Rune')
   static repeat_pattern(
     n: number,
@@ -469,15 +251,6 @@ class RuneFunctions {
   // Z-axis Transformation functions
   // =============================================================================
 
-  /**
-   * The depth range of the z-axis of a rune is [0,-1], this function gives a [0, -frac] of the depth range to rune1 and the rest to rune2.
-   * @param {number} frac - Fraction between 0 and 1 (inclusive)
-   * @param {Rune} rune1 - Given Rune
-   * @param {Rune} rune2 - Given Rune
-   * @return {Rune} Resulting Rune
-   *
-   * @category Main
-   */
   @functionDeclaration('frac: number, rune1: Rune, rune2: Rune', 'Rune')
   static overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
     // to developer: please read https://www.tutorialspoint.com/webgl/webgl_basics.htm to understand the webgl z-axis interpretation.
@@ -523,14 +296,6 @@ class RuneFunctions {
     });
   }
 
-  /**
-   * The depth range of the z-axis of a rune is [0,-1], this function maps the depth range of rune1 and rune2 to [0,-0.5] and [-0.5,-1] respectively.
-   * @param {Rune} rune1 - Given Rune
-   * @param {Rune} rune2 - Given Rune
-   * @return {Rune} Resulting Runes
-   *
-   * @category Main
-   */
   @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   static overlay(rune1: Rune, rune2: Rune): Rune {
     throwIfNotRune(RuneFunctions.overlay.name, rune1);
@@ -542,19 +307,6 @@ class RuneFunctions {
   // Color functions
   // =============================================================================
 
-  /**
-   * Adds color to rune by specifying
-   * the red, green, blue (RGB) value, ranging from 0.0 to 1.0.
-   * RGB is additive: if all values are 1, the color is white,
-   * and if all values are 0, the color is black.
-   * @param {Rune} rune - The rune to add color to
-   * @param {number} r - Red value [0.0-1.0]
-   * @param {number} g - Green value [0.0-1.0]
-   * @param {number} b - Blue value [0.0-1.0]
-   * @returns {Rune} The colored Rune
-   *
-   * @category Color
-   */
   @functionDeclaration('rune: Rune, r: number, g: number, b: number', 'Rune')
   static color(rune: Rune, r: number, g: number, b: number): Rune {
     throwIfNotRune(RuneFunctions.color.name, rune);
@@ -566,15 +318,6 @@ class RuneFunctions {
     });
   }
 
-  /**
-   * Gives random color to the given rune.
-   * The color is chosen randomly from the following nine
-   * colors: red, pink, purple, indigo, blue, green, yellow, orange, brown
-   * @param {Rune} rune - The rune to color
-   * @returns {Rune} The colored Rune
-   *
-   * @category Color
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static random_color(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.random_color.name, rune);
@@ -588,143 +331,66 @@ class RuneFunctions {
     });
   }
 
-  /**
-   * Colors the given rune red (#F44336).
-   * @param {Rune} rune - The rune to color
-   * @returns {Rune} The colored Rune
-   *
-   * @category Color
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static red(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.red.name, rune);
     return addColorFromHex(rune, '#F44336');
   }
 
-  /**
-   * Colors the given rune pink (#E91E63s).
-   * @param {Rune} rune - The rune to color
-   * @returns {Rune} The colored Rune
-   *
-   * @category Color
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static pink(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.pink.name, rune);
     return addColorFromHex(rune, '#E91E63');
   }
 
-  /**
-   * Colors the given rune purple (#AA00FF).
-   * @param {Rune} rune - The rune to color
-   * @returns {Rune} The colored Rune
-   *
-   * @category Color
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static purple(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.purple.name, rune);
     return addColorFromHex(rune, '#AA00FF');
   }
 
-  /**
-   * Colors the given rune indigo (#3F51B5).
-   * @param {Rune} rune - The rune to color
-   * @returns {Rune} The colored Rune
-   *
-   * @category Color
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static indigo(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.indigo.name, rune);
     return addColorFromHex(rune, '#3F51B5');
   }
 
-  /**
-   * Colors the given rune blue (#2196F3).
-   * @param {Rune} rune - The rune to color
-   * @returns {Rune} The colored Rune
-   *
-   * @category Color
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static blue(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.blue.name, rune);
     return addColorFromHex(rune, '#2196F3');
   }
 
-  /**
-   * Colors the given rune green (#4CAF50).
-   * @param {Rune} rune - The rune to color
-   * @returns {Rune} The colored Rune
-   *
-   * @category Color
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static green(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.green.name, rune);
     return addColorFromHex(rune, '#4CAF50');
   }
 
-  /**
-   * Colors the given rune yellow (#FFEB3B).
-   * @param {Rune} rune - The rune to color
-   * @returns {Rune} The colored Rune
-   *
-   * @category Color
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static yellow(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.yellow.name, rune);
     return addColorFromHex(rune, '#FFEB3B');
   }
 
-  /**
-   * Colors the given rune orange (#FF9800).
-   * @param {Rune} rune - The rune to color
-   * @returns {Rune} The colored Rune
-   *
-   * @category Color
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static orange(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.orange.name, rune);
     return addColorFromHex(rune, '#FF9800');
   }
 
-  /**
-   * Colors the given rune brown.
-   * @param {Rune} rune - The rune to color
-   * @returns {Rune} The colored Rune
-   *
-   * @category Color
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static brown(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.brown.name, rune);
     return addColorFromHex(rune, '#795548');
   }
 
-  /**
-   * Colors the given rune black (#000000).
-   * @param {Rune} rune - The rune to color
-   * @returns {Rune} The colored Rune
-   *
-   * @category Color
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static black(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.black.name, rune);
     return addColorFromHex(rune, '#000000');
   }
 
-  /**
-   * Colors the given rune white (#FFFFFF).
-   * @param {Rune} rune - The rune to color
-   * @returns {Rune} The colored Rune
-   *
-   * @category Color
-   */
   @functionDeclaration('rune: Rune', 'Rune')
   static white(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.white.name, rune);
@@ -961,48 +627,463 @@ export class HollusionRune extends DrawnRune {
 /** @hidden */
 export const isHollusionRune = (rune: DrawnRune): rune is HollusionRune => rune.isHollusion;
 
-export const {
-  beside,
-  beside_frac,
-  black,
-  blank,
-  blue,
-  brown,
-  circle,
-  color,
-  corner,
-  flip_horiz,
-  flip_vert,
-  from_url,
-  green,
-  heart,
-  indigo,
-  make_cross,
-  nova,
-  orange,
-  overlay,
-  overlay_frac,
-  pentagram,
-  pink,
-  purple,
-  quarter_turn_left,
-  quarter_turn_right,
-  random_color,
-  rcross,
-  red,
-  repeat_pattern,
-  ribbon,
-  rotate,
-  sail,
-  scale,
-  scale_independent,
-  square,
-  stack,
-  stack_frac,
-  stackn,
-  translate,
-  triangle,
-  turn_upside_down,
-  white,
-  yellow
-} = RuneFunctions;
+/**
+ * Makes a new Rune from two given Runes by
+ * placing the first on the left of the second,
+ * both occupying equal portions of the width
+ * of the result
+ * @param {Rune} rune1 - Given Rune
+ * @param {Rune} rune2 - Given Rune
+ * @return {Rune} Resulting Rune
+ * @function
+ *
+ * @category Main
+ */
+export const beside = RuneFunctions.beside;
+
+/**
+ * Makes a new Rune from two given Runes by
+ * placing the first on the left of the second
+ * such that the first one occupies frac
+ * portion of the width of the result and
+ * the second the rest
+ * @param {number} frac - Fraction between 0 and 1 (inclusive)
+ * @param {Rune} rune1 - Given Rune
+ * @param {Rune} rune2 - Given Rune
+ * @return {Rune} Resulting Rune
+ * @function
+ *
+ * @category Main
+ */
+export const beside_frac = RuneFunctions.beside_frac;
+
+/**
+ * Colors the given rune black (#000000).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
+ * @function
+ *
+ * @category Color
+ */
+export const black = RuneFunctions.black;
+
+/**
+ * Rune with the shape of a blank square
+ *
+ * @category Primitive
+ */
+export const blank = RuneFunctions.blank;
+
+/**
+ * Colors the given rune blue (#2196F3).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
+ * @function
+ *
+ * @category Color
+ */
+export const blue = RuneFunctions.blue;
+
+/**
+ * Colors the given rune brown.
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
+ * @function
+ *
+ * @category Color
+ */
+export const brown = RuneFunctions.brown;
+
+/**
+ * Rune with the shape of a circle
+ *
+ * @category Primitive
+ */
+export const circle = RuneFunctions.circle;
+
+/**
+ * Adds color to rune by specifying
+ * the red, green, blue (RGB) value, ranging from 0.0 to 1.0.
+ * RGB is additive: if all values are 1, the color is white,
+ * and if all values are 0, the color is black.
+ * @param {Rune} rune - The rune to add color to
+ * @param {number} r - Red value [0.0, 1.0]
+ * @param {number} g - Green value [0.0, 1.0]
+ * @param {number} b - Blue value [0.0, 1.0]
+ * @returns {Rune} The colored Rune
+ * @function
+ *
+ * @category Color
+ */
+export const color = RuneFunctions.color;
+
+/**
+ * Rune with black triangle,
+ * filling upper right corner
+ *
+ * @category Primitive
+ */
+export const corner = RuneFunctions.corner;
+
+/**
+ * Makes a new Rune from a given Rune by
+ * flipping it around a vertical axis,
+ * creating a mirror image
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting Rune
+ * @function
+ *
+ * @category Main
+ */
+export const flip_horiz = RuneFunctions.flip_horiz;
+
+/**
+ * Makes a new Rune from a given Rune by
+ * flipping it around a horizontal axis,
+ * turning it upside down
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting Rune
+ * @function
+ *
+ * @category Main
+ */
+export const flip_vert = RuneFunctions.flip_vert;
+
+/**
+ * Create a rune using the image provided in the url
+ * @param {string} imageUrl URL to the image that is used to create the rune.
+ * Note that the url must be from a domain that allows CORS.
+ * @returns {Rune} Rune created using the image.
+ * @function
+ *
+ * @category Main
+ */
+export const from_url = RuneFunctions.from_url;
+
+/**
+ * Colors the given rune green (#4CAF50).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
+ * @function
+ *
+ * @category Color
+ */
+export const green = RuneFunctions.green;
+
+/**
+ * Rune with the shape of a heart
+ *
+ * @category Primitive
+ */
+export const heart = RuneFunctions.heart;
+
+/**
+ * Colors the given rune indigo (#3F51B5).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
+ * @function
+ *
+ * @category Color
+ */
+export const indigo = RuneFunctions.indigo;
+
+/**
+ * Makes a new Rune from a given Rune by
+ * arranging into a square for copies of the
+ * given Rune in different orientations
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting Rune
+ * @function
+ *
+ * @category Main
+ */
+export const make_cross = RuneFunctions.make_cross;
+
+/**
+ * Rune with the shape of two overlapping
+ * triangles, residing in the upper half
+ * of the shape
+ *
+ * @category Primitive
+ */
+export const nova = RuneFunctions.nova;
+
+/**
+ * Colors the given rune orange (#FF9800).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
+ * @function
+ *
+ * @category Color
+ */
+export const orange = RuneFunctions.orange;
+
+/**
+ * The depth range of the z-axis of a rune is [0,-1], this function maps the depth range of rune1 and rune2 to [0,-0.5] and [-0.5,-1] respectively.
+ * @param {Rune} rune1 - Given Rune
+ * @param {Rune} rune2 - Given Rune
+ * @return {Rune} Resulting Runes
+ * @function
+ *
+ * @category Main
+ */
+export const overlay = RuneFunctions.overlay;
+
+/**
+ * The depth range of the z-axis of a rune is [0,-1], this function gives a [0, -frac] of the depth range to rune1 and the rest to rune2.
+ * @param {number} frac - Fraction between 0 and 1 (inclusive)
+ * @param {Rune} rune1 - Given Rune
+ * @param {Rune} rune2 - Given Rune
+ * @return {Rune} Resulting Rune
+ * @function
+ *
+ * @category Main
+ */
+export const overlay_frac = RuneFunctions.overlay_frac;
+
+/**
+ * Rune with the shape of a pentagram
+ *
+ * @category Primitive
+ */
+export const pentagram = RuneFunctions.pentagram;
+
+/**
+ * Colors the given rune pink (#E91E63s).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
+ * @function
+ *
+ * @category Color
+ */
+export const pink = RuneFunctions.pink;
+
+/**
+ * Colors the given rune purple (#AA00FF).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
+ * @function
+ *
+ * @category Color
+ */
+export const purple = RuneFunctions.purple;
+
+/**
+ * Makes a new Rune from a given Rune
+ * by turning it a quarter-turn in
+ * anti-clockwise direction.
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting Rune
+ * @function
+ *
+ * @category Main
+ */
+export const quarter_turn_left = RuneFunctions.quarter_turn_left;
+
+/**
+ * Makes a new Rune from a given Rune
+ * by turning it a quarter-turn around the centre in
+ * clockwise direction.
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting Rune
+ * @function
+ *
+ * @category Main
+ */
+export const quarter_turn_right = RuneFunctions.quarter_turn_right;
+
+/**
+ * Gives random color to the given rune.
+ * The color is chosen randomly from the following nine
+ * colors: red, pink, purple, indigo, blue, green, yellow, orange, brown
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
+ * @function
+ *
+ * @category Color
+ */
+export const random_color = RuneFunctions.random_color;
+
+/**
+ * Rune with the shape of a
+ * small square inside a large square,
+ * each diagonally split into a
+ * black and white half
+ *
+ * @category Primitive
+ */
+export const rcross = RuneFunctions.rcross;
+
+/**
+ * Colors the given rune red (#F44336).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
+ * @function
+ *
+ * @category Color
+ */
+export const red = RuneFunctions.red;
+
+/**
+ * Applies a given function n times to an initial value
+ * @param {number} n - A non-negative integer
+ * @param {function} pattern - Unary function from Rune to Rune
+ * @param {Rune} initial - The initial Rune
+ * @return {Rune} - Result of n times application of pattern to initial:
+ * pattern(pattern(...pattern(pattern(initial))...))
+ * @function
+ *
+ * @category Main
+ */
+export const repeat_pattern = RuneFunctions.repeat_pattern;
+
+/**
+ * Rune with the shape of a ribbon
+ * winding outwards in an anticlockwise spiral
+ *
+ * @category Primitive
+ */
+export const ribbon = RuneFunctions.ribbon;
+
+/**
+ * Rotates a given Rune by a given angle,
+ * given in radians, in anti-clockwise direction.
+ * Note that parts of the Rune
+ * may be cropped as a result.
+ * @param {number} rad - Angle in radians
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Rotated Rune
+ * @function
+ *
+ * @category Main
+ */
+export const rotate = RuneFunctions.rotate;
+
+/**
+ * Rune with the shape of a sail
+ *
+ * @category Primitive
+ */
+export const sail = RuneFunctions.sail;
+
+/**
+ * Scales a given Rune by a given factor in both x and y direction
+ * @param {number} ratio - Scaling factor
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting scaled Rune
+ * @function
+ *
+ * @category Main
+ */
+export const scale = RuneFunctions.scale;
+
+/**
+ * Scales a given Rune by separate factors in x and y direction
+ * @param {number} ratio_x - Scaling factor in x direction
+ * @param {number} ratio_y - Scaling factor in y direction
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting scaled Rune
+ * @function
+ *
+ * @category Main
+ */
+export const scale_independent = RuneFunctions.scale_independent;
+
+/**
+ * Makes a new Rune from two given Runes by
+ * placing the first on top of the second, each
+ * occupying equal parts of the height of the
+ * result
+ * @param {Rune} rune1 - Given Rune
+ * @param {Rune} rune2 - Given Rune
+ * @return {Rune} Resulting Rune
+ * @function
+ *
+ * @category Main
+ */
+export const stack = RuneFunctions.stack;
+
+/**
+ * Makes a new Rune from two given Runes by
+ * placing the first on top of the second
+ * such that the first one occupies frac
+ * portion of the height of the result and
+ * the second the rest
+ * @param {number} frac - Fraction between 0 and 1 (inclusive)
+ * @param {Rune} rune1 - Given Rune
+ * @param {Rune} rune2 - Given Rune
+ * @return {Rune} Resulting Rune
+ * @function
+ *
+ * @category Main
+ */
+export const stack_frac = RuneFunctions.stack_frac;
+
+/**
+ * Makes a new Rune from a given Rune
+ * by vertically stacking n copies of it
+ * @param {number} n - Positive integer
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting Rune
+ * @function
+ *
+ * @category Main
+ */
+export const stackn = RuneFunctions.stackn;
+
+/**
+ * Rune with the shape of a full square
+ *
+ * @category Primitive
+ */
+export const square = RuneFunctions.square;
+
+/**
+ * Translates a given Rune by given values in x and y direction
+ * @param {number} x - Translation in x direction
+ * @param {number} y - Translation in y direction
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting translated Rune
+ * @function
+ *
+ * @category Main
+ */
+export const translate = RuneFunctions.translate;
+
+/**
+ * Rune with the shape of a triangle
+ *
+ * @category Primitive
+ */
+export const triangle = RuneFunctions.triangle;
+
+/**
+ * Makes a new Rune from a given Rune
+ * by turning it upside-down
+ * @param {Rune} rune - Given Rune
+ * @return {Rune} Resulting Rune
+ * @function
+ *
+ * @category Main
+ */
+export const turn_upside_down = RuneFunctions.turn_upside_down;
+
+/**
+ * Colors the given rune yellow (#FFEB3B).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
+ * @function
+ *
+ * @category Color
+ */
+export const yellow = RuneFunctions.yellow;
+
+/**
+ * Colors the given rune white (#FFFFFF).
+ * @param {Rune} rune - The rune to color
+ * @returns {Rune} The colored Rune
+ * @function
+ *
+ * @category Color
+ */
+export const white = RuneFunctions.white;

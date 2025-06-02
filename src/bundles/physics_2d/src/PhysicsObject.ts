@@ -7,7 +7,7 @@ import {
   b2PolygonShape,
   b2Vec2
 } from '@box2d/core';
-import type { ReplResult } from '../../typings/type_helpers';
+import type { ReplResult } from '@sourceacademy/modules-lib/types';
 
 import type { PhysicsWorld } from './PhysicsWorld';
 import { ACCURACY, type Force, type ForceWithPos } from './types';

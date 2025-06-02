@@ -183,7 +183,6 @@ export class ProgrammableRepl {
     // console.log(context);
     const options : Partial<IOptions> = {
       originalMaxExecTime: 1000,
-      scheduler: 'preemptive',
       stepLimit: 1000,
       throwInfiniteLoops: true,
       useSubst: false
@@ -196,7 +195,7 @@ export class ProgrammableRepl {
 
     runFilesInContext(sourceFile, '/ReplModuleUserCode.js', context, options)
       .then((evalResult) => {
-        if (evalResult.status === 'suspended' || evalResult.status === 'suspended-cse-eval') {
+        if (evalResult.status === 'suspended-cse-eval') {
           throw new Error('This should not happen');
         }
         if (evalResult.status !== 'error') {

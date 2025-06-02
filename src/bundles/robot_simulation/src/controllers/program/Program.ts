@@ -44,7 +44,6 @@ export class Program implements Controller {
   start() {
     const options: Partial<IOptions> = {
       originalMaxExecTime: Infinity,
-      scheduler: 'preemptive',
       stepLimit: Infinity,
       throwInfiniteLoops: false,
       useSubst: false,
