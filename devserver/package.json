@@ -29,6 +29,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "postinstall": "playwright install"
+    "postinstall": "playwright install",
+    "test": "vitest --config ./vite.config.ts --project \"Dev Server\""
   }
 }

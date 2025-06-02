@@ -3,7 +3,7 @@
 import pathlib from 'path';
 import react from '@vitejs/plugin-react';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import { loadEnv, defineConfig } from 'vite'
+import { loadEnv, defineConfig, searchForWorkspaceRoot } from 'vite'
 import { defineProject, mergeConfig } from 'vitest/config';
 import type { BrowserCommand } from 'vitest/node';
 import rootConfig from '../vitest.config'
@@ -22,54 +22,77 @@ declare module '@vitest/browser/context' {
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
+  const modulesDir = pathlib.resolve(import.meta.dirname, '..', 'build') 
+
   return mergeConfig(
     rootConfig,
     defineProject({
-    plugins: [
-      nodePolyfills({
-        include: ['path']
-      }),
-      react(),
-    ],
-    resolve: {
-      preserveSymlinks: true,
-      alias:[{
-        find: /^js-slang\/context/,
-        replacement: pathlib.resolve(import.meta.dirname, 'src', 'mockModuleContext.ts')
-      }]
-    },
-    define: {
-      'process.env': env
-    },
-    optimizeDeps: {
-      esbuildOptions: {
-        // Node.js global to browser globalThis
-        define: {
-          global: 'globalThis'
+      plugins: [
+        nodePolyfills({
+          include: ['path']
+        }),
+        react(),
+      ],
+      resolve: {
+        preserveSymlinks: true,
+        alias:[{
+          find: /^js-slang\/context/,
+          replacement: pathlib.resolve(import.meta.dirname, 'src', 'mockModuleContext.ts')
+        }]
+      },
+      server: {
+        port: 8022,
+        strictPort: true,
+        proxy: {
+          '/modules': {
+            target: 'http://localhost:8022',
+            rewrite(path) {
+              const finalPath = path.replace('/modules', modulesDir)
+              return `/@fs/${finalPath}`
+            }
+          }
+        },
+        fs: {
+          allow: [
+            searchForWorkspaceRoot(import.meta.dirname),
+            modulesDir
+          ]
         }
       },
-      include: [
-        "vite-plugin-node-polyfills/shims/buffer",
-        "vite-plugin-node-polyfills/shims/global",
-        "vite-plugin-node-polyfills/shims/process",
-      ]
-    },
-    test: {
-      name: 'devserver',
-      include: [
-        "**/__tests__/**/*.ts*"
-      ],
-      browser: {
-        enabled: true,
-        headless: false,
-        provider: 'playwright',
-        instances: [{
-          browser: 'chromium'
-        }],
-        commands: {
-          setLocalStorage
+      define: {
+        'process.env': env
+      },
+      optimizeDeps: {
+        esbuildOptions: {
+          // Node.js global to browser globalThis
+          define: {
+            global: 'globalThis'
+          }
+        },
+        include: [
+          "vite-plugin-node-polyfills/shims/buffer",
+          "vite-plugin-node-polyfills/shims/global",
+          "vite-plugin-node-polyfills/shims/process",
+        ]
+      },
+      test: {
+        name: 'Dev Server',
+        include: [
+          "**/__tests__/**/*.ts*"
+        ],
+        browser: {
+          enabled: true,
+          headless: true,
+          provider: 'playwright',
+          instances: [{
+            browser: 'chromium',
+            screenshotFailures: false
+          }],
+          commands: {
+            setLocalStorage
+          }
         }
       }
-    }
-  }));
+    })
+  );
 })
