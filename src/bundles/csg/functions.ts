@@ -1,7 +1,6 @@
 /* [Imports] */
 import { primitives } from '@jscad/modeling';
 import { colorize as colorSolid } from '@jscad/modeling/src/colors';
-import { geom3 } from '@jscad/modeling/src/geometries';
 import {
   measureBoundingBox,
   type BoundingBox
