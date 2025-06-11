@@ -16,25 +16,28 @@ const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'
 
 export default tseslint.config(
   {
-    // global ignores
+    name: 'Global Ignores',
     ignores: [
+      '.yarn',
       '**/*.snap',
       'build/**',
       'lib/buildtools/bin',
       'lib/buildtools/src/build/__test_mocks__',
       'lib/lintplugin/dist.js',
+      'devserver/vite.config.ts',
       '**/dist/**',
       'src/**/samples/**',
-      '**/*.d.ts'
+      '**/*.d.ts',
+      '**/coverage',
     ]
   },
   js.configs.recommended,
   {
-    // Global JS Rules
+    name: 'Global JS Rules',
     languageOptions: {
       globals: {
         ...globals.node,
-        ...globals.es2022
+        ...globals.es2020
       }
     },
     plugins: {
@@ -72,7 +75,7 @@ export default tseslint.config(
   },
   ...tseslint.configs.recommended,
   {
-    // Global typescript rules
+    name: 'Global Typescript Rules',
     files: ['**/*.ts*'],
     languageOptions: {
       parser: tseslint.parser
@@ -96,7 +99,7 @@ export default tseslint.config(
     }
   },
   {
-    // global for TSX files
+    name: 'Global for TSX Files',
     files: ['**/*.tsx'],
     plugins: {
       'react-hooks': reactHooksPlugin,
@@ -112,7 +115,7 @@ export default tseslint.config(
     }
   },
   {
-    // Rules for bundles and tabs
+    name: 'Rules for bundles and tabs',
     files: [
       'src/bundles/**/*.ts*',
       'src/tabs/**/*.ts*',
@@ -120,7 +123,7 @@ export default tseslint.config(
     languageOptions: {
       globals: globals.browser,
       parserOptions: {
-        project: `${import.meta.dirname}/src/tsconfig.json`
+        project: './src/tsconfig.json'
       }
     },
     rules: {
@@ -142,17 +145,18 @@ export default tseslint.config(
     },
   },
   {
-    // Rules for scripts
+    name: 'Rules for modules library',
     files: ['lib/**/*.ts'],
     languageOptions: {
       parserOptions: {
-        project: `${import.meta.dirname}/lib/tsconfig.json`
+        project: './lib/tsconfig.json'
       }
     },
     rules: {
       'func-style': 'off',
       'import/extensions': ['error', 'never', { json: 'always' }],
       'no-constant-condition': 'off', // Was 'error',
+      'no-fallthrough': 'off',
 
       '@stylistic/arrow-parens': ['warn', 'as-needed'],
 
@@ -161,22 +165,23 @@ export default tseslint.config(
       '@typescript-eslint/return-await': ['error', 'in-try-catch']
     },
   },
+
   {
-    // Rules for devserver,
-    files: ['./devserver/**/*.ts*'],
+    name: 'Rules for Dev Server',
+    files: ['devserver/**/*.ts*'],
     ignores: ['dist'],
     languageOptions: {
       parserOptions: {
-        project: `${import.meta.dirname}/devserver/tsconfig.json`
+        project: './devserver/tsconfig.json',
+        globals: {
+          ...globals.browser,
+          ...globals.node
+        },
       },
-      globals: {
-        ...globals.browser,
-        ...globals.node
-      }
-    },
+    }
   },
   {
-    // Rules for tests
+    name: 'Rules for tests',
     plugins: {
       'vitest': vitestPlugin,
     },
@@ -187,7 +192,9 @@ export default tseslint.config(
     ],
     rules: {
       ...vitestPlugin.configs.recommended.rules,
-      'vitest/expect-expect': ['error', { assertFunctionNames: ['expect*'] }],
+      'vitest/expect-expect': ['error', {
+        assertFunctionNames: ['expect*'],
+      }],
       'vitest/no-alias-methods': 'off',
       'vitest/no-conditional-expect': 'off',
       'vitest/no-export': 'off',
@@ -200,20 +207,14 @@ export default tseslint.config(
     }
   },
   {
-    // Rules for cjs files
+    name: 'Rules for cjs files',
     files: ['**/*.cjs'],
     rules: {
       '@typescript-eslint/no-require-imports': 'off', // Was 'error'
     }
   },
   {
-    // Rules for scripts
-    rules: {
-      'no-fallthrough': 'off'
-    }
-  },
-  {
-    // Rules specifically for tabs
+    name: 'Rules specifically for tabs',
     files: [
       'src/tabs/*/index.tsx',
       'src/tabs/*/src/index.tsx',
@@ -221,5 +222,12 @@ export default tseslint.config(
     rules: {
       '@sourceacademy/tab-type': 'error'
     }
-  }
+  },
+  {
+    name: 'Specifically for buildtools',
+    files: ['lib/buildtools/**/*.ts'],
+    rules: {
+      'import/extensions': 'off'
+    }
+  },
 );
