@@ -1,5 +1,4 @@
-const logLevels = ['source', 'error'] as const;
-type LogLevel = typeof logLevels[number];
+type LogLevel = 'error' | 'source';
 
 export type LogEntry = {
   message: string;
