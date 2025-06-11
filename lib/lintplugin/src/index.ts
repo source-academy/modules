@@ -1,6 +1,5 @@
 import type { ESLint } from 'eslint';
 import { jsConfig, tsConfig } from './configs';
-import moduleTagPresent from './rules/moduleTag';
 import tabType from './rules/tabType';
 import collateTypeImports from './rules/typeimports';
 
@@ -9,7 +8,6 @@ const plugin: ESLint.Plugin = {
   rules: {
     // @ts-expect-error typescript-eslint rules are typed differently
     'collate-type-imports': collateTypeImports,
-    'module-tag-present': moduleTagPresent,
     'tab-type': tabType
   },
   configs: {

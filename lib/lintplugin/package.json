@@ -2,25 +2,29 @@
   "name": "@sourceacademy/lint-plugin",
   "version": "1.0.0",
   "type": "module",
-  "exports": "./dist.js",
-  "dependencies": {
-    "@es-joy/jsdoccomment": "^0.50.1",
-    "@stylistic/eslint-plugin": "^4.2.0",
-    "@typescript-eslint/utils": "^8.32.1",
-    "eslint-plugin-import": "^2.31.0",
-    "globals": "^15.11.0",
-    "typescript-eslint": "^8.24.1"
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist.js"
+    }
   },
   "peerDependencies": {
-    "eslint": "^9.21.0"
+    "@stylistic/eslint-plugin": "^4.4.1",
+    "@typescript-eslint/utils": "^8.33.1",
+    "eslint": "^9.28.0",
+    "eslint-plugin-import": "^2.31.0",
+    "globals": "^15.11.0",
+    "typescript-eslint": "^8.33.1"
   },
   "devDependencies": {
-    "@typescript-eslint/rule-tester": "^8.32.1",
+    "@typescript-eslint/rule-tester": "^8.33.1",
+    "esbuild": "^0.25.5",
     "typescript": "^5.8.2",
-    "vitest": "^3.1.4"
+    "vitest": "^3.2.3"
   },
   "scripts": {
     "build": "tsc --project ./tsconfig.prod.json && node ./build.js",
+    "install": "yarn build",
     "tsc": "tsc --project ./tsconfig.json",
     "test": "vitest --config ./vitest.config.ts"
   }

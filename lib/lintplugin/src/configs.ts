@@ -1,5 +1,6 @@
 import stylePlugin from '@stylistic/eslint-plugin';
 import type { Linter } from 'eslint';
+// @ts-expect-error Wait for eslint-plugin-import to publish the release that has typescript types
 import * as importPlugin from 'eslint-plugin-import';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -13,7 +14,7 @@ export const jsConfig = {
   languageOptions: {
     globals: {
       ...globals.node,
-      ...globals.es2022
+      ...globals.es2020
     }
   },
   plugins: {
