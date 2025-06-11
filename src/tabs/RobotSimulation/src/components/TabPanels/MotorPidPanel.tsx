@@ -1,6 +1,6 @@
 import { NumericInput } from '@blueprintjs/core';
+import type { DefaultEv3 } from '@sourceacademy/bundle-robot_simulation/controllers';
 import type { CSSProperties } from 'react';
-import type { DefaultEv3 } from '../../../../bundles/robot_simulation/controllers';
 import { TabWrapper } from './tabComponents/Wrapper';
 
 const RowStyle: CSSProperties = {

@@ -14,6 +14,8 @@
   },
   "scripts": {
     "build": "buildtools build tab .",
-    "lint": "buildtools lint ."
-  }
+    "lint": "buildtools lint .",
+    "tsc": "tsc --project ./tsconfig.json"
+  },
+  "type": "module"
 }

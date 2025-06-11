@@ -1,5 +1,5 @@
+import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
 import React, { useState } from 'react';
-import type { DebuggerContext } from '../../../typings/type_helpers';
 import { Modal } from './Modal';
 import { SimulationCanvas } from './Simulation';
 import { TabUi } from './TabUi';
