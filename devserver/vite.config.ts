@@ -1,12 +1,13 @@
+// Devserver Vite Config
 /// <reference types="@vitest/browser/providers/playwright" />
 
 import pathlib from 'path';
 import react from '@vitejs/plugin-react';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { loadEnv, defineConfig, searchForWorkspaceRoot } from 'vite'
-import { defineProject, mergeConfig } from 'vitest/config';
+import { mergeConfig } from 'vitest/config';
 import type { BrowserCommand } from 'vitest/node';
-import rootConfig from '../vitest.config'
+import rootConfig from '../vitest.config';
 
 const setLocalStorage: BrowserCommand<[key: string, value: any]> = async (ctx, key, value) => {
   if (ctx.provider.name === 'playwright') {
@@ -25,8 +26,7 @@ export default defineConfig(({ mode }) => {
   const modulesDir = pathlib.resolve(import.meta.dirname, '..', 'build') 
 
   return mergeConfig(
-    rootConfig,
-    defineProject({
+    rootConfig, {
       plugins: [
         nodePolyfills({
           include: ['path']
@@ -93,6 +93,6 @@ export default defineConfig(({ mode }) => {
           }
         }
       }
-    })
+    }
   );
 })
