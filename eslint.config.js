@@ -78,7 +78,11 @@ export default tseslint.config(
     name: 'Global Typescript Rules',
     files: ['**/*.ts*'],
     languageOptions: {
-      parser: tseslint.parser
+      parser: tseslint.parser,
+      parserOptions: {
+        tsconfigRootDir: import.meta.dirname,
+        project: true
+      }
     },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
@@ -90,12 +94,11 @@ export default tseslint.config(
       '@typescript-eslint/ban-types': 'off', // Was 'error'
       '@typescript-eslint/no-duplicate-type-constituents': 'off', // Was 'error'
       '@typescript-eslint/no-explicit-any': 'off', // Was 'error'
+      '@typescript-eslint/no-import-type-side-effects': 'error',
       '@typescript-eslint/no-redundant-type-constituents': 'off', // Was 'error'
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
       '@typescript-eslint/prefer-ts-expect-error': 'warn',
       '@typescript-eslint/sort-type-constituents': 'warn',
-
-      '@sourceacademy/collate-type-imports': 'warn'
     }
   },
   {
@@ -122,9 +125,6 @@ export default tseslint.config(
     ],
     languageOptions: {
       globals: globals.browser,
-      parserOptions: {
-        project: './src/tsconfig.json'
-      }
     },
     rules: {
       'func-style': ['warn', 'declaration', {
@@ -147,11 +147,6 @@ export default tseslint.config(
   {
     name: 'Rules for modules library',
     files: ['lib/**/*.ts'],
-    languageOptions: {
-      parserOptions: {
-        project: './lib/tsconfig.json'
-      }
-    },
     rules: {
       'func-style': 'off',
       'import/extensions': ['error', 'never', { json: 'always' }],
@@ -172,7 +167,6 @@ export default tseslint.config(
     ignores: ['dist'],
     languageOptions: {
       parserOptions: {
-        project: './devserver/tsconfig.json',
         globals: {
           ...globals.browser,
           ...globals.node
