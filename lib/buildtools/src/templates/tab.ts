@@ -1,9 +1,10 @@
 import fs from 'fs/promises';
 import type { Interface } from 'readline/promises';
 import _package from '../../../../package.json' with { type: 'json' };
-import { getBundleManifests, type BundleManifest, type ModulesManifest } from '../build/manifest';
-import { askQuestion, success, warn } from './print';
-import { check, isPascalCase } from './utilities';
+import { getBundleManifests } from '../build/manifest.js';
+import type { ModulesManifest, BundleManifest } from '../types.js';
+import { askQuestion, success, warn } from './print.js';
+import { check, isPascalCase } from './utilities.js';
 
 async function askModuleName(manifest: ModulesManifest, rl: Interface) {
   while (true) {
@@ -59,7 +60,8 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
       react: reactVersion,
     },
     scripts: {
-      'build': 'buildtools build tab .'
+      build: 'buildtools build tab .',
+      tsc: 'tsc --project ./tsconfig.json'
     }
   };
 

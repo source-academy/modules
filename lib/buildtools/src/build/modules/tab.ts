@@ -1,9 +1,12 @@
 import pathlib from 'path';
 import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild';
-import _ from 'lodash';
-import { collateResults, type BuildResult } from '../../utils';
-import { resolveAllBundles, resolvePaths, type ResolvedBundle } from '../manifest';
-import { commonEsbuildOptions, outputBundleOrTab } from './commons';
+import uniq from 'lodash/uniq.js';
+import type { PrebuildOptions } from '../../prebuild/index.js';
+import { runBuilderWithPrebuild } from '../../prebuild/index.js';
+import type { FullResult, ResolvedBundle, ResolvedTab, TabResultEntry } from '../../types.js';
+import { createBuilder } from '../buildUtils.js';
+import { resolveAllBundles, resolvePaths } from '../manifest.js';
+import { commonEsbuildOptions, outputBundleOrTab } from './commons.js';
 
 const tabContextPlugin: ESBuildPlugin = {
   name: 'Tab Context',
@@ -16,23 +19,14 @@ const tabContextPlugin: ESBuildPlugin = {
   }
 };
 
-interface ResolvedTab {
-  directory: string
-  entryPoint: string
-  name: string
-}
-
-export async function resolveSingleTab(tabDir: string): Promise<ResolvedTab> {
+export async function resolveSingleTab(tabDir: string): Promise<ResolvedTab | undefined> {
   const fullyResolved = pathlib.resolve(tabDir);
-
   const tabPath = await resolvePaths(
     `${fullyResolved}/src/index.tsx`,
     `${fullyResolved}/index.tsx`
   );
 
-  if (tabPath === undefined) {
-    throw new Error(`No tab found at ${fullyResolved}!`);
-  }
+  if (tabPath === undefined) return undefined;
 
   return {
     directory: fullyResolved,
@@ -43,33 +37,25 @@ export async function resolveSingleTab(tabDir: string): Promise<ResolvedTab> {
 
 export async function resolveAllTabs(bundlesDir: string, tabsDir: string) {
   const bundlesManifest = await resolveAllBundles(bundlesDir);
+  const tabNames = uniq(Object.values(bundlesManifest).flatMap(({ manifest: { tabs} }) => tabs ?? []));
 
-  const rawTabs = await Promise.all(
-    Object.values(bundlesManifest).map(async ({ manifest }) => {
-      if (manifest.tabs) {
-        return Promise.all(manifest.tabs.map(async tabName => {
-          const resolvedTab = await resolveSingleTab(pathlib.join(tabsDir, tabName));
-          return resolvedTab;
-        }));
-      }
+  const resolvedTabs = await Promise.all(tabNames.map(tabName => resolveSingleTab(`${tabsDir}/${tabName}`)));
 
-      return [];
-    }));
-
-  return rawTabs.reduce((res, tabs) => {
-    return tabs.reduce((res, tab) => ({
+  return resolvedTabs.reduce((res, tab) => tab === undefined
+    ? res
+    : {
       ...res,
       [tab.name]: tab
-    }), res);
-  }, {} as Record<string, ResolvedTab>);
+    }, {} as Record<string, ResolvedTab>);
 }
 
 /**
  * Build a tab at the given directory
  */
-export async function buildTab(tabDir: string, outDir: string): Promise<BuildResult> {
-  const tab = await resolveSingleTab(tabDir);
-
+export const {
+  builder: buildTab,
+  formatter: formatTabResult
+} = createBuilder<[tab: ResolvedTab], TabResultEntry>(async (outDir, tab) => {
   const { outputFiles: [result]} = await esbuild({
     ...commonEsbuildOptions,
     entryPoints: [tab.entryPoint],
@@ -84,14 +70,30 @@ export async function buildTab(tabDir: string, outDir: string): Promise<BuildRes
     tsconfig: `${tab.directory}/tsconfig.json`,
     plugins: [tabContextPlugin],
   });
-  return outputBundleOrTab(result, tab.name, 'tab', outDir);
-}
+  const resultEntry = await outputBundleOrTab(result, tab.name, 'tab', outDir);
+  return [resultEntry];
+});
 
 /**
  * Find all the tabs within the given directory and build them all at once
  */
-export async function buildTabs(resolvedBundles: Record<string, ResolvedBundle>, tabsDir: string, outDir: string) {
-  const tabNames = _.uniq(Object.values(resolvedBundles).map(({ manifest: { tabs } }) => tabs ?? []));
-  const results = await Promise.all(tabNames.map(tabName => buildTab(`${tabsDir}/${tabName}`, outDir)));
-  return collateResults(results);
+export function buildTabs(resolvedBundles: Record<string, ResolvedBundle>, tabsDir: string, prebuildOpts: PrebuildOptions, outDir: string) {
+  const tabNames = uniq(Object.values(resolvedBundles).flatMap(({ manifest: { tabs } }) => tabs ?? []));
+  return Promise.all(
+    tabNames.map(async (tabName): Promise<FullResult> => {
+      const tab = await resolveSingleTab(`${tabsDir}/${tabName}`);
+      if (!tab) {
+        return [
+          [{
+            severity: 'error',
+            assetType: 'tab',
+            inputName: tabName,
+            message: `Could not find tab at ${tabsDir}/${tabName}!`
+          }],
+          {}
+        ];
+      }
+
+      return runBuilderWithPrebuild(buildTab, prebuildOpts, tab, outDir);
+    }));
 }

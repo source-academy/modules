@@ -1,9 +1,10 @@
 import fs from 'fs/promises';
 import type { Interface } from 'readline/promises';
 import _package from '../../../../package.json' with { type: 'json' };
-import { getBundleManifests, type BundleManifest, type ModulesManifest } from '../build/manifest';
-import { askQuestion, success, warn } from './print';
-import { check, isSnakeCase } from './utilities';
+import { getBundleManifests } from '../build/manifest.js';
+import type { ModulesManifest, BundleManifest } from '../types.js';
+import { askQuestion, success, warn } from './print.js';
+import { check, isSnakeCase } from './utilities.js';
 
 async function askModuleName(manifest: ModulesManifest, rl: Interface) {
   while (true) {
@@ -25,6 +26,7 @@ export async function addNew(bundlesDir: string, rl: Interface) {
 
   await fs.mkdir(bundlesDir, { recursive: true });
   await fs.cp(`${import.meta.dirname}/templates/bundle`, bundleDestination);
+  const { default: sampleTsconfig } = await import(`${import.meta.dirname}/templates/bundle_tsconfig.json`, { with: { type: 'json' }});
 
   const typescriptVersion = _package.devDependencies.typescript;
 
@@ -47,13 +49,18 @@ export async function addNew(bundlesDir: string, rl: Interface) {
     }
   };
 
+  sampleTsconfig.typedocOptions = {
+    name: moduleName
+  };
+
   const bundleManifest: BundleManifest = {
     tabs: []
   };
 
   await Promise.all([
     fs.writeFile(`${bundleDestination}/package.json`, JSON.stringify(packageJson, null, 2)),
-    fs.writeFile(`${bundleDestination}/manifest.json`, JSON.stringify(bundleManifest, null, 2))
+    fs.writeFile(`${bundleDestination}/manifest.json`, JSON.stringify(bundleManifest, null, 2)),
+    fs.writeFile(`${bundleDestination}/tsconfig.json`, JSON.stringify(sampleTsconfig, null, 2)),
   ]);
 
   success(`Bundle for module ${moduleName} created at ${bundleDestination}.`);

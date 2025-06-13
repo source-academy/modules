@@ -1,30 +1,27 @@
 import { build as esbuild } from 'esbuild';
-import { collateResults, type BuildResult } from '../../utils';
-import { resolvePaths, type ResolvedBundle } from '../manifest';
-import { commonEsbuildOptions, outputBundleOrTab } from './commons';
+import type { PrebuildOptions } from '../../prebuild/index.js';
+import { runBuilderWithPrebuild } from '../../prebuild/index.js';
+import type { BundleResultEntry, ResolvedBundle } from '../../types.js';
+import { createBuilder } from '../buildUtils.js';
+import { commonEsbuildOptions, outputBundleOrTab } from './commons.js';
 
-export function getBundleEntryPoint(bundleDir: string) {
-  return resolvePaths(
-    `${bundleDir}/src/index.ts`,
-    `${bundleDir}/index.ts`,
-  );
-}
+export const {
+  builder: buildBundle,
+  formatter: formatBundleResult,
+} = createBuilder<[bundle: ResolvedBundle], BundleResultEntry>(
+  async (outDir, bundle) => {
+    const { outputFiles: [result] } = await esbuild({
+      ...commonEsbuildOptions,
+      entryPoints: [`${bundle.directory}/src/index.ts`],
+      tsconfig: `${bundle.directory}/tsconfig.json`,
+      outfile: `/bundle/${bundle.name}`,
+    });
 
-/**
- * Build the given resolved bundle
- */
-export async function buildBundle(bundle: ResolvedBundle, outDir: string): Promise<BuildResult> {
-  const { outputFiles: [result] } = await esbuild({
-    ...commonEsbuildOptions,
-    entryPoints: [bundle.entryPoint],
-    tsconfig: `${bundle.directory}/tsconfig.json`,
-    outfile: `/bundle/${bundle.name}`,
-  });
+    const resultEntry = await outputBundleOrTab(result, bundle.name, 'bundle', outDir);
+    return [resultEntry];
+  }
+);
 
-  return outputBundleOrTab(result, bundle.name, 'bundle', outDir);
-}
-
-export async function buildBundles(resolvedBundles: Record<string, ResolvedBundle>, outDir: string): Promise<BuildResult> {
-  const results = await Promise.all(Object.values(resolvedBundles).map(bundle => buildBundle(bundle, outDir)));
-  return collateResults(results);
+export function buildBundles(resolvedBundles: Record<string, ResolvedBundle>, options: PrebuildOptions, outDir: string) {
+  return Promise.all(Object.values(resolvedBundles).map(bundle => runBuilderWithPrebuild(buildBundle, options, bundle, outDir)));
 }

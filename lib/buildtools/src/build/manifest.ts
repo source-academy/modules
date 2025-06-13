@@ -1,20 +1,12 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
 import { validate } from 'jsonschema';
-import { getTabsDir } from '../getGitRoot';
-import { isNodeError } from '../utils';
-import { getBundleEntryPoint } from './modules/bundle';
+import { getTabsDir } from '../getGitRoot.js';
+import type { BundleManifest, ManifestResult, ModulesManifest, ResolvedBundle } from '../types.js';
+import { isNodeError } from '../utils.js';
+import { createBuilder } from './buildUtils.js';
 import manifestSchema from './modules/manifest.schema.json' with { type: 'json' };
-import { resolveSingleTab } from './modules/tab';
-
-export interface BundleManifest {
-  version?: string
-  tabs?: string[]
-}
-
-export type ModulesManifest = {
-  [name: string]: BundleManifest
-};
+import { resolveSingleTab } from './modules/tab.js';
 
 /**
  * Checks that the given bundle manifest was correctly specified
@@ -38,11 +30,8 @@ export async function getBundleManifest(manifestFile: string, tabCheck?: boolean
   if (tabCheck && data.tabs) {
     const tabsDir = await getTabsDir();
     await Promise.all(data.tabs.map(async tabName => {
-      try {
-        await resolveSingleTab(`${tabsDir}/${tabName}`);
-      } catch {
-        throw new Error(`Failed to find tab with name '${tabName}'!`);
-      }
+      const resolvedTab = await resolveSingleTab(`${tabsDir}/${tabName}`);
+      if (resolvedTab === undefined) throw new Error(`Failed to find tab with name '${tabName}'!`);
     }));
   }
 
@@ -88,13 +77,6 @@ export async function getBundleManifests(bundlesDir: string): Promise<ModulesMan
   }, {} as Record<string, BundleManifest>);
 }
 
-export interface ResolvedBundle {
-  name: string
-  manifest: BundleManifest
-  entryPoint: string
-  directory: string
-}
-
 export async function resolveSingleBundle(bundleDir: string): Promise<ResolvedBundle | undefined> {
   const fullyResolved = pathlib.resolve(bundleDir);
 
@@ -104,14 +86,18 @@ export async function resolveSingleBundle(bundleDir: string): Promise<ResolvedBu
   const manifest = await getBundleManifest(`${fullyResolved}/manifest.json`);
   if (!manifest) return undefined;
 
-  const entryPoint = await getBundleEntryPoint(fullyResolved);
-  if (!entryPoint) return undefined;
+  try {
+    const entryPoint = `${fullyResolved}/src/index.ts`;
+    await fs.access(entryPoint, fs.constants.R_OK);
+  } catch (error) {
+    if (!isNodeError(error) || error.code !== 'ENOENT') throw error;
+    return undefined;
+  }
 
   const bundleName = pathlib.basename(fullyResolved);
   return {
     name: bundleName,
     manifest,
-    entryPoint,
     directory: fullyResolved
   };
 }
@@ -145,3 +131,28 @@ export async function resolvePaths(...paths: string[]) {
 
   return undefined;
 }
+
+export const {
+  builder: writeManifest,
+  formatter: formatManifestResult
+} = createBuilder<[bundles: Record<string, ResolvedBundle>], ManifestResult>(async (outDir, resolvedBundles) => {
+  try {
+    const toWrite = Object.entries(resolvedBundles).reduce((res, [key, { manifest }]) => ({
+      ...res,
+      [key]: manifest
+    }), {});
+    const outpath = `${outDir}/modules.json`;
+    await fs.writeFile(outpath, JSON.stringify(toWrite, null, 2));
+    return [{
+      severity: 'success',
+      assetType: 'manifest',
+      message: `Manifest written to ${outpath}`
+    }];
+  } catch (error) {
+    return [{
+      severity: 'error',
+      assetType: 'manifest',
+      message: `${error}`
+    }];
+  }
+});

@@ -1,13 +1,13 @@
 import fs from 'fs/promises';
-import { resolve } from 'path';
 import type { ProjectReflection } from 'typedoc';
-import { expect, test, vi, type MockedFunction } from 'vitest';
-import { initTypedoc, initTypedocForSingleBundle } from '../docsUtils';
-import { buildJson } from '../json';
+import { expect, test, vi } from 'vitest';
+import { testMocksDir } from '../../../__tests__/fixtures.js';
+import { initTypedoc, initTypedocForSingleBundle } from '../docsUtils.js';
+import { buildJson } from '../json.js';
 
-vi.mock(import('../../../getGitRoot'));
+vi.mock(import('../../../getGitRoot.js'));
 
-const mockedWriteFile = fs.writeFile as MockedFunction<typeof fs.writeFile>;
+const mockedWriteFile = vi.mocked(fs.writeFile);
 
 const test0Obj = {
   test_function: {
@@ -30,16 +30,16 @@ function expectObj<T>(raw: string, expected: T) {
   expect(JSON.parse(raw)).toMatchObject(expected as any);
 }
 
-const testMocksDir = resolve(import.meta.dirname, '../../../__test_mocks__');
-
 test('Building the json documentation for a single bundle', async () => {
-  const project = await initTypedocForSingleBundle({
+  const bundle = {
     name: 'test0',
     manifest: {},
     directory: `${testMocksDir}/bundles/test0`,
-    entryPoint: `${testMocksDir}/bundles/test0/index.ts`,
-  }, false);
-  await buildJson('test0', project, '/build');
+  };
+
+  const project = await initTypedocForSingleBundle(bundle);
+
+  await buildJson('/build', bundle, project);
 
   const [[test0Path, test0str]] = mockedWriteFile.mock.calls;
   expectObj(test0str as string, test0Obj);
@@ -50,26 +50,26 @@ test('initTypedoc for muiltiple bundles', async () => {
   // This test will complain that the README can't be found, which is fine
   // since it's not present inside the mock folder
 
-  const [project,] = await initTypedoc({
+  const bundles = {
     test0: {
       name: 'test0',
       manifest: {},
       directory: `${testMocksDir}/bundles/test0`,
-      entryPoint: `${testMocksDir}/bundles/test0/index.ts`,
     },
     test1: {
       name: 'test1',
       manifest: {},
       directory: `${testMocksDir}/bundles/test1`,
-      entryPoint: `${testMocksDir}/bundles/test1/index.ts`,
     }
-  }, false);
+  };
+
+  const [project,] = await initTypedoc(bundles);
 
   const test0Reflection = project.getChildByName('test0') as ProjectReflection;
-  await buildJson('test0', test0Reflection, '/build');
+  await buildJson('/build', bundles.test0, test0Reflection);
 
   const test1Reflection = project.getChildByName('test1') as ProjectReflection;
-  await buildJson('test1', test1Reflection, '/build');
+  await buildJson('/build', bundles.test1, test1Reflection);
 
   const [[test0Path, test0str], [test1Path, test1str]] = mockedWriteFile.mock.calls;
   expectObj(test0str as string, test0Obj);

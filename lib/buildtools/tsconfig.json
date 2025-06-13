@@ -1,10 +1,9 @@
 // buildtools tsconfig
 {
   "compilerOptions": {
-    "isolatedModules": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "noEmit": true
+    "noEmit": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext"
   },
   "extends": "../tsconfig.json",
   "include": ["./src", "vitest.setup.ts"],

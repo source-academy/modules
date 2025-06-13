@@ -1,20 +1,27 @@
+import chalk from 'chalk';
 import { ESLint } from 'eslint';
-import { getGitRoot } from '../getGitRoot';
-import { findSeverity, type Severity } from '../utils';
+import { getGitRoot } from '../getGitRoot.js';
+import type { ResolvedBundle, ResolvedTab } from '../types.js';
+import { findSeverity, type Severity } from '../utils.js';
+import { createPrebuilder } from './prebuildUtils.js';
 
-interface LintResults {
+export interface LintResults {
   formatted: string
   severity: Severity
+  input: ResolvedBundle | ResolvedTab
 }
 
-export async function runEslint(directory: string, fix: boolean): Promise<LintResults> {
+export const {
+  builder: runEslint,
+  formatter: formatLintResult
+} = createPrebuilder<LintResults, [fix: boolean]>(async (input, fix) => {
   const linter = new ESLint({
     fix,
     cwd: await getGitRoot()
   });
 
   try {
-    const linterResults = await linter.lintFiles(directory);
+    const linterResults = await linter.lintFiles(input.directory);
     if (fix) {
       await ESLint.outputFixes(linterResults);
     }
@@ -38,12 +45,26 @@ export async function runEslint(directory: string, fix: boolean): Promise<LintRe
 
     return {
       formatted,
-      severity
+      severity,
+      input
     };
   } catch (error) {
     return {
       severity: 'error',
-      formatted: `${error}`
+      formatted: `${error}`,
+      input
     };
   }
-}
+}, ({ severity, formatted, input }) => {
+  const inputType = 'entryPoint' in input ? 'tab' : 'bundle';
+  const prefix = `${chalk.blueBright(`[${inputType} ${input.name}]:`)} ${chalk.cyanBright('Linting completed')}`;
+
+  switch (severity) {
+    case 'error':
+      return `${prefix} ${chalk.cyanBright('with')} ${chalk.redBright('errors')}:\n${formatted}`;
+    case 'warn':
+      return `${prefix} ${chalk.cyanBright('with')} ${chalk.yellowBright('warnings')}:\n${formatted}`;
+    case 'success':
+      return `${prefix} ${chalk.greenBright('successfully')}`;
+  }
+});

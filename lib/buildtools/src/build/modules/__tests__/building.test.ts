@@ -1,10 +1,9 @@
 import fs from 'fs/promises';
-import { resolve } from 'path';
-import { beforeEach, vi, test, expect } from 'vitest';
-import { buildBundle } from '../bundle';
-import { buildTab } from '../tab';
-
-const testMocksDir = resolve(import.meta.dirname, '../../../', '__test_mocks__');
+import { beforeEach, expect, vi, test } from 'vitest';
+import { testMocksDir } from '../../../__tests__/fixtures.js';
+import { writeManifest } from '../../manifest.js';
+import { buildBundle } from '../bundle.js';
+import { buildTab } from '../tab.js';
 
 const written: string[] = [];
 vi.spyOn(fs, 'open').mockResolvedValue({
@@ -16,17 +15,18 @@ vi.spyOn(fs, 'open').mockResolvedValue({
   close: vi.fn()
 } as any);
 
+vi.mock(import('../../../getGitRoot.js'));
+
 beforeEach(() => {
   written.splice(0, written.length);
 });
 
 test('build bundle', async () => {
-  await buildBundle({
+  await buildBundle('/build', {
     manifest: {},
     name: 'test0',
     directory: `${testMocksDir}/bundles/test0`,
-    entryPoint: `${testMocksDir}/bundles/test0/index.ts`,
-  }, '/build');
+  });
 
   expect(fs.open).toHaveBeenCalledWith('/build/bundles/test0.js', 'w');
 
@@ -58,7 +58,11 @@ test('build bundle', async () => {
 });
 
 test('build tab', async () => {
-  await buildTab(`${testMocksDir}/tabs/tab0`, '/build');
+  await buildTab('/build', {
+    directory: `${testMocksDir}/tabs/tab0`,
+    name: 'tab0',
+    entryPoint: `${testMocksDir}/tabs/tab0/src/index.tsx`,
+  });
   expect(fs.open).toHaveBeenCalledWith('/build/tabs/tab0.js', 'w');
 
   const data = written.join('');
@@ -67,4 +71,28 @@ test('build tab', async () => {
   const { default: tab } = eval(trimmed)(() => {});
   expect(tab.body(0)).toEqual(0);
   expect(tab.toSpawn()).toEqual(true);
+});
+
+vi.spyOn(fs, 'writeFile').mockResolvedValue();
+
+test('writing manifest', async () => {
+  await writeManifest('/build', {
+    test0: {
+      manifest: {
+        tabs: ['tab0']
+      }
+    },
+    test1: {
+      manifest: {}
+    }
+  } as any);
+
+  expect(fs.writeFile).toHaveBeenCalledTimes(1);
+  const [[path, data]] = vi.mocked(fs.writeFile).mock.calls;
+
+  expect(path).toEqual('/build/modules.json');
+  expect(JSON.parse(data as string)).toMatchObject({
+    test0: { tabs: ['tab0'] },
+    test1: {}
+  });
 });

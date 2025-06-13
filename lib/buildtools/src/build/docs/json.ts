@@ -1,7 +1,9 @@
 import fs from 'fs/promises';
 import * as td from 'typedoc';
-import type { BuildResult } from '../../utils';
-import drawdown from './drawdown';
+import type { JsonResultEntry, ResolvedBundle } from '../../types.js';
+import type { Severity } from '../../utils.js';
+import { createBuilder } from '../buildUtils.js';
+import drawdown from './drawdown.js';
 
 const typeToName = (type: td.SomeType) => type.stringify(td.TypeContext.none);
 
@@ -9,10 +11,8 @@ const parsers: {
   [K in td.ReflectionKind]?: (obj: td.DeclarationReflection) => ({
     error: any
   } | {
-    obj: any,
-    meta: {
-      warnings: string[],
-    }
+    obj: unknown,
+    warnings: string[],
   })
 } = {
   [td.ReflectionKind.Function](obj) {
@@ -39,19 +39,17 @@ const parsers: {
       description = 'No description available';
     }
 
-    const params = signature.parameters!.map(({ type, name }) => [name, typeToName(type!)] as [string, string]);
+    const params = signature.parameters?.map(({ type, name }) => [name, typeToName(type!)] as [string, string]);
 
     return {
       obj: {
         kind: 'function',
         name: obj.name,
         description,
-        params,
+        params: params ?? [],
         retType: typeToName(signature.type!)
       },
-      meta: {
-        warnings: []
-      }
+      warnings: []
     };
   },
   [td.ReflectionKind.Variable](obj) {
@@ -70,84 +68,69 @@ const parsers: {
         description,
         type: typeToName(obj.type!)
       },
-      meta: {
-        warnings: []
-      }
+      warnings: []
     };
   }
 };
 
-/**
- * Build the JSON documentation for a single bundle using the output from
- * typedoc
- */
-export async function buildJson(bundleName: string, reflection: td.ProjectReflection, outDir: string): Promise<BuildResult> {
-  const [jsonData, warnings, errors] = reflection.children!.reduce(([res, warnings, errors], element) => {
-    if (element.name === 'type_map') {
-      // console.warn(`${chalk.yellowBright('[warning]')}: type_map present in output for ${bundleName}! Did you forget a @hidden tag?`);
-      return [
-        res,
-        [
-          ...warnings,
-          `type_map present in output for ${bundleName}! Did you forget a @hidden tag?`
-        ],
-        errors
-      ];
-    }
+export const {
+  builder: buildJson,
+  formatter: formatJsonResult
+} = createBuilder<[bundle: ResolvedBundle, reflection: td.ProjectReflection], JsonResultEntry>(async (outDir, { name: bundleName }, reflection) => {
+  const createEntry = (severity: Severity, message: string): JsonResultEntry => ({
+    severity,
+    assetType: 'json',
+    message,
+    inputName: bundleName
+  });
 
-    const parser = parsers[element.kind];
-    if (parser) {
-      const result = parser(element);
-      if ('error' in result) {
-        return [res, warnings, [...errors, result.error]];
+  try {
+    const [jsonData, resultEntries] = reflection.children!.reduce<[
+      Record<string, unknown>,
+      JsonResultEntry[]
+    ]>(([res, results], element) => {
+      const parser = parsers[element.kind];
+
+      if (parser) {
+        const result = parser(element);
+        if ('error' in result) {
+          return [res, [...results, createEntry('error', `${result.error}`)]];
+        }
+
+        const { obj, warnings } = result;
+
+        return [
+          {
+            ...res,
+            [element.name]: obj
+          },
+          [
+            ...results,
+            ...warnings.map(warning => createEntry('warn', warning))
+          ]
+        ];
+      } else {
+        return [
+          {
+            ...res,
+            [element.name]: { kind: 'unknown' }
+          }, [
+            ...results,
+            createEntry('warn', `No parser found for ${element.name} which is of type ${element.kind}.`)
+          ]];
       }
+    }, [{}, []]);
 
-      const { obj, meta } = result;
+    const outpath = `${outDir}/jsons/${bundleName}.json`;
+    await fs.writeFile(outpath, JSON.stringify(jsonData, null, 2));
 
-      return [
-        {
-          ...res,
-          [element.name]: obj
-        },
-        [
-          ...warnings,
-          ...meta.warnings
-        ],
-        errors
-      ];
-    } else {
-      return [
-        {
-          ...res,
-          [element.name]: { kind: 'unknown' }
-        }, [
-          ...warnings,
-          `No parser found for ${element.name} which is of type ${element.kind}.`
-        ], errors];
-    }
-  }, [{}, [], []] as [Record<string, any>, string[], string[]]);
-
-  await fs.writeFile(`${outDir}/jsons/${bundleName}.json`, JSON.stringify(jsonData, null, 2));
-
-  if (errors.length > 0) {
-    return {
+    return resultEntries.length === 0 ? [ createEntry('success', `JSON written to ${outpath}`) ] : resultEntries;
+  } catch (error) {
+    return [{
       severity: 'error',
-      errors,
-      warnings
-    };
+      inputName: bundleName,
+      assetType: 'json',
+      message: `${error}`
+    }];
   }
-
-  if (warnings.length > 0) {
-    return {
-      severity: 'warn',
-      warnings,
-      errors
-    };
-  }
-
-  return {
-    severity: 'success',
-    warnings: [],
-    errors: []
-  };
-}
+});

@@ -1,10 +1,17 @@
-import { vi, expect, describe, test } from 'vitest';
-import * as utils from '../../getGitRoot';
-import { getLintCommand } from '../lint';
+import { ESLint } from 'eslint';
+import { beforeEach, vi, expect, describe, test } from 'vitest';
+import * as manifest from '../../build/manifest.js';
+import * as tab from '../../build/modules/tab.js';
+import * as utils from '../../getGitRoot.js';
+import { getLintCommand } from '../lint.js';
+import { expectCommandExit, expectCommandSuccess, getCommandRunner } from './testingUtils.js';
 
 const lintFilesMock = vi.hoisted(() => vi.fn());
 
 vi.spyOn(utils, 'getGitRoot').mockResolvedValue('/');
+
+const mockedResolveSingleBundle = vi.spyOn(manifest, 'resolveSingleBundle');
+const mockedResolveSingleTab = vi.spyOn(tab, 'resolveSingleTab');
 
 vi.mock(import('eslint'), async importActual => {
   const actualEslint = await importActual();
@@ -17,7 +24,7 @@ vi.mock(import('eslint'), async importActual => {
         this.fix = fix;
       }
 
-      static outputFixes = () => Promise.resolve();
+      static outputFixes = vi.fn(() => Promise.resolve());
       lintFiles = lintFilesMock;
       loadFormatter = () => Promise.resolve({
         format: () => Promise.resolve('')
@@ -26,18 +33,22 @@ vi.mock(import('eslint'), async importActual => {
   };
 });
 
+const runCommand = getCommandRunner(getLintCommand);
 describe('Test Lint Command', () => {
-  async function runCommand(...args: string[]) {
-    const command = getLintCommand();
-    await command.parseAsync(args, { from: 'user' });
-  }
+  beforeEach(() => {
+    mockedResolveSingleBundle.mockResolvedValueOnce({
+      directory: '',
+      manifest: {},
+      name: 'test0'
+    });
+  });
 
   test('Fatal errors without --fix cause errors', async () => {
     lintFilesMock.mockResolvedValueOnce([{
       fatalErrorCount: 1
     }]);
 
-    await expect(runCommand()).rejects.toThrow('process.exit called with 1');
+    await expectCommandExit(runCommand());
   });
 
   test('Fatal errors with --fix cause errors', async () => {
@@ -45,7 +56,8 @@ describe('Test Lint Command', () => {
       fatalErrorCount: 1
     }]);
 
-    await expect(runCommand('--fix')).rejects.toThrow('process.exit called with 1');
+    await expectCommandExit(runCommand('--fix'));
+    expect(ESLint.outputFixes).toHaveBeenCalledTimes(1);
   });
 
   test('Non fatal errors without --fix cause errors', async () => {
@@ -53,7 +65,7 @@ describe('Test Lint Command', () => {
       errorCount: 1
     }]);
 
-    await expect(runCommand()).rejects.toThrow('process.exit called with 1');
+    await expectCommandExit(runCommand());
   });
 
   test('Non fatal errors with --fix does not call process.exit', async () => {
@@ -61,7 +73,8 @@ describe('Test Lint Command', () => {
       errorCount: 1
     }]);
 
-    await expect(runCommand('--fix')).resolves.not.toThrow();
+    await expectCommandSuccess(runCommand('--fix'));
+    expect(ESLint.outputFixes).toHaveBeenCalledTimes(1);
   });
 
   test('Warnings outside of ci mode should not error out', async () => {
@@ -70,7 +83,7 @@ describe('Test Lint Command', () => {
       fixableWarningCount: 0
     }]);
 
-    await expect(runCommand()).resolves.not.toThrow();
+    await expectCommandSuccess(runCommand());
   });
 
   test('Warnings in ci mode should error out', async () => {
@@ -79,7 +92,7 @@ describe('Test Lint Command', () => {
       fixableWarningCount: 0
     }]);
 
-    await expect(runCommand('--ci')).rejects.toThrow('process.exit called with 1');
+    await expectCommandExit(runCommand('--ci'));
   });
 
   test('Fixable Warnings outside of ci mode should not error out', async () => {
@@ -88,7 +101,7 @@ describe('Test Lint Command', () => {
       fixableWarningCount: 1
     }]);
 
-    await expect(runCommand()).resolves.not.toThrow();
+    await expectCommandSuccess(runCommand());
   });
 
   test('Fixable Warnings with --fix do not errors out', async () => {
@@ -97,7 +110,8 @@ describe('Test Lint Command', () => {
       fixableWarningCount: 1
     }]);
 
-    await expect(runCommand('--fix')).resolves.not.toThrow();
+    await expectCommandSuccess(runCommand('--fix'));
+    expect(ESLint.outputFixes).toHaveBeenCalledTimes(1);
   });
 
   test('Fixable Warnings with --fix and --ci do not errors out', async () => {
@@ -106,6 +120,27 @@ describe('Test Lint Command', () => {
       fixableWarningCount: 1
     }]);
 
-    await expect(runCommand('--fix', '--ci')).resolves.not.toThrow();
+    await expectCommandSuccess(runCommand('--fix', '--ci'));
+    expect(ESLint.outputFixes).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('Test Lint command directory resolution', () => {
+  test('Lint command resolving a tab', async () => {
+    mockedResolveSingleBundle.mockResolvedValueOnce(undefined);
+    mockedResolveSingleTab.mockResolvedValueOnce({
+      directory: '',
+      entryPoint: '',
+      name: 'tab0'
+    });
+    lintFilesMock.mockResolvedValueOnce([{ warningCount: 0 }]);
+    await expectCommandSuccess(runCommand());
+  });
+
+  test('Lint command resolving neither', async () => {
+    mockedResolveSingleBundle.mockResolvedValueOnce(undefined);
+    mockedResolveSingleTab.mockResolvedValueOnce(undefined);
+    await expect(runCommand()).rejects.toThrow();
+    expect(lintFilesMock).not.toHaveBeenCalled();
   });
 });

@@ -1,12 +1,14 @@
-import pathlib from 'path';
 import * as td from 'typedoc';
-import { getBundlesDir } from '../../getGitRoot';
-import type { ResolvedBundle } from '../manifest';
+import type { ResolvedBundle } from '../../types.js';
 
-const commonTypedocOptions: td.Configuration.TypeDocOptions = {
+const typedocPackageOptions: td.Configuration.TypeDocPackageOptions = {
   categorizeByGroup: true,
   disableSources: true,
   excludeInternal: true,
+  skipErrorChecking: true,
+};
+
+const commonTypedocOptions: td.Configuration.TypeDocOptions = {
   logLevel: 'Error',
   visibilityFilters: {}
 };
@@ -16,12 +18,12 @@ const commonTypedocOptions: td.Configuration.TypeDocOptions = {
  * documentation for a single bundle without having to process every other
  * bundle
  */
-export async function initTypedocForSingleBundle(bundle: ResolvedBundle, errorChecking: boolean) {
+export async function initTypedocForSingleBundle(bundle: ResolvedBundle) {
   const app = await td.Application.bootstrap({
     ...commonTypedocOptions,
+    ...typedocPackageOptions,
     name: bundle.name,
-    entryPoints: [bundle.entryPoint],
-    skipErrorChecking: !errorChecking,
+    entryPoints: [`${bundle.directory}/src/index.ts`],
     tsconfig: `${bundle.directory}/tsconfig.json`,
   });
 
@@ -39,19 +41,19 @@ export async function initTypedocForSingleBundle(bundle: ResolvedBundle, errorCh
  *
  * More efficient than having to initialize typedoc separately each time
  */
-export async function initTypedoc(manifest: Record<string, ResolvedBundle>, errorChecking: boolean) {
-  const entryPoints = Object.values(manifest).map(({ entryPoint }) => entryPoint);
-  const bundlesDir = await getBundlesDir();
-  const tsconfigPath = pathlib.resolve(bundlesDir, 'tsconfig.json');
-
+export async function initTypedoc(manifest: Record<string, ResolvedBundle>) {
+  const entryPoints = Object.values(manifest).map(({ directory }) => directory);
   const app = await td.Application.bootstrap({
     ...commonTypedocOptions,
     alwaysCreateEntryPointModule: true,
     entryPoints,
+    entryPointStrategy: 'packages',
+    packageOptions: {
+      ...typedocPackageOptions,
+      entryPoints: ['src/index.ts'],
+    },
     name: 'Source Academy Modules',
     readme: `${import.meta.dirname}/docsreadme.md`,
-    skipErrorChecking: !errorChecking,
-    tsconfig: tsconfigPath,
   });
 
   const project = await app.convert();

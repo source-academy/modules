@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { compareSeverity, findSeverity, type Severity } from '../utils';
+import { compareSeverity, findSeverity, type Severity } from '../utils.js';
 
 describe('test findSeverity', () => {
   const cases: Severity[][] = [

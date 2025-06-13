@@ -1,15 +1,16 @@
 import fs from 'fs/promises';
-import { expect, describe, test, it, vi, beforeEach, type MockedFunction } from 'vitest';
+import { beforeEach, describe, expect, it, test, vi } from 'vitest';
 
-import * as manifest from '../../build/manifest';
-import * as utils from '../../getGitRoot';
-import { askQuestion } from '../../templates/print';
-import getTemplateCommand from '../template';
+import * as manifest from '../../build/manifest.js';
+import * as utils from '../../getGitRoot.js';
+import { askQuestion } from '../../templates/print.js';
+import getTemplateCommand from '../template.js';
+import { getCommandRunner } from './testingUtils.js';
 
 vi.spyOn(utils, 'getBundlesDir').mockResolvedValue('/src/bundles');
 vi.spyOn(utils, 'getTabsDir').mockResolvedValue('/src/tabs');
 
-vi.mock(import('../../templates/print'), async importActual => {
+vi.mock(import('../../templates/print.js'), async importActual => {
   const actualTemplates = await importActual();
   return ({
     ...actualTemplates,
@@ -33,19 +34,12 @@ vi.spyOn(manifest, 'getBundleManifests').mockResolvedValue({
   test1: {},
 });
 
-const asMock = <T extends (...args: any[]) => any>(func: T) => func as MockedFunction<T>;
-
-const mockedAskQuestion = asMock(askQuestion);
-
-function runCommand(...args: string[]) {
-  return getTemplateCommand()
-    .parseAsync(args, { from: 'user' });
-}
+const mockedAskQuestion = vi.mocked(askQuestion);
 
 function expectCall<T extends(...args: any) => any>(
   func: T,
   ...expected: Parameters<T>[]) {
-  const mocked = asMock(func);
+  const mocked = vi.mocked(func);
 
   expect(func)
     .toHaveBeenCalledTimes(expected.length);
@@ -55,6 +49,8 @@ function expectCall<T extends(...args: any) => any>(
       .toEqual(expected[i]);
   });
 }
+
+const runCommand = getCommandRunner(getTemplateCommand);
 
 async function expectCommandFailure(msg: string) {
   await expect(runCommand())
@@ -98,12 +94,13 @@ describe('Test adding new module', () => {
       ]
     );
 
-    expect(fs.writeFile).toHaveBeenCalledTimes(2);
+    expect(fs.writeFile).toHaveBeenCalledTimes(3);
 
     const [
       [packagePath, rawPackage],
-      [manifestPath, rawManifest]
-    ] = asMock(fs.writeFile).mock.calls;
+      [manifestPath, rawManifest],
+      [tsconfigPath, rawTsconfig]
+    ] = vi.mocked(fs.writeFile).mock.calls;
 
     expect(packagePath).toEqual('/src/bundles/new_module/package.json');
     const packageJson = JSON.parse(rawPackage as string);
@@ -113,6 +110,16 @@ describe('Test adding new module', () => {
     const manifest = JSON.parse(rawManifest as string);
     expect(manifest).toMatchObject({
       tabs: []
+    });
+
+    expect(tsconfigPath).toEqual('/src/bundles/new_module/tsconfig.json');
+    const tsconfig = JSON.parse(rawTsconfig as string);
+    expect(tsconfig).toMatchObject({
+      include: ['./src'],
+      extends: '../tsconfig.json',
+      typedocOptions: {
+        name: 'new_module'
+      }
     });
   });
 });
@@ -156,7 +163,7 @@ describe('Test adding new tab', () => {
     const [
       [packagePath, packageJsonRaw],
       [bundleManifestPath, manifestRaw]
-    ] = asMock(fs.writeFile).mock.calls;
+    ] = vi.mocked(fs.writeFile).mock.calls;
 
     // Expect that a package json was created
     expect(packagePath)

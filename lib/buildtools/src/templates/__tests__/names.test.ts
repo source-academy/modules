@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { isPascalCase, isSnakeCase } from '../utilities';
+import { isPascalCase, isSnakeCase } from '../utilities.js';
 
 function testFunction(
   func: (value: string) => boolean,

@@ -3,7 +3,8 @@ import { parse } from 'acorn';
 import { generate } from 'astring';
 import type { BuildOptions as ESBuildOptions, OutputFile } from 'esbuild';
 import type es from 'estree';
-import type { BuildResult } from '../../utils';
+import type { Severity } from '../../utils.js';
+import type { BundleResultEntry, TabResultEntry } from '../../types.js';
 
 export const commonEsbuildOptions = {
   bundle: true,
@@ -23,7 +24,16 @@ export const commonEsbuildOptions = {
   write: false
 } satisfies ESBuildOptions;
 
-export async function outputBundleOrTab({ text }: OutputFile, name: string, type: 'bundle' | 'tab', outDir: string): Promise<BuildResult> {
+export async function outputBundleOrTab({ text }: OutputFile, name: string, type: 'bundle', outDir: string): Promise<BundleResultEntry>;
+export async function outputBundleOrTab({ text }: OutputFile, name: string, type: 'tab', outDir: string): Promise<TabResultEntry>;
+export async function outputBundleOrTab({ text }: OutputFile, name: string, type: 'bundle' | 'tab', outDir: string): Promise<BundleResultEntry | TabResultEntry> {
+  const createEntry = (severity: Severity, message: string): BundleResultEntry | TabResultEntry => ({
+    severity,
+    message,
+    assetType: type,
+    inputName: name
+  });
+
   const parsed = parse(text, { ecmaVersion: 6 }) as es.Program;
 
   // Account for 'use strict'; directives
@@ -36,21 +46,16 @@ export async function outputBundleOrTab({ text }: OutputFile, name: string, type
 
   const { init: callExpression } = declStatement.declarations[0];
   if (callExpression?.type !== 'CallExpression') {
-    return {
-      severity: 'error',
-      warnings: [],
-      errors: [`${type} ${name} parse failure: Expected a CallExpression, got ${callExpression?.type ?? callExpression}`],
-    };
+    return createEntry(
+      'error',
+      `parse failure: Expected a CallExpression, got ${callExpression?.type ?? callExpression}`,
+    );
   }
 
   const moduleCode = callExpression.callee;
 
   if (moduleCode.type !== 'FunctionExpression' && moduleCode.type !== 'ArrowFunctionExpression') {
-    return {
-      severity: 'error',
-      warnings: [],
-      errors: [`${type} ${name} parse failure: Expected a function, got ${moduleCode.type}`]
-    };
+    return createEntry('error',`${type} ${name} parse failure: Expected a function, got ${moduleCode.type}`);
   }
 
   const output: es.ExportDefaultDeclaration = {
@@ -67,15 +72,12 @@ export async function outputBundleOrTab({ text }: OutputFile, name: string, type
   await fs.mkdir(`${outDir}/${type}s`, { recursive: true });
   let file: fs.FileHandle | null = null;
   try {
-    file = await fs.open(`${outDir}/${type}s/${name}.js`, 'w');
+    const outPath = `${outDir}/${type}s/${name}.js`;
+    file = await fs.open(outPath, 'w');
     const writeStream = file.createWriteStream();
     generate(output, { output: writeStream });
 
-    return {
-      severity: 'success',
-      warnings: [],
-      errors: []
-    };
+    return createEntry('success', `${type} written to ${outPath}`);
   } finally {
     await file?.close();
   }
