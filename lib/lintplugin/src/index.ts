@@ -1,5 +1,5 @@
 import type { ESLint } from 'eslint';
-import { jsConfig, tsConfig } from './configs';
+import * as configs from './configs';
 import tabType from './rules/tabType';
 import collateTypeImports from './rules/typeimports';
 
@@ -11,9 +11,10 @@ const plugin: ESLint.Plugin = {
     'tab-type': tabType
   },
   configs: {
-    js: jsConfig,
-    // @ts-expect-error tseslint doesn't play nice with eslint's typing
-    ts: tsConfig
+    'js/recommended': configs.jsConfig,
+    'ts/recommended': configs.tsConfig,
+    'tsx/recommended': configs.tsxConfig,
+    'vitest/recommended': configs.vitestConfig
   }
 };
 

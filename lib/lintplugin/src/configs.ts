@@ -2,6 +2,9 @@ import stylePlugin from '@stylistic/eslint-plugin';
 import type { Linter } from 'eslint';
 // @ts-expect-error Wait for eslint-plugin-import to publish the release that has typescript types
 import * as importPlugin from 'eslint-plugin-import';
+import reactPlugin from 'eslint-plugin-react';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import vitestPlugin from 'eslint-plugin-vitest';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import saLintPlugin from '.';
@@ -9,8 +12,8 @@ import saLintPlugin from '.';
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
 const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
 
-export const jsConfig = {
-  // Global JS Rules
+export const jsConfig: Linter.Config = {
+  name: 'SA JavaScript Recommended Config',
   languageOptions: {
     globals: {
       ...globals.node,
@@ -49,9 +52,10 @@ export const jsConfig = {
       { markers: todoTreeKeywordsAll }
     ],
   }
-} satisfies Linter.Config;
+};
 
-export const tsConfig = {
+export const tsConfig: Linter.Config = {
+  name: 'SA TypeScript Recommended Config',
   // Global typescript rules
   files: ['**/*.ts*'],
   languageOptions: {
@@ -76,4 +80,48 @@ export const tsConfig = {
 
     '@sourceacademy/collate-type-imports': 'warn'
   }
-} satisfies Linter.Config;
+};
+
+export const vitestConfig: Linter.Config = {
+  name: 'SA Testing Config (Vitest)',
+  plugins: {
+    vitest: vitestPlugin,
+  },
+  files: [
+    '**/__tests__/**/*.ts*',
+    '**/__mocks__/**/*.ts*',
+    '**/vitest.*.ts'
+  ],
+  rules: {
+    ...vitestPlugin.configs.recommended.rules,
+    'vitest/expect-expect': ['error', {
+      assertFunctionNames: ['expect*'],
+    }],
+    'vitest/no-alias-methods': 'off',
+    'vitest/no-conditional-expect': 'off',
+    'vitest/no-export': 'off',
+    'vitest/require-top-level-describe': 'off',
+    'vitest/valid-describe-callback': 'off',
+
+    'import/extensions': ['error', 'never', {
+      config: 'ignore'
+    }]
+  }
+};
+
+export const tsxConfig: Linter.Config = {
+  name: 'SA TSX Config',
+  files: ['**/*.tsx'],
+  plugins: {
+    'react-hooks': reactHooksPlugin,
+    'react': reactPlugin
+  },
+  rules: {
+    'react-hooks/rules-of-hooks': 'error',
+
+    '@stylistic/jsx-equals-spacing': ['warn', 'never'],
+    '@stylistic/jsx-indent': ['warn', 2],
+    '@stylistic/jsx-indent-props': ['warn', 2],
+    '@stylistic/jsx-props-no-multi-spaces': 'warn',
+  }
+};
