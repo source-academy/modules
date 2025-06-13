@@ -30,6 +30,8 @@
     "noImplicitAny": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    
+    /* Ensure that imports used only as types get removed */
     "verbatimModuleSyntax": true,
     "isolatedModules": true
   },

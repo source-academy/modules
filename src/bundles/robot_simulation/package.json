@@ -14,7 +14,8 @@
   "exports": {
     ".": "./dist/index.js",
     "./*": "./dist/*.js",
-    "./*.js": "./dist/*.js"
+    "./controllers": "./dist/controllers/index.js",
+    "./engine": "./dist/engine/index.js"
   },
   "scripts": {
     "tsc": "tsc --project ./tsconfig.json",

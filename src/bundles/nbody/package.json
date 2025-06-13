@@ -9,6 +9,12 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "typescript": "^5.8.2"
   },
+  "peerDependencies": {
+    "@types/plotly.js": "^2.35.4",
+    "@types/three": "^0.175.0",
+    "plotly.js-dist": "^2.17.1",
+    "three": "^0.175.0"
+  },
   "type": "module",
   "exports": {
     ".": "./dist/index.js",

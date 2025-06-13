@@ -6,9 +6,10 @@
     "./*"
   ],
   "devDependencies": {
-    "vitest": "^3.1.4"
+    "@sourceacademy/modules-buildtools": "workspace:^"
   },
   "scripts": {
-    "test": "vitest --config ./vitest.config.ts --project Bundles"
+    "test": "buildtools test .",
+    "tsc": "yarn workspaces foreach -ptW --from \"./*\" run tsc"
   }
 }

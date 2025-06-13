@@ -18,6 +18,7 @@
   },
   "scripts": {
     "build": "buildtools build bundle .",
+    "test": "buildtools test .",
     "tsc": "tsc --project ./tsconfig.prod.json"
   }
 }

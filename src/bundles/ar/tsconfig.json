@@ -6,5 +6,8 @@
   "extends": "../tsconfig.json",
   "include": [
     "./src"
-  ]
+  ],
+  "typedocOptions": {
+    "name": "ar"
+  }
 }

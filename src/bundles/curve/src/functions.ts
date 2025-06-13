@@ -15,6 +15,8 @@ context.moduleContexts.curve.state = {
   drawnCurves
 };
 
+// export type Yo = gg;
+
 function createDrawFunction(
   scaleMode: ScaleMode,
   drawMode: DrawMode,

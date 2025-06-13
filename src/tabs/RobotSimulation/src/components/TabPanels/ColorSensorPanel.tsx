@@ -1,5 +1,5 @@
+import type { DefaultEv3 } from '@sourceacademy/bundle-robot_simulation/controllers/ev3/ev3/default/ev3';
 import React, { useEffect, useRef } from 'react';
-import type { DefaultEv3 } from '../../../../bundles/robot_simulation/controllers/ev3/ev3/default/ev3';
 import { useFetchFromSimulation } from '../../hooks/fetchFromSimulation';
 import { LastUpdated } from './tabComponents/LastUpdated';
 import { TabWrapper } from './tabComponents/Wrapper';
