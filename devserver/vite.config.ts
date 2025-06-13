@@ -4,7 +4,7 @@
 import pathlib from 'path';
 import react from '@vitejs/plugin-react';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import { loadEnv, defineConfig, searchForWorkspaceRoot } from 'vite'
+import { loadEnv, defineConfig } from 'vite'
 import { mergeConfig } from 'vitest/config';
 import type { BrowserCommand } from 'vitest/node';
 import rootConfig from '../vitest.config';
@@ -23,7 +23,7 @@ declare module '@vitest/browser/context' {
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
-  const modulesDir = pathlib.resolve(import.meta.dirname, '..', 'build') 
+  // const modulesDir = pathlib.resolve(import.meta.dirname, '..', 'build') 
 
   return mergeConfig(
     rootConfig, {
@@ -40,6 +40,7 @@ export default defineConfig(({ mode }) => {
           replacement: pathlib.resolve(import.meta.dirname, 'src', 'mockModuleContext.ts')
         }]
       },
+      /* Experimental for serving modules using the dev server
       server: {
         port: 8022,
         strictPort: true,
@@ -59,6 +60,7 @@ export default defineConfig(({ mode }) => {
           ]
         }
       },
+      */
       define: {
         'process.env': env
       },
