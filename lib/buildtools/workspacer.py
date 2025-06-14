@@ -7,98 +7,50 @@ the tsconfigs or package.jsons of all tabs and bundles at once
 import asyncio as aio
 import os
 import json
+from typing import Any, Callable, Literal
 
 async def get_git_root():
   proc = await aio.create_subprocess_exec('git', 'rev-parse', '--show-toplevel', stdout=aio.subprocess.PIPE)
   stdout, _ = await proc.communicate()
-  return stdout.decode()
+  return stdout.decode().strip()
 
-def get_tabs(git_root: str):
-  for name in os.listdir(f'{git_root}/src/tabs'):
-    full_path = os.path.join(git_root, 'src', 'tabs', name)
-    if not os.path.isdir(f'./src/tabs/{name}'):
-      continue
-    yield name, full_path
-
-def get_bundles():
-  for name in os.listdir('./src/bundles'):
+def get_assets(git_root: str, asset: Literal['bundle', 'tab']):
+  """
+  Returns an iterable of tuples consisting of the name of either every bundle or every tab
+  and the full path to its directory
+  """
+  for name in os.listdir(f'{git_root}/src/{asset}s'):
     if name == '__mocks__':
       continue
 
-    if not os.path.isdir(f'./src/bundles/{name}'):
+    full_path = os.path.join(git_root, 'src', f'{asset}s', name)
+    if not os.path.isdir(full_path):
       continue
-    yield name
+    yield name, full_path
 
-def update_tab_packages(git_root: str):
-  for name, full_path in get_tabs(git_root):
-    with open(f'./src/tabs/{name}/package.json') as file:
+def update_json(git_root: str, asset: Literal['bundle', 'tab'], file_name: Literal['package','tsconfig'], updater: Callable[[str, str, Any], Any]):
+  for name, full_path in get_assets(git_root, asset):
+    with open(f'{full_path}/{file_name}.json') as file:
       original = json.load(file)
-      original['dependencies']['@sourceacademy/modules-lib'] = 'workspace:^'
+      updated = updater(name, full_path, original)
 
-    with open(f'./src/tabs/{name}/package.json', 'w') as file:
-      json.dump(original, file, indent=2)
+      if not updated:
+        raise RuntimeError(f'Updated returned an empty object for {asset} {name}')
 
-def create_bundle_manifest():
-  with open('modules.json') as file:
-    current_manifest = json.load(file)
+    with open(f'{full_path}/{file_name}.json', 'w') as file:
+      json.dump(updated, file, indent=2)
 
-  for moduleName in current_manifest.keys():
-    with open(f'./src/bundles/{moduleName}/manifest.json', 'w') as manifest_file:
-      manifest = {}
-
-      if 'tabs' in current_manifest[moduleName]:
-        manifest['tabs'] = current_manifest[moduleName]['tabs']
-
-      json.dump(manifest, manifest_file, indent=2)
-
-def update_tab_tsconfigs():
-  for name in get_tabs():
-    tsconfigPath = f'./src/tabs/{name}/tsconfig.json'
-    with open(tsconfigPath) as file:
-      original = json.load(file)
-
-    with open(f'./src/tabs/{name}/tsconfig.json', 'w') as file:
-      compilerOptions = original.setdefault('compilerOptions', dict())
-      compilerOptions['outDir'] = './dist'
-      json.dump(original, file, indent=2)
-
-def update_bundle_tsconfigs():
-  for name in os.listdir('./src/bundles'):
-    if not os.path.isdir(f'./src/bundles/{name}'):
-      continue
-
-    with open(f'./src/bundles/{name}/tsconfig.json') as file:
-      original = json.load(file)
-
-    if 'compilerOptions' in original:
-      original['compilerOptions']['outDir'] = './dist'
-    else:
-      original['compilerOptions'] = {
-        "outDir": './dist'
-      }
-
-    with open(f'./src/bundles/{name}/tsconfig.json', 'w') as file:
-      json.dump(original, file, indent=2)
-
-def update_bundle_packages():
-  for name in get_bundles():
-    with open(f'./src/bundles/{name}/package.json') as file:
-      original = json.load(file)
-
-      if '@sourceacademy/module-buildtools' in original['devDependencies']:
-        del original['devDependencies']['@sourceacademy/module-buildtools']
-        original['devDependencies']['@sourceacademy/modules-buildtools'] = "workspace:^"
-
-    with open(f'./src/bundles/{name}/package.json', 'w') as file:
-      json.dump(original, file, indent=2)
 
 async def main():
   git_root = await get_git_root()
+  def updater(name: str, full_path: str, obj: Any):
+    obj['typedocOptions'] = {
+      "name": name
+    }
+
+    return obj
+
+  update_json(git_root, 'bundle', 'tsconfig', updater)
 
 if __name__ == '__main__':
-  # create_bundle_manifest()
-  # update_bundle_packages()
-  # update_bundle_tsconfigs()
   aio.run(main())
-  # update_tab_tsconfigs()
-      

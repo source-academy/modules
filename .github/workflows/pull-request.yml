@@ -20,21 +20,32 @@ jobs:
         - name: Use Node.js 💻
           uses: actions/setup-node@v4
           with:
-            node-version: 20
+            node-version: 22
             cache: yarn
 
         - name: Install dependencies
           run: yarn install --immutable
 
-        - name: Build bundles and tabs
-          run: yarn build --tsc --lint
+        - name: Run tsc for libraries
+          run: yarn workspaces foreach -ptW --from "./lib/*" run tsc
+
+        - name: Run lint for libraries
+          run: yarn eslint ./lib
+
+        - name: Run test for libraries
+          run: yarn test:libs
+
+        - name: Build, lint and run tsc for bundles and tabs
+          run: yarn build:modules --tsc --lint
 
         - name: Test bundles and tabs
-          run: yarn test --color
-
-        - name: Test and lint scripts
-          run: yarn scripts:tsc && yarn scripts:lint && yarn scripts:test --color
-
-        - name: Check and Lint Devserver
-          run: yarn devserver:tsc && yarn devserver:lint
+          run: yarn test:modules
         
+        - name: Run tsc for Dev Server
+          run: yarn tsc:devserver
+
+        - name: Run Lint for Dev Server
+          run: yarn eslint devserver
+
+        - name: Test Dev Server
+          run: yarn test:devserver

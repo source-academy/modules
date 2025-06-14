@@ -2,11 +2,11 @@ import fs from 'fs/promises';
 import { Command } from '@commander-js/extra-typings';
 import { initTypedocForSingleBundle } from '../build/docs/docsUtils.js';
 import { buildDocs, buildJson } from '../build/docs/index.js';
+import buildAll from '../build/index.js';
 import { resolveAllBundles, resolveSingleBundle , writeManifest } from '../build/manifest.js';
-import { buildBundles } from '../build/modules/bundle.js';
-import { buildBundle, buildTab, buildTabs } from '../build/modules/index.js';
+import { buildBundle, buildTab } from '../build/modules/index.js';
 import { resolveSingleTab } from '../build/modules/tab.js';
-import { getBundlesDir, getOutDir, getTabsDir } from '../getGitRoot.js';
+import { getBundlesDir, getOutDir } from '../getGitRoot.js';
 import { runBuilderWithPrebuild } from '../prebuild/index.js';
 import type { FullResult, ResolvedBundle } from '../types.js';
 import { getResultString, lintOption, resultsProcessor, tscOption } from './commandUtils.js';
@@ -24,7 +24,7 @@ export const getBuildBundleCommand = () => new Command('bundle')
     const bundle = await resolveSingleBundle(bundleDir);
     if (!bundle) throw new Error(`No bundle found at ${bundleDir}!`);
 
-    const results = await runBuilderWithPrebuild(buildBundle, opts, bundle, outDir);
+    const results = await runBuilderWithPrebuild(buildBundle, opts, bundle, outDir, 'bundle');
     console.log(getResultString(results));
     resultsProcessor(results, opts.ci);
   });
@@ -39,7 +39,7 @@ export const getBuildTabCommand = () => new Command('tab')
     const tab = await resolveSingleTab(tabDir);
     if (!tab) throw new Error(`No tab found at ${tabDir}`);
 
-    const results = await runBuilderWithPrebuild(buildTab, opts, tab, outDir);
+    const results = await runBuilderWithPrebuild(buildTab, opts, tab, outDir, 'tab');
     console.log(getResultString(results));
     resultsProcessor(results, opts.ci);
   });
@@ -56,12 +56,12 @@ export const getBuildJsonCommand = () => new Command('json')
     const results = await runBuilderWithPrebuild(
       async (outDir, bundle: ResolvedBundle) => {
         const reflection = await initTypedocForSingleBundle(bundle);
-        await fs.mkdir(`${outDir}/jsons`, { recursive: true });
         return buildJson(outDir, bundle, reflection);
       },
       opts,
       bundle,
       outDir,
+      'json'
     );
 
     console.log(getResultString(results));
@@ -73,6 +73,7 @@ export const getBuildDocsCommand = () => new Command('docs')
   .option('--ci', 'Run in CI mode', !!process.env.CI)
   .action(async ({ ci }) => {
     const manifest = await resolveAllBundles(bundlesDir);
+    await fs.mkdir(`${outDir}/jsons`, { recursive: true });
     const results: FullResult = [await buildDocs(manifest, outDir), {}];
     console.log(getResultString(results));
     resultsProcessor(results, ci);
@@ -95,15 +96,7 @@ export const getBuildAllCommand = () => new Command('all')
   .addOption(lintOption)
   .option('--ci', 'Run in CI mode', !!process.env.CI)
   .action(async opts => {
-    const manifest = await resolveAllBundles(bundlesDir);
-    await fs.mkdir(outDir, { recursive: true });
-
-    await Promise.all([
-      writeManifest(outDir, manifest),
-      buildDocs(manifest, outDir),
-      buildBundles(manifest, opts, outDir),
-      getTabsDir().then(tabsDir => buildTabs(manifest, tabsDir, opts, outDir))
-    ]);
+    await buildAll(bundlesDir, opts, outDir);
   });
 
 export const getBuildCommand = () => new Command('build')

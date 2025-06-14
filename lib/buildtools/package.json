@@ -21,7 +21,6 @@
     "astring": "^1.8.6",
     "chalk": "^5.0.1",
     "commander": "^13.0.0",
-    "console-table-printer": "^2.11.1",
     "esbuild": "^0.25.5",
     "eslint": "^9.28.0",
     "jsonschema": "^1.5.0",
@@ -34,6 +33,6 @@
     "lint": "eslint src",
     "prepare": "node ./build.js",
     "tsc": "tsc --project ./tsconfig.json",
-    "test": "vitest --project \"Build Tools\""
+    "test": "vitest --config ./vitest.config.ts --project \"Build Tools\""
   }
 }

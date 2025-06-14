@@ -44,8 +44,19 @@ function testBuildCommand<T extends Record<string, any>>(
   obj: T,
   funcName: BuildFunctionsFilter<T>[keyof BuildFunctionsFilter<T>],
   prebuild: boolean | { tsc?: boolean, lint?: boolean } = false,
+  directories: string[] = [],
   ...cmdArgs: string[]
 ) {
+  function assertDirectories(created: boolean) {
+    for (const directory of directories) {
+      if (created) {
+        expect(fs.mkdir).toHaveBeenCalledWith(`/build/${directory}`, { recursive: true });
+      } else {
+        expect(fs.mkdir).not.toHaveBeenCalledWith(`/build/${directory}`, { recursive: true });
+      }
+    }
+  }
+
   describe(`Testing ${commandName} command`, () => {
     const mockedBuilder = vi.spyOn(obj, funcName as any);
     const builder = obj[funcName];
@@ -55,12 +66,14 @@ function testBuildCommand<T extends Record<string, any>>(
       mockResolvedValueOnce(mockedBuilder, 'success');
       await expectCommandSuccess(runCommand(...cmdArgs));
       expect(builder).toHaveBeenCalledTimes(1);
+      assertDirectories(true);
     });
 
     test('Command execution that returns errors', async () => {
       mockResolvedValueOnce(mockedBuilder, 'error');
       await expectCommandExit(runCommand(...cmdArgs));
       expect(builder).toHaveBeenCalledTimes(1);
+      assertDirectories(true);
     });
 
     test('Command execution that returns warnings', async () => {
@@ -68,6 +81,7 @@ function testBuildCommand<T extends Record<string, any>>(
       expect(process.env.CI).toBeUndefined();
       await expectCommandSuccess(runCommand(...cmdArgs));
       expect(builder).toHaveBeenCalledTimes(1);
+      assertDirectories(true);
     });
 
     test('Command execution that returns warnings in CI mode', async () => {
@@ -76,6 +90,7 @@ function testBuildCommand<T extends Record<string, any>>(
         mockResolvedValueOnce(mockedBuilder, 'warn');
         await expectCommandExit(runCommand(...cmdArgs));
         expect(builder).toHaveBeenCalledTimes(1);
+        assertDirectories(true);
       } finally {
         vi.unstubAllEnvs();
       }
@@ -105,6 +120,7 @@ function testBuildCommand<T extends Record<string, any>>(
 
           expect(lintRunner.runEslint).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(1);
+          assertDirectories(true);
         });
 
         test('Bundle command with linting errors', async () => {
@@ -116,6 +132,7 @@ function testBuildCommand<T extends Record<string, any>>(
           await expectCommandExit(runCommand(...cmdArgs, '--lint'));
           expect(lintRunner.runEslint).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(0);
+          assertDirectories(false);
         });
 
         test('Bundle command with linting warnings', async () => {
@@ -128,6 +145,7 @@ function testBuildCommand<T extends Record<string, any>>(
           await expectCommandSuccess(runCommand(...cmdArgs, '--lint'));
           expect(lintRunner.runEslint).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(1);
+          assertDirectories(true);
         });
 
         test('Bundle command with linting warnings in CI mode', async () => {
@@ -141,6 +159,7 @@ function testBuildCommand<T extends Record<string, any>>(
             await expectCommandExit(runCommand(...cmdArgs, '--lint'));
             expect(lintRunner.runEslint).toHaveBeenCalledTimes(1);
             expect(mockedBuilder).toHaveBeenCalledTimes(0);
+            assertDirectories(false);
           } finally {
             vi.unstubAllEnvs();
           }
@@ -163,6 +182,7 @@ function testBuildCommand<T extends Record<string, any>>(
           await expectCommandSuccess(runCommand(...cmdArgs, '--tsc'));
           expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(1);
+          assertDirectories(true);
         });
 
         test('Testing command with tsc errors', async () => {
@@ -174,6 +194,7 @@ function testBuildCommand<T extends Record<string, any>>(
           await expectCommandExit(runCommand(...cmdArgs, '--tsc'));
           expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(0);
+          assertDirectories(false);
         });
 
         test('Testing command with tsc warnings', async () => {
@@ -186,6 +207,7 @@ function testBuildCommand<T extends Record<string, any>>(
           expect(process.env.CI).toBeUndefined();
           expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(1);
+          assertDirectories(true);
         });
 
         test('Testing command with tsc warnings in CI mode', async () => {
@@ -199,6 +221,7 @@ function testBuildCommand<T extends Record<string, any>>(
             await expectCommandExit(runCommand(...cmdArgs, '--tsc'));
             expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);
             expect(mockedBuilder).toHaveBeenCalledTimes(0);
+            assertDirectories(false);
           } finally {
             vi.unstubAllEnvs();
           }
@@ -224,12 +247,13 @@ function testBuildCommand<T extends Record<string, any>>(
         expect(lintRunner.runEslint).toHaveBeenCalledTimes(1);
         expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);
         expect(mockedBuilder).toHaveBeenCalledTimes(1);
+        assertDirectories(true);
       });
     }
   });
 }
 
-testBuildCommand('JSON', commands.getBuildJsonCommand, docs, 'buildJson', { tsc: true }, `${testMocksDir}/bundles/test0`);
-testBuildCommand('Docs', commands.getBuildDocsCommand, docs, 'buildDocs');
-testBuildCommand('Bundles', commands.getBuildBundleCommand, modules, 'buildBundle', true, `${testMocksDir}/bundles/test0`);
-testBuildCommand('Tabs', commands.getBuildTabCommand, modules, 'buildTab', true, `${testMocksDir}/tabs/tab0`);
+testBuildCommand('JSON', commands.getBuildJsonCommand, docs, 'buildJson', { tsc: true }, ['jsons'], `${testMocksDir}/bundles/test0`);
+testBuildCommand('Docs', commands.getBuildDocsCommand, docs, 'buildDocs', false, ['jsons']);
+testBuildCommand('Bundles', commands.getBuildBundleCommand, modules, 'buildBundle', true, ['bundles'], `${testMocksDir}/bundles/test0`);
+testBuildCommand('Tabs', commands.getBuildTabCommand, modules, 'buildTab', true, ['tabs'], `${testMocksDir}/tabs/tab0`);

@@ -9,6 +9,7 @@
     "resolveJsonModule": true,
     "strict": true,
     "target": "ESNext",
+    "isolatedModules": true,
     "verbatimModuleSyntax": true
   }
 }

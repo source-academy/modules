@@ -1,5 +1,3 @@
-/// <reference types="../../../vite.config.ts"/>
-
 import { userEvent, commands } from '@vitest/browser/context';
 import { runInContext } from 'js-slang';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
@@ -7,6 +5,12 @@ import { render, type RenderResult } from 'vitest-browser-react';
 import Playground from '../Playground';
 import * as importers from '../sideContent/importers/importers';
 import '../../styles/index.scss';
+
+declare module '@vitest/browser/context' {
+  interface BrowserCommands {
+    setLocalStorage: (key: string, value: string) => Promise<void>
+  }
+}
 
 vi.mock(import('js-slang'), { spy: true });
 vi.mock(import('../sideContent/importers/importers'), { spy: true });

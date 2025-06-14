@@ -6,7 +6,7 @@ export const {
   builder: buildHtml,
   formatter: formatHtmlResult
 } = createBuilder<[app: Application, project: ProjectReflection], HTMLResult>(async (outDir, app, project) => {
-  /**
+  /*
     Because of the way Typedoc generates HTML documentation, it is not possible
     to regenerate the HTML documentation for a specific bundle. Instead, the documentation
     for every single bundle must be generated at once.

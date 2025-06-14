@@ -15,12 +15,6 @@ const setLocalStorage: BrowserCommand<[key: string, value: any]> = async (ctx, k
   }
 }
 
-declare module '@vitest/browser/context' {
-  interface BrowserCommands {
-    setLocalStorage: (key: string, value: string) => Promise<void>
-  }
-}
-
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
   // const modulesDir = pathlib.resolve(import.meta.dirname, '..', 'build') 

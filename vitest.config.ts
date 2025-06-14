@@ -2,12 +2,13 @@
 import { join } from 'path';
 import { defineConfig, coverageConfigDefaults } from 'vitest/config';
 
-const otherWorkspaces = [
+const testProjects = [
   './lib/buildtools',
   './lib/lintplugin',
   './lib/modules-lib',
-  './devserver',
-].map(p => join(import.meta.dirname, p));
+  './src/bundles',
+  './src/tabs'
+].map(p => join(import.meta.dirname, p, 'vitest.config.ts'));
 
 export default defineConfig({
   resolve: {
@@ -17,29 +18,17 @@ export default defineConfig({
     }]
   },
   test: {
-    workspace: [
-      {
-        extends: true,
-        test: {
-          name: 'Bundles',
-          include: [`${import.meta.dirname}/src/bundles/**/__tests__/*.ts`],
-          environment: 'jsdom',
-        }
-      },
-      {
-        extends: true,
-        test: {
-          name: 'Tabs',
-          include: [`${import.meta.dirname}/src/tabs/**/__tests__/*.{ts,tsx}`],
-          environment: 'jsdom',
-        }
-      },
-      ...otherWorkspaces
+    projects: [
+      ...testProjects,
+      join(import.meta.dirname, 'devserver', 'vite.config.ts')
     ],
+    watch: false,
+    silent: 'passed-only',
     coverage: {
       provider: 'v8',
       exclude: [
         ...coverageConfigDefaults.exclude,
+        '**/dist/**',
         '**/__mocks__/**',
         '**/__test_mocks__/**',
         '**/bin/**',

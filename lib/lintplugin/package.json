@@ -30,6 +30,6 @@
     "build": "tsc --project ./tsconfig.prod.json && node ./build.js",
     "prepare": "yarn build",
     "tsc": "tsc --project ./tsconfig.json",
-    "test": "vitest --config ./vitest.config.ts"
+    "test": "vitest --config ./vitest.config.ts --project \"Lint Plugin\""
   }
 }

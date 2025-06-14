@@ -4,52 +4,52 @@
   "version": "1.0.0",
   "repository": "https://github.com/source-academy/modules.git",
   "license": "Apache-2.0",
-  "scripts-info": {
-    "template": "Interactively initialise a new bundle or tab from their templates",
-    "devserver": "Start the tab development server",
-    "devserver:lint": "Lint code related to the dev server",
-    "devserver:tsc": "Run tsc over dev server code",
-    "docs": "Build only documentation",
-    "lint": "Lint bundle and tab code",
-    "build": "Lint code, then build modules and documentation",
-    "serve": "Start the HTTP server to serve all files in `build/`, with the same directory structure",
-    "prepare": "Enable git hooks",
-    "test": "Run unit tests",
-    "test:watch": "Watch files for changes and rerun tests related to changed files",
-    "dev": "Build bundles and tabs only, then serve. Skips linting / type checking, does not build jsons and HTML docs. For rapid testing during development",
-    "postinstall": "Install all patches to node_modules packages"
-  },
   "type": "module",
-  "exports": {
-    "./bundles/*": "./build/bundles/*.js",
-    "./jsons/*": "./build/jsons/*.js",
-    "./tabs/*": "./build/tabs/*.js",
-    "./modules.json": "./build/modules.json"
+  "scripts-info": {
+    "build:docs": "Build all documentation for all bundles",
+    "build:libs": "Build all module library code",
+    "build:modules": "Build all bundles, tabs and documentation",
+    "lint:all": "Lint all code in the repository",
+    "lint:inspect": "Run the interactive ESLint config inspector",
+    "prepare": "Enable git hooks",
+    "serve": "Start the HTTP server to serve all files in `build/`, with the same directory structure",
+    "template": "Interactively initialise a new bundle or tab from their templates",
+    "test:all": "Run unit tests for the entire repository",
+    "test:modules": "Run unit tests for tabs and bundles",
+    "tsc:all": "Run the Typescript compiler for all code in the repository",
+    "tsc:modules": "Run the Typescript compiler for bundle and tabs only"
   },
   "scripts": {
-    "build:all": "buildtools build all",
     "build:docs": "buildtools build docs",
-    "bundles:tsc": "yarn workspaces foreach -pW --since --from ./src/bundles run tsc",
-    "tabs:tsc": "yarn workspaces foreach -pW --since --from ./src/tabs run tsc",
+    "build:libs": "yarn workspaces foreach -ptW --from \"./lib/*\" run build",
+    "build:modules": "buildtools build all",
+    "devserver": "devserver",
+    "lint:all": "eslint src lib devserver",
+    "lint:inspect": "yarn dlx eslint --inspect-config",
+    "preinstall": "yarn build:libs",
     "prepare": "husky",
-    "postinstall": "patch-package",
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
     "template": "buildtools template",
-    "devserver": "vite",
-    "devserver:lint": "eslint devserver",
-    "devserver:tsc": "tsc --project devserver/tsconfig.json"
+    "test:all": "buildtools test",
+    "test:devserver": "vitest --project \"Dev Server\"",
+    "test:libs": "yarn workspaces foreach -ptW --from \"./lib/*\" run test",
+    "test:modules": "buildtools test src",
+    "tsc:all": "yarn workspaces foreach -pt --all run tsc",
+    "tsc:devserver": "tsc --project ./devserver/tsconfig.json",
+    "tsc:modules": "yarn workspaces foreach -ptW --from \"./src/{bundles,tabs}/*\" run tsc"
   },
   "devDependencies": {
     "@sourceacademy/lint-plugin": "workspace:^",
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@stylistic/eslint-plugin": "^4.2.0",
-    "@types/node": "^20.12.12",
+    "@sourceacademy/modules-lib": "workspace:^",
+    "@stylistic/eslint-plugin": "^4.4.1",
+    "@types/node": "^22.15.30",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
-    "@vitest/coverage-v8": "^3.1.4",
+    "@vitest/coverage-v8": "^3.2.3",
     "@yarnpkg/types": "^4.0.1",
-    "esbuild": "^0.25.0",
-    "eslint": "^9.21.0",
+    "esbuild": "^0.25.5",
+    "eslint": "^9.28.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.4",
@@ -58,26 +58,30 @@
     "http-server": "^0.13.0",
     "husky": "^9.0.11",
     "jsdom": "^26.1.0",
-    "patch-package": "^6.5.1",
-    "postinstall-postinstall": "^2.1.0",
-    "tsx": "^4.19.4",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.24.1",
-    "vitest": "^3.1.4",
+    "typescript-eslint": "^8.33.1",
+    "vitest": "^3.2.3",
     "yarnhook": "^0.6.0"
   },
   "dependencies": {
-    "@jscad/modeling": "patch:@jscad/modeling@npm%3A2.9.6#~/.yarn/patches/@jscad-modeling-npm-2.9.6-71e6aa3a91.patch",
     "js-slang": "^1.0.81",
     "lodash": "^4.17.21",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
+  },
+  "optionalDependencies": {
+    "@sourceacademy/modules-devserver": "workspace:^"
   },
   "devEngines": {
     "packageManager": {
       "name": "yarn",
       "version": "4.8.1",
       "onFail": "warn"
+    },
+    "runtime": {
+      "name": "node",
+      "version": "^22.16.0",
+      "onFail": "error"
     }
   },
   "packageManager": "yarn@4.8.1",
@@ -85,11 +89,9 @@
     "./devserver",
     "./lib/*",
     "./src/bundles",
-    "./src/tabs",
-    "./src/modules-lib"
+    "./src/tabs"
   ],
   "resolutions": {
-    "js-slang": "portal:/Users/leeyi45/source/source_academy/js-slang",
-    "@jscad/modeling@npm:2.9.6": "patch:@jscad/modeling@npm%3A2.9.6#~/.yarn/patches/@jscad-modeling-npm-2.9.6-71e6aa3a91.patch"
+    "js-slang": "portal:/Users/leeyi45/source/source_academy/js-slang"
   }
 }

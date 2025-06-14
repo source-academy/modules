@@ -94,6 +94,6 @@ export function buildTabs(resolvedBundles: Record<string, ResolvedBundle>, tabsD
         ];
       }
 
-      return runBuilderWithPrebuild(buildTab, prebuildOpts, tab, outDir);
+      return runBuilderWithPrebuild(buildTab, prebuildOpts, tab, outDir, undefined);
     }));
 }

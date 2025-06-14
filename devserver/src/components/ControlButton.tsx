@@ -27,13 +27,13 @@ const defaultOptions = {
   minimal: true
 };
 
-const ControlButton = React.forwardRef<HTMLButtonElement, ControlButtonProps>(({
+const ControlButton: React.FC<ControlButtonProps> = ({
   label = '',
   icon,
   onClick,
   options = {},
   isDisabled = false
-}, ref) => {
+}) => {
   const buttonOptions: ButtonOptions = {
     ...defaultOptions,
     ...options
@@ -53,13 +53,12 @@ const ControlButton = React.forwardRef<HTMLButtonElement, ControlButtonProps>(({
       className={buttonOptions.className}
       type={buttonOptions.type}
       onClick={onClick}
-      ref={ref}
       icon={!buttonOptions.iconOnRight && iconElement}
       rightIcon={buttonOptions.iconOnRight && iconElement}
     >
       {label}
     </ButtonComponent>
   );
-});
+};
 
 export default ControlButton;

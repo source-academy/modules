@@ -52,7 +52,9 @@ export interface JsonResultEntry extends ModuleResult {
   assetType: 'json'
 }
 
-export type ResultEntry = BundleResultEntry | HTMLResult | JsonResultEntry | ManifestResult | TabResultEntry;
+export type ModuleResultEntry = BundleResultEntry | JsonResultEntry | TabResultEntry;
+
+export type ResultEntry = HTMLResult | ManifestResult | ModuleResultEntry;
 
 export type ResultFormatter<T extends ResultEntry, U extends any[] = []> = (entry: T, ...args: U) => string;
 

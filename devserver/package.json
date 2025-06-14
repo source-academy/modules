@@ -30,12 +30,14 @@
     "@vitest/browser": "^3.2.3",
     "playwright": "^1.52.0",
     "sass": "^1.85.0",
+    "typescript": "^5.8.2",
     "vitest": "^3.2.3",
     "vitest-browser-react": "^0.2.0"
   },
   "scripts": {
     "dev": "vite",
     "postinstall": "playwright install",
-    "test": "vitest --project \"Dev Server\""
+    "test": "vitest --config ./vite.config.ts --project \"Dev Server\"",
+    "tsc": "tsc --project ./tsconfig.json"
   }
 }

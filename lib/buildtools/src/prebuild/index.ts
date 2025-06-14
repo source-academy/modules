@@ -1,4 +1,5 @@
-import type { ResolvedTab, ResolvedBundle, ResultEntry } from '../types.js';
+import fs from 'fs/promises';
+import type { ResolvedTab, ResolvedBundle, ResultEntry, ModuleResultEntry } from '../types.js';
 import { compareSeverity } from '../utils.js';
 import { runEslint, type LintResults } from './lint.js';
 import { runTsc, type TscResult } from './tsc.js';
@@ -14,6 +15,7 @@ export async function runBuilderWithPrebuild<T extends ResolvedBundle | Resolved
   { tsc, lint, ci }: PrebuildOptions,
   asset: T,
   outDir: string,
+  outputType: ModuleResultEntry['assetType'] | undefined,
   ...args: U
 ): Promise<[V[], { tsc?: TscResult, lint?: LintResults }]> {
   const promises: [Promise<TscResult | undefined>, Promise<LintResults | undefined>] = [
@@ -34,6 +36,11 @@ export async function runBuilderWithPrebuild<T extends ResolvedBundle | Resolved
       }
     ];
   }
+
+  if (outputType !== undefined) {
+    await fs.mkdir(`${outDir}/${outputType}s`, { recursive: true });
+  }
+
   const results = await builder(outDir, asset, ...args);
 
   return [

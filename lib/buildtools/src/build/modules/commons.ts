@@ -3,8 +3,8 @@ import { parse } from 'acorn';
 import { generate } from 'astring';
 import type { BuildOptions as ESBuildOptions, OutputFile } from 'esbuild';
 import type es from 'estree';
-import type { Severity } from '../../utils.js';
 import type { BundleResultEntry, TabResultEntry } from '../../types.js';
+import type { Severity } from '../../utils.js';
 
 export const commonEsbuildOptions = {
   bundle: true,

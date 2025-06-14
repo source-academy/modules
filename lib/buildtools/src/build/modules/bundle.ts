@@ -23,5 +23,5 @@ export const {
 );
 
 export function buildBundles(resolvedBundles: Record<string, ResolvedBundle>, options: PrebuildOptions, outDir: string) {
-  return Promise.all(Object.values(resolvedBundles).map(bundle => runBuilderWithPrebuild(buildBundle, options, bundle, outDir)));
+  return Promise.all(Object.values(resolvedBundles).map(bundle => runBuilderWithPrebuild(buildBundle, options, bundle, outDir, undefined)));
 }
