@@ -75,7 +75,7 @@
   "devEngines": {
     "packageManager": {
       "name": "yarn",
-      "version": "4.8.1",
+      "version": "^4.8.1",
       "onFail": "warn"
     },
     "runtime": {
@@ -90,8 +90,5 @@
     "./lib/*",
     "./src/bundles",
     "./src/tabs"
-  ],
-  "resolutions": {
-    "js-slang": "portal:/Users/leeyi45/source/source_academy/js-slang"
-  }
+  ]
 }

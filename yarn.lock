@@ -7656,9 +7656,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-slang@portal:/Users/leeyi45/source/source_academy/js-slang::locator=%40sourceacademy%2Fmodules%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "js-slang@portal:/Users/leeyi45/source/source_academy/js-slang::locator=%40sourceacademy%2Fmodules%40workspace%3A."
+"js-slang@npm:^1.0.81":
+  version: 1.0.84
+  resolution: "js-slang@npm:1.0.84"
   dependencies:
     "@babel/parser": "npm:^7.19.4"
     "@commander-js/extra-typings": "npm:^12.0.1"
@@ -7676,8 +7676,9 @@ __metadata:
     source-map: "npm:0.7.3"
   bin:
     js-slang: dist/repl/index.js
+  checksum: 10c0/bc01cfddb02be7e4d69510bb6d9aef5147d4d2a3da9fd00cd16a45e1a2fcd70e44abaa71c81bfa5c8f336825015070aec50d32dbc37e60767fdaf604a5ca45a2
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "js-tokens@npm:^3.0.0 || ^4.0.0, js-tokens@npm:^4.0.0":
   version: 4.0.0
