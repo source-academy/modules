@@ -12,8 +12,6 @@ import RobotSimulation from './RobotSimulation';
  * React Component props for the Tab.
  */
 interface MainProps {
-  children?: never
-  className?: never
   context?: DebuggerContext
 }
 
@@ -33,16 +31,14 @@ export default {
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
-  toSpawn(context: DebuggerContext) {
-    return context.context?.moduleContexts?.robot_minigame.state.isInit;
-  },
+  toSpawn: (context: DebuggerContext) => context.context?.moduleContexts?.robot_minigame.state.isInit,
 
   /**
    * This function will be called to render the module tab in the side contents
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: any) => <RobotMaze context={context} />,
+  body: (context: DebuggerContext) => <RobotMaze context={context} />,
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.

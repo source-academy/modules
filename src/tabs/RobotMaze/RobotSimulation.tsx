@@ -123,8 +123,6 @@ const ANIMATION_SPEED : number = 2;
  * React Component props for the Tab.
  */
 interface MapProps {
-  children?: never
-  className?: never
   state: RobotMinigame,
 }
 

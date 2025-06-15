@@ -14,19 +14,8 @@ export function run_tests({
 }) : boolean {
   // Run each test in order
   for (const test of tests) {
-    // Store status in a variable
-    let success: boolean;
-
-    switch(test.type) {
-      case 'area':
-        success = test.test(areaLog);
-        break;
-      default:
-        success = true;
-    }
-
-    // If the test fails, return false
-    if (!success) return false;
+    // Can replace with a switch statement when more success conditions appear
+    if (test.type === 'area' && !test.test(areaLog)) return false;
   }
 
   // If all tests pass, return true
