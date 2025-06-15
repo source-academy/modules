@@ -1,0 +1,12 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": ["src/bundles/**/manifest.json"],
+      "url": "./lib/buildtools/src/build/modules/manifest.schema.json"
+    }, 
+    {
+      "fileMatch": ["./tsconfig.*.json"],
+      "url": "http://json.schemastore.org/tsconfig"
+    }
+  ]
+}

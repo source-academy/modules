@@ -5,8 +5,7 @@
   "private": true,
   "exports": {
     ".": "./dist/index.js",
-    "./*": "./dist/*.js",
-    "./*.js": "./dist/*.js"
+    "./*": "./dist/*.js"
   },
   "dependencies": {
     "saar": "^1.0.4",
