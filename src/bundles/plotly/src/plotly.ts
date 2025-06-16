@@ -1,17 +1,15 @@
+import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
 import type { ReplResult } from '@sourceacademy/modules-lib/types';
-import type { Pair } from 'js-slang/dist/stdlib/list';
 import type { Data, Layout } from 'plotly.js-dist';
 
 /**
  * Represents plots with a draw method attached
  */
 export class DrawnPlot implements ReplResult {
-  drawFn: any;
-  data: ListOfPairs;
-  constructor(drawFn: any, data: ListOfPairs) {
-    this.drawFn = drawFn;
-    this.data = data;
-  }
+  constructor(
+    private readonly drawFn: any,
+    private readonly data: ListOfPairs
+  ) {}
 
   public toReplString = () => '<Plot>';
 
@@ -21,14 +19,12 @@ export class DrawnPlot implements ReplResult {
 }
 
 export class CurvePlot implements ReplResult {
-  plotlyDrawFn: any;
-  data: Data;
-  layout: Partial<Layout>;
-  constructor(plotlyDrawFn: any, data: Data, layout: Partial<Layout>) {
-    this.plotlyDrawFn = plotlyDrawFn;
-    this.data = data;
-    this.layout = layout;
-  }
+  constructor(
+    private readonly plotlyDrawFn: any,
+    private readonly data: Data,
+    private readonly layout: Partial<Layout>
+  ) {}
+
   public toReplString = () => '<CurvePlot>';
 
   public draw = (divId: string) => {
@@ -38,25 +34,6 @@ export class CurvePlot implements ReplResult {
 
 export type ListOfPairs = (ListOfPairs | any)[] | null;
 export type Data2d = number[];
-export type Color = { r: number; g: number; b: number };
 
 export type DataTransformer = (c: Data2d[]) => Data2d[];
 export type CurvePlotFunction = (func: Curve) => CurvePlot;
-
-export type Curve = (n: number) => Point;
-export type CurveTransformer = (c: Curve) => Curve;
-
-/** Encapsulates 3D point with RGB values. */
-export class Point implements ReplResult {
-  constructor(
-    public readonly x: number,
-    public readonly y: number,
-    public readonly z: number,
-    public readonly color: Color
-  ) {}
-
-  public toReplString = () => `(${this.x}, ${this.y}, ${this.z}, Color: ${this.color})`;
-}
-
-export type Wave = (...t: any) => number;
-export type Sound = Pair<Wave, number>;

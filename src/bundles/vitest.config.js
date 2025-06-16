@@ -1,5 +1,5 @@
+// @ts-check
 // Bundles vitest config
-
 import { defineProject, mergeConfig } from 'vitest/config';
 import rootConfig from '../../vitest.config';
 
@@ -9,7 +9,7 @@ export default mergeConfig(
     test: {
       name: 'Bundles',
       environment: 'jsdom',
-      include: [`${import.meta.dirname}/**/__tests__/*.ts`]
+      include: [`${import.meta.dirname}/**/__tests__/*.{ts,tsx}`]
     }
   })
 );

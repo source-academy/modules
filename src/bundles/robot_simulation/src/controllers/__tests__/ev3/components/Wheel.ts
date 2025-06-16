@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Wheel } from '../../../ev3/components/Wheel';
 
-vi.mock('../../../../engine/Render/debug/DebugArrow', () => ({
+vi.mock(import('../../../../engine/Render/debug/DebugArrow'), () => ({
   DebugArrow: vi.fn().mockImplementation(() => ({
     getMesh: vi.fn().mockReturnValue({}),
     update: vi.fn(),

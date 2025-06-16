@@ -1,13 +1,13 @@
-import { vi, beforeEach, describe, it, expect, type MockedFunction, type MockedClass } from 'vitest';
+import { vi, beforeEach, describe, it, expect } from 'vitest';
 import { CallbackHandler } from '../../../engine/Core/CallbackHandler';
 import { Program, program_controller_identifier } from '../../program/Program';
 import { runECEvaluator } from '../../program/evaluate';
 
-vi.mock('../../../engine/Core/CallbackHandler');
-vi.mock('../../program/evaluate');
+vi.mock(import('../../../engine/Core/CallbackHandler'));
+vi.mock(import('../../program/evaluate'));
 
-const mockedRunECEvaluator = runECEvaluator as MockedFunction<typeof runECEvaluator>;
-const mockedCallbackHandler = CallbackHandler as MockedClass<typeof CallbackHandler>;
+const mockedRunECEvaluator = vi.mocked(runECEvaluator);
+const mockedCallbackHandler = vi.mocked(CallbackHandler);
 
 describe('Program', () => {
   let program: Program;

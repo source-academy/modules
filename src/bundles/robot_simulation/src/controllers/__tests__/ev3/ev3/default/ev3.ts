@@ -10,32 +10,32 @@ import { createDefaultEv3 } from '../../../../ev3/ev3/default/ev3';
 import { ColorSensor } from '../../../../ev3/sensor/ColorSensor';
 import { UltrasonicSensor } from '../../../../ev3/sensor/UltrasonicSensor';
 
-vi.mock('../../../../ev3/components/Chassis', () => {
+vi.mock(import('../../../../ev3/components/Chassis'), () => {
   return { ChassisWrapper: vi.fn() };
 });
-vi.mock('../../../../ev3/components/Mesh', () => {
+vi.mock(import('../../../../ev3/components/Mesh'), () => {
   return { Mesh: vi.fn() };
 });
-vi.mock('../../../../ev3/components/Motor', () => {
+vi.mock(import('../../../../ev3/components/Motor'), () => {
   return { Motor: vi.fn() };
 });
-vi.mock('../../../../ev3/components/Wheel', () => {
+vi.mock(import('../../../../ev3/components/Wheel'), () => {
   return { Wheel: vi.fn() };
 });
-vi.mock('../../../../ev3/sensor/ColorSensor', () => {
+vi.mock(import('../../../../ev3/sensor/ColorSensor'), () => {
   return { ColorSensor: vi.fn() };
 });
-vi.mock('../../../../ev3/sensor/UltrasonicSensor', () => {
+vi.mock(import('../../../../ev3/sensor/UltrasonicSensor'), () => {
   return { UltrasonicSensor: vi.fn() };
 });
-vi.mock('../../../../../engine', () => {
+vi.mock(import('../../../../../engine'), () => {
   return {
     Physics: vi.fn(),
     Renderer: vi.fn(),
     ControllerMap: vi.fn().mockImplementation(() => {
       return { add: vi.fn() };
     })
-  };
+  } as any;
 });
 
 describe('createDefaultEv3', () => {

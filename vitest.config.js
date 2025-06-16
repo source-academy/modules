@@ -1,3 +1,4 @@
+// @ts-check
 // Root vitest config
 import { join } from 'path';
 import { defineConfig, coverageConfigDefaults } from 'vitest/config';
@@ -8,7 +9,7 @@ const testProjects = [
   './lib/modules-lib',
   './src/bundles',
   './src/tabs'
-].map(p => join(import.meta.dirname, p, 'vitest.config.ts'));
+].map(p => join(import.meta.dirname, p, 'vitest.config.js'));
 
 export default defineConfig({
   resolve: {

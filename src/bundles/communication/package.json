@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
+    "@types/uniqid": "^5.3.4",
     "typescript": "^5.8.2"
   },
   "type": "module",
@@ -16,7 +17,7 @@
     "./*": "./dist/*.js"
   },
   "scripts": {
-    "tsc": "tsc --project ./tsconfig.json",
-    "build": "buildtools build bundle ."
+    "build": "buildtools build bundle .",
+    "tsc": "tsc --project ./tsconfig.json"
   }
 }

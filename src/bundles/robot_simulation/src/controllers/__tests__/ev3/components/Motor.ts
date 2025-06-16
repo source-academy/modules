@@ -6,7 +6,7 @@ import { ChassisWrapper } from '../../../ev3/components/Chassis';
 import { Motor } from '../../../ev3/components/Motor';
 import { ev3Config } from '../../../ev3/ev3/default/config';
 
-vi.mock('../../../../engine/Render/helpers/GLTF', () => ({
+vi.mock(import('../../../../engine/Render/helpers/GLTF'), () => ({
   loadGLTF: vi.fn().mockResolvedValue({
     scene: {
       position: {
@@ -21,14 +21,14 @@ vi.mock('../../../../engine/Render/helpers/GLTF', () => ({
   }),
 }));
 
-vi.mock('../../../../engine', () => ({
+vi.mock(import('../../../../engine'), () => ({
   Physics: vi.fn(),
   Renderer: vi.fn().mockImplementation(() => ({
     add: vi.fn(),
   })),
-}));
+}) as any);
 
-vi.mock('../../../ev3/components/Chassis', () => ({
+vi.mock(import('../../../ev3/components/Chassis'), () => ({
   ChassisWrapper: vi.fn().mockImplementation(() => ({
     getEntity: vi.fn().mockReturnValue({
       transformDirection: vi.fn().mockImplementation((v) => v),

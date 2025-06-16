@@ -1,5 +1,5 @@
-import { connect, type MqttClient } from 'mqtt/dist/mqtt';
-// Need to use "mqtt/dist/mqtt" as "mqtt" requires global, which SA's compiller does not define.
+import { connect, type QoS, type MqttClient } from 'mqtt/dist/mqtt';
+// Need to use "mqtt/dist/mqtt" as "mqtt" requires global, which SA's compiler does not define.
 
 export const STATE_CONNECTED = 'Connected';
 export const STATE_DISCONNECTED = 'Disconnected';
@@ -85,10 +85,10 @@ export class MqttController {
     topic: string,
     message: string,
     isRetain: boolean,
-    qos: number = 1,
+    qos: QoS = 1,
   ) {
     this.client?.publish(topic, message, {
-      qos: qos,
+      qos,
       retain: isRetain,
     });
   }
@@ -102,9 +102,9 @@ export class MqttController {
    *            1: Receive each message at least once
    *            2: Receive each message once and only once
    */
-  public subscribe(topic: string, qos: number = 1) {
+  public subscribe(topic: string, qos: QoS = 1) {
     if (this.client) {
-      this.client.subscribe(topic, { qos: qos });
+      this.client.subscribe(topic, { qos });
     }
   }
 

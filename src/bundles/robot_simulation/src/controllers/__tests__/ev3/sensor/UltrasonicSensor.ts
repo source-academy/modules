@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { UltrasonicSensor } from '../../../ev3/sensor/UltrasonicSensor';
 
-vi.mock('three', () => ({
+vi.mock(import('three'), () => ({
   Vector3: vi.fn().mockImplementation(() => ({
     clone: vi.fn().mockReturnThis(),
     normalize: vi.fn().mockReturnThis(),
@@ -15,7 +15,7 @@ vi.mock('three', () => ({
     },
     setDirection: vi.fn()
   }))
-}));
+}) as any);
 
 describe('UltrasonicSensor', () => {
   let sensor: UltrasonicSensor;

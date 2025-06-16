@@ -3,18 +3,18 @@
  * @module plotly
  */
 
+import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
+import { get_duration, get_wave, is_sound } from '@sourceacademy/bundle-sound';
 import type { Sound } from '@sourceacademy/bundle-sound/types';
 import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { generatePlot } from './curve_functions';
 import {
-  type Curve,
   CurvePlot,
   type CurvePlotFunction,
   DrawnPlot,
   type ListOfPairs
 } from './plotly';
-import { get_duration, get_wave, is_sound } from './sound_functions';
 
 const drawnPlots: (CurvePlot | DrawnPlot)[] = [];
 

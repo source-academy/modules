@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { beforeEach, describe, expect, it, vi, type Mocked } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Physics, Renderer, EntityFactory , MeshFactory } from '../../../../engine';
 
 import { ChassisWrapper } from '../../../ev3/components/Chassis';
@@ -24,8 +24,8 @@ vi.mock('three', async importOriginal => {
   };
 });
 
-const mockedMeshFactory = MeshFactory as Mocked<typeof MeshFactory>;
-const mockedEntityFactory = EntityFactory as Mocked<typeof EntityFactory>;
+const mockedMeshFactory = vi.mocked(MeshFactory);
+const mockedEntityFactory = vi.mocked(EntityFactory);
 
 describe('ChassisWrapper', () => {
   let physicsMock;

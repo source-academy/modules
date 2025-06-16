@@ -2,15 +2,15 @@ import * as THREE from 'three';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ColorSensor } from '../../../ev3/sensor/ColorSensor';
 
-vi.mock('../../../../engine', () => ({
+vi.mock(import('../../../../engine'), () => ({
   Renderer: vi.fn().mockImplementation(() => ({
     scene: vi.fn(),
     render: vi.fn(),
     getElement: vi.fn(() => document.createElement('canvas')),
   })),
-}));
+}) as any);
 
-vi.mock('../../../../engine/Render/helpers/Camera', () => ({
+vi.mock(import('../../../../engine/Render/helpers/Camera'), () => ({
   getCamera: vi.fn().mockImplementation(() => {
     return new THREE.PerspectiveCamera();
   }),

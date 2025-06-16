@@ -5,7 +5,7 @@ import { loadGLTF } from '../../../../engine/Render/helpers/GLTF';
 import { ChassisWrapper } from '../../../ev3/components/Chassis';
 import { Mesh } from '../../../ev3/components/Mesh';
 
-vi.mock('three', async importOriginal => {
+vi.mock(import('three'), async importOriginal => {
   return {
     ...await importOriginal(),
     GLTF: vi.fn().mockImplementation(() => ({
@@ -14,7 +14,7 @@ vi.mock('three', async importOriginal => {
   };
 });
 
-vi.mock('../../../../engine/Render/helpers/GLTF', () => ({
+vi.mock(import('../../../../engine/Render/helpers/GLTF'), () => ({
   loadGLTF: vi.fn().mockResolvedValue({
     scene: {
       position: {
@@ -27,7 +27,7 @@ vi.mock('../../../../engine/Render/helpers/GLTF', () => ({
   }),
 }));
 
-vi.mock('../../../ev3/components/Chassis', () => ({
+vi.mock(import('../../../ev3/components/Chassis'), () => ({
   ChassisWrapper: vi.fn().mockImplementation(() => ({
     getEntity: vi.fn().mockReturnValue({
       getTranslation: vi.fn().mockReturnValue(new THREE.Vector3()),
@@ -36,11 +36,11 @@ vi.mock('../../../ev3/components/Chassis', () => ({
   })),
 }));
 
-vi.mock('../../../../engine', () => ({
+vi.mock(import('../../../../engine'), () => ({
   Renderer: vi.fn().mockImplementation(() => ({
     add: vi.fn(),
   })),
-}));
+}) as any);
 
 describe('Mesh', () => {
   let mesh;

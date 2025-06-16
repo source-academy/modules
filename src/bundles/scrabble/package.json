@@ -12,7 +12,7 @@
     "./*": "./dist/*.js"
   },
   "scripts": {
-    "tsc": "tsc --project ./tsconfig.json",
-    "build": "buildtools build bundle ."
+    "build": "buildtools build bundle .",
+    "tsc": "tsc --project ./tsconfig.json"
   }
 }

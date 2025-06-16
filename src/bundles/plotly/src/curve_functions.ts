@@ -1,84 +1,8 @@
+import { x_of, y_of, z_of, r_of, g_of, b_of } from '@sourceacademy/bundle-curve';
+import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
-import { type Curve, CurvePlot, type Point } from './plotly';
+import { CurvePlot } from './plotly';
 
-export function x_of(pt: Point): number {
-  return pt.x;
-}
-
-/**
- * Retrieves the y-coordinate of a given Point.
- *
- * @param p given point
- * @returns y-coordinate of the Point
- * @example
- * ```
- * const point = make_color_point(1, 2, 3, 50, 100, 150);
- * y_of(point); // Returns 2
- * ```
- */
-export function y_of(pt: Point): number {
-  return pt.y;
-}
-
-/**
- * Retrieves the z-coordinate of a given Point.
- *
- * @param p given point
- * @returns z-coordinate of the Point
- * @example
- * ```
- * const point = make_color_point(1, 2, 3, 50, 100, 150);
- * z_of(point); // Returns 3
- * ```
- */
-export function z_of(pt: Point): number {
-  return pt.z;
-}
-
-/**
- * Retrieves the red component of a given Point.
- *
- * @param p given point
- * @returns Red component of the Point
- * @example
- * ```
- * const point = make_color_point(1, 2, 3, 50, 100, 150);
- * r_of(point); // Returns 50
- * ```
- */
-export function r_of(pt: Point): number {
-  return (pt.color[0] ?? 0) * 255;
-}
-
-/**
- * Retrieves the green component of a given Point.
- *
- * @param p given point
- * @returns Green component of the Point
- * @example
- * ```
- * const point = make_color_point(1, 2, 3, 50, 100, 150);
- * g_of(point); // Returns 100
- * ```
- */
-export function g_of(pt: Point): number {
-  return (pt.color[1] ?? 0) * 255;
-}
-
-/**
- * Retrieves the blue component of a given Point.
- *
- * @param p given point
- * @returns Blue component of the Point
- * @example
- * ```
- * const point = make_color_point(1, 2, 3, 50, 100, 150);
- * b_of(point); // Returns 150
- * ```
- */
-export function b_of(pt: Point): number {
-  return (pt.color[2] ?? 0) * 255;
-}
 export function generatePlot(
   type: string,
   numPoints: number,

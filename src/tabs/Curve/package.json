@@ -13,11 +13,13 @@
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/react": "^18.3.1",
-    "@types/react-dom": "^18.3.1"
+    "@types/react-dom": "^18.3.1",
+    "vitest": "^3.2.3"
   },
   "scripts": {
     "build": "buildtools build tab .",
     "lint": "buildtools lint .",
+    "test": "vitest --project \"Curve Tab\"",
     "tsc": "tsc --project ./tsconfig.json"
   },
   "type": "module"

@@ -16,7 +16,8 @@
     "typescript": "^5.8.2"
   },
   "scripts": {
-    "tsc": "tsc --project ./tsconfig.json",
-    "build": "buildtools build bundle ."
+    "build": "buildtools build bundle .",
+    "lint": "buildtools lint .",
+    "tsc": "tsc --project ./tsconfig.json"
   }
 }

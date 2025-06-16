@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/bundle-curve": "workspace:^",
     "@sourceacademy/bundle-sound": "workspace:^",
     "js-slang": "^1.0.81",
     "plotly.js-dist": "^2.17.1"

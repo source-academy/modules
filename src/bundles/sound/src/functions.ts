@@ -464,6 +464,7 @@ export function stop(): void {
  * @param duration the duration of the noise sound
  * @return resulting noise Sound
  * @example noise_sound(5);
+ * @category Primitive
  */
 export function noise_sound(duration: number): Sound {
   return make_sound((_t) => Math.random() * 2 - 1, duration);
@@ -475,6 +476,7 @@ export function noise_sound(duration: number): Sound {
  * @param duration the duration of the silence Sound
  * @return resulting silence Sound
  * @example silence_sound(5);
+ * @category Primitive
  */
 export function silence_sound(duration: number): Sound {
   return make_sound((_t) => 0, duration);
@@ -487,6 +489,7 @@ export function silence_sound(duration: number): Sound {
  * @param duration the duration of the sine wave Sound
  * @return resulting sine wave Sound
  * @example sine_sound(440, 5);
+ * @category Primitive
  */
 export function sine_sound(freq: number, duration: number): Sound {
   return make_sound((t) => Math.sin(2 * Math.PI * t * freq), duration);
@@ -499,6 +502,7 @@ export function sine_sound(freq: number, duration: number): Sound {
  * @param duration the duration of the square wave Sound
  * @return resulting square wave Sound
  * @example square_sound(440, 5);
+ * @category Primitive
  */
 export function square_sound(f: number, duration: number): Sound {
   function fourier_expansion_square(t: number) {
@@ -521,6 +525,7 @@ export function square_sound(f: number, duration: number): Sound {
  * @param duration the duration of the triangle wave Sound
  * @return resulting triangle wave Sound
  * @example triangle_sound(440, 5);
+ * @category Primitive
  */
 export function triangle_sound(freq: number, duration: number): Sound {
   function fourier_expansion_triangle(t: number) {
@@ -545,6 +550,7 @@ export function triangle_sound(freq: number, duration: number): Sound {
  * @param duration the duration of the sawtooth wave Sound
  * @return resulting sawtooth wave Sound
  * @example sawtooth_sound(440, 5);
+ * @category Primitive
  */
 export function sawtooth_sound(freq: number, duration: number): Sound {
   function fourier_expansion_sawtooth(t: number) {
@@ -825,6 +831,7 @@ export function letter_name_to_frequency(note: string): number {
  * @param duration duration in seconds
  * @return Sound resulting bell Sound with given pitch and duration
  * @example bell(40, 1);
+ * @category Instrument
  */
 export function bell(note: number, duration: number): Sound {
   return stacking_adsr(
@@ -847,6 +854,7 @@ export function bell(note: number, duration: number): Sound {
  * @param duration duration in seconds
  * @return Sound resulting cello Sound with given pitch and duration
  * @example cello(36, 5);
+ * @category Instrument
  */
 export function cello(note: number, duration: number): Sound {
   return stacking_adsr(
@@ -864,6 +872,8 @@ export function cello(note: number, duration: number): Sound {
  * @param duration duration in seconds
  * @return Sound resulting piano Sound with given pitch and duration
  * @example piano(48, 5);
+ * @category Instrument
+
  */
 export function piano(note: number, duration: number): Sound {
   return stacking_adsr(
@@ -881,6 +891,7 @@ export function piano(note: number, duration: number): Sound {
  * @param duration duration in seconds
  * @return Sound resulting trombone Sound with given pitch and duration
  * @example trombone(60, 2);
+ * @category Instrument
  */
 export function trombone(note: number, duration: number): Sound {
   return stacking_adsr(
@@ -898,6 +909,7 @@ export function trombone(note: number, duration: number): Sound {
  * @param duration duration in seconds
  * @return Sound resulting violin Sound with given pitch and duration
  * @example violin(53, 4);
+ * @category Instrument
  */
 export function violin(note: number, duration: number): Sound {
   return stacking_adsr(
