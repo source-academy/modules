@@ -3,6 +3,7 @@ import type { Interface } from 'readline/promises';
 import _package from '../../../../package.json' with { type: 'json' };
 import { getBundleManifests } from '../build/manifest.js';
 import type { ModulesManifest, BundleManifest } from '../types.js';
+import sampleTsconfig from './bundle_tsconfig.json' with { type: 'json' };
 import { askQuestion, success, warn } from './print.js';
 import { check, isSnakeCase } from './utilities.js';
 
@@ -25,8 +26,7 @@ export async function addNew(bundlesDir: string, rl: Interface) {
   const bundleDestination = `${bundlesDir}/${moduleName}`;
 
   await fs.mkdir(bundlesDir, { recursive: true });
-  await fs.cp(`${import.meta.dirname}/templates/bundle`, bundleDestination);
-  const { default: sampleTsconfig } = await import(`${import.meta.dirname}/templates/bundle_tsconfig.json`, { with: { type: 'json' }});
+  await fs.cp(`${import.meta.dirname}/templates/bundle`, bundleDestination, { recursive: true });
 
   const typescriptVersion = _package.devDependencies.typescript;
 
@@ -40,8 +40,9 @@ export async function addNew(bundlesDir: string, rl: Interface) {
     },
     type: 'module',
     scripts: {
+      build: 'buildtools build bundle .',
+      lint: 'buildtools lint .',
       tsc: 'tsc --project ./tsconfig.json',
-      build: 'buildtools build bundle .'
     },
     exports: {
       '.': './dist/index.js',

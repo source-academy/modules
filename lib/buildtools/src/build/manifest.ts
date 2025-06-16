@@ -102,6 +102,10 @@ export async function resolveSingleBundle(bundleDir: string): Promise<ResolvedBu
   };
 }
 
+/**
+ * Find all the bundles with the given directory and returns their
+ * resolved information
+ */
 export async function resolveAllBundles(bundlesDir: string) {
   const subdirs = await fs.readdir(bundlesDir);
   const manifests = await Promise.all(subdirs.map(subdir => {
@@ -143,16 +147,16 @@ export const {
     }), {});
     const outpath = `${outDir}/modules.json`;
     await fs.writeFile(outpath, JSON.stringify(toWrite, null, 2));
-    return [{
+    return {
       severity: 'success',
       assetType: 'manifest',
       message: `Manifest written to ${outpath}`
-    }];
+    };
   } catch (error) {
-    return [{
+    return {
       severity: 'error',
       assetType: 'manifest',
       message: `${error}`
-    }];
+    };
   }
 });

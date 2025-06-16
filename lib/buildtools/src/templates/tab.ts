@@ -61,6 +61,7 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
     },
     scripts: {
       build: 'buildtools build tab .',
+      lint: 'buildtools lint .',
       tsc: 'tsc --project ./tsconfig.json'
     }
   };
@@ -74,7 +75,7 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
   };
 
   const tabDestination = `${tabsDir}/${tabName}`;
-  await fs.cp(`${import.meta.dirname}/templates/tabs`, tabDestination);
+  await fs.cp(`${import.meta.dirname}/templates/tabs`, tabDestination, { recursive: true });
   await Promise.all([
     fs.writeFile(`${tabDestination}/package.json`, JSON.stringify(packageJson, null, 2)),
     fs.writeFile(`${bundlesDir}/${moduleName}/manifest.json`, JSON.stringify(newManifest, null, 2))

@@ -76,61 +76,57 @@ const parsers: {
 export const {
   builder: buildJson,
   formatter: formatJsonResult
-} = createBuilder<[bundle: ResolvedBundle, reflection: td.ProjectReflection], JsonResultEntry>(async (outDir, { name: bundleName }, reflection) => {
-  const createEntry = (severity: Severity, message: string): JsonResultEntry => ({
-    severity,
-    assetType: 'json',
-    message,
-    inputName: bundleName
-  });
-
-  try {
-    const [jsonData, resultEntries] = reflection.children!.reduce<[
-      Record<string, unknown>,
-      JsonResultEntry[]
-    ]>(([res, results], element) => {
-      const parser = parsers[element.kind];
-
-      if (parser) {
-        const result = parser(element);
-        if ('error' in result) {
-          return [res, [...results, createEntry('error', `${result.error}`)]];
-        }
-
-        const { obj, warnings } = result;
-
-        return [
-          {
-            ...res,
-            [element.name]: obj
-          },
-          [
-            ...results,
-            ...warnings.map(warning => createEntry('warn', warning))
-          ]
-        ];
-      } else {
-        return [
-          {
-            ...res,
-            [element.name]: { kind: 'unknown' }
-          }, [
-            ...results,
-            createEntry('warn', `No parser found for ${element.name} which is of type ${element.kind}.`)
-          ]];
-      }
-    }, [{}, []]);
-
-    const outpath = `${outDir}/jsons/${bundleName}.json`;
-    await fs.writeFile(outpath, JSON.stringify(jsonData, null, 2));
-
-    return resultEntries.length === 0 ? [ createEntry('success', `JSON written to ${outpath}`) ] : resultEntries;
-  } catch (error) {
-    return [{
-      severity: 'error',
-      inputName: bundleName,
+} = createBuilder<[bundle: ResolvedBundle, reflection: td.ProjectReflection], JsonResultEntry[]>(
+  async (outDir, { name: bundleName }, reflection) => {
+    const createEntry = (severity: Severity, message: string): JsonResultEntry => ({
+      severity,
       assetType: 'json',
-      message: `${error}`
-    }];
-  }
-});
+      message,
+      inputName: bundleName
+    });
+
+    try {
+      const [jsonData, resultEntries] = reflection.children!.reduce<[
+        Record<string, unknown>,
+        JsonResultEntry[]
+      ]>(([res, results], element) => {
+        const parser = parsers[element.kind];
+
+        if (parser) {
+          const result = parser(element);
+          if ('error' in result) {
+            return [res, [...results, createEntry('error', `${result.error}`)]];
+          }
+
+          const { obj, warnings } = result;
+
+          return [
+            {
+              ...res,
+              [element.name]: obj
+            },
+            [
+              ...results,
+              ...warnings.map(warning => createEntry('warn', warning))
+            ]
+          ];
+        } else {
+          return [
+            {
+              ...res,
+              [element.name]: { kind: 'unknown' }
+            }, [
+              ...results,
+              createEntry('warn', `No parser found for ${element.name} which is of type ${element.kind}.`)
+            ]];
+        }
+      }, [{}, []]);
+
+      const outpath = `${outDir}/jsons/${bundleName}.json`;
+      await fs.writeFile(outpath, JSON.stringify(jsonData, null, 2));
+
+      return resultEntries.length === 0 ? [ createEntry('success', `JSON written to ${outpath}`) ] : resultEntries;
+    } catch (error) {
+      return [createEntry('error', `${error}`)];
+    }
+  });

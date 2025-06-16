@@ -1,9 +1,7 @@
 import pathlib from 'path';
 import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild';
 import uniq from 'lodash/uniq.js';
-import type { PrebuildOptions } from '../../prebuild/index.js';
-import { runBuilderWithPrebuild } from '../../prebuild/index.js';
-import type { FullResult, ResolvedBundle, ResolvedTab, TabResultEntry } from '../../types.js';
+import type { ResolvedTab, TabResultEntry } from '../../types.js';
 import { createBuilder } from '../buildUtils.js';
 import { resolveAllBundles, resolvePaths } from '../manifest.js';
 import { commonEsbuildOptions, outputBundleOrTab } from './commons.js';
@@ -70,30 +68,5 @@ export const {
     tsconfig: `${tab.directory}/tsconfig.json`,
     plugins: [tabContextPlugin],
   });
-  const resultEntry = await outputBundleOrTab(result, tab.name, 'tab', outDir);
-  return [resultEntry];
+  return outputBundleOrTab(result, tab.name, 'tab', outDir);
 });
-
-/**
- * Find all the tabs within the given directory and build them all at once
- */
-export function buildTabs(resolvedBundles: Record<string, ResolvedBundle>, tabsDir: string, prebuildOpts: PrebuildOptions, outDir: string) {
-  const tabNames = uniq(Object.values(resolvedBundles).flatMap(({ manifest: { tabs } }) => tabs ?? []));
-  return Promise.all(
-    tabNames.map(async (tabName): Promise<FullResult> => {
-      const tab = await resolveSingleTab(`${tabsDir}/${tabName}`);
-      if (!tab) {
-        return [
-          [{
-            severity: 'error',
-            assetType: 'tab',
-            inputName: tabName,
-            message: `Could not find tab at ${tabsDir}/${tabName}!`
-          }],
-          {}
-        ];
-      }
-
-      return runBuilderWithPrebuild(buildTab, prebuildOpts, tab, outDir, undefined);
-    }));
-}

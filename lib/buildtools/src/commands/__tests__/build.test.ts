@@ -35,7 +35,7 @@ function mockResolvedValueOnce<T extends ResultEntry>(
 }
 
 type BuildFunctionsFilter<T extends Record<string, any>> = {
-  [K in keyof T]: T[K] extends (...args: any[]) => Promise<ResultEntry[]> ? K : never
+  [K in keyof T]: T[K] extends (...args: any[]) => Promise<ResultEntry | ResultEntry[]> ? K : never
 };
 
 function testBuildCommand<T extends Record<string, any>>(

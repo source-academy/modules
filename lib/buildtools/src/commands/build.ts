@@ -8,7 +8,7 @@ import { buildBundle, buildTab } from '../build/modules/index.js';
 import { resolveSingleTab } from '../build/modules/tab.js';
 import { getBundlesDir, getOutDir } from '../getGitRoot.js';
 import { runBuilderWithPrebuild } from '../prebuild/index.js';
-import type { FullResult, ResolvedBundle } from '../types.js';
+import type { FullResult, ResolvedBundle, ResultEntry } from '../types.js';
 import { getResultString, lintOption, resultsProcessor, tscOption } from './commandUtils.js';
 
 const outDir = await getOutDir();
@@ -74,9 +74,9 @@ export const getBuildDocsCommand = () => new Command('docs')
   .action(async ({ ci }) => {
     const manifest = await resolveAllBundles(bundlesDir);
     await fs.mkdir(`${outDir}/jsons`, { recursive: true });
-    const results: FullResult = [await buildDocs(manifest, outDir), {}];
-    console.log(getResultString(results));
-    resultsProcessor(results, ci);
+    const results = await buildDocs(manifest, outDir);
+    console.log(getResultString({ results }));
+    resultsProcessor({ results }, ci);
   });
 
 export const getBuildManifestCommand = () => new Command('manifest')
@@ -85,9 +85,9 @@ export const getBuildManifestCommand = () => new Command('manifest')
     const manifest = await resolveAllBundles(bundlesDir);
     await fs.mkdir(outDir, { recursive: true });
 
-    const result: FullResult = [await writeManifest(outDir, manifest), {}];
-    console.log(getResultString(result));
-    resultsProcessor(result, false);
+    const results = await writeManifest(outDir, manifest);
+    console.log(getResultString({ results }));
+    resultsProcessor({ results }, false);
   });
 
 export const getBuildAllCommand = () => new Command('all')
@@ -96,7 +96,17 @@ export const getBuildAllCommand = () => new Command('all')
   .addOption(lintOption)
   .option('--ci', 'Run in CI mode', !!process.env.CI)
   .action(async opts => {
-    await buildAll(bundlesDir, opts, outDir);
+    const [manifest, [html, ...json], bundles, tabs] = await buildAll(bundlesDir, opts, outDir);
+    const results: FullResult<ResultEntry>[] = [
+      { results: manifest },
+      { results: html },
+      ...json.map(each => ({ results: each })),
+      ...bundles,
+      ...tabs
+    ];
+
+    console.log(results.map(getResultString).join('\n'));
+    results.forEach(each => resultsProcessor(each, opts.ci));
   });
 
 export const getBuildCommand = () => new Command('build')

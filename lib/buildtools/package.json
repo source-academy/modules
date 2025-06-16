@@ -33,6 +33,6 @@
     "lint": "eslint src",
     "prepare": "node ./build.js",
     "tsc": "tsc --project ./tsconfig.json",
-    "test": "vitest --config ./vitest.config.ts --project \"Build Tools\""
+    "test": "vitest --config ./vitest.config.js --project \"Build Tools\""
   }
 }

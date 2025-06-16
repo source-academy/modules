@@ -90,7 +90,8 @@ describe('Test adding new module', () => {
       fs.cp,
       [
         expect.any(String),
-        '/src/bundles/new_module'
+        '/src/bundles/new_module',
+        { recursive: true }
       ]
     );
 
@@ -158,7 +159,7 @@ describe('Test adding new tab', () => {
     );
 
     // Expect the entire template directory to be copied over
-    expectCall(fs.cp, [expect.any(String), '/src/tabs/TabNew']);
+    expectCall(fs.cp, [expect.any(String), '/src/tabs/TabNew', { recursive: true }]);
 
     const [
       [packagePath, packageJsonRaw],

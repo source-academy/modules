@@ -10,7 +10,7 @@ import { buildJson } from './json.js';
  * having to instantiate typedoc multiple times\
  * Build both JSON documentation and HTML documentation
  */
-export async function buildDocs(resolvedBundles: Record<string, ResolvedBundle>, outDir: string): Promise<(HTMLResult | JsonResultEntry)[]> {
+export async function buildDocs(resolvedBundles: Record<string, ResolvedBundle>, outDir: string): Promise<[HTMLResult, ...JsonResultEntry[]]> {
   const warnings: string[] = [];
 
   const [[project, app]] = await Promise.all([
@@ -46,8 +46,8 @@ export async function buildDocs(resolvedBundles: Record<string, ResolvedBundle>,
   ]);
 
   return [
+    htmlResult,
     ...jsonResults.flat(),
-    ...htmlResult
   ];
 }
 

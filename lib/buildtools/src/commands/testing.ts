@@ -4,7 +4,7 @@ import type { VitestRunMode } from 'vitest/node';
 import runVitest from '../testing.js';
 
 export const getTestCommand = () => new Command('test')
-  .argument('[directory]', 'Directory to search for tests, or if not provided, assumes the current working directory')
+  .argument('[testPattern]', 'Pattern to filter tests')
   .addOption(
     new Option('--mode <mode>', 'Vitest Run Mode. See https://vitest.dev/guide/cli.html#mode')
       .choices(['test', 'benchmark'] as VitestRunMode[])
@@ -16,8 +16,8 @@ export const getTestCommand = () => new Command('test')
   )
   .option('--coverage')
   .option('-u, --update', 'Update snapshots')
-  .action(async (directory, { mode, ...options }) => {
-    const fullyResolved = resolve(directory ?? process.cwd());
+  .action(async (testPattern, { mode, ...options }) => {
+    const fullyResolved = resolve(testPattern ?? process.cwd());
     const vitest = await runVitest(mode, fullyResolved, options);
     await vitest.close();
   });

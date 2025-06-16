@@ -58,4 +58,8 @@ export type ResultEntry = HTMLResult | ManifestResult | ModuleResultEntry;
 
 export type ResultFormatter<T extends ResultEntry, U extends any[] = []> = (entry: T, ...args: U) => string;
 
-export type FullResult = [ResultEntry[], { tsc?: TscResult, lint?: LintResults }];
+export interface FullResult<T extends (ResultEntry | ResultEntry[])> {
+  results?: T;
+  tsc?: TscResult;
+  lint?: LintResults
+}
