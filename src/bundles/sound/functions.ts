@@ -16,7 +16,7 @@ import type {
   Sound,
   SoundProducer,
   SoundTransformer,
-  AudioPlayed
+  AudioPlayed,
 } from './types';
 
 // Global Constants and Variables

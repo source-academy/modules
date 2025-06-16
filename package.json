@@ -102,6 +102,7 @@
     "@jscad/stl-serializer": "2.1.11",
     "ace-builds": "^1.25.1",
     "classnames": "^2.3.1",
+    "fft.js": "^4.0.4",
     "gl-matrix": "^3.3.0",
     "js-slang": "^1.0.81",
     "lodash": "^4.17.21",

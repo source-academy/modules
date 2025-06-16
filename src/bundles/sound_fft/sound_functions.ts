@@ -1,10 +1,11 @@
 import {
   head,
   tail,
+  pair,
   is_pair
 } from 'js-slang/dist/stdlib/list';
 import type { Sound, Wave } from '../sound/types';
-import type { FrequencySample, AugmentedSample } from '../sound_fft/types';
+
 export function is_sound(x: any): x is Sound {
   return (
     is_pair(x)
@@ -12,6 +13,26 @@ export function is_sound(x: any): x is Sound {
         && typeof get_duration(x) === 'number'
   );
 }
+
+/**
+ * Makes a Sound with given wave function and duration.
+ * The wave function is a function: number -> number
+ * that takes in a non-negative input time and returns an amplitude
+ * between -1 and 1.
+ *
+ * @param wave wave function of the Sound
+ * @param duration duration of the Sound
+ * @return with wave as wave function and duration as duration
+ * @example const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);
+ */
+export function make_sound(wave: Wave, duration: number): Sound {
+  if (duration < 0) {
+    throw new Error('Sound duration must be greater than or equal to 0');
+  }
+
+  return pair((t: number) => (t >= duration ? 0 : wave(t)), duration);
+}
+
 /**
  * Accesses the wave function of a given Sound.
  *
@@ -22,6 +43,7 @@ export function is_sound(x: any): x is Sound {
 export function get_wave(sound: Sound): Wave {
   return head(sound);
 }
+
 /**
  * Accesses the duration of a given Sound.
  *
@@ -31,22 +53,4 @@ export function get_wave(sound: Sound): Wave {
  */
 export function get_duration(sound: Sound): number {
   return tail(sound);
-}
-/**
- * Accesses the magnitude of a given frequency sample.
- *
- * @param frequency_sample given frequency sample
- * @return the magnitude of the frequency sample
- */
-function get_magnitude_fs(frequency_sample: FrequencySample): number {
-  return head(frequency_sample);
-}
-/**
- * Accesses the magnitude of a given augmented sample.
- *
- * @param augmented_sample given augmented sample
- * @return the magnitude of the augmented sample
- */
-export function get_magnitude(augmented_sample: AugmentedSample): number {
-  return get_magnitude_fs(tail(augmented_sample));
 }
