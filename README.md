@@ -67,7 +67,7 @@ The following set of instructions explain how to transpile and serve the modules
 To transpile the modules' files from `src` into JavaScript files in `build`, run the following command.
 
 ```bash
-yarn run build
+yarn run build:all
 ```
 
 To start the server that serves all the contents of the `build` folder in the root directory of the project, run the following command. By default, running this command serves the contents of the `build` folder on <http://localhost:8022>.

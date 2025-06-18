@@ -2238,6 +2238,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-communication@workspace:src/bundles/communication"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@types/uniqid": "npm:^5.3.4"
     mqtt: "npm:^4.3.7"
     typescript: "npm:^5.8.2"
     uniqid: "npm:^5.4.0"
@@ -2275,6 +2276,7 @@ __metadata:
     gl-matrix: "npm:^3.3.0"
     js-slang: "npm:^1.0.81"
     typescript: "npm:^5.8.2"
+    vitest: "npm:^3.2.3"
   languageName: unknown
   linkType: soft
 
@@ -2292,6 +2294,15 @@ __metadata:
 "@sourceacademy/bundle-mark_sweep@workspace:src/bundles/mark_sweep":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-mark_sweep@workspace:src/bundles/mark_sweep"
+  dependencies:
+    "@sourceacademy/modules-buildtools": "workspace:^"
+    typescript: "npm:^5.8.2"
+  languageName: unknown
+  linkType: soft
+
+"@sourceacademy/bundle-midi@workspace:src/bundles/midi":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/bundle-midi@workspace:src/bundles/midi"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     typescript: "npm:^5.8.2"
@@ -2347,6 +2358,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-plotly@workspace:src/bundles/plotly"
   dependencies:
+    "@sourceacademy/bundle-curve": "workspace:^"
     "@sourceacademy/bundle-sound": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/plotly.js": "npm:^2.35.4"
@@ -2505,6 +2517,7 @@ __metadata:
   dependencies:
     "@typescript-eslint/rule-tester": "npm:^8.33.1"
     esbuild: "npm:^0.25.5"
+    eslint: "npm:^9.28.0"
     typescript: "npm:^5.8.2"
     vitest: "npm:^3.2.3"
   peerDependencies:
@@ -2535,7 +2548,6 @@ __metadata:
     commander: "npm:^13.0.0"
     esbuild: "npm:^0.25.5"
     eslint: "npm:^9.28.0"
-    jsonschema: "npm:^1.5.0"
     lodash: "npm:^4.17.21"
     typedoc: "npm:^0.28.4"
     typescript: "npm:^5.8.2"
@@ -2559,6 +2571,7 @@ __metadata:
     ace-builds: "npm:^1.25.1"
     classnames: "npm:^2.3.1"
     commander: "npm:^13.0.0"
+    eslint: "npm:^9.28.0"
     js-slang: "npm:^1.0.81"
     playwright: "npm:^1.52.0"
     re-resizable: "npm:^6.9.11"
@@ -2584,11 +2597,24 @@ __metadata:
     "@blueprintjs/icons": "npm:^5.9.0"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
+    eslint: "npm:^9.28.0"
     js-slang: "npm:^1.0.81"
+    jsonschema: "npm:^1.5.0"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     typescript: "npm:^5.8.2"
     vitest: "npm:^3.2.3"
+  languageName: unknown
+  linkType: soft
+
+"@sourceacademy/modules-vitestplugin@workspace:^, @sourceacademy/modules-vitestplugin@workspace:lib/vitestplugin":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/modules-vitestplugin@workspace:lib/vitestplugin"
+  dependencies:
+    typescript: "npm:^5.8.2"
+  peerDependencies:
+    "@sourceacademy/modules-lib": "workspace:^"
+    vitest: ^3.2.3
   languageName: unknown
   linkType: soft
 
@@ -2600,6 +2626,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-devserver": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
+    "@sourceacademy/modules-vitestplugin": "workspace:^"
     "@stylistic/eslint-plugin": "npm:^4.4.1"
     "@types/node": "npm:^22.15.30"
     "@types/react": "npm:^18.3.1"
@@ -2624,9 +2651,6 @@ __metadata:
     typescript-eslint: "npm:^8.33.1"
     vitest: "npm:^3.2.3"
     yarnhook: "npm:^0.6.0"
-  dependenciesMeta:
-    "@sourceacademy/modules-devserver":
-      optional: true
   languageName: unknown
   linkType: soft
 
@@ -2703,6 +2727,7 @@ __metadata:
     "@types/react-dom": "npm:^18.3.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
+    vitest: "npm:^3.2.3"
   languageName: unknown
   linkType: soft
 
@@ -2848,6 +2873,7 @@ __metadata:
     "@types/react": "npm:^18.3.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
+    vitest: "npm:^3.2.3"
   languageName: unknown
   linkType: soft
 
@@ -3273,6 +3299,13 @@ __metadata:
     fflate: "npm:~0.8.2"
     meshoptimizer: "npm:~0.18.1"
   checksum: 10c0/9e4b4a0aeba942b4dc5fc3648eb7932f8b7b6c03f2f9d69549f967bb5e581bb48022d15494b4e95eac21982d107bc4db2eecfb539a34451d2876ca3bd22a001c
+  languageName: node
+  linkType: hard
+
+"@types/uniqid@npm:^5.3.4":
+  version: 5.3.4
+  resolution: "@types/uniqid@npm:5.3.4"
+  checksum: 10c0/0075a77f2d67ef0cfeb5b55d27b059e4302ea4f5adb9038be198a344495df814778e5765cb69303ad7b22977f2d0a6bd98ed0b3a3120e89a8a724b8a2dff6272
   languageName: node
   linkType: hard
 

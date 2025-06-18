@@ -1,6 +1,7 @@
 // @ts-check
 
 const { defineConfig } = require('@yarnpkg/types');
+const { name } = require('./package.json');
 
 module.exports = defineConfig({
   async constraints({ Yarn }) {
@@ -9,16 +10,17 @@ module.exports = defineConfig({
       workspace.set('type', 'module');
     }
 
-    // make sure that all dependencies have the same version
-    for (const dependency of Yarn.dependencies()) {
-      if (dependency.type === 'peerDependencies')
-        continue;
+    // Make sure that if the dependency is defined in the root workspace
+    // that all child workspaces use the same version of that dependency
+    const [mainWorkspace] = Yarn.workspaces({ ident: name });
 
-      for (const otherDependency of Yarn.dependencies({ident: dependency.ident})) {
-        if (otherDependency.type === 'peerDependencies')
-          continue;
+    for (const workspaceDep of Yarn.dependencies({ workspace: mainWorkspace })) {
+      if (workspaceDep.type === 'peerDependencies') continue;
 
-        dependency.update(otherDependency.range);
+      for (const otherDep of Yarn.dependencies({ ident: workspaceDep.ident })) {
+        if (otherDep.type === 'peerDependencies') continue;
+
+        otherDep.update(workspaceDep.range);
       }
     }
   }
