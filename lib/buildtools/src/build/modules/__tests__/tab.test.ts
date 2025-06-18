@@ -1,8 +1,7 @@
 import { describe, expect, it, test, vi } from 'vitest';
 import { testMocksDir } from '../../../__tests__/fixtures.js';
-import { resolveAllTabs, resolveSingleTab } from '../tab.js';
+import { resolveSingleTab, resolveAllTabs } from '../../manifest.js';
 
-vi.unmock(import('fs/promises'));
 vi.mock(import('../../../getGitRoot.js'));
 
 describe('Test resolveSingleTab', () => {

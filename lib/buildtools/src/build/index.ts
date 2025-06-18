@@ -14,6 +14,6 @@ export default async function buildAll(bundlesDir: string, opts: PrebuildOptions
     writeManifest(outDir, manifest),
     buildDocs(manifest, outDir),
     buildBundles(manifest, opts, outDir),
-    getTabsDir().then(([tabsDir]) => buildTabs(manifest, tabsDir, opts, outDir))
+    getTabsDir().then(tabsDir => buildTabs(manifest, tabsDir, opts, outDir))
   ]);
 }

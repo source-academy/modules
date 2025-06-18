@@ -74,7 +74,7 @@ export default defineConfig(({ mode }) => {
       test: {
         name: 'Dev Server',
         include: [
-          "**/__tests__/**/*.ts*"
+          `${import.meta.dirname}/**/__tests__/**/*.ts*`
         ],
         browser: {
           enabled: true,

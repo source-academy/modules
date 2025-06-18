@@ -44,13 +44,11 @@ def update_json(git_root: str, asset: Literal['bundle', 'tab'], file_name: Liter
 async def main():
   git_root = await get_git_root()
   def updater(name: str, full_path: str, obj: Any):
-    obj['typedocOptions'] = {
-      "name": name
-    }
+    obj['scripts']['lint'] = 'buildtools lint .'
 
     return obj
 
-  update_json(git_root, 'bundle', 'tsconfig', updater)
+  update_json(git_root, 'bundle', 'package', updater)
 
 if __name__ == '__main__':
   aio.run(main())

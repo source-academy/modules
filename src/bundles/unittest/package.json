@@ -15,7 +15,9 @@
     "./*": "./dist/*.js"
   },
   "scripts": {
+    "build": "buildtools build bundle .",
+    "test": "buildtools test .",
     "tsc": "tsc --project ./tsconfig.json",
-    "build": "buildtools build bundle ."
+    "lint": "buildtools lint ."
   }
 }

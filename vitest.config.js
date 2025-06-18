@@ -1,15 +1,6 @@
 // @ts-check
 // Root vitest config
-import { join } from 'path';
 import { defineConfig, coverageConfigDefaults } from 'vitest/config';
-
-const testProjects = [
-  './lib/buildtools',
-  './lib/lintplugin',
-  './lib/modules-lib',
-  './src/bundles',
-  './src/tabs'
-].map(p => join(import.meta.dirname, p, 'vitest.config.js'));
 
 export default defineConfig({
   resolve: {
@@ -19,12 +10,7 @@ export default defineConfig({
     }]
   },
   test: {
-    projects: [
-      ...testProjects,
-      join(import.meta.dirname, 'devserver', 'vite.config.ts')
-    ],
-    watch: false,
-    silent: 'passed-only',
+    clearMocks: true,
     coverage: {
       provider: 'v8',
       exclude: [
@@ -37,6 +23,13 @@ export default defineConfig({
         `${import.meta.dirname}/lib/buildtools/src/build/docs/drawdown.ts`
       ]
     },
-    clearMocks: true
+    projects: [
+      './lib/*/vitest.config.js',
+      './devserver/vite.config.ts',
+      './src/*/vitest.config.js'
+    ],
+    root: import.meta.dirname,
+    silent: 'passed-only',
+    watch: false
   }
 });

@@ -23,6 +23,7 @@ beforeEach(() => {
 
 test('build bundle', async () => {
   await buildBundle('/build', {
+    type: 'bundle',
     manifest: {},
     name: 'test0',
     directory: `${testMocksDir}/bundles/test0`,
@@ -59,6 +60,7 @@ test('build bundle', async () => {
 
 test('build tab', async () => {
   await buildTab('/build', {
+    type: 'tab',
     directory: `${testMocksDir}/tabs/tab0`,
     name: 'tab0',
     entryPoint: `${testMocksDir}/tabs/tab0/src/index.tsx`,

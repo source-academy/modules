@@ -19,7 +19,7 @@
   "scripts": {
     "build": "buildtools build tab .",
     "lint": "buildtools lint .",
-    "test": "vitest --project \"Curve Tab\"",
+    "test": "buildtools test .",
     "tsc": "tsc --project ./tsconfig.json"
   },
   "type": "module"

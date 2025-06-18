@@ -10,10 +10,7 @@ import type { ResultEntry } from '../../types.js';
 import type { Severity } from '../../utils.js';
 import * as commands from '../build.js';
 import * as commandUtils from '../commandUtils.js';
-import { expectCommandExit, expectCommandSuccess, getCommandRunner } from './testingUtils.js';
-
-vi.unmock(import('fs/promises'));
-vi.spyOn(fs, 'mkdir').mockResolvedValue(undefined);
+import { getCommandRunner } from './testingUtils.js';
 
 const mockedRunEslint = vi.spyOn(lintRunner, 'runEslint');
 const mockedRunTsc = vi.spyOn(tscRunner, 'runTsc');
@@ -64,14 +61,14 @@ function testBuildCommand<T extends Record<string, any>>(
 
     test('Regular command execution', async () => {
       mockResolvedValueOnce(mockedBuilder, 'success');
-      await expectCommandSuccess(runCommand(...cmdArgs));
+      await expect(runCommand(...cmdArgs)).commandSuccess();
       expect(builder).toHaveBeenCalledTimes(1);
       assertDirectories(true);
     });
 
     test('Command execution that returns errors', async () => {
       mockResolvedValueOnce(mockedBuilder, 'error');
-      await expectCommandExit(runCommand(...cmdArgs));
+      await expect(runCommand(...cmdArgs)).commandExit();
       expect(builder).toHaveBeenCalledTimes(1);
       assertDirectories(true);
     });
@@ -79,7 +76,7 @@ function testBuildCommand<T extends Record<string, any>>(
     test('Command execution that returns warnings', async () => {
       mockResolvedValueOnce(mockedBuilder, 'warn');
       expect(process.env.CI).toBeUndefined();
-      await expectCommandSuccess(runCommand(...cmdArgs));
+      await expect(runCommand(...cmdArgs)).commandSuccess();
       expect(builder).toHaveBeenCalledTimes(1);
       assertDirectories(true);
     });
@@ -88,7 +85,7 @@ function testBuildCommand<T extends Record<string, any>>(
       vi.stubEnv('CI', 'yeet');
       try {
         mockResolvedValueOnce(mockedBuilder, 'warn');
-        await expectCommandExit(runCommand(...cmdArgs));
+        await expect(runCommand(...cmdArgs)).commandExit();
         expect(builder).toHaveBeenCalledTimes(1);
         assertDirectories(true);
       } finally {
@@ -116,7 +113,7 @@ function testBuildCommand<T extends Record<string, any>>(
             formatted: '',
             input: {} as any
           });
-          await expectCommandSuccess(runCommand(...cmdArgs, '--lint'));
+          await expect(runCommand(...cmdArgs, '--lint')).commandSuccess();
 
           expect(lintRunner.runEslint).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(1);
@@ -129,7 +126,7 @@ function testBuildCommand<T extends Record<string, any>>(
             formatted: '',
             input: {} as any
           });
-          await expectCommandExit(runCommand(...cmdArgs, '--lint'));
+          await expect(runCommand(...cmdArgs, '--lint')).commandExit();
           expect(lintRunner.runEslint).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(0);
           assertDirectories(false);
@@ -142,7 +139,7 @@ function testBuildCommand<T extends Record<string, any>>(
             input: {} as any
           });
           expect(process.env.CI).toBeUndefined();
-          await expectCommandSuccess(runCommand(...cmdArgs, '--lint'));
+          await expect(runCommand(...cmdArgs, '--lint')).commandSuccess();
           expect(lintRunner.runEslint).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(1);
           assertDirectories(true);
@@ -156,7 +153,7 @@ function testBuildCommand<T extends Record<string, any>>(
               formatted: '',
               input: {} as any
             });
-            await expectCommandExit(runCommand(...cmdArgs, '--lint'));
+            await expect(runCommand(...cmdArgs, '--lint')).commandExit();
             expect(lintRunner.runEslint).toHaveBeenCalledTimes(1);
             expect(mockedBuilder).toHaveBeenCalledTimes(0);
             assertDirectories(false);
@@ -179,7 +176,7 @@ function testBuildCommand<T extends Record<string, any>>(
             results: [],
             input: {} as any
           });
-          await expectCommandSuccess(runCommand(...cmdArgs, '--tsc'));
+          await expect(runCommand(...cmdArgs, '--tsc')).commandSuccess();
           expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(1);
           assertDirectories(true);
@@ -191,7 +188,7 @@ function testBuildCommand<T extends Record<string, any>>(
             results: [],
             input: {} as any
           });
-          await expectCommandExit(runCommand(...cmdArgs, '--tsc'));
+          await expect(runCommand(...cmdArgs, '--tsc')).commandExit();
           expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(0);
           assertDirectories(false);
@@ -203,7 +200,7 @@ function testBuildCommand<T extends Record<string, any>>(
             results: [],
             input: {} as any
           });
-          await expectCommandSuccess(runCommand(...cmdArgs, '--tsc'));
+          await expect(runCommand(...cmdArgs, '--tsc')).commandSuccess();
           expect(process.env.CI).toBeUndefined();
           expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(1);
@@ -218,7 +215,7 @@ function testBuildCommand<T extends Record<string, any>>(
               results: [],
               input: {} as any
             });
-            await expectCommandExit(runCommand(...cmdArgs, '--tsc'));
+            await expect(runCommand(...cmdArgs, '--tsc')).commandExit();
             expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);
             expect(mockedBuilder).toHaveBeenCalledTimes(0);
             assertDirectories(false);
@@ -242,7 +239,7 @@ function testBuildCommand<T extends Record<string, any>>(
           formatted: '',
           input: {} as any
         });
-        await expectCommandSuccess(runCommand(...cmdArgs, '--lint', '--tsc'));
+        await expect(runCommand(...cmdArgs, '--lint', '--tsc')).commandSuccess();
 
         expect(lintRunner.runEslint).toHaveBeenCalledTimes(1);
         expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);

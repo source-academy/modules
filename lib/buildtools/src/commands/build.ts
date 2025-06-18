@@ -3,13 +3,12 @@ import { Command } from '@commander-js/extra-typings';
 import { initTypedocForSingleBundle } from '../build/docs/docsUtils.js';
 import { buildDocs, buildJson } from '../build/docs/index.js';
 import buildAll from '../build/index.js';
-import { resolveAllBundles, resolveSingleBundle , writeManifest } from '../build/manifest.js';
+import { resolveAllBundles, resolveSingleBundle , resolveSingleTab, writeManifest } from '../build/manifest.js';
 import { buildBundle, buildTab } from '../build/modules/index.js';
-import { resolveSingleTab } from '../build/modules/tab.js';
 import { getBundlesDir, getOutDir } from '../getGitRoot.js';
 import { runBuilderWithPrebuild } from '../prebuild/index.js';
 import type { FullResult, ResolvedBundle, ResultEntry } from '../types.js';
-import { getResultString, lintOption, resultsProcessor, tscOption } from './commandUtils.js';
+import { getResultString, lintOption, logCommandErrorAndExit, resultsProcessor, tscOption } from './commandUtils.js';
 
 const outDir = await getOutDir();
 const bundlesDir = await getBundlesDir();
@@ -22,7 +21,7 @@ export const getBuildBundleCommand = () => new Command('bundle')
   .option('--ci', 'Run in CI mode', !!process.env.CI)
   .action(async (bundleDir, opts) => {
     const bundle = await resolveSingleBundle(bundleDir);
-    if (!bundle) throw new Error(`No bundle found at ${bundleDir}!`);
+    if (!bundle) logCommandErrorAndExit(`No bundle found at ${bundleDir}!`);
 
     const results = await runBuilderWithPrebuild(buildBundle, opts, bundle, outDir, 'bundle');
     console.log(getResultString(results));
@@ -37,7 +36,7 @@ export const getBuildTabCommand = () => new Command('tab')
   .option('--ci', 'Run in CI mode', !!process.env.CI)
   .action(async (tabDir, opts) => {
     const tab = await resolveSingleTab(tabDir);
-    if (!tab) throw new Error(`No tab found at ${tabDir}`);
+    if (!tab) logCommandErrorAndExit(`No tab found at ${tabDir}`);
 
     const results = await runBuilderWithPrebuild(buildTab, opts, tab, outDir, 'tab');
     console.log(getResultString(results));
@@ -51,7 +50,7 @@ export const getBuildJsonCommand = () => new Command('json')
   .option('--ci', 'Run in CI mode', !!process.env.CI)
   .action(async (bundleDir, opts) => {
     const bundle = await resolveSingleBundle(bundleDir);
-    if (!bundle) throw new Error(`No bundle found at ${bundleDir}!`);
+    if (!bundle) logCommandErrorAndExit(`No bundle found at ${bundleDir}!`);
 
     const results = await runBuilderWithPrebuild(
       async (outDir, bundle: ResolvedBundle) => {

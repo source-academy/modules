@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import type { ProjectReflection } from 'typedoc';
 import { expect, test, vi } from 'vitest';
 import { testMocksDir } from '../../../__tests__/fixtures.js';
+import type { ResolvedBundle } from '../../../types.js';
 import { initTypedoc, initTypedocForSingleBundle } from '../docsUtils.js';
 import { buildJson } from '../json.js';
 
@@ -31,7 +32,8 @@ function expectObj<T>(raw: string, expected: T) {
 }
 
 test('Building the json documentation for a single bundle', async () => {
-  const bundle = {
+  const bundle: ResolvedBundle = {
+    type: 'bundle',
     name: 'test0',
     manifest: {},
     directory: `${testMocksDir}/bundles/test0`,
@@ -50,13 +52,15 @@ test('initTypedoc for muiltiple bundles', async () => {
   // This test will complain that the README can't be found, which is fine
   // since it's not present inside the mock folder
 
-  const bundles = {
+  const bundles: Record<string, ResolvedBundle> = {
     test0: {
+      type: 'bundle',
       name: 'test0',
       manifest: {},
       directory: `${testMocksDir}/bundles/test0`,
     },
     test1: {
+      type: 'bundle',
       name: 'test1',
       manifest: {},
       directory: `${testMocksDir}/bundles/test1`,

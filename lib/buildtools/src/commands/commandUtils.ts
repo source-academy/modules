@@ -1,4 +1,5 @@
-import { Argument, Option } from '@commander-js/extra-typings';
+import { Option } from '@commander-js/extra-typings';
+import chalk from 'chalk';
 import { formatHtmlResult } from '../build/docs/html.js';
 import { formatJsonResult } from '../build/docs/json.js';
 import { formatManifestResult } from '../build/manifest.js';
@@ -8,12 +9,6 @@ import { formatLintResult } from '../prebuild/lint.js';
 import { formatTscResult } from '../prebuild/tsc.js';
 import type { FullResult, ResultEntry } from '../types.js';
 import type { Severity } from '../utils.js';
-
-export const bundleDirArg = new Argument('[bundle]', 'Directory in which the bundle\'s source files are located')
-  .default(process.cwd());
-
-export const tabDirArg = new Argument('[tab]', 'Directory in which the tab\'s source files are located')
-  .default(process.cwd());
 
 export const lintOption = new Option('--lint', 'Run ESLint when building')
   .default(false);
@@ -106,4 +101,9 @@ export function resultsProcessor<T extends (ResultEntry | ResultEntry[])>({ resu
         process.exit(1);
     }
   }
+}
+
+export function logCommandErrorAndExit(message: string, code: number = 1): never {
+  console.error(chalk.redBright(message));
+  process.exit(code);
 }

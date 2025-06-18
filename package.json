@@ -30,10 +30,10 @@
     "prepare": "husky",
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
     "template": "buildtools template",
-    "test:all": "buildtools test",
+    "test:all": "yarn test:modules && yarn test:libs && yarn test:devserver",
     "test:devserver": "vitest --project \"Dev Server\"",
     "test:libs": "yarn workspaces foreach -ptW --from \"./lib/*\" run test",
-    "test:modules": "buildtools test src",
+    "test:modules": "yarn workspaces foreach -ptW --from \"./src/{bundles,tabs}/*\" run test",
     "tsc:all": "yarn workspaces foreach -pt --all run tsc",
     "tsc:devserver": "tsc --project ./devserver/tsconfig.json",
     "tsc:modules": "yarn workspaces foreach -ptW --from \"./src/{bundles,tabs}/*\" run tsc"
@@ -41,6 +41,7 @@
   "devDependencies": {
     "@sourceacademy/lint-plugin": "workspace:^",
     "@sourceacademy/modules-buildtools": "workspace:^",
+    "@sourceacademy/modules-devserver": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
     "@stylistic/eslint-plugin": "^4.4.1",
     "@types/node": "^22.15.30",
@@ -68,9 +69,6 @@
     "lodash": "^4.17.21",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
-  },
-  "optionalDependencies": {
-    "@sourceacademy/modules-devserver": "workspace:^"
   },
   "devEngines": {
     "packageManager": {

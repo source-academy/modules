@@ -43,6 +43,8 @@ export const {
       return 'success';
     });
 
+    console.log(severity);
+
     return {
       formatted,
       severity,

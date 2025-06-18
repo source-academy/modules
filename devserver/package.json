@@ -28,6 +28,7 @@
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "@vitest/browser": "^3.2.3",
+    "eslint": "^9.28.0",
     "playwright": "^1.52.0",
     "sass": "^1.85.0",
     "typescript": "^5.8.2",
@@ -36,6 +37,7 @@
   },
   "scripts": {
     "dev": "vite",
+    "lint": "eslint src",
     "postinstall": "playwright install",
     "test": "vitest --config ./vite.config.ts --project \"Dev Server\"",
     "tsc": "tsc --project ./tsconfig.json"

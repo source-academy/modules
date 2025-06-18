@@ -1,17 +1,15 @@
 import { ESLint } from 'eslint';
 import { beforeEach, vi, expect, describe, test } from 'vitest';
 import * as manifest from '../../build/manifest.js';
-import * as tab from '../../build/modules/tab.js';
 import * as utils from '../../getGitRoot.js';
 import { getLintCommand } from '../lint.js';
-import { expectCommandExit, expectCommandSuccess, getCommandRunner } from './testingUtils.js';
+import { getCommandRunner } from './testingUtils.js';
 
 const lintFilesMock = vi.hoisted(() => vi.fn());
 
 vi.spyOn(utils, 'getGitRoot').mockResolvedValue('/');
 
-const mockedResolveSingleBundle = vi.spyOn(manifest, 'resolveSingleBundle');
-const mockedResolveSingleTab = vi.spyOn(tab, 'resolveSingleTab');
+const mockedResolveEither = vi.spyOn(manifest, 'resolveEitherBundleOrTab');
 
 vi.mock(import('eslint'), async importActual => {
   const actualEslint = await importActual();
@@ -36,7 +34,8 @@ vi.mock(import('eslint'), async importActual => {
 const runCommand = getCommandRunner(getLintCommand);
 describe('Test Lint Command', () => {
   beforeEach(() => {
-    mockedResolveSingleBundle.mockResolvedValueOnce({
+    mockedResolveEither.mockResolvedValueOnce({
+      type: 'bundle',
       directory: '',
       manifest: {},
       name: 'test0'
@@ -48,7 +47,7 @@ describe('Test Lint Command', () => {
       fatalErrorCount: 1
     }]);
 
-    await expectCommandExit(runCommand());
+    await expect(runCommand()).commandExit();
   });
 
   test('Fatal errors with --fix cause errors', async () => {
@@ -56,7 +55,7 @@ describe('Test Lint Command', () => {
       fatalErrorCount: 1
     }]);
 
-    await expectCommandExit(runCommand('--fix'));
+    await expect(runCommand('--fix')).commandExit();
     expect(ESLint.outputFixes).toHaveBeenCalledTimes(1);
   });
 
@@ -65,7 +64,7 @@ describe('Test Lint Command', () => {
       errorCount: 1
     }]);
 
-    await expectCommandExit(runCommand());
+    await expect(runCommand()).commandExit();
   });
 
   test('Non fatal errors with --fix does not call process.exit', async () => {
@@ -73,7 +72,7 @@ describe('Test Lint Command', () => {
       errorCount: 1
     }]);
 
-    await expectCommandSuccess(runCommand('--fix'));
+    await expect(runCommand('--fix')).commandSuccess();
     expect(ESLint.outputFixes).toHaveBeenCalledTimes(1);
   });
 
@@ -83,7 +82,7 @@ describe('Test Lint Command', () => {
       fixableWarningCount: 0
     }]);
 
-    await expectCommandSuccess(runCommand());
+    await expect(runCommand()).commandSuccess();
   });
 
   test('Warnings in ci mode should error out', async () => {
@@ -92,7 +91,7 @@ describe('Test Lint Command', () => {
       fixableWarningCount: 0
     }]);
 
-    await expectCommandExit(runCommand('--ci'));
+    await expect(runCommand('--ci')).commandExit();
   });
 
   test('Fixable Warnings outside of ci mode should not error out', async () => {
@@ -101,7 +100,7 @@ describe('Test Lint Command', () => {
       fixableWarningCount: 1
     }]);
 
-    await expectCommandSuccess(runCommand());
+    await expect(runCommand()).commandSuccess();
   });
 
   test('Fixable Warnings with --fix do not errors out', async () => {
@@ -110,37 +109,36 @@ describe('Test Lint Command', () => {
       fixableWarningCount: 1
     }]);
 
-    await expectCommandSuccess(runCommand('--fix'));
+    await expect(runCommand('--fix')).commandSuccess();
     expect(ESLint.outputFixes).toHaveBeenCalledTimes(1);
   });
 
-  test('Fixable Warnings with --fix and --ci do not errors out', async () => {
+  test('Fixable Warnings with --fix and --ci do not error out', async () => {
     lintFilesMock.mockResolvedValueOnce([{
       warningCount: 1,
       fixableWarningCount: 1
     }]);
 
-    await expectCommandSuccess(runCommand('--fix', '--ci'));
+    await expect(runCommand('--fix', '--ci')).commandSuccess();
     expect(ESLint.outputFixes).toHaveBeenCalledTimes(1);
   });
 });
 
 describe('Test Lint command directory resolution', () => {
   test('Lint command resolving a tab', async () => {
-    mockedResolveSingleBundle.mockResolvedValueOnce(undefined);
-    mockedResolveSingleTab.mockResolvedValueOnce({
+    mockedResolveEither.mockResolvedValueOnce({
+      type: 'tab',
       directory: '',
       entryPoint: '',
       name: 'tab0'
     });
     lintFilesMock.mockResolvedValueOnce([{ warningCount: 0 }]);
-    await expectCommandSuccess(runCommand());
+    await expect(runCommand()).commandSuccess();
   });
 
   test('Lint command resolving neither', async () => {
-    mockedResolveSingleBundle.mockResolvedValueOnce(undefined);
-    mockedResolveSingleTab.mockResolvedValueOnce(undefined);
-    await expect(runCommand()).rejects.toThrow();
+    mockedResolveEither.mockResolvedValueOnce(undefined);
+    await expect(runCommand()).commandExit();
     expect(lintFilesMock).not.toHaveBeenCalled();
   });
 });

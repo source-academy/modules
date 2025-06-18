@@ -12,12 +12,14 @@ export type ModulesManifest = {
 };
 
 export interface ResolvedBundle {
+  type: 'bundle'
   name: string;
   manifest: BundleManifest;
   directory: string;
 }
 
 export interface ResolvedTab {
+  type: 'tab'
   directory: string;
   entryPoint: string;
   name: string;

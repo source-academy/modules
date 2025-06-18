@@ -1,8 +1,8 @@
 import { Command } from '@commander-js/extra-typings';
 import chalk from 'chalk';
-import { resolveAllBundles, resolveSingleBundle } from '../build/manifest.js';
-import { resolveAllTabs, resolveSingleTab } from '../build/modules/tab.js';
+import { resolveAllBundles, resolveAllTabs, resolveSingleBundle, resolveSingleTab } from '../build/manifest.js';
 import { getBundlesDir, getTabsDir } from '../getGitRoot.js';
+import { logCommandErrorAndExit } from './commandUtils.js';
 
 export const getListBundlesCommand = () => new Command('bundle')
   .description('Lists all the bundles present or the information for a specific bundle in a given directory')
@@ -22,7 +22,7 @@ export const getListBundlesCommand = () => new Command('bundle')
     } else {
       const manifest = await resolveSingleBundle(directory);
       if (!manifest) {
-        throw new Error(`No bundle found at ${directory}!`);
+        logCommandErrorAndExit(`No bundle found at ${directory}!`);
       } else {
         console.log(chalk.magentaBright(`Bundle '${manifest.name}' found in ${directory}`));
       }
@@ -51,7 +51,7 @@ export const getListTabsCommand = () => new Command('tabs')
     } else {
       const resolvedTab = await resolveSingleTab(directory);
       if (!resolvedTab) {
-        console.log(chalk.redBright(`No tab found in ${directory}`));
+        logCommandErrorAndExit(`No tab found in ${directory}`);
         process.exit(1);
       }
       console.log(chalk.magentaBright(`Tab '${resolvedTab.name}' found in ${directory}`));

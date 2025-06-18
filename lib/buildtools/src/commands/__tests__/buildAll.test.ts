@@ -1,4 +1,3 @@
-import fs from 'fs/promises';
 import { describe, expect, test, vi } from 'vitest';
 import * as html from '../../build/docs/html.js';
 import * as json from '../../build/docs/json.js';
@@ -9,10 +8,7 @@ import * as lint from '../../prebuild/lint.js';
 import * as tsc from '../../prebuild/tsc.js';
 import type { Severity } from '../../utils.js';
 import { getBuildAllCommand } from '../build.js';
-import { expectCommandExit, expectCommandSuccess, getCommandRunner } from './testingUtils.js';
-
-vi.unmock(import('fs/promises'));
-vi.spyOn(fs, 'mkdir').mockResolvedValue(undefined);
+import { getCommandRunner } from './testingUtils.js';
 
 vi.mock(import('../../getGitRoot.js'));
 
@@ -59,7 +55,7 @@ describe('Test build:all command', () => {
   const runCommand = getCommandRunner(getBuildAllCommand);
 
   test('Regular command execution', async () => {
-    await expectCommandSuccess(runCommand());
+    await expect(runCommand()).commandSuccess();
 
     // Two bundles, so two calls to buildBundle
     expect(bundles.buildBundle).toHaveBeenCalledTimes(2);
@@ -75,7 +71,7 @@ describe('Test build:all command', () => {
   });
 
   test('Regular command execution with lint', async () => {
-    await expectCommandSuccess(runCommand('--lint'));
+    await expect(runCommand('--lint')).commandSuccess();
 
     // Two bundles, so two calls to buildBundle
     expect(bundles.buildBundle).toHaveBeenCalledTimes(2);
@@ -94,7 +90,7 @@ describe('Test build:all command', () => {
   });
 
   test('Regular command execution with tsc', async () => {
-    await expectCommandSuccess(runCommand('--tsc'));
+    await expect(runCommand('--tsc')).commandSuccess();
 
     // Two bundles, so two calls to buildBundle
     expect(bundles.buildBundle).toHaveBeenCalledTimes(2);
@@ -119,7 +115,7 @@ describe('Test build:all command', () => {
       formatted: ''
     }));
 
-    await expectCommandExit(runCommand('--lint'));
+    await expect(runCommand('--lint')).commandExit();
   });
 
   test('Command execution with tsc error', async () => {
@@ -129,6 +125,6 @@ describe('Test build:all command', () => {
       results: []
     }));
 
-    await expectCommandExit(runCommand('--tsc'));
+    await expect(runCommand('--tsc')).commandExit();
   });
 });

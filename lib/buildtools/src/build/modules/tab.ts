@@ -1,9 +1,6 @@
-import pathlib from 'path';
 import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild';
-import uniq from 'lodash/uniq.js';
 import type { ResolvedTab, TabResultEntry } from '../../types.js';
 import { createBuilder } from '../buildUtils.js';
-import { resolveAllBundles, resolvePaths } from '../manifest.js';
 import { commonEsbuildOptions, outputBundleOrTab } from './commons.js';
 
 const tabContextPlugin: ESBuildPlugin = {
@@ -16,36 +13,6 @@ const tabContextPlugin: ESBuildPlugin = {
     }));
   }
 };
-
-export async function resolveSingleTab(tabDir: string): Promise<ResolvedTab | undefined> {
-  const fullyResolved = pathlib.resolve(tabDir);
-  const tabPath = await resolvePaths(
-    `${fullyResolved}/src/index.tsx`,
-    `${fullyResolved}/index.tsx`
-  );
-
-  if (tabPath === undefined) return undefined;
-
-  return {
-    directory: fullyResolved,
-    entryPoint: tabPath,
-    name: pathlib.basename(fullyResolved)
-  };
-}
-
-export async function resolveAllTabs(bundlesDir: string, tabsDir: string) {
-  const bundlesManifest = await resolveAllBundles(bundlesDir);
-  const tabNames = uniq(Object.values(bundlesManifest).flatMap(({ manifest: { tabs} }) => tabs ?? []));
-
-  const resolvedTabs = await Promise.all(tabNames.map(tabName => resolveSingleTab(`${tabsDir}/${tabName}`)));
-
-  return resolvedTabs.reduce((res, tab) => tab === undefined
-    ? res
-    : {
-      ...res,
-      [tab.name]: tab
-    }, {} as Record<string, ResolvedTab>);
-}
 
 /**
  * Build a tab at the given directory

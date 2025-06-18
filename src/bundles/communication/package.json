@@ -18,6 +18,8 @@
   },
   "scripts": {
     "build": "buildtools build bundle .",
-    "tsc": "tsc --project ./tsconfig.json"
+    "test": "buildtools test .",
+    "tsc": "tsc --project ./tsconfig.json",
+    "lint": "buildtools lint ."
   }
 }

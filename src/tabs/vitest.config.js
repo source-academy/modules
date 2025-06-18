@@ -1,6 +1,4 @@
-// @ts-check
-// Tabs vitest config
-import { defineProject, mergeConfig } from 'vitest/config';
+import { mergeConfig, defineProject } from 'vitest/config';
 import rootConfig from '../../vitest.config';
 
 export default mergeConfig(
