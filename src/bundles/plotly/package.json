@@ -6,11 +6,11 @@
     "@sourceacademy/bundle-curve": "workspace:^",
     "@sourceacademy/bundle-sound": "workspace:^",
     "js-slang": "^1.0.81",
-    "plotly.js-dist": "^2.17.1"
+    "plotly.js-dist": "^3.0.0"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@types/plotly.js": "^2.35.4",
+    "@types/plotly.js": "^3.0.0",
     "typescript": "^5.8.2"
   },
   "type": "module",
