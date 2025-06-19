@@ -35,8 +35,8 @@ jobs:
         - name: Run test for libraries
           run: yarn test:libs
 
-        - name: Build and run tsc for bundles and tabs
-          run: yarn build:modules --tsc
+        - name: Build, lint and run tsc for bundles and tabs
+          run: yarn workspaces foreach -ptW --from "./src/{bundles,tsc}/*" run build --tsc --lint
 
         - name: Lint bundles and tabs
           run: yarn lint:modules
