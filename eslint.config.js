@@ -8,6 +8,7 @@ import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import vitestPlugin from 'eslint-plugin-vitest';
 import globals from 'globals';
+import jsonParser from 'jsonc-eslint-parser';
 
 import tseslint from 'typescript-eslint';
 
@@ -31,9 +32,37 @@ export default tseslint.config(
       '**/coverage',
     ]
   },
-  js.configs.recommended,
   {
+    files: ['**/*.json'],
+    ignores: [
+      'src/java/**',
+      'package-lock.json' // Just in case someone accidentally creates one
+    ],
+    languageOptions: {
+      parser: jsonParser,
+      parserOptions: {
+        // Use JSONC so that comments in JSON files don't get treated as
+        // syntax errors
+        jsonSyntax: 'jsonc'
+      }
+    },
+    plugins: {
+      '@stylistic': stylePlugin,
+    },
+    rules: {
+      '@stylistic/eol-last': 'warn',
+    }
+  },
+  {
+    extends: [
+      js.configs.recommended,
+    ],
     name: 'Global JS Rules',
+    files: [
+      '**/*.*js',
+      '**/*.ts',
+      '**/*.tsx',
+    ],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -73,13 +102,15 @@ export default tseslint.config(
       ],
     }
   },
-  ...tseslint.configs.recommended,
   {
+    extends: tseslint.configs.recommended,
     name: 'Global Typescript Rules',
     files: ['**/*.ts*'],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
+        // Prevent the parser from going any higher in the directory tree
+        // to find a tsconfig
         tsconfigRootDir: import.meta.dirname,
         project: true
       }
