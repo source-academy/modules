@@ -5,7 +5,7 @@
     "./src"
   ],
   "compilerOptions": {
-    "noEmit": true
+    "outDir": "./dist"
   },
   "typedocOptions": {
     "name": "curve"

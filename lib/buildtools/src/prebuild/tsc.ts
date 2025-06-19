@@ -80,9 +80,14 @@ export const {
   const { results: tsconfig, fileNames } = tsconfigRes;
 
   try {
-    const tsc = ts.createProgram(fileNames, tsconfig);
-    const results = tsc.emit();
-    const diagnostics = ts.getPreEmitDiagnostics(tsc)
+    const typecheckProgram = ts.createProgram({
+      rootNames: fileNames,
+      options: {
+        ...tsconfig,
+        noEmit: true
+      }});
+    const results = typecheckProgram.emit();
+    const diagnostics = ts.getPreEmitDiagnostics(typecheckProgram)
       .concat(results.diagnostics);
 
     const severity = findSeverity(diagnostics, ({ category }) => {
@@ -95,6 +100,21 @@ export const {
           return 'success';
       }
     });
+
+    if (severity !== 'error' && !tsconfig.noEmit) {
+      // If noEmit isn't specified, then run tsc again without including test
+      // files and actually output the files
+      const filesWithoutTests = fileNames.filter(p => {
+        const segments = p.split(pathlib.sep);
+        return !segments.includes('__tests__');
+      });
+      const compileProgram = ts.createProgram({
+        rootNames: filesWithoutTests,
+        options: tsconfig,
+        oldProgram: typecheckProgram
+      });
+      compileProgram.emit();
+    }
 
     return {
       severity,

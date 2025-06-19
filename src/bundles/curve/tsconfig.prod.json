@@ -1,9 +1,0 @@
-// Curve Bundle production
-{
-  "compilerOptions": {
-    "noEmit": false,
-    "outDir": "./dist"
-  },
-  "extends": "./tsconfig.json",
-  "exclude": ["**/__tests__"]
-}
