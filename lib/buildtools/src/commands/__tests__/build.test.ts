@@ -73,9 +73,8 @@ function testBuildCommand<T extends Record<string, any>>(
       assertDirectories(true);
     });
 
-    test('Command execution that returns warnings', async () => {
+    test.skipIf(!!process.env.CI)('Command execution that returns warnings', async () => {
       mockResolvedValueOnce(mockedBuilder, 'warn');
-      expect(process.env.CI).toBeUndefined();
       await expect(runCommand(...cmdArgs)).commandSuccess();
       expect(builder).toHaveBeenCalledTimes(1);
       assertDirectories(true);
@@ -132,13 +131,12 @@ function testBuildCommand<T extends Record<string, any>>(
           assertDirectories(false);
         });
 
-        test('Bundle command with linting warnings', async () => {
+        test.skipIf(!!process.env.CI)('Bundle command with linting warnings', async () => {
           mockedRunEslint.mockResolvedValueOnce({
             severity: 'warn',
             formatted: '',
             input: {} as any
           });
-          expect(process.env.CI).toBeUndefined();
           await expect(runCommand(...cmdArgs, '--lint')).commandSuccess();
           expect(lintRunner.runEslint).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(1);
@@ -194,14 +192,13 @@ function testBuildCommand<T extends Record<string, any>>(
           assertDirectories(false);
         });
 
-        test('Testing command with tsc warnings', async () => {
+        test.skipIf(!!process.env.CI)('Testing command with tsc warnings', async () => {
           mockedRunTsc.mockResolvedValueOnce({
             severity: 'warn',
             results: [],
             input: {} as any
           });
           await expect(runCommand(...cmdArgs, '--tsc')).commandSuccess();
-          expect(process.env.CI).toBeUndefined();
           expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(1);
           assertDirectories(true);

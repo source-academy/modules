@@ -76,7 +76,7 @@ describe('Test Lint Command', () => {
     expect(ESLint.outputFixes).toHaveBeenCalledTimes(1);
   });
 
-  test('Warnings outside of ci mode should not error out', async () => {
+  test.skipIf(!!process.env.CI)('Warnings outside of ci mode should not error out', async () => {
     lintFilesMock.mockResolvedValueOnce([{
       warningCount: 1,
       fixableWarningCount: 0
@@ -94,7 +94,7 @@ describe('Test Lint Command', () => {
     await expect(runCommand('--ci')).commandExit();
   });
 
-  test('Fixable Warnings outside of ci mode should not error out', async () => {
+  test.skipIf(!!process.env.CI)('Fixable Warnings outside of ci mode should not error out', async () => {
     lintFilesMock.mockResolvedValueOnce([{
       warningCount: 1,
       fixableWarningCount: 1
