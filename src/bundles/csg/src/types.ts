@@ -1,19 +1,9 @@
 /* [Imports] */
 import type { RGB, RGBA } from '@jscad/modeling/src/colors';
 import type { Geom3 } from '@jscad/modeling/src/geometries/types';
-import {
-  cameras,
-  controls as _controls,
-  type drawCommands
-} from '@jscad/regl-renderer';
+import type { cameras, controls, drawCommands } from '@jscad/regl-renderer';
 import type makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
 import type { InitializationOptions } from 'regl';
-
-/* [Main] */
-const orthographicCamera = cameras.orthographic;
-const perspectiveCamera = cameras.perspective;
-
-const controls = _controls.orbit;
 
 /* [Exports] */
 
@@ -29,11 +19,11 @@ export type Mat4 = Float32Array;
 
 //  @jscad\regl-renderer\src\cameras\perspectiveCamera.js
 //  @jscad\regl-renderer\src\cameras\orthographicCamera.js
-export type PerspectiveCamera = typeof perspectiveCamera;
-export type OrthographicCamera = typeof orthographicCamera;
+export type PerspectiveCamera = typeof cameras.perspective;
+export type OrthographicCamera = typeof cameras.orthographic;
 
 export type PerspectiveCameraState = Omit<
-  typeof perspectiveCamera.cameraState,
+  typeof cameras.perspective.cameraState,
 'position' | 'target' | 'view'
 > & {
   target: CoordinatesXYZ;
@@ -41,12 +31,12 @@ export type PerspectiveCameraState = Omit<
   position: CoordinatesXYZ;
   view: Mat4;
 };
-export type OrthographicCameraState = typeof orthographicCamera.cameraState;
+export type OrthographicCameraState = typeof cameras.orthographic.cameraState;
 export type CameraState = OrthographicCameraState | PerspectiveCameraState;
 
 // @jscad\regl-renderer\src\controls\orbitControls.js
 export type Controls = Omit<
-  typeof controls,
+  typeof controls.orbit,
 'pan' | 'rotate' | 'update' | 'zoomToFit'
 > & {
   update: ControlsUpdate.Function;
@@ -124,10 +114,10 @@ export type ControlsPan = (
 };
 
 export type ControlsState = Omit<
-  typeof controls.controlsState,
+  typeof controls.orbit.controlsState,
 'phiDelta' | 'scale' | 'thetaDelta'
 > &
-  typeof controls.controlsProps & {
+  typeof controls.orbit.controlsProps & {
     scale: number;
 
     thetaDelta: number;

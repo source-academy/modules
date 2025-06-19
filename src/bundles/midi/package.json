@@ -1,0 +1,19 @@
+{
+  "name": "@sourceacademy/bundle-midi",
+  "private": true,
+  "version": "1.0.0",
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "typescript": "^5.8.2"
+  },
+  "type": "module",
+  "scripts": {
+    "tsc": "tsc --project ./tsconfig.json",
+    "build": "buildtools build bundle .",
+    "lint": "buildtools lint ."
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
+  }
+}

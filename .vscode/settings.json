@@ -1,11 +1,12 @@
 {
+  "files.insertFinalNewline": true,
   "json.schemas": [
     {
       "fileMatch": ["src/bundles/**/manifest.json"],
-      "url": "./lib/modules-lib/src/internal/manifest.schema.json"
+      "url": "./lib/buildtools/src/build/modules/manifest.schema.json"
     }, 
     {
-      "fileMatch": ["./tsconfig.*.json"],
+      "fileMatch": ["tsconfig.*.json"],
       "url": "http://json.schemastore.org/tsconfig"
     }
   ]

@@ -1,11 +1,8 @@
 /* [Import] */
 import type { RGB, RGBA } from '@jscad/modeling/src/colors/types';
 import type { Geom3 } from '@jscad/modeling/src/geometries/types';
-import { type cameras, type drawCommands, controls } from '@jscad/regl-renderer';
+import type { cameras, drawCommands, controls } from '@jscad/regl-renderer';
 import type makeDrawMultiGrid from '@jscad/regl-renderer/types/rendering/commands/drawGrid/multi';
-
-/* [Main] */
-const { orbit } = controls;
 
 /* [Exports] */
 export type Color = RGB;
@@ -208,10 +205,10 @@ export type WrappedRenderer = (data: WrappedRendererData) => void;
   (Not exhaustive, only defines well the important properties we need)
 */
 export type ControlsState = Omit<
-  typeof orbit.controlsState,
+  typeof controls.orbit.controlsState,
 'phiDelta' | 'scale' | 'thetaDelta'
 > &
-  typeof orbit.controlsProps & {
+  typeof controls.orbit.controlsProps & {
     scale: number;
 
     thetaDelta: number;
