@@ -16,6 +16,7 @@
     "module": "esnext",
     /* Specify the module resolution strategy: 'node' (Node.js) or 'classic' (used in TypeScript before the release of 1.6). */
     "moduleResolution": "bundler",
+    "skipLibCheck": true,
 
     /* Allows importing modules with a ‘.json’ extension, which is a common practice in node projects. */
     "resolveJsonModule": true,

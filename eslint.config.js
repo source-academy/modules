@@ -74,7 +74,11 @@ export default tseslint.config(
       '@stylistic': stylePlugin,
     },
     rules: {
+      'import/first': 'warn',
+      'import/newline-after-import': 'warn',
+      'import/no-cycle': 'error',
       'import/no-duplicates': ['warn', { 'prefer-inline': false }],
+      'import/no-useless-path-segments': 'error',
       'import/order': [
         'warn',
         {
@@ -252,7 +256,7 @@ export default tseslint.config(
     name: 'Specifically for buildtools',
     files: ['lib/buildtools/**/*.ts'],
     rules: {
-      'import/extensions': 'off'
+      'import/extensions': ['error', 'ignorePackages']
     }
   },
 );
