@@ -30,13 +30,16 @@ jobs:
           run: yarn workspaces foreach -ptW --from "./lib/*" run tsc
 
         - name: Run lint for libraries
-          run: yarn eslint ./lib
+          run: yarn eslint lib
 
         - name: Run test for libraries
           run: yarn test:libs
 
-        - name: Build, lint and run tsc for bundles and tabs
-          run: yarn build:modules --tsc --lint
+        - name: Build and run tsc for bundles and tabs
+          run: yarn build:modules --tsc
+
+        - name: Lint bundles and tabs
+          run: yarn lint:modules
 
         - name: Test bundles and tabs
           run: yarn test:modules

@@ -26,6 +26,7 @@
     "devserver": "devserver",
     "lint:all": "eslint src lib devserver",
     "lint:inspect": "yarn dlx eslint --inspect-config",
+    "lint:modules": "yarn workspaces foreach -j 5 -pW --from \"./src/{bundles,tabs}\" run lint",
     "preinstall": "yarn build:libs",
     "prepare": "husky",
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
