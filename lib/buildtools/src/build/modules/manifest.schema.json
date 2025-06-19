@@ -11,7 +11,8 @@
     },
     "version": {
       "type": "string",
-      "description": "Version of your bundle"
+      "description": "Version of your bundle",
+      "pattern": "^[0-9]+(\\.[0-9]){0,2}$"
     },
     "requires": {
       "enum": [1, 2, 3, 4],

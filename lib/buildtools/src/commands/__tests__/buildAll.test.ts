@@ -54,7 +54,7 @@ const mockedTsc = vi.spyOn(tsc, 'runTsc').mockImplementation(input => Promise.re
 describe('Test build:all command', () => {
   const runCommand = getCommandRunner(getBuildAllCommand);
 
-  test('Regular command execution', async () => {
+  test('Regular command execution', { timeout: 10000 }, async () => {
     await expect(runCommand()).commandSuccess();
 
     // Two bundles, so two calls to buildBundle

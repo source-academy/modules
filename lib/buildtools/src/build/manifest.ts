@@ -12,10 +12,10 @@ import manifestSchema from './modules/manifest.schema.json' with { type: 'json' 
  * Checks that the given bundle manifest was correctly specified
  */
 export async function getBundleManifest(manifestFile: string, tabCheck?: boolean): Promise<BundleManifest | undefined> {
-  let rawManifest: string;
+  let manifestStr: string;
 
   try {
-    rawManifest = await fs.readFile(manifestFile, 'utf-8');
+    manifestStr = await fs.readFile(manifestFile, 'utf-8');
   } catch (error) {
     if (isNodeError(error) && error.code === 'ENOENT') {
       return undefined;
@@ -23,19 +23,24 @@ export async function getBundleManifest(manifestFile: string, tabCheck?: boolean
     throw error;
   }
 
-  const data = JSON.parse(rawManifest) as BundleManifest;
-  validate(data, manifestSchema, { throwError: true });
+  const rawManifest = JSON.parse(manifestStr) as BundleManifest;
+  validate(rawManifest, manifestSchema, { throwError: true });
+
+  const manifest = {
+    ...rawManifest,
+    tabs: !rawManifest.tabs ? rawManifest.tabs : rawManifest.tabs.map(each => each.trim()),
+  };
 
   // Make sure that all the tabs specified exist
-  if (tabCheck && data.tabs) {
+  if (tabCheck && manifest.tabs) {
     const tabsDir = await getTabsDir();
-    await Promise.all(data.tabs.map(async tabName => {
+    await Promise.all(manifest.tabs.map(async tabName => {
       const resolvedTab = await resolveSingleTab(`${tabsDir}/${tabName}`);
       if (resolvedTab === undefined) throw new Error(`Failed to find tab with name '${tabName}'!`);
     }));
   }
 
-  return data;
+  return manifest;
 }
 
 /**
