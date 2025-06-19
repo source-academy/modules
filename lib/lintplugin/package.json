@@ -34,6 +34,6 @@
     "lint": "eslint src",
     "prepare": "yarn build",
     "tsc": "tsc --project ./tsconfig.json",
-    "test": "vitest --config ./vitest.config.ts --project \"Lint Plugin\""
+    "test": "vitest --project \"Lint Plugin\""
   }
 }

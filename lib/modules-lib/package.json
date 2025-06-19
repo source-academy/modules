@@ -26,6 +26,6 @@
     "lint": "eslint src",
     "prepare": "yarn build",
     "tsc": "tsc --project ./tsconfig.json",
-    "test": "vitest --config ../../vitest.config.ts --project \"Modules Library\""
+    "test": "vitest --project \"Modules Library\""
   }
 }
