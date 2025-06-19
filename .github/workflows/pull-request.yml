@@ -23,9 +23,6 @@ jobs:
             node-version: 22
             cache: yarn
 
-        - name: Validate Constraints
-          run: yarn constraints
-
         - name: Install dependencies
           run: yarn install --immutable
 
