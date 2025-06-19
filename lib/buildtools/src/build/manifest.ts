@@ -24,7 +24,7 @@ export async function getBundleManifest(manifestFile: string, tabCheck?: boolean
   }
 
   const data = JSON.parse(rawManifest) as BundleManifest;
-  validate(data, manifestSchema.schema, { throwError: true });
+  validate(data, manifestSchema, { throwError: true });
 
   // Make sure that all the tabs specified exist
   if (tabCheck && data.tabs) {
