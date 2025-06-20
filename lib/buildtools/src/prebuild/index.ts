@@ -23,7 +23,7 @@ export async function runBuilderWithPrebuild<T extends ResolvedBundle | Resolved
   ...args: U
 ): Promise<FullResult<V>> {
   const promises: [Promise<TscResult | undefined>, Promise<LintResults | undefined>] = [
-    !tsc ? Promise.resolve(undefined) : runTsc(asset),
+    !tsc ? Promise.resolve(undefined) : runTsc(asset, false),
     !lint ? Promise.resolve(undefined) : runEslint(asset, false),
   ];
 
