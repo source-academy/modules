@@ -30,6 +30,7 @@
     "lint:all": "eslint lib devserver && yarn lint:modules",
     "lint:inspect": "yarn dlx eslint --inspect-config",
     "lint:modules": "yarn workspaces foreach -j 5 -pW --from \"./src/{bundles,tabs}\" run lint",
+    "preinstall": "yarn build:libs",
     "prepare": "husky",
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
     "template": "buildtools template",
