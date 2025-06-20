@@ -76,6 +76,10 @@ jobs:
         - name: Test bundles and tabs
           if: needs.paths-filter.outputs.modules == 'true'
           run: yarn test:modules
+
+        - name: Build manifest
+          if: needs.paths-filter.outputs.devserver == 'true' || needs.paths-filter.outputs.modules == 'true'
+          run: yarn buildtools build manifest
         
         - name: Run tsc for Dev Server
           if: needs.paths-filter.outputs.devserver == 'true'
