@@ -20,7 +20,7 @@
     "build": "buildtools build tab .",
     "lint": "buildtools lint .",
     "test": "buildtools test .",
-    "tsc": "tsc --project ./tsconfig.json"
+    "tsc": "buildtools tsc ."
   },
   "type": "module"
 }

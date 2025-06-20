@@ -34,6 +34,20 @@ vi.spyOn(process, 'exit').mockImplementation(code => {
   throw new MockProcessError(code);
 });
 
+vi.mock(import('typescript'), async importOriginal => {
+  const { default: original } = await importOriginal();
+
+  return {
+    default: {
+      ...original,
+      sys: {
+        ...original.sys,
+        writeFile: () => {},
+      },
+    }
+  };
+});
+
 expect.extend({
   async commandSuccess(received: Promise<any>) {
     try {

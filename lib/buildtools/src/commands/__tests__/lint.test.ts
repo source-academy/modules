@@ -2,7 +2,7 @@ import { ESLint } from 'eslint';
 import { beforeEach, vi, expect, describe, test } from 'vitest';
 import * as manifest from '../../build/manifest.js';
 import * as utils from '../../getGitRoot.js';
-import { getLintCommand } from '../lint.js';
+import { getLintCommand } from '../prebuild.js';
 import { getCommandRunner } from './testingUtils.js';
 
 const lintFilesMock = vi.hoisted(() => vi.fn());

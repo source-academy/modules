@@ -68,7 +68,7 @@ async function getTsconfig(srcDir: string): Promise<TsconfigResult> {
 export const {
   builder: runTsc,
   formatter: formatTscResult
-} = createPrebuilder<TscResult>(async input => {
+} = createPrebuilder<TscResult, [noEmit: boolean]>(async (input, noEmit) => {
   const tsconfigRes = await getTsconfig(input.directory);
   if (tsconfigRes.severity === 'error') {
     return {
@@ -101,7 +101,8 @@ export const {
       }
     });
 
-    if (severity !== 'error' && !tsconfig.noEmit) {
+    noEmit = tsconfig.noEmit ?? noEmit;
+    if (severity !== 'error' && !noEmit ) {
       // If noEmit isn't specified, then run tsc again without including test
       // files and actually output the files
       const filesWithoutTests = fileNames.filter(p => {

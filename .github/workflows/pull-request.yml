@@ -6,7 +6,7 @@ on:
 
 jobs:
   paths-filter:
-    name: Determine which files are changed
+    name: Determine which files have changed
     runs-on: ubuntu-latest
     steps:
       - name: Check out source code
@@ -19,25 +19,19 @@ jobs:
         id: filter
         with:
           filters: |
+            workflows:
+            - .github/workflows/**
             devserver:
             - 'devserver/**'
             libraries:
             - 'lib/**'
             modules:
             - src/{bundles,tabs}/**
-
-      - if: steps.filter.outputs.devserver == 'true'
-        run: echo "Changes detected in devserver"
-
-      - if: steps.filter.outputs.libraries == 'true'
-        run: echo "Changes detected in libraries"      
-      
-      - if: steps.filter.outputs.modules == 'true'
-        run: echo "Changes detected in modules"
     outputs:
-      devserver: ${{ steps.filter.outputs.devserver }}
-      modules: ${{ steps.filter.outputs.modules }}
-      libraries: ${{ steps.filter.outputs.libraries }}
+      # if the workflow file was modified, then we rerun the entire job
+      devserver: ${{ steps.filter.outputs.devserver || steps.filter.outputs.workflows }}
+      modules: ${{ steps.filter.outputs.modules || steps.filter.outputs.workflows }}
+      libraries: ${{ steps.filter.outputs.libraries || steps.filter.outputs.workflows }}
 
   test:
     name: Verify all tests pass and build success
@@ -77,11 +71,7 @@ jobs:
 
         - name: Build, lint and run tsc for bundles and tabs
           if: needs.paths-filter.outputs.modules == 'true'
-          run: yarn workspaces foreach -ptW --from "./src/{bundles,tsc}/*" run build --tsc --lint
-
-        - name: Lint bundles and tabs
-          if: needs.paths-filter.outputs.modules == 'true'
-          run: yarn lint:modules
+          run: yarn workspaces foreach -j 5 -ptW --from "./src/{bundles,tsc}/*" run build --tsc --lint
 
         - name: Test bundles and tabs
           if: needs.paths-filter.outputs.modules == 'true'

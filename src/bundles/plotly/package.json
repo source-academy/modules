@@ -19,7 +19,7 @@
     "./*": "./dist/*.js"
   },
   "scripts": {
-    "tsc": "tsc --project ./tsconfig.json",
+    "tsc": "buildtools tsc .",
     "build": "buildtools build bundle .",
     "lint": "buildtools lint ."
   }

@@ -17,7 +17,7 @@
   "scripts": {
     "build": "buildtools build bundle .",
     "test": "buildtools test .",
-    "tsc": "tsc --project ./tsconfig.json",
+    "tsc": "buildtools tsc .",
     "lint": "buildtools lint ."
   }
 }

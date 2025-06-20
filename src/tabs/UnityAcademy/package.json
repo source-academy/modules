@@ -19,6 +19,6 @@
   "scripts": {
     "build": "buildtools build tab .",
     "lint": "buildtools lint .",
-    "tsc": "tsc --project ./tsconfig.json"
+    "tsc": "buildtools tsc ."
   }
 }

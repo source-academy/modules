@@ -14,8 +14,6 @@
     "module": "esnext",
     /* Specify the module resolution strategy: 'node' (Node.js) or 'classic' (used in TypeScript before the release of 1.6). */
     "moduleResolution": "node",
-    /* Do not emit compiler output files like JavaScript source code, source-maps or declarations. */
-    "noEmit": true,
     /* Allows importing modules with a ‘.json’ extension, which is a common practice in node projects. */
     "resolveJsonModule": true,
     /* The longest common path of all non-declaration input files. */
