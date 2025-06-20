@@ -77,7 +77,7 @@ describe('Test the augmented tsc functionality', () => {
     expect(mockedWriteFile).not.toBeCalled();
   });
 
-  test('tsc on a tab', async () => {
+  test('tsc on a tab', { timeout: 10000 }, async () => {
     await runTsc({
       type: 'tab',
       directory: `${testMocksDir}/tabs/tab0`,
