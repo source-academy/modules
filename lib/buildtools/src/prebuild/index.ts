@@ -50,3 +50,18 @@ export async function runBuilderWithPrebuild<T extends ResolvedBundle | Resolved
     lint: lintResult
   };
 }
+
+/**
+ * Run just tsc and ESLint simultaneously without running any build tasks
+ */
+export async function runPrebuild(asset: ResolvedBundle | ResolvedTab) {
+  const [tscResult, lintResult] = await Promise.all([
+    runTsc(asset, false),
+    runEslint(asset, false)
+  ]);
+
+  return {
+    tsc: tscResult,
+    lint: lintResult
+  };
+}
