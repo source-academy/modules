@@ -1,4 +1,4 @@
-yarn workspaces foreach -ptR -j 5 --since --include "./src/{bundles,tabs}/*" run build --tsc --lint
+yarn workspaces foreach -ptR -j 5 --since --include "./src/{bundles,tabs}/*" run buildtools prebuild
 yarn workspaces foreach -ptR -j 5 --since --include "./src/{bundles,tabs}/*" run test
 yarn workspaces foreach -ptW --since --include "./{lib,devserver}/*" run lint
 yarn workspaces foreach -ptW --since --include "./{lib,devserver}/*" run tsc
