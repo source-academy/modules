@@ -6,7 +6,7 @@ This page contains instructions for creating a new bundle from scratch. If you a
 > ```sh
 > yarn workspaces focus @sourceacademy/modules
 > ```
-> to install **only** the dependencies required for your creating nbundle.
+> to install **only** the dependencies required for creating your bundle.
 
 To create a new bundle, use the `template` command.
 
@@ -29,10 +29,10 @@ What is the name of your new module? (eg. binary_tree)
 new_bundle
 ```
 
-This will create a folder under `src/bundles/new_bundle` with all the necessary files for creating your bundle:
+This will create a new folder `src/bundles/new_bundle` with all the necessary files for creating your bundle:
 
 ![](image.png)
 
 From there you can edit your bundle as necessary
 
-When you are ready to compile you can refer to [this](../editing/compiling) page.
+When you are ready to compile you can refer to [this](../compiling) page.

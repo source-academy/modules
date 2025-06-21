@@ -1,4 +1,4 @@
-# Writing Tests
+# Unit Testing
 
 The testing library used by this repository is [`vitest`](https://vitest.dev).
 

@@ -23,8 +23,9 @@ At this point it is not necessary to run `yarn install` yet to install dependenc
 ## Next Steps
 Once your environment has been setup, refer to the following guides:
 * [Creating a new bundle](./bundle/creating)
-* [Creating a new tab](./creating/tab)
-* [Modifying an existing bundle](./idk)
+* [Creating a new tab](./tabs/creating)
+* [Modifying an existing bundle](./bundle/editing.md)
+* [Modifying an existing tab](./tabs/editing.md)
 
 ## Development with local versions of `js-slang`
 

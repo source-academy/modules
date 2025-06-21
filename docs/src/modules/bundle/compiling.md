@@ -47,7 +47,7 @@ If you intend for your bundle to be consumed from other bundles, do the followin
 }
 ```
 
-### 2. Ensure that your `package.json` points to the correct exports
+### 2. Ensure that your `package.json` is configured correctly
 ```json
 {
   "name": "@sourceacademy/bundle-curve",

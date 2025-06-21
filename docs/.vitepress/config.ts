@@ -14,13 +14,6 @@ export default defineConfig({
     ],
 
     sidebar: {
-      '/': [{
-        text: 'Examples',
-        items: [
-          { text: 'Markdown Examples', link: '/markdown-examples' },
-          { text: 'Runtime API Examples', link: '/api-examples' }
-        ]
-      }],
       '/modules/': [
         {
           text: 'Developing Modules',
@@ -30,7 +23,11 @@ export default defineConfig({
               link: '/modules'
             },
             {
-              text: 'Writing Tests',
+              text: 'Getting Started',
+              link: '/modules/getting-started'
+            },
+            {
+              text: 'Unit Testing',
               link: '/modules/testing'
             },
             {
@@ -40,6 +37,10 @@ export default defineConfig({
             {
               text: 'Module Contexts',
               link: '/modules/context'
+            },
+            {
+              text: 'Using the Frontend',
+              link: '/modules/tabs/frontend'
             },
             {
               text: 'Bundles',
@@ -57,17 +58,48 @@ export default defineConfig({
                   link: '/modules/bundle/editing'
                 },
                 {
+                  text: 'Bundle Documentation',
+                  link: '/modules/bundle/documentation'
+                },
+                {
                   text: 'Compiling a Bundle',
                   link: '/modules/bundle/compiling'
+                },
+                {
+                  text: 'Bundle Type Maps',
+                  link: '/modules/bundle/type_map'
                 }
               ]
             },
             {
               text: 'Tabs',
-              items: [{
-                text:' Tabs Overview',
-                link: '/modules/tabs/overview'
-              }]
+              items: [
+                {
+                  text:' Tabs Overview',
+                  link: '/modules/tabs'
+                },
+                {
+                  text: 'Creating a Tab',
+                  link: '/modules/tabs/creating'
+                },
+                {
+                  text: 'Editing a Tab',
+                  link: '/modules/tabs/editing'
+                },
+                {
+                  text: 'Compiling a tab',
+                  link: '/modules/tabs/compiling'
+                },
+                {
+                  text: 'Working with Context',
+                  link: '/modules/tabs/context'
+                },
+                {
+                  text: 'Using the Dev Server',
+                  link: '/modules/tabs/devserver'
+                },
+
+              ]
             }
           ]
         },
@@ -75,7 +107,11 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: _package.repository }
+      { icon: 'github', link: _package.repository },
+      {
+        icon: 'gitbook',
+        link: 'https://source-academy.github.io/modules/documentation/'
+      }
     ]
   }
 });
