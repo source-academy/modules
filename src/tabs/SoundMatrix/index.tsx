@@ -1,4 +1,5 @@
 import { Button, Classes } from '@blueprintjs/core';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import classNames from 'classnames';
 import React from 'react';
 
@@ -84,31 +85,9 @@ class SoundMatrix extends React.Component<Props, State> {
   }
 }
 
-export default {
-  /**
-   * This function will be called to determine if the component will be
-   * rendered. Currently spawns when the result in the REPL is "test".
-   * @param {DebuggerContext} context
-   * @returns {boolean}
-   */
-  toSpawn: (context: any) => context.result.value === 'test',
-
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   * @param {DebuggerContext} context
-   */
-  body: (context: any) => <SoundMatrix context={context} />,
-
-  /**
-   * The Tab's icon tooltip in the side contents on Source Academy frontend.
-   */
+export default defineTab({
+  toSpawn: (context) => context.result.value === 'test',
+  body: (context) => <SoundMatrix context={context} />,
   label: 'Sound Matrix',
-
-  /**
-   * BlueprintJS IconName element's name, used to render the icon which will be
-   * displayed in the side contents panel.
-   * @see https://blueprintjs.com/docs/#icons
-   */
   iconName: 'music'
-};
+});

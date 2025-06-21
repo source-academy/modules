@@ -1,0 +1,11 @@
+// modules-lib build tsconfig
+{
+  "compilerOptions": {
+    "declaration": true,
+    "noEmit": false,
+    "outDir": "./dist",
+    "removeComments": false
+  },
+  "extends": "./tsconfig.json",
+  "exclude": ["**/__tests__"]
+}

@@ -1,8 +1,8 @@
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import Phaser from 'phaser';
 import React from 'react';
-import type { DebuggerContext } from '../../typings/type_helpers';
 
 /**
  * Game display tab for user-created games made with the Arcade2D module.
@@ -142,39 +142,15 @@ class GameTab extends React.Component<Props, GameState> {
   }
 }
 
-export default {
-  /**
-   * This function will be called to determine if the component will be
-   * rendered. Currently spawns when there is a stored game config, or if
-   * the string in the REPL is "[Arcade2D]".
-   * context.result.value is the return value from the playground code.
-   * @param {DebuggerContext} context
-   * @returns {boolean}
-   */
-  toSpawn(context: DebuggerContext) {
+export default defineTab({
+  toSpawn(context) {
     const config = context.result?.value?.gameConfig;
     if (config) {
       return true;
     }
     return false;
   },
-
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   * @param {DebuggerContext} context
-   */
-  body: (context: DebuggerContext) => <GameTab context={context} />,
-
-  /**
-   * The Tab's icon tooltip in the side contents on Source Academy frontend.
-   */
+  body: context => <GameTab context={context} />,
   label: 'Arcade2D Tab',
-
-  /**
-   * BlueprintJS IconName element's name, used to render the icon which will be
-   * displayed in the side contents panel.
-   * @see https://blueprintjs.com/docs/#icons
-   */
   iconName: IconNames.SHAPES
-};
+});

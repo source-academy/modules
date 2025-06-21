@@ -8,6 +8,15 @@ type OutputProps = {
   output: InterpreterOutput;
 };
 
+function safeParseErrors(errors: any[]) {
+  const notSafeToParse = errors.find(each => !('explain' in each));
+
+  if (notSafeToParse) {
+    return errors.map(err => err.toString()).join('\n');
+  }
+  return parseError(errors);
+}
+
 const Output: React.FC<OutputProps> = (props: OutputProps) => {
   switch (props.output.type) {
     case 'code':
@@ -41,7 +50,7 @@ const Output: React.FC<OutputProps> = (props: OutputProps) => {
       if (props.output.consoleLogs.length === 0) {
         return (
           <Card>
-            <Pre className="error-output">{parseError(props.output.errors)}</Pre>
+            <Pre className="error-output">{safeParseErrors(props.output.errors)}</Pre>
           </Card>
         );
       }
@@ -49,7 +58,7 @@ const Output: React.FC<OutputProps> = (props: OutputProps) => {
         <Card>
           <Pre className="log-output">{props.output.consoleLogs.join('\n')}</Pre>
           <br />
-          <Pre className="error-output">{parseError(props.output.errors)}</Pre>
+          <Pre className="error-output">{safeParseErrors(props.output.errors)}</Pre>
         </Card>
       );
 

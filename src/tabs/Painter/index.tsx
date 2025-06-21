@@ -1,7 +1,7 @@
+import type { LinePlot } from '@sourceacademy/bundle-painter/painter';
+import Modal from '@sourceacademy/modules-lib/tabs/ModalDiv';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
-import type { LinePlot } from '../../bundles/painter/painter';
-import type { DebuggerContext } from '../../typings/type_helpers';
-import Modal from '../common/ModalDiv';
 
 type Props = {
   children?: never
@@ -88,13 +88,13 @@ class Painter extends React.Component<Props, State> {
   }
 }
 
-export default {
-  toSpawn(context: DebuggerContext) {
+export default defineTab({
+  toSpawn(context) {
     const drawnPainters = context.context?.moduleContexts?.painter.state.drawnPainters;
     console.log(drawnPainters);
     return drawnPainters.length > 0;
   },
-  body: (debuggerContext: any) => <Painter debuggerContext={debuggerContext} />,
+  body: (debuggerContext) => <Painter debuggerContext={debuggerContext} />,
   label: 'Painter Test Tab',
   iconName: 'scatter-plot'
-};
+});

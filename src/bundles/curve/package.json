@@ -1,0 +1,25 @@
+{
+  "name": "@sourceacademy/bundle-curve",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^",
+    "gl-matrix": "^3.3.0",
+    "js-slang": "^1.0.81"
+  },
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "typescript": "^5.8.2"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
+  },
+  "scripts": {
+    "build": "buildtools build bundle .",
+    "test": "buildtools test .",
+    "tsc": "buildtools tsc .",
+    "lint": "buildtools lint ."
+  }
+}

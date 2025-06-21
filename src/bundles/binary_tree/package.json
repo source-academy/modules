@@ -1,0 +1,19 @@
+{
+  "name": "@sourceacademy/bundle-binary_tree",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "typescript": "^5.8.2"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
+  },
+  "scripts": {
+    "tsc": "buildtools tsc .",
+    "build": "buildtools build bundle .",
+    "lint": "buildtools lint ."
+  }
+}

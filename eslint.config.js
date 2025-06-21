@@ -1,39 +1,72 @@
 // @ts-check
 
 import js from '@eslint/js';
+import saLintPlugin from '@sourceacademy/lint-plugin';
 import stylePlugin from '@stylistic/eslint-plugin';
 import * as importPlugin from 'eslint-plugin-import';
-import jestPlugin from 'eslint-plugin-jest';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import vitestPlugin from 'eslint-plugin-vitest';
 import globals from 'globals';
+import jsonParser from 'jsonc-eslint-parser';
 
 import tseslint from 'typescript-eslint';
-
-import typeImportsPlugin from './scripts/dist/typeimports.js';
 
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
 const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
 
 export default tseslint.config(
   {
-    // global ignores
+    name: 'Global Ignores',
     ignores: [
+      '.yarn',
       '**/*.snap',
       'build/**',
-      'scripts/**/templates/templates/**',
-      'scripts/src/build/docs/__tests__/test_mocks/**',
-      'scripts/dist',
-      'src/**/samples/**'
+      'lib/buildtools/bin',
+      'lib/buildtools/src/build/__test_mocks__',
+      'lib/lintplugin/dist.js',
+      'devserver/vite.config.ts',
+      '**/dist/**',
+      'src/**/samples/**',
+      '**/*.d.ts',
+      '**/coverage',
     ]
   },
-  js.configs.recommended,
   {
-    // Global JS Rules
+    files: ['**/*.json'],
+    ignores: [
+      'src/java/**',
+      'package-lock.json' // Just in case someone accidentally creates one
+    ],
+    languageOptions: {
+      parser: jsonParser,
+      parserOptions: {
+        // Use JSONC so that comments in JSON files don't get treated as
+        // syntax errors
+        jsonSyntax: 'jsonc'
+      }
+    },
+    plugins: {
+      '@stylistic': stylePlugin,
+    },
+    rules: {
+      '@stylistic/eol-last': 'warn',
+    }
+  },
+  {
+    extends: [
+      js.configs.recommended,
+    ],
+    name: 'Global JS Rules',
+    files: [
+      '**/*.*js',
+      '**/*.ts',
+      '**/*.tsx',
+    ],
     languageOptions: {
       globals: {
         ...globals.node,
-        ...globals.es2022
+        ...globals.es2020
       }
     },
     plugins: {
@@ -41,7 +74,11 @@ export default tseslint.config(
       '@stylistic': stylePlugin,
     },
     rules: {
+      'import/first': 'warn',
+      'import/newline-after-import': 'warn',
+      'import/no-cycle': 'error',
       'import/no-duplicates': ['warn', { 'prefer-inline': false }],
+      'import/no-useless-path-segments': 'error',
       'import/order': [
         'warn',
         {
@@ -69,16 +106,22 @@ export default tseslint.config(
       ],
     }
   },
-  ...tseslint.configs.recommended,
   {
-    // Global typescript rules
+    extends: tseslint.configs.recommended,
+    name: 'Global Typescript Rules',
     files: ['**/*.ts*'],
     languageOptions: {
-      parser: tseslint.parser
+      parser: tseslint.parser,
+      parserOptions: {
+        // Prevent the parser from going any higher in the directory tree
+        // to find a tsconfig
+        tsconfigRootDir: import.meta.dirname,
+        project: true
+      }
     },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
-      'typeImports': typeImportsPlugin
+      '@sourceacademy': saLintPlugin
     },
     rules: {
       'no-unused-vars': 'off', // Use the typescript eslint rule instead
@@ -86,16 +129,15 @@ export default tseslint.config(
       '@typescript-eslint/ban-types': 'off', // Was 'error'
       '@typescript-eslint/no-duplicate-type-constituents': 'off', // Was 'error'
       '@typescript-eslint/no-explicit-any': 'off', // Was 'error'
+      '@typescript-eslint/no-import-type-side-effects': 'error',
       '@typescript-eslint/no-redundant-type-constituents': 'off', // Was 'error'
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
       '@typescript-eslint/prefer-ts-expect-error': 'warn',
       '@typescript-eslint/sort-type-constituents': 'warn',
-
-      'typeImports/collate-type-imports': 'warn'
     }
   },
   {
-    // global for TSX files
+    name: 'Global for TSX Files',
     files: ['**/*.tsx'],
     plugins: {
       'react-hooks': reactHooksPlugin,
@@ -111,15 +153,21 @@ export default tseslint.config(
     }
   },
   {
-    // Rules for bundles and tabs
-    files: ['src/**/*.ts*'],
+    name: 'Rules for bundles and tabs',
+    files: [
+      'src/bundles/**/*.ts*',
+      'src/tabs/**/*.ts*',
+    ],
     languageOptions: {
       globals: globals.browser,
-      parserOptions: {
-        project: './src/tsconfig.json'
-      }
     },
     rules: {
+      'func-style': ['warn', 'declaration', {
+        allowArrowFunctions: true,
+        overrides: {
+          namedExports: 'declaration'
+        }
+      }],
       'prefer-const': 'warn', // Was 'error'
 
       '@typescript-eslint/no-empty-object-type': ['error', {
@@ -127,24 +175,18 @@ export default tseslint.config(
         allowWithName: '(?:Props)|(?:State)$'
       }],
       '@typescript-eslint/no-namespace': 'off', // Was 'error'
-      '@typescript-eslint/no-var-requires': 'warn', // Was 'error'
       '@typescript-eslint/no-unsafe-function-type': 'off',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
     },
   },
   {
-    // Rules for scripts
-    files: ['scripts/**/*.ts'],
-    ignores: ['scripts/src/templates/templates/**/*.ts*'],
-    languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {
-        project: './scripts/tsconfig.json'
-      }
-    },
+    name: 'Rules for modules library',
+    files: ['lib/**/*.ts'],
     rules: {
+      'func-style': 'off',
       'import/extensions': ['error', 'never', { json: 'always' }],
       'no-constant-condition': 'off', // Was 'error',
+      'no-fallthrough': 'off',
 
       '@stylistic/arrow-parens': ['warn', 'as-needed'],
 
@@ -152,40 +194,69 @@ export default tseslint.config(
       '@typescript-eslint/require-await': 'error',
       '@typescript-eslint/return-await': ['error', 'in-try-catch']
     },
-    settings: {
-      'import/internal-regex': '^@src/',
-    },
   },
+
   {
-    // Rules for devserver,
+    name: 'Rules for Dev Server',
     files: ['devserver/**/*.ts*'],
     ignores: ['dist'],
     languageOptions: {
       parserOptions: {
-        project: './devserver/tsconfig.json'
+        globals: {
+          ...globals.browser,
+          ...globals.node
+        },
       },
-      globals: {
-        ...globals.browser,
-        ...globals.node
-      }
-    },
+    }
   },
   {
-    // Rules for tests
-    ...jestPlugin.configs['flat/recommended'],
+    name: 'Rules for tests',
+    plugins: {
+      'vitest': vitestPlugin,
+    },
     files: [
       '**/__tests__/**/*.ts*',
       '**/__mocks__/**/*.ts*',
-      '**/jest.setup.ts'
+      '**/vitest.*.ts'
     ],
     rules: {
-      ...jestPlugin.configs['flat/recommended'].rules,
-      'jest/expect-expect': ['error', { assertFunctionNames: ['expect*'] }],
-      'jest/no-alias-methods': 'off',
-      'jest/no-conditional-expect': 'off',
-      'jest/no-export': 'off',
-      'jest/require-top-level-describe': 'off',
-      'jest/valid-describe-callback': 'off'
+      ...vitestPlugin.configs.recommended.rules,
+      'vitest/expect-expect': ['error', {
+        assertFunctionNames: ['expect*'],
+      }],
+      'vitest/no-alias-methods': 'off',
+      'vitest/no-conditional-expect': 'off',
+      'vitest/no-export': 'off',
+      'vitest/require-top-level-describe': 'off',
+      'vitest/valid-describe-callback': 'off',
+
+      'import/extensions': ['error', 'never', {
+        config: 'ignore'
+      }]
     }
-  }
+  },
+  {
+    name: 'Rules for cjs files',
+    files: ['**/*.cjs'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off', // Was 'error'
+    }
+  },
+  {
+    name: 'Rules specifically for tabs',
+    files: [
+      'src/tabs/*/index.tsx',
+      'src/tabs/*/src/index.tsx',
+    ],
+    rules: {
+      '@sourceacademy/tab-type': 'error'
+    }
+  },
+  {
+    name: 'Specifically for buildtools',
+    files: ['lib/buildtools/**/*.ts'],
+    rules: {
+      'import/extensions': ['error', 'ignorePackages']
+    }
+  },
 );

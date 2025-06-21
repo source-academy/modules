@@ -1,0 +1,39 @@
+{
+  "name": "@sourceacademy/lint-plugin",
+  "version": "1.0.0",
+  "readme": "./README.md",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist.js"
+    }
+  },
+  "dependencies": {
+    "eslint": "^9.29.0"
+  },
+  "peerDependencies": {
+    "@stylistic/eslint-plugin": "^4.4.1",
+    "@typescript-eslint/utils": "^8.33.1",
+    "eslint": "*",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-vitest": "^0.5.4",
+    "globals": "^15.11.0",
+    "typescript-eslint": "^8.33.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/rule-tester": "^8.33.1",
+    "esbuild": "^0.25.5",
+    "typescript": "^5.8.2",
+    "vitest": "^3.2.3"
+  },
+  "scripts": {
+    "build": "tsc --project ./tsconfig.prod.json && node ./build.js",
+    "lint": "eslint src",
+    "prepare": "yarn build",
+    "tsc": "tsc --project ./tsconfig.json",
+    "test": "vitest --project \"Lint Plugin\""
+  }
+}

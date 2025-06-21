@@ -22,7 +22,11 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "types": [
+      "@vitest/browser/matchers",
+      "@vitest/browser/providers/playwright" 
+    ]
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

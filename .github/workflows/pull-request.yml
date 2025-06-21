@@ -5,9 +5,40 @@ on:
       - master
 
 jobs:
+  paths-filter:
+    name: Determine which files have changed
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Filter paths
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            workflows:
+            - .github/workflows/**
+            devserver:
+            - 'devserver/**'
+            libraries:
+            - 'lib/**'
+            modules:
+            - src/{bundles,tabs}/**
+    outputs:
+      # if the workflow file was modified, then we rerun the entire job
+      devserver: ${{ steps.filter.outputs.devserver || steps.filter.outputs.workflows }}
+      modules: ${{ steps.filter.outputs.modules || steps.filter.outputs.workflows }}
+      libraries: ${{ steps.filter.outputs.libraries || steps.filter.outputs.workflows }}
+
   test:
     name: Verify all tests pass and build success
     runs-on: ubuntu-latest
+
+    # execute after the paths-filter job is done
+    needs: paths-filter
     steps:
         - name: Check out source code
           uses: actions/checkout@v4
@@ -20,21 +51,44 @@ jobs:
         - name: Use Node.js 💻
           uses: actions/setup-node@v4
           with:
-            node-version: 20
+            node-version: 22
             cache: yarn
 
         - name: Install dependencies
           run: yarn install --immutable
 
-        - name: Build bundles and tabs
-          run: yarn build --tsc --lint
+        - name: Run tsc for libraries
+          if: needs.paths-filter.outputs.libraries == 'true'
+          run: yarn workspaces foreach -ptW --from "./lib/*" run tsc
+
+        - name: Run lint for libraries
+          if: needs.paths-filter.outputs.libraries == 'true'
+          run: yarn eslint lib
+
+        - name: Run test for libraries
+          if: needs.paths-filter.outputs.libraries == 'true'
+          run: yarn test:libs
+
+        - name: Build, lint and run tsc for bundles and tabs
+          if: needs.paths-filter.outputs.devserver == 'true' || needs.paths-filter.outputs.modules == 'true'
+          run: yarn workspaces foreach -j 5 -ptW --from "./src/{bundles,tsc}/*" run build --tsc --lint
 
         - name: Test bundles and tabs
-          run: yarn test --color
+          if: needs.paths-filter.outputs.modules == 'true'
+          run: yarn test:modules
 
-        - name: Test and lint scripts
-          run: yarn scripts:tsc && yarn scripts:lint && yarn scripts:test --color
-
-        - name: Check and Lint Devserver
-          run: yarn devserver:tsc && yarn devserver:lint
+        - name: Build manifest
+          if: needs.paths-filter.outputs.devserver == 'true' || needs.paths-filter.outputs.modules == 'true'
+          run: yarn buildtools build manifest
         
+        - name: Run tsc for Dev Server
+          if: needs.paths-filter.outputs.devserver == 'true'
+          run: yarn tsc:devserver
+
+        - name: Run Lint for Dev Server
+          if: needs.paths-filter.outputs.devserver == 'true'
+          run: yarn eslint devserver
+
+        - name: Test Dev Server
+          if: needs.paths-filter.outputs.devserver == 'true'
+          run: yarn test:devserver

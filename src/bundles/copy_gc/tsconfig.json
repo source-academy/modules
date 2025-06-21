@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "exclude": ["./dist"],
+  "include": [
+    "./src"
+  ],
+  "compilerOptions": {
+    "outDir": "./dist"
+  },
+  "typedocOptions": { 
+    "name": "copy_gc"
+  }
+}

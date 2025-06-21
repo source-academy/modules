@@ -1,3 +1,4 @@
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
 
 type Props = {
@@ -12,9 +13,9 @@ class Repeat extends React.PureComponent<Props> {
   }
 }
 
-export default {
+export default defineTab({
   toSpawn: () => true,
   body: (debuggerContext: any) => <Repeat debuggerContext={debuggerContext} />,
   label: 'Repeat Test Tab',
   iconName: 'build'
-};
+});

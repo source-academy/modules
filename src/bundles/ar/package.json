@@ -1,0 +1,23 @@
+{
+  "name": "@sourceacademy/bundle-ar",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
+  },
+  "dependencies": {
+    "saar": "^1.0.4",
+    "uniqid": "^5.4.0"
+  },
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build": "buildtools build bundle .",
+    "lint": "buildtools lint .",
+    "tsc": "buildtools tsc ."
+  }
+}

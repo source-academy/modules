@@ -1,6 +1,5 @@
 import { Button, ButtonGroup, Divider, NumericInput } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import React, { type ChangeEvent, type DragEvent } from 'react';
 import {
   DEFAULT_FPS,
   DEFAULT_HEIGHT,
@@ -12,13 +11,15 @@ import {
   MIN_FPS,
   MIN_HEIGHT,
   MIN_WIDTH
-} from '../../bundles/pix_n_flix/constants';
+} from '@sourceacademy/bundle-pix_n_flix/constants';
 import {
   type BundlePacket,
   type ErrorLogger,
   InputFeed,
   type TabsPacket
-} from '../../bundles/pix_n_flix/types';
+} from '@sourceacademy/bundle-pix_n_flix/types';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import React, { type ChangeEvent, type DragEvent } from 'react';
 
 type Props = {
   children?: never;
@@ -417,11 +418,11 @@ class PixNFlix extends React.Component<Props, State> {
   }
 }
 
-export default {
+export default defineTab({
   toSpawn: () => true,
   body: (debuggerContext: any) => (
     <PixNFlix debuggerContext={debuggerContext} />
   ),
   label: 'PixNFlix Live Feed',
   iconName: 'mobile-video'
-};
+});

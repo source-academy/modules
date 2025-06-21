@@ -1,7 +1,7 @@
+import type { DrawnPlot } from '@sourceacademy/bundle-plotly/plotly';
+import Modal from '@sourceacademy/modules-lib/tabs/ModalDiv';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
-import type { DrawnPlot } from '../../bundles/plotly/plotly';
-import type { DebuggerContext } from '../../typings/type_helpers';
-import Modal from '../common/ModalDiv';
 
 type Props = {
   children?: never
@@ -88,12 +88,12 @@ class Plotly extends React.Component<Props, State> {
   }
 }
 
-export default {
-  toSpawn(context: DebuggerContext) {
+export default defineTab({
+  toSpawn(context) {
     const drawnPlots = context.context?.moduleContexts?.plotly.state.drawnPlots;
     return drawnPlots.length > 0;
   },
-  body: (debuggerContext: any) => <Plotly debuggerContext={debuggerContext} />,
+  body: debuggerContext => <Plotly debuggerContext={debuggerContext} />,
   label: 'Plotly',
   iconName: 'scatter-plot'
-};
+});

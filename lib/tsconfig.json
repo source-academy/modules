@@ -1,0 +1,16 @@
+// Lib tsconfig.json
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ESNext",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "@sourceacademy/tab-Curve",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@blueprintjs/core": "^5.10.2",
+    "@blueprintjs/icons": "^5.9.0",
+    "@sourceacademy/bundle-curve": "workspace:^",
+    "@sourceacademy/modules-lib": "workspace:^",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "vitest": "^3.2.3"
+  },
+  "scripts": {
+    "build": "buildtools build tab .",
+    "lint": "buildtools lint .",
+    "test": "buildtools test .",
+    "tsc": "buildtools tsc ."
+  },
+  "type": "module"
+}

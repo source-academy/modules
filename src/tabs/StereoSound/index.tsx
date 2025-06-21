@@ -1,6 +1,7 @@
-import type { StereoSoundModuleState } from '../../bundles/stereo_sound/types';
-import { getModuleState, type DebuggerContext, type ModuleTab } from '../../typings/type_helpers';
-import MultiItemDisplay from '../common/MultItemDisplay';
+import type { StereoSoundModuleState } from '@sourceacademy/bundle-stereo_sound/types';
+import MultiItemDisplay from '@sourceacademy/modules-lib/tabs/MultItemDisplay';
+import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
+import type { ModuleTab } from '@sourceacademy/modules-lib/types';
 
 /**
  * Tab for Source Academy Sounds Module
@@ -34,34 +35,14 @@ const SoundTab: ModuleTab = ({ context }) => {
   );
 };
 
-export default {
-  /**
-   * This function will be called to determine if the component will be
-   * rendered.
-   * @returns {boolean}
-   */
-  toSpawn(context: any) {
+export default defineTab({
+  toSpawn(context) {
     const audioPlayed = context.context?.moduleContexts?.stereo_sound?.state?.audioPlayed;
     return audioPlayed.length > 0;
   },
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   * @param {DebuggerContext} context
-   */
-  body(context: DebuggerContext) {
+  body(context) {
     return <SoundTab context={context} />;
   },
-
-  /**
-   * The Tab's icon tooltip in the side contents on Source Academy frontend.
-   */
   label: 'Stereo Sounds',
-
-  /**
-   * BlueprintJS IconName element's name, used to render the icon which will be
-   * displayed in the side contents panel.
-   * @see https://blueprintjs.com/docs/#icons
-   */
   iconName: 'music'
-};
+});
