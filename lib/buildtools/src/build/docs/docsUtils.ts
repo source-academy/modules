@@ -1,6 +1,7 @@
 import * as td from 'typedoc';
 import type { ResolvedBundle } from '../../types.js';
 
+// #region commonOpts
 const typedocPackageOptions: td.Configuration.TypeDocPackageOptions = {
   categorizeByGroup: true,
   disableSources: true,
@@ -12,6 +13,7 @@ const commonTypedocOptions: td.Configuration.TypeDocOptions = {
   logLevel: 'Error',
   visibilityFilters: {}
 };
+// #endregion commonOpts
 
 /**
  * Initialize typedoc for a single bundle. Useful for building the JSON

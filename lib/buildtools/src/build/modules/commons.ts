@@ -6,6 +6,8 @@ import type es from 'estree';
 import type { BundleResultEntry, TabResultEntry } from '../../types.js';
 import type { Severity } from '../../utils.js';
 
+// The region tag is used in the developer documentation. DON'T REMOVE
+// #region esbuildOptions
 export const commonEsbuildOptions = {
   bundle: true,
   format: 'iife',
@@ -23,6 +25,7 @@ export const commonEsbuildOptions = {
   target: 'es6',
   write: false
 } satisfies ESBuildOptions;
+// #endregion esbuildOptions
 
 export async function outputBundleOrTab({ text }: OutputFile, name: string, type: 'bundle', outDir: string): Promise<BundleResultEntry>;
 export async function outputBundleOrTab({ text }: OutputFile, name: string, type: 'tab', outDir: string): Promise<TabResultEntry>;

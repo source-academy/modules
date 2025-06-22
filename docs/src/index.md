@@ -9,10 +9,7 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /getting-started
-    - theme: brand
-      text: Create a tab or bundle
-      link: /creating
+      link: /modules/1_getting-started
     - theme: brand
       text: Repo Overview
     - theme: alt
@@ -20,15 +17,15 @@ hero:
       link: /api-examples
 
 features:
-  - title: Creating a bundle
-    details: Instructions for creating a bundle
+  - title: Creating a bundle or tab
+    details: Instructions for creating a bundle or tab
+    link: /modules/getting-started/start
 
-  - title: Creating a tab
-    details: Instructions for creating a tab
-
-  - title: The Development Server
-    details: How and why to use the development server
+  - title: Common Modules Library
+    details: idk
+    link: /lib
 
   - title: Build Tools
     details: Details behind the tooling that compiles Source Academy modules
+    link: /buildtools/overview
 ---
