@@ -1,6 +1,7 @@
 // @ts-check
 
 import js from '@eslint/js';
+import markdown from '@eslint/markdown';
 import saLintPlugin from '@sourceacademy/lint-plugin';
 import stylePlugin from '@stylistic/eslint-plugin';
 import * as importPlugin from 'eslint-plugin-import';
@@ -33,6 +34,7 @@ export default tseslint.config(
     ]
   },
   {
+    name: 'JSON Files',
     files: ['**/*.json'],
     ignores: [
       'src/java/**',
@@ -51,6 +53,24 @@ export default tseslint.config(
     },
     rules: {
       '@stylistic/eol-last': 'warn',
+    }
+  },
+  {
+    name: 'Markdown Files',
+    extends: [markdown.configs.recommended],
+    files: ['**/*.md'],
+    language: 'markdown/gfm',
+    languageOptions: {
+      // @ts-expect-error typescript eslint doesn't recognize this property
+      frontmatter: 'yaml'
+    },
+    plugins: { markdown },
+    rules: {
+      'markdown/no-missing-label-refs': 'off', // was error
+      // Frontmatter titles are used for navigation only, so its okay
+      // to have both that and a h1 element
+      'markdown/no-multiple-h1': ['error', { frontmatterTitle: '' }],
+      'markdown/require-alt-text': 'off', // was error
     }
   },
   {
