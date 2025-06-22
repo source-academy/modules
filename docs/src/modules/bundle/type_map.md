@@ -1,3 +1,7 @@
+---
+order: 5
+---
+
 # Bundle Type Maps
 Sometimes, a bundle's exports may have very complex types, or types that leak implementation details. Or, a bundle's author
 might want to present an export with a different type than the one used in its Typescript source code.

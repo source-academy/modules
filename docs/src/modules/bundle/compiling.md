@@ -1,3 +1,6 @@
+---
+order: 6
+---
 # Compiling a Bundle
 This page contains information on compiling bundles, both for consumption by `js-slang` as well as other bundles.
 

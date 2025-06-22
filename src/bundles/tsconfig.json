@@ -2,7 +2,7 @@
   "compilerOptions": {
     "declaration": true,
     "paths": {
-      "js-slang/context": ["../../lib/modules-lib/src/types/js-slang/context.d.ts"],
+      "js-slang/context": ["./context.d.ts"],
       "plotly.js-dist": ["../../node_modules/@types/plotly.js/index.d.ts"]
     }
   },

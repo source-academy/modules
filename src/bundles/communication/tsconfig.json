@@ -7,7 +7,7 @@
     "outDir": "./dist",
     "paths": {
       "mqtt/dist/*": ["../../../node_modules/mqtt/types"],
-      "js-slang/context": ["../../../lib/modules-lib/src/types/js-slang/context.d.ts"]
+      "js-slang/context": ["../context.d.ts"]
     }
   },
   "typedocOptions": {

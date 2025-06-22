@@ -1,3 +1,6 @@
+---
+order: 2
+---
 # Creating a Tab
 This page contains instructions for creating a new bundle from scratch. If you are looking to edit an existing bundle refer to [these](./editing) instructions instead.
 
@@ -20,12 +23,12 @@ yarn template
 
 This will start an interactive prompt that will help you through the process of creating a tab.  Enter `tab` to create a new tab.
 
-```
+```txt
 What would you like to create? (module/tab)
 tab
 ```
 Then enter the name of the parent bundle. It must be a bundle that already exists.
-```
+```txt
 What would you like to create? (module/tab)
 tab
 
@@ -34,7 +37,7 @@ new_module
 ```
 
 Then enter the name of your new tab. It must be in `PascalCase`.
-```
+```txt
 What would you like to create? (module/tab)
 tab
 

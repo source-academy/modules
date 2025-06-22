@@ -1,3 +1,6 @@
+---
+order: 5
+---
 # Compiling a Tab
 This page contains information on compiling tabs for the Source Academy Frontend.
 

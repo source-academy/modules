@@ -1,3 +1,6 @@
+---
+order: 1
+---
 # Module Contexts
 Some times, a bundle needs to be able to maintain some state information, or send information to a tab. Module Contexts form the solution to this problem.
 

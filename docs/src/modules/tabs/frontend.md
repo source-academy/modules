@@ -1,3 +1,7 @@
+---
+title: Development with Frontend
+order: 7
+---
 # Development with Source Academy `frontend`
 
 The following set of instructions explains how to use a local copy of the Source Academy [frontend](https://github.com/source-academy/frontend) with a local copy of the modules code repository. If you only need to check how your tabs are being displayed

@@ -1,3 +1,7 @@
+---
+order: 2
+---
+
 # Code Formatting and Linting
 Code linting is the process of conducting static analysis on code to detect potential runtime issues and enforce
 stylistic conventions. Linting for the repository is provided by [ESLint](https://eslint.org).

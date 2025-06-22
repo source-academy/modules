@@ -1,7 +1,5 @@
 ---
-next:
-  text: Bundles Overview
-  link: /modules/bundle
+order: 1
 ---
 # Modules Overview
 This page contains information regarding the overview of the Source Modules system. 
@@ -20,8 +18,8 @@ These are the 3 main terms the project will be using to refer to the individual 
 | **Term**   | **Description**                                                    | **Links**        |
 | ---------- | ------------------------------------------------------------------ | ---------------- |
 | **Module** | A set of **one** bundle and **zero or more** tabs.                 |                  |
-| **Bundle** | The suite of functions that are provided by the module.            | [Docs](./bundle) |
-| **Tab**    | A user interface used by the module.                               | [Docs](./tabs)   |
+| **Bundle** | The suite of functions that are provided by the module.            | [Docs](./2_bundle/1_overview/1_overview) |
+| **Tab**    | A user interface used by the module.                               | [Docs](./3_tabs/1_overview/1_overview)   |
 
 ## Aims
 
@@ -37,7 +35,7 @@ The project was suggested by Professor Martin Henz who first proposed to include
 3. To simplify Source implementation tools. Imported names will all be explicitly mentioned in the Source program.
 
 > I'm proposing to allow the following syntax in Source:
-> ```
+> ```txt
 > program         ::= importdirective... statement...
 > importdirective ::= import { importnames } from string;
 > importnames     ::= importname (, importname)...
@@ -45,7 +43,7 @@ The project was suggested by Professor Martin Henz who first proposed to include
 > ```
 >
 > This means that we will explicitly import modules (libraries) from now on, in order to use them:
-> ```
+> ```ts
 > import { heart as lung, show as view, stack, sail } from 'lib/runes';
 > 
 > view(stack(lung, sail));

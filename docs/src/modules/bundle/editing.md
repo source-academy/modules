@@ -1,3 +1,6 @@
+---
+order: 3
+---
 # Editing an Existing Bundle
 This page contains instructions for modifying an existing bundle. If you are creating a new bundle from scratch, refer to [these](../creating/) instructions instead.
 

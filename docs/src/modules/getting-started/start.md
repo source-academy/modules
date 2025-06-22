@@ -1,3 +1,7 @@
+---
+order: 2
+---
+
 # Setting up the development environment
 To begin developing using this repository, follow the following steps to setup your local development environment.
 
@@ -22,10 +26,10 @@ At this point it is not necessary to run `yarn install` yet to install dependenc
 
 ## Next Steps
 Once your environment has been setup, refer to the following guides:
-* [Creating a new bundle](./bundle/creating)
-* [Creating a new tab](./tabs/creating)
-* [Modifying an existing bundle](./bundle/editing.md)
-* [Modifying an existing tab](./tabs/editing.md)
+* [Creating a new bundle](/modules/2_bundle/2_creating/2_creating)
+* [Creating a new tab](/modules/3_tabs/2_creating)
+* [Modifying an existing bundle](/modules/2_bundle/3_editing)
+* [Modifying an existing tab](/modules/3_tabs/3_editing.md)
 
 ## Development with local versions of `js-slang`
 

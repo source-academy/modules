@@ -1,19 +1,130 @@
-import { defineConfig } from 'vitepress';
+import { defineConfig, type UserConfig } from 'vitepress';
+import { withSidebar } from 'vitepress-sidebar';
+import type { VitePressSidebarOptions } from 'vitepress-sidebar/types';
 import _package from '../../package.json' with { type: 'json' };
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
-  title: 'Modules Developer Documentation',
+const vitepressOptions: UserConfig = {
   description: 'Developer documentation for the Source Academy modules repository',
   srcDir: 'src',
+  title: 'Modules Developer Documentation',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Develop a Module', link: '/modules' }
+      { text: 'Module Development', link: '/modules' }
+    ],
+    siteTitle: 'SA Modules',
+    sociallinks: [
+      { icon: 'github', link: _package.repository },
+      {
+        icon: 'gitbook',
+        link: 'https://source-academy.github.io/modules/documentation/'
+      }
+    ],
+    search: {
+      provider: 'local'
+    }
+  }
+};
+
+const commonSideBarOptions: VitePressSidebarOptions = {
+  sortMenusByFrontmatterOrder: true,
+  useFolderLinkFromSameNameSubFile: true,
+  useFolderTitleFromIndexFile: true,
+  useTitleFromFrontmatter: true,
+  useTitleFromFileHeading: true,
+};
+
+const sideBarOptions: VitePressSidebarOptions[] = [
+  {
+    documentRootPath: '/src',
+    scanStartPath: 'buildtools',
+    resolvePath: '/buildtools/',
+  },
+  {
+    documentRootPath: '/src',
+    scanStartPath: 'modules',
+    resolvePath: '/modules/',
+  }
+].map(each => ({
+  ...commonSideBarOptions,
+  ...each,
+}));
+
+export default defineConfig(withSidebar(vitepressOptions, sideBarOptions));
+
+/*
+export default defineConfig({
+
+  themeConfig: {
+    siteTitle: 'SA Modules',
+    // https://vitepress.dev/reference/default-theme-config
+    nav: [
+      { text: 'Home', link: '/' },
+      { text: 'Module Development', link: '/modules' }
     ],
 
     sidebar: {
+      '/buildtools/': [
+        {
+          text: 'Build Tools Overview',
+          link: '/buildtools',
+          items: [
+            {
+              text: 'Command Handlers',
+              link: './command'
+            },
+            {
+              text: 'Builders',
+              link: './builders'
+            },
+            {
+              text: 'Prebuild Tasks',
+              link: './prebuild',
+            },
+            {
+              text: 'Testing',
+              link: './testing'
+            },
+            {
+              text: 'Templates',
+              link: './templates'
+            }
+          ]
+        }
+      ],
+      '/buildtools/builders/': [{
+        text: 'Builders',
+        link: '/buildtools/builders',
+        items: [
+          {
+            text: 'Bundles and Tabs',
+            link: './modules'
+          },
+          {
+            text: 'Documentation',
+            link: './docs'
+          },
+          {
+            text: 'Manifest',
+            link: './manifest'
+          }
+        ]
+      }],
+      '/lib/': [{
+        text: 'Modules Libraries',
+        items: [
+          {
+            text: 'ESLint Plugin',
+            link: '/lib/lintplugin'
+          },
+          {
+            text: 'Common Library',
+            link: '/lib/modules-lib/modules'
+          }
+        ]
+      }],
       '/modules/': [
         {
           text: 'Developing Modules',
@@ -106,12 +217,16 @@ export default defineConfig({
       ]
     },
 
-    socialLinks: [
+    sociallinks: [
       { icon: 'github', link: _package.repository },
       {
         icon: 'gitbook',
         link: 'https://source-academy.github.io/modules/documentation/'
       }
-    ]
+    ],
+    search: {
+      provider: 'local'
+    }
   }
 });
+*/
