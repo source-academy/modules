@@ -1,7 +1,7 @@
 import type { SoundModuleState } from '@sourceacademy/bundle-sound/types';
 import MultiItemDisplay from '@sourceacademy/modules-lib/tabs/MultItemDisplay';
 import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
-import type { DebuggerContext, ModuleTab } from '@sourceacademy/modules-lib/types';
+import type { ModuleTab } from '@sourceacademy/modules-lib/types';
 
 /**
  * Tab for Source Academy Sounds Module
@@ -35,11 +35,11 @@ const SoundTab: ModuleTab = ({ context }) => {
 };
 
 export default defineTab({
-  toSpawn(context: DebuggerContext) {
+  toSpawn(context) {
     const audioPlayed = context.context?.moduleContexts?.sound?.state?.audioPlayed;
     return audioPlayed.length > 0;
   },
-  body(context: DebuggerContext) {
+  body(context) {
     return <SoundTab context={context} />;
   },
   label: 'Sounds',

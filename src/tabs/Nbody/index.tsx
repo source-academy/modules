@@ -1,6 +1,7 @@
 import { Button, ButtonGroup, NumericInput } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import type { DebuggerContext } from '@sourceacademy/modules-lib/types/index';
 import type { Simulation } from 'nbody';
 import React from 'react';
 
@@ -13,9 +14,7 @@ import React from 'react';
  * React Component props for the Tab.
  */
 type Props = {
-  children?: never;
-  className?: never;
-  context?: any;
+  context: DebuggerContext;
 };
 
 /**
@@ -27,9 +26,6 @@ type State = {};
  * React component props for the control buttons.
  */
 type SimControlProps = {
-  children?: never;
-  className?: never;
-  context?: any;
   sim: Simulation;
 };
 

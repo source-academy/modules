@@ -1,21 +1,13 @@
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
 
-type Props = {
-  children?: never;
-  className?: string;
-  debuggerContext?: any;
+const Repeat: React.FC = () => {
+  return <div>This is spawned from the repeat package</div>;
 };
-
-class Repeat extends React.PureComponent<Props> {
-  public render() {
-    return <div>This is spawned from the repeat package</div>;
-  }
-}
 
 export default defineTab({
   toSpawn: () => true,
-  body: (debuggerContext: any) => <Repeat debuggerContext={debuggerContext} />,
+  body: () => <Repeat />,
   label: 'Repeat Test Tab',
   iconName: 'build'
 });

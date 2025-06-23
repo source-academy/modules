@@ -1,12 +1,11 @@
-import { Slider, Icon } from '@blueprintjs/core';
+import { Icon, Slider } from '@blueprintjs/core';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import type { DebuggerContext } from '@sourceacademy/modules-lib/types/index';
 import React from 'react';
 import { ThemeColor } from './style';
 
 type Props = {
-  children?: never;
-  className?: string;
-  debuggerContext: any;
+  debuggerContext: DebuggerContext;
 };
 
 type State = {
@@ -466,7 +465,7 @@ class MarkSweep extends React.Component<Props, State> {
 
 export default defineTab({
   toSpawn: () => true,
-  body: (debuggerContext: any) => (
+  body: (debuggerContext) => (
     <MarkSweep debuggerContext={debuggerContext} />
   ),
   label: 'Mark Sweep Garbage Collector',
