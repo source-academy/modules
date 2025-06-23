@@ -12,10 +12,10 @@ const vitepressOptions: UserConfig = {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Module Development', link: '/modules' }
+      { text: 'Module Development', link: '/modules/' }
     ],
     siteTitle: 'SA Modules',
-    sociallinks: [
+    socialLinks: [
       { icon: 'github', link: _package.repository },
       {
         icon: 'gitbook',
@@ -29,204 +29,28 @@ const vitepressOptions: UserConfig = {
 };
 
 const commonSideBarOptions: VitePressSidebarOptions = {
-  sortMenusByFrontmatterOrder: true,
+  documentRootPath: '/src',
+  // sortMenusByName: true,
+
+  // TODO: Investigate? Do we need rewrite rules?
+  // folderLinkNotIncludesFileName: true,
   useFolderLinkFromSameNameSubFile: true,
   useFolderTitleFromIndexFile: true,
   useTitleFromFrontmatter: true,
   useTitleFromFileHeading: true,
 };
 
-const sideBarOptions: VitePressSidebarOptions[] = [
-  {
-    documentRootPath: '/src',
-    scanStartPath: 'buildtools',
-    resolvePath: '/buildtools/',
-  },
-  {
-    documentRootPath: '/src',
-    scanStartPath: 'modules',
-    resolvePath: '/modules/',
-  }
-].map(each => ({
+const sidebarConfigs: Record<string, VitePressSidebarOptions> = {
+  buildtools: {},
+  modules: {},
+  lib: {}
+};
+
+const sideBarOptions = Object.entries(sidebarConfigs).map(([startPath, options]): VitePressSidebarOptions => ({
+  scanStartPath: startPath,
+  resolvePath: `/${startPath}/`,
   ...commonSideBarOptions,
-  ...each,
+  ...options
 }));
 
 export default defineConfig(withSidebar(vitepressOptions, sideBarOptions));
-
-/*
-export default defineConfig({
-
-  themeConfig: {
-    siteTitle: 'SA Modules',
-    // https://vitepress.dev/reference/default-theme-config
-    nav: [
-      { text: 'Home', link: '/' },
-      { text: 'Module Development', link: '/modules' }
-    ],
-
-    sidebar: {
-      '/buildtools/': [
-        {
-          text: 'Build Tools Overview',
-          link: '/buildtools',
-          items: [
-            {
-              text: 'Command Handlers',
-              link: './command'
-            },
-            {
-              text: 'Builders',
-              link: './builders'
-            },
-            {
-              text: 'Prebuild Tasks',
-              link: './prebuild',
-            },
-            {
-              text: 'Testing',
-              link: './testing'
-            },
-            {
-              text: 'Templates',
-              link: './templates'
-            }
-          ]
-        }
-      ],
-      '/buildtools/builders/': [{
-        text: 'Builders',
-        link: '/buildtools/builders',
-        items: [
-          {
-            text: 'Bundles and Tabs',
-            link: './modules'
-          },
-          {
-            text: 'Documentation',
-            link: './docs'
-          },
-          {
-            text: 'Manifest',
-            link: './manifest'
-          }
-        ]
-      }],
-      '/lib/': [{
-        text: 'Modules Libraries',
-        items: [
-          {
-            text: 'ESLint Plugin',
-            link: '/lib/lintplugin'
-          },
-          {
-            text: 'Common Library',
-            link: '/lib/modules-lib/modules'
-          }
-        ]
-      }],
-      '/modules/': [
-        {
-          text: 'Developing Modules',
-          items: [
-            {
-              text: 'Modules Overview',
-              link: '/modules'
-            },
-            {
-              text: 'Getting Started',
-              link: '/modules/getting-started'
-            },
-            {
-              text: 'Unit Testing',
-              link: '/modules/testing'
-            },
-            {
-              text: 'Linting',
-              link: '/modules/linting'
-            },
-            {
-              text: 'Module Contexts',
-              link: '/modules/context'
-            },
-            {
-              text: 'Using the Frontend',
-              link: '/modules/tabs/frontend'
-            },
-            {
-              text: 'Bundles',
-              items: [
-                {
-                  text: 'Bundles Overview',
-                  link: '/modules/bundle'
-                },
-                {
-                  text: 'Creating a Bundle',
-                  link: '/modules/bundle/creating'
-                },
-                {
-                  text: 'Editing a Bundle',
-                  link: '/modules/bundle/editing'
-                },
-                {
-                  text: 'Bundle Documentation',
-                  link: '/modules/bundle/documentation'
-                },
-                {
-                  text: 'Compiling a Bundle',
-                  link: '/modules/bundle/compiling'
-                },
-                {
-                  text: 'Bundle Type Maps',
-                  link: '/modules/bundle/type_map'
-                }
-              ]
-            },
-            {
-              text: 'Tabs',
-              items: [
-                {
-                  text:' Tabs Overview',
-                  link: '/modules/tabs'
-                },
-                {
-                  text: 'Creating a Tab',
-                  link: '/modules/tabs/creating'
-                },
-                {
-                  text: 'Editing a Tab',
-                  link: '/modules/tabs/editing'
-                },
-                {
-                  text: 'Compiling a tab',
-                  link: '/modules/tabs/compiling'
-                },
-                {
-                  text: 'Working with Context',
-                  link: '/modules/tabs/context'
-                },
-                {
-                  text: 'Using the Dev Server',
-                  link: '/modules/tabs/devserver'
-                },
-
-              ]
-            }
-          ]
-        },
-      ]
-    },
-
-    sociallinks: [
-      { icon: 'github', link: _package.repository },
-      {
-        icon: 'gitbook',
-        link: 'https://source-academy.github.io/modules/documentation/'
-      }
-    ],
-    search: {
-      provider: 'local'
-    }
-  }
-});
-*/

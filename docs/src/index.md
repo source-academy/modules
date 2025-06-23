@@ -27,5 +27,5 @@ features:
 
   - title: Build Tools
     details: Details behind the tooling that compiles Source Academy modules
-    link: /buildtools/overview
+    link: /buildtools
 ---
