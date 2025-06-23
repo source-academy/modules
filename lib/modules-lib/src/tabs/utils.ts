@@ -1,34 +1,19 @@
-import type { IconName } from '@blueprintjs/icons';
-import type { DebuggerContext } from '../types';
+import type { DebuggerContext, ModuleSideContent } from '../types';
 
-export function getModuleState<T>({ context }: DebuggerContext, name: string): T {
-  return context.moduleContexts[name].state;
+/**
+ * Helper function for extracting the state object for your bundle
+ * @template T The type of your bundle's state object
+ * @param debuggerContext DebuggerContext as returned by the frontend
+ * @param name Name of your bundle
+ * @returns The state object of your bundle
+ */
+export function getModuleState<T>(debuggerContext: DebuggerContext, name: string): T {
+  return debuggerContext.context.moduleContexts[name].state;
 }
 
 /**
  * Helper for typing tabs
  */
-export function defineTab(tab: {
-  /**
-   * BlueprintJS IconName element's name, used to render the icon which will be
-   * displayed in the side contents panel.
-   * @see https://blueprintjs.com/docs/#icons
-   */
-  iconName: IconName
-  /**
-   * The Tab's icon tooltip in the side contents on Source Academy frontend.
-   */
-  label: string
-  /**
-   * This function will be called to determine if the component will be
-   * rendered
-   */
-  toSpawn?: (context: DebuggerContext) => boolean
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   */
-  body: (context: DebuggerContext) => JSX.Element
-}) {
+export function defineTab(tab: ModuleSideContent) {
   return tab;
 }

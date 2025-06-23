@@ -8,7 +8,7 @@ import PlayButton from './PlayButton';
 import WebGLCanvas from './WebglCanvas';
 import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from './css_constants';
 
-type AnimCanvasProps = {
+export type AnimCanvasProps = {
   animation: glAnimation;
 };
 
@@ -28,12 +28,7 @@ type AnimCanvasState = {
   errored?: any;
 };
 
-/**
- * Canvas to display glAnimations.
- *
- * Uses WebGLCanvas internally.
- */
-export default class AnimationCanvas extends React.Component<
+class AnimationCanvasInternal extends React.Component<
   AnimCanvasProps,
   AnimCanvasState
 > {
@@ -344,4 +339,13 @@ export default class AnimationCanvas extends React.Component<
       </div>
     </div>;
   }
+}
+
+/**
+ * React Component for displaying {@link glAnimation|glAnimations}.
+ *
+ * Uses {@link WebGLCanvas} internally.
+ */
+export default function AnimationCanvas(props: AnimCanvasProps) {
+  return <AnimationCanvasInternal {...props} />;
 }

@@ -11,11 +11,22 @@ import manifestSchema from './modules/manifest.schema.json' with { type: 'json' 
 /**
  * Checks that the given bundle manifest was correctly specified
  */
-export async function getBundleManifest(manifestFile: string, tabCheck?: boolean): Promise<BundleManifest | undefined> {
+export async function getBundleManifest(directory: string, tabCheck?: boolean): Promise<BundleManifest | undefined> {
   let manifestStr: string;
 
   try {
-    manifestStr = await fs.readFile(manifestFile, 'utf-8');
+    manifestStr = await fs.readFile(`${directory}/manifest.json`, 'utf-8');
+  } catch (error) {
+    if (isNodeError(error) && error.code === 'ENOENT') {
+      return undefined;
+    }
+    throw error;
+  }
+
+  let versionStr: string | undefined;
+  try {
+    const rawPackageJson = await fs.readFile(`${directory}/package.json`, 'utf-8')
+    ;({ version: versionStr } = JSON.parse(rawPackageJson));
   } catch (error) {
     if (isNodeError(error) && error.code === 'ENOENT') {
       return undefined;
@@ -26,9 +37,10 @@ export async function getBundleManifest(manifestFile: string, tabCheck?: boolean
   const rawManifest = JSON.parse(manifestStr) as BundleManifest;
   validate(rawManifest, manifestSchema, { throwError: true });
 
-  const manifest = {
+  const manifest: BundleManifest = {
     ...rawManifest,
     tabs: !rawManifest.tabs ? rawManifest.tabs : rawManifest.tabs.map(each => each.trim()),
+    version: versionStr,
   };
 
   // Make sure that all the tabs specified exist
@@ -62,7 +74,7 @@ export async function getBundleManifests(bundlesDir: string, tabCheck?: boolean)
     const fullPath = pathlib.join(bundlesDir, fileName);
     const stats = await fs.stat(fullPath);
     if (stats.isDirectory()) {
-      const manifest = await getBundleManifest(`${fullPath}/manifest.json`, tabCheck);
+      const manifest = await getBundleManifest(fullPath, tabCheck);
       if (manifest === undefined) return undefined;
       return [fileName, manifest] as [string, BundleManifest];
     }
@@ -88,7 +100,7 @@ export async function resolveSingleBundle(bundleDir: string): Promise<ResolvedBu
   const stats = await fs.stat(fullyResolved);
   if (!stats.isDirectory()) return undefined;
 
-  const manifest = await getBundleManifest(`${fullyResolved}/manifest.json`);
+  const manifest = await getBundleManifest(fullyResolved);
   if (!manifest) return undefined;
 
   try {

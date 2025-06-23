@@ -9,23 +9,22 @@ const defaultOptions = {
   minimal: true
 };
 
-type Props = {
+export type ButtonComponentProps = {
   onClick?: MouseEventHandler<HTMLElement>,
   disabled?: boolean,
   children?: ReactNode,
 };
 
-const ButtonComponent = (props: Props) => {
+/**
+ * Button Component that retains interactability even when disabled. Refer to
+ * {@link https://blueprintjs.com/docs/#core/components/buttons.anchorbutton|this} for more information
+ */
+export default function ButtonComponent(props: ButtonComponentProps) {
   const buttonProps = {
     ...defaultOptions,
     ...props
   };
   return props.disabled
-    ? (
-      <AnchorButton {...buttonProps} />
-    )
-    : (
-      <Button {...buttonProps} />
-    );
+    ? <AnchorButton {...buttonProps} />
+    : <Button {...buttonProps} />;
 };
-export default ButtonComponent;

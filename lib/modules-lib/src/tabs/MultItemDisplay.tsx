@@ -3,11 +3,14 @@ import { IconNames } from '@blueprintjs/icons';
 import { clamp } from 'lodash';
 import React from 'react';
 
-type MultiItemDisplayProps = {
+export type MultiItemDisplayProps = {
   elements: React.JSX.Element[]
 };
 
-const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
+/**
+ * React Component for displaying multiple items
+ */
+const MultiItemDisplay = (props: MultiItemDisplayProps) => {
   // The actual index of the currently selected element
   const [currentStep, setCurrentStep] = React.useState(0);
 
@@ -16,7 +19,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
   const [stepEditorFocused, setStepEditorFocused] = React.useState(false);
 
   const resetStepEditor = () => setStepEditorValue((currentStep + 1).toString());
-  const elementsDigitCount = Math.floor(Math.log10(Math.max(1, elements.length))) + 1;
+  const elementsDigitCount = Math.floor(Math.log10(Math.max(1, props.elements.length))) + 1;
 
   return (
     <div
@@ -68,7 +71,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
             <div style={{ width: `${stepEditorFocused ? elementsDigitCount + 2 : elementsDigitCount}ch` }}>
               <EditableText
                 value={stepEditorValue}
-                disabled={elements.length === 1}
+                disabled={props.elements.length === 1}
                 placeholder={undefined}
                 type="number"
                 onChange={(newValue) => {
@@ -82,7 +85,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
                 onConfirm={(value) => {
                   if (value) {
                     const newStep = parseInt(value);
-                    const clampedStep = clamp(newStep, 1, elements.length);
+                    const clampedStep = clamp(newStep, 1, props.elements.length);
                     setCurrentStep(clampedStep - 1);
                     setStepEditorFocused(false);
                     setStepEditorValue(clampedStep.toString());
@@ -103,7 +106,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
                 onEdit={() => setStepEditorFocused(true)}
               />
             </div>
-            {stepEditorFocused && <>&nbsp;</>}/{elements.length}
+            {stepEditorFocused && <>&nbsp;</>}/{props.elements.length}
           </div>
         </h3>
         <Button
@@ -118,7 +121,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
             setCurrentStep(currentStep + 1);
             setStepEditorValue((currentStep + 2).toString());
           }}
-          disabled={currentStep === elements.length - 1}
+          disabled={currentStep === props.elements.length - 1}
         >
           Next
         </Button>
@@ -133,7 +136,7 @@ const MultiItemDisplay = ({ elements }: MultiItemDisplayProps) => {
           justifyContent: 'center'
         }}
       >
-        {elements[currentStep]}
+        {props.elements[currentStep]}
       </div>
     </div>
   );

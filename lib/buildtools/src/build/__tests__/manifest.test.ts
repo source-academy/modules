@@ -10,26 +10,31 @@ describe('Test bundle manifest schema validation', () => {
 
   test('Valid Schema', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": [] }');
+    mockedReadFile.mockResolvedValueOnce('{ version: "1.0.0" }');
 
     await expect(getBundleManifest('yes'))
       .resolves
       .toMatchObject({
-        tabs: []
+        tabs: [],
+        version: '1.0.0'
       });
   });
 
   test('Valid Schema with tabs without verification', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": ["tab0", "tab1"] }');
+    mockedReadFile.mockResolvedValueOnce('{ version: "1.0.0" }');
 
     await expect(getBundleManifest('yes', false))
       .resolves
       .toMatchObject({
-        tabs: ['tab0', 'tab1']
+        tabs: ['tab0', 'tab1'],
+        version: '1.0.0'
       });
   });
 
   test('Valid schema with tabs and verification', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": ["tab0"] }');
+    mockedReadFile.mockResolvedValueOnce('{}');
 
     await expect(getBundleManifest('yes', true))
       .resolves
@@ -40,6 +45,7 @@ describe('Test bundle manifest schema validation', () => {
 
   test('Valid schema with invalid tab verification', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": ["tab2"] }');
+    mockedReadFile.mockResolvedValueOnce('{}');
 
     await expect(getBundleManifest('yes', true))
       .rejects.toThrow();
@@ -47,6 +53,7 @@ describe('Test bundle manifest schema validation', () => {
 
   test('Schema with additional properties', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": ["tab0", "tab1"], "unknown": true }');
+    mockedReadFile.mockResolvedValueOnce('{}');
 
     await expect(getBundleManifest('yes'))
       .rejects
@@ -55,6 +62,7 @@ describe('Test bundle manifest schema validation', () => {
 
   test('Schema with invalid requires', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": ["tab0", "tab1"], "requires": "yes" }');
+    mockedReadFile.mockResolvedValueOnce('{}');
 
     await expect(getBundleManifest('yes'))
       .rejects

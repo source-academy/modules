@@ -7,19 +7,17 @@ export type AutoLoopSwitchProps = Omit<SwitchProps, 'checked' | 'style'> & {
 };
 
 /* [Main] */
-export default class AutoLoopSwitch extends React.Component<AutoLoopSwitchProps> {
-  render() {
-    return <Switch
-      style={{
+export default function AutoLoopSwitch(props: AutoLoopSwitchProps) {
+  return <Switch
+    style={{
       // Remove default bottom margin
-        marginBottom: '0px',
+      marginBottom: '0px',
 
-        // Prevent label from wrapping at every letter when width is small
-        whiteSpace: 'nowrap'
-      }}
-      label="Auto Loop"
-      checked={ this.props.isAutoLooping }
-      {...this.props}
-    />;
-  }
+      // Prevent label from wrapping at every letter when width is small
+      whiteSpace: 'nowrap'
+    }}
+    label="Auto Loop"
+    checked={props.isAutoLooping}
+    {...props}
+  />;
 }
