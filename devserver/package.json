@@ -38,7 +38,7 @@
   "scripts": {
     "dev": "vite",
     "lint": "eslint src",
-    "postinstall": "playwright install",
+    "postinstall": "playwright install --with-deps",
     "test": "vitest --config ./vite.config.ts --project \"Dev Server\"",
     "tsc": "tsc --project ./tsconfig.json"
   }

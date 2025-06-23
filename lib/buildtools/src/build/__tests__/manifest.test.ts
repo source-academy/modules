@@ -10,7 +10,7 @@ describe('Test bundle manifest schema validation', () => {
 
   test('Valid Schema', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": [] }');
-    mockedReadFile.mockResolvedValueOnce('{ version: "1.0.0" }');
+    mockedReadFile.mockResolvedValueOnce('{ "version": "1.0.0" }');
 
     await expect(getBundleManifest('yes'))
       .resolves
@@ -22,7 +22,7 @@ describe('Test bundle manifest schema validation', () => {
 
   test('Valid Schema with tabs without verification', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": ["tab0", "tab1"] }');
-    mockedReadFile.mockResolvedValueOnce('{ version: "1.0.0" }');
+    mockedReadFile.mockResolvedValueOnce('{ "version": "1.0.0" }');
 
     await expect(getBundleManifest('yes', false))
       .resolves
