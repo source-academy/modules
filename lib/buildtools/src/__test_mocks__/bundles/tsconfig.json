@@ -32,7 +32,7 @@
     "noImplicitAny": false,
     "verbatimModuleSyntax": true,
     "paths": {
-      "js-slang/context": ["../../../../modules-lib/src/types/js-slang/context.d.ts"]
+      "js-slang/context": ["./context.d.ts"]
     },
     "ignoreDeprecations": "5.0"
   },

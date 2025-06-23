@@ -130,8 +130,7 @@ export const {
     };
   }
 }, tscResult => {
-  const inputType = 'entryPoint' in tscResult.input ? 'tab' : 'bundle';
-  const prefix = `${chalk.blueBright(`[${inputType} ${tscResult.input.name}]`)}: ${chalk.cyanBright('tsc completed')}`;
+  const prefix = `${chalk.blueBright(`[${tscResult.input.type} ${tscResult.input.name}]`)}: ${chalk.cyanBright('tsc completed')}`;
   if (tscResult.severity === 'error' && 'error' in tscResult) {
     return `${prefix} ${chalk.cyanBright('with')} ${chalk.redBright('errors')}: ${tscResult.error}`;
   }
