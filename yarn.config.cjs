@@ -23,5 +23,13 @@ module.exports = defineConfig({
         otherDep.update(workspaceDep.range);
       }
     }
+
+    for (const dep of Yarn.dependencies()) {
+      // Dependencies that are from this workspace should use
+      // the correct version
+      if (dep.ident.startsWith('@sourceacademy')) {
+        dep.update('workspace:^');
+      }
+    }
   }
 });

@@ -1,3 +1,4 @@
+// Bundles tsconfig
 {
   "compilerOptions": {
     "declaration": true,

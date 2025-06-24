@@ -134,6 +134,10 @@ This file controls the behaviour of Typescript. By default, it should look like 
 ```
 In general, there should not be a need for you to modify this file.  A full explanation on how to use `tsconfig.json` can be found [here](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html). Note that the `typedocOptions` field is a custom field used by `typedoc` for its configuration. Refer to [here](https://typedoc.org/documents/Options.Configuration.html#compileroptions) for more information.
 
+> [!WARNING]
+> You should not remove or modify the `typedocOptions` section from your `tsconfig.json` unless you provide the name of your bundle to Typedoc via its other configuration methods. Generating documentation for your bundle
+> requires that the name of your bundle be set correctly.
+
 ::: details Missing types for dependencies and overriding `tsconfig.json`
 Sometimes, your bundle might depend on packages that have published their types differently. For example, the `communication` bundle requires `mqtt`:
 ```ts

@@ -1,19 +1,21 @@
-import React from 'react';
+import { forwardRef, type CanvasHTMLAttributes, type DetailedHTMLProps } from 'react';
 import { CANVAS_MAX_WIDTH } from './css_constants';
 
 const defaultStyle = {
   width: '100%',
   maxWidth: CANVAS_MAX_WIDTH,
   aspectRatio: '1'
-} as React.CSSProperties;
+};
+
+export type WebGLCanvasProps = DetailedHTMLProps<CanvasHTMLAttributes<HTMLCanvasElement>, HTMLCanvasElement>;
 
 /**
  * Canvas component used by the curve and rune modules. Standardizes the
  * appearances of canvases for both modules.
  */
-const WebGLCanvas = React.forwardRef<HTMLCanvasElement, any>(
-  (props: any, ref) => {
-    const style
+const WebGLCanvas = forwardRef<HTMLCanvasElement, WebGLCanvasProps>(
+  (props, ref) => {
+    const style: Partial<WebGLCanvasProps['style']>
       = props.style !== undefined
         ? {
           ...defaultStyle,

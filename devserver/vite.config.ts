@@ -69,6 +69,9 @@ export default defineConfig(({ mode }) => {
           "vite-plugin-node-polyfills/shims/buffer",
           "vite-plugin-node-polyfills/shims/global",
           "vite-plugin-node-polyfills/shims/process",
+        ],
+        exclude: [
+          '../build/tabs/*.js'
         ]
       },
       test: {

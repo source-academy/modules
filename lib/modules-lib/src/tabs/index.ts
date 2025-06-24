@@ -3,12 +3,12 @@
  * @module Tabs
  * @title Tabs Library
  */
-export { default as AnimationCanvas } from './AnimationCanvas';
-export { default as AutoLoopSwitch } from './AutoLoopSwitch';
-export { default as ButtonComponent } from './ButtonComponent';
+export { default as AnimationCanvas, type AnimCanvasProps } from './AnimationCanvas';
+export { default as AutoLoopSwitch, type AutoLoopSwitchProps } from './AutoLoopSwitch';
+export { default as ButtonComponent, type ButtonComponentProps } from './ButtonComponent';
 export * from './css_constants';
-export { default as ModalDiv } from './ModalDiv';
-export { default as MultiItemDisplay } from './MultiItemDisplay';
-export { default as PlayButton } from './PlayButton';
+export { default as ModalDiv, type ModalProps } from './ModalDiv';
+export { default as MultiItemDisplay, type MultiItemDisplayProps } from './MultiItemDisplay';
+export { default as PlayButton, type PlayButtonProps } from './PlayButton';
 export * from './utils';
-export { default as WebGLCanvas } from './WebGLCanvas';
+export { default as WebGLCanvas, type WebGLCanvasProps } from './WebGLCanvas';

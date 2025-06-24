@@ -1,28 +1,37 @@
-import type { DebuggerContext } from './types';
+/**
+ * Common utility functions that can be used across bundles and tabs
+ * @module Utilities
+ * @title Utilities
+ */
 
-/* [Exports] */
+/**
+ * Converts an angle in degrees into radians
+ * @param degrees Angle in degrees
+ * @returns Angle in radians
+ */
 export function degreesToRadians(degrees: number): number {
   return (degrees / 360) * (2 * Math.PI);
 }
 
-export function hexToColor(hex: string): [number, number, number] {
+/**
+ * Converts a color hex value string to its red, green and blue components, each normalized to
+ * between 0 and 1. The leading `#` is optional.
+ * @returns Tuple of three numbers representing the R, G and B components
+ */
+export function hexToColor(hex: string, func_name?: string): [number, number, number] {
   const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
   const groups = regex.exec(hex);
 
-  if (groups == undefined) return [0, 0, 0];
+  if (groups == undefined) {
+    if (func_name === undefined) {
+      throw new Error(`Invalid color hex string: ${hex}`);
+    }
+    throw new Error(`${func_name}: Invalid color hex string: ${hex}`);
+  };
+
   return [
     parseInt(groups[1], 16) / 0xff,
     parseInt(groups[2], 16) / 0xff,
     parseInt(groups[3], 16) / 0xff
   ];
-}
-
-export function mockDebuggerContext<T>(state: T, module: string) {
-  return {
-    context: {
-      [module]: {
-        state
-      }
-    }
-  } as unknown as DebuggerContext;
 }

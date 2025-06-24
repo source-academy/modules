@@ -7,13 +7,22 @@ const tabType = {
     docs: {
       description: 'Enforces typing for Source Academy tabs'
     },
-    schema: [{ type: 'string' }, { type: 'string' }],
+    schema: [
+      {
+        description: 'Expected Import Source',
+        type: 'string'
+      },
+      {
+        description: 'Name of the import',
+        type: 'string'
+      }
+    ],
     messages: {
       noExport: 'Your tab should export an object using the defineTab helper',
       useHelper: 'Use the defineTab helper from {{ source }}'
     },
     defaultOptions: [
-      '@sourceacademy/modules-lib/tabs/utils',
+      '@sourceacademy/modules-lib/tabs',
       'defineTab'
     ],
   },

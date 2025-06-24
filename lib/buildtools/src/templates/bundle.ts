@@ -59,9 +59,9 @@ export async function addNew(bundlesDir: string, rl: Interface) {
   };
 
   await Promise.all([
-    fs.writeFile(`${bundleDestination}/package.json`, JSON.stringify(packageJson, null, 2)),
-    fs.writeFile(`${bundleDestination}/manifest.json`, JSON.stringify(bundleManifest, null, 2)),
-    fs.writeFile(`${bundleDestination}/tsconfig.json`, JSON.stringify(sampleTsconfig, null, 2)),
+    fs.writeFile(`${bundleDestination}/package.json`, JSON.stringify(packageJson, null, 2) + '\n'),
+    fs.writeFile(`${bundleDestination}/manifest.json`, JSON.stringify(bundleManifest, null, 2) + '\n'),
+    fs.writeFile(`${bundleDestination}/tsconfig.json`, `// ${moduleName} tsconfig\n${JSON.stringify(sampleTsconfig, null, 2)}\n`),
   ]);
 
   success(`Bundle for module ${moduleName} created at ${bundleDestination}.`);

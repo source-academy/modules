@@ -4,7 +4,7 @@
  */
 
 /** @hidden */
-type Decorator = (...args: any[]) => any;
+export type Decorator = (...args: any[]) => any;
 
 /**
  * Utility function for creating type maps

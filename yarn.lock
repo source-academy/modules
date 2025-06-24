@@ -3216,6 +3216,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/modules-devdocs@workspace:docs"
   dependencies:
+    "@sourceacademy/modules-lib": "workspace:^"
     vitepress: "npm:^1.6.3"
     vitepress-sidebar: "npm:^1.31.1"
   languageName: unknown

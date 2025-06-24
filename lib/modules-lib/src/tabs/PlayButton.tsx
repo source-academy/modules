@@ -1,10 +1,10 @@
 /* [Imports] */
-import { Icon, type ButtonProps, Tooltip } from '@blueprintjs/core';
+import { Icon, Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import ButtonComponent from './ButtonComponent';
+import ButtonComponent, { type ButtonComponentProps } from './ButtonComponent';
 
 /* [Exports] */
-export type PlayButtonProps = ButtonProps & {
+export type PlayButtonProps = ButtonComponentProps & {
   isPlaying: boolean,
   // onClickCallback: () => void,
 };

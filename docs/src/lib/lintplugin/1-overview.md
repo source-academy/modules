@@ -1,3 +1,6 @@
+---
+title: Overview
+---
 # Modules ESLint Plugin
 `@sourceacademy/modules-lintplugin` provides the ability for developers to write their own custom linting rules for SA Modules.
 

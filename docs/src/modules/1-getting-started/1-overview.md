@@ -1,5 +1,8 @@
 # Modules Overview
-This page contains information regarding the overview of the Source Modules system. 
+This page contains information regarding the overview of the Source Modules system. If you want to skip this overview, navigate to the bottom of the page
+where the **next page** button is located.
+
+## Terminology
 
 The module system imitates ESM Javascript, allowing the use of `import` statements to import external code into Source programs:
 
@@ -8,8 +11,6 @@ import { draw_connected } from 'curve';
 ```
 > [!NOTE]
 > If you're familiar with the Javascript ecosystem, you may know that there are other module formats that are in common use. Source Modules are written in the ECMAScript _(ESM)_ format (i.e using `import` and `export`). However, there are limitations. For example, top-level await is not supported.
-
-## Terminology
 
 These are the 3 main terms the project will be using to refer to the individual components of the Source Modules system. Please follow the set of definitions below to avoid any inconsistencies. 
 | **Term**   | **Description**                                                    | **Links**        |

@@ -3,9 +3,8 @@
 layout: home
 
 hero:
-  name: "Modules Developer Documentation"
-  text: "Developer documentation for the Source Academy modules repository"
-  tagline: My great project tagline
+  name: Modules Developer Documentation
+  tagline: Developer documentation for the Source Academy modules repository
   actions:
     - theme: brand
       text: Get Started
@@ -17,15 +16,18 @@ hero:
       link: /api-examples
 
 features:
-  - title: Creating a bundle or tab
+  - title: Your first bundle or tab
     details: Instructions for creating a bundle or tab
-    link: /modules/getting-started/start
+    link: /modules/1-getting-started/1-overview
 
-  - title: Common Modules Library
-    details: idk
+  - title: Common Modules Libraries
+    details: Libraries intended to be shared between SA Modules
     link: /lib
 
   - title: Build Tools
-    details: Details behind the tooling that compiles Source Academy modules
+    details: Details behind the tooling that compiles SA Modules
     link: /buildtools
+
+  - title: Repository Tools
+    details: Details for the tools used to aid in developing SA Modules
 ---

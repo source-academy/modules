@@ -5,12 +5,14 @@
   "version": "1.0.0",
   "type": "module",
   "devDependencies": {
+    "@sourceacademy/modules-lib": "workspace:^",
     "vitepress": "^1.6.3",
     "vitepress-sidebar": "^1.31.1"
   },
   "scripts": {
     "build": "vitepress build .",
     "dev": "vitepress dev .",
-    "preview": "vitepress preview ."
+    "preview": "vitepress preview .",
+    "prepare": "yarn workspaces foreach -A --include \"@sourceacademy/modules-lib\" run docs"
   }
 }
