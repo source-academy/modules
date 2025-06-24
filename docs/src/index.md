@@ -5,15 +5,6 @@ layout: home
 hero:
   name: Modules Developer Documentation
   tagline: Developer documentation for the Source Academy modules repository
-  actions:
-    - theme: brand
-      text: Get Started
-      link: /modules/1_getting-started
-    - theme: brand
-      text: Repo Overview
-    - theme: alt
-      text: Developer Instructions
-      link: /api-examples
 
 features:
   - title: Your first bundle or tab
@@ -30,4 +21,5 @@ features:
 
   - title: Repository Tools
     details: Details for the tools used to aid in developing SA Modules
+    link: /repotools
 ---

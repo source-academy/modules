@@ -9,18 +9,18 @@ describe('Test collateTypeImports', () => {
     {
       valid: [{
         code: `
-          import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+          import { defineTab } from '@sourceacademy/modules-lib/tabs';
           export default defineTab({})
         `
       }, {
         code: `
-          import { defineTab as definer } from '@sourceacademy/modules-lib/tabs/utils';
+          import { defineTab as definer } from '@sourceacademy/modules-lib/tabs';
           export default definer({})
         `
       }, {
         code: `
         import { stuff } from 'somewhere';
-        import { defineTab as definer } from '@sourceacademy/modules-lib/tabs/utils';
+        import { defineTab as definer } from '@sourceacademy/modules-lib/tabs';
         export default definer({ stuff })
       `}],
       invalid: [{
@@ -34,7 +34,7 @@ describe('Test collateTypeImports', () => {
         errors: 1
       }, {
         code: `
-          import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+          import { defineTab } from '@sourceacademy/modules-lib/tabs';
           export default 0;
         `,
         errors: 1

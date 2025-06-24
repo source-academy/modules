@@ -46,7 +46,8 @@ const sidebarConfigs: Record<string, VitePressSidebarOptions> = {
   buildtools: {},
   modules: {},
   lib: {},
-  '/lib/modules-lib': {}
+  'lib/modules-lib': {},
+  repotools: {}
 };
 
 const sideBarOptions = Object.entries(sidebarConfigs).map(([startPath, options]): VitePressSidebarOptions => ({

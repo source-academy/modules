@@ -6,8 +6,15 @@
       "url": "./lib/buildtools/src/build/modules/manifest.schema.json"
     }, 
     {
-      "fileMatch": ["tsconfig.*.json"],
-      "url": "http://json.schemastore.org/tsconfig"
+      "fileMatch": ["tsconfig.json", "tsconfig.*.json"],
+      "schema": {
+        "allOf": [{ "$ref": "http://json.schemastore.org/tsconfig" }],
+        "properties": {
+          "typedocOptions": {
+            "allOf": [{ "$ref": "https://typedoc.org/schema.json" }]
+          }
+        }
+      }
     }
   ]
 }
