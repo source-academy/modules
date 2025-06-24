@@ -29,8 +29,13 @@ What is the name of your new module? (eg. binary_tree)
 new_bundle
 ```
 
-This will create a new folder `src/bundles/new_bundle` with all the necessary files for creating your bundle:
+The name of your bundle is what Source users will import from to actually use your bundle:
+```ts
+import { function } from 'new_bundle';
+```
 
-![](image.png)
+The command should have creates a new folder `src/bundles/new_bundle` with all the necessary files for creating your bundle:
+
+![](./new_bundle.png)
 
 From there you can edit your bundle as necessary

@@ -12,7 +12,9 @@ const vitepressOptions: UserConfig = {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Module Development', link: '/modules/' }
+      { text: 'Module Development', link: '/modules/' },
+      { text: 'Common Library', link: '/lib' },
+      { text: 'Build Tools', link: '/buildtools' }
     ],
     siteTitle: 'SA Modules',
     socialLinks: [
@@ -25,7 +27,7 @@ const vitepressOptions: UserConfig = {
     search: {
       provider: 'local'
     }
-  }
+  },
 };
 
 const commonSideBarOptions: VitePressSidebarOptions = {
@@ -43,7 +45,8 @@ const commonSideBarOptions: VitePressSidebarOptions = {
 const sidebarConfigs: Record<string, VitePressSidebarOptions> = {
   buildtools: {},
   modules: {},
-  lib: {}
+  lib: {},
+  '/lib/modules-lib': {}
 };
 
 const sideBarOptions = Object.entries(sidebarConfigs).map(([startPath, options]): VitePressSidebarOptions => ({

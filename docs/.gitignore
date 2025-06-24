@@ -1,2 +1,4 @@
 .vitepress/cache
 .vitepress/dist
+
+src/lib/modules-lib

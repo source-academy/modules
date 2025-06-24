@@ -1,7 +1,3 @@
----
-order: 3
----
-
 # General Design of the Build Tools
 
 ## Path Resolution

@@ -1,4 +1,12 @@
 /**
+ * Utilites for creating and manipulating Bundle Type Maps
+ * @module Type Maps
+ */
+
+/** @hidden */
+type Decorator = (...args: any[]) => any;
+
+/**
  * Utility function for creating type maps
  *
  * @returns A reference to a type map alongside decorators that are
@@ -15,13 +23,13 @@ export default function createTypeMap() {
     }
   }
 
-  function classDeclaration(name: string) {
+  function classDeclaration(name: string): Decorator {
     return (_target: any) => {
       registerType('prelude', `class ${name} {}`);
     };
   }
 
-  function typeDeclaration(type: string, declaration = null) {
+  function typeDeclaration(type: string, declaration = null): Decorator {
     return (target: any) => {
       const typeAlias = `type ${target.name} = ${type}`;
       let variableDeclaration = `const ${target.name} = ${declaration === null ? type : declaration}`;
@@ -45,7 +53,7 @@ export default function createTypeMap() {
     };
   }
 
-  function functionDeclaration(paramTypes: string, returnType: string) {
+  function functionDeclaration(paramTypes: string, returnType: string): Decorator {
     return (_target: any, propertyKey: string, _descriptor: PropertyDescriptor) => {
       let returnValue = '';
       switch (returnType) {
@@ -69,7 +77,7 @@ export default function createTypeMap() {
     };
   }
 
-  function variableDeclaration(type: string) {
+  function variableDeclaration(type: string): Decorator {
     return (_target: any, propertyKey: string) => {
       registerType(propertyKey, `const ${propertyKey}: ${type} = ${type}`);
     };

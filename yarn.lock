@@ -3266,6 +3266,7 @@ __metadata:
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     typedoc: "npm:^0.28.4"
+    typedoc-plugin-frontmatter: "npm:^1.3.0"
     typedoc-plugin-markdown: "npm:^4.7.0"
     typedoc-plugin-rename-defaults: "npm:^0.7.3"
     typescript: "npm:^5.8.2"
@@ -13334,6 +13335,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typedoc-plugin-frontmatter@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "typedoc-plugin-frontmatter@npm:1.3.0"
+  dependencies:
+    yaml: "npm:^2.7.0"
+  peerDependencies:
+    typedoc-plugin-markdown: ">=4.5.0"
+  checksum: 10c0/967ee5c38ab64b94489b9001744bbecc1cb6951bb07232caf2f4925f6a4dc0ac53305c4305e34ba10d6fddaab8f939642a2fbf10f1da884d6d6885d370c94cf3
+  languageName: node
+  linkType: hard
+
 "typedoc-plugin-markdown@npm:^4.7.0":
   version: 4.7.0
   resolution: "typedoc-plugin-markdown@npm:4.7.0"
@@ -14316,6 +14328,15 @@ __metadata:
   version: 5.0.0
   resolution: "yallist@npm:5.0.0"
   checksum: 10c0/a499c81ce6d4a1d260d4ea0f6d49ab4da09681e32c3f0472dee16667ed69d01dae63a3b81745a24bd78476ec4fcf856114cb4896ace738e01da34b2c42235416
+  languageName: node
+  linkType: hard
+
+"yaml@npm:^2.7.0":
+  version: 2.8.0
+  resolution: "yaml@npm:2.8.0"
+  bin:
+    yaml: bin.mjs
+  checksum: 10c0/f6f7310cf7264a8107e72c1376f4de37389945d2fb4656f8060eca83f01d2d703f9d1b925dd8f39852a57034fafefde6225409ddd9f22aebfda16c6141b71858
   languageName: node
   linkType: hard
 

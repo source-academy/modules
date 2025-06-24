@@ -1,6 +1,6 @@
 # Documentation Generation
 
-There are two types of documentation used by Source, which are the jsons and the HTML documentation. Both are built using the [`typedoc`](typedoc.org) tool. By reading comments and type annotations, `typedoc` is able to generate both human readable documentation and documentation in the form of JSON.
+There are two types of documentation used by Source, which are the jsons and the HTML documentation. Both are built using the [`typedoc`](https://typedoc.org) tool. By reading comments and type annotations, `typedoc` is able to generate both human readable documentation and documentation in the form of JSON.
 
 ## Typedoc Overview
 Typedoc has been configured to use the [`package` entry point strategy](https://typedoc.org/documents/Options.Input.html#packages). To make sure that each bundle's documentation is generated with the proper name, each bundle's `tsconfig.json` contains

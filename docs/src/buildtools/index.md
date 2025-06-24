@@ -8,7 +8,7 @@ The Source Academy Modules build tools are written in Typescript and designed to
 
 The build tools are comprised of several sections:
 
-- [Command Handlers](./command)
+- [Command Handlers](./2-command)
   - The actual code that runs command line argument parsing
 - [Builders](./1-builders)
   - The code that converts a bundle or tab into its outputs

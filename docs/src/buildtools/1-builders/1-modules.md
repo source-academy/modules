@@ -36,7 +36,7 @@ Bundles and tabs are transpiled with esbuild using the following common options 
 
 <<< ../../../../lib/buildtools/src/build/modules/commons.ts#esbuildOptions
 
-## Options Explained:
+## Options Explained
 ### `bundle: true`
 Tell `esbuild` to bundle the code into a single file.
 
@@ -94,7 +94,7 @@ var module = (function() {
 ```
 Which are then transformed by the `outputBundleOrTab` function, which produces output that looks like this:
 ```js
-require => {
+export default require => {
   var exports = {}
   exports.add_one = function(x) {
     return x + 1;
@@ -104,7 +104,8 @@ require => {
 }
 ```
 
-When bundles and tabs are loaded, the IIFE is called with a function that simulates the `require()` function in CommonJS to provide the dependencies marked as external (that have to be provided at runtime).
+Consumers of this compiled version of bundles and tabs can retrieve the IIFE by using the default export.  When bundles and tabs are loaded, the IIFE is called with a function that simulates the `require()` function
+in CommonJS to provide the dependencies marked as external (that have to be provided at runtime).
 
 ## `js-slang/context`
 `js-slang/context` is an import provided at runtime by `js-slang` that returns the context in use for evaluation. It is not an actual import that's available

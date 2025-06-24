@@ -5,7 +5,7 @@ import type { glAnimation } from '../types';
 import AutoLoopSwitch from './AutoLoopSwitch';
 import ButtonComponent from './ButtonComponent';
 import PlayButton from './PlayButton';
-import WebGLCanvas from './WebglCanvas';
+import WebGLCanvas from './WebGLCanvas';
 import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from './css_constants';
 
 export type AnimCanvasProps = {
