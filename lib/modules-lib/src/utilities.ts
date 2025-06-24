@@ -4,6 +4,8 @@
  * @title Utilities
  */
 
+import type { DebuggerContext } from './types';
+
 /**
  * Converts an angle in degrees into radians
  * @param degrees Angle in degrees
@@ -34,4 +36,22 @@ export function hexToColor(hex: string, func_name?: string): [number, number, nu
     parseInt(groups[2], 16) / 0xff,
     parseInt(groups[3], 16) / 0xff
   ];
+}
+
+/**
+ * Returns a partial {@link DebuggerContext} object that contains a context which contains the mocked
+ * module state for the given module.
+ * Function intended for testing use only.
+ */
+export function mockDebuggerContext<T>(moduleState: T, name: string) {
+  return {
+    context: {
+      moduleContexts: {
+        [name]: {
+          state: moduleState,
+          tabs: []
+        }
+      }
+    }
+  } as unknown as DebuggerContext;
 }
