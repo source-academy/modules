@@ -5,16 +5,43 @@ import _package from '../../package.json' with { type: 'json' };
 
 // https://vitepress.dev/reference/site-config
 const vitepressOptions: UserConfig = {
+  base: '/devdocs/',
   description: 'Developer documentation for the Source Academy modules repository',
+  ignoreDeadLinks: 'localhostLinks',
+  outDir: `${import.meta.dirname}/../../build/devdocs`,
   srcDir: 'src',
   title: 'Modules Developer Documentation',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Module Development', link: '/modules/' },
+      {
+        text: 'Module Development',
+        items: [
+          {
+            text: 'Overview',
+            link: '/modules/1-getting-started/1-overview'
+          },
+          {
+            text: 'Getting Started',
+            link: '/modules/1-getting-started/2-overview'
+          }
+        ]
+      },
       { text: 'Common Library', link: '/lib' },
-      { text: 'Build Tools', link: '/buildtools' }
+      {
+        text: 'Dev Tools',
+        items: [
+          {
+            text: 'Build Tools',
+            link: '/buildtools'
+          },
+          {
+            text: 'Repo Tools',
+            link: '/repotools'
+          },
+        ]
+      }
     ],
     siteTitle: 'SA Modules',
     socialLinks: [

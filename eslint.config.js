@@ -26,6 +26,7 @@ export default tseslint.config(
       'lib/buildtools/bin',
       'lib/buildtools/src/build/__test_mocks__',
       'lib/lintplugin/dist.js',
+      'docs/.vitepress/cache',
       'devserver/vite.config.ts',
       '**/dist/**',
       'src/**/samples/**',
@@ -59,6 +60,10 @@ export default tseslint.config(
     name: 'Markdown Files',
     extends: [markdown.configs.recommended],
     files: ['**/*.md'],
+    ignores: [
+      // These are generated via Typedoc, we don't have to lint them
+      'docs/src/lib/modules-lib/**/*.md'
+    ],
     language: 'markdown/gfm',
     languageOptions: {
       // @ts-expect-error typescript eslint doesn't recognize this property

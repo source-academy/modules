@@ -27,11 +27,15 @@ jobs:
             - 'lib/**'
             modules:
             - src/{bundles,tabs}/**
+            docs:
+            - docs/**
     outputs:
       # if the workflow file was modified, then we rerun the entire job
       devserver: ${{ steps.filter.outputs.devserver || steps.filter.outputs.workflows }}
-      modules: ${{ steps.filter.outputs.modules || steps.filter.outputs.workflows }}
+      # if the devserver needs to be tested bundles and tabs need to bre rebuilt
+      modules: ${{ steps.filter.outputs.modules || steps.filter.outputs.workflows || steps.filter.outputs.devserver }}
       libraries: ${{ steps.filter.outputs.libraries || steps.filter.outputs.workflows }}
+      docs: ${{ steps.filter.outputs.docs || steps.filter.outputs.workflows }}
 
   test:
     name: Verify all tests pass and build success
@@ -70,7 +74,7 @@ jobs:
           run: yarn test:libs
 
         - name: Build, lint and run tsc for bundles and tabs
-          if: needs.paths-filter.outputs.devserver == 'true' || needs.paths-filter.outputs.modules == 'true'
+          if: needs.paths-filter.outputs.devserver == 'true'
           run: yarn workspaces foreach -j 5 -ptW --from "./src/{bundles,tsc}/*" run build --tsc --lint
 
         - name: Test bundles and tabs
@@ -78,8 +82,12 @@ jobs:
           run: yarn test:modules
 
         - name: Build manifest
-          if: needs.paths-filter.outputs.devserver == 'true' || needs.paths-filter.outputs.modules == 'true'
+          if: needs.paths-filter.outputs.devserver == 'true'
           run: yarn buildtools build manifest
+
+        - name: Build Docs Server
+          if: needs.paths-filter.outputs.docs == 'true'
+          run: yarn workspaces foreach -A --include "@sourceacademy/mdoules-docserver" run build
         
         - name: Run tsc for Dev Server
           if: needs.paths-filter.outputs.devserver == 'true'

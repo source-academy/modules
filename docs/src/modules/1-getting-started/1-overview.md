@@ -16,8 +16,8 @@ These are the 3 main terms the project will be using to refer to the individual 
 | **Term**   | **Description**                                                    | **Links**        |
 | ---------- | ------------------------------------------------------------------ | ---------------- |
 | **Module** | A set of **one** bundle and **zero or more** tabs.                 |                  |
-| **Bundle** | The suite of functions that are provided by the module.            | [Docs](./2_bundle/1_overview/1_overview) |
-| **Tab**    | A user interface used by the module.                               | [Docs](./3_tabs/1_overview/1_overview)   |
+| **Bundle** | The suite of functions that are provided by the module.            | [Docs](../2-bundle/1-overview/1-overview) |
+| **Tab**    | A user interface used by the module.                               | [Docs](../3-tabs/1-overview)   |
 
 ## Aims
 

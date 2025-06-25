@@ -1,5 +1,5 @@
 # Editing an Existing Tab
-This page contains instructions for modifying an existing tab. If you are creating a new tab from scratch, refer to [these](./creating/) instructions instead.
+This page contains instructions for modifying an existing tab. If you are creating a new tab from scratch, refer to [these](./2-creating) instructions instead.
 
 ## Installing Dependencies
 To install **only** the dependencies required by the tab you are modifying, use the command below:
@@ -42,4 +42,4 @@ This adds the dependency to `devDependencies` instead.
 There are several React components defined under `@sourceacademy/modules-lib/tabs` which you are highly encouraged to use to help us
 retain a unified feel and look across all tabs.
 
-You can see the documentation for these components [here]()
+You can see the documentation for these components [here](/lib/modules-lib/)

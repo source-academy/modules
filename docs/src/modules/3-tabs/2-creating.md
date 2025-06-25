@@ -1,5 +1,5 @@
 # Creating a Tab
-This page contains instructions for creating a new bundle from scratch. If you are looking to edit an existing bundle refer to [these](./editing) instructions instead.
+This page contains instructions for creating a new bundle from scratch. If you are looking to edit an existing bundle refer to [these](./3-editing) instructions instead.
 
 All tabs require at least one parent bundle. Before you create your tab, make sure you identify which bundle(s) are
 supposed to be the parent of your tab.
@@ -47,4 +47,4 @@ NewTab
 
 This will create a new folder `src/tab/NewTab` with all the necessary files for creating your tab.
 
-When you are ready to compile you can refer to [this](../compiling) page.
+When you are ready to compile you can refer to [this](./5-compiling) page.

@@ -1,6 +1,6 @@
 # Using the Development Server
 
-Normally, tabs need to be displayed using the frontend. If you wish to test your tabs using a copy of the frontend, follow the instructions [here](../frontend).
+Normally, tabs need to be displayed using the frontend. If you wish to test your tabs using a copy of the frontend, follow the instructions [here](../7-frontend).
 
 The Development Server (or dev server, for short) is a lightweight version of the frontend that provides developers with a copy of the Source Academy playground so
 that they can run their bundle code and see the actual graphic interface of their tabs.
@@ -13,7 +13,7 @@ yarn devserver
 
 > [!NOTE]
 > Because the dev server relies on Vite which needs to pre-bundle its dependencies, you will need to have compiled your tab
-> using the steps listed [here](./compiling) before starting the dev server.
+> using the steps listed [here](../5-compiling) before starting the dev server.
 
 You will also need to start the modules server using `yarn serve`.
 

@@ -1,5 +1,5 @@
 {
-  "name": "@sourceacademy/modules-devdocs",
+  "name": "@sourceacademy/modules-docserver",
   "description": "Developer documentation for the Source Academy modules repository",
   "private": true,
   "version": "1.0.0",

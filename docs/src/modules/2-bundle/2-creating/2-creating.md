@@ -1,5 +1,5 @@
 # Creating a Bundle
-This page contains instructions for creating a new bundle from scratch. If you are looking to edit an existing bundle refer to [these](../editing) instructions instead.
+This page contains instructions for creating a new bundle from scratch. If you are looking to edit an existing bundle refer to [these](../3-editing) instructions instead.
 ## Running the Template Command
 > [!TIP]
 > If necessary, before running the `template` command, you can run 

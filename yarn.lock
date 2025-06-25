@@ -3212,16 +3212,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/modules-devdocs@workspace:docs":
-  version: 0.0.0-use.local
-  resolution: "@sourceacademy/modules-devdocs@workspace:docs"
-  dependencies:
-    "@sourceacademy/modules-lib": "workspace:^"
-    vitepress: "npm:^1.6.3"
-    vitepress-sidebar: "npm:^1.31.1"
-  languageName: unknown
-  linkType: soft
-
 "@sourceacademy/modules-devserver@workspace:^, @sourceacademy/modules-devserver@workspace:devserver":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/modules-devserver@workspace:devserver"
@@ -3252,6 +3242,16 @@ __metadata:
     vitest-browser-react: "npm:^0.2.0"
   bin:
     devserver: ./bin.js
+  languageName: unknown
+  linkType: soft
+
+"@sourceacademy/modules-docserver@workspace:docs":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/modules-docserver@workspace:docs"
+  dependencies:
+    "@sourceacademy/modules-lib": "workspace:^"
+    vitepress: "npm:^1.6.3"
+    vitepress-sidebar: "npm:^1.31.1"
   languageName: unknown
   linkType: soft
 

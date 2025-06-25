@@ -1,5 +1,5 @@
 # Editing an Existing Bundle
-This page contains instructions for modifying an existing bundle. If you are creating a new bundle from scratch, refer to [these](../creating/) instructions instead.
+This page contains instructions for modifying an existing bundle. If you are creating a new bundle from scratch, refer to [these](./2-creating/2-creating) instructions instead.
 
 ## Installing Dependencies
 To install **only** the dependencies required by the bundle you are modifying, use the command below:
