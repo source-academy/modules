@@ -15,7 +15,6 @@
     "vitest": "^3.2.3"
   },
   "exports": {
-    "./tabs/*": null,
     "./*": "./dist/*.js",
     "./tabs": "./dist/tabs/index.js",
     "./types": "./dist/types/index.js"
