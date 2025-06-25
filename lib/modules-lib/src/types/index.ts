@@ -1,6 +1,6 @@
 import type { IconName } from '@blueprintjs/icons';
 import type { Context } from 'js-slang';
-import type { FC } from 'react';
+import type React from 'react';
 
 /**
  * Represents an animation drawn using WebGL
@@ -49,7 +49,7 @@ export interface ReplResult {
   toReplString: () => string;
 }
 
-export type ModuleTab = FC<{ context: DebuggerContext }>;
+export type ModuleTab = (props: { context: DebuggerContext }) => React.ReactNode;
 
 export type ModuleSideContent = {
   /**
