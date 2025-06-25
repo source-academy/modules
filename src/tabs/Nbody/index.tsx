@@ -1,6 +1,6 @@
 import { Button, ButtonGroup, NumericInput } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import { defineTab } from '@sourceacademy/modules-lib/tabs';
 import type { Simulation } from 'nbody';
 import React from 'react';
 

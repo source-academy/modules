@@ -2,7 +2,7 @@
 import { IconNames } from '@blueprintjs/icons';
 import { Core } from '@sourceacademy/bundle-csg/core';
 import type { CsgModuleState } from '@sourceacademy/bundle-csg/utilities';
-import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import { defineTab } from '@sourceacademy/modules-lib/tabs';
 import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
 import type { ReactElement } from 'react';
 import CanvasHolder from './canvas_holder';

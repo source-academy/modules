@@ -9,7 +9,7 @@ import { IconNames } from '@blueprintjs/icons';
 
 import { FONT_MESSAGE, MINIMUM_EDITOR_HEIGHT } from '@sourceacademy/bundle-repl/config';
 import type { ProgrammableRepl } from '@sourceacademy/bundle-repl/programmable_repl';
-import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import { defineTab } from '@sourceacademy/modules-lib/tabs';
 import React from 'react';
 import AceEditor from 'react-ace';
 

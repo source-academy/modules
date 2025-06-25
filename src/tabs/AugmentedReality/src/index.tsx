@@ -1,6 +1,6 @@
 import { IconNames } from '@blueprintjs/icons';
 import { getModuleState } from '@sourceacademy/bundle-ar/AR';
-import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import { defineTab } from '@sourceacademy/modules-lib/tabs';
 import React from 'react';
 import { ScreenStateContext } from 'saar/libraries/screen_state_library/ScreenStateContext';
 import { StartButton } from './StartButton';

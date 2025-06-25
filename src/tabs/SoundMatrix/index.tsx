@@ -1,5 +1,5 @@
 import { Button, Classes } from '@blueprintjs/core';
-import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import { defineTab } from '@sourceacademy/modules-lib/tabs';
 import classNames from 'classnames';
 import React from 'react';
 
