@@ -1,5 +1,5 @@
 import type { HollusionRune } from '@sourceacademy/bundle-rune/functions';
-import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebglCanvas';
+import { WebGLCanvas } from '@sourceacademy/modules-lib/tabs';
 import React from 'react';
 
 /**
