@@ -5,16 +5,19 @@ exports[`Ensure that rune animations error gracefully 1`] = `
   context={
     {
       "context": {
-        "rune": {
-          "state": {
-            "drawnRunes": [
-              AnimatedRune {
-                "duration": 1,
-                "fps": 60,
-                "func": [Function],
-                "toReplString": [Function],
-              },
-            ],
+        "moduleContexts": {
+          "rune": {
+            "state": {
+              "drawnRunes": [
+                AnimatedRune {
+                  "duration": 1,
+                  "fps": 60,
+                  "func": [Function],
+                  "toReplString": [Function],
+                },
+              ],
+            },
+            "tabs": [],
           },
         },
       },
