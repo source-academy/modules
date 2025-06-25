@@ -114,14 +114,19 @@ describe('Test adding new module', () => {
     });
 
     expect(tsconfigPath).toEqual('/src/bundles/new_module/tsconfig.json');
-    const tsconfig = JSON.parse(rawTsconfig as string);
-    expect(tsconfig).toMatchObject({
-      include: ['./src'],
-      extends: '../tsconfig.json',
-      typedocOptions: {
-        name: 'new_module'
+    expect(rawTsconfig).toMatchInlineSnapshot(`
+      "// new_module tsconfig
+      {
+        "extends": "../tsconfig.json",
+        "include": [
+          "./src"
+        ],
+        "typedocOptions": {
+          "name": "new_module"
+        }
       }
-    });
+      "
+    `);
   });
 });
 
