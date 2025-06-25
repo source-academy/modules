@@ -7,7 +7,7 @@ import {
   entitiesFromSolids,
   prepareRender
 } from '@jscad/regl-renderer';
-import { ACE_GUTTER_BACKGROUND_COLOR, ACE_GUTTER_TEXT_COLOR, BP_TEXT_COLOR } from '@sourceacademy/modules-lib/tabs/css_constants';
+import { ACE_GUTTER_BACKGROUND_COLOR, ACE_GUTTER_TEXT_COLOR, BP_TEXT_COLOR } from '@sourceacademy/modules-lib/tabs';
 import {
   DEFAULT_COLOR,
   GRID_PADDING,

@@ -4,7 +4,7 @@ import { DrawShapes, type b2World } from '@box2d/core';
 import { DebugDraw } from '@box2d/debug-draw';
 
 import type { PhysicsWorld } from '@sourceacademy/bundle-physics_2d/PhysicsWorld';
-import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebGLCanvas';
+import{ WebGLCanvas } from '@sourceacademy/modules-lib/tabs';
 import React from 'react';
 
 type DebugDrawCanvasProps = {

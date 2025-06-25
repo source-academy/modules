@@ -1,6 +1,6 @@
 /* [Imports] */
 import { Icon, Tooltip } from '@blueprintjs/core';
-import { BP_ICON_COLOR, SA_TAB_BUTTON_WIDTH, SA_TAB_ICON_SIZE } from '@sourceacademy/modules-lib/tabs/css_constants';
+import { BP_ICON_COLOR, SA_TAB_BUTTON_WIDTH, SA_TAB_ICON_SIZE } from '@sourceacademy/modules-lib/tabs';
 import React from 'react';
 import type { HintProps } from '../types';
 

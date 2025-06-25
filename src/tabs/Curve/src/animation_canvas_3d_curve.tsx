@@ -1,11 +1,15 @@
 import { Icon, Slider, Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import type { AnimatedCurve } from '@sourceacademy/bundle-curve/types';
-import AutoLoopSwitch from '@sourceacademy/modules-lib/tabs/AutoLoopSwitch';
-import ButtonComponent from '@sourceacademy/modules-lib/tabs/ButtonComponent';
-import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
-import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebglCanvas';
-import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '@sourceacademy/modules-lib/tabs/css_constants';
+import {
+  BP_TAB_BUTTON_MARGIN,
+  BP_TEXT_MARGIN,
+  CANVAS_MAX_WIDTH,
+  AutoLoopSwitch,
+  ButtonComponent,
+  PlayButton,
+  WebGLCanvas
+} from '@sourceacademy/modules-lib/tabs';
 import React from 'react';
 
 type Props = {
