@@ -3,7 +3,8 @@ import { Command } from '@commander-js/extra-typings';
 import { initTypedocForSingleBundle } from '../build/docs/docsUtils.js';
 import { buildDocs, buildJson } from '../build/docs/index.js';
 import buildAll from '../build/index.js';
-import { resolveAllBundles, resolveSingleBundle , resolveSingleTab, writeManifest } from '../build/manifest.js';
+import { formatResolveBundleErrors } from '../build/manifest/formatters.js';
+import { resolveAllBundles, resolveSingleBundle , resolveSingleTab, writeManifest } from '../build/manifest/index.js';
 import { buildBundle, buildTab } from '../build/modules/index.js';
 import { getBundlesDir, getOutDir } from '../getGitRoot.js';
 import { runBuilderWithPrebuild } from '../prebuild/index.js';
@@ -20,10 +21,13 @@ export const getBuildBundleCommand = () => new Command('bundle')
   .addOption(lintOption)
   .option('--ci', 'Run in CI mode', !!process.env.CI)
   .action(async (bundleDir, opts) => {
-    const bundle = await resolveSingleBundle(bundleDir);
-    if (!bundle) logCommandErrorAndExit(`No bundle found at ${bundleDir}!`);
+    const result = await resolveSingleBundle(bundleDir);
+    if (!result) logCommandErrorAndExit(`No bundle found at ${bundleDir}!`);
+    else if (result.severity === 'error') {
+      logCommandErrorAndExit(formatResolveBundleErrors(result));
+    }
 
-    const results = await runBuilderWithPrebuild(buildBundle, opts, bundle, outDir, 'bundle');
+    const results = await runBuilderWithPrebuild(buildBundle, opts, result.bundle, outDir, 'bundle');
     console.log(getResultString(results));
     resultsProcessor(results, opts.ci);
   });
@@ -49,8 +53,11 @@ export const getBuildJsonCommand = () => new Command('json')
   .addOption(tscOption)
   .option('--ci', 'Run in CI mode', !!process.env.CI)
   .action(async (bundleDir, opts) => {
-    const bundle = await resolveSingleBundle(bundleDir);
-    if (!bundle) logCommandErrorAndExit(`No bundle found at ${bundleDir}!`);
+    const result = await resolveSingleBundle(bundleDir);
+    if (!result) logCommandErrorAndExit(`No bundle found at ${bundleDir}!`);
+    else if (result.severity === 'error') {
+      logCommandErrorAndExit(formatResolveBundleErrors(result));
+    }
 
     const results = await runBuilderWithPrebuild(
       async (outDir, bundle: ResolvedBundle) => {
@@ -58,7 +65,7 @@ export const getBuildJsonCommand = () => new Command('json')
         return buildJson(outDir, bundle, reflection);
       },
       opts,
-      bundle,
+      result.bundle,
       outDir,
       'json'
     );
@@ -71,22 +78,29 @@ export const getBuildDocsCommand = () => new Command('docs')
   .description('Build all documentation for all bundles')
   .option('--ci', 'Run in CI mode', !!process.env.CI)
   .action(async ({ ci }) => {
-    const manifest = await resolveAllBundles(bundlesDir);
-    await fs.mkdir(`${outDir}/jsons`, { recursive: true });
-    const results = await buildDocs(manifest, outDir);
-    console.log(getResultString({ results }));
-    resultsProcessor({ results }, ci);
+    const manifestResult = await resolveAllBundles(bundlesDir);
+    if (manifestResult.severity === 'success') {
+      await fs.mkdir(`${outDir}/jsons`, { recursive: true });
+      const results = await buildDocs(manifestResult.bundles, outDir);
+      console.log(getResultString({ results }));
+      resultsProcessor({ results }, ci);
+    } else {
+      logCommandErrorAndExit(formatResolveBundleErrors(manifestResult));
+    }
   });
 
 export const getBuildManifestCommand = () => new Command('manifest')
   .description('Write the module manifest to the output directory')
   .action(async () => {
-    const manifest = await resolveAllBundles(bundlesDir);
-    await fs.mkdir(outDir, { recursive: true });
-
-    const results = await writeManifest(outDir, manifest);
-    console.log(getResultString({ results }));
-    resultsProcessor({ results }, false);
+    const manifestResult = await resolveAllBundles(bundlesDir);
+    if (manifestResult.severity === 'success') {
+      await fs.mkdir(outDir, { recursive: true });
+      const results = await writeManifest(outDir, manifestResult.bundles);
+      console.log(getResultString({ results }));
+      resultsProcessor({ results }, false);
+    } else {
+      logCommandErrorAndExit(formatResolveBundleErrors(manifestResult));
+    }
   });
 
 export const getBuildAllCommand = () => new Command('all')
@@ -95,7 +109,12 @@ export const getBuildAllCommand = () => new Command('all')
   .addOption(lintOption)
   .option('--ci', 'Run in CI mode', !!process.env.CI)
   .action(async opts => {
-    const [manifest, [html, ...json], bundles, tabs] = await buildAll(bundlesDir, opts, outDir);
+    const manifestResult = await resolveAllBundles(bundlesDir);
+    if (manifestResult.severity === 'error') {
+      logCommandErrorAndExit(formatResolveBundleErrors(manifestResult));
+    }
+
+    const [manifest, [html, ...json], bundles, tabs] = await buildAll(manifestResult.bundles, opts, outDir);
     const results: FullResult<ResultEntry>[] = [
       { results: manifest },
       { results: html },

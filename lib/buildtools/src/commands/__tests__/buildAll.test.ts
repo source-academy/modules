@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from 'vitest';
 import * as html from '../../build/docs/html.js';
 import * as json from '../../build/docs/json.js';
-import * as manifest from '../../build/manifest.js';
+import * as manifest from '../../build/manifest/index.js';
 import * as bundles from '../../build/modules/bundle.js';
 import * as tabs from '../../build/modules/tab.js';
 import * as lint from '../../prebuild/lint.js';

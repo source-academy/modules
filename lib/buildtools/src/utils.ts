@@ -13,6 +13,10 @@ export function compareSeverity(lhs: Severity, rhs: Severity) {
   }
 }
 
+/**
+ * Given an array of items, map them to {@link Severity | Severity} objects and then
+ * determine the overall severity of all the given items
+ */
 export function findSeverity<T>(items: T[], mapper: (each: T) => Severity): Severity {
   let output: Severity = 'success';
   for (const item of items) {
@@ -28,4 +32,21 @@ export const divideAndRound = (n: number, divisor: number) => (n / divisor).toFi
 
 export function isNodeError(error: unknown): error is NodeJS.ErrnoException {
   return error instanceof Error;
+}
+
+/**
+ * `Array.flatMap` but with a mapping function that returns a promise
+ */
+export async function flatMapAsync<T, U>(items: T[], mapper: (item: T, index: number) => Promise<U[]>) {
+  const results = await Promise.all(items.map(mapper));
+  return results.flat();
+}
+
+/**
+ * `Array.filter`, but with a filtering function that returns a promise
+ */
+export async function filterAsync<T>(items: T[], filter: (item: T, index: number) => Promise<boolean>): Promise<T[]> {
+  const results = await Promise.all(items.map(filter));
+
+  return items.reduce((res, item, i) => results[i] ? [...res, item] : res, [] as T[]);
 }

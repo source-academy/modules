@@ -1,0 +1,327 @@
+import type { Dirent } from 'fs';
+import fs from 'fs/promises';
+import pathlib from 'path';
+import { validate } from 'jsonschema';
+import uniq from 'lodash/uniq.js';
+import { getTabsDir } from '../../getGitRoot.js';
+import type { BundleManifest, ManifestResult, ResolvedBundle, ResolvedTab } from '../../types.js';
+import { filterAsync, isNodeError } from '../../utils.js';
+import { createBuilder } from '../buildUtils.js';
+import manifestSchema from '../modules/manifest.schema.json' with { type: 'json' };
+import {
+  MissingEntryPointError,
+  MissingTabError,
+  type GetBundleManifestResult,
+  type ResolveAllBundlesResult,
+  type ResolveAllTabsResult,
+  type ResolveSingleBundleResult
+} from './types.js';
+
+/**
+ * Checks that the given directory has contains a bundle and that it has the correct
+ * format and structures. Returns `undefined` if no bundle was detected.
+ */
+export async function getBundleManifest(directory: string, tabCheck?: boolean): Promise<GetBundleManifestResult> {
+  let manifestStr: string;
+
+  try {
+    manifestStr = await fs.readFile(`${directory}/manifest.json`, 'utf-8');
+  } catch (error) {
+    if (isNodeError(error) && error.code === 'ENOENT') {
+      return undefined;
+    }
+    return { severity: 'error', errors: [error] };
+  }
+
+  let versionStr: string | undefined;
+  try {
+    const rawPackageJson = await fs.readFile(`${directory}/package.json`, 'utf-8')
+    ;({ version: versionStr } = JSON.parse(rawPackageJson));
+  } catch (error) {
+    if (isNodeError(error) && error.code === 'ENOENT') {
+      return undefined;
+    }
+    return { severity: 'error', errors: [error] };
+  }
+
+  const rawManifest = JSON.parse(manifestStr) as BundleManifest;
+  const validateResult = validate(rawManifest, manifestSchema, { throwError: false });
+
+  if (validateResult.errors.length > 0) {
+    return {
+      severity: 'error',
+      errors: validateResult.errors
+    };
+  }
+
+  const manifest: BundleManifest = {
+    ...rawManifest,
+    tabs: !rawManifest.tabs ? rawManifest.tabs : rawManifest.tabs.map(each => each.trim()),
+    version: versionStr,
+  };
+
+  // Make sure that all the tabs specified exist
+  if (tabCheck && manifest.tabs) {
+    const tabsDir = await getTabsDir();
+    const unknownTabs = await filterAsync(manifest.tabs, async tabName => {
+      const resolvedTab = await resolveSingleTab(`${tabsDir}/${tabName}`);
+      return resolvedTab === undefined;
+    });
+
+    if (unknownTabs.length > 0) {
+      return {
+        severity: 'error',
+        errors: unknownTabs.map(each => new MissingTabError(each))
+      };
+    }
+  }
+
+  return {
+    severity: 'success',
+    manifest
+  };
+}
+
+type GetAllBundleManifestsResult = {
+  severity: 'error'
+  errors: unknown[]
+} | {
+  severity: 'success'
+  manifests: Record<string, BundleManifest>
+};
+
+/**
+ * Get all bundle manifests
+ */
+export async function getBundleManifests(bundlesDir: string, tabCheck?: boolean): Promise<GetAllBundleManifestsResult> {
+  let subdirs: Dirent[];
+  try {
+    subdirs = await fs.readdir(bundlesDir, { withFileTypes: true });
+  } catch (error) {
+    return {
+      severity: 'error',
+      errors: [error]
+    };
+  }
+
+  const manifests = await Promise.all(subdirs.map(async each => {
+    const fullPath = pathlib.join(bundlesDir, each.name);
+    if (each.isDirectory()) {
+      const manifest = await getBundleManifest(fullPath, tabCheck);
+      if (manifest === undefined) return undefined;
+      return [each.name, manifest] as [string, typeof manifest];
+    }
+
+    return undefined;
+  }));
+
+  const [combinedManifests, errors] = manifests.reduce<[Record<string, BundleManifest>, unknown[]]>(([res, errors], entry) => {
+    if (entry === undefined) return [res, errors];
+    const [name, manifest] = entry;
+
+    if (manifest.severity === 'error') {
+      return [
+        res,
+        [
+          ...errors,
+          ...manifest.errors
+        ]
+      ];
+    }
+
+    return [
+      {
+        ...res,
+        [name]: manifest.manifest,
+      },
+      errors
+    ];
+
+  }, [{}, []]);
+
+  if (errors.length > 0) {
+    return {
+      severity: 'error',
+      errors
+    };
+  }
+
+  return {
+    severity: 'success',
+    manifests: combinedManifests
+  };
+}
+
+/**
+ * Attempts to resolve the information at the given directory as a bundle. Returns `undefined` if no bundle was detected
+ * at the given directory. Otherwise returns with either the manifest of the bundle or corresponding errors.
+ */
+export async function resolveSingleBundle(bundleDir: string): Promise<ResolveSingleBundleResult> {
+  const fullyResolved = pathlib.resolve(bundleDir);
+  const bundleName = pathlib.basename(fullyResolved);
+
+  const stats = await fs.stat(fullyResolved);
+  if (!stats.isDirectory()) return undefined;
+
+  const manifest = await getBundleManifest(fullyResolved);
+  if (!manifest || manifest.severity === 'error') return manifest;
+
+  try {
+    const entryPoint = `${fullyResolved}/src/index.ts`;
+    await fs.access(entryPoint, fs.constants.R_OK);
+  } catch (error) {
+    if (!isNodeError(error) || error.code !== 'ENOENT') throw error;
+    return {
+      severity: 'error',
+      errors: [new MissingEntryPointError('bundle', bundleName)]
+    };
+  }
+
+  return {
+    severity: 'success',
+    bundle: {
+      type: 'bundle',
+      name: bundleName,
+      manifest: manifest.manifest,
+      directory: fullyResolved
+    }
+  };
+}
+
+/**
+ * Find all the bundles with the given directory and returns their
+ * resolved information
+ */
+export async function resolveAllBundles(bundlesDir: string): Promise<ResolveAllBundlesResult> {
+  const subdirs = await fs.readdir(bundlesDir);
+  const manifests = await Promise.all(subdirs.map(subdir => {
+    const fullPath = pathlib.join(bundlesDir, subdir);
+    return resolveSingleBundle(fullPath);
+  }));
+
+  const [combinedManifests, errors] = manifests.reduce<[Record<string, ResolvedBundle>, any[]]>(([res, errors], entry) => {
+    if (entry === undefined) return [res, errors];
+
+    if (entry.severity === 'error') {
+      return [
+        res,
+        [
+          ...errors,
+          ...entry.errors
+        ]
+      ];
+    }
+
+    return [
+      {
+        ...res,
+        [entry.bundle.name]: entry.bundle
+      },
+      errors
+    ];
+  }, [{}, []]);
+
+  if (errors.length > 0) {
+    return {
+      severity: 'error',
+      errors
+    };
+  }
+
+  return {
+    severity: 'success',
+    bundles: combinedManifests
+  };
+}
+
+async function resolvePaths(...paths: string[]) {
+  for (const path of paths) {
+    try {
+      await fs.access(path, fs.constants.R_OK);
+      return path;
+    } catch (error) {
+      if (isNodeError(error) && error.code !== 'ENOENT') throw error;
+    }
+  }
+
+  return undefined;
+}
+
+export const {
+  builder: writeManifest,
+  formatter: formatManifestResult
+} = createBuilder<[bundles: Record<string, ResolvedBundle>], ManifestResult>(async (outDir, resolvedBundles) => {
+  try {
+    const toWrite = Object.entries(resolvedBundles).reduce((res, [key, { manifest }]) => ({
+      ...res,
+      [key]: manifest
+    }), {});
+    const outpath = `${outDir}/modules.json`;
+    await fs.writeFile(outpath, JSON.stringify(toWrite, null, 2));
+    return {
+      severity: 'success',
+      assetType: 'manifest',
+      message: `Manifest written to ${outpath}`
+    };
+  } catch (error) {
+    return {
+      severity: 'error',
+      assetType: 'manifest',
+      message: `${error}`
+    };
+  }
+});
+
+export async function resolveSingleTab(tabDir: string): Promise<ResolvedTab | undefined> {
+  const fullyResolved = pathlib.resolve(tabDir);
+  const tabPath = await resolvePaths(
+    `${fullyResolved}/src/index.tsx`,
+    `${fullyResolved}/index.tsx`
+  );
+
+  if (tabPath === undefined) return undefined;
+
+  return {
+    type: 'tab',
+    directory: fullyResolved,
+    entryPoint: tabPath,
+    name: pathlib.basename(fullyResolved)
+  };
+}
+
+export async function resolveAllTabs(bundlesDir: string, tabsDir: string): Promise<ResolveAllTabsResult> {
+  const bundlesManifest = await resolveAllBundles(bundlesDir);
+  if (bundlesManifest.severity === 'error') {
+    return bundlesManifest;
+  }
+
+  const tabNames = uniq(Object.values(bundlesManifest.bundles).flatMap(({ manifest: { tabs } }) => tabs ?? []));
+
+  const resolvedTabs = await Promise.all(tabNames.map(tabName => resolveSingleTab(`${tabsDir}/${tabName}`)));
+
+  const tabsManifest = resolvedTabs.reduce((res, tab) => tab === undefined
+    ? res
+    : {
+      ...res,
+      [tab.name]: tab
+    }, {} as Record<string, ResolvedTab>);
+
+  return {
+    severity: 'success',
+    tabs: tabsManifest
+  };
+}
+
+/**
+ * Attempts to resolve the given directory as a bundle or a tab. Returns `undefined`
+ * if it was unable to do either.
+ */
+export async function resolveEitherBundleOrTab(directory: string) {
+  const bundle = await resolveSingleBundle(directory);
+  if (!bundle || bundle.severity !== 'success') {
+    const tab = await resolveSingleTab(directory);
+    return tab;
+  }
+
+  return bundle.bundle;
+}

@@ -1,7 +1,7 @@
 import { resolve } from 'path';
 import { Command, Option } from '@commander-js/extra-typings';
 import type { VitestRunMode } from 'vitest/node';
-import { resolveEitherBundleOrTab } from '../build/manifest.js';
+import { resolveEitherBundleOrTab } from '../build/manifest/index.js';
 import { runIndividualVitest } from '../testing.js';
 import { logCommandErrorAndExit } from './commandUtils.js';
 

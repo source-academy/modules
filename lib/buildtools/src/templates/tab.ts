@@ -1,9 +1,10 @@
 import fs from 'fs/promises';
 import type { Interface } from 'readline/promises';
 import _package from '../../../../package.json' with { type: 'json' };
-import { getBundleManifests } from '../build/manifest.js';
+import { formatResolveBundleErrors } from '../build/manifest/formatters.js';
+import { getBundleManifests } from '../build/manifest/index.js';
 import type { ModulesManifest, BundleManifest } from '../types.js';
-import { askQuestion, success, warn } from './print.js';
+import { askQuestion, error, success, warn } from './print.js';
 import { check, isPascalCase } from './utilities.js';
 
 async function askModuleName(manifest: ModulesManifest, rl: Interface) {
@@ -35,7 +36,13 @@ async function askTabName(manifest: ModulesManifest, rl: Interface) {
 }
 
 export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface) {
-  const manifest = await getBundleManifests(bundlesDir);
+  const manifestResult = await getBundleManifests(bundlesDir);
+  if (manifestResult.severity === 'error') {
+    error(formatResolveBundleErrors(manifestResult));
+    return;
+  }
+  const manifest = manifestResult.manifests;
+
   const moduleName = await askModuleName(manifest, rl);
   const tabName = await askTabName(manifest, rl);
 

@@ -1,99 +1,118 @@
 import fs from 'fs/promises';
+import { ValidationError } from 'jsonschema';
 import { describe, expect, it, test, vi } from 'vitest';
-import { testMocksDir } from '../../__tests__/fixtures.js';
-import { getBundleManifest, getBundleManifests, resolveAllBundles, resolveSingleBundle } from '../manifest.js';
+import { expectIsError, expectIsSuccess, testMocksDir } from '../../../__tests__/fixtures.js';
+import { getBundleManifest, getBundleManifests, resolveAllBundles, resolveSingleBundle } from '../index.js';
+import { MissingTabError, type GetBundleManifestSuccess } from '../types.js';
 
-vi.mock(import('../../getGitRoot.js'));
+vi.mock(import('../../../getGitRoot.js'));
 
-describe('Test bundle manifest schema validation', () => {
+describe('Test bundle manifest schema validation succeeds', () => {
   const mockedReadFile = vi.spyOn(fs, 'readFile');
 
   test('Valid Schema', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": [] }');
     mockedReadFile.mockResolvedValueOnce('{ "version": "1.0.0" }');
 
-    await expect(getBundleManifest('yes'))
-      .resolves
-      .toMatchObject({
+    const expected: GetBundleManifestSuccess = {
+      severity: 'success',
+      manifest: {
         tabs: [],
         version: '1.0.0'
-      });
+      }
+    };
+
+    await expect(getBundleManifest('yes'))
+      .resolves
+      .toMatchObject(expected);
   });
 
-  test('Valid Schema with tabs without verification', async () => {
+  test('Valid Schema with tabs without verification succeeds', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": ["tab0", "tab1"] }');
     mockedReadFile.mockResolvedValueOnce('{ "version": "1.0.0" }');
 
-    await expect(getBundleManifest('yes', false))
-      .resolves
-      .toMatchObject({
+    const expected: GetBundleManifestSuccess = {
+      severity: 'success',
+      manifest: {
         tabs: ['tab0', 'tab1'],
         version: '1.0.0'
-      });
+      }
+    };
+
+    await expect(getBundleManifest('yes', false))
+      .resolves
+      .toMatchObject(expected);
   });
 
-  test('Valid schema with tabs and verification', async () => {
+  test('Valid schema with tabs and verification succeeds', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": ["tab0"] }');
     mockedReadFile.mockResolvedValueOnce('{}');
 
+    const expected: GetBundleManifestSuccess = {
+      severity: 'success',
+      manifest: {
+        tabs: ['tab0']
+      }
+    };
+
     await expect(getBundleManifest('yes', true))
       .resolves
-      .toMatchObject({
-        tabs: ['tab0']
-      });
+      .toMatchObject(expected);
   });
 
   test('Valid schema with invalid tab verification', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": ["tab2"] }');
     mockedReadFile.mockResolvedValueOnce('{}');
 
-    await expect(getBundleManifest('yes', true))
-      .rejects.toThrow();
+    const result = await getBundleManifest('yes', true);
+    expect(result).not.toBeUndefined();
+    expectIsError(result!.severity);
+
+    expect(result!.errors.length).toEqual(1);
+    const [err] = result!.errors;
+    expect(err).toBeInstanceOf(MissingTabError);
   });
 
   test('Schema with additional properties', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": ["tab0", "tab1"], "unknown": true }');
     mockedReadFile.mockResolvedValueOnce('{}');
 
-    await expect(getBundleManifest('yes'))
-      .rejects
-      .toThrow();
+    const result = await getBundleManifest('yes');
+    expect(result).not.toBeUndefined();
+    expectIsError(result!.severity);
+
+    expect(result!.errors.length).toEqual(1);
+    const [err] = result!.errors;
+    expect(err).toBeInstanceOf(ValidationError);
   });
 
   test('Schema with invalid requires', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": ["tab0", "tab1"], "requires": "yes" }');
     mockedReadFile.mockResolvedValueOnce('{}');
 
-    await expect(getBundleManifest('yes'))
-      .rejects
-      .toThrow();
+    const result = await getBundleManifest('yes');
+    expect(result).not.toBeUndefined();
+    expectIsError(result!.severity);
+
+    expect(result!.errors.length).toEqual(1);
+    const [err] = result!.errors;
+    expect(err).toBeInstanceOf(ValidationError);
   });
 });
 
 describe('Test getBundleManifests', () => {
   const mockedReadDir = vi.spyOn(fs, 'readdir');
 
-  it('should return undefined when the bundles directory doesn\'t exist', async () => {
-    mockedReadDir.mockRejectedValueOnce(new class extends Error {
+  it('should return the error if readdir throws an error', async () => {
+    const errorObject = new class extends Error {
       code = 'ENOENT';
-    });
+    };
 
-    await expect(getBundleManifests('/src/bundles')).resolves.toEqual({});
-  });
+    mockedReadDir.mockRejectedValueOnce(errorObject);
 
-  it('should throw the error if the error code isn\'t ENOENT', async () => {
-    mockedReadDir.mockRejectedValueOnce(new class extends Error {
-      code = 'ENOPERM';
-    });
-
-    await expect(getBundleManifests('/src/bundles')).rejects.toThrowError();
-  });
-
-  it('should throw any other error', async () => {
-    const err = new Error('help me');
-    mockedReadDir.mockRejectedValueOnce(err);
-
-    await expect(getBundleManifests('/src/bundles')).rejects.toThrowError(err);
+    const result = await getBundleManifests('/src/bundles');
+    expectIsError(result.severity);
+    expect(result.errors[0]).toBe(errorObject);
   });
 });
 
@@ -102,8 +121,10 @@ describe('Test resolveSingleBundle', () => {
     const resolved = await resolveSingleBundle(`${testMocksDir}/bundles/test0`);
 
     expect(resolved).not.toBeUndefined();
-    expect(resolved!.name).toEqual('test0');
-    expect(resolved!.manifest.tabs).toEqual(['tab0']);
+    expectIsSuccess(resolved!.severity);
+
+    expect(resolved!.bundle.name).toEqual('test0');
+    expect(resolved!.bundle.manifest.tabs).toEqual(['tab0']);
   });
 
   it('Doesn\'t consider a directory missing a manifest as a bundle', async () => {
@@ -129,7 +150,9 @@ describe('Test resolveAllBundles', () => {
   it('Properly detects bundles and non-bundles', async () => {
     const resolved = await resolveAllBundles(`${testMocksDir}/bundles`);
 
-    expect(resolved.test0).toMatchObject({
+    expectIsSuccess(resolved.severity);
+
+    expect(resolved.bundles.test0).toMatchObject({
       name: 'test0',
       directory: `${testMocksDir}/bundles/test0`,
       manifest: {
@@ -137,7 +160,7 @@ describe('Test resolveAllBundles', () => {
       }
     });
 
-    expect(resolved.test1).toMatchObject({
+    expect(resolved.bundles.test1).toMatchObject({
       name: 'test1',
       directory: `${testMocksDir}/bundles/test1`,
       manifest: {}

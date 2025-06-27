@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import { beforeEach, describe, expect, it, test, vi } from 'vitest';
 
-import * as manifest from '../../build/manifest.js';
+import * as manifest from '../../build/manifest/index.js';
 import * as gitRoot from '../../getGitRoot.js';
 import { askQuestion } from '../../templates/print.js';
 import getTemplateCommand from '../template.js';
@@ -30,8 +30,11 @@ vi.mock(import('../../templates/print.js'), async importActual => {
 });
 
 vi.spyOn(manifest, 'getBundleManifests').mockResolvedValue({
-  test0: { tabs: ['tab0'] },
-  test1: {},
+  severity: 'success',
+  manifests: {
+    test0: { tabs: ['tab0'] },
+    test1: {},
+  }
 });
 
 const mockedAskQuestion = vi.mocked(askQuestion);

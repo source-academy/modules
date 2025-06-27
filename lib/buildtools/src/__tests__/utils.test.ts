@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { compareSeverity, findSeverity, type Severity } from '../utils.js';
+import { compareSeverity, filterAsync, findSeverity, type Severity } from '../utils.js';
 
 describe('test findSeverity', () => {
   const cases: Severity[][] = [
@@ -31,4 +31,10 @@ describe('test compareSeverity', () => {
   test.each(cases)('Expecting %s', (expected, lhs, rhs) => {
     expect(compareSeverity(lhs, rhs)).toEqual(expected);
   });
+});
+
+test('filterAsync', async () => {
+  const objects = [1, 2, 3, 4, 5, 6];
+  const results = await filterAsync(objects, each => Promise.resolve(each % 2 == 0));
+  expect(results).toMatchObject([2, 4, 6]);
 });

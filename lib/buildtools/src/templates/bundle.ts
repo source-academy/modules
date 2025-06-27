@@ -1,10 +1,11 @@
 import fs from 'fs/promises';
 import type { Interface } from 'readline/promises';
 import _package from '../../../../package.json' with { type: 'json' };
-import { getBundleManifests } from '../build/manifest.js';
+import { formatResolveBundleErrors } from '../build/manifest/formatters.js';
+import { getBundleManifests } from '../build/manifest/index.js';
 import type { ModulesManifest, BundleManifest } from '../types.js';
 import sampleTsconfig from './bundle_tsconfig.json' with { type: 'json' };
-import { askQuestion, success, warn } from './print.js';
+import { askQuestion, error, success, warn } from './print.js';
 import { check, isSnakeCase } from './utilities.js';
 
 async function askModuleName(manifest: ModulesManifest, rl: Interface) {
@@ -22,7 +23,12 @@ async function askModuleName(manifest: ModulesManifest, rl: Interface) {
 
 export async function addNew(bundlesDir: string, rl: Interface) {
   const manifest = await getBundleManifests(bundlesDir);
-  const moduleName = await askModuleName(manifest, rl);
+  if (manifest.severity === 'error') {
+    error(formatResolveBundleErrors(manifest));
+    return;
+  }
+
+  const moduleName = await askModuleName(manifest.manifests, rl);
   const bundleDestination = `${bundlesDir}/${moduleName}`;
 
   await fs.mkdir(bundlesDir, { recursive: true });

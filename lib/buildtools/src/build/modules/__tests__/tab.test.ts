@@ -1,6 +1,6 @@
 import { describe, expect, it, test, vi } from 'vitest';
-import { testMocksDir } from '../../../__tests__/fixtures.js';
-import { resolveSingleTab, resolveAllTabs } from '../../manifest.js';
+import { expectIsSuccess, testMocksDir } from '../../../__tests__/fixtures.js';
+import { resolveSingleTab, resolveAllTabs } from '../../manifest/index.js';
 
 vi.mock(import('../../../getGitRoot.js'));
 
@@ -31,15 +31,18 @@ describe('Test resolveSingleTab', () => {
 test('resolveAllTabs', async () => {
   const resolved = await resolveAllTabs(`${testMocksDir}/bundles`, `${testMocksDir}/tabs`);
 
-  expect(resolved).toHaveProperty('tab0');
-  expect(resolved.tab0).toMatchObject({
+  expectIsSuccess(resolved.severity);
+  const { tabs } = resolved;
+
+  expect(tabs).toHaveProperty('tab0');
+  expect(tabs.tab0).toMatchObject({
     entryPoint: `${testMocksDir}/tabs/tab0/src/index.tsx`,
     directory: `${testMocksDir}/tabs/tab0`,
     name: 'tab0'
   });
 
-  expect(resolved).toHaveProperty('tab1');
-  expect(resolved.tab1).toMatchObject({
+  expect(tabs).toHaveProperty('tab1');
+  expect(tabs.tab1).toMatchObject({
     entryPoint: `${testMocksDir}/tabs/tab1/index.tsx`,
     directory: `${testMocksDir}/tabs/tab1`,
     name: 'tab1'

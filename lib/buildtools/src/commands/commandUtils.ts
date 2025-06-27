@@ -2,7 +2,7 @@ import { Option } from '@commander-js/extra-typings';
 import chalk from 'chalk';
 import { formatHtmlResult } from '../build/docs/html.js';
 import { formatJsonResult } from '../build/docs/json.js';
-import { formatManifestResult } from '../build/manifest.js';
+import { formatManifestResult } from '../build/manifest/index.js';
 import { formatBundleResult } from '../build/modules/bundle.js';
 import { formatTabResult } from '../build/modules/tab.js';
 import { formatLintResult } from '../prebuild/lint.js';
@@ -103,7 +103,9 @@ export function resultsProcessor<T extends (ResultEntry | ResultEntry[])>({ resu
   }
 }
 
-export function logCommandErrorAndExit(message: string, code: number = 1): never {
+export function logCommandErrorAndExit(message: unknown[], code?: number): never;
+export function logCommandErrorAndExit(message: string, code?: number): never;
+export function logCommandErrorAndExit(message: unknown[] | string, code: number = 1): never {
   console.error(chalk.redBright(message));
   process.exit(code);
 }

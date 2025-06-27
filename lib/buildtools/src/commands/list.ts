@@ -1,6 +1,8 @@
 import { Command } from '@commander-js/extra-typings';
 import chalk from 'chalk';
-import { resolveAllBundles, resolveAllTabs, resolveSingleBundle, resolveSingleTab } from '../build/manifest.js';
+import omit from 'lodash/omit.js';
+import { formatResolveBundleErrors } from '../build/manifest/formatters.js';
+import { resolveAllBundles, resolveAllTabs, resolveSingleBundle, resolveSingleTab } from '../build/manifest/index.js';
 import { getBundlesDir, getTabsDir } from '../getGitRoot.js';
 import { logCommandErrorAndExit } from './commandUtils.js';
 
@@ -10,21 +12,29 @@ export const getListBundlesCommand = () => new Command('bundle')
   .action(async directory => {
     if (directory === undefined) {
       const bundlesDir = await getBundlesDir();
-      const manifest = await resolveAllBundles(bundlesDir);
-      const bundleNames = Object.keys(manifest);
+      const manifestResult = await resolveAllBundles(bundlesDir);
+      if (manifestResult.severity === 'error') {
+        logCommandErrorAndExit(formatResolveBundleErrors(manifestResult));
+      }
 
-      if (bundleNames.length > 0 ) {
+      const bundleNames = Object.keys(manifestResult.bundles);
+
+      if (bundleNames.length > 0) {
         const bundlesStr = bundleNames.map((each, i) => `${i+1}. ${each}`).join('\n');
         console.log(`${chalk.magentaBright(`Detected ${bundleNames.length} bundles in ${bundlesDir}:`)}\n${bundlesStr}`);
       } else {
-        console.log(chalk.redBright(`No bundles in ${bundlesDir}`));
+        logCommandErrorAndExit(`No bundles in ${bundlesDir}!`);
       }
     } else {
-      const manifest = await resolveSingleBundle(directory);
-      if (!manifest) {
+      const manifestResult = await resolveSingleBundle(directory);
+      if (!manifestResult) {
         logCommandErrorAndExit(`No bundle found at ${directory}!`);
+      } else if (manifestResult.severity === 'error') {
+        logCommandErrorAndExit(formatResolveBundleErrors(manifestResult));
       } else {
-        console.log(chalk.magentaBright(`Bundle '${manifest.name}' found in ${directory}`));
+        const bundle = omit(manifestResult.bundle, 'type');
+        const manifestStr = JSON.stringify(bundle, null, 2);
+        console.log(`${chalk.magentaBright(`Bundle '${manifestResult.bundle.name}' found in ${directory}`)}:\n${manifestStr}`);
       }
     }
   });
@@ -40,19 +50,22 @@ export const getListTabsCommand = () => new Command('tabs')
       ]);
 
       const tabsManifest = await resolveAllTabs(bundlesDir, tabsDir);
-      const tabNames = Object.keys(tabsManifest);
+      if (tabsManifest.severity === 'error') {
+        logCommandErrorAndExit(formatResolveBundleErrors(tabsManifest));
+      }
+
+      const tabNames = Object.keys(tabsManifest.tabs);
 
       if (tabNames.length > 0) {
         const tabsStr = tabNames.map((each, i) => `${i+1}. ${each}`).join('\n');
-        console.log(`${chalk.magentaBright(`Detected ${tabNames.length} bundles in ${tabsDir}:`)}\n${tabsStr}`);
+        console.log(`${chalk.magentaBright(`Detected ${tabNames.length} tabs in ${tabsDir}:`)}\n${tabsStr}`);
       } else {
-        console.log(chalk.redBright(`No tabs in ${tabsDir}`));
+        logCommandErrorAndExit(`No tabs in ${tabsDir}`);
       }
     } else {
       const resolvedTab = await resolveSingleTab(directory);
       if (!resolvedTab) {
         logCommandErrorAndExit(`No tab found in ${directory}`);
-        process.exit(1);
       }
       console.log(chalk.magentaBright(`Tab '${resolvedTab.name}' found in ${directory}`));
     }

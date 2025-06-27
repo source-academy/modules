@@ -12,6 +12,7 @@ vi.mock(import('typescript'), async importOriginal => {
   const createProgram: typeof original.createProgram = vi.fn((opts: ts.CreateProgramOptions) => {
     const program = original.createProgram(opts);
     const emit: typeof program.emit = (sourceFile, _, cancelToken, emitDts, transformers) => {
+      // We mock create program so that we can check what the writeFile callback is called with
       return program.emit(sourceFile, mockedWriteFile, cancelToken, emitDts, transformers);
     };
 
