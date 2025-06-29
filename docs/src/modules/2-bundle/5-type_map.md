@@ -31,7 +31,22 @@ export const type_map = typeMapCreator.type_map;
 
 Note that the type map export has a `@hidden` documentation tag applied to it.
 
-To configure the type map, you then use the functions returned by the utility as [decorators](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#decorators):
+> [!IMPORTANT]
+> The `@hidden` tag needs to be applied at the point of declaration. The code below doesn't hide `type_map` as `@hidden` is being applied to where `type_map` is being exported,
+> and not where it is being declared:
+> ```ts
+> const { type_map } = createTypeMap()
+> export { 
+>   /** @hidden */
+>   type_map
+> }
+> ```
+> Hence in the example above, the exports aren't consolidated and written using the export shorthand as seen below:
+> ```ts
+> export const { functionDeclaration, variableDeclaration, classDeclaration, type_map, typeDeclaration } = createTypeMap();
+> ```
+
+To configure the type map, you use the [decorators](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#decorators) returned by the utility:
 
 ```ts
 // rune/src/functions.ts
@@ -80,8 +95,10 @@ export const translate = RuneFunctions.translate;
 > the documentation is properly applied to the exported function.
 >
 > Also notice that the `@function` tag has been applied. More information about why this is necessary can be found [here](./4-documentation/4-documentation#use-of-function)
+>
+> A quick way to check if you have written your documentation correctly is to see if IntelliSense in VSCode is able to display it to you.
 
-Remember to export your type map from the bundle's entry point:
+Remember to export the type map from the bundle's entry point:
 ```ts
 // rune/src/index.ts
 export { type_map } from './type_map';
@@ -91,7 +108,7 @@ export { type_map } from './type_map';
 There are four decorators returned by `createTypeMap`:
 
 ### `variableDeclaration`
-Use this decorator to type constant declarations that are not supposed to behave like functions. The decorator takes one parameter, which is the string
+Use this decorator to type constant declarations that are **not supposed to behave like functions**. The decorator takes one parameter, which is the string
 representation of the type of the variable.
 
 ```ts
@@ -136,7 +153,7 @@ This decorator can only be applied to members of a class, so it may be necessary
 have them declared as static members.
 
 ### `classDeclaration`
-This declarator is used to represent actual classes. It takes parameter, the string representation of the type it is wrapping.
+This declarator is used to represent actual classes. It takes one parameter, the string representation of the type it is wrapping.
 
 The decorator can be applied directly to the class:
 ```ts

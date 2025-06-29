@@ -1,4 +1,6 @@
+// Vitepress config
 import { defineConfig, type UserConfig } from 'vitepress';
+import { withMermaid } from 'vitepress-plugin-mermaid';
 import { withSidebar } from 'vitepress-sidebar';
 import type { VitePressSidebarOptions } from 'vitepress-sidebar/types';
 import _package from '../../package.json' with { type: 'json' };
@@ -7,12 +9,15 @@ import _package from '../../package.json' with { type: 'json' };
 const vitepressOptions: UserConfig = {
   base: '/devdocs/',
   description: 'Developer documentation for the Source Academy modules repository',
+  head: [['link', { rel: 'icon', href: '/devdocs/favicon.ico' }]],
   ignoreDeadLinks: 'localhostLinks',
+  lastUpdated: true,
   outDir: `${import.meta.dirname}/../../build/devdocs`,
   srcDir: 'src',
   title: 'Modules Developer Documentation',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    logo: './favicon.ico',
     nav: [
       { text: 'Home', link: '/' },
       {
@@ -24,7 +29,7 @@ const vitepressOptions: UserConfig = {
           },
           {
             text: 'Getting Started',
-            link: '/modules/1-getting-started/2-overview'
+            link: '/modules/1-getting-started/2-start'
           }
         ]
       },
@@ -84,4 +89,15 @@ const sideBarOptions = Object.entries(sidebarConfigs).map(([startPath, options])
   ...options
 }));
 
-export default defineConfig(withSidebar(vitepressOptions, sideBarOptions));
+export default defineConfig(
+  withMermaid({
+    ...withSidebar(vitepressOptions, sideBarOptions),
+    mermaid: {
+      // Use the default font that Vitepress uses
+      fontFamily: 'Inter',
+      flowchart: {
+        curve: 'linear',
+      }
+    }
+  })
+);

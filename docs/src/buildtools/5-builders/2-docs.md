@@ -20,7 +20,7 @@ as its children, each of which represents a different bundle.
 > `typedoc` simply returns `undefined` when `Application.convert` is called.
 
 ## HTML Generation
-It is not possible to generate the HTML documentation on a per-bundle basis. Thus, when HTML documentation needs to be regenerated, the source files of every single bundle gets processed.
+It is not possible to generate the HTML documentation on a per-bundle basis. Thus, when HTML documentation needs to be regenerated, the source files of every single bundle needs to be processed.
 
 ## JSON Generation
 `typedoc` represents each bundle as a [`DeclarationReflection`](https://typedoc.org/api/classes/Models.DeclarationReflection.html) internally. Each of these `DeclarationReflection`s contains an array of "children" elements which

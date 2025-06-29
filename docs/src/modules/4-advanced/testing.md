@@ -5,7 +5,7 @@ order: 3
 
 The testing library used by this repository is [`vitest`](https://vitest.dev).
 
-> [!WARNING]
+> [!IMPORTANT]
 > Other Source Academy repositories use `jest` as their testing package. Although `vitest` has been designed as a drop in replacement for `jest`,
 > there are subtle differences between the two. For example, `vi.spyOn` doesn't replace the implementation within the module while `jest.spyOn` does (See [here](https://vitest.dev/guide/mocking.html#mocking-pitfalls)).
 > 

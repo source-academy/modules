@@ -66,7 +66,7 @@ This causes `vitest` to resolve the configuration correctly every time.
 ## Vitest for specific Bundle/Tab
 
 However, even with the configuration above, we face an issue. `vitest` requires that each project specification matches a specific file. The pattern `src/bundles/*/vitest.config.ts` matches all `vitest.config.ts` files under the
-top-level directory of each bundle. This is equivalent to `src/bundles/*`, since by default, `vitest` will try to find a file named `vitest.config`. However, it does mean that the specific configuration file must exist in that folder for it to be considered a project.
+top-level directory of each bundle. This is equivalent to `src/bundles/*`, since by default, `vitest` will try to find a file named `vitest.config`. This requires that the specific configuration file exists in that folder for it to be considered a project.
 
 This means that for a bundle/tab's tests to be detected, that bundle or tab would need to maintain its own `vitest` config. Alternatively, the specific configuration for that bundle/tab could be added directly to the root config. Neither of these solutions are particularly ideal.
 The former would run the risk of misconfiguration, and the latter would cause the root configuration to become cluttered and defeat the purpose of splitting the repository into workspaces.
@@ -84,5 +84,5 @@ With this, running `yarn test` within a bundle or tab's directory structure will
 The approach above works when you know that the current tab or bundle has tests that need to be run. In order to run tests for **all** bundles or **all** tabs at once, the buildtools would have to determine
 which bundles and tabs have tests and which don't (as Vitest considers it an error if you give it a test project that it can't find tests for).
 
-Instead, all bundles and all tabs are configured as a test project each. Hence, under `src/bundles` and `src/tabs` you can find a `vitest.config.js` that is specific to bundle and tabs respectively. This shifts
-the responsibility for determining which bundles and tabs contain tests onto `vitest` itself, and so it will not fail (unless for some reason every single bundle and tab test was removed).
+Instead, all bundles and all tabs are configured as a test project each. Hence, under `src/bundles` and `src/tabs` you can find a `vitest.config.js` that is specific to bundles and tabs respectively. This shifts
+the responsibility for determining which bundles and tabs contain tests onto `vitest` itself and so it will not fail (unless for some reason every single bundle and tab test was removed).

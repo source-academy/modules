@@ -4,19 +4,17 @@ title: FAQ
 # Frequently Asked Questions
 
 * [**Infrastructure**](https://github.com/source-academy/modules/wiki/FAQs#infrastructure)
-  * [Could you explain more on the infrastructure of the modules system? Especially regarding how the bundle and tabs communicate.](https://github.com/source-academy/modules/wiki/FAQs#could-you-explain-more-on-the-infrastructure-of-the-modules-system-especially-regarding-how-the-bundle-and-tabs-communicate)
-* [**Set Up and Configuration**](https://github.com/source-academy/modules/wiki/FAQs#set-up-and-configuration)
-  * [How do we use our own local version of the js-slang interpreter with the modules?](https://github.com/source-academy/modules/wiki/FAQs#how-do-we-use-our-own-local-version-of-the-js-slang-interpreter-with-the-modules)
-  * [Is it possible to be using modules served from more than one location simultaneously?](https://github.com/source-academy/modules/wiki/FAQs#is-it-possible-to-be-using-modules-served-from-more-than-one-location-simultaneously)
-* [**Language Specifications**](https://github.com/source-academy/modules/wiki/FAQs#language-specifications)
+  * [Could you explain more on the infrastructure of the modules system? Especially regarding how the bundle and tabs communicate.](#could-you-explain-more-on-the-infrastructure-of-the-modules-system-especially-regarding-how-the-bundle-and-tabs-communicate)
+* [**Set Up and Configuration**](#set-up-and-configuration)
+  * [How do we use our own local version of the js-slang interpreter with the modules?](#how-do-we-use-our-own-local-version-of-the-js-slang-interpreter-with-the-modules)
+  * [Is it possible to be using modules served from more than one location simultaneously?](#is-it-possible-to-be-using-modules-served-from-more-than-one-location-simultaneously)
+* [**Language Specifications**](#language-specifications)
   * [Can a user on Source Academy import more than one module at once?](https://github.com/source-academy/modules/wiki/FAQs#can-a-user-on-source-academy-import-more-than-one-module-at-once)
-* [**Tabs**](https://github.com/source-academy/modules/wiki/FAQs#tabs)
-  * [Why is my Tab not spawning on Source Academy?](https://github.com/source-academy/modules/wiki/FAQs#why-is-my-tab-not-spawning-on-source-academy)
-  * [How does the modules system handles css for the tabs?](https://github.com/source-academy/modules/wiki/Frequently-Asked-Questions-(FAQs)#how-does-the-modules-system-handles-css-for-the-tabs)
-* [**Interaction with `js-slang`**](https://github.com/source-academy/modules/wiki/FAQs#interaction-with-js-slang)
-  * [How can we switch to the Source interpreter rather than the Source transpiler?](https://github.com/source-academy/modules/wiki/FAQs#how-can-we-switch-to-the-source-interpreter-rather-than-the-source-transpiler)
-
----
+* [**Tabs**](#tabs)
+  * [Why is my Tab not spawning on Source Academy?](#why-is-my-tab-not-spawning-on-source-academy)
+  * [How does the modules system handles css for the tabs?](#how-does-the-modules-system-handles-css-for-the-tabs)
+* [**Interaction with `js-slang`**](#interaction-with-js-slang)
+  * [How can we switch to the Source interpreter rather than the Source transpiler?](#how-can-we-switch-to-the-source-interpreter-rather-than-the-source-transpiler)
 
 ## Infrastructure
 
@@ -26,7 +24,7 @@ title: FAQ
 > 1. `bundle/**/*.ts` is where we store all logical functions 
 > 2. `tabs/**/*.tsx` is where we use all the react and jsx which will be shown in the frontend
 
-A brief overview of the current infrastructure is explained [here](https://github.com/source-academy/modules/wiki/Flow-of-Module-System). However, I would like to explain in more detail how the `bundle` and `tab` interacts with `js-slang` and `cadet-frontend` respectively. 
+A brief overview of the current infrastructure is explained [here](../4-advanced/flow/flow). However, I would like to explain in more detail how the `bundle` and `tab` interacts with `js-slang` and `cadet-frontend` respectively. 
 
 Firstly, a `bundle` is defined as the suite of functions that are provided by the module. More specifically, what we mean by this is that the bundle will provide all the functions and constants that are intended to be available for use by the cadet when programming in the Source language. 
 ```ts
@@ -35,11 +33,9 @@ import { install_filter, video_height, video_width, init } from "pix_n_flix";
 install_filter((src, dest) => { ... });
 init();
 ```
-An example of the code that makes use of a module written in the Source language is given above. The main objective of the `bundle` is to provide the behind the scenes implementation of the `install_filter`, `video_height`, `video_width` and `init` functions so that the cadet programming in Source language can use it as a black box. In the above example, you can find the implementations of the said functions [here](https://github.com/source-academy/modules/blob/master/src/bundles/pix_n_flix/index.ts). The `bundle` however, does not store all logical functions that is required by your module like those needed only by the tab that are not provided to the cadets. To see how the implementation of a `bundle` looks like, refer to [here](https://github.com/source-academy/modules/wiki/Modules-Structure#bundles).
+An example of the code that makes use of a module written in the Source language is given above. The main objective of the `bundle` is to provide the behind the scenes implementation of the `install_filter`, `video_height`, `video_width` and `init` functions so that the cadet programming in Source language can use it as a black box. In the above example, you can find the implementations of the said functions [here](https://github.com/source-academy/modules/blob/master/src/bundles/pix_n_flix/index.ts). The `bundle` however, does not store all logical functions that is required by your module like those needed only by the tab that are not provided to the cadets.
 
-A `tab` on the other hand is more formally defined as an _optional_ user interface used by the module. A module can exist without a tab. The tab exists for developers of modules to make use of Source Academy's side content tabs to display user interfaces that are used with the module's bundle. The tab can optionally choose to make use of the result returned from the evaluation of the Source code. The tab can also even be entirely not dependent on the result from the evaluation of the Source code. To see how the implementation of a `tab` looks like, refer to [here](https://github.com/source-academy/modules/wiki/Modules-Structure#tabs). 
-
-So how then does the `tab` make use of information from the `bundle`? The tab does this through the use of an object from `cadet-frontend` called the `debuggerContext`. When constructing the side content tabs, we would occasionally want to make use of front-end data like the code that was evaluated, the result of the code evaluated and Source version used. On `cadet-frontend`, all these information is stored within the `debuggerContext` object which is defined [here](https://github.com/source-academy/cadet-frontend/blob/master/src/commons/workspace/WorkspaceTypes.ts). Hence, all tabs will receieve the object `debuggerContext` as a component prop. 
+A `tab` on the other hand is more formally defined as an _optional_ user interface used by the module. A module can exist without a tab. The tab exists for developers of modules to make use of Source Academy's side content tabs to display user interfaces that are used with the module's bundle. The tab can optionally choose to make use of the result returned from the evaluation of the Source code. The tab can also even be entirely not dependent on the result from the evaluation of the Source code. So how then does the `tab` make use of information from the `bundle`? The tab does this through the use of an object from `cadet-frontend` called the `debuggerContext`. When constructing the side content tabs, we would occasionally want to make use of front-end data like the code that was evaluated, the result of the code evaluated and Source version used. On `cadet-frontend`, all these information is stored within the `debuggerContext` object which is defined [here](https://github.com/source-academy/cadet-frontend/blob/master/src/commons/workspace/WorkspaceTypes.ts). Hence, all tabs will receieve the object `debuggerContext` as a component prop. 
 
 An example of an implementation of this is from the `pix_n_flix` module. The implementation can be found [here](https://github.com/source-academy/modules/blob/master/src/bundles/pix_n_flix/index.ts). In the module, a function `init()` is provided to the Source programmer. The specifications of the `pix_n_flix` module requires this `init()` function to be applied as the last statement of the Source program. As a result, the `js-slang` evaluator will return the return value of the `init()` function which is a JavaScript object with the type signature shown below. 
 ```ts
@@ -49,8 +45,6 @@ An example of an implementation of this is from the `pix_n_flix` module. The imp
 }
 ```
 As described in the paragraphs above, this return value of the `init()` function will be stored within the `debuggerContext` in `debuggerContext.result.value`. The `tab` associated with the rendering of the video and canvas element will then render the HTMLVideoElement and HTMLCanvasElement, before creating references to the respective elements and applying the `init()` function in `debuggerContext.result.value` in the component's `componentDidMount()` method. 
-
-See [here](https://github.com/source-academy/modules/wiki/System-Implementation-in-Source-Academy-Frontend#interaction-with-the-source-modules-bundle) for more information regarding this process. 
 
 ## Set Up and Configuration
 

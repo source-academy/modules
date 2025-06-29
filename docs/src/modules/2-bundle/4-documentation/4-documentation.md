@@ -1,4 +1,4 @@
-# Bundle Documentation
+# Bundle Documentation for Users
 Documentation for Source bundles is generated using the [`typedoc`](https://typedoc.org) tool. There are two types: HTML and JSON documentation.
 
 By reading comments and type annotations, `typedoc` is able to generate both human readable documentation and documentation in the form of JSON.
@@ -57,7 +57,7 @@ It is important that you provide an `@module` tag in this description. Otherwise
 documentation properly.
 
 ### Use of `@hidden`
-If there are exports you want hidden from the output of the documentation, you must use the either `@hidden` tag.
+If there are exports you want hidden from the output of the documentation, you must use the `@hidden` tag.
 
 The example below is taken from the `rune` bundle:
 ```ts
@@ -113,7 +113,7 @@ Typedoc won't consider `draw_connected` to be a function. Instead it will consid
 
 This is because `drawConnected` is of type `RenderFunction` and `RenderFunction` is only _function-like_.
 
-To remedy this, include the `@function` tag in your documentation:
+To remedy this, you can either change the type to be an actual function type, or include the `@function` tag in your documentation:
 ```ts {6}
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the

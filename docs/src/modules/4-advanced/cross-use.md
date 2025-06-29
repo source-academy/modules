@@ -1,6 +1,6 @@
 # Bundles as Libraries
 
-Since bundles are designed to be imported from Source user code, they can also be imported from other bundles (and tabs!). The steps required for configuraing your bundle to be able to be do so can be found [here](/modules/2-bundle/6-compiling#for-other-bundles).
+Since bundles are designed to be imported from Source user code, they can also be imported from other bundles (and tabs!). The steps required for configuring your bundle to be able to be do so can be found [here](/modules/2-bundle/6-compiling#for-other-bundles).
 
 Bundles can then be added as dependencies as if they were any other `npm` or Yarn package:
 
