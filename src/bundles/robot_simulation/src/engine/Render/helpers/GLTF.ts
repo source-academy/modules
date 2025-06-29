@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { type GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import type { Dimension } from '../../Math/Vector';
 
 type GLTFLoaderOptions = Dimension;

@@ -1,6 +1,7 @@
 import pathlib from 'path';
 import { Command } from '@commander-js/extra-typings';
 import chalk from 'chalk';
+import { formatResolveBundleErrors } from '../build/manifest/formatters.js';
 import { resolveEitherBundleOrTab } from '../build/manifest/index.js';
 import { runPrebuild } from '../prebuild/index.js';
 import { formatLintResult, lintGlobal, runEslint } from '../prebuild/lint.js';
@@ -20,14 +21,17 @@ export const getLintCommand = () => new Command('lint')
   .option('--ci', process.env.CI)
   .action(async (directory, { fix, ci }) => {
     const fullyResolved = pathlib.resolve(directory);
+    const resolveResult = await resolveEitherBundleOrTab(fullyResolved);
 
-    const asset = await resolveEitherBundleOrTab(fullyResolved);
+    if (resolveResult.severity === 'error') {
+      if (resolveResult.errors.length === 0 ) {
+        logCommandErrorAndExit(`No tab or bundle found at ${fullyResolved}`);
+      }
 
-    if (!asset) {
-      logCommandErrorAndExit(`No tab or bundle found at ${fullyResolved}`);
+      logCommandErrorAndExit(formatResolveBundleErrors(resolveResult));
     }
 
-    const result = await runEslint(asset, fix);
+    const result = await runEslint(resolveResult.asset, fix);
     console.log(formatLintResult(result));
 
     switch (result.severity) {
@@ -77,13 +81,17 @@ export const getTscCommand = () => new Command('tsc')
   .option('--ci', process.env.CI)
   .action(async (directory, { emit, ci }) => {
     const fullyResolved = pathlib.resolve(directory);
-    const asset = await resolveEitherBundleOrTab(fullyResolved);
+    const resolveResult = await resolveEitherBundleOrTab(fullyResolved);
 
-    if (!asset) {
-      logCommandErrorAndExit(`No tab or bundle found at ${fullyResolved}`);
+    if (resolveResult.severity === 'error') {
+      if (resolveResult.errors.length === 0 ) {
+        logCommandErrorAndExit(`No tab or bundle found at ${fullyResolved}`);
+      }
+
+      logCommandErrorAndExit(formatResolveBundleErrors(resolveResult));
     }
 
-    const result = await runTsc(asset, !emit);
+    const result = await runTsc(resolveResult.asset, !emit);
     console.log(formatTscResult(result));
 
     switch (result.severity) {
@@ -101,13 +109,17 @@ export const getPrebuildAllCommand = () => new Command('prebuild')
   .option('--ci', process.env.CI)
   .action(async (directory, { ci }) => {
     const fullyResolved = pathlib.resolve(directory);
-    const asset = await resolveEitherBundleOrTab(fullyResolved);
+    const resolveResult = await resolveEitherBundleOrTab(fullyResolved);
 
-    if (!asset) {
-      logCommandErrorAndExit(`No tab or bundle found at ${fullyResolved}`);
+    if (resolveResult.severity === 'error') {
+      if (resolveResult.errors.length === 0 ) {
+        logCommandErrorAndExit(`No tab or bundle found at ${fullyResolved}`);
+      }
+
+      logCommandErrorAndExit(formatResolveBundleErrors(resolveResult));
     }
 
-    const { tsc, lint } = await runPrebuild(asset);
+    const { tsc, lint } = await runPrebuild(resolveResult.asset);
     console.log(formatTscResult(tsc));
     console.log(formatLintResult(lint));
 

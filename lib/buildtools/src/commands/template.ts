@@ -3,7 +3,7 @@ import { Command } from '@commander-js/extra-typings';
 
 import { getBundlesDir, getTabsDir } from '../getGitRoot.js';
 import { addNew as addNewModule } from '../templates/bundle.js';
-import { error as _error, askQuestion, getRl, info, warn } from '../templates/print.js';
+import { askQuestion, error as _error, getRl, info, warn } from '../templates/print.js';
 import { addNew as addNewTab } from '../templates/tab.js';
 import { isNodeError } from '../utils.js';
 

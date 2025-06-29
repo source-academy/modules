@@ -2,7 +2,7 @@
  * @module mark_sweep
  */
 
-import { type MemoryHeaps, type Memory, type Tag, COMMAND, type CommandHeapObject } from './types';
+import { COMMAND, type CommandHeapObject, type Memory, type MemoryHeaps, type Tag } from './types';
 
 // Global Variables
 let ROW: number = 10;

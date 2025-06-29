@@ -1,4 +1,4 @@
-import { CentripetalForce, CombinedForce, Gravity, type CelestialBody, type Force, type Vector3, LambdaForce } from 'nbody';
+import { CentripetalForce, CombinedForce, Gravity, LambdaForce, type CelestialBody, type Force, type Vector3 } from 'nbody';
 
 /**
  * Create a force that applies to all bodies using the provided higher order/lambda/arrow/anonymous function.

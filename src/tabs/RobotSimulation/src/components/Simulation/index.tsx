@@ -4,7 +4,7 @@ import type { DefaultEv3 } from '@sourceacademy/bundle-robot_simulation/controll
 import type { World } from '@sourceacademy/bundle-robot_simulation/engine';
 import type { WorldState } from '@sourceacademy/bundle-robot_simulation/engine/World';
 import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
-import { useRef, type CSSProperties, useEffect, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 
 import { ColorSensorPanel } from '../TabPanels/ColorSensorPanel';
 import { ConsolePanel } from '../TabPanels/ConsolePanel';

@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { compareSeverity, filterAsync, findSeverity, type Severity } from '../utils.js';
 
 describe('test findSeverity', () => {

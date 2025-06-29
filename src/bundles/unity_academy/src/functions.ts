@@ -4,10 +4,10 @@
  * @author Wang Zihan
  */
 
-import { initializeModule, getInstance, type GameObjectIdentifier, type AudioClipIdentifier } from './UnityAcademy';
-import {
-  type Vector3, checkVector3Parameter, makeVector3D, scaleVector, addVectors, vectorDifference, dotProduct,
-  crossProduct, normalizeVector, vectorMagnitude, zeroVector, pointDistance
+import { getInstance, initializeModule, type AudioClipIdentifier, type GameObjectIdentifier } from './UnityAcademy';
+import { addVectors, checkVector3Parameter,
+  crossProduct, dotProduct, makeVector3D, normalizeVector, pointDistance, scaleVector, vectorDifference, vectorMagnitude, zeroVector,
+  type Vector3
 } from './UnityAcademyMaths';
 
 /**

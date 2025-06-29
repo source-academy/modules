@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import type { ResolvedTab, ResolvedBundle, ResultEntry, ModuleResultEntry, FullResult } from '../types.js';
+import type { FullResult, ModuleResultEntry, ResolvedBundle, ResolvedTab, ResultEntry } from '../types.js';
 import { compareSeverity } from '../utils.js';
 import { runEslint, type LintResults } from './lint.js';
 import { runTsc, type TscResult } from './tsc.js';

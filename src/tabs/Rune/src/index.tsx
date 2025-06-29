@@ -1,5 +1,5 @@
-import { type RuneModuleState, isHollusionRune } from '@sourceacademy/bundle-rune/functions';
-import { defineTab, getModuleState, AnimationCanvas, MultiItemDisplay, WebGLCanvas } from '@sourceacademy/modules-lib/tabs';
+import { isHollusionRune, type RuneModuleState } from '@sourceacademy/bundle-rune/functions';
+import { AnimationCanvas, MultiItemDisplay, WebGLCanvas, defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs';
 import { glAnimation, type ModuleTab } from '@sourceacademy/modules-lib/types';
 import HollusionCanvas from './hollusion_canvas';
 

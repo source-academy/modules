@@ -1,5 +1,5 @@
 import context from 'js-slang/context';
-import { RecordingVisualizer, RecordingVisualizer3D, Simulation, type Universe, type VisType } from 'nbody';
+import { RecordingVisualizer3D, RecordingVisualizer, Simulation, type Universe, type VisType } from 'nbody';
 
 /**
  * Create a new simulation.

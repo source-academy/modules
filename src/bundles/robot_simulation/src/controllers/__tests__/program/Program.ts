@@ -1,4 +1,4 @@
-import { vi, beforeEach, describe, it, expect } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CallbackHandler } from '../../../engine/Core/CallbackHandler';
 import { Program, program_controller_identifier } from '../../program/Program';
 import { runECEvaluator } from '../../program/evaluate';

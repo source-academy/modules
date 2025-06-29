@@ -35,6 +35,13 @@ export function isNodeError(error: unknown): error is NodeJS.ErrnoException {
 }
 
 /**
+ * `Array.map` but with a mapping function that returns a promise
+ */
+export function mapAsync<T, U>(items: T[], mapper: (item: T, index: number) => Promise<U>) {
+  return Promise.all(items.map(mapper));
+}
+
+/**
  * `Array.flatMap` but with a mapping function that returns a promise
  */
 export async function flatMapAsync<T, U>(items: T[], mapper: (item: T, index: number) => Promise<U[]>) {

@@ -9,8 +9,8 @@ import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Vector3, normalizeVector, zeroVector, pointDistance } from './UnityAcademyMaths';
-import { UNITY_ACADEMY_BACKEND_URL, BUILD_NAME } from './config';
+import { Vector3, normalizeVector, pointDistance, zeroVector } from './UnityAcademyMaths';
+import { BUILD_NAME, UNITY_ACADEMY_BACKEND_URL } from './config';
 
 type Transform = {
   position : Vector3;

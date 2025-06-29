@@ -1,5 +1,5 @@
 import type * as THREE from 'three';
-import type { Renderer, Controller, Physics } from '../../../engine';
+import type { Controller, Physics, Renderer } from '../../../engine';
 import { vec3 } from '../../../engine/Math/Convert';
 import type { SimpleVector } from '../../../engine/Math/Vector';
 import type { PhysicsTimingInfo } from '../../../engine/Physics';

@@ -1,6 +1,6 @@
 // @ts-check
 // Root vitest config
-import { defineConfig, coverageConfigDefaults } from 'vitest/config';
+import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
   resolve: {

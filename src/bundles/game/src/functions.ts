@@ -15,16 +15,16 @@
  */
 
 import context from 'js-slang/context';
-import { type List, head, tail, is_pair, accumulate } from 'js-slang/dist/stdlib/list';
+import { accumulate, head, is_pair, tail, type List } from 'js-slang/dist/stdlib/list';
 import Phaser from 'phaser';
 import {
+  defaultGameParams,
   type GameObject,
   type ObjectConfig,
   type RawContainer,
   type RawGameElement,
   type RawGameObject,
-  type RawInputObject,
-  defaultGameParams
+  type RawInputObject
 } from './types';
 
 if (!context.moduleContexts.game.state) {

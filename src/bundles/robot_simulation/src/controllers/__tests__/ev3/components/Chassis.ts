@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { Physics, Renderer, EntityFactory , MeshFactory } from '../../../../engine';
+import { EntityFactory, MeshFactory, Physics, Renderer } from '../../../../engine';
 
 import { ChassisWrapper } from '../../../ev3/components/Chassis';
 

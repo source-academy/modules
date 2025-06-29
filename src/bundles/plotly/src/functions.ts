@@ -11,8 +11,8 @@ import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { generatePlot } from './curve_functions';
 import {
   CurvePlot,
-  type CurvePlotFunction,
   DrawnPlot,
+  type CurvePlotFunction,
   type ListOfPairs
 } from './plotly';
 

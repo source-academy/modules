@@ -7,14 +7,14 @@ import {
 import {
   CircleGameObject,
   GameObject,
-  type InteractableGameObject,
   RectangleGameObject,
   ShapeGameObject,
   SpriteGameObject,
   TextGameObject,
-  TriangleGameObject
+  TriangleGameObject,
+  type InteractableGameObject
 } from './gameobject';
-import type { TransformProps, PositionXY, ExceptionError, PhaserGameObject } from './types';
+import type { ExceptionError, PhaserGameObject, PositionXY, TransformProps } from './types';
 
 // Game state information, that changes every frame.
 export const gameState = {

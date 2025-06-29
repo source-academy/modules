@@ -1,4 +1,4 @@
-import { userEvent, commands } from '@vitest/browser/context';
+import { commands, userEvent } from '@vitest/browser/context';
 import { runInContext } from 'js-slang';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { render, type RenderResult } from 'vitest-browser-react';

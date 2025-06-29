@@ -13,9 +13,9 @@ import {
   MIN_WIDTH
 } from '@sourceacademy/bundle-pix_n_flix/constants';
 import {
+  InputFeed,
   type BundlePacket,
   type ErrorLogger,
-  InputFeed,
   type TabsPacket
 } from '@sourceacademy/bundle-pix_n_flix/types';
 import { defineTab } from '@sourceacademy/modules-lib/tabs';

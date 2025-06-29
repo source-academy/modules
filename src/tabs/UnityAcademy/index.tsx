@@ -4,7 +4,7 @@
  * @author Wang Zihan
  */
 
-import { Button, NumericInput, Checkbox } from '@blueprintjs/core';
+import { Button, Checkbox, NumericInput } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { getInstance } from '@sourceacademy/bundle-unity_academy/UnityAcademy';
 import { UNITY_ACADEMY_BACKEND_URL } from '@sourceacademy/bundle-unity_academy/config';

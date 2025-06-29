@@ -1,6 +1,6 @@
-import { test, expect } from 'vitest';
+import { expect, test } from 'vitest';
 
-import { repeat, twice, thrice } from '../functions';
+import { repeat, thrice, twice } from '../functions';
 
 // Test functions
 test('repeat works correctly and repeats function n times', () => {

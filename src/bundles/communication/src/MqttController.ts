@@ -1,4 +1,4 @@
-import { connect, type QoS, type MqttClient } from 'mqtt/dist/mqtt';
+import { connect, type MqttClient, type QoS } from 'mqtt/dist/mqtt';
 // Need to use "mqtt/dist/mqtt" as "mqtt" requires global, which SA's compiler does not define.
 
 export const STATE_CONNECTED = 'Connected';

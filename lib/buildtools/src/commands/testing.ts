@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 import { Command, Option } from '@commander-js/extra-typings';
 import type { VitestRunMode } from 'vitest/node';
+import { formatResolveBundleErrors } from '../build/manifest/formatters.js';
 import { resolveEitherBundleOrTab } from '../build/manifest/index.js';
 import { runIndividualVitest } from '../testing.js';
 import { logCommandErrorAndExit } from './commandUtils.js';
@@ -24,10 +25,15 @@ export const getTestCommand = () => new Command('test')
   .argument('[directory]', 'Directory to search for tests. If no directory is specified, the current working directory is used')
   .action(async (directory, { mode, ...options }) => {
     const fullyResolved = resolve(directory ?? process.cwd());
-    const asset = await resolveEitherBundleOrTab(fullyResolved);
-    if (asset === undefined) {
-      logCommandErrorAndExit(`No bundle or tab found at ${fullyResolved}`);
+    const resolveResult = await resolveEitherBundleOrTab(fullyResolved);
+
+    if (resolveResult.severity === 'error') {
+      if (resolveResult.errors.length === 0 ) {
+        logCommandErrorAndExit(`No tab or bundle found at ${fullyResolved}`);
+      }
+
+      logCommandErrorAndExit(formatResolveBundleErrors(resolveResult));
     }
 
-    await runIndividualVitest(mode, asset, options);
+    await runIndividualVitest(mode, resolveResult.asset, options);
   });

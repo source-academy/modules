@@ -1,11 +1,11 @@
 import {
-  type b2Body,
-  type b2Shape,
-  type b2Fixture,
   b2BodyType,
   b2CircleShape,
   b2PolygonShape,
-  b2Vec2
+  b2Vec2,
+  type b2Body,
+  type b2Fixture,
+  type b2Shape
 } from '@box2d/core';
 import type { ReplResult } from '@sourceacademy/modules-lib/types';
 

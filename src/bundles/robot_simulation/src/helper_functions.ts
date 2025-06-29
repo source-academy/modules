@@ -9,7 +9,7 @@ import {
   type DefaultEv3,
 } from './controllers/ev3/ev3/default/ev3';
 import { Program } from './controllers/program/Program';
-import { type Controller, Physics, Renderer, Timer, World } from './engine';
+import { Physics, Renderer, Timer, World, type Controller } from './engine';
 
 import { RobotConsole } from './engine/Core/RobotConsole';
 import {

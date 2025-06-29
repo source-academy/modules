@@ -1,5 +1,5 @@
 import type { StereoSoundModuleState } from '@sourceacademy/bundle-stereo_sound/types';
-import { defineTab, getModuleState, MultiItemDisplay } from '@sourceacademy/modules-lib/tabs';
+import { MultiItemDisplay, defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs';
 import type { ModuleTab } from '@sourceacademy/modules-lib/types';
 
 /**

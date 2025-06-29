@@ -1,4 +1,4 @@
-import { type Interface, createInterface } from 'readline/promises';
+import { createInterface, type Interface } from 'readline/promises';
 import chalk from 'chalk';
 
 export const getRl = () => createInterface({

@@ -1,32 +1,32 @@
 import { mat4, vec3 } from 'gl-matrix';
 import {
-  Rune,
   DrawnRune,
+  Rune,
   drawRunesToFrameBuffer,
   type AnimatedRune
 } from './rune';
 import {
-  getSquare,
-  getBlank,
-  getRcross,
-  getSail,
-  getTriangle,
-  getCorner,
-  getNova,
-  getCircle,
-  getHeart,
-  getPentagram,
-  getRibbon,
-  throwIfNotRune,
   addColorFromHex,
   colorPalette,
-  hexToColor
+  getBlank,
+  getCircle,
+  getCorner,
+  getHeart,
+  getNova,
+  getPentagram,
+  getRcross,
+  getRibbon,
+  getSail,
+  getSquare,
+  getTriangle,
+  hexToColor,
+  throwIfNotRune
 } from './runes_ops';
 import {
-  type FrameBufferWithTexture,
   getWebGlFromCanvas,
   initFramebufferObject,
-  initShaderProgram
+  initShaderProgram,
+  type FrameBufferWithTexture
 } from './runes_webgl';
 import { functionDeclaration, variableDeclaration } from './type_map';
 

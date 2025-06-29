@@ -87,7 +87,7 @@ jobs:
 
         - name: Build Docs Server
           if: needs.paths-filter.outputs.docs == 'true'
-          run: yarn workspaces foreach -A --include "@sourceacademy/mdoules-docserver" run build
+          run: yarn workspaces foreach -A --include "@sourceacademy/modules-docserver" run build
         
         - name: Run tsc for Dev Server
           if: needs.paths-filter.outputs.devserver == 'true'

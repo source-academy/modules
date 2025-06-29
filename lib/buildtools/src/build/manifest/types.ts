@@ -39,6 +39,19 @@ interface ResolveAllTabsSuccess {
 export type ResolveAllTabsError = GetBundleManifestError;
 export type ResolveAllTabsResult = ResolveAllTabsError | ResolveAllTabsSuccess;
 
+export interface ResolveEitherSuccess {
+  asset: ResolvedBundle | ResolvedTab
+  severity: 'success'
+}
+
+export interface ResolveEitherError {
+  asset: undefined
+  errors: unknown[]
+  severity: 'error'
+}
+
+export type ResolveEitherResult = ResolveEitherError | ResolveEitherSuccess;
+
 export class MissingTabError extends Error {
   constructor(public readonly name: string) { super(); }
 

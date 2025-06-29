@@ -1,4 +1,4 @@
-import { BodyCenterTransformation, CoMTransformation, RotateTransformation, LambdaTransformation, type Vector3, type State, type Transformation, PinTransformation, TimedRotateTransformation } from 'nbody';
+import { BodyCenterTransformation, CoMTransformation, LambdaTransformation, PinTransformation, RotateTransformation, TimedRotateTransformation, type State, type Transformation, type Vector3 } from 'nbody';
 
 /**
  * Create a frame of reference transformation that moves the origin to the center of ith both.

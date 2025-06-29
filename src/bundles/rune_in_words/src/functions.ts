@@ -1,16 +1,16 @@
 import type { Rune } from './rune';
 import {
-  getSquare,
   getBlank,
-  getRcross,
-  getSail,
-  getTriangle,
-  getCorner,
-  getNova,
   getCircle,
+  getCorner,
   getHeart,
+  getNova,
   getPentagram,
+  getRcross,
   getRibbon,
+  getSail,
+  getSquare,
+  getTriangle,
   throwIfNotRune
 } from './runes_ops';
 

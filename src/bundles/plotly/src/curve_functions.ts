@@ -1,4 +1,4 @@
-import { x_of, y_of, z_of, r_of, g_of, b_of } from '@sourceacademy/bundle-curve';
+import { b_of, g_of, r_of, x_of, y_of, z_of } from '@sourceacademy/bundle-curve';
 import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { CurvePlot } from './plotly';

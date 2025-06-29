@@ -10,7 +10,6 @@ import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import vitestPlugin from 'eslint-plugin-vitest';
 import globals from 'globals';
 import jsonParser from 'jsonc-eslint-parser';
-
 import tseslint from 'typescript-eslint';
 
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
@@ -72,9 +71,7 @@ export default tseslint.config(
     plugins: { markdown },
     rules: {
       'markdown/no-missing-label-refs': 'off', // was error
-      // Frontmatter titles are used for navigation only, so its okay
-      // to have both that and a h1 element
-      'markdown/no-multiple-h1': ['error', { frontmatterTitle: '' }],
+      'markdown/no-multiple-h1': 'off', // was error
       'markdown/require-alt-text': 'off', // was error
     }
   },
@@ -108,6 +105,10 @@ export default tseslint.config(
         'warn',
         {
           groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+          named: {
+            import: true,
+            types: 'types-last'
+          },
           alphabetize: {
             order: 'asc',
             orderImportKind: 'asc'

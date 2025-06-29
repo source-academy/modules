@@ -1,4 +1,4 @@
-import { is_pair, head, tail, is_list, is_null, length, type List, type Pair } from 'js-slang/dist/stdlib/list';
+import { head, is_list, is_null, is_pair, length, tail, type List, type Pair } from 'js-slang/dist/stdlib/list';
 
 /**
  * Asserts that a predicate returns true.

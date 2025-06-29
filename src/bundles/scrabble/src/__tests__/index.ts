@@ -1,4 +1,4 @@
-import { test, expect } from 'vitest';
+import { expect, test } from 'vitest';
 import {
   scrabble_letters,
   scrabble_letters_tiny,

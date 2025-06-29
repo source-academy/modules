@@ -9,7 +9,7 @@ import context from 'js-slang/context';
 
 import { PhysicsObject } from './PhysicsObject';
 import { PhysicsWorld } from './PhysicsWorld';
-import { type Force, Vector2 } from './types';
+import { Vector2, type Force } from './types';
 
 // Global Variables
 

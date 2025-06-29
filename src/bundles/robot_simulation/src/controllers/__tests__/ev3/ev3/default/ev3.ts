@@ -1,6 +1,6 @@
-import { vi, describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { Physics, Renderer, ControllerMap } from '../../../../../engine';
+import { ControllerMap, Physics, Renderer } from '../../../../../engine';
 import { ChassisWrapper } from '../../../../ev3/components/Chassis';
 import { Mesh } from '../../../../ev3/components/Mesh';
 import { Motor } from '../../../../ev3/components/Motor';

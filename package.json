@@ -27,7 +27,7 @@
     "build:libs": "yarn workspaces foreach -ptW --from \"./lib/*\" run build",
     "build:modules": "buildtools build all",
     "devserver": "devserver",
-    "lint:all": "eslint lib devserver docs && yarn lint:modules",
+    "lint:all": "buildtools lintglobal && yarn lint:modules",
     "lint:inspect": "yarn dlx eslint --inspect-config",
     "lint:modules": "yarn workspaces foreach -j 5 -pW --from \"./src/{bundles,tabs}\" run lint",
     "preinstall": "yarn build:libs",

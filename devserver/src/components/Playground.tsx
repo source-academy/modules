@@ -1,7 +1,7 @@
-import { type ToastProps, Intent, OverlayToaster, Popover, Tooltip, Button, Classes } from '@blueprintjs/core';
+import { Button, Classes, Intent, OverlayToaster, Popover, Tooltip, type ToastProps } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import classNames from 'classnames';
-import { type Context, getNames, SourceDocumentation, runInContext } from 'js-slang';
+import { SourceDocumentation, getNames, runInContext, type Context } from 'js-slang';
 // Importing this straight from js-slang doesn't work for whatever reason
 import createContext from 'js-slang/dist/createContext';
 import { Chapter, Variant } from 'js-slang/dist/types';

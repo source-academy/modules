@@ -1,5 +1,5 @@
 import type { DrawnPlot } from '@sourceacademy/bundle-plotly/plotly';
-import { defineTab, ModalDiv as Modal } from '@sourceacademy/modules-lib/tabs';
+import { ModalDiv as Modal, defineTab } from '@sourceacademy/modules-lib/tabs';
 import React from 'react';
 
 type Props = {

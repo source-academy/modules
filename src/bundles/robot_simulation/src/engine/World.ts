@@ -1,5 +1,5 @@
 import { ProgramError } from '../controllers/program/error';
-import { type Controller, ControllerGroup } from './Core/Controller';
+import { ControllerGroup, type Controller } from './Core/Controller';
 import { TypedEventTarget } from './Core/Events';
 import type { RobotConsole } from './Core/RobotConsole';
 import type { Timer } from './Core/Timer';

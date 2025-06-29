@@ -15,10 +15,10 @@ import { serialize } from '@jscad/stl-serializer';
 import { degreesToRadians, hexToColor } from '@sourceacademy/modules-lib/utilities';
 import {
   head,
+  is_list,
   list,
   tail,
-  type List,
-  is_list
+  type List
 } from 'js-slang/dist/stdlib/list';
 import save from 'save-file';
 import { Core } from './core';
@@ -26,9 +26,9 @@ import type { Solid } from './jscad/types';
 import {
   Group,
   Shape,
+  centerPrimitive,
   type Operable,
-  type RenderGroup,
-  centerPrimitive
+  type RenderGroup
 } from './utilities';
 
 /* [Main] */

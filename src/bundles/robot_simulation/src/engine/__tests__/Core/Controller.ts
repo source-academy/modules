@@ -1,8 +1,8 @@
 import { describe, expect, test, vi, type Mock } from 'vitest';
 import {
-  type Controller,
   ControllerGroup,
   ControllerMap,
+  type Controller,
 } from '../../Core/Controller';
 import type { PhysicsTimingInfo } from '../../Physics';
 

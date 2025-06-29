@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import uniq from 'lodash/uniq.js';
-import { type PrebuildOptions, runBuilderWithPrebuild } from '../../prebuild/index.js';
+import { runBuilderWithPrebuild, type PrebuildOptions } from '../../prebuild/index.js';
 import type { FullResult, ResolvedBundle, TabResultEntry } from '../../types.js';
 import { resolveSingleTab } from '../manifest/index.js';
 import { buildBundle } from './bundle.js';

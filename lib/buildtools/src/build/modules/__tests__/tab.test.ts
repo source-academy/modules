@@ -1,6 +1,6 @@
 import { describe, expect, it, test, vi } from 'vitest';
 import { expectIsSuccess, testMocksDir } from '../../../__tests__/fixtures.js';
-import { resolveSingleTab, resolveAllTabs } from '../../manifest/index.js';
+import { resolveAllTabs, resolveSingleTab } from '../../manifest/index.js';
 
 vi.mock(import('../../../getGitRoot.js'));
 

@@ -1,5 +1,5 @@
 import { list } from 'js-slang/dist/stdlib/list';
-import { test, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, expect, test, vi } from 'vitest';
 import * as asserts from '../asserts';
 import * as testing from '../functions';
 

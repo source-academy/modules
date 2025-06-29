@@ -1,4 +1,4 @@
-import { beforeEach, expect, describe, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { TypedEventTarget } from '../../Core/Events';
 
 class StringEvent extends Event {

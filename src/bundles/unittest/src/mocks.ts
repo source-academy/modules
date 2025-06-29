@@ -1,4 +1,4 @@
-import { pair, list, vector_to_list } from 'js-slang/dist/stdlib/list';
+import { list, pair, vector_to_list } from 'js-slang/dist/stdlib/list';
 
 /**
  * Mocks a function `fun`.

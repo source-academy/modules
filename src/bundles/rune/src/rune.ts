@@ -1,4 +1,4 @@
-import { type AnimFrame, type ReplResult, glAnimation } from '@sourceacademy/modules-lib/types';
+import { glAnimation, type AnimFrame, type ReplResult } from '@sourceacademy/modules-lib/types';
 import { mat4 } from 'gl-matrix';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
 import { classDeclaration } from './type_map';

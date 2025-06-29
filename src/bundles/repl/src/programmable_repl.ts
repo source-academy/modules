@@ -6,7 +6,7 @@
 
 import { runFilesInContext, type IOptions } from 'js-slang';
 import context from 'js-slang/context';
-import { COLOR_RUN_CODE_RESULT, COLOR_ERROR_MESSAGE, DEFAULT_EDITOR_HEIGHT } from './config';
+import { COLOR_ERROR_MESSAGE, COLOR_RUN_CODE_RESULT, DEFAULT_EDITOR_HEIGHT } from './config';
 import { default_js_slang } from './functions';
 
 export class ProgrammableRepl {

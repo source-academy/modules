@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import { beforeEach, expect, vi, test } from 'vitest';
+import { beforeEach, expect, test, vi } from 'vitest';
 import { testMocksDir } from '../../../__tests__/fixtures.js';
 import { writeManifest } from '../../manifest/index.js';
 import { buildBundle } from '../bundle.js';

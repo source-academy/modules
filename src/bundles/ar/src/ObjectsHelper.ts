@@ -1,23 +1,23 @@
 import type { Vector3 } from 'saar/libraries/misc';
 import {
-  type ARObject,
   CubeObject,
+  GltfObject,
   LightObject,
   SphereObject,
   UIObject,
-  GltfObject,
+  type ARObject,
 } from 'saar/libraries/object_state_library/ARObject';
 import {
   AlwaysRender,
   FixRotation,
   MovementStyle,
   OrbitMovement,
-  type PathItem,
   PathMovement,
   RenderWithinDistance,
   RotateAroundY,
   RotateToUser,
   SpringMovement,
+  type PathItem,
 } from 'saar/libraries/object_state_library/Behaviour';
 import UIBase64ImageComponent from 'saar/libraries/object_state_library/ui_component/UIBase64ImageItem';
 import UIColumnItem, {

@@ -1,6 +1,6 @@
 import context from 'js-slang/context';
 
-import type { TestContext, TestSuite, Test } from './types';
+import type { Test, TestContext, TestSuite } from './types';
 
 const handleErr = (err: any) => {
   if (err.error && err.error.message) {

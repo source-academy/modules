@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { isPascalCase, isSnakeCase } from '../utilities.js';
 
 function testFunction(

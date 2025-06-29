@@ -1,4 +1,4 @@
-import { type State, Universe, type SimulateFunction, type Transformation } from 'nbody';
+import { Universe, type SimulateFunction, type State, type Transformation } from 'nbody';
 
 /**
  * Create a new universe.

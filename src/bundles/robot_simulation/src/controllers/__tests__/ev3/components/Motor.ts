@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { Renderer, Physics } from '../../../../engine';
+import { Physics, Renderer } from '../../../../engine';
 import { loadGLTF } from '../../../../engine/Render/helpers/GLTF';
 import { ChassisWrapper } from '../../../ev3/components/Chassis';
 import { Motor } from '../../../ev3/components/Motor';

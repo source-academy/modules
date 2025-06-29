@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 
 import {
-  type Physics,
-  type Controller,
   EntityFactory,
-  type Entity,
   MeshFactory,
+  type Controller,
+  type Entity,
+  type Physics,
   type Renderer,
 } from '../../../engine';
 import type { EntityCuboidOptions } from '../../../engine/Entity/EntityFactory';

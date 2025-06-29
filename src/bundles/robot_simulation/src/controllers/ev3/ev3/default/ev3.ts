@@ -1,4 +1,4 @@
-import { type Physics, type Renderer, ControllerMap } from '../../../../engine';
+import { ControllerMap, type Physics, type Renderer } from '../../../../engine';
 
 import { ChassisWrapper } from '../../components/Chassis';
 import { Mesh } from '../../components/Mesh';
@@ -8,12 +8,12 @@ import { ColorSensor } from '../../sensor/ColorSensor';
 import { UltrasonicSensor } from '../../sensor/UltrasonicSensor';
 
 import {
-  wheelNames,
   motorNames,
+  wheelNames,
   type DefaultEv3Controller,
   type Ev3Config,
-  type WheelControllers,
   type MotorControllers,
+  type WheelControllers,
 } from './types';
 
 export type DefaultEv3 = ControllerMap<DefaultEv3Controller>;

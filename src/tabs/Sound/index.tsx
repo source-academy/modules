@@ -1,5 +1,5 @@
 import type { SoundModuleState } from '@sourceacademy/bundle-sound/types';
-import { getModuleState, defineTab, MultiItemDisplay } from '@sourceacademy/modules-lib/tabs';
+import { MultiItemDisplay, defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs';
 import type { DebuggerContext, ModuleTab } from '@sourceacademy/modules-lib/types';
 
 /**

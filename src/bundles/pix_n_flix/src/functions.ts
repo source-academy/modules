@@ -1,29 +1,29 @@
 import {
-  DEFAULT_WIDTH,
-  DEFAULT_HEIGHT,
   DEFAULT_FPS,
+  DEFAULT_HEIGHT,
+  DEFAULT_LOOP,
   DEFAULT_VOLUME,
-  MAX_HEIGHT,
-  MIN_HEIGHT,
-  MAX_WIDTH,
-  MIN_WIDTH,
+  DEFAULT_WIDTH,
   MAX_FPS,
+  MAX_HEIGHT,
+  MAX_WIDTH,
   MIN_FPS,
-  DEFAULT_LOOP
+  MIN_HEIGHT,
+  MIN_WIDTH
 } from './constants';
 import {
+  InputFeed,
+  type BundlePacket,
   type CanvasElement,
-  type VideoElement,
   type ErrorLogger,
-  type StartPacket,
+  type Filter,
+  type ImageElement,
   type Pixel,
   type Pixels,
-  type Filter,
   type Queue,
+  type StartPacket,
   type TabsPacket,
-  type BundlePacket,
-  InputFeed,
-  type ImageElement
+  type VideoElement
 } from './types';
 
 // Global Variables

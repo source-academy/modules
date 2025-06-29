@@ -1,10 +1,10 @@
-import { type Dirent, promises as fs } from 'fs';
-import path from 'path';
+import { promises as fs, type Dirent } from 'fs';
+import pathlib from 'path';
 import chalk from 'chalk';
 import { ESLint } from 'eslint';
 import { getGitRoot } from '../getGitRoot.js';
 import type { ResolvedBundle, ResolvedTab } from '../types.js';
-import { findSeverity, isNodeError, flatMapAsync, type Severity } from '../utils.js';
+import { findSeverity, flatMapAsync, isNodeError, type Severity } from '../utils.js';
 import { createPrebuilder } from './prebuildUtils.js';
 
 export interface LintResults {
@@ -91,7 +91,7 @@ interface LintGlobalResults {
 
 /**
  * Function for linting the source directory excluding bundles and tabs. Since linting bundles and tabs
- * altogether causes ESLint to run out of memory, we have this function that lints everything else
+ * all together causes ESLint to run out of memory, we have this function that lints everything else
  * so that the bundles and tabs can be linted separately.
  */
 export async function lintGlobal(fix: boolean): Promise<LintGlobalResults> {
@@ -120,7 +120,7 @@ export async function lintGlobal(fix: boolean): Promise<LintGlobalResults> {
     return flatMapAsync(files, async each => {
       if (filterSrc && each.name === 'src') return [];
 
-      const fullPath = path.join(dir, each.name);
+      const fullPath = pathlib.join(dir, each.name);
       if (each.isFile()) {
         const isIgnored = await linter.isPathIgnored(fullPath);
         return isIgnored ? [] : [fullPath];

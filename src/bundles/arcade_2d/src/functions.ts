@@ -11,52 +11,52 @@
 
 import { AudioClip } from './audio';
 import {
-  DEFAULT_WIDTH,
-  DEFAULT_HEIGHT,
-  DEFAULT_SCALE,
-  DEFAULT_FPS,
-  MAX_HEIGHT,
-  MIN_HEIGHT,
-  MAX_WIDTH,
-  MIN_WIDTH,
-  MAX_SCALE,
-  MIN_SCALE,
-  MAX_FPS,
-  MIN_FPS,
-  MAX_VOLUME,
-  MIN_VOLUME,
   DEFAULT_DEBUG_STATE,
-  DEFAULT_TRANSFORM_PROPS,
+  DEFAULT_FPS,
+  DEFAULT_HEIGHT,
+  DEFAULT_INTERACTABLE_PROPS,
   DEFAULT_RENDER_PROPS,
-  DEFAULT_INTERACTABLE_PROPS
+  DEFAULT_SCALE,
+  DEFAULT_TRANSFORM_PROPS,
+  DEFAULT_WIDTH,
+  MAX_FPS,
+  MAX_HEIGHT,
+  MAX_SCALE,
+  MAX_VOLUME,
+  MAX_WIDTH,
+  MIN_FPS,
+  MIN_HEIGHT,
+  MIN_SCALE,
+  MIN_VOLUME,
+  MIN_WIDTH
 } from './constants';
 import {
-  GameObject,
+  CircleGameObject,
+  GameObject, InteractableGameObject,
+  RectangleGameObject,
   RenderableGameObject,
-  type ShapeGameObject,
   SpriteGameObject,
   TextGameObject,
-  RectangleGameObject,
-  CircleGameObject,
-  TriangleGameObject, InteractableGameObject
+  TriangleGameObject,
+  type ShapeGameObject
 } from './gameobject';
 import {
   PhaserScene,
   gameState
 } from './phaserScene';
 import type {
-  DisplayText,
   BuildGame,
-  Sprite,
-  UpdateFunction,
-  RectangleProps,
   CircleProps,
-  TriangleProps,
-  FlipXY,
-  ScaleXY,
-  PositionXY,
+  ColorRGBA,
   DimensionsXY,
-  ColorRGBA
+  DisplayText,
+  FlipXY,
+  PositionXY,
+  RectangleProps,
+  ScaleXY,
+  Sprite,
+  TriangleProps,
+  UpdateFunction
 } from './types';
 
 // =============================================================================

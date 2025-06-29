@@ -11,22 +11,26 @@ export type ModulesManifest = {
   [name: string]: BundleManifest;
 };
 
+// #region ResolvedBundle
 export interface ResolvedBundle {
   type: 'bundle'
   name: string;
   manifest: BundleManifest;
   directory: string;
 }
+// #endregion ResolvedBundle
 
+// #region ResolvedTab
 export interface ResolvedTab {
   type: 'tab'
   directory: string;
   entryPoint: string;
   name: string;
 }
+// #endregion ResolvedTab
 
-interface BaseResult {
-  message: string,
+interface BaseResult<T = string> {
+  message: T,
   severity: Severity
 }
 
@@ -38,7 +42,7 @@ export interface ManifestResult extends BaseResult {
   assetType: 'manifest'
 }
 
-interface ModuleResult extends BaseResult {
+interface ModuleResult<T = string> extends BaseResult<T> {
   inputName: string
 }
 
@@ -54,7 +58,11 @@ export interface JsonResultEntry extends ModuleResult {
   assetType: 'json'
 }
 
-export type ModuleResultEntry = BundleResultEntry | JsonResultEntry | TabResultEntry;
+export interface ManifestResultEntry extends ModuleResult {
+  assetType: 'manifest'
+}
+
+export type ModuleResultEntry = BundleResultEntry | JsonResultEntry | ManifestResultEntry | TabResultEntry;
 
 export type ResultEntry = HTMLResult | ManifestResult | ModuleResultEntry;
 

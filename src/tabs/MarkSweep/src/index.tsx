@@ -1,4 +1,4 @@
-import { Slider, Icon } from '@blueprintjs/core';
+import { Icon, Slider } from '@blueprintjs/core';
 import { defineTab } from '@sourceacademy/modules-lib/tabs';
 import React from 'react';
 import { ThemeColor } from './style';

@@ -1,4 +1,4 @@
-import { type CelestialBody, State } from 'nbody';
+import { State, type CelestialBody } from 'nbody';
 
 /**
  * Create a new state snapshot of the universe.

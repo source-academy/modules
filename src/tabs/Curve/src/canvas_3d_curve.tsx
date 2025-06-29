@@ -1,6 +1,6 @@
 import { Slider } from '@blueprintjs/core';
 import type { CurveDrawn } from '@sourceacademy/bundle-curve/curves_webgl';
-import { PlayButton, WebGLCanvas, BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '@sourceacademy/modules-lib/tabs';
+import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH, PlayButton, WebGLCanvas } from '@sourceacademy/modules-lib/tabs';
 import { degreesToRadians } from '@sourceacademy/modules-lib/utilities';
 import React from 'react';
 

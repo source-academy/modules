@@ -1,6 +1,6 @@
-import { Quaternion, Vector3, Euler } from 'three';
-import { describe, it, expect } from 'vitest';
-import { quat, vec3, euler } from '../../Math/Convert'; // Adjust the import path as necessary
+import { Euler, Quaternion, Vector3 } from 'three';
+import { describe, expect, it } from 'vitest';
+import { euler, quat, vec3 } from '../../Math/Convert'; // Adjust the import path as necessary
 
 describe('Three.js utility functions', () => {
   describe('quat function', () => {

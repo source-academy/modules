@@ -22,7 +22,7 @@ export const getBuildBundleCommand = () => new Command('bundle')
   .option('--ci', 'Run in CI mode', !!process.env.CI)
   .action(async (bundleDir, opts) => {
     const result = await resolveSingleBundle(bundleDir);
-    if (!result) logCommandErrorAndExit(`No bundle found at ${bundleDir}!`);
+    if (result === undefined) logCommandErrorAndExit(`No bundle found at ${bundleDir}!`);
     else if (result.severity === 'error') {
       logCommandErrorAndExit(formatResolveBundleErrors(result));
     }

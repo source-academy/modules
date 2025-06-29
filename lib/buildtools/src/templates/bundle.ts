@@ -3,7 +3,7 @@ import type { Interface } from 'readline/promises';
 import _package from '../../../../package.json' with { type: 'json' };
 import { formatResolveBundleErrors } from '../build/manifest/formatters.js';
 import { getBundleManifests } from '../build/manifest/index.js';
-import type { ModulesManifest, BundleManifest } from '../types.js';
+import type { BundleManifest, ModulesManifest } from '../types.js';
 import sampleTsconfig from './bundle_tsconfig.json' with { type: 'json' };
 import { askQuestion, error, success, warn } from './print.js';
 import { check, isSnakeCase } from './utilities.js';

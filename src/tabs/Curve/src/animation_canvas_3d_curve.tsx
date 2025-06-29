@@ -2,11 +2,11 @@ import { Icon, Slider, Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import type { AnimatedCurve } from '@sourceacademy/bundle-curve/types';
 import {
+  AutoLoopSwitch,
   BP_TAB_BUTTON_MARGIN,
   BP_TEXT_MARGIN,
-  CANVAS_MAX_WIDTH,
-  AutoLoopSwitch,
   ButtonComponent,
+  CANVAS_MAX_WIDTH,
   PlayButton,
   WebGLCanvas
 } from '@sourceacademy/modules-lib/tabs';

@@ -1,22 +1,22 @@
 import context from 'js-slang/context';
 import {
-  pair,
+  accumulate,
   head,
-  tail,
-  list,
-  length,
   is_null,
   is_pair,
-  accumulate,
+  length,
+  list,
+  pair,
+  tail,
   type List
 } from 'js-slang/dist/stdlib/list';
 import { RIFFWAVE } from './riffwave';
 import type {
-  Wave,
+  AudioPlayed,
   Sound,
   SoundProducer,
   SoundTransformer,
-  AudioPlayed
+  Wave
 } from './types';
 
 // Global Constants and Variables
