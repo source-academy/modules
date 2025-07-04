@@ -66,12 +66,12 @@ class MultiGridEntity implements MultiGridEntityType {
     color?: AlphaColor;
     subColor?: AlphaColor;
   } = {
-      drawCmd: 'drawGrid',
-      show: true,
+    drawCmd: 'drawGrid',
+    show: true,
 
-      color: hexToAlphaColor(BP_TEXT_COLOR),
-      subColor: hexToAlphaColor(ACE_GUTTER_TEXT_COLOR)
-    };
+    color: hexToAlphaColor(BP_TEXT_COLOR),
+    subColor: hexToAlphaColor(ACE_GUTTER_TEXT_COLOR)
+  };
 
   ticks: [number, number] = [MAIN_TICKS, SUB_TICKS];
 
@@ -87,9 +87,9 @@ class AxisEntity implements AxisEntityType {
     drawCmd: 'drawAxis';
     show: boolean;
   } = {
-      drawCmd: 'drawAxis',
-      show: true
-    };
+    drawCmd: 'drawAxis',
+    show: true
+  };
 
   alwaysVisible: boolean = false;
 

@@ -117,6 +117,11 @@
       "Nbody"
     ]
   },
+  "maze": {
+    "tabs": [
+      "Maze"
+    ]
+  }, 
   "unittest": {
     "tabs": [
       "Unittest"
