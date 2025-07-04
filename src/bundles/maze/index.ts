@@ -1,7 +1,7 @@
 /**
- * The robot_minigame module allows us to control a robot to complete various tasks
+ * The maze module allows us to guide a robot through a maze.
  *
- * @module robot_minigame
+ * @module maze
  * @author Koh Wai Kei
  * @author Justin Cheng
  */

@@ -1,9 +1,9 @@
 import React from 'react';
 import type { DebuggerContext } from '../../typings/type_helpers';
-import RobotSimulation from './RobotSimulation';
+import MazeSimulation from './MazeSimulation';
 
 /**
- * Renders the robot minigame in the assessment workspace
+ * Renders the maze simulation in the assessment workspace
  * @author Koh Wai Kei
  * @author Justin Cheng
  */
@@ -18,9 +18,9 @@ interface MainProps {
 /**
  * The main React Component of the Tab.
  */
-const RobotMaze : React.FC<MainProps> = ({ context }) => {
+const Maze : React.FC<MainProps> = ({ context }) => {
   return (
-    <RobotSimulation state={context?.context.moduleContexts.robot_minigame.state}></RobotSimulation>
+    <MazeSimulation state={context?.context.moduleContexts.maze.state}></MazeSimulation>
   );
 };
 
@@ -31,24 +31,24 @@ export default {
    * @param {DebuggerContext} context
    * @returns {boolean}
    */
-  toSpawn: (context: DebuggerContext) => context.context?.moduleContexts?.robot_minigame.state.isInit,
+  toSpawn: (context: DebuggerContext) => context.context?.moduleContexts?.maze.state.isInit,
 
   /**
    * This function will be called to render the module tab in the side contents
    * on Source Academy frontend.
    * @param {DebuggerContext} context
    */
-  body: (context: DebuggerContext) => <RobotMaze context={context} />,
+  body: (context: DebuggerContext) => <Maze context={context} />,
 
   /**
    * The Tab's icon tooltip in the side contents on Source Academy frontend.
    */
-  label: 'Robot Maze',
+  label: 'Maze',
 
   /**
    * BlueprintJS IconName element's name, used to render the icon which will be
    * displayed in the side contents panel.
    * @see https://blueprintjs.com/docs/#icons
    */
-  iconName: 'build',
+  iconName: 'layout-grid',
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { run_tests } from '../../bundles/robot_minigame/helpers/tests';
-import type { Area, Action, BorderConfig, Robot, RobotMinigame } from '../../bundles/robot_minigame/types';
+import { run_tests } from '../../bundles/maze/helpers/tests';
+import type { Area, Action, BorderConfig, Robot, Maze } from '../../bundles/maze/types';
 
 /**
  * Calculate the acute angle between 2 angles
@@ -125,10 +125,10 @@ const ANIMATION_SPEED : number = 2;
  * React Component props for the Tab.
  */
 interface MapProps {
-  state: RobotMinigame,
+  state: Maze,
 }
 
-const RobotSimulation : React.FC<MapProps> = ({
+const MazeSimulation : React.FC<MapProps> = ({
   state: {
     hasCollided,
     width,
@@ -288,4 +288,4 @@ const RobotSimulation : React.FC<MapProps> = ({
   );
 };
 
-export default RobotSimulation;
+export default MazeSimulation;

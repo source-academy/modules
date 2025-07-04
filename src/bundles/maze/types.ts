@@ -26,27 +26,32 @@ export interface Action {
   position: PointWithRotation
 }
 
+// Any optional flags an area may have (e.g. color)
 export interface AreaFlags {
   [name: string]: any
 }
 
+// An area within the maze
 export interface Area {
   vertices: Point[]
   isObstacle: boolean
   flags: AreaFlags
 }
 
+// A test for the student to pass
 export interface Test {
   type: string
   test: Function
 }
 
+// A test testing an area
 export interface AreaTest extends Test {
   type: 'area'
   test: (areas: Area[]) => boolean
 }
 
-export interface RobotMinigame {
+// The main maze state
+export interface Maze {
   isInit: boolean
   hasCollided: boolean
   width: number

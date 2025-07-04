@@ -12,11 +12,11 @@ import type {
   Action,
   AreaFlags, Area,
   AreaTest,
-  RobotMinigame
+  Maze
 } from './types';
 
 // Default state before initialisation
-const state: RobotMinigame = {
+const state: Maze = {
   isInit: false,
   hasCollided: false,
   width: 500,
@@ -31,7 +31,7 @@ const state: RobotMinigame = {
 };
 
 // sets the context to the state obj, mostly for convenience so i dont have to type context.... everytime
-context.moduleContexts.robot_minigame.state = state;
+context.moduleContexts.maze.state = state;
 
 // ===== //
 // SETUP //
