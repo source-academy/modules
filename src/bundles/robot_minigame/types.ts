@@ -1,3 +1,8 @@
+// A config storing border data
+export interface BorderConfig {
+  color?: string
+}
+
 // A point (x, y)
 export interface Point {
   x: number
@@ -45,6 +50,7 @@ export interface RobotMinigame {
   hasCollided: boolean
   width: number
   height: number
+  border: BorderConfig
   robot: Robot
   areas: Area[]
   areaLog: Area[]

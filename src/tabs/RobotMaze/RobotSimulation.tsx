@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { run_tests } from '../../bundles/robot_minigame/helpers/tests';
-import type { Area, Action, Robot, RobotMinigame } from '../../bundles/robot_minigame/types';
+import type { Area, Action, BorderConfig, Robot, RobotMinigame } from '../../bundles/robot_minigame/types';
 
 /**
  * Calculate the acute angle between 2 angles
@@ -31,7 +31,8 @@ const smallestAngle = (
 const drawBorders = (
   ctx: CanvasRenderingContext2D,
   width: number,
-  height: number
+  height: number,
+  border: BorderConfig
 ) => {
   ctx.beginPath();
   ctx.moveTo(0, 0);
@@ -40,7 +41,7 @@ const drawBorders = (
   ctx.lineTo(width, 0);
   ctx.closePath();
 
-  ctx.strokeStyle = 'gray';
+  ctx.strokeStyle = border.color || 'gray';
   ctx.lineWidth = 3;
   ctx.stroke();
 };
@@ -104,15 +105,16 @@ const drawRobot = (
  * Render the current game state
  */
 const drawAll = (
-  ctx : CanvasRenderingContext2D,
-  width : number,
-  height : number,
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  border: BorderConfig,
   areas: Area[],
-  robot : Robot
+  robot: Robot
 ) => {
   ctx.reset();
-  drawBorders(ctx, width, height);
   drawAreas(ctx, areas);
+  drawBorders(ctx, width, height, border);
   drawRobot(ctx, robot);
 };
 
@@ -131,6 +133,7 @@ const RobotSimulation : React.FC<MapProps> = ({
     hasCollided,
     width,
     height,
+    border,
     robot: {radius: robotSize},
     areas,
     actionLog,
@@ -175,7 +178,7 @@ const RobotSimulation : React.FC<MapProps> = ({
     canvas.width = width;
     canvas.height = height;
 
-    drawAll(ctx, width, height, areas, robot.current);
+    drawAll(ctx, width, height, border, areas, robot.current);
   }, [animationStatus]);
 
   // Handle animation
@@ -183,6 +186,7 @@ const RobotSimulation : React.FC<MapProps> = ({
     if (animationStatus !== 1) return;
 
     const interval = setInterval(() => {
+      // Retrieve canvas 2d context
       const canvas = canvasRef.current;
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
@@ -255,7 +259,7 @@ const RobotSimulation : React.FC<MapProps> = ({
           robot.current = Object.assign({}, {radius: robot.current.radius}, target);
       }
 
-      drawAll(ctx, width, height, areas, robot.current);
+      drawAll(ctx, width, height, border, areas, robot.current);
     }, 10);
 
     return () => clearInterval(interval);

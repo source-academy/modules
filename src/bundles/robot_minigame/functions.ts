@@ -21,7 +21,8 @@ const state: RobotMinigame = {
   hasCollided: false,
   width: 500,
   height: 500,
-  robot: {x: 250, y: 250, rotation: 0, radius: 15},
+  border: {},
+  robot: { x: 250, y: 250, rotation: 0, radius: 15 },
   areas: [],
   areaLog: [],
   actionLog: [],
@@ -75,6 +76,20 @@ export function init(
 
   // Update the success message
   state.message = 'Please run this in the assessments tab!';
+}
+
+/**
+ * Set the color of the map border
+ *
+ * @param {string} color of the border (in any CSS-accepted format)
+ */
+export function set_border_color(
+  color: string
+) {
+  // Init functions should not run after initialization
+  if (state.isInit) throw new Error('May not use initialization functions after initialization is complete!');
+
+  state.border.color = color;
 }
 
 /**
