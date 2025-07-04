@@ -42,7 +42,7 @@ const drawBorders = (
   ctx.closePath();
 
   ctx.strokeStyle = border.color || 'gray';
-  ctx.lineWidth = 3;
+  ctx.lineWidth = border.width || 3;
   ctx.stroke();
 };
 

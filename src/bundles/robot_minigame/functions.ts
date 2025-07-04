@@ -93,49 +93,39 @@ export function set_border_color(
 }
 
 /**
- * Create a new area with the given vertices and flags
+ * Set the width of the map border
  *
- * @param vertices of the area in alternating x-y pairs
- * @param isObstacle a boolean indicating if the area is an obstacle or not
- * @param flags any additional flags the area may have
+ * @param {number} width of the border
  */
-export function create_area(
-  vertices: number[],
-  isObstacle: boolean,
-  flags: any[]
+export function set_border_width(
+  width: number
 ) {
   // Init functions should not run after initialization
   if (state.isInit) throw new Error('May not use initialization functions after initialization is complete!');
 
-  if (vertices.length % 2 !== 0) throw new Error('Odd number of vertice x-y coordinates given (expected even)');
+  state.border.width = width;
+}
 
-  if (flags.length % 2 !== 0) throw new Error('Odd number of flag arguments given (expected even)');
+/**
+ * Create a new area with the given vertices and flags
+ *
+ * @param vertices of the area (in x-y pairs)
+ * @param isObstacle a boolean indicating if the area is an obstacle or not
+ * @param flags any additional flags the area may have (in key-value pairs)
+ */
+export function create_area(
+  vertices: [x: number, y: number][],
+  isObstacle: boolean,
+  flags: [key: string, value: any][]
+) {
+  // Init functions should not run after initialization
+  if (state.isInit) throw new Error('May not use initialization functions after initialization is complete!');
 
   // Store vertices as Point array
-  const parsedVertices: Point[] = [];
-
-  // Parse x-y pairs into Points
-  for (let i = 0; i < vertices.length / 2; i++) {
-    parsedVertices[i] = {
-      x: vertices[i * 2],
-      y: vertices[i * 2 + 1]
-    };
-  }
+  const parsedVertices: Point[] = vertices.map(v => ({ x: v[0], y: v[1] }));
 
   // Store flags as an object
-  const parsedFlags = {};
-
-  // Parse flag-value pairs into flags
-  for (let i = 0; i < flags.length / 2; i++) {
-    // Retrieve flag
-    const flag = flags[i * 2];
-
-    // Check flag is string
-    if (typeof flag !== 'string') throw new Error(`Flag arguments must be strings (${flag} is a ${typeof flag})`);
-
-    // Add flag to object
-    parsedFlags[flag] = flags[i * 2 + 1];
-  }
+  const parsedFlags = flags.reduce((acc, f) => ({ ...acc, [f[0]]: f[1] }), {});
 
   // Store the new area
   state.areas.push({
@@ -153,7 +143,7 @@ export function create_area(
  * @param width of the rectangle
  * @param height of the rectangle
  * @param isObstacle a boolean indicating if the area is an obstacle or not
- * @param flags any additional flags the area may have
+ * @param flags any additional flags the area may have (in key-value pairs)
  */
 export function create_rect_area(
   x: number,
@@ -161,16 +151,16 @@ export function create_rect_area(
   width: number,
   height: number,
   isObstacle: boolean,
-  flags: any[]
+  flags: [key: string, value: any][]
 ) {
   // Init functions should not run after initialization
   if (state.isInit) throw new Error('May not use initialization functions after initialization is complete!');
 
   create_area([
-    x, y,
-    x + width, y,
-    x + width, y + height,
-    x, y + height
+    [x, y],
+    [x + width, y],
+    [x + width, y + height],
+    [x, y + height]
   ], isObstacle, flags);
 }
 
@@ -180,7 +170,7 @@ export function create_rect_area(
  * @param vertices of the obstacle
  */
 export function create_obstacle(
-  vertices: number[]
+  vertices: [x: number, y: number][]
 ) {
   // Init functions should not run after initialization
   if (state.isInit) throw new Error('May not use initialization functions after initialization is complete!');

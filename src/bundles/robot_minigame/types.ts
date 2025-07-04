@@ -1,6 +1,7 @@
 // A config storing border data
 export interface BorderConfig {
   color?: string
+  width?: number
 }
 
 // A point (x, y)
