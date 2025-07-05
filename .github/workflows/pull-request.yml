@@ -75,7 +75,7 @@ jobs:
 
         - name: Build, lint and run tsc for bundles and tabs
           if: needs.paths-filter.outputs.devserver == 'true'
-          run: yarn workspaces foreach -j 5 -ptW --from "./src/{bundles,tsc}/*" run build --tsc --lint
+          run: yarn workspaces foreach -j 5 -ptW --from "./src/{bundles,tabs}/*" run build --tsc --lint
 
         - name: Test bundles and tabs
           if: needs.paths-filter.outputs.modules == 'true'
