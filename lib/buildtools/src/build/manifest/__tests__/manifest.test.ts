@@ -139,7 +139,10 @@ describe('Test resolveSingleBundle', () => {
   it('Doesn\'t consider a non-directory a bundle', async () => {
     const path = `${testMocksDir}/bundles/tsconfig.json`;
     const resolved = await resolveSingleBundle(path);
-    expect(resolved).toBeUndefined();
+    expect(resolved).toMatchObject({
+      severity: 'error',
+      errors: [expect.any(Error)]
+    });
 
     const stats = await fs.stat(path);
     expect(stats.isDirectory()).toEqual(false);
