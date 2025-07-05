@@ -44,7 +44,7 @@ export default tseslint.config(
     files: ['**/*.md'],
     ignores: [
       // These are generated via Typedoc, we don't have to lint them
-      'docs/src/lib/modules-lib/**/*.md'
+      'docs/src/lib/modules-lib/**/*.md',
     ],
     language: 'markdown/gfm',
     languageOptions: {
@@ -108,7 +108,7 @@ export default tseslint.config(
     },
     plugins: {
       import: importPlugin,
-      jsdoc: jsdocPlugin
+      jsdoc: jsdocPlugin,
     },
     rules: {
       'import/first': 'warn',
@@ -163,14 +163,13 @@ export default tseslint.config(
 
       'jsdoc/no-types': 'warn',
 
+      '@typescript-eslint/ban-ts-comment': 'error',
       '@typescript-eslint/ban-types': 'off', // Was 'error'
       '@typescript-eslint/no-duplicate-type-constituents': 'off', // Was 'error'
       '@typescript-eslint/no-explicit-any': 'off', // Was 'error'
       '@typescript-eslint/no-import-type-side-effects': 'error',
       '@typescript-eslint/no-redundant-type-constituents': 'off', // Was 'error'
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
-      '@typescript-eslint/prefer-ts-expect-error': 'warn',
-      '@typescript-eslint/sort-type-constituents': 'warn',
 
       '@stylistic/type-annotation-spacing': ['warn', { overrides: { colon: { before: false, after: true }}}],
     }

@@ -12,9 +12,9 @@
     "vitepress-sidebar": "^1.31.1"
   },
   "scripts": {
-    "build": "vitepress build .",
+    "build": "yarn build-lib-docs && vitepress build .",
+    "build-lib-docs": "yarn workspaces foreach -A --include \"@sourceacademy/modules-lib\" run docs",
     "dev": "vitepress dev .",
-    "preview": "vitepress preview .",
-    "prepare": "yarn workspaces foreach -A --include \"@sourceacademy/modules-lib\" run docs"
+    "preview": "vitepress preview ."
   }
 }
