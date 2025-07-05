@@ -129,4 +129,5 @@ export const {
     } catch (error) {
       return [createEntry('error', `${error}`)];
     }
-  });
+  }
+);

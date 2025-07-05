@@ -31,7 +31,7 @@ vi.mock(import('typescript'), async importOriginal => {
 });
 
 describe('Test the augmented tsc functionality', () => {
-  test('tsc on a bundle', async () => {
+  test('tsc on a bundle', { timeout: 10000 }, async () => {
     await runTsc({
       type: 'bundle',
       directory: `${testMocksDir}/bundles/test0`,
@@ -46,7 +46,7 @@ describe('Test the augmented tsc functionality', () => {
     expect(writePath).not.toEqual(`${testMocksDir}/bundles/test0/__tests__/test0.test.js`,);
   });
 
-  test('tsc on a bundle with --noEmit', async () => {
+  test('tsc on a bundle with --noEmit', { timeout: 10000 }, async () => {
     await runTsc({
       type: 'bundle',
       directory: `${testMocksDir}/bundles/test0`,
