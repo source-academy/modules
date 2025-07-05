@@ -7,7 +7,7 @@
   "compilerOptions": {
     "outDir": "./dist"
   },
-  "typedocOptions": { 
+  "typedocOptions": {
     "name": "copy_gc"
   }
 }

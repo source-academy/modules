@@ -49,7 +49,7 @@ export async function getCompiledTabs(context: Context) {
       if (manifest.tabs) {
         const tabsToSpawn = manifest.tabs as string[];
         return Promise.all(tabsToSpawn.map(async (tabName): Promise<ModuleSideContent> => {
-          const { default: rawTab } = await import(`../../../../../build/tabs/${tabName}.js`);
+          const { default: rawTab } = await import(/* @vite-ignore */ `../../../../../build/tabs/${tabName}.js`);
           const { default: content } = await (rawTab as RawTab)(requireProvider, React);
           return content;
         }));

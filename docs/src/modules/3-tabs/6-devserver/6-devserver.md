@@ -17,6 +17,8 @@ yarn devserver
 
 You will also need to start the modules server using `yarn serve`.
 
+The dev server can then be viewed from the web browser.
+
 ## Compiled Mode
 By default, the dev server is in hot reload mode. This means the dev server can detect changes to tabs as they are being made
 and automatically reload the displayed tab without requiring a refresh of the page or for the user to rerun code.

@@ -184,3 +184,17 @@ When building the json documentation for a bundle, the following steps are taken
 3. All the processed strings then get written to a json file in the jsons folder.
 
 If no documentation could be found, or there was an error parsing the documented code, the system will still output jsons, just with warnings.
+
+## Code Samples
+
+You can include "sample" files that are written in Javascript. These files can be used as part of documentation but are not intended to be included during compilation or
+used by Source users. Refer to the `csg` bundle for an example of this.
+
+## JSDoc Annotations
+Modules are written primarily in Typescript.
+
+There is a convention for writing type annotations (essentially documentations comments) in Javascript that allows for type checking functionality. Since
+modules are already written in Typescript, there is no need to use JSDoc comments to document the type of an object. All type annotations should be written in Typescript
+so as not to confuse Typedoc.
+
+If you do need to the type of an export to be documented differently from its type in Typescript source code, you can use a [type map](../5-type_map).

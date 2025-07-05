@@ -6,13 +6,22 @@
 /** @hidden */
 export type Decorator = (...args: any[]) => any;
 
+/** @hidden */
+export interface TypeMapUtilities {
+  classDeclaration: (target: any) => Decorator
+  typeDeclaration: (target: any) => Decorator
+  functionDeclaration: (paramTypes: string, returnType: string) => Decorator
+  variableDeclaration: (type: string) => Decorator
+  type_map: Record<string, string>
+}
+
 /**
  * Utility function for creating type maps
  *
  * @returns A reference to a type map alongside decorators that are
  * used to populate it
  */
-export default function createTypeMap() {
+export default function createTypeMap(): TypeMapUtilities {
   const type_map : Record<string, string> = {};
 
   function registerType(name: string, declaration: string) {

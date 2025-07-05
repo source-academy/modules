@@ -29,13 +29,18 @@ What is the name of your new module? (eg. binary_tree)
 new_bundle
 ```
 
-The name of your bundle is what Source users will import from to actually use your bundle:
-```ts
-import { function } from 'new_bundle';
-```
+For conventions on naming your bundle, refer to the [next](#naming-your-bundle) section.
 
 The command should have creates a new folder `src/bundles/new_bundle` with all the necessary files for creating your bundle:
 
 ![](./new_bundle.png)
 
 From there you can edit your bundle as necessary
+
+## Naming your Bundle
+The name of your bundle is what Source users will import from to actually use your bundle:
+```ts
+import { function } from 'new_bundle';
+```
+
+Your bundle's name should be concise and give be somewhat descriptive of what functionalities your bundle provides.

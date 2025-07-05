@@ -46,10 +46,7 @@ export {
   sawtooth_sound,
   triangle_sound,
   square_sound,
-  // MIDI
-  letter_name_to_midi_note,
-  midi_note_to_frequency,
-  letter_name_to_frequency,
+
   // Instruments
   bell,
   cello,
@@ -57,3 +54,10 @@ export {
   trombone,
   violin
 } from './functions';
+
+export {
+  // MIDI
+  letter_name_to_midi_note,
+  midi_note_to_frequency,
+  letter_name_to_frequency,
+} from '@sourceacademy/bundle-midi';

@@ -37,3 +37,6 @@ This adds the dependency to `devDependencies` instead.
 > ```sh
 > yarn add @sourceacademy/modules-lib@workspace:^
 > ```
+
+## Adding Unit Tests
+Where possible, you should add unit tests to your bundle. Refer to [this](/modules/4-advanced/testing) page for instructions.

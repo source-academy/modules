@@ -14,8 +14,8 @@ import React from 'react';
 type Props = {};
 
 class Unity3DTab extends React.Component<Props> {
-  private userAgreementCheckboxChecked : boolean;
-  constructor(props : Props) {
+  private userAgreementCheckboxChecked: boolean;
+  constructor(props: Props) {
     super(props);
     this.userAgreementCheckboxChecked = false;
   }
@@ -137,7 +137,7 @@ class Unity3DTab extends React.Component<Props> {
               .getUserAgreementStatus() === 'agreed');
             this.userAgreementCheckboxChecked = e.checked;
           }
-        }} onChange={(event : React.ChangeEvent<HTMLInputElement>) => {
+        }} onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           this.userAgreementCheckboxChecked = event.target.checked;
           getInstance()
             .setUserAgreementStatus(this.userAgreementCheckboxChecked);
@@ -146,7 +146,7 @@ class Unity3DTab extends React.Component<Props> {
     );
   }
 
-  openUnityWindow(resolution : number) : void {
+  openUnityWindow(resolution: number): void {
     if (!this.userAgreementCheckboxChecked) {
       alert('You must agree to the our User Agreement before using Unity Academy and this module!');
       return;

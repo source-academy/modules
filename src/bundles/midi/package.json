@@ -8,9 +8,10 @@
   },
   "type": "module",
   "scripts": {
-    "tsc": "buildtools tsc .",
     "build": "buildtools build bundle .",
-    "lint": "buildtools lint ."
+    "lint": "buildtools lint .",
+    "prepare": "yarn tsc",
+    "tsc": "buildtools tsc ."
   },
   "exports": {
     ".": "./dist/index.js",

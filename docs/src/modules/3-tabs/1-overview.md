@@ -6,7 +6,7 @@ be used with the [frontend](https://github.com/source-academy/frontend).
 The typical tab directory structure is shown below.
 
 ```txt
-tabName
+TabName
 ├── index.tsx
 ├── tsconfig.json
 └── package.json
@@ -14,7 +14,7 @@ tabName
 
 Alternatively, should you wish to use a `src` folder:
 ```txt
-tabName
+TabName
 ├── src
 │   ├── index.tsx
 │   ├── component.tsx
@@ -25,13 +25,33 @@ tabName
 > [!NOTE]
 > The name of the root folder will be the name of the tab
 
+Tabs also support testing (using both `.ts` and `.tsx` extensions):
+```txt
+TabName
+├── src
+│   ├── __tests__
+│   │     └── test.tsx
+│   ├── index.tsx
+│   ├── component.tsx
+│   └── ...
+├── tsconfig.json
+└── package.json
+```
+
+The name of the tab is what you should refer to the tab as in its parent bundle's manifest:
+```json
+{
+  "tabs": ["TabName"]
+}
+```
+
 ## Tab Entry Point
 The entry point for a tab is either `index.tsx` or `src/index.tsx`. No other entrypoints will be considered valid.
 
-The Frontend expects each tab's entrypoint to provide a default export of an object conforming to the following interface:
+The Frontend expects each tab's entry point to provide a default export of an object conforming to the following interface:
 
 ```ts
-interface Tab {
+interface ModuleSideContent {
   toSpawn: ((context: DebuggerContext) => boolean) | undefined;
   body: ((context: DebuggerContext) => JSX.Element);
   label: string;
@@ -41,7 +61,7 @@ interface Tab {
 
 To ensure that your tab conforms to this interface, use the `defineTab` helper:
 ```ts
-import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import { defineTab } from '@sourceacademy/modules-lib/tabs';
 
 export default defineTab({
   // ...details
@@ -53,14 +73,19 @@ export default defineTab({
 Here is an example of a tab object:
 ```ts
 // Curve/src/index.tsx
-import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import type { CurveModuleState } from '@sourceacademy/bundle-curve/types';
+import { defineTab, getModuleState, MultiItemDisplay } from '@sourceacademy/modules-lib/tabs';
 
 export default defineTab({
   toSpawn(context: DebuggerContext) {
-    return context.context?.moduleHelpers.curve.state.drawnCurves.length > 0;
+    const { context: { moduleContexts: { curve: { state: { drawnCurves } } } } } = context;
+    return drawCurves.length > 0;
   },
   body(context: DebuggerContext) {
-    const { context: { modules: { contexts: { curve: { drawnCurves } } } } } = context;
+    // Alternatively you can use the getModuleState helper
+    // but you will need to provide typing for the returned state object
+    const { drawnCurves } = getModuleState<CurveModuleState>(context, 'curve');
+
    /*
     * Implementation hidden...
     */
@@ -74,13 +99,16 @@ export default defineTab({
 Here are explanations for each member of the tab interface:
 
 ### `toSpawn`
-If not provided, when it's corresponding bundle is loaded, the tab will also be loaded.
+If not provided or `undefined`, when its corresponding bundle is loaded, the tab will always be spawned.
 
 Otherwise, the tab will be spawned depending on the return value of the function, true to spawn the tab, false otherwise. This is where you can use module contexts to determine if the tab should be spawned.
 
 ```ts
 // Will spawn the Curve tab if there are any drawn curves
-const toSpawn = (context) => context.context.moduleContexts.curve.state.drawnCurves.length > 0
+const toSpawn = (context: DebuggerContext) => {
+  const { context: { moduleContexts: { curve: { state: { drawnCurves } } } } } = context;
+  return drawCurves.length > 0;
+}
 ```
 
 ### `body`
@@ -88,7 +116,7 @@ If `toSpawn` returns true, this function will be called to generate the content 
 ```tsx
 const body = (context) => <div>This is the repeat tab</div>;
 ```
-Similarly, the debugger context is available here, which allows you to access module contexts.
+Similarly, the debugger context is available here, which allows you to access module contexts or the result of the program that was just evaluated.
 
 ### `label`
 A string containing the text for the tooltip to display when the user hovers over the tab's icon.

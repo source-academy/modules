@@ -19,7 +19,7 @@ context.moduleContexts.repl.state = INSTANCE;
  *   // ...
  * }
  * ```
- * @param {evalFunc} evalFunc - evaulator entrance function
+ * @param evalFunc - evaulator entrance function
  *
  * @category Main
  */
@@ -69,10 +69,10 @@ export function set_evaluator(evalFunc: Function) {
  *  - Note that if you apply the conflicting attributes together, only one conflicted style will take effect and other conflicting styles will be discarded, like  "pair(pair(pair("123", small), medium), large) "  (Set conflicting font size for the same text)
  *  - Also note that for safety matters, certain words and characters are not allowed to appear under rich text display mode.
  *
- * @param {content} the content you want to display
+ * @param the content you want to display
  * @category Main
  */
-export function repl_display(content: any) : any {
+export function repl_display(content: any): any {
   if (INSTANCE.richDisplayInternal(content) === 'not_rich_text_pair') {
     INSTANCE.pushOutputString(content.toString(), COLOR_REPL_DISPLAY_DEFAULT, 'plaintext');// students may set the value of the parameter "str" to types other than a string (for example "repl_display(1)" ). So here I need to first convert the parameter "str" into a string before preceding.
     return content;
@@ -82,19 +82,19 @@ export function repl_display(content: any) : any {
 
 /**
  * Set Programmable Repl editor background image with a customized image URL
- * @param {img_url} the url to the new background image
- * @param {background_color_alpha} the alpha (transparency) of the original background color that covers on your background image [0 ~ 1]. Recommended value is 0.5 .
+ * @param the url to the new background image
+ * @param the alpha (transparency) of the original background color that covers on your background image [0 ~ 1]. Recommended value is 0.5 .
  *
  * @category Main
  */
-export function set_background_image(img_url: string, background_color_alpha: number) : void {
+export function set_background_image(img_url: string, background_color_alpha: number): void {
   INSTANCE.customizedEditorProps.backgroundImageUrl = img_url;
   INSTANCE.customizedEditorProps.backgroundColorAlpha = background_color_alpha;
 }
 
 /**
  * Set Programmable Repl editor font size
- * @param {font_size_px} font size (in pixel)
+ * @param font size (in pixel)
  *
  * @category Main
  */
@@ -104,7 +104,7 @@ export function set_font_size(font_size_px: number) {
 
 /**
  * Set program text in the Repl editor to the given string
- * @param {text} string
+ * @param string
  *
  * @category Main
  */
@@ -114,12 +114,12 @@ export function set_program_text(text: string) {
 
 /**
  * When use this function as the entrance function in the parameter of "set_evaluator", the Programmable Repl will directly use the default js-slang interpreter to run your program in Programmable Repl editor. Do not directly call this function in your own code.
- * @param {program} Do not directly set this parameter in your code.
- * @param {safeKey} A parameter that is designed to prevent student from directly calling this function in Source language.
+ * @param Do not directly set this parameter in your code.
+ * @param A parameter that is designed to prevent student from directly calling this function in Source language.
  *
  * @category Main
  */
-export function default_js_slang(_program: string) : any {
+export function default_js_slang(_program: string): any {
   throw new Error('Invaild Call: Function "default_js_slang" can not be directly called by user\'s code in editor. You should use it as the parameter of the function "set_evaluator"');
   // When the function is normally called by set_evaluator function, safeKey is set to "document.body", which has a type "Element".
   // Students can not create objects and use HTML Elements in Source due to limitations and rules in Source, so they can't set the safeKey to a HTML Element, thus they can't use this function in Source.

@@ -29,7 +29,7 @@ type State = {
 const BOX_PADDING_VALUE = 4;
 
 class ProgrammableReplGUI extends React.Component<Props, State> {
-  public replInstance : ProgrammableRepl;
+  public replInstance: ProgrammableRepl;
   private editorAreaRect;
   private editorInstance;
   constructor(data: Props) {
@@ -66,7 +66,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
   }
   public render() {
     const { editorHeight } = this.state;
-    const outputDivs : React.JSX.Element[] = [];
+    const outputDivs: React.JSX.Element[] = [];
     const outputStringCount = this.replInstance.outputStrings.length;
     for (let i = 0; i < outputStringCount; i++) {
       const str = this.replInstance.outputStrings[i];

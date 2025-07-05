@@ -35,6 +35,6 @@ describe('test compareSeverity', () => {
 
 test('filterAsync', async () => {
   const objects = [1, 2, 3, 4, 5, 6];
-  const results = await filterAsync(objects, each => Promise.resolve(each % 2 == 0));
+  const results = await filterAsync(objects, each => Promise.resolve(each % 2 === 0));
   expect(results).toMatchObject([2, 4, 6]);
 });

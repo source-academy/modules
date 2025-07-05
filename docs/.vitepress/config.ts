@@ -17,7 +17,7 @@ const vitepressOptions: UserConfig = {
   title: 'Modules Developer Documentation',
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    logo: './favicon.ico',
+    logo: '/favicon.ico',
     nav: [
       { text: 'Home', link: '/' },
       {
@@ -30,10 +30,28 @@ const vitepressOptions: UserConfig = {
           {
             text: 'Getting Started',
             link: '/modules/1-getting-started/2-start'
+          },
+          {
+            text: 'Bundles',
+            link: '/modules/2-bundle/1-overview/1-overview'
+          },
+          {
+            text: 'Tabs',
+            link: '/modules/3-tabs/1-overview'
           }
         ]
       },
-      { text: 'Common Library', link: '/lib' },
+      {
+        text: 'Libraries',
+        items: [
+          {
+            text: 'Common Libraries',
+            link: '/lib'
+          }, {
+            text: 'Developer Docs',
+            link: '/lib/dev'
+          }]
+      },
       {
         text: 'Dev Tools',
         items: [

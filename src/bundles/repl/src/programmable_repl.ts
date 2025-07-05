@@ -17,7 +17,7 @@ export class ProgrammableRepl {
   private _tabReactComponent: any;
   // I store editorHeight value separately in here although it is already stored in the module's Tab React component state because I need to keep the editor height
   // when the Tab component is re-mounted due to the user drags the area between the module's Tab and Source Academy's original REPL to resize the module's Tab height.
-  public editorHeight : number;
+  public editorHeight: number;
 
   public customizedEditorProps = {
     backgroundImageUrl: 'no-background-image',
@@ -72,7 +72,7 @@ export class ProgrammableRepl {
   }
 
   // Rich text output method allow output strings to have html tags and css styles.
-  pushOutputString(content : string, textColor : string, outputMethod : string = 'plaintext') {
+  pushOutputString(content: string, textColor: string, outputMethod: string = 'plaintext') {
     const tmp = {
       content: content === undefined ? 'undefined' : content === null ? 'null' : content,
       color: textColor,
@@ -98,7 +98,7 @@ export class ProgrammableRepl {
     const tail = (pair) => pair[1];
     const is_pair = (obj) => obj instanceof Array && obj.length === 2;
     if (!is_pair(pair_rich_text)) return 'not_rich_text_pair';
-    function checkColorStringValidity(htmlColor:string) {
+    function checkColorStringValidity(htmlColor: string) {
       if (htmlColor.length !== 7) return false;
       if (htmlColor[0] !== '#') return false;
       for (let i = 1; i < 7; i++) {
@@ -123,7 +123,7 @@ export class ProgrammableRepl {
       if (!is_pair(param)) {
         throw new Error(`Unexpected data type ${typeof (param)} when processing rich text. It should be a pair.`);
       } else {
-        const pairStyleToCssStyle : { [pairStyle : string] : string } = {
+        const pairStyleToCssStyle: { [pairStyle: string]: string } = {
           bold: 'font-weight:bold;',
           italic: 'font-style:italic;',
           small: 'font-size: 14px;',
@@ -181,7 +181,7 @@ export class ProgrammableRepl {
   runInJsSlang(code: string): string {
     developmentLog('js-slang context:');
     // console.log(context);
-    const options : Partial<IOptions> = {
+    const options: Partial<IOptions> = {
       originalMaxExecTime: 1000,
       stepLimit: 1000,
       throwInfiniteLoops: true,
@@ -189,7 +189,7 @@ export class ProgrammableRepl {
     };
     context.prelude = 'const display=(x)=>repl_display(x);';
     context.errors = []; // Here if I don't manually clear the "errors" array in context, the remaining errors from the last evaluation will stop the function "preprocessFileImports" in preprocessor.ts of js-slang thus stop the whole evaluation.
-    const sourceFile : Record<string, string> = {
+    const sourceFile: Record<string, string> = {
       '/ReplModuleUserCode.js': code
     };
 
@@ -220,7 +220,7 @@ export class ProgrammableRepl {
     return 'Async run in js-slang';
   }
 
-  setTabReactComponentInstance(tab : any) {
+  setTabReactComponentInstance(tab: any) {
     this._tabReactComponent = tab;
   }
 

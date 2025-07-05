@@ -18,8 +18,9 @@ export const getLintCommand = () => new Command('lint')
   .description('Run ESLint for the given directory, or the current directory if no directory is specified')
   .argument('[directory]', 'Directory to run ESLint in', process.cwd())
   .option('--fix', 'Output linting fixes', false)
+  .option('--stats', 'Output linting stats', false)
   .option('--ci', process.env.CI)
-  .action(async (directory, { fix, ci }) => {
+  .action(async (directory, { fix, ci, stats }) => {
     const fullyResolved = pathlib.resolve(directory);
     const resolveResult = await resolveEitherBundleOrTab(fullyResolved);
 
@@ -31,7 +32,7 @@ export const getLintCommand = () => new Command('lint')
       logCommandErrorAndExit(formatResolveBundleErrors(resolveResult));
     }
 
-    const result = await runEslint(resolveResult.asset, fix);
+    const result = await runEslint(resolveResult.asset, fix, stats);
     console.log(formatLintResult(result));
 
     switch (result.severity) {

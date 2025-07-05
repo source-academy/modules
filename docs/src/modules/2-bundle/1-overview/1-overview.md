@@ -8,14 +8,16 @@ For example, the `binary_tree` module may want to provide an abstraction for Sou
 
 The typical bundle structure for a bundle is shown below. Each section will have its own explanation.
 ```txt
-bundle_name          // Name of the root folder is the name of the bundle
+bundle_name             // Name of the root folder is the name of the bundle
 ├── src
-│   ├── index.ts     // Entry Point
-│   ├── functions.ts // Example file
-│   └── ....         // Other files your bundle may use
-├── package.json     // Package Manifest
-├── manifest.json    // Bundle Manifest
-└── tsconfig.json    // Typescript Configuration
+│   ├── __tests__       // Folder containing unit tests
+│   │   └── index.ts    // File containing unit tests
+│   ├── index.ts        // Entry Point
+│   ├── functions.ts    // Example file
+│   └── ....            // Other files your bundle may use
+├── package.json        // Package Manifest
+├── manifest.json       // Bundle Manifest
+└── tsconfig.json       // Typescript Configuration
 ```
 
 > [!NOTE]
@@ -95,8 +97,16 @@ The `package.json` file follows the same format as your typical `package.json` u
 ```
 You can find more information about each of the fields and what they mean [here](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#devdependencies).
 
-> [!WARNING]
-> The `name` field must follow the format `@sourceacademy/bundle-[your bundle name]`.
+> [!WARNING] Bundle vs Package Name
+> The `name` field in `package.json` is the package name and must follow the format `@sourceacademy/bundle-[your bundle name]`.
+> The bundle name is what users will actually use to import your bundle from within Source code:
+> ```ts
+> import { whatever } from 'bundle_name';
+> ```
+> However, if people consuming your bundle from regular Javascript and Typescript need to use the full (scoped) package name:
+> ```ts
+> import { whatever } from '@sourceacademy/bundle-bundle_name';
+> ```
 
 ### `manifest.json`
 `manifest.json` contains the information required by `js-slang` to load your bundle.
@@ -114,7 +124,7 @@ Your bundle may rely on features that are only present in later Source Chapters.
 :::
 
 >[!TIP] Verifying your manifest
-> You can use the `buildtools list` command to check that your bundle can be properly detected and has the correct format.
+> You can use the `buildtools list bundle` command to check that your bundle can be properly detected and has the correct format.
 
 ## `tsconfig.json`
 This file controls the behaviour of Typescript. By default, it should look like this:

@@ -35,7 +35,7 @@
  *
  * @module repl
  * @author Wang Zihan
-*/
+ */
 
 export {
   set_evaluator,

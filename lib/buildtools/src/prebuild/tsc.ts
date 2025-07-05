@@ -101,7 +101,7 @@ export const {
       }
     });
 
-    noEmit = tsconfig.noEmit ?? noEmit;
+    noEmit = tsconfig.noEmit || noEmit;
     if (severity !== 'error' && !noEmit ) {
       // If noEmit isn't specified, then run tsc again without including test
       // files and actually output the files

@@ -32,10 +32,7 @@ export {
   get_wave,
   init_record,
   is_sound,
-  letter_name_to_frequency,
-  letter_name_to_midi_note,
   make_sound,
-  midi_note_to_frequency,
   noise_sound,
   phase_mod,
   piano,
@@ -55,3 +52,9 @@ export {
   trombone,
   violin
 } from './functions';
+
+export {
+  letter_name_to_midi_note,
+  letter_name_to_frequency,
+  midi_note_to_frequency
+} from '@sourceacademy/bundle-midi';

@@ -38,9 +38,10 @@ async function timePromise<T>(f: () => Promise<T>) {
 export const {
   builder: runEslint,
   formatter: formatLintResult
-} = createPrebuilder<LintResults, [fix: boolean]>(async (input, fix) => {
+} = createPrebuilder<LintResults, [fix: boolean, stats: boolean]>(async (input, fix, stats) => {
   const linter = new ESLint({
     fix,
+    stats,
     cwd: await getGitRoot()
   });
 

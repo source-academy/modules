@@ -24,7 +24,7 @@ export async function runBuilderWithPrebuild<T extends ResolvedBundle | Resolved
 ): Promise<FullResult<V>> {
   const promises: [Promise<TscResult | undefined>, Promise<LintResults | undefined>] = [
     !tsc ? Promise.resolve(undefined) : runTsc(asset, false),
-    !lint ? Promise.resolve(undefined) : runEslint(asset, false),
+    !lint ? Promise.resolve(undefined) : runEslint(asset, false, false),
   ];
 
   const [tscResult, lintResult] = await Promise.all(promises);
@@ -57,7 +57,7 @@ export async function runBuilderWithPrebuild<T extends ResolvedBundle | Resolved
 export async function runPrebuild(asset: ResolvedBundle | ResolvedTab) {
   const [tscResult, lintResult] = await Promise.all([
     runTsc(asset, false),
-    runEslint(asset, false)
+    runEslint(asset, false, false)
   ]);
 
   return {

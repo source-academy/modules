@@ -7,6 +7,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "@sourceacademy/bundle-midi": "workspace:^",
     "js-slang": "^1.0.81"
   },
   "type": "module",

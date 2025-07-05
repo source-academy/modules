@@ -18,6 +18,11 @@ errors always cause a non-zero exit code.
 ESLint provides several [formatters](https://eslint.org/docs/latest/use/formatters/) for processing the results objects it returns. To produce the human readable output that is printed to the command line, the `stylish` formatter
 is loaded and used.
 
+::: details Inspecting the Linting Config
+The entire repository's linting configuration is located at the root of the repository within `eslint.config.js`. If you want to view the view what rules are being applied to which files you can
+use the config inspector, which can be started using `yarn lint:inspect`
+:::
+
 ## Calling Typescript from Node
 
 Most of the code for running Typescript functionality from Node was taken from [this](https://github.com/Microsoft/TypeScript/issues/6387) Github issue.
@@ -39,7 +44,7 @@ The first three steps in the process involve reading the raw text from the `tsco
 in use, as well as the file paths to the files that are to be processed.
 
 ### Type Checking
-The first time `ts.createProgram` is called, it is called with every single file as returned from `ts.parseJsonConfigFileContent`. However, it is called with `noEmit: true`. This prevents any Javascript and Typescript declaration files from being written.
+At step 4, `ts.createProgram` is called for the first time. It is called with every single file as returned from `ts.parseJsonConfigFileContent`. However, it is called with `noEmit: true`. This prevents any Javascript and Typescript declaration files from being written.
 This is important because we want test files to be type checked, but we don't want them to be compiled into Javascript and exported with the rest of the code. If they were included and the `tsconfig` was configured to produce outputs, the test files would end
 up being written to the `outDir`. `typecheckProgram.emit` is called to perform the type checking.
 

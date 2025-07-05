@@ -18,8 +18,9 @@
   },
   "scripts": {
     "build": "buildtools build bundle .",
+    "lint": "buildtools lint .",
+    "prepare": "yarn tsc",
     "test": "buildtools test .",
-    "tsc": "buildtools tsc .",
-    "lint": "buildtools lint ."
+    "tsc": "buildtools tsc ."
   }
 }

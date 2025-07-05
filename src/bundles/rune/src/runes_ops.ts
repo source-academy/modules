@@ -7,12 +7,8 @@ import { Rune } from './rune';
 // =============================================================================
 // Utility Functions
 // =============================================================================
-export function throwIfNotRune(name: string, ...runes: any) {
-  runes.forEach((rune) => {
-    if (!(rune instanceof Rune)) {
-      throw Error(`${name} expects a rune as argument.`);
-    }
-  });
+export function throwIfNotRune(name: string, rune: unknown): asserts rune is Rune {
+  if (!(rune instanceof Rune)) throw Error(`${name} expects a rune as argument.`);
 }
 
 // =============================================================================

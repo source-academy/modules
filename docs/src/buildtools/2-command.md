@@ -15,3 +15,31 @@ Command execution follows the following steps:
 ## CI Pipeline Compatibility
 Since the buildtools need to be run as part of the CI pipeline, it is important that they return non-zero exit codes when appropriate so that
 the CI pipeline can detect that errors have occurred and halt the pipeline.
+
+## Command Execution Flow
+
+### Single Bundle/Tab
+For a command that processes a single bundle or tab, this is the flow of the command:
+```mermaid
+graph TD
+  A[Resolve bundle/tab]
+  C["Run prebuilds (if necessary)"]
+  B[Run Command]
+  D[Check if running in CI Mode]
+  E[Display error and exit with code 1]
+  F[Display success message]
+
+  A -- Is resolved --> C
+  A -- Is not resolved --> E
+
+  C -- No errors or warnings --> B
+  C -- Warnings present --> D
+  C -- Errors present --> E
+
+  B -- Warnings present --> D
+  B -- Errors present --> E
+
+  D -- Is CI Mode --> E
+  D -- Not CI Mode --> F
+  B -- No errors or warnings --> F
+```

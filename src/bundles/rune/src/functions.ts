@@ -162,7 +162,8 @@ class RuneFunctions {
 
   @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   static stack(rune1: Rune, rune2: Rune): Rune {
-    throwIfNotRune(RuneFunctions.stack.name, rune1, rune2);
+    throwIfNotRune(RuneFunctions.stack.name, rune1);
+    throwIfNotRune(RuneFunctions.stack.name, rune2);
     return RuneFunctions.stack_frac(1 / 2, rune1, rune2);
   }
 
@@ -195,7 +196,8 @@ class RuneFunctions {
 
   @functionDeclaration('frac: number, rune1: Rune, rune2: Rune', 'Rune')
   static beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
-    throwIfNotRune(RuneFunctions.beside_frac.name, rune1, rune2);
+    throwIfNotRune(RuneFunctions.beside_frac.name, rune1);
+    throwIfNotRune(RuneFunctions.beside_frac.name, rune2);
 
     if (!(frac >= 0 && frac <= 1)) {
       throw Error('beside_frac can only take fraction in [0,1].');
@@ -210,7 +212,8 @@ class RuneFunctions {
 
   @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   static beside(rune1: Rune, rune2: Rune): Rune {
-    throwIfNotRune(RuneFunctions.beside.name, rune1, rune2);
+    throwIfNotRune(RuneFunctions.beside.name, rune1);
+    throwIfNotRune(RuneFunctions.beside.name, rune2);
     return RuneFunctions.beside_frac(1 / 2, rune1, rune2);
   }
 
@@ -321,9 +324,7 @@ class RuneFunctions {
   @functionDeclaration('rune: Rune', 'Rune')
   static random_color(rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.random_color.name, rune);
-    const randomColor = hexToColor(
-      colorPalette[Math.floor(Math.random() * colorPalette.length)]
-    );
+    const randomColor = hexToColor(colorPalette[Math.floor(Math.random() * colorPalette.length)]);
 
     return Rune.of({
       colors: new Float32Array(randomColor),

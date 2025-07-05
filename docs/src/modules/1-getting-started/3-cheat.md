@@ -1,6 +1,88 @@
+<script setup>
+  import { data } from './scripts.data.ts';
+  const { globalScripts, rootScripts } = data
+</script>
+
 # Commands Cheat Sheet
+All commands have a `-h` or `--help` option that can be used to get more information about the command. 
+
+## Icon Legend
+<table>
+  <thead>
+    <tr>
+      <th>Icon</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>💼</td>
+      <td>Can be run from a bundle's directory or any of its subdirectories</td>
+    </tr>
+    <tr>
+      <td>🖥</td>
+      <td>Can be run from a tab's directory or any of its subdirectories</td>
+    </tr>
+    <tr>
+      <td>🏠</td>
+      <td>Can be run from the repository root</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Installation Commands
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Purpose</th>
+      <th><a href="#icon-legend">💼</a></th>
+      <th><a href="#icon-legend">🖥</a></th>
+      <th><a href="#icon-legend">🏠</a></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>yarn workspaces focus @sourceacademy/modules</code></td>
+      <td>Installs the dependencies required for the repository <strong>only</strong> (like the build tools)</td>
+      <td/>
+      <td/>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td><code>yarn workspaces focus @sourceacademy/bundle-curve</code></td>
+      <td>Installs the dependencies required for the `curve` bundle <strong>only</strong> </td>
+      <td>✅</td>
+      <td/>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td><code>yarn add &lt;package&gt;</code></td>
+      <td>
+        Adds a package to the current bundle or tab <br />
+      </td>
+      <td>✅</td>
+      <td>✅</td>
+      <td>✅*</td>
+    </tr>
+    <tr>
+      <td><code>yarn add -D &lt;package&gt;</code></td>
+      <td>
+        Adds a package to the current bundle or tab that will only be used during runtime <br />
+      </td>
+      <td>✅</td>
+      <td>✅</td>
+      <td>✅*</td>
+    </tr>
+  </tbody>
+</table>
+
+\* Will add packages to the root repository. Only do this if you are adding or updating a constraint for the entire repository.
+
+## Bundle or Tab Specific Commands
+These commands are only applicable to bundles or tabs and should only be run from within the bundle or tab's directory.
+
+### Compilation
 <table>
   <thead>
     <tr>
@@ -10,39 +92,21 @@
   </thead>
   <tbody>
     <tr>
-      <td><code>yarn workspaces focus @sourceacademy/modules</code></td>
-      <td>Installs the dependencies required for the repository <strong>only</strong> (like the build tools)</td>
+      <td><code>yarn build</code></td>
+      <td>Compiles the bundle or tab to the <code>/build</code> directory</td>
     </tr>
     <tr>
-      <td><code>yarn workspaces focus @sourceacademy/bundle-curve</code></td>
-      <td>Installs the dependencies required for the `curve` bundle <strong>only</strong> </td>
+      <td><nobr><code>yarn build --tsc</code></nobr></td>
+      <td>Same as <code>yarn build</code> but also runs <code>tsc</code> for type checking</td>
     </tr>
     <tr>
-      <td><code>yarn add &lt;package&gt;</code></td>
-      <td>
-        Adds a package to the current bundle or tab <br />
-        (SHOULD ONLY BE RUN WITHIN THE BUNDLE OR TAB DIRECTORY)
-      </td>
-    </tr>
-    <tr>
-      <td><code>yarn add -D &lt;package&gt;</code></td>
-      <td>
-        Adds a package to the current bundle or tab that will only be used during runtime <br />
-        (SHOULD ONLY BE RUN WITHIN THE BUNDLE OR TAB DIRECTORY)
-      </td>
+      <td><nobr><code>yarn build --lint</code></nobr></td>
+      <td>Same as <code>yarn build</code> but also runs ESLint</td>
     </tr>
   </tbody>
 </table>
 
-## Bundle or Tab Specific Commands
-
-### Compilation
-| Command                   | Purpose                                                       |
-|---------------------------|---------------------------------------------------------------|
-| `yarn build`              | Compiles the bundle or tab to the `/build` directory          |
-| `yarn build --tsc`        | Same as `yarn build` but also runs `tsc` for type checking    |
-| `yarn build --lint`       | Same as `yarn build` but also runs ESLint for linting         |
-| `yarn build --lint --tsc` | Run both ESLint and `tsc` simultaneously before running build |
+Both the `--tsc` and `--lint` options can be used togther to run `tsc` and ESLint simultaneously.
 
 ### Prebuild and Testing
 <ins>Prebuild</ins> refers to commands that are to be run **before** the build/compilation commands are executed.
@@ -65,13 +129,9 @@ These commands should only be run from the root of the Git repository.
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td><nobr><code>yarn devserver</code></nobr></td>
-      <td>Start the modules development server</td>
-    </tr>
-    <tr>
-      <td><nobr><code>yarn serve</code></nobr></td>
-      <td>Run the modules server to serve modules to local copies of <code>js-slang</code> and the frontend </td>
+    <tr v-for="cmd of rootScripts">
+      <td><nobr><code>yarn {{ cmd.name }}</code></nobr></td>
+      <td>{{ cmd.info }} </td>
     </tr>
   </tbody>
 </table>
@@ -79,6 +139,12 @@ These commands should only be run from the root of the Git repository.
 ### Global Commands
 Yarn considers scripts with a ":" in their name to be a [global script](https://yarnpkg.com/features/workspaces#global-scripts) that can be run from anywhere,
 including child workspaces. In other words, these commands are available throughout the repository, not just at the root level.
+
+In general, global scripts for this repository follow the same format.
+- `:all` will be run for all code in the respository
+- `:devserver` will only be run for the devserver.
+- `:libs` will be run for all code under the `lib` folder (common modules libraries)
+- `:modules` will be run for all bundle and tab code
 
 <table>
   <thead>
@@ -88,17 +154,9 @@ including child workspaces. In other words, these commands are available through
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td><nobr><code>yarn build:modules</code></nobr></td>
-      <td>Builds all bundles, tabs, JSONS and HTML documentation</td>
-    </tr>
-    <tr>
-      <td><nobr><code>yarn build:docs</code></nobr></td>
-      <td>Builds JSONS and HTML documentation for all bundles. <br /> Useful if you're only changing documentation.</td>
-    </tr>
-    <tr>
-      <td><nobr><code>yarn template</code></nobr></td>
-      <td>Starts the interactive bundle/tab creator</td>
+    <tr v-for="cmd of globalScripts">
+      <td><nobr><code>yarn {{ cmd.name }}</code></nobr></td>
+      <td>{{ cmd.info }} </td>
     </tr>
   </tbody>
 </table>

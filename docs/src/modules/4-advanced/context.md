@@ -26,21 +26,20 @@ This `state` object can then be accessed by the module's tab, for example:
 ```ts
 // Curve/index.tsx
 export default {
-  toSpawn: (context) => {
-    return context.context.moduleHelpers.curve.state.drawnCurves.length > 0;
+  toSpawn: (debuggerContext) => {
+    return debuggerContext.context.moduleContexts.curve.state.drawnCurves.length > 0;
   },
   body: (context) => { /* implementation */ },
 }
 ```
-For more information refer to the documentation for tabs.
 
 `js-slang` guarantees that each module is only evaluated once per code evaluation, no matter how many import statements there are in a Source program.
 
 > [!IMPORTANT]
-> Module Contexts are reset on each evaluation and are not capable of storing information that persists across evaluations.
+> Module Contexts are reset on each evaluation and are not capable of storing information that persists across evaluations
 
-## Where to access context?
-> [!WARNING]
+## Where to access context in a bundle?
+> [!WARNING] TL;DR
 > Writing to and reading from `js-slang/context` in multiple places throughout your bundle may result in undefined behaviour. Consider importing the context from
 > one place only.
 
@@ -90,9 +89,9 @@ import { main } from 'bundle';
 display(main());
 ```
 
-Code that does not imports code from other files will be evaluated first. Since `functions_2.ts` imports `functions_0.ts`, we know that `functions_2.ts` will be evaluated before `functions_0.ts`. By the time `main()` is even defined, the bundle's state will thus not be 2.
+Code that does not import code from other files will be evaluated first. Since `functions_2.ts` imports `functions_0.ts`, we know that `functions_2.ts` will be evaluated before `functions_0.ts`. By the time `main()` is even defined, the bundle's state will thus not be 2.
 
-However, it is not clear which of `functions_0.ts` or `functions_1.ts` will be evaluated first. Depending on how the bundle is evaluated or was compiled, either `functions_0.ts` or `functions_1.ts` could be evaluated first. The bundle's state could be _non-deterministically_ either 0 or 1.
+However, it is not clear which of `functions_0.ts` or `functions_1.ts` will be evaluated first. Depending on how the bundle is evaluated or was compiled, either `functions_0.ts` or `functions_1.ts` could be evaluated first. The bundle's state could be _non-deterministically_ either 0 or 1 depending on how it was compiled by ESBuild.
 
 Thus it is recommended that you access context once throughout your entire bundle, or make sure you understand which order your files are going to be evaluated to avoid the above issue.
 

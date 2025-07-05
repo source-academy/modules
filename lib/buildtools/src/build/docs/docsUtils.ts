@@ -7,6 +7,7 @@ const typedocPackageOptions: td.Configuration.TypeDocPackageOptions = {
   disableSources: true,
   excludeInternal: true,
   skipErrorChecking: true,
+  sort: ['documents-last']
 };
 
 const commonTypedocOptions: td.Configuration.TypeDocOptions = {

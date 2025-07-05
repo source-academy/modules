@@ -1,41 +1,13 @@
 /**
- * Bundle for manipulating MIDI notes
+ * Bundle that provides functions for manipulating MIDI notes, converting between letter names
+ * and frequencies.
  *
  * @module MIDI
- * @author Lee Yi
+ * @author leeyi45
  */
 
-import { Accidental, type MIDINote, type Note, type NoteName, type NoteWithOctave } from './types';
-
-function noteToValues(note: NoteWithOctave, func_name: string = noteToValues.name) {
-  const match = /([A-G])([#♮b]?)(\d*)/.exec(note.toUpperCase());
-  if (match === null) throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
-
-  const [, noteName, accidental, octaveStr] = match;
-
-  switch (accidental) {
-    case Accidental.SHARP: {
-      if (noteName === 'B' || noteName === 'E') {
-        throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
-      }
-
-      break;
-    }
-    case Accidental.FLAT: {
-      if (noteName === 'F' || noteName === 'C') {
-        throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
-      }
-      break;
-    }
-  }
-  const octave = octaveStr === '' ? 4 : parseInt(octaveStr);
-
-  return [
-    noteName,
-    accidental !== '' ? accidental : Accidental.NATURAL,
-    octave
-  ] as [NoteName, Accidental, number];
-}
+import { Accidental, type MIDINote, type NoteWithOctave } from './types';
+import { midiNoteToNoteName, noteToValues } from './utils';
 
 /**
  * Converts a letter name to its corresponding MIDI note.
@@ -100,37 +72,6 @@ export function letter_name_to_midi_note(note: NoteWithOctave): MIDINote {
   return res + 12 * octave;
 }
 
-function midiNoteToNoteName(midiNote: MIDINote, accidental: 'flat' | 'sharp'): Note {
-  switch (midiNote % 12) {
-    case 0:
-      return 'C';
-    case 1:
-      return accidental === 'sharp' ? 'C#' : 'Db';
-    case 2:
-      return 'D';
-    case 3:
-      return accidental === 'sharp' ? 'D#' : 'Eb';
-    case 4:
-      return 'E';
-    case 5:
-      return 'F';
-    case 6:
-      return accidental === 'sharp' ? 'F#' : 'Gb';
-    case 7:
-      return 'G';
-    case 8:
-      return accidental === 'sharp' ? 'G#' : 'Ab';
-    case 9:
-      return 'A';
-    case 10:
-      return accidental === 'sharp' ? 'A#' : 'Bb';
-    case 11:
-      return 'B';
-    default:
-      throw new Error(`Invalid MIDI note value ${midiNote}`);
-  }
-}
-
 /**
  * Convert a MIDI note into its letter representation
  * @param midiNote Note to convert
@@ -138,8 +79,8 @@ function midiNoteToNoteName(midiNote: MIDINote, accidental: 'flat' | 'sharp'): N
  * @function
  */
 export function midi_note_to_letter_name(midiNote: MIDINote, accidental: 'flat' | 'sharp'): NoteWithOctave {
-  const octave = Math.floor(midiNote / 12);
-  const note = midiNoteToNoteName(midiNote, accidental);
+  const octave = Math.floor(midiNote / 12) - 1;
+  const note = midiNoteToNoteName(midiNote, accidental, midi_note_to_letter_name.name);
   return `${note}${octave}`;
 }
 
@@ -166,3 +107,20 @@ export function midi_note_to_frequency(note: MIDINote): number {
 export function letter_name_to_frequency(note: NoteWithOctave): number {
   return midi_note_to_frequency(letter_name_to_midi_note(note));
 }
+
+export * from './scales';
+
+/**
+ * String representing the sharp symbol '#'
+ */
+export const SHARP = Accidental.SHARP;
+
+/**
+ * String representing the flat symbol 'b'
+ */
+export const FLAT = Accidental.FLAT;
+
+/**
+ * String representing the natural symbol '♮'
+ */
+export const NATURAL = Accidental.NATURAL;
