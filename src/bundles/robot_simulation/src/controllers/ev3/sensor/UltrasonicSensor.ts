@@ -47,9 +47,7 @@ export class UltrasonicSensor implements Sensor<number> {
 
   fixedUpdate(): void {
     const chassis = this.chassisWrapper.getEntity();
-    const globalDisplacement = chassis.worldTranslation(
-      this.displacement.clone(),
-    );
+    const globalDisplacement = chassis.worldTranslation(this.displacement.clone(),);
     const globalDirection = chassis.transformDirection(this.direction.clone());
 
     const result = this.physics.castRay(

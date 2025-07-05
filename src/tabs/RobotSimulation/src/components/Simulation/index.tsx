@@ -73,9 +73,7 @@ export const SimulationCanvas: React.FC<SimulationCanvasProps> = ({
       }
 
       if (sensorRef.current) {
-        sensorRef.current.replaceChildren(
-          ev3.get('colorSensor').renderer.getElement()
-        );
+        sensorRef.current.replaceChildren(ev3.get('colorSensor').renderer.getElement());
       }
     };
 

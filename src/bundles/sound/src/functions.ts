@@ -66,9 +66,7 @@ let recorded_sound: Sound | undefined;
 // to record a sound
 function check_permission() {
   if (permission === undefined) {
-    throw new Error(
-      'Call init_record(); to obtain permission to use microphone'
-    );
+    throw new Error('Call init_record(); to obtain permission to use microphone');
   } else if (permission === false) {
     throw new Error(`Permission has been denied.\n
         Re-start browser and call init_record();\n
@@ -391,9 +389,7 @@ export function play_in_tab(sound: Sound): Sound {
 export function play(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(
-      `${play.name} is expecting sound, but encountered ${sound}`
-    );
+    throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
   } else if (get_duration(sound) < 0) {
     throw new Error(`${play.name}: duration of sound is negative`);
   } else if (get_duration(sound) === 0) {
@@ -701,13 +697,11 @@ export function stacking_adsr(
     return pair(pair(n, head(lst)), zip(tail(lst), n + 1));
   }
 
-  return simultaneously(
-    accumulate(
-      (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
-      null,
-      zip(envelopes, 1)
-    )
-  );
+  return simultaneously(accumulate(
+    (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
+    null,
+    zip(envelopes, 1)
+  ));
 }
 
 /**
@@ -786,7 +780,7 @@ export function cello(note: number, duration: number): Sound {
  * @return Sound resulting piano Sound with given pitch and duration
  * @example piano(48, 5);
  * @category Instrument
-
+ *
  */
 export function piano(note: number, duration: number): Sound {
   return stacking_adsr(

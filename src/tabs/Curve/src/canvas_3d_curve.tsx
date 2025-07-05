@@ -147,8 +147,7 @@ export default class Canvas3dCurve extends React.Component<Props, State> {
           <PlayButton
             isPlaying={ this.state.isRotating }
             onClick={ this.onClickHandler }
-          >
-          </PlayButton>
+          />
           <Slider
             value={ this.state.displayAngle }
             min={ 0 }

@@ -65,9 +65,7 @@ export function initShaderProgram(
  * @param canvas WebGLRenderingContext
  * @returns
  */
-export function getWebGlFromCanvas(
-  canvas: HTMLCanvasElement
-): WebGLRenderingContext {
+export function getWebGlFromCanvas(canvas: HTMLCanvasElement): WebGLRenderingContext {
   const gl: WebGLRenderingContext | null = canvas.getContext('webgl');
   if (!gl) {
     throw Error('Unable to initialize WebGL.');
@@ -84,9 +82,7 @@ export function getWebGlFromCanvas(
  * @param gl WebGLRenderingContext
  * @returns FrameBufferWithTexture
  */
-export function initFramebufferObject(
-  gl: WebGLRenderingContext
-): FrameBufferWithTexture {
+export function initFramebufferObject(gl: WebGLRenderingContext): FrameBufferWithTexture {
   // create a framebuffer object
   const framebuffer = gl.createFramebuffer();
   if (!framebuffer) {

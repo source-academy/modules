@@ -15,7 +15,7 @@ export type WheelConfig = {
   };
   displacement: SimpleVector;
   gapToFloor: number;
-  maxRayDistance:number;
+  maxRayDistance: number;
   debug: boolean;
 };
 
@@ -57,12 +57,8 @@ export class Wheel implements Controller {
   fixedUpdate(timingInfo: PhysicsTimingInfo): void {
     const chassis = this.chassisWrapper.getEntity();
 
-    const globalDisplacement = chassis.worldTranslation(
-      this.displacementVector.clone(),
-    );
-    const globalDownDirection = chassis.transformDirection(
-      this.downVector.clone(),
-    );
+    const globalDisplacement = chassis.worldTranslation(this.displacementVector.clone(),);
+    const globalDownDirection = chassis.transformDirection(this.downVector.clone(),);
 
     const result = this.physics.castRay(
       globalDisplacement,

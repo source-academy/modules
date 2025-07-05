@@ -16,8 +16,8 @@ export class Timer {
   private _currentTime: number | null = null;
 
   /**
-     * Pauses the timer and marks the pause time.
-     */
+   * Pauses the timer and marks the pause time.
+   */
   pause(): void {
     if (this._currentTime === null) {
       return;
@@ -30,10 +30,10 @@ export class Timer {
   }
 
   /**
-     * Steps the timer forward, calculates frame timing info.
-     * @param timestamp - The current timestamp.
-     * @returns The frame timing information.
-     */
+   * Steps the timer forward, calculates frame timing info.
+   * @param timestamp - The current timestamp.
+   * @returns The frame timing information.
+   */
   step(timestamp: number): FrameTimingInfo {
     if (this._startTime === null) {
       this._startTime = timestamp;

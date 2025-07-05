@@ -37,5 +37,6 @@ export async function buildTabs(resolvedBundles: Record<string, ResolvedBundle>,
       }
 
       return runBuilderWithPrebuild(buildTab, prebuildOpts, tab, outDir, undefined);
-    }));
+    })
+  );
 }

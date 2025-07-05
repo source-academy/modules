@@ -13,12 +13,14 @@ import { RecordingVisualizer3D, RecordingVisualizer, Simulation, type Universe, 
  * @returns A new simulation.
  * @category Simulation
  */
-export function createSimulation(universes: Universe[],
+export function createSimulation(
+  universes: Universe[],
   visType: VisType,
   record?: boolean,
   looped?: boolean,
   showTrails?: boolean,
-  maxTrailLength?: number): Simulation {
+  maxTrailLength?: number
+): Simulation {
   return new Simulation(universes, {
     visType,
     record,
@@ -55,9 +57,7 @@ export function playSim(sim: Simulation): void {
     simulations.pop()!.stop();
   }
   if (isRecordingBased(sim)) {
-    throw new Error(
-      'playSim expects non-recording simulations'
-    );
+    throw new Error('playSim expects non-recording simulations');
   }
   recordInfo.isRecording = false;
   simulations.push(sim);
@@ -75,9 +75,7 @@ export function recordSim(sim: Simulation, recordFor: number, recordSpeed: numbe
     simulations.pop()!.stop();
   }
   if (!isRecordingBased(sim)) {
-    throw new Error(
-      'recordSim expects recording simulations'
-    );
+    throw new Error('recordSim expects recording simulations');
   }
   recordInfo.isRecording = true;
   recordInfo.recordFor = recordFor;

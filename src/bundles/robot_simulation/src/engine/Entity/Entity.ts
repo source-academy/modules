@@ -62,9 +62,7 @@ export class Entity {
     return this.#rapierRigidBody.applyImpulseAtPoint(impulse, point, true);
   }
 
-  worldTranslation(
-    localTranslation: THREE.Vector3,
-  ): THREE.Vector3 {
+  worldTranslation(localTranslation: THREE.Vector3,): THREE.Vector3 {
     const rotation = this.getRotation();
     const translation = this.getTranslation();
 
@@ -78,9 +76,7 @@ export class Entity {
       .applyQuaternion(rotation);
   }
 
-  distanceVectorOfPointToRotationalAxis(
-    localPoint: THREE.Vector3,
-  ): SimpleVector {
+  distanceVectorOfPointToRotationalAxis(localPoint: THREE.Vector3,): SimpleVector {
     return localPoint
       .clone()
       .projectOnVector(vec3(this.getAngularVelocity()))
@@ -90,8 +86,8 @@ export class Entity {
 
   /**
    * Calculates the tangential velocity of a point in a rotating system.
-   * @param {THREE.Vector3} localPoint - The point for which to calculate the tangential velocity.
-   * @returns {THREE.Vector3} The tangential velocity vector of the point.
+   * @param localPoint - The point for which to calculate the tangential velocity.
+   * @returns The tangential velocity vector of the point.
    */
   tangentialVelocityOfPoint(localPoint): THREE.Vector3 {
     // Calculate the distance vector from the point to the rotational axis
@@ -116,9 +112,7 @@ export class Entity {
     return tangentialVelocity;
   }
 
-  worldVelocity(
-    localPoint: THREE.Vector3,
-  ): THREE.Vector3 {
+  worldVelocity(localPoint: THREE.Vector3,): THREE.Vector3 {
     return this.tangentialVelocityOfPoint(localPoint)
       .add(this.getVelocity());
   }

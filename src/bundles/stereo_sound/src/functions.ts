@@ -67,9 +67,7 @@ let recorded_sound: Sound | undefined;
 // to record a sound
 function check_permission() {
   if (permission === undefined) {
-    throw new Error(
-      'Call init_record(); to obtain permission to use microphone'
-    );
+    throw new Error('Call init_record(); to obtain permission to use microphone');
   } else if (permission === false) {
     throw new Error(`Permission has been denied.\n
         Re-start browser and call init_record();\n
@@ -879,13 +877,11 @@ export function stacking_adsr(
     return pair(pair(n, head(lst)), zip(tail(lst), n + 1));
   }
 
-  return simultaneously(
-    accumulate(
-      (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
-      null,
-      zip(envelopes, 1)
-    )
-  );
+  return simultaneously(accumulate(
+    (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
+    null,
+    zip(envelopes, 1)
+  ));
 }
 
 /**
@@ -909,9 +905,7 @@ export function phase_mod(
 ): SoundTransformer {
   return (modulator: Sound) => make_stereo_sound(
     (t) => Math.sin(2 * Math.PI * t * freq + amount * get_left_wave(modulator)(t)),
-    (t) => Math.sin(
-      2 * Math.PI * t * freq + amount * get_right_wave(modulator)(t)
-    ),
+    (t) => Math.sin(2 * Math.PI * t * freq + amount * get_right_wave(modulator)(t)),
     duration
   );
 }

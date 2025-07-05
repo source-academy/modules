@@ -76,9 +76,7 @@ const scene = () => mandatory(context.moduleContexts.game.state.scene, 'No scene
 // =============================================================================
 
 /** @hidden */
-function get_obj(
-  obj: GameObject
-): RawContainer | RawGameObject | RawInputObject {
+function get_obj(obj: GameObject): RawContainer | RawGameObject | RawInputObject {
   return obj.object!;
 }
 
@@ -147,7 +145,7 @@ function set_type(
 /**
  * Throw a console error, including the function caller name.
  *
- * @param {string} message error message
+ * @param message error message
  * @hidden
  */
 function throw_error(message: string): never {
@@ -412,9 +410,7 @@ export function create_anim_frame_config(
  * @param key key associated with spritesheet
  * @returns animation frame configs
  */
-export function create_anim_spritesheet_frame_configs(
-  key: string
-): ObjectConfig[] | undefined {
+export function create_anim_spritesheet_frame_configs(key: string): ObjectConfig[] | undefined {
   if (preloadSpritesheetMap.get(key)) {
     const configArr = scene().anims.generateFrameNumbers(key, {});
     return configArr;
@@ -784,9 +780,7 @@ export function add_to_container(
       .add(get_game_obj(obj));
     return container;
   }
-  throw_error(
-    `${obj} is not of type ${ObjTypes} or ${container} is not of type ${ObjectTypes.ContainerType}`
-  );
+  throw_error(`${obj} is not of type ${ObjTypes} or ${container} is not of type ${ObjectTypes.ContainerType}`);
 }
 
 // OBJECT

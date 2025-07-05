@@ -92,9 +92,7 @@ export default class AnimationCanvas3dCurve extends React.Component<
   private drawFrame = () => {
     try {
       if (this.canvas) {
-        const frame = this.props.animation.getFrame(
-          this.state.animTimestamp / 1000
-        );
+        const frame = this.props.animation.getFrame(this.state.animTimestamp / 1000);
         frame.draw(this.canvas);
       }
     } catch (error) {

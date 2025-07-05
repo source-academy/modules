@@ -18,9 +18,7 @@ export abstract class GameObject implements Transformable, ReplResult {
   protected isTransformUpdated: boolean = false;
   public readonly id: number;
 
-  constructor(
-    private transformProps: types.TransformProps = DEFAULT_TRANSFORM_PROPS
-  ) {
+  constructor(private transformProps: types.TransformProps = DEFAULT_TRANSFORM_PROPS) {
     this.id = GameObject.gameObjectCount++;
   }
   setTransform(transformProps: types.TransformProps) {

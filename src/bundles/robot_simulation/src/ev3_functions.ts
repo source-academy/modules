@@ -27,9 +27,7 @@ type MotorFunctionReturnType = Motor | null;
  */
 export function ev3_pause(duration: number): void {
   const world = getWorldFromContext();
-  const program = world.controllers.controllers.find(
-    (controller) => controller.name === program_controller_identifier
-  ) as Program;
+  const program = world.controllers.controllers.find((controller) => controller.name === program_controller_identifier) as Program;
   program.pause(duration);
 }
 
@@ -221,9 +219,7 @@ export function ev3_ultrasonicSensor() {
  *
  * @category EV3
  */
-export function ev3_ultrasonicSensorDistance(
-  ultraSonicSensor: UltrasonicSensor
-): number {
+export function ev3_ultrasonicSensorDistance(ultraSonicSensor: UltrasonicSensor): number {
   return ultraSonicSensor.sense();
 }
 

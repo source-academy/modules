@@ -147,9 +147,7 @@ export function addARObject(arObject: ARObject) {
 export function removeARObject(arObject: ARObject) {
   const moduleState = getModuleState();
   if (!moduleState) return;
-  moduleState.arObjects = moduleState.arObjects.filter(
-    (item) => item.id !== arObject.id,
-  );
+  moduleState.arObjects = moduleState.arObjects.filter((item) => item.id !== arObject.id,);
   callARCallback();
 }
 
@@ -265,9 +263,7 @@ export function setFrontObject(arObject: ARObject | undefined) {
 export function getFrontObject() {
   const moduleState = getModuleState();
   if (!moduleState) return undefined;
-  return moduleState.arObjects.find(
-    (arObject) => arObject.id === moduleState.selectedObjectId,
-  );
+  return moduleState.arObjects.find((arObject) => arObject.id === moduleState.selectedObjectId,);
 }
 
 /**

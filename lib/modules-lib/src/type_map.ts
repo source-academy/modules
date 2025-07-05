@@ -22,7 +22,7 @@ export interface TypeMapUtilities {
  * used to populate it
  */
 export default function createTypeMap(): TypeMapUtilities {
-  const type_map : Record<string, string> = {};
+  const type_map: Record<string, string> = {};
 
   function registerType(name: string, declaration: string) {
     if (name === 'prelude') {

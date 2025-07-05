@@ -24,12 +24,10 @@ implements Controller {
 
   async start(): Promise<void> {
     await this.callbacks?.start?.();
-    await Promise.all(
-      Object.values(this.map)
-        .map(async (controller) => {
-          await controller.start?.();
-        }),
-    );
+    await Promise.all(Object.values(this.map)
+      .map(async (controller) => {
+        await controller.start?.();
+      }),);
   }
 
   update(timingInfo: PhysicsTimingInfo): void {
@@ -65,11 +63,9 @@ export class ControllerGroup implements Controller {
   }
 
   async start?(): Promise<void> {
-    await Promise.all(
-      this.controllers.map(async (controller) => {
-        await controller.start?.();
-      }),
-    );
+    await Promise.all(this.controllers.map(async (controller) => {
+      await controller.start?.();
+    }),);
   }
 
   update(timingInfo: PhysicsTimingInfo): void {

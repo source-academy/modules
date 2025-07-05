@@ -15,9 +15,7 @@ const globalStateController = new GlobalStateController(
 test('Empty Root Set Null', () => {
   globalStateController.globalState = undefined;
   globalStateController.parseGlobalStateMessage('', JSON.stringify(null));
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify(null),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify(null),);
 });
 
 test('Empty Root Set Object', () => {
@@ -26,9 +24,7 @@ test('Empty Root Set Object', () => {
     a: 'b',
   };
   globalStateController.parseGlobalStateMessage('', JSON.stringify(object));
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify(object),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify(object),);
 });
 
 // Non-Empty Root - Replace root.
@@ -39,9 +35,7 @@ test('Non-Empty Root Set Empty', () => {
   };
   globalStateController.globalState = object;
   globalStateController.parseGlobalStateMessage('', JSON.stringify(undefined));
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify(undefined),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify(undefined),);
 });
 
 test('Non-Empty Root Set Null', () => {
@@ -50,9 +44,7 @@ test('Non-Empty Root Set Null', () => {
   };
   globalStateController.globalState = object;
   globalStateController.parseGlobalStateMessage('', JSON.stringify(null));
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify(null),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify(null),);
 });
 
 test('Non-Empty Root Set Object', () => {
@@ -63,9 +55,7 @@ test('Non-Empty Root Set Object', () => {
     c: 'd',
   };
   globalStateController.parseGlobalStateMessage('', JSON.stringify(object));
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify(object),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify(object),);
 });
 
 // Branch Value - Replace value if non-empty, remove path if empty.
@@ -76,9 +66,7 @@ test('Branch Value Set Empty', () => {
     c: 'd',
   };
   globalStateController.parseGlobalStateMessage('a', JSON.stringify(undefined));
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify({ c: 'd' }),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify({ c: 'd' }),);
 });
 
 test('Nested Branch Value Set Empty', () => {
@@ -91,9 +79,7 @@ test('Nested Branch Value Set Empty', () => {
     'a/b',
     JSON.stringify(undefined),
   );
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify({ a: {} }),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify({ a: {} }),);
 });
 
 test('Branch Value Set Null', () => {
@@ -102,9 +88,7 @@ test('Branch Value Set Null', () => {
     c: 'd',
   };
   globalStateController.parseGlobalStateMessage('a', JSON.stringify(null));
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify({ a: null, c: 'd' }),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify({ a: null, c: 'd' }),);
 });
 
 test('Nested Branch Value Set Null', () => {
@@ -114,9 +98,7 @@ test('Nested Branch Value Set Null', () => {
     },
   };
   globalStateController.parseGlobalStateMessage('a/b', JSON.stringify(null));
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify({ a: { b: null } }),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify({ a: { b: null } }),);
 });
 
 test('Branch Value Set Object', () => {
@@ -128,9 +110,7 @@ test('Branch Value Set Object', () => {
     b: 'e',
   };
   globalStateController.parseGlobalStateMessage('a', JSON.stringify(object));
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify({ a: object, c: 'd' }),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify({ a: object, c: 'd' }),);
 });
 
 test('Nested Branch Value Set Object', () => {
@@ -143,9 +123,7 @@ test('Nested Branch Value Set Object', () => {
     c: 'd',
   };
   globalStateController.parseGlobalStateMessage('a/b', JSON.stringify(object));
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify({ a: { b: object } }),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify({ a: { b: object } }),);
 });
 
 // Branch Object - Replace object if non-empty, remove path if empty.
@@ -156,9 +134,7 @@ test('Branch Object Set Empty', () => {
     d: 'e',
   };
   globalStateController.parseGlobalStateMessage('a', JSON.stringify(undefined));
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify({ d: 'e' }),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify({ d: 'e' }),);
 });
 
 test('Nested Branch Object Set Empty', () => {
@@ -169,9 +145,7 @@ test('Nested Branch Object Set Empty', () => {
     'a/b',
     JSON.stringify(undefined),
   );
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify({ a: { e: 'f' } }),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify({ a: { e: 'f' } }),);
 });
 
 test('Branch Object Set Null', () => {
@@ -180,9 +154,7 @@ test('Branch Object Set Null', () => {
     d: 'e',
   };
   globalStateController.parseGlobalStateMessage('a', JSON.stringify(null));
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify({ a: null, d: 'e' }),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify({ a: null, d: 'e' }),);
 });
 
 test('Nested Branch Object Set Null', () => {
@@ -190,9 +162,7 @@ test('Nested Branch Object Set Null', () => {
     a: { b: { c: 'd' }, e: 'f' },
   };
   globalStateController.parseGlobalStateMessage('a/b', JSON.stringify(null));
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify({ a: { b: null, e: 'f' } }),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify({ a: { b: null, e: 'f' } }),);
 });
 
 test('Branch Object Set Object', () => {
@@ -205,9 +175,7 @@ test('Branch Object Set Object', () => {
     g: 'h',
   };
   globalStateController.parseGlobalStateMessage('a', JSON.stringify(object));
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify({ a: object, f: 'g' }),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify({ a: object, f: 'g' }),);
 });
 
 test('Nested Branch Object Set Null 2', () => {
@@ -219,7 +187,5 @@ test('Nested Branch Object Set Null 2', () => {
     h: 'i',
   };
   globalStateController.parseGlobalStateMessage('a/b', JSON.stringify(object));
-  expect(JSON.stringify(globalStateController.globalState)).toBe(
-    JSON.stringify({ a: { b: object, e: 'f' } }),
-  );
+  expect(JSON.stringify(globalStateController.globalState)).toBe(JSON.stringify({ a: { b: object, e: 'f' } }),);
 });

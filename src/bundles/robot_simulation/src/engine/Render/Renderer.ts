@@ -64,9 +64,7 @@ export class Renderer {
     return this.#renderer.domElement;
   }
 
-  add(
-    ...input: Parameters<typeof THREE.Scene.prototype.add>
-  ): ReturnType<typeof THREE.Scene.prototype.add> {
+  add(...input: Parameters<typeof THREE.Scene.prototype.add>): ReturnType<typeof THREE.Scene.prototype.add> {
     return this.#scene.add(...input);
   }
 

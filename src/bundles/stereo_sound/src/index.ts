@@ -4,7 +4,7 @@
  * Within this module, all Sounds are represented in stereo, with two waves, left and right.
  *
  * A Stereo Sound (just denoted as "Sound" in this document) is
- a `pair(pair(left_wave, right_wave), duration)` where duration is the length of the Sound in seconds.
+ * a `pair(pair(left_wave, right_wave), duration)` where duration is the length of the Sound in seconds.
  * The constructor `make_stereo_sound` and accessors `get_left_wave`, `get_right_wave`, and `get_duration` are provided.
  * The `make_sound` constructor from sounds is syntatic sugar for `make_stereo_sounds` with equal waves.
  *

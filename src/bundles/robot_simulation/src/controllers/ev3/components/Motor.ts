@@ -90,9 +90,7 @@ export class Motor implements Controller {
       = chassis.transformDirection(targetMotorVelocity);
 
     // Calculate the actual motor velocity from the global perspective
-    const actualMotorGlobalVelocity = chassis.worldVelocity(
-      this.displacementVector.clone(),
-    );
+    const actualMotorGlobalVelocity = chassis.worldVelocity(this.displacementVector.clone(),);
 
     // Calculate the PID output with the PID controller
     const pidOutput = this.pid.calculate(
@@ -101,19 +99,15 @@ export class Motor implements Controller {
     );
 
     // Find the global position of the motor
-    const motorGlobalPosition = chassis.worldTranslation(
-      this.displacementVector.clone(),
-    );
+    const motorGlobalPosition = chassis.worldTranslation(this.displacementVector.clone(),);
 
     // Calculate the impulse to apply to the chassis
     const impulse = pidOutput
-      .projectOnPlane(
-        vec3({
-          x: 0,
-          y: 1,
-          z: 0,
-        }),
-      )
+      .projectOnPlane(vec3({
+        x: 0,
+        y: 1,
+        z: 0,
+      }),)
       .multiplyScalar(chassis.getMass());
 
     // Apply the impulse to the chassis

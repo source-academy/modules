@@ -9,6 +9,6 @@ describe('Make sure that all subcommands can execute', () => {
   mainCommand.commands.map(command => test(
     `Test ${command.name()}`,
     () => expect(command.parseAsync(['--help'], { from: 'user' }))
-      .commandExit(0))
-  );
+      .commandExit(0)
+  ));
 });

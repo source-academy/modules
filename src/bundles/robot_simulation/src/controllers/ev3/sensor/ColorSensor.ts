@@ -72,9 +72,7 @@ export class ColorSensor implements Sensor<Color> {
 
   getColorSensorPosition() {
     const chassis = this.chassisWrapper.getEntity();
-    const colorSensorPosition = chassis.worldTranslation(
-      this.displacement.clone(),
-    );
+    const colorSensorPosition = chassis.worldTranslation(this.displacement.clone(),);
     return colorSensorPosition;
   }
 

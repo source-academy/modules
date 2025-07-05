@@ -112,16 +112,14 @@ export function add_wall(pos: Vector2, rot: number, size: Vector2) {
     throw NO_WORLD;
   }
 
-  return world.addObject(
-    new PhysicsObject(
-      pos,
-      rot,
-      new b2PolygonShape()
-        .SetAsBox(size.x / 2, size.y / 2),
-      true,
-      world
-    )
-  );
+  return world.addObject(new PhysicsObject(
+    pos,
+    rot,
+    new b2PolygonShape()
+      .SetAsBox(size.x / 2, size.y / 2),
+    true,
+    world
+  ));
 }
 
 /**

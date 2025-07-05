@@ -105,9 +105,7 @@ export default class StatefulRenderer {
     if (firstStart) this.addWebGlListeners();
     this.inputTracker.addListeners();
 
-    const frameCallback: FrameRequestCallback = (
-      _timestamp: DOMHighResTimeStamp
-    ) => {
+    const frameCallback: FrameRequestCallback = (_timestamp: DOMHighResTimeStamp) => {
       this.inputTracker.respondToInput();
 
       if (this.inputTracker.frameDirty) {

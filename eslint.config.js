@@ -33,6 +33,7 @@ export default tseslint.config(
       'lib/buildtools/src/build/__test_mocks__',
       'lib/lintplugin/dist.js',
       'src/**/samples/**',
+      'src/bundles/scrabble/src/words.json', // Don't lint this because its way too big
       'src/java/**',
       'package-lock.json' // Just in case someone accidentally creates one
     ]
@@ -134,6 +135,8 @@ export default tseslint.config(
       'jsdoc/require-asterisk-prefix': 'warn',
 
       '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
+      '@stylistic/function-call-spacing': ['warn', 'never'],
+      '@stylistic/function-paren-newline': ['warn', 'multiline-arguments'],
       '@stylistic/quotes': ['warn', 'single', { avoidEscape: true }],
       '@stylistic/semi': ['warn', 'always'],
     }
@@ -169,8 +172,6 @@ export default tseslint.config(
       '@typescript-eslint/prefer-ts-expect-error': 'warn',
       '@typescript-eslint/sort-type-constituents': 'warn',
 
-      '@stylistic/function-call-spacing': ['warn', 'never'],
-      '@stylistic/function-paren-newline': ['warn', 'multiline'],
       '@stylistic/type-annotation-spacing': ['warn', { overrides: { colon: { before: false, after: true }}}],
     }
   },

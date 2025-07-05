@@ -162,9 +162,7 @@ function drawImage(source: ImageElement | VideoElement): void {
     console.error(errMsg);
 
     if (!e.name) {
-      errorLogger(
-        'There is an error with filter function (error shown below). Filter will be reset back to the default. If you are facing an infinite loop error, you can consider increasing the timeout period (clock icon) at the top / reducing the frame dimensions.'
-      );
+      errorLogger('There is an error with filter function (error shown below). Filter will be reset back to the default. If you are facing an infinite loop error, you can consider increasing the timeout period (clock icon) at the top / reducing the frame dimensions.');
 
       errorLogger([e], true);
     } else {

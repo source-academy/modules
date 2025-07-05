@@ -407,9 +407,7 @@ export const draw_points_3d = createPlotFunction(
 export function draw_sound_2d(sound: Sound) {
   const FS: number = 44100; // Output sample rate
   if (!is_sound(sound)) {
-    throw new Error(
-      `draw_sound_2d is expecting sound, but encountered ${sound}`
-    );
+    throw new Error(`draw_sound_2d is expecting sound, but encountered ${sound}`);
     // If a sound is already displayed, terminate execution.
   } else if (get_duration(sound) < 0) {
     throw new Error('draw_sound_2d: duration of sound is negative');

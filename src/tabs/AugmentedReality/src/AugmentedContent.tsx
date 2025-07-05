@@ -28,17 +28,13 @@ export function AugmentedContent(props: ARState) {
         return;
       }
       if (prev) {
-        const object = objectsRef.current?.find(
-          (item) => item.uuid === prev.uuid,
-        );
+        const object = objectsRef.current?.find((item) => item.uuid === prev.uuid,);
         if (object) {
           object.isInFront = false;
         }
       }
       if (current) {
-        const object = objectsRef.current?.find(
-          (item) => item.uuid === current.uuid,
-        );
+        const object = objectsRef.current?.find((item) => item.uuid === current.uuid,);
         if (object) {
           object.isInFront = true;
           setFrontObject(object);
@@ -98,9 +94,7 @@ export function AugmentedContent(props: ARState) {
     if (!overlayRef || !overlayRef.current) return;
     const overlay = overlayRef.current;
     // Recalibrate
-    const recalibrateToggle = overlay?.querySelector(
-      '#recalibrate-toggle',
-    ) as HTMLElement;
+    const recalibrateToggle = overlay?.querySelector('#recalibrate-toggle',) as HTMLElement;
     if (recalibrateToggle) {
       recalibrateToggle.onclick = recalibrate;
     }
@@ -120,9 +114,7 @@ export function AugmentedContent(props: ARState) {
       }
     }
     // Center
-    const centerToggle = overlay?.querySelector(
-      '#center-toggle',
-    ) as HTMLElement;
+    const centerToggle = overlay?.querySelector('#center-toggle',) as HTMLElement;
     if (centerToggle) {
       if (overlayHelper.toggleCenter) {
         centerToggle.style.display = 'block';

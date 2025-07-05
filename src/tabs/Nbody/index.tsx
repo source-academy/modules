@@ -175,7 +175,7 @@ class Nbody extends React.Component<Props, State> {
                       sim.start(divId, 500, 500, 1, true);
                     }
                   }}
-                ></div>
+                />
               </div>
             );
           })

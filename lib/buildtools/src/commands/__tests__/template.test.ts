@@ -41,7 +41,8 @@ const mockedAskQuestion = vi.mocked(askQuestion);
 
 function expectCall<T extends(...args: any) => any>(
   func: T,
-  ...expected: Parameters<T>[]) {
+  ...expected: Parameters<T>[]
+) {
   const mocked = vi.mocked(func);
 
   expect(func)

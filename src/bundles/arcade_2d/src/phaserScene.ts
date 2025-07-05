@@ -201,13 +201,11 @@ export class PhaserScene extends Phaser.Scene {
             shape.radius
           ));
           if (gameObject.getHitboxState().isHitboxActive) {
-            this.phaserGameObjects[gameObject.id].setInteractive(
-              new Phaser.Geom.Circle(
-                shape.radius,
-                shape.radius,
-                shape.radius
-              ), Phaser.Geom.Circle.Contains
-            );
+            this.phaserGameObjects[gameObject.id].setInteractive(new Phaser.Geom.Circle(
+              shape.radius,
+              shape.radius,
+              shape.radius
+            ), Phaser.Geom.Circle.Contains);
           }
         }
         if (gameObject instanceof TriangleGameObject) {
@@ -223,16 +221,14 @@ export class PhaserScene extends Phaser.Scene {
             shape.y3
           ));
           if (gameObject.getHitboxState().isHitboxActive) {
-            this.phaserGameObjects[gameObject.id].setInteractive(
-              new Phaser.Geom.Triangle(
-                shape.x1,
-                shape.y1,
-                shape.x2,
-                shape.y2,
-                shape.x3,
-                shape.y3
-              ), Phaser.Geom.Triangle.Contains
-            );
+            this.phaserGameObjects[gameObject.id].setInteractive(new Phaser.Geom.Triangle(
+              shape.x1,
+              shape.y1,
+              shape.x2,
+              shape.y2,
+              shape.x3,
+              shape.y3
+            ), Phaser.Geom.Triangle.Contains);
           }
         }
       }
@@ -287,9 +283,7 @@ export class PhaserScene extends Phaser.Scene {
         gameState.debugLogArray.push(`${error.name}: ${error.message}`);
       } else {
         const exceptionError = error as ExceptionError;
-        gameState.debugLogArray.push(
-          `Line ${exceptionError.location.start.line}: ${exceptionError.error.name}: ${exceptionError.error.message}`
-        );
+        gameState.debugLogArray.push(`Line ${exceptionError.location.start.line}: ${exceptionError.error.name}: ${exceptionError.error.message}`);
       }
     }
   }

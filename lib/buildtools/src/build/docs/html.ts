@@ -27,4 +27,5 @@ export const {
         message: `${error}`
       };
     }
-  });
+  }
+);

@@ -1,5 +1,5 @@
 import { stringify } from 'js-slang/dist/utils/stringify';
-import { test, expect } from 'vitest';
+import { expect, test } from 'vitest';
 import { generateCurve, type Curve } from '../curves_webgl';
 import { animate_3D_curve, animate_curve, draw_3D_connected, draw_connected, make_point } from '../functions';
 

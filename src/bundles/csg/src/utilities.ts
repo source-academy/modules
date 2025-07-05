@@ -110,9 +110,7 @@ export class Shape implements Operable, ReplResult {
 
   store(newTransforms: Mat4 = mat4.create()): void {
     Core.getRenderGroupManager()
-      .storeShape(
-        this.applyTransforms(newTransforms) as Shape
-      );
+      .storeShape(this.applyTransforms(newTransforms) as Shape);
   }
 
   translate(offsets: [number, number, number]): Shape {
@@ -187,9 +185,7 @@ export class RenderGroupManager {
   }
 
   getGroupsToRender(): RenderGroup[] {
-    return this.renderGroups.filter(
-      (renderGroup: RenderGroup) => renderGroup.render
-    );
+    return this.renderGroups.filter((renderGroup: RenderGroup) => renderGroup.render);
   }
 }
 

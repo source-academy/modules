@@ -101,9 +101,7 @@ export class PhysicsObject implements ReplResult {
   }
 
   private applyForcesToCenter(world_time: number) {
-    this.forcesCentered = this.forcesCentered.filter(
-      (force: Force) => force.start_time + force.duration > world_time
-    );
+    this.forcesCentered = this.forcesCentered.filter((force: Force) => force.start_time + force.duration > world_time);
 
     const resForce = this.forcesCentered
       .filter((force: Force) => force.start_time < world_time)
@@ -116,9 +114,7 @@ export class PhysicsObject implements ReplResult {
   }
 
   private applyForcesAtAPoint(world_time: number) {
-    this.forcesAtAPoint = this.forcesAtAPoint.filter(
-      (forceWithPos: ForceWithPos) => forceWithPos.force.start_time + forceWithPos.force.duration > world_time
-    );
+    this.forcesAtAPoint = this.forcesAtAPoint.filter((forceWithPos: ForceWithPos) => forceWithPos.force.start_time + forceWithPos.force.duration > world_time);
 
     this.forcesAtAPoint.forEach((forceWithPos) => {
       const force = forceWithPos.force;
@@ -148,12 +144,8 @@ export class PhysicsObject implements ReplResult {
   public toReplString = () => `
   Mass: ${this.getMass()
     .toFixed(ACCURACY)}
-  Position: [${this.getPosition().x.toFixed(
-    ACCURACY
-  )},${this.getPosition().y.toFixed(ACCURACY)}]
-  Velocity: [${this.getVelocity().x.toFixed(
-    ACCURACY
-  )},${this.getVelocity().y.toFixed(ACCURACY)}] 
+  Position: [${this.getPosition().x.toFixed(ACCURACY)},${this.getPosition().y.toFixed(ACCURACY)}]
+  Velocity: [${this.getVelocity().x.toFixed(ACCURACY)},${this.getVelocity().y.toFixed(ACCURACY)}] 
   
   Rotation: ${this.getRotation()
     .toFixed(ACCURACY)}
@@ -167,12 +159,10 @@ export class PhysicsObject implements ReplResult {
       const centroid: b2Vec2 = this.shape.m_centroid;
       const arr: b2Vec2[] = [];
       this.shape.m_vertices.forEach((vec) => {
-        arr.push(
-          new b2Vec2(
-            centroid.x + scale * (vec.x - centroid.x),
-            centroid.y + scale * (vec.y - centroid.y)
-          )
-        );
+        arr.push(new b2Vec2(
+          centroid.x + scale * (vec.x - centroid.x),
+          centroid.y + scale * (vec.y - centroid.y)
+        ));
       });
       this.shape = new b2PolygonShape()
         .Set(arr);

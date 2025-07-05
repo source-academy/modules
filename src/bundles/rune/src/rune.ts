@@ -109,16 +109,14 @@ export class Rune {
     return runeList;
   };
 
-  public static of = (
-    params: {
-      vertices?: Float32Array;
-      colors?: Float32Array | null;
-      transformMatrix?: mat4;
-      subRunes?: Rune[];
-      texture?: HTMLImageElement | null;
-      hollusionDistance?: number;
-    } = {}
-  ) => {
+  public static of = (params: {
+    vertices?: Float32Array;
+    colors?: Float32Array | null;
+    transformMatrix?: mat4;
+    subRunes?: Rune[];
+    texture?: HTMLImageElement | null;
+    hollusionDistance?: number;
+  } = {}) => {
     const paramGetter = (name: string, defaultValue: () => any) => (params[name] === undefined ? defaultValue() : params[name]);
 
     return new Rune(

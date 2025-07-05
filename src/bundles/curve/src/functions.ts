@@ -1,5 +1,5 @@
 import context from 'js-slang/context';
-import { type Curve, type CurveDrawn, generateCurve, Point } from './curves_webgl';
+import { Point, generateCurve, type Curve, type CurveDrawn } from './curves_webgl';
 import {
   AnimatedCurve,
   type CurveAnimation,

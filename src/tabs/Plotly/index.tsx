@@ -48,11 +48,10 @@ class Plotly extends React.Component<Props, State> {
               }
             }}
             style={{ height: '80vh' }}
-          >
-          </div>
+          />
         </Modal>
         {
-          drawnPlots.map((drawnPlot: any, id:number) => {
+          drawnPlots.map((drawnPlot: any, id: number) => {
             const divId = `plotDiv${id}`;
             return (
               <div style={{
@@ -75,8 +74,7 @@ class Plotly extends React.Component<Props, State> {
                   ref={() => {
                     drawnPlot.draw(divId);
                   }}
-                >
-                </div>
+                />
               </div>
             );
           })

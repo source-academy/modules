@@ -104,18 +104,14 @@ function makeExtraEntities(
   // Run calculations for grid and/or axis only if needed
   if (!(hasAxis || hasGrid)) return [];
 
-  const boundingBoxes: BoundingBox[] = solids.map(
-    (solid: Solid): BoundingBox => measureBoundingBox(solid)
-  );
-  const minMaxXys: number[][] = boundingBoxes.map(
-    (boundingBox: BoundingBox): number[] => {
-      const minX = boundingBox[0][0];
-      const minY = boundingBox[0][1];
-      const maxX = boundingBox[1][0];
-      const maxY = boundingBox[1][1];
-      return [minX, minY, maxX, maxY];
-    }
-  );
+  const boundingBoxes: BoundingBox[] = solids.map((solid: Solid): BoundingBox => measureBoundingBox(solid));
+  const minMaxXys: number[][] = boundingBoxes.map((boundingBox: BoundingBox): number[] => {
+    const minX = boundingBox[0][0];
+    const minY = boundingBox[0][1];
+    const maxX = boundingBox[1][0];
+    const maxY = boundingBox[1][1];
+    return [minX, minY, maxX, maxY];
+  });
   const xys: number[] = minMaxXys.flat(1);
   const distancesFromOrigin: number[] = xys.map(Math.abs);
   const furthestDistance: number = Math.max(...distancesFromOrigin);
@@ -132,9 +128,7 @@ export function makeWrappedRendererData(
   renderGroup: RenderGroup,
   cameraState: PerspectiveCameraState
 ): WrappedRendererData {
-  const solids: Solid[] = renderGroup.shapes.map(
-    (shape: Shape): Solid => shape.solid
-  );
+  const solids: Solid[] = renderGroup.shapes.map((shape: Shape): Solid => shape.solid);
   const geometryEntities: GeometryEntity[] = solidsToGeometryEntities(solids);
   const extraEntities: Entity[] = makeExtraEntities(renderGroup, solids);
   const allEntities: Entity[] = [...geometryEntities, ...extraEntities];
@@ -153,9 +147,7 @@ export function makeWrappedRendererData(
   };
 }
 
-export function makeWrappedRenderer(
-  canvas: HTMLCanvasElement
-): WrappedRenderer {
+export function makeWrappedRenderer(canvas: HTMLCanvasElement): WrappedRenderer {
   return prepareRender({
     // Used to initialise Regl from the REGL package constructor
     glOptions: { canvas }

@@ -48,12 +48,8 @@ let timeout_objects: number[] = []; // set_timeout_renamed return type
 // given the x, y coordinates of a "click" event
 // return the row and column numbers of the clicked square in an array
 function x_y_to_row_column(x: number, y: number): number[] {
-  const row = Math.floor(
-    (y - margin_length) / (square_side_length + distance_between_squares)
-  );
-  const column = Math.floor(
-    (x - margin_length) / (square_side_length + distance_between_squares)
-  );
+  const row = Math.floor((y - margin_length) / (square_side_length + distance_between_squares));
+  const column = Math.floor((x - margin_length) / (square_side_length + distance_between_squares));
   return [row, column];
 }
 
@@ -341,9 +337,7 @@ ToneMatrix.bindMatrixButtons = bindMatrixButtons;
 // return the current state of the matrix, represented by a list of lists of bits
 export function get_matrix(): List {
   if (!matrix) {
-    throw new Error(
-      'Please activate the tone matrix first by clicking on the tab!'
-    );
+    throw new Error('Please activate the tone matrix first by clicking on the tab!');
   }
   const matrix_list = matrix.slice(0);
   const result: List[] = [];
@@ -378,9 +372,7 @@ export function set_timeout(f, t) {
     const timeoutObj = set_time_out_renamed(f, t);
     timeout_objects.push(timeoutObj);
   } else {
-    throw new Error(
-      'set_timeout(f, t) expects a function and a number respectively.'
-    );
+    throw new Error('set_timeout(f, t) expects a function and a number respectively.');
   }
 }
 

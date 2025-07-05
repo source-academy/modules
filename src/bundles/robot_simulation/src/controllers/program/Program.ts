@@ -70,9 +70,7 @@ export class Program implements Controller {
       }
     } catch (e) {
       console.error(e);
-      throw new ProgramError(
-        'Error in program execution. Please check your code and try again.',
-      );
+      throw new ProgramError('Error in program execution. Please check your code and try again.',);
     }
   }
 

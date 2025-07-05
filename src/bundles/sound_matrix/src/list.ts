@@ -36,9 +36,7 @@ export function head(xs): any {
   if (is_pair(xs)) {
     return xs[0];
   } else {
-    throw new Error(
-      'head(xs) expects a pair as argument xs, but encountered ' + xs
-    );
+    throw new Error('head(xs) expects a pair as argument xs, but encountered ' + xs);
   }
 }
 
@@ -49,9 +47,7 @@ export function tail(xs) {
   if (is_pair(xs)) {
     return xs[1];
   } else {
-    throw new Error(
-      'tail(xs) expects a pair as argument xs, but encountered ' + xs
-    );
+    throw new Error('tail(xs) expects a pair as argument xs, but encountered ' + xs);
   }
 }
 
@@ -139,11 +135,9 @@ export function map(f, xs) {
 // tslint:disable-next-line:ban-types
 export function build_list(n, fun) {
   if (typeof n !== 'number' || n < 0 || Math.floor(n) !== n) {
-    throw new Error(
-      'build_list(n, fun) expects a positive integer as '
+    throw new Error('build_list(n, fun) expects a positive integer as '
         + 'argument n, but encountered '
-        + n
-    );
+        + n);
   }
 
   // tslint:disable-next-line:ban-types
@@ -168,9 +162,7 @@ export function build_list(n, fun) {
 // tslint:disable-next-line:ban-types
 export function for_each(fun, xs) {
   if (!is_list(xs)) {
-    throw new Error(
-      'for_each expects a list as argument xs, but encountered ' + xs
-    );
+    throw new Error('for_each expects a list as argument xs, but encountered ' + xs);
   }
   for (; !is_null(xs); xs = tail(xs)) {
     fun(head(xs));
@@ -182,9 +174,7 @@ export function for_each(fun, xs) {
 // reverse throws an exception if the argument is not a list.
 export function reverse(xs) {
   if (!is_list(xs)) {
-    throw new Error(
-      'reverse(xs) expects a list as argument xs, but encountered ' + xs
-    );
+    throw new Error('reverse(xs) expects a list as argument xs, but encountered ' + xs);
   }
   let result: any = null;
   for (; !is_null(xs); xs = tail(xs)) {
@@ -293,16 +283,12 @@ export function filter(pred, xs) {
 // exceeds end.
 export function enum_list(start, end) {
   if (typeof start !== 'number') {
-    throw new Error(
-      'enum_list(start, end) expects a number as argument start, but encountered '
-        + start
-    );
+    throw new Error('enum_list(start, end) expects a number as argument start, but encountered '
+        + start);
   }
   if (typeof end !== 'number') {
-    throw new Error(
-      'enum_list(start, end) expects a number as argument start, but encountered '
-        + end
-    );
+    throw new Error('enum_list(start, end) expects a number as argument start, but encountered '
+        + end);
   }
   if (start > end) {
     return null;
@@ -314,10 +300,8 @@ export function enum_list(start, end) {
 // Returns the item in list lst at index n (the first item is at position 0)
 export function list_ref(xs, n) {
   if (typeof n !== 'number' || n < 0 || Math.floor(n) !== n) {
-    throw new Error(
-      'list_ref(xs, n) expects a positive integer as argument n, but encountered '
-        + n
-    );
+    throw new Error('list_ref(xs, n) expects a positive integer as argument n, but encountered '
+        + n);
   }
   for (; n > 0; --n) {
     xs = tail(xs);
@@ -349,9 +333,7 @@ export function set_head(xs, x) {
     xs[0] = x;
     return undefined;
   } else {
-    throw new Error(
-      'set_head(xs,x) expects a pair as argument xs, but encountered ' + xs
-    );
+    throw new Error('set_head(xs,x) expects a pair as argument xs, but encountered ' + xs);
   }
 }
 
@@ -363,8 +345,6 @@ export function set_tail(xs, x) {
     xs[1] = x;
     return undefined;
   } else {
-    throw new Error(
-      'set_tail(xs,x) expects a pair as argument xs, but encountered ' + xs
-    );
+    throw new Error('set_tail(xs,x) expects a pair as argument xs, but encountered ' + xs);
   }
 }

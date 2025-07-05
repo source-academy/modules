@@ -617,9 +617,7 @@ export function is_group(parameter: unknown): boolean {
  *
  * @category Utilities
  */
-export function bounding_box(
-  shape: Shape
-): (axis: string, minMax: string) => number {
+export function bounding_box(shape: Shape): (axis: string, minMax: string) => number {
   const bounds: BoundingBox = measureBoundingBox(shape.solid);
 
   return (axis: string, minMax: string): number => {
@@ -628,18 +626,14 @@ export function bounding_box(
     else if (axis === 'y') j = 1;
     else if (axis === 'z') j = 2;
     else {
-      throw new Error(
-        `Bounding box getter function expected "x", "y", or "z" as first parameter, but got ${axis}`
-      );
+      throw new Error(`Bounding box getter function expected "x", "y", or "z" as first parameter, but got ${axis}`);
     }
 
     let i: number;
     if (minMax === 'min') i = 0;
     else if (minMax === 'max') i = 1;
     else {
-      throw new Error(
-        `Bounding box getter function expected "min" or "max" as second parameter, but got ${minMax}`
-      );
+      throw new Error(`Bounding box getter function expected "min" or "max" as second parameter, but got ${minMax}`);
     }
 
     return bounds[i][j];

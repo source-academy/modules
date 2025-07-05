@@ -17,9 +17,7 @@ export const ColorSensorPanel: React.FC<{ ev3?: DefaultEv3 }> = ({ ev3 }) => {
 
   useEffect(() => {
     if (colorSensor && sensorVisionRef.current) {
-      sensorVisionRef.current.replaceChildren(
-        colorSensor.renderer.getElement()
-      );
+      sensorVisionRef.current.replaceChildren(colorSensor.renderer.getElement());
     }
   }, [timing]);
 
@@ -38,7 +36,7 @@ export const ColorSensorPanel: React.FC<{ ev3?: DefaultEv3 }> = ({ ev3 }) => {
   return (
     <TabWrapper>
       <LastUpdated time={timing} />
-      <div ref={sensorVisionRef}></div>
+      <div ref={sensorVisionRef} />
       <p>Red: {color.r}</p>
       <p>Green: {color.g}</p>
       <p>Blue: {color.b}</p>

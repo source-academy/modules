@@ -226,13 +226,11 @@ describe('Entity', () => {
 
         const localDirection = vec3({ x: 1, y: 2, z: 3 });
         const worldDirection = entity.transformDirection(localDirection.clone());
-        expect(worldDirection).toEqual(
-          {
-            x:-localDirection.x,
-            y:localDirection.y,
-            z:-localDirection.z,
-          }
-        );
+        expect(worldDirection).toEqual({
+          x:-localDirection.x,
+          y:localDirection.y,
+          z:-localDirection.z,
+        });
       });
     });
 

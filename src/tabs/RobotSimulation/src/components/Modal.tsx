@@ -52,7 +52,7 @@ export const Modal: React.FC<ModalProps> = ({ children, isOpen, onClose }) => {
         display: isOpen ? 'block' : 'none',
       }}
     >
-      <div style={greyedOutBackground}></div>
+      <div style={greyedOutBackground} />
       <span style={closeButtonStyle} onClick={onClose}>
         x
       </span>

@@ -2,12 +2,12 @@ import * as THREE from 'three';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { NumberPidController, VectorPidController } from '../../../ev3/feedback_control/PidController';
 
-const resetPid = (pidController:NumberPidController) => {
+const resetPid = (pidController: NumberPidController) => {
   pidController.errorsSum = 0;
   pidController.previousError = 0;
 };
 
-const resetVectorPid = (pidController:VectorPidController) => {
+const resetVectorPid = (pidController: VectorPidController) => {
   pidController.errorsSum = new THREE.Vector3();
   pidController.previousError = new THREE.Vector3();
 };
