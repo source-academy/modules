@@ -1,6 +1,5 @@
 import stylePlugin from '@stylistic/eslint-plugin';
 import type { Linter } from 'eslint';
-// @ts-expect-error Wait for eslint-plugin-import to publish the release that has typescript types
 import * as importPlugin from 'eslint-plugin-import';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
