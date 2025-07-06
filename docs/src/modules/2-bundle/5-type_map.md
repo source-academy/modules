@@ -36,7 +36,7 @@ Note that the type map export has a `@hidden` documentation tag applied to it.
 > and not where it is being declared:
 > ```ts
 > const { type_map } = createTypeMap()
-> export { 
+> export {
 >   /** @hidden */
 >   type_map
 > }

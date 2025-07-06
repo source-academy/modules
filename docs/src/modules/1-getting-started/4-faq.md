@@ -3,18 +3,7 @@ title: FAQ
 ---
 # Frequently Asked Questions
 
-* [**Infrastructure**](https://github.com/source-academy/modules/wiki/FAQs#infrastructure)
-  * [Could you explain more on the infrastructure of the modules system? Especially regarding how the bundle and tabs communicate.](#could-you-explain-more-on-the-infrastructure-of-the-modules-system-especially-regarding-how-the-bundle-and-tabs-communicate)
-* [**Set Up and Configuration**](#set-up-and-configuration)
-  * [How do we use our own local version of the js-slang interpreter with the modules?](#how-do-we-use-our-own-local-version-of-the-js-slang-interpreter-with-the-modules)
-  * [Is it possible to be using modules served from more than one location simultaneously?](#is-it-possible-to-be-using-modules-served-from-more-than-one-location-simultaneously)
-* [**Language Specifications**](#language-specifications)
-  * [Can a user on Source Academy import more than one module at once?](https://github.com/source-academy/modules/wiki/FAQs#can-a-user-on-source-academy-import-more-than-one-module-at-once)
-* [**Tabs**](#tabs)
-  * [Why is my Tab not spawning on Source Academy?](#why-is-my-tab-not-spawning-on-source-academy)
-  * [How does the modules system handles css for the tabs?](#how-does-the-modules-system-handles-css-for-the-tabs)
-* [**Interaction with `js-slang`**](#interaction-with-js-slang)
-  * [How can we switch to the Source interpreter rather than the Source transpiler?](#how-can-we-switch-to-the-source-interpreter-rather-than-the-source-transpiler)
+[[toc]]
 
 ## Infrastructure
 
@@ -28,9 +17,9 @@ A brief overview of the current infrastructure is explained [here](../4-advanced
 
 Firstly, a `bundle` is defined as the suite of functions that are provided by the module. More specifically, what we mean by this is that the bundle will provide all the functions and constants that are intended to be available for use by the cadet when programming in the Source language. 
 ```ts
-import { install_filter, video_height, video_width, init } from "pix_n_flix";
+import { init, install_filter, video_height, video_width } from 'pix_n_flix';
 
-install_filter((src, dest) => { ... });
+install_filter((src, dest) => { /* implementation */ });
 init();
 ```
 An example of the code that makes use of a module written in the Source language is given above. The main objective of the `bundle` is to provide the behind the scenes implementation of the `install_filter`, `video_height`, `video_width` and `init` functions so that the cadet programming in Source language can use it as a black box. In the above example, you can find the implementations of the said functions [here](https://github.com/source-academy/modules/blob/master/src/bundles/pix_n_flix/index.ts). The `bundle` however, does not store all logical functions that is required by your module like those needed only by the tab that are not provided to the cadets.
@@ -41,7 +30,7 @@ An example of an implementation of this is from the `pix_n_flix` module. The imp
 ```ts
 {
   toReplString: () => string;
-  init: (video: HTMLVideoElement, canvas: HTMLCanvasElement, _errorLogger: () => void) => void; 
+  init: (video: HTMLVideoElement, canvas: HTMLCanvasElement, _errorLogger: () => void) => {};
 }
 ```
 As described in the paragraphs above, this return value of the `init()` function will be stored within the `debuggerContext` in `debuggerContext.result.value`. The `tab` associated with the rendering of the video and canvas element will then render the HTMLVideoElement and HTMLCanvasElement, before creating references to the respective elements and applying the `init()` function in `debuggerContext.result.value` in the component's `componentDidMount()` method. 
@@ -67,8 +56,8 @@ It is not possible to be retrieving the modules' JavaScript files from more than
 ### Can a user on Source Academy import more than one module at once?
 > Am I able to run the following code in Source?
 ```ts
-import { function_a } from "module_a";
-import { function_b } from "module_b";
+import { function_a } from 'module_a';
+import { function_b } from 'module_b';
 
 function_a();
 function_b();

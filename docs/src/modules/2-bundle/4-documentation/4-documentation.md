@@ -137,6 +137,10 @@ The export will now be correctly recognized as a function:
 
 There is no automatic way to make this distinction, so it is up to the bundle authors to make sure that this convention is adhered to.
 
+### Other Tags
+There are a variety of tags that Typedoc supports. This list can be found [here](https://typedoc.org/documents/Tags.html). When writing your documentation you should use these tags
+to the best of your ability to help make your documentation as comprehensive as possible.
+
 ## HTML Documentation
 The human readable documentation resides in the `build/documentation` folder. You can view its output [here](https://source-academy.github.io/modules/documentation). This is what the output for `make_point` looks like:
 
@@ -188,12 +192,15 @@ If no documentation could be found, or there was an error parsing the documented
 ## Code Samples
 
 You can include "sample" files that are written in Javascript. These files can be used as part of documentation but are not intended to be included during compilation or
-used by Source users. Refer to the `csg` bundle for an example of this.
+used by Source users. Refer to the `csg` bundle for an example of this. Usually, these are contained in a `samples` folder located within the bundle directory.
+
+These files aren't automatically included by Typedoc, but Typedoc does have [a mechanism](https://typedoc.org/documents/External_Documents.html) for including external code. Alternatively, a simple solution
+would be to provide a link to the Github folder in which your sample files are contained.
 
 ## JSDoc Annotations
 Modules are written primarily in Typescript.
 
-There is a convention for writing type annotations (essentially documentations comments) in Javascript that allows for type checking functionality. Since
+There is a convention for writing type annotations (essentially documentations comments) in Javascript that allows for type checking functionality known as JSDoc. Since
 modules are already written in Typescript, there is no need to use JSDoc comments to document the type of an object. All type annotations should be written in Typescript
 so as not to confuse Typedoc.
 

@@ -62,3 +62,20 @@ been able to get that to work. You can start [here](https://github.com/vuejs/vit
 ## Diagrams
 Diagrams (such as the one seen [here](/buildtools/4-resolution.html#bundle-resolution)) are supported via the [`mermaid`](https://mermaid.js.org) rendering engine and provided with the [Vitepress plugin for mermaid](https://github.com/emersonbottero/vitepress-plugin-mermaid).
 Simply use a Markdown code block with the `mermaid` language tag.
+
+## Code Snippets
+`vitepress` provides the ability for a Markdown document to "import" a code snippet from an external file. This function is documented [here](https://vitepress.dev/guide/markdown#import-code-snippets).
+
+Throughout many files in the repository, you will see VSCode `#region` comments. These comments are used to mark out a VSCode region in Typescript/Javascript and are used by the doc server to extract only
+a specified portion of the code within the file. Do not remove these comments unless absolutely necessary.
+
+## Tree Diagrams
+Directory tree diagrams like the one below
+```txt
+this
+├── is
+├── a
+└── tree
+    └── diagram
+```
+were generated from [this website](https://tree.nathanfriend.com/)

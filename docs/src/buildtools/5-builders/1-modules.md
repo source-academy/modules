@@ -16,7 +16,7 @@ Bundles and tabs are transpiled with esbuild using the following common options 
 
 This converts each bundle and tab into an [IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE). Here is the `curve` bundle passed through `esbuild`:
 
-```ts
+```js
 // All of the code within the curve bundle is combined into a single file
 // build/bundles/curve.js
 var globalName = (() => {
@@ -26,7 +26,6 @@ var globalName = (() => {
   function copy(out, a) { /* implemntation details */ }
   // ... and other implementation details
 
-  
   // The module's exports are returned as a single object
   return {
     draw_connected_2d,

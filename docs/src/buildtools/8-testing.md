@@ -24,7 +24,7 @@ And then we have a child config that inherits from the root config:
 ```ts
 // src/bundles/curve/vitest.config.ts
 
-import { mergeConfig, defineProject } from 'vitest/config';
+import { defineProject, mergeConfig } from 'vitest/config';
 import rootConfig from '../../vitest.config.ts';
 
 export default mergeConfig(

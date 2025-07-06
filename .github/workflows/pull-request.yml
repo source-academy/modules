@@ -32,7 +32,7 @@ jobs:
     outputs:
       # if the workflow file was modified, then we rerun the entire job
       devserver: ${{ steps.filter.outputs.devserver || steps.filter.outputs.workflows }}
-      # if the devserver needs to be tested bundles and tabs need to bre rebuilt
+      # if the devserver needs to be tested bundles and tabs need to be rebuilt
       modules: ${{ steps.filter.outputs.modules || steps.filter.outputs.workflows || steps.filter.outputs.devserver }}
       libraries: ${{ steps.filter.outputs.libraries || steps.filter.outputs.workflows }}
       docs: ${{ steps.filter.outputs.docs || steps.filter.outputs.workflows }}

@@ -42,7 +42,7 @@ The project was suggested by Professor Martin Henz who first proposed to include
 >
 > This means that we will explicitly import modules (libraries) from now on, in order to use them:
 > ```ts
-> import { heart as lung, show as view, stack, sail } from 'lib/runes';
+> import { heart as lung, sail, show as view, stack } from 'lib/runes';
 > 
 > view(stack(lung, sail));
 > ```

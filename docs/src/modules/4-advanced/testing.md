@@ -70,7 +70,7 @@ Any tests that you have written must be pass in order for you to push to the mai
 ## Custom Test Configuration
 The default test configuration parameters are as follows:
 ```js
-import { mergeConfig, defineProject } from 'vitest/config';
+import { defineProject, mergeConfig } from 'vitest/config';
 import rootConfig from '[repo root]/vitest.config.js'; // the config at the repo root
 
 export default mergeConfig(
@@ -83,7 +83,7 @@ export default mergeConfig(
       watch: false
     }
   })
-)
+);
 ```
 
 ::: details `vitest.config.js` vs `vitest.config.ts`
@@ -116,5 +116,5 @@ Should you need to use a unique configuration, follow the steps below:
 >   test: {
 >     // vitest configuration options
 >   }
-> })
+> });
 > ```

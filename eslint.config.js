@@ -54,8 +54,8 @@ export default tseslint.config(
     plugins: { markdown },
     rules: {
       'markdown/no-missing-label-refs': 'off', // was error
-      'markdown/no-multiple-h1': 'off', // was error
-      'markdown/require-alt-text': 'off', // was error
+      'markdown/no-multiple-h1': 'off',        // was error
+      'markdown/require-alt-text': 'off',      // was error
     }
   },
   {
@@ -71,7 +71,7 @@ export default tseslint.config(
       '@stylistic/indent': ['warn', 2, { SwitchCase: 1 }],
       '@stylistic/no-mixed-spaces-and-tabs': 'warn',
       '@stylistic/no-multiple-empty-lines': ['warn', { max: 1, maxEOF: 0 }],
-      '@stylistic/no-multi-spaces': 'warn',
+      '@stylistic/no-multi-spaces': ['warn', { ignoreEOLComments: true }],
       '@stylistic/no-trailing-spaces': 'warn',
       '@stylistic/spaced-comment': [
         'warn',
@@ -144,7 +144,7 @@ export default tseslint.config(
   {
     extends: tseslint.configs.recommended,
     name: 'Global Typescript Rules',
-    files: ['**/*.ts*'],
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
@@ -185,7 +185,6 @@ export default tseslint.config(
       'react-hooks/rules-of-hooks': 'error',
 
       '@stylistic/jsx-equals-spacing': ['warn', 'never'],
-      '@stylistic/jsx-indent': ['warn', 2],
       '@stylistic/jsx-indent-props': ['warn', 2],
       '@stylistic/jsx-props-no-multi-spaces': 'warn',
       '@stylistic/jsx-self-closing-comp': 'warn',

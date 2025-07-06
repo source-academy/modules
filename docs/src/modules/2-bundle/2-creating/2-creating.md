@@ -40,7 +40,7 @@ From there you can edit your bundle as necessary
 ## Naming your Bundle
 The name of your bundle is what Source users will import from to actually use your bundle:
 ```ts
-import { function } from 'new_bundle';
+import { func } from 'new_bundle';
 ```
 
 Your bundle's name should be concise and give be somewhat descriptive of what functionalities your bundle provides.

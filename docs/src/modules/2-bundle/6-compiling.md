@@ -28,7 +28,7 @@ The output for your bundle will be placed at `/build/bundles/[your_bundle_name].
 A Source Bundle may use another Source Bundle as a dependency. As an example, the `plotly` bundle relies on the `curve` bundle:
 ```ts {2,3}
 // plotly/src/curve_functions.ts
-import { x_of, y_of, z_of, r_of, g_of, b_of } from '@sourceacademy/bundle-curve';
+import { b_of, g_of, r_of, x_of, y_of, z_of } from '@sourceacademy/bundle-curve';
 import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { CurvePlot } from './plotly';
@@ -39,7 +39,7 @@ If you intend for your bundle to be consumed from other bundles, do the followin
 ### 1. Ensure that your `tsconfig.json` is properly configured
 ```json
 {
-  "compilerOptions" {
+  "compilerOptions": {
     "outDir": "./dist", // Make sure outDir is specified
     "noEmit": false,    // noEmit needs to be false
     "declaration": true // declaration needs to be true

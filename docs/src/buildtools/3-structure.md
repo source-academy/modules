@@ -31,10 +31,10 @@ embeds the entire JSON file into `bin/index.js`, thus removing the import altoge
 // ../../package.json
 var package_default = {
   private: true,
-  name: "@sourceacademy/modules",
-  version: "1.0.0",
-  repository: "https://github.com/source-academy/modules.git",
-  license: "Apache-2.0",
+  name: '@sourceacademy/modules',
+  version: '1.0.0',
+  repository: 'https://github.com/source-academy/modules.git',
+  license: 'Apache-2.0',
   // other things...
 };
 const typescriptVersion = package_default.devDependencies.typescript;

@@ -66,15 +66,14 @@ import { defineTab } from '@sourceacademy/modules-lib/tabs';
 export default defineTab({
   // ...details
 })
-
 ```
 
 
 Here is an example of a tab object:
-```ts
+```tsx
 // Curve/src/index.tsx
 import type { CurveModuleState } from '@sourceacademy/bundle-curve/types';
-import { defineTab, getModuleState, MultiItemDisplay } from '@sourceacademy/modules-lib/tabs';
+import { MultiItemDisplay, defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs';
 
 export default defineTab({
   toSpawn(context: DebuggerContext) {
@@ -86,7 +85,7 @@ export default defineTab({
     // but you will need to provide typing for the returned state object
     const { drawnCurves } = getModuleState<CurveModuleState>(context, 'curve');
 
-   /*
+    /*
     * Implementation hidden...
     */
     return <MultiItemDisplay elements={canvases} />;

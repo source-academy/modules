@@ -8,6 +8,7 @@ Every time `js-slang` evaluates Source code, it creates an evaluation context. B
 ```ts
 // curve/functions.ts
 import context from 'js-slang/context';
+
 const drawnCurves = [];
 context.moduleContexts.curve.state = {
   drawnCurves,
@@ -48,6 +49,7 @@ prints out the current value of the bundle's state.
 ::: code-group
 ```ts [index.ts]
 import context from 'js-slang/context';
+
 export { function0 } from './functions_0';
 export { function1 } from './functions_1';
 export { function2 } from './functions_2';
@@ -58,6 +60,7 @@ export function main() {
 ```
 ```ts  [functions_0.ts]
 import context from 'js-slang/context';
+
 context.moduleContexts.bundle.state = 0;
 
 export function function0() {
@@ -66,16 +69,17 @@ export function function0() {
 ```
 ```ts [functions_1.ts]
 import context from 'js-slang/context';
+
 context.moduleContexts.bundle.state = 1;
 
 export function function1() {
   // Does some things
 }
-
 ```
 ```ts [functions_2.ts]
-import { function0 } from './functions_0';
 import context from 'js-slang/context';
+import { function0 } from './functions_0';
+
 context.moduleContexts.bundle.state = 2;
 
 export function function2() {
@@ -86,6 +90,7 @@ export function function2() {
 What will be the output of the code below?
 ```ts
 import { main } from 'bundle';
+
 display(main());
 ```
 
@@ -158,7 +163,6 @@ export default function gameFuncs() {
   };
   // Here we know for sure that the game module's state object has been initialized
   // but the check is still here just in case the module was not used in its intended way
-
 
   // do other things...
 }

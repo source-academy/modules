@@ -65,7 +65,7 @@ All tab code must be compiled down to regular Javascript before they can be load
 in the root `tsconfig.json` used by tabs. `esbuild` reads from `tsconfig.json` and retrieves this option when compiling tabs.
 :::
 
-## Components from the Common Library
+### Components from the Common Library
 There are also several React components defined under `@sourceacademy/modules-lib/tabs` that perform functions common across tabs.
 
 You can see the documentation for these components [here](/lib/modules-lib/)
@@ -108,8 +108,8 @@ if you do not use the `defineTab` helper or if your tab is missing the default e
 > ```
 
 Only the default export is used by the Frontend for displaying your tab. It is not necessary to also export your components, but it can be done for testing:
-```tsx
-// tabName/src/index.tsx
+::: code-group
+```tsx [index.tsx]
 import { defineTab } from '@sourceacademy/modules-lib/tabs';
 
 export function Component() {
@@ -122,12 +122,15 @@ export default defineTab({
   label: 'some-tab',
   iconName: 'some icon'
 })
+```
 
-// tabName/src/__tests__/index.tsx
-import { test, expect } from 'vitest';
+```tsx [__tests__/index.tsx]
+import { expect, test } from 'vitest';
 import { Component } from '..'
 
 test('Matches snapshot', () => {
   expect(<Component />).toMatchSnapshot()
 })
 ```
+
+:::

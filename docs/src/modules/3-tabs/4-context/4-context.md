@@ -28,11 +28,10 @@ import context from 'js-slang/context';
 
 export const bar = () => console.log(context);
 export { foo } from './functions';
-
 ```
 ```ts [functions.ts]
 // mock/src/functions.ts
-export const foo () => 'do nothing';
+export const foo = () => 'do nothing';
 ```
 :::
 

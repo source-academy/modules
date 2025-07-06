@@ -19,7 +19,7 @@ Examples of **correct** code for this rule:
 ```tsx
 import { defineTab } from '@sourceacademy/modules-lib/tabs';
 
-export default defineTab{
+export default defineTab({
   body: () => <Component />,
   toSpawn: () => false,
   iconName: 'icon',
