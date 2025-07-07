@@ -174,24 +174,8 @@ The helpful comment below the import explains the discrepancy. However, without 
 ![](./mqtt-types.png)
 
 `tsconfig` does provide a way for you to tell Typescript where to look for types: using either the `paths` or `types` field. The `tsconfig` for the `communication` bundle looks like this:
-```jsonc
-{
-  "extends": "../tsconfig.json",
-  "include": [
-    "./src"
-  ],
-  "compilerOptions": {
-    "outDir": "./dist",
-    "paths": { // [!code focus]
-      "mqtt/dist/*": ["../../../node_modules/mqtt/types"], // [!code focus]
-      "js-slang/context": ["../../../lib/modules-lib/src/types/js-slang/context.d.ts"]// [!code focus]
-    }// [!code focus]
-  },
-  "typedocOptions": {
-    "name": "communication"
-  }
-}
-```
+
+<<< ../../../../../src/bundles/communication/tsconfig.json
 
 The `paths` compiler option has been set to tell Typescript where to find the types for `mqtt/dist/mqtt`. Because of the way `tsconfig.json` file inheritance works, if you override a configuration option in a child `tsconfig`,
 you'll need to specify the options from the parent configuration again (hence the `js-slang/context` path).

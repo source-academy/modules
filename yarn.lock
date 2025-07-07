@@ -1710,12 +1710,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@iconify-json/logos@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "@iconify-json/logos@npm:1.2.4"
+  dependencies:
+    "@iconify/types": "npm:*"
+  checksum: 10c0/b1e835ed858fbfc0f183e0b22cebc499bfce1b0a5205b7af17e18a7ba95dd47ffc0ef4617aae670b71ad1f70a605505157a3f2c96d408094c3132c3c571305a4
+  languageName: node
+  linkType: hard
+
 "@iconify-json/simple-icons@npm:^1.2.21":
   version: 1.2.39
   resolution: "@iconify-json/simple-icons@npm:1.2.39"
   dependencies:
     "@iconify/types": "npm:*"
   checksum: 10c0/d88387339174ecda8c3fd91f8939bde57cf8e415c0cf106f1b92d2dc033fb7b98efc0ca4565869127a63aca4a7ebc0dab8ce8479fcfb580767e5138252bc95d1
+  languageName: node
+  linkType: hard
+
+"@iconify-json/vscode-icons@npm:^1.2.23":
+  version: 1.2.23
+  resolution: "@iconify-json/vscode-icons@npm:1.2.23"
+  dependencies:
+    "@iconify/types": "npm:*"
+  checksum: 10c0/989398199dedf7a024ebaf6f03d6837e67e00f7f8813517adec0cb1d5cf8ce6ece2f258abcef410a71319b0e4683608044b5410b82be8fadbc896f0d13e0eae9
   languageName: node
   linkType: hard
 
@@ -1726,7 +1744,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iconify/utils@npm:^2.1.33":
+"@iconify/utils@npm:^2.1.33, @iconify/utils@npm:^2.3.0":
   version: 2.3.0
   resolution: "@iconify/utils@npm:2.3.0"
   dependencies:
@@ -3380,6 +3398,7 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     mermaid: "npm:^11.7.0"
     vitepress: "npm:^1.6.3"
+    vitepress-plugin-group-icons: "npm:^1.6.1"
     vitepress-plugin-mermaid: "npm:^2.0.17"
     vitepress-sidebar: "npm:^1.31.1"
   languageName: unknown
@@ -15249,6 +15268,20 @@ __metadata:
   bin:
     vite: bin/vite.js
   checksum: 10c0/df70201659085133abffc6b88dcdb8a57ef35f742a01311fc56a4cfcda6a404202860729cc65a2c401a724f6e25f9ab40ce4339ed4946f550541531ced6fe41c
+  languageName: node
+  linkType: hard
+
+"vitepress-plugin-group-icons@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "vitepress-plugin-group-icons@npm:1.6.1"
+  dependencies:
+    "@iconify-json/logos": "npm:^1.2.4"
+    "@iconify-json/vscode-icons": "npm:^1.2.23"
+    "@iconify/utils": "npm:^2.3.0"
+  peerDependencies:
+    markdown-it: ">=14"
+    vite: ">=3"
+  checksum: 10c0/7ddaf945448e9fcac579888afc04eef3b67ec4f2d4fd572ff1b95650f173d07fb6bc7be17b311556c579302cfd0418ff6550f497cd5544728da31a71e4756508
   languageName: node
   linkType: hard
 

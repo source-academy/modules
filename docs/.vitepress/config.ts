@@ -1,5 +1,6 @@
 // Vitepress config
 import { defineConfig, type UserConfig } from 'vitepress';
+import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons';
 import { withMermaid } from 'vitepress-plugin-mermaid';
 import { withSidebar } from 'vitepress-sidebar';
 import type { VitePressSidebarOptions } from 'vitepress-sidebar/types';
@@ -12,6 +13,11 @@ const vitepressOptions: UserConfig = {
   head: [['link', { rel: 'icon', href: '/devdocs/favicon.ico' }]],
   ignoreDeadLinks: 'localhostLinks',
   lastUpdated: true,
+  markdown: {
+    config(md) {
+      md.use(groupIconMdPlugin);
+    }
+  },
   outDir: `${import.meta.dirname}/../../build/devdocs`,
   srcDir: 'src',
   title: 'Modules Developer Documentation',
@@ -78,6 +84,10 @@ const vitepressOptions: UserConfig = {
       provider: 'local'
     }
   },
+  vite: {
+    // @ts-expect-error something weird going on here
+    plugins: [groupIconVitePlugin()]
+  }
 };
 
 const commonSideBarOptions: VitePressSidebarOptions = {

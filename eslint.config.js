@@ -137,6 +137,10 @@ export default tseslint.config(
       '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
       '@stylistic/function-call-spacing': ['warn', 'never'],
       '@stylistic/function-paren-newline': ['warn', 'multiline-arguments'],
+      '@stylistic/nonblock-statement-body-position': ['error', 'beside'],
+      '@stylistic/object-curly-newline': ['warn', {
+        ImportDeclaration: { multiline: true },
+      }],
       '@stylistic/quotes': ['warn', 'single', { avoidEscape: true }],
       '@stylistic/semi': ['warn', 'always'],
     }
@@ -277,7 +281,7 @@ export default tseslint.config(
     name: 'Rules for tests',
     extends: [vitestPlugin.configs.recommended],
     plugins: {
-      'vitest': vitestPlugin,
+      vitest: vitestPlugin,
     },
     files: [
       '**/__tests__/**/*.ts*',

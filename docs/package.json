@@ -4,17 +4,18 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "devDependencies": {
-    "@sourceacademy/modules-lib": "workspace:^",
-    "mermaid": "^11.7.0",
-    "vitepress": "^1.6.3",
-    "vitepress-plugin-mermaid": "^2.0.17",
-    "vitepress-sidebar": "^1.31.1"
-  },
   "scripts": {
     "build": "yarn build-lib-docs && vitepress build .",
     "build-lib-docs": "yarn workspaces foreach -A --include \"@sourceacademy/modules-lib\" run docs",
     "dev": "vitepress dev .",
     "preview": "vitepress preview ."
+  },
+  "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^",
+    "mermaid": "^11.7.0",
+    "vitepress": "^1.6.3",
+    "vitepress-plugin-group-icons": "^1.6.1",
+    "vitepress-plugin-mermaid": "^2.0.17",
+    "vitepress-sidebar": "^1.31.1"
   }
 }
