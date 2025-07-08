@@ -103,7 +103,7 @@ You can find more information about each of the fields and what they mean [here]
 > ```ts
 > import { whatever } from 'bundle_name';
 > ```
-> However, if people consuming your bundle from regular Javascript and Typescript need to use the full (scoped) package name:
+> However, people consuming your bundle from regular Javascript and Typescript need to use the full (scoped) package name:
 > ```ts
 > import { whatever } from '@sourceacademy/bundle-bundle_name';
 > ```
@@ -170,7 +170,7 @@ The `mqtt` dependency however, is specified as such in `package.json`:
   }
 }
 ```
-The helpful comment below the import explains the discrepancy. However, without further configuration, we find that Typescript is unable to find the types for the `mqtt/dist/mqtt` package:
+The helpful comment below the import explains the discrepancy. Without further configuration, we find that Typescript is unable to find the types for the `mqtt/dist/mqtt` package:
 ![](./mqtt-types.png)
 
 `tsconfig` does provide a way for you to tell Typescript where to look for types: using either the `paths` or `types` field. The `tsconfig` for the `communication` bundle looks like this:
