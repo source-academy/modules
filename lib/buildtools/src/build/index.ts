@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import type { LogLevel } from 'typedoc';
 import { getTabsDir } from '../getGitRoot.js';
 import type { PrebuildOptions } from '../prebuild/index.js';
 import type { ResolvedBundle } from '../types.js';
@@ -9,12 +10,12 @@ import { buildBundles, buildTabs } from './modules/index.js';
 /**
  * Build bundles, tabs, documentation and writes the manifest to the output directory
  */
-export default async function buildAll(manifest: Record<string, ResolvedBundle>, opts: PrebuildOptions, outDir: string) {
+export default async function buildAll(manifest: Record<string, ResolvedBundle>, opts: PrebuildOptions, outDir: string, logLevel: LogLevel) {
   await fs.mkdir(outDir, { recursive: true });
 
   return Promise.all([
     writeManifest(outDir, manifest),
-    buildDocs(manifest, outDir),
+    buildDocs(manifest, outDir, logLevel),
     buildBundles(manifest, opts, outDir),
     getTabsDir().then(tabsDir => buildTabs(manifest, tabsDir, opts, outDir))
   ]);

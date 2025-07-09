@@ -85,7 +85,8 @@ export const {
       options: {
         ...tsconfig,
         noEmit: true
-      }});
+      }
+    });
     const results = typecheckProgram.emit();
     const diagnostics = ts.getPreEmitDiagnostics(typecheckProgram)
       .concat(results.diagnostics);

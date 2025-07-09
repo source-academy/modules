@@ -39,16 +39,27 @@ export const {
   builder: runEslint,
   formatter: formatLintResult
 } = createPrebuilder<LintResults, [fix: boolean, stats: boolean]>(async (input, fix, stats) => {
+  const gitRoot = await getGitRoot();
   const linter = new ESLint({
     fix,
     stats,
-    cwd: await getGitRoot()
+    cwd: gitRoot
   });
 
   try {
     const linterResults = await linter.lintFiles(input.directory);
     if (fix) {
       await ESLint.outputFixes(linterResults);
+    }
+
+    if (stats) {
+      await fs.mkdir(`${gitRoot}/lintstats`, { recursive: true });
+
+      const statsFormatter = await linter.loadFormatter('json');
+      const statsFormatted = await statsFormatter.format(linterResults);
+      const stringified = JSON.stringify(JSON.parse(statsFormatted), null, 2);
+
+      await fs.writeFile(`${gitRoot}/lintstats/${input.type}-${input.name}.json`, stringified);
     }
 
     const outputFormatter = await linter.loadFormatter('stylish');
@@ -69,8 +80,7 @@ export const {
     };
   }
 }, ({ severity, formatted, input }) => {
-  const inputType = 'entryPoint' in input ? 'tab' : 'bundle';
-  const prefix = `${chalk.blueBright(`[${inputType} ${input.name}]:`)} ${chalk.cyanBright('Linting completed')}`;
+  const prefix = `${chalk.blueBright(`[${input.type} ${input.name}]:`)} ${chalk.cyanBright('Linting completed')}`;
 
   switch (severity) {
     case 'error':

@@ -9,7 +9,7 @@ import { buildBundle, buildTab } from '../build/modules/index.js';
 import { getBundlesDir, getOutDir } from '../getGitRoot.js';
 import { runBuilderWithPrebuild } from '../prebuild/index.js';
 import type { FullResult, ResolvedBundle, ResultEntry } from '../types.js';
-import { getResultString, lintOption, logCommandErrorAndExit, resultsProcessor, tscOption } from './commandUtils.js';
+import { getResultString, lintOption, logCommandErrorAndExit, logLevelOption, resultsProcessor, tscOption } from './commandUtils.js';
 
 const outDir = await getOutDir();
 const bundlesDir = await getBundlesDir();
@@ -51,6 +51,7 @@ export const getBuildJsonCommand = () => new Command('json')
   .description('Build the JSON documentation for the bundle at the given directory')
   .argument('[bundle]', 'Directory in which the bundle\'s source files are located', process.cwd())
   .addOption(tscOption)
+  .addOption(logLevelOption)
   .option('--ci', 'Run in CI mode', !!process.env.CI)
   .action(async (bundleDir, opts) => {
     const result = await resolveSingleBundle(bundleDir);
@@ -61,8 +62,16 @@ export const getBuildJsonCommand = () => new Command('json')
 
     const results = await runBuilderWithPrebuild(
       async (outDir, bundle: ResolvedBundle) => {
-        const reflection = await initTypedocForSingleBundle(bundle);
-        return buildJson(outDir, bundle, reflection);
+        const reflection = await initTypedocForSingleBundle(bundle, opts.logLevel);
+        if (reflection.severity === 'error') {
+          return [{
+            ...reflection,
+            assetType: 'json',
+            inputName: bundle.name,
+          }];
+        }
+
+        return buildJson(outDir, bundle, reflection.reflection);
       },
       opts,
       result.bundle,
@@ -77,11 +86,12 @@ export const getBuildJsonCommand = () => new Command('json')
 export const getBuildDocsCommand = () => new Command('docs')
   .description('Build all documentation for all bundles')
   .option('--ci', 'Run in CI mode', !!process.env.CI)
-  .action(async ({ ci }) => {
+  .addOption(logLevelOption)
+  .action(async ({ ci, logLevel }) => {
     const manifestResult = await resolveAllBundles(bundlesDir);
     if (manifestResult.severity === 'success') {
       await fs.mkdir(`${outDir}/jsons`, { recursive: true });
-      const results = await buildDocs(manifestResult.bundles, outDir);
+      const results = await buildDocs(manifestResult.bundles, outDir, logLevel);
       console.log(getResultString({ results }));
       resultsProcessor({ results }, ci);
     } else {
@@ -107,6 +117,7 @@ export const getBuildAllCommand = () => new Command('all')
   .description('Build all bundles, tabs and documentation')
   .addOption(tscOption)
   .addOption(lintOption)
+  .addOption(logLevelOption)
   .option('--ci', 'Run in CI mode', !!process.env.CI)
   .action(async opts => {
     const manifestResult = await resolveAllBundles(bundlesDir);
@@ -114,7 +125,7 @@ export const getBuildAllCommand = () => new Command('all')
       logCommandErrorAndExit(formatResolveBundleErrors(manifestResult));
     }
 
-    const [manifest, [html, ...json], bundles, tabs] = await buildAll(manifestResult.bundles, opts, outDir);
+    const [manifest, [html, ...json], bundles, tabs] = await buildAll(manifestResult.bundles, opts, outDir, opts.logLevel);
     const results: FullResult<ResultEntry>[] = [
       { results: manifest },
       { results: html },

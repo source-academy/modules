@@ -200,8 +200,8 @@ would be to provide a link to the Github folder in which your sample files are c
 ## JSDoc Annotations
 Modules are written primarily in Typescript.
 
-There is a convention for writing type annotations (essentially documentations comments) in Javascript that allows for type checking functionality known as JSDoc. Since
+There is a convention for writing type annotations (essentially documentations comments) in Javascript that allows for type checking functionality known as [JSDoc](https://jsdoc.app). Since
 modules are already written in Typescript, there is no need to use JSDoc comments to document the type of an object. All type annotations should be written in Typescript
 so as not to confuse Typedoc.
 
-If you do need to the type of an export to be documented differently from its type in Typescript source code, you can use a [type map](../5-type_map).
+If you do need to the type of an export to be documented differently from its type in Typescript source code, you can use a [type map](../7-type_map).

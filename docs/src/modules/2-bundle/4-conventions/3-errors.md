@@ -60,7 +60,7 @@ import { show } from 'rune';
 show(1);
 ```
 ::: details Type Maps
-Source is moving toward enabling compile-time (or at least pre-execution since Source programs don't really have a "compilation" step) type checking for Source Modules using a feature known as [type maps](./5-type_map).
+Source is moving toward enabling compile-time (or at least pre-execution since Source programs don't really have a "compilation" step) type checking for Source Modules using a feature known as [type maps](../7-type_map).
 :::
 
 

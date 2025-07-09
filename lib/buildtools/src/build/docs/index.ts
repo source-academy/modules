@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import type { ProjectReflection } from 'typedoc';
+import type { LogLevel, ProjectReflection } from 'typedoc';
 import type { HTMLResult, JsonResultEntry, ResolvedBundle } from '../../types.js';
 import { initTypedoc } from './docsUtils.js';
 import { buildHtml } from './html.js';
@@ -10,11 +10,11 @@ import { buildJson } from './json.js';
  * having to instantiate typedoc multiple times\
  * Build both JSON documentation and HTML documentation
  */
-export async function buildDocs(resolvedBundles: Record<string, ResolvedBundle>, outDir: string): Promise<[HTMLResult, ...JsonResultEntry[]]> {
+export async function buildDocs(resolvedBundles: Record<string, ResolvedBundle>, outDir: string, logLevel: LogLevel): Promise<[HTMLResult, ...JsonResultEntry[]]> {
   const warnings: string[] = [];
 
   const [[project, app]] = await Promise.all([
-    initTypedoc(resolvedBundles),
+    initTypedoc(resolvedBundles, logLevel),
     fs.mkdir(`${outDir}/jsons`, { recursive: true }),
   ]);
 

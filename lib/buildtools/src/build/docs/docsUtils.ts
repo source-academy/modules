@@ -7,35 +7,56 @@ const typedocPackageOptions: td.Configuration.TypeDocPackageOptions = {
   disableSources: true,
   excludeInternal: true,
   skipErrorChecking: true,
-  sort: ['documents-last']
+  sort: ['documents-last'],
 };
 
 const commonTypedocOptions: td.Configuration.TypeDocOptions = {
-  logLevel: 'Error',
-  visibilityFilters: {}
+  visibilityFilters: {},
 };
 // #endregion commonOpts
+
+type InitTypedocResult = {
+  severity: 'success'
+  reflection: td.ProjectReflection
+} | {
+  severity: 'error',
+  message: string
+};
 
 /**
  * Initialize typedoc for a single bundle. Useful for building the JSON
  * documentation for a single bundle without having to process every other
  * bundle
  */
-export async function initTypedocForSingleBundle(bundle: ResolvedBundle) {
-  const app = await td.Application.bootstrap({
+export async function initTypedocForSingleBundle(bundle: ResolvedBundle, logLevel: td.LogLevel): Promise<InitTypedocResult> {
+  const app = await td.Application.bootstrapWithPlugins({
     ...commonTypedocOptions,
     ...typedocPackageOptions,
     name: bundle.name,
+    logLevel,
     entryPoints: [`${bundle.directory}/src/index.ts`],
     tsconfig: `${bundle.directory}/tsconfig.json`,
   });
 
   const reflection = await app.convert();
   if (!reflection) {
-    throw new Error(`Failed to generate reflection for ${bundle.name}, check that the bundle has no type errors!`);
+    return {
+      severity: 'error',
+      message: `Failed to generate reflection for ${bundle.name}, check that the bundle has no type errors!`
+    };
   }
 
-  return reflection;
+  if (app.logger.hasErrors()) {
+    return {
+      severity: 'error',
+      message: 'Refer to the console for Typedoc errors'
+    };
+  }
+
+  return {
+    severity: 'success',
+    reflection
+  };
 }
 
 /**
@@ -44,9 +65,9 @@ export async function initTypedocForSingleBundle(bundle: ResolvedBundle) {
  *
  * More efficient than having to initialize typedoc separately each time
  */
-export async function initTypedoc(manifest: Record<string, ResolvedBundle>) {
+export async function initTypedoc(manifest: Record<string, ResolvedBundle>, logLevel: td.LogLevel) {
   const entryPoints = Object.values(manifest).map(({ directory }) => directory);
-  const app = await td.Application.bootstrap({
+  const app = await td.Application.bootstrapWithPlugins({
     ...commonTypedocOptions,
     alwaysCreateEntryPointModule: true,
     entryPoints,
@@ -56,6 +77,7 @@ export async function initTypedoc(manifest: Record<string, ResolvedBundle>) {
       entryPoints: ['src/index.ts'],
     },
     name: 'Source Academy Modules',
+    logLevel,
     readme: `${import.meta.dirname}/docsreadme.md`,
   });
 

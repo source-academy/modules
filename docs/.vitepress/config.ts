@@ -104,7 +104,9 @@ const commonSideBarOptions: VitePressSidebarOptions = {
 
 const sidebarConfigs: Record<string, VitePressSidebarOptions> = {
   buildtools: {},
-  modules: {},
+  modules: {
+    collapseDepth: 1
+  },
   lib: {},
   'lib/modules-lib': {},
   repotools: {}
@@ -121,8 +123,7 @@ export default defineConfig(
   withMermaid({
     ...withSidebar(vitepressOptions, sideBarOptions),
     mermaid: {
-      // Use the default font that Vitepress uses
-      fontFamily: 'Inter',
+      fontFamily: 'Inter', // Use the default font that Vitepress uses
       flowchart: {
         curve: 'linear',
       }

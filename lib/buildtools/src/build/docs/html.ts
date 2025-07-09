@@ -1,4 +1,4 @@
-import type { Application, ProjectReflection } from 'typedoc';
+import { Application, type ProjectReflection } from 'typedoc';
 import type { HTMLResult } from '../../types.js';
 import { createBuilder } from '../buildUtils.js';
 
@@ -15,6 +15,15 @@ export const {
     const outpath = `${outDir}/documentation`;
     try {
       await app.generateDocs(project, outpath);
+
+      if (app.logger.hasErrors()) {
+        return {
+          severity: 'error',
+          assetType: 'html',
+          message: 'Check the console for Typedoc errors'
+        };
+      }
+
       return {
         severity: 'success',
         assetType: 'html',

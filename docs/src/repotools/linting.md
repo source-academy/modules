@@ -19,7 +19,7 @@ for the repository at large. This requires that we manually override some of the
 
 When changing a rule's configuration, leave a comment explaining what the original configuration for that rule was:
 
-<<< ../../../eslint.config.js#Markdown
+<<< ../../../eslint.config.js#markdown
 
 Where possible, also provide an explanation for why that rule has been configured as such:
 

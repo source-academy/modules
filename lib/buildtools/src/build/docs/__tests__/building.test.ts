@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import type { ProjectReflection } from 'typedoc';
+import { LogLevel, type ProjectReflection } from 'typedoc';
 import { expect, test, vi } from 'vitest';
 import { testMocksDir } from '../../../__tests__/fixtures.js';
 import type { ResolvedBundle } from '../../../types.js';
@@ -39,7 +39,7 @@ test('Building the json documentation for a single bundle', async () => {
     directory: `${testMocksDir}/bundles/test0`,
   };
 
-  const project = await initTypedocForSingleBundle(bundle);
+  const project = await initTypedocForSingleBundle(bundle, LogLevel.Error);
 
   await buildJson('/build', bundle, project);
 
@@ -67,7 +67,7 @@ test('initTypedoc for muiltiple bundles', async () => {
     }
   };
 
-  const [project,] = await initTypedoc(bundles);
+  const [project,] = await initTypedoc(bundles, LogLevel.Error);
 
   const test0Reflection = project.getChildByName('test0') as ProjectReflection;
   await buildJson('/build', bundles.test0, test0Reflection);

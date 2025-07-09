@@ -1,5 +1,6 @@
-import { Option } from '@commander-js/extra-typings';
+import { InvalidArgumentError, Option } from '@commander-js/extra-typings';
 import chalk from 'chalk';
+import { LogLevel } from 'typedoc';
 import { formatHtmlResult } from '../build/docs/html.js';
 import { formatJsonResult } from '../build/docs/json.js';
 import { formatManifestResult } from '../build/manifest/index.js';
@@ -16,6 +17,18 @@ export const lintOption = new Option('--lint', 'Run ESLint when building')
 export const tscOption = new Option('--tsc', 'Run tsc when building')
   .default(false);
 
+export const logLevelOption = new Option('--logLevel <level>', 'Log level that Typedoc should use')
+  .choices(objectKeys(LogLevel))
+  .default(LogLevel.Error)
+  .argParser((val): LogLevel => {
+    if (val in LogLevel) {
+      // @ts-expect-error Enums kind of behave weirdly in Typescript
+      return LogLevel[val];
+    }
+
+    throw new InvalidArgumentError(`Invalid log level: ${val}`);
+  });
+
 type ValuesOfRecord<T> = T extends Record<any, infer U> ? U : never;
 
 export type EntriesOfRecord<T extends Record<any, any>> = ValuesOfRecord<{
@@ -24,6 +37,14 @@ export type EntriesOfRecord<T extends Record<any, any>> = ValuesOfRecord<{
 
 export function objectEntries<T extends Record<any, any>>(obj: T) {
   return Object.entries(obj) as EntriesOfRecord<T>[];
+}
+
+export function objectValues<T>(obj: Record<string | number | symbol, T>) {
+  return Object.values(obj) as T[];
+}
+
+export function objectKeys<T extends string | number | symbol>(obj: Record<T, unknown>) {
+  return Object.keys(obj) as T[];
 }
 
 /**
