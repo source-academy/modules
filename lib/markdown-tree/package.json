@@ -1,0 +1,13 @@
+{
+  "name": "@sourceacademy/markdown-plugin-directory-tree",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "typescript": "^5.8.2"
+  },
+  "exports": "./index.js",
+  "peerDependencies": {
+    "markdown-it": "*"
+  }
+}

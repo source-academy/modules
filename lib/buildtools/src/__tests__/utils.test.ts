@@ -1,13 +1,14 @@
 import { describe, expect, test } from 'vitest';
-import { compareSeverity, filterAsync, findSeverity, type Severity } from '../utils.js';
+import { Severity } from '../types.js';
+import { compareSeverity, filterAsync, findSeverity } from '../utils.js';
 
 describe('test findSeverity', () => {
   const cases: Severity[][] = [
-    ['success', 'success', 'success'],
-    ['warn', 'success', 'warn'],
-    ['warn', 'warn', 'warn'],
-    ['error', 'error', 'warn'],
-    ['error', 'error', 'success']
+    [Severity.SUCCESS, Severity.SUCCESS, Severity.SUCCESS],
+    [Severity.WARN, Severity.SUCCESS, Severity.WARN],
+    [Severity.WARN, Severity.WARN, Severity.WARN],
+    [Severity.ERROR, Severity.ERROR, Severity.WARN],
+    [Severity.ERROR, Severity.ERROR, Severity.SUCCESS]
   ];
 
   test.each(cases)('Expecting %s', (expected, ...args) => {
@@ -17,15 +18,15 @@ describe('test findSeverity', () => {
 
 describe('test compareSeverity', () => {
   const cases: [Severity, Severity, Severity][] = [
-    ['success', 'success', 'success'],
-    ['warn', 'success', 'warn'],
-    ['warn', 'warn', 'success'],
-    ['warn', 'warn', 'warn'],
-    ['error', 'success', 'error'],
-    ['error', 'warn', 'error'],
-    ['error', 'error', 'error'],
-    ['error', 'error', 'warn'],
-    ['error', 'error', 'success'],
+    [Severity.SUCCESS, Severity.SUCCESS, Severity.SUCCESS],
+    [Severity.WARN, Severity.SUCCESS, Severity.WARN],
+    [Severity.WARN, Severity.WARN, Severity.SUCCESS],
+    [Severity.WARN, Severity.WARN, Severity.WARN],
+    [Severity.ERROR, Severity.SUCCESS, Severity.ERROR],
+    [Severity.ERROR, Severity.WARN, Severity.ERROR],
+    [Severity.ERROR, Severity.ERROR, Severity.ERROR],
+    [Severity.ERROR, Severity.ERROR, Severity.WARN],
+    [Severity.ERROR, Severity.ERROR, Severity.SUCCESS],
   ];
 
   test.each(cases)('Expecting %s', (expected, lhs, rhs) => {

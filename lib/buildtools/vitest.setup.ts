@@ -57,6 +57,13 @@ expect.extend({
         message: () => 'Command resolved successfully,'
       };
     } catch (error) {
+      if (error instanceof MockProcessError) {
+        return {
+          pass: false,
+          message: () => `process.exit was called with ${error.code}`
+        };
+      }
+
       return {
         pass: false,
         message: () => `Command rejected with error ${error}`

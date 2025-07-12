@@ -1,6 +1,8 @@
-import type { LintResults } from './prebuild/lint.js';
-import type { TscResult } from './prebuild/tsc.js';
-import type { Severity } from './utils.js';
+export enum Severity {
+  ERROR = 'error',
+  WARN = 'warn',
+  SUCCESS = 'success'
+}
 
 export interface BundleManifest {
   version?: string;
@@ -29,47 +31,46 @@ export interface ResolvedTab {
 }
 // #endregion ResolvedTab
 
-interface BaseResult<T = string> {
-  message: T,
-  severity: Severity
+export interface ErrorResult {
+  severity: Severity.ERROR;
+  errors: string[]
 }
 
-export interface HTMLResult extends BaseResult {
-  assetType: 'html'
-}
+export type WarningResult<T = { path: string }> = {
+  severity: Severity.WARN
+  warnings: string[]
+} & T;
 
-export interface ManifestResult extends BaseResult {
-  assetType: 'manifest'
-}
+export type SuccessResult<T = { path: string }> = {
+  severity: Severity.SUCCESS
+} & T;
 
-interface ModuleResult<T = string> extends BaseResult<T> {
-  inputName: string
-}
+export type InputAsset = ResolvedBundle | ResolvedTab;
 
-export interface BundleResultEntry extends ModuleResult {
-  assetType: 'bundle'
-}
+export type ResultType<T = { path: string }> = ErrorResult | SuccessResult<T>;
 
-export interface TabResultEntry extends ModuleResult {
-  assetType: 'tab'
-}
+export type ResultTypeWithWarn<T = { path: string }> = ResultType<T> | WarningResult<T>;
 
-export interface JsonResultEntry extends ModuleResult {
-  assetType: 'json'
-}
+export type TabResult = ResultType & {
+  type: 'tab'
+  input: ResolvedTab
+};
 
-export interface ManifestResultEntry extends ModuleResult {
-  assetType: 'manifest'
-}
+export type BundleResult = ResultType & {
+  type: 'bundle'
+  input: ResolvedBundle
+};
 
-export type ModuleResultEntry = BundleResultEntry | JsonResultEntry | ManifestResultEntry | TabResultEntry;
+export type DocsResult = ResultTypeWithWarn & {
+  type: 'docs'
+  input: ResolvedBundle
+};
 
-export type ResultEntry = HTMLResult | ManifestResult | ModuleResultEntry;
+export type BuildResult = BundleResult | DocsResult | TabResult;
 
-export type ResultFormatter<T extends ResultEntry, U extends any[] = []> = (entry: T, ...args: U) => string;
-
-export interface FullResult<T extends (ResultEntry | ResultEntry[])> {
-  results?: T;
-  tsc?: TscResult;
-  lint?: LintResults
+export interface ResolutionFailure {
+  severity: Severity.ERROR
+  type: 'bundle' | 'tab'
+  path: string
+  error?: string
 }

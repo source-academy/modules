@@ -1,44 +1,52 @@
-import fs from 'fs/promises';
-import uniq from 'lodash/uniq.js';
-import { runBuilderWithPrebuild, type PrebuildOptions } from '../../prebuild/index.js';
-import type { FullResult, ResolvedBundle, TabResultEntry } from '../../types.js';
-import { mapAsync } from '../../utils.js';
-import { resolveSingleTab } from '../manifest/index.js';
-import { buildBundle } from './bundle.js';
-import { buildTab } from './tab.js';
-
-export { buildBundle, buildTab };
+import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild';
+import type { ResolvedBundle, ResolvedTab } from '../../types.js';
+import { commonEsbuildOptions, outputBundleOrTab } from './commons.js';
 
 /**
- * Build all the provided bundles at once
+ * Use ESBuild to compile a single bundle and write its output to the
+ * build directory.
  */
-export async function buildBundles(resolvedBundles: Record<string, ResolvedBundle>, options: PrebuildOptions, outDir: string) {
-  await fs.mkdir(`${outDir}/bundles`, { recursive: true });
-  return mapAsync(Object.values(resolvedBundles), bundle => runBuilderWithPrebuild(buildBundle, options, bundle, outDir, undefined));
+export async function buildBundle(outDir: string, bundle: ResolvedBundle) {
+  const { outputFiles: [result] } = await esbuild({
+    ...commonEsbuildOptions,
+    entryPoints: [`${bundle.directory}/src/index.ts`],
+    tsconfig: `${bundle.directory}/tsconfig.json`,
+    outfile: `/bundle/${bundle.name}`,
+  });
+
+  return outputBundleOrTab(result, bundle, outDir);
 }
 
-/**
- * Find all the tabs within the given directory and build them all at once
- */
-export async function buildTabs(resolvedBundles: Record<string, ResolvedBundle>, tabsDir: string, prebuildOpts: PrebuildOptions, outDir: string) {
-  await fs.mkdir(`${outDir}/tabs`, { recursive: true });
-  const tabNames = uniq(Object.values(resolvedBundles).flatMap(({ manifest: { tabs } }) => tabs ?? []));
-  return mapAsync(
-    tabNames,
-    async (tabName): Promise<FullResult<TabResultEntry>> => {
-      const tab = await resolveSingleTab(`${tabsDir}/${tabName}`);
-      if (!tab) {
-        return {
-          results: {
-            severity: 'error',
-            assetType: 'tab',
-            inputName: tabName,
-            message: `Could not find tab at ${tabsDir}/${tabName}!`
-          }
-        };
-      }
+const tabContextPlugin: ESBuildPlugin = {
+  name: 'Tab Context',
+  setup(build) {
+    build.onResolve({ filter: /^js-slang\/context/ }, () => ({
+      errors: [{
+        text: 'If you see this message, it means that your tab code is importing js-slang/context directly or indirectly. Do not do this'
+      }]
+    }));
+  }
+};
 
-      return runBuilderWithPrebuild(buildTab, prebuildOpts, tab, outDir, undefined);
-    }
-  );
+/**
+ * Use ESBuild to compile a single tab and write its output to the
+ * build directory.
+ */
+export async function buildTab(outDir: string, tab: ResolvedTab) {
+  const { outputFiles: [result]} = await esbuild({
+    ...commonEsbuildOptions,
+    entryPoints: [tab.entryPoint],
+    external: [
+      ...commonEsbuildOptions.external,
+      'react',
+      'react-ace',
+      'react-dom',
+      'react/jsx-runtime',
+      '@blueprintjs/*'
+    ],
+    tsconfig: `${tab.directory}/tsconfig.json`,
+    plugins: [tabContextPlugin],
+  });
+
+  return outputBundleOrTab(result, tab, outDir);
 }

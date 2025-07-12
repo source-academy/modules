@@ -1,11 +1,10 @@
 import fs from 'fs/promises';
-import { ValidationError } from 'jsonschema';
 import { describe, expect, it, test, vi } from 'vitest';
-import { expectIsError, expectIsSuccess, testMocksDir } from '../../../__tests__/fixtures.js';
-import { getBundleManifest, getBundleManifests, resolveAllBundles, resolveSingleBundle } from '../index.js';
-import { MissingTabError, type GetBundleManifestSuccess } from '../types.js';
+import { expectIsError, expectIsSuccess, testMocksDir } from '../../__tests__/fixtures.js';
+import { Severity } from '../../types.js';
+import { getBundleManifest, getBundleManifests, resolveAllBundles, resolveSingleBundle, type GetBundleManifestResult } from '../manifest.js';
 
-vi.mock(import('../../../getGitRoot.js'));
+vi.mock(import('../../getGitRoot.js'));
 
 describe('Test bundle manifest schema validation succeeds', () => {
   const mockedReadFile = vi.spyOn(fs, 'readFile');
@@ -14,8 +13,8 @@ describe('Test bundle manifest schema validation succeeds', () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": [] }');
     mockedReadFile.mockResolvedValueOnce('{ "version": "1.0.0" }');
 
-    const expected: GetBundleManifestSuccess = {
-      severity: 'success',
+    const expected: GetBundleManifestResult = {
+      severity: Severity.SUCCESS,
       manifest: {
         tabs: [],
         version: '1.0.0'
@@ -31,8 +30,8 @@ describe('Test bundle manifest schema validation succeeds', () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": ["tab0", "tab1"] }');
     mockedReadFile.mockResolvedValueOnce('{ "version": "1.0.0" }');
 
-    const expected: GetBundleManifestSuccess = {
-      severity: 'success',
+    const expected: GetBundleManifestResult = {
+      severity: Severity.SUCCESS,
       manifest: {
         tabs: ['tab0', 'tab1'],
         version: '1.0.0'
@@ -48,8 +47,8 @@ describe('Test bundle manifest schema validation succeeds', () => {
     mockedReadFile.mockResolvedValueOnce('{ "tabs": ["tab0"] }');
     mockedReadFile.mockResolvedValueOnce('{}');
 
-    const expected: GetBundleManifestSuccess = {
-      severity: 'success',
+    const expected: GetBundleManifestResult = {
+      severity: Severity.SUCCESS,
       manifest: {
         tabs: ['tab0']
       }
@@ -70,7 +69,7 @@ describe('Test bundle manifest schema validation succeeds', () => {
 
     expect(result!.errors.length).toEqual(1);
     const [err] = result!.errors;
-    expect(err).toBeInstanceOf(MissingTabError);
+    expect(err).toEqual('Unknown tab tab2');
   });
 
   test('Schema with additional properties', async () => {
@@ -83,7 +82,7 @@ describe('Test bundle manifest schema validation succeeds', () => {
 
     expect(result!.errors.length).toEqual(1);
     const [err] = result!.errors;
-    expect(err).toBeInstanceOf(ValidationError);
+    expect(err).toMatchInlineSnapshot(`"instance is not allowed to have the additional property "unknown""`);
   });
 
   test('Schema with invalid requires', async () => {
@@ -96,7 +95,7 @@ describe('Test bundle manifest schema validation succeeds', () => {
 
     expect(result!.errors.length).toEqual(1);
     const [err] = result!.errors;
-    expect(err).toBeInstanceOf(ValidationError);
+    expect(err).toMatchInlineSnapshot(`"instance.requires is not one of enum values: 1,2,3,4"`);
   });
 });
 
@@ -112,7 +111,6 @@ describe('Test getBundleManifests', () => {
 
     const result = await getBundleManifests('/src/bundles');
     expectIsError(result.severity);
-    expect(result.errors[0]).toBe(errorObject);
   });
 });
 
@@ -141,7 +139,7 @@ describe('Test resolveSingleBundle', () => {
     const resolved = await resolveSingleBundle(path);
     expect(resolved).toMatchObject({
       severity: 'error',
-      errors: [expect.any(Error)]
+      errors: [expect.any(String)]
     });
 
     const stats = await fs.stat(path);

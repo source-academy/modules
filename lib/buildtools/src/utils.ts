@@ -1,15 +1,15 @@
+import { Severity, type ResolvedBundle, type ResolvedTab } from './types.js';
+
 export type AwaitedReturn<T extends (...args: any[]) => Promise<any>> = Awaited<ReturnType<T>>;
 
-export type Severity = 'error' | 'success' | 'warn';
-
-export function compareSeverity(lhs: Severity, rhs: Severity) {
+export function compareSeverity(lhs: Severity, rhs: Severity): Severity {
   switch (lhs) {
-    case 'success':
+    case Severity.SUCCESS:
       return rhs;
-    case 'warn':
-      return rhs === 'error' ? 'error' : 'warn';
-    case 'error':
-      return 'error';
+    case Severity.WARN:
+      return rhs === 'error' ? Severity.ERROR : Severity.WARN;
+    case Severity.ERROR:
+      return Severity.ERROR;
   }
 }
 
@@ -18,14 +18,41 @@ export function compareSeverity(lhs: Severity, rhs: Severity) {
  * determine the overall severity of all the given items
  */
 export function findSeverity<T>(items: T[], mapper: (each: T) => Severity): Severity {
-  let output: Severity = 'success';
+  let output: Severity = Severity.SUCCESS;
+
   for (const item of items) {
     const severity = mapper(item);
     output = compareSeverity(output, severity);
-    if (output === 'error') return 'error';
+    if (output === Severity.ERROR) return Severity.ERROR;
   }
 
   return output;
+}
+
+export function processSeverities(items: { severity: Severity }[]) {
+  return findSeverity(items, ({ severity }) => severity);
+}
+
+type CollatedResult<T> = {
+  [k: `bundle-${string}`]: T
+} | {
+  [k: `tab-${string}`]: T
+};
+
+export function collateResults<T extends { bundle: ResolvedBundle } | { tab: ResolvedTab }>(results: T[]) {
+  return results.reduce<CollatedResult<T>>((res, each) => {
+    if ('bundle' in each) {
+      return {
+        ...res,
+        [`bundle-${each.bundle.name}`]: each
+      };
+    }
+
+    return {
+      ...res,
+      [`tab-${each.tab.name}`]: each
+    };
+  }, {});
 }
 
 export const divideAndRound = (n: number, divisor: number) => (n / divisor).toFixed(2);

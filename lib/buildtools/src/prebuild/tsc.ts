@@ -2,18 +2,17 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import chalk from 'chalk';
 import ts from 'typescript';
-import type { ResolvedBundle, ResolvedTab } from '../types.js';
-import { findSeverity, type Severity } from '../utils.js';
-import { createPrebuilder } from './prebuildUtils.js';
+import { Severity, type ResolvedBundle, type ResolvedTab } from '../types.js';
+import { findSeverity } from '../utils.js';
 
 type TsconfigResult = {
-  severity: 'error',
+  severity: Severity.ERROR
   error: any
 } | {
-  severity: 'error',
+  severity: Severity.ERROR
   results: ts.Diagnostic[]
 } | {
-  severity: 'success',
+  severity: Severity.SUCCESS
   results: ts.CompilerOptions
   fileNames: string[]
 };
@@ -21,7 +20,7 @@ type TsconfigResult = {
 export type TscResult = {
   input: ResolvedBundle | ResolvedTab
 } & ({
-  severity: Extract<Severity, 'error'>
+  severity: Severity.ERROR
   error: any
 } | {
   severity: Severity
@@ -38,7 +37,7 @@ async function getTsconfig(srcDir: string): Promise<TsconfigResult> {
     const { error: configJsonError, config: configJson } = ts.parseConfigFileTextToJson(tsconfigLocation, configText);
     if (configJsonError) {
       return {
-        severity: 'error',
+        severity: Severity.ERROR,
         results: [configJsonError]
       };
     }
@@ -47,28 +46,25 @@ async function getTsconfig(srcDir: string): Promise<TsconfigResult> {
     const { errors: parseErrors, options: tsconfig, fileNames } = ts.parseJsonConfigFileContent(configJson, ts.sys, srcDir);
     if (parseErrors.length > 0) {
       return {
-        severity: 'error',
+        severity: Severity.ERROR,
         results: parseErrors
       };
     }
 
     return {
-      severity: 'success',
+      severity: Severity.SUCCESS,
       results: tsconfig,
       fileNames
     };
   } catch (error) {
     return {
-      severity: 'error',
+      severity: Severity.ERROR,
       error
     };
   }
 }
 
-export const {
-  builder: runTsc,
-  formatter: formatTscResult
-} = createPrebuilder<TscResult, [noEmit: boolean]>(async (input, noEmit) => {
+export async function runTsc(input: ResolvedBundle | ResolvedTab, noEmit: boolean): Promise<TscResult> {
   const tsconfigRes = await getTsconfig(input.directory);
   if (tsconfigRes.severity === 'error') {
     return {
@@ -94,11 +90,11 @@ export const {
     const severity = findSeverity(diagnostics, ({ category }) => {
       switch (category) {
         case ts.DiagnosticCategory.Error:
-          return 'error';
+          return Severity.ERROR;
         case ts.DiagnosticCategory.Warning:
-          return 'warn';
+          return Severity.WARN;
         default:
-          return 'success';
+          return Severity.SUCCESS;
       }
     });
 
@@ -125,13 +121,16 @@ export const {
     };
   } catch (error) {
     return {
-      severity: 'error',
+      severity: Severity.ERROR,
       input,
       error
     };
   }
-}, tscResult => {
-  const prefix = `${chalk.blueBright(`[${tscResult.input.type} ${tscResult.input.name}]`)}: ${chalk.cyanBright('tsc completed')}`;
+}
+
+export function formatTscResult(tscResult: TscResult): string {
+  const prefix = chalk.cyanBright('tsc completed');
+
   if (tscResult.severity === 'error' && 'error' in tscResult) {
     return `${prefix} ${chalk.cyanBright('with')} ${chalk.redBright('errors')}: ${tscResult.error}`;
   }
@@ -143,11 +142,11 @@ export const {
   });
 
   switch (tscResult.severity) {
-    case 'error':
+    case Severity.ERROR:
       return `${prefix} ${chalk.cyanBright('with')} ${chalk.redBright('errors')}\n${diagStr}`;
-    case 'warn':
+    case Severity.WARN:
       return `${prefix} ${chalk.cyanBright('with')} ${chalk.yellowBright('warnings')}\n${diagStr}`;
-    case 'success':
+    case Severity.SUCCESS:
       return `${prefix} ${chalk.greenBright('successfully')}`;
   }
-});
+}

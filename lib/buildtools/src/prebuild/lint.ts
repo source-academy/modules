@@ -3,27 +3,26 @@ import pathlib from 'path';
 import chalk from 'chalk';
 import { ESLint } from 'eslint';
 import { getGitRoot } from '../getGitRoot.js';
-import type { ResolvedBundle, ResolvedTab } from '../types.js';
-import { findSeverity, flatMapAsync, isNodeError, type Severity } from '../utils.js';
-import { createPrebuilder } from './prebuildUtils.js';
+import { Severity, type InputAsset } from '../types.js';
+import { findSeverity, flatMapAsync, isNodeError } from '../utils.js';
 
-export interface LintResults {
+export interface LintResult {
   formatted: string
   severity: Severity
-  input: ResolvedBundle | ResolvedTab
+  input: InputAsset
 }
 
-function severityFinder({ warningCount, errorCount, fatalErrorCount, fixableWarningCount }: ESLint.LintResult, fix: boolean) {
-  if (fatalErrorCount > 0) return 'error';
-  if (!fix && errorCount > 0) return 'error';
+function severityFinder({ warningCount, errorCount, fatalErrorCount, fixableWarningCount }: ESLint.LintResult, fix: boolean): Severity {
+  if (fatalErrorCount > 0) return Severity.ERROR;
+  if (!fix && errorCount > 0) return Severity.ERROR;
 
   if (warningCount > 0) {
     if (fix && fixableWarningCount === warningCount) {
-      return 'success';
+      return Severity.SUCCESS;
     }
-    return 'warn';
+    return Severity.WARN;
   }
-  return 'success';
+  return Severity.SUCCESS;
 }
 
 async function timePromise<T>(f: () => Promise<T>) {
@@ -35,10 +34,7 @@ async function timePromise<T>(f: () => Promise<T>) {
   };
 }
 
-export const {
-  builder: runEslint,
-  formatter: formatLintResult
-} = createPrebuilder<LintResults, [fix: boolean, stats: boolean]>(async (input, fix, stats) => {
+export async function runEslint(input: InputAsset, fix: boolean, stats: boolean): Promise<LintResult> {
   const gitRoot = await getGitRoot();
   const linter = new ESLint({
     fix,
@@ -74,23 +70,24 @@ export const {
     };
   } catch (error) {
     return {
-      severity: 'error',
+      severity: Severity.ERROR,
       formatted: `${error}`,
       input
     };
   }
-}, ({ severity, formatted, input }) => {
+}
+export function formatLintResult({severity, formatted, input}: LintResult): string {
   const prefix = `${chalk.blueBright(`[${input.type} ${input.name}]:`)} ${chalk.cyanBright('Linting completed')}`;
 
   switch (severity) {
-    case 'error':
+    case Severity.ERROR:
       return `${prefix} ${chalk.cyanBright('with')} ${chalk.redBright('errors')}:\n${formatted}`;
-    case 'warn':
+    case Severity.WARN:
       return `${prefix} ${chalk.cyanBright('with')} ${chalk.yellowBright('warnings')}:\n${formatted}`;
-    case 'success':
+    case Severity.SUCCESS:
       return `${prefix} ${chalk.greenBright('successfully')}`;
   }
-});
+}
 
 interface LintGlobalResults {
   severity: Severity

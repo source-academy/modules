@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
 import type { Interface } from 'readline/promises';
 import _package from '../../../../package.json' with { type: 'json' };
-import { formatResolveBundleErrors } from '../build/manifest/formatters.js';
-import { getBundleManifests } from '../build/manifest/index.js';
+import { formatResult } from '../build/formatter.js';
+import { getBundleManifests } from '../build/manifest.js';
 import type { BundleManifest, ModulesManifest } from '../types.js';
 import sampleTsconfig from './bundle_tsconfig.json' with { type: 'json' };
 import { askQuestion, error, success, warn } from './print.js';
@@ -24,7 +24,7 @@ async function askModuleName(manifest: ModulesManifest, rl: Interface) {
 export async function addNew(bundlesDir: string, rl: Interface) {
   const manifest = await getBundleManifests(bundlesDir);
   if (manifest.severity === 'error') {
-    error(formatResolveBundleErrors(manifest));
+    error(formatResult(manifest));
     return;
   }
 

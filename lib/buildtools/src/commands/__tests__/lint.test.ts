@@ -1,7 +1,8 @@
 import { ESLint } from 'eslint';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import * as manifest from '../../build/manifest/index.js';
+import * as manifest from '../../build/manifest.js';
 import * as utils from '../../getGitRoot.js';
+import { Severity } from '../../types.js';
 import { getLintCommand } from '../prebuild.js';
 import { getCommandRunner } from './testingUtils.js';
 
@@ -35,7 +36,7 @@ const runCommand = getCommandRunner(getLintCommand);
 describe('Test Lint Command', () => {
   beforeEach(() => {
     mockedResolveEither.mockResolvedValueOnce({
-      severity: 'success',
+      severity: Severity.SUCCESS,
       asset: {
         type: 'bundle',
         directory: '',
@@ -130,7 +131,7 @@ describe('Test Lint Command', () => {
 describe('Test Lint command directory resolution', () => {
   test('Lint command resolving a tab', async () => {
     mockedResolveEither.mockResolvedValueOnce({
-      severity: 'success',
+      severity: Severity.SUCCESS,
       asset: {
         type: 'tab',
         directory: '',
@@ -144,10 +145,10 @@ describe('Test Lint command directory resolution', () => {
 
   test('Lint command resolving neither', async () => {
     mockedResolveEither.mockResolvedValueOnce({
-      severity: 'error',
+      severity: Severity.ERROR,
       errors: [],
-      asset: undefined
     });
+
     await expect(runCommand()).commandExit();
     expect(lintFilesMock).not.toHaveBeenCalled();
   });

@@ -2,39 +2,63 @@ import fs from 'fs/promises';
 import type { Command } from '@commander-js/extra-typings';
 import { beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { testMocksDir } from '../../__tests__/fixtures.js';
-import * as docs from '../../build/docs/index.js';
+import * as json from '../../build/docs/json.js';
 import * as modules from '../../build/modules/index.js';
 import * as lintRunner from '../../prebuild/lint.js';
 import * as tscRunner from '../../prebuild/tsc.js';
-import type { ResultEntry } from '../../types.js';
-import type { Severity } from '../../utils.js';
+import { Severity, type BuildResult } from '../../types.js';
 import * as commands from '../build.js';
-import * as commandUtils from '../commandUtils.js';
 import { getCommandRunner } from './testingUtils.js';
 
 const mockedRunEslint = vi.spyOn(lintRunner, 'runEslint');
 const mockedRunTsc = vi.spyOn(tscRunner, 'runTsc');
 
 vi.mock(import('../../getGitRoot.js'));
-vi.spyOn(commandUtils, 'getResultString').mockReturnValue('');
+vi.mock(import('typedoc'), async importOriginal => {
+  const original = await importOriginal();
+
+  // @ts-expect-error Just ignore the fact that the class isn't supposed to be extended :)
+  class NewApplication extends original.Application {
+    static bootstrapWithPlugins: typeof original.Application.bootstrapWithPlugins = async (options, readers) => {
+      const app = await original.Application.bootstrapWithPlugins(options, readers);
+      app.generateJson = () => Promise.resolve();
+      return app;
+    };
+  }
+
+  return {
+    ...original,
+    Application: NewApplication
+  };
+});
 
 /**
  * Convenience function for mocking return values
  */
-function mockResolvedValueOnce<T extends ResultEntry>(
-  mockInstance: MockInstance<(...args: any[]) => Promise<T[]>>,
+function mockResolvedValueOnce<T extends BuildResult>(
+  mockInstance: MockInstance<(...args: any[]) => Promise<T>>,
   severity: Severity
 ) {
-  mockInstance.mockResolvedValueOnce([{
+  mockInstance.mockResolvedValueOnce({
     severity,
-    messages: []
-  } as any]);
+    warnings: [],
+    errors: []
+  } as any);
 }
 
 type BuildFunctionsFilter<T extends Record<string, any>> = {
-  [K in keyof T]: T[K] extends (...args: any[]) => Promise<ResultEntry | ResultEntry[]> ? K : never
+  [K in keyof T]: T[K] extends (...args: any[]) => Promise<BuildResult> ? K : never
 };
 
+/**
+ * @param commandName Descriptive string name used in `describe`.
+ * @param getter Function that returns the command handler
+ * @param obj Import object
+ * @param funcName Name of the function to test
+ * @param prebuild Prebuild options. Use to configure whether to test with tsc or ESLint.
+ * @param directories List of directories that we expect to be have been created with fs.mkdir
+ * @param cmdArgs Arguments to pass to the command handler
+ */
 function testBuildCommand<T extends Record<string, any>>(
   commandName: string,
   getter: () => Command<any>,
@@ -60,21 +84,21 @@ function testBuildCommand<T extends Record<string, any>>(
     const runCommand = getCommandRunner(getter);
 
     test('Regular command execution', async () => {
-      mockResolvedValueOnce(mockedBuilder, 'success');
+      mockResolvedValueOnce(mockedBuilder, Severity.SUCCESS);
       await expect(runCommand(...cmdArgs)).commandSuccess();
       expect(builder).toHaveBeenCalledTimes(1);
       assertDirectories(true);
     });
 
     test('Command execution that returns errors', async () => {
-      mockResolvedValueOnce(mockedBuilder, 'error');
+      mockResolvedValueOnce(mockedBuilder, Severity.ERROR);
       await expect(runCommand(...cmdArgs)).commandExit();
       expect(builder).toHaveBeenCalledTimes(1);
       assertDirectories(true);
     });
 
     test.skipIf(!!process.env.CI)('Command execution that returns warnings', async () => {
-      mockResolvedValueOnce(mockedBuilder, 'warn');
+      mockResolvedValueOnce(mockedBuilder, Severity.WARN);
       await expect(runCommand(...cmdArgs)).commandSuccess();
       expect(builder).toHaveBeenCalledTimes(1);
       assertDirectories(true);
@@ -83,7 +107,7 @@ function testBuildCommand<T extends Record<string, any>>(
     test('Command execution that returns warnings in CI mode', async () => {
       vi.stubEnv('CI', 'yeet');
       try {
-        mockResolvedValueOnce(mockedBuilder, 'warn');
+        mockResolvedValueOnce(mockedBuilder, Severity.WARN);
         await expect(runCommand(...cmdArgs)).commandExit();
         expect(builder).toHaveBeenCalledTimes(1);
         assertDirectories(true);
@@ -103,12 +127,12 @@ function testBuildCommand<T extends Record<string, any>>(
     if (lint) {
       describe('Testing command with --lint', () => {
         beforeEach(() => {
-          mockResolvedValueOnce(mockedBuilder, 'success');
+          mockResolvedValueOnce(mockedBuilder, Severity.SUCCESS);
         });
 
         test('Command execution with --lint', async () => {
           mockedRunEslint.mockResolvedValueOnce({
-            severity: 'success',
+            severity: Severity.SUCCESS,
             formatted: '',
             input: {} as any
           });
@@ -121,7 +145,7 @@ function testBuildCommand<T extends Record<string, any>>(
 
         test('Bundle command with linting errors', async () => {
           mockedRunEslint.mockResolvedValueOnce({
-            severity: 'error',
+            severity: Severity.ERROR,
             formatted: '',
             input: {} as any
           });
@@ -133,7 +157,7 @@ function testBuildCommand<T extends Record<string, any>>(
 
         test.skipIf(!!process.env.CI)('Bundle command with linting warnings', async () => {
           mockedRunEslint.mockResolvedValueOnce({
-            severity: 'warn',
+            severity: Severity.WARN,
             formatted: '',
             input: {} as any
           });
@@ -147,7 +171,7 @@ function testBuildCommand<T extends Record<string, any>>(
           vi.stubEnv('CI', 'yeet');
           try {
             mockedRunEslint.mockResolvedValueOnce({
-              severity: 'warn',
+              severity: Severity.WARN,
               formatted: '',
               input: {} as any
             });
@@ -165,12 +189,12 @@ function testBuildCommand<T extends Record<string, any>>(
     if (tsc) {
       describe('Testing command with --tsc', () => {
         beforeEach(() => {
-          mockResolvedValueOnce(mockedBuilder, 'success');
+          mockResolvedValueOnce(mockedBuilder, Severity.SUCCESS);
         });
 
         test('Testing command with --tsc', async () => {
           mockedRunTsc.mockResolvedValueOnce({
-            severity: 'success',
+            severity: Severity.SUCCESS,
             results: [],
             input: {} as any
           });
@@ -182,7 +206,7 @@ function testBuildCommand<T extends Record<string, any>>(
 
         test('Testing command with tsc errors', async () => {
           mockedRunTsc.mockResolvedValueOnce({
-            severity: 'error',
+            severity: Severity.ERROR,
             results: [],
             input: {} as any
           });
@@ -194,7 +218,7 @@ function testBuildCommand<T extends Record<string, any>>(
 
         test.skipIf(!!process.env.CI)('Testing command with tsc warnings', async () => {
           mockedRunTsc.mockResolvedValueOnce({
-            severity: 'warn',
+            severity: Severity.WARN,
             results: [],
             input: {} as any
           });
@@ -208,7 +232,7 @@ function testBuildCommand<T extends Record<string, any>>(
           vi.stubEnv('CI', 'yeet');
           try {
             mockedRunTsc.mockResolvedValueOnce({
-              severity: 'warn',
+              severity: Severity.WARN,
               results: [],
               input: {} as any
             });
@@ -225,14 +249,14 @@ function testBuildCommand<T extends Record<string, any>>(
 
     if (lint && tsc) {
       test('Check that specifying both --tsc and --lint works', async () => {
-        mockResolvedValueOnce(mockedBuilder, 'success');
+        mockResolvedValueOnce(mockedBuilder, Severity.SUCCESS);
         mockedRunTsc.mockResolvedValueOnce({
-          severity: 'success',
+          severity: Severity.SUCCESS,
           results: [],
           input: {} as any
         });
         mockedRunEslint.mockResolvedValueOnce({
-          severity: 'success',
+          severity: Severity.SUCCESS,
           formatted: '',
           input: {} as any
         });
@@ -247,7 +271,6 @@ function testBuildCommand<T extends Record<string, any>>(
   });
 }
 
-testBuildCommand('JSON', commands.getBuildJsonCommand, docs, 'buildJson', { tsc: true }, ['jsons'], `${testMocksDir}/bundles/test0`);
-testBuildCommand('Docs', commands.getBuildDocsCommand, docs, 'buildDocs', false, ['jsons']);
+testBuildCommand('Docs', commands.getBuildDocsCommand, json, 'buildJson', false, ['jsons'], `${testMocksDir}/bundles/test0`);
 testBuildCommand('Bundles', commands.getBuildBundleCommand, modules, 'buildBundle', true, ['bundles'], `${testMocksDir}/bundles/test0`);
 testBuildCommand('Tabs', commands.getBuildTabCommand, modules, 'buildTab', true, ['tabs'], `${testMocksDir}/tabs/tab0`);

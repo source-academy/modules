@@ -1,7 +1,8 @@
 import fs from 'fs/promises';
 import { describe, test, vi } from 'vitest';
 import { testMocksDir } from '../../__tests__/fixtures.js';
-import * as manifest from '../../build/manifest/index.js';
+import * as manifest from '../../build/manifest.js';
+import { Severity } from '../../types.js';
 import { getListBundlesCommand, getListTabsCommand } from '../list.js';
 import { getCommandRunner } from './testingUtils.js';
 
@@ -24,7 +25,7 @@ describe('Test list command with bundles', () => {
 
   test('Running command when bundles directory has no bundles', async ({ expect }) => {
     mockedResolveAllBundles.mockResolvedValueOnce({
-      severity: 'success',
+      severity: Severity.SUCCESS,
       bundles: {}
     });
     await expect(runCommand()).commandExit();
@@ -100,7 +101,7 @@ describe('Test list command with tabs', () => {
 
   test('Running command when tabs directory has no tabs', async ({ expect }) => {
     mockedResolveAllTabs.mockResolvedValueOnce({
-      severity: 'success',
+      severity: Severity.SUCCESS,
       tabs: {}
     });
     await expect(runCommand()).commandExit();

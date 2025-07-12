@@ -3,8 +3,7 @@ import { parse } from 'acorn';
 import { generate } from 'astring';
 import type { BuildOptions as ESBuildOptions, OutputFile } from 'esbuild';
 import type es from 'estree';
-import type { BundleResultEntry, TabResultEntry } from '../../types.js';
-import type { Severity } from '../../utils.js';
+import { Severity, type BuildResult, type InputAsset } from '../../types.js';
 
 // The region tag is used in the developer documentation. DON'T REMOVE
 // #region esbuildOptions
@@ -27,16 +26,10 @@ export const commonEsbuildOptions = {
 } satisfies ESBuildOptions;
 // #endregion esbuildOptions
 
-export async function outputBundleOrTab({ text }: OutputFile, name: string, type: 'bundle', outDir: string): Promise<BundleResultEntry>;
-export async function outputBundleOrTab({ text }: OutputFile, name: string, type: 'tab', outDir: string): Promise<TabResultEntry>;
-export async function outputBundleOrTab({ text }: OutputFile, name: string, type: 'bundle' | 'tab', outDir: string): Promise<BundleResultEntry | TabResultEntry> {
-  const createEntry = (severity: Severity, message: string): BundleResultEntry | TabResultEntry => ({
-    severity,
-    message,
-    assetType: type,
-    inputName: name
-  });
-
+/**
+ * Write the compiled output from ESBuild to the file system after performing AST transformation
+ */
+export async function outputBundleOrTab({ text }: OutputFile, input: InputAsset, outDir: string): Promise<BuildResult> {
   const parsed = parse(text, { ecmaVersion: 6 }) as es.Program;
 
   // Account for 'use strict'; directives
@@ -49,16 +42,23 @@ export async function outputBundleOrTab({ text }: OutputFile, name: string, type
 
   const { init: callExpression } = declStatement.declarations[0];
   if (callExpression?.type !== 'CallExpression') {
-    return createEntry(
-      'error',
-      `parse failure: Expected a CallExpression, got ${callExpression?.type ?? callExpression}`,
-    );
+    return {
+      type: input.type,
+      severity: Severity.ERROR,
+      input,
+      errors: [`parse failure: Expected a CallExpression, got ${callExpression?.type ?? callExpression}`]
+    } as BuildResult;
   }
 
   const moduleCode = callExpression.callee;
 
   if (moduleCode.type !== 'FunctionExpression' && moduleCode.type !== 'ArrowFunctionExpression') {
-    return createEntry('error',`${type} ${name} parse failure: Expected a function, got ${moduleCode.type}`);
+    return {
+      type: input.type,
+      severity: Severity.ERROR,
+      input,
+      errors: [`${input.type} ${input.name} parse failure: Expected a function, got ${moduleCode.type}`]
+    } as BuildResult;
   }
 
   const output: es.ExportDefaultDeclaration = {
@@ -72,15 +72,23 @@ export async function outputBundleOrTab({ text }: OutputFile, name: string, type
     }
   };
 
-  await fs.mkdir(`${outDir}/${type}s`, { recursive: true });
+  const outputDirectory = `${outDir}/${input.type}s`;
+  await fs.mkdir(outputDirectory, { recursive: true });
+
   let file: fs.FileHandle | null = null;
+  const outpath = `${outputDirectory}/${input.name}.js`;
+
   try {
-    const outPath = `${outDir}/${type}s/${name}.js`;
-    file = await fs.open(outPath, 'w');
+    file = await fs.open(outpath, 'w');
     const writeStream = file.createWriteStream();
     generate(output, { output: writeStream });
 
-    return createEntry('success', `${type} written to ${outPath}`);
+    return {
+      type: input.type,
+      severity: Severity.SUCCESS,
+      input,
+      path: outpath
+    } as BuildResult;
   } finally {
     await file?.close();
   }

@@ -1,9 +1,7 @@
 import fs from 'fs/promises';
 import { beforeEach, expect, test, vi } from 'vitest';
 import { testMocksDir } from '../../../__tests__/fixtures.js';
-import { writeManifest } from '../../manifest/index.js';
-import { buildBundle } from '../bundle.js';
-import { buildTab } from '../tab.js';
+import { buildBundle, buildTab } from '../index.js';
 
 const written: string[] = [];
 vi.spyOn(fs, 'open').mockResolvedValue({
@@ -73,28 +71,4 @@ test('build tab', async () => {
   const { default: tab } = eval(trimmed)(() => {});
   expect(tab.body(0)).toEqual(0);
   expect(tab.toSpawn()).toEqual(true);
-});
-
-vi.spyOn(fs, 'writeFile').mockResolvedValue();
-
-test('writing manifest', async () => {
-  await writeManifest('/build', {
-    test0: {
-      manifest: {
-        tabs: ['tab0']
-      }
-    },
-    test1: {
-      manifest: {}
-    }
-  } as any);
-
-  expect(fs.writeFile).toHaveBeenCalledTimes(1);
-  const [[path, data]] = vi.mocked(fs.writeFile).mock.calls;
-
-  expect(path).toEqual('/build/modules.json');
-  expect(JSON.parse(data as string)).toMatchObject({
-    test0: { tabs: ['tab0'] },
-    test1: {}
-  });
 });

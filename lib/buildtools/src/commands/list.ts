@@ -1,8 +1,7 @@
 import { Command } from '@commander-js/extra-typings';
 import chalk from 'chalk';
 import omit from 'lodash/omit.js';
-import { formatResolveBundleErrors } from '../build/manifest/formatters.js';
-import { resolveAllBundles, resolveAllTabs, resolveSingleBundle, resolveSingleTab } from '../build/manifest/index.js';
+import { resolveAllBundles, resolveAllTabs, resolveSingleBundle, resolveSingleTab } from '../build/manifest.js';
 import { getBundlesDir, getTabsDir } from '../getGitRoot.js';
 import { logCommandErrorAndExit } from './commandUtils.js';
 
@@ -14,7 +13,7 @@ export const getListBundlesCommand = () => new Command('bundle')
       const bundlesDir = await getBundlesDir();
       const manifestResult = await resolveAllBundles(bundlesDir);
       if (manifestResult.severity === 'error') {
-        logCommandErrorAndExit(formatResolveBundleErrors(manifestResult));
+        logCommandErrorAndExit(manifestResult);
       }
 
       const bundleNames = Object.keys(manifestResult.bundles);
@@ -30,7 +29,7 @@ export const getListBundlesCommand = () => new Command('bundle')
       if (!manifestResult) {
         logCommandErrorAndExit(`No bundle found at ${directory}!`);
       } else if (manifestResult.severity === 'error') {
-        logCommandErrorAndExit(formatResolveBundleErrors(manifestResult));
+        logCommandErrorAndExit(manifestResult);
       } else {
         const bundle = omit(manifestResult.bundle, 'type');
         const manifestStr = JSON.stringify(bundle, null, 2);
@@ -51,7 +50,7 @@ export const getListTabsCommand = () => new Command('tabs')
 
       const tabsManifest = await resolveAllTabs(bundlesDir, tabsDir);
       if (tabsManifest.severity === 'error') {
-        logCommandErrorAndExit(formatResolveBundleErrors(tabsManifest));
+        logCommandErrorAndExit(tabsManifest);
       }
 
       const tabNames = Object.keys(tabsManifest.tabs);

@@ -3,26 +3,19 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import { validate } from 'jsonschema';
 import uniq from 'lodash/uniq.js';
-import { getTabsDir } from '../../getGitRoot.js';
-import type { BundleManifest, ManifestResult, ResolvedBundle, ResolvedTab } from '../../types.js';
-import { filterAsync, isNodeError, mapAsync } from '../../utils.js';
-import { createBuilder } from '../buildUtils.js';
-import manifestSchema from '../modules/manifest.schema.json' with { type: 'json' };
-import {
-  MissingEntryPointError,
-  MissingTabError,
-  type GetBundleManifestResult,
-  type ResolveAllBundlesResult,
-  type ResolveAllTabsResult,
-  type ResolveEitherResult,
-  type ResolveSingleBundleResult
-} from './types.js';
+import { objectEntries } from '../commands/commandUtils.js';
+import { getTabsDir } from '../getGitRoot.js';
+import { Severity, type BundleManifest, type InputAsset, type ResolvedBundle, type ResolvedTab, type ResultType, type SuccessResult } from '../types.js';
+import { filterAsync, isNodeError, mapAsync } from '../utils.js';
+import manifestSchema from './modules/manifest.schema.json' with { type: 'json' };
+
+export type GetBundleManifestResult = ResultType<{ manifest: BundleManifest }>;
 
 /**
  * Checks that the given directory has contains a bundle and that it has the correct
  * format and structures. Returns `undefined` if no bundle was detected.
  */
-export async function getBundleManifest(directory: string, tabCheck?: boolean): Promise<GetBundleManifestResult> {
+export async function getBundleManifest(directory: string, tabCheck?: boolean): Promise<GetBundleManifestResult | undefined> {
   let manifestStr: string;
 
   try {
@@ -31,7 +24,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
     if (isNodeError(error) && error.code === 'ENOENT') {
       return undefined;
     }
-    return { severity: 'error', errors: [error] };
+    return { severity: Severity.ERROR, errors: [`${error}`] };
   }
 
   let versionStr: string | undefined;
@@ -42,7 +35,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
     if (isNodeError(error) && error.code === 'ENOENT') {
       return undefined;
     }
-    return { severity: 'error', errors: [error] };
+    return { severity: Severity.ERROR, errors: [`${error}`] };
   }
 
   const rawManifest = JSON.parse(manifestStr) as BundleManifest;
@@ -50,8 +43,8 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
 
   if (validateResult.errors.length > 0) {
     return {
-      severity: 'error',
-      errors: validateResult.errors
+      severity: Severity.ERROR,
+      errors: validateResult.errors.map(each => each.toString())
     };
   }
 
@@ -71,25 +64,19 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
 
     if (unknownTabs.length > 0) {
       return {
-        severity: 'error',
-        errors: unknownTabs.map(each => new MissingTabError(each))
+        severity: Severity.ERROR,
+        errors: unknownTabs.map(each => `Unknown tab ${each}`)
       };
     }
   }
 
   return {
-    severity: 'success',
+    severity: Severity.SUCCESS,
     manifest
   };
 }
 
-type GetAllBundleManifestsResult = {
-  severity: 'error'
-  errors: unknown[]
-} | {
-  severity: 'success'
-  manifests: Record<string, BundleManifest>
-};
+export type GetAllBundleManifestsResult = ResultType<{ manifests: Record<string, BundleManifest> }>;
 
 /**
  * Get all bundle manifests
@@ -100,8 +87,8 @@ export async function getBundleManifests(bundlesDir: string, tabCheck?: boolean)
     subdirs = await fs.readdir(bundlesDir, { withFileTypes: true });
   } catch (error) {
     return {
-      severity: 'error',
-      errors: [error]
+      severity: Severity.ERROR,
+      errors: [`${error}`]
     };
   }
 
@@ -116,7 +103,7 @@ export async function getBundleManifests(bundlesDir: string, tabCheck?: boolean)
     return undefined;
   }));
 
-  const [combinedManifests, errors] = manifests.reduce<[Record<string, BundleManifest>, unknown[]]>(([res, errors], entry) => {
+  const [combinedManifests, errors] = manifests.reduce<[Record<string, BundleManifest>, string[]]>(([res, errors], entry) => {
     if (entry === undefined) return [res, errors];
     const [name, manifest] = entry;
 
@@ -142,30 +129,40 @@ export async function getBundleManifests(bundlesDir: string, tabCheck?: boolean)
 
   if (errors.length > 0) {
     return {
-      severity: 'error',
+      severity: Severity.ERROR,
       errors
     };
   }
 
   return {
-    severity: 'success',
+    severity: Severity.SUCCESS,
     manifests: combinedManifests
   };
 }
+
+type ResolveSingleBundleResult = ResultType<{ bundle: ResolvedBundle }>;
 
 /**
  * Attempts to resolve the information at the given directory as a bundle. Returns `undefined` if no bundle was detected
  * at the given directory. Otherwise returns with either the manifest of the bundle or corresponding errors.
  */
-export async function resolveSingleBundle(bundleDir: string): Promise<ResolveSingleBundleResult> {
+export async function resolveSingleBundle(bundleDir: string): Promise<ResolveSingleBundleResult | undefined> {
   const fullyResolved = pathlib.resolve(bundleDir);
   const bundleName = pathlib.basename(fullyResolved);
 
-  const stats = await fs.stat(fullyResolved);
-  if (!stats.isDirectory()) {
+  try {
+    const stats = await fs.stat(fullyResolved);
+    if (!stats.isDirectory()) {
+      return {
+        severity: Severity.ERROR,
+        errors: [`${fullyResolved} is not a directory!`]
+      };
+    }
+  } catch (error) {
+    if (!isNodeError(error) || error.code !== 'ENOENT') throw error;
     return {
-      severity: 'error',
-      errors: [new Error(`${fullyResolved} is not a directory!`)]
+      severity: Severity.ERROR,
+      errors: [`${fullyResolved} is not a directory!`]
     };
   }
 
@@ -178,20 +175,20 @@ export async function resolveSingleBundle(bundleDir: string): Promise<ResolveSin
 
     if (!entryStats.isFile()) {
       return {
-        severity: 'error',
-        errors: [new MissingEntryPointError('bundle', bundleName)]
+        severity: Severity.ERROR,
+        errors: ['Could not find entrypoint!']
       };
     }
   } catch (error) {
     if (!isNodeError(error) || error.code !== 'ENOENT') throw error;
     return {
-      severity: 'error',
-      errors: [new MissingEntryPointError('bundle', bundleName)]
+      severity: Severity.ERROR,
+      errors: ['Could not find entrpoint!']
     };
   }
 
   return {
-    severity: 'success',
+    severity: Severity.SUCCESS,
     bundle: {
       type: 'bundle',
       name: bundleName,
@@ -200,6 +197,8 @@ export async function resolveSingleBundle(bundleDir: string): Promise<ResolveSin
     }
   };
 }
+
+type ResolveAllBundlesResult = ResultType<{ bundles: Record<string, ResolvedBundle> }>;
 
 /**
  * Find all the bundles with the given directory and returns their
@@ -238,13 +237,13 @@ export async function resolveAllBundles(bundlesDir: string): Promise<ResolveAllB
 
   if (errors.length > 0) {
     return {
-      severity: 'error',
+      severity: Severity.ERROR,
       errors
     };
   }
 
   return {
-    severity: 'success',
+    severity: Severity.SUCCESS,
     bundles: combinedManifests
   };
 }
@@ -263,30 +262,30 @@ async function resolvePaths(isDir: boolean, ...paths: string[]) {
   return undefined;
 }
 
-export const {
-  builder: writeManifest,
-  formatter: formatManifestResult
-} = createBuilder<[bundles: Record<string, ResolvedBundle>], ManifestResult>(async (outDir, resolvedBundles) => {
-  try {
-    const toWrite = Object.entries(resolvedBundles).reduce((res, [key, { manifest }]) => ({
-      ...res,
-      [key]: manifest
-    }), {});
-    const outpath = `${outDir}/modules.json`;
-    await fs.writeFile(outpath, JSON.stringify(toWrite, null, 2));
-    return {
-      severity: 'success',
-      assetType: 'manifest',
-      message: `Manifest written to ${outpath}`
-    };
-  } catch (error) {
-    return {
-      severity: 'error',
-      assetType: 'manifest',
-      message: `${error}`
-    };
-  }
-});
+// export const {
+//   builder: writeManifest,
+//   formatter: formatManifestResult
+// } = createBuilder<[bundles: Record<string, ResolvedBundle>], ManifestResult>(async (outDir, resolvedBundles) => {
+//   try {
+//     const toWrite = Object.entries(resolvedBundles).reduce((res, [key, { manifest }]) => ({
+//       ...res,
+//       [key]: manifest
+//     }), {});
+//     const outpath = `${outDir}/modules.json`;
+//     await fs.writeFile(outpath, JSON.stringify(toWrite, null, 2));
+//     return {
+//       severity: 'success',
+//       assetType: 'manifest',
+//       message: `Manifest written to ${outpath}`
+//     };
+//   } catch (error) {
+//     return {
+//       severity: 'error',
+//       assetType: 'manifest',
+//       message: `${error}`
+//     };
+//   }
+// });
 
 export async function resolveSingleTab(tabDir: string): Promise<ResolvedTab | undefined> {
   const fullyResolved = pathlib.resolve(tabDir);
@@ -316,6 +315,8 @@ export async function resolveSingleTab(tabDir: string): Promise<ResolvedTab | un
   };
 }
 
+type ResolveAllTabsResult = ResultType<{ tabs: Record<string, ResolvedTab> }>;
+
 export async function resolveAllTabs(bundlesDir: string, tabsDir: string): Promise<ResolveAllTabsResult> {
   const bundlesManifest = await resolveAllBundles(bundlesDir);
   if (bundlesManifest.severity === 'error') {
@@ -334,11 +335,12 @@ export async function resolveAllTabs(bundlesDir: string, tabsDir: string): Promi
     }, {} as Record<string, ResolvedTab>);
 
   return {
-    severity: 'success',
+    severity: Severity.SUCCESS,
     tabs: tabsManifest
   };
 }
 
+type ResolveEitherResult = ResultType<{ asset: InputAsset }>;
 /**
  * Attempts to resolve the given directory as a bundle or a tab. Returns an object with `asset: undefined`
  * if it was unable to do either. Otherwise, it returns the error(s) associated with resolving the bundle or tab
@@ -349,28 +351,44 @@ export async function resolveEitherBundleOrTab(directory: string): Promise<Resol
     const tab = await resolveSingleTab(directory);
     if (tab === undefined) {
       return {
-        severity: 'error',
+        severity: Severity.ERROR,
         errors: [],
-        asset: undefined
       };
     }
 
     return {
-      severity: 'success',
+      severity: Severity.SUCCESS,
       asset: tab
     };
   }
 
   if (bundle.severity === 'error') {
     return {
-      severity: 'error',
+      severity: Severity.ERROR,
       errors: bundle.errors,
-      asset: undefined
     };
   }
 
   return {
-    severity: 'success',
+    severity: Severity.SUCCESS,
     asset: bundle.bundle
+  };
+}
+
+/**
+ * Writes the combined modules' manifest to the output directory
+ */
+export async function buildManifest(bundles: Record<string, ResolvedBundle>, outDir: string): Promise<SuccessResult> {
+  const finalManifest = objectEntries(bundles).reduce<Record<string, BundleManifest>>((res, [name, { manifest }]) => ({
+    ...res,
+    [name]: manifest
+  }), {});
+
+  const outpath = `${outDir}/modules.json`;
+  await fs.writeFile(outpath, JSON.stringify(finalManifest, null, 2));
+
+  return {
+    severity: Severity.SUCCESS,
+    path: outpath
   };
 }

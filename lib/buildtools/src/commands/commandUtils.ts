@@ -1,15 +1,9 @@
 import { InvalidArgumentError, Option } from '@commander-js/extra-typings';
 import chalk from 'chalk';
 import { LogLevel } from 'typedoc';
-import { formatHtmlResult } from '../build/docs/html.js';
-import { formatJsonResult } from '../build/docs/json.js';
-import { formatManifestResult } from '../build/manifest/index.js';
-import { formatBundleResult } from '../build/modules/bundle.js';
-import { formatTabResult } from '../build/modules/tab.js';
-import { formatLintResult } from '../prebuild/lint.js';
-import { formatTscResult } from '../prebuild/tsc.js';
-import type { FullResult, ResultEntry } from '../types.js';
-import type { Severity } from '../utils.js';
+import type { LintResult } from '../prebuild/lint.js';
+import type { TscResult } from '../prebuild/tsc.js';
+import type { ErrorResult, Severity } from '../types.js';
 
 export const lintOption = new Option('--lint', 'Run ESLint when building')
   .default(false);
@@ -48,61 +42,15 @@ export function objectKeys<T extends string | number | symbol>(obj: Record<T, un
 }
 
 /**
- * Convert the provided result object into a single string
- */
-export function getResultString<T extends (ResultEntry | ResultEntry[])>({ results, tsc, lint }: FullResult<T>): string {
-  function resultMapper(result: ResultEntry) {
-    switch (result.assetType) {
-      case 'bundle':
-        return formatBundleResult(result);
-      case 'html':
-        return formatHtmlResult(result);
-      case 'json':
-        return formatJsonResult(result);
-      case 'manifest':
-        return formatManifestResult(result);
-      case 'tab':
-        return formatTabResult(result);
-    }
-  }
-
-  const output: string[] = [];
-
-  if (tsc) {
-    output.push(formatTscResult(tsc));
-  }
-
-  if (lint) {
-    output.push(formatLintResult(lint));
-  }
-
-  if (results !== undefined) {
-    if (Array.isArray(results)) {
-      results.forEach(result => {
-        output.push(resultMapper(result));
-      });
-    } else {
-      output.push(resultMapper(results));
-    }
-  }
-
-  return output.join('\n');
-}
-
-/**
  * Iterate through the entire results object, checking for errors. This will call `process.exit(1)` if there
  * are errors, or if there are warnings and `errorOnWarning` has been given as `true`.\
  * Mainly intended for use with CI pipelines so that processes can exit with non-zero codes
  */
-export function resultsProcessor<T extends (ResultEntry | ResultEntry[])>({ results, tsc, lint }: FullResult<T>, errorOnWarning: boolean) {
+export function processResult({ results, tsc, lint }: { results?: { severity: Severity }, tsc?: TscResult, lint?: LintResult }, errorOnWarning: boolean) {
   const severities: Severity[] = [];
 
-  if (results !== undefined) {
-    if (Array.isArray(results)) {
-      results.forEach(({ severity }) => severities.push(severity));
-    } else {
-      severities.push(results.severity);
-    }
+  if (results) {
+    severities.push(results.severity);
   }
 
   if (tsc) {
@@ -124,9 +72,12 @@ export function resultsProcessor<T extends (ResultEntry | ResultEntry[])>({ resu
   }
 }
 
-export function logCommandErrorAndExit(message: unknown[], code?: number): never;
-export function logCommandErrorAndExit(message: string, code?: number): never;
-export function logCommandErrorAndExit(message: unknown[] | string, code: number = 1): never {
-  console.error(chalk.redBright(message));
+export function logCommandErrorAndExit(errorObject: ErrorResult | string, code: number = 1): never {
+  if (typeof errorObject === 'string') {
+    console.error(chalk.redBright(errorObject));
+  } else {
+    const errStr = errorObject.errors.join('\n');
+    console.error(chalk.redBright(errStr));
+  }
   process.exit(code);
 }

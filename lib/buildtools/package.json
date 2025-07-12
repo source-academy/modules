@@ -8,6 +8,7 @@
     "@types/estree": "^1.0.0",
     "@types/lodash": "^4.14.198",
     "@types/node": "^22.15.30",
+    "@types/uglify-js": "^3",
     "typescript": "^5.8.2"
   },
   "exports": null,
@@ -26,6 +27,7 @@
     "jsonschema": "^1.5.0",
     "lodash": "^4.17.21",
     "typedoc": "^0.28.4",
+    "uglify-js": "^3.19.3",
     "vitest": "^3.2.3"
   },
   "scripts": {

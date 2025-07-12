@@ -1,8 +1,7 @@
 import pathlib from 'path';
 import { Command } from '@commander-js/extra-typings';
 import chalk from 'chalk';
-import { formatResolveBundleErrors } from '../build/manifest/formatters.js';
-import { resolveEitherBundleOrTab } from '../build/manifest/index.js';
+import { resolveEitherBundleOrTab } from '../build/manifest.js';
 import { runPrebuild } from '../prebuild/index.js';
 import { formatLintResult, lintGlobal, runEslint } from '../prebuild/lint.js';
 import { formatTscResult, runTsc } from '../prebuild/tsc.js';
@@ -29,7 +28,7 @@ export const getLintCommand = () => new Command('lint')
         logCommandErrorAndExit(`No tab or bundle found at ${fullyResolved}`);
       }
 
-      logCommandErrorAndExit(formatResolveBundleErrors(resolveResult));
+      logCommandErrorAndExit(resolveResult);
     }
 
     const result = await runEslint(resolveResult.asset, fix, stats);
@@ -89,7 +88,7 @@ export const getTscCommand = () => new Command('tsc')
         logCommandErrorAndExit(`No tab or bundle found at ${fullyResolved}`);
       }
 
-      logCommandErrorAndExit(formatResolveBundleErrors(resolveResult));
+      logCommandErrorAndExit(resolveResult);
     }
 
     const result = await runTsc(resolveResult.asset, !emit);
@@ -117,7 +116,7 @@ export const getPrebuildAllCommand = () => new Command('prebuild')
         logCommandErrorAndExit(`No tab or bundle found at ${fullyResolved}`);
       }
 
-      logCommandErrorAndExit(formatResolveBundleErrors(resolveResult));
+      logCommandErrorAndExit(resolveResult);
     }
 
     const { tsc, lint } = await runPrebuild(resolveResult.asset);

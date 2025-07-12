@@ -1,15 +1,15 @@
+// Code for building JSON documentation specifically
+
 import fs from 'fs/promises';
 import * as td from 'typedoc';
-import type { JsonResultEntry, ResolvedBundle } from '../../types.js';
-import type { Severity } from '../../utils.js';
-import { createBuilder } from '../buildUtils.js';
+import { Severity, type BuildResult, type ResolvedBundle } from '../../types.js';
 import drawdown from './drawdown.js';
 
 const typeToName = (type: td.SomeType) => type.stringify(td.TypeContext.none);
 
 const parsers: {
   [K in td.ReflectionKind]?: (obj: td.DeclarationReflection) => ({
-    error: any
+    error: string
   } | {
     obj: unknown,
     warnings: string[],
@@ -49,7 +49,7 @@ const parsers: {
         params: params ?? [],
         retType: typeToName(signature.type!)
       },
-      warnings: []
+      warnings
     };
   },
   [td.ReflectionKind.Variable](obj) {
@@ -73,61 +73,74 @@ const parsers: {
   }
 };
 
-export const {
-  builder: buildJson,
-  formatter: formatJsonResult
-} = createBuilder<[bundle: ResolvedBundle, reflection: td.ProjectReflection], JsonResultEntry[]>(
-  async (outDir, { name: bundleName }, reflection) => {
-    const createEntry = (severity: Severity, message: string): JsonResultEntry => ({
-      severity,
-      assetType: 'json',
-      message,
-      inputName: bundleName
-    });
+/**
+ * Converts a Typedoc reflection into the format as expected by the frontend and write it to disk as a JSON file
+ */
+export async function buildJson(bundle: ResolvedBundle, outDir: string, reflection: td.ProjectReflection): Promise<BuildResult> {
+  const [jsonData, warnings, errors] = reflection.children!.reduce<
+    [Record<string, unknown>, string[], string[]]
+  >(([res, warnings, errors], element) => {
+    const parser = parsers[element.kind];
 
-    try {
-      const [jsonData, resultEntries] = reflection.children!.reduce<[
-        Record<string, unknown>,
-        JsonResultEntry[]
-      ]>(([res, results], element) => {
-        const parser = parsers[element.kind];
-
-        if (parser) {
-          const result = parser(element);
-          if ('error' in result) {
-            return [res, [...results, createEntry('error', `${result.error}`)]];
-          }
-
-          const { obj, warnings } = result;
-
-          return [
-            {
-              ...res,
-              [element.name]: obj
-            },
-            [
-              ...results,
-              ...warnings.map(warning => createEntry('warn', warning))
-            ]
-          ];
-        } else {
-          return [
-            {
-              ...res,
-              [element.name]: { kind: 'unknown' }
-            }, [
-              ...results,
-              createEntry('warn', `No parser found for ${element.name} which is of type ${element.kind}.`)
-            ]];
-        }
-      }, [{}, []]);
-
-      const outpath = `${outDir}/jsons/${bundleName}.json`;
-      await fs.writeFile(outpath, JSON.stringify(jsonData, null, 2));
-
-      return resultEntries.length === 0 ? [ createEntry('success', `JSON written to ${outpath}`) ] : resultEntries;
-    } catch (error) {
-      return [createEntry('error', `${error}`)];
+    if (!parser) {
+      return [
+        {
+          ...res,
+          [element.name]: { kind: 'unknown' }
+        },
+        [
+          ...warnings,
+          `No parser found for ${element.name} which is of type ${element.kind}.`
+        ],
+        errors
+      ];
     }
+
+    const result = parser(element);
+    if ('error' in result) {
+      return [res, warnings, [...errors, result.error]];
+    }
+
+    const { obj, warnings: parsedWarnings } = result;
+    return [
+      {
+        ...res,
+        [element.name]: obj
+      },
+      [
+        ...warnings,
+        ...parsedWarnings
+      ],
+      errors
+    ];
+  }, [{}, [], []]);
+
+  if (errors.length > 0) {
+    return {
+      type: 'docs',
+      severity: Severity.ERROR,
+      errors,
+      input: bundle
+    };
   }
-);
+
+  const outpath = `${outDir}/jsons/${bundle.name}.json`;
+  await fs.writeFile(outpath, JSON.stringify(jsonData, null, 2));
+
+  if (warnings.length > 0) {
+    return {
+      type: 'docs',
+      severity: Severity.WARN,
+      warnings,
+      path: outpath,
+      input: bundle
+    };
+  }
+
+  return {
+    type: 'docs',
+    severity: Severity.SUCCESS,
+    path: outpath,
+    input: bundle
+  };
+}

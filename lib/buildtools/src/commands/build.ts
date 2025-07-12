@@ -1,18 +1,18 @@
-import fs from 'fs/promises';
 import { Command } from '@commander-js/extra-typings';
-import { initTypedocForSingleBundle } from '../build/docs/docsUtils.js';
-import { buildDocs, buildJson } from '../build/docs/index.js';
-import buildAll from '../build/index.js';
-import { formatResolveBundleErrors } from '../build/manifest/formatters.js';
-import { resolveAllBundles, resolveSingleBundle , resolveSingleTab, writeManifest } from '../build/manifest/index.js';
+import { buildAll } from '../build/all.js';
+import { buildHtml, buildSingleBundleDocs } from '../build/docs/index.js';
+import { formatResult, formatResultObject } from '../build/formatter.js';
+import { buildManifest, resolveAllBundles, resolveEitherBundleOrTab, resolveSingleBundle , resolveSingleTab } from '../build/manifest.js';
 import { buildBundle, buildTab } from '../build/modules/index.js';
 import { getBundlesDir, getOutDir } from '../getGitRoot.js';
 import { runBuilderWithPrebuild } from '../prebuild/index.js';
-import type { FullResult, ResolvedBundle, ResultEntry } from '../types.js';
-import { getResultString, lintOption, logCommandErrorAndExit, logLevelOption, resultsProcessor, tscOption } from './commandUtils.js';
+import { Severity } from '../types.js';
+import { lintOption, logCommandErrorAndExit, logLevelOption, processResult, tscOption } from './commandUtils.js';
 
 const outDir = await getOutDir();
 const bundlesDir = await getBundlesDir();
+
+// Commands that are specific to a tab or bundle
 
 export const getBuildBundleCommand = () => new Command('bundle')
   .description('Build the bundle at the given directory')
@@ -24,12 +24,12 @@ export const getBuildBundleCommand = () => new Command('bundle')
     const result = await resolveSingleBundle(bundleDir);
     if (result === undefined) logCommandErrorAndExit(`No bundle found at ${bundleDir}!`);
     else if (result.severity === 'error') {
-      logCommandErrorAndExit(formatResolveBundleErrors(result));
+      logCommandErrorAndExit(result);
     }
 
     const results = await runBuilderWithPrebuild(buildBundle, opts, result.bundle, outDir, 'bundle');
-    console.log(getResultString(results));
-    resultsProcessor(results, opts.ci);
+    console.log(formatResultObject(results));
+    processResult(results, opts.ci);
   });
 
 export const getBuildTabCommand = () => new Command('tab')
@@ -43,105 +43,80 @@ export const getBuildTabCommand = () => new Command('tab')
     if (!tab) logCommandErrorAndExit(`No tab found at ${tabDir}`);
 
     const results = await runBuilderWithPrebuild(buildTab, opts, tab, outDir, 'tab');
-    console.log(getResultString(results));
-    resultsProcessor(results, opts.ci);
-  });
-
-export const getBuildJsonCommand = () => new Command('json')
-  .description('Build the JSON documentation for the bundle at the given directory')
-  .argument('[bundle]', 'Directory in which the bundle\'s source files are located', process.cwd())
-  .addOption(tscOption)
-  .addOption(logLevelOption)
-  .option('--ci', 'Run in CI mode', !!process.env.CI)
-  .action(async (bundleDir, opts) => {
-    const result = await resolveSingleBundle(bundleDir);
-    if (!result) logCommandErrorAndExit(`No bundle found at ${bundleDir}!`);
-    else if (result.severity === 'error') {
-      logCommandErrorAndExit(formatResolveBundleErrors(result));
-    }
-
-    const results = await runBuilderWithPrebuild(
-      async (outDir, bundle: ResolvedBundle) => {
-        const reflection = await initTypedocForSingleBundle(bundle, opts.logLevel);
-        if (reflection.severity === 'error') {
-          return [{
-            ...reflection,
-            assetType: 'json',
-            inputName: bundle.name,
-          }];
-        }
-
-        return buildJson(outDir, bundle, reflection.reflection);
-      },
-      opts,
-      result.bundle,
-      outDir,
-      'json'
-    );
-
-    console.log(getResultString(results));
-    resultsProcessor(results, opts.ci);
+    console.log(formatResultObject(results));
+    processResult(results, opts.ci);
   });
 
 export const getBuildDocsCommand = () => new Command('docs')
-  .description('Build all documentation for all bundles')
+  .description('Build the documentation for the given bundle')
+  .argument('[bundle]', 'Directory in which the bundle\'s source files are located', process.cwd())
   .option('--ci', 'Run in CI mode', !!process.env.CI)
   .addOption(logLevelOption)
-  .action(async ({ ci, logLevel }) => {
-    const manifestResult = await resolveAllBundles(bundlesDir);
-    if (manifestResult.severity === 'success') {
-      await fs.mkdir(`${outDir}/jsons`, { recursive: true });
-      const results = await buildDocs(manifestResult.bundles, outDir, logLevel);
-      console.log(getResultString({ results }));
-      resultsProcessor({ results }, ci);
+  .action(async (directory, { ci, logLevel }) => {
+    const manifestResult = await resolveSingleBundle(directory);
+    if (manifestResult === undefined) {
+      logCommandErrorAndExit(`No bundle found at ${directory}!`);
+    } else if (manifestResult.severity === 'success') {
+      const docResult = await buildSingleBundleDocs(manifestResult.bundle, outDir, logLevel);
+      console.log(formatResultObject({ docs: docResult }));
+      processResult({ results: docResult }, ci);
     } else {
-      logCommandErrorAndExit(formatResolveBundleErrors(manifestResult));
-    }
-  });
-
-export const getBuildManifestCommand = () => new Command('manifest')
-  .description('Write the module manifest to the output directory')
-  .action(async () => {
-    const manifestResult = await resolveAllBundles(bundlesDir);
-    if (manifestResult.severity === 'success') {
-      await fs.mkdir(outDir, { recursive: true });
-      const results = await writeManifest(outDir, manifestResult.bundles);
-      console.log(getResultString({ results }));
-      resultsProcessor({ results }, false);
-    } else {
-      logCommandErrorAndExit(formatResolveBundleErrors(manifestResult));
+      logCommandErrorAndExit(manifestResult);
     }
   });
 
 export const getBuildAllCommand = () => new Command('all')
-  .description('Build all bundles, tabs and documentation')
+  .description('Build all assets for the given bundle/tab')
+  .argument('[directory]', 'Directory in which the source files are located', process.cwd())
   .addOption(tscOption)
   .addOption(lintOption)
   .addOption(logLevelOption)
   .option('--ci', 'Run in CI mode', !!process.env.CI)
-  .action(async opts => {
-    const manifestResult = await resolveAllBundles(bundlesDir);
-    if (manifestResult.severity === 'error') {
-      logCommandErrorAndExit(formatResolveBundleErrors(manifestResult));
+  .action(async (directory, opts) => {
+    const resolvedResult = await resolveEitherBundleOrTab(directory);
+    if (resolvedResult.severity === 'error') {
+      if (resolvedResult.errors.length === 0) {
+        logCommandErrorAndExit(`Could not locate tab/bundle at ${directory}`);
+      } else {
+        const errStr = resolvedResult.errors.join('\n');
+        logCommandErrorAndExit(`Error while resolving ${directory}: ${errStr}`);
+      }
     }
 
-    const [manifest, [html, ...json], bundles, tabs] = await buildAll(manifestResult.bundles, opts, outDir, opts.logLevel);
-    const results: FullResult<ResultEntry>[] = [
-      { results: manifest },
-      { results: html },
-      ...json.map(each => ({ results: each })),
-      ...bundles,
-      ...tabs
-    ];
-
-    console.log(results.map(getResultString).join('\n'));
-    results.forEach(each => resultsProcessor(each, opts.ci));
+    const result = await buildAll(resolvedResult.asset, opts, outDir, opts.logLevel);
+    console.log(formatResultObject(result));
+    processResult(result, opts.ci);
   });
 
 export const getBuildCommand = () => new Command('build')
-  .addCommand(getBuildAllCommand())
+  .addCommand(getBuildAllCommand(), { isDefault: true })
   .addCommand(getBuildBundleCommand())
   .addCommand(getBuildTabCommand())
-  .addCommand(getBuildJsonCommand())
-  .addCommand(getBuildDocsCommand())
-  .addCommand(getBuildManifestCommand());
+  .addCommand(getBuildDocsCommand());
+
+// Commands that should be run from the root repository
+export const getManifestCommand = () => new Command('manifest')
+  .description('Build the combined modules manifest')
+  .action(async () => {
+    const resolveResult = await resolveAllBundles(bundlesDir);
+    if (resolveResult.severity === Severity.ERROR) {
+      logCommandErrorAndExit(resolveResult);
+    }
+
+    const manifestResult = await buildManifest(resolveResult.bundles, outDir);
+    console.log(formatResult(manifestResult));
+  });
+
+export const getBuildHtmlCommand = () => new Command('html')
+  .description('Builds the HTML documentation. The JSON documentation of each bundle must first have been built')
+  .addOption(logLevelOption)
+  .action(async ({ logLevel }) => {
+    const resolveResult = await resolveAllBundles(bundlesDir);
+    if (resolveResult.severity === Severity.ERROR) {
+      logCommandErrorAndExit(resolveResult);
+    }
+
+    const htmlResult = await buildHtml(resolveResult.bundles, outDir, logLevel);
+    console.log(formatResult(htmlResult, 'html'));
+    processResult({ results: htmlResult }, false);
+  });

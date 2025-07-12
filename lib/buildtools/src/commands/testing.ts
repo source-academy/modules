@@ -1,8 +1,7 @@
 import { resolve } from 'path';
 import { Command, Option } from '@commander-js/extra-typings';
 import type { VitestRunMode } from 'vitest/node';
-import { formatResolveBundleErrors } from '../build/manifest/formatters.js';
-import { resolveEitherBundleOrTab } from '../build/manifest/index.js';
+import { resolveEitherBundleOrTab } from '../build/manifest.js';
 import { runIndividualVitest } from '../testing.js';
 import { logCommandErrorAndExit } from './commandUtils.js';
 
@@ -32,7 +31,7 @@ export const getTestCommand = () => new Command('test')
         logCommandErrorAndExit(`No tab or bundle found at ${fullyResolved}`);
       }
 
-      logCommandErrorAndExit(formatResolveBundleErrors(resolveResult));
+      logCommandErrorAndExit(resolveResult);
     }
 
     await runIndividualVitest(mode, resolveResult.asset, options);
