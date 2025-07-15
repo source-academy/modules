@@ -1,4 +1,5 @@
 // Vitepress config
+import { directoryTreePlugin } from '@sourceacademy/markdown-plugin-directory-tree';
 import { defineConfig, type UserConfig } from 'vitepress';
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons';
 import { withMermaid } from 'vitepress-plugin-mermaid';
@@ -16,6 +17,10 @@ const vitepressOptions: UserConfig = {
   markdown: {
     config(md) {
       md.use(groupIconMdPlugin);
+      md.use(directoryTreePlugin);
+    },
+    languageAlias: {
+      dirtree: 'yml'
     }
   },
   outDir: `${import.meta.dirname}/../../build/devdocs`,
@@ -63,11 +68,11 @@ const vitepressOptions: UserConfig = {
         items: [
           {
             text: 'Build Tools',
-            link: '/buildtools'
+            link: '/buildtools/'
           },
           {
             text: 'Repo Tools',
-            link: '/repotools'
+            link: '/repotools/'
           },
         ]
       }

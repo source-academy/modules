@@ -25,7 +25,7 @@ export async function buildSingleBundleDocs(bundle: ResolvedBundle, outDir: stri
     name: bundle.name,
     logLevel,
     entryPoints: [`${bundle.directory}/src/index.ts`],
-    tsconfig: `${bundle.directory}/tsconfig.json`
+    tsconfig: `${bundle.directory}/tsconfig.json`,
   });
 
   const project = await app.convert();

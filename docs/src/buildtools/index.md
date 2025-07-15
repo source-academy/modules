@@ -20,24 +20,42 @@ The build tools are comprised of several sections:
   - Code for the template command
 
 ## Structure of the Build Tools package
-```txt
-uildtools
-├── bin
-│   ├── templates                     // Actual template files, retrieved at runtime
-│   ├── docsreadme.md                 // Docs HTML readme, retrieved at runtime
-│   └── index.js                      // The compiled buildtools
-├── src
-│   ├── ___test_mocks__               // Contains a set of mock bundles and tabs for testing
-│   ├── build
-│   │   ├── docs                      // Docs Builders
-│   │   ├── modules
-│   │   │   ├── bundle                // Bundle Builder
-│   │   │   ├── tab                   // Tab Builder
-│   │   │   └── manifest.schema.json  // Schema used to validate bundle manifests
-│   │   └── manifest                  // Code related to manipulating manifests
-│   ├── commands                      // Code where command handlers are defined
-│   ├── prebuild                      // Code for running ESLint and tsc
-│   ├── templates                     // Code for the template commands
-│   └── testing.ts                    // Code for running Vitest from Node
-└── workspacer.py                     // Python code for updating JSON files across bundles and tabs
+```dirtree
+path: ../../../lib/buildtools/
+children:
+  - name: bin
+    children:
+      - name: templates
+        comment: Actual template files, retrieved at runtime
+      - name: docsreadme.md
+        comment: Docs HTML readme, retrieved at runtime
+      - name: index.js
+        comment: The compiled and bundled buildtools
+  - name: src
+    children:
+      - name: __tests_mocks__
+        comment: Contains a set of mock bundles and tabs for testing
+      - name: build
+        children:
+          - name: docs
+            comment: Builders for HTML and JSON documentation
+          - name: modules
+            comment: Builders for bundles and tabs
+            children:
+              - name: manifest.schema.json
+                comment: Schema used to validate bundle manifests
+              - name: all.ts
+                comment: Combined builder for a specific bundle or tab
+              - name: manifest.ts
+                comment: Code for working with bundle manifests and bundle/tab resolution
+      - name: commands
+        comment: Code where command handlers are defined
+      - name: prebuild
+        comment: Code for running ESLint and tsc, both separately and in parallel
+      - name: templates
+        comment: Code for template commands
+      - name: testing.ts
+        comment: Code for running Vitest from NodeJS
+  - name: workspacer.py
+    comment: Python code for updating JSON files across bundles and tabs
 ```

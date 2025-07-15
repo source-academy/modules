@@ -5,11 +5,11 @@ import js from '@eslint/js';
 import markdown from '@eslint/markdown';
 import saLintPlugin from '@sourceacademy/lint-plugin';
 import stylePlugin from '@stylistic/eslint-plugin';
+import vitestPlugin from '@vitest/eslint-plugin';
 import * as importPlugin from 'eslint-plugin-import';
 import jsdocPlugin from 'eslint-plugin-jsdoc';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import vitestPlugin from 'eslint-plugin-vitest';
 import globals from 'globals';
 import jsonParser from 'jsonc-eslint-parser';
 import tseslint from 'typescript-eslint';
@@ -38,6 +38,7 @@ export default tseslint.config(
       'package-lock.json' // Just in case someone accidentally creates one
     ]
   },
+  // #region markdown
   {
     name: 'Markdown Files',
     extends: [markdown.configs.recommended],
@@ -58,6 +59,7 @@ export default tseslint.config(
       'markdown/require-alt-text': 'off',      // was error
     }
   },
+  // #endregion markdown
   {
     name: 'Global Configuration (Excluding Markdown)',
     // We exclude markdown because the markdown code processor doesn't support
@@ -145,6 +147,7 @@ export default tseslint.config(
       '@stylistic/semi': ['warn', 'always'],
     }
   },
+  // #region typescript
   {
     extends: tseslint.configs.recommended,
     name: 'Global Typescript Rules',
@@ -178,6 +181,7 @@ export default tseslint.config(
       '@stylistic/type-annotation-spacing': ['warn', { overrides: { colon: { before: false, after: true }}}],
     }
   },
+  // #endregion typescript
   {
     name: 'Global for TSX Files',
     files: ['**/*.tsx'],
@@ -254,6 +258,7 @@ export default tseslint.config(
     rules: {
       'func-style': 'off',
       'import/extensions': ['error', 'never', { json: 'always' }],
+      'no-empty': ['error', { allowEmptyCatch: true }],
       'no-constant-condition': 'off', // Was 'error',
       'no-fallthrough': 'off',
 
@@ -289,6 +294,8 @@ export default tseslint.config(
       '**/vitest.*.ts'
     ],
     rules: {
+      '@stylistic/quotes': 'off', // Turn this off to avoid conflicting with snapshots
+
       'vitest/expect-expect': ['error', {
         assertFunctionNames: ['expect*'],
       }],
@@ -296,7 +303,7 @@ export default tseslint.config(
       'vitest/no-conditional-expect': 'off',
       'vitest/no-export': 'off',
       'vitest/require-top-level-describe': 'off',
-      'vitest/valid-describe-callback': 'off',
+      'vitest/valid-expect-in-promise': 'error',
 
       'import/extensions': ['error', 'never', {
         config: 'ignore'

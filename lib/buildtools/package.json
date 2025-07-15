@@ -23,7 +23,7 @@
     "chalk": "^5.0.1",
     "commander": "^13.0.0",
     "esbuild": "^0.25.5",
-    "eslint": "^9.29.0",
+    "eslint": "^9.31.0",
     "jsonschema": "^1.5.0",
     "lodash": "^4.17.21",
     "typedoc": "^0.28.4",

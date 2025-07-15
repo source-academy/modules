@@ -1,13 +1,33 @@
 {
   "name": "@sourceacademy/markdown-plugin-directory-tree",
+  "description": "A Markdown-It plugin used to convert directory structures into a neatly formatted text diagram that can be displayed in code blocks",
   "private": true,
   "type": "module",
   "devDependencies": {
+    "@commander-js/extra-typings": "^13.0.0",
+    "@types/lodash": "^4.14.198",
     "@types/markdown-it": "^14.1.2",
-    "typescript": "^5.8.2"
+    "commander": "^13.0.0",
+    "esbuild": "^0.25.5",
+    "typescript": "^5.8.2",
+    "vitest": "^3.2.3"
   },
-  "exports": "./index.js",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist.cjs"
+    }
+  },
   "peerDependencies": {
     "markdown-it": "*"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "yaml": "^2.8.0"
+  },
+  "scripts": {
+    "build": "node ./build.js",
+    "prepare": "yarn build",
+    "test": "vitest --project \"Markdown Tree Plugin\""
   }
 }

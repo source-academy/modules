@@ -5,37 +5,44 @@ be used with the [frontend](https://github.com/source-academy/frontend).
 ## Tab Directory Structure Overview
 The typical tab directory structure is shown below.
 
-```txt
-TabName
-├── index.tsx
-├── tsconfig.json
-└── package.json
+```dirtree
+name: TabName
+children:
+  - index.tsx
+  - tsconfig.json
+  - package.json
 ```
 
 Alternatively, should you wish to use a `src` folder:
-```txt
-TabName
-├── src
-│   ├── index.tsx
-│   ├── component.tsx
-│   └── ...
-├── tsconfig.json
-└── package.json
+```dirtree
+name: TabName
+children:
+  - name: src
+    children:
+      - index.tsx
+      - component.tsx
+  - tsconfig.json
+  - package.json
 ```
 > [!NOTE]
 > The name of the root folder will be the name of the tab
 
 Tabs also support testing (using both `.ts` and `.tsx` extensions):
-```txt
-TabName
-├── src
-│   ├── __tests__
-│   │     └── test.tsx
-│   ├── index.tsx
-│   ├── component.tsx
-│   └── ...
-├── tsconfig.json
-└── package.json
+```dirtree
+name: TabName
+children:
+  - name: src
+    children:
+      - name: __tests__
+        children:
+          - name: test.tsx
+            comment: You can use a tsx file
+          - name: test2.ts
+            comment: Or a regular ts file
+      - index.tsx
+      - component.tsx
+  - tsconfig.json
+  - package.json
 ```
 
 The name of the tab is what you should refer to the tab as in its parent bundle's manifest:

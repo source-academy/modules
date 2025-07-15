@@ -3,7 +3,7 @@ import type { Linter } from 'eslint';
 import * as importPlugin from 'eslint-plugin-import';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import vitestPlugin from 'eslint-plugin-vitest';
+import vitestPlugin from '@vitest/eslint-plugin';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import saLintPlugin from '.';
@@ -84,6 +84,7 @@ export const tsConfig: Linter.Config = {
 export const vitestConfig: Linter.Config = {
   name: 'SA Testing Config (Vitest)',
   plugins: {
+    // @ts-expect-error Something weird going on here with the vitest plugin type
     vitest: vitestPlugin,
   },
   files: [

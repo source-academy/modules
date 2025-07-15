@@ -7,17 +7,23 @@ For example, the `binary_tree` module may want to provide an abstraction for Sou
 ## Bundle Directory Structure Overview
 
 The typical bundle structure for a bundle is shown below. Each section will have its own explanation.
-```txt
-bundle_name             // Name of the root folder is the name of the bundle
-├── src
-│   ├── __tests__       // Folder containing unit tests
-│   │   └── index.ts    // File containing unit tests
-│   ├── index.ts        // Entry Point
-│   ├── functions.ts    // Example file
-│   └── ....            // Other files your bundle may use
-├── package.json        // Package Manifest
-├── manifest.json       // Bundle Manifest
-└── tsconfig.json       // Typescript Configuration
+```dirtree
+name: bundle_name
+children:
+  - name: src
+    children:
+    - name: __tests__
+      comment: Folder containing unit tests
+    - name: index.ts
+      comment: Entry point
+    - name: functions.ts
+      comment: Example file
+  - name: package.json
+    comment: Package Manifest; Used by Yarn
+  - name: manifest.json
+    comment: Bundle Manifest
+  - name: tsconfig.json
+    comment: Typescript Configuration
 ```
 
 > [!NOTE]

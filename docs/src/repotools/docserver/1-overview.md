@@ -1,3 +1,6 @@
+---
+title: Overview
+---
 # Developer Documentation Server
 
 Originally most of the developer documentation was contained within the Github repository's wiki. However, as the documentation became more comprehensive in scope and complex in design,
@@ -13,26 +16,32 @@ some folder have contents that are labelled `1-something`, `2-something` etc. Ea
 
 Folders produce item groups, the name of which can be customized using an `index.md` file within that folder.
 
-```txt
-bundles
-├── index.md
-├── 1-getting-started
-│   ├── 1-overview.md
-│   ├── 2-start.md
-│   ├── 3.cheat.md
-│   ├── 4-faq.md
-│   └── index.md
-└── 2-bundle
-    ├── 1-overview
-    │   └── 1-overview.md
-    ├── 2-creating
-    │   └── 2-creating.md
-    ├── 3-editing.md
-    ├── 4-documentation
-    │   └── 4-documentation.md
-    ├── 5-type_map.md
-    ├── 6-compiling.md
-    └── index.md
+```dirtree
+name: bundles
+children:
+    - index.md
+    - name: 1-getting-started
+      children:
+        - 1-overview.md
+        - 2-start.md
+        - 3-cheat.md
+        - 4-faq.md
+        - index.md
+    - name: 2-bundle
+      children:
+        - name: 1-overview
+          children:
+            - 1-overview.md
+        - name: 2-creating.md
+          children:
+            - 2-creating.md
+        - 3-editing.md
+        - name: 4-documentation
+          children:
+            - 4-documentation.md
+        - 5-type_map.md
+        - 6-compiling.md
+        - index.md
 ```
 
 The above file structure produces the menu below:
@@ -41,7 +50,7 @@ The above file structure produces the menu below:
 Each item takes its title value from either the frontmatter (if available) or the first heading of each page.
 
 `index.md` files are only used to title the menus, they are not intended for navigation, though are navigable to if the user enters the address manually, so it is still recommended to keep some basic
-documentation in those pages or create rewrites so that users are automatically redirected away from those pages. Here are the contents of `2-bundle/index.md`:
+documentation in those pages or create rewrites so that users are automatically redirected away from those pages. Here are the contents of <nobr><code>2-bundle/index.md</code></nobr>:
 
 <<< ../../modules/2-bundle/index.md
 
@@ -78,4 +87,4 @@ this
 └── tree
     └── diagram
 ```
-were generated from [this website](https://tree.nathanfriend.com/)
+are generated via their own markdown plugin, the details of which can be found [here](./2-dirtree).
