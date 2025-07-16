@@ -1,9 +1,7 @@
 import type { DeepPartial } from '@sourceacademy/modules-lib/types';
 import * as THREE from 'three';
 
-import {
-  mergeConfig,
-} from '../../../controllers/utils/mergeConfig';
+import { mergeConfig } from '../../../controllers/utils/mergeConfig';
 
 type DebugArrowConfig = {
   color: THREE.Color;

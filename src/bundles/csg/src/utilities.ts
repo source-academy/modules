@@ -1,7 +1,5 @@
 /* [Imports] */
-import geom3, {
-  transform as _transform
-} from '@jscad/modeling/src/geometries/geom3';
+import geom3, { transform as _transform } from '@jscad/modeling/src/geometries/geom3';
 import mat4, { type Mat4 } from '@jscad/modeling/src/maths/mat4';
 import {
   center as _center,

@@ -1,9 +1,9 @@
 import stylePlugin from '@stylistic/eslint-plugin';
+import vitestPlugin from '@vitest/eslint-plugin';
 import type { Linter } from 'eslint';
 import * as importPlugin from 'eslint-plugin-import';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import vitestPlugin from '@vitest/eslint-plugin';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import saLintPlugin from '.';

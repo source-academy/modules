@@ -45,8 +45,8 @@
  * );
  * render_grid_axes(snowglobe);
  * ```
- *
  * More samples can be found at: https://github.com/source-academy/modules/tree/master/src/bundles/csg/samples
+ *
  *
  * @module csg
  * @author Joel Leow

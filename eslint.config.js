@@ -31,7 +31,7 @@ export default tseslint.config(
       'devserver/vite.config.ts',
       'lib/buildtools/bin',
       'lib/buildtools/src/build/__test_mocks__',
-      'lib/lintplugin/dist.js',
+      'lib/*/dist.*js',
       'src/**/samples/**',
       'src/bundles/scrabble/src/words.json', // Don't lint this because its way too big
       'src/java/**',
@@ -303,6 +303,7 @@ export default tseslint.config(
       'vitest/no-conditional-expect': 'off',
       'vitest/no-export': 'off',
       'vitest/require-top-level-describe': 'off',
+      'vitest/valid-describe-callback': 'off',
       'vitest/valid-expect-in-promise': 'error',
 
       'import/extensions': ['error', 'never', {

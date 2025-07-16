@@ -5,8 +5,18 @@
  */
 
 import { getInstance, initializeModule, type AudioClipIdentifier, type GameObjectIdentifier } from './UnityAcademy';
-import { addVectors, checkVector3Parameter,
-  crossProduct, dotProduct, makeVector3D, normalizeVector, pointDistance, scaleVector, vectorDifference, vectorMagnitude, zeroVector,
+import {
+  addVectors,
+  checkVector3Parameter,
+  crossProduct,
+  dotProduct,
+  makeVector3D,
+  normalizeVector,
+  pointDistance,
+  scaleVector,
+  vectorDifference,
+  vectorMagnitude,
+  zeroVector,
   type Vector3
 } from './UnityAcademyMaths';
 

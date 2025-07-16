@@ -65,17 +65,13 @@ jobs:
           if: needs.paths-filter.outputs.libraries == 'true'
           run: yarn workspaces foreach -ptW --from "./lib/*" run tsc
 
-        - name: Run lint for libraries
-          if: needs.paths-filter.outputs.libraries == 'true'
-          run: yarn eslint lib
-
         - name: Run test for libraries
           if: needs.paths-filter.outputs.libraries == 'true'
           run: yarn test:libs
 
-        - name: Build, lint and run tsc for bundles and tabs
+        - name: Build and run tsc for bundles and tabs
           if: needs.paths-filter.outputs.devserver == 'true'
-          run: yarn workspaces foreach -j 5 -ptW --from "./src/{bundles,tabs}/*" run build --tsc --lint
+          run: yarn workspaces foreach -j 5 -ptW --from "./src/{bundles,tabs}/*" run build --tsc
 
         - name: Test bundles and tabs
           if: needs.paths-filter.outputs.modules == 'true'
@@ -83,7 +79,7 @@ jobs:
 
         - name: Build manifest
           if: needs.paths-filter.outputs.devserver == 'true'
-          run: yarn buildtools build manifest
+          run: yarn buildtools manifest
 
         - name: Build Docs Server
           if: needs.paths-filter.outputs.docs == 'true'
@@ -93,10 +89,9 @@ jobs:
           if: needs.paths-filter.outputs.devserver == 'true'
           run: yarn tsc:devserver
 
-        - name: Run Lint for Dev Server
-          if: needs.paths-filter.outputs.devserver == 'true'
-          run: yarn eslint devserver
-
         - name: Test Dev Server
           if: needs.paths-filter.outputs.devserver == 'true'
           run: yarn test:devserver
+
+        - name: Lint Everything
+          run: yarn buildtools lintglobal

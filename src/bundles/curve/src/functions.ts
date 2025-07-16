@@ -41,7 +41,12 @@ function createDrawFunction(
     // Because the draw functions are actually functions
     // we need hacky workarounds like these to pass information around
     func.is3D = space === '3D';
-    func.toString = () => `<${space==='3D' ? '3D' : ''}RenderFunction(${numPoints})>`;
+    const stringifier = () => `<${space==='3D' ? '3D' : ''}RenderFunction(${numPoints})>`;
+
+    // Retain both properties for compatibility
+    func.toString = stringifier;
+    func.toReplString = stringifier;
+
     return func;
   };
 }

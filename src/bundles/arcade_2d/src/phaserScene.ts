@@ -1,9 +1,7 @@
 import Phaser from 'phaser';
 import { AudioClip } from './audio';
 import { DEFAULT_PATH_PREFIX } from './constants';
-import {
-  config
-} from './functions';
+import { config } from './functions';
 import {
   CircleGameObject,
   GameObject,

@@ -57,6 +57,7 @@ export function generateStructure(rootObj: RootYamlObject, validatePath?: string
     const warnings: string[] = [];
 
     if (validatePath !== undefined && !fs.existsSync(validatePath)) {
+      console.log(`${validatePath} failed to validate`);
       warnings.push(`[Markdown Tree Plugin 1] Could not locate ${validatePath}`);
       exists = false;
     }

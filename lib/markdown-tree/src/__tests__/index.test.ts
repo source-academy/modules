@@ -4,7 +4,7 @@ import { generateStructure } from '../structure';
 import { isRootYamlObject, isYamlObject } from '../types';
 
 const mockExistsSync = vi.spyOn(fs, 'existsSync');
-vi.spyOn(fs, 'statSync').mockReturnValue({
+const mockStatSync = vi.spyOn(fs, 'statSync').mockReturnValue({
   isDirectory: () => true
 } as any);
 
@@ -55,32 +55,71 @@ describe('Test structure generation', () => {
 
 describe('Test tree validation', () => {
   const validPaths = [
-    '/dir',
-    '/dir/real_item0'
+    '/',
+    '/real_item0',
+    '/real_item1',
+    '/real_item1/real_item2',
   ];
 
   mockExistsSync.mockImplementation(path => validPaths.includes(path as string));
 
   test('Successful validation', () => {
     const [,,warnings] = generateStructure({
-      path: '/dir',
+      path: '.',
       name: 'root',
       children: [
-        'real_item0'
+        'real_item0',
+        {
+          name: 'real_item1',
+          children: ['real_item2']
+        }
       ]
     }, '/');
     expect(warnings.length).toEqual(0);
-    expect(fs.existsSync).toHaveBeenCalledTimes(2);
+    expect(fs.existsSync).toHaveBeenCalledTimes(4);
   });
 
-  test('Unsuccessful validation', () => {
+  test('Unsuccessful validation when child item doesn\'t exist', () => {
     const [,,warnings] = generateStructure({
-      path: './dir',
+      path: '.',
       name: 'root',
       children: ['fake_item0']
     }, '/');
 
     expect(warnings.length).toEqual(1);
     expect(fs.existsSync).toHaveBeenCalledTimes(2);
+  });
+
+  test('Unsuccessful validation when item with children is not a folder', () => {
+    mockStatSync.mockReturnValueOnce({
+      isDirectory: () => false
+    } as any);
+
+    const [,,warnings] = generateStructure({
+      path: '.',
+      name: 'root',
+      children: [{
+        name: 'real_item0',
+        children: ['real_item2']
+      }]
+    }, '/');
+
+    expect(warnings.length).toEqual(1);
+    expect(fs.existsSync).toHaveBeenCalledTimes(3);
+  });
+
+  test('Not providing a path means no validation is run', () => {
+    const [,,warnings] = generateStructure({
+      path: '.',
+      name: 'root',
+      children: [{
+        name: 'real_item1',
+        children: ['real_item2']
+      }]
+    });
+
+    expect(warnings.length).toEqual(0);
+    expect(fs.existsSync).not.toHaveBeenCalled();
+    expect(fs.statSync).not.toHaveBeenCalled();
   });
 });
