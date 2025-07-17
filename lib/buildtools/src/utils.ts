@@ -2,6 +2,12 @@ import { Severity, type ResolvedBundle, type ResolvedTab } from './types.js';
 
 export type AwaitedReturn<T extends (...args: any[]) => Promise<any>> = Awaited<ReturnType<T>>;
 
+export function isSeverity(obj: unknown): obj is Severity {
+  if (typeof obj !== 'string') return false;
+
+  return obj === Severity.ERROR || obj === Severity.WARN || obj === Severity.SUCCESS;
+}
+
 export function compareSeverity(lhs: Severity, rhs: Severity): Severity {
   switch (lhs) {
     case Severity.SUCCESS:

@@ -53,12 +53,12 @@ export async function buildSingleBundleDocs(bundle: ResolvedBundle, outDir: stri
   return buildJson(bundle, outDir, project);
 }
 
-type BuildAllBundleDocsResult = ResultType;
+type BuildHtmlResult = ResultType;
 
 /**
  * Builds HTML documentation for all bundles. Needs to be run after {@link buildSingleBundleDocs}
  */
-export async function buildHtml(bundles: Record<string, ResolvedBundle>, outDir: string, logLevel: td.LogLevel): Promise<BuildAllBundleDocsResult> {
+export async function buildHtml(bundles: Record<string, ResolvedBundle>, outDir: string, logLevel: td.LogLevel): Promise<BuildHtmlResult> {
   const jsonStats = await mapAsync(Object.values(bundles), async ({ name, directory }) => {
     try {
       const stats = await fs.stat(`${directory}/dist/docs.json`);

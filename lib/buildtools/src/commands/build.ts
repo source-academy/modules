@@ -118,5 +118,5 @@ export const getBuildHtmlCommand = () => new Command('html')
 
     const htmlResult = await buildHtml(resolveResult.bundles, outDir, logLevel);
     console.log(formatResult(htmlResult, 'html'));
-    processResult({ results: htmlResult }, false);
+    processResult(htmlResult, false);
   });

@@ -2,7 +2,7 @@ import { promises as fs, type Dirent } from 'fs';
 import pathlib from 'path';
 import chalk from 'chalk';
 import { ESLint } from 'eslint';
-import { getGitRoot } from '../getGitRoot.js';
+import { getGitRoot, getOutDir } from '../getGitRoot.js';
 import { Severity, type InputAsset } from '../types.js';
 import { findSeverity, flatMapAsync, isNodeError } from '../utils.js';
 
@@ -49,13 +49,14 @@ export async function runEslint(input: InputAsset, fix: boolean, stats: boolean)
     }
 
     if (stats) {
-      await fs.mkdir(`${gitRoot}/lintstats`, { recursive: true });
+      const outDir = await getOutDir();
+      await fs.mkdir(`${outDir}/lintstats`, { recursive: true });
 
       const statsFormatter = await linter.loadFormatter('json');
       const statsFormatted = await statsFormatter.format(linterResults);
       const stringified = JSON.stringify(JSON.parse(statsFormatted), null, 2);
 
-      await fs.writeFile(`${gitRoot}/lintstats/${input.type}-${input.name}.json`, stringified);
+      await fs.writeFile(`${outDir}/lintstats/${input.type}-${input.name}.json`, stringified);
     }
 
     const outputFormatter = await linter.loadFormatter('stylish');

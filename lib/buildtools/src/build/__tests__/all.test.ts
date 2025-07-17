@@ -14,7 +14,7 @@ vi.mock(import('../../getGitRoot.js'));
 vi.spyOn(all, 'buildAll');
 const mockedBuildBundle = vi.spyOn(modules, 'buildBundle');
 const mockedBuildTab = vi.spyOn(modules, 'buildTab');
-const mockedBuildJson = vi.spyOn(docs, 'buildSingleBundleDocs');
+const mockedBuildSingleBundleDocs = vi.spyOn(docs, 'buildSingleBundleDocs');
 
 const mockedRunTsc = vi.spyOn(tsc, 'runTsc').mockResolvedValue({
   severity: Severity.SUCCESS,
@@ -46,7 +46,7 @@ describe('Test the buildAll command', () => {
         input: {} as any
       });
 
-      mockedBuildJson.mockResolvedValueOnce({
+      mockedBuildSingleBundleDocs.mockResolvedValueOnce({
         type: 'docs',
         severity: Severity.SUCCESS,
         path: '/build/jsons',
@@ -64,7 +64,7 @@ describe('Test the buildAll command', () => {
         input: {} as any
       });
 
-      mockedBuildJson.mockResolvedValueOnce({
+      mockedBuildSingleBundleDocs.mockResolvedValueOnce({
         type: 'docs',
         severity: Severity.SUCCESS,
         path: '/build/jsons',
@@ -83,7 +83,7 @@ describe('Test the buildAll command', () => {
         input: {} as any
       });
 
-      mockedBuildJson.mockResolvedValueOnce({
+      mockedBuildSingleBundleDocs.mockResolvedValueOnce({
         type: 'docs',
         severity: Severity.SUCCESS,
         path: '/build/jsons',
@@ -130,7 +130,7 @@ describe('Test the buildAll command', () => {
         errors: []
       });
 
-      mockedBuildJson.mockResolvedValueOnce({
+      mockedBuildSingleBundleDocs.mockResolvedValueOnce({
         type: 'docs',
         severity: Severity.SUCCESS,
         path: '/build/jsons',
@@ -151,7 +151,7 @@ describe('Test the buildAll command', () => {
         input: {} as any
       });
 
-      mockedBuildJson.mockResolvedValueOnce({
+      mockedBuildSingleBundleDocs.mockResolvedValueOnce({
         type: 'docs',
         severity: Severity.ERROR,
         errors: [],

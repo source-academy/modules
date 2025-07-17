@@ -1,9 +1,8 @@
 import { InvalidArgumentError, Option } from '@commander-js/extra-typings';
 import chalk from 'chalk';
 import { LogLevel } from 'typedoc';
-import type { LintResult } from '../prebuild/lint.js';
-import type { TscResult } from '../prebuild/tsc.js';
-import type { ErrorResult, Severity } from '../types.js';
+import { Severity, type ErrorResult } from '../types.js';
+import { isSeverity } from '../utils.js';
 
 export const lintOption = new Option('--lint', 'Run ESLint when building')
   .default(false);
@@ -46,27 +45,33 @@ export function objectKeys<T extends string | number | symbol>(obj: Record<T, un
  * are errors, or if there are warnings and `errorOnWarning` has been given as `true`.\
  * Mainly intended for use with CI pipelines so that processes can exit with non-zero codes
  */
-export function processResult({ results, tsc, lint }: { results?: { severity: Severity }, tsc?: TscResult, lint?: LintResult }, errorOnWarning: boolean) {
-  const severities: Severity[] = [];
+export function processResult(obj: object, errorOnWarning: boolean) {
+  function* severities(obj: object): Generator<Severity> {
+    if (obj === null) {
+      yield Severity.SUCCESS;
+      return;
+    }
 
-  if (results) {
-    severities.push(results.severity);
+    if (Array.isArray(obj)) {
+      for (const item of obj) {
+        yield* severities(item);
+      }
+
+      return;
+    }
+
+    for (const [key, value] of Object.entries(obj)) {
+      if (key === 'severity' && isSeverity(value)) yield value;
+      if (typeof value === 'object') yield* severities(value);
+    }
   }
 
-  if (tsc) {
-    severities.push(tsc.severity);
-  }
-
-  if (lint) {
-    severities.push(lint.severity);
-  }
-
-  for (const severity of severities) {
+  for (const severity of severities(obj)) {
     switch (severity) {
-      case 'warn': {
+      case Severity.WARN: {
         if (!errorOnWarning) continue;
       }
-      case 'error':
+      case Severity.ERROR:
         process.exit(1);
     }
   }

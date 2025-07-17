@@ -4,7 +4,11 @@ import { parseDocument } from 'yaml';
 import { generateTree } from './tree';
 import { isRootYamlObject, type DirectoryTreePluginOptions, type FileStructure, type RootYamlObject, type YamlObject } from './types';
 
-export function parseContent(content: string, docdir: string, options: DirectoryTreePluginOptions = {}): [string, string[]] {
+/**
+ * Convert the given the YAML string into the ASCII directory tree representation
+ * @param docdir The path to the directory containing the markdown file that contains this dirtree snippet
+ */
+export function parseContent(content: string, docdir: string, options: DirectoryTreePluginOptions = {}): [content: string, warnings: string[]] {
   const yamlNode = parseDocument(content);
 
   if (yamlNode.errors.length > 0) {
@@ -30,7 +34,7 @@ export function parseContent(content: string, docdir: string, options: Directory
  * provided follows the directory structure of the directory at the given path.
  */
 
-export function generateStructure(rootObj: RootYamlObject, validatePath?: string): [FileStructure, number, string[]] {
+export function generateStructure(rootObj: RootYamlObject, validatePath?: string): [structure: FileStructure, loc: number, warnings: string[]] {
   const rootName = rootObj.name ?? (validatePath !== undefined ? pathlib.basename(validatePath) : 'root');
 
   const root: FileStructure = {

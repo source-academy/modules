@@ -8,8 +8,14 @@ declare module 'vitest' {
     commandSuccess: () => Promise<T>
 
     /**
-     * Asserts that process.exit was called with the specified code
+     * Asserts that process.exit was called with the specified code when the promise resolves
      */
     commandExit: (code?: number) => Promise<T>
+
+    /**
+     * Asserts that process.exit was called with the specified code when the
+     * function is called
+     */
+    processExit: (code?: number) => T
   }
 }

@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { describe, expect, test, vi } from 'vitest';
 import { generateStructure } from '../structure';
+import { generateTree } from '../tree';
 import { isRootYamlObject, isYamlObject } from '../types';
 
 const mockExistsSync = vi.spyOn(fs, 'existsSync');
@@ -50,7 +51,27 @@ describe('Test isRootYamlObject', () => {
   });
 });
 
-describe('Test structure generation', () => {
+test('structure generation', () => {
+  const [structure, commentLoc, warnings] = generateStructure({
+    name: 'root',
+    children: [{
+      name: 'item1',
+      comment: 'this is a comment'
+    },
+    'item2',
+    {
+      name: 'item3',
+      comment: 'also a comment'
+    }
+    ]
+  });
+  expect(warnings.length).toEqual(0);
+  expect(generateTree(structure, commentLoc)).toMatchInlineSnapshot(`
+    "root
+    ├── item1  // this is a comment
+    ├── item2
+    └── item3  // also a comment"
+  `);
 });
 
 describe('Test tree validation', () => {

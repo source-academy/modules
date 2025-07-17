@@ -3,6 +3,10 @@ import { expect, vi } from 'vitest';
 
 class MockProcessError extends Error {
   constructor(public readonly code: number) { super(); }
+
+  toString() {
+    return `process.exit was called with ${this.code}`;
+  }
 };
 
 vi.mock('chalk', () => {
@@ -88,6 +92,26 @@ expect.extend({
       return {
         pass: false,
         message: () => `Command rejected with unexpected error: ${error}`
+      };
+    }
+  },
+  processExit(received: () => any, expected: number = 1) {
+    try {
+      received();
+      return {
+        pass: false,
+        message: () => `Expected function to call process.exit with code ${expected}`
+      };
+    } catch (error) {
+      if (error instanceof MockProcessError) {
+        return {
+          pass: error.code === expected,
+          message: () => `process.exit called with ${expected}`
+        };
+      }
+      return {
+        pass: false,
+        message: () => `Function threw an unexpected error: ${error}`
       };
     }
   }
