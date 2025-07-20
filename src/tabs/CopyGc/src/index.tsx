@@ -1,6 +1,6 @@
 import { Icon, Slider } from '@blueprintjs/core';
 import { COMMAND } from '@sourceacademy/bundle-copy_gc/types';
-import { defineTab } from '@sourceacademy/modules-lib/tabs';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
 import { ThemeColor } from './style';
 

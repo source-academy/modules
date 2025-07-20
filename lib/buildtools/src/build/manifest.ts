@@ -5,7 +5,7 @@ import { validate } from 'jsonschema';
 import uniq from 'lodash/uniq.js';
 import { objectEntries } from '../commands/commandUtils.js';
 import { getTabsDir } from '../getGitRoot.js';
-import { Severity, type BundleManifest, type InputAsset, type ResolvedBundle, type ResolvedTab, type ResultType, type SuccessResult } from '../types.js';
+import type { BundleManifest, InputAsset, ResolvedBundle, ResolvedTab, ResultType, SuccessResult } from '../types.js';
 import { filterAsync, isNodeError, mapAsync } from '../utils.js';
 import manifestSchema from './modules/manifest.schema.json' with { type: 'json' };
 
@@ -24,7 +24,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
     if (isNodeError(error) && error.code === 'ENOENT') {
       return undefined;
     }
-    return { severity: Severity.ERROR, errors: [`${error}`] };
+    return { severity: 'error', errors: [`${error}`] };
   }
 
   let versionStr: string | undefined;
@@ -35,7 +35,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
     if (isNodeError(error) && error.code === 'ENOENT') {
       return undefined;
     }
-    return { severity: Severity.ERROR, errors: [`${error}`] };
+    return { severity: 'error', errors: [`${error}`] };
   }
 
   const rawManifest = JSON.parse(manifestStr) as BundleManifest;
@@ -43,7 +43,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
 
   if (validateResult.errors.length > 0) {
     return {
-      severity: Severity.ERROR,
+      severity: 'error',
       errors: validateResult.errors.map(each => each.toString())
     };
   }
@@ -64,14 +64,14 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
 
     if (unknownTabs.length > 0) {
       return {
-        severity: Severity.ERROR,
+        severity: 'error',
         errors: unknownTabs.map(each => `Unknown tab ${each}`)
       };
     }
   }
 
   return {
-    severity: Severity.SUCCESS,
+    severity: 'success',
     manifest
   };
 }
@@ -87,7 +87,7 @@ export async function getBundleManifests(bundlesDir: string, tabCheck?: boolean)
     subdirs = await fs.readdir(bundlesDir, { withFileTypes: true });
   } catch (error) {
     return {
-      severity: Severity.ERROR,
+      severity: 'error',
       errors: [`${error}`]
     };
   }
@@ -129,13 +129,13 @@ export async function getBundleManifests(bundlesDir: string, tabCheck?: boolean)
 
   if (errors.length > 0) {
     return {
-      severity: Severity.ERROR,
+      severity: 'error',
       errors
     };
   }
 
   return {
-    severity: Severity.SUCCESS,
+    severity: 'success',
     manifests: combinedManifests
   };
 }
@@ -154,14 +154,14 @@ export async function resolveSingleBundle(bundleDir: string): Promise<ResolveSin
     const stats = await fs.stat(fullyResolved);
     if (!stats.isDirectory()) {
       return {
-        severity: Severity.ERROR,
+        severity: 'error',
         errors: [`${fullyResolved} is not a directory!`]
       };
     }
   } catch (error) {
     if (!isNodeError(error) || error.code !== 'ENOENT') throw error;
     return {
-      severity: Severity.ERROR,
+      severity: 'error',
       errors: [`${fullyResolved} is not a directory!`]
     };
   }
@@ -175,20 +175,20 @@ export async function resolveSingleBundle(bundleDir: string): Promise<ResolveSin
 
     if (!entryStats.isFile()) {
       return {
-        severity: Severity.ERROR,
+        severity: 'error',
         errors: ['Could not find entrypoint!']
       };
     }
   } catch (error) {
     if (!isNodeError(error) || error.code !== 'ENOENT') throw error;
     return {
-      severity: Severity.ERROR,
+      severity: 'error',
       errors: ['Could not find entrpoint!']
     };
   }
 
   return {
-    severity: Severity.SUCCESS,
+    severity: 'success',
     bundle: {
       type: 'bundle',
       name: bundleName,
@@ -237,13 +237,13 @@ export async function resolveAllBundles(bundlesDir: string): Promise<ResolveAllB
 
   if (errors.length > 0) {
     return {
-      severity: Severity.ERROR,
+      severity: 'error',
       errors
     };
   }
 
   return {
-    severity: Severity.SUCCESS,
+    severity: 'success',
     bundles: combinedManifests
   };
 }
@@ -335,7 +335,7 @@ export async function resolveAllTabs(bundlesDir: string, tabsDir: string): Promi
     }, {} as Record<string, ResolvedTab>);
 
   return {
-    severity: Severity.SUCCESS,
+    severity: 'success',
     tabs: tabsManifest
   };
 }
@@ -351,26 +351,26 @@ export async function resolveEitherBundleOrTab(directory: string): Promise<Resol
     const tab = await resolveSingleTab(directory);
     if (tab === undefined) {
       return {
-        severity: Severity.ERROR,
+        severity: 'error',
         errors: [],
       };
     }
 
     return {
-      severity: Severity.SUCCESS,
+      severity: 'success',
       asset: tab
     };
   }
 
   if (bundle.severity === 'error') {
     return {
-      severity: Severity.ERROR,
+      severity: 'error',
       errors: bundle.errors,
     };
   }
 
   return {
-    severity: Severity.SUCCESS,
+    severity: 'success',
     asset: bundle.bundle
   };
 }
@@ -388,7 +388,7 @@ export async function buildManifest(bundles: Record<string, ResolvedBundle>, out
   await fs.writeFile(outpath, JSON.stringify(finalManifest, null, 2));
 
   return {
-    severity: Severity.SUCCESS,
+    severity: 'success',
     path: outpath
   };
 }

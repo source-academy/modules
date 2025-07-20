@@ -1,8 +1,10 @@
-export enum Severity {
-  ERROR = 'error',
-  WARN = 'warn',
-  SUCCESS = 'success'
-}
+export const severity = {
+  ERROR: 'error',
+  WARN: 'warn',
+  SUCCESS: 'success'
+} as const;
+
+export type Severity = (typeof severity)[keyof typeof severity];
 
 export interface BundleManifest {
   version?: string;
@@ -32,17 +34,17 @@ export interface ResolvedTab {
 // #endregion ResolvedTab
 
 export interface ErrorResult {
-  severity: Severity.ERROR;
+  severity: 'error'
   errors: string[]
 }
 
 export type WarningResult<T = { path: string }> = {
-  severity: Severity.WARN
+  severity: 'warn'
   warnings: string[]
 } & T;
 
 export type SuccessResult<T = { path: string }> = {
-  severity: Severity.SUCCESS
+  severity: 'success'
 } & T;
 
 export type InputAsset = ResolvedBundle | ResolvedTab;
@@ -69,7 +71,7 @@ export type DocsResult = ResultTypeWithWarn & {
 export type BuildResult = BundleResult | DocsResult | TabResult;
 
 export interface ResolutionFailure {
-  severity: Severity.ERROR
+  severity: 'error'
   type: 'bundle' | 'tab'
   path: string
   error?: string

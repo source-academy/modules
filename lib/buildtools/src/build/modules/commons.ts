@@ -3,7 +3,7 @@ import { parse } from 'acorn';
 import { generate } from 'astring';
 import type { BuildOptions as ESBuildOptions, OutputFile } from 'esbuild';
 import type es from 'estree';
-import { Severity, type BuildResult, type InputAsset } from '../../types.js';
+import type { BuildResult, InputAsset } from '../../types.js';
 
 // The region tag is used in the developer documentation. DON'T REMOVE
 // #region esbuildOptions
@@ -44,7 +44,7 @@ export async function outputBundleOrTab({ text }: OutputFile, input: InputAsset,
   if (callExpression?.type !== 'CallExpression') {
     return {
       type: input.type,
-      severity: Severity.ERROR,
+      severity: 'error',
       input,
       errors: [`parse failure: Expected a CallExpression, got ${callExpression?.type ?? callExpression}`]
     } as BuildResult;
@@ -55,7 +55,7 @@ export async function outputBundleOrTab({ text }: OutputFile, input: InputAsset,
   if (moduleCode.type !== 'FunctionExpression' && moduleCode.type !== 'ArrowFunctionExpression') {
     return {
       type: input.type,
-      severity: Severity.ERROR,
+      severity: 'error',
       input,
       errors: [`${input.type} ${input.name} parse failure: Expected a function, got ${moduleCode.type}`]
     } as BuildResult;
@@ -85,7 +85,7 @@ export async function outputBundleOrTab({ text }: OutputFile, input: InputAsset,
 
     return {
       type: input.type,
-      severity: Severity.SUCCESS,
+      severity: 'success',
       input,
       path: outpath
     } as BuildResult;

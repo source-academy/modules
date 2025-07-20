@@ -47,8 +47,10 @@ export function generateStructure(rootObj: RootYamlObject, validatePath?: string
   /**
    * Recurse through the YAML object and convert it to the file structure
    * @param level The current level of nesting
-   * @returns A tuple consisting of a {@see FileStructure} and a number representing index of the longest line
-   * that will be displayed in the tree diagram that will allow us to position comments.
+   * @returns A tuple consisting of:
+   * - A {@see FileStructure}
+   * - A number representing index of the longest line that will be displayed in the tree diagram that will allow us to position comments.
+   * - All warnings
    */
   function recurser(
     name: string,
@@ -61,8 +63,7 @@ export function generateStructure(rootObj: RootYamlObject, validatePath?: string
     const warnings: string[] = [];
 
     if (validatePath !== undefined && !fs.existsSync(validatePath)) {
-      console.log(`${validatePath} failed to validate`);
-      warnings.push(`[Markdown Tree Plugin 1] Could not locate ${validatePath}`);
+      warnings.push(`Could not locate ${validatePath}`);
       exists = false;
     }
 
@@ -81,7 +82,7 @@ export function generateStructure(rootObj: RootYamlObject, validatePath?: string
           if (validatePath !== undefined && exists) {
             const joinedPath = pathlib.join(validatePath, value);
             if (!fs.existsSync(joinedPath)) {
-              warnings.push(`[Markdown Tree Plugin 3] Could not locate ${joinedPath}`);
+              warnings.push(`Could not locate ${joinedPath}`);
             }
           }
           const entryCommentLoc = value.length + (level + 1) * 4;

@@ -18,7 +18,7 @@ import {
   type ErrorLogger,
   type TabsPacket
 } from '@sourceacademy/bundle-pix_n_flix/types';
-import { defineTab } from '@sourceacademy/modules-lib/tabs';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React, { type ChangeEvent, type DragEvent } from 'react';
 
 type Props = {

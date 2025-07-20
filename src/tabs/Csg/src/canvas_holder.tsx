@@ -4,7 +4,7 @@ import { IconNames } from '@blueprintjs/icons';
 import { Core } from '@sourceacademy/bundle-csg/core';
 import StatefulRenderer from '@sourceacademy/bundle-csg/stateful_renderer';
 import type { RenderGroup } from '@sourceacademy/bundle-csg/utilities';
-import { BP_CARD_BORDER_RADIUS, BP_TAB_BUTTON_MARGIN, BP_TAB_PANEL_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '@sourceacademy/modules-lib/tabs';
+import { BP_CARD_BORDER_RADIUS, BP_TAB_BUTTON_MARGIN, BP_TAB_PANEL_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '@sourceacademy/modules-lib/tabs/css_constants';
 import React from 'react';
 import type { CanvasHolderProps, CanvasHolderState } from '../types';
 import HoverControlHint from './hover_control_hint';

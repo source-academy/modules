@@ -6,7 +6,6 @@ import { buildManifest, resolveAllBundles, resolveEitherBundleOrTab, resolveSing
 import { buildBundle, buildTab } from '../build/modules/index.js';
 import { getBundlesDir, getOutDir } from '../getGitRoot.js';
 import { runBuilderWithPrebuild } from '../prebuild/index.js';
-import { Severity } from '../types.js';
 import { lintOption, logCommandErrorAndExit, logLevelOption, processResult, tscOption } from './commandUtils.js';
 
 const outDir = await getOutDir();
@@ -99,7 +98,7 @@ export const getManifestCommand = () => new Command('manifest')
   .description('Build the combined modules manifest')
   .action(async () => {
     const resolveResult = await resolveAllBundles(bundlesDir);
-    if (resolveResult.severity === Severity.ERROR) {
+    if (resolveResult.severity === 'error') {
       logCommandErrorAndExit(resolveResult);
     }
 
@@ -112,7 +111,7 @@ export const getBuildHtmlCommand = () => new Command('html')
   .addOption(logLevelOption)
   .action(async ({ logLevel }) => {
     const resolveResult = await resolveAllBundles(bundlesDir);
-    if (resolveResult.severity === Severity.ERROR) {
+    if (resolveResult.severity === 'error') {
       logCommandErrorAndExit(resolveResult);
     }
 

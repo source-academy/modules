@@ -2,17 +2,17 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import chalk from 'chalk';
 import ts from 'typescript';
-import { Severity, type ResolvedBundle, type ResolvedTab } from '../types.js';
+import type { ResolvedBundle, ResolvedTab, Severity } from '../types.js';
 import { findSeverity } from '../utils.js';
 
 type TsconfigResult = {
-  severity: Severity.ERROR
+  severity: 'error'
   error: any
 } | {
-  severity: Severity.ERROR
+  severity: 'error'
   results: ts.Diagnostic[]
 } | {
-  severity: Severity.SUCCESS
+  severity: 'success'
   results: ts.CompilerOptions
   fileNames: string[]
 };
@@ -20,7 +20,7 @@ type TsconfigResult = {
 export type TscResult = {
   input: ResolvedBundle | ResolvedTab
 } & ({
-  severity: Severity.ERROR
+  severity: 'error'
   error: any
 } | {
   severity: Severity
@@ -37,7 +37,7 @@ async function getTsconfig(srcDir: string): Promise<TsconfigResult> {
     const { error: configJsonError, config: configJson } = ts.parseConfigFileTextToJson(tsconfigLocation, configText);
     if (configJsonError) {
       return {
-        severity: Severity.ERROR,
+        severity: 'error',
         results: [configJsonError]
       };
     }
@@ -46,19 +46,19 @@ async function getTsconfig(srcDir: string): Promise<TsconfigResult> {
     const { errors: parseErrors, options: tsconfig, fileNames } = ts.parseJsonConfigFileContent(configJson, ts.sys, srcDir);
     if (parseErrors.length > 0) {
       return {
-        severity: Severity.ERROR,
+        severity: 'error',
         results: parseErrors
       };
     }
 
     return {
-      severity: Severity.SUCCESS,
+      severity: 'success',
       results: tsconfig,
       fileNames
     };
   } catch (error) {
     return {
-      severity: Severity.ERROR,
+      severity: 'error',
       error
     };
   }
@@ -90,11 +90,11 @@ export async function runTsc(input: ResolvedBundle | ResolvedTab, noEmit: boolea
     const severity = findSeverity(diagnostics, ({ category }) => {
       switch (category) {
         case ts.DiagnosticCategory.Error:
-          return Severity.ERROR;
+          return 'error';
         case ts.DiagnosticCategory.Warning:
-          return Severity.WARN;
+          return 'warn';
         default:
-          return Severity.SUCCESS;
+          return 'success';
       }
     });
 
@@ -121,7 +121,7 @@ export async function runTsc(input: ResolvedBundle | ResolvedTab, noEmit: boolea
     };
   } catch (error) {
     return {
-      severity: Severity.ERROR,
+      severity: 'error',
       input,
       error
     };
@@ -142,11 +142,11 @@ export function formatTscResult(tscResult: TscResult): string {
   });
 
   switch (tscResult.severity) {
-    case Severity.ERROR:
+    case 'error':
       return `${prefix} ${chalk.cyanBright('with')} ${chalk.redBright('errors')}\n${diagStr}`;
-    case Severity.WARN:
+    case 'warn':
       return `${prefix} ${chalk.cyanBright('with')} ${chalk.yellowBright('warnings')}\n${diagStr}`;
-    case Severity.SUCCESS:
+    case 'success':
       return `${prefix} ${chalk.greenBright('successfully')}`;
   }
 }

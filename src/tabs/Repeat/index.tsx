@@ -1,4 +1,4 @@
-import { defineTab } from '@sourceacademy/modules-lib/tabs';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
 
 type Props = {

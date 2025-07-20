@@ -1,34 +1,33 @@
 import type { HollusionRune } from '@sourceacademy/bundle-rune/functions';
-import { WebGLCanvas } from '@sourceacademy/modules-lib/tabs';
+import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebGLCanvas';
+import { useAnimation } from '@sourceacademy/modules-lib/tabs/useAnimation';
 import React from 'react';
+
+type Props = {
+  rune: HollusionRune
+};
 
 /**
  * Canvas used to display Hollusion runes
  */
-export default function HollusionCanvas({ rune }: { rune: HollusionRune }) {
-  const canvasRef = React.useRef(null);
+export default function HollusionCanvas({ rune }: Props) {
+  // We memoize the render function so that we don't have
+  // to reinitialize the shaders every time
   const renderFuncRef = React.useRef<(time: number) => void>();
-  const animId = React.useRef<number | null>(null);
 
-  const animCallback = (timeInMs: number) => {
-    renderFuncRef.current!(timeInMs);
-    animId.current = requestAnimationFrame(animCallback);
-  };
+  const { start, canvasRef } = useAnimation({
+    callback(timestamp, canvas) {
+      if (renderFuncRef.current === undefined) {
+        renderFuncRef.current = rune.draw(canvas);
+      }
+      renderFuncRef.current(timestamp);
+    },
+    autoStart: true
+  });
 
   React.useEffect(() => {
-    if (canvasRef.current) {
-      renderFuncRef.current = rune.draw(canvasRef.current!);
-      animCallback(0);
-
-      return () => {
-        if (animId.current) {
-          cancelAnimationFrame(animId.current!);
-        }
-      };
-    }
-
-    return undefined;
-  }, []);
+    start();
+  }, [rune]);
 
   return <WebGLCanvas ref={canvasRef} />;
 }

@@ -6,7 +6,6 @@ import { getCommandRunner } from '../../commands/__tests__/testingUtils.js';
 import { getBuildAllCommand } from '../../commands/build.js';
 import * as lint from '../../prebuild/lint.js';
 import * as tsc from '../../prebuild/tsc.js';
-import { Severity } from '../../types.js';
 import * as all from '../all.js';
 
 vi.mock(import('../../getGitRoot.js'));
@@ -17,13 +16,13 @@ const mockedBuildTab = vi.spyOn(modules, 'buildTab');
 const mockedBuildSingleBundleDocs = vi.spyOn(docs, 'buildSingleBundleDocs');
 
 const mockedRunTsc = vi.spyOn(tsc, 'runTsc').mockResolvedValue({
-  severity: Severity.SUCCESS,
+  severity: 'success',
   input: {} as any,
   results: [],
 });
 
 const mockedRunEslint = vi.spyOn(lint, 'runEslint').mockResolvedValue({
-  severity: Severity.SUCCESS,
+  severity: 'success',
   formatted: '',
   input: {} as any
 });
@@ -40,7 +39,7 @@ describe('Test the buildAll command', () => {
 
     test('Regular execution for a bundle', async () => {
       mockedBuildBundle.mockResolvedValueOnce({
-        severity: Severity.SUCCESS,
+        severity: 'success',
         type: 'bundle',
         path: '/build/bundles',
         input: {} as any
@@ -48,7 +47,7 @@ describe('Test the buildAll command', () => {
 
       mockedBuildSingleBundleDocs.mockResolvedValueOnce({
         type: 'docs',
-        severity: Severity.SUCCESS,
+        severity: 'success',
         path: '/build/jsons',
         input: {} as any,
       });
@@ -58,7 +57,7 @@ describe('Test the buildAll command', () => {
 
     test('Regular execution for a bundle with --tsc', async () => {
       mockedBuildBundle.mockResolvedValueOnce({
-        severity: Severity.SUCCESS,
+        severity: 'success',
         type: 'bundle',
         path: '/build/bundles',
         input: {} as any
@@ -66,7 +65,7 @@ describe('Test the buildAll command', () => {
 
       mockedBuildSingleBundleDocs.mockResolvedValueOnce({
         type: 'docs',
-        severity: Severity.SUCCESS,
+        severity: 'success',
         path: '/build/jsons',
         input: {} as any,
       });
@@ -77,7 +76,7 @@ describe('Test the buildAll command', () => {
 
     test('Regular execution for a bundle with --lint', async () => {
       mockedBuildBundle.mockResolvedValueOnce({
-        severity: Severity.SUCCESS,
+        severity: 'success',
         type: 'bundle',
         path: '/build/bundles',
         input: {} as any
@@ -85,7 +84,7 @@ describe('Test the buildAll command', () => {
 
       mockedBuildSingleBundleDocs.mockResolvedValueOnce({
         type: 'docs',
-        severity: Severity.SUCCESS,
+        severity: 'success',
         path: '/build/jsons',
         input: {} as any,
       });
@@ -96,7 +95,7 @@ describe('Test the buildAll command', () => {
 
     test('Lint error should avoid building bundle and json', async () => {
       mockedRunEslint.mockResolvedValueOnce({
-        severity: Severity.ERROR,
+        severity: 'error',
         input: {} as any,
         formatted: ''
       });
@@ -110,7 +109,7 @@ describe('Test the buildAll command', () => {
 
     test('Tsc error should avoid building bundle and json', async () => {
       mockedRunTsc.mockResolvedValueOnce({
-        severity: Severity.ERROR,
+        severity: 'error',
         input: {} as any,
         results: []
       });
@@ -124,7 +123,7 @@ describe('Test the buildAll command', () => {
 
     test('Bundle error doesn\'t affect building json', async () => {
       mockedBuildBundle.mockResolvedValueOnce({
-        severity: Severity.ERROR,
+        severity: 'error',
         type: 'bundle',
         input: {} as any,
         errors: []
@@ -132,7 +131,7 @@ describe('Test the buildAll command', () => {
 
       mockedBuildSingleBundleDocs.mockResolvedValueOnce({
         type: 'docs',
-        severity: Severity.SUCCESS,
+        severity: 'success',
         path: '/build/jsons',
         input: {} as any,
       });
@@ -145,7 +144,7 @@ describe('Test the buildAll command', () => {
 
     test('JSON error doesn\'t affect building bundle', async () => {
       mockedBuildBundle.mockResolvedValueOnce({
-        severity: Severity.SUCCESS,
+        severity: 'success',
         type: 'bundle',
         path: '/build/bundles',
         input: {} as any
@@ -153,7 +152,7 @@ describe('Test the buildAll command', () => {
 
       mockedBuildSingleBundleDocs.mockResolvedValueOnce({
         type: 'docs',
-        severity: Severity.ERROR,
+        severity: 'error',
         errors: [],
         input: {} as any,
       });
@@ -171,7 +170,7 @@ describe('Test the buildAll command', () => {
     test('Regular execution for a tab', async () => {
       mockedBuildTab.mockResolvedValueOnce({
         type: 'tab',
-        severity: Severity.SUCCESS,
+        severity: 'success',
         input: {} as any,
         path: '/build/tabs',
       });
@@ -182,7 +181,7 @@ describe('Test the buildAll command', () => {
     test('Regular execution for a tab with --tsc', async () => {
       mockedBuildTab.mockResolvedValueOnce({
         type: 'tab',
-        severity: Severity.SUCCESS,
+        severity: 'success',
         input: {} as any,
         path: '/build/tabs',
       });
@@ -194,7 +193,7 @@ describe('Test the buildAll command', () => {
     test('Regular execution for a tab with --lint', async () => {
       mockedBuildTab.mockResolvedValueOnce({
         type: 'tab',
-        severity: Severity.SUCCESS,
+        severity: 'success',
         input: {} as any,
         path: '/build/tabs',
       });
@@ -205,7 +204,7 @@ describe('Test the buildAll command', () => {
 
     test('Lint error should avoid building tab', async () => {
       mockedRunEslint.mockResolvedValueOnce({
-        severity: Severity.ERROR,
+        severity: 'error',
         input: {} as any,
         formatted: ''
       });
@@ -218,7 +217,7 @@ describe('Test the buildAll command', () => {
 
     test('Tsc error should avoid building tab', async () => {
       mockedRunTsc.mockResolvedValueOnce({
-        severity: Severity.ERROR,
+        severity: 'error',
         input: {} as any,
         results: []
       });

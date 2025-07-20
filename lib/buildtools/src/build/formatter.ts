@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { formatLintResult, type LintResult } from '../prebuild/lint.js';
 import { formatTscResult, type TscResult } from '../prebuild/tsc.js';
-import { Severity, type BuildResult, type ResultTypeWithWarn } from '../types.js';
+import type { BuildResult, ResultTypeWithWarn } from '../types.js';
 
 interface ResultsObject {
   tsc?: TscResult
@@ -14,14 +14,14 @@ interface ResultsObject {
  * Formats a single result object into a string
  */
 export function formatResult(result: ResultTypeWithWarn, type?: 'docs' | 'bundle' | 'tab' | 'html') {
-  if (result.severity === Severity.ERROR) {
+  if (result.severity === 'error') {
     return result.errors.join('\n');
   }
 
   const typeStr = type ?? 'output';
   const successStr = chalk.greenBright(`${typeStr} written to ${result.path}`);
 
-  if (result.severity === Severity.WARN) {
+  if (result.severity === 'warn') {
     return [
       ...result.warnings,
       successStr

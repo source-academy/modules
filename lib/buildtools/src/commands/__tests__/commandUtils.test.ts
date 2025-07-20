@@ -1,34 +1,34 @@
 import { describe, expect, test } from "vitest";
-import { Severity } from "../../types.js";
+import type { Severity } from "../../types.js";
 import { processResult } from "../commandUtils.js";
 
 describe('Testing processResults', () => {
   const testCases: [any, Severity][] = [
-    [{ severity: Severity.SUCCESS }, Severity.SUCCESS],
-    [{ severity: Severity.ERROR }, Severity.ERROR],
+    [{ severity: 'success' }, 'success'],
+    [{ severity: 'error' }, 'error'],
     [
       {
-        items: [{ severity: Severity.ERROR }, { severity: Severity.SUCCESS }]
+        items: [{ severity: 'error' }, { severity: 'success' }]
       },
-      Severity.ERROR
+      'error'
     ],
     [
       {
-        item1: { severity: Severity.WARN },
+        item1: { severity: 'warn' },
         item2: {
           item3: {},
           item4: {
-            item5: { severity: Severity.WARN },
-            severity: Severity.ERROR
+            item5: { severity: 'warn' },
+            severity: 'error'
           }
         }
       },
-      Severity.ERROR
+      'error'
     ]
   ];
 
   test.each(testCases)('%#', (obj, expected) => {
-    if (expected === Severity.ERROR) {
+    if (expected === 'error') {
       expect(() => processResult(obj, false)).processExit();
     } else {
       expect(() => processResult(obj, false)).not.processExit();

@@ -1,21 +1,21 @@
-import { Severity, type ResolvedBundle, type ResolvedTab } from './types.js';
+import type { ResolvedBundle, ResolvedTab, Severity } from './types.js';
 
 export type AwaitedReturn<T extends (...args: any[]) => Promise<any>> = Awaited<ReturnType<T>>;
 
 export function isSeverity(obj: unknown): obj is Severity {
   if (typeof obj !== 'string') return false;
 
-  return obj === Severity.ERROR || obj === Severity.WARN || obj === Severity.SUCCESS;
+  return obj === 'error' || obj === 'warn' || obj === 'success';
 }
 
 export function compareSeverity(lhs: Severity, rhs: Severity): Severity {
   switch (lhs) {
-    case Severity.SUCCESS:
+    case 'success':
       return rhs;
-    case Severity.WARN:
-      return rhs === 'error' ? Severity.ERROR : Severity.WARN;
-    case Severity.ERROR:
-      return Severity.ERROR;
+    case 'warn':
+      return rhs === 'error' ? 'error' : 'warn';
+    case 'error':
+      return 'error';
   }
 }
 
@@ -24,12 +24,12 @@ export function compareSeverity(lhs: Severity, rhs: Severity): Severity {
  * determine the overall severity of all the given items
  */
 export function findSeverity<T>(items: T[], mapper: (each: T) => Severity): Severity {
-  let output: Severity = Severity.SUCCESS;
+  let output: Severity = 'success';
 
   for (const item of items) {
     const severity = mapper(item);
     output = compareSeverity(output, severity);
-    if (output === Severity.ERROR) return Severity.ERROR;
+    if (output === 'error') return 'error';
   }
 
   return output;

@@ -2,13 +2,13 @@ import type { LogLevel } from 'typedoc';
 import type { PrebuildOptions } from '../prebuild/index.js';
 import { runEslint, type LintResult } from '../prebuild/lint.js';
 import { runTsc, type TscResult } from '../prebuild/tsc.js';
-import { Severity, type BuildResult, type InputAsset } from '../types.js';
+import type { BuildResult, InputAsset, Severity } from '../types.js';
 import { compareSeverity } from '../utils.js';
 import { buildSingleBundleDocs } from './docs/index.js';
 import { buildBundle, buildTab } from './modules/index.js';
 
 interface BuildAllPrebuildError {
-  severity: Severity.ERROR
+  severity: 'error'
 
   tsc: TscResult | undefined
   lint: LintResult | undefined
@@ -43,9 +43,9 @@ export async function buildAll(input: InputAsset, prebuild: PrebuildOptions, out
     prebuild.lint ? runEslint(input, false, false) : Promise.resolve(undefined)
   ]);
 
-  if (tscResult?.severity === Severity.ERROR || lintResult?.severity === Severity.ERROR) {
+  if (tscResult?.severity === 'error' || lintResult?.severity === 'error') {
     return {
-      severity: Severity.ERROR,
+      severity: 'error',
       lint: lintResult,
       tsc: tscResult
     };

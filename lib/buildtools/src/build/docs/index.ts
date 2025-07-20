@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import * as td from 'typedoc';
-import { Severity, type BuildResult, type ResolvedBundle, type ResultType } from '../../types.js';
+import type { BuildResult, ResolvedBundle, ResultType } from '../../types.js';
 import { mapAsync } from '../../utils.js';
 import { buildJson } from './json.js';
 
@@ -32,7 +32,7 @@ export async function buildSingleBundleDocs(bundle: ResolvedBundle, outDir: stri
   if (!project) {
     return {
       type: 'docs',
-      severity: Severity.ERROR,
+      severity: 'error',
       errors: [`Failed to generate reflection for ${bundle.name}, check that the bundle has no type errors!`],
       input: bundle
     };
@@ -43,7 +43,7 @@ export async function buildSingleBundleDocs(bundle: ResolvedBundle, outDir: stri
   if (app.logger.hasErrors()) {
     return {
       type: 'docs',
-      severity: Severity.ERROR,
+      severity: 'error',
       errors: ['Refer to the command line for Typedoc\'s error messages'],
       input: bundle
     };
@@ -72,7 +72,7 @@ export async function buildHtml(bundles: Record<string, ResolvedBundle>, outDir:
   const missings = jsonStats.filter(each => each !== undefined);
   if (missings.length > 0) {
     return {
-      severity: Severity.ERROR,
+      severity: 'error',
       errors: missings.map(each => `Could not find JSON documentation for ${each}`),
     };
   }
@@ -89,7 +89,7 @@ export async function buildHtml(bundles: Record<string, ResolvedBundle>, outDir:
   const project = await app.convert();
   if (!project) {
     return {
-      severity: Severity.ERROR,
+      severity: 'error',
       errors: ['Failed to generate reflections, check that there are no type errors across all bundles!']
     };
   }
@@ -97,13 +97,13 @@ export async function buildHtml(bundles: Record<string, ResolvedBundle>, outDir:
   await app.generateDocs(project, `${outDir}/documentation`);
   if (app.logger.hasErrors()) {
     return {
-      severity: Severity.ERROR,
+      severity: 'error',
       errors: ['Refer to the command line for Typedoc\'s error messages']
     };
   }
 
   return {
-    severity: Severity.SUCCESS,
+    severity: 'success',
     path: `${outDir}/documentation`,
   };
 }

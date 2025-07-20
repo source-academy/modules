@@ -1,5 +1,5 @@
 import type { SuiteResult, TestContext } from '@sourceacademy/bundle-unittest/types';
-import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs';
+import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
 
 /**

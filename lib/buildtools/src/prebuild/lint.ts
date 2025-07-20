@@ -3,7 +3,7 @@ import pathlib from 'path';
 import chalk from 'chalk';
 import { ESLint } from 'eslint';
 import { getGitRoot, getOutDir } from '../getGitRoot.js';
-import { Severity, type InputAsset } from '../types.js';
+import type { InputAsset, Severity } from '../types.js';
 import { findSeverity, flatMapAsync, isNodeError } from '../utils.js';
 
 export interface LintResult {
@@ -13,16 +13,16 @@ export interface LintResult {
 }
 
 function severityFinder({ warningCount, errorCount, fatalErrorCount, fixableWarningCount }: ESLint.LintResult, fix: boolean): Severity {
-  if (fatalErrorCount > 0) return Severity.ERROR;
-  if (!fix && errorCount > 0) return Severity.ERROR;
+  if (fatalErrorCount > 0) return 'error';
+  if (!fix && errorCount > 0) return 'error';
 
   if (warningCount > 0) {
     if (fix && fixableWarningCount === warningCount) {
-      return Severity.SUCCESS;
+      return 'success';
     }
-    return Severity.WARN;
+    return 'warn';
   }
-  return Severity.SUCCESS;
+  return 'success';
 }
 
 async function timePromise<T>(f: () => Promise<T>) {
@@ -71,7 +71,7 @@ export async function runEslint(input: InputAsset, fix: boolean, stats: boolean)
     };
   } catch (error) {
     return {
-      severity: Severity.ERROR,
+      severity: 'error',
       formatted: `${error}`,
       input
     };
@@ -81,11 +81,11 @@ export function formatLintResult({severity, formatted, input}: LintResult): stri
   const prefix = `${chalk.blueBright(`[${input.type} ${input.name}]:`)} ${chalk.cyanBright('Linting completed')}`;
 
   switch (severity) {
-    case Severity.ERROR:
+    case 'error':
       return `${prefix} ${chalk.cyanBright('with')} ${chalk.redBright('errors')}:\n${formatted}`;
-    case Severity.WARN:
+    case 'warn':
       return `${prefix} ${chalk.cyanBright('with')} ${chalk.yellowBright('warnings')}:\n${formatted}`;
-    case Severity.SUCCESS:
+    case 'success':
       return `${prefix} ${chalk.greenBright('successfully')}`;
   }
 }

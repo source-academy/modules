@@ -2,7 +2,7 @@
 
 import fs from 'fs/promises';
 import * as td from 'typedoc';
-import { Severity, type BuildResult, type ResolvedBundle } from '../../types.js';
+import type { BuildResult, ResolvedBundle } from '../../types.js';
 import drawdown from './drawdown.js';
 
 const typeToName = (type: td.SomeType) => type.stringify(td.TypeContext.none);
@@ -118,7 +118,7 @@ export async function buildJson(bundle: ResolvedBundle, outDir: string, reflecti
   if (errors.length > 0) {
     return {
       type: 'docs',
-      severity: Severity.ERROR,
+      severity: 'error',
       errors,
       input: bundle
     };
@@ -130,7 +130,7 @@ export async function buildJson(bundle: ResolvedBundle, outDir: string, reflecti
   if (warnings.length > 0) {
     return {
       type: 'docs',
-      severity: Severity.WARN,
+      severity: 'warn',
       warnings,
       path: outpath,
       input: bundle
@@ -139,7 +139,7 @@ export async function buildJson(bundle: ResolvedBundle, outDir: string, reflecti
 
   return {
     type: 'docs',
-    severity: Severity.SUCCESS,
+    severity: 'success',
     path: outpath,
     input: bundle
   };

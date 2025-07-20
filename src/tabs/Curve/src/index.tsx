@@ -1,9 +1,12 @@
 import { IconNames } from '@blueprintjs/icons';
 import type { CurveModuleState } from '@sourceacademy/bundle-curve/types';
-import { AnimationCanvas, MultiItemDisplay, WebGLCanvas, defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs';
+import AnimationCanvas from '@sourceacademy/modules-lib/tabs/AnimationCanvas';
+import MultiItemDisplay from '@sourceacademy/modules-lib/tabs/MultiItemDisplay';
+import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebGLCanvas';
+import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 import { glAnimation, type DebuggerContext, type ModuleTab } from '@sourceacademy/modules-lib/types';
-import Curve3DAnimationCanvas from './animation_canvas_3d_curve';
 import CurveCanvas3D from './canvas_3d_curve';
+import Curve3DAnimationCanvas from './curve_3d_animation_canvas';
 
 export const CurveTab: ModuleTab = ({ context }) => {
   const { drawnCurves } = getModuleState<CurveModuleState>(context, 'curve');

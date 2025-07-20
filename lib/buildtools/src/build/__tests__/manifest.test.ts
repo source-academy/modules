@@ -1,7 +1,6 @@
 import fs from 'fs/promises';
 import { describe, expect, it, test, vi } from 'vitest';
 import { expectIsError, expectIsSuccess, testMocksDir } from '../../__tests__/fixtures.js';
-import { Severity } from '../../types.js';
 import { getBundleManifest, getBundleManifests, resolveAllBundles, resolveSingleBundle, type GetBundleManifestResult } from '../manifest.js';
 
 vi.mock(import('../../getGitRoot.js'));
@@ -14,7 +13,7 @@ describe('Test bundle manifest schema validation succeeds', () => {
     mockedReadFile.mockResolvedValueOnce('{ "version": "1.0.0" }');
 
     const expected: GetBundleManifestResult = {
-      severity: Severity.SUCCESS,
+      severity: 'success',
       manifest: {
         tabs: [],
         version: '1.0.0'
@@ -31,7 +30,7 @@ describe('Test bundle manifest schema validation succeeds', () => {
     mockedReadFile.mockResolvedValueOnce('{ "version": "1.0.0" }');
 
     const expected: GetBundleManifestResult = {
-      severity: Severity.SUCCESS,
+      severity: 'success',
       manifest: {
         tabs: ['tab0', 'tab1'],
         version: '1.0.0'
@@ -48,7 +47,7 @@ describe('Test bundle manifest schema validation succeeds', () => {
     mockedReadFile.mockResolvedValueOnce('{}');
 
     const expected: GetBundleManifestResult = {
-      severity: Severity.SUCCESS,
+      severity: 'success',
       manifest: {
         tabs: ['tab0']
       }

@@ -1,7 +1,7 @@
 import { InvalidArgumentError, Option } from '@commander-js/extra-typings';
 import chalk from 'chalk';
 import { LogLevel } from 'typedoc';
-import { Severity, type ErrorResult } from '../types.js';
+import type { ErrorResult, Severity } from '../types.js';
 import { isSeverity } from '../utils.js';
 
 export const lintOption = new Option('--lint', 'Run ESLint when building')
@@ -48,7 +48,7 @@ export function objectKeys<T extends string | number | symbol>(obj: Record<T, un
 export function processResult(obj: object, errorOnWarning: boolean) {
   function* severities(obj: object): Generator<Severity> {
     if (obj === null) {
-      yield Severity.SUCCESS;
+      yield 'success';
       return;
     }
 
@@ -68,10 +68,10 @@ export function processResult(obj: object, errorOnWarning: boolean) {
 
   for (const severity of severities(obj)) {
     switch (severity) {
-      case Severity.WARN: {
+      case 'warn': {
         if (!errorOnWarning) continue;
       }
-      case Severity.ERROR:
+      case 'error':
         process.exit(1);
     }
   }

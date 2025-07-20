@@ -1,6 +1,6 @@
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { defineTab } from '@sourceacademy/modules-lib/tabs';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import Phaser from 'phaser';
 import React from 'react';
 

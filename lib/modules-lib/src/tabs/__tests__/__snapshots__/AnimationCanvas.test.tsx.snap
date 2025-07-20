@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`rendering the component 1`] = `
+<AnimationCanvas
+  animation={
+    {
+      "duration": 10,
+      "fps": 1,
+      "getFrame": [Function],
+    }
+  }
+/>
+`;

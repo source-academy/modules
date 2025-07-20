@@ -1,13 +1,12 @@
 /* [Imports] */
 import { Switch, type SwitchProps } from '@blueprintjs/core';
-import React from 'react';
 
 export type AutoLoopSwitchProps = Omit<SwitchProps, 'checked' | 'style'> & {
   isAutoLooping: boolean,
 };
 
 /* [Main] */
-export default function AutoLoopSwitch(props: AutoLoopSwitchProps) {
+export default function AutoLoopSwitch({ isAutoLooping, ...props }: AutoLoopSwitchProps) {
   return <Switch
     style={{
       // Remove default bottom margin
@@ -17,7 +16,7 @@ export default function AutoLoopSwitch(props: AutoLoopSwitchProps) {
       whiteSpace: 'nowrap'
     }}
     label="Auto Loop"
-    checked={props.isAutoLooping}
+    checked={isAutoLooping}
     {...props}
   />;
 }

@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import { Severity, type InputAsset, type ResolvedBundle, type ResolvedTab } from '../types.js';
+import type { InputAsset, ResolvedBundle, ResolvedTab } from '../types.js';
 import { compareSeverity } from '../utils.js';
 import { runEslint, type LintResult } from './lint.js';
 import { runTsc, type TscResult } from './tsc.js';
@@ -34,7 +34,7 @@ export async function runBuilderWithPrebuild<T extends InputAsset, U extends any
   ];
 
   const [tscResult, lintResult] = await Promise.all(promises);
-  const prebuildSeverity = compareSeverity(tscResult?.severity ?? Severity.SUCCESS, lintResult?.severity ?? Severity.SUCCESS);
+  const prebuildSeverity = compareSeverity(tscResult?.severity ?? 'success', lintResult?.severity ?? 'success');
 
   if (prebuildSeverity === 'error' || (ci && prebuildSeverity !== 'success')) {
     // If prebuild had errors don't run the builder function after

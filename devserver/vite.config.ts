@@ -1,10 +1,11 @@
 // Devserver Vite Config
 /// <reference types="@vitest/browser/providers/playwright" />
 
+import fs from 'fs/promises';
 import pathlib from 'path';
 import react from '@vitejs/plugin-react';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import { loadEnv, defineConfig } from 'vite'
+import { loadEnv, defineConfig, type UserConfig, type ResolverFunction } from 'vite'
 import { mergeConfig } from 'vitest/config';
 import type { BrowserCommand } from 'vitest/node';
 import rootConfig from '../vitest.config';
@@ -17,62 +18,63 @@ const setLocalStorage: BrowserCommand<[key: string, value: any]> = async (ctx, k
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
-  // const modulesDir = pathlib.resolve(import.meta.dirname, '..', 'build') 
+
+  const viteConfig: UserConfig = {
+    root: import.meta.dirname,
+    plugins: [
+      nodePolyfills({
+        include: ['path']
+      }),
+      react(),
+    ],
+    resolve: {
+      preserveSymlinks: true,
+      alias: [{
+        find: /^js-slang\/context/,
+        replacement: pathlib.resolve(import.meta.dirname, 'src', 'mockModuleContext.ts')
+      }, {
+        // This alias configuration allows us to edit the modules library and the changes
+        // be reflected in real time when in hot-reload mode
+        find: /^@sourceacademy\/modules-lib\/tabs/,
+        replacement: '.',
+        async customResolver(source) {
+          const newSource = pathlib.resolve(import.meta.dirname, '../lib/modules-lib/src/tabs', source)
+          const extensions = ['.tsx', '.ts', '/index.ts']
+
+          for (const each of extensions) {
+            try {
+              await fs.access(`${newSource}${each}`, fs.constants.R_OK)
+              return `${newSource}${each}`
+            } catch {}
+          }
+
+          return undefined;
+        },
+      }],
+    },
+    define: {
+      'process.env': env
+    },
+    optimizeDeps: {
+      esbuildOptions: {
+        // Node.js global to browser globalThis
+        define: {
+          global: 'globalThis'
+        }
+      },
+      include: [
+        "vite-plugin-node-polyfills/shims/buffer",
+        "vite-plugin-node-polyfills/shims/global",
+        "vite-plugin-node-polyfills/shims/process",
+        '../build/tabs/*.js',
+        // '@sourceacademy/modules-lib/tabs'
+      ],
+    },
+  }
 
   return mergeConfig(
     rootConfig, {
-      root: import.meta.dirname,
-      plugins: [
-        nodePolyfills({
-          include: ['path']
-        }),
-        react(),
-      ],
-      resolve: {
-        preserveSymlinks: true,
-        alias:[{
-          find: /^js-slang\/context/,
-          replacement: pathlib.resolve(import.meta.dirname, 'src', 'mockModuleContext.ts')
-        }]
-      },
-      /* Experimental for serving modules using the dev server
-      server: {
-        port: 8022,
-        strictPort: true,
-        proxy: {
-          '/modules': {
-            target: 'http://localhost:8022',
-            rewrite(path) {
-              const finalPath = path.replace('/modules', modulesDir)
-              return `/@fs/${finalPath}`
-            }
-          }
-        },
-        fs: {
-          allow: [
-            searchForWorkspaceRoot(import.meta.dirname),
-            modulesDir
-          ]
-        }
-      },
-      */
-      define: {
-        'process.env': env
-      },
-      optimizeDeps: {
-        esbuildOptions: {
-          // Node.js global to browser globalThis
-          define: {
-            global: 'globalThis'
-          }
-        },
-        include: [
-          "vite-plugin-node-polyfills/shims/buffer",
-          "vite-plugin-node-polyfills/shims/global",
-          "vite-plugin-node-polyfills/shims/process",
-          '../build/tabs/*.js'
-        ],
-      },
+      ...viteConfig,
       test: {
         name: 'Dev Server',
         include: [

@@ -23,6 +23,7 @@ export default defineConfig({
         '**.config.[cm]?[jt]s',
         '**/coverage/**',
         '**/dist/**',
+        '**/dist.c?js',
         '**/src/**/samples/**',
         `${import.meta.dirname}/lib/buildtools/src/build/docs/drawdown.ts`
       ]
