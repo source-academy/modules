@@ -29,4 +29,6 @@ const WebGLCanvas = forwardRef<HTMLCanvasElement, WebGLCanvasProps>(
   }
 );
 
+WebGLCanvas.displayName = 'WebGLCanvas';
+
 export default WebGLCanvas;

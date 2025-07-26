@@ -78,6 +78,12 @@ export interface AnimationHookResult {
    * the current frame.
    */
   drawFrame: (timestamp?: number) => void;
+
+  /**
+   * `null` if no error has occurred. Otherwise, this will be set to
+   * the value of the error that the callback threw.
+   */
+  errored: Error | null
 }
 
 /**
@@ -91,12 +97,7 @@ function useRerender() {
 
 /**
  * Hook for animations based around the `requestAnimationFrame` function. Calls the provided callback periodically.
- *
- * @param frameDuration Duration of each frame in milliseconds
- * @param animDuration Duration of the entire animation in milliseconds
- * @param autoLoop Should the animation automatically restart after finishing?
- * @param callback Callback that is called with the timestamp of each frame in milliseconds
- * @returns Hook utilities
+ * @returns Animation Hook utilities
  */
 
 export function useAnimation({
@@ -128,6 +129,7 @@ export function useAnimation({
    */
   const lastFrameTimestamp = useRef<number | null>(null);
   const [isPlaying, setIsPlaying] = useState(autoStart ?? false);
+  const [errored, setErrored] = useState<Error | null>(null);
 
   /**
    * Set the current timestamp that the animation is at
@@ -190,7 +192,12 @@ export function useAnimation({
    */
   function callbackWrapper(time: number) {
     if (canvasRef.current) {
-      callback(time, canvasRef.current);
+      try {
+        callback(time, canvasRef.current);
+      } catch (error) {
+        setErrored(error as Error);
+        stop();
+      }
     }
   }
 
@@ -273,5 +280,6 @@ export function useAnimation({
         requestFrame();
       }
     },
+    errored: errored,
   };
 }

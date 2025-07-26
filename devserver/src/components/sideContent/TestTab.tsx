@@ -11,7 +11,7 @@ const TestTab: React.FC = () => (
     <h2>Source Academy Tab Development Server</h2>
     <p>
       Run some code that imports modules in the editor on the left. You should see the corresponding module tab spawn.<br />
-      Whenever you make changes to the tab, the server should automatically reload and show the changes that you've made <br />
+      Whenever you make changes to the tab, the server should automatically reload and show the changes that you&apos;ve made <br />
       If that does not happen, you can click the refresh button to manually reload tabs
     </p>
   </div>

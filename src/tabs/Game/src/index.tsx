@@ -1,5 +1,4 @@
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
-import React from 'react';
 import { Links } from './constants';
 
 type Props = {
@@ -8,30 +7,28 @@ type Props = {
   debuggerContext?: any;
 };
 
-class Game extends React.PureComponent<Props> {
-  public render() {
-    return (
-      <div>
-        Info: You need to visit the game to see the effect of your program.
-        Remember to save your work first!
-        <br />
-        <br />
-        You may find the game module{' '}
-        <a
-          href={Links.gameAPIDocumentation}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          documentation{' '}
-        </a>
-        and{' '}
-        <a href={Links.gameUserGuide} rel="noopener noreferrer" target="_blank">
-          user guide{' '}
-        </a>
-        useful.
-      </div>
-    );
-  }
+function Game(_props: Props) {
+  return (
+    <div>
+      Info: You need to visit the game to see the effect of your program.
+      Remember to save your work first!
+      <br />
+      <br />
+      You may find the game module{' '}
+      <a
+        href={Links.gameAPIDocumentation}
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        documentation{' '}
+      </a>
+      and{' '}
+      <a href={Links.gameUserGuide} rel="noopener noreferrer" target="_blank">
+        user guide{' '}
+      </a>
+      useful.
+    </div>
+  );
 }
 
 export default defineTab({

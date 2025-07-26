@@ -2,6 +2,7 @@ import { Icon, Slider, Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import { useMemo, useState } from 'react';
 import type { glAnimation } from '../types';
+import AnimationError from './AnimationError';
 import AutoLoopSwitch from './AutoLoopSwitch';
 import ButtonComponent from './ButtonComponent';
 import PlayButton from './PlayButton';
@@ -19,7 +20,6 @@ export type AnimCanvasProps = {
  * Uses {@link WebGLCanvas} internally.
  */
 export default function AnimationCanvas(props: AnimCanvasProps) {
-  const [errored, setErrored] = useState<Error | null>(null);
   const [isAutoLooping, setIsAutoLooping] = useState(true);
   const [wasPlaying, setWasPlaying] = useState<boolean | null>(null);
 
@@ -28,18 +28,13 @@ export default function AnimationCanvas(props: AnimCanvasProps) {
     Math.round(props.animation.duration * 1000)
   ], [props.animation]);
 
-  const { stop, start, reset, changeTimestamp, isPlaying, timestamp, setCanvas } = useAnimation({
+  const { stop, start, reset, changeTimestamp, isPlaying, errored, timestamp, setCanvas } = useAnimation({
     frameDuration,
     animationDuration,
     autoLoop: isAutoLooping,
     callback: (timestamp, canvas) => {
-      try {
-        const frame = props.animation.getFrame(timestamp / 1000);
-        frame.draw(canvas);
-      } catch (error) {
-        stop();
-        setErrored(error as Error);
-      }
+      const frame = props.animation.getFrame(timestamp / 1000);
+      frame.draw(canvas);
     }
   });
 
@@ -130,39 +125,10 @@ export default function AnimationCanvas(props: AnimCanvasProps) {
       }}
     >
       {errored
-        ? (
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-          }}>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center'
-            }}>
-              <Icon icon={IconNames.WARNING_SIGN} size={90} />
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                marginBottom: 20
-              }}>
-                <h3>An error occurred while running your animation!</h3>
-                <p style={{ justifySelf: 'flex-end' }}>Here's the details:</p>
-              </div>
-            </div>
-            <code style={{
-              color: 'red'
-            }}>
-              {errored.toString()}
-            </code>
-          </div>)
+        ? <AnimationError error={errored} />
         : (
           <WebGLCanvas
-            style={{
-              flexGrow: 1
-            }}
+            style={{ flexGrow: 1 }}
             ref={element => {
               if (element !== null) {
                 setCanvas(element);

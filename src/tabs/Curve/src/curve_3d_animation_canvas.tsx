@@ -1,6 +1,7 @@
 import { Icon, Slider, Tooltip } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import type { AnimatedCurve } from '@sourceacademy/bundle-curve/types';
+import AnimationError from '@sourceacademy/modules-lib/tabs/AnimationError';
 import AutoLoopSwitch from '@sourceacademy/modules-lib/tabs/AutoLoopSwitch';
 import ButtonComponent from '@sourceacademy/modules-lib/tabs/ButtonComponent';
 import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
@@ -20,20 +21,14 @@ export default function Curve3DAnimationCanvas({ animation }: Props) {
   const [displayAngle, setDisplayAngle] = React.useState(0);
   const [isAutoLooping, setIsAutoLooping] = React.useState(true);
   const [wasPlaying, setWasPlaying] = React.useState<boolean | null>(null);
-  const [errored, setErrored] = React.useState<Error | null>(null);
 
   const frameDuration = 1000 / animation.fps;
   const animationDuration = Math.round(animation.duration * 1000);
-  const { changeTimestamp, drawFrame, start, stop, reset, timestamp, isPlaying, setCanvas } = useAnimation({
+  const { changeTimestamp, drawFrame, start, stop, reset, timestamp, errored, isPlaying, setCanvas } = useAnimation({
     frameDuration, animationDuration, autoLoop: isAutoLooping,
     callback(timestamp, canvas) {
-      try {
-        const frame = animation.getFrame(timestamp / 1000);
-        frame.draw(canvas);
-      } catch (error) {
-        stop();
-        setErrored(error as Error);
-      }
+      const frame = animation.getFrame(timestamp / 1000);
+      frame.draw(canvas);
     },
   });
 
@@ -145,34 +140,7 @@ export default function Curve3DAnimationCanvas({ animation }: Props) {
       }}
     >
       {errored
-        ? (
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-          }}>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center'
-            }}>
-              <Icon icon={IconNames.WARNING_SIGN} size={90} />
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                marginBottom: 20
-              }}>
-                <h3>An error occurred while running your animation!</h3>
-                <p style={{ justifySelf: 'flex-end' }}>Here's the details:</p>
-              </div>
-            </div>
-            <code style={{
-              color: 'red'
-            }}>
-              {errored.toString()}
-            </code>
-          </div>)
+        ? <AnimationError error={errored} />
         : (
           <WebGLCanvas
             style={{

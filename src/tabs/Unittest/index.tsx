@@ -1,6 +1,5 @@
 import type { SuiteResult, TestContext } from '@sourceacademy/bundle-unittest/types';
 import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
-import React from 'react';
 
 /**
  * Tab for unit tests.
@@ -74,25 +73,21 @@ function suiteResultToDiv(suiteResult: SuiteResult) {
   );
 }
 
-class TestSuitesTab extends React.PureComponent<Props> {
-  public render() {
-    const { context: { suiteResults, called } } = this.props;
-
-    if (!called) {
-      return <div>
-        Call <code>describe</code> at least once to be able to view the results of your tests
-      </div>;
-    }
-
-    const block = suiteResultToDiv(suiteResults);
-
-    return (
-      <div>
-        <p>The following is a report of your tests.</p>
-        {block}
-      </div>
-    );
+function TestSuitesTab({ context: {suiteResults, called } }: Props) {
+  if (!called) {
+    return <div>
+      Call <code>describe</code> at least once to be able to view the results of your tests
+    </div>;
   }
+
+  const block = suiteResultToDiv(suiteResults);
+
+  return (
+    <div>
+      <p>The following is a report of your tests.</p>
+      {block}
+    </div>
+  );
 }
 
 export default defineTab({

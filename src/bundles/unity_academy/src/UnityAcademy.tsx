@@ -8,7 +8,7 @@
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Vector3, normalizeVector, pointDistance, zeroVector } from './UnityAcademyMaths';
 import { BUILD_NAME, UNITY_ACADEMY_BACKEND_URL } from './config';
 
@@ -217,7 +217,9 @@ class UnityAcademyJsInteropContext {
 
     // Load Unity Academy App
     document.body.appendChild(this.unityContainerElement);
-    ReactDOM.render(<UnityComponent />, this.unityContainerElement);
+    const root = createRoot(this.unityContainerElement);
+    root.render(<UnityComponent />);
+
     this.setShowUnityComponent(0);
     this.isShowingUnityAcademy = false;
 

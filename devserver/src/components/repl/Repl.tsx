@@ -63,7 +63,7 @@ const Output: React.FC<OutputProps> = (props: OutputProps) => {
       );
 
     default:
-      return <Card>''</Card>;
+      return <Card>&rsquo;&rsquo;</Card>;
   }
 };
 
