@@ -189,13 +189,30 @@ export default tseslint.config(
       'react-hooks': reactHooksPlugin,
       'react': reactPlugin
     },
+    extends: [
+      reactPlugin.configs.flat.recommended,
+      reactPlugin.configs.flat['jsx-runtime']
+    ],
+    languageOptions: {
+      parserOptions: {
+        ecmaFeatures: { jsx: true }
+      }
+    },
     rules: {
       'react-hooks/rules-of-hooks': 'error',
+      'react/jsx-key': 'off', // was 'error'
+      'react/prefer-stateless-function': 'warn',
+      'react/prop-types': 'off', // was 'error'
 
       '@stylistic/jsx-equals-spacing': ['warn', 'never'],
       '@stylistic/jsx-indent-props': ['warn', 2],
       '@stylistic/jsx-props-no-multi-spaces': 'warn',
       '@stylistic/jsx-self-closing-comp': 'warn',
+    },
+    settings: {
+      react: {
+        version: 'detect'
+      }
     }
   },
   {
