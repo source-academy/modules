@@ -62,7 +62,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
           onClick={() => {
             changeStep(currentStep - 1);
             setStepEditorValue(currentStep.toString());
-          } }
+          }}
           disabled={currentStep === 0}
         >
           Previous
@@ -85,7 +85,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
                 placeholder={undefined}
                 selectAllOnFocus
                 customInputAttributes={{
-                  tabIndex: 0
+                  tabIndex: 0,
                 }}
                 onChange={(newValue) => {
                   // Disallow non numeric inputs

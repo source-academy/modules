@@ -1,5 +1,0 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`Rendering the component 1`] = `<SampleMultiItemDisplay />`;
-
-exports[`rendering the component 1`] = `<SampleMultiItemDisplay />`;

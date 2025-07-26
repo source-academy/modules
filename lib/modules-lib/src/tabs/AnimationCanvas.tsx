@@ -28,7 +28,7 @@ export default function AnimationCanvas(props: AnimCanvasProps) {
     Math.round(props.animation.duration * 1000)
   ], [props.animation]);
 
-  const { stop, start, reset, changeTimestamp, isPlaying, timestamp, canvasRef } = useAnimation({
+  const { stop, start, reset, changeTimestamp, isPlaying, timestamp, setCanvas } = useAnimation({
     frameDuration,
     animationDuration,
     autoLoop: isAutoLooping,
@@ -60,11 +60,10 @@ export default function AnimationCanvas(props: AnimCanvasProps) {
       <PlayButton
         title='PlayButton'
         isPlaying={isPlaying}
-        disabled={Boolean(errored)}
         onClick={() => {
           if (isPlaying) stop();
           else {
-            if (timestamp >= animationDuration) reset();
+            if (errored || timestamp >= animationDuration) reset();
             start();
           }
         }}
@@ -164,7 +163,11 @@ export default function AnimationCanvas(props: AnimCanvasProps) {
             style={{
               flexGrow: 1
             }}
-            ref={canvasRef}
+            ref={element => {
+              if (element !== null) {
+                setCanvas(element);
+              }
+            }}
           />
         )}
     </div>

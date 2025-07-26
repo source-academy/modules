@@ -294,6 +294,8 @@ export default tseslint.config(
       '**/vitest.*.ts'
     ],
     rules: {
+      'no-empty-pattern': 'off', // vitest requires certain things to be destructured using an object pattern
+
       '@stylistic/quotes': 'off', // Turn this off to avoid conflicting with snapshots
 
       'vitest/expect-expect': ['error', {

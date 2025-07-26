@@ -12,3 +12,4 @@ export { default as MultiItemDisplay, type MultiItemDisplayProps } from './Multi
 export { default as PlayButton, type PlayButtonProps } from './PlayButton';
 export * from './utils';
 export { default as WebGLCanvas, type WebGLCanvasProps } from './WebGLCanvas';
+export { useAnimation, type AnimationOptions, type AnimationHookResult } from './useAnimation';

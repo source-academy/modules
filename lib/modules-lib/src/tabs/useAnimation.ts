@@ -21,6 +21,10 @@ export interface AnimationOptions {
    * Has no effect if the animation duration is `undefined`.
    */
   autoLoop?: boolean;
+
+  /**
+   * Callback that's called to draw each frame
+   */
   callback: (timestamp: number, canvas: HTMLCanvasElement) => void;
 
   /**
@@ -66,7 +70,7 @@ export interface AnimationHookResult {
    * Pass this ref to the canvas element that will be used to draw
    * the frames
    */
-  readonly canvasRef: React.MutableRefObject<HTMLCanvasElement | null>;
+  setCanvas: (canvas: HTMLCanvasElement) => void
 
   /**
    * Callback for manually drawing a frame to the canvas
@@ -77,7 +81,17 @@ export interface AnimationHookResult {
 }
 
 /**
- * Hook for animations based around the `requestAnimationFrame` function
+ * Hook that returns a function that causes React to rerender
+ * when called.
+ */
+function useRerender() {
+  const [, setRenderer] = useState(true);
+  return () => setRenderer(prev => !prev);
+}
+
+/**
+ * Hook for animations based around the `requestAnimationFrame` function. Calls the provided callback periodically.
+ *
  * @param frameDuration Duration of each frame in milliseconds
  * @param animDuration Duration of the entire animation in milliseconds
  * @param autoLoop Should the animation automatically restart after finishing?
@@ -85,7 +99,13 @@ export interface AnimationHookResult {
  * @returns Hook utilities
  */
 
-export function useAnimation({ frameDuration, animationDuration, autoLoop, callback, autoStart }: AnimationOptions): AnimationHookResult {
+export function useAnimation({
+  animationDuration,
+  autoLoop,
+  autoStart,
+  callback,
+  frameDuration,
+}: AnimationOptions): AnimationHookResult {
   /*
    * Because we always pass the same instance of animCallback to requestAnimationFrame,
    * values that are returned by useState end up always being stale. So instead, we need
@@ -94,8 +114,7 @@ export function useAnimation({ frameDuration, animationDuration, autoLoop, callb
    * If the value we change needs to trigger a rerender, then we call the rerender function
    * to trick React into doing the rerender.
    */
-  const [, setRenderer] = useState(true);
-  const rerender = () => setRenderer(prev => !prev);
+  const rerender = useRerender();
 
   /**
    * Keeps track of the requestAnimationFrame request id so
@@ -104,8 +123,11 @@ export function useAnimation({ frameDuration, animationDuration, autoLoop, callb
   const requestIdRef = useRef<number | null>(null);
   const elapsedRef = useRef(0);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  /**
+   * Keeps track of the time when the last frame was drawn
+   */
   const lastFrameTimestamp = useRef<number | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(autoStart ?? false);
 
   /**
    * Set the current timestamp that the animation is at
@@ -115,6 +137,19 @@ export function useAnimation({ frameDuration, animationDuration, autoLoop, callb
     rerender();
   }
 
+  /**
+   * Submit a request to call `animCallback` using `requestAnimationFrame`
+   */
+  function requestFrame() {
+    requestIdRef.current = requestAnimationFrame(animCallback);
+  }
+
+  /**
+   * Stops the animation by:
+   * - Setting `isPlaying` to false
+   * - Cancelling the current animation request
+   * - Sets the lastFrameTimestamp to null
+   */
   function stop() {
     setIsPlaying(false);
     if (requestIdRef.current !== null) {
@@ -124,21 +159,35 @@ export function useAnimation({ frameDuration, animationDuration, autoLoop, callb
     lastFrameTimestamp.current = null;
   }
 
+  /**
+   * Resets the animation to the start but doesn't change `isPlaying`
+   * - Sets elapsed to 0 and draws the 0 frame to the canvas
+   * - Sets lastFrameTimestamp to null
+   * - Cancels the current animation request
+   * - If there was a an animation callback scheduled, call `requestFrame` again
+   */
   function reset() {
     setElapsed(0);
     callbackWrapper(0);
     lastFrameTimestamp.current = null;
     if (requestIdRef.current !== null) {
       cancelAnimationFrame(requestIdRef.current);
-      requestIdRef.current = requestAnimationFrame(animCallback);
+      requestFrame();
     }
   }
 
+  /**
+   * Sets `isPlaying` to true and requests an animation frame.
+   */
   function start() {
     setIsPlaying(true);
-    requestIdRef.current = requestAnimationFrame(animCallback);
+    if (canvasRef.current) requestFrame();
   }
 
+  /**
+   * Calls the provided callback with the given timestamp only
+   * if the canvas is not null
+   */
   function callbackWrapper(time: number) {
     if (canvasRef.current) {
       callback(time, canvasRef.current);
@@ -149,30 +198,29 @@ export function useAnimation({ frameDuration, animationDuration, autoLoop, callb
     if (lastFrameTimestamp.current === null) {
       // This is the first time the animation is being drawn
       lastFrameTimestamp.current = timeInMs;
-      requestIdRef.current = requestAnimationFrame(animCallback);
+      requestFrame();
     } else {
       // Compare with the time since the last frame was drawn
       const diff = timeInMs - lastFrameTimestamp.current;
       const newElapsed = elapsedRef.current + diff;
 
       if (animationDuration === undefined || newElapsed < animationDuration) {
-        setElapsed(newElapsed);
-        requestIdRef.current = requestAnimationFrame(animCallback);
+        requestFrame();
+        // If enough time has elapsed since the last frame
+        // we can draw the next one
+        if (frameDuration === undefined || diff >= frameDuration) {
+          setElapsed(newElapsed);
+          callbackWrapper(newElapsed);
+          lastFrameTimestamp.current = timeInMs;
+        };
       } else {
         // If we have exceeded the animation duration, round the elapsed value
         // to the animation duration and call the finish callback
         setElapsed(animationDuration);
-        if (finishCallbackRef.current) {
-          finishCallbackRef.current();
-        }
+        callbackWrapper(animationDuration);
+        finishCallbackRef.current!();
+        return;
       }
-
-      // If enough time has elapsed since the last frame
-      // we can draw the next one
-      if (frameDuration === undefined || diff >= frameDuration) {
-        callbackWrapper(elapsedRef.current + diff);
-        lastFrameTimestamp.current = timeInMs;
-      };
     }
   }
 
@@ -192,12 +240,7 @@ export function useAnimation({ frameDuration, animationDuration, autoLoop, callb
   }, [autoLoop]);
 
   useEffect(() => {
-    // Draw the first frame of the animation so that the canvas isn't blank
-    // on the first render
-    callbackWrapper(0);
-
     if (autoStart) start();
-
     return stop;
   }, []);
 
@@ -215,6 +258,20 @@ export function useAnimation({ frameDuration, animationDuration, autoLoop, callb
     drawFrame: timestamp => callbackWrapper(timestamp ?? elapsedRef.current),
     isPlaying,
     timestamp: elapsedRef.current,
-    canvasRef,
+    setCanvas: canvas => {
+      // No need to do anything with the canvas if the current canvas
+      // we're receiving is the same one that we have stored
+      if (canvasRef.current !== null && Object.is(canvasRef.current, canvas)) {
+        return;
+      }
+
+      canvasRef.current = canvas;
+      // Draw the current frame of the animation so that the canvas isn't blank
+      // after setting the canvas
+      callbackWrapper(elapsedRef.current);
+      if (isPlaying) {
+        requestFrame();
+      }
+    },
   };
 }

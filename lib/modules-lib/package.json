@@ -4,8 +4,6 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "@vitest/browser": "^3.2.3",
@@ -44,7 +42,7 @@
     "build": "tsc --project ./tsconfig.prod.json",
     "docs": "typedoc",
     "lint": "eslint src",
-    "prepare": "yarn build",
+    "prepare": "yarn build && playwright install --with-deps",
     "tsc": "tsc --project ./tsconfig.json",
     "test": "vitest --project \"Modules Library\""
   }
