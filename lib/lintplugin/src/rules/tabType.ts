@@ -22,7 +22,7 @@ const tabType = {
       useHelper: 'Use the defineTab helper from {{ source }}'
     },
     defaultOptions: [
-      '@sourceacademy/modules-lib/tabs/utils',
+      '@sourceacademy/modules-lib/tabs',
       'defineTab'
     ],
   },

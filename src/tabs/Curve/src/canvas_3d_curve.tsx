@@ -1,10 +1,119 @@
-import { Slider } from '@blueprintjs/core';
+import { EditableText, Slider } from '@blueprintjs/core';
 import type { CurveDrawn } from '@sourceacademy/bundle-curve/curves_webgl';
 import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
 import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebGLCanvas';
 import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH, } from '@sourceacademy/modules-lib/tabs/css_constants';
+import { useAnimation } from '@sourceacademy/modules-lib/tabs/useAnimation';
 import { degreesToRadians } from '@sourceacademy/modules-lib/utilities';
+import { clamp } from 'lodash';
 import React from 'react';
+
+export default function Canvas3DCurve({ curve }: Props) {
+  const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const [angleText, setAngleText] = React.useState<string | null>(null);
+  const [isEditing, setIsEditing] = React.useState(false);
+
+  const {
+    isPlaying: isRotating,
+    start,
+    stop,
+    changeTimestamp: setDisplayAngle,
+    timestamp: displayAngle,
+    setCanvas,
+  } = useAnimation({
+    animationDuration: 7200,
+    autoLoop: true,
+    callback(angle) {
+      const angleInRadians = degreesToRadians(angle / 20);
+      curve.redraw(angleInRadians);
+    }
+  });
+
+  React.useEffect(() => {
+    if (canvasRef.current) {
+      curve.init(canvasRef.current);
+      setCanvas(canvasRef.current);
+    }
+  }, [curve, canvasRef.current]);
+
+  return <div
+    style={{ width: '100%' }}
+  >
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center'
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: BP_TAB_BUTTON_MARGIN,
+
+          width: '100%',
+          maxWidth: CANVAS_MAX_WIDTH,
+
+          paddingTop: BP_TEXT_MARGIN,
+          paddingBottom: BP_TEXT_MARGIN
+        }}
+      >
+        <PlayButton
+          isPlaying={isRotating}
+          onClick={() => {
+            if (isRotating) stop();
+            else start();
+          }}
+        />
+        <Slider
+          value={displayAngle / 20}
+          min={0}
+          max={360}
+          labelRenderer={false}
+          onChange={newValue => {
+            stop();
+            setDisplayAngle(newValue * 20);
+          }}
+        />
+        <EditableText
+          customInputAttributes={{
+            style: { height: '100%' }
+          }}
+          isEditing={isEditing}
+          onEdit={() => setIsEditing(true)}
+          type="number"
+          value={angleText ?? Math.round(displayAngle / 20).toString()}
+          disabled={isRotating}
+          onChange={value => {
+            setAngleText(value);
+            if (isEditing) return;
+
+            const angle = parseFloat(value);
+            if (!Number.isNaN(angle)) {
+              setDisplayAngle(clamp(angle, 0, 360) * 20);
+            }
+            setAngleText(null);
+          }}
+          onConfirm={value => {
+            const angle = parseFloat(value);
+            setDisplayAngle(clamp(angle, 0, 360) * 20);
+            setAngleText(null);
+            setIsEditing(false);
+          }}
+          onCancel={() => setIsEditing(false)}
+        />
+      </div>
+    </div>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center'
+      }}
+    >
+      <WebGLCanvas ref={canvasRef} />
+    </div>
+  </div>;
+}
 
 type State = {
   /**
@@ -31,7 +140,7 @@ type Props = {
  *
  * Uses WebGLCanvas internally.
  */
-export default class Canvas3dCurve extends React.Component<Props, State> {
+export class Canvas3dCurve extends React.Component<Props, State> {
   private canvas: HTMLCanvasElement | null;
 
   constructor(props) {

@@ -15,7 +15,7 @@ export default function HollusionCanvas({ rune }: Props) {
   // to reinitialize the shaders every time
   const renderFuncRef = React.useRef<(time: number) => void>();
 
-  const { start, canvasRef } = useAnimation({
+  const { setCanvas } = useAnimation({
     callback(timestamp, canvas) {
       if (renderFuncRef.current === undefined) {
         renderFuncRef.current = rune.draw(canvas);
@@ -25,9 +25,9 @@ export default function HollusionCanvas({ rune }: Props) {
     autoStart: true
   });
 
-  React.useEffect(() => {
-    start();
-  }, [rune]);
-
-  return <WebGLCanvas ref={canvasRef} />;
+  return <WebGLCanvas ref={canvas => {
+    if (canvas) {
+      setCanvas(canvas);
+    }
+  }} />;
 }
