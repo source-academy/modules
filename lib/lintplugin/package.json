@@ -24,10 +24,8 @@
     "typescript-eslint": "^8.33.1"
   },
   "devDependencies": {
-    "@commander-js/extra-typings": "^13.0.0",
+    "@sourceacademy/lib-compiler": "workspace:^",
     "@typescript-eslint/rule-tester": "^8.33.1",
-    "commander": "^13.0.0",
-    "esbuild": "^0.25.5",
     "typescript": "^5.8.2",
     "vitest": "^3.2.3"
   },

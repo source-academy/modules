@@ -3320,14 +3320,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@sourceacademy/lib-compiler@workspace:^, @sourceacademy/lib-compiler@workspace:lib/lib-compiler":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/lib-compiler@workspace:lib/lib-compiler"
+  dependencies:
+    "@commander-js/extra-typings": "npm:^13.0.0"
+    chalk: "npm:^5.0.1"
+    commander: "npm:^13.0.0"
+    esbuild: "npm:^0.25.5"
+    typescript: "npm:^5.8.2"
+  languageName: unknown
+  linkType: soft
+
 "@sourceacademy/lint-plugin@workspace:^, @sourceacademy/lint-plugin@workspace:lib/lintplugin":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/lint-plugin@workspace:lib/lintplugin"
   dependencies:
-    "@commander-js/extra-typings": "npm:^13.0.0"
+    "@sourceacademy/lib-compiler": "workspace:^"
     "@typescript-eslint/rule-tester": "npm:^8.33.1"
-    commander: "npm:^13.0.0"
-    esbuild: "npm:^0.25.5"
     eslint: "npm:^9.31.0"
     typescript: "npm:^5.8.2"
     vitest: "npm:^3.2.3"
@@ -3348,11 +3358,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/markdown-plugin-directory-tree@workspace:lib/markdown-tree"
   dependencies:
-    "@commander-js/extra-typings": "npm:^13.0.0"
+    "@sourceacademy/lib-compiler": "workspace:^"
     "@types/lodash": "npm:^4.14.198"
     "@types/markdown-it": "npm:^14.1.2"
-    commander: "npm:^13.0.0"
-    esbuild: "npm:^0.25.5"
     lodash: "npm:^4.17.21"
     typescript: "npm:^5.8.2"
     vitest: "npm:^3.2.3"
@@ -3367,6 +3375,7 @@ __metadata:
   resolution: "@sourceacademy/modules-buildtools@workspace:lib/buildtools"
   dependencies:
     "@commander-js/extra-typings": "npm:^13.0.0"
+    "@sourceacademy/lib-compiler": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/estree": "npm:^1.0.0"
     "@types/lodash": "npm:^4.14.198"

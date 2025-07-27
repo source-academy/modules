@@ -28,9 +28,10 @@ export default defineConfig({
       ]
     },
     projects: [
+      './devserver',
       './lib/*/vitest.config.js',
-      './devserver/vite.config.ts',
-      './src/*/vitest.config.js'
+      './src/bundles',
+      './src/tabs'
     ],
     root: import.meta.dirname,
     silent: 'passed-only',

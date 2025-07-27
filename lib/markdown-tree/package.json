@@ -4,11 +4,9 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@commander-js/extra-typings": "^13.0.0",
+    "@sourceacademy/lib-compiler": "workspace:^",
     "@types/lodash": "^4.14.198",
     "@types/markdown-it": "^14.1.2",
-    "commander": "^13.0.0",
-    "esbuild": "^0.25.5",
     "typescript": "^5.8.2",
     "vitest": "^3.2.3"
   },
