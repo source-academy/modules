@@ -33,7 +33,7 @@ export default defineConfig(({ mode }) => {
         find: /^js-slang\/context/,
         replacement: pathlib.resolve(import.meta.dirname, 'src', 'mockModuleContext.ts')
       }, {
-        // This alias configuration allows us to edit the modules library and the changes
+        // This alias configuration allows us to edit the modules library and have the changes
         // be reflected in real time when in hot-reload mode
         find: /^@sourceacademy\/modules-lib/,
         replacement: '.',
