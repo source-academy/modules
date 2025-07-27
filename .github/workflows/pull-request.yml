@@ -35,10 +35,11 @@ jobs:
       # if the workflow file was modified, then we rerun the entire job
       devserver: ${{ steps.filter.outputs.devserver || steps.filter.outputs.workflows }}
       # if the devserver needs to be tested bundles and tabs need to be rebuilt
-      modules: ${{ steps.filter.outputs.tabs || steps.filter.outputs.bundles || steps.filter.outputs.workflows || steps.filter.outputs.devserver }}
+      tabs: ${{ steps.filter.outputs.tabs || steps.filter.outputs.workflows || steps.filter.outputs.devserver }}
+      bundles: ${{ steps.filter.outputs.bundles || steps.filter.outputs.workflows || steps.filter.outputs.devserver }}
       libraries: ${{ steps.filter.outputs.libraries || steps.filter.outputs.workflows }}
       docs: ${{ steps.filter.outputs.docs || steps.filter.outputs.workflows }}
-      playwright: $${{ steps.filter.outputs.devserver || steps.filter.outputs.libraries || steps.filter.outputs.bundles }}
+      playwright: $${{ steps.filter.outputs.devserver || steps.filter.outputs.libraries || steps.filter.outputs.tabs }}
 
   test:
     name: Verify all tests pass and build success
@@ -77,12 +78,16 @@ jobs:
           run: yarn test:libs
 
         - name: Build and run tsc for bundles and tabs
-          if: needs.paths-filter.outputs.devserver == 'true'
+          if: needs.paths-filter.outputs.bundles == 'true' || needs.paths-filter.outputs.tabs == 'true'
           run: yarn workspaces foreach -j 5 -ptW --from "./src/{bundles,tabs}/*" run build --tsc
 
-        - name: Test bundles and tabs
-          if: needs.paths-filter.outputs.modules == 'true'
-          run: yarn test:modules
+        - name: Test bundles
+          if: needs.paths-filter.outputs.bundles == 'true'
+          run: yarn workspaces foreach -j 5 -ptW --from "./src/bundles/*" run test
+
+        - name: Test tabs
+          if: needs.paths-filter.outputs.tabs == 'true'
+          run: yarn workspaces foreach -j 5 -ptW --from "./src/tabs/*" run test
 
         - name: Build manifest
           if: needs.paths-filter.outputs.devserver == 'true'
