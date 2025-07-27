@@ -1,0 +1,25 @@
+{
+  "name": "@sourceacademy/lib-compiler",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Wrapper around esbuild and commander to make it simpler to bundle library packages",
+  "devDependencies": {
+    "@commander-js/extra-typings": "^13.0.0",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "chalk": "^5.0.1",
+    "commander": "^13.0.0",
+    "esbuild": "^0.25.5"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "yarn tsc"
+  }
+}

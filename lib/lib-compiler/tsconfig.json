@@ -1,0 +1,8 @@
+{
+  "include": ["./index.ts"],
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "outDir": "./dist"
+  }
+}
