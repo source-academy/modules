@@ -1,13 +1,13 @@
-import { EditableText, Slider, Tooltip } from '@blueprintjs/core';
+import { Slider, Tooltip } from '@blueprintjs/core';
 import type { CurveDrawn } from '@sourceacademy/bundle-curve/curves_webgl';
 import AnimationError from '@sourceacademy/modules-lib/tabs/AnimationError';
+import NumberSelector from '@sourceacademy/modules-lib/tabs/NumberSelector';
 import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
 import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebGLCanvas';
 import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH, } from '@sourceacademy/modules-lib/tabs/css_constants';
 import { useAnimation } from '@sourceacademy/modules-lib/tabs/useAnimation';
 import { degreesToRadians } from '@sourceacademy/modules-lib/utilities';
-import clamp from 'lodash/clamp';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface Props {
   curve: CurveDrawn;
@@ -20,8 +20,6 @@ interface Props {
  */
 export default function Canvas3DCurve({ curve }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [angleText, setAngleText] = useState<string | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
 
   const {
     isPlaying: isRotating,
@@ -68,6 +66,7 @@ export default function Canvas3DCurve({ curve }: Props) {
         }}
       >
         <PlayButton
+          title="PlayButton"
           isPlaying={isRotating}
           disabled={!!errored}
           onClick={() => {
@@ -87,33 +86,14 @@ export default function Canvas3DCurve({ curve }: Props) {
           }}
         />
         <Tooltip content="Angle in Degrees">
-          <EditableText
+          <NumberSelector
+            value={Math.round(displayAngle / 20)}
+            minValue={0}
+            maxValue={360}
             customInputAttributes={{
-              style: { height: '100%' }
+              style: { height: '100%', width: '5ch' }
             }}
-            isEditing={isEditing}
-            onEdit={() => setIsEditing(true)}
-            type="number"
-            value={angleText ?? Math.round(displayAngle / 20).toString()}
-            disabled={isRotating || !!errored}
-            onChange={value => {
-              if (value.length > 3) return;
-              setAngleText(value);
-              if (isEditing) return;
-
-              const angle = parseFloat(value);
-              if (!Number.isNaN(angle)) {
-                setDisplayAngle(clamp(angle, 0, 360) * 20);
-              }
-              setAngleText(null);
-            }}
-            onConfirm={value => {
-              const angle = parseFloat(value);
-              setDisplayAngle(clamp(angle, 0, 360) * 20);
-              setAngleText(null);
-              setIsEditing(false);
-            }}
-            onCancel={() => setIsEditing(false)}
+            onValueChanged={value => setDisplayAngle(value * 20)}
           />
         </Tooltip>
       </div>

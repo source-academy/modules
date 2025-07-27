@@ -8,7 +8,7 @@ import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
 import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebGLCanvas';
 import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '@sourceacademy/modules-lib/tabs/css_constants';
 import { useAnimation } from '@sourceacademy/modules-lib/tabs/useAnimation';
-import React from 'react';
+import { useState } from 'react';
 
 type Props = {
   animation: AnimatedCurve;
@@ -18,9 +18,12 @@ type Props = {
  * Animation Canvas for 3D curves
  */
 export default function Curve3DAnimationCanvas({ animation }: Props) {
-  const [displayAngle, setDisplayAngle] = React.useState(0);
-  const [isAutoLooping, setIsAutoLooping] = React.useState(true);
-  const [wasPlaying, setWasPlaying] = React.useState<boolean | null>(null);
+  /**
+   * Display angle of the curve in radians
+   */
+  const [displayAngle, setDisplayAngle] = useState(animation.angle);
+  const [isAutoLooping, setIsAutoLooping] = useState(true);
+  const [wasPlaying, setWasPlaying] = useState<boolean | null>(null);
 
   const frameDuration = 1000 / animation.fps;
   const animationDuration = Math.round(animation.duration * 1000);
@@ -57,6 +60,7 @@ export default function Curve3DAnimationCanvas({ animation }: Props) {
         }}
       >
         <PlayButton
+          title="PlayButton"
           isPlaying={isPlaying}
           disabled={Boolean(errored)}
           onClick={() => {

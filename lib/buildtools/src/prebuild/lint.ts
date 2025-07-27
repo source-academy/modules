@@ -2,7 +2,7 @@ import { promises as fs, type Dirent } from 'fs';
 import pathlib from 'path';
 import chalk from 'chalk';
 import { ESLint } from 'eslint';
-import { getGitRoot, getOutDir } from '../getGitRoot.js';
+import { getBundlesDir, getGitRoot, getOutDir, getTabsDir } from '../getGitRoot.js';
 import type { InputAsset, Severity } from '../types.js';
 import { findSeverity, flatMapAsync, isNodeError } from '../utils.js';
 
@@ -104,7 +104,11 @@ interface LintGlobalResults {
  * so that the bundles and tabs can be linted separately.
  */
 export async function lintGlobal(fix: boolean): Promise<LintGlobalResults> {
-  const gitRoot = await getGitRoot();
+  const [gitRoot, bundlesDir, tabsDir] = await Promise.all([
+    getGitRoot(),
+    getBundlesDir(),
+    getTabsDir()
+  ]);
 
   const linter = new ESLint({ fix, cwd: gitRoot });
 
@@ -113,11 +117,8 @@ export async function lintGlobal(fix: boolean): Promise<LintGlobalResults> {
    * doesn't quite work (they are still considered ignored) so we have to recurse
    * into every subfolder to get the full path of every file and check if it is
    * ignored
-   *
-   * @param filterSrc Filter out paths that contain `'src'`. Only necessary for the root directory.
-   * Subsequent recursive calls are allowed to recurse into src directories
    */
-  async function getFiles(dir: string, filterSrc: boolean): Promise<string[]> {
+  async function getFiles(dir: string, noRecurse: boolean): Promise<string[]> {
     let files: Dirent[];
     try {
       files = await fs.readdir(dir, { withFileTypes: true });
@@ -127,15 +128,19 @@ export async function lintGlobal(fix: boolean): Promise<LintGlobalResults> {
     }
 
     return flatMapAsync(files, async each => {
-      if (filterSrc && each.name === 'src') return [];
-
       const fullPath = pathlib.join(dir, each.name);
+
       if (each.isFile()) {
         const isIgnored = await linter.isPathIgnored(fullPath);
         return isIgnored ? [] : [fullPath];
       }
 
-      if (each.isDirectory()) {
+      if (each.isDirectory() && !noRecurse) {
+        // If we're in the tabs or bundles directory, then we're only allowed
+        // to lint files. No recursing into directories
+        if (fullPath === bundlesDir || fullPath === tabsDir) {
+          return getFiles(fullPath, true);
+        }
         return getFiles(fullPath, false);
       }
 
@@ -143,7 +148,7 @@ export async function lintGlobal(fix: boolean): Promise<LintGlobalResults> {
     });
   }
 
-  const { result: toLint, elapsed: filesElapsed } = await timePromise(() => getFiles(gitRoot, true));
+  const { result: toLint, elapsed: filesElapsed } = await timePromise(() => getFiles(gitRoot, false));
   const { result: lintResults, elapsed: lintElapsed } = await timePromise(() => flatMapAsync(toLint, each => linter.lintFiles(each)));
 
   let fixElapsed: number | undefined = undefined;

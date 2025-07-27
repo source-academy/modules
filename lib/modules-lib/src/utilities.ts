@@ -15,6 +15,10 @@ export function degreesToRadians(degrees: number): number {
   return (degrees / 360) * (2 * Math.PI);
 }
 
+export function radiansToDegrees(radians: number): number {
+  return radians / Math.PI * 180;
+}
+
 /**
  * Converts a color hex value string to its red, green and blue components, each normalized to
  * between 0 and 1. The leading `#` is optional.

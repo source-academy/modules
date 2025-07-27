@@ -18,6 +18,7 @@
   "type": "module",
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
+    "@vitejs/plugin-react": "^4.5.1",
     "acorn": "^8.8.1",
     "astring": "^1.8.6",
     "chalk": "^5.0.1",

@@ -15,17 +15,16 @@ export default defineConfig({
       provider: 'v8',
       exclude: [
         ...coverageConfigDefaults.exclude,
-        'build/**',
+        './build/**',
         '**/__mocks__/**',
         '**/__test_mocks__/**',
         '**/bin/**',
         '**/build.js',
-        '**.config.[cm]?[jt]s',
-        '**/coverage/**',
-        '**/dist/**',
-        '**/dist.c?js',
+        '**/*.config.?(c)[jt]s',
+        '**/dist.?(c)js',
+        './docs',
         '**/src/**/samples/**',
-        `${import.meta.dirname}/lib/buildtools/src/build/docs/drawdown.ts`
+        './lib/buildtools/src/build/docs/drawdown.ts'
       ]
     },
     projects: [

@@ -35,10 +35,10 @@ export default defineConfig(({ mode }) => {
       }, {
         // This alias configuration allows us to edit the modules library and the changes
         // be reflected in real time when in hot-reload mode
-        find: /^@sourceacademy\/modules-lib\/tabs/,
+        find: /^@sourceacademy\/modules-lib/,
         replacement: '.',
         async customResolver(source) {
-          const newSource = pathlib.resolve(import.meta.dirname, '../lib/modules-lib/src/tabs', source)
+          const newSource = pathlib.resolve(import.meta.dirname, '../lib/modules-lib/src', source)
           const extensions = ['.tsx', '.ts', '/index.ts']
 
           for (const each of extensions) {
@@ -67,7 +67,7 @@ export default defineConfig(({ mode }) => {
         "vite-plugin-node-polyfills/shims/global",
         "vite-plugin-node-polyfills/shims/process",
         '../build/tabs/*.js',
-        // '@sourceacademy/modules-lib/tabs'
+        'react/jsx-dev-runtime'
       ],
     },
   }

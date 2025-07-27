@@ -1,4 +1,6 @@
-import { mergeConfig, defineProject } from 'vitest/config';
+// @ts-check
+// Bundles Vitest config
+import { defineProject, mergeConfig } from 'vitest/config';
 import rootConfig from '../../vitest.config';
 
 export default mergeConfig(

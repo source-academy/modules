@@ -51,9 +51,9 @@ function linear_decay(decay_period: number): (t: number) => number {
   };
 }
 
-// // ---------------------------------------------
-// // Microphone Functionality
-// // ---------------------------------------------
+// ---------------------------------------------
+// Microphone Functionality
+// ---------------------------------------------
 
 // permission initially undefined
 // set to true by granting microphone permission

@@ -51,6 +51,9 @@ export class AnimatedCurve extends glAnimation implements ReplResult {
     };
   }
 
+  /**
+   * Viewport angle in radians
+   */
   public angle: number;
 
   public toReplString = () => '<AnimatedCurve>';

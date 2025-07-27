@@ -1,5 +1,4 @@
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
-import React from 'react';
 
 type Props = {
   children?: never;
@@ -7,10 +6,8 @@ type Props = {
   debuggerContext?: any;
 };
 
-class Repeat extends React.PureComponent<Props> {
-  public render() {
-    return <div>This is spawned from the repeat package</div>;
-  }
+function Repeat(_props: Props) {
+  return <div>This is spawned from the repeat package</div>;
 }
 
 export default defineTab({

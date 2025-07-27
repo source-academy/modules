@@ -1,4 +1,5 @@
 import pathlib from 'path';
+import react from '@vitejs/plugin-react';
 import type { TestProjectConfiguration } from 'vitest/config';
 import { startVitest, type VitestRunMode } from 'vitest/node';
 import { getGitRoot } from './getGitRoot.js';
@@ -26,6 +27,7 @@ async function runVitest(mode: VitestRunMode, filters: string[] | undefined, pro
     watch: options.watch,
     update: options.update,
     coverage: {
+      // include: filters?.map(each => `${each}/**/*.tsx`),
       enabled: options.coverage
     }
   });
@@ -44,12 +46,44 @@ async function runVitest(mode: VitestRunMode, filters: string[] | undefined, pro
  * Run Vitest on the given tab or bundle
  */
 export function runIndividualVitest(mode: VitestRunMode, asset: ResolvedBundle | ResolvedTab, options: RunVitestBoolOptions) {
-  return runVitest(mode, [asset.directory], [{
-    extends: rootConfigPath,
-    test: {
-      environment: 'jsdom',
-      name: `${asset.name} ${asset.type}`,
-      include: [`${asset.directory}/**/__tests__/*.{ts,tsx}`]
-    }
-  }], options);
+
+  if (asset.type === 'tab') {
+    return runVitest(mode, [asset.directory], [{
+      // @ts-expect-error Weird stuff happening with plugin again
+      plugins: [react()],
+      extends: rootConfigPath,
+      optimizeDeps: {
+        include: [
+          '@blueprintjs/core',
+          '@blueprintjs/icons',
+          'gl-matrix',
+          'js-slang',
+          'lodash'
+        ]
+      },
+      test: {
+        include: [], // Use the browser mode configuration instead
+        browser: {
+          enabled: true,
+          provider: 'playwright',
+          instances: [{
+            browser: 'chromium',
+            name: `${asset.name} ${asset.type}`,
+            headless: !options.watch,
+            include: [`${asset.directory}/**/__tests__/*.{ts,tsx}`]
+          }]
+        }
+      }
+    }], options);
+  } else {
+    return runVitest(mode, [asset.directory], [{
+      extends: rootConfigPath,
+      test: {
+        name: `${asset.type} ${asset.name}`,
+        environment: 'jsdom',
+        include: [`${asset.directory}/**/__tests__/*.{ts,tsx}`],
+      }
+    }], options);
+  }
+
 }

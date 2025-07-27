@@ -1,13 +1,24 @@
-import { mergeConfig, defineProject } from 'vitest/config';
+// @ts-check
+// Tabs vitest config
+import { defineProject, mergeConfig } from 'vitest/config';
 import rootConfig from '../../vitest.config';
 
 export default mergeConfig(
   rootConfig,
   defineProject({
     test: {
-      name: 'Tabs',
+      include: [],
       environment: 'jsdom',
-      include: [`${import.meta.dirname}/**/__tests__/*.{ts,tsx}`]
+      browser: {
+        enabled: true,
+        provider: 'playwright',
+        instances: [{
+          headless: true,
+          name: 'Tabs',
+          browser: 'chromium',
+          include: [`${import.meta.dirname}/**/__tests__/*.{ts,tsx}`]
+        }]
+      }
     }
   })
 );

@@ -31,6 +31,11 @@ export interface AnimationOptions {
    * Whether the animation should start playing automatically
    */
   autoStart?: boolean;
+
+  /**
+   * Value from which to begin the animation
+   */
+  startTimestamp?: number
 }
 
 export interface AnimationHookResult {
@@ -106,6 +111,7 @@ export function useAnimation({
   autoStart,
   callback,
   frameDuration,
+  startTimestamp
 }: AnimationOptions): AnimationHookResult {
   /*
    * Because we always pass the same instance of animCallback to requestAnimationFrame,
@@ -122,7 +128,7 @@ export function useAnimation({
    * that we can cancel it if need be
    */
   const requestIdRef = useRef<number | null>(null);
-  const elapsedRef = useRef(0);
+  const elapsedRef = useRef(startTimestamp ?? 0);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   /**
    * Keeps track of the time when the last frame was drawn

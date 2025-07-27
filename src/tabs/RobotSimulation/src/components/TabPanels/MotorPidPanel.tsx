@@ -13,7 +13,7 @@ export const MotorPidPanel: React.FC<{ ev3?: DefaultEv3 }> = ({ ev3 }) => {
   if (!ev3) {
     return (
       <TabWrapper>
-        EV3 not found in context. Did you call saveToContext('ev3', ev3);
+        EV3 not found in context. Did you call saveToContext(&apos;ev3&apos;, ev3);
       </TabWrapper>
     );
   }

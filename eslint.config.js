@@ -28,7 +28,7 @@ export default tseslint.config(
       '.yarn',
       'build/**',
       'docs/.vitepress/cache',
-      'devserver/vite.config.ts',
+      'devserver/vite.config.ts', // Don't lint this because there's no tsconfig properly configured for it
       'lib/buildtools/bin',
       'lib/buildtools/src/build/__test_mocks__',
       'lib/*/dist.*js',

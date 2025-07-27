@@ -4,7 +4,7 @@ import AnimationCanvas from '@sourceacademy/modules-lib/tabs/AnimationCanvas';
 import MultiItemDisplay from '@sourceacademy/modules-lib/tabs/MultiItemDisplay';
 import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebGLCanvas';
 import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
-import { glAnimation, type DebuggerContext, type ModuleTab } from '@sourceacademy/modules-lib/types';
+import { glAnimation, type ModuleTab } from '@sourceacademy/modules-lib/types';
 import CurveCanvas3D from './canvas_3d_curve';
 import Curve3DAnimationCanvas from './curve_3d_animation_canvas';
 
@@ -43,11 +43,11 @@ export const CurveTab: ModuleTab = ({ context }) => {
 };
 
 export default defineTab({
-  toSpawn(context: DebuggerContext) {
+  toSpawn(context) {
     const drawnCurves = context.context?.moduleContexts?.curve?.state?.drawnCurves;
     return drawnCurves.length > 0;
   },
-  body(context: DebuggerContext) {
+  body(context) {
     return <CurveTab context={context} />;
   },
   label: 'Curves Tab',
