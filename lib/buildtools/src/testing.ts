@@ -57,7 +57,10 @@ export function runIndividualVitest(mode: VitestRunMode, asset: ResolvedBundle |
           '@blueprintjs/icons',
           'gl-matrix',
           'js-slang',
+          'js-slang/dist/utils/stringify',
           'lodash',
+          'lodash/clamp',
+          'vitest-browser-react'
         ]
       },
       test: {
