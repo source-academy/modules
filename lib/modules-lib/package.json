@@ -6,6 +6,7 @@
   "devDependencies": {
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.5.1",
     "@vitest/browser": "^3.2.3",
     "eslint": "^9.31.0",
     "playwright": "^1.54.1",
@@ -15,8 +16,7 @@
     "typedoc-plugin-rename-defaults": "^0.7.3",
     "typescript": "^5.8.2",
     "vitest": "^3.2.3",
-    "vitest-browser-react": "^1.0.0",
-    "@vitejs/plugin-react": "^4.5.1"
+    "vitest-browser-react": "^1.0.0"
   },
   "exports": {
     "./tabs/index": null,
