@@ -46,7 +46,6 @@ async function runVitest(mode: VitestRunMode, filters: string[] | undefined, pro
  * Run Vitest on the given tab or bundle
  */
 export function runIndividualVitest(mode: VitestRunMode, asset: ResolvedBundle | ResolvedTab, options: RunVitestBoolOptions) {
-
   if (asset.type === 'tab') {
     return runVitest(mode, [asset.directory], [{
       // @ts-expect-error Weird stuff happening with plugin again
@@ -58,7 +57,7 @@ export function runIndividualVitest(mode: VitestRunMode, asset: ResolvedBundle |
           '@blueprintjs/icons',
           'gl-matrix',
           'js-slang',
-          'lodash'
+          'lodash',
         ]
       },
       test: {

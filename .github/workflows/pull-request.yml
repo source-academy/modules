@@ -39,7 +39,7 @@ jobs:
       bundles: ${{ steps.filter.outputs.bundles || steps.filter.outputs.workflows || steps.filter.outputs.devserver }}
       libraries: ${{ steps.filter.outputs.libraries || steps.filter.outputs.workflows }}
       docs: ${{ steps.filter.outputs.docs || steps.filter.outputs.workflows }}
-      playwright: $${{ steps.filter.outputs.devserver || steps.filter.outputs.libraries || steps.filter.outputs.tabs }}
+      playwright: ${{ steps.filter.outputs.devserver || steps.filter.outputs.libraries || steps.filter.outputs.tabs }}
 
   test:
     name: Verify all tests pass and build success
