@@ -5,7 +5,7 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import react from '@vitejs/plugin-react';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import { loadEnv, defineConfig, type UserConfig, type ResolverFunction } from 'vite'
+import { loadEnv, defineConfig, type UserConfig } from 'vite'
 import { mergeConfig } from 'vitest/config';
 import type { BrowserCommand } from 'vitest/node';
 import rootConfig from '../vitest.config';
@@ -85,8 +85,7 @@ export default defineConfig(({ mode }) => {
           headless: true,
           provider: 'playwright',
           instances: [{
-            browser: 'chromium',
-            screenshotFailures: false
+            browser: 'chromium'
           }],
           commands: {
             setLocalStorage

@@ -25,17 +25,20 @@ jobs:
             - 'devserver/**'
             libraries:
             - 'lib/**'
-            modules:
-            - src/{bundles,tabs}/**
+            tabs:
+            - src/tabs/**
+            bundles:
+            - src/bundles/**
             docs:
             - docs/**
     outputs:
       # if the workflow file was modified, then we rerun the entire job
       devserver: ${{ steps.filter.outputs.devserver || steps.filter.outputs.workflows }}
       # if the devserver needs to be tested bundles and tabs need to be rebuilt
-      modules: ${{ steps.filter.outputs.modules || steps.filter.outputs.workflows || steps.filter.outputs.devserver }}
+      modules: ${{ steps.filter.outputs.tabs || steps.filter.outputs.bundles || steps.filter.outputs.workflows || steps.filter.outputs.devserver }}
       libraries: ${{ steps.filter.outputs.libraries || steps.filter.outputs.workflows }}
       docs: ${{ steps.filter.outputs.docs || steps.filter.outputs.workflows }}
+      playwright: $${{ steps.filter.outputs.devserver || steps.filter.outputs.libraries || steps.filter.outputs.bundles }}
 
   test:
     name: Verify all tests pass and build success
@@ -61,6 +64,10 @@ jobs:
         - name: Install dependencies
           run: yarn install --immutable
 
+        - name: Install Playwright
+          if: needs.paths-filter.outputs.playwright == 'true'
+          run: yarn playwright install --with-deps
+
         - name: Run tsc for libraries
           if: needs.paths-filter.outputs.libraries == 'true'
           run: yarn workspaces foreach -ptW --from "./lib/*" run tsc
@@ -75,7 +82,7 @@ jobs:
 
         - name: Test bundles and tabs
           if: needs.paths-filter.outputs.modules == 'true'
-          run: playwright install --with-deps && yarn test:modules
+          run: yarn test:modules
 
         - name: Build manifest
           if: needs.paths-filter.outputs.devserver == 'true'
