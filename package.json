@@ -50,6 +50,7 @@
   },
   "devDependencies": {
     "@eslint/markdown": "^6.6.0",
+    "@sourceacademy/lib-compiler": "workspace:^",
     "@sourceacademy/lint-plugin": "workspace:^",
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-devserver": "workspace:^",
