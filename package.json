@@ -41,7 +41,7 @@
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
     "template": "buildtools template",
     "test:all": "buildtools testall",
-    "test:devserver": "vitest --project \"Dev Server\"",
+    "test:devserver": "yarn workspaces foreach -A --include \"@sourceacademy/modules-devserver\" run test",
     "test:libs": "yarn workspaces foreach -ptW --from \"./lib/*\" run test",
     "test:modules": "yarn workspaces foreach -ptW --from \"./src/{bundles,tabs}/*\" run test",
     "tsc:all": "yarn workspaces foreach -pt --all --exclude \"@sourceacademy/modules\" run tsc",
