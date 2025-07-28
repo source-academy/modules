@@ -26,7 +26,6 @@
   "devDependencies": {
     "@sourceacademy/lib-compiler": "workspace:^",
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@typescript-eslint/rule-tester": "^8.33.1",
     "typescript": "^5.8.2"
   },
   "scripts": {
