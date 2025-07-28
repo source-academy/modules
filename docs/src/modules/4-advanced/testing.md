@@ -29,7 +29,7 @@ describe('This is a describe block', () => {
 ```
 
 > [!NOTE]
-> Test files should included by each bundle's `tsconfig.json`. The build tools will automatically filter out these files when emitting
+> Test files should included by each bundle's or tab's `tsconfig.json`. The build tools will automatically filter out these files when emitting
 > Javascript and Typescript declarations but will still conduct type checking for them.
 
 Tests for tabs can also use the `.tsx` extension along with JSX syntax:
@@ -68,53 +68,199 @@ Any tests that you have written must be pass in order for you to push to the mai
 > unless absolutely necessary.
 
 ## Custom Test Configuration
-The default test configuration parameters are as follows:
-```js
-import { defineProject, mergeConfig } from 'vitest/config';
-import rootConfig from '[repo root]/vitest.config.js'; // the config at the repo root
 
-export default mergeConfig(
-  rootConfig,
-  defineProject({
-    test: {
-      name: 'Your Bundle or Your Tab',
-      environment: 'jsdom', // Important, since all our bundles and tabs need to be able to run in the browser
-      silent: 'passed-only',
-      watch: false
-    }
-  })
-);
-```
+You don't need to create a custom `vitest.config.js` for your bundle or tab. If the configuration file is absent, the default testing configuration
+options will be applied.
 
 ::: details `vitest.config.js` vs `vitest.config.ts`
 `vitest` actually supports having its config files being written in Typescript. The repository's `vitest` config files however
 are sometimes not attached to any Typescript project. This confuses other tooling in the repository (like ESLint), so the files are
 written in plain Javascript with a <nobr><code>// @ts-check</code></nobr> directive.
-
-However, if your configuration doesn't need to import the root configuration, then you can write your config file in Typescript.
 :::
 
-Should you need to use a unique configuration, follow the steps below:
-1. Create your own `vitest.config` at the root of your bundle/tab.
-1. Add `vitest` as a dev dependency
-1. Change the `test` script to `vitest --config ./vitest.config.js`
+Should you need to use a unique configuration, simply create your own `vitest.config.js` at the root of your bundle/tab.
+The configuration options in your `vitest.config.js` will be used **in addition** to the default options, so it is not necessary
+to redefine every single option in your configuration file.
+
+You should use the `defineProject` helper instead of the `defineConfig` helper:
+```js [vitest.config.js]
+// @ts-check
+import { defineProject } from 'vitest/config';
+
+export default defineProject({
+  test: {
+    root: import.meta.dirname, // Remember to configure this correctly
+    name: 'My Bundle'
+  }
+})
+```
+
+There is no need to use `mergeConfig` to merge your configuration with the root configurations. When the build tools run `vitest`,
+the merging is performed automatically.
+
+## Browser Mode
+Tabs have the ability to leverage `playwright` and `vitest`'s browser mode to ensure that the interactive features of the tab actually
+behave like they should.
+
+The default testing configuration for tabs has browser mode disabled. This is so that if your tab doesn't need the features that Playwright provides,
+`vitest` won't need to spin up the Playwright instance.
+
+### Setting up Browser Mode
+Should you wish to enable browser mode, create a custom `vitest` configuration file for your tab with the `browswer.enabled` option set to `true`:
+
+```js {9}
+// @ts-check
+import { defineProject } from 'vitest/config';
+
+export default defineProject({
+  test: {
+    root: import.meta.dirname,
+    name: 'My Tab',
+    browser: {
+      enabled: true
+    }
+  }
+})
+```
+
+Now, the tests for your tab will be run in browser mode.
+
+> [!INFO] Default Browser Instance
+> By default, one `chromium` browser instance will be provided. This should be sufficient, but you can always
+> add more instances if necessary.
+
+While your tests are running either locally or as part of the Github Actions CI pipeline, `vitest` may warn you that you need to include
+certain dependencies under `optimizeDeps.include`. Your tests may fail intermittently as well. To remedy this, simply add those
+dependencies to your configuration:
+
+```js {6}
+// @ts-check
+import { defineProject } from 'vitest/config';
+
+export default defineProject({
+  optimizeDeps: {
+    include: ['lodash']
+  },
+  test: {
+    root: import.meta.dirname,
+    name: 'My Tab',
+    browser: {
+      enabled: true
+    }
+  }
+})
+```
+Note that `optimizeDeps.include` is a Vite option and so doesn't belong under the `test` configuration object.
+
+Alongside `vitest`, you will need to ensure that `@vitest/browser` and `vitest-browser-react` are installed as development
+dependencies for your tab.
+
+### Writing Interactive Tests
+Writing interactive tests is not very different from writing regular tests. Most of the time, the usual test and assertion functions will suffice.
+
+> [!INFO]
+> While writing your tests, you should use watch mode. This will allow `vitest` to open a browser and actually display what your tab looks like whilst
+> being rendered during the test.
+
+Use the `render` function provided `vitest-browser-react` to render your tab/component to a screen. The returned component can then be interacted with:
+```tsx
+import { render } from 'vitest-browser-react';
+
+test('Testing my component', () => {
+  const screen = render(<MyComponent />);
+  const button = screen.getByRole('button');
+
+  await button.click();
+
+  expect().somethingToHaveHappened();
+});
+```
+`vitest` also provide [a different set](https://vitest.dev/guide/browser/assertion-api.html) of matchers that you can use specifically with browser elements.
 
 > [!TIP]
-> If your bundle requires `js-slang/context`, `vitest` will not be able to run your tests unless you add the following block
-> to your configuration:
-> ```js
-> import { defineConfig } from 'vitest/config';
-> 
-> defineConfig({
->   resolve: {
->     alias: [{
->       find: /^js-slang\/context/,
->       // You need to find the path to the mocked context module
->       replacement: `${repoRoot}/src/__mocks__/context.ts`
->     }]
->   },
->   test: {
->     // vitest configuration options
->   }
-> });
+> `vitest-browser-react` also provides a `cleanup` function that can be used after each test. You don't _technically_ need to use it, but
+> you may find that if you have multiple tests in the same file that behaviour might be inconsistent.
+>
+> You can use it with `afterEach` from `vitest`:
+> ```ts
+> import { afterEach } from 'vitest';
+> import { cleanup } from 'vitest-browser-react';
+>
+> afterEach(() => { cleanup(); });
 > ```
+
+### `expect.poll` and `expect.element`
+Sometimes, visual elements take a while to finish or an element might take a while to load. If you just directly used an assertion, the assertion
+might fail because the element hasn't displayed yet:
+
+```tsx
+import { render } from 'vitest-browser-react';
+
+test('An animation', async () => {
+  const component = render(<Animation />);
+  const finishScreen = component.getByTitle('finish');
+  // Might fail because the assertion will execute before the animation finishes
+  expect(finishScreen).toBeVisible(); 
+});
+```
+
+Instead, `vitest` provides a special set of matchers that can be used to "retry" the assertion until it passes or when it times out:
+```tsx
+import { render } from 'vitest-browser-react';
+
+test('An animation', async () => {
+  const component = render(<Animation />);
+  const finishScreen = component.getByTitle('finish');
+
+  await expect.poll(() => finishScreen).toBeVisible(); 
+  // or use the shorthand
+  await expect.element(finishScreen).toBeVisible();
+});
+```
+
+### Animations with `requestAnimationFrame`
+If you're using `requestAnimationFrame` to trigger animations, you can also test the behaviour of these animated components.
+
+Firstly, add the following setup and teardown function calls to your code:
+```ts
+import { beforeEach, afterEach, vi } from 'vitest';
+
+beforeEach(() => {
+  vi.useFakeTimers();
+})
+
+afterEach(() => {
+  vi.runOnlyPendingTimers();
+  vi.useRealTimers();
+})
+```
+
+Then you can use calls `vi.advanceTimersToNextFrame()` to simulate `requestAnimationFrame` being called:
+
+```tsx
+import { beforeEach, afterEach, vi } from 'vitest';
+import { cleanup, render } from 'vitest-browser-react';
+
+beforeEach(() => {
+  vi.useFakeTimers();
+})
+
+afterEach(() => {
+  vi.runOnlyPendingTimers();
+  vi.useRealTimers();
+  cleanup();
+})
+
+test('An animation', async () => {
+  const component = render(<Animation />);
+  const finishScreen = component.getByTitle('finish');
+
+  for (let i = 0; i < 160; i++) {
+    // Each call advances "time" by 16ms
+    vi.advanceTimersToNextFrame();
+  }
+
+  await expect.element(finishScreen).toBeVisible();
+});
+
+```

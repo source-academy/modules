@@ -1,31 +1,30 @@
 # Testing Using `Vitest`
 
 `vitest` comes with its own [Node API](https://vitest.dev/advanced/api/) that can be used to run tests from Node. To reduce the number of configuration files required,
-the buildtools provide their own default `vitest` configuration for bundles and tabs.
+the buildtools provide their own default `vitest` configuration for bundles and tabs. `vitest` supports a similar concept to workspaces known as [projects](https://vitest.dev/guide/projects.html).
 
-`vitest` supports a similar concept to workspaces known as [projects](https://vitest.dev/guide/projects.html). However, each `vitest` configuration file assumes that it isn't a child project under another root configuration.
-So, when we use `mergeConfig` to inherit test configuration options from the root config, `vitest` tries to resolve `projects` field relative to that file. For example, if we have the following `vitest.config.ts`:
+::: details `vitest`'s own configuration utilities
+We can combine configurations using the `mergeConfig` helper from `vitest/config`.
+This helper doesn't do anything interesting other than directly combine the options between the two parameters.
 
-```ts
-// src/vitest.config.ts
+This means that if we attached the projects configuration to the root config file, the project configuration will end up
+getting copied over to every other child configuration.
+
+For example, consider the root config file below with one project configured.
+
+```js
 import { defineConfig } from 'vitest/config';
-
+// Root Config
 export default defineConfig({
   test: {
-    name: 'Root Test Project',
-    projects: [
-      'src/bundles/*/vitest.config.ts'
-    ]
+    projects: ['./sub-project/vitest.config.js']
   }
 })
 ```
-
-And then we have a child config that inherits from the root config:
-```ts
-// src/bundles/curve/vitest.config.ts
-
+For the child configuration:
+```js
 import { defineProject, mergeConfig } from 'vitest/config';
-import rootConfig from '../../vitest.config.ts';
+import rootConfig from '../vitest.config.js';
 
 export default mergeConfig(
   rootConfig,
@@ -37,52 +36,106 @@ export default mergeConfig(
 )
 ```
 
-If we run `vitest` from the root of the repository, it will accurately detect `"Child Project"` is a valid project name. However, the buildtools need to be able to be executed from within the bundle's directory too.
+The actual configuration that's actually resolved by `vitest` actually looks like this:
+```js
+const config = {
+  test: {
+    name: 'Child Project',
+    projects: ['./sub-project/vitest.config.js']
+  }
+}
+```
+So if you ran `yarn vitest --config ./sub-project/vitest.config.js`, `vitest` would try to locate another `vitest` project
+located at `./sub-project/sub-project/vitest.config.js`. Since the child config is intended to be just that, this is simply
+incorrect functionality. If that particular configuration file doesn't exist, `vitest` wouldn't even be able to start.
 
-If we run the following command within the bundles directory, we will find that `vitest` cannot find a project with the name "Child Project":
+In the spirit of more closely matching the projects configuration system that `jest` uses, a lot of code had to be written
+to get around the way `vitest` behaves.
+:::
 
-```sh
-yarn vitest --project "Child Project"
+The buildtools maintains a set of default configurations. If no `vitest` configuration is present, then those defaults are used automatically.
+Otherwise, that configuration is loaded and its options are combined with the default configurations using `mergeConfig`.
+
+## Config Resolution
+```mermaid
+graph TD
+  A[Does this directory contain a Vitest config?]
+  B[Load the config and combine it with defaults]
+  C[Is this directory a tab or a bundle?]
+  E[Load defaults]
+  D[Return Error]
+  I[Does this bundle or tab have tests?]
+  F[Is browser mode enabled]
+  G[Process Browser Mode Options]
+  H[Run Vitest]
+  J[Skip directory]
+
+  A -- Yes --> B
+  A -- No --> C
+  C -- Yes --> I
+  I -- No --> J
+  I -- Yes --> E
+  C -- No --> D
+
+  B --> F
+  E --> F
+
+  F -- Yes --> G
+  F -- No --> H
+  G --> H
 ```
 
-This can be solved by configuring the root `vitest.config.ts`'s root parameter:
+### `testall` Command
+The `testall` command functions slightly differently. The command first checks the root `vitest.config.js` to identify which directories it should check as a `vitest` project.
+For each of those directories, no error will be thrown if the `vitest` config file is missing, unless that directory also contains test files.
 
-```ts {6}
-// src/vitest.config.ts
-import { defineConfig } from 'vitest/config';
+Bundles and tabs are allowed to be missing a `vitest` configuration file and still have tests, since the buildtools will automatically provide a default `vitest` configuration.
 
-export default defineConfig({
+## Actually Running `vitest` from Node
+The main way to run `vitest` from Node is via the [`startVitest`](https://vitest.dev/advanced/api/#startvitest) function. The documentation
+for this function is unfortunately a bit lacking, but from what I have figured out, here's how it works:
+
+| |Parameter | Type | Explanation |
+| - | --------- | --------- | ----------- |
+| 1 | Mode  | <code>'bench' \| 'test'</code> | Vitest Run Mode. Used to distinguish between running tests and benchmarks |
+| 2 | Filters | `string[]` | Glob paths to filter test files by |
+| 3 | CLI Options | `VitestUserConfig` | Your actual test options. |
+| 4 | Vite Options | `ViteUserConfig` | Options for Vite |
+| 5 | Vitest Options | `VitestOptions` | A configuration object for `stdout`, `stderr` and the like. | 
+
+That third parameter should be passed a test configuration, rather than the entire Vite config:
+```js
+const fullViteConfig = {
   test: {
-    root: import.meta.dirname,
-    name: 'Root Test Project',
-    projects: [
-      'src/bundles/*/vitest.config.ts'
-    ]
+    name: 'Tests'
   }
+}
+
+// Pass this to startVitest instead
+const vitestConfig = {
+  name: 'Tests'
+}
+```
+
+You should also pass `config: false`. Otherwise, `vitest` will still try to load a `vitest` configuration file
+using its own resolution rules:
+```js
+startVitest('test', [], {
+  config: false,
+  ...testOptions
 })
 ```
-This causes `vitest` to resolve the configuration correctly every time.
+When running tests, you need to actually provide each configuration object as a project:
 
-## Vitest for specific Bundle/Tab
+```js
+startVitest('test', [], {
+  config: false,
+  projects: [yourTestConfig]
+})
+```
 
-However, even with the configuration above, we face an issue. `vitest` requires that each project specification matches a specific file. The pattern `src/bundles/*/vitest.config.ts` matches all `vitest.config.ts` files under the
-top-level directory of each bundle. This is equivalent to `src/bundles/*`, since by default, `vitest` will try to find a file named `vitest.config`. This requires that the specific configuration file exists in that folder for it to be considered a project.
+## Browser Mode
+If browser mode is enabled, the buildtools will automatically reassign the names of projects and the `include` field will be
+moved from the `test` object onto the `browser.instance` object.
 
-This means that for a bundle/tab's tests to be detected, that bundle or tab would need to maintain its own `vitest` config. Alternatively, the specific configuration for that bundle/tab could be added directly to the root config. Neither of these solutions are particularly ideal.
-The former would run the risk of misconfiguration, and the latter would cause the root configuration to become cluttered and defeat the purpose of splitting the repository into workspaces.
-
-To remove the need for each bundle/tab to contain its own Vitest config, the buildtools provide the configuration manually:
-
-<<< ../../../lib/buildtools/src/testing.ts
-
-Within the `runIndividualVitest` function, the bundle/tab you are trying to run tests for gets configured as its own test project that inherits options from the root configuration file.
-
-With this, running `yarn test` within a bundle or tab's directory structure will only run the tests for that tab or bundle without requiring the `--project` or directory filters.
-
-## Vitest for all bundles or all tabs or both
-
-The approach above works when you know that the current tab or bundle has tests that need to be run. In order to run tests for **all** bundles or **all** tabs at once, the buildtools would have to determine
-which bundles and tabs have tests and which don't (as Vitest considers it an error if you give it a test project that it can't find tests for).
-
-Instead, all bundles and all tabs are configured as a test project each. Hence, under `src/bundles` and `src/tabs` you can find a `vitest.config.js` that is specific to bundles and tabs respectively. This shifts
-the responsibility for determining which bundles and tabs contain tests onto `vitest` itself and so it will not fail (unless for some reason every single bundle and tab test was removed).
+Headless mode is always enabled, so long as `vitest` isn't being run in watch mode.
