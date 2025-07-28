@@ -1,14 +1,14 @@
 import { Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
-interface Props {
+export interface AnimationErrorProps {
   error: Error
 }
 
 /**
  * React component for displaying errors related to animations
  */
-export default function AnimationError({ error }: Props) {
+export default function AnimationError({ error }: AnimationErrorProps) {
   return <div style={{
     display: 'flex',
     flexDirection: 'column',

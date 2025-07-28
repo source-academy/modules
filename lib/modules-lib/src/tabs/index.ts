@@ -9,7 +9,7 @@
 // (not that you should be able to)
 
 export { default as AnimationCanvas, type AnimCanvasProps } from './AnimationCanvas';
-export { default as AnimationError } from './AnimationError';
+export { default as AnimationError, type AnimationErrorProps } from './AnimationError';
 export { default as AutoLoopSwitch, type AutoLoopSwitchProps } from './AutoLoopSwitch';
 export { default as ButtonComponent, type ButtonComponentProps } from './ButtonComponent';
 export * from './css_constants';

@@ -111,6 +111,7 @@ export default tseslint.config(
     plugins: {
       import: importPlugin,
       jsdoc: jsdocPlugin,
+      '@sourceacademy': saLintPlugin
     },
     rules: {
       'import/first': 'warn',
@@ -135,6 +136,8 @@ export default tseslint.config(
 
       'jsdoc/check-alignment': 'warn',
       'jsdoc/require-asterisk-prefix': 'warn',
+
+      '@sourceacademy/region-comment': 'error',
 
       '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
       '@stylistic/function-call-spacing': ['warn', 'never'],
@@ -163,7 +166,6 @@ export default tseslint.config(
     },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
-      '@sourceacademy': saLintPlugin
     },
     rules: {
       'no-unused-vars': 'off', // Use the typescript eslint rule instead

@@ -1,5 +1,6 @@
 import type { ESLint } from 'eslint';
 import * as configs from './configs';
+import regionComment from './rules/regionComment';
 import tabType from './rules/tabType';
 import collateTypeImports from './rules/typeimports';
 
@@ -8,7 +9,8 @@ const plugin: ESLint.Plugin = {
   rules: {
     // @ts-expect-error typescript-eslint rules are typed differently
     'collate-type-imports': collateTypeImports,
-    'tab-type': tabType
+    'tab-type': tabType,
+    'region-comment': regionComment
   },
   configs: {
     'js/recommended': configs.jsConfig,
