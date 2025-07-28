@@ -23,6 +23,7 @@ export async function runVitest(mode: VitestRunMode, filters: string[] | undefin
         },
       }
     );
+
     const vitest = await startVitest(mode, filters, finalConfig);
 
     if (vitest.shouldKeepServer()) {

@@ -2,13 +2,10 @@ import type { ESLint } from 'eslint';
 import * as configs from './configs';
 import regionComment from './rules/regionComment';
 import tabType from './rules/tabType';
-import collateTypeImports from './rules/typeimports';
 
 const plugin: ESLint.Plugin = {
   name: 'Source Academy Lint Plugin',
   rules: {
-    // @ts-expect-error typescript-eslint rules are typed differently
-    'collate-type-imports': collateTypeImports,
     'tab-type': tabType,
     'region-comment': regionComment
   },

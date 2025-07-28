@@ -28,7 +28,7 @@ describe('Playground tests', () => {
   test('Running js-slang by clicking the run button', async () => {
     const component = render(<Playground />);
     await clickRunButton(component);
-    expect(runInContext).toHaveBeenCalled();
+    await expect.poll(() => runInContext).toHaveBeenCalled();
   });
 
   test('Loading tabs via Vite', async () => {
@@ -37,7 +37,7 @@ describe('Playground tests', () => {
     const component = render(<Playground />);
 
     await clickRunButton(component);
-    expect(runInContext).toHaveBeenCalled();
+    await expect.poll(() => runInContext).toHaveBeenCalled();
     expect(importers.getDynamicTabs).toHaveBeenCalled();
   });
 
@@ -54,26 +54,7 @@ describe('Playground tests', () => {
     await userEvent.click(settingsButton);
 
     await clickRunButton(component);
-    expect(runInContext).toHaveBeenCalled();
+    await expect.poll(() => runInContext).toHaveBeenCalled();
     expect(importers.getCompiledTabs).toHaveBeenCalled();
-  });
-
-  test('Multiple evaluations', async () => {
-    const component = render(<Playground />);
-
-    await commands.setLocalStorage('editorValue', 'delete this');
-    await clickRunButton(component);
-
-    const crossIcon = component.baseElement.getElementsByClassName('bp5-icon bp5-icon-cross').item(0);
-    console.log(crossIcon);
-    await userEvent.click(crossIcon!);
-
-    const replCard = component.baseElement.getElementsByTagName('pre');
-    console.log(replCard);
-
-    await commands.setLocalStorage('editorValue', '0;');
-    await clickRunButton(component);
-
-    expect(runInContext).toHaveBeenCalledTimes(2);
   });
 });

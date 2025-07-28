@@ -1,42 +1,16 @@
-import pathlib from 'path';
 import react from '@vitejs/plugin-react';
-import { coverageConfigDefaults, defineConfig, defineProject, mergeConfig } from 'vitest/config';
-import { getGitRoot } from '../getGitRoot.js';
+import { defineProject, mergeConfig, type ViteUserConfig } from 'vitest/config';
+// @ts-expect-error I'm too lazy to make the root config work with typescript
+import rootConfig from '../../../../vitest.config.js';
 
-const gitRoot = await getGitRoot();
+rootConfig.test.projects = undefined;
+rootConfig.test.environment = 'jsdom';
 
 /**
  * A shared Vitest configuration object that can be combined with {@link mergeConfig}
  * to create custom Vitest configurations for each sub project
  */
-export const sharedVitestConfiguration = defineConfig({
-  resolve: {
-    alias: [{
-      find: /^js-slang\/context/,
-      replacement: pathlib.join(gitRoot, 'src/__mocks__/context.ts')
-    }]
-  },
-  test: {
-    clearMocks: true,
-    coverage: {
-      provider: 'v8',
-      exclude: [
-        ...coverageConfigDefaults.exclude,
-        './build/**',
-        '**/__mocks__/**',
-        '**/__test_mocks__/**',
-        '**/bin/**',
-        '**/build.js',
-        '**/*.config.?(c)[jt]s',
-        '**/dist.?(c)js',
-        './docs',
-        '**/src/**/samples/**',
-        './lib/buildtools/src/build/docs/drawdown.ts'
-      ]
-    },
-    silent: 'passed-only',
-  }
-});
+export const sharedVitestConfiguration: ViteUserConfig = rootConfig;
 
 /**
  * Vitest configuration specific to tabs

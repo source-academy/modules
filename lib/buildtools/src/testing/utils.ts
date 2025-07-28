@@ -125,7 +125,6 @@ async function getBundleOrTabTestConfiguration(asset: ResolvedTab | ResolvedBund
     }
 
     setBrowserOptions(indivConfig, asset, watch);
-
     return indivConfig;
   }
 
@@ -135,14 +134,11 @@ async function getBundleOrTabTestConfiguration(asset: ResolvedTab | ResolvedBund
     indivConfig = cloneDeep(sharedVitestConfiguration);
   }
 
-  if (!indivConfig.test) {
-    throw new Error(`Vitest config for ${asset.type} does not contain a 'test' section!`);
-  }
+  indivConfig!.test!.name = `${capitalize(asset.name)} ${capitalize(asset.type)}`;
+  indivConfig!.test!.root = asset.directory;
+  indivConfig!.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
 
-  indivConfig.test.name = `${capitalize(asset.name)} ${capitalize(asset.type)}`;
-  indivConfig.test.root = asset.directory;
-
-  setBrowserOptions(indivConfig, asset, watch);
+  setBrowserOptions(indivConfig!, asset, watch);
   return indivConfig;
 }
 
