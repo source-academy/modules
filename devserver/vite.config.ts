@@ -6,9 +6,8 @@ import pathlib from 'path';
 import react from '@vitejs/plugin-react';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { loadEnv, defineConfig, type UserConfig } from 'vite'
-import { mergeConfig } from 'vitest/config';
+import { defineProject } from 'vitest/config';
 import type { BrowserCommand } from 'vitest/node';
-import rootConfig from '../vitest.config';
 
 const setLocalStorage: BrowserCommand<[key: string, value: any]> = async (ctx, key, value) => {
   if (ctx.provider.name === 'playwright') {
@@ -72,26 +71,26 @@ export default defineConfig(({ mode }) => {
     },
   }
 
-  return mergeConfig(
-    rootConfig, {
-      ...viteConfig,
-      test: {
-        name: 'Dev Server',
-        include: [
-          `${import.meta.dirname}/**/__tests__/**/*.ts*`
-        ],
-        browser: {
-          enabled: true,
-          headless: true,
-          provider: 'playwright',
-          instances: [{
-            browser: 'chromium'
-          }],
-          commands: {
-            setLocalStorage
-          }
+  const testConfig = defineProject({
+    test: {
+      root: import.meta.dirname,
+      name: 'Dev Server',
+      include: ['**/__tests__/**/*.{ts,tsx}'],
+      browser: {
+        enabled: true,
+        provider: 'playwright',
+        instances: [{
+          browser: 'chromium'
+        }],
+        commands: {
+          setLocalStorage
         }
       }
     }
-  );
+  })
+
+  return {
+    ...viteConfig,
+    ...testConfig,
+  }
 })

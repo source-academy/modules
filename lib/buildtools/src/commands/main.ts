@@ -3,7 +3,7 @@ import { getBuildCommand, getBuildHtmlCommand, getManifestCommand } from './buil
 import { getListCommand } from './list.js';
 import { getLintCommand, getLintGlobalCommand, getPrebuildAllCommand, getTscCommand } from './prebuild.js';
 import getTemplateCommand from './template.js';
-import { getTestCommand } from './testing.js';
+import { getTestAllCommand, getTestCommand } from './testing.js';
 
 const commands: (() => Command<any>)[] = [
   getBuildCommand,
@@ -15,6 +15,7 @@ const commands: (() => Command<any>)[] = [
   getPrebuildAllCommand,
   getTemplateCommand,
   getTestCommand,
+  getTestAllCommand,
   getTscCommand
 ];
 

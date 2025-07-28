@@ -40,7 +40,7 @@
     "run:bundles": "yarn workspaces foreach -ptW --from \"./src/bundles/*\" run",
     "serve": "http-server --cors=* -c-1 -p 8022 ./build",
     "template": "buildtools template",
-    "test:all": "vitest",
+    "test:all": "buildtools testall",
     "test:devserver": "vitest --project \"Dev Server\"",
     "test:libs": "yarn workspaces foreach -ptW --from \"./lib/*\" run test",
     "test:modules": "yarn workspaces foreach -ptW --from \"./src/{bundles,tabs}/*\" run test",
