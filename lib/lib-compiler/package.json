@@ -16,11 +16,10 @@
   "exports": {
     ".": {
       "types": "./index.ts",
-      "default": "./dist/index.js"
+      "default": "./dist.js"
     }
   },
   "scripts": {
-    "build": "yarn tsc",
-    "prepare": "yarn build"
+    "build": "esbuild --format=esm --platform=node --packages=external --outfile=./dist.js ./index.ts"
   }
 }

@@ -3393,6 +3393,7 @@ __metadata:
     typedoc: "npm:^0.28.4"
     typescript: "npm:^5.8.2"
     uglify-js: "npm:^3.19.3"
+    vite: "npm:^6.3.5"
     vitest: "npm:^3.2.3"
   bin:
     buildtools: ./bin/index.js

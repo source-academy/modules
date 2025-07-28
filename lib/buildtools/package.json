@@ -30,6 +30,7 @@
     "lodash": "^4.17.21",
     "typedoc": "^0.28.4",
     "uglify-js": "^3.19.3",
+    "vite": "^6.3.5",
     "vitest": "^3.2.3"
   },
   "scripts": {

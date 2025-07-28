@@ -1,6 +1,7 @@
 {
   "name": "@sourceacademy/markdown-plugin-directory-tree",
   "description": "A Markdown-It plugin used to convert directory structures into a neatly formatted text diagram that can be displayed in code blocks",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "devDependencies": {
