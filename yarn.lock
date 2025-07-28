@@ -3337,10 +3337,10 @@ __metadata:
   resolution: "@sourceacademy/lint-plugin@workspace:lib/lintplugin"
   dependencies:
     "@sourceacademy/lib-compiler": "workspace:^"
+    "@sourceacademy/modules-buildtools": "workspace:^"
     "@typescript-eslint/rule-tester": "npm:^8.33.1"
     eslint: "npm:^9.31.0"
     typescript: "npm:^5.8.2"
-    vitest: "npm:^3.2.3"
   peerDependencies:
     "@stylistic/eslint-plugin": ^4.4.1
     "@typescript-eslint/utils": ^8.33.1
@@ -3359,11 +3359,11 @@ __metadata:
   resolution: "@sourceacademy/markdown-plugin-directory-tree@workspace:lib/markdown-tree"
   dependencies:
     "@sourceacademy/lib-compiler": "workspace:^"
+    "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/lodash": "npm:^4.14.198"
     "@types/markdown-it": "npm:^14.1.2"
     lodash: "npm:^4.17.21"
     typescript: "npm:^5.8.2"
-    vitest: "npm:^3.2.3"
     yaml: "npm:^2.8.0"
   peerDependencies:
     markdown-it: "*"
@@ -3407,6 +3407,7 @@ __metadata:
     "@blueprintjs/core": "npm:^5.10.2"
     "@blueprintjs/icons": "npm:^5.9.0"
     "@commander-js/extra-typings": "npm:^13.0.0"
+    "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
@@ -3453,6 +3454,7 @@ __metadata:
   dependencies:
     "@blueprintjs/core": "npm:^5.10.2"
     "@blueprintjs/icons": "npm:^5.9.0"
+    "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     "@vitejs/plugin-react": "npm:^4.5.1"

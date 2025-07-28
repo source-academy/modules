@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@commander-js/extra-typings": "^13.0.0",
+    "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "@vitest/browser": "^3.2.3",
@@ -40,7 +41,7 @@
     "dev": "vite",
     "lint": "eslint src",
     "postinstall": "playwright install --with-deps",
-    "test": "vitest --config ./vite.config.ts --project \"Dev Server\"",
+    "test": "buildtools test .",
     "tsc": "tsc --project ./tsconfig.json"
   }
 }

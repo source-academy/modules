@@ -25,15 +25,15 @@
   },
   "devDependencies": {
     "@sourceacademy/lib-compiler": "workspace:^",
+    "@sourceacademy/modules-buildtools": "workspace:^",
     "@typescript-eslint/rule-tester": "^8.33.1",
-    "typescript": "^5.8.2",
-    "vitest": "^3.2.3"
+    "typescript": "^5.8.2"
   },
   "scripts": {
     "build": "tsc --project ./tsconfig.prod.json && node ./build.js",
     "lint": "eslint src",
     "prepare": "yarn build",
     "tsc": "tsc --project ./tsconfig.json",
-    "test": "vitest --project \"Lint Plugin\""
+    "test": "buildtools test ."
   }
 }

@@ -6,10 +6,10 @@
   "type": "module",
   "devDependencies": {
     "@sourceacademy/lib-compiler": "workspace:^",
+    "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/lodash": "^4.14.198",
     "@types/markdown-it": "^14.1.2",
-    "typescript": "^5.8.2",
-    "vitest": "^3.2.3"
+    "typescript": "^5.8.2"
   },
   "exports": {
     ".": {
@@ -27,6 +27,6 @@
   "scripts": {
     "build": "node ./build.js",
     "prepare": "yarn build",
-    "test": "vitest --project \"Markdown Tree Plugin\""
+    "test": "buildtools test ."
   }
 }
