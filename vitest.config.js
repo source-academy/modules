@@ -20,6 +20,7 @@ export default defineConfig({
     clearMocks: true,
     coverage: {
       provider: 'v8',
+      reporter: 'html',
       exclude: [
         ...coverageConfigDefaults.exclude,
         './build/**',
@@ -28,6 +29,7 @@ export default defineConfig({
         '**/bin/**',
         '**/build.js',
         '**/*.config.?(c)[jt]s',
+        '**/dist/**',
         '**/dist.?(c)js',
         './docs',
         '**/src/**/samples/**',

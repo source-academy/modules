@@ -20,30 +20,39 @@ export const getTestCommand = () => new Command('test')
   .addOption(watchOption)
   .addOption(updateOption)
   .addOption(coverageOption)
-  .argument('[directory]', 'Directory to search for tests. If no directory is specified, the current working directory is used')
-  .action(async (directory, { mode, ...options }) => {
-    const fullyResolved = resolve(directory ?? process.cwd());
-    const configResult = await getTestConfiguration(fullyResolved, !!options.watch);
+  .argument('[project]', 'Directory that contains the vitest config file')
+  .argument('[patterns...]', 'Test patterns to filter by.')
+  .action(async (project, patterns, { mode, ...options }) => {
+    const fullyResolvedProject = resolve(project ?? process.cwd());
+    const fullyResolvedPatterns = patterns.map(each => resolve(process.cwd(), each));
+
+    const configResult = await getTestConfiguration(fullyResolvedProject, !!options.watch);
 
     if (configResult.severity === 'error') {
       logCommandErrorAndExit(configResult);
     }
 
     if (configResult.config === null) {
-      console.log(chalk.yellowBright(`No tests found for in ${fullyResolved}`));
+      console.log(chalk.yellowBright(`No tests found for ${fullyResolvedProject}`));
       return;
     }
 
-    await runVitest(mode, [fullyResolved], [configResult.config], options);
+    await runVitest(mode, fullyResolvedPatterns, [configResult.config], options);
   });
 
 export const getTestAllCommand = () => new Command('testall')
   .description('Run all tests based on the configuration of the root vitest file')
+  .argument('[patterns...]', 'Test patterns to filter by.')
   .addOption(vitestModeOption)
   .addOption(watchOption)
   .addOption(updateOption)
   .addOption(coverageOption)
-  .action(async ({ mode, ...options }) => {
+  .action(async (patterns, { mode, ...options }) => {
     const configs = await getAllTestConfigurations(!!options.watch);
-    await runVitest(mode, undefined, configs, options);
+    if (configs.length === 0) {
+      console.log(chalk.yellowBright('No tests found.'));
+      return;
+    }
+
+    await runVitest(mode, patterns, configs, options);
   });

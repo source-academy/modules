@@ -3,14 +3,13 @@ import pathlib from 'path';
 import capitalize from 'lodash/capitalize.js';
 import cloneDeep from 'lodash/cloneDeep.js';
 import partition from 'lodash/partition.js';
-import { loadConfigFromFile } from 'vite';
 import type { LabelColor } from 'vitest';
 import { mergeConfig, type TestProjectInlineConfiguration } from 'vitest/config';
 import { resolveEitherBundleOrTab } from '../build/manifest.js';
 import { getGitRoot } from '../getGitRoot.js';
 import type { ErrorResult, ResolvedBundle, ResolvedTab } from '../types.js';
 import { mapAsync } from '../utils.js';
-import { sharedTabsConfig, sharedVitestConfiguration } from './configs.js';
+import { loadVitestConfigFromDir, sharedTabsConfig, sharedVitestConfiguration } from './configs.js';
 
 /**
  * For a given directory, recurse through it and determine if the given directory has any Vitest
@@ -24,74 +23,18 @@ export async function hasTests(directory: string) {
     return true;
   } catch {}
 
-  async function* findFile(directory: string): AsyncGenerator<boolean> {
-    const contents = await fs.readdir(directory, { withFileTypes: true });
-    for (const each of contents) {
-      if (each.isFile()) {
-        const ext = pathlib.extname(each.name);
-        if (ext === '.ts' || ext === '.tsx') {
-          yield true;
-          return;
-        }
-      } else if (each.isDirectory()) {
-        const fullPath = pathlib.join(directory, each.name);
-        yield* findFile(fullPath);
-      }
-    }
+  for await (const each of fs.glob(`${directory}/**/__tests__/**/*.{ts,tsx}`)) {
+    return true;
   }
 
-  async function* findTestDirectory(directory: string): AsyncGenerator<boolean> {
-    const contents = await fs.readdir(directory, { withFileTypes: true });
-    for (const each of contents) {
-      const fullPath = pathlib.join(directory, each.name);
-      if (!each.isDirectory()) continue;
-
-      if (each.name === '__tests__') {
-        yield* findFile(directory);
-      }
-      yield* findTestDirectory(fullPath);
-    }
-  }
-
-  for await (const each of findTestDirectory(directory)) {
-    if (each) return true;
-  }
   return false;
-  // return findTestDirectory(directory);
-}
-
-/**
- * Try to load the `vitest.config.js` from the given
- * directory. If it doesn't exist, then return `null`.
- */
-async function loadVitestConfigFromDir(directory: string) {
-  const filesToTry = [
-    'vitest.config.js',
-    'vite.config.ts'
-  ];
-
-  for (const fileToTry of filesToTry) {
-    try {
-      const fullPath = pathlib.join(directory, fileToTry);
-      await fs.access(fullPath, fs.constants.R_OK);
-      const config = await loadConfigFromFile(
-        { command: 'build', mode: '' },
-        fullPath,
-        undefined,
-        'silent',
-      );
-
-      if (config !== null) return config.config as TestProjectInlineConfiguration;
-    } catch {}
-  }
-  return null;
 }
 
 /**
  * If the vitest project has browser mode enabled, then remove the regular test project as that will run duplicate tests
  * Also, unless `watch` is true, the tests should be run in headless mode.
  */
-function setBrowserOptions(indivConfig: TestProjectInlineConfiguration, asset: ResolvedTab | ResolvedBundle, watch: boolean) {
+export function setBrowserOptions(indivConfig: TestProjectInlineConfiguration, asset: ResolvedTab | ResolvedBundle, watch: boolean) {
   const nameStr = typeof indivConfig.test!.name === 'string' ? indivConfig.test!.name : indivConfig.test?.name?.label;
 
   if (indivConfig.test!.browser?.enabled) {
@@ -111,11 +54,11 @@ function setBrowserOptions(indivConfig: TestProjectInlineConfiguration, asset: R
  * then it is merged with the default options for tabs and bundles respectively. Otherwise, those default options
  * will be used wholesale.
  */
-async function getBundleOrTabTestConfiguration(asset: ResolvedTab | ResolvedBundle, watch: boolean) {
+export async function getBundleOrTabTestConfiguration(asset: ResolvedTab | ResolvedBundle, watch: boolean) {
   let indivConfig = await loadVitestConfigFromDir(asset.directory);
   if (indivConfig !== null && indivConfig.test) {
     if (!indivConfig.test.name) {
-      indivConfig.test.name = `${capitalize(asset.name)} ${capitalize(asset.type)}`;
+      indivConfig.test.name = `${asset.name} ${capitalize(asset.type)}`;
     }
 
     if (asset.type === 'tab') {
@@ -134,7 +77,7 @@ async function getBundleOrTabTestConfiguration(asset: ResolvedTab | ResolvedBund
     indivConfig = cloneDeep(sharedVitestConfiguration);
   }
 
-  indivConfig!.test!.name = `${capitalize(asset.name)} ${capitalize(asset.type)}`;
+  indivConfig!.test!.name = `${asset.name} ${capitalize(asset.type)}`;
   indivConfig!.test!.root = asset.directory;
   indivConfig!.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
 
@@ -142,7 +85,7 @@ async function getBundleOrTabTestConfiguration(asset: ResolvedTab | ResolvedBund
   return indivConfig;
 }
 
-type GetTestConfigurationResult = ErrorResult | {
+export type GetTestConfigurationResult = ErrorResult | {
   severity: 'success'
   config: TestProjectInlineConfiguration | null
 };
@@ -241,11 +184,23 @@ export async function getAllTestConfigurations(watch: boolean) {
   // Assign each configuration a different colour :)
   const colors: LabelColor[] = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'];
   configs.forEach((config, i) => {
-    if (typeof config.test!.name === 'string') {
-      config.test!.name = {
-        label: config.test!.name,
-        color: colors[i % colors.length]
-      };
+    switch (typeof config.test!.name) {
+      case 'string': {
+        config.test!.name = {
+          label: config.test!.name,
+          color: colors[i % colors.length]
+        };
+        break;
+      }
+      case 'object': {
+        if (config.test!.name !== null) {
+          config.test!.name = {
+            label: config.test!.name.label,
+            color: config.test!.name.color ?? colors[i % colors.length]
+          };
+        }
+        break;
+      }
     }
   });
 
