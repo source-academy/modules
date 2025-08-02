@@ -62,6 +62,9 @@ jobs:
             node-version: 22
             cache: yarn
 
+        - name: Setup Repotools
+          run: yarn workspaces focus @sourceacademy/modules-repotools && yarn workspaces foreach -A --include "@sourceacademy/modules-repotools" run build
+
         - name: Install dependencies
           run: yarn install --immutable
 
