@@ -109,7 +109,10 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
 
   const packageJsonResult = await findPackageJson(directory);
   if (packageJsonResult === null) {
-    throw new Error(`Could not find a package.json for ${directory}`);
+    return {
+      severity: 'success',
+      config: null
+    };
   }
 
   const [type, jsonDir] = packageJsonResult;

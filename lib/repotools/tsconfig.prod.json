@@ -1,0 +1,11 @@
+// Repotools production tsconfig
+{
+  "extends": ["./tsconfig.json"],
+  "include": ["./src"],
+  "exclude": ["**/__tests__/**", "**/__mocks__/**"],
+  "compilerOptions": {
+    "declaration": true,
+    "noEmit": false,
+    "outDir": "./dist"
+  }
+}

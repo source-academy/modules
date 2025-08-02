@@ -6,7 +6,8 @@
   "description": "Common library for tooling used by the modules repository",
   "devDependencies": {
     "@commander-js/extra-typings": "^13.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vitest": "^3.2.3"
   },
   "dependencies": {
     "chalk": "^5.0.1",
@@ -19,6 +20,9 @@
     "./*": "./dist/*.js"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc --project ./tsconfig.prod.json",
+    "prepare": "yarn build",
+    "tsc": "tsc --project ./tsconfig.json",
+    "test": "vitest"
   }
 }

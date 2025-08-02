@@ -3478,6 +3478,7 @@ __metadata:
     jsonschema: "npm:^1.5.0"
     lodash: "npm:^4.17.21"
     typescript: "npm:^5.8.2"
+    vitest: "npm:^3.2.3"
   languageName: unknown
   linkType: soft
 

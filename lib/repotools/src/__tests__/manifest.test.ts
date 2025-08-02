@@ -1,8 +1,13 @@
+import pathlib from 'path';
 import { describe, expect, it, test, vi } from 'vitest';
-import { expectIsSuccess, testMocksDir } from '../../../buildtools/src/__tests__/fixtures.js';
 import { resolveAllTabs, resolveSingleTab } from '../manifest.js';
 
+const testMocksDir = pathlib.resolve(import.meta.dirname, '../../../__test_mocks__');
 vi.mock(import('../getGitRoot.js'));
+
+function expectSuccess(obj: unknown): asserts obj is 'success' {
+  expect(obj).toEqual('success');
+}
 
 describe('Test resolveSingleTab', () => {
   it('properly detects a tab with the src/index.tsx entrypoint', async () => {
@@ -30,8 +35,8 @@ describe('Test resolveSingleTab', () => {
 
 test('resolveAllTabs', async () => {
   const resolved = await resolveAllTabs(`${testMocksDir}/bundles`, `${testMocksDir}/tabs`);
+  expectSuccess(resolved.severity);
 
-  expectIsSuccess(resolved.severity);
   const { tabs } = resolved;
 
   expect(tabs).toHaveProperty('tab0');
