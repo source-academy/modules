@@ -3,6 +3,11 @@
 import pathlib from 'path';
 import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 
+const coverageReporters = ['html', 'text'];
+if (process.env.GITHUB_ACTIONS) {
+  coverageReporters.push('github-actions');
+}
+
 export default defineConfig({
   resolve: {
     alias: [{
@@ -20,7 +25,7 @@ export default defineConfig({
     clearMocks: true,
     coverage: {
       provider: 'v8',
-      reporter: ['html', 'text'],
+      reporter: coverageReporters,
       exclude: [
         ...coverageConfigDefaults.exclude,
         './build/**',
