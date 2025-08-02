@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
-import { getGitRoot } from '@sourceacademy/modules-repotools/getGitRoot';
+import { gitRoot } from '@sourceacademy/modules-repotools/getGitRoot';
 import { resolveSingleBundle, resolveSingleTab } from '@sourceacademy/modules-repotools/manifest';
 import type { ErrorResult } from '@sourceacademy/modules-repotools/types';
 import { isNodeError, mapAsync } from '@sourceacademy/modules-repotools/utils';
@@ -12,8 +12,6 @@ import { loadVitestConfigFromDir, sharedTabsConfig, sharedVitestConfiguration } 
 
 // Assign to each configuration a different colour :)
 const colors: Readonly<LabelColor[]> = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'];
-
-const gitRoot = await getGitRoot();
 
 /**
  * If the vitest project has browser mode enabled, then remove the regular test project as that will run duplicate tests
@@ -214,7 +212,6 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
  * Based on the root Vitest's configuration, get all the projects we need to test
  */
 export async function getAllTestConfigurations(watch: boolean) {
-  const gitRoot = await getGitRoot();
   const rootConfig = await loadVitestConfigFromDir(gitRoot);
   if (!rootConfig?.test?.projects) return [];
 

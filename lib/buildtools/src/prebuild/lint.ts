@@ -1,6 +1,6 @@
 import { promises as fs, type Dirent } from 'fs';
 import pathlib from 'path';
-import { getBundlesDir, getGitRoot, getOutDir, getTabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
+import { bundlesDir, gitRoot, outDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import type { InputAsset, Severity } from '@sourceacademy/modules-repotools/types';
 import { findSeverity, flatMapAsync, isNodeError } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
@@ -35,7 +35,6 @@ async function timePromise<T>(f: () => Promise<T>) {
 }
 
 export async function runEslint(input: InputAsset, fix: boolean, stats: boolean): Promise<LintResult> {
-  const gitRoot = await getGitRoot();
   const linter = new ESLint({
     fix,
     stats,
@@ -49,7 +48,6 @@ export async function runEslint(input: InputAsset, fix: boolean, stats: boolean)
     }
 
     if (stats) {
-      const outDir = await getOutDir();
       await fs.mkdir(`${outDir}/lintstats`, { recursive: true });
 
       const statsFormatter = await linter.loadFormatter('json');
@@ -104,12 +102,6 @@ interface LintGlobalResults {
  * so that the bundles and tabs can be linted separately.
  */
 export async function lintGlobal(fix: boolean): Promise<LintGlobalResults> {
-  const [gitRoot, bundlesDir, tabsDir] = await Promise.all([
-    getGitRoot(),
-    getBundlesDir(),
-    getTabsDir()
-  ]);
-
   const linter = new ESLint({ fix, cwd: gitRoot });
 
   /**

@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import { validate } from 'jsonschema';
 import uniq from 'lodash/uniq.js';
-import { getTabsDir } from './getGitRoot.js';
+import { tabsDir } from './getGitRoot.js';
 import manifestSchema from './manifest.schema.json' with { type: 'json' };
 import type { BundleManifest, InputAsset, ResolvedBundle, ResolvedTab, ResultType } from './types.js';
 import { filterAsync, isNodeError, mapAsync } from './utils.js';
@@ -55,7 +55,6 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
 
   // Make sure that all the tabs specified exist
   if (tabCheck && manifest.tabs) {
-    const tabsDir = await getTabsDir();
     const unknownTabs = await filterAsync(manifest.tabs, async tabName => {
       const resolvedTab = await resolveSingleTab(`${tabsDir}/${tabName}`);
       return resolvedTab === undefined;

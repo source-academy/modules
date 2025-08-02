@@ -1,4 +1,3 @@
-import * as utils from '@sourceacademy/modules-repotools/getGitRoot';
 import * as manifest from '@sourceacademy/modules-repotools/manifest';
 import { ESLint } from 'eslint';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
@@ -7,7 +6,10 @@ import { getCommandRunner } from './testingUtils.js';
 
 const lintFilesMock = vi.hoisted(() => vi.fn());
 
-vi.spyOn(utils, 'getGitRoot').mockResolvedValue('/');
+vi.mock(import('@sourceacademy/modules-repotools/getGitRoot'), async importOriginal => ({
+  ...await importOriginal(),
+  gitRoot: '/'
+}));
 
 const mockedResolveEither = vi.spyOn(manifest, 'resolveEitherBundleOrTab');
 

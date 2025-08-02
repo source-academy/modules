@@ -1,6 +1,6 @@
 import pathlib from 'path';
 import { Command, Option } from '@commander-js/extra-typings';
-import { getGitRoot } from '@sourceacademy/modules-repotools/getGitRoot';
+import { gitRoot } from '@sourceacademy/modules-repotools/getGitRoot';
 import chalk from 'chalk';
 import type { VitestRunMode } from 'vitest/node';
 import { runVitest } from '../testing/runner.js';
@@ -25,7 +25,6 @@ export const getTestCommand = () => new Command('test')
   .option('-p, --project <directory>', 'Path to the directory that is the root of your test project')
   .argument('[patterns...]', 'Test patterns to filter by.')
   .action(async (patterns, { mode, project, ...options }) => {
-    const gitRoot = await getGitRoot();
     const relative = pathlib.relative(project ?? process.cwd(), gitRoot);
 
     if (relative && !relative.startsWith('..') && !pathlib.isAbsolute(relative)) {

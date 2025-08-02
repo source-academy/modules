@@ -53,13 +53,13 @@ vi.mock(import('typescript'), async importOriginal => {
   };
 });
 
-vi.mock(import('@sourceacademy/modules-repotools/getGitRoot'), async () => {
+vi.mock(import('@sourceacademy/modules-repotools/getGitRoot'), () => {
   const testMocksDir = pathlib.resolve(import.meta.dirname, '../__test_mocks__');
   return {
-    getGitRoot: () => Promise.resolve(testMocksDir),
-    getBundlesDir: () => Promise.resolve(pathlib.join(testMocksDir, 'bundles')),
-    getTabsDir: () => Promise.resolve(pathlib.join(testMocksDir, 'tabs')),
-    getOutDir: () => Promise.resolve('/build'),
+    gitRoot: testMocksDir,
+    bundlesDir: pathlib.join(testMocksDir, 'bundles'),
+    tabsDir: pathlib.join(testMocksDir, 'tabs'),
+    outDir: '/build',
   };
 });
 

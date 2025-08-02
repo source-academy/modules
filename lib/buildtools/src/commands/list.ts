@@ -1,5 +1,5 @@
 import { Command } from '@commander-js/extra-typings';
-import { getBundlesDir, getTabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
+import { bundlesDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import { resolveAllBundles, resolveAllTabs, resolveSingleBundle, resolveSingleTab } from '@sourceacademy/modules-repotools/manifest';
 import chalk from 'chalk';
 import omit from 'lodash/omit.js';
@@ -10,7 +10,6 @@ export const getListBundlesCommand = () => new Command('bundle')
   .argument('[directory]')
   .action(async directory => {
     if (directory === undefined) {
-      const bundlesDir = await getBundlesDir();
       const manifestResult = await resolveAllBundles(bundlesDir);
       if (manifestResult.severity === 'error') {
         logCommandErrorAndExit(manifestResult);
@@ -43,11 +42,6 @@ export const getListTabsCommand = () => new Command('tabs')
   .argument('[directory]')
   .action(async directory => {
     if (directory === undefined) {
-      const [bundlesDir, tabsDir] = await Promise.all([
-        getBundlesDir(),
-        getTabsDir()
-      ]);
-
       const tabsManifest = await resolveAllTabs(bundlesDir, tabsDir);
       if (tabsManifest.severity === 'error') {
         logCommandErrorAndExit(tabsManifest);

@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
 import util from 'util';
-import { getBundlesDir, getTabsDir } from './getGitRoot.js';
+import { bundlesDir, tabsDir } from './getGitRoot.js';
 import type { Severity } from './types.js';
 
 export type AwaitedReturn<T extends (...args: any[]) => Promise<any>> = Awaited<ReturnType<T>>;
@@ -105,8 +105,6 @@ export async function filterAsync<T>(items: T[], filter: (item: T, index: number
 
 export async function isBundleOrTabDirectory(directory: string) {
   const RE = /^@sourceacademy\/(bundle|tab)-(.+)$/u;
-  const bundlesDir = await getBundlesDir();
-  const tabsDir = await getTabsDir();
 
   async function recurser(directory: string): Promise<['bundle' | 'tab', string] | null> {
     try {

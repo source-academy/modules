@@ -1,6 +1,5 @@
 import { execFile } from 'child_process';
 import pathlib from 'path';
-import memoize from 'lodash/memoize.js';
 
 /*
  * Due to the multi-level directory structure in the repository, some commands can be run anywhere
@@ -21,21 +20,21 @@ function rawGetGitRoot() {
 }
 
 /**
- * Get the path to the root of the git repository
+ * Path to the root of the git repository
  */
-export const getGitRoot = memoize(rawGetGitRoot);
+export const gitRoot = await rawGetGitRoot();
 
 /**
- * Get the path to the directory within which bundles are stored
+ * Path to the directory within which bundles are defined
  */
-export const getBundlesDir = memoize(async () => pathlib.join(await getGitRoot(), 'src', 'bundles'));
+export const bundlesDir = pathlib.join(gitRoot, 'src', 'bundles');
 
 /**
- * Get the path to the directory within which tabs are stored
+ * Path to the directory within which tabs are defined
  */
-export const getTabsDir = memoize(async () => pathlib.join(await getGitRoot(), 'src', 'tabs'));
+export const tabsDir = pathlib.join(gitRoot, 'src', 'tabs');
 
 /**
- * Get the path to the default output directory
+ * Path to the default output directory
  */
-export const getOutDir = memoize(async () => pathlib.join(await getGitRoot(), 'build'));
+export const outDir = pathlib.join(gitRoot, 'build');

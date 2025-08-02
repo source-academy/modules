@@ -1,14 +1,15 @@
 import fs from 'fs/promises';
-
-import * as gitRoot from '@sourceacademy/modules-repotools/getGitRoot';
 import * as manifest from '@sourceacademy/modules-repotools/manifest';
 import { beforeEach, describe, expect, it, test, vi } from 'vitest';
 import { askQuestion } from '../../templates/print.js';
 import getTemplateCommand from '../template.js';
 import { getCommandRunner } from './testingUtils.js';
 
-vi.spyOn(gitRoot, 'getBundlesDir').mockResolvedValue('/src/bundles');
-vi.spyOn(gitRoot, 'getTabsDir').mockResolvedValue('/src/tabs');
+vi.mock(import('@sourceacademy/modules-repotools/getGitRoot'), async importOriginal => ({
+  ...await importOriginal(),
+  bundlesDir: '/src/bundles',
+  tabsDir: '/src/tabs',
+}));
 
 vi.mock(import('../../templates/print.js'), async importActual => {
   const actualTemplates = await importActual();

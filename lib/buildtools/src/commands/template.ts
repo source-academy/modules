@@ -1,7 +1,6 @@
 import type { Interface } from 'readline/promises';
 import { Command } from '@commander-js/extra-typings';
-import { getBundlesDir, getTabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
-
+import { bundlesDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import { isNodeError } from '@sourceacademy/modules-repotools/utils';
 import { addNew as addNewModule } from '../templates/bundle.js';
 import { askQuestion, error as _error, getRl, info, warn } from '../templates/print.js';
@@ -22,11 +21,6 @@ export default function getTemplateCommand() {
   return new Command('template')
     .description('Interactively create a new module or tab')
     .action(async () => {
-      const [bundlesDir, tabsDir] = await Promise.all([
-        getBundlesDir(),
-        getTabsDir()
-      ]);
-
       const rl = getRl();
       try {
         const mode = await askMode(rl);
