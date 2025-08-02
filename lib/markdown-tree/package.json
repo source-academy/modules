@@ -27,6 +27,6 @@
   "scripts": {
     "build": "node ./build.js",
     "prepare": "yarn build",
-    "test": "buildtools test ."
+    "test": "buildtools test --project ."
   }
 }

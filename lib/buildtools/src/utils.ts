@@ -1,13 +1,23 @@
-import type { ResolvedBundle, ResolvedTab, Severity } from './types.js';
+import fs from 'fs/promises';
+import pathlib from 'path';
+import util from 'util';
+import { getBundlesDir, getTabsDir } from './getGitRoot.js';
+import type { Severity } from './types.js';
 
 export type AwaitedReturn<T extends (...args: any[]) => Promise<any>> = Awaited<ReturnType<T>>;
 
+/**
+ * Check if the given object is a severity value.
+ */
 export function isSeverity(obj: unknown): obj is Severity {
   if (typeof obj !== 'string') return false;
 
   return obj === 'error' || obj === 'warn' || obj === 'success';
 }
 
+/**
+ * Given two severity values, determine which is more severe.
+ */
 export function compareSeverity(lhs: Severity, rhs: Severity): Severity {
   switch (lhs) {
     case 'success':
@@ -35,6 +45,7 @@ export function findSeverity<T>(items: T[], mapper: (each: T) => Severity): Seve
   return output;
 }
 
+/*
 export function processSeverities(items: { severity: Severity }[]) {
   return findSeverity(items, ({ severity }) => severity);
 }
@@ -60,11 +71,12 @@ export function collateResults<T extends { bundle: ResolvedBundle } | { tab: Res
     };
   }, {});
 }
+*/
 
 export const divideAndRound = (n: number, divisor: number) => (n / divisor).toFixed(2);
 
 export function isNodeError(error: unknown): error is NodeJS.ErrnoException {
-  return error instanceof Error;
+  return util.types.isNativeError(error);
 }
 
 /**
@@ -89,4 +101,30 @@ export async function filterAsync<T>(items: T[], filter: (item: T, index: number
   const results = await Promise.all(items.map(filter));
 
   return items.reduce((res, item, i) => results[i] ? [...res, item] : res, [] as T[]);
+}
+
+export async function isBundleOrTabDirectory(directory: string) {
+  const RE = /^@sourceacademy\/(bundle|tab)-(.+)$/u;
+  const bundlesDir = await getBundlesDir();
+  const tabsDir = await getTabsDir();
+
+  async function recurser(directory: string): Promise<['bundle' | 'tab', string] | null> {
+    try {
+      const packageJson = JSON.parse(await fs.readFile(`${directory}/package.json`, 'utf-8'));
+      const match = RE.exec(packageJson.name);
+
+      if (match) {
+        const [, type, name] = match;
+        return [type as 'bundle' | 'tab', name];
+      }
+    } catch (error) {
+      if (!isNodeError(error) || error.code !== 'ENOENT') throw error;
+    }
+
+    if (directory === bundlesDir || directory === tabsDir) return null;
+    const parentDir = pathlib.resolve(directory, '..');
+    return recurser(parentDir);
+  }
+
+  return recurser(directory);
 }

@@ -11,7 +11,8 @@
     "build": "buildtools build bundle .",
     "lint": "buildtools lint .",
     "prepare": "yarn tsc",
-    "tsc": "buildtools tsc ."
+    "tsc": "buildtools tsc .",
+    "test": "buildtools test --project ."
   },
   "exports": {
     ".": "./dist/index.js",

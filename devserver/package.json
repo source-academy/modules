@@ -41,7 +41,7 @@
     "dev": "vite",
     "lint": "eslint src",
     "postinstall": "playwright install --with-deps",
-    "test": "buildtools test .",
+    "test": "buildtools test --project .",
     "tsc": "tsc --project ./tsconfig.json"
   }
 }

@@ -20,7 +20,7 @@ def get_assets(git_root: str, asset: Literal['bundle', 'tab']):
   and the full path to its directory
   """
   for name in os.listdir(f'{git_root}/src/{asset}s'):
-    if name == '__mocks__':
+    if name == '__mocks__' or name == 'node_modules':
       continue
 
     full_path = os.path.join(git_root, 'src', f'{asset}s', name)
@@ -44,11 +44,11 @@ def update_json(git_root: str, asset: Literal['bundle', 'tab'], file_name: Liter
 async def main():
   git_root = await get_git_root()
   def updater(name: str, full_path: str, obj: Any):
-    obj['scripts']['tsc'] = 'buildtools tsc .'
+    obj['scripts']['test'] = 'buildtools test --project .'
 
     return obj
 
-  update_json(git_root, 'tab', 'package', updater)
+  update_json(git_root, 'bundle', 'package', updater)
 
 if __name__ == '__main__':
   aio.run(main())

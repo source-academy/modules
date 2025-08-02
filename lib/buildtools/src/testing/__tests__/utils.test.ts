@@ -3,11 +3,23 @@ import fs from 'fs/promises';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TestProjectInlineConfiguration } from 'vitest/config.js';
 import * as manifest from '../../build/manifest.js';
-import type { ResolvedBundle, ResolvedTab } from '../../types.js';
 import * as configs from '../configs.js';
 import * as utils from '../utils.js';
 
-vi.mock(import('../../getGitRoot.js'));
+class ENOENT extends Error {
+  public get code() {
+    return 'ENOENT';
+  }
+}
+
+// @ts-expect-error These mock implementations don't also include the types
+// for the memoization done by lodash
+vi.mock(import('../../getGitRoot.js'), () => ({
+  getGitRoot: () => Promise.resolve('/'),
+  getBundlesDir: () => Promise.resolve('/bundles'),
+  getTabsDir: () => Promise.resolve('/tabs'),
+  getOutDir: () => Promise.resolve('/out')
+}));
 
 const mockedFsGlob = vi.spyOn(fs, 'glob');
 function mockHasTestsOnce(retValue: boolean) {
@@ -20,6 +32,7 @@ function mockHasTestsOnce(retValue: boolean) {
 }
 
 const mockedFsAccess = vi.spyOn(fs, 'access').mockRejectedValue(new Error());
+const mockedReadFile = vi.spyOn(fs, 'readFile');
 const mockedLoadConfig = vi.spyOn(configs, 'loadVitestConfigFromDir');
 const mockedResolver = vi.spyOn(manifest, 'resolveEitherBundleOrTab');
 
@@ -50,13 +63,6 @@ describe('Test hasTests', () => {
 });
 
 describe('Test setBrowserOptions', () => {
-  const mockBundle: ResolvedBundle = {
-    name: 'yo',
-    manifest: {},
-    directory: '',
-    type: 'bundle'
-  };
-
   it('Should do nothing if browser mode is not enabled', () => {
     const mockedConfig: TestProjectInlineConfiguration = {
       test: {
@@ -64,7 +70,7 @@ describe('Test setBrowserOptions', () => {
       }
     };
 
-    utils.setBrowserOptions(mockedConfig, mockBundle, false);
+    utils.setBrowserOptions(mockedConfig, false);
     expect(mockedConfig).toMatchObject({});
   });
 
@@ -82,7 +88,7 @@ describe('Test setBrowserOptions', () => {
       }
     };
 
-    utils.setBrowserOptions(mockedConfig, mockBundle, false);
+    utils.setBrowserOptions(mockedConfig, false);
     expect(mockedConfig).toMatchObject({
       test: {
         include: [],
@@ -113,7 +119,7 @@ describe('Test setBrowserOptions', () => {
       }
     };
 
-    utils.setBrowserOptions(mockedConfig, mockBundle, true);
+    utils.setBrowserOptions(mockedConfig, true);
     expect(mockedConfig).toMatchObject({
       test: {
         include: [],
@@ -132,111 +138,52 @@ describe('Test setBrowserOptions', () => {
   });
 });
 
-describe('Test getBundleOrTabConfiguration', () => {
-  const mockBundle: ResolvedBundle = {
-    name: 'test_bundle',
-    manifest: {},
-    directory: '/test_bundle',
-    type: 'bundle'
-  };
-
-  it('should return the exact config if the config is present and has a test object (for bundles)', async () => {
-    mockedLoadConfig.mockResolvedValueOnce({
-      test: {
-        name: 'test',
-      }
-    });
-
-    await expect(utils.getBundleOrTabTestConfiguration(mockBundle, false)).resolves.toMatchObject({
-      ...configs.sharedVitestConfiguration,
-      test: {
-        ...configs.sharedVitestConfiguration.test!,
-        name: 'test'
-      }
-    });
-    expect(configs.loadVitestConfigFromDir).toHaveBeenCalledOnce();
-  });
-
-  it('should return the exact config if the config is present and has a test object (for tabs)', async () => {
-    const mockTab: ResolvedTab = {
-      type: 'tab',
-      name: 'Tab0',
-      directory: '',
-      entryPoint: ''
-    };
-
-    mockedLoadConfig.mockResolvedValueOnce({
-      test: {
-        name: 'test',
-      }
-    });
-
-    await expect(utils.getBundleOrTabTestConfiguration(mockTab, false)).resolves.toMatchObject({
-      ...configs.sharedTabsConfig,
-      test: {
-        ...configs.sharedTabsConfig.test!,
-        name: 'test'
-      }
-    });
-    expect(configs.loadVitestConfigFromDir).toHaveBeenCalledOnce();
-  });
-
-  it('should set the name for the test if the config did not contain one', async () => {
-    mockedLoadConfig.mockResolvedValueOnce({
-      test: {}
-    });
-
-    await expect(utils.getBundleOrTabTestConfiguration(mockBundle, false)).resolves.toMatchObject({
-      ...configs.sharedVitestConfiguration,
-      test: {
-        ...configs.sharedVitestConfiguration.test!,
-        name: 'test_bundle Bundle'
-      }
-    });
-    expect(configs.loadVitestConfigFromDir).toHaveBeenCalledOnce();
-  });
-
-  it('should populate the test configuration if the bundle has none', async () => {
-    mockedLoadConfig.mockResolvedValueOnce(null);
-
-    await expect(utils.getBundleOrTabTestConfiguration(mockBundle, false)).resolves.toMatchObject({
-      ...configs.sharedVitestConfiguration,
-      test: {
-        ...configs.sharedVitestConfiguration.test!,
-        name: 'test_bundle Bundle',
-        include: ['**/__tests__/**/*.{ts,tsx}'],
-        root: '/test_bundle',
-      }
-    });
-    expect(configs.loadVitestConfigFromDir).toHaveBeenCalledOnce();
-  });
-});
-
 describe('Test getTestConfiguration', () => {
-
   describe('With tabs', () => {
     beforeEach(() => {
-      mockedResolver.mockResolvedValueOnce({
-        severity: 'success',
-        asset: {
-          type: 'tab',
-          name: 'Tab0',
-          directory: '/Tab0',
-          entryPoint: '/Tab0/index.tsx'
+      mockedReadFile.mockImplementation(p => {
+        if (p === '/tabs/Tab0/package.json') {
+          return Promise.resolve(JSON.stringify({
+            name: '@sourceacademy/tab-Tab0'
+          }));
         }
+
+        throw new ENOENT();
+      });
+
+      vi.spyOn(manifest, 'resolveSingleTab').mockResolvedValueOnce({
+        type: 'tab',
+        name: 'Tab0',
+        directory: '/tabs/Tab0',
+        entryPoint: '/tabs/Tab0/index.tsx'
       });
     });
 
     it('Should return the config if the tab has tests', async () => {
       mockHasTestsOnce(true);
-      await expect(utils.getTestConfiguration('', false)).resolves.toMatchObject({
+      await expect(utils.getTestConfiguration('/tabs/Tab0', false)).resolves.toMatchObject({
         severity: 'success',
         config: {
           ...configs.sharedTabsConfig,
           test: {
             ...configs.sharedTabsConfig.test!,
             name: 'Tab0 Tab',
-            root: '/Tab0'
+            root: '/tabs/Tab0'
+          }
+        }
+      });
+    });
+
+    it('Should return the config even if the function was called from not the tab\'s root directory', async () => {
+      mockHasTestsOnce(true);
+      await expect(utils.getTestConfiguration('/tabs/Tab0/sub/directory', false)).resolves.toMatchObject({
+        severity: 'success',
+        config: {
+          ...configs.sharedTabsConfig,
+          test: {
+            ...configs.sharedTabsConfig.test!,
+            name: 'Tab0 Tab',
+            root: '/tabs/Tab0'
           }
         }
       });
@@ -244,7 +191,7 @@ describe('Test getTestConfiguration', () => {
 
     it('Should return null if the tab has no tests', async () => {
       mockHasTestsOnce(false);
-      await expect(utils.getTestConfiguration('', false)).resolves.toMatchObject({
+      await expect(utils.getTestConfiguration('/tabs/Tab0', false)).resolves.toMatchObject({
         severity: 'success',
         config: null
       });
@@ -253,27 +200,52 @@ describe('Test getTestConfiguration', () => {
 
   describe('With bundles', () => {
     beforeEach(() => {
-      mockedResolver.mockResolvedValueOnce({
+      mockedReadFile.mockImplementation(p => {
+        if (p === '/bundles/bundle0/package.json') {
+          return Promise.resolve(JSON.stringify({
+            name: '@sourceacademy/bundle-bundle0'
+          }));
+        }
+
+        throw new ENOENT();
+      });
+
+      vi.spyOn(manifest, 'resolveSingleBundle').mockResolvedValueOnce({
         severity: 'success',
-        asset: {
+        bundle: {
           type: 'bundle',
           name: 'bundle0',
           manifest: {},
-          directory: '/bundle0',
+          directory: '/bundles/bundle0',
         }
       });
     });
 
     it('Should return the config if the bundle has tests', async () => {
       mockHasTestsOnce(true);
-      await expect(utils.getTestConfiguration('', false)).resolves.toMatchObject({
+      await expect(utils.getTestConfiguration('/bundles/bundle0', false)).resolves.toMatchObject({
         severity: 'success',
         config: {
           ...configs.sharedVitestConfiguration,
           test: {
             ...configs.sharedVitestConfiguration.test!,
             name: 'bundle0 Bundle',
-            root: '/bundle0'
+            root: '/bundles/bundle0'
+          }
+        }
+      });
+    });
+
+    it('Should return the config even if the function was called from not the tab\'s root directory', async () => {
+      mockHasTestsOnce(true);
+      await expect(utils.getTestConfiguration('/bundles/bundle0/sub/directory', false)).resolves.toMatchObject({
+        severity: 'success',
+        config: {
+          ...configs.sharedVitestConfiguration,
+          test: {
+            ...configs.sharedVitestConfiguration.test!,
+            name: 'bundle0 Bundle',
+            root: '/bundles/bundle0'
           }
         }
       });
@@ -281,7 +253,7 @@ describe('Test getTestConfiguration', () => {
 
     it('Should return null if the bundle has no tests', async () => {
       mockHasTestsOnce(false);
-      await expect(utils.getTestConfiguration('', false)).resolves.toMatchObject({
+      await expect(utils.getTestConfiguration('/bundles/bundle0', false)).resolves.toMatchObject({
         severity: 'success',
         config: null
       });
@@ -290,9 +262,13 @@ describe('Test getTestConfiguration', () => {
 
   describe('With neither', () => {
     beforeEach(() => {
-      mockedResolver.mockResolvedValueOnce({
-        severity: 'error',
-        errors: []
+      mockedReadFile.mockImplementation(p => {
+        if (p === '/dir/package.json') {
+          return Promise.resolve(JSON.stringify({
+            name: "@sourceacademy/a-pacakge"
+          }));
+        }
+        throw new ENOENT();
       });
       mockedFsGlob.mockReset();
     });
@@ -304,7 +280,6 @@ describe('Test getTestConfiguration', () => {
           name: 'Test0'
         }
       });
-
       await expect(utils.getTestConfiguration('/dir', false)).resolves.toMatchObject({
         severity: 'success',
         config: {
@@ -326,7 +301,7 @@ describe('Test getTestConfiguration', () => {
         .resolves
         .toMatchObject({
           severity: 'error',
-          errors: ['Tests were found at /dir, but no vitest config was found']
+          errors: ['Tests were found for /dir, but no vitest config could be located']
         });
     });
 
@@ -345,6 +320,19 @@ describe('Test getTestConfiguration', () => {
 });
 
 describe('Test getAllTestConfigurations', () => {
+  mockedReadFile.mockImplementation(p => {
+    const RE = /^\/dir\/project(\d)\/package\.json$/;
+    const match = RE.exec(p as string);
+    if (match) {
+      const [,index] = match;
+      return Promise.resolve(JSON.stringify({
+        name: `@sourceacademy/project${index}`
+      }));
+    }
+
+    throw new ENOENT();
+  });
+
   it('returns an empty array if there are no projects defined', async () => {
     mockedLoadConfig.mockResolvedValueOnce({
       test: {
@@ -424,7 +412,7 @@ describe('Test getAllTestConfigurations', () => {
     // Once for the root config
     mockedLoadConfig.mockResolvedValueOnce({
       test: {
-        projects: ['project0', 'project1', 'project2']
+        projects: ['/dir/project*']
       }
     })
     // Then once more for each of the child projects
@@ -454,7 +442,7 @@ describe('Test getAllTestConfigurations', () => {
           yield {
             isDirectory: () => true,
             name: `project${i}`,
-            parentPath: '/'
+            parentPath: '/dir'
           } as Dirent;
         }
       }
@@ -462,45 +450,59 @@ describe('Test getAllTestConfigurations', () => {
       yield {
         isDirectory: () => true,
         name: 'node_modules',
-        parentPath: '/'
+        parentPath: '/dir'
       } as Dirent;
     });
 
     const results = await utils.getAllTestConfigurations(false);
     expect(results.length).toEqual(3);
     expect(configs.loadVitestConfigFromDir).toHaveBeenCalledTimes(4);
-    expect(results).toContainEqual({
-      ...configs.sharedVitestConfiguration,
-      test: {
-        ...configs.sharedVitestConfiguration.test!,
-        root: '/project0',
-        name: {
-          label: 'project0',
-          color: 'black'
+
+    for (const result of results) {
+      switch (result.root) {
+        case '/dir/project0': {
+          expect(results).toContainEqual({
+            ...configs.sharedVitestConfiguration,
+            test: {
+              ...configs.sharedVitestConfiguration.test!,
+              root: '/dir/project0',
+              name: {
+                label: 'project0',
+                color: 'black'
+              }
+            }
+          });
+          break;
+        }
+        case '/dir/project1': {
+          expect(results).toContainEqual({
+            ...configs.sharedVitestConfiguration,
+            test: {
+              ...configs.sharedVitestConfiguration.test!,
+              root: '/dir/project1',
+              name: {
+                label: 'project1',
+                color: 'red'
+              }
+            }
+          });
+          break;
+        }
+        case '/dir/project2': {
+          expect(results).toContainEqual({
+            ...configs.sharedVitestConfiguration,
+            test: {
+              ...configs.sharedVitestConfiguration.test!,
+              root: '/dir/project2',
+              name: {
+                label: 'project2',
+                color: 'black'
+              }
+            }
+          });
+          break;
         }
       }
-    });
-    expect(results).toContainEqual({
-      ...configs.sharedVitestConfiguration,
-      test: {
-        ...configs.sharedVitestConfiguration.test!,
-        root: '/project1',
-        name: {
-          label: 'project1',
-          color: 'red'
-        }
-      }
-    });
-    expect(results).toContainEqual({
-      ...configs.sharedVitestConfiguration,
-      test: {
-        ...configs.sharedVitestConfiguration.test!,
-        root: '/project2',
-        name: {
-          label: 'project2',
-          color: 'black'
-        }
-      }
-    });
+    }
   });
 });

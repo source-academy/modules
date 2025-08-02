@@ -1,7 +1,8 @@
-import { resolve } from 'path';
+import pathlib from 'path';
 import { Command, Option } from '@commander-js/extra-typings';
 import chalk from 'chalk';
 import type { VitestRunMode } from 'vitest/node';
+import { getGitRoot } from '../getGitRoot.js';
 import { runVitest } from '../testing/runner.js';
 import { getAllTestConfigurations, getTestConfiguration } from '../testing/utils.js';
 import { logCommandErrorAndExit } from './commandUtils.js';
@@ -13,6 +14,8 @@ const vitestModeOption = new Option('--mode <mode>', 'Vitest Run Mode. See https
 const watchOption = new Option('-w, --watch', 'Run tests in watch mode');
 const updateOption = new Option('-u, --update', 'Update snapshots');
 const coverageOption = new Option('--coverage');
+const allowOnlyOption = new Option('--no-allow-only', 'Allow the use of .only')
+  .default(!process.env.CI);
 
 export const getTestCommand = () => new Command('test')
   .description('Run test for the specific bundle or tab at the specified directory.')
@@ -20,11 +23,19 @@ export const getTestCommand = () => new Command('test')
   .addOption(watchOption)
   .addOption(updateOption)
   .addOption(coverageOption)
-  .argument('[project]', 'Directory that contains the vitest config file')
+  .addOption(allowOnlyOption)
+  .option('-p, --project <directory>', 'Path to the directory that is the root of your test project')
   .argument('[patterns...]', 'Test patterns to filter by.')
-  .action(async (project, patterns, { mode, ...options }) => {
-    const fullyResolvedProject = resolve(project ?? process.cwd());
-    const fullyResolvedPatterns = patterns.map(each => resolve(process.cwd(), each));
+  .action(async (patterns, { mode, project, ...options }) => {
+    const gitRoot = await getGitRoot();
+    const relative = pathlib.relative(project ?? process.cwd(), gitRoot);
+
+    if (relative && !relative.startsWith('..') && !pathlib.isAbsolute(relative)) {
+      logCommandErrorAndExit('Cannot be run from a parent directory of the git root');
+    }
+
+    const fullyResolvedProject = pathlib.resolve(project ?? process.cwd());
+    const fullyResolvedPatterns = patterns.map(each => pathlib.resolve(process.cwd(), each));
 
     const configResult = await getTestConfiguration(fullyResolvedProject, !!options.watch);
 
@@ -47,6 +58,7 @@ export const getTestAllCommand = () => new Command('testall')
   .addOption(watchOption)
   .addOption(updateOption)
   .addOption(coverageOption)
+  .addOption(allowOnlyOption)
   .action(async (patterns, { mode, ...options }) => {
     const configs = await getAllTestConfigurations(!!options.watch);
     if (configs.length === 0) {

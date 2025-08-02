@@ -1,15 +1,43 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
-import capitalize from 'lodash/capitalize.js';
 import cloneDeep from 'lodash/cloneDeep.js';
 import partition from 'lodash/partition.js';
 import type { LabelColor } from 'vitest';
 import { mergeConfig, type TestProjectInlineConfiguration } from 'vitest/config';
-import { resolveEitherBundleOrTab } from '../build/manifest.js';
+import { resolveSingleBundle, resolveSingleTab } from '../build/manifest.js';
 import { getGitRoot } from '../getGitRoot.js';
-import type { ErrorResult, ResolvedBundle, ResolvedTab } from '../types.js';
-import { mapAsync } from '../utils.js';
+import type { ErrorResult } from '../types.js';
+import { isNodeError, mapAsync } from '../utils.js';
 import { loadVitestConfigFromDir, sharedTabsConfig, sharedVitestConfiguration } from './configs.js';
+
+// Assign to each configuration a different colour :)
+const colors: Readonly<LabelColor[]> = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'];
+
+const gitRoot = await getGitRoot();
+
+/**
+ * If the vitest project has browser mode enabled, then remove the regular test project as that will run duplicate tests
+ * Also, unless `watch` is true, the tests should be run in headless mode.
+ */
+export function setBrowserOptions(indivConfig: TestProjectInlineConfiguration, watch: boolean) {
+  const nameStr = typeof indivConfig.test!.name === 'string' ? indivConfig.test!.name : indivConfig.test?.name?.label;
+
+  if (indivConfig.test!.browser?.enabled) {
+    indivConfig.test!.browser.headless = !watch;
+    indivConfig.test!.browser.instances?.forEach(instance => {
+      instance.name = `${nameStr} (${instance.browser})`;
+      if (!instance.include) {
+        instance.include = indivConfig.test!.include;
+      }
+    });
+    indivConfig.test!.include = [];
+  }
+}
+
+export type GetTestConfigurationResult = ErrorResult | {
+  severity: 'success'
+  config: TestProjectInlineConfiguration | null
+};
 
 /**
  * For a given directory, recurse through it and determine if the given directory has any Vitest
@@ -31,118 +59,142 @@ export async function hasTests(directory: string) {
 }
 
 /**
- * If the vitest project has browser mode enabled, then remove the regular test project as that will run duplicate tests
- * Also, unless `watch` is true, the tests should be run in headless mode.
- */
-export function setBrowserOptions(indivConfig: TestProjectInlineConfiguration, asset: ResolvedTab | ResolvedBundle, watch: boolean) {
-  const nameStr = typeof indivConfig.test!.name === 'string' ? indivConfig.test!.name : indivConfig.test?.name?.label;
-
-  if (indivConfig.test!.browser?.enabled) {
-    indivConfig.test!.browser.headless = !watch;
-    indivConfig.test!.browser.instances?.forEach(instance => {
-      instance.name = `${nameStr} (${instance.browser})`;
-      if (!instance.include) {
-        instance.include = indivConfig.test!.include;
-      }
-    });
-    indivConfig.test!.include = [];
-  }
-}
-
-/**
- * Load the Vitest configuration for a given tab or bundle. If the tab or bundle defines its own `vitest.config.js`,
- * then it is merged with the default options for tabs and bundles respectively. Otherwise, those default options
- * will be used wholesale.
- */
-export async function getBundleOrTabTestConfiguration(asset: ResolvedTab | ResolvedBundle, watch: boolean) {
-  let indivConfig = await loadVitestConfigFromDir(asset.directory);
-  if (indivConfig !== null && indivConfig.test) {
-    if (!indivConfig.test.name) {
-      indivConfig.test.name = `${asset.name} ${capitalize(asset.type)}`;
-    }
-
-    if (asset.type === 'tab') {
-      indivConfig = mergeConfig(sharedTabsConfig, indivConfig);
-    } else {
-      indivConfig = mergeConfig(sharedVitestConfiguration, indivConfig);
-    }
-
-    setBrowserOptions(indivConfig, asset, watch);
-    return indivConfig;
-  }
-
-  if (asset.type === 'tab') {
-    indivConfig = cloneDeep(sharedTabsConfig);
-  } else {
-    indivConfig = cloneDeep(sharedVitestConfiguration);
-  }
-
-  indivConfig!.test!.name = `${asset.name} ${capitalize(asset.type)}`;
-  indivConfig!.test!.root = asset.directory;
-  indivConfig!.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
-
-  setBrowserOptions(indivConfig!, asset, watch);
-  return indivConfig;
-}
-
-export type GetTestConfigurationResult = ErrorResult | {
-  severity: 'success'
-  config: TestProjectInlineConfiguration | null
-};
-
-/**
- * Load `vitest.config.js` from the given directory. This should not be used with a directory
- * that contains a bundle or a tab
+ * Based on a starting directory, locate the package.json that directory belongs to, then check
+ * if a vitest config is present next to that package.json.
+ * - The package.json refers to either a bundle or a tab, then
+ *   - No config was found
+ *     - return config: null if the bundle or tab has no tests
+ *     - return the shared config if there are tests
+ *   - If a config was found, then combine it with the shared configs and return
+ * - The package.json refers to a regular package:
+ *   - If there was no config found:
+ *     - Throw an error if tests were found
+ *     - Ignore if no tests were found
+ *   - Merge the shared config with the loaded config and return
  */
 export async function getTestConfiguration(directory: string, watch: boolean): Promise<GetTestConfigurationResult> {
-  const resolveResult = await resolveEitherBundleOrTab(directory);
-  if (resolveResult.severity === 'success') {
-    const { asset } = resolveResult;
+  /**
+   * Recurse upward from the current directory to find the nearest package json. If we're already at the git root
+   * directory, throw an error.
+   */
+  async function findPackageJson(directory: string): Promise<['bundle' | 'tab' | 'config', string] | null> {
+    if (directory === gitRoot) return null;
 
-    if (!await hasTests(asset.directory)) {
-      return {
-        severity: 'success',
-        config: null
-      };
+    try {
+      const jsonPath = `${directory}/package.json`;
+      const packageJson = JSON.parse(await fs.readFile(jsonPath, 'utf-8'));
+      const match = /^@sourceacademy\/(bundle|tab)-.+$/u.exec(packageJson.name);
+
+      if (!match) return ['config', directory];
+
+      const [, typeStr] = match;
+      const type = typeStr as 'bundle' | 'tab';
+      return [type, directory];
+    } catch (error) {
+      if (!isNodeError(error) || error.code !== 'ENOENT') throw error;
+      const parentDir = pathlib.resolve(directory, '..');
+      return findPackageJson(parentDir);
     }
-
-    const config = await getBundleOrTabTestConfiguration(asset, watch);
-    return {
-      severity: 'success',
-      config
-    };
   }
 
-  if (resolveResult.errors.length > 0) {
-    return resolveResult;
+  const packageJsonResult = await findPackageJson(directory);
+  if (packageJsonResult === null) {
+    throw new Error(`Could not find a package.json for ${directory}`);
   }
 
-  const indivConfig = await loadVitestConfigFromDir(directory);
-  if (indivConfig === null || !indivConfig.test) {
-    if (await hasTests(directory)) {
-      return {
-        severity: 'error',
-        errors: [`Tests were found at ${directory}, but no vitest config was found`]
-      };
+  const [type, jsonDir] = packageJsonResult;
+  let config = await loadVitestConfigFromDir(jsonDir);
+  switch (type) {
+    case 'config': {
+      if (config === null) {
+      // Not a bundle, no config
+        if (await hasTests(jsonDir)) {
+          return {
+            severity: 'error',
+            errors: [`Tests were found for ${directory}, but no vitest config could be located`]
+          };
+        }
+
+        return {
+          severity: 'success',
+          config: null
+        };
+      } else {
+        config = mergeConfig(sharedVitestConfiguration, config);
+      }
+
+      if (config.test!.root === undefined) {
+        config.test!.root = jsonDir;
+      }
+
+      if (config.test!.include === undefined) {
+        config!.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
+      }
+
+      break;
     }
-    return {
-      severity: 'success',
-      config: null
-    };
+    case 'tab': {
+      const tab = await resolveSingleTab(jsonDir);
+      if (!tab) {
+        return {
+          severity: 'error',
+          errors: [`Invalid tab located at ${jsonDir}`]
+        };
+      }
+
+      if (config === null) {
+        if (!await hasTests(jsonDir)) {
+          return {
+            severity: 'success',
+            config: null
+          };
+        }
+        config = cloneDeep(sharedTabsConfig);
+        config!.test!.name = `${tab.name} Tab`;
+        config!.test!.root = jsonDir;
+        config!.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
+      } else {
+        config = mergeConfig(sharedTabsConfig, config);
+      }
+      break;
+    }
+    case 'bundle': {
+      const bundleResult = await resolveSingleBundle(jsonDir);
+      if (!bundleResult) {
+        return {
+          severity: 'error',
+          errors: [`Invalid bundle present at ${jsonDir}`]
+        };
+      } else if (bundleResult.severity === 'error') {
+        return bundleResult;
+      }
+
+      const { bundle } = bundleResult;
+      if (config === null) {
+        if (!await hasTests(jsonDir)) {
+          return {
+            severity: 'success',
+            config: null
+          };
+        }
+
+        config = cloneDeep(sharedVitestConfiguration);
+        config!.test!.name = `${bundle.name} Bundle`;
+        config!.test!.root = jsonDir;
+        config!.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
+      } else {
+        config = mergeConfig(sharedVitestConfiguration, config);
+      }
+      break;
+    }
   }
 
-  if (indivConfig.test.browser?.enabled) {
-    indivConfig!.test.browser.headless = !watch;
-  }
-
-  if (!indivConfig.test.root) {
-    indivConfig.test.root = directory;
-  }
-
+  setBrowserOptions(config, watch);
   return {
     severity: 'success',
-    config: mergeConfig(sharedVitestConfiguration, indivConfig!)
+    config
   };
+
 }
 
 /**
@@ -181,14 +233,13 @@ export async function getAllTestConfigurations(watch: boolean) {
     }
   });
 
-  // Assign each configuration a different colour :)
-  const colors: LabelColor[] = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'];
   configs.forEach((config, i) => {
+    const color = colors[i % colors.length];
     switch (typeof config.test!.name) {
       case 'string': {
         config.test!.name = {
           label: config.test!.name,
-          color: colors[i % colors.length]
+          color,
         };
         break;
       }
@@ -196,7 +247,7 @@ export async function getAllTestConfigurations(watch: boolean) {
         if (config.test!.name !== null) {
           config.test!.name = {
             label: config.test!.name.label,
-            color: config.test!.name.color ?? colors[i % colors.length]
+            color: config.test!.name.color ?? color
           };
         }
         break;

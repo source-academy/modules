@@ -1,9 +1,11 @@
 import { describe, expect, test, vi } from 'vitest';
+import { testMocksDir } from '../../__tests__/fixtures.js';
 import * as runner from '../../testing/runner.js';
 import * as configs from '../../testing/utils.js';
 import { getTestCommand } from '../testing.js';
 import { getCommandRunner } from './testingUtils.js';
 
+vi.mock(import('../../getGitRoot.js'));
 vi.spyOn(process, 'cwd').mockReturnValue('/');
 vi.spyOn(runner, 'runVitest').mockResolvedValue();
 
@@ -22,13 +24,15 @@ describe('Test regular test command', () => {
     };
 
     mockedTestConfiguration.mockResolvedValueOnce(mockConfig);
+    const projectPath = `${testMocksDir}/dir`;
 
-    await expect(runCommand('/dir', '/dir/dir1')).commandSuccess();
-    expect(configs.getTestConfiguration).toHaveBeenCalledExactlyOnceWith('/dir', false);
-    expect(runner.runVitest).toHaveBeenCalledExactlyOnceWith('test', ['/dir/dir1'], [mockConfig.config], {});
+    await expect(runCommand('--project', projectPath, `${projectPath}/dir1`)).commandSuccess();
+    expect(configs.getTestConfiguration).toHaveBeenCalledExactlyOnceWith(projectPath, false);
+    expect(runner.runVitest).toHaveBeenCalledExactlyOnceWith('test', [`${projectPath}/dir1`], [mockConfig.config], { allowOnly: true });
   });
 
   test('Providing both the project directory but no patterns', async () => {
+    const projectPath = `${testMocksDir}/dir`;
     const mockConfig: configs.GetTestConfigurationResult = {
       severity: 'success',
       config: {
@@ -40,17 +44,23 @@ describe('Test regular test command', () => {
 
     mockedTestConfiguration.mockResolvedValueOnce(mockConfig);
 
-    await expect(runCommand('/dir')).commandSuccess();
-    expect(configs.getTestConfiguration).toHaveBeenCalledExactlyOnceWith('/dir', false);
-    expect(runner.runVitest).toHaveBeenCalledExactlyOnceWith('test', [], [mockConfig.config], {});
+    await expect(runCommand('--project', projectPath)).commandSuccess();
+    expect(configs.getTestConfiguration).toHaveBeenCalledExactlyOnceWith(projectPath, false);
+    expect(runner.runVitest).toHaveBeenCalledExactlyOnceWith('test', [], [mockConfig.config], { allowOnly: true });
   });
 
   test('Expect command to exit with no issues if no tests were found', async () => {
+    const projectPath = `${testMocksDir}/dir`;
     mockedTestConfiguration.mockResolvedValueOnce({
       severity: 'success',
       config: null
     });
 
-    await expect(runCommand('/dir')).commandSuccess();
+    await expect(runCommand('--project', projectPath)).commandSuccess();
+  });
+
+  test('Command should error if the command was called from beyond the git root', async () => {
+    const projectPath = `${testMocksDir}/..`;
+    await expect(runCommand('--project', projectPath)).commandExit();
   });
 });

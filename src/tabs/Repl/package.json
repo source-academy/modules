@@ -17,7 +17,8 @@
   "scripts": {
     "build": "buildtools build tab .",
     "lint": "buildtools lint .",
-    "tsc": "buildtools tsc ."
+    "tsc": "buildtools tsc .",
+    "test": "buildtools test --project ."
   },
   "type": "module"
 }

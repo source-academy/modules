@@ -18,6 +18,7 @@
   "scripts": {
     "build": "buildtools build bundle .",
     "lint": "buildtools lint .",
-    "tsc": "buildtools tsc ."
+    "tsc": "buildtools tsc .",
+    "test": "buildtools test --project ."
   }
 }

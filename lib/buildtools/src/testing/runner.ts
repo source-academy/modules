@@ -1,29 +1,58 @@
-import { mergeConfig, type TestProjectInlineConfiguration } from 'vitest/config';
+import { mergeConfig, type TestProjectInlineConfiguration, type ViteUserConfig } from 'vitest/config';
 import { startVitest, type VitestRunMode } from 'vitest/node';
 import { sharedVitestConfiguration } from './configs.js';
-import type { RunVitestBoolOptions } from './types.js';
+
+interface RunVitestBoolOptions {
+  watch?: boolean
+  coverage?: boolean
+  update?: boolean
+  allowOnly?: boolean
+}
+
+function getIncludes({ test }: TestProjectInlineConfiguration) {
+  const output: string[] = [];
+
+  if (test?.include) {
+    output.push(...test.include);
+  }
+
+  if (test?.browser?.enabled && test?.browser?.instances) {
+    for (const { include } of test.browser.instances) {
+      if (include) {
+        output.push(...include);
+      }
+    }
+  }
+
+  return output;
+}
 
 /**
  * Create a new Vitest instance and run it. Refer to https://vitest.dev/advanced/api/#startvitest for more information.
  */
-export async function runVitest(mode: VitestRunMode, filters: string[] | undefined, projects: TestProjectInlineConfiguration[], options: RunVitestBoolOptions) {
+export async function runVitest(mode: VitestRunMode, filters: string[], projects: TestProjectInlineConfiguration[], options: RunVitestBoolOptions) {
   try {
+    const coverageIncludeFilters = filters.length === 0 ? filters : projects.flatMap(getIncludes);
+    const runtimeOptions: ViteUserConfig['test'] = {
+      projects,
+      update: !!options.update,
+      coverage: {
+        include: coverageIncludeFilters,
+        enabled: !!options.coverage,
+      },
+      allowOnly: !!options.allowOnly,
+      watch: !!options.watch,
+    };
+
     const finalConfig = mergeConfig(
       sharedVitestConfiguration.test!,
       {
         config: false,
-        projects,
-        watch: !!options.watch,
-        update: !!options.update,
-        coverage: {
-          // Coverage is always just blank so I can never seem to get
-          // specific coverage reports only
-          // include: filters?.map(each => `${each}/**/*.tsx`),
-          enabled: !!options.coverage
-        },
+        ...runtimeOptions
       }
     );
 
+    finalConfig.coverage.include = coverageIncludeFilters;
     const vitest = await startVitest(mode, filters, finalConfig);
 
     if (vitest.shouldKeepServer()) {

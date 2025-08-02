@@ -33,6 +33,6 @@
     "lint": "eslint src",
     "prepare": "yarn build",
     "tsc": "tsc --project ./tsconfig.json",
-    "test": "buildtools test ."
+    "test": "buildtools test --project ."
   }
 }

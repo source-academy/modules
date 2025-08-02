@@ -46,6 +46,6 @@
     "lint": "eslint src",
     "prepare": "yarn build && playwright install --with-deps",
     "tsc": "tsc --project ./tsconfig.json",
-    "test": "buildtools test ."
+    "test": "buildtools test --project ."
   }
 }
