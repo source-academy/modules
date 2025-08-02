@@ -5,7 +5,6 @@
   "version": "1.0.0",
   "devDependencies": {
     "@commander-js/extra-typings": "^13.0.0",
-    "@sourceacademy/modules-repotools": "workspace:^",
     "@types/estree": "^1.0.0",
     "@types/lodash": "^4.14.198",
     "@types/node": "^22.15.30",
@@ -19,6 +18,7 @@
   "type": "module",
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
+    "@sourceacademy/modules-repotools": "workspace:^",
     "@vitejs/plugin-react": "^4.5.1",
     "acorn": "^8.8.1",
     "astring": "^1.8.6",
