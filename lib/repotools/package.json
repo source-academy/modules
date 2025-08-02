@@ -6,6 +6,8 @@
   "description": "Common library for tooling used by the modules repository",
   "devDependencies": {
     "@commander-js/extra-typings": "^13.0.0",
+    "@types/lodash": "^4.14.198",
+    "@types/node": "^22.15.30",
     "typescript": "^5.8.2",
     "vitest": "^3.2.3"
   },
