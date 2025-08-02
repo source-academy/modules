@@ -50,7 +50,7 @@ Bundle resolution involves loading its manifest, determining its version and nam
 
 `resolveSingleBundle` executes the resolution process and returns the following type:
 
-<<< ../../../lib/buildtools/src/types.ts#ResolvedBundle
+<<< ../../../lib/repotools/src/types.ts#ResolvedBundle
 
 ### `resolveAllBundles`
 `resolveAllBundles` is used to collate the manifests of every single bundle at once. If bundle(s) return an error during resolution, the resolution process will still proceed and the errors are collated together
@@ -80,6 +80,6 @@ This process is also used when checking that the tabs specified the bundle manif
 
 `resolveSingleTab` used to perform tab resolution returns the following type:
 
-<<< ../../../lib/buildtools/src/types.ts#ResolvedTab
+<<< ../../../lib/repotools/src/types.ts#ResolvedTab
 
 Because the entry point for a tab can be either `src/index.tsx` or `index.tsx`, we do need to store the tab's entry point.
