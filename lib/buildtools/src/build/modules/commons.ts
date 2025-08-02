@@ -1,7 +1,8 @@
 import fs from 'fs/promises';
 import { parse } from 'acorn';
 import { generate } from 'astring';
-import type { BuildOptions as ESBuildOptions, OutputFile } from 'esbuild';
+import chalk from 'chalk';
+import type { BuildOptions as ESBuildOptions, OutputFile, Plugin as ESBuildPlugin } from 'esbuild';
 import type es from 'estree';
 import type { BuildResult, InputAsset } from '../../types.js';
 
@@ -26,12 +27,15 @@ export const commonEsbuildOptions = {
 } satisfies ESBuildOptions;
 // #endregion esbuildOptions
 
-/**
- * Write the compiled output from ESBuild to the file system after performing AST transformation
- */
-export async function outputBundleOrTab({ text }: OutputFile, input: InputAsset, outDir: string): Promise<BuildResult> {
-  const parsed = parse(text, { ecmaVersion: 6 }) as es.Program;
+type ConvertAstResult = {
+  severity: 'error',
+  error: string
+} | {
+  severity: 'success'
+  output: es.Node
+};
 
+function convertAst(parsed: es.Program): ConvertAstResult {
   // Account for 'use strict'; directives
   let declStatement: es.VariableDeclaration;
   if (parsed.body[0].type === 'VariableDeclaration') {
@@ -43,22 +47,18 @@ export async function outputBundleOrTab({ text }: OutputFile, input: InputAsset,
   const { init: callExpression } = declStatement.declarations[0];
   if (callExpression?.type !== 'CallExpression') {
     return {
-      type: input.type,
       severity: 'error',
-      input,
-      errors: [`parse failure: Expected a CallExpression, got ${callExpression?.type ?? callExpression}`]
-    } as BuildResult;
+      error: `parse failure: Expected a CallExpression, got ${callExpression?.type ?? callExpression}`
+    };
   }
 
   const moduleCode = callExpression.callee;
 
   if (moduleCode.type !== 'FunctionExpression' && moduleCode.type !== 'ArrowFunctionExpression') {
     return {
-      type: input.type,
       severity: 'error',
-      input,
-      errors: [`${input.type} ${input.name} parse failure: Expected a function, got ${moduleCode.type}`]
-    } as BuildResult;
+      error: `parse failure: Expected a function, got ${moduleCode.type}`,
+    };
   }
 
   const output: es.ExportDefaultDeclaration = {
@@ -72,6 +72,29 @@ export async function outputBundleOrTab({ text }: OutputFile, input: InputAsset,
     }
   };
 
+  return {
+    severity: 'success',
+    output
+  };
+}
+
+/**
+ * Write the compiled output from ESBuild to the file system after performing AST transformation
+ */
+export async function outputBundleOrTab({ text }: OutputFile, input: InputAsset, outDir: string): Promise<BuildResult> {
+  const parsed = parse(text, { ecmaVersion: 6 }) as es.Program;
+
+  const astResult = convertAst(parsed);
+  if (astResult.severity === 'error') {
+    return {
+      type: input.type,
+      severity: 'error',
+      input,
+      errors: [`${input.type} ${input.name} ${astResult.error}`]
+    } as BuildResult;
+  }
+
+  const { output } = astResult;
   const outputDirectory = `${outDir}/${input.type}s`;
   await fs.mkdir(outputDirectory, { recursive: true });
 
@@ -92,4 +115,31 @@ export async function outputBundleOrTab({ text }: OutputFile, input: InputAsset,
   } finally {
     await file?.close();
   }
+}
+
+export function builderPlugin(input: InputAsset, outDir: string): ESBuildPlugin {
+  return {
+    name: 'Builder Plugin',
+    async setup({ initialOptions, onEnd }) {
+      if (initialOptions.write !== false) {
+        throw new Error('Plugin must be used with write: false');
+      }
+
+      const outpath = `${outDir}/${input.name}.js`;
+      const file = await fs.open(outpath, 'w');
+      const writeStream = file.createWriteStream();
+
+      onEnd(result => {
+        const [{ text }] = result.outputFiles!;
+        const parsed = parse(text, { ecmaVersion: 6 }) as es.Program;
+        const astResult = convertAst(parsed);
+        if (astResult.severity === 'success') {
+          generate(astResult.output, { output: writeStream });
+          console.log(chalk.greenBright(`Output written to ${outpath}`));
+        } else {
+          console.error(chalk.redBright(astResult.error));
+        }
+      });
+    }
+  };
 }

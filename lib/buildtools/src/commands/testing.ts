@@ -14,8 +14,6 @@ const vitestModeOption = new Option('--mode <mode>', 'Vitest Run Mode. See https
 const watchOption = new Option('-w, --watch', 'Run tests in watch mode');
 const updateOption = new Option('-u, --update', 'Update snapshots');
 const coverageOption = new Option('--coverage');
-const allowOnlyOption = new Option('--no-allow-only', 'Allow the use of .only')
-  .default(!process.env.CI);
 
 export const getTestCommand = () => new Command('test')
   .description('Run test for the specific bundle or tab at the specified directory.')
@@ -23,7 +21,7 @@ export const getTestCommand = () => new Command('test')
   .addOption(watchOption)
   .addOption(updateOption)
   .addOption(coverageOption)
-  .addOption(allowOnlyOption)
+  .option('--no-allow-only', 'Allow the use of .only in tests', !process.env.CI)
   .option('-p, --project <directory>', 'Path to the directory that is the root of your test project')
   .argument('[patterns...]', 'Test patterns to filter by.')
   .action(async (patterns, { mode, project, ...options }) => {
@@ -58,7 +56,7 @@ export const getTestAllCommand = () => new Command('testall')
   .addOption(watchOption)
   .addOption(updateOption)
   .addOption(coverageOption)
-  .addOption(allowOnlyOption)
+  .option('--no-allow-only', 'Allow the use of .only in tests', !process.env.CI)
   .action(async (patterns, { mode, ...options }) => {
     const configs = await getAllTestConfigurations(!!options.watch);
     if (configs.length === 0) {

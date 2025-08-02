@@ -6,7 +6,7 @@ import { getTestCommand } from '../testing.js';
 import { getCommandRunner } from './testingUtils.js';
 
 vi.mock(import('../../getGitRoot.js'));
-vi.spyOn(process, 'cwd').mockReturnValue('/');
+vi.spyOn(process, 'cwd').mockReturnValue(testMocksDir);
 vi.spyOn(runner, 'runVitest').mockResolvedValue();
 
 describe('Test regular test command', () => {
@@ -62,5 +62,50 @@ describe('Test regular test command', () => {
   test('Command should error if the command was called from beyond the git root', async () => {
     const projectPath = `${testMocksDir}/..`;
     await expect(runCommand('--project', projectPath)).commandExit();
+  });
+
+  test('--no-allow-only should not allow only :)', async () => {
+    const mockConfig: configs.GetTestConfigurationResult = {
+      severity: 'success',
+      config: {
+        test: {
+          name: 'Test0'
+        }
+      }
+    };
+    mockedTestConfiguration.mockResolvedValueOnce(mockConfig);
+
+    await expect(runCommand('--no-allow-only')).commandSuccess();
+    expect(runner.runVitest).toHaveBeenCalledExactlyOnceWith(
+      'test',
+      [],
+      [mockConfig.config],
+      { allowOnly: false }
+    );
+  });
+
+  test('--no-allow-only should be true when CI', async () => {
+    vi.stubEnv('CI', 'yeet');
+    try {
+      const mockConfig: configs.GetTestConfigurationResult = {
+        severity: 'success',
+        config: {
+          test: {
+            name: 'Test0'
+          }
+        }
+      };
+      mockedTestConfiguration.mockResolvedValueOnce(mockConfig);
+
+      await expect(runCommand()).commandSuccess();
+      expect(runner.runVitest).toHaveBeenCalledExactlyOnceWith(
+        'test',
+        [],
+        [mockConfig.config],
+        { allowOnly: false }
+      );
+    } finally {
+      vi.unstubAllEnvs();
+    }
   });
 });

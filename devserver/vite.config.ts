@@ -62,11 +62,24 @@ export default defineConfig(({ mode }) => {
         }
       },
       include: [
+        '../build/tabs/*.js',
+        'ace-builds',
+        'ace-builds/src-noconflict/ace',
+        'ace-builds/src-noconflict/ext-language_tools',
+        'ace-builds/src-noconflict/ext-searchbox',
+        'classnames',
+        'js-slang/dist/createContext',
+        'js-slang/dist/editors/ace/modes/source',
+        'js-slang/dist/editors/ace/theme/source',
+        'js-slang/dist/types',
+        'js-slang/dist/utils/stringify',
+        'react/jsx-dev-runtime',
+        'react-ace',
+        'react-ace/lib/ace',
+        're-resizable',
         "vite-plugin-node-polyfills/shims/buffer",
         "vite-plugin-node-polyfills/shims/global",
         "vite-plugin-node-polyfills/shims/process",
-        '../build/tabs/*.js',
-        'react/jsx-dev-runtime'
       ],
     },
   }

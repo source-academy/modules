@@ -31,6 +31,16 @@ export function setBrowserOptions(indivConfig: TestProjectInlineConfiguration, w
       }
     });
     indivConfig.test!.include = [];
+
+    if (!indivConfig.optimizeDeps) {
+      indivConfig.optimizeDeps = {};
+    }
+
+    if (indivConfig.optimizeDeps.include === undefined) {
+      indivConfig.optimizeDeps.include = [];
+    }
+
+    indivConfig.optimizeDeps.include.push(...sharedTabsConfig.optimizeDeps.include);
   }
 }
 
