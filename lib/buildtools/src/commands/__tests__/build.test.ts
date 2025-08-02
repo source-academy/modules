@@ -1,19 +1,18 @@
 import fs from 'fs/promises';
 import type { Command } from '@commander-js/extra-typings';
+import type { BuildResult, Severity } from '@sourceacademy/modules-repotools/types';
 import { beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import { testMocksDir } from '../../__tests__/fixtures.js';
 import * as json from '../../build/docs/json.js';
 import * as modules from '../../build/modules/index.js';
 import * as lintRunner from '../../prebuild/lint.js';
 import * as tscRunner from '../../prebuild/tsc.js';
-import type { BuildResult, Severity } from '../../types.js';
 import * as commands from '../build.js';
 import { getCommandRunner } from './testingUtils.js';
 
 const mockedRunEslint = vi.spyOn(lintRunner, 'runEslint');
 const mockedRunTsc = vi.spyOn(tscRunner, 'runTsc');
 
-vi.mock(import('../../getGitRoot.js'));
 vi.mock(import('typedoc'), async importOriginal => {
   const original = await importOriginal();
 

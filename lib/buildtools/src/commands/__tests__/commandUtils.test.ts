@@ -1,5 +1,5 @@
+import type { Severity } from "@sourceacademy/modules-repotools/types";
 import { describe, expect, test } from "vitest";
-import type { Severity } from "../../types.js";
 import { processResult } from "../commandUtils.js";
 
 describe('Testing processResults', () => {

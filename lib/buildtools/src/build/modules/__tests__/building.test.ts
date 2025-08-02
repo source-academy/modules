@@ -13,8 +13,6 @@ vi.spyOn(fs, 'open').mockResolvedValue({
   close: vi.fn()
 } as any);
 
-vi.mock(import('../../../getGitRoot.js'));
-
 beforeEach(() => {
   written.splice(0, written.length);
 });

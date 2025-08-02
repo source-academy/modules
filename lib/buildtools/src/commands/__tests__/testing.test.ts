@@ -5,7 +5,6 @@ import * as configs from '../../testing/utils.js';
 import { getTestCommand } from '../testing.js';
 import { getCommandRunner } from './testingUtils.js';
 
-vi.mock(import('../../getGitRoot.js'));
 vi.spyOn(process, 'cwd').mockReturnValue(testMocksDir);
 vi.spyOn(runner, 'runVitest').mockResolvedValue();
 

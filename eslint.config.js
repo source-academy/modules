@@ -334,7 +334,11 @@ export default tseslint.config(
   },
   {
     name: 'Rules specifically for files that interact with Node only',
-    files: ['lib/buildtools/**/*.ts', '**/vitest.config.js'],
+    files: [
+      'lib/buildtools/**/*.ts',
+      'lib/repotools/**/*.ts',
+      '**/vitest.config.js'
+    ],
     rules: {
       'import/extensions': ['error', 'ignorePackages'],
     }

@@ -1,10 +1,10 @@
 import fs from 'fs/promises';
+import type { BuildResult, InputAsset } from '@sourceacademy/modules-repotools/types';
 import { parse } from 'acorn';
 import { generate } from 'astring';
 import chalk from 'chalk';
 import type { BuildOptions as ESBuildOptions, OutputFile, Plugin as ESBuildPlugin } from 'esbuild';
 import type es from 'estree';
-import type { BuildResult, InputAsset } from '../../types.js';
 
 // The region tag is used in the developer documentation. DON'T REMOVE
 // #region esbuildOptions

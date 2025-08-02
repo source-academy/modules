@@ -1,5 +1,5 @@
+import type { ResolvedBundle, ResolvedTab } from '@sourceacademy/modules-repotools/types';
 import { build as esbuild, type Plugin as ESBuildPlugin } from 'esbuild';
-import type { ResolvedBundle, ResolvedTab } from '../../types.js';
 import { commonEsbuildOptions, outputBundleOrTab } from './commons.js';
 
 /**

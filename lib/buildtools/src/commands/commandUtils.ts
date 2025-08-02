@@ -1,8 +1,8 @@
 import { InvalidArgumentError, Option } from '@commander-js/extra-typings';
+import type { ErrorResult, Severity } from '@sourceacademy/modules-repotools/types';
+import { isSeverity } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
 import { LogLevel } from 'typedoc';
-import type { ErrorResult, Severity } from '../types.js';
-import { isSeverity } from '../utils.js';
 
 export const lintOption = new Option('--lint', 'Run ESLint when building')
   .default(false);

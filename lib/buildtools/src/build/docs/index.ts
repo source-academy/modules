@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
+import type { BuildResult, ResolvedBundle, ResultType } from '@sourceacademy/modules-repotools/types';
+import { mapAsync } from '@sourceacademy/modules-repotools/utils';
 import * as td from 'typedoc';
-import type { BuildResult, ResolvedBundle, ResultType } from '../../types.js';
-import { mapAsync } from '../../utils.js';
 import { buildJson } from './json.js';
 
 // #region commonOpts

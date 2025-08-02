@@ -1,8 +1,8 @@
 import { describe, expect, it, test, vi } from 'vitest';
-import { expectIsSuccess, testMocksDir } from '../../../__tests__/fixtures.js';
-import { resolveAllTabs, resolveSingleTab } from '../../manifest.js';
+import { expectIsSuccess, testMocksDir } from '../../../buildtools/src/__tests__/fixtures.js';
+import { resolveAllTabs, resolveSingleTab } from '../manifest.js';
 
-vi.mock(import('../../../getGitRoot.js'));
+vi.mock(import('../getGitRoot.js'));
 
 describe('Test resolveSingleTab', () => {
   it('properly detects a tab with the src/index.tsx entrypoint', async () => {

@@ -1,11 +1,10 @@
 import fs from 'fs/promises';
+import * as manifest from '@sourceacademy/modules-repotools/manifest';
 import { describe, test, vi } from 'vitest';
 import { testMocksDir } from '../../__tests__/fixtures.js';
-import * as manifest from '../../build/manifest.js';
 import { getListBundlesCommand, getListTabsCommand } from '../list.js';
 import { getCommandRunner } from './testingUtils.js';
 
-vi.mock(import('../../getGitRoot.js'));
 vi.spyOn(console, 'log');
 vi.spyOn(console, 'error');
 

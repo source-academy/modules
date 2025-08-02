@@ -1,4 +1,5 @@
 // Buildtools vitest setup
+import pathlib from 'path';
 import { expect, vi } from 'vitest';
 
 class MockProcessError extends Error {
@@ -49,6 +50,16 @@ vi.mock(import('typescript'), async importOriginal => {
         writeFile: () => {},
       },
     }
+  };
+});
+
+vi.mock(import('@sourceacademy/modules-repotools/getGitRoot'), async () => {
+  const testMocksDir = pathlib.resolve(import.meta.dirname, '../__test_mocks__');
+  return {
+    getGitRoot: () => Promise.resolve(testMocksDir),
+    getBundlesDir: () => Promise.resolve(pathlib.join(testMocksDir, 'bundles')),
+    getTabsDir: () => Promise.resolve(pathlib.join(testMocksDir, 'tabs')),
+    getOutDir: () => Promise.resolve('/build'),
   };
 });
 

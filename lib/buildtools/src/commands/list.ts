@@ -1,8 +1,8 @@
 import { Command } from '@commander-js/extra-typings';
+import { getBundlesDir, getTabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
+import { resolveAllBundles, resolveAllTabs, resolveSingleBundle, resolveSingleTab } from '@sourceacademy/modules-repotools/manifest';
 import chalk from 'chalk';
 import omit from 'lodash/omit.js';
-import { resolveAllBundles, resolveAllTabs, resolveSingleBundle, resolveSingleTab } from '../build/manifest.js';
-import { getBundlesDir, getTabsDir } from '../getGitRoot.js';
 import { logCommandErrorAndExit } from './commandUtils.js';
 
 export const getListBundlesCommand = () => new Command('bundle')

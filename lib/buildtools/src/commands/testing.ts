@@ -1,8 +1,8 @@
 import pathlib from 'path';
 import { Command, Option } from '@commander-js/extra-typings';
+import { getGitRoot } from '@sourceacademy/modules-repotools/getGitRoot';
 import chalk from 'chalk';
 import type { VitestRunMode } from 'vitest/node';
-import { getGitRoot } from '../getGitRoot.js';
 import { runVitest } from '../testing/runner.js';
 import { getAllTestConfigurations, getTestConfiguration } from '../testing/utils.js';
 import { logCommandErrorAndExit } from './commandUtils.js';

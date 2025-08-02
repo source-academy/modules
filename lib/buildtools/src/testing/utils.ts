@@ -1,13 +1,13 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
+import { getGitRoot } from '@sourceacademy/modules-repotools/getGitRoot';
+import { resolveSingleBundle, resolveSingleTab } from '@sourceacademy/modules-repotools/manifest';
+import type { ErrorResult } from '@sourceacademy/modules-repotools/types';
+import { isNodeError, mapAsync } from '@sourceacademy/modules-repotools/utils';
 import cloneDeep from 'lodash/cloneDeep.js';
 import partition from 'lodash/partition.js';
 import type { LabelColor } from 'vitest';
 import { mergeConfig, type TestProjectInlineConfiguration } from 'vitest/config';
-import { resolveSingleBundle, resolveSingleTab } from '../build/manifest.js';
-import { getGitRoot } from '../getGitRoot.js';
-import type { ErrorResult } from '../types.js';
-import { isNodeError, mapAsync } from '../utils.js';
 import { loadVitestConfigFromDir, sharedTabsConfig, sharedVitestConfiguration } from './configs.js';
 
 // Assign to each configuration a different colour :)

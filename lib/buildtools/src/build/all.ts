@@ -1,9 +1,9 @@
+import type { BuildResult, InputAsset, Severity } from '@sourceacademy/modules-repotools/types';
+import { compareSeverity } from '@sourceacademy/modules-repotools/utils';
 import type { LogLevel } from 'typedoc';
 import type { PrebuildOptions } from '../prebuild/index.js';
 import { runEslint, type LintResult } from '../prebuild/lint.js';
 import { runTsc, type TscResult } from '../prebuild/tsc.js';
-import type { BuildResult, InputAsset, Severity } from '../types.js';
-import { compareSeverity } from '../utils.js';
 import { buildSingleBundleDocs } from './docs/index.js';
 import { buildBundle, buildTab } from './modules/index.js';
 

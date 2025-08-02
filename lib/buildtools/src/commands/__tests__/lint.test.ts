@@ -1,7 +1,7 @@
+import * as utils from '@sourceacademy/modules-repotools/getGitRoot';
+import * as manifest from '@sourceacademy/modules-repotools/manifest';
 import { ESLint } from 'eslint';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import * as manifest from '../../build/manifest.js';
-import * as utils from '../../getGitRoot.js';
 import { getLintCommand } from '../prebuild.js';
 import { getCommandRunner } from './testingUtils.js';
 

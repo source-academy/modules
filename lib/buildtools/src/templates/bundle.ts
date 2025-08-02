@@ -1,9 +1,9 @@
 import fs from 'fs/promises';
 import type { Interface } from 'readline/promises';
+import { getBundleManifests } from '@sourceacademy/modules-repotools/manifest';
+import type { BundleManifest, ModulesManifest } from '@sourceacademy/modules-repotools/types';
 import _package from '../../../../package.json' with { type: 'json' };
 import { formatResult } from '../build/formatter.js';
-import { getBundleManifests } from '../build/manifest.js';
-import type { BundleManifest, ModulesManifest } from '../types.js';
 import sampleTsconfig from './bundle_tsconfig.json' with { type: 'json' };
 import { askQuestion, error, success, warn } from './print.js';
 import { check, isSnakeCase } from './utilities.js';

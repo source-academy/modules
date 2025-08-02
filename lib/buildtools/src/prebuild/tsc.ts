@@ -1,9 +1,9 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
+import type { InputAsset, Severity } from '@sourceacademy/modules-repotools/types';
+import { findSeverity } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
 import ts from 'typescript';
-import type { ResolvedBundle, ResolvedTab, Severity } from '../types.js';
-import { findSeverity } from '../utils.js';
 
 type TsconfigResult = {
   severity: 'error'
@@ -18,7 +18,7 @@ type TsconfigResult = {
 };
 
 export type TscResult = {
-  input: ResolvedBundle | ResolvedTab
+  input: InputAsset
 } & ({
   severity: 'error'
   error: any
@@ -64,7 +64,7 @@ async function getTsconfig(srcDir: string): Promise<TsconfigResult> {
   }
 }
 
-export async function runTsc(input: ResolvedBundle | ResolvedTab, noEmit: boolean): Promise<TscResult> {
+export async function runTsc(input: InputAsset, noEmit: boolean): Promise<TscResult> {
   const tsconfigRes = await getTsconfig(input.directory);
   if (tsconfigRes.severity === 'error') {
     return {

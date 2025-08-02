@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
-import type { InputAsset, ResolvedBundle, ResolvedTab } from '../types.js';
-import { compareSeverity } from '../utils.js';
+import type { InputAsset } from '@sourceacademy/modules-repotools/types';
+import { compareSeverity } from '@sourceacademy/modules-repotools/utils';
 import { runEslint, type LintResult } from './lint.js';
 import { runTsc, type TscResult } from './tsc.js';
 
@@ -60,7 +60,7 @@ export async function runBuilderWithPrebuild<T extends InputAsset, U extends any
 /**
  * Run just tsc and ESLint simultaneously without running any build tasks
  */
-export async function runPrebuild(asset: ResolvedBundle | ResolvedTab) {
+export async function runPrebuild(asset: InputAsset) {
   const [tscResult, lintResult] = await Promise.all([
     runTsc(asset, false),
     runEslint(asset, false, false)

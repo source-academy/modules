@@ -128,3 +128,25 @@ export async function isBundleOrTabDirectory(directory: string) {
 
   return recurser(directory);
 }
+
+type DeconstructRecord<T extends Record<string | symbol | number, unknown>> = {
+  [K in keyof T]: [K, T[K]]
+}[keyof T];
+
+/**
+ * Type safe `Object.entries`
+ */
+export function objectEntries<T extends Record<string | symbol | number, unknown>>(obj: T) {
+  return Object.entries(obj) as DeconstructRecord<T>[];
+}
+
+/**
+ * Type safe `Object.values`
+ */
+export function objectValues<T>(obj: Record<string | symbol | number, T>) {
+  return Object.values(obj) as T[];
+}
+
+export function objectKeys<T extends string | symbol | number>(obj: Record<T, unknown>) {
+  return Object.keys(obj) as T[];
+}

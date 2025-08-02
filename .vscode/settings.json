@@ -3,7 +3,7 @@
   "json.schemas": [
     {
       "fileMatch": ["src/bundles/**/manifest.json"],
-      "url": "./lib/buildtools/src/build/modules/manifest.schema.json"
+      "url": "./lib/repotools/src/manifest.schema.json"
     },
     {
       "fileMatch": ["tsconfig.json", "tsconfig.*.json"],

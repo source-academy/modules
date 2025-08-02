@@ -1,8 +1,11 @@
 {
-  "include": ["./index.ts"],
+  "extends": ["../tsconfig.json"],
+  "include": ["./src"],
   "compilerOptions": {
+    "declaration": true,
     "module": "nodenext",
     "moduleResolution": "nodenext",
+    "noEmit": false,
     "outDir": "./dist"
   }
 }

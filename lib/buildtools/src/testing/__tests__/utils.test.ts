@@ -1,8 +1,8 @@
 import type { Dirent } from 'fs';
 import fs from 'fs/promises';
+import * as manifest from '@sourceacademy/modules-repotools/manifest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { TestProjectInlineConfiguration } from 'vitest/config.js';
-import * as manifest from '../../build/manifest.js';
+import type { TestProjectInlineConfiguration } from 'vitest/config';
 import * as configs from '../configs.js';
 import * as utils from '../utils.js';
 

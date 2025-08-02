@@ -1,10 +1,11 @@
 import { Command } from '@commander-js/extra-typings';
+import { getBundlesDir, getOutDir } from '@sourceacademy/modules-repotools/getGitRoot';
+import { resolveAllBundles, resolveEitherBundleOrTab, resolveSingleBundle, resolveSingleTab } from '@sourceacademy/modules-repotools/manifest';
 import { buildAll } from '../build/all.js';
 import { buildHtml, buildSingleBundleDocs } from '../build/docs/index.js';
 import { formatResult, formatResultObject } from '../build/formatter.js';
-import { buildManifest, resolveAllBundles, resolveEitherBundleOrTab, resolveSingleBundle, resolveSingleTab } from '../build/manifest.js';
 import { buildBundle, buildTab } from '../build/modules/index.js';
-import { getBundlesDir, getOutDir } from '../getGitRoot.js';
+import { buildManifest } from '../build/modules/manifest.js';
 import { runBuilderWithPrebuild } from '../prebuild/index.js';
 import { lintOption, logCommandErrorAndExit, logLevelOption, processResult, tscOption } from './commandUtils.js';
 

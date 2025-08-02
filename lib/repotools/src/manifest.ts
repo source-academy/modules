@@ -3,11 +3,10 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import { validate } from 'jsonschema';
 import uniq from 'lodash/uniq.js';
-import { objectEntries } from '../commands/commandUtils.js';
-import { getTabsDir } from '../getGitRoot.js';
-import type { BundleManifest, InputAsset, ResolvedBundle, ResolvedTab, ResultType, SuccessResult } from '../types.js';
-import { filterAsync, isNodeError, mapAsync } from '../utils.js';
-import manifestSchema from './modules/manifest.schema.json' with { type: 'json' };
+import { getTabsDir } from './getGitRoot.js';
+import manifestSchema from './manifest.schema.json' with { type: 'json' };
+import type { BundleManifest, InputAsset, ResolvedBundle, ResolvedTab, ResultType } from './types.js';
+import { filterAsync, isNodeError, mapAsync } from './utils.js';
 
 export type GetBundleManifestResult = ResultType<{ manifest: BundleManifest }>;
 
@@ -372,23 +371,5 @@ export async function resolveEitherBundleOrTab(directory: string): Promise<Resol
   return {
     severity: 'success',
     asset: bundle.bundle
-  };
-}
-
-/**
- * Writes the combined modules' manifest to the output directory
- */
-export async function buildManifest(bundles: Record<string, ResolvedBundle>, outDir: string): Promise<SuccessResult> {
-  const finalManifest = objectEntries(bundles).reduce<Record<string, BundleManifest>>((res, [name, { manifest }]) => ({
-    ...res,
-    [name]: manifest
-  }), {});
-
-  const outpath = `${outDir}/modules.json`;
-  await fs.writeFile(outpath, JSON.stringify(finalManifest, null, 2));
-
-  return {
-    severity: 'success',
-    path: outpath
   };
 }

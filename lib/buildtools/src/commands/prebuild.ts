@@ -1,11 +1,11 @@
 import pathlib from 'path';
 import { Command } from '@commander-js/extra-typings';
+import { resolveEitherBundleOrTab } from '@sourceacademy/modules-repotools/manifest';
+import { divideAndRound } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
-import { resolveEitherBundleOrTab } from '../build/manifest.js';
 import { runPrebuild } from '../prebuild/index.js';
 import { formatLintResult, lintGlobal, runEslint } from '../prebuild/lint.js';
 import { formatTscResult, runTsc } from '../prebuild/tsc.js';
-import { divideAndRound } from '../utils.js';
 import { logCommandErrorAndExit } from './commandUtils.js';
 
 /*

@@ -1,8 +1,8 @@
 // Code for building JSON documentation specifically
 
 import fs from 'fs/promises';
+import type { BuildResult, ResolvedBundle } from '@sourceacademy/modules-repotools/types';
 import * as td from 'typedoc';
-import type { BuildResult, ResolvedBundle } from '../../types.js';
 import drawdown from './drawdown.js';
 
 const typeToName = (type: td.SomeType) => type.stringify(td.TypeContext.none);

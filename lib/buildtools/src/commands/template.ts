@@ -1,11 +1,11 @@
 import type { Interface } from 'readline/promises';
 import { Command } from '@commander-js/extra-typings';
+import { getBundlesDir, getTabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 
-import { getBundlesDir, getTabsDir } from '../getGitRoot.js';
+import { isNodeError } from '@sourceacademy/modules-repotools/utils';
 import { addNew as addNewModule } from '../templates/bundle.js';
 import { askQuestion, error as _error, getRl, info, warn } from '../templates/print.js';
 import { addNew as addNewTab } from '../templates/tab.js';
-import { isNodeError } from '../utils.js';
 
 async function askMode(rl: Interface) {
   while (true) {

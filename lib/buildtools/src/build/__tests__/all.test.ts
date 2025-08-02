@@ -8,8 +8,6 @@ import * as lint from '../../prebuild/lint.js';
 import * as tsc from '../../prebuild/tsc.js';
 import * as all from '../all.js';
 
-vi.mock(import('../../getGitRoot.js'));
-
 vi.spyOn(all, 'buildAll');
 const mockedBuildBundle = vi.spyOn(modules, 'buildBundle');
 const mockedBuildTab = vi.spyOn(modules, 'buildTab');

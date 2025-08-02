@@ -5,8 +5,8 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@sourceacademy/lib-compiler": "workspace:^",
     "@sourceacademy/modules-buildtools": "workspace:^",
+    "@sourceacademy/modules-repotools": "workspace:^",
     "@types/lodash": "^4.14.198",
     "@types/markdown-it": "^14.1.2",
     "typescript": "^5.8.2"

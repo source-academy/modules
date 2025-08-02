@@ -1,10 +1,10 @@
 import { promises as fs, type Dirent } from 'fs';
 import pathlib from 'path';
+import { getBundlesDir, getGitRoot, getOutDir, getTabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
+import type { InputAsset, Severity } from '@sourceacademy/modules-repotools/types';
+import { findSeverity, flatMapAsync, isNodeError } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
 import { ESLint } from 'eslint';
-import { getBundlesDir, getGitRoot, getOutDir, getTabsDir } from '../getGitRoot.js';
-import type { InputAsset, Severity } from '../types.js';
-import { findSeverity, flatMapAsync, isNodeError } from '../utils.js';
 
 export interface LintResult {
   formatted: string

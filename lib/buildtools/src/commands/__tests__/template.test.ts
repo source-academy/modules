@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
-import { beforeEach, describe, expect, it, test, vi } from 'vitest';
 
-import * as manifest from '../../build/manifest.js';
-import * as gitRoot from '../../getGitRoot.js';
+import * as gitRoot from '@sourceacademy/modules-repotools/getGitRoot';
+import * as manifest from '@sourceacademy/modules-repotools/manifest';
+import { beforeEach, describe, expect, it, test, vi } from 'vitest';
 import { askQuestion } from '../../templates/print.js';
 import getTemplateCommand from '../template.js';
 import { getCommandRunner } from './testingUtils.js';
