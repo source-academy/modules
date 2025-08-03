@@ -16,7 +16,6 @@
   },
   "type": "module",
   "dependencies": {
-    "@sourceacademy/modules-lib": "workspace:^",
     "@sourceacademy/modules-repotools": "workspace:^",
     "@vitejs/plugin-react": "^4.5.1",
     "acorn": "^8.8.1",

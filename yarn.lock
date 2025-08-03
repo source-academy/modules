@@ -3412,7 +3412,6 @@ __metadata:
   resolution: "@sourceacademy/modules-buildtools@workspace:lib/buildtools"
   dependencies:
     "@commander-js/extra-typings": "npm:^13.0.0"
-    "@sourceacademy/modules-lib": "workspace:^"
     "@sourceacademy/modules-repotools": "workspace:^"
     "@types/estree": "npm:^1.0.0"
     "@types/lodash": "npm:^4.14.198"
