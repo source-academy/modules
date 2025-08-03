@@ -6,6 +6,17 @@ import { getExecOutput } from '@actions/exec';
 interface PackageRecord {
   directory: string
   name: string
+  changes: boolean
+}
+
+/**
+ * Returns `true` if there are changes present in the given directory relative to
+ * the master branch\
+ * Used to determine, particularly for libraries if running tests and tsc are necessary
+ */
+async function checkForChanges(directory: string) {
+  const { exitCode } = await getExecOutput('git', ['--no-pager', 'diff', '--quiet', 'master', '--', directory]);
+  return exitCode !== 0;
 }
 
 /**
@@ -24,7 +35,12 @@ async function findPackages(directory: string, maxDepth?: number) {
           try {
             const { default: { name } } = await import(fullPath, { with: { type: 'json' }});
             if (name) {
-              yield { name, directory: currentDir };
+              yield checkForChanges(currentDir)
+                .then(changes => ({
+                  directory: currentDir,
+                  changes,
+                  name
+                }));
               return;
             };
           } catch {}
@@ -49,32 +65,23 @@ async function main() {
   const { stdout } = await getExecOutput('git', ['rev-parse', '--show-toplevel']);
   const gitRoot = stdout.trim();
 
-  const packageType = core.getInput('type', { required: true });
+  await Promise.all(Object.entries({
+    libs: pathlib.join(gitRoot, 'lib'),
+    bundles: pathlib.join(gitRoot, 'src', 'bundles'),
+    tabs: pathlib.join(gitRoot, 'src', 'tabs')
+  }).map(async ([packageType, dirPath]) => {
+    const packages = await findPackages(dirPath);
+    core.summary.addHeading(`${packageType} packages`, 1);
 
-  let dirPath: string;
-  switch (packageType) {
-    case 'libs': {
-      dirPath = pathlib.join(gitRoot, 'lib');
-      break;
-    }
-    case 'bundles': {
-      dirPath = pathlib.join(gitRoot, 'src', 'bundles');
-      break;
-    }
-    case 'tabs': {
-      dirPath = pathlib.join(gitRoot, 'src', 'tabs');
-      break;
-    }
-    default: {
-      core.error(`Invalid package type: ${packageType}. Must be lib, bundles or tabs`);
-      return;
-    }
-  }
+    const summaryItems = packages.map(packageInfo => {
+      const args = Object.entries(packageInfo).map(([key, value]) => `<li>${key}: ${value}</li>`);
+      return `<ul>${args.join('\n')}</ul>`;
+    });
 
-  const packages = await findPackages(dirPath);
-  core.setOutput(packageType, packages);
-  core.summary.addHeading(`Found ${packageType}`);
-  core.summary.addList(packages.map(({ name }) => name));
+    core.summary.addList(summaryItems);
+    core.setOutput(packageType, packages);
+  }));
+
   core.summary.write();
 }
 

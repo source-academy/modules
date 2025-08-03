@@ -1,11 +1,6 @@
 name: Package Info
 description: Gets which packages are currently present in the repository
 
-inputs:
-  type:
-    description: Which type of packages to find
-    required: true
-
 outputs:
   packages:
     description: The list of packages present

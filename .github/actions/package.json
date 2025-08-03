@@ -12,6 +12,7 @@
     "@actions/exec": "^1.1.1"
   },
   "scripts": {
-    "build": "node ./build.js"
+    "build": "node ./build.js",
+    "postinstall": "yarn build"
   }
 }

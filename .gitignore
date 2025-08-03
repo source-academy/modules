@@ -7,9 +7,9 @@ build/*
 **/dist/**
 coverage/
 
-.yarn/*
-!.yarn/
-!.yarn/patches
+**/.yarn/*
+!**/.yarn/
+!**/.yarn/patches
 
 # Compiled source #
 ###################

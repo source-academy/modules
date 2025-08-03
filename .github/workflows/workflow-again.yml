@@ -1,0 +1,33 @@
+name: New Workflow
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  find-packages:
+    name: Get information about the packages within the repository
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Install actions
+        run: yarn workspaces focus @sourceacademy/modules-github-actions
+
+      - name: Get Package Information
+        id: info
+        uses: ./.github/actions/src/info
+
+    outputs:
+      bundles: ${{ steps.info.outputs.bundles }}
+      tabs: ${{ steps.info.outputs.tabs }}
+      libs: ${{ steps.info.outputs.libs }}
