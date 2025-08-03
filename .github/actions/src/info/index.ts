@@ -65,12 +65,16 @@ async function main() {
   const { stdout } = await getExecOutput('git', ['rev-parse', '--show-toplevel']);
   const gitRoot = stdout.trim();
 
-  await Promise.all(Object.entries({
+  const results = await Promise.all(Object.entries({
     libs: pathlib.join(gitRoot, 'lib'),
     bundles: pathlib.join(gitRoot, 'src', 'bundles'),
     tabs: pathlib.join(gitRoot, 'src', 'tabs')
-  }).map(async ([packageType, dirPath]) => {
+  }).map(async ([packageType, dirPath]): Promise<[string, PackageRecord[]]> => {
     const packages = await findPackages(dirPath);
+    return [packageType, packages];
+  }));
+
+  for (const [packageType, packages] of results) {
     core.summary.addHeading(`${packageType} packages`, 1);
 
     const summaryItems = packages.map(packageInfo => {
@@ -80,7 +84,7 @@ async function main() {
 
     core.summary.addList(summaryItems);
     core.setOutput(packageType, packages);
-  }));
+  }
 
   core.summary.write();
 }
