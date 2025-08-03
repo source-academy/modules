@@ -65,6 +65,8 @@ async function main() {
 
   const packages = await findPackages(dirPath);
   core.setOutput('packages', packages);
+  core.summary.addHeading(`Found ${packageType}`);
+  core.summary.addList(packages);
 }
 
 try {
