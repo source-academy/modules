@@ -95,8 +95,8 @@ jobs:
     steps:
       - name: Check out source code
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: ${{ matrix.package.directory }}
+        # with:
+        #   sparse-checkout: ${{ matrix.package.directory }}
 
       - name: Enable Corepack
         run: corepack enable
