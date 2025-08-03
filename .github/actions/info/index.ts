@@ -7,6 +7,7 @@ import { getExecOutput } from '@actions/exec';
  * Recursively locates the packages present in a directory, up to an optional max depth
  */
 async function findPackages(directory: string, maxDepth?: number) {
+  const output: string[] = [];
   async function* recurser(currentDir: string, currentDepth: number): AsyncGenerator<string> {
     if (maxDepth !== undefined && currentDepth >= maxDepth) return;
 
@@ -26,7 +27,11 @@ async function findPackages(directory: string, maxDepth?: number) {
     }
   }
 
-  return Array.fromAsync(recurser(directory, 0));
+  for await (const each of recurser(directory, 0)) {
+    output.push(each);
+  }
+
+  return output;
 }
 
 async function main() {

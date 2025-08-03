@@ -2,12 +2,12 @@
   "include": ["./index.ts"],
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
-    "lib": ["esnext"],
+    "lib": ["ES2020"],
     "module": "esnext",
     "moduleResolution": "bundler",
     "noEmit": true,
     "strict": true,
-    "target": "esnext",
+    "target": "ES2020",
     "verbatimModuleSyntax": true
   }
 }

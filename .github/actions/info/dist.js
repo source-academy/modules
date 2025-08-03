@@ -4,6 +4,7 @@ import pathlib from "path";
 import * as core from "@actions/core";
 import { getExecOutput } from "@actions/exec";
 async function findPackages(directory, maxDepth) {
+  const output = [];
   async function* recurser(currentDir, currentDepth) {
     if (maxDepth !== void 0 && currentDepth >= maxDepth) return;
     const items = await fs.readdir(currentDir, { withFileTypes: true });
@@ -15,12 +16,15 @@ async function findPackages(directory, maxDepth) {
         }
         continue;
       }
-      if (item.isDirectory() && item.name !== "node__modules") {
+      if (item.isDirectory() && item.name !== "node_modules") {
         yield* recurser(fullPath, currentDepth + 1);
       }
     }
   }
-  return Array.fromAsync(recurser(directory, 0));
+  for await (const each of recurser(directory, 0)) {
+    output.push(each);
+  }
+  return output;
 }
 async function main() {
   const { stdout } = await getExecOutput("git", ["rev-parse", "--show-toplevel"]);
@@ -48,4 +52,8 @@ async function main() {
   const packages = await findPackages(dirPath);
   core.setOutput("packages", packages);
 }
-await main();
+try {
+  await main();
+} catch (error2) {
+  core.setFailed(error2.message);
+}

@@ -5,7 +5,8 @@ const buildCommand = getBuildCommand({
   entryPoints: ['./index.ts'],
   format: 'esm',
   outfile: './dist.js',
-  packages: 'external'
+  packages: 'external',
+  target: 'node20'
 });
 
 await buildCommand.parseAsync();
