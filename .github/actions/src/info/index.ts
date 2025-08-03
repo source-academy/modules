@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
 import * as core from '@actions/core';
-import { exec, getExecOutput } from '@actions/exec';
+import { getExecOutput } from '@actions/exec';
 
 interface PackageRecord {
   directory: string
@@ -17,7 +17,7 @@ interface PackageRecord {
 async function checkForChanges(directory: string) {
   const { exitCode } = await getExecOutput(
     'git',
-    ['--no-pager', 'diff', '--quiet', 'master', '--', directory],
+    ['--no-pager', 'diff', '--quiet', 'origin/master', '--', directory],
     { failOnStdErr: false }
   );
   return exitCode !== 0;
@@ -36,17 +36,16 @@ async function findPackages(directory: string, maxDepth?: number) {
       const fullPath = pathlib.join(currentDir, item.name);
       if (item.isFile()) {
         if (item.name === 'package.json') {
+          core.info(`Found ${fullPath}`);
           try {
             const { default: { name } } = await import(fullPath, { with: { type: 'json' }});
-            if (name) {
-              const changes = await checkForChanges(currentDir);
-              yield {
-                directory: currentDir,
-                changes,
-                name
-              };
-              return;
+            const changes = await checkForChanges(currentDir);
+            yield {
+              directory: currentDir,
+              changes,
+              name
             };
+            return;
           } catch {}
         }
         continue;
@@ -66,10 +65,8 @@ async function findPackages(directory: string, maxDepth?: number) {
 }
 
 async function main() {
-  await exec('ls -la');
-  const gitRoot = pathlib.resolve(process.cwd());
-
-  core.info(`git root is ${gitRoot}`);
+  const { stdout } = await getExecOutput('git rev-parse --show-toplevel');
+  const gitRoot = stdout.trim();
 
   const results = await Promise.all(
     Object.entries({
