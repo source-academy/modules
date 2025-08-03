@@ -24,7 +24,7 @@ async function findPackages(directory: string, maxDepth?: number) {
           try {
             const { default: { name } } = await import(fullPath, { with: { type: 'json' }});
             if (name) {
-              yield { name, directory };
+              yield { name, directory: currentDir };
               return;
             };
           } catch {}

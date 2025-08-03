@@ -72,6 +72,3 @@ jobs:
           cd ${{ matrix.package.directory }}
           yarn tsc
           yarn test
-
-
-
