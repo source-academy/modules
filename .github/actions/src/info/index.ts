@@ -7,6 +7,7 @@ interface PackageRecord {
   directory: string
   name: string
   changes: boolean
+  needsPlaywright: boolean
 }
 
 /**
@@ -40,12 +41,13 @@ async function findPackages(directory: string, maxDepth?: number) {
       if (item.isFile()) {
         if (item.name === 'package.json') {
           try {
-            const { default: { name } } = await import(fullPath, { with: { type: 'json' }});
+            const { default: { name, devDependencies } } = await import(fullPath, { with: { type: 'json' }});
             const changes = await checkForChanges(currentDir);
             yield {
               directory: currentDir,
               changes,
-              name
+              name,
+              needsPlaywright: 'playwright' in devDependencies
             };
             return;
           } catch {}
@@ -90,6 +92,7 @@ async function main() {
         <ul>
           <li>Directory: <code>${packageInfo.directory}</code></li>
           <li>Changes: <code>${packageInfo.changes}</code></li>
+          <li>Needs Playwright: <code>${packageInfo.needsPlaywright}</code></li>
         </ul>
       </div>`;
     });

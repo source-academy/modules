@@ -12,7 +12,8 @@
     "lint": "buildtools lint .",
     "prepare": "yarn tsc",
     "tsc": "buildtools tsc .",
-    "test": "buildtools test --project ."
+    "test": "buildtools test --project .",
+    "postinstall": "yarn tsc"
   },
   "exports": {
     ".": "./dist/index.js",

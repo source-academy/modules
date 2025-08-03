@@ -21,6 +21,7 @@
     "lint": "buildtools lint .",
     "prepare": "yarn tsc",
     "test": "buildtools test --project .",
-    "tsc": "buildtools tsc ."
+    "tsc": "buildtools tsc .",
+    "postinstall": "yarn tsc"
   }
 }

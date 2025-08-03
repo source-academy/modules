@@ -24,6 +24,7 @@
     "tsc": "buildtools tsc .",
     "build": "buildtools build bundle .",
     "lint": "buildtools lint .",
-    "test": "buildtools test --project ."
+    "test": "buildtools test --project .",
+    "postinstall": "yarn tsc"
   }
 }

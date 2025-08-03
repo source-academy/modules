@@ -20,6 +20,7 @@
     "build": "buildtools build bundle .",
     "test": "buildtools test --project .",
     "tsc": "buildtools tsc .",
-    "lint": "buildtools lint ."
+    "lint": "buildtools lint .",
+    "postinstall": "yarn tsc"
   }
 }
