@@ -26,7 +26,10 @@ export default function getBuildCommand(esbuildOptions: Omit<BuildOptions, 'mini
         console.log(chalk.yellowBright('Running ESBuild in watch mode.'));
         await buildContext.watch();
       } else {
-        await build(esbuildOptions);
+        await build({
+          ...esbuildOptions,
+          minify: !dev,
+        });
       }
     });
 }
