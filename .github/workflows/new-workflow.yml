@@ -39,4 +39,4 @@ jobs:
           type: ${{ matrix.type }}
 
       - name: Print
-        run: echo ${{ steps.find.outputs }}
+        run: echo ${{ steps.find.outputs.packages }}
