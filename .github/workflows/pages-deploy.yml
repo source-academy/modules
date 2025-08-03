@@ -24,7 +24,7 @@ jobs:
           cache: yarn
       
       - name: Install Dependencies 📦
-        run: yarn install --immutable
+        run: yarn workspace focus @sourceacademy/modules-info-action --immutable
           
       - name: Build Modules 🔧
         run: yarn workspaces foreach -j 5 -ptW --from "./src/{bundles,tsc}/*" run build --tsc --lint
