@@ -14,7 +14,11 @@ async function findPackages(directory, maxDepth) {
         if (item.name === "package.json") {
           try {
             const { default: { name } } = await import(fullPath, { with: { type: "json" } });
-            if (name) yield name;
+            if (name) {
+              yield { name, directory };
+              return;
+            }
+            ;
           } catch {
           }
         }
@@ -56,7 +60,7 @@ async function main() {
   const packages = await findPackages(dirPath);
   core.setOutput(packageType, packages);
   core.summary.addHeading(`Found ${packageType}`);
-  core.summary.addList(packages);
+  core.summary.addList(packages.map(({ name }) => name));
   core.summary.write();
 }
 try {

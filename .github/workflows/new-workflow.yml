@@ -65,10 +65,11 @@ jobs:
           cache: yarn
 
       - name: Install dependencies
-        run: yarn workspaces focus ${{ matrix.package }}
+        run: yarn workspaces focus ${{ matrix.package.name }}
 
       - name: tsc and test
         run: |
+          cd ${{ matrix.package.directory }}
           yarn tsc
           yarn test
 

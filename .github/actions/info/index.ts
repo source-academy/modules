@@ -3,12 +3,17 @@ import pathlib from 'path';
 import * as core from '@actions/core';
 import { getExecOutput } from '@actions/exec';
 
+interface PackageRecord {
+  directory: string
+  name: string
+}
+
 /**
  * Recursively locates the packages present in a directory, up to an optional max depth
  */
 async function findPackages(directory: string, maxDepth?: number) {
-  const output: string[] = [];
-  async function* recurser(currentDir: string, currentDepth: number): AsyncGenerator<string> {
+  const output: PackageRecord[] = [];
+  async function* recurser(currentDir: string, currentDepth: number): AsyncGenerator<PackageRecord> {
     if (maxDepth !== undefined && currentDepth >= maxDepth) return;
 
     const items = await fs.readdir(currentDir, { withFileTypes: true });
@@ -18,7 +23,10 @@ async function findPackages(directory: string, maxDepth?: number) {
         if (item.name === 'package.json') {
           try {
             const { default: { name } } = await import(fullPath, { with: { type: 'json' }});
-            if (name) yield name;
+            if (name) {
+              yield { name, directory };
+              return;
+            };
           } catch {}
         }
         continue;
@@ -66,7 +74,7 @@ async function main() {
   const packages = await findPackages(dirPath);
   core.setOutput(packageType, packages);
   core.summary.addHeading(`Found ${packageType}`);
-  core.summary.addList(packages);
+  core.summary.addList(packages.map(({ name }) => name));
   core.summary.write();
 }
 
