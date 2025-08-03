@@ -18,7 +18,10 @@ async function checkForChanges(directory: string) {
   const { exitCode } = await getExecOutput(
     'git',
     ['--no-pager', 'diff', '--quiet', 'origin/master', '--', directory],
-    { failOnStdErr: false }
+    {
+      failOnStdErr: false,
+      ignoreReturnCode: true
+    }
   );
   return exitCode !== 0;
 }
