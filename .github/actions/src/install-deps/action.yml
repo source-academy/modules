@@ -16,4 +16,4 @@ inputs:
 
 runs:
   using: node20
-  main: ../dist/install-deps.js
+  main: ../../dist/install-deps.js
