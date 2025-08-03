@@ -65,11 +65,16 @@ jobs:
       - name: Build Tab
         run: yarn workspaces foreach -A --include ${{ matrix.tabInfo.name }} run build
 
-      - name: Test Tab
+      - name: Install Playwright (if needed)
         if: matrix.tabInfo.changes == 'true' && matrix.tabInfo.needsPlaywright
         run: |
           cd ${{ matrix.tabInfo.directory }}
           yarn playwright install --with-deps
+
+      - name: Run Tests
+        if: matrix.tabInfo.changes == 'true'
+        run: |
+          cd ${{ matrix.tabInfo.directory }}
           yarn test
 
       - name: Run Auxillary Tasks

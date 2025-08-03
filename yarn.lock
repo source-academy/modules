@@ -3103,7 +3103,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/bundle-copy_gc@workspace:src/bundles/copy_gc":
+"@sourceacademy/bundle-copy_gc@workspace:^, @sourceacademy/bundle-copy_gc@workspace:src/bundles/copy_gc":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-copy_gc@workspace:src/bundles/copy_gc"
   dependencies:
@@ -3200,6 +3200,7 @@ __metadata:
   dependencies:
     "@box2d/core": "npm:^0.10.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     typescript: "npm:^5.8.2"
   languageName: unknown
   linkType: soft
@@ -3246,7 +3247,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/bundle-repl@workspace:src/bundles/repl":
+"@sourceacademy/bundle-repl@workspace:^, @sourceacademy/bundle-repl@workspace:src/bundles/repl":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-repl@workspace:src/bundles/repl"
   dependencies:
@@ -3617,6 +3618,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/tab-CopyGc@workspace:src/tabs/CopyGc"
   dependencies:
+    "@sourceacademy/bundle-copy_gc": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
@@ -3768,6 +3770,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/tab-Repl@workspace:src/tabs/Repl"
   dependencies:
+    "@sourceacademy/bundle-repl": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"

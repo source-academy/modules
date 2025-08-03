@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@box2d/core": "^0.10.0"
+    "@box2d/core": "^0.10.0",
+    "@sourceacademy/modules-lib": "workspace:^"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/bundle-repl": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
     "ace-builds": "^1.25.1",
     "react": "^18.3.1",

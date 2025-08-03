@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/bundle-copy_gc": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
