@@ -41,6 +41,32 @@ jobs:
     name: Do work with the tabs
     runs-on: ubuntu-latest
     needs: find-packages
+    strategy:
+      matrix:
+        tabInfo: ${{ fromJson(needs.find-packages.outputs.tabs) }}
+
     steps:
-      - name: Just Echo
-        run: echo ${{ needs.find-packages.outputs.bundles }}
+      - name: Check out source code
+        uses: actions/checkout@v4 
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use Node.js 💻
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: yarn
+
+      - name: Install Dependencies
+        run: yarn workspaces focus ${{ matrix.tabInfo.name }}
+
+      - name: Build Tab
+        run: yarn workspaces foreach -A --include ${{ matrix.tabInfo.name }} run build
+
+      - name: Run Auxillary Tasks
+        if: matrix.tabInfo.changes == 'true'
+        run: |
+          cd ${{ matrix.tabInfo.directory }}
+          yarn tsc
+          yarn lint
