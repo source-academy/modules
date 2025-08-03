@@ -27,7 +27,7 @@ jobs:
           cache: yarn
 
       - name: Check cache for repotools
-        uses: actions/cache@v4/restore
+        uses: actions/cache/restore@v4
         id: cache-repotools
         with:
           path: ./lib/repotools/dist
@@ -42,7 +42,7 @@ jobs:
 
       - name: Cache Repotools
         if: steps.cache-repotools.outputs.cache-hit != 'true'
-        uses: actions/cache@v4/save
+        uses: actions/cache/save@v4
         with:
           path: ./lib/repotools/dist
           key: repotools
@@ -51,7 +51,7 @@ jobs:
         run: yarn workspaces focus @sourceacademy/modules-buildtools
       
       - name: Check cache for buildtools
-        uses: actions/cache@v4/restore
+        uses: actions/cache/restore@v4
         id: cache-buildtools
         with:
           path: ./lib/buildtools/bin/index.js
@@ -63,7 +63,7 @@ jobs:
 
       - name: Cache Buildtools
         if: steps.cache-repotools.outputs.cache-hit != 'true'
-        uses: actions/cache@v4/save
+        uses: actions/cache/save@v4
         with:
           path: ./lib/buildtools/bin/index.js
           key: buildtools
@@ -170,7 +170,7 @@ jobs:
         run: cd ${{ matrix.package.directory }}
 
       - name: Restore buildtools
-        uses: actions/cache@v4/restore
+        uses: actions/cache/restore@v4
         with:
           key: buildtools
           path: ./lib/buildtools/bin/index.js
