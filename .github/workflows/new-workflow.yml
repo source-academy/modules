@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Check out source code
         uses: actions/checkout@v4
+        with:
+          sparse-checkout: ./lib/repotools
 
       - name: Enable Corepack
         run: corepack enable
@@ -91,6 +93,14 @@ jobs:
         package: ${{ fromJSON(needs.find-packages.outputs.libs) }}
 
     steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: ${{ matrix.package.directory }}
+
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Install dependencies
         run: yarn workspaces focus ${{ matrix.package.name }}
 
