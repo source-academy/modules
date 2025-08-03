@@ -49,7 +49,7 @@ jobs:
     needs: load-packages
     strategy:
       matrix:
-        package: ${{ needs.load-packages.outputs.libs }}
+        package: ${{ fromJson(needs.load-packages.outputs.libs) }}
     
     steps:
       - name: Check out source code
