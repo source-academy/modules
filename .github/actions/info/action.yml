@@ -11,5 +11,5 @@ outputs:
     description: The list of packages present
 
 runs:
-  using: node22
+  using: node20
   main: ./dist.js
