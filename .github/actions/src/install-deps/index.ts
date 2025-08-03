@@ -10,9 +10,14 @@ async function main() {
   await exec('yarn', args);
 
   const { default: packageJson } = await import(`${directory}/package.json`, { with: { type: 'json' }});
-  if (testRequired && packageJson.devDependecies) {
+  if (testRequired && packageJson.devDependencies.playwright) {
     core.info(`Playwright is necessary for ${packageName}, installing`);
     await exec('yarn', ['playwright', 'install', '--with-deps']);
+  }
+
+  if (packageJson.devDependencies['@sourceacademy/modules-buildtools']) {
+    core.info('Building buildtools');
+    await exec('yarn', ['workspaces', 'foreach', '-A', '--include', '@sourceacademy/modules-buildtools', 'run', 'build']);
   }
 }
 
