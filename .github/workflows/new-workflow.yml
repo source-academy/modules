@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  load-packages:
+  find-packages:
     name: Determine the packages present in the repo for the given type
     runs-on: ubuntu-latest
     strategy:
@@ -34,6 +34,9 @@ jobs:
           node-version-file: .node-version
           cache: yarn
 
+      - name: Setup actions
+        run: yarn workspaces focus @sourceacademy/modules-github-actions --production
+
       - name: Find Packages
         id: find
         uses: ./.github/actions/src/info
@@ -43,10 +46,10 @@ jobs:
   test-libs:
     name: Test and Typecheck libraries
     runs-on: ubuntu-latest
-    needs: load-packages
+    needs: find-packages
     strategy:
       matrix:
-        package: ${{ fromJson(needs.load-packages.outputs.tabs) }}
+        package: ${{ fromJson(needs.find-packages.outputs.tabs) }}
     
     steps:
       - name: Check out source code
@@ -73,11 +76,11 @@ jobs:
   test-tabs:
     name: Test and Typecheck tabs
     runs-on: ubuntu-latest
-    needs: load-packages
+    needs: find-packages
     strategy:
       fail-fast: false
       matrix:
-        package: ${{ fromJson(needs.load-packages.outputs.tabs) }}
+        package: ${{ fromJson(needs.find-packages.outputs.tabs) }}
 
     steps:
       - name: Check out source code
@@ -92,6 +95,9 @@ jobs:
           node-version-file: .node-version
           cache: yarn
 
+      - name: Setup actions
+        run: yarn workspaces focus @sourceacademy/modules-github-actions --production
+
       - name: Filter paths
         uses: dorny/paths-filter@v3
         id: filter
@@ -100,7 +106,7 @@ jobs:
             changed:
               ${{ matrix.package.directory }}/**
 
-      - name: Change into directory
+      - name: Change into directory for ${{ matrix.package.name }}
         run: cd ${{ matrix.package.directory }}
 
       - name: Install dependencies

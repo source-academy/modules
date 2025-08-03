@@ -8,6 +8,7 @@ const buildCommand = getBuildCommand({
   ],
   format: 'esm',
   outdir: 'dist',
+  packages: 'external',
   platform: 'node',
   target: 'node20'
 });
