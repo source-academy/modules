@@ -1,9 +1,9 @@
 # General Design of the Build Tools
 
 ## Path Resolution
-The build tools are designed to be written in Typescript, then compiled and bundled by `esbuild` into a single minified Javascript file `bin/index.js`. This means relative paths used during runtime need to be written in such a way that they account for the path of the executable file.
+The build tools are designed to be written in Typescript, then compiled and bundled by `esbuild` into a single minified Javascript file `dist/index.js`. This means relative paths used during runtime need to be written in such a way that they account for the path of the executable file.
 
-For example, the template script needs to copy the templates from the `bin/templates` folder. So the call to `fs.cp` is written relative to `import.meta.dirname` instead of
+For example, the template script needs to copy the templates from the `dist/templates` folder. So the call to `fs.cp` is written relative to `import.meta.dirname` instead of
 hardcoding a relative path:
 
 ```ts
@@ -11,7 +11,7 @@ hardcoding a relative path:
 await fs.cp(`${import.meta.dirname}/templates/bundle`, bundleDestination, { recursive: true });
 ```
 
-When `bin/index.js` is executed, `import.meta.dirname` refers to `lib/buildtools/bin`, so the above path becomes `lib/buildtools/bin/templates/bundle`, which is the actual location of where the template files are located.
+When `dist/index.js` is executed, `import.meta.dirname` refers to `lib/buildtools/dist`, so the above path becomes `lib/buildtools/dist/templates/bundle`, which is the actual location of where the template files are located.
 
 On the other hand, relative module imports that are bundled during the compilation process don't need to be changed. The template script imports the root package json to
 determine the versions of dependencies to use:
@@ -25,7 +25,7 @@ const { dependencies: { typescript: typescriptVersion } } = _package
 ```
 
 Although the resolved module path refers to a path outside of the buildtools folder, during compilation, `esbuild` actually
-embeds the entire JSON file into `bin/index.js`, thus removing the import altogether:
+embeds the entire JSON file into `dist/index.js`, thus removing the import altogether:
 
 ```ts
 // ../../package.json
@@ -67,14 +67,6 @@ function rawGetGitRoot() {
 }
 ```
 This is guaranteed to work, since the user should have Git present on their system (otherwise how did they get this git repo?)
-
-Since the path of the git repository shouldn't be changing during execution of the buildtools, we use `lodash`'s [`memoize`](https://lodash.com/docs/4.17.15#memoize) to eliminate unnecessary calls to Git:
-```ts
-/**
- * Get the path to the root of the git repository
- */
-export const getGitRoot = memoize(rawGetGitRoot);
-```
 
 By abstracting this functionality into a separate module, it is simple to change the paths at which everything is defined (such as where the directory containing bundles is found). In particular,
 by mocking this module, we can run the buildtools on mock bundles and tabs with ease.

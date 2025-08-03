@@ -83,6 +83,9 @@ jobs:
           if: needs.paths-filter.outputs.libraries == 'true'
           run: yarn workspaces foreach -ptW --from "./lib/*" run tsc
 
+        - name: Run build for libraries
+          run: yarn workspaces foreach -ptW --from "./lib/*" run build
+
         - name: Run test for libraries
           if: needs.paths-filter.outputs.libraries == 'true'
           run: yarn test:libs
