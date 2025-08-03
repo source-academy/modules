@@ -48,9 +48,7 @@ async function findPackages(directory: string, maxDepth?: number) {
               name
             };
             return;
-          } catch(error) {
-            core.error(error);
-          }
+          } catch {}
         }
         continue;
       }
@@ -85,11 +83,15 @@ async function main() {
   );
 
   for (const [packageType, packages] of results) {
-    // core.summary.addHeading(`${packageType} packages`);
-
+    core.summary.addHeading(`${packageType} packages`);
     const summaryItems = packages.map(packageInfo => {
-      const args = Object.entries(packageInfo).map(([key, value]) => `<li>${key}: ${value}</li>`);
-      return `<ul>${args.join('\n')}</ul>`;
+      return `<div>
+        <h2>${packageInfo.name}</h2>
+        <ul>
+          <li>Directory: <code>${packageInfo.directory}</code></li>
+          <li>Changes: <code>${packageInfo.changes}</code></li>
+        </ul>
+      </div>`;
     });
 
     core.info(summaryItems.join('\n'));
