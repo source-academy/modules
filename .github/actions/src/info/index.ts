@@ -15,7 +15,11 @@ interface PackageRecord {
  * Used to determine, particularly for libraries if running tests and tsc are necessary
  */
 async function checkForChanges(directory: string) {
-  const { exitCode } = await getExecOutput('git', ['--no-pager', 'diff', '--quiet', 'master', '--', directory]);
+  const { exitCode } = await getExecOutput(
+    'git',
+    ['--no-pager', 'diff', '--quiet', 'master', '--', directory],
+    { failOnStdErr: false }
+  );
   return exitCode !== 0;
 }
 
@@ -35,12 +39,12 @@ async function findPackages(directory: string, maxDepth?: number) {
           try {
             const { default: { name } } = await import(fullPath, { with: { type: 'json' }});
             if (name) {
-              yield checkForChanges(currentDir)
-                .then(changes => ({
-                  directory: currentDir,
-                  changes,
-                  name
-                }));
+              const changes = await checkForChanges(currentDir);
+              yield {
+                directory: currentDir,
+                changes,
+                name
+              };
               return;
             };
           } catch {}
