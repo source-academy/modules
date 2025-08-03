@@ -3120,6 +3120,7 @@ __metadata:
     "@jscad/regl-renderer": "npm:^2.6.1"
     "@jscad/stl-serializer": "npm:2.1.11"
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     save-file: "npm:^2.3.1"
     typescript: "npm:^5.8.2"
   languageName: unknown
@@ -3186,6 +3187,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-painter@workspace:src/bundles/painter"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     "@types/plotly.js": "npm:^3.0.0"
     plotly.js-dist: "npm:^3.0.0"
     typescript: "npm:^5.8.2"
@@ -3259,6 +3261,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-robot_simulation@workspace:src/bundles/robot_simulation"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     "@types/three": "npm:^0.175.0"
     three: "npm:^0.175.0"
     typescript: "npm:^5.8.2"
@@ -3588,6 +3591,7 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
+    phaser: "npm:^3.54.0"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
   languageName: unknown

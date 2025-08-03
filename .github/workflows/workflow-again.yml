@@ -10,7 +10,7 @@ on:
 
 jobs:
   find-packages:
-    name: Get information about the packages within the repository
+    name: Get packages within the repository
     runs-on: ubuntu-latest
 
     steps:
@@ -38,7 +38,7 @@ jobs:
       libs: ${{ steps.info.outputs.libs }}
 
   tabs:
-    name: Do work with the tabs
+    name: Tabs
     runs-on: ubuntu-latest
     needs: find-packages
     strategy:
@@ -65,11 +65,16 @@ jobs:
       - name: Build Tab
         run: yarn workspaces foreach -A --include ${{ matrix.tabInfo.name }} run build
 
+      - name: Test Tab
+        if: matrix.tabInfo.changes == 'true' && matrix.tabInfo.needsPlaywright
+        run: |
+          cd ${{ matrix.tabInfo.directory }}
+          yarn playwright install --with-deps
+          yarn test
+
       - name: Run Auxillary Tasks
         if: matrix.tabInfo.changes == 'true'
         run: |
           cd ${{ matrix.tabInfo.directory }}
           yarn tsc
           yarn lint
-          yarn playwright install --with-deps
-          yarn test

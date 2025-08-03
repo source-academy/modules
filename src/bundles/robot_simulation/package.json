@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^",
     "three": "^0.175.0"
   },
   "devDependencies": {
