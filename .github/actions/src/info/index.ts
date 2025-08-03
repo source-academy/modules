@@ -94,7 +94,6 @@ async function main() {
       </div>`;
     });
 
-    core.info(summaryItems.join('\n'));
     core.summary.addList(summaryItems);
     core.setOutput(packageType, packages);
   }
