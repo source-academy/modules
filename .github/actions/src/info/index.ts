@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
 import * as core from '@actions/core';
-import { getExecOutput } from '@actions/exec';
+import { exec, getExecOutput } from '@actions/exec';
 
 interface PackageRecord {
   directory: string
@@ -66,6 +66,7 @@ async function findPackages(directory: string, maxDepth?: number) {
 }
 
 async function main() {
+  await exec('pwd');
   const gitRoot = pathlib.resolve(process.cwd());
 
   core.info(`git root is ${gitRoot}`);
