@@ -67,6 +67,7 @@ async function main() {
   core.setOutput('packages', packages);
   core.summary.addHeading(`Found ${packageType}`);
   core.summary.addList(packages);
+  core.summary.write();
 }
 
 try {
