@@ -181,6 +181,12 @@ jobs:
           key: buildtools
           path: ./lib/buildtools/bin/index.js
 
+      - name: Restore repotools
+        uses: actions/cache/restore@v4
+        with:
+          key: repotools
+          path: ./lib/repotools/dist
+
       - name: Install dependencies
         uses: ./.github/actions/src/install-deps
         with:
