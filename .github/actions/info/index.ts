@@ -24,7 +24,7 @@ async function findPackages(directory: string, maxDepth?: number) {
         continue;
       }
 
-      if (item.isDirectory() && item.name !== 'node_modules') {
+      if (item.isDirectory() && item.name !== 'node_modules' && !item.name.startsWith('__')) {
         yield* recurser(fullPath, currentDepth + 1);
       }
     }
@@ -45,7 +45,7 @@ async function main() {
 
   let dirPath: string;
   switch (packageType) {
-    case 'lib': {
+    case 'libs': {
       dirPath = pathlib.join(gitRoot, 'lib');
       break;
     }
@@ -64,7 +64,7 @@ async function main() {
   }
 
   const packages = await findPackages(dirPath);
-  core.setOutput('packages', packages);
+  core.setOutput(packageType, packages);
   core.summary.addHeading(`Found ${packageType}`);
   core.summary.addList(packages);
   core.summary.write();

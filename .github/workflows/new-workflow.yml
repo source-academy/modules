@@ -14,10 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        type: ['lib', 'bundles', 'tabs']
+        type: ['libs', 'bundles', 'tabs']
 
     outputs:
-      packages: ${{ steps.find.outputs.packages }}
+      libs: ${{ steps.find.outputs.libs }}
+      bundles: ${{ steps.find.outputs.bundles }}
+      tabs: ${{ steps.find.outputs.tabs }}
 
     steps:
       - name: Check out source code
@@ -40,3 +42,35 @@ jobs:
         uses: ./.github/actions/info
         with:
           type: ${{ matrix.type }}
+
+  test-libs:
+    name: Test and Typecheck libraries
+    runs-on: ubuntu-latest
+    needs: load-packages
+    strategy:
+      matrix:
+        package: ${{ needs.load-packages.outputs.libs }}
+    
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use Node.js 💻
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn workspaces focus ${{ matrix.package }}
+
+      - name: tsc and test
+        run: |
+          yarn tsc
+          yarn test
+
+
+
