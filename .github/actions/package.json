@@ -3,13 +3,13 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@sourceacademy/modules-repotools": "workspace:^",
     "@types/node": "^22.15.30",
     "typescript": "^5.8.2"
   },
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@actions/exec": "^1.1.1"
+    "@actions/exec": "^1.1.1",
+    "@sourceacademy/modules-repotools": "workspace:^"
   },
   "scripts": {
     "build": "node ./build.js"
