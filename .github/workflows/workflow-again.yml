@@ -83,3 +83,48 @@ jobs:
           cd ${{ matrix.tabInfo.directory }}
           yarn tsc
           yarn lint
+
+  bundles:
+    name: Bundles
+    runs-on: ubuntu-latest
+    needs: find-packages
+    strategy:
+      fail-fast: false
+      matrix:
+        bundleInfo: ${{ fromJson(needs.find-packages.outputs.bundles) }}
+
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use Node.js 💻
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: yarn
+
+      - name: Install Dependencies
+        run: yarn workspaces focus ${{ matrix.bundleInfo.name }}
+
+      - name: Build Bundle
+        run: |
+          cd ${{ matrix.bundleInfo.directory }}
+          yarn build
+          yarn tsc
+
+      - name: Run Tests
+        if: matrix.bundleInfo.changes == 'true'
+        run: |
+          cd ${{ matrix.bundleInfo.directory }}
+          yarn test
+
+      - name: Run Auxillary Tasks
+        if: matrix.bundleInfo.changes == 'true'
+        run: |
+          cd ${{ matrix.bundleInfo.directory }}
+          yarn tsc
+          yarn lint
+  
