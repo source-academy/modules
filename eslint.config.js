@@ -137,6 +137,8 @@ export default tseslint.config(
       'jsdoc/check-alignment': 'warn',
       'jsdoc/require-asterisk-prefix': 'warn',
 
+      'no-empty': ['error', { allowEmptyCatch: true }],
+
       '@sourceacademy/region-comment': 'error',
 
       '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
@@ -277,7 +279,6 @@ export default tseslint.config(
     rules: {
       'func-style': 'off',
       'import/extensions': ['error', 'never', { json: 'always' }],
-      'no-empty': ['error', { allowEmptyCatch: true }],
       'no-constant-condition': 'off', // Was 'error',
       'no-fallthrough': 'off',
 

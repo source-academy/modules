@@ -12,7 +12,11 @@ async function findPackages(directory, maxDepth) {
       const fullPath = pathlib.join(currentDir, item.name);
       if (item.isFile()) {
         if (item.name === "package.json") {
-          yield fullPath;
+          try {
+            const { default: { name } } = await import(fullPath, { with: { type: "json" } });
+            if (name) yield name;
+          } catch {
+          }
         }
         continue;
       }

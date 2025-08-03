@@ -16,6 +16,9 @@ jobs:
       matrix:
         type: ['lib', 'bundles', 'tabs']
 
+    outputs:
+      packages: ${{ steps.find.outputs.packages }}
+
     steps:
       - name: Check out source code
         uses: actions/checkout@v4
@@ -37,6 +40,3 @@ jobs:
         uses: ./.github/actions/info
         with:
           type: ${{ matrix.type }}
-
-      - name: Print
-        run: echo ${{ steps.find.outputs.packages }}
