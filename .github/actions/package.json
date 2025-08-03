@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@types/node": "^22.15.30",
     "@sourceacademy/modules-repotools": "workspace:^",
+    "@types/node": "^22.15.30",
     "typescript": "^5.8.2"
   },
   "dependencies": {

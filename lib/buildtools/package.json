@@ -12,7 +12,7 @@
   },
   "exports": null,
   "bin": {
-    "buildtools": "./bin/index.js"
+    "buildtools": "./dist/index.js"
   },
   "type": "module",
   "dependencies": {
