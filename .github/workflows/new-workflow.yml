@@ -9,37 +9,8 @@ on:
       - master
 
 jobs:
-  build-actions:
-    name: Builds the github actions that will be used
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out source code
-        uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Use Node.js 💻
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
-          cache: yarn
-
-      - name: Setup repotools
-        run: |
-          yarn workspaces focus @sourceacademy/modules-repotools
-          yarn workspaces foreach -A --include @sourceacademy/modules-repotools run build
-
-      - name: Install dependencies
-        run: yarn workspaces focus @sourceacademy/modules-github-actions
-
-      - name: Build
-        run: |
-          yarn workspaces foreach -A --include @sourceacademy/modules-github-actions run build
-
   load-packages:
     name: Determine the packages present in the repo for the given type
-    needs: build-actions
     runs-on: ubuntu-latest
     strategy:
       matrix:

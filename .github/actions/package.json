@@ -4,12 +4,12 @@
   "type": "module",
   "devDependencies": {
     "@types/node": "^22.15.30",
+    "@sourceacademy/modules-repotools": "workspace:^",
     "typescript": "^5.8.2"
   },
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@actions/exec": "^1.1.1",
-    "@sourceacademy/modules-repotools": "workspace:^"
+    "@actions/exec": "^1.1.1"
   },
   "scripts": {
     "build": "node ./build.js"
