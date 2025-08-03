@@ -6,6 +6,9 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "typescript": "^5.8.2"
   },
+  "dependencies": {
+    "js-slang": "^1.0.81"
+  },
   "type": "module",
   "scripts": {
     "build": "buildtools build bundle .",

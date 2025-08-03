@@ -3,12 +3,22 @@ import pathlib from 'path';
 import * as core from '@actions/core';
 import { getExecOutput } from '@actions/exec';
 
-interface PackageRecord {
+interface BasePackageRecord {
   directory: string
   name: string
   changes: boolean
   needsPlaywright: boolean
 }
+
+interface BundlePackageRecord extends BasePackageRecord {
+  bundleName: string;
+}
+
+interface TabPackageRecord extends BasePackageRecord {
+  tabName: string;
+}
+
+type PackageRecord = BundlePackageRecord | TabPackageRecord | BasePackageRecord;
 
 /**
  * Returns `true` if there are changes present in the given directory relative to
@@ -31,7 +41,9 @@ async function checkForChanges(directory: string) {
  * Recursively locates the packages present in a directory, up to an optional max depth
  */
 async function findPackages(directory: string, maxDepth?: number) {
-  const output: PackageRecord[] = [];
+  const output: BasePackageRecord[] = [];
+  const RE = /^@sourceacademy\/(.+?)-(.+)$/u;
+
   async function* recurser(currentDir: string, currentDepth: number): AsyncGenerator<PackageRecord> {
     if (maxDepth !== undefined && currentDepth >= maxDepth) return;
 
@@ -42,13 +54,46 @@ async function findPackages(directory: string, maxDepth?: number) {
         if (item.name === 'package.json') {
           try {
             const { default: { name, devDependencies } } = await import(fullPath, { with: { type: 'json' }});
+            const match = RE.exec(name);
             const changes = await checkForChanges(currentDir);
-            yield {
-              directory: currentDir,
-              changes,
-              name,
-              needsPlaywright: 'playwright' in devDependencies
-            };
+
+            if (!match) {
+              throw new Error(`Failed to match package name: ${name}`);
+            }
+
+            const [,packageType, packageBaseName] = match;
+
+            switch (packageType) {
+              case 'bundle': {
+                yield {
+                  directory: currentDir,
+                  changes,
+                  name,
+                  needsPlaywright: false,
+                  bundleName: packageBaseName,
+                };
+                break;
+              }
+              case 'tab': {
+                yield {
+                  directory: currentDir,
+                  changes,
+                  name,
+                  needsPlaywright: 'playwright' in devDependencies,
+                  tabName: packageBaseName,
+                };
+                break;
+              }
+              default: {
+                yield {
+                  directory: currentDir,
+                  changes,
+                  name,
+                  needsPlaywright: 'playwright' in devDependencies
+                };
+                break;
+              }
+            }
             return;
           } catch {}
         }
@@ -77,7 +122,7 @@ async function main() {
       libs: pathlib.join(gitRoot, 'lib'),
       bundles: pathlib.join(gitRoot, 'src', 'bundles'),
       tabs: pathlib.join(gitRoot, 'src', 'tabs')
-    }).map(async ([packageType, dirPath]): Promise<[string, PackageRecord[]]> => {
+    }).map(async ([packageType, dirPath]): Promise<[string, BasePackageRecord[]]> => {
       const packages = await findPackages(dirPath);
       core.info(`Found ${packages.length} ${packageType} packages`);
       return [packageType, packages];
