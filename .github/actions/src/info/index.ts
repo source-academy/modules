@@ -65,28 +65,31 @@ async function main() {
   const { stdout } = await getExecOutput('git', ['rev-parse', '--show-toplevel']);
   const gitRoot = stdout.trim();
 
-  const results = await Promise.all(Object.entries({
-    libs: pathlib.join(gitRoot, 'lib'),
-    bundles: pathlib.join(gitRoot, 'src', 'bundles'),
-    tabs: pathlib.join(gitRoot, 'src', 'tabs')
-  }).map(async ([packageType, dirPath]): Promise<[string, PackageRecord[]]> => {
-    const packages = await findPackages(dirPath);
-    return [packageType, packages];
-  }));
+  const results = await Promise.all(
+    Object.entries({
+      libs: pathlib.join(gitRoot, 'lib'),
+      bundles: pathlib.join(gitRoot, 'src', 'bundles'),
+      tabs: pathlib.join(gitRoot, 'src', 'tabs')
+    }).map(async ([packageType, dirPath]): Promise<[string, PackageRecord[]]> => {
+      const packages = await findPackages(dirPath);
+      return [packageType, packages];
+    })
+  );
 
   for (const [packageType, packages] of results) {
-    core.summary.addHeading(`${packageType} packages`, 1);
+    // core.summary.addHeading(`${packageType} packages`);
 
     const summaryItems = packages.map(packageInfo => {
       const args = Object.entries(packageInfo).map(([key, value]) => `<li>${key}: ${value}</li>`);
       return `<ul>${args.join('\n')}</ul>`;
     });
 
+    core.info(summaryItems.join('\n'));
     core.summary.addList(summaryItems);
     core.setOutput(packageType, packages);
   }
 
-  core.summary.write();
+  await core.summary.write();
 }
 
 try {
