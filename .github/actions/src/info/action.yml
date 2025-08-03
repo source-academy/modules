@@ -2,8 +2,12 @@ name: Package Info
 description: Gets which packages are currently present in the repository
 
 outputs:
-  packages:
-    description: The list of packages present
+  libs:
+    description: The list of library packages present
+  bundles:
+    description: The list of bundles packages present
+  tabs:
+    description: The list of tabs packages present
 
 runs:
   using: node20
