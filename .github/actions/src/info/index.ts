@@ -69,6 +69,8 @@ async function main() {
   const { stdout } = await getExecOutput('git', ['rev-parse', '--show-toplevel']);
   const gitRoot = stdout.trim();
 
+  core.info(`git root is ${gitRoot}`);
+
   const results = await Promise.all(
     Object.entries({
       libs: pathlib.join(gitRoot, 'lib'),
@@ -76,6 +78,7 @@ async function main() {
       tabs: pathlib.join(gitRoot, 'src', 'tabs')
     }).map(async ([packageType, dirPath]): Promise<[string, PackageRecord[]]> => {
       const packages = await findPackages(dirPath);
+      core.info(`Found ${packages.length} ${packageType} packages`);
       return [packageType, packages];
     })
   );

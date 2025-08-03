@@ -20,8 +20,13 @@ jobs:
       - name: Enable corepack
         run: corepack enable
 
-      - name: Install actions
+      - name: Install action packages
         run: yarn workspaces focus @sourceacademy/modules-github-actions
+
+      - name: Build actions
+        run:
+          cd ./.github/actions
+          yarn build
 
       - name: Get Package Information
         id: info
