@@ -104,7 +104,7 @@ jobs:
         with:
           filters: |
             changed:
-              ${{ matrix.package.directory }}/**
+              - ${{ matrix.package.directory }}/**
 
       - name: Change into directory for ${{ matrix.package.name }}
         run: cd ${{ matrix.package.directory }}

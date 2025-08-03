@@ -2,7 +2,7 @@ name: Install Dependencies
 description: Install the dependencies for the given package
 
 inputs:
-  package:
+  packageName:
     description: The name of the package
     required: true
 
