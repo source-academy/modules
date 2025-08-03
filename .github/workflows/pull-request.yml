@@ -3,10 +3,10 @@ name: on-pull-request
 permissions:
   contents: read
 
-# on:
-#   pull_request:
-#     branches:
-#       - master
+on:
+  pull_request:
+    branches:
+      - master
 
 jobs:
   paths-filter:
@@ -45,30 +45,6 @@ jobs:
       docs: ${{ steps.filter.outputs.docs || steps.filter.outputs.workflows }}
       playwright: ${{ steps.filter.outputs.devserver || steps.filter.outputs.libraries || steps.filter.outputs.tabs }}
 
-  job-creator:
-    name: Determine what jobs to run
-    runs-on: ubuntu-latest
-    steps:
-      # Determine which paths and thus which bu
-      - name: Filter paths
-        uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            workflows:
-            - .github/workflows/**
-            devserver:
-            - 'devserver/**'
-            libraries:
-            - 'lib/**'
-            tabs:
-            - src/tabs/**
-            bundles:
-            - src/bundles/**
-            docs:
-            - docs/**
-
-    
 
   test:
     name: Verify that all tests, linting, type-checking and building succeeds.
