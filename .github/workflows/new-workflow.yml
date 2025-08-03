@@ -31,7 +31,7 @@ jobs:
         id: cache-repotools
         with:
           path: ./lib/repotools/dist
-          restore-keys: repotools
+          key: repotools
 
       - name: Install Repotools Dependencies
         run: yarn workspaces focus @sourceacademy/modules-repotools
@@ -55,7 +55,7 @@ jobs:
         id: cache-buildtools
         with:
           path: ./lib/buildtools/bin/index.js
-          restore-keys: buildtools
+          key: buildtools
       
       - name: Build Buildtools
         if: steps.cache-buildtools.outputs.cache-hit != 'true'
