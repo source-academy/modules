@@ -66,7 +66,7 @@ async function findPackages(directory: string, maxDepth?: number) {
 }
 
 async function main() {
-  await exec('pwd');
+  await exec('ls -la');
   const gitRoot = pathlib.resolve(process.cwd());
 
   core.info(`git root is ${gitRoot}`);
