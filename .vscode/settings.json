@@ -16,5 +16,15 @@
         }
       }
     }
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "json",
+    "mdx",
+    "typescript",
+    "typescriptreact",
+    "yml",
+    "yaml"
   ]
 }

@@ -129,7 +129,7 @@ jobs:
   #   strategy:
   #     matrix:
   #       package: ${{ fromJson(needs.find-packages.outputs.tabs) }}
-    
+
   #   steps:
   #     - name: Check out source code
   #       uses: actions/checkout@v4
@@ -161,7 +161,7 @@ jobs:
   test-tabs:
     name: Test and Typecheck tabs
     runs-on: ubuntu-latest
-    needs: 
+    needs:
       - build-libs
       - find-packages
 
@@ -215,7 +215,7 @@ jobs:
           directory: ${{ matrix.package.directory }}
           packageName: ${{ matrix.package.name }}
           testRequired: ${{ steps.filter.outputs.changed == 'true' }}
-      
+
       - name: tsc and test
         if: steps.filter.outputs.changed == 'true'
         run: |

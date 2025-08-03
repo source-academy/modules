@@ -45,7 +45,6 @@ jobs:
       docs: ${{ steps.filter.outputs.docs || steps.filter.outputs.workflows }}
       playwright: ${{ steps.filter.outputs.devserver || steps.filter.outputs.libraries || steps.filter.outputs.tabs }}
 
-
   test:
     name: Verify that all tests, linting, type-checking and building succeeds.
     runs-on: ubuntu-latest
@@ -53,70 +52,70 @@ jobs:
     # execute after the paths-filter job is done
     needs: paths-filter
     steps:
-        - name: Check out source code
-          uses: actions/checkout@v4
-          with:
-            submodules: recursive
+      - name: Check out source code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-        - name: Enable Corepack
-          run: corepack enable
-            
-        - name: Use Node.js 💻
-          uses: actions/setup-node@v4
-          with:
-            node-version-file: .node-version
-            cache: yarn
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use Node.js 💻
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: yarn
 
         # For whatever reason, repotools refuses to install correctly, so we have to install it separately and
         # build it in its entirety before proceeding with installing everything else
-        - name: Setup Repotools
-          run: yarn workspaces focus @sourceacademy/modules-repotools && yarn workspaces foreach -A --include "@sourceacademy/modules-repotools" run build
+      - name: Setup Repotools
+        run: yarn workspaces focus @sourceacademy/modules-repotools && yarn workspaces foreach -A --include "@sourceacademy/modules-repotools" run build
 
-        - name: Install dependencies
-          run: yarn install --immutable
+      - name: Install dependencies
+        run: yarn install --immutable
 
-        - name: Install Playwright
-          if: needs.paths-filter.outputs.playwright == 'true'
-          run: yarn playwright install --with-deps
+      - name: Install Playwright
+        if: needs.paths-filter.outputs.playwright == 'true'
+        run: yarn playwright install --with-deps
 
-        - name: Run tsc for libraries
-          if: needs.paths-filter.outputs.libraries == 'true'
-          run: yarn workspaces foreach -ptW --from "./lib/*" run tsc
+      - name: Run tsc for libraries
+        if: needs.paths-filter.outputs.libraries == 'true'
+        run: yarn workspaces foreach -ptW --from "./lib/*" run tsc
 
-        - name: Run build for libraries
-          run: yarn workspaces foreach -ptW --from "./lib/*" run build
+      - name: Run build for libraries
+        run: yarn workspaces foreach -ptW --from "./lib/*" run build
 
-        - name: Run test for libraries
-          if: needs.paths-filter.outputs.libraries == 'true'
-          run: yarn test:libs
+      - name: Run test for libraries
+        if: needs.paths-filter.outputs.libraries == 'true'
+        run: yarn test:libs
 
-        - name: Build and run tsc for bundles and tabs
-          if: needs.paths-filter.outputs.bundles == 'true' || needs.paths-filter.outputs.tabs == 'true'
-          run: yarn workspaces foreach -j 5 -ptW --from "./src/{bundles,tabs}/*" run build --tsc
+      - name: Build and run tsc for bundles and tabs
+        if: needs.paths-filter.outputs.bundles == 'true' || needs.paths-filter.outputs.tabs == 'true'
+        run: yarn workspaces foreach -j 5 -ptW --from "./src/{bundles,tabs}/*" run build --tsc
 
-        - name: Test bundles
-          if: needs.paths-filter.outputs.bundles == 'true'
-          run: yarn workspaces foreach -j 5 -ptW --from "./src/bundles/*" run test
+      - name: Test bundles
+        if: needs.paths-filter.outputs.bundles == 'true'
+        run: yarn workspaces foreach -j 5 -ptW --from "./src/bundles/*" run test
 
-        - name: Test tabs
-          if: needs.paths-filter.outputs.tabs == 'true'
-          run: yarn workspaces foreach -j 5 -ptW --from "./src/tabs/*" run test
+      - name: Test tabs
+        if: needs.paths-filter.outputs.tabs == 'true'
+        run: yarn workspaces foreach -j 5 -ptW --from "./src/tabs/*" run test
 
-        - name: Build manifest
-          if: needs.paths-filter.outputs.devserver == 'true'
-          run: yarn buildtools manifest
+      - name: Build manifest
+        if: needs.paths-filter.outputs.devserver == 'true'
+        run: yarn buildtools manifest
 
-        - name: Build Docs Server
-          if: needs.paths-filter.outputs.docs == 'true'
-          run: yarn workspaces foreach -A --include "@sourceacademy/modules-docserver" run build
-        
-        - name: Run tsc for Dev Server
-          if: needs.paths-filter.outputs.devserver == 'true'
-          run: yarn tsc:devserver
+      - name: Build Docs Server
+        if: needs.paths-filter.outputs.docs == 'true'
+        run: yarn workspaces foreach -A --include "@sourceacademy/modules-docserver" run build
 
-        - name: Test Dev Server
-          if: needs.paths-filter.outputs.devserver == 'true'
-          run: yarn test:devserver
+      - name: Run tsc for Dev Server
+        if: needs.paths-filter.outputs.devserver == 'true'
+        run: yarn tsc:devserver
 
-        - name: Lint Everything
-          run: yarn buildtools lintglobal
+      - name: Test Dev Server
+        if: needs.paths-filter.outputs.devserver == 'true'
+        run: yarn test:devserver
+
+      - name: Lint Everything
+        run: yarn buildtools lintglobal

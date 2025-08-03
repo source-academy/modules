@@ -10,6 +10,7 @@ import * as importPlugin from 'eslint-plugin-import';
 import jsdocPlugin from 'eslint-plugin-jsdoc';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import ymlPlugin from 'eslint-plugin-yml';
 import globals from 'globals';
 import jsonParser from 'jsonc-eslint-parser';
 import tseslint from 'typescript-eslint';
@@ -30,6 +31,7 @@ export default tseslint.config(
       'build/**',
       'docs/.vitepress/cache',
       'devserver/vite.config.ts', // Don't lint this because there's no tsconfig properly configured for it
+      'node_modules',
       'lib/buildtools/bin',
       'lib/buildtools/src/build/__test_mocks__',
       'src/**/samples/**',
@@ -60,6 +62,7 @@ export default tseslint.config(
     }
   },
   // #endregion markdown
+
   {
     name: 'Global Configuration (Excluding Markdown)',
     // We exclude markdown because the markdown code processor doesn't support
@@ -80,6 +83,22 @@ export default tseslint.config(
         'always',
         { markers: todoTreeKeywordsAll }
       ],
+    }
+  },
+  {
+    name: 'YML Files',
+    extends: [ymlPlugin.configs['flat/recommended']],
+    files: ['**/*.yml', '**/*.yaml'],
+    plugins: {
+      yml: ymlPlugin
+    },
+    rules: {
+      'yml/indent': 'warn',
+      'yml/no-tab-indent': 'error',
+
+      // based on https://ota-meshi.github.io/eslint-plugin-yml/rules/spaced-comment.html
+      '@stylistic/spaced-comment': 'off',
+      'yml/spaced-comment': 'warn'
     }
   },
   {

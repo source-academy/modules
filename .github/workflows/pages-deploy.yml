@@ -16,24 +16,27 @@ jobs:
 
       - name: Enable Corepack
         run: corepack enable
-      
+
       - name: Use Node.js 💻
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: yarn
-      
+
       - name: Install Dependencies 📦
         run: yarn install --immutable
-          
+
       - name: Build Modules 🔧
         run: yarn workspaces foreach -j 5 -ptW --from "./src/{bundles,tsc}/*" run build --tsc --lint
-      
+
+      - name: Build Docs
+        run: yarn build:docs
+
       - name: include java json
         run: cp -r src/java build
 
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} 
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build # The folder the action should deploy.
