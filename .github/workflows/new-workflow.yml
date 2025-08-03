@@ -9,8 +9,68 @@ on:
       - master
 
 jobs:
+  setup-repo:
+    name: Setup Repository Tooling
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use Node.js 💻
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: yarn
+
+      - name: Check cache for repotools
+        uses: actions/cache@v4/restore
+        id: cache-repotools
+        with:
+          path: ./lib/repotools/dist
+          restore-keys: repotools
+
+      - name: Install Repotools Dependencies
+        run: yarn workspaces focus @sourceacademy/modules-repotools
+
+      - name: Build Repotools
+        if: steps.cache-repotools.outputs.cache-hit != 'true'
+        run: yarn workspaces foreach -A --include @sourceacademy/modules-repotools run build
+
+      - name: Cache Repotools
+        if: steps.cache-repotools.outputs.cache-hit != 'true'
+        uses: actions/cache@v4/save
+        with:
+          path: ./lib/repotools/dist
+          key: repotools
+
+      - name: Install Buildtools Dependencies
+        run: yarn workspaces focus @sourceacademy/modules-buildtools
+      
+      - name: Check cache for buildtools
+        uses: actions/cache@v4/restore
+        id: cache-buildtools
+        with:
+          path: ./lib/buildtools/bin/index.js
+          restore-keys: buildtools
+      
+      - name: Build Buildtools
+        if: steps.cache-buildtools.outputs.cache-hit != 'true'
+        run: yarn workspaces foreach -A --include @sourceacademy/modules-buildtools run build
+
+      - name: Cache Buildtools
+        if: steps.cache-repotools.outputs.cache-hit != 'true'
+        uses: actions/cache@v4/save
+        with:
+          path: ./lib/buildtools/bin/index.js
+          key: buildtools
+
   find-packages:
     name: Determine the packages present in the repo for the given type
+    needs: setup-repo
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -108,6 +168,12 @@ jobs:
 
       - name: Change into directory for ${{ matrix.package.name }}
         run: cd ${{ matrix.package.directory }}
+
+      - name: Restore buildtools
+        uses: actions/cache@v4/restore
+        with:
+          key: buildtools
+          path: ./lib/buildtools/bin/index.js
 
       - name: Install dependencies
         uses: ./.github/actions/src/install-deps
