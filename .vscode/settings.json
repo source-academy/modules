@@ -2,7 +2,7 @@
   "files.insertFinalNewline": true,
   "json.schemas": [
     {
-      "fileMatch": ["src/bundles/**/manifest.json"],
+      "fileMatch": ["src/bundles/*/manifest.json"],
       "url": "./lib/repotools/src/manifest.schema.json"
     },
     {

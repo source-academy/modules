@@ -25,7 +25,7 @@ module.exports = defineConfig({
     }
 
     for (const dep of Yarn.dependencies()) {
-      // Dependencies that are from this workspace should use
+      // Dependencies that are from this repository should use
       // the correct version
       if (dep.ident.startsWith('@sourceacademy')) {
         dep.update('workspace:^');

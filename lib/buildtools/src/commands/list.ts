@@ -7,8 +7,9 @@ import { logCommandErrorAndExit } from './commandUtils.js';
 
 export const getListBundlesCommand = () => new Command('bundle')
   .description('Lists all the bundles present or the information for a specific bundle in a given directory')
+  .option('--raw', 'Output just the names of bundles')
   .argument('[directory]')
-  .action(async directory => {
+  .action(async (directory, { raw }) => {
     if (directory === undefined) {
       const manifestResult = await resolveAllBundles(bundlesDir);
       if (manifestResult.severity === 'error') {
@@ -18,6 +19,11 @@ export const getListBundlesCommand = () => new Command('bundle')
       const bundleNames = Object.keys(manifestResult.bundles);
 
       if (bundleNames.length > 0) {
+        if (raw) {
+          console.log(bundleNames.join('\n'));
+          return;
+        }
+
         const bundlesStr = bundleNames.map((each, i) => `${i+1}. ${each}`).join('\n');
         console.log(`${chalk.magentaBright(`Detected ${bundleNames.length} bundles in ${bundlesDir}:`)}\n${bundlesStr}`);
       } else {
@@ -39,8 +45,9 @@ export const getListBundlesCommand = () => new Command('bundle')
 
 export const getListTabsCommand = () => new Command('tabs')
   .description('Lists all the tabs present or the information for a specific tab in a given directory')
+  .option('--raw', 'Output just the names of tabs')
   .argument('[directory]')
-  .action(async directory => {
+  .action(async (directory, { raw }) => {
     if (directory === undefined) {
       const tabsManifest = await resolveAllTabs(bundlesDir, tabsDir);
       if (tabsManifest.severity === 'error') {
@@ -50,6 +57,11 @@ export const getListTabsCommand = () => new Command('tabs')
       const tabNames = Object.keys(tabsManifest.tabs);
 
       if (tabNames.length > 0) {
+        if (raw) {
+          console.log(tabNames.join('\n'));
+          return;
+        }
+
         const tabsStr = tabNames.map((each, i) => `${i+1}. ${each}`).join('\n');
         console.log(`${chalk.magentaBright(`Detected ${tabNames.length} tabs in ${tabsDir}:`)}\n${tabsStr}`);
       } else {

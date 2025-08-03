@@ -25,13 +25,13 @@ export default tseslint.config(
       '**/*.snap',
       '**/*.d.ts',
       '**/dist/**',
+      '**/dist.*js',
       '.yarn',
       'build/**',
       'docs/.vitepress/cache',
       'devserver/vite.config.ts', // Don't lint this because there's no tsconfig properly configured for it
       'lib/buildtools/bin',
       'lib/buildtools/src/build/__test_mocks__',
-      'lib/*/dist.*js',
       'src/**/samples/**',
       'src/bundles/scrabble/src/words.json', // Don't lint this because its way too big
       'src/java/**',
@@ -337,6 +337,7 @@ export default tseslint.config(
     files: [
       'lib/buildtools/**/*.ts',
       'lib/repotools/**/*.ts',
+      '.github.actions/**/*.ts',
       '**/vitest.config.js'
     ],
     rules: {

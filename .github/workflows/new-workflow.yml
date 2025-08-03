@@ -1,0 +1,36 @@
+name: new-workflow
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  load-packages:
+    name: Determine the packages present in the repo for the given type
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        type: ['lib', 'bundles', 'tabs']
+
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 💻
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: yarn
+
+      - name: Find Packages
+        id: find
+        uses: ./.github/actions/info
+        with:
+          type: ${{ matrix.type }}
+
+      - name: Print
+        run: echo ${{ steps.find.outputs }}
