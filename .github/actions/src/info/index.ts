@@ -36,7 +36,6 @@ async function findPackages(directory: string, maxDepth?: number) {
       const fullPath = pathlib.join(currentDir, item.name);
       if (item.isFile()) {
         if (item.name === 'package.json') {
-          core.info(`Found ${fullPath}`);
           try {
             const { default: { name } } = await import(fullPath, { with: { type: 'json' }});
             const changes = await checkForChanges(currentDir);
@@ -46,7 +45,9 @@ async function findPackages(directory: string, maxDepth?: number) {
               name
             };
             return;
-          } catch {}
+          } catch(error) {
+            core.error(error);
+          }
         }
         continue;
       }
