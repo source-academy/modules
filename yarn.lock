@@ -3482,9 +3482,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/modules-info-action@workspace:.github/actions/info":
+"@sourceacademy/modules-github-actions@workspace:.github/actions":
   version: 0.0.0-use.local
-  resolution: "@sourceacademy/modules-info-action@workspace:.github/actions/info"
+  resolution: "@sourceacademy/modules-github-actions@workspace:.github/actions"
   dependencies:
     "@actions/core": "npm:^1.11.1"
     "@actions/exec": "npm:^1.1.1"

@@ -99,7 +99,7 @@
   },
   "packageManager": "yarn@4.8.1",
   "workspaces": [
-    "./.github/actions/*",
+    "./.github/actions",
     "./devserver",
     "./docs",
     "./lib/*",

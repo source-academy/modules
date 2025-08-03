@@ -338,7 +338,7 @@ export default tseslint.config(
     files: [
       'lib/buildtools/**/*.ts',
       'lib/repotools/**/*.ts',
-      '.github.actions/**/*.ts',
+      '.github/actions/**/*.ts',
       '**/vitest.config.js'
     ],
     rules: {

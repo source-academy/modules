@@ -1,5 +1,5 @@
 {
-  "include": ["./index.ts"],
+  "include": ["src"],
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
     "lib": ["ES2020"],
