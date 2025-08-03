@@ -130,6 +130,7 @@ jobs:
       - name: Restore repotools
         uses: actions/cache/restore@v4
         with:
+          path: ./lib/repotools/dist
           key: repotools
 
       - name: tsc and test
@@ -146,6 +147,9 @@ jobs:
       fail-fast: false
       matrix:
         package: ${{ fromJson(needs.find-packages.outputs.tabs) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.package.directory }}
 
     steps:
       - name: Check out source code
@@ -170,9 +174,6 @@ jobs:
           filters: |
             changed:
               - ${{ matrix.package.directory }}/**
-
-      - name: Change into directory for ${{ matrix.package.name }}
-        run: cd ${{ matrix.package.directory }}
 
       - name: Restore buildtools
         uses: actions/cache/restore@v4
