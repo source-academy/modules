@@ -127,6 +127,11 @@ jobs:
       - name: Install dependencies
         run: yarn workspaces focus ${{ matrix.package.name }}
 
+      - name: Restore repotools
+        uses: actions/cache/restore@v4
+        with:
+          key: repotools
+
       - name: tsc and test
         run: |
           cd ${{ matrix.package.directory }}

@@ -14,11 +14,6 @@ async function main() {
     core.info(`Playwright is necessary for ${packageName}, installing`);
     await exec('yarn', ['playwright', 'install', '--with-deps']);
   }
-
-  if (packageJson.devDependencies['@sourceacademy/modules-buildtools']) {
-    core.info('Building buildtools');
-    await exec('yarn', ['workspaces', 'foreach', '-A', '--include', '@sourceacademy/modules-buildtools', 'run', 'build']);
-  }
 }
 
 await main();
