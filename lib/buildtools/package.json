@@ -33,7 +33,7 @@
   "scripts": {
     "build": "node ./build.js --dev",
     "lint": "eslint src",
-    "prepare": "node ./build.js",
+    "postinstall": "node ./build.js",
     "tsc": "tsc --project ./tsconfig.json",
     "test": "buildtools test --project ."
   }

@@ -23,7 +23,7 @@
   },
   "scripts": {
     "build": "tsc --project ./tsconfig.prod.json",
-    "prepare": "yarn build",
+    "postinstall": "yarn build",
     "tsc": "tsc --project ./tsconfig.json",
     "test": "vitest"
   }

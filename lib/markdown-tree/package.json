@@ -26,7 +26,7 @@
   },
   "scripts": {
     "build": "node ./build.js",
-    "prepare": "yarn build",
+    "postinstall": "yarn build",
     "test": "buildtools test --project ."
   }
 }

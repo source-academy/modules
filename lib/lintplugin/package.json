@@ -31,7 +31,7 @@
   "scripts": {
     "build": "tsc --project ./tsconfig.prod.json && node ./build.js",
     "lint": "eslint src",
-    "prepare": "yarn build",
+    "prepare": "postinstall build",
     "tsc": "tsc --project ./tsconfig.json",
     "test": "buildtools test --project ."
   }
