@@ -6,10 +6,10 @@ branding:
   color: green
 
 inputs:
-  workspace-name:
+  package-name:
     required: false
     default: null
-    description: Name of the workspace you're initializing
+    description: Name of the workspace/package you're initializing
 
   install-deps:
     required: false
@@ -36,11 +36,11 @@ runs:
 
     - name: Install Dependencies (Focused)
       if: inputs.workspace-name != null && inputs.install-deps
-      run: yarn workspaces focus ${{ inputs.workspace-name }}
+      run: yarn workspaces focus ${{ inputs.package-name }}
       shell: bash
 
     - name: Install Dependencies (General)
-      if: inputs.workspace-name == null && inputs.install-deps
+      if: inputs.package-name == null && inputs.install-deps
       run: yarn install --immutable
       shell: bash
 
