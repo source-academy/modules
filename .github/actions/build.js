@@ -1,3 +1,4 @@
+// @ts-check
 import getBuildCommand from '@sourceacademy/modules-repotools/builder';
 
 const buildCommand = getBuildCommand({
@@ -10,7 +11,7 @@ const buildCommand = getBuildCommand({
   outdir: 'dist',
   packages: 'external',
   platform: 'node',
-  target: 'node20'
+  target: 'node20',
 });
 
 await buildCommand.parseAsync();

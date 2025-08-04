@@ -1,0 +1,49 @@
+name: Initialize Environment
+description: Checks out code and installs Yarn
+
+branding:
+  icon: play
+  color: green
+
+inputs:
+  workspace-name:
+    required: false
+    default: null
+    description: Name of the workspace you're initializing
+
+  install-deps:
+    required: false
+    default: true
+    description: "Should dependencies be installed? (default: true)"
+
+  playwright:
+    required: false
+    default: false
+    description: Should run the Playwright installation command
+
+runs:
+  using: composite
+  steps:
+    - name: Check out source code
+      uses: actions/checkout@v4
+
+    - name: Enable Corepack
+      run: corepack enable
+
+    - name: Use Node.js 💻
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: .node-version
+        cache: yarn
+
+    - name: Install Dependencies (Focused)
+      if: inputs.workspace-name != null && inputs.install-deps
+      run: yarn workspaces focus ${{ inputs.workspace-name }}
+
+    - name: Install Dependencies (General)
+      if: inputs.workspace-name == null && inputs.install-deps
+      run: yarn install --immutable
+
+    - name: Install Playwright
+      if: inputs.playwright == 'true' && inputs.install-deps
+      run: yarn playwright install --with-deps

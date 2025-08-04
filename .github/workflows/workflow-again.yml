@@ -14,14 +14,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out source code
-        uses: actions/checkout@v4
-
-      - name: Enable corepack
-        run: corepack enable
-
-      - name: Install action packages
-        run: yarn workspaces focus @sourceacademy/modules-github-actions
+      - name: Initialize Repo
+        uses: ./.github/actions/src/init
+        with:
+          package-name: '@sourceacademy/modules-github-actions'
 
       - name: Build actions
         run: |
@@ -46,26 +42,11 @@ jobs:
       matrix:
         lib: ${{ fromJson(needs.find-packages.outputs.libs) }}
     steps:
-      - name: Check out source code
-        uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Use Node.js 💻
-        uses: actions/setup-node@v4
+      - name: Initialize Repo
+        uses: ./.github/actions/src/init
         with:
-          node-version-file: .node-version
-          cache: yarn
-
-      - name: Install Dependencies
-        run: yarn workspaces focus ${{ matrix.lib.name }}
-
-      - name: Install Playwright (if needed)
-        if: matrix.lib.changes == 'true' && matrix.lib.needsPlaywright
-        run: |
-          cd ${{ matrix.lib.directory }}
-          yarn playwright install --with-deps
+          package-name: ${{ matrix.lib.name }}
+          playwright: ${{ matrix.lib.changes && matrix.lib.needsPlaywright }}
 
       - name: Run Tests
         if: matrix.lib.changes == 'true'
@@ -90,17 +71,11 @@ jobs:
         tabInfo: ${{ fromJson(needs.find-packages.outputs.tabs) }}
 
     steps:
-      - name: Check out source code
-        uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Use Node.js 💻
-        uses: actions/setup-node@v4
+      - name: Initialize Repo
+        uses: ./.github/actions/src/init
         with:
-          node-version-file: .node-version
-          cache: yarn
+          package-name: ${{ matrix.tabInfo.name }}
+          playwright: ${{ matrix.tabInfo.needsPlaywright && matrix.tabInfo.changes }}
 
       - name: Install Dependencies
         run: yarn workspaces focus ${{ matrix.tabInfo.name }}
@@ -114,20 +89,14 @@ jobs:
           path: ./build/tabs/${{ matrix.tabInfo.tabName }}.js
           key: ${{ matrix.tabInfo.name }}
 
-      - name: Install Playwright (if needed)
-        if: matrix.tabInfo.changes == 'true' && matrix.tabInfo.needsPlaywright
-        run: |
-          cd ${{ matrix.tabInfo.directory }}
-          yarn playwright install --with-deps
-
       - name: Run Tests
-        if: matrix.tabInfo.changes == 'true'
+        if: matrix.tabInfo.changes
         run: |
           cd ${{ matrix.tabInfo.directory }}
           yarn test
 
       - name: Run Auxillary Tasks
-        if: matrix.tabInfo.changes == 'true'
+        if: matrix.tabInfo.changes
         run: |
           cd ${{ matrix.tabInfo.directory }}
           yarn tsc
@@ -143,20 +112,10 @@ jobs:
         bundleInfo: ${{ fromJson(needs.find-packages.outputs.bundles) }}
 
     steps:
-      - name: Check out source code
-        uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Use Node.js 💻
-        uses: actions/setup-node@v4
+      - name: Initialize Repo
+        uses: ./.github/actions/src/init
         with:
-          node-version-file: .node-version
-          cache: yarn
-
-      - name: Install Dependencies
-        run: yarn workspaces focus ${{ matrix.bundleInfo.name }}
+          package-name: ${{ matrix.bundleInfo.name }}
 
       - name: Build Bundle
         run: |
@@ -197,17 +156,46 @@ jobs:
       - tabs
 
     steps:
-      - name: Check out source code
-        uses: actions/checkout@v4
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Use Node.js 💻
-        uses: actions/setup-node@v4
+      - name: Initialize Repo
+        uses: ./.github/actions/src/init
         with:
-          node-version-file: .node-version
-          cache: yarn
+          package-name: '@sourceacademy/modules-devserver'
+          playwright: true
 
-      - name: Install Dependencies
-        run: yarn workspaces focus @sourceacademy/modules-devserver
+      - name: Run tests
+        run: |
+          cd ./devserver
+          yarn test
+      
+      - name: Run Auxillary Tasks
+        run: |
+          cd ./devserver
+          yarn tsc
+
+  docserver:
+    name: Docs Server Tests
+    runs-on: ubuntu-latest
+    needs: libraries
+    steps:
+      - name: Initialize Repo
+        uses: ./.github/actions/src/init
+        with:
+          package-name: '@sourceacademy/modules-docserver'
+
+      - name: Build Docs
+        run: |
+          cd ./docs
+          yarn build
+
+  repo-tasks:
+    name: Repo Wide Tasks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Initialize Repo
+        uses: ./.github/actions/src/init
+        with:
+          package-name: '@sourceacademy/modules'
+      
+      - name: Lint Everything
+        run: yarn lint:all

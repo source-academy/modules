@@ -3173,13 +3173,12 @@ __metadata:
   resolution: "@sourceacademy/bundle-nbody@workspace:src/bundles/nbody"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@types/plotly.js": "npm:^2.35.4"
+    "@types/three": "npm:^0.175.0"
     nbody: "npm:^0.2.0"
+    plotly.js-dist: "npm:^2.17.1"
+    three: "npm:^0.175.0"
     typescript: "npm:^5.8.2"
-  peerDependencies:
-    "@types/plotly.js": ^2.35.4
-    "@types/three": ^0.175.0
-    plotly.js-dist: ^2.17.1
-    three: ^0.175.0
   languageName: unknown
   linkType: soft
 
@@ -3262,6 +3261,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-robot_simulation@workspace:src/bundles/robot_simulation"
   dependencies:
+    "@dimforge/rapier3d-compat": "npm:^0.11.2"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/three": "npm:^0.175.0"
@@ -3694,10 +3694,14 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
+    "@types/plotly.js": "npm:^2.35.4"
     "@types/react": "npm:^18.3.1"
+    "@types/three": "npm:^0.175.0"
     nbody: "npm:^0.2.0"
+    plotly.js-dist: "npm:^2.17.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
+    three: "npm:^0.175.0"
   languageName: unknown
   linkType: soft
 
@@ -4460,6 +4464,13 @@ __metadata:
   version: 2019.7.3
   resolution: "@types/offscreencanvas@npm:2019.7.3"
   checksum: 10c0/6d1dfae721d321cd2b5435f347a0e53b09f33b2f9e9333396480f592823bc323847b8169f7d251d2285cb93dbc1ba2e30741ac5cf4b1c003d660fd4c24526963
+  languageName: node
+  linkType: hard
+
+"@types/plotly.js@npm:^2.35.4":
+  version: 2.35.8
+  resolution: "@types/plotly.js@npm:2.35.8"
+  checksum: 10c0/9b59a56fdef4c383aab03cf3e2597393140ed743ca1682e5512f95583787ae2f75dd3f980a56eed0eaa2f088ad0475fc915cb5d37875b08f499168966bc92e22
   languageName: node
   linkType: hard
 
@@ -12378,6 +12389,13 @@ __metadata:
   bin:
     playwright: cli.js
   checksum: 10c0/c5fedae31a03a1f4c4846569aef3ffb98da23000a4d255abfc8c2ede15b43cc7cd87b80f6fa078666c030373de8103787cf77ef7653ae9458aabbbd4320c2599
+  languageName: node
+  linkType: hard
+
+"plotly.js-dist@npm:^2.17.1":
+  version: 2.35.3
+  resolution: "plotly.js-dist@npm:2.35.3"
+  checksum: 10c0/cbdcfaaf72244e22a4311408f7bbad43e4462bc8dc5c7ea831f3dee3a2dc09bae6e390fc1eca92cc2b29f4cbae9507749b52fb3d7000a4115c666b6295e81a84
   languageName: node
   linkType: hard
 
