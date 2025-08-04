@@ -100,7 +100,7 @@ jobs:
           key: ${{ matrix.tabInfo.name }}
 
       - name: Echo Some Information
-        run: echo ${{ matrix.tabInfo.changes }}
+        run: echo ${{ matrix.tabInfo.changes == 'true' }}
 
       - name: Run Tests
         if: matrix.tabInfo.changes == 'true' 
