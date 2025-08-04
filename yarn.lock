@@ -3098,8 +3098,9 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/uniqid": "npm:^5.3.4"
     mqtt: "npm:^4.3.7"
+    os: "npm:^0.1.2"
     typescript: "npm:^5.8.2"
-    uniqid: "patch:uniqid@npm%3A5.4.0#~/.yarn/patches/uniqid-npm-5.4.0-f982bda028.patch"
+    uniqid: "npm:^5.4.0"
   languageName: unknown
   linkType: soft
 
