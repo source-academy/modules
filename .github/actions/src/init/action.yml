@@ -34,6 +34,18 @@ runs:
         node-version-file: .node-version
         cache: yarn
 
+    - name: Echo package-name
+      run: echo "${{ inputs.package-name }}"
+      shell: bash
+
+    - name: Echo install-deps
+      run: echo "${{ inputs.install-deps }}"
+      shell: bash
+
+    - name: Echo playwright
+      run: echo "${{ inputs.playwright }}"
+      shell: bash
+
     - name: Install Dependencies (Focused)
       if: inputs.workspace-name != '' && inputs.install-deps
       run: yarn workspaces focus ${{ inputs.package-name }}
