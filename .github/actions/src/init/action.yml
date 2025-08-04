@@ -44,6 +44,10 @@ runs:
       run: yarn install --immutable
       shell: bash
 
+    - name: Echo?
+      run: echo "${{ inputs.playwright }}"
+      shell: bash
+
     - name: Install Playwright
       if: inputs.playwright && inputs.install-deps
       run: yarn playwright install --with-deps
