@@ -99,6 +99,9 @@ jobs:
           path: ./build/tabs/${{ matrix.tabInfo.tabName }}.js
           key: ${{ matrix.tabInfo.name }}
 
+      - name: Echo Some Information
+        run: echo ${{ matrix.tabInfo.changes }}
+
       - name: Run Tests
         if: matrix.tabInfo.changes == 'true' 
         run: |
