@@ -44,11 +44,7 @@ runs:
       run: yarn install --immutable
       shell: bash
 
-    - name: Echo?
-      run: echo "${{ inputs.playwright == 'true' && inputs.install-deps == 'true'}}"
-      shell: bash
-
     - name: Install Playwright
       if: inputs.playwright == 'true' && inputs.install-deps == 'true'
-      run: yarn playwright install --with-deps
+      run: yarn workspaces foreach -A --include ${{ inputs.package-name }} run playwright install --with-deps
       shell: bash

@@ -13,6 +13,23 @@ vi.spyOn(fs, 'open').mockResolvedValue({
   close: vi.fn()
 } as any);
 
+vi.mock(import('esbuild'), async importOriginal => {
+  // Add modules-lib to the list of external packages since it might
+  // not be installed during a buildtools test run
+  const original = await importOriginal();
+  return {
+    ...original,
+    build: options => {
+      options.external!.push('@sourceacademy/modules-lib');
+      return original.build(options);
+    },
+    context: options => {
+      options.external!.push('@sourceacademy/modules-lib');
+      return original.context(options);
+    }
+  };
+});
+
 beforeEach(() => {
   written.splice(0, written.length);
 });
@@ -63,10 +80,21 @@ test('build tab', async () => {
   });
   expect(fs.open).toHaveBeenCalledWith('/build/tabs/tab0.js', 'w');
 
+  function mockRequire(path: string) {
+    console.log(path);
+    if (path === '@sourceacademy/modules-lib/tabs/utils') {
+      return {
+        defineTab: (x: any) => x
+      };
+    }
+
+    return {};
+  }
+
   const data = written.join('');
   const trimmed = (data as string).slice('export default'.length);
 
-  const { default: tab } = eval(trimmed)(() => {});
+  const { default: tab } = eval(trimmed)(mockRequire);
   expect(tab.body(0)).toEqual(0);
   expect(tab.toSpawn()).toEqual(true);
 });
