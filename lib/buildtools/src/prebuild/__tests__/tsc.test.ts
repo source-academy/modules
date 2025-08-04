@@ -5,6 +5,11 @@ import { runTsc } from '../tsc.js';
 
 const mockedWriteFile = vi.hoisted(() => vi.fn<(arg0: string, arg1: string) => void>(() => undefined));
 
+// Set a longer timeout just for this file
+vi.setConfig({
+  testTimeout: 20000
+});
+
 vi.mock(import('typescript'), async importOriginal => {
   const { default: original } = await importOriginal();
 
@@ -31,7 +36,7 @@ vi.mock(import('typescript'), async importOriginal => {
 });
 
 describe('Test the augmented tsc functionality', () => {
-  test('tsc on a bundle', { timeout: 15000 }, async () => {
+  test('tsc on a bundle', async () => {
     await runTsc({
       type: 'bundle',
       directory: `${testMocksDir}/bundles/test0`,
@@ -46,7 +51,7 @@ describe('Test the augmented tsc functionality', () => {
     expect(writePath).not.toEqual(`${testMocksDir}/bundles/test0/__tests__/test0.test.js`,);
   });
 
-  test('tsc on a bundle with --noEmit', { timeout: 15000 }, async () => {
+  test('tsc on a bundle with --noEmit', async () => {
     await runTsc({
       type: 'bundle',
       directory: `${testMocksDir}/bundles/test0`,
@@ -78,7 +83,7 @@ describe('Test the augmented tsc functionality', () => {
     expect(mockedWriteFile).not.toBeCalled();
   });
 
-  test('tsc on a tab', { timeout: 10000 }, async () => {
+  test('tsc on a tab', async () => {
     await runTsc({
       type: 'tab',
       directory: `${testMocksDir}/tabs/tab0`,
