@@ -35,20 +35,20 @@ runs:
         cache: yarn
 
     - name: Install Dependencies (Focused)
-      if: inputs.package-name != '' && inputs.install-deps
+      if: inputs.package-name != '' && inputs.install-deps == 'true'
       run: yarn workspaces focus ${{ inputs.package-name }}
       shell: bash
 
     - name: Install Dependencies (General)
-      if: inputs.package-name == '' && inputs.install-deps
+      if: inputs.package-name == '' && inputs.install-deps == 'true'
       run: yarn install --immutable
       shell: bash
 
     - name: Echo?
-      run: echo "${{ inputs.playwright && inputs.install-deps }}"
+      run: echo "${{ inputs.playwright == 'true' && inputs.install-deps == 'true'}}"
       shell: bash
 
     - name: Install Playwright
-      if: inputs.playwright && inputs.install-deps
+      if: inputs.playwright == 'true' && inputs.install-deps == 'true'
       run: yarn playwright install --with-deps
       shell: bash

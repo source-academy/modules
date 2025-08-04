@@ -53,16 +53,16 @@ jobs:
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.lib.name }}
-          playwright: ${{ matrix.lib.changes && matrix.lib.needsPlaywright }}
+          playwright: ${{ matrix.lib.changes == 'true' && matrix.lib.needsPlaywright == 'true' }}
 
       - name: Run Tests
-        if: matrix.lib.changes
+        if: matrix.lib.changes == 'true'
         run: |
           cd ${{ matrix.lib.directory }}
           yarn test
 
       - name: Run Auxillary Tasks
-        if: matrix.lib.changes
+        if: matrix.lib.changes == 'true'
         run: |
           cd ${{ matrix.lib.directory }}
           yarn tsc
@@ -85,7 +85,7 @@ jobs:
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.tabInfo.name }}
-          playwright: ${{ matrix.tabInfo.needsPlaywright && matrix.tabInfo.changes }}
+          playwright: ${{ matrix.tabInfo.needsPlaywright == 'true' && matrix.tabInfo.changes == 'true' }}
 
       - name: Install Dependencies
         run: yarn workspaces focus ${{ matrix.tabInfo.name }}
@@ -100,13 +100,13 @@ jobs:
           key: ${{ matrix.tabInfo.name }}
 
       - name: Run Tests
-        if: matrix.tabInfo.changes
+        if: matrix.tabInfo.changes == 'true' 
         run: |
           cd ${{ matrix.tabInfo.directory }}
           yarn test
 
       - name: Run Auxillary Tasks
-        if: matrix.tabInfo.changes
+        if: matrix.tabInfo.changes == 'true'
         run: |
           cd ${{ matrix.tabInfo.directory }}
           yarn tsc
