@@ -14,6 +14,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+ 
       - name: Initialize Repo
         uses: ./.github/actions/src/init
         with:
@@ -30,8 +33,8 @@ jobs:
 
     outputs:
       bundles: ${{ steps.info.outputs.bundles }}
-      tabs: ${{ steps.info.outputs.tabs }}
       libs: ${{ steps.info.outputs.libs }}
+      tabs: ${{ steps.info.outputs.tabs }}
 
   libraries:
     name: Libaries
@@ -41,7 +44,11 @@ jobs:
       fail-fast: false
       matrix:
         lib: ${{ fromJson(needs.find-packages.outputs.libs) }}
+
     steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
       - name: Initialize Repo
         uses: ./.github/actions/src/init
         with:
@@ -49,13 +56,13 @@ jobs:
           playwright: ${{ matrix.lib.changes && matrix.lib.needsPlaywright }}
 
       - name: Run Tests
-        if: matrix.lib.changes == 'true'
+        if: matrix.lib.changes
         run: |
           cd ${{ matrix.lib.directory }}
           yarn test
 
       - name: Run Auxillary Tasks
-        if: matrix.lib.changes == 'true'
+        if: matrix.lib.changes
         run: |
           cd ${{ matrix.lib.directory }}
           yarn tsc
@@ -71,6 +78,9 @@ jobs:
         tabInfo: ${{ fromJson(needs.find-packages.outputs.tabs) }}
 
     steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
       - name: Initialize Repo
         uses: ./.github/actions/src/init
         with:
@@ -112,6 +122,9 @@ jobs:
         bundleInfo: ${{ fromJson(needs.find-packages.outputs.bundles) }}
 
     steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
       - name: Initialize Repo
         uses: ./.github/actions/src/init
         with:
@@ -156,11 +169,17 @@ jobs:
       - tabs
 
     steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
       - name: Initialize Repo
         uses: ./.github/actions/src/init
         with:
           package-name: '@sourceacademy/modules-devserver'
           playwright: true
+
+      - name: Build all tabs
+        run: yarn workspaces foreach -ptW --from "./src/tabs/*" run build
 
       - name: Run tests
         run: |
@@ -177,6 +196,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: libraries
     steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
       - name: Initialize Repo
         uses: ./.github/actions/src/init
         with:
@@ -192,6 +214,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
       - name: Initialize Repo
         uses: ./.github/actions/src/init
         with:
