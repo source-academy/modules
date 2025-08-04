@@ -3067,7 +3067,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     saar: "npm:^1.0.4"
     typescript: "npm:^5.8.2"
-    uniqid: "npm:^5.4.0"
+    uniqid: "patch:uniqid@npm%3A5.4.0#~/.yarn/patches/uniqid-npm-5.4.0-f982bda028.patch"
   languageName: unknown
   linkType: soft
 
@@ -3099,7 +3099,7 @@ __metadata:
     "@types/uniqid": "npm:^5.3.4"
     mqtt: "npm:^4.3.7"
     typescript: "npm:^5.8.2"
-    uniqid: "npm:^5.4.0"
+    uniqid: "patch:uniqid@npm%3A5.4.0#~/.yarn/patches/uniqid-npm-5.4.0-f982bda028.patch"
   languageName: unknown
   linkType: soft
 
@@ -14934,10 +14934,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uniqid@npm:^5.4.0":
+"uniqid@npm:5.4.0":
   version: 5.4.0
   resolution: "uniqid@npm:5.4.0"
   checksum: 10c0/ef0d7c7ae26d5d7eb632ec9a1548575c855edfa422fd1ade1ee82d7d60bddef24574a53a5ec716db887ec763e4f5dea6dae4dfc1918e2ee5fda35dc43a6c0b7a
+  languageName: node
+  linkType: hard
+
+"uniqid@patch:uniqid@npm%3A5.4.0#~/.yarn/patches/uniqid-npm-5.4.0-f982bda028.patch":
+  version: 5.4.0
+  resolution: "uniqid@patch:uniqid@npm%3A5.4.0#~/.yarn/patches/uniqid-npm-5.4.0-f982bda028.patch::version=5.4.0&hash=555b83"
+  checksum: 10c0/388fe81bfe81214016c2a52a45bccae925b71281cca86d7fee36652b25178e952fec738af76698a059c35f3dbcfa20614c314f9b73786a3f7c72ae3773c6660a
   languageName: node
   linkType: hard
 

@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "mqtt": "^4.3.7",
-    "uniqid": "^5.4.0"
+    "uniqid": "patch:uniqid@npm%3A5.4.0#~/.yarn/patches/uniqid-npm-5.4.0-f982bda028.patch"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",

@@ -106,5 +106,8 @@
     "./lib/*",
     "./src/bundles",
     "./src/tabs"
-  ]
+  ],
+  "resolutions": {
+    "uniqid@npm:^5.4.0": "patch:uniqid@npm%3A5.4.0#~/.yarn/patches/uniqid-npm-5.4.0-f982bda028.patch"
+  }
 }

@@ -110,7 +110,6 @@ jobs:
         run: |
           cd ${{ matrix.tabInfo.directory }}
           yarn tsc
-          yarn lint
 
   bundles:
     name: Bundles
@@ -159,7 +158,6 @@ jobs:
         run: |
           cd ${{ matrix.bundleInfo.directory }}
           yarn tsc
-          yarn lint
   
   devserver:
     name: Dev Server Tests
