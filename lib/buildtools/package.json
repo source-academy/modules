@@ -18,16 +18,20 @@
   "dependencies": {
     "@sourceacademy/modules-repotools": "workspace:^",
     "@vitejs/plugin-react": "^4.5.1",
+    "@vitest/browser": "^3.2.3",
+    "@vitest/coverage-v8": "^3.2.3",
     "acorn": "^8.8.1",
     "astring": "^1.8.6",
     "chalk": "^5.0.1",
     "commander": "^13.0.0",
     "esbuild": "^0.25.8",
     "eslint": "^9.31.0",
+    "jsdom": "^26.1.0",
     "lodash": "^4.17.21",
     "typedoc": "^0.28.9",
     "vite": "^6.3.5",
-    "vitest": "^3.2.3"
+    "vitest": "^3.2.3",
+    "vitest-browser-react": "^1.0.0"
   },
   "scripts": {
     "build": "node ./build.js --dev",

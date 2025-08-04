@@ -59,7 +59,7 @@ jobs:
           playwright: ${{ matrix.lib.changes && matrix.lib.needsPlaywright }}
 
       - name: Run Tests
-        if: matrix.lib.change
+        if: matrix.lib.changes
         run: |
           cd ${{ matrix.lib.directory }}
           yarn test
@@ -218,6 +218,9 @@ jobs:
         uses: ./.github/actions/src/init
         with:
           package-name: '@sourceacademy/modules'
+
+      - name: Check constraints
+        run: yarn constraints
       
       - name: Lint Everything
         run: yarn lint:all
