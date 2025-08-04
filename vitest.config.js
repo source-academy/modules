@@ -3,9 +3,13 @@
 import pathlib from 'path';
 import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 
-const coverageReporters = ['html', 'text'];
+const reporters = ['default'];
+const coverageReporters = ['text'];
+
 if (process.env.GITHUB_ACTIONS) {
-  coverageReporters.push('github-actions');
+  reporters.push('github-actions');
+} else {
+  coverageReporters.push('html');
 }
 
 export default defineConfig({
@@ -22,6 +26,7 @@ export default defineConfig({
       './src/bundles/*',
       './src/tabs/*'
     ],
+    reporters,
     clearMocks: true,
     coverage: {
       provider: 'v8',
