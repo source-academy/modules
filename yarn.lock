@@ -3542,6 +3542,7 @@ __metadata:
     "@commander-js/extra-typings": "npm:^13.0.0"
     "@types/lodash": "npm:^4.14.198"
     "@types/node": "npm:^22.15.30"
+    "@vitest/coverage-v8": "npm:^3.2.3"
     chalk: "npm:^5.0.1"
     commander: "npm:^13.0.0"
     esbuild: "npm:^0.25.8"
