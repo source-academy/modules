@@ -45,7 +45,7 @@ runs:
       shell: bash
 
     - name: Echo?
-      run: echo "${{ inputs.playwright }}"
+      run: echo "${{ inputs.playwright && inputs.install-deps }}"
       shell: bash
 
     - name: Install Playwright
