@@ -26,6 +26,7 @@ runs:
   steps:
     - name: Enable Corepack
       run: corepack enable
+      shell: bash
 
     - name: Use Node.js 💻
       uses: actions/setup-node@v4
@@ -36,11 +37,14 @@ runs:
     - name: Install Dependencies (Focused)
       if: inputs.workspace-name != null && inputs.install-deps
       run: yarn workspaces focus ${{ inputs.workspace-name }}
+      shell: bash
 
     - name: Install Dependencies (General)
       if: inputs.workspace-name == null && inputs.install-deps
       run: yarn install --immutable
+      shell: bash
 
     - name: Install Playwright
       if: inputs.playwright == 'true' && inputs.install-deps
       run: yarn playwright install --with-deps
+      shell: bash
