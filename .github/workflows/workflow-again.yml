@@ -87,7 +87,7 @@ jobs:
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.tabInfo.name }}
-          playwright: ${{ matrix.tabInfo.needsPlaywright  && matrix.tabInfo.changes }}
+          playwright: ${{ matrix.tabInfo.needsPlaywright && matrix.tabInfo.changes }}
 
       - name: Build Tab
         run: yarn workspaces foreach -A --include ${{ matrix.tabInfo.name }} run build
