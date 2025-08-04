@@ -62,7 +62,7 @@ jobs:
         if: matrix.lib.changes
         run: |
           cd ${{ matrix.lib.directory }}
-          yarn test
+          yarn test --coverage
 
       - name: Run Auxillary Tasks
         if: matrix.lib.changes
@@ -102,7 +102,7 @@ jobs:
         if: matrix.tabInfo.changes
         run: |
           cd ${{ matrix.tabInfo.directory }}
-          yarn test
+          yarn test --coverage
 
       - name: Run Auxillary Tasks
         if: matrix.tabInfo.changes
@@ -150,7 +150,7 @@ jobs:
         if: matrix.bundleInfo.changes
         run: |
           cd ${{ matrix.bundleInfo.directory }}
-          yarn test
+          yarn test --coverage
 
       - name: Run Auxillary Tasks
         if: matrix.bundleInfo.changes
@@ -181,7 +181,7 @@ jobs:
       - name: Run tests
         run: |
           cd ./devserver
-          yarn test
+          yarn test --coverage
 
       - name: Run Auxillary Tasks
         run: |
