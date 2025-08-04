@@ -27,6 +27,9 @@ jobs:
           cd ./.github/actions
           yarn build
 
+      - name: Fetch Master branch
+        run: git fetch origin master
+
       - name: Get Package Information
         id: info
         uses: ./.github/actions/src/info
@@ -53,16 +56,16 @@ jobs:
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.lib.name }}
-          playwright: ${{ matrix.lib.changes == 'true' && matrix.lib.needsPlaywright == 'true' }}
+          playwright: ${{ matrix.lib.changes && matrix.lib.needsPlaywright }}
 
       - name: Run Tests
-        if: matrix.lib.changes == 'true'
+        if: matrix.lib.change
         run: |
           cd ${{ matrix.lib.directory }}
           yarn test
 
       - name: Run Auxillary Tasks
-        if: matrix.lib.changes == 'true'
+        if: matrix.lib.changes
         run: |
           cd ${{ matrix.lib.directory }}
           yarn tsc
@@ -85,10 +88,7 @@ jobs:
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.tabInfo.name }}
-          playwright: ${{ matrix.tabInfo.needsPlaywright == 'true' && matrix.tabInfo.changes == 'true' }}
-
-      - name: Install Dependencies
-        run: yarn workspaces focus ${{ matrix.tabInfo.name }}
+          playwright: ${{ matrix.tabInfo.needsPlaywright  && matrix.tabInfo.changes }}
 
       - name: Build Tab
         run: yarn workspaces foreach -A --include ${{ matrix.tabInfo.name }} run build
@@ -100,16 +100,16 @@ jobs:
           key: ${{ matrix.tabInfo.name }}
 
       - name: Echo Some Information
-        run: echo ${{ matrix.tabInfo.changes == 'true' }}
+        run: echo >>${{ matrix.tabInfo.changes }}<<
 
       - name: Run Tests
-        if: matrix.tabInfo.changes == 'true' 
+        if: matrix.tabInfo.changes
         run: |
           cd ${{ matrix.tabInfo.directory }}
           yarn test
 
       - name: Run Auxillary Tasks
-        if: matrix.tabInfo.changes == 'true'
+        if: matrix.tabInfo.changes
         run: |
           cd ${{ matrix.tabInfo.directory }}
           yarn tsc
@@ -151,13 +151,13 @@ jobs:
           key: ${{ matrix.bundleInfo.name }}-tsc
 
       - name: Run Tests
-        if: matrix.bundleInfo.changes == 'true'
+        if: matrix.bundleInfo.changes
         run: |
           cd ${{ matrix.bundleInfo.directory }}
           yarn test
 
       - name: Run Auxillary Tasks
-        if: matrix.bundleInfo.changes == 'true'
+        if: matrix.bundleInfo.changes
         run: |
           cd ${{ matrix.bundleInfo.directory }}
           yarn tsc
