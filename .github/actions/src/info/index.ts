@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
+import utils from 'util';
 import * as core from '@actions/core';
 import { getExecOutput } from '@actions/exec';
 
@@ -98,7 +99,17 @@ async function findPackages(directory: string, maxDepth?: number) {
         if (item.name === 'package.json') {
           try {
             return await getPackageInfo(currentDir);
-          } catch {}
+          } catch (error) {
+            if (!utils.types.isNativeError(error)) {
+              core.error(`Unknown error occurred ${error}`);
+              throw error;
+            }
+
+            if ('code' in error && error.code !== 'ERR_MODULE_NOT_FOUND') {
+              core.error(error);
+              throw error;
+            }
+          }
         }
         continue;
       }
@@ -118,7 +129,6 @@ async function findPackages(directory: string, maxDepth?: number) {
 }
 
 async function runForAllPackages(gitRoot: string) {
-
   const results = await Promise.all(
     Object.entries({
       libs: pathlib.join(gitRoot, 'lib'),
