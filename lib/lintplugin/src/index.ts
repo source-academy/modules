@@ -13,6 +13,10 @@ const plugin: ESLint.Plugin = {
   },
   configs: {
     'js/recommended': configs.jsConfig,
+    'jsdoc/recommended': configs.jsdocConfig,
+    'md/recommended': configs.markdownConfig,
+    'style/recommended': configs.styleConfig,
+    // @ts-expect-error ESLint and Typescript-ESLint types don't always agree
     'ts/recommended': configs.tsConfig,
     'tsx/recommended': configs.tsxConfig,
     'vitest/recommended': configs.vitestConfig
