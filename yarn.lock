@@ -3542,6 +3542,7 @@ __metadata:
     "@commander-js/extra-typings": "npm:^13.0.0"
     "@types/lodash": "npm:^4.14.198"
     "@types/node": "npm:^22.15.30"
+    "@vitejs/plugin-react": "npm:^4.5.1"
     "@vitest/coverage-v8": "npm:^3.2.3"
     chalk: "npm:^5.0.1"
     commander: "npm:^13.0.0"
@@ -3550,9 +3551,10 @@ __metadata:
     lodash: "npm:^4.17.21"
     typescript: "npm:^5.8.2"
     vitest: "npm:^3.2.3"
+    vitest-browser-react: "npm:^1.0.0"
   peerDependencies:
     "@vitejs/plugin-react": "*"
-    vite-browser-react: "*"
+    vitest-browser-react: "*"
   languageName: unknown
   linkType: soft
 
