@@ -20,9 +20,7 @@ export const baseVitestConfig: ViteUserConfig = rootConfig;
  */
 export const sharedTabsConfig = mergeConfig(
   baseVitestConfig,
-  // @ts-expect-error help why are plugins weird
   defineProject({
-    // @ts-expect-error help why are plugins weird
     plugins: [react()],
     optimizeDeps: {
       include: [

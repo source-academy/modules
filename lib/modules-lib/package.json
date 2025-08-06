@@ -7,7 +7,7 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.5.1",
+    "@vitejs/plugin-react": "^4.7.0",
     "@vitest/browser": "^3.2.3",
     "eslint": "^9.31.0",
     "playwright": "^1.54.1",
