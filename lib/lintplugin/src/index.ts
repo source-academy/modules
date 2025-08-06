@@ -1,5 +1,6 @@
 import type { ESLint } from 'eslint';
 import * as configs from './configs';
+import defaultImportName from './rules/defaultImportName';
 import regionComment from './rules/regionComment';
 import tabType from './rules/tabType';
 
@@ -7,7 +8,8 @@ const plugin: ESLint.Plugin = {
   name: 'Source Academy Lint Plugin',
   rules: {
     'tab-type': tabType,
-    'region-comment': regionComment
+    'region-comment': regionComment,
+    'default-import-name': defaultImportName
   },
   configs: {
     'js/recommended': configs.jsConfig,

@@ -3550,6 +3550,9 @@ __metadata:
     lodash: "npm:^4.17.21"
     typescript: "npm:^5.8.2"
     vitest: "npm:^3.2.3"
+  peerDependencies:
+    "@vitejs/plugin-react": "*"
+    vite-browser-react: "*"
   languageName: unknown
   linkType: soft
 

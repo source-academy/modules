@@ -17,11 +17,13 @@ describe('Test collateTypeImports', () => {
           import { defineTab as definer } from '@sourceacademy/modules-lib/tabs/utils';
           export default definer({})
         `
-      }, {code: `
-        import { stuff } from 'somewhere';
-        import { defineTab as definer } from '@sourceacademy/modules-lib/tabs/utils';
-        export default definer({ stuff })
-      `}],
+      }, {
+        code: `
+          import { stuff } from 'somewhere';
+          import { defineTab as definer } from '@sourceacademy/modules-lib/tabs/utils';
+          export default definer({ stuff })
+        `
+      }],
       invalid: [{
         code: '',
         errors: 1
