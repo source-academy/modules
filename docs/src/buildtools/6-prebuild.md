@@ -7,7 +7,7 @@ The buildtools call both ESLint and `tsc` in parallel since they are not depende
 ## Running ESLint from the Command Line
 ESLint provides [documentation](https://eslint.org/docs/latest/integrate/nodejs-api) detailing how to use its Node API. Below is the code that does just that:
 
-<<< ../../../lib/buildtools/src/prebuild/lint.ts {ts:line-numbers}
+<<< ../../../lib/buildtools/src/prebuild/lint.ts#runEslint {ts:line-numbers}
 
 Because the configuration file for the repository is located at the root of the repository, we need to set the `cwd` to the path to the root of the repository when
 initializing the `ESLint` instance. This allows ESLint to resolve the configuration correctly.
@@ -18,9 +18,18 @@ errors always cause a non-zero exit code.
 ESLint provides several [formatters](https://eslint.org/docs/latest/use/formatters/) for processing the results objects it returns. To produce the human readable output that is printed to the command line, the `stylish` formatter
 is loaded and used.
 
-::: details Inspecting the Linting Config
-The entire repository's linting configuration is located at the root of the repository within `eslint.config.js`. If you want to view the view what rules are being applied to which files you can
-use the config inspector, which can be started using `yarn lint:inspect`
+>[!TIP] Inspecting the Linting Config
+> The entire repository's linting configuration is located at the root of the repository within `eslint.config.js`. If you want to view the view what rules are being applied to which files you can
+> use the config inspector, which can be started using `yarn lint:inspect`
+
+When run with the [`--stats`](https://eslint.org/docs/latest/extend/stats#cli-usage) option, the collected stats will be written to the output directory under the `lintstats` folder.
+
+::: details Out of Memory Error
+As of the time of writing, spinning up a single ESLint instance to lint all the files in the repository at once seems to cause ESLint/NodeJS to run out of memory.
+A lot of the tooling has been designed to seamlessly bypass this issue by linting each bundle and tab with a separate instance of ESLint, but this does mean that we
+also need specific tooling for linting the rest of the respository.
+
+That's why there's a `lint` command and also a `lintglobal` command.
 :::
 
 ## Calling Typescript from Node

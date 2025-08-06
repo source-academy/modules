@@ -17,9 +17,6 @@ The modules repository pipelines rely on the [Yarn](https://yarnpkg.com/) packag
 > [!TIP]
 > If you already have Yarn installed, you might find that you have a different version installed than the one used by the repository. Use the `yarn set version` command to install the correct version.
 
-> [!TIP]
-> If you are on MacOS, you may find that the version of Yarn used by your terminal is not correct, even after running `yarn set version`. You may have to run the command every time you start a new terminal instance.
-
 At this point it is not necessary to run `yarn install` yet to install dependencies. Depending on what you are doing, there are different methods for installing dependencies.
 
 ## Next Steps
@@ -28,6 +25,8 @@ Once your environment has been setup, refer to the following guides:
 * [Creating a new tab](/modules/3-tabs/2-creating)
 * [Modifying an existing bundle](/modules/2-bundle/3-editing)
 * [Modifying an existing tab](/modules/3-tabs/3-editing.md)
+
+Make sure to read the other guides such as [this](./3-git) one for working with Git as well, especially if you're unfamiliar.
 
 ## Development with local versions of `js-slang`
 

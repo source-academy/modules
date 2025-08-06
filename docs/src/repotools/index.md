@@ -6,6 +6,6 @@ Below is a list of other tools:
 - [Development Server](./devserver/devserver)
 - [Docs Server](./docserver/1-overview)
 - [ESLint](./linting)
-- [Github Workflows](./workflows)
+- [Github Workflows](./workflows/index)
 - [VSCode](./vscode)
 - [Yarn](./yarn)

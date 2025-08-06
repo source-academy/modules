@@ -43,6 +43,7 @@ Note that the type map export has a `@hidden` documentation tag applied to it.
 > ```
 > Hence in the example above, the exports aren't consolidated and written using the export shorthand as seen below:
 > ```ts
+> // Not written like this!
 > export const { functionDeclaration, variableDeclaration, classDeclaration, type_map, typeDeclaration } = createTypeMap();
 > ```
 

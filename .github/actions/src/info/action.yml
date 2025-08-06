@@ -8,6 +8,8 @@ outputs:
     description: The list of bundles packages present
   tabs:
     description: The list of tabs packages present
+  devserver:
+    description: Information for the devserver
 
 runs:
   using: node20

@@ -37,70 +37,74 @@ async function checkForChanges(directory: string) {
   return exitCode !== 0;
 }
 
+const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
+
+/**
+ * Retrieves the information for a given package.
+ * @param directory The directory containing the `package.json` for the given package.
+ */
+async function getPackageInfo(directory: string): Promise<PackageRecord> {
+  const { default: { name, devDependencies } } = await import(`${directory}/package.json`, { with: { type: 'json' } });
+  const match = packageNameRE.exec(name);
+
+  if (!match) {
+    throw new Error(`Failed to match package name: ${name}`);
+  }
+
+  const changes = await checkForChanges(directory);
+  const [,packageType, packageBaseName] = match;
+
+  switch (packageType) {
+    case 'bundle':
+      return {
+        directory: directory,
+        changes,
+        name,
+        needsPlaywright: false,
+        bundleName: packageBaseName,
+      };
+
+    case 'tab':
+      return {
+        directory: directory,
+        changes,
+        name,
+        needsPlaywright: 'playwright' in devDependencies,
+        tabName: packageBaseName,
+      };
+    default: {
+      return {
+        directory: directory,
+        changes,
+        name,
+        needsPlaywright: 'playwright' in devDependencies
+      };
+    }
+  }
+}
+
 /**
  * Recursively locates the packages present in a directory, up to an optional max depth
  */
 async function findPackages(directory: string, maxDepth?: number) {
   const output: BasePackageRecord[] = [];
-  const RE = /^@sourceacademy\/(.+?)-(.+)$/u;
 
   async function* recurser(currentDir: string, currentDepth: number): AsyncGenerator<PackageRecord> {
     if (maxDepth !== undefined && currentDepth >= maxDepth) return;
 
     const items = await fs.readdir(currentDir, { withFileTypes: true });
     for (const item of items) {
-      const fullPath = pathlib.join(currentDir, item.name);
       if (item.isFile()) {
         if (item.name === 'package.json') {
           try {
-            const { default: { name, devDependencies } } = await import(fullPath, { with: { type: 'json' } });
-            const match = RE.exec(name);
-            const changes = await checkForChanges(currentDir);
-
-            if (!match) {
-              throw new Error(`Failed to match package name: ${name}`);
-            }
-
-            const [,packageType, packageBaseName] = match;
-
-            switch (packageType) {
-              case 'bundle': {
-                yield {
-                  directory: currentDir,
-                  changes,
-                  name,
-                  needsPlaywright: false,
-                  bundleName: packageBaseName,
-                };
-                break;
-              }
-              case 'tab': {
-                yield {
-                  directory: currentDir,
-                  changes,
-                  name,
-                  needsPlaywright: 'playwright' in devDependencies,
-                  tabName: packageBaseName,
-                };
-                break;
-              }
-              default: {
-                yield {
-                  directory: currentDir,
-                  changes,
-                  name,
-                  needsPlaywright: 'playwright' in devDependencies
-                };
-                break;
-              }
-            }
-            return;
+            return await getPackageInfo(currentDir);
           } catch {}
         }
         continue;
       }
 
       if (item.isDirectory() && item.name !== 'node_modules' && !item.name.startsWith('__')) {
+        const fullPath = pathlib.join(currentDir, item.name);
         yield* recurser(fullPath, currentDepth + 1);
       }
     }
@@ -113,9 +117,7 @@ async function findPackages(directory: string, maxDepth?: number) {
   return output;
 }
 
-async function main() {
-  const { stdout } = await getExecOutput('git rev-parse --show-toplevel');
-  const gitRoot = stdout.trim();
+async function runForAllPackages(gitRoot: string) {
 
   const results = await Promise.all(
     Object.entries({
@@ -145,8 +147,20 @@ async function main() {
     core.summary.addList(summaryItems);
     core.setOutput(packageType, packages);
   }
-
   await core.summary.write();
+
+  const devserver = await getPackageInfo(pathlib.join(gitRoot, 'devserver'));
+  core.setOutput('devserver', devserver);
+}
+
+async function main() {
+  const { stdout } = await getExecOutput('git rev-parse --show-toplevel');
+  const gitRoot = stdout.trim();
+
+  await runForAllPackages(gitRoot);
+  // const fullPath = pathlib.join(gitRoot, query);
+  // const packageInfo = await getPackageInfo(fullPath);
+  // core.setOutput()
 }
 
 try {

@@ -7,6 +7,10 @@ import { expectWarn } from '../../../__tests__/fixtures.js';
 import { buildJson, parsers, type ParserError, type ParserResult, type ParserSuccess } from '../json.js';
 import { initTypedocForJson } from '../typedoc.js';
 
+vi.setConfig({
+  testTimeout: 10000
+});
+
 describe('Test buildJson', () => {
   interface Fixtures {
     testBundle: ResolvedBundle

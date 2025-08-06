@@ -56,6 +56,14 @@ to get around the way `vitest` behaves.
 The buildtools maintains a set of default configurations. If no `vitest` configuration is present, then those defaults are used automatically.
 Otherwise, that configuration is loaded and its options are combined with the default configurations using `mergeConfig`.
 
+::: details Vite vs Vitest
+`vitest` is built on top of `vite`, which is a bundler designed mainly for frontend development. It is used with the devserver for that purpose,
+but Vitest makes use of Vite to run tests.
+
+This means that `vite` is the one primarily handling all the transforms necessary (like processing ESM and JSX), and also module resolution. This is why
+the `vitest` configs all have their options under a `test` object.
+:::
+
 ## Config Resolution
 ```mermaid
 graph TD

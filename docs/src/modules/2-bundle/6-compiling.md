@@ -63,9 +63,9 @@ If you intend for your bundle to be consumed from other bundles, do the followin
 ```
 Refer to [this page](https://nodejs.org/api/packages.html#package-entry-points) for more information on how to configure your package exports.
 
-::: details The `prepare` script
+::: details The `postinstall` script
 As per NPM [docs](https://docs.npmjs.com/cli/v8/using-npm/scripts#life-cycle-scripts), when the package is being installed locally the
-`prepare` script is executed. By providing this script, anyone else that adds your bundle as a dependency for their code won't have to
+`postinstall` script is executed. By providing this script, anyone else that adds your bundle as a dependency for their code won't have to
 manually build your bundle.
 :::
 

@@ -78,6 +78,32 @@ are sometimes not attached to any Typescript project. This confuses other toolin
 written in plain Javascript with a <nobr><code>// @ts-check</code></nobr> directive.
 :::
 
+> [!WARNING] Dependency Optimization Error
+> You may find that when your tests run on your local machine the following warning (or something similar) may appear:
+> ```sh
+> [vite] (client) ✨ new dependencies optimized: react/jsx-dev-runtime  
+> [vite] (client) ✨ optimized dependencies changed. reloading  
+> [vitest] Vite unexpectedly reloaded a test. This may cause tests to fail, lead to flaky behaviour or duplicated test runs.  
+> For a stable experience, please add mentioned dependencies to your config's `optimizeDeps.include` field manually.  
+> ```
+> If this warning appears when you run your tests on the machine, you may find that your tests may still pass on the local machine, but
+> fail on the CI pipeline.
+>
+> This is because you have a dependency that Vite can only detect at runtime and so has to run its internal transforms twice. This causes
+> Vitest to fail, since the original import would have failed. To fix this, you should create your own `vitest.config.js` and add those
+> dependencies to `optimizeDeps`:
+> ```js
+> export default defineProject({
+>   optimizeDeps: {
+>     include: ['react/jsx-dev-runtime'] 
+>   },
+>   test: {
+>     name: 'Root Project'
+>   }
+> })
+> ```
+> For more information, refer to the [Vite](https://vite.dev/config/dep-optimization-options.html#optimizedeps-include) documentation.
+
 Should you need to use a unique configuration, simply create your own `vitest.config.js` at the root of your bundle/tab.
 The configuration options in your `vitest.config.js` will be used **in addition** to the default options, so it is not necessary
 to redefine every single option in your configuration file.
@@ -128,32 +154,6 @@ Now, the tests for your tab will be run in browser mode.
 > [!INFO] Default Browser Instance
 > By default, one `chromium` browser instance will be provided. This should be sufficient, but you can always
 > add more instances if necessary.
-
-While your tests are running either locally or as part of the Github Actions CI pipeline, `vitest` may warn you that you need to include
-certain dependencies under `optimizeDeps.include`. Your tests may fail intermittently as well. To remedy this, simply add those
-dependencies to your configuration:
-
-```js {6}
-// @ts-check
-import { defineProject } from 'vitest/config';
-
-export default defineProject({
-  optimizeDeps: {
-    include: ['lodash']
-  },
-  test: {
-    root: import.meta.dirname,
-    name: 'My Tab',
-    browser: {
-      enabled: true
-    }
-  }
-})
-```
-Note that `optimizeDeps.include` is a Vite option and so doesn't belong under the `test` configuration object.
-
-Alongside `vitest`, you will need to ensure that `@vitest/browser` and `vitest-browser-react` are installed as development
-dependencies for your tab.
 
 ### Writing Interactive Tests
 Writing interactive tests is not very different from writing regular tests. Most of the time, the usual test and assertion functions will suffice.

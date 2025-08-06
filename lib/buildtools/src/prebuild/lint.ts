@@ -34,6 +34,7 @@ async function timePromise<T>(f: () => Promise<T>) {
   };
 }
 
+// #region runEslint
 export async function runEslint(input: InputAsset, fix: boolean, stats: boolean): Promise<LintResult> {
   const linter = new ESLint({
     fix,
@@ -75,6 +76,8 @@ export async function runEslint(input: InputAsset, fix: boolean, stats: boolean)
     };
   }
 }
+// #endregion runEslint
+
 export function formatLintResult({ severity, formatted, input }: LintResult): string {
   const prefix = `${chalk.blueBright(`[${input.type} ${input.name}]:`)} ${chalk.cyanBright('Linting completed')}`;
 
