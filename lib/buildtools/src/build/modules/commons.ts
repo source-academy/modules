@@ -117,6 +117,10 @@ export async function outputBundleOrTab({ text }: OutputFile, input: InputAsset,
   }
 }
 
+/**
+ * The output step for bundles and tabs, but as an esbuild plugin that can be used
+ * with watch mode
+ */
 export function builderPlugin(input: InputAsset, outDir: string): ESBuildPlugin {
   return {
     name: 'Builder Plugin',
@@ -135,7 +139,6 @@ export function builderPlugin(input: InputAsset, outDir: string): ESBuildPlugin 
         const astResult = convertAst(parsed);
         if (astResult.severity === 'success') {
           generate(astResult.output, { output: writeStream });
-          console.log(chalk.greenBright(`Output written to ${outpath}`));
         } else {
           console.error(chalk.redBright(astResult.error));
         }

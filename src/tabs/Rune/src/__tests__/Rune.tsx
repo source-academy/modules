@@ -6,7 +6,7 @@ import { RuneTab } from '..';
 
 test('Ensure that rune animations error gracefully', () => {
   const badAnimation = animate_rune(1, 60, _t => 1 as any);
-  const mockContext = mockDebuggerContext<RuneModuleState>({ drawnRunes: [badAnimation]}, 'rune');
+  const mockContext = mockDebuggerContext<RuneModuleState>({ drawnRunes: [badAnimation] }, 'rune');
   expect(<RuneTab context={mockContext} />)
     .toMatchSnapshot();
 });

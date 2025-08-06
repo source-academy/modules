@@ -1,4 +1,5 @@
 /* eslint-disable */
+/* istanbul ignore file */
 // @ts-nocheck
 /**
  * Module to convert from markdown into HTML\

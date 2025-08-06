@@ -40,7 +40,7 @@ test('build bundle', async () => {
     manifest: {},
     name: 'test0',
     directory: `${testMocksDir}/bundles/test0`,
-  });
+  }, false);
 
   expect(fs.open).toHaveBeenCalledWith('/build/bundles/test0.js', 'w');
 
@@ -77,7 +77,7 @@ test('build tab', async () => {
     directory: `${testMocksDir}/tabs/tab0`,
     name: 'tab0',
     entryPoint: `${testMocksDir}/tabs/tab0/src/index.tsx`,
-  });
+  }, false);
   expect(fs.open).toHaveBeenCalledWith('/build/tabs/tab0.js', 'w');
 
   function mockRequire(path: string) {

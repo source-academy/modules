@@ -148,3 +148,10 @@ export function objectValues<T>(obj: Record<string | symbol | number, T>) {
 export function objectKeys<T extends string | symbol | number>(obj: Record<T, unknown>) {
   return Object.keys(obj) as T[];
 }
+
+type ArrayOfLength<T extends number, U = unknown, V extends U[] = []> =
+  V['length'] extends T ? V : ArrayOfLength<T, U, [...V, U]>;
+
+export function arrayIsLength<T extends number>(obj: unknown, length: T): obj is ArrayOfLength<T> {
+  return Array.isArray(obj) && obj.length === length;
+}

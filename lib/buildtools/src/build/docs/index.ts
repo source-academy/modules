@@ -3,30 +3,14 @@ import type { BuildResult, ResolvedBundle, ResultType } from '@sourceacademy/mod
 import { mapAsync } from '@sourceacademy/modules-repotools/utils';
 import * as td from 'typedoc';
 import { buildJson } from './json.js';
-
-// #region commonOpts
-const typedocPackageOptions: td.Configuration.TypeDocOptions = {
-  categorizeByGroup: true,
-  disableSources: true,
-  excludeInternal: true,
-  skipErrorChecking: true,
-  sort: ['documents-last'],
-  visibilityFilters: {},
-};
-// #endregion commonOpts
+import { initTypedocForHtml, initTypedocForJson } from './typedoc.js';
 
 /**
  * First builds an intermediate JSON file in the dist directory of the bundle\
  * Then it builds the JSON documentation for that bundle
  */
 export async function buildSingleBundleDocs(bundle: ResolvedBundle, outDir: string, logLevel: td.LogLevel): Promise<BuildResult> {
-  const app = await td.Application.bootstrapWithPlugins({
-    ...typedocPackageOptions,
-    name: bundle.name,
-    logLevel,
-    entryPoints: [`${bundle.directory}/src/index.ts`],
-    tsconfig: `${bundle.directory}/tsconfig.json`,
-  });
+  const app = await initTypedocForJson(bundle, logLevel);
 
   const project = await app.convert();
   if (!project) {
@@ -73,18 +57,11 @@ export async function buildHtml(bundles: Record<string, ResolvedBundle>, outDir:
   if (missings.length > 0) {
     return {
       severity: 'error',
-      errors: missings.map(each => `Could not find JSON documentation for ${each}`),
+      errors: missings.map(each => `Could not find documentation for ${each}`),
     };
   }
 
-  const app = await td.Application.bootstrapWithPlugins({
-    ...typedocPackageOptions,
-    name: 'Source Academy Modules',
-    logLevel,
-    entryPoints: Object.values(bundles).map(({ directory }) => `${directory}/dist/docs.json`),
-    entryPointStrategy: 'merge',
-    readme: `${import.meta.dirname}/docsreadme.md`,
-  });
+  const app = await initTypedocForHtml(bundles, logLevel);
 
   const project = await app.convert();
   if (!project) {

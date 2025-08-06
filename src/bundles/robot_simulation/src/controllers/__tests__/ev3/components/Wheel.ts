@@ -96,7 +96,7 @@ describe('Wheel', () => {
     wheel.fixedUpdate(timingInfo);
 
     expect(mockChassisWrapper.getEntity().applyImpulse).toHaveBeenCalledWith(
-      expect.objectContaining({x: 0, z: 0}), // y value can be anything
+      expect.objectContaining({ x: 0, z: 0 }), // y value can be anything
       expect.any(THREE.Vector3)
     );
   });

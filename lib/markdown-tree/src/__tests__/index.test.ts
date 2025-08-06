@@ -12,7 +12,7 @@ const mockStatSync = vi.spyOn(fs, 'statSync').mockReturnValue({
 describe('Test isYamlObject', () => {
   const testCases: [string, unknown, boolean][] = [
     ['Name property is required', {}, false],
-    ['Name property is required', { comment: 'oops'}, false],
+    ['Name property is required', { comment: 'oops' }, false],
     ['Name is not of type string', { name: 0 }, false],
     ['Name property is present and of type string', { name: 'test' }, true],
 

@@ -31,7 +31,7 @@ export default tseslint.config(
       'build/**',
       'docs/.vitepress/cache',
       'devserver/vite.config.ts', // Don't lint this because there's no tsconfig properly configured for it
-      'node_modules',
+      '**/node_modules',
       'lib/buildtools/bin',
       'lib/buildtools/src/build/__test_mocks__',
       'src/**/samples/**',
@@ -158,6 +158,7 @@ export default tseslint.config(
 
       'no-empty': ['error', { allowEmptyCatch: true }],
 
+      '@sourceacademy/default-import-name': ['warn', { path: 'pathlib' }],
       '@sourceacademy/region-comment': 'error',
 
       '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
@@ -167,6 +168,7 @@ export default tseslint.config(
       '@stylistic/object-curly-newline': ['warn', {
         ImportDeclaration: { multiline: true },
       }],
+      '@stylistic/object-curly-spacing': ['warn', 'always'],
       '@stylistic/quotes': ['warn', 'single', { avoidEscape: true }],
       '@stylistic/semi': ['warn', 'always'],
     }
@@ -193,6 +195,8 @@ export default tseslint.config(
 
       'jsdoc/no-types': 'warn',
 
+      '@stylistic/type-annotation-spacing': ['warn', { overrides: { colon: { before: false, after: true } } }],
+
       '@typescript-eslint/ban-ts-comment': 'error',
       '@typescript-eslint/ban-types': 'off', // Was 'error'
       '@typescript-eslint/no-duplicate-type-constituents': 'off', // Was 'error'
@@ -200,8 +204,6 @@ export default tseslint.config(
       '@typescript-eslint/no-import-type-side-effects': 'error',
       '@typescript-eslint/no-redundant-type-constituents': 'off', // Was 'error'
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
-
-      '@stylistic/type-annotation-spacing': ['warn', { overrides: { colon: { before: false, after: true }}}],
     }
   },
   // #endregion typescript
@@ -343,7 +345,9 @@ export default tseslint.config(
       'vitest/no-alias-methods': 'off',
       'vitest/no-conditional-expect': 'off',
       'vitest/no-export': 'off',
+      'vitest/no-focused-tests': ['warn', { fixable: false }],
       'vitest/require-top-level-describe': 'off',
+      'vitest/prefer-hooks-on-top': 'warn',
       'vitest/valid-describe-callback': 'off',
       'vitest/valid-expect-in-promise': 'error',
 

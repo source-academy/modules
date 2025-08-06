@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 import { loadConfigFromFile } from 'vite';
 import { defineProject, mergeConfig, type TestProjectInlineConfiguration, type ViteUserConfig } from 'vitest/config';
 // @ts-expect-error I'm too lazy to make the root config work with typescript
-import rootConfig from '../../../../vitest.config.js';
+import rootConfig from '../../../vitest.config.js';
 
 rootConfig.test.projects = undefined;
 rootConfig.test.environment = 'jsdom';
@@ -13,13 +13,13 @@ rootConfig.test.environment = 'jsdom';
  * A shared Vitest configuration object that can be combined with {@link mergeConfig}
  * to create custom Vitest configurations for each sub project
  */
-export const sharedVitestConfiguration: ViteUserConfig = rootConfig;
+export const baseVitestConfig: ViteUserConfig = rootConfig;
 
 /**
  * Vitest configuration specific to tabs
  */
 export const sharedTabsConfig = mergeConfig(
-  sharedVitestConfiguration,
+  baseVitestConfig,
   // @ts-expect-error help why are plugins weird
   defineProject({
     // @ts-expect-error help why are plugins weird

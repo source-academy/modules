@@ -1,4 +1,4 @@
-name: New Workflow
+name: On Pull Request
 
 permissions:
   contents: read
@@ -47,6 +47,9 @@ jobs:
       fail-fast: false
       matrix:
         lib: ${{ fromJson(needs.find-packages.outputs.libs) }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.lib.directory }}
 
     steps:
       - name: Check out source code
@@ -60,15 +63,11 @@ jobs:
 
       - name: Run Tests
         if: matrix.lib.changes
-        run: |
-          cd ${{ matrix.lib.directory }}
-          yarn test --coverage
+        run: yarn test --coverage
 
       - name: Run Auxillary Tasks
         if: matrix.lib.changes
-        run: |
-          cd ${{ matrix.lib.directory }}
-          yarn tsc
+        run: yarn tsc
 
   tabs:
     name: Tabs

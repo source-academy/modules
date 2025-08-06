@@ -8,7 +8,7 @@ export type PaperConfig = {
     width: number;
     height: number;
   };
-  position: {x: number, y: number};
+  position: { x: number, y: number };
   rotation: number,
 };
 

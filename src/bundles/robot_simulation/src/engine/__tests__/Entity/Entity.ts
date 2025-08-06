@@ -150,7 +150,7 @@ describe('Entity', () => {
       test('no rotation', () => {
         const rigidBodyTranslation = { x: 1, y: 1, z: 1 };
 
-        const rigidBody = createRigidBodyMock(rigidBodyTranslation, {x:0, y:0, z:0, w:1});
+        const rigidBody = createRigidBodyMock(rigidBodyTranslation, { x:0, y:0, z:0, w:1 });
         const collider = createCollider(1);
         const entity = new Entity({
           rapierRigidBody: rigidBody,
@@ -169,7 +169,7 @@ describe('Entity', () => {
       test('no local translation', () => {
         const rigidBodyTranslation = { x: 1, y: 1, z: 1 };
 
-        const rigidBody = createRigidBodyMock(rigidBodyTranslation, {x:1, y:0, z:0, w:1});
+        const rigidBody = createRigidBodyMock(rigidBodyTranslation, { x:1, y:0, z:0, w:1 });
         const collider = createCollider(1);
         const entity = new Entity({
           rapierRigidBody: rigidBody,
@@ -185,7 +185,7 @@ describe('Entity', () => {
         const rigidBodyTranslation = { x: 12, y: 0, z: 0 };
 
         // 180 degree rotation around the x axis
-        const rigidBody = createRigidBodyMock(rigidBodyTranslation, {x:0, y:1, z:0, w:0});
+        const rigidBody = createRigidBodyMock(rigidBodyTranslation, { x:0, y:1, z:0, w:0 });
         const collider = createCollider(1);
         const entity = new Entity({
           rapierRigidBody: rigidBody,
@@ -204,7 +204,7 @@ describe('Entity', () => {
 
     describe('transformDirection', () => {
       test('no rotation', () => {
-        const rigidBody = createRigidBodyMock({ x: 1, y: 1, z: 1 }, {x:0, y:0, z:0, w:1});
+        const rigidBody = createRigidBodyMock({ x: 1, y: 1, z: 1 }, { x:0, y:0, z:0, w:1 });
         const collider = createCollider(1);
         const entity = new Entity({
           rapierRigidBody: rigidBody,
@@ -217,7 +217,7 @@ describe('Entity', () => {
       });
 
       test('with rotation and local translation', () => {
-        const rigidBody = createRigidBodyMock({ x: 1, y: 1, z: 1 }, {x:0, y:1, z:0, w:0});
+        const rigidBody = createRigidBodyMock({ x: 1, y: 1, z: 1 }, { x:0, y:1, z:0, w:0 });
         const collider = createCollider(1);
         const entity = new Entity({
           rapierRigidBody: rigidBody,

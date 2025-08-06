@@ -5,6 +5,6 @@ const panelWrapperStyle: CSSProperties = {
 };
 export const TabWrapper: React.FC<{
   children?: React.ReactNode;
-}> = ({children}) => {
+}> = ({ children }) => {
   return <div style={panelWrapperStyle}>{children}</div>;
 };

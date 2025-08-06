@@ -75,7 +75,7 @@ export async function runEslint(input: InputAsset, fix: boolean, stats: boolean)
     };
   }
 }
-export function formatLintResult({severity, formatted, input}: LintResult): string {
+export function formatLintResult({ severity, formatted, input }: LintResult): string {
   const prefix = `${chalk.blueBright(`[${input.type} ${input.name}]:`)} ${chalk.cyanBright('Linting completed')}`;
 
   switch (severity) {

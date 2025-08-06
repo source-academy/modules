@@ -2,13 +2,13 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import { gitRoot } from '@sourceacademy/modules-repotools/getGitRoot';
 import { resolveSingleBundle, resolveSingleTab } from '@sourceacademy/modules-repotools/manifest';
+import { baseVitestConfig, loadVitestConfigFromDir, sharedTabsConfig } from '@sourceacademy/modules-repotools/testing';
 import type { ErrorResult } from '@sourceacademy/modules-repotools/types';
 import { isNodeError, mapAsync } from '@sourceacademy/modules-repotools/utils';
 import cloneDeep from 'lodash/cloneDeep.js';
 import partition from 'lodash/partition.js';
 import type { LabelColor } from 'vitest';
 import { mergeConfig, type TestProjectInlineConfiguration } from 'vitest/config';
-import { loadVitestConfigFromDir, sharedTabsConfig, sharedVitestConfiguration } from './configs.js';
 
 // Assign to each configuration a different colour :)
 const colors: Readonly<LabelColor[]> = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white'];
@@ -131,7 +131,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
           config: null
         };
       } else {
-        config = mergeConfig(sharedVitestConfiguration, config);
+        config = mergeConfig(baseVitestConfig, config);
       }
 
       if (config.test!.root === undefined) {
@@ -189,12 +189,12 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
           };
         }
 
-        config = cloneDeep(sharedVitestConfiguration);
+        config = cloneDeep(baseVitestConfig);
         config!.test!.name = `${bundle.name} Bundle`;
         config!.test!.root = jsonDir;
         config!.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
       } else {
-        config = mergeConfig(sharedVitestConfiguration, config);
+        config = mergeConfig(baseVitestConfig, config);
       }
       break;
     }

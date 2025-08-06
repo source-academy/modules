@@ -17,7 +17,7 @@ export interface RunPrebuildResult<T> {
 }
 
 /**
- * Returns a function that calls the provider builder, alongside with the prebuild functions (tsc and linting)
+ * Calls the provided builder alongside with the prebuild functions (tsc and linting)
  * if the corresponding prebuild options are provided.
  */
 export async function runBuilderWithPrebuild<T extends InputAsset, U extends any[], V>(

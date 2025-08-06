@@ -89,14 +89,14 @@ class SimulationControl extends React.Component<SimControlProps, SimControlState
   public render() {
     return (
       <>
-        <ButtonGroup style={{width: '100%', margin: '4px auto'}}>
+        <ButtonGroup style={{ width: '100%', margin: '4px auto' }}>
           <Button
             className="nbody-pause-toggle-button"
             icon={this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY}
             active={false}
             onClick={() => this.toggleSimPause()}
             text={this.state.isPlaying ? 'Pause' : 'Play'}
-            style={{ margin: '4px'}}
+            style={{ margin: '4px' }}
           />
 
           <Button
@@ -104,7 +104,7 @@ class SimulationControl extends React.Component<SimControlProps, SimControlState
             icon={IconNames.ROUTE}
             active={this.state.showTrails}
             onClick={() => this.toggleShowTrails()}
-            style={{ margin: '4px'}}
+            style={{ margin: '4px' }}
             text={(this.state.showTrails ? 'Hide' : 'Show') + ' Trails'} />
         </ButtonGroup>
         <NumericInput defaultValue={this.state.speed} onValueChange={(value) => this.setSpeed(value)} style={{

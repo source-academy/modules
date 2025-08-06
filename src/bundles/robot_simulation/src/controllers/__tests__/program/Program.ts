@@ -48,7 +48,7 @@ describe('Program', () => {
     mockedRunECEvaluator.mockReturnValue(mockIterator);
 
     program.start();
-    const tick = {stepCount:0,timestep: 1000} as any;
+    const tick = { stepCount:0,timestep: 1000 } as any;
     program.update(tick);
     program.pause(900);
     expect(program.isPaused).toBeTruthy();

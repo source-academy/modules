@@ -73,7 +73,7 @@ function suiteResultToDiv(suiteResult: SuiteResult) {
   );
 }
 
-function TestSuitesTab({ context: {suiteResults, called } }: Props) {
+function TestSuitesTab({ context: { suiteResults, called } }: Props) {
   if (!called) {
     return <div>
       Call <code>describe</code> at least once to be able to view the results of your tests

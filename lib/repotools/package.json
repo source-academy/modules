@@ -19,6 +19,10 @@
     "jsonschema": "^1.5.0",
     "lodash": "^4.17.21"
   },
+  "peerDependencies": {
+    "@vitejs/plugin-react": "*",
+    "vite-browser-react": "*"
+  },
   "exports": {
     "./*": "./dist/*.js"
   },

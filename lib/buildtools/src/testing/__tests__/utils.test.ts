@@ -1,9 +1,9 @@
 import type { Dirent } from 'fs';
 import fs from 'fs/promises';
 import * as manifest from '@sourceacademy/modules-repotools/manifest';
+import * as configs from '@sourceacademy/modules-repotools/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TestProjectInlineConfiguration } from 'vitest/config';
-import * as configs from '../configs.js';
 import * as utils from '../utils.js';
 
 class ENOENT extends Error {
@@ -12,13 +12,11 @@ class ENOENT extends Error {
   }
 }
 
-// @ts-expect-error These mock implementations don't also include the types
-// for the memoization done by lodash
-vi.mock(import('../../getGitRoot.js'), () => ({
-  getGitRoot: () => Promise.resolve('/'),
-  getBundlesDir: () => Promise.resolve('/bundles'),
-  getTabsDir: () => Promise.resolve('/tabs'),
-  getOutDir: () => Promise.resolve('/out')
+vi.mock(import('@sourceacademy/modules-repotools/getGitRoot'), () => ({
+  gitRoot: '/',
+  bundlesDir: '/bundles',
+  tabsDir: '/tabs',
+  outDir: '/out'
 }));
 
 const mockedFsGlob = vi.spyOn(fs, 'glob');
@@ -226,9 +224,9 @@ describe('Test getTestConfiguration', () => {
       await expect(utils.getTestConfiguration('/bundles/bundle0', false)).resolves.toMatchObject({
         severity: 'success',
         config: {
-          ...configs.sharedVitestConfiguration,
+          ...configs.baseVitestConfig,
           test: {
-            ...configs.sharedVitestConfiguration.test!,
+            ...configs.baseVitestConfig.test!,
             name: 'bundle0 Bundle',
             root: '/bundles/bundle0'
           }
@@ -241,9 +239,9 @@ describe('Test getTestConfiguration', () => {
       await expect(utils.getTestConfiguration('/bundles/bundle0/sub/directory', false)).resolves.toMatchObject({
         severity: 'success',
         config: {
-          ...configs.sharedVitestConfiguration,
+          ...configs.baseVitestConfig,
           test: {
-            ...configs.sharedVitestConfiguration.test!,
+            ...configs.baseVitestConfig.test!,
             name: 'bundle0 Bundle',
             root: '/bundles/bundle0'
           }
@@ -283,9 +281,9 @@ describe('Test getTestConfiguration', () => {
       await expect(utils.getTestConfiguration('/dir', false)).resolves.toMatchObject({
         severity: 'success',
         config: {
-          ...configs.sharedVitestConfiguration,
+          ...configs.baseVitestConfig,
           test: {
-            ...configs.sharedVitestConfiguration.test!,
+            ...configs.baseVitestConfig.test!,
             name: 'Test0',
             root: '/dir'
           }
@@ -462,9 +460,9 @@ describe('Test getAllTestConfigurations', () => {
       switch (result.root) {
         case '/dir/project0': {
           expect(results).toContainEqual({
-            ...configs.sharedVitestConfiguration,
+            ...configs.baseVitestConfig,
             test: {
-              ...configs.sharedVitestConfiguration.test!,
+              ...configs.baseVitestConfig.test!,
               root: '/dir/project0',
               name: {
                 label: 'project0',
@@ -476,9 +474,9 @@ describe('Test getAllTestConfigurations', () => {
         }
         case '/dir/project1': {
           expect(results).toContainEqual({
-            ...configs.sharedVitestConfiguration,
+            ...configs.baseVitestConfig,
             test: {
-              ...configs.sharedVitestConfiguration.test!,
+              ...configs.baseVitestConfig.test!,
               root: '/dir/project1',
               name: {
                 label: 'project1',
@@ -490,9 +488,9 @@ describe('Test getAllTestConfigurations', () => {
         }
         case '/dir/project2': {
           expect(results).toContainEqual({
-            ...configs.sharedVitestConfiguration,
+            ...configs.baseVitestConfig,
             test: {
-              ...configs.sharedVitestConfiguration.test!,
+              ...configs.baseVitestConfig.test!,
               root: '/dir/project2',
               name: {
                 label: 'project2',

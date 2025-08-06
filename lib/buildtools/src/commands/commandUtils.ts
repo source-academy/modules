@@ -10,6 +10,9 @@ export const lintOption = new Option('--lint', 'Run ESLint when building')
 export const tscOption = new Option('--tsc', 'Run tsc when building')
   .default(false);
 
+export const watchOption = new Option('-w, --watch', 'Run in watch mode')
+  .default(false);
+
 export const logLevelOption = new Option('--logLevel <level>', 'Log level that Typedoc should use')
   .choices(objectKeys(LogLevel))
   .default(LogLevel.Error)

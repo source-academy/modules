@@ -35,7 +35,7 @@ describe('ChassisWrapper', () => {
 
   beforeEach(() => {
     physicsMock = vi.fn() as unknown as Physics;
-    rendererMock = {add:vi.fn()} as unknown as Renderer;
+    rendererMock = { add:vi.fn() } as unknown as Renderer;
     config = {
       dimension: { width: 1, height: 1, depth: 1 },
       orientation: { x: 0, y: 0, z: 0, w: 1 },

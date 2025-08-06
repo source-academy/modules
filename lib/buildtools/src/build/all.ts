@@ -53,7 +53,7 @@ export async function buildAll(input: InputAsset, prebuild: PrebuildOptions, out
 
   if (input.type === 'bundle') {
     const [bundleResult, docsResult] = await Promise.all([
-      buildBundle(outDir, input),
+      buildBundle(outDir, input, false),
       buildSingleBundleDocs(input, outDir, logLevel)
     ]);
 
@@ -65,7 +65,7 @@ export async function buildAll(input: InputAsset, prebuild: PrebuildOptions, out
       tsc: tscResult,
     };
   } else {
-    const tabResult = await buildTab(outDir, input);
+    const tabResult = await buildTab(outDir, input, false);
     return {
       severity: tabResult.severity,
       results: tabResult,

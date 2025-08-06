@@ -53,7 +53,7 @@ async function findPackages(directory: string, maxDepth?: number) {
       if (item.isFile()) {
         if (item.name === 'package.json') {
           try {
-            const { default: { name, devDependencies } } = await import(fullPath, { with: { type: 'json' }});
+            const { default: { name, devDependencies } } = await import(fullPath, { with: { type: 'json' } });
             const match = RE.exec(name);
             const changes = await checkForChanges(currentDir);
 

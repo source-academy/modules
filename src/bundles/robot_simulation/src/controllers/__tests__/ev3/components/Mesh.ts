@@ -97,7 +97,7 @@ describe('Mesh', () => {
 
   it('should update mesh position and orientation according to chassis', async () => {
     await mesh.start();
-    mesh.update({residualFactor: 0.5});
+    mesh.update({ residualFactor: 0.5 });
 
     expect(mesh.mesh.scene.position.copy).toHaveBeenCalled();
     expect(mesh.mesh.scene.quaternion.copy).toHaveBeenCalled();

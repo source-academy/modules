@@ -1,6 +1,6 @@
+import { baseVitestConfig } from '@sourceacademy/modules-repotools/testing';
 import { mergeConfig, type TestProjectInlineConfiguration, type ViteUserConfig } from 'vitest/config';
 import { startVitest, type VitestRunMode } from 'vitest/node';
-import { sharedVitestConfiguration } from './configs.js';
 
 interface RunVitestBoolOptions {
   watch?: boolean
@@ -45,7 +45,7 @@ export async function runVitest(mode: VitestRunMode, filters: string[], projects
     };
 
     const finalConfig = mergeConfig(
-      sharedVitestConfiguration.test!,
+      baseVitestConfig.test!,
       {
         config: false,
         ...runtimeOptions
