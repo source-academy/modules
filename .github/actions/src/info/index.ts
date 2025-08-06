@@ -98,7 +98,7 @@ async function findPackages(directory: string, maxDepth?: number) {
       if (item.isFile()) {
         if (item.name === 'package.json') {
           try {
-            return await getPackageInfo(currentDir);
+            yield await getPackageInfo(currentDir);
           } catch (error) {
             if (!utils.types.isNativeError(error)) {
               core.error(`Unknown error occurred ${error}`);
