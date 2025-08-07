@@ -60,9 +60,11 @@ jobs:
 
     steps:
       - name: Check out source code
+        if: matrix.lib.changes
         uses: actions/checkout@v4
 
       - name: Initialize Repo
+        if: matrix.lib.changes
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.lib.name }}
@@ -87,13 +89,16 @@ jobs:
 
     steps:
       - name: Check out source code
+        if: matrix.tabInfo.changes
         uses: actions/checkout@v4
 
       - name: Initialize Repo
+        if: matrix.tabInfo.changes
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.tabInfo.name }}
           playwright: ${{ matrix.tabInfo.needsPlaywright && matrix.tabInfo.changes }}
+
       - name: Build Tab
         if: matrix.tabInfo.changes
         run: |
@@ -132,9 +137,11 @@ jobs:
 
     steps:
       - name: Check out source code
+        if: matrix.bundleInfo.changes
         uses: actions/checkout@v4
 
       - name: Initialize Repo
+        if: matrix.bundleInfo.changes
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.bundleInfo.name }}

@@ -3179,8 +3179,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/modules-docserver@workspace:docs"
   dependencies:
+    "@sourceacademy/lint-plugin": "workspace:^"
     "@sourceacademy/markdown-plugin-directory-tree": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
+    eslint: "npm:^9.31.0"
     mermaid: "npm:^11.7.0"
     vitepress: "npm:^1.6.3"
     vitepress-plugin-group-icons: "npm:^1.6.1"

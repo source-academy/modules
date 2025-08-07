@@ -11,6 +11,7 @@
     "preview": "vitepress preview ."
   },
   "dependencies": {
+    "@sourceacademy/lint-plugin": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
     "mermaid": "^11.7.0",
     "vitepress": "^1.6.3",
@@ -19,6 +20,7 @@
     "vitepress-sidebar": "^1.31.1"
   },
   "devDependencies": {
-    "@sourceacademy/markdown-plugin-directory-tree": "workspace:^"
+    "@sourceacademy/markdown-plugin-directory-tree": "workspace:^",
+    "eslint": "^9.31.0"
   }
 }

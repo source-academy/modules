@@ -6,73 +6,34 @@
 # Commands Cheat Sheet
 All commands have a `-h` or `--help` option that can be used to get more information about the command. 
 
-## Icon Legend
-<table>
-  <thead>
-    <tr>
-      <th>Icon</th>
-      <th>Meaning</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>💼</td>
-      <td>Can be run from a bundle's directory or any of its subdirectories</td>
-    </tr>
-    <tr>
-      <td>🖥</td>
-      <td>Can be run from a tab's directory or any of its subdirectories</td>
-    </tr>
-    <tr>
-      <td>🏠</td>
-      <td>Can be run from the repository root</td>
-    </tr>
-  </tbody>
-</table>
-
 ## Installation Commands
 <table>
   <thead>
     <tr>
       <th>Command</th>
       <th>Purpose</th>
-      <th><a href="#icon-legend">💼</a></th>
-      <th><a href="#icon-legend">🖥</a></th>
-      <th><a href="#icon-legend">🏠</a></th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td><code>yarn workspaces focus @sourceacademy/modules</code></td>
       <td>Installs the dependencies required for the repository <strong>only</strong> (like the build tools)</td>
-      <td/>
-      <td/>
-      <td>✅</td>
     </tr>
     <tr>
       <td><code>yarn workspaces focus @sourceacademy/bundle-curve</code></td>
       <td>Installs the dependencies required for the `curve` bundle <strong>only</strong> </td>
-      <td>✅</td>
-      <td/>
-      <td>✅</td>
     </tr>
     <tr>
-      <td><code>yarn add &lt;package&gt;</code></td>
+      <td><code>yarn add &lt;package&gt;</code>*</td>
       <td>
         Adds a package to the current bundle or tab <br />
       </td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅*</td>
     </tr>
     <tr>
-      <td><code>yarn add -D &lt;package&gt;</code></td>
+      <td><code>yarn add -D &lt;package&gt;</code>*</td>
       <td>
         Adds a package to the current bundle or tab that will only be used during runtime <br />
       </td>
-      <td>✅</td>
-      <td>✅</td>
-      <td>✅*</td>
     </tr>
   </tbody>
 </table>
@@ -116,6 +77,10 @@ Both the `--tsc` and `--lint` options can be used togther to run `tsc` and ESLin
 | `yarn tsc`                | Run `tsc`                                                     |
 | `yarn prebuild`           | Run both ESLint and `tsc` without running any builds          |
 | `yarn test`               | Run any unit tests defined for the current bundle/tab         |
+
+#### NOTES:
+- Running `yarn lint --fix` will fix any automatically fixable errors
+- The test command has several options. Refer to [this](../4-advanced/testing) page for more information.
 
 ## Root Repository Commands
 ### Root Only Commands

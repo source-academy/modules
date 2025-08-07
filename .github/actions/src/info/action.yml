@@ -11,7 +11,7 @@ outputs:
   devserver:
     description: Information for the devserver
   workflows:
-    description: Did the worflow file change?
+    description: Boolean value. True if there were changes to workflow files, false otherwise.
 
 runs:
   using: node20

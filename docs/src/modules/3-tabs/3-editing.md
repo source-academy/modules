@@ -39,7 +39,8 @@ This adds the dependency to `devDependencies` instead.
 > ```
 
 ## React/UI Components
-Tabs are written using the React (JSX) syntax. In React, each UI element is referred to as a "component". Documentation on how to create UIs and use React can be found [here](https://react.dev).
+Tabs are written using the React (JSX) syntax. In React, each UI element is referred to as a "component". Documentation on how to create UIs and use React can be found [here](https://react.dev). Where possible,
+you should aim to write components using the funcional syntax.
 
 ::: details Functional vs Class Components
 Traditionally, React's functional components could not be "stateful". If a component needed to store state, it had to be written as a [class component](https://react.dev/reference/react/Component).
@@ -134,3 +135,21 @@ test('Matches snapshot', () => {
 ```
 
 :::
+
+## Quick FAQs
+### When to spawn the tab?
+As mentioned, the frontend will go through the list of tabs for the bundles currently loaded and determine if it should spawn those tabs. This is done
+by calling the tab's `toSpawn` function (if it exists). If the function is missing, then the tab is always spawned.
+
+In most cases, you should use the `toSpawn` function. This way, if the parent bundle is imported but no tab functions are called, the frontend won't have
+to waste time loading the tab's UI. More importantly, it gives the developer more fine grained control of when the tab should be spawned.
+
+However, there are some cases where it makes sense to have the tab always spawn. For example, the `pix_n_flix` tab doesn't rely on any functionality from the bundle.
+So long as the `pix_n_flix` bundle is imported, the tab will be spawned.
+
+### Can I update other UI elements in the frontend?
+Right now, the UI is only updated once per evaluation (a limitation on the side of the frontend). This means that if code from your tab calls functions
+like `display`, the output of those functions won't be displayed in the main REPL. The only elements that can be changed are elements within the tab.
+
+As a workaround, bundles like the `repl` bundle provide their own REPL output. That way, when the `repl` bundle evaluates code, the output of that code
+is still visible to the user.

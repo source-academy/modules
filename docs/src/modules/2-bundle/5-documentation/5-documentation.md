@@ -36,6 +36,9 @@ export { make_point } from './functions.ts';
 ```
 Since the `curve` bundle exports the `make_point` function, `typedoc` will generate documentation for it. 
 
+Documentation should be written in [Markdown](https://www.markdownguide.org/getting-started/). That way, both IntelliSense and Typedoc will be able to process it. During documentation generation,
+the markdown is converted to raw HTML.
+
 The following sections are conventions for writing documentation.
 
 ### Entry Point
@@ -55,6 +58,9 @@ export { repeat, twice, thrice } from './functions';
 ```
 It is important that you provide an `@module` tag in this description. Otherwise, the build tools may not be able to detect your bundle's
 documentation properly.
+
+> [!TIP]
+> An ESLint Rule has been configured specifically for this purpose, so a lint error should appear if you forget to do so.
 
 ### Use of `@hidden`
 If there are exports you want hidden from the output of the documentation, you must use the `@hidden` tag.
@@ -205,3 +211,7 @@ modules are already written in Typescript, there is no need to use JSDoc comment
 so as not to confuse Typedoc.
 
 If you do need to the type of an export to be documented differently from its type in Typescript source code, you can use a [type map](../7-type_map).
+
+## Other Typedoc Options
+`typedoc` options can be specified in the `"typedocOptions"` section of your `tsconfig.json`. Unfortunately, we cannot support dynamic configurations (like those loaded using a Javascript file)
+at the moment.

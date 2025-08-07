@@ -6,9 +6,23 @@ import { getExecOutput } from '@actions/exec';
 import getGitRoot from './gitRoot.js';
 
 interface BasePackageRecord {
+  /**
+   * Directory within which the `package.json` file was found
+   */
   directory: string
+  /**
+   * Full scoped package name
+   */
   name: string
+  /**
+   * `true` if git detected changes from within the package's subdirectories,
+   * `false` otherwise
+   */
   changes: boolean
+  /**
+   * `true` if playwright is present under devDependencies. This means that the package
+   * might need playwright for its tests
+   */
   needsPlaywright: boolean
 }
 

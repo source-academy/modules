@@ -52,9 +52,7 @@ yarn test # If your package.json has this script specified
 
 By default, `vitest` will quit after running tests. If you wish to run the tests in watch mode, use the `--watch` parameter.
 
-## Code Coverage
-To see how much of your code has been covered by tests, simply run your tests with the\
-`--coverage` parameter.
+You can also use `--update` to update snapshots and `--coverage` to run the V8 coverage reporter.
 
 ## Integration with Git Hooks
 Any tests that you have written must be pass in order for you to push to the main repository, as well as for your pull requests to be merged.
@@ -175,7 +173,7 @@ test('Testing my component', () => {
   expect().somethingToHaveHappened();
 });
 ```
-`vitest` also provide [a different set](https://vitest.dev/guide/browser/assertion-api.html) of matchers that you can use specifically with browser elements.
+`vitest` also provides [a different set](https://vitest.dev/guide/browser/assertion-api.html) of matchers that you can use specifically with browser elements.
 
 > [!TIP]
 > `vitest-browser-react` also provides a `cleanup` function that can be used after each test. You don't _technically_ need to use it, but
