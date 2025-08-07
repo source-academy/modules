@@ -216,7 +216,7 @@ async function main() {
   ] = await Promise.all([
     getAllPackages(pathlib.join(gitRoot, 'src', 'bundles')),
     getAllPackages(pathlib.join(gitRoot, 'src', 'tabs')),
-    getAllPackages(pathlib.join(gitRoot, 'libs')),
+    getAllPackages(pathlib.join(gitRoot, 'lib')),
     getAllPackages(pathlib.join(gitRoot), 1)
   ]);
 
