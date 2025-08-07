@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@actions/exec": "^1.1.1"
+    "@actions/exec": "^1.1.1",
+    "lodash": "^4.17.21"
   },
   "scripts": {
     "build": "node ./build.js",

@@ -3,6 +3,7 @@ import pathlib from 'path';
 import utils from 'util';
 import * as core from '@actions/core';
 import { getExecOutput } from '@actions/exec';
+import memoize from 'lodash/memoize.js';
 import getGitRoot from './gitRoot.js';
 
 interface RawPackageRecord<T = boolean | null> {
@@ -51,7 +52,7 @@ type PackageRecord = BundlePackageRecord | TabPackageRecord | BasePackageRecord;
  * the master branch\
  * Used to determine, particularly for libraries if running tests and tsc are necessary
  */
-export async function checkForChanges(directory: string) {
+export const checkForChanges = memoize(async (directory: string) => {
   const { exitCode } = await getExecOutput(
     'git',
     ['--no-pager', 'diff', '--quiet', 'origin/master', '--', directory],
@@ -61,7 +62,7 @@ export async function checkForChanges(directory: string) {
     }
   );
   return exitCode !== 0;
-}
+});
 
 /**
  * Retrieves the information for all packages in the repository
@@ -226,6 +227,11 @@ async function main() {
     ...tabs,
     ...libs
   };
+
+  // Remove the root packages from the bundles and tabs collection
+  // of packages cause they're not supposed be used like that
+  delete bundles['@sourceacademy/bundles'];
+  delete tabs['@sourceacademy/tabs'];
 
   const summaryItems = Object.values(packages).map(packageInfo => {
     const relpath = pathlib.relative(gitRoot, packageInfo.directory);

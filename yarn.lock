@@ -3199,6 +3199,7 @@ __metadata:
     "@actions/exec": "npm:^1.1.1"
     "@sourceacademy/modules-repotools": "workspace:^"
     "@types/node": "npm:^22.15.30"
+    lodash: "npm:^4.17.21"
     typescript: "npm:^5.8.2"
     vitest: "npm:^3.2.3"
   languageName: unknown
