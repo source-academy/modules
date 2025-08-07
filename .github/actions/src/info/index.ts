@@ -101,7 +101,7 @@ export async function getAllPackages(gitRoot: string) {
         return;
       }
 
-      if (item.isDirectory() && item.name !== 'node_modules') {
+      if (item.isDirectory() && item.name !== 'node_modules' && !item.name.startsWith('__')) {
         const fullPath = pathlib.join(currentDir, item.name);
         await recurser(fullPath);
       }
