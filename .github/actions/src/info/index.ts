@@ -221,13 +221,13 @@ async function main() {
   ]);
 
   const packages = {
-    ...Object.values(rootPackages),
+    ...rootPackages,
     ...bundles,
     ...tabs,
     ...libs
   };
 
-  const summaryItems = packages.map(packageInfo => {
+  const summaryItems = Object.values(packages).map(packageInfo => {
     return `<div>
         <h2>${packageInfo.name}</h2>
         <ul>
@@ -241,9 +241,9 @@ async function main() {
   core.summary.addList(summaryItems);
   await core.summary.write();
 
-  core.setOutput('bundles', bundles);
-  core.setOutput('tabs', tabs);
-  core.setOutput('libs', libs);
+  core.setOutput('bundles', Object.values(bundles));
+  core.setOutput('tabs', Object.values(tabs));
+  core.setOutput('libs', Object.values(libs));
   core.setOutput('devserver', rootPackages['@sourceacademy/devserver']);
   core.setOutput('docserver', rootPackages['@sourceacademy/docserver']);
 
