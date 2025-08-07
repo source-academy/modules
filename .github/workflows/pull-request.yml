@@ -27,6 +27,11 @@ jobs:
           cd ./.github/actions
           yarn build
 
+      - name: Test Actions
+        run: | 
+          cd ./.github/actions
+          yarn test
+
       - name: Fetch Master branch
         run: git fetch origin master
 
@@ -39,6 +44,7 @@ jobs:
       libs: ${{ steps.info.outputs.libs }}
       tabs: ${{ steps.info.outputs.tabs }}
       devserver: ${{ steps.info.outputs.devserver }}
+      workflows: ${{ steps.info.outputs.workflows }}
 
   libraries:
     name: Libraries
@@ -99,10 +105,13 @@ jobs:
           key: ${{ matrix.tabInfo.name }}
 
       - name: Run Tests
+        # https://github.com/vitest-dev/vitest/issues/5477
+        # Known Vitest issue for coverage running in browser mode
+        # Momentarily disable coverage checking on Github Actions for tabs
         if: matrix.tabInfo.changes
         run: |
           cd ${{ matrix.tabInfo.directory }}
-          yarn test --coverage
+          yarn test
 
       - name: Run Auxillary Tasks
         if: matrix.tabInfo.changes

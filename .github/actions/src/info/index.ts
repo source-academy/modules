@@ -3,6 +3,7 @@ import pathlib from 'path';
 import utils from 'util';
 import * as core from '@actions/core';
 import { getExecOutput } from '@actions/exec';
+import getGitRoot from './gitRoot.js';
 
 interface BasePackageRecord {
   directory: string
@@ -26,7 +27,7 @@ type PackageRecord = BundlePackageRecord | TabPackageRecord | BasePackageRecord;
  * the master branch\
  * Used to determine, particularly for libraries if running tests and tsc are necessary
  */
-async function checkForChanges(directory: string) {
+export async function checkForChanges(directory: string) {
   const { exitCode } = await getExecOutput(
     'git',
     ['--no-pager', 'diff', '--quiet', 'origin/master', '--', directory],
@@ -44,8 +45,9 @@ const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
  * Retrieves the information for a given package.
  * @param directory The directory containing the `package.json` for the given package.
  */
-async function getPackageInfo(directory: string): Promise<PackageRecord> {
-  const { default: { name, devDependencies } } = await import(`${directory}/package.json`, { with: { type: 'json' } });
+export async function getPackageInfo(directory: string): Promise<PackageRecord> {
+  const fileName = pathlib.join(directory, 'package.json');
+  const { name, devDependencies } = JSON.parse(await fs.readFile(fileName, 'utf8'));
   const match = packageNameRE.exec(name);
 
   if (!match) {
@@ -54,31 +56,32 @@ async function getPackageInfo(directory: string): Promise<PackageRecord> {
 
   const changes = await checkForChanges(directory);
   const [,packageType, packageBaseName] = match;
+  const needsPlaywright = !!devDependencies && 'playwright' in devDependencies;
 
   switch (packageType) {
     case 'bundle':
       return {
-        directory: directory,
         changes,
+        directory: directory,
         name,
-        needsPlaywright: false,
+        needsPlaywright,
         bundleName: packageBaseName,
       };
 
     case 'tab':
       return {
-        directory: directory,
         changes,
+        directory: directory,
         name,
-        needsPlaywright: 'playwright' in devDependencies,
+        needsPlaywright,
         tabName: packageBaseName,
       };
     default: {
       return {
-        directory: directory,
         changes,
+        directory: directory,
         name,
-        needsPlaywright: 'playwright' in devDependencies
+        needsPlaywright
       };
     }
   }
@@ -105,7 +108,7 @@ async function findPackages(directory: string, maxDepth?: number) {
               throw error;
             }
 
-            if ('code' in error && error.code !== 'ERR_MODULE_NOT_FOUND') {
+            if ('code' in error && error.code !== 'ENOENT') {
               core.error(error);
               throw error;
             }
@@ -164,17 +167,18 @@ async function runForAllPackages(gitRoot: string) {
 }
 
 async function main() {
-  const { stdout } = await getExecOutput('git rev-parse --show-toplevel');
-  const gitRoot = stdout.trim();
+  const gitRoot = await getGitRoot();
 
   await runForAllPackages(gitRoot);
-  // const fullPath = pathlib.join(gitRoot, query);
-  // const packageInfo = await getPackageInfo(fullPath);
-  // core.setOutput()
+
+  const workflows = await checkForChanges(pathlib.join(gitRoot, '.github/workflows'));
+  core.setOutput('workflows', workflows);
 }
 
-try {
-  await main();
-} catch (error: any) {
-  core.setFailed(error.message);
+if (process.env.GITHUB_ACTIONS) {
+  try {
+    await main();
+  } catch (error: any) {
+    core.setFailed(error.message);
+  }
 }
