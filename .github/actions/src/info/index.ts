@@ -166,9 +166,9 @@ function rawRecordToFullRecord(
 ): PackageRecord {
   const needsPlaywright = !!devDependencies && 'playwright' in devDependencies;
   if (
-    packageName === '@sourceacademy/modules' ||
-      packageName === '@sourceacademy/bundles' ||
-      packageName === '@sourceacademy/tabs'
+    packageName !== '@sourceacademy/modules' &&
+    packageName !== '@sourceacademy/bundles' &&
+    packageName !== '@sourceacademy/tabs'
   ) {
     const match = packageNameRE.exec(packageName);
     if (!match) throw new Error(`Unknown package ${packageName}`);
