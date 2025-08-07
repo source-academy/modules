@@ -94,15 +94,17 @@ jobs:
         with:
           package-name: ${{ matrix.tabInfo.name }}
           playwright: ${{ matrix.tabInfo.needsPlaywright && matrix.tabInfo.changes }}
-
       - name: Build Tab
-        run: yarn workspaces foreach -A --include ${{ matrix.tabInfo.name }} run build
+        if: matrix.tabInfo.changes
+        run: |
+          cd ${{ matrix.tabInfo.directory }}
+          yarn build
 
-      - name: Cache Tab
-        uses: actions/cache/save@v4
+      - name: Upload Tab Artifact
+        uses: actions/upload-artifact@v4
         with:
+          name: ${{ matrix.tabInfo.tabName }} Tab
           path: ./build/tabs/${{ matrix.tabInfo.tabName }}.js
-          key: ${{ matrix.tabInfo.name }}
 
       - name: Run Tests
         # https://github.com/vitest-dev/vitest/issues/5477
@@ -138,34 +140,23 @@ jobs:
           package-name: ${{ matrix.bundleInfo.name }}
 
       - name: Build Bundle
+        if: matrix.bundleInfo.changes
         run: |
           cd ${{ matrix.bundleInfo.directory }}
           yarn build
           yarn tsc
 
-      - name: Cache Buildtools Compiled Bundle
-        uses: actions/cache/save@v4
+      - name: Upload Bundle Artifact
+        uses: actions/upload-artifact@v4
         with:
+          name: ${{ matrix.bundleInfo.bundleName }} Bundle
           path: ./build/bundles/${{ matrix.bundleInfo.bundleName }}.js
-          key: ${{ matrix.bundleInfo.name }}-buildtools
-
-      - name: Cache tsc Compiled Bundle
-        uses: actions/cache/save@v4
-        with:
-          path: ${{ matrix.bundleInfo.directory }}/dist
-          key: ${{ matrix.bundleInfo.name }}-tsc
 
       - name: Run Tests
         if: matrix.bundleInfo.changes
         run: |
           cd ${{ matrix.bundleInfo.directory }}
           yarn test --coverage
-
-      - name: Run Auxillary Tasks
-        if: matrix.bundleInfo.changes
-        run: |
-          cd ${{ matrix.bundleInfo.directory }}
-          yarn tsc
 
   devserver:
     name: Dev Server Tests
