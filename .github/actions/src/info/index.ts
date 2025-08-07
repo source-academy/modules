@@ -166,34 +166,28 @@ function rawRecordToFullRecord(
 ): PackageRecord {
   const needsPlaywright = !!devDependencies && 'playwright' in devDependencies;
 
-  if (
-    packageName !== '@sourceacademy/bundles' &&
-    packageName !== '@sourceacademy/tabs' &&
-    packageName !== '@sourceacademy/modules'
-  ) {
-    const match = packageNameRE.exec(packageName);
-    if (!match) throw new Error(`Unknown package ${packageName}`);
+  const match = packageNameRE.exec(packageName);
+  if (!match) throw new Error(`Unknown package ${packageName}`);
 
-    const [, packageType, baseName] = match;
+  const [, packageType, baseName] = match;
 
-    switch (packageType) {
-      case 'bundle':
-        return {
-          changes: hasChanges,
-          directory: directory,
-          name: packageName,
-          needsPlaywright,
-          bundleName: baseName,
-        };
-      case 'tab':
-        return {
-          changes: hasChanges,
-          directory: directory,
-          name: packageName,
-          needsPlaywright,
-          tabName: baseName,
-        };
-    }
+  switch (packageType) {
+    case 'bundle':
+      return {
+        changes: hasChanges,
+        directory: directory,
+        name: packageName,
+        needsPlaywright,
+        bundleName: baseName,
+      };
+    case 'tab':
+      return {
+        changes: hasChanges,
+        directory: directory,
+        name: packageName,
+        needsPlaywright,
+        tabName: baseName,
+      };
   }
 
   return {
@@ -214,7 +208,13 @@ async function processPackages(gitRoot: string) {
   const tabs: PackageRecord[] = [];
   const libs: PackageRecord[] = [];
 
-  for (const fullRecord of Object.values(packages)) {
+  for (const [packageName, fullRecord] of Object.entries(packages)) {
+    if (
+      packageName === '@sourceacademy/modules' ||
+      packageName === '@sourceacademy/bundles' ||
+      packageName === '@sourceacademy/tabs'
+    ) continue;
+
     if ('bundleName' in fullRecord) {
       bundles.push(fullRecord);
     } else if ('tabName' in fullRecord) {
