@@ -113,6 +113,11 @@ export async function buildJson(bundle: ResolvedBundle, outDir: string, reflecti
   const [jsonData, warnings, errors] = reflection.children!.reduce<
     [Record<string, unknown>, string[], string[]]
   >(([res, warnings, errors], element) => {
+    if (element.kind === td.ReflectionKind.TypeAlias) {
+      // Ignore Type Aliases for JSON documentation
+      return [res, warnings, errors];
+    }
+
     const parser = parsers[element.kind];
 
     if (!parser) {

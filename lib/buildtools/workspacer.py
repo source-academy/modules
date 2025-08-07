@@ -44,7 +44,7 @@ def update_json(git_root: str, asset: Literal['bundle', 'tab'], file_name: Liter
 async def main():
   git_root = await get_git_root()
   def updater(name: str, full_path: str, obj: Any):
-    obj['scripts']['test'] = 'buildtools test --project .'
+    obj['scripts']['postinstall'] = 'yarn tsc'
 
     return obj
 

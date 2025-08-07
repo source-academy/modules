@@ -347,7 +347,6 @@ export default tseslint.config(
       'vitest/no-export': 'off',
       'vitest/no-focused-tests': ['warn', { fixable: false }],
       'vitest/require-top-level-describe': 'off',
-      'vitest/prefer-hooks-on-top': 'warn',
       'vitest/valid-describe-callback': 'off',
       'vitest/valid-expect-in-promise': 'error',
 

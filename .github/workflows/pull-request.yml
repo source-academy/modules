@@ -28,7 +28,7 @@ jobs:
           yarn build
 
       - name: Test Actions
-        run: | 
+        run: |
           cd ./.github/actions
           yarn test
 
@@ -138,6 +138,7 @@ jobs:
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.bundleInfo.name }}
+          needsPlaywright: ${{ matrix.bundleInfo.needsPlaywright }}
 
       - name: Build Bundle
         if: matrix.bundleInfo.changes
@@ -163,8 +164,8 @@ jobs:
         if: matrix.bundleInfo.changes
         uses: actions/upload-artifact@v4
         with:
-            path: ${{ matrix.bundleInfo.directory }}/dist/docs.json
-            name: ${{ matrix.bundleInfo.bundleName }} Docs
+          path: ${{ matrix.bundleInfo.directory }}/dist/docs.json
+          name: ${{ matrix.bundleInfo.bundleName }} Docs
 
       - name: Run Tests
         if: matrix.bundleInfo.changes

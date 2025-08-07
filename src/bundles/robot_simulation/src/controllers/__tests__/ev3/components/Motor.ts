@@ -96,7 +96,7 @@ describe('Motor', () => {
 
   it('updates mesh', async () => {
     await motor.start();
-    motor.update({frameDuration: 1});
+    motor.update({ frameDuration: 1 });
 
     expect(motor.mesh.scene.position.copy).toBeCalled();
     expect(motor.mesh.scene.quaternion.copy).toBeCalled();
@@ -105,7 +105,7 @@ describe('Motor', () => {
   it('rotates the mesh if on the left side', async () => {
     motor.wheelSide = 'left';
     await motor.start();
-    motor.update({frameDuration: 1});
+    motor.update({ frameDuration: 1 });
 
     expect(motor.mesh.scene.rotateZ).toBeCalled();
   });
