@@ -44,6 +44,7 @@ jobs:
       libs: ${{ steps.info.outputs.libs }}
       tabs: ${{ steps.info.outputs.tabs }}
       devserver: ${{ steps.info.outputs.devserver }}
+      docserver: ${{ steps.info.outputs.docserver }}
       workflows: ${{ steps.info.outputs.workflows }}
 
   libraries:
@@ -106,6 +107,7 @@ jobs:
           yarn build
 
       - name: Upload Tab Artifact
+        if: matrix.tabInfo.changes
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.tabInfo.tabName }} Tab
@@ -181,7 +183,7 @@ jobs:
           yarn test --coverage
 
   devserver:
-    name: Dev Server Tests
+    name: Dev Server Tasks
     runs-on: ubuntu-latest
     needs:
       - find-packages
@@ -214,9 +216,13 @@ jobs:
           yarn tsc
 
   docserver:
-    name: Docs Server Tests
+    name: Docs Server Tasks
     runs-on: ubuntu-latest
-    needs: libraries
+    needs:
+      - libraries
+      - find-packages
+    if: ${{ needs.find-packages.outputs.docserver.changes }}
+
     steps:
       - name: Check out source code
         uses: actions/checkout@v4

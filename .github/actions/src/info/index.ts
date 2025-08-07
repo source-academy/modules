@@ -5,6 +5,16 @@ import * as core from '@actions/core';
 import { getExecOutput } from '@actions/exec';
 import getGitRoot from './gitRoot.js';
 
+interface RawPackageRecord<T = boolean | null> {
+  directory: string
+  hasChanges: T
+  package: {
+    name: string
+    devDependencies: Record<string, string>
+    dependencies: Record<string, string>
+  }
+}
+
 interface BasePackageRecord {
   /**
    * Directory within which the `package.json` file was found
@@ -53,69 +63,29 @@ export async function checkForChanges(directory: string) {
   return exitCode !== 0;
 }
 
-const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
-
 /**
- * Retrieves the information for a given package.
- * @param directory The directory containing the `package.json` for the given package.
+ * Retrieves the information for all packages in the repository
  */
-export async function getPackageInfo(directory: string): Promise<PackageRecord> {
-  const fileName = pathlib.join(directory, 'package.json');
-  const { name, devDependencies } = JSON.parse(await fs.readFile(fileName, 'utf8'));
-  const match = packageNameRE.exec(name);
+export async function getAllPackages(gitRoot: string) {
+  const output: Record<string, RawPackageRecord> = {};
 
-  if (!match) {
-    throw new Error(`Failed to match package name: ${name}`);
-  }
-
-  const changes = await checkForChanges(directory);
-  const [,packageType, packageBaseName] = match;
-  const needsPlaywright = !!devDependencies && 'playwright' in devDependencies;
-
-  switch (packageType) {
-    case 'bundle':
-      return {
-        changes,
-        directory: directory,
-        name,
-        needsPlaywright,
-        bundleName: packageBaseName,
-      };
-
-    case 'tab':
-      return {
-        changes,
-        directory: directory,
-        name,
-        needsPlaywright,
-        tabName: packageBaseName,
-      };
-    default: {
-      return {
-        changes,
-        directory: directory,
-        name,
-        needsPlaywright
-      };
-    }
-  }
-}
-
-/**
- * Recursively locates the packages present in a directory, up to an optional max depth
- */
-async function findPackages(directory: string, maxDepth?: number) {
-  const output: BasePackageRecord[] = [];
-
-  async function* recurser(currentDir: string, currentDepth: number): AsyncGenerator<PackageRecord> {
-    if (maxDepth !== undefined && currentDepth >= maxDepth) return;
-
+  async function recurser(currentDir: string) {
     const items = await fs.readdir(currentDir, { withFileTypes: true });
-    for (const item of items) {
+    await Promise.all(items.map(async item => {
       if (item.isFile()) {
         if (item.name === 'package.json') {
           try {
-            yield await getPackageInfo(currentDir);
+            const [hasChanges, packageJson] = await Promise.all([
+              checkForChanges(currentDir),
+              fs.readFile(pathlib.join(currentDir, 'package.json'), 'utf-8')
+                .then(JSON.parse)
+            ]);
+
+            output[packageJson.name] = {
+              directory: currentDir,
+              hasChanges: hasChanges ? true : null,
+              package: packageJson.name
+            };
           } catch (error) {
             if (!utils.types.isNativeError(error)) {
               core.error(`Unknown error occurred ${error}`);
@@ -128,40 +98,135 @@ async function findPackages(directory: string, maxDepth?: number) {
             }
           }
         }
-        continue;
+        return;
       }
 
-      if (item.isDirectory() && item.name !== 'node_modules' && !item.name.startsWith('__')) {
+      if (item.isDirectory()) {
         const fullPath = pathlib.join(currentDir, item.name);
-        yield* recurser(fullPath, currentDepth + 1);
+        await recurser(fullPath);
       }
+    }));
+  }
+
+  /**
+   * Recursively determine if the package has changes that call for
+   * it to be rebuilt
+   */
+  function populateChanges(packageName: string): boolean {
+    const packageInfo = output[packageName];
+    if (packageInfo.hasChanges !== null) return packageInfo.hasChanges;
+
+    const { dependencies, devDependencies } = packageInfo.package;
+    if (dependencies) {
+      for (const name of Object.keys(dependencies)) {
+        if (!name.startsWith('@sourceacademy')) continue;
+
+        const hasChanges = populateChanges(name);
+        if (hasChanges) {
+          packageInfo.hasChanges = true;
+          return true;
+        }
+      }
+    }
+
+    if (devDependencies) {
+      for (const name of Object.keys(devDependencies)) {
+        if (name.startsWith('@sourceacademy')) continue;
+
+        const hasChanges = populateChanges(name);
+        if (hasChanges) {
+          packageInfo.hasChanges = true;
+          return true;
+        }
+      }
+    }
+
+    packageInfo.hasChanges = false;
+    return false;
+  }
+
+  await recurser(gitRoot);
+  Object.keys(output).forEach(populateChanges);
+
+  return Object.entries(output)
+    .reduce<Record<string, PackageRecord>>((res, [key, value]) => ({
+      ...res,
+      [key]: rawRecordToFullRecord(key, value as RawPackageRecord<boolean>)
+    }), {});
+}
+
+const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
+function rawRecordToFullRecord(
+  packageName: string,
+  {
+    hasChanges,
+    directory,
+    package: { devDependencies }
+  }: RawPackageRecord<boolean>
+): PackageRecord {
+  const match = packageNameRE.exec(packageName);
+  if (!match) throw new Error(`Unknown package ${packageName}`);
+
+  const [, packageType, baseName] = match;
+  const needsPlaywright = !!devDependencies && 'playwright' in devDependencies;
+
+  switch (packageType) {
+    case 'bundle':
+      return {
+        changes: hasChanges,
+        directory: directory,
+        name: packageName,
+        needsPlaywright,
+        bundleName: baseName,
+      };
+    case 'tab':
+      return {
+        changes: hasChanges,
+        directory: directory,
+        name: packageName,
+        needsPlaywright,
+        tabName: baseName,
+      };
+
+    default:
+      return {
+        changes: hasChanges,
+        directory: directory,
+        name: packageName,
+        needsPlaywright
+      };
+  }
+}
+
+/**
+ * Iterate through all packages and convert the raw package records to the
+ * version that the action actually outputs
+ */
+async function processPackages(gitRoot: string) {
+  const packages = await getAllPackages(gitRoot);
+  const bundles: PackageRecord[] = [];
+  const tabs: PackageRecord[] = [];
+  const libs: PackageRecord[] = [];
+
+  for (const fullRecord of Object.values(packages)) {
+    if ('bundleName' in fullRecord) {
+      bundles.push(fullRecord);
+    } else if ('tabName' in fullRecord) {
+      tabs.push(fullRecord);
+    } else {
+      libs.push(fullRecord);
     }
   }
 
-  for await (const each of recurser(directory, 0)) {
-    output.push(each);
-  }
-
-  return output;
+  return { packages, bundles, tabs, libs };
 }
 
-async function runForAllPackages(gitRoot: string) {
-  const results = await Promise.all(
-    Object.entries({
-      libs: pathlib.join(gitRoot, 'lib'),
-      bundles: pathlib.join(gitRoot, 'src', 'bundles'),
-      tabs: pathlib.join(gitRoot, 'src', 'tabs')
-    }).map(async ([packageType, dirPath]): Promise<[string, BasePackageRecord[]]> => {
-      const packages = await findPackages(dirPath);
-      core.info(`Found ${packages.length} ${packageType} packages`);
-      return [packageType, packages];
-    })
-  );
+async function main() {
+  const gitRoot = await getGitRoot();
 
-  for (const [packageType, packages] of results) {
-    core.summary.addHeading(`${packageType} packages`);
-    const summaryItems = packages.map(packageInfo => {
-      return `<div>
+  const { packages, bundles, tabs, libs } = await processPackages(gitRoot);
+  const summaryItems = Object.values(packages).map(packageInfo => {
+    return `<div>
         <h2>${packageInfo.name}</h2>
         <ul>
           <li>Directory: <code>${packageInfo.directory}</code></li>
@@ -169,21 +234,16 @@ async function runForAllPackages(gitRoot: string) {
           <li>Needs Playwright: <code>${packageInfo.needsPlaywright}</code></li>
         </ul>
       </div>`;
-    });
+  });
 
-    core.summary.addList(summaryItems);
-    core.setOutput(packageType, packages);
-  }
+  core.summary.addList(summaryItems);
   await core.summary.write();
 
-  const devserver = await getPackageInfo(pathlib.join(gitRoot, 'devserver'));
-  core.setOutput('devserver', devserver);
-}
-
-async function main() {
-  const gitRoot = await getGitRoot();
-
-  await runForAllPackages(gitRoot);
+  core.setOutput('bundles', bundles);
+  core.setOutput('tabs', tabs);
+  core.setOutput('libs', libs);
+  core.setOutput('devserver', packages['@sourceacademy/devserver']);
+  core.setOutput('docserver', packages['@sourceacademy/docserver']);
 
   const workflows = await checkForChanges(pathlib.join(gitRoot, '.github/workflows'));
   core.setOutput('workflows', workflows);
