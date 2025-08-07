@@ -157,7 +157,7 @@ jobs:
         if: matrix.bundleInfo.changes
         run: |
           cd ${{ matrix.bundleInfo.directory }}
-          yarn buildtools docs
+          yarn buildtools build docs
 
       - name: Upload Compiled Bundle Docs Artifact
         if: matrix.bundleInfo.changes
