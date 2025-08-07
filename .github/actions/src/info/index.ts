@@ -248,13 +248,11 @@ async function main() {
   core.summary.addList(summaryItems);
   await core.summary.write();
 
-  core.info(JSON.stringify(rootPackages));
-
   core.setOutput('bundles', Object.values(bundles));
   core.setOutput('tabs', Object.values(tabs));
   core.setOutput('libs', Object.values(libs));
-  core.setOutput('devserver', rootPackages['@sourceacademy/devserver']);
-  core.setOutput('docserver', rootPackages['@sourceacademy/docserver']);
+  core.setOutput('devserver', rootPackages['@sourceacademy/modules-devserver']);
+  core.setOutput('docserver', rootPackages['@sourceacademy/modules-docserver']);
 
   const workflows = await checkForChanges(pathlib.join(gitRoot, '.github/workflows'));
   core.setOutput('workflows', workflows);
