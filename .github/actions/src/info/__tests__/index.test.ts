@@ -2,6 +2,10 @@ import * as exec from '@actions/exec';
 import { describe, expect, it, vi } from 'vitest';
 import { checkForChanges } from '../index.js';
 
+vi.mock(import('lodash/memoize.js'), () => ({
+  default: (x: any) => x
+}) as any);
+
 const mockedExecOutput = vi.spyOn(exec, 'getExecOutput');
 
 describe('Test checkForChanges', () => {
