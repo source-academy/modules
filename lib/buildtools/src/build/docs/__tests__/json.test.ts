@@ -3,7 +3,7 @@ import { bundlesDir, outDir } from '@sourceacademy/modules-repotools/getGitRoot'
 import type { ResolvedBundle } from '@sourceacademy/modules-repotools/types';
 import * as td from 'typedoc';
 import { describe, expect, it, test as baseTest, vi } from 'vitest';
-import { expectWarn } from '../../../__tests__/fixtures.js';
+import { expectSuccess, expectWarn } from '../../../__tests__/fixtures.js';
 import { buildJson, parsers, type ParserError, type ParserResult, type ParserSuccess } from '../json.js';
 import { initTypedocForJson } from '../typedoc.js';
 
@@ -61,14 +61,14 @@ describe('Test buildJson', () => {
   test('Encountering an unrecognized type', async ({ testBundle, project }) => {
     project.addChild(new td.DeclarationReflection(
       'TestType',
-      td.ReflectionKind.TypeAlias
+      td.ReflectionKind.TypeParameter
     ));
 
     const result = await buildJson(testBundle, outDir, project);
     expectWarn(result.severity);
 
     expect(result.warnings.length).toEqual(1);
-    expect(result.warnings[0]).toEqual('No parser found for TestType which is of type TypeAlias.');
+    expect(result.warnings[0]).toEqual('No parser found for TestType which is of type TypeParameter.');
 
     expect(fs.writeFile).toHaveBeenCalledOnce();
     const { calls: [[path, data]] } = mockedWriteFile.mock;
@@ -89,6 +89,37 @@ describe('Test buildJson', () => {
         },
         "TestType": {
           "kind": "unknown"
+        }
+      }"
+    `);
+  });
+
+  test('TypeAliases are ignored for JSON building', async ({ testBundle, project }) => {
+    project.addChild(
+      new td.DeclarationReflection(
+        'TestType',
+        td.ReflectionKind.TypeAlias
+      )
+    );
+    const result = await buildJson(testBundle, outDir, project);
+    expectSuccess(result.severity);
+
+    expect(fs.writeFile).toHaveBeenCalledOnce();
+    const { calls: [[path, data]] } = mockedWriteFile.mock;
+    expect(path).toEqual(`${outDir}/jsons/test0.json`);
+    expect(data).toMatchInlineSnapshot(`
+      "{
+        "test_function": {
+          "kind": "function",
+          "name": "test_function",
+          "description": "<p>This is just some test function</p>",
+          "params": [
+            [
+              "_param0",
+              "string"
+            ]
+          ],
+          "retType": "number"
         }
       }"
     `);
