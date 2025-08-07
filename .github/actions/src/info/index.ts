@@ -47,6 +47,54 @@ interface TabPackageRecord extends BasePackageRecord {
 
 type PackageRecord = BundlePackageRecord | TabPackageRecord | BasePackageRecord;
 
+const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
+function rawRecordToFullRecord(
+  packageName: string,
+  {
+    hasChanges,
+    directory,
+    package: { devDependencies }
+  }: RawPackageRecord<boolean>
+): PackageRecord {
+  const needsPlaywright = !!devDependencies && 'playwright' in devDependencies;
+  if (
+    packageName !== '@sourceacademy/modules' &&
+    packageName !== '@sourceacademy/bundles' &&
+    packageName !== '@sourceacademy/tabs'
+  ) {
+    const match = packageNameRE.exec(packageName);
+    if (!match) throw new Error(`Unknown package ${packageName}`);
+
+    const [, packageType, baseName] = match;
+
+    switch (packageType) {
+      case 'bundle':
+        return {
+          changes: hasChanges,
+          directory: directory,
+          name: packageName,
+          needsPlaywright,
+          bundleName: baseName,
+        };
+      case 'tab':
+        return {
+          changes: hasChanges,
+          directory: directory,
+          name: packageName,
+          needsPlaywright,
+          tabName: baseName,
+        };
+    }
+  }
+
+  return {
+    changes: hasChanges,
+    directory: directory,
+    name: packageName,
+    needsPlaywright
+  };
+}
+
 /**
  * Returns `true` if there are changes present in the given directory relative to
  * the master branch\
@@ -156,54 +204,6 @@ export async function getAllPackages(gitRoot: string, maxDepth?: number) {
       ...res,
       [key]: rawRecordToFullRecord(key, value as RawPackageRecord<boolean>)
     }), {});
-}
-
-const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
-function rawRecordToFullRecord(
-  packageName: string,
-  {
-    hasChanges,
-    directory,
-    package: { devDependencies }
-  }: RawPackageRecord<boolean>
-): PackageRecord {
-  const needsPlaywright = !!devDependencies && 'playwright' in devDependencies;
-  if (
-    packageName !== '@sourceacademy/modules' &&
-    packageName !== '@sourceacademy/bundles' &&
-    packageName !== '@sourceacademy/tabs'
-  ) {
-    const match = packageNameRE.exec(packageName);
-    if (!match) throw new Error(`Unknown package ${packageName}`);
-
-    const [, packageType, baseName] = match;
-
-    switch (packageType) {
-      case 'bundle':
-        return {
-          changes: hasChanges,
-          directory: directory,
-          name: packageName,
-          needsPlaywright,
-          bundleName: baseName,
-        };
-      case 'tab':
-        return {
-          changes: hasChanges,
-          directory: directory,
-          name: packageName,
-          needsPlaywright,
-          tabName: baseName,
-        };
-    }
-  }
-
-  return {
-    changes: hasChanges,
-    directory: directory,
-    name: packageName,
-    needsPlaywright
-  };
 }
 
 async function main() {

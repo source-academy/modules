@@ -39,6 +39,9 @@ jobs:
         id: info
         uses: ./.github/actions/src/info
 
+      - name: Echo Info
+        run: echo ${{ toJSON(steps.info.outputs.docserver) }}
+
     outputs:
       bundles: ${{ steps.info.outputs.bundles }}
       libs: ${{ steps.info.outputs.libs }}
@@ -147,7 +150,7 @@ jobs:
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.bundleInfo.name }}
-          needsPlaywright: ${{ matrix.bundleInfo.needsPlaywright }}
+          playwright: ${{ matrix.bundleInfo.needsPlaywright }}
 
       - name: Build Bundle
         if: matrix.bundleInfo.changes
