@@ -164,38 +164,40 @@ function rawRecordToFullRecord(
     package: { devDependencies }
   }: RawPackageRecord<boolean>
 ): PackageRecord {
-  const match = packageNameRE.exec(packageName);
-  if (!match) throw new Error(`Unknown package ${packageName}`);
-
-  const [, packageType, baseName] = match;
   const needsPlaywright = !!devDependencies && 'playwright' in devDependencies;
 
-  switch (packageType) {
-    case 'bundle':
-      return {
-        changes: hasChanges,
-        directory: directory,
-        name: packageName,
-        needsPlaywright,
-        bundleName: baseName,
-      };
-    case 'tab':
-      return {
-        changes: hasChanges,
-        directory: directory,
-        name: packageName,
-        needsPlaywright,
-        tabName: baseName,
-      };
+  if (packageName !== '@sourceacademy/bundles' && packageName !== '@sourceacademy/tabs') {
+    const match = packageNameRE.exec(packageName);
+    if (!match) throw new Error(`Unknown package ${packageName}`);
 
-    default:
-      return {
-        changes: hasChanges,
-        directory: directory,
-        name: packageName,
-        needsPlaywright
-      };
+    const [, packageType, baseName] = match;
+
+    switch (packageType) {
+      case 'bundle':
+        return {
+          changes: hasChanges,
+          directory: directory,
+          name: packageName,
+          needsPlaywright,
+          bundleName: baseName,
+        };
+      case 'tab':
+        return {
+          changes: hasChanges,
+          directory: directory,
+          name: packageName,
+          needsPlaywright,
+          tabName: baseName,
+        };
+    }
   }
+
+  return {
+    changes: hasChanges,
+    directory: directory,
+    name: packageName,
+    needsPlaywright
+  };
 }
 
 /**
