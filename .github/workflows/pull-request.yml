@@ -146,11 +146,25 @@ jobs:
           yarn build
           yarn tsc
 
-      - name: Upload Bundle Artifact
+      - name: Upload Compiled Bundle Artifact
+        if: matrix.bundleInfo.changes
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.bundleInfo.bundleName }} Bundle
+          name: ${{ matrix.bundleInfo.bundleName }} Compiled Bundle
           path: ./build/bundles/${{ matrix.bundleInfo.bundleName }}.js
+
+      - name: Build Bundle Docs
+        if: matrix.bundleInfo.changes
+        run: |
+          cd ${{ matrix.bundleInfo.directory }}
+          yarn buildtools docs
+
+      - name: Upload Compiled Bundle Docs Artifact
+        if: matrix.bundleInfo.changes
+        uses: actions/upload-artifact@v4
+        with:
+            path: ${{ matrix.bundleInfo.directory }}/dist/docs.json
+            name: ${{ matrix.bundleInfo.bundleName }} Docs
 
       - name: Run Tests
         if: matrix.bundleInfo.changes
