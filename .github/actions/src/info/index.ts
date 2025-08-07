@@ -66,10 +66,12 @@ export async function checkForChanges(directory: string) {
 /**
  * Retrieves the information for all packages in the repository
  */
-export async function getAllPackages(gitRoot: string) {
+export async function getAllPackages(gitRoot: string, maxDepth?: number) {
   const output: Record<string, RawPackageRecord> = {};
 
-  async function recurser(currentDir: string) {
+  async function recurser(currentDir: string, currentDepth: number) {
+    if (maxDepth !== undefined && currentDepth >= maxDepth) return;
+
     const items = await fs.readdir(currentDir, { withFileTypes: true });
     await Promise.all(items.map(async item => {
       if (item.isFile()) {
@@ -103,7 +105,7 @@ export async function getAllPackages(gitRoot: string) {
 
       if (item.isDirectory() && item.name !== 'node_modules' && !item.name.startsWith('__')) {
         const fullPath = pathlib.join(currentDir, item.name);
-        await recurser(fullPath);
+        await recurser(fullPath, currentDepth + 1);
       }
     }));
   }
@@ -145,7 +147,7 @@ export async function getAllPackages(gitRoot: string) {
     return false;
   }
 
-  await recurser(gitRoot);
+  await recurser(gitRoot, 0);
   Object.keys(output).forEach(populateChanges);
 
   return Object.entries(output)
@@ -203,40 +205,29 @@ function rawRecordToFullRecord(
   };
 }
 
-/**
- * Iterate through all packages and convert the raw package records to the
- * version that the action actually outputs
- */
-async function processPackages(gitRoot: string) {
-  const packages = await getAllPackages(gitRoot);
-  const bundles: PackageRecord[] = [];
-  const tabs: PackageRecord[] = [];
-  const libs: PackageRecord[] = [];
-
-  for (const [packageName, fullRecord] of Object.entries(packages)) {
-    if (
-      packageName === '@sourceacademy/modules' ||
-      packageName === '@sourceacademy/bundles' ||
-      packageName === '@sourceacademy/tabs'
-    ) continue;
-
-    if ('bundleName' in fullRecord) {
-      bundles.push(fullRecord);
-    } else if ('tabName' in fullRecord) {
-      tabs.push(fullRecord);
-    } else {
-      libs.push(fullRecord);
-    }
-  }
-
-  return { packages, bundles, tabs, libs };
-}
-
 async function main() {
   const gitRoot = await getGitRoot();
 
-  const { packages, bundles, tabs, libs } = await processPackages(gitRoot);
-  const summaryItems = Object.values(packages).map(packageInfo => {
+  const [
+    bundles,
+    tabs,
+    libs,
+    rootPackages
+  ] = await Promise.all([
+    getAllPackages(pathlib.join(gitRoot, 'src', 'bundles')),
+    getAllPackages(pathlib.join(gitRoot, 'src', 'tabs')),
+    getAllPackages(pathlib.join(gitRoot, 'libs')),
+    getAllPackages(pathlib.join(gitRoot), 1)
+  ]);
+
+  const packages = {
+    ...Object.values(rootPackages),
+    ...bundles,
+    ...tabs,
+    ...libs
+  };
+
+  const summaryItems = packages.map(packageInfo => {
     return `<div>
         <h2>${packageInfo.name}</h2>
         <ul>
@@ -253,8 +244,8 @@ async function main() {
   core.setOutput('bundles', bundles);
   core.setOutput('tabs', tabs);
   core.setOutput('libs', libs);
-  core.setOutput('devserver', packages['@sourceacademy/devserver']);
-  core.setOutput('docserver', packages['@sourceacademy/docserver']);
+  core.setOutput('devserver', rootPackages['@sourceacademy/devserver']);
+  core.setOutput('docserver', rootPackages['@sourceacademy/docserver']);
 
   const workflows = await checkForChanges(pathlib.join(gitRoot, '.github/workflows'));
   core.setOutput('workflows', workflows);

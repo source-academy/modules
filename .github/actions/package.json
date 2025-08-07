@@ -15,6 +15,7 @@
   "scripts": {
     "build": "node ./build.js",
     "postinstall": "yarn build",
-    "test": "vitest"
+    "test": "vitest",
+    "tsc": "tsc --project ./tsconfig.json"
   }
 }
