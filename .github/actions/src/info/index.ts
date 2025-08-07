@@ -70,7 +70,7 @@ export async function getAllPackages(gitRoot: string, maxDepth?: number) {
   const output: Record<string, RawPackageRecord> = {};
 
   async function recurser(currentDir: string, currentDepth: number) {
-    if (maxDepth !== undefined && currentDepth >= maxDepth) return;
+    if (maxDepth !== undefined && currentDepth > maxDepth) return;
 
     const items = await fs.readdir(currentDir, { withFileTypes: true });
     await Promise.all(items.map(async item => {
@@ -228,10 +228,11 @@ async function main() {
   };
 
   const summaryItems = Object.values(packages).map(packageInfo => {
+    const relpath = pathlib.relative(gitRoot, packageInfo.directory);
     return `<div>
         <h2>${packageInfo.name}</h2>
         <ul>
-          <li>Directory: <code>${packageInfo.directory}</code></li>
+          <li>Directory: <code>${relpath}</code></li>
           <li>Changes: <code>${packageInfo.changes}</code></li>
           <li>Needs Playwright: <code>${packageInfo.needsPlaywright}</code></li>
         </ul>
