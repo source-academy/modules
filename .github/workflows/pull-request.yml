@@ -39,9 +39,6 @@ jobs:
         id: info
         uses: ./.github/actions/src/info
 
-      - name: Echo Info
-        run: echo ${{ toJSON(steps.info.outputs.docserver) }}
-
     outputs:
       bundles: ${{ steps.info.outputs.bundles }}
       libs: ${{ steps.info.outputs.libs }}

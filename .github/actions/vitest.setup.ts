@@ -26,7 +26,3 @@ vi.mock(import('@actions/core'), async importOriginal => {
 });
 
 vi.mock(import('@actions/exec'));
-
-vi.mock(import('./src/info/gitRoot.js'), () => ({
-  default: () => Promise.resolve('/')
-}));

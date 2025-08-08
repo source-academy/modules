@@ -72,6 +72,7 @@ export default tseslint.config(
       '@stylistic': stylePlugin,
     },
     rules: {
+      'object-shorthand': ['warn', 'properties'],
       '@stylistic/eol-last': 'warn',
       '@stylistic/indent': ['warn', 2, { SwitchCase: 1 }],
       '@stylistic/no-mixed-spaces-and-tabs': 'warn',

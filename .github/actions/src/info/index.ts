@@ -2,125 +2,20 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import utils from 'util';
 import * as core from '@actions/core';
-import { getExecOutput } from '@actions/exec';
-import memoize from 'lodash/memoize.js';
-import getGitRoot from './gitRoot.js';
-
-interface RawPackageRecord<T = boolean | null> {
-  directory: string
-  hasChanges: T
-  package: {
-    name: string
-    devDependencies: Record<string, string>
-    dependencies: Record<string, string>
-  }
-}
-
-interface BasePackageRecord {
-  /**
-   * Directory within which the `package.json` file was found
-   */
-  directory: string
-  /**
-   * Full scoped package name
-   */
-  name: string
-  /**
-   * `true` if git detected changes from within the package's subdirectories,
-   * `false` otherwise
-   */
-  changes: boolean
-  /**
-   * `true` if playwright is present under devDependencies. This means that the package
-   * might need playwright for its tests
-   */
-  needsPlaywright: boolean
-}
-
-interface BundlePackageRecord extends BasePackageRecord {
-  bundleName: string;
-}
-
-interface TabPackageRecord extends BasePackageRecord {
-  tabName: string;
-}
-
-type PackageRecord = BundlePackageRecord | TabPackageRecord | BasePackageRecord;
+import { checkForChanges, getGitRoot } from './git.js';
+import { topoSortPackages } from './sorter.js';
+import type { PackageRecord, RawPackageRecord } from './utils.js';
 
 const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
-function rawRecordToFullRecord(
-  packageName: string,
-  {
-    hasChanges,
-    directory,
-    package: { devDependencies }
-  }: RawPackageRecord<boolean>
-): PackageRecord {
-  const needsPlaywright = !!devDependencies && 'playwright' in devDependencies;
-  if (
-    packageName !== '@sourceacademy/modules' &&
-    packageName !== '@sourceacademy/bundles' &&
-    packageName !== '@sourceacademy/tabs'
-  ) {
-    const match = packageNameRE.exec(packageName);
-    if (!match) throw new Error(`Unknown package ${packageName}`);
-
-    const [, packageType, baseName] = match;
-
-    switch (packageType) {
-      case 'bundle':
-        return {
-          changes: hasChanges,
-          directory: directory,
-          name: packageName,
-          needsPlaywright,
-          bundleName: baseName,
-        };
-      case 'tab':
-        return {
-          changes: hasChanges,
-          directory: directory,
-          name: packageName,
-          needsPlaywright,
-          tabName: baseName,
-        };
-    }
-  }
-
-  return {
-    changes: hasChanges,
-    directory: directory,
-    name: packageName,
-    needsPlaywright
-  };
-}
 
 /**
- * Returns `true` if there are changes present in the given directory relative to
- * the master branch\
- * Used to determine, particularly for libraries if running tests and tsc are necessary
+ * Retrieves the information for all packages in the repository, but in
+ * an unprocessed format
  */
-export const checkForChanges = memoize(async (directory: string) => {
-  const { exitCode } = await getExecOutput(
-    'git',
-    ['--no-pager', 'diff', '--quiet', 'origin/master', '--', directory],
-    {
-      failOnStdErr: false,
-      ignoreReturnCode: true
-    }
-  );
-  return exitCode !== 0;
-});
-
-/**
- * Retrieves the information for all packages in the repository
- */
-export async function getAllPackages(gitRoot: string, maxDepth?: number) {
+export async function getRawPackages(gitRoot: string, maxDepth?: number) {
   const output: Record<string, RawPackageRecord> = {};
 
   async function recurser(currentDir: string, currentDepth: number) {
-    if (maxDepth !== undefined && currentDepth > maxDepth) return;
-
     const items = await fs.readdir(currentDir, { withFileTypes: true });
     await Promise.all(items.map(async item => {
       if (item.isFile()) {
@@ -134,8 +29,8 @@ export async function getAllPackages(gitRoot: string, maxDepth?: number) {
 
             output[packageJson.name] = {
               directory: currentDir,
-              hasChanges: hasChanges ? true : null,
-              package: packageJson.name
+              hasChanges,
+              package: packageJson
             };
           } catch (error) {
             if (!utils.types.isNativeError(error)) {
@@ -147,78 +42,139 @@ export async function getAllPackages(gitRoot: string, maxDepth?: number) {
               core.error(error);
               throw error;
             }
+            console.error(error);
           }
         }
         return;
       }
 
-      if (item.isDirectory() && item.name !== 'node_modules' && !item.name.startsWith('__')) {
+      if (
+        (maxDepth === undefined || currentDepth < maxDepth) &&
+        item.isDirectory() &&
+        item.name !== 'node_modules' &&
+        !item.name.startsWith('__')
+      ) {
         const fullPath = pathlib.join(currentDir, item.name);
         await recurser(fullPath, currentDepth + 1);
       }
     }));
   }
 
-  /**
-   * Recursively determine if the package has changes that call for
-   * it to be rebuilt
-   */
-  function populateChanges(packageName: string): boolean {
-    const packageInfo = output[packageName];
-    if (packageInfo.hasChanges !== null) return packageInfo.hasChanges;
-
-    const { dependencies, devDependencies } = packageInfo.package;
-    if (dependencies) {
-      for (const name of Object.keys(dependencies)) {
-        if (!name.startsWith('@sourceacademy')) continue;
-
-        const hasChanges = populateChanges(name);
-        if (hasChanges) {
-          packageInfo.hasChanges = true;
-          return true;
-        }
-      }
-    }
-
-    if (devDependencies) {
-      for (const name of Object.keys(devDependencies)) {
-        if (name.startsWith('@sourceacademy')) continue;
-
-        const hasChanges = populateChanges(name);
-        if (hasChanges) {
-          packageInfo.hasChanges = true;
-          return true;
-        }
-      }
-    }
-
-    packageInfo.hasChanges = false;
-    return false;
-  }
-
   await recurser(gitRoot, 0);
-  Object.keys(output).forEach(populateChanges);
-
-  return Object.entries(output)
-    .reduce<Record<string, PackageRecord>>((res, [key, value]) => ({
-      ...res,
-      [key]: rawRecordToFullRecord(key, value as RawPackageRecord<boolean>)
-    }), {});
+  return output;
 }
 
-async function main() {
-  const gitRoot = await getGitRoot();
+/**
+ * Combines the two objects by using the keys from the LHS
+ * to index the RHS object. The result will have the keys of the LHS
+ * mapped to the values on the RHS object.
+ */
+function mergeObjects<
+  RHS extends Record<string | symbol | number, any>,
+  LHS extends Record<keyof RHS, any>
+>(lhs: LHS, rhs: RHS) {
+  return Object.keys(lhs).reduce((res, key) => ({
+    ...res,
+    [key]: rhs[key]
+  }), {} as Record<keyof LHS, RHS[keyof LHS]>);
+}
 
+/**
+ * Iterate through the packages in topological order to determine, based on its dependencies, if it
+ * has changes and thus needs to be rebuilt
+ */
+export function processRawPackages(topoOrder: string[], packages: Record<string, RawPackageRecord>) {
+  return topoOrder.reduce<Record<string, PackageRecord>>((res, packageName) => {
+    const packageInfo = packages[packageName];
+
+    // Check each dependency if it has changes. Because this is done in topological order
+    // these fields should already be their most accurate values
+    if (!packageInfo.hasChanges) {
+      if (packageInfo.package.dependencies) {
+        for (const name of Object.keys(packageInfo.package.dependencies)) {
+          if (packages[name].hasChanges) {
+            packageInfo.hasChanges = true;
+            break;
+          }
+        }
+      }
+
+      if (!packageInfo.hasChanges && packageInfo.package.devDependencies) {
+        for (const name of Object.keys(packageInfo.package.devDependencies)) {
+          if (packages[name].hasChanges) {
+            packageInfo.hasChanges = true;
+            break;
+          }
+        }
+      }
+    }
+
+    const needsPlaywright =
+      packageInfo.package.devDependencies !== undefined &&
+      'playwright' in packageInfo.package.devDependencies;
+
+    if (
+      packageName !== '@sourceacademy/modules' &&
+      packageName !== '@sourceacademy/bundles' &&
+      packageName !== '@sourceacademy/tabs'
+    ) {
+      const match = packageNameRE.exec(packageName);
+      if (!match) throw new Error(`Unknown package ${packageName}`);
+
+      const [, packageType, baseName] = match;
+
+      switch (packageType) {
+        case 'bundle':
+          return {
+            ...res,
+            [packageName]: {
+              changes: packageInfo.hasChanges,
+              directory: packageInfo.directory,
+              name: packageName,
+              needsPlaywright,
+              bundleName: baseName,
+            }
+          };
+        case 'tab':
+          return {
+            ...res,
+            [packageName]: {
+              changes: packageInfo.hasChanges,
+              directory: packageInfo.directory,
+              name: packageName,
+              needsPlaywright,
+              tabName: baseName,
+            }
+          };
+      }
+    }
+
+    return {
+      ...res,
+      [packageName]: {
+        changes: packageInfo.hasChanges,
+        directory: packageInfo.directory,
+        name: packageName,
+        needsPlaywright
+      }
+    };
+  }, {});
+}
+
+/**
+ * Retrieve all packages from within the git repository, sorted into the different types
+ */
+export async function getAllPackages(gitRoot: string) {
   const [
     bundles,
     tabs,
     libs,
     rootPackages
   ] = await Promise.all([
-    getAllPackages(pathlib.join(gitRoot, 'src', 'bundles')),
-    getAllPackages(pathlib.join(gitRoot, 'src', 'tabs')),
-    getAllPackages(pathlib.join(gitRoot, 'lib')),
-    getAllPackages(pathlib.join(gitRoot), 1)
+    getRawPackages(pathlib.join(gitRoot, 'src', 'bundles')),
+    getRawPackages(pathlib.join(gitRoot, 'src', 'tabs')),
+    getRawPackages(pathlib.join(gitRoot, 'lib')),
+    getRawPackages(pathlib.join(gitRoot), 1)
   ]);
 
   const packages = {
@@ -227,11 +183,25 @@ async function main() {
     ...tabs,
     ...libs
   };
-
   // Remove the root packages from the bundles and tabs collection
   // of packages cause they're not supposed be used like that
   delete bundles['@sourceacademy/bundles'];
   delete tabs['@sourceacademy/tabs'];
+
+  const sort = topoSortPackages(packages);
+  const processed = processRawPackages(sort, packages);
+
+  return {
+    bundles: mergeObjects(bundles, processed),
+    tabs: mergeObjects(tabs, processed),
+    libs: mergeObjects(libs, processed),
+    packages: processed
+  };
+}
+
+async function main() {
+  const gitRoot = await getGitRoot();
+  const { packages, bundles, tabs, libs } = await getAllPackages(gitRoot);
 
   const summaryItems = Object.values(packages).map(packageInfo => {
     const relpath = pathlib.relative(gitRoot, packageInfo.directory);
@@ -251,14 +221,15 @@ async function main() {
   core.setOutput('bundles', Object.values(bundles));
   core.setOutput('tabs', Object.values(tabs));
   core.setOutput('libs', Object.values(libs));
-  core.setOutput('devserver', rootPackages['@sourceacademy/modules-devserver']);
-  core.setOutput('docserver', rootPackages['@sourceacademy/modules-docserver']);
+  core.setOutput('devserver', packages['@sourceacademy/modules-devserver']);
+  core.setOutput('docserver', packages['@sourceacademy/modules-docserver']);
 
   const workflows = await checkForChanges(pathlib.join(gitRoot, '.github/workflows'));
   core.setOutput('workflows', workflows);
 }
 
 if (process.env.GITHUB_ACTIONS) {
+  // Only automatically execute when running in github actions
   try {
     await main();
   } catch (error: any) {
