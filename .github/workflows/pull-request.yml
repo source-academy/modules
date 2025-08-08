@@ -39,12 +39,6 @@ jobs:
         id: info
         uses: ./.github/actions/src/info
 
-      - name: Echo Information about docserver
-        run: echo ${{ steps.info.outputs.docserver }}
-
-      - name: Echo Information about devserver
-        run: echo ${{ steps.info.outputs.devserver }}
-
     outputs:
       bundles: ${{ steps.info.outputs.bundles }}
       libs: ${{ steps.info.outputs.libs }}
@@ -227,7 +221,7 @@ jobs:
     needs:
       - libraries
       - find-packages
-    if: ${{ needs.find-packages.outputs.docserver.changes }}
+    if: ${{ needs.find-packages.outputs.docserver.changes == 'true' }}
 
     steps:
       - name: Check out source code
