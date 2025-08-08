@@ -199,6 +199,24 @@ export async function getAllPackages(gitRoot: string) {
   };
 }
 
+/**
+ * Use the Github actions core.setOutput function, but this is just here
+ * for type safety
+ */
+function setOutputs(
+  bundles: PackageRecord[],
+  tabs: PackageRecord[],
+  libs: PackageRecord[],
+  devserver: PackageRecord,
+  docserver: PackageRecord
+) {
+  core.setOutput('bundles', bundles);
+  core.setOutput('tabs', tabs);
+  core.setOutput('libs', libs);
+  core.setOutput('devserver', devserver);
+  core.setOutput('docserver', docserver);
+}
+
 async function main() {
   const gitRoot = await getGitRoot();
   const { packages, bundles, tabs, libs } = await getAllPackages(gitRoot);
@@ -218,11 +236,13 @@ async function main() {
   core.summary.addList(summaryItems);
   await core.summary.write();
 
-  core.setOutput('bundles', Object.values(bundles));
-  core.setOutput('tabs', Object.values(tabs));
-  core.setOutput('libs', Object.values(libs));
-  core.setOutput('devserver', packages['@sourceacademy/modules-devserver']);
-  core.setOutput('docserver', packages['@sourceacademy/modules-docserver']);
+  setOutputs(
+    Object.values(bundles),
+    Object.values(tabs),
+    Object.values(libs),
+    packages['@sourceacademy/modules-devserver'],
+    packages['@sourceacademy/modules-docserver']
+  );
 
   const workflows = await checkForChanges(pathlib.join(gitRoot, '.github/workflows'));
   core.setOutput('workflows', workflows);
