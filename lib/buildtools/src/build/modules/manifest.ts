@@ -12,7 +12,12 @@ export async function buildManifest(bundles: Record<string, ResolvedBundle>, out
     [name]: manifest
   }), {});
 
-  await fs.mkdir(outDir);
+  // TODO: Just use fs-extra which has .ensureDir (graceful-fs under the hood)
+  try {
+    await fs.mkdir(outDir, { recursive: true });
+  } catch (err: any) {
+    if (err.code !== 'EEXIST') throw err;
+  }
 
   const outpath = pathlib.join(outDir, 'modules.json');
   await fs.writeFile(outpath, JSON.stringify(finalManifest, null, 2));
