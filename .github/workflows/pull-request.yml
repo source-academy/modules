@@ -55,12 +55,13 @@ jobs:
 
   libraries:
     name: Libraries
-    runs-on: ubuntu-latest
     needs: find-packages
     strategy:
       fail-fast: false
       matrix:
         lib: ${{ fromJson(needs.find-packages.outputs.libs) }}
+        os: ['ubuntu-latest', 'windows-latest']
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
         working-directory: ${{ matrix.lib.directory }}
