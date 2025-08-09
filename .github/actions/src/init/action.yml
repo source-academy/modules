@@ -37,12 +37,7 @@ runs:
       if: ${{ inputs.shell == 'pwsh' }}
       shell: pwsh
       run: |
-        corepack -v
-        C:\npm\prefix\yarn.cmd --version
-        C:\npm\prefix\yarn.ps1 --version
-        NewItem -ItemType File -Force -Path $PROFILE
-        echo "$env:PATH += \";LOCALAPPDATA\Corepack\"" >> $PROFILE
-        Get-Command yarn | Select-Object -ExpandProperty Definition
+        corepack install yarn@4.8.1
 
     - name: Use Node.js 💻
       uses: actions/setup-node@v4
