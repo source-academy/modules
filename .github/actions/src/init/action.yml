@@ -38,6 +38,7 @@ runs:
       shell: pwsh
       run: |
         corepack -v
+        Get-Command yarn | Select-Object -ExpandProperty Definition
 
     - name: Use Node.js 💻
       uses: actions/setup-node@v4
