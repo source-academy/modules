@@ -14,7 +14,7 @@ const filesToInclude = files.filter(each => {
   return each.name !== 'index.md';
 }).map(each => {
   // Paths are resolved relative to the src directory
-  return pathlib.posix.join('/lib/dev', each.name);
+  return pathlib.join('/lib/dev', each.name);
 });
 
 export default createContentLoader(filesToInclude, {

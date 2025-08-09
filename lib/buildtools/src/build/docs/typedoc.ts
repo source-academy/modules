@@ -17,12 +17,14 @@ const typedocPackageOptions: td.Configuration.TypeDocOptions = {
  * Initialize Typedoc to build the JSON documentation for each bundle
  */
 export function initTypedocForJson(bundle: ResolvedBundle, logLevel: td.LogLevel) {
+  // TypeDoc expects POSIX paths
+  const directoryAsPosix = bundle.directory.replace(/\\/g, '/');
   return td.Application.bootstrapWithPlugins({
     ...typedocPackageOptions,
     name: bundle.name,
     logLevel,
-    entryPoints: [pathlib.join(bundle.directory, 'src', 'index.ts')],
-    tsconfig: pathlib.join(bundle.directory, 'tsconfig.json')
+    entryPoints: [`${directoryAsPosix}/src/index.ts`],
+    tsconfig: `${directoryAsPosix}/tsconfig.json`,
   });
 }
 
