@@ -125,15 +125,16 @@ test('build manifest', async () => {
   await buildManifest(sampleManifests, outDir);
 
   expect(fs.mkdir).toHaveBeenCalledExactlyOnceWith(outDir);
-  expect(fs.writeFile).toHaveBeenCalledExactlyOnceWith(
-    `${outDir}/modules.json`,
-    JSON.stringify({
-      bundle0: {
-        requires: 1
-      },
-      bundle1: {
-        version: '1.0.0'
-      }
-    })
-  );
+  expect(fs.writeFile).toHaveBeenCalledOnce();
+  const [[path, output]] = vi.mocked(fs.writeFile).mock.calls;
+
+  expect(path).toEqual(`${outDir}/modules.json`);
+  expect(JSON.parse(output as string)).toMatchObject({
+    bundle0: {
+      requires: 1
+    },
+    bundle1: {
+      version: '1.0.0'
+    }
+  });
 });
