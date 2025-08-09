@@ -77,6 +77,7 @@ jobs:
         with:
           package-name: ${{ matrix.lib.name }}
           playwright: ${{ matrix.lib.changes && matrix.lib.needsPlaywright }}
+          shell: ${{ matrix.os == 'Windows' && 'pwsh' || 'bash' }}
 
       - name: Run Tests
         if: matrix.lib.changes

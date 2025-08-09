@@ -21,12 +21,19 @@ inputs:
     default: false
     description: Should run the Playwright installation command
 
+  shell:
+    required: true
+    description: What shell to use
+
+defaults:
+  runs:
+    shell: ${{ inputs.shell }}
+
 runs:
   using: composite
   steps:
     - name: Enable Corepack
       run: corepack enable
-      shell: bash
 
     - name: Use Node.js 💻
       uses: actions/setup-node@v4
@@ -37,14 +44,11 @@ runs:
     - name: Install Dependencies (Focused)
       if: inputs.package-name != '' && inputs.install-deps == 'true'
       run: yarn workspaces focus ${{ inputs.package-name }}
-      shell: bash
 
     - name: Install Dependencies (General)
       if: inputs.package-name == '' && inputs.install-deps == 'true'
       run: yarn install --immutable
-      shell: bash
 
     - name: Install Playwright
       if: inputs.playwright == 'true' && inputs.install-deps == 'true'
       run: yarn workspaces foreach -A --include ${{ inputs.package-name }} run playwright install --with-deps
-      shell: bash
