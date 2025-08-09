@@ -108,7 +108,7 @@ export async function isBundleOrTabDirectory(directory: string) {
 
   async function recurser(directory: string): Promise<['bundle' | 'tab', string] | null> {
     try {
-      const packageJson = JSON.parse(await fs.readFile(`${directory}/package.json`, 'utf-8'));
+      const packageJson = JSON.parse(await fs.readFile(pathlib.join(directory, 'package.json'), 'utf-8'));
       const match = RE.exec(packageJson.name);
 
       if (match) {
