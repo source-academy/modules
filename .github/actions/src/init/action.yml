@@ -34,19 +34,16 @@ runs:
       run: corepack enable
       shell: bash
 
-    - name: Enable Corepack (Powershell)
+    - name: Do Windows Things (Powershell)
       if: ${{ inputs.shell == 'pwsh' }}
-      run: corepack enable --install-directory ~/corepack
-      shell: ${{ inputs.shell }}
-
-    - name: Setup Aliases (Windows)
-      if: ${{ inputs.shell == 'pwsh' }}
-      shell: pwsh
       run: |
+        New-Item -ItemType Directory -Force -Path ~/corepack
+        corepack enable --install-directory ~/corepack
         dir ~/corepack
         corepack prepare yarn@4.8.1 --activate
         Get-Command yarn | Select-Object -ExpandProperty Definition
         C:\npm\prefix\yarn.ps1 --version
+      shell: ${{ inputs.shell }}
 
     - name: Use Node.js 💻
       uses: actions/setup-node@v4
