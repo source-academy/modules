@@ -34,12 +34,12 @@ runs:
       run: corepack enable
       shell: bash
 
-    - name: Do Windows Things (Powershell)
+    - name: Enable Corepack (Powershell)
       if: ${{ inputs.shell == 'pwsh' }}
       run: |
         npm uninstall -g yarn
         corepack enable
-      shell: ${{ inputs.shell }}
+      shell: pwsh
 
     - name: Use Node.js 💻
       uses: actions/setup-node@v4

@@ -13,6 +13,12 @@ interface BasePackageRecord {
    * Directory within which the `package.json` file was found
    */
   directory: string
+
+  /**
+   * A windows version of the directory
+   */
+  windowsDirectory: string
+
   /**
    * Full scoped package name
    */

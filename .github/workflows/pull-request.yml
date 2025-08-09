@@ -63,7 +63,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-        working-directory: ${{ matrix.lib.directory }}
+        working-directory: ${{ matrix.os == 'windows-latest' && matrix.lib.windowsDirectory || matrix.lib.directory }}
         shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
 
     name: ${{ matrix.lib.name }} library (${{ matrix.os }})

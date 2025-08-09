@@ -113,6 +113,8 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
       packageInfo.package.devDependencies !== undefined &&
       'playwright' in packageInfo.package.devDependencies;
 
+    const windowsDirectory = packageInfo.directory.split(pathlib.sep).join(pathlib.win32.sep);
+
     if (
       packageName !== '@sourceacademy/modules' &&
       packageName !== '@sourceacademy/bundles' &&
@@ -130,6 +132,7 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
             [packageName]: {
               changes: packageInfo.hasChanges,
               directory: packageInfo.directory,
+              windowsDirectory,
               name: packageName,
               needsPlaywright,
               bundleName: baseName,
@@ -141,6 +144,7 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
             [packageName]: {
               changes: packageInfo.hasChanges,
               directory: packageInfo.directory,
+              windowsDirectory,
               name: packageName,
               needsPlaywright,
               tabName: baseName,
@@ -154,6 +158,7 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
       [packageName]: {
         changes: packageInfo.hasChanges,
         directory: packageInfo.directory,
+        windowsDirectory,
         name: packageName,
         needsPlaywright
       }
