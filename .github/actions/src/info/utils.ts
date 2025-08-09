@@ -15,11 +15,6 @@ interface BasePackageRecord {
   directory: string
 
   /**
-   * A windows version of the directory
-   */
-  windowsDirectory: string
-
-  /**
    * Full scoped package name
    */
   name: string

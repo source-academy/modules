@@ -63,7 +63,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-        # working-directory: ${{ matrix.os == 'windows-latest' && matrix.lib.windowsDirectory || matrix.lib.directory }}
         shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
 
     name: ${{ matrix.lib.name }} library (${{ matrix.os }})
@@ -80,23 +79,14 @@ jobs:
           package-name: ${{ matrix.lib.name }}
           playwright: ${{ matrix.lib.changes && matrix.lib.needsPlaywright }}
           shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
-      - name: Echo cwd
-        run: |
-          pwd
-          echo ${{ matrix.lib.windowsDirectory }}
-          echo ${{ matrix.lib.directory }}
-
-      - name: Echo cwd
-        working-directory: ${{ matrix.os == 'windows-latest' && matrix.lib.windowsDirectory || matrix.lib.directory }}
-        run: pwd
 
       - name: Run Tests
         if: matrix.lib.changes
-        run: yarn test --coverage
+        run: yarn workspaces foreach -A --include ${{ matrix.lib.name }} run test --coverage
 
       - name: Run Auxillary Tasks
         if: matrix.lib.changes
-        run: yarn tsc
+        run: yarn workspaces foreach -A --include ${{ matrix.lib.name }} run tsc
 
   # tabs:
   #   runs-on: ubuntu-latest
