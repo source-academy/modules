@@ -63,7 +63,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-        working-directory: ${{ matrix.os == 'windows-latest' && matrix.lib.windowsDirectory || matrix.lib.directory }}
+        # working-directory: ${{ matrix.os == 'windows-latest' && matrix.lib.windowsDirectory || matrix.lib.directory }}
         shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
 
     name: ${{ matrix.lib.name }} library (${{ matrix.os }})
@@ -81,7 +81,9 @@ jobs:
           playwright: ${{ matrix.lib.changes && matrix.lib.needsPlaywright }}
           shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
       - name: Echo cwd
-        run: echo ${{ matrix.os == 'windows-latest' && matrix.lib.windowsDirectory || matrix.lib.directory }}
+        run: |
+          echo ${{ matrix.lib.windowsDirectory}}
+          echo ${{ matrix.lib.directory }}
 
       - name: Echo cwd
         working-directory: ${{ matrix.os == 'windows-latest' && matrix.lib.windowsDirectory || matrix.lib.directory }}
