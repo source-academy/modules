@@ -1,7 +1,10 @@
 import fs from 'fs/promises';
+import { outDir } from '@sourceacademy/modules-repotools/getGitRoot';
+import type { ResolvedBundle } from '@sourceacademy/modules-repotools/types';
 import { beforeEach, expect, test, vi } from 'vitest';
 import { testMocksDir } from '../../../__tests__/fixtures.js';
 import { buildBundle, buildTab } from '../index.js';
+import { buildManifest } from '../manifest.js';
 
 const written: string[] = [];
 vi.spyOn(fs, 'open').mockResolvedValue({
@@ -97,4 +100,40 @@ test('build tab', async () => {
   const { default: tab } = eval(trimmed)(mockRequire);
   expect(tab.body(0)).toEqual(0);
   expect(tab.toSpawn()).toEqual(true);
+});
+
+test('build manifest', async () => {
+  const sampleManifests: Record<string, ResolvedBundle> = {
+    bundle0: {
+      type: 'bundle',
+      name: 'bundle0',
+      directory: './bundle0',
+      manifest: {
+        requires: 1
+      }
+    },
+    bundle1: {
+      type: 'bundle',
+      name: 'bundle1',
+      directory: './bundle1',
+      manifest: {
+        version: '1.0.0'
+      }
+    }
+  };
+
+  await buildManifest(sampleManifests, outDir);
+
+  expect(fs.mkdir).toHaveBeenCalledExactlyOnceWith(outDir);
+  expect(fs.writeFile).toHaveBeenCalledExactlyOnceWith(
+    `${outDir}/modules.json`,
+    JSON.stringify({
+      bundle0: {
+        requires: 1
+      },
+      bundle1: {
+        version: '1.0.0'
+      }
+    })
+  );
 });

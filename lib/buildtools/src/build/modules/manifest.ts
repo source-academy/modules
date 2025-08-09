@@ -11,6 +11,8 @@ export async function buildManifest(bundles: Record<string, ResolvedBundle>, out
     [name]: manifest
   }), {});
 
+  await fs.mkdir(outDir);
+
   const outpath = `${outDir}/modules.json`;
   await fs.writeFile(outpath, JSON.stringify(finalManifest, null, 2));
 

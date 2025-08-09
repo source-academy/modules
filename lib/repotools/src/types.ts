@@ -7,7 +7,8 @@ export const severity = {
 export type Severity = (typeof severity)[keyof typeof severity];
 
 export interface BundleManifest {
-  version?: string;
+  requires?: number;
+  version?: string
   tabs?: string[];
 }
 
