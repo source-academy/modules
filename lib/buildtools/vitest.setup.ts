@@ -125,5 +125,12 @@ expect.extend({
         message: () => `Function threw an unexpected error: ${error}`
       };
     }
+  },
+  toMatchPath(received: string, expected: string) {
+    const output = pathlib.relative(received, expected);
+    return {
+      pass: output === '',
+      message: () => `${received} ${output === '' ? 'did not resolve' : 'resolved'} to ${expected}`,
+    };
   }
 });

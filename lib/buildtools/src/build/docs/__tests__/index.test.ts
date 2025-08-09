@@ -39,13 +39,13 @@ describe('Test buildSingleBundleDocs', () => {
   });
 
   test('Project conversion success', async () => {
-    const mockGenerateJson = vi.fn(() => Promise.resolve());
+    const mockGenerateJson = vi.fn((() => Promise.resolve()) as td.Application['generateJson']);
     const project = new td.DeclarationReflection('test0', td.ReflectionKind.Module);
     project.children = [];
 
     mockedJsonInit.mockResolvedValueOnce({
       convert: () => Promise.resolve(project),
-      generateJson: mockGenerateJson,
+      generateJson: mockGenerateJson ,
       logger: {
         hasErrors: () => false
       }
@@ -53,8 +53,11 @@ describe('Test buildSingleBundleDocs', () => {
 
     const result = await buildSingleBundleDocs(mockBundle, outDir, td.LogLevel.None);
     expectSuccess(result.severity);
+    expect(mockGenerateJson).toHaveBeenCalledOnce();
+    const [[projectArg, calledPath]] = mockGenerateJson.mock.calls;
 
-    expect(mockGenerateJson).toHaveBeenCalledExactlyOnceWith(project, pathlib.join(bundlesDir, 'test0', 'dist', 'docs.json'));
+    expect(calledPath).toMatchPath(pathlib.join(bundlesDir, 'test0', 'dist', 'docs.json'));
+    expect(projectArg).toMatchObject(project);
     expect(fs.mkdir).toHaveBeenCalledExactlyOnceWith(pathlib.join(outDir,'jsons'), { recursive: true });
     expect(json.buildJson).toHaveBeenCalledTimes(1);
   });

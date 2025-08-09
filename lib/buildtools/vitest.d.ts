@@ -17,5 +17,11 @@ declare module 'vitest' {
      * function is called
      */
     processExit: (code?: number) => T
+
+    /**
+     * Checks if the given path resolves to the same location as the expected
+     * path
+     */
+    toMatchPath: (p: string) => T
   }
 }

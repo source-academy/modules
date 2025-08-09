@@ -80,12 +80,13 @@ jobs:
           playwright: ${{ matrix.lib.changes && matrix.lib.needsPlaywright }}
           shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
 
+      # Only thing we really need to do on Windows is run tests
       - name: Run Tests
         if: matrix.lib.changes
         run: yarn workspaces foreach -A --include ${{ matrix.lib.name }} run test --coverage
 
       - name: Run Auxillary Tasks
-        if: matrix.lib.changes
+        if: matrix.lib.changes && matrix.os == 'ubuntu-latest'
         run: yarn workspaces foreach -A --include ${{ matrix.lib.name }} run tsc
 
   # tabs:

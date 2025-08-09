@@ -1,15 +1,11 @@
 import fs from 'fs/promises';
+import pathlib from 'path';
+import { bundlesDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import * as manifest from '@sourceacademy/modules-repotools/manifest';
 import { beforeEach, describe, expect, it, test, vi } from 'vitest';
 import { askQuestion } from '../../templates/print.js';
 import getTemplateCommand from '../template.js';
 import { getCommandRunner } from './testingUtils.js';
-
-vi.mock(import('@sourceacademy/modules-repotools/getGitRoot'), async importOriginal => ({
-  ...await importOriginal(),
-  bundlesDir: '/src/bundles',
-  tabsDir: '/src/tabs',
-}));
 
 vi.mock(import('../../templates/print.js'), async importActual => {
   const actualTemplates = await importActual();
@@ -88,14 +84,15 @@ describe('Test adding new module', () => {
 
     expectCall(
       fs.mkdir,
-      ['/src/bundles', { recursive: true }]
+      [bundlesDir, { recursive: true }]
     );
 
+    const bundleDest = pathlib.join(bundlesDir, 'new_module');
     expectCall(
       fs.cp,
       [
         expect.any(String),
-        '/src/bundles/new_module',
+        bundleDest,
         { recursive: true }
       ]
     );
@@ -108,17 +105,17 @@ describe('Test adding new module', () => {
       [tsconfigPath, rawTsconfig]
     ] = vi.mocked(fs.writeFile).mock.calls;
 
-    expect(packagePath).toEqual('/src/bundles/new_module/package.json');
+    expect(packagePath).toMatchPath(pathlib.join(bundleDest, 'package.json'));
     const packageJson = JSON.parse(rawPackage as string);
     expect(packageJson.name).toEqual('@sourceacademy/bundle-new_module');
 
-    expect(manifestPath).toEqual('/src/bundles/new_module/manifest.json');
+    expect(manifestPath).toMatchPath(pathlib.join(bundleDest, 'manifest.json'));
     const manifest = JSON.parse(rawManifest as string);
     expect(manifest).toMatchObject({
       tabs: []
     });
 
-    expect(tsconfigPath).toEqual('/src/bundles/new_module/tsconfig.json');
+    expect(tsconfigPath).toMatchPath(pathlib.join(bundleDest, 'tsconfig.json'));
     expect(rawTsconfig).toMatchInlineSnapshot(`
       "// new_module tsconfig
       {
@@ -165,11 +162,12 @@ describe('Test adding new tab', () => {
 
     expectCall(
       fs.mkdir,
-      ['/src/tabs', { recursive: true }]
+      [tabsDir, { recursive: true }]
     );
 
+    const tabsDest = pathlib.join(tabsDir, 'TabNew');
     // Expect the entire template directory to be copied over
-    expectCall(fs.cp, [expect.any(String), '/src/tabs/TabNew', { recursive: true }]);
+    expectCall(fs.cp, [expect.any(String), tabsDest, { recursive: true }]);
 
     const [
       [packagePath, packageJsonRaw],
@@ -177,14 +175,13 @@ describe('Test adding new tab', () => {
     ] = vi.mocked(fs.writeFile).mock.calls;
 
     // Expect that a package json was created
-    expect(packagePath)
-      .toEqual('/src/tabs/TabNew/package.json');
+    expect(packagePath).toMatchPath(pathlib.join(tabsDest, 'package.json'));
 
     const packageJson = JSON.parse(packageJsonRaw as string);
     expect(packageJson.name).toEqual('@sourceacademy/tab-TabNew');
 
     // Check that the corresponding bundle manifest was updated
-    expect(bundleManifestPath).toEqual('/src/bundles/test0/manifest.json');
+    expect(bundleManifestPath).toMatchPath(pathlib.join(bundlesDir, 'test0', 'manifest.json'));
     const manifest = JSON.parse(manifestRaw as string);
     expect(manifest.tabs).toContain('TabNew');
   });
