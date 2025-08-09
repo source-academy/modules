@@ -29,6 +29,8 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-repotools": "workspace:^",
     "@stylistic/eslint-plugin": "^4.4.1",
+    "@typescript-eslint/rule-tester": "^8.39.0",
+    "@typescript-eslint/utils": "^8.39.0",
     "@vitest/eslint-plugin": "^1.3.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsdoc": "^51.3.1",

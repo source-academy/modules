@@ -286,6 +286,6 @@ export function useAnimation({
         requestFrame();
       }
     },
-    errored: errored,
+    errored,
   };
 }

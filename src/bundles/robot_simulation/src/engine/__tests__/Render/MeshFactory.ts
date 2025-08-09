@@ -56,8 +56,8 @@ vi.mock('three', async importOriginal => {
       this.position = new Vector3();
       this.quaternion = new Quaternion();
     }),
-    Vector3: Vector3,
-    Quaternion: Quaternion,
+    Vector3,
+    Quaternion,
     Color: vi.fn().mockImplementation(function (color) {
       return { color };
     }),

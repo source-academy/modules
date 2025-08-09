@@ -1,5 +1,5 @@
 ---
-title: Configurations
+title: Config Reference
 ---
 <script setup>
   import { data } from './configs.data.ts';

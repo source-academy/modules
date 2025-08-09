@@ -1,8 +1,10 @@
 import type { ESLint, Rule } from 'eslint';
 declare const plugin: {
   rules: {
-    'tab-type': Rule.RuleModule
+    'default-import-name': Rule.RuleModule
+    'no-barrel-imports': Rule.RuleModule
     'region-comment': Rule.RuleModule
+    'tab-type': Rule.RuleModule
   },
   configs: {
     'js/recommended': ESLint.ConfigData

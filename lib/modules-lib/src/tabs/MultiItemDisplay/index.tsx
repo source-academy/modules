@@ -1,6 +1,6 @@
 import { Button, EditableText } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { clamp } from 'lodash';
+import clamp from 'lodash/clamp';
 import { useState } from 'react';
 
 export type MultiItemDisplayProps = {

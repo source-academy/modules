@@ -39,6 +39,12 @@ jobs:
         id: info
         uses: ./.github/actions/src/info
 
+      - name: Echo Information about docserver
+        run: echo ${{ steps.info.outputs.docserver }}
+
+      - name: Echo Information about devserver
+        run: echo ${{ steps.info.outputs.devserver }}
+
     outputs:
       bundles: ${{ steps.info.outputs.bundles }}
       libs: ${{ steps.info.outputs.libs }}
@@ -221,7 +227,7 @@ jobs:
     needs:
       - libraries
       - find-packages
-    if: ${{ needs.find-packages.outputs.docserver.changes == 'true' }}
+    if: ${{ needs.find-packages.outputs.docserver.changes }}
 
     steps:
       - name: Check out source code
@@ -255,3 +261,12 @@ jobs:
 
       - name: Lint Everything
         run: yarn lint:all
+
+      - name: Build Manifest
+        run: yarn buildtools manifest
+
+      - name: Upload Manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: manifest
+          path: ./build/modules.json

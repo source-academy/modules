@@ -160,6 +160,7 @@ export default tseslint.config(
       'no-empty': ['error', { allowEmptyCatch: true }],
 
       '@sourceacademy/default-import-name': ['warn', { path: 'pathlib' }],
+      '@sourceacademy/no-barrel-imports': ['error', ['lodash']],
       '@sourceacademy/region-comment': 'error',
 
       '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],

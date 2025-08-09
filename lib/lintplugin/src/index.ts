@@ -1,15 +1,18 @@
 import type { ESLint } from 'eslint';
 import * as configs from './configs';
 import defaultImportName from './rules/defaultImportName';
+import noBarrelImports from './rules/noBarrelImports';
 import regionComment from './rules/regionComment';
 import tabType from './rules/tabType';
 
 const plugin: ESLint.Plugin = {
   name: 'Source Academy Lint Plugin',
   rules: {
-    'tab-type': tabType,
+    'default-import-name': defaultImportName,
+    // @ts-expect-error Typescript-Eslint rules are just built different
+    'no-barrel-imports': noBarrelImports,
     'region-comment': regionComment,
-    'default-import-name': defaultImportName
+    'tab-type': tabType,
   },
   configs: {
     'js/recommended': configs.jsConfig,

@@ -18,10 +18,11 @@
     }
   ],
   "eslint.validate": [
+    "github-actions-workflow",
     "javascript",
     "javascriptreact",
     "json",
-    "mdx",
+    "markdown",
     "typescript",
     "typescriptreact",
     "yml",
