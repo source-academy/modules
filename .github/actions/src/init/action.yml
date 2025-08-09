@@ -37,10 +37,8 @@ runs:
     - name: Do Windows Things (Powershell)
       if: ${{ inputs.shell == 'pwsh' }}
       run: |
-        New-Item -ItemType Directory -Force -Path ~/corepack
-        corepack enable --install-directory ~/corepack
-        dir ~/corepack
-        corepack prepare yarn@4.8.1 --activate
+        npm uninstall -g yarn
+        corepack enable
         Get-Command yarn | Select-Object -ExpandProperty Definition
         C:\npm\prefix\yarn.ps1 --version
       shell: ${{ inputs.shell }}
