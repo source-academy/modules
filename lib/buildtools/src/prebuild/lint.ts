@@ -49,13 +49,14 @@ export async function runEslint(input: InputAsset, fix: boolean, stats: boolean)
     }
 
     if (stats) {
-      await fs.mkdir(`${outDir}/lintstats`, { recursive: true });
+      const lintstatsDir = pathlib.join(outDir, 'lintstats');
+      await fs.mkdir(lintstatsDir, { recursive: true });
 
       const statsFormatter = await linter.loadFormatter('json');
       const statsFormatted = await statsFormatter.format(linterResults);
       const stringified = JSON.stringify(JSON.parse(statsFormatted), null, 2);
 
-      await fs.writeFile(`${outDir}/lintstats/${input.type}-${input.name}.json`, stringified);
+      await fs.writeFile(pathlib.join(lintstatsDir, `${input.type}-${input.name}.json`), stringified);
     }
 
     const outputFormatter = await linter.loadFormatter('stylish');

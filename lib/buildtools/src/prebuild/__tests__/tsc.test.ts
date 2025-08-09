@@ -1,3 +1,4 @@
+import pathlib from 'path';
 import ts from 'typescript';
 import { describe, expect, test, vi } from 'vitest';
 import { testMocksDir } from '../../__tests__/fixtures.js';
@@ -39,7 +40,7 @@ describe('Test the augmented tsc functionality', () => {
   test('tsc on a bundle', async () => {
     await runTsc({
       type: 'bundle',
-      directory: `${testMocksDir}/bundles/test0`,
+      directory: pathlib.join(testMocksDir, 'bundles', 'test0'),
       name: 'test0',
       manifest: {}
     }, false);
@@ -48,13 +49,13 @@ describe('Test the augmented tsc functionality', () => {
     expect(mockedWriteFile).toHaveBeenCalledTimes(1);
     const [[writePath]] = mockedWriteFile.mock.calls;
 
-    expect(writePath).not.toEqual(`${testMocksDir}/bundles/test0/__tests__/test0.test.js`,);
+    expect(writePath).not.toEqual(pathlib.join(testMocksDir, 'bundles', 'test0', '__tests__', 'test0.test.js'));
   });
 
   test('tsc on a bundle with --noEmit', async () => {
     await runTsc({
       type: 'bundle',
-      directory: `${testMocksDir}/bundles/test0`,
+      directory: pathlib.join(testMocksDir, 'bundles', 'test0'),
       name: 'test0',
       manifest: {}
     }, true);
@@ -74,7 +75,7 @@ describe('Test the augmented tsc functionality', () => {
 
     await runTsc({
       type: 'bundle',
-      directory: `${testMocksDir}/bundles/test0`,
+      directory: pathlib.join(testMocksDir, 'bundles', 'test0'),
       name: 'test0',
       manifest: {}
     }, false);
@@ -86,8 +87,8 @@ describe('Test the augmented tsc functionality', () => {
   test('tsc on a tab', async () => {
     await runTsc({
       type: 'tab',
-      directory: `${testMocksDir}/tabs/tab0`,
-      entryPoint: `${testMocksDir}/tabs/tab0/src/index.tsx`,
+      directory: pathlib.join(testMocksDir, 'tabs', 'tab0'),
+      entryPoint: pathlib.join(testMocksDir, 'tabs', 'tab0', 'src', 'index.tsx'),
       name: 'tab0'
     }, false);
 

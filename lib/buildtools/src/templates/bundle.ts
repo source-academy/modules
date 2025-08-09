@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import pathlib from 'path';
 import type { Interface } from 'readline/promises';
 import { getBundleManifests } from '@sourceacademy/modules-repotools/manifest';
 import type { BundleManifest, ModulesManifest } from '@sourceacademy/modules-repotools/types';
@@ -29,10 +30,10 @@ export async function addNew(bundlesDir: string, rl: Interface) {
   }
 
   const moduleName = await askModuleName(manifest.manifests, rl);
-  const bundleDestination = `${bundlesDir}/${moduleName}`;
+  const bundleDestination = pathlib.join(bundlesDir, moduleName);
 
   await fs.mkdir(bundlesDir, { recursive: true });
-  await fs.cp(`${import.meta.dirname}/templates/bundle`, bundleDestination, { recursive: true });
+  await fs.cp(pathlib.join(import.meta.dirname, 'templates', 'bundle'), bundleDestination, { recursive: true });
 
   const typescriptVersion = _package.devDependencies.typescript;
 
@@ -65,9 +66,9 @@ export async function addNew(bundlesDir: string, rl: Interface) {
   };
 
   await Promise.all([
-    fs.writeFile(`${bundleDestination}/package.json`, JSON.stringify(packageJson, null, 2) + '\n'),
-    fs.writeFile(`${bundleDestination}/manifest.json`, JSON.stringify(bundleManifest, null, 2) + '\n'),
-    fs.writeFile(`${bundleDestination}/tsconfig.json`, `// ${moduleName} tsconfig\n${JSON.stringify(sampleTsconfig, null, 2)}\n`),
+    fs.writeFile(pathlib.join(bundleDestination, 'package.json'), JSON.stringify(packageJson, null, 2) + '\n'),
+    fs.writeFile(pathlib.join(bundleDestination, 'manifest.json'), JSON.stringify(bundleManifest, null, 2) + '\n'),
+    fs.writeFile(pathlib.join(bundleDestination, 'tsconfig.json'), `// ${moduleName} tsconfig\n${JSON.stringify(sampleTsconfig, null, 2)}\n`),
   ]);
 
   success(`Bundle for module ${moduleName} created at ${bundleDestination}.`);

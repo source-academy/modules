@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import pathlib from 'path';
 import type { BuildResult, InputAsset } from '@sourceacademy/modules-repotools/types';
 import { parse } from 'acorn';
 import { generate } from 'astring';
@@ -95,11 +96,11 @@ export async function outputBundleOrTab({ text }: OutputFile, input: InputAsset,
   }
 
   const { output } = astResult;
-  const outputDirectory = `${outDir}/${input.type}s`;
+  const outputDirectory = pathlib.join(outDir, `${input.type}s`);
   await fs.mkdir(outputDirectory, { recursive: true });
 
   let file: fs.FileHandle | null = null;
-  const outpath = `${outputDirectory}/${input.name}.js`;
+  const outpath = pathlib.join(outputDirectory, `${input.name}.js`);
 
   try {
     file = await fs.open(outpath, 'w');
@@ -129,7 +130,7 @@ export function builderPlugin(input: InputAsset, outDir: string): ESBuildPlugin 
         throw new Error('Plugin must be used with write: false');
       }
 
-      const outpath = `${outDir}/${input.name}.js`;
+      const outpath = pathlib.join(outDir, `${input.name}.js`);
       const file = await fs.open(outpath, 'w');
       const writeStream = file.createWriteStream();
 

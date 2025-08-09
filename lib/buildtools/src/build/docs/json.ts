@@ -1,6 +1,6 @@
 // Code for building JSON documentation specifically
-
 import fs from 'fs/promises';
+import pathlib from 'path';
 import type { BuildResult, ResolvedBundle } from '@sourceacademy/modules-repotools/types';
 import * as td from 'typedoc';
 import drawdown from './drawdown.js';
@@ -163,7 +163,7 @@ export async function buildJson(bundle: ResolvedBundle, outDir: string, reflecti
     };
   }
 
-  const outpath = `${outDir}/jsons/${bundle.name}.json`;
+  const outpath = pathlib.join(outDir, 'jsons', `${bundle.name}.json`);
   await fs.writeFile(outpath, JSON.stringify(jsonData, null, 2));
 
   if (warnings.length > 0) {

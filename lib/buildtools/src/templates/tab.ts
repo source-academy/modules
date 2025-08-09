@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import pathlib from 'path';
 import type { Interface } from 'readline/promises';
 import { getBundleManifests } from '@sourceacademy/modules-repotools/manifest';
 import type { BundleManifest, ModulesManifest } from '@sourceacademy/modules-repotools/types';
@@ -81,11 +82,11 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
     ]
   };
 
-  const tabDestination = `${tabsDir}/${tabName}`;
-  await fs.cp(`${import.meta.dirname}/templates/tabs`, tabDestination, { recursive: true });
+  const tabDestination = pathlib.join(tabsDir, tabName);
+  await fs.cp(pathlib.join(import.meta.dirname, 'templates', 'tabs'), tabDestination, { recursive: true });
   await Promise.all([
-    fs.writeFile(`${tabDestination}/package.json`, JSON.stringify(packageJson, null, 2)),
-    fs.writeFile(`${bundlesDir}/${moduleName}/manifest.json`, JSON.stringify(newManifest, null, 2))
+    fs.writeFile(pathlib.join(tabDestination, 'package.json'), JSON.stringify(packageJson, null, 2)),
+    fs.writeFile(pathlib.join(bundlesDir, moduleName, 'manifest.json'), JSON.stringify(newManifest, null, 2))
   ]);
 
   success(

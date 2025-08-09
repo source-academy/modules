@@ -1,3 +1,4 @@
+import pathlib from 'path';
 import type { ResolvedBundle } from '@sourceacademy/modules-repotools/types';
 import * as td from 'typedoc';
 
@@ -20,8 +21,8 @@ export function initTypedocForJson(bundle: ResolvedBundle, logLevel: td.LogLevel
     ...typedocPackageOptions,
     name: bundle.name,
     logLevel,
-    entryPoints: [`${bundle.directory}/src/index.ts`],
-    tsconfig: `${bundle.directory}/tsconfig.json`,
+    entryPoints: [pathlib.join(bundle.directory, 'src', 'index.ts')],
+    tsconfig: pathlib.join(bundle.directory, 'tsconfig.json')
   });
 }
 
@@ -34,8 +35,8 @@ export function initTypedocForHtml(bundles: Record<string, ResolvedBundle>, logL
     ...typedocPackageOptions,
     name: 'Source Academy Modules',
     logLevel,
-    entryPoints: Object.values(bundles).map(({ directory }) => `${directory}/dist/docs.json`),
+    entryPoints: Object.values(bundles).map(({ directory }) => pathlib.join(directory, 'dist', 'docs.json')),
     entryPointStrategy: 'merge',
-    readme: `${import.meta.dirname}/docsreadme.md`,
+    readme: pathlib.join(import.meta.dirname, 'docsreadme.md'),
   });
 }

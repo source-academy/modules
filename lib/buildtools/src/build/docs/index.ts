@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import pathlib from 'path';
 import type { BuildResult, ResolvedBundle, ResultType } from '@sourceacademy/modules-repotools/types';
 import { mapAsync } from '@sourceacademy/modules-repotools/utils';
 import * as td from 'typedoc';
@@ -22,7 +23,7 @@ export async function buildSingleBundleDocs(bundle: ResolvedBundle, outDir: stri
     };
   }
 
-  await app.generateJson(project, `${bundle.directory}/dist/docs.json`);
+  await app.generateJson(project, pathlib.join(bundle.directory, 'dist', 'docs.json'));
 
   if (app.logger.hasErrors()) {
     return {
@@ -33,7 +34,7 @@ export async function buildSingleBundleDocs(bundle: ResolvedBundle, outDir: stri
     };
   }
 
-  await fs.mkdir(`${outDir}/jsons`, { recursive: true });
+  await fs.mkdir(pathlib.join(outDir, 'jsons'), { recursive: true });
   return buildJson(bundle, outDir, project);
 }
 
@@ -45,7 +46,7 @@ type BuildHtmlResult = ResultType;
 export async function buildHtml(bundles: Record<string, ResolvedBundle>, outDir: string, logLevel: td.LogLevel): Promise<BuildHtmlResult> {
   const jsonStats = await mapAsync(Object.values(bundles), async ({ name, directory }) => {
     try {
-      const stats = await fs.stat(`${directory}/dist/docs.json`);
+      const stats = await fs.stat(pathlib.join(directory, 'dist', 'docs.json'));
       return stats.isFile() ? undefined : name;
     } catch {
       return name;
@@ -71,7 +72,7 @@ export async function buildHtml(bundles: Record<string, ResolvedBundle>, outDir:
     };
   }
 
-  await app.generateDocs(project, `${outDir}/documentation`);
+  await app.generateDocs(project, pathlib.join(outDir, 'documentation'));
   if (app.logger.hasErrors()) {
     return {
       severity: 'error',

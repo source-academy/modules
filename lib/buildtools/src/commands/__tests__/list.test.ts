@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import pathlib from 'path';
 import * as manifest from '@sourceacademy/modules-repotools/manifest';
 import { describe, test, vi } from 'vitest';
 import { testMocksDir } from '../../__tests__/fixtures.js';
@@ -50,7 +51,7 @@ describe('Test list command with bundles', () => {
 
     const parsed = JSON.parse(match![1]);
     expect(parsed).toMatchObject({
-      directory: `${testMocksDir}/bundles/test0`,
+      directory: pathlib.join(testMocksDir, 'bundles', 'test0'),
       manifest: {
         tabs: ['tab0']
       },
@@ -64,7 +65,7 @@ describe('Test list command with bundles', () => {
       "extraProperty": ""
     }`);
 
-    await expect(runCommand(`${testMocksDir}/bundles/test0`)).commandExit();
+    await expect(runCommand(pathlib.join(testMocksDir, 'bundles', 'test0'))).commandExit();
   });
 
   test('Bundle verification failure for a single bundle, but when reading all bundles', async ({ expect }) => {

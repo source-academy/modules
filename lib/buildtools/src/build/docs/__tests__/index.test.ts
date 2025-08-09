@@ -54,8 +54,8 @@ describe('Test buildSingleBundleDocs', () => {
     const result = await buildSingleBundleDocs(mockBundle, outDir, td.LogLevel.None);
     expectSuccess(result.severity);
 
-    expect(mockGenerateJson).toHaveBeenCalledExactlyOnceWith(project, `${bundlesDir}/test0/dist/docs.json`);
-    expect(fs.mkdir).toHaveBeenCalledExactlyOnceWith(`${outDir}/jsons`, { recursive: true });
+    expect(mockGenerateJson).toHaveBeenCalledExactlyOnceWith(project, pathlib.join(bundlesDir, 'test0', 'dist', 'docs.json'));
+    expect(fs.mkdir).toHaveBeenCalledExactlyOnceWith(pathlib.join(outDir,'jsons'), { recursive: true });
     expect(json.buildJson).toHaveBeenCalledTimes(1);
   });
 });
@@ -68,7 +68,7 @@ describe('Test buildHtml', () => {
     test0: mockBundle,
     test1: {
       type: 'bundle',
-      directory: `${bundlesDir}/test1`,
+      directory: pathlib.join(bundlesDir, 'test1'),
       manifest: {},
       name: 'test1'
     }
@@ -94,8 +94,8 @@ describe('Test buildHtml', () => {
 
     const result = await buildHtml(bundles, outDir, td.LogLevel.None);
     expectSuccess(result.severity);
-    expect(result.path).toEqual(`${outDir}/documentation`);
-    expect(generateDocs).toHaveBeenCalledExactlyOnceWith(project, `${outDir}/documentation`);
+    expect(result.path).toEqual(pathlib.join(outDir, 'documentation'));
+    expect(generateDocs).toHaveBeenCalledExactlyOnceWith(project, pathlib.join(outDir, 'documentation'));
   });
 
   test('Generation of HTML when not all bundles have been generated', async () => {

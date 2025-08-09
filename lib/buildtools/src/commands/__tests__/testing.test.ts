@@ -1,3 +1,4 @@
+import pathlib from 'path';
 import { describe, expect, test, vi } from 'vitest';
 import { testMocksDir } from '../../__tests__/fixtures.js';
 import * as runner from '../../testing/runner.js';
@@ -23,15 +24,16 @@ describe('Test regular test command', () => {
     };
 
     mockedTestConfiguration.mockResolvedValueOnce(mockConfig);
-    const projectPath = `${testMocksDir}/dir`;
+    const projectPath = pathlib.join(testMocksDir, 'dir');
+    const filterPath = pathlib.join(projectPath, 'dir1');
 
-    await expect(runCommand('--project', projectPath, `${projectPath}/dir1`)).commandSuccess();
+    await expect(runCommand('--project', projectPath, filterPath)).commandSuccess();
     expect(configs.getTestConfiguration).toHaveBeenCalledExactlyOnceWith(projectPath, false);
-    expect(runner.runVitest).toHaveBeenCalledExactlyOnceWith('test', [`${projectPath}/dir1`], [mockConfig.config], { allowOnly: expect.any(Boolean) });
+    expect(runner.runVitest).toHaveBeenCalledExactlyOnceWith('test', [filterPath], [mockConfig.config], { allowOnly: expect.any(Boolean) });
   });
 
   test('Providing both the project directory but no patterns', async () => {
-    const projectPath = `${testMocksDir}/dir`;
+    const projectPath = pathlib.join(testMocksDir, 'dir');
     const mockConfig: configs.GetTestConfigurationResult = {
       severity: 'success',
       config: {
@@ -49,7 +51,7 @@ describe('Test regular test command', () => {
   });
 
   test('Expect command to exit with no issues if no tests were found', async () => {
-    const projectPath = `${testMocksDir}/dir`;
+    const projectPath = pathlib.join(testMocksDir, 'dir');
     mockedTestConfiguration.mockResolvedValueOnce({
       severity: 'success',
       config: null
@@ -59,7 +61,7 @@ describe('Test regular test command', () => {
   });
 
   test('Command should error if the command was called from beyond the git root', async () => {
-    const projectPath = `${testMocksDir}/..`;
+    const projectPath = pathlib.join(testMocksDir,'..');
     await expect(runCommand('--project', projectPath)).commandExit();
   });
 

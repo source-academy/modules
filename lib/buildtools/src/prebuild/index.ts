@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import pathlib from 'path';
 import type { InputAsset } from '@sourceacademy/modules-repotools/types';
 import { compareSeverity } from '@sourceacademy/modules-repotools/utils';
 import { runEslint, type LintResult } from './lint.js';
@@ -45,7 +46,7 @@ export async function runBuilderWithPrebuild<T extends InputAsset, U extends any
   }
 
   if (outputType !== undefined) {
-    await fs.mkdir(`${outDir}/${outputType}s`, { recursive: true });
+    await fs.mkdir(pathlib.join(outDir, `${outputType}s`), { recursive: true });
   }
 
   const results = await builder(outDir, asset, ...args);

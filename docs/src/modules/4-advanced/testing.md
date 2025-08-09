@@ -43,6 +43,8 @@ test('CurveTab', () => {
 })
 ```
 
+For more instructions on how to write tests you can refer to the [Vitest website](https://vitest.dev/guide/#writing-tests).
+
 ## Running Tests
 To run tests for a given bundle or tab, simply run either of the following commands within the directory:
 ```sh

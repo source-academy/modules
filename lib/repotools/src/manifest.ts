@@ -18,7 +18,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
   let manifestStr: string;
 
   try {
-    manifestStr = await fs.readFile(`${directory}/manifest.json`, 'utf-8');
+    manifestStr = await fs.readFile(pathlib.join(directory, 'manifest.json'), 'utf-8');
   } catch (error) {
     if (isNodeError(error) && error.code === 'ENOENT') {
       return undefined;
@@ -28,7 +28,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
 
   let versionStr: string | undefined;
   try {
-    const rawPackageJson = await fs.readFile(`${directory}/package.json`, 'utf-8')
+    const rawPackageJson = await fs.readFile(pathlib.join(directory, 'package.json'), 'utf-8')
     ;({ version: versionStr } = JSON.parse(rawPackageJson));
   } catch (error) {
     if (isNodeError(error) && error.code === 'ENOENT') {
@@ -56,7 +56,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
   // Make sure that all the tabs specified exist
   if (tabCheck && manifest.tabs) {
     const unknownTabs = await filterAsync(manifest.tabs, async tabName => {
-      const resolvedTab = await resolveSingleTab(`${tabsDir}/${tabName}`);
+      const resolvedTab = await resolveSingleTab(pathlib.join(tabsDir, tabName));
       return resolvedTab === undefined;
     });
 
@@ -168,7 +168,7 @@ export async function resolveSingleBundle(bundleDir: string): Promise<ResolveSin
   if (!manifest || manifest.severity === 'error') return manifest;
 
   try {
-    const entryPoint = `${fullyResolved}/src/index.ts`;
+    const entryPoint = pathlib.join(fullyResolved, 'src', 'index.ts');
     const entryStats = await fs.stat(entryPoint);
 
     if (!entryStats.isFile()) {
@@ -260,31 +260,6 @@ async function resolvePaths(isDir: boolean, ...paths: string[]) {
   return undefined;
 }
 
-// export const {
-//   builder: writeManifest,
-//   formatter: formatManifestResult
-// } = createBuilder<[bundles: Record<string, ResolvedBundle>], ManifestResult>(async (outDir, resolvedBundles) => {
-//   try {
-//     const toWrite = Object.entries(resolvedBundles).reduce((res, [key, { manifest }]) => ({
-//       ...res,
-//       [key]: manifest
-//     }), {});
-//     const outpath = `${outDir}/modules.json`;
-//     await fs.writeFile(outpath, JSON.stringify(toWrite, null, 2));
-//     return {
-//       severity: 'success',
-//       assetType: 'manifest',
-//       message: `Manifest written to ${outpath}`
-//     };
-//   } catch (error) {
-//     return {
-//       severity: 'error',
-//       assetType: 'manifest',
-//       message: `${error}`
-//     };
-//   }
-// });
-
 export async function resolveSingleTab(tabDir: string): Promise<ResolvedTab | undefined> {
   const fullyResolved = pathlib.resolve(tabDir);
 
@@ -299,8 +274,8 @@ export async function resolveSingleTab(tabDir: string): Promise<ResolvedTab | un
 
   const tabPath = await resolvePaths(
     false,
-    `${fullyResolved}/src/index.tsx`,
-    `${fullyResolved}/index.tsx`
+    pathlib.join(fullyResolved,'/src', 'index.tsx'),
+    pathlib.join(fullyResolved, 'index.tsx')
   );
 
   if (tabPath === undefined) return undefined;
@@ -323,7 +298,7 @@ export async function resolveAllTabs(bundlesDir: string, tabsDir: string): Promi
 
   const tabNames = uniq(Object.values(bundlesManifest.bundles).flatMap(({ manifest: { tabs } }) => tabs ?? []));
 
-  const resolvedTabs = await Promise.all(tabNames.map(tabName => resolveSingleTab(`${tabsDir}/${tabName}`)));
+  const resolvedTabs = await Promise.all(tabNames.map(tabName => resolveSingleTab(pathlib.join(tabsDir, tabName))));
 
   const tabsManifest = resolvedTabs.reduce((res, tab) => tab === undefined
     ? res

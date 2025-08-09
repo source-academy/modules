@@ -55,7 +55,7 @@ export async function hasTests(directory: string) {
   try {
     // If the given folder has a vitest config, we assume the folder is
     // supposed to contain tests
-    await fs.access(`${directory}/vitest.config.js`, fs.constants.R_OK);
+    await fs.access(pathlib.join(directory, 'vitest.config.js'), fs.constants.R_OK);
     return true;
   } catch {}
 
@@ -89,7 +89,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
     if (directory === gitRoot) return null;
 
     try {
-      const jsonPath = `${directory}/package.json`;
+      const jsonPath = pathlib.join(directory, 'package.json');
       const packageJson = JSON.parse(await fs.readFile(jsonPath, 'utf-8'));
       const match = /^@sourceacademy\/(bundle|tab)-.+$/u.exec(packageJson.name);
 

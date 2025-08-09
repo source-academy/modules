@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import pathlib from 'path';
 import type { BundleManifest, ResolvedBundle, SuccessResult } from '@sourceacademy/modules-repotools/types';
 import { objectEntries } from '@sourceacademy/modules-repotools/utils';
 
@@ -13,7 +14,7 @@ export async function buildManifest(bundles: Record<string, ResolvedBundle>, out
 
   await fs.mkdir(outDir);
 
-  const outpath = `${outDir}/modules.json`;
+  const outpath = pathlib.join(outDir, 'modules.json');
   await fs.writeFile(outpath, JSON.stringify(finalManifest, null, 2));
 
   return {

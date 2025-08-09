@@ -38,6 +38,14 @@ This adds the dependency to `devDependencies` instead.
 > yarn add @sourceacademy/modules-lib@workspace:^
 > ```
 
+### React Within bundles
+Currently, the way bundles are loaded by `js-slang` means that React cannot be externalized for bundles. `js-slang` simply has no way to provide React
+from the frontend to the bundle.
+
+This means that tools like the React DevTools will not be able to work correctly during development with the frontend.
+
+Refer to the [issue](https://github.com/source-academy/modules/issues/211) tracking this functionality.
+
 ## Bundle Conventions
 To ensure that bundles conform to the different Source language specifications, there are a few rules that bundles need to abide by.
 Refer to [this list](./4-conventions/index) for more information.

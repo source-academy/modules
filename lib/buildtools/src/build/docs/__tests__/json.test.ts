@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import pathlib from 'path';
 import { bundlesDir, outDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import type { ResolvedBundle } from '@sourceacademy/modules-repotools/types';
 import * as td from 'typedoc';
@@ -39,7 +40,7 @@ describe('Test buildJson', () => {
 
     expect(fs.writeFile).toHaveBeenCalledOnce();
     const { calls: [[path, data]] } = mockedWriteFile.mock;
-    expect(path).toEqual(`${outDir}/jsons/test0.json`);
+    expect(path).toEqual(pathlib.join(outDir, 'jsons', 'test0.json'));
     expect(data).toMatchInlineSnapshot(`
       "{
         "test_function": {
@@ -72,7 +73,7 @@ describe('Test buildJson', () => {
 
     expect(fs.writeFile).toHaveBeenCalledOnce();
     const { calls: [[path, data]] } = mockedWriteFile.mock;
-    expect(path).toEqual(`${outDir}/jsons/test0.json`);
+    expect(path).toEqual(pathlib.join(outDir, 'jsons', 'test0.json'));
     expect(data).toMatchInlineSnapshot(`
       "{
         "test_function": {
@@ -106,7 +107,7 @@ describe('Test buildJson', () => {
 
     expect(fs.writeFile).toHaveBeenCalledOnce();
     const { calls: [[path, data]] } = mockedWriteFile.mock;
-    expect(path).toEqual(`${outDir}/jsons/test0.json`);
+    expect(path).toEqual(pathlib.join(outDir, 'jsons', 'test0.json'));
     expect(data).toMatchInlineSnapshot(`
       "{
         "test_function": {
