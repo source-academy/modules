@@ -30,7 +30,13 @@ runs:
   using: composite
   steps:
     - name: Enable Corepack
-      run: corepack enable ~/corepack
+      if: ${{ inputs.shell != 'pwsh' }}
+      run: corepack enable
+      shell: bash
+
+    - name: Enable Corepack (Powershell)
+      if: ${{ inputs.shell == 'pwsh' }}
+      run: corepack enable --install-directory ~/corepack
       shell: ${{ inputs.shell }}
 
     - name: Setup Aliases (Windows)
