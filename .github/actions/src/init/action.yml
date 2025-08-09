@@ -37,9 +37,7 @@ runs:
       if: ${{ inputs.shell == 'pwsh' }}
       shell: pwsh
       run: |
-        New-Item -Force -ItemType File -Path $PROFILE
-        echo "function yarn { corepack yarn `$args }" >> $PROFILE
-        echo "function yarnpkg { corepack yarnpkg `$args }" >> $PROFILE
+        corepack -v
 
     - name: Use Node.js 💻
       uses: actions/setup-node@v4
