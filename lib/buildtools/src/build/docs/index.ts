@@ -74,7 +74,8 @@ export async function buildHtml(bundles: Record<string, ResolvedBundle>, outDir:
     };
   }
 
-  await app.generateDocs(project, pathlib.join(outDir, 'documentation'));
+  const htmlPath = pathlib.join(outDir, 'documentation');
+  await app.generateDocs(project, htmlPath);
   if (app.logger.hasErrors()) {
     return {
       severity: 'error',
@@ -84,6 +85,6 @@ export async function buildHtml(bundles: Record<string, ResolvedBundle>, outDir:
 
   return {
     severity: 'success',
-    path: `${outDir}/documentation`,
+    path: htmlPath
   };
 }

@@ -125,7 +125,7 @@ test('build manifest', async () => {
 
   await buildManifest(sampleManifests, outDir);
 
-  expect(fs.mkdir).toHaveBeenCalledExactlyOnceWith(outDir);
+  expect(fs.mkdir).toHaveBeenCalledExactlyOnceWith(outDir, { recursive: true });
   expect(fs.writeFile).toHaveBeenCalledOnce();
   const [[path, output]] = vi.mocked(fs.writeFile).mock.calls;
 
