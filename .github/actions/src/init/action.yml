@@ -37,7 +37,7 @@ runs:
       if: ${{ inputs.shell == 'pwsh' }}
       shell: pwsh
       run: |
-        New-Item -ItemType File -Path $PROFILE
+        New-Item -Force -ItemType File -Path $PROFILE
         echo "function yarn { corepack yarn `$args }" >> $PROFILE
         echo "function yarnpkg { corepack yarnpkg `$args }" >> $PROFILE
 
