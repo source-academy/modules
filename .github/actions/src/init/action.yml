@@ -39,8 +39,6 @@ runs:
       run: |
         npm uninstall -g yarn
         corepack enable
-        Get-Command yarn | Select-Object -ExpandProperty Definition
-        C:\npm\prefix\yarn.ps1 --version
       shell: ${{ inputs.shell }}
 
     - name: Use Node.js 💻
