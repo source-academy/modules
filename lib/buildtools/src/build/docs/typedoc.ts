@@ -37,7 +37,11 @@ export function initTypedocForHtml(bundles: Record<string, ResolvedBundle>, logL
     ...typedocPackageOptions,
     name: 'Source Academy Modules',
     logLevel,
-    entryPoints: Object.values(bundles).map(({ directory }) => pathlib.join(directory, 'dist', 'docs.json')),
+    entryPoints: Object.values(bundles).map(({ directory }) => {
+      // TypeDoc expects POSIX paths
+      const directoryAsPosix = directory.replace(/\\/g, '/');
+      return `${directoryAsPosix}/dist/docs.json`;
+    }),
     entryPointStrategy: 'merge',
     readme: pathlib.join(import.meta.dirname, 'docsreadme.md'),
   });

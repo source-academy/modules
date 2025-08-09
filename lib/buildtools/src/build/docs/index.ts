@@ -23,7 +23,9 @@ export async function buildSingleBundleDocs(bundle: ResolvedBundle, outDir: stri
     };
   }
 
-  await app.generateJson(project, pathlib.join(bundle.directory, 'dist', 'docs.json'));
+  // TypeDoc expects POSIX paths
+  const directoryAsPosix = bundle.directory.replace(/\\/g, '/');
+  await app.generateJson(project, `${directoryAsPosix}/dist/docs.json`);
 
   if (app.logger.hasErrors()) {
     return {
