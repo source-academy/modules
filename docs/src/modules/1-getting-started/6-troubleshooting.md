@@ -18,4 +18,5 @@ does not seem to work (or work permanently) for you.
 
 Things to check for:
 - Remove any errant `package.json` or `.yarnrc.yml` files in places like your home directory or elsewhere.
-- Run `npm uninstall -g yarn` if you previously instally Yarn using installed `npm`.
+- Run `npm uninstall -g yarn` if you previously installed Yarn using installed `npm`.
+- For people running Windows, `corepack enable` is a command that needs to be run using administrator privileges. If this is not possible for you, there are [workarounds](https://github.com/nodejs/corepack?tab=readme-ov-file#corepack-enable--name).

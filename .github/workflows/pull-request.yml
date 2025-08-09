@@ -73,9 +73,6 @@ jobs:
         if: matrix.lib.changes
         uses: actions/checkout@v4
 
-      - name: Echo cwd
-        run: pwd
-
       - name: Initialize Repo
         if: matrix.lib.changes
         uses: ./.github/actions/src/init
@@ -83,6 +80,9 @@ jobs:
           package-name: ${{ matrix.lib.name }}
           playwright: ${{ matrix.lib.changes && matrix.lib.needsPlaywright }}
           shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
+
+      - name: Echo cwd
+        run: pwd
 
       - name: Run Tests
         if: matrix.lib.changes
