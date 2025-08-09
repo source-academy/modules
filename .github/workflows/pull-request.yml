@@ -80,8 +80,11 @@ jobs:
           package-name: ${{ matrix.lib.name }}
           playwright: ${{ matrix.lib.changes && matrix.lib.needsPlaywright }}
           shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
+      - name: Echo cwd
+        run: echo ${{ matrix.os == 'windows-latest' && matrix.lib.windowsDirectory || matrix.lib.directory }}
 
       - name: Echo cwd
+        working-directory: ${{ matrix.os == 'windows-latest' && matrix.lib.windowsDirectory || matrix.lib.directory }}
         run: pwd
 
       - name: Run Tests
