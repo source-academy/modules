@@ -44,6 +44,10 @@ runs:
         node-version-file: .node-version
         cache: yarn
 
+    - name: Enable Corepack
+      run: corepack enable
+      shell: ${{ inputs.shell }}
+
     - name: Install Dependencies (Focused)
       if: inputs.package-name != '' && inputs.install-deps == 'true'
       run: yarn workspaces focus ${{ inputs.package-name }}
