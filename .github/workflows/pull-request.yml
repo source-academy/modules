@@ -82,7 +82,8 @@ jobs:
           shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
       - name: Echo cwd
         run: |
-          echo ${{ matrix.lib.windowsDirectory}}
+          pwd
+          echo ${{ matrix.lib.windowsDirectory }}
           echo ${{ matrix.lib.directory }}
 
       - name: Echo cwd
