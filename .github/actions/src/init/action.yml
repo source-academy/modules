@@ -36,7 +36,10 @@ runs:
     - name: Setup Aliases (Windows)
       if: ${{ inputs.shell == 'pwsh' }}
       shell: pwsh
-      run: npm install -g yarn@4.8.1
+      run: |
+        corepack prepare yarn@4.8.1 --activate
+        Get-Command yarn | Select-Object -ExpandProperty Definition
+        C:\npm\prefix\yarn.ps1 --version
 
     - name: Use Node.js 💻
       uses: actions/setup-node@v4
