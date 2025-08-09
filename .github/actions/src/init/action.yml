@@ -33,10 +33,13 @@ runs:
       run: corepack enable
       shell: ${{ inputs.shell }}
 
-    - name: Set Alias? (Windows)
+    - name: Setup Aliases (Windows)
       if: ${{ inputs.shell == 'pwsh' }}
-      run: echo "function yarn { corepack yarn `$args }" >> $PROFILE
       shell: pwsh
+      run: |
+        New-Item -ItemType File -Path $PROFILE
+        echo "function yarn { corepack yarn `$args }" >> $PROFILE
+        echo "function yarnpkg { corepack yarnpkg `$args }" >> $PROFILE
 
     - name: Use Node.js 💻
       uses: actions/setup-node@v4
