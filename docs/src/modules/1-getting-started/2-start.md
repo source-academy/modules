@@ -15,8 +15,12 @@ Clone the modules repository to your local machine using `git` or your tool of c
 The modules repository pipelines rely on the [Yarn](https://yarnpkg.com/) package manager. To install the Yarn package manager through [NPM](https://www.npmjs.com/), you can run the following command in the development directory: `corepack enable`.
 This may prompt you to download the version of Yarn that this repository uses.
 
-> [!TIP]
-> If you already have Yarn installed, you might find that you have a different version installed than the one used by the repository. Use the `yarn set version` command to install the correct version.
+> [!INFO] Corepack and Yarn
+> `corepack` is a tool that comes with NodeJS to help better manage the installation of package managers. Corepack allows the package manager to be defined at a package level, so
+> multiple packages on the same systems can use different versions of the same package manager, or even different package managers altogether.
+>
+> `corepack enable` should automatically install the version of Yarn used by the repository, but if you face issues using `corepack`, you can still use `npm` to install Yarn. You will however, need to run
+> `yarn set version` to change to the correct version of Yarn before working with the repository.
 
 At this point it is not necessary to run `yarn install` yet to install dependencies. Depending on what you are doing, there are different methods for installing dependencies.
 
