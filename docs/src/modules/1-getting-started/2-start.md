@@ -12,7 +12,8 @@ You can use [nvm](https://github.com/creationix/nvm#installation) _(macOS/Linux)
 Clone the modules repository to your local machine using `git` or your tool of choice.
 
 ## 3. Install Yarn
-The modules repository pipelines rely on the [Yarn](https://yarnpkg.com/) package manager. To install the Yarn package manager through [NPM](https://www.npmjs.com/), you can run the following command in the development directory: `npm install yarn`
+The modules repository pipelines rely on the [Yarn](https://yarnpkg.com/) package manager. To install the Yarn package manager through [NPM](https://www.npmjs.com/), you can run the following command in the development directory: `corepack enable`.
+This may prompt you to download the version of Yarn that this repository uses.
 
 > [!TIP]
 > If you already have Yarn installed, you might find that you have a different version installed than the one used by the repository. Use the `yarn set version` command to install the correct version.

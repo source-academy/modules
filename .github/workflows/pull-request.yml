@@ -69,12 +69,12 @@ jobs:
     name: ${{ matrix.lib.name }} library (${{ matrix.os }})
 
     steps:
-      - name: Echo cwd
-        run: pwd
-
       - name: Check out source code
         if: matrix.lib.changes
         uses: actions/checkout@v4
+
+      - name: Echo cwd
+        run: pwd
 
       - name: Initialize Repo
         if: matrix.lib.changes
