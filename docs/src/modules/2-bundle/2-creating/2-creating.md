@@ -1,11 +1,16 @@
 # Creating a Bundle
+
 This page contains instructions for creating a new bundle from scratch. If you are looking to edit an existing bundle refer to [these](../3-editing) instructions instead.
+
 ## Running the Template Command
+
 > [!TIP]
-> If necessary, before running the `template` command, you can run 
+> If necessary, before running the `template` command, you can run
+>
 > ```sh
 > yarn workspaces focus @sourceacademy/modules
 > ```
+>
 > to install **only** the dependencies required for creating your bundle.
 
 To create a new bundle, use the `template` command.
@@ -13,6 +18,7 @@ To create a new bundle, use the `template` command.
 ```sh
 yarn template
 ```
+
 This will start an interactive prompt that will help you through the process of creating a bundle.  Enter `module` to create a new bundle.
 
 ```txt
@@ -21,6 +27,7 @@ module
 ```
 
 Then enter the name of your new bundle. It must be in `snake_case`.
+
 ```txt
 What would you like to create? (module/tab)
 module
@@ -38,7 +45,9 @@ The command should have creates a new folder `src/bundles/new_bundle` with all t
 From there you can edit your bundle as necessary
 
 ## Naming your Bundle
+
 The name of your bundle is what Source users will import from to actually use your bundle:
+
 ```ts
 import { func } from 'new_bundle';
 ```

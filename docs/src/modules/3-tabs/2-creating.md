@@ -1,15 +1,19 @@
 # Creating a Tab
+
 This page contains instructions for creating a new bundle from scratch. If you are looking to edit an existing bundle refer to [these](./3-editing) instructions instead.
 
 All tabs require at least one parent bundle. Before you create your tab, make sure you identify which bundle(s) are
 supposed to be the parent of your tab.
 
 ## Running the Template Command
+
 > [!TIP]
-> If necessary, before running the `template` command, you can run 
+> If necessary, before running the `template` command, you can run
+>
 > ```sh
 > yarn workspaces focus @sourceacademy/modules
 > ```
+>
 > to install **only** the dependencies required for creating your tab.
 
 To create a new tab, use the `template` command:
@@ -24,7 +28,9 @@ This will start an interactive prompt that will help you through the process of 
 What would you like to create? (module/tab)
 tab
 ```
+
 Then enter the name of the parent bundle. It must be a bundle that already exists.
+
 ```txt
 What would you like to create? (module/tab)
 tab
@@ -34,6 +40,7 @@ new_module
 ```
 
 Then enter the name of your new tab. It must be in `PascalCase`.
+
 ```txt
 What would you like to create? (module/tab)
 tab

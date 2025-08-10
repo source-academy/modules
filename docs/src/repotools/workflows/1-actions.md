@@ -3,6 +3,7 @@ title: Custom Actions
 ---
 
 # Custom Github Actions
+
 Github Actions does provide us the ability to write our own custom actions that can be integrated with the rest of the pipeline. This repository
 makes use of two:
 
@@ -13,6 +14,7 @@ Creating custom actions is detailed [here](https://docs.github.com/en/actions/re
 directory as its source code (if necessary).
 
 ## Information Action (`info/action.yml`)
+
 The information action retrieves information about each package present in the repository, namely:
 
 - Has this package changed relative to the master branch?
@@ -25,6 +27,7 @@ In the case of bundles or tabs, it also retrieves the name of the bundle or tab.
 This information is used by both the initializer action and the workflows to determine the what tasks need to be executed.
 
 ## Initializer Action (`init/action.yml`)
+
 The initializer action combines the initialization steps that are necessary for each package:
 
 1. Enable `corepack`

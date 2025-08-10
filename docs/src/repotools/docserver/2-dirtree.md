@@ -44,6 +44,7 @@ children:
 
 Each item can either just be a string entry (like `item0` above), in which case that entry is simply displayed as is, or it can be a
 compound YAML object like `item1` is. The details for such an entry are as follows:
+
 ```yml
 name: item1  # You must provide the name property
 comment: This is an optional comment
@@ -52,7 +53,9 @@ children:    # Optional list of items
 ```
 
 ## Optional Comments
+
 If provided, the comment is rendered on the same line, in alignment with all other comments:
+
 ```dirtree
 name: root
 children:
@@ -67,6 +70,7 @@ children:
 ```
 
 ## Path Validation
+
 In the case you intend for your displayed directory tree to reflect the structure of an actual directory on disk,
 you can specify a `path` property on the root object. This path is resolved from the file containing the markdown.
 

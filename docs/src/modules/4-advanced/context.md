@@ -2,9 +2,11 @@
 order: 1
 ---
 # Module Contexts
+
 Some times, a bundle needs to be able to maintain some state information, or send information to a tab. Module Contexts form the solution to this problem.
 
 Every time `js-slang` evaluates Source code, it creates an evaluation context. Bundles can access this context by using this import:
+
 ```ts
 // curve/functions.ts
 import context from 'js-slang/context';
@@ -14,7 +16,9 @@ context.moduleContexts.curve.state = {
   drawnCurves,
 }
 ```
+
 `context.moduleContexts` will not be null here, and is of the type:
+
 ```ts
 type ModuleContexts = Record<string, { tabs: any[], state: any }>
 ```
@@ -24,6 +28,7 @@ To access a module's context, simply index the `moduleContexts` object using the
 The `state` object can be of any type - it is up to the developer to decide what needs to be stored as state.
 
 This `state` object can then be accessed by the module's tab, for example:
+
 ```ts
 // Curve/index.tsx
 export default {
@@ -40,6 +45,7 @@ export default {
 > Module Contexts are reset on each evaluation and are not capable of storing information that persists across evaluations
 
 ## Where to access context in a bundle?
+
 > [!WARNING] TL;DR
 > Writing to and reading from `js-slang/context` in multiple places throughout your bundle may result in undefined behaviour. Consider importing the context from
 > one place only.
@@ -47,6 +53,7 @@ export default {
 Consider the following bundle. It has three different `functions` files that each set the bundle's state to a different value. It also exports a `main()` function that
 prints out the current value of the bundle's state.
 ::: code-group
+
 ```ts [index.ts]
 import context from 'js-slang/context';
 
@@ -58,6 +65,7 @@ export function main() {
   return context.moduleContexts.bundle.state
 }
 ```
+
 ```ts  [functions_0.ts]
 import context from 'js-slang/context';
 
@@ -67,6 +75,7 @@ export function function0() {
   // Does some things
 }
 ```
+
 ```ts [functions_1.ts]
 import context from 'js-slang/context';
 
@@ -76,6 +85,7 @@ export function function1() {
   // Does some things
 }
 ```
+
 ```ts [functions_2.ts]
 import context from 'js-slang/context';
 import { function0 } from './functions_0';
@@ -86,8 +96,10 @@ export function function2() {
   // Does some things
 }
 ```
+
 :::
 What will be the output of the code below?
+
 ```ts
 import { main } from 'bundle';
 
@@ -101,8 +113,10 @@ However, it is not clear which of `functions_0.ts` or `functions_1.ts` will be e
 Thus it is recommended that you access context once throughout your entire bundle, or make sure you understand which order your files are going to be evaluated to avoid the above issue.
 
 ## Accessing Other Modules
+
 It is possible for one bundle to access the context of another:
 ::: code-group
+
 ```ts [curve/src/index.ts]
 import context from 'js-slang/context';
 
@@ -113,6 +127,7 @@ if (context.moduleContexts.rune) {
   console.log('Only the curve module was loaded')
 }
 ```
+
 :::
 
 However, the order in which modules are evaluated is not guaranteed. In the above code, if the `curve` module was evaluated first, it would indicate that only the `curve` module was loaded since `rune`'s state object has yet to be initialized. Thus, use this feature with caution.
@@ -122,6 +137,7 @@ However, the order in which modules are evaluated is not guaranteed. In the abov
 Normally data flows from the bundle to the context object: i.e. the bundle contains the code that initializes the module's state object. However, it is also possible for the module's state object to be initialized before the bundle is loaded.
 
 For example, the `game` module's [room preview feature](https://github.com/source-academy/frontend/blob/master/src/features/game/scenes/roomPreview/RoomPreview.ts) utilizes a special evaluation context:
+
 ```ts
 // within createContext()
 
@@ -144,7 +160,9 @@ this.context.moduleContexts.game = {
 
 // Pass the context to the runInContext function from js-slang
 ```
+
 The `game` bundle is then able to use the data provided to it:
+
 ```ts
 // game/functions.ts
 import context from 'js-slang/moduleContexts';

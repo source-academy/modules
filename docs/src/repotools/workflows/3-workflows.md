@@ -1,7 +1,9 @@
 # Other Workflows
+
 There are other workflows that the repository uses, not just with Github Actions.
 
 ## `pre-push` Git Hook
+
 This hook is run every time you try to push to a branch on the remote. The pre-push git hook is configured as follows:
 
 The first thing it does is validate that the repository's constraints have been fulfilled using `yarn constraints`.
@@ -17,4 +19,3 @@ These Git Hooks are powered by [`husky`](https://github.com/typicode/husky).
 Upon any successful merge into `master`, this action runs to deploy the modules site onto Github pages to automatically serve the default modules and their documentation.
 
 Its configuration is shown below:
-

@@ -1,6 +1,6 @@
-import { URL } from 'url';
 import lintPlugin from '@sourceacademy/lint-plugin';
 import type { Linter } from 'eslint';
+import { URL } from 'url';
 
 /**
  * Represents the information about a single Rule

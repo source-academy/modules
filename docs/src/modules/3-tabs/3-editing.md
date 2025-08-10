@@ -1,7 +1,9 @@
 # Editing an Existing Tab
+
 This page contains instructions for modifying an existing tab. If you are creating a new tab from scratch, refer to [these](./2-creating) instructions instead.
 
 ## Installing Dependencies
+
 To install **only** the dependencies required by the tab you are modifying, use the command below:
 
 ```sh
@@ -9,15 +11,19 @@ yarn workspaces focus @sourceacademy/Tab-[desired tab]
 ```
 
 ## Adding Dependencies
+
 Your tab may need other Javascript packages. To add a dependency to your tab, run the command below:
+
 ```sh
 yarn add [dependency]
 ```
 
 If the dependency does not need to be present during runtime, then use:
+
 ```sh
 yarn add --dev [dependency]
 ```
+
 This adds the dependency to `devDependencies` instead.
 
 > [!WARNING]
@@ -27,18 +33,22 @@ This adds the dependency to `devDependencies` instead.
 > [!NOTE]
 > There are certain dependencies that are common to all tab (like `react`). When adding such a dependency, remember to add the exact version
 > specified in the root repository `package.json`:
+>
 > ```sh
 > yarn add react@^18.3.1
 > ```
+>
 > You can also use the command `yarn constraints`  to check if you have incorrectly specified the version of a dependency.
 
 > [!NOTE]
 > When adding dependencies that originate from the repository (e.g `@sourceacademy/modules-lib`), use `workspace:^` as the given version:
+>
 > ```sh
 > yarn add @sourceacademy/modules-lib@workspace:^
 > ```
 
 ## React/UI Components
+
 Tabs are written using the React (JSX) syntax. In React, each UI element is referred to as a "component". Documentation on how to create UIs and use React can be found [here](https://react.dev). Where possible,
 you should aim to write components using the funcional syntax.
 
@@ -46,7 +56,7 @@ you should aim to write components using the funcional syntax.
 Traditionally, React's functional components could not be "stateful". If a component needed to store state, it had to be written as a [class component](https://react.dev/reference/react/Component).
 
 With the introduction of [hooks](https://react.dev/reference/react/hooks) in React 16, functional components could now be stateful and became the go-to method for writing React components. Officially, React now considers class components a legacy API and
-all new code should be written using the functional style. 
+all new code should be written using the functional style.
 
 Within this repository, many of the tabs were written before the introduction and widespread use of functional components. Regardless, you should be designing your components using the functional component syntax where possible.
 :::
@@ -67,11 +77,13 @@ in the root `tsconfig.json` used by tabs. `esbuild` reads from `tsconfig.json` a
 :::
 
 ### Components from the Common Library
+
 There are also several React components defined under `@sourceacademy/modules-lib/tabs` that perform functions common across tabs.
 
 You can see the documentation for these components [here](/lib/modules-lib/)
 
 ## Export Interface
+
 As mentioned in the [overview](./1-overview), all tabs should export a single default export from their entry point using the `defineTab` helper from `@sourceacademy/modules-lib/tabs`:
 
 ```tsx
@@ -96,6 +108,7 @@ if you do not use the `defineTab` helper or if your tab is missing the default e
 > [!TIP]
 > For the Devserver to be able to accurately detect the changes you make to your tab while in hot-reload mode, you should define your component
 > outside of the `body` property as in the example **above** and **not** within the property as in the example below:
+>
 > ```tsx
 > // incorrect example
 > export default defineTab({
@@ -110,6 +123,7 @@ if you do not use the `defineTab` helper or if your tab is missing the default e
 
 Only the default export is used by the Frontend for displaying your tab. It is not necessary to also export your components, but it can be done for testing:
 ::: code-group
+
 ```tsx [index.tsx]
 import { defineTab } from '@sourceacademy/modules-lib/tabs';
 
@@ -137,7 +151,9 @@ test('Matches snapshot', () => {
 :::
 
 ## Quick FAQs
+
 ### When to spawn the tab?
+
 As mentioned, the frontend will go through the list of tabs for the bundles currently loaded and determine if it should spawn those tabs. This is done
 by calling the tab's `toSpawn` function (if it exists). If the function is missing, then the tab is always spawned.
 
@@ -148,6 +164,7 @@ However, there are some cases where it makes sense to have the tab always spawn.
 So long as the `pix_n_flix` bundle is imported, the tab will be spawned.
 
 ### Can I update other UI elements in the frontend?
+
 Right now, the UI is only updated once per evaluation (a limitation on the side of the frontend). This means that if code from your tab calls functions
 like `display`, the output of those functions won't be displayed in the main REPL. The only elements that can be changed are elements within the tab.
 
