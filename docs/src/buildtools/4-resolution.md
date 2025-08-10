@@ -16,6 +16,7 @@ configure `modules.json` themselves. So long as your bundle is correctly configu
 A directory located in the `src/bundles` folder is considered a bundle if it has both a `package.json` and `manifest.json` file.
 
 For each subdirectory located in `src/bundles`, the following process is executed:
+
 ```mermaid
 graph TD
   A[Does it contain manifest.json]
@@ -53,10 +54,12 @@ Bundle resolution involves loading its manifest, determining its version and nam
 <<< ../../../lib/repotools/src/types.ts#ResolvedBundle
 
 ### `resolveAllBundles`
+
 `resolveAllBundles` is used to collate the manifests of every single bundle at once. If bundle(s) return an error during resolution, the resolution process will still proceed and the errors are collated together
 and returned at the end.
 
 ## Tab Resolution
+
 First, the above process is executed to retrieve all manifests from all bundles. From there, we can retrieve the names of every
 single tab that is supposed to be present.
 
@@ -76,6 +79,7 @@ graph TD
   B -- yes --> D
   B -- no --> C
 ```
+
 This process is also used when checking that the tabs specified the bundle manifest exist.
 
 `resolveSingleTab` used to perform tab resolution returns the following type:

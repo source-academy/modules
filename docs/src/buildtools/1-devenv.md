@@ -1,7 +1,9 @@
 # Working with the Build Tools
+
 This page contains the instructions required for working with the build tools' source code.
 
 ## Installing Dependencies for Build Tools
+
 If you haven't already, follow the instructions [here](/modules/1-getting-started/2-start) to install NodeJS and Yarn.
 
 Running the command below will install the dependencies for **only** the build tools:
@@ -19,4 +21,5 @@ For the projects that are supposed to be bundled into a single file using `esbui
 easy to use compiler.
 
 ## Testing
+
 The build tools come with a comprehensive suite of tests. If you are planning to contribute, please write tests to cover your new/modified functionality.

@@ -21,7 +21,9 @@ export default defineConfig({
   }
 })
 ```
+
 For the child configuration:
+
 ```js
 import { defineProject, mergeConfig } from 'vitest/config';
 import rootConfig from '../vitest.config.js';
@@ -37,6 +39,7 @@ export default mergeConfig(
 ```
 
 The actual configuration that's actually resolved by `vitest` actually looks like this:
+
 ```js
 const config = {
   test: {
@@ -45,6 +48,7 @@ const config = {
   }
 }
 ```
+
 So if you ran `yarn vitest --config ./sub-project/vitest.config.js`, `vitest` would try to locate another `vitest` project
 located at `./sub-project/sub-project/vitest.config.js`. Since the child config is intended to be just that, this is simply
 incorrect functionality. If that particular configuration file doesn't exist, `vitest` wouldn't even be able to start.
@@ -65,6 +69,7 @@ the `vitest` configs all have their options under a `test` object.
 :::
 
 ## Config Resolution
+
 ```mermaid
 graph TD
   A[Does this directory contain a Vitest config?]
@@ -94,12 +99,14 @@ graph TD
 ```
 
 ### `testall` Command
+
 The `testall` command functions slightly differently. The command first checks the root `vitest.config.js` to identify which directories it should check as a `vitest` project.
 For each of those directories, no error will be thrown if the `vitest` config file is missing, unless that directory also contains test files.
 
 Bundles and tabs are allowed to be missing a `vitest` configuration file and still have tests, since the buildtools will automatically provide a default `vitest` configuration.
 
 ## Actually Running `vitest` from Node
+
 The main way to run `vitest` from Node is via the [`startVitest`](https://vitest.dev/advanced/api/#startvitest) function. The documentation
 for this function is unfortunately a bit lacking, but from what I have figured out, here's how it works:
 
@@ -109,9 +116,10 @@ for this function is unfortunately a bit lacking, but from what I have figured o
 | 2 | Filters | `string[]` | Glob paths to filter test files by |
 | 3 | CLI Options | `VitestUserConfig` | Your actual test options. |
 | 4 | Vite Options | `ViteUserConfig` | Options for Vite |
-| 5 | Vitest Options | `VitestOptions` | A configuration object for `stdout`, `stderr` and the like. | 
+| 5 | Vitest Options | `VitestOptions` | A configuration object for `stdout`, `stderr` and the like. |
 
 That third parameter should be passed a test configuration, rather than the entire Vite config:
+
 ```js
 const fullViteConfig = {
   test: {
@@ -127,12 +135,14 @@ const vitestConfig = {
 
 You should also pass `config: false`. Otherwise, `vitest` will still try to load a `vitest` configuration file
 using its own resolution rules:
+
 ```js
 startVitest('test', [], {
   config: false,
   ...testOptions
 })
 ```
+
 When running tests, you need to actually provide each configuration object as a project:
 
 ```js
@@ -143,6 +153,7 @@ startVitest('test', [], {
 ```
 
 ## Browser Mode
+
 If browser mode is enabled, the buildtools will automatically reassign the names of projects and the `include` field will be
 moved from the `test` object onto the `browser.instance` object.
 

@@ -5,6 +5,7 @@ There are two "prebuild" tasks, linting and type checking that need to be run be
 The buildtools call both ESLint and `tsc` in parallel since they are not dependent on each others' outputs.
 
 ## Running ESLint from the Command Line
+
 ESLint provides [documentation](https://eslint.org/docs/latest/integrate/nodejs-api) detailing how to use its Node API. Below is the code that does just that:
 
 <<< ../../../lib/buildtools/src/prebuild/lint.ts#runEslint {ts:line-numbers}
@@ -39,6 +40,7 @@ Most of the code for running Typescript functionality from Node was taken from [
 <<< ../../../lib/buildtools/src/prebuild/tsc.ts {ts:line-numbers}
 
 The high level overview of this process is as follows:
+
 1. Read the raw text from the `tsconfig.json`
 2. Parse the `tsconfig.json` into a JSON object using `ts.parseConfigFileTextToJson`
 3. Parse the JSON object into actual compiler options using `ts.parseJsonConfigFileContent`. This also returns an array of file names for parsing.
@@ -49,10 +51,12 @@ The high level overview of this process is as follows:
 8. Format the diagnostic objects using `ts.formatDiagnosticsWithColorAndContext`
 
 ### Reading and Parsing `tsconfig.json`
+
 The first three steps in the process involve reading the raw text from the `tsconfig.json` and then parsing it. At the end of it, `ts.parseJsonConfigFileContent` resolves all the inherited options and produces the compiler options
 in use, as well as the file paths to the files that are to be processed.
 
 ### Type Checking
+
 At step 4, `ts.createProgram` is called for the first time. It is called with every single file as returned from `ts.parseJsonConfigFileContent`. However, it is called with `noEmit: true`. This prevents any Javascript and Typescript declaration files from being written.
 This is important because we want test files to be type checked, but we don't want them to be compiled into Javascript and exported with the rest of the code. If they were included and the `tsconfig` was configured to produce outputs, the test files would end
 up being written to the `outDir`. `typecheckProgram.emit` is called to perform the type checking.

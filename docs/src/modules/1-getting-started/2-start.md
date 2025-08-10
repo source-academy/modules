@@ -1,7 +1,9 @@
 # Setting up the development environment
+
 To begin developing using this repository, follow the following steps to setup your local development environment.
 
 ## 1. Download and Install NodeJS
+
 A stable version of [NodeJS](https://nodejs.org/en/) is required on your local development machine. Select a version of NodeJS that is compatible with the version below. Typically, the LTS release will suffice.
 
 <<< ../../../../.node-version
@@ -9,9 +11,11 @@ A stable version of [NodeJS](https://nodejs.org/en/) is required on your local d
 You can use [nvm](https://github.com/creationix/nvm#installation) _(macOS/Linux)_ or [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows) _(windows)_ to switch Node versions between different projects.
 
 ## 2. Clone this Repository
+
 Clone the modules repository to your local machine using `git` or your tool of choice.
 
 ## 3. Install Yarn
+
 The modules repository pipelines rely on the [Yarn](https://yarnpkg.com/) package manager. To install the Yarn package manager through [NPM](https://www.npmjs.com/), you can run the following command in the development directory: `corepack enable`.
 This may prompt you to download the version of Yarn that this repository uses.
 
@@ -25,7 +29,9 @@ This may prompt you to download the version of Yarn that this repository uses.
 At this point it is not necessary to run `yarn install` yet to install dependencies. Depending on what you are doing, there are different methods for installing dependencies.
 
 ## Next Steps
+
 Once your environment has been setup, refer to the following guides:
+
 * [Creating a new bundle](/modules/2-bundle/2-creating/2-creating)
 * [Creating a new tab](/modules/3-tabs/2-creating)
 * [Modifying an existing bundle](/modules/2-bundle/3-editing)

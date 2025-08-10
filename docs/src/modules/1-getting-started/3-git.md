@@ -10,6 +10,7 @@ When making changes to the code in this repository, you should abide by some goo
 - Run the `pre-push` Git Hook before pushing so that your code is verified locally
 
 ## Creating your own branch
+
 The `master` branch of the repository is protected. This means that you cannot push commits directly to it, nor can pull requests be merged
 into the branch without first passing code review.
 
@@ -23,6 +24,7 @@ Make sure that the branch is named appropriately. For example, if you were creat
 `matrix_bundle`.
 
 ## Procedure for Pull Requests
+
 When you're ready for your work to be incorporated into the `master` branch, open a pull request with the modules repository to merge your
 changes into `master` branch. Make sure that your branch is up-to-date with the `master` branch (by performing a `git merge` from the `master` branch to your own branch).
 
@@ -32,4 +34,5 @@ workflow fails, check the summary and determine where the errors lie, then fix y
 Once your code has been reviewed, the pull request will be merged.
 
 ## Opening Issues
+
 If you have a bug report or feature request, open an issue with the appropriate label(s) [here](https://github.com/source-academy/modules/issues)

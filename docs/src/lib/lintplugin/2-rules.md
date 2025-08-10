@@ -1,13 +1,16 @@
 # Rules Reference
+
 [[toc]]
 
 ## `default-import-name`
+
 Enforces that the name assigned to a default or namespace import is consistent.
 
 This rule was primarily created to avoid developers using the import <nobr><code>import path from 'path'</code></nobr> since the identifier `path` would be end up being used in other places often.
 With this linting rule, common default imports (especially those from Node) will be named consistently.
 
 The rule has a configuration option, which is just an object whose keys represent import sources and values represent valid identifier values:
+
 ```ts
 type RuleOptions = {
   [source: string]: string | string[]
@@ -15,14 +18,17 @@ type RuleOptions = {
 ```
 
 ### Specifying a Single Name
-#### ❌ Examples of incorrect code for this rule with `{ path: 'pathlib' }`:
+
+#### ❌ Examples of incorrect code for this rule with `{ path: 'pathlib' }`
+
 ```ts
 // with the option set to { path: 'pathlib' }
 import path from 'path';
 import * as path from 'path';
 ```
 
-#### ✅ Examples of correct code for this rule with `{ path: 'pathlib' }`:
+#### ✅ Examples of correct code for this rule with `{ path: 'pathlib' }`
+
 ```ts
 // with the option set to { path: 'pathlib' }
 import pathlib from 'path';
@@ -31,15 +37,18 @@ import fs from 'fs/promises' // This is ignored because it wasn't specified in t
 ```
 
 ### Specifying Multiple Names
+
 If you specify multiple valid names, then any one of those names is accepted:
 
-#### ✅ Examples of correct code for this rule with `{ path: ['path', 'pathlib'] }`:
+#### ✅ Examples of correct code for this rule with `{ path: ['path', 'pathlib'] }`
+
 ```ts
 import pathlib from 'path';
 import path from 'path';
 ```
 
 ### Specifying Multiple Sources
+
 You can of course, enforce naming for more than one import source:
 
 ```ts
@@ -52,10 +61,12 @@ import path from 'pathlib'
 ```
 
 ## `no-barrel-imports`
+
 Enforces that imports from a certain source uses individual imports intead of the main barrel import.
 
 This rule was primarily motivated by packages like `lodash` and `@mui`, which re-export all their functionalities
 through the main export, but also make each function available in a separate package:
+
 ```ts
 // Imports from the root package
 import _ from 'lodash'
@@ -75,6 +86,7 @@ The reason for these "per method imports" is to help bundlers more effectively t
 > However, the `lodash` [documentation](https://lodash.com/per-method-packages) recommends against this practice for reasons mentioned there.
 
 The exception to this is Typescript "type-only" imports, since those automatically get removed from the output source code:
+
 ```ts
 // Are perfectly ok
 import type _ from 'lodash'
@@ -82,7 +94,9 @@ import type { memoize } from 'lodash'
 ```
 
 ### Fixes
+
 The rule replaces the original import with different import statements from each of the subpackages:
+
 ```ts
 import { memoize } from 'lodash'
 // gets autofixed to
@@ -90,6 +104,7 @@ import memoize from 'lodash/memoize'
 ```
 
 If you aliased the import, the appropriate alias name will be used:
+
 ```ts
 import { memoize as func } from 'lodash'
 // gets autofixed to
@@ -97,6 +112,7 @@ import func from 'lodash/memoize'
 ```
 
 Multiple imports from the root package get transformed like this:
+
 ```ts
 import { memoize as func, cloneDeep } from 'lodash'
 // gets autofixed to
@@ -106,6 +122,7 @@ import cloneDeep from 'lodash/cloneDeep'
 ```
 
 Type-only imports, when mixed with default imports, also get autofixed:
+
 ```ts
 import { type memoize as func, cloneDeep } from 'lodash'
 // gets autofixed to
@@ -118,15 +135,16 @@ import cloneDeep from 'lodash/cloneDeep'
 > are actually available. For example, the rule will not actually verify that `lodash/memoize` is a valid import path and that it does have a default export
 
 ### Options
+
 The rule should be configured with an array of package names to check:
+
 ```ts
 rules: {
   '@sourceacademy/no-barrel-imports': ['error', ['lodash']]
 }
 ```
 
-
-### ✅ Examples of **correct** code for this rule:
+### ✅ Examples of **correct** code for this rule
 
 ```ts
 // with @sourceacademy/no-barrel-imports: ['error', ['lodash']]
@@ -140,7 +158,8 @@ import type _ from 'lodash';
 import type { memoize } from 'lodash';
 ```
 
-### ❌ Examples of **incorrect** code for this rule:
+### ❌ Examples of **incorrect** code for this rule
+
 ```ts
 // with @sourceacademy/no-barrel-imports: ['error', ['lodash']]
 
@@ -152,9 +171,11 @@ import _, { type memoize } from 'lodash';
 ```
 
 ## `region-comment`
+
 This rule enforces that each `// #region` comment is named and paired with a corresponding `// #endregion` comment.
 
-### ✅ Examples of **correct** code for this rule:
+### ✅ Examples of **correct** code for this rule
+
 ```ts
 // #region Region1
 export function foo() {}
@@ -162,6 +183,7 @@ export function foo() {}
 ```
 
 Regions can overlap:
+
 ```ts
 // #region Region1
 // #region Region2
@@ -170,7 +192,7 @@ export function foo() {}
 // #endregion Region1
 ```
 
-### ❌ Examples of **incorrect** code for this rule:
+### ❌ Examples of **incorrect** code for this rule
 
 ```ts
 // Missing name for region
@@ -187,7 +209,8 @@ export function bar() {}
 
 Enforces that tabs have a default export using the `defineTab` helper.
 
-### ❌ Examples of **incorrect** code for this rule:
+### ❌ Examples of **incorrect** code for this rule
+
 ```tsx
 export default 0;
 
@@ -198,7 +221,9 @@ export default {
   label: 'tab'
 }
 ```
+
 Examples of **correct** code for this rule:
+
 ```tsx
 import { defineTab } from '@sourceacademy/modules-lib/tabs';
 
@@ -211,6 +236,7 @@ export default defineTab({
 ```
 
 The rule considers the code below **correct** even if the import is aliased:
+
 ```tsx
 import { defineTab as tabHelper } from '@sourceacademy/modules-lib/tabs';
 
@@ -223,11 +249,14 @@ export default tabHelper({
 ```
 
 ### Options
+
 This rule accepts a configuration array with two elements:
+
 - The first option represents the expected import source. This is by default `@sourceacademy/modules-lib/tabs` but can be changed to whatever is in use
 - The second option is the name of the imported helper. This is by default `defineTab`.
 
 ✅ Examples of **correct** code using these options:
+
 ```tsx
 /* eslint @sourceacademy/tab-type: ['error', '@sourceacademy/modules-lib/tabs/utils', 'tabHelper'] */
 import { tabHelper } from '@sourceacademy/modules-lib/tabs/utils';
@@ -239,4 +268,3 @@ export default tabHelper({
   label: 'tab'
 });
 ```
-

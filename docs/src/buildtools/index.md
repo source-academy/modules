@@ -20,6 +20,7 @@ The build tools are comprised of several sections:
   - Code for the template command
 
 ## Structure of the Build Tools package
+
 ```dirtree
 path: ../../../lib/buildtools/
 children:

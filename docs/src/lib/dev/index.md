@@ -13,4 +13,3 @@ title: Modules Developer Docs
     <a :href="doc.url">{{ doc.frontmatter.title }}</a>
   </li>
 </ul>
-
