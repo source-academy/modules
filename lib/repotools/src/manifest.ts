@@ -181,7 +181,7 @@ export async function resolveSingleBundle(bundleDir: string): Promise<ResolveSin
     if (!isNodeError(error) || error.code !== 'ENOENT') throw error;
     return {
       severity: 'error',
-      errors: ['Could not find entrpoint!']
+      errors: ['Could not find entrypoint!']
     };
   }
 
