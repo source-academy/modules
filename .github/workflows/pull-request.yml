@@ -56,41 +56,41 @@ jobs:
       docserver: ${{ steps.info.outputs.docserver }}
       workflows: ${{ steps.info.outputs.workflows }}
 
-  libraries:
-    needs: find-packages
-    strategy:
-      fail-fast: false
-      matrix:
-        lib: ${{ fromJson(needs.find-packages.outputs.libs) }}
-        os: ['ubuntu-latest', 'windows-latest']
-    runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
+  # libraries:
+  #   needs: find-packages
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       lib: ${{ fromJson(needs.find-packages.outputs.libs) }}
+  #       os: ['ubuntu-latest', 'windows-latest']
+  #   runs-on: ${{ matrix.os }}
+  #   defaults:
+  #     run:
+  #       shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
 
-    name: ${{ matrix.lib.name }} library (${{ matrix.os }})
+  #   name: ${{ matrix.lib.name }} library (${{ matrix.os }})
 
-    steps:
-      - name: Check out source code
-        if: matrix.lib.changes
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Check out source code
+  #       if: matrix.lib.changes
+  #       uses: actions/checkout@v4
 
-      - name: Initialize Repo
-        if: matrix.lib.changes
-        uses: ./.github/actions/src/init
-        with:
-          package-name: ${{ matrix.lib.name }}
-          playwright: ${{ matrix.lib.changes && matrix.lib.needsPlaywright }}
-          shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
+  #     - name: Initialize Repo
+  #       if: matrix.lib.changes
+  #       uses: ./.github/actions/src/init
+  #       with:
+  #         package-name: ${{ matrix.lib.name }}
+  #         playwright: ${{ matrix.lib.changes && matrix.lib.needsPlaywright }}
+  #         shell: ${{ matrix.os == 'windows-latest' && 'pwsh' || 'bash' }}
 
-      # Only thing we really need to do on Windows is run tests
-      - name: Run Tests
-        if: matrix.lib.changes
-        run: yarn workspaces foreach -A --include ${{ matrix.lib.name }} run test --coverage
+  #     # Only thing we really need to do on Windows is run tests
+  #     - name: Run Tests
+  #       if: matrix.lib.changes
+  #       run: yarn workspaces foreach -A --include ${{ matrix.lib.name }} run test --coverage
 
-      - name: Run Auxillary Tasks
-        if: matrix.lib.changes && matrix.os == 'ubuntu-latest'
-        run: yarn workspaces foreach -A --include ${{ matrix.lib.name }} run tsc
+  #     - name: Run Auxillary Tasks
+  #       if: matrix.lib.changes && matrix.os == 'ubuntu-latest'
+  #       run: yarn workspaces foreach -A --include ${{ matrix.lib.name }} run tsc
 
   # tabs:
   #   runs-on: ubuntu-latest
@@ -230,12 +230,12 @@ jobs:
     name: Docs Server Tasks
     runs-on: ubuntu-latest
     needs:
-      - libraries
+      # - libraries
       - find-packages
 
     steps:
       - name: Echo Information
-        run: echo ${{ needs.find-packages.outputs.docserver.changes }}
+        run: echo ${{ needs.find-packages.outputs.docserver }}
 
       - name: Check out source code
         uses: actions/checkout@v4
