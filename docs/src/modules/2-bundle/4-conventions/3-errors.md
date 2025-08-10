@@ -1,9 +1,12 @@
 # Error Handling
+
 As a continuation of the previous section, and important part of hiding a bundle's implementation details involves handling error conditions and errors
 that could be thrown.
 
 ## The `name` Property on Functions
+
 Specific to error handling, thrown errors should contain a reference to the calling function's name (using the `name` property):
+
 ```ts
 export function make_sound(wave: Wave, duration: number): Sound {
   if (duration < 0) {
@@ -17,6 +20,7 @@ export function make_sound(wave: Wave, duration: number): Sound {
 This helps prevent the stack trace from going deeper into internal bundle implementations, which would only serve to confuse a cadet and break abstractions.
 
 If the error is thrown from a function that's only meant for internal use, then that function should take a `name` string parameter instead:
+
 ```ts
 // throwIfNotRune isn't exported, it is supposed to be called
 // from functions that are
@@ -50,6 +54,7 @@ that is visible to them. Many other functions might rely on `throwIfNotRune`. If
 (was it `show`? or `anaglyph`? or something else?)
 
 ## Type Checking
+
 Though bundles are written in Typescript, Source (except for the Typed Variant) does not support anything beyond rudimentary type checking. This means that it can determine that an expression
 like `1 - "string"` is badly typed, but it can't type check more complex programs like the one below, especially when bundle functions are involved:
 
@@ -59,10 +64,10 @@ import { show } from 'rune';
 // Error: show expects a rune!
 show(1);
 ```
+
 ::: details Type Maps
 Source is moving toward enabling compile-time (or at least pre-execution since Source programs don't really have a "compilation" step) type checking for Source Modules using a feature known as [type maps](../7-type_map).
 :::
-
 
 The above call to `show` won't a throw compile-time error. Instead, the error is thrown at runtime by bundle code. This is the case even if the function has been annotated with
 Typescript types.
@@ -87,6 +92,7 @@ export function show(rune: unknown) {
   return rune;
 }
 ```
+
 If we're expecting cadets to be able to pass any type of object in, why not use `unknown` in all these places?
 
 Currently, bundle documentation for cadets relies on these type annotations being present and properly typed. If everything were typed as `unknown`, that's

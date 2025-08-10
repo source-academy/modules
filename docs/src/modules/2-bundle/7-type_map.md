@@ -1,4 +1,5 @@
 # Bundle Type Maps
+
 Sometimes, a bundle's exports may have very complex types, or types that leak implementation details. Or, a bundle's author
 might want to present an export with a different type than the one used in its Typescript source code.
 
@@ -16,7 +17,9 @@ Type Maps are opt-in. If the bundle does not provide a type map, then no type ch
 how `skipLibCheck: true` is used in Typescript.
 
 ## Configuring a Type Map
+
 To create a type map, use the `createTypeMap` utility from `@sourceacademy/modules-lib/type_map`.
+
 ```ts
 // rune/src/type_map.ts
 import createTypeMap from '@sourceacademy/modules-lib/type_map';
@@ -34,6 +37,7 @@ Note that the type map export has a `@hidden` documentation tag applied to it.
 > [!IMPORTANT]
 > The `@hidden` tag needs to be applied at the point of declaration. The code below doesn't hide `type_map` as `@hidden` is being applied to where `type_map` is being exported,
 > and not where it is being declared:
+>
 > ```ts
 > const { type_map } = createTypeMap()
 > export {
@@ -41,7 +45,9 @@ Note that the type map export has a `@hidden` documentation tag applied to it.
 >   type_map
 > }
 > ```
+>
 > Hence in the example above, the exports aren't consolidated and written using the export shorthand as seen below:
+>
 > ```ts
 > // Not written like this!
 > export const { functionDeclaration, variableDeclaration, classDeclaration, type_map, typeDeclaration } = createTypeMap();
@@ -100,15 +106,18 @@ export const translate = RuneFunctions.translate;
 > A quick way to check if you have written your documentation correctly is to see if IntelliSense in VSCode is able to display it to you.
 
 Remember to export the type map from the bundle's entry point:
+
 ```ts
 // rune/src/index.ts
 export { type_map } from './type_map';
 ```
 
 ## Type Map Utilities
+
 There are four decorators returned by `createTypeMap`:
 
 ### `variableDeclaration`
+
 Use this decorator to type constant declarations that are **not supposed to behave like functions**. The decorator takes one parameter, which is the string
 representation of the type of the variable.
 
@@ -120,11 +129,14 @@ class RuneFunctions {
   static square: Rune = getSquare();
 }
 ```
+
 This decorator can only be applied to members of a class, so it may be necessary to wrap your variables in a class and
 have them declared as static members.
 
 ### `functionDeclaration`
+
 Use this decorator to type declarations that are supposed to be callable. This decorator takes two parameters:
+
 1. The string representation of the types and names of its parameters
 1. The string representation of its return type
 
@@ -154,9 +166,11 @@ This decorator can only be applied to members of a class, so it may be necessary
 have them declared as static members.
 
 ### `classDeclaration`
+
 This declarator is used to represent actual classes. It takes one parameter, the string representation of the type it is wrapping.
 
 The decorator can be applied directly to the class:
+
 ```ts
 import { classDeclaration } from './type_map';
 
@@ -176,8 +190,10 @@ export class Rune {
 ```
 
 ### `typeDeclaration`
+
 This decorator is used to represent Typescript types. Since Typescript types are intended to be erased entirely to produce
 plain Javascript, it may be necessary to apply these decorators to dummy classes:
+
 ```ts
 // Actual type of curve in Typescript is type Curve = (u: number) => Point
 

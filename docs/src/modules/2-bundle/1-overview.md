@@ -2,11 +2,12 @@
 
 Similar to regular Javascript modules, Source allows developers to export functions and constants to users for importing into their programs.
 
-For example, the `binary_tree` module may want to provide an abstraction for Source programs to interact with the Binary Tree data structure. Thus, the `binary_tree` module would expose functions such as `make_tree`, `left_branch` and `right_branch` to be used in Source programs. 
+For example, the `binary_tree` module may want to provide an abstraction for Source programs to interact with the Binary Tree data structure. Thus, the `binary_tree` module would expose functions such as `make_tree`, `left_branch` and `right_branch` to be used in Source programs.
 
 ## Bundle Directory Structure Overview
 
 The typical bundle structure for a bundle is shown below. Each section will have its own explanation.
+
 ```dirtree
 name: bundle_name
 children:
@@ -65,12 +66,14 @@ export function createDrawFunction(
   // implementation hidden...
 }
 ```
+
 Note that `curve/functions.ts` exports both `createDrawFunction` and `make_point`.
 
 ```ts
 // curve/index.ts
 export { make_point } from './functions';
 ```
+
 However, only `make_point` is exported at the bundle's entry point however `createDrawFunction` is not, so cadets will not be able to access it, identical to how ES modules behave.
 
 ```js
@@ -87,6 +90,7 @@ It is not recommended that you use default exports in your code as default expor
 :::
 
 ## `package.json`
+
 The `package.json` file follows the same format as your typical `package.json` used with the likes of `npm` or `yarn`. If you use the template creation command, it should already have been created for you.
 
 ```jsonc
@@ -101,21 +105,27 @@ The `package.json` file follows the same format as your typical `package.json` u
   }
 }
 ```
+
 You can find more information about each of the fields and what they mean [here](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#devdependencies).
 
 > [!WARNING] Bundle vs Package Name
 > The `name` field in `package.json` is the package name and must follow the format `@sourceacademy/bundle-[your bundle name]`.
 > The bundle name is what users will actually use to import your bundle from within Source code:
+>
 > ```ts
 > import { whatever } from 'bundle_name';
 > ```
+>
 > However, people consuming your bundle from regular Javascript and Typescript need to use the full (scoped) package name:
+>
 > ```ts
 > import { whatever } from '@sourceacademy/bundle-bundle_name';
 > ```
 
 ### `manifest.json`
+
 `manifest.json` contains the information required by `js-slang` to load your bundle.
+
 ```jsonc
 {
   "tabs": ["Curve"], // String array of the names of the tabs that will be loaded alongside your bundle
@@ -133,7 +143,9 @@ Your bundle may rely on features that are only present in later Source Chapters.
 > You can use the `buildtools list bundle` command to check that your bundle can be properly detected and has the correct format.
 
 ## `tsconfig.json`
+
 This file controls the behaviour of Typescript. By default, it should look like this:
+
 ```json
 {
   "extends": "../tsconfig.json",
@@ -148,10 +160,9 @@ This file controls the behaviour of Typescript. By default, it should look like 
   }
 }
 ```
+
 In general, there should not be a need for you to modify this file.  A full explanation on how to use `tsconfig.json` can be found [here](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html). Note that the `typedocOptions` field is a custom field used by `typedoc` for its configuration. Refer to [here](https://typedoc.org/documents/Options.Configuration.html#compileroptions) for more information.
 
 > [!WARNING]
 > You should not remove or modify the `typedocOptions` section from your `tsconfig.json` unless you provide the name of your bundle to Typedoc via its other configuration methods. Generating documentation for your bundle
 > requires that the name of your bundle be set correctly.
-
-

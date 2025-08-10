@@ -6,7 +6,9 @@ The Development Server (or dev server, for short) is a lightweight version of th
 that they can run their bundle code and see the actual graphic interface of their tabs.
 
 ## Running the Dev Server
+
 To run the dev server, simply use:
+
 ```sh
 yarn devserver
 ```
@@ -20,15 +22,16 @@ You will also need to start the modules server using `yarn serve`.
 The dev server can then be viewed from the web browser.
 
 ## Compiled Mode
+
 By default, the dev server is in hot reload mode. This means the dev server can detect changes to tabs as they are being made
 and automatically reload the displayed tab without requiring a refresh of the page or for the user to rerun code.
 
 In this mode, the dev server can only detect the changes you've made **after** you've compiled your tab.
 
 However, should you wish to test the compiled version of your tab, you can switch the dev server to compiled mode by following the steps below:
+
 1. Click on the settings button:
 ![](./step1.png)
 
 2. Switch to compiled mode
 ![](./step2.png)
-

@@ -1,14 +1,16 @@
 # Bundle Documentation for Users
+
 Documentation for Source bundles is generated using the [`typedoc`](https://typedoc.org) tool. There are two types: HTML and JSON documentation.
 
 By reading comments and type annotations, `typedoc` is able to generate both human readable documentation and documentation in the form of JSON.
 
 > [!WARNING]
 > `typedoc` normally performs type checking for code before generating its outputs. This functionality has been turned off for this repository as more often then not, `tsc` will be run before `typedoc`, making the type checking performed by `typedoc` extraneous.
-> 
+>
 > This does mean that if the documentation is built without running `tsc`, there is a possibility that type errors will cause `typedoc` to crash.
 
 ## Writing Documentation
+
 `typedoc` reads both Typescript type annotations, as well as [TSDOC](https://tsdoc.org) style comments. It will build documentation for all functions and constants exported by the particular module.
 
 ::: details Type Aware annotations
@@ -22,6 +24,7 @@ If you do need to the type of an export to be documented differently from its ty
 :::
 
 Let us look at an example from the `curve` module.
+
 ```ts
 // functions.ts
 /**
@@ -44,7 +47,8 @@ export function make_point(x: number, y: number): Point {
 // index.ts
 export { make_point } from './functions.ts';
 ```
-Since the `curve` bundle exports the `make_point` function, `typedoc` will generate documentation for it. 
+
+Since the `curve` bundle exports the `make_point` function, `typedoc` will generate documentation for it.
 
 Documentation should be written in [Markdown](https://www.markdownguide.org/getting-started/). That way, both IntelliSense and Typedoc will be able to process it. During documentation generation,
 the markdown is converted to raw HTML.
@@ -52,9 +56,11 @@ the markdown is converted to raw HTML.
 The following sections are conventions for writing documentation.
 
 ### Entry Point
+
 At the entry point for each bundle, there should be a block comment that provides general information about the bundle.
 
 This example is taken from the `repeat` bundle:
+
 ```ts
 // repeat/src/index.ts
 /**
@@ -66,6 +72,7 @@ This example is taken from the `repeat` bundle:
 
 export { repeat, twice, thrice } from './functions';
 ```
+
 It is important that you provide an `@module` tag in this description. Otherwise, the build tools may not be able to detect your bundle's
 documentation properly.
 
@@ -73,9 +80,11 @@ documentation properly.
 > An ESLint Rule has been configured specifically for this purpose, so a lint error should appear if you forget to do so.
 
 ### Use of `@hidden`
+
 If there are exports you want hidden from the output of the documentation, you must use the `@hidden` tag.
 
 The example below is taken from the `rune` bundle:
+
 ```ts
 // rune/src/type_map.ts
 import createTypeMap from '@sourceacademy/modules-lib/type_map';
@@ -95,8 +104,10 @@ This causes `type_map` to be removed from the documentation, even if it is expor
 > your bundle's type map export, the build tools will show a warning.
 
 ### Use of `@function`
+
 Following v0.28, Typedoc only documents function-like types as functions if they are explicitly typed as functions (see the issue [here](https://github.com/TypeStrong/typedoc/issues/2881)).
 This means that if you have code that looks like this:
+
 ```ts
 // curve/functions.ts
 function createDrawFunction(
@@ -112,7 +123,9 @@ function createDrawFunction(
 
 export const draw_connected = createDrawFunction('none', 'lines', '2D', false);
 ```
+
 and `RenderFunction` has the following type:
+
 ```ts
 // curve/types.ts
 /**
@@ -124,12 +137,14 @@ export type RenderFunction = {
   is3D: boolean
 };
 ```
+
 Typedoc won't consider `draw_connected` to be a function. Instead it will consider it to be a variable:
 ![](./drawConst.png)
 
 This is because `drawConnected` is of type `RenderFunction` and `RenderFunction` is only _function-like_.
 
 To remedy this, you can either change the type to be an actual function type, or include the `@function` tag in your documentation:
+
 ```ts {6}
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -154,10 +169,12 @@ The export will now be correctly recognized as a function:
 There is no automatic way to make this distinction, so it is up to the bundle authors to make sure that this convention is adhered to.
 
 ### Other Tags
+
 There are a variety of tags that Typedoc supports. This list can be found [here](https://typedoc.org/documents/Tags.html). When writing your documentation you should use these tags
 to the best of your ability to help make your documentation as comprehensive as possible.
 
 ## HTML Documentation
+
 The human readable documentation resides in the `build/documentation` folder. You can view its output [here](https://source-academy.github.io/modules/documentation). This is what the output for `make_point` looks like:
 
 ![image](./htmlDocs.png)
@@ -168,6 +185,7 @@ The description block supports formatting using Markdown. The markdown is transl
 
 To provide the frontend with documentation that can be directly displayed to the user, each module has its own json file in the `jsons` folder containing the formatted descriptions of exported variables.
 Using the example code above, here is what the JSON documentation looks like for the actual `curve` bundle:
+
 ```jsonc
 {
   "make_point": {
@@ -189,12 +207,13 @@ Using the example code above, here is what the JSON documentation looks like for
   // ...other functions and constants
 }
 ```
+
 This is then displayed by the frontend:
 
 ![image](./sourceDocs.png)
 
-
 When building the json documentation for a bundle, the following steps are taken:
+
 1. From `typedoc`'s output, extract the [project](https://typedoc.org/api/classes/ProjectReflection.html) corresponding to the bundle.
 1. For each exported variable, run it through a converter to convert the `typedoc` project into a single string:
     - For constants, their names and types are extracted
@@ -213,8 +232,7 @@ used by Source users. Refer to the `csg` bundle for an example of this. Usually,
 These files aren't automatically included by Typedoc, but Typedoc does have [a mechanism](https://typedoc.org/documents/External_Documents.html) for including external code. Alternatively, a simple solution
 would be to provide a link to the Github folder in which your sample files are contained.
 
-
-
 ## Other Typedoc Options
+
 `typedoc` options can be specified in the `"typedocOptions"` section of your `tsconfig.json`. Unfortunately, we cannot support dynamic configurations (like those loaded using a Javascript file)
 at the moment.

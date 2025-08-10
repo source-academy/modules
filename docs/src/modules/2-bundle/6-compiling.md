@@ -1,4 +1,5 @@
 # Compiling a Bundle
+
 This page contains information on compiling bundles, both for consumption by `js-slang` as well as other bundles.
 
 > [!WARNING]
@@ -6,6 +7,7 @@ This page contains information on compiling bundles, both for consumption by `js
 > test files and will not be included in the compiled output.
 
 ## For `js-slang`
+
 In its raw ESM format, the bundle is unsuitable for use with `js-slang`. It is thus necessary to compile your written Typescript into the format needed by `js-slang`.
 
 Run the following command from within your bundle directory.
@@ -15,6 +17,7 @@ yarn build
 ```
 
 Note that running this command will **NOT** perform typechecking. If you wish to perform typechecking, use the following command:
+
 ```sh
 yarn build --tsc
 ```
@@ -25,7 +28,9 @@ and your bundle will not be compiled.
 The output for your bundle will be placed at `/build/bundles/[your_bundle_name].js`.
 
 ## For Other Bundles
+
 A Source Bundle may use another Source Bundle as a dependency. As an example, the `plotly` bundle relies on the `curve` bundle:
+
 ```ts {2,3}
 // plotly/src/curve_functions.ts
 import { b_of, g_of, r_of, x_of, y_of, z_of } from '@sourceacademy/bundle-curve';
@@ -37,6 +42,7 @@ import { CurvePlot } from './plotly';
 If you intend for your bundle to be consumed from other bundles, do the following:
 
 ### 1. Ensure that your `tsconfig.json` is properly configured
+
 ```json
 {
   "compilerOptions": {
@@ -48,6 +54,7 @@ If you intend for your bundle to be consumed from other bundles, do the followin
 ```
 
 ### 2. Ensure that your `package.json` is configured correctly
+
 ```json
 {
   "name": "@sourceacademy/bundle-curve",
@@ -61,6 +68,7 @@ If you intend for your bundle to be consumed from other bundles, do the followin
   }
 }
 ```
+
 Refer to [this page](https://nodejs.org/api/packages.html#package-entry-points) for more information on how to configure your package exports.
 
 ::: details The `postinstall` script
@@ -70,4 +78,5 @@ manually build your bundle.
 :::
 
 ### 3. Run `tsc`
+
 If necessary, run `yarn tsc` to produce Javascript and Typescript declaration files.
