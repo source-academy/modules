@@ -52,8 +52,8 @@ jobs:
       bundles: ${{ steps.info.outputs.bundles }}
       libs: ${{ steps.info.outputs.libs }}
       tabs: ${{ steps.info.outputs.tabs }}
-      devserver: ${{ fromJson(steps.info.outputs.devserver) }}
-      docserver: ${{ fromJson(steps.info.outputs.docserver) }}
+      devserver: ${{ steps.info.outputs.devserver }}
+      docserver: ${{ steps.info.outputs.docserver }}
       workflows: ${{ steps.info.outputs.workflows }}
 
   libraries:
@@ -232,9 +232,11 @@ jobs:
     needs:
       - libraries
       - find-packages
-    if: ${{ needs.find-packages.outputs.docserver.changes }}
 
     steps:
+      - name: Echo Information
+        run: echo ${{ needs.find-packages.outputs.docserver.changes }}
+
       - name: Check out source code
         uses: actions/checkout@v4
 
