@@ -92,3 +92,20 @@ The buildtools have a `vitest` setup file configured to apply some global mocks:
 
 The setup file also provides two extra matchers that are intended for use with `commander` commands. The typings for these matchers
 are included in `vitest.d.ts`.
+
+## Path Manipulation
+The buildtools are designed to work in both Windows and Unix environments. This means that a lot of the path manipulation required (like resolution or concatenation)
+need to be done in a platform agnostic way where possible. NodeJS provides two versions of its `path` library: `path.win32` and `path.posix` and switches between the
+versions depending on what it detects the OS to be.
+
+This is why for the most part, it is preferable to use the `path` functions rather than string manipulation to manipulate file paths:
+```js
+import pathlib from 'path';
+const finalPath = pathlib.join('1', '2', '3');
+// vs
+const finalPath = '1/2/3';
+```
+However, it is important to note that some tooling (like Typedoc) requires Posix style paths. In that case, it becomes necessary to convert all paths to Posix
+style paths before passing it to Typedoc.
+
+Many of the unit tests have also been written in this way to account for the different behaviours between Windows and Posix style paths.

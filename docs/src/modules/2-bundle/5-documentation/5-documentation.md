@@ -11,6 +11,16 @@ By reading comments and type annotations, `typedoc` is able to generate both hum
 ## Writing Documentation
 `typedoc` reads both Typescript type annotations, as well as [TSDOC](https://tsdoc.org) style comments. It will build documentation for all functions and constants exported by the particular module.
 
+::: details Type Aware annotations
+[JSDoc](https://jsdoc.app) (and TSDoc) both support annotations that express type information directly like `@type` or annotations that can optionally contain type information like `@param` and `@returns`.
+Since modules are already written in Typescript, there is no need to use type-aware annotations to document the type of an object.
+
+All type annotations should be written in directly Typescript
+so as not to confuse Typedoc and ensure that the Typescript compiler is able to ensure type safety.
+
+If you do need to the type of an export to be documented differently from its type in Typescript source code, you can use a [type map](../7-type_map).
+:::
+
 Let us look at an example from the `curve` module.
 ```ts
 // functions.ts
@@ -203,14 +213,7 @@ used by Source users. Refer to the `csg` bundle for an example of this. Usually,
 These files aren't automatically included by Typedoc, but Typedoc does have [a mechanism](https://typedoc.org/documents/External_Documents.html) for including external code. Alternatively, a simple solution
 would be to provide a link to the Github folder in which your sample files are contained.
 
-## JSDoc Annotations
-Modules are written primarily in Typescript.
 
-There is a convention for writing type annotations (essentially documentations comments) in Javascript that allows for type checking functionality known as [JSDoc](https://jsdoc.app). Since
-modules are already written in Typescript, there is no need to use JSDoc comments to document the type of an object. All type annotations should be written in Typescript
-so as not to confuse Typedoc.
-
-If you do need to the type of an export to be documented differently from its type in Typescript source code, you can use a [type map](../7-type_map).
 
 ## Other Typedoc Options
 `typedoc` options can be specified in the `"typedocOptions"` section of your `tsconfig.json`. Unfortunately, we cannot support dynamic configurations (like those loaded using a Javascript file)
