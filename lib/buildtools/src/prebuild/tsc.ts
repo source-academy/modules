@@ -104,6 +104,7 @@ export async function runTsc(input: InputAsset, noEmit: boolean): Promise<TscRes
       // files and actually output the files
       const filesWithoutTests = fileNames.filter(p => {
         const segments = p.split(pathlib.sep);
+        console.log(segments);
         return !segments.includes('__tests__');
       });
       const compileProgram = ts.createProgram({

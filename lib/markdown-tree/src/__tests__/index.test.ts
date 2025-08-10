@@ -1,5 +1,7 @@
 import fs from 'fs';
-import { describe, expect, test, vi } from 'vitest';
+import os from 'os';
+import pathlib from 'path';
+import { describe, expect, test, vi, type MockInstance } from 'vitest';
 import { generateStructure } from '../structure';
 import { generateTree } from '../tree';
 import { isRootYamlObject, isYamlObject } from '../types';
@@ -8,6 +10,8 @@ const mockExistsSync = vi.spyOn(fs, 'existsSync');
 const mockStatSync = vi.spyOn(fs, 'statSync').mockReturnValue({
   isDirectory: () => true
 } as any);
+
+const isWindows = os.platform() === 'win32';
 
 describe('Test isYamlObject', () => {
   const testCases: [string, unknown, boolean][] = [
@@ -75,16 +79,26 @@ test('structure generation', () => {
 });
 
 describe('Test tree validation', () => {
-  const validPaths = [
-    '/',
-    '/real_item0',
-    '/real_item1',
-    '/real_item1/real_item2',
-  ];
+  interface Fixtures {
+    rootDir: string;
+    validPaths: string[]
+    mockExistsSync: MockInstance<typeof fs.existsSync>
+  }
 
-  mockExistsSync.mockImplementation(path => validPaths.includes(path as string));
+  const treeTest = test.extend<Fixtures>({
+    rootDir: ({}, use) => use(isWindows ? '\\' : '/'),
+    validPaths: ({ rootDir }, use) => use([
+      rootDir,
+      pathlib.join(rootDir, 'real_item0'),
+      pathlib.join(rootDir, 'real_item1'),
+      pathlib.join(rootDir, 'real_item1', 'real_item2'),
+    ]),
+    mockExistsSync: ({ validPaths }, use) => use(
+      mockExistsSync.mockImplementation(path => validPaths.includes(path as string))
+    )
+  });
 
-  test('Successful validation', () => {
+  treeTest('Successful validation', ({ rootDir, mockExistsSync }) => {
     const [,,warnings] = generateStructure({
       path: '.',
       name: 'root',
@@ -95,24 +109,23 @@ describe('Test tree validation', () => {
           children: ['real_item2']
         }
       ]
-    }, '/');
-    console.log(warnings);
+    }, rootDir);
     expect(warnings.length).toEqual(0);
-    expect(fs.existsSync).toHaveBeenCalledTimes(4);
+    expect(mockExistsSync).toHaveBeenCalledTimes(4);
   });
 
-  test('Unsuccessful validation when child item doesn\'t exist', () => {
+  treeTest('Unsuccessful validation when child item doesn\'t exist', ({ rootDir, mockExistsSync }) => {
     const [,,warnings] = generateStructure({
       path: '.',
       name: 'root',
       children: ['fake_item0']
-    }, '/');
+    }, rootDir);
 
     expect(warnings.length).toEqual(1);
-    expect(fs.existsSync).toHaveBeenCalledTimes(2);
+    expect(mockExistsSync).toHaveBeenCalledTimes(2);
   });
 
-  test('Unsuccessful validation when item with children is not a folder', () => {
+  treeTest('Unsuccessful validation when item with children is not a folder', ({ rootDir, mockExistsSync }) => {
     mockStatSync.mockReturnValueOnce({
       isDirectory: () => false
     } as any);
@@ -124,14 +137,14 @@ describe('Test tree validation', () => {
         name: 'real_item0',
         children: ['real_item2']
       }]
-    }, '/');
+    }, rootDir);
 
     console.log(warnings);
     expect(warnings.length).toEqual(1);
-    expect(fs.existsSync).toHaveBeenCalledTimes(3);
+    expect(mockExistsSync).toHaveBeenCalledTimes(3);
   });
 
-  test('Not providing a path means no validation is run', () => {
+  treeTest('Not providing a path means no validation is run', ({ mockExistsSync }) => {
     const [,,warnings] = generateStructure({
       path: '.',
       name: 'root',
@@ -142,7 +155,7 @@ describe('Test tree validation', () => {
     });
 
     expect(warnings.length).toEqual(0);
-    expect(fs.existsSync).not.toHaveBeenCalled();
+    expect(mockExistsSync).not.toHaveBeenCalled();
     expect(fs.statSync).not.toHaveBeenCalled();
   });
 });
