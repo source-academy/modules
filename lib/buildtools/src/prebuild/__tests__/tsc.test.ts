@@ -47,6 +47,7 @@ describe('Test the augmented tsc functionality', () => {
 
     expect(ts.createProgram).toHaveBeenCalledTimes(2);
     expect(mockedWriteFile).toHaveBeenCalledTimes(1);
+    console.log(mockedWriteFile.mock.calls);
     const [[writePath]] = mockedWriteFile.mock.calls;
 
     expect(writePath).not.toEqual(pathlib.join(testMocksDir, 'bundles', 'test0', '__tests__', 'test0.test.js'));

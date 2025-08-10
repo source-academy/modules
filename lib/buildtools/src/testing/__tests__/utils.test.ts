@@ -4,6 +4,7 @@ import pathlib from 'path';
 import { bundlesDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import * as manifest from '@sourceacademy/modules-repotools/manifest';
 import * as configs from '@sourceacademy/modules-repotools/testing';
+import { isSamePath } from '@sourceacademy/modules-repotools/utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TestProjectInlineConfiguration } from 'vitest/config';
 import { testMocksDir } from '../../__tests__/fixtures.js';
@@ -14,13 +15,6 @@ class ENOENT extends Error {
     return 'ENOENT';
   }
 }
-
-vi.mock(import('@sourceacademy/modules-repotools/getGitRoot'), () => ({
-  gitRoot: '/',
-  bundlesDir: '/bundles',
-  tabsDir: '/tabs',
-  outDir: '/out'
-}));
 
 const mockedFsGlob = vi.spyOn(fs, 'glob');
 function mockHasTestsOnce(retValue: boolean) {
@@ -142,10 +136,11 @@ describe('Test setBrowserOptions', () => {
 describe('Test getTestConfiguration', () => {
   describe('With tabs', () => {
     const tabPath = pathlib.join(tabsDir, 'Tab0');
+    const tabPackageJson = pathlib.join(tabPath, 'package.json');
 
     beforeEach(() => {
       mockedReadFile.mockImplementation(p => {
-        if (p === '/tabs/Tab0/package.json') {
+        if (isSamePath(tabPackageJson, p as string)) {
           return Promise.resolve(JSON.stringify({
             name: '@sourceacademy/tab-Tab0'
           }));
@@ -204,10 +199,11 @@ describe('Test getTestConfiguration', () => {
 
   describe('With bundles', () => {
     const bundlePath = pathlib.join(bundlesDir, 'bundle0');
+    const bundlePackageJson = pathlib.join(bundlePath, 'package.json');
 
     beforeEach(() => {
       mockedReadFile.mockImplementation(p => {
-        if (p === '/bundles/bundle0/package.json') {
+        if (isSamePath(p as string, bundlePackageJson)) {
           return Promise.resolve(JSON.stringify({
             name: '@sourceacademy/bundle-bundle0'
           }));
@@ -242,7 +238,7 @@ describe('Test getTestConfiguration', () => {
       });
     });
 
-    it('Should return the config even if the function was called from not the tab\'s root directory', async () => {
+    it('Should return the config even if the function was called from not the bundle\'s root directory', async () => {
       const subdir = pathlib.join(bundlePath, 'sub', 'directory');
       mockHasTestsOnce(true);
       await expect(utils.getTestConfiguration(subdir, false)).resolves.toMatchObject({
