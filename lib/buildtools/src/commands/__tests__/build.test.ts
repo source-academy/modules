@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import pathlib from 'path';
 import type { Command } from '@commander-js/extra-typings';
 import type { BuildResult, Severity } from '@sourceacademy/modules-repotools/types';
 import { beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
@@ -67,12 +68,22 @@ function testBuildCommand<T extends Record<string, any>>(
   directories: string[] = [],
   ...cmdArgs: string[]
 ) {
+  /**
+   * Assert that the given directories were created/not created
+   */
   function assertDirectories(created: boolean) {
+    const { calls } = vi.mocked(fs.mkdir).mock;
     for (const directory of directories) {
+      const callFound = calls.find(([actual]) => {
+        const relpath = pathlib.relative(actual as string, `/build/${directory}`);
+        return relpath === '';
+      });
+
       if (created) {
-        expect(fs.mkdir).toHaveBeenCalledWith(`/build/${directory}`, { recursive: true });
+        expect(callFound).not.toBeUndefined();
+        expect(callFound![1]).toEqual({ recursive: true });
       } else {
-        expect(fs.mkdir).not.toHaveBeenCalledWith(`/build/${directory}`, { recursive: true });
+        expect(callFound).toBeUndefined();
       }
     }
   }

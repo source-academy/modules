@@ -28,6 +28,7 @@ vi.mock(import('fs/promises'), async importOriginal => {
     default: {
       ...original,
       cp: vi.fn().mockResolvedValue(undefined),
+      glob: vi.fn(),
       mkdir: vi.fn().mockResolvedValue(undefined),
       writeFile: vi.fn().mockResolvedValue(undefined),
     }
