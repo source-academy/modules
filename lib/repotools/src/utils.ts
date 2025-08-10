@@ -155,3 +155,21 @@ type ArrayOfLength<T extends number, U = unknown, V extends U[] = []> =
 export function arrayIsLength<T extends number>(obj: unknown, length: T): obj is ArrayOfLength<T> {
   return Array.isArray(obj) && obj.length === length;
 }
+
+/**
+ * If the provided path is already a posix path, then this function does nothing.\
+ * Otherwise, it will return Windows paths with the path separators replaced.
+ */
+export function convertToPosixPath(p: string) {
+  return pathlib.posix.join(...p.split(pathlib.sep));
+}
+
+/**
+ * Returns `true` if both paths refer to the same location. This
+ * function should be OS agnostic
+ */
+export function isSamePath(lhs: string, rhs: string) {
+  const relpath = pathlib.relative(lhs, rhs);
+  console.log('relpath for', lhs, 'and', rhs, 'is', relpath);
+  return relpath === '';
+}

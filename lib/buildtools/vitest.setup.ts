@@ -1,5 +1,6 @@
 // Buildtools vitest setup
 import pathlib from 'path';
+import { isSamePath } from '@sourceacademy/modules-repotools/utils';
 import { expect, vi } from 'vitest';
 
 class MockProcessError extends Error {
@@ -128,10 +129,10 @@ expect.extend({
     }
   },
   toMatchPath(received: string, expected: string) {
-    const output = pathlib.relative(received, expected);
+    const result = isSamePath(received, expected);
     return {
-      pass: output === '',
-      message: () => `${received} ${output === '' ? 'did not resolve' : 'resolved'} to ${expected}`,
+      pass: result,
+      message: () => `${received} ${result ? 'did not resolve' : 'resolved'} to ${expected}`,
     };
   }
 });
