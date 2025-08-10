@@ -45,6 +45,62 @@ test('CurveTab', () => {
 
 For more instructions on how to write tests you can refer to the [Vitest website](https://vitest.dev/guide/#writing-tests).
 
+### Test Filtering
+
+> [!INFO]
+> More information on this entire section can be found [here](https://vitest.dev/guide/filtering.html#skipping-suites-and-tests);
+
+While writing tests, you might find that you might want to focus on a single test or single group of tests. For this, `vitest` provides on its `test`, `it` and `describe` functions
+a `.skip` and a `.only` property:
+```ts
+describe('Test1 and Test3 will run!', () => {
+  test('Test1', () => {});
+  test.skip('Test2', () => {});
+  test('Test3', () => {})
+});
+```
+You don't have to comment out your tests; simply use `.skip` to indicate that a test block should not be executed.
+
+If for some reason you want to skip your tests based on some condition, `vitest` provides the `skipIf` property:
+```ts
+describe('Test1 and Test3 will run!', () => {
+  test('Test1', () => {});
+  test.skipIf(condition)('Test2', () => {});
+  test('Test3', () => {})
+});
+```
+
+`.only` is kind of the reverse of `.skip`. Tests that you use `.only` with will be the **only** tests that run in that file:
+```ts
+describe('Only Test 2 will run!', () => {
+  test('Test1', () => {});
+  test.only('Test2', () => {});
+  test('Test3', () => {})
+});
+```
+The main runner that runs unit tests on the CI/CD pipeline does not allow for `.only`. You can simulate this behaviour by running your tests with the
+`--no-allow-only` flag.  This behaviour is intended to prevent you from causing only part of your tests to run.
+
+> [!INFO] Linting
+> There is an ESLint rule configured to warn you if you use focused tests (using `.only`). This is not an issue, so long as you remember
+> to remove `.only` before pushing to the main repository.
+
+Pushing with skipped tests however, is allowed. Do leave a comment explaining why the test is skipped:
+```ts
+// Test is skipped because there is an outstanding bug
+test.skip('Test path resolution', () => {})
+```
+
+### Stubbing Tests
+If you want to indicate that tests should be written for certain functionality in the future, you can use `.todo`:
+
+```ts
+// Needs to be implemented when the outstanding bug is fixed
+test.todo('Test path resolution')
+```
+
+TODO tests still generate an entry in your test reports, but will be considered neither failed nor passed.
+
 ## Running Tests
 To run tests for a given bundle or tab, simply run either of the following commands within the directory:
 ```sh
@@ -55,6 +111,8 @@ yarn test # If your package.json has this script specified
 By default, `vitest` will quit after running tests. If you wish to run the tests in watch mode, use the `--watch` parameter.
 
 You can also use `--update` to update snapshots and `--coverage` to run the V8 coverage reporter.
+
+For bundles and tabs, the test environment should always be `jsdom`, since they are intended for the browser.
 
 ## Integration with Git Hooks
 Any tests that you have written must be pass in order for you to push to the main repository, as well as for your pull requests to be merged.

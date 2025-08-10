@@ -165,11 +165,9 @@ export function convertToPosixPath(p: string) {
 }
 
 /**
- * Returns `true` if both paths refer to the same location. This
- * function should be OS agnostic
+ * Returns `true` if both paths refer to the same location.
  */
 export function isSamePath(lhs: string, rhs: string) {
   const relpath = pathlib.relative(lhs, rhs);
-  console.log('relpath for', lhs, 'and', rhs, 'is', relpath);
   return relpath === '';
 }

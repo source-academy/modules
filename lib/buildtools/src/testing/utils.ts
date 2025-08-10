@@ -99,6 +99,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
       const type = typeStr as 'bundle' | 'tab';
       return [type, directory];
     } catch (error) {
+      console.log('No package.json found in', directory);
       if (!isNodeError(error) || error.code !== 'ENOENT') throw error;
       const parentDir = pathlib.resolve(directory, '..');
       return findPackageJson(parentDir);

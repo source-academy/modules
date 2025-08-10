@@ -1,9 +1,12 @@
 import type { Dirent } from 'fs';
 import fs from 'fs/promises';
+import pathlib from 'path';
+import { bundlesDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import * as manifest from '@sourceacademy/modules-repotools/manifest';
 import * as configs from '@sourceacademy/modules-repotools/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TestProjectInlineConfiguration } from 'vitest/config';
+import { testMocksDir } from '../../__tests__/fixtures.js';
 import * as utils from '../utils.js';
 
 class ENOENT extends Error {
@@ -138,6 +141,8 @@ describe('Test setBrowserOptions', () => {
 
 describe('Test getTestConfiguration', () => {
   describe('With tabs', () => {
+    const tabPath = pathlib.join(tabsDir, 'Tab0');
+
     beforeEach(() => {
       mockedReadFile.mockImplementation(p => {
         if (p === '/tabs/Tab0/package.json') {
@@ -152,36 +157,37 @@ describe('Test getTestConfiguration', () => {
       vi.spyOn(manifest, 'resolveSingleTab').mockResolvedValueOnce({
         type: 'tab',
         name: 'Tab0',
-        directory: '/tabs/Tab0',
-        entryPoint: '/tabs/Tab0/index.tsx'
+        directory: tabPath,
+        entryPoint: pathlib.join(tabPath, 'index.tsx')
       });
     });
 
     it('Should return the config if the tab has tests', async () => {
       mockHasTestsOnce(true);
-      await expect(utils.getTestConfiguration('/tabs/Tab0', false)).resolves.toMatchObject({
+      await expect(utils.getTestConfiguration(tabPath, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
           ...configs.sharedTabsConfig,
           test: {
             ...configs.sharedTabsConfig.test!,
             name: 'Tab0 Tab',
-            root: '/tabs/Tab0'
+            root: tabPath
           }
         }
       });
     });
 
     it('Should return the config even if the function was called from not the tab\'s root directory', async () => {
+      const subDir = pathlib.join(tabPath, 'sub', 'directory');
       mockHasTestsOnce(true);
-      await expect(utils.getTestConfiguration('/tabs/Tab0/sub/directory', false)).resolves.toMatchObject({
+      await expect(utils.getTestConfiguration(subDir, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
           ...configs.sharedTabsConfig,
           test: {
             ...configs.sharedTabsConfig.test!,
             name: 'Tab0 Tab',
-            root: '/tabs/Tab0'
+            root: tabPath
           }
         }
       });
@@ -189,7 +195,7 @@ describe('Test getTestConfiguration', () => {
 
     it('Should return null if the tab has no tests', async () => {
       mockHasTestsOnce(false);
-      await expect(utils.getTestConfiguration('/tabs/Tab0', false)).resolves.toMatchObject({
+      await expect(utils.getTestConfiguration(tabPath, false)).resolves.toMatchObject({
         severity: 'success',
         config: null
       });
@@ -197,6 +203,8 @@ describe('Test getTestConfiguration', () => {
   });
 
   describe('With bundles', () => {
+    const bundlePath = pathlib.join(bundlesDir, 'bundle0');
+
     beforeEach(() => {
       mockedReadFile.mockImplementation(p => {
         if (p === '/bundles/bundle0/package.json') {
@@ -214,36 +222,37 @@ describe('Test getTestConfiguration', () => {
           type: 'bundle',
           name: 'bundle0',
           manifest: {},
-          directory: '/bundles/bundle0',
+          directory: bundlePath
         }
       });
     });
 
     it('Should return the config if the bundle has tests', async () => {
       mockHasTestsOnce(true);
-      await expect(utils.getTestConfiguration('/bundles/bundle0', false)).resolves.toMatchObject({
+      await expect(utils.getTestConfiguration(bundlePath, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
           ...configs.baseVitestConfig,
           test: {
             ...configs.baseVitestConfig.test!,
             name: 'bundle0 Bundle',
-            root: '/bundles/bundle0'
+            root: bundlePath
           }
         }
       });
     });
 
     it('Should return the config even if the function was called from not the tab\'s root directory', async () => {
+      const subdir = pathlib.join(bundlePath, 'sub', 'directory');
       mockHasTestsOnce(true);
-      await expect(utils.getTestConfiguration('/bundles/bundle0/sub/directory', false)).resolves.toMatchObject({
+      await expect(utils.getTestConfiguration(subdir, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
           ...configs.baseVitestConfig,
           test: {
             ...configs.baseVitestConfig.test!,
             name: 'bundle0 Bundle',
-            root: '/bundles/bundle0'
+            root: bundlePath
           }
         }
       });
@@ -251,7 +260,7 @@ describe('Test getTestConfiguration', () => {
 
     it('Should return null if the bundle has no tests', async () => {
       mockHasTestsOnce(false);
-      await expect(utils.getTestConfiguration('/bundles/bundle0', false)).resolves.toMatchObject({
+      await expect(utils.getTestConfiguration(bundlePath, false)).resolves.toMatchObject({
         severity: 'success',
         config: null
       });
@@ -259,9 +268,11 @@ describe('Test getTestConfiguration', () => {
   });
 
   describe('With neither', () => {
+    const libPath = pathlib.join(testMocksDir, 'dir');
+
     beforeEach(() => {
       mockedReadFile.mockImplementation(p => {
-        if (p === '/dir/package.json') {
+        if (p === pathlib.join(libPath, 'package.json')) {
           return Promise.resolve(JSON.stringify({
             name: "@sourceacademy/a-pacakge"
           }));
@@ -278,14 +289,35 @@ describe('Test getTestConfiguration', () => {
           name: 'Test0'
         }
       });
-      await expect(utils.getTestConfiguration('/dir', false)).resolves.toMatchObject({
+      await expect(utils.getTestConfiguration(libPath, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
           ...configs.baseVitestConfig,
           test: {
             ...configs.baseVitestConfig.test!,
             name: 'Test0',
-            root: '/dir'
+            root: libPath
+          }
+        }
+      });
+    });
+
+    it('should return the package directory even if run from a sub directory', async () => {
+      mockHasTestsOnce(true);
+      mockedLoadConfig.mockResolvedValueOnce({
+        test: {
+          name: 'Test0'
+        }
+      });
+      const subdir = pathlib.join(libPath, 'sub', 'directory');
+      await expect(utils.getTestConfiguration(subdir, false)).resolves.toMatchObject({
+        severity: 'success',
+        config: {
+          ...configs.baseVitestConfig,
+          test: {
+            ...configs.baseVitestConfig.test!,
+            name: 'Test0',
+            root: libPath
           }
         }
       });
@@ -295,11 +327,11 @@ describe('Test getTestConfiguration', () => {
       mockedLoadConfig.mockResolvedValueOnce(null);
       mockHasTestsOnce(true);
 
-      await expect(utils.getTestConfiguration('/dir', false))
+      await expect(utils.getTestConfiguration(libPath, false))
         .resolves
         .toMatchObject({
           severity: 'error',
-          errors: ['Tests were found for /dir, but no vitest config could be located']
+          errors: [`Tests were found for ${libPath}, but no vitest config could be located`]
         });
     });
 
@@ -307,7 +339,7 @@ describe('Test getTestConfiguration', () => {
       mockedLoadConfig.mockResolvedValueOnce(null);
       mockHasTestsOnce(false);
 
-      await expect(utils.getTestConfiguration('/dir', false))
+      await expect(utils.getTestConfiguration(libPath, false))
         .resolves
         .toMatchObject({
           severity: 'success',
@@ -430,6 +462,7 @@ describe('Test getAllTestConfigurations', () => {
           }
         }
       });
+    const dirpath = pathlib.join(testMocksDir, 'dir');
 
     // eslint-disable-next-line @typescript-eslint/require-await
     mockedFsGlob.mockImplementationOnce(async function* () {
@@ -440,7 +473,7 @@ describe('Test getAllTestConfigurations', () => {
           yield {
             isDirectory: () => true,
             name: `project${i}`,
-            parentPath: '/dir'
+            parentPath: dirpath,
           } as Dirent;
         }
       }
@@ -448,7 +481,7 @@ describe('Test getAllTestConfigurations', () => {
       yield {
         isDirectory: () => true,
         name: 'node_modules',
-        parentPath: '/dir'
+        parentPath: dirpath
       } as Dirent;
     });
 
@@ -463,7 +496,7 @@ describe('Test getAllTestConfigurations', () => {
             ...configs.baseVitestConfig,
             test: {
               ...configs.baseVitestConfig.test!,
-              root: '/dir/project0',
+              root: pathlib.join(dirpath, 'project0'),
               name: {
                 label: 'project0',
                 color: 'black'
@@ -477,7 +510,7 @@ describe('Test getAllTestConfigurations', () => {
             ...configs.baseVitestConfig,
             test: {
               ...configs.baseVitestConfig.test!,
-              root: '/dir/project1',
+              root: pathlib.join(dirpath, 'project1'),
               name: {
                 label: 'project1',
                 color: 'red'
@@ -491,7 +524,7 @@ describe('Test getAllTestConfigurations', () => {
             ...configs.baseVitestConfig,
             test: {
               ...configs.baseVitestConfig.test!,
-              root: '/dir/project2',
+              root: pathlib.join(dirpath, 'project2'),
               name: {
                 label: 'project2',
                 color: 'black'
