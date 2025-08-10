@@ -42,7 +42,7 @@ jobs:
       - name: Echo Information about docserver
         run: |
           echo ${{ steps.info.outputs.docserver }}
-          echo ${{ steps.info.outputs.docserver.changes }}
+          echo ${{ fromJson(steps.info.outputs.docserver).changes }}
 
       - name: Echo Information about devserver
         if: ${{ !steps.info.outputs.docserver.changes }}
@@ -52,8 +52,8 @@ jobs:
       bundles: ${{ steps.info.outputs.bundles }}
       libs: ${{ steps.info.outputs.libs }}
       tabs: ${{ steps.info.outputs.tabs }}
-      devserver: ${{ steps.info.outputs.devserver }}
-      docserver: ${{ steps.info.outputs.docserver }}
+      devserver: ${{ fromJson(steps.info.outputs.devserver) }}
+      docserver: ${{ fromJson(steps.info.outputs.docserver) }}
       workflows: ${{ steps.info.outputs.workflows }}
 
   libraries:
