@@ -235,7 +235,7 @@ jobs:
 
     steps:
       - name: Echo Information
-        run: echo ${{ needs.find-packages.outputs.docserver }}
+        run: echo ${{ fromJson(needs.find-packages.outputs.docserver).changes }}
 
       - name: Check out source code
         uses: actions/checkout@v4
