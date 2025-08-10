@@ -103,8 +103,7 @@ export async function runTsc(input: InputAsset, noEmit: boolean): Promise<TscRes
       // If noEmit isn't specified, then run tsc again without including test
       // files and actually output the files
       const filesWithoutTests = fileNames.filter(p => {
-        const segments = p.split(pathlib.sep);
-        console.log(segments);
+        const segments = p.split(pathlib.posix.sep);
         return !segments.includes('__tests__');
       });
       const compileProgram = ts.createProgram({
