@@ -1,4 +1,4 @@
-import type { RawPackageRecord } from './utils.js';
+import type { RawPackageRecord } from '../commons.js';
 
 /**
  * Based on the dependencies and devDependencies fields of packages, create a topological

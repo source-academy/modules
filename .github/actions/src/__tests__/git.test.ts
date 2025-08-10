@@ -1,6 +1,6 @@
 import * as exec from '@actions/exec';
 import { describe, expect, it, vi } from 'vitest';
-import * as git from '../git.js';
+import * as git from '../commons.js';
 
 vi.mock(import('lodash/memoize.js'), () => ({
   default: (x: any) => x

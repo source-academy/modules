@@ -32,7 +32,7 @@
     "build:libs": "yarn workspaces foreach -ptW --from \"./lib/*\" run build",
     "build:modules": "yarn workspaces foreach -ptW --from \"./src/{bundles,tabs}/*\" run buildtools build && buildtools manifest",
     "devserver": "devserver",
-    "lint:all": "buildtools lintglobal && yarn lint:modules",
+    "lint:all": "node --max-old-space-size=8192 $(yarn bin buildtools) lintglobal && yarn lint:modules",
     "lint:inspect": "yarn dlx eslint --inspect-config",
     "lint:modules": "yarn workspaces foreach -j 5 -pW --from \"./src/{bundles,tabs}\" run lint",
     "prepare": "husky",
