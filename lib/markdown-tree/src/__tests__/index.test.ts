@@ -96,6 +96,7 @@ describe('Test tree validation', () => {
         }
       ]
     }, '/');
+    console.log(warnings);
     expect(warnings.length).toEqual(0);
     expect(fs.existsSync).toHaveBeenCalledTimes(4);
   });
@@ -125,6 +126,7 @@ describe('Test tree validation', () => {
       }]
     }, '/');
 
+    console.log(warnings);
     expect(warnings.length).toEqual(1);
     expect(fs.existsSync).toHaveBeenCalledTimes(3);
   });
