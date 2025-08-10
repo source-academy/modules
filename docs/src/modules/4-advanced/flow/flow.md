@@ -11,6 +11,7 @@
 6. Any tabs that need to be loaded will then be loaded, ready for display by the frontend.
 
 ## In the Frontend
+
 ![image](./fig2.png)
 > Figure 2: The Flow of the Source Modules system in the frontend
 

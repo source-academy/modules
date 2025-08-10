@@ -4,6 +4,7 @@ The ESLint config file for this repository is fairly complex. The different conf
 You can refer to [this](https://eslint.org/docs/latest/use/configure/configuration-files) page for more information on how ESLint processes these configuration objects.
 
 Generally, there are two types of linting rules:
+
 1. Repository only code (used for development of modules)
 2. Module code (Code that is actually intended to be used in Source)
 
@@ -14,6 +15,7 @@ ESLint does provide a configuration inspector which can be started using <nobr>`
 and also other information like what rules are considered deprecated.
 
 ## Configuration Conventions
+
 Our linting configurations often inherit from recommended configurations provided by plugins. However, not all of the rules that are configured by these configurations make sense
 for the repository at large. This requires that we manually override some of the settings provided by these configurations.
 
@@ -36,6 +38,7 @@ are usually incomplete snippets of Typescript/Javascript, so a lot of the typica
 -->
 
 ## Linting JSON Files
+
 For the most part, there are only stylistic rules that need to be applied to JSON files. This is why this repository doesn't use the official `@eslint/json` package for linting JSON files.
 Instead. the parser from `eslint-plugin-json` is used so that stylistic rules can be applied to the JSON files. This does mean that none of the rules from `@eslint/json` can be applied
 directly.

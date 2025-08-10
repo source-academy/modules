@@ -4,7 +4,9 @@ Using the [`extends`](https://www.typescriptlang.org/tsconfig/#extends) property
 different levels to share options across both bundles and tabs.
 
 ## Missing types for dependencies and overriding `tsconfig.json`
+
 Sometimes, your bundle might depend on packages that have published their types differently. For example, the `communication` bundle requires `mqtt`:
+
 ```ts
 import { connect, type MqttClient, type QoS } from 'mqtt/dist/mqtt';
 // Need to use "mqtt/dist/mqtt" as "mqtt" requires global, which SA's compiler does not define.
@@ -16,7 +18,9 @@ export const STATE_OFFLINE = 'Offline';
 
 // ...other things
 ```
+
 The `mqtt` dependency however, is specified as such in `package.json`:
+
 ```json
 {
   "dependencies": {
@@ -25,6 +29,7 @@ The `mqtt` dependency however, is specified as such in `package.json`:
   }
 }
 ```
+
 The helpful comment below the import explains the discrepancy. Without further configuration, we find that Typescript is unable to find the types for the `mqtt/dist/mqtt` package:
 ![](./mqtt-types.png)
 

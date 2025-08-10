@@ -2,6 +2,7 @@
 title: Modules Manifest
 ---
 # The Modules Manifest
+
 Every bundle has its own [manifest](../2-bundle/1-overview#manifestjson), but there is also a combined manifest, which actually consists of all the
 separate bundles' manifests combined into one. This serves as a easy file for `js-slang` to check against when loading bundles and also to make
 sure that the bundle being loaded actually exists.

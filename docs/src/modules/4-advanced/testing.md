@@ -8,7 +8,7 @@ The testing library used by this repository is [`vitest`](https://vitest.dev).
 > [!IMPORTANT]
 > Other Source Academy repositories use `jest` as their testing package. Although `vitest` has been designed as a drop in replacement for `jest`,
 > there are subtle differences between the two. For example, `vi.spyOn` doesn't replace the implementation within the module while `jest.spyOn` does (See [here](https://vitest.dev/guide/mocking.html#mocking-pitfalls)).
-> 
+>
 > Refer to [this page](https://vitest.dev/guide/migration.html#jest) for more differences between `jest` and `vitest`.
 
 ## Adding Tests
@@ -17,6 +17,7 @@ By default, any Typescript (`.ts`) files located within a `__tests__` folder are
 detect any tests within that file, it will throw an error.  This also includes any subdirectories under a `__tests__` folder.
 
 Simply write your tests within a `__tests__` folder:
+
 ```ts
 // curve/src/__tests__/index.ts
 import { describe, expect, test } from 'vitest'; // You will need to import these functions, unlike in Jest
@@ -33,6 +34,7 @@ describe('This is a describe block', () => {
 > Javascript and Typescript declarations but will still conduct type checking for them.
 
 Tests for tabs can also use the `.tsx` extension along with JSX syntax:
+
 ```tsx
 // Curve/__tests__/index.tsx
 import { expect, test } from 'vitest';
@@ -52,6 +54,7 @@ For more instructions on how to write tests you can refer to the [Vitest website
 
 While writing tests, you might find that you might want to focus on a single test or single group of tests. For this, `vitest` provides on its `test`, `it` and `describe` functions
 a `.skip` and a `.only` property:
+
 ```ts
 describe('Test1 and Test3 will run!', () => {
   test('Test1', () => {});
@@ -59,9 +62,11 @@ describe('Test1 and Test3 will run!', () => {
   test('Test3', () => {})
 });
 ```
+
 You don't have to comment out your tests; simply use `.skip` to indicate that a test block should not be executed.
 
 If for some reason you want to skip your tests based on some condition, `vitest` provides the `skipIf` property:
+
 ```ts
 describe('Test1 and Test3 will run!', () => {
   test('Test1', () => {});
@@ -71,6 +76,7 @@ describe('Test1 and Test3 will run!', () => {
 ```
 
 `.only` is kind of the reverse of `.skip`. Tests that you use `.only` with will be the **only** tests that run in that file:
+
 ```ts
 describe('Only Test 2 will run!', () => {
   test('Test1', () => {});
@@ -78,6 +84,7 @@ describe('Only Test 2 will run!', () => {
   test('Test3', () => {})
 });
 ```
+
 The main runner that runs unit tests on the CI/CD pipeline does not allow for `.only`. You can simulate this behaviour by running your tests with the
 `--no-allow-only` flag.  This behaviour is intended to prevent you from causing only part of your tests to run.
 
@@ -86,12 +93,14 @@ The main runner that runs unit tests on the CI/CD pipeline does not allow for `.
 > to remove `.only` before pushing to the main repository.
 
 Pushing with skipped tests however, is allowed. Do leave a comment explaining why the test is skipped:
+
 ```ts
 // Test is skipped because there is an outstanding bug
 test.skip('Test path resolution', () => {})
 ```
 
 ### Stubbing Tests
+
 If you want to indicate that tests should be written for certain functionality in the future, you can use `.todo`:
 
 ```ts
@@ -102,7 +111,9 @@ test.todo('Test path resolution')
 TODO tests still generate an entry in your test reports, but will be considered neither failed nor passed.
 
 ## Running Tests
+
 To run tests for a given bundle or tab, simply run either of the following commands within the directory:
+
 ```sh
 yarn buildtools test .
 yarn test # If your package.json has this script specified
@@ -115,13 +126,16 @@ You can also use `--update` to update snapshots and `--coverage` to run the V8 c
 For bundles and tabs, the test environment should always be `jsdom`, since they are intended for the browser.
 
 ## Integration with Git Hooks
+
 Any tests that you have written must be pass in order for you to push to the main repository, as well as for your pull requests to be merged.
 
 > [!TIP]
 > You can push to the branch while bypassing the Git hook by running:
+>
 > ```sh
 > git push --no-verify
 > ```
+>
 > However, the tests will still be run and must pass before your pull request can be merged. So, we recommend not using this option
 > unless absolutely necessary.
 
@@ -138,18 +152,21 @@ written in plain Javascript with a <nobr><code>// @ts-check</code></nobr> direct
 
 > [!WARNING] Dependency Optimization Error
 > You may find that when your tests run on your local machine the following warning (or something similar) may appear:
+>
 > ```sh
 > [vite] (client) ✨ new dependencies optimized: react/jsx-dev-runtime  
 > [vite] (client) ✨ optimized dependencies changed. reloading  
 > [vitest] Vite unexpectedly reloaded a test. This may cause tests to fail, lead to flaky behaviour or duplicated test runs.  
 > For a stable experience, please add mentioned dependencies to your config's `optimizeDeps.include` field manually.  
 > ```
+>
 > If this warning appears when you run your tests on the machine, you may find that your tests may still pass on the local machine, but
 > fail on the CI pipeline.
 >
 > This is because you have a dependency that Vite can only detect at runtime and so has to run its internal transforms twice. This causes
 > Vitest to fail, since the original import would have failed. To fix this, you should create your own `vitest.config.js` and add those
 > dependencies to `optimizeDeps`:
+>
 > ```js
 > export default defineProject({
 >   optimizeDeps: {
@@ -160,6 +177,7 @@ written in plain Javascript with a <nobr><code>// @ts-check</code></nobr> direct
 >   }
 > })
 > ```
+>
 > For more information, refer to the [Vite](https://vite.dev/config/dep-optimization-options.html#optimizedeps-include) documentation.
 
 Should you need to use a unique configuration, simply create your own `vitest.config.js` at the root of your bundle/tab.
@@ -167,6 +185,7 @@ The configuration options in your `vitest.config.js` will be used **in addition*
 to redefine every single option in your configuration file.
 
 You should use the `defineProject` helper instead of the `defineConfig` helper:
+
 ```js [vitest.config.js]
 // @ts-check
 import { defineProject } from 'vitest/config';
@@ -183,6 +202,7 @@ There is no need to use `mergeConfig` to merge your configuration with the root 
 the merging is performed automatically.
 
 ## Browser Mode
+
 Tabs have the ability to leverage `playwright` and `vitest`'s browser mode to ensure that the interactive features of the tab actually
 behave like they should.
 
@@ -190,6 +210,7 @@ The default testing configuration for tabs has browser mode disabled. This is so
 `vitest` won't need to spin up the Playwright instance.
 
 ### Setting up Browser Mode
+
 Should you wish to enable browser mode, create a custom `vitest` configuration file for your tab with the `browswer.enabled` option set to `true`:
 
 ```js {9}
@@ -214,6 +235,7 @@ Now, the tests for your tab will be run in browser mode.
 > add more instances if necessary.
 
 ### Writing Interactive Tests
+
 Writing interactive tests is not very different from writing regular tests. Most of the time, the usual test and assertion functions will suffice.
 
 > [!INFO]
@@ -221,6 +243,7 @@ Writing interactive tests is not very different from writing regular tests. Most
 > being rendered during the test.
 
 Use the `render` function provided `vitest-browser-react` to render your tab/component to a screen. The returned component can then be interacted with:
+
 ```tsx
 import { render } from 'vitest-browser-react';
 
@@ -233,6 +256,7 @@ test('Testing my component', () => {
   expect().somethingToHaveHappened();
 });
 ```
+
 `vitest` also provides [a different set](https://vitest.dev/guide/browser/assertion-api.html) of matchers that you can use specifically with browser elements.
 
 > [!TIP]
@@ -240,6 +264,7 @@ test('Testing my component', () => {
 > you may find that if you have multiple tests in the same file that behaviour might be inconsistent.
 >
 > You can use it with `afterEach` from `vitest`:
+>
 > ```ts
 > import { afterEach } from 'vitest';
 > import { cleanup } from 'vitest-browser-react';
@@ -248,6 +273,7 @@ test('Testing my component', () => {
 > ```
 
 ### `expect.poll` and `expect.element`
+
 Sometimes, visual elements take a while to finish or an element might take a while to load. If you just directly used an assertion, the assertion
 might fail because the element hasn't displayed yet:
 
@@ -263,6 +289,7 @@ test('An animation', async () => {
 ```
 
 Instead, `vitest` provides a special set of matchers that can be used to "retry" the assertion until it passes or when it times out:
+
 ```tsx
 import { render } from 'vitest-browser-react';
 
@@ -277,9 +304,11 @@ test('An animation', async () => {
 ```
 
 ### Animations with `requestAnimationFrame`
+
 If you're using `requestAnimationFrame` to trigger animations, you can also test the behaviour of these animated components.
 
 Firstly, add the following setup and teardown function calls to your code:
+
 ```ts
 import { beforeEach, afterEach, vi } from 'vitest';
 
