@@ -40,9 +40,11 @@ jobs:
         uses: ./.github/actions/src/info
 
       - name: Echo Information about docserver
+        if: ${{ !steps.info.outputs.docserver.changes }}
         run: echo ${{ steps.info.outputs.docserver }}
 
       - name: Echo Information about devserver
+        if: ${{ !steps.info.outputs.docserver.changes }}
         run: echo ${{ steps.info.outputs.devserver }}
 
     outputs:
