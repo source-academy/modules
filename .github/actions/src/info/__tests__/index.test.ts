@@ -2,7 +2,7 @@ import type { Dirent } from 'fs';
 import fs from 'fs/promises';
 import pathlib from 'path';
 import { describe, expect, test, vi } from 'vitest';
-import * as git from '../git.js';
+import * as git from '../../commons.js';
 import { getAllPackages, getRawPackages } from '../index.js';
 
 const mockedCheckChanges = vi.spyOn(git, 'checkForChanges');

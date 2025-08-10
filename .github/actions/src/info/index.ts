@@ -2,9 +2,8 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import utils from 'util';
 import * as core from '@actions/core';
-import { checkForChanges, getGitRoot } from './git.js';
+import { checkForChanges, getGitRoot, type PackageRecord, type RawPackageRecord } from '../commons.js';
 import { topoSortPackages } from './sorter.js';
-import type { PackageRecord, RawPackageRecord } from './utils.js';
 
 const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
 
