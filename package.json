@@ -76,8 +76,7 @@
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.33.1",
     "vitest": "^3.2.3",
-    "vitest-browser-react": "^1.0.0",
-    "yarnhook": "^0.6.0"
+    "vitest-browser-react": "^1.0.0"
   },
   "dependencies": {
     "js-slang": "^1.0.81",

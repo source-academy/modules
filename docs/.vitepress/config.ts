@@ -1,4 +1,5 @@
 // Vitepress config
+import pathlib from 'path';
 import { directoryTreePlugin } from '@sourceacademy/markdown-plugin-directory-tree';
 import { defineConfig, type UserConfig } from 'vitepress';
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons';
@@ -23,7 +24,7 @@ const vitepressOptions: UserConfig = {
       dirtree: 'yml'
     }
   },
-  outDir: `${import.meta.dirname}/../../build/devdocs`,
+  outDir: pathlib.join(import.meta.dirname, '..', '..', 'build', 'devdocs'),
   srcDir: 'src',
   title: 'Modules Developer Documentation',
   themeConfig: {
@@ -90,7 +91,6 @@ const vitepressOptions: UserConfig = {
     }
   },
   vite: {
-    // @ts-expect-error something weird going on here
     plugins: [groupIconVitePlugin()]
   }
 };
