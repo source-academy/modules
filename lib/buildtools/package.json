@@ -6,6 +6,7 @@
   "devDependencies": {
     "@commander-js/extra-typings": "^13.0.0",
     "@types/estree": "^1.0.0",
+    "@types/http-server": "^0.12.4",
     "@types/lodash": "^4.14.198",
     "@types/node": "^22.15.30",
     "typescript": "^5.8.2"
@@ -26,6 +27,7 @@
     "commander": "^13.0.0",
     "esbuild": "^0.25.8",
     "eslint": "^9.31.0",
+    "http-server": "^14.1.1",
     "jsdom": "^26.1.0",
     "lodash": "^4.17.21",
     "typedoc": "^0.28.9",
