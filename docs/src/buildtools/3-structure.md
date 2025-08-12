@@ -22,7 +22,7 @@ determine the versions of dependencies to use:
 import _package from '../../../../package.json' with { type: 'json' };
 
 // extract typescript version
-const { dependencies: { typescript: typescriptVersion } } = _package
+const { dependencies: { typescript: typescriptVersion } } = _package;
 ```
 
 Although the resolved module path refers to a path outside of the buildtools folder, during compilation, `esbuild` actually

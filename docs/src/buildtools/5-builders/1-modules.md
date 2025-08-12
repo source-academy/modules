@@ -35,7 +35,7 @@ var globalName = (() => {
     draw_connected_2d,
     make_point,
     // etc...
-  }
+  };
 })();
 ```
 
@@ -59,23 +59,23 @@ By default, `esbuild`'s IIFE output doesn't return its exports:
 
 ```js
 (function() {
-  var exports = {}
+  var exports = {};
   exports.add_one = function(x) {
     return x + 1;
-  }
-})()
+  };
+})();
 ```
 
 By specifying a  `globalName`, the generated code instead becomes:
 
 ```js
 var module = (function() {
-  var exports = {}
+  var exports = {};
   exports.add_one = function(x) {
     return x + 1;
-  }
+  };
   return exports;
-})()
+})();
 ```
 
 It is then possible to extract the inner IIFE and use it to retrieve the exports.
@@ -102,26 +102,26 @@ After esbuild bundling, both bundles and tabs are parsed using [`acorn`](https:/
 
 ```js
 var module = (function() {
-  var exports = {}
+  var exports = {};
   exports.add_one = function(x) {
     return x + 1;
-  }
+  };
 
   return exports;
-})()
+})();
 ```
 
 The AST is then transformed by the `outputBundleOrTab` function, which produces output that looks like this:
 
 ```js
 export default require => {
-  var exports = {}
+  var exports = {};
   exports.add_one = function(x) {
     return x + 1;
-  }
+  };
 
   return exports;
-}
+};
 ```
 
 This is what is finally written to the output folders.

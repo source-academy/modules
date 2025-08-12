@@ -14,7 +14,7 @@ The rule has a configuration option, which is just an object whose keys represen
 ```ts
 type RuleOptions = {
   [source: string]: string | string[]
-}
+};
 ```
 
 ### Specifying a Single Name
@@ -33,7 +33,7 @@ import * as path from 'path';
 // with the option set to { path: 'pathlib' }
 import pathlib from 'path';
 import * as pathlib from 'path';
-import fs from 'fs/promises' // This is ignored because it wasn't specified in the options
+import fs from 'fs/promises'; // This is ignored because it wasn't specified in the options
 ```
 
 ### Specifying Multiple Names
@@ -55,7 +55,7 @@ You can of course, enforce naming for more than one import source:
 // with option: { path: 'pathlib', 'fs/promises': 'fs' }
 
 import fs from 'fs/promises';
-import path from 'pathlib'
+import path from 'pathlib';
 
 // both import statements will be validated!
 ```
@@ -69,14 +69,14 @@ through the main export, but also make each function available in a separate pac
 
 ```ts
 // Imports from the root package
-import _ from 'lodash'
-_.memoize(func)
+import _ from 'lodash';
+_.memoize(func);
 
-import { memoize } from 'lodash'
-memoize(func)
+import { memoize } from 'lodash';
+memoize(func);
 // vs importing from a "sub-package"
-import memoize 'lodash/memoize'
-memoize(func)
+import memoize from 'lodash/memoize';
+memoize(func);
 ```
 
 The reason for these "per method imports" is to help bundlers more effectively tree-shake and thus more effectively reduce final bundle size.
@@ -89,8 +89,8 @@ The exception to this is Typescript "type-only" imports, since those automatical
 
 ```ts
 // Are perfectly ok
-import type _ from 'lodash'
-import type { memoize } from 'lodash'
+import type _ from 'lodash';
+import type { memoize } from 'lodash';
 ```
 
 ### Fixes
@@ -98,36 +98,36 @@ import type { memoize } from 'lodash'
 The rule replaces the original import with different import statements from each of the subpackages:
 
 ```ts
-import { memoize } from 'lodash'
+import { memoize } from 'lodash';
 // gets autofixed to
-import memoize from 'lodash/memoize'
+import memoize from 'lodash/memoize';
 ```
 
 If you aliased the import, the appropriate alias name will be used:
 
 ```ts
-import { memoize as func } from 'lodash'
+import { memoize as func } from 'lodash';
 // gets autofixed to
-import func from 'lodash/memoize'
+import func from 'lodash/memoize';
 ```
 
 Multiple imports from the root package get transformed like this:
 
 ```ts
-import { memoize as func, cloneDeep } from 'lodash'
+import { memoize as func, cloneDeep } from 'lodash';
 // gets autofixed to
-import func from 'lodash/memoize'
-import cloneDeep from 'lodash/cloneDeep'
-import cloneDeep from 'lodash/cloneDeep'
+import func from 'lodash/memoize';
+import cloneDeep from 'lodash/cloneDeep';
+import cloneDeep from 'lodash/cloneDeep';
 ```
 
 Type-only imports, when mixed with default imports, also get autofixed:
 
 ```ts
-import { type memoize as func, cloneDeep } from 'lodash'
+import { type memoize as func, cloneDeep } from 'lodash';
 // gets autofixed to
-import type func from 'lodash/memoize'
-import cloneDeep from 'lodash/cloneDeep'
+import type func from 'lodash/memoize';
+import cloneDeep from 'lodash/cloneDeep';
 ```
 
 > [!WARNING]
@@ -138,10 +138,12 @@ import cloneDeep from 'lodash/cloneDeep'
 
 The rule should be configured with an array of package names to check:
 
-```ts
-rules: {
-  '@sourceacademy/no-barrel-imports': ['error', ['lodash']]
-}
+```js
+const config = {
+  rules: {
+    '@sourceacademy/no-barrel-imports': ['error', ['lodash']]
+  }
+};
 ```
 
 ### ✅ Examples of **correct** code for this rule
@@ -150,8 +152,8 @@ rules: {
 // with @sourceacademy/no-barrel-imports: ['error', ['lodash']]
 
 // Lone default or namespace imports are ok
-import _ from 'lodash'
-import * as _ from 'lodash'
+import _ from 'lodash';
+import * as _ from 'lodash';
 
 // Type-only imports are okay
 import type _ from 'lodash';
@@ -164,7 +166,7 @@ import type { memoize } from 'lodash';
 // with @sourceacademy/no-barrel-imports: ['error', ['lodash']]
 
 // Regular Import
-import { memoize } from 'lodash'
+import { memoize } from 'lodash';
 
 // Default import mixed with type imports
 import _, { type memoize } from 'lodash';
@@ -219,7 +221,7 @@ export default {
   toSpawn: () => false,
   iconName: 'icon',
   label: 'tab'
-}
+};
 ```
 
 Examples of **correct** code for this rule:
@@ -256,9 +258,8 @@ This rule accepts a configuration array with two elements:
 - The second option is the name of the imported helper. This is by default `defineTab`.
 
 ✅ Examples of **correct** code using these options:
-
+If the rule was configured with `['error', '@sourceacademy/modules-lib/tabs/utils', 'tabHelper']`:
 ```tsx
-/* eslint @sourceacademy/tab-type: ['error', '@sourceacademy/modules-lib/tabs/utils', 'tabHelper'] */
 import { tabHelper } from '@sourceacademy/modules-lib/tabs/utils';
 
 export default tabHelper({

@@ -35,7 +35,7 @@ the rule needs to be disabled, following the example provided below:
 ```tsx
 import { Button } from '@blueprintjs/core';
 // eslint-disable @typescript-eslint/no-var-requires This import doesn't work if written using ESM
-const TextBox = require('Textbox').default
+const TextBox = require('Textbox').default;
 ```
 
 ## Ignoring Files

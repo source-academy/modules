@@ -33,7 +33,7 @@ A `tab` on the other hand is more formally defined as an _optional_ user interfa
 An example of an implementation of this is from the `pix_n_flix` module. The implementation can be found [here](https://github.com/source-academy/modules/blob/master/src/bundles/pix_n_flix/index.ts). In the module, a function `init()` is provided to the Source programmer. The specifications of the `pix_n_flix` module requires this `init()` function to be applied as the last statement of the Source program. As a result, the `js-slang` evaluator will return the return value of the `init()` function which is a JavaScript object with the type signature shown below.
 
 ```ts
-{
+interface InitReturnValue {
   toReplString: () => string;
   init: (video: HTMLVideoElement, canvas: HTMLCanvasElement, _errorLogger: () => void) => {};
 }

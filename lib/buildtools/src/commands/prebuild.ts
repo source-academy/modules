@@ -49,6 +49,7 @@ export const getLintGlobalCommand = () => new Command('lintglobal')
   .option('--fix', 'Output linting fixes', false)
   .option('--ci', process.env.CI)
   .action(async ({ fix, ci }) => {
+    console.log(chalk.cyanBright('Beginning lint global'));
     const result = await lintGlobal(fix);
     const prefix = chalk.blueBright('[lintglobal]');
     const logs = [

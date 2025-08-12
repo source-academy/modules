@@ -8,6 +8,7 @@ import stylePlugin from '@stylistic/eslint-plugin';
 import vitestPlugin from '@vitest/eslint-plugin';
 import * as importPlugin from 'eslint-plugin-import';
 import jsdocPlugin from 'eslint-plugin-jsdoc';
+import * as mdx from 'eslint-plugin-mdx';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import ymlPlugin from 'eslint-plugin-yml';
@@ -49,6 +50,10 @@ export default tseslint.config(
       // These are generated via Typedoc, we don't have to lint them
       'docs/src/lib/modules-lib/**/*.md',
     ],
+    processor: mdx.createRemarkProcessor({
+      lintCodeBlocks: true,
+      ignoreRemarkConfig: true
+    }),
     language: 'markdown/gfm',
     languageOptions: {
       // @ts-expect-error typescript eslint doesn't recognize this property
@@ -62,9 +67,8 @@ export default tseslint.config(
     }
   },
   // #endregion markdown
-
   {
-    name: 'Global Configuration (Excluding Markdown)',
+    name: 'Stylistic Rules (Excluding Markdown)',
     // We exclude markdown because the markdown code processor doesn't support
     // some rules
     ignores: ['**/*.md'],
@@ -72,7 +76,6 @@ export default tseslint.config(
       '@stylistic': stylePlugin,
     },
     rules: {
-      'object-shorthand': ['warn', 'properties'],
       '@stylistic/eol-last': 'warn',
       '@stylistic/indent': ['warn', 2, { SwitchCase: 1 }],
       '@stylistic/no-mixed-spaces-and-tabs': 'warn',
@@ -84,6 +87,7 @@ export default tseslint.config(
         'always',
         { markers: todoTreeKeywordsAll }
       ],
+
     }
   },
   {
@@ -114,9 +118,10 @@ export default tseslint.config(
       }
     }
   },
+
   {
     extends: [js.configs.recommended],
-    name: 'Global JS Rules',
+    name: 'Global JS/TS Stylistic Rules',
     files: [
       '**/*.*js',
       '**/*.ts',
@@ -128,6 +133,64 @@ export default tseslint.config(
         ...globals.es2020
       }
     },
+    rules: {
+      'object-shorthand': ['warn', 'properties'],
+      '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
+      '@stylistic/function-call-spacing': ['warn', 'never'],
+      '@stylistic/function-paren-newline': ['warn', 'multiline-arguments'],
+      '@stylistic/nonblock-statement-body-position': ['error', 'beside'],
+      '@stylistic/object-curly-newline': ['warn', {
+        ImportDeclaration: { multiline: true },
+      }],
+      '@stylistic/object-curly-spacing': ['warn', 'always'],
+      '@stylistic/quotes': ['warn', 'single', { avoidEscape: true }],
+      '@stylistic/semi': ['warn', 'always'],
+    }
+  },
+  {
+    name: 'Code blocks within Markdown files',
+    files: ['**/*.md/**/*.{js,ts,tsx}'],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        experimentalDecorators: true,
+        ecmaFeatures: {
+          impliedStrict: true,
+        }
+      }
+    },
+    rules: {
+      // The Markdown parser automatically trims trailing
+      // newlines from code blocks.
+      '@stylistic/eol-last': 'off',
+
+      // In code snippets and examples, these rules are often
+      // counterproductive to clarity and brevity.
+      'no-redeclare': 'off',
+      'no-undef': 'off',
+      'no-unused-expressions': 'off',
+      'react/jsx-no-undef': 'off',
+      'no-unused-vars': 'off',
+      'padded-blocks': 'off',
+
+      // Adding a "use strict" directive at the top of every
+      // code block is tedious and distracting. The config
+      // opts into strict mode parsing without the directive.
+      strict: 'off',
+
+      // The processor will not receive a Unicode Byte Order
+      // Mark from the Markdown parser.
+      'unicode-bom': 'off',
+    }
+  },
+  {
+    name: 'Global JS/TS Functional Rules',
+    files: [
+      '**/*.*js',
+      '**/*.ts',
+      '**/*.tsx',
+    ],
+    ignores: ['**/*.md/**/*.{js,ts,tsx}'],
     plugins: {
       import: importPlugin,
       jsdoc: jsdocPlugin,
@@ -162,17 +225,6 @@ export default tseslint.config(
       '@sourceacademy/default-import-name': ['warn', { path: 'pathlib' }],
       '@sourceacademy/no-barrel-imports': ['error', ['lodash']],
       '@sourceacademy/region-comment': 'error',
-
-      '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
-      '@stylistic/function-call-spacing': ['warn', 'never'],
-      '@stylistic/function-paren-newline': ['warn', 'multiline-arguments'],
-      '@stylistic/nonblock-statement-body-position': ['error', 'beside'],
-      '@stylistic/object-curly-newline': ['warn', {
-        ImportDeclaration: { multiline: true },
-      }],
-      '@stylistic/object-curly-spacing': ['warn', 'always'],
-      '@stylistic/quotes': ['warn', 'single', { avoidEscape: true }],
-      '@stylistic/semi': ['warn', 'always'],
     }
   },
   // #region typescript
@@ -180,6 +232,9 @@ export default tseslint.config(
     extends: tseslint.configs.recommended,
     name: 'Global Typescript Rules',
     files: ['**/*.{ts,tsx}'],
+    // Markdown virtual files need to be ignored because the type-aware rules
+    // don't work with them
+    ignores: ['**/*.md/**/*.{ts,tsx}'],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
@@ -212,6 +267,7 @@ export default tseslint.config(
   {
     name: 'Global for TSX Files',
     files: ['**/*.tsx'],
+    ignores: ['**/*.md/**/*.tsx'],
     plugins: {
       'react-hooks': reactHooksPlugin,
       'react': reactPlugin

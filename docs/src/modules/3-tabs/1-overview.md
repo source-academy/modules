@@ -80,7 +80,7 @@ import { defineTab } from '@sourceacademy/modules-lib/tabs';
 
 export default defineTab({
   // ...details
-})
+});
 ```
 
 Here is an example of a tab object:
@@ -123,7 +123,7 @@ Otherwise, the tab will be spawned depending on the return value of the function
 const toSpawn = (context: DebuggerContext) => {
   const { context: { moduleContexts: { curve: { state: { drawnCurves } } } } } = context;
   return drawCurves.length > 0;
-}
+};
 ```
 
 ### `body`

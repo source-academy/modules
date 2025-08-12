@@ -19,7 +19,7 @@ export default defineConfig({
   test: {
     projects: ['./sub-project/vitest.config.js']
   }
-})
+});
 ```
 
 For the child configuration:
@@ -35,7 +35,7 @@ export default mergeConfig(
       name: 'Child Project'
     }
   })
-)
+);
 ```
 
 The actual configuration that's actually resolved by `vitest` actually looks like this:
@@ -46,7 +46,7 @@ const config = {
     name: 'Child Project',
     projects: ['./sub-project/vitest.config.js']
   }
-}
+};
 ```
 
 So if you ran `yarn vitest --config ./sub-project/vitest.config.js`, `vitest` would try to locate another `vitest` project
@@ -125,12 +125,12 @@ const fullViteConfig = {
   test: {
     name: 'Tests'
   }
-}
+};
 
 // Pass this to startVitest instead
 const vitestConfig = {
   name: 'Tests'
-}
+};
 ```
 
 You should also pass `config: false`. Otherwise, `vitest` will still try to load a `vitest` configuration file
@@ -140,7 +140,7 @@ using its own resolution rules:
 startVitest('test', [], {
   config: false,
   ...testOptions
-})
+});
 ```
 
 When running tests, you need to actually provide each configuration object as a project:
@@ -149,7 +149,7 @@ When running tests, you need to actually provide each configuration object as a 
 startVitest('test', [], {
   config: false,
   projects: [yourTestConfig]
-})
+});
 ```
 
 ## Browser Mode

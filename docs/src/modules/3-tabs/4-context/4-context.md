@@ -18,7 +18,7 @@ export default {
     foo(); // From bundle!
     // implementation...
   },
-}
+};
 ```
 
 However, when you build this code, the build system throws an error that looks like this:
@@ -55,7 +55,7 @@ export default {
     foo(); // From bundle!
     // implementation...
   },
-}
+};
 ```
 
 This way, when the tab is transpiled, the context import is never triggered.

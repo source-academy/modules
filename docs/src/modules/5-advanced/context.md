@@ -14,13 +14,13 @@ import context from 'js-slang/context';
 const drawnCurves = [];
 context.moduleContexts.curve.state = {
   drawnCurves,
-}
+};
 ```
 
 `context.moduleContexts` will not be null here, and is of the type:
 
 ```ts
-type ModuleContexts = Record<string, { tabs: any[], state: any }>
+type ModuleContexts = Record<string, { tabs: any[], state: any }>;
 ```
 
 To access a module's context, simply index the `moduleContexts` object using the bundle's name.
@@ -36,7 +36,7 @@ export default {
     return debuggerContext.context.moduleContexts.curve.state.drawnCurves.length > 0;
   },
   body: (context) => { /* implementation */ },
-}
+};
 ```
 
 `js-slang` guarantees that each module is only evaluated once per code evaluation, no matter how many import statements there are in a Source program.
@@ -62,7 +62,7 @@ export { function1 } from './functions_1';
 export { function2 } from './functions_2';
 
 export function main() {
-  return context.moduleContexts.bundle.state
+  return context.moduleContexts.bundle.state;
 }
 ```
 
@@ -122,9 +122,9 @@ import context from 'js-slang/context';
 
 // If the rune module was also loaded, this object *may* not be null
 if (context.moduleContexts.rune) {
-  console.log('Both the rune and curve modules were loaded!')
+  console.log('Both the rune and curve modules were loaded!');
 } else {
-  console.log('Only the curve module was loaded')
+  console.log('Only the curve module was loaded');
 }
 ```
 
@@ -153,7 +153,7 @@ this.context.moduleContexts.game = {
     preloadSoundMap: this.preloadSoundMap,
     preloadSpritesheetMap: this.preloadSpritesheetMap,
     remotePath: (file: string) => toS3Path(file, true),
-    screenSize: screenSize,
+    screenSize,
     createAward: (x: number, y: number, key: ItemId) => this.createAward(x, y, key)
   }
 };

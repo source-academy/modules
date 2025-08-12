@@ -110,7 +110,7 @@ export default defineTab({
   body: () => <Component />,
   label: 'some-tab',
   iconName: 'some icon'
-})
+});
 ```
 
 This provides type checking to ensure that the tab correctly conforms to the interface required by the frontend. There is a linting rule that has been configured to show an error
@@ -125,11 +125,11 @@ if you do not use the `defineTab` helper or if your tab is missing the default e
 > export default defineTab({
 >   toSpawn: () => true,
 >   body: () => {
->     return <p>This is a react component!</p>
+>     return <p>This is a react component!</p>;
 >   },
 >   label: 'some-tab',
 >   iconName: 'some icon'
-> })
+> });
 > ```
 
 Only the default export is used by the Frontend for displaying your tab. It is not necessary to also export your components, but it can be done for testing:
@@ -139,7 +139,7 @@ Only the default export is used by the Frontend for displaying your tab. It is n
 import { defineTab } from '@sourceacademy/modules-lib/tabs';
 
 export function Component() {
-  return <p>This is a react component!</p>
+  return <p>This is a react component!</p>;
 }
 
 export default defineTab({
@@ -147,16 +147,16 @@ export default defineTab({
   body: () => <Component />,
   label: 'some-tab',
   iconName: 'some icon'
-})
+});
 ```
 
 ```tsx [__tests__/index.tsx]
 import { expect, test } from 'vitest';
-import { Component } from '..'
+import { Component } from '..';
 
 test('Matches snapshot', () => {
-  expect(<Component />).toMatchSnapshot()
-})
+  expect(<Component />).toMatchSnapshot();
+});
 ```
 
 :::

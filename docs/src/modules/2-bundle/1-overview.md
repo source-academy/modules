@@ -78,8 +78,8 @@ However, only `make_point` is exported at the bundle's entry point however `crea
 
 ```js
 // User's Source program
-import { make_point } from 'curve' // No Error
-import { createDrawFunction } from 'curve' // Will throw an error
+import { make_point } from 'curve'; // No Error
+import { createDrawFunction } from 'curve'; // Will throw an error
 ```
 
 ::: details An aside about exports

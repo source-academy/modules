@@ -13,7 +13,7 @@ function configure_options(option_1: boolean, option_2: boolean = false) {
 
 // or this
 function concat_strings(...args: string[]) {
-  return args.join(',')
+  return args.join(',');
 }
 
 // But default and rest parameters are okay for internal use

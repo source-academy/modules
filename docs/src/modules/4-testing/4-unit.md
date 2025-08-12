@@ -25,8 +25,8 @@ import { describe, expect, test } from 'vitest'; // You will need to import thes
 describe('This is a describe block', () => {
   test('This is a test', () => {
     expect(1).toEqual(1);
-  })
-})
+  });
+});
 ```
 
 > [!NOTE]
@@ -42,7 +42,7 @@ import curveTab from '..';
 
 test('CurveTab', () => {
   expect(<CurveTab />).toMatchSnapshot();
-})
+});
 ```
 
 For more instructions on how to write tests you can refer to the [Vitest website](https://vitest.dev/guide/#writing-tests).
@@ -59,7 +59,7 @@ a `.skip` and a `.only` property:
 describe('Test1 and Test3 will run!', () => {
   test('Test1', () => {});
   test.skip('Test2', () => {});
-  test('Test3', () => {})
+  test('Test3', () => {});
 });
 ```
 
@@ -71,7 +71,7 @@ If for some reason you want to skip your tests based on some condition, `vitest`
 describe('Test1 and Test3 will run!', () => {
   test('Test1', () => {});
   test.skipIf(condition)('Test2', () => {});
-  test('Test3', () => {})
+  test('Test3', () => {});
 });
 ```
 
@@ -81,7 +81,7 @@ describe('Test1 and Test3 will run!', () => {
 describe('Only Test 2 will run!', () => {
   test('Test1', () => {});
   test.only('Test2', () => {});
-  test('Test3', () => {})
+  test('Test3', () => {});
 });
 ```
 
@@ -96,7 +96,7 @@ Pushing with skipped tests however, is allowed. Do leave a comment explaining wh
 
 ```ts
 // Test is skipped because there is an outstanding bug
-test.skip('Test path resolution', () => {})
+test.skip('Test path resolution', () => {});
 ```
 
 ### Stubbing Tests
@@ -105,7 +105,7 @@ If you want to indicate that tests should be written for certain functionality i
 
 ```ts
 // Needs to be implemented when the outstanding bug is fixed
-test.todo('Test path resolution')
+test.todo('Test path resolution');
 ```
 
 TODO tests still generate an entry in your test reports, but will be considered neither failed nor passed.
@@ -170,12 +170,12 @@ written in plain Javascript with a <nobr><code>// @ts-check</code></nobr> direct
 > ```js
 > export default defineProject({
 >   optimizeDeps: {
->     include: ['react/jsx-dev-runtime'] 
+>     include: ['react/jsx-dev-runtime']
 >   },
 >   test: {
 >     name: 'Root Project'
 >   }
-> })
+> });
 > ```
 >
 > For more information, refer to the [Vite](https://vite.dev/config/dep-optimization-options.html#optimizedeps-include) documentation.
@@ -195,7 +195,7 @@ export default defineProject({
     root: import.meta.dirname, // Remember to configure this correctly
     name: 'My Bundle'
   }
-})
+});
 ```
 
 There is no need to use `mergeConfig` to merge your configuration with the root configurations. When the build tools run `vitest`,
@@ -225,7 +225,7 @@ export default defineProject({
       enabled: true
     }
   }
-})
+});
 ```
 
 Now, the tests for your tab will be run in browser mode.
@@ -284,7 +284,7 @@ test('An animation', async () => {
   const component = render(<Animation />);
   const finishScreen = component.getByTitle('finish');
   // Might fail because the assertion will execute before the animation finishes
-  expect(finishScreen).toBeVisible(); 
+  expect(finishScreen).toBeVisible();
 });
 ```
 
@@ -297,7 +297,7 @@ test('An animation', async () => {
   const component = render(<Animation />);
   const finishScreen = component.getByTitle('finish');
 
-  await expect.poll(() => finishScreen).toBeVisible(); 
+  await expect.poll(() => finishScreen).toBeVisible();
   // or use the shorthand
   await expect.element(finishScreen).toBeVisible();
 });
@@ -310,33 +310,33 @@ If you're using `requestAnimationFrame` to trigger animations, you can also test
 Firstly, add the following setup and teardown function calls to your code:
 
 ```ts
-import { beforeEach, afterEach, vi } from 'vitest';
+import { afterEach, beforeEach, vi } from 'vitest';
 
 beforeEach(() => {
   vi.useFakeTimers();
-})
+});
 
 afterEach(() => {
   vi.runOnlyPendingTimers();
   vi.useRealTimers();
-})
+});
 ```
 
 Then you can use calls `vi.advanceTimersToNextFrame()` to simulate `requestAnimationFrame` being called:
 
 ```tsx
-import { beforeEach, afterEach, vi } from 'vitest';
+import { afterEach, beforeEach, vi } from 'vitest';
 import { cleanup, render } from 'vitest-browser-react';
 
 beforeEach(() => {
   vi.useFakeTimers();
-})
+});
 
 afterEach(() => {
   vi.runOnlyPendingTimers();
   vi.useRealTimers();
   cleanup();
-})
+});
 
 test('An animation', async () => {
   const component = render(<Animation />);
@@ -349,5 +349,4 @@ test('An animation', async () => {
 
   await expect.element(finishScreen).toBeVisible();
 });
-
 ```

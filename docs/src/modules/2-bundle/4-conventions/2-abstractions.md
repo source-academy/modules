@@ -49,7 +49,7 @@ curve => {
     drawnCurves.push(curveDrawn);
   }
   return curveDrawn;
-}
+};
 ```
 
 This exposes implementation details to the cadet and "breaks" the `RenderFunction` abstraction. Thus, there is a need for such objects to be able to override the default `toString`
@@ -79,6 +79,7 @@ but if your circumstances can't support it you can refer to the second method wh
 >
 > ```ts
 > import { show } from 'rune';
+> 
 > display(show);
 > ```
 >
@@ -127,7 +128,7 @@ Referring back to the `curve` bundle's `RenderFunction`s, the type `RenderFuncti
 type RenderFunction = {
   (func: Curve): CurveDrawn
   is3D: boolean
-}
+};
 
 // Equivalent to
 // type RenderFunction = ((func: Curve) => CurveDraw) & { is3D: boolean }
@@ -183,6 +184,7 @@ We've seen the result of the default `toString` implementation. By providing `to
 
 ```js
 import { draw_connected } from 'curve';
+
 display(draw_connected(200));
 
 // Produces the output below
@@ -201,8 +203,8 @@ provide compile time validation that the property has been set correctly.
 There may be cases where you intend for your abstraction to be "decomposable" by cadets. The `Sound` type is just a wrapper around a `js-slang` pair:
 
 ```ts
-type Wave = (t: number) => number
-type Sound = Pair<Wave, number>
+type Wave = (t: number) => number;
+type Sound = Pair<Wave, number>;
 ```
 
 For both of these types, the default `toString` behaviour closely follows their definitions:
@@ -231,7 +233,7 @@ interface TextOptions {
   color: string
   size: number
 }
-export function change_text_options(options: TextOptions): void
+export function change_text_options(options: TextOptions): void;
 ```
 
 Alternatively, you could do something like this:
@@ -241,8 +243,8 @@ interface TextOptions {
   color: string
   size: number
 }
-export function create_text_options(color: string, size: number): TextOptions
-export function change_text_options(options: TextOptions): void
+export function create_text_options(color: string, size: number): TextOptions;
+export function change_text_options(options: TextOptions): void;
 
 // Used like this:
 const options = create_text_options('blue', 20);

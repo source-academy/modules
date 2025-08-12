@@ -20,7 +20,7 @@ how `skipLibCheck: true` is used in Typescript.
 
 To create a type map, use the `createTypeMap` utility from `@sourceacademy/modules-lib/type_map`.
 
-```ts
+```js
 // rune/src/type_map.ts
 import createTypeMap from '@sourceacademy/modules-lib/type_map';
 
@@ -38,17 +38,17 @@ Note that the type map export has a `@hidden` documentation tag applied to it.
 > The `@hidden` tag needs to be applied at the point of declaration. The code below doesn't hide `type_map` as `@hidden` is being applied to where `type_map` is being exported,
 > and not where it is being declared:
 >
-> ```ts
-> const { type_map } = createTypeMap()
+> ```js
+> const { type_map } = createTypeMap();
 > export {
 >   /** @hidden */
 >   type_map
-> }
+> };
 > ```
 >
 > Hence in the example above, the exports aren't consolidated and written using the export shorthand as seen below:
 >
-> ```ts
+> ```js
 > // Not written like this!
 > export const { functionDeclaration, variableDeclaration, classDeclaration, type_map, typeDeclaration } = createTypeMap();
 > ```
