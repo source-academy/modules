@@ -47,10 +47,11 @@ export const getLintCommand = () => new Command('lint')
 export const getLintGlobalCommand = () => new Command('lintglobal')
   .description('Lints everything except tabs and bundles')
   .option('--fix', 'Output linting fixes', false)
+  .option('--stats', 'Output linting stats', false)
   .option('--ci', process.env.CI)
-  .action(async ({ fix, ci }) => {
+  .action(async ({ fix, stats, ci }) => {
     console.log(chalk.cyanBright('Beginning lint global'));
-    const result = await lintGlobal(fix);
+    const result = await lintGlobal(fix, stats);
     const prefix = chalk.blueBright('[lintglobal]');
     const logs = [
       `${prefix} Took ${divideAndRound(result.filesElapsed, 1000)}s to find files`,

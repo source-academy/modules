@@ -221,6 +221,7 @@ export default tseslint.config(
       'jsdoc/require-asterisk-prefix': 'warn',
 
       'no-empty': ['error', { allowEmptyCatch: true }],
+      'prefer-const': ['warn', { destructuring: 'all' }],
 
       '@sourceacademy/default-import-name': ['warn', { path: 'pathlib' }],
       '@sourceacademy/no-barrel-imports': ['error', ['lodash']],
@@ -314,7 +315,6 @@ export default tseslint.config(
           namedExports: 'declaration'
         }
       }],
-      'prefer-const': 'warn', // Was 'error'
 
       '@typescript-eslint/no-empty-object-type': ['error', {
         allowInterfaces: 'with-single-extends',

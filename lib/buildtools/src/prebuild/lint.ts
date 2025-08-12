@@ -105,8 +105,8 @@ interface LintGlobalResults {
  * all together causes ESLint to run out of memory, we have this function that lints everything else
  * so that the bundles and tabs can be linted separately.
  */
-export async function lintGlobal(fix: boolean): Promise<LintGlobalResults> {
-  const linter = new ESLint({ fix, cwd: gitRoot });
+export async function lintGlobal(fix: boolean, stats: boolean): Promise<LintGlobalResults> {
+  const linter = new ESLint({ fix, stats, cwd: gitRoot });
 
   /**
    * Recursively determine what files to to lint. Just supplying folder paths
@@ -154,6 +154,13 @@ export async function lintGlobal(fix: boolean): Promise<LintGlobalResults> {
 
   const formatter = await linter.loadFormatter('stylish');
   const formatted = await formatter.format(lintResults);
+
+  if (stats) {
+    const jsonFormatter = await linter.loadFormatter('json');
+    const jsonFormatted = await jsonFormatter.format(lintResults);
+    await fs.mkdir(outDir, { recursive: true });
+    await fs.writeFile(pathlib.join(outDir, 'lintstats.json'), jsonFormatted);
+  }
 
   const severity = findSeverity(lintResults, each => severityFinder(each, fix));
 
