@@ -21,24 +21,27 @@ for the repository at large. This requires that we manually override some of the
 
 When changing a rule's configuration, leave a comment explaining what the original configuration for that rule was:
 
-<<< ../../../eslint.config.js#markdown
+<<< ../../../eslint.config.js#markdown {20}
 
 Where possible, also provide an explanation for why that rule has been configured as such:
 
-<<< ../../../eslint.config.js#typescript {18}
+<<< ../../../eslint.config.js#typescript {21}
 
-<!--
 ## Linting Markdown Code Examples
 
-Markdown gives us the ability to embed code blocks within regular text. ESLint is able to lint this code with the functionality provided by the `@eslint/markdown` package, which
+Markdown gives us the ability to embed code blocks within regular text. ESLint is able to lint this code with the functionality provided by the `eslint-plugin-mdx` package, which
 provides a processor that makes these code blocks available to ESLint.
 
 Because `typescript-eslint` requires a `tsconfig` to be able to lint any kind of Typescript code, it can't actually be used with any type-aware rules. Furthermore, code examples
 are usually incomplete snippets of Typescript/Javascript, so a lot of the typical rules in use don't really apply to these. Thus, code examples have their own separate configurations.
--->
 
 ## Linting JSON Files
 
 For the most part, there are only stylistic rules that need to be applied to JSON files. This is why this repository doesn't use the official `@eslint/json` package for linting JSON files.
 Instead. the parser from `eslint-plugin-json` is used so that stylistic rules can be applied to the JSON files. This does mean that none of the rules from `@eslint/json` can be applied
 directly.
+
+## Collecting Linting Stats
+
+The lint commands can be run with the `--stats` option, which causes ESLint to collect the time taken by each rule to lint a given file. The outputs are written to the build directory
+as CSV files.
