@@ -1,8 +1,22 @@
 import context from 'js-slang/context';
 
-import type { Test, TestContext, TestSuite } from './types';
+import type { Suite, SuiteResult, Test, TestResult } from './types';
 
-const handleErr = (err: any) => {
+function getNewSuite(name?: string): Suite {
+  return {
+    name,
+    results: [],
+  };
+}
+
+/**
+ * If describe was called multiple times from the root level, we need somewhere
+ * to collect those Suite Results since none of them will have a parent suite
+ */
+export const suiteResults: SuiteResult[] = [];
+let currentSuite: Suite | null = null;
+
+function handleErr(err: any) {
   if (err.error && err.error.message) {
     return (err.error as Error).message;
   }
@@ -10,84 +24,89 @@ const handleErr = (err: any) => {
     return (err as Error).message;
   }
   throw err;
-};
-
-export const testContext: TestContext = {
-  called: false,
-  describe(msg: string, suite: TestSuite) {
-    if (this.called) {
-      throw new Error(`${describe.name} can only be called once per program!`);
-    }
-
-    this.called = true;
-
-    const starttime = performance.now();
-    this.suiteResults = {
-      name: msg,
-      results: [],
-      total: 0,
-      passed: 0,
-    };
-
-    suite();
-
-    this.allResults.results.push(this.suiteResults);
-
-    const endtime = performance.now();
-    this.runtime += endtime - starttime;
-    return this.allResults;
-  },
-
-  it(msg: string, test: Test) {
-    const name = `${msg}`;
-    let error = '';
-    this.suiteResults.total += 1;
-
-    try {
-      test();
-      this.suiteResults.passed += 1;
-    } catch (err: any) {
-      error = handleErr(err);
-    }
-
-    this.suiteResults.results.push({
-      name,
-      error,
-    });
-  },
-
-  suiteResults: {
-    name: '',
-    results: [],
-    total: 0,
-    passed: 0,
-  },
-
-  allResults: {
-    results: [],
-    toReplString: () =>
-      `${testContext.allResults.results.length} suites completed in ${testContext.runtime} ms.`,
-  },
-
-  runtime: 0,
-};
-
-context.moduleContexts.unittest.state = testContext;
+}
 
 /**
  * Defines a single test.
- * @param str Description for this test.
- * @param func Function containing tests.
+ * @param name Description for this test.
+ * @param func Function containing assertions.
  */
-export function it(msg: string, func: Test) {
-  testContext.it(msg, func);
+export function it(name: string, func: Test): void {
+  if (currentSuite === null) {
+    throw new Error(`'${it.name}' must be called from within a test suite!`);
+  }
+
+  try {
+    func();
+    currentSuite.results.push({
+      name,
+      passed: true,
+    });
+  } catch (err) {
+    const error = handleErr(err);
+    currentSuite.results.push({
+      name,
+      passed: false,
+      error,
+    });
+  }
+}
+
+/**
+ * Defines a single test.
+ * @param msg Description for this test.
+ * @param func Function containing assertions.
+ */
+export function test(msg: string, func: Test): void {
+  if (currentSuite === null) {
+    throw new Error(`${test.name} must be called from within a test suite!`);
+  }
+  it(msg, func);
+}
+
+function determinePassCount(results: (TestResult | SuiteResult)[]): number {
+  const passedItems = results.filter(each => {
+    if ('results' in each) {
+      const passCount = determinePassCount(each.results);
+      each.passed = passCount === each.results.length;
+    }
+
+    return each.passed;
+  });
+
+  return passedItems.length;
 }
 
 /**
  * Describes a test suite.
- * @param str Description for this test.
+ * @param msg Description for this test suite.
  * @param func Function containing tests.
  */
-export function describe(msg: string, func: TestSuite) {
-  return testContext.describe(msg, func);
+export function describe(msg: string, func: Test): void {
+  const oldSuite = currentSuite;
+  const newSuite = getNewSuite(msg);
+
+  currentSuite = newSuite;
+  newSuite.startTime = performance.now();
+  func();
+  currentSuite = oldSuite;
+
+  const passCount = determinePassCount(newSuite.results);
+  const suiteResult: SuiteResult = {
+    name: msg,
+    results: newSuite.results,
+    passCount,
+    passed: passCount === newSuite.results.length,
+    runtime: performance.now() - newSuite.startTime
+  };
+
+  if (oldSuite !== null) {
+    oldSuite.results.push(suiteResult);
+  } else {
+    suiteResults.push(suiteResult);
+  }
 }
+
+context.moduleContexts.unittest.state = {
+  suiteResults
+};

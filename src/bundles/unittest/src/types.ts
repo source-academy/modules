@@ -2,29 +2,45 @@ export type ErrorLogger = (
   error: string[] | string,
   isSlangError?: boolean
 ) => void;
+
+/**
+ * Represents a function that when called, should either execute successfully
+ * or throw an assertion error
+ */
 export type Test = () => void;
+
+/**
+ * Represents a function that when called, executes any number of {@link Test|tests}
+ */
 export type TestSuite = () => void;
-export type TestContext = {
-  called: boolean;
-  describe: (msg: string, tests: TestSuite) => Results;
-  it: (msg: string, test: Test) => void;
-  // This holds the result of a single suite and is cleared on every run
-  suiteResults: SuiteResult;
-  // This holds the results of the entire suite
-  allResults: Results;
+
+export interface Suite {
+  name?: string
+  results: (TestResult | SuiteResult)[]
+  startTime?: number,
+}
+
+export interface SuiteResult {
+  name: string,
+  results: (TestResult | SuiteResult)[]
   runtime: number;
+  passCount: number
+  passed: boolean
+}
+
+export type TestSuccess = {
+  passed: true
+  name: string
 };
-export type TestResult = {
-  name: string;
-  error: string;
+
+export type TestFailure = {
+  passed: false
+  name: string
+  error: string
 };
-export type SuiteResult = {
-  name: string;
-  results: TestResult[];
-  total: number;
-  passed: number;
-};
-export type Results = {
-  results: SuiteResult[];
-  toReplString: () => string;
-};
+
+export type TestResult = TestSuccess | TestFailure;
+
+export interface UnittestModuleState {
+  suiteResults: SuiteResult[]
+}

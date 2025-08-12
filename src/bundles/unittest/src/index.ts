@@ -12,7 +12,7 @@ export {
   assert_greater_equals,
   assert_length,
 } from './asserts';
-export { it, describe } from './functions';
+export { it, test, describe } from './functions';
 export { mock_fn } from './mocks';
 
 /**

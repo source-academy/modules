@@ -1,35 +1,102 @@
 import { list } from 'js-slang/dist/stdlib/list';
-import { beforeEach, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import * as asserts from '../asserts';
 import * as testing from '../functions';
 
-beforeEach(() => {
-  testing.testContext.suiteResults = {
-    name: '',
-    results: [],
-    total: 0,
-    passed: 0,
-  };
-  testing.testContext.allResults.results = [];
-  testing.testContext.runtime = 0;
-  testing.testContext.called = false;
-});
+vi.spyOn(performance, 'now').mockReturnValue(0);
 
-test('context is created correctly', () => {
-  const mockTestFn = vi.fn();
-  testing.describe('Testing 321', () => {
-    testing.it('Testing 123', mockTestFn);
+describe('Test \'it\' and \'describe\'', () => {
+  beforeEach(() => {
+    testing.suiteResults.splice(0);
   });
-  expect(testing.testContext.suiteResults.passed).toEqual(1);
-  expect(mockTestFn).toHaveBeenCalled();
-});
 
-test('context fails correctly', () => {
-  testing.describe('Testing 123', () => {
-    testing.it('This test fails!', () => asserts.assert_equals(0, 1));
+  test('it() throws an error when called without describe', () => {
+    expect(() => testing.it('desc', () => {})).toThrowError('\'it\' must be called from within a test suite!');
   });
-  expect(testing.testContext.suiteResults.passed).toEqual(0);
-  expect(testing.testContext.suiteResults.total).toEqual(1);
+
+  test('it() throws an error even after describe', () => {
+    testing.describe('a test', () => {});
+    expect(() => testing.it('desc', () => {})).toThrowError('\'it\' must be called from within a test suite!');
+  });
+
+  test('it() works fine from within a describe block', () => {
+    expect(() => {
+      testing.describe('desc', () => {
+        testing.it('desc', () => {});
+      });
+    }).not.toThrow();
+  });
+
+  test('it() correctly assigns results to the correct suite', () => {
+    testing.describe('block1', () => {
+      testing.it('test1', () => {});
+    });
+
+    testing.describe('block2', () => {
+      testing.it('test2', () => {});
+    });
+
+    expect(testing.suiteResults.length).toEqual(2);
+    const [result1, result2] = testing.suiteResults;
+    expect(result1).toMatchObject({
+      name: 'block1',
+      results: [{ name: 'test1', passed: true }],
+      passed: true,
+      passCount: 1,
+      runtime: 0,
+    });
+
+    expect(result2).toMatchObject({
+      name: 'block2',
+      results: [{ name: 'test2', passed: true }],
+      runtime: 0,
+      passed: true,
+      passCount: 1
+    });
+  });
+
+  test('it() correctly assigns results to child suites', () => {
+    testing.describe('block1', () => {
+      testing.describe('block3', () => {
+        testing.it('test3', () => {});
+      });
+      testing.it('test1', () => {});
+    });
+
+    testing.describe('block2', () => {
+      testing.it('test2', () => {});
+    });
+
+    expect(testing.suiteResults.length).toEqual(2);
+    const [result1, result2] = testing.suiteResults;
+    // Verify Result 1 first
+    expect(result1.results.length).toEqual(2);
+    const [subResult1, subResult2] = result1.results;
+    expect(subResult1).toMatchObject({
+      name: 'block3',
+      results: [{ name: 'test3', passed: true }],
+      runtime: 0,
+      passCount: 1,
+      passed: true
+    });
+
+    expect(subResult2).toEqual({
+      name: 'test1',
+      passed: true
+    });
+
+    expect(result1.name).toEqual('block1');
+    expect(result1.runtime).toEqual(0);
+
+    // Verify result2 next
+    expect(result2).toMatchObject({
+      name: 'block2',
+      results: [{ name: 'test2', passed: true }],
+      runtime: 0,
+      passCount: 1,
+      passed: true,
+    });
+  });
 });
 
 test('assert works', () => {
