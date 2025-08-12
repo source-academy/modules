@@ -52,11 +52,10 @@ export async function runEslint(input: InputAsset, fix: boolean, stats: boolean)
       const lintstatsDir = pathlib.join(outDir, 'lintstats');
       await fs.mkdir(lintstatsDir, { recursive: true });
 
-      const statsFormatter = await linter.loadFormatter('json');
-      const statsFormatted = await statsFormatter.format(linterResults);
-      const stringified = JSON.stringify(JSON.parse(statsFormatted), null, 2);
-
-      await fs.writeFile(pathlib.join(lintstatsDir, `${input.type}-${input.name}.json`), stringified);
+      const csvFormatter = await linter.loadFormatter(pathlib.join(import.meta.dirname, '../../lintplugin/dist/formatter.js'));
+      const csvFormatted = await csvFormatter.format(linterResults);
+      await fs.mkdir(outDir, { recursive: true });
+      await fs.writeFile(pathlib.join(lintstatsDir, `${input.type}-${input.name}.csv`), csvFormatted);
     }
 
     const outputFormatter = await linter.loadFormatter('stylish');
@@ -156,10 +155,10 @@ export async function lintGlobal(fix: boolean, stats: boolean): Promise<LintGlob
   const formatted = await formatter.format(lintResults);
 
   if (stats) {
-    const jsonFormatter = await linter.loadFormatter('json');
-    const jsonFormatted = await jsonFormatter.format(lintResults);
+    const csvFormatter = await linter.loadFormatter(pathlib.join(import.meta.dirname, '../../lintplugin/dist/formatter.js'));
+    const csvFormatted = await csvFormatter.format(lintResults);
     await fs.mkdir(outDir, { recursive: true });
-    await fs.writeFile(pathlib.join(outDir, 'lintstats.json'), jsonFormatted);
+    await fs.writeFile(pathlib.join(outDir, 'lintstats.csv'), csvFormatted);
   }
 
   const severity = findSeverity(lintResults, each => severityFinder(each, fix));

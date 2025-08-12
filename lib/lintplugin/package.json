@@ -6,8 +6,9 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "default": "./dist.js"
-    }
+      "default": "./dist/index.js"
+    },
+    "./formatter": "./dist/formatter.js"
   },
   "dependencies": {
     "eslint": "^9.31.0"
