@@ -27,6 +27,9 @@ This means that if the package requires `playwright` to run its tests, it will b
 These jobs have the `fail-fast` option set to `false`, so a single job failing doesn't mean that the rest of the jobs
 in the workflow get cancelled.
 
+For libraries in particular, the job is run with both the `ubuntu-latest` and `windows-latest` OSes. This makes sure that
+our libraries are compatibile with both Windows and POSIX-Compliant operating systems.
+
 ## 3. `devserver`
 
 The `devserver` jobs only executes if there were changes within the dev server. Since it relies on bundles and tabs being

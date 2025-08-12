@@ -9,6 +9,15 @@ When making changes to the code in this repository, you should abide by some goo
 - Commit often with informative commit messages
 - Run the `pre-push` Git Hook before pushing so that your code is verified locally
 
+> [!TIP] Lockfiles
+> Package managers such as `yarn` and `npm` use a single file called the lockfile to keep track of the dependencies and their dependencies and so on.
+> Since this repository uses Yarn, the lockfile we use is `yarn.lock`.
+>
+> There is always only one lockfile. Even if you use focused installs or add a dependency to a single package, `yarn.lock` will be modified.
+>
+> When you add a dependency to your bundle/tab, remember to run your installation command to ensure that the lockfile gets updated, and then
+> commit the changes to the lockfile.
+
 ## Creating your own branch
 
 The `master` branch of the repository is protected. This means that you cannot push commits directly to it, nor can pull requests be merged

@@ -2,28 +2,31 @@
  * Adapted directly from the http-server package
  */
 
-import { Command, InvalidOptionArgumentError } from '@commander-js/extra-typings';
+import { Command } from '@commander-js/extra-typings';
 import { outDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import chalk from 'chalk';
 import { createServer } from 'http-server';
+import { logCommandErrorAndExit } from './commandUtils.js';
 
 export default function getHttpServerCommand() {
   return new Command('serve')
     .option(
       '-p, --port <port>',
       'Port to serve modules over. If 0, look for open port.',
-      val => {
-        const portVal = parseInt(val);
-        if (portVal < 0 || portVal > 65535) {
-          throw new InvalidOptionArgumentError(`Invalid port ${val}`);
-        }
-
-        return portVal;
-      },
-      8022
     )
     .option('--bind <address>', 'Address to bind to', '127.0.0.1')
-    .action(({ port, bind: hostname }) => {
+    .action(({ port: portStr, bind: hostname }) => {
+      portStr = portStr ?? process.env.PORT;
+      let port = 8022;
+      if (portStr) {
+        const portVal = parseInt(portStr);
+        if (Number.isNaN(portVal) || portVal < 0 || portVal > 65535) {
+          logCommandErrorAndExit(`Invalid port ${portStr}`);
+        }
+
+        port = portVal;
+      }
+
       const server = createServer({
         cache: -1,
         cors: true,

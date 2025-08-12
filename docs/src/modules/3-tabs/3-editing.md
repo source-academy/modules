@@ -47,6 +47,17 @@ This adds the dependency to `devDependencies` instead.
 > yarn add @sourceacademy/modules-lib@workspace:^
 > ```
 
+You can also add the dependency directly by modifying your `package.json`:
+```jsonc {4}
+{
+  "name": "@sourceacademy/bundle-bundle0",
+  "dependencies": {
+    "lodash": "^4.0.0"
+  }
+}
+```
+If you do so, remember to run your installation command (same as the one above) to update the lockfile.
+
 ## React/UI Components
 
 Tabs are written using the React (JSX) syntax. In React, each UI element is referred to as a "component". Documentation on how to create UIs and use React can be found [here](https://react.dev). Where possible,

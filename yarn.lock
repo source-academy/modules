@@ -3145,7 +3145,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/modules-devserver@workspace:^, @sourceacademy/modules-devserver@workspace:devserver":
+"@sourceacademy/modules-devserver@workspace:devserver":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/modules-devserver@workspace:devserver"
   dependencies:
@@ -3265,8 +3265,6 @@ __metadata:
     "@eslint/markdown": "npm:^6.6.0"
     "@sourceacademy/lint-plugin": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    "@sourceacademy/modules-devserver": "workspace:^"
-    "@sourceacademy/modules-lib": "workspace:^"
     "@sourceacademy/modules-repotools": "workspace:^"
     "@stylistic/eslint-plugin": "npm:^4.4.1"
     "@types/node": "npm:^22.15.30"

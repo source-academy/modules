@@ -44,11 +44,17 @@ def update_json(git_root: str, asset: Literal['bundle', 'tab'], file_name: Liter
 async def main():
   git_root = await get_git_root()
   def updater(name: str, full_path: str, obj: Any):
-    obj['scripts']['postinstall'] = 'yarn tsc'
-
+    obj['scripts']['serve'] = 'yarn buildtools serve'
+    obj['scripts-info'] = {
+      'build': 'Compiles the given tab to the output directory',
+      'lint': 'Runs ESlint on the code in the tab',
+      'serve': 'Starts the modules server',
+      'test': 'Runs unit tests defined for the tab',
+      'tsc': 'Runs the Typescript compiler',
+    }
     return obj
 
-  update_json(git_root, 'bundle', 'package', updater)
+  update_json(git_root, 'tab', 'package', updater)
 
 if __name__ == '__main__':
   aio.run(main())

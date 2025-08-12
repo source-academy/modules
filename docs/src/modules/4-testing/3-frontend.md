@@ -16,8 +16,7 @@ Ensure that the environment variable `REACT_APP_MODULE_BACKEND_URL` in the `.env
 
 ## 2. Ensure that the modules server is running
 
-By default, a local server is available by running `yarn run serve`, which can that be accessed at <http://localhost:8022>.
-The default modules are implemented in the repository <https://github.com/source-academy/modules> and deployed to the modules site <https://source-academy.github.io/modules>.
+Again, follow the instructions [here](./1-desktop#the-modules-server).
 
 ## 3. Run Frontend
 

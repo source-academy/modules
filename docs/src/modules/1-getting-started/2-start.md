@@ -25,8 +25,17 @@ This may prompt you to download the version of Yarn that this repository uses.
 >
 > `corepack enable` should automatically install the version of Yarn used by the repository, but if you face issues using `corepack`, you can still use `npm` to install Yarn. You will however, need to run
 > `yarn set version` to change to the correct version of Yarn before working with the repository.
+>
+> If that is the case, you must take care **not** to commit the `yarnPath` changes that will be made to the `.yarnrc.yml` file.
 
-At this point it is not necessary to run `yarn install` yet to install dependencies. Depending on what you are doing, there are different methods for installing dependencies.
+## 4. Install the root package's dependencies
+
+Run the following command to ensure that dependencies like `eslint` get installed correctly:
+```sh
+yarn workspaces focus @sourceacademy/modules
+```
+
+At this point it is not necessary to run `yarn install` yet to install any other dependencies. Depending on what you are doing, there are different methods for installing dependencies.
 
 ## Next Steps
 

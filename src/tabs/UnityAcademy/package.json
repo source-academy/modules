@@ -20,6 +20,14 @@
     "build": "buildtools build tab .",
     "lint": "buildtools lint .",
     "tsc": "buildtools tsc .",
-    "test": "buildtools test --project ."
+    "test": "buildtools test --project .",
+    "serve": "yarn buildtools serve"
+  },
+  "scripts-info": {
+    "build": "Compiles the given tab to the output directory",
+    "lint": "Runs ESlint on the code in the tab",
+    "serve": "Starts the modules server",
+    "test": "Runs unit tests defined for the tab",
+    "tsc": "Runs the Typescript compiler"
   }
 }

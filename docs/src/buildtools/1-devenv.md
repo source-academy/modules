@@ -17,8 +17,8 @@ yarn workspaces focus @sourceacademy/modules-buildtools
 Compiling the build tools is as simple as running `yarn build`. This by default produces a minified Javascript file, which is not very conducive to debugging. If necessary
 you can run `yarn build --dev` instead to produce a non-minified build.
 
-For the projects that are supposed to be bundled into a single file using `esbuild`, the package `@sourceacademy/lib-compiler` wraps `esbuild` and `commander` to create a
-easy to use compiler.
+For the projects that are supposed to be bundled into a single file using `esbuild`, the package `@sourceacademy/modules-repotools` exports a function that 
+wraps `esbuild` and `commander` to create a easy to use compiler.
 
 ## Testing
 

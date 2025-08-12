@@ -16,10 +16,18 @@
     "prepare": "yarn tsc",
     "tsc": "buildtools tsc .",
     "test": "buildtools test --project .",
-    "postinstall": "yarn tsc"
+    "postinstall": "yarn tsc",
+    "serve": "yarn buildtools serve"
   },
   "exports": {
     ".": "./dist/index.js",
     "./*": "./dist/*.js"
+  },
+  "scripts-info": {
+    "build": "Compiles the given bundle to the output directory",
+    "lint": "Runs ESlint on the code in the bundle",
+    "serve": "Starts the modules server",
+    "test": "Runs unit tests defined for the bundle",
+    "tsc": "Runs the Typescript compiler and produces the library version of the bundle"
   }
 }

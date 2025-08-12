@@ -40,7 +40,14 @@ All commands have a `-h` or `--help` option that can be used to get more informa
   </tbody>
 </table>
 
-\* Will add packages to the root repository. Only do this if you are adding or updating a constraint for the entire repository.
+> [!WARNING] Adding Dependencies
+> `yarn add` will add the dependencies to the package whose directory this command is being run under. For example,
+> if you run `yarn add` from `src/bundles/curve`, then the dependencies get added to the curve bundle.
+>
+> However, if you run `yarn add` from the root of the repository, then the dependencies get added to the
+> `@sourceacademy/modules` package instead.
+>
+> Be careful of where you run this command so as to avoid extraneous dependencies being added to the wrong packages.
 
 ## Bundle or Tab Specific Commands
 
@@ -62,7 +69,10 @@ These commands are only applicable to bundles or tabs and should only be run fro
     </tr>
     <tr>
       <td><nobr><code>yarn build --tsc</code></nobr></td>
-      <td>Same as <code>yarn build</code> but also runs <code>tsc</code> for type checking</td>
+      <td>
+        Same as <code>yarn build</code> but also runs <code>tsc</code> for type checking. <br/>
+        For bundles, this will also output the library form of the bundle
+      </td>
     </tr>
     <tr>
       <td><nobr><code>yarn build --lint</code></nobr></td>
@@ -76,13 +86,36 @@ Both the `--tsc` and `--lint` options can be used togther to run `tsc` and ESLin
 ### Prebuild and Testing
 
 <ins>Prebuild</ins> refers to commands that are to be run **before** the build/compilation commands are executed.
-
-| Command                   | Purpose                                                       |
-|---------------------------|---------------------------------------------------------------|
-| `yarn lint`               | Run ESLint                                                    |
-| `yarn tsc`                | Run `tsc`                                                     |
-| `yarn prebuild`           | Run both ESLint and `tsc` without running any builds          |
-| `yarn test`               | Run any unit tests defined for the current bundle/tab         |
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>yarn lint</code></td>
+      <td>Run ESLint on the bundle's/tab's code</td>
+    </tr>
+    <tr>
+      <td><code>yarn tsc</code></td>
+      <td>Run the typescript compiler. For bundles, this will <br/> also output the library form of the bundle.</td>
+    </tr>
+    <tr>
+      <td><code>yarn prebuild</code></td>
+      <td>Run both ESLint and <code>tsc</code> <strong>without</strong> running any builds</td>
+    </tr>
+    <tr>
+      <td><code>yarn test</code></td>
+      <td>Run any unit tests defined for the bundle/tab</td>
+    </tr>
+    <tr>
+      <td><code>yarn serve</code></td>
+      <td>Start the modules server</td>
+    </tr>
+  </tbody>
+</table>
 
 #### NOTES
 
@@ -121,6 +154,13 @@ In general, global scripts for this repository follow the same format.
 - `:devserver` will only be run for the devserver.
 - `:libs` will be run for all code under the `lib` folder (common modules libraries)
 - `:modules` will be run for all bundle and tab code
+
+> [!WARNING] On Focused Installs
+> If you used a focus install, the dependencies for the other bundles and tabs will not be available. In fact, the root
+> repository's package may not have been installed either.
+>
+> This means that many of the `:all` and `:modules` commands will not work. You should use the bundle or tab specific
+> commands instead.
 
 <table>
   <thead>

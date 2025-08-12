@@ -7,7 +7,7 @@
   "scripts": {
     "build": "yarn build-lib-docs && vitepress build .",
     "build-lib-docs": "yarn workspaces foreach -A --include \"@sourceacademy/modules-lib\" run docs",
-    "dev": "node ./runner.js",
+    "dev": "vitepress dev .",
     "postinstall": "yarn build-lib-docs",
     "preview": "vitepress preview ."
   },
