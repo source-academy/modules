@@ -45,34 +45,6 @@ export function findSeverity<T>(items: T[], mapper: (each: T) => Severity): Seve
   return output;
 }
 
-/*
-export function processSeverities(items: { severity: Severity }[]) {
-  return findSeverity(items, ({ severity }) => severity);
-}
-
-type CollatedResult<T> = {
-  [k: `bundle-${string}`]: T
-} | {
-  [k: `tab-${string}`]: T
-};
-
-export function collateResults<T extends { bundle: ResolvedBundle } | { tab: ResolvedTab }>(results: T[]) {
-  return results.reduce<CollatedResult<T>>((res, each) => {
-    if ('bundle' in each) {
-      return {
-        ...res,
-        [`bundle-${each.bundle.name}`]: each
-      };
-    }
-
-    return {
-      ...res,
-      [`tab-${each.tab.name}`]: each
-    };
-  }, {});
-}
-*/
-
 export const divideAndRound = (n: number, divisor: number) => (n / divisor).toFixed(2);
 
 export function isNodeError(error: unknown): error is NodeJS.ErrnoException {

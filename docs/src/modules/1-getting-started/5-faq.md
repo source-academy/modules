@@ -15,7 +15,7 @@ title: FAQ
 > 1. `bundle/**/*.ts` is where we store all logical functions
 > 2. `tabs/**/*.tsx` is where we use all the react and jsx which will be shown in the frontend
 
-A brief overview of the current infrastructure is explained [here](../4-advanced/flow/flow). However, I would like to explain in more detail how the `bundle` and `tab` interacts with `js-slang` and `cadet-frontend` respectively.
+A brief overview of the current infrastructure is explained [here](../5-advanced/flow/flow). However, I would like to explain in more detail how the `bundle` and `tab` interacts with `js-slang` and `cadet-frontend` respectively.
 
 Firstly, a `bundle` is defined as the suite of functions that are provided by the module. More specifically, what we mean by this is that the bundle will provide all the functions and constants that are intended to be available for use by the cadet when programming in the Source language.
 

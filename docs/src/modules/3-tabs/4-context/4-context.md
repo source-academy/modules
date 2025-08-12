@@ -1,6 +1,6 @@
 # Working with Module Contexts
 
-Module contexts are a way to pass information between bundles and tabs. A more in-depth introduction to module contexts can be found [here](/modules/4-advanced/context).
+Module contexts are a way to pass information between bundles and tabs. A more in-depth introduction to module contexts can be found [here](/modules/5-advanced/context).
 
 A module's tabs are always loaded after its bundle, and only if its bundle was imported by the Source program.
 This means that it is safe to assume that a module's context object has been initialized (if there is code in the bundle that does so)

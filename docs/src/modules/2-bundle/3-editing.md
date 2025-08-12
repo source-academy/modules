@@ -79,4 +79,4 @@ instead of implementing your own versions of them.
 
 ## Adding Unit Tests
 
-Where possible, you should add unit tests to your bundle. Refer to [this](/modules/4-advanced/testing) page for instructions.
+Where possible, you should add unit tests to your bundle. Refer to [this](/modules/4-testing/) page for instructions.
