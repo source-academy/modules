@@ -259,6 +259,7 @@ This rule accepts a configuration array with two elements:
 
 ✅ Examples of **correct** code using these options:
 If the rule was configured with `['error', '@sourceacademy/modules-lib/tabs/utils', 'tabHelper']`:
+
 ```tsx
 import { tabHelper } from '@sourceacademy/modules-lib/tabs/utils';
 

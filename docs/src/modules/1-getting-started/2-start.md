@@ -31,6 +31,7 @@ This may prompt you to download the version of Yarn that this repository uses.
 ## 4. Install the root package's dependencies
 
 Run the following command to ensure that dependencies like `eslint` get installed correctly:
+
 ```sh
 yarn workspaces focus @sourceacademy/modules
 ```

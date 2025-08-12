@@ -9,11 +9,13 @@ need to test with the frontend instead.
 ## Running the Dev Server
 
 If you used a focused install, you may have to run this command first:
+
 ```sh
 yarn workspaces focus @sourceacademy/modules-devserver
 ```
 
 Then to start the devserver, simply run the following command from the **root** of the repository:
+
 ```sh
 yarn devserver
 ```

@@ -48,6 +48,7 @@ This adds the dependency to `devDependencies` instead.
 > ```
 
 You can also add the dependency directly by modifying your `package.json`:
+
 ```jsonc {4}
 {
   "name": "@sourceacademy/bundle-bundle0",
@@ -56,6 +57,7 @@ You can also add the dependency directly by modifying your `package.json`:
   }
 }
 ```
+
 If you do so, remember to run your installation command (same as the one above) to update the lockfile.
 
 ## React/UI Components
