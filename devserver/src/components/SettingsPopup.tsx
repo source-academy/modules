@@ -1,4 +1,5 @@
 import { Card, EditableText, Switch, Tooltip } from '@blueprintjs/core';
+import { useState } from 'react';
 
 type SettingsPopupProps = {
   backend: string
@@ -8,6 +9,8 @@ type SettingsPopupProps = {
 };
 
 export default function SettingsPopup(props: SettingsPopupProps) {
+  const [backendText, setBackendText] = useState(props.backend);
+
   return <Card>
     <div style={{
       display: 'flex',
@@ -20,11 +23,14 @@ export default function SettingsPopup(props: SettingsPopupProps) {
         flexDirection: 'row',
         justifyContent: 'space-between'
       }}>
-        <p>Modules Backend:</p>
-        <EditableText value={props.backend}
+        <p>Modules Backend:  </p>
+        <EditableText value={backendText}
+          alwaysRenderInput
+          onChange={setBackendText}
           onConfirm={v => {
             if (props.onBackendChange) props.onBackendChange(v);
           }}
+          onCancel={() => setBackendText(props.backend)}
         />
       </div>
       <br/>

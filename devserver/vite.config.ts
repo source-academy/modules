@@ -25,6 +25,30 @@ export default defineConfig(({ mode }) => {
         include: ['path']
       }),
       react(),
+      // TODO: Investigate how to include bundles into hot reload
+      // {
+      //   name: 'Bundle Provider',
+      //   resolveId(source) {
+      //     const RE =  /^@sourceacademy\/bundle-.+(?:$|\/(.+)$)/
+      //     const match = RE.exec(source);
+          
+      //     if (source.startsWith('@sourceacademy')) {
+      //       console.log('trying to resolve', source)
+      //     }
+
+      //     if (!match) return undefined;
+
+      //     const [, bundleName, path] = match!;
+      //     if (!path) {
+      //       const newPath = pathlib.resolve(import.meta.dirname, '../src/bundles', bundleName, 'src/index.ts')
+      //       console.log('oldPath', source, 'newPath', newPath)
+      //     } else {
+      //       const newPath = pathlib.resolve(import.meta.dirname, '../src/bundles', bundleName, 'src', `${path}.ts`)
+      //       console.log('oldPath', source, 'newPath', newPath)
+      //     }
+      //     return undefined;
+      //   }
+      // }
     ],
     resolve: {
       preserveSymlinks: true,

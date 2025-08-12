@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { SourceDocumentation, getNames, runInContext, type Context } from 'js-slang';
 // Importing this straight from js-slang doesn't work for whatever reason
 import createContext from 'js-slang/dist/createContext';
+import { setModulesStaticURL } from 'js-slang/dist/modules/loader';
 import { Chapter, Variant } from 'js-slang/dist/types';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import React from 'react';
@@ -50,7 +51,16 @@ const createContextHelper = (onConsoleLog: (arg: string) => void) => {
 const Playground: React.FC = () => {
   const consoleLogs = React.useRef<string[]>([]);
   const [moduleBackend, setModuleBackend] = React.useState<string | null>(null);
-  const [useCompiledTabs, setUseCompiledTabs] = React.useState(false);
+
+  React.useEffect(() => {
+    const savedBackend = localStorage.getItem('backend');
+    if (savedBackend != undefined) {
+      setModuleBackend(savedBackend);
+      setModulesStaticURL(savedBackend);
+    }
+  }, []);
+
+  const [useCompiledTabs, setUseCompiledTabs] = React.useState(!!localStorage.getItem('compiledTabs'));
 
   const [dynamicTabs, setDynamicTabs] = React.useState<SideContentTab[]>([]);
   const [selectedTabId, setSelectedTab] = React.useState(testTabContent.id);
@@ -184,9 +194,16 @@ const Playground: React.FC = () => {
           placement="right"
           content={<SettingsPopup
             backend={moduleBackend ?? ''}
-            onBackendChange={setModuleBackend}
+            onBackendChange={value => {
+              setModuleBackend(value);
+              setModulesStaticURL(value);
+              localStorage.setItem('backend', value);
+            }}
             useCompiledForTabs={useCompiledTabs}
-            onUseCompiledChange={setUseCompiledTabs}
+            onUseCompiledChange={value => {
+              setUseCompiledTabs(value);
+              localStorage.setItem('compiledTabs', value ? 'true' : '');
+            }}
           />}
           renderTarget={({ isOpen: _isOpen, ...targetProps }) => {
             return (
