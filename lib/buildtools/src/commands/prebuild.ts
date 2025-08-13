@@ -24,7 +24,7 @@ export const getLintCommand = () => new Command('lint')
     const resolveResult = await resolveEitherBundleOrTab(fullyResolved);
 
     if (resolveResult.severity === 'error') {
-      if (resolveResult.errors.length === 0 ) {
+      if (resolveResult.errors.length === 0) {
         logCommandErrorAndExit(`No tab or bundle found at ${fullyResolved}`);
       }
 
@@ -86,7 +86,7 @@ export const getTscCommand = () => new Command('tsc')
     const resolveResult = await resolveEitherBundleOrTab(fullyResolved);
 
     if (resolveResult.severity === 'error') {
-      if (resolveResult.errors.length === 0 ) {
+      if (resolveResult.errors.length === 0) {
         logCommandErrorAndExit(`No tab or bundle found at ${fullyResolved}`);
       }
 
@@ -107,14 +107,14 @@ export const getTscCommand = () => new Command('tsc')
   });
 
 export const getPrebuildAllCommand = () => new Command('prebuild')
-  .argument('[directory]', 'Directory to prebuild tasks in', process.cwd())
+  .argument('[directory]', 'Directory to run prebuild tasks in', process.cwd())
   .option('--ci', process.env.CI)
   .action(async (directory, { ci }) => {
     const fullyResolved = pathlib.resolve(directory);
     const resolveResult = await resolveEitherBundleOrTab(fullyResolved);
 
     if (resolveResult.severity === 'error') {
-      if (resolveResult.errors.length === 0 ) {
+      if (resolveResult.errors.length === 0) {
         logCommandErrorAndExit(`No tab or bundle found at ${fullyResolved}`);
       }
 

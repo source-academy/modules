@@ -109,6 +109,13 @@ jobs:
           cd ${{ matrix.tabInfo.directory }}
           yarn build
 
+      - name: Upload Tab Artifact
+        if: matrix.tabInfo.changes
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.tabInfo.tabName }}-tab
+          path: ./build/tabs/${{ matrix.tabInfo.tabName }}.js
+
       - name: Run Tests
         # https://github.com/vitest-dev/vitest/issues/5477
         # Known Vitest issue for coverage running in browser mode
@@ -183,8 +190,11 @@ jobs:
           package-name: '@sourceacademy/modules-devserver'
           playwright: true
 
-      - name: Build all tabs
-        run: yarn workspaces foreach -ptW --from "./src/tabs/*" run build
+      - name: Install dependencies for other actions
+        run: yarn workspaces focus @sourceacademy/modules-github-actions
+
+      - name: Load/Build all tabs
+        uses: ./.github/actions/src/load-artifacts
 
       - name: Run tests
         run: |

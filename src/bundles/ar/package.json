@@ -8,10 +8,11 @@
     "./*": "./dist/*.js"
   },
   "dependencies": {
+    "os": "^0.1.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "saar": "^1.0.4",
-    "uniqid": "patch:uniqid@npm%3A5.4.0#~/.yarn/patches/uniqid-npm-5.4.0-f982bda028.patch"
+    "uniqid": "^5.4.0"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
