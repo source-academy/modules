@@ -22,11 +22,14 @@ async function main() {
   const tabPromises = Object.keys(tabsResult.tabs).map(async tabName => {
     try {
       const { artifact: { id } } = await artifact.getArtifact(`${tabName}-tab`);
-      await artifact.downloadArtifact(id, { path: pathlib.join(outDir, 'tabs', `${tabName}.js`) });
+      await artifact.downloadArtifact(id, { path: pathlib.join(outDir, 'tabs') });
       core.info(`Downloaded artifact for ${tabName}`);
-    } catch {}
+      return;
+    } catch(error) {
+      core.error(`Error retrieving artifact for ${tabName}, will try building`);
+      core.error(error as Error);
+    }
 
-    core.info(`Error retrieving artifact for ${tabName}, will try building`);
     // Artifact could not be found, we probably need to build it
     const focusExitCode = await exec('yarn', ['workspaces', 'focus', `@sourceacademy/tab-${tabName}`]);
     if (focusExitCode !== 0) {
