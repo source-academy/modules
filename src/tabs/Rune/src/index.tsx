@@ -41,12 +41,9 @@ export default defineTab({
     const drawnRunes = context.context?.moduleContexts?.rune?.state?.drawnRunes;
     return drawnRunes.length > 0;
   },
-
   body(context) {
     return <RuneTab context={context} />;
   },
-
   label: 'Runes Tab',
-
   iconName: 'group-objects'
 });
