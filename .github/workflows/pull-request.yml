@@ -183,17 +183,17 @@ jobs:
       - name: Check out source code
         uses: actions/checkout@v4
 
-      - name: Initialize Repo
-        uses: ./.github/actions/src/init
-        with:
-          package-name: '@sourceacademy/modules-devserver'
-          playwright: true
-
       - name: Install dependencies for other actions
         run: yarn workspaces focus @sourceacademy/modules-github-actions
 
       - name: Load/Build all tabs
         uses: ./.github/actions/src/load-artifacts
+
+      - name: Initialize Repo
+        uses: ./.github/actions/src/init
+        with:
+          package-name: '@sourceacademy/modules-devserver'
+          playwright: true
 
       - name: Run tests
         run: |
