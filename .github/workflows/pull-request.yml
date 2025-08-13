@@ -198,6 +198,9 @@ jobs:
           package-name: '@sourceacademy/modules-devserver'
           playwright: true
 
+      - name: Build Manifest
+        run: yarn buildtools manifest
+
       - name: Run tests
         run: |
           cd ./devserver
