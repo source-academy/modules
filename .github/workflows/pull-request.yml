@@ -183,6 +183,9 @@ jobs:
       - name: Check out source code
         uses: actions/checkout@v4
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Install dependencies for other actions
         run: yarn workspaces focus @sourceacademy/modules-github-actions
 
