@@ -7122,8 +7122,8 @@ __metadata:
   linkType: hard
 
 "js-slang@npm:^1.0.81":
-  version: 1.0.82
-  resolution: "js-slang@npm:1.0.82"
+  version: 1.0.85
+  resolution: "js-slang@npm:1.0.85"
   dependencies:
     "@babel/parser": "npm:^7.19.4"
     "@commander-js/extra-typings": "npm:^12.0.1"
@@ -7138,10 +7138,10 @@ __metadata:
     commander: "npm:^12.0.0"
     js-base64: "npm:^3.7.5"
     lodash: "npm:^4.17.21"
-    source-map: "npm:0.7.3"
+    source-map: "npm:0.7.6"
   bin:
     js-slang: dist/repl/index.js
-  checksum: 10c0/a89c20b58dc5fa2ded7ac8457152b59a4eb2994c4afd7c0fea07743974dd216792c47ff7b59085241772546678297b5c8ba3174b4f7fd193c8e9ef175a027d96
+  checksum: 10c0/8a206d6052e5b23a27bda4aef66675b4b7f9bebde936c789a182948478e26fa7aee6289effd0d867725a939e14674ee59fd218e1bec1fd1dc597b6bf7cbbaf42
   languageName: node
   linkType: hard
 
@@ -9842,10 +9842,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map@npm:0.7.3":
-  version: 0.7.3
-  resolution: "source-map@npm:0.7.3"
-  checksum: 10c0/7d2ddb51f3d2451847692a9ac7808da2b2b3bf7aef92ece33128919040a7e74d9a5edfde7a781f035c974deff876afaf83f2e30484faffffb86484e7408f5d7c
+"source-map@npm:0.7.6":
+  version: 0.7.6
+  resolution: "source-map@npm:0.7.6"
+  checksum: 10c0/59f6f05538539b274ba771d2e9e32f6c65451982510564438e048bc1352f019c6efcdc6dd07909b1968144941c14015c2c7d4369fb7c4d7d53ae769716dcc16c
   languageName: node
   linkType: hard
 
