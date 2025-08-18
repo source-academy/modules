@@ -199,7 +199,9 @@ jobs:
           playwright: true
 
       - name: Build Manifest
-        run: yarn buildtools manifest
+        run: |
+          cd ./devserver
+          yarn buildtools manifest
 
       - name: Run tests
         run: |
@@ -255,8 +257,9 @@ jobs:
       - name: Build Manifest
         run: yarn buildtools manifest
 
-      - name: Upload Manifest
-        uses: actions/upload-artifact@v4
-        with:
-          name: manifest
-          path: ./build/modules.json
+      # Not sure if we need to upload this as an artifact
+      # - name: Upload Manifest
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: manifest
+      #     path: ./build/modules.json

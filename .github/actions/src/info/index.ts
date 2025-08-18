@@ -2,6 +2,7 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import utils from 'util';
 import * as core from '@actions/core';
+import type { SummaryTableRow } from '@actions/core/lib/summary.js';
 import { checkForChanges, getGitRoot, type PackageRecord, type RawPackageRecord } from '../commons.js';
 import { topoSortPackages } from './sorter.js';
 
@@ -220,19 +221,36 @@ async function main() {
   const gitRoot = await getGitRoot();
   const { packages, bundles, tabs, libs } = await getAllPackages(gitRoot);
 
-  const summaryItems = Object.values(packages).map(packageInfo => {
+  const summaryItems = Object.values(packages).map((packageInfo): SummaryTableRow => {
     const relpath = pathlib.relative(gitRoot, packageInfo.directory);
-    return `<div>
-        <h2>${packageInfo.name}</h2>
-        <ul>
-          <li>Directory: <code>${relpath}</code></li>
-          <li>Changes: <code>${packageInfo.changes}</code></li>
-          <li>Needs Playwright: <code>${packageInfo.needsPlaywright}</code></li>
-        </ul>
-      </div>`;
+    return [
+      packageInfo.name,
+      relpath,
+      packageInfo.changes ? 'true' : 'false',
+      packageInfo.needsPlaywright ? 'true' : 'false'
+    ];
   });
 
-  core.summary.addList(summaryItems);
+  summaryItems.unshift([
+    {
+      data: 'Package Name',
+      header: true,
+    },
+    {
+      data: 'Package Path',
+      header: true
+    },
+    {
+      data: 'Has Changes',
+      header: true
+    },
+    {
+      data: 'Needs Playwright',
+      header: true
+    }
+  ]);
+
+  core.summary.addTable(summaryItems);
   await core.summary.write();
 
   setOutputs(

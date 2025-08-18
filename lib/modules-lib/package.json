@@ -44,7 +44,7 @@
     "build": "tsc --project ./tsconfig.prod.json",
     "docs": "typedoc",
     "lint": "eslint src",
-    "postinstall": "yarn build && playwright install --with-deps",
+    "postinstall": "yarn build",
     "tsc": "tsc --project ./tsconfig.json",
     "test": "buildtools test --project ."
   }
