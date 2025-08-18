@@ -1,5 +1,6 @@
 {
   "name": "@sourceacademy/modules-github-actions",
+  "description": "Github Actions for the modules repository",
   "private": true,
   "type": "module",
   "devDependencies": {
