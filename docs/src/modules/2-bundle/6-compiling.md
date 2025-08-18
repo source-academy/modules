@@ -25,7 +25,7 @@ yarn build --tsc
 This will run the TypeScript compiler before compiling your bundle. If there are any type errors, it will be displayed in the command line
 and your bundle will not be compiled.
 
-The output for your bundle will be placed at `/build/bundles/[your_bundle_name].js`.
+The output for your bundle will be placed at `build/bundles/[your_bundle_name].js`.
 
 ## For Other Bundles
 

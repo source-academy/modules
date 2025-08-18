@@ -31,5 +31,12 @@ module.exports = defineConfig({
         dep.update('workspace:^');
       }
     }
+
+    // Repotools should not be allowed to depend on any other packages in this
+    // repository
+    const [repotools] = Yarn.workspaces({ ident: '@sourceacademy/modules-repotools' });
+    for (const dep of Yarn.dependencies({ workspace: repotools })) {
+      if (dep.ident.startsWith('@sourceacademy/modules')) dep.update(undefined);
+    }
   }
 });

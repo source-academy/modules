@@ -10,6 +10,10 @@ A stable version of [NodeJS](https://nodejs.org/en/) is required on your local d
 
 You can use [nvm](https://github.com/creationix/nvm#installation) _(macOS/Linux)_ or [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows) _(windows)_ to switch Node versions between different projects.
 
+> [!INFO]
+> The tooling in the repository is intended to work with both Posix-Compliant systems (macOS/Linux/WSL) _and_ Windows.
+> If you encounter any compatibility issues do open an issue with the respository.
+
 ## 2. Clone this Repository
 
 Clone the modules repository to your local machine using `git` or your tool of choice.

@@ -118,7 +118,6 @@ export default tseslint.config(
       }
     }
   },
-
   {
     extends: [js.configs.recommended],
     name: 'Global JS/TS Stylistic Rules',
