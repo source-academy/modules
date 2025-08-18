@@ -109,7 +109,6 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
       }
     }
 
-    console.log(packageName, packageInfo.package.devDependencies);
     const needsPlaywright =
       packageInfo.package.devDependencies !== undefined &&
       'playwright' in packageInfo.package.devDependencies;
