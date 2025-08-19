@@ -70,7 +70,9 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
     scripts: {
       build: 'buildtools build tab .',
       lint: 'buildtools lint .',
-      tsc: 'tsc --project ./tsconfig.json'
+      test: 'buildtools test --project .',
+      tsc: 'buildtools tsc .',
+      serve: 'yarn buildtools serve'
     }
   };
 

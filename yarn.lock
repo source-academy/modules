@@ -3553,14 +3553,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/bundles@workspace:src/bundles":
-  version: 0.0.0-use.local
-  resolution: "@sourceacademy/bundles@workspace:src/bundles"
-  dependencies:
-    "@sourceacademy/modules-buildtools": "workspace:^"
-  languageName: unknown
-  linkType: soft
-
 "@sourceacademy/lint-plugin@workspace:^, @sourceacademy/lint-plugin@workspace:lib/lintplugin":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/lint-plugin@workspace:lib/lintplugin"
@@ -3869,6 +3861,7 @@ __metadata:
     "@types/react-dom": "npm:^18.3.1"
     "@vitest/browser": "npm:^3.2.3"
     "@vitest/coverage-v8": "npm:^3.2.3"
+    playwright: "npm:^1.54.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     vitest: "npm:^3.2.3"
@@ -4090,18 +4083,6 @@ __metadata:
     "@sourceacademy/bundle-unity_academy": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    "@types/react": "npm:^18.3.1"
-    "@types/react-dom": "npm:^18.3.1"
-    react: "npm:^18.3.1"
-    react-dom: "npm:^18.3.1"
-  languageName: unknown
-  linkType: soft
-
-"@sourceacademy/tabs@workspace:src/tabs":
-  version: 0.0.0-use.local
-  resolution: "@sourceacademy/tabs@workspace:src/tabs"
-  dependencies:
-    "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     react: "npm:^18.3.1"

@@ -113,11 +113,7 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
       packageInfo.package.devDependencies !== undefined &&
       'playwright' in packageInfo.package.devDependencies;
 
-    if (
-      packageName !== '@sourceacademy/modules' &&
-      packageName !== '@sourceacademy/bundles' &&
-      packageName !== '@sourceacademy/tabs'
-    ) {
+    if (packageName !== '@sourceacademy/modules') {
       const match = packageNameRE.exec(packageName);
       if (!match) throw new Error(`Unknown package ${packageName}`);
 
@@ -183,10 +179,6 @@ export async function getAllPackages(gitRoot: string) {
     ...tabs,
     ...libs
   };
-  // Remove the root packages from the bundles and tabs collection
-  // of packages cause they're not supposed be used like that
-  delete bundles['@sourceacademy/bundles'];
-  delete tabs['@sourceacademy/tabs'];
 
   const sort = topoSortPackages(packages);
   const processed = processRawPackages(sort, packages);

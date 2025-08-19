@@ -1,5 +1,6 @@
 import pathlib from 'path';
 import { Command } from '@commander-js/extra-typings';
+import { outDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import { resolveEitherBundleOrTab } from '@sourceacademy/modules-repotools/manifest';
 import { divideAndRound } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
@@ -63,6 +64,11 @@ export const getLintGlobalCommand = () => new Command('lintglobal')
     ];
 
     console.log(logs.join('\n'));
+
+    if (stats) {
+      const statPath = pathlib.join(outDir, 'lintstats.csv');
+      console.log(chalk.greenBright(`Stats written to ${statPath}`));
+    }
 
     switch (result.severity) {
       case 'warn': {

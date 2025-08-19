@@ -49,6 +49,8 @@ export async function addNew(bundlesDir: string, rl: Interface) {
     scripts: {
       build: 'buildtools build bundle .',
       lint: 'buildtools lint .',
+      serve: 'yarn buildtools serve',
+      test: 'buildtools test --project .',
       tsc: 'tsc --project ./tsconfig.json',
     },
     exports: {

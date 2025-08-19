@@ -17,6 +17,10 @@ describe('Test noBarrelImports', () => {
           options: [['lodash']]
         },
         {
+          code: "import type * as _ from 'lodash';",
+          options: [['lodash']]
+        },
+        {
           code: "import memoize from 'lodash/memoize'\nimport cloneDeep from 'lodash/cloneDeep'",
           options: [['lodash']]
         },
