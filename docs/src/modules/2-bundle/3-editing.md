@@ -10,6 +10,13 @@ To install **only** the dependencies required by the bundle you are modifying, u
 yarn workspaces focus @sourceacademy/bundle-[desired bundle]
 ```
 
+> [!TIP]
+> You may require functionalities from the root package, or other packages from this repository.
+> It is possible to focus multiple workspaces at once:
+> ```sh
+> yarn workspaces focus @sourceacademy/bundle-[desired bundle] @sourceacademy/modules
+> ```
+
 ## Adding Dependencies
 
 Your bundle may need other Javascript packages. To add a dependency to your bundle, run the command below:

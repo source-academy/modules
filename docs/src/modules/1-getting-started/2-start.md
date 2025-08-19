@@ -34,11 +34,12 @@ This may prompt you to download the version of Yarn that this repository uses.
 
 ## 4. Install the root package's dependencies
 
-Run the following command to ensure that dependencies like `eslint` get installed correctly:
-
+Run the following command to install the root package.
 ```sh
 yarn workspaces focus @sourceacademy/modules
 ```
+
+This will enable you to use some of the global scripts like templates.
 
 At this point it is not necessary to run `yarn install` yet to install any other dependencies. Depending on what you are doing, there are different methods for installing dependencies.
 

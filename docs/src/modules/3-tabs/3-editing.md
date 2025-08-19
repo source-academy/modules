@@ -10,6 +10,13 @@ To install **only** the dependencies required by the tab you are modifying, use 
 yarn workspaces focus @sourceacademy/Tab-[desired tab]
 ```
 
+> [!TIP]
+> You may require functionalities from the root package, or other packages from this repository.
+> It is possible to focus multiple workspaces at once:
+> ```sh
+> yarn workspaces focus @sourceacademy/Tab-[desired tab] @sourceacademy/modules
+> ```
+
 ## Adding Dependencies
 
 Your tab may need other Javascript packages. To add a dependency to your tab, run the command below:

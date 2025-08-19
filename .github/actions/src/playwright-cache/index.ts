@@ -1,5 +1,6 @@
 import * as core from '@actions/core';
 import { exec, getExecOutput } from '@actions/exec';
+import * as io from '@actions/io';
 import * as tc from '@actions/tool-cache';
 
 interface YarnWhyEntry {
@@ -57,12 +58,13 @@ async function main() {
   if (!playwrightDir) {
     core.info('playwright directory cache not located, installing');
 
-    const exitCode = await exec('yarn', ['workspaces', 'foreach', '-A', '--include', packageName, 'run', 'playwright', 'install', 'chromium', '--with-deps', '--only-shell']);
+    const exitCode = await exec('yarn', ['workspaces', 'foreach', '-A', '--include', packageName, 'run', 'playwright', 'install', 'chromium', '--with-deps', '--only-shell'], { silent: true });
     if (exitCode !== 0) {
       core.setFailed('Failed to install playwright');
       return;
     }
 
+    await io.mkdirP('~/.cache/ms-playwright');
     playwrightDir = await tc.cacheDir('~/.cache/ms-playwright', 'playwright', version);
   }
 
