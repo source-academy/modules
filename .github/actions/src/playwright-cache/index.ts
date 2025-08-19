@@ -55,7 +55,7 @@ async function main() {
 
   const playwrightDir = tc.find('playwright', version);
 
-  core.info(playwrightDir);
+  core.info(`Playwright directory is ${playwrightDir}`);
 }
 
 try {
