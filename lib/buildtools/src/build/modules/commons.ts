@@ -29,11 +29,11 @@ export const commonEsbuildOptions = {
 // #endregion esbuildOptions
 
 type ConvertAstResult = {
-  severity: 'error',
-  error: string
+  severity: 'error';
+  error: string;
 } | {
-  severity: 'success'
-  output: es.Node
+  severity: 'success';
+  output: es.Node;
 };
 
 function convertAst(parsed: es.Program): ConvertAstResult {

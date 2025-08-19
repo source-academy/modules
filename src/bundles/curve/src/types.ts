@@ -2,7 +2,7 @@ import { glAnimation, type AnimFrame, type ReplResult } from '@sourceacademy/mod
 import type { Curve, CurveDrawn } from './curves_webgl';
 
 export type CurveModuleState = {
-  drawnCurves: (AnimatedCurve | CurveDrawn)[]
+  drawnCurves: (AnimatedCurve | CurveDrawn)[];
 };
 
 /** A function that takes in CurveFunction and returns a tranformed CurveFunction. */
@@ -22,8 +22,8 @@ export type CurveAnimation = (t: number) => Curve;
  * a CurveFunction and returns a ShapeDrawn based on its specifications.
  */
 export interface RenderFunction extends ReplResult {
-  (func: Curve): CurveDrawn
-  is3D: boolean
+  (func: Curve): CurveDrawn;
+  is3D: boolean;
 };
 
 export class AnimatedCurve extends glAnimation implements ReplResult {

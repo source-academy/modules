@@ -8,11 +8,11 @@ export type Decorator = (...args: any[]) => any;
 
 /** @hidden */
 export interface TypeMapUtilities {
-  classDeclaration: (target: any) => Decorator
-  typeDeclaration: (target: any) => Decorator
-  functionDeclaration: (paramTypes: string, returnType: string) => Decorator
-  variableDeclaration: (type: string) => Decorator
-  type_map: Record<string, string>
+  classDeclaration: (target: any) => Decorator;
+  typeDeclaration: (target: any) => Decorator;
+  functionDeclaration: (paramTypes: string, returnType: string) => Decorator;
+  variableDeclaration: (type: string) => Decorator;
+  type_map: Record<string, string>;
 }
 
 /**

@@ -6,25 +6,25 @@ import chalk from 'chalk';
 import ts from 'typescript';
 
 type TsconfigResult = {
-  severity: 'error'
-  error: any
+  severity: 'error';
+  error: any;
 } | {
-  severity: 'error'
-  results: ts.Diagnostic[]
+  severity: 'error';
+  results: ts.Diagnostic[];
 } | {
-  severity: 'success'
-  results: ts.CompilerOptions
-  fileNames: string[]
+  severity: 'success';
+  results: ts.CompilerOptions;
+  fileNames: string[];
 };
 
 export type TscResult = {
-  input: InputAsset
+  input: InputAsset;
 } & ({
-  severity: 'error'
-  error: any
+  severity: 'error';
+  error: any;
 } | {
-  severity: Severity
-  results: ts.Diagnostic[]
+  severity: Severity;
+  results: ts.Diagnostic[];
 });
 
 async function getTsconfig(srcDir: string): Promise<TsconfigResult> {

@@ -21,17 +21,17 @@ export type SideContentProps = {
   renderActiveTabPanelOnly?: boolean;
   editorWidth?: string;
   sideContentHeight?: number;
-  dynamicTabs: SideContentTab[]
+  dynamicTabs: SideContentTab[];
 
-  selectedTabId: string
-  alerts: string[]
-  onChange?: (newId: string, oldId: string) => void
+  selectedTabId: string;
+  alerts: string[];
+  onChange?: (newId: string, oldId: string) => void;
 };
 
 interface TabIconProps {
-  iconName: IconName
-  tooltip: string
-  shouldAlert?: boolean
+  iconName: IconName;
+  tooltip: string;
+  shouldAlert?: boolean;
 }
 
 function TabIcon({ iconName, tooltip, shouldAlert }: TabIconProps) {

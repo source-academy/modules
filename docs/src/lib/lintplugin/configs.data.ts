@@ -6,21 +6,21 @@ import type { Linter } from 'eslint';
  * Represents the information about a single Rule
  */
 interface RuleInfo {
-  name: string
-  severity: Linter.StringSeverity
-  options?: unknown[]
-  url?: string
+  name: string;
+  severity: Linter.StringSeverity;
+  options?: unknown[];
+  url?: string;
 }
 
 /**
  * Represents the information for a single configuration object
  */
 interface SingleConfig {
-  files: (string | string[])[]
-  ignores?: string[]
-  name: string
-  rules: RuleInfo[]
-  plugins?: string[]
+  files: (string | string[])[];
+  ignores?: string[];
+  name: string;
+  rules: RuleInfo[];
+  plugins?: string[];
 }
 
 /**
@@ -28,8 +28,8 @@ interface SingleConfig {
  * of multiple {@link SingleConfig} objects.
  */
 interface ConfigInfo {
-  name: string
-  configs: SingleConfig[]
+  name: string;
+  configs: SingleConfig[];
 }
 
 /**

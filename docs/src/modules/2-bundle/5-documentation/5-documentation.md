@@ -133,8 +133,8 @@ and `RenderFunction` has the following type:
  * a CurveFunction and returns a ShapeDrawn based on its specifications.
  */
 export type RenderFunction = {
-  (func: Curve): CurveDrawn
-  is3D: boolean
+  (func: Curve): CurveDrawn;
+  is3D: boolean;
 };
 ```
 

@@ -10,7 +10,7 @@ import {
 import type { ChassisWrapper } from '../components/Chassis';
 import type { Sensor } from './types';
 
-type Color = { r: number; g: number; b: number };
+type Color = { r: number, g: number, b: number };
 
 export type ColorSensorConfig = {
   size: {

@@ -72,7 +72,7 @@ export type Ev3ColorSensorConfig = ColorSensorConfig;
 export type Ev3UltrasonicSenorConfig = UltrasonicSensorConfig;
 
 export type Ev3Config = {
-  chassis: Ev3ChassisConfig
+  chassis: Ev3ChassisConfig;
   mesh: Ev3MeshConfig;
   wheels: Ev3WheelsConfig;
   motors: Ev3MotorsConfig;

@@ -4,10 +4,10 @@ import { formatLintResult, type LintResult } from '../prebuild/lint.js';
 import { formatTscResult, type TscResult } from '../prebuild/tsc.js';
 
 interface ResultsObject {
-  tsc?: TscResult
-  lint?: LintResult
-  docs?: BuildResult
-  results?: BuildResult
+  tsc?: TscResult;
+  lint?: LintResult;
+  docs?: BuildResult;
+  results?: BuildResult;
 }
 
 /**

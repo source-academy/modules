@@ -4,7 +4,7 @@ import { useAnimation } from '@sourceacademy/modules-lib/tabs/useAnimation';
 import React from 'react';
 
 type Props = {
-  rune: HollusionRune
+  rune: HollusionRune;
 };
 
 /**

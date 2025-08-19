@@ -8,7 +8,7 @@ import '../../styles/index.scss';
 
 declare module '@vitest/browser/context' {
   interface BrowserCommands {
-    setLocalStorage: (key: string, value: string) => Promise<void>
+    setLocalStorage: (key: string, value: string) => Promise<void>;
   }
 }
 

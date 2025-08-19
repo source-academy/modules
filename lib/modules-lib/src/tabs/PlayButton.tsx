@@ -5,7 +5,7 @@ import ButtonComponent, { type ButtonComponentProps } from './ButtonComponent';
 
 /* [Exports] */
 export type PlayButtonProps = ButtonComponentProps & {
-  isPlaying: boolean,
+  isPlaying: boolean;
   // onClickCallback: () => void,
 };
 

@@ -8,27 +8,27 @@ import { buildSingleBundleDocs } from './docs/index.js';
 import { buildBundle, buildTab } from './modules/index.js';
 
 interface BuildAllPrebuildError {
-  severity: 'error'
+  severity: 'error';
 
-  tsc: TscResult | undefined
-  lint: LintResult | undefined
+  tsc: TscResult | undefined;
+  lint: LintResult | undefined;
 }
 
 interface BuildAllBundleResult {
-  severity: Severity
-  results: BuildResult
-  docs: BuildResult
+  severity: Severity;
+  results: BuildResult;
+  docs: BuildResult;
 
-  tsc: TscResult | undefined
-  lint: LintResult | undefined
+  tsc: TscResult | undefined;
+  lint: LintResult | undefined;
 }
 
 interface BuildAllTabResult {
-  severity: Severity
-  results: BuildResult
+  severity: Severity;
+  results: BuildResult;
 
-  tsc: TscResult | undefined
-  lint: LintResult | undefined
+  tsc: TscResult | undefined;
+  lint: LintResult | undefined;
 }
 
 export type BuildAllResult = BuildAllPrebuildError | BuildAllBundleResult | BuildAllTabResult;

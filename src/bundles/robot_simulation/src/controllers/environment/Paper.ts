@@ -9,7 +9,7 @@ export type PaperConfig = {
     height: number;
   };
   position: { x: number, y: number };
-  rotation: number,
+  rotation: number;
 };
 
 export class Paper {

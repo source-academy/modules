@@ -137,6 +137,19 @@ export default tseslint.config(
       '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
       '@stylistic/function-call-spacing': ['warn', 'never'],
       '@stylistic/function-paren-newline': ['warn', 'multiline-arguments'],
+      '@stylistic/member-delimiter-style': [
+        'warn',
+        {
+          multiline: {
+            delimiter: 'semi',
+            requireLast: true
+          },
+          singleline: {
+            delimiter: 'comma',
+            requireLast: false
+          }
+        }
+      ],
       '@stylistic/nonblock-statement-body-position': ['error', 'beside'],
       '@stylistic/object-curly-newline': ['warn', {
         ImportDeclaration: { multiline: true },

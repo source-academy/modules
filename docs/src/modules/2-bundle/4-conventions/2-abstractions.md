@@ -61,7 +61,7 @@ To allow objects to provide their own `toString` implementations, objects can im
 
 ```ts
 interface ReplResult {
-  toReplString: () => string
+  toReplString: () => string;
 }
 ```
 
@@ -133,8 +133,8 @@ Referring back to the `curve` bundle's `RenderFunction`s, the type `RenderFuncti
 
 ```ts
 type RenderFunction = {
-  (func: Curve): CurveDrawn
-  is3D: boolean
+  (func: Curve): CurveDrawn;
+  is3D: boolean;
 };
 
 // Equivalent to
@@ -237,8 +237,8 @@ export function change_text_size(size: number): void;
 
 // And not this!
 interface TextOptions {
-  color: string
-  size: number
+  color: string;
+  size: number;
 }
 export function change_text_options(options: TextOptions): void;
 ```
@@ -247,8 +247,8 @@ Alternatively, you could do something like this:
 
 ```ts
 interface TextOptions {
-  color: string
-  size: number
+  color: string;
+  size: number;
 }
 export function create_text_options(color: string, size: number): TextOptions;
 export function change_text_options(options: TextOptions): void;

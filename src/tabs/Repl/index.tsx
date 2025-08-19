@@ -22,8 +22,8 @@ type Props = {
 };
 
 type State = {
-  editorHeight: number,
-  isDraggingDragBar: boolean,
+  editorHeight: number;
+  isDraggingDragBar: boolean;
 };
 
 const BOX_PADDING_VALUE = 4;

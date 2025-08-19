@@ -16,7 +16,7 @@ const createTimingInfo = () => {
 describe('ControllerMap methods', () => {
   // Define test cases in an array of arrays. Each inner array represents parameters for a single test case.
   const methodsTestData: Array<
-    [string, Mock, { async: boolean; args?: any[] }]
+    [string, Mock, { async: boolean, args?: any[] }]
   > = [
     ['start', vi.fn(), { async: true }],
     ['update', vi.fn(), { async: false, args: [createTimingInfo()] }],
@@ -96,7 +96,7 @@ describe('ControllerMap methods', () => {
 
 describe('ControllerGroup', () => {
   // Define test data for each method
-  const methodsTestData: Array<[string, { async: boolean; args: any[] }]> = [
+  const methodsTestData: Array<[string, { async: boolean, args: any[] }]> = [
     ['start', { async: true, args: [] }],
     ['update', { async: false, args: [{ stepCount: 1, timestep: 20 }] }], // Assuming createTimingInfo() returns something similar
     ['fixedUpdate', { async: false, args: [{ stepCount: 2, timestep: 15 }] }],

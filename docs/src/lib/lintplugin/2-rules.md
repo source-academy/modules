@@ -13,7 +13,7 @@ The rule has a configuration option, which is just an object whose keys represen
 
 ```ts
 type RuleOptions = {
-  [source: string]: string | string[]
+  [source: string]: string | string[];
 };
 ```
 

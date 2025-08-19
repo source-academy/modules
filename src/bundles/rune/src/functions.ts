@@ -31,7 +31,7 @@ import {
 import { functionDeclaration, variableDeclaration } from './type_map';
 
 export type RuneModuleState = {
-  drawnRunes: (AnimatedRune | DrawnRune)[]
+  drawnRunes: (AnimatedRune | DrawnRune)[];
 };
 
 // =============================================================================

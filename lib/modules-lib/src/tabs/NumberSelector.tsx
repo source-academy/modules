@@ -6,7 +6,7 @@ export type NumberSelectorProps = {
   /**
    * Current value of the selector
    */
-  value: number
+  value: number;
   /**
    * Maximum value that the selector is allowed to take on
    */
@@ -18,7 +18,7 @@ export type NumberSelectorProps = {
   /**
    * Callback that is called with the value that the selector is changing to
    */
-  onValueChanged?: (newValue: number) => void
+  onValueChanged?: (newValue: number) => void;
 } & Omit<EditableTextProps, 'alwaysRenderInput' | 'value' | 'type' | 'isEditing'>;
 
 /**

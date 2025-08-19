@@ -23,7 +23,7 @@ afterEach(() => {
 // Reference for keyboard events: https://testing-library.com/docs/user-event/keyboard/
 
 const test = baseTest.extend<{
-  component: ReturnType<typeof render>
+  component: ReturnType<typeof render>;
 }>({
   component: ({}, usefixture) => usefixture(render(<MultiItemDisplay elements={items} onStepChange={stepChangeHandler} />)),
 });

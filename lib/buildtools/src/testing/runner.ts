@@ -3,10 +3,10 @@ import { mergeConfig, type TestProjectInlineConfiguration, type ViteUserConfig }
 import { startVitest, type VitestRunMode } from 'vitest/node';
 
 interface RunVitestBoolOptions {
-  watch?: boolean
-  coverage?: boolean
-  update?: boolean
-  allowOnly?: boolean
+  watch?: boolean;
+  coverage?: boolean;
+  update?: boolean;
+  allowOnly?: boolean;
 }
 
 function getIncludes({ test }: TestProjectInlineConfiguration) {

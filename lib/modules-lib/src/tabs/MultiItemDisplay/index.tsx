@@ -4,8 +4,8 @@ import clamp from 'lodash/clamp';
 import { useState } from 'react';
 
 export type MultiItemDisplayProps = {
-  elements: JSX.Element[]
-  onStepChange?: (newIndex: number, oldIndex: number) => void
+  elements: JSX.Element[];
+  onStepChange?: (newIndex: number, oldIndex: number) => void;
 };
 
 /**

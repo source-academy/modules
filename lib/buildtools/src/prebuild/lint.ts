@@ -7,9 +7,9 @@ import chalk from 'chalk';
 import { ESLint } from 'eslint';
 
 export interface LintResult {
-  formatted: string
-  severity: Severity
-  input: InputAsset
+  formatted: string;
+  severity: Severity;
+  input: InputAsset;
 }
 
 function severityFinder({ warningCount, errorCount, fatalErrorCount, fixableWarningCount }: ESLint.LintResult, fix: boolean): Severity {
@@ -92,11 +92,11 @@ export function formatLintResult({ severity, formatted, input }: LintResult): st
 }
 
 interface LintGlobalResults {
-  severity: Severity
-  formatted: string
-  fixElapsed: number | undefined
-  lintElapsed: number
-  filesElapsed: number
+  severity: Severity;
+  formatted: string;
+  fixElapsed: number | undefined;
+  lintElapsed: number;
+  filesElapsed: number;
 }
 
 /**

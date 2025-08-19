@@ -35,7 +35,7 @@ export interface AnimationOptions {
   /**
    * Value from which to begin the animation
    */
-  startTimestamp?: number
+  startTimestamp?: number;
 }
 
 export interface AnimationHookResult {
@@ -75,7 +75,7 @@ export interface AnimationHookResult {
    * Pass this ref to the canvas element that will be used to draw
    * the frames
    */
-  setCanvas: (canvas: HTMLCanvasElement) => void
+  setCanvas: (canvas: HTMLCanvasElement) => void;
 
   /**
    * Callback for manually drawing a frame to the canvas
@@ -88,7 +88,7 @@ export interface AnimationHookResult {
    * `null` if no error has occurred. Otherwise, this will be set to
    * the value of the error that the callback threw.
    */
-  errored: Error | null
+  errored: Error | null;
 }
 
 /**

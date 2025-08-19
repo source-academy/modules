@@ -40,11 +40,11 @@ const backdropStyle = {
 } as CSSProperties;
 
 export interface ModalProps {
-  open: boolean
-  height: string
-  width: string
-  handleClose: MouseEventHandler
-  children: ReactElement
+  open: boolean;
+  height: string;
+  width: string;
+  handleClose: MouseEventHandler;
+  children: ReactElement;
 }
 const Modal = ({ open, height, width, children, handleClose }: ModalProps) => (
   <>

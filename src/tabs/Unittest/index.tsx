@@ -94,7 +94,7 @@ function suiteResultToDiv(suiteResult: SuiteResult) {
 }
 
 type Props = {
-  results: SuiteResult[]
+  results: SuiteResult[];
 };
 
 function TestSuitesTab({ results }: Props) {

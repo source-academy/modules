@@ -14,8 +14,8 @@ vi.setConfig({
 
 describe('Test buildJson', () => {
   interface Fixtures {
-    testBundle: ResolvedBundle
-    project: td.ProjectReflection
+    testBundle: ResolvedBundle;
+    project: td.ProjectReflection;
   }
 
   const mockedWriteFile = vi.spyOn(fs, 'writeFile');

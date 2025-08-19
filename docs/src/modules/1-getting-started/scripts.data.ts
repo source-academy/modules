@@ -1,8 +1,8 @@
 import _package from '../../../../package.json' with { type: 'json' };
 
 type Script = {
-  name: string
-  info: string
+  name: string;
+  info: string;
 };
 
 export default {

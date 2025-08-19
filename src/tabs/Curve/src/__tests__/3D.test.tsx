@@ -15,8 +15,8 @@ afterEach(() => {
 
 describe('Test 3D Curve Canvas', () => {
   interface Fixtures {
-    curve: CurveDrawn
-    mockedRedraw: MockedFunction<(angle: number) => void>
+    curve: CurveDrawn;
+    mockedRedraw: MockedFunction<(angle: number) => void>;
   };
 
   const test = baseTest.extend<Fixtures>({
@@ -97,9 +97,9 @@ describe('Test 3D Curve Canvas', () => {
 
 describe('Test 3D Animated Curve Canvas', () => {
   interface Fixtures {
-    curve: AnimatedCurve
-    mockAngleRedraw: MockedFunction<(angle: number) => void>
-    mockGetFrame: MockedFunction<(timestamp: number) => void>
+    curve: AnimatedCurve;
+    mockAngleRedraw: MockedFunction<(angle: number) => void>;
+    mockGetFrame: MockedFunction<(timestamp: number) => void>;
   };
 
   beforeEach(() => {

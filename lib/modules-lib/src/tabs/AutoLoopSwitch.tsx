@@ -2,7 +2,7 @@
 import { Switch, type SwitchProps } from '@blueprintjs/core';
 
 export type AutoLoopSwitchProps = Omit<SwitchProps, 'checked' | 'style'> & {
-  isAutoLooping: boolean,
+  isAutoLooping: boolean;
 };
 
 /* [Main] */

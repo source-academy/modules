@@ -43,8 +43,8 @@ export function setBrowserOptions(indivConfig: TestProjectInlineConfiguration, w
 }
 
 export type GetTestConfigurationResult = ErrorResult | {
-  severity: 'success'
-  config: TestProjectInlineConfiguration | null
+  severity: 'success';
+  config: TestProjectInlineConfiguration | null;
 };
 
 /**

@@ -8,7 +8,7 @@ export type Severity = (typeof severity)[keyof typeof severity];
 
 export interface BundleManifest {
   requires?: number;
-  version?: string
+  version?: string;
   tabs?: string[];
 }
 
@@ -18,7 +18,7 @@ export type ModulesManifest = {
 
 // #region ResolvedBundle
 export interface ResolvedBundle {
-  type: 'bundle'
+  type: 'bundle';
   name: string;
   manifest: BundleManifest;
   directory: string;
@@ -27,7 +27,7 @@ export interface ResolvedBundle {
 
 // #region ResolvedTab
 export interface ResolvedTab {
-  type: 'tab'
+  type: 'tab';
   directory: string;
   entryPoint: string;
   name: string;
@@ -35,17 +35,17 @@ export interface ResolvedTab {
 // #endregion ResolvedTab
 
 export interface ErrorResult {
-  severity: 'error'
-  errors: string[]
+  severity: 'error';
+  errors: string[];
 }
 
 export type WarningResult<T = { path: string }> = {
-  severity: 'warn'
-  warnings: string[]
+  severity: 'warn';
+  warnings: string[];
 } & T;
 
 export type SuccessResult<T = { path: string }> = {
-  severity: 'success'
+  severity: 'success';
 } & T;
 
 export type InputAsset = ResolvedBundle | ResolvedTab;
@@ -55,25 +55,25 @@ export type ResultType<T = { path: string }> = ErrorResult | SuccessResult<T>;
 export type ResultTypeWithWarn<T = { path: string }> = ResultType<T> | WarningResult<T>;
 
 export type TabResult = ResultType & {
-  type: 'tab'
-  input: ResolvedTab
+  type: 'tab';
+  input: ResolvedTab;
 };
 
 export type BundleResult = ResultType & {
-  type: 'bundle'
-  input: ResolvedBundle
+  type: 'bundle';
+  input: ResolvedBundle;
 };
 
 export type DocsResult = ResultTypeWithWarn & {
-  type: 'docs'
-  input: ResolvedBundle
+  type: 'docs';
+  input: ResolvedBundle;
 };
 
 export type BuildResult = BundleResult | DocsResult | TabResult;
 
 export interface ResolutionFailure {
-  severity: 'error'
-  type: 'bundle' | 'tab'
-  path: string
-  error?: string
+  severity: 'error';
+  type: 'bundle' | 'tab';
+  path: string;
+  error?: string;
 }

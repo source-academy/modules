@@ -22,7 +22,7 @@ export interface FileStructure {
   /** The name of the file or folder */
   name: string;
 
-  comment?: string
+  comment?: string;
 
   /** If a folder, the contents of the folder */
   children: FileStructure[];
@@ -32,13 +32,13 @@ export interface FileStructure {
 }
 
 export interface YamlObject {
-  name: string
-  children?: (string | YamlObject)[]
+  name: string;
+  children?: (string | YamlObject)[];
   comment?: string;
 }
 
 export interface RootYamlObject extends YamlObject {
-  path?: string
+  path?: string;
 }
 
 export function isYamlObject(obj: unknown, ignoreName?: boolean): obj is YamlObject {

@@ -6,15 +6,15 @@ import { runEslint, type LintResult } from './lint.js';
 import { runTsc, type TscResult } from './tsc.js';
 
 export type PrebuildOptions = {
-  tsc?: boolean,
-  lint?: boolean
-  ci?: boolean
+  tsc?: boolean;
+  lint?: boolean;
+  ci?: boolean;
 };
 
 export interface RunPrebuildResult<T> {
-  tsc: TscResult | undefined
-  lint: LintResult | undefined
-  results?: T
+  tsc: TscResult | undefined;
+  lint: LintResult | undefined;
+  results?: T;
 }
 
 /**

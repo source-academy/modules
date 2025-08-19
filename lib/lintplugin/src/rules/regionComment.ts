@@ -4,9 +4,9 @@ import type { SourceLocation } from 'estree';
 const RE = /^\s*#(region|endregion)(?:$|\s+(.*)$)/;
 
 interface CommentInfo {
-  type: 'start' | 'end'
-  regionName?: string
-  loc: SourceLocation
+  type: 'start' | 'end';
+  regionName?: string;
+  loc: SourceLocation;
 }
 
 const regionComment = {

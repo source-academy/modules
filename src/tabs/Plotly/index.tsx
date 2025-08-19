@@ -4,14 +4,14 @@ import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
 
 type Props = {
-  children?: never
-  className?: string
-  debuggerContext: any
+  children?: never;
+  className?: string;
+  debuggerContext: any;
 };
 
 type State = {
-  modalOpen: boolean
-  selectedPlot: any | null
+  modalOpen: boolean;
+  selectedPlot: any | null;
 };
 
 class Plotly extends React.Component<Props, State> {

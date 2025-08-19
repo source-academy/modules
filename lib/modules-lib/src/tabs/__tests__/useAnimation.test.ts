@@ -4,8 +4,8 @@ import { renderHook } from 'vitest-browser-react';
 import { useAnimation, type AnimationOptions } from '../useAnimation';
 
 interface Fixtures {
-  callback: (timestamp: number, canvas: HTMLCanvasElement) => void
-  canvas: HTMLCanvasElement
+  callback: (timestamp: number, canvas: HTMLCanvasElement) => void;
+  canvas: HTMLCanvasElement;
 }
 
 const test = baseTest.extend<Fixtures>(

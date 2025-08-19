@@ -81,8 +81,8 @@ test('structure generation', () => {
 describe('Test tree validation', () => {
   interface Fixtures {
     rootDir: string;
-    validPaths: string[]
-    mockExistsSync: MockInstance<typeof fs.existsSync>
+    validPaths: string[];
+    mockExistsSync: MockInstance<typeof fs.existsSync>;
   }
 
   const treeTest = test.extend<Fixtures>({

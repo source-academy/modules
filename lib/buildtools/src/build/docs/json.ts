@@ -6,29 +6,29 @@ import * as td from 'typedoc';
 import drawdown from './drawdown.js';
 
 interface VariableDocEntry {
-  kind: 'variable'
-  name: string
-  type: string
-  description: string
+  kind: 'variable';
+  name: string;
+  type: string;
+  description: string;
 };
 
 interface FunctionDocEntry {
-  kind: 'function'
-  name: string
-  retType: string
-  description: string
-  params: [string, string][]
+  kind: 'function';
+  name: string;
+  retType: string;
+  description: string;
+  params: [string, string][];
 }
 
 type DocEntry = VariableDocEntry | FunctionDocEntry;
 
 export interface ParserSuccess {
-  obj: DocEntry
-  warnings: string[]
+  obj: DocEntry;
+  warnings: string[];
 }
 
 export interface ParserError {
-  error: string
+  error: string;
 }
 
 export type ParserResult = ParserError | ParserSuccess;

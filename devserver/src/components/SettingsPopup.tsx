@@ -2,10 +2,10 @@ import { Card, EditableText, Switch, Tooltip } from '@blueprintjs/core';
 import { useState } from 'react';
 
 type SettingsPopupProps = {
-  backend: string
-  useCompiledForTabs: boolean
-  onUseCompiledChange?: (newValue: boolean) => void
-  onBackendChange?: (newValue: string) => void
+  backend: string;
+  useCompiledForTabs: boolean;
+  onUseCompiledChange?: (newValue: boolean) => void;
+  onBackendChange?: (newValue: string) => void;
 };
 
 export default function SettingsPopup(props: SettingsPopupProps) {

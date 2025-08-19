@@ -14,33 +14,47 @@ export type Test = () => void;
  */
 export type TestSuite = () => void;
 
+/**
+ * Represents a collection of tests or nested suites
+ */
 export interface Suite {
-  name?: string
-  results: (TestResult | SuiteResult)[]
-  startTime?: number,
+  /**
+   * Name of the suite. `undefined` if this is the 'root' suite (i.e. the suite
+   * to contain top level calls to test without a call to describe)
+   */
+  name?: string;
+  results: (TestResult | SuiteResult)[];
+  startTime?: number;
 }
 
+/**
+ * Represents the results of running the suite
+ */
 export interface SuiteResult {
-  name: string,
-  results: (TestResult | SuiteResult)[]
+  /**
+   * Name of the suite. Can't be `undefined` as the root suite does not
+   * produce a SuiteResult
+   */
+  name: string;
+  results: (TestResult | SuiteResult)[];
   runtime: number;
-  passCount: number
-  passed: boolean
+  passCount: number;
+  passed: boolean;
 }
 
 export type TestSuccess = {
-  passed: true
-  name: string
+  passed: true;
+  name: string;
 };
 
 export type TestFailure = {
-  passed: false
-  name: string
-  error: string
+  passed: false;
+  name: string;
+  error: string;
 };
 
 export type TestResult = TestSuccess | TestFailure;
 
 export interface UnittestModuleState {
-  suiteResults: SuiteResult[]
+  suiteResults: SuiteResult[];
 }

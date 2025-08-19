@@ -1,7 +1,7 @@
 import type { PhysicsTimingInfo } from '../Physics';
 
 export type TimeoutCallback = () => void;
-export type CallbackEntry = { callback: TimeoutCallback; delay: number };
+export type CallbackEntry = { callback: TimeoutCallback, delay: number };
 
 export class CallbackHandler {
   callbackStore: Array<CallbackEntry>;

@@ -2,7 +2,7 @@ import { Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
 
 export interface AnimationErrorProps {
-  error: Error
+  error: Error;
 }
 
 /**

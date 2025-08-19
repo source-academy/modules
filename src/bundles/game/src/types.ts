@@ -34,7 +34,7 @@ export type GameParams = {
   };
   renderPreview: boolean;
   remotePath: (path: string) => string;
-  screenSize: { x: number; y: number };
+  screenSize: { x: number, y: number };
   createAward: (x: number, y: number, key: string) => Phaser.GameObjects.Sprite;
 };
 
