@@ -1,0 +1,11 @@
+name: Playwright Cache
+description: Manages the installation of playwright and its dependencies
+
+inputs:
+  package-name:
+    required: true
+    description: Name of the package
+
+runs:
+  using: node20
+  main: ../../dist/playwright.js
