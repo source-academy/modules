@@ -57,7 +57,7 @@ async function main() {
   if (!playwrightDir) {
     core.info('playwright directory cache not located, installing');
 
-    const exitCode = await exec('yarn', ['playwright', 'install', 'chromium', '--with-deps', '--shell-only']);
+    const exitCode = await exec('yarn', ['workspaces', 'foreach', '-A', '--include', packageName, 'run', 'playwright', 'install', 'chromium', '--with-deps', '--shell-only']);
     if (exitCode !== 0) {
       core.setFailed('Failed to install playwright');
       return;
@@ -69,7 +69,7 @@ async function main() {
   core.info(`Playwright directory is ${playwrightDir}`);
   core.addPath(playwrightDir);
 
-  await exec('yarn', ['playwright', '--version']);
+  await exec('yarn', ['workspaces', 'foreach', '-A', '--include', packageName, 'run', 'playwright', '--version']);
 }
 
 try {
