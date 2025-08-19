@@ -58,4 +58,8 @@ async function main() {
   core.info(playwrightDir);
 }
 
-await main();
+try {
+  await main();
+} catch (error) {
+  core.setFailed(error as Error);
+}
