@@ -5,8 +5,7 @@ const buildCommand = getBuildCommand({
   bundle: true,
   entryPoints: [
     { in: './src/info/index.ts', out: 'info' },
-    { in: './src/load-artifacts/index.ts', out: 'load' },
-    { in: './src/playwright-cache/index.ts', out: 'playwright' },
+    { in: './src/load-artifacts/index.ts', out: 'load' }
   ],
   format: 'esm',
   outdir: 'dist',
