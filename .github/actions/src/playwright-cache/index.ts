@@ -55,7 +55,7 @@ async function main() {
 
   const playwrightDir = tc.find('playwright', version);
 
-  console.log(playwrightDir);
+  core.info(playwrightDir);
 }
 
 await main();
