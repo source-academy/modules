@@ -29,16 +29,17 @@ function findInstalledVersion(entry: YarnWhyEntry) {
 const RE = /^(@sourceacademy\/.+)@.+/;
 
 async function main() {
-  const { exitCode, stderr, stdout } = await getExecOutput('yarn', ['why', 'playwright', '--json'], { silent: true });
+  const { exitCode, stderr, stdout } = await getExecOutput('yarn', ['why', 'playwright', '--json']);
 
   if (exitCode !== 0) {
     core.setFailed(stderr);
     return;
   }
 
-  const entries = stdout.trim().split('\n').map(each => JSON.parse(each) as YarnWhyEntry);
+  const entries = stdout.trim().split('\n').map(each => JSON.parse(each.trim()) as YarnWhyEntry);
   const packageName = core.getInput('package-name', { required: true });
-  // const packageName = '@sourceacademy/tab-Curve';
+
+  core.info(`Finding playwright version for ${packageName}`);
 
   const entry = entries.find(each => {
     const match = RE.exec(each.value);
@@ -50,6 +51,8 @@ async function main() {
   if (!entry) throw new Error(`${packageName} does not have playwright listed as a dependency.`);
 
   const version = findInstalledVersion(entry);
+  core.info(`playwright version for ${packageName} is ${version}`);
+
   const playwrightDir = tc.find('playwright', version);
 
   console.log(playwrightDir);
