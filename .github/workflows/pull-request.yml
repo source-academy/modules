@@ -17,13 +17,17 @@ jobs:
       - name: Check out source code
         uses: actions/checkout@v4
 
-      - name: Initialize Repo
-        uses: ./.github/actions/src/init
+      - name: Enable Corepack (Powershell)
+        run: corepack enable
+
+      - name: Use Node.js 💻
+        uses: actions/setup-node@v4
         with:
-          package-name: '@sourceacademy/modules-github-actions'
+          node-version-file: .node-version
+          cache: yarn
 
       - name: Init Tab
-        run: yarn workspaces focus @sourceacademy/tab-Curve
+        run: yarn workspaces focus @sourceacademy/modules-github-actions @sourceacademy/tab-Curve
 
       - name: Step 1
         uses: ./.github/actions/src/playwright-cache
