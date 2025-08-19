@@ -2,7 +2,6 @@ import * as cache from '@actions/cache';
 import * as core from '@actions/core';
 import { exec, getExecOutput } from '@actions/exec';
 import * as io from '@actions/io';
-import * as tc from '@actions/tool-cache';
 
 interface YarnWhyEntry {
   value: string;
