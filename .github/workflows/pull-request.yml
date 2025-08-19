@@ -22,10 +22,14 @@ jobs:
         with:
           package-name: '@sourceacademy/modules-github-actions'
 
+      - name: Init Tab
+        run: yarn workspaces focus @sourceacademy/tab-Curve
+
       - name: Step 1
         uses: ./.github/actions/src/playwright-cache
         with:
           package-name: '@sourceacademy/tab-Curve'
+
   # find-packages:
   #   name: Get packages within the repository
   #   runs-on: ubuntu-latest
