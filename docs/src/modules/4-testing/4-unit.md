@@ -211,7 +211,7 @@ The default testing configuration for tabs has browser mode disabled. This is so
 
 ### Setting up Browser Mode
 
-Should you wish to enable browser mode, create a custom `vitest` configuration file for your tab with the `browswer.enabled` option set to `true`:
+Should you wish to enable browser mode, create a custom `vitest` configuration file for your tab with the `browser.enabled` option set to `true`:
 
 ```js {9}
 // @ts-check
@@ -228,11 +228,23 @@ export default defineProject({
 });
 ```
 
-Now, the tests for your tab will be run in browser mode.
+You will also need to add (to your dev dependencies) other packages:
+- `@vitest/browser`
+- `vitest-browser-react`
+- `playwright`
+
+In the case of `playwright`, you might also have to run `playwright install chromium`.
+
+If your system doesn't have the necessary dependencies for `playwright`'s install, you will have to run `playwright install chromium --with-deps` instead.
+
+Now, the tests for your tab can be run in browser mode.
 
 > [!INFO] Default Browser Instance
 > By default, one `chromium` browser instance will be provided. This should be sufficient, but you can always
 > add more instances if necessary.
+>
+> Then, you will also have to specify this instance when running the `playwright` installation command above.
+
 
 ### Writing Interactive Tests
 
@@ -350,3 +362,55 @@ test('An animation', async () => {
   await expect.element(finishScreen).toBeVisible();
 });
 ```
+
+### Element Locators
+
+In the above examples, you might have noticed that we can actually grab elements that are within the DOM and do things with them (like performing
+assertions or clicking).
+
+`vitest` provides several ways to "locate" an element helpfully called [locators](https://vitest.dev/guide/browser/locators.html).
+
+While writing tabs, if we believe that a component will need to be interacted with during unit testing, we can use attributes like `title` to make it
+easier to refer to these elements:
+
+```tsx
+export function Foo() {
+  return <p title="important" />;
+}
+
+// Can then be referred to:
+test('test0', () => {
+  const screen = render(<Foo />);
+  const p = screen.getByTitle('important');
+  await expect.element(p).toBeVisible();
+});
+```
+
+### Simulating User Input
+
+You can simulate user input by using the `userEvent` utility from `@vitest/browser`:
+```tsx
+export function Foo() {
+  const [text, setText] = useState('');
+  return <div>
+    <input
+      onChange={e => setText(e.target.value)}
+      value={text}
+    />
+    <p>You said: {text}</p>
+  </div>;
+}
+
+// In tests:
+import { userEvent } from '@vitest/browser/context';
+import { render } from 'vitest-browser-react';
+
+test('Changing text works', () => {
+  const screen = render(<Foo />);
+  await userEvent.keyboard('abcd');
+  const element = screen.getByText('abcd');
+  await expect.element(element).toBeVisible();
+});
+```
+
+It can also simulate sustained keypresses, mouse inputs and a whole lot of [other things](https://testing-library.com/docs/user-event/keyboard/).

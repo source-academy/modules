@@ -1,7 +1,7 @@
-import { afterEach, beforeEach, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { cleanup, render } from 'vitest-browser-react';
-import type { glAnimation } from "../../types";
-import AnimationCanvas from "../AnimationCanvas";
+import type { glAnimation } from '../../types';
+import AnimationCanvas from '../AnimationCanvas';
 
 beforeEach(() => {
   vi.useFakeTimers();

@@ -1,6 +1,6 @@
-import type { Severity } from "@sourceacademy/modules-repotools/types";
-import { describe, expect, test } from "vitest";
-import { processResult } from "../commandUtils.js";
+import type { Severity } from '@sourceacademy/modules-repotools/types';
+import { describe, expect, test } from 'vitest';
+import { processResult } from '../commandUtils.js';
 
 describe('Testing processResults', () => {
   const testCases: [any, Severity][] = [

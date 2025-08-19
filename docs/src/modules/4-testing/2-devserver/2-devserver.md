@@ -44,3 +44,5 @@ to compiled mode by following the steps below:
 
 2. Switch to compiled mode
 ![](./step2.png)
+
+If need be, you can use the the textbox to customize which server to load modules from.

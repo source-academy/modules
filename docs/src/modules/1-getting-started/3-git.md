@@ -18,6 +18,10 @@ When making changes to the code in this repository, you should abide by some goo
 > When you add a dependency to your bundle/tab, remember to run your installation command to ensure that the lockfile gets updated, and then
 > commit the changes to the lockfile.
 
+> [!WARNING] package-lock.json
+> If you accidentally run installation commands with `npm` instead (i.e `npm i`), a different type of lockfile will get generated. This file should be
+> deleted if present and should not be added to the repository.
+
 ## Creating your own branch
 
 The `master` branch of the repository is protected. This means that you cannot push commits directly to it, nor can pull requests be merged
@@ -45,3 +49,12 @@ Once your code has been reviewed, the pull request will be merged.
 ## Opening Issues
 
 If you have a bug report or feature request, open an issue with the appropriate label(s) [here](https://github.com/source-academy/modules/issues)
+
+## `.gitignore` Files
+
+You should include files that are produced from compilation into your own `.gitignore` file and avoid committing them to the repository. By default,
+the `dist` folders are ignored for all bundles and tabs, but if you need to add other files you can create a custom `.gitignore` in your bundle/tab's
+directory.
+
+> [!TIP]
+> If you want to remove a file that been committed in the past you can use `git rm`

@@ -270,7 +270,7 @@ describe('Test getTestConfiguration', () => {
       mockedReadFile.mockImplementation(p => {
         if (p === pathlib.join(libPath, 'package.json')) {
           return Promise.resolve(JSON.stringify({
-            name: "@sourceacademy/a-pacakge"
+            name: '@sourceacademy/a-pacakge'
           }));
         }
         throw new ENOENT();

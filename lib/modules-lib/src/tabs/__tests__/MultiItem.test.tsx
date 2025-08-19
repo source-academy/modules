@@ -1,7 +1,7 @@
-import { userEvent } from "@vitest/browser/context";
-import { afterEach, beforeEach, expect, test as baseTest, vi } from "vitest";
-import { cleanup, render } from "vitest-browser-react";
-import MultiItemDisplay from "../MultiItemDisplay";
+import { userEvent } from '@vitest/browser/context';
+import { afterEach, beforeEach, expect, test as baseTest, vi } from 'vitest';
+import { cleanup, render } from 'vitest-browser-react';
+import MultiItemDisplay from '../MultiItemDisplay';
 
 const items = [
   <p>Item One</p>,

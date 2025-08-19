@@ -53,7 +53,7 @@ Then, the error can be thrown with the correct function name. Otherwise, cadets 
 that is visible to them. Many other functions might rely on `throwIfNotRune`. If they were all called in the same program, it doesn't tell the cadet which function the error was thrown from
 (was it `show`? or `anaglyph`? or something else?)
 
-## Type Checking
+## Source Type Checking
 
 Though bundles are written in Typescript, Source (except for the Typed Variant) does not support anything beyond rudimentary type checking. This means that it can determine that an expression
 like `1 - "string"` is badly typed, but it can't type check more complex programs like the one below, especially when bundle functions are involved:

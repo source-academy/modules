@@ -1,5 +1,5 @@
-import { RuleTester } from "@typescript-eslint/rule-tester";
-import noBarrelImports from "../noBarrelImports";
+import { RuleTester } from '@typescript-eslint/rule-tester';
+import noBarrelImports from '../noBarrelImports';
 
 describe('Test noBarrelImports', () => {
   const tester = new RuleTester();

@@ -35,8 +35,8 @@ Functionally, `Sound` behaves like a primitive type: as far as a cadet using the
 ## Breaking Abstractions with `display` and `stringify`
 
 `js-slang` provides a built-in function for converting any value into a string: `stringify()`. `display()` behaves like the typical `console.log` and prints the string representation
-as returned by `stringify` to the REPL. Under the hood, `stringify` uses the default Javascript `toString` functionality to convert primitive types to their string representations. This does
-mean that for "primitives" that are actually objects, `js-slang`'s default implementation will end up exposing implementation details.
+as returned by `stringify` to the REPL. Under the hood, `stringify` uses the default Javascript `toString` functionality to convert Javascript types to their string representations. This does
+mean that for Source primitives that are actually Javascript objects, `js-slang`'s default implementation will end up exposing implementation details.
 
 Taking an example from the `curve` bundle, `RenderFunction`s are considered a type of primitive. Without any further changes, calling `display` on a `RenderFunction` produces the following
 output:
@@ -115,6 +115,13 @@ export class Point implements ReplResult {
 
 `Point` is a class that directly implements the `ReplResult` interface.  If it didn't implement this interface, then calling `display(make_point(20, 20))`
 would result in the infamous `[object Object]` being printed.
+
+The type doesn't have to be a class, it can also be a Typescript [interface](https://www.typescriptlang.org/docs/handbook/2/objects.html):
+```ts
+interface Thing extends ReplResult {
+  // ...implementation details
+}
+```
 
 The benefit of implementing the interface this way in Typescript is that it enables type-checking to ensure that the interface is properly implemented.
 
@@ -251,4 +258,4 @@ const options = create_text_options('blue', 20);
 change_text_options(options);
 ```
 
-The idea is that the abstraction of the `TextOptions` type is never broken and that the cadet never interacts with the object directly.
+The idea is that the abstraction of the `TextOptions` type is never broken and that the cadet never interacts with the object's component parts directly.

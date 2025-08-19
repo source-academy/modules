@@ -394,7 +394,15 @@ export default tseslint.config(
     rules: {
       'no-empty-pattern': 'off', // vitest requires certain things to be destructured using an object pattern
 
-      '@stylistic/quotes': 'off', // Turn this off to avoid conflicting with snapshots
+      // Change to avoid conflicting with snapshots
+      '@stylistic/quotes': [
+        'warn',
+        'single',
+        {
+          avoidEscape: true,
+          allowTemplateLiterals: 'always'
+        }
+      ],
 
       'vitest/expect-expect': ['error', {
         assertFunctionNames: ['expect*'],

@@ -21,6 +21,32 @@ If you are a developer looking to do things like create a new bundle or work wit
 | `js-slang` | https://github.com/source-academy/js-slang |
 | Frontend | https://github.com/source-academy/frontend |
 
+## Repository Structure
+
+```txt
+.
+├── .github
+│   ├── actions        // Custom Github Actions
+│   └── workflow       // CI/CD Workflow files
+├── build              // Output for compiled assets
+├── devserver          // Development Server
+├── docs               // Documentation Server
+├── lib
+│   ├── __test_mocks__ // Mock bundles and tabs used for testing
+│   ├── buildtools     // Command line tools for bundles and tabs
+│   ├── lintplugin     // ESLint Plugin
+│   ├── markdown-tree  // Markdown-It plugin for generating directory trees
+│   ├── modules-lib    // Common library for utilities used by bundles and tabs
+│   └── repotools      // Repository wide tooling
+├── src                // Code for bundles, tabs and java-slang
+│   ├── bundles
+│   ├── tabs
+│   └── java
+├── vitest.config.js   // Root Vitest Config
+├── eslint.config.js   // ESLint Config
+└── yarn.config.cjs    // Yarn Constraints file
+```
+
 ## Building the documentation server
 
 1. Run the command: `yarn workspaces focus @sourceacademy/modules-docserver`

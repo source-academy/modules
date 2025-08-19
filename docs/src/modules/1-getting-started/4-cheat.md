@@ -23,16 +23,16 @@ All commands have a `-h` or `--help` option that can be used to get more informa
     </tr>
     <tr>
       <td><code>yarn workspaces focus @sourceacademy/bundle-curve</code></td>
-      <td>Installs the dependencies required for the `curve` bundle <strong>only</strong> </td>
+      <td>Installs the dependencies required for the <code>curve</code> bundle <strong>only</strong> </td>
     </tr>
     <tr>
-      <td><code>yarn add &lt;package&gt;</code>*</td>
+      <td><code>yarn add &lt;package&gt;</code></td>
       <td>
         Adds a package to the current bundle or tab <br />
       </td>
     </tr>
     <tr>
-      <td><code>yarn add -D &lt;package&gt;</code>*</td>
+      <td><code>yarn add -D &lt;package&gt;</code></td>
       <td>
         Adds a package to the current bundle or tab that will only be used during runtime <br />
       </td>
@@ -156,10 +156,10 @@ In general, global scripts for this repository follow the same format.
 - `:modules` will be run for all bundle and tab code
 
 > [!WARNING] On Focused Installs
-> If you used a focus install, the dependencies for the other bundles and tabs will not be available. In fact, the root
+> If you used a focused install, the dependencies for the other bundles and tabs will not be available. The root
 > repository's package may not have been installed either.
 >
-> This means that many of the `:all` and `:modules` commands will not work. You should use the bundle or tab specific
+> Without the root package being installed, many of the `:all` and `:modules` commands may not work. You can still use the bundle or tab specific
 > commands instead.
 
 <table>

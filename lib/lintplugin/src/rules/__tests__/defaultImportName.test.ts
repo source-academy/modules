@@ -1,5 +1,5 @@
-import { RuleTester } from "eslint";
-import defaultImportName from "../defaultImportName";
+import { RuleTester } from 'eslint';
+import defaultImportName from '../defaultImportName';
 
 describe('Test defaultImportName', () => {
   const tester = new RuleTester();

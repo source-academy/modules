@@ -1,5 +1,5 @@
-import { RuleTester } from "eslint";
-import regionComment from "../regionComment";
+import { RuleTester } from 'eslint';
+import regionComment from '../regionComment';
 
 describe('Test regionComment', () => {
   const tester = new RuleTester();
