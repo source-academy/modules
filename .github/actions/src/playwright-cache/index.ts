@@ -1,3 +1,4 @@
+import * as cache from '@actions/cache';
 import * as core from '@actions/core';
 import { exec, getExecOutput } from '@actions/exec';
 import * as io from '@actions/io';
@@ -12,6 +13,8 @@ interface YarnWhyEntry {
     };
   };
 }
+
+const playwrightDir = '~/.cache/ms-playwright';
 
 /**
  * Given the output from `yarn why`, figure out what the installed version is
@@ -54,8 +57,9 @@ async function main() {
   const version = findInstalledVersion(entry);
   core.info(`playwright version for ${packageName} is ${version}`);
 
-  let playwrightDir = tc.find('playwright', version);
-  if (!playwrightDir) {
+  await io.mkdirP(playwrightDir);
+  const cacheHit = await cache.restoreCache([playwrightDir], `playwright-${version}`);
+  if (!cacheHit) {
     core.info('playwright directory cache not located, installing');
 
     const exitCode = await exec('yarn', ['workspaces', 'foreach', '-A', '--include', packageName, 'run', 'playwright', 'install', 'chromium', '--with-deps', '--only-shell'], { silent: true });
@@ -64,11 +68,11 @@ async function main() {
       return;
     }
 
-    await io.mkdirP('~/.cache/ms-playwright');
-    playwrightDir = await tc.cacheDir('~/.cache/ms-playwright', 'playwright', version);
+    await cache.saveCache([playwrightDir], `playwright-${version}`);
+  } else {
+    core.info('Playwright cache hit');
   }
 
-  core.info(`Playwright directory is ${playwrightDir}`);
   core.addPath(playwrightDir);
 
   await exec('yarn', ['workspaces', 'foreach', '-A', '--include', packageName, 'run', 'playwright', '--version']);
