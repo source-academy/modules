@@ -2,7 +2,7 @@ import type { Severity } from '@sourceacademy/modules-repotools/types';
 import { describe, expect, test } from 'vitest';
 import { processResult } from '../commandUtils.js';
 
-describe('Testing processResults', () => {
+describe(processResult, () => {
   const testCases: [any, Severity][] = [
     [{ severity: 'success' }, 'success'],
     [{ severity: 'error' }, 'error'],

@@ -87,7 +87,6 @@ export default tseslint.config(
         'always',
         { markers: todoTreeKeywordsAll }
       ],
-
     }
   },
   {
@@ -424,9 +423,11 @@ export default tseslint.config(
       'vitest/no-conditional-expect': 'off',
       'vitest/no-export': 'off',
       'vitest/no-focused-tests': ['warn', { fixable: false }],
+      'vitest/prefer-describe-function-title': 'warn',
       'vitest/require-top-level-describe': 'off',
       'vitest/valid-describe-callback': 'off',
       'vitest/valid-expect-in-promise': 'error',
+      'vitest/valid-title': ['error', { ignoreTypeOfDescribeName: true }],
 
       'import/extensions': ['error', 'never', {
         config: 'ignore'

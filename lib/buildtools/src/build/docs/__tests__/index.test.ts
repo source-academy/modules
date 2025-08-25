@@ -18,7 +18,7 @@ const mockBundle: ResolvedBundle = {
   manifest: {}
 };
 
-describe('Test buildSingleBundleDocs', () => {
+describe(buildSingleBundleDocs, () => {
   const mockedJsonInit = vi.spyOn(init, 'initTypedocForJson');
   test('Project conversion failure', async () => {
     const mockGenerateJson = vi.fn(() => Promise.resolve());
@@ -63,7 +63,7 @@ describe('Test buildSingleBundleDocs', () => {
   });
 });
 
-describe('Test buildHtml', () => {
+describe(buildHtml, () => {
   const mockedHtmlInit = vi.spyOn(init, 'initTypedocForHtml');
   const mockedFsStat = vi.spyOn(fs, 'stat');
 

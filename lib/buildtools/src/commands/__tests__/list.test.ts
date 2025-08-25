@@ -6,8 +6,8 @@ import { testMocksDir } from '../../__tests__/fixtures.js';
 import { getListBundlesCommand, getListTabsCommand } from '../list.js';
 import { getCommandRunner } from './testingUtils.js';
 
-vi.spyOn(console, 'log');
-vi.spyOn(console, 'error');
+const mockedConsoleLog = vi.spyOn(console, 'log');
+const mockedConsoleError = vi.spyOn(console, 'error');
 
 describe('Test list command with bundles', () => {
   const mockedResolveSingleBundle = vi.spyOn(manifest, 'resolveSingleBundle');
@@ -18,7 +18,7 @@ describe('Test list command with bundles', () => {
   test('Running command with no arguments', async ({ expect }) => {
     await expect(runCommand()).commandSuccess();
     expect(console.log).toHaveBeenCalledTimes(1);
-    const [[data]] = vi.mocked(console.log).mock.calls;
+    const [[data]] = mockedConsoleLog.mock.calls;
     expect(data).toMatch(/^Detected 2 bundles in .+:\n1. test0\n2. test1$/);
   });
 
@@ -30,7 +30,7 @@ describe('Test list command with bundles', () => {
     await expect(runCommand()).commandExit();
 
     expect(console.error).toHaveBeenCalledTimes(1);
-    const [[data]] = vi.mocked(console.error).mock.calls;
+    const [[data]] = mockedConsoleError.mock.calls;
     expect(data).toMatch(/^No bundles in .+$/);
   });
 
@@ -43,7 +43,7 @@ describe('Test list command with bundles', () => {
     await expect(runCommand(`${testMocksDir}/bundles/test0`)).commandSuccess();
 
     expect(console.log).toHaveBeenCalledTimes(1);
-    const [[data]] = vi.mocked(console.log).mock.calls;
+    const [[data]] = mockedConsoleLog.mock.calls;
     const sanitized = (data as string).split('\n').join('');
 
     const match = /^.+:(\{.+\})$/gm.exec(sanitized);
@@ -94,7 +94,7 @@ describe('Test list command with tabs', () => {
     await expect(runCommand()).commandSuccess();
 
     expect(console.log).toHaveBeenCalledTimes(1);
-    const [[data]] = vi.mocked(console.log).mock.calls;
+    const [[data]] = mockedConsoleLog.mock.calls;
     expect(data).toMatch(/^Detected 2 tabs in .+:\n1. tab0\n2. tab1$/);
   });
 
@@ -106,7 +106,7 @@ describe('Test list command with tabs', () => {
     await expect(runCommand()).commandExit();
 
     expect(console.error).toHaveBeenCalledTimes(1);
-    const [[data]] = vi.mocked(console.error).mock.calls;
+    const [[data]] = mockedConsoleError.mock.calls;
     expect(data).toMatch(/^No tabs in .+$/);
   });
 
@@ -119,7 +119,7 @@ describe('Test list command with tabs', () => {
     await expect(runCommand(`${testMocksDir}/tabs/tab0`)).commandSuccess();
 
     expect(console.log).toHaveBeenCalledTimes(1);
-    const [[data]] = vi.mocked(console.log).mock.calls;
+    const [[data]] = mockedConsoleLog.mock.calls;
     expect(data).toMatch(/^Tab 'tab0' found in .+$/);
   });
 });

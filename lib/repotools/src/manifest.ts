@@ -10,6 +10,8 @@ import { filterAsync, isNodeError, mapAsync } from './utils.js';
 
 export type GetBundleManifestResult = ResultType<{ manifest: BundleManifest }>;
 
+const packageNameRegex = /^@sourceacademy\/(bundle|tab)-(.+)$/u;
+
 /**
  * Checks that the given directory has contains a bundle and that it has the correct
  * format and structures. Returns `undefined` if no bundle was detected.
@@ -28,8 +30,17 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
 
   let versionStr: string | undefined;
   try {
+    let packageName: string;
     const rawPackageJson = await fs.readFile(pathlib.join(directory, 'package.json'), 'utf-8')
-    ;({ version: versionStr } = JSON.parse(rawPackageJson));
+    ;({ version: versionStr, name: packageName } = JSON.parse(rawPackageJson));
+
+    if (!packageNameRegex.test(packageName)) {
+      return {
+        severity: 'error',
+        errors: [`The package name "${packageName}" does not follow the correct format!`]
+      };
+    }
+
   } catch (error) {
     if (isNodeError(error) && error.code === 'ENOENT') {
       return undefined;
@@ -63,7 +74,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
     if (unknownTabs.length > 0) {
       return {
         severity: 'error',
-        errors: unknownTabs.map(each => `Unknown tab ${each}`)
+        errors: unknownTabs.map(each => `Unknown tab "${each}"`)
       };
     }
   }
@@ -101,17 +112,20 @@ export async function getBundleManifests(bundlesDir: string, tabCheck?: boolean)
     return undefined;
   }));
 
-  const [combinedManifests, errors] = manifests.reduce<[Record<string, BundleManifest>, string[]]>(([res, errors], entry) => {
+  const [combinedManifests, errors] = manifests.reduce<[
+    Record<string, BundleManifest>,
+    Record<string, string[]>
+  ]>(([res, errors], entry) => {
     if (entry === undefined) return [res, errors];
     const [name, manifest] = entry;
 
     if (manifest.severity === 'error') {
       return [
         res,
-        [
+        {
           ...errors,
-          ...manifest.errors
-        ]
+          [name]: manifest.errors
+        }
       ];
     }
 
@@ -123,12 +137,18 @@ export async function getBundleManifests(bundlesDir: string, tabCheck?: boolean)
       errors
     ];
 
-  }, [{}, []]);
+  }, [{}, {}]);
 
-  if (errors.length > 0) {
+  if (Object.keys(errors).length > 0) {
+    const errorStrs = Object.entries(errors)
+      .flatMap(
+        ([name, errors]) => errors
+          .map(error => `${name}: ${error}`)
+      );
+
     return {
       severity: 'error',
-      errors
+      errors: errorStrs
     };
   }
 
@@ -157,10 +177,16 @@ export async function resolveSingleBundle(bundleDir: string): Promise<ResolveSin
       };
     }
   } catch (error) {
-    if (!isNodeError(error) || error.code !== 'ENOENT') throw error;
+    if (isNodeError(error) && error.code === 'ENOENT') {
+      return {
+        severity: 'error',
+        errors: [`${fullyResolved} does not exist!`]
+      };
+    };
+
     return {
       severity: 'error',
-      errors: [`${fullyResolved} is not a directory!`]
+      errors: [`An error occurred while trying to read from ${fullyResolved}: ${error}`]
     };
   }
 
@@ -174,7 +200,7 @@ export async function resolveSingleBundle(bundleDir: string): Promise<ResolveSin
     if (!entryStats.isFile()) {
       return {
         severity: 'error',
-        errors: ['Could not find entrypoint!']
+        errors: [`${entryPoint} is not a file!`]
       };
     }
   } catch (error) {
@@ -202,12 +228,12 @@ type ResolveAllBundlesResult = ResultType<{ bundles: Record<string, ResolvedBund
  * Find all the bundles with the given directory and returns their
  * resolved information
  */
-export async function resolveAllBundles(bundlesDir: string): Promise<ResolveAllBundlesResult> {
-  const subdirs = await fs.readdir(bundlesDir, { withFileTypes: true });
+export async function resolveAllBundles(bundleDir: string): Promise<ResolveAllBundlesResult> {
+  const subdirs = await fs.readdir(bundleDir, { withFileTypes: true });
   const manifests = await mapAsync(subdirs, async each => {
     if (!each.isDirectory()) return undefined;
 
-    const fullPath = pathlib.join(bundlesDir, each.name);
+    const fullPath = pathlib.join(bundleDir, each.name);
     return resolveSingleBundle(fullPath);
   });
 
@@ -268,13 +294,15 @@ export async function resolveSingleTab(tabDir: string): Promise<ResolvedTab | un
     if (!dirStats.isDirectory()) {
       return undefined;
     }
-  } catch {
+  } catch (error) {
+    if (!isNodeError(error) || error.code !== 'ENOENT') throw error;
+
     return undefined;
   }
 
   const tabPath = await resolvePaths(
     false,
-    pathlib.join(fullyResolved,'/src', 'index.tsx'),
+    pathlib.join(fullyResolved, 'src', 'index.tsx'),
     pathlib.join(fullyResolved, 'index.tsx')
   );
 

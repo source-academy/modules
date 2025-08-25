@@ -31,6 +31,7 @@ export default defineConfig({
       exclude: [
         ...coverageConfigDefaults.exclude,
         './build/**',
+        '**/coverage/**',
         '**/__mocks__/**',
         '**/__test_mocks__/**',
         '**/bin/**',

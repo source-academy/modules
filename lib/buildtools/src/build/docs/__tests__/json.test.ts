@@ -12,7 +12,7 @@ vi.setConfig({
   testTimeout: 10000
 });
 
-describe('Test buildJson', () => {
+describe(buildJson, () => {
   interface Fixtures {
     testBundle: ResolvedBundle;
     project: td.ProjectReflection;

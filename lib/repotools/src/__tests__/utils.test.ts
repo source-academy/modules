@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 import type { Severity } from '../types.js';
 import { compareSeverity, filterAsync, findSeverity } from '../utils.js';
 
-describe('test findSeverity', () => {
+describe(findSeverity, () => {
   const cases: Severity[][] = [
     ['success', 'success', 'success'],
     ['warn', 'success', 'warn'],
@@ -16,7 +16,7 @@ describe('test findSeverity', () => {
   });
 });
 
-describe('test compareSeverity', () => {
+describe(compareSeverity, () => {
   const cases: [Severity, Severity, Severity][] = [
     ['success', 'success', 'success'],
     ['warn', 'success', 'warn'],
