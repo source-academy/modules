@@ -2,6 +2,7 @@ import { list } from 'js-slang/dist/stdlib/list';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import * as asserts from '../asserts';
 import * as testing from '../functions';
+import { UnitestBundleInternalError } from '../types';
 
 vi.spyOn(performance, 'now').mockReturnValue(0);
 
@@ -10,13 +11,27 @@ describe('Test \'it\' and \'describe\'', () => {
     testing.suiteResults.splice(0);
   });
 
-  test('it() throws an error when called without describe', () => {
-    expect(() => testing.it('desc', () => {})).toThrowError('\'it\' must be called from within a test suite!');
+  test('it and describe correctly set and resets the value of current test and suite', () => {
+    expect(testing.currentTest).toBeNull();
+    expect(testing.currentSuite).toBeNull();
+    testing.describe('suite', () => {
+      expect(testing.currentSuite).not.toBeNull();
+      expect(testing.currentTest).toBeNull();
+      testing.it('test', () => {
+        expect(testing.currentTest).toEqual('test');
+      });
+    });
+
+    expect(testing.currentTest).toBeNull();
   });
 
-  test('it() throws an error even after describe', () => {
+  test('it() throws an error when called without describe', () => {
+    expect(() => testing.it('desc', () => {})).toThrowError('it must be called from within a test suite!');
+  });
+
+  test('it() throws an error even if it is called after describe', () => {
     testing.describe('a test', () => {});
-    expect(() => testing.it('desc', () => {})).toThrowError('\'it\' must be called from within a test suite!');
+    expect(() => testing.it('desc', () => {})).toThrowError('it must be called from within a test suite!');
   });
 
   test('it() works fine from within a describe block', () => {
@@ -97,6 +112,16 @@ describe('Test \'it\' and \'describe\'', () => {
       passed: true,
     });
   });
+
+  test('it() throws when called within another it block', () => {
+    const f = () => testing.describe('suite', () => {
+      testing.it('test0', () => {
+        testing.it('test1', () => {});
+      });
+    });
+
+    expect(f).toThrowError('it cannot be called from within another test!');
+  });
 });
 
 test('assert works', () => {
@@ -114,4 +139,10 @@ test('assert_contains works', () => {
   const list1 = list(1, 2, 3);
   expect(() => asserts.assert_contains(list1, 2)).not.toThrow();
   expect(() => asserts.assert_contains(list1, 10)).toThrow();
+});
+
+test('internal errors are not handled', () => {
+  expect(() => {
+    throw new UnitestBundleInternalError();
+  }).toThrow();
 });

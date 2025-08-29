@@ -1,8 +1,3 @@
-export type ErrorLogger = (
-  error: string[] | string,
-  isSlangError?: boolean
-) => void;
-
 /**
  * Represents a function that when called, should either execute successfully
  * or throw an assertion error
@@ -42,12 +37,12 @@ export interface SuiteResult {
   passed: boolean;
 }
 
-export type TestSuccess = {
+export interface TestSuccess {
   passed: true;
   name: string;
 };
 
-export type TestFailure = {
+export interface TestFailure {
   passed: false;
   name: string;
   error: string;
@@ -58,3 +53,10 @@ export type TestResult = TestSuccess | TestFailure;
 export interface UnittestModuleState {
   suiteResults: SuiteResult[];
 }
+
+/**
+ * These errors represent errors that shouldn't be handled as if they were thrown
+ * by the assertion functions
+ */
+export class UnitestBundleInternalError extends Error {
+};

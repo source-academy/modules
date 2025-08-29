@@ -1,6 +1,13 @@
 import context from 'js-slang/context';
 
-import type { Suite, SuiteResult, Test, TestResult } from './types';
+import {
+  UnitestBundleInternalError,
+  type Suite,
+  type SuiteResult,
+  type Test,
+  type TestResult,
+  type TestSuite
+} from './types';
 
 function getNewSuite(name?: string): Suite {
   return {
@@ -14,7 +21,9 @@ function getNewSuite(name?: string): Suite {
  * to collect those Suite Results since none of them will have a parent suite
  */
 export const suiteResults: SuiteResult[] = [];
-let currentSuite: Suite | null = null;
+
+export let currentSuite: Suite | null = null;
+export let currentTest: string | null = null;
 
 function handleErr(err: any) {
   if (err.error && err.error.message) {
@@ -26,30 +35,45 @@ function handleErr(err: any) {
   throw err;
 }
 
-/**
- * Defines a single test.
- * @param name Description for this test.
- * @param func Function containing assertions.
- */
-export function it(name: string, func: Test): void {
+function runTest(name: string, funcName: string, func: Test) {
   if (currentSuite === null) {
-    throw new Error(`'${it.name}' must be called from within a test suite!`);
+    throw new UnitestBundleInternalError(`${funcName} must be called from within a test suite!`);
+  }
+
+  if (currentTest !== null) {
+    throw new UnitestBundleInternalError(`${funcName} cannot be called from within another test!`);
   }
 
   try {
+    currentTest = name;
     func();
     currentSuite.results.push({
       name,
       passed: true,
     });
   } catch (err) {
+    if (err instanceof UnitestBundleInternalError) {
+      throw err;
+    }
+
     const error = handleErr(err);
     currentSuite.results.push({
       name,
       passed: false,
       error,
     });
+  } finally {
+    currentTest = null;
   }
+}
+
+/**
+ * Defines a single test.
+ * @param name Description for this test.
+ * @param func Function containing assertions.
+ */
+export function it(name: string, func: Test): void {
+  runTest(name, it.name, func);
 }
 
 /**
@@ -58,10 +82,7 @@ export function it(name: string, func: Test): void {
  * @param func Function containing assertions.
  */
 export function test(msg: string, func: Test): void {
-  if (currentSuite === null) {
-    throw new Error(`${test.name} must be called from within a test suite!`);
-  }
-  it(msg, func);
+  runTest(msg, test.name, func);
 }
 
 function determinePassCount(results: (TestResult | SuiteResult)[]): number {
@@ -82,7 +103,7 @@ function determinePassCount(results: (TestResult | SuiteResult)[]): number {
  * @param msg Description for this test suite.
  * @param func Function containing tests.
  */
-export function describe(msg: string, func: Test): void {
+export function describe(msg: string, func: TestSuite): void {
   const oldSuite = currentSuite;
   const newSuite = getNewSuite(msg);
 
