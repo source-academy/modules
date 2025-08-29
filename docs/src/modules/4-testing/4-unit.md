@@ -1,17 +1,14 @@
----
-order: 3
----
 # Unit Testing
 
 The testing library used by this repository is [`vitest`](https://vitest.dev).
 
 > [!IMPORTANT]
-> Other Source Academy repositories use `jest` as their testing package. Although `vitest` has been designed as a drop in replacement for `jest`,
+> Other Source Academy repositories may use `jest` as their testing package. Although `vitest` has been designed as a drop in replacement for `jest`,
 > there are subtle differences between the two. For example, `vi.spyOn` doesn't replace the implementation within the module while `jest.spyOn` does (See [here](https://vitest.dev/guide/mocking.html#mocking-pitfalls)).
 >
 > Refer to [this page](https://vitest.dev/guide/migration.html#jest) for more differences between `jest` and `vitest`.
 
-## Adding Tests
+## Adding/Writing Tests
 
 By default, any Typescript (`.ts`) files located within a `__tests__` folder are considered test files. This means that if `vitest` does not
 detect any tests within that file, it will throw an error.  This also includes any subdirectories under a `__tests__` folder.
@@ -45,7 +42,27 @@ test('CurveTab', () => {
 });
 ```
 
-For more instructions on how to write tests you can refer to the [Vitest website](https://vitest.dev/guide/#writing-tests).
+For comprehensive instructions on how to write tests you can refer to the [Vitest website](https://vitest.dev/guide/#writing-tests).
+
+### Describe Block Titles for functions
+
+Vitest supports passing functions directly to `describe` blocks. You should use this syntax instead of using a string title where possible:
+```ts
+function foo() {}
+
+// Don't do this
+describe('foo', () => {});
+
+// Do this instead!
+describe(foo, () => {});
+```
+
+This is so that if you ever rename the function, the title of the describe block will change during your refactoring and there won't be a mismatch.
+
+Of course, if you're not specifically testing a function, you can still use the normal string description:
+```ts
+describe('A bunch of tests that need to execute', () => {});
+```
 
 ### Test Filtering
 
