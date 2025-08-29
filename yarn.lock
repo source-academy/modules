@@ -1265,6 +1265,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@commander-js/extra-typings@npm:^14.0.0":
+  version: 14.0.0
+  resolution: "@commander-js/extra-typings@npm:14.0.0"
+  peerDependencies:
+    commander: ~14.0.0
+  checksum: 10c0/b064889e254e1c895886ec8148ac6e0d9bfa3c0336b9ee58124178308819dcf008f15e2a7abdc89b6c1ac3bdbd8003d8cfdaf363971d41dcce64b28c9714af12
+  languageName: node
+  linkType: hard
+
 "@csstools/color-helpers@npm:^5.0.2":
   version: 5.0.2
   resolution: "@csstools/color-helpers@npm:5.0.2"
@@ -3640,7 +3649,7 @@ __metadata:
   dependencies:
     "@blueprintjs/core": "npm:^5.10.2"
     "@blueprintjs/icons": "npm:^5.9.0"
-    "@commander-js/extra-typings": "npm:^13.0.0"
+    "@commander-js/extra-typings": "npm:^14.0.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
@@ -3649,7 +3658,7 @@ __metadata:
     "@vitest/browser": "npm:^3.2.3"
     ace-builds: "npm:^1.25.1"
     classnames: "npm:^2.3.1"
-    commander: "npm:^13.0.0"
+    commander: "npm:^14.0.0"
     eslint: "npm:^9.31.0"
     js-slang: "npm:^1.0.81"
     playwright: "npm:^1.54.1"
@@ -3729,13 +3738,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/modules-repotools@workspace:lib/repotools"
   dependencies:
-    "@commander-js/extra-typings": "npm:^13.0.0"
+    "@commander-js/extra-typings": "npm:^14.0.0"
     "@types/lodash": "npm:^4.14.198"
     "@types/node": "npm:^22.15.30"
     "@vitejs/plugin-react": "npm:^4.7.0"
     "@vitest/coverage-v8": "npm:^3.2.3"
     chalk: "npm:^5.0.1"
-    commander: "npm:^13.0.0"
+    commander: "npm:^14.0.0"
     esbuild: "npm:^0.25.8"
     jsonschema: "npm:^1.5.0"
     lodash: "npm:^4.17.21"
@@ -4537,14 +4546,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/estree@npm:*, @types/estree@npm:^1.0.8":
+"@types/estree@npm:*, @types/estree@npm:^1.0.5, @types/estree@npm:^1.0.8":
   version: 1.0.8
   resolution: "@types/estree@npm:1.0.8"
   checksum: 10c0/39d34d1afaa338ab9763f37ad6066e3f349444f9052b9676a7cc0252ef9485a41c6d81c9c4e0d26e9077993354edf25efc853f3224dd4b447175ef62bdcc86a5
   languageName: node
   linkType: hard
 
-"@types/estree@npm:1.0.7, @types/estree@npm:^1.0.0, @types/estree@npm:^1.0.5, @types/estree@npm:^1.0.6":
+"@types/estree@npm:1.0.7, @types/estree@npm:^1.0.0, @types/estree@npm:^1.0.6":
   version: 1.0.7
   resolution: "@types/estree@npm:1.0.7"
   checksum: 10c0/be815254316882f7c40847336cd484c3bc1c3e34f710d197160d455dc9d6d050ffbf4c3bc76585dba86f737f020ab20bdb137ebe0e9116b0c86c7c0342221b8c
@@ -7018,6 +7027,13 @@ __metadata:
   version: 13.1.0
   resolution: "commander@npm:13.1.0"
   checksum: 10c0/7b8c5544bba704fbe84b7cab2e043df8586d5c114a4c5b607f83ae5060708940ed0b5bd5838cf8ce27539cde265c1cbd59ce3c8c6b017ed3eec8943e3a415164
+  languageName: node
+  linkType: hard
+
+"commander@npm:^14.0.0":
+  version: 14.0.0
+  resolution: "commander@npm:14.0.0"
+  checksum: 10c0/73c4babfa558077868d84522b11ef56834165d472b9e86a634cd4c3ae7fc72d59af6377d8878e06bd570fe8f3161eced3cbe383c38f7093272bb65bd242b595b
   languageName: node
   linkType: hard
 
@@ -10805,8 +10821,8 @@ __metadata:
   linkType: hard
 
 "js-slang@npm:^1.0.81":
-  version: 1.0.84
-  resolution: "js-slang@npm:1.0.84"
+  version: 1.0.85
+  resolution: "js-slang@npm:1.0.85"
   dependencies:
     "@babel/parser": "npm:^7.19.4"
     "@commander-js/extra-typings": "npm:^12.0.1"
@@ -10821,10 +10837,10 @@ __metadata:
     commander: "npm:^12.0.0"
     js-base64: "npm:^3.7.5"
     lodash: "npm:^4.17.21"
-    source-map: "npm:0.7.3"
+    source-map: "npm:0.7.6"
   bin:
     js-slang: dist/repl/index.js
-  checksum: 10c0/bc01cfddb02be7e4d69510bb6d9aef5147d4d2a3da9fd00cd16a45e1a2fcd70e44abaa71c81bfa5c8f336825015070aec50d32dbc37e60767fdaf604a5ca45a2
+  checksum: 10c0/8a206d6052e5b23a27bda4aef66675b4b7f9bebde936c789a182948478e26fa7aee6289effd0d867725a939e14674ee59fd218e1bec1fd1dc597b6bf7cbbaf42
   languageName: node
   linkType: hard
 
@@ -14812,10 +14828,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map@npm:0.7.3":
-  version: 0.7.3
-  resolution: "source-map@npm:0.7.3"
-  checksum: 10c0/7d2ddb51f3d2451847692a9ac7808da2b2b3bf7aef92ece33128919040a7e74d9a5edfde7a781f035c974deff876afaf83f2e30484faffffb86484e7408f5d7c
+"source-map@npm:0.7.6":
+  version: 0.7.6
+  resolution: "source-map@npm:0.7.6"
+  checksum: 10c0/59f6f05538539b274ba771d2e9e32f6c65451982510564438e048bc1352f019c6efcdc6dd07909b1968144941c14015c2c7d4369fb7c4d7d53ae769716dcc16c
   languageName: node
   linkType: hard
 

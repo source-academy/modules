@@ -92,6 +92,7 @@ export default defineConfig(({ mode }) => {
         'ace-builds/src-noconflict/ext-language_tools',
         'ace-builds/src-noconflict/ext-searchbox',
         'classnames',
+        'js-slang',
         'js-slang/dist/createContext',
         'js-slang/dist/editors/ace/modes/source',
         'js-slang/dist/editors/ace/theme/source',
