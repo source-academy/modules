@@ -217,7 +217,7 @@ async function main() {
   const { repository } = packageJson;
   const summaryItems = Object.values(packages).map((packageInfo): SummaryTableRow => {
     const relpath = pathlib.relative(gitRoot, packageInfo.directory);
-    const url = new URL(relpath, repository);
+    const url = new URL(relpath, repository.endsWith('/') ? repository : `${repository}/`);
 
     return [
       `<code>${packageInfo.name}</code>`,
