@@ -3,6 +3,7 @@ import pathlib from 'path';
 import utils from 'util';
 import * as core from '@actions/core';
 import type { SummaryTableRow } from '@actions/core/lib/summary.js';
+import packageJson from '../../../../package.json' with { type: 'json' };
 import { checkForChanges, getGitRoot, type PackageRecord, type RawPackageRecord } from '../commons.js';
 import { topoSortPackages } from './sorter.js';
 
@@ -213,13 +214,16 @@ async function main() {
   const gitRoot = await getGitRoot();
   const { packages, bundles, tabs, libs } = await getAllPackages(gitRoot);
 
+  const { repository } = packageJson;
   const summaryItems = Object.values(packages).map((packageInfo): SummaryTableRow => {
     const relpath = pathlib.relative(gitRoot, packageInfo.directory);
+    const url = new URL(relpath, repository);
+
     return [
-      packageInfo.name,
-      relpath,
-      packageInfo.changes ? 'true' : 'false',
-      packageInfo.needsPlaywright ? 'true' : 'false'
+      `<code>${packageInfo.name}</code>`,
+      `<a href="${url}">${relpath}</a>`,
+      `<code>${packageInfo.changes ? 'true' : 'false'}</code>`,
+      `<code>${packageInfo.needsPlaywright ? 'true' : 'false'}</code>`
     ];
   });
 
@@ -242,6 +246,7 @@ async function main() {
     }
   ]);
 
+  core.summary.addHeading('Package Information');
   core.summary.addTable(summaryItems);
   await core.summary.write();
 
