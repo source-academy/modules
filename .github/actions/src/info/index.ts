@@ -214,12 +214,12 @@ async function main() {
   const gitRoot = await getGitRoot();
   const { packages, bundles, tabs, libs } = await getAllPackages(gitRoot);
 
-  const { repository: repoUrl } = packageJson;
-  const repository = pathlib.basename(repoUrl, '.git');
+  const { repository } = packageJson;
+  const repoUrl = repository.substring(0, repository.length - 4); // Remove the .git at the end
 
   const summaryItems = Object.values(packages).map((packageInfo): SummaryTableRow => {
     const relpath = pathlib.relative(gitRoot, packageInfo.directory);
-    const url = new URL(relpath, `${repository}/tree/master/`);
+    const url = new URL(relpath, `${repoUrl}/tree/master/`);
 
     return [
       `<code>${packageInfo.name}</code>`,
