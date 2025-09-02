@@ -4,5 +4,5 @@ import { Painter } from '..';
 
 test('painter tab', () => {
   const context = mockDebuggerContext({ drawnPainters: [] }, 'painter');
-  expect(<Painter debuggerContext={context} />).toMatchSnapshot();
+  expect(<Painter context={context} />).toMatchSnapshot();
 });
