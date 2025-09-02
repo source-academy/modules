@@ -1,12 +1,11 @@
 import type { DrawnPlot } from '@sourceacademy/bundle-plotly/plotly';
 import Modal from '@sourceacademy/modules-lib/tabs/ModalDiv';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import type { DebuggerContext } from '@sourceacademy/modules-lib/types/index';
 import React from 'react';
 
 type Props = {
-  children?: never;
-  className?: string;
-  debuggerContext: any;
+  debuggerContext: DebuggerContext;
 };
 
 type State = {

@@ -15,17 +15,11 @@ export const CurveTab: ModuleTab = ({ context }) => {
 
     if (glAnimation.isAnimation(curve)) {
       return curve.is3D
-        ? (
-          <Curve3DAnimationCanvas animation={curve} key={elemKey} />
-        )
-        : (
-          <AnimationCanvas animation={curve} key={elemKey} />
-        );
+        ? <Curve3DAnimationCanvas animation={curve} key={elemKey} />
+        : <AnimationCanvas animation={curve} key={elemKey} />;
     }
     return curve.is3D()
-      ? (
-        <CurveCanvas3D curve={curve} key={elemKey} />
-      )
+      ? <CurveCanvas3D curve={curve} key={elemKey} />
       : (
         <WebGLCanvas
           ref={(r) => {

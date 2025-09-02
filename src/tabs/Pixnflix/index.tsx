@@ -19,12 +19,11 @@ import {
   type TabsPacket
 } from '@sourceacademy/bundle-pix_n_flix/types';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import type { DebuggerContext } from '@sourceacademy/modules-lib/types/index';
 import React, { type ChangeEvent, type DragEvent } from 'react';
 
 type Props = {
-  children?: never;
-  className?: string;
-  debuggerContext: any;
+  debuggerContext: DebuggerContext;
 };
 
 enum VideoMode {

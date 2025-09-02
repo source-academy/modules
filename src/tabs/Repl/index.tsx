@@ -13,9 +13,9 @@ import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
 import AceEditor from 'react-ace';
 
+import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-twilight';
-import 'ace-builds/src-noconflict/ext-language_tools';
 
 type Props = {
   programmableReplInstance: ProgrammableRepl;
