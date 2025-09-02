@@ -1,4 +1,5 @@
 import context from 'js-slang/context';
+import clamp from 'lodash/clamp';
 import { Point, generateCurve, type Curve, type CurveDrawn } from './curves_webgl';
 import {
   AnimatedCurve,
@@ -41,7 +42,7 @@ function createDrawFunction(
     // Because the draw functions are actually functions
     // we need hacky workarounds like these to pass information around
     func.is3D = space === '3D';
-    const stringifier = () => `<${space==='3D' ? '3D' : ''}RenderFunction(${numPoints})>`;
+    const stringifier = () => `<${space === '3D' ? '3D' : ''}RenderFunction(${numPoints})>`;
 
     // Retain both properties for compatibility
     func.toString = stringifier;
@@ -363,6 +364,10 @@ export function make_color_point(
   g: number,
   b: number
 ): Point {
+  r = clamp(r, 0, 255);
+  g = clamp(g, 0, 255);
+  b = clamp(b, 0, 255);
+
   return new Point(x, y, 0, [r / 255, g / 255, b / 255, 1]);
 }
 
@@ -391,7 +396,17 @@ export function make_3D_color_point(
   g: number,
   b: number
 ): Point {
+  r = clamp(r, 0, 255);
+  g = clamp(g, 0, 255);
+  b = clamp(b, 0, 255);
+
   return new Point(x, y, z, [r / 255, g / 255, b / 255, 1]);
+}
+
+function throwIfNotPoint(obj: unknown, func_name: string): asserts obj is Point {
+  if (!(obj instanceof Point)) {
+    throw new Error(`${func_name} expects a point as argument`);
+  }
 }
 
 /**
@@ -406,6 +421,7 @@ export function make_3D_color_point(
  * ```
  */
 export function x_of(pt: Point): number {
+  throwIfNotPoint(pt, x_of.name);
   return pt.x;
 }
 
@@ -421,6 +437,7 @@ export function x_of(pt: Point): number {
  * ```
  */
 export function y_of(pt: Point): number {
+  throwIfNotPoint(pt, y_of.name);
   return pt.y;
 }
 
@@ -436,6 +453,7 @@ export function y_of(pt: Point): number {
  * ```
  */
 export function z_of(pt: Point): number {
+  throwIfNotPoint(pt, z_of.name);
   return pt.z;
 }
 
@@ -451,7 +469,8 @@ export function z_of(pt: Point): number {
  * ```
  */
 export function r_of(pt: Point): number {
-  return pt.color[0] * 255;
+  throwIfNotPoint(pt, r_of.name);
+  return Math.floor(pt.color[0] * 255);
 }
 
 /**
@@ -466,7 +485,8 @@ export function r_of(pt: Point): number {
  * ```
  */
 export function g_of(pt: Point): number {
-  return pt.color[1] * 255;
+  throwIfNotPoint(pt, g_of.name);
+  return Math.floor(pt.color[1] * 255);
 }
 
 /**
@@ -481,7 +501,8 @@ export function g_of(pt: Point): number {
  * ```
  */
 export function b_of(pt: Point): number {
-  return pt.color[2] * 255;
+  throwIfNotPoint(pt, b_of.name);
+  return Math.floor(pt.color[2] * 255);
 }
 
 /**
@@ -493,9 +514,9 @@ export function b_of(pt: Point): number {
  * @param original original Curve
  * @returns result Curve
  */
-export function invert(curve: Curve): Curve {
-  return (t: number) => curve(1 - t);
-}
+export const invert: CurveTransformer = curve => {
+  return t => curve(1 - t);
+};
 
 /**
  * This function returns a Curve transformation: It takes an x-value x0, a
@@ -509,112 +530,87 @@ export function invert(curve: Curve): Curve {
  * @param z0 z-value
  * @returns Curve transformation
  */
-export function translate(
-  x0: number,
-  y0: number,
-  z0: number
-): CurveTransformer {
-  return (curve: Curve) => {
-    const transformation = (cf: Curve) => (t: number) => {
-      const a = x0 === undefined ? 0 : x0;
-      const b = y0 === undefined ? 0 : y0;
-      const c = z0 === undefined ? 0 : z0;
-      const ct: Point = cf(t);
-      return make_3D_color_point(
-        a + x_of(ct),
-        b + y_of(ct),
-        c + z_of(ct),
-        r_of(ct),
-        g_of(ct),
-        b_of(ct)
-      );
-    };
-    return transformation(curve);
+export function translate(x0: number, y0: number, z0: number): CurveTransformer {
+  return curve => t => {
+    const ct = curve(t);
+    return new Point(
+      x0 + ct.x,
+      y0 + ct.y,
+      z0 + ct.z,
+      [ct.color[0], ct.color[1], ct.color[2], 1]
+    );
   };
 }
 
 /**
  * This function takes 3 angles, a, b and c in radians as parameter
- * and returns a Curve transformation: a function that takes a Curve as argument
- * and returns a new Curve, which is the original Curve rotated
+ * and returns a Curve transformation: a function that takes a 3D Curve as argument
+ * and returns a new 3D Curve, which is the original Curve rotated
  * extrinsically with Euler angles (a, b, c) about x, y,
  * and z axes.
- *
  * @param a given angle
  * @param b given angle
  * @param c given angle
  * @returns function that takes a Curve and returns a Curve
  */
-export function rotate_around_origin(
-  theta1: number,
-  theta2: number,
-  theta3: number
-): CurveTransformer {
-  if (theta3 === undefined && theta1 !== undefined && theta2 !== undefined) {
-    // 2 args
-    throw new Error('Expected 1 or 3 arguments, but received 2');
-  } else if (
-    theta1 !== undefined
-    && theta2 === undefined
-    && theta3 === undefined
-  ) {
-    // 1 args
-    const cth = Math.cos(theta1);
-    const sth = Math.sin(theta1);
-    return (curve: Curve) => {
-      const transformation = (c: Curve) => (t: number) => {
-        const ct = c(t);
-        const x = x_of(ct);
-        const y = y_of(ct);
-        const z = z_of(ct);
-        return make_3D_color_point(
-          cth * x - sth * y,
-          sth * x + cth * y,
-          z,
-          r_of(ct),
-          g_of(ct),
-          b_of(ct)
-        );
-      };
-      return transformation(curve);
-    };
-  } else {
-    const cthx = Math.cos(theta1);
-    const sthx = Math.sin(theta1);
-    const cthy = Math.cos(theta2);
-    const sthy = Math.sin(theta2);
-    const cthz = Math.cos(theta3);
-    const sthz = Math.sin(theta3);
-    return (curve: Curve) => {
-      const transformation = (c: Curve) => (t: number) => {
-        const ct = c(t);
-        const coord = [x_of(ct), y_of(ct), z_of(ct)];
-        const mat = [
-          [
-            cthz * cthy,
-            cthz * sthy * sthx - sthz * cthx,
-            cthz * sthy * cthx + sthz * sthx
-          ],
-          [
-            sthz * cthy,
-            sthz * sthy * sthx + cthz * cthx,
-            sthz * sthy * cthx - cthz * sthx
-          ],
-          [-sthy, cthy * sthx, cthy * cthx]
-        ];
-        let xf = 0;
-        let yf = 0;
-        let zf = 0;
-        for (let i = 0; i < 3; i += 1) {
-          xf += mat[0][i] * coord[i];
-          yf += mat[1][i] * coord[i];
-          zf += mat[2][i] * coord[i];
-        }
-        return make_3D_color_point(xf, yf, zf, r_of(ct), g_of(ct), b_of(ct));
-      };
-      return transformation(curve);
-    };
-  }
+export function rotate_around_origin_3D(a: number, b: number, c: number): CurveTransformer {
+  const cthx = Math.cos(a);
+  const sthx = Math.sin(a);
+  const cthy = Math.cos(b);
+  const sthy = Math.sin(b);
+  const cthz = Math.cos(c);
+  const sthz = Math.sin(c);
+
+  return curve => t => {
+    const ct = curve(t);
+    const coord = [ct.x, ct.y, ct.z];
+    const mat = [
+      [
+        cthz * cthy,
+        cthz * sthy * sthx - sthz * cthx,
+        cthz * sthy * cthx + sthz * sthx
+      ],
+      [
+        sthz * cthy,
+        sthz * sthy * sthx + cthz * cthx,
+        sthz * sthy * cthx - cthz * sthx
+      ],
+      [-sthy, cthy * sthx, cthy * cthx]
+    ];
+    let xf = 0;
+    let yf = 0;
+    let zf = 0;
+    for (let i = 0; i < 3; i += 1) {
+      xf += mat[0][i] * coord[i];
+      yf += mat[1][i] * coord[i];
+      zf += mat[2][i] * coord[i];
+    }
+    return new Point(xf, yf, zf, [ct.color[0], ct.color[1], ct.color[2], 1]);
+  };
+}
+
+/**
+ * This function an angle a in radians as parameter
+ * and returns a Curve transformation: a function that takes a Curve as argument
+ * and returns a new Curve, which is the original Curve rotated
+ * extrinsically with Euler angle a about the z axis.
+ *
+ * @param a given angle
+ * @returns function that takes a Curve and returns a Curve
+ */
+export function rotate_around_origin(a: number): CurveTransformer {
+  // 1 args
+  const cth = Math.cos(a);
+  const sth = Math.sin(a);
+  return curve => t => {
+    const ct = curve(t);
+    return new Point(
+      cth * ct.x - sth * ct.y,
+      sth * ct.x + cth * ct.y,
+      ct.z,
+      [ct.color[0], ct.color[1], ct.color[2], 1]
+    );
+  };
 }
 
 /**
@@ -623,28 +619,21 @@ export function rotate_around_origin(
  * Curve transformation that scales a given Curve by `a` in
  * x-direction, `b` in y-direction and `c` in z-direction.
  *
- * @param a scaling factor in x-direction
- * @param b scaling factor in y-direction
- * @param c scaling factor in z-direction
+ * @param x scaling factor in x-direction
+ * @param y scaling factor in y-direction
+ * @param z scaling factor in z-direction
  * @returns function that takes a Curve and returns a Curve
  */
-export function scale(a: number, b: number, c: number): CurveTransformer {
-  return (curve) => {
-    const transformation = (cf: Curve) => (t: number) => {
-      const ct = cf(t);
-      const a1 = a === undefined ? 1 : a;
-      const b1 = b === undefined ? 1 : b;
-      const c1 = c === undefined ? 1 : c;
-      return make_3D_color_point(
-        a1 * x_of(ct),
-        b1 * y_of(ct),
-        c1 * z_of(ct),
-        r_of(ct),
-        g_of(ct),
-        b_of(ct)
-      );
-    };
-    return transformation(curve);
+export function scale(x: number, y: number, z: number): CurveTransformer {
+  return curve => t => {
+    const ct = curve(t);
+
+    return new Point(
+      x * ct.x,
+      y * ct.y,
+      z * ct.z,
+      [ct.color[0], ct.color[1], ct.color[2], 1]
+    );
   };
 }
 
@@ -671,7 +660,7 @@ export function scale_proportional(s: number): CurveTransformer {
  * @param curve given Curve
  * @returns result Curve
  */
-export function put_in_standard_position(curve: Curve): Curve {
+export const put_in_standard_position: CurveTransformer = curve => {
   const start_point = curve(0);
   const curve_started_at_origin = translate(
     -x_of(start_point),
@@ -680,14 +669,14 @@ export function put_in_standard_position(curve: Curve): Curve {
   )(curve);
   const new_end_point = curve_started_at_origin(1);
   const theta = Math.atan2(y_of(new_end_point), x_of(new_end_point));
-  const curve_ended_at_x_axis = rotate_around_origin(
+  const curve_ended_at_x_axis = rotate_around_origin_3D(
     0,
     0,
     -theta
   )(curve_started_at_origin);
   const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1));
   return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
-}
+};
 
 /**
  * This function is a binary Curve operator: It takes two Curves as arguments
@@ -737,9 +726,9 @@ export function connect_ends(curve1: Curve, curve2: Curve): Curve {
  * @param t fraction between 0 and 1
  * @returns Point on the circle at t
  */
-export function unit_circle(t: number): Point {
+export const unit_circle: Curve = t => {
   return make_point(Math.cos(2 * Math.PI * t), Math.sin(2 * Math.PI * t));
-}
+};
 
 /**
  * This function is a curve: a function from a fraction t to a point. The
@@ -748,20 +737,18 @@ export function unit_circle(t: number): Point {
  * @param t fraction between 0 and 1
  * @returns Point on the line at t
  */
-export function unit_line(t: number): Point {
-  return make_point(t, 0);
-}
+export const unit_line: Curve = t => make_point(t, 0);
 
 /**
  * This function is a Curve generator: it takes a number and returns a
  * horizontal curve. The number is a y-coordinate, and the Curve generates only
  * points with the given y-coordinate.
  *
- * @param t fraction between 0 and 1
+ * @param y fraction between 0 and 1
  * @returns horizontal Curve
  */
-export function unit_line_at(t: number): Curve {
-  return (a: number): Point => make_point(a, t);
+export function unit_line_at(y: number): Curve {
+  return t => make_point(t, y);
 }
 
 /**
@@ -773,9 +760,9 @@ export function unit_line_at(t: number): Curve {
  * @param t fraction between 0 and 1
  * @returns Point in the arc at t
  */
-export function arc(t: number): Point {
+export const arc: Curve = t => {
   return make_point(Math.sin(Math.PI * t), Math.cos(Math.PI * t));
-}
+};
 
 /**
  * Create a animation of curves using a curve generating function.

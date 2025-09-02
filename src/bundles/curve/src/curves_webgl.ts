@@ -112,7 +112,7 @@ export type Curve = ((u: number) => Point) & {
   shouldNotAppend?: boolean;
 };
 
-type Color = [r: number, g: number, b: number, t: number];
+export type Color = [r: number, g: number, b: number, t: number];
 
 /** Encapsulates 3D point with RGB values. */
 export class Point implements ReplResult {
