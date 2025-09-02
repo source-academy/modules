@@ -41,6 +41,7 @@ export default defineConfig({
         '**/dist.?(c)js',
         './docs',
         '**/src/**/samples/**',
+        '**/vitest.setup.[jt]s',
         `${import.meta.dirname}/lib/buildtools/src/build/docs/drawdown.ts`
       ]
     },

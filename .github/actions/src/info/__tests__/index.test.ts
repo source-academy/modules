@@ -106,7 +106,7 @@ function mockReadFile(path: string) {
 vi.spyOn(fs, 'readdir').mockImplementation(mockReaddir as any);
 vi.spyOn(fs, 'readFile').mockImplementation(mockReadFile as any);
 
-describe('Test getRawPackages', () => {
+describe(getRawPackages, () => {
   test('maxDepth = 1', async () => {
     mockedCheckChanges.mockResolvedValueOnce(true);
     const results = Object.entries(await getRawPackages('root', 1));
@@ -169,7 +169,7 @@ describe('Test getRawPackages', () => {
   });
 });
 
-describe('Test getAllPackages', () => {
+describe(getAllPackages, () => {
   test('Transitive change dependencies', async () => {
     mockedCheckChanges.mockImplementation(p => {
       switch (p) {
