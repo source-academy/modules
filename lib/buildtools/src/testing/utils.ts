@@ -137,7 +137,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
           config: null
         };
       } else {
-        config = cloneDeep(mergeConfig(baseVitestConfig, config));
+        config = mergeConfig(cloneDeep(baseVitestConfig), config);
       }
 
       if (config.test!.root === undefined) {
@@ -166,18 +166,12 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
             config: null
           };
         }
-        config = cloneDeep(mergeConfig(sharedTabsConfig, {
-          test: {
-            name: `${tab.name} Tab`,
-            root: jsonDir,
-          }
-        }));
-
-        if (config.test!.include === undefined) {
-          config.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
-        }
+        config = cloneDeep(sharedTabsConfig);
+        config.test!.name = `${tab.name} Tab`;
+        config.test!.root = jsonDir;
+        config.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
       } else {
-        config = cloneDeep(mergeConfig(sharedTabsConfig, config));
+        config = mergeConfig(cloneDeep(sharedTabsConfig), config);
       }
       break;
     }
@@ -201,18 +195,12 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
           };
         }
 
-        config = cloneDeep(mergeConfig(baseVitestConfig, {
-          test: {
-            name: `${bundle.name} Bundle`,
-            root: jsonDir,
-          }
-        }));
-
-        if (config.test!.include === undefined) {
-          config.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
-        }
+        config = cloneDeep(baseVitestConfig);
+        config.test!.name = `${bundle.name} Bundle`;
+        config.test!.root = jsonDir;
+        config.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
       } else {
-        config = cloneDeep(mergeConfig(baseVitestConfig, config));
+        config = mergeConfig(cloneDeep(baseVitestConfig), config);
       }
       break;
     }

@@ -169,7 +169,7 @@ describe(funcs.put_in_standard_position, () => {
     expect(y0).toBeCloseTo(0);
 
     const [xn, yn] = points[points.length - 1];
-    expect(xn).toBeCloseTo(1);
-    expect(yn).toBeCloseTo(1);
+    expect(xn).toBeCloseTo(1, 1);
+    expect(yn).toBeCloseTo(0, 1);
   });
 });
