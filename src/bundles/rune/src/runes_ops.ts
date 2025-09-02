@@ -8,7 +8,7 @@ import { Rune } from './rune';
 // Utility Functions
 // =============================================================================
 export function throwIfNotRune(name: string, rune: unknown): asserts rune is Rune {
-  if (!(rune instanceof Rune)) throw Error(`${name} expects a rune as argument.`);
+  if (!(rune instanceof Rune)) throw new Error(`${name} expects a rune as argument.`);
 }
 
 // =============================================================================
@@ -324,17 +324,6 @@ export function getRibbon() {
 // =============================================================================
 // black and white not included because they are boring colors
 // colorPalette is used in generateFlattenedRuneList to generate a random color
-export const colorPalette = [
-  '#F44336',
-  '#E91E63',
-  '#AA00FF',
-  '#3F51B5',
-  '#2196F3',
-  '#4CAF50',
-  '#FFEB3B',
-  '#FF9800',
-  '#795548'
-];
 
 export function hexToColor(hex: string): number[] {
   const result = hexToColorUtil(hex);

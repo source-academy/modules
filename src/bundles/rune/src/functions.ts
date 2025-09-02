@@ -1,4 +1,5 @@
 import { mat4, vec3 } from 'gl-matrix';
+import clamp from 'lodash/clamp';
 import {
   DrawnRune,
   Rune,
@@ -7,7 +8,6 @@ import {
 } from './rune';
 import {
   addColorFromHex,
-  colorPalette,
   getBlank,
   getCircle,
   getCorner,
@@ -34,12 +34,24 @@ export type RuneModuleState = {
   drawnRunes: (AnimatedRune | DrawnRune)[];
 };
 
+function throwIfNotFraction(val: unknown, param_name: string, func_name: string): asserts val is number {
+  if (typeof val !== 'number') throw new Error(`${func_name}: ${param_name} must be a number!`);
+
+  if (val < 0) {
+    throw new Error(`${func_name}: ${param_name} cannot be less than 0!`);
+  }
+
+  if (val > 1) {
+    throw new Error(`${func_name}: ${param_name} cannot be greater than 1!`);
+  }
+}
+
 // =============================================================================
 // Basic Runes
 // =============================================================================
 
-class RuneFunctions {
-
+// Exported for testing
+export class RuneFunctions {
   @variableDeclaration('Rune')
   static square: Rune = getSquare();
 
@@ -148,10 +160,7 @@ class RuneFunctions {
   static stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
     throwIfNotRune(RuneFunctions.stack_frac.name, rune1);
     throwIfNotRune(RuneFunctions.stack_frac.name, rune2);
-
-    if (!(frac >= 0 && frac <= 1)) {
-      throw Error('stack_frac can only take fraction in [0,1].');
-    }
+    throwIfNotFraction(frac, 'frac', RuneFunctions.stack_frac.name);
 
     const upper = RuneFunctions.translate(0, -(1 - frac), RuneFunctions.scale_independent(1, frac, rune1));
     const lower = RuneFunctions.translate(0, frac, RuneFunctions.scale_independent(1, 1 - frac, rune2));
@@ -170,7 +179,11 @@ class RuneFunctions {
   @functionDeclaration('n: number, rune: Rune', 'Rune')
   static stackn(n: number, rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.stackn.name, rune);
-    if (n === 1) {
+    if (!Number.isInteger(n)) {
+      throw new Error(`${RuneFunctions.stackn.name} expects an integer!`);
+    }
+
+    if (n <= 1) {
       return rune;
     }
     return RuneFunctions.stack_frac(1 / n, rune, RuneFunctions.stackn(n - 1, rune));
@@ -198,10 +211,7 @@ class RuneFunctions {
   static beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
     throwIfNotRune(RuneFunctions.beside_frac.name, rune1);
     throwIfNotRune(RuneFunctions.beside_frac.name, rune2);
-
-    if (!(frac >= 0 && frac <= 1)) {
-      throw Error('beside_frac can only take fraction in [0,1].');
-    }
+    throwIfNotFraction(frac, 'frac', RuneFunctions.beside_frac.name);
 
     const left = RuneFunctions.translate(-(1 - frac), 0, RuneFunctions.scale_independent(frac, 1, rune1));
     const right = RuneFunctions.translate(frac, 0, RuneFunctions.scale_independent(1 - frac, 1, rune2));
@@ -214,7 +224,7 @@ class RuneFunctions {
   static beside(rune1: Rune, rune2: Rune): Rune {
     throwIfNotRune(RuneFunctions.beside.name, rune1);
     throwIfNotRune(RuneFunctions.beside.name, rune2);
-    return RuneFunctions.beside_frac(1 / 2, rune1, rune2);
+    return RuneFunctions.beside_frac(0.5, rune1, rune2);
   }
 
   @functionDeclaration('rune: Rune', 'Rune')
@@ -244,9 +254,10 @@ class RuneFunctions {
     pattern: (a: Rune) => Rune,
     initial: Rune
   ): Rune {
-    if (n === 0) {
+    if (n <= 0) {
       return initial;
     }
+
     return pattern(RuneFunctions.repeat_pattern(n - 1, pattern, initial));
   }
 
@@ -260,23 +271,16 @@ class RuneFunctions {
     // The key point is that positive z is closer to the screen. Hence, the image at the back should have smaller z value. Primitive runes have z = 0.
     throwIfNotRune(RuneFunctions.overlay_frac.name, rune1);
     throwIfNotRune(RuneFunctions.overlay_frac.name, rune2);
-    if (!(frac >= 0 && frac <= 1)) {
-      throw Error('overlay_frac can only take fraction in [0,1].');
-    }
+    throwIfNotFraction(frac, 'frac', RuneFunctions.overlay_frac.name);
+
     // by definition, when frac == 0 or 1, the back rune will overlap with the front rune.
     // however, this would cause graphical glitch because overlapping is physically impossible
     // we hack this problem by clipping the frac input from [0,1] to [1E-6, 1-1E-6]
     // this should not be graphically noticable
-    let useFrac = frac;
     const minFrac = 0.000001;
     const maxFrac = 1 - minFrac;
-    if (useFrac < minFrac) {
-      useFrac = minFrac;
-    }
-    if (useFrac > maxFrac) {
-      useFrac = maxFrac;
-    }
 
+    const useFrac = clamp(frac, minFrac, maxFrac);
     const frontMat = mat4.create();
     // z: scale by frac
     mat4.scale(frontMat, frontMat, vec3.fromValues(1, 1, useFrac));
@@ -313,6 +317,9 @@ class RuneFunctions {
   @functionDeclaration('rune: Rune, r: number, g: number, b: number', 'Rune')
   static color(rune: Rune, r: number, g: number, b: number): Rune {
     throwIfNotRune(RuneFunctions.color.name, rune);
+    throwIfNotFraction(r, 'r', RuneFunctions.color.name);
+    throwIfNotFraction(g, 'g', RuneFunctions.color.name);
+    throwIfNotFraction(b, 'b', RuneFunctions.color.name);
 
     const colorVector = [r, g, b, 1];
     return Rune.of({
@@ -320,82 +327,99 @@ class RuneFunctions {
       subRunes: [rune]
     });
   }
+}
+
+// Class dedicated to functions for colouring Runes specific colours
+// Separated into a different class for testing
+export class RuneColours {
+  static colours = {
+    blue: '#2196F3',
+    brown: '#795548',
+    green: '#4CAF50',
+    indigo: '#3F51B5',
+    orange: '#FF9800',
+    pink: '#E91E63',
+    purple: '#AA00FF',
+    red: '#F44336',
+    yellow: '#FFEB3B',
+  } as const;
+
+  @functionDeclaration('rune: Rune', 'Rune')
+  static black(rune: Rune): Rune {
+    throwIfNotRune(RuneColours.black.name, rune);
+    return addColorFromHex(rune, '#000000');
+  }
+
+  @functionDeclaration('rune: Rune', 'Rune')
+  static blue(rune: Rune): Rune {
+    throwIfNotRune(RuneColours.blue.name, rune);
+    return addColorFromHex(rune, RuneColours.colours.blue);
+  }
+  @functionDeclaration('rune: Rune', 'Rune')
+  static brown(rune: Rune): Rune {
+    throwIfNotRune(RuneColours.brown.name, rune);
+    return addColorFromHex(rune, RuneColours.colours.brown);
+  }
+
+  @functionDeclaration('rune: Rune', 'Rune')
+  static green(rune: Rune): Rune {
+    throwIfNotRune(RuneColours.green.name, rune);
+    return addColorFromHex(rune, RuneColours.colours.green);
+  }
+
+  @functionDeclaration('rune: Rune', 'Rune')
+  static indigo(rune: Rune): Rune {
+    throwIfNotRune(RuneColours.indigo.name, rune);
+    return addColorFromHex(rune, RuneColours.colours.indigo);
+  }
+
+  @functionDeclaration('rune: Rune', 'Rune')
+  static red(rune: Rune): Rune {
+    throwIfNotRune(RuneColours.red.name, rune);
+    return addColorFromHex(rune, RuneColours.colours.red);
+  }
+
+  @functionDeclaration('rune: Rune', 'Rune')
+  static pink(rune: Rune): Rune {
+    throwIfNotRune(RuneColours.pink.name, rune);
+    return addColorFromHex(rune, RuneColours.colours.pink);
+  }
+
+  @functionDeclaration('rune: Rune', 'Rune')
+  static orange(rune: Rune): Rune {
+    throwIfNotRune(RuneColours.orange.name, rune);
+    return addColorFromHex(rune, RuneColours.colours.orange);
+  }
+
+  @functionDeclaration('rune: Rune', 'Rune')
+  static purple(rune: Rune): Rune {
+    throwIfNotRune(RuneColours.purple.name, rune);
+    return addColorFromHex(rune, RuneColours.colours.purple);
+  }
+
+  @functionDeclaration('rune: Rune', 'Rune')
+  static white(rune: Rune): Rune {
+    throwIfNotRune(RuneColours.white.name, rune);
+    return addColorFromHex(rune, '#FFFFFF');
+  }
+
+  @functionDeclaration('rune: Rune', 'Rune')
+  static yellow(rune: Rune): Rune {
+    throwIfNotRune(RuneColours.yellow.name, rune);
+    return addColorFromHex(rune, RuneColours.colours.yellow);
+  }
 
   @functionDeclaration('rune: Rune', 'Rune')
   static random_color(rune: Rune): Rune {
-    throwIfNotRune(RuneFunctions.random_color.name, rune);
-    const randomColor = hexToColor(colorPalette[Math.floor(Math.random() * colorPalette.length)]);
+    throwIfNotRune(RuneColours.random_color.name, rune);
+    const colourNames = Object.keys(RuneColours.colours);
+    const colourName = colourNames[Math.floor(Math.random() * colourNames.length)];
+    const randomColor = hexToColor(RuneColours.colours[colourName]);
 
     return Rune.of({
       colors: new Float32Array(randomColor),
       subRunes: [rune]
     });
-  }
-
-  @functionDeclaration('rune: Rune', 'Rune')
-  static red(rune: Rune): Rune {
-    throwIfNotRune(RuneFunctions.red.name, rune);
-    return addColorFromHex(rune, '#F44336');
-  }
-
-  @functionDeclaration('rune: Rune', 'Rune')
-  static pink(rune: Rune): Rune {
-    throwIfNotRune(RuneFunctions.pink.name, rune);
-    return addColorFromHex(rune, '#E91E63');
-  }
-
-  @functionDeclaration('rune: Rune', 'Rune')
-  static purple(rune: Rune): Rune {
-    throwIfNotRune(RuneFunctions.purple.name, rune);
-    return addColorFromHex(rune, '#AA00FF');
-  }
-
-  @functionDeclaration('rune: Rune', 'Rune')
-  static indigo(rune: Rune): Rune {
-    throwIfNotRune(RuneFunctions.indigo.name, rune);
-    return addColorFromHex(rune, '#3F51B5');
-  }
-
-  @functionDeclaration('rune: Rune', 'Rune')
-  static blue(rune: Rune): Rune {
-    throwIfNotRune(RuneFunctions.blue.name, rune);
-    return addColorFromHex(rune, '#2196F3');
-  }
-
-  @functionDeclaration('rune: Rune', 'Rune')
-  static green(rune: Rune): Rune {
-    throwIfNotRune(RuneFunctions.green.name, rune);
-    return addColorFromHex(rune, '#4CAF50');
-  }
-
-  @functionDeclaration('rune: Rune', 'Rune')
-  static yellow(rune: Rune): Rune {
-    throwIfNotRune(RuneFunctions.yellow.name, rune);
-    return addColorFromHex(rune, '#FFEB3B');
-  }
-
-  @functionDeclaration('rune: Rune', 'Rune')
-  static orange(rune: Rune): Rune {
-    throwIfNotRune(RuneFunctions.orange.name, rune);
-    return addColorFromHex(rune, '#FF9800');
-  }
-
-  @functionDeclaration('rune: Rune', 'Rune')
-  static brown(rune: Rune): Rune {
-    throwIfNotRune(RuneFunctions.brown.name, rune);
-    return addColorFromHex(rune, '#795548');
-  }
-
-  @functionDeclaration('rune: Rune', 'Rune')
-  static black(rune: Rune): Rune {
-    throwIfNotRune(RuneFunctions.black.name, rune);
-    return addColorFromHex(rune, '#000000');
-  }
-
-  @functionDeclaration('rune: Rune', 'Rune')
-  static white(rune: Rune): Rune {
-    throwIfNotRune(RuneFunctions.white.name, rune);
-    return addColorFromHex(rune, '#FFFFFF');
   }
 }
 
@@ -666,7 +690,7 @@ export const beside_frac = RuneFunctions.beside_frac;
  *
  * @category Color
  */
-export const black = RuneFunctions.black;
+export const black = RuneColours.black;
 
 /**
  * Rune with the shape of a blank square
@@ -683,7 +707,7 @@ export const blank = RuneFunctions.blank;
  *
  * @category Color
  */
-export const blue = RuneFunctions.blue;
+export const blue = RuneColours.blue;
 
 /**
  * Colors the given rune brown.
@@ -693,7 +717,7 @@ export const blue = RuneFunctions.blue;
  *
  * @category Color
  */
-export const brown = RuneFunctions.brown;
+export const brown = RuneColours.brown;
 
 /**
  * Rune with the shape of a circle
@@ -769,7 +793,7 @@ export const from_url = RuneFunctions.from_url;
  *
  * @category Color
  */
-export const green = RuneFunctions.green;
+export const green = RuneColours.green;
 
 /**
  * Rune with the shape of a heart
@@ -786,7 +810,7 @@ export const heart = RuneFunctions.heart;
  *
  * @category Color
  */
-export const indigo = RuneFunctions.indigo;
+export const indigo = RuneColours.indigo;
 
 /**
  * Makes a new Rune from a given Rune by
@@ -817,7 +841,7 @@ export const nova = RuneFunctions.nova;
  *
  * @category Color
  */
-export const orange = RuneFunctions.orange;
+export const orange = RuneColours.orange;
 
 /**
  * The depth range of the z-axis of a rune is [0,-1], this function maps the depth range of rune1 and rune2 to [0,-0.5] and [-0.5,-1] respectively.
@@ -857,7 +881,7 @@ export const pentagram = RuneFunctions.pentagram;
  *
  * @category Color
  */
-export const pink = RuneFunctions.pink;
+export const pink = RuneColours.pink;
 
 /**
  * Colors the given rune purple (#AA00FF).
@@ -867,7 +891,7 @@ export const pink = RuneFunctions.pink;
  *
  * @category Color
  */
-export const purple = RuneFunctions.purple;
+export const purple = RuneColours.purple;
 
 /**
  * Makes a new Rune from a given Rune
@@ -903,7 +927,7 @@ export const quarter_turn_right = RuneFunctions.quarter_turn_right;
  *
  * @category Color
  */
-export const random_color = RuneFunctions.random_color;
+export const random_color = RuneColours.random_color;
 
 /**
  * Rune with the shape of a
@@ -923,7 +947,7 @@ export const rcross = RuneFunctions.rcross;
  *
  * @category Color
  */
-export const red = RuneFunctions.red;
+export const red = RuneColours.red;
 
 /**
  * Applies a given function n times to an initial value
@@ -1077,7 +1101,7 @@ export const turn_upside_down = RuneFunctions.turn_upside_down;
  *
  * @category Color
  */
-export const yellow = RuneFunctions.yellow;
+export const yellow = RuneColours.yellow;
 
 /**
  * Colors the given rune white (#FFFFFF).
@@ -1087,4 +1111,4 @@ export const yellow = RuneFunctions.yellow;
  *
  * @category Color
  */
-export const white = RuneFunctions.white;
+export const white = RuneColours.white;
