@@ -22,12 +22,18 @@ export function setBrowserOptions(indivConfig: TestProjectInlineConfiguration, w
 
   if (indivConfig.test!.browser?.enabled) {
     indivConfig.test!.browser.headless = !watch;
-    indivConfig.test!.browser.instances?.forEach(instance => {
-      instance.name = `${nameStr} (${instance.browser})`;
-      if (!instance.include) {
-        instance.include = indivConfig.test!.include;
-      }
-    });
+
+    if (indivConfig.test!.browser.instances) {
+      indivConfig.test!.browser.instances?.forEach(instance => {
+        if (!instance.name) {
+          instance.name = `${nameStr} (${instance.browser})`;
+        }
+
+        if (!instance.include) {
+          instance.include = indivConfig.test!.include;
+        }
+      });
+    }
     indivConfig.test!.include = [];
 
     if (!indivConfig.optimizeDeps) {
@@ -118,7 +124,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
   switch (type) {
     case 'config': {
       if (config === null) {
-      // Not a bundle, no config
+        // Not a bundle, no config
         if (await hasTests(jsonDir)) {
           return {
             severity: 'error',
@@ -131,7 +137,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
           config: null
         };
       } else {
-        config = mergeConfig(baseVitestConfig, config);
+        config = cloneDeep(mergeConfig(baseVitestConfig, config));
       }
 
       if (config.test!.root === undefined) {
@@ -160,12 +166,18 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
             config: null
           };
         }
-        config = cloneDeep(sharedTabsConfig);
-        config!.test!.name = `${tab.name} Tab`;
-        config!.test!.root = jsonDir;
-        config!.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
+        config = cloneDeep(mergeConfig(sharedTabsConfig, {
+          test: {
+            name: `${tab.name} Tab`,
+            root: jsonDir,
+          }
+        }));
+
+        if (config.test!.include === undefined) {
+          config.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
+        }
       } else {
-        config = mergeConfig(sharedTabsConfig, config);
+        config = cloneDeep(mergeConfig(sharedTabsConfig, config));
       }
       break;
     }
@@ -189,18 +201,25 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
           };
         }
 
-        config = cloneDeep(baseVitestConfig);
-        config!.test!.name = `${bundle.name} Bundle`;
-        config!.test!.root = jsonDir;
-        config!.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
+        config = cloneDeep(mergeConfig(baseVitestConfig, {
+          test: {
+            name: `${bundle.name} Bundle`,
+            root: jsonDir,
+          }
+        }));
+
+        if (config.test!.include === undefined) {
+          config.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
+        }
       } else {
-        config = mergeConfig(baseVitestConfig, config);
+        config = cloneDeep(mergeConfig(baseVitestConfig, config));
       }
       break;
     }
   }
 
   setBrowserOptions(config, watch);
+
   return {
     severity: 'success',
     config
@@ -229,7 +248,11 @@ export async function getAllTestConfigurations(watch: boolean) {
   for (const globPath of globPatterns) {
     const fullGlobPath = pathlib.join(gitRoot, globPath);
     for await (const info of fs.glob(fullGlobPath, { withFileTypes: true })) {
-      if (!info.isDirectory() || info.name === 'node_modules') continue;
+      if (
+        !info.isDirectory()
+        || info.name === 'node_modules'
+        || info.name.startsWith('__')
+      ) continue;
 
       const fullPath = pathlib.join(info.parentPath, info.name);
       filePatterns.add(fullPath);

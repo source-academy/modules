@@ -31,7 +31,7 @@ const mockedReadFile = vi.spyOn(fs, 'readFile');
 const mockedLoadConfig = vi.spyOn(configs, 'loadVitestConfigFromDir');
 const mockedResolver = vi.spyOn(manifest, 'resolveEitherBundleOrTab');
 
-describe('Test hasTests', () => {
+describe(utils.hasTests, () => {
   it('Returns true when there are files that match the glob', async () => {
     mockHasTestsOnce(true);
 
@@ -57,7 +57,7 @@ describe('Test hasTests', () => {
   });
 });
 
-describe('Test setBrowserOptions', () => {
+describe(utils.setBrowserOptions, () => {
   it('Should do nothing if browser mode is not enabled', () => {
     const mockedConfig: TestProjectInlineConfiguration = {
       test: {
@@ -133,7 +133,7 @@ describe('Test setBrowserOptions', () => {
   });
 });
 
-describe('Test getTestConfiguration', () => {
+describe(utils.getTestConfiguration, () => {
   describe('With tabs', () => {
     const tabPath = pathlib.join(tabsDir, 'Tab0');
     const tabPackageJson = pathlib.join(tabPath, 'package.json');
@@ -345,7 +345,7 @@ describe('Test getTestConfiguration', () => {
   });
 });
 
-describe('Test getAllTestConfigurations', () => {
+describe(utils.getAllTestConfigurations, () => {
   mockedReadFile.mockImplementation(p => {
     const RE = /^\/dir\/project(\d)\/package\.json$/;
     const match = RE.exec(p as string);
