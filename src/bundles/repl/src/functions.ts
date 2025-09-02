@@ -10,6 +10,7 @@ import { ProgrammableRepl } from './programmable_repl';
 
 const INSTANCE = new ProgrammableRepl();
 context.moduleContexts.repl.state = INSTANCE;
+
 /**
  * Setup the programmable REPL with given evaulator's entrance function
  *
@@ -23,10 +24,9 @@ context.moduleContexts.repl.state = INSTANCE;
  *
  * @category Main
  */
-export function set_evaluator(evalFunc: Function) {
-  if (!(evalFunc instanceof Function)) {
-    const typeName = typeof (evalFunc);
-    throw new Error(`Wrong parameter type "${typeName}' in function "set_evaluator". It supposed to be a function and it's the entrance function of your metacircular evaulator.`);
+export function set_evaluator(evalFunc: (code: string) => any) {
+  if (typeof evalFunc !== 'function') {
+    throw new Error(`${set_evaluator.name} expects a function as parameter`);
   }
   INSTANCE.evalFunction = evalFunc;
   return {
@@ -113,14 +113,27 @@ export function set_program_text(text: string) {
 }
 
 /**
- * When use this function as the entrance function in the parameter of "set_evaluator", the Programmable Repl will directly use the default js-slang interpreter to run your program in Programmable Repl editor. Do not directly call this function in your own code.
- * @param Do not directly set this parameter in your code.
- * @param A parameter that is designed to prevent student from directly calling this function in Source language.
- *
+ * Unique symbol that the {@link default_js_slang} evaluator carries to allow it to be
+ * distinguished from other evaluator functions.
+ * @hidden
+ */
+export const evaluatorSymbol = Symbol('repl/js-slang');
+
+/**
+ * When use this function as the entrance function in the parameter of "set_evaluator", the Programmable Repl will directly use the default
+ * js-slang interpreter to run your program in Programmable Repl editor. Do not directly call this function in your own code.
  * @category Main
  */
 export function default_js_slang(_program: string): any {
+  /*
+    This needs to be an actual function since it needs to behave like an actual
+    evaluator as far as cadets are concerned. But js-slang evaluates to a promise
+    and thus needs to be handled differently from user evaluators.
+
+    This function carries the evaluator symbol to allow it to be distinguished from other
+    evaluator functions.
+  */
   throw new Error('Invaild Call: Function "default_js_slang" can not be directly called by user\'s code in editor. You should use it as the parameter of the function "set_evaluator"');
-  // When the function is normally called by set_evaluator function, safeKey is set to "document.body", which has a type "Element".
-  // Students can not create objects and use HTML Elements in Source due to limitations and rules in Source, so they can't set the safeKey to a HTML Element, thus they can't use this function in Source.
 }
+
+default_js_slang[evaluatorSymbol] = true;

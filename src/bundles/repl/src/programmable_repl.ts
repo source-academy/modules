@@ -7,10 +7,10 @@
 import { runFilesInContext, type IOptions } from 'js-slang';
 import context from 'js-slang/context';
 import { COLOR_ERROR_MESSAGE, COLOR_RUN_CODE_RESULT, DEFAULT_EDITOR_HEIGHT } from './config';
-import { default_js_slang } from './functions';
+import { evaluatorSymbol } from './functions';
 
 export class ProgrammableRepl {
-  public evalFunction: Function;
+  public evalFunction: ((code: string) => any);
   public userCodeInEditor: string;
   public outputStrings: any[];
   private _editorInstance;
@@ -26,7 +26,7 @@ export class ProgrammableRepl {
   };
 
   constructor() {
-    this.evalFunction = (_placeholder) => this.easterEggFunction();
+    this.evalFunction = () => this.easterEggFunction();
     this.userCodeInEditor = this.getSavedEditorContent();
     this.outputStrings = [];
     this._editorInstance = null;// To be set when calling "SetEditorInstance" in the ProgrammableRepl Tab React Component render function.
@@ -34,7 +34,7 @@ export class ProgrammableRepl {
     developmentLog(this);
   }
 
-  InvokeREPL_Internal(evalFunc: Function) {
+  InvokeREPL_Internal(evalFunc: (code: string) => any) {
     this.evalFunction = evalFunc;
   }
 
@@ -42,7 +42,7 @@ export class ProgrammableRepl {
     this.outputStrings = [];
     let retVal: any;
     try {
-      if (Object.is(this.evalFunction, default_js_slang)) {
+      if (evaluatorSymbol in this.evalFunction) {
         retVal = this.runInJsSlang(this.userCodeInEditor);
       } else {
         retVal = this.evalFunction(this.userCodeInEditor);
@@ -67,7 +67,7 @@ export class ProgrammableRepl {
     developmentLog('RunCode finished');
   }
 
-  updateUserCode(code) {
+  updateUserCode(code: string) {
     this.userCodeInEditor = code;
   }
 
@@ -210,7 +210,7 @@ export class ProgrammableRepl {
             const error = errors[i];
             if (error.explain()
               .indexOf('Name repl_display not declared.') !== -1) {
-              this.pushOutputString('[Error] It seems that you haven\'t import the function "repl_display" correctly when calling "set_evaluator" in Source Academy\'s main editor.', COLOR_ERROR_MESSAGE);
+              this.pushOutputString('[Error] It seems that you haven\'t imported the function "repl_display" correctly when calling "set_evaluator" in Source Academy\'s main editor.', COLOR_ERROR_MESSAGE);
             } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, COLOR_ERROR_MESSAGE);
           }
         }
@@ -241,7 +241,7 @@ export class ProgrammableRepl {
     return savedContent;
   }
 
-  private easterEggFunction() {
+  easterEggFunction() {
     this.pushOutputString('<br>', 'white', 'richtext');
     this.pushOutputString(
       'If you see this, please check whether you have called <span style=\'font-weight:bold;font-style:italic;\'>set_evaluator</span> function with the correct parameter before using the Programmable Repl Tab.',
