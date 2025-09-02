@@ -17,6 +17,7 @@
  *
  */
 
+/* v8 ignore start */
 /* eslint-disable */
 var FastBase64 = {
   chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',

@@ -581,7 +581,7 @@ export function consecutively(list_of_sounds: List): Sound {
     const wave2 = get_wave(ss2);
     const dur1 = get_duration(ss1);
     const dur2 = get_duration(ss2);
-    const new_wave = (t: number) => (t < dur1 ? wave1(t) : wave2(t - dur1));
+    const new_wave: Wave = t => (t < dur1 ? wave1(t) : wave2(t - dur1));
     return make_sound(new_wave, dur1 + dur2);
   }
   return accumulate(consec_two, silence_sound(0), list_of_sounds);
@@ -604,8 +604,20 @@ export function simultaneously(list_of_sounds: List): Sound {
     const wave2 = get_wave(ss2);
     const dur1 = get_duration(ss1);
     const dur2 = get_duration(ss2);
-    // new_wave assumes sound discipline (ie, wave(t) = 0 after t > dur)
-    const new_wave = (t: number) => wave1(t) + wave2(t);
+
+    const new_wave: Wave = t => {
+      let sum = 0;
+      if (t <= dur1) {
+        sum += wave1(t);
+      }
+
+      if (t <= dur2) {
+        sum += wave2(t);
+      }
+
+      return sum;
+    };
+
     // new_dur is higher of the two dur
     const new_dur = dur1 < dur2 ? dur2 : dur1;
     return make_sound(new_wave, new_dur);
@@ -613,7 +625,7 @@ export function simultaneously(list_of_sounds: List): Sound {
 
   const mushed_sounds = accumulate(simul_two, silence_sound(0), list_of_sounds);
   const len = length(list_of_sounds);
-  const normalised_wave = (t: number) => head(mushed_sounds)(t) / len;
+  const normalised_wave: Wave = t => head(mushed_sounds)(t) / len;
   const highest_duration = tail(mushed_sounds);
   return make_sound(normalised_wave, highest_duration);
 }
