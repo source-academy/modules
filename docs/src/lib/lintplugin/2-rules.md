@@ -118,7 +118,6 @@ import { memoize as func, cloneDeep } from 'lodash';
 // gets autofixed to
 import func from 'lodash/memoize';
 import cloneDeep from 'lodash/cloneDeep';
-import cloneDeep from 'lodash/cloneDeep';
 ```
 
 Type-only imports, when mixed with default imports, also get autofixed:

@@ -1,7 +1,7 @@
 import { describe, expect, it, test } from 'vitest';
 import { hexToColor } from '../utilities';
 
-describe('Test hexToColor', () => {
+describe(hexToColor, () => {
   test.each([
     ['#FFFFFF', [1, 1, 1]],
     ['ffffff', [1, 1, 1]],

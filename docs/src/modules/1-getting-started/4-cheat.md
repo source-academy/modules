@@ -120,7 +120,7 @@ Both the `--tsc` and `--lint` options can be used togther to run `tsc` and ESLin
 #### NOTES
 
 - Running `yarn lint --fix` will fix any automatically fixable errors
-- The test command has several options. Refer to [this](../4-testing/4-unit) page for more information.
+- The test command has several options. Refer to [this](../4-testing/4-unit/4-unit) page for more information.
 
 ## Root Repository Commands
 

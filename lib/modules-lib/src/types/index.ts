@@ -51,7 +51,7 @@ export interface ReplResult {
 
 export type ModuleTab = (props: { context: DebuggerContext }) => React.ReactNode;
 
-export type ModuleSideContent = {
+export interface ModuleSideContent {
   /**
    * BlueprintJS IconName element's name, used to render the icon which will be
    * displayed in the side contents panel.

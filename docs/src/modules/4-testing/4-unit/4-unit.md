@@ -156,6 +156,59 @@ Any tests that you have written must be pass in order for you to push to the mai
 > However, the tests will still be run and must pass before your pull request can be merged. So, we recommend not using this option
 > unless absolutely necessary.
 
+## Coverage
+
+Test coverage broadly refers to the how much of your code's functionality is covered by your unit tests as a way of identifying
+things that might need to be tested.
+
+You can generate a coverage report for your tests by running `yarn test --coverage`. There are several metrics by which code
+coverage is measured when using `vitest`, namely statements, branches, lines and functions.
+
+> [!WARNING]
+> Coverage reports might not be generated if your any of your tests fail.
+
+The coverage report is printed out to the terminal:
+![](./terminal-coverage.png)
+
+and can also be viewed as a HTML report using your browser:
+![](./browser-coverage.png)
+
+The browser report is also able to show you exactly what parts of your code remain uncovered by testing:
+![](./uncovered.png)
+
+Right now, there isn't a coverage threshold in place (i.e your tests won't be considered passed if your overall coverage is too low),
+but there may be one in the future, and anyways high code coverage is good practice.
+
+### Ignoring Files for Coverage
+
+There might be functionality that's completely impossible to test. For example, if we tried to mock the `vitest` utilities,
+the `vitest` instance running our tests would break:
+
+```ts
+// This test won't be able to execute!
+import { foo } from '../functions';
+import * as vitest from 'vitest';
+
+vitest.vi.spyOn(vitest, 'test');
+
+vitest.describe('A test suite', () => {
+  vitest.test('Expect test to be called', () => {
+    foo();
+    vitest.expect(vitest.test).toHaveBeenCalledOnce();
+  });
+});
+```
+
+In such a case you can use an `ignore` directive to instruct `vitest` to ignore the given lines or files when determining coverage:
+```ts
+/* v8 ignore start */
+export function foo() {
+  // This function won't be considered for code coverage.
+}
+/* v8 ignore stop */
+```
+More information can be found [here](https://github.com/istanbuljs/v8-to-istanbul#ignoring-uncovered-lines)
+
 ## Custom Test Configuration
 
 You don't need to create a custom `vitest.config.js` for your bundle or tab. If the configuration file is absent, the default testing configuration
