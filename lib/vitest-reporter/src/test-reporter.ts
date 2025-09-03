@@ -4,12 +4,12 @@ import type { Reporter, TestCase, TestModule, TestSuite, Vitest } from 'vitest/n
 function* formatTestCase(testCase: TestCase, prefixes: string[]) {
   const passed = testCase.ok();
   const diagnostics = testCase.diagnostic();
-  const durationStr = diagnostics ? `${diagnostics.duration}ms` : '';
+  const durationStr = diagnostics ? `${diagnostics.duration.toFixed(0)}ms` : '';
 
   if (prefixes.length > 0) {
-    yield `- ${passed ? '✅' : '❌'} ${prefixes.join(' > ')} > ${testCase.name} ${durationStr}`;
+    yield `- ${passed ? '✅' : '❌'} ${prefixes.join(' > ')} > ${testCase.name} ${durationStr}\n`;
   } else {
-    yield `- ${passed ? '✅' : '❌'} ${testCase.name} ${durationStr}`;
+    yield `- ${passed ? '✅' : '❌'} ${testCase.name} ${durationStr}\n`;
   }
 }
 
@@ -51,7 +51,7 @@ export default class GithubActionsSummaryReporter implements Reporter {
   onTestRunEnd(modules: readonly TestModule[]) {
     if (!this.writeStream) return;
 
-    this.writeStream.write('<h3>Test Results</h3>');
+    this.writeStream.write('### Test Results');
     for (const testModule of modules) {
       const passed = testModule.ok();
       const testCount = getTestCount(testModule);
@@ -63,6 +63,16 @@ export default class GithubActionsSummaryReporter implements Reporter {
         const line = Array.from(formatter).join('');
         this.writeStream.write(line);
       }
+
+      const diagnostics = testModule.diagnostic();
+      const totalDuration = diagnostics.duration.toFixed(0);
+
+      this.writeStream.write('\n\n');
+      this.writeStream.write('#### Summary\n');
+      this.writeStream.write('Test Files\n');
+      this.writeStream.write(`     Tests ${testCount}\n`);
+      this.writeStream.write('  Start at\n');
+      this.writeStream.write(`  Duration: ${totalDuration}ms\n`);
     }
 
     this.writeStream.close();
