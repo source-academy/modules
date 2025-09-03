@@ -199,6 +199,7 @@ export default tseslint.config(
     files: [
       '**/*.*js',
       '**/*.ts',
+      '**/*.cts',
       '**/*.tsx',
     ],
     ignores: ['**/*.md/**/*.{js,ts,tsx}'],
@@ -243,7 +244,7 @@ export default tseslint.config(
   {
     extends: tseslint.configs.recommended,
     name: 'Global Typescript Rules',
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{ts,cts,tsx}'],
     // Markdown virtual files need to be ignored because the type-aware rules
     // don't work with them
     ignores: ['**/*.md/**/*.{ts,tsx}'],
@@ -365,7 +366,7 @@ export default tseslint.config(
   },
   {
     name: 'Rules for modules libraries',
-    files: ['lib/**/*.ts'],
+    files: ['lib/**/*.{ts,cts}'],
     rules: {
       'func-style': 'off',
       'import/extensions': ['error', 'never', { json: 'always' }],
@@ -447,8 +448,8 @@ export default tseslint.config(
     }
   },
   {
-    name: 'Rules for cjs files',
-    files: ['**/*.cjs'],
+    name: 'Rules for commonjs files',
+    files: ['**/*.{cjs,cts}'],
     rules: {
       '@typescript-eslint/no-require-imports': 'off', // Was 'error'
     }

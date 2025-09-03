@@ -1,7 +1,7 @@
 // Repotools regular tsconfig
 {
   "extends": ["../tsconfig.json"],
-  "include": ["index.cts"],
+  "include": ["./index.cts"],
   "compilerOptions": {
     "module": "commonjs",
     "moduleResolution": "node",
