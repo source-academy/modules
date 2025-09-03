@@ -1,6 +1,5 @@
 import fs from 'fs';
-import type { RunnerTestFile, TestCase, TestModule, TestSuite, Vitest } from 'vitest/node';
-import { BasicReporter } from 'vitest/reporters';
+import type { Reporter, TestCase, TestModule, TestSuite, Vitest } from 'vitest/node';
 
 function* formatTestCase(testCase: TestCase, prefixes: string[]) {
   const passed = testCase.ok();
@@ -37,7 +36,7 @@ function getTestCount(item: TestModule | TestSuite | TestCase): number {
   return output;
 }
 
-export default class GithubActionsSummaryReporter extends BasicReporter {
+export default class GithubActionsSummaryReporter implements Reporter {
   private writeStream: fs.WriteStream | null = null;
   private vitest: Vitest | null = null;
 
@@ -49,18 +48,15 @@ export default class GithubActionsSummaryReporter extends BasicReporter {
     }
   }
 
-  onTestRunEnd(files: RunnerTestFile[]) {
+  onTestRunEnd(modules: readonly TestModule[]) {
     if (!this.writeStream) return;
 
     this.writeStream.write('<h3>Test Results</h3>');
-    for (const file of files) {
-      const testModule = this.vitest!.state.getReportedEntity(file) as TestModule;
-      if (testModule === undefined) continue;
-
+    for (const testModule of modules) {
       const passed = testModule.ok();
       const testCount = getTestCount(testModule);
 
-      this.writeStream.write(`${passed ? '✅' : '❌'} \`${file.filepath}\` (${testCount} test${testCount === 1 ? '' : 's'}) \n`);
+      this.writeStream.write(`${passed ? '✅' : '❌'} (fileName) (${testCount} test${testCount === 1 ? '' : 's'}) \n`);
 
       for (const child of testModule.children) {
         const formatter = child.type === 'suite' ? formatTestSuite(child, []) : formatTestCase(child, []);
