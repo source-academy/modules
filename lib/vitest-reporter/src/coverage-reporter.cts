@@ -100,7 +100,7 @@ module.exports = class GithubActionsCoverageReporter extends ReportBase {
     this.cw = fs.createWriteStream(process.env.GITHUB_STEP_SUMMARY, { encoding: 'utf-8', flags: 'a' })
 
     this.watermarks = context.watermarks;
-    this.cw.write('<h3>Test Coverage</h3>')
+    this.cw.write('<h2>Test Coverage</h2>')
     this.cw.write('<table><thead><tr>');
     for (const heading of ['File', ...headers, 'Uncovered Lines']) {
       this.cw.write(`<th>${heading}</th>`);

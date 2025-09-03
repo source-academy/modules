@@ -48,7 +48,7 @@ function getTestCount(item: TestModule | TestSuite | TestCase): number {
 export default class GithubActionsSummaryReporter implements Reporter {
   private writeStream: fs.WriteStream | null = null;
   private vitest: Vitest | null = null;
-  private startTimes: Record<string, number> = {};
+  private startTimes: Record<string, Date> = {};
 
   onInit(vitest: Vitest) {
     this.vitest = vitest;
@@ -59,13 +59,13 @@ export default class GithubActionsSummaryReporter implements Reporter {
   }
 
   onTestModuleStart(module: TestModule) {
-    this.startTimes[module.id] = performance.now();
+    this.startTimes[module.id] = new Date();
   }
 
   onTestRunEnd(modules: readonly TestModule[]) {
     if (!this.writeStream) return;
 
-    this.writeStream.write('## Test Results\n');
+    this.writeStream.write('<h2>Test Results</h2>\n');
     for (const testModule of modules) {
       const passed = testModule.ok();
       // @ts-expect-error idk where else to get the file information from
@@ -86,7 +86,7 @@ export default class GithubActionsSummaryReporter implements Reporter {
       const diagnostics = testModule.diagnostic();
       const totalDuration = diagnostics.duration.toFixed(0);
 
-      const startTime = new Date(this.startTimes[testModule.id]);
+      const startTime = this.startTimes[testModule.id];
       const hours = startTime.getHours().toString().padStart(2, '0');
       const minutes = startTime.getMinutes().toString().padStart(2, '0');
       const seconds = startTime.getSeconds().toString().padStart(2, '0');

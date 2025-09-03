@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "@types/istanbul-lib-report": "^3.0.3",
+    "@types/node": "^22.15.30",
     "esbuild": "^0.25.8",
     "typescript": "^5.8.2"
   },
