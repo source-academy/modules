@@ -34,42 +34,38 @@ function nodeMissing(node: report.ReportNode) {
   const isEmpty = metrics.isEmpty();
   const lines = isEmpty ? 0 : metrics.lines.pct;
 
-  let coveredLines;
+  let coveredLines: [string, boolean | number][];
 
   const fileCoverage = node.getFileCoverage();
   if (lines === 100) {
     const branches = fileCoverage.getBranchCoverageByLine();
-    coveredLines = Object.entries(branches).map(([key, { coverage }]) => [
-      key,
-      coverage === 100
-    ]);
+    coveredLines = Object.entries(branches)
+      .map(([key, { coverage }]) => [key, coverage === 100] as [string, boolean]);
   } else {
     coveredLines = Object.entries(fileCoverage.getLineCoverage());
   }
 
   let newRange = true;
   const ranges = coveredLines
-    .reduce((acum, [line, hit]) => {
-      if (hit) newRange = true;
-      else {
-        line = parseInt(line);
-        if (newRange) {
-          acum.push([line]);
-          newRange = false;
-        } else acum[acum.length - 1][1] = line;
-      }
+    .reduce<([number] | [number, number])[]>((acum, [line, hit]) => {
+    if (hit) newRange = true;
+    else {
+      const linenum = parseInt(line);
+      if (newRange) {
+        acum.push([linenum]);
+        newRange = false;
+      } else acum[acum.length - 1][1] = linenum;
+    }
 
-      return acum;
-    }, [])
+    return acum;
+  }, [])
     .map(range => {
       const { length } = range;
-
       if (length === 1) return range[0];
-
       return `${range[0]}-${range[1]}`;
     });
 
-  return [].concat(...ranges).join(',');
+  return ranges.join(',');
 }
 
 const { ReportBase }: typeof report = require('istanbul-lib-report');
@@ -87,21 +83,18 @@ type ResultObject = {
 module.exports = class GithubActionsReporter extends ReportBase {
   private readonly skipEmpty: boolean;
   private readonly skipFull: boolean;
-  private readonly results: Record<string, ResultObject> = {}
+  private readonly results: Record<string, ResultObject> = {};
+  private watermarks: report.Watermarks | null;
 
   constructor(opts: any) {
     super(opts);
 
     this.skipEmpty = Boolean(opts.skipEmpty);
     this.skipFull = Boolean(opts.skipFull);
+    this.watermarks = null;
   }
 
   onStart() {
-    if (!core) {
-      console.log('@actions/core could not be found in the environment!');
-      return;
-    }
-
     core.summary.addHeading('Test Coverage', 3);
     core.summary.addRaw('<table>');
     core.summary.addRaw('<thead><tr>');
@@ -111,8 +104,10 @@ module.exports = class GithubActionsReporter extends ReportBase {
     core.summary.addRaw('</tr></thead><tbody>');
   }
 
-  onSummary(node: report.ReportNode) {
-    const nodeName = node.getRelativeName() ?? 'All Files';
+  onSummary(node: report.ReportNode, context: report.Context) {
+    this.watermarks = context.watermarks;
+
+    const nodeName = node.getRelativeName() || 'All Files';
     const rawMetrics = node.getCoverageSummary(false);
     const isEmpty = rawMetrics.isEmpty();
 
@@ -132,8 +127,23 @@ module.exports = class GithubActionsReporter extends ReportBase {
     }
   }
 
-  onDetail(node: report.ReportNode) {
-    return this.onSummary(node);
+  onDetail(node: report.ReportNode, context: report.Context) {
+    return this.onSummary(node, context);
+  }
+
+  private colorizer(value: number, watermark: keyof report.Watermarks) {
+    if (!this.watermarks) return `<td>${value}</td>`
+    const [low, high] = this.watermarks[watermark];
+
+    if (value < low) {
+      return `<td><p style="color: red;">${value}</p></td>`
+    }
+
+    if (value > high) {
+      return `<td><p style="color: green;">${value}</p></td>`
+    }
+
+    return `<td><p style="color: yellow;">${value}</p></td>`
   }
 
   onEnd() {
@@ -143,10 +153,10 @@ module.exports = class GithubActionsReporter extends ReportBase {
       const metrics = this.results[fileName];
       core.summary.addRaw('<tr>');
       core.summary.addRaw(`<td>${fileName}</td>`);
-      core.summary.addRaw(`<td>${metrics.statements}</td>`);
-      core.summary.addRaw(`<td>${metrics.branches}</td>`);
-      core.summary.addRaw(`<td>${metrics.functions}</td>`);
-      core.summary.addRaw(`<td>${metrics.lines}</td>`);
+      core.summary.addRaw(`<td>${this.colorizer(metrics.statements, 'statements')}</td>`);
+      core.summary.addRaw(`<td>${this.colorizer(metrics.branches, 'branches')}</td>`);
+      core.summary.addRaw(`<td>${this.colorizer(metrics.functions, 'functions')}</td>`);
+      core.summary.addRaw(`<td>${this.colorizer(metrics.lines, 'lines')}</td>`);
       core.summary.addRaw(`<td>${metrics.uncoveredLines}</td>`);
       core.summary.addRaw('</tr>');
     }
