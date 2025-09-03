@@ -10,6 +10,9 @@ import type * as corelib from '@actions/core';
 
 const core: typeof corelib = require('@actions/core');
 
+/**
+ * Determines if the coverage summary has full coverage
+ */
 function isFull(metrics: CoverageSummary) {
   return (
     metrics.statements.pct === 100 &&
@@ -19,7 +22,59 @@ function isFull(metrics: CoverageSummary) {
   );
 }
 
+
+/**
+ * Determines the uncovered lines
+ */
+function nodeMissing(node: report.ReportNode) {
+  if (node.isSummary()) {
+      return '';
+  }
+
+  const metrics = node.getCoverageSummary(false);
+  const isEmpty = metrics.isEmpty();
+  const lines = isEmpty ? 0 : metrics.lines.pct;
+
+  let coveredLines;
+
+  const fileCoverage = node.getFileCoverage();
+  if (lines === 100) {
+      const branches = fileCoverage.getBranchCoverageByLine();
+      coveredLines = Object.entries(branches).map(([key, { coverage }]) => [
+          key,
+          coverage === 100
+      ]);
+  } else {
+      coveredLines = Object.entries(fileCoverage.getLineCoverage());
+  }
+
+  let newRange = true;
+  const ranges = coveredLines
+    .reduce((acum, [line, hit]) => {
+      if (hit) newRange = true;
+      else {
+        line = parseInt(line);
+        if (newRange) {
+          acum.push([line]);
+          newRange = false;
+        } else acum[acum.length - 1][1] = line;
+      }
+
+      return acum;
+    }, [])
+    .map(range => {
+      const { length } = range;
+
+      if (length === 1) return range[0];
+
+      return `${range[0]}-${range[1]}`;
+    });
+
+  return [].concat(...ranges).join(',');
+}
+
 const { ReportBase }: typeof report = require('istanbul-lib-report');
+const headers = ['Files', 'Statements', 'Branches', 'Functions', 'Lines']
 
 module.exports = class GithubActionsReporter extends ReportBase {
   private readonly skipEmpty: boolean;
@@ -41,7 +96,7 @@ module.exports = class GithubActionsReporter extends ReportBase {
     core.summary.addHeading('Test Coverage');
     core.summary.addRaw('<table>');
     core.summary.addRaw('<thead><tr>');
-    for (const heading of ['file', 'statements', 'branches', 'functions', 'lines']) {
+    for (const heading of [...headers, 'Uncovered Lines']) {
       core.summary.addRaw(`<th>${heading}</th>`);
     }
     core.summary.addRaw('</tr></thead><tbody>');
@@ -70,11 +125,17 @@ module.exports = class GithubActionsReporter extends ReportBase {
 
     core.summary.addRaw('<tr>');
     core.summary.addRaw(`<td>${nodeName}</td>`);
-    for (const value of Object.values(metrics)) {
+    for (const header of headers) {
+      const value = metrics[header as keyof typeof metrics];
       core.summary.addRaw(`<td>${value}%</td>`);
     }
 
+    core.summary.addRaw(`<td>${nodeMissing(node)}</td>`)
     core.summary.addRaw('</tr>');
+  }
+
+  onDetail(node: report.ReportNode) {
+    return this.onSummary(node);
   }
 
   onEnd() {
