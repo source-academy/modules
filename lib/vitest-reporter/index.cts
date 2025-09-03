@@ -4,9 +4,11 @@
  *
  * Heavily based on the default text reporter
  */
+import type fslib from 'fs';
 import type { CoverageSummary } from 'istanbul-lib-coverage';
 import type * as report from 'istanbul-lib-report';
 
+const fs: typeof fslib = require('fs');
 const { ReportBase }: typeof report = require('istanbul-lib-report');
 
 /**
@@ -79,15 +81,14 @@ module.exports = class GithubActionsCoverageReporter extends ReportBase {
   private readonly skipEmpty: boolean;
   private readonly skipFull: boolean;
   private readonly results: Record<string, ResultObject> = {};
-  private cw: report.ContentWriter | null = null;
-  private watermarks: report.Watermarks | null;
+  private cw: fslib.WriteStream | null = null;
+  private watermarks: report.Watermarks | null = null;
 
   constructor(opts: any) {
     super(opts);
 
     this.skipEmpty = Boolean(opts.skipEmpty);
     this.skipFull = Boolean(opts.skipFull);
-    this.watermarks = null;
   }
 
   onStart(_node: any, context: report.Context) {
@@ -96,15 +97,15 @@ module.exports = class GithubActionsCoverageReporter extends ReportBase {
       return;
     }
 
-    this.cw = context.writer.writeFile(process.env.GITHUB_STEP_SUMMARY);
+    this.cw = fs.createWriteStream(process.env.GITHUB_STEP_SUMMARY, { encoding: 'utf-8', flags: 'a' })
 
     this.watermarks = context.watermarks;
-    this.cw.println('<h3>Test Coverage</h3>')
-    this.cw.println('<table><thead><tr>');
+    this.cw.write('<h3>Test Coverage</h3>')
+    this.cw.write('<table><thead><tr>');
     for (const heading of ['File', ...headers, 'Uncovered Lines']) {
-      this.cw.println(`<th>${heading}</th>`);
+      this.cw.write(`<th>${heading}</th>`);
     }
-    this.cw.println('</tr></thead><tbody>');
+    this.cw.write('</tr></thead><tbody>');
   }
 
   onSummary(node: report.ReportNode) {
@@ -154,30 +155,30 @@ module.exports = class GithubActionsCoverageReporter extends ReportBase {
 
     for (const fileName of fileNames) {
       const metrics = this.results[fileName];
-      this.cw.println(`<tr><td><code>${fileName}</code></td>`);
-      this.cw.println(this.formatter(metrics.statements, 'statements'));
-      this.cw.println(this.formatter(metrics.branches, 'branches'));
-      this.cw.println(this.formatter(metrics.functions, 'functions'));
-      this.cw.println(this.formatter(metrics.lines, 'lines'));
+      this.cw.write(`<tr><td><code>${fileName}</code></td>`);
+      this.cw.write(this.formatter(metrics.statements, 'statements'));
+      this.cw.write(this.formatter(metrics.branches, 'branches'));
+      this.cw.write(this.formatter(metrics.functions, 'functions'));
+      this.cw.write(this.formatter(metrics.lines, 'lines'));
 
       if (metrics.uncoveredLines.length > 0) {
-        this.cw.println('<td><details><summary>Expand</summary><ul>');
+        this.cw.write('<td><details><summary>Expand</summary><ul>');
         for (const range of metrics.uncoveredLines) {
           if (range.length === 1) {
-            this.cw.println(`<li>${range[0]}</li>`)
+            this.cw.write(`<li>${range[0]}</li>`)
           } else {
-            this.cw.println(`<li>${range[0]}-${range[1]}</li>`)
+            this.cw.write(`<li>${range[0]}-${range[1]}</li>`)
           }
         }
-        this.cw.println('</ul></details></td>');
+        this.cw.write('</ul></details></td>');
       } else {
-        this.cw.println('<td></td>');
+        this.cw.write('<td></td>');
       }
 
-      this.cw.println('</tr>');
+      this.cw.write('</tr>');
     }
 
-    this.cw.println('</tbody></table>');
+    this.cw.write('</tbody></table>');
     this.cw.close();
   }
 }
