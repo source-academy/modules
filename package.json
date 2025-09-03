@@ -54,6 +54,7 @@
     "@sourceacademy/lint-plugin": "workspace:^",
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-repotools": "workspace:^",
+    "@sourceacademy/vitest-reporter": "workspace:^",
     "@stylistic/eslint-plugin": "^4.4.1",
     "@types/node": "^22.15.30",
     "@types/react": "^18.3.1",

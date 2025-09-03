@@ -3766,6 +3766,7 @@ __metadata:
     "@sourceacademy/lint-plugin": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-repotools": "workspace:^"
+    "@sourceacademy/vitest-reporter": "workspace:^"
     "@stylistic/eslint-plugin": "npm:^4.4.1"
     "@types/node": "npm:^22.15.30"
     "@types/react": "npm:^18.3.1"
@@ -4100,6 +4101,20 @@ __metadata:
     "@types/react-dom": "npm:^18.3.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
+  languageName: unknown
+  linkType: soft
+
+"@sourceacademy/vitest-reporter@workspace:^, @sourceacademy/vitest-reporter@workspace:lib/reporters":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/vitest-reporter@workspace:lib/reporters"
+  dependencies:
+    "@actions/core": "npm:^1.11.1"
+    "@sourceacademy/modules-repotools": "workspace:^"
+    "@types/istanbul-lib-report": "npm:^3.0.3"
+    istanbul-lib-report: "npm:^3.0.1"
+    typescript: "npm:^5.8.2"
+  peerDependencies:
+    "@actions/core": ">=1.11.0"
   languageName: unknown
   linkType: soft
 
@@ -4612,7 +4627,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/istanbul-lib-report@npm:*":
+"@types/istanbul-lib-report@npm:*, @types/istanbul-lib-report@npm:^3.0.3":
   version: 3.0.3
   resolution: "@types/istanbul-lib-report@npm:3.0.3"
   dependencies:

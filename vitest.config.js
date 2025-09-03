@@ -4,8 +4,9 @@ import pathlib from 'path';
 import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 
 const coverageReporters = ['text'];
-
-if (!process.env.GITHUB_ACTIONS) {
+if (process.env.GITHUB_ACTIONS) {
+  coverageReporters.push('@sourceacademy/vitest-reporter');
+} else {
   coverageReporters.push('html');
 }
 
