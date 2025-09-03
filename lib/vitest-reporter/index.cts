@@ -8,7 +8,8 @@ import type * as corelib from '@actions/core';
 import type { CoverageSummary } from 'istanbul-lib-coverage';
 import type * as report from 'istanbul-lib-report';
 
-const core: typeof corelib = require('@actions/core');
+const { summary }: typeof corelib = require('@actions/core');
+const { ReportBase }: typeof report = require('istanbul-lib-report');
 
 /**
  * Determines if the coverage summary has full coverage
@@ -61,20 +62,11 @@ function getUncoveredLines(node: report.ReportNode) {
   }, [])
 
   return ranges
-  //   .map(range => {
-  //     const { length } = range;
-  //     if (length === 1) return range[0];
-  //     return `${range[0]}-${range[1]}`;
-  //   });
-
-  // return ranges.join(',');
 }
-
-const { ReportBase }: typeof report = require('istanbul-lib-report');
 
 const headers = ['Statements', 'Branches', 'Functions', 'Lines']
 
-type ResultObject = {
+interface ResultObject {
   branches: number
   functions: number
   lines: number
@@ -97,13 +89,13 @@ module.exports = class GithubActionsReporter extends ReportBase {
   }
 
   onStart() {
-    core.summary.addHeading('Test Coverage', 3);
-    core.summary.addRaw('<table>');
-    core.summary.addRaw('<thead><tr>');
+    summary.addHeading('Test Coverage', 3);
+    summary.addRaw('<table>');
+    summary.addRaw('<thead><tr>');
     for (const heading of ['File', ...headers, 'Uncovered Lines']) {
-      core.summary.addRaw(`<th>${heading}</th>`);
+      summary.addRaw(`<th>${heading}</th>`);
     }
-    core.summary.addRaw('</tr></thead><tbody>');
+    summary.addRaw('</tr></thead><tbody>');
   }
 
   onSummary(node: report.ReportNode, context: report.Context) {
@@ -133,19 +125,19 @@ module.exports = class GithubActionsReporter extends ReportBase {
     return this.onSummary(node, context);
   }
 
-  private colorizer(value: number, watermark: keyof report.Watermarks) {
-    if (!this.watermarks) return `<td>${value}</td>`
+  private colorizer(pct: number, watermark: keyof report.Watermarks) {
+    if (!this.watermarks) return `<td>${pct}%</td>`
     const [low, high] = this.watermarks[watermark];
 
-    if (value < low) {
-      return `<td><p style="color:red">${value}</p></td>`
+    if (pct < low) {
+      return `<td><p style="color:red">${pct}%</p></td>`
     }
 
-    if (value > high) {
-      return `<td><p style="color:green">${value}</p></td>`
+    if (pct > high) {
+      return `<td><p style="color:green">${pct}%</p></td>`
     }
 
-    return `<td><p style="color:yellow">${value}</p></td>`
+    return `<td><p style="color:yellow">${pct}%</p></td>`
   }
 
   onEnd() {
@@ -153,32 +145,32 @@ module.exports = class GithubActionsReporter extends ReportBase {
 
     for (const fileName of fileNames) {
       const metrics = this.results[fileName];
-      core.summary.addRaw('<tr>');
-      core.summary.addRaw(`<td><code>${fileName}</code></td>`);
-      core.summary.addRaw(this.colorizer(metrics.statements, 'statements'));
-      core.summary.addRaw(this.colorizer(metrics.branches, 'branches'));
-      core.summary.addRaw(this.colorizer(metrics.functions, 'functions'));
-      core.summary.addRaw(this.colorizer(metrics.lines, 'lines'));
+      summary.addRaw('<tr>');
+      summary.addRaw(`<td><code>${fileName}</code></td>`);
+      summary.addRaw(this.colorizer(metrics.statements, 'statements'));
+      summary.addRaw(this.colorizer(metrics.branches, 'branches'));
+      summary.addRaw(this.colorizer(metrics.functions, 'functions'));
+      summary.addRaw(this.colorizer(metrics.lines, 'lines'));
 
       if (metrics.uncoveredLines.length > 0) {
-        core.summary.addRaw('<td><ul>');
+        summary.addRaw('<td><details><summary>Expand</summary><ul>');
         for (const range of metrics.uncoveredLines) {
           const { length } = range;
           if (length === 1) {
-            core.summary.addRaw(`<li>${range[0]}</li>`)
+            summary.addRaw(`<li>${range[0]}</li>`)
           } else {
-            core.summary.addRaw(`<li>${range[0]}-${range[1]}</li>`)
+            summary.addRaw(`<li>${range[0]}-${range[1]}</li>`)
           }
         }
-        core.summary.addRaw('</ul></td>');
+        summary.addRaw('</ul></details></td>');
       } else {
-        core.summary.addRaw('<td></td>');
+        summary.addRaw('<td></td>');
       }
 
-      core.summary.addRaw('</tr>');
+      summary.addRaw('</tr>');
     }
 
-    core.summary.addRaw('</tbody></table>');
-    core.summary.write();
+    summary.addRaw('</tbody></table>');
+    summary.write();
   }
 }

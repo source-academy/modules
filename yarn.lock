@@ -4104,17 +4104,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/vitest-reporter@workspace:^, @sourceacademy/vitest-reporter@workspace:lib/reporters":
+"@sourceacademy/vitest-reporter@workspace:^, @sourceacademy/vitest-reporter@workspace:lib/vitest-reporter":
   version: 0.0.0-use.local
-  resolution: "@sourceacademy/vitest-reporter@workspace:lib/reporters"
+  resolution: "@sourceacademy/vitest-reporter@workspace:lib/vitest-reporter"
   dependencies:
     "@actions/core": "npm:^1.11.1"
     "@sourceacademy/modules-repotools": "workspace:^"
     "@types/istanbul-lib-report": "npm:^3.0.3"
     istanbul-lib-report: "npm:^3.0.1"
     typescript: "npm:^5.8.2"
-  peerDependencies:
-    "@actions/core": ">=1.11.0"
   languageName: unknown
   linkType: soft
 

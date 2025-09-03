@@ -2,16 +2,13 @@
   "name": "@sourceacademy/vitest-reporter",
   "type": "module",
   "dependencies": {
+    "@actions/core": "^1.11.1",
     "istanbul-lib-report": "^3.0.1"
   },
   "devDependencies": {
-    "@actions/core": "^1.11.1",
     "@sourceacademy/modules-repotools": "workspace:^",
     "@types/istanbul-lib-report": "^3.0.3",
     "typescript": "^5.8.2"
-  },
-  "peerDependencies": {
-    "@actions/core": ">=1.11.0"
   },
   "exports": {
     ".": "./dist.cjs"
