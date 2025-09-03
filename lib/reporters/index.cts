@@ -76,9 +76,18 @@ const { ReportBase }: typeof report = require('istanbul-lib-report');
 
 const headers = ['Statements', 'Branches', 'Functions', 'Lines']
 
+type ResultObject = {
+  branches: number
+  functions: number
+  lines: number
+  statements: number
+  uncoveredLines: string
+}
+
 module.exports = class GithubActionsReporter extends ReportBase {
   private readonly skipEmpty: boolean;
   private readonly skipFull: boolean;
+  private readonly results: Record<string, ResultObject> = {}
 
   constructor(opts: any) {
     super(opts);
@@ -93,6 +102,7 @@ module.exports = class GithubActionsReporter extends ReportBase {
       return;
     }
 
+    core.summary.addHeading('Test Coverage', 3);
     core.summary.addRaw('<table>');
     core.summary.addRaw('<thead><tr>');
     for (const heading of ['File', ...headers, 'Uncovered Lines']) {
@@ -102,8 +112,6 @@ module.exports = class GithubActionsReporter extends ReportBase {
   }
 
   onSummary(node: report.ReportNode) {
-    if (!core) return;
-
     const nodeName = node.getRelativeName() ?? 'All Files';
     const rawMetrics = node.getCoverageSummary(false);
     const isEmpty = rawMetrics.isEmpty();
@@ -115,21 +123,13 @@ module.exports = class GithubActionsReporter extends ReportBase {
       return;
     }
 
-    const metrics = {
+    this.results[nodeName] = {
       statements: isEmpty ? 0 : rawMetrics.statements.pct,
       branches: isEmpty ? 0 : rawMetrics.branches.pct,
       functions: isEmpty ? 0 : rawMetrics.functions.pct,
-      lines: isEmpty ? 0 : rawMetrics.lines.pct
-    };
-
-    core.summary.addRaw('<tr>');
-    core.summary.addRaw(`<td>${nodeName}</td>`);
-    for (const value of Object.values(metrics)) {
-      core.summary.addRaw(`<td>${value}%</td>`);
+      lines: isEmpty ? 0 : rawMetrics.lines.pct,
+      uncoveredLines: nodeMissing(node),
     }
-
-    core.summary.addRaw(`<td>${nodeMissing(node)}</td>`)
-    core.summary.addRaw('</tr>');
   }
 
   onDetail(node: report.ReportNode) {
@@ -137,7 +137,21 @@ module.exports = class GithubActionsReporter extends ReportBase {
   }
 
   onEnd() {
-    core?.summary.addRaw('</tbody></table>');
-    core?.summary.write();
+    const fileNames = Object.keys(this.results).sort();
+
+    for (const fileName of fileNames) {
+      const metrics = this.results[fileName];
+      core.summary.addRaw('<tr>');
+      core.summary.addRaw(`<td>${fileName}</td>`);
+      core.summary.addRaw(`<td>${metrics.statements}</td>`);
+      core.summary.addRaw(`<td>${metrics.branches}</td>`);
+      core.summary.addRaw(`<td>${metrics.functions}</td>`);
+      core.summary.addRaw(`<td>${metrics.lines}</td>`);
+      core.summary.addRaw(`<td>${metrics.uncoveredLines}</td>`);
+      core.summary.addRaw('</tr>');
+    }
+
+    core.summary.addRaw('</tbody></table>');
+    core.summary.write();
   }
 }
