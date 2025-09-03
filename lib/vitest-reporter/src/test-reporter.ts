@@ -7,7 +7,7 @@ function* formatTestCase(testCase: TestCase) {
   const diagnostics = testCase.diagnostic();
   const durationStr = diagnostics ? `${diagnostics.duration.toFixed(0)}ms` : '';
 
-  yield `${passed ? '✅' : '❌'} ${testCase.name} ${durationStr}\n`;
+  yield `${passed ? '✅' : '❌'} ${testCase.name} <code>${durationStr}</code>\n`;
 }
 
 function* formatTestSuite(suite: TestSuite): Generator<string> {
@@ -48,6 +48,7 @@ function getTestCount(item: TestModule | TestSuite | TestCase): number {
 export default class GithubActionsSummaryReporter implements Reporter {
   private writeStream: fs.WriteStream | null = null;
   private vitest: Vitest | null = null;
+  private startTimes: Record<string, number> = {};
 
   onInit(vitest: Vitest) {
     this.vitest = vitest;
@@ -55,6 +56,10 @@ export default class GithubActionsSummaryReporter implements Reporter {
     if (process.env.GITHUB_STEP_SUMMARY) {
       this.writeStream = fs.createWriteStream(process.env.GITHUB_STEP_SUMMARY, { encoding: 'utf-8', flags: 'a' });
     }
+  }
+
+  onTestModuleStart(module: TestModule) {
+    this.startTimes[module.id] = performance.now();
   }
 
   onTestRunEnd(modules: readonly TestModule[]) {
@@ -81,12 +86,16 @@ export default class GithubActionsSummaryReporter implements Reporter {
       const diagnostics = testModule.diagnostic();
       const totalDuration = diagnostics.duration.toFixed(0);
 
+      const startTime = new Date(this.startTimes[testModule.id]);
+      const hours = startTime.getHours().toString().padStart(2, '0');
+      const minutes = startTime.getMinutes().toString().padStart(2, '0');
+      const seconds = startTime.getSeconds().toString().padStart(2, '0');
+
       this.writeStream.write('\n\n');
-      this.writeStream.write(`<h4>Summary for <code>${file.filepath}</code></h4>\n`);
+      this.writeStream.write(`<h4>Summary for <code>${relpath}</code></h4>\n`);
       this.writeStream.write('<table>\n');
-      this.writeStream.write(formatRow('Test Files', ''));
       this.writeStream.write(formatRow('Tests', testCount.toString()));
-      this.writeStream.write(formatRow('Start at', ''));
+      this.writeStream.write(formatRow('Start at', `${hours}:${minutes}:${seconds}`));
       this.writeStream.write(formatRow('Duration', `${totalDuration}ms`));
       this.writeStream.write('</table>');
     }

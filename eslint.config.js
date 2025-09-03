@@ -35,6 +35,7 @@ export default tseslint.config(
       '**/node_modules',
       'lib/buildtools/bin',
       'lib/buildtools/src/build/__test_mocks__',
+      'lib/vitest-reporter/build',
       'src/**/samples/**',
       'src/bundles/scrabble/src/words.json', // Don't lint this because its way too big
       'src/java/**',
