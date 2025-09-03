@@ -4,11 +4,9 @@
  *
  * Heavily based on the default text reporter
  */
-import type * as corelib from '@actions/core';
 import type { CoverageSummary } from 'istanbul-lib-coverage';
 import type * as report from 'istanbul-lib-report';
 
-const { summary }: typeof corelib = require('@actions/core');
 const { ReportBase }: typeof report = require('istanbul-lib-report');
 
 /**
@@ -77,10 +75,11 @@ interface ResultObject {
   uncoveredLines: ([number] | [number, number])[]
 }
 
-module.exports = class GithubActionsReporter extends ReportBase {
+module.exports = class GithubActionsCoverageReporter extends ReportBase {
   private readonly skipEmpty: boolean;
   private readonly skipFull: boolean;
   private readonly results: Record<string, ResultObject> = {};
+  private cw: report.ContentWriter | null = null;
   private watermarks: report.Watermarks | null;
 
   constructor(opts: any) {
@@ -92,14 +91,20 @@ module.exports = class GithubActionsReporter extends ReportBase {
   }
 
   onStart(_node: any, context: report.Context) {
-    this.watermarks = context.watermarks;
-    summary.addHeading('Test Coverage', 3);
-    summary.addRaw('<table>');
-    summary.addRaw('<thead><tr>');
-    for (const heading of ['File', ...headers, 'Uncovered Lines']) {
-      summary.addRaw(`<th>${heading}</th>`);
+    if (!process.env.GITHUB_STEP_SUMMARY) {
+      console.log('Reporter not being executed in Github Actions environment')
+      return;
     }
-    summary.addRaw('</tr></thead><tbody>');
+
+    this.cw = context.writer.writeFile(process.env.GITHUB_STEP_SUMMARY);
+
+    this.watermarks = context.watermarks;
+    this.cw.println('<h3>Test Coverage</h3>')
+    this.cw.println('<table><thead><tr>');
+    for (const heading of ['File', ...headers, 'Uncovered Lines']) {
+      this.cw.println(`<th>${heading}</th>`);
+    }
+    this.cw.println('</tr></thead><tbody>');
   }
 
   onSummary(node: report.ReportNode) {
@@ -143,34 +148,36 @@ module.exports = class GithubActionsReporter extends ReportBase {
   }
 
   onEnd() {
+    if (!this.cw) return;
+
     const fileNames = Object.keys(this.results).sort();
 
     for (const fileName of fileNames) {
       const metrics = this.results[fileName];
-      summary.addRaw(`<tr><td><code>${fileName}</code></td>`);
-      summary.addRaw(this.formatter(metrics.statements, 'statements'));
-      summary.addRaw(this.formatter(metrics.branches, 'branches'));
-      summary.addRaw(this.formatter(metrics.functions, 'functions'));
-      summary.addRaw(this.formatter(metrics.lines, 'lines'));
+      this.cw.println(`<tr><td><code>${fileName}</code></td>`);
+      this.cw.println(this.formatter(metrics.statements, 'statements'));
+      this.cw.println(this.formatter(metrics.branches, 'branches'));
+      this.cw.println(this.formatter(metrics.functions, 'functions'));
+      this.cw.println(this.formatter(metrics.lines, 'lines'));
 
       if (metrics.uncoveredLines.length > 0) {
-        summary.addRaw('<td><details><summary>Expand</summary><ul>');
+        this.cw.println('<td><details><summary>Expand</summary><ul>');
         for (const range of metrics.uncoveredLines) {
           if (range.length === 1) {
-            summary.addRaw(`<li>${range[0]}</li>`)
+            this.cw.println(`<li>${range[0]}</li>`)
           } else {
-            summary.addRaw(`<li>${range[0]}-${range[1]}</li>`)
+            this.cw.println(`<li>${range[0]}-${range[1]}</li>`)
           }
         }
-        summary.addRaw('</ul></details></td>');
+        this.cw.println('</ul></details></td>');
       } else {
-        summary.addRaw('<td></td>');
+        this.cw.println('<td></td>');
       }
 
-      summary.addRaw('</tr>');
+      this.cw.println('</tr>');
     }
 
-    summary.addRaw('</tbody></table>');
-    summary.write();
+    this.cw.println('</tbody></table>');
+    this.cw.close();
   }
 }

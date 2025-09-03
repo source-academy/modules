@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
-    "@actions/core": "^1.11.1",
     "istanbul-lib-report": "^3.0.1"
   },
   "devDependencies": {
