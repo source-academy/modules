@@ -136,14 +136,14 @@ module.exports = class GithubActionsReporter extends ReportBase {
     const [low, high] = this.watermarks[watermark];
 
     if (value < low) {
-      return `<td><p style="color: red;">${value}</p></td>`
+      return `<td><p style="color:red">${value}</p></td>`
     }
 
     if (value > high) {
-      return `<td><p style="color: green;">${value}</p></td>`
+      return `<td><p style="color:green">${value}</p></td>`
     }
 
-    return `<td><p style="color: yellow;">${value}</p></td>`
+    return `<td><p style="color:yellow">${value}</p></td>`
   }
 
   onEnd() {
@@ -152,7 +152,7 @@ module.exports = class GithubActionsReporter extends ReportBase {
     for (const fileName of fileNames) {
       const metrics = this.results[fileName];
       core.summary.addRaw('<tr>');
-      core.summary.addRaw(`<td>${fileName}</td>`);
+      core.summary.addRaw(`<td><code>${fileName}</code></td>`);
       core.summary.addRaw(`<td>${this.colorizer(metrics.statements, 'statements')}</td>`);
       core.summary.addRaw(`<td>${this.colorizer(metrics.branches, 'branches')}</td>`);
       core.summary.addRaw(`<td>${this.colorizer(metrics.functions, 'functions')}</td>`);
