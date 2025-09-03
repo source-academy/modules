@@ -17,7 +17,6 @@
     ".": "./dist.cjs"
   },
   "scripts": {
-    "build": "node ./build.js",
-    "postinstall": "yarn build"
+    "build": "node ./build.js"
   }
 }

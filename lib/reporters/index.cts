@@ -5,9 +5,10 @@
  * Heavily based on the default text reporter
  */
 import type { CoverageSummary } from 'istanbul-lib-coverage';
-import type { ReportNode } from 'istanbul-lib-report';
+import type * as report from 'istanbul-lib-report';
+import type * as corelib from '@actions/core';
 
-function loadCore() {
+function loadCore(): typeof corelib | undefined {
   try {
     return require('@actions/core');
   } catch {
@@ -26,7 +27,7 @@ function isFull(metrics: CoverageSummary) {
   );
 }
 
-const { ReportBase } = require('istanbul-lib-report');
+const { ReportBase }: typeof report = require('istanbul-lib-report');
 
 module.exports = class GithubActionsReporter extends ReportBase {
   private readonly skipEmpty: boolean;
@@ -48,19 +49,13 @@ module.exports = class GithubActionsReporter extends ReportBase {
     core.summary.addHeading('Test Coverage');
     core.summary.addRaw('<table>');
     core.summary.addRaw('<thead><tr>');
-    for (const heading of [
-      'file',
-      'statements',
-      'branches',
-      'functions',
-      'lines'
-    ]) {
+    for (const heading of ['file', 'statements', 'branches', 'functions', 'lines']) {
       core.summary.addRaw(`<th>${heading}</th>`);
     }
     core.summary.addRaw('</tr></thead><tbody>');
   }
 
-  onSummary(node: ReportNode) {
+  onSummary(node: report.ReportNode) {
     if (!core) return;
 
     const nodeName = node.getRelativeName() ?? 'All Files';
