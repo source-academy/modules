@@ -55,6 +55,8 @@ export default class GithubActionsSummaryReporter extends BasicReporter {
     this.writeStream.write('<h3>Test Results</h3>');
     for (const file of files) {
       const testModule = this.vitest!.state.getReportedEntity(file) as TestModule;
+      if (testModule === undefined) continue;
+
       const passed = testModule.ok();
       const testCount = getTestCount(testModule);
 
