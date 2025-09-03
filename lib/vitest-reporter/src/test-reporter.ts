@@ -1,5 +1,5 @@
 import fs from 'fs';
-import type { Reporter, TestCase, TestModule, TestSuite, Vitest } from 'vitest/node';
+import type { Reporter, RunnerTestFile, TestCase, TestModule, TestSuite, Vitest } from 'vitest/node';
 
 function* formatTestCase(testCase: TestCase) {
   const passed = testCase.ok();
@@ -62,10 +62,11 @@ export default class GithubActionsSummaryReporter implements Reporter {
     this.writeStream.write('## Test Results\n');
     for (const testModule of modules) {
       const passed = testModule.ok();
-      const fileName: string = testModule.task ?? 'undefined';
+      // @ts-expect-error idk where else to get the file information from
+      const file: RunnerTestFile = testModule.task;
       const testCount = getTestCount(testModule);
 
-      this.writeStream.write(`${passed ? '✅' : '❌'} \`${fileName}\` (${testCount} test${testCount === 1 ? '' : 's'}) \n`);
+      this.writeStream.write(`### ${passed ? '✅' : '❌'} \`${file.filepath}\` (${testCount} test${testCount === 1 ? '' : 's'}) \n`);
 
       this.writeStream.write('<ul>');
       for (const child of testModule.children) {
@@ -79,7 +80,7 @@ export default class GithubActionsSummaryReporter implements Reporter {
       const totalDuration = diagnostics.duration.toFixed(0);
 
       this.writeStream.write('\n\n');
-      this.writeStream.write(`#### Summary for \`${fileName}\`\n`);
+      this.writeStream.write(`#### Summary for \`${file.filepath}\`\n`);
       this.writeStream.write('<table>\n');
       this.writeStream.write(formatRow('Test Files', ''));
       this.writeStream.write(formatRow('Tests', testCount.toString()));
