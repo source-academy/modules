@@ -1,28 +1,31 @@
 import fs from 'fs';
 import type { Reporter, TestCase, TestModule, TestSuite, Vitest } from 'vitest/node';
 
-function* formatTestCase(testCase: TestCase, prefixes: string[]) {
+function* formatTestCase(testCase: TestCase) {
   const passed = testCase.ok();
   const diagnostics = testCase.diagnostic();
   const durationStr = diagnostics ? `${diagnostics.duration.toFixed(0)}ms` : '';
 
-  if (prefixes.length > 0) {
-    yield `- ${passed ? '✅' : '❌'} ${prefixes.join(' > ')} > ${testCase.name} ${durationStr}\n`;
-  } else {
-    yield `- ${passed ? '✅' : '❌'} ${testCase.name} ${durationStr}\n`;
-  }
+  yield `${passed ? '✅' : '❌'} ${testCase.name} ${durationStr}\n`;
 }
 
-function* formatTestSuite(suite: TestSuite, prefixes: string[]): Generator<string> {
+function* formatTestSuite(suite: TestSuite): Generator<string> {
   const suiteName = suite.name;
+  const passed = suite.ok();
+
+  yield `${passed ? '✅' : '❌'} ${suiteName}<ul>`;
 
   for (const child of suite.children) {
     if (child.type === 'suite') {
-      yield* formatTestSuite(child, [...prefixes, suiteName]);
+      yield* formatTestSuite(child);
     } else {
-      yield* formatTestCase(child, [...prefixes, suiteName]);
+      yield '<li>';
+      yield* formatTestCase(child);
+      yield '</li>';
     }
   }
+
+  yield '</ul>\n';
 }
 
 function getTestCount(item: TestModule | TestSuite | TestCase): number {
@@ -51,28 +54,38 @@ export default class GithubActionsSummaryReporter implements Reporter {
   onTestRunEnd(modules: readonly TestModule[]) {
     if (!this.writeStream) return;
 
-    this.writeStream.write('### Test Results');
+    this.writeStream.write('## Test Results\n');
     for (const testModule of modules) {
       const passed = testModule.ok();
       const testCount = getTestCount(testModule);
 
       this.writeStream.write(`${passed ? '✅' : '❌'} (fileName) (${testCount} test${testCount === 1 ? '' : 's'}) \n`);
 
+      this.writeStream.write('<ul>');
       for (const child of testModule.children) {
-        const formatter = child.type === 'suite' ? formatTestSuite(child, []) : formatTestCase(child, []);
+        const formatter = child.type === 'suite' ? formatTestSuite(child) : formatTestCase(child);
         const line = Array.from(formatter).join('');
-        this.writeStream.write(line);
+        this.writeStream.write(`<li>${line}</li>`);
       }
+      this.writeStream.write('</ul>');
 
       const diagnostics = testModule.diagnostic();
       const totalDuration = diagnostics.duration.toFixed(0);
 
       this.writeStream.write('\n\n');
       this.writeStream.write('#### Summary\n');
-      this.writeStream.write('Test Files\n');
-      this.writeStream.write(`     Tests ${testCount}\n`);
-      this.writeStream.write('  Start at\n');
-      this.writeStream.write(`  Duration: ${totalDuration}ms\n`);
+      this.writeStream.write('<table>');
+
+      function formatRow(...items: string[]) {
+        const tds = items.map(item => `<td>${item}</td>`);
+        return `<tr>${tds.join('')}</tr>\n`;
+      }
+
+      this.writeStream.write(formatRow('Test Files', ''));
+      this.writeStream.write(formatRow('Tests', testCount.toString()));
+      this.writeStream.write(formatRow('Start at', ''));
+      this.writeStream.write(formatRow('Duration', `${totalDuration}ms`));
+      this.writeStream.write('</table>');
     }
 
     this.writeStream.close();
