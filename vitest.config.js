@@ -2,7 +2,7 @@
 // Root vitest config
 import pathlib from 'path';
 import { coverageConfigDefaults, defineConfig } from 'vitest/config';
-import GithubActionsSummaryReporter from './lib/vitest-reporter/dist/test-reporter.js';
+import GithubActionsSummaryReporter from './lib/vitest-reporter/build/test-reporter.js';
 
 const coverageReporters = ['text'];
 
@@ -12,7 +12,7 @@ const coverageReporters = ['text'];
 const testReporters = ['default'];
 
 if (process.env.GITHUB_ACTIONS) {
-  const reporter = pathlib.resolve(import.meta.dirname, './lib/vitest-reporter/dist/coverage-reporter.cjs');
+  const reporter = pathlib.resolve(import.meta.dirname, './lib/vitest-reporter/build/coverage-reporter.cjs');
   coverageReporters.push(reporter);
   testReporters.push(new GithubActionsSummaryReporter());
 } else {
