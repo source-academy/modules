@@ -5,7 +5,7 @@ import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 
 const coverageReporters = ['text'];
 if (process.env.GITHUB_ACTIONS) {
-  const reporter = pathlib.resolve(import.meta.dirname, './lib/reporters/dist.cjs');
+  const reporter = pathlib.resolve(import.meta.dirname, './lib/vitest-reporter/dist.cjs');
   coverageReporters.push(reporter);
 } else {
   coverageReporters.push('html');

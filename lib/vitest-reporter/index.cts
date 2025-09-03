@@ -25,9 +25,9 @@ function isFull(metrics: CoverageSummary) {
 /**
  * Determines the uncovered lines
  */
-function nodeMissing(node: report.ReportNode) {
+function getUncoveredLines(node: report.ReportNode) {
   if (node.isSummary()) {
-    return '';
+    return [];
   }
 
   const metrics = node.getCoverageSummary(false);
@@ -59,13 +59,15 @@ function nodeMissing(node: report.ReportNode) {
 
     return acum;
   }, [])
-    .map(range => {
-      const { length } = range;
-      if (length === 1) return range[0];
-      return `${range[0]}-${range[1]}`;
-    });
 
-  return ranges.join(',');
+  return ranges
+  //   .map(range => {
+  //     const { length } = range;
+  //     if (length === 1) return range[0];
+  //     return `${range[0]}-${range[1]}`;
+  //   });
+
+  // return ranges.join(',');
 }
 
 const { ReportBase }: typeof report = require('istanbul-lib-report');
@@ -77,7 +79,7 @@ type ResultObject = {
   functions: number
   lines: number
   statements: number
-  uncoveredLines: string
+  uncoveredLines: ([number] | [number, number])[]
 }
 
 module.exports = class GithubActionsReporter extends ReportBase {
@@ -123,7 +125,7 @@ module.exports = class GithubActionsReporter extends ReportBase {
       branches: isEmpty ? 0 : rawMetrics.branches.pct,
       functions: isEmpty ? 0 : rawMetrics.functions.pct,
       lines: isEmpty ? 0 : rawMetrics.lines.pct,
-      uncoveredLines: nodeMissing(node),
+      uncoveredLines: getUncoveredLines(node),
     }
   }
 
@@ -157,7 +159,22 @@ module.exports = class GithubActionsReporter extends ReportBase {
       core.summary.addRaw(this.colorizer(metrics.branches, 'branches'));
       core.summary.addRaw(this.colorizer(metrics.functions, 'functions'));
       core.summary.addRaw(this.colorizer(metrics.lines, 'lines'));
-      core.summary.addRaw(`<td>${metrics.uncoveredLines}</td>`);
+
+      if (metrics.uncoveredLines.length > 0) {
+        core.summary.addRaw('<td><ul>');
+        for (const range of metrics.uncoveredLines) {
+          const { length } = range;
+          if (length === 1) {
+            core.summary.addRaw(`<li>${range[0]}</li>`)
+          } else {
+            core.summary.addRaw(`<li>${range[0]}-${range[1]}</li>`)
+          }
+        }
+        core.summary.addRaw('</ul></td>');
+      } else {
+        core.summary.addRaw('<td></td>');
+      }
+
       core.summary.addRaw('</tr>');
     }
 
