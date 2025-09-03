@@ -8,15 +8,7 @@ import type { CoverageSummary } from 'istanbul-lib-coverage';
 import type * as report from 'istanbul-lib-report';
 import type * as corelib from '@actions/core';
 
-function loadCore(): typeof corelib | undefined {
-  try {
-    return require('@actions/core');
-  } catch {
-    return undefined;
-  }
-}
-
-const core = loadCore();
+const core: typeof corelib = require('@actions/core');
 
 function isFull(metrics: CoverageSummary) {
   return (
