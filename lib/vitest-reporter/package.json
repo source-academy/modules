@@ -1,5 +1,7 @@
 {
   "name": "@sourceacademy/vitest-reporter",
+  "description": "A Vitest coverage reporter designed to work with Github Actions",
+  "version": "1.0.0",
   "type": "module",
   "dependencies": {
     "@actions/core": "^1.11.1",
