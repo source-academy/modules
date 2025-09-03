@@ -62,7 +62,7 @@ export default class GithubActionsSummaryReporter implements Reporter {
     this.writeStream.write('## Test Results\n');
     for (const testModule of modules) {
       const passed = testModule.ok();
-      const fileName: string = testModule.location ?? 'undefined`';
+      const fileName: string = testModule.task ?? 'undefined';
       const testCount = getTestCount(testModule);
 
       this.writeStream.write(`${passed ? '✅' : '❌'} \`${fileName}\` (${testCount} test${testCount === 1 ? '' : 's'}) \n`);
