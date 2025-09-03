@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 import { topoSortPackages } from '../sorter.js';
 
-describe('Test topoSorter', () => {
+describe(topoSortPackages, () => {
   test('Without a cycle', () => {
     const result = topoSortPackages({
       '@sourceacademy/0': {

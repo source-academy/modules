@@ -28,6 +28,11 @@ function* formatTestSuite(suite: TestSuite): Generator<string> {
   yield '</ul>\n';
 }
 
+function formatRow(...items: string[]) {
+  const tds = items.map(item => `<td>${item}</td>`);
+  return `<tr>${tds.join('')}</tr>\n`;
+}
+
 function getTestCount(item: TestModule | TestSuite | TestCase): number {
   if (item.type === 'test') return 1;
 
@@ -57,9 +62,10 @@ export default class GithubActionsSummaryReporter implements Reporter {
     this.writeStream.write('## Test Results\n');
     for (const testModule of modules) {
       const passed = testModule.ok();
+      const fileName: string = testModule.location ?? 'undefined`';
       const testCount = getTestCount(testModule);
 
-      this.writeStream.write(`${passed ? '✅' : '❌'} (fileName) (${testCount} test${testCount === 1 ? '' : 's'}) \n`);
+      this.writeStream.write(`${passed ? '✅' : '❌'} \`${fileName}\` (${testCount} test${testCount === 1 ? '' : 's'}) \n`);
 
       this.writeStream.write('<ul>');
       for (const child of testModule.children) {
@@ -73,14 +79,8 @@ export default class GithubActionsSummaryReporter implements Reporter {
       const totalDuration = diagnostics.duration.toFixed(0);
 
       this.writeStream.write('\n\n');
-      this.writeStream.write('#### Summary\n');
-      this.writeStream.write('<table>');
-
-      function formatRow(...items: string[]) {
-        const tds = items.map(item => `<td>${item}</td>`);
-        return `<tr>${tds.join('')}</tr>\n`;
-      }
-
+      this.writeStream.write(`#### Summary for \`${fileName}\`\n`);
+      this.writeStream.write('<table>\n');
       this.writeStream.write(formatRow('Test Files', ''));
       this.writeStream.write(formatRow('Tests', testCount.toString()));
       this.writeStream.write(formatRow('Start at', ''));
