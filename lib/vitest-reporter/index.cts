@@ -49,13 +49,16 @@ function getUncoveredLines(node: report.ReportNode) {
   let newRange = true;
   const ranges = coveredLines
     .reduce<([number] | [number, number])[]>((acum, [line, hit]) => {
-    if (hit) newRange = true;
-    else {
+    if (hit) {
+      newRange = true;
+    } else {
       const linenum = parseInt(line);
       if (newRange) {
         acum.push([linenum]);
         newRange = false;
-      } else acum[acum.length - 1][1] = linenum;
+      } else {
+        acum[acum.length - 1][1] = linenum;
+      }
     }
 
     return acum;
@@ -88,7 +91,8 @@ module.exports = class GithubActionsReporter extends ReportBase {
     this.watermarks = null;
   }
 
-  onStart() {
+  onStart(_node: any, context: report.Context) {
+    this.watermarks = context.watermarks;
     summary.addHeading('Test Coverage', 3);
     summary.addRaw('<table>');
     summary.addRaw('<thead><tr>');
@@ -98,9 +102,7 @@ module.exports = class GithubActionsReporter extends ReportBase {
     summary.addRaw('</tr></thead><tbody>');
   }
 
-  onSummary(node: report.ReportNode, context: report.Context) {
-    this.watermarks = context.watermarks;
-
+  onSummary(node: report.ReportNode) {
     const nodeName = node.getRelativeName() || 'All Files';
     const rawMetrics = node.getCoverageSummary(false);
     const isEmpty = rawMetrics.isEmpty();
@@ -121,11 +123,11 @@ module.exports = class GithubActionsReporter extends ReportBase {
     }
   }
 
-  onDetail(node: report.ReportNode, context: report.Context) {
-    return this.onSummary(node, context);
+  onDetail(node: report.ReportNode) {
+    return this.onSummary(node);
   }
 
-  private colorizer(pct: number, watermark: keyof report.Watermarks) {
+  private formatter(pct: number, watermark: keyof report.Watermarks) {
     if (!this.watermarks) return `<td>${pct}%</td>`
     const [low, high] = this.watermarks[watermark];
 
@@ -145,18 +147,16 @@ module.exports = class GithubActionsReporter extends ReportBase {
 
     for (const fileName of fileNames) {
       const metrics = this.results[fileName];
-      summary.addRaw('<tr>');
-      summary.addRaw(`<td><code>${fileName}</code></td>`);
-      summary.addRaw(this.colorizer(metrics.statements, 'statements'));
-      summary.addRaw(this.colorizer(metrics.branches, 'branches'));
-      summary.addRaw(this.colorizer(metrics.functions, 'functions'));
-      summary.addRaw(this.colorizer(metrics.lines, 'lines'));
+      summary.addRaw(`<tr><td><code>${fileName}</code></td>`);
+      summary.addRaw(this.formatter(metrics.statements, 'statements'));
+      summary.addRaw(this.formatter(metrics.branches, 'branches'));
+      summary.addRaw(this.formatter(metrics.functions, 'functions'));
+      summary.addRaw(this.formatter(metrics.lines, 'lines'));
 
       if (metrics.uncoveredLines.length > 0) {
         summary.addRaw('<td><details><summary>Expand</summary><ul>');
         for (const range of metrics.uncoveredLines) {
-          const { length } = range;
-          if (length === 1) {
+          if (range.length === 1) {
             summary.addRaw(`<li>${range[0]}</li>`)
           } else {
             summary.addRaw(`<li>${range[0]}-${range[1]}</li>`)
