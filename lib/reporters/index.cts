@@ -153,10 +153,10 @@ module.exports = class GithubActionsReporter extends ReportBase {
       const metrics = this.results[fileName];
       core.summary.addRaw('<tr>');
       core.summary.addRaw(`<td><code>${fileName}</code></td>`);
-      core.summary.addRaw(`<td>${this.colorizer(metrics.statements, 'statements')}</td>`);
-      core.summary.addRaw(`<td>${this.colorizer(metrics.branches, 'branches')}</td>`);
-      core.summary.addRaw(`<td>${this.colorizer(metrics.functions, 'functions')}</td>`);
-      core.summary.addRaw(`<td>${this.colorizer(metrics.lines, 'lines')}</td>`);
+      core.summary.addRaw(this.colorizer(metrics.statements, 'statements'));
+      core.summary.addRaw(this.colorizer(metrics.branches, 'branches'));
+      core.summary.addRaw(this.colorizer(metrics.functions, 'functions'));
+      core.summary.addRaw(this.colorizer(metrics.lines, 'lines'));
       core.summary.addRaw(`<td>${metrics.uncoveredLines}</td>`);
       core.summary.addRaw('</tr>');
     }
