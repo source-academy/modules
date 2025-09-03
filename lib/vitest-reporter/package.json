@@ -4,17 +4,21 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
-    "istanbul-lib-report": "^3.0.1"
+    "istanbul-lib-report": "^3.0.1",
+    "vitest": "^3.2.3"
   },
   "devDependencies": {
-    "@sourceacademy/modules-repotools": "workspace:^",
     "@types/istanbul-lib-report": "^3.0.3",
+    "esbuild": "^0.25.8",
     "typescript": "^5.8.2"
   },
   "exports": {
-    ".": "./dist.cjs"
+    "./coverage-reporter": "./dist/coverage-reporter.cjs",
+    "./test-reporter": "./dist/test-reporter.js"
   },
   "scripts": {
-    "build": "node ./build.js"
+    "build": "yarn build:coverage-reporter && yarn build:test-reporter",
+    "build:coverage-reporter": "esbuild --outfile=./dist/coverage-reporter.cjs --format=cjs --bundle=true --external:\"istanbul-lib-report\" --platform=node src/coverage-reporter.cts",
+    "build:test-reporter": "esbuild --outfile=./dist/test-reporter.js --format=esm --bundle=true --external:\"vitest*\" --platform=node src/test-reporter.ts"
   }
 }

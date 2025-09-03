@@ -4108,10 +4108,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/vitest-reporter@workspace:lib/vitest-reporter"
   dependencies:
-    "@sourceacademy/modules-repotools": "workspace:^"
     "@types/istanbul-lib-report": "npm:^3.0.3"
+    esbuild: "npm:^0.25.8"
     istanbul-lib-report: "npm:^3.0.1"
     typescript: "npm:^5.8.2"
+    vitest: "npm:^3.2.3"
   languageName: unknown
   linkType: soft
 
