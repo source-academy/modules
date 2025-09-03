@@ -13,7 +13,7 @@ const mockStatSync = vi.spyOn(fs, 'statSync').mockReturnValue({
 
 const isWindows = os.platform() === 'win32';
 
-describe('Test isYamlObject', () => {
+describe(isYamlObject, () => {
   const testCases: [string, unknown, boolean][] = [
     ['Name property is required', {}, false],
     ['Name property is required', { comment: 'oops' }, false],
@@ -33,7 +33,7 @@ describe('Test isYamlObject', () => {
   test.each(testCases)('%s', (_, obj, expected) => expect(isYamlObject(obj)).toEqual(expected));
 });
 
-describe('Test isRootYamlObject', () => {
+describe(isRootYamlObject, () => {
   test('path is required property', () => {
     expect(isRootYamlObject({
       name: 'root',

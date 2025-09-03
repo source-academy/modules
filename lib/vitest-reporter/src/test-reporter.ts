@@ -1,13 +1,19 @@
 import fs from 'fs';
 import pathlib from 'path';
-import type { Reporter, RunnerTestFile, TestCase, TestModule, TestSuite, Vitest } from 'vitest/node';
+import type { Reporter, RunnerTestFile, TestCase, TestModule, TestSuite } from 'vitest/node';
 
 function* formatTestCase(testCase: TestCase) {
   const passed = testCase.ok();
   const diagnostics = testCase.diagnostic();
   const durationStr = diagnostics ? `${diagnostics.duration.toFixed(0)}ms` : '';
 
-  yield `${passed ? '✅' : '❌'} ${testCase.name} <code>${durationStr}</code>\n`;
+  yield `${passed ? '✅' : '❌'} ${testCase.name} <code>${durationStr}</code>`;
+
+  if (diagnostics?.slow) {
+    yield ' ⚠️';
+  }
+
+  yield '\n';
 }
 
 function* formatTestSuite(suite: TestSuite): Generator<string> {
@@ -22,7 +28,7 @@ function* formatTestSuite(suite: TestSuite): Generator<string> {
     } else {
       yield '<li>';
       yield* formatTestCase(child);
-      yield '</li>';
+      yield '</li>\n';
     }
   }
 
@@ -47,12 +53,9 @@ function getTestCount(item: TestModule | TestSuite | TestCase): number {
 
 export default class GithubActionsSummaryReporter implements Reporter {
   private writeStream: fs.WriteStream | null = null;
-  private vitest: Vitest | null = null;
   private startTimes: Record<string, Date> = {};
 
-  onInit(vitest: Vitest) {
-    this.vitest = vitest;
-
+  onInit() {
     if (process.env.GITHUB_STEP_SUMMARY) {
       this.writeStream = fs.createWriteStream(process.env.GITHUB_STEP_SUMMARY, { encoding: 'utf-8', flags: 'a' });
     }
@@ -79,7 +82,7 @@ export default class GithubActionsSummaryReporter implements Reporter {
       for (const child of testModule.children) {
         const formatter = child.type === 'suite' ? formatTestSuite(child) : formatTestCase(child);
         const line = Array.from(formatter).join('');
-        this.writeStream.write(`<li>${line}</li>`);
+        this.writeStream.write(`<li>${line}</li>\n`);
       }
       this.writeStream.write('</ul>');
 
