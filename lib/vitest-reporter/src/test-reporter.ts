@@ -40,15 +40,21 @@ function formatRow(...items: string[]) {
   return `<tr>${tds.join('')}</tr>\n`;
 }
 
-function getTestCount(item: TestModule | TestSuite | TestCase): number {
-  if (item.type === 'test') return 1;
-
-  let output = 0;
-  for (const child of item.children) {
-    output += getTestCount(child);
+function getTestCount(item: TestModule | TestSuite | TestCase): [passed: number, failed: number] {
+  if (item.type === 'test') {
+    return item.ok() ? [1, 0] : [0, 1];
   }
 
-  return output;
+  let passed = 0;
+  let failed = 0;
+
+  for (const child of item.children) {
+    const [passCount, failCount] = getTestCount(child);
+    passed += passCount;
+    failed += failCount;
+  }
+
+  return [passed, failed];
 }
 
 /**
@@ -77,7 +83,8 @@ export default class GithubActionsSummaryReporter implements Reporter {
       // @ts-expect-error idk where else to get the file information from
       const file: RunnerTestFile = testModule.task;
       const relpath = pathlib.relative(testModule.project.config.root, file.filepath);
-      const testCount = getTestCount(testModule);
+      const [passCount, failCount] = getTestCount(testModule);
+      const testCount = passCount + failCount;
 
       this.writeStream.write(`<h3>${passed ? '✅' : '❌'} <code>${relpath}</code> (${testCount} test${testCount === 1 ? '' : 's'})</h3>\n`);
 
@@ -100,7 +107,14 @@ export default class GithubActionsSummaryReporter implements Reporter {
       this.writeStream.write('\n\n');
       this.writeStream.write(`<h4>Summary for <code>${relpath}</code></h4>\n`);
       this.writeStream.write('<table>\n');
-      this.writeStream.write(formatRow('Tests', testCount.toString()));
+
+      if (failCount > 0) {
+        const testCountStr = `${failCount} Failed | ${passCount} passed (${testCount})`;
+        this.writeStream.write(formatRow('Tests', testCountStr));
+      } else {
+        this.writeStream.write(formatRow('Tests', `${passCount} passed`));
+      }
+
       this.writeStream.write(formatRow('Start at', `${hours}:${minutes}:${seconds}`));
       this.writeStream.write(formatRow('Duration', `${totalDuration}ms`));
       this.writeStream.write('</table>');
