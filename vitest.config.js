@@ -56,6 +56,6 @@ export default defineConfig({
         `${import.meta.dirname}/lib/buildtools/src/build/docs/drawdown.ts`
       ]
     },
-    silent: 'passed-only',
+    silent: 'passed-only'
   }
 });

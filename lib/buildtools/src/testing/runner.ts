@@ -7,6 +7,7 @@ interface RunVitestBoolOptions {
   coverage?: boolean;
   update?: boolean;
   allowOnly?: boolean;
+  silent?: boolean | 'passed-only';
 }
 
 function getIncludes({ test }: TestProjectInlineConfiguration) {
@@ -43,6 +44,7 @@ export async function runVitest(mode: VitestRunMode, filters: string[], projects
       },
       allowOnly: !!options.allowOnly,
       watch: !!options.watch,
+      silent: options.silent
     };
 
     const finalConfig = mergeConfig(

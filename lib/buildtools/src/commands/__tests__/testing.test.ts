@@ -1,9 +1,10 @@
 import pathlib from 'path';
+import { Command } from '@commander-js/extra-typings';
 import { describe, expect, test, vi } from 'vitest';
 import { testMocksDir } from '../../__tests__/fixtures.js';
 import * as runner from '../../testing/runner.js';
 import * as configs from '../../testing/utils.js';
-import { getTestCommand } from '../testing.js';
+import { getTestCommand, silentOption } from '../testing.js';
 import { getCommandRunner } from './testingUtils.js';
 
 vi.spyOn(process, 'cwd').mockReturnValue(testMocksDir);
@@ -29,7 +30,15 @@ describe('Test regular test command', () => {
 
     await expect(runCommand('--project', projectPath, filterPath)).commandSuccess();
     expect(configs.getTestConfiguration).toHaveBeenCalledExactlyOnceWith(projectPath, false);
-    expect(runner.runVitest).toHaveBeenCalledExactlyOnceWith('test', [filterPath], [mockConfig.config], { allowOnly: expect.any(Boolean) });
+    expect(runner.runVitest).toHaveBeenCalledExactlyOnceWith(
+      'test',
+      [filterPath],
+      [mockConfig.config],
+      {
+        allowOnly: expect.any(Boolean),
+        silent: 'passed-only'
+      }
+    );
   });
 
   test('Providing both the project directory but no patterns', async () => {
@@ -47,7 +56,15 @@ describe('Test regular test command', () => {
 
     await expect(runCommand('--project', projectPath)).commandSuccess();
     expect(configs.getTestConfiguration).toHaveBeenCalledExactlyOnceWith(projectPath, false);
-    expect(runner.runVitest).toHaveBeenCalledExactlyOnceWith('test', [], [mockConfig.config], { allowOnly: expect.any(Boolean) });
+    expect(runner.runVitest).toHaveBeenCalledExactlyOnceWith(
+      'test',
+      [],
+      [mockConfig.config],
+      {
+        allowOnly: expect.any(Boolean),
+        silent: 'passed-only'
+      }
+    );
   });
 
   test('Expect command to exit with no issues if no tests were found', async () => {
@@ -81,7 +98,10 @@ describe('Test regular test command', () => {
       'test',
       [],
       [mockConfig.config],
-      { allowOnly: false }
+      {
+        allowOnly: false,
+        silent: 'passed-only'
+      }
     );
   });
 
@@ -103,10 +123,63 @@ describe('Test regular test command', () => {
         'test',
         [],
         [mockConfig.config],
-        { allowOnly: false }
+        {
+          allowOnly: false,
+          silent: 'passed-only'
+        }
       );
     } finally {
       vi.unstubAllEnvs();
     }
+  });
+});
+
+describe('Test silent option', () => {
+  const runCommand = (...args: string[]) => new Promise<undefined | boolean | 'passed-only'>(
+    (resolve, reject) => {
+      const command = new Command()
+        .exitOverride()
+        .addOption(silentOption)
+        .action(option => {
+          resolve(option.silent);
+        });
+
+      try {
+        command.parse(args, { from: 'user' });
+      } catch (error) {
+        reject(error);
+      }
+    }
+  );
+
+  test('running command without option', async () => {
+    const value = await runCommand();
+    expect(value).toEqual('passed-only');
+  });
+
+  test('running command with without value', async () => {
+    const value = await runCommand('--silent');
+    expect(value).toEqual(true);
+  });
+
+  test('running command with \'true\'', async () => {
+    const value = await runCommand('--silent', 'true');
+    expect(value).toEqual(true);
+  });
+
+  test('running command with \'false\'', async () => {
+    const value = await runCommand('--silent', 'false');
+    expect(value).toEqual(false);
+  });
+
+  test('running command with \'passed-only\'', async () => {
+    const value = await runCommand('--silent', 'passed-only');
+    expect(value).toEqual('passed-only');
+  });
+
+  test('running command with invalid option', () => {
+    return expect(runCommand('--silent', 'unknown'))
+      .rejects
+      .toThrowError('Invalid value for silent: unknown');
   });
 });

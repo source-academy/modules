@@ -1,5 +1,5 @@
 import pathlib from 'path';
-import { Command, Option } from '@commander-js/extra-typings';
+import { Command, InvalidOptionArgumentError, Option } from '@commander-js/extra-typings';
 import { gitRoot } from '@sourceacademy/modules-repotools/getGitRoot';
 import chalk from 'chalk';
 import type { VitestRunMode } from 'vitest/node';
@@ -13,7 +13,24 @@ const vitestModeOption = new Option('--mode <mode>', 'Vitest Run Mode. See https
 
 const watchOption = new Option('-w, --watch', 'Run tests in watch mode');
 const updateOption = new Option('-u, --update', 'Update snapshots');
-const coverageOption = new Option('--coverage');
+const coverageOption = new Option('--coverage', 'Run coverage testing');
+
+export const silentOption = new Option('--silent [option]', 'Silent mode')
+  .choices(['passed-only', 'false', 'true'] as const)
+  .argParser(value => {
+    switch (value) {
+      case 'passed-only':
+        return 'passed-only';
+      case 'false':
+        return false;
+      case 'true':
+      case undefined:
+        return true;
+      default:
+        throw new InvalidOptionArgumentError(`Invalid value for silent: ${value}`);
+    }
+  })
+  .default('passed-only');
 
 export const getTestCommand = () => new Command('test')
   .description('Run test for the specific bundle or tab at the specified directory.')
@@ -21,6 +38,7 @@ export const getTestCommand = () => new Command('test')
   .addOption(watchOption)
   .addOption(updateOption)
   .addOption(coverageOption)
+  .addOption(silentOption)
   .option('--no-allow-only', 'Allow the use of .only in tests', !process.env.CI)
   .option('-p, --project <directory>', 'Path to the directory that is the root of your test project')
   .argument('[patterns...]', 'Test patterns to filter by.')
@@ -55,6 +73,7 @@ export const getTestAllCommand = () => new Command('testall')
   .addOption(watchOption)
   .addOption(updateOption)
   .addOption(coverageOption)
+  .addOption(silentOption)
   .option('--no-allow-only', 'Allow the use of .only in tests', !process.env.CI)
   .action(async (patterns, { mode, ...options }) => {
     const configs = await getAllTestConfigurations(!!options.watch);
