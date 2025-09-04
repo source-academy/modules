@@ -10,7 +10,7 @@ import type { ModuleTab } from '@sourceacademy/modules-lib/types';
  */
 
 const SoundTab: ModuleTab = ({ context }) => {
-  const { audioPlayed } = getModuleState<StereoSoundModuleState>(context, 'sound');
+  const { audioPlayed } = getModuleState<StereoSoundModuleState>(context, 'stereo_sound');
 
   const elements = audioPlayed.map((audio) => (
     <audio
