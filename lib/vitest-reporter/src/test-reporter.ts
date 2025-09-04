@@ -51,6 +51,9 @@ function getTestCount(item: TestModule | TestSuite | TestCase): number {
   return output;
 }
 
+/**
+ * A Vitest reporter that writes results to the Github Actions summary
+ */
 export default class GithubActionsSummaryReporter implements Reporter {
   private writeStream: fs.WriteStream | null = null;
   private startTimes: Record<string, Date> = {};

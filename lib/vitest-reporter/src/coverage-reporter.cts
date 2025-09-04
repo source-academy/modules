@@ -77,6 +77,9 @@ interface ResultObject {
   uncoveredLines: ([number] | [number, number])[]
 }
 
+/**
+ * A Vitest coverage reporter that writes to the Github Actions summary
+ */
 module.exports = class GithubActionsCoverageReporter extends ReportBase {
   private readonly skipEmpty: boolean;
   private readonly skipFull: boolean;

@@ -14,6 +14,6 @@ export function getModuleState<T>(debuggerContext: DebuggerContext, name: string
 /**
  * Helper for typing tabs
  */
-export function defineTab(tab: ModuleSideContent) {
+export function defineTab<T extends ModuleSideContent>(tab: T) {
   return tab;
 }
