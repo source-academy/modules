@@ -3532,7 +3532,9 @@ __metadata:
   resolution: "@sourceacademy/bundle-unittest@workspace:src/bundles/unittest"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@types/lodash": "npm:^4.14.198"
     js-slang: "npm:^1.0.81"
+    lodash: "npm:^4.17.21"
     typescript: "npm:^5.8.2"
   languageName: unknown
   linkType: soft
@@ -4109,6 +4111,7 @@ __metadata:
   resolution: "@sourceacademy/vitest-reporter@workspace:lib/vitest-reporter"
   dependencies:
     "@types/istanbul-lib-report": "npm:^3.0.3"
+    "@types/node": "npm:^22.15.30"
     esbuild: "npm:^0.25.8"
     istanbul-lib-report: "npm:^3.0.1"
     typescript: "npm:^5.8.2"

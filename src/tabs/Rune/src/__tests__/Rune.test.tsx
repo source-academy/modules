@@ -1,9 +1,10 @@
 import { animate_anaglyph, animate_rune, blank } from '@sourceacademy/bundle-rune';
 import { HollusionRune, type RuneModuleState } from '@sourceacademy/bundle-rune/functions';
+import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
 import { mockDebuggerContext } from '@sourceacademy/modules-lib/utilities';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
-import { RuneTab } from '..';
+import { cleanup, render } from 'vitest-browser-react';
+import RuneSideContent, { RuneTab } from '..';
 import HollusionCanvas from '../hollusion_canvas';
 
 test('Ensure that rune animations error gracefully', () => {
@@ -28,6 +29,7 @@ describe(HollusionCanvas, () => {
   afterEach(() => {
     vi.runOnlyPendingTimers();
     vi.useRealTimers();
+    cleanup();
   });
 
   test('Render function is memoized', () => {
@@ -41,5 +43,36 @@ describe(HollusionCanvas, () => {
     }
 
     expect(mockedDraw).toHaveBeenCalledOnce();
+  });
+});
+
+describe('Test Rune Side Content', () => {
+  const propertyAccessor = vi.fn(() => ({
+    state: {
+      drawnRunes: []
+    }
+  }));
+
+  const contextObject: DebuggerContext = {
+    context: {
+      moduleContexts: new Proxy({}, {
+        get: propertyAccessor
+      })
+    }
+  } as any;
+
+  beforeEach(() => {
+    propertyAccessor.mockClear();
+  });
+
+  test('toSpawn asks for rune module state', () => {
+    RuneSideContent.toSpawn(contextObject);
+    expect(propertyAccessor).toHaveBeenCalledExactlyOnceWith(expect.any(Object), 'rune', expect.any(Object));
+  });
+
+  test('body asks for rune module state', () => {
+    render(<RuneSideContent.body {...contextObject} />);
+    expect(propertyAccessor).toHaveBeenCalledExactlyOnceWith(expect.any(Object), 'rune', expect.any(Object));
+    cleanup();
   });
 });

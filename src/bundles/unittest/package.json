@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "js-slang": "^1.0.81"
+    "js-slang": "^1.0.81",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
+    "@types/lodash": "^4.14.198",
     "typescript": "^5.8.2"
   },
   "type": "module",

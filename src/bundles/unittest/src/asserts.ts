@@ -1,4 +1,6 @@
-import { head, is_list, is_null, is_pair, length, tail, type List, type Pair } from 'js-slang/dist/stdlib/list';
+import * as list from 'js-slang/dist/stdlib/list';
+import { stringify } from 'js-slang/dist/utils/stringify';
+import isEqualWith from 'lodash/isEqualWith';
 
 /**
  * Asserts that a predicate returns true.
@@ -11,6 +13,54 @@ export function assert(pred: () => boolean) {
   }
 }
 
+function equalityComparer(expected: any, received: any): boolean | undefined {
+  if (typeof expected === 'number') {
+    // if either is a float, use approximate checking
+    if (!Number.isInteger(expected) || !Number.isInteger(received)) {
+      return Math.abs(expected - received) <= 0.001;
+    }
+
+    return expected === received;
+  }
+
+  if (list.is_list(expected)) {
+    if (!list.is_list(received)) return false;
+
+    let list0 = expected;
+    let list1 = received;
+    while (true) {
+      if (list.is_null(list0) || list.is_null(list1)) {
+        // We have reached the end of at least one of the lists
+        if (list.is_null(list0) !== list.is_null(list1)) {
+          // If we haven't reached the end of both, then the lists
+          // must not be equal
+          return false;
+        }
+        return true;
+      }
+
+      if (!isEqualWith(list.head(list0), list.head(list1), equalityComparer)) {
+        return false;
+      }
+
+      list0 = list.tail(list0);
+      list1 = list.tail(list1);
+    }
+  }
+
+  if (list.is_pair(expected)) {
+    if (!list.is_pair(received)) return false;
+
+    if (!isEqualWith(list.head(expected), list.head(received), equalityComparer)) return false;
+    if (!isEqualWith(list.tail(expected), list.tail(received), equalityComparer)) return false;
+    return true;
+  }
+
+  // TODO: A comparison for streams/arrays?
+  return undefined;
+}
+
+// TODO: Fix to prevent stack overflow with circular lists
 /**
  * Asserts the equality (===) of two parameters.
  * @param expected The expected value.
@@ -18,22 +68,8 @@ export function assert(pred: () => boolean) {
  * @returns
  */
 export function assert_equals(expected: any, received: any) {
-  const fail = () => {
+  if (!isEqualWith(expected, received, equalityComparer)) {
     throw new Error(`Expected \`${expected}\`, got \`${received}\`!`);
-  };
-  if (typeof expected !== typeof received) {
-    fail();
-  }
-  // approx checking for floats
-  if (typeof expected === 'number' && !Number.isInteger(expected)) {
-    if (Math.abs(expected - received) > 0.001) {
-      fail();
-    } else {
-      return;
-    }
-  }
-  if (expected !== received) {
-    fail();
   }
 }
 
@@ -44,35 +80,44 @@ export function assert_equals(expected: any, received: any) {
  * @returns
  */
 export function assert_not_equals(expected: any, received: any) {
-  if (expected === received) {
+  if (!isEqualWith(expected, received, equalityComparer)) {
     throw new Error(`Expected \`${expected}\` to not equal \`${received}\`!`);
   }
 }
 
 /**
  * Asserts that `xs` contains `toContain`.
- * @param xs The list to assert.
+ * @param xs The list or pair to assert.
  * @param toContain The element that `xs` is expected to contain.
  */
 export function assert_contains(xs: any, toContain: any) {
   const fail = () => {
-    throw new Error(`Expected \`${xs}\` to contain \`${toContain}\`.`);
+    throw new Error(`Expected \`${stringify(xs)}\` to contain \`${toContain}\`.`);
   };
 
-  const member = (xs: List | Pair<any, any>, item: any) => {
-    if (is_null(xs)) return false;
+  function member(xs: list.List | list.Pair<any, any>, item: any): boolean {
+    if (list.is_null(xs)) return false;
 
-    if (is_list(xs)) {
-      if (head(xs) === item) return true;
-      return member(tail(xs), item);
+    if (list.is_list(xs)) {
+      if (isEqualWith(list.head(xs), item, equalityComparer)) return true;
+      return member(list.tail(xs), item);
     }
 
-    if (is_pair(xs)) {
-      return member(head(xs), item) || member(tail(xs), item);
+    if (list.is_pair(xs)) {
+      if (
+        isEqualWith(list.head(xs), item, equalityComparer) ||
+        isEqualWith(list.tail(xs), item, equalityComparer)
+      ) return true;
+
+      if (list.is_pair(list.head(xs)) && member(list.head(xs), item)) {
+        return true;
+      }
+
+      return list.is_pair(list.tail(xs)) && member(list.tail(xs), item);
     }
 
-    throw new Error(`First argument to ${assert_contains.name} must be a list or a pair, got \`${xs}\`.`);
-  };
+    throw new Error(`First argument to ${assert_contains.name} must be a list or a pair, got \`${stringify(xs)}\`.`);
+  }
   if (!member(xs, toContain)) fail();
 }
 
@@ -81,8 +126,10 @@ export function assert_contains(xs: any, toContain: any) {
  * @param list The list to assert.
  * @param len The expected length of the list.
  */
-export function assert_length(list: any, len: number) {
-  assert_equals(length(list), len);
+export function assert_length(xs: any, len: number) {
+  if (!list.is_list(xs)) throw new Error(`First argument to ${assert_length.name} must be a list.`);
+
+  assert_equals(list.length(xs), len);
 }
 
 /**
@@ -91,8 +138,12 @@ export function assert_length(list: any, len: number) {
  * @param expected The value to check against
  */
 export function assert_greater(item: any, expected: number) {
-  if (typeof item !== 'number' || typeof expected !== 'number') {
-    throw new Error(`${assert_greater.name} should be called with numeric arguments!`);
+  if (typeof expected !== 'number') {
+    throw new Error(`${assert_greater.name}: Expected value should be a number!`);
+  }
+
+  if (typeof item !== 'number') {
+    throw new Error(`Expected ${item} to be a number!`);
   }
 
   if (item <= expected) {
@@ -106,8 +157,12 @@ export function assert_greater(item: any, expected: number) {
  * @param expected The value to check against
  */
 export function assert_greater_equals(item: any, expected: number) {
-  if (typeof item !== 'number' || typeof expected !== 'number') {
-    throw new Error(`${assert_greater.name} should be called with numeric arguments!`);
+  if (typeof expected !== 'number') {
+    throw new Error(`${assert_greater_equals.name}: Expected value should be a number!`);
+  }
+
+  if (typeof item !== 'number') {
+    throw new Error(`Expected ${item} to be a number!`);
   }
 
   if (item < expected) {
