@@ -128,6 +128,7 @@ export function assert_contains(xs: any, toContain: any) {
  */
 export function assert_length(xs: any, len: number) {
   if (!list.is_list(xs)) throw new Error(`First argument to ${assert_length.name} must be a list.`);
+  if (!Number.isInteger(len)) throw new Error(`Second argument to ${assert_length.name} must be an integer.`);
 
   assert_equals(list.length(xs), len);
 }

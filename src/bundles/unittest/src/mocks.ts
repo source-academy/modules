@@ -27,9 +27,15 @@ function throwIfNotMockedFunction(obj: (...args: any[]) => any, func_name: strin
  * @returns A mocked version of the given function.
  */
 export function mock_function(fn: (...args: any[]) => any): MockedFunction {
+  if (typeof fn !== 'function') {
+    throw new Error(`${mock_function.name} expects a function as argument`);
+  }
+
   const arglist: any[] = [];
   const retVals: any[] = [];
 
+  // TODO: Check if some kind of function copying is required
+  // js-slang has its own set of utils for doing this
   function func(...args: any[]) {
     arglist.push(args);
     const retVal = fn.apply(fn, args);
@@ -81,4 +87,17 @@ export function get_ret_vals(fn: MockedFunction) {
   throwIfNotMockedFunction(fn, get_ret_vals.name);
   const { retVals } = fn[mockSymbol];
   return vector_to_list(retVals);
+}
+
+/**
+ * Resets the statistics on the provided mocked functon.
+ * @param fn Mocked function to reset
+ * @returns The function passed to it
+ */
+export function clear_mock(fn: MockedFunction) {
+  throwIfNotMockedFunction(fn, clear_mock.name);
+  fn[mockSymbol].arglist = [];
+  fn[mockSymbol].retVals = [];
+
+  return fn;
 }
