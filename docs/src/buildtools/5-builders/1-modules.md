@@ -58,9 +58,9 @@ Tell `esbuild` to output the code as an [IIFE](https://developer.mozilla.org/en-
 By default, `esbuild`'s IIFE output doesn't return its exports:
 
 ```js
-(function() {
+(function () {
   var exports = {};
-  exports.add_one = function(x) {
+  exports.add_one = function (x) {
     return x + 1;
   };
 })();
@@ -69,9 +69,9 @@ By default, `esbuild`'s IIFE output doesn't return its exports:
 By specifying a  `globalName`, the generated code instead becomes:
 
 ```js
-var module = (function() {
+var module = (function () {
   var exports = {};
-  exports.add_one = function(x) {
+  exports.add_one = function (x) {
     return x + 1;
   };
   return exports;
@@ -101,9 +101,9 @@ Tell `esbuild` that we are bundling for the browser, and that we need to compile
 After esbuild bundling, both bundles and tabs are parsed using [`acorn`](https://github.com/acornjs/acorn) to produce an AST. Esbuild will produce an IIFE that looks like the following:
 
 ```js
-var module = (function() {
+var module = (function () {
   var exports = {};
-  exports.add_one = function(x) {
+  exports.add_one = function (x) {
     return x + 1;
   };
 
@@ -116,7 +116,7 @@ The AST is then transformed by the `outputBundleOrTab` function, which produces 
 ```js
 export default require => {
   var exports = {};
-  exports.add_one = function(x) {
+  exports.add_one = function (x) {
     return x + 1;
   };
 

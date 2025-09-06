@@ -151,7 +151,7 @@ describe('Test parsers', () => {
       const result = functionParser(decl);
       expectParseSuccess(result);
       expect(result.warnings.length).toEqual(0);
-      expect((result.obj).description).toEqual('<p>This is a summary</p>');
+      expect(result.obj.description).toEqual('<p>This is a summary</p>');
     });
 
     it('Should return "No description available" when none is available', () => {

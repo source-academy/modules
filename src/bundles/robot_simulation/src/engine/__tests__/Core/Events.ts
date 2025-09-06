@@ -24,7 +24,7 @@ interface EventMap {
   event2: NumberEvent;
 }
 
-describe('TypedEventTarget', () => {
+describe(TypedEventTarget, () => {
   let eventTarget: TypedEventTarget<EventMap>;
 
   beforeEach(() => {

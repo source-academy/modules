@@ -28,7 +28,7 @@ const createCollider = (mass: number) => {
   return colliderMock as unknown as Rapier.Collider;
 };
 
-describe('Entity', () => {
+describe(Entity, () => {
   let entity: Entity;
 
   describe('unit tests', () => {

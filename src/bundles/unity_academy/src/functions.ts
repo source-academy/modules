@@ -64,7 +64,7 @@ function checkGameObjectIdentifierParameter(gameObjectIdentifier: any) {
   // even when students provide the parameter with the correct type.
   const instance = getInstance();
   if (!(gameObjectIdentifier instanceof instance.gameObjectIdentifierWrapperClass)) {
-    throw new Error(`Type "${(typeof (gameObjectIdentifier)).toString()}" can not be used as game object identifier!`);
+    throw new Error(`Type "${(typeof gameObjectIdentifier).toString()}" can not be used as game object identifier!`);
   }
   if (instance.getStudentGameObject(gameObjectIdentifier).isDestroyed) {
     throw new Error('Trying to use a GameObject that is already destroyed.');
@@ -72,7 +72,7 @@ function checkGameObjectIdentifierParameter(gameObjectIdentifier: any) {
 }
 
 function checkParameterType(parameter: any, expectedType: string, numberAllowInfinity = false) {
-  const actualType = typeof (parameter);
+  const actualType = typeof parameter;
   if (actualType !== expectedType) {
     throw new Error(`Wrong parameter type: expected ${expectedType}, but got ${actualType}`);
   }
@@ -483,7 +483,7 @@ export function gameobject_distance(gameObjectIdentifier_A: GameObjectIdentifier
 }
 
 function checkKeyCodeValidityAndToLowerCase(keyCode: string): string {
-  if (typeof (keyCode) !== 'string') throw new Error(`Key code must be a string! Given type: ${typeof (keyCode)}`);
+  if (typeof keyCode !== 'string') throw new Error(`Key code must be a string! Given type: ${typeof keyCode}`);
   if (keyCode === 'LeftMouseBtn' || keyCode === 'RightMouseBtn' || keyCode === 'MiddleMouseBtn' || keyCode === 'Space' || keyCode === 'LeftShift' || keyCode === 'RightShift') return keyCode;
   keyCode = keyCode.toLowerCase();
   if (keyCode.length !== 1) throw new Error(`Key code must be either a string of length 1 or one among 'LeftMouseBtn', 'RightMouseBtn', 'MiddleMouseBtn', 'Space', 'LeftShift' or 'RightShift'! Given length: ${keyCode.length}`);

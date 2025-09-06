@@ -9,7 +9,7 @@ import { getCommandRunner } from './testingUtils.js';
 
 vi.mock(import('../../templates/print.js'), async importActual => {
   const actualTemplates = await importActual();
-  return ({
+  return {
     ...actualTemplates,
     askQuestion: vi.fn(),
     error(x: string) {
@@ -23,7 +23,7 @@ vi.mock(import('../../templates/print.js'), async importActual => {
     warn(x: string) {
       throw new Error(x);
     }
-  });
+  };
 });
 
 vi.spyOn(manifest, 'getBundleManifests').mockResolvedValue({

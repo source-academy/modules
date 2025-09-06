@@ -12,8 +12,15 @@ export {
   assert_greater_equals,
   assert_length,
 } from './asserts';
+
 export { it, test, describe } from './functions';
-export { mock_fn } from './mocks';
+
+export {
+  get_arg_list,
+  get_num_calls,
+  get_ret_vals,
+  mock_function
+} from './mocks';
 
 /**
  * Increment a number by a value of 1.

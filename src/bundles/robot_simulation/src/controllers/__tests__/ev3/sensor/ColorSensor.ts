@@ -16,7 +16,7 @@ vi.mock(import('../../../../engine/Render/helpers/Camera'), () => ({
   }),
 }));
 
-describe('ColorSensor', () => {
+describe(ColorSensor, () => {
   let sensor;
   let mockChassisWrapper;
   let mockRenderer;

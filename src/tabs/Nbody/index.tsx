@@ -77,7 +77,7 @@ class SimulationControl extends React.Component<SimControlProps, SimControlState
   toggleShowUniverse(label: string, i: number): void {
     this.props.sim.setShowUniverse(label, !this.state.showUniverse[i]);
     this.setState({
-      showUniverse: this.state.showUniverse.map((v, j) => (i === j) ? !v : v)
+      showUniverse: this.state.showUniverse.map((v, j) => i === j ? !v : v)
     });
 
   }
@@ -146,7 +146,7 @@ class Nbody extends React.Component<Props, State> {
 
     return (
       <div>
-        {(simulations.length === 0)
+        {simulations.length === 0
           ? <div>No simulations found</div>
           : <SimulationControl sim={simulations[0]} />
         }

@@ -298,9 +298,7 @@ class MarkSweep extends React.Component<Props, State> {
                     <span> {state.rightDesc} </span>
                   </div>
                 )
-                : (
-                  false
-                )}
+                : false}
             </div>
             <br />
             <p>

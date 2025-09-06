@@ -42,7 +42,7 @@ vi.mock(import('../../../../engine'), () => ({
   })),
 }) as any);
 
-describe('Mesh', () => {
+describe(Mesh, () => {
   let mesh;
   let mockChassisWrapper;
   let mockRenderer;

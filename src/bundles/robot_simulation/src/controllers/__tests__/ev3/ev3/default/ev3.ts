@@ -38,7 +38,7 @@ vi.mock(import('../../../../../engine'), () => {
   } as any;
 });
 
-describe('createDefaultEv3', () => {
+describe(createDefaultEv3, () => {
   const mockPhysics = new Physics({ gravity:{ x:0, y:-1, z:0 }, timestep: 0.01 });
   const mockRenderer = vi.fn() as unknown as Renderer;
   const mockConfig =ev3Config;

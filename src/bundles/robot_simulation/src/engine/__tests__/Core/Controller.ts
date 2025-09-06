@@ -94,7 +94,7 @@ describe('ControllerMap methods', () => {
   });
 });
 
-describe('ControllerGroup', () => {
+describe(ControllerGroup, () => {
   // Define test data for each method
   const methodsTestData: Array<[string, { async: boolean, args: any[] }]> = [
     ['start', { async: true, args: [] }],

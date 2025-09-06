@@ -27,7 +27,7 @@ vi.mock('three', async importOriginal => {
 const mockedMeshFactory = vi.mocked(MeshFactory);
 const mockedEntityFactory = vi.mocked(EntityFactory);
 
-describe('ChassisWrapper', () => {
+describe(ChassisWrapper, () => {
   let physicsMock;
   let rendererMock;
   let chassisWrapper;

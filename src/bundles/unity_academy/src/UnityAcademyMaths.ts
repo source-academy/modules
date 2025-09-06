@@ -20,10 +20,10 @@ export class Vector3 {
 }
 
 export function checkVector3Parameter(parameter: any): void {
-  if (typeof (parameter) !== 'object') {
-    throw new Error(`The given parameter is not a valid 3D vector! Wrong parameter type: ${typeof (parameter)}`);
+  if (typeof parameter !== 'object') {
+    throw new Error(`The given parameter is not a valid 3D vector! Wrong parameter type: ${typeof parameter}`);
   }
-  if (typeof (parameter.x) !== 'number' || typeof (parameter.y) !== 'number' || typeof (parameter.z) !== 'number') {
+  if (typeof parameter.x !== 'number' || typeof parameter.y !== 'number' || typeof parameter.z !== 'number') {
     throw new Error('The given parameter is not a valid 3D vector!');
   }
 }

@@ -17,7 +17,7 @@ vi.mock(import('three'), () => ({
   }))
 }) as any);
 
-describe('UltrasonicSensor', () => {
+describe(UltrasonicSensor, () => {
   let sensor: UltrasonicSensor;
   let mockChassisWrapper;
   let mockPhysics;

@@ -9,7 +9,7 @@ vi.mock(import('../../../../engine/Render/debug/DebugArrow'), () => ({
   })),
 }));
 
-describe('Wheel', () => {
+describe(Wheel, () => {
   let wheel;
   let mockChassisWrapper;
   let mockPhysics;

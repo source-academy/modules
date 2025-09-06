@@ -9,7 +9,7 @@ vi.mock(import('../../program/evaluate'));
 const mockedRunECEvaluator = vi.mocked(runECEvaluator);
 const mockedCallbackHandler = vi.mocked(CallbackHandler);
 
-describe('Program', () => {
+describe(Program, () => {
   let program: Program;
   const mockCode = 'const x = 1;';
 

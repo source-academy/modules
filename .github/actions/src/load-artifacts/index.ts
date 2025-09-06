@@ -25,7 +25,7 @@ async function main() {
       await artifact.downloadArtifact(id, { path: pathlib.join(outDir, 'tabs') });
       core.info(`Downloaded artifact for ${tabName}`);
       return;
-    } catch(error) {
+    } catch (error) {
       core.error(`Error retrieving artifact for ${tabName}, will try building`);
       core.error(error as Error);
     }

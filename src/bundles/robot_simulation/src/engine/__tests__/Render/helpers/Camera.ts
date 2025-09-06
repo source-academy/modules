@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest';
 
 import { getCamera, type CameraOptions } from '../../../Render/helpers/Camera';
 
-describe('getCamera', () => {
+describe(getCamera, () => {
   test('returns a PerspectiveCamera when type is "perspective"', () => {
     const cameraOptions: CameraOptions = {
       type: 'perspective',

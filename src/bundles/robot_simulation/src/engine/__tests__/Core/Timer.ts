@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Timer } from '../../Core/Timer'; // Adjust the import path as per your project structure
 
-describe('Timer', () => {
+describe(Timer, () => {
   let timer;
   let mockTimestamp;
 

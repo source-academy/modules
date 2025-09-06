@@ -64,7 +64,7 @@ vi.mock('three', async importOriginal => {
   };
 });
 
-describe('addCuboid', () => {
+describe(addCuboid, () => {
   it('creates a cuboid with the correct dimensions and color', () => {
     const orientation = {
       position: new THREE.Vector3(1, 2, 3),

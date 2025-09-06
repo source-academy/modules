@@ -23,7 +23,7 @@ vi.mock('@dimforge/rapier3d-compat', () => {
   };
 });
 
-describe('Physics', () => {
+describe(Physics, () => {
   let physics;
   const config = { gravity: { x: 0, y: -9.81, z: 0 }, timestep: 1 / 60 };
 

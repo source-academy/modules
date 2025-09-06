@@ -15,7 +15,7 @@ const createTimingInfo = ({
   return { stepCount, timestep } as PhysicsTimingInfo;
 };
 
-describe('CallbackHandler', () => {
+describe(CallbackHandler, () => {
   test('adds callbacks correctly', () => {
     const handler = new CallbackHandler();
     const mockCallback = vi.fn();

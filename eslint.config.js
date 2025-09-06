@@ -79,9 +79,9 @@ export default tseslint.config(
     rules: {
       '@stylistic/eol-last': 'warn',
       '@stylistic/indent': ['warn', 2, { SwitchCase: 1 }],
-      '@stylistic/no-mixed-spaces-and-tabs': 'warn',
       '@stylistic/no-multiple-empty-lines': ['warn', { max: 1, maxEOF: 0 }],
       '@stylistic/no-multi-spaces': ['warn', { ignoreEOLComments: true }],
+      '@stylistic/no-tabs': 'error',
       '@stylistic/no-trailing-spaces': 'warn',
       '@stylistic/spaced-comment': [
         'warn',
@@ -134,9 +134,12 @@ export default tseslint.config(
     },
     rules: {
       'object-shorthand': ['warn', 'properties'],
+      '@stylistic/arrow-spacing': 'warn',
+      '@stylistic/block-spacing': 'warn',
       '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
       '@stylistic/function-call-spacing': ['warn', 'never'],
       '@stylistic/function-paren-newline': ['warn', 'multiline-arguments'],
+      '@stylistic/keyword-spacing': 'warn',
       '@stylistic/member-delimiter-style': [
         'warn',
         {
@@ -150,6 +153,11 @@ export default tseslint.config(
           }
         }
       ],
+      '@stylistic/no-extra-parens': ['warn', 'all', {
+        enforceForArrowConditionals: false,
+        ignoreJSX: 'all',
+        nestedBinaryExpressions: false,
+      }],
       '@stylistic/nonblock-statement-body-position': ['error', 'beside'],
       '@stylistic/object-curly-newline': ['warn', {
         ImportDeclaration: { multiline: true },
@@ -157,6 +165,12 @@ export default tseslint.config(
       '@stylistic/object-curly-spacing': ['warn', 'always'],
       '@stylistic/quotes': ['warn', 'single', { avoidEscape: true }],
       '@stylistic/semi': ['warn', 'always'],
+      '@stylistic/space-before-blocks': 'warn',
+      '@stylistic/space-before-function-paren': ['warn', {
+        anonymous: 'always',
+        asyncArrow: 'always',
+        named: 'never'
+      }]
     }
   },
   {

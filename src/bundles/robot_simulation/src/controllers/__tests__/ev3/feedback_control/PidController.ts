@@ -12,7 +12,7 @@ const resetVectorPid = (pidController: VectorPidController) => {
   pidController.previousError = new THREE.Vector3();
 };
 
-describe('NumberPidController', () => {
+describe(NumberPidController, () => {
   let pidController;
 
   beforeEach(() => {
@@ -50,7 +50,7 @@ describe('NumberPidController', () => {
   });
 });
 
-describe('VectorPidController', () => {
+describe(VectorPidController, () => {
   let pidController;
 
   beforeEach(() => {

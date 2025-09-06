@@ -58,7 +58,7 @@ export class ProgrammableRepl {
       this.reRenderTab();
       return;
     }
-    if (typeof (retVal) === 'string') {
+    if (typeof retVal === 'string') {
       retVal = `"${retVal}"`;
     }
     // Here must use plain text output mode because retVal contains strings from the users.
@@ -111,7 +111,7 @@ export class ProgrammableRepl {
       return true;
     }
     function recursiveHelper(thisInstance, param): string {
-      if (typeof (param) === 'string') {
+      if (typeof param === 'string') {
         // There MUST be a safe check on users' strings, because users may insert something that can be interpreted as executable JavaScript code when outputing rich text.
         const safeCheckResult = thisInstance.userStringSafeCheck(param);
         if (safeCheckResult !== 'safe') {
@@ -121,7 +121,7 @@ export class ProgrammableRepl {
         return `">${param}</span>`;
       }
       if (!is_pair(param)) {
-        throw new Error(`Unexpected data type ${typeof (param)} when processing rich text. It should be a pair.`);
+        throw new Error(`Unexpected data type ${typeof param} when processing rich text. It should be a pair.`);
       } else {
         const pairStyleToCssStyle: { [pairStyle: string]: string } = {
           bold: 'font-weight:bold;',
@@ -132,8 +132,8 @@ export class ProgrammableRepl {
           gigantic: 'font-size: 50px;',
           underline: 'text-decoration: underline;'
         };
-        if (typeof (tail(param)) !== 'string') {
-          throw new Error(`The tail in style pair should always be a string, but got ${typeof (tail(param))}.`);
+        if (typeof tail(param) !== 'string') {
+          throw new Error(`The tail in style pair should always be a string, but got ${typeof tail(param)}.`);
         }
         let style = '';
         if (tail(param)

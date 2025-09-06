@@ -119,12 +119,12 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
             style={ {
               width: '100%',
               height: `${editorHeight}px`,
-              ...(this.replInstance.customizedEditorProps.backgroundImageUrl !== 'no-background-image' && {
+              ...this.replInstance.customizedEditorProps.backgroundImageUrl !== 'no-background-image' && {
                 backgroundImage: `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`,
                 backgroundColor: `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`,
                 backgroundSize: '100%',
                 backgroundRepeat: 'no-repeat'
-              })
+              }
             } }
             mode="javascript" theme="twilight"
             onChange={ (newValue) => this.replInstance.updateUserCode(newValue) }

@@ -41,7 +41,7 @@ vi.mock(import('../../../ev3/components/Chassis'), () => ({
   })),
 }));
 
-describe('Motor', () => {
+describe(Motor, () => {
   let motor;
   let mockChassisWrapper;
   let mockPhysics;

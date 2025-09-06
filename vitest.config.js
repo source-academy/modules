@@ -53,7 +53,8 @@ export default defineConfig({
         './docs',
         '**/src/**/samples/**',
         '**/vitest.setup.[jt]s',
-        `${import.meta.dirname}/lib/buildtools/src/build/docs/drawdown.ts`
+        pathlib.join(import.meta.dirname, 'lib/buildtools/src/build/docs/drawdown.ts'),
+        pathlib.join(import.meta.dirname, 'lib/vitest-reporter/build')
       ]
     },
     silent: 'passed-only'

@@ -8,7 +8,7 @@ const { classDeclaration, functionDeclaration, typeDeclaration } = typeMapCreato
 class Point {}
 
 @classDeclaration('AnimatedCurve')
-class AnimatedCurve{}
+class AnimatedCurve {}
 
 @typeDeclaration('(u: number) => Point')
 class Curve {}

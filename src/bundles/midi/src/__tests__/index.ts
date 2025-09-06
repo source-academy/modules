@@ -29,7 +29,7 @@ describe('scales', () => {
   });
 });
 
-describe('midi_note_to_letter_name', () => {
+describe(midi_note_to_letter_name, () => {
   describe('Test with sharps', () => {
     test.each([
       [12, 'C0'],
@@ -49,7 +49,7 @@ describe('midi_note_to_letter_name', () => {
   });
 });
 
-describe('noteToValues', () => {
+describe(noteToValues, () => {
   test.each([
     ['C0', 'C', Accidental.NATURAL, 0],
     ['C3', 'C', Accidental.NATURAL, 3],

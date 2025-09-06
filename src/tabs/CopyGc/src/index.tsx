@@ -278,9 +278,7 @@ class CopyGC extends React.Component<Props, State> {
                     <span> {state.leftDesc} </span>
                   </div>
                 )
-                : (
-                  false
-                )}
+                : false}
               {state.rightDesc
                 ? (
                   <div style={{ flex: 1 }}>
@@ -294,9 +292,7 @@ class CopyGC extends React.Component<Props, State> {
                     <span> {state.rightDesc} </span>
                   </div>
                 )
-                : (
-                  false
-                )}
+                : false}
             </div>
             <br />
             <p>
