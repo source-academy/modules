@@ -13,7 +13,18 @@ The testing library used by this repository is [`vitest`](https://vitest.dev).
 By default, any Typescript (`.ts`) files located within a `__tests__` folder are considered test files. This means that if `vitest` does not
 detect any tests within that file, it will throw an error.  This also includes any subdirectories under a `__tests__` folder.
 
-Simply write your tests within a `__tests__` folder:
+> [!WARNING] Test File Naming
+> Right now any file ending with `.ts` or `.tsx` will be considered a test file. This is inconvenient, especially if you want to create a set of
+> common utilities to be used only for tests. Such a file might (_READ: should_) not contain any tests, which will be considered by Vitest to be
+> an error. 
+>
+> To remedy this, in the future, only files that end in `.test.ts` or `.test.tsx` will be considered test files. This will allow us to have regular
+> Typescript files located within `__tests__` directories. This means you should use that naming convention instead when creating your test files.
+>
+> The current behaviour is retained for backwards compatibility since many Source modules' tests aren't written within `.test.ts` files. To see
+> examples of how to use this new system you can refer to how the tests for the buildtools are written.
+
+Simply write your tests within a file within a `__tests__` folder:
 
 ```ts
 // curve/src/__tests__/index.ts
@@ -132,7 +143,7 @@ TODO tests still generate an entry in your test reports, but will be considered 
 To run tests for a given bundle or tab, simply run either of the following commands within the directory:
 
 ```sh
-yarn buildtools test .
+yarn buildtools test --project .
 yarn test # If your package.json has this script specified
 ```
 
