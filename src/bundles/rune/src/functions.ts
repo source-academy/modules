@@ -650,7 +650,7 @@ export class HollusionRune extends DrawnRune {
 }
 
 /** @hidden */
-export const isHollusionRune = (rune: DrawnRune): rune is HollusionRune => rune.isHollusion;
+export const isHollusionRune = (rune: DrawnRune): rune is HollusionRune => rune instanceof HollusionRune;
 
 /**
  * Makes a new Rune from two given Runes by
