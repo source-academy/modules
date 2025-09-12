@@ -1,7 +1,7 @@
 // Repotools regular tsconfig
 {
   "extends": ["../tsconfig.json"],
-  "include": ["src"],
+  "include": ["src/coverage-reporter.cts", "src/**/*.ts"],
   "compilerOptions": {
     "module": "nodenext",
     "moduleResolution": "nodenext",

@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { describe, expect, it as baseIt, vi } from 'vitest';
-import CoverageReporter from '../coverage-reporter.js';
+import CoverageReporter from '../coverage-reporter.cjs'
 
 vi.spyOn(fs, 'createWriteStream').mockReturnValue({
   write: () => true,
@@ -8,7 +8,7 @@ vi.spyOn(fs, 'createWriteStream').mockReturnValue({
 } as any);
 
 describe(CoverageReporter, () => {
-  const it = baseIt.extend<{ reporter: CoverageReporter }>({
+  const it = baseIt.extend<{ reporter: typeof CoverageReporter }>({
     reporter: new CoverageReporter({})
   });
 

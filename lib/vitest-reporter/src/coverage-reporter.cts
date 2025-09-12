@@ -1,12 +1,13 @@
 /**
- * For whatever reason, this reporter doesn't really work if its compiled to ESM
- * so its compiled to CJS
+ * For whatever reason, this reporter doesn't really work if its written in ESM
+ * so its written in and compiled to CJS
  *
  * Heavily based on the default text reporter
  */
-import fs from 'fs';
+
+import fs = require('fs')
+import report = require('istanbul-lib-report');
 import type { CoverageSummary } from 'istanbul-lib-coverage';
-import { ReportBase, type ContextOptions, type ReportNode, type Watermarks } from 'istanbul-lib-report';
 
 /**
  * Determines if the coverage summary has full coverage
@@ -23,7 +24,7 @@ function isFull(metrics: CoverageSummary) {
 /**
  * Determines the uncovered lines
  */
-function getUncoveredLines(node: ReportNode) {
+function getUncoveredLines(node: report.ReportNode) {
   if (node.isSummary()) {
     return [];
   }
@@ -77,12 +78,12 @@ interface ResultObject {
 /**
  * A Vitest coverage reporter that writes to the Github Actions summary
  */
-export default class GithubActionsCoverageReporter extends ReportBase {
+module.exports = class GithubActionsCoverageReporter extends report.ReportBase {
   private readonly skipEmpty: boolean;
   private readonly skipFull: boolean;
   private readonly results: Record<string, ResultObject> = {};
   private cw: fs.WriteStream | null = null;
-  private watermarks: Partial<Watermarks> | null = null;
+  private watermarks: Partial<report.Watermarks> = {};
 
   constructor(opts: any) {
     super(opts);
@@ -91,7 +92,7 @@ export default class GithubActionsCoverageReporter extends ReportBase {
     this.skipFull = Boolean(opts.skipFull);
   }
 
-  onStart(_node: any, context: ContextOptions) {
+  onStart(_node: any, context: report.ContextOptions) {
     if (!process.env.GITHUB_STEP_SUMMARY) {
       console.log('Reporter not being executed in Github Actions environment');
       return;
@@ -108,7 +109,7 @@ export default class GithubActionsCoverageReporter extends ReportBase {
     this.cw.write('</tr></thead><tbody>');
   }
 
-  onSummary(node: ReportNode) {
+  onSummary(node: report.ReportNode) {
     const nodeName = node.getRelativeName() || 'All Files';
     const rawMetrics = node.getCoverageSummary(false);
     const isEmpty = rawMetrics.isEmpty();
@@ -129,12 +130,12 @@ export default class GithubActionsCoverageReporter extends ReportBase {
     };
   }
 
-  onDetail(node: ReportNode) {
+  onDetail(node: report.ReportNode) {
     return this.onSummary(node);
   }
 
-  private formatter(pct: number, watermark: keyof Watermarks) {
-    if (!this.watermarks || this.watermarks[watermark] === undefined) return `<td>${pct}%</td>`;
+  private formatter(pct: number, watermark: keyof report.Watermarks) {
+    if (this.watermarks[watermark] === undefined) return `<td>${pct}%</td>`;
     const [low, high] = this.watermarks[watermark];
 
     if (pct < low) {

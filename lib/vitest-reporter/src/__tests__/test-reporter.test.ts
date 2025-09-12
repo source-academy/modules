@@ -3,7 +3,7 @@ import { describe, expect, it as baseIt, vi } from 'vitest';
 import TestReporter from '../test-reporter.js';
 
 vi.spyOn(fs, 'createWriteStream').mockImplementation(() => ({
-  write: () => {},
+  write: () => true,
   close: () => {}
 } as any));
 
