@@ -6,7 +6,7 @@
  */
 import fs from 'fs';
 import type { CoverageSummary } from 'istanbul-lib-coverage';
-import report from 'istanbul-lib-report';
+import { ReportBase, type ContextOptions, type ReportNode, type Watermarks } from 'istanbul-lib-report';
 
 /**
  * Determines if the coverage summary has full coverage
@@ -23,7 +23,7 @@ function isFull(metrics: CoverageSummary) {
 /**
  * Determines the uncovered lines
  */
-function getUncoveredLines(node: report.ReportNode) {
+function getUncoveredLines(node: ReportNode) {
   if (node.isSummary()) {
     return [];
   }
@@ -77,12 +77,12 @@ interface ResultObject {
 /**
  * A Vitest coverage reporter that writes to the Github Actions summary
  */
-export default class GithubActionsCoverageReporter extends report.ReportBase {
+export default class GithubActionsCoverageReporter extends ReportBase {
   private readonly skipEmpty: boolean;
   private readonly skipFull: boolean;
   private readonly results: Record<string, ResultObject> = {};
   private cw: fs.WriteStream | null = null;
-  private watermarks: Partial<report.Watermarks> | null = null;
+  private watermarks: Partial<Watermarks> | null = null;
 
   constructor(opts: any) {
     super(opts);
@@ -91,7 +91,7 @@ export default class GithubActionsCoverageReporter extends report.ReportBase {
     this.skipFull = Boolean(opts.skipFull);
   }
 
-  onStart(_node: any, context: report.ContextOptions) {
+  onStart(_node: any, context: ContextOptions) {
     if (!process.env.GITHUB_STEP_SUMMARY) {
       console.log('Reporter not being executed in Github Actions environment');
       return;
@@ -108,7 +108,7 @@ export default class GithubActionsCoverageReporter extends report.ReportBase {
     this.cw.write('</tr></thead><tbody>');
   }
 
-  onSummary(node: report.ReportNode) {
+  onSummary(node: ReportNode) {
     const nodeName = node.getRelativeName() || 'All Files';
     const rawMetrics = node.getCoverageSummary(false);
     const isEmpty = rawMetrics.isEmpty();
@@ -129,11 +129,11 @@ export default class GithubActionsCoverageReporter extends report.ReportBase {
     };
   }
 
-  onDetail(node: report.ReportNode) {
+  onDetail(node: ReportNode) {
     return this.onSummary(node);
   }
 
-  private formatter(pct: number, watermark: keyof report.Watermarks) {
+  private formatter(pct: number, watermark: keyof Watermarks) {
     if (!this.watermarks || this.watermarks[watermark] === undefined) return `<td>${pct}%</td>`;
     const [low, high] = this.watermarks[watermark];
 

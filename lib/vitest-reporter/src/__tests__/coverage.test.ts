@@ -29,8 +29,8 @@ describe(CoverageReporter, () => {
     }
   });
 
-  it('doesn\'t open the summary file if GITHUB_STEP_SUMMARY isn\'t defined', ({ reporter }) => {
-    reporter.onStart({} as any, { watermarks: {} } as any);
-    expect(fs.createWriteStream).not.toHaveBeenCalled();
+  it.skipIf(!!process.env.GITHUB_STEP_SUMMARY)('doesn\'t open the summary file if GITHUB_STEP_SUMMARY isn\'t defined', ({ reporter }) => {
+      reporter.onStart({} as any, { watermarks: {} } as any);
+      expect(fs.createWriteStream).not.toHaveBeenCalled();
   });
 });

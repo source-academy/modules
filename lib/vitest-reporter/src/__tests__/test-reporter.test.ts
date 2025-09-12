@@ -26,7 +26,7 @@ describe(TestReporter, () => {
     }
   });
 
-  it('doesn\'t open the summary file if GITHUB_STEP_SUMMARY isn\'t defined', ({ reporter }) => {
+  it.skipIf(!!process.env.GITHUB_STEP_SUMMARY)('doesn\'t open the summary file if GITHUB_STEP_SUMMARY isn\'t defined', ({ reporter }) => {
     reporter.onInit();
     expect(fs.createWriteStream).not.toHaveBeenCalled();
   });
