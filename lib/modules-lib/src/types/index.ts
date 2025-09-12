@@ -19,7 +19,7 @@ export abstract class glAnimation {
 
   public abstract getFrame(timestamp: number): AnimFrame;
 
-  public static isAnimation = (obj: any): obj is glAnimation => obj.fps !== undefined;
+  public static isAnimation = (obj: any): obj is glAnimation => obj instanceof glAnimation;
 }
 export interface AnimFrame {
   draw: (canvas: HTMLCanvasElement) => void;
