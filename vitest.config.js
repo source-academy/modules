@@ -12,7 +12,7 @@ const coverageReporters = ['text'];
 const testReporters = ['default'];
 
 if (process.env.GITHUB_ACTIONS) {
-  const reporter = pathlib.resolve(import.meta.dirname, './lib/vitest-reporter/build/coverage-reporter.cjs');
+  const reporter = pathlib.resolve(import.meta.dirname, './lib/vitest-reporter/build/coverage-reporter.js');
   coverageReporters.push(reporter);
   testReporters.push(new GithubActionsSummaryReporter());
 } else {
