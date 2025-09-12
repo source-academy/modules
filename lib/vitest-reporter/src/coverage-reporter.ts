@@ -6,7 +6,7 @@
  */
 import fs from 'fs';
 import type { CoverageSummary } from 'istanbul-lib-coverage';
-import * as report from 'istanbul-lib-report';
+import report from 'istanbul-lib-report';
 
 /**
  * Determines if the coverage summary has full coverage
