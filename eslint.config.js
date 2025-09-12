@@ -455,6 +455,7 @@ export default tseslint.config(
     files: [
       'lib/buildtools/**/*.ts',
       'lib/repotools/**/*.ts',
+      'lib/vitest-reporter/**/*.ts',
       '.github/actions/**/*.ts',
       '**/vitest.config.js'
     ],

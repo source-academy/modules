@@ -35,6 +35,10 @@ function* formatTestSuite(suite: TestSuite): Generator<string> {
   yield '</ul>\n';
 }
 
+function getIcon(passed: boolean) {
+  return passed ? '✅' : '❌';
+}
+
 function formatRow(...items: string[]) {
   const tds = items.map(item => `<td>${item}</td>`);
   return `<tr>${tds.join('')}</tr>\n`;
@@ -86,7 +90,7 @@ export default class GithubActionsSummaryReporter implements Reporter {
       const [passCount, failCount] = getTestCount(testModule);
       const testCount = passCount + failCount;
 
-      this.writeStream.write(`<h3>${passed ? '✅' : '❌'} <code>${relpath}</code> (${testCount} test${testCount === 1 ? '' : 's'})</h3>\n`);
+      this.writeStream.write(`<h3>${getIcon(passed)} <code>${relpath}</code> (${testCount} test${testCount === 1 ? '' : 's'})</h3>\n`);
 
       this.writeStream.write('<ul>');
       for (const child of testModule.children) {

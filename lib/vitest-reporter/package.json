@@ -19,7 +19,8 @@
   },
   "scripts": {
     "build": "yarn build:coverage-reporter && yarn build:test-reporter",
-    "build:coverage-reporter": "esbuild --outfile=./build/coverage-reporter.cjs --format=cjs --bundle=true --minify --external:\"istanbul-lib-report\" --platform=node src/coverage-reporter.cts",
-    "build:test-reporter": "esbuild --outfile=./build/test-reporter.js --format=esm --bundle=true  --minify --external:\"vitest*\" --platform=node src/test-reporter.ts"
+    "build:coverage-reporter": "esbuild --outfile=./build/coverage-reporter.cjs --format=cjs --bundle=true --minify --external:\"istanbul-lib-report\" --platform=node src/coverage-reporter.ts",
+    "build:test-reporter": "esbuild --outfile=./build/test-reporter.js --format=esm --bundle=true  --minify --external:\"vitest*\" --platform=node src/test-reporter.ts",
+    "test": "vitest"
   }
 }

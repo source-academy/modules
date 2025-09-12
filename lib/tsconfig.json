@@ -1,6 +1,7 @@
 // Lib tsconfig.json
 {
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",

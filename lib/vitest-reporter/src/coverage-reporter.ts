@@ -1,15 +1,12 @@
 /**
- * For whatever reason, this reporter doesn't really work if its written in ESM,
- * so its written in and compiled to CJS
+ * For whatever reason, this reporter doesn't really work if its compiled to ESM
+ * so its compiled to CJS
  *
  * Heavily based on the default text reporter
  */
-import type fslib from 'fs';
+import fs from 'fs';
 import type { CoverageSummary } from 'istanbul-lib-coverage';
-import type * as report from 'istanbul-lib-report';
-
-const fs: typeof fslib = require('fs');
-const { ReportBase }: typeof report = require('istanbul-lib-report');
+import * as report from 'istanbul-lib-report';
 
 /**
  * Determines if the coverage summary has full coverage
@@ -62,30 +59,30 @@ function getUncoveredLines(node: report.ReportNode) {
     }
 
     return acum;
-  }, [])
+  }, []);
 
-  return ranges
+  return ranges;
 }
 
-const headers = ['Statements', 'Branches', 'Functions', 'Lines']
+const headers = ['Statements', 'Branches', 'Functions', 'Lines'];
 
 interface ResultObject {
-  branches: number
-  functions: number
-  lines: number
-  statements: number
-  uncoveredLines: ([number] | [number, number])[]
+  branches: number;
+  functions: number;
+  lines: number;
+  statements: number;
+  uncoveredLines: ([number] | [number, number])[];
 }
 
 /**
  * A Vitest coverage reporter that writes to the Github Actions summary
  */
-module.exports = class GithubActionsCoverageReporter extends ReportBase {
+export default class GithubActionsCoverageReporter extends report.ReportBase {
   private readonly skipEmpty: boolean;
   private readonly skipFull: boolean;
   private readonly results: Record<string, ResultObject> = {};
-  private cw: fslib.WriteStream | null = null;
-  private watermarks: report.Watermarks | null = null;
+  private cw: fs.WriteStream | null = null;
+  private watermarks: Partial<report.Watermarks> | null = null;
 
   constructor(opts: any) {
     super(opts);
@@ -94,16 +91,16 @@ module.exports = class GithubActionsCoverageReporter extends ReportBase {
     this.skipFull = Boolean(opts.skipFull);
   }
 
-  onStart(_node: any, context: report.Context) {
+  onStart(_node: any, context: report.ContextOptions) {
     if (!process.env.GITHUB_STEP_SUMMARY) {
-      console.log('Reporter not being executed in Github Actions environment')
+      console.log('Reporter not being executed in Github Actions environment');
       return;
     }
 
-    this.cw = fs.createWriteStream(process.env.GITHUB_STEP_SUMMARY, { encoding: 'utf-8', flags: 'a' })
+    this.cw = fs.createWriteStream(process.env.GITHUB_STEP_SUMMARY, { encoding: 'utf-8', flags: 'a' });
 
     this.watermarks = context.watermarks;
-    this.cw.write('<h2>Test Coverage</h2>')
+    this.cw.write('<h2>Test Coverage</h2>');
     this.cw.write('<table><thead><tr>');
     for (const heading of ['File', ...headers, 'Uncovered Lines']) {
       this.cw.write(`<th>${heading}</th>`);
@@ -129,7 +126,7 @@ module.exports = class GithubActionsCoverageReporter extends ReportBase {
       functions: isEmpty ? 0 : rawMetrics.functions.pct,
       lines: isEmpty ? 0 : rawMetrics.lines.pct,
       uncoveredLines: getUncoveredLines(node),
-    }
+    };
   }
 
   onDetail(node: report.ReportNode) {
@@ -137,18 +134,18 @@ module.exports = class GithubActionsCoverageReporter extends ReportBase {
   }
 
   private formatter(pct: number, watermark: keyof report.Watermarks) {
-    if (!this.watermarks) return `<td>${pct}%</td>`
+    if (!this.watermarks || this.watermarks[watermark] === undefined) return `<td>${pct}%</td>`;
     const [low, high] = this.watermarks[watermark];
 
     if (pct < low) {
-      return `<td><p style="color:red">${pct}%</p></td>`
+      return `<td><p style="color:red">${pct}%</p></td>`;
     }
 
     if (pct > high) {
-      return `<td><p style="color:green">${pct}%</p></td>`
+      return `<td><p style="color:green">${pct}%</p></td>`;
     }
 
-    return `<td><p style="color:yellow">${pct}%</p></td>`
+    return `<td><p style="color:yellow">${pct}%</p></td>`;
   }
 
   onEnd() {
@@ -168,9 +165,9 @@ module.exports = class GithubActionsCoverageReporter extends ReportBase {
         this.cw.write('<td><details><summary>Expand</summary><ul>');
         for (const range of metrics.uncoveredLines) {
           if (range.length === 1) {
-            this.cw.write(`<li>${range[0]}</li>`)
+            this.cw.write(`<li>${range[0]}</li>`);
           } else {
-            this.cw.write(`<li>${range[0]}-${range[1]}</li>`)
+            this.cw.write(`<li>${range[0]}-${range[1]}</li>`);
           }
         }
         this.cw.write('</ul></details></td>');
