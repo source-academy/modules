@@ -249,6 +249,15 @@ export default tseslint.config(
       'jsdoc/require-asterisk-prefix': 'warn',
 
       'no-empty': ['error', { allowEmptyCatch: true }],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [{
+            name: 'commander',
+            message: 'Import from @commander-js/extra-typings instead'
+          }]
+        }
+      ],
       'prefer-const': ['warn', { destructuring: 'all' }],
 
       '@sourceacademy/default-import-name': ['warn', { path: 'pathlib' }],
