@@ -1,13 +1,33 @@
 import pathlib from 'path';
-import { Command } from '@commander-js/extra-typings';
+import { Command, InvalidArgumentError, Option } from '@commander-js/extra-typings';
 import { outDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import { resolveEitherBundleOrTab } from '@sourceacademy/modules-repotools/manifest';
 import { divideAndRound } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
+import type { ESLint } from 'eslint';
 import { runPrebuild } from '../prebuild/index.js';
 import { formatLintResult, lintGlobal, runEslint } from '../prebuild/lint.js';
 import { formatTscResult, runTsc } from '../prebuild/tsc.js';
 import { logCommandErrorAndExit } from './commandUtils.js';
+
+export const concurrencyOption = new Option('--concurrency <value>')
+  .argParser((value): Exclude<ESLint.Options['concurrency'], undefined> => {
+    switch (value) {
+      case 'auto':
+      case 'off':
+        return value;
+      default: {
+        const count = parseInt(value);
+
+        if (Number.isNaN(count)) {
+          throw new InvalidArgumentError(`Expected auto, off or a number, got ${value}`);
+        }
+
+        return count;
+      }
+    }
+  })
+  .default('auto');
 
 /*
  * The lint command is provided as part of buildtools so that each bundle and tab doesn't
@@ -20,7 +40,8 @@ export const getLintCommand = () => new Command('lint')
   .option('--fix', 'Output linting fixes', false)
   .option('--stats', 'Output linting stats', false)
   .option('--ci', process.env.CI)
-  .action(async (directory, { fix, ci, stats }) => {
+  .addOption(concurrencyOption)
+  .action(async (directory, { ci, ...opts }) => {
     const fullyResolved = pathlib.resolve(directory);
     const resolveResult = await resolveEitherBundleOrTab(fullyResolved);
 
@@ -32,7 +53,7 @@ export const getLintCommand = () => new Command('lint')
       logCommandErrorAndExit(resolveResult);
     }
 
-    const result = await runEslint(resolveResult.asset, fix, stats);
+    const result = await runEslint(resolveResult.asset, opts);
     console.log(formatLintResult(result));
 
     switch (result.severity) {
@@ -50,10 +71,16 @@ export const getLintGlobalCommand = () => new Command('lintglobal')
   .option('--fix', 'Output linting fixes', false)
   .option('--stats', 'Output linting stats', false)
   .option('--ci', process.env.CI)
-  .action(async ({ fix, stats, ci }) => {
-    console.log(chalk.cyanBright('Beginning lint global'));
-    const result = await lintGlobal(fix, stats);
+  .addOption(concurrencyOption)
+  .action(async ({ ci, ...opts }) => {
     const prefix = chalk.blueBright('[lintglobal]');
+
+    console.log(`${prefix} ${chalk.cyanBright('Beginning linting with the following options:')}`);
+    Object.entries(opts).forEach(([key, value], i) => {
+      console.log(`  ${i+1}. ${chalk.greenBright(key)}: ${chalk.cyanBright(value)}`);
+    });
+
+    const result = await lintGlobal(opts);
     const logs = [
       `${prefix} Took ${divideAndRound(result.filesElapsed, 1000)}s to find files`,
       `${prefix} Took ${divideAndRound(result.lintElapsed, 1000)}s to lint files`,
@@ -65,7 +92,7 @@ export const getLintGlobalCommand = () => new Command('lintglobal')
 
     console.log(logs.join('\n'));
 
-    if (stats) {
+    if (opts.stats) {
       const statPath = pathlib.join(outDir, 'lintstats.csv');
       console.log(chalk.greenBright(`Stats written to ${statPath}`));
     }

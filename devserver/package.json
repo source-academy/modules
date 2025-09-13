@@ -30,7 +30,7 @@
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "@vitest/browser": "^3.2.3",
-    "eslint": "^9.31.0",
+    "eslint": "^9.35.0",
     "playwright": "^1.54.1",
     "sass": "^1.85.0",
     "typescript": "^5.8.2",

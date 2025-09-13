@@ -140,6 +140,7 @@ describe('Test silent option', () => {
       const command = new Command()
         .exitOverride()
         .addOption(silentOption)
+        .configureOutput({ writeErr: () => {} })
         .action(option => {
           resolve(option.silent);
         });

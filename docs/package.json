@@ -21,7 +21,6 @@
     "vitepress-sidebar": "^1.31.1"
   },
   "devDependencies": {
-    "@sourceacademy/markdown-plugin-directory-tree": "workspace:^",
-    "eslint": "^9.31.0"
+    "@sourceacademy/markdown-plugin-directory-tree": "workspace:^"
   }
 }

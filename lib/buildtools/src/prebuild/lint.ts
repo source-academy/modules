@@ -6,6 +6,12 @@ import { findSeverity, flatMapAsync, isNodeError } from '@sourceacademy/modules-
 import chalk from 'chalk';
 import { ESLint } from 'eslint';
 
+export interface LintOptions {
+  concurrency: Exclude<ESLint.Options['concurrency'], undefined>;
+  fix: boolean;
+  stats: boolean;
+}
+
 export interface LintResult {
   formatted: string;
   severity: Severity;
@@ -35,11 +41,12 @@ async function timePromise<T>(f: () => Promise<T>) {
 }
 
 // #region runEslint
-export async function runEslint(input: InputAsset, fix: boolean, stats: boolean): Promise<LintResult> {
+export async function runEslint(input: InputAsset, { fix, stats, concurrency }: LintOptions): Promise<LintResult> {
   const linter = new ESLint({
     fix,
     stats,
-    cwd: gitRoot
+    concurrency,
+    cwd: gitRoot,
   });
 
   try {
@@ -104,8 +111,8 @@ interface LintGlobalResults {
  * all together causes ESLint to run out of memory, we have this function that lints everything else
  * so that the bundles and tabs can be linted separately.
  */
-export async function lintGlobal(fix: boolean, stats: boolean): Promise<LintGlobalResults> {
-  const linter = new ESLint({ fix, stats, cwd: gitRoot });
+export async function lintGlobal(opts: LintOptions): Promise<LintGlobalResults> {
+  const linter = new ESLint({ cwd: gitRoot, ...opts });
 
   /**
    * Recursively determine what files to to lint. Just supplying folder paths
@@ -147,21 +154,21 @@ export async function lintGlobal(fix: boolean, stats: boolean): Promise<LintGlob
   const { result: lintResults, elapsed: lintElapsed } = await timePromise(() => flatMapAsync(toLint, each => linter.lintFiles(each)));
 
   let fixElapsed: number | undefined = undefined;
-  if (fix) {
+  if (opts.fix) {
     ;({ elapsed: fixElapsed } = await timePromise(() => ESLint.outputFixes(lintResults)));
   }
 
   const formatter = await linter.loadFormatter('stylish');
   const formatted = await formatter.format(lintResults);
 
-  if (stats) {
+  if (opts.stats) {
     const csvFormatter = await linter.loadFormatter(pathlib.join(import.meta.dirname, '../../lintplugin/dist/formatter.js'));
     const csvFormatted = await csvFormatter.format(lintResults);
     await fs.mkdir(outDir, { recursive: true });
     await fs.writeFile(pathlib.join(outDir, 'lintstats.csv'), csvFormatted);
   }
 
-  const severity = findSeverity(lintResults, each => severityFinder(each, fix));
+  const severity = findSeverity(lintResults, each => severityFinder(each, opts.fix));
 
   return {
     formatted,

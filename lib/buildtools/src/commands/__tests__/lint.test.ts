@@ -1,7 +1,8 @@
+import { Command } from '@commander-js/extra-typings';
 import * as manifest from '@sourceacademy/modules-repotools/manifest';
 import { ESLint } from 'eslint';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { getLintCommand } from '../prebuild.js';
+import { concurrencyOption, getLintCommand } from '../prebuild.js';
 import { getCommandRunner } from './testingUtils.js';
 
 const lintFilesMock = vi.hoisted(() => vi.fn());
@@ -152,5 +153,36 @@ describe('Test Lint command directory resolution', () => {
 
     await expect(runCommand()).commandExit();
     expect(lintFilesMock).not.toHaveBeenCalled();
+  });
+});
+
+describe('Test concurrency option', () => {
+  const runOption = (...args: string[]) => new Promise<ESLint.Options['concurrency']>((resolve, reject) => {
+    new Command()
+      .addOption(concurrencyOption)
+      .exitOverride(reject)
+      .configureOutput({
+        writeErr: () => {}
+      })
+      .action(({ concurrency }) => resolve(concurrency))
+      .parse(args, { from: 'user' });
+  });
+
+  test('number for option uses that number', () => {
+    return expect(runOption('--concurrency', '3')).resolves.toEqual(3);
+  });
+
+  test('off returns \'off\'', () => {
+    return expect(runOption('--concurrency', 'off')).resolves.toEqual('off');
+  });
+
+  test('auto returns \'auto\'', () => {
+    return expect(runOption('--concurrency', 'auto')).resolves.toEqual('auto');
+  });
+
+  test('unknown option throws error', () => {
+    return expect(runOption('--concurrency', 'unknown'))
+      .rejects
+      .toThrowError('Expected auto, off or a number, got unknown');
   });
 });
