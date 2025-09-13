@@ -226,7 +226,8 @@ export default tseslint.config(
     rules: {
       'import/first': 'warn',
       'import/newline-after-import': 'warn',
-      'import/no-cycle': 'error',
+      // This rule is very time intensive.
+      // 'import/no-cycle': 'error',
       'import/no-duplicates': ['warn', { 'prefer-inline': false }],
       'import/no-useless-path-segments': 'error',
       'import/order': [

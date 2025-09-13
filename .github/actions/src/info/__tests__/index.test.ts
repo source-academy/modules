@@ -7,6 +7,15 @@ import { getAllPackages, getRawPackages } from '../index.js';
 
 const mockedCheckChanges = vi.spyOn(git, 'checkForChanges');
 
+vi.mock(import('path'), async importOriginal => {
+  const { posix } = await importOriginal();
+
+  return {
+    default: posix,
+    posix,
+  };
+});
+
 class NodeError extends Error {
   constructor(public readonly code: string) {
     super();

@@ -1,10 +1,10 @@
 import fs from 'fs';
 import { describe, expect, it as baseIt, vi } from 'vitest';
-import reporter from '../coverage-reporter.cjs'
+import reporter from '../coverage-reporter.cjs';
 
 // I really don't know why importing from a CJS module doesn't work here
 // so that's why this line is here
-const CoverageReporter = reporter as any
+const CoverageReporter = reporter as any;
 
 vi.spyOn(fs, 'createWriteStream').mockReturnValue({
   write: () => true,
@@ -34,7 +34,7 @@ describe(CoverageReporter, () => {
   });
 
   it.skipIf(!!process.env.GITHUB_STEP_SUMMARY)('doesn\'t open the summary file if GITHUB_STEP_SUMMARY isn\'t defined', ({ reporter }) => {
-      reporter.onStart({} as any, { watermarks: {} } as any);
-      expect(fs.createWriteStream).not.toHaveBeenCalled();
+    reporter.onStart({} as any, { watermarks: {} } as any);
+    expect(fs.createWriteStream).not.toHaveBeenCalled();
   });
 });
