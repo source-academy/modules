@@ -10,6 +10,7 @@
   "devDependencies": {
     "@types/istanbul-lib-report": "^3.0.3",
     "@types/node": "^22.15.30",
+    "@vitest/coverage-v8": "^3.2.3",
     "esbuild": "^0.25.8",
     "typescript": "^5.8.2"
   },
@@ -19,7 +20,7 @@
   },
   "scripts": {
     "build": "yarn build:coverage-reporter && yarn build:test-reporter",
-    "build:coverage-reporter": "esbuild --outfile=./build/coverage-reporter.cjs --format=cjs --bundle=true --minify=false --external:\"istanbul-lib-report\" --platform=node src/coverage-reporter.cts",
+    "build:coverage-reporter": "esbuild --outfile=./build/coverage-reporter.cjs --format=cjs --bundle=true --minify --external:\"istanbul-lib-report\" --platform=node src/coverage-reporter.cts",
     "build:test-reporter": "esbuild --outfile=./build/test-reporter.js --format=esm --bundle=true  --minify --external:\"vitest*\" --platform=node src/test-reporter.ts",
     "test": "vitest"
   }

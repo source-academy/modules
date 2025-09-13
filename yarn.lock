@@ -4112,6 +4112,7 @@ __metadata:
   dependencies:
     "@types/istanbul-lib-report": "npm:^3.0.3"
     "@types/node": "npm:^22.15.30"
+    "@vitest/coverage-v8": "npm:^3.2.3"
     esbuild: "npm:^0.25.8"
     istanbul-lib-report: "npm:^3.0.1"
     typescript: "npm:^5.8.2"

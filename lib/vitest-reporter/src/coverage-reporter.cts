@@ -5,6 +5,8 @@
  * Heavily based on the default text reporter
  */
 
+// This is some weird typescript only syntax that allows us to continue to have
+// the type information even though we're using CJS imports
 import fs = require('fs')
 import report = require('istanbul-lib-report');
 import type { CoverageSummary } from 'istanbul-lib-coverage';
