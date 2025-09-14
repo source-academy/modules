@@ -40,8 +40,17 @@ async function timePromise<T>(f: () => Promise<T>) {
   };
 }
 
+const defaultLintOptions: LintOptions = {
+  fix: false,
+  stats: false,
+  concurrency: 'auto'
+}
+
 // #region runEslint
-export async function runEslint(input: InputAsset, { fix, stats, concurrency }: LintOptions): Promise<LintResult> {
+export async function runEslint(
+  input: InputAsset,
+  { fix, stats, concurrency }: LintOptions = defaultLintOptions
+): Promise<LintResult> {
   const linter = new ESLint({
     fix,
     stats,

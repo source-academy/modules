@@ -31,7 +31,7 @@ export async function runBuilderWithPrebuild<T extends InputAsset, U extends any
 ): Promise<RunPrebuildResult<V>> {
   const promises: [Promise<TscResult | undefined>, Promise<LintResult | undefined>] = [
     !tsc ? Promise.resolve(undefined) : runTsc(asset, false),
-    !lint ? Promise.resolve(undefined) : runEslint(asset, false, false),
+    !lint ? Promise.resolve(undefined) : runEslint(asset),
   ];
 
   const [tscResult, lintResult] = await Promise.all(promises);
@@ -64,7 +64,7 @@ export async function runBuilderWithPrebuild<T extends InputAsset, U extends any
 export async function runPrebuild(asset: InputAsset) {
   const [tscResult, lintResult] = await Promise.all([
     runTsc(asset, false),
-    runEslint(asset, false, false)
+    runEslint(asset)
   ]);
 
   return {

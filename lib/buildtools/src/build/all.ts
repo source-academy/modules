@@ -40,7 +40,7 @@ export type BuildAllResult = BuildAllPrebuildError | BuildAllBundleResult | Buil
 export async function buildAll(input: InputAsset, prebuild: PrebuildOptions, outDir: string, logLevel: LogLevel): Promise<BuildAllResult> {
   const [tscResult, lintResult] = await Promise.all([
     prebuild.tsc ? runTsc(input, true) : Promise.resolve(undefined),
-    prebuild.lint ? runEslint(input, false, false) : Promise.resolve(undefined)
+    prebuild.lint ? runEslint(input) : Promise.resolve(undefined)
   ]);
 
   if (tscResult?.severity === 'error' || lintResult?.severity === 'error') {
