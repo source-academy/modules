@@ -255,11 +255,8 @@ jobs:
       - name: Check constraints
         run: yarn constraints
 
-      - name: Lint Global
-        run: yarn buildtools lintglobal
-
-      - name: Lint Bundles and Tabs
-        run: yarn workspaces foreach -j 5 -pW --from "./src/{bundles,tabs}/*" run lint
+      - name: Lint Everything
+        run: yarn lint:all
 
       - name: Build Manifest
         run: yarn buildtools manifest
