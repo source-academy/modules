@@ -9,8 +9,8 @@ function getIcon(passed: boolean) {
 function* formatTestCase(testCase: TestCase) {
   const passed = testCase.ok();
   const diagnostics = testCase.diagnostic();
-  const durationStr = !Number.isNaN(diagnostics?.duration)
-    ? ` <code>${diagnostics!.duration.toFixed(0)}ms</code>`
+  const durationStr = diagnostics && testCase.result().state !== 'skipped'
+    ? ` <code>${diagnostics.duration.toFixed(0)}ms</code>`
     : '';
 
   yield `${getIcon(passed)} ${testCase.name}${durationStr}`;
@@ -26,7 +26,7 @@ function* formatTestSuite(suite: TestSuite): Generator<string> {
   const suiteName = suite.name;
   const passed = suite.ok();
 
-  yield `${passed ? '✅' : '❌'} ${suiteName}<ul>`;
+  yield `${getIcon(passed)} ${suiteName}<ul>`;
 
   for (const child of suite.children) {
     if (child.type === 'suite') {
