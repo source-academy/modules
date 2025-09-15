@@ -2,14 +2,18 @@ import fs from 'fs';
 import pathlib from 'path';
 import type { Reporter, RunnerTestFile, TestCase, TestModule, TestSuite } from 'vitest/node';
 
+function getIcon(passed: boolean) {
+  return passed ? '✅' : '❌';
+}
+
 function* formatTestCase(testCase: TestCase) {
   const passed = testCase.ok();
   const diagnostics = testCase.diagnostic();
-  const durationStr = typeof diagnostics?.duration === 'number'
-    ? ` <code>${diagnostics.duration.toFixed(0)}ms</code>`
+  const durationStr = !Number.isNaN(diagnostics?.duration)
+    ? ` <code>${diagnostics!.duration.toFixed(0)}ms</code>`
     : '';
 
-  yield `${passed ? '✅' : '❌'} ${testCase.name}${durationStr}`;
+  yield `${getIcon(passed)} ${testCase.name}${durationStr}`;
 
   if (diagnostics?.slow) {
     yield ' ⚠️';
@@ -35,10 +39,6 @@ function* formatTestSuite(suite: TestSuite): Generator<string> {
   }
 
   yield '</ul>\n';
-}
-
-function getIcon(passed: boolean) {
-  return passed ? '✅' : '❌';
 }
 
 function formatRow(...items: string[]) {
