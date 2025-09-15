@@ -31,7 +31,7 @@ vi.mock(import('@actions/artifact'), async importOriginal => {
   };
 });
 
-vi.spyOn(exec, 'exec').mockResolvedValue(0);
+const mockedExec = vi.spyOn(exec, 'exec').mockResolvedValue(0);
 
 test('tab resolution errors cause setFailed to be called', async () => {
   mockedResolveAllTabs.mockResolvedValueOnce({
@@ -86,4 +86,26 @@ test('tabs that can\'t be found are built', async () => {
 
   expect(execCall1).toContain('@sourceacademy/tab-Tab1');
   expect(execCall1).not.toContain('@sourceacademy/tab-Tab0');
+});
+
+test('install failure means build doesn\'t happen', async () => {
+  mockedResolveAllTabs.mockResolvedValueOnce({
+    severity: 'success',
+    tabs: {
+      Tab0: {
+        type: 'tab',
+        directory: 'tab0',
+        name: 'Tab0',
+        entryPoint: 'tab0/index.tsx',
+      },
+    }
+  });
+
+  mockedGetArtifact.mockRejectedValueOnce(new Error());
+
+  mockedExec.mockResolvedValueOnce(1);
+  await main();
+
+  expect(exec.exec).toHaveBeenCalledOnce();
+  expect(core.setFailed).toHaveBeenCalledExactlyOnceWith('yarn workspace focus failed for Tab0');
 });

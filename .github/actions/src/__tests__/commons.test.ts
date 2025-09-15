@@ -68,7 +68,7 @@ describe(commons.isPackageRecord, () => {
       tabName: ''
     })).toEqual(true);
   });
-  
+
   test('non-string tabName property is not ok', () => {
     expect(commons.isPackageRecord({
       directory: '',
