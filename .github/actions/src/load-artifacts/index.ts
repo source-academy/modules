@@ -5,7 +5,7 @@ import { exec } from '@actions/exec';
 import { bundlesDir, outDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import { resolveAllTabs } from '@sourceacademy/modules-repotools/manifest';
 
-async function main() {
+export async function main() {
   const artifact = new DefaultArtifactClient();
   const tabsResult = await resolveAllTabs(bundlesDir, tabsDir);
 

@@ -51,8 +51,11 @@ export function isPackageRecord(obj: unknown): obj is PackageRecord {
   if (!('changes' in obj) || typeof obj.changes !== 'boolean') return false;
   if (!('needsPlaywright' in obj) || typeof obj.needsPlaywright !== 'boolean') return false;
 
-  if ('bundleName' in obj && typeof obj.bundleName !== 'string') return false;
-  if ('tabName' in obj && typeof obj.tabName !== 'string') return false;
+  if ('bundleName' in obj) {
+    if ('tabName' in obj || typeof obj.bundleName !== 'string') return false;
+  } else if ('tabName' in obj) {
+    if (typeof obj.tabName !== 'string') return false;
+  }
 
   return true;
 }
