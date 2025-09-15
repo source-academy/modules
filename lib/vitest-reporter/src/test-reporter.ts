@@ -5,7 +5,9 @@ import type { Reporter, RunnerTestFile, TestCase, TestModule, TestSuite } from '
 function* formatTestCase(testCase: TestCase) {
   const passed = testCase.ok();
   const diagnostics = testCase.diagnostic();
-  const durationStr = diagnostics ? ` <code>${diagnostics.duration.toFixed(0)}ms</code>` : '';
+  const durationStr = typeof diagnostics?.duration === 'number'
+    ? ` <code>${diagnostics.duration.toFixed(0)}ms</code>`
+    : '';
 
   yield `${passed ? '✅' : '❌'} ${testCase.name}${durationStr}`;
 
