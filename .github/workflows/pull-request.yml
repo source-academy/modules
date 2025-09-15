@@ -134,8 +134,7 @@ jobs:
         run: |
           cd ${{ matrix.tabInfo.directory }}
           yarn tsc
-          yarn lint
-      
+
   bundles:
     runs-on: ubuntu-latest
     needs: find-packages
@@ -174,12 +173,6 @@ jobs:
         run: |
           cd ${{ matrix.bundleInfo.directory }}
           yarn test --coverage
-
-      - name: Run Linting
-        if: matrix.bundleInfo.changes
-        run: |
-          cd ${{ matrix.bundleInfo.directory }}
-          yarn lint
 
   devserver:
     name: Dev Server Tasks
@@ -264,6 +257,9 @@ jobs:
 
       - name: Lint Global
         run: yarn buildtools lintglobal
+
+      - name: Lint Bundles and Tabs
+        run: yarn workspaces foreach -j 5 -pW --from "./src/{bundles,tabs}/*" run lint
 
       - name: Build Manifest
         run: yarn buildtools manifest
