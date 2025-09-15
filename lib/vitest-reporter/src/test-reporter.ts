@@ -46,21 +46,43 @@ function formatRow(...items: string[]) {
   return `<tr>${tds.join('')}</tr>\n`;
 }
 
-function getTestCount(item: TestModule | TestSuite | TestCase): [passed: number, failed: number] {
+interface TestCount {
+  failed: number;
+  passed: number;
+  skipped: number;
+}
+
+function getTestCount(item: TestModule | TestSuite | TestCase): TestCount {
   if (item.type === 'test') {
-    return item.ok() ? [1, 0] : [0, 1];
+    switch (item.result().state) {
+      case 'failed':
+        return { failed: 1, passed: 0, skipped: 0 };
+      case 'passed':
+        return { failed: 0, passed: 1, skipped: 0 };
+      case 'skipped':
+        return { failed: 0, passed: 0, skipped: 1 };
+      default:
+        throw new Error('Should not get here');
+    }
   }
 
   let passed = 0;
   let failed = 0;
+  let skipped = 0;
 
   for (const child of item.children) {
-    const [passCount, failCount] = getTestCount(child);
+    const {
+      failed: failCount,
+      passed: passCount,
+      skipped: skipCount
+    } = getTestCount(child);
+
     passed += passCount;
     failed += failCount;
+    skipped += skipCount;
   }
 
-  return [passed, failed];
+  return { failed, passed, skipped };
 }
 
 /**
@@ -89,8 +111,12 @@ export default class GithubActionsSummaryReporter implements Reporter {
       // @ts-expect-error idk where else to get the file information from
       const file: RunnerTestFile = testModule.task;
       const relpath = pathlib.relative(testModule.project.config.root, file.filepath);
-      const [passCount, failCount] = getTestCount(testModule);
-      const testCount = passCount + failCount;
+      const {
+        failed: failCount,
+        passed: passCount,
+        skipped: skipCount
+      } = getTestCount(testModule);
+      const testCount = passCount + failCount + skipCount;
 
       this.writeStream.write(`<h3>${getIcon(passed)} <code>${relpath}</code> (${testCount} test${testCount === 1 ? '' : 's'})</h3>\n`);
 
@@ -114,13 +140,19 @@ export default class GithubActionsSummaryReporter implements Reporter {
       this.writeStream.write(`<h4>Summary for <code>${relpath}</code></h4>\n`);
       this.writeStream.write('<table>\n');
 
-      if (failCount > 0) {
-        const testCountStr = `${failCount} Failed | ${passCount} passed (${testCount})`;
-        this.writeStream.write(formatRow('Tests', testCountStr));
-      } else {
-        this.writeStream.write(formatRow('Tests', `${passCount} passed`));
+      function* formatSummary() {
+        if (failCount > 0) {
+          yield `${failCount} Failed`;
+        }
+
+        if (skipCount > 0) {
+          yield `${skipCount} Skipped`;
+        }
+
+        yield `${passCount} Passed`;
       }
 
+      this.writeStream.write(formatRow('Tests', Array.from(formatSummary()).join(' | ')));
       this.writeStream.write(formatRow('Start at', `${hours}:${minutes}:${seconds}`));
       this.writeStream.write(formatRow('Duration', `${totalDuration}ms`));
       this.writeStream.write('</table>');
