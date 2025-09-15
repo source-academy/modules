@@ -39,6 +39,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: coverageReporters,
+      extension: ['.ts', '.cts', '.tsx'],
       exclude: [
         ...coverageConfigDefaults.exclude,
         './build/**',
@@ -50,11 +51,11 @@ export default defineConfig({
         '**/*.config.?(c)[jt]s',
         '**/dist/**',
         '**/dist.?(c)js',
-        './docs',
         '**/src/**/samples/**',
         '**/vitest.setup.[jt]s',
+        pathlib.join(import.meta.dirname, 'docs'),
         pathlib.join(import.meta.dirname, 'lib/buildtools/src/build/docs/drawdown.ts'),
-        pathlib.join(import.meta.dirname, 'lib/vitest-reporter/build')
+        pathlib.join(import.meta.dirname, 'lib/vitest-reporter/build/**')
       ]
     },
     silent: 'passed-only'

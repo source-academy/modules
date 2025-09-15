@@ -1,42 +1,49 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { describe, expect, it, test } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import * as funcs from '../functions';
 import type { Sound } from '../types';
 
 describe(funcs.make_sound, () => {
-  test('Should error gracefully when duration is negative', () => {
+  it('Should error gracefully when duration is negative', () => {
     expect(() => funcs.make_sound(() => 0, -1))
       .toThrow('Sound duration must be greater than or equal to 0');
   });
 
-  test('Should not error when duration is zero', () => {
+  it('Should not error when duration is zero', () => {
     expect(() => funcs.make_sound(() => 0, 0)).not.toThrow();
   });
 });
 
 describe(funcs.play, () => {
-  test('Should error gracefully when duration is negative', () => {
-    const sound = [(t) => 0, -1];
+  it('Should error gracefully when duration is negative', () => {
+    const sound = [() => 0, -1];
     expect(() => funcs.play(sound as any))
       .toThrow('play: duration of sound is negative');
   });
 
-  test('Should not error when duration is zero', () => {
-    const sound = funcs.make_sound((t) => 0, 0);
+  it('Should not error when duration is zero', () => {
+    const sound = funcs.make_sound(() => 0, 0);
     expect(() => funcs.play(sound)).not.toThrow();
+  });
+
+  it('Should throw error when given not a sound', () => {
+    expect(() => funcs.play(0 as any)).toThrow('play is expecting sound, but encountered 0');
   });
 });
 
 describe(funcs.play_in_tab, () => {
-  test('Should error gracefully when duration is negative', () => {
-    const sound = [(t) => 0, -1];
+  it('Should error gracefully when duration is negative', () => {
+    const sound = [() => 0, -1];
     expect(() => funcs.play_in_tab(sound as any))
       .toThrow('play_in_tab: duration of sound is negative');
   });
 
-  test('Should not error when duration is zero', () => {
-    const sound = funcs.make_sound((t) => 0, 0);
+  it('Should not error when duration is zero', () => {
+    const sound = funcs.make_sound(() => 0, 0);
     expect(() => funcs.play_in_tab(sound)).not.toThrow();
+  });
+
+  it('Should throw error when given not a sound', () => {
+    expect(() => funcs.play_in_tab(0 as any)).toThrow('play_in_tab is expecting sound, but encountered 0');
   });
 });
 

@@ -44,7 +44,7 @@ const defaultLintOptions: LintOptions = {
   fix: false,
   stats: false,
   concurrency: 'auto'
-}
+};
 
 // #region runEslint
 export async function runEslint(
