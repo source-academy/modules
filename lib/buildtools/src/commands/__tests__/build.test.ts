@@ -153,7 +153,7 @@ function testBuildCommand<T extends Record<string, any>>(
           assertDirectories(true);
         });
 
-        test('Bundle command with linting errors', async () => {
+        test('Command execution with linting errors', async () => {
           mockedRunEslint.mockResolvedValueOnce({
             severity: 'error',
             formatted: '',
@@ -165,7 +165,7 @@ function testBuildCommand<T extends Record<string, any>>(
           assertDirectories(false);
         });
 
-        test.skipIf(!!process.env.CI)('Bundle command with linting warnings', async () => {
+        test.skipIf(!!process.env.CI)('Command execution with linting warnings', async () => {
           mockedRunEslint.mockResolvedValueOnce({
             severity: 'warn',
             formatted: '',
@@ -177,7 +177,7 @@ function testBuildCommand<T extends Record<string, any>>(
           assertDirectories(true);
         });
 
-        test('Bundle command with linting warnings in CI mode', async () => {
+        test('Command execution with linting warnings in CI mode', async () => {
           vi.stubEnv('CI', 'yeet');
           try {
             mockedRunEslint.mockResolvedValueOnce({
