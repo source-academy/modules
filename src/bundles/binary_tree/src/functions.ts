@@ -1,5 +1,5 @@
 import { head, is_list, is_pair, list, tail } from 'js-slang/dist/stdlib/list';
-import type { BinaryTree, EmptyBinaryTree } from './types';
+import type { BinaryTree, EmptyBinaryTree, NonEmptyBinaryTree } from './types';
 
 /**
  * Returns an empty binary tree, represented by the empty list null
@@ -69,7 +69,7 @@ export function is_empty_tree(value: BinaryTree): value is EmptyBinaryTree {
   return value === null;
 }
 
-function throwIfNotTree(value: unknown, func_name: string): asserts value is Exclude<BinaryTree, EmptyBinaryTree> {
+function throwIfNotNonEmptyTree(value: unknown, func_name: string): asserts value is NonEmptyBinaryTree {
   if (!is_tree(value)) {
     throw new Error(`${func_name} expects binary tree, received: ${value}`);
   }
@@ -90,7 +90,7 @@ function throwIfNotTree(value: unknown, func_name: string): asserts value is Exc
  * @returns Value
  */
 export function entry(t: BinaryTree): any {
-  throwIfNotTree(t, entry.name);
+  throwIfNotNonEmptyTree(t, entry.name);
   return t[0];
 }
 
@@ -105,7 +105,7 @@ export function entry(t: BinaryTree): any {
  * @returns BinaryTree
  */
 export function left_branch(t: BinaryTree): BinaryTree {
-  throwIfNotTree(t, left_branch.name);
+  throwIfNotNonEmptyTree(t, left_branch.name);
   return head(tail(t));
 }
 
@@ -120,6 +120,6 @@ export function left_branch(t: BinaryTree): BinaryTree {
  * @returns BinaryTree
  */
 export function right_branch(t: BinaryTree): BinaryTree {
-  throwIfNotTree(t, right_branch.name);
+  throwIfNotNonEmptyTree(t, right_branch.name);
   return head(tail(tail(t)));
 }

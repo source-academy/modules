@@ -7,4 +7,6 @@ export type EmptyBinaryTree = null;
 /**
  * A binary tree, represented by a list of length 3.
  */
-export type BinaryTree = [any, [BinaryTree, [BinaryTree, null]]] | EmptyBinaryTree;
+export type NonEmptyBinaryTree = [any, [BinaryTree, [BinaryTree, null]]];
+
+export type BinaryTree = NonEmptyBinaryTree | EmptyBinaryTree;
