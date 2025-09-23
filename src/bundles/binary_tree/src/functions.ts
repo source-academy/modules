@@ -1,4 +1,5 @@
-import type { BinaryTree } from './types';
+import { head, is_list, is_pair, list, tail } from 'js-slang/dist/stdlib/list';
+import type { BinaryTree, EmptyBinaryTree } from './types';
 
 /**
  * Returns an empty binary tree, represented by the empty list null
@@ -8,7 +9,6 @@ import type { BinaryTree } from './types';
  * ```
  * @return An empty binary tree
  */
-
 export function make_empty_tree(): BinaryTree {
   return null;
 }
@@ -25,12 +25,8 @@ export function make_empty_tree(): BinaryTree {
  * @param right Right subtree of the node
  * @returns A binary tree
  */
-export function make_tree(
-  value: any,
-  left: BinaryTree,
-  right: BinaryTree
-): BinaryTree {
-  return [value, [left, [right, null]]];
+export function make_tree(value: any, left: BinaryTree, right: BinaryTree): BinaryTree {
+  return list(value, left, right);
 }
 
 /**
@@ -44,16 +40,18 @@ export function make_tree(
  * @param v Value to be tested
  * @returns bool
  */
-export function is_tree(value: any): boolean {
-  return value === null
-         || (Array.isArray(value)
-    && value.length === 2
-    && Array.isArray(value[1])
-      && value[1].length === 2
-    && is_tree(value[1][0])
-    && value[1][1].length === 2
-    && is_tree(value[1][1][0])
-    && value[1][1][1] === null);
+export function is_tree(value: any): value is BinaryTree {
+  if (!is_list(value)) return false;
+
+  if (is_empty_tree(value)) return true;
+
+  const left = tail(value);
+  if (!is_list(left) || !is_tree(head(left))) return false;
+
+  const right = tail(left);
+  if (!is_pair(right) || !is_tree(head(right))) return false;
+
+  return tail(right) === null;
 }
 
 /**
@@ -67,8 +65,18 @@ export function is_tree(value: any): boolean {
  * @param v Value to be tested
  * @returns bool
  */
-export function is_empty_tree(value: any): boolean {
+export function is_empty_tree(value: BinaryTree): value is EmptyBinaryTree {
   return value === null;
+}
+
+function throwIfNotTree(value: unknown, func_name: string): asserts value is Exclude<BinaryTree, EmptyBinaryTree> {
+  if (!is_tree(value)) {
+    throw new Error(`${func_name} expects binary tree, received: ${value}`);
+  }
+
+  if (is_empty_tree(value)) {
+    throw new Error(`${func_name} received an empty binary tree!`);
+  }
 }
 
 /**
@@ -81,11 +89,9 @@ export function is_empty_tree(value: any): boolean {
  * @param t BinaryTree to be accessed
  * @returns Value
  */
-export function entry(t: BinaryTree): boolean {
-  if (Array.isArray(t) && t.length === 2) {
-    return t[0];
-  }
-  throw new Error(`function entry expects binary tree, received: ${t}`);
+export function entry(t: BinaryTree): any {
+  throwIfNotTree(t, entry.name);
+  return t[0];
 }
 
 /**
@@ -99,11 +105,8 @@ export function entry(t: BinaryTree): boolean {
  * @returns BinaryTree
  */
 export function left_branch(t: BinaryTree): BinaryTree {
-  if (Array.isArray(t) && t.length === 2
-      && Array.isArray(t[1]) && t[1].length === 2) {
-    return t[1][0];
-  }
-  throw new Error(`function left_branch expects binary tree, received: ${t}`);
+  throwIfNotTree(t, left_branch.name);
+  return head(tail(t));
 }
 
 /**
@@ -117,10 +120,6 @@ export function left_branch(t: BinaryTree): BinaryTree {
  * @returns BinaryTree
  */
 export function right_branch(t: BinaryTree): BinaryTree {
-  if (Array.isArray(t) && t.length === 2
-      && Array.isArray(t[1]) && t[1].length === 2
-      && Array.isArray(t[1][1]) && t[1][1].length === 2) {
-    return t[1][1][0];
-  }
-  throw new Error(`function right_branch expects binary tree, received: ${t}`);
+  throwIfNotTree(t, right_branch.name);
+  return head(tail(tail(t)));
 }

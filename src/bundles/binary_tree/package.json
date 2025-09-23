@@ -2,6 +2,9 @@
   "name": "@sourceacademy/bundle-binary_tree",
   "version": "1.0.0",
   "private": true,
+  "dependencies": {
+    "js-slang": "^1.0.81"
+  },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
     "typescript": "^5.8.2"

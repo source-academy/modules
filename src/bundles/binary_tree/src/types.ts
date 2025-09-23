@@ -1,1 +1,10 @@
-export type BinaryTree = (BinaryTree | any)[] | null;
+
+/**
+ * An empty binary tree, represented by the empty list `null`
+ */
+export type EmptyBinaryTree = null;
+
+/**
+ * A binary tree, represented by a list of length 3.
+ */
+export type BinaryTree = [any, [BinaryTree, [BinaryTree, null]]] | EmptyBinaryTree;
