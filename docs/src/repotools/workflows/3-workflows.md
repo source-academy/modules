@@ -17,5 +17,3 @@ These Git Hooks are powered by [`husky`](https://github.com/typicode/husky).
 ## Deployment to Github Pages
 
 Upon any successful merge into `master`, this action runs to deploy the modules site onto Github pages to automatically serve the default modules and their documentation.
-
-Its configuration is shown below:

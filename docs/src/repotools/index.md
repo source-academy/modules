@@ -9,4 +9,7 @@ Below is a list of other tools:
 - [ESLint](./linting)
 - [Github Workflows](./workflows/index)
 - [VSCode](./vscode)
+- [Vitest Reporters](./reporters)
 - [Yarn](./yarn)
+
+You may also want to refer to the Source Academy wide developer conventions which can be found [here](https://github.com/source-academy/general/wiki/Conventions-and-practices).

@@ -32,6 +32,23 @@ For example, the root package specifies `react@^18.3.1` as a depdendency, so all
 
 This validation is not carried out across child workspaces, however. Two different bundles could use two different versions of the same package. This should not cause an issue **unless** the bundles are somehow dependendent on each other.
 
+Furthermore, if you are depending on a package from within the modules repository, you should be using the `workspace:^` version specification as the packages within this repository
+are not intended to be published to NPM so a regular version specification would be invalid.
+
+### 3. `js-slang` has no resolution override
+
+Yarn allows users to override the resolution of packages via the [`resolutions`](https://yarnpkg.com/configuration/manifest#resolutions) field. There are several reasons to do this,
+but the most common reason a resolution would be used in this repository would be to point Yarn to a local copy of `js-slang`.
+
+Of course, the final production versions of your code shouldn't be relying on a local copy of `js-slang` (that wouldn't exist anyway), so the constraint is enforced here to
+make sure that `js-slang` isn't incorrectly resolved.
+
+### 4. `repotools` doesn't have another local dependency
+
+The `repotools` package is designed to be the 'root' for all the tooling in the repository. If it were to depend on another package within this repository, we would create
+a dependency loop that Yarn would not be able to resolve. So we enforce the constraint that the `@sourceacademy/modules-repotools` package is not allowed to depend on any
+other package within this repository.
+
 ## Parallel Execution of Scripts
 
 Using the various options of the `yarn workspaces foreach` command, you can execute multiple tasks in parallel, which is how many of the commands in the root repository have been set up.

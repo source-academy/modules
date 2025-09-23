@@ -91,3 +91,11 @@ this
 ```
 
 are generated via their own markdown plugin, the details of which can be found [here](./2-dirtree).
+
+## Production Build and Dead Links
+
+The preview version of the docs rendered by Vitepress when the `vitepress dev` command is executed is not the final version that is intended to be displayed.
+For this, Vitepress provides the `vitepress build` command, which converts the documentation source into its final, minified HTML form.
+
+As part of this process, Vitepress will highlight any "dead" links (i.e links that don't point to anything) and will fail if it finds any. If you're editing
+the documentation, you should run the build command to check for the dead links before pushing to the repository.
