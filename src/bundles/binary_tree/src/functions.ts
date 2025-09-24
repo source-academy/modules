@@ -37,8 +37,7 @@ export function make_tree(value: any, left: BinaryTree, right: BinaryTree): Bina
  * const tree = make_tree(1, make_empty_tree(), make_empty_tree());
  * display(is_tree(tree)); // Shows "true" in the REPL
  * ```
- * @param v Value to be tested
- * @returns bool
+ * @param value Value to be tested
  */
 export function is_tree(value: any): value is BinaryTree {
   if (!is_list(value)) return false;
@@ -62,7 +61,7 @@ export function is_tree(value: any): value is BinaryTree {
  * const tree = make_tree(1, make_empty_tree(), make_empty_tree());
  * display(is_empty_tree(tree)); // Shows "false" in the REPL
  * ```
- * @param v Value to be tested
+ * @param value Value to be tested
  * @returns bool
  */
 export function is_empty_tree(value: BinaryTree): value is EmptyBinaryTree {

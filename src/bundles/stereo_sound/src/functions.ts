@@ -664,7 +664,7 @@ export function sine_sound(freq: number, duration: number): Sound {
 /**
  * Makes a square wave sound with given frequency and duration
  *
- * @param freq the frequency of the square wave sound
+ * @param f the frequency of the square wave sound
  * @param duration the duration of the square wave sound
  * @return resulting square wave sound
  * @example square_sound(440, 5);

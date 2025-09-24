@@ -122,7 +122,7 @@ export function createVector3(x: number, y: number, z: number): Vector3 {
 /**
  * Adds the specified object to the augmented world.
  *
- * @param object ARObject to add. (E.g. cube, sphere, etc..)
+ * @param arObject ARObject to add. (E.g. cube, sphere, etc..)
  */
 export function addARObject(arObject: ARObject) {
   const moduleState = getModuleState();

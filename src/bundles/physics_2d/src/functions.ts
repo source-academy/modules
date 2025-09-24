@@ -475,7 +475,8 @@ export function array_to_vector([x, y]: [number, number]) {
 /**
  * Adds two vectors together and returns the resultant vector.
  *
- * @param arr array with [x, y]
+ * @param vec1 First vector
+ * @param vec2 Second Vector
  * @returns vector 2d
  *
  * @category Main
@@ -487,7 +488,8 @@ export function add_vector(vec1: Vector2, vec2: Vector2) {
 /**
  * Subtract the second vector from the first and returns the resultant vector.
  *
- * @param arr array with [x, y]
+ * @param vec1 First vector
+ * @param vec2 Second Vector
  * @returns vector 2d
  *
  * @category Main

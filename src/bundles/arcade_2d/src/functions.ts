@@ -100,9 +100,8 @@ export function create_rectangle(width: number, height: number): ShapeGameObject
 /**
  * Creates a CircleGameObject that takes in circle shape properties.
  *
- * @param width The width of the rectangle
- * @param height The height of the rectangle
- * ```
+ * @param radius Radius of the circle to create
+ * @example```ts
  * const circle = create_circle(100);
  * ```
  * @category GameObject

@@ -69,7 +69,7 @@ export function set_evaluator(evalFunc: (code: string) => any) {
  *  - Note that if you apply the conflicting attributes together, only one conflicted style will take effect and other conflicting styles will be discarded, like  "pair(pair(pair("123", small), medium), large) "  (Set conflicting font size for the same text)
  *  - Also note that for safety matters, certain words and characters are not allowed to appear under rich text display mode.
  *
- * @param the content you want to display
+ * @param content the content you want to display
  * @category Main
  */
 export function repl_display(content: any): any {
@@ -82,8 +82,8 @@ export function repl_display(content: any): any {
 
 /**
  * Set Programmable Repl editor background image with a customized image URL
- * @param the url to the new background image
- * @param the alpha (transparency) of the original background color that covers on your background image [0 ~ 1]. Recommended value is 0.5 .
+ * @param img_url the url to the new background image
+ * @param background_color_alpha the alpha (transparency) of the original background color that covers on your background image [0, 1]. Recommended value is 0.5 .
  *
  * @category Main
  */
@@ -94,8 +94,7 @@ export function set_background_image(img_url: string, background_color_alpha: nu
 
 /**
  * Set Programmable Repl editor font size
- * @param font size (in pixel)
- *
+ * @param font_size_px font size (in pixels)
  * @category Main
  */
 export function set_font_size(font_size_px: number) {
@@ -104,8 +103,6 @@ export function set_font_size(font_size_px: number) {
 
 /**
  * Set program text in the Repl editor to the given string
- * @param string
- *
  * @category Main
  */
 export function set_program_text(text: string) {

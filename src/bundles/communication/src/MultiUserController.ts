@@ -14,7 +14,6 @@ export class MultiUserController {
    * Sets up and connect to the MQTT link.
    * Uses websocket implementation.
    *
-   * @param isPrivate Whether to use NUS private broker.
    * @param address Address to connect to.
    * @param port MQTT port number.
    * @param user Username of account, leave empty if not required.

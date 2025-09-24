@@ -16,7 +16,7 @@ import { midiNoteToNoteName, noteToValues } from './utils';
  * Refer to <a href="https://i.imgur.com/qGQgmYr.png">this mapping from
  * letter name to midi notes.
  *
- * @param letter_name given letter name
+ * @param note given letter name
  * @return the corresponding midi note
  * @example letter_name_to_midi_note("C4"); // Returns 60
  * @function
@@ -100,7 +100,7 @@ export function midi_note_to_frequency(note: MIDINote): number {
 /**
  * Converts a letter name to its corresponding frequency.
  *
- * @param letter_name given letter name
+ * @param note given letter name
  * @return the corresponding frequency
  * @example letter_name_to_frequency("A4"); // Returns 440
  */

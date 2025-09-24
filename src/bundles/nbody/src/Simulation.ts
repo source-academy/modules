@@ -8,7 +8,6 @@ import { RecordingVisualizer3D, RecordingVisualizer, Simulation, type Universe, 
  * @param record Whether to record the simulation.
  * @param looped Whether to loop the simulation.
  * @param showTrails Whether to show trails.
- * @param showDebugInfo Whether to show debug info
  * @param maxTrailLength The maximum length of trails.
  * @returns A new simulation.
  * @category Simulation

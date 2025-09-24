@@ -412,7 +412,7 @@ function throwIfNotPoint(obj: unknown, func_name: string): asserts obj is Point 
 /**
  * Retrieves the x-coordinate of a given Point.
  *
- * @param p given point
+ * @param pt given point
  * @returns x-coordinate of the Point
  * @example
  * ```
@@ -428,7 +428,7 @@ export function x_of(pt: Point): number {
 /**
  * Retrieves the y-coordinate of a given Point.
  *
- * @param p given point
+ * @param pt given point
  * @returns y-coordinate of the Point
  * @example
  * ```
@@ -444,7 +444,7 @@ export function y_of(pt: Point): number {
 /**
  * Retrieves the z-coordinate of a given Point.
  *
- * @param p given point
+ * @param pt given point
  * @returns z-coordinate of the Point
  * @example
  * ```
@@ -460,8 +460,8 @@ export function z_of(pt: Point): number {
 /**
  * Retrieves the red component of a given Point.
  *
- * @param p given point
- * @returns Red component of the Point
+ * @param pt given point
+ * @returns Red component of the Point as a value between [0,255]
  * @example
  * ```
  * const point = make_color_point(1, 2, 3, 50, 100, 150);
@@ -476,8 +476,8 @@ export function r_of(pt: Point): number {
 /**
  * Retrieves the green component of a given Point.
  *
- * @param p given point
- * @returns Green component of the Point
+ * @param pt given point
+ * @returns Green component of the Point as a value between [0,255]
  * @example
  * ```
  * const point = make_color_point(1, 2, 3, 50, 100, 150);
@@ -492,8 +492,8 @@ export function g_of(pt: Point): number {
 /**
  * Retrieves the blue component of a given Point.
  *
- * @param p given point
- * @returns Blue component of the Point
+ * @param pt given point
+ * @returns Blue component of the Point as a value between [0,255]
  * @example
  * ```
  * const point = make_color_point(1, 2, 3, 50, 100, 150);
@@ -514,9 +514,7 @@ export function b_of(pt: Point): number {
  * @param original original Curve
  * @returns result Curve
  */
-export const invert: CurveTransformer = curve => {
-  return t => curve(1 - t);
-};
+export const invert: CurveTransformer = original => t => original(1 - t);
 
 /**
  * This function returns a Curve transformation: It takes an x-value x0, a

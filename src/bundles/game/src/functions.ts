@@ -112,7 +112,7 @@ function is_type(obj: GameObject, type: string): boolean {
  * Checks whether the given game object is any of the enquired ObjectTypes
  *
  * @param obj the game object
- * @param ObjectTypes enquired ObjectTypes
+ * @param types enquired ObjectTypes
  * @returns if game object is of any of the enquired ObjectTypes
  * @hidden
  */

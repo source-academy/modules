@@ -291,7 +291,7 @@ export class TextGameObject extends InteractableGameObject {
  */
 interface Transformable {
   /**
-   * @param renderProps The transform properties of the GameObject.
+   * @param transformProps The transform properties of the GameObject.
    */
   setTransform(transformProps: types.TransformProps);
 
@@ -343,7 +343,7 @@ interface Renderable {
  */
 interface Interactable {
   /**
-   * @param active The hitbox state of the GameObject in detecting overlaps.
+   * @param interactableProps The hitbox state of the GameObject in detecting overlaps.
    */
   setHitboxState(interactableProps: types.InteractableProps);
 

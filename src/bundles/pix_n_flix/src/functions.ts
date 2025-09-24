@@ -601,7 +601,7 @@ export function copy_image(src: Pixels, dest: Pixels): void {
  * two-dimensional arrays of Pixels:
  * the source image and the destination image.
  *
- * @param filter The filter to be installed
+ * @param _filter The filter to be installed
  */
 export function install_filter(_filter: Filter): void {
   filter = _filter;
@@ -734,7 +734,7 @@ export function get_video_time(): number {
 /**
  * Sets pix_n_flix to preserve the aspect ratio of the video or image
  *
- * @param keepAspectRatio to keep aspect ratio. (Default value of true)
+ * @param _keepAspectRatio to keep aspect ratio. (Default value of true)
  */
 export function keep_aspect_ratio(_keepAspectRatio: boolean): void {
   keepAspectRatio = _keepAspectRatio;

@@ -123,7 +123,7 @@ export function assert_contains(xs: any, toContain: any) {
 
 /**
  * Asserts that the given list has length `len`.
- * @param list The list to assert.
+ * @param xs The list to assert.
  * @param len The expected length of the list.
  */
 export function assert_length(xs: any, len: number) {

@@ -288,6 +288,10 @@ export default tseslint.config(
     rules: {
       'no-unused-vars': 'off', // Use the typescript eslint rule instead
 
+      'jsdoc/check-param-names': ['error', {
+        checkDestructured: false,
+        disableMissingParamChecks: true
+      }],
       'jsdoc/no-types': 'warn',
 
       '@stylistic/type-annotation-spacing': ['warn', { overrides: { colon: { before: false, after: true } } }],

@@ -319,10 +319,7 @@ export function get_scale(gameObjectIdentifier: GameObjectIdentifier): Vector3 {
  * By default the scale of a GameObject is (1, 1, 1). Changing the scale of a GameObject along one axis will lead to a stretch or squeeze of the GameObject along that axis.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to change scale for.
- * @param x The x component for the scale.
- * @param y The y component for the scale.
- * @param z The z component for the scale.
- *
+ * @param scale Vector to scale by
  * @category Transform
  */
 export function set_scale(gameObjectIdentifier: GameObjectIdentifier, scale: Vector3): void {
@@ -746,7 +743,7 @@ export function set_use_gravity(gameObjectIdentifier: GameObjectIdentifier, useG
  * Usage of all physics functions under the Physics category requires calling `apply_rigidbody` first on the applied game objects.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to add the force.
- * @param The force vector.
+ * @param force The force vector.
  * @category Physics - Rigidbody
  */
 export function add_impulse_force(gameObjectIdentifier: GameObjectIdentifier, force: Vector3): void {
