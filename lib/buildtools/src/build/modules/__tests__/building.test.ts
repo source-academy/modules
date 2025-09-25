@@ -52,7 +52,7 @@ test('build bundle', async () => {
   expect(data.startsWith('export default')).toEqual(true);
 
   // Trim the export default
-  const trimmed = (data as string).slice('export default'.length);
+  const trimmed = data.slice('export default'.length);
   const provider = vi.fn((p: string) => {
     if (p === 'js-slang/context') {
       return {
@@ -96,7 +96,7 @@ test('build tab', async () => {
   }
 
   const data = written.join('');
-  const trimmed = (data as string).slice('export default'.length);
+  const trimmed = data.slice('export default'.length);
 
   const { default: tab } = eval(trimmed)(mockRequire);
   expect(tab.body(0)).toEqual(0);

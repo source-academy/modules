@@ -246,6 +246,10 @@ export default tseslint.config(
       ],
 
       'jsdoc/check-alignment': 'warn',
+      'jsdoc/check-param-names': ['error', {
+        checkDestructured: false,
+        disableMissingParamChecks: true
+      }],
       'jsdoc/require-asterisk-prefix': 'warn',
 
       'no-empty': ['error', { allowEmptyCatch: true }],
@@ -288,20 +292,17 @@ export default tseslint.config(
     rules: {
       'no-unused-vars': 'off', // Use the typescript eslint rule instead
 
-      'jsdoc/check-param-names': ['error', {
-        checkDestructured: false,
-        disableMissingParamChecks: true
-      }],
       'jsdoc/no-types': 'warn',
 
       '@stylistic/type-annotation-spacing': ['warn', { overrides: { colon: { before: false, after: true } } }],
 
       '@typescript-eslint/ban-ts-comment': 'error',
-      '@typescript-eslint/ban-types': 'off', // Was 'error'
+      '@typescript-eslint/consistent-type-assertions': ['warn', { assertionStyle: 'as' }],
       '@typescript-eslint/no-duplicate-type-constituents': 'off', // Was 'error'
       '@typescript-eslint/no-explicit-any': 'off', // Was 'error'
       '@typescript-eslint/no-import-type-side-effects': 'error',
       '@typescript-eslint/no-redundant-type-constituents': 'off', // Was 'error'
+      '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
     }
   },

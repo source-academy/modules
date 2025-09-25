@@ -145,7 +145,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
       }
 
       if (config.test!.include === undefined) {
-        config!.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
+        config.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
       }
 
       break;

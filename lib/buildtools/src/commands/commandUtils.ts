@@ -1,6 +1,6 @@
 import { InvalidArgumentError, Option } from '@commander-js/extra-typings';
 import type { ErrorResult, Severity } from '@sourceacademy/modules-repotools/types';
-import { isSeverity } from '@sourceacademy/modules-repotools/utils';
+import { isSeverity, objectKeys } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
 import { LogLevel } from 'typedoc';
 
@@ -24,24 +24,6 @@ export const logLevelOption = new Option('--logLevel <level>', 'Log level that T
 
     throw new InvalidArgumentError(`Invalid log level: ${val}`);
   });
-
-type ValuesOfRecord<T> = T extends Record<any, infer U> ? U : never;
-
-export type EntriesOfRecord<T extends Record<any, any>> = ValuesOfRecord<{
-  [K in keyof T]: [K, T[K]]
-}>;
-
-export function objectEntries<T extends Record<any, any>>(obj: T) {
-  return Object.entries(obj) as EntriesOfRecord<T>[];
-}
-
-export function objectValues<T>(obj: Record<string | number | symbol, T>) {
-  return Object.values(obj) as T[];
-}
-
-export function objectKeys<T extends string | number | symbol>(obj: Record<T, unknown>) {
-  return Object.keys(obj) as T[];
-}
 
 /**
  * Iterate through the entire results object, checking for errors. This will call `process.exit(1)` if there

@@ -306,7 +306,7 @@ class UnityAcademyJsInteropContext {
     this.unityInstance = null;
     this.resetModuleData();
     this.setShowUnityComponent(0);
-    const canvasContext = (document.querySelector('#unity-canvas') as HTMLCanvasElement)!.getContext('webgl2');
+    const canvasContext = (document.querySelector('#unity-canvas') as HTMLCanvasElement).getContext('webgl2');
     canvasContext!.clearColor(0, 0, 0, 0);
     canvasContext!.clear(canvasContext!.COLOR_BUFFER_BIT);
     document.querySelector('#unity_load_info')!.innerHTML = 'Unity Academy app has been terminated. Please rerun your program with init_unity_academy_3d or init_unity_academy_2d for re-initialization.';

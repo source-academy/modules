@@ -12,10 +12,7 @@ import { Program } from './controllers/program/Program';
 import { Physics, Renderer, Timer, World, type Controller } from './engine';
 
 import { RobotConsole } from './engine/Core/RobotConsole';
-import {
-  isRigidBodyType,
-  type RigidBodyType,
-} from './engine/Entity/EntityFactory';
+import { isRigidBodyType } from './engine/Entity/EntityFactory';
 import type { PhysicsConfig } from './engine/Physics';
 import type { RenderConfig } from './engine/Render/Renderer';
 import { getCamera, type CameraOptions } from './engine/Render/helpers/Camera';
@@ -270,8 +267,6 @@ export function createCuboid(
     throw new Error('Invalid body type');
   }
 
-  const narrowedBodyType = bodyType as RigidBodyType;
-
   const config: CuboidConfig = {
     position: {
       x: position_x,
@@ -285,7 +280,7 @@ export function createCuboid(
     },
     mass,
     color,
-    type: narrowedBodyType,
+    type: bodyType
   };
 
   const cuboid = new Cuboid(physics, renderer, config);

@@ -20,7 +20,7 @@ export default ruleCreator({
   defaultOptions: [[] as string[]],
   create: context => ({
     ImportDeclaration(node) {
-      const sources = context.options[0] as string[];
+      const sources = context.options[0];
       const importSource = node.source.value;
       if (
         typeof importSource !== 'string' ||

@@ -172,7 +172,7 @@ const getName = (
   }
 
   // Optionally prefix the name with its full path
-  if (options.fullPath && structure.parent && structure.parent) {
+  if (options.fullPath && structure.parent) {
     nameChunks.unshift(
       getName(
         structure.parent,

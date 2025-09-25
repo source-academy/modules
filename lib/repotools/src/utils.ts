@@ -117,8 +117,8 @@ export function objectEntries<T extends Record<string | symbol | number, unknown
 /**
  * Type safe `Object.values`
  */
-export function objectValues<T>(obj: Record<string | symbol | number, T>) {
-  return Object.values(obj) as T[];
+export function objectValues<T>(obj: Record<string | symbol | number, T>): T[] {
+  return Object.values(obj);
 }
 
 export function objectKeys<T extends string | symbol | number>(obj: Record<T, unknown>) {

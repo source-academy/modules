@@ -12,7 +12,7 @@ import {
   TriangleGameObject,
   type InteractableGameObject
 } from './gameobject';
-import type { ExceptionError, PhaserGameObject, PositionXY, TransformProps } from './types';
+import type { ExceptionError, PhaserGameObject, PositionXY } from './types';
 
 // Game state information, that changes every frame.
 export const gameState = {
@@ -289,11 +289,11 @@ export class PhaserScene extends Phaser.Scene {
   /**  Loop through each GameObject in the array and determine which needs to update. */
   private handleGameObjectUpdates() {
     this.sourceGameObjects.forEach((gameObject: InteractableGameObject) => {
-      const phaserGameObject = this.phaserGameObjects[gameObject.id] as PhaserGameObject;
+      const phaserGameObject = this.phaserGameObjects[gameObject.id];
       if (phaserGameObject) {
         // Update the transform of Phaser GameObject
         if (gameObject.hasTransformUpdates() || this.shouldRerenderGameObjects) {
-          const transformProps = gameObject.getTransform() as TransformProps;
+          const transformProps = gameObject.getTransform();
           phaserGameObject.setPosition(transformProps.position[0], transformProps.position[1])
             .setRotation(transformProps.rotation)
             .setScale(transformProps.scale[0], transformProps.scale[1]);
@@ -341,7 +341,7 @@ export class PhaserScene extends Phaser.Scene {
   private handleAudioUpdates() {
     this.sourceAudioClips.forEach((audioClip: AudioClip) => {
       if (audioClip.hasAudioClipUpdates()) {
-        const phaserAudioClip = this.phaserAudioClips[audioClip.id] as Phaser.Sound.BaseSound;
+        const phaserAudioClip = this.phaserAudioClips[audioClip.id];
         if (phaserAudioClip) {
           if (audioClip.shouldAudioClipPlay()) {
             phaserAudioClip.play();
