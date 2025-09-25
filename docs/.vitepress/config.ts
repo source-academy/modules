@@ -45,7 +45,7 @@ const vitepressOptions: UserConfig = {
           },
           {
             text: 'Bundles',
-            link: '/modules/2-bundle/1-overview/1-overview'
+            link: '/modules/2-bundle/1-overview'
           },
           {
             text: 'Tabs',

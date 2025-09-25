@@ -69,11 +69,11 @@ show(1);
 Source is moving toward enabling compile-time (or at least pre-execution since Source programs don't really have a "compilation" step) type checking for Source Modules using a feature known as [type maps](../7-type_map).
 :::
 
-The above call to `show` won't a throw compile-time error. Instead, the error is thrown at runtime by bundle code. This is the case even if the function has been annotated with
-Typescript types.
+The above call to `show` **won't** a throw compile-time error. Instead, the error is thrown at runtime by bundle code or even in tab code. This is the case even if the function has been annotated with Typescript types.
 
-As seen above, `show`'s functionality is pretty simple. This means that if it gets called with something that isn't a `Rune` the error might end up being thrown further downstream by other `rune` bundle functions
-or by the `Rune` tab.
+In the case of `show`, if no runtime type-checking was performed, no error would be thrown when `show` is called. The error only manifests itself when the Rune tab is displayed:
+
+![](./rune-error.png)
 
 This is not helpful for the cadet's debugging, as the error occurred in `show`. Thus, by checking if the passed parameter is indeed a `Rune` before
 passing it on to other `rune` bundle functions, we make error tracing a lot simpler for cadets.

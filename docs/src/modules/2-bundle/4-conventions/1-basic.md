@@ -27,7 +27,59 @@ export function exposed_function() {
 Neither default nor rest parameters are currently supported due to an [issue](https://github.com/source-academy/js-slang/issues/1238) on the `js-slang` side.
 :::
 
-## 2. If your bundle requires specific Source features, make sure to indicate it in the manifest
+## 2. Cadet facing functions should not use array destructuring for parameters
+
+Javascript allows us to pass destruct iterables directly within the function declaration:
+
+```ts
+export function foo([x, y]: [string, string]) {
+  return x;
+}
+```
+
+There's nothing inherently wrong with this, but if cadets pass a non-iterable object into the function,
+Javascript is going to throw a fairly mysterious error:
+
+```sh
+foo(0);
+
+function foo([x, y]) {
+            ^
+TypeError: number 0 is not iterable (cannot read property Symbol(Symbol.iterator))
+```
+
+If instead the parameter isn't destructured, it gives you the chance to perform type checking:
+
+```ts
+export function foo(arr: [string, string]) {
+  if (!Array.isArray(arr)) throw new Error();
+  return arr[0];
+}
+```
+
+More information about throwing errors and why this kind of type checking is important can be found [here](./3-errors#source-type-checking).
+
+::: details What about Object Destructuring?
+Javascript also supports object destructuring in parameters:
+```js
+function foo({ x, y }) {
+  return x;
+}
+```
+
+However, Javascript doesn't actually throw an error if you pass an invalid object into this function:
+```js
+function foo({ x, y }) {
+  return x;
+}
+
+console.log(foo(0)); // prints undefined
+```
+
+If an invalid argument gets passed, no error is thrown and the destructured values just take on the value of `undefined` (which you might want to check for).
+:::
+
+## 3. If your bundle requires specific Source features, make sure to indicate it in the manifest
 
 Consider the bundle function below:
 
@@ -72,7 +124,7 @@ Lists are actually introduced in Source 1, which would make the above function c
 functionality specific to arrays, then consider using Source Lists instead.
 :::
 
-## 3. Making use of `js-slang/stdlib`
+## 4. Making use of `js-slang/stdlib`
 
 Bundles, where necessary, should use the implementations of libraries such as `list` or `stream` from the `js-slang` standard library:
 
