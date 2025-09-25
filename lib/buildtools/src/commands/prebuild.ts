@@ -4,7 +4,7 @@ import { outDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import { resolveEitherBundleOrTab } from '@sourceacademy/modules-repotools/manifest';
 import { divideAndRound } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
-import type { ESLint } from 'eslint';
+import { ESLint } from 'eslint';
 import { runPrebuild } from '../prebuild/index.js';
 import { formatLintResult, lintGlobal, runEslint } from '../prebuild/lint.js';
 import { formatTscResult, runTsc } from '../prebuild/tsc.js';
@@ -53,7 +53,13 @@ export const getLintCommand = () => new Command('lint')
       logCommandErrorAndExit(resolveResult);
     }
 
-    const result = await runEslint(resolveResult.asset, opts);
+    const prefix = chalk.blueBright('[lintglobal]');
+    console.log(`${prefix} ${chalk.cyanBright(`Running ESLint v${ESLint.version}`)}`);
+    const { asset } = resolveResult;
+
+    console.log(`${prefix} ${chalk.cyanBright(`Linting ${asset.name} ${asset.type}`)}`);
+
+    const result = await runEslint(asset, opts);
     console.log(formatLintResult(result));
 
     switch (result.severity) {
@@ -75,6 +81,7 @@ export const getLintGlobalCommand = () => new Command('lintglobal')
   .action(async ({ ci, ...opts }) => {
     const prefix = chalk.blueBright('[lintglobal]');
 
+    console.log(`${prefix} ${chalk.cyanBright(`Running ESLint v${ESLint.version}`)}`);
     console.log(`${prefix} ${chalk.cyanBright('Beginning linting with the following options:')}`);
     Object.entries(opts).forEach(([key, value], i) => {
       console.log(`  ${i+1}. ${chalk.greenBright(key)}: ${chalk.cyanBright(value)}`);
