@@ -4,6 +4,7 @@
     "./src"
   ],
   "compilerOptions": {
+    "jsx": "react-jsx",
     "outDir": "./dist"
   },
   "typedocOptions": {

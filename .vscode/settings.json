@@ -17,7 +17,7 @@
       }
     }
   ],
-  "eslint.validate": [
+   "eslint.validate": [
     "github-actions-workflow",
     "javascript",
     "javascriptreact",

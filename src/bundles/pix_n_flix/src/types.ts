@@ -39,6 +39,6 @@ export type StartPacket = {
   updateVolume: (volume: number) => void;
   updateDimensions: (width: number, height: number) => void;
 };
-export type Pixel = number[];
+export type Pixel = [r: number, g: number, b: number, a: number];
 export type Pixels = Pixel[][];
 export type Filter = (src: Pixels, dest: Pixels) => void;

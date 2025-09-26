@@ -66,7 +66,26 @@ let displayHeight: number = HEIGHT;
 // Module's Private Functions
 // =============================================================================
 
-/** @hidden */
+/**
+ * Creates a black image.
+ *
+ * @hidden
+ */
+export function new_image(): Pixels {
+  const img: Pixels = [];
+  for (let i = 0; i < HEIGHT; i += 1) {
+    img[i] = [];
+    for (let j = 0; j < WIDTH; j += 1) {
+      img[i][j] = [0, 0, 0, 255];
+    }
+  }
+  return img;
+}
+
+/**
+ * Setup the pixel arrays
+ * @hidden
+ */
 function setupData(): void {
   for (let i = 0; i < HEIGHT; i += 1) {
     pixels[i] = [];
@@ -78,8 +97,14 @@ function setupData(): void {
   }
 }
 
-/** @hidden */
-function isPixelFilled(pixel: Pixel): boolean {
+/**
+ * Determines whether the r,g,b and a values for the pixel
+ * are valid (i.e between 0 and 255). If that value is out of range,
+ * then that value gets set to 0.
+ * Exported for testing.
+ * @hidden
+ */
+export function isPixelValid(pixel: Pixel): boolean {
   let ok = true;
   for (let i = 0; i < 4; i += 1) {
     if (pixel[i] >= 0 && pixel[i] <= 255) {
@@ -91,14 +116,19 @@ function isPixelFilled(pixel: Pixel): boolean {
   return ok;
 }
 
-/** @hidden */
-function writeToBuffer(buffer: Uint8ClampedArray, data: Pixels) {
+/**
+ * Write the provided pixel data to the buffer, performing error checking
+ * and resetting invalid pixels.
+ * Exported for testing.
+ * @hidden
+ */
+export function writeToBuffer(buffer: Uint8ClampedArray, data: Pixels) {
   let ok: boolean = true;
 
   for (let i = 0; i < HEIGHT; i += 1) {
     for (let j = 0; j < WIDTH; j += 1) {
       const p = i * WIDTH * 4 + j * 4;
-      if (isPixelFilled(data[i][j]) === false) {
+      if (!isPixelValid(data[i][j])) {
         ok = false;
       }
       buffer[p] = data[i][j][0];
@@ -116,7 +146,10 @@ function writeToBuffer(buffer: Uint8ClampedArray, data: Pixels) {
   }
 }
 
-/** @hidden */
+/**
+ * Retrieve pixel data from the buffer and convert it to the 2D array format.
+ * @hidden
+ */
 function readFromBuffer(pixelData: Uint8ClampedArray, src: Pixels) {
   for (let i = 0; i < HEIGHT; i += 1) {
     for (let j = 0; j < WIDTH; j += 1) {
@@ -217,7 +250,7 @@ function pauseVideoElement() {
 }
 
 /** @hidden */
-function startVideo(): void {
+export function startVideo(): void {
   if (videoIsPlaying) return;
   if (inputFeed === InputFeed.Camera) videoIsPlaying = true;
   else playVideoElement();
@@ -229,7 +262,7 @@ function startVideo(): void {
  *
  * @hidden
  */
-function stopVideo(): void {
+export function stopVideo(): void {
   if (!videoIsPlaying) return;
   if (inputFeed === InputFeed.Camera) videoIsPlaying = false;
   else pauseVideoElement();
@@ -459,6 +492,7 @@ function init(
  */
 function deinit(): void {
   stopVideo();
+  queue = () => {};
   const stream = videoElement.srcObject;
   if (!stream) {
     return;
@@ -615,22 +649,6 @@ export function reset_filter(): void {
 }
 
 /**
- * Creates a black image.
- *
- * @hidden
- */
-function new_image(): Pixels {
-  const img: Pixels = [];
-  for (let i = 0; i < HEIGHT; i += 1) {
-    img[i] = [];
-    for (let j = 0; j < WIDTH; j += 1) {
-      img[i][j] = [0, 0, 0, 255];
-    }
-  }
-  return img;
-}
-
-/**
  * Returns a new filter that is equivalent to applying
  * filter1 and then filter2.
  *
@@ -662,7 +680,7 @@ export function pause_at(pause_time: number): void {
 }
 
 /**
- * Sets the diemsions of the displayed images.
+ * Sets the dimensions of the displayed images.
  * Note: Only accepts width and height values within the range of 1 to 500.
  *
  * @param width The width of the displayed images (default value: 300)

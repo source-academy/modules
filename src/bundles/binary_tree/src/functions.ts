@@ -40,6 +40,7 @@ export function make_tree(value: any, left: BinaryTree, right: BinaryTree): Bina
  * @param value Value to be tested
  */
 export function is_tree(value: any): value is BinaryTree {
+  // TODO: value parameter should be of type unknown
   if (!is_list(value)) return false;
 
   if (is_empty_tree(value)) return true;

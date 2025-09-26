@@ -1,10 +1,24 @@
 import { describe, expect, it } from 'vitest';
 import * as funcs from '../functions';
+import { list } from 'js-slang/dist/stdlib/list';
 
 describe(funcs.is_tree, () => {
   it('returns false when argument is not a tree', () => {
     const arg = [0, [0, null]];
     expect(funcs.is_tree(arg)).toEqual(false);
+  });
+
+  it('returns false when argument is a list of 4 elements', () => {
+    const arg = list(0, funcs.make_empty_tree(), funcs.make_empty_tree(), funcs.make_empty_tree());
+    expect(funcs.is_tree(arg)).toEqual(false);
+  });
+
+  it('returns false when the branches are not trees', () => {
+    const not_tree = list(0, 1, 2);
+    expect(funcs.is_tree(not_tree)).toEqual(false);
+
+    const also_not_tree = list(1, not_tree, null);
+    expect(funcs.is_tree(also_not_tree)).toEqual(false);
   });
 
   it('returns true when argument is a tree (simple)', () => {
