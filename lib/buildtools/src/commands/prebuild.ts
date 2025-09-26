@@ -53,7 +53,7 @@ export const getLintCommand = () => new Command('lint')
       logCommandErrorAndExit(resolveResult);
     }
 
-    const prefix = chalk.blueBright('[lintglobal]');
+    const prefix = chalk.blueBright('[lint]');
     console.log(`${prefix} ${chalk.cyanBright(`Running ESLint v${ESLint.version}`)}`);
     const { asset } = resolveResult;
 
