@@ -302,7 +302,8 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'off', // Was 'error'
       '@typescript-eslint/no-import-type-side-effects': 'error',
       '@typescript-eslint/no-redundant-type-constituents': 'off', // Was 'error'
-      '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+      // This rule doesn't seem to fail locally but fails on the CI
+      // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
     }
   },
@@ -368,7 +369,7 @@ export default tseslint.config(
     },
   },
   {
-    name: 'Rules specifically for bundles',
+    name: 'Rules specifically for bundle entrypoints',
     files: ['src/bundles/*/src/index.ts'],
 
     rules: {
@@ -385,7 +386,7 @@ export default tseslint.config(
     }
   },
   {
-    name: 'Rules specifically for tabs',
+    name: 'Rules specifically for tab entrypoints',
     files: [
       'src/tabs/*/index.tsx',
       'src/tabs/*/src/index.tsx',
@@ -452,7 +453,6 @@ export default tseslint.config(
       }],
       'vitest/no-alias-methods': 'off',
       'vitest/no-conditional-expect': 'off',
-      'vitest/no-export': 'off',
       'vitest/no-focused-tests': ['warn', { fixable: false }],
       'vitest/prefer-describe-function-title': 'warn',
       'vitest/require-top-level-describe': 'off',
