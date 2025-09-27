@@ -121,10 +121,12 @@ export default tseslint.config(
   {
     extends: [js.configs.recommended],
     name: 'Global JS/TS Stylistic Rules',
+    plugins: {
+      jsdoc: jsdocPlugin,
+    },
     files: [
-      '**/*.*js',
-      '**/*.ts',
-      '**/*.tsx',
+      '**/*.{js,cjs,mjs}',
+      '**/*.{ts,cts,tsx}',
     ],
     languageOptions: {
       globals: {
@@ -133,7 +135,13 @@ export default tseslint.config(
       }
     },
     rules: {
+      'jsdoc/check-alignment': 'warn',
+      'jsdoc/no-blank-blocks': 'warn',
+      'jsdoc/no-multi-asterisks': ['warn', { allowWhitespace: true }],
+      'jsdoc/require-asterisk-prefix': 'warn',
+
       'object-shorthand': ['warn', 'properties'],
+
       '@stylistic/arrow-spacing': 'warn',
       '@stylistic/block-spacing': 'warn',
       '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
@@ -212,18 +220,22 @@ export default tseslint.config(
   {
     name: 'Global JS/TS Functional Rules',
     files: [
-      '**/*.*js',
-      '**/*.ts',
-      '**/*.cts',
-      '**/*.tsx',
+      '**/*.{js,cjs,mjs}',
+      '**/*.{ts,cts,tsx}',
     ],
+    // Markdown virtual files are ignored because these 'functional' rules
+    // aren't required for them
     ignores: ['**/*.md/**/*.{js,ts,tsx}'],
     plugins: {
       import: importPlugin,
-      jsdoc: jsdocPlugin,
       '@sourceacademy': saLintPlugin
     },
     rules: {
+      'jsdoc/check-param-names': ['error', {
+        checkDestructured: false,
+        disableMissingParamChecks: true
+      }],
+
       'import/first': 'warn',
       'import/newline-after-import': 'warn',
       // This rule is very time intensive.
@@ -244,13 +256,6 @@ export default tseslint.config(
           },
         }
       ],
-
-      'jsdoc/check-alignment': 'warn',
-      'jsdoc/check-param-names': ['error', {
-        checkDestructured: false,
-        disableMissingParamChecks: true
-      }],
-      'jsdoc/require-asterisk-prefix': 'warn',
 
       'no-empty': ['error', { allowEmptyCatch: true }],
       'no-restricted-imports': [
@@ -305,6 +310,7 @@ export default tseslint.config(
       // This rule doesn't seem to fail locally but fails on the CI
       // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
+      '@typescript-eslint/only-throw-error': 'error'
     }
   },
   // #endregion typescript
@@ -451,12 +457,12 @@ export default tseslint.config(
       'vitest/expect-expect': ['error', {
         assertFunctionNames: ['expect*'],
       }],
-      'vitest/no-alias-methods': 'off',
-      'vitest/no-conditional-expect': 'off',
+      'vitest/no-alias-methods': 'off', // was 'error'
+      'vitest/no-conditional-expect': 'off', // was 'error'
       'vitest/no-focused-tests': ['warn', { fixable: false }],
       'vitest/prefer-describe-function-title': 'warn',
-      'vitest/require-top-level-describe': 'off',
-      'vitest/valid-describe-callback': 'off',
+      'vitest/require-top-level-describe': 'off', // was 'error'
+      'vitest/valid-describe-callback': 'off', // was 'error'
       'vitest/valid-expect-in-promise': 'error',
       'vitest/valid-title': ['error', { ignoreTypeOfDescribeName: true }],
 

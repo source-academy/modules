@@ -17,7 +17,7 @@ export function throwIfNotRune(name: string, rune: unknown): asserts rune is Run
 
 /**
  * primitive Rune in the rune of a full square
- * */
+ */
 export function getSquare() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
@@ -46,7 +46,7 @@ export function getBlank() {
  * smallsquare inside a large square,
  * each diagonally split into a
  * black and white half
- * */
+ */
 export function getRcross() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
@@ -82,7 +82,7 @@ export function getRcross() {
 
 /**
  * primitive Rune in the rune of a sail
- * */
+ */
 export function getSail() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
@@ -101,7 +101,7 @@ export function getSail() {
 
 /**
  * primitive Rune in the rune of a triangle
- * */
+ */
 export function getTriangle() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
@@ -121,7 +121,7 @@ export function getTriangle() {
 /**
  * primitive Rune with black triangle,
  * filling upper right corner
- * */
+ */
 export function getCorner() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
@@ -141,7 +141,7 @@ export function getCorner() {
  * primitive Rune in the rune of two overlapping
  * triangles, residing in the upper half
  * of
- * */
+ */
 export function getNova() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
@@ -163,7 +163,7 @@ export function getNova() {
 
 /**
  * primitive Rune in the rune of a circle
- * */
+ */
 export function getCircle() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
@@ -185,7 +185,7 @@ export function getCircle() {
 
 /**
  * primitive Rune in the rune of a heart
- * */
+ */
 export function getHeart() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
@@ -246,7 +246,7 @@ export function getHeart() {
 
 /**
  * primitive Rune in the rune of a pentagram
- * */
+ */
 export function getPentagram() {
   const vertexList: number[] = [];
   const colorList: number[] = [];
@@ -281,7 +281,7 @@ export function getPentagram() {
 /**
  * primitive Rune in the rune of a ribbon
  * winding outwards in an anticlockwise spiral
- * */
+ */
 export function getRibbon() {
   const vertexList: number[] = [];
   const colorList: number[] = [];

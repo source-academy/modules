@@ -184,4 +184,4 @@ module.exports = class GithubActionsCoverageReporter extends report.ReportBase {
     this.cw.write('</tbody></table>');
     this.cw.close();
   }
-}
+};

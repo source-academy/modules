@@ -15,7 +15,7 @@ export function throwIfNotRune(name: string, ...runes: any) {
 
 /**
  * primitive Rune in the rune of a full square
- * */
+ */
 export const getSquare: () => string = () => 'square';
 
 export const getBlank: () => string = () => 'blank';
