@@ -58,7 +58,7 @@ You can also add the dependency directly by modifying your `package.json`:
 
 ```jsonc {4}
 {
-  "name": "@sourceacademy/bundle-bundle0",
+  "name": "@sourceacademy/tab-Tab0",
   "dependencies": {
     "lodash": "^4.0.0"
   }

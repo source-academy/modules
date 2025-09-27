@@ -11,7 +11,11 @@ By reading comments and type annotations, `typedoc` is able to generate both hum
 
 ## Writing Documentation
 
-`typedoc` reads both Typescript type annotations, as well as [TSDOC](https://tsdoc.org) style comments. It will build documentation for all functions and constants exported by the particular module.
+`typedoc` reads both Typescript type annotations, as well as [TSDOC](https://tsdoc.org) style comments. It will build documentation for all functions and constants exported by the particular bundle's entry point.
+For example, since the `curve` bundle exports the `make_point` function, `typedoc` will generate documentation for it. However, there are many other functions that the bundle does not expose that won't have documentation generated.
+
+Documentation should be written in [Markdown](https://www.markdownguide.org/getting-started/). That way, both IntelliSense and Typedoc will be able to process it. During documentation generation,
+the markdown is converted to raw HTML.
 
 ::: details Type Aware annotations
 [JSDoc](https://jsdoc.app) (and TSDoc) both support annotations that express type information directly like `@type` or annotations that can optionally contain type information like `@param` and `@returns`.
@@ -23,7 +27,9 @@ so as not to confuse Typedoc and ensure that the Typescript compiler is able to 
 If you do need to the type of an export to be documented differently from its type in Typescript source code, you can use a [type map](../7-type_map).
 :::
 
-Let us look at an example from the `curve` module.
+Let us look at more examples from the `curve` module.
+
+### Functions
 
 ```ts
 // functions.ts
@@ -43,65 +49,20 @@ export function make_point(x: number, y: number): Point {
 }
 ```
 
+Notice that in the example above, each `@param` tag is followed directly by the name of the parameter its describing, which is then followed
+by the description of the parameter itself.
+
+Missing the documentation for a parameter is okay (not that you should), but trying to document a parameter that doesn't exist will cause a linting
+error:
 ```ts
-// index.ts
-export { make_point } from './functions.ts';
-```
-
-Since the `curve` bundle exports the `make_point` function, `typedoc` will generate documentation for it.
-
-Documentation should be written in [Markdown](https://www.markdownguide.org/getting-started/). That way, both IntelliSense and Typedoc will be able to process it. During documentation generation,
-the markdown is converted to raw HTML.
-
-The following sections are conventions for writing documentation.
-
-### Entry Point
-
-At the entry point for each bundle, there should be a block comment that provides general information about the bundle.
-
-This example is taken from the `repeat` bundle:
-
-```ts
-// repeat/src/index.ts
 /**
- * Test bundle for Source Academy modules repository
- * @author Loh Xian Ze, Bryan
- * @author Tang Xin Kye, Marcus
- * @module repeat
+ * Oops p1 isn't documented!
+ * @param p3 This parameter doesn't exist and so this will cause a lint error!
  */
-
-export { repeat, twice, thrice } from './functions';
+export function foo(p1: string, p2: string) {
+  // ...implementation
+}
 ```
-
-It is important that you provide an `@module` tag in this description. Otherwise, the build tools may not be able to detect your bundle's
-documentation properly.
-
-> [!TIP]
-> An ESLint Rule has been configured specifically for this purpose, so a lint error should appear if you forget to do so.
-
-### Use of `@hidden`
-
-If there are exports you want hidden from the output of the documentation, you must use the `@hidden` tag.
-
-The example below is taken from the `rune` bundle:
-
-```ts
-// rune/src/type_map.ts
-import createTypeMap from '@sourceacademy/modules-lib/type_map';
-
-const typeMapCreator = createTypeMap();
-
-export const { functionDeclaration, variableDeclaration, classDeclaration } = typeMapCreator;
-
-/** @hidden */
-export const type_map = typeMapCreator.type_map;
-```
-
-This causes `type_map` to be removed from the documentation, even if it is exported from `rune/src/index.ts`.
-
-> [!WARNING]
-> Bundle `type_map`s are supposed to be internal implementation details hidden from users. If you forget to apply a `@hidden` tag to
-> your bundle's type map export, the build tools will show a warning.
 
 ### Use of `@function`
 
@@ -167,6 +128,67 @@ The export will now be correctly recognized as a function:
 ![](./drawFunc.png)
 
 There is no automatic way to make this distinction, so it is up to the bundle authors to make sure that this convention is adhered to.
+
+### Variables/Constants
+
+Constants can be documented in a similar fashion:
+```ts
+/**
+ * Represents the mathematical constant PI
+ */
+const PI: number = 3.14159;
+```
+
+Also similar to function return types and parameters, because the types of variables is determined by the Typescript compiler, it is unnecessary
+to use the `@type` tag here.
+
+### Entry Point
+
+At the entry point for each bundle, there should be a block comment that provides general information about the bundle.
+
+This example is taken from the `repeat` bundle:
+
+```ts
+// repeat/src/index.ts
+/**
+ * Test bundle for Source Academy modules repository
+ * @author Loh Xian Ze, Bryan
+ * @author Tang Xin Kye, Marcus
+ * @module repeat
+ */
+
+export { repeat, twice, thrice } from './functions';
+```
+
+It is important that you provide an `@module` tag in this description. Otherwise, the build tools may not be able to detect your bundle's
+documentation properly.
+
+> [!TIP]
+> An ESLint Rule has been configured specifically for this purpose, so a lint error should appear if you forget to do so.
+
+### Use of `@hidden`
+
+If there are exports you want hidden from the output of the documentation, you must use the `@hidden` tag.
+
+The example below is taken from the `rune` bundle:
+
+```ts
+// rune/src/type_map.ts
+import createTypeMap from '@sourceacademy/modules-lib/type_map';
+
+const typeMapCreator = createTypeMap();
+
+export const { functionDeclaration, variableDeclaration, classDeclaration } = typeMapCreator;
+
+/** @hidden */
+export const type_map = typeMapCreator.type_map;
+```
+
+This causes `type_map` to be removed from the documentation, even if it is exported from `rune/src/index.ts`.
+
+> [!WARNING]
+> Bundle `type_map`s are supposed to be internal implementation details hidden from users. If you forget to apply a `@hidden` tag to
+> your bundle's type map export, the build tools will show a warning.
 
 ### Other Tags
 

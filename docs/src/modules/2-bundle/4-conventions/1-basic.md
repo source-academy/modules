@@ -29,7 +29,7 @@ Neither default nor rest parameters are currently supported due to an [issue](ht
 
 ## 2. Cadet facing functions should not use array destructuring for parameters
 
-Javascript allows us to pass destruct iterables directly within the function declaration:
+Javascript allows us to destruct iterables directly within a function's parameters:
 
 ```ts
 export function foo([x, y]: [string, string]) {
@@ -124,7 +124,22 @@ Lists are actually introduced in Source 1, which would make the above function c
 functionality specific to arrays, then consider using Source Lists instead.
 :::
 
-## 4. Making use of `js-slang/stdlib`
+## 4. Semantic Versioning
+
+[Semantic Versioning](https://semver.org) refers to a convention on how version numbers should be specified. In your bundle's `package.json`, a `version` field should
+be specified:
+
+```jsonc {3}
+{
+  "name": "@sourceacademy/bundle-bundle0",
+  "version": "1.0.0"
+}
+```
+
+This version number should follow the rules of semantic versioning. `js-slang` will use this version number to determine if it currently has the latest version of your bundle
+compatible with its current version.
+
+## 5. Making use of `js-slang/stdlib`
 
 Bundles, where necessary, should use the implementations of libraries such as `list` or `stream` from the `js-slang` standard library:
 

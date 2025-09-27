@@ -1,6 +1,6 @@
+import { list } from 'js-slang/dist/stdlib/list';
 import { describe, expect, it } from 'vitest';
 import * as funcs from '../functions';
-import { list } from 'js-slang/dist/stdlib/list';
 
 describe(funcs.is_tree, () => {
   it('returns false when argument is not a tree', () => {
