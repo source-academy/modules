@@ -216,6 +216,24 @@ export function record_for(duration: number, buffer: number): () => Sound {
   };
 }
 
+function validateDuration(func_name: string, duration: unknown): asserts duration is number {
+  if (typeof duration !== 'number') {
+    throw new Error(`${func_name} expects a number for duration, got ${duration}`);
+  }
+
+  if (duration < 0) {
+    throw new Error(`${func_name}: Sound duration must be greater than or equal to 0`);
+  }
+}
+
+function validateWave(func_name: string, wave: unknown, lr?: 'left' | 'right'): asserts wave is Wave {
+  const direction = lr !== undefined ? `${lr}_` : '';
+
+  if (typeof wave !== 'function') {
+    throw new Error(`${func_name}: ${direction}wave must be a Wave, got ${wave}`);
+  }
+}
+
 // =============================================================================
 // Module's Exposed Functions
 //
@@ -243,6 +261,10 @@ export function make_stereo_sound(
   right_wave: Wave,
   duration: number
 ): Sound {
+  validateDuration(make_sound.name, duration);
+  validateWave(make_sound.name, left_wave, 'left');
+  validateWave(make_sound.name, right_wave, 'right');
+
   return pair(
     pair(
       t => (t >= duration ? 0 : left_wave(t)),
@@ -264,7 +286,16 @@ export function make_stereo_sound(
  * @example const s = make_sound(t => math_sin(2 * math_PI * 440 * t), 5);
  */
 export function make_sound(wave: Wave, duration: number): Sound {
-  return make_stereo_sound(wave, wave, duration);
+  validateDuration(make_sound.name, duration);
+  validateWave(make_sound.name, wave);
+
+  return pair(
+    pair(
+      t => (t >= duration ? 0 : wave(t)),
+      t => (t >= duration ? 0 : wave(t))
+    ),
+    duration
+  );
 }
 
 /**
@@ -325,6 +356,8 @@ export function is_sound(x: unknown): x is Sound {
  * @example play_wave(t => math_sin(t * 3000), 5);
  */
 export function play_wave(wave: Wave, duration: number): Sound {
+  validateDuration(play_wave.name, duration);
+  validateWave(play_wave.name, wave);
   return play(make_sound(wave, duration));
 }
 
@@ -333,17 +366,21 @@ export function play_wave(wave: Wave, duration: number): Sound {
  * given in seconds. The first Wave is for the left channel, the second for the
  * right channel.
  *
- * @param wave1 the wave function to play on the left channel, starting at 0
- * @param wave2 the wave function to play on the right channel, starting at 0
+ * @param left_wave the wave function to play on the left channel, starting at 0
+ * @param right_wave the wave function to play on the right channel, starting at 0
  * @return the given Sound
  * @example play_waves(t => math_sin(t * 3000), t => math_sin(t * 6000), 5);
  */
 export function play_waves(
-  wave1: Wave,
-  wave2: Wave,
+  left_wave: Wave,
+  right_wave: Wave,
   duration: number
 ): Sound {
-  return play(make_stereo_sound(wave1, wave2, duration));
+  validateDuration(make_sound.name, duration);
+  validateWave(make_sound.name, left_wave, 'left');
+  validateWave(make_sound.name, right_wave, 'right');
+
+  return play(make_stereo_sound(left_wave, right_wave, duration));
 }
 
 /**
@@ -362,87 +399,89 @@ export function play_in_tab(sound: Sound): Sound {
     // If a sound is already playing, terminate execution.
   } else if (isPlaying) {
     throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
-  } else if (get_duration(sound) < 0) {
+  }
+
+  const duration = get_duration(sound) ;
+  if (duration < 0) {
     throw new Error(`${play_in_tab.name}: duration of sound is negative`);
-  } else if (get_duration(sound) === 0) {
-    return sound;
-  } else {
-    // Instantiate audio context if it has not been instantiated.
-    if (!audioplayer) {
-      init_audioCtx();
-    }
-
-    const channel: number[] = [];
-    const len = Math.ceil(FS * get_duration(sound));
-
-    let Ltemp: number;
-    let Rtemp: number;
-    let Lprev_value = 0;
-    let Rprev_value = 0;
-
-    const left_wave = get_left_wave(sound);
-    const right_wave = get_right_wave(sound);
-    for (let i = 0; i < len; i += 1) {
-      Ltemp = left_wave(i / FS);
-      // clip amplitude
-      if (Ltemp > 1) {
-        channel[2 * i] = 1;
-      } else if (Ltemp < -1) {
-        channel[2 * i] = -1;
-      } else {
-        channel[2 * i] = Ltemp;
-      }
-
-      // smoothen out sudden cut-outs
-      if (
-        channel[2 * i] === 0
-        && Math.abs(channel[2 * i] - Lprev_value) > 0.01
-      ) {
-        channel[2 * i] = Lprev_value * 0.999;
-      }
-
-      Lprev_value = channel[2 * i];
-
-      Rtemp = right_wave(i / FS);
-      // clip amplitude
-      if (Rtemp > 1) {
-        channel[2 * i + 1] = 1;
-      } else if (Rtemp < -1) {
-        channel[2 * i + 1] = -1;
-      } else {
-        channel[2 * i + 1] = Rtemp;
-      }
-
-      // smoothen out sudden cut-outs
-      if (
-        channel[2 * i + 1] === 0
-        && Math.abs(channel[2 * i] - Rprev_value) > 0.01
-      ) {
-        channel[2 * i + 1] = Rprev_value * 0.999;
-      }
-
-      Rprev_value = channel[2 * i + 1];
-    }
-
-    // quantize
-    for (let i = 0; i < channel.length; i += 1) {
-      channel[i] = Math.floor(channel[i] * 32767.999);
-    }
-
-    const riffwave = new RIFFWAVE([]);
-    riffwave.header.sampleRate = FS;
-    riffwave.header.numChannels = 2;
-    riffwave.header.bitsPerSample = 16;
-    riffwave.Make(channel);
-
-    const audio = {
-      toReplString: () => '<AudioPlayed>',
-      dataUri: riffwave.dataURI
-    };
-
-    audioPlayed.push(audio);
+  } else if (duration === 0) {
     return sound;
   }
+  // Instantiate audio context if it has not been instantiated.
+  if (!audioplayer) {
+    init_audioCtx();
+  }
+
+  const channel: number[] = [];
+  const len = Math.ceil(FS * duration);
+
+  let Ltemp: number;
+  let Rtemp: number;
+  let Lprev_value = 0;
+  let Rprev_value = 0;
+
+  const left_wave = get_left_wave(sound);
+  const right_wave = get_right_wave(sound);
+  for (let i = 0; i < len; i += 1) {
+    Ltemp = left_wave(i / FS);
+    // clip amplitude
+    if (Ltemp > 1) {
+      channel[2 * i] = 1;
+    } else if (Ltemp < -1) {
+      channel[2 * i] = -1;
+    } else {
+      channel[2 * i] = Ltemp;
+    }
+
+    // smoothen out sudden cut-outs
+    if (
+      channel[2 * i] === 0
+      && Math.abs(channel[2 * i] - Lprev_value) > 0.01
+    ) {
+      channel[2 * i] = Lprev_value * 0.999;
+    }
+
+    Lprev_value = channel[2 * i];
+
+    Rtemp = right_wave(i / FS);
+    // clip amplitude
+    if (Rtemp > 1) {
+      channel[2 * i + 1] = 1;
+    } else if (Rtemp < -1) {
+      channel[2 * i + 1] = -1;
+    } else {
+      channel[2 * i + 1] = Rtemp;
+    }
+
+    // smoothen out sudden cut-outs
+    if (
+      channel[2 * i + 1] === 0
+      && Math.abs(channel[2 * i] - Rprev_value) > 0.01
+    ) {
+      channel[2 * i + 1] = Rprev_value * 0.999;
+    }
+
+    Rprev_value = channel[2 * i + 1];
+  }
+
+  // quantize
+  for (let i = 0; i < channel.length; i += 1) {
+    channel[i] = Math.floor(channel[i] * 32767.999);
+  }
+
+  const riffwave = new RIFFWAVE([]);
+  riffwave.header.sampleRate = FS;
+  riffwave.header.numChannels = 2;
+  riffwave.header.bitsPerSample = 16;
+  riffwave.Make(channel);
+
+  const audio = {
+    toReplString: () => '<AudioPlayed>',
+    dataUri: riffwave.dataURI
+  };
+
+  audioPlayed.push(audio);
+  return sound;
 }
 
 /**
@@ -460,91 +499,94 @@ export function play(sound: Sound): Sound {
     // If a sound is already playing, terminate execution.
   } else if (isPlaying) {
     throw new Error(`${play.name}: audio system still playing previous sound`);
-  } else if (get_duration(sound) < 0) {
+  }
+
+  const duration = get_duration(sound);
+  if (duration < 0) {
     throw new Error(`${play.name}: duration of sound is negative`);
-  } else if (get_duration(sound) === 0) {
-    return sound;
-  } else {
-    // Instantiate audio context if it has not been instantiated.
-    if (!audioplayer) {
-      init_audioCtx();
-    }
-
-    const channel: number[] = [];
-    const len = Math.ceil(FS * get_duration(sound));
-
-    let Ltemp: number;
-    let Rtemp: number;
-    let Lprev_value = 0;
-    let Rprev_value = 0;
-
-    const left_wave = get_left_wave(sound);
-    const right_wave = get_right_wave(sound);
-    for (let i = 0; i < len; i += 1) {
-      Ltemp = left_wave(i / FS);
-      // clip amplitude
-      if (Ltemp > 1) {
-        channel[2 * i] = 1;
-      } else if (Ltemp < -1) {
-        channel[2 * i] = -1;
-      } else {
-        channel[2 * i] = Ltemp;
-      }
-
-      // smoothen out sudden cut-outs
-      if (
-        channel[2 * i] === 0
-        && Math.abs(channel[2 * i] - Lprev_value) > 0.01
-      ) {
-        channel[2 * i] = Lprev_value * 0.999;
-      }
-
-      Lprev_value = channel[2 * i];
-
-      Rtemp = right_wave(i / FS);
-      // clip amplitude
-      if (Rtemp > 1) {
-        channel[2 * i + 1] = 1;
-      } else if (Rtemp < -1) {
-        channel[2 * i + 1] = -1;
-      } else {
-        channel[2 * i + 1] = Rtemp;
-      }
-
-      // smoothen out sudden cut-outs
-      if (
-        channel[2 * i + 1] === 0
-        && Math.abs(channel[2 * i] - Rprev_value) > 0.01
-      ) {
-        channel[2 * i + 1] = Rprev_value * 0.999;
-      }
-
-      Rprev_value = channel[2 * i + 1];
-    }
-
-    // quantize
-    for (let i = 0; i < channel.length; i += 1) {
-      channel[i] = Math.floor(channel[i] * 32767.999);
-    }
-
-    const riffwave = new RIFFWAVE([]);
-    riffwave.header.sampleRate = FS;
-    riffwave.header.numChannels = 2;
-    riffwave.header.bitsPerSample = 16;
-    riffwave.Make(channel);
-    const audio = new Audio(riffwave.dataURI);
-    const source2 = audioplayer.createMediaElementSource(audio);
-    source2.connect(audioplayer.destination);
-
-    // Connect data to output destination
-    audio.play();
-    isPlaying = true;
-    audio.onended = () => {
-      source2.disconnect(audioplayer.destination);
-      isPlaying = false;
-    };
+  } else if (duration === 0) {
     return sound;
   }
+
+  // Instantiate audio context if it has not been instantiated.
+  if (!audioplayer) {
+    init_audioCtx();
+  }
+
+  const channel: number[] = [];
+  const len = Math.ceil(FS * duration);
+
+  let Ltemp: number;
+  let Rtemp: number;
+  let Lprev_value = 0;
+  let Rprev_value = 0;
+
+  const left_wave = get_left_wave(sound);
+  const right_wave = get_right_wave(sound);
+  for (let i = 0; i < len; i += 1) {
+    Ltemp = left_wave(i / FS);
+    // clip amplitude
+    if (Ltemp > 1) {
+      channel[2 * i] = 1;
+    } else if (Ltemp < -1) {
+      channel[2 * i] = -1;
+    } else {
+      channel[2 * i] = Ltemp;
+    }
+
+    // smoothen out sudden cut-outs
+    if (
+      channel[2 * i] === 0
+      && Math.abs(channel[2 * i] - Lprev_value) > 0.01
+    ) {
+      channel[2 * i] = Lprev_value * 0.999;
+    }
+
+    Lprev_value = channel[2 * i];
+
+    Rtemp = right_wave(i / FS);
+    // clip amplitude
+    if (Rtemp > 1) {
+      channel[2 * i + 1] = 1;
+    } else if (Rtemp < -1) {
+      channel[2 * i + 1] = -1;
+    } else {
+      channel[2 * i + 1] = Rtemp;
+    }
+
+    // smoothen out sudden cut-outs
+    if (
+      channel[2 * i + 1] === 0
+      && Math.abs(channel[2 * i] - Rprev_value) > 0.01
+    ) {
+      channel[2 * i + 1] = Rprev_value * 0.999;
+    }
+
+    Rprev_value = channel[2 * i + 1];
+  }
+
+  // quantize
+  for (let i = 0; i < channel.length; i += 1) {
+    channel[i] = Math.floor(channel[i] * 32767.999);
+  }
+
+  const riffwave = new RIFFWAVE([]);
+  riffwave.header.sampleRate = FS;
+  riffwave.header.numChannels = 2;
+  riffwave.header.bitsPerSample = 16;
+  riffwave.Make(channel);
+  const audio = new Audio(riffwave.dataURI);
+  const source2 = audioplayer.createMediaElementSource(audio);
+  source2.connect(audioplayer.destination);
+
+  // Connect data to output destination
+  audio.play();
+  isPlaying = true;
+  audio.onended = () => {
+    source2.disconnect(audioplayer.destination);
+    isPlaying = false;
+  };
+  return sound;
 }
 
 /**
@@ -635,6 +677,7 @@ export function pan_mod(modulator: Sound): SoundTransformer {
  * @example noise_sound(5);
  */
 export function noise_sound(duration: number): Sound {
+  validateDuration(noise_sound.name, duration);
   return make_sound((_t) => Math.random() * 2 - 1, duration);
 }
 
@@ -646,6 +689,7 @@ export function noise_sound(duration: number): Sound {
  * @example silence_sound(5);
  */
 export function silence_sound(duration: number): Sound {
+  validateDuration(silence_sound.name, duration);
   return make_sound((_t) => 0, duration);
 }
 
@@ -658,6 +702,7 @@ export function silence_sound(duration: number): Sound {
  * @example sine_sound(440, 5);
  */
 export function sine_sound(freq: number, duration: number): Sound {
+  validateDuration(sine_sound.name, duration);
   return make_sound((t) => Math.sin(2 * Math.PI * t * freq), duration);
 }
 
@@ -670,6 +715,7 @@ export function sine_sound(freq: number, duration: number): Sound {
  * @example square_sound(440, 5);
  */
 export function square_sound(f: number, duration: number): Sound {
+  validateDuration(square_sound.name, duration);
   function fourier_expansion_square(t: number) {
     let answer = 0;
     for (let i = 1; i <= fourier_expansion_level; i += 1) {
@@ -692,6 +738,7 @@ export function square_sound(f: number, duration: number): Sound {
  * @example triangle_sound(440, 5);
  */
 export function triangle_sound(freq: number, duration: number): Sound {
+  validateDuration(triangle_sound.name, duration);
   function fourier_expansion_triangle(t: number) {
     let answer = 0;
     for (let i = 0; i < fourier_expansion_level; i += 1) {
@@ -716,6 +763,7 @@ export function triangle_sound(freq: number, duration: number): Sound {
  * @example sawtooth_sound(440, 5);
  */
 export function sawtooth_sound(freq: number, duration: number): Sound {
+  validateDuration(sawtooth_sound.name, duration);
   function fourier_expansion_sawtooth(t: number) {
     let answer = 0;
     for (let i = 1; i <= fourier_expansion_level; i += 1) {
@@ -814,7 +862,7 @@ export function adsr(
   sustain_level: number,
   release_ratio: number
 ): SoundTransformer {
-  return (sound) => {
+  return sound => {
     const Lwave = get_left_wave(sound);
     const Rwave = get_right_wave(sound);
     const duration = get_duration(sound);
@@ -903,11 +951,16 @@ export function phase_mod(
   duration: number,
   amount: number
 ): SoundTransformer {
-  return (modulator: Sound) => make_stereo_sound(
-    (t) => Math.sin(2 * Math.PI * t * freq + amount * get_left_wave(modulator)(t)),
-    (t) => Math.sin(2 * Math.PI * t * freq + amount * get_right_wave(modulator)(t)),
-    duration
-  );
+  return modulator => {
+    const left_wave = get_left_wave(modulator);
+    const right_wave = get_left_wave(modulator);
+
+    return make_stereo_sound(
+      (t) => Math.sin(2 * Math.PI * t * freq + amount * left_wave(t)),
+      (t) => Math.sin(2 * Math.PI * t * freq + amount * right_wave(t)),
+      duration
+    );
+  };
 }
 
 // Instruments

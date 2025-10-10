@@ -133,10 +133,10 @@ function save(audioBuffer: AudioBuffer) {
 }
 
 /**
- * Throws an error if any of the provided parameters are outside of their
- * acceptable values.
+ * Throws an exception if duration is not a number or if
+ * number is negative
  */
-function validateSound(func_name: string, wave: Wave, duration: number) {
+function validateDuration(func_name: string, duration: unknown): asserts duration is number {
   if (typeof duration !== 'number') {
     throw new Error(`${func_name} expects a number for duration, got ${duration}`);
   }
@@ -144,7 +144,12 @@ function validateSound(func_name: string, wave: Wave, duration: number) {
   if (duration < 0) {
     throw new Error(`${func_name}: Sound duration must be greater than or equal to 0`);
   }
+}
 
+/**
+ * Throws an exception if wave is not a function
+ */
+function validateWave(func_name: string, wave: unknown): asserts wave is Wave {
   if (typeof wave !== 'function') {
     throw new Error(`${func_name} expects a wave, got ${wave}`);
   }
@@ -266,7 +271,9 @@ export function record_for(duration: number, buffer: number): () => Sound {
  * @example const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);
  */
 export function make_sound(wave: Wave, duration: number): Sound {
-  validateSound(make_sound.name, wave, duration);
+  validateDuration(make_sound.name, duration);
+  validateWave(make_sound.name, wave);
+
   return pair((t: number) => (t >= duration ? 0 : wave(t)), duration);
 }
 
@@ -316,7 +323,9 @@ export function is_sound(x: unknown): x is Sound {
  * @example play_wave(t => math_sin(t * 3000), 5);
  */
 export function play_wave(wave: Wave, duration: number): Sound {
-  validateSound(play_wave.name, wave, duration);
+  validateDuration(play_wave.name, duration);
+  validateWave(play_wave.name, wave);
+
   return play(make_sound(wave, duration));
 }
 
@@ -486,6 +495,7 @@ export function stop(): void {
  * @category Primitive
  */
 export function noise_sound(duration: number): Sound {
+  validateDuration(noise_sound.name, duration);
   return make_sound((_t) => Math.random() * 2 - 1, duration);
 }
 
@@ -498,6 +508,7 @@ export function noise_sound(duration: number): Sound {
  * @category Primitive
  */
 export function silence_sound(duration: number): Sound {
+  validateDuration(silence_sound.name, duration);
   return make_sound((_t) => 0, duration);
 }
 
@@ -511,6 +522,7 @@ export function silence_sound(duration: number): Sound {
  * @category Primitive
  */
 export function sine_sound(freq: number, duration: number): Sound {
+  validateDuration(sine_sound.name, duration);
   return make_sound((t) => Math.sin(2 * Math.PI * t * freq), duration);
 }
 
@@ -524,6 +536,7 @@ export function sine_sound(freq: number, duration: number): Sound {
  * @category Primitive
  */
 export function square_sound(f: number, duration: number): Sound {
+  validateDuration(square_sound.name, duration);
   function fourier_expansion_square(t: number) {
     let answer = 0;
     for (let i = 1; i <= fourier_expansion_level; i += 1) {
@@ -547,6 +560,7 @@ export function square_sound(f: number, duration: number): Sound {
  * @category Primitive
  */
 export function triangle_sound(freq: number, duration: number): Sound {
+  validateDuration(triangle_sound.name, duration);
   function fourier_expansion_triangle(t: number) {
     let answer = 0;
     for (let i = 0; i < fourier_expansion_level; i += 1) {
@@ -572,6 +586,7 @@ export function triangle_sound(freq: number, duration: number): Sound {
  * @category Primitive
  */
 export function sawtooth_sound(freq: number, duration: number): Sound {
+  validateDuration(sawtooth_sound.name, duration);
   function fourier_expansion_sawtooth(t: number) {
     let answer = 0;
     for (let i = 1; i <= fourier_expansion_level; i += 1) {
@@ -673,7 +688,7 @@ export function adsr(
   sustain_level: number,
   release_ratio: number
 ): SoundTransformer {
-  return (sound) => {
+  return sound => {
     const wave = get_wave(sound);
     const duration = get_duration(sound);
     const attack_time = duration * attack_ratio;
