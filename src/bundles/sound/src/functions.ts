@@ -336,62 +336,65 @@ export function play_in_tab(sound: Sound): Sound {
     // If a sound is already playing, terminate execution.
   } else if (isPlaying) {
     throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
-  } else if (get_duration(sound) < 0) {
+  }
+
+  const duration = get_duration(sound);
+  if (duration < 0) {
     throw new Error(`${play_in_tab.name}: duration of sound is negative`);
-  } else if (get_duration(sound) === 0) {
-    return sound;
-  } else {
-    // Instantiate audio context if it has not been instantiated.
-    if (!audioplayer) {
-      init_audioCtx();
-    }
-
-    // Create mono buffer
-    const channel: number[] = [];
-    const len = Math.ceil(FS * get_duration(sound));
-
-    let temp: number;
-    let prev_value = 0;
-
-    const wave = get_wave(sound);
-    for (let i = 0; i < len; i += 1) {
-      temp = wave(i / FS);
-      // clip amplitude
-      // channel[i] = temp > 1 ? 1 : temp < -1 ? -1 : temp;
-      if (temp > 1) {
-        channel[i] = 1;
-      } else if (temp < -1) {
-        channel[i] = -1;
-      } else {
-        channel[i] = temp;
-      }
-
-      // smoothen out sudden cut-outs
-      if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
-        channel[i] = prev_value * 0.999;
-      }
-
-      prev_value = channel[i];
-    }
-
-    // quantize
-    for (let i = 0; i < channel.length; i += 1) {
-      channel[i] = Math.floor(channel[i] * 32767.999);
-    }
-
-    const riffwave = new RIFFWAVE([]);
-    riffwave.header.sampleRate = FS;
-    riffwave.header.numChannels = 1;
-    riffwave.header.bitsPerSample = 16;
-    riffwave.Make(channel);
-
-    const soundToPlay = {
-      toReplString: () => '<AudioPlayed>',
-      dataUri: riffwave.dataURI
-    };
-    audioPlayed.push(soundToPlay);
+  } else if (duration === 0) {
     return sound;
   }
+
+  // Instantiate audio context if it has not been instantiated.
+  if (!audioplayer) {
+    init_audioCtx();
+  }
+
+  // Create mono buffer
+  const channel: number[] = [];
+  const len = Math.ceil(FS * duration);
+
+  let temp: number;
+  let prev_value = 0;
+
+  const wave = get_wave(sound);
+  for (let i = 0; i < len; i += 1) {
+    temp = wave(i / FS);
+    // clip amplitude
+    // channel[i] = temp > 1 ? 1 : temp < -1 ? -1 : temp;
+    if (temp > 1) {
+      channel[i] = 1;
+    } else if (temp < -1) {
+      channel[i] = -1;
+    } else {
+      channel[i] = temp;
+    }
+
+    // smoothen out sudden cut-outs
+    if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
+      channel[i] = prev_value * 0.999;
+    }
+
+    prev_value = channel[i];
+  }
+
+  // quantize
+  for (let i = 0; i < channel.length; i += 1) {
+    channel[i] = Math.floor(channel[i] * 32767.999);
+  }
+
+  const riffwave = new RIFFWAVE([]);
+  riffwave.header.sampleRate = FS;
+  riffwave.header.numChannels = 1;
+  riffwave.header.bitsPerSample = 16;
+  riffwave.Make(channel);
+
+  const soundToPlay = {
+    toReplString: () => '<AudioPlayed>',
+    dataUri: riffwave.dataURI
+  };
+  audioPlayed.push(soundToPlay);
+  return sound;
 }
 
 /**
@@ -406,59 +409,62 @@ export function play(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
-  } else if (get_duration(sound) < 0) {
+  }
+
+  const duration = get_duration(sound);
+  if (duration < 0) {
     throw new Error(`${play.name}: duration of sound is negative`);
-  } else if (get_duration(sound) === 0) {
-    return sound;
-  } else {
-    // Instantiate audio context if it has not been instantiated.
-    if (!audioplayer) {
-      init_audioCtx();
-    }
-
-    // Create mono buffer
-    const theBuffer = audioplayer.createBuffer(
-      1,
-      Math.ceil(FS * get_duration(sound)),
-      FS
-    );
-    const channel = theBuffer.getChannelData(0);
-
-    let temp: number;
-    let prev_value = 0;
-
-    const wave = get_wave(sound);
-    for (let i = 0; i < channel.length; i += 1) {
-      temp = wave(i / FS);
-      // clip amplitude
-      if (temp > 1) {
-        channel[i] = 1;
-      } else if (temp < -1) {
-        channel[i] = -1;
-      } else {
-        channel[i] = temp;
-      }
-
-      // smoothen out sudden cut-outs
-      if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
-        channel[i] = prev_value * 0.999;
-      }
-
-      prev_value = channel[i];
-    }
-
-    // Connect data to output destination
-    const source = audioplayer.createBufferSource();
-    source.buffer = theBuffer;
-    source.connect(audioplayer.destination);
-    isPlaying = true;
-    source.start();
-    source.onended = () => {
-      source.disconnect(audioplayer.destination);
-      isPlaying = false;
-    };
+  } else if (duration === 0) {
     return sound;
   }
+
+  // Instantiate audio context if it has not been instantiated.
+  if (!audioplayer) {
+    init_audioCtx();
+  }
+
+  // Create mono buffer
+  const theBuffer = audioplayer.createBuffer(
+    1,
+    Math.ceil(FS * duration),
+    FS
+  );
+  const channel = theBuffer.getChannelData(0);
+
+  let temp: number;
+  let prev_value = 0;
+
+  const wave = get_wave(sound);
+  for (let i = 0; i < channel.length; i += 1) {
+    temp = wave(i / FS);
+    // clip amplitude
+    if (temp > 1) {
+      channel[i] = 1;
+    } else if (temp < -1) {
+      channel[i] = -1;
+    } else {
+      channel[i] = temp;
+    }
+
+    // smoothen out sudden cut-outs
+    if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
+      channel[i] = prev_value * 0.999;
+    }
+
+    prev_value = channel[i];
+  }
+
+  // Connect data to output destination
+  const source = audioplayer.createBufferSource();
+  source.buffer = theBuffer;
+  source.connect(audioplayer.destination);
+  isPlaying = true;
+  source.start();
+  source.onended = () => {
+    source.disconnect(audioplayer.destination);
+    isPlaying = false;
+  };
+  return sound;
 }
 
 /**
@@ -751,10 +757,13 @@ export function phase_mod(
   duration: number,
   amount: number
 ): SoundTransformer {
-  return (modulator: Sound) => make_sound(
-    (t) => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)),
-    duration
-  );
+  return modulator => {
+    const wave = get_wave(modulator);
+    return make_sound(
+      t => Math.sin(2 * Math.PI * t * freq + amount * wave(t)),
+      duration
+    );
+  };
 }
 
 // Instruments

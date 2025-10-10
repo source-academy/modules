@@ -11,7 +11,7 @@ describe(funcs.make_sound, () => {
   it('Should not error when duration is zero', () => {
     expect(() => funcs.make_sound(() => 0, 0)).not.toThrow();
   });
-  
+
   it('Should error gracefully when wave is not a function', () => {
     expect(() => funcs.make_sound(true as any, 1))
       .toThrow('make_sound expects a wave, got true');
