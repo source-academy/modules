@@ -1,0 +1,20 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`painter tab 1`] = `
+<Painter
+  context={
+    {
+      "context": {
+        "moduleContexts": {
+          "painter": {
+            "state": {
+              "drawnPainters": [],
+            },
+            "tabs": [],
+          },
+        },
+      },
+    }
+  }
+/>
+`;
