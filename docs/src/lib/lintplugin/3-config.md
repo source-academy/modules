@@ -10,8 +10,8 @@ title: Config Reference
 Following the [ESLint conventions](https://eslint.org/docs/latest/extend/shareable-configs) for sharing configurations, each of the configurations
 are named with a different prefix to indicate what kind of configuration it is.
 
-Each configuration might consist of 1 or more sub configurations
-Each of the tables belows contains information about what rules have been configured for each sub configuration and for what files.
+Each configuration might consist of 1 or more sub configurations.
+Each of the tables below contains information about what rules have been configured for each sub configuration and for what files.
 
 Some of the rules have URL links to documentation; you can click on the name of the rule to see the associated documentation page.
 

@@ -92,7 +92,7 @@ export const translate = RuneFunctions.translate;
 ```
 
 > [!WARNING]
-> The decorators returned by `createTypeMap` will only populated the type map returned by the same call to `createTypeMap`. Multiple
+> The decorators returned by `createTypeMap` will only populate the type map returned by the same call to `createTypeMap`. Multiple
 > calls to `createTypeMap` will return entirely new and unrelated decorators and type map instances.
 >
 > If you need to use the decorators across files, re-export the decorators as shown above instead of calling `createTypeMap` multiple times.

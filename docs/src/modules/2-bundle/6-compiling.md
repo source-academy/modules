@@ -64,7 +64,7 @@ If you intend for your bundle to be consumed from other bundles, do the followin
     "./*": "./dist/*.js"
   },
   "scripts": {
-    "prepare": "yarn buildtools tsc"
+    "postinstall": "yarn buildtools tsc"
   }
 }
 ```
