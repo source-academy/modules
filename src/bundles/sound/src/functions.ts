@@ -133,6 +133,24 @@ function save(audioBuffer: AudioBuffer) {
 }
 
 /**
+ * Throws an error if any of the provided parameters are outside of their
+ * acceptable values.
+ */
+function validateSound(func_name: string, wave: Wave, duration: number) {
+  if (typeof duration !== 'number') {
+    throw new Error(`${func_name} expects a number for duration, got ${duration}`);
+  }
+
+  if (duration < 0) {
+    throw new Error(`${func_name}: Sound duration must be greater than or equal to 0`);
+  }
+
+  if (typeof wave !== 'function') {
+    throw new Error(`${func_name} expects a wave, got ${wave}`);
+  }
+}
+
+/**
  * Initialize recording by obtaining permission
  * to use the default device microphone
  *
@@ -248,10 +266,7 @@ export function record_for(duration: number, buffer: number): () => Sound {
  * @example const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);
  */
 export function make_sound(wave: Wave, duration: number): Sound {
-  if (duration < 0) {
-    throw new Error('Sound duration must be greater than or equal to 0');
-  }
-
+  validateSound(make_sound.name, wave, duration);
   return pair((t: number) => (t >= duration ? 0 : wave(t)), duration);
 }
 
@@ -284,7 +299,7 @@ export function get_duration(sound: Sound): number {
  * @return true if x is a Sound, false otherwise
  * @example is_sound(make_sound(t => 0, 2)); // Returns true
  */
-export function is_sound(x: any): x is Sound {
+export function is_sound(x: unknown): x is Sound {
   return (
     is_pair(x)
     && typeof get_wave(x) === 'function'
@@ -301,6 +316,7 @@ export function is_sound(x: any): x is Sound {
  * @example play_wave(t => math_sin(t * 3000), 5);
  */
 export function play_wave(wave: Wave, duration: number): Sound {
+  validateSound(play_wave.name, wave, duration);
   return play(make_sound(wave, duration));
 }
 
