@@ -1,6 +1,9 @@
-# Bundle Documentation for Users
+---
+title: Cadet Documentation
+---
+# Bundle Documentation for Cadets
 
-Documentation for Source bundles is generated using the [`typedoc`](https://typedoc.org) tool. There are two types: HTML and JSON documentation.
+For cadets to know how to use your bundle's functionalities, you must provide documentation. Cadet documentation for Source bundles is generated using the [`typedoc`](https://typedoc.org) tool. There are two types: HTML and JSON documentation.
 
 By reading comments and type annotations, `typedoc` is able to generate both human readable documentation and documentation in the form of JSON.
 
