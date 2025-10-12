@@ -33,8 +33,7 @@ If you have more complex documentation needs, you can follow the instructions in
 
 ### 2. As a collection of Markdown files located [here](../../../lib/dev):
 
-Within the `dev` folder, markdown files are collated and displayed in the index page. Each
-markdown file/folder structure represents a separate bundle.
+Within the `dev` folder, each markdown file/folder structure represents a separate bundle.
 
 For example:
 ```dirtree
@@ -53,12 +52,31 @@ children:
   comment: Add your own bundle's documentation!
 ```
 
+You can of course use a directory structure as well:
+```dirtree
+name: dev
+children:
+- name: index.md
+  comment: Index Page
+
+- name: curve.md
+  comment: Documentation for the curve bundle
+
+- name: game.md
+  comment: Documentation for the game bundle
+
+- name: your_bundle
+  children:
+  - index.md
+  - docs.md
+```
+
 ### 3. Throughout Your Code
 
 Especially when your bundle intentionally breaks conventions or rules, or when you need to do
 something unconventional, you should leave comments in your source code detailing why.
 
-For example, the `communication` bundle uses the `mqtt` bundle but doesn't use its main
+In the example below, the `communication` bundle uses the `mqtt` bundle but doesn't use its main
 export. The comment explains why the alternate import is being used.
 ```ts
 import { connect, type MqttClient, type QoS } from 'mqtt/dist/mqtt';

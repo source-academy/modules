@@ -6,6 +6,7 @@ import markdown from '@eslint/markdown';
 import saLintPlugin from '@sourceacademy/lint-plugin';
 import stylePlugin from '@stylistic/eslint-plugin';
 import vitestPlugin from '@vitest/eslint-plugin';
+import { defineConfig } from 'eslint/config';
 import * as importPlugin from 'eslint-plugin-import';
 import jsdocPlugin from 'eslint-plugin-jsdoc';
 import * as mdx from 'eslint-plugin-mdx';
@@ -19,7 +20,7 @@ import tseslint from 'typescript-eslint';
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
 const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
 
-export default tseslint.config(
+export default defineConfig(
   {
     name: 'Global Ignores',
     ignores: [
@@ -57,7 +58,6 @@ export default tseslint.config(
     }),
     language: 'markdown/gfm',
     languageOptions: {
-      // @ts-expect-error typescript eslint doesn't recognize this property
       frontmatter: 'yaml'
     },
     plugins: { markdown },
@@ -95,6 +95,7 @@ export default tseslint.config(
     extends: [ymlPlugin.configs['flat/recommended']],
     files: ['**/*.yml', '**/*.yaml'],
     plugins: {
+      // @ts-expect-error yml plugin causes errors
       yml: ymlPlugin
     },
     rules: {
