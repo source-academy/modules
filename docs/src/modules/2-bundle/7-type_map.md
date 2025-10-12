@@ -11,7 +11,7 @@ Regardless of the situation, type maps are a way for bundle authors to control t
 > Currently `js-slang` only performs any kind of type checking for modules when the typed Source variant is used.
 > This means that type maps are only used by the typed Source Variant.
 >
-> This also means that documentation (mentioned [here](./5-documentation/5-documentation)) will not reflect the types specified by the type map
+> This also means that documentation (mentioned [here](./5-documentation/1-cadet/1-cadet)) will not reflect the types specified by the type map
 
 Type Maps are opt-in. If the bundle does not provide a type map, then no type checking is performed on its exports, similar to
 how `skipLibCheck: true` is used in Typescript.
@@ -101,7 +101,7 @@ export const translate = RuneFunctions.translate;
 > Notice that when re-exporting, the documentation is attached to the constant declaration and not the declaration in the class. This is so that
 > the documentation is properly applied to the exported function.
 >
-> Also notice that the `@function` tag has been applied. More information about why this is necessary can be found [here](./5-documentation/5-documentation#use-of-function)
+> Also notice that the `@function` tag has been applied. More information about why this is necessary can be found [here](./5-documentation/1-cadet/1-cadet#use-of-function)
 >
 > A quick way to check if you have written your documentation correctly is to see if IntelliSense in VSCode is able to display it to you.
 

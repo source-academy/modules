@@ -31,7 +31,7 @@ the entire documentation server to read it).
 
 If you have more complex documentation needs, you can follow the instructions in the next section.
 
-### 2. As a collection of Markdown files located [here](../../../lib/dev):
+### 2. As a collection of Markdown files located [here](../../../lib/dev/index):
 
 Within the `dev` folder, each markdown file/folder structure represents a separate bundle.
 

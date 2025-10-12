@@ -27,7 +27,7 @@ Since modules are already written in Typescript, there is no need to use type-aw
 All type annotations should be written in directly Typescript
 so as not to confuse Typedoc and ensure that the Typescript compiler is able to ensure type safety.
 
-If you do need to the type of an export to be documented differently from its type in Typescript source code, you can use a [type map](../7-type_map).
+If you do need to the type of an export to be documented differently from its type in Typescript source code, you can use a [type map](../../7-type_map).
 :::
 
 Let us look at more examples from the `curve` module.
