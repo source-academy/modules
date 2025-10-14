@@ -26,7 +26,7 @@ const FS: number = 44100; // Output sample rate
 const fourier_expansion_level: number = 5; // fourier expansion level
 /**
  * duration of recording signal in milliseconds
- */ 
+ */
 const recording_signal_ms = 100;
 /**
  * duration of pause after "record" before recording signal is played
@@ -174,7 +174,7 @@ export function init_record(): string {
  * Records a sound until the returned stop function is called.
  * Takes a buffer duration (in seconds) as argument, and
  * returns a nullary stop. A call to the stop function returns a Sound promise.
- * 
+ *
  * How the function behaves in detail:
  * 1. `record` is called.
  * 2. The function waits for the given buffer duration.
@@ -231,14 +231,14 @@ export function record(buffer: number): () => SoundPromise {
 
 /**
  * Records a sound of a given duration. Returns a Sound promise.
- * 
+ *
  * How the function behaves in detail:
  * 1. `record_for` is called.
  * 2. The function waits for the given buffer duration.
  * 3. The recording signal is played.
  * 4. Recording begins when the recording signal finishes.
  * 5. The recording signal plays to signal the end after the given duration.
- * 
+ *
  * @example
  * ```
  * init_record();
