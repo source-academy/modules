@@ -24,11 +24,17 @@ import type {
 // Global Constants and Variables
 const FS: number = 44100; // Output sample rate
 const fourier_expansion_level: number = 5; // fourier expansion level
+/**
+ * duration of recording signal in milliseconds
+ */ 
+const recording_signal_ms = 100;
+/**
+ * duration of pause after "record" before recording signal is played
+ */
+const pre_recording_signal_pause_ms = 200;
 
 const audioPlayed: AudioPlayed[] = [];
-context.moduleContexts.sound.state = {
-  audioPlayed
-};
+context.moduleContexts.sound.state = { audioPlayed };
 
 interface BundleGlobalVars {
   /**
@@ -58,7 +64,10 @@ export const globalVars: BundleGlobalVars = {
   audioplayer: null
 };
 
-// Instantiates new audio context
+/**
+ * Returns the current AudioContext in use for the bundle. If
+ * none, initializes a new context and returns it.
+ */
 function getAudioContext() {
   if (!globalVars.audioplayer) {
     globalVars.audioplayer = new AudioContext();
@@ -79,8 +88,10 @@ function linear_decay(decay_period: number): (t: number) => number {
 // ---------------------------------------------
 // Microphone Functionality
 // ---------------------------------------------
-// check_permission is called whenever we try
-// to record a sound
+/**
+ * Determine if the user has already provided permission to use the
+ * microphone and return the provided MediaStream if they have.
+ */
 function check_permission() {
   if (globalVars.stream === null) {
     throw new Error('Call init_record(); to obtain permission to use microphone');
@@ -93,6 +104,10 @@ function check_permission() {
   return globalVars.stream;
 }
 
+/**
+ * Set up the provided MediaRecorder and begin the recording
+ * process.
+ */
 function start_recording(mediaRecorder: MediaRecorder) {
   const data: Blob[] = [];
   mediaRecorder.ondataavailable = (e) => e.data.size && data.push(e.data);
@@ -100,32 +115,30 @@ function start_recording(mediaRecorder: MediaRecorder) {
   mediaRecorder.onstop = () => process(data);
 }
 
-// duration of recording signal in milliseconds
-const recording_signal_ms = 100;
-
-// duration of pause after "run" before recording signal is played
-const pre_recording_signal_pause_ms = 200;
-
 function play_recording_signal() {
   play(sine_sound(1200, recording_signal_ms / 1000));
 }
 
+/**
+ * Converts the data received from the MediaRecorder into an AudioBuffer.
+ */
 function process(data: Blob[]) {
   const audioContext = new AudioContext();
   const blob = new Blob(data);
-
-  convertToArrayBuffer(blob)
-    .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
-    .then(save);
-}
-
-// Converts input microphone sound (blob) into array format.
-async function convertToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
   const url = URL.createObjectURL(blob);
-  const response = await fetch(url);
-  return response.arrayBuffer();
+  fetch(url)
+    .then(async response => {
+      const arrayBuffer = await response.arrayBuffer();
+      const decodedBuffer = await audioContext.decodeAudioData(arrayBuffer);
+      save(decodedBuffer);
+    });
 }
 
+/**
+ * Converts the data stored in the provided AudioBuffer, converts it
+ * into a Sound and then stores it into the `globalVars.recordedSound`
+ * variable.
+ */
 function save(audioBuffer: AudioBuffer) {
   const array = audioBuffer.getChannelData(0);
   const duration = array.length / FS;
@@ -138,29 +151,6 @@ function save(audioBuffer: AudioBuffer) {
     const lower = array[lowerIndex] ? array[lowerIndex] : 0;
     return lower * (1 - ratio) + upper * ratio;
   }, duration);
-}
-
-/**
- * Throws an exception if duration is not a number or if
- * number is negative
- */
-function validateDuration(func_name: string, duration: unknown): asserts duration is number {
-  if (typeof duration !== 'number') {
-    throw new Error(`${func_name} expects a number for duration, got ${duration}`);
-  }
-
-  if (duration < 0) {
-    throw new Error(`${func_name}: Sound duration must be greater than or equal to 0`);
-  }
-}
-
-/**
- * Throws an exception if wave is not a function
- */
-function validateWave(func_name: string, wave: unknown): asserts wave is Wave {
-  if (typeof wave !== 'function') {
-    throw new Error(`${func_name} expects a wave, got ${wave}`);
-  }
 }
 
 /**
@@ -183,8 +173,15 @@ export function init_record(): string {
 /**
  * Records a sound until the returned stop function is called.
  * Takes a buffer duration (in seconds) as argument, and
- * returns a nullary stop. A call to the stop function returns
- * a Sound promise:
+ * returns a nullary stop. A call to the stop function returns a Sound promise.
+ * 
+ * How the function behaves in detail:
+ * 1. `record` is called.
+ * 2. The function waits for the given buffer duration.
+ * 3. The recording signal is played.
+ * 4. Recording begins when the recording signal finishes.
+ * 5. Recording stops when the returned stop function is called.
+ *
  * @example
  * ```ts
  * init_record();
@@ -196,6 +193,10 @@ export function init_record(): string {
  * @param buffer - pause before recording, in seconds
  */
 export function record(buffer: number): () => SoundPromise {
+  if (typeof buffer !== 'number' || buffer < 0) {
+    throw new Error(`${record.name}: Expected a positive number for buffer, got ${buffer}`);
+  }
+
   if (globalVars.isPlaying) {
     throw new Error(`${record.name}: Cannot record while another sound is playing!`);
   }
@@ -229,17 +230,24 @@ export function record(buffer: number): () => SoundPromise {
 }
 
 /**
- * Records a sound of given <CODE>duration</CODE> in seconds, after
- * a <CODE>buffer</CODE> also in seconds, and
- * returns a Sound promise: a nullary function
- * that returns a Sound. Example: <PRE><CODE>init_record();
- * const promise = record_for(2, 0.5);
- * // In next query, you can play the promised Sound, by
- * // applying the promise:
- * play(promise());</CODE></PRE>
+ * Records a sound of a given duration. Returns a Sound promise.
+ * 
+ * How the function behaves in detail:
+ * 1. `record_for` is called.
+ * 2. The function waits for the given buffer duration.
+ * 3. The recording signal is played.
+ * 4. Recording begins when the recording signal finishes.
+ * 5. The recording signal plays to signal the end after the given duration.
+ * 
+ * @example
+ * ```
+ * init_record();
+ * const promise = record_for(2, 0.5); // begin recording after 0.5s for 2s
+ * const sound = promise();            // retrieve the recorded sound
+ * play(sound);                        // and do whatever with it
+ * ```
  * @param duration duration in seconds
  * @param buffer pause before recording, in seconds
- * @return <CODE>promise</CODE>: nullary function which returns recorded Sound
  */
 export function record_for(duration: number, buffer: number): SoundPromise {
   if (globalVars.isPlaying) {
@@ -278,15 +286,28 @@ export function record_for(duration: number, buffer: number): SoundPromise {
   return promise;
 }
 
-// =============================================================================
-// Module's Exposed Functions
-//
-// This file only includes the implementation and documentation of exposed
-// functions of the module. For private functions dealing with the browser's
-// graphics library context, see './webGL_curves.ts'.
-// =============================================================================
+/**
+ * Throws an exception if duration is not a number or if
+ * number is negative
+ */
+function validateDuration(func_name: string, duration: unknown): asserts duration is number {
+  if (typeof duration !== 'number') {
+    throw new Error(`${func_name} expects a number for duration, got ${duration}`);
+  }
 
-// Core functions
+  if (duration < 0) {
+    throw new Error(`${func_name}: Sound duration must be greater than or equal to 0`);
+  }
+}
+
+/**
+ * Throws an exception if wave is not a function
+ */
+function validateWave(func_name: string, wave: unknown): asserts wave is Wave {
+  if (typeof wave !== 'function') {
+    throw new Error(`${func_name} expects a wave, got ${wave}`);
+  }
+}
 
 /**
  * Makes a Sound with given wave function and duration.

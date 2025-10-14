@@ -9,9 +9,7 @@
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
-    "playwright": "^1.54.1",
-    "typescript": "^5.8.2",
-    "vitest": "^3.2.3"
+    "typescript": "^5.8.2"
   },
   "type": "module",
   "exports": {

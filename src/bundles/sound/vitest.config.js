@@ -9,11 +9,6 @@ export default defineConfig({
     root: import.meta.dirname,
     browser: {
       enabled: false,
-      provider: 'playwright',
-      instances: [{
-        screenshotFailures: false,
-        browser: 'chromium',
-      }]
     }
   }
 });

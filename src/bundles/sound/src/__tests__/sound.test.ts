@@ -1,11 +1,14 @@
-import { afterEach, beforeEach, describe, expect, it, test } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, test, vi } from 'vitest';
 import * as funcs from '../functions';
 import type { Sound, Wave } from '../types';
 import { mockAudioContext } from './utils';
 
 Object.defineProperty(global, 'AudioContext', {
-  value: () => mockAudioContext
+  value: () => {},
+  writable: true,
 });
+
+vi.spyOn(global, 'AudioContext').mockReturnValue(mockAudioContext as any);
 
 describe(funcs.make_sound, () => {
   it('Should error gracefully when duration is negative', () => {
@@ -48,8 +51,7 @@ describe('Concurrent playback functions', () => {
       expect(() => funcs.play(0 as any)).toThrow('play is expecting sound, but encountered 0');
     });
 
-    test.only('Concurrently playing two sounds should error', () => {
-      console.log(AudioContext);
+    test('Concurrently playing two sounds should error', () => {
       const sound = funcs.silence_sound(10);
       expect(() => funcs.play(sound)).not.toThrow();
       expect(() => funcs.play(sound)).toThrowError('play: Previous sound still playing');

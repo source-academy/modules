@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import { stringify } from 'js-slang/dist/utils/stringify';
 import {
   afterEach,
@@ -25,12 +24,25 @@ vi.spyOn(global, 'navigator', 'get').mockReturnValue({
 } as any);
 
 Object.defineProperty(global, 'AudioContext', {
-  value: () => mockAudioContext
+  value: () => {},
+  writable: true
 });
 
 Object.defineProperty(global, 'MediaRecorder', {
-  value: () => mockMediaRecorder
+  value: () => {},
+  writable: true
 });
+
+Object.defineProperty(global, 'URL', {
+  value: class {
+    static createObjectURL() {
+      return '';
+    }
+  }
+});
+
+vi.spyOn(global, 'AudioContext').mockReturnValue(mockAudioContext as any);
+vi.spyOn(global, 'MediaRecorder').mockReturnValue(mockMediaRecorder as any);
 
 beforeEach(() => {
   funcs.globalVars.recordedSound = null;
