@@ -16,6 +16,7 @@ import type {
   AudioPlayed,
   Sound,
   SoundProducer,
+  SoundPromise,
   SoundTransformer,
   Wave
 } from './types';
@@ -29,16 +30,40 @@ context.moduleContexts.sound.state = {
   audioPlayed
 };
 
-// Singular audio context for all playback functions
-let audioplayer: AudioContext;
+interface BundleGlobalVars {
+  /**
+   * Can be one of 3 values:\
+   * 1. `null`: `init_record` has not been called
+   * 2. `MediaStream`: `init_record` has been called and allowed permissions
+   * 3. `false`:`init_record` has been called and disallowed permissions
+   */
+  stream: MediaStream | false | null;
+  recordedSound: Sound | null;
 
-// Track if a sound is currently playing
-let isPlaying: boolean;
+  /**
+   * Track if a sound is currently playing
+   */
+  isPlaying: boolean;
+
+  /**
+   * Singular audio context for all playback functions
+   */
+  audioplayer: AudioContext | null;
+}
+
+export const globalVars: BundleGlobalVars = {
+  stream: null,
+  recordedSound: null,
+  isPlaying: false,
+  audioplayer: null
+};
 
 // Instantiates new audio context
-function init_audioCtx(): void {
-  audioplayer = new window.AudioContext();
-  // audioplayer = new (window.AudioContext || window.webkitAudioContext)();
+function getAudioContext() {
+  if (!globalVars.audioplayer) {
+    globalVars.audioplayer = new AudioContext();
+  }
+  return globalVars.audioplayer;
 }
 
 // linear decay from 1 to 0 over decay_period
@@ -54,39 +79,22 @@ function linear_decay(decay_period: number): (t: number) => number {
 // ---------------------------------------------
 // Microphone Functionality
 // ---------------------------------------------
-
-// permission initially undefined
-// set to true by granting microphone permission
-// set to false by denying microphone permission
-let permission: boolean | undefined;
-
-let recorded_sound: Sound | undefined;
-
 // check_permission is called whenever we try
 // to record a sound
 function check_permission() {
-  if (permission === undefined) {
+  if (globalVars.stream === null) {
     throw new Error('Call init_record(); to obtain permission to use microphone');
-  } else if (permission === false) {
+  } else if (globalVars.stream === false) {
     throw new Error(`Permission has been denied.\n
         Re-start browser and call init_record();\n
         to obtain permission to use microphone.`);
-  } // (permission === true): do nothing
-}
+  }
 
-let globalStream: any;
-
-function rememberStream(stream: any) {
-  permission = true;
-  globalStream = stream;
-}
-
-function setPermissionToFalse() {
-  permission = false;
+  return globalVars.stream;
 }
 
 function start_recording(mediaRecorder: MediaRecorder) {
-  const data: any[] = [];
+  const data: Blob[] = [];
   mediaRecorder.ondataavailable = (e) => e.data.size && data.push(e.data);
   mediaRecorder.start();
   mediaRecorder.onstop = () => process(data);
@@ -102,26 +110,26 @@ function play_recording_signal() {
   play(sine_sound(1200, recording_signal_ms / 1000));
 }
 
-function process(data) {
+function process(data: Blob[]) {
   const audioContext = new AudioContext();
   const blob = new Blob(data);
 
   convertToArrayBuffer(blob)
-    .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
+    .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
     .then(save);
 }
 
 // Converts input microphone sound (blob) into array format.
-function convertToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
+async function convertToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
   const url = URL.createObjectURL(blob);
-  return fetch(url)
-    .then((response) => response.arrayBuffer());
+  const response = await fetch(url);
+  return response.arrayBuffer();
 }
 
 function save(audioBuffer: AudioBuffer) {
   const array = audioBuffer.getChannelData(0);
   const duration = array.length / FS;
-  recorded_sound = make_sound((t) => {
+  globalVars.recordedSound = make_sound((t) => {
     const index = t * FS;
     const lowerIndex = Math.floor(index);
     const upperIndex = lowerIndex + 1;
@@ -164,44 +172,59 @@ function validateWave(func_name: string, wave: unknown): asserts wave is Wave {
 export function init_record(): string {
   navigator.mediaDevices
     .getUserMedia({ audio: true })
-    .then(rememberStream, setPermissionToFalse);
+    .then(stream => {
+      globalVars.stream = stream;
+    }, () => {
+      globalVars.stream = false;
+    });
   return 'obtaining recording permission';
 }
 
 /**
  * Records a sound until the returned stop function is called.
- * Takes a <CODE>buffer</CODE> duration (in seconds) as argument, and
- * returns a nullary stop function <CODE>stop</CODE>. A call
- * <CODE>stop()</CODE> returns a Sound promise: a nullary function
- * that returns a Sound. Example: <PRE><CODE>init_record();
- * const stop = record(0.5);
- * // record after 0.5 seconds. Then in next query:
- * const promise = stop();
- * // In next query, you can play the promised sound, by
- * // applying the promise:
- * play(promise());</CODE></PRE>
+ * Takes a buffer duration (in seconds) as argument, and
+ * returns a nullary stop. A call to the stop function returns
+ * a Sound promise:
+ * @example
+ * ```ts
+ * init_record();
+ * const stop = record(0.5); // record after 0.5 seconds.
+ * const promise = stop();   // stop recording and get sound promoie
+ * const sound = promise();  // retrieve the recorded sound
+ * play(sound);              // and do whatever with it
+ * ```
  * @param buffer - pause before recording, in seconds
- * @returns nullary <CODE>stop</CODE> function;
- * <CODE>stop()</CODE> stops the recording and
- * returns a Sound promise: a nullary function that returns the recorded Sound
  */
-export function record(buffer: number): () => () => Sound {
-  check_permission();
-  const mediaRecorder = new MediaRecorder(globalStream);
+export function record(buffer: number): () => SoundPromise {
+  if (globalVars.isPlaying) {
+    throw new Error(`${record.name}: Cannot record while another sound is playing!`);
+  }
+
+  const stream = check_permission();
+  const mediaRecorder = new MediaRecorder(stream);
+
   setTimeout(() => {
     play_recording_signal();
-    start_recording(mediaRecorder);
-  }, recording_signal_ms + buffer * 1000);
+    setTimeout(() => {
+      start_recording(mediaRecorder);
+    }, recording_signal_ms);
+  }, pre_recording_signal_pause_ms + buffer * 1000);
+
   return () => {
     mediaRecorder.stop();
     play_recording_signal();
-    return () => {
-      if (recorded_sound === undefined) {
+    const promise = () => {
+      if (globalVars.recordedSound === null) {
         throw new Error('recording still being processed');
       } else {
-        return recorded_sound;
+        return globalVars.recordedSound;
       }
     };
+
+    // TODO: Remove when ReplResult is properly implemented
+    promise.toReplString = () => '<SoundPromise>';
+    promise.toString = () => '<SoundPromise>';
+    return promise;
   };
 }
 
@@ -218,12 +241,13 @@ export function record(buffer: number): () => () => Sound {
  * @param buffer pause before recording, in seconds
  * @return <CODE>promise</CODE>: nullary function which returns recorded Sound
  */
-export function record_for(duration: number, buffer: number): () => Sound {
-  recorded_sound = undefined;
-  const recording_ms = duration * 1000;
-  const pre_recording_pause_ms = buffer * 1000;
-  check_permission();
-  const mediaRecorder = new MediaRecorder(globalStream);
+export function record_for(duration: number, buffer: number): SoundPromise {
+  if (globalVars.isPlaying) {
+    throw new Error(`${record_for.name}: Cannot record while another sound is playing!`);
+  }
+
+  const stream = check_permission();
+  const mediaRecorder = new MediaRecorder(stream);
 
   // order of events for record_for:
   // pre-recording-signal pause | recording signal |
@@ -236,17 +260,22 @@ export function record_for(duration: number, buffer: number): () => Sound {
       setTimeout(() => {
         mediaRecorder.stop();
         play_recording_signal();
-      }, recording_ms);
-    }, recording_signal_ms + pre_recording_pause_ms);
+      }, duration * 1000);
+    }, recording_signal_ms + buffer * 1000);
   }, pre_recording_signal_pause_ms);
 
-  return () => {
-    if (recorded_sound === undefined) {
+  const promise = () => {
+    if (globalVars.recordedSound === null) {
       throw new Error('recording still being processed');
     } else {
-      return recorded_sound;
+      return globalVars.recordedSound;
     }
   };
+
+  promise.toReplString = () => '<SoundPromise>';
+  // TODO: Remove when ReplResult is properly implemented
+  promise.toString = () => '<SoundPromise>';
+  return promise;
 }
 
 // =============================================================================
@@ -343,8 +372,6 @@ export function play_in_tab(sound: Sound): Sound {
   if (!is_sound(sound)) {
     throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
     // If a sound is already playing, terminate execution.
-  } else if (isPlaying) {
-    throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
   }
 
   const duration = get_duration(sound);
@@ -352,11 +379,6 @@ export function play_in_tab(sound: Sound): Sound {
     throw new Error(`${play_in_tab.name}: duration of sound is negative`);
   } else if (duration === 0) {
     return sound;
-  }
-
-  // Instantiate audio context if it has not been instantiated.
-  if (!audioplayer) {
-    init_audioCtx();
   }
 
   // Create mono buffer
@@ -418,6 +440,8 @@ export function play(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
+  } else if (globalVars.isPlaying) {
+    throw new Error(`${play.name}: Previous sound still playing!`);
   }
 
   const duration = get_duration(sound);
@@ -427,10 +451,7 @@ export function play(sound: Sound): Sound {
     return sound;
   }
 
-  // Instantiate audio context if it has not been instantiated.
-  if (!audioplayer) {
-    init_audioCtx();
-  }
+  const audioplayer = getAudioContext();
 
   // Create mono buffer
   const theBuffer = audioplayer.createBuffer(
@@ -438,6 +459,7 @@ export function play(sound: Sound): Sound {
     Math.ceil(FS * duration),
     FS
   );
+
   const channel = theBuffer.getChannelData(0);
 
   let temp: number;
@@ -467,11 +489,11 @@ export function play(sound: Sound): Sound {
   const source = audioplayer.createBufferSource();
   source.buffer = theBuffer;
   source.connect(audioplayer.destination);
-  isPlaying = true;
+  globalVars.isPlaying = true;
   source.start();
   source.onended = () => {
     source.disconnect(audioplayer.destination);
-    isPlaying = false;
+    globalVars.isPlaying = false;
   };
   return sound;
 }
@@ -480,8 +502,10 @@ export function play(sound: Sound): Sound {
  * Stops all currently playing sounds.
  */
 export function stop(): void {
-  audioplayer.close();
-  isPlaying = false;
+  if (globalVars.audioplayer) {
+    globalVars.audioplayer.close();
+  }
+  globalVars.isPlaying = false;
 }
 
 // Primitive sounds

@@ -1,3 +1,4 @@
+import type { ReplResult } from '@sourceacademy/modules-lib/types';
 import type { Pair } from 'js-slang/dist/stdlib/list';
 
 /**
@@ -13,11 +14,18 @@ export type Wave = (t: number) => number;
  */
 export type Sound = Pair<Wave, number>;
 
+/**
+ * A nullary function that returns a Sound.
+ * @function
+ */
+export interface SoundPromise extends ReplResult {
+  (): Sound;
+}
+
 export type SoundProducer = (...t: any) => Sound;
 export type SoundTransformer = (s: Sound) => Sound;
 
-export interface AudioPlayed {
-  toReplString: () => string;
+export interface AudioPlayed extends ReplResult {
   dataUri: string;
 };
 

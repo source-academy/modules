@@ -1,6 +1,11 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, test } from 'vitest';
 import * as funcs from '../functions';
-import type { Sound } from '../types';
+import type { Sound, Wave } from '../types';
+import { mockAudioContext } from './utils';
+
+Object.defineProperty(global, 'AudioContext', {
+  value: () => mockAudioContext
+});
 
 describe(funcs.make_sound, () => {
   it('Should error gracefully when duration is negative', () => {
@@ -18,37 +23,72 @@ describe(funcs.make_sound, () => {
   });
 });
 
-describe(funcs.play, () => {
-  it('Should error gracefully when duration is negative', () => {
-    const sound: Sound = [() => 0, -1];
-    expect(() => funcs.play(sound))
-      .toThrow('play: duration of sound is negative');
+describe('Concurrent playback functions', () => {
+  beforeEach(() => {
+    funcs.globalVars.audioplayer = null;
   });
 
-  it('Should not error when duration is zero', () => {
-    const sound = funcs.make_sound(() => 0, 0);
-    expect(() => funcs.play(sound)).not.toThrow();
+  afterEach(() => {
+    funcs.globalVars.isPlaying = false;
   });
 
-  it('Should throw error when given not a sound', () => {
-    expect(() => funcs.play(0 as any)).toThrow('play is expecting sound, but encountered 0');
-  });
-});
+  describe(funcs.play, () => {
+    it('Should error gracefully when duration is negative', () => {
+      const sound: Sound = [() => 0, -1];
+      expect(() => funcs.play(sound))
+        .toThrow('play: duration of sound is negative');
+    });
 
-describe(funcs.play_wave, () => {
-  it('Should error gracefully when duration is negative', () => {
-    expect(() => funcs.play_wave(() => 0, -1))
-      .toThrow('play_wave: Sound duration must be greater than or equal to 0');
+    it('Should not error when duration is zero', () => {
+      const sound = funcs.make_sound(() => 0, 0);
+      expect(() => funcs.play(sound)).not.toThrow();
+    });
+
+    it('Should throw error when given not a sound', () => {
+      expect(() => funcs.play(0 as any)).toThrow('play is expecting sound, but encountered 0');
+    });
+
+    test.only('Concurrently playing two sounds should error', () => {
+      console.log(AudioContext);
+      const sound = funcs.silence_sound(10);
+      expect(() => funcs.play(sound)).not.toThrow();
+      expect(() => funcs.play(sound)).toThrowError('play: Previous sound still playing');
+    });
   });
 
-  it('Should error gracefully when duration is not a number', () => {
-    expect(() => funcs.play_wave(() => 0, true as any))
-      .toThrow('play_wave expects a number for duration, got true');
+  describe(funcs.play_wave, () => {
+    it('Should error gracefully when duration is negative', () => {
+      expect(() => funcs.play_wave(() => 0, -1))
+        .toThrow('play_wave: Sound duration must be greater than or equal to 0');
+    });
+
+    it('Should error gracefully when duration is not a number', () => {
+      expect(() => funcs.play_wave(() => 0, true as any))
+        .toThrow('play_wave expects a number for duration, got true');
+    });
+
+    it('Should error gracefully when wave is not a function', () => {
+      expect(() => funcs.play_wave(true as any, 0))
+        .toThrow('play_wave expects a wave, got true');
+    });
+
+    test('Concurrently playing two sounds should error', () => {
+      const wave: Wave = () => 0;
+      expect(() => funcs.play_wave(wave, 10)).not.toThrow();
+      expect(() => funcs.play_wave(wave, 10)).toThrowError('play: Previous sound still playing');
+    });
   });
 
-  it('Should error gracefully when wave is not a function', () => {
-    expect(() => funcs.play_wave(true as any, 0))
-      .toThrow('play_wave expects a wave, got true');
+  describe(funcs.stop, () => {
+    test('Calling stop without ever calling any playback functions should not throw an error', () => {
+      expect(funcs.stop).not.toThrowError();
+    });
+
+    it('sets isPlaying to false', () => {
+      funcs.globalVars.isPlaying = true;
+      funcs.stop();
+      expect(funcs.globalVars.isPlaying).toEqual(false);
+    });
   });
 });
 
@@ -66,6 +106,13 @@ describe(funcs.play_in_tab, () => {
 
   it('Should throw error when given not a sound', () => {
     expect(() => funcs.play_in_tab(0 as any)).toThrow('play_in_tab is expecting sound, but encountered 0');
+  });
+
+  test('Multiple calls does not cause an error', () => {
+    const sound = funcs.silence_sound(10);
+    expect(() => funcs.play_in_tab(sound)).not.toThrow();
+    expect(() => funcs.play_in_tab(sound)).not.toThrow();
+    expect(() => funcs.play_in_tab(sound)).not.toThrow();
   });
 });
 
