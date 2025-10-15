@@ -5,11 +5,12 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "yarn build-lib-docs && vitepress build .",
+    "build": "yarn build-lib-docs && yarn spellcheck && vitepress build .",
     "build-lib-docs": "yarn workspaces foreach -A --include \"@sourceacademy/modules-lib\" run docs",
     "dev": "vitepress dev .",
     "postinstall": "yarn build-lib-docs",
-    "preview": "vitepress preview ."
+    "preview": "vitepress preview .",
+    "spellcheck": "cspell --config ./cspell.config.js src"
   },
   "dependencies": {
     "@sourceacademy/lint-plugin": "workspace:^",
@@ -21,6 +22,7 @@
     "vitepress-sidebar": "^1.31.1"
   },
   "devDependencies": {
-    "@sourceacademy/markdown-plugin-directory-tree": "workspace:^"
+    "@sourceacademy/markdown-plugin-directory-tree": "workspace:^",
+    "cspell": "^9.2.1"
   }
 }

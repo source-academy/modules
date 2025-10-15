@@ -28,9 +28,9 @@ As part of ensuring consistency, everything in this repository has been designed
 Tabs, for example, should all be using the same versions of `react` and `react-dom`: the one in use by the frontend. If a dependency is specified in the root `package.json`, then the constraints file
 requires that all child workspaces use the version of that dependency.
 
-For example, the root package specifies `react@^18.3.1` as a depdendency, so all workspaces that require React must also use that version spec.
+For example, the root package specifies `react@^18.3.1` as a dependency, so all workspaces that require React must also use that version spec.
 
-This validation is not carried out across child workspaces, however. Two different bundles could use two different versions of the same package. This should not cause an issue **unless** the bundles are somehow dependendent on each other.
+This validation is not carried out across child workspaces, however. Two different bundles could use two different versions of the same package. This should not cause an issue **unless** the bundles are somehow dependent on each other.
 
 Furthermore, if you are depending on a package from within the modules repository, you should be using the `workspace:^` version specification as the packages within this repository
 are not intended to be published to NPM so a regular version specification would be invalid.

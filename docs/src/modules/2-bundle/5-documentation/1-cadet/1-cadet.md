@@ -245,9 +245,9 @@ When building the json documentation for a bundle, the following steps are taken
     - For functions, their name, the names and types of each parameter, and return types are extracted.\
     The descriptions of both functions are constants are also included, but first they are passed through a Markdown to HTML converter called [drawdown](https://github.com/adamvleggett/drawdown), included in this project as `drawdown.ts`
 3. The code then converts it to the HTML format expected by the frontend
-3. All the processed strings then get written to a json file in the jsons folder.
+3. All the processed strings then get written to a json file in the `jsons` folder.
 
-If no documentation could be found, or there was an error parsing the documented code, the system will still output jsons, just with warnings.
+If no documentation could be found, or there was an error parsing the documented code, the system will still output JSONs, just with warnings.
 
 ## Code Samples
 

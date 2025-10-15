@@ -81,7 +81,7 @@ These commands are only applicable to bundles or tabs and should only be run fro
   </tbody>
 </table>
 
-Both the `--tsc` and `--lint` options can be used togther to run `tsc` and ESLint simultaneously.
+Both the `--tsc` and `--lint` options can be used together to run `tsc` and ESLint simultaneously.
 
 ### Prebuild and Testing
 
@@ -150,7 +150,7 @@ including child workspaces. In other words, these commands are available through
 
 In general, global scripts for this repository follow the same format.
 
-- `:all` will be run for all code in the respository
+- `:all` will be run for all code in the repository
 - `:devserver` will only be run for the devserver.
 - `:libs` will be run for all code under the `lib` folder (common modules libraries)
 - `:modules` will be run for all bundle and tab code

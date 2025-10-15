@@ -1,6 +1,6 @@
 # Handling Abstractions
 
-Source supports several primtive objects like numbers and strings. Slightly more complex primitives do also exist like lists and arrays. Your bundle may wish to introduce its own set of primitives, such as
+Source supports several primitive objects like numbers and strings. Slightly more complex primitives do also exist like lists and arrays. Your bundle may wish to introduce its own set of primitives, such as
 `Sound` and `Wave` (from the `sound` bundle) or `BodyCentreTransformation` (from the `nbody` bundle).
 
 The important thing to note is that as far as Javascript is concerned, these types are composed of other

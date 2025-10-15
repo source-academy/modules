@@ -1,6 +1,6 @@
 # Documentation Generation
 
-There are two types of documentation used by Source, which are the jsons and the HTML documentation. Both are built using the [`typedoc`](https://typedoc.org) tool. By reading comments and type annotations, `typedoc` is able to generate both human readable documentation and documentation in the form of JSON.
+There are two types of documentation used by Source, which are the JSONs and the HTML documentation. Both are built using the [`typedoc`](https://typedoc.org) tool. By reading comments and type annotations, `typedoc` is able to generate both human readable documentation and documentation in the form of JSON.
 
 ## Typedoc Overview
 

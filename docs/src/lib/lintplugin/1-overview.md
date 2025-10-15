@@ -19,7 +19,7 @@ Run `yarn build` to build the plugin. The plugin is bundled into a single `dist.
 into the root `index.d.ts` file.
 
 ::: details Why not just compile to Typescript Declaration Files?
-The outward facing type interface of this plugin is really only concerned with the rule and config definitons. If we used the compiled output from Typescript,
+The outward facing type interface of this plugin is really only concerned with the rule and config definitions. If we used the compiled output from Typescript,
 we'd get all the implementation details included within the types for the plugin.
 
 Instead (and also to save us the time of having to rollup the declaration files), we declare the rules and configs, but mask their internal types using

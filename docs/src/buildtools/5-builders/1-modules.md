@@ -25,9 +25,9 @@ This converts each bundle and tab into an [IIFE](https://developer.mozilla.org/e
 // build/bundles/curve.js
 var globalName = (() => {
   // Code from mat4
-  function create() { /* implemntation details */ }
-  function clone(a) { /* implemntation details */ }
-  function copy(out, a) { /* implemntation details */ }
+  function create() { /* implementation details */ }
+  function clone(a) { /* implementation details */ }
+  function copy(out, a) { /* implementation details */ }
   // ... and other implementation details
 
   // The module's exports are returned as a single object

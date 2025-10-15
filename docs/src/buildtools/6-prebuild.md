@@ -28,7 +28,7 @@ When run with the [`--stats`](https://eslint.org/docs/latest/extend/stats#cli-us
 ::: details Out of Memory Error
 As of the time of writing, spinning up a single ESLint instance to lint all the files in the repository at once seems to cause ESLint/NodeJS to run out of memory.
 A lot of the tooling has been designed to seamlessly bypass this issue by linting each bundle and tab with a separate instance of ESLint, but this does mean that we
-also need specific tooling for linting the rest of the respository.
+also need specific tooling for linting the rest of the repository.
 
 That's why there's a `lint` command and also a `lintglobal` command.
 :::

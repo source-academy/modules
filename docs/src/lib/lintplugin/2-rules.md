@@ -62,7 +62,7 @@ import path from 'pathlib';
 
 ## `no-barrel-imports`
 
-Enforces that imports from a certain source uses individual imports intead of the main barrel import.
+Enforces that imports from a certain source uses individual imports instead of the main barrel import.
 
 This rule was primarily motivated by packages like `lodash` and `@mui`, which re-export all their functionalities
 through the main export, but also make each function available in a separate package:

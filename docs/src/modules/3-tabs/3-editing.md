@@ -70,7 +70,7 @@ If you do so, remember to run your installation command (same as the one above) 
 ## React/UI Components
 
 Tabs are written using the React (JSX) syntax. In React, each UI element is referred to as a "component". Documentation on how to create UIs and use React can be found [here](https://react.dev). Where possible,
-you should aim to write components using the funcional syntax.
+you should aim to write components using the functional syntax.
 
 ::: details Functional vs Class Components
 Traditionally, React's functional components could not be "stateful". If a component needed to store state, it had to be written as a [class component](https://react.dev/reference/react/Component).

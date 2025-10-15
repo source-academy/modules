@@ -23,7 +23,7 @@ This will run the TypeScript compiler before compiling your tab. If there are an
 The output for your tab will be placed at `/build/tabs/[your_tab_name].js`.
 
 ::: details Runtime Dependencies
-Since dependencies like React and `@blueprintjs/core` are used by the frontend, the frontend provides these pacakges to tabs when they are loaded.
+Since dependencies like React and `@blueprintjs/core` are used by the frontend, the frontend provides these packages to tabs when they are loaded.
 This means that these dependencies do not need to be bundled with the tab during compilation and are thus marked as external.
 
 Externalizing dependencies reduces the bundle size of our tabs. You should keep the number of non-externalizable packages that your tab relies on to a minimum.

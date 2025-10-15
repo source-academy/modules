@@ -12,7 +12,7 @@ You can use [nvm](https://github.com/creationix/nvm#installation) _(macOS/Linux)
 
 > [!INFO]
 > The tooling in the repository is intended to work with both Posix-Compliant systems (macOS/Linux/WSL) _and_ Windows.
-> If you encounter any compatibility issues do open an issue with the respository.
+> If you encounter any compatibility issues do open an issue with the repository.
 
 ## 2. Clone this Repository
 
