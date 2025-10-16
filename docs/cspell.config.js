@@ -11,7 +11,7 @@ export default defineConfig({
     'typescript'
   ],
   patterns: [{
-    name: "markdownCodeBlock",
+    name: 'markdownCodeBlock',
     pattern: [
       /^\s*```[\s\S]*?^\s*```/gm, // ignore things within full code blocks
       /`.+?`/g,                   // ignore things within inline code blocks
@@ -30,5 +30,9 @@ export default defineConfig({
   ignoreRegExpList: [
     'href',
     'markdownCodeBlock',
+  ],
+  globRoot: '.',
+  ignorePaths: [
+    'src/lib/modules-lib'
   ]
 });

@@ -234,7 +234,12 @@ jobs:
         with:
           package-name: '@sourceacademy/modules-docserver'
 
-      - name: Build Docs
+      - name: Spellcheck
+        run: |
+          cd ./docs
+          yarn spellcheck
+
+      - name: Spellcheck and Build Docs
         run: |
           cd ./docs
           yarn build

@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "yarn build-lib-docs && yarn spellcheck && vitepress build .",
+    "build": "yarn build-lib-docs && vitepress build .",
     "build-lib-docs": "yarn workspaces foreach -A --include \"@sourceacademy/modules-lib\" run docs",
     "dev": "vitepress dev .",
     "postinstall": "yarn build-lib-docs",
