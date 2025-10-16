@@ -4,7 +4,7 @@ The `@sourceacademy/modules-repotools` package itself has a bunch of utilities f
 
 Below is a list of other tools:
 
-- [Development Server](./devserver/devserver)
+- [Development Server](./devserver)
 - [Docs Server](./docserver/1-overview)
 - [ESLint](./linting)
 - [Github Workflows](./workflows/index)

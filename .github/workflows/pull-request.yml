@@ -239,7 +239,7 @@ jobs:
           cd ./docs
           yarn spellcheck
 
-      - name: Spellcheck and Build Docs
+      - name: Build Docs
         run: |
           cd ./docs
           yarn build
