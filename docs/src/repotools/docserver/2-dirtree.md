@@ -28,7 +28,7 @@ name: root directory
 ```
 ````
 
-If you do not specify a name for your root directory, then it will have the default name of `"root"`. Now you can proceed to at
+If you do not specify a name for your root directory, then it will have the default name of `"root"`. Now you can proceed to create
 children elements using a YAML list:
 
 ````md
