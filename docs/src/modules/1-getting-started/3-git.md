@@ -38,7 +38,7 @@ Make sure that the branch is named appropriately. For example, if you were creat
 
 ## Procedure for Pull Requests
 
-When you're ready for your work to be incorporated into the `master` branch, open a pull request with the modules repository to merge your
+When you're ready for your work to be incorporated into the `master` branch, [open](https://github.com/source-academy/modules/compare) a pull request with the modules repository to merge your
 changes into `master` branch. Make sure that your branch is up-to-date with the `master` branch (by performing a `git merge` from the `master` branch to your own branch).
 
 This will automatically trigger the repository's workflows, which will verify that your changes don't break any of the existing code. If the
@@ -57,4 +57,5 @@ the `dist` folders are ignored for all bundles and tabs, but if you need to add 
 directory.
 
 > [!TIP]
-> If you want to remove a file that been committed in the past you can use `git rm`
+> If you want to remove a file that been committed in the past you can use `git rm` or\
+> `git rm --cached`.

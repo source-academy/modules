@@ -95,6 +95,12 @@ but if your circumstances can't support it you can refer to the second method wh
 > This means that is is unnecessary to implement `ReplResult` for any of your top-level functions. You can still override this automatic functionality by implementing
 > `ReplResult`.
 
+> [!INFO]
+> The `ReplResult` interface can be imported from `@sourceacademy/modules-lib/types`.  To use it, you will have to
+> add the `@sourceacademy/modules-lib` package to your dependencies.
+>
+> Using the interface as exported will be helpful for type checking, but it is not necessary.
+
 ### Implementing `ReplResult` directly
 
 The simplest way to implement the interface is to do it in Typescript. For example, the `curve` bundle has a `Point` class, which is an abstraction of a point in 3D space with a color value:

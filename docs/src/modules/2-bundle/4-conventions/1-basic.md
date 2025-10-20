@@ -27,7 +27,7 @@ export function exposed_function() {
 Neither default nor rest parameters are currently supported due to an [issue](https://github.com/source-academy/js-slang/issues/1238) on the `js-slang` side.
 :::
 
-## 2. Cadet facing functions should not use array destructuring for parameters
+## 2. Cadet facing functions should not use destructuring for parameters
 
 Javascript allows us to destruct iterables directly within a function's parameters:
 
@@ -48,6 +48,53 @@ function foo([x, y]) {
 TypeError: number 0 is not iterable (cannot read property Symbol(Symbol.iterator))
 ```
 
+Javascript also supports object destructuring in parameters:
+```ts
+interface BarParams {
+  x: string;
+  y: string;
+}
+
+function bar({ x, y }: BarParams) {
+  return x;
+}
+```
+
+However, Javascript doesn't actually throw an error if you pass an invalid object into the function:
+```ts
+function bar({ x, y }: BarParams) {
+  return x;
+}
+
+console.log(bar(0)); // prints undefined
+```
+
+If an invalid argument gets passed, no error is thrown and the destructured values just take on the value of `undefined` (which you might want to check for).
+
+However, if you use nested destructuring, Javascript _will_ throw an error:
+```ts
+interface Bar2Params {
+  x: {
+    a: string;
+    b: string;
+  };
+}
+
+function bar2({ x: { a, b } }: Bar2Params) {
+  return a;
+}
+
+console.log(bar2(0));
+```
+
+The call to `bar2` causes an error like the one below:
+```sh
+Uncaught TypeError: Cannot read properties of undefined (reading 'a')
+  at bar2 (<anonymous>:1:21)
+  at <anonymous>:1:1
+```
+because of course, when `bar2` is called with `0`, `x` becomes `undefined` and trying to destructure `undefined` causes the `TypeError`.
+
 If instead the parameter isn't destructured, it gives you the chance to perform type checking:
 
 ```ts
@@ -55,29 +102,18 @@ export function foo(arr: [string, string]) {
   if (!Array.isArray(arr)) throw new Error();
   return arr[0];
 }
-```
 
-More information about throwing errors and why this kind of type checking is important can be found [here](./3-errors#source-type-checking).
+export function bar2(obj: Bar2Params) {
+  if (typeof obj !== 'object' || !('x' in obj)) {
+    // throw an error....
+  }
 
-::: details What about Object Destructuring?
-Javascript also supports object destructuring in parameters:
-```js
-function foo({ x, y }) {
-  return x;
+  return obj.x;
 }
 ```
 
-However, Javascript doesn't actually throw an error if you pass an invalid object into this function:
-```js
-function foo({ x, y }) {
-  return x;
-}
-
-console.log(foo(0)); // prints undefined
-```
-
-If an invalid argument gets passed, no error is thrown and the destructured values just take on the value of `undefined` (which you might want to check for).
-:::
+> [!IMPORTANT]
+> More information about throwing errors and why this kind of type checking is important can be found [here](./3-errors#source-type-checking).
 
 ## 3. If your bundle requires specific Source features, make sure to indicate it in the manifest
 
