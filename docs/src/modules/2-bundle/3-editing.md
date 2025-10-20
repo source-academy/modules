@@ -45,7 +45,8 @@ This adds the dependency to `devDependencies` instead.
 > yarn add react@^18.3.1
 > ```
 >
-> You can also use the command `yarn constraints`  to check if you have incorrectly specified the version of a dependency.
+> You can also use the command `yarn constraints`  to check if you have incorrectly specified the version of a dependency. You can view all
+> constraints [here](../../repotools/5-yarn).
 
 > [!NOTE]
 > When adding dependencies that originate from the repository (e.g `@sourceacademy/modules-lib`), use `workspace:^` as the given version:
