@@ -1,0 +1,25 @@
+{
+  "name": "@sourceacademy/tab-Matrix",
+  "private": true,
+  "version": "1.0.0",
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "@types/lodash": "^4.14.198",
+    "@types/react": "^18.3.1",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@blueprintjs/core": "^5.10.2",
+    "@sourceacademy/bundle-matrix": "workspace:^",
+    "@sourceacademy/modules-lib": "workspace:^",
+    "lodash": "^4.17.21",
+    "react": "^18.3.1"
+  },
+  "scripts": {
+    "build": "buildtools build tab .",
+    "lint": "buildtools lint .",
+    "test": "buildtools test --project .",
+    "tsc": "buildtools tsc .",
+    "serve": "yarn buildtools serve"
+  }
+}

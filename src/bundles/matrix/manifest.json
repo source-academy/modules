@@ -1,4 +1,6 @@
 {
-  "tabs": [],
+  "tabs": [
+    "Matrix"
+  ],
   "requires": 3
 }

@@ -85,7 +85,7 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
   };
 
   const tabDestination = pathlib.join(tabsDir, tabName);
-  await fs.cp(pathlib.join(import.meta.dirname, 'templates', 'tabs'), tabDestination, { recursive: true });
+  await fs.cp(pathlib.join(import.meta.dirname, 'templates', 'tab'), tabDestination, { recursive: true });
   await Promise.all([
     fs.writeFile(pathlib.join(tabDestination, 'package.json'), JSON.stringify(packageJson, null, 2)),
     fs.writeFile(pathlib.join(bundlesDir, moduleName, 'manifest.json'), JSON.stringify(newManifest, null, 2))
