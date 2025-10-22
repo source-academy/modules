@@ -1,0 +1,10 @@
+// matrix tsconfig
+{
+  "extends": "../tsconfig.json",
+  "include": [
+    "./src"
+  ],
+  "typedocOptions": {
+    "name": "matrix"
+  }
+}

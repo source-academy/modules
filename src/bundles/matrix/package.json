@@ -1,0 +1,24 @@
+{
+  "name": "@sourceacademy/bundle-matrix",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "js-slang": "^1.0.81"
+  },
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "typescript": "^5.8.2"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "buildtools build bundle .",
+    "lint": "buildtools lint .",
+    "serve": "yarn buildtools serve",
+    "test": "buildtools test --project .",
+    "tsc": "tsc --project ./tsconfig.json"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
+  }
+}
