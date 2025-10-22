@@ -104,8 +104,5 @@
     "./lib/*",
     "./src/bundles/*",
     "./src/tabs/*"
-  ],
-  "resolutions": {
-    "vite": "npm:vite@^6.3.5"
-  }
+  ]
 }

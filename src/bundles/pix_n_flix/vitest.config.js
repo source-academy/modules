@@ -1,6 +1,7 @@
 // @ts-check
 
 import { defineProject } from 'vitest/config';
+import { playwright } from '@vitest/browser-playwright';
 
 export default defineProject({
   optimizeDeps: {
@@ -15,7 +16,7 @@ export default defineProject({
     name: 'pix_n_flix Bundle',
     browser: {
       enabled: true,
-      provider: 'playwright',
+      provider: playwright(),
       instances: [{
         browser: 'chromium',
       }]

@@ -77,6 +77,7 @@ describe(manifest.getBundleManifest, () => {
       severity: 'success',
       manifest: {
         tabs: ['tab0'],
+        version: '1.0.0'
       }
     });
 
@@ -94,6 +95,7 @@ describe(manifest.getBundleManifest, () => {
       severity: 'success',
       manifest: {
         tabs: ['tab0'],
+        version: '1.0.0'
       }
     });
 
@@ -121,6 +123,7 @@ describe(manifest.getBundleManifest, () => {
       severity: 'success',
       manifest: {
         tabs: ['unknown'],
+        version: '1.0.0'
       }
     });
 
@@ -167,7 +170,7 @@ describe(manifest.getBundleManifest, () => {
       severity: 'success',
       manifest: {
         tabs: [],
-        version: undefined
+        version: '1.0.0'
       }
     });
 
@@ -184,11 +187,12 @@ describe(manifest.getBundleManifests, () => {
         severity: 'success',
         manifests: {
           test0: {
-            tabs: ['tab0']
+            tabs: ['tab0'],
+            version: '1.0.0'
           },
           test1: {
-
-            tabs: ['tab1']
+            tabs: ['tab1'],
+            version: '1.0.0'
           }
         }
       });
@@ -236,7 +240,8 @@ describe(manifest.resolveSingleBundle, () => {
         type: 'bundle',
         name: 'test0',
         manifest: {
-          tabs: ['tab0']
+          tabs: ['tab0'],
+          version: '1.0.0'
         },
         directory: bundlePath
       }
@@ -322,7 +327,7 @@ describe(manifest.resolveEitherBundleOrTab, () => {
         type: 'bundle',
         manifest: {
           tabs: ['tab0'],
-          version: undefined,
+          version: '1.0.0',
         },
         directory: bundle0Path,
         name: 'test0',

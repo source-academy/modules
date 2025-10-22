@@ -3,6 +3,7 @@ import pathlib from 'path';
 import react from '@vitejs/plugin-react';
 import { loadConfigFromFile } from 'vite';
 import { defineProject, mergeConfig, type TestProjectInlineConfiguration, type ViteUserConfig } from 'vitest/config';
+import { playwright } from '@vitest/browser-playwright'
 // @ts-expect-error I'm too lazy to make the root config work with typescript
 import rootConfig from '../../../vitest.config.js';
 
@@ -36,7 +37,7 @@ export const sharedTabsConfig = mergeConfig(
       include: ['**/__tests__/**/*.{ts,tsx}'],
       environment: 'jsdom',
       browser: {
-        provider: 'playwright',
+        provider: playwright(),
         instances: [{
           browser: 'chromium',
         }]
