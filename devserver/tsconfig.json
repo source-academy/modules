@@ -25,7 +25,7 @@
     "verbatimModuleSyntax": true,
     "types": [
       "@vitest/browser/matchers",
-      "@vitest/browser/providers/playwright"
+      "@vitest/browser-playwright"
     ]
   },
   "include": ["src"],

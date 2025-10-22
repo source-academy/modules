@@ -1,5 +1,4 @@
 // Devserver Vite Config
-/// <reference types="@vitest/browser/providers/playwright" />
 
 import fs from 'fs/promises';
 import pathlib from 'path';

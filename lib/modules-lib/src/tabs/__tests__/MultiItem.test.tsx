@@ -1,6 +1,6 @@
-import { userEvent } from '@vitest/browser/context';
-import { afterEach, beforeEach, expect, test as baseTest, vi } from 'vitest';
-import { cleanup, render } from 'vitest-browser-react';
+import { beforeEach, expect, test as baseTest, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
+import { cleanup, render, type RenderResult } from 'vitest-browser-react';
 import MultiItemDisplay from '../MultiItemDisplay';
 
 const items = [
@@ -16,16 +16,16 @@ beforeEach(() => {
   stepChangeHandler.mockClear();
 });
 
-afterEach(() => {
-  cleanup();
-});
-
 // Reference for keyboard events: https://testing-library.com/docs/user-event/keyboard/
 
 const test = baseTest.extend<{
-  component: ReturnType<typeof render>;
+  component: RenderResult;
 }>({
-  component: ({}, usefixture) => usefixture(render(<MultiItemDisplay elements={items} onStepChange={stepChangeHandler} />)),
+  component: async ({}, usefixture) => {
+    const value = await render(<MultiItemDisplay elements={items} onStepChange={stepChangeHandler} />);
+    await usefixture(value);
+    cleanup();
+  },
 });
 
 test('Changing the currently selected value using the keyboard', async ({ component }) => {
@@ -113,7 +113,7 @@ test('The item selector moves to the end when set out of range', async ({ compon
 });
 
 test('Both selector buttons are disabled when there is only one item', async () => {
-  const component = render(<MultiItemDisplay elements={[<p>Item One</p>]}/>);
+  const component = await render(<MultiItemDisplay elements={[<p>Item One</p>]}/>);
   const buttonLocator = component.getByRole('button');
 
   await expect.element(buttonLocator.first()).toBeDisabled();

@@ -1,12 +1,12 @@
-import { commands, userEvent } from '@vitest/browser/context';
 import { runInContext } from 'js-slang';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { commands, userEvent } from 'vitest/browser';
 import { render, type RenderResult } from 'vitest-browser-react';
 import Playground from '../Playground';
 import * as importers from '../sideContent/importers/importers';
 import '../../styles/index.scss';
 
-declare module '@vitest/browser/context' {
+declare module 'vitest/browser' {
   interface BrowserCommands {
     setLocalStorage: (key: string, value: string) => Promise<void>;
   }
@@ -26,7 +26,7 @@ describe('Playground tests', () => {
   };
 
   test('Running js-slang by clicking the run button', async () => {
-    const component = render(<Playground />);
+    const component = await render(<Playground />);
     await clickRunButton(component);
     await expect.poll(() => runInContext).toHaveBeenCalled();
   });
@@ -34,7 +34,7 @@ describe('Playground tests', () => {
   test('Loading tabs via Vite', async () => {
     await commands.setLocalStorage('editorValue', '0;');
 
-    const component = render(<Playground />);
+    const component = await render(<Playground />);
 
     await clickRunButton(component);
     await expect.poll(() => runInContext).toHaveBeenCalled();
@@ -43,7 +43,7 @@ describe('Playground tests', () => {
 
   test('Loading compiled tabs', async () => {
     await commands.setLocalStorage('editorValue', '0;');
-    const component = render(<Playground />);
+    const component = await render(<Playground />);
 
     const settingsButton = component.getByRole('button').filter({ hasText: /^$/ });
     await userEvent.click(settingsButton);

@@ -150,7 +150,6 @@ export const tsConfig = tseslint.config({
     parserOptions: {
       // Prevent the parser from going any higher in the directory tree
       // to find a tsconfig
-      tsconfigRootDir: import.meta.dirname,
       project: true
     }
   },

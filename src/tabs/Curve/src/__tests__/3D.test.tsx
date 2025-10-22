@@ -70,7 +70,7 @@ describe('Test 3D Curve Canvas', () => {
     vi.useFakeTimers();
 
     try {
-      const screen = render(<Canvas3DCurve curve={curve} />);
+      const screen = await render(<Canvas3DCurve curve={curve} />);
       const playButton = screen.getByTitle('PlayButton');
       await playButton.click();
 
@@ -146,7 +146,7 @@ describe('Test 3D Animated Curve Canvas', () => {
   });
 
   test('Clicking play button runs through the entire animation', async ({ curve, mockAngleRedraw, mockGetFrame }) => {
-    const screen = render(<Curve3DAnimationCanvas animation={curve} />);
+    const screen = await render(<Curve3DAnimationCanvas animation={curve} />);
     const playButton = screen.getByTitle('PlayButton');
     const autoPlaySwitch = screen.getByRole('checkbox');
     await autoPlaySwitch.click();
@@ -171,7 +171,7 @@ describe('Test 3D Animated Curve Canvas', () => {
 
   test('Changing the angle', async ({ curve, mockAngleRedraw, mockGetFrame }) => {
     curve.angle = Math.PI;
-    const screen = render(<Curve3DAnimationCanvas animation={curve} />);
+    const screen = await render(<Curve3DAnimationCanvas animation={curve} />);
 
     const playButton = screen.getByTitle('PlayButton');
     const autoPlaySwitch = screen.getByRole('checkbox');

@@ -30,7 +30,7 @@ test('Animations are played entirely and stops', async () => {
       };
     },
   };
-  const component = render(<AnimationCanvas animation={testAnimation} />);
+  const component = await render(<AnimationCanvas animation={testAnimation} />);
 
   const playButton = component.getByTitle('PlayButton');
   const autoLoopSwitch = component.getByRole('checkbox');
@@ -66,7 +66,7 @@ test('Gracefully handles animations that error halfway through and can be restar
     getFrame: testFrame
   };
 
-  const component = render(<AnimationCanvas animation={errorAnimation} />);
+  const component = await render(<AnimationCanvas animation={errorAnimation} />);
   const playButton = component.getByTitle('PlayButton');
   await playButton.click();
 

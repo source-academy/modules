@@ -89,7 +89,7 @@ function testBuildCommand<T extends Record<string, any>>(
   }
 
   describe(`Testing ${commandName} command`, { timeout: 10000 }, () => {
-    const mockedBuilder = vi.spyOn(obj, funcName as any);
+    const mockedBuilder = vi.spyOn(obj, funcName as any) as MockInstance<() => Promise<BuildResult>>;
     const builder = obj[funcName];
     const runCommand = getCommandRunner(getter);
 
