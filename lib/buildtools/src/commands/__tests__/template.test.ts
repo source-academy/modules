@@ -125,6 +125,9 @@ describe('Test adding new module', () => {
         ],
         "typedocOptions": {
           "name": "new_module"
+        },
+        "compilerOptions": {
+          "outDir": "./dist"
         }
       }
       "
@@ -184,5 +187,6 @@ describe('Test adding new tab', () => {
     expect(bundleManifestPath).toMatchPath(pathlib.join(bundlesDir, 'test0', 'manifest.json'));
     const manifest = JSON.parse(manifestRaw as string);
     expect(manifest.tabs).toContain('TabNew');
+    expect(manifest).not.toHaveProperty('version');
   });
 });

@@ -1,5 +1,8 @@
 {
   "extends" : "../tsconfig.json",
   "include": ["./src"],
-  "typedocOptions": {}
+  "typedocOptions": {},
+  "compilerOptions": {
+    "outDir": "./dist"
+  }
 }
