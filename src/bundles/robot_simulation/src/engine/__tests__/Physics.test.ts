@@ -8,14 +8,14 @@ vi.mock('@dimforge/rapier3d-compat', () => {
   return {
     default: {
       init: vi.fn(),
-      World: vi.fn().mockImplementation(() => ({
-        timestep: vi.fn(),
-        createRigidBody: vi.fn(),
-        createCollider: vi.fn(),
-        castRayAndGetNormal: vi.fn(),
-        step: vi.fn(),
-        castRay: vi.fn(),
-      })),
+      World: class {
+        timestep = vi.fn();
+        createRigidBody = vi.fn();
+        createCollider = vi.fn();
+        castRayAndGetNormal = vi.fn();
+        step = vi.fn();
+        castRay = vi.fn();
+      },
       Ray: vi.fn(),
       RigidBodyDesc: vi.fn(),
       ColliderDesc: vi.fn(),

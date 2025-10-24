@@ -2,9 +2,9 @@ import * as THREE from 'three';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Physics, Renderer } from '../../../../engine';
 import { loadGLTF } from '../../../../engine/Render/helpers/GLTF';
-import { ChassisWrapper } from '../../../ev3/components/Chassis';
-import { Motor } from '../../../ev3/components/Motor';
-import { ev3Config } from '../../../ev3/ev3/default/config';
+import { ev3Config } from '../../ev3/default/config';
+import { ChassisWrapper } from '../Chassis';
+import { Motor } from '../Motor';
 
 vi.mock(import('../../../../engine/Render/helpers/GLTF'), () => ({
   loadGLTF: vi.fn().mockResolvedValue({
@@ -28,18 +28,18 @@ vi.mock(import('../../../../engine'), () => ({
   })),
 }) as any);
 
-vi.mock(import('../../../ev3/components/Chassis'), () => ({
-  ChassisWrapper: vi.fn().mockImplementation(() => ({
-    getEntity: vi.fn().mockReturnValue({
+vi.mock(import('../Chassis'), () => ({
+  ChassisWrapper: vi.fn(class {
+    getEntity = vi.fn().mockReturnValue({
       transformDirection: vi.fn().mockImplementation((v) => v),
       worldVelocity: vi.fn().mockReturnValue(new THREE.Vector3()),
       worldTranslation: vi.fn().mockReturnValue(new THREE.Vector3()),
       applyImpulse: vi.fn(),
       getMass: vi.fn().mockReturnValue(1),
       getRotation: vi.fn(),
-    }),
-  })),
-}));
+    });
+  }),
+} as any));
 
 describe(Motor, () => {
   let motor;

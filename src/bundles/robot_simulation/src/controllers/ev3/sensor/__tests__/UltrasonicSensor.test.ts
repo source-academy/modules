@@ -1,20 +1,20 @@
 import * as THREE from 'three';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { UltrasonicSensor } from '../../../ev3/sensor/UltrasonicSensor';
+import { UltrasonicSensor } from '../UltrasonicSensor';
 
 vi.mock(import('three'), () => ({
-  Vector3: vi.fn().mockImplementation(() => ({
-    clone: vi.fn().mockReturnThis(),
-    normalize: vi.fn().mockReturnThis(),
-    copy: vi.fn()
-  })),
-  ArrowHelper: vi.fn().mockImplementation(() => ({
-    visible: false,
-    position: {
+  Vector3: vi.fn(class {
+    clone = vi.fn().mockReturnThis();
+    normalize = vi.fn().mockReturnThis();
+    copy = vi.fn();
+  }),
+  ArrowHelper: class {
+    visible = false;
+    position = {
       copy: vi.fn()
-    },
-    setDirection: vi.fn()
-  }))
+    };
+    setDirection = vi.fn();
+  }
 }) as any);
 
 describe(UltrasonicSensor, () => {

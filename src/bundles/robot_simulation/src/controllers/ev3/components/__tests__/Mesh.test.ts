@@ -2,8 +2,8 @@ import * as THREE from 'three';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Renderer } from '../../../../engine';
 import { loadGLTF } from '../../../../engine/Render/helpers/GLTF';
-import { ChassisWrapper } from '../../../ev3/components/Chassis';
-import { Mesh } from '../../../ev3/components/Mesh';
+import { ChassisWrapper } from '../Chassis';
+import { Mesh } from '../Mesh';
 
 vi.mock(import('three'), async importOriginal => {
   return {
@@ -27,7 +27,7 @@ vi.mock(import('../../../../engine/Render/helpers/GLTF'), () => ({
   }),
 }));
 
-vi.mock(import('../../../ev3/components/Chassis'), () => ({
+vi.mock(import('../Chassis'), () => ({
   ChassisWrapper: vi.fn().mockImplementation(() => ({
     getEntity: vi.fn().mockReturnValue({
       getTranslation: vi.fn().mockReturnValue(new THREE.Vector3()),
