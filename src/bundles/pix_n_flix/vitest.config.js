@@ -1,7 +1,7 @@
 // @ts-check
 
-import { defineProject } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
+import { defineProject } from 'vitest/config';
 
 export default defineProject({
   optimizeDeps: {

@@ -40,6 +40,8 @@ def update_json(git_root: str, asset: Literal['bundle', 'tab'], file_name: Liter
 
       with open(f'{full_path}/{file_name}.json', 'w') as file:
         json.dump(updated, file, indent=2)
+        file.write('\n')
+
     except Exception as e:
       print(f'{e} occurred with {full_path}/{file_name}.json')
 
