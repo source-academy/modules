@@ -24,6 +24,12 @@ export default defineConfig({
     alias: [{
       find: /^js-slang\/context/,
       replacement: pathlib.join(import.meta.dirname, 'src/__mocks__/context.ts')
+    }, {
+      find: 'fs/promises',
+      replacement: 'node:fs/promises',
+    }, {
+      find: 'path',
+      replacement: 'node:path'
     }]
   },
   test: {
@@ -39,7 +45,6 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: coverageReporters,
-      extension: ['.ts', '.cts', '.tsx'],
       exclude: [
         ...coverageConfigDefaults.exclude,
         './build/**',
