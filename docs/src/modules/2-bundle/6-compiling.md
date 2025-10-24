@@ -47,7 +47,6 @@ If you intend for your bundle to be consumed from other bundles, do the followin
 {
   "compilerOptions": {
     "outDir": "./dist", // Make sure outDir is specified
-    "noEmit": false,    // noEmit needs to be false
     "declaration": true // declaration needs to be true
   }
 }
@@ -69,6 +68,7 @@ If you intend for your bundle to be consumed from other bundles, do the followin
 }
 ```
 
+Both the `exports` field and `postinstall` script are required.
 Refer to [this page](https://nodejs.org/api/packages.html#package-entry-points) for more information on how to configure your package exports.
 
 ::: details The `postinstall` script

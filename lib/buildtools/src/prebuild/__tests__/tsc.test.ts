@@ -65,26 +65,6 @@ describe('Test the augmented tsc functionality', () => {
     expect(mockedWriteFile).not.toBeCalled();
   });
 
-  test('tsc on a bundle with noEmit in its tsconfig', async () => {
-    const originalTs: typeof ts = await vi.importActual('typescript');
-
-    vi.spyOn(ts, 'parseJsonConfigFileContent').mockImplementationOnce((...args) => {
-      const rawResult = originalTs.parseJsonConfigFileContent(...args);
-      rawResult.options.noEmit = true;
-      return rawResult;
-    });
-
-    await runTsc({
-      type: 'bundle',
-      directory: pathlib.join(testMocksDir, 'bundles', 'test0'),
-      name: 'test0',
-      manifest: {}
-    }, false);
-
-    expect(ts.createProgram).toHaveBeenCalledTimes(1);
-    expect(mockedWriteFile).not.toBeCalled();
-  });
-
   test('tsc on a tab', async () => {
     await runTsc({
       type: 'tab',

@@ -40,6 +40,7 @@ export default defineConfig({
       './src/bundles/*',
       './src/tabs/*'
     ],
+    exclude: ['**/dist'],
     reporters: testReporters,
     clearMocks: true,
     coverage: {

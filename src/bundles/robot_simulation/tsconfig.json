@@ -4,7 +4,8 @@
     "./src"
   ],
   "compilerOptions": {
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "noEmit": true
   },
   "typedocOptions": {
     "name": "robot_simulation"

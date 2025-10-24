@@ -1,11 +1,11 @@
-// curve bundle tests
 {
   "extends": "../tsconfig.json",
   "include": [
     "./src"
   ],
   "compilerOptions": {
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "noEmit": true
   },
   "typedocOptions": {
     "name": "curve"

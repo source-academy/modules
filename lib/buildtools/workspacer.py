@@ -30,31 +30,26 @@ def get_assets(git_root: str, asset: Literal['bundle', 'tab']):
 
 def update_json(git_root: str, asset: Literal['bundle', 'tab'], file_name: Literal['package','tsconfig'], updater: Callable[[str, str, Any], Any]):
   for name, full_path in get_assets(git_root, asset):
-    with open(f'{full_path}/{file_name}.json') as file:
-      original = json.load(file)
-      updated = updater(name, full_path, original)
+    try:
+      with open(f'{full_path}/{file_name}.json') as file:
+        original = json.load(file)
+        updated = updater(name, full_path, original)
 
-      if not updated:
-        raise RuntimeError(f'Updated returned an empty object for {asset} {name}')
+        if not updated:
+          raise RuntimeError(f'Updated returned an empty object for {asset} {name}')
 
-    with open(f'{full_path}/{file_name}.json', 'w') as file:
-      json.dump(updated, file, indent=2)
-
+      with open(f'{full_path}/{file_name}.json', 'w') as file:
+        json.dump(updated, file, indent=2)
+    except Exception as e:
+      print(f'{e} occurred with {full_path}/{file_name}.json')
 
 async def main():
   git_root = await get_git_root()
   def updater(name: str, full_path: str, obj: Any):
-    obj['scripts']['serve'] = 'yarn buildtools serve'
-    obj['scripts-info'] = {
-      'build': 'Compiles the given tab to the output directory',
-      'lint': 'Runs ESlint on the code in the tab',
-      'serve': 'Starts the modules server',
-      'test': 'Runs unit tests defined for the tab',
-      'tsc': 'Runs the Typescript compiler',
-    }
+    obj['compilerOptions']['noEmit'] = True
     return obj
 
-  update_json(git_root, 'tab', 'package', updater)
+  update_json(git_root, 'bundle', 'tsconfig', updater)
 
 if __name__ == '__main__':
   aio.run(main())

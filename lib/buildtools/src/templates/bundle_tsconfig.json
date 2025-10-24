@@ -3,6 +3,7 @@
   "include": ["./src"],
   "typedocOptions": {},
   "compilerOptions": {
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "noEmit": true
   }
 }
