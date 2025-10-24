@@ -32,11 +32,11 @@ describe(HollusionCanvas, () => {
     cleanup();
   });
 
-  test('Render function is memoized', () => {
+  test('Render function is memoized', async () => {
     const rune = new HollusionRune(blank, 0.1);
     const mockedDraw = vi.spyOn(rune, 'draw');
 
-    render(<HollusionCanvas rune={rune} />);
+    await render(<HollusionCanvas rune={rune} />);
 
     for (let i = 0; i < 10; i++) {
       vi.advanceTimersToNextFrame();
@@ -70,8 +70,8 @@ describe('Test Rune Side Content', () => {
     expect(propertyAccessor).toHaveBeenCalledExactlyOnceWith(expect.any(Object), 'rune', expect.any(Object));
   });
 
-  test('body asks for rune module state', () => {
-    render(<RuneSideContent.body {...contextObject} />);
+  test('body asks for rune module state', async () => {
+    await render(<RuneSideContent.body {...contextObject} />);
     expect(propertyAccessor).toHaveBeenCalledExactlyOnceWith(expect.any(Object), 'rune', expect.any(Object));
     cleanup();
   });

@@ -1,14 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, test } from 'vitest';
 import * as funcs from '../functions';
 import type { Sound, Wave } from '../types';
 import { mockAudioContext } from './utils';
 
 Object.defineProperty(global, 'AudioContext', {
-  value: () => {},
-  writable: true,
+  value: function () { return mockAudioContext; },
 });
-
-vi.spyOn(global, 'AudioContext').mockReturnValue(mockAudioContext as any);
 
 describe(funcs.make_sound, () => {
   it('Should error gracefully when duration is negative', () => {

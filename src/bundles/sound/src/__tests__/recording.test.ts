@@ -24,13 +24,11 @@ vi.spyOn(global, 'navigator', 'get').mockReturnValue({
 } as any);
 
 Object.defineProperty(global, 'AudioContext', {
-  value: () => {},
-  writable: true
+  value: function () { return mockAudioContext; }
 });
 
 Object.defineProperty(global, 'MediaRecorder', {
-  value: () => {},
-  writable: true
+  value: function () { return mockMediaRecorder; }
 });
 
 Object.defineProperty(global, 'URL', {
@@ -40,9 +38,6 @@ Object.defineProperty(global, 'URL', {
     }
   }
 });
-
-vi.spyOn(global, 'AudioContext').mockReturnValue(mockAudioContext as any);
-vi.spyOn(global, 'MediaRecorder').mockReturnValue(mockMediaRecorder as any);
 
 beforeEach(() => {
   funcs.globalVars.recordedSound = null;
