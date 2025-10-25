@@ -121,6 +121,7 @@ You can find more information about each of the fields and what they mean [here]
 > ```ts
 > import { whatever } from '@sourceacademy/bundle-bundle_name';
 > ```
+> If your package name doesn't follow the required format the bundle won't validate.
 
 ## `manifest.json`
 
@@ -133,14 +134,18 @@ You can find more information about each of the fields and what they mean [here]
 }
 ```
 
-The presence of this file in your root folder is what allows the build tools to determine that the folder contains a bundle. If this file is not present, your folder will be ignored.
+The presence of this file in your root folder is what allows the build tools to determine that the folder contains a bundle. If this file is not present, your folder will be ignored or if you use any commands that require the current folder to be a bundle, an error will be thrown.
 
-::: details The `requires` field
+### The `requires` field
+
 Your bundle may rely on features that are only present in later Source Chapters. For example, streams are only available from Source 3 onwards. If your bundle makes uses of streams, then you can use `requires: 3` to specify that your bundle can only be loaded when running Source 3 and beyond.
-:::
 
->[!TIP] Verifying your manifest
-> You can use the `buildtools list bundle` command to check that your bundle can be properly detected and has the correct format.
+### Verifying your manifest
+
+You can use the `buildtools validate .` command to check that your bundle can be properly detected and has the correct format.
+
+If your bundle doesn't validate correctly, an error like the one below may be shown in the command line whenever you run a command:
+![image](./validate_error.png)
 
 ## `tsconfig.json`
 

@@ -19,7 +19,7 @@ const packageNameRegex = /^@sourceacademy\/(bundle|tab)-(.+)$/u;
 export async function getBundleManifest(directory: string, tabCheck?: boolean): Promise<GetBundleManifestResult | undefined> {
   let manifestStr: string;
   const manifestPath = pathlib.join(directory, 'manifest.json');
-  const dirName = pathlib.basename(directory);
+  const bundleName = pathlib.basename(directory);
 
   try {
     manifestStr = await fs.readFile(manifestPath, 'utf-8');
@@ -39,7 +39,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
     if (!packageNameRegex.test(packageName)) {
       return {
         severity: 'error',
-        errors: [`${dirName}: The package name "${packageName}" does not follow the correct format!`]
+        errors: [`${bundleName}: The package name "${packageName}" does not follow the correct format!`]
       };
     }
 
@@ -56,7 +56,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
   if (validateResult.errors.length > 0) {
     return {
       severity: 'error',
-      errors: validateResult.errors.map(each => `${dirName}: ${each.toString()}`)
+      errors: validateResult.errors.map(each => `${bundleName}: ${each.toString()}`)
     };
   }
 
@@ -76,7 +76,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
     if (unknownTabs.length > 0) {
       return {
         severity: 'error',
-        errors: unknownTabs.map(each => `${dirName}: Unknown tab "${each}"`)
+        errors: unknownTabs.map(each => `${bundleName}: Unknown tab "${each}"`)
       };
     }
   }

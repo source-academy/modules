@@ -17,7 +17,7 @@
     "@sourceacademy/modules-lib": "workspace:^",
     "mermaid": "^11.7.0",
     "vitepress": "^1.6.3",
-    "vitepress-plugin-group-icons": "^1.6.1",
+    "vitepress-plugin-group-icons": "^1.6.5",
     "vitepress-plugin-mermaid": "^2.0.17",
     "vitepress-sidebar": "^1.31.1"
   },

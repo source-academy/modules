@@ -6,40 +6,27 @@ import omit from 'lodash/omit.js';
 import { logCommandErrorAndExit } from './commandUtils.js';
 
 export const getListBundlesCommand = () => new Command('bundle')
-  .description('Lists all the bundles present or the information for a specific bundle in a given directory')
+  .description('Lists all the bundles present in a given directory')
   .option('--raw', 'Output just the names of bundles')
-  .argument('[directory]')
+  .argument('[directory]', 'Directory to check', bundlesDir)
   .action(async (directory, { raw }) => {
-    if (directory === undefined) {
-      const manifestResult = await resolveAllBundles(bundlesDir);
-      if (manifestResult.severity === 'error') {
-        logCommandErrorAndExit(manifestResult);
+    const manifestResult = await resolveAllBundles(directory);
+    if (manifestResult.severity === 'error') {
+      logCommandErrorAndExit(manifestResult);
+    }
+
+    const bundleNames = Object.keys(manifestResult.bundles);
+
+    if (bundleNames.length > 0) {
+      if (raw) {
+        console.log(bundleNames.join('\n'));
+        return;
       }
 
-      const bundleNames = Object.keys(manifestResult.bundles);
-
-      if (bundleNames.length > 0) {
-        if (raw) {
-          console.log(bundleNames.join('\n'));
-          return;
-        }
-
-        const bundlesStr = bundleNames.map((each, i) => `${i+1}. ${each}`).join('\n');
-        console.log(`${chalk.magentaBright(`Detected ${bundleNames.length} bundles in ${bundlesDir}:`)}\n${bundlesStr}`);
-      } else {
-        logCommandErrorAndExit(`No bundles in ${bundlesDir}!`);
-      }
+      const bundlesStr = bundleNames.map((each, i) => `${i+1}. ${each}`).join('\n');
+      console.log(`${chalk.magentaBright(`Detected ${bundleNames.length} bundles in ${bundlesDir}:`)}\n${bundlesStr}`);
     } else {
-      const manifestResult = await resolveSingleBundle(directory);
-      if (!manifestResult) {
-        logCommandErrorAndExit(`No bundle found at ${directory}!`);
-      } else if (manifestResult.severity === 'error') {
-        logCommandErrorAndExit(manifestResult);
-      } else {
-        const bundle = omit(manifestResult.bundle, 'type');
-        const manifestStr = JSON.stringify(bundle, null, 2);
-        console.log(`${chalk.magentaBright(`Bundle '${manifestResult.bundle.name}' found in ${directory}`)}:\n${manifestStr}`);
-      }
+      logCommandErrorAndExit(`No bundles in ${bundlesDir}!`);
     }
   });
 
@@ -73,6 +60,22 @@ export const getListTabsCommand = () => new Command('tabs')
         logCommandErrorAndExit(`No tab found in ${directory}`);
       }
       console.log(chalk.magentaBright(`Tab '${resolvedTab.name}' found in ${directory}`));
+    }
+  });
+
+export const getValidateCommand = () => new Command('validate')
+  .description('Validate the bundle at the given directory')
+  .argument('<directory>')
+  .action(async directory => {
+    const manifestResult = await resolveSingleBundle(directory);
+    if (!manifestResult) {
+      logCommandErrorAndExit(`No bundle found at ${directory}!`);
+    } else if (manifestResult.severity === 'error') {
+      logCommandErrorAndExit(manifestResult);
+    } else {
+      const bundle = omit(manifestResult.bundle, 'type');
+      const manifestStr = JSON.stringify(bundle, null, 2);
+      console.log(`${chalk.magentaBright(`Bundle '${manifestResult.bundle.name}' found in ${directory}`)}:\n${manifestStr}`);
     }
   });
 

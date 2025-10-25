@@ -45,7 +45,7 @@ const vitepressOptions: UserConfig = {
           },
           {
             text: 'Bundles',
-            link: '/modules/2-bundle/1-overview'
+            link: '/modules/2-bundle/1-overview/1-overview'
           },
           {
             text: 'Tabs',
@@ -107,7 +107,6 @@ const commonSideBarOptions: VitePressSidebarOptions = {
   documentRootPath: '/src',
   // sortMenusByName: true,
 
-  // TODO: Investigate? Do we need rewrite rules?
   // folderLinkNotIncludesFileName: true,
   useFolderLinkFromSameNameSubFile: true,
   useFolderTitleFromIndexFile: true,

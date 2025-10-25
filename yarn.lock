@@ -268,7 +268,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@antfu/install-pkg@npm:^1.0.0":
+"@antfu/install-pkg@npm:^1.0.0, @antfu/install-pkg@npm:^1.1.0":
   version: 1.1.0
   resolution: "@antfu/install-pkg@npm:1.1.0"
   dependencies:
@@ -282,6 +282,13 @@ __metadata:
   version: 8.1.1
   resolution: "@antfu/utils@npm:8.1.1"
   checksum: 10c0/cd55d322496f0324323a7bd312bbdc305db02f5c74c53d59213a00a7ecfd66926b6755a41f27c6e664a687cd7a967d3a8b12d3ea57f264ae45dd1c5c181f5160
+  languageName: node
+  linkType: hard
+
+"@antfu/utils@npm:^9.2.0":
+  version: 9.3.0
+  resolution: "@antfu/utils@npm:9.3.0"
+  checksum: 10c0/69135a94c8cc8f48b19d6e81ec53b6997f306fd8688d759e298fa9216779b76e86f5947d7917eccf10d6d000516d5efd3120bf23cbe0c770c9454a36e8a18a3f
   languageName: node
   linkType: hard
 
@@ -2664,12 +2671,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iconify-json/logos@npm:^1.2.4":
-  version: 1.2.4
-  resolution: "@iconify-json/logos@npm:1.2.4"
+"@iconify-json/logos@npm:^1.2.9":
+  version: 1.2.9
+  resolution: "@iconify-json/logos@npm:1.2.9"
   dependencies:
     "@iconify/types": "npm:*"
-  checksum: 10c0/b1e835ed858fbfc0f183e0b22cebc499bfce1b0a5205b7af17e18a7ba95dd47ffc0ef4617aae670b71ad1f70a605505157a3f2c96d408094c3132c3c571305a4
+  checksum: 10c0/7f5e2c8026560fb63489566cfc90497375543ca3649e7c7d13079f0a166dc4a738cf5686ec66a4cb9a319b8213303bc7c5ae74070e88d4bf0e5c1ef57cb3bacc
   languageName: node
   linkType: hard
 
@@ -2682,12 +2689,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iconify-json/vscode-icons@npm:^1.2.23":
-  version: 1.2.23
-  resolution: "@iconify-json/vscode-icons@npm:1.2.23"
+"@iconify-json/vscode-icons@npm:^1.2.32":
+  version: 1.2.33
+  resolution: "@iconify-json/vscode-icons@npm:1.2.33"
   dependencies:
     "@iconify/types": "npm:*"
-  checksum: 10c0/989398199dedf7a024ebaf6f03d6837e67e00f7f8813517adec0cb1d5cf8ce6ece2f258abcef410a71319b0e4683608044b5410b82be8fadbc896f0d13e0eae9
+  checksum: 10c0/b55c3b263643d08a5e7ef9d35e1dd63c11c911b86e344cfaa8e7fe639bdbf5940ca4164d05f2ec5de89627c934bec4e93a4be480be2c3bcc3ade9c57fd119073
   languageName: node
   linkType: hard
 
@@ -2698,7 +2705,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iconify/utils@npm:^2.1.33, @iconify/utils@npm:^2.3.0":
+"@iconify/utils@npm:^2.1.33":
   version: 2.3.0
   resolution: "@iconify/utils@npm:2.3.0"
   dependencies:
@@ -2711,6 +2718,22 @@ __metadata:
     local-pkg: "npm:^1.0.0"
     mlly: "npm:^1.7.4"
   checksum: 10c0/926013852cd9d09b8501ee0f3f7d40386dc5ed1cb904869d6502f5ee1a64aee5664e9c00da49d700528d26c4a51ea0cac4f046c4eb281d0f8d54fc5df2f3fd0d
+  languageName: node
+  linkType: hard
+
+"@iconify/utils@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "@iconify/utils@npm:3.0.2"
+  dependencies:
+    "@antfu/install-pkg": "npm:^1.1.0"
+    "@antfu/utils": "npm:^9.2.0"
+    "@iconify/types": "npm:^2.0.0"
+    debug: "npm:^4.4.1"
+    globals: "npm:^15.15.0"
+    kolorist: "npm:^1.8.0"
+    local-pkg: "npm:^1.1.1"
+    mlly: "npm:^1.7.4"
+  checksum: 10c0/ac9f9362b0d0143dd9861bcc64a0699f607f4f9df902aab3875b06832a89dd6a0e8ba2e1c43e927073a84661bf2882f1c79b5a3159a3cee53570d080b535c12c
   languageName: node
   linkType: hard
 
@@ -4466,7 +4489,7 @@ __metadata:
     cspell: "npm:^9.2.1"
     mermaid: "npm:^11.7.0"
     vitepress: "npm:^1.6.3"
-    vitepress-plugin-group-icons: "npm:^1.6.1"
+    vitepress-plugin-group-icons: "npm:^1.6.5"
     vitepress-plugin-mermaid: "npm:^2.0.17"
     vitepress-sidebar: "npm:^1.31.1"
   languageName: unknown
@@ -10602,7 +10625,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globals@npm:^15.11.0, globals@npm:^15.14.0":
+"globals@npm:^15.11.0, globals@npm:^15.14.0, globals@npm:^15.15.0":
   version: 15.15.0
   resolution: "globals@npm:15.15.0"
   checksum: 10c0/f9ae80996392ca71316495a39bec88ac43ae3525a438b5626cd9d5ce9d5500d0a98a266409605f8cd7241c7acf57c354a48111ea02a767ba4f374b806d6861fe
@@ -12220,6 +12243,17 @@ __metadata:
     pkg-types: "npm:^2.0.1"
     quansync: "npm:^0.2.8"
   checksum: 10c0/fe8f9d0443fb066c3f28a4c89d587dd7cba3ab02645cd16598f8d5f30968acf60af1b0ec2d6ad768475ec9f52baad124f31a93d2fbc034f645bcc02bf3a84882
+  languageName: node
+  linkType: hard
+
+"local-pkg@npm:^1.1.1":
+  version: 1.1.2
+  resolution: "local-pkg@npm:1.1.2"
+  dependencies:
+    mlly: "npm:^1.7.4"
+    pkg-types: "npm:^2.3.0"
+    quansync: "npm:^0.2.11"
+  checksum: 10c0/1bcfcc5528dea95cba3caa478126a348d3985aad9f69ecf7802c13efef90897e1c5ff7851974332c5e6d4a4698efe610fef758a068c8bc3feb5322aeb35d5993
   languageName: node
   linkType: hard
 
@@ -14400,6 +14434,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pkg-types@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "pkg-types@npm:2.3.0"
+  dependencies:
+    confbox: "npm:^0.2.2"
+    exsolve: "npm:^1.0.7"
+    pathe: "npm:^2.0.3"
+  checksum: 10c0/d2bbddc5b81bd4741e1529c08ef4c5f1542bbdcf63498b73b8e1d84cff71806d1b8b1577800549bb569cb7aa20056257677b979bff48c97967cba7e64f72ae12
+  languageName: node
+  linkType: hard
+
 "playwright-core@npm:1.54.1":
   version: 1.54.1
   resolution: "playwright-core@npm:1.54.1"
@@ -14649,6 +14694,13 @@ __metadata:
   version: 1.10.1
   resolution: "qsu@npm:1.10.1"
   checksum: 10c0/6997ebce26a14474bfad4b1e5dfb1124b90c18b6427778a7e85cd31ac52017f769063dccd5fb1db028adabe6265ed5a8fd67f0619451e312bfa0aafb9fa75e37
+  languageName: node
+  linkType: hard
+
+"quansync@npm:^0.2.11":
+  version: 0.2.11
+  resolution: "quansync@npm:0.2.11"
+  checksum: 10c0/cb9a1f8ebce074069f2f6a78578873ffedd9de9f6aa212039b44c0870955c04a71c3b1311b5d97f8ac2f2ec476de202d0a5c01160cb12bc0a11b7ef36d22ef56
   languageName: node
   linkType: hard
 
@@ -17496,17 +17548,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitepress-plugin-group-icons@npm:^1.6.1":
-  version: 1.6.1
-  resolution: "vitepress-plugin-group-icons@npm:1.6.1"
+"vitepress-plugin-group-icons@npm:^1.6.5":
+  version: 1.6.5
+  resolution: "vitepress-plugin-group-icons@npm:1.6.5"
   dependencies:
-    "@iconify-json/logos": "npm:^1.2.4"
-    "@iconify-json/vscode-icons": "npm:^1.2.23"
-    "@iconify/utils": "npm:^2.3.0"
+    "@iconify-json/logos": "npm:^1.2.9"
+    "@iconify-json/vscode-icons": "npm:^1.2.32"
+    "@iconify/utils": "npm:^3.0.2"
   peerDependencies:
-    markdown-it: ">=14"
     vite: ">=3"
-  checksum: 10c0/7ddaf945448e9fcac579888afc04eef3b67ec4f2d4fd572ff1b95650f173d07fb6bc7be17b311556c579302cfd0418ff6550f497cd5544728da31a71e4756508
+  peerDependenciesMeta:
+    vite:
+      optional: true
+  checksum: 10c0/8e30800925cdc2ae1aeafcb42d9aae5da4a3c922e8aa0bd629461f29ff1ba3a766cb45f7ee66a350a4be8acce5f7069457da36a3977255bf241858ba8a5dad36
   languageName: node
   linkType: hard
 
