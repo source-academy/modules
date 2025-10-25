@@ -1,5 +1,4 @@
 import fs from 'fs/promises';
-import pathlib from 'path';
 import * as manifest from '@sourceacademy/modules-repotools/manifest';
 import { describe, test, vi } from 'vitest';
 import { testMocksDir } from '../../__tests__/fixtures.js';
@@ -10,7 +9,6 @@ const mockedConsoleLog = vi.spyOn(console, 'log');
 const mockedConsoleError = vi.spyOn(console, 'error');
 
 describe('Test list command with bundles', () => {
-  const mockedResolveSingleBundle = vi.spyOn(manifest, 'resolveSingleBundle');
   const mockedResolveAllBundles = vi.spyOn(manifest, 'resolveAllBundles');
 
   const runCommand = getCommandRunner(getListBundlesCommand);
@@ -35,37 +33,12 @@ describe('Test list command with bundles', () => {
   });
 
   test('Running command in a directory that doesn\'t have a bundle', ({ expect }) => {
-    mockedResolveSingleBundle.mockResolvedValueOnce(undefined);
-    return expect(runCommand('somewhere')).commandExit();
-  });
-
-  test('Running command in a directory that does have a bundle', async ({ expect }) => {
-    await expect(runCommand(`${testMocksDir}/bundles/test0`)).commandSuccess();
-
-    expect(console.log).toHaveBeenCalledTimes(1);
-    const [[data]] = mockedConsoleLog.mock.calls;
-    const sanitized = (data as string).split('\n').join('');
-
-    const match = /^.+:(\{.+\})$/gm.exec(sanitized);
-    expect(match).not.toBeNull();
-
-    const parsed = JSON.parse(match![1]);
-    expect(parsed).toMatchObject({
-      directory: pathlib.join(testMocksDir, 'bundles', 'test0'),
-      manifest: {
-        tabs: ['tab0']
-      },
-      name: 'test0'
+    mockedResolveAllBundles.mockResolvedValueOnce({
+      severity: 'success',
+      bundles: {}
     });
-  });
 
-  test('Bundle verification failure for a single bundle', async ({ expect }) => {
-    vi.spyOn(fs, 'readFile').mockResolvedValueOnce(`{
-      "tabs": [],
-      "extraProperty": ""
-    }`);
-
-    await expect(runCommand(pathlib.join(testMocksDir, 'bundles', 'test0'))).commandExit();
+    return expect(runCommand('somewhere')).commandExit();
   });
 
   test('Bundle verification failure for a single bundle, but when reading all bundles', async ({ expect }) => {
