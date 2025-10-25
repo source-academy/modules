@@ -68,14 +68,13 @@ You can also add the dependency directly by modifying your `package.json`:
 
 If you do so, remember to run your installation command (same as the one above) to update the lockfile.
 
-### React Within bundles
-
-Currently, the way bundles are loaded by `js-slang` means that React cannot be externalized for bundles. `js-slang` simply has no way to provide React
-from the frontend to the bundle.
-
-This means that tools like the React DevTools will not be able to work correctly during development with the frontend.
-
-Refer to the [issue](https://github.com/source-academy/modules/issues/211) tracking this functionality.
+> [!IMPORTANT] React Within bundles
+> Currently, the way bundles are loaded by `js-slang` means that React cannot be externalized for bundles. `js-slang` simply has no way to provide React
+> from the frontend to the bundle.
+> 
+> This means that tools like the React DevTools will not be able to work correctly for bundles during development with the frontend.
+> 
+> Refer to the [issue](https://github.com/source-academy/modules/issues/211) tracking this functionality.
 
 ## Bundle Conventions
 

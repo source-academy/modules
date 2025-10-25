@@ -310,7 +310,7 @@ export default defineProject({
 ```
 
 You will also need to add (to your dev dependencies) other packages:
-- `@vitest/browser`
+- `@vitest/browser-playwright`
 - `vitest-browser-react`
 - `playwright`
 
@@ -335,13 +335,14 @@ Writing interactive tests is not very different from writing regular tests. Most
 > While writing your tests, you should use watch mode. This will allow `vitest` to open a browser and actually display what your tab looks like whilst
 > being rendered during the test.
 
-Use the `render` function provided `vitest-browser-react` to render your tab/component to a screen. The returned component can then be interacted with:
+Use the `render` function provided `vitest-browser-react` to render your tab/component to a screen. Note that it should be awaited.
+The returned value can then be interacted with:
 
 ```tsx
 import { render } from 'vitest-browser-react';
 
-test('Testing my component', () => {
-  const screen = render(<MyComponent />);
+test('Testing my component', async () => {
+  const screen = await render(<MyComponent />);
   const button = screen.getByRole('button');
 
   await button.click();
@@ -374,7 +375,7 @@ might fail because the element hasn't displayed yet:
 import { render } from 'vitest-browser-react';
 
 test('An animation', async () => {
-  const component = render(<Animation />);
+  const component = await render(<Animation />);
   const finishScreen = component.getByTitle('finish');
   // Might fail because the assertion will execute before the animation finishes
   expect(finishScreen).toBeVisible();
@@ -387,7 +388,7 @@ Instead, `vitest` provides a special set of matchers that can be used to "retry"
 import { render } from 'vitest-browser-react';
 
 test('An animation', async () => {
-  const component = render(<Animation />);
+  const component = await render(<Animation />);
   const finishScreen = component.getByTitle('finish');
 
   await expect.poll(() => finishScreen).toBeVisible();
@@ -432,7 +433,7 @@ afterEach(() => {
 });
 
 test('An animation', async () => {
-  const component = render(<Animation />);
+  const component = await render(<Animation />);
   const finishScreen = component.getByTitle('finish');
 
   for (let i = 0; i < 160; i++) {
@@ -460,8 +461,8 @@ export function Foo() {
 }
 
 // Can then be referred to:
-test('test0', () => {
-  const screen = render(<Foo />);
+test('test0', async () => {
+  const screen = await render(<Foo />);
   const p = screen.getByTitle('important');
   await expect.element(p).toBeVisible();
 });
@@ -469,7 +470,7 @@ test('test0', () => {
 
 ### Simulating User Input
 
-You can simulate user input by using the `userEvent` utility from `@vitest/browser`:
+You can simulate user input by using the `userEvent` utility from `vitest/browser`:
 ```tsx
 export function Foo() {
   const [text, setText] = useState('');
@@ -483,11 +484,11 @@ export function Foo() {
 }
 
 // In tests:
-import { userEvent } from '@vitest/browser/context';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 
-test('Changing text works', () => {
-  const screen = render(<Foo />);
+test('Changing text works', async () => {
+  const screen = await render(<Foo />);
   await userEvent.keyboard('abcd');
   const element = screen.getByText('abcd');
   await expect.element(element).toBeVisible();
