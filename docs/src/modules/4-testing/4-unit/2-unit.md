@@ -206,7 +206,7 @@ Sometimes you might want to mock only a specific function while retaining the or
 else. For this case, the factory function is provided a function (as an argument) that will return the original module:
 
 ```ts
-// You could also use 
+// You could also use
 // vi.importActual();
 // but that's not necessary
 
