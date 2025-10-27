@@ -24,12 +24,6 @@ export default defineConfig({
     alias: [{
       find: /^js-slang\/context/,
       replacement: pathlib.join(import.meta.dirname, 'src/__mocks__/context.ts')
-    }, {
-      find: 'fs/promises',
-      replacement: 'node:fs/promises',
-    }, {
-      find: 'path',
-      replacement: 'node:path'
     }]
   },
   test: {
