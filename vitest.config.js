@@ -42,7 +42,7 @@ export default defineConfig({
       reporter: coverageReporters,
       exclude: [
         '**/__mocks__',
-        '**/build',
+        '**/build/**',
         '**/dist',
         '**/src/**/samples/**',
         pathlib.join(import.meta.dirname, 'lib/buildtools/src/build/docs/drawdown.ts'),
