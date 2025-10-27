@@ -53,7 +53,7 @@ const vitepressOptions: UserConfig = {
           },
           {
             text: 'Testing',
-            link: '/modules/4-testing/'
+            link: '/modules/4-testing'
           },
           {
             text: 'Advanced',

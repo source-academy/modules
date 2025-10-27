@@ -47,6 +47,7 @@ If you intend for your bundle to be consumed from other bundles, do the followin
 {
   "compilerOptions": {
     "outDir": "./dist", // Make sure outDir is specified
+    "noEmit": true,     // noEmit should still be true
     "declaration": true // declaration needs to be true
   }
 }
