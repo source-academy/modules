@@ -49,6 +49,11 @@ The `repotools` package is designed to be the 'root' for all the tooling in the 
 a dependency loop that Yarn would not be able to resolve. So we enforce the constraint that the `@sourceacademy/modules-repotools` package is not allowed to depend on any
 other package within this repository.
 
+### 5. Vitest related dependencies should have the same version as Vitest
+
+Aside from `vitest-browser-react` and `@vitest/eslint-plugin`, all Vitest packages should have the same version range
+as Vitest throughout the repository.
+
 ## Parallel Execution of Scripts
 
 Using the various options of the `yarn workspaces foreach` command, you can execute multiple tasks in parallel, which is how many of the commands in the root repository have been set up.
