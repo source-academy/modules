@@ -1,6 +1,7 @@
 {
   "name": "@sourceacademy/tab-Matrix",
   "private": true,
+  "type": "module",
   "version": "1.0.0",
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
