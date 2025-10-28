@@ -5,9 +5,10 @@
 export type CellCallback = (row: number, col: number, newValue: boolean) => void;
 
 /**
- * Representation of a 2D matrix of boolean values
+ * Representation of a 2D matrix of values
  */
 export interface Matrix {
+  name: string | undefined;
   values: boolean[][];
   labels: string[][];
   readonly rows: number;

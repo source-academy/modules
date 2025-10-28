@@ -17,16 +17,6 @@ function checkDimensions(func_name: string, matrix: Matrix, row: number, col: nu
   }
 }
 
-// type TempMatrixObject<T extends keyof Matrix> = {
-//   [K in keyof Matrix as T extends K ? T : never]: Matrix[K]
-// };
-
-// function throwIfNotMatrix<T extends keyof Matrix>(func_name: string, obj: unknown, prop: T): asserts obj is TempMatrixObject<T> {
-//   if (typeof obj !== 'object' || obj === null || !(prop in obj)) {
-//     throw new Error(`${func_name}: Expected a matrix, got ${obj}`);
-//   }
-// }
-
 /**
  * Maximum number of rows supported
  */
@@ -39,15 +29,15 @@ export const MAX_COLS: number = 256;
 
 /**
  * Creates a 2D matrix with the given number of rows and columns
- * @param rows Number of rows between 1 and 255
- * @param cols Number of columns between 1 and 255
+ * @param rows Number of rows between 1 and {@link MAX_ROWS}
+ * @param cols Number of columns between 1 and {@link MAX_COLS}
  * @returns Matrix
  */
-export function create_matrix(rows: number, cols: number): Matrix {
+export function create_matrix(rows: number, cols: number, name: string | undefined): Matrix {
   if (!Number.isInteger(rows)) throw new Error(`${create_matrix.name}: Expected an integer value for rows, got: ${rows}`);
   if (!Number.isInteger(cols)) throw new Error(`${create_matrix.name}: Expected an integer value for columns, got: ${cols}`);
 
-  if (rows < 1 || cols < 1) throw new Error('Cannot create a matrix with fewer than 1 row or column!');
+  if (rows < 1 || cols < 1) throw new Error(`${create_matrix.name}: Cannot create a matrix with fewer than 1 row or column!`);
   if (rows > MAX_ROWS) throw new Error(`${create_matrix.name}: Cannot create a matrix with greater than ${MAX_ROWS} rows!`);
   if (cols > MAX_COLS) throw new Error(`${create_matrix.name}: Cannot create a matrix with greater than ${MAX_COLS} columns!`);
 
@@ -60,6 +50,7 @@ export function create_matrix(rows: number, cols: number): Matrix {
     for (let j = 0; j < cols; j++) values[i][j] = false;
   }
   return {
+    name,
     labels,
     values,
     rows,
@@ -71,7 +62,7 @@ export function create_matrix(rows: number, cols: number): Matrix {
 
 /**
  * Creates a copy of an existing matrix. The copy will not have the existing's registered buttons
- * or callback.
+ * or callbacks. Its name will be the name of the existing matrix with "Copy" appended
  * @param matrix Matrix to copy
  * @returns A new matrix with the same values and labels as the first
  */
@@ -86,6 +77,7 @@ export function copy_matrix(matrix: Matrix): Matrix {
   }
   return {
     ...matrix,
+    name: `${matrix.name} Copy`,
     values,
     labels,
     buttons: [],
@@ -118,8 +110,8 @@ export function clear_matrix(matrix: Matrix) {
  * @param col Column index of cell
  * @returns Boolean value of cell
  */
-export function get_value(matrix: Matrix, row: number, col: number): boolean {
-  checkDimensions(get_value.name, matrix, row, col);
+export function get_cell_value(matrix: Matrix, row: number, col: number): boolean {
+  checkDimensions(get_cell_value.name, matrix, row, col);
   return matrix.values[row][col];
 }
 
@@ -142,7 +134,7 @@ export function get_cell_label(matrix: Matrix, row: number, col: number): string
  */
 // It is necessary to make a copy of the 2D array, otherwise changes to the array will change
 // the values in the matrix
-export function get_values(matrix: Matrix): boolean[][] {
+export function get_cell_values(matrix: Matrix): boolean[][] {
   return copy_matrix(matrix).values;
 }
 
@@ -272,8 +264,8 @@ export const randomize_matrix = randomise_matrix;
  * @param col Column index of cell
  * @param value Value to set the cell to
  */
-export function set_value(matrix: Matrix, row: number, col: number, value: boolean): void {
-  checkDimensions(set_value.name, matrix, row, col);
+export function set_cell_value(matrix: Matrix, row: number, col: number, value: boolean): void {
+  checkDimensions(set_cell_value.name, matrix, row, col);
   matrix.values[row][col] = value;
 }
 
@@ -295,7 +287,7 @@ export function set_cell_label(matrix: Matrix, row: number, col: number, label: 
  * @param matrix Matrix to modify
  * @param values Values to use
  */
-export function set_values(matrix: Matrix, values: boolean[][]): void {
+export function set_cell_values(matrix: Matrix, values: boolean[][]): void {
   for (let i = 0; i < Math.min(matrix.rows, values.length); i++) {
     for (let j = 0; j < Math.min(matrix.cols, values[i].length); i++) {
       matrix.values[i][j] = values[i][j];
@@ -315,4 +307,12 @@ export function set_cell_labels(matrix: Matrix, labels: string[][]): void {
       matrix.labels[i][j] = labels[i][j];
     }
   }
+}
+
+/**
+ * Sets the name of the provided matrix
+ */
+export function set_matrix_name(matrix: Matrix, name: string | undefined) {
+  matrix.name = name;
+  return matrix;
 }

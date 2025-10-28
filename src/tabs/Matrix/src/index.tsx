@@ -1,4 +1,3 @@
-
 import {
   Alignment,
   Button,
@@ -80,11 +79,12 @@ const Stack = ({ direction, children, alignItems }: StackProps) => <div
   {children}
 </div>;
 
-type DisplayProps = {
+interface MatrixInstanceProps {
   matrix: Matrix;
   index: number;
 };
-const MatrixInstance = ({ matrix, index }: DisplayProps) => {
+
+function MatrixInstance({ matrix, index }: MatrixInstanceProps) {
   // Use this state variable to force React to rerender
   const [updater, setUpdater] = useState(0);
   const rerender = () => setUpdater(updater + 1);
@@ -94,36 +94,32 @@ const MatrixInstance = ({ matrix, index }: DisplayProps) => {
   const [showCellLabels, setShowCellLabels] = useState(false);
 
   const settingsMenu = <Popover
-    content={
-      <Menu>
-        <MenuDivider title="Settings" />
-        <MenuDivider />
-        <Checkbox checked={showColLabels} onChange={() => setShowColLabels(!showColLabels)}>
-          Show Row and Column Labels
-        </Checkbox>
-        <Checkbox checked={showCellLabels} onChange={() => setShowCellLabels(!showCellLabels)}>
-          Show Cell Labels
-        </Checkbox>
-      </Menu>
-    }
+    content={<Menu>
+      <MenuDivider title="Settings" />
+      <MenuDivider />
+      <Checkbox checked={showColLabels} onChange={() => setShowColLabels(!showColLabels)}>
+        Show Row and Column Labels
+      </Checkbox>
+      <Checkbox checked={showCellLabels} onChange={() => setShowCellLabels(!showCellLabels)}>
+        Show Cell Labels
+      </Checkbox>
+    </Menu>}
     renderTarget={targetProps => (
       <Tooltip content="Tab Settings">
         <Button
           {...targetProps}
         >
-          <Icon icon="settings"/>
+          <Icon icon="settings" />
         </Button>
       </Tooltip>
-    )}
-  />;
+    )} />;
 
   const userButtons = matrix.buttons.length > 0
     ? (
       <UserToolbar
         max={5}
         buttons={matrix.buttons}
-        onClick={() => rerender()}
-      />
+        onClick={() => rerender()} />
     )
     : (
       <p style={{
@@ -138,11 +134,9 @@ const MatrixInstance = ({ matrix, index }: DisplayProps) => {
   const coordIndicator = (
     <p>
       (<code>
-        {
-          hoverCoords === false
-            ? ' , '
-            : `${hoverCoords[0] === false ? ' ' : hoverCoords[0]},${hoverCoords[1] === false ? ' ' : hoverCoords[1]}`
-        }
+        {hoverCoords === false
+          ? ' , '
+          : `${hoverCoords[0] === false ? ' ' : hoverCoords[0]},${hoverCoords[1] === false ? ' ' : hoverCoords[1]}`}
       </code>)
     </p>
   );
@@ -151,7 +145,7 @@ const MatrixInstance = ({ matrix, index }: DisplayProps) => {
     direction="column"
     alignItems="center"
   >
-    <h2>Matrix {index + 1}</h2>
+   <h2>{matrix.name ?? `Matrix ${index + 1}`}</h2>
     <Card elevation={2}>
       <Stack
         direction="column"
@@ -180,25 +174,23 @@ const MatrixInstance = ({ matrix, index }: DisplayProps) => {
             rerenderCallback={() => rerender()}
             matrix={matrix}
             showCellLabels={showCellLabels}
-            showColLabels={showColLabels}
-          />
+            showColLabels={showColLabels} />
         </div>
       </Stack>
     </Card>
   </Stack>;
-};
+}
 
-type TabProps = {
+interface MatrixTabProps {
   moduleState: MatrixModuleState;
 };
-const MatrixTab = ({ moduleState: state }: TabProps) => {
+function MatrixTab({ moduleState: state }: MatrixTabProps) {
   const elements = state.matrices.map((matrix, i) => <MatrixInstance
     matrix={matrix}
-    index={i}
-  />);
+    index={i} />);
 
   return <MultiItemDisplay elements={elements} />;
-};
+}
 
 export default defineTab({
   toSpawn: ({ context }) => context.moduleContexts.matrix?.state.matrices.length > 0,
