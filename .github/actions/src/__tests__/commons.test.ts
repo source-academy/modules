@@ -8,7 +8,7 @@ vi.mock(import('lodash/memoize.js'), () => ({
 
 const mockedExecOutput = vi.spyOn(exec, 'getExecOutput');
 
-describe('checkForChanges', () => {
+describe(commons.checkForChanges, () => {
   function mockChanges(value: boolean) {
     mockedExecOutput.mockResolvedValueOnce({
       exitCode: value ? 1 : 0, stdout: '', stderr: ''

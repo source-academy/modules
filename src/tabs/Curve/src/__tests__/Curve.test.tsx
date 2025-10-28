@@ -45,8 +45,8 @@ describe('Test Curve Side Content', () => {
     expect(propertyAccessor).toHaveBeenCalledExactlyOnceWith(expect.any(Object), 'curve', expect.any(Object));
   });
 
-  test('body asks for curve module state', () => {
-    render(<CurveSideContent.body {...contextObject} />);
+  test('body asks for curve module state', async () => {
+    await render(<CurveSideContent.body {...contextObject} />);
     expect(propertyAccessor).toHaveBeenCalledExactlyOnceWith(expect.any(Object), 'curve', expect.any(Object));
   });
 });
