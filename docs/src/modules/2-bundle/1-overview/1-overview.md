@@ -158,8 +158,7 @@ This file controls the behaviour of Typescript. By default, it should look like 
     "./src"
   ],
   "compilerOptions": {
-    "outDir": "./dist",
-    "noEmit": true
+    "outDir": "./dist"
   },
   "typedocOptions": {
     "name": "curve"
@@ -176,6 +175,9 @@ In general, there should not be a need for you to modify this file.  A full expl
 > requires that the name of your bundle be set correctly.
 
 > [!INFO] Why both noEmit and outDir?
+> You might notice that for both bundles and tabs, the `noEmit` property is set to `true` via their shared `tsconfig.json`, which would
+> seem to contradict the fact that the `outDir` property has been set.
+>
 > Most of the time, the Typescript compiler should be run via the buildtools, i.e `yarn buildtools tsc` or `yarn buildtools build --tsc`.
 > The buildtools automatically include unit tests for type checking but exclude them from compilation to Javascript.
 >

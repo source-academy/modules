@@ -138,6 +138,16 @@ export default defineProject({
 There is no need to use `mergeConfig` to merge your configuration with the root configurations. When the build tools run `vitest`,
 the merging is performed automatically.
 
+> [!INFO]
+> Some paths are automatically excluded from both testing and test coverage. Paths like
+> `**/dist/**` are only intended for containing build artifacts which do not need to be
+> tested.
+> 
+> Therefore, it is unnecessary to exclude such paths in your own custom test configuration.
+> In general, it is unnecessary to configure the `exclude` property unless you're noticing that
+> Vitest is incorrectly detecting files as test files and incorrectly including files in coverage
+> reports.
+
 ## Integration with Git Hooks
 
 Any tests that you have written must be pass in order for you to push to the main repository, as well as for your pull requests to be merged.

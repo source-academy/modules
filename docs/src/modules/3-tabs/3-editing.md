@@ -175,7 +175,8 @@ test('Matches snapshot', () => {
 
 ### When to spawn the tab?
 
-As mentioned, the frontend will go through the list of tabs for the bundles currently loaded and determine if it should spawn those tabs. This is done
+As mentioned, when a `js-slang` program that imports Source modules gets evaluated, the frontend will go through the list of tabs for
+the bundles currently loaded and determine if it should spawn those bundles' tabs. This is done
 by calling the tab's `toSpawn` function (if it exists). If the function is missing, then the tab is always spawned.
 
 In most cases, you should use the `toSpawn` function. This way, if the parent bundle is imported but no tab functions are called, the frontend won't have
@@ -183,6 +184,8 @@ to waste time loading the tab's UI. More importantly, it gives the developer mor
 
 However, there are some cases where it makes sense to have the tab always spawn. For example, the `pix_n_flix` tab doesn't rely on any functionality from the bundle.
 So long as the `pix_n_flix` bundle is imported, the tab will be spawned.
+
+Each tab is only ever loaded and evaluated once per program evaluation (i.e both `body` and `toSpawn` are only ever called once each).
 
 ### Can I update other UI elements in the frontend?
 

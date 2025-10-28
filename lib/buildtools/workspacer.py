@@ -48,7 +48,7 @@ def update_json(git_root: str, asset: Literal['bundle', 'tab'], file_name: Liter
 async def main():
   git_root = await get_git_root()
   def updater(name: str, full_path: str, obj: Any):
-    obj['compilerOptions']['noEmit'] = True
+    del obj['compilerOptions']['noEmit']
     return obj
 
   update_json(git_root, 'bundle', 'tsconfig', updater)
