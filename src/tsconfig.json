@@ -18,6 +18,8 @@
     "moduleResolution": "bundler",
     "skipLibCheck": true,
 
+    "noEmit": true,
+
     /* Allows importing modules with a ‘.json’ extension, which is a common practice in node projects. */
     "resolveJsonModule": true,
     /* Enables the generation of sourcemap files. These files allow debuggers and other tools to display the original TypeScript source code when actually working with the emitted JavaScript files. */

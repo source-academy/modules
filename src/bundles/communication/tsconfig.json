@@ -12,8 +12,7 @@
       "js-slang/context": [
         "../context.d.ts"
       ]
-    },
-    "noEmit": true
+    }
   },
   "typedocOptions": {
     "name": "communication"

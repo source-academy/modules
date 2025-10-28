@@ -4,8 +4,7 @@
     "./src"
   ],
   "compilerOptions": {
-    "outDir": "./dist",
-    "noEmit": true
+    "outDir": "./dist"
   },
   "typedocOptions": {
     "name": "binary_tree"

@@ -1,4 +1,3 @@
-// unity_academy bundle
 {
   "extends": "../tsconfig.json",
   "include": [
