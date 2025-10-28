@@ -201,6 +201,7 @@ export default defineConfig(
 
       // In code snippets and examples, these rules are often
       // counterproductive to clarity and brevity.
+      'no-dupe-keys': 'off',
       'no-redeclare': 'off',
       'no-undef': 'off',
       'no-unused-expressions': 'off',

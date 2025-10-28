@@ -18,9 +18,11 @@ const packageNameRegex = /^@sourceacademy\/(bundle|tab)-(.+)$/u;
  */
 export async function getBundleManifest(directory: string, tabCheck?: boolean): Promise<GetBundleManifestResult | undefined> {
   let manifestStr: string;
+  const manifestPath = pathlib.join(directory, 'manifest.json');
+  const bundleName = pathlib.basename(directory);
 
   try {
-    manifestStr = await fs.readFile(pathlib.join(directory, 'manifest.json'), 'utf-8');
+    manifestStr = await fs.readFile(manifestPath, 'utf-8');
   } catch (error) {
     if (isNodeError(error) && error.code === 'ENOENT') {
       return undefined;
@@ -37,7 +39,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
     if (!packageNameRegex.test(packageName)) {
       return {
         severity: 'error',
-        errors: [`The package name "${packageName}" does not follow the correct format!`]
+        errors: [`${bundleName}: The package name "${packageName}" does not follow the correct format!`]
       };
     }
 
@@ -54,7 +56,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
   if (validateResult.errors.length > 0) {
     return {
       severity: 'error',
-      errors: validateResult.errors.map(each => each.toString())
+      errors: validateResult.errors.map(each => `${bundleName}: ${each.toString()}`)
     };
   }
 
@@ -74,7 +76,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
     if (unknownTabs.length > 0) {
       return {
         severity: 'error',
-        errors: unknownTabs.map(each => `Unknown tab "${each}"`)
+        errors: unknownTabs.map(each => `${bundleName}: Unknown tab "${each}"`)
       };
     }
   }
@@ -114,7 +116,7 @@ export async function getBundleManifests(bundlesDir: string, tabCheck?: boolean)
 
   const [combinedManifests, errors] = manifests.reduce<[
     Record<string, BundleManifest>,
-    Record<string, string[]>
+    string[]
   ]>(([res, errors], entry) => {
     if (entry === undefined) return [res, errors];
     const [name, manifest] = entry;
@@ -122,10 +124,10 @@ export async function getBundleManifests(bundlesDir: string, tabCheck?: boolean)
     if (manifest.severity === 'error') {
       return [
         res,
-        {
+        [
           ...errors,
-          [name]: manifest.errors
-        }
+          ...manifest.errors
+        ]
       ];
     }
 
@@ -137,18 +139,12 @@ export async function getBundleManifests(bundlesDir: string, tabCheck?: boolean)
       errors
     ];
 
-  }, [{}, {}]);
+  }, [{}, []]);
 
-  if (Object.keys(errors).length > 0) {
-    const errorStrs = Object.entries(errors)
-      .flatMap(
-        ([name, errors]) => errors
-          .map(error => `${name}: ${error}`)
-      );
-
+  if (errors.length > 0) {
     return {
       severity: 'error',
-      errors: errorStrs
+      errors,
     };
   }
 

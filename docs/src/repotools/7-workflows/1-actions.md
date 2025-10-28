@@ -34,7 +34,7 @@ The initializer action combines the initialization steps that are necessary for 
 2. Install dependencies for that workspace (using `yarn workspaces focus`)
 3. Install playwright if necessary (using `yarn playwright install --with-deps`)
 
->[!INFO]
+> [!INFO]
 > Though theoretically this action should also include `actions/checkout` since that action is repeated across
 > the different packages, because the initializer action is a custom action, the code for the action needs to be
 > checked out before this action can be run.

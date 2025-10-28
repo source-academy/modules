@@ -7,8 +7,8 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.7.0",
-    "@vitest/browser": "^3.2.3",
+    "@vitejs/plugin-react": "^5.1.0",
+    "@vitest/browser-playwright": "^4.0.4",
     "eslint": "^9.35.0",
     "playwright": "^1.54.1",
     "typedoc": "^0.28.9",
@@ -16,8 +16,8 @@
     "typedoc-plugin-markdown": "^4.7.0",
     "typedoc-plugin-rename-defaults": "^0.7.3",
     "typescript": "^5.8.2",
-    "vitest": "^3.2.3",
-    "vitest-browser-react": "^1.0.0"
+    "vitest": "^4.0.4",
+    "vitest-browser-react": "^2.0.2"
   },
   "exports": {
     "./tabs/index": null,

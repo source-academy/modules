@@ -1,5 +1,7 @@
 # Basic Conventions
 
+This section contains some conventions to follow when writing your bundle.
+
 ## 1. Cadet facing functions should not have default or rest parameters
 
 The function signature below takes in two booleans, the second of which is optional. This is not supported for Module functions in Source, but is fine if your function
@@ -175,9 +177,9 @@ be specified:
 This version number should follow the rules of semantic versioning. `js-slang` will use this version number to determine if it currently has the latest version of your bundle
 compatible with its current version.
 
-## 5. Making use of `js-slang/stdlib`
+## 5. Making use of `js-slang`
 
-Bundles, where necessary, should use the implementations of libraries such as `list` or `stream` from the `js-slang` standard library:
+Bundles, where necessary, should use the implementations from `js-slang`:
 
 ```ts
 import { is_pair } from 'js-slang/dist/stdlib/list';
@@ -191,10 +193,15 @@ export function is_sound(obj: unknown): obj is Sound {
 }
 ```
 
-These libraries get externalized and are then provided to bundles at runtime, so not only does this make your bundle size smaller, but it also
-ensures that you are using the same version of the `stdlib` as the version being used by `js-slang` while running your bundle code.
+These imports get externalized and are then provided to bundles at runtime, so not only does this make your bundle size smaller, but it also
+ensures that you are using the same implementations as those being used by `js-slang` while running your bundle code.
 
-::: details An extra copy of `list`?
-Once again, if you've been around long enough, you might remember a time where bundles each had to provide their own copy of the `list` library.
-This is no longer necessary.
-:::
+Note that not every export from `js-slang` is currently supported. Below is the list of paths you can import from:
+- `js-slang`
+- `js-slang/context`
+- `js-slang/dist/stdlib`
+- `js-slang/dist/types`
+- `js-slang/dist/utils/assert`
+- `js-slang/dist/utils/stringify`
+- `js-slang/dist/parser/parser`
+- `js-slang/dist/cse-machine/interpreter`

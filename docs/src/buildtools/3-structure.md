@@ -41,7 +41,7 @@ var package_default = {
 const typescriptVersion = package_default.devDependencies.typescript;
 ```
 
-## `getGitRoot.ts`
+## `@sourceacademy/modules-repotools/getGitRoot.ts`
 
 In general, the outputs of compiling bundles and tabs are placed relative to the root of the Git repository (the `/build`) folder. Since the buildtools
 need to be able to be executed from any of the bundles' and tabs' directories and subdirectories (and in fact any directory within the repository), it is crucial
@@ -71,6 +71,13 @@ function rawGetGitRoot() {
 ```
 
 This is guaranteed to work, since the user should have Git present on their system (otherwise how did they get this git repo?)
+
+You can import the absolute file paths to different directories straight from this module:
+```js
+import { bundlesDir, tabsDir, outDir } from '@sourceacademy/modules-repotools/getGitRoot';
+
+console.log(bundlesDir);
+```
 
 By abstracting this functionality into a separate module, it is simple to change the paths at which everything is defined (such as where the directory containing bundles is found). In particular,
 by mocking this module, we can run the buildtools on mock bundles and tabs with ease.

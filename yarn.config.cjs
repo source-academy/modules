@@ -8,6 +8,19 @@ module.exports = defineConfig({
     // Make sure all workspaces have type: "module"
     for (const workspace of Yarn.workspaces()) {
       workspace.set('type', 'module');
+
+      // All the vitest dependencies should have the same version as vitest
+      const vitestDep = Yarn.dependency({ workspace, ident: 'vitest' });
+
+      if (vitestDep !== null) {
+        for (const otherVitestDep of Yarn.dependencies({ workspace })) {
+          const depName = otherVitestDep.ident;
+          // Except for the eslint plugin
+          if (depName.startsWith('@vitest') && depName !== '@vitest/eslint-plugin') {
+            otherVitestDep.update(vitestDep.range);
+          }
+        }
+      }
     }
 
     // Make sure that if the dependency is defined in the root workspace

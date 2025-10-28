@@ -17,7 +17,7 @@ const test = baseTest.extend<{
 }>({
   screen: async ({}, fixture) => {
     await fixture(
-      render(<div>
+      await render(<div>
         <canvas title="canvas" />
         <video title="vid" />
         <img title='img' />

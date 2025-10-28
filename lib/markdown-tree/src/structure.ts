@@ -12,7 +12,7 @@ export function parseContent(content: string, docdir: string, options: Directory
   const yamlNode = parseDocument(content);
 
   if (yamlNode.errors.length > 0) {
-    console.error('[Markdown Tree Plugin] Errors ocurred while parsing the YAML');
+    console.error('[Markdown Tree Plugin] Errors occurred while parsing the YAML');
     return [yamlNode.errors.map(each => `${each}`).join('\n'), []];
   } else {
     const document = yamlNode.toJS();

@@ -47,7 +47,8 @@ The high level overview of this process is as follows:
 4. Use `ts.createProgram` to get the preliminary program for type checking only.
 5. Call `typecheckProgram.emit()` to produce the typechecking results.
 6. Combine the results with `ts.getPreEmitDiagonstics`.
-7. If there were no typechecking errors and the `tsconfig.json` did not specify <nobr><code>noEmit: true</code></nobr>, use `ts.createProgram` again with the typecheck program to perform compilation and declaration file emission excluding test files.
+7. If there were no typechecking errors use `ts.createProgram` again with the typecheck program to perform compilation and declaration file emission excluding test files by
+manually setting `noEmit` to `false`.
 8. Format the diagnostic objects using `ts.formatDiagnosticsWithColorAndContext`
 
 ### Reading and Parsing `tsconfig.json`

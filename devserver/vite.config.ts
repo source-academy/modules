@@ -1,11 +1,11 @@
 // Devserver Vite Config
-/// <reference types="@vitest/browser/providers/playwright" />
 
 import fs from 'fs/promises';
 import pathlib from 'path';
 import react from '@vitejs/plugin-react';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import { loadEnv, defineConfig, type UserConfig } from 'vite'
+import { loadEnv } from 'vite'
+import { playwright } from '@vitest/browser-playwright';
 import { defineProject } from 'vitest/config';
 import type { BrowserCommand } from 'vitest/node';
 
@@ -15,10 +15,10 @@ const setLocalStorage: BrowserCommand<[key: string, value: any]> = async (ctx, k
   }
 }
 
-export default defineConfig(({ mode }) => {
+export default defineProject(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
 
-  const viteConfig: UserConfig = {
+  return {
     root: import.meta.dirname,
     plugins: [
       nodePolyfills({
@@ -107,16 +107,13 @@ export default defineConfig(({ mode }) => {
         "vite-plugin-node-polyfills/shims/process",
       ],
     },
-  }
-
-  const testConfig = defineProject({
     test: {
       root: import.meta.dirname,
       name: 'Dev Server',
       include: ['**/__tests__/**/*.{ts,tsx}'],
       browser: {
         enabled: true,
-        provider: 'playwright',
+        provider: playwright(),
         instances: [{
           browser: 'chromium'
         }],
@@ -125,10 +122,5 @@ export default defineConfig(({ mode }) => {
         }
       }
     }
-  })
-
-  return {
-    ...viteConfig,
-    ...testConfig,
   }
-})
+});

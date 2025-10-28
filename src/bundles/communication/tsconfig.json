@@ -6,8 +6,12 @@
   "compilerOptions": {
     "outDir": "./dist",
     "paths": {
-      "mqtt/dist/*": ["../../../node_modules/mqtt/types"],
-      "js-slang/context": ["../context.d.ts"]
+      "mqtt/dist/*": [
+        "../../../node_modules/mqtt/types"
+      ],
+      "js-slang/context": [
+        "../context.d.ts"
+      ]
     }
   },
   "typedocOptions": {

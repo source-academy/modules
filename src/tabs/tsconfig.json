@@ -4,8 +4,6 @@
   "compilerOptions": {
     // Tabs should never need to emit any kind of files
     "declaration": false,
-    "noEmit": true,
-
     "jsx": "react-jsx"
   }
 }

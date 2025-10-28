@@ -3,11 +3,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Wheel } from '../../../ev3/components/Wheel';
 
 vi.mock(import('../../../../engine/Render/debug/DebugArrow'), () => ({
-  DebugArrow: vi.fn().mockImplementation(() => ({
-    getMesh: vi.fn().mockReturnValue({}),
-    update: vi.fn(),
-  })),
-}));
+  DebugArrow: class {
+    getMesh = vi.fn().mockReturnValue({});
+    update = vi.fn();
+  },
+} as any));
 
 describe(Wheel, () => {
   let wheel;

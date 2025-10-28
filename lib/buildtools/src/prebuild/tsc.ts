@@ -76,6 +76,8 @@ export async function runTsc(input: InputAsset, noEmit: boolean): Promise<TscRes
   const { results: tsconfig, fileNames } = tsconfigRes;
 
   try {
+    // tsc instance that only does typechecking
+    // Type checking for both tests and source code is performed
     const typecheckProgram = ts.createProgram({
       rootNames: fileNames,
       options: {
@@ -98,17 +100,21 @@ export async function runTsc(input: InputAsset, noEmit: boolean): Promise<TscRes
       }
     });
 
-    noEmit = tsconfig.noEmit || noEmit;
-    if (severity !== 'error' && !noEmit) {
+    if (input.type === 'bundle' && severity !== 'error' && !noEmit) {
       // If noEmit isn't specified, then run tsc again without including test
       // files and actually output the files
       const filesWithoutTests = fileNames.filter(p => {
         const segments = p.split(pathlib.posix.sep);
         return !segments.includes('__tests__');
       });
+      // tsc instance that does compilation
+      // only compiles non test files
       const compileProgram = ts.createProgram({
         rootNames: filesWithoutTests,
-        options: tsconfig,
+        options: {
+          ...tsconfig,
+          noEmit: false
+        },
         oldProgram: typecheckProgram
       });
       compileProgram.emit();

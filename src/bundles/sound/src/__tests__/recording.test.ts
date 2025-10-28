@@ -23,26 +23,13 @@ vi.spyOn(global, 'navigator', 'get').mockReturnValue({
   }
 } as any);
 
-Object.defineProperty(global, 'AudioContext', {
-  value: () => {},
-  writable: true
-});
-
-Object.defineProperty(global, 'MediaRecorder', {
-  value: () => {},
-  writable: true
-});
-
-Object.defineProperty(global, 'URL', {
-  value: class {
-    static createObjectURL() {
-      return '';
-    }
+vi.stubGlobal('AudioContext', function () { return mockAudioContext; });
+vi.stubGlobal('MediaRecorder', function () { return mockMediaRecorder; });
+vi.stubGlobal('URL', class {
+  static createObjectURL() {
+    return '';
   }
 });
-
-vi.spyOn(global, 'AudioContext').mockReturnValue(mockAudioContext as any);
-vi.spyOn(global, 'MediaRecorder').mockReturnValue(mockMediaRecorder as any);
 
 beforeEach(() => {
   funcs.globalVars.recordedSound = null;

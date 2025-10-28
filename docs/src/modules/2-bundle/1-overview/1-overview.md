@@ -121,8 +121,9 @@ You can find more information about each of the fields and what they mean [here]
 > ```ts
 > import { whatever } from '@sourceacademy/bundle-bundle_name';
 > ```
+> If your package name doesn't follow the required format the bundle won't validate.
 
-### `manifest.json`
+## `manifest.json`
 
 `manifest.json` contains the information required by `js-slang` to load your bundle.
 
@@ -133,14 +134,18 @@ You can find more information about each of the fields and what they mean [here]
 }
 ```
 
-The presence of this file in your root folder is what allows the build tools to determine that the folder contains a bundle. If this file is not present, your folder will be ignored.
+The presence of this file in your root folder is what allows the build tools to determine that the folder contains a bundle. If this file is not present, your folder will be ignored or if you use any commands that require the current folder to be a bundle, an error will be thrown.
 
-::: details The `requires` field
+### The `requires` field
+
 Your bundle may rely on features that are only present in later Source Chapters. For example, streams are only available from Source 3 onwards. If your bundle makes uses of streams, then you can use `requires: 3` to specify that your bundle can only be loaded when running Source 3 and beyond.
-:::
 
->[!TIP] Verifying your manifest
-> You can use the `buildtools list bundle` command to check that your bundle can be properly detected and has the correct format.
+### Verifying your manifest
+
+You can use the `buildtools validate .` command to check that your bundle can be properly detected and has the correct format.
+
+If your bundle doesn't validate correctly, an error like the one below may be shown in the command line whenever you run a command:
+![image](./validate_error.png)
 
 ## `tsconfig.json`
 
@@ -161,8 +166,24 @@ This file controls the behaviour of Typescript. By default, it should look like 
 }
 ```
 
+Note that the `include` option includes both source code and unit tests. This is so that your unit tests can be type checked and linted properly.
+
 In general, there should not be a need for you to modify this file.  A full explanation on how to use `tsconfig.json` can be found [here](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html). Note that the `typedocOptions` field is a custom field used by `typedoc` for its configuration. Refer to [here](https://typedoc.org/documents/Options.Configuration.html#compileroptions) for more information.
 
 > [!WARNING]
 > You should not remove or modify the `typedocOptions` section from your `tsconfig.json` unless you provide the name of your bundle to Typedoc via its other configuration methods. Generating documentation for your bundle
 > requires that the name of your bundle be set correctly.
+
+> [!INFO] Why both noEmit and outDir?
+> You might notice that for both bundles and tabs, the `noEmit` property is set to `true` via their shared `tsconfig.json`, which would
+> seem to contradict the fact that the `outDir` property has been set.
+>
+> Most of the time, the Typescript compiler should be run via the buildtools, i.e `yarn buildtools tsc` or `yarn buildtools build --tsc`.
+> The buildtools automatically include unit tests for type checking but exclude them from compilation to Javascript.
+>
+> However, if you accidentally run the Typescript compiler directly, `tsc` will compile the test files too
+> (since `tsconfig.json` should be configured to include them), which is undesirable.
+> Hence, `noEmit` is set to `true` to prevent this. The buildtools automatically override this value when executed.
+>
+> The alternative would be to have two different `tsconfig.json` files: one for type checking and one for compilation, but that would just
+> add to the clutter of files throughout the repository.

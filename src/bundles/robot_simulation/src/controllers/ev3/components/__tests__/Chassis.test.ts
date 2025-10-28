@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { EntityFactory, MeshFactory, Physics, Renderer } from '../../../../engine';
 
-import { ChassisWrapper } from '../../../ev3/components/Chassis';
+import { ChassisWrapper } from '../Chassis';
 
 vi.mock('../../../../engine', () => ({
   Physics: vi.fn(),
@@ -15,11 +15,11 @@ vi.mock('../../../../engine/Entity/EntityFactory');
 vi.mock('three', async importOriginal => {
   return {
     ...await importOriginal(),
-    Mesh: vi.fn().mockImplementation(() => ({
-      position: { copy: vi.fn() },
-      quaternion: { copy: vi.fn() },
-      visible: false,
-    })),
+    Mesh: vi.fn(class {
+      position = { copy: vi.fn() };
+      quaternion = { copy: vi.fn() };
+      visible = false;
+    }),
     Color: vi.fn()
   };
 });

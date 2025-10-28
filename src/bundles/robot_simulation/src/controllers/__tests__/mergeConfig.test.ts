@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { mergeConfig } from '../../utils/mergeConfig'; // Update the path accordingly
+import { mergeConfig } from '../utils/mergeConfig';
 
-describe('mergeConfig function', () => {
+describe(mergeConfig, () => {
   // Test default configuration alone
   it('should return the default configuration when user configuration is undefined', () => {
     const defaultConfig = { color: 'blue', size: 'large' };

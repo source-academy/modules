@@ -3,12 +3,7 @@ import * as funcs from '../functions';
 import type { Sound, Wave } from '../types';
 import { mockAudioContext } from './utils';
 
-Object.defineProperty(global, 'AudioContext', {
-  value: () => {},
-  writable: true,
-});
-
-vi.spyOn(global, 'AudioContext').mockReturnValue(mockAudioContext as any);
+vi.stubGlobal('AudioContext', function () { return mockAudioContext; });
 
 describe(funcs.make_sound, () => {
   it('Should error gracefully when duration is negative', () => {

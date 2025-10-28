@@ -24,13 +24,13 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-function getAnimationHook(
+async function getAnimationHook(
   options: AnimationOptions,
   canvas: HTMLCanvasElement
 ) {
-  const { result, act } = renderHook(() => useAnimation(options));
+  const { result, act } = await renderHook(() => useAnimation(options));
 
-  act(() => {
+  await act(() => {
     result.current.setCanvas(canvas);
   });
 
@@ -38,7 +38,7 @@ function getAnimationHook(
     hook: result,
     act,
     advanceFrames(count: number) {
-      act(() => {
+      return act(() => {
         for (let i = 0; i < count; i++) {
           vi.advanceTimersToNextFrame();
         }
@@ -47,25 +47,25 @@ function getAnimationHook(
   };
 }
 
-test('First frame is automatically drawn', ({ callback, canvas }) => {
-  getAnimationHook({ callback }, canvas);
+test('First frame is automatically drawn', async ({ callback, canvas }) => {
+  await getAnimationHook({ callback }, canvas);
   expect(callback).toHaveBeenCalledTimes(1);
   expect(callback).toHaveBeenCalledWith(0, expect.anything());
 });
 
-test('Animation should automatically restart if autoLoop is true', ({ callback, canvas }) => {
-  const { hook, act, advanceFrames } = getAnimationHook({
+test('Animation should automatically restart if autoLoop is true', async ({ callback, canvas }) => {
+  const { hook, act, advanceFrames } = await getAnimationHook({
     autoLoop: true,
     animationDuration: 1000,
     callback
   }, canvas);
 
-  act(() => {
+  await act(() => {
     hook.current.start();
     hook.current.changeTimestamp(999);
   });
 
-  advanceFrames(4);
+  await advanceFrames(4);
 
   expect(callback).toHaveBeenCalledTimes(5);
   const [[frame0], [frame1], [frame2], [frame3], [frame4]] = vi.mocked(callback).mock.calls;
@@ -81,20 +81,20 @@ test('Animation should automatically restart if autoLoop is true', ({ callback, 
   expect(frame4).toBeGreaterThan(0);
 });
 
-test('Animation should stop if autoLoop is false', ({ callback, canvas }) => {
-  const { hook, act, advanceFrames } = getAnimationHook({
+test('Animation should stop if autoLoop is false', async ({ callback, canvas }) => {
+  const { hook, act, advanceFrames } = await getAnimationHook({
     autoLoop: false,
     animationDuration: 1000,
     callback
   }, canvas);
 
-  act(() => {
+  await act(() => {
     hook.current.start();
     hook.current.changeTimestamp(999);
   });
 
   expect(hook.current.isPlaying).toEqual(true);
-  advanceFrames(3);
+  await advanceFrames(3);
 
   expect(callback).toHaveBeenCalledTimes(3);
   const [[frame0], [frame1], [frame2]] = vi.mocked(callback).mock.calls;
@@ -105,48 +105,48 @@ test('Animation should stop if autoLoop is false', ({ callback, canvas }) => {
   expect(hook.current.isPlaying).toEqual(false);
 });
 
-test('Animation should auto start if autoStart is true', ({ callback, canvas }) => {
-  const { hook, advanceFrames } = getAnimationHook({
+test('Animation should auto start if autoStart is true', async ({ callback, canvas }) => {
+  const { hook, advanceFrames } = await getAnimationHook({
     autoLoop: false,
     autoStart: true,
     animationDuration: 1000,
     callback,
   }, canvas);
 
-  advanceFrames(10);
+  await advanceFrames(10);
 
   expect(callback).toHaveBeenCalledTimes(10);
   expect(hook.current.isPlaying).toEqual(true);
 });
 
-test('Animation should not auto start if autoStart is false', ({ callback, canvas }) => {
-  const { hook, advanceFrames } = getAnimationHook({
+test('Animation should not auto start if autoStart is false', async ({ callback, canvas }) => {
+  const { hook, advanceFrames } = await getAnimationHook({
     autoLoop: false,
     autoStart: false,
     animationDuration: 1000,
     callback,
   }, canvas);
-  advanceFrames(10);
+  await advanceFrames(10);
 
   expect(callback).toHaveBeenCalledTimes(1);
   expect(hook.current.isPlaying).toEqual(false);
 });
 
-test('Test animation reset', ({ callback, canvas }) => {
-  const { hook, act, advanceFrames } = getAnimationHook({
+test('Test animation reset', async ({ callback, canvas }) => {
+  const { hook, act, advanceFrames } = await getAnimationHook({
     autoLoop: false,
     animationDuration: 1000,
     callback,
   }, canvas);
 
-  act(() => {
+  await act(() => {
     hook.current.start();
   });
 
   expect(hook.current.isPlaying).toEqual(true);
-  advanceFrames(1);
+  await advanceFrames(1);
 
-  act(() => {
+  await act(() => {
     hook.current.reset();
   });
 
@@ -155,14 +155,14 @@ test('Test animation reset', ({ callback, canvas }) => {
   expect(hook.current.isPlaying).toEqual(true);
 });
 
-test('Hook correctly respects framerate', ({ callback, canvas }) => {
-  const { advanceFrames } = getAnimationHook({
+test('Hook correctly respects framerate', async ({ callback, canvas }) => {
+  const { advanceFrames } = await getAnimationHook({
     autoStart: true,
     frameDuration: 100,
     animationDuration: 1000,
     callback
   }, canvas);
 
-  advanceFrames(160);
+  await advanceFrames(160);
   expect(callback).toHaveBeenCalledTimes(10);
 });

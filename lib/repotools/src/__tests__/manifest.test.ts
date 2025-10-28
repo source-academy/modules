@@ -77,6 +77,7 @@ describe(manifest.getBundleManifest, () => {
       severity: 'success',
       manifest: {
         tabs: ['tab0'],
+        version: '1.0.0'
       }
     });
 
@@ -94,6 +95,7 @@ describe(manifest.getBundleManifest, () => {
       severity: 'success',
       manifest: {
         tabs: ['tab0'],
+        version: '1.0.0'
       }
     });
 
@@ -104,13 +106,26 @@ describe(manifest.getBundleManifest, () => {
   test('invalid manifest should not execute tab check (tabCheck true)', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "unknown": true, "tabs": ["unknown"] }');
 
-    const result = await manifest.getBundleManifest(bundle0Path, true);
+    await expect(manifest.getBundleManifest(bundle0Path, true))
+      .resolves
+      .toEqual({
+        severity: 'error',
+        errors: [
+          'test0: instance is not allowed to have the additional property "unknown"'
+        ]
+      });
+    expect(fs.stat).not.toHaveBeenCalled();
+  });
+
+  test('invalid package name should not pass', async () => {
+    mockedReadFile.mockResolvedValueOnce('{ "requires": 1, "tabs": ["unknown"] }');
+    mockedReadFile.mockResolvedValueOnce('{ "name": "invalid_name" }');
+
+    const result = await manifest.getBundleManifest(bundle0Path, false);
     expect(result).toEqual({
       severity: 'error',
-      errors: ['instance is not allowed to have the additional property "unknown"']
+      errors: ['test0: The package name "invalid_name" does not follow the correct format!']
     });
-
-    expect(fs.stat).not.toHaveBeenCalled();
   });
 
   test('unknown tabs should pass without tab check', async () => {
@@ -121,6 +136,7 @@ describe(manifest.getBundleManifest, () => {
       severity: 'success',
       manifest: {
         tabs: ['unknown'],
+        version: '1.0.0'
       }
     });
 
@@ -133,7 +149,7 @@ describe(manifest.getBundleManifest, () => {
     const result = await manifest.getBundleManifest(bundle0Path, true);
     expect(result).toEqual({
       severity: 'error',
-      errors: ['Unknown tab "unknown"']
+      errors: ['test0: Unknown tab "unknown"']
     });
 
     expect(fs.stat).toHaveBeenCalledTimes(1);
@@ -148,8 +164,8 @@ describe(manifest.getBundleManifest, () => {
     expect(result).toEqual({
       severity: 'error',
       errors: [
-        'Unknown tab "unknown1"',
-        'Unknown tab "unknown2"',
+        'test0: Unknown tab "unknown1"',
+        'test0: Unknown tab "unknown2"',
       ]
     });
 
@@ -167,7 +183,7 @@ describe(manifest.getBundleManifest, () => {
       severity: 'success',
       manifest: {
         tabs: [],
-        version: undefined
+        version: '1.0.0'
       }
     });
 
@@ -184,11 +200,12 @@ describe(manifest.getBundleManifests, () => {
         severity: 'success',
         manifests: {
           test0: {
-            tabs: ['tab0']
+            tabs: ['tab0'],
+            version: '1.0.0'
           },
           test1: {
-
-            tabs: ['tab1']
+            tabs: ['tab1'],
+            version: '1.0.0'
           }
         }
       });
@@ -236,7 +253,8 @@ describe(manifest.resolveSingleBundle, () => {
         type: 'bundle',
         name: 'test0',
         manifest: {
-          tabs: ['tab0']
+          tabs: ['tab0'],
+          version: '1.0.0'
         },
         directory: bundlePath
       }
@@ -322,7 +340,7 @@ describe(manifest.resolveEitherBundleOrTab, () => {
         type: 'bundle',
         manifest: {
           tabs: ['tab0'],
-          version: undefined,
+          version: '1.0.0',
         },
         directory: bundle0Path,
         name: 'test0',
@@ -335,7 +353,7 @@ describe(manifest.resolveEitherBundleOrTab, () => {
 
     return expect(manifest.resolveEitherBundleOrTab(bundle0Path)).resolves.toEqual({
       severity: 'error',
-      errors: ['instance is not allowed to have the additional property "unknown"']
+      errors: ['test0: instance is not allowed to have the additional property "unknown"']
     });
   });
 

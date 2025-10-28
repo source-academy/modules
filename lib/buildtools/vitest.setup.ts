@@ -3,7 +3,7 @@ import pathlib from 'path';
 import { isSamePath } from '@sourceacademy/modules-repotools/utils';
 import { expect, vi } from 'vitest';
 
-class MockProcessError extends Error {
+class MockProcessExit extends Error {
   constructor(public readonly code: number) { super(); }
 
   toString() {
@@ -38,7 +38,7 @@ vi.mock(import('fs/promises'), async importOriginal => {
 
 vi.spyOn(process, 'exit').mockImplementation(code => {
   if (typeof code !== 'number') throw new Error(`Expected a numeric code, got ${code}`);
-  throw new MockProcessError(code);
+  throw new MockProcessExit(code);
 });
 
 vi.mock(import('typescript'), async importOriginal => {
@@ -74,7 +74,7 @@ expect.extend({
         message: () => 'Command resolved successfully,'
       };
     } catch (error) {
-      if (error instanceof MockProcessError) {
+      if (error instanceof MockProcessExit) {
         return {
           pass: false,
           message: () => `process.exit was called with ${error.code}`
@@ -95,7 +95,7 @@ expect.extend({
         message: () => `Expected command to exit with code ${expected}, but command resolved`
       };
     } catch (error) {
-      if (error instanceof MockProcessError) {
+      if (error instanceof MockProcessExit) {
         return {
           pass: error.code === expected,
           message: () => `process.exit called with ${expected}`
@@ -116,7 +116,7 @@ expect.extend({
         message: () => `Expected function to call process.exit with code ${expected}`
       };
     } catch (error) {
-      if (error instanceof MockProcessError) {
+      if (error instanceof MockProcessExit) {
         return {
           pass: error.code === expected,
           message: () => `process.exit called with ${expected}`

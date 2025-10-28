@@ -33,7 +33,7 @@ function getIncludes({ test }: TestProjectInlineConfiguration) {
  */
 export async function runVitest(mode: VitestRunMode, filters: string[], projects: TestProjectInlineConfiguration[], options: RunVitestBoolOptions) {
   try {
-    const coverageIncludeFilters = filters.length === 0 ? filters : projects.flatMap(getIncludes);
+    const coverageIncludeFilters = filters.length === 0 ? undefined : projects.flatMap(getIncludes);
 
     const runtimeOptions: ViteUserConfig['test'] = {
       projects,
