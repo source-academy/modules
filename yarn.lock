@@ -4725,9 +4725,11 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/lodash": "npm:^4.14.198"
     "@types/react": "npm:^18.3.1"
+    "@vitest/browser-playwright": "npm:^4.0.4"
     lodash: "npm:^4.17.21"
     react: "npm:^18.3.1"
     typescript: "npm:^5.8.2"
+    vitest-browser-react: "npm:^2.0.2"
   languageName: unknown
   linkType: soft
 

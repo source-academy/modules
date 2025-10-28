@@ -69,6 +69,7 @@ export function create_matrix(rows: number, cols: number, name: string | undefin
 export function copy_matrix(matrix: Matrix): Matrix {
   const values = new Array(matrix.rows);
   const labels = new Array(matrix.cols);
+
   for (let i = 0; i < matrix.rows; i++) {
     for (let j = 0; j < matrix.cols; j++) {
       values[i] = [...matrix.values[i]];
@@ -90,6 +91,8 @@ export function copy_matrix(matrix: Matrix): Matrix {
  * @param value New value for all cells
  */
 export function fill_matrix(matrix: Matrix, value: boolean): void {
+  if (typeof value !== 'boolean') throw new Error(`${fill_matrix.name}: Value should be a boolean, got ${value}`);
+
   for (let i = 0; i < matrix.rows; i++) {
     for (let j = 0; j < matrix.cols; j++) matrix.values[i][j] = value;
   }
@@ -99,8 +102,8 @@ export function fill_matrix(matrix: Matrix, value: boolean): void {
  * Set all the values in the matrix to false
  * @param matrix Matrix to clear
  */
-export function clear_matrix(matrix: Matrix) {
-  return fill_matrix(matrix, false);
+export function clear_matrix(matrix: Matrix): void {
+  fill_matrix(matrix, false);
 }
 
 /**
@@ -197,7 +200,7 @@ export function install_buttons(matrix: Matrix, list: List): void {
     const [head, tail] = lst;
     // Check the types of the head
     if (typeof head[0] !== 'string' || typeof head[1] !== 'function') {
-      throw new Error('Expected a list containing pairs of strings and functions');
+      throw new Error(`${install_buttons.name}: Expected a list containing only of pairs of strings and functions`);
     }
 
     return [head, ...list_to_array(tail)];
@@ -207,32 +210,48 @@ export function install_buttons(matrix: Matrix, list: List): void {
 }
 
 /**
- * Attach a callback that will be executed every time the user clicks on a cell.
+ * Attach a callback that will be executed every time the user clicks on a cell. The callback is passed
+ * the row index, column index and current value of the cell.
+ *
  * @param matrix Matrix to attach to
  * @param callback Callback to use
  */
 export function on_cell_click(matrix: Matrix, callback: CellCallback): void {
   if (typeof callback !== 'function') throw new Error(`${on_cell_click.name} expects a function for its callback parameter!`);
+  if (callback.length !== 3) throw new Error(`${on_cell_click.name} expects a function that takes 3 parameters for its callback!`);
+
   matrix.onCellClick = callback;
 }
 
 /**
- * Attach a callback that will be executed every time the user selects/deselects an entire column.
+ * Attach a callback that will be executed every time the user selects/deselects an entire column. The callback
+ * is passed the index of the column and the current value of the column.
+ *
+ * A column is considered selected only if all of the cells in that column are selected.
+ *
  * @param matrix Matrix to attach to
  * @param callback Callback to use
  */
 export function on_col_click(matrix: Matrix, callback: (col: number, value: boolean) => void) {
   if (typeof callback !== 'function') throw new Error(`${on_col_click.name} expects a function for its callback parameter!`);
+  if (callback.length !== 2) throw new Error(`${on_col_click.name} expects a function that takes 2 parameters for its callback!`);
+
   matrix.onColClick = callback;
 }
 
 /**
- * Attach a callback that will be executed every time the user selects/deselects an entire row.
+ * Attach a callback that will be executed every time the user selects/deselects an entire row. The callback
+ * is passed the index of the row and the current value of the row.
+ *
+ * A row is considered selected only if all the cells in that row are selected.
+ *
  * @param matrix Matrix to attach to
  * @param callback Callback to use
  */
 export function on_row_click(matrix: Matrix, callback: (row: number, value: boolean) => void) {
   if (typeof callback !== 'function') throw new Error(`${on_row_click.name} expects a function for its callback parameter!`);
+  if (callback.length !== 2) throw new Error(`${on_row_click.name} expects a function that takes 2 parameters for its callback!`);
+
   matrix.onRowClick = callback;
 }
 
@@ -283,7 +302,7 @@ export function set_cell_label(matrix: Matrix, row: number, col: number, label: 
 
 /**
  * Set the value of all cells in the matrix using the given 2D boolean array. If there are fewer provided values than the size
- * of the matrix, the extra cells' values will not be changed
+ * of the matrix, the extra cells' values will not be changed. Extraneous values are ignored.
  * @param matrix Matrix to modify
  * @param values Values to use
  */
@@ -312,7 +331,6 @@ export function set_cell_labels(matrix: Matrix, labels: string[][]): void {
 /**
  * Sets the name of the provided matrix
  */
-export function set_matrix_name(matrix: Matrix, name: string | undefined) {
+export function set_matrix_name(matrix: Matrix, name: string | undefined): void {
   matrix.name = name;
-  return matrix;
 }

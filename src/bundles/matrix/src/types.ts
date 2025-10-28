@@ -1,8 +1,8 @@
 /**
- * A function that is passed the row and column numbers of the cell that changed
- * and its new value.
+ * A function that is passed the row and column numbers of the cell that was clicked
+ * on and its current value.
  */
-export type CellCallback = (row: number, col: number, newValue: boolean) => void;
+export type CellCallback = (row: number, col: number, currentValue: boolean) => void;
 
 /**
  * Representation of a 2D matrix of values

@@ -1,11 +1,21 @@
 import { Button, Icon, Menu, Popover } from '@blueprintjs/core';
 
 interface UserButtonDisplayProps {
+  /**
+   * The maximum number of buttons that can be displayed at once
+   */
   max: number;
   buttons: [string, () => void][];
-  onClick: () => void;
+
+  /**
+   * Callback that is called with the name of the button whenever a button is clicked
+   */
+  onClick?: (name: string) => void;
 };
 
+/**
+ * React component for displaying a Matrix's installed buttons
+ */
 export default function UserToolbar({ max, buttons, onClick }: UserButtonDisplayProps) {
   const displayedButtons = buttons.slice(0, max + 1);
   const overflowButtons = buttons.slice(max + 1);
@@ -24,8 +34,8 @@ export default function UserToolbar({ max, buttons, onClick }: UserButtonDisplay
       key={i}
       onClick={() => {
         func();
-        onClick();
-      } }
+        onClick?.(text);
+      }}
     >
       {text}
     </Button>)}
@@ -41,8 +51,8 @@ export default function UserToolbar({ max, buttons, onClick }: UserButtonDisplay
             key={i}
             onClick={() => {
               func();
-              onClick();
-            } }
+              onClick?.(text);
+            }}
           >
             {text}
           </Button>)}

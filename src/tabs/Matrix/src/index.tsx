@@ -18,57 +18,12 @@ import { useState } from 'react';
 import MatrixDisplay from './MatrixDisplay';
 import UserToolbar from './UserToolbar';
 
-// return <div style={{
-//   display: 'flex',
-//   flexDirection: 'row',
-//   alignItems: 'center',
-//   justifyContent: 'space-evenly',
-// }}>
-//   {displayedButtons.map(([text, func], i) => <Button
-//     style={{
-//       marginLeft: '1px',
-//       marginRight: '1px',
-//     }}
-//     key={i}
-//     onClick={() => {
-//       func();
-//       onClick();
-//     }}
-//   >
-//     {text}
-//   </Button>)}
-//   {overflowButtons.length > 0 && <Popover2
-//     content={<Menu>
-//       <div style={{
-//         display: 'flex',
-//         flexDirection: 'column',
-//         alignItems: 'center',
-//         columnGap: '2px',
-//       }}>
-//         {overflowButtons.map(([text, func], i) => <Button
-//           key={i}
-//           onClick={() => {
-//             func();
-//             onClick();
-//           }}
-//         >
-//           {text}
-//         </Button>)}
-//       </div>
-//     </Menu>}
-//     renderTarget={({ ref, ...targetProps }) => <Button
-//       elementRef={ref}
-//       {...targetProps}
-//     >
-//       <Icon icon="widget-button"/>
-//     </Button>}
-//   />}
-// </div>;
-type StackProps = {
+interface StackProps {
   direction: 'row' | 'column';
   children?: JSX.Element[];
   alignItems: any;
 };
+
 const Stack = ({ direction, children, alignItems }: StackProps) => <div
   style={{
     display: 'flex',
@@ -84,10 +39,13 @@ interface MatrixInstanceProps {
   index: number;
 };
 
+/**
+ * React component to display a Matrix, complete with its installed buttons
+ */
 function MatrixInstance({ matrix, index }: MatrixInstanceProps) {
   // Use this state variable to force React to rerender
-  const [updater, setUpdater] = useState(0);
-  const rerender = () => setUpdater(updater + 1);
+  const [, setUpdater] = useState(0);
+  const rerender = () => setUpdater(x => x + 1);
 
   const [hoverCoords, setHoverCoords] = useState<[number | false, number | false] | false>(false);
   const [showColLabels, setShowColLabels] = useState(false);
@@ -115,37 +73,33 @@ function MatrixInstance({ matrix, index }: MatrixInstanceProps) {
     )} />;
 
   const userButtons = matrix.buttons.length > 0
-    ? (
-      <UserToolbar
-        max={5}
-        buttons={matrix.buttons}
-        onClick={() => rerender()} />
-    )
-    : (
-      <p style={{
-        fontSize: '12px',
-        textAlign: 'center',
-        color: 'GrayText',
-      }}>
-        Use <code>install_buttons()</code><br />to place some buttons here
-      </p>
-    );
+    ? <UserToolbar
+      max={5}
+      buttons={matrix.buttons}
+      onClick={rerender}
+    />
+    : <p style={{
+      fontSize: '12px',
+      textAlign: 'center',
+      color: 'GrayText',
+    }}>
+      Use <code>install_buttons()</code><br />to place some buttons here
+    </p>;
 
-  const coordIndicator = (
-    <p>
-      (<code>
-        {hoverCoords === false
-          ? ' , '
-          : `${hoverCoords[0] === false ? ' ' : hoverCoords[0]},${hoverCoords[1] === false ? ' ' : hoverCoords[1]}`}
-      </code>)
-    </p>
-  );
+  const coordIndicator = <p>
+    (<code>
+      {hoverCoords === false
+        ? ' , '
+        : `${hoverCoords[0] === false ? ' ' : hoverCoords[0]},${hoverCoords[1] === false ? ' ' : hoverCoords[1]}`
+      }
+    </code>)
+  </p>;
 
   return <Stack
     direction="column"
     alignItems="center"
   >
-   <h2>{matrix.name ?? `Matrix ${index + 1}`}</h2>
+    <h2>{matrix.name ?? `Matrix ${index + 1}`}</h2>
     <Card elevation={2}>
       <Stack
         direction="column"
@@ -171,7 +125,7 @@ function MatrixInstance({ matrix, index }: MatrixInstanceProps) {
           <MatrixDisplay
             hoverCoords={hoverCoords}
             onHoverChange={setHoverCoords}
-            rerenderCallback={() => rerender()}
+            rerenderCallback={rerender}
             matrix={matrix}
             showCellLabels={showCellLabels}
             showColLabels={showColLabels} />
@@ -187,7 +141,8 @@ interface MatrixTabProps {
 function MatrixTab({ moduleState: state }: MatrixTabProps) {
   const elements = state.matrices.map((matrix, i) => <MatrixInstance
     matrix={matrix}
-    index={i} />);
+    index={i}
+  />);
 
   return <MultiItemDisplay elements={elements} />;
 }

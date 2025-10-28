@@ -7,7 +7,10 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/lodash": "^4.14.198",
     "@types/react": "^18.3.1",
-    "typescript": "^5.8.2"
+    "@vitest/browser-playwright": "^4.0.4",
+    "typescript": "^5.8.2",
+    "vitest-browser-react": "^2.0.2",
+    "playwright": "^1.54.1"
   },
   "dependencies": {
     "@blueprintjs/core": "^5.10.2",

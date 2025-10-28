@@ -1,16 +1,29 @@
+import { Button } from '@blueprintjs/core';
+
 interface IndexLabelProps {
-  onMouseEnter: () => void;
-  onMouseLeave: () => void;
-  onClick: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  onClick?: () => void;
+  /**
+   * The column or row index
+   */
   index: number;
+  /**
+   * Title attribute to apply to the underlying button. Only needed for testing
+   */
+  title?: string;
 };
 
-export default function IndexLabel({ index, onMouseEnter, onMouseLeave, onClick }: IndexLabelProps) {
-  return <rect
-    onMouseEnter={() => onMouseEnter()}
-    onMouseLeave={() => onMouseLeave()}
-    onClick={() => onClick()}
+/**
+ * React component for rendering the row and column "headers"
+ */
+export default function IndexLabel({ index, onMouseEnter, onMouseLeave, onClick, title }: IndexLabelProps) {
+  return <Button
+    title={title}
+    onMouseEnter={onMouseEnter}
+    onMouseLeave={onMouseLeave}
+    onClick={onClick}
   >
-    <p>{index}</p>
-  </rect>;
+    {index}
+  </Button>;
 }

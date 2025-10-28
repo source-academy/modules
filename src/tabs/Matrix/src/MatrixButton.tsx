@@ -9,14 +9,31 @@ interface MatrixButtonProps {
   onClick?: () => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
+
+  /**
+   * The current state of the button
+   */
   state: boolean;
+
+  /**
+   * Whether the button or its row or column is currently being hovered over
+   */
   hover?: boolean;
+
   label: string;
   showLabel?: boolean;
+
+  /**
+   * Title attribute to be applied to the button. Only needed for testing
+   */
+  title?: string;
 };
 
+/**
+ * React component representing a single cell in the matrix.
+ */
 export default function MatrixButton({
-  onClick, state, label, hover, showLabel, onMouseEnter, onMouseLeave,
+  onClick, state, label, hover, showLabel, onMouseEnter, onMouseLeave, title
 }: MatrixButtonProps) {
   const backgroundColor = state
     ? hover
@@ -31,10 +48,11 @@ export default function MatrixButton({
       backgroundColor,
       margin: '2px, 2px, 2px, 2px',
     }}
-    onClick={() => { onClick?.(); }}
-    onMouseEnter={() => { onMouseEnter?.(); }}
-    onMouseLeave={() => { onMouseLeave?.(); }}
+    title={title}
+    onClick={onClick}
+    onMouseEnter={onMouseEnter}
+    onMouseLeave={onMouseLeave}
   >
-    {showLabel && <p>{label}</p>}
+    {showLabel && <>{label}</>}
   </Button>;
 }

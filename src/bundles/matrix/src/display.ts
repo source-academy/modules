@@ -24,7 +24,6 @@ context.moduleContexts.matrix.state = {
  * @param matrix Matrix to display
  * @returns Original matrix
  */
-export function display_matrix(matrix: Matrix): Matrix {
+export function display_matrix(matrix: Matrix): void {
   if (!matrices.includes(matrix)) matrices.push(matrix);
-  return matrix;
 }
