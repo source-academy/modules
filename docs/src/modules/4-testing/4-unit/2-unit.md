@@ -299,23 +299,18 @@ Error: The property "AudioContext" is not defined on the object.
  ❯ src/__tests__/sound.test.ts:6:4
       6| vi.spyOn(global, 'AudioContext').mockReturnValue(mockAudioContext as any);
        |    ^
-      7| 
-      8| // Object.defineProperty(global, 'AudioContext', {
 ```
 
-To resolve this you can use [browser mode](./3-browser), but this might be very heavyweight, especially if you
+To resolve this you could use [browser mode](./3-browser), but this might be very heavyweight, especially if you
 don't need any of the interactive testing features like `render`.
 
-Instead, use `Object.defineProperty` on the `global` object:
+Instead, use `vi.stubGlobal`:
 
 ```ts
 import { expect, test, vi } from 'vitest';
 import { play, silence_sound } from '../functions';
 
-Object.defineProperty(global, 'AudioContext', {
-  value: vi.fn(),
-  writable: true // use this if you want to spy on it later
-});
+vi.stubGlobal('AudioContext', vi.fn());
 
 test('play works', () => {
   const sound = silence_sound(10);

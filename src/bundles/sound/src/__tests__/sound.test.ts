@@ -1,11 +1,9 @@
-import { afterEach, beforeEach, describe, expect, it, test } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, test, vi } from 'vitest';
 import * as funcs from '../functions';
 import type { Sound, Wave } from '../types';
 import { mockAudioContext } from './utils';
 
-Object.defineProperty(global, 'AudioContext', {
-  value: function () { return mockAudioContext; },
-});
+vi.stubGlobal('AudioContext', function () { return mockAudioContext; });
 
 describe(funcs.make_sound, () => {
   it('Should error gracefully when duration is negative', () => {
