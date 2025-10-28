@@ -127,8 +127,7 @@ describe('Test adding new module', () => {
           "name": "new_module"
         },
         "compilerOptions": {
-          "outDir": "./dist",
-          "noEmit": true
+          "outDir": "./dist"
         }
       }
       "
