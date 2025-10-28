@@ -43,7 +43,7 @@ export default function MatrixDisplay({
                     for (let j = 0; j < matrix.rows; j++) {
                       matrix.values[j][i] = value;
                     }
-                    if (matrix.onColClick) matrix.onColClick(i, value);
+                    matrix.onColClick?.(i, value);
                     rerenderCallback();
                   } } />
               </td>
@@ -100,7 +100,7 @@ export default function MatrixDisplay({
                     row[colIndex] = !entry;
                     matrix.onCellClick?.(rowIndex, colIndex, !entry);
                     rerenderCallback();
-                  } } />
+                  }} />
               </td>);
             })}
           </tr>))}
