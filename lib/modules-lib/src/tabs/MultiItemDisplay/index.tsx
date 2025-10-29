@@ -3,7 +3,7 @@ import { IconNames } from '@blueprintjs/icons';
 import clamp from 'lodash/clamp';
 import { useState } from 'react';
 
-export type MultiItemDisplayProps = {
+export interface MultiItemDisplayProps {
   elements: JSX.Element[];
   onStepChange?: (newIndex: number, oldIndex: number) => void;
 };
@@ -35,9 +35,11 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'center',
+        // justifyContent: 'center',
         alignContent: 'center',
-        height: '100%'
+        height: '100vh',
+        // transform: 'scale(0.75)',
+        // marginTop: '-12vh'
       }}
     >
       <div
