@@ -182,7 +182,9 @@ function reveal_cell(row, col) {
 }
 
 function cell_click_callback(row, col, value, click) {
-  if (!value && game_result === 'not_in_game') {
+  if (game_result !== 'not_in_game') {
+    reset_game();
+  } else if (!value) {
     if (click === 'left') {
       if (!flags[row][col]) {
         if (!board[row][col]) {
@@ -197,6 +199,7 @@ function cell_click_callback(row, col, value, click) {
         } else {
           // Clicking on a mine means you die!
           set_cell_label(mat, row, col, '💣');
+          set_cell_value(mat, row, col, true);
           game_over('loss');
         }
       }
@@ -227,3 +230,4 @@ install_buttons(mat, list(
 on_cell_click(mat, cell_click_callback);
 generate_mines(mine_count);
 display_matrix(mat);
+

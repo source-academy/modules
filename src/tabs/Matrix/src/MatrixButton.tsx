@@ -46,7 +46,9 @@ export default function MatrixButton({
     style={{
       backgroundColor,
       margin: '2px, 2px, 2px, 2px',
-      color: state ? '#000000' : '#ffffff'
+      color: state ? '#000000' : '#ffffff',
+      height: '5px',
+      width: '5px'
     }}
     title={title}
     onClick={() => onClick?.('left')}

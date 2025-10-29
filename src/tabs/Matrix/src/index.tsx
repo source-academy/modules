@@ -7,6 +7,8 @@ import {
   Menu,
   MenuDivider,
   Navbar,
+  NavbarDivider,
+  NavbarGroup,
   Popover,
   Tooltip
 } from '@blueprintjs/core';
@@ -103,15 +105,15 @@ function MatrixInstance({ matrix, index }: MatrixInstanceProps) {
         alignItems="center"
       >
         <Navbar>
-          <Navbar.Group align={Alignment.START}>
+          <NavbarGroup align={Alignment.START}>
             {settingsMenu}
             <Navbar.Divider />
-          </Navbar.Group>
-          <Navbar.Group>
+          </NavbarGroup>
+          <NavbarGroup>
             {userButtons}
-          </Navbar.Group>
+          </NavbarGroup>
           <Navbar.Group align={Alignment.END}>
-            <Navbar.Divider />
+            <NavbarDivider />
             {coordIndicator}
           </Navbar.Group>
         </Navbar>

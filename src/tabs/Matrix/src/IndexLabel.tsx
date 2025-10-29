@@ -23,6 +23,11 @@ export default function IndexLabel({ index, onMouseEnter, onMouseLeave, onClick,
     onMouseEnter={onMouseEnter}
     onMouseLeave={onMouseLeave}
     onClick={onClick}
+    style={{
+      width: '5px',
+      height: '5px',
+      textWrap: 'nowrap'
+    }}
   >
     {index}
   </Button>;
