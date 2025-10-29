@@ -15,7 +15,7 @@ interface MatrixOutputProps {
 }
 
 export default function MatrixOutput({ errors }: MatrixOutputProps) {
-  return <Card elevation={2}>
+  return <Card elevation={2} style={{overflowX: 'auto', height: '10vh'}}>
     {errors.length > 0
     ? <Pre
       style={{

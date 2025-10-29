@@ -14,7 +14,7 @@ import {
 } from '@blueprintjs/core';
 
 import type { Matrix, MatrixModuleState } from '@sourceacademy/bundle-matrix/types';
-import MultiItemDisplay from '@sourceacademy/modules-lib/tabs/MultiItemDisplay';
+import MultiItemDisplay from '@sourceacademy/modules-lib/tabs/MultiItemDisplay/index';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import { useState, type ReactNode } from 'react';
 import MatrixDisplay from './MatrixDisplay';
