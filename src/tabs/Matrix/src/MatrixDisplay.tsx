@@ -4,6 +4,8 @@ import range from 'lodash/range';
 import IndexLabel from './IndexLabel';
 import MatrixButton from './MatrixButton';
 
+type ErrorLocations = 'cell' | 'col' | 'row';
+
 interface MatrixDisplayProps {
   /**
    * Coordinates of which column, row or cell is being hovered over, or `false`
@@ -17,13 +19,18 @@ interface MatrixDisplayProps {
   rerenderCallback: () => void;
   matrix: Matrix;
   showColLabels?: boolean;
+
+  /**
+   * Callback that is called when a user provided function throws an error
+   */
+  onError?: (loc: ErrorLocations, error: unknown) => void;
 };
 
 /**
  * React component for displaying a single {@link Matrix}, excluding its installed buttons.
  */
 export default function MatrixDisplay({
-  hoverCoords, matrix, showColLabels, onHoverChange, rerenderCallback,
+  hoverCoords, matrix, showColLabels, onHoverChange, rerenderCallback, onError
 }: MatrixDisplayProps) {
   const rowClickCallback = matrix.onRowClick ?? getDefaultRowCallback(matrix);
   const colClickCallback = matrix.onColClick ?? getDefaultColCallback(matrix);
@@ -54,8 +61,12 @@ export default function MatrixDisplay({
                       break;
                     }
                   }
-                  colClickCallback(i, value);
-                  rerenderCallback();
+                  try {
+                    colClickCallback(i, value);
+                    rerenderCallback();
+                  } catch (e) {
+                    onError?.('col', e);
+                  }
                 }}
               />
             </td>
@@ -79,8 +90,12 @@ export default function MatrixDisplay({
                 onMouseLeave={() => onHoverChange?.(false)}
                 onClick={() => {
                   const value = !row.some(x => !x);
-                  rowClickCallback(rowIndex, value);
-                  rerenderCallback();
+                  try {
+                    rowClickCallback(rowIndex, value);
+                    rerenderCallback();
+                  } catch (e) {
+                    onError?.('row', e);
+                  }
                 }}
                 title={`row_${rowIndex}_label`}
               />
@@ -106,8 +121,12 @@ export default function MatrixDisplay({
                 onMouseEnter={() => onHoverChange?.([rowIndex, colIndex])}
                 onMouseLeave={() => onHoverChange?.(false)}
                 onClick={click => {
-                  cellClickCallback(rowIndex, colIndex, entry, click);
-                  rerenderCallback();
+                  try {
+                    cellClickCallback(rowIndex, colIndex, entry, click);
+                    rerenderCallback();
+                  } catch (e) {
+                    onError?.('cell', e);
+                  }
                 }}
               />
             </td>);

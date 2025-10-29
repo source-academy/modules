@@ -11,12 +11,17 @@ interface UserButtonDisplayProps {
    * Callback that is called with the name of the button whenever a button is clicked
    */
   onClick?: (name: string) => void;
+
+  /**
+   * Callback that is called when a user provided function throws an error
+   */
+  onError?: (error: unknown) => void;
 };
 
 /**
  * React component for displaying a Matrix's installed buttons
  */
-export default function UserToolbar({ max, buttons, onClick }: UserButtonDisplayProps) {
+export default function UserToolbar({ max, buttons, onClick, onError }: UserButtonDisplayProps) {
   const displayedButtons = buttons.slice(0, max + 1);
   const overflowButtons = buttons.slice(max + 1);
 
@@ -33,8 +38,12 @@ export default function UserToolbar({ max, buttons, onClick }: UserButtonDisplay
       }}
       key={i}
       onClick={() => {
-        func();
-        onClick?.(text);
+        try {
+          func();
+          onClick?.(text);
+        } catch (error) {
+          onError?.(error);
+        }
       }}
     >
       {text}
@@ -50,8 +59,12 @@ export default function UserToolbar({ max, buttons, onClick }: UserButtonDisplay
           {overflowButtons.map(([text, func], i) => <Button
             key={i}
             onClick={() => {
-              func();
-              onClick?.(text);
+              try {
+                func();
+                onClick?.(text);
+              } catch (error) {
+                onError?.(error);
+              }
             }}
           >
             {text}

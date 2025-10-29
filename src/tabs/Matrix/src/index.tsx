@@ -16,13 +16,14 @@ import {
 import type { Matrix, MatrixModuleState } from '@sourceacademy/bundle-matrix/types';
 import MultiItemDisplay from '@sourceacademy/modules-lib/tabs/MultiItemDisplay';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import MatrixDisplay from './MatrixDisplay';
+import MatrixOutput from './MatrixOutput';
 import UserToolbar from './UserToolbar';
 
 interface StackProps {
   direction: 'row' | 'column';
-  children?: JSX.Element[];
+  children?: ReactNode[];
   alignItems: any;
 };
 
@@ -47,6 +48,7 @@ interface MatrixInstanceProps {
 function MatrixInstance({ matrix, index }: MatrixInstanceProps) {
   // Use this state variable to force React to rerender
   const [, setUpdater] = useState(0);
+  const [matrixErrors, setMatrixErrors] = useState<any[]>([]);
   const rerender = () => setUpdater(x => x + 1);
 
   const [hoverCoords, setHoverCoords] = useState<[number | false, number | false] | false>(false);
@@ -73,9 +75,9 @@ function MatrixInstance({ matrix, index }: MatrixInstanceProps) {
 
   const userButtons = matrix.buttons.length > 0
     ? <UserToolbar
-      max={5}
-      buttons={matrix.buttons}
-      onClick={rerender}
+        max={5}
+        buttons={matrix.buttons}
+        onClick={rerender}
     />
     : <p style={{
       fontSize: '12px',
@@ -100,10 +102,11 @@ function MatrixInstance({ matrix, index }: MatrixInstanceProps) {
   >
     <h2>{matrix.name ?? `Matrix ${index + 1}`}</h2>
     <Card elevation={2}>
-      <Stack
-        direction="column"
-        alignItems="center"
-      >
+      <div style={{
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+      }}>
         <Navbar>
           <NavbarGroup align={Alignment.START}>
             {settingsMenu}
@@ -127,10 +130,35 @@ function MatrixInstance({ matrix, index }: MatrixInstanceProps) {
             rerenderCallback={rerender}
             matrix={matrix}
             showColLabels={showColLabels}
+            onError={(_, err) => {
+              setMatrixErrors(curr => [...curr, err]);
+            }}
           />
         </div>
-      </Stack>
+      </div>
     </Card>
+    <div style={{
+      padding: '5px',
+      flexDirection: 'column',
+      alignItems: 'center',
+      width: '100%'
+    }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '5px'
+      }}>
+        <h4>Matrix Error Output</h4>
+        <Button
+          onClick={() => setMatrixErrors([])}
+        >
+          <Icon icon='trash' />
+        </Button>
+      </div>
+      <MatrixOutput errors={matrixErrors} />
+    </div>
   </Stack>;
 }
 
