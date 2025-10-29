@@ -6,7 +6,7 @@ const color_off = '#333333';
 const color_off_hover = '#444444';
 
 interface MatrixButtonProps {
-  onClick?: () => void;
+  onClick?: (click: 'left' | 'right') => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
 
@@ -20,8 +20,7 @@ interface MatrixButtonProps {
    */
   hover?: boolean;
 
-  label: string;
-  showLabel?: boolean;
+  label?: string;
 
   /**
    * Title attribute to be applied to the button. Only needed for testing
@@ -33,7 +32,7 @@ interface MatrixButtonProps {
  * React component representing a single cell in the matrix.
  */
 export default function MatrixButton({
-  onClick, state, label, hover, showLabel, onMouseEnter, onMouseLeave, title
+  onClick, state, label, hover, onMouseEnter, onMouseLeave, title
 }: MatrixButtonProps) {
   const backgroundColor = state
     ? hover
@@ -47,12 +46,17 @@ export default function MatrixButton({
     style={{
       backgroundColor,
       margin: '2px, 2px, 2px, 2px',
+      color: state ? '#000000' : '#ffffff'
     }}
     title={title}
-    onClick={onClick}
+    onClick={() => onClick?.('left')}
+    onContextMenu={e => {
+      onClick?.('right');
+      e.preventDefault();
+    }}
     onMouseEnter={onMouseEnter}
     onMouseLeave={onMouseLeave}
   >
-    {showLabel && <>{label}</>}
+    {label !== undefined && <>{label}</>}
   </Button>;
 }

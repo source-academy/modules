@@ -3,9 +3,9 @@ import type { Pair } from 'js-slang/dist/stdlib/list';
 
 /**
  * A function that is passed the row and column numbers of the cell that was clicked
- * on and its current value.
+ * on, its current value and if it was a right or left click.
  */
-export type CellCallback = (row: number, col: number, currentValue: boolean) => void;
+export type CellCallback = (row: number, col: number, currentValue: boolean, click: 'left' | 'right') => void;
 
 /**
  * Representation of a 2D matrix of values
@@ -43,6 +43,4 @@ export interface Matrix extends ReplResult {
 
 export interface MatrixModuleState {
   matrices: Matrix[];
-  showCellLabels?: boolean;
-  showColLabels?: boolean;
 };

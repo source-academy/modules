@@ -25,10 +25,18 @@ describe(funcs.create_matrix, () => {
 describe(funcs.copy_matrix, () => {
   it('works', () => {
     const mat = funcs.create_matrix(10, 10, 'mat');
+    funcs.set_cell_value(mat, 1, 1, true);
     const copied = funcs.copy_matrix(mat);
+
+    // Set the value after the copy
+    funcs.set_cell_value(mat, 1, 2, true);
 
     expect(copied.buttons).toEqual([]);
     expect(copied.name).toEqual('mat Copy');
+    expect(copied.values[1][1]).toEqual(true);
+
+    expect(mat.values[1][2]).toEqual(true);
+    expect(copied.values[1][2]).toEqual(false);
   });
 });
 
@@ -40,13 +48,13 @@ describe(funcs.on_cell_click, () => {
       .toThrowError('on_cell_click expects a function for its callback parameter!');
   });
 
-  it('throws an error when callback is not a function with 3 parameters', () => {
+  it('throws an error when callback is not a function with 4 parameters', () => {
     expect(() => funcs.on_cell_click(matrix, () => {}))
-      .toThrowError('on_cell_click expects a function that takes 3 parameters for its callback!');
+      .toThrowError('on_cell_click expects a function that takes 4 parameters for its callback!');
   });
 
   it('works', () => {
-    const fn: CellCallback = (_a, _b, _c) => {};
+    const fn: CellCallback = (_a, _b, _c, _d) => {};
     funcs.on_cell_click(matrix, fn);
     expect(matrix.onCellClick).toBe(fn);
   });

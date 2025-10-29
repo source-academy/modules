@@ -218,7 +218,7 @@ export function install_buttons(matrix: Matrix, list: List): void {
  */
 export function on_cell_click(matrix: Matrix, callback: CellCallback): void {
   if (typeof callback !== 'function') throw new Error(`${on_cell_click.name} expects a function for its callback parameter!`);
-  if (callback.length !== 3) throw new Error(`${on_cell_click.name} expects a function that takes 3 parameters for its callback!`);
+  if (callback.length !== 4) throw new Error(`${on_cell_click.name} expects a function that takes 4 parameters for its callback!`);
 
   matrix.onCellClick = callback;
 }
@@ -308,7 +308,7 @@ export function set_cell_label(matrix: Matrix, row: number, col: number, label: 
  */
 export function set_cell_values(matrix: Matrix, values: boolean[][]): void {
   for (let i = 0; i < Math.min(matrix.rows, values.length); i++) {
-    for (let j = 0; j < Math.min(matrix.cols, values[i].length); i++) {
+    for (let j = 0; j < Math.min(matrix.cols, values[i].length); j++) {
       matrix.values[i][j] = values[i][j];
     }
   }
@@ -322,7 +322,7 @@ export function set_cell_values(matrix: Matrix, values: boolean[][]): void {
  */
 export function set_cell_labels(matrix: Matrix, labels: string[][]): void {
   for (let i = 0; i < Math.min(matrix.rows, labels.length); i++) {
-    for (let j = 0; j < Math.min(matrix.cols, labels[i].length); i++) {
+    for (let j = 0; j < Math.min(matrix.cols, labels[i].length); j++) {
       matrix.labels[i][j] = labels[i][j];
     }
   }

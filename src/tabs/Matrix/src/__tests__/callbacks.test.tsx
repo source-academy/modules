@@ -124,14 +124,14 @@ describe('Default cell callback', () => {
   });
 
   testWithMatrix('Providing a different callback', async ({ matrix }) => {
-    const callback = vi.fn((_a, _b, _c) => {});
+    const callback = vi.fn((_a, _b, _c, _d) => {});
     on_cell_click(matrix, callback);
 
     const display = await render(<MatrixDisplay matrix={matrix} rerenderCallback={() => {}}/>);
     const label = display.getByTitle('cell_1_0_button');
     await userEvent.click(label);
 
-    expect(callback).toHaveBeenCalledExactlyOnceWith(1, 0, false);
+    expect(callback).toHaveBeenCalledExactlyOnceWith(1, 0, false, 'left');
     // This new callback doesn't change anything, so no values in the matrix should change
     expect(matrix.values[1][0]).toEqual(false);
   });

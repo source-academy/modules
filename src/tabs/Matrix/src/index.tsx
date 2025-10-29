@@ -49,7 +49,6 @@ function MatrixInstance({ matrix, index }: MatrixInstanceProps) {
 
   const [hoverCoords, setHoverCoords] = useState<[number | false, number | false] | false>(false);
   const [showColLabels, setShowColLabels] = useState(false);
-  const [showCellLabels, setShowCellLabels] = useState(false);
 
   const settingsMenu = <Popover
     content={<Menu>
@@ -57,9 +56,6 @@ function MatrixInstance({ matrix, index }: MatrixInstanceProps) {
       <MenuDivider />
       <Checkbox checked={showColLabels} onChange={() => setShowColLabels(!showColLabels)}>
         Show Row and Column Labels
-      </Checkbox>
-      <Checkbox checked={showCellLabels} onChange={() => setShowCellLabels(!showCellLabels)}>
-        Show Cell Labels
       </Checkbox>
     </Menu>}
     renderTarget={targetProps => (
@@ -70,7 +66,8 @@ function MatrixInstance({ matrix, index }: MatrixInstanceProps) {
           <Icon icon="settings" />
         </Button>
       </Tooltip>
-    )} />;
+    )}
+  />;
 
   const userButtons = matrix.buttons.length > 0
     ? <UserToolbar
@@ -127,8 +124,8 @@ function MatrixInstance({ matrix, index }: MatrixInstanceProps) {
             onHoverChange={setHoverCoords}
             rerenderCallback={rerender}
             matrix={matrix}
-            showCellLabels={showCellLabels}
-            showColLabels={showColLabels} />
+            showColLabels={showColLabels}
+          />
         </div>
       </Stack>
     </Card>

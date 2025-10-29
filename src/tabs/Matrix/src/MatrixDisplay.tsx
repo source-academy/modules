@@ -16,7 +16,6 @@ interface MatrixDisplayProps {
   onHoverChange?: (coords: [r: number | false, c: number | false] | false) => void;
   rerenderCallback: () => void;
   matrix: Matrix;
-  showCellLabels?: boolean;
   showColLabels?: boolean;
 };
 
@@ -24,7 +23,7 @@ interface MatrixDisplayProps {
  * React component for displaying a single {@link Matrix}, excluding its installed buttons.
  */
 export default function MatrixDisplay({
-  hoverCoords, matrix, showColLabels, onHoverChange, rerenderCallback, showCellLabels,
+  hoverCoords, matrix, showColLabels, onHoverChange, rerenderCallback,
 }: MatrixDisplayProps) {
   const rowClickCallback = matrix.onRowClick ?? getDefaultRowCallback(matrix);
   const colClickCallback = matrix.onColClick ?? getDefaultColCallback(matrix);
@@ -70,24 +69,23 @@ export default function MatrixDisplay({
             verticalAlign: 'middle',
           }}
         >
-          {showColLabels
-            && <td>
-              <div style={{
-                paddingRight: '2px',
-              }}>
-                <IndexLabel
-                  index={rowIndex}
-                  onMouseEnter={() => onHoverChange?.([rowIndex, false])}
-                  onMouseLeave={() => onHoverChange?.(false)}
-                  onClick={() => {
-                    const value = !row.some(x => !x);
-                    rowClickCallback(rowIndex, value);
-                    rerenderCallback();
-                  }}
-                  title={`row_${rowIndex}_label`}
-                />
-              </div>
-            </td>}
+          {showColLabels && <td>
+            <div style={{
+              paddingRight: '2px',
+            }}>
+              <IndexLabel
+                index={rowIndex}
+                onMouseEnter={() => onHoverChange?.([rowIndex, false])}
+                onMouseLeave={() => onHoverChange?.(false)}
+                onClick={() => {
+                  const value = !row.some(x => !x);
+                  rowClickCallback(rowIndex, value);
+                  rerenderCallback();
+                }}
+                title={`row_${rowIndex}_label`}
+              />
+            </div>
+          </td>}
           {row.map((entry, colIndex) => {
             let hover: boolean;
 
@@ -105,11 +103,10 @@ export default function MatrixDisplay({
                 state={entry}
                 label={matrix.labels[rowIndex][colIndex]}
                 title={`cell_${rowIndex}_${colIndex}_button`}
-                showLabel={showCellLabels}
                 onMouseEnter={() => onHoverChange?.([rowIndex, colIndex])}
                 onMouseLeave={() => onHoverChange?.(false)}
-                onClick={() => {
-                  cellClickCallback(rowIndex, colIndex, entry);
+                onClick={click => {
+                  cellClickCallback(rowIndex, colIndex, entry, click);
                   rerenderCallback();
                 }}
               />
