@@ -15,8 +15,13 @@
     "typescript": "^5.8.2"
   },
   "exports": {
-    "./coverage-reporter": "./dist/coverage-reporter.cjs",
-    "./test-reporter": "./dist/test-reporter.js"
+    "./coverage-reporter": {
+      "default": "./build/coverage-reporter.cjs"
+    },
+    "./test-reporter": {
+      "types": "./build/test-reporter.d.ts",
+      "default": "./build/test-reporter.js"
+    }
   },
   "scripts": {
     "build": "yarn build:coverage-reporter && yarn build:test-reporter",

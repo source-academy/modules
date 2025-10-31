@@ -1,4 +1,3 @@
-// @ts-check
 // Lint Plugin vitest config
 import { defineProject, mergeConfig } from 'vitest/config';
 import rootConfig from '../../vitest.config.js';

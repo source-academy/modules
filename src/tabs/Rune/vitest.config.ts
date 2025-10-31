@@ -1,4 +1,3 @@
-// @ts-check
 // Rune Tab vitest.config.js
 import { defineProject } from 'vitest/config';
 

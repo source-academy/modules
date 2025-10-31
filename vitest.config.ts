@@ -1,4 +1,3 @@
-// @ts-check
 // Root vitest config
 import pathlib from 'path';
 import { defineConfig } from 'vitest/config';
@@ -6,10 +5,7 @@ import GithubActionsSummaryReporter from './lib/vitest-reporter/build/test-repor
 
 const coverageReporters = ['text'];
 
-/**
- * @type {Exclude<import('vitest/config').ViteUserConfig['test'], undefined>['reporters']}
- */
-const testReporters = ['default'];
+const testReporters: Exclude<import('vitest/config').ViteUserConfig['test'], undefined>['reporters'] = ['default'];
 
 if (process.env.GITHUB_ACTIONS) {
   const reporter = pathlib.resolve(import.meta.dirname, './lib/vitest-reporter/build/coverage-reporter.cjs');

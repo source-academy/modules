@@ -1,10 +1,7 @@
-// @ts-check
+import type { ViteUserConfig } from 'vitest/config';
 import rootConfig from '../../vitest.config.js';
 
-/**
- * @type {import('vitest/config').ViteUserConfig}
- */
-const config = {
+const config: ViteUserConfig = {
   ...rootConfig,
   test: {
     ...rootConfig.test,

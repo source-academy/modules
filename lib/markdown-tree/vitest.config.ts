@@ -1,6 +1,4 @@
 // Markdown-Tree plugin vitest
-// @ts-check
-
 import { defineProject, mergeConfig } from 'vitest/config';
 import rootConfig from '../../vitest.config.js';
 

@@ -1,4 +1,3 @@
-// @ts-check
 // vitest-reporter vitest config
 import { defineConfig } from 'vitest/config';
 import rootConfig from '../../vitest.config.js';

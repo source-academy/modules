@@ -55,13 +55,17 @@ vi.mock(import('typescript'), async importOriginal => {
   };
 });
 
-vi.mock(import('@sourceacademy/modules-repotools/getGitRoot'), () => {
+vi.mock(import('@sourceacademy/modules-repotools/getGitRoot'), async importOriginal => {
+  const { rootVitestConfigPath } = await importOriginal();
   const testMocksDir = pathlib.resolve(import.meta.dirname, '../__test_mocks__');
   return {
     gitRoot: testMocksDir,
     bundlesDir: pathlib.join(testMocksDir, 'bundles'),
     tabsDir: pathlib.join(testMocksDir, 'tabs'),
     outDir: '/build',
+    // retain the actual path to the root vitest config because we don't have a
+    // mocked version
+    rootVitestConfigPath
   };
 });
 

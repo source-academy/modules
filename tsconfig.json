@@ -1,0 +1,11 @@
+// General tsconfig
+{
+  "include": ["**/vitest.config.ts" ],
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "declaration": false,
+    "noEmit": true,
+    "verbatimModuleSyntax": true,
+  }
+}

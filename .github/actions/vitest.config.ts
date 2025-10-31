@@ -1,4 +1,3 @@
-// @ts-check
 // Actions Vitest config
 
 import { baseVitestConfig } from '@sourceacademy/modules-repotools/testing';

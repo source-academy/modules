@@ -1,4 +1,3 @@
-// @ts-check
 // Buildtools Vitest config
 import { defineProject } from 'vitest/config';
 

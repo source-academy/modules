@@ -4,17 +4,32 @@ import react from '@vitejs/plugin-react';
 import { playwright } from '@vitest/browser-playwright';
 import { loadConfigFromFile } from 'vite';
 import { defineProject, mergeConfig, type TestProjectInlineConfiguration, type ViteUserConfig } from 'vitest/config';
-// @ts-expect-error I'm too lazy to make the root config work with typescript
-import rootConfig from '../../../vitest.config.js';
+import { rootVitestConfigPath } from './getGitRoot.js';
 
-rootConfig.test.projects = undefined;
-rootConfig.test.environment = 'jsdom';
+async function loadRootConfig() {
+  const loadResult = await loadConfigFromFile(
+    { command: 'build', mode: '' },
+    rootVitestConfigPath,
+    undefined,
+    'silent',
+  );
+
+  if (loadResult === null) {
+    throw new Error('Failed to load root vitest configuration!');
+  }
+  
+  const config = loadResult.config;
+  config.test!.projects = undefined;
+  config.test!.environment = 'jsdom';
+
+  return config;
+}
 
 /**
  * A shared Vitest configuration object that can be combined with {@link mergeConfig}
  * to create custom Vitest configurations for each sub project
  */
-export const baseVitestConfig: ViteUserConfig = rootConfig;
+export const baseVitestConfig: ViteUserConfig = await loadRootConfig();
 
 /**
  * Vitest configuration specific to tabs
@@ -52,23 +67,28 @@ export const sharedTabsConfig = mergeConfig(
  */
 export async function loadVitestConfigFromDir(directory: string) {
   const filesToTry = [
-    'vitest.config.js',
-    'vite.config.ts'
+    'vitest.config',
+    'vite.config'
   ];
 
-  for (const fileToTry of filesToTry) {
-    try {
-      const fullPath = pathlib.join(directory, fileToTry);
-      await fs.access(fullPath, fs.constants.R_OK);
-      const config = await loadConfigFromFile(
-        { command: 'build', mode: '' },
-        fullPath,
-        undefined,
-        'silent',
-      );
+  const extensionsToTry = ['ts', 'js']
 
-      if (config !== null) return config.config as TestProjectInlineConfiguration;
-    } catch {}
+  for (const fileToTry of filesToTry) {
+    for (const extToTry of extensionsToTry) {
+      try {
+        const fullPath = pathlib.join(directory, `${fileToTry}.${extToTry}`);
+        await fs.access(fullPath, fs.constants.R_OK);
+        const config = await loadConfigFromFile(
+          { command: 'build', mode: '' },
+          fullPath,
+          undefined,
+          'silent',
+        );
+
+        if (config !== null) return config.config as TestProjectInlineConfiguration;
+      } catch {}
+
+    }
   }
   return null;
 }

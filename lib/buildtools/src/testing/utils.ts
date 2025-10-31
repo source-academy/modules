@@ -61,7 +61,7 @@ export async function hasTests(directory: string) {
   try {
     // If the given folder has a vitest config, we assume the folder is
     // supposed to contain tests
-    await fs.access(pathlib.join(directory, 'vitest.config.js'), fs.constants.R_OK);
+    await fs.access(pathlib.join(directory, 'vitest.config.ts'), fs.constants.R_OK);
     return true;
   } catch {}
 

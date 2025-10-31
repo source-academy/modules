@@ -1,5 +1,4 @@
-// @ts-check
-// Curve Tab vitest.config.js
+// Curve Tab vitest.config
 import { defineProject } from 'vitest/config';
 
 export default defineProject({

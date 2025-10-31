@@ -1,5 +1,3 @@
-// @ts-check
-
 import { playwright } from '@vitest/browser-playwright';
 import { defineProject } from 'vitest/config';
 
