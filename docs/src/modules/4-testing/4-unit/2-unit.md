@@ -6,7 +6,7 @@ detect any tests within that file, it will throw an error.  This also includes a
 > [!WARNING] Test File Naming
 > Right now any file ending with `.ts` or `.tsx` will be considered a test file. This is inconvenient, especially if you want to create a set of
 > common utilities to be used only for tests. Such a file might (_READ: should_) not contain any tests, which will be considered by Vitest to be
-> an error. 
+> an error.
 >
 > To remedy this, in the future, only files that end in `.test.ts` or `.test.tsx` will be considered test files. This will allow us to have regular
 > Typescript files located within `__tests__` directories. This means you should use that naming convention instead when creating your test files.
@@ -48,6 +48,7 @@ For comprehensive instructions on how to write tests you can refer to the [Vites
 ## Describe Block Titles for functions
 
 Vitest supports passing functions directly to `describe` blocks. You should use this syntax instead of using a string title where possible:
+
 ```ts
 function foo() {}
 
@@ -61,6 +62,7 @@ describe(foo, () => {});
 This is so that if you ever rename the function, the title of the describe block will change during your refactoring and there won't be a mismatch.
 
 Of course, if you're not specifically testing a function, you can still use the normal string description:
+
 ```ts
 describe('A bunch of tests that need to execute', () => {});
 ```
@@ -140,6 +142,7 @@ Javascript modules.
 Mocking modules should be done with the `vi.mock` utility:
 
 ::: code-group
+
 ```ts [index.test.ts]
 import { foo } from './index';
 import { expect, test, vi } from 'vitest';
@@ -154,6 +157,7 @@ test('foo returns 1', () => {
   expect(foo()).toEqual(1);
 });
 ```
+
 ```ts [index.ts]
 import { bar } from './bar';
 
@@ -171,6 +175,7 @@ export function bar2() {
   return 2;
 }
 ```
+
 :::
 
 Though `vi.mock` accepts a string path, you should always use the import expression syntax, since it will
@@ -235,6 +240,7 @@ From version 4 onwards, Vitest allows classes to be mocked using `vi.fn`. Howeve
 a class or a function expression:
 
 ::: code-group
+
 ```ts [index.test.ts]
 vi.mock(import('./index'), () => ({
   Foo: vi.fn(class {} as any),
@@ -251,6 +257,7 @@ expect(Foo).toHaveBeenCalledOnce();
 ```ts [index.ts]
 export class Foo {}
 ```
+
 :::
 
 ### Mocking "Global" Properties
@@ -280,6 +287,7 @@ test('play works', () => {
   expect(() => play(sound)).not.toThrow();
 });
 ```
+
 fails with the following error:
 
 ```sh

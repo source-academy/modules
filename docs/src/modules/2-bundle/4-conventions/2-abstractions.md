@@ -123,6 +123,7 @@ export class Point implements ReplResult {
 would result in the infamous `[object Object]` being printed.
 
 The type doesn't have to be a class, it can also be a Typescript [interface](https://www.typescriptlang.org/docs/handbook/2/objects.html):
+
 ```ts
 interface Thing extends ReplResult {
   // ...implementation details

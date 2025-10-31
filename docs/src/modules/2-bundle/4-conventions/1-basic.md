@@ -51,6 +51,7 @@ TypeError: number 0 is not iterable (cannot read property Symbol(Symbol.iterator
 ```
 
 Javascript also supports object destructuring in parameters:
+
 ```ts
 interface BarParams {
   x: string;
@@ -63,6 +64,7 @@ function bar({ x, y }: BarParams) {
 ```
 
 However, Javascript doesn't actually throw an error if you pass an invalid object into the function:
+
 ```ts
 function bar({ x, y }: BarParams) {
   return x;
@@ -74,6 +76,7 @@ console.log(bar(0)); // prints undefined
 If an invalid argument gets passed, no error is thrown and the destructured values just take on the value of `undefined` (which you might want to check for).
 
 However, if you use nested destructuring, Javascript _will_ throw an error:
+
 ```ts
 interface Bar2Params {
   x: {
@@ -90,11 +93,13 @@ console.log(bar2(0));
 ```
 
 The call to `bar2` causes an error like the one below:
+
 ```sh
 Uncaught TypeError: Cannot read properties of undefined (reading 'a')
   at bar2 (<anonymous>:1:21)
   at <anonymous>:1:1
 ```
+
 because of course, when `bar2` is called with `0`, `x` becomes `undefined` and trying to destructure `undefined` causes the `TypeError`.
 
 If instead the parameter isn't destructured, it gives you the chance to perform type checking:
@@ -197,6 +202,7 @@ These imports get externalized and are then provided to bundles at runtime, so n
 ensures that you are using the same implementations as those being used by `js-slang` while running your bundle code.
 
 Note that not every export from `js-slang` is currently supported. Below is the list of paths you can import from:
+
 - `js-slang`
 - `js-slang/context`
 - `js-slang/dist/stdlib`

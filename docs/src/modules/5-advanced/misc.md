@@ -18,6 +18,7 @@ export function bar() { return 1; }
 
 Now consider a tab that wants to display something to the user depending on what function
 the user passed to the tab:
+
 ```tsx [tab.tsx] {9,11}
 import { foo, bar } from '@sourceacademy/modules-bundle0';
 
@@ -35,12 +36,14 @@ export function Tab({ func }: Props) {
   }
 }
 ```
+
 Notice that the two comparisons (the two highlighted lines) use `===`. In Javascript, functions are compared by reference equality.
 
 Unfortunately, `js-slang` does not guarantee this kind of object identity stability during bundle loading, so these two
 comparisons might fail even if the cadet provides the `foo` or `bar` function.
 
 A workaround for this would be to attach a symbol to your object:
+
 ```ts
 export const fooSymbol = Symbol('foo');
 export function foo() { return 0; }
@@ -52,6 +55,7 @@ bar[barSymbol] = true;
 ```
 
 and then check for the symbol on the object:
+
 ```tsx
 import { foo, fooSymbol, bar, barSymbol } from '@sourceacademy/modules-bundle0';
 

@@ -26,6 +26,7 @@ export default defineProject({
 ```
 
 You will also need to add (to your dev dependencies) other packages:
+
 - `@vitest/browser-playwright`
 - `vitest-browser-react`
 - `playwright`
@@ -186,6 +187,7 @@ test('test0', async () => {
 ## Simulating User Input
 
 You can simulate user input by using the `userEvent` utility from `vitest/browser`:
+
 ```tsx
 export function Foo() {
   const [text, setText] = useState('');

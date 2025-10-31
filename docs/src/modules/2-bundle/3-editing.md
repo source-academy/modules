@@ -13,6 +13,7 @@ yarn workspaces focus @sourceacademy/bundle-[desired bundle]
 > [!TIP]
 > You may require functionalities from the root package, or other packages from this repository.
 > It is possible to focus multiple workspaces at once:
+>
 > ```sh
 > yarn workspaces focus @sourceacademy/bundle-[desired bundle] @sourceacademy/modules
 > ```
@@ -71,9 +72,9 @@ If you do so, remember to run your installation command (same as the one above) 
 > [!IMPORTANT] React Within bundles
 > Currently, the way bundles are loaded by `js-slang` means that React cannot be externalized for bundles. `js-slang` simply has no way to provide React
 > from the frontend to the bundle.
-> 
+>
 > This means that tools like the React DevTools will not be able to work correctly for bundles during development with the frontend.
-> 
+>
 > Refer to the [issue](https://github.com/source-academy/modules/issues/211) tracking this functionality.
 
 ## Bundle Conventions
