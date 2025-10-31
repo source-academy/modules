@@ -16,5 +16,5 @@ outputs:
     description: Boolean value. True if there were changes to workflow files, false otherwise.
 
 runs:
-  using: node20
+  using: node24
   main: ../../dist/info.js
