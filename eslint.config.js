@@ -480,7 +480,7 @@ export default defineConfig(
       'lib/repotools/**/*.ts',
       'lib/vitest-reporter/**/*.ts',
       '.github/actions/**/*.ts',
-      '**/vitest.config.js'
+      '**/vitest.config.{js,ts}'
     ],
     rules: {
       'import/extensions': ['error', 'ignorePackages'],
