@@ -1,6 +1,7 @@
 import pathlib from 'path';
 import { Command, InvalidOptionArgumentError, Option } from '@commander-js/extra-typings';
 import { gitRoot } from '@sourceacademy/modules-repotools/getGitRoot';
+import { isBundleOrTabDirectory } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
 import type { VitestRunMode } from 'vitest/node';
 import { runVitest } from '../testing/runner.js';
@@ -59,7 +60,10 @@ export const getTestCommand = () => new Command('test')
     }
 
     if (configResult.config === null) {
-      console.log(chalk.yellowBright(`No tests found for ${fullyResolvedProject}`));
+      // Just ignore it if a bundle doesn't or tab doesn't have tests
+      if (!await isBundleOrTabDirectory(fullyResolvedProject)) {
+        console.log(chalk.yellowBright(`No tests found for ${fullyResolvedProject}`));
+      }
       return;
     }
 

@@ -11,9 +11,10 @@ yarn buildtools test --project .
 yarn test # If your package.json has this script specified
 ```
 
-You can further specify file paths and patterns to filter which test files you'd like to execute:
+You can further specify file and folder paths and patterns to filter which test files you'd like to execute:
 
 ```sh
+yarn test src/__tests__/
 yarn test src/__tests__/functions.test.ts
 ```
 
@@ -160,7 +161,7 @@ import { defineProject } from 'vitest/config';
 
 export default defineProject({
   test: {
-    root: import.meta.dirname, 
+    root: import.meta.dirname,
     name: 'My Bundle', // Remember to configure this correctly
   }
 });

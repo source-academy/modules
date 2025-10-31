@@ -16,46 +16,11 @@ class ENOENT extends Error {
   }
 }
 
+const mockedIsTestDirectory = vi.spyOn(configs, 'isTestDirectory');
 const mockedFsGlob = vi.spyOn(fs, 'glob');
-function mockHasTestsOnce(retValue: boolean) {
-  mockedFsGlob.mockImplementationOnce(retValue ? async function* () {
-    yield Promise.resolve('');
-  // eslint-disable-next-line require-yield, @typescript-eslint/require-await
-  } : async function* () {
-    return;
-  });
-}
-
-const mockedFsAccess = vi.spyOn(fs, 'access').mockRejectedValue(new Error());
 const mockedReadFile = vi.spyOn(fs, 'readFile');
 const mockedLoadConfig = vi.spyOn(configs, 'loadVitestConfigFromDir');
 const mockedResolver = vi.spyOn(manifest, 'resolveEitherBundleOrTab');
-
-describe(utils.hasTests, () => {
-  it('Returns true when there are files that match the glob', async () => {
-    mockHasTestsOnce(true);
-
-    await expect(utils.hasTests('')).resolves.toEqual(true);
-    expect(fs.access).toHaveBeenCalledOnce();
-    expect(fs.glob).toHaveBeenCalledOnce();
-  });
-
-  it('Returns false when there are no files that match the glob', async () => {
-    mockHasTestsOnce(false);
-
-    await expect(utils.hasTests('')).resolves.toEqual(false);
-    expect(fs.access).toHaveBeenCalledOnce();
-    expect(fs.glob).toHaveBeenCalledOnce();
-  });
-
-  it('Returns true if there is a vitest config', async () => {
-    mockedFsAccess.mockResolvedValueOnce();
-
-    await expect(utils.hasTests('')).resolves.toEqual(true);
-    expect(fs.access).toHaveBeenCalledOnce();
-    expect(fs.glob).not.toHaveBeenCalled();
-  });
-});
 
 describe(utils.setBrowserOptions, () => {
   it('Should do nothing if browser mode is not enabled', () => {
@@ -158,7 +123,7 @@ describe(utils.getTestConfiguration, () => {
     });
 
     it('Should return the config if the tab has tests', async () => {
-      mockHasTestsOnce(true);
+      mockedIsTestDirectory.mockResolvedValueOnce(true);
       await expect(utils.getTestConfiguration(tabPath, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
@@ -174,7 +139,7 @@ describe(utils.getTestConfiguration, () => {
 
     it('Should return the config even if the function was called from not the tab\'s root directory', async () => {
       const subDir = pathlib.join(tabPath, 'sub', 'directory');
-      mockHasTestsOnce(true);
+      mockedIsTestDirectory.mockResolvedValueOnce(true);
       await expect(utils.getTestConfiguration(subDir, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
@@ -189,7 +154,7 @@ describe(utils.getTestConfiguration, () => {
     });
 
     it('Should return null if the tab has no tests', async () => {
-      mockHasTestsOnce(false);
+      mockedIsTestDirectory.mockResolvedValueOnce(false);
       await expect(utils.getTestConfiguration(tabPath, false)).resolves.toMatchObject({
         severity: 'success',
         config: null
@@ -224,7 +189,7 @@ describe(utils.getTestConfiguration, () => {
     });
 
     it('Should return the config if the bundle has tests', async () => {
-      mockHasTestsOnce(true);
+      mockedIsTestDirectory.mockResolvedValueOnce(true);
       await expect(utils.getTestConfiguration(bundlePath, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
@@ -240,7 +205,7 @@ describe(utils.getTestConfiguration, () => {
 
     it('Should return the config even if the function was called from not the bundle\'s root directory', async () => {
       const subdir = pathlib.join(bundlePath, 'sub', 'directory');
-      mockHasTestsOnce(true);
+      mockedIsTestDirectory.mockResolvedValueOnce(true);
       await expect(utils.getTestConfiguration(subdir, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
@@ -255,7 +220,7 @@ describe(utils.getTestConfiguration, () => {
     });
 
     it('Should return null if the bundle has no tests', async () => {
-      mockHasTestsOnce(false);
+      mockedIsTestDirectory.mockResolvedValueOnce(false);
       await expect(utils.getTestConfiguration(bundlePath, false)).resolves.toMatchObject({
         severity: 'success',
         config: null
@@ -275,16 +240,15 @@ describe(utils.getTestConfiguration, () => {
         }
         throw new ENOENT();
       });
-      mockedFsGlob.mockReset();
     });
 
     it('should return the config if the directory has tests', async () => {
-      mockHasTestsOnce(true);
       mockedLoadConfig.mockResolvedValueOnce({
         test: {
           name: 'Test0'
         }
       });
+
       await expect(utils.getTestConfiguration(libPath, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
@@ -296,10 +260,12 @@ describe(utils.getTestConfiguration, () => {
           }
         }
       });
+
+      expect(mockedIsTestDirectory).not.toHaveBeenCalledOnce();
+      expect(mockedLoadConfig).toHaveBeenCalledOnce();
     });
 
     it('should return the package directory even if run from a sub directory', async () => {
-      mockHasTestsOnce(true);
       mockedLoadConfig.mockResolvedValueOnce({
         test: {
           name: 'Test0'
@@ -317,11 +283,14 @@ describe(utils.getTestConfiguration, () => {
           }
         }
       });
+
+      expect(mockedIsTestDirectory).not.toHaveBeenCalledOnce();
+      expect(mockedLoadConfig).toHaveBeenCalledOnce();
     });
 
     it('should return an error if the directory doesn\'t have a vitest config but has tests', async () => {
       mockedLoadConfig.mockResolvedValueOnce(null);
-      mockHasTestsOnce(true);
+      mockedIsTestDirectory.mockResolvedValueOnce(true);
 
       await expect(utils.getTestConfiguration(libPath, false))
         .resolves
@@ -329,11 +298,14 @@ describe(utils.getTestConfiguration, () => {
           severity: 'error',
           errors: [`Tests were found for ${libPath}, but no vitest config could be located`]
         });
+
+      expect(mockedIsTestDirectory).toHaveBeenCalledOnce();
+      expect(mockedLoadConfig).toHaveBeenCalledOnce();
     });
 
     it('should not return an error if the directory has no vitest config or tests', async () => {
       mockedLoadConfig.mockResolvedValueOnce(null);
-      mockHasTestsOnce(false);
+      mockedIsTestDirectory.mockResolvedValueOnce(false);
 
       await expect(utils.getTestConfiguration(libPath, false))
         .resolves
@@ -341,6 +313,9 @@ describe(utils.getTestConfiguration, () => {
           severity: 'success',
           config: null
         });
+
+      expect(mockedIsTestDirectory).toHaveBeenCalledOnce();
+      expect(mockedLoadConfig).toHaveBeenCalledOnce();
     });
   });
 });
@@ -350,7 +325,7 @@ describe(utils.getAllTestConfigurations, () => {
     const RE = /^\/dir\/project(\d)\/package\.json$/;
     const match = RE.exec(p as string);
     if (match) {
-      const [,index] = match;
+      const [, index] = match;
       return Promise.resolve(JSON.stringify({
         name: `@sourceacademy/project${index}`
       }));
@@ -441,7 +416,7 @@ describe(utils.getAllTestConfigurations, () => {
         projects: ['/dir/project*']
       }
     })
-    // Then once more for each of the child projects
+      // Then once more for each of the child projects
       .mockResolvedValueOnce({ test: { name: 'project0' } })
       .mockResolvedValueOnce({
         test: {

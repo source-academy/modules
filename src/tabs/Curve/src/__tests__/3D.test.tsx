@@ -1,10 +1,9 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { animate_3D_curve, draw_3D_connected, make_3D_point } from '@sourceacademy/bundle-curve';
 import type { Curve, CurveDrawn } from '@sourceacademy/bundle-curve/curves_webgl';
 import type { AnimatedCurve } from '@sourceacademy/bundle-curve/types';
 import { degreesToRadians } from '@sourceacademy/modules-lib/utilities';
-import { userEvent } from '@vitest/browser/context';
 import { afterEach, beforeEach, describe, expect, test as baseTest, vi, type MockedFunction } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { cleanup, render } from 'vitest-browser-react';
 import Canvas3DCurve from '../canvas_3d_curve';
 import Curve3DAnimationCanvas from '../curve_3d_animation_canvas';
@@ -20,13 +19,13 @@ describe('Test 3D Curve Canvas', () => {
   };
 
   const test = baseTest.extend<Fixtures>({
-    curve: ({}, use) => {
-      return use(draw_3D_connected(400)(t => make_3D_point(t, 0.5 * Math.sin(2 * t * Math.PI), t)));
+    curve: ({ }, fixture) => {
+      return fixture(draw_3D_connected(400)(t => make_3D_point(t, 0.5 * Math.sin(2 * t * Math.PI), t)));
     },
-    mockedRedraw: ({ curve }, use) => {
+    mockedRedraw: ({ curve }, fixture) => {
       const mockedRedraw = vi.fn(curve.redraw.bind(curve));
       curve.redraw = mockedRedraw;
-      return use(mockedRedraw);
+      return fixture(mockedRedraw);
     }
   });
 
@@ -112,9 +111,9 @@ describe('Test 3D Animated Curve Canvas', () => {
   });
 
   const test = baseTest.extend<Fixtures>({
-    mockAngleRedraw: ({}, use) => use(vi.fn((_angle: number) => {})),
-    mockGetFrame: ({}, use) => use(vi.fn((_timestamp: number) => {})),
-    curve: ({ mockAngleRedraw, mockGetFrame }, use) => {
+    mockAngleRedraw: ({ }, fixture) => fixture(vi.fn((_angle: number) => { })),
+    mockGetFrame: ({ }, fixture) => fixture(vi.fn((_timestamp: number) => { })),
+    curve: ({ mockAngleRedraw, mockGetFrame }, fixture) => {
       const drawer = draw_3D_connected(400);
       /**
        * A mocked implementation of draw_3D_connected that allows us to spy
@@ -141,7 +140,7 @@ describe('Test 3D Animated Curve Canvas', () => {
         return oldGetFrame(timestamp);
       };
 
-      return use(animation);
+      return fixture(animation);
     },
   });
 

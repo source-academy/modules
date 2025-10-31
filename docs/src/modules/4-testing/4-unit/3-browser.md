@@ -31,8 +31,9 @@ You will also need to add (to your dev dependencies) other packages:
 - `vitest-browser-react`
 - `playwright`
 
-In the case of `playwright`, you might also have to run `playwright install chromium`.
+Do note that the version range for `@vitest/browser-playwright` should be the same as `vitest`.
 
+In the case of `playwright`, you might also have to run `playwright install chromium`.
 If your system doesn't have the necessary dependencies for `playwright`'s install, you will have to run `playwright install chromium --with-deps` instead.
 
 Now, the tests for your tab can be run in browser mode.

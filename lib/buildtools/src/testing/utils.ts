@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import { gitRoot } from '@sourceacademy/modules-repotools/getGitRoot';
 import { resolveSingleBundle, resolveSingleTab } from '@sourceacademy/modules-repotools/manifest';
-import { baseVitestConfig, loadVitestConfigFromDir, sharedTabsConfig } from '@sourceacademy/modules-repotools/testing';
+import { baseVitestConfig, isTestDirectory, loadVitestConfigFromDir, sharedTabsConfig, testIncludePattern } from '@sourceacademy/modules-repotools/testing';
 import type { ErrorResult } from '@sourceacademy/modules-repotools/types';
 import { isNodeError, isSamePath, mapAsync } from '@sourceacademy/modules-repotools/utils';
 import cloneDeep from 'lodash/cloneDeep.js';
@@ -52,25 +52,6 @@ export type GetTestConfigurationResult = ErrorResult | {
   severity: 'success';
   config: TestProjectInlineConfiguration | null;
 };
-
-/**
- * For a given directory, recurse through it and determine if the given directory has any Vitest
- * test files within it
- */
-export async function hasTests(directory: string) {
-  try {
-    // If the given folder has a vitest config, we assume the folder is
-    // supposed to contain tests
-    await fs.access(pathlib.join(directory, 'vitest.config.ts'), fs.constants.R_OK);
-    return true;
-  } catch {}
-
-  for await (const each of fs.glob(`${directory}/**/__tests__/**/*.{ts,tsx}`)) {
-    return true;
-  }
-
-  return false;
-}
 
 /**
  * Based on a starting directory, locate the package.json that directory belongs to, then check
@@ -125,7 +106,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
     case 'config': {
       if (config === null) {
         // Not a bundle, no config
-        if (await hasTests(jsonDir)) {
+        if (await isTestDirectory(jsonDir)) {
           return {
             severity: 'error',
             errors: [`Tests were found for ${directory}, but no vitest config could be located`]
@@ -145,7 +126,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
       }
 
       if (config.test!.include === undefined) {
-        config.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
+        config.test!.include = [testIncludePattern];
       }
 
       break;
@@ -160,7 +141,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
       }
 
       if (config === null) {
-        if (!await hasTests(jsonDir)) {
+        if (!await isTestDirectory(jsonDir)) {
           return {
             severity: 'success',
             config: null
@@ -169,7 +150,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
         config = cloneDeep(sharedTabsConfig);
         config.test!.name = `${tab.name} Tab`;
         config.test!.root = jsonDir;
-        config.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
+        config.test!.include = [testIncludePattern];
       } else {
         config = mergeConfig(cloneDeep(sharedTabsConfig), config);
       }
@@ -188,7 +169,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
 
       const { bundle } = bundleResult;
       if (config === null) {
-        if (!await hasTests(jsonDir)) {
+        if (!await isTestDirectory(jsonDir)) {
           return {
             severity: 'success',
             config: null
@@ -198,7 +179,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
         config = cloneDeep(baseVitestConfig);
         config.test!.name = `${bundle.name} Bundle`;
         config.test!.root = jsonDir;
-        config.test!.include = ['**/__tests__/**/*.{ts,tsx}'];
+        config.test!.include = [testIncludePattern];
       } else {
         config = mergeConfig(cloneDeep(baseVitestConfig), config);
       }
