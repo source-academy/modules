@@ -1,5 +1,6 @@
 import pathlib from 'path';
 import { Command } from '@commander-js/extra-typings';
+import * as utils from '@sourceacademy/modules-repotools/utils';
 import { describe, expect, test, vi } from 'vitest';
 import { testMocksDir } from '../../__tests__/fixtures.js';
 import * as runner from '../../testing/runner.js';
@@ -67,7 +68,9 @@ describe('Test regular test command', () => {
     );
   });
 
-  test('Expect command to exit with no issues if no tests were found', { timeout: 10_000 }, async () => {
+  test('Expect command to exit with no issues if no tests were found', async () => {
+    vi.spyOn(utils, 'isBundleOrTabDirectory').mockResolvedValueOnce(null);
+
     const projectPath = pathlib.join(testMocksDir, 'dir');
     mockedTestConfiguration.mockResolvedValueOnce({
       severity: 'success',
