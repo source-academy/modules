@@ -8,6 +8,6 @@ export default defineProject({
     environment: 'node',
     name: 'Build Tools',
     setupFiles: ['./vitest.setup.ts'],
-    include: ['**/__tests__/*.test.ts']
+    include: ['**/__tests__/**/*.test.ts']
   }
 });

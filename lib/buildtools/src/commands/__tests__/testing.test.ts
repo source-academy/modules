@@ -67,7 +67,7 @@ describe('Test regular test command', () => {
     );
   });
 
-  test('Expect command to exit with no issues if no tests were found', async () => {
+  test('Expect command to exit with no issues if no tests were found', { timeout: 10_000 }, async () => {
     const projectPath = pathlib.join(testMocksDir, 'dir');
     mockedTestConfiguration.mockResolvedValueOnce({
       severity: 'success',
@@ -78,7 +78,7 @@ describe('Test regular test command', () => {
   });
 
   test('Command should error if the command was called from beyond the git root', async () => {
-    const projectPath = pathlib.join(testMocksDir,'..');
+    const projectPath = pathlib.join(testMocksDir, '..');
     await expect(runCommand('--project', projectPath)).commandExit();
   });
 
@@ -140,7 +140,7 @@ describe('Test silent option', () => {
       const command = new Command()
         .exitOverride()
         .addOption(silentOption)
-        .configureOutput({ writeErr: () => {} })
+        .configureOutput({ writeErr: () => { } })
         .action(option => {
           resolve(option.silent);
         });

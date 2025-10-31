@@ -179,6 +179,8 @@ It is important that you set the `name` property correctly, as Vitest projects c
 > Vitest is incorrectly detecting files as test files and incorrectly including files in coverage
 > reports.
 
+You should **not** be including `vitest.config.ts` in your `tsconfig.json`.
+
 ## Integration with Git Hooks
 
 Any tests that you have written must be pass in order for you to push to the main repository, as well as for your pull requests to be merged.

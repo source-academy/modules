@@ -276,6 +276,7 @@ export default defineConfig(
       '@sourceacademy/region-comment': 'error',
     }
   },
+
   // #region typescript
   {
     extends: tseslint.configs.recommended,
@@ -484,6 +485,15 @@ export default defineConfig(
     ],
     rules: {
       'import/extensions': ['error', 'ignorePackages'],
+    }
+  },
+  {
+    name: 'Rules for Vitest configs',
+    files: ['**/vitest.config.ts'],
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.json'
+      }
     }
   },
   {
