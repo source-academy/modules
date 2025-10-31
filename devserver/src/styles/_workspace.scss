@@ -1,3 +1,5 @@
+@use "variables" as *;
+
 $code-color-code: #ced9e0;
 $code-color-log: #dd8c60;
 $code-color-result: #ffffff;
@@ -144,7 +146,7 @@ $code-color-error: #ff4444;
     }
 
     .ace_breakpoint:before {
-      content: ' \25CF';
+      content: " \25CF";
       margin-left: -10px;
       color: red;
     }
@@ -425,7 +427,10 @@ $code-color-error: #ff4444;
                 * output. Taken from react-ace
                 * sourcecode, font size modified.
                 */
-              font: 16px / normal 'Inconsolata', 'Consolas', monospace;
+              font:
+                16px / normal "Inconsolata",
+                "Consolas",
+                monospace;
 
               .canvas-container {
                 display: -webkit-box;
@@ -455,7 +460,7 @@ $code-color-error: #ff4444;
     // Set colour of icons in blueprintjs tabs
     color: #a7b6c2;
 
-    &[aria-selected='true'] {
+    &[aria-selected="true"] {
       .side-content-tooltip {
         background-color: #495a6b;
 
@@ -468,7 +473,7 @@ $code-color-error: #ff4444;
       }
     }
 
-    &[aria-disabled='true'] {
+    &[aria-disabled="true"] {
       .side-content-tooltip {
         // Set tooltip colour to always be the same as the background
         background-color: inherit;
@@ -676,7 +681,10 @@ $code-color-error: #ff4444;
           * output. Taken from react-ace
           * sourcecode, font size modified.
           */
-        font: 16px / normal 'Inconsolata', 'Consolas', monospace;
+        font:
+          16px / normal "Inconsolata",
+          "Consolas",
+          monospace;
       }
 
       .code-output {

@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Initialize Repo
         uses: ./.github/actions/src/init
@@ -64,7 +64,7 @@ jobs:
     steps:
       - name: Check out source code
         if: matrix.lib.changes
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Initialize Repo
         if: matrix.lib.changes
@@ -98,7 +98,7 @@ jobs:
     steps:
       - name: Check out source code
         if: matrix.tabInfo.changes
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Initialize Repo
         if: matrix.tabInfo.changes
@@ -146,7 +146,7 @@ jobs:
     steps:
       - name: Check out source code
         if: matrix.bundleInfo.changes
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Initialize Repo
         if: matrix.bundleInfo.changes
@@ -185,7 +185,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Enable Corepack
         run: corepack enable
@@ -227,7 +227,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Initialize Repo
         uses: ./.github/actions/src/init
@@ -250,7 +250,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Initialize Repo
         uses: ./.github/actions/src/init

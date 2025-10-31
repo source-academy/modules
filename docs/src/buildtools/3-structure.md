@@ -73,6 +73,7 @@ function rawGetGitRoot() {
 This is guaranteed to work, since the user should have Git present on their system (otherwise how did they get this git repo?)
 
 You can import the absolute file paths to different directories straight from this module:
+
 ```js
 import { bundlesDir, tabsDir, outDir } from '@sourceacademy/modules-repotools/getGitRoot';
 

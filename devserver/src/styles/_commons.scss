@@ -1,3 +1,5 @@
+@use "variables" as *;
+
 .#{$ns}-running-text.md {
   pre > code {
     -webkit-box-shadow: none;

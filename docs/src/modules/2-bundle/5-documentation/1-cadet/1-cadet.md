@@ -57,6 +57,7 @@ by the description of the parameter itself.
 
 Missing the documentation for a parameter is okay (not that you should), but trying to document a parameter that doesn't exist will cause a linting
 error:
+
 ```ts
 /**
  * Oops p1 isn't documented!
@@ -135,6 +136,7 @@ There is no automatic way to make this distinction, so it is up to the bundle au
 ### Variables/Constants
 
 Constants can be documented in a similar fashion:
+
 ```ts
 /**
  * Represents the mathematical constant PI

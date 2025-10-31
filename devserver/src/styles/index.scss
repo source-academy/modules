@@ -1,12 +1,9 @@
-@use 'sass:math';
+@use "@blueprintjs/core/lib/css/blueprint.css" as *;
+@use "@blueprintjs/core/lib/scss/variables" as *;
 
-@import '@blueprintjs/core/lib/css/blueprint.css';
-@import '@blueprintjs/core/lib/scss/variables';
-
-@import 'global';
-
-@import 'application';
-@import 'commons';
-@import 'editorTabs';
-@import 'playground';
-@import 'workspace';
+@use "global" as *;
+@use "application" as *;
+@use "commons" as *;
+@use "editorTabs" as *;
+@use "playground" as *;
+@use "workspace" as *;

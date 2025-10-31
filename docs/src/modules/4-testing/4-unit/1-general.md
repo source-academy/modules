@@ -67,6 +67,7 @@ vitest.describe('A test suite', () => {
 ```
 
 In such a case you can use an `ignore` directive to instruct `vitest` to ignore the given lines or files when determining coverage:
+
 ```ts
 /* v8 ignore start */
 export function foo() {
@@ -74,6 +75,7 @@ export function foo() {
 }
 /* v8 ignore stop */
 ```
+
 More information can be found [here](https://github.com/istanbuljs/v8-to-istanbul#ignoring-uncovered-lines)
 
 ## Custom Test Configuration
@@ -142,7 +144,7 @@ the merging is performed automatically.
 > Some paths are automatically excluded from both testing and test coverage. Paths like
 > `**/dist/**` are only intended for containing build artifacts which do not need to be
 > tested.
-> 
+>
 > Therefore, it is unnecessary to exclude such paths in your own custom test configuration.
 > In general, it is unnecessary to configure the `exclude` property unless you're noticing that
 > Vitest is incorrectly detecting files as test files and incorrectly including files in coverage

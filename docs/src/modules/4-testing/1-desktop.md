@@ -8,6 +8,7 @@ You will need to change which module backend is in use using the `--modulesBacke
 If your package already depends on `js-slang`, then you can already run `js-slang` from the command line using `yarn js-slang`.
 
 If not, you can either:
+
 - Add `js-slang` to your dev dependencies
 - Install the root repository package.
 - Use the [`yarn dlx` command](https://yarnpkg.com/cli/dlx)

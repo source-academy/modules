@@ -11,7 +11,7 @@ add to or modify the functionalities of your bundle.
 
 Developer documentation for bundles are located in two places:
 
-### 1. As a `README` file at the root of your bundle:
+### 1. As a `README` file at the root of your bundle
 
 ```dirtree
 name: bundle0
@@ -31,11 +31,12 @@ the entire documentation server to read it).
 
 If you have more complex documentation needs, you can follow the instructions in the next section.
 
-### 2. As a collection of Markdown files located [here](../../../lib/dev/index):
+### 2. As a collection of Markdown files located [here](../../../lib/dev/index)
 
 Within the `dev` folder, each markdown file/folder structure represents a separate bundle.
 
 For example:
+
 ```dirtree
 name: dev
 children:
@@ -53,6 +54,7 @@ children:
 ```
 
 You can of course use a directory structure as well:
+
 ```dirtree
 name: dev
 children:
@@ -78,6 +80,7 @@ something unconventional, you should leave comments in your source code detailin
 
 In the example below, the `communication` bundle uses the `mqtt` bundle but doesn't use its main
 export. The comment explains why the alternate import is being used.
+
 ```ts
 import { connect, type MqttClient, type QoS } from 'mqtt/dist/mqtt';
 // Need to use "mqtt/dist/mqtt" as "mqtt" requires global, which SA's compiler does not define.
@@ -86,6 +89,7 @@ import { connect, type MqttClient, type QoS } from 'mqtt/dist/mqtt';
 ## What to include?
 
 You should document:
+
 - Your thought processes behind your code
 - How you intend for cadets to use your bundle
 - Information flows (like what functions write to the module context etc...)
