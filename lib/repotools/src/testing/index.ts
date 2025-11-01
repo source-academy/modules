@@ -29,7 +29,7 @@ async function loadRootConfig() {
 /**
  * Default inclusion pattern to be used for detecting test files
  */
-export const testIncludePattern = pathlib.join('**', '__tests__', '**', '*.test.{ts,tsx}');
+export const testIncludePattern = '**/__tests__/**/*.test.{ts,tsx}';
 
 /**
  * A shared Vitest configuration object that can be combined with {@link mergeConfig}
