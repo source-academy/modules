@@ -92,11 +92,11 @@ function linear_decay(decay_period: number): (t: number) => number {
  * Determine if the user has already provided permission to use the
  * microphone and return the provided MediaStream if they have.
  */
-function check_permission() {
+function getAudioStream(func_name: string) {
   if (globalVars.stream === null) {
-    throw new Error('Call init_record(); to obtain permission to use microphone');
+    throw new Error(`${func_name}: Call init_record(); to obtain permission to use microphone`);
   } else if (globalVars.stream === false) {
-    throw new Error(`Permission has been denied.\n
+    throw new Error(`${func_name}: Permission has been denied.\n
         Re-start browser and call init_record();\n
         to obtain permission to use microphone.`);
   }
@@ -201,7 +201,7 @@ export function record(buffer: number): () => SoundPromise {
     throw new Error(`${record.name}: Cannot record while another sound is playing!`);
   }
 
-  const stream = check_permission();
+  const stream = getAudioStream(record.name);
   const mediaRecorder = new MediaRecorder(stream);
 
   setTimeout(() => {
@@ -254,7 +254,7 @@ export function record_for(duration: number, buffer: number): SoundPromise {
     throw new Error(`${record_for.name}: Cannot record while another sound is playing!`);
   }
 
-  const stream = check_permission();
+  const stream = getAudioStream(record_for.name);
   const mediaRecorder = new MediaRecorder(stream);
 
   // order of events for record_for:
@@ -380,8 +380,7 @@ export function play_wave(wave: Wave, duration: number): Sound {
 }
 
 /**
- * Plays the given Sound using the computer’s sound device.
- * The sound is added to a list of sounds to be played one-at-a-time
+ * Adds the given Sound to a list of sounds to be played one-at-a-time
  * in a Source Academy tab.
  *
  * @param sound the Sound to play
@@ -392,7 +391,6 @@ export function play_in_tab(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
     throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
-    // If a sound is already playing, terminate execution.
   }
 
   const duration = get_duration(sound);
