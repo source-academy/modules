@@ -1,10 +1,10 @@
 import pathlib from 'path';
 import { Command } from '@commander-js/extra-typings';
+import * as testing from '@sourceacademy/modules-repotools/testing';
 import * as utils from '@sourceacademy/modules-repotools/utils';
 import { describe, expect, test, vi } from 'vitest';
 import { testMocksDir } from '../../__tests__/fixtures.js';
-import * as runner from '../../testing/runner.js';
-import * as configs from '../../testing/utils.js';
+import * as runner from '../../testing.js';
 import { getTestCommand, silentOption } from '../testing.js';
 import { getCommandRunner } from './testingUtils.js';
 
@@ -12,11 +12,11 @@ vi.spyOn(process, 'cwd').mockReturnValue(testMocksDir);
 vi.spyOn(runner, 'runVitest').mockResolvedValue();
 
 describe('Test regular test command', () => {
-  const mockedTestConfiguration = vi.spyOn(configs, 'getTestConfiguration');
+  const mockedTestConfiguration = vi.spyOn(testing, 'getTestConfiguration');
   const runCommand = getCommandRunner(getTestCommand);
 
   test('Providing both the project directory and pattern', async () => {
-    const mockConfig: configs.GetTestConfigurationResult = {
+    const mockConfig: testing.GetTestConfigurationResult = {
       severity: 'success',
       config: {
         test: {
@@ -30,7 +30,7 @@ describe('Test regular test command', () => {
     const filterPath = pathlib.join(projectPath, 'dir1');
 
     await expect(runCommand('--project', projectPath, filterPath)).commandSuccess();
-    expect(configs.getTestConfiguration).toHaveBeenCalledExactlyOnceWith(projectPath, false);
+    expect(testing.getTestConfiguration).toHaveBeenCalledExactlyOnceWith(projectPath, false);
     expect(runner.runVitest).toHaveBeenCalledExactlyOnceWith(
       'test',
       [filterPath],
@@ -44,7 +44,7 @@ describe('Test regular test command', () => {
 
   test('Providing both the project directory but no patterns', async () => {
     const projectPath = pathlib.join(testMocksDir, 'dir');
-    const mockConfig: configs.GetTestConfigurationResult = {
+    const mockConfig: testing.GetTestConfigurationResult = {
       severity: 'success',
       config: {
         test: {
@@ -56,7 +56,7 @@ describe('Test regular test command', () => {
     mockedTestConfiguration.mockResolvedValueOnce(mockConfig);
 
     await expect(runCommand('--project', projectPath)).commandSuccess();
-    expect(configs.getTestConfiguration).toHaveBeenCalledExactlyOnceWith(projectPath, false);
+    expect(testing.getTestConfiguration).toHaveBeenCalledExactlyOnceWith(projectPath, false);
     expect(runner.runVitest).toHaveBeenCalledExactlyOnceWith(
       'test',
       [],
@@ -86,7 +86,7 @@ describe('Test regular test command', () => {
   });
 
   test('--no-allow-only should not allow only', async () => {
-    const mockConfig: configs.GetTestConfigurationResult = {
+    const mockConfig: testing.GetTestConfigurationResult = {
       severity: 'success',
       config: {
         test: {
@@ -111,7 +111,7 @@ describe('Test regular test command', () => {
   test('--no-allow-only should be true when CI', async () => {
     vi.stubEnv('CI', 'yeet');
     try {
-      const mockConfig: configs.GetTestConfigurationResult = {
+      const mockConfig: testing.GetTestConfigurationResult = {
         severity: 'success',
         config: {
           test: {

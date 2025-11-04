@@ -77,7 +77,7 @@ export async function filterAsync<T>(items: T[], filter: (item: T, index: number
 
 /**
  * Beginning from the current directory, recurse upwards until a `package.json` is located or the git root is reached.\
- * Returns the name of the bundle/tab that the directory belongs to if it exists, null otherwise.
+ * Returns the name of the bundle/tab that the directory belongs to if it exists, `null` otherwise.
  */
 export async function isBundleOrTabDirectory(directory: string) {
   const RE = /^@sourceacademy\/(bundle|tab)-(.+)$/u;

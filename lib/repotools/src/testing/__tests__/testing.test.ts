@@ -1,14 +1,14 @@
 import type { Dirent } from 'fs';
 import fs from 'fs/promises';
 import pathlib from 'path';
-import { bundlesDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
-import * as manifest from '@sourceacademy/modules-repotools/manifest';
-import * as configs from '@sourceacademy/modules-repotools/testing';
-import { isSamePath } from '@sourceacademy/modules-repotools/utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TestProjectInlineConfiguration } from 'vitest/config';
-import { testMocksDir } from '../../__tests__/fixtures.js';
-import * as utils from '../utils.js';
+import { bundlesDir, tabsDir } from '../../getGitRoot.js';
+import * as manifest from '../../manifest.js';
+import { isSamePath } from '../../utils.js';
+import * as configs from '../index.js';
+import * as loader from '../loader.js';
+import * as testUtils from '../testUtils.js';
 
 class ENOENT extends Error {
   public get code() {
@@ -16,13 +16,50 @@ class ENOENT extends Error {
   }
 }
 
-const mockedIsTestDirectory = vi.spyOn(configs, 'isTestDirectory');
+const mockedIsTestDirectory = vi.spyOn(testUtils, 'isTestDirectory');
 const mockedFsGlob = vi.spyOn(fs, 'glob');
 const mockedReadFile = vi.spyOn(fs, 'readFile');
-const mockedLoadConfig = vi.spyOn(configs, 'loadVitestConfigFromDir');
+const mockedLoadConfig = vi.spyOn(loader, 'default');
 const mockedResolver = vi.spyOn(manifest, 'resolveEitherBundleOrTab');
 
-describe(utils.setBrowserOptions, () => {
+const testMocksDir = pathlib.join(import.meta.dirname, '../../../../__test_mocks__');
+
+describe(testUtils.isTestDirectory, () => {
+  const mockedFsGlob = vi.spyOn(fs, 'glob');
+  const mockedLoader = vi.spyOn(loader, 'default').mockResolvedValue(null);
+
+  function mockGlobTestsOnce(retValue: boolean) {
+    mockedFsGlob.mockImplementationOnce(retValue ? async function* () {
+      yield Promise.resolve('');
+      // eslint-disable-next-line require-yield, @typescript-eslint/require-await
+    } : async function* () {
+      return;
+    });
+  }
+
+  it('Returns true when there are files that match the glob', async () => {
+    mockGlobTestsOnce(true);
+
+    await expect(testUtils.isTestDirectory('')).resolves.toEqual(true);
+    expect(fs.glob).toHaveBeenCalledOnce();
+  });
+
+  it('Returns false when there are no files that match the glob', async () => {
+    mockGlobTestsOnce(false);
+
+    await expect(testUtils.isTestDirectory('')).resolves.toEqual(false);
+    expect(fs.glob).toHaveBeenCalledOnce();
+  });
+
+  it('Returns true if there is a vitest config', async () => {
+    mockedLoader.mockResolvedValueOnce({} as any);
+
+    await expect(testUtils.isTestDirectory('')).resolves.toEqual(true);
+    expect(fs.glob).not.toHaveBeenCalled();
+  });
+});
+
+describe(configs.setBrowserOptions, () => {
   it('Should do nothing if browser mode is not enabled', () => {
     const mockedConfig: TestProjectInlineConfiguration = {
       test: {
@@ -30,8 +67,8 @@ describe(utils.setBrowserOptions, () => {
       }
     };
 
-    utils.setBrowserOptions(mockedConfig, false);
-    expect(mockedConfig).toMatchObject({});
+    expect(configs.setBrowserOptions(mockedConfig, false))
+      .toMatchObject(mockedConfig);
   });
 
   it('Should move name and include onto the browser instance if browser mode is enabled', () => {
@@ -48,21 +85,21 @@ describe(utils.setBrowserOptions, () => {
       }
     };
 
-    utils.setBrowserOptions(mockedConfig, false);
-    expect(mockedConfig).toMatchObject({
-      test: {
-        include: [],
-        name: 'yo',
-        browser: {
-          enabled: true,
-          instances: [{
-            browser: 'chromium',
-            name: 'yo (chromium)',
-            include: ['files']
-          }]
+    expect(configs.setBrowserOptions(mockedConfig, false))
+      .toMatchObject({
+        test: {
+          include: [],
+          name: 'yo',
+          browser: {
+            enabled: true,
+            instances: [{
+              browser: 'chromium',
+              name: 'yo (chromium)',
+              include: ['files']
+            }]
+          }
         }
-      }
-    });
+      });
   });
 
   it('Should set headless to false when watch is true', () => {
@@ -79,26 +116,55 @@ describe(utils.setBrowserOptions, () => {
       }
     };
 
-    utils.setBrowserOptions(mockedConfig, true);
-    expect(mockedConfig).toMatchObject({
+    expect(configs.setBrowserOptions(mockedConfig, true))
+      .toMatchObject({
+        test: {
+          include: [],
+          name: 'yo',
+          browser: {
+            enabled: true,
+            headless: false,
+            instances: [{
+              browser: 'chromium',
+              name: 'yo (chromium)',
+              include: ['files']
+            }]
+          }
+        }
+      });
+  });
+
+  it('Should add at least 1 chromium instance if there are none', () => {
+    const mockedConfig: TestProjectInlineConfiguration = {
       test: {
-        include: [],
         name: 'yo',
+        include: ['files'],
         browser: {
           enabled: true,
-          headless: false,
-          instances: [{
-            browser: 'chromium',
-            name: 'yo (chromium)',
-            include: ['files']
-          }]
         }
       }
-    });
+    };
+
+    expect(configs.setBrowserOptions(mockedConfig, true))
+      .toMatchObject({
+        test: {
+          include: [],
+          name: 'yo',
+          browser: {
+            enabled: true,
+            headless: false,
+            instances: [{
+              browser: 'chromium',
+              name: 'yo (chromium)',
+              include: ['files']
+            }]
+          }
+        }
+      });
   });
 });
 
-describe(utils.getTestConfiguration, () => {
+describe(configs.getTestConfiguration, () => {
   describe('With tabs', () => {
     const tabPath = pathlib.join(tabsDir, 'Tab0');
     const tabPackageJson = pathlib.join(tabPath, 'package.json');
@@ -124,7 +190,7 @@ describe(utils.getTestConfiguration, () => {
 
     it('Should return the config if the tab has tests', async () => {
       mockedIsTestDirectory.mockResolvedValueOnce(true);
-      await expect(utils.getTestConfiguration(tabPath, false)).resolves.toMatchObject({
+      await expect(configs.getTestConfiguration(tabPath, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
           ...configs.sharedTabsConfig,
@@ -135,12 +201,13 @@ describe(utils.getTestConfiguration, () => {
           }
         }
       });
+      expect(mockedIsTestDirectory).toHaveBeenCalledOnce();
     });
 
     it('Should return the config even if the function was called from not the tab\'s root directory', async () => {
       const subDir = pathlib.join(tabPath, 'sub', 'directory');
       mockedIsTestDirectory.mockResolvedValueOnce(true);
-      await expect(utils.getTestConfiguration(subDir, false)).resolves.toMatchObject({
+      await expect(configs.getTestConfiguration(subDir, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
           ...configs.sharedTabsConfig,
@@ -151,14 +218,16 @@ describe(utils.getTestConfiguration, () => {
           }
         }
       });
+      expect(mockedIsTestDirectory).toHaveBeenCalledOnce();
     });
 
     it('Should return null if the tab has no tests', async () => {
       mockedIsTestDirectory.mockResolvedValueOnce(false);
-      await expect(utils.getTestConfiguration(tabPath, false)).resolves.toMatchObject({
+      await expect(configs.getTestConfiguration(tabPath, false)).resolves.toMatchObject({
         severity: 'success',
         config: null
       });
+      expect(mockedIsTestDirectory).toHaveBeenCalledOnce();
     });
   });
 
@@ -190,7 +259,7 @@ describe(utils.getTestConfiguration, () => {
 
     it('Should return the config if the bundle has tests', async () => {
       mockedIsTestDirectory.mockResolvedValueOnce(true);
-      await expect(utils.getTestConfiguration(bundlePath, false)).resolves.toMatchObject({
+      await expect(configs.getTestConfiguration(bundlePath, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
           ...configs.baseVitestConfig,
@@ -201,12 +270,13 @@ describe(utils.getTestConfiguration, () => {
           }
         }
       });
+      expect(mockedIsTestDirectory).toHaveBeenCalledOnce();
     });
 
     it('Should return the config even if the function was called from not the bundle\'s root directory', async () => {
       const subdir = pathlib.join(bundlePath, 'sub', 'directory');
       mockedIsTestDirectory.mockResolvedValueOnce(true);
-      await expect(utils.getTestConfiguration(subdir, false)).resolves.toMatchObject({
+      await expect(configs.getTestConfiguration(subdir, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
           ...configs.baseVitestConfig,
@@ -217,14 +287,16 @@ describe(utils.getTestConfiguration, () => {
           }
         }
       });
+      expect(mockedIsTestDirectory).toHaveBeenCalledOnce();
     });
 
     it('Should return null if the bundle has no tests', async () => {
       mockedIsTestDirectory.mockResolvedValueOnce(false);
-      await expect(utils.getTestConfiguration(bundlePath, false)).resolves.toMatchObject({
+      await expect(configs.getTestConfiguration(bundlePath, false)).resolves.toMatchObject({
         severity: 'success',
         config: null
       });
+      expect(mockedIsTestDirectory).toHaveBeenCalledOnce();
     });
   });
 
@@ -249,7 +321,7 @@ describe(utils.getTestConfiguration, () => {
         }
       });
 
-      await expect(utils.getTestConfiguration(libPath, false)).resolves.toMatchObject({
+      await expect(configs.getTestConfiguration(libPath, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
           ...configs.baseVitestConfig,
@@ -272,7 +344,7 @@ describe(utils.getTestConfiguration, () => {
         }
       });
       const subdir = pathlib.join(libPath, 'sub', 'directory');
-      await expect(utils.getTestConfiguration(subdir, false)).resolves.toMatchObject({
+      await expect(configs.getTestConfiguration(subdir, false)).resolves.toMatchObject({
         severity: 'success',
         config: {
           ...configs.baseVitestConfig,
@@ -292,7 +364,7 @@ describe(utils.getTestConfiguration, () => {
       mockedLoadConfig.mockResolvedValueOnce(null);
       mockedIsTestDirectory.mockResolvedValueOnce(true);
 
-      await expect(utils.getTestConfiguration(libPath, false))
+      await expect(configs.getTestConfiguration(libPath, false))
         .resolves
         .toMatchObject({
           severity: 'error',
@@ -307,7 +379,7 @@ describe(utils.getTestConfiguration, () => {
       mockedLoadConfig.mockResolvedValueOnce(null);
       mockedIsTestDirectory.mockResolvedValueOnce(false);
 
-      await expect(utils.getTestConfiguration(libPath, false))
+      await expect(configs.getTestConfiguration(libPath, false))
         .resolves
         .toMatchObject({
           severity: 'success',
@@ -320,7 +392,7 @@ describe(utils.getTestConfiguration, () => {
   });
 });
 
-describe(utils.getAllTestConfigurations, () => {
+describe(configs.getAllTestConfigurations, () => {
   mockedReadFile.mockImplementation(p => {
     const RE = /^\/dir\/project(\d)\/package\.json$/;
     const match = RE.exec(p as string);
@@ -341,7 +413,7 @@ describe(utils.getAllTestConfigurations, () => {
       }
     });
 
-    await expect(utils.getAllTestConfigurations(false)).resolves.toEqual([]);
+    await expect(configs.getAllTestConfigurations(false)).resolves.toEqual([]);
   });
 
   it('correctly handles non string project specifications', async () => {
@@ -373,7 +445,7 @@ describe(utils.getAllTestConfigurations, () => {
       }
     });
 
-    const result = await utils.getAllTestConfigurations(false);
+    const result = await configs.getAllTestConfigurations(false);
     expect(result.length).toEqual(3);
     expect(result[0]).toMatchObject({
       test: {
@@ -456,7 +528,7 @@ describe(utils.getAllTestConfigurations, () => {
       } as Dirent;
     });
 
-    const results = await utils.getAllTestConfigurations(false);
+    const results = await configs.getAllTestConfigurations(false);
     expect(results.length).toEqual(3);
     expect(configs.loadVitestConfigFromDir).toHaveBeenCalledTimes(4);
 

@@ -1,6 +1,6 @@
 import { baseVitestConfig } from '@sourceacademy/modules-repotools/testing';
-import { mergeConfig, type TestProjectInlineConfiguration, type ViteUserConfig } from 'vitest/config';
-import { startVitest, type VitestRunMode } from 'vitest/node';
+import { mergeConfig, type TestProjectInlineConfiguration } from 'vitest/config';
+import { startVitest, type InlineConfig, type VitestRunMode } from 'vitest/node';
 
 interface RunVitestBoolOptions {
   watch?: boolean;
@@ -10,36 +10,15 @@ interface RunVitestBoolOptions {
   silent?: boolean | 'passed-only';
 }
 
-function getIncludes({ test }: TestProjectInlineConfiguration) {
-  const output: string[] = [];
-
-  if (test?.include) {
-    output.push(...test.include);
-  }
-
-  if (test?.browser?.enabled && test?.browser?.instances) {
-    for (const { include } of test.browser.instances) {
-      if (include) {
-        output.push(...include);
-      }
-    }
-  }
-
-  return output;
-}
-
 /**
  * Create a new Vitest instance and run it. Refer to https://vitest.dev/advanced/api/#startvitest for more information.
  */
 export async function runVitest(mode: VitestRunMode, filters: string[], projects: TestProjectInlineConfiguration[], options: RunVitestBoolOptions) {
   try {
-    const coverageIncludeFilters = filters.length === 0 ? undefined : projects.flatMap(getIncludes);
-
-    const runtimeOptions: ViteUserConfig['test'] = {
+    const runtimeOptions: InlineConfig = {
       projects,
       update: !!options.update,
       coverage: {
-        include: coverageIncludeFilters,
         enabled: !!options.coverage,
       },
       allowOnly: !!options.allowOnly,
@@ -47,7 +26,7 @@ export async function runVitest(mode: VitestRunMode, filters: string[], projects
       silent: options.silent
     };
 
-    const finalConfig = mergeConfig(
+    const finalConfig: InlineConfig = mergeConfig(
       baseVitestConfig.test!,
       {
         config: false,
@@ -55,13 +34,12 @@ export async function runVitest(mode: VitestRunMode, filters: string[], projects
       }
     );
 
-    finalConfig.coverage.include = coverageIncludeFilters;
     const vitest = await startVitest(mode, filters, finalConfig);
 
     if (vitest.shouldKeepServer()) {
-    // If Vitest is called in watch mode, then we wait for the onClose hook
-    // to be called to return instead
-    // Refer to https://vitest.dev/advanced/api/vitest.html#shouldkeepserver
+      // If Vitest is called in watch mode, then we wait for the onClose hook
+      // to be called to return instead
+      // Refer to https://vitest.dev/advanced/api/vitest.html#shouldkeepserver
       await new Promise<void>(resolve => vitest.onClose(resolve));
     } else {
       await vitest.close();

@@ -4,8 +4,13 @@ import { loadConfigFromFile } from 'vite';
 import type { TestProjectInlineConfiguration } from 'vitest/config';
 
 /**
- * Try to load the a Vitest config from the given
- * directory. If it doesn't exist, then return `null`.
+ * Try to load a Vitest config from the given directory. If it doesn't exist, then return `null`.
+ *
+ * It will search for the following files in the given order:
+ * 1. `vitest.config.ts`
+ * 2. `vitest.config.js`
+ * 3. `vite.config.ts`
+ * 4. `vite.config.js`
  */
 export default async function loadVitestConfigFromDir(directory: string) {
   const filesToTry = [

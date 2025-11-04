@@ -34,7 +34,7 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
   try {
     let packageName: string;
     const rawPackageJson = await fs.readFile(pathlib.join(directory, 'package.json'), 'utf-8')
-    ;({ version: versionStr, name: packageName } = JSON.parse(rawPackageJson));
+      ; ({ version: versionStr, name: packageName } = JSON.parse(rawPackageJson));
 
     if (!packageNameRegex.test(packageName)) {
       return {
@@ -221,7 +221,7 @@ export async function resolveSingleBundle(bundleDir: string): Promise<ResolveSin
 type ResolveAllBundlesResult = ResultType<{ bundles: Record<string, ResolvedBundle> }>;
 
 /**
- * Find all the bundles with the given directory and returns their
+ * Find all the bundles within the given directory and returns their
  * resolved information
  */
 export async function resolveAllBundles(bundleDir: string): Promise<ResolveAllBundlesResult> {
@@ -268,12 +268,20 @@ export async function resolveAllBundles(bundleDir: string): Promise<ResolveAllBu
   };
 }
 
+/**
+ * From the array of given paths, return the first path that exists and
+ * refers to either a directory or file depending on the `isDir` parameter
+ *
+ * @param isDir Set this to `true` to resolve to a directory. `false` resolves
+ * to any file.
+ * @returns `undefined` if the path resolved. Returns the path otherwise.
+ */
 async function resolvePaths(isDir: boolean, ...paths: string[]) {
   for (const path of paths) {
     try {
       const stat = await fs.stat(path);
       if (isDir && stat.isDirectory()) return path;
-      else if (!isDir && stat.isFile()) return path;
+      if (!isDir && stat.isFile()) return path;
     } catch (error) {
       if (isNodeError(error) && error.code !== 'ENOENT') throw error;
     }
@@ -282,6 +290,10 @@ async function resolvePaths(isDir: boolean, ...paths: string[]) {
   return undefined;
 }
 
+/**
+ * Attempts to resolve the information at the given directory as a tab. Returns `undefined` if no tab was detected
+ * at the given directory.
+ */
 export async function resolveSingleTab(tabDir: string): Promise<ResolvedTab | undefined> {
   const fullyResolved = pathlib.resolve(tabDir);
 
@@ -314,6 +326,10 @@ export async function resolveSingleTab(tabDir: string): Promise<ResolvedTab | un
 
 type ResolveAllTabsResult = ResultType<{ tabs: Record<string, ResolvedTab> }>;
 
+/**
+ * Find all the tabs within the given directory and returns their
+ * resolved information
+ */
 export async function resolveAllTabs(bundlesDir: string, tabsDir: string): Promise<ResolveAllTabsResult> {
   const bundlesManifest = await resolveAllBundles(bundlesDir);
   if (bundlesManifest.severity === 'error') {
@@ -338,6 +354,7 @@ export async function resolveAllTabs(bundlesDir: string, tabsDir: string): Promi
 }
 
 type ResolveEitherResult = ResultType<{ asset: InputAsset }>;
+
 /**
  * Attempts to resolve the given directory as a bundle or a tab. Returns an object with `asset: undefined`
  * if it was unable to do either. Otherwise, it returns the error(s) associated with resolving the bundle or tab
