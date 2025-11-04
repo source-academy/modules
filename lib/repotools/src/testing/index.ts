@@ -56,7 +56,16 @@ async function loadRootConfig() {
  */
 export const baseVitestConfig: ViteUserConfig = await loadRootConfig();
 
+/**
+ * Default browser mode options
+ */
 export const browserModeConfig: BrowserConfigOptions = {
+  /*
+   * Instances should not be set here because if the config to merge
+   * also contains an instances configuration the instance configured here
+   * gets added instead of being replaced, resulting in an erroneous extra
+   * instance configuration.
+   */
   provider: playwright(),
 };
 

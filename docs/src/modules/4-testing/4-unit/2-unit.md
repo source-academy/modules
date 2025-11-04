@@ -233,8 +233,10 @@ export function bar2() {
 
 :::
 
-Though `vi.mock` accepts a string path, you should always use the import expression syntax, since it will
-allow Typescript to provide typing and ensure that the path refers to a module that exists.
+Though `vi.mock` accepts a string path, you should always use the import expression syntax where possible,
+since it will allow Typescript to provide typing and ensure that the path refers to a module that exists. Also, if you
+relocate the file you're importing from or the test file itself, the path will automatically get rewritten
+(if you're using an editor like VSCode).
 
 ```ts
 // do this

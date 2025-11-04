@@ -1,17 +1,19 @@
 # Browser Mode
 
-Tabs have the ability to leverage `playwright` and `vitest`'s browser mode to ensure that the interactive features of the tab actually
-behave like they should.
+Vitest provides a special "browser" mode that runs tests directly in a simulated browser environment and provides utilities
+to test interactive features.
 
-The default testing configuration for tabs has browser mode disabled. This is so that if your tab doesn't need the features that Playwright provides,
+This is particularly useful for tabs, but bundles can also leverage browser mode to test browser-only functionalities. Refer to the `pix_n_flix`
+bundle for such an example.
+
+The default testing configuration has browser mode disabled. This is so that if your dom't need the features that Playwright provides,
 `vitest` won't need to spin up the Playwright instance.
 
 ## Setting up Browser Mode
 
-Should you wish to enable browser mode, create a custom `vitest` configuration file for your tab with the `browser.enabled` option set to `true`:
+Should you wish to enable browser mode, [create](./1-general#custom-test-configuration) a custom `vitest` configuration file for your tab with the `browser.enabled` option set to `true`:
 
-```js {9}
-// @ts-check
+```js {8}
 import { defineProject } from 'vitest/config';
 
 export default defineProject({
@@ -49,8 +51,8 @@ Now, the tests for your tab can be run in browser mode.
 Writing interactive tests is not very different from writing regular tests. Most of the time, the usual test and assertion functions will suffice.
 
 > [!INFO]
-> While writing your tests, you should use watch mode. This will allow `vitest` to open a browser and actually display what your tab looks like whilst
-> being rendered during the test.
+> While writing your tests, you should use watch mode. This will allow `vitest` to open a browser and actually display what your rendered
+> component looks like during the test.
 
 Use the `render` function provided `vitest-browser-react` to render your tab/component to a screen. Note that it should be awaited.
 The returned value can then be interacted with:
@@ -85,7 +87,7 @@ test('Testing my component', async () => {
 
 ### `expect.poll` and `expect.element`
 
-Sometimes, visual elements take a while to finish or an element might take a while to load. If you just directly used an assertion, the assertion
+Sometimes, visual elements take a while to finish or an element might take a while to load. If you just used an assertion normally, the assertion
 might fail because the element hasn't displayed yet:
 
 ```tsx
@@ -169,7 +171,7 @@ assertions or clicking).
 
 `vitest` provides several ways to "locate" an element helpfully called [locators](https://vitest.dev/guide/browser/locators.html).
 
-While writing tabs, if we believe that a component will need to be interacted with during unit testing, we can use attributes like `title` to make it
+While writing components, if we believe they will need to be interacted with during unit testing, we can use attributes like `title` to make it
 easier to refer to these elements:
 
 ```tsx
