@@ -31,7 +31,7 @@ export default defineProject(({ mode }) => {
       //   resolveId(source) {
       //     const RE =  /^@sourceacademy\/bundle-.+(?:$|\/(.+)$)/
       //     const match = RE.exec(source);
-          
+
       //     if (source.startsWith('@sourceacademy')) {
       //       console.log('trying to resolve', source)
       //     }
@@ -68,7 +68,7 @@ export default defineProject(({ mode }) => {
             try {
               await fs.access(`${newSource}${each}`, fs.constants.R_OK)
               return `${newSource}${each}`
-            } catch {}
+            } catch { }
           }
 
           return undefined;
@@ -87,6 +87,8 @@ export default defineProject(({ mode }) => {
       },
       include: [
         '../build/tabs/*.js',
+        '@blueprintjs/core',
+        '@blueprintjs/icons',
         'ace-builds',
         'ace-builds/src-noconflict/ace',
         'ace-builds/src-noconflict/ext-language_tools',
@@ -96,6 +98,7 @@ export default defineProject(({ mode }) => {
         'js-slang/dist/createContext',
         'js-slang/dist/editors/ace/modes/source',
         'js-slang/dist/editors/ace/theme/source',
+        'js-slang/dist/modules/loader',
         'js-slang/dist/types',
         'js-slang/dist/utils/stringify',
         'react/jsx-dev-runtime',
@@ -105,12 +108,13 @@ export default defineProject(({ mode }) => {
         "vite-plugin-node-polyfills/shims/buffer",
         "vite-plugin-node-polyfills/shims/global",
         "vite-plugin-node-polyfills/shims/process",
+        'vitest-browser-react'
       ],
     },
     test: {
       root: import.meta.dirname,
       name: 'Dev Server',
-      include: ['**/__tests__/**/*.{ts,tsx}'],
+      include: ['**/__tests__/**/*.test.{ts,tsx}'],
       browser: {
         enabled: true,
         provider: playwright(),

@@ -20,10 +20,10 @@ describe('Playground tests', () => {
     await commands.setLocalStorage('editorValue', '');
   });
 
-  const clickRunButton = (component: RenderResult) => {
+  function clickRunButton(component: RenderResult) {
     const runButton = component.getByRole('button', { name: 'run' });
     return userEvent.click(runButton);
-  };
+  }
 
   test('Running js-slang by clicking the run button', async () => {
     const component = await render(<Playground />);
