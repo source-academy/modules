@@ -6,30 +6,30 @@
 
 import { Button } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
+
+import { FONT_MESSAGE, MINIMUM_EDITOR_HEIGHT } from '@sourceacademy/bundle-repl/config';
+import type { ProgrammableRepl } from '@sourceacademy/bundle-repl/programmable_repl';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import React from 'react';
 import AceEditor from 'react-ace';
 
-import { FONT_MESSAGE, MINIMUM_EDITOR_HEIGHT } from '../../bundles/repl/config';
-import type { ProgrammableRepl } from '../../bundles/repl/programmable_repl';
-import type { DebuggerContext } from '../../typings/type_helpers';
-
+import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-twilight';
-import 'ace-builds/src-noconflict/ext-language_tools';
 
 type Props = {
   programmableReplInstance: ProgrammableRepl;
 };
 
 type State = {
-  editorHeight: number,
-  isDraggingDragBar: boolean,
+  editorHeight: number;
+  isDraggingDragBar: boolean;
 };
 
 const BOX_PADDING_VALUE = 4;
 
 class ProgrammableReplGUI extends React.Component<Props, State> {
-  public replInstance : ProgrammableRepl;
+  public replInstance: ProgrammableRepl;
   private editorAreaRect;
   private editorInstance;
   constructor(data: Props) {
@@ -66,7 +66,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
   }
   public render() {
     const { editorHeight } = this.state;
-    const outputDivs : React.JSX.Element[] = [];
+    const outputDivs: React.JSX.Element[] = [];
     const outputStringCount = this.replInstance.outputStrings.length;
     for (let i = 0; i < outputStringCount; i++) {
       const str = this.replInstance.outputStrings[i];
@@ -119,12 +119,12 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
             style={ {
               width: '100%',
               height: `${editorHeight}px`,
-              ...(this.replInstance.customizedEditorProps.backgroundImageUrl !== 'no-background-image' && {
+              ...this.replInstance.customizedEditorProps.backgroundImageUrl !== 'no-background-image' && {
                 backgroundImage: `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`,
                 backgroundColor: `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`,
                 backgroundSize: '100%',
                 backgroundRepeat: 'no-repeat'
-              })
+              }
             } }
             mode="javascript" theme="twilight"
             onChange={ (newValue) => this.replInstance.updateUserCode(newValue) }
@@ -146,35 +146,13 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
   }
 }
 
-export default {
-  /**
-   * This function will be called to determine if the component will be
-   * rendered.
-   * @param {DebuggerContext} context
-   * @returns {boolean}
-   */
-  toSpawn(_context: DebuggerContext) {
+export default defineTab({
+  toSpawn() {
     return true;
   },
-
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   * @param {DebuggerContext} context
-   */
-  body(context: DebuggerContext) {
+  body(context) {
     return <ProgrammableReplGUI programmableReplInstance={context.context.moduleContexts.repl.state} />;
   },
-
-  /**
-   * The Tab's icon tooltip in the side contents on Source Academy frontend.
-   */
   label: 'Programmable Repl Tab',
-
-  /**
-   * BlueprintJS IconName element's name, used to render the icon which will be
-   * displayed in the side contents panel.
-   * @see https://blueprintjs.com/docs/#icons
-   */
   iconName: 'code'
-};
+});

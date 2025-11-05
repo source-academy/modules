@@ -4,9 +4,12 @@
 node_modules/
 devserver/node_modules
 build/*
+**/dist/**
 coverage/
 
-scripts/dist
+**/.yarn/*
+!**/.yarn/
+!**/.yarn/patches
 
 # Compiled source #
 ###################
@@ -45,3 +48,5 @@ scripts/dist
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+**/__tests__/**/__screenshots__

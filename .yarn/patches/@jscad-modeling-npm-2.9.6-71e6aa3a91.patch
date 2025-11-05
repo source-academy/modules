@@ -1,0 +1,270 @@
+diff --git a/src/colors/hexToRgb.d.ts b/src/colors/hexToRgb.d.ts
+index 7ae081799dd86be901565869a2a8270a5df8a038..aa09123302b69d388904da17769dcfef8f3d7ba4 100644
+--- a/src/colors/hexToRgb.d.ts
++++ b/src/colors/hexToRgb.d.ts
+@@ -1,4 +1,4 @@
+-import { RGB, RGBA } from './types'
++import { RGB, RGBA } from '@jscad/modeling/src/colors/types'
+ 
+ export default hexToRgb
+ 
+diff --git a/src/geometries/geom3/toPolygons.d.ts b/src/geometries/geom3/toPolygons.d.ts
+index 85720f419213b3a06268fb3402754c52be059cab..9ef2a9d8dc74f42c1916fd4cd95d37a43cb19ff4 100644
+--- a/src/geometries/geom3/toPolygons.d.ts
++++ b/src/geometries/geom3/toPolygons.d.ts
+@@ -3,4 +3,4 @@ import Poly3 from '../poly3/type'
+ 
+ export default toPolygons
+ 
+-declare function toPolygons(geometry: Geom3): Array<Poly3>
++declare function toPolygons(geometry: Geom3, colorizePolygons: boolean): Array<Poly3>
+diff --git a/src/geometries/geom3/toPolygons.js b/src/geometries/geom3/toPolygons.js
+index 25f9f50647d7dd1c614b3e5d47aa9f75f89bae96..c3214ad0e057e6f436773d1f29fa080776a78c1f 100644
+--- a/src/geometries/geom3/toPolygons.js
++++ b/src/geometries/geom3/toPolygons.js
+@@ -1,5 +1,13 @@
++const poly3 = require('../poly3')
+ const applyTransforms = require('./applyTransforms')
+ 
++const colorPoly3 = (color, object) => {
++  if (!object.color) {
++    object.color = color;
++  }
++  return object
++}
++
+ /**
+  * Produces an array of polygons from the given geometry, after applying transforms.
+  * The returned array should not be modified as the polygons are shared with the geometry.
+@@ -10,6 +18,11 @@ const applyTransforms = require('./applyTransforms')
+  * @example
+  * let sharedpolygons = toPolygons(geometry)
+  */
+-const toPolygons = (geometry) => applyTransforms(geometry).polygons
++const toPolygons = (geometry, colorizePolygons = false) => {
++  const newPolygons = applyTransforms(geometry).polygons
++  return colorizePolygons && geometry.color
++    ? newPolygons.map(polygon => colorPoly3(geometry.color, polygon))
++    : newPolygons
++}
+ 
+ module.exports = toPolygons
+diff --git a/src/geometries/poly3/fromPointsAndPlane.d.ts b/src/geometries/poly3/fromPointsAndPlane.d.ts
+index 6a06d4f6d7f272204d54bee5e0544ee0680a2304..45953f41687e1d8e3ca80166e7303aa06aa3400a 100644
+--- a/src/geometries/poly3/fromPointsAndPlane.d.ts
++++ b/src/geometries/poly3/fromPointsAndPlane.d.ts
+@@ -1,7 +1,8 @@
+ import Poly3 from './type'
+ import Vec3 from '../../maths/vec3/type'
+ import Plane from '../../maths/plane/type'
++import { RGB, RGBA } from '../../colors'
+ 
+ export default fromPointsAndPlane
+ 
+-declare function fromPointsAndPlane(vertices: Array<Vec3>, plane: Plane): Poly3
++declare function fromPointsAndPlane(vertices: Array<Vec3>, plane: Plane, color?: RGB | RGBA): Poly3
+diff --git a/src/geometries/poly3/fromPointsAndPlane.js b/src/geometries/poly3/fromPointsAndPlane.js
+index ecef4959e712d6a61b719c61ff96daf3696b4ce1..8332fd5b344a5073b3342f4233b5491d10ae8387 100644
+--- a/src/geometries/poly3/fromPointsAndPlane.js
++++ b/src/geometries/poly3/fromPointsAndPlane.js
+@@ -8,10 +8,17 @@ const create = require('./create')
+  * @returns {poly3} a new polygon
+  * @alias module:modeling/geometries/poly3.fromPointsAndPlane
+  */
+-const fromPointsAndPlane = (vertices, plane) => {
++const fromPointsAndPlane = (vertices, plane, color = undefined) => {
+   const poly = create(vertices)
+   poly.plane = plane // retain the plane for later use
+-  return poly
++  /* If the polygon has been colored 
++     (Most likely due to a previous Boolean operation,
++     since polygons are not colored when the shape is first
++     created), then we should preserve the color of 
++     the polygon).
++  */
++  return color ? {...poly, color} : poly
+ }
+ 
++
+ module.exports = fromPointsAndPlane
+diff --git a/src/geometries/poly3/invert.js b/src/geometries/poly3/invert.js
+index b37c672335bc3d57e9dbbd6aa02af51a81c5e89c..173066781de4ba723835f355667b5b6e6330b6e4 100644
+--- a/src/geometries/poly3/invert.js
++++ b/src/geometries/poly3/invert.js
+@@ -15,6 +15,10 @@ const invert = (polygon) => {
+     // Flip existing plane to save recompute
+     inverted.plane = plane.flip(plane.create(), polygon.plane)
+   }
++  if(polygon.color) {
++    inverted.color = polygon.color
++  }
++
+   return inverted
+ }
+ 
+diff --git a/src/geometries/poly3/transform.js b/src/geometries/poly3/transform.js
+index ad2d533d338f71c09a7a44cd055533998ac708dc..27f623202017e3f10adeffa663573bed638aa914 100644
+--- a/src/geometries/poly3/transform.js
++++ b/src/geometries/poly3/transform.js
+@@ -16,7 +16,15 @@ const transform = (matrix, polygon) => {
+     // reverse the order to preserve the orientation
+     vertices.reverse()
+   }
+-  return create(vertices)
++  /* If the polygon has been colored 
++     (Most likely due to a previous Boolean operation,
++     since polygons are not colored when the shape is first
++     created), then we should preserve the color of 
++     the polygon).
++  */
++  const transformedVertices = create(vertices)
++  return polygon.color ? {color: polygon.color, ...transformedVertices} 
++                       : transformedVertices
+ }
+ 
+ module.exports = transform
+diff --git a/src/operations/booleans/intersectGeom3.js b/src/operations/booleans/intersectGeom3.js
+index a9370c9f5186e2b9006ea6f9abd2c6cad0a718b2..f2a032be0ffb211a622b6e7e2de9bbe9ae65f7f4 100644
+--- a/src/operations/booleans/intersectGeom3.js
++++ b/src/operations/booleans/intersectGeom3.js
+@@ -1,7 +1,5 @@
+ const flatten = require('../../utils/flatten')
+ 
+-const retessellate = require('../modifiers/retessellate')
+-
+ const intersectSub = require('./intersectGeom3Sub')
+ 
+ /*
+@@ -18,7 +16,6 @@ const intersect = (...geometries) => {
+     newgeometry = intersectSub(newgeometry, geometry)
+   })
+ 
+-  newgeometry = retessellate(newgeometry)
+   return newgeometry
+ }
+ 
+diff --git a/src/operations/booleans/intersectGeom3Sub.js b/src/operations/booleans/intersectGeom3Sub.js
+index b43dd862531855fce7e2c187fd1a8bdfc50a4607..566a4f4e690393ca1f65483f6859bc99b3618860 100644
+--- a/src/operations/booleans/intersectGeom3Sub.js
++++ b/src/operations/booleans/intersectGeom3Sub.js
+@@ -15,8 +15,8 @@ const intersectGeom3Sub = (geometry1, geometry2) => {
+     return geom3.create() // empty geometry
+   }
+ 
+-  const a = new Tree(geom3.toPolygons(geometry1))
+-  const b = new Tree(geom3.toPolygons(geometry2))
++  const a = new Tree(geom3.toPolygons(geometry1, true))
++  const b = new Tree(geom3.toPolygons(geometry2, true))
+ 
+   a.invert()
+   b.clipTo(a)
+diff --git a/src/operations/booleans/subtractGeom3.js b/src/operations/booleans/subtractGeom3.js
+index df86fec2adfd54e54cf0812289e72f2f2090c5b1..35f88eb90c9444ef46bb0a8d3f16982e9f9bf6b9 100644
+--- a/src/operations/booleans/subtractGeom3.js
++++ b/src/operations/booleans/subtractGeom3.js
+@@ -1,7 +1,5 @@
+ const flatten = require('../../utils/flatten')
+ 
+-const retessellate = require('../modifiers/retessellate')
+-
+ const subtractSub = require('./subtractGeom3Sub')
+ 
+ /*
+@@ -18,7 +16,6 @@ const subtract = (...geometries) => {
+     newgeometry = subtractSub(newgeometry, geometry)
+   })
+ 
+-  newgeometry = retessellate(newgeometry)
+   return newgeometry
+ }
+ 
+diff --git a/src/operations/booleans/subtractGeom3Sub.js b/src/operations/booleans/subtractGeom3Sub.js
+index 62eb4cd4801ae223cde7bbc01a6f84c133cbb127..196a7e062a0f75c5b248e08ec6207234ec73a224 100644
+--- a/src/operations/booleans/subtractGeom3Sub.js
++++ b/src/operations/booleans/subtractGeom3Sub.js
+@@ -15,8 +15,8 @@ const subtractGeom3Sub = (geometry1, geometry2) => {
+     return geom3.clone(geometry1)
+   }
+ 
+-  const a = new Tree(geom3.toPolygons(geometry1))
+-  const b = new Tree(geom3.toPolygons(geometry2))
++  const a = new Tree(geom3.toPolygons(geometry1, true))
++  const b = new Tree(geom3.toPolygons(geometry2, true))
+ 
+   a.invert()
+   a.clipTo(b)
+diff --git a/src/operations/booleans/trees/splitPolygonByPlane.js b/src/operations/booleans/trees/splitPolygonByPlane.js
+index 75e3ab8b89aeac5c8e8f4c41cd41bc0338d955a5..b2f5e909a9a98275207e191de6df7b34a667da73 100644
+--- a/src/operations/booleans/trees/splitPolygonByPlane.js
++++ b/src/operations/booleans/trees/splitPolygonByPlane.js
+@@ -108,10 +108,10 @@ const splitPolygonByPlane = (splane, polygon) => {
+         }
+       }
+       if (frontvertices.length >= 3) {
+-        result.front = poly3.fromPointsAndPlane(frontvertices, pplane)
++        result.front = poly3.fromPointsAndPlane(frontvertices, pplane, polygon.color)
+       }
+       if (backvertices.length >= 3) {
+-        result.back = poly3.fromPointsAndPlane(backvertices, pplane)
++        result.back = poly3.fromPointsAndPlane(backvertices, pplane, polygon.color)
+       }
+     }
+   }
+diff --git a/src/operations/booleans/unionGeom3.js b/src/operations/booleans/unionGeom3.js
+index cf9c591669eb046afc832c0a558a9b2ea1b0289c..a29a81f54f65b80d49fb16308054d6bae40dcd07 100644
+--- a/src/operations/booleans/unionGeom3.js
++++ b/src/operations/booleans/unionGeom3.js
+@@ -1,7 +1,5 @@
+ const flatten = require('../../utils/flatten')
+ 
+-const retessellate = require('../modifiers/retessellate')
+-
+ const unionSub = require('./unionGeom3Sub')
+ 
+ /*
+@@ -18,7 +16,19 @@ const union = (...geometries) => {
+     geometries.push(unionSub(geometries[i - 1], geometries[i]))
+   }
+   let newgeometry = geometries[i - 1]
++
++
++  /*
++  To preserve the colors of the Geom3 object after boolean operations,
++  this line of code
++
+   newgeometry = retessellate(newgeometry)
++  
++  was removed. The same was done to intersect and subtract operations. 
++  This is due to the fact that retessellating combines coplanar polygons, 
++  including those with different colors, and replaces them with
++  a new plane with the default color. 
++  */
+   return newgeometry
+ }
+ 
+diff --git a/src/operations/booleans/unionGeom3Sub.js b/src/operations/booleans/unionGeom3Sub.js
+index a4026e331a6e994382f2a0147e92529695d87697..2ac06894c892d812af243b29abd2b86d72474fbf 100644
+--- a/src/operations/booleans/unionGeom3Sub.js
++++ b/src/operations/booleans/unionGeom3Sub.js
+@@ -14,8 +14,8 @@ const unionSub = (geometry1, geometry2) => {
+     return unionForNonIntersecting(geometry1, geometry2)
+   }
+ 
+-  const a = new Tree(geom3.toPolygons(geometry1))
+-  const b = new Tree(geom3.toPolygons(geometry2))
++  const a = new Tree(geom3.toPolygons(geometry1, true))
++  const b = new Tree(geom3.toPolygons(geometry2, true))
+ 
+   a.clipTo(b, false)
+   // b.clipTo(a, true); // ERROR: doesn't work
+@@ -32,8 +32,8 @@ const unionSub = (geometry1, geometry2) => {
+ // Like union, but when we know that the two solids are not intersecting
+ // Do not use if you are not completely sure that the solids do not intersect!
+ const unionForNonIntersecting = (geometry1, geometry2) => {
+-  let newpolygons = geom3.toPolygons(geometry1)
+-  newpolygons = newpolygons.concat(geom3.toPolygons(geometry2))
++  let newpolygons = geom3.toPolygons(geometry1, true)
++  newpolygons = newpolygons.concat(geom3.toPolygons(geometry2, true))
+   return geom3.create(newpolygons)
+ }
+ 

@@ -1,0 +1,33 @@
+{
+  "name": "@sourceacademy/bundle-midi",
+  "private": true,
+  "version": "1.0.0",
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "js-slang": "^1.0.81"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "buildtools build bundle .",
+    "lint": "buildtools lint .",
+    "prepare": "yarn tsc",
+    "tsc": "buildtools tsc .",
+    "test": "buildtools test --project .",
+    "postinstall": "yarn tsc",
+    "serve": "yarn buildtools serve"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
+  },
+  "scripts-info": {
+    "build": "Compiles the given bundle to the output directory",
+    "lint": "Runs ESlint on the code in the bundle",
+    "serve": "Starts the modules server",
+    "test": "Runs unit tests defined for the bundle",
+    "tsc": "Runs the Typescript compiler and produces the library version of the bundle"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "name": "@sourceacademy/vitest-reporter",
+  "description": "Vitest test and coverage reporters designed to work with Github Actions",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "istanbul-lib-report": "^3.0.1",
+    "vitest": "^4.0.4"
+  },
+  "devDependencies": {
+    "@types/istanbul-lib-report": "^3.0.3",
+    "@types/node": "^22.15.30",
+    "@vitest/coverage-v8": "^4.0.4",
+    "esbuild": "^0.25.8",
+    "typescript": "^5.8.2"
+  },
+  "exports": {
+    "./coverage-reporter": {
+      "default": "./build/coverage-reporter.cjs"
+    },
+    "./test-reporter": {
+      "types": "./build/test-reporter.d.ts",
+      "default": "./build/test-reporter.js"
+    }
+  },
+  "scripts": {
+    "build": "yarn build:coverage-reporter && yarn build:test-reporter",
+    "build:coverage-reporter": "esbuild --outfile=./build/coverage-reporter.cjs --format=cjs --bundle=true --minify --external:\"istanbul-lib-report\" --platform=node src/coverage-reporter.cts",
+    "build:test-reporter": "esbuild --outfile=./build/test-reporter.js --format=esm --bundle=true  --minify --external:\"vitest*\" --platform=node src/test-reporter.ts",
+    "test": "vitest"
+  }
+}

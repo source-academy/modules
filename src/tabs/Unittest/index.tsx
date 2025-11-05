@@ -1,60 +1,72 @@
-import React from 'react';
-import type { SuiteResult, TestContext } from '../../bundles/unittest/types';
-import { getModuleState, type DebuggerContext } from '../../typings/type_helpers';
-
 /**
  * Tab for unit tests.
  * @author Jia Xiaodong
  */
 
-type Props = {
-  context: TestContext;
+import type { SuiteResult, UnittestModuleState } from '@sourceacademy/bundle-unittest/types';
+import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
+import partition from 'lodash/partition';
+
+const colfixed = {
+  border: '1px solid gray',
+  overflow: 'hidden',
+  width: 200,
+};
+
+const colauto = {
+  border: '1px solid gray',
+  overflow: 'hidden',
+  width: 'auto',
 };
 
 /**
  * Converts the results of a test suite run into a table format in its own div.
  */
 function suiteResultToDiv(suiteResult: SuiteResult) {
-  const { name, results, total, passed } = suiteResult;
-  if (results.length === 0) {
-    return <div>
-      Your test suite did not contain any tests!
-    </div>;
-  }
-
-  const colfixed = {
-    border: '1px solid gray',
-    overflow: 'hidden',
-    width: 200,
-  };
-  const colauto = {
-    border: '1px solid gray',
-    overflow: 'hidden',
-    width: 'auto',
-  };
-
-  const rows = results.map(({ name: testname, error }, index) => (
-    <tr key={index}>
-      <td style={colfixed}>{testname}</td>
-      <td style={colauto}>{error || 'Passed.'}</td>
-    </tr>
-  ));
+  const { name, results, runtime, passCount } = suiteResult;
+  const [suiteResults, testResults] = partition(results, each => 'results' in each);
 
   const tablestyle = {
     'table-layout': 'fixed',
     width: '100%',
   };
-  const table = (
-    <table style={tablestyle}>
-      <thead>
-        <tr>
-          <th style={colfixed}>Test case</th>
-          <th style={colauto}>Messages</th>
-        </tr>
-      </thead>
-      <tbody>{rows}</tbody>
-    </table>
+  const testsPassed = testResults.filter(each => each.passed);
+  const testResultsTable = (
+    <details>
+      <summary><strong>Test Cases</strong> Passed {testsPassed.length}/{testResults.length}</summary>
+      <table style={tablestyle}>
+        <thead>
+          <tr>
+            <th style={colfixed}>Test Cases</th>
+            <th style={colauto}>Messages</th>
+          </tr>
+        </thead>
+        <tbody>{
+          testResults.map(each => {
+            if (each.passed) {
+              return <tr>
+                <td style={colfixed}>{each.name}</td>
+                <td style={colauto}>&apos;Passed.&apos;</td>
+              </tr>;
+            } else {
+              return <tr>
+                <td style={colfixed}>{each.name}</td>
+                <td style={colauto}>&apos;{each.error}&apos;</td>
+              </tr>;
+            }
+          })}
+        </tbody>
+      </table>
+    </details>
   );
+
+  const suitesPassed = suiteResults.filter(each => each.passed);
+  const suiteResultList = <details>
+    <summary><strong>Test Suites</strong> Passed all {suitesPassed.length}/{suiteResults.length}</summary>
+    <ol>
+      {suiteResults.map(each => <li>{suiteResultToDiv(each)}</li>)}
+    </ol>
+  </details>;
 
   const suitestyle = {
     border: '1px solid white',
@@ -66,63 +78,44 @@ function suiteResultToDiv(suiteResult: SuiteResult) {
       <p>
         <strong>{name}</strong>
       </p>
-      <p>
-        Passed testcases: {passed}/{total}
-      </p>
-      {table}
+      {
+        results.length > 0
+          ? <>
+            <p>
+              Passed {passCount}/{results.length} in {runtime.toFixed(2)}ms
+            </p>
+            {testResults.length > 0 && testResultsTable}
+            {suiteResults.length > 0 && suiteResultList}
+          </>
+          : <p>This test suite did not contain any tests/suites</p>
+      }
     </div>
   );
 }
 
-class TestSuitesTab extends React.PureComponent<Props> {
-  public render() {
-    const { context: { suiteResults, called } } = this.props;
+type Props = {
+  results: SuiteResult[];
+};
 
-    if (!called) {
-      return <div>
-        Call <code>describe</code> at least once to be able to view the results of your tests
-      </div>;
-    }
-
-    const block = suiteResultToDiv(suiteResults);
-
-    return (
-      <div>
-        <p>The following is a report of your tests.</p>
-        {block}
-      </div>
-    );
-  }
+function TestSuitesTab({ results }: Props) {
+  return <div>
+    <h1>Test Report</h1>
+    <ol>
+      {results.map(each => {
+        return <li>{suiteResultToDiv(each)}</li>;
+      })}
+    </ol>
+  </div>;
 }
 
-export default {
-  /**
-   * This function will be called to determine if the component will be
-   * rendered.
-   * @param {DebuggerContext} context
-   * @returns {boolean}
-   */
-  toSpawn: (_context: DebuggerContext): boolean => true,
-
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   * @param {DebuggerContext} context
-   */
-  body: (context: DebuggerContext) => {
-    const moduleContext = getModuleState<TestContext>(context, 'unittest');
-    return <TestSuitesTab context={moduleContext} />;
+export default defineTab({
+  toSpawn: ({ context: { moduleContexts } }) => {
+    return moduleContexts.unittest?.state.suiteResults.length > 0;
   },
-
-  /**
-   * The Tab's icon tooltip in the side contents on Source Academy frontend.
-   */
+  body: context => {
+    const moduleContext = getModuleState<UnittestModuleState>(context, 'unittest');
+    return <TestSuitesTab results={moduleContext.suiteResults} />;
+  },
   label: 'Test suites',
-
-  /**
-   * BlueprintJS IconName element's name, used to render the icon which will be
-   * displayed in the side contents panel.
-   * @see https://blueprintjs.com/docs/#icons
-   */
   iconName: 'lab-test',
-};
+});

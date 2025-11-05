@@ -1,0 +1,70 @@
+{
+  "files.insertFinalNewline": true,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.detectIndentation": false,
+    "editor.tabSize": 2
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.detectIndentation": false,
+    "editor.tabSize": 2
+  },
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "src/bundles/*/manifest.json"
+      ],
+      "url": "./lib/repotools/src/manifest.schema.json"
+    },
+    {
+      "fileMatch": [
+        "tsconfig.json",
+        "tsconfig.*.json"
+      ],
+      "schema": {
+        "allOf": [
+          {
+            "$ref": "http://json.schemastore.org/tsconfig"
+          }
+        ],
+        "properties": {
+          "typedocOptions": {
+            "allOf": [
+              {
+                "$ref": "https://typedoc.org/schema.json"
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "eslint.validate": [
+    "github-actions-workflow",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "markdown",
+    "typescript",
+    "typescriptreact",
+    "yml",
+    "yaml"
+  ]
+}

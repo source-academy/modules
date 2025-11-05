@@ -1,5 +1,7 @@
 import { Button, ButtonGroup, NumericInput } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import type { DebuggerContext } from '@sourceacademy/modules-lib/types/index';
 import type { Simulation } from 'nbody';
 import React from 'react';
 
@@ -12,9 +14,7 @@ import React from 'react';
  * React Component props for the Tab.
  */
 type Props = {
-  children?: never;
-  className?: never;
-  context?: any;
+  context: DebuggerContext;
 };
 
 /**
@@ -26,9 +26,6 @@ type State = {};
  * React component props for the control buttons.
  */
 type SimControlProps = {
-  children?: never;
-  className?: never;
-  context?: any;
   sim: Simulation;
 };
 
@@ -80,7 +77,7 @@ class SimulationControl extends React.Component<SimControlProps, SimControlState
   toggleShowUniverse(label: string, i: number): void {
     this.props.sim.setShowUniverse(label, !this.state.showUniverse[i]);
     this.setState({
-      showUniverse: this.state.showUniverse.map((v, j) => (i === j) ? !v : v)
+      showUniverse: this.state.showUniverse.map((v, j) => i === j ? !v : v)
     });
 
   }
@@ -88,14 +85,14 @@ class SimulationControl extends React.Component<SimControlProps, SimControlState
   public render() {
     return (
       <>
-        <ButtonGroup style={{width: '100%', margin: '4px auto'}}>
+        <ButtonGroup style={{ width: '100%', margin: '4px auto' }}>
           <Button
             className="nbody-pause-toggle-button"
             icon={this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY}
             active={false}
             onClick={() => this.toggleSimPause()}
             text={this.state.isPlaying ? 'Pause' : 'Play'}
-            style={{ margin: '4px'}}
+            style={{ margin: '4px' }}
           />
 
           <Button
@@ -103,7 +100,7 @@ class SimulationControl extends React.Component<SimControlProps, SimControlState
             icon={IconNames.ROUTE}
             active={this.state.showTrails}
             onClick={() => this.toggleShowTrails()}
-            style={{ margin: '4px'}}
+            style={{ margin: '4px' }}
             text={(this.state.showTrails ? 'Hide' : 'Show') + ' Trails'} />
         </ButtonGroup>
         <NumericInput defaultValue={this.state.speed} onValueChange={(value) => this.setSpeed(value)} style={{
@@ -149,7 +146,7 @@ class Nbody extends React.Component<Props, State> {
 
     return (
       <div>
-        {(simulations.length === 0)
+        {simulations.length === 0
           ? <div>No simulations found</div>
           : <SimulationControl sim={simulations[0]} />
         }
@@ -174,7 +171,7 @@ class Nbody extends React.Component<Props, State> {
                       sim.start(divId, 500, 500, 1, true);
                     }
                   }}
-                ></div>
+                />
               </div>
             );
           })
@@ -185,35 +182,13 @@ class Nbody extends React.Component<Props, State> {
   }
 }
 
-export default {
-  /**
-   * This function will be called to determine if the component will be
-   * rendered. Currently spawns when the result in the REPL is "test".
-   * @param {any} context
-   * @returns {boolean}
-   */
-  toSpawn(context: any) {
+export default defineTab({
+  toSpawn(context) {
     console.log('Nbody tospawn');
     const simulations = context.context?.moduleContexts?.nbody.state.simulations;
     return simulations.length > 0;
   },
-
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   * @param {DebuggerContext} context
-   */
-  body: (context: any) => <Nbody context={context} />,
-
-  /**
-   * The Tab's icon tooltip in the side contents on Source Academy frontend.
-   */
+  body: (context) => <Nbody context={context} />,
   label: 'Nbody Viz Tab',
-
-  /**
-   * BlueprintJS IconName element's name, used to render the icon which will be
-   * displayed in the side contents panel.
-   * @see https://blueprintjs.com/docs/#icons
-   */
   iconName: 'clean',
-};
+});

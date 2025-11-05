@@ -1,22 +1,23 @@
-import { Classes, Intent, OverlayToaster, type ToastProps } from '@blueprintjs/core';
+import { Button, Classes, Intent, OverlayToaster, Popover, Tooltip, type ToastProps } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import { SourceDocumentation, getNames, runInContext, type Context } from 'js-slang';
-
 // Importing this straight from js-slang doesn't work for whatever reason
 import createContext from 'js-slang/dist/createContext';
-
+import { setModulesStaticURL } from 'js-slang/dist/modules/loader';
 import { Chapter, Variant } from 'js-slang/dist/types';
 import { stringify } from 'js-slang/dist/utils/stringify';
-import React, { useCallback } from 'react';
+import React from 'react';
 import mockModuleContext from '../mockModuleContext';
 import type { InterpreterOutput } from '../types';
+import SettingsPopup from './SettingsPopup';
 import Workspace, { type WorkspaceProps } from './Workspace';
 import { ControlBarClearButton } from './controlBar/ControlBarClearButton';
 import { ControlBarRefreshButton } from './controlBar/ControlBarRefreshButton';
 import { ControlBarRunButton } from './controlBar/ControlBarRunButton';
 import testTabContent from './sideContent/TestTab';
+import loadDynamicTabs from './sideContent/importers';
 import type { SideContentTab } from './sideContent/types';
-import { getDynamicTabs } from './sideContent/utils';
 
 const refreshSuccessToast: ToastProps = {
   intent: Intent.SUCCESS,
@@ -33,15 +34,37 @@ const evalSuccessToast: ToastProps = {
   message: 'Code evaluated successfully!'
 };
 
-const createContextHelper = () => {
-  const tempContext = createContext(Chapter.SOURCE_4, Variant.DEFAULT);
+const createContextHelper = (onConsoleLog: (arg: string) => void) => {
+  const tempContext = createContext(Chapter.SOURCE_4, Variant.DEFAULT, {}, [], undefined, {
+    rawDisplay(value: any, str: string | undefined) {
+      const valueStr = typeof value === 'string' ? value : stringify(value);
+      if (str !== undefined) {
+        onConsoleLog(`${valueStr} ${str}`);
+      } else {
+        onConsoleLog(valueStr);
+      }
+    },
+  } as any);
   return tempContext;
 };
 
 const Playground: React.FC = () => {
+  const consoleLogs = React.useRef<string[]>([]);
+  const [moduleBackend, setModuleBackend] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const savedBackend = localStorage.getItem('backend');
+    if (savedBackend != undefined) {
+      setModuleBackend(savedBackend);
+      setModulesStaticURL(savedBackend);
+    }
+  }, []);
+
+  const [useCompiledTabs, setUseCompiledTabs] = React.useState(!!localStorage.getItem('compiledTabs'));
+
   const [dynamicTabs, setDynamicTabs] = React.useState<SideContentTab[]>([]);
   const [selectedTabId, setSelectedTab] = React.useState(testTabContent.id);
-  const [codeContext, setCodeContext] = React.useState<Context>(createContextHelper());
+  const [codeContext, setCodeContext] = React.useState<Context>(createContextHelper(str => consoleLogs.current.push(str)));
   const [editorValue, setEditorValue] = React.useState(localStorage.getItem('editorValue') ?? '');
   const [replOutput, setReplOutput] = React.useState<InterpreterOutput | null>(null);
   const [alerts, setAlerts] = React.useState<string[]>([]);
@@ -52,12 +75,12 @@ const Playground: React.FC = () => {
     if (toaster.current) {
       toaster.current.show({
         ...props,
-        timeout: 1500
+        timeout: 15000
       });
     }
   };
 
-  const getAutoComplete = useCallback((row: number, col: number, callback: any) => {
+  const getAutoComplete = React.useCallback((row: number, col: number, callback: any) => {
     getNames(editorValue, row, col, codeContext)
       .then(([editorNames, displaySuggestions]) => {
         if (!displaySuggestions) {
@@ -91,8 +114,9 @@ const Playground: React.FC = () => {
       });
   }, [editorValue, codeContext]);
 
-  const loadTabs = () => getDynamicTabs(codeContext)
-    .then((tabs) => {
+  const loadTabs = async () => {
+    try {
+      const tabs = await loadDynamicTabs(codeContext, useCompiledTabs);
       setDynamicTabs(tabs);
 
       const newIds = tabs.map(({ id }) => id);
@@ -102,17 +126,23 @@ const Playground: React.FC = () => {
         setSelectedTab(testTabContent.id);
       }
       setAlerts(newIds);
-    })
-    .catch((error) => {
+
+    } catch (error) {
       showToast(errorToast);
       console.log(error);
-    });
+    }
+  };
 
   const evalCode = () => {
     codeContext.errors = [];
     codeContext.moduleContexts = mockModuleContext.moduleContexts = {};
+    consoleLogs.current = [];
 
-    runInContext(editorValue, codeContext)
+    runInContext(editorValue, codeContext, {
+      importOptions: {
+        loadTabs: useCompiledTabs
+      }
+    })
       .then((result) => {
         if (codeContext.errors.length > 0) {
           showToast(errorToast);
@@ -121,26 +151,27 @@ const Playground: React.FC = () => {
             .then(() => showToast(evalSuccessToast));
         }
 
-        // TODO: Add support for console.log?
         if (result.status === 'finished') {
           setReplOutput({
             type: 'result',
             // code: editorValue,
-            consoleLogs: [],
+            consoleLogs: consoleLogs.current,
             value: stringify(result.value)
           });
         } else if (result.status === 'error') {
           setReplOutput({
             type: 'errors',
             errors: codeContext.errors,
-            consoleLogs: []
+            consoleLogs: consoleLogs.current
           });
         }
       });
   };
 
   const resetEditor = () => {
-    setCodeContext(createContextHelper());
+    setCodeContext(createContextHelper(str => consoleLogs.current.push(str)));
+    consoleLogs.current = [];
+
     setEditorValue('');
     localStorage.setItem('editorValue', '');
     setDynamicTabs([]);
@@ -157,6 +188,34 @@ const Playground: React.FC = () => {
   const workspaceProps: WorkspaceProps = {
     controlBarProps: {
       editorButtons: [
+        <Popover
+          key='settings'
+          interactionKind='click'
+          placement="right"
+          content={<SettingsPopup
+            backend={moduleBackend ?? ''}
+            onBackendChange={value => {
+              setModuleBackend(value);
+              setModulesStaticURL(value);
+              localStorage.setItem('backend', value);
+            }}
+            useCompiledForTabs={useCompiledTabs}
+            onUseCompiledChange={value => {
+              setUseCompiledTabs(value);
+              localStorage.setItem('compiledTabs', value ? 'true' : '');
+            }}
+          />}
+          renderTarget={({ isOpen: _isOpen, ...targetProps }) => {
+            return (
+              <Tooltip content="Settings">
+                <Button
+                  {...targetProps}
+                  icon={IconNames.SETTINGS}
+                />
+              </Tooltip>
+            );
+          }}
+        />,
         <ControlBarRunButton handleEditorEval={evalCode} key="eval" />,
         <ControlBarClearButton onClick={resetEditor}
           key="clear"
@@ -165,6 +224,7 @@ const Playground: React.FC = () => {
           onClick={onRefresh}
           key="refresh"
         />
+
       ]
     },
     replProps: {
@@ -180,7 +240,7 @@ const Playground: React.FC = () => {
     sideContentProps: {
       dynamicTabs: [testTabContent, ...dynamicTabs],
       selectedTabId,
-      onChange: useCallback((newId: string) => {
+      onChange: React.useCallback((newId: string) => {
         setSelectedTab(newId);
         setAlerts(alerts.filter((id) => id !== newId));
       }, [alerts]),

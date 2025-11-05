@@ -1,0 +1,19 @@
+# Bundles as Libraries
+
+Although bundles are designed to be imported from Source user code, they can also be imported from other bundles (and tabs!). The steps required for configuring your bundle to be able to be do so can be found [here](/modules/2-bundle/6-compiling#for-other-bundles).
+
+Bundles can then be added as dependencies as if they were any other `npm` or Yarn package:
+
+```sh
+yarn add @sourceacademy/bundle-curve@workspace:^
+```
+
+> [!TIP]
+> Because our bundles aren't designed to be published within the wider `npm` ecosystem, the only versions available are the ones in the workspace,
+> which means when you are adding dependencies like these you need to specify `workspace:^` as the version.
+
+They can then be imported just like any other package installed using Yarn:
+
+```ts
+import { draw_connected } from '@sourceacademy/bundle-curve';
+```

@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "tabs": {
+      "description": "Tabs that will be loaded with this bundle",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requires": {
+      "enum": [1, 2, 3, 4],
+      "description": "Minimum Source version required to run this bundle"
+    }
+  },
+  "additionalProperties": false
+}

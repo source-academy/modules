@@ -1,0 +1,34 @@
+{
+  "name": "@sourceacademy/bundle-painter",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^",
+    "plotly.js-dist": "^3.0.0"
+  },
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "@types/plotly.js": "^3.0.0",
+    "typescript": "^5.8.2"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
+  },
+  "scripts": {
+    "tsc": "buildtools tsc .",
+    "build": "buildtools build bundle .",
+    "lint": "buildtools lint .",
+    "test": "buildtools test --project .",
+    "postinstall": "yarn tsc",
+    "serve": "yarn buildtools serve"
+  },
+  "scripts-info": {
+    "build": "Compiles the given bundle to the output directory",
+    "lint": "Runs ESlint on the code in the bundle",
+    "serve": "Starts the modules server",
+    "test": "Runs unit tests defined for the bundle",
+    "tsc": "Runs the Typescript compiler and produces the library version of the bundle"
+  }
+}

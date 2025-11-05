@@ -1,0 +1,38 @@
+{
+  "name": "@sourceacademy/bundle-ar",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
+  },
+  "dependencies": {
+    "os": "^0.1.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "saar": "^1.0.4",
+    "uniqid": "^5.4.0"
+  },
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build": "buildtools build bundle .",
+    "lint": "buildtools lint .",
+    "tsc": "buildtools tsc .",
+    "test": "buildtools test --project .",
+    "postinstall": "yarn tsc",
+    "serve": "yarn buildtools serve"
+  },
+  "scripts-info": {
+    "build": "Compiles the given bundle to the output directory",
+    "lint": "Runs ESlint on the code in the bundle",
+    "serve": "Starts the modules server",
+    "test": "Runs unit tests defined for the bundle",
+    "tsc": "Runs the Typescript compiler and produces the library version of the bundle"
+  }
+}

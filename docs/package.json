@@ -1,0 +1,28 @@
+{
+  "name": "@sourceacademy/modules-docserver",
+  "description": "Developer documentation for the Source Academy modules repository",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "yarn build-lib-docs && vitepress build .",
+    "build-lib-docs": "yarn workspaces foreach -A --include \"@sourceacademy/modules-lib\" run docs",
+    "dev": "vitepress dev .",
+    "postinstall": "yarn build-lib-docs",
+    "preview": "vitepress preview .",
+    "spellcheck": "cspell --config ./cspell.config.js src"
+  },
+  "dependencies": {
+    "@sourceacademy/lint-plugin": "workspace:^",
+    "@sourceacademy/modules-lib": "workspace:^",
+    "mermaid": "^11.7.0",
+    "vitepress": "^1.6.3",
+    "vitepress-plugin-group-icons": "^1.6.5",
+    "vitepress-plugin-mermaid": "^2.0.17",
+    "vitepress-sidebar": "^1.31.1"
+  },
+  "devDependencies": {
+    "@sourceacademy/markdown-plugin-directory-tree": "workspace:^",
+    "cspell": "^9.2.1"
+  }
+}

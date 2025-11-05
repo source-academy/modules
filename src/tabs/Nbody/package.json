@@ -1,0 +1,34 @@
+{
+  "name": "@sourceacademy/tab-Nbody",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^",
+    "nbody": "^0.2.0",
+    "plotly.js-dist": "^2.17.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.175.0"
+  },
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "@types/plotly.js": "^2.35.4",
+    "@types/react": "^18.3.1",
+    "@types/three": "^0.175.0"
+  },
+  "scripts": {
+    "build": "buildtools build tab .",
+    "lint": "buildtools lint .",
+    "tsc": "buildtools tsc .",
+    "test": "buildtools test --project .",
+    "serve": "yarn buildtools serve"
+  },
+  "type": "module",
+  "scripts-info": {
+    "build": "Compiles the given tab to the output directory",
+    "lint": "Runs ESlint on the code in the tab",
+    "serve": "Starts the modules server",
+    "test": "Runs unit tests defined for the tab",
+    "tsc": "Runs the Typescript compiler"
+  }
+}

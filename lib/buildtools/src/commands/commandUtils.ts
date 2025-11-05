@@ -1,0 +1,73 @@
+import { InvalidArgumentError, Option } from '@commander-js/extra-typings';
+import type { ErrorResult, Severity } from '@sourceacademy/modules-repotools/types';
+import { isSeverity, objectKeys } from '@sourceacademy/modules-repotools/utils';
+import chalk from 'chalk';
+import { LogLevel } from 'typedoc';
+
+export const lintOption = new Option('--lint', 'Run ESLint when building')
+  .default(false);
+
+export const tscOption = new Option('--tsc', 'Run tsc when building')
+  .default(false);
+
+export const watchOption = new Option('-w, --watch', 'Run in watch mode')
+  .default(false);
+
+export const logLevelOption = new Option('--logLevel <level>', 'Log level that Typedoc should use')
+  .choices(objectKeys(LogLevel))
+  .default(LogLevel.Error)
+  .argParser((val): LogLevel => {
+    if (val in LogLevel) {
+      // @ts-expect-error Enums kind of behave weirdly in Typescript
+      return LogLevel[val];
+    }
+
+    throw new InvalidArgumentError(`Invalid log level: ${val}`);
+  });
+
+/**
+ * Iterate through the entire results object, checking for errors. This will call `process.exit(1)` if there
+ * are errors, or if there are warnings and `errorOnWarning` has been given as `true`.\
+ * Mainly intended for use with CI pipelines so that processes can exit with non-zero codes
+ */
+export function processResult(obj: object, errorOnWarning: boolean) {
+  function* severities(obj: object): Generator<Severity> {
+    if (obj === null) {
+      yield 'success';
+      return;
+    }
+
+    if (Array.isArray(obj)) {
+      for (const item of obj) {
+        yield* severities(item);
+      }
+
+      return;
+    }
+
+    for (const [key, value] of Object.entries(obj)) {
+      if (key === 'severity' && isSeverity(value)) yield value;
+      if (typeof value === 'object') yield* severities(value);
+    }
+  }
+
+  for (const severity of severities(obj)) {
+    switch (severity) {
+      case 'warn': {
+        if (!errorOnWarning) continue;
+      }
+      case 'error':
+        process.exit(1);
+    }
+  }
+}
+
+export function logCommandErrorAndExit(errorObject: ErrorResult | string, code: number = 1): never {
+  if (typeof errorObject === 'string') {
+    console.error(chalk.redBright(errorObject));
+  } else {
+    const errStr = errorObject.errors.join('\n');
+    console.error(chalk.redBright(errStr));
+  }
+  process.exit(code);
+}

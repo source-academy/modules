@@ -3,7 +3,7 @@ import { IconNames } from '@blueprintjs/icons';
 import ControlButton from '../ControlButton';
 
 type Props = {
-  onClick: () => void
+  onClick: () => void;
 };
 
 export const ControlBarRefreshButton = (props: Props) => <Tooltip content="Manually refresh the side content">

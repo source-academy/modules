@@ -1,4 +1,4 @@
-import { Card, Icon, Tab, type TabProps, Tabs, Tooltip } from '@blueprintjs/core';
+import { Card, Icon, Tab, Tabs, Tooltip, type IconName, type TabProps } from '@blueprintjs/core';
 import React from 'react';
 import type { SideContentTab } from './types';
 
@@ -21,12 +21,26 @@ export type SideContentProps = {
   renderActiveTabPanelOnly?: boolean;
   editorWidth?: string;
   sideContentHeight?: number;
-  dynamicTabs: SideContentTab[]
+  dynamicTabs: SideContentTab[];
 
-  selectedTabId: string
-  alerts: string[]
-  onChange?: (newId: string, oldId: string) => void
+  selectedTabId: string;
+  alerts: string[];
+  onChange?: (newId: string, oldId: string) => void;
 };
+
+interface TabIconProps {
+  iconName: IconName;
+  tooltip: string;
+  shouldAlert?: boolean;
+}
+
+function TabIcon({ iconName, tooltip, shouldAlert }: TabIconProps) {
+  return <Tooltip content={tooltip}>
+    <div className={!shouldAlert ? 'side-content-tooltip' : 'side-content-tooltip side-content-tab-alert'}>
+      <Icon icon={iconName} iconSize={20} />
+    </div>
+  </Tooltip>;
+}
 
 const renderTab = (
   tab: SideContentTab,
@@ -34,17 +48,9 @@ const renderTab = (
   _editorWidth?: string,
   _sideContentHeight?: number
 ) => {
-  const iconSize = 20;
-  const tabTitle = (
-    <Tooltip content={tab.label}>
-      <div className={!shouldAlert ? 'side-content-tooltip' : 'side-content-tooltip side-content-tab-alert'}>
-        <Icon icon={tab.iconName} iconSize={iconSize} />
-      </div>
-    </Tooltip>
-  );
   const tabProps: TabProps = {
     id: tab.id,
-    title: tabTitle,
+    title: <TabIcon iconName={tab.iconName} tooltip={tab.label} shouldAlert={shouldAlert} />,
     // disabled: tab.disabled,
     className: 'side-content-tab'
   };
@@ -53,17 +59,6 @@ const renderTab = (
     return <Tab key={tab.id} {...tabProps} />;
   }
 
-  // const tabBody: JSX.Element = workspaceLocation
-  //   ? {
-  //       ...tab.body,
-  //       props: {
-  //         ...tab.body.props,
-  //         workspaceLocation,
-  //         editorWidth,
-  //         sideContentHeight
-  //       }
-  //     }
-  //   : tab.body;
   const tabPanel: React.JSX.Element = <div className="side-content-text">{tab.body}</div>;
 
   return <Tab key={tab.id} {...tabProps} panel={tabPanel} />;
