@@ -90,8 +90,8 @@ test('tabs that can\'t be found are built', async () => {
   expect(execCall0).not.toContain('@sourceacademy/tab-Tab0');
 
   expect(execCmd1).toEqual('yarn workspaces foreach -pA');
-  expect(execCall1).toContain('--include @sourceacademy/tab-Tab1');
-  expect(execCall1).not.toContain('--include @sourceacademy/tab-Tab0');
+  expect(execCall1).toContain('@sourceacademy/tab-Tab1');
+  expect(execCall1).not.toContain('@sourceacademy/tab-Tab0');
 });
 
 test('install failure means build doesn\'t happen', async () => {

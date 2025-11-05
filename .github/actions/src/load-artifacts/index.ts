@@ -46,7 +46,7 @@ export async function main() {
     return;
   }
 
-  const workspaceBuildArgs = workspaces.map(each => `--include ${each}`);
+  const workspaceBuildArgs = workspaces.flatMap(each => ['--include', each]);
   const buildExitCode = await exec(
     'yarn workspaces foreach -pA',
     [...workspaceBuildArgs, 'run', 'build'],
