@@ -447,7 +447,9 @@ export function draw_sound_2d(sound: Sound) {
       {
         xaxis: {
           type: 'linear',
-          title: 'Time',
+          title: {
+            text: 'Time'
+          },
           anchor: 'y',
           position: 0,
           rangeslider: { visible: true }
