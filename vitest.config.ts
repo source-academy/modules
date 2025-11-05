@@ -39,6 +39,7 @@ export default defineConfig({
       reporter: coverageReporters,
       exclude: [
         '**/__mocks__',
+        '**/__tests__',
         '**/build/**',
         '**/dist',
         '**/src/**/samples/**',
