@@ -10,9 +10,9 @@ import _package from '../../package.json' with { type: 'json' };
 
 // https://vitepress.dev/reference/site-config
 const vitepressOptions: UserConfig = {
-  base: '/devdocs/',
+  base: '/modules/devdocs/',
   description: 'Developer documentation for the Source Academy modules repository',
-  head: [['link', { rel: 'icon', href: '/devdocs/favicon.ico' }]],
+  head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
   ignoreDeadLinks: 'localhostLinks',
   lastUpdated: true,
   markdown: {
@@ -99,6 +99,7 @@ const vitepressOptions: UserConfig = {
     }
   },
   vite: {
+    // @ts-expect-error groupIconVitePlugin is probably built for an incorrect version of Vite
     plugins: [groupIconVitePlugin()]
   }
 };
