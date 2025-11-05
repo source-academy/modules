@@ -45,7 +45,7 @@ export default require => {
     "<define:process>"() {}
   });
   var require_classnames = __commonJS({
-    "node_modules/classnames/index.js"(exports, module) {
+    "../../../node_modules/classnames/index.js"(exports, module) {
       "use strict";
       init_define_process();
       (function () {
@@ -104,12 +104,16 @@ export default require => {
       })();
     }
   });
-  var SoundMatrix_exports = {};
-  __export(SoundMatrix_exports, {
-    default: () => SoundMatrix_default
+  var index_exports = {};
+  __export(index_exports, {
+    default: () => index_default
   });
   init_define_process();
   var import_core = __require("@blueprintjs/core");
+  init_define_process();
+  function defineTab(tab) {
+    return tab;
+  }
   var import_classnames = __toESM(require_classnames(), 1);
   var import_react = __toESM(__require("react"), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
@@ -162,13 +166,13 @@ export default require => {
       });
     }
   };
-  var SoundMatrix_default = {
+  var index_default = defineTab({
     toSpawn: context => context.result.value === "test",
     body: context => (0, import_jsx_runtime.jsx)(SoundMatrix, {
       context
     }),
     label: "Sound Matrix",
     iconName: "music"
-  };
-  return __toCommonJS(SoundMatrix_exports);
+  });
+  return __toCommonJS(index_exports);
 };

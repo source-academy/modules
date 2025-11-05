@@ -1,10 +1,4 @@
 {
-  "type_map": {
-    "kind": "variable",
-    "name": "type_map",
-    "description": "No description available",
-    "type": "Record<string, string>"
-  },
   "animate_3D_curve": {
     "kind": "function",
     "name": "animate_3D_curve",
@@ -54,16 +48,10 @@
     "retType": "AnimatedCurve"
   },
   "arc": {
-    "kind": "function",
+    "kind": "variable",
     "name": "arc",
     "description": "<p>This function is a curve: a function from a fraction t to a point. The points\nlie on the right half of the unit circle. They start at Point (0,1) when t is</p><ol start=\"0\"><li>When t is 0.5, they reach Point (1,0), when t is 1, they reach Point\n(0, -1).</li></ol>",
-    "params": [
-      [
-        "t",
-        "number"
-      ]
-    ],
-    "retType": "Point"
+    "type": "Curve"
   },
   "b_of": {
     "kind": "function",
@@ -266,16 +254,10 @@
     "retType": "number"
   },
   "invert": {
-    "kind": "function",
+    "kind": "variable",
     "name": "invert",
     "description": "<p>This function is a Curve transformation: a function from a Curve to a Curve.\nThe points of the result Curve are the same points as the points of the\noriginal Curve, but in reverse: The result Curve applied to 0 is the original\nCurve applied to 1 and vice versa.</p>",
-    "params": [
-      [
-        "curve",
-        "Curve"
-      ]
-    ],
-    "retType": "Curve"
+    "type": "CurveTransformer"
   },
   "make_3D_color_point": {
     "kind": "function",
@@ -374,16 +356,10 @@
     "retType": "Point"
   },
   "put_in_standard_position": {
-    "kind": "function",
+    "kind": "variable",
     "name": "put_in_standard_position",
     "description": "<p>This function is a Curve transformation: It takes a Curve as argument and\nreturns a new Curve, as follows. A Curve is in standard position if it\nstarts at (0,0) ends at (1,0). This function puts the given Curve in\nstandard position by rigidly translating it so its start Point is at the\norigin (0,0), then rotating it about the origin to put its endpoint on the\nx axis, then scaling it to put the endpoint at (1,0). Behavior is unspecified\non closed Curves where start-point equal end-point.</p>",
-    "params": [
-      [
-        "curve",
-        "Curve"
-      ]
-    ],
-    "retType": "Curve"
+    "type": "CurveTransformer"
   },
   "r_of": {
     "kind": "function",
@@ -400,18 +376,10 @@
   "rotate_around_origin": {
     "kind": "function",
     "name": "rotate_around_origin",
-    "description": "<p>This function takes 3 angles, a, b and c in radians as parameter\nand returns a Curve transformation: a function that takes a Curve as argument\nand returns a new Curve, which is the original Curve rotated\nextrinsically with Euler angles (a, b, c) about x, y,\nand z axes.</p>",
+    "description": "<p>This function an angle a in radians as parameter\nand returns a Curve transformation: a function that takes a Curve as argument\nand returns a new Curve, which is the original Curve rotated\nextrinsically with Euler angle a about the z axis.</p>",
     "params": [
       [
-        "theta1",
-        "number"
-      ],
-      [
-        "theta2",
-        "number"
-      ],
-      [
-        "theta3",
+        "a",
         "number"
       ]
     ],
@@ -423,15 +391,15 @@
     "description": "<p>This function takes scaling factors <code>a</code>, <code>b</code> and\n<code>c</code>, as arguments and returns a\nCurve transformation that scales a given Curve by <code>a</code> in\nx-direction, <code>b</code> in y-direction and <code>c</code> in z-direction.</p>",
     "params": [
       [
-        "a",
+        "x",
         "number"
       ],
       [
-        "b",
+        "y",
         "number"
       ],
       [
-        "c",
+        "z",
         "number"
       ]
     ],
@@ -470,28 +438,16 @@
     "retType": "CurveTransformer"
   },
   "unit_circle": {
-    "kind": "function",
+    "kind": "variable",
     "name": "unit_circle",
     "description": "<p>This function is a curve: a function from a fraction t to a point. The points\nlie on the unit circle. They start at Point (1,0) when t is 0. When t is\n0.25, they reach Point (0,1), when t is 0.5, they reach Point (-1, 0), etc.</p>",
-    "params": [
-      [
-        "t",
-        "number"
-      ]
-    ],
-    "retType": "Point"
+    "type": "Curve"
   },
   "unit_line": {
-    "kind": "function",
+    "kind": "variable",
     "name": "unit_line",
     "description": "<p>This function is a curve: a function from a fraction t to a point. The\nx-coordinate at fraction t is t, and the y-coordinate is 0.</p>",
-    "params": [
-      [
-        "t",
-        "number"
-      ]
-    ],
-    "retType": "Point"
+    "type": "Curve"
   },
   "unit_line_at": {
     "kind": "function",
@@ -499,7 +455,7 @@
     "description": "<p>This function is a Curve generator: it takes a number and returns a\nhorizontal curve. The number is a y-coordinate, and the Curve generates only\npoints with the given y-coordinate.</p>",
     "params": [
       [
-        "t",
+        "y",
         "number"
       ]
     ],

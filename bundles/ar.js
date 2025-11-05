@@ -99,7 +99,7 @@ export default require => {
     }
   });
   var require_react_production_min = __commonJS({
-    "node_modules/react/cjs/react.production.min.js"(exports) {
+    "../../../node_modules/react/cjs/react.production.min.js"(exports) {
       "use strict";
       init_define_process();
       var l = Symbol.for("react.element");
@@ -439,7 +439,7 @@ export default require => {
     }
   });
   var require_react_development = __commonJS({
-    "node_modules/react/cjs/react.development.js"(exports, module) {
+    "../../../node_modules/react/cjs/react.development.js"(exports, module) {
       "use strict";
       init_define_process();
       if (define_process_default.env.NODE_ENV !== "production") {
@@ -1414,7 +1414,7 @@ export default require => {
             }
             return dispatcher.useContext(Context);
           }
-          function useState16(initialState) {
+          function useState15(initialState) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useState(initialState);
           }
@@ -1422,11 +1422,11 @@ export default require => {
             var dispatcher = resolveDispatcher();
             return dispatcher.useReducer(reducer, initialArg, init);
           }
-          function useRef15(initialValue) {
+          function useRef14(initialValue) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useRef(initialValue);
           }
-          function useEffect15(create2, deps) {
+          function useEffect14(create2, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useEffect(create2, deps);
           }
@@ -1442,7 +1442,7 @@ export default require => {
             var dispatcher = resolveDispatcher();
             return dispatcher.useCallback(callback, deps);
           }
-          function useMemo10(create2, deps) {
+          function useMemo9(create2, deps) {
             var dispatcher = resolveDispatcher();
             return dispatcher.useMemo(create2, deps);
           }
@@ -2205,15 +2205,15 @@ export default require => {
           exports.useContext = useContext4;
           exports.useDebugValue = useDebugValue2;
           exports.useDeferredValue = useDeferredValue;
-          exports.useEffect = useEffect15;
+          exports.useEffect = useEffect14;
           exports.useId = useId;
           exports.useImperativeHandle = useImperativeHandle4;
           exports.useInsertionEffect = useInsertionEffect;
           exports.useLayoutEffect = useLayoutEffect9;
-          exports.useMemo = useMemo10;
+          exports.useMemo = useMemo9;
           exports.useReducer = useReducer2;
-          exports.useRef = useRef15;
-          exports.useState = useState16;
+          exports.useRef = useRef14;
+          exports.useState = useState15;
           exports.useSyncExternalStore = useSyncExternalStore;
           exports.useTransition = useTransition;
           exports.version = ReactVersion;
@@ -2225,7 +2225,7 @@ export default require => {
     }
   });
   var require_react = __commonJS({
-    "node_modules/react/index.js"(exports, module) {
+    "../../../node_modules/react/index.js"(exports, module) {
       "use strict";
       init_define_process();
       if (define_process_default.env.NODE_ENV === "production") {
@@ -2236,14 +2236,14 @@ export default require => {
     }
   });
   var require_os = __commonJS({
-    "node_modules/os/index.js"(exports, module) {
+    "../../../node_modules/os/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = require_os();
     }
   });
   var require_uniqid = __commonJS({
-    "node_modules/uniqid/index.js"(exports, module) {
+    "../../../node_modules/uniqid/index.js"(exports, module) {
       "use strict";
       init_define_process();
       var pid = typeof define_process_default !== "undefined" && define_process_default.pid ? define_process_default.pid.toString(36) : "";
@@ -2286,7 +2286,7 @@ export default require => {
     }
   });
   var require_react_jsx_runtime_production_min = __commonJS({
-    "node_modules/react/cjs/react-jsx-runtime.production.min.js"(exports) {
+    "../../../node_modules/react/cjs/react-jsx-runtime.production.min.js"(exports) {
       "use strict";
       init_define_process();
       var f = require_react();
@@ -2322,7 +2322,7 @@ export default require => {
     }
   });
   var require_react_jsx_runtime_development = __commonJS({
-    "node_modules/react/cjs/react-jsx-runtime.development.js"(exports) {
+    "../../../node_modules/react/cjs/react-jsx-runtime.development.js"(exports) {
       "use strict";
       init_define_process();
       if (define_process_default.env.NODE_ENV !== "production") {
@@ -3205,7 +3205,7 @@ export default require => {
     }
   });
   var require_jsx_runtime = __commonJS({
-    "node_modules/react/jsx-runtime.js"(exports, module) {
+    "../../../node_modules/react/jsx-runtime.js"(exports, module) {
       "use strict";
       init_define_process();
       if (define_process_default.env.NODE_ENV === "production") {
@@ -3216,7 +3216,7 @@ export default require => {
     }
   });
   var require_react_reconciler_constants_production_min = __commonJS({
-    "node_modules/react-reconciler/cjs/react-reconciler-constants.production.min.js"(exports) {
+    "../../../node_modules/react-reconciler/cjs/react-reconciler-constants.production.min.js"(exports) {
       "use strict";
       init_define_process();
       exports.ConcurrentRoot = 1;
@@ -3228,7 +3228,7 @@ export default require => {
     }
   });
   var require_react_reconciler_constants_development = __commonJS({
-    "node_modules/react-reconciler/cjs/react-reconciler-constants.development.js"(exports) {
+    "../../../node_modules/react-reconciler/cjs/react-reconciler-constants.development.js"(exports) {
       "use strict";
       init_define_process();
       if (define_process_default.env.NODE_ENV !== "production") {
@@ -3255,7 +3255,7 @@ export default require => {
     }
   });
   var require_constants = __commonJS({
-    "node_modules/react-reconciler/constants.js"(exports, module) {
+    "../../../node_modules/react-reconciler/constants.js"(exports, module) {
       "use strict";
       init_define_process();
       if (define_process_default.env.NODE_ENV === "production") {
@@ -3266,7 +3266,7 @@ export default require => {
     }
   });
   var require_scheduler_production_min = __commonJS({
-    "node_modules/scheduler/cjs/scheduler.production.min.js"(exports) {
+    "../../../node_modules/scheduler/cjs/scheduler.production.min.js"(exports) {
       "use strict";
       init_define_process();
       function f(a, b) {
@@ -3515,7 +3515,7 @@ export default require => {
     }
   });
   var require_scheduler_development = __commonJS({
-    "node_modules/scheduler/cjs/scheduler.development.js"(exports) {
+    "../../../node_modules/scheduler/cjs/scheduler.development.js"(exports) {
       "use strict";
       init_define_process();
       if (define_process_default.env.NODE_ENV !== "production") {
@@ -3961,7 +3961,7 @@ export default require => {
     }
   });
   var require_scheduler = __commonJS({
-    "node_modules/scheduler/index.js"(exports, module) {
+    "../../../node_modules/scheduler/index.js"(exports, module) {
       "use strict";
       init_define_process();
       if (define_process_default.env.NODE_ENV === "production") {
@@ -3972,7 +3972,7 @@ export default require => {
     }
   });
   var require_react_reconciler_production_min = __commonJS({
-    "node_modules/react-reconciler/cjs/react-reconciler.production.min.js"(exports, module) {
+    "../../../node_modules/react-reconciler/cjs/react-reconciler.production.min.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = function $$$reconciler($$$hostConfig) {
@@ -8861,7 +8861,7 @@ export default require => {
     }
   });
   var require_react_reconciler_development = __commonJS({
-    "node_modules/react-reconciler/cjs/react-reconciler.development.js"(exports, module) {
+    "../../../node_modules/react-reconciler/cjs/react-reconciler.development.js"(exports, module) {
       "use strict";
       init_define_process();
       if (define_process_default.env.NODE_ENV !== "production") {
@@ -23504,7 +23504,7 @@ export default require => {
     }
   });
   var require_react_reconciler = __commonJS({
-    "node_modules/react-reconciler/index.js"(exports, module) {
+    "../../../node_modules/react-reconciler/index.js"(exports, module) {
       "use strict";
       init_define_process();
       if (define_process_default.env.NODE_ENV === "production") {
@@ -23514,60 +23514,8 @@ export default require => {
       }
     }
   });
-  var require_debounce = __commonJS({
-    "node_modules/debounce/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      function debounce(func, wait, immediate) {
-        var timeout, args, context2, timestamp, result;
-        if (null == wait) wait = 100;
-        function later() {
-          var last = Date.now() - timestamp;
-          if (last < wait && last >= 0) {
-            timeout = setTimeout(later, wait - last);
-          } else {
-            timeout = null;
-            if (!immediate) {
-              result = func.apply(context2, args);
-              context2 = args = null;
-            }
-          }
-        }
-        ;
-        var debounced = function () {
-          context2 = this;
-          args = arguments;
-          timestamp = Date.now();
-          var callNow = immediate && !timeout;
-          if (!timeout) timeout = setTimeout(later, wait);
-          if (callNow) {
-            result = func.apply(context2, args);
-            context2 = args = null;
-          }
-          return result;
-        };
-        debounced.clear = function () {
-          if (timeout) {
-            clearTimeout(timeout);
-            timeout = null;
-          }
-        };
-        debounced.flush = function () {
-          if (timeout) {
-            result = func.apply(context2, args);
-            context2 = args = null;
-            clearTimeout(timeout);
-            timeout = null;
-          }
-        };
-        return debounced;
-      }
-      debounce.debounce = debounce;
-      module.exports = debounce;
-    }
-  });
-  var ar_exports = {};
-  __export(ar_exports, {
+  var index_exports = {};
+  __export(index_exports, {
     addARObject: () => addARObject,
     alignmentBottom: () => alignmentBottom,
     alignmentCenter: () => alignmentCenter,
@@ -53695,7 +53643,7 @@ void main() {
         });
       }
       if (instance.__r3f.attach === void 0) {
-        if (instance instanceof BufferGeometry) instance.__r3f.attach = "geometry"; else if (instance instanceof Material) instance.__r3f.attach = "material";
+        if (instance.isBufferGeometry) instance.__r3f.attach = "geometry"; else if (instance.isMaterial) instance.__r3f.attach = "material";
       }
       if (name !== "inject") applyProps$1(instance, props);
       return instance;
@@ -54137,13 +54085,15 @@ void main() {
         } else if (targetProp.copy && value && value.constructor && (__DEV__ ? targetProp.constructor.name === value.constructor.name : targetProp.constructor === value.constructor)) {
           targetProp.copy(value);
         } else if (value !== void 0) {
-          const isColor = targetProp instanceof Color;
+          var _targetProp;
+          const isColor = (_targetProp = targetProp) == null ? void 0 : _targetProp.isColor;
           if (!isColor && targetProp.setScalar) targetProp.setScalar(value); else if (targetProp instanceof Layers && value instanceof Layers) targetProp.mask = value.mask; else targetProp.set(value);
           if (!getColorManagement() && rootState && !rootState.linear && isColor) targetProp.convertSRGBToLinear();
         }
       } else {
+        var _currentInstance$key;
         currentInstance[key] = value;
-        if (currentInstance[key] instanceof Texture && currentInstance[key].format === RGBAFormat && currentInstance[key].type === UnsignedByteType && rootState) {
+        if ((_currentInstance$key = currentInstance[key]) != null && _currentInstance$key.isTexture && currentInstance[key].format === RGBAFormat && currentInstance[key].type === UnsignedByteType && rootState) {
           const texture = currentInstance[key];
           if (hasColorSpace(texture) && hasColorSpace(rootState.gl)) texture.colorSpace = rootState.gl.outputColorSpace; else texture.encoding = rootState.gl.outputEncoding;
         }
@@ -54372,8 +54322,6 @@ void main() {
     version: React4.version
   });
   var React5 = __toESM(require_react());
-  var import_react7 = __toESM(require_react());
-  var import_debounce = __toESM(require_debounce());
   var import_jsx_runtime5 = __toESM(require_jsx_runtime());
   var import_constants2 = __toESM(require_constants());
   var import_react_reconciler2 = __toESM(require_react_reconciler());
@@ -54479,7 +54427,7 @@ void main() {
     }
     return sessionInit;
   };
-  var startSession = (sessionMode, sessionInit) => __async(void 0, null, function* () {
+  var startSession = (sessionMode, sessionInit) => __async(null, null, function* () {
     const xrState = globalSessionStore.getState();
     if (xrState.session) {
       console.warn("@react-three/xr: session already started, please stop it first");
@@ -54492,7 +54440,7 @@ void main() {
     }));
     return session;
   });
-  var stopSession = () => __async(void 0, null, function* () {
+  var stopSession = () => __async(null, null, function* () {
     const xrState = globalSessionStore.getState();
     if (!xrState.session) {
       console.warn("@react-three/xr: no session to stop, please start it first");
@@ -54503,7 +54451,7 @@ void main() {
       session: null
     });
   });
-  var toggleSession = (_0, ..._1) => __async(void 0, [_0, ..._1], function* (sessionMode, {sessionInit, enterOnly, exitOnly} = {}) {
+  var toggleSession = (_0, ..._1) => __async(null, [_0, ..._1], function* (sessionMode, {sessionInit, enterOnly, exitOnly} = {}) {
     const xrState = globalSessionStore.getState();
     if (xrState.session && enterOnly) return;
     if (!xrState.session && exitOnly) return;
@@ -54566,7 +54514,7 @@ void main() {
         setStatus("exited");
       }
     }), [status]);
-    const handleButtonClick = React9.useCallback(event => __async(this, null, function* () {
+    const handleButtonClick = React9.useCallback(event => __async(null, null, function* () {
       onClick == null ? void 0 : onClick(event);
       try {
         toggleSession(sessionMode, {
@@ -54631,7 +54579,7 @@ void main() {
   }
   init_define_process();
   init_define_process();
-  var version2 = parseInt(REVISION.replace(/\D+/g, ""));
+  var version2 = (() => parseInt(REVISION.replace(/\D+/g, "")))();
   init_define_process();
   function toTrianglesDrawMode(geometry, drawMode) {
     if (drawMode === TrianglesDrawMode) {
@@ -57838,10 +57786,10 @@ void main() {
     return void 0;
   }
   init_define_process();
-  var import_react27 = __toESM(require_react());
+  var import_react26 = __toESM(require_react());
   init_define_process();
-  var import_react8 = __toESM(require_react());
-  var ErrorBoundary2 = class extends import_react8.Component {
+  var import_react7 = __toESM(require_react());
+  var ErrorBoundary2 = class extends import_react7.Component {
     constructor() {
       super(...arguments);
       this.state = {
@@ -57861,7 +57809,7 @@ void main() {
     }
   };
   init_define_process();
-  var import_react13 = __toESM(require_react());
+  var import_react12 = __toESM(require_react());
   init_define_process();
   function clone(source) {
     const sourceLookup = new Map();
@@ -58048,7 +57996,7 @@ void main() {
       }
     });
   }
-  var import_react9 = __toESM(require_react());
+  var import_react8 = __toESM(require_react());
   function noop() {}
   var defineHidden = (obj, key, value) => Object.defineProperty(obj, key, {
     value,
@@ -58707,9 +58655,9 @@ void main() {
   function isAnimatedString(value) {
     return is2.str(value) && (value[0] == "#" || (/\d/).test(value) || !isSSR2() && cssVariableRegex.test(value) || (value in (colors$1 || ({}))));
   }
-  var useIsomorphicLayoutEffect4 = isSSR2() ? import_react9.useEffect : import_react9.useLayoutEffect;
+  var useIsomorphicLayoutEffect4 = isSSR2() ? import_react8.useEffect : import_react8.useLayoutEffect;
   var useIsMounted = () => {
-    const isMounted = (0, import_react9.useRef)(false);
+    const isMounted = (0, import_react8.useRef)(false);
     useIsomorphicLayoutEffect4(() => {
       isMounted.current = true;
       return () => {
@@ -58719,7 +58667,7 @@ void main() {
     return isMounted;
   };
   function useForceUpdate() {
-    const update3 = (0, import_react9.useState)()[1];
+    const update3 = (0, import_react8.useState)()[1];
     const isMounted = useIsMounted();
     return () => {
       if (isMounted.current) {
@@ -58728,11 +58676,11 @@ void main() {
     };
   }
   function useMemoOne(getResult, inputs) {
-    const [initial] = (0, import_react9.useState)(() => ({
+    const [initial] = (0, import_react8.useState)(() => ({
       inputs,
       result: getResult()
     }));
-    const committed = (0, import_react9.useRef)();
+    const committed = (0, import_react8.useRef)();
     const prevCache = committed.current;
     let cache = prevCache;
     if (cache) {
@@ -58746,7 +58694,7 @@ void main() {
     } else {
       cache = initial;
     }
-    (0, import_react9.useEffect)(() => {
+    (0, import_react8.useEffect)(() => {
       committed.current = cache;
       if (prevCache == initial) {
         initial.inputs = initial.result = void 0;
@@ -58765,20 +58713,20 @@ void main() {
     }
     return true;
   }
-  var useOnce = effect => (0, import_react9.useEffect)(effect, emptyDeps);
+  var useOnce = effect => (0, import_react8.useEffect)(effect, emptyDeps);
   var emptyDeps = [];
   function usePrev(value) {
-    const prevRef = (0, import_react9.useRef)();
-    (0, import_react9.useEffect)(() => {
+    const prevRef = (0, import_react8.useRef)();
+    (0, import_react8.useEffect)(() => {
       prevRef.current = value;
     });
     return prevRef.current;
   }
   var React11 = __toESM(require_react());
-  var import_react11 = __toESM(require_react());
+  var import_react10 = __toESM(require_react());
   init_define_process();
   var React10 = __toESM(require_react());
-  var import_react10 = __toESM(require_react());
+  var import_react9 = __toESM(require_react());
   var $node = Symbol.for("Animated:node");
   var isAnimated = value => !!value && value[$node] === value;
   var getAnimated = owner => owner && owner[$node];
@@ -58975,9 +58923,9 @@ void main() {
   }
   var withAnimated = (Component8, host2) => {
     const hasInstance = !is2.fun(Component8) || Component8.prototype && Component8.prototype.isReactComponent;
-    return (0, import_react10.forwardRef)((givenProps, givenRef) => {
-      const instanceRef = (0, import_react10.useRef)(null);
-      const ref = hasInstance && (0, import_react10.useCallback)(value => {
+    return (0, import_react9.forwardRef)((givenProps, givenRef) => {
+      const instanceRef = (0, import_react9.useRef)(null);
+      const ref = hasInstance && (0, import_react9.useCallback)(value => {
         instanceRef.current = updateRef(givenRef, value);
       }, [givenRef]);
       const [props, deps] = getAnimatedState(givenProps, host2);
@@ -58993,7 +58941,7 @@ void main() {
         }
       };
       const observer = new PropsObserver(callback, deps);
-      const observerRef = (0, import_react10.useRef)();
+      const observerRef = (0, import_react9.useRef)();
       useIsomorphicLayoutEffect4(() => {
         observerRef.current = observer;
         each(deps, dep => addFluidObserver(dep, observer));
@@ -59004,7 +58952,7 @@ void main() {
           }
         };
       });
-      (0, import_react10.useEffect)(callback, []);
+      (0, import_react9.useEffect)(callback, []);
       useOnce(() => () => {
         const observer2 = observerRef.current;
         each(observer2.deps, dep => removeFluidObserver(dep, observer2));
@@ -59379,7 +59327,7 @@ void main() {
     if (!parentId && to2 === prevTo && !props.reset) {
       return prevPromise;
     }
-    return state.promise = (() => __async(this, null, function* () {
+    return state.promise = (() => __async(null, null, function* () {
       state.asyncId = callId;
       state.asyncTo = to2;
       const defaultProps = getDefaultProps(props, (value, key) => key === "onRest" ? void 0 : value);
@@ -59397,7 +59345,7 @@ void main() {
       const animate = (arg1, arg2) => {
         const bailSignal = new BailSignal();
         const skipAnimationSignal = new SkipAnimationSignal();
-        return (() => __async(this, null, function* () {
+        return (() => __async(null, null, function* () {
           if (globals.skipAnimation) {
             stopAsync(state);
             skipAnimationSignal.result = getFinishedResult(target, false);
@@ -59432,7 +59380,7 @@ void main() {
       try {
         let animating;
         if (is2.arr(to2)) {
-          animating = (queue2 => __async(this, null, function* () {
+          animating = (queue2 => __async(null, null, function* () {
             for (const props2 of queue2) {
               yield animate(props2);
             }
@@ -60441,7 +60389,7 @@ void main() {
   var _excluded$6 = ["children"];
   var SpringContext = _ref => {
     let {children} = _ref, props = _objectWithoutPropertiesLoose(_ref, _excluded$6);
-    const inherited = (0, import_react11.useContext)(ctx);
+    const inherited = (0, import_react10.useContext)(ctx);
     const pause = props.pause || !!inherited.pause, immediate = props.immediate || !!inherited.immediate;
     props = useMemoOne(() => ({
       pause,
@@ -60530,10 +60478,10 @@ void main() {
   function useSprings(length, props, deps) {
     const propsFn = is2.fun(props) && props;
     if (propsFn && !deps) deps = [];
-    const ref = (0, import_react11.useMemo)(() => propsFn || arguments.length == 3 ? SpringRef() : void 0, []);
-    const layoutId = (0, import_react11.useRef)(0);
+    const ref = (0, import_react10.useMemo)(() => propsFn || arguments.length == 3 ? SpringRef() : void 0, []);
+    const layoutId = (0, import_react10.useRef)(0);
     const forceUpdate = useForceUpdate();
-    const state = (0, import_react11.useMemo)(() => ({
+    const state = (0, import_react10.useMemo)(() => ({
       ctrls: [],
       queue: [],
       flush(ctrl, updates2) {
@@ -60548,10 +60496,10 @@ void main() {
         });
       }
     }), []);
-    const ctrls = (0, import_react11.useRef)([...state.ctrls]);
+    const ctrls = (0, import_react10.useRef)([...state.ctrls]);
     const updates = [];
     const prevLength = usePrev(length) || 0;
-    (0, import_react11.useMemo)(() => {
+    (0, import_react10.useMemo)(() => {
       each(ctrls.current.slice(length, prevLength), ctrl => {
         detachRefs(ctrl, ref);
         ctrl.stop(true);
@@ -60559,7 +60507,7 @@ void main() {
       ctrls.current.length = length;
       declareUpdates(prevLength, length);
     }, [length]);
-    (0, import_react11.useMemo)(() => {
+    (0, import_react10.useMemo)(() => {
       declareUpdates(0, Math.min(prevLength, length));
     }, deps);
     function declareUpdates(startIndex, endIndex) {
@@ -60572,7 +60520,7 @@ void main() {
       }
     }
     const springs = ctrls.current.map((ctrl, i2) => getSprings(ctrl, updates[i2]));
-    const context2 = (0, import_react11.useContext)(SpringContext);
+    const context2 = (0, import_react10.useContext)(SpringContext);
     const prevContext = usePrev(context2);
     const hasContext = context2 !== prevContext && hasProps(context2);
     useIsomorphicLayoutEffect4(() => {
@@ -60917,7 +60865,13 @@ void main() {
       var dependencies = options.dependencies;
       var init = options.init;
       dependencies = Array.isArray(dependencies) ? dependencies.map(function (dep) {
-        return dep && dep._getInitResult ? dep._getInitResult() : dep;
+        if (dep) {
+          dep = dep.onMainThread || dep;
+          if (dep._getInitResult) {
+            dep = dep._getInitResult();
+          }
+        }
+        return dep;
       }) : [];
       var initPromise = Promise.all(dependencies).then(function (deps) {
         return init.apply(null, deps);
@@ -60963,9 +60917,7 @@ void main() {
     var init = options.init;
     var getTransferables = options.getTransferables;
     var workerId = options.workerId;
-    if (!supportsWorkers()) {
-      return defineMainThreadModule(options);
-    }
+    var onMainThread = defineMainThreadModule(options);
     if (workerId == null) {
       workerId = "#default";
     }
@@ -60990,6 +60942,9 @@ void main() {
     function moduleFunc() {
       var args = [], len = arguments.length;
       while (len--) args[len] = arguments[len];
+      if (!supportsWorkers()) {
+        return onMainThread.apply(void 0, args);
+      }
       if (!registrationPromise) {
         registrationPromise = callWorker(workerId, "registerModule", moduleFunc.workerModuleData);
         var unregister = function () {
@@ -61018,6 +60973,7 @@ void main() {
       init: stringifyFunction(init),
       getTransferables: getTransferables && stringifyFunction(getTransferables)
     };
+    moduleFunc.onMainThread = onMainThread;
     return moduleFunc;
   }
   function terminateWorker(workerId) {
@@ -62499,6 +62455,20 @@ void main() {
       isDerivedMaterial: {
         value: true
       },
+      type: {
+        get: () => baseMaterial.type,
+        set: value => {
+          baseMaterial.type = value;
+        }
+      },
+      isDerivedFrom: {
+        writable: true,
+        configurable: true,
+        value: function (testMaterial) {
+          const base = this.baseMaterial;
+          return testMaterial === base || base.isDerivedMaterial && base.isDerivedFrom(testMaterial) || false;
+        }
+      },
       customProgramCacheKey: {
         writable: true,
         configurable: true,
@@ -62589,7 +62559,7 @@ void main() {
       vertexShader = expandShaderIncludes(vertexShader);
     }
     if (fragmentColorTransform || customRewriter) {
-      fragmentShader = fragmentShader.replace(/^[ \t]*#include <((?:tonemapping|encodings|fog|premultiplied_alpha|dithering)_fragment)>/gm, "\n//!BEGIN_POST_CHUNK $1\n$&\n//!END_POST_CHUNK\n");
+      fragmentShader = fragmentShader.replace(/^[ \t]*#include <((?:tonemapping|encodings|colorspace|fog|premultiplied_alpha|dithering)_fragment)>/gm, "\n//!BEGIN_POST_CHUNK $1\n$&\n//!END_POST_CHUNK\n");
       fragmentShader = expandShaderIncludes(fragmentShader);
     }
     if (customRewriter) {
@@ -64461,7 +64431,7 @@ void main() {
         (function resolveUserFonts(startIndex = 0) {
           for (let i2 = startIndex, iLen = text.length; i2 < iLen; i2++) {
             const codePoint = text.codePointAt(i2);
-            if (prevCharResult === RESOLVED && fontResolutions[charResolutions[i2 - 1]].supportsCodePoint(codePoint) || (/\s/).test(text[i2])) {
+            if (prevCharResult === RESOLVED && fontResolutions[charResolutions[i2 - 1]].supportsCodePoint(codePoint) || i2 > 0 && (/\s/).test(text[i2])) {
               charResolutions[i2] = charResolutions[i2 - 1];
               if (prevCharResult === NEEDS_FALLBACK) {
                 fallbackRanges[fallbackRanges.length - 1][1] = i2;
@@ -65166,7 +65136,8 @@ void main() {
     sdfGlyphSize: 64,
     sdfMargin: 1 / 16,
     sdfExponent: 9,
-    textureWidth: 2048
+    textureWidth: 2048,
+    useWorker: true
   };
   var tempColor = new Color();
   var hasRequested = false;
@@ -65230,7 +65201,8 @@ void main() {
       initContextLossHandling(atlas);
     }
     const {sdfTexture, sdfCanvas} = atlas;
-    typesetInWorker(args).then(result => {
+    const typeset = CONFIG.useWorker ? typesetInWorker : typesetOnMainThread;
+    typeset(args).then(result => {
       const {glyphIds, glyphFontIndices, fontData, glyphPositions, fontSize, timings} = result;
       const neededSDFs = [];
       const glyphBounds = new Float32Array(glyphIds.length * 4);
@@ -65425,26 +65397,12 @@ void main() {
       return transferables;
     }
   });
+  var typesetOnMainThread = typesetInWorker.onMainThread;
   var templateGeometries = {};
   function getTemplateGeometry(detail) {
     let geom = templateGeometries[detail];
     if (!geom) {
-      const front = new PlaneGeometry(1, 1, detail, detail);
-      const back = front.clone();
-      const frontAttrs = front.attributes;
-      const backAttrs = back.attributes;
-      const combined = new BufferGeometry();
-      const vertCount = frontAttrs.uv.count;
-      for (let i2 = 0; i2 < vertCount; i2++) {
-        backAttrs.position.array[i2 * 3] *= -1;
-        backAttrs.normal.array[i2 * 3 + 2] *= -1;
-      }
-      ["position", "normal", "uv"].forEach(name => {
-        combined.setAttribute(name, new Float32BufferAttribute([...frontAttrs[name].array, ...backAttrs[name].array], frontAttrs[name].itemSize));
-      });
-      combined.setIndex([...front.index.array, ...back.index.array.map(n => n + vertCount)]);
-      combined.translate(0.5, 0.5, 0);
-      geom = templateGeometries[detail] = combined;
+      geom = templateGeometries[detail] = new PlaneGeometry(1, 1, detail, detail).translate(0.5, 0.5, 0);
     }
     return geom;
   }
@@ -65470,10 +65428,6 @@ void main() {
     }
     computeBoundingSphere() {}
     computeBoundingBox() {}
-    setSide(side) {
-      const verts = this.getIndex().count;
-      this.setDrawRange(side === BackSide ? verts / 2 : 0, side === DoubleSide ? verts : verts / 2);
-    }
     set detail(detail) {
       if (detail !== this._detail) {
         this._detail = detail;
@@ -65500,9 +65454,9 @@ void main() {
       return this._curveRadius;
     }
     updateGlyphs(glyphBounds, glyphAtlasIndices, blockBounds, chunkedBounds, glyphColors) {
-      updateBufferAttr(this, glyphBoundsAttrName, glyphBounds, 4);
-      updateBufferAttr(this, glyphIndexAttrName, glyphAtlasIndices, 1);
-      updateBufferAttr(this, glyphColorAttrName, glyphColors, 3);
+      this.updateAttributeData(glyphBoundsAttrName, glyphBounds, 4);
+      this.updateAttributeData(glyphIndexAttrName, glyphAtlasIndices, 1);
+      this.updateAttributeData(glyphColorAttrName, glyphColors, 3);
       this._blockBounds = blockBounds;
       this._chunkedBounds = chunkedBounds;
       this.instanceCount = glyphAtlasIndices.length;
@@ -65545,22 +65499,22 @@ void main() {
       }
       this.instanceCount = count;
     }
-  };
-  function updateBufferAttr(geom, attrName, newArray, itemSize) {
-    const attr = geom.getAttribute(attrName);
-    if (newArray) {
-      if (attr && attr.array.length === newArray.length) {
-        attr.array.set(newArray);
-        attr.needsUpdate = true;
-      } else {
-        geom.setAttribute(attrName, new InstancedBufferAttribute(newArray, itemSize));
-        delete geom._maxInstanceCount;
-        geom.dispose();
+    updateAttributeData(attrName, newArray, itemSize) {
+      const attr = this.getAttribute(attrName);
+      if (newArray) {
+        if (attr && attr.array.length === newArray.length) {
+          attr.array.set(newArray);
+          attr.needsUpdate = true;
+        } else {
+          this.setAttribute(attrName, new InstancedBufferAttribute(newArray, itemSize));
+          delete this._maxInstanceCount;
+          this.dispose();
+        }
+      } else if (attr) {
+        this.deleteAttribute(attrName);
       }
-    } else if (attr) {
-      geom.deleteAttribute(attrName);
     }
-  }
+  };
   var VERTEX_DEFS = `
 uniform vec2 uTroikaSDFTextureSize;
 uniform float uTroikaSDFGlyphSize;
@@ -65568,7 +65522,7 @@ uniform vec4 uTroikaTotalBounds;
 uniform vec4 uTroikaClipRect;
 uniform mat3 uTroikaOrient;
 uniform bool uTroikaUseGlyphColors;
-uniform float uTroikaDistanceOffset;
+uniform float uTroikaEdgeOffset;
 uniform float uTroikaBlurRadius;
 uniform vec2 uTroikaPositionOffset;
 uniform float uTroikaCurveRadius;
@@ -65587,8 +65541,8 @@ bounds.xz += uTroikaPositionOffset.x;
 bounds.yw -= uTroikaPositionOffset.y;
 
 vec4 outlineBounds = vec4(
-  bounds.xy - uTroikaDistanceOffset - uTroikaBlurRadius,
-  bounds.zw + uTroikaDistanceOffset + uTroikaBlurRadius
+  bounds.xy - uTroikaEdgeOffset - uTroikaBlurRadius,
+  bounds.zw + uTroikaEdgeOffset + uTroikaBlurRadius
 );
 vec4 clippedBounds = vec4(
   clamp(outlineBounds.xy, uTroikaClipRect.xy, uTroikaClipRect.zw),
@@ -65629,9 +65583,8 @@ uniform sampler2D uTroikaSDFTexture;
 uniform vec2 uTroikaSDFTextureSize;
 uniform float uTroikaSDFGlyphSize;
 uniform float uTroikaSDFExponent;
-uniform float uTroikaDistanceOffset;
+uniform float uTroikaEdgeOffset;
 uniform float uTroikaFillOpacity;
-uniform float uTroikaOutlineOpacity;
 uniform float uTroikaBlurRadius;
 uniform vec3 uTroikaStrokeColor;
 uniform float uTroikaStrokeWidth;
@@ -65704,7 +65657,7 @@ float aaDist = troikaGetAADist();
 float fragDistance = troikaGetFragDistValue();
 float edgeAlpha = uTroikaSDFDebug ?
   troikaGlyphUvToSdfValue(vTroikaGlyphUV) :
-  troikaGetEdgeAlpha(fragDistance, uTroikaDistanceOffset, max(aaDist, uTroikaBlurRadius));
+  troikaGetEdgeAlpha(fragDistance, uTroikaEdgeOffset, max(aaDist, uTroikaBlurRadius));
 
 #if !defined(IS_DEPTH_MATERIAL) && !defined(IS_DISTANCE_MATERIAL)
 vec4 fillRGBA = gl_FragColor;
@@ -65748,10 +65701,7 @@ if (edgeAlpha == 0.0) {
         uTroikaClipRect: {
           value: new Vector4(0, 0, 0, 0)
         },
-        uTroikaDistanceOffset: {
-          value: 0
-        },
-        uTroikaOutlineOpacity: {
+        uTroikaEdgeOffset: {
           value: 0
         },
         uTroikaFillOpacity: {
@@ -65804,6 +65754,7 @@ if (edgeAlpha == 0.0) {
       }
     });
     textMaterial.transparent = true;
+    textMaterial.forceSinglePass = true;
     Object.defineProperties(textMaterial, {
       isTroikaTextMaterial: {
         value: true
@@ -65948,16 +65899,6 @@ if (edgeAlpha == 0.0) {
       if (material.isTroikaTextMaterial) {
         this._prepareForRender(material);
       }
-      material._hadOwnSide = material.hasOwnProperty("side");
-      this.geometry.setSide(material._actualSide = material.side);
-      material.side = FrontSide;
-    }
-    onAfterRender(renderer, scene, camera, geometry, material, group) {
-      if (material._hadOwnSide) {
-        material.side = material._actualSide;
-      } else {
-        delete material.side;
-      }
     }
     dispose() {
       this.geometry.dispose();
@@ -65965,17 +65906,20 @@ if (edgeAlpha == 0.0) {
     get textRenderInfo() {
       return this._textRenderInfo || null;
     }
+    createDerivedMaterial(baseMaterial) {
+      return createTextDerivedMaterial(baseMaterial);
+    }
     get material() {
       let derivedMaterial = this._derivedMaterial;
       const baseMaterial = this._baseMaterial || this._defaultMaterial || (this._defaultMaterial = defaultMaterial.clone());
-      if (!derivedMaterial || derivedMaterial.baseMaterial !== baseMaterial) {
-        derivedMaterial = this._derivedMaterial = createTextDerivedMaterial(baseMaterial);
+      if (!derivedMaterial || !derivedMaterial.isDerivedFrom(baseMaterial)) {
+        derivedMaterial = this._derivedMaterial = this.createDerivedMaterial(baseMaterial);
         baseMaterial.addEventListener("dispose", function onDispose() {
           baseMaterial.removeEventListener("dispose", onDispose);
           derivedMaterial.dispose();
         });
       }
-      if (this.outlineWidth || this.outlineBlur || this.outlineOffsetX || this.outlineOffsetY) {
+      if (this.hasOutline()) {
         let outlineMaterial = derivedMaterial._outlineMtl;
         if (!outlineMaterial) {
           outlineMaterial = derivedMaterial._outlineMtl = Object.create(derivedMaterial, {
@@ -66004,6 +65948,9 @@ if (edgeAlpha == 0.0) {
         this._baseMaterial = baseMaterial;
       }
     }
+    hasOutline() {
+      return !!(this.outlineWidth || this.outlineBlur || this.outlineOffsetX || this.outlineOffsetY);
+    }
     get glyphGeometryDetail() {
       return this.geometry.detail;
     }
@@ -66019,9 +65966,11 @@ if (edgeAlpha == 0.0) {
     get customDepthMaterial() {
       return first(this.material).getDepthMaterial();
     }
+    set customDepthMaterial(m) {}
     get customDistanceMaterial() {
       return first(this.material).getDistanceMaterial();
     }
+    set customDistanceMaterial(m) {}
     _prepareForRender(material) {
       const isOutline = material.isTextOutlineMaterial;
       const uniforms = material.uniforms;
@@ -66059,7 +66008,7 @@ if (edgeAlpha == 0.0) {
           }
           fillOpacity = this.fillOpacity;
         }
-        uniforms.uTroikaDistanceOffset.value = distanceOffset;
+        uniforms.uTroikaEdgeOffset.value = distanceOffset;
         uniforms.uTroikaPositionOffset.value.set(offsetX, offsetY);
         uniforms.uTroikaBlurRadius.value = blurRadius;
         uniforms.uTroikaStrokeWidth.value = strokeWidth;
@@ -66180,6 +66129,8 @@ if (edgeAlpha == 0.0) {
       }
     });
   });
+  var tempBox3 = new Box3();
+  var tempColor$1 = new Color();
   var Text2 = React12.forwardRef((_a2, ref) => {
     var _b2 = _a2, {sdfGlyphSize = 64, anchorX = "center", anchorY = "middle", font, fontSize = 1, children, characters, onSync} = _b2, props = __objRest(_b2, ["sdfGlyphSize", "anchorX", "anchorY", "font", "fontSize", "children", "characters", "onSync"]);
     const invalidate2 = useThree(({invalidate: invalidate3}) => invalidate3);
@@ -66251,15 +66202,15 @@ if (edgeAlpha == 0.0) {
   }
   init_define_process();
   var React13 = __toESM(require_react());
-  var import_react12 = __toESM(require_react());
+  var import_react11 = __toESM(require_react());
   var IsObject = url => url === Object(url) && !Array.isArray(url) && typeof url !== "function";
   function useTexture(input, onLoad) {
     const gl = useThree(state => state.gl);
     const textures = useLoader(TextureLoader, IsObject(input) ? Object.values(input) : input);
-    (0, import_react12.useLayoutEffect)(() => {
+    (0, import_react11.useLayoutEffect)(() => {
       onLoad == null || onLoad(textures);
     }, [onLoad]);
-    (0, import_react12.useEffect)(() => {
+    (0, import_react11.useEffect)(() => {
       if (("initTexture" in gl)) {
         let textureArray = [];
         if (Array.isArray(textures)) {
@@ -66276,7 +66227,7 @@ if (edgeAlpha == 0.0) {
         });
       }
     }, [gl, textures]);
-    const mappedTextures = (0, import_react12.useMemo)(() => {
+    const mappedTextures = (0, import_react11.useMemo)(() => {
       if (IsObject(input)) {
         const keyed = {};
         let i2 = 0;
@@ -66374,7 +66325,7 @@ if (edgeAlpha == 0.0) {
       if (ref.current.geometry.parameters) {
         ref.current.material.scale.set(planeBounds[0] * ref.current.geometry.parameters.width, planeBounds[1] * ref.current.geometry.parameters.height);
       }
-    }, []);
+    }, [planeBounds[0], planeBounds[1]]);
     return React14.createElement("mesh", _extends4({
       ref,
       scale: Array.isArray(scale) ? [...scale, 1] : scale
@@ -66428,6 +66379,7 @@ if (edgeAlpha == 0.0) {
   }, `#include <common>
    #include <morphtarget_pars_vertex>
    #include <skinning_pars_vertex>
+   #include <clipping_planes_pars_vertex>
    uniform float thickness;
    uniform bool screenspace;
    uniform vec2 size;
@@ -66443,6 +66395,7 @@ if (edgeAlpha == 0.0) {
 	   #include <morphtarget_vertex>
 	   #include <skinning_vertex>
      #include <project_vertex>
+     #include <clipping_planes_vertex>
      vec4 tNormal = vec4(normal, 0.0);
      vec4 tPosition = vec4(transformed, 1.0);
      #ifdef USE_INSTANCING
@@ -66461,13 +66414,15 @@ if (edgeAlpha == 0.0) {
      }
    }`, `uniform vec3 color;
    uniform float opacity;
+   #include <clipping_planes_pars_fragment>
    void main(){
+     #include <clipping_planes_fragment>
      gl_FragColor = vec4(color, opacity);
      #include <tonemapping_fragment>
      #include <${version3 >= 154 ? "colorspace_fragment" : "encodings_fragment"}>
    }`);
   function Outlines(_a2) {
-    var _b2 = _a2, {color = "black", opacity = 1, transparent = false, screenspace = false, toneMapped = true, polygonOffset = false, polygonOffsetFactor = 0, renderOrder = 0, thickness = 0.05, angle = Math.PI} = _b2, props = __objRest(_b2, ["color", "opacity", "transparent", "screenspace", "toneMapped", "polygonOffset", "polygonOffsetFactor", "renderOrder", "thickness", "angle"]);
+    var _b2 = _a2, {color = "black", opacity = 1, transparent = false, screenspace = false, toneMapped = true, polygonOffset = false, polygonOffsetFactor = 0, renderOrder = 0, thickness = 0.05, angle = Math.PI, clippingPlanes} = _b2, props = __objRest(_b2, ["color", "opacity", "transparent", "screenspace", "toneMapped", "polygonOffset", "polygonOffsetFactor", "renderOrder", "thickness", "angle", "clippingPlanes"]);
     const ref = React15.useRef();
     const [material] = React15.useState(() => new OutlinesMaterial({
       side: BackSide
@@ -66508,6 +66463,8 @@ if (edgeAlpha == 0.0) {
             group.add(mesh);
           }
           mesh.geometry = angle ? toCreasedNormals(parent.geometry, angle) : parent.geometry;
+          mesh.morphTargetInfluences = parent.morphTargetInfluences;
+          mesh.morphTargetDictionary = parent.morphTargetDictionary;
         }
       }
     });
@@ -66517,6 +66474,11 @@ if (edgeAlpha == 0.0) {
       const mesh = group.children[0];
       if (mesh) {
         mesh.renderOrder = renderOrder;
+        const parent = group.parent;
+        applyProps(mesh, {
+          morphTargetInfluences: parent.morphTargetInfluences,
+          morphTargetDictionary: parent.morphTargetDictionary
+        });
         applyProps(mesh.material, {
           transparent,
           thickness,
@@ -66526,7 +66488,9 @@ if (edgeAlpha == 0.0) {
           screenspace,
           toneMapped,
           polygonOffset,
-          polygonOffsetFactor
+          polygonOffsetFactor,
+          clippingPlanes,
+          clipping: clippingPlanes && clippingPlanes.length > 0
         });
       }
     });
@@ -66572,18 +66536,18 @@ if (edgeAlpha == 0.0) {
   useGLTF.setDecoderPath = path => {
     decoderPath = path;
   };
-  var import_react14 = __toESM(require_react());
+  var import_react13 = __toESM(require_react());
   var import_jsx_runtime6 = __toESM(require_jsx_runtime());
   function GltfComponent(props) {
     const model = useGLTF(props.gltfModel.resource);
-    const [scene, setScene] = (0, import_react13.useState)();
-    const mixer = (0, import_react13.useRef)();
-    (0, import_react13.useEffect)(() => {
+    const [scene, setScene] = (0, import_react12.useState)();
+    const mixer = (0, import_react12.useRef)();
+    (0, import_react12.useEffect)(() => {
       const clonedScene = clone(model.scene);
       setScene(clonedScene);
       mixer.current = new AnimationMixer(clonedScene);
     }, [model.scene]);
-    (0, import_react13.useEffect)(() => {
+    (0, import_react12.useEffect)(() => {
       if (model.animations.length > 0) {
         props.gltfModel.callAnimation = actionName => {
           var _a2, _b2;
@@ -66603,7 +66567,7 @@ if (edgeAlpha == 0.0) {
       position: props.springPosition,
       scale: props.gltfModel.scale,
       ref: props.meshRef,
-      children: [(0, import_jsx_runtime6.jsx)(import_react13.Suspense, {
+      children: [(0, import_jsx_runtime6.jsx)(import_react12.Suspense, {
         fallback: null,
         children: scene ? (0, import_jsx_runtime6.jsx)("primitive", {
           object: scene
@@ -66612,9 +66576,9 @@ if (edgeAlpha == 0.0) {
     });
   }
   init_define_process();
-  var import_react16 = __toESM(require_react());
-  init_define_process();
   var import_react15 = __toESM(require_react());
+  init_define_process();
+  var import_react14 = __toESM(require_react());
   var import_jsx_runtime7 = __toESM(require_jsx_runtime());
   function Outline(props) {
     function getColor() {
@@ -66636,7 +66600,7 @@ if (edgeAlpha == 0.0) {
       angle: 0
     });
   }
-  var import_react17 = __toESM(require_react());
+  var import_react16 = __toESM(require_react());
   var import_jsx_runtime8 = __toESM(require_jsx_runtime());
   function ShapeComponent(props) {
     return (0, import_jsx_runtime8.jsx)(animated.mesh, {
@@ -66653,8 +66617,8 @@ if (edgeAlpha == 0.0) {
     });
   }
   init_define_process();
+  var import_react17 = __toESM(require_react());
   var import_react18 = __toESM(require_react());
-  var import_react19 = __toESM(require_react());
   var import_jsx_runtime9 = __toESM(require_jsx_runtime());
   function LightComponent(props) {
     return (0, import_jsx_runtime9.jsx)(animated.mesh, {
@@ -66666,10 +66630,10 @@ if (edgeAlpha == 0.0) {
     });
   }
   init_define_process();
-  var import_react25 = __toESM(require_react());
+  var import_react24 = __toESM(require_react());
   init_define_process();
+  var import_react19 = __toESM(require_react());
   var import_react20 = __toESM(require_react());
-  var import_react21 = __toESM(require_react());
   var import_jsx_runtime10 = __toESM(require_jsx_runtime());
   var TEXT_UI_TYPE = "UITextItem";
   var UITextItem = class _UITextItem extends UIBasicItem {
@@ -66727,9 +66691,9 @@ if (edgeAlpha == 0.0) {
   };
   function Component5(props) {
     let {component, position, updateParent} = props;
-    const [offsetX, setOffsetX] = (0, import_react20.useState)(0);
-    const ref = (0, import_react20.useRef)();
-    (0, import_react20.useEffect)(() => {
+    const [offsetX, setOffsetX] = (0, import_react19.useState)(0);
+    const ref = (0, import_react19.useRef)();
+    (0, import_react19.useEffect)(() => {
       if (ref.current) {
         getSize();
       }
@@ -66794,7 +66758,7 @@ if (edgeAlpha == 0.0) {
     }, `component_${component.id}`);
   }
   init_define_process();
-  var import_react22 = __toESM(require_react());
+  var import_react21 = __toESM(require_react());
   var import_jsx_runtime11 = __toESM(require_jsx_runtime());
   var IMAGE_UI_TYPE = "UIImageItem";
   var UIImageItem = class _UIImageItem extends UIBasicItem {
@@ -66843,8 +66807,8 @@ if (edgeAlpha == 0.0) {
     }, `component_${component.id}`);
   }
   init_define_process();
+  var import_react22 = __toESM(require_react());
   var import_react23 = __toESM(require_react());
-  var import_react24 = __toESM(require_react());
   var import_jsx_runtime12 = __toESM(require_jsx_runtime());
   var BASE64_IMAGE_UI_TYPE = "UIBase64ImageItem";
   var UIBase64ImageItem = class _UIBase64ImageItem extends UIBasicItem {
@@ -66883,8 +66847,8 @@ if (edgeAlpha == 0.0) {
     }
   };
   function Component7(props) {
-    const [material, setMaterial] = (0, import_react23.useState)();
-    (0, import_react23.useEffect)(() => {
+    const [material, setMaterial] = (0, import_react22.useState)();
+    (0, import_react22.useEffect)(() => {
       const image = new Image();
       image.src = props.component.base64;
       const texture = new Texture();
@@ -66905,13 +66869,13 @@ if (edgeAlpha == 0.0) {
       })
     }, `component_${props.component.id}`);
   }
-  var import_react26 = __toESM(require_react());
+  var import_react25 = __toESM(require_react());
   var import_jsx_runtime13 = __toESM(require_jsx_runtime());
   function InterfaceComponent(props) {
-    const [components, setComponents] = (0, import_react25.useState)();
-    const [width, setWidth] = (0, import_react25.useState)(0);
-    const [height, setHeight] = (0, import_react25.useState)(0);
-    (0, import_react25.useEffect)(() => {
+    const [components, setComponents] = (0, import_react24.useState)();
+    const [width, setWidth] = (0, import_react24.useState)(0);
+    const [height, setHeight] = (0, import_react24.useState)(0);
+    (0, import_react24.useEffect)(() => {
       var _a2, _b2, _c, _d, _e;
       setWidth((_b2 = (_a2 = props.interfaceModel.rootComponent) == null ? void 0 : _a2.getWidth()) != null ? _b2 : 0);
       setHeight((_d = (_c = props.interfaceModel.rootComponent) == null ? void 0 : _c.getHeight()) != null ? _d : 0);
@@ -66972,16 +66936,16 @@ if (edgeAlpha == 0.0) {
     }
     return void 0;
   }
-  var import_react28 = __toESM(require_react());
+  var import_react27 = __toESM(require_react());
   var import_jsx_runtime14 = __toESM(require_jsx_runtime());
   function ARObjectComponent(props) {
-    const ref = (0, import_react27.useRef)(null);
-    const [showComponent, setShowComponent] = (0, import_react27.useState)(false);
-    const [targetPosition, setTargetPosition] = (0, import_react27.useState)(props.arObject.position);
+    const ref = (0, import_react26.useRef)(null);
+    const [showComponent, setShowComponent] = (0, import_react26.useState)(false);
+    const [targetPosition, setTargetPosition] = (0, import_react26.useState)(props.arObject.position);
     const spring = useSpring({
       position: vector3ToArray(targetPosition)
     });
-    const [isInFront, setInFront] = (0, import_react27.useState)(false);
+    const [isInFront, setInFront] = (0, import_react26.useState)(false);
     useFrame((_, delta) => {
       var _a2;
       let uuid = (_a2 = ref.current) == null ? void 0 : _a2.uuid;
@@ -67089,7 +67053,7 @@ if (edgeAlpha == 0.0) {
       mesh.rotation.y = 0;
     }
   }
-  var import_react29 = __toESM(require_react());
+  var import_react28 = __toESM(require_react());
   var import_jsx_runtime15 = __toESM(require_jsx_runtime());
   var ARObject = class {
     constructor(id, position, behaviours, onSelect) {
@@ -67571,5 +67535,5 @@ if (edgeAlpha == 0.0) {
   var alignmentLeft = 0;
   var alignmentCenter = 1;
   var alignmentRight = 2;
-  return __toCommonJS(ar_exports);
+  return __toCommonJS(index_exports);
 };

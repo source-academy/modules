@@ -34,8 +34,8 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var stereo_sound_exports = {};
-  __export(stereo_sound_exports, {
+  var index_exports = {};
+  __export(index_exports, {
     adsr: () => adsr,
     bell: () => bell,
     cello: () => cello,
@@ -73,8 +73,90 @@ export default require => {
     trombone: () => trombone,
     violin: () => violin
   });
-  var import_context = __toESM(__require("js-slang/context"), 1);
+  var Accidental;
+  (function (Accidental2) {
+    Accidental2["SHARP"] = "#";
+    Accidental2["FLAT"] = "b";
+    Accidental2["NATURAL"] = "\u266E";
+  })(Accidental || (Accidental = {}));
+  function noteToValues(note, func_name = noteToValues.name) {
+    const match = (/^([A-Ga-g])([#♮b]?)(\d*)$/).exec(note);
+    if (match === null) throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
+    const [, noteName, accidental, octaveStr] = match;
+    switch (accidental) {
+      case Accidental.SHARP:
+        {
+          if (noteName === "B" || noteName === "E") {
+            throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
+          }
+          break;
+        }
+      case Accidental.FLAT:
+        {
+          if (noteName === "F" || noteName === "C") {
+            throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
+          }
+          break;
+        }
+    }
+    const octave = octaveStr === "" ? 4 : parseInt(octaveStr);
+    return [noteName.toUpperCase(), accidental !== "" ? accidental : Accidental.NATURAL, octave];
+  }
   var import_list = __require("js-slang/dist/stdlib/list");
+  function letter_name_to_midi_note(note) {
+    const [noteName, accidental, octave] = noteToValues(note, letter_name_to_midi_note.name);
+    let res = 12;
+    switch (noteName) {
+      case "C":
+        break;
+      case "D":
+        res += 2;
+        break;
+      case "E":
+        res += 4;
+        break;
+      case "F":
+        res += 5;
+        break;
+      case "G":
+        res += 7;
+        break;
+      case "A":
+        res += 9;
+        break;
+      case "B":
+        res += 11;
+        break;
+      default:
+        break;
+    }
+    switch (accidental) {
+      case Accidental.FLAT:
+        {
+          res -= 1;
+          break;
+        }
+      case Accidental.SHARP:
+        {
+          res += 1;
+          break;
+        }
+      case Accidental.NATURAL:
+        break;
+    }
+    return res + 12 * octave;
+  }
+  function midi_note_to_frequency(note) {
+    return 440 * Math.pow(2, (note - 69) / 12);
+  }
+  function letter_name_to_frequency(note) {
+    return midi_note_to_frequency(letter_name_to_midi_note(note));
+  }
+  var SHARP = Accidental.SHARP;
+  var FLAT = Accidental.FLAT;
+  var NATURAL = Accidental.NATURAL;
+  var import_context = __toESM(__require("js-slang/context"), 1);
+  var import_list2 = __require("js-slang/dist/stdlib/list");
   var FastBase64 = {
     chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
     encLookup: String,
@@ -276,159 +358,185 @@ export default require => {
       }
     };
   }
+  function validateDuration(func_name, duration) {
+    if (typeof duration !== "number") {
+      throw new Error(`${func_name} expects a number for duration, got ${duration}`);
+    }
+    if (duration < 0) {
+      throw new Error(`${func_name}: Sound duration must be greater than or equal to 0`);
+    }
+  }
+  function validateWave(func_name, wave, lr) {
+    const direction = lr !== void 0 ? `${lr}_` : "";
+    if (typeof wave !== "function") {
+      throw new Error(`${func_name}: ${direction}wave must be a Wave, got ${wave}`);
+    }
+  }
   function make_stereo_sound(left_wave, right_wave, duration) {
-    return (0, import_list.pair)((0, import_list.pair)(t => t >= duration ? 0 : left_wave(t), t => t >= duration ? 0 : right_wave(t)), duration);
+    validateDuration(make_sound.name, duration);
+    validateWave(make_sound.name, left_wave, "left");
+    validateWave(make_sound.name, right_wave, "right");
+    return (0, import_list2.pair)((0, import_list2.pair)(t => t >= duration ? 0 : left_wave(t), t => t >= duration ? 0 : right_wave(t)), duration);
   }
   function make_sound(wave, duration) {
-    return make_stereo_sound(wave, wave, duration);
+    validateDuration(make_sound.name, duration);
+    validateWave(make_sound.name, wave);
+    return (0, import_list2.pair)((0, import_list2.pair)(t => t >= duration ? 0 : wave(t), t => t >= duration ? 0 : wave(t)), duration);
   }
   function get_left_wave(sound) {
-    return (0, import_list.head)((0, import_list.head)(sound));
+    return (0, import_list2.head)((0, import_list2.head)(sound));
   }
   function get_right_wave(sound) {
-    return (0, import_list.tail)((0, import_list.head)(sound));
+    return (0, import_list2.tail)((0, import_list2.head)(sound));
   }
   function get_duration(sound) {
-    return (0, import_list.tail)(sound);
+    return (0, import_list2.tail)(sound);
   }
   function is_sound(x) {
-    return (0, import_list.is_pair)(x) && typeof get_left_wave(x) === "function" && typeof get_right_wave(x) === "function" && typeof get_duration(x) === "number";
+    return (0, import_list2.is_pair)(x) && typeof get_left_wave(x) === "function" && typeof get_right_wave(x) === "function" && typeof get_duration(x) === "number";
   }
   function play_wave(wave, duration) {
+    validateDuration(play_wave.name, duration);
+    validateWave(play_wave.name, wave);
     return play(make_sound(wave, duration));
   }
-  function play_waves(wave1, wave2, duration) {
-    return play(make_stereo_sound(wave1, wave2, duration));
+  function play_waves(left_wave, right_wave, duration) {
+    validateDuration(make_sound.name, duration);
+    validateWave(make_sound.name, left_wave, "left");
+    validateWave(make_sound.name, right_wave, "right");
+    return play(make_stereo_sound(left_wave, right_wave, duration));
   }
   function play_in_tab(sound) {
     if (!is_sound(sound)) {
       throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
     } else if (isPlaying) {
       throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
-    } else if (get_duration(sound) < 0) {
+    }
+    const duration = get_duration(sound);
+    if (duration < 0) {
       throw new Error(`${play_in_tab.name}: duration of sound is negative`);
-    } else if (get_duration(sound) === 0) {
-      return sound;
-    } else {
-      if (!audioplayer) {
-        init_audioCtx();
-      }
-      const channel = [];
-      const len = Math.ceil(FS * get_duration(sound));
-      let Ltemp;
-      let Rtemp;
-      let Lprev_value = 0;
-      let Rprev_value = 0;
-      const left_wave = get_left_wave(sound);
-      const right_wave = get_right_wave(sound);
-      for (let i = 0; i < len; i += 1) {
-        Ltemp = left_wave(i / FS);
-        if (Ltemp > 1) {
-          channel[2 * i] = 1;
-        } else if (Ltemp < -1) {
-          channel[2 * i] = -1;
-        } else {
-          channel[2 * i] = Ltemp;
-        }
-        if (channel[2 * i] === 0 && Math.abs(channel[2 * i] - Lprev_value) > 0.01) {
-          channel[2 * i] = Lprev_value * 0.999;
-        }
-        Lprev_value = channel[2 * i];
-        Rtemp = right_wave(i / FS);
-        if (Rtemp > 1) {
-          channel[2 * i + 1] = 1;
-        } else if (Rtemp < -1) {
-          channel[2 * i + 1] = -1;
-        } else {
-          channel[2 * i + 1] = Rtemp;
-        }
-        if (channel[2 * i + 1] === 0 && Math.abs(channel[2 * i] - Rprev_value) > 0.01) {
-          channel[2 * i + 1] = Rprev_value * 0.999;
-        }
-        Rprev_value = channel[2 * i + 1];
-      }
-      for (let i = 0; i < channel.length; i += 1) {
-        channel[i] = Math.floor(channel[i] * 32767.999);
-      }
-      const riffwave = new RIFFWAVE([]);
-      riffwave.header.sampleRate = FS;
-      riffwave.header.numChannels = 2;
-      riffwave.header.bitsPerSample = 16;
-      riffwave.Make(channel);
-      const audio = {
-        toReplString: () => "<AudioPlayed>",
-        dataUri: riffwave.dataURI
-      };
-      audioPlayed.push(audio);
+    } else if (duration === 0) {
       return sound;
     }
+    if (!audioplayer) {
+      init_audioCtx();
+    }
+    const channel = [];
+    const len = Math.ceil(FS * duration);
+    let Ltemp;
+    let Rtemp;
+    let Lprev_value = 0;
+    let Rprev_value = 0;
+    const left_wave = get_left_wave(sound);
+    const right_wave = get_right_wave(sound);
+    for (let i = 0; i < len; i += 1) {
+      Ltemp = left_wave(i / FS);
+      if (Ltemp > 1) {
+        channel[2 * i] = 1;
+      } else if (Ltemp < -1) {
+        channel[2 * i] = -1;
+      } else {
+        channel[2 * i] = Ltemp;
+      }
+      if (channel[2 * i] === 0 && Math.abs(channel[2 * i] - Lprev_value) > 0.01) {
+        channel[2 * i] = Lprev_value * 0.999;
+      }
+      Lprev_value = channel[2 * i];
+      Rtemp = right_wave(i / FS);
+      if (Rtemp > 1) {
+        channel[2 * i + 1] = 1;
+      } else if (Rtemp < -1) {
+        channel[2 * i + 1] = -1;
+      } else {
+        channel[2 * i + 1] = Rtemp;
+      }
+      if (channel[2 * i + 1] === 0 && Math.abs(channel[2 * i] - Rprev_value) > 0.01) {
+        channel[2 * i + 1] = Rprev_value * 0.999;
+      }
+      Rprev_value = channel[2 * i + 1];
+    }
+    for (let i = 0; i < channel.length; i += 1) {
+      channel[i] = Math.floor(channel[i] * 32767.999);
+    }
+    const riffwave = new RIFFWAVE([]);
+    riffwave.header.sampleRate = FS;
+    riffwave.header.numChannels = 2;
+    riffwave.header.bitsPerSample = 16;
+    riffwave.Make(channel);
+    const audio = {
+      toReplString: () => "<AudioPlayed>",
+      dataUri: riffwave.dataURI
+    };
+    audioPlayed.push(audio);
+    return sound;
   }
   function play(sound) {
     if (!is_sound(sound)) {
       throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
     } else if (isPlaying) {
       throw new Error(`${play.name}: audio system still playing previous sound`);
-    } else if (get_duration(sound) < 0) {
+    }
+    const duration = get_duration(sound);
+    if (duration < 0) {
       throw new Error(`${play.name}: duration of sound is negative`);
-    } else if (get_duration(sound) === 0) {
-      return sound;
-    } else {
-      if (!audioplayer) {
-        init_audioCtx();
-      }
-      const channel = [];
-      const len = Math.ceil(FS * get_duration(sound));
-      let Ltemp;
-      let Rtemp;
-      let Lprev_value = 0;
-      let Rprev_value = 0;
-      const left_wave = get_left_wave(sound);
-      const right_wave = get_right_wave(sound);
-      for (let i = 0; i < len; i += 1) {
-        Ltemp = left_wave(i / FS);
-        if (Ltemp > 1) {
-          channel[2 * i] = 1;
-        } else if (Ltemp < -1) {
-          channel[2 * i] = -1;
-        } else {
-          channel[2 * i] = Ltemp;
-        }
-        if (channel[2 * i] === 0 && Math.abs(channel[2 * i] - Lprev_value) > 0.01) {
-          channel[2 * i] = Lprev_value * 0.999;
-        }
-        Lprev_value = channel[2 * i];
-        Rtemp = right_wave(i / FS);
-        if (Rtemp > 1) {
-          channel[2 * i + 1] = 1;
-        } else if (Rtemp < -1) {
-          channel[2 * i + 1] = -1;
-        } else {
-          channel[2 * i + 1] = Rtemp;
-        }
-        if (channel[2 * i + 1] === 0 && Math.abs(channel[2 * i] - Rprev_value) > 0.01) {
-          channel[2 * i + 1] = Rprev_value * 0.999;
-        }
-        Rprev_value = channel[2 * i + 1];
-      }
-      for (let i = 0; i < channel.length; i += 1) {
-        channel[i] = Math.floor(channel[i] * 32767.999);
-      }
-      const riffwave = new RIFFWAVE([]);
-      riffwave.header.sampleRate = FS;
-      riffwave.header.numChannels = 2;
-      riffwave.header.bitsPerSample = 16;
-      riffwave.Make(channel);
-      const audio = new Audio(riffwave.dataURI);
-      const source2 = audioplayer.createMediaElementSource(audio);
-      source2.connect(audioplayer.destination);
-      audio.play();
-      isPlaying = true;
-      audio.onended = () => {
-        source2.disconnect(audioplayer.destination);
-        isPlaying = false;
-      };
+    } else if (duration === 0) {
       return sound;
     }
+    if (!audioplayer) {
+      init_audioCtx();
+    }
+    const channel = [];
+    const len = Math.ceil(FS * duration);
+    let Ltemp;
+    let Rtemp;
+    let Lprev_value = 0;
+    let Rprev_value = 0;
+    const left_wave = get_left_wave(sound);
+    const right_wave = get_right_wave(sound);
+    for (let i = 0; i < len; i += 1) {
+      Ltemp = left_wave(i / FS);
+      if (Ltemp > 1) {
+        channel[2 * i] = 1;
+      } else if (Ltemp < -1) {
+        channel[2 * i] = -1;
+      } else {
+        channel[2 * i] = Ltemp;
+      }
+      if (channel[2 * i] === 0 && Math.abs(channel[2 * i] - Lprev_value) > 0.01) {
+        channel[2 * i] = Lprev_value * 0.999;
+      }
+      Lprev_value = channel[2 * i];
+      Rtemp = right_wave(i / FS);
+      if (Rtemp > 1) {
+        channel[2 * i + 1] = 1;
+      } else if (Rtemp < -1) {
+        channel[2 * i + 1] = -1;
+      } else {
+        channel[2 * i + 1] = Rtemp;
+      }
+      if (channel[2 * i + 1] === 0 && Math.abs(channel[2 * i] - Rprev_value) > 0.01) {
+        channel[2 * i + 1] = Rprev_value * 0.999;
+      }
+      Rprev_value = channel[2 * i + 1];
+    }
+    for (let i = 0; i < channel.length; i += 1) {
+      channel[i] = Math.floor(channel[i] * 32767.999);
+    }
+    const riffwave = new RIFFWAVE([]);
+    riffwave.header.sampleRate = FS;
+    riffwave.header.numChannels = 2;
+    riffwave.header.bitsPerSample = 16;
+    riffwave.Make(channel);
+    const audio = new Audio(riffwave.dataURI);
+    const source2 = audioplayer.createMediaElementSource(audio);
+    source2.connect(audioplayer.destination);
+    audio.play();
+    isPlaying = true;
+    audio.onended = () => {
+      source2.disconnect(audioplayer.destination);
+      isPlaying = false;
+    };
+    return sound;
   }
   function stop() {
     audioplayer.close();
@@ -468,15 +576,19 @@ export default require => {
     };
   }
   function noise_sound(duration) {
+    validateDuration(noise_sound.name, duration);
     return make_sound(_t => Math.random() * 2 - 1, duration);
   }
   function silence_sound(duration) {
+    validateDuration(silence_sound.name, duration);
     return make_sound(_t => 0, duration);
   }
   function sine_sound(freq, duration) {
+    validateDuration(sine_sound.name, duration);
     return make_sound(t => Math.sin(2 * Math.PI * t * freq), duration);
   }
   function square_sound(f, duration) {
+    validateDuration(square_sound.name, duration);
     function fourier_expansion_square(t) {
       let answer = 0;
       for (let i = 1; i <= fourier_expansion_level; i += 1) {
@@ -487,6 +599,7 @@ export default require => {
     return make_sound(t => 4 / Math.PI * fourier_expansion_square(t), duration);
   }
   function triangle_sound(freq, duration) {
+    validateDuration(triangle_sound.name, duration);
     function fourier_expansion_triangle(t) {
       let answer = 0;
       for (let i = 0; i < fourier_expansion_level; i += 1) {
@@ -497,6 +610,7 @@ export default require => {
     return make_sound(t => 8 / Math.PI / Math.PI * fourier_expansion_triangle(t), duration);
   }
   function sawtooth_sound(freq, duration) {
+    validateDuration(sawtooth_sound.name, duration);
     function fourier_expansion_sawtooth(t) {
       let answer = 0;
       for (let i = 1; i <= fourier_expansion_level; i += 1) {
@@ -518,7 +632,7 @@ export default require => {
       const new_right = t => t < dur1 ? Rwave1(t) : Rwave2(t - dur1);
       return make_stereo_sound(new_left, new_right, dur1 + dur2);
     }
-    return (0, import_list.accumulate)(stereo_cons_two, silence_sound(0), list_of_sounds);
+    return (0, import_list2.accumulate)(stereo_cons_two, silence_sound(0), list_of_sounds);
   }
   function simultaneously(list_of_sounds) {
     function stereo_simul_two(sound1, sound2) {
@@ -533,11 +647,11 @@ export default require => {
       const new_dur = dur1 < dur2 ? dur2 : dur1;
       return make_stereo_sound(new_left, new_right, new_dur);
     }
-    const unnormed = (0, import_list.accumulate)(stereo_simul_two, silence_sound(0), list_of_sounds);
-    const sounds_length = (0, import_list.length)(list_of_sounds);
-    const normalised_left = t => (0, import_list.head)((0, import_list.head)(unnormed))(t) / sounds_length;
-    const normalised_right = t => (0, import_list.tail)((0, import_list.head)(unnormed))(t) / sounds_length;
-    const highest_duration = (0, import_list.tail)(unnormed);
+    const unnormed = (0, import_list2.accumulate)(stereo_simul_two, silence_sound(0), list_of_sounds);
+    const sounds_length = (0, import_list2.length)(list_of_sounds);
+    const normalised_left = t => (0, import_list2.head)((0, import_list2.head)(unnormed))(t) / sounds_length;
+    const normalised_right = t => (0, import_list2.tail)((0, import_list2.head)(unnormed))(t) / sounds_length;
+    const highest_duration = (0, import_list2.tail)(unnormed);
     return make_stereo_sound(normalised_left, normalised_right, highest_duration);
   }
   function adsr(attack_ratio, decay_ratio, sustain_level, release_ratio) {
@@ -567,78 +681,34 @@ export default require => {
   }
   function stacking_adsr(waveform, base_frequency, duration, envelopes) {
     function zip(lst, n) {
-      if ((0, import_list.is_null)(lst)) {
+      if ((0, import_list2.is_null)(lst)) {
         return lst;
       }
-      return (0, import_list.pair)((0, import_list.pair)(n, (0, import_list.head)(lst)), zip((0, import_list.tail)(lst), n + 1));
+      return (0, import_list2.pair)((0, import_list2.pair)(n, (0, import_list2.head)(lst)), zip((0, import_list2.tail)(lst), n + 1));
     }
-    return simultaneously((0, import_list.accumulate)((x, y) => (0, import_list.pair)((0, import_list.tail)(x)(waveform(base_frequency * (0, import_list.head)(x), duration)), y), null, zip(envelopes, 1)));
+    return simultaneously((0, import_list2.accumulate)((x, y) => (0, import_list2.pair)((0, import_list2.tail)(x)(waveform(base_frequency * (0, import_list2.head)(x), duration)), y), null, zip(envelopes, 1)));
   }
   function phase_mod(freq, duration, amount) {
-    return modulator => make_stereo_sound(t => Math.sin(2 * Math.PI * t * freq + amount * get_left_wave(modulator)(t)), t => Math.sin(2 * Math.PI * t * freq + amount * get_right_wave(modulator)(t)), duration);
-  }
-  function letter_name_to_midi_note(note) {
-    let res = 12;
-    const n = note[0].toUpperCase();
-    switch (n) {
-      case "D":
-        res += 2;
-        break;
-      case "E":
-        res += 4;
-        break;
-      case "F":
-        res += 5;
-        break;
-      case "G":
-        res += 7;
-        break;
-      case "A":
-        res += 9;
-        break;
-      case "B":
-        res += 11;
-        break;
-      default:
-        break;
-    }
-    if (note.length === 2) {
-      res += parseInt(note[1]) * 12;
-    } else if (note.length === 3) {
-      switch (note[1]) {
-        case "#":
-          res += 1;
-          break;
-        case "b":
-          res -= 1;
-          break;
-        default:
-          break;
-      }
-      res += parseInt(note[2]) * 12;
-    }
-    return res;
-  }
-  function midi_note_to_frequency(note) {
-    return 440 * __pow(2, (note - 69) / 12);
-  }
-  function letter_name_to_frequency(note) {
-    return midi_note_to_frequency(letter_name_to_midi_note(note));
+    return modulator => {
+      const left_wave = get_left_wave(modulator);
+      const right_wave = get_left_wave(modulator);
+      return make_stereo_sound(t => Math.sin(2 * Math.PI * t * freq + amount * left_wave(t)), t => Math.sin(2 * Math.PI * t * freq + amount * right_wave(t)), duration);
+    };
   }
   function bell(note, duration) {
-    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0, 0.6, 0, 0.05), adsr(0, 0.6618, 0, 0.05), adsr(0, 0.7618, 0, 0.05), adsr(0, 0.9071, 0, 0.05)));
+    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0, 0.6, 0, 0.05), adsr(0, 0.6618, 0, 0.05), adsr(0, 0.7618, 0, 0.05), adsr(0, 0.9071, 0, 0.05)));
   }
   function cello(note, duration) {
-    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0.05, 0, 1, 0.1), adsr(0.05, 0, 1, 0.15), adsr(0, 0, 0.2, 0.15)));
+    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0.05, 0, 1, 0.1), adsr(0.05, 0, 1, 0.15), adsr(0, 0, 0.2, 0.15)));
   }
   function piano(note, duration) {
-    return stacking_adsr(triangle_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0, 0.515, 0, 0.05), adsr(0, 0.32, 0, 0.05), adsr(0, 0.2, 0, 0.05)));
+    return stacking_adsr(triangle_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0, 0.515, 0, 0.05), adsr(0, 0.32, 0, 0.05), adsr(0, 0.2, 0, 0.05)));
   }
   function trombone(note, duration) {
-    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0.2, 0, 1, 0.1), adsr(0.3236, 0.6, 0, 0.1)));
+    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0.2, 0, 1, 0.1), adsr(0.3236, 0.6, 0, 0.1)));
   }
   function violin(note, duration) {
-    return stacking_adsr(sawtooth_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0.35, 0, 1, 0.15), adsr(0.35, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15)));
+    return stacking_adsr(sawtooth_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0.35, 0, 1, 0.15), adsr(0.35, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15)));
   }
-  return __toCommonJS(stereo_sound_exports);
+  return __toCommonJS(index_exports);
 };

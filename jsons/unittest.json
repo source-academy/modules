@@ -1,8 +1,206 @@
 {
-  "default": {
-    "kind": "variable",
-    "name": "default",
-    "description": "No description available",
-    "type": "Object"
+  "sample_function": {
+    "kind": "function",
+    "name": "sample_function",
+    "description": "<p>Increment a number by a value of 1.</p>",
+    "params": [
+      [
+        "x",
+        "number"
+      ]
+    ],
+    "retType": "number"
+  },
+  "assert_equals": {
+    "kind": "function",
+    "name": "assert_equals",
+    "description": "<p>Asserts the equality (===) of two parameters.</p>",
+    "params": [
+      [
+        "expected",
+        "any"
+      ],
+      [
+        "received",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "assert_not_equals": {
+    "kind": "function",
+    "name": "assert_not_equals",
+    "description": "<p>Asserts that two parameters are not equal (!==).</p>",
+    "params": [
+      [
+        "expected",
+        "any"
+      ],
+      [
+        "received",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "assert_contains": {
+    "kind": "function",
+    "name": "assert_contains",
+    "description": "<p>Asserts that <code>xs</code> contains <code>toContain</code>.</p>",
+    "params": [
+      [
+        "xs",
+        "any"
+      ],
+      [
+        "toContain",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "assert_greater": {
+    "kind": "function",
+    "name": "assert_greater",
+    "description": "<p>Asserts that the given item is greater than <code>expected</code></p>",
+    "params": [
+      [
+        "item",
+        "any"
+      ],
+      [
+        "expected",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "assert_greater_equals": {
+    "kind": "function",
+    "name": "assert_greater_equals",
+    "description": "<p>Asserts that the given item is greater than or equal to <code>expected</code></p>",
+    "params": [
+      [
+        "item",
+        "any"
+      ],
+      [
+        "expected",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "assert_length": {
+    "kind": "function",
+    "name": "assert_length",
+    "description": "<p>Asserts that the given list has length <code>len</code>.</p>",
+    "params": [
+      [
+        "xs",
+        "any"
+      ],
+      [
+        "len",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "it": {
+    "kind": "function",
+    "name": "it",
+    "description": "<p>Defines a single test.</p>",
+    "params": [
+      [
+        "name",
+        "string"
+      ],
+      [
+        "func",
+        "Test"
+      ]
+    ],
+    "retType": "void"
+  },
+  "test": {
+    "kind": "function",
+    "name": "test",
+    "description": "<p>Defines a single test.</p>",
+    "params": [
+      [
+        "msg",
+        "string"
+      ],
+      [
+        "func",
+        "Test"
+      ]
+    ],
+    "retType": "void"
+  },
+  "describe": {
+    "kind": "function",
+    "name": "describe",
+    "description": "<p>Describes a test suite.</p>",
+    "params": [
+      [
+        "msg",
+        "string"
+      ],
+      [
+        "func",
+        "TestSuite"
+      ]
+    ],
+    "retType": "void"
+  },
+  "get_arg_list": {
+    "kind": "function",
+    "name": "get_arg_list",
+    "description": "<p>Given a mocked function, returns all the arguments the function has been called with as a list of lists.</p>",
+    "params": [
+      [
+        "fn",
+        "MockedFunction"
+      ]
+    ],
+    "retType": "List"
+  },
+  "get_num_calls": {
+    "kind": "function",
+    "name": "get_num_calls",
+    "description": "<p>Given a mocked function, returns the number of times the function has been called.</p>",
+    "params": [
+      [
+        "fn",
+        "MockedFunction"
+      ]
+    ],
+    "retType": "number"
+  },
+  "get_ret_vals": {
+    "kind": "function",
+    "name": "get_ret_vals",
+    "description": "<p>Given a mocked function, returns all the values the function has returned with.</p>",
+    "params": [
+      [
+        "fn",
+        "MockedFunction"
+      ]
+    ],
+    "retType": "List"
+  },
+  "mock_function": {
+    "kind": "function",
+    "name": "mock_function",
+    "description": "<p>Mocks a given function, allowing you to track the number of times it's been called and what\nvalues it returned with. You should call the return value from this function rather than the\noriginal value you passed in if you want the mocked function to be properly tracked.</p>",
+    "params": [
+      [
+        "fn",
+        "(args: any[]) => any"
+      ]
+    ],
+    "retType": "MockedFunction"
   }
 }

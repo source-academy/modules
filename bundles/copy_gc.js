@@ -21,8 +21,8 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var copy_gc_exports = {};
-  __export(copy_gc_exports, {
+  var index_exports = {};
+  __export(index_exports, {
     allHeap: () => allHeap,
     doneShowRoot: () => doneShowRoot,
     endFlip: () => endFlip,
@@ -354,5 +354,5 @@ export default require => {
       get_roots
     };
   }
-  return __toCommonJS(copy_gc_exports);
+  return __toCommonJS(index_exports);
 };

@@ -9,7 +9,27 @@
         "GameObject"
       ]
     ],
-    "retType": "GameObject | undefined"
+    "retType": "undefined | GameObject"
+  },
+  "add_listener": {
+    "kind": "function",
+    "name": "add_listener",
+    "description": "<p>Attach a listener to the object. The callback will be executed\nwhen the event is emitted.\nMutate the object.</p><p>For all available events, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.Input.Events.html</p>",
+    "params": [
+      [
+        "obj",
+        "GameObject"
+      ],
+      [
+        "event",
+        "string"
+      ],
+      [
+        "callback",
+        "Function"
+      ]
+    ],
+    "retType": "undefined | GameObject"
   },
   "add_keyboard_listener": {
     "kind": "function",
@@ -31,26 +51,6 @@
     ],
     "retType": "GameObject"
   },
-  "add_listener": {
-    "kind": "function",
-    "name": "add_listener",
-    "description": "<p>Attach a listener to the object. The callback will be executed\nwhen the event is emitted.\nMutate the object.</p><p>For all available events, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.Input.Events.html</p>",
-    "params": [
-      [
-        "obj",
-        "GameObject"
-      ],
-      [
-        "event",
-        "string"
-      ],
-      [
-        "callback",
-        "Function"
-      ]
-    ],
-    "retType": "GameObject | undefined"
-  },
   "add_to_container": {
     "kind": "function",
     "name": "add_to_container",
@@ -65,7 +65,7 @@
         "GameObject"
       ]
     ],
-    "retType": "GameObject | undefined"
+    "retType": "undefined | GameObject"
   },
   "add_tween": {
     "kind": "function",
@@ -81,7 +81,7 @@
         "ObjectConfig"
       ]
     ],
-    "retType": "Promise<GameObject | undefined>"
+    "retType": "Promise<undefined | GameObject>"
   },
   "create_anim": {
     "kind": "function",
@@ -165,7 +165,7 @@
         "string"
       ]
     ],
-    "retType": "ObjectConfig[] | undefined"
+    "retType": "undefined | ObjectConfig[]"
   },
   "create_award": {
     "kind": "function",
@@ -265,7 +265,7 @@
         "string"
       ]
     ],
-    "retType": "GameObject | undefined"
+    "retType": "undefined | GameObject"
   },
   "create_interactive_config": {
     "kind": "function",
@@ -322,70 +322,6 @@
       ]
     ],
     "retType": "GameObject"
-  },
-  "create_sound_config": {
-    "kind": "function",
-    "name": "create_sound_config",
-    "description": "<p>Create sound config object, can be used to configure sound settings.</p><p>For more details about sound config object, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.Types.Sound.html#.SoundConfig</p>",
-    "params": [
-      [
-        "mute",
-        "boolean"
-      ],
-      [
-        "volume",
-        "number"
-      ],
-      [
-        "rate",
-        "number"
-      ],
-      [
-        "detune",
-        "number"
-      ],
-      [
-        "seek",
-        "number"
-      ],
-      [
-        "loop",
-        "boolean"
-      ],
-      [
-        "delay",
-        "number"
-      ]
-    ],
-    "retType": "ObjectConfig"
-  },
-  "create_spritesheet_config": {
-    "kind": "function",
-    "name": "create_spritesheet_config",
-    "description": "<p>Create spritesheet config, can be used to configure the frames within the\nspritesheet. Can be used as config at load_spritesheet.</p>",
-    "params": [
-      [
-        "frame_width",
-        "number"
-      ],
-      [
-        "frame_height",
-        "number"
-      ],
-      [
-        "start_frame",
-        "number"
-      ],
-      [
-        "margin",
-        "number"
-      ],
-      [
-        "spacing",
-        "number"
-      ]
-    ],
-    "retType": "ObjectConfig"
   },
   "create_text": {
     "kind": "function",
@@ -491,6 +427,70 @@
     ],
     "retType": "ObjectConfig"
   },
+  "create_sound_config": {
+    "kind": "function",
+    "name": "create_sound_config",
+    "description": "<p>Create sound config object, can be used to configure sound settings.</p><p>For more details about sound config object, see:\nhttps://photonstorm.github.io/phaser3-docs/Phaser.Types.Sound.html#.SoundConfig</p>",
+    "params": [
+      [
+        "mute",
+        "boolean"
+      ],
+      [
+        "volume",
+        "number"
+      ],
+      [
+        "rate",
+        "number"
+      ],
+      [
+        "detune",
+        "number"
+      ],
+      [
+        "seek",
+        "number"
+      ],
+      [
+        "loop",
+        "boolean"
+      ],
+      [
+        "delay",
+        "number"
+      ]
+    ],
+    "retType": "ObjectConfig"
+  },
+  "create_spritesheet_config": {
+    "kind": "function",
+    "name": "create_spritesheet_config",
+    "description": "<p>Create spritesheet config, can be used to configure the frames within the\nspritesheet. Can be used as config at load_spritesheet.</p>",
+    "params": [
+      [
+        "frame_width",
+        "number"
+      ],
+      [
+        "frame_height",
+        "number"
+      ],
+      [
+        "start_frame",
+        "number"
+      ],
+      [
+        "margin",
+        "number"
+      ],
+      [
+        "spacing",
+        "number"
+      ]
+    ],
+    "retType": "ObjectConfig"
+  },
   "destroy_obj": {
     "kind": "function",
     "name": "destroy_obj",
@@ -503,17 +503,10 @@
     ],
     "retType": "void"
   },
-  "get_screen_display_height": {
+  "get_screen_width": {
     "kind": "function",
-    "name": "get_screen_display_height",
-    "description": "<p>Get game screen display height (accounting window size).</p>",
-    "params": [],
-    "retType": "number"
-  },
-  "get_screen_display_width": {
-    "kind": "function",
-    "name": "get_screen_display_width",
-    "description": "<p>Get game screen display width (accounting window size).</p>",
+    "name": "get_screen_width",
+    "description": "<p>Get in-game screen width.</p>",
     "params": [],
     "retType": "number"
   },
@@ -524,10 +517,17 @@
     "params": [],
     "retType": "number"
   },
-  "get_screen_width": {
+  "get_screen_display_width": {
     "kind": "function",
-    "name": "get_screen_width",
-    "description": "<p>Get in-game screen width.</p>",
+    "name": "get_screen_display_width",
+    "description": "<p>Get game screen display width (accounting window size).</p>",
+    "params": [],
+    "retType": "number"
+  },
+  "get_screen_display_height": {
+    "kind": "function",
+    "name": "get_screen_display_height",
+    "description": "<p>Get game screen display height (accounting window size).</p>",
     "params": [],
     "retType": "number"
   },
@@ -597,7 +597,7 @@
         "string"
       ]
     ],
-    "retType": "GameObject | undefined"
+    "retType": "undefined | GameObject"
   },
   "play_sound": {
     "kind": "function",
@@ -653,7 +653,7 @@
         "number"
       ]
     ],
-    "retType": "GameObject | undefined"
+    "retType": "undefined | GameObject"
   },
   "set_display_size": {
     "kind": "function",
@@ -673,7 +673,7 @@
         "number"
       ]
     ],
-    "retType": "GameObject | undefined"
+    "retType": "undefined | GameObject"
   },
   "set_flip": {
     "kind": "function",
@@ -693,7 +693,7 @@
         "boolean"
       ]
     ],
-    "retType": "GameObject | undefined"
+    "retType": "undefined | GameObject"
   },
   "set_interactive": {
     "kind": "function",
@@ -709,7 +709,7 @@
         "ObjectConfig"
       ]
     ],
-    "retType": "GameObject | undefined"
+    "retType": "undefined | GameObject"
   },
   "set_origin": {
     "kind": "function",
@@ -729,7 +729,7 @@
         "number"
       ]
     ],
-    "retType": "GameObject | undefined"
+    "retType": "undefined | GameObject"
   },
   "set_position": {
     "kind": "function",
@@ -749,7 +749,7 @@
         "number"
       ]
     ],
-    "retType": "GameObject | undefined"
+    "retType": "undefined | GameObject"
   },
   "set_rotation": {
     "kind": "function",
@@ -765,7 +765,7 @@
         "number"
       ]
     ],
-    "retType": "GameObject | undefined"
+    "retType": "undefined | GameObject"
   },
   "set_scale": {
     "kind": "function",
@@ -785,6 +785,6 @@
         "number"
       ]
     ],
-    "retType": "GameObject | undefined"
+    "retType": "undefined | GameObject"
   }
 }

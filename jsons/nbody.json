@@ -1,44 +1,4 @@
 {
-  "addVectors": {
-    "kind": "function",
-    "name": "addVectors",
-    "description": "<p>Add two vectors.</p>",
-    "params": [
-      [
-        "v1",
-        "Vector3"
-      ],
-      [
-        "v2",
-        "Vector3"
-      ]
-    ],
-    "retType": "Vector3"
-  },
-  "clone": {
-    "kind": "function",
-    "name": "clone",
-    "description": "<p>Deep clone an object.</p>",
-    "params": [
-      [
-        "obj",
-        "Vector3 | CelestialBody | State | Universe"
-      ]
-    ],
-    "retType": "CelestialBody | State | Universe | Vector3"
-  },
-  "createBodyCenterTransformation": {
-    "kind": "function",
-    "name": "createBodyCenterTransformation",
-    "description": "<p>Create a frame of reference transformation that moves the origin to the center of ith both.</p>",
-    "params": [
-      [
-        "i",
-        "number"
-      ]
-    ],
-    "retType": "BodyCenterTransformation"
-  },
   "createCelestialBody": {
     "kind": "function",
     "name": "createCelestialBody",
@@ -83,13 +43,6 @@
     ],
     "retType": "CentripetalForce"
   },
-  "createCoMTransformation": {
-    "kind": "function",
-    "name": "createCoMTransformation",
-    "description": "<p>Create a frame of reference transformation that moves the origin to the center of mass of the system.</p>",
-    "params": [],
-    "retType": "CoMTransformation"
-  },
   "createCombinedForce": {
     "kind": "function",
     "name": "createCombinedForce",
@@ -102,18 +55,6 @@
     ],
     "retType": "CombinedForce"
   },
-  "createExplicitEulerSim": {
-    "kind": "function",
-    "name": "createExplicitEulerSim",
-    "description": "<p>Create an explicit euler integrator to be used as the simulation function.</p>",
-    "params": [
-      [
-        "force",
-        "Force"
-      ]
-    ],
-    "retType": "ExplicitEulerSim"
-  },
   "createForce": {
     "kind": "function",
     "name": "createForce",
@@ -121,7 +62,7 @@
     "params": [
       [
         "fn",
-        "Function"
+        "(bodies: CelestialBody[]) => Vector3[]"
       ]
     ],
     "retType": "Force"
@@ -138,6 +79,30 @@
     ],
     "retType": "Gravity"
   },
+  "clone": {
+    "kind": "function",
+    "name": "clone",
+    "description": "<p>Deep clone an object.</p>",
+    "params": [
+      [
+        "obj",
+        "Vector3 | CelestialBody | State | Universe"
+      ]
+    ],
+    "retType": "Vector3 | CelestialBody | State | Universe"
+  },
+  "createExplicitEulerSim": {
+    "kind": "function",
+    "name": "createExplicitEulerSim",
+    "description": "<p>Create an explicit euler integrator to be used as the simulation function.</p>",
+    "params": [
+      [
+        "force",
+        "Force"
+      ]
+    ],
+    "retType": "ExplicitEulerSim"
+  },
   "createLambdaSim": {
     "kind": "function",
     "name": "createLambdaSim",
@@ -145,10 +110,157 @@
     "params": [
       [
         "fn",
-        "Function"
+        "(deltaT: number, prevState: State, currState: State) => State"
       ]
     ],
     "retType": "LambdaSim"
+  },
+  "createRungeKutta4Sim": {
+    "kind": "function",
+    "name": "createRungeKutta4Sim",
+    "description": "<p>Create a numerical integrator that uses the Runge-Kutta 4 method to simulate the nbody system.</p>",
+    "params": [
+      [
+        "force",
+        "Force"
+      ],
+      [
+        "weights",
+        "number[]"
+      ]
+    ],
+    "retType": "RungeKutta4Sim"
+  },
+  "createSemiImplicitEulerSim": {
+    "kind": "function",
+    "name": "createSemiImplicitEulerSim",
+    "description": "<p>Create a numerical integrator that uses the semi-implicit Euler method to simulate the nbody system.</p>",
+    "params": [
+      [
+        "force",
+        "Force"
+      ]
+    ],
+    "retType": "SemiImplicitEulerSim"
+  },
+  "createVelocityVerletSim": {
+    "kind": "function",
+    "name": "createVelocityVerletSim",
+    "description": "<p>Create a numerical integrator that uses the velocity Verlet method to simulate the nbody system.</p>",
+    "params": [
+      [
+        "force",
+        "Force"
+      ]
+    ],
+    "retType": "VelocityVerletSim"
+  },
+  "createSimulation": {
+    "kind": "function",
+    "name": "createSimulation",
+    "description": "<p>Create a new simulation.</p>",
+    "params": [
+      [
+        "universes",
+        "Universe[]"
+      ],
+      [
+        "visType",
+        "VisType"
+      ],
+      [
+        "record",
+        "boolean"
+      ],
+      [
+        "looped",
+        "boolean"
+      ],
+      [
+        "showTrails",
+        "boolean"
+      ],
+      [
+        "maxTrailLength",
+        "number"
+      ]
+    ],
+    "retType": "Simulation"
+  },
+  "playSim": {
+    "kind": "function",
+    "name": "playSim",
+    "description": "<p>Play a simulation.</p>",
+    "params": [
+      [
+        "sim",
+        "Simulation"
+      ]
+    ],
+    "retType": "void"
+  },
+  "recordSim": {
+    "kind": "function",
+    "name": "recordSim",
+    "description": "<p>Record and play a simulation.</p>",
+    "params": [
+      [
+        "sim",
+        "Simulation"
+      ],
+      [
+        "recordFor",
+        "number"
+      ],
+      [
+        "recordSpeed",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "createState": {
+    "kind": "function",
+    "name": "createState",
+    "description": "<p>Create a new state snapshot of the universe.</p>",
+    "params": [
+      [
+        "bodies",
+        "CelestialBody[]"
+      ]
+    ],
+    "retType": "State"
+  },
+  "getBodies": {
+    "kind": "function",
+    "name": "getBodies",
+    "description": "<p>Get the bodies in a state.</p>",
+    "params": [
+      [
+        "state",
+        "State"
+      ]
+    ],
+    "retType": "CelestialBody[]"
+  },
+  "createBodyCenterTransformation": {
+    "kind": "function",
+    "name": "createBodyCenterTransformation",
+    "description": "<p>Create a frame of reference transformation that moves the origin to the center of ith both.</p>",
+    "params": [
+      [
+        "i",
+        "number"
+      ]
+    ],
+    "retType": "BodyCenterTransformation"
+  },
+  "createCoMTransformation": {
+    "kind": "function",
+    "name": "createCoMTransformation",
+    "description": "<p>Create a frame of reference transformation that moves the origin to the center of mass of the system.</p>",
+    "params": [],
+    "retType": "CoMTransformation"
   },
   "createLambdaTransformation": {
     "kind": "function",
@@ -157,7 +269,7 @@
     "params": [
       [
         "fn",
-        "Function"
+        "(state: State) => State"
       ]
     ],
     "retType": "LambdaTransformation"
@@ -193,78 +305,6 @@
       ]
     ],
     "retType": "RotateTransformation"
-  },
-  "createRungeKutta4Sim": {
-    "kind": "function",
-    "name": "createRungeKutta4Sim",
-    "description": "<p>Create a numerical integrator that uses the Runge-Kutta 4 method to simulate the nbody system.</p>",
-    "params": [
-      [
-        "force",
-        "Force"
-      ],
-      [
-        "weights",
-        "number[]"
-      ]
-    ],
-    "retType": "RungeKutta4Sim"
-  },
-  "createSemiImplicitEulerSim": {
-    "kind": "function",
-    "name": "createSemiImplicitEulerSim",
-    "description": "<p>Create a numerical integrator that uses the semi-implicit Euler method to simulate the nbody system.</p>",
-    "params": [
-      [
-        "force",
-        "Force"
-      ]
-    ],
-    "retType": "SemiImplicitEulerSim"
-  },
-  "createSimulation": {
-    "kind": "function",
-    "name": "createSimulation",
-    "description": "<p>Create a new simulation.</p>",
-    "params": [
-      [
-        "universes",
-        "Universe[]"
-      ],
-      [
-        "visType",
-        "VisType"
-      ],
-      [
-        "record",
-        "boolean"
-      ],
-      [
-        "looped",
-        "boolean"
-      ],
-      [
-        "showTrails",
-        "boolean"
-      ],
-      [
-        "maxTrailLength",
-        "number"
-      ]
-    ],
-    "retType": "Simulation"
-  },
-  "createState": {
-    "kind": "function",
-    "name": "createState",
-    "description": "<p>Create a new state snapshot of the universe.</p>",
-    "params": [
-      [
-        "bodies",
-        "CelestialBody[]"
-      ]
-    ],
-    "retType": "State"
   },
   "createTimedRotateTransformation": {
     "kind": "function",
@@ -314,6 +354,22 @@
     ],
     "retType": "Universe"
   },
+  "addVectors": {
+    "kind": "function",
+    "name": "addVectors",
+    "description": "<p>Add two vectors.</p>",
+    "params": [
+      [
+        "v1",
+        "Vector3"
+      ],
+      [
+        "v2",
+        "Vector3"
+      ]
+    ],
+    "retType": "Vector3"
+  },
   "createVector": {
     "kind": "function",
     "name": "createVector",
@@ -333,30 +389,6 @@
       ]
     ],
     "retType": "Vector3"
-  },
-  "createVelocityVerletSim": {
-    "kind": "function",
-    "name": "createVelocityVerletSim",
-    "description": "<p>Create a numerical integrator that uses the velocity Verlet method to simulate the nbody system.</p>",
-    "params": [
-      [
-        "force",
-        "Force"
-      ]
-    ],
-    "retType": "VelocityVerletSim"
-  },
-  "getBodies": {
-    "kind": "function",
-    "name": "getBodies",
-    "description": "<p>Get the bodies in a state.</p>",
-    "params": [
-      [
-        "state",
-        "State"
-      ]
-    ],
-    "retType": "CelestialBody[]"
   },
   "getX": {
     "kind": "function",
@@ -409,38 +441,6 @@
       ]
     ],
     "retType": "Vector3"
-  },
-  "playSim": {
-    "kind": "function",
-    "name": "playSim",
-    "description": "<p>Play a simulation.</p>",
-    "params": [
-      [
-        "sim",
-        "Simulation"
-      ]
-    ],
-    "retType": "void"
-  },
-  "recordSim": {
-    "kind": "function",
-    "name": "recordSim",
-    "description": "<p>Record and play a simulation.</p>",
-    "params": [
-      [
-        "sim",
-        "Simulation"
-      ],
-      [
-        "recordFor",
-        "number"
-      ],
-      [
-        "recordSpeed",
-        "number"
-      ]
-    ],
-    "retType": "void"
   },
   "setX": {
     "kind": "function",

@@ -11,6 +11,14 @@ export default require => {
     if (typeof require !== "undefined") return require.apply(this, arguments);
     throw Error('Dynamic require of "' + x + '" is not supported');
   });
+  var __esm = (fn, res) => function __init() {
+    return (fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res);
+  };
+  var __commonJS = (cb, mod) => function __require2() {
+    return (mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = {
+      exports: {}
+    }).exports, mod), mod.exports);
+  };
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
       get: all[name],
@@ -39,8 +47,231 @@ export default require => {
     if (kind && result) __defProp(target, key, result);
     return result;
   };
-  var curve_exports = {};
-  __export(curve_exports, {
+  var init_define_process = __esm({
+    "<define:process>"() {}
+  });
+  var require_baseClamp = __commonJS({
+    "../../../node_modules/lodash/_baseClamp.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      function baseClamp(number, lower, upper) {
+        if (number === number) {
+          if (upper !== void 0) {
+            number = number <= upper ? number : upper;
+          }
+          if (lower !== void 0) {
+            number = number >= lower ? number : lower;
+          }
+        }
+        return number;
+      }
+      module.exports = baseClamp;
+    }
+  });
+  var require_trimmedEndIndex = __commonJS({
+    "../../../node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var reWhitespace = /\s/;
+      function trimmedEndIndex(string) {
+        var index = string.length;
+        while (index-- && reWhitespace.test(string.charAt(index))) {}
+        return index;
+      }
+      module.exports = trimmedEndIndex;
+    }
+  });
+  var require_baseTrim = __commonJS({
+    "../../../node_modules/lodash/_baseTrim.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var trimmedEndIndex = require_trimmedEndIndex();
+      var reTrimStart = /^\s+/;
+      function baseTrim(string) {
+        return string ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, "") : string;
+      }
+      module.exports = baseTrim;
+    }
+  });
+  var require_isObject = __commonJS({
+    "../../../node_modules/lodash/isObject.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      function isObject(value) {
+        var type = typeof value;
+        return value != null && (type == "object" || type == "function");
+      }
+      module.exports = isObject;
+    }
+  });
+  var require_freeGlobal = __commonJS({
+    "../../../node_modules/lodash/_freeGlobal.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var freeGlobal = typeof globalThis == "object" && globalThis && globalThis.Object === Object && globalThis;
+      module.exports = freeGlobal;
+    }
+  });
+  var require_root = __commonJS({
+    "../../../node_modules/lodash/_root.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var freeGlobal = require_freeGlobal();
+      var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+      var root = freeGlobal || freeSelf || Function("return this")();
+      module.exports = root;
+    }
+  });
+  var require_Symbol = __commonJS({
+    "../../../node_modules/lodash/_Symbol.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var root = require_root();
+      var Symbol2 = root.Symbol;
+      module.exports = Symbol2;
+    }
+  });
+  var require_getRawTag = __commonJS({
+    "../../../node_modules/lodash/_getRawTag.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var Symbol2 = require_Symbol();
+      var objectProto = Object.prototype;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      var nativeObjectToString = objectProto.toString;
+      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+      function getRawTag(value) {
+        var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
+        try {
+          value[symToStringTag] = void 0;
+          var unmasked = true;
+        } catch (e) {}
+        var result = nativeObjectToString.call(value);
+        if (unmasked) {
+          if (isOwn) {
+            value[symToStringTag] = tag;
+          } else {
+            delete value[symToStringTag];
+          }
+        }
+        return result;
+      }
+      module.exports = getRawTag;
+    }
+  });
+  var require_objectToString = __commonJS({
+    "../../../node_modules/lodash/_objectToString.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var objectProto = Object.prototype;
+      var nativeObjectToString = objectProto.toString;
+      function objectToString(value) {
+        return nativeObjectToString.call(value);
+      }
+      module.exports = objectToString;
+    }
+  });
+  var require_baseGetTag = __commonJS({
+    "../../../node_modules/lodash/_baseGetTag.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var Symbol2 = require_Symbol();
+      var getRawTag = require_getRawTag();
+      var objectToString = require_objectToString();
+      var nullTag = "[object Null]";
+      var undefinedTag = "[object Undefined]";
+      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+      function baseGetTag(value) {
+        if (value == null) {
+          return value === void 0 ? undefinedTag : nullTag;
+        }
+        return symToStringTag && (symToStringTag in Object(value)) ? getRawTag(value) : objectToString(value);
+      }
+      module.exports = baseGetTag;
+    }
+  });
+  var require_isObjectLike = __commonJS({
+    "../../../node_modules/lodash/isObjectLike.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      function isObjectLike(value) {
+        return value != null && typeof value == "object";
+      }
+      module.exports = isObjectLike;
+    }
+  });
+  var require_isSymbol = __commonJS({
+    "../../../node_modules/lodash/isSymbol.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var baseGetTag = require_baseGetTag();
+      var isObjectLike = require_isObjectLike();
+      var symbolTag = "[object Symbol]";
+      function isSymbol(value) {
+        return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
+      }
+      module.exports = isSymbol;
+    }
+  });
+  var require_toNumber = __commonJS({
+    "../../../node_modules/lodash/toNumber.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var baseTrim = require_baseTrim();
+      var isObject = require_isObject();
+      var isSymbol = require_isSymbol();
+      var NAN = 0 / 0;
+      var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+      var reIsBinary = /^0b[01]+$/i;
+      var reIsOctal = /^0o[0-7]+$/i;
+      var freeParseInt = parseInt;
+      function toNumber(value) {
+        if (typeof value == "number") {
+          return value;
+        }
+        if (isSymbol(value)) {
+          return NAN;
+        }
+        if (isObject(value)) {
+          var other = typeof value.valueOf == "function" ? value.valueOf() : value;
+          value = isObject(other) ? other + "" : other;
+        }
+        if (typeof value != "string") {
+          return value === 0 ? value : +value;
+        }
+        value = baseTrim(value);
+        var isBinary = reIsBinary.test(value);
+        return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
+      }
+      module.exports = toNumber;
+    }
+  });
+  var require_clamp = __commonJS({
+    "../../../node_modules/lodash/clamp.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var baseClamp = require_baseClamp();
+      var toNumber = require_toNumber();
+      function clamp2(number, lower, upper) {
+        if (upper === void 0) {
+          upper = lower;
+          lower = void 0;
+        }
+        if (upper !== void 0) {
+          upper = toNumber(upper);
+          upper = upper === upper ? upper : 0;
+        }
+        if (lower !== void 0) {
+          lower = toNumber(lower);
+          lower = lower === lower ? lower : 0;
+        }
+        return baseClamp(toNumber(number), lower, upper);
+      }
+      module.exports = clamp2;
+    }
+  });
+  var index_exports = {};
+  __export(index_exports, {
     animate_3D_curve: () => animate_3D_curve,
     animate_curve: () => animate_curve,
     arc: () => arc,
@@ -79,7 +310,13 @@ export default require => {
     y_of: () => y_of,
     z_of: () => z_of
   });
+  init_define_process();
+  init_define_process();
   var import_context = __toESM(__require("js-slang/context"), 1);
+  var import_clamp = __toESM(require_clamp(), 1);
+  init_define_process();
+  init_define_process();
+  init_define_process();
   var EPSILON = 1e-6;
   var ARRAY_TYPE = typeof Float32Array !== "undefined" ? Float32Array : Array;
   var RANDOM = Math.random;
@@ -145,6 +382,7 @@ export default require => {
     translate: () => translate,
     transpose: () => transpose
   });
+  init_define_process();
   function create() {
     var out = new ARRAY_TYPE(16);
     if (ARRAY_TYPE != Float32Array) {
@@ -1392,6 +1630,7 @@ export default require => {
     transformQuat: () => transformQuat,
     zero: () => zero
   });
+  init_define_process();
   function create2() {
     var out = new ARRAY_TYPE(3);
     if (ARRAY_TYPE != Float32Array) {
@@ -1988,13 +2227,15 @@ void main() {
     }
     return new CurveDrawn(drawMode, numPoints, space, drawCubeArray, curvePosArray, curveColorArray);
   }
+  init_define_process();
+  init_define_process();
   var glAnimation = class {
     constructor(duration, fps) {
       this.duration = duration;
       this.fps = fps;
     }
   };
-  glAnimation.isAnimation = obj => obj.fps !== void 0;
+  glAnimation.isAnimation = obj => obj instanceof glAnimation;
   var AnimatedCurve = class extends glAnimation {
     constructor(duration, fps, func, drawer, is3D) {
       super(duration, fps);
@@ -2030,7 +2271,9 @@ void main() {
         return curveDrawn;
       };
       func.is3D = space === "3D";
-      func.toString = () => `<${space === "3D" ? "3D" : ""}RenderFunction(${numPoints})>`;
+      const stringifier = () => `<${space === "3D" ? "3D" : ""}RenderFunction(${numPoints})>`;
+      func.toString = stringifier;
+      func.toReplString = stringifier;
       return func;
     };
   }
@@ -2053,110 +2296,101 @@ void main() {
     return new Point(x, y, z, [0, 0, 0, 1]);
   }
   function make_color_point(x, y, r, g, b) {
+    r = (0, import_clamp.default)(r, 0, 255);
+    g = (0, import_clamp.default)(g, 0, 255);
+    b = (0, import_clamp.default)(b, 0, 255);
     return new Point(x, y, 0, [r / 255, g / 255, b / 255, 1]);
   }
   function make_3D_color_point(x, y, z, r, g, b) {
+    r = (0, import_clamp.default)(r, 0, 255);
+    g = (0, import_clamp.default)(g, 0, 255);
+    b = (0, import_clamp.default)(b, 0, 255);
     return new Point(x, y, z, [r / 255, g / 255, b / 255, 1]);
   }
+  function throwIfNotPoint(obj, func_name) {
+    if (!(obj instanceof Point)) {
+      throw new Error(`${func_name} expects a point as argument`);
+    }
+  }
   function x_of(pt) {
+    throwIfNotPoint(pt, x_of.name);
     return pt.x;
   }
   function y_of(pt) {
+    throwIfNotPoint(pt, y_of.name);
     return pt.y;
   }
   function z_of(pt) {
+    throwIfNotPoint(pt, z_of.name);
     return pt.z;
   }
   function r_of(pt) {
-    return pt.color[0] * 255;
+    throwIfNotPoint(pt, r_of.name);
+    return Math.floor(pt.color[0] * 255);
   }
   function g_of(pt) {
-    return pt.color[1] * 255;
+    throwIfNotPoint(pt, g_of.name);
+    return Math.floor(pt.color[1] * 255);
   }
   function b_of(pt) {
-    return pt.color[2] * 255;
+    throwIfNotPoint(pt, b_of.name);
+    return Math.floor(pt.color[2] * 255);
   }
-  function invert2(curve) {
-    return t => curve(1 - t);
-  }
+  var invert2 = original => t => original(1 - t);
   function translate2(x0, y0, z0) {
-    return curve => {
-      const transformation = cf => t => {
-        const a = x0 === void 0 ? 0 : x0;
-        const b = y0 === void 0 ? 0 : y0;
-        const c = z0 === void 0 ? 0 : z0;
-        const ct = cf(t);
-        return make_3D_color_point(a + x_of(ct), b + y_of(ct), c + z_of(ct), r_of(ct), g_of(ct), b_of(ct));
-      };
-      return transformation(curve);
+    return curve => t => {
+      const ct = curve(t);
+      return new Point(x0 + ct.x, y0 + ct.y, z0 + ct.z, [ct.color[0], ct.color[1], ct.color[2], 1]);
     };
   }
-  function rotate_around_origin(theta1, theta2, theta3) {
-    if (theta3 === void 0 && theta1 !== void 0 && theta2 !== void 0) {
-      throw new Error("Expected 1 or 3 arguments, but received 2");
-    } else if (theta1 !== void 0 && theta2 === void 0 && theta3 === void 0) {
-      const cth = Math.cos(theta1);
-      const sth = Math.sin(theta1);
-      return curve => {
-        const transformation = c => t => {
-          const ct = c(t);
-          const x = x_of(ct);
-          const y = y_of(ct);
-          const z = z_of(ct);
-          return make_3D_color_point(cth * x - sth * y, sth * x + cth * y, z, r_of(ct), g_of(ct), b_of(ct));
-        };
-        return transformation(curve);
-      };
-    } else {
-      const cthx = Math.cos(theta1);
-      const sthx = Math.sin(theta1);
-      const cthy = Math.cos(theta2);
-      const sthy = Math.sin(theta2);
-      const cthz = Math.cos(theta3);
-      const sthz = Math.sin(theta3);
-      return curve => {
-        const transformation = c => t => {
-          const ct = c(t);
-          const coord = [x_of(ct), y_of(ct), z_of(ct)];
-          const mat = [[cthz * cthy, cthz * sthy * sthx - sthz * cthx, cthz * sthy * cthx + sthz * sthx], [sthz * cthy, sthz * sthy * sthx + cthz * cthx, sthz * sthy * cthx - cthz * sthx], [-sthy, cthy * sthx, cthy * cthx]];
-          let xf = 0;
-          let yf = 0;
-          let zf = 0;
-          for (let i = 0; i < 3; i += 1) {
-            xf += mat[0][i] * coord[i];
-            yf += mat[1][i] * coord[i];
-            zf += mat[2][i] * coord[i];
-          }
-          return make_3D_color_point(xf, yf, zf, r_of(ct), g_of(ct), b_of(ct));
-        };
-        return transformation(curve);
-      };
-    }
+  function rotate_around_origin_3D(a, b, c) {
+    const cthx = Math.cos(a);
+    const sthx = Math.sin(a);
+    const cthy = Math.cos(b);
+    const sthy = Math.sin(b);
+    const cthz = Math.cos(c);
+    const sthz = Math.sin(c);
+    return curve => t => {
+      const ct = curve(t);
+      const coord = [ct.x, ct.y, ct.z];
+      const mat = [[cthz * cthy, cthz * sthy * sthx - sthz * cthx, cthz * sthy * cthx + sthz * sthx], [sthz * cthy, sthz * sthy * sthx + cthz * cthx, sthz * sthy * cthx - cthz * sthx], [-sthy, cthy * sthx, cthy * cthx]];
+      let xf = 0;
+      let yf = 0;
+      let zf = 0;
+      for (let i = 0; i < 3; i += 1) {
+        xf += mat[0][i] * coord[i];
+        yf += mat[1][i] * coord[i];
+        zf += mat[2][i] * coord[i];
+      }
+      return new Point(xf, yf, zf, [ct.color[0], ct.color[1], ct.color[2], 1]);
+    };
   }
-  function scale3(a, b, c) {
-    return curve => {
-      const transformation = cf => t => {
-        const ct = cf(t);
-        const a1 = a === void 0 ? 1 : a;
-        const b1 = b === void 0 ? 1 : b;
-        const c1 = c === void 0 ? 1 : c;
-        return make_3D_color_point(a1 * x_of(ct), b1 * y_of(ct), c1 * z_of(ct), r_of(ct), g_of(ct), b_of(ct));
-      };
-      return transformation(curve);
+  function rotate_around_origin(a) {
+    const cth = Math.cos(a);
+    const sth = Math.sin(a);
+    return curve => t => {
+      const ct = curve(t);
+      return new Point(cth * ct.x - sth * ct.y, sth * ct.x + cth * ct.y, ct.z, [ct.color[0], ct.color[1], ct.color[2], 1]);
+    };
+  }
+  function scale3(x, y, z) {
+    return curve => t => {
+      const ct = curve(t);
+      return new Point(x * ct.x, y * ct.y, z * ct.z, [ct.color[0], ct.color[1], ct.color[2], 1]);
     };
   }
   function scale_proportional(s) {
     return scale3(s, s, s);
   }
-  function put_in_standard_position(curve) {
+  var put_in_standard_position = curve => {
     const start_point = curve(0);
     const curve_started_at_origin = translate2(-x_of(start_point), -y_of(start_point), 0)(curve);
     const new_end_point = curve_started_at_origin(1);
     const theta = Math.atan2(y_of(new_end_point), x_of(new_end_point));
-    const curve_ended_at_x_axis = rotate_around_origin(0, 0, -theta)(curve_started_at_origin);
+    const curve_ended_at_x_axis = rotate_around_origin_3D(0, 0, -theta)(curve_started_at_origin);
     const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1));
     return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
-  }
+  };
   function connect_rigidly(curve1, curve2) {
     return t => t < 1 / 2 ? curve1(2 * t) : curve2(2 * t - 1);
   }
@@ -2165,18 +2399,16 @@ void main() {
     const endPointOfCurve1 = curve1(1);
     return connect_rigidly(curve1, translate2(x_of(endPointOfCurve1) - x_of(startPointOfCurve2), y_of(endPointOfCurve1) - y_of(startPointOfCurve2), z_of(endPointOfCurve1) - z_of(startPointOfCurve2))(curve2));
   }
-  function unit_circle(t) {
+  var unit_circle = t => {
     return make_point(Math.cos(2 * Math.PI * t), Math.sin(2 * Math.PI * t));
+  };
+  var unit_line = t => make_point(t, 0);
+  function unit_line_at(y) {
+    return t => make_point(t, y);
   }
-  function unit_line(t) {
-    return make_point(t, 0);
-  }
-  function unit_line_at(t) {
-    return a => make_point(a, t);
-  }
-  function arc(t) {
+  var arc = t => {
     return make_point(Math.sin(Math.PI * t), Math.cos(Math.PI * t));
-  }
+  };
   function animate_curve(duration, fps, drawer, func) {
     if (drawer.is3D) {
       throw new Error("animate_curve cannot be used with 3D draw function!");
@@ -2193,64 +2425,82 @@ void main() {
     drawnCurves.push(anim);
     return anim;
   }
-  var type_map = {};
-  var registerType = (name, declaration) => {
-    if (name == "prelude") {
-      type_map["prelude"] = type_map["prelude"] != void 0 ? type_map["prelude"] + "\n" + declaration : declaration;
-    } else {
-      type_map[name] = declaration;
+  init_define_process();
+  init_define_process();
+  function createTypeMap() {
+    const type_map2 = {};
+    function registerType(name, declaration) {
+      if (name === "prelude") {
+        type_map2["prelude"] = type_map2["prelude"] != void 0 ? type_map2["prelude"] + "\n" + declaration : declaration;
+      } else {
+        type_map2[name] = declaration;
+      }
     }
-  };
-  var classDeclaration = name => {
-    return _target => {
-      registerType("prelude", `class ${name} {}`);
+    function classDeclaration2(name) {
+      return _target => {
+        registerType("prelude", `class ${name} {}`);
+      };
+    }
+    function typeDeclaration2(type, declaration = null) {
+      return target => {
+        const typeAlias = `type ${target.name} = ${type}`;
+        let variableDeclaration2 = `const ${target.name} = ${declaration === null ? type : declaration}`;
+        switch (type) {
+          case "number":
+            variableDeclaration2 = `const ${target.name} = 0`;
+            break;
+          case "string":
+            variableDeclaration2 = `const ${target.name} = ''`;
+            break;
+          case "boolean":
+            variableDeclaration2 = `const ${target.name} = false`;
+            break;
+          case "void":
+            variableDeclaration2 = "";
+            break;
+        }
+        registerType("prelude", `${typeAlias};
+${variableDeclaration2};`);
+      };
+    }
+    function functionDeclaration2(paramTypes, returnType) {
+      return (_target, propertyKey, _descriptor) => {
+        let returnValue = "";
+        switch (returnType) {
+          case "number":
+            returnValue = "return 0";
+            break;
+          case "string":
+            returnValue = "return ''";
+            break;
+          case "boolean":
+            returnValue = "return false";
+            break;
+          case "void":
+            returnValue = "";
+            break;
+          default:
+            returnValue = `return ${returnType}`;
+            break;
+        }
+        registerType(propertyKey, `function ${propertyKey} (${paramTypes}) : ${returnType} { ${returnValue} }`);
+      };
+    }
+    function variableDeclaration(type) {
+      return (_target, propertyKey) => {
+        registerType(propertyKey, `const ${propertyKey}: ${type} = ${type}`);
+      };
+    }
+    return {
+      classDeclaration: classDeclaration2,
+      functionDeclaration: functionDeclaration2,
+      variableDeclaration,
+      typeDeclaration: typeDeclaration2,
+      type_map: type_map2
     };
-  };
-  var typeDeclaration = (type, declaration = null) => {
-    return _target => {
-      const typeAlias = `type ${_target.name} = ${type}`;
-      let variableDeclaration = `const ${_target.name} = ${declaration === null ? type : declaration}`;
-      switch (type) {
-        case "number":
-          variableDeclaration = `const ${_target.name} = 0`;
-          break;
-        case "string":
-          variableDeclaration = `const ${_target.name} = ''`;
-          break;
-        case "boolean":
-          variableDeclaration = `const ${_target.name} = false`;
-          break;
-        case "void":
-          variableDeclaration = "";
-          break;
-      }
-      registerType("prelude", `${typeAlias};
-${variableDeclaration};`);
-    };
-  };
-  var functionDeclaration = (paramTypes, returnType) => {
-    return (_target, propertyKey, _descriptor) => {
-      let returnValue = "";
-      switch (returnType) {
-        case "number":
-          returnValue = "return 0";
-          break;
-        case "string":
-          returnValue = "return ''";
-          break;
-        case "boolean":
-          returnValue = "return false";
-          break;
-        case "void":
-          returnValue = "";
-          break;
-        default:
-          returnValue = `return ${returnType}`;
-          break;
-      }
-      registerType(propertyKey, `function ${propertyKey} (${paramTypes}) : ${returnType} { ${returnValue} }`);
-    };
-  };
+  }
+  var typeMapCreator = createTypeMap();
+  var {classDeclaration, functionDeclaration, typeDeclaration} = typeMapCreator;
   var Point2 = class {};
   Point2 = __decorateClass([classDeclaration("Point")], Point2);
   var AnimatedCurve2 = class {};
@@ -2333,5 +2583,6 @@ ${variableDeclaration};`);
   __decorateClass([functionDeclaration("p: Point", "number")], TypeInterface.prototype, "x_of", 1);
   __decorateClass([functionDeclaration("p: Point", "number")], TypeInterface.prototype, "y_of", 1);
   __decorateClass([functionDeclaration("p: Point", "number")], TypeInterface.prototype, "z_of", 1);
-  return __toCommonJS(curve_exports);
+  var type_map = typeMapCreator.type_map;
+  return __toCommonJS(index_exports);
 };

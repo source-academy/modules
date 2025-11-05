@@ -18,7 +18,7 @@
     "params": [
       [
         "buffer",
-        "number[] | Uint8Array<ArrayBufferLike>"
+        "Uint8Array<ArrayBufferLike> | number[]"
       ]
     ],
     "retType": "AlternatingLinkedList<string, ExportValue>"

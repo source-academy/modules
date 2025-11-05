@@ -63,7 +63,7 @@ export default require => {
     "<define:process>"() {}
   });
   var require_abs = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/abs.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/abs.js"(exports, module) {
       "use strict";
       init_define_process();
       var abs = (out, vector) => {
@@ -76,7 +76,7 @@ export default require => {
     }
   });
   var require_add = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/add.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/add.js"(exports, module) {
       "use strict";
       init_define_process();
       var add = (out, a, b) => {
@@ -89,7 +89,7 @@ export default require => {
     }
   });
   var require_dot = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/dot.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/dot.js"(exports, module) {
       "use strict";
       init_define_process();
       var dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
@@ -97,7 +97,7 @@ export default require => {
     }
   });
   var require_angle = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/angle.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/angle.js"(exports, module) {
       "use strict";
       init_define_process();
       var dot = require_dot();
@@ -118,7 +118,7 @@ export default require => {
     }
   });
   var require_create = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/create.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/create.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = () => [0, 0, 0];
@@ -126,7 +126,7 @@ export default require => {
     }
   });
   var require_clone = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/clone.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/clone.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = require_create();
@@ -141,7 +141,7 @@ export default require => {
     }
   });
   var require_copy = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/copy.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/copy.js"(exports, module) {
       "use strict";
       init_define_process();
       var copy = (out, vector) => {
@@ -154,7 +154,7 @@ export default require => {
     }
   });
   var require_cross = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/cross.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/cross.js"(exports, module) {
       "use strict";
       init_define_process();
       var cross = (out, a, b) => {
@@ -173,7 +173,7 @@ export default require => {
     }
   });
   var require_distance = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/distance.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/distance.js"(exports, module) {
       "use strict";
       init_define_process();
       var distance = (a, b) => {
@@ -186,7 +186,7 @@ export default require => {
     }
   });
   var require_divide = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/divide.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/divide.js"(exports, module) {
       "use strict";
       init_define_process();
       var divide = (out, a, b) => {
@@ -199,7 +199,7 @@ export default require => {
     }
   });
   var require_equals = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/equals.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/equals.js"(exports, module) {
       "use strict";
       init_define_process();
       var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
@@ -207,7 +207,7 @@ export default require => {
     }
   });
   var require_fromScalar = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/fromScalar.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/fromScalar.js"(exports, module) {
       "use strict";
       init_define_process();
       var fromScalar = (out, scalar) => {
@@ -220,7 +220,7 @@ export default require => {
     }
   });
   var require_fromValues = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/fromValues.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/fromValues.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = require_create();
@@ -235,7 +235,7 @@ export default require => {
     }
   });
   var require_fromVec2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/fromVec2.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/fromVec2.js"(exports, module) {
       "use strict";
       init_define_process();
       var fromVector2 = (out, vector, z = 0) => {
@@ -248,7 +248,7 @@ export default require => {
     }
   });
   var require_length = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/length.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/length.js"(exports, module) {
       "use strict";
       init_define_process();
       var length = vector => {
@@ -261,7 +261,7 @@ export default require => {
     }
   });
   var require_lerp = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/lerp.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/lerp.js"(exports, module) {
       "use strict";
       init_define_process();
       var lerp = (out, a, b, t) => {
@@ -274,7 +274,7 @@ export default require => {
     }
   });
   var require_max = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/max.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/max.js"(exports, module) {
       "use strict";
       init_define_process();
       var max = (out, a, b) => {
@@ -287,7 +287,7 @@ export default require => {
     }
   });
   var require_min = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/min.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/min.js"(exports, module) {
       "use strict";
       init_define_process();
       var min = (out, a, b) => {
@@ -300,7 +300,7 @@ export default require => {
     }
   });
   var require_multiply = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/multiply.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/multiply.js"(exports, module) {
       "use strict";
       init_define_process();
       var multiply = (out, a, b) => {
@@ -313,7 +313,7 @@ export default require => {
     }
   });
   var require_negate = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/negate.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/negate.js"(exports, module) {
       "use strict";
       init_define_process();
       var negate = (out, vector) => {
@@ -326,7 +326,7 @@ export default require => {
     }
   });
   var require_normalize = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/normalize.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/normalize.js"(exports, module) {
       "use strict";
       init_define_process();
       var normalize = (out, vector) => {
@@ -346,7 +346,7 @@ export default require => {
     }
   });
   var require_orthogonal = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/orthogonal.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/orthogonal.js"(exports, module) {
       "use strict";
       init_define_process();
       var abs = require_abs();
@@ -363,7 +363,7 @@ export default require => {
     }
   });
   var require_rotateX = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/rotateX.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/rotateX.js"(exports, module) {
       "use strict";
       init_define_process();
       var rotateX = (out, vector, origin, radians) => {
@@ -384,7 +384,7 @@ export default require => {
     }
   });
   var require_rotateY = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/rotateY.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/rotateY.js"(exports, module) {
       "use strict";
       init_define_process();
       var rotateY = (out, vector, origin, radians) => {
@@ -405,7 +405,7 @@ export default require => {
     }
   });
   var require_rotateZ = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/rotateZ.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/rotateZ.js"(exports, module) {
       "use strict";
       init_define_process();
       var rotateZ = (out, vector, origin, radians) => {
@@ -424,7 +424,7 @@ export default require => {
     }
   });
   var require_scale = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/scale.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/scale.js"(exports, module) {
       "use strict";
       init_define_process();
       var scale = (out, vector, amount) => {
@@ -437,7 +437,7 @@ export default require => {
     }
   });
   var require_snap = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/snap.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/snap.js"(exports, module) {
       "use strict";
       init_define_process();
       var snap = (out, vector, epsilon) => {
@@ -450,7 +450,7 @@ export default require => {
     }
   });
   var require_squaredDistance = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/squaredDistance.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/squaredDistance.js"(exports, module) {
       "use strict";
       init_define_process();
       var squaredDistance = (a, b) => {
@@ -463,7 +463,7 @@ export default require => {
     }
   });
   var require_squaredLength = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/squaredLength.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/squaredLength.js"(exports, module) {
       "use strict";
       init_define_process();
       var squaredLength = vector => {
@@ -476,7 +476,7 @@ export default require => {
     }
   });
   var require_subtract = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/subtract.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/subtract.js"(exports, module) {
       "use strict";
       init_define_process();
       var subtract = (out, a, b) => {
@@ -489,7 +489,7 @@ export default require => {
     }
   });
   var require_toString = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/toString.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/toString.js"(exports, module) {
       "use strict";
       init_define_process();
       var toString = vec => `[${vec[0].toFixed(7)}, ${vec[1].toFixed(7)}, ${vec[2].toFixed(7)}]`;
@@ -497,7 +497,7 @@ export default require => {
     }
   });
   var require_transform = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/transform.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/transform.js"(exports, module) {
       "use strict";
       init_define_process();
       var transform = (out, vector, matrix) => {
@@ -515,7 +515,7 @@ export default require => {
     }
   });
   var require_vec3 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec3/index.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = {
@@ -555,7 +555,7 @@ export default require => {
     }
   });
   var require_flatten = __commonJS({
-    "node_modules/@jscad/modeling/src/utils/flatten.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/utils/flatten.js"(exports, module) {
       "use strict";
       init_define_process();
       var flatten = arr => arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
@@ -563,7 +563,7 @@ export default require => {
     }
   });
   var require_abs2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/abs.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/abs.js"(exports, module) {
       "use strict";
       init_define_process();
       var abs = (out, vector) => {
@@ -575,7 +575,7 @@ export default require => {
     }
   });
   var require_add2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/add.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/add.js"(exports, module) {
       "use strict";
       init_define_process();
       var add = (out, a, b) => {
@@ -587,7 +587,7 @@ export default require => {
     }
   });
   var require_angleRadians = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/angleRadians.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/angleRadians.js"(exports, module) {
       "use strict";
       init_define_process();
       var angleRadians = vector => Math.atan2(vector[1], vector[0]);
@@ -595,14 +595,14 @@ export default require => {
     }
   });
   var require_angle2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/angle.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/angle.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = require_angleRadians();
     }
   });
   var require_angleDegrees = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/angleDegrees.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/angleDegrees.js"(exports, module) {
       "use strict";
       init_define_process();
       var angleRadians = require_angleRadians();
@@ -611,7 +611,7 @@ export default require => {
     }
   });
   var require_create2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/create.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/create.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = () => [0, 0];
@@ -619,7 +619,7 @@ export default require => {
     }
   });
   var require_clone2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/clone.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/clone.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = require_create2();
@@ -633,7 +633,7 @@ export default require => {
     }
   });
   var require_copy2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/copy.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/copy.js"(exports, module) {
       "use strict";
       init_define_process();
       var copy = (out, vector) => {
@@ -645,7 +645,7 @@ export default require => {
     }
   });
   var require_cross2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/cross.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/cross.js"(exports, module) {
       "use strict";
       init_define_process();
       var cross = (out, a, b) => {
@@ -658,7 +658,7 @@ export default require => {
     }
   });
   var require_distance2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/distance.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/distance.js"(exports, module) {
       "use strict";
       init_define_process();
       var distance = (a, b) => {
@@ -670,7 +670,7 @@ export default require => {
     }
   });
   var require_divide2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/divide.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/divide.js"(exports, module) {
       "use strict";
       init_define_process();
       var divide = (out, a, b) => {
@@ -682,7 +682,7 @@ export default require => {
     }
   });
   var require_dot2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/dot.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/dot.js"(exports, module) {
       "use strict";
       init_define_process();
       var dot = (a, b) => a[0] * b[0] + a[1] * b[1];
@@ -690,7 +690,7 @@ export default require => {
     }
   });
   var require_equals2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/equals.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/equals.js"(exports, module) {
       "use strict";
       init_define_process();
       var equals = (a, b) => a[0] === b[0] && a[1] === b[1];
@@ -698,7 +698,7 @@ export default require => {
     }
   });
   var require_constants = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/constants.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/constants.js"(exports, module) {
       "use strict";
       init_define_process();
       var spatialResolution = 1e5;
@@ -712,7 +712,7 @@ export default require => {
     }
   });
   var require_trigonometry = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/utils/trigonometry.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/utils/trigonometry.js"(exports, module) {
       "use strict";
       init_define_process();
       var {NEPS} = require_constants();
@@ -726,7 +726,7 @@ export default require => {
     }
   });
   var require_fromAngleRadians = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/fromAngleRadians.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/fromAngleRadians.js"(exports, module) {
       "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
@@ -739,7 +739,7 @@ export default require => {
     }
   });
   var require_fromAngleDegrees = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/fromAngleDegrees.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/fromAngleDegrees.js"(exports, module) {
       "use strict";
       init_define_process();
       var fromAngleRadians = require_fromAngleRadians();
@@ -748,7 +748,7 @@ export default require => {
     }
   });
   var require_fromScalar2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/fromScalar.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/fromScalar.js"(exports, module) {
       "use strict";
       init_define_process();
       var fromScalar = (out, scalar) => {
@@ -760,7 +760,7 @@ export default require => {
     }
   });
   var require_fromValues2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/fromValues.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/fromValues.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = require_create2();
@@ -774,7 +774,7 @@ export default require => {
     }
   });
   var require_length2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/length.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/length.js"(exports, module) {
       "use strict";
       init_define_process();
       var length = vector => Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
@@ -782,7 +782,7 @@ export default require => {
     }
   });
   var require_lerp2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/lerp.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/lerp.js"(exports, module) {
       "use strict";
       init_define_process();
       var lerp = (out, a, b, t) => {
@@ -796,7 +796,7 @@ export default require => {
     }
   });
   var require_max2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/max.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/max.js"(exports, module) {
       "use strict";
       init_define_process();
       var max = (out, a, b) => {
@@ -808,7 +808,7 @@ export default require => {
     }
   });
   var require_min2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/min.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/min.js"(exports, module) {
       "use strict";
       init_define_process();
       var min = (out, a, b) => {
@@ -820,7 +820,7 @@ export default require => {
     }
   });
   var require_multiply2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/multiply.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/multiply.js"(exports, module) {
       "use strict";
       init_define_process();
       var multiply = (out, a, b) => {
@@ -832,7 +832,7 @@ export default require => {
     }
   });
   var require_negate2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/negate.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/negate.js"(exports, module) {
       "use strict";
       init_define_process();
       var negate = (out, vector) => {
@@ -844,7 +844,7 @@ export default require => {
     }
   });
   var require_rotate = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/rotate.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/rotate.js"(exports, module) {
       "use strict";
       init_define_process();
       var rotate2 = (out, vector, origin, radians) => {
@@ -860,7 +860,7 @@ export default require => {
     }
   });
   var require_normal = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/normal.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/normal.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = require_create2();
@@ -870,7 +870,7 @@ export default require => {
     }
   });
   var require_normalize2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/normalize.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/normalize.js"(exports, module) {
       "use strict";
       init_define_process();
       var normalize = (out, vector) => {
@@ -888,7 +888,7 @@ export default require => {
     }
   });
   var require_scale2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/scale.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/scale.js"(exports, module) {
       "use strict";
       init_define_process();
       var scale = (out, vector, amount) => {
@@ -900,7 +900,7 @@ export default require => {
     }
   });
   var require_snap2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/snap.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/snap.js"(exports, module) {
       "use strict";
       init_define_process();
       var snap = (out, vector, epsilon) => {
@@ -912,7 +912,7 @@ export default require => {
     }
   });
   var require_squaredDistance2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/squaredDistance.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/squaredDistance.js"(exports, module) {
       "use strict";
       init_define_process();
       var squaredDistance = (a, b) => {
@@ -924,7 +924,7 @@ export default require => {
     }
   });
   var require_squaredLength2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/squaredLength.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/squaredLength.js"(exports, module) {
       "use strict";
       init_define_process();
       var squaredLength = vector => {
@@ -936,7 +936,7 @@ export default require => {
     }
   });
   var require_subtract2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/subtract.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/subtract.js"(exports, module) {
       "use strict";
       init_define_process();
       var subtract = (out, a, b) => {
@@ -948,7 +948,7 @@ export default require => {
     }
   });
   var require_toString2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/toString.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/toString.js"(exports, module) {
       "use strict";
       init_define_process();
       var toString = vector => `[${vector[0].toFixed(7)}, ${vector[1].toFixed(7)}]`;
@@ -956,7 +956,7 @@ export default require => {
     }
   });
   var require_transform2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/transform.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/transform.js"(exports, module) {
       "use strict";
       init_define_process();
       var transform = (out, vector, matrix) => {
@@ -970,7 +970,7 @@ export default require => {
     }
   });
   var require_vec2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec2/index.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = {
@@ -1011,7 +1011,7 @@ export default require => {
     }
   });
   var require_clone3 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom2/clone.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/clone.js"(exports, module) {
       "use strict";
       init_define_process();
       var clone = geometry => Object.assign({}, geometry);
@@ -1019,7 +1019,7 @@ export default require => {
     }
   });
   var require_add3 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/add.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/add.js"(exports, module) {
       "use strict";
       init_define_process();
       var add = (out, a, b) => {
@@ -1045,7 +1045,7 @@ export default require => {
     }
   });
   var require_create3 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/create.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/create.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = () => [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
@@ -1053,7 +1053,7 @@ export default require => {
     }
   });
   var require_clone4 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/clone.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/clone.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = require_create3();
@@ -1081,7 +1081,7 @@ export default require => {
     }
   });
   var require_copy3 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/copy.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/copy.js"(exports, module) {
       "use strict";
       init_define_process();
       var copy = (out, matrix) => {
@@ -1107,7 +1107,7 @@ export default require => {
     }
   });
   var require_invert = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/invert.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/invert.js"(exports, module) {
       "use strict";
       init_define_process();
       var invert = (out, matrix) => {
@@ -1166,7 +1166,7 @@ export default require => {
     }
   });
   var require_equals3 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/equals.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/equals.js"(exports, module) {
       "use strict";
       init_define_process();
       var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3] && a[4] === b[4] && a[5] === b[5] && a[6] === b[6] && a[7] === b[7] && a[8] === b[8] && a[9] === b[9] && a[10] === b[10] && a[11] === b[11] && a[12] === b[12] && a[13] === b[13] && a[14] === b[14] && a[15] === b[15];
@@ -1174,7 +1174,7 @@ export default require => {
     }
   });
   var require_identity = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/identity.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/identity.js"(exports, module) {
       "use strict";
       init_define_process();
       var identity = out => {
@@ -1200,7 +1200,7 @@ export default require => {
     }
   });
   var require_fromRotation = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/fromRotation.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/fromRotation.js"(exports, module) {
       "use strict";
       init_define_process();
       var {EPS} = require_constants();
@@ -1241,7 +1241,7 @@ export default require => {
     }
   });
   var require_fromScaling = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/fromScaling.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/fromScaling.js"(exports, module) {
       "use strict";
       init_define_process();
       var fromScaling = (out, vector) => {
@@ -1267,7 +1267,7 @@ export default require => {
     }
   });
   var require_fromTaitBryanRotation = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/fromTaitBryanRotation.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/fromTaitBryanRotation.js"(exports, module) {
       "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
@@ -1300,7 +1300,7 @@ export default require => {
     }
   });
   var require_fromTranslation = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/fromTranslation.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/fromTranslation.js"(exports, module) {
       "use strict";
       init_define_process();
       var fromTranslation = (out, vector) => {
@@ -1326,7 +1326,7 @@ export default require => {
     }
   });
   var require_fromValues3 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/fromValues.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/fromValues.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = require_create3();
@@ -1354,7 +1354,7 @@ export default require => {
     }
   });
   var require_fromVectorRotation = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/fromVectorRotation.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/fromVectorRotation.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec32 = require_vec3();
@@ -1388,7 +1388,7 @@ export default require => {
     }
   });
   var require_fromXRotation = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/fromXRotation.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/fromXRotation.js"(exports, module) {
       "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
@@ -1417,7 +1417,7 @@ export default require => {
     }
   });
   var require_fromYRotation = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/fromYRotation.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/fromYRotation.js"(exports, module) {
       "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
@@ -1446,7 +1446,7 @@ export default require => {
     }
   });
   var require_fromZRotation = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/fromZRotation.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/fromZRotation.js"(exports, module) {
       "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
@@ -1475,7 +1475,7 @@ export default require => {
     }
   });
   var require_isIdentity = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/isIdentity.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/isIdentity.js"(exports, module) {
       "use strict";
       init_define_process();
       var isIdentity = matrix => matrix[0] === 1 && matrix[1] === 0 && matrix[2] === 0 && matrix[3] === 0 && matrix[4] === 0 && matrix[5] === 1 && matrix[6] === 0 && matrix[7] === 0 && matrix[8] === 0 && matrix[9] === 0 && matrix[10] === 1 && matrix[11] === 0 && matrix[12] === 0 && matrix[13] === 0 && matrix[14] === 0 && matrix[15] === 1;
@@ -1483,7 +1483,7 @@ export default require => {
     }
   });
   var require_isOnlyTransformScale = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/isOnlyTransformScale.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/isOnlyTransformScale.js"(exports, module) {
       "use strict";
       init_define_process();
       var isOnlyTransformScale = matrix => isZero(matrix[1]) && isZero(matrix[2]) && isZero(matrix[3]) && isZero(matrix[4]) && isZero(matrix[6]) && isZero(matrix[7]) && isZero(matrix[8]) && isZero(matrix[9]) && isZero(matrix[11]) && matrix[15] === 1;
@@ -1492,7 +1492,7 @@ export default require => {
     }
   });
   var require_isMirroring = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/isMirroring.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/isMirroring.js"(exports, module) {
       "use strict";
       init_define_process();
       var isMirroring = matrix => {
@@ -1506,7 +1506,7 @@ export default require => {
     }
   });
   var require_mirrorByPlane = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/mirrorByPlane.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/mirrorByPlane.js"(exports, module) {
       "use strict";
       init_define_process();
       var mirrorByPlane = (out, plane) => {
@@ -1533,7 +1533,7 @@ export default require => {
     }
   });
   var require_multiply3 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/multiply.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/multiply.js"(exports, module) {
       "use strict";
       init_define_process();
       var multiply = (out, a, b) => {
@@ -1591,7 +1591,7 @@ export default require => {
     }
   });
   var require_rotate2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/rotate.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/rotate.js"(exports, module) {
       "use strict";
       init_define_process();
       var {EPS} = require_constants();
@@ -1655,7 +1655,7 @@ export default require => {
     }
   });
   var require_rotateX2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/rotateX.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/rotateX.js"(exports, module) {
       "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
@@ -1694,7 +1694,7 @@ export default require => {
     }
   });
   var require_rotateY2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/rotateY.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/rotateY.js"(exports, module) {
       "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
@@ -1733,7 +1733,7 @@ export default require => {
     }
   });
   var require_rotateZ2 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/rotateZ.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/rotateZ.js"(exports, module) {
       "use strict";
       init_define_process();
       var {sin, cos} = require_trigonometry();
@@ -1772,7 +1772,7 @@ export default require => {
     }
   });
   var require_scale3 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/scale.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/scale.js"(exports, module) {
       "use strict";
       init_define_process();
       var scale = (out, matrix, dimensions) => {
@@ -1801,7 +1801,7 @@ export default require => {
     }
   });
   var require_subtract3 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/subtract.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/subtract.js"(exports, module) {
       "use strict";
       init_define_process();
       var subtract = (out, a, b) => {
@@ -1827,7 +1827,7 @@ export default require => {
     }
   });
   var require_toString3 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/toString.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/toString.js"(exports, module) {
       "use strict";
       init_define_process();
       var toString = mat => mat.map(n => n.toFixed(7)).toString();
@@ -1835,7 +1835,7 @@ export default require => {
     }
   });
   var require_translate = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/translate.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/translate.js"(exports, module) {
       "use strict";
       init_define_process();
       var translate = (out, matrix, offsets) => {
@@ -1895,7 +1895,7 @@ export default require => {
     }
   });
   var require_mat4 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/mat4/index.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/mat4/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = {
@@ -1932,7 +1932,7 @@ export default require => {
     }
   });
   var require_create4 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom2/create.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/create.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_mat4();
@@ -1949,7 +1949,7 @@ export default require => {
     }
   });
   var require_fromPoints = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom2/fromPoints.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/fromPoints.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec2 = require_vec2();
@@ -1976,7 +1976,7 @@ export default require => {
     }
   });
   var require_fromCompactBinary = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom2/fromCompactBinary.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/fromCompactBinary.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_mat4();
@@ -2000,7 +2000,7 @@ export default require => {
     }
   });
   var require_isA = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom2/isA.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/isA.js"(exports, module) {
       "use strict";
       init_define_process();
       var isA = object => {
@@ -2017,7 +2017,7 @@ export default require => {
     }
   });
   var require_applyTransforms = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom2/applyTransforms.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/applyTransforms.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_mat4();
@@ -2036,7 +2036,7 @@ export default require => {
     }
   });
   var require_toSides = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom2/toSides.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/toSides.js"(exports, module) {
       "use strict";
       init_define_process();
       var applyTransforms = require_applyTransforms();
@@ -2045,7 +2045,7 @@ export default require => {
     }
   });
   var require_reverse = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom2/reverse.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/reverse.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = require_create4();
@@ -2060,7 +2060,7 @@ export default require => {
     }
   });
   var require_toOutlines = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom2/toOutlines.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/toOutlines.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec2 = require_vec2();
@@ -2154,7 +2154,7 @@ export default require => {
     }
   });
   var require_toPoints = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom2/toPoints.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/toPoints.js"(exports, module) {
       "use strict";
       init_define_process();
       var toSides = require_toSides();
@@ -2170,7 +2170,7 @@ export default require => {
     }
   });
   var require_toString4 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom2/toString.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/toString.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec2 = require_vec2();
@@ -2188,7 +2188,7 @@ export default require => {
     }
   });
   var require_toCompactBinary = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom2/toCompactBinary.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/toCompactBinary.js"(exports, module) {
       "use strict";
       init_define_process();
       var toCompactBinary = geometry => {
@@ -2233,7 +2233,7 @@ export default require => {
     }
   });
   var require_transform3 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom2/transform.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/transform.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_mat4();
@@ -2247,7 +2247,7 @@ export default require => {
     }
   });
   var require_validate = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom2/validate.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/validate.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec2 = require_vec2();
@@ -2271,7 +2271,7 @@ export default require => {
     }
   });
   var require_geom2 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom2/index.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = {
@@ -2292,7 +2292,7 @@ export default require => {
     }
   });
   var require_clone5 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom3/clone.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/clone.js"(exports, module) {
       "use strict";
       init_define_process();
       var clone = geometry => Object.assign({}, geometry);
@@ -2300,7 +2300,7 @@ export default require => {
     }
   });
   var require_create5 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom3/create.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/create.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_mat4();
@@ -2317,7 +2317,7 @@ export default require => {
     }
   });
   var require_create6 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/create.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/create.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = vertices => {
@@ -2332,7 +2332,7 @@ export default require => {
     }
   });
   var require_clone6 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/clone.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/clone.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = require_create6();
@@ -2354,7 +2354,7 @@ export default require => {
     }
   });
   var require_fromPoints2 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/fromPoints.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/fromPoints.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec32 = require_vec3();
@@ -2367,7 +2367,7 @@ export default require => {
     }
   });
   var require_fromPointsAndPlane = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/fromPointsAndPlane.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/fromPointsAndPlane.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = require_create6();
@@ -2382,7 +2382,7 @@ export default require => {
     }
   });
   var require_create7 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec4/create.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/create.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = () => [0, 0, 0, 0];
@@ -2390,7 +2390,7 @@ export default require => {
     }
   });
   var require_clone7 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec4/clone.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/clone.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = require_create7();
@@ -2406,7 +2406,7 @@ export default require => {
     }
   });
   var require_copy4 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec4/copy.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/copy.js"(exports, module) {
       "use strict";
       init_define_process();
       var copy = (out, vector) => {
@@ -2420,7 +2420,7 @@ export default require => {
     }
   });
   var require_equals4 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec4/equals.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/equals.js"(exports, module) {
       "use strict";
       init_define_process();
       var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
@@ -2428,7 +2428,7 @@ export default require => {
     }
   });
   var require_flip = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/plane/flip.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/plane/flip.js"(exports, module) {
       "use strict";
       init_define_process();
       var flip = (out, plane) => {
@@ -2442,7 +2442,7 @@ export default require => {
     }
   });
   var require_fromNormalAndPoint = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/plane/fromNormalAndPoint.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/plane/fromNormalAndPoint.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec32 = require_vec3();
@@ -2459,7 +2459,7 @@ export default require => {
     }
   });
   var require_fromValues4 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec4/fromValues.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/fromValues.js"(exports, module) {
       "use strict";
       init_define_process();
       var create = require_create7();
@@ -2475,7 +2475,7 @@ export default require => {
     }
   });
   var require_fromPoints3 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/plane/fromPoints.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/plane/fromPoints.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec32 = require_vec3();
@@ -2511,7 +2511,7 @@ export default require => {
     }
   });
   var require_fromPointsRandom = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/plane/fromPointsRandom.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/plane/fromPointsRandom.js"(exports, module) {
       "use strict";
       init_define_process();
       var {EPS} = require_constants();
@@ -2542,7 +2542,7 @@ export default require => {
     }
   });
   var require_projectionOfPoint = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/plane/projectionOfPoint.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/plane/projectionOfPoint.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec32 = require_vec3();
@@ -2557,7 +2557,7 @@ export default require => {
     }
   });
   var require_signedDistanceToPoint = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/plane/signedDistanceToPoint.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/plane/signedDistanceToPoint.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec32 = require_vec3();
@@ -2566,7 +2566,7 @@ export default require => {
     }
   });
   var require_toString5 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec4/toString.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/toString.js"(exports, module) {
       "use strict";
       init_define_process();
       var toString = vec => `(${vec[0].toFixed(9)}, ${vec[1].toFixed(9)}, ${vec[2].toFixed(9)}, ${vec[3].toFixed(9)})`;
@@ -2574,7 +2574,7 @@ export default require => {
     }
   });
   var require_transform4 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/plane/transform.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/plane/transform.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_mat4();
@@ -2603,7 +2603,7 @@ export default require => {
     }
   });
   var require_plane = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/plane/index.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/plane/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = {
@@ -2624,7 +2624,7 @@ export default require => {
     }
   });
   var require_invert2 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/invert.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/invert.js"(exports, module) {
       "use strict";
       init_define_process();
       var plane = require_plane();
@@ -2644,7 +2644,7 @@ export default require => {
     }
   });
   var require_isA2 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/isA.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/isA.js"(exports, module) {
       "use strict";
       init_define_process();
       var isA = object => {
@@ -2661,7 +2661,7 @@ export default require => {
     }
   });
   var require_isConvex = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/isConvex.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/isConvex.js"(exports, module) {
       "use strict";
       init_define_process();
       var plane = require_plane();
@@ -2693,7 +2693,7 @@ export default require => {
     }
   });
   var require_plane2 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/plane.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/plane.js"(exports, module) {
       "use strict";
       init_define_process();
       var mplane = require_plane();
@@ -2707,7 +2707,7 @@ export default require => {
     }
   });
   var require_measureArea = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/measureArea.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureArea.js"(exports, module) {
       "use strict";
       init_define_process();
       var plane = require_plane2();
@@ -2770,7 +2770,7 @@ export default require => {
     }
   });
   var require_measureBoundingBox = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingBox.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingBox.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec32 = require_vec3();
@@ -2789,7 +2789,7 @@ export default require => {
     }
   });
   var require_dot3 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec4/dot.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/dot.js"(exports, module) {
       "use strict";
       init_define_process();
       var dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
@@ -2797,7 +2797,7 @@ export default require => {
     }
   });
   var require_fromScalar3 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec4/fromScalar.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/fromScalar.js"(exports, module) {
       "use strict";
       init_define_process();
       var fromScalar = (out, scalar) => {
@@ -2811,7 +2811,7 @@ export default require => {
     }
   });
   var require_transform5 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec4/transform.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/transform.js"(exports, module) {
       "use strict";
       init_define_process();
       var transform = (out, vector, matrix) => {
@@ -2826,7 +2826,7 @@ export default require => {
     }
   });
   var require_vec4 = __commonJS({
-    "node_modules/@jscad/modeling/src/maths/vec4/index.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = {
@@ -2843,7 +2843,7 @@ export default require => {
     }
   });
   var require_measureBoundingSphere = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingSphere.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingSphere.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec32 = require_vec3();
@@ -2889,7 +2889,7 @@ export default require => {
     }
   });
   var require_measureSignedVolume = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/measureSignedVolume.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureSignedVolume.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec32 = require_vec3();
@@ -2908,7 +2908,7 @@ export default require => {
     }
   });
   var require_toPoints2 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/toPoints.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/toPoints.js"(exports, module) {
       "use strict";
       init_define_process();
       var toPoints = polygon => polygon.vertices;
@@ -2916,7 +2916,7 @@ export default require => {
     }
   });
   var require_toString6 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/toString.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/toString.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec32 = require_vec3();
@@ -2932,7 +2932,7 @@ export default require => {
     }
   });
   var require_transform6 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/transform.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/transform.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_mat4();
@@ -2952,7 +2952,7 @@ export default require => {
     }
   });
   var require_validate2 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/validate.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/validate.js"(exports, module) {
       "use strict";
       init_define_process();
       var signedDistanceToPoint = require_signedDistanceToPoint();
@@ -2999,7 +2999,7 @@ export default require => {
     }
   });
   var require_poly3 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/poly3/index.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = {
@@ -3023,7 +3023,7 @@ export default require => {
     }
   });
   var require_fromPoints4 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom3/fromPoints.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/fromPoints.js"(exports, module) {
       "use strict";
       init_define_process();
       var poly3 = require_poly3();
@@ -3043,7 +3043,7 @@ export default require => {
     }
   });
   var require_fromCompactBinary2 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom3/fromCompactBinary.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/fromCompactBinary.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec32 = require_vec3();
@@ -3076,7 +3076,7 @@ export default require => {
     }
   });
   var require_applyTransforms2 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom3/applyTransforms.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/applyTransforms.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_mat4();
@@ -3091,7 +3091,7 @@ export default require => {
     }
   });
   var require_toPolygons = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js"(exports, module) {
       "use strict";
       init_define_process();
       var poly3 = require_poly3();
@@ -3110,7 +3110,7 @@ export default require => {
     }
   });
   var require_invert3 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom3/invert.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/invert.js"(exports, module) {
       "use strict";
       init_define_process();
       var poly3 = require_poly3();
@@ -3125,7 +3125,7 @@ export default require => {
     }
   });
   var require_isA3 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom3/isA.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/isA.js"(exports, module) {
       "use strict";
       init_define_process();
       var isA = object => {
@@ -3142,7 +3142,7 @@ export default require => {
     }
   });
   var require_toPoints3 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom3/toPoints.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toPoints.js"(exports, module) {
       "use strict";
       init_define_process();
       var poly3 = require_poly3();
@@ -3156,7 +3156,7 @@ export default require => {
     }
   });
   var require_toString7 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom3/toString.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toString.js"(exports, module) {
       "use strict";
       init_define_process();
       var poly3 = require_poly3();
@@ -3173,7 +3173,7 @@ export default require => {
     }
   });
   var require_toCompactBinary2 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom3/toCompactBinary.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toCompactBinary.js"(exports, module) {
       "use strict";
       init_define_process();
       var poly3 = require_poly3();
@@ -3227,7 +3227,7 @@ export default require => {
     }
   });
   var require_transform7 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom3/transform.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/transform.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_mat4();
@@ -3241,7 +3241,7 @@ export default require => {
     }
   });
   var require_validate3 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom3/validate.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/validate.js"(exports, module) {
       "use strict";
       init_define_process();
       var poly3 = require_poly3();
@@ -3284,7 +3284,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_geom3 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/geom3/index.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = {
@@ -3304,7 +3304,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_clone8 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/clone.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/clone.js"(exports, module) {
       "use strict";
       init_define_process();
       var clone = geometry => Object.assign({}, geometry);
@@ -3312,7 +3312,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_close = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/close.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/close.js"(exports, module) {
       "use strict";
       init_define_process();
       var {EPS} = require_constants();
@@ -3338,7 +3338,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_create8 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/create.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/create.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_mat4();
@@ -3356,7 +3356,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_fromPoints5 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/fromPoints.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/fromPoints.js"(exports, module) {
       "use strict";
       init_define_process();
       var {EPS} = require_constants();
@@ -3384,7 +3384,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_applyTransforms3 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/applyTransforms.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/applyTransforms.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_mat4();
@@ -3399,7 +3399,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_toPoints4 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/toPoints.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/toPoints.js"(exports, module) {
       "use strict";
       init_define_process();
       var applyTransforms = require_applyTransforms3();
@@ -3408,7 +3408,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_appendArc = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/appendArc.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/appendArc.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec2 = require_vec2();
@@ -3503,7 +3503,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_concat = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/concat.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/concat.js"(exports, module) {
       "use strict";
       init_define_process();
       var fromPoints = require_fromPoints5();
@@ -3529,7 +3529,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_appendPoints = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/appendPoints.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/appendPoints.js"(exports, module) {
       "use strict";
       init_define_process();
       var concat = require_concat();
@@ -3539,7 +3539,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_appendBezier = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/appendBezier.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/appendBezier.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec2 = require_vec2();
@@ -3651,7 +3651,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_equals5 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/equals.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/equals.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec2 = require_vec2();
@@ -3688,7 +3688,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_fromCompactBinary3 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/fromCompactBinary.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/fromCompactBinary.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_mat4();
@@ -3712,7 +3712,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_isA4 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/isA.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/isA.js"(exports, module) {
       "use strict";
       init_define_process();
       var isA = object => {
@@ -3729,7 +3729,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_reverse2 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/reverse.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/reverse.js"(exports, module) {
       "use strict";
       init_define_process();
       var clone = require_clone8();
@@ -3742,7 +3742,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_toString8 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/toString.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/toString.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec2 = require_vec2();
@@ -3760,7 +3760,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_toCompactBinary3 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/toCompactBinary.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/toCompactBinary.js"(exports, module) {
       "use strict";
       init_define_process();
       var toCompactBinary = geometry => {
@@ -3803,7 +3803,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_transform8 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/transform.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/transform.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_mat4();
@@ -3817,7 +3817,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_validate4 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/validate.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/validate.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec2 = require_vec2();
@@ -3846,7 +3846,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_path2 = __commonJS({
-    "node_modules/@jscad/modeling/src/geometries/path2/index.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/path2/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = {
@@ -3871,7 +3871,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_measureBoundingBox2 = __commonJS({
-    "node_modules/@jscad/modeling/src/measurements/measureBoundingBox.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/measurements/measureBoundingBox.js"(exports, module) {
       "use strict";
       init_define_process();
       var flatten = require_flatten();
@@ -3961,7 +3961,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_create9 = __commonJS({
-    "node_modules/gl-mat4/create.js"(exports, module) {
+    "../../../node_modules/gl-mat4/create.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = create;
@@ -3988,7 +3988,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_clone9 = __commonJS({
-    "node_modules/gl-mat4/clone.js"(exports, module) {
+    "../../../node_modules/gl-mat4/clone.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = clone;
@@ -4015,7 +4015,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_copy5 = __commonJS({
-    "node_modules/gl-mat4/copy.js"(exports, module) {
+    "../../../node_modules/gl-mat4/copy.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = copy;
@@ -4041,7 +4041,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_identity2 = __commonJS({
-    "node_modules/gl-mat4/identity.js"(exports, module) {
+    "../../../node_modules/gl-mat4/identity.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = identity;
@@ -4067,7 +4067,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_transpose = __commonJS({
-    "node_modules/gl-mat4/transpose.js"(exports, module) {
+    "../../../node_modules/gl-mat4/transpose.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = transpose;
@@ -4109,7 +4109,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_invert4 = __commonJS({
-    "node_modules/gl-mat4/invert.js"(exports, module) {
+    "../../../node_modules/gl-mat4/invert.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = invert;
@@ -4140,7 +4140,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_adjoint = __commonJS({
-    "node_modules/gl-mat4/adjoint.js"(exports, module) {
+    "../../../node_modules/gl-mat4/adjoint.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = adjoint;
@@ -4167,7 +4167,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_determinant = __commonJS({
-    "node_modules/gl-mat4/determinant.js"(exports, module) {
+    "../../../node_modules/gl-mat4/determinant.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = determinant;
@@ -4178,7 +4178,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_multiply4 = __commonJS({
-    "node_modules/gl-mat4/multiply.js"(exports, module) {
+    "../../../node_modules/gl-mat4/multiply.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = multiply;
@@ -4218,7 +4218,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_translate2 = __commonJS({
-    "node_modules/gl-mat4/translate.js"(exports, module) {
+    "../../../node_modules/gl-mat4/translate.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = translate;
@@ -4264,7 +4264,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_scale4 = __commonJS({
-    "node_modules/gl-mat4/scale.js"(exports, module) {
+    "../../../node_modules/gl-mat4/scale.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = scale;
@@ -4291,7 +4291,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_rotate3 = __commonJS({
-    "node_modules/gl-mat4/rotate.js"(exports, module) {
+    "../../../node_modules/gl-mat4/rotate.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = rotate2;
@@ -4351,7 +4351,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_rotateX3 = __commonJS({
-    "node_modules/gl-mat4/rotateX.js"(exports, module) {
+    "../../../node_modules/gl-mat4/rotateX.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = rotateX;
@@ -4380,7 +4380,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_rotateY3 = __commonJS({
-    "node_modules/gl-mat4/rotateY.js"(exports, module) {
+    "../../../node_modules/gl-mat4/rotateY.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = rotateY;
@@ -4409,7 +4409,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_rotateZ3 = __commonJS({
-    "node_modules/gl-mat4/rotateZ.js"(exports, module) {
+    "../../../node_modules/gl-mat4/rotateZ.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = rotateZ;
@@ -4438,7 +4438,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_fromRotation2 = __commonJS({
-    "node_modules/gl-mat4/fromRotation.js"(exports, module) {
+    "../../../node_modules/gl-mat4/fromRotation.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = fromRotation;
@@ -4479,7 +4479,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_fromRotationTranslation = __commonJS({
-    "node_modules/gl-mat4/fromRotationTranslation.js"(exports, module) {
+    "../../../node_modules/gl-mat4/fromRotationTranslation.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = fromRotationTranslation;
@@ -4506,7 +4506,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_fromScaling2 = __commonJS({
-    "node_modules/gl-mat4/fromScaling.js"(exports, module) {
+    "../../../node_modules/gl-mat4/fromScaling.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = fromScaling;
@@ -4532,7 +4532,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_fromTranslation2 = __commonJS({
-    "node_modules/gl-mat4/fromTranslation.js"(exports, module) {
+    "../../../node_modules/gl-mat4/fromTranslation.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = fromTranslation;
@@ -4558,7 +4558,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_fromXRotation2 = __commonJS({
-    "node_modules/gl-mat4/fromXRotation.js"(exports, module) {
+    "../../../node_modules/gl-mat4/fromXRotation.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = fromXRotation;
@@ -4585,7 +4585,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_fromYRotation2 = __commonJS({
-    "node_modules/gl-mat4/fromYRotation.js"(exports, module) {
+    "../../../node_modules/gl-mat4/fromYRotation.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = fromYRotation;
@@ -4612,7 +4612,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_fromZRotation2 = __commonJS({
-    "node_modules/gl-mat4/fromZRotation.js"(exports, module) {
+    "../../../node_modules/gl-mat4/fromZRotation.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = fromZRotation;
@@ -4639,7 +4639,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_fromQuat = __commonJS({
-    "node_modules/gl-mat4/fromQuat.js"(exports, module) {
+    "../../../node_modules/gl-mat4/fromQuat.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = fromQuat;
@@ -4666,7 +4666,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_frustum = __commonJS({
-    "node_modules/gl-mat4/frustum.js"(exports, module) {
+    "../../../node_modules/gl-mat4/frustum.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = frustum;
@@ -4693,7 +4693,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_perspective = __commonJS({
-    "node_modules/gl-mat4/perspective.js"(exports, module) {
+    "../../../node_modules/gl-mat4/perspective.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = perspective;
@@ -4720,7 +4720,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_perspectiveFromFieldOfView = __commonJS({
-    "node_modules/gl-mat4/perspectiveFromFieldOfView.js"(exports, module) {
+    "../../../node_modules/gl-mat4/perspectiveFromFieldOfView.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = perspectiveFromFieldOfView;
@@ -4747,7 +4747,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_ortho = __commonJS({
-    "node_modules/gl-mat4/ortho.js"(exports, module) {
+    "../../../node_modules/gl-mat4/ortho.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = ortho;
@@ -4774,7 +4774,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_lookAt = __commonJS({
-    "node_modules/gl-mat4/lookAt.js"(exports, module) {
+    "../../../node_modules/gl-mat4/lookAt.js"(exports, module) {
       "use strict";
       init_define_process();
       var identity = require_identity2();
@@ -4840,7 +4840,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_str = __commonJS({
-    "node_modules/gl-mat4/str.js"(exports, module) {
+    "../../../node_modules/gl-mat4/str.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = str;
@@ -4850,7 +4850,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_gl_mat4 = __commonJS({
-    "node_modules/gl-mat4/index.js"(exports, module) {
+    "../../../node_modules/gl-mat4/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = {
@@ -4887,7 +4887,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_renderContext = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/rendering/renderContext.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/rendering/renderContext.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_gl_mat4();
@@ -4928,7 +4928,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_renderDefaults = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/rendering/renderDefaults.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/rendering/renderDefaults.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = {
@@ -4945,7 +4945,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_regl = __commonJS({
-    "node_modules/@jscad/regl-renderer/node_modules/regl/dist/regl.js"(exports, module) {
+    "../../../node_modules/regl/dist/regl.js"(exports, module) {
       "use strict";
       init_define_process();
       (function (global, factory) {
@@ -12657,7 +12657,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_render = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/rendering/render.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/rendering/render.js"(exports, module) {
       "use strict";
       init_define_process();
       var renderContext = require_renderContext();
@@ -12715,7 +12715,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_drawGrid = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/rendering/commands/drawGrid/index.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/rendering/commands/drawGrid/index.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_gl_mat4();
@@ -12842,7 +12842,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_multi = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/rendering/commands/drawGrid/multi.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/rendering/commands/drawGrid/multi.js"(exports, module) {
       "use strict";
       init_define_process();
       var makeDrawMultiGrid = (regl, params) => {
@@ -12872,7 +12872,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_drawAxis = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/rendering/commands/drawAxis/index.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/rendering/commands/drawAxis/index.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_gl_mat4();
@@ -12943,7 +12943,7 @@ ${nonManifold.join("\n")}`);
     }
   });
   var require_vColorShaders = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/rendering/commands/drawMesh/vColorShaders.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/rendering/commands/drawMesh/vColorShaders.js"(exports, module) {
       "use strict";
       init_define_process();
       var vColorVert = `
@@ -13027,7 +13027,7 @@ void main () {
     }
   });
   var require_meshShaders = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/rendering/commands/drawMesh/meshShaders.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/rendering/commands/drawMesh/meshShaders.js"(exports, module) {
       "use strict";
       init_define_process();
       var meshFrag = `
@@ -13088,7 +13088,7 @@ void main() {
     }
   });
   var require_drawMesh = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/rendering/commands/drawMesh/index.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/rendering/commands/drawMesh/index.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_gl_mat4();
@@ -13186,7 +13186,7 @@ void main() {
     }
   });
   var require_vColorShaders2 = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/rendering/commands/drawLines/vColorShaders.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/rendering/commands/drawLines/vColorShaders.js"(exports, module) {
       "use strict";
       init_define_process();
       var vColorVert = `
@@ -13229,7 +13229,7 @@ void main () {
     }
   });
   var require_meshShaders2 = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/rendering/commands/drawLines/meshShaders.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/rendering/commands/drawLines/meshShaders.js"(exports, module) {
       "use strict";
       init_define_process();
       var meshVert = `
@@ -13294,7 +13294,7 @@ void main () {
     }
   });
   var require_colorOnlyShaders = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/rendering/commands/drawLines/colorOnlyShaders.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/rendering/commands/drawLines/colorOnlyShaders.js"(exports, module) {
       "use strict";
       init_define_process();
       var vColorFrag = `
@@ -13311,7 +13311,7 @@ void main () {
     }
   });
   var require_drawLines = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/rendering/commands/drawLines/index.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/rendering/commands/drawLines/index.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_gl_mat4();
@@ -13380,14 +13380,14 @@ void main () {
     }
   });
   var require_epsilon = __commonJS({
-    "node_modules/gl-vec3/epsilon.js"(exports, module) {
+    "../../../node_modules/gl-vec3/epsilon.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = 1e-6;
     }
   });
   var require_create10 = __commonJS({
-    "node_modules/gl-vec3/create.js"(exports, module) {
+    "../../../node_modules/gl-vec3/create.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = create;
@@ -13401,7 +13401,7 @@ void main () {
     }
   });
   var require_clone10 = __commonJS({
-    "node_modules/gl-vec3/clone.js"(exports, module) {
+    "../../../node_modules/gl-vec3/clone.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = clone;
@@ -13415,7 +13415,7 @@ void main () {
     }
   });
   var require_fromValues5 = __commonJS({
-    "node_modules/gl-vec3/fromValues.js"(exports, module) {
+    "../../../node_modules/gl-vec3/fromValues.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = fromValues;
@@ -13429,7 +13429,7 @@ void main () {
     }
   });
   var require_normalize3 = __commonJS({
-    "node_modules/gl-vec3/normalize.js"(exports, module) {
+    "../../../node_modules/gl-vec3/normalize.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = normalize;
@@ -13447,7 +13447,7 @@ void main () {
     }
   });
   var require_dot4 = __commonJS({
-    "node_modules/gl-vec3/dot.js"(exports, module) {
+    "../../../node_modules/gl-vec3/dot.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = dot;
@@ -13457,7 +13457,7 @@ void main () {
     }
   });
   var require_angle3 = __commonJS({
-    "node_modules/gl-vec3/angle.js"(exports, module) {
+    "../../../node_modules/gl-vec3/angle.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = angle;
@@ -13479,7 +13479,7 @@ void main () {
     }
   });
   var require_copy6 = __commonJS({
-    "node_modules/gl-vec3/copy.js"(exports, module) {
+    "../../../node_modules/gl-vec3/copy.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = copy;
@@ -13492,7 +13492,7 @@ void main () {
     }
   });
   var require_set = __commonJS({
-    "node_modules/gl-vec3/set.js"(exports, module) {
+    "../../../node_modules/gl-vec3/set.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = set;
@@ -13505,7 +13505,7 @@ void main () {
     }
   });
   var require_equals6 = __commonJS({
-    "node_modules/gl-vec3/equals.js"(exports, module) {
+    "../../../node_modules/gl-vec3/equals.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = equals;
@@ -13522,7 +13522,7 @@ void main () {
     }
   });
   var require_exactEquals = __commonJS({
-    "node_modules/gl-vec3/exactEquals.js"(exports, module) {
+    "../../../node_modules/gl-vec3/exactEquals.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = exactEquals;
@@ -13532,7 +13532,7 @@ void main () {
     }
   });
   var require_add4 = __commonJS({
-    "node_modules/gl-vec3/add.js"(exports, module) {
+    "../../../node_modules/gl-vec3/add.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = add;
@@ -13545,7 +13545,7 @@ void main () {
     }
   });
   var require_subtract4 = __commonJS({
-    "node_modules/gl-vec3/subtract.js"(exports, module) {
+    "../../../node_modules/gl-vec3/subtract.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = subtract;
@@ -13558,14 +13558,14 @@ void main () {
     }
   });
   var require_sub = __commonJS({
-    "node_modules/gl-vec3/sub.js"(exports, module) {
+    "../../../node_modules/gl-vec3/sub.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = require_subtract4();
     }
   });
   var require_multiply5 = __commonJS({
-    "node_modules/gl-vec3/multiply.js"(exports, module) {
+    "../../../node_modules/gl-vec3/multiply.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = multiply;
@@ -13578,14 +13578,14 @@ void main () {
     }
   });
   var require_mul = __commonJS({
-    "node_modules/gl-vec3/mul.js"(exports, module) {
+    "../../../node_modules/gl-vec3/mul.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = require_multiply5();
     }
   });
   var require_divide3 = __commonJS({
-    "node_modules/gl-vec3/divide.js"(exports, module) {
+    "../../../node_modules/gl-vec3/divide.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = divide;
@@ -13598,14 +13598,14 @@ void main () {
     }
   });
   var require_div = __commonJS({
-    "node_modules/gl-vec3/div.js"(exports, module) {
+    "../../../node_modules/gl-vec3/div.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = require_divide3();
     }
   });
   var require_min3 = __commonJS({
-    "node_modules/gl-vec3/min.js"(exports, module) {
+    "../../../node_modules/gl-vec3/min.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = min;
@@ -13618,7 +13618,7 @@ void main () {
     }
   });
   var require_max3 = __commonJS({
-    "node_modules/gl-vec3/max.js"(exports, module) {
+    "../../../node_modules/gl-vec3/max.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = max;
@@ -13631,7 +13631,7 @@ void main () {
     }
   });
   var require_floor = __commonJS({
-    "node_modules/gl-vec3/floor.js"(exports, module) {
+    "../../../node_modules/gl-vec3/floor.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = floor;
@@ -13644,7 +13644,7 @@ void main () {
     }
   });
   var require_ceil = __commonJS({
-    "node_modules/gl-vec3/ceil.js"(exports, module) {
+    "../../../node_modules/gl-vec3/ceil.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = ceil;
@@ -13657,7 +13657,7 @@ void main () {
     }
   });
   var require_round = __commonJS({
-    "node_modules/gl-vec3/round.js"(exports, module) {
+    "../../../node_modules/gl-vec3/round.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = round;
@@ -13670,7 +13670,7 @@ void main () {
     }
   });
   var require_scale5 = __commonJS({
-    "node_modules/gl-vec3/scale.js"(exports, module) {
+    "../../../node_modules/gl-vec3/scale.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = scale;
@@ -13683,7 +13683,7 @@ void main () {
     }
   });
   var require_scaleAndAdd = __commonJS({
-    "node_modules/gl-vec3/scaleAndAdd.js"(exports, module) {
+    "../../../node_modules/gl-vec3/scaleAndAdd.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = scaleAndAdd;
@@ -13696,7 +13696,7 @@ void main () {
     }
   });
   var require_distance3 = __commonJS({
-    "node_modules/gl-vec3/distance.js"(exports, module) {
+    "../../../node_modules/gl-vec3/distance.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = distance;
@@ -13707,14 +13707,14 @@ void main () {
     }
   });
   var require_dist = __commonJS({
-    "node_modules/gl-vec3/dist.js"(exports, module) {
+    "../../../node_modules/gl-vec3/dist.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = require_distance3();
     }
   });
   var require_squaredDistance3 = __commonJS({
-    "node_modules/gl-vec3/squaredDistance.js"(exports, module) {
+    "../../../node_modules/gl-vec3/squaredDistance.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = squaredDistance;
@@ -13725,14 +13725,14 @@ void main () {
     }
   });
   var require_sqrDist = __commonJS({
-    "node_modules/gl-vec3/sqrDist.js"(exports, module) {
+    "../../../node_modules/gl-vec3/sqrDist.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = require_squaredDistance3();
     }
   });
   var require_length3 = __commonJS({
-    "node_modules/gl-vec3/length.js"(exports, module) {
+    "../../../node_modules/gl-vec3/length.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = length;
@@ -13743,14 +13743,14 @@ void main () {
     }
   });
   var require_len = __commonJS({
-    "node_modules/gl-vec3/len.js"(exports, module) {
+    "../../../node_modules/gl-vec3/len.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = require_length3();
     }
   });
   var require_squaredLength3 = __commonJS({
-    "node_modules/gl-vec3/squaredLength.js"(exports, module) {
+    "../../../node_modules/gl-vec3/squaredLength.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = squaredLength;
@@ -13761,14 +13761,14 @@ void main () {
     }
   });
   var require_sqrLen = __commonJS({
-    "node_modules/gl-vec3/sqrLen.js"(exports, module) {
+    "../../../node_modules/gl-vec3/sqrLen.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = require_squaredLength3();
     }
   });
   var require_negate3 = __commonJS({
-    "node_modules/gl-vec3/negate.js"(exports, module) {
+    "../../../node_modules/gl-vec3/negate.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = negate;
@@ -13781,7 +13781,7 @@ void main () {
     }
   });
   var require_inverse = __commonJS({
-    "node_modules/gl-vec3/inverse.js"(exports, module) {
+    "../../../node_modules/gl-vec3/inverse.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = inverse;
@@ -13794,7 +13794,7 @@ void main () {
     }
   });
   var require_cross3 = __commonJS({
-    "node_modules/gl-vec3/cross.js"(exports, module) {
+    "../../../node_modules/gl-vec3/cross.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = cross;
@@ -13808,7 +13808,7 @@ void main () {
     }
   });
   var require_lerp3 = __commonJS({
-    "node_modules/gl-vec3/lerp.js"(exports, module) {
+    "../../../node_modules/gl-vec3/lerp.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = lerp;
@@ -13822,7 +13822,7 @@ void main () {
     }
   });
   var require_random = __commonJS({
-    "node_modules/gl-vec3/random.js"(exports, module) {
+    "../../../node_modules/gl-vec3/random.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = random;
@@ -13839,7 +13839,7 @@ void main () {
     }
   });
   var require_transformMat4 = __commonJS({
-    "node_modules/gl-vec3/transformMat4.js"(exports, module) {
+    "../../../node_modules/gl-vec3/transformMat4.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = transformMat4;
@@ -13854,7 +13854,7 @@ void main () {
     }
   });
   var require_transformMat3 = __commonJS({
-    "node_modules/gl-vec3/transformMat3.js"(exports, module) {
+    "../../../node_modules/gl-vec3/transformMat3.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = transformMat3;
@@ -13868,7 +13868,7 @@ void main () {
     }
   });
   var require_transformQuat = __commonJS({
-    "node_modules/gl-vec3/transformQuat.js"(exports, module) {
+    "../../../node_modules/gl-vec3/transformQuat.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = transformQuat;
@@ -13882,7 +13882,7 @@ void main () {
     }
   });
   var require_rotateX4 = __commonJS({
-    "node_modules/gl-vec3/rotateX.js"(exports, module) {
+    "../../../node_modules/gl-vec3/rotateX.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = rotateX;
@@ -13901,7 +13901,7 @@ void main () {
     }
   });
   var require_rotateY4 = __commonJS({
-    "node_modules/gl-vec3/rotateY.js"(exports, module) {
+    "../../../node_modules/gl-vec3/rotateY.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = rotateY;
@@ -13920,7 +13920,7 @@ void main () {
     }
   });
   var require_rotateZ4 = __commonJS({
-    "node_modules/gl-vec3/rotateZ.js"(exports, module) {
+    "../../../node_modules/gl-vec3/rotateZ.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = rotateZ;
@@ -13939,7 +13939,7 @@ void main () {
     }
   });
   var require_forEach = __commonJS({
-    "node_modules/gl-vec3/forEach.js"(exports, module) {
+    "../../../node_modules/gl-vec3/forEach.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = forEach;
@@ -13971,7 +13971,7 @@ void main () {
     }
   });
   var require_gl_vec3 = __commonJS({
-    "node_modules/gl-vec3/index.js"(exports, module) {
+    "../../../node_modules/gl-vec3/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = {
@@ -14024,7 +14024,7 @@ void main () {
     }
   });
   var require_perspectiveCamera = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/cameras/perspectiveCamera.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/cameras/perspectiveCamera.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_gl_mat4();
@@ -14079,7 +14079,7 @@ void main () {
     }
   });
   var require_orthographicCamera = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/cameras/orthographicCamera.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/cameras/orthographicCamera.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_gl_mat4();
@@ -14124,7 +14124,7 @@ void main () {
     }
   });
   var require_camera = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/cameras/camera.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/cameras/camera.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec32 = require_gl_vec3();
@@ -14203,7 +14203,7 @@ void main () {
     }
   });
   var require_flatten2 = __commonJS({
-    "node_modules/@jscad/array-utils/src/flatten.js"(exports, module) {
+    "../../../node_modules/@jscad/array-utils/src/flatten.js"(exports, module) {
       "use strict";
       init_define_process();
       var flatten = arr => arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
@@ -14211,7 +14211,7 @@ void main () {
     }
   });
   var require_fnNumberSort = __commonJS({
-    "node_modules/@jscad/array-utils/src/fnNumberSort.js"(exports, module) {
+    "../../../node_modules/@jscad/array-utils/src/fnNumberSort.js"(exports, module) {
       "use strict";
       init_define_process();
       var fnNumberSort = (a, b) => a - b;
@@ -14219,7 +14219,7 @@ void main () {
     }
   });
   var require_head = __commonJS({
-    "node_modules/@jscad/array-utils/src/head.js"(exports, module) {
+    "../../../node_modules/@jscad/array-utils/src/head.js"(exports, module) {
       "use strict";
       init_define_process();
       var head = array => {
@@ -14232,7 +14232,7 @@ void main () {
     }
   });
   var require_insertSorted = __commonJS({
-    "node_modules/@jscad/array-utils/src/insertSorted.js"(exports, module) {
+    "../../../node_modules/@jscad/array-utils/src/insertSorted.js"(exports, module) {
       "use strict";
       init_define_process();
       var insertSorted = (array, element, compareFunction) => {
@@ -14255,7 +14255,7 @@ void main () {
     }
   });
   var require_nth = __commonJS({
-    "node_modules/@jscad/array-utils/src/nth.js"(exports, module) {
+    "../../../node_modules/@jscad/array-utils/src/nth.js"(exports, module) {
       "use strict";
       init_define_process();
       var nth = (array, index) => {
@@ -14268,7 +14268,7 @@ void main () {
     }
   });
   var require_padToLength = __commonJS({
-    "node_modules/@jscad/array-utils/src/padToLength.js"(exports, module) {
+    "../../../node_modules/@jscad/array-utils/src/padToLength.js"(exports, module) {
       "use strict";
       init_define_process();
       var padToLength = (anArray, padding, targetLength) => {
@@ -14282,7 +14282,7 @@ void main () {
     }
   });
   var require_toArray = __commonJS({
-    "node_modules/@jscad/array-utils/src/toArray.js"(exports, module) {
+    "../../../node_modules/@jscad/array-utils/src/toArray.js"(exports, module) {
       "use strict";
       init_define_process();
       var toArray = array => {
@@ -14294,7 +14294,7 @@ void main () {
     }
   });
   var require_src = __commonJS({
-    "node_modules/@jscad/array-utils/src/index.js"(exports, module) {
+    "../../../node_modules/@jscad/array-utils/src/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = {
@@ -14309,7 +14309,7 @@ void main () {
     }
   });
   var require_boundingBox = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/bound-utils/boundingBox.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/bound-utils/boundingBox.js"(exports, module) {
       "use strict";
       init_define_process();
       var boundingBox = positions => {
@@ -14347,7 +14347,7 @@ void main () {
     }
   });
   var require_computeBounds = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/bound-utils/computeBounds.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/bound-utils/computeBounds.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec32 = require_gl_vec3();
@@ -14385,7 +14385,7 @@ void main () {
     }
   });
   var require_projectMat4 = __commonJS({
-    "node_modules/camera-unproject/lib/projectMat4.js"(exports, module) {
+    "../../../node_modules/camera-unproject/lib/projectMat4.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = project;
@@ -14400,7 +14400,7 @@ void main () {
     }
   });
   var require_camera_unproject = __commonJS({
-    "node_modules/camera-unproject/index.js"(exports, module) {
+    "../../../node_modules/camera-unproject/index.js"(exports, module) {
       "use strict";
       init_define_process();
       var transform = require_projectMat4();
@@ -14419,7 +14419,7 @@ void main () {
     }
   });
   var require_orbitControls = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/controls/orbitControls.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/controls/orbitControls.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec32 = require_gl_vec3();
@@ -14627,7 +14627,7 @@ void main () {
     }
   });
   var require_geom2ToGeometries = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/geometry-utils-V2/geom2ToGeometries.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/geometry-utils-V2/geom2ToGeometries.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_gl_mat4();
@@ -14684,7 +14684,7 @@ void main () {
     }
   });
   var require_geom3ToGeometries = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/geometry-utils-V2/geom3ToGeometries.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/geometry-utils-V2/geom3ToGeometries.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec32 = require_gl_vec3();
@@ -14768,7 +14768,7 @@ void main () {
     }
   });
   var require_path2ToGeometries = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/geometry-utils-V2/path2ToGeometries.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/geometry-utils-V2/path2ToGeometries.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_gl_mat4();
@@ -14818,7 +14818,7 @@ void main () {
     }
   });
   var require_entitiesFromSolids = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/geometry-utils-V2/entitiesFromSolids.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/geometry-utils-V2/entitiesFromSolids.js"(exports, module) {
       "use strict";
       init_define_process();
       var {flatten, toArray} = require_src();
@@ -14876,7 +14876,7 @@ void main () {
     }
   });
   var require_src2 = __commonJS({
-    "node_modules/@jscad/regl-renderer/src/index.js"(exports, module) {
+    "../../../node_modules/@jscad/regl-renderer/src/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = {
@@ -14900,7 +14900,7 @@ void main () {
     }
   });
   var require_padArrayToLength = __commonJS({
-    "node_modules/@jscad/modeling/src/utils/padArrayToLength.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/utils/padArrayToLength.js"(exports, module) {
       "use strict";
       init_define_process();
       var padArrayToLength = (anArray, padding, targetLength) => {
@@ -14914,7 +14914,7 @@ void main () {
     }
   });
   var require_measureAggregateBoundingBox = __commonJS({
-    "node_modules/@jscad/modeling/src/measurements/measureAggregateBoundingBox.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/measurements/measureAggregateBoundingBox.js"(exports, module) {
       "use strict";
       init_define_process();
       var flatten = require_flatten();
@@ -14938,7 +14938,7 @@ void main () {
     }
   });
   var require_translate3 = __commonJS({
-    "node_modules/@jscad/modeling/src/operations/transforms/translate.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/translate.js"(exports, module) {
       "use strict";
       init_define_process();
       var flatten = require_flatten();
@@ -14973,7 +14973,7 @@ void main () {
     }
   });
   var require_align = __commonJS({
-    "node_modules/@jscad/modeling/src/operations/transforms/align.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/align.js"(exports, module) {
       "use strict";
       init_define_process();
       var flatten = require_flatten();
@@ -15044,7 +15044,7 @@ void main () {
     }
   });
   var require_center = __commonJS({
-    "node_modules/@jscad/modeling/src/operations/transforms/center.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/center.js"(exports, module) {
       "use strict";
       init_define_process();
       var flatten = require_flatten();
@@ -15105,7 +15105,7 @@ void main () {
     }
   });
   var require_mirror = __commonJS({
-    "node_modules/@jscad/modeling/src/operations/transforms/mirror.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/mirror.js"(exports, module) {
       "use strict";
       init_define_process();
       var flatten = require_flatten();
@@ -15153,7 +15153,7 @@ void main () {
     }
   });
   var require_rotate4 = __commonJS({
-    "node_modules/@jscad/modeling/src/operations/transforms/rotate.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/rotate.js"(exports, module) {
       "use strict";
       init_define_process();
       var flatten = require_flatten();
@@ -15191,7 +15191,7 @@ void main () {
     }
   });
   var require_scale6 = __commonJS({
-    "node_modules/@jscad/modeling/src/operations/transforms/scale.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/scale.js"(exports, module) {
       "use strict";
       init_define_process();
       var flatten = require_flatten();
@@ -15227,7 +15227,7 @@ void main () {
     }
   });
   var require_transform9 = __commonJS({
-    "node_modules/@jscad/modeling/src/operations/transforms/transform.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/transform.js"(exports, module) {
       "use strict";
       init_define_process();
       var flatten = require_flatten();
@@ -15249,7 +15249,7 @@ void main () {
     }
   });
   var require_transforms = __commonJS({
-    "node_modules/@jscad/modeling/src/operations/transforms/index.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = {
@@ -15278,14 +15278,14 @@ void main () {
       };
     }
   });
-  var Csg_exports = {};
-  __export(Csg_exports, {
-    default: () => Csg_default
+  var index_exports = {};
+  __export(index_exports, {
+    default: () => index_default
   });
   init_define_process();
   var import_icons2 = __require("@blueprintjs/icons");
   init_define_process();
-  var _Core = class _Core {
+  var Core = class _Core {
     static initialize(csgModuleState) {
       _Core.moduleState = csgModuleState;
     }
@@ -15298,12 +15298,14 @@ void main () {
       return moduleState.nextComponent();
     }
   };
-  _Core.moduleState = null;
-  var Core = _Core;
+  Core.moduleState = null;
+  init_define_process();
+  function defineTab(tab) {
+    return tab;
+  }
   init_define_process();
   var import_core4 = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
-  var import_react2 = __toESM(__require("react"), 1);
   init_define_process();
   init_define_process();
   var import_vec3 = __toESM(require_vec3(), 1);
@@ -15338,10 +15340,16 @@ void main () {
   var import_mat4 = __toESM(require_mat4(), 1);
   var import_transforms = __toESM(require_transforms(), 1);
   init_define_process();
-  function hexToColor(hex) {
+  function hexToColor(hex, func_name) {
     const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
     const groups = regex.exec(hex);
-    if (groups == void 0) return [0, 0, 0];
+    if (groups == void 0) {
+      if (func_name === void 0) {
+        throw new Error(`Invalid color hex string: ${hex}`);
+      }
+      throw new Error(`${func_name}: Invalid color hex string: ${hex}`);
+    }
+    ;
     return [parseInt(groups[1], 16) / 255, parseInt(groups[2], 16) / 255, parseInt(groups[3], 16) / 255];
   }
   function colorToAlphaColor(color, opacity = 1) {
@@ -15427,10 +15435,10 @@ void main () {
     });
   }
   function cloneCameraState() {
-    return __spreadValues({}, import_regl_renderer.cameras.perspective.defaults);
+    return Object.assign({}, import_regl_renderer.cameras.perspective.defaults);
   }
   function cloneControlsState() {
-    return __spreadValues({}, import_regl_renderer.controls.orbit.defaults);
+    return Object.assign({}, import_regl_renderer.controls.orbit.defaults);
   }
   function updateProjection(cameraState, width, height) {
     import_regl_renderer.cameras.perspective.setProjection(cameraState, cameraState, {
@@ -15491,6 +15499,16 @@ void main () {
       });
     }
   };
+  var MousePointer;
+  (function (MousePointer2) {
+    MousePointer2[MousePointer2["LEFT"] = 0] = "LEFT";
+    MousePointer2[MousePointer2["MIDDLE"] = 1] = "MIDDLE";
+    MousePointer2[MousePointer2["RIGHT"] = 2] = "RIGHT";
+    MousePointer2[MousePointer2["BACK"] = 3] = "BACK";
+    MousePointer2[MousePointer2["FORWARD"] = 4] = "FORWARD";
+    MousePointer2[MousePointer2["NONE"] = -1] = "NONE";
+    MousePointer2[MousePointer2["OTHER"] = 7050] = "OTHER";
+  })(MousePointer || (MousePointer = {}));
   var InputTracker = class {
     constructor(canvas, cameraState, geometryEntities) {
       this.canvas = canvas;
@@ -15499,7 +15517,7 @@ void main () {
       this.controlsState = cloneControlsState();
       this.zoomToFit = true;
       this.zoomTicks = 0;
-      this.heldPointer = -1;
+      this.heldPointer = MousePointer.NONE;
       this.lastX = null;
       this.lastY = null;
       this.rotateX = 0;
@@ -15514,24 +15532,24 @@ void main () {
     }
     setHeldPointer(mouseEventButton) {
       switch (mouseEventButton) {
-        case 0:
-        case 2:
-        case 1:
+        case MousePointer.LEFT:
+        case MousePointer.RIGHT:
+        case MousePointer.MIDDLE:
           this.heldPointer = mouseEventButton;
           break;
         default:
-          this.heldPointer = 7050;
+          this.heldPointer = MousePointer.OTHER;
           break;
       }
     }
     unsetHeldPointer() {
-      this.heldPointer = -1;
+      this.heldPointer = MousePointer.NONE;
     }
     shouldIgnorePointerMove() {
-      return ![0, 1].includes(this.heldPointer);
+      return ![MousePointer.LEFT, MousePointer.MIDDLE].includes(this.heldPointer);
     }
     isPointerPan(isShiftKey) {
-      return this.heldPointer === 1 || this.heldPointer === 0 && isShiftKey;
+      return this.heldPointer === MousePointer.MIDDLE || this.heldPointer === MousePointer.LEFT && isShiftKey;
     }
     unsetLastCoordinates() {
       this.lastX = null;
@@ -15709,36 +15727,34 @@ void main () {
       this.isStarted = false;
     }
   };
+  var import_react = __toESM(__require("react"), 1);
   init_define_process();
   var import_core3 = __require("@blueprintjs/core");
-  var import_react = __toESM(__require("react"), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
-  var HoverControlHint = class extends import_react.default.Component {
-    render() {
-      return (0, import_jsx_runtime.jsx)("div", {
-        style: {
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          height: SA_TAB_BUTTON_WIDTH
-        },
-        children: (0, import_jsx_runtime.jsx)(import_core3.Tooltip, {
-          content: this.props.tooltipText,
-          placement: "left",
-          children: (0, import_jsx_runtime.jsx)(import_core3.Icon, {
-            icon: this.props.iconName,
-            size: SA_TAB_ICON_SIZE,
-            color: BP_ICON_COLOR
-          })
+  function HoverControlHint(props) {
+    return (0, import_jsx_runtime.jsx)("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        height: SA_TAB_BUTTON_WIDTH
+      },
+      children: (0, import_jsx_runtime.jsx)(import_core3.Tooltip, {
+        content: props.tooltipText,
+        placement: "left",
+        children: (0, import_jsx_runtime.jsx)(import_core3.Icon, {
+          icon: props.iconName,
+          size: SA_TAB_ICON_SIZE,
+          color: BP_ICON_COLOR
         })
-      });
-    }
-  };
+      })
+    });
+  }
   var import_jsx_runtime2 = __require("react/jsx-runtime");
-  var CanvasHolder = class extends import_react2.default.Component {
+  var CanvasHolder = class extends import_react.default.Component {
     constructor(props) {
       super(props);
-      this.canvasReference = import_react2.default.createRef();
+      this.canvasReference = import_react.default.createRef();
       this.statefulRenderer = null;
       this.state = {
         isContextLost: false
@@ -15835,19 +15851,19 @@ void main () {
     }
   };
   var import_jsx_runtime3 = __require("react/jsx-runtime");
-  var Csg_default = {
+  var index_default = defineTab({
     toSpawn(debuggerContext) {
       const moduleState = debuggerContext.context.moduleContexts.csg.state;
       Core.initialize(moduleState);
       return Core.getRenderGroupManager().shouldRender();
     },
-    body(_debuggerContext) {
+    body() {
       return (0, import_jsx_runtime3.jsx)(CanvasHolder, {
         componentNumber: Core.nextComponent()
       });
     },
     iconName: import_icons2.IconNames.SHAPES,
     label: "CSG Tab"
-  };
-  return __toCommonJS(Csg_exports);
+  });
+  return __toCommonJS(index_exports);
 };

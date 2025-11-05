@@ -15,10 +15,10 @@
     ],
     "retType": "Function"
   },
-  "thrice": {
+  "twice": {
     "kind": "function",
-    "name": "thrice",
-    "description": "<p>Returns a new function which when applied to an argument, has the same effect\nas applying the specified function to the same argument 3 times.</p>",
+    "name": "twice",
+    "description": "<p>Returns a new function which when applied to an argument, has the same effect\nas applying the specified function to the same argument 2 times.</p>",
     "params": [
       [
         "func",
@@ -27,10 +27,10 @@
     ],
     "retType": "Function"
   },
-  "twice": {
+  "thrice": {
     "kind": "function",
-    "name": "twice",
-    "description": "<p>Returns a new function which when applied to an argument, has the same effect\nas applying the specified function to the same argument 2 times.</p>",
+    "name": "thrice",
+    "description": "<p>Returns a new function which when applied to an argument, has the same effect\nas applying the specified function to the same argument 3 times.</p>",
     "params": [
       [
         "func",

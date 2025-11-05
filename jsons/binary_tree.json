@@ -9,7 +9,7 @@
         "BinaryTree"
       ]
     ],
-    "retType": "boolean"
+    "retType": "any"
   },
   "is_empty_tree": {
     "kind": "function",
@@ -18,10 +18,10 @@
     "params": [
       [
         "value",
-        "any"
+        "BinaryTree"
       ]
     ],
-    "retType": "boolean"
+    "retType": "value is null"
   },
   "is_tree": {
     "kind": "function",
@@ -33,7 +33,7 @@
         "any"
       ]
     ],
-    "retType": "boolean"
+    "retType": "value is BinaryTree"
   },
   "left_branch": {
     "kind": "function",

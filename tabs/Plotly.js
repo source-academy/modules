@@ -1,25 +1,8 @@
 export default require => {
-  var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
-  var __getOwnPropSymbols = Object.getOwnPropertySymbols;
-  var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __propIsEnum = Object.prototype.propertyIsEnumerable;
-  var __defNormalProp = (obj, key, value) => (key in obj) ? __defProp(obj, key, {
-    enumerable: true,
-    configurable: true,
-    writable: true,
-    value
-  }) : obj[key] = value;
-  var __spreadValues = (a, b) => {
-    for (var prop in b || (b = {})) if (__hasOwnProp.call(b, prop)) __defNormalProp(a, prop, b[prop]);
-    if (__getOwnPropSymbols) for (var prop of __getOwnPropSymbols(b)) {
-      if (__propIsEnum.call(b, prop)) __defNormalProp(a, prop, b[prop]);
-    }
-    return a;
-  };
   var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
   }) : x)(function (x) {
@@ -41,18 +24,14 @@ export default require => {
     }
     return to;
   };
-  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
-    value: mod,
-    enumerable: true
-  }) : target, mod));
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var Plotly_exports = {};
-  __export(Plotly_exports, {
-    default: () => Plotly_default
+  var index_exports = {};
+  __export(index_exports, {
+    Plotly: () => Plotly,
+    default: () => index_default
   });
-  var import_react = __toESM(__require("react"), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
   var containerStyle = {
     position: "fixed",
@@ -93,7 +72,7 @@ export default require => {
   var Modal = ({open, height, width, children, handleClose}) => (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, {
     children: open && (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, {
       children: [(0, import_jsx_runtime.jsx)("div", {
-        style: __spreadValues({
+        style: Object.assign({
           height,
           width
         }, containerStyle),
@@ -108,85 +87,73 @@ export default require => {
     })
   });
   var ModalDiv_default = Modal;
+  function defineTab(tab) {
+    return tab;
+  }
+  var import_react = __require("react");
   var import_jsx_runtime2 = __require("react/jsx-runtime");
-  var Plotly = class extends import_react.default.Component {
-    constructor(props) {
-      super(props);
-      this.handleOpen = selectedPlot => {
-        this.setState({
-          modalOpen: true,
-          selectedPlot
-        });
-      };
-      this.state = {
-        modalOpen: false,
-        selectedPlot: null
-      };
-    }
-    render() {
-      const {context: {moduleContexts: {plotly: {state: {drawnPlots}}}}} = this.props.debuggerContext;
-      return (0, import_jsx_runtime2.jsxs)("div", {
-        children: [(0, import_jsx_runtime2.jsx)(ModalDiv_default, {
-          open: this.state.modalOpen,
-          height: "90vh",
-          width: "80vw",
-          handleClose: () => this.setState({
-            modalOpen: false
-          }),
-          children: (0, import_jsx_runtime2.jsx)("div", {
-            id: "modalDiv",
-            ref: () => {
-              if (this.state.selectedPlot) {
-                this.state.selectedPlot.draw("modalDiv");
-              }
+  var Plotly = ({context}) => {
+    const [selectedPlot, setSelectedPlot] = (0, import_react.useState)(null);
+    const {context: {moduleContexts: {plotly: {state: {drawnPlots}}}}} = context;
+    return (0, import_jsx_runtime2.jsxs)("div", {
+      children: [(0, import_jsx_runtime2.jsx)(ModalDiv_default, {
+        open: selectedPlot !== null,
+        height: "90vh",
+        width: "80vw",
+        handleClose: () => setSelectedPlot(null),
+        children: (0, import_jsx_runtime2.jsx)("div", {
+          id: "modalDiv",
+          ref: () => {
+            if (selectedPlot) {
+              selectedPlot.draw("modalDiv");
+            }
+          },
+          style: {
+            height: "80vh"
+          }
+        })
+      }), drawnPlots.map((drawnPlot, id) => {
+        const divId = `plotDiv${id}`;
+        return (0, import_jsx_runtime2.jsxs)("div", {
+          style: {
+            height: "80vh",
+            marginBottom: "5vh"
+          },
+          children: [(0, import_jsx_runtime2.jsx)("div", {
+            onClick: () => setSelectedPlot(drawnPlot),
+            style: {
+              cursor: "pointer",
+              padding: "5px 10px",
+              backgroundColor: "#474F5E",
+              border: "1px solid #aaa",
+              borderRadius: "4px",
+              display: "inline-block"
             },
+            children: "Popout plot"
+          }), (0, import_jsx_runtime2.jsx)("div", {
+            id: divId,
             style: {
               height: "80vh"
-            }
-          })
-        }), drawnPlots.map((drawnPlot, id) => {
-          const divId = `plotDiv${id}`;
-          return (0, import_jsx_runtime2.jsxs)("div", {
-            style: {
-              height: "80vh",
-              marginBottom: "5vh"
             },
-            children: [(0, import_jsx_runtime2.jsx)("div", {
-              onClick: () => this.handleOpen(drawnPlot),
-              style: {
-                cursor: "pointer",
-                padding: "5px 10px",
-                backgroundColor: "#474F5E",
-                border: "1px solid #aaa",
-                borderRadius: "4px",
-                display: "inline-block"
-              },
-              children: "Popout plot"
-            }), (0, import_jsx_runtime2.jsx)("div", {
-              id: divId,
-              style: {
-                height: "80vh"
-              },
-              ref: () => {
-                drawnPlot.draw(divId);
-              }
-            })]
-          }, divId);
-        })]
-      });
-    }
+            ref: () => {
+              drawnPlot.draw(divId);
+            }
+          })]
+        }, divId);
+      })]
+    });
   };
-  var Plotly_default = {
+  var index_default = defineTab({
     toSpawn(context) {
       var _a, _b;
       const drawnPlots = (_b = (_a = context.context) == null ? void 0 : _a.moduleContexts) == null ? void 0 : _b.plotly.state.drawnPlots;
       return drawnPlots.length > 0;
     },
     body: debuggerContext => (0, import_jsx_runtime2.jsx)(Plotly, {
-      debuggerContext
+      context: debuggerContext
     }),
     label: "Plotly",
     iconName: "scatter-plot"
-  };
-  return __toCommonJS(Plotly_exports);
+  });
+  return __toCommonJS(index_exports);
 };

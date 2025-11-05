@@ -1,9 +1,7 @@
 export default require => {
-  var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
-  var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
@@ -26,43 +24,37 @@ export default require => {
     }
     return to;
   };
-  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
-    value: mod,
-    enumerable: true
-  }) : target, mod));
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var Game_exports = {};
-  __export(Game_exports, {
-    default: () => Game_default
+  var index_exports = {};
+  __export(index_exports, {
+    default: () => index_default
   });
-  var import_react = __toESM(__require("react"), 1);
+  function defineTab(tab) {
+    return tab;
+  }
   var import_jsx_runtime = __require("react/jsx-runtime");
-  var Game = class extends import_react.default.PureComponent {
-    render() {
-      return (0, import_jsx_runtime.jsxs)("div", {
-        children: ["Info: You need to visit the game to see the effect of your program. Remember to save your work first!", (0, import_jsx_runtime.jsx)("br", {}), (0, import_jsx_runtime.jsx)("br", {}), "You may find the game module", " ", (0, import_jsx_runtime.jsxs)("a", {
-          href: "https://source-academy.github.io/modules/documentation/modules/game.html",
-          rel: "noopener noreferrer",
-          target: "_blank",
-          children: ["documentation", " "]
-        }), "and", " ", (0, import_jsx_runtime.jsxs)("a", {
-          href: "https://github.com/source-academy/modules/wiki/%5Bgame%5D-User-Guide",
-          rel: "noopener noreferrer",
-          target: "_blank",
-          children: ["user guide", " "]
-        }), "useful."]
-      });
-    }
+  var Game = () => {
+    return (0, import_jsx_runtime.jsxs)("div", {
+      children: ["Info: You need to visit the game to see the effect of your program. Remember to save your work first!", (0, import_jsx_runtime.jsx)("br", {}), (0, import_jsx_runtime.jsx)("br", {}), "You may find the game module", " ", (0, import_jsx_runtime.jsxs)("a", {
+        href: "https://source-academy.github.io/modules/documentation/modules/game.html",
+        rel: "noopener noreferrer",
+        target: "_blank",
+        children: ["documentation", " "]
+      }), "and", " ", (0, import_jsx_runtime.jsxs)("a", {
+        href: "https://github.com/source-academy/modules/wiki/%5Bgame%5D-User-Guide",
+        rel: "noopener noreferrer",
+        target: "_blank",
+        children: ["user guide", " "]
+      }), "useful."]
+    });
   };
-  var Game_default = {
+  var index_default = defineTab({
     toSpawn: () => true,
-    body: debuggerContext => (0, import_jsx_runtime.jsx)(Game, {
-      debuggerContext
-    }),
+    body: () => (0, import_jsx_runtime.jsx)(Game, {}),
     label: "Game Info Tab",
     iconName: "info-sign"
-  };
-  return __toCommonJS(Game_exports);
+  });
+  return __toCommonJS(index_exports);
 };

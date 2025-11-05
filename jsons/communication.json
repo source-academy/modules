@@ -2,80 +2,26 @@
   "STATE_CONNECTED": {
     "kind": "variable",
     "name": "STATE_CONNECTED",
-    "description": "No description available",
+    "description": "<p>No description available</p>",
     "type": "\"Connected\""
   },
   "STATE_DISCONNECTED": {
     "kind": "variable",
     "name": "STATE_DISCONNECTED",
-    "description": "No description available",
+    "description": "<p>No description available</p>",
     "type": "\"Disconnected\""
   },
   "STATE_OFFLINE": {
     "kind": "variable",
     "name": "STATE_OFFLINE",
-    "description": "No description available",
+    "description": "<p>No description available</p>",
     "type": "\"Offline\""
   },
   "STATE_RECONNECTING": {
     "kind": "variable",
     "name": "STATE_RECONNECTING",
-    "description": "No description available",
+    "description": "<p>No description available</p>",
     "type": "\"Reconnecting\""
-  },
-  "callFunction": {
-    "kind": "function",
-    "name": "callFunction",
-    "description": "<p>Calls a function exposed by another user.</p>",
-    "params": [
-      [
-        "receiver",
-        "string"
-      ],
-      [
-        "name",
-        "string"
-      ],
-      [
-        "args",
-        "any[]"
-      ],
-      [
-        "callback",
-        "Function"
-      ]
-    ],
-    "retType": "void"
-  },
-  "expose": {
-    "kind": "function",
-    "name": "expose",
-    "description": "<p>Exposes the specified function to other users.\nOther users can use \"callFunction\" to call this function.</p>",
-    "params": [
-      [
-        "name",
-        "string"
-      ],
-      [
-        "func",
-        "Function"
-      ]
-    ],
-    "retType": "void"
-  },
-  "getGlobalState": {
-    "kind": "function",
-    "name": "getGlobalState",
-    "description": "<p>Obtains the current global state.</p>",
-    "params": [],
-    "retType": "any"
-  },
-  "getUserId": {
-    "kind": "function",
-    "name": "getUserId",
-    "description": "<p>Obtains the user's ID.</p>",
-    "params": [],
-    "retType": "string"
   },
   "initCommunications": {
     "kind": "function",
@@ -112,7 +58,30 @@
       ],
       [
         "callback",
-        "Function"
+        "(state: any) => void"
+      ]
+    ],
+    "retType": "void"
+  },
+  "getGlobalState": {
+    "kind": "function",
+    "name": "getGlobalState",
+    "description": "<p>Obtains the current global state.</p>",
+    "params": [],
+    "retType": "any"
+  },
+  "updateGlobalState": {
+    "kind": "function",
+    "name": "updateGlobalState",
+    "description": "<p>Broadcasts the new states to all devices.\nHas ability to modify only part of the JSON state.</p>",
+    "params": [
+      [
+        "path",
+        "string"
+      ],
+      [
+        "updatedState",
+        "any"
       ]
     ],
     "retType": "void"
@@ -133,6 +102,53 @@
     ],
     "retType": "void"
   },
+  "getUserId": {
+    "kind": "function",
+    "name": "getUserId",
+    "description": "<p>Obtains the user's ID.</p>",
+    "params": [],
+    "retType": "string"
+  },
+  "expose": {
+    "kind": "function",
+    "name": "expose",
+    "description": "<p>Exposes the specified function to other users.\nOther users can use \"callFunction\" to call this function.</p>",
+    "params": [
+      [
+        "name",
+        "string"
+      ],
+      [
+        "func",
+        "(args: any[]) => any"
+      ]
+    ],
+    "retType": "void"
+  },
+  "callFunction": {
+    "kind": "function",
+    "name": "callFunction",
+    "description": "<p>Calls a function exposed by another user.</p>",
+    "params": [
+      [
+        "receiver",
+        "string"
+      ],
+      [
+        "name",
+        "string"
+      ],
+      [
+        "args",
+        "any[]"
+      ],
+      [
+        "callback",
+        "(args: any[]) => void"
+      ]
+    ],
+    "retType": "void"
+  },
   "keepRunning": {
     "kind": "function",
     "name": "keepRunning",
@@ -145,22 +161,6 @@
     "name": "stopRunning",
     "description": "<p>Removes interval that keeps the program running.</p>",
     "params": [],
-    "retType": "void"
-  },
-  "updateGlobalState": {
-    "kind": "function",
-    "name": "updateGlobalState",
-    "description": "<p>Broadcasts the new states to all devices.\nHas ability to modify only part of the JSON state.</p>",
-    "params": [
-      [
-        "path",
-        "string"
-      ],
-      [
-        "updatedState",
-        "any"
-      ]
-    ],
     "retType": "void"
   }
 }

@@ -1,26 +1,26 @@
 {
-  "scrabble_letters": {
-    "kind": "variable",
-    "name": "scrabble_letters",
-    "description": "<p><code>scrabble_letters</code> is an array of arrays of strings. Each array\nof strings represents an allowed word in Scrabble and contains\nthe letters of that word as single-character strings in the\norder in which the letters appear in the word.</p>",
-    "type": "string[][]"
-  },
-  "scrabble_letters_tiny": {
-    "kind": "variable",
-    "name": "scrabble_letters_tiny",
-    "description": "No description available",
-    "type": "string[][]"
-  },
   "scrabble_words": {
     "kind": "variable",
     "name": "scrabble_words",
     "description": "<p><code>scrabble_words</code> is an array of strings, each representing\nan allowed word in Scrabble.</p>",
     "type": "string[]"
   },
+  "scrabble_letters": {
+    "kind": "variable",
+    "name": "scrabble_letters",
+    "description": "<p><code>scrabble_letters</code> is an array of arrays of strings. Each array\nof strings represents an allowed word in Scrabble and contains\nthe letters of that word as single-character strings in the\norder in which the letters appear in the word.</p>",
+    "type": "string[][]"
+  },
   "scrabble_words_tiny": {
     "kind": "variable",
     "name": "scrabble_words_tiny",
-    "description": "No description available",
+    "description": "<p>No description available</p>",
     "type": "string[]"
+  },
+  "scrabble_letters_tiny": {
+    "kind": "variable",
+    "name": "scrabble_letters_tiny",
+    "description": "<p>No description available</p>",
+    "type": "string[][]"
   }
 }

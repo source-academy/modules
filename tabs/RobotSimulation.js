@@ -65,10 +65,13 @@ export default require => {
       step((generator = generator.apply(__this, __arguments)).next());
     });
   };
-  var RobotSimulation_exports = {};
-  __export(RobotSimulation_exports, {
-    default: () => RobotSimulation_default
+  var index_exports = {};
+  __export(index_exports, {
+    default: () => index_default
   });
+  function defineTab(tab) {
+    return tab;
+  }
   var import_react7 = __require("react");
   var import_react = __require("react");
   var import_jsx_runtime = __require("react/jsx-runtime");
@@ -455,7 +458,7 @@ export default require => {
     const ev3 = context.context.moduleContexts.robot_simulation.state.ev3;
     const robotConsole = world.robotConsole;
     (0, import_react5.useEffect)(() => {
-      const startThreeAndRapierEngines = () => __async(void 0, null, function* () {
+      const startThreeAndRapierEngines = () => __async(null, null, function* () {
         setCurrentState(world.state);
       });
       const attachRenderDom = () => {
@@ -570,7 +573,7 @@ export default require => {
     });
   };
   var import_jsx_runtime12 = __require("react/jsx-runtime");
-  var RobotSimulation_default = {
+  var index_default = defineTab({
     toSpawn(context) {
       var _a, _b;
       const worldState = (_b = (_a = context.context.moduleContexts.robot_simulation.state) == null ? void 0 : _a.world) == null ? void 0 : _b.state;
@@ -579,8 +582,8 @@ export default require => {
     body: context => (0, import_jsx_runtime12.jsx)(Main, {
       context
     }),
-    label: "Sample Tab",
+    label: "Robot Simulation Tab",
     iconName: "build"
-  };
-  return __toCommonJS(RobotSimulation_exports);
+  });
+  return __toCommonJS(index_exports);
 };

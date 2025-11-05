@@ -1,4 +1,92 @@
 {
+  "set_gravity": {
+    "kind": "function",
+    "name": "set_gravity",
+    "description": "<p>Creates a new physics world and sets the gravity of the world.</p>",
+    "params": [
+      [
+        "v",
+        "Vector2"
+      ]
+    ],
+    "retType": "void"
+  },
+  "make_ground": {
+    "kind": "function",
+    "name": "make_ground",
+    "description": "<p>Makes the ground body of the world.</p>",
+    "params": [
+      [
+        "height",
+        "number"
+      ],
+      [
+        "friction",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "add_wall": {
+    "kind": "function",
+    "name": "add_wall",
+    "description": "<p>Makes a wall (static box object with no velocity).</p>",
+    "params": [
+      [
+        "pos",
+        "Vector2"
+      ],
+      [
+        "rot",
+        "number"
+      ],
+      [
+        "size",
+        "Vector2"
+      ]
+    ],
+    "retType": "PhysicsObject"
+  },
+  "make_vector": {
+    "kind": "function",
+    "name": "make_vector",
+    "description": "<p>Makes a 2d vector with the given x and y components.</p>",
+    "params": [
+      [
+        "x",
+        "number"
+      ],
+      [
+        "y",
+        "number"
+      ]
+    ],
+    "retType": "Vector2"
+  },
+  "make_force": {
+    "kind": "function",
+    "name": "make_force",
+    "description": "<p>Makes a force with direction vector, magnitude, force duration and start time.</p>",
+    "params": [
+      [
+        "dir",
+        "Vector2"
+      ],
+      [
+        "mag",
+        "number"
+      ],
+      [
+        "dur",
+        "number"
+      ],
+      [
+        "start",
+        "number"
+      ]
+    ],
+    "retType": "Force"
+  },
   "add_box_object": {
     "kind": "function",
     "name": "add_box_object",
@@ -87,41 +175,165 @@
     ],
     "retType": "PhysicsObject"
   },
-  "add_vector": {
+  "set_density": {
     "kind": "function",
-    "name": "add_vector",
-    "description": "<p>Adds two vectors together and returns the resultant vector.</p>",
+    "name": "set_density",
+    "description": "<p>Set density of the object.</p>",
     "params": [
       [
-        "vec1",
-        "Vector2"
+        "obj",
+        "PhysicsObject"
       ],
       [
-        "vec2",
-        "Vector2"
+        "density",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "set_friction": {
+    "kind": "function",
+    "name": "set_friction",
+    "description": "<p>Sets the friction value of the object.</p>",
+    "params": [
+      [
+        "obj",
+        "PhysicsObject"
+      ],
+      [
+        "friction",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "scale_size": {
+    "kind": "function",
+    "name": "scale_size",
+    "description": "<p>Resizes the object with given scale factor.</p>",
+    "params": [
+      [
+        "obj",
+        "PhysicsObject"
+      ],
+      [
+        "scale",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "get_position": {
+    "kind": "function",
+    "name": "get_position",
+    "description": "<p>Gets position of the object at current world time.</p>",
+    "params": [
+      [
+        "obj",
+        "PhysicsObject"
       ]
     ],
     "retType": "Vector2"
   },
-  "add_wall": {
+  "set_position": {
     "kind": "function",
-    "name": "add_wall",
-    "description": "<p>Makes a wall (static box object with no velocity).</p>",
+    "name": "set_position",
+    "description": "<p>Sets the position of the object.</p>",
     "params": [
+      [
+        "obj",
+        "PhysicsObject"
+      ],
       [
         "pos",
         "Vector2"
+      ]
+    ],
+    "retType": "void"
+  },
+  "get_rotation": {
+    "kind": "function",
+    "name": "get_rotation",
+    "description": "<p>Gets rotation of the object at current world time.</p>",
+    "params": [
+      [
+        "obj",
+        "PhysicsObject"
+      ]
+    ],
+    "retType": "number"
+  },
+  "set_rotation": {
+    "kind": "function",
+    "name": "set_rotation",
+    "description": "<p>Sets the rotation of the object.</p>",
+    "params": [
+      [
+        "obj",
+        "PhysicsObject"
       ],
       [
         "rot",
         "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "get_velocity": {
+    "kind": "function",
+    "name": "get_velocity",
+    "description": "<p>Gets velocity of the object at current world time.</p>",
+    "params": [
+      [
+        "obj",
+        "PhysicsObject"
+      ]
+    ],
+    "retType": "Vector2"
+  },
+  "set_velocity": {
+    "kind": "function",
+    "name": "set_velocity",
+    "description": "<p>Sets current velocity of the object.</p>",
+    "params": [
+      [
+        "obj",
+        "PhysicsObject"
       ],
       [
-        "size",
+        "velc",
         "Vector2"
       ]
     ],
-    "retType": "PhysicsObject"
+    "retType": "void"
+  },
+  "get_angular_velocity": {
+    "kind": "function",
+    "name": "get_angular_velocity",
+    "description": "<p>Gets angular velocity of the object at current world time.</p>",
+    "params": [
+      [
+        "obj",
+        "PhysicsObject"
+      ]
+    ],
+    "retType": "Vector2"
+  },
+  "set_angular_velocity": {
+    "kind": "function",
+    "name": "set_angular_velocity",
+    "description": "<p>Sets current angular velocity of the object.</p>",
+    "params": [
+      [
+        "obj",
+        "PhysicsObject"
+      ],
+      [
+        "velc",
+        "number"
+      ]
+    ],
+    "retType": "void"
   },
   "apply_force": {
     "kind": "function",
@@ -159,65 +371,21 @@
     ],
     "retType": "void"
   },
-  "array_to_vector": {
+  "is_touching": {
     "kind": "function",
-    "name": "array_to_vector",
-    "description": "<p>Converts an array of 2 numbers into a 2d vector.</p>",
+    "name": "is_touching",
+    "description": "<p>Checks if two objects are touching at current world time.</p>",
     "params": [
       [
-        "arr",
-        "[number, number]"
-      ]
-    ],
-    "retType": "Vector2"
-  },
-  "get_angular_velocity": {
-    "kind": "function",
-    "name": "get_angular_velocity",
-    "description": "<p>Gets angular velocity of the object at current world time.</p>",
-    "params": [
+        "obj1",
+        "PhysicsObject"
+      ],
       [
-        "obj",
+        "obj2",
         "PhysicsObject"
       ]
     ],
-    "retType": "Vector2"
-  },
-  "get_position": {
-    "kind": "function",
-    "name": "get_position",
-    "description": "<p>Gets position of the object at current world time.</p>",
-    "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ]
-    ],
-    "retType": "Vector2"
-  },
-  "get_rotation": {
-    "kind": "function",
-    "name": "get_rotation",
-    "description": "<p>Gets rotation of the object at current world time.</p>",
-    "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ]
-    ],
-    "retType": "number"
-  },
-  "get_velocity": {
-    "kind": "function",
-    "name": "get_velocity",
-    "description": "<p>Gets velocity of the object at current world time.</p>",
-    "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ]
-    ],
-    "retType": "Vector2"
+    "retType": "boolean"
   },
   "impact_start_time": {
     "kind": "function",
@@ -235,198 +403,14 @@
     ],
     "retType": "number"
   },
-  "is_touching": {
+  "update_world": {
     "kind": "function",
-    "name": "is_touching",
-    "description": "<p>Checks if two objects are touching at current world time.</p>",
+    "name": "update_world",
+    "description": "<p>Updates the world once with the given time step.</p>",
     "params": [
       [
-        "obj1",
-        "PhysicsObject"
-      ],
-      [
-        "obj2",
-        "PhysicsObject"
-      ]
-    ],
-    "retType": "boolean"
-  },
-  "make_force": {
-    "kind": "function",
-    "name": "make_force",
-    "description": "<p>Makes a force with direction vector, magnitude, force duration and start time.</p>",
-    "params": [
-      [
-        "dir",
-        "Vector2"
-      ],
-      [
-        "mag",
+        "dt",
         "number"
-      ],
-      [
-        "dur",
-        "number"
-      ],
-      [
-        "start",
-        "number"
-      ]
-    ],
-    "retType": "Force"
-  },
-  "make_ground": {
-    "kind": "function",
-    "name": "make_ground",
-    "description": "<p>Makes the ground body of the world.</p>",
-    "params": [
-      [
-        "height",
-        "number"
-      ],
-      [
-        "friction",
-        "number"
-      ]
-    ],
-    "retType": "void"
-  },
-  "make_vector": {
-    "kind": "function",
-    "name": "make_vector",
-    "description": "<p>Makes a 2d vector with the given x and y components.</p>",
-    "params": [
-      [
-        "x",
-        "number"
-      ],
-      [
-        "y",
-        "number"
-      ]
-    ],
-    "retType": "Vector2"
-  },
-  "scale_size": {
-    "kind": "function",
-    "name": "scale_size",
-    "description": "<p>Resizes the object with given scale factor.</p>",
-    "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ],
-      [
-        "scale",
-        "number"
-      ]
-    ],
-    "retType": "void"
-  },
-  "set_angular_velocity": {
-    "kind": "function",
-    "name": "set_angular_velocity",
-    "description": "<p>Sets current angular velocity of the object.</p>",
-    "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ],
-      [
-        "velc",
-        "number"
-      ]
-    ],
-    "retType": "void"
-  },
-  "set_density": {
-    "kind": "function",
-    "name": "set_density",
-    "description": "<p>Set density of the object.</p>",
-    "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ],
-      [
-        "density",
-        "number"
-      ]
-    ],
-    "retType": "void"
-  },
-  "set_friction": {
-    "kind": "function",
-    "name": "set_friction",
-    "description": "<p>Sets the friction value of the object.</p>",
-    "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ],
-      [
-        "friction",
-        "number"
-      ]
-    ],
-    "retType": "void"
-  },
-  "set_gravity": {
-    "kind": "function",
-    "name": "set_gravity",
-    "description": "<p>Creates a new physics world and sets the gravity of the world.</p>",
-    "params": [
-      [
-        "v",
-        "Vector2"
-      ]
-    ],
-    "retType": "void"
-  },
-  "set_position": {
-    "kind": "function",
-    "name": "set_position",
-    "description": "<p>Sets the position of the object.</p>",
-    "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ],
-      [
-        "pos",
-        "Vector2"
-      ]
-    ],
-    "retType": "void"
-  },
-  "set_rotation": {
-    "kind": "function",
-    "name": "set_rotation",
-    "description": "<p>Sets the rotation of the object.</p>",
-    "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ],
-      [
-        "rot",
-        "number"
-      ]
-    ],
-    "retType": "void"
-  },
-  "set_velocity": {
-    "kind": "function",
-    "name": "set_velocity",
-    "description": "<p>Sets current velocity of the object.</p>",
-    "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ],
-      [
-        "velc",
-        "Vector2"
       ]
     ],
     "retType": "void"
@@ -443,6 +427,46 @@
     ],
     "retType": "void"
   },
+  "vector_to_array": {
+    "kind": "function",
+    "name": "vector_to_array",
+    "description": "<p>Converts a 2d vector into an array.</p>",
+    "params": [
+      [
+        "vec",
+        "Vector2"
+      ]
+    ],
+    "retType": "number[]"
+  },
+  "array_to_vector": {
+    "kind": "function",
+    "name": "array_to_vector",
+    "description": "<p>Converts an array of 2 numbers into a 2d vector.</p>",
+    "params": [
+      [
+        "arr",
+        "[number, number]"
+      ]
+    ],
+    "retType": "Vector2"
+  },
+  "add_vector": {
+    "kind": "function",
+    "name": "add_vector",
+    "description": "<p>Adds two vectors together and returns the resultant vector.</p>",
+    "params": [
+      [
+        "vec1",
+        "Vector2"
+      ],
+      [
+        "vec2",
+        "Vector2"
+      ]
+    ],
+    "retType": "Vector2"
+  },
   "subtract_vector": {
     "kind": "function",
     "name": "subtract_vector",
@@ -458,29 +482,5 @@
       ]
     ],
     "retType": "Vector2"
-  },
-  "update_world": {
-    "kind": "function",
-    "name": "update_world",
-    "description": "<p>Updates the world once with the given time step.</p>",
-    "params": [
-      [
-        "dt",
-        "number"
-      ]
-    ],
-    "retType": "void"
-  },
-  "vector_to_array": {
-    "kind": "function",
-    "name": "vector_to_array",
-    "description": "<p>Converts a 2d vector into an array.</p>",
-    "params": [
-      [
-        "vec",
-        "Vector2"
-      ]
-    ],
-    "retType": "number[]"
   }
 }

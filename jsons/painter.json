@@ -1,16 +1,4 @@
 {
-  "display_painter": {
-    "kind": "function",
-    "name": "display_painter",
-    "description": "<p>Returns a function that turns a given Frame into a Drawing, given the\npainter</p>",
-    "params": [
-      [
-        "painter",
-        "Function"
-      ]
-    ],
-    "retType": "Function"
-  },
   "draw_line": {
     "kind": "function",
     "name": "draw_line",
@@ -26,5 +14,17 @@
       ]
     ],
     "retType": "void"
+  },
+  "display_painter": {
+    "kind": "function",
+    "name": "display_painter",
+    "description": "<p>Returns a function that turns a given Frame into a Drawing, given the\npainter</p>",
+    "params": [
+      [
+        "painter",
+        "(frame: Frame) => void"
+      ]
+    ],
+    "retType": "(frame: Frame) => void"
   }
 }

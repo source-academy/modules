@@ -1,39 +1,135 @@
 {
-  "alignmentBottom": {
+  "alignmentTop": {
     "kind": "variable",
-    "name": "alignmentBottom",
-    "description": "No description available",
-    "type": "Bottom"
-  },
-  "alignmentCenter": {
-    "kind": "variable",
-    "name": "alignmentCenter",
-    "description": "No description available",
-    "type": "Center"
-  },
-  "alignmentLeft": {
-    "kind": "variable",
-    "name": "alignmentLeft",
-    "description": "No description available",
-    "type": "Left"
+    "name": "alignmentTop",
+    "description": "<p>No description available</p>",
+    "type": "Top"
   },
   "alignmentMiddle": {
     "kind": "variable",
     "name": "alignmentMiddle",
-    "description": "No description available",
+    "description": "<p>No description available</p>",
     "type": "Middle"
+  },
+  "alignmentBottom": {
+    "kind": "variable",
+    "name": "alignmentBottom",
+    "description": "<p>No description available</p>",
+    "type": "Bottom"
+  },
+  "alignmentLeft": {
+    "kind": "variable",
+    "name": "alignmentLeft",
+    "description": "<p>No description available</p>",
+    "type": "Left"
+  },
+  "alignmentCenter": {
+    "kind": "variable",
+    "name": "alignmentCenter",
+    "description": "<p>No description available</p>",
+    "type": "Center"
   },
   "alignmentRight": {
     "kind": "variable",
     "name": "alignmentRight",
-    "description": "No description available",
+    "description": "<p>No description available</p>",
     "type": "Right"
   },
-  "alignmentTop": {
-    "kind": "variable",
-    "name": "alignmentTop",
-    "description": "No description available",
-    "type": "Top"
+  "initAR": {
+    "kind": "function",
+    "name": "initAR",
+    "description": "<p>Initialize AR.</p>",
+    "params": [],
+    "retType": "void"
+  },
+  "setLeftToggle": {
+    "kind": "function",
+    "name": "setLeftToggle",
+    "description": "<p>Sets the left toggle.</p>",
+    "params": [
+      [
+        "text",
+        "string"
+      ],
+      [
+        "callback",
+        "() => void"
+      ]
+    ],
+    "retType": "void"
+  },
+  "setCenterToggle": {
+    "kind": "function",
+    "name": "setCenterToggle",
+    "description": "<p>Sets the center toggle.</p>",
+    "params": [
+      [
+        "text",
+        "string"
+      ],
+      [
+        "callback",
+        "() => void"
+      ]
+    ],
+    "retType": "void"
+  },
+  "setRightToggle": {
+    "kind": "function",
+    "name": "setRightToggle",
+    "description": "<p>Sets the right toggle.</p>",
+    "params": [
+      [
+        "text",
+        "string"
+      ],
+      [
+        "callback",
+        "() => void"
+      ]
+    ],
+    "retType": "void"
+  },
+  "removeLeftToggle": {
+    "kind": "function",
+    "name": "removeLeftToggle",
+    "description": "<p>Resets and hides the left toggle.</p>",
+    "params": [],
+    "retType": "void"
+  },
+  "removeCenterToggle": {
+    "kind": "function",
+    "name": "removeCenterToggle",
+    "description": "<p>Resets and hides the center toggle.</p>",
+    "params": [],
+    "retType": "void"
+  },
+  "removeRightToggle": {
+    "kind": "function",
+    "name": "removeRightToggle",
+    "description": "<p>Resets and hides the right toggle.</p>",
+    "params": [],
+    "retType": "void"
+  },
+  "createVector3": {
+    "kind": "function",
+    "name": "createVector3",
+    "description": "<p>Creates an instance of Vector3.</p>",
+    "params": [
+      [
+        "x",
+        "number"
+      ],
+      [
+        "y",
+        "number"
+      ],
+      [
+        "z",
+        "number"
+      ]
+    ],
+    "retType": "Vector3"
   },
   "addARObject": {
     "kind": "function",
@@ -47,6 +143,37 @@
     ],
     "retType": "void"
   },
+  "removeARObject": {
+    "kind": "function",
+    "name": "removeARObject",
+    "description": "<p>Removes the specified object from the augmented world.</p>",
+    "params": [
+      [
+        "arObject",
+        "ARObject"
+      ]
+    ],
+    "retType": "void"
+  },
+  "getARObjects": {
+    "kind": "function",
+    "name": "getARObjects",
+    "description": "<p>Obtains the current ARObjects.</p>",
+    "params": [],
+    "retType": "ARObject[]"
+  },
+  "setAsARObjects": {
+    "kind": "function",
+    "name": "setAsARObjects",
+    "description": "<p>Sets AR objects from json.</p>",
+    "params": [
+      [
+        "json",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
   "clearARObjects": {
     "kind": "function",
     "name": "clearARObjects",
@@ -54,17 +181,108 @@
     "params": [],
     "retType": "void"
   },
-  "clearMovement": {
+  "getXPosition": {
     "kind": "function",
-    "name": "clearMovement",
-    "description": "<p>Removes the movement of the object.</p>",
+    "name": "getXPosition",
+    "description": "<p>Obtains the position of the specified object on the x-axis.</p>",
     "params": [
       [
-        "object",
+        "arObject",
         "ARObject"
       ]
     ],
+    "retType": "number"
+  },
+  "getYPosition": {
+    "kind": "function",
+    "name": "getYPosition",
+    "description": "<p>Obtains the position of the specified object on the y-axis.</p>",
+    "params": [
+      [
+        "arObject",
+        "ARObject"
+      ]
+    ],
+    "retType": "number"
+  },
+  "getZPosition": {
+    "kind": "function",
+    "name": "getZPosition",
+    "description": "<p>Obtains the position of the specified object on the z-axis.</p>",
+    "params": [
+      [
+        "arObject",
+        "ARObject"
+      ]
+    ],
+    "retType": "number"
+  },
+  "moveARObject": {
+    "kind": "function",
+    "name": "moveARObject",
+    "description": "<p>Moves the specified object to a new position.</p>",
+    "params": [
+      [
+        "arObject",
+        "ARObject"
+      ],
+      [
+        "position",
+        "Vector3"
+      ]
+    ],
     "retType": "void"
+  },
+  "setHighlightFrontObject": {
+    "kind": "function",
+    "name": "setHighlightFrontObject",
+    "description": "<p>Turn on highlighting of object that the user is facing.</p>",
+    "params": [
+      [
+        "isEnabled",
+        "boolean"
+      ]
+    ],
+    "retType": "void"
+  },
+  "selectObject": {
+    "kind": "function",
+    "name": "selectObject",
+    "description": "<p>Sets the select state for the specified AR object.</p>",
+    "params": [
+      [
+        "arObject",
+        "ARObject"
+      ],
+      [
+        "isSelected",
+        "boolean"
+      ]
+    ],
+    "retType": "void"
+  },
+  "getFrontObject": {
+    "kind": "function",
+    "name": "getFrontObject",
+    "description": "<p>Obtains the first object in the user's line of sight, if any.</p>",
+    "params": [],
+    "retType": "undefined | ARObject"
+  },
+  "getJsonChild": {
+    "kind": "function",
+    "name": "getJsonChild",
+    "description": "<p>Obtains the value of a json object at the key.</p>",
+    "params": [
+      [
+        "object",
+        "any"
+      ],
+      [
+        "key",
+        "string"
+      ]
+    ],
+    "retType": "any"
   },
   "createCubeObject": {
     "kind": "function",
@@ -93,10 +311,34 @@
       ],
       [
         "onSelect",
-        "Function"
+        "() => any"
       ]
     ],
     "retType": "CubeObject"
+  },
+  "createSphereObject": {
+    "kind": "function",
+    "name": "createSphereObject",
+    "description": "<p>Creates an instance of an AR sphere object.</p>",
+    "params": [
+      [
+        "position",
+        "Vector3"
+      ],
+      [
+        "radius",
+        "number"
+      ],
+      [
+        "color",
+        "number"
+      ],
+      [
+        "onSelect",
+        "() => any"
+      ]
+    ],
+    "retType": "SphereObject"
   },
   "createGltfObject": {
     "kind": "function",
@@ -117,118 +359,10 @@
       ],
       [
         "onSelect",
-        "Function"
+        "() => any"
       ]
     ],
     "retType": "GltfObject"
-  },
-  "createInterfaceBase64Image": {
-    "kind": "function",
-    "name": "createInterfaceBase64Image",
-    "description": "<p>Creates an image component for UI object, using Base64 string.\nCrops the image to the specified size.</p>",
-    "params": [
-      [
-        "base64",
-        "string"
-      ],
-      [
-        "imageWidth",
-        "number"
-      ],
-      [
-        "imageHeight",
-        "number"
-      ],
-      [
-        "paddingLeft",
-        "number"
-      ],
-      [
-        "paddingRight",
-        "number"
-      ],
-      [
-        "paddingTop",
-        "number"
-      ],
-      [
-        "paddingBottom",
-        "number"
-      ]
-    ],
-    "retType": "UIBase64ImageComponent"
-  },
-  "createInterfaceColumn": {
-    "kind": "function",
-    "name": "createInterfaceColumn",
-    "description": "<p>Creates a row component for UI object.</p>",
-    "params": [
-      [
-        "children",
-        "UIBasicItem[]"
-      ],
-      [
-        "horizontalAlignment",
-        "HorizontalAlignment"
-      ],
-      [
-        "paddingLeft",
-        "number"
-      ],
-      [
-        "paddingRight",
-        "number"
-      ],
-      [
-        "paddingTop",
-        "number"
-      ],
-      [
-        "paddingBottom",
-        "number"
-      ],
-      [
-        "backgroundColor",
-        "number"
-      ]
-    ],
-    "retType": "UIColumnItem"
-  },
-  "createInterfaceImage": {
-    "kind": "function",
-    "name": "createInterfaceImage",
-    "description": "<p>Creates an image component for UI object.\nCrops the image to the specified size.</p>",
-    "params": [
-      [
-        "src",
-        "string"
-      ],
-      [
-        "imageWidth",
-        "number"
-      ],
-      [
-        "imageHeight",
-        "number"
-      ],
-      [
-        "paddingLeft",
-        "number"
-      ],
-      [
-        "paddingRight",
-        "number"
-      ],
-      [
-        "paddingTop",
-        "number"
-      ],
-      [
-        "paddingBottom",
-        "number"
-      ]
-    ],
-    "retType": "UIImageItem"
   },
   "createInterfaceObject": {
     "kind": "function",
@@ -245,10 +379,26 @@
       ],
       [
         "onSelect",
-        "Function"
+        "() => any"
       ]
     ],
     "retType": "UIObject"
+  },
+  "createLightObject": {
+    "kind": "function",
+    "name": "createLightObject",
+    "description": "<p>Creates an instance of light source in augmented world.\nShines in all direction from a point.</p>",
+    "params": [
+      [
+        "position",
+        "Vector3"
+      ],
+      [
+        "intensity",
+        "number"
+      ]
+    ],
+    "retType": "LightObject"
   },
   "createInterfaceRow": {
     "kind": "function",
@@ -285,6 +435,42 @@
       ]
     ],
     "retType": "UIRowItem"
+  },
+  "createInterfaceColumn": {
+    "kind": "function",
+    "name": "createInterfaceColumn",
+    "description": "<p>Creates a row component for UI object.</p>",
+    "params": [
+      [
+        "children",
+        "UIBasicItem[]"
+      ],
+      [
+        "horizontalAlignment",
+        "HorizontalAlignment"
+      ],
+      [
+        "paddingLeft",
+        "number"
+      ],
+      [
+        "paddingRight",
+        "number"
+      ],
+      [
+        "paddingTop",
+        "number"
+      ],
+      [
+        "paddingBottom",
+        "number"
+      ],
+      [
+        "backgroundColor",
+        "number"
+      ]
+    ],
+    "retType": "UIColumnItem"
   },
   "createInterfaceText": {
     "kind": "function",
@@ -330,21 +516,145 @@
     ],
     "retType": "UITextItem"
   },
-  "createLightObject": {
+  "createInterfaceImage": {
     "kind": "function",
-    "name": "createLightObject",
-    "description": "<p>Creates an instance of light source in augmented world.\nShines in all direction from a point.</p>",
+    "name": "createInterfaceImage",
+    "description": "<p>Creates an image component for UI object.\nCrops the image to the specified size.</p>",
     "params": [
       [
-        "position",
-        "Vector3"
+        "src",
+        "string"
       ],
       [
-        "intensity",
+        "imageWidth",
+        "number"
+      ],
+      [
+        "imageHeight",
+        "number"
+      ],
+      [
+        "paddingLeft",
+        "number"
+      ],
+      [
+        "paddingRight",
+        "number"
+      ],
+      [
+        "paddingTop",
+        "number"
+      ],
+      [
+        "paddingBottom",
         "number"
       ]
     ],
-    "retType": "LightObject"
+    "retType": "UIImageItem"
+  },
+  "createInterfaceBase64Image": {
+    "kind": "function",
+    "name": "createInterfaceBase64Image",
+    "description": "<p>Creates an image component for UI object, using Base64 string.\nCrops the image to the specified size.</p>",
+    "params": [
+      [
+        "base64",
+        "string"
+      ],
+      [
+        "imageWidth",
+        "number"
+      ],
+      [
+        "imageHeight",
+        "number"
+      ],
+      [
+        "paddingLeft",
+        "number"
+      ],
+      [
+        "paddingRight",
+        "number"
+      ],
+      [
+        "paddingTop",
+        "number"
+      ],
+      [
+        "paddingBottom",
+        "number"
+      ]
+    ],
+    "retType": "UIBase64ImageItem"
+  },
+  "setFixedRotation": {
+    "kind": "function",
+    "name": "setFixedRotation",
+    "description": "<p>Fix the rotation of the object at the specified angle around the vertical axis.</p>",
+    "params": [
+      [
+        "object",
+        "ARObject"
+      ],
+      [
+        "radians",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "setRotateToUser": {
+    "kind": "function",
+    "name": "setRotateToUser",
+    "description": "<p>Always rotate the object to where the user is facing.</p>",
+    "params": [
+      [
+        "object",
+        "ARObject"
+      ]
+    ],
+    "retType": "void"
+  },
+  "setRotateAroundY": {
+    "kind": "function",
+    "name": "setRotateAroundY",
+    "description": "<p>Rotates the object continuously around the vertical axis.</p>",
+    "params": [
+      [
+        "object",
+        "ARObject"
+      ]
+    ],
+    "retType": "void"
+  },
+  "setAlwaysRender": {
+    "kind": "function",
+    "name": "setAlwaysRender",
+    "description": "<p>Always render the object.</p>",
+    "params": [
+      [
+        "object",
+        "ARObject"
+      ]
+    ],
+    "retType": "void"
+  },
+  "setRenderDistance": {
+    "kind": "function",
+    "name": "setRenderDistance",
+    "description": "<p>Only render the object when in range.</p>",
+    "params": [
+      [
+        "object",
+        "ARObject"
+      ],
+      [
+        "distance",
+        "number"
+      ]
+    ],
+    "retType": "void"
   },
   "createPathItem": {
     "kind": "function",
@@ -366,268 +676,18 @@
     ],
     "retType": "PathItem"
   },
-  "createSphereObject": {
+  "setPathMovement": {
     "kind": "function",
-    "name": "createSphereObject",
-    "description": "<p>Creates an instance of an AR sphere object.</p>",
-    "params": [
-      [
-        "position",
-        "Vector3"
-      ],
-      [
-        "radius",
-        "number"
-      ],
-      [
-        "color",
-        "number"
-      ],
-      [
-        "onSelect",
-        "Function"
-      ]
-    ],
-    "retType": "SphereObject"
-  },
-  "createVector3": {
-    "kind": "function",
-    "name": "createVector3",
-    "description": "<p>Creates an instance of Vector3.</p>",
-    "params": [
-      [
-        "x",
-        "number"
-      ],
-      [
-        "y",
-        "number"
-      ],
-      [
-        "z",
-        "number"
-      ]
-    ],
-    "retType": "Vector3"
-  },
-  "getARObjects": {
-    "kind": "function",
-    "name": "getARObjects",
-    "description": "<p>Obtains the current ARObjects.</p>",
-    "params": [],
-    "retType": "ARObject[]"
-  },
-  "getFrontObject": {
-    "kind": "function",
-    "name": "getFrontObject",
-    "description": "<p>Obtains the first object in the user's line of sight, if any.</p>",
-    "params": [],
-    "retType": "undefined | ARObject"
-  },
-  "getJsonChild": {
-    "kind": "function",
-    "name": "getJsonChild",
-    "description": "<p>Obtains the value of a json object at the key.</p>",
-    "params": [
-      [
-        "object",
-        "any"
-      ],
-      [
-        "key",
-        "string"
-      ]
-    ],
-    "retType": "any"
-  },
-  "getXPosition": {
-    "kind": "function",
-    "name": "getXPosition",
-    "description": "<p>Obtains the position of the specified object on the x-axis.</p>",
-    "params": [
-      [
-        "arObject",
-        "ARObject"
-      ]
-    ],
-    "retType": "number"
-  },
-  "getYPosition": {
-    "kind": "function",
-    "name": "getYPosition",
-    "description": "<p>Obtains the position of the specified object on the y-axis.</p>",
-    "params": [
-      [
-        "arObject",
-        "ARObject"
-      ]
-    ],
-    "retType": "number"
-  },
-  "getZPosition": {
-    "kind": "function",
-    "name": "getZPosition",
-    "description": "<p>Obtains the position of the specified object on the z-axis.</p>",
-    "params": [
-      [
-        "arObject",
-        "ARObject"
-      ]
-    ],
-    "retType": "number"
-  },
-  "initAR": {
-    "kind": "function",
-    "name": "initAR",
-    "description": "<p>Initialize AR.</p>",
-    "params": [],
-    "retType": "void"
-  },
-  "moveARObject": {
-    "kind": "function",
-    "name": "moveARObject",
-    "description": "<p>Moves the specified object to a new position.</p>",
-    "params": [
-      [
-        "arObject",
-        "ARObject"
-      ],
-      [
-        "position",
-        "Vector3"
-      ]
-    ],
-    "retType": "void"
-  },
-  "removeARObject": {
-    "kind": "function",
-    "name": "removeARObject",
-    "description": "<p>Removes the specified object from the augmented world.</p>",
-    "params": [
-      [
-        "arObject",
-        "ARObject"
-      ]
-    ],
-    "retType": "void"
-  },
-  "removeCenterToggle": {
-    "kind": "function",
-    "name": "removeCenterToggle",
-    "description": "<p>Resets and hides the center toggle.</p>",
-    "params": [],
-    "retType": "void"
-  },
-  "removeLeftToggle": {
-    "kind": "function",
-    "name": "removeLeftToggle",
-    "description": "<p>Resets and hides the left toggle.</p>",
-    "params": [],
-    "retType": "void"
-  },
-  "removeRightToggle": {
-    "kind": "function",
-    "name": "removeRightToggle",
-    "description": "<p>Resets and hides the right toggle.</p>",
-    "params": [],
-    "retType": "void"
-  },
-  "selectObject": {
-    "kind": "function",
-    "name": "selectObject",
-    "description": "<p>Sets the select state for the specified AR object.</p>",
-    "params": [
-      [
-        "arObject",
-        "ARObject"
-      ],
-      [
-        "isSelected",
-        "boolean"
-      ]
-    ],
-    "retType": "void"
-  },
-  "setAlwaysRender": {
-    "kind": "function",
-    "name": "setAlwaysRender",
-    "description": "<p>Always render the object.</p>",
-    "params": [
-      [
-        "object",
-        "ARObject"
-      ]
-    ],
-    "retType": "void"
-  },
-  "setAsARObjects": {
-    "kind": "function",
-    "name": "setAsARObjects",
-    "description": "<p>Sets AR objects from json.</p>",
-    "params": [
-      [
-        "json",
-        "any"
-      ]
-    ],
-    "retType": "void"
-  },
-  "setCenterToggle": {
-    "kind": "function",
-    "name": "setCenterToggle",
-    "description": "<p>Sets the center toggle.</p>",
-    "params": [
-      [
-        "text",
-        "string"
-      ],
-      [
-        "callback",
-        "Function"
-      ]
-    ],
-    "retType": "void"
-  },
-  "setFixedRotation": {
-    "kind": "function",
-    "name": "setFixedRotation",
-    "description": "<p>Fix the rotation of the object at the specified angle around the vertical axis.</p>",
+    "name": "setPathMovement",
+    "description": "<p>Moves object in the specified path, repeat when ended.</p>",
     "params": [
       [
         "object",
         "ARObject"
       ],
       [
-        "radians",
-        "number"
-      ]
-    ],
-    "retType": "void"
-  },
-  "setHighlightFrontObject": {
-    "kind": "function",
-    "name": "setHighlightFrontObject",
-    "description": "<p>Turn on highlighting of object that the user is facing.</p>",
-    "params": [
-      [
-        "isEnabled",
-        "boolean"
-      ]
-    ],
-    "retType": "void"
-  },
-  "setLeftToggle": {
-    "kind": "function",
-    "name": "setLeftToggle",
-    "description": "<p>Sets the left toggle.</p>",
-    "params": [
-      [
-        "text",
-        "string"
-      ],
-      [
-        "callback",
-        "Function"
+        "path",
+        "PathItem[]"
       ]
     ],
     "retType": "void"
@@ -652,82 +712,22 @@
     ],
     "retType": "void"
   },
-  "setPathMovement": {
-    "kind": "function",
-    "name": "setPathMovement",
-    "description": "<p>Moves object in the specified path, repeat when ended.</p>",
-    "params": [
-      [
-        "object",
-        "ARObject"
-      ],
-      [
-        "path",
-        "PathItem[]"
-      ]
-    ],
-    "retType": "void"
-  },
-  "setRenderDistance": {
-    "kind": "function",
-    "name": "setRenderDistance",
-    "description": "<p>Only render the object when in range.</p>",
-    "params": [
-      [
-        "object",
-        "ARObject"
-      ],
-      [
-        "distance",
-        "number"
-      ]
-    ],
-    "retType": "void"
-  },
-  "setRightToggle": {
-    "kind": "function",
-    "name": "setRightToggle",
-    "description": "<p>Sets the right toggle.</p>",
-    "params": [
-      [
-        "text",
-        "string"
-      ],
-      [
-        "callback",
-        "Function"
-      ]
-    ],
-    "retType": "void"
-  },
-  "setRotateAroundY": {
-    "kind": "function",
-    "name": "setRotateAroundY",
-    "description": "<p>Rotates the object continuously around the vertical axis.</p>",
-    "params": [
-      [
-        "object",
-        "ARObject"
-      ]
-    ],
-    "retType": "void"
-  },
-  "setRotateToUser": {
-    "kind": "function",
-    "name": "setRotateToUser",
-    "description": "<p>Always rotate the object to where the user is facing.</p>",
-    "params": [
-      [
-        "object",
-        "ARObject"
-      ]
-    ],
-    "retType": "void"
-  },
   "setSpringMovement": {
     "kind": "function",
     "name": "setSpringMovement",
     "description": "<p>Animates movement when the position of the object changes.</p>",
+    "params": [
+      [
+        "object",
+        "ARObject"
+      ]
+    ],
+    "retType": "void"
+  },
+  "clearMovement": {
+    "kind": "function",
+    "name": "clearMovement",
+    "description": "<p>Removes the movement of the object.</p>",
     "params": [
       [
         "object",

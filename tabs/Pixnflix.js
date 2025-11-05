@@ -33,13 +33,12 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var Pixnflix_exports = {};
-  __export(Pixnflix_exports, {
-    default: () => Pixnflix_default
+  var index_exports = {};
+  __export(index_exports, {
+    default: () => index_default
   });
   var import_core = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
-  var import_react = __toESM(__require("react"), 1);
   var DEFAULT_WIDTH = 400;
   var DEFAULT_HEIGHT = 300;
   var DEFAULT_FPS = 10;
@@ -50,6 +49,17 @@ export default require => {
   var MIN_WIDTH = 1;
   var MAX_FPS = 60;
   var MIN_FPS = 1;
+  var InputFeed;
+  (function (InputFeed2) {
+    InputFeed2[InputFeed2["Camera"] = 0] = "Camera";
+    InputFeed2[InputFeed2["ImageURL"] = 1] = "ImageURL";
+    InputFeed2[InputFeed2["VideoURL"] = 2] = "VideoURL";
+    InputFeed2[InputFeed2["Local"] = 3] = "Local";
+  })(InputFeed || (InputFeed = {}));
+  function defineTab(tab) {
+    return tab;
+  }
+  var import_react = __toESM(__require("react"), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
   var PixNFlix = class extends import_react.default.Component {
     constructor(props) {
@@ -65,9 +75,9 @@ export default require => {
             onClickStill: this.onClickStill
           });
           let mode = 0;
-          if (inputFeed === 3) {
+          if (inputFeed === InputFeed.Local) {
             mode = 2;
-          } else if (inputFeed === 1) {
+          } else if (inputFeed === InputFeed.ImageURL) {
             mode = 3;
           }
           this.setState({
@@ -75,7 +85,7 @@ export default require => {
             width: WIDTH,
             FPS,
             volume: VOLUME,
-            hasAudio: inputFeed === 2,
+            hasAudio: inputFeed === InputFeed.VideoURL,
             mode
           });
         }
@@ -361,13 +371,13 @@ export default require => {
       });
     }
   };
-  var Pixnflix_default = {
+  var index_default = defineTab({
     toSpawn: () => true,
     body: debuggerContext => (0, import_jsx_runtime.jsx)(PixNFlix, {
       debuggerContext
     }),
     label: "PixNFlix Live Feed",
     iconName: "mobile-video"
-  };
-  return __toCommonJS(Pixnflix_exports);
+  });
+  return __toCommonJS(index_exports);
 };

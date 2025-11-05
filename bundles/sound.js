@@ -34,8 +34,28 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var sound_exports = {};
-  __export(sound_exports, {
+  var __async = (__this, __arguments, generator) => {
+    return new Promise((resolve, reject) => {
+      var fulfilled = value => {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      };
+      var rejected = value => {
+        try {
+          step(generator.throw(value));
+        } catch (e) {
+          reject(e);
+        }
+      };
+      var step = x => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+      step((generator = generator.apply(__this, __arguments)).next());
+    });
+  };
+  var index_exports = {};
+  __export(index_exports, {
     adsr: () => adsr,
     bell: () => bell,
     cello: () => cello,
@@ -67,8 +87,90 @@ export default require => {
     trombone: () => trombone,
     violin: () => violin
   });
-  var import_context = __toESM(__require("js-slang/context"), 1);
+  var Accidental;
+  (function (Accidental2) {
+    Accidental2["SHARP"] = "#";
+    Accidental2["FLAT"] = "b";
+    Accidental2["NATURAL"] = "\u266E";
+  })(Accidental || (Accidental = {}));
+  function noteToValues(note, func_name = noteToValues.name) {
+    const match = (/^([A-Ga-g])([#♮b]?)(\d*)$/).exec(note);
+    if (match === null) throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
+    const [, noteName, accidental, octaveStr] = match;
+    switch (accidental) {
+      case Accidental.SHARP:
+        {
+          if (noteName === "B" || noteName === "E") {
+            throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
+          }
+          break;
+        }
+      case Accidental.FLAT:
+        {
+          if (noteName === "F" || noteName === "C") {
+            throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
+          }
+          break;
+        }
+    }
+    const octave = octaveStr === "" ? 4 : parseInt(octaveStr);
+    return [noteName.toUpperCase(), accidental !== "" ? accidental : Accidental.NATURAL, octave];
+  }
   var import_list = __require("js-slang/dist/stdlib/list");
+  function letter_name_to_midi_note(note) {
+    const [noteName, accidental, octave] = noteToValues(note, letter_name_to_midi_note.name);
+    let res = 12;
+    switch (noteName) {
+      case "C":
+        break;
+      case "D":
+        res += 2;
+        break;
+      case "E":
+        res += 4;
+        break;
+      case "F":
+        res += 5;
+        break;
+      case "G":
+        res += 7;
+        break;
+      case "A":
+        res += 9;
+        break;
+      case "B":
+        res += 11;
+        break;
+      default:
+        break;
+    }
+    switch (accidental) {
+      case Accidental.FLAT:
+        {
+          res -= 1;
+          break;
+        }
+      case Accidental.SHARP:
+        {
+          res += 1;
+          break;
+        }
+      case Accidental.NATURAL:
+        break;
+    }
+    return res + 12 * octave;
+  }
+  function midi_note_to_frequency(note) {
+    return 440 * Math.pow(2, (note - 69) / 12);
+  }
+  function letter_name_to_frequency(note) {
+    return midi_note_to_frequency(letter_name_to_midi_note(note));
+  }
+  var SHARP = Accidental.SHARP;
+  var FLAT = Accidental.FLAT;
+  var NATURAL = Accidental.NATURAL;
+  var import_context = __toESM(__require("js-slang/context"), 1);
+  var import_list2 = __require("js-slang/dist/stdlib/list");
   var FastBase64 = {
     chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
     encLookup: String,
@@ -154,14 +256,23 @@ export default require => {
   }
   var FS = 44100;
   var fourier_expansion_level = 5;
+  var recording_signal_ms = 100;
+  var pre_recording_signal_pause_ms = 200;
   var audioPlayed = [];
   import_context.default.moduleContexts.sound.state = {
     audioPlayed
   };
-  var audioplayer;
-  var isPlaying;
-  function init_audioCtx() {
-    audioplayer = new window.AudioContext();
+  var globalVars = {
+    stream: null,
+    recordedSound: null,
+    isPlaying: false,
+    audioplayer: null
+  };
+  function getAudioContext() {
+    if (!globalVars.audioplayer) {
+      globalVars.audioplayer = new AudioContext();
+    }
+    return globalVars.audioplayer;
   }
   function linear_decay(decay_period) {
     return t => {
@@ -171,26 +282,17 @@ export default require => {
       return 1 - t / decay_period;
     };
   }
-  var permission;
-  var recorded_sound;
-  function check_permission() {
-    if (permission === void 0) {
-      throw new Error("Call init_record(); to obtain permission to use microphone");
-    } else if (permission === false) {
-      throw new Error(`Permission has been denied.
+  function getAudioStream(func_name) {
+    if (globalVars.stream === null) {
+      throw new Error(`${func_name}: Call init_record(); to obtain permission to use microphone`);
+    } else if (globalVars.stream === false) {
+      throw new Error(`${func_name}: Permission has been denied.
 
         Re-start browser and call init_record();
 
         to obtain permission to use microphone.`);
     }
-  }
-  var globalStream;
-  function rememberStream(stream) {
-    permission = true;
-    globalStream = stream;
-  }
-  function setPermissionToFalse() {
-    permission = false;
+    return globalVars.stream;
   }
   function start_recording(mediaRecorder) {
     const data = [];
@@ -198,24 +300,23 @@ export default require => {
     mediaRecorder.start();
     mediaRecorder.onstop = () => process(data);
   }
-  var recording_signal_ms = 100;
-  var pre_recording_signal_pause_ms = 200;
   function play_recording_signal() {
     play(sine_sound(1200, recording_signal_ms / 1e3));
   }
   function process(data) {
     const audioContext = new AudioContext();
     const blob = new Blob(data);
-    convertToArrayBuffer(blob).then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer)).then(save);
-  }
-  function convertToArrayBuffer(blob) {
     const url = URL.createObjectURL(blob);
-    return fetch(url).then(response => response.arrayBuffer());
+    fetch(url).then(response => __async(null, null, function* () {
+      const arrayBuffer = yield response.arrayBuffer();
+      const decodedBuffer = yield audioContext.decodeAudioData(arrayBuffer);
+      save(decodedBuffer);
+    }));
   }
   function save(audioBuffer) {
     const array = audioBuffer.getChannelData(0);
     const duration = array.length / FS;
-    recorded_sound = make_sound(t => {
+    globalVars.recordedSound = make_sound(t => {
       const index = t * FS;
       const lowerIndex = Math.floor(index);
       const upperIndex = lowerIndex + 1;
@@ -228,34 +329,49 @@ export default require => {
   function init_record() {
     navigator.mediaDevices.getUserMedia({
       audio: true
-    }).then(rememberStream, setPermissionToFalse);
+    }).then(stream => {
+      globalVars.stream = stream;
+    }, () => {
+      globalVars.stream = false;
+    });
     return "obtaining recording permission";
   }
   function record(buffer) {
-    check_permission();
-    const mediaRecorder = new MediaRecorder(globalStream);
+    if (typeof buffer !== "number" || buffer < 0) {
+      throw new Error(`${record.name}: Expected a positive number for buffer, got ${buffer}`);
+    }
+    if (globalVars.isPlaying) {
+      throw new Error(`${record.name}: Cannot record while another sound is playing!`);
+    }
+    const stream = getAudioStream(record.name);
+    const mediaRecorder = new MediaRecorder(stream);
     setTimeout(() => {
       play_recording_signal();
-      start_recording(mediaRecorder);
-    }, recording_signal_ms + buffer * 1e3);
+      setTimeout(() => {
+        start_recording(mediaRecorder);
+      }, recording_signal_ms);
+    }, pre_recording_signal_pause_ms + buffer * 1e3);
     return () => {
       mediaRecorder.stop();
       play_recording_signal();
-      return () => {
-        if (recorded_sound === void 0) {
+      const promise = () => {
+        if (globalVars.recordedSound === null) {
           throw new Error("recording still being processed");
         } else {
-          return recorded_sound;
+          return globalVars.recordedSound;
         }
       };
+      promise.toReplString = () => "<SoundPromise>";
+      promise.toString = () => "<SoundPromise>";
+      return promise;
     };
   }
   function record_for(duration, buffer) {
-    recorded_sound = void 0;
-    const recording_ms = duration * 1e3;
-    const pre_recording_pause_ms = buffer * 1e3;
-    check_permission();
-    const mediaRecorder = new MediaRecorder(globalStream);
+    if (globalVars.isPlaying) {
+      throw new Error(`${record_for.name}: Cannot record while another sound is playing!`);
+    }
+    const stream = getAudioStream(record_for.name);
+    const mediaRecorder = new MediaRecorder(stream);
     setTimeout(() => {
       play_recording_signal();
       setTimeout(() => {
@@ -263,139 +379,159 @@ export default require => {
         setTimeout(() => {
           mediaRecorder.stop();
           play_recording_signal();
-        }, recording_ms);
-      }, recording_signal_ms + pre_recording_pause_ms);
+        }, duration * 1e3);
+      }, recording_signal_ms + buffer * 1e3);
     }, pre_recording_signal_pause_ms);
-    return () => {
-      if (recorded_sound === void 0) {
+    const promise = () => {
+      if (globalVars.recordedSound === null) {
         throw new Error("recording still being processed");
       } else {
-        return recorded_sound;
+        return globalVars.recordedSound;
       }
     };
+    promise.toReplString = () => "<SoundPromise>";
+    promise.toString = () => "<SoundPromise>";
+    return promise;
+  }
+  function validateDuration(func_name, duration) {
+    if (typeof duration !== "number") {
+      throw new Error(`${func_name} expects a number for duration, got ${duration}`);
+    }
+    if (duration < 0) {
+      throw new Error(`${func_name}: Sound duration must be greater than or equal to 0`);
+    }
+  }
+  function validateWave(func_name, wave) {
+    if (typeof wave !== "function") {
+      throw new Error(`${func_name} expects a wave, got ${wave}`);
+    }
   }
   function make_sound(wave, duration) {
-    if (duration < 0) {
-      throw new Error("Sound duration must be greater than or equal to 0");
-    }
-    return (0, import_list.pair)(t => t >= duration ? 0 : wave(t), duration);
+    validateDuration(make_sound.name, duration);
+    validateWave(make_sound.name, wave);
+    return (0, import_list2.pair)(t => t >= duration ? 0 : wave(t), duration);
   }
   function get_wave(sound) {
-    return (0, import_list.head)(sound);
+    return (0, import_list2.head)(sound);
   }
   function get_duration(sound) {
-    return (0, import_list.tail)(sound);
+    return (0, import_list2.tail)(sound);
   }
   function is_sound(x) {
-    return (0, import_list.is_pair)(x) && typeof get_wave(x) === "function" && typeof get_duration(x) === "number";
+    return (0, import_list2.is_pair)(x) && typeof get_wave(x) === "function" && typeof get_duration(x) === "number";
   }
   function play_wave(wave, duration) {
+    validateDuration(play_wave.name, duration);
+    validateWave(play_wave.name, wave);
     return play(make_sound(wave, duration));
   }
   function play_in_tab(sound) {
     if (!is_sound(sound)) {
       throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
-    } else if (isPlaying) {
-      throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
-    } else if (get_duration(sound) < 0) {
+    }
+    const duration = get_duration(sound);
+    if (duration < 0) {
       throw new Error(`${play_in_tab.name}: duration of sound is negative`);
-    } else if (get_duration(sound) === 0) {
-      return sound;
-    } else {
-      if (!audioplayer) {
-        init_audioCtx();
-      }
-      const channel = [];
-      const len = Math.ceil(FS * get_duration(sound));
-      let temp;
-      let prev_value = 0;
-      const wave = get_wave(sound);
-      for (let i = 0; i < len; i += 1) {
-        temp = wave(i / FS);
-        if (temp > 1) {
-          channel[i] = 1;
-        } else if (temp < -1) {
-          channel[i] = -1;
-        } else {
-          channel[i] = temp;
-        }
-        if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
-          channel[i] = prev_value * 0.999;
-        }
-        prev_value = channel[i];
-      }
-      for (let i = 0; i < channel.length; i += 1) {
-        channel[i] = Math.floor(channel[i] * 32767.999);
-      }
-      const riffwave = new RIFFWAVE([]);
-      riffwave.header.sampleRate = FS;
-      riffwave.header.numChannels = 1;
-      riffwave.header.bitsPerSample = 16;
-      riffwave.Make(channel);
-      const soundToPlay = {
-        toReplString: () => "<AudioPlayed>",
-        dataUri: riffwave.dataURI
-      };
-      audioPlayed.push(soundToPlay);
+    } else if (duration === 0) {
       return sound;
     }
+    const channel = [];
+    const len = Math.ceil(FS * duration);
+    let temp;
+    let prev_value = 0;
+    const wave = get_wave(sound);
+    for (let i = 0; i < len; i += 1) {
+      temp = wave(i / FS);
+      if (temp > 1) {
+        channel[i] = 1;
+      } else if (temp < -1) {
+        channel[i] = -1;
+      } else {
+        channel[i] = temp;
+      }
+      if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
+        channel[i] = prev_value * 0.999;
+      }
+      prev_value = channel[i];
+    }
+    for (let i = 0; i < channel.length; i += 1) {
+      channel[i] = Math.floor(channel[i] * 32767.999);
+    }
+    const riffwave = new RIFFWAVE([]);
+    riffwave.header.sampleRate = FS;
+    riffwave.header.numChannels = 1;
+    riffwave.header.bitsPerSample = 16;
+    riffwave.Make(channel);
+    const soundToPlay = {
+      toReplString: () => "<AudioPlayed>",
+      dataUri: riffwave.dataURI
+    };
+    audioPlayed.push(soundToPlay);
+    return sound;
   }
   function play(sound) {
     if (!is_sound(sound)) {
       throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
-    } else if (get_duration(sound) < 0) {
+    } else if (globalVars.isPlaying) {
+      throw new Error(`${play.name}: Previous sound still playing!`);
+    }
+    const duration = get_duration(sound);
+    if (duration < 0) {
       throw new Error(`${play.name}: duration of sound is negative`);
-    } else if (get_duration(sound) === 0) {
-      return sound;
-    } else {
-      if (!audioplayer) {
-        init_audioCtx();
-      }
-      const theBuffer = audioplayer.createBuffer(1, Math.ceil(FS * get_duration(sound)), FS);
-      const channel = theBuffer.getChannelData(0);
-      let temp;
-      let prev_value = 0;
-      const wave = get_wave(sound);
-      for (let i = 0; i < channel.length; i += 1) {
-        temp = wave(i / FS);
-        if (temp > 1) {
-          channel[i] = 1;
-        } else if (temp < -1) {
-          channel[i] = -1;
-        } else {
-          channel[i] = temp;
-        }
-        if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
-          channel[i] = prev_value * 0.999;
-        }
-        prev_value = channel[i];
-      }
-      const source = audioplayer.createBufferSource();
-      source.buffer = theBuffer;
-      source.connect(audioplayer.destination);
-      isPlaying = true;
-      source.start();
-      source.onended = () => {
-        source.disconnect(audioplayer.destination);
-        isPlaying = false;
-      };
+    } else if (duration === 0) {
       return sound;
     }
+    const audioplayer = getAudioContext();
+    const theBuffer = audioplayer.createBuffer(1, Math.ceil(FS * duration), FS);
+    const channel = theBuffer.getChannelData(0);
+    let temp;
+    let prev_value = 0;
+    const wave = get_wave(sound);
+    for (let i = 0; i < channel.length; i += 1) {
+      temp = wave(i / FS);
+      if (temp > 1) {
+        channel[i] = 1;
+      } else if (temp < -1) {
+        channel[i] = -1;
+      } else {
+        channel[i] = temp;
+      }
+      if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
+        channel[i] = prev_value * 0.999;
+      }
+      prev_value = channel[i];
+    }
+    const source = audioplayer.createBufferSource();
+    source.buffer = theBuffer;
+    source.connect(audioplayer.destination);
+    globalVars.isPlaying = true;
+    source.start();
+    source.onended = () => {
+      source.disconnect(audioplayer.destination);
+      globalVars.isPlaying = false;
+    };
+    return sound;
   }
   function stop() {
-    audioplayer.close();
-    isPlaying = false;
+    if (globalVars.audioplayer) {
+      globalVars.audioplayer.close();
+    }
+    globalVars.isPlaying = false;
   }
   function noise_sound(duration) {
+    validateDuration(noise_sound.name, duration);
     return make_sound(_t => Math.random() * 2 - 1, duration);
   }
   function silence_sound(duration) {
+    validateDuration(silence_sound.name, duration);
     return make_sound(_t => 0, duration);
   }
   function sine_sound(freq, duration) {
+    validateDuration(sine_sound.name, duration);
     return make_sound(t => Math.sin(2 * Math.PI * t * freq), duration);
   }
   function square_sound(f, duration) {
+    validateDuration(square_sound.name, duration);
     function fourier_expansion_square(t) {
       let answer = 0;
       for (let i = 1; i <= fourier_expansion_level; i += 1) {
@@ -406,6 +542,7 @@ export default require => {
     return make_sound(t => 4 / Math.PI * fourier_expansion_square(t), duration);
   }
   function triangle_sound(freq, duration) {
+    validateDuration(triangle_sound.name, duration);
     function fourier_expansion_triangle(t) {
       let answer = 0;
       for (let i = 0; i < fourier_expansion_level; i += 1) {
@@ -416,6 +553,7 @@ export default require => {
     return make_sound(t => 8 / Math.PI / Math.PI * fourier_expansion_triangle(t), duration);
   }
   function sawtooth_sound(freq, duration) {
+    validateDuration(sawtooth_sound.name, duration);
     function fourier_expansion_sawtooth(t) {
       let answer = 0;
       for (let i = 1; i <= fourier_expansion_level; i += 1) {
@@ -434,7 +572,7 @@ export default require => {
       const new_wave = t => t < dur1 ? wave1(t) : wave2(t - dur1);
       return make_sound(new_wave, dur1 + dur2);
     }
-    return (0, import_list.accumulate)(consec_two, silence_sound(0), list_of_sounds);
+    return (0, import_list2.accumulate)(consec_two, silence_sound(0), list_of_sounds);
   }
   function simultaneously(list_of_sounds) {
     function simul_two(ss1, ss2) {
@@ -442,14 +580,23 @@ export default require => {
       const wave2 = get_wave(ss2);
       const dur1 = get_duration(ss1);
       const dur2 = get_duration(ss2);
-      const new_wave = t => wave1(t) + wave2(t);
+      const new_wave = t => {
+        let sum = 0;
+        if (t <= dur1) {
+          sum += wave1(t);
+        }
+        if (t <= dur2) {
+          sum += wave2(t);
+        }
+        return sum;
+      };
       const new_dur = dur1 < dur2 ? dur2 : dur1;
       return make_sound(new_wave, new_dur);
     }
-    const mushed_sounds = (0, import_list.accumulate)(simul_two, silence_sound(0), list_of_sounds);
-    const len = (0, import_list.length)(list_of_sounds);
-    const normalised_wave = t => (0, import_list.head)(mushed_sounds)(t) / len;
-    const highest_duration = (0, import_list.tail)(mushed_sounds);
+    const mushed_sounds = (0, import_list2.accumulate)(simul_two, silence_sound(0), list_of_sounds);
+    const len = (0, import_list2.length)(list_of_sounds);
+    const normalised_wave = t => (0, import_list2.head)(mushed_sounds)(t) / len;
+    const highest_duration = (0, import_list2.tail)(mushed_sounds);
     return make_sound(normalised_wave, highest_duration);
   }
   function adsr(attack_ratio, decay_ratio, sustain_level, release_ratio) {
@@ -475,78 +622,33 @@ export default require => {
   }
   function stacking_adsr(waveform, base_frequency, duration, envelopes) {
     function zip(lst, n) {
-      if ((0, import_list.is_null)(lst)) {
+      if ((0, import_list2.is_null)(lst)) {
         return lst;
       }
-      return (0, import_list.pair)((0, import_list.pair)(n, (0, import_list.head)(lst)), zip((0, import_list.tail)(lst), n + 1));
+      return (0, import_list2.pair)((0, import_list2.pair)(n, (0, import_list2.head)(lst)), zip((0, import_list2.tail)(lst), n + 1));
     }
-    return simultaneously((0, import_list.accumulate)((x, y) => (0, import_list.pair)((0, import_list.tail)(x)(waveform(base_frequency * (0, import_list.head)(x), duration)), y), null, zip(envelopes, 1)));
+    return simultaneously((0, import_list2.accumulate)((x, y) => (0, import_list2.pair)((0, import_list2.tail)(x)(waveform(base_frequency * (0, import_list2.head)(x), duration)), y), null, zip(envelopes, 1)));
   }
   function phase_mod(freq, duration, amount) {
-    return modulator => make_sound(t => Math.sin(2 * Math.PI * t * freq + amount * get_wave(modulator)(t)), duration);
-  }
-  function letter_name_to_midi_note(note) {
-    let res = 12;
-    const n = note[0].toUpperCase();
-    switch (n) {
-      case "D":
-        res += 2;
-        break;
-      case "E":
-        res += 4;
-        break;
-      case "F":
-        res += 5;
-        break;
-      case "G":
-        res += 7;
-        break;
-      case "A":
-        res += 9;
-        break;
-      case "B":
-        res += 11;
-        break;
-      default:
-        break;
-    }
-    if (note.length === 2) {
-      res += parseInt(note[1]) * 12;
-    } else if (note.length === 3) {
-      switch (note[1]) {
-        case "#":
-          res += 1;
-          break;
-        case "b":
-          res -= 1;
-          break;
-        default:
-          break;
-      }
-      res += parseInt(note[2]) * 12;
-    }
-    return res;
-  }
-  function midi_note_to_frequency(note) {
-    return 440 * __pow(2, (note - 69) / 12);
-  }
-  function letter_name_to_frequency(note) {
-    return midi_note_to_frequency(letter_name_to_midi_note(note));
+    return modulator => {
+      const wave = get_wave(modulator);
+      return make_sound(t => Math.sin(2 * Math.PI * t * freq + amount * wave(t)), duration);
+    };
   }
   function bell(note, duration) {
-    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0, 0.6, 0, 0.05), adsr(0, 0.6618, 0, 0.05), adsr(0, 0.7618, 0, 0.05), adsr(0, 0.9071, 0, 0.05)));
+    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0, 0.6, 0, 0.05), adsr(0, 0.6618, 0, 0.05), adsr(0, 0.7618, 0, 0.05), adsr(0, 0.9071, 0, 0.05)));
   }
   function cello(note, duration) {
-    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0.05, 0, 1, 0.1), adsr(0.05, 0, 1, 0.15), adsr(0, 0, 0.2, 0.15)));
+    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0.05, 0, 1, 0.1), adsr(0.05, 0, 1, 0.15), adsr(0, 0, 0.2, 0.15)));
   }
   function piano(note, duration) {
-    return stacking_adsr(triangle_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0, 0.515, 0, 0.05), adsr(0, 0.32, 0, 0.05), adsr(0, 0.2, 0, 0.05)));
+    return stacking_adsr(triangle_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0, 0.515, 0, 0.05), adsr(0, 0.32, 0, 0.05), adsr(0, 0.2, 0, 0.05)));
   }
   function trombone(note, duration) {
-    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0.2, 0, 1, 0.1), adsr(0.3236, 0.6, 0, 0.1)));
+    return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0.2, 0, 1, 0.1), adsr(0.3236, 0.6, 0, 0.1)));
   }
   function violin(note, duration) {
-    return stacking_adsr(sawtooth_sound, midi_note_to_frequency(note), duration, (0, import_list.list)(adsr(0.35, 0, 1, 0.15), adsr(0.35, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15)));
+    return stacking_adsr(sawtooth_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0.35, 0, 1, 0.15), adsr(0.35, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15)));
   }
-  return __toCommonJS(sound_exports);
+  return __toCommonJS(index_exports);
 };

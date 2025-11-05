@@ -1,125 +1,4 @@
 {
-  "type_map": {
-    "kind": "unknown"
-  },
-  "blank": {
-    "kind": "variable",
-    "name": "blank",
-    "description": "No description available",
-    "type": "Rune"
-  },
-  "circle": {
-    "kind": "variable",
-    "name": "circle",
-    "description": "No description available",
-    "type": "Rune"
-  },
-  "corner": {
-    "kind": "variable",
-    "name": "corner",
-    "description": "No description available",
-    "type": "Rune"
-  },
-  "heart": {
-    "kind": "variable",
-    "name": "heart",
-    "description": "No description available",
-    "type": "Rune"
-  },
-  "nova": {
-    "kind": "variable",
-    "name": "nova",
-    "description": "No description available",
-    "type": "Rune"
-  },
-  "pentagram": {
-    "kind": "variable",
-    "name": "pentagram",
-    "description": "No description available",
-    "type": "Rune"
-  },
-  "rcross": {
-    "kind": "variable",
-    "name": "rcross",
-    "description": "No description available",
-    "type": "Rune"
-  },
-  "ribbon": {
-    "kind": "variable",
-    "name": "ribbon",
-    "description": "No description available",
-    "type": "Rune"
-  },
-  "sail": {
-    "kind": "variable",
-    "name": "sail",
-    "description": "No description available",
-    "type": "Rune"
-  },
-  "square": {
-    "kind": "variable",
-    "name": "square",
-    "description": "No description available",
-    "type": "Rune"
-  },
-  "triangle": {
-    "kind": "variable",
-    "name": "triangle",
-    "description": "No description available",
-    "type": "Rune"
-  },
-  "anaglyph": {
-    "kind": "function",
-    "name": "anaglyph",
-    "description": "<p>Renders the specified Rune in a tab as an anaglyph. Use 3D glasses to view the\nanaglyph.</p>",
-    "params": [
-      [
-        "rune",
-        "Rune"
-      ]
-    ],
-    "retType": "Rune"
-  },
-  "animate_anaglyph": {
-    "kind": "function",
-    "name": "animate_anaglyph",
-    "description": "<p>Create an animation of anaglyph runes</p>",
-    "params": [
-      [
-        "duration",
-        "number"
-      ],
-      [
-        "fps",
-        "number"
-      ],
-      [
-        "func",
-        "RuneAnimation"
-      ]
-    ],
-    "retType": "AnimatedRune"
-  },
-  "animate_rune": {
-    "kind": "function",
-    "name": "animate_rune",
-    "description": "<p>Create an animation of runes</p>",
-    "params": [
-      [
-        "duration",
-        "number"
-      ],
-      [
-        "fps",
-        "number"
-      ],
-      [
-        "func",
-        "RuneAnimation"
-      ]
-    ],
-    "retType": "AnimatedRune"
-  },
   "beside": {
     "kind": "function",
     "name": "beside",
@@ -168,6 +47,12 @@
     ],
     "retType": "Rune"
   },
+  "blank": {
+    "kind": "variable",
+    "name": "blank",
+    "description": "<p>Rune with the shape of a blank square</p>",
+    "type": "Rune"
+  },
   "blue": {
     "kind": "function",
     "name": "blue",
@@ -192,6 +77,12 @@
     ],
     "retType": "Rune"
   },
+  "circle": {
+    "kind": "variable",
+    "name": "circle",
+    "description": "<p>Rune with the shape of a circle</p>",
+    "type": "Rune"
+  },
   "color": {
     "kind": "function",
     "name": "color",
@@ -215,6 +106,12 @@
       ]
     ],
     "retType": "Rune"
+  },
+  "corner": {
+    "kind": "variable",
+    "name": "corner",
+    "description": "<p>Rune with black triangle,\nfilling upper right corner</p>",
+    "type": "Rune"
   },
   "flip_horiz": {
     "kind": "function",
@@ -264,33 +161,11 @@
     ],
     "retType": "Rune"
   },
-  "hollusion": {
-    "kind": "function",
-    "name": "hollusion",
-    "description": "<p>Renders the specified Rune in a tab as a hollusion, with a default magnitude\nof 0.1.</p>",
-    "params": [
-      [
-        "rune",
-        "Rune"
-      ]
-    ],
-    "retType": "Rune"
-  },
-  "hollusion_magnitude": {
-    "kind": "function",
-    "name": "hollusion_magnitude",
-    "description": "<p>Renders the specified Rune in a tab as a hollusion, using the specified\nmagnitude.</p>",
-    "params": [
-      [
-        "rune",
-        "Rune"
-      ],
-      [
-        "magnitude",
-        "number"
-      ]
-    ],
-    "retType": "Rune"
+  "heart": {
+    "kind": "variable",
+    "name": "heart",
+    "description": "<p>Rune with the shape of a heart</p>",
+    "type": "Rune"
   },
   "indigo": {
     "kind": "function",
@@ -315,6 +190,12 @@
       ]
     ],
     "retType": "Rune"
+  },
+  "nova": {
+    "kind": "variable",
+    "name": "nova",
+    "description": "<p>Rune with the shape of two overlapping\ntriangles, residing in the upper half\nof the shape</p>",
+    "type": "Rune"
   },
   "orange": {
     "kind": "function",
@@ -363,6 +244,12 @@
       ]
     ],
     "retType": "Rune"
+  },
+  "pentagram": {
+    "kind": "variable",
+    "name": "pentagram",
+    "description": "<p>Rune with the shape of a pentagram</p>",
+    "type": "Rune"
   },
   "pink": {
     "kind": "function",
@@ -424,6 +311,12 @@
     ],
     "retType": "Rune"
   },
+  "rcross": {
+    "kind": "variable",
+    "name": "rcross",
+    "description": "<p>Rune with the shape of a\nsmall square inside a large square,\neach diagonally split into a\nblack and white half</p>",
+    "type": "Rune"
+  },
   "red": {
     "kind": "function",
     "name": "red",
@@ -447,7 +340,7 @@
       ],
       [
         "pattern",
-        "Function"
+        "(a: Rune) => Rune"
       ],
       [
         "initial",
@@ -455,6 +348,12 @@
       ]
     ],
     "retType": "Rune"
+  },
+  "ribbon": {
+    "kind": "variable",
+    "name": "ribbon",
+    "description": "<p>Rune with the shape of a ribbon\nwinding outwards in an anticlockwise spiral</p>",
+    "type": "Rune"
   },
   "rotate": {
     "kind": "function",
@@ -471,6 +370,12 @@
       ]
     ],
     "retType": "Rune"
+  },
+  "sail": {
+    "kind": "variable",
+    "name": "sail",
+    "description": "<p>Rune with the shape of a sail</p>",
+    "type": "Rune"
   },
   "scale": {
     "kind": "function",
@@ -508,43 +413,17 @@
     ],
     "retType": "Rune"
   },
-  "show": {
-    "kind": "function",
-    "name": "show",
-    "description": "<p>Renders the specified Rune in a tab as a basic drawing.</p>",
-    "params": [
-      [
-        "rune",
-        "Rune"
-      ]
-    ],
-    "retType": "Rune"
+  "square": {
+    "kind": "variable",
+    "name": "square",
+    "description": "<p>Rune with the shape of a full square</p>",
+    "type": "Rune"
   },
   "stack": {
     "kind": "function",
     "name": "stack",
     "description": "<p>Makes a new Rune from two given Runes by\nplacing the first on top of the second, each\noccupying equal parts of the height of the\nresult</p>",
     "params": [
-      [
-        "rune1",
-        "Rune"
-      ],
-      [
-        "rune2",
-        "Rune"
-      ]
-    ],
-    "retType": "Rune"
-  },
-  "stack_frac": {
-    "kind": "function",
-    "name": "stack_frac",
-    "description": "<p>Makes a new Rune from two given Runes by\nplacing the first on top of the second\nsuch that the first one occupies frac\nportion of the height of the result and\nthe second the rest</p>",
-    "params": [
-      [
-        "frac",
-        "number"
-      ],
       [
         "rune1",
         "Rune"
@@ -572,6 +451,26 @@
     ],
     "retType": "Rune"
   },
+  "stack_frac": {
+    "kind": "function",
+    "name": "stack_frac",
+    "description": "<p>Makes a new Rune from two given Runes by\nplacing the first on top of the second\nsuch that the first one occupies frac\nportion of the height of the result and\nthe second the rest</p>",
+    "params": [
+      [
+        "frac",
+        "number"
+      ],
+      [
+        "rune1",
+        "Rune"
+      ],
+      [
+        "rune2",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
   "translate": {
     "kind": "function",
     "name": "translate",
@@ -591,6 +490,12 @@
       ]
     ],
     "retType": "Rune"
+  },
+  "triangle": {
+    "kind": "variable",
+    "name": "triangle",
+    "description": "<p>Rune with the shape of a triangle</p>",
+    "type": "Rune"
   },
   "turn_upside_down": {
     "kind": "function",
@@ -620,6 +525,98 @@
     "kind": "function",
     "name": "yellow",
     "description": "<p>Colors the given rune yellow (#FFEB3B).</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "anaglyph": {
+    "kind": "function",
+    "name": "anaglyph",
+    "description": "<p>Renders the specified Rune in a tab as an anaglyph. Use 3D glasses to view the\nanaglyph.</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "animate_anaglyph": {
+    "kind": "function",
+    "name": "animate_anaglyph",
+    "description": "<p>Create an animation of anaglyph runes</p>",
+    "params": [
+      [
+        "duration",
+        "number"
+      ],
+      [
+        "fps",
+        "number"
+      ],
+      [
+        "func",
+        "RuneAnimation"
+      ]
+    ],
+    "retType": "AnimatedRune"
+  },
+  "animate_rune": {
+    "kind": "function",
+    "name": "animate_rune",
+    "description": "<p>Create an animation of runes</p>",
+    "params": [
+      [
+        "duration",
+        "number"
+      ],
+      [
+        "fps",
+        "number"
+      ],
+      [
+        "func",
+        "RuneAnimation"
+      ]
+    ],
+    "retType": "AnimatedRune"
+  },
+  "hollusion": {
+    "kind": "function",
+    "name": "hollusion",
+    "description": "<p>Renders the specified Rune in a tab as a hollusion, with a default magnitude\nof 0.1.</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "hollusion_magnitude": {
+    "kind": "function",
+    "name": "hollusion_magnitude",
+    "description": "<p>Renders the specified Rune in a tab as a hollusion, using the specified\nmagnitude.</p>",
+    "params": [
+      [
+        "rune",
+        "Rune"
+      ],
+      [
+        "magnitude",
+        "number"
+      ]
+    ],
+    "retType": "Rune"
+  },
+  "show": {
+    "kind": "function",
+    "name": "show",
+    "description": "<p>Renders the specified Rune in a tab as a basic drawing.</p>",
     "params": [
       [
         "rune",

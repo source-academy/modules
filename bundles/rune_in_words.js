@@ -21,8 +21,8 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var rune_in_words_exports = {};
-  __export(rune_in_words_exports, {
+  var index_exports = {};
+  __export(index_exports, {
     anaglyph: () => anaglyph,
     beside: () => beside,
     beside_frac: () => beside_frac,
@@ -243,5 +243,5 @@ export default require => {
     throwIfNotRune(hollusion.name, rune);
     return rune;
   }
-  return __toCommonJS(rune_in_words_exports);
+  return __toCommonJS(index_exports);
 };

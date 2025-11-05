@@ -1,15 +1,15 @@
 {
-  "default_js_slang": {
+  "set_evaluator": {
     "kind": "function",
-    "name": "default_js_slang",
-    "description": "<p>When use this function as the entrance function in the parameter of \"set_evaluator\", the Programmable Repl will directly use the default js-slang interpreter to run your program in Programmable Repl editor. Do not directly call this function in your own code.</p>",
+    "name": "set_evaluator",
+    "description": "<p>Setup the programmable REPL with given evaulator's entrance function</p><p>The function should take one parameter as the code from the module's editor, for example:<pre><code>function parse_and_evaluate(code) {\n  // ...\n}</code></pre></p>",
     "params": [
       [
-        "_program",
-        "string"
+        "evalFunc",
+        "(code: string) => any"
       ]
     ],
-    "retType": "any"
+    "retType": "{ toReplString: () => string }"
   },
   "repl_display": {
     "kind": "function",
@@ -39,18 +39,6 @@
     ],
     "retType": "void"
   },
-  "set_evaluator": {
-    "kind": "function",
-    "name": "set_evaluator",
-    "description": "<p>Setup the programmable REPL with given evaulator's entrance function</p><p>The function should take one parameter as the code from the module's editor, for example:<pre><code>function parse_and_evaluate(code) {\n  // ...\n}</code></pre></p>",
-    "params": [
-      [
-        "evalFunc",
-        "Function"
-      ]
-    ],
-    "retType": "Object"
-  },
   "set_font_size": {
     "kind": "function",
     "name": "set_font_size",
@@ -74,5 +62,17 @@
       ]
     ],
     "retType": "void"
+  },
+  "default_js_slang": {
+    "kind": "function",
+    "name": "default_js_slang",
+    "description": "<p>When use this function as the entrance function in the parameter of \"set_evaluator\", the Programmable Repl will directly use the default\njs-slang interpreter to run your program in Programmable Repl editor. Do not directly call this function in your own code.</p>",
+    "params": [
+      [
+        "_program",
+        "string"
+      ]
+    ],
+    "retType": "any"
   }
 }

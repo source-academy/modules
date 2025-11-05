@@ -1,8 +1,15 @@
 {
-  "alpha_of": {
+  "start": {
     "kind": "function",
-    "name": "alpha_of",
-    "description": "<p>Returns the alpha component of the given pixel.</p>",
+    "name": "start",
+    "description": "<p>Starts processing the image or video using the installed filter.</p>",
+    "params": [],
+    "retType": "StartPacket"
+  },
+  "red_of": {
+    "kind": "function",
+    "name": "red_of",
+    "description": "<p>Returns the red component of the given pixel.</p>",
     "params": [
       [
         "pixel",
@@ -23,45 +30,6 @@
     ],
     "retType": "number"
   },
-  "compose_filter": {
-    "kind": "function",
-    "name": "compose_filter",
-    "description": "<p>Returns a new filter that is equivalent to applying\nfilter1 and then filter2.</p>",
-    "params": [
-      [
-        "filter1",
-        "Filter"
-      ],
-      [
-        "filter2",
-        "Filter"
-      ]
-    ],
-    "retType": "Filter"
-  },
-  "copy_image": {
-    "kind": "function",
-    "name": "copy_image",
-    "description": "<p>The default filter that just copies the source image to the\ndestination image.</p>",
-    "params": [
-      [
-        "src",
-        "Pixels"
-      ],
-      [
-        "dest",
-        "Pixels"
-      ]
-    ],
-    "retType": "void"
-  },
-  "get_video_time": {
-    "kind": "function",
-    "name": "get_video_time",
-    "description": "<p>Returns the elapsed time in milliseconds since the start of the video.</p>",
-    "params": [],
-    "retType": "number"
-  },
   "green_of": {
     "kind": "function",
     "name": "green_of",
@@ -74,60 +42,10 @@
     ],
     "retType": "number"
   },
-  "image_height": {
+  "alpha_of": {
     "kind": "function",
-    "name": "image_height",
-    "description": "<p>Returns the current height of the displayed images in\npixels, i.e. the number of pixels in the vertical dimension.</p>",
-    "params": [],
-    "retType": "number"
-  },
-  "image_width": {
-    "kind": "function",
-    "name": "image_width",
-    "description": "<p>Returns the current width of the displayed images in\npixels, i.e. the number of pixels in the horizontal dimension.</p>",
-    "params": [],
-    "retType": "number"
-  },
-  "install_filter": {
-    "kind": "function",
-    "name": "install_filter",
-    "description": "<p>Installs the given filter to be used to transform each source image from\nthe live camera or from a local/remote file to a destination image that\nis then displayed on screen.</p><p>A filter is a function that is applied to two\ntwo-dimensional arrays of Pixels:\nthe source image and the destination image.</p>",
-    "params": [
-      [
-        "_filter",
-        "Filter"
-      ]
-    ],
-    "retType": "void"
-  },
-  "keep_aspect_ratio": {
-    "kind": "function",
-    "name": "keep_aspect_ratio",
-    "description": "<p>Sets pix_n_flix to preserve the aspect ratio of the video or image</p>",
-    "params": [
-      [
-        "_keepAspectRatio",
-        "boolean"
-      ]
-    ],
-    "retType": "void"
-  },
-  "pause_at": {
-    "kind": "function",
-    "name": "pause_at",
-    "description": "<p>Pauses the video at a set time after the video starts.</p>",
-    "params": [
-      [
-        "pause_time",
-        "number"
-      ]
-    ],
-    "retType": "void"
-  },
-  "red_of": {
-    "kind": "function",
-    "name": "red_of",
-    "description": "<p>Returns the red component of the given pixel.</p>",
+    "name": "alpha_of",
+    "description": "<p>Returns the alpha component of the given pixel.</p>",
     "params": [
       [
         "pixel",
@@ -135,53 +53,6 @@
       ]
     ],
     "retType": "number"
-  },
-  "reset_filter": {
-    "kind": "function",
-    "name": "reset_filter",
-    "description": "<p>Resets the installed filter to the default filter.</p>",
-    "params": [],
-    "retType": "void"
-  },
-  "set_dimensions": {
-    "kind": "function",
-    "name": "set_dimensions",
-    "description": "<p>Sets the diemsions of the displayed images.\nNote: Only accepts width and height values within the range of 1 to 500.</p>",
-    "params": [
-      [
-        "width",
-        "number"
-      ],
-      [
-        "height",
-        "number"
-      ]
-    ],
-    "retType": "void"
-  },
-  "set_fps": {
-    "kind": "function",
-    "name": "set_fps",
-    "description": "<p>Sets the framerate (i.e. frames per second (FPS)) of the video.\nNote: Only accepts FPS values within the range of 2 to 30.</p>",
-    "params": [
-      [
-        "fps",
-        "number"
-      ]
-    ],
-    "retType": "void"
-  },
-  "set_loop_count": {
-    "kind": "function",
-    "name": "set_loop_count",
-    "description": "<p>Sets the number of times the video is played.\nIf the number of times the video repeats is negative, the video will loop forever.</p>",
-    "params": [
-      [
-        "n",
-        "number"
-      ]
-    ],
-    "retType": "void"
   },
   "set_rgba": {
     "kind": "function",
@@ -211,6 +82,111 @@
     ],
     "retType": "void"
   },
+  "image_height": {
+    "kind": "function",
+    "name": "image_height",
+    "description": "<p>Returns the current height of the displayed images in\npixels, i.e. the number of pixels in the vertical dimension.</p>",
+    "params": [],
+    "retType": "number"
+  },
+  "image_width": {
+    "kind": "function",
+    "name": "image_width",
+    "description": "<p>Returns the current width of the displayed images in\npixels, i.e. the number of pixels in the horizontal dimension.</p>",
+    "params": [],
+    "retType": "number"
+  },
+  "copy_image": {
+    "kind": "function",
+    "name": "copy_image",
+    "description": "<p>The default filter that just copies the source image to the\ndestination image.</p>",
+    "params": [
+      [
+        "src",
+        "Pixels"
+      ],
+      [
+        "dest",
+        "Pixels"
+      ]
+    ],
+    "retType": "void"
+  },
+  "install_filter": {
+    "kind": "function",
+    "name": "install_filter",
+    "description": "<p>Installs the given filter to be used to transform each source image from\nthe live camera or from a local/remote file to a destination image that\nis then displayed on screen.</p><p>A filter is a function that is applied to two\ntwo-dimensional arrays of Pixels:\nthe source image and the destination image.</p>",
+    "params": [
+      [
+        "_filter",
+        "Filter"
+      ]
+    ],
+    "retType": "void"
+  },
+  "reset_filter": {
+    "kind": "function",
+    "name": "reset_filter",
+    "description": "<p>Resets the installed filter to the default filter.</p>",
+    "params": [],
+    "retType": "void"
+  },
+  "compose_filter": {
+    "kind": "function",
+    "name": "compose_filter",
+    "description": "<p>Returns a new filter that is equivalent to applying\nfilter1 and then filter2.</p>",
+    "params": [
+      [
+        "filter1",
+        "Filter"
+      ],
+      [
+        "filter2",
+        "Filter"
+      ]
+    ],
+    "retType": "Filter"
+  },
+  "pause_at": {
+    "kind": "function",
+    "name": "pause_at",
+    "description": "<p>Pauses the video at a set time after the video starts.</p>",
+    "params": [
+      [
+        "pause_time",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "set_dimensions": {
+    "kind": "function",
+    "name": "set_dimensions",
+    "description": "<p>Sets the dimensions of the displayed images.\nNote: Only accepts width and height values within the range of 1 to 500.</p>",
+    "params": [
+      [
+        "width",
+        "number"
+      ],
+      [
+        "height",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
+  "set_fps": {
+    "kind": "function",
+    "name": "set_fps",
+    "description": "<p>Sets the framerate (i.e. frames per second (FPS)) of the video.\nNote: Only accepts FPS values within the range of 2 to 30.</p>",
+    "params": [
+      [
+        "fps",
+        "number"
+      ]
+    ],
+    "retType": "void"
+  },
   "set_volume": {
     "kind": "function",
     "name": "set_volume",
@@ -223,12 +199,12 @@
     ],
     "retType": "void"
   },
-  "start": {
+  "use_local_file": {
     "kind": "function",
-    "name": "start",
-    "description": "<p>Starts processing the image or video using the installed filter.</p>",
+    "name": "use_local_file",
+    "description": "<p>Sets pix_n_flix to use video or image feed from a local file\ninstead of using the default live camera feed.</p>",
     "params": [],
-    "retType": "StartPacket"
+    "retType": "void"
   },
   "use_image_url": {
     "kind": "function",
@@ -242,13 +218,6 @@
     ],
     "retType": "void"
   },
-  "use_local_file": {
-    "kind": "function",
-    "name": "use_local_file",
-    "description": "<p>Sets pix_n_flix to use video or image feed from a local file\ninstead of using the default live camera feed.</p>",
-    "params": [],
-    "retType": "void"
-  },
   "use_video_url": {
     "kind": "function",
     "name": "use_video_url",
@@ -257,6 +226,37 @@
       [
         "URL",
         "string"
+      ]
+    ],
+    "retType": "void"
+  },
+  "get_video_time": {
+    "kind": "function",
+    "name": "get_video_time",
+    "description": "<p>Returns the elapsed time in milliseconds since the start of the video.</p>",
+    "params": [],
+    "retType": "number"
+  },
+  "keep_aspect_ratio": {
+    "kind": "function",
+    "name": "keep_aspect_ratio",
+    "description": "<p>Sets pix_n_flix to preserve the aspect ratio of the video or image</p>",
+    "params": [
+      [
+        "_keepAspectRatio",
+        "boolean"
+      ]
+    ],
+    "retType": "void"
+  },
+  "set_loop_count": {
+    "kind": "function",
+    "name": "set_loop_count",
+    "description": "<p>Sets the number of times the video is played.\nIf the number of times the video repeats is negative, the video will loop forever.</p>",
+    "params": [
+      [
+        "n",
+        "number"
       ]
     ],
     "retType": "void"

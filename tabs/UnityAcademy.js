@@ -33,20 +33,19 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var UnityAcademy_exports = {};
-  __export(UnityAcademy_exports, {
-    default: () => UnityAcademy_default
+  var index_exports = {};
+  __export(index_exports, {
+    default: () => index_default
   });
   var import_core2 = __require("@blueprintjs/core");
   var import_icons2 = __require("@blueprintjs/icons");
-  var import_react2 = __toESM(__require("react"), 1);
+  var import_jsx_runtime = __require("react/jsx-runtime");
   var import_core = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
   var import_react = __toESM(__require("react"), 1);
-  var import_react_dom = __toESM(__require("react-dom"), 1);
+  var import_client = __require("react-dom/client");
   var UNITY_ACADEMY_BACKEND_URL = "https://unity-academy.s3.ap-southeast-1.amazonaws.com/";
   var BUILD_NAME = "ua-frontend-prod";
-  var import_jsx_runtime = __require("react/jsx-runtime");
   function getInstance() {
     return window.unityAcademyContext;
   }
@@ -133,6 +132,10 @@ export default require => {
     productName: "Unity Academy (Source Academy Embedding Version)",
     productVersion: "See 'About' in the embedded frontend."
   };
+  function defineTab(tab) {
+    return tab;
+  }
+  var import_react2 = __toESM(__require("react"), 1);
   var import_jsx_runtime2 = __require("react/jsx-runtime");
   var Unity3DTab = class extends import_react2.default.Component {
     constructor(props) {
@@ -306,15 +309,15 @@ export default require => {
       INSTANCE.setShowUnityComponent(resolution);
     }
   };
-  var UnityAcademy_default = {
-    toSpawn(_context) {
+  var index_default = defineTab({
+    toSpawn() {
       return getInstance() !== void 0;
     },
-    body(_context) {
+    body() {
       return (0, import_jsx_runtime2.jsx)(Unity3DTab, {});
     },
     label: "Unity Academy",
-    iconName: "cube"
-  };
-  return __toCommonJS(UnityAcademy_exports);
+    iconName: import_icons2.IconNames.CUBE
+  });
+  return __toCommonJS(index_exports);
 };

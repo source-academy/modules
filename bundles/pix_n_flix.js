@@ -21,8 +21,8 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var pix_n_flix_exports = {};
-  __export(pix_n_flix_exports, {
+  var index_exports = {};
+  __export(index_exports, {
     alpha_of: () => alpha_of,
     blue_of: () => blue_of,
     compose_filter: () => compose_filter,
@@ -84,6 +84,16 @@ export default require => {
   var intrinsicHeight = HEIGHT;
   var displayWidth = WIDTH;
   var displayHeight = HEIGHT;
+  function new_image() {
+    const img = [];
+    for (let i = 0; i < HEIGHT; i += 1) {
+      img[i] = [];
+      for (let j = 0; j < WIDTH; j += 1) {
+        img[i][j] = [0, 0, 0, 255];
+      }
+    }
+    return img;
+  }
   function setupData() {
     for (let i = 0; i < HEIGHT; i += 1) {
       pixels[i] = [];
@@ -94,7 +104,7 @@ export default require => {
       }
     }
   }
-  function isPixelFilled(pixel) {
+  function isPixelValid(pixel) {
     let ok = true;
     for (let i = 0; i < 4; i += 1) {
       if (pixel[i] >= 0 && pixel[i] <= 255) {
@@ -110,7 +120,7 @@ export default require => {
     for (let i = 0; i < HEIGHT; i += 1) {
       for (let j = 0; j < WIDTH; j += 1) {
         const p = i * WIDTH * 4 + j * 4;
-        if (isPixelFilled(data[i][j]) === false) {
+        if (!isPixelValid(data[i][j])) {
           ok = false;
         }
         buffer[p] = data[i][j][0];
@@ -333,6 +343,7 @@ export default require => {
   }
   function deinit() {
     stopVideo();
+    queue = () => {};
     const stream = videoElement.srcObject;
     if (!stream) {
       return;
@@ -390,16 +401,6 @@ export default require => {
   function reset_filter() {
     install_filter(copy_image);
   }
-  function new_image() {
-    const img = [];
-    for (let i = 0; i < HEIGHT; i += 1) {
-      img[i] = [];
-      for (let j = 0; j < WIDTH; j += 1) {
-        img[i][j] = [0, 0, 0, 255];
-      }
-    }
-    return img;
-  }
   function compose_filter(filter1, filter2) {
     return (src, dest) => {
       const temp = new_image();
@@ -441,5 +442,5 @@ export default require => {
   function set_loop_count(n) {
     LOOP_COUNT = n;
   }
-  return __toCommonJS(pix_n_flix_exports);
+  return __toCommonJS(index_exports);
 };

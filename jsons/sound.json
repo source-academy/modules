@@ -105,34 +105,10 @@
     "params": [
       [
         "x",
-        "any"
+        "unknown"
       ]
     ],
     "retType": "x is Sound"
-  },
-  "letter_name_to_frequency": {
-    "kind": "function",
-    "name": "letter_name_to_frequency",
-    "description": "<p>Converts a letter name to its corresponding frequency.</p>",
-    "params": [
-      [
-        "note",
-        "string"
-      ]
-    ],
-    "retType": "number"
-  },
-  "letter_name_to_midi_note": {
-    "kind": "function",
-    "name": "letter_name_to_midi_note",
-    "description": "<p>Converts a letter name to its corresponding MIDI note.\nThe letter name is represented in standard pitch notation.\nExamples are \"A5\", \"Db3\", \"C#7\".\nRefer to &lt;a href=\"https://i.imgur.com/qGQgmYr.png\"&gt;this mapping from\nletter name to midi notes.</p>",
-    "params": [
-      [
-        "note",
-        "string"
-      ]
-    ],
-    "retType": "number"
   },
   "make_sound": {
     "kind": "function",
@@ -149,18 +125,6 @@
       ]
     ],
     "retType": "Sound"
-  },
-  "midi_note_to_frequency": {
-    "kind": "function",
-    "name": "midi_note_to_frequency",
-    "description": "<p>Converts a MIDI note to its corresponding frequency.</p>",
-    "params": [
-      [
-        "note",
-        "number"
-      ]
-    ],
-    "retType": "number"
   },
   "noise_sound": {
     "kind": "function",
@@ -210,10 +174,10 @@
     ],
     "retType": "Sound"
   },
-  "play": {
+  "play_in_tab": {
     "kind": "function",
-    "name": "play",
-    "description": "<p>Plays the given Sound using the computer’s sound device\non top of any Sounds that are currently playing.</p>",
+    "name": "play_in_tab",
+    "description": "<p>Adds the given Sound to a list of sounds to be played one-at-a-time\nin a Source Academy tab.</p>",
     "params": [
       [
         "sound",
@@ -222,10 +186,10 @@
     ],
     "retType": "Sound"
   },
-  "play_in_tab": {
+  "play": {
     "kind": "function",
-    "name": "play_in_tab",
-    "description": "<p>Plays the given Sound using the computer’s sound device.\nThe sound is added to a list of sounds to be played one-at-a-time\nin a Source Academy tab.</p>",
+    "name": "play",
+    "description": "<p>Plays the given Sound using the computer’s sound device\non top of any Sounds that are currently playing.</p>",
     "params": [
       [
         "sound",
@@ -253,19 +217,19 @@
   "record": {
     "kind": "function",
     "name": "record",
-    "description": "<p>Records a sound until the returned stop function is called.\nTakes a &lt;CODE&gt;buffer&lt;/CODE&gt; duration (in seconds) as argument, and\nreturns a nullary stop function &lt;CODE&gt;stop&lt;/CODE&gt;. A call\n&lt;CODE&gt;stop()&lt;/CODE&gt; returns a Sound promise: a nullary function\nthat returns a Sound. Example: &lt;PRE&gt;&lt;CODE&gt;init_record();\nconst stop = record(0.5);\n// record after 0.5 seconds. Then in next query:\nconst promise = stop();\n// In next query, you can play the promised sound, by\n// applying the promise:\nplay(promise());&lt;/CODE&gt;&lt;/PRE&gt;</p>",
+    "description": "<p>Records a sound until the returned stop function is called.\nTakes a buffer duration (in seconds) as argument, and\nreturns a nullary stop. A call to the stop function returns a Sound promise.</p><p>How the function behaves in detail:</p><ol start=\"1\"><li><code>record</code> is called.</li><li>The function waits for the given buffer duration.</li><li>The recording signal is played.</li><li>Recording begins when the recording signal finishes.</li><li>Recording stops when the returned stop function is called.</li></ol>",
     "params": [
       [
         "buffer",
         "number"
       ]
     ],
-    "retType": "Function"
+    "retType": "() => SoundPromise"
   },
   "record_for": {
     "kind": "function",
     "name": "record_for",
-    "description": "<p>Records a sound of given &lt;CODE&gt;duration&lt;/CODE&gt; in seconds, after\na &lt;CODE&gt;buffer&lt;/CODE&gt; also in seconds, and\nreturns a Sound promise: a nullary function\nthat returns a Sound. Example: &lt;PRE&gt;&lt;CODE&gt;init_record();\nconst promise = record_for(2, 0.5);\n// In next query, you can play the promised Sound, by\n// applying the promise:\nplay(promise());&lt;/CODE&gt;&lt;/PRE&gt;</p>",
+    "description": "<p>Records a sound of a given duration. Returns a Sound promise.</p><p>How the function behaves in detail:</p><ol start=\"1\"><li><code>record_for</code> is called.</li><li>The function waits for the given buffer duration.</li><li>The recording signal is played.</li><li>Recording begins when the recording signal finishes.</li><li>The recording signal plays to signal the end after the given duration.</li></ol>",
     "params": [
       [
         "duration",
@@ -276,7 +240,7 @@
         "number"
       ]
     ],
-    "retType": "Function"
+    "retType": "SoundPromise"
   },
   "sawtooth_sound": {
     "kind": "function",
@@ -428,5 +392,41 @@
       ]
     ],
     "retType": "Sound"
+  },
+  "letter_name_to_midi_note": {
+    "kind": "function",
+    "name": "letter_name_to_midi_note",
+    "description": "<p>Converts a letter name to its corresponding MIDI note.\nThe letter name is represented in standard pitch notation.\nExamples are \"A5\", \"Db3\", \"C#7\".\nRefer to &lt;a href=\"https://i.imgur.com/qGQgmYr.png\"&gt;this mapping from\nletter name to midi notes.</p>",
+    "params": [
+      [
+        "note",
+        "NoteWithOctave"
+      ]
+    ],
+    "retType": "number"
+  },
+  "letter_name_to_frequency": {
+    "kind": "function",
+    "name": "letter_name_to_frequency",
+    "description": "<p>Converts a letter name to its corresponding frequency.</p>",
+    "params": [
+      [
+        "note",
+        "NoteWithOctave"
+      ]
+    ],
+    "retType": "number"
+  },
+  "midi_note_to_frequency": {
+    "kind": "function",
+    "name": "midi_note_to_frequency",
+    "description": "<p>Converts a MIDI note to its corresponding frequency.</p>",
+    "params": [
+      [
+        "note",
+        "number"
+      ]
+    ],
+    "retType": "number"
   }
 }

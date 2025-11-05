@@ -33,12 +33,15 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var Nbody_exports = {};
-  __export(Nbody_exports, {
-    default: () => Nbody_default
+  var index_exports = {};
+  __export(index_exports, {
+    default: () => index_default
   });
   var import_core = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
+  function defineTab(tab) {
+    return tab;
+  }
   var import_react = __toESM(__require("react"), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
   var SimulationControl = class extends import_react.default.Component {
@@ -170,7 +173,7 @@ export default require => {
       });
     }
   };
-  var Nbody_default = {
+  var index_default = defineTab({
     toSpawn(context) {
       var _a, _b;
       console.log("Nbody tospawn");
@@ -182,6 +185,6 @@ export default require => {
     }),
     label: "Nbody Viz Tab",
     iconName: "clean"
-  };
-  return __toCommonJS(Nbody_exports);
+  });
+  return __toCommonJS(index_exports);
 };

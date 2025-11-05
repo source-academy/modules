@@ -33,8 +33,8 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var repl_exports = {};
-  __export(repl_exports, {
+  var index_exports = {};
+  __export(index_exports, {
     default_js_slang: () => default_js_slang,
     repl_display: () => repl_display,
     set_background_image: () => set_background_image,
@@ -56,7 +56,7 @@ export default require => {
         backgroundColorAlpha: 1,
         fontSize: 17
       };
-      this.evalFunction = _placeholder => this.easterEggFunction();
+      this.evalFunction = () => this.easterEggFunction();
       this.userCodeInEditor = this.getSavedEditorContent();
       this.outputStrings = [];
       this._editorInstance = null;
@@ -71,7 +71,7 @@ export default require => {
       this.outputStrings = [];
       let retVal;
       try {
-        if (Object.is(this.evalFunction, default_js_slang)) {
+        if ((evaluatorSymbol in this.evalFunction)) {
           retVal = this.runInJsSlang(this.userCodeInEditor);
         } else {
           retVal = this.evalFunction(this.userCodeInEditor);
@@ -193,7 +193,6 @@ export default require => {
       developmentLog("js-slang context:");
       const options = {
         originalMaxExecTime: 1e3,
-        scheduler: "preemptive",
         stepLimit: 1e3,
         throwInfiniteLoops: true,
         useSubst: false
@@ -204,7 +203,7 @@ export default require => {
         "/ReplModuleUserCode.js": code
       };
       (0, import_js_slang.runFilesInContext)(sourceFile, "/ReplModuleUserCode.js", import_context.default, options).then(evalResult => {
-        if (evalResult.status === "suspended" || evalResult.status === "suspended-cse-eval") {
+        if (evalResult.status === "suspended-cse-eval") {
           throw new Error("This should not happen");
         }
         if (evalResult.status !== "error") {
@@ -217,7 +216,7 @@ export default require => {
           for (let i = 0; i < errorCount; i++) {
             const error = errors[i];
             if (error.explain().indexOf("Name repl_display not declared.") !== -1) {
-              this.pushOutputString(`[Error] It seems that you haven't import the function "repl_display" correctly when calling "set_evaluator" in Source Academy's main editor.`, COLOR_ERROR_MESSAGE);
+              this.pushOutputString(`[Error] It seems that you haven't imported the function "repl_display" correctly when calling "set_evaluator" in Source Academy's main editor.`, COLOR_ERROR_MESSAGE);
             } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, COLOR_ERROR_MESSAGE);
           }
         }
@@ -252,9 +251,8 @@ export default require => {
   var INSTANCE = new ProgrammableRepl();
   import_context2.default.moduleContexts.repl.state = INSTANCE;
   function set_evaluator(evalFunc) {
-    if (!(evalFunc instanceof Function)) {
-      const typeName = typeof evalFunc;
-      throw new Error(`Wrong parameter type "${typeName}' in function "set_evaluator". It supposed to be a function and it's the entrance function of your metacircular evaulator.`);
+    if (typeof evalFunc !== "function") {
+      throw new Error(`${set_evaluator.name} expects a function as parameter`);
     }
     INSTANCE.evalFunction = evalFunc;
     return {
@@ -278,8 +276,10 @@ export default require => {
   function set_program_text(text) {
     INSTANCE.updateUserCode(text);
   }
+  var evaluatorSymbol = Symbol("repl/js-slang");
   function default_js_slang(_program) {
     throw new Error(`Invaild Call: Function "default_js_slang" can not be directly called by user's code in editor. You should use it as the parameter of the function "set_evaluator"`);
   }
-  return __toCommonJS(repl_exports);
+  default_js_slang[evaluatorSymbol] = true;
+  return __toCommonJS(index_exports);
 };

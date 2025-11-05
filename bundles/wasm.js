@@ -46,7 +46,7 @@ export default require => {
     }
   });
   var require_source_academy_utils = __commonJS({
-    "node_modules/source-academy-utils/index.js"(exports, module) {
+    "../../../node_modules/source-academy-utils/index.js"(exports, module) {
       "use strict";
       init_define_process();
       var __defProp2 = Object.defineProperty;
@@ -98,7 +98,7 @@ export default require => {
     }
   });
   var require_source_academy_wabt = __commonJS({
-    "node_modules/source-academy-wabt/index.js"(exports, module) {
+    "../../../node_modules/source-academy-wabt/index.js"(exports, module) {
       "use strict";
       init_define_process();
       var __create2 = Object.create;
@@ -408,7 +408,7 @@ export default require => {
               "\u2029": "u2029"
             };
             var freeParseFloat = parseFloat, freeParseInt = parseInt;
-            var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
+            var freeGlobal = typeof globalThis == "object" && globalThis && globalThis.Object === Object && globalThis;
             var freeSelf = typeof self == "object" && self && self.Object === Object && self;
             var root = freeGlobal || freeSelf || Function("return this")();
             var freeExports = typeof exports2 == "object" && exports2 && !exports2.nodeType && exports2;
@@ -6254,7 +6254,7 @@ export default require => {
       var Reflect2;
       (function (Reflect3) {
         (function (factory) {
-          var root = typeof global === "object" ? global : typeof self === "object" ? self : typeof this === "object" ? this : Function("return this;")();
+          var root = typeof globalThis === "object" ? globalThis : typeof self === "object" ? self : typeof this === "object" ? this : Function("return this;")();
           var exporter = makeExporter(Reflect3);
           if (typeof root.Reflect === "undefined") {
             root.Reflect = Reflect3;
@@ -10564,8 +10564,8 @@ export default require => {
       };
     }
   });
-  var wasm_exports = {};
-  __export(wasm_exports, {
+  var index_exports = {};
+  __export(index_exports, {
     wcompile: () => wcompile,
     wrun: () => wrun
   });
@@ -10581,5 +10581,5 @@ export default require => {
     const exps = new WebAssembly.Instance(new WebAssembly.Module(buffer)).exports;
     return (0, import_source_academy_utils.objectToLinkedList)(exps);
   };
-  return __toCommonJS(wasm_exports);
+  return __toCommonJS(index_exports);
 };

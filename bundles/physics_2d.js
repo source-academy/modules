@@ -64,7 +64,7 @@ export default require => {
     "<define:process>"() {}
   });
   var require_b2_settings = __commonJS({
-    "node_modules/@box2d/core/dist/common/b2_settings.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/common/b2_settings.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -76,7 +76,7 @@ export default require => {
     }
   });
   var require_b2_common = __commonJS({
-    "node_modules/@box2d/core/dist/common/b2_common.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/common/b2_common.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -141,7 +141,7 @@ export default require => {
     }
   });
   var require_b2_math = __commonJS({
-    "node_modules/@box2d/core/dist/common/b2_math.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/common/b2_math.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -1013,7 +1013,7 @@ export default require => {
     }
   });
   var require_b2_draw = __commonJS({
-    "node_modules/@box2d/core/dist/common/b2_draw.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/common/b2_draw.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -1160,7 +1160,7 @@ export default require => {
     }
   });
   var require_b2_shape = __commonJS({
-    "node_modules/@box2d/core/dist/collision/b2_shape.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/collision/b2_shape.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -1203,7 +1203,7 @@ export default require => {
     }
   });
   var require_b2_distance = __commonJS({
-    "node_modules/@box2d/core/dist/collision/b2_distance.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/collision/b2_distance.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -1770,7 +1770,7 @@ export default require => {
     }
   });
   var require_b2_collision = __commonJS({
-    "node_modules/@box2d/core/dist/collision/b2_collision.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/collision/b2_collision.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -2234,7 +2234,7 @@ export default require => {
     }
   });
   var require_b2_fixture = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_fixture.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_fixture.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -2411,7 +2411,7 @@ export default require => {
     }
   });
   var require_b2_body = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_body.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_body.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -2971,7 +2971,7 @@ export default require => {
     }
   });
   var require_b2_draw_helper = __commonJS({
-    "node_modules/@box2d/core/dist/common/b2_draw_helper.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/common/b2_draw_helper.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -3077,7 +3077,7 @@ export default require => {
     }
   });
   var require_b2_timer = __commonJS({
-    "node_modules/@box2d/core/dist/common/b2_timer.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/common/b2_timer.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -3100,7 +3100,7 @@ export default require => {
     }
   });
   var require_b2_augment = __commonJS({
-    "node_modules/@box2d/core/dist/common/b2_augment.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/common/b2_augment.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -3124,7 +3124,7 @@ export default require => {
     }
   });
   var require_b2_dynamic_tree = __commonJS({
-    "node_modules/@box2d/core/dist/collision/b2_dynamic_tree.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/collision/b2_dynamic_tree.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -3573,7 +3573,7 @@ export default require => {
     }
   });
   var require_b2_broad_phase = __commonJS({
-    "node_modules/@box2d/core/dist/collision/b2_broad_phase.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/collision/b2_broad_phase.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -3681,7 +3681,7 @@ export default require => {
     }
   });
   var require_b2_time_of_impact = __commonJS({
-    "node_modules/@box2d/core/dist/collision/b2_time_of_impact.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/collision/b2_time_of_impact.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -4027,7 +4027,7 @@ export default require => {
     }
   });
   var require_b2_collide_circle = __commonJS({
-    "node_modules/@box2d/core/dist/collision/b2_collide_circle.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/collision/b2_collide_circle.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -4132,7 +4132,7 @@ export default require => {
     }
   });
   var require_b2_collide_polygon = __commonJS({
-    "node_modules/@box2d/core/dist/collision/b2_collide_polygon.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/collision/b2_collide_polygon.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -4311,7 +4311,7 @@ export default require => {
     }
   });
   var require_b2_collide_edge = __commonJS({
-    "node_modules/@box2d/core/dist/collision/b2_collide_edge.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/collision/b2_collide_edge.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -4679,7 +4679,7 @@ export default require => {
     }
   });
   var require_b2_circle_shape = __commonJS({
-    "node_modules/@box2d/core/dist/collision/b2_circle_shape.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/collision/b2_circle_shape.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -4769,7 +4769,7 @@ export default require => {
     }
   });
   var require_b2_polygon_shape = __commonJS({
-    "node_modules/@box2d/core/dist/collision/b2_polygon_shape.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/collision/b2_polygon_shape.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -5079,7 +5079,7 @@ export default require => {
     }
   });
   var require_b2_edge_shape = __commonJS({
-    "node_modules/@box2d/core/dist/collision/b2_edge_shape.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/collision/b2_edge_shape.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -5211,7 +5211,7 @@ export default require => {
     }
   });
   var require_b2_chain_shape = __commonJS({
-    "node_modules/@box2d/core/dist/collision/b2_chain_shape.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/collision/b2_chain_shape.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -5343,7 +5343,7 @@ export default require => {
     }
   });
   var require_b2_joint = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_joint.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_joint.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -5476,7 +5476,7 @@ export default require => {
     }
   });
   var require_b2_distance_joint = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_distance_joint.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_distance_joint.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -5818,7 +5818,7 @@ export default require => {
     }
   });
   var require_b2_area_joint = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_area_joint.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_area_joint.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -5994,7 +5994,7 @@ export default require => {
     }
   });
   var require_b2_friction_joint = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_friction_joint.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_friction_joint.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -6185,7 +6185,7 @@ export default require => {
     }
   });
   var require_b2_gear_joint = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_gear_joint.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_gear_joint.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -6532,7 +6532,7 @@ export default require => {
     }
   });
   var require_b2_motor_joint = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_motor_joint.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_motor_joint.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -6754,7 +6754,7 @@ export default require => {
     }
   });
   var require_b2_mouse_joint = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_mouse_joint.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_mouse_joint.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -6924,7 +6924,7 @@ export default require => {
     }
   });
   var require_b2_prismatic_joint = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_prismatic_joint.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_prismatic_joint.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -7426,7 +7426,7 @@ export default require => {
     }
   });
   var require_b2_pulley_joint = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_pulley_joint.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_pulley_joint.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -7697,7 +7697,7 @@ export default require => {
     }
   });
   var require_b2_revolute_joint = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_revolute_joint.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_revolute_joint.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -8083,7 +8083,7 @@ export default require => {
     }
   });
   var require_b2_weld_joint = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_weld_joint.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_weld_joint.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -8361,7 +8361,7 @@ export default require => {
     }
   });
   var require_b2_wheel_joint = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_wheel_joint.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_wheel_joint.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -8888,7 +8888,7 @@ export default require => {
     }
   });
   var require_b2_contact = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_contact.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_contact.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -9108,7 +9108,7 @@ export default require => {
     }
   });
   var require_b2_circle_contact = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_circle_contact.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_circle_contact.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -9126,7 +9126,7 @@ export default require => {
     }
   });
   var require_b2_polygon_contact = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_polygon_contact.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_polygon_contact.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -9144,7 +9144,7 @@ export default require => {
     }
   });
   var require_b2_polygon_circle_contact = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_polygon_circle_contact.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_polygon_circle_contact.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -9162,7 +9162,7 @@ export default require => {
     }
   });
   var require_b2_edge_circle_contact = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_edge_circle_contact.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_edge_circle_contact.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -9180,7 +9180,7 @@ export default require => {
     }
   });
   var require_b2_edge_polygon_contact = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_edge_polygon_contact.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_edge_polygon_contact.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -9198,7 +9198,7 @@ export default require => {
     }
   });
   var require_b2_chain_circle_contact = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_chain_circle_contact.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_chain_circle_contact.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -9220,7 +9220,7 @@ export default require => {
     }
   });
   var require_b2_chain_polygon_contact = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_chain_polygon_contact.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_chain_polygon_contact.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -9242,7 +9242,7 @@ export default require => {
     }
   });
   var require_b2_contact_factory = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_contact_factory.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_contact_factory.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -9313,7 +9313,7 @@ export default require => {
     }
   });
   var require_b2_world_callbacks = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_world_callbacks.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_world_callbacks.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -9357,7 +9357,7 @@ export default require => {
     }
   });
   var require_b2_contact_manager = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_contact_manager.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_contact_manager.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -9528,7 +9528,7 @@ export default require => {
     }
   });
   var require_b2_time_step = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_time_step.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_time_step.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -9607,7 +9607,7 @@ export default require => {
     }
   });
   var require_b2_contact_solver = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_contact_solver.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_contact_solver.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -10186,7 +10186,7 @@ export default require => {
     }
   });
   var require_b2_island = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_island.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_island.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -10438,7 +10438,7 @@ export default require => {
     }
   });
   var require_b2_world = __commonJS({
-    "node_modules/@box2d/core/dist/dynamics/b2_world.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/dynamics/b2_world.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -11223,7 +11223,7 @@ export default require => {
     }
   });
   var require_b2_rope = __commonJS({
-    "node_modules/@box2d/core/dist/rope/b2_rope.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/rope/b2_rope.js"(exports) {
       "use strict";
       init_define_process();
       Object.defineProperty(exports, "__esModule", {
@@ -11800,7 +11800,7 @@ export default require => {
     }
   });
   var require_dist = __commonJS({
-    "node_modules/@box2d/core/dist/index.js"(exports) {
+    "../../../node_modules/@box2d/core/dist/index.js"(exports) {
       "use strict";
       init_define_process();
       var __createBinding = exports && exports.__createBinding || (Object.create ? function (o, m, k, k2) {
@@ -11900,8 +11900,8 @@ export default require => {
       __exportStar(require_b2_rope(), exports);
     }
   });
-  var physics_2d_exports = {};
-  __export(physics_2d_exports, {
+  var index_exports = {};
+  __export(index_exports, {
     add_box_object: () => add_box_object,
     add_circle_object: () => add_circle_object,
     add_triangle_object: () => add_triangle_object,
@@ -12309,5 +12309,5 @@ export default require => {
   function subtract_vector(vec1, vec2) {
     return new Vector2(vec1.x - vec2.x, vec1.y - vec2.y);
   }
-  return __toCommonJS(physics_2d_exports);
+  return __toCommonJS(index_exports);
 };

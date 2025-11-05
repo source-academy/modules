@@ -21,8 +21,8 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var repeat_exports = {};
-  __export(repeat_exports, {
+  var index_exports = {};
+  __export(index_exports, {
     repeat: () => repeat,
     thrice: () => thrice,
     twice: () => twice
@@ -36,5 +36,5 @@ export default require => {
   function thrice(func) {
     return repeat(func, 3);
   }
-  return __toCommonJS(repeat_exports);
+  return __toCommonJS(index_exports);
 };

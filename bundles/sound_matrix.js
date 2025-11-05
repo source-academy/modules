@@ -21,8 +21,8 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var sound_matrix_exports = {};
-  __export(sound_matrix_exports, {
+  var index_exports = {};
+  __export(index_exports, {
     ToneMatrix: () => ToneMatrix,
     clear_all_timeout: () => clear_all_timeout,
     clear_matrix: () => clear_matrix,
@@ -183,5 +183,5 @@ export default require => {
     }
     timeout_objects = [];
   }
-  return __toCommonJS(sound_matrix_exports);
+  return __toCommonJS(index_exports);
 };

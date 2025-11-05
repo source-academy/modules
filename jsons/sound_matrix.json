@@ -1,31 +1,28 @@
 {
-  "clear_matrix": {
-    "kind": "unknown"
-  },
   "ToneMatrix": {
     "kind": "variable",
     "name": "ToneMatrix",
-    "description": "No description available",
-    "type": "Object"
-  },
-  "clear_all_timeout": {
-    "kind": "function",
-    "name": "clear_all_timeout",
-    "description": "No description available",
-    "params": [],
-    "retType": "void"
+    "description": "<p>Imported functions</p>",
+    "type": "{ initialise_matrix: ($container: HTMLElement) => void; clear_matrix: () => void; randomise_matrix: () => void; bindMatrixButtons: () => void }"
   },
   "get_matrix": {
     "kind": "function",
     "name": "get_matrix",
-    "description": "No description available",
+    "description": "<p>No description available</p>",
     "params": [],
     "retType": "List"
+  },
+  "clear_matrix": {
+    "kind": "function",
+    "name": "clear_matrix",
+    "description": "<p>No description available</p>",
+    "params": [],
+    "retType": "void"
   },
   "set_timeout": {
     "kind": "function",
     "name": "set_timeout",
-    "description": "No description available",
+    "description": "<p>No description available</p>",
     "params": [
       [
         "f",
@@ -36,6 +33,13 @@
         "any"
       ]
     ],
+    "retType": "void"
+  },
+  "clear_all_timeout": {
+    "kind": "function",
+    "name": "clear_all_timeout",
+    "description": "<p>No description available</p>",
+    "params": [],
     "retType": "void"
   }
 }

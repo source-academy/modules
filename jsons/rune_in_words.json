@@ -1,70 +1,4 @@
 {
-  "blank": {
-    "kind": "variable",
-    "name": "blank",
-    "description": "<p>Rune with the shape of a blank square</p>",
-    "type": "string"
-  },
-  "circle": {
-    "kind": "variable",
-    "name": "circle",
-    "description": "<p>Rune with the shape of a circle</p>",
-    "type": "string"
-  },
-  "corner": {
-    "kind": "variable",
-    "name": "corner",
-    "description": "<p>Rune with black triangle,\nfilling upper right corner</p>",
-    "type": "string"
-  },
-  "heart": {
-    "kind": "variable",
-    "name": "heart",
-    "description": "<p>Rune with the shape of a heart</p>",
-    "type": "string"
-  },
-  "nova": {
-    "kind": "variable",
-    "name": "nova",
-    "description": "<p>Rune with the shape of two overlapping\ntriangles, residing in the upper half\nof the shape</p>",
-    "type": "string"
-  },
-  "pentagram": {
-    "kind": "variable",
-    "name": "pentagram",
-    "description": "<p>Rune with the shape of a pentagram</p>",
-    "type": "string"
-  },
-  "rcross": {
-    "kind": "variable",
-    "name": "rcross",
-    "description": "<p>Rune with the shape of a\nsmall square inside a large square,\neach diagonally split into a\nblack and white half</p>",
-    "type": "string"
-  },
-  "ribbon": {
-    "kind": "variable",
-    "name": "ribbon",
-    "description": "<p>Rune with the shape of a ribbon\nwinding outwards in an anticlockwise spiral</p>",
-    "type": "string"
-  },
-  "sail": {
-    "kind": "variable",
-    "name": "sail",
-    "description": "<p>Rune with the shape of a sail</p>",
-    "type": "string"
-  },
-  "square": {
-    "kind": "variable",
-    "name": "square",
-    "description": "<p>Rune with the shape of a full square</p>",
-    "type": "string"
-  },
-  "triangle": {
-    "kind": "variable",
-    "name": "triangle",
-    "description": "<p>Rune with the shape of a triangle</p>",
-    "type": "string"
-  },
   "anaglyph": {
     "kind": "function",
     "name": "anaglyph",
@@ -125,6 +59,12 @@
     ],
     "retType": "string"
   },
+  "blank": {
+    "kind": "variable",
+    "name": "blank",
+    "description": "<p>Rune with the shape of a blank square</p>",
+    "type": "string"
+  },
   "blue": {
     "kind": "function",
     "name": "blue",
@@ -149,6 +89,12 @@
     ],
     "retType": "string"
   },
+  "circle": {
+    "kind": "variable",
+    "name": "circle",
+    "description": "<p>Rune with the shape of a circle</p>",
+    "type": "string"
+  },
   "color": {
     "kind": "function",
     "name": "color",
@@ -172,6 +118,12 @@
       ]
     ],
     "retType": "string"
+  },
+  "corner": {
+    "kind": "variable",
+    "name": "corner",
+    "description": "<p>Rune with black triangle,\nfilling upper right corner</p>",
+    "type": "string"
   },
   "flip_horiz": {
     "kind": "function",
@@ -221,6 +173,12 @@
     ],
     "retType": "string"
   },
+  "heart": {
+    "kind": "variable",
+    "name": "heart",
+    "description": "<p>Rune with the shape of a heart</p>",
+    "type": "string"
+  },
   "hollusion": {
     "kind": "function",
     "name": "hollusion",
@@ -256,6 +214,12 @@
       ]
     ],
     "retType": "string"
+  },
+  "nova": {
+    "kind": "variable",
+    "name": "nova",
+    "description": "<p>Rune with the shape of two overlapping\ntriangles, residing in the upper half\nof the shape</p>",
+    "type": "string"
   },
   "orange": {
     "kind": "function",
@@ -304,6 +268,12 @@
       ]
     ],
     "retType": "string"
+  },
+  "pentagram": {
+    "kind": "variable",
+    "name": "pentagram",
+    "description": "<p>Rune with the shape of a pentagram</p>",
+    "type": "string"
   },
   "pink": {
     "kind": "function",
@@ -365,6 +335,12 @@
     ],
     "retType": "string"
   },
+  "rcross": {
+    "kind": "variable",
+    "name": "rcross",
+    "description": "<p>Rune with the shape of a\nsmall square inside a large square,\neach diagonally split into a\nblack and white half</p>",
+    "type": "string"
+  },
   "red": {
     "kind": "function",
     "name": "red",
@@ -388,7 +364,7 @@
       ],
       [
         "pattern",
-        "Function"
+        "(a: string) => string"
       ],
       [
         "initial",
@@ -396,6 +372,12 @@
       ]
     ],
     "retType": "string"
+  },
+  "ribbon": {
+    "kind": "variable",
+    "name": "ribbon",
+    "description": "<p>Rune with the shape of a ribbon\nwinding outwards in an anticlockwise spiral</p>",
+    "type": "string"
   },
   "rotate": {
     "kind": "function",
@@ -412,6 +394,12 @@
       ]
     ],
     "retType": "string"
+  },
+  "sail": {
+    "kind": "variable",
+    "name": "sail",
+    "description": "<p>Rune with the shape of a sail</p>",
+    "type": "string"
   },
   "scale": {
     "kind": "function",
@@ -461,31 +449,17 @@
     ],
     "retType": "string"
   },
+  "square": {
+    "kind": "variable",
+    "name": "square",
+    "description": "<p>Rune with the shape of a full square</p>",
+    "type": "string"
+  },
   "stack": {
     "kind": "function",
     "name": "stack",
     "description": "<p>Makes a new Rune from two given Runes by\nplacing the first on top of the second, each\noccupying equal parts of the height of the\nresult</p>",
     "params": [
-      [
-        "rune1",
-        "string"
-      ],
-      [
-        "rune2",
-        "string"
-      ]
-    ],
-    "retType": "string"
-  },
-  "stack_frac": {
-    "kind": "function",
-    "name": "stack_frac",
-    "description": "<p>Makes a new Rune from two given Runes by\nplacing the first on top of the second\nsuch that the first one occupies frac\nportion of the height of the result and\nthe second the rest</p>",
-    "params": [
-      [
-        "frac",
-        "number"
-      ],
       [
         "rune1",
         "string"
@@ -513,6 +487,26 @@
     ],
     "retType": "string"
   },
+  "stack_frac": {
+    "kind": "function",
+    "name": "stack_frac",
+    "description": "<p>Makes a new Rune from two given Runes by\nplacing the first on top of the second\nsuch that the first one occupies frac\nportion of the height of the result and\nthe second the rest</p>",
+    "params": [
+      [
+        "frac",
+        "number"
+      ],
+      [
+        "rune1",
+        "string"
+      ],
+      [
+        "rune2",
+        "string"
+      ]
+    ],
+    "retType": "string"
+  },
   "translate": {
     "kind": "function",
     "name": "translate",
@@ -532,6 +526,12 @@
       ]
     ],
     "retType": "string"
+  },
+  "triangle": {
+    "kind": "variable",
+    "name": "triangle",
+    "description": "<p>Rune with the shape of a triangle</p>",
+    "type": "string"
   },
   "turn_upside_down": {
     "kind": "function",

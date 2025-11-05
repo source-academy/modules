@@ -27,8 +27,8 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var remote_execution_exports = {};
-  __export(remote_execution_exports, {
+  var index_exports = {};
+  __export(index_exports, {
     EV3: () => ev3_default
   });
   var import_types = __require("js-slang/dist/types");
@@ -39,5 +39,5 @@ export default require => {
     languageChapter: import_types.Chapter.SOURCE_3
   };
   var ev3_default = ev3DeviceType;
-  return __toCommonJS(remote_execution_exports);
+  return __toCommonJS(index_exports);
 };

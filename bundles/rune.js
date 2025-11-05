@@ -11,6 +11,14 @@ export default require => {
     if (typeof require !== "undefined") return require.apply(this, arguments);
     throw Error('Dynamic require of "' + x + '" is not supported');
   });
+  var __esm = (fn, res) => function __init() {
+    return (fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res);
+  };
+  var __commonJS = (cb, mod) => function __require2() {
+    return (mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = {
+      exports: {}
+    }).exports, mod), mod.exports);
+  };
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
       get: all[name],
@@ -39,8 +47,231 @@ export default require => {
     if (kind && result) __defProp(target, key, result);
     return result;
   };
-  var rune_exports = {};
-  __export(rune_exports, {
+  var init_define_process = __esm({
+    "<define:process>"() {}
+  });
+  var require_baseClamp = __commonJS({
+    "../../../node_modules/lodash/_baseClamp.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      function baseClamp(number, lower, upper) {
+        if (number === number) {
+          if (upper !== void 0) {
+            number = number <= upper ? number : upper;
+          }
+          if (lower !== void 0) {
+            number = number >= lower ? number : lower;
+          }
+        }
+        return number;
+      }
+      module.exports = baseClamp;
+    }
+  });
+  var require_trimmedEndIndex = __commonJS({
+    "../../../node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var reWhitespace = /\s/;
+      function trimmedEndIndex(string) {
+        var index = string.length;
+        while (index-- && reWhitespace.test(string.charAt(index))) {}
+        return index;
+      }
+      module.exports = trimmedEndIndex;
+    }
+  });
+  var require_baseTrim = __commonJS({
+    "../../../node_modules/lodash/_baseTrim.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var trimmedEndIndex = require_trimmedEndIndex();
+      var reTrimStart = /^\s+/;
+      function baseTrim(string) {
+        return string ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, "") : string;
+      }
+      module.exports = baseTrim;
+    }
+  });
+  var require_isObject = __commonJS({
+    "../../../node_modules/lodash/isObject.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      function isObject(value) {
+        var type = typeof value;
+        return value != null && (type == "object" || type == "function");
+      }
+      module.exports = isObject;
+    }
+  });
+  var require_freeGlobal = __commonJS({
+    "../../../node_modules/lodash/_freeGlobal.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var freeGlobal = typeof globalThis == "object" && globalThis && globalThis.Object === Object && globalThis;
+      module.exports = freeGlobal;
+    }
+  });
+  var require_root = __commonJS({
+    "../../../node_modules/lodash/_root.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var freeGlobal = require_freeGlobal();
+      var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+      var root = freeGlobal || freeSelf || Function("return this")();
+      module.exports = root;
+    }
+  });
+  var require_Symbol = __commonJS({
+    "../../../node_modules/lodash/_Symbol.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var root = require_root();
+      var Symbol2 = root.Symbol;
+      module.exports = Symbol2;
+    }
+  });
+  var require_getRawTag = __commonJS({
+    "../../../node_modules/lodash/_getRawTag.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var Symbol2 = require_Symbol();
+      var objectProto = Object.prototype;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      var nativeObjectToString = objectProto.toString;
+      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+      function getRawTag(value) {
+        var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
+        try {
+          value[symToStringTag] = void 0;
+          var unmasked = true;
+        } catch (e) {}
+        var result = nativeObjectToString.call(value);
+        if (unmasked) {
+          if (isOwn) {
+            value[symToStringTag] = tag;
+          } else {
+            delete value[symToStringTag];
+          }
+        }
+        return result;
+      }
+      module.exports = getRawTag;
+    }
+  });
+  var require_objectToString = __commonJS({
+    "../../../node_modules/lodash/_objectToString.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var objectProto = Object.prototype;
+      var nativeObjectToString = objectProto.toString;
+      function objectToString(value) {
+        return nativeObjectToString.call(value);
+      }
+      module.exports = objectToString;
+    }
+  });
+  var require_baseGetTag = __commonJS({
+    "../../../node_modules/lodash/_baseGetTag.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var Symbol2 = require_Symbol();
+      var getRawTag = require_getRawTag();
+      var objectToString = require_objectToString();
+      var nullTag = "[object Null]";
+      var undefinedTag = "[object Undefined]";
+      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+      function baseGetTag(value) {
+        if (value == null) {
+          return value === void 0 ? undefinedTag : nullTag;
+        }
+        return symToStringTag && (symToStringTag in Object(value)) ? getRawTag(value) : objectToString(value);
+      }
+      module.exports = baseGetTag;
+    }
+  });
+  var require_isObjectLike = __commonJS({
+    "../../../node_modules/lodash/isObjectLike.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      function isObjectLike(value) {
+        return value != null && typeof value == "object";
+      }
+      module.exports = isObjectLike;
+    }
+  });
+  var require_isSymbol = __commonJS({
+    "../../../node_modules/lodash/isSymbol.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var baseGetTag = require_baseGetTag();
+      var isObjectLike = require_isObjectLike();
+      var symbolTag = "[object Symbol]";
+      function isSymbol(value) {
+        return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
+      }
+      module.exports = isSymbol;
+    }
+  });
+  var require_toNumber = __commonJS({
+    "../../../node_modules/lodash/toNumber.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var baseTrim = require_baseTrim();
+      var isObject = require_isObject();
+      var isSymbol = require_isSymbol();
+      var NAN = 0 / 0;
+      var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+      var reIsBinary = /^0b[01]+$/i;
+      var reIsOctal = /^0o[0-7]+$/i;
+      var freeParseInt = parseInt;
+      function toNumber(value) {
+        if (typeof value == "number") {
+          return value;
+        }
+        if (isSymbol(value)) {
+          return NAN;
+        }
+        if (isObject(value)) {
+          var other = typeof value.valueOf == "function" ? value.valueOf() : value;
+          value = isObject(other) ? other + "" : other;
+        }
+        if (typeof value != "string") {
+          return value === 0 ? value : +value;
+        }
+        value = baseTrim(value);
+        var isBinary = reIsBinary.test(value);
+        return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
+      }
+      module.exports = toNumber;
+    }
+  });
+  var require_clamp = __commonJS({
+    "../../../node_modules/lodash/clamp.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var baseClamp = require_baseClamp();
+      var toNumber = require_toNumber();
+      function clamp2(number, lower, upper) {
+        if (upper === void 0) {
+          upper = lower;
+          lower = void 0;
+        }
+        if (upper !== void 0) {
+          upper = toNumber(upper);
+          upper = upper === upper ? upper : 0;
+        }
+        if (lower !== void 0) {
+          lower = toNumber(lower);
+          lower = lower === lower ? lower : 0;
+        }
+        return baseClamp(toNumber(number), lower, upper);
+      }
+      module.exports = clamp2;
+    }
+  });
+  var index_exports = {};
+  __export(index_exports, {
     anaglyph: () => anaglyph,
     animate_anaglyph: () => animate_anaglyph,
     animate_rune: () => animate_rune,
@@ -92,6 +323,10 @@ export default require => {
     white: () => white,
     yellow: () => yellow
   });
+  init_define_process();
+  init_define_process();
+  init_define_process();
+  init_define_process();
   var EPSILON = 1e-6;
   var ARRAY_TYPE = typeof Float32Array !== "undefined" ? Float32Array : Array;
   var RANDOM = Math.random;
@@ -157,6 +392,7 @@ export default require => {
     translate: () => translate,
     transpose: () => transpose
   });
+  init_define_process();
   function create() {
     var out = new ARRAY_TYPE(16);
     if (ARRAY_TYPE != Float32Array) {
@@ -1404,6 +1640,7 @@ export default require => {
     transformQuat: () => transformQuat,
     zero: () => zero
   });
+  init_define_process();
   function create2() {
     var out = new ARRAY_TYPE(3);
     if (ARRAY_TYPE != Float32Array) {
@@ -1735,54 +1972,17 @@ export default require => {
       return a;
     };
   })();
-  var type_map = {};
-  var registerType = (name, declaration) => {
-    if (name == "prelude") {
-      type_map["prelude"] = type_map["prelude"] != void 0 ? type_map["prelude"] + "\n" + declaration : declaration;
-    } else {
-      type_map[name] = declaration;
-    }
-  };
-  var classDeclaration = name => {
-    return _target => {
-      registerType("prelude", `class ${name} {}`);
-    };
-  };
-  var functionDeclaration = (paramTypes, returnType) => {
-    return (_target, propertyKey, _descriptor) => {
-      let returnValue = "";
-      switch (returnType) {
-        case "number":
-          returnValue = "return 0";
-          break;
-        case "string":
-          returnValue = "return ''";
-          break;
-        case "boolean":
-          returnValue = "return false";
-          break;
-        case "void":
-          returnValue = "";
-          break;
-        default:
-          returnValue = `return ${returnType}`;
-          break;
-      }
-      registerType(propertyKey, `function ${propertyKey} (${paramTypes}) : ${returnType} { ${returnValue} }`);
-    };
-  };
-  var variableDeclaration = type => {
-    return (_target, propertyKey) => {
-      registerType(propertyKey, `const ${propertyKey}: ${type} = ${type}`);
-    };
-  };
+  var import_clamp = __toESM(require_clamp(), 1);
+  init_define_process();
+  init_define_process();
   var glAnimation = class {
     constructor(duration, fps) {
       this.duration = duration;
       this.fps = fps;
     }
   };
-  glAnimation.isAnimation = obj => obj.fps !== void 0;
+  glAnimation.isAnimation = obj => obj instanceof glAnimation;
+  init_define_process();
   function loadShader(gl, type, source) {
     const shader = gl.createShader(type);
     if (!shader) {
@@ -1853,6 +2053,83 @@ export default require => {
       texture
     };
   }
+  init_define_process();
+  init_define_process();
+  function createTypeMap() {
+    const type_map2 = {};
+    function registerType(name, declaration) {
+      if (name === "prelude") {
+        type_map2["prelude"] = type_map2["prelude"] != void 0 ? type_map2["prelude"] + "\n" + declaration : declaration;
+      } else {
+        type_map2[name] = declaration;
+      }
+    }
+    function classDeclaration2(name) {
+      return _target => {
+        registerType("prelude", `class ${name} {}`);
+      };
+    }
+    function typeDeclaration(type, declaration = null) {
+      return target => {
+        const typeAlias = `type ${target.name} = ${type}`;
+        let variableDeclaration3 = `const ${target.name} = ${declaration === null ? type : declaration}`;
+        switch (type) {
+          case "number":
+            variableDeclaration3 = `const ${target.name} = 0`;
+            break;
+          case "string":
+            variableDeclaration3 = `const ${target.name} = ''`;
+            break;
+          case "boolean":
+            variableDeclaration3 = `const ${target.name} = false`;
+            break;
+          case "void":
+            variableDeclaration3 = "";
+            break;
+        }
+        registerType("prelude", `${typeAlias};
+${variableDeclaration3};`);
+      };
+    }
+    function functionDeclaration2(paramTypes, returnType) {
+      return (_target, propertyKey, _descriptor) => {
+        let returnValue = "";
+        switch (returnType) {
+          case "number":
+            returnValue = "return 0";
+            break;
+          case "string":
+            returnValue = "return ''";
+            break;
+          case "boolean":
+            returnValue = "return false";
+            break;
+          case "void":
+            returnValue = "";
+            break;
+          default:
+            returnValue = `return ${returnType}`;
+            break;
+        }
+        registerType(propertyKey, `function ${propertyKey} (${paramTypes}) : ${returnType} { ${returnValue} }`);
+      };
+    }
+    function variableDeclaration2(type) {
+      return (_target, propertyKey) => {
+        registerType(propertyKey, `const ${propertyKey}: ${type} = ${type}`);
+      };
+    }
+    return {
+      classDeclaration: classDeclaration2,
+      functionDeclaration: functionDeclaration2,
+      variableDeclaration: variableDeclaration2,
+      typeDeclaration,
+      type_map: type_map2
+    };
+  }
+  var typeMapCreator = createTypeMap();
+  var {functionDeclaration, variableDeclaration, classDeclaration} = typeMapCreator;
+  var type_map = typeMapCreator.type_map;
   var normalVertexShader = `
 attribute vec4 aVertexPosition;
 uniform vec4 uVertexColor;
@@ -2082,20 +2359,24 @@ void main(void) {
       };
     }
   };
-  function hexToColor(hex) {
+  init_define_process();
+  init_define_process();
+  function hexToColor(hex, func_name) {
     const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
     const groups = regex.exec(hex);
-    if (groups == void 0) return [0, 0, 0];
+    if (groups == void 0) {
+      if (func_name === void 0) {
+        throw new Error(`Invalid color hex string: ${hex}`);
+      }
+      throw new Error(`${func_name}: Invalid color hex string: ${hex}`);
+    }
+    ;
     return [parseInt(groups[1], 16) / 255, parseInt(groups[2], 16) / 255, parseInt(groups[3], 16) / 255];
   }
-  function throwIfNotRune(name, ...runes) {
-    runes.forEach(rune => {
-      if (!(rune instanceof Rune)) {
-        throw Error(`${name} expects a rune as argument.`);
-      }
-    });
+  function throwIfNotRune(name, rune) {
+    if (!(rune instanceof Rune)) throw new Error(`${name} expects a rune as argument.`);
   }
-  var getSquare = () => {
+  function getSquare() {
     const vertexList = [];
     const colorList = [];
     vertexList.push(-1, 1, 0, 1);
@@ -2109,9 +2390,11 @@ void main(void) {
       vertices: new Float32Array(vertexList),
       colors: new Float32Array(colorList)
     });
-  };
-  var getBlank = () => Rune.of();
-  var getRcross = () => {
+  }
+  function getBlank() {
+    return Rune.of();
+  }
+  function getRcross() {
     const vertexList = [];
     const colorList = [];
     vertexList.push(-0.5, 0.5, 0, 1);
@@ -2134,8 +2417,8 @@ void main(void) {
       vertices: new Float32Array(vertexList),
       colors: new Float32Array(colorList)
     });
-  };
-  var getSail = () => {
+  }
+  function getSail() {
     const vertexList = [];
     const colorList = [];
     vertexList.push(0.5, -1, 0, 1);
@@ -2146,8 +2429,8 @@ void main(void) {
       vertices: new Float32Array(vertexList),
       colors: new Float32Array(colorList)
     });
-  };
-  var getTriangle = () => {
+  }
+  function getTriangle() {
     const vertexList = [];
     const colorList = [];
     vertexList.push(1, -1, 0, 1);
@@ -2158,8 +2441,8 @@ void main(void) {
       vertices: new Float32Array(vertexList),
       colors: new Float32Array(colorList)
     });
-  };
-  var getCorner = () => {
+  }
+  function getCorner() {
     const vertexList = [];
     const colorList = [];
     vertexList.push(1, 0, 0, 1);
@@ -2170,8 +2453,8 @@ void main(void) {
       vertices: new Float32Array(vertexList),
       colors: new Float32Array(colorList)
     });
-  };
-  var getNova = () => {
+  }
+  function getNova() {
     const vertexList = [];
     const colorList = [];
     vertexList.push(0, 1, 0, 1);
@@ -2185,8 +2468,8 @@ void main(void) {
       vertices: new Float32Array(vertexList),
       colors: new Float32Array(colorList)
     });
-  };
-  var getCircle = () => {
+  }
+  function getCircle() {
     const vertexList = [];
     const colorList = [];
     const circleDiv = 60;
@@ -2202,8 +2485,8 @@ void main(void) {
       vertices: new Float32Array(vertexList),
       colors: new Float32Array(colorList)
     });
-  };
-  var getHeart = () => {
+  }
+  function getHeart() {
     const vertexList = [];
     const colorList = [];
     const root2 = Math.sqrt(2);
@@ -2233,8 +2516,8 @@ void main(void) {
       vertices: new Float32Array(vertexList),
       colors: new Float32Array(colorList)
     });
-  };
-  var getPentagram = () => {
+  }
+  function getPentagram() {
     const vertexList = [];
     const colorList = [];
     const v1 = Math.sin(Math.PI / 10);
@@ -2257,8 +2540,8 @@ void main(void) {
       vertices: new Float32Array(vertexList),
       colors: new Float32Array(colorList)
     });
-  };
-  var getRibbon = () => {
+  }
+  function getRibbon() {
     const vertexList = [];
     const colorList = [];
     const thetaMax = 30;
@@ -2279,8 +2562,7 @@ void main(void) {
       vertices: new Float32Array(vertexList),
       colors: new Float32Array(colorList)
     });
-  };
-  var colorPalette = ["#F44336", "#E91E63", "#AA00FF", "#3F51B5", "#2196F3", "#4CAF50", "#FFEB3B", "#FF9800", "#795548"];
+  }
   function hexToColor2(hex) {
     const result = hexToColor(hex);
     return [...result, 1];
@@ -2291,6 +2573,15 @@ void main(void) {
       subRunes: [rune],
       colors: new Float32Array(hexToColor2(hex))
     });
+  }
+  function throwIfNotFraction(val, param_name, func_name) {
+    if (typeof val !== "number") throw new Error(`${func_name}: ${param_name} must be a number!`);
+    if (val < 0) {
+      throw new Error(`${func_name}: ${param_name} cannot be less than 0!`);
+    }
+    if (val > 1) {
+      throw new Error(`${func_name}: ${param_name} cannot be greater than 1!`);
+    }
   }
   var _RuneFunctions = class _RuneFunctions {
     static from_url(imageUrl) {
@@ -2342,9 +2633,7 @@ void main(void) {
     static stack_frac(frac, rune1, rune2) {
       throwIfNotRune(_RuneFunctions.stack_frac.name, rune1);
       throwIfNotRune(_RuneFunctions.stack_frac.name, rune2);
-      if (!(frac >= 0 && frac <= 1)) {
-        throw Error("stack_frac can only take fraction in [0,1].");
-      }
+      throwIfNotFraction(frac, "frac", _RuneFunctions.stack_frac.name);
       const upper = _RuneFunctions.translate(0, -(1 - frac), _RuneFunctions.scale_independent(1, frac, rune1));
       const lower = _RuneFunctions.translate(0, frac, _RuneFunctions.scale_independent(1, 1 - frac, rune2));
       return Rune.of({
@@ -2352,12 +2641,16 @@ void main(void) {
       });
     }
     static stack(rune1, rune2) {
-      throwIfNotRune(_RuneFunctions.stack.name, rune1, rune2);
+      throwIfNotRune(_RuneFunctions.stack.name, rune1);
+      throwIfNotRune(_RuneFunctions.stack.name, rune2);
       return _RuneFunctions.stack_frac(1 / 2, rune1, rune2);
     }
     static stackn(n, rune) {
       throwIfNotRune(_RuneFunctions.stackn.name, rune);
-      if (n === 1) {
+      if (!Number.isInteger(n)) {
+        throw new Error(`${_RuneFunctions.stackn.name} expects an integer!`);
+      }
+      if (n <= 1) {
         return rune;
       }
       return _RuneFunctions.stack_frac(1 / n, rune, _RuneFunctions.stackn(n - 1, rune));
@@ -2375,10 +2668,9 @@ void main(void) {
       return _RuneFunctions.rotate(Math.PI, rune);
     }
     static beside_frac(frac, rune1, rune2) {
-      throwIfNotRune(_RuneFunctions.beside_frac.name, rune1, rune2);
-      if (!(frac >= 0 && frac <= 1)) {
-        throw Error("beside_frac can only take fraction in [0,1].");
-      }
+      throwIfNotRune(_RuneFunctions.beside_frac.name, rune1);
+      throwIfNotRune(_RuneFunctions.beside_frac.name, rune2);
+      throwIfNotFraction(frac, "frac", _RuneFunctions.beside_frac.name);
       const left = _RuneFunctions.translate(-(1 - frac), 0, _RuneFunctions.scale_independent(frac, 1, rune1));
       const right = _RuneFunctions.translate(frac, 0, _RuneFunctions.scale_independent(1 - frac, 1, rune2));
       return Rune.of({
@@ -2386,8 +2678,9 @@ void main(void) {
       });
     }
     static beside(rune1, rune2) {
-      throwIfNotRune(_RuneFunctions.beside.name, rune1, rune2);
-      return _RuneFunctions.beside_frac(1 / 2, rune1, rune2);
+      throwIfNotRune(_RuneFunctions.beside.name, rune1);
+      throwIfNotRune(_RuneFunctions.beside.name, rune2);
+      return _RuneFunctions.beside_frac(0.5, rune1, rune2);
     }
     static flip_vert(rune) {
       throwIfNotRune(_RuneFunctions.flip_vert.name, rune);
@@ -2402,7 +2695,7 @@ void main(void) {
       return _RuneFunctions.stack(_RuneFunctions.beside(_RuneFunctions.quarter_turn_right(rune), _RuneFunctions.rotate(Math.PI, rune)), _RuneFunctions.beside(rune, _RuneFunctions.rotate(Math.PI / 2, rune)));
     }
     static repeat_pattern(n, pattern, initial) {
-      if (n === 0) {
+      if (n <= 0) {
         return initial;
       }
       return pattern(_RuneFunctions.repeat_pattern(n - 1, pattern, initial));
@@ -2410,18 +2703,10 @@ void main(void) {
     static overlay_frac(frac, rune1, rune2) {
       throwIfNotRune(_RuneFunctions.overlay_frac.name, rune1);
       throwIfNotRune(_RuneFunctions.overlay_frac.name, rune2);
-      if (!(frac >= 0 && frac <= 1)) {
-        throw Error("overlay_frac can only take fraction in [0,1].");
-      }
-      let useFrac = frac;
+      throwIfNotFraction(frac, "frac", _RuneFunctions.overlay_frac.name);
       const minFrac = 1e-6;
       const maxFrac = 1 - minFrac;
-      if (useFrac < minFrac) {
-        useFrac = minFrac;
-      }
-      if (useFrac > maxFrac) {
-        useFrac = maxFrac;
-      }
+      const useFrac = (0, import_clamp.default)(frac, minFrac, maxFrac);
       const frontMat = mat4_exports.create();
       mat4_exports.scale(frontMat, frontMat, vec3_exports.fromValues(1, 1, useFrac));
       const front = Rune.of({
@@ -2446,63 +2731,14 @@ void main(void) {
     }
     static color(rune, r, g, b) {
       throwIfNotRune(_RuneFunctions.color.name, rune);
+      throwIfNotFraction(r, "r", _RuneFunctions.color.name);
+      throwIfNotFraction(g, "g", _RuneFunctions.color.name);
+      throwIfNotFraction(b, "b", _RuneFunctions.color.name);
       const colorVector = [r, g, b, 1];
       return Rune.of({
         colors: new Float32Array(colorVector),
         subRunes: [rune]
       });
-    }
-    static random_color(rune) {
-      throwIfNotRune(_RuneFunctions.random_color.name, rune);
-      const randomColor = hexToColor2(colorPalette[Math.floor(Math.random() * colorPalette.length)]);
-      return Rune.of({
-        colors: new Float32Array(randomColor),
-        subRunes: [rune]
-      });
-    }
-    static red(rune) {
-      throwIfNotRune(_RuneFunctions.red.name, rune);
-      return addColorFromHex(rune, "#F44336");
-    }
-    static pink(rune) {
-      throwIfNotRune(_RuneFunctions.pink.name, rune);
-      return addColorFromHex(rune, "#E91E63");
-    }
-    static purple(rune) {
-      throwIfNotRune(_RuneFunctions.purple.name, rune);
-      return addColorFromHex(rune, "#AA00FF");
-    }
-    static indigo(rune) {
-      throwIfNotRune(_RuneFunctions.indigo.name, rune);
-      return addColorFromHex(rune, "#3F51B5");
-    }
-    static blue(rune) {
-      throwIfNotRune(_RuneFunctions.blue.name, rune);
-      return addColorFromHex(rune, "#2196F3");
-    }
-    static green(rune) {
-      throwIfNotRune(_RuneFunctions.green.name, rune);
-      return addColorFromHex(rune, "#4CAF50");
-    }
-    static yellow(rune) {
-      throwIfNotRune(_RuneFunctions.yellow.name, rune);
-      return addColorFromHex(rune, "#FFEB3B");
-    }
-    static orange(rune) {
-      throwIfNotRune(_RuneFunctions.orange.name, rune);
-      return addColorFromHex(rune, "#FF9800");
-    }
-    static brown(rune) {
-      throwIfNotRune(_RuneFunctions.brown.name, rune);
-      return addColorFromHex(rune, "#795548");
-    }
-    static black(rune) {
-      throwIfNotRune(_RuneFunctions.black.name, rune);
-      return addColorFromHex(rune, "#000000");
-    }
-    static white(rune) {
-      throwIfNotRune(_RuneFunctions.white.name, rune);
-      return addColorFromHex(rune, "#FFFFFF");
     }
   };
   _RuneFunctions.square = getSquare();
@@ -2547,19 +2783,87 @@ void main(void) {
   __decorateClass([functionDeclaration("frac: number, rune1: Rune, rune2: Rune", "Rune")], _RuneFunctions, "overlay_frac", 1);
   __decorateClass([functionDeclaration("rune1: Rune, rune2: Rune", "Rune")], _RuneFunctions, "overlay", 1);
   __decorateClass([functionDeclaration("rune: Rune, r: number, g: number, b: number", "Rune")], _RuneFunctions, "color", 1);
-  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "random_color", 1);
-  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "red", 1);
-  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "pink", 1);
-  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "purple", 1);
-  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "indigo", 1);
-  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "blue", 1);
-  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "green", 1);
-  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "yellow", 1);
-  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "orange", 1);
-  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "brown", 1);
-  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "black", 1);
-  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneFunctions, "white", 1);
   var RuneFunctions = _RuneFunctions;
+  var _RuneColours = class _RuneColours {
+    static black(rune) {
+      throwIfNotRune(_RuneColours.black.name, rune);
+      return addColorFromHex(rune, "#000000");
+    }
+    static blue(rune) {
+      throwIfNotRune(_RuneColours.blue.name, rune);
+      return addColorFromHex(rune, _RuneColours.colours.blue);
+    }
+    static brown(rune) {
+      throwIfNotRune(_RuneColours.brown.name, rune);
+      return addColorFromHex(rune, _RuneColours.colours.brown);
+    }
+    static green(rune) {
+      throwIfNotRune(_RuneColours.green.name, rune);
+      return addColorFromHex(rune, _RuneColours.colours.green);
+    }
+    static indigo(rune) {
+      throwIfNotRune(_RuneColours.indigo.name, rune);
+      return addColorFromHex(rune, _RuneColours.colours.indigo);
+    }
+    static red(rune) {
+      throwIfNotRune(_RuneColours.red.name, rune);
+      return addColorFromHex(rune, _RuneColours.colours.red);
+    }
+    static pink(rune) {
+      throwIfNotRune(_RuneColours.pink.name, rune);
+      return addColorFromHex(rune, _RuneColours.colours.pink);
+    }
+    static orange(rune) {
+      throwIfNotRune(_RuneColours.orange.name, rune);
+      return addColorFromHex(rune, _RuneColours.colours.orange);
+    }
+    static purple(rune) {
+      throwIfNotRune(_RuneColours.purple.name, rune);
+      return addColorFromHex(rune, _RuneColours.colours.purple);
+    }
+    static white(rune) {
+      throwIfNotRune(_RuneColours.white.name, rune);
+      return addColorFromHex(rune, "#FFFFFF");
+    }
+    static yellow(rune) {
+      throwIfNotRune(_RuneColours.yellow.name, rune);
+      return addColorFromHex(rune, _RuneColours.colours.yellow);
+    }
+    static random_color(rune) {
+      throwIfNotRune(_RuneColours.random_color.name, rune);
+      const colourNames = Object.keys(_RuneColours.colours);
+      const colourName = colourNames[Math.floor(Math.random() * colourNames.length)];
+      const randomColor = hexToColor2(_RuneColours.colours[colourName]);
+      return Rune.of({
+        colors: new Float32Array(randomColor),
+        subRunes: [rune]
+      });
+    }
+  };
+  _RuneColours.colours = {
+    blue: "#2196F3",
+    brown: "#795548",
+    green: "#4CAF50",
+    indigo: "#3F51B5",
+    orange: "#FF9800",
+    pink: "#E91E63",
+    purple: "#AA00FF",
+    red: "#F44336",
+    yellow: "#FFEB3B"
+  };
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "black", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "blue", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "brown", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "green", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "indigo", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "red", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "pink", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "orange", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "purple", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "white", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "yellow", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "random_color", 1);
+  var RuneColours = _RuneColours;
   var _AnaglyphRune = class _AnaglyphRune extends DrawnRune {
     constructor(rune) {
       super(rune, false);
@@ -2692,7 +2996,50 @@ void main(void) {
     }
     `;
   var HollusionRune = _HollusionRune;
-  var {beside, beside_frac, black, blank, blue, brown, circle, color, corner, flip_horiz, flip_vert, from_url, green, heart, indigo, make_cross, nova, orange, overlay, overlay_frac, pentagram, pink, purple, quarter_turn_left, quarter_turn_right, random_color, rcross, red, repeat_pattern, ribbon, rotate: rotate2, sail, scale: scale3, scale_independent, square, stack, stack_frac, stackn, translate: translate2, triangle, turn_upside_down, white, yellow} = RuneFunctions;
+  var beside = RuneFunctions.beside;
+  var beside_frac = RuneFunctions.beside_frac;
+  var black = RuneColours.black;
+  var blank = RuneFunctions.blank;
+  var blue = RuneColours.blue;
+  var brown = RuneColours.brown;
+  var circle = RuneFunctions.circle;
+  var color = RuneFunctions.color;
+  var corner = RuneFunctions.corner;
+  var flip_horiz = RuneFunctions.flip_horiz;
+  var flip_vert = RuneFunctions.flip_vert;
+  var from_url = RuneFunctions.from_url;
+  var green = RuneColours.green;
+  var heart = RuneFunctions.heart;
+  var indigo = RuneColours.indigo;
+  var make_cross = RuneFunctions.make_cross;
+  var nova = RuneFunctions.nova;
+  var orange = RuneColours.orange;
+  var overlay = RuneFunctions.overlay;
+  var overlay_frac = RuneFunctions.overlay_frac;
+  var pentagram = RuneFunctions.pentagram;
+  var pink = RuneColours.pink;
+  var purple = RuneColours.purple;
+  var quarter_turn_left = RuneFunctions.quarter_turn_left;
+  var quarter_turn_right = RuneFunctions.quarter_turn_right;
+  var random_color = RuneColours.random_color;
+  var rcross = RuneFunctions.rcross;
+  var red = RuneColours.red;
+  var repeat_pattern = RuneFunctions.repeat_pattern;
+  var ribbon = RuneFunctions.ribbon;
+  var rotate2 = RuneFunctions.rotate;
+  var sail = RuneFunctions.sail;
+  var scale3 = RuneFunctions.scale;
+  var scale_independent = RuneFunctions.scale_independent;
+  var stack = RuneFunctions.stack;
+  var stack_frac = RuneFunctions.stack_frac;
+  var stackn = RuneFunctions.stackn;
+  var square = RuneFunctions.square;
+  var translate2 = RuneFunctions.translate;
+  var triangle = RuneFunctions.triangle;
+  var turn_upside_down = RuneFunctions.turn_upside_down;
+  var yellow = RuneColours.yellow;
+  var white = RuneColours.white;
+  init_define_process();
   var import_context = __toESM(__require("js-slang/context"), 1);
   var drawnRunes = [];
   import_context.default.moduleContexts.rune.state = {
@@ -2744,6 +3091,11 @@ void main(void) {
   __decorateClass([functionDeclaration("duration: number, fps: number, func: RuneAnimation", "AnimatedRune")], _RuneDisplay, "animate_rune", 1);
   __decorateClass([functionDeclaration("duration: number, fps: number, func: RuneAnimation", "AnimatedRune")], _RuneDisplay, "animate_anaglyph", 1);
   var RuneDisplay = _RuneDisplay;
-  var {show, anaglyph, hollusion, hollusion_magnitude, animate_rune, animate_anaglyph} = RuneDisplay;
-  return __toCommonJS(rune_exports);
+  var show = RuneDisplay.show;
+  var anaglyph = RuneDisplay.anaglyph;
+  var hollusion = RuneDisplay.hollusion;
+  var hollusion_magnitude = RuneDisplay.hollusion_magnitude;
+  var animate_rune = RuneDisplay.animate_rune;
+  var animate_anaglyph = RuneDisplay.animate_anaglyph;
+  return __toCommonJS(index_exports);
 };

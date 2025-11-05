@@ -90,7 +90,7 @@ export default require => {
     }
   });
   var require_mqtt = __commonJS({
-    "node_modules/mqtt/dist/mqtt.js"(exports, module) {
+    "../../../node_modules/mqtt/dist/mqtt.js"(exports, module) {
       "use strict";
       init_define_process();
       (function (f) {
@@ -102,8 +102,8 @@ export default require => {
           var g;
           if (typeof window !== "undefined") {
             g = window;
-          } else if (typeof global !== "undefined") {
-            g = global;
+          } else if (typeof globalThis !== "undefined") {
+            g = globalThis;
           } else if (typeof self !== "undefined") {
             g = self;
           } else {
@@ -1580,7 +1580,7 @@ export default require => {
                 };
                 module3.exports = MqttClient;
               }).call(this);
-            }).call(this, require2("_process"), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
+            }).call(this, require2("_process"), typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
           }, {
             "./default-message-id-provider": 7,
             "./store": 8,
@@ -11080,7 +11080,7 @@ export default require => {
                   }
                 })(this);
               }).call(this);
-            }).call(this, typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
+            }).call(this, typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
           }, {}],
           52: [function (require2, module3, exports3) {
             "use strict";
@@ -12096,7 +12096,7 @@ export default require => {
                   return -1;
                 }
               }).call(this);
-            }).call(this, require2("_process"), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
+            }).call(this, require2("_process"), typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
           }, {
             "../errors": 55,
             "./_stream_duplex": 56,
@@ -12653,7 +12653,7 @@ export default require => {
                   cb(err);
                 };
               }).call(this);
-            }).call(this, require2("_process"), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
+            }).call(this, require2("_process"), typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
           }, {
             "../errors": 55,
             "./_stream_duplex": 56,
@@ -14418,7 +14418,7 @@ export default require => {
                   return String(val).toLowerCase() === "true";
                 }
               }).call(this);
-            }).call(this, typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
+            }).call(this, typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
           }, {}],
           79: [function (require2, module3, exports3) {
             module3.exports = wrappy;
@@ -14848,14 +14848,14 @@ export default require => {
     }
   });
   var require_os = __commonJS({
-    "node_modules/os/index.js"(exports, module) {
+    "../../../node_modules/os/index.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = require_os();
     }
   });
   var require_uniqid = __commonJS({
-    "node_modules/uniqid/index.js"(exports, module) {
+    "../../../node_modules/uniqid/index.js"(exports, module) {
       "use strict";
       init_define_process();
       var pid = typeof define_process_default !== "undefined" && define_process_default.pid ? define_process_default.pid.toString(36) : "";
@@ -14897,8 +14897,8 @@ export default require => {
       }
     }
   });
-  var communication_exports = {};
-  __export(communication_exports, {
+  var index_exports = {};
+  __export(index_exports, {
     STATE_CONNECTED: () => STATE_CONNECTED,
     STATE_DISCONNECTED: () => STATE_DISCONNECTED,
     STATE_OFFLINE: () => STATE_OFFLINE,
@@ -15267,5 +15267,5 @@ export default require => {
     }
     throw new Error("Error: Communication module not initialized.");
   }
-  return __toCommonJS(communication_exports);
+  return __toCommonJS(index_exports);
 };

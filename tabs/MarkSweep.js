@@ -33,11 +33,14 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var MarkSweep_exports = {};
-  __export(MarkSweep_exports, {
-    default: () => MarkSweep_default
+  var index_exports = {};
+  __export(index_exports, {
+    default: () => index_default
   });
   var import_core = __require("@blueprintjs/core");
+  function defineTab(tab) {
+    return tab;
+  }
   var import_react = __toESM(__require("react"), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
   var MARK_SLOT = 1;
@@ -447,13 +450,13 @@ export default require => {
       });
     }
   };
-  var MarkSweep_default = {
+  var index_default = defineTab({
     toSpawn: () => true,
     body: debuggerContext => (0, import_jsx_runtime.jsx)(MarkSweep, {
       debuggerContext
     }),
     label: "Mark Sweep Garbage Collector",
     iconName: "heat-grid"
-  };
-  return __toCommonJS(MarkSweep_exports);
+  });
+  return __toCommonJS(index_exports);
 };

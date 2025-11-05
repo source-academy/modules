@@ -124,7 +124,7 @@ export default require => {
     "<define:process>"() {}
   });
   var require_lodash = __commonJS({
-    "node_modules/lodash/lodash.js"(exports, module) {
+    "../../../node_modules/lodash/lodash.js"(exports, module) {
       "use strict";
       init_define_process();
       (function () {
@@ -399,7 +399,7 @@ export default require => {
           "\u2029": "u2029"
         };
         var freeParseFloat = parseFloat, freeParseInt = parseInt;
-        var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
+        var freeGlobal = typeof globalThis == "object" && globalThis && globalThis.Object === Object && globalThis;
         var freeSelf = typeof self == "object" && self && self.Object === Object && self;
         var root = freeGlobal || freeSelf || Function("return this")();
         var freeExports = typeof exports == "object" && exports && !exports.nodeType && exports;
@@ -5469,8 +5469,8 @@ export default require => {
       }).call(exports);
     }
   });
-  var robot_simulation_exports = {};
-  __export(robot_simulation_exports, {
+  var index_exports = {};
+  __export(index_exports, {
     addControllerToWorld: () => addControllerToWorld,
     createCSE: () => createCSE,
     createCuboid: () => createCuboid,
@@ -5743,7 +5743,6 @@ export default require => {
     start() {
       const options = {
         originalMaxExecTime: Infinity,
-        scheduler: "preemptive",
         stepLimit: Infinity,
         throwInfiniteLoops: false,
         useSubst: false
@@ -5772,11 +5771,11 @@ export default require => {
     }
   };
   init_define_process();
-  var import_context2 = __toESM(__require("js-slang/context"), 1);
   init_define_process();
   function interrupt() {
     throw "source_academy_interrupt";
   }
+  var import_context2 = __toESM(__require("js-slang/context"), 1);
   init_define_process();
   var sceneConfig = {
     width: 900,
@@ -35840,7 +35839,6 @@ void main() {
     if (isRigidBodyType(bodyType) === false) {
       throw new Error("Invalid body type");
     }
-    const narrowedBodyType = bodyType;
     const config = {
       position: {
         x: position_x,
@@ -35854,7 +35852,7 @@ void main() {
       },
       mass,
       color,
-      type: narrowedBodyType
+      type: bodyType
     };
     const cuboid = new Cuboid(physics, renderer, config);
     return cuboid;
@@ -35959,5 +35957,5 @@ void main() {
   function ev3_ultrasonicSensorDistance(ultraSonicSensor) {
     return ultraSonicSensor.sense();
   }
-  return __toCommonJS(robot_simulation_exports);
+  return __toCommonJS(index_exports);
 };

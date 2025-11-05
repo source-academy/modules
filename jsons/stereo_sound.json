@@ -1,36 +1,16 @@
 {
-  "adsr": {
+  "make_stereo_sound": {
     "kind": "function",
-    "name": "adsr",
-    "description": "<p>Returns an envelope: a function from Sound to Sound.\nWhen the adsr envelope is applied to a Sound, it returns\na new Sound with its amplitude modified according to parameters\nThe relative amplitude increases from 0 to 1 linearly over the\nattack proportion, then decreases from 1 to sustain level over the\ndecay proportion, and remains at that level until the release\nproportion when it decays back to 0.</p>",
+    "name": "make_stereo_sound",
+    "description": "<p>Makes a Stereo Sound with given wave function and duration.\nThe wave function is a function: number -&gt; number\nthat takes in a non-negative input time and returns an amplitude\nbetween -1 and 1.</p>",
     "params": [
       [
-        "attack_ratio",
-        "number"
+        "left_wave",
+        "Wave"
       ],
       [
-        "decay_ratio",
-        "number"
-      ],
-      [
-        "sustain_level",
-        "number"
-      ],
-      [
-        "release_ratio",
-        "number"
-      ]
-    ],
-    "retType": "SoundTransformer"
-  },
-  "bell": {
-    "kind": "function",
-    "name": "bell",
-    "description": "<p>returns a Sound reminiscent of a bell, playing\na given note for a given duration</p>",
-    "params": [
-      [
-        "note",
-        "number"
+        "right_wave",
+        "Wave"
       ],
       [
         "duration",
@@ -39,14 +19,14 @@
     ],
     "retType": "Sound"
   },
-  "cello": {
+  "make_sound": {
     "kind": "function",
-    "name": "cello",
-    "description": "<p>returns a Sound reminiscent of a cello, playing\na given note for a given duration</p>",
+    "name": "make_sound",
+    "description": "<p>Makes a Sound with given wave function and duration.\nThe wave function is a function: number -&gt; number\nthat takes in a non-negative input time and returns an amplitude\nbetween -1 and 1.</p>",
     "params": [
       [
-        "note",
-        "number"
+        "wave",
+        "Wave"
       ],
       [
         "duration",
@@ -54,30 +34,6 @@
       ]
     ],
     "retType": "Sound"
-  },
-  "consecutively": {
-    "kind": "function",
-    "name": "consecutively",
-    "description": "<p>Makes a new Sound by combining the sounds in a given list\nwhere the second sound is appended to the end of the first sound,\nthe third sound is appended to the end of the second sound, and\nso on. The effect is that the sounds in the list are joined end-to-end</p>",
-    "params": [
-      [
-        "list_of_sounds",
-        "List"
-      ]
-    ],
-    "retType": "Sound"
-  },
-  "get_duration": {
-    "kind": "function",
-    "name": "get_duration",
-    "description": "<p>Accesses the duration of a given Sound.</p>",
-    "params": [
-      [
-        "sound",
-        "Sound"
-      ]
-    ],
-    "retType": "number"
   },
   "get_left_wave": {
     "kind": "function",
@@ -103,12 +59,17 @@
     ],
     "retType": "Wave"
   },
-  "init_record": {
+  "get_duration": {
     "kind": "function",
-    "name": "init_record",
-    "description": "<p>Initialize recording by obtaining permission\nto use the default device microphone</p>",
-    "params": [],
-    "retType": "string"
+    "name": "get_duration",
+    "description": "<p>Accesses the duration of a given Sound.</p>",
+    "params": [
+      [
+        "sound",
+        "Sound"
+      ]
+    ],
+    "retType": "number"
   },
   "is_sound": {
     "kind": "function",
@@ -117,91 +78,19 @@
     "params": [
       [
         "x",
-        "any"
+        "unknown"
       ]
     ],
-    "retType": "boolean"
+    "retType": "x is Sound"
   },
-  "letter_name_to_frequency": {
+  "squash": {
     "kind": "function",
-    "name": "letter_name_to_frequency",
-    "description": "<p>Converts a letter name to its corresponding frequency.</p>",
+    "name": "squash",
+    "description": "<p>Centers a Sound by averaging its left and right channels,\nresulting in an effectively mono sound.</p>",
     "params": [
       [
-        "note",
-        "string"
-      ]
-    ],
-    "retType": "number"
-  },
-  "letter_name_to_midi_note": {
-    "kind": "function",
-    "name": "letter_name_to_midi_note",
-    "description": "<p>Converts a letter name to its corresponding MIDI note.\nThe letter name is represented in standard pitch notation.\nExamples are \"A5\", \"Db3\", \"C#7\".\nRefer to &lt;a href=\"https://i.imgur.com/qGQgmYr.png\"&gt;this mapping from\nletter name to midi notes.</p>",
-    "params": [
-      [
-        "note",
-        "string"
-      ]
-    ],
-    "retType": "number"
-  },
-  "make_sound": {
-    "kind": "function",
-    "name": "make_sound",
-    "description": "<p>Makes a Sound with given wave function and duration.\nThe wave function is a function: number -&gt; number\nthat takes in a non-negative input time and returns an amplitude\nbetween -1 and 1.</p>",
-    "params": [
-      [
-        "wave",
-        "Wave"
-      ],
-      [
-        "duration",
-        "number"
-      ]
-    ],
-    "retType": "Sound"
-  },
-  "make_stereo_sound": {
-    "kind": "function",
-    "name": "make_stereo_sound",
-    "description": "<p>Makes a Stereo Sound with given wave function and duration.\nThe wave function is a function: number -&gt; number\nthat takes in a non-negative input time and returns an amplitude\nbetween -1 and 1.</p>",
-    "params": [
-      [
-        "left_wave",
-        "Wave"
-      ],
-      [
-        "right_wave",
-        "Wave"
-      ],
-      [
-        "duration",
-        "number"
-      ]
-    ],
-    "retType": "Sound"
-  },
-  "midi_note_to_frequency": {
-    "kind": "function",
-    "name": "midi_note_to_frequency",
-    "description": "<p>Converts a MIDI note to its corresponding frequency.</p>",
-    "params": [
-      [
-        "note",
-        "number"
-      ]
-    ],
-    "retType": "number"
-  },
-  "noise_sound": {
-    "kind": "function",
-    "name": "noise_sound",
-    "description": "<p>Makes a noise sound with given duration</p>",
-    "params": [
-      [
-        "duration",
-        "number"
+        "sound",
+        "Sound"
       ]
     ],
     "retType": "Sound"
@@ -229,54 +118,6 @@
       ]
     ],
     "retType": "SoundTransformer"
-  },
-  "phase_mod": {
-    "kind": "function",
-    "name": "phase_mod",
-    "description": "<p>Returns a SoundTransformer which uses its argument\nto modulate the phase of a (carrier) sine wave\nof given frequency and duration with a given Sound.\nModulating with a low frequency Sound results in a vibrato effect.\nModulating with a Sound with frequencies comparable to\nthe sine wave frequency results in more complex wave forms.</p>",
-    "params": [
-      [
-        "freq",
-        "number"
-      ],
-      [
-        "duration",
-        "number"
-      ],
-      [
-        "amount",
-        "number"
-      ]
-    ],
-    "retType": "SoundTransformer"
-  },
-  "piano": {
-    "kind": "function",
-    "name": "piano",
-    "description": "<p>returns a Sound reminiscent of a piano, playing\na given note for a given duration</p>",
-    "params": [
-      [
-        "note",
-        "number"
-      ],
-      [
-        "duration",
-        "number"
-      ]
-    ],
-    "retType": "Sound"
-  },
-  "play": {
-    "kind": "function",
-    "name": "play",
-    "description": "<p>Plays the given Sound using the computer’s sound device\non top of any Sounds that are currently playing.</p>",
-    "params": [
-      [
-        "sound",
-        "Sound"
-      ]
-    ],
-    "retType": "Sound"
   },
   "play_in_tab": {
     "kind": "function",
@@ -312,11 +153,11 @@
     "description": "<p>Plays the given two Waves using the computer’s sound device, for the duration\ngiven in seconds. The first Wave is for the left channel, the second for the\nright channel.</p>",
     "params": [
       [
-        "wave1",
+        "left_wave",
         "Wave"
       ],
       [
-        "wave2",
+        "right_wave",
         "Wave"
       ],
       [
@@ -325,6 +166,32 @@
       ]
     ],
     "retType": "Sound"
+  },
+  "play": {
+    "kind": "function",
+    "name": "play",
+    "description": "<p>Plays the given Sound using the computer’s sound device\non top of any Sounds that are currently playing.</p>",
+    "params": [
+      [
+        "sound",
+        "Sound"
+      ]
+    ],
+    "retType": "Sound"
+  },
+  "stop": {
+    "kind": "function",
+    "name": "stop",
+    "description": "<p>Stops all currently playing sounds.</p>",
+    "params": [],
+    "retType": "void"
+  },
+  "init_record": {
+    "kind": "function",
+    "name": "init_record",
+    "description": "<p>Initialize recording by obtaining permission\nto use the default device microphone</p>",
+    "params": [],
+    "retType": "string"
   },
   "record": {
     "kind": "function",
@@ -336,7 +203,7 @@
         "number"
       ]
     ],
-    "retType": "Function"
+    "retType": "() => () => Sound"
   },
   "record_for": {
     "kind": "function",
@@ -352,17 +219,105 @@
         "number"
       ]
     ],
-    "retType": "Function"
+    "retType": "() => Sound"
   },
-  "sawtooth_sound": {
+  "consecutively": {
     "kind": "function",
-    "name": "sawtooth_sound",
-    "description": "<p>Makes a sawtooth wave sound with given frequency and duration</p>",
+    "name": "consecutively",
+    "description": "<p>Makes a new Sound by combining the sounds in a given list\nwhere the second sound is appended to the end of the first sound,\nthe third sound is appended to the end of the second sound, and\nso on. The effect is that the sounds in the list are joined end-to-end</p>",
+    "params": [
+      [
+        "list_of_sounds",
+        "List"
+      ]
+    ],
+    "retType": "Sound"
+  },
+  "simultaneously": {
+    "kind": "function",
+    "name": "simultaneously",
+    "description": "<p>Makes a new Sound by combining the sounds in a given list.\nIn the result sound, the component sounds overlap such that\nthey start at the beginning of the result sound. To achieve\nthis, the amplitudes of the component sounds are added together\nand then divided by the length of the list.</p>",
+    "params": [
+      [
+        "list_of_sounds",
+        "List"
+      ]
+    ],
+    "retType": "Sound"
+  },
+  "phase_mod": {
+    "kind": "function",
+    "name": "phase_mod",
+    "description": "<p>Returns a SoundTransformer which uses its argument\nto modulate the phase of a (carrier) sine wave\nof given frequency and duration with a given Sound.\nModulating with a low frequency Sound results in a vibrato effect.\nModulating with a Sound with frequencies comparable to\nthe sine wave frequency results in more complex wave forms.</p>",
     "params": [
       [
         "freq",
         "number"
       ],
+      [
+        "duration",
+        "number"
+      ],
+      [
+        "amount",
+        "number"
+      ]
+    ],
+    "retType": "SoundTransformer"
+  },
+  "adsr": {
+    "kind": "function",
+    "name": "adsr",
+    "description": "<p>Returns an envelope: a function from Sound to Sound.\nWhen the adsr envelope is applied to a Sound, it returns\na new Sound with its amplitude modified according to parameters\nThe relative amplitude increases from 0 to 1 linearly over the\nattack proportion, then decreases from 1 to sustain level over the\ndecay proportion, and remains at that level until the release\nproportion when it decays back to 0.</p>",
+    "params": [
+      [
+        "attack_ratio",
+        "number"
+      ],
+      [
+        "decay_ratio",
+        "number"
+      ],
+      [
+        "sustain_level",
+        "number"
+      ],
+      [
+        "release_ratio",
+        "number"
+      ]
+    ],
+    "retType": "SoundTransformer"
+  },
+  "stacking_adsr": {
+    "kind": "function",
+    "name": "stacking_adsr",
+    "description": "<p>Returns a Sound that results from applying a list of envelopes\nto a given wave form. The wave form is a Sound generator that\ntakes a frequency and a duration as arguments and produces a\nSound with the given frequency and duration. Each envelope is\napplied to a harmonic: the first harmonic has the given frequency,\nthe second has twice the frequency, the third three times the\nfrequency etc. The harmonics are then layered simultaneously to\nproduce the resulting Sound.</p>",
+    "params": [
+      [
+        "waveform",
+        "SoundProducer"
+      ],
+      [
+        "base_frequency",
+        "number"
+      ],
+      [
+        "duration",
+        "number"
+      ],
+      [
+        "envelopes",
+        "List"
+      ]
+    ],
+    "retType": "Sound"
+  },
+  "noise_sound": {
+    "kind": "function",
+    "name": "noise_sound",
+    "description": "<p>Makes a noise sound with given duration</p>",
+    "params": [
       [
         "duration",
         "number"
@@ -382,22 +337,42 @@
     ],
     "retType": "Sound"
   },
-  "simultaneously": {
-    "kind": "function",
-    "name": "simultaneously",
-    "description": "<p>Makes a new Sound by combining the sounds in a given list.\nIn the result sound, the component sounds overlap such that\nthey start at the beginning of the result sound. To achieve\nthis, the amplitudes of the component sounds are added together\nand then divided by the length of the list.</p>",
-    "params": [
-      [
-        "list_of_sounds",
-        "List"
-      ]
-    ],
-    "retType": "Sound"
-  },
   "sine_sound": {
     "kind": "function",
     "name": "sine_sound",
     "description": "<p>Makes a sine wave sound with given frequency and duration</p>",
+    "params": [
+      [
+        "freq",
+        "number"
+      ],
+      [
+        "duration",
+        "number"
+      ]
+    ],
+    "retType": "Sound"
+  },
+  "sawtooth_sound": {
+    "kind": "function",
+    "name": "sawtooth_sound",
+    "description": "<p>Makes a sawtooth wave sound with given frequency and duration</p>",
+    "params": [
+      [
+        "freq",
+        "number"
+      ],
+      [
+        "duration",
+        "number"
+      ]
+    ],
+    "retType": "Sound"
+  },
+  "triangle_sound": {
+    "kind": "function",
+    "name": "triangle_sound",
+    "description": "<p>Makes a triangle wave sound with given frequency and duration</p>",
     "params": [
       [
         "freq",
@@ -426,56 +401,45 @@
     ],
     "retType": "Sound"
   },
-  "squash": {
+  "bell": {
     "kind": "function",
-    "name": "squash",
-    "description": "<p>Centers a Sound by averaging its left and right channels,\nresulting in an effectively mono sound.</p>",
+    "name": "bell",
+    "description": "<p>returns a Sound reminiscent of a bell, playing\na given note for a given duration</p>",
     "params": [
       [
-        "sound",
-        "Sound"
-      ]
-    ],
-    "retType": "Sound"
-  },
-  "stacking_adsr": {
-    "kind": "function",
-    "name": "stacking_adsr",
-    "description": "<p>Returns a Sound that results from applying a list of envelopes\nto a given wave form. The wave form is a Sound generator that\ntakes a frequency and a duration as arguments and produces a\nSound with the given frequency and duration. Each envelope is\napplied to a harmonic: the first harmonic has the given frequency,\nthe second has twice the frequency, the third three times the\nfrequency etc. The harmonics are then layered simultaneously to\nproduce the resulting Sound.</p>",
-    "params": [
-      [
-        "waveform",
-        "SoundProducer"
-      ],
-      [
-        "base_frequency",
+        "note",
         "number"
       ],
       [
         "duration",
         "number"
-      ],
-      [
-        "envelopes",
-        "List"
       ]
     ],
     "retType": "Sound"
   },
-  "stop": {
+  "cello": {
     "kind": "function",
-    "name": "stop",
-    "description": "<p>Stops all currently playing sounds.</p>",
-    "params": [],
-    "retType": "void"
-  },
-  "triangle_sound": {
-    "kind": "function",
-    "name": "triangle_sound",
-    "description": "<p>Makes a triangle wave sound with given frequency and duration</p>",
+    "name": "cello",
+    "description": "<p>returns a Sound reminiscent of a cello, playing\na given note for a given duration</p>",
     "params": [
       [
-        "freq",
+        "note",
+        "number"
+      ],
+      [
+        "duration",
+        "number"
+      ]
+    ],
+    "retType": "Sound"
+  },
+  "piano": {
+    "kind": "function",
+    "name": "piano",
+    "description": "<p>returns a Sound reminiscent of a piano, playing\na given note for a given duration</p>",
+    "params": [
+      [
+        "note",
         "number"
       ],
       [
@@ -516,5 +480,41 @@
       ]
     ],
     "retType": "Sound"
+  },
+  "letter_name_to_midi_note": {
+    "kind": "function",
+    "name": "letter_name_to_midi_note",
+    "description": "<p>Converts a letter name to its corresponding MIDI note.\nThe letter name is represented in standard pitch notation.\nExamples are \"A5\", \"Db3\", \"C#7\".\nRefer to &lt;a href=\"https://i.imgur.com/qGQgmYr.png\"&gt;this mapping from\nletter name to midi notes.</p>",
+    "params": [
+      [
+        "note",
+        "NoteWithOctave"
+      ]
+    ],
+    "retType": "number"
+  },
+  "midi_note_to_frequency": {
+    "kind": "function",
+    "name": "midi_note_to_frequency",
+    "description": "<p>Converts a MIDI note to its corresponding frequency.</p>",
+    "params": [
+      [
+        "note",
+        "number"
+      ]
+    ],
+    "retType": "number"
+  },
+  "letter_name_to_frequency": {
+    "kind": "function",
+    "name": "letter_name_to_frequency",
+    "description": "<p>Converts a letter name to its corresponding frequency.</p>",
+    "params": [
+      [
+        "note",
+        "NoteWithOctave"
+      ]
+    ],
+    "retType": "number"
   }
 }

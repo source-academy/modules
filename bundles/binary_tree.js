@@ -3,6 +3,12 @@ export default require => {
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+  }) : x)(function (x) {
+    if (typeof require !== "undefined") return require.apply(this, arguments);
+    throw Error('Dynamic require of "' + x + '" is not supported');
+  });
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
       get: all[name],
@@ -21,8 +27,8 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var binary_tree_exports = {};
-  __export(binary_tree_exports, {
+  var index_exports = {};
+  __export(index_exports, {
     entry: () => entry,
     is_empty_tree: () => is_empty_tree,
     is_tree: () => is_tree,
@@ -31,35 +37,44 @@ export default require => {
     make_tree: () => make_tree,
     right_branch: () => right_branch
   });
+  var import_list = __require("js-slang/dist/stdlib/list");
   function make_empty_tree() {
     return null;
   }
   function make_tree(value, left, right) {
-    return [value, [left, [right, null]]];
+    return (0, import_list.list)(value, left, right);
   }
   function is_tree(value) {
-    return value === null || Array.isArray(value) && value.length === 2 && Array.isArray(value[1]) && value[1].length === 2 && is_tree(value[1][0]) && value[1][1].length === 2 && is_tree(value[1][1][0]) && value[1][1][1] === null;
+    if (!(0, import_list.is_list)(value)) return false;
+    if (is_empty_tree(value)) return true;
+    const left = (0, import_list.tail)(value);
+    if (!(0, import_list.is_list)(left) || !is_tree((0, import_list.head)(left))) return false;
+    const right = (0, import_list.tail)(left);
+    if (!(0, import_list.is_pair)(right) || !is_tree((0, import_list.head)(right))) return false;
+    return (0, import_list.tail)(right) === null;
   }
   function is_empty_tree(value) {
     return value === null;
   }
-  function entry(t) {
-    if (Array.isArray(t) && t.length === 2) {
-      return t[0];
+  function throwIfNotNonEmptyTree(value, func_name) {
+    if (!is_tree(value)) {
+      throw new Error(`${func_name} expects binary tree, received: ${value}`);
     }
-    throw new Error(`function entry expects binary tree, received: ${t}`);
+    if (is_empty_tree(value)) {
+      throw new Error(`${func_name} received an empty binary tree!`);
+    }
+  }
+  function entry(t) {
+    throwIfNotNonEmptyTree(t, entry.name);
+    return t[0];
   }
   function left_branch(t) {
-    if (Array.isArray(t) && t.length === 2 && Array.isArray(t[1]) && t[1].length === 2) {
-      return t[1][0];
-    }
-    throw new Error(`function left_branch expects binary tree, received: ${t}`);
+    throwIfNotNonEmptyTree(t, left_branch.name);
+    return (0, import_list.head)((0, import_list.tail)(t));
   }
   function right_branch(t) {
-    if (Array.isArray(t) && t.length === 2 && Array.isArray(t[1]) && t[1].length === 2 && Array.isArray(t[1][1]) && t[1][1].length === 2) {
-      return t[1][1][0];
-    }
-    throw new Error(`function right_branch expects binary tree, received: ${t}`);
+    throwIfNotNonEmptyTree(t, right_branch.name);
+    return (0, import_list.head)((0, import_list.tail)((0, import_list.tail)(t)));
   }
-  return __toCommonJS(binary_tree_exports);
+  return __toCommonJS(index_exports);
 };

@@ -1,4 +1,28 @@
 {
+  "new_plot": {
+    "kind": "function",
+    "name": "new_plot",
+    "description": "<p>Adds a new plotly plot to the context which will be rendered in the Plotly Tabs</p>",
+    "params": [
+      [
+        "data",
+        "ListOfPairs"
+      ]
+    ],
+    "retType": "void"
+  },
+  "new_plot_json": {
+    "kind": "function",
+    "name": "new_plot_json",
+    "description": "<p>Adds a new plotly plot to the context which will be rendered in the Plotly Tabs</p>",
+    "params": [
+      [
+        "data",
+        "any"
+      ]
+    ],
+    "retType": "void"
+  },
   "draw_connected_2d": {
     "kind": "function",
     "name": "draw_connected_2d",
@@ -55,30 +79,6 @@
       [
         "sound",
         "Sound"
-      ]
-    ],
-    "retType": "void"
-  },
-  "new_plot": {
-    "kind": "function",
-    "name": "new_plot",
-    "description": "<p>Adds a new plotly plot to the context which will be rendered in the Plotly Tabs</p>",
-    "params": [
-      [
-        "data",
-        "ListOfPairs"
-      ]
-    ],
-    "retType": "void"
-  },
-  "new_plot_json": {
-    "kind": "function",
-    "name": "new_plot_json",
-    "description": "<p>Adds a new plotly plot to the context which will be rendered in the Plotly Tabs</p>",
-    "params": [
-      [
-        "data",
-        "any"
       ]
     ],
     "retType": "void"

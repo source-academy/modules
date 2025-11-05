@@ -33,11 +33,25 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var CopyGc_exports = {};
-  __export(CopyGc_exports, {
-    default: () => CopyGc_default
+  var index_exports = {};
+  __export(index_exports, {
+    default: () => index_default
   });
   var import_core = __require("@blueprintjs/core");
+  var COMMAND;
+  (function (COMMAND2) {
+    COMMAND2["FLIP"] = "Flip";
+    COMMAND2["PUSH"] = "Push";
+    COMMAND2["POP"] = "Pop";
+    COMMAND2["COPY"] = "Copy";
+    COMMAND2["ASSIGN"] = "Assign";
+    COMMAND2["NEW"] = "New";
+    COMMAND2["SCAN"] = "Scan";
+    COMMAND2["INIT"] = "Initialize Memory";
+  })(COMMAND || (COMMAND = {}));
+  function defineTab(tab) {
+    return tab;
+  }
   var import_react = __toESM(__require("react"), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
   var CopyGC = class extends import_react.default.Component {
@@ -181,7 +195,7 @@ export default require => {
         const size2 = commandHeap[value].sizeRight;
         const {command} = this.state;
         let color = "";
-        if (command === "Flip") {
+        if (command === COMMAND.FLIP) {
           if (indexValue === firstChild) {
             color = "#42a870";
           }
@@ -425,13 +439,13 @@ export default require => {
       });
     }
   };
-  var CopyGc_default = {
+  var index_default = defineTab({
     toSpawn: () => true,
     body: debuggerContext => (0, import_jsx_runtime.jsx)(CopyGC, {
       debuggerContext
     }),
     label: "Copying Garbage Collector",
     iconName: "duplicate"
-  };
-  return __toCommonJS(CopyGc_exports);
+  });
+  return __toCommonJS(index_exports);
 };
