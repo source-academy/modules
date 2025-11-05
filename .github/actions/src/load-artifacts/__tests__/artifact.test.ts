@@ -1,3 +1,4 @@
+import { ArtifactNotFoundError } from '@actions/artifact';
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
 import * as manifest from '@sourceacademy/modules-repotools/manifest';
@@ -10,10 +11,10 @@ vi.mock(import('@actions/core'), async importOriginal => {
     ...original,
     // Mock these functions to remove stdout output
     error: vi.fn(),
-    info: () => {},
-    startGroup: () => {},
+    info: () => { },
+    startGroup: () => { },
     setFailed: vi.fn(),
-    endGroup: () => {}
+    endGroup: () => { }
   };
 });
 const mockedResolveAllTabs = vi.spyOn(manifest, 'resolveAllTabs');
@@ -41,6 +42,7 @@ test('tab resolution errors cause setFailed to be called', async () => {
 
   await main();
 
+  expect(mockedResolveAllTabs).toHaveBeenCalledOnce();
   expect(core.error).toHaveBeenCalledExactlyOnceWith('error1');
   expect(core.setFailed).toHaveBeenCalledExactlyOnceWith('Tab resolution failed with errors');
 });
@@ -68,24 +70,28 @@ test('tabs that can\'t be found are built', async () => {
     if (name === 'Tab0-tab') {
       return { artifact: { id: 0 } };
     }
-    throw new Error();
+    throw new ArtifactNotFoundError();
   });
 
   await main();
 
   expect(mockedGetArtifact).toHaveBeenCalledTimes(2);
+  expect(mockedResolveAllTabs).toHaveBeenCalledOnce();
+
   const [[artifactCall0], [artifactCall1]] = mockedGetArtifact.mock.calls;
   expect(artifactCall0).toEqual('Tab0-tab');
   expect(artifactCall1).toEqual('Tab1-tab');
 
   expect(exec.exec).toHaveBeenCalledTimes(2);
-  const [[,execCall0], [,execCall1]] = vi.mocked(exec.exec).mock.calls;
-  console.log('args are', execCall0);
+  const [[execCmd0, execCall0], [execCmd1, execCall1]] = vi.mocked(exec.exec).mock.calls;
+
+  expect(execCmd0).toEqual('yarn workspaces focus');
   expect(execCall0).toContain('@sourceacademy/tab-Tab1');
   expect(execCall0).not.toContain('@sourceacademy/tab-Tab0');
 
-  expect(execCall1).toContain('@sourceacademy/tab-Tab1');
-  expect(execCall1).not.toContain('@sourceacademy/tab-Tab0');
+  expect(execCmd1).toEqual('yarn workspaces foreach -pA');
+  expect(execCall1).toContain('--include @sourceacademy/tab-Tab1');
+  expect(execCall1).not.toContain('--include @sourceacademy/tab-Tab0');
 });
 
 test('install failure means build doesn\'t happen', async () => {
@@ -101,11 +107,12 @@ test('install failure means build doesn\'t happen', async () => {
     }
   });
 
-  mockedGetArtifact.mockRejectedValueOnce(new Error());
-
+  mockedGetArtifact.mockRejectedValueOnce(new ArtifactNotFoundError());
   mockedExec.mockResolvedValueOnce(1);
+
   await main();
 
+  expect(mockedGetArtifact).toHaveBeenCalledOnce();
   expect(exec.exec).toHaveBeenCalledOnce();
-  expect(core.setFailed).toHaveBeenCalledExactlyOnceWith('yarn workspace focus failed for Tab0');
+  expect(core.setFailed).toHaveBeenCalledExactlyOnceWith('yarn workspace focus failed');
 });
