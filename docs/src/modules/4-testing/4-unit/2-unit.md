@@ -11,6 +11,7 @@ detect any tests within that file, it will throw an error.  This also includes a
 > only be used for tests.  Such a file **should** not contain any tests.
 >
 > For example:
+>
 > ```dirtree
 > name: src
 > children:
@@ -26,6 +27,7 @@ detect any tests within that file, it will throw an error.  This also includes a
 > ```
 >
 > ::: code-group
+>
 > ```ts [utils.ts]
 > import { vi } from 'vitest';
 > import * as funcs from '../functions';
@@ -61,6 +63,7 @@ detect any tests within that file, it will throw an error.  This also includes a
 >   return 0;
 > }
 > ```
+>
 > :::
 
 Simply write your tests within a file within a `__tests__` folder:
@@ -77,13 +80,14 @@ describe('This is a describe block', () => {
 
 > [!NOTE]
 > Test files should included by each bundle's or tab's `tsconfig.json`, i.e:
-> 
+>
 > ```jsonc
 > {
 >   "include": ["src"],
 >   // "exclude": ["**/__tests__/*.ts"] You don't need this exclude
 > }
 > ```
+>
 > The build tools will automatically filter out these files when emitting
 > Javascript and Typescript declarations but will still conduct type checking for them.
 
