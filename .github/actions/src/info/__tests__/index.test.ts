@@ -39,7 +39,7 @@ const mockDirectory: Record<string, string | Record<string, unknown>> = {
         'package.json': JSON.stringify({
           name: '@sourceacademy/bundle-bundle0',
           devDependencies: {
-            '@sourceacademy/modules-lib': 'workspace:^'
+            '@sourceacademy/modules-lib': 'workspace:^',
           }
         })
       },
@@ -49,7 +49,8 @@ const mockDirectory: Record<string, string | Record<string, unknown>> = {
         'package.json': JSON.stringify({
           name: '@sourceacademy/tab-Tab0',
           dependencies: {
-            '@sourceacademy/bundle-bundle0': 'workspace:^'
+            lodash: '^4.1.1',
+            '@sourceacademy/bundle-bundle0': 'workspace:^',
           },
           devDependencies: {
             playwright: '^1.54.0'

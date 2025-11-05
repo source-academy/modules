@@ -16,6 +16,9 @@ const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
 export async function getRawPackages(gitRoot: string, maxDepth?: number) {
   const output: Record<string, RawPackageRecord> = {};
 
+  /**
+   * Search the given directory for package.json files
+   */
   async function recurser(currentDir: string, currentDepth: number) {
     const items = await fs.readdir(currentDir, { withFileTypes: true });
     await Promise.all(items.map(async item => {
@@ -93,16 +96,18 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
     if (!packageInfo.hasChanges) {
       if (packageInfo.package.dependencies) {
         for (const name of Object.keys(packageInfo.package.dependencies)) {
-          if (packages[name].hasChanges) {
+          if (packages[name]?.hasChanges) {
             packageInfo.hasChanges = true;
             break;
           }
         }
       }
 
+      // If hasChanges still hasn't been set yet, we can proceed to iterate
+      // through devDependencies as well
       if (!packageInfo.hasChanges && packageInfo.package.devDependencies) {
         for (const name of Object.keys(packageInfo.package.devDependencies)) {
-          if (packages[name].hasChanges) {
+          if (packages[name]?.hasChanges) {
             packageInfo.hasChanges = true;
             break;
           }
@@ -269,6 +274,6 @@ if (process.env.GITHUB_ACTIONS) {
   try {
     await main();
   } catch (error: any) {
-    core.setFailed(error.message);
+    core.setFailed(error);
   }
 }
