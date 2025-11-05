@@ -272,3 +272,17 @@ jobs:
       #   with:
       #     name: manifest
       #     path: ./build/modules.json
+
+  test:
+    name: Verify all tests pass and build success
+    runs-on: ubuntu-latest
+    needs:
+      - libraries
+      - tabs
+      - bundles
+      - devserver
+      - docserver
+      - repo-tasks
+    steps:
+      - name: All done! 🎉
+        run: echo "All tasks completed successfully!"
