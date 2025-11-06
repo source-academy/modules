@@ -48,6 +48,8 @@ jobs:
       workflows: ${{ steps.info.outputs.workflows }}
 
   libraries:
+    if: ${{ needs.find-packages.outputs.libs != '[]' }}
+
     needs: find-packages
     strategy:
       fail-fast: false
@@ -86,6 +88,8 @@ jobs:
         run: yarn workspaces foreach -A --include ${{ matrix.lib.name }} run tsc
 
   tabs:
+    if: ${{ needs.find-packages.outputs.tabs != '[]' }}
+
     runs-on: ubuntu-latest
     needs: find-packages
     strategy:
@@ -128,6 +132,8 @@ jobs:
           yarn tsc
 
   bundles:
+    if: ${{ needs.find-packages.outputs.bundles != '[]' }}
+
     runs-on: ubuntu-latest
     needs: find-packages
     strategy:
