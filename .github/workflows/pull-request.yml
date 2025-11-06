@@ -292,14 +292,14 @@ jobs:
       - devserver
       - docserver
       - repo-tasks
-    
+
     if: >-
       ${{
         always() &&
         !cancelled() &&
-        (needs.find-packages.outputs.libs == '[]' || needs.libraries.result == 'success') && 
-        (needs.find-packages.outputs.tabs == '[]' || needs.tabs.result == 'success') && 
-        (needs.find-packages.outputs.bundles == '[]' || needs.bundles.result == 'success') && 
+        (needs.find-packages.outputs.libs == '[]' || needs.libraries.result == 'success') &&
+        (needs.find-packages.outputs.tabs == '[]' || needs.tabs.result == 'success') &&
+        (needs.find-packages.outputs.bundles == '[]' || needs.bundles.result == 'success') &&
         !(!fromJson(needs.find-packages.outputs.docserver).changes || needs.docserver.result != 'success') &&
         !(!fromJson(needs.find-packages.outputs.devserver).changes || needs.devserver.result != 'success') &&
         needs.repo-tasks.result == 'success'

@@ -235,7 +235,7 @@ describe(main, () => {
     expect(calls[0]).toEqual(['bundles', []]);
     expect(calls[1]).toEqual(['tabs', [expect.objectContaining({ changes: true })]]);
     expect(calls[2]).toEqual(['libs', []]);
-    
+
     // These next two are undefined because the mock implementations
     // don't return any info about them
     expect(calls[3]).toEqual(['devserver', undefined]);
