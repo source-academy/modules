@@ -1,9 +1,10 @@
 import type { Dirent } from 'fs';
 import fs from 'fs/promises';
 import pathlib from 'path';
+import * as core from '@actions/core';
 import { describe, expect, test, vi } from 'vitest';
 import * as git from '../../commons.js';
-import { getAllPackages, getRawPackages } from '../index.js';
+import { getAllPackages, getRawPackages, main } from '../index.js';
 
 const mockedCheckChanges = vi.spyOn(git, 'checkForChanges');
 
@@ -39,7 +40,7 @@ const mockDirectory: Record<string, string | Record<string, unknown>> = {
         'package.json': JSON.stringify({
           name: '@sourceacademy/bundle-bundle0',
           devDependencies: {
-            '@sourceacademy/modules-lib': 'workspace:^'
+            '@sourceacademy/modules-lib': 'workspace:^',
           }
         })
       },
@@ -49,7 +50,8 @@ const mockDirectory: Record<string, string | Record<string, unknown>> = {
         'package.json': JSON.stringify({
           name: '@sourceacademy/tab-Tab0',
           dependencies: {
-            '@sourceacademy/bundle-bundle0': 'workspace:^'
+            lodash: '^4.1.1',
+            '@sourceacademy/bundle-bundle0': 'workspace:^',
           },
           devDependencies: {
             playwright: '^1.54.0'
@@ -209,5 +211,36 @@ describe(getAllPackages, () => {
 
     expect(results).toHaveProperty('@sourceacademy/modules-lib');
     expect(results['@sourceacademy/modules-lib'].changes).toEqual(true);
+  });
+});
+
+describe(main, () => {
+  vi.spyOn(git, 'getGitRoot').mockResolvedValue('root');
+  const mockedSetOutput = vi.spyOn(core, 'setOutput');
+
+  vi.spyOn(core.summary, 'addHeading').mockImplementation(() => core.summary);
+  vi.spyOn(core.summary, 'addTable').mockImplementation(() => core.summary);
+  vi.spyOn(core.summary, 'write').mockImplementation(() => Promise.resolve(core.summary));
+
+  test('Does not write packages with no changes to the output', async () => {
+    mockedCheckChanges.mockImplementation(path => {
+      return Promise.resolve(path === 'root/src/tabs/tab0');
+    });
+
+    await main();
+    const { mock: { calls } } = mockedSetOutput;
+
+    expect(mockedSetOutput).toHaveBeenCalledTimes(6);
+
+    expect(calls[0]).toEqual(['bundles', []]);
+    expect(calls[1]).toEqual(['tabs', [expect.objectContaining({ changes: true })]]);
+    expect(calls[2]).toEqual(['libs', []]);
+
+    // These next two are undefined because the mock implementations
+    // don't return any info about them
+    expect(calls[3]).toEqual(['devserver', undefined]);
+    expect(calls[4]).toEqual(['docserver', undefined]);
+
+    expect(calls[5]).toEqual(['workflows', false]);
   });
 });

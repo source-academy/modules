@@ -4150,6 +4150,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-matrix@workspace:src/bundles/matrix"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     js-slang: "npm:^1.0.81"
     typescript: "npm:^5.8.2"
   languageName: unknown
@@ -4727,6 +4728,7 @@ __metadata:
     "@types/react": "npm:^18.3.1"
     "@vitest/browser-playwright": "npm:^4.0.4"
     lodash: "npm:^4.17.21"
+    playwright: "npm:^1.54.1"
     react: "npm:^18.3.1"
     typescript: "npm:^5.8.2"
     vitest-browser-react: "npm:^2.0.2"

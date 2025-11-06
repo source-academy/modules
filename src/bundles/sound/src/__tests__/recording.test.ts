@@ -63,7 +63,7 @@ describe('Recording functions', () => {
 
   describe(funcs.record, () => {
     test('throws error if called without init_record', () => {
-      expect(() => funcs.record(0)).toThrowError('Call init_record(); to obtain permission to use microphone');
+      expect(() => funcs.record(0)).toThrowError('record: Call init_record(); to obtain permission to use microphone');
     });
 
     test('throws error if called concurrently with another sound', () => {
@@ -101,7 +101,7 @@ describe('Recording functions', () => {
 
   describe(funcs.record_for, () => {
     test('throws error if called without init_record', () => {
-      expect(() => funcs.record_for(0, 0)).toThrowError('Call init_record(); to obtain permission to use microphone');
+      expect(() => funcs.record_for(0, 0)).toThrowError('record_for: Call init_record(); to obtain permission to use microphone');
     });
 
     test('throws error if called concurrently with another sound', () => {

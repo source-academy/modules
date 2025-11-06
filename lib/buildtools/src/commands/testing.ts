@@ -1,10 +1,11 @@
 import pathlib from 'path';
 import { Command, InvalidOptionArgumentError, Option } from '@commander-js/extra-typings';
 import { gitRoot } from '@sourceacademy/modules-repotools/getGitRoot';
+import { getAllTestConfigurations, getTestConfiguration } from '@sourceacademy/modules-repotools/testing';
+import { isBundleOrTabDirectory } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
 import type { VitestRunMode } from 'vitest/node';
-import { runVitest } from '../testing/runner.js';
-import { getAllTestConfigurations, getTestConfiguration } from '../testing/utils.js';
+import { runVitest } from '../testing.js';
 import { logCommandErrorAndExit } from './commandUtils.js';
 
 const vitestModeOption = new Option('--mode <mode>', 'Vitest Run Mode. See https://vitest.dev/guide/cli.html#mode')
@@ -59,7 +60,10 @@ export const getTestCommand = () => new Command('test')
     }
 
     if (configResult.config === null) {
-      console.log(chalk.yellowBright(`No tests found for ${fullyResolvedProject}`));
+      // Just ignore it if a bundle doesn't or tab doesn't have tests
+      if (!await isBundleOrTabDirectory(fullyResolvedProject)) {
+        console.log(chalk.yellowBright(`No tests found for ${fullyResolvedProject}`));
+      }
       return;
     }
 

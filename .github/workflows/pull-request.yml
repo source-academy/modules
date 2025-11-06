@@ -15,9 +15,9 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-      - name: Initialize Repo
+      - name: Initialize Github Actions
         uses: ./.github/actions/src/init
         with:
           package-name: '@sourceacademy/modules-github-actions'
@@ -48,6 +48,8 @@ jobs:
       workflows: ${{ steps.info.outputs.workflows }}
 
   libraries:
+    if: ${{ needs.find-packages.outputs.libs != '[]' }}
+
     needs: find-packages
     strategy:
       fail-fast: false
@@ -63,11 +65,9 @@ jobs:
 
     steps:
       - name: Check out source code
-        if: matrix.lib.changes
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-      - name: Initialize Repo
-        if: matrix.lib.changes
+      - name: Initialize ${{ matrix.lib.name }}
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.lib.name }}
@@ -76,18 +76,20 @@ jobs:
 
       # Only thing we really need to do on Windows is run tests (without coverage)
       - name: Run Tests (Windows)
-        if: matrix.lib.changes && matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-latest'
         run: yarn workspaces foreach -A --include ${{ matrix.lib.name }} run test
 
       - name: Run Tests (Ubuntu)
-        if: matrix.lib.changes && matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest'
         run: yarn workspaces foreach -A --include ${{ matrix.lib.name }} run test --coverage
 
       - name: Run Auxillary Tasks
-        if: matrix.lib.changes && matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest'
         run: yarn workspaces foreach -A --include ${{ matrix.lib.name }} run tsc
 
   tabs:
+    if: ${{ needs.find-packages.outputs.tabs != '[]' }}
+
     runs-on: ubuntu-latest
     needs: find-packages
     strategy:
@@ -97,24 +99,20 @@ jobs:
     name: ${{ matrix.tabInfo.tabName }} Tab
     steps:
       - name: Check out source code
-        if: matrix.tabInfo.changes
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-      - name: Initialize Repo
-        if: matrix.tabInfo.changes
+      - name: Initialize ${{ matrix.tabInfo.tabName }}
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.tabInfo.name }}
           playwright: ${{ matrix.tabInfo.needsPlaywright && matrix.tabInfo.changes }}
 
       - name: Build Tab
-        if: matrix.tabInfo.changes
         run: |
           cd ${{ matrix.tabInfo.directory }}
           yarn build
 
       - name: Upload Tab Artifact
-        if: matrix.tabInfo.changes
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.tabInfo.tabName }}-tab
@@ -124,18 +122,18 @@ jobs:
         # https://github.com/vitest-dev/vitest/issues/5477
         # Known Vitest issue for coverage running in browser mode
         # Momentarily disable coverage checking on Github Actions for tabs
-        if: matrix.tabInfo.changes
         run: |
           cd ${{ matrix.tabInfo.directory }}
           yarn test
 
       - name: Run Auxillary Tasks
-        if: matrix.tabInfo.changes
         run: |
           cd ${{ matrix.tabInfo.directory }}
           yarn tsc
 
   bundles:
+    if: ${{ needs.find-packages.outputs.bundles != '[]' }}
+
     runs-on: ubuntu-latest
     needs: find-packages
     strategy:
@@ -145,31 +143,26 @@ jobs:
     name: ${{ matrix.bundleInfo.bundleName }} Bundle
     steps:
       - name: Check out source code
-        if: matrix.bundleInfo.changes
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-      - name: Initialize Repo
-        if: matrix.bundleInfo.changes
+      - name: Initialize ${{ matrix.bundleInfo.name }}
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.bundleInfo.name }}
           playwright: ${{ matrix.bundleInfo.needsPlaywright }}
 
       - name: Build Bundle
-        if: matrix.bundleInfo.changes
         run: |
           cd ${{ matrix.bundleInfo.directory }}
           yarn build
           yarn tsc
 
       - name: Build Bundle Docs
-        if: matrix.bundleInfo.changes
         run: |
           cd ${{ matrix.bundleInfo.directory }}
           yarn buildtools build docs
 
       - name: Run Tests
-        if: matrix.bundleInfo.changes
         run: |
           cd ${{ matrix.bundleInfo.directory }}
           yarn test --coverage
@@ -181,11 +174,18 @@ jobs:
       - find-packages
       - tabs
 
-    if: ${{ fromJson(needs.find-packages.outputs.devserver).changes }}
+    if: >-
+      ${{
+        always() &&
+        !cancelled() &&
+        fromJson(needs.find-packages.outputs.devserver).changes &&
+        needs.find-packages.result == 'success' &&
+        (needs.find-packages.outputs.tabs == '[]' || needs.tabs.result == 'success')
+      }}
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Enable Corepack
         run: corepack enable
@@ -196,7 +196,7 @@ jobs:
       - name: Load/Build all tabs
         uses: ./.github/actions/src/load-artifacts
 
-      - name: Initialize Repo
+      - name: Initialize Devserver
         uses: ./.github/actions/src/init
         with:
           package-name: '@sourceacademy/modules-devserver'
@@ -223,13 +223,21 @@ jobs:
     needs:
       - libraries
       - find-packages
-    if: ${{ fromJson(needs.find-packages.outputs.docserver).changes }}
+
+    if: >-
+      ${{
+        always() &&
+        !cancelled() &&
+        fromJson(needs.find-packages.outputs.docserver).changes &&
+        needs.find-packages.result == 'success' &&
+        (needs.find-packages.outputs.libs == '[]' || needs.libraries.result == 'success')
+      }}
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-      - name: Initialize Repo
+      - name: Initialize Docserver
         uses: ./.github/actions/src/init
         with:
           package-name: '@sourceacademy/modules-docserver'
@@ -250,7 +258,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Initialize Repo
         uses: ./.github/actions/src/init
@@ -272,3 +280,31 @@ jobs:
       #   with:
       #     name: manifest
       #     path: ./build/modules.json
+
+  test:
+    name: Verify all tests pass and build success
+    runs-on: ubuntu-latest
+    needs:
+      - find-packages
+      - libraries
+      - tabs
+      - bundles
+      - devserver
+      - docserver
+      - repo-tasks
+
+    if: >-
+      ${{
+        always() &&
+        !cancelled() &&
+        (needs.find-packages.outputs.libs == '[]' || needs.libraries.result == 'success') &&
+        (needs.find-packages.outputs.tabs == '[]' || needs.tabs.result == 'success') &&
+        (needs.find-packages.outputs.bundles == '[]' || needs.bundles.result == 'success') &&
+        !(!fromJson(needs.find-packages.outputs.docserver).changes || needs.docserver.result != 'success') &&
+        !(!fromJson(needs.find-packages.outputs.devserver).changes || needs.devserver.result != 'success') &&
+        needs.repo-tasks.result == 'success'
+      }}
+
+    steps:
+      - name: All done! 🎉
+        run: echo "All tasks completed successfully!"

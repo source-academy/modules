@@ -51,6 +51,10 @@ TypeError: number 0 is not iterable (cannot read property Symbol(Symbol.iterator
 ```
 
 Javascript also supports object destructuring in parameters:
+<<<<<<< HEAD
+=======
+
+>>>>>>> workspaces-fix
 ```ts
 interface BarParams {
   x: string;

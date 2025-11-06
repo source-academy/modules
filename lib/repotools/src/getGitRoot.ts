@@ -38,3 +38,8 @@ export const tabsDir = pathlib.join(gitRoot, 'src', 'tabs');
  * Path to the default output directory
  */
 export const outDir = pathlib.join(gitRoot, 'build');
+
+/**
+ * Path to the `vitest.config.ts` file at the root of the repository.
+ */
+export const rootVitestConfigPath = pathlib.join(gitRoot, 'vitest.config.ts');

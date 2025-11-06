@@ -121,6 +121,7 @@ You can find more information about each of the fields and what they mean [here]
 > ```ts
 > import { whatever } from '@sourceacademy/bundle-bundle_name';
 > ```
+>
 > If your package name doesn't follow the required format the bundle won't validate.
 
 ## `manifest.json`

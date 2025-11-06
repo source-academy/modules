@@ -2,5 +2,5 @@ name: Load Artifacts for Dev Server
 description: This action is mainly intended for loading all of the compiled tabs for the devserver.
 
 runs:
-  using: node20
+  using: node24
   main: ../../dist/load.js

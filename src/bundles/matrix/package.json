@@ -3,8 +3,8 @@
   "private": true,
   "version": "1.0.0",
   "dependencies": {
-    "js-slang": "^1.0.81",
-    "@sourceacademy/modules-lib": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^",
+    "js-slang": "^1.0.81"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",

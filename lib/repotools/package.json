@@ -27,6 +27,7 @@
     "vitest-browser-react": "*"
   },
   "exports": {
+    "./testing": "./dist/testing/index.js",
     "./*": "./dist/*.js"
   },
   "scripts": {

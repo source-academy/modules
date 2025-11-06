@@ -3,6 +3,10 @@ title: Bundles
 ---
 
 Table of Contents:
+<<<<<<< HEAD
+=======
+
+>>>>>>> workspaces-fix
 1. [Overview](./1-overview/1-overview)
 2. [Creation](./2-creating/2-creating)
 3. [Editing](./3-editing)

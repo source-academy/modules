@@ -1,4 +1,3 @@
-
 /**
  * An empty binary tree, represented by the empty list `null`
  */

@@ -4,20 +4,71 @@ By default, any Typescript (`.ts`) files located within a `__tests__` folder are
 detect any tests within that file, it will throw an error.  This also includes any subdirectories under a `__tests__` folder.
 
 > [!WARNING] Test File Naming
-> Right now any file ending with `.ts` or `.tsx` will be considered a test file. This is inconvenient, especially if you want to create a set of
-> common utilities to be used only for tests. Such a file might (_READ: should_) not contain any tests, which will be considered by Vitest to be
-> an error. 
+> Only files that end with `.test.ts` or `.test.tsx` (i.e `index.test.ts`) will be considered a test file. This means that Vitest will expect
+> such a file to contain unit tests and will fail if it doesn't detect any.
 >
-> To remedy this, in the future, only files that end in `.test.ts` or `.test.tsx` will be considered test files. This will allow us to have regular
-> Typescript files located within `__tests__` directories. This means you should use that naming convention instead when creating your test files.
+> Any other file won't be treated as a test file, but will still be excluded from compilation. This is useful for creating utilities that will
+> only be used for tests.  Such a file **should** not contain any tests.
 >
-> The current behaviour is retained for backwards compatibility since many Source modules' tests aren't written within `.test.ts` files. To see
-> examples of how to use this new system you can refer to how the tests for the buildtools are written.
+> For example:
+>
+> ```dirtree
+> name: src
+> children:
+> - name: __tests__
+>   children:
+>   - name: index.test.ts
+>     comment: Must contain tests
+>   - name: functions.test.tsx
+>     comment: Must contain tests
+>   - name: utils.ts
+>     comment: Must not contain tests
+> - functions.ts
+> ```
+>
+> ::: code-group
+>
+> ```ts [utils.ts]
+> import { vi } from 'vitest';
+> import * as funcs from '../functions';
+>
+> export function mockFooValue(value: number) {
+>   vi.spyOn(funcs, 'foo').mockReturnValue(value);
+> }
+> ```
+>
+> ```ts [index.test.ts]
+> import { expect, test } from 'vitest';
+> import { mockFooValue } from './utils';
+> import { foo } from '../functions';
+> 
+> test('Test foo return value', () => {
+>   mockFooValue(0);
+>   expect(foo()).toEqual(0);
+> });
+> ```
+>
+> ```ts [functions.test.tsx]
+> import { expect, test } from 'vitest';
+> import { foo } from '../functions';
+> 
+> test('Another test', () => {
+>   mockFooValue(1);
+>   expect(foo()).toEqual(1);
+> });
+> ```
+>
+> ```ts [functions.ts]
+> export function foo() {
+>   return 0;
+> }
+> ```
+>
+> :::
 
 Simply write your tests within a file within a `__tests__` folder:
 
-```ts
-// curve/src/__tests__/index.ts
+```ts [curve/src/__tests__/index.test.ts]
 import { describe, expect, test } from 'vitest'; // You will need to import these functions, unlike in Jest
 
 describe('This is a describe block', () => {
@@ -28,13 +79,21 @@ describe('This is a describe block', () => {
 ```
 
 > [!NOTE]
-> Test files should included by each bundle's or tab's `tsconfig.json`. The build tools will automatically filter out these files when emitting
+> Test files should included by each bundle's or tab's `tsconfig.json`, i.e:
+>
+> ```jsonc
+> {
+>   "include": ["src"],
+>   // "exclude": ["**/__tests__/*.ts"] You don't need this exclude
+> }
+> ```
+>
+> The build tools will automatically filter out these files when emitting
 > Javascript and Typescript declarations but will still conduct type checking for them.
 
 Tests for tabs can also use the `.tsx` extension along with JSX syntax:
 
-```tsx
-// Curve/__tests__/index.tsx
+```tsx [Curve/__tests__/index.test.tsx]
 import { expect, test } from 'vitest';
 import curveTab from '..';
 
@@ -171,10 +230,13 @@ export function bar2() {
   return 2;
 }
 ```
+
 :::
 
-Though `vi.mock` accepts a string path, you should always use the import expression syntax, since it will
-allow Typescript to provide typing and ensure that the path refers to a module that exists.
+Though `vi.mock` accepts a string path, you should always use the import expression syntax where possible,
+since it will allow Typescript to provide typing and ensure that the path refers to a module that exists. Also, if you
+relocate the file you're importing from or the test file itself, the path will automatically get rewritten
+(if you're using an editor like VSCode).
 
 ```ts
 // do this

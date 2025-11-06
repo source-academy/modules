@@ -8,9 +8,9 @@
     "@types/lodash": "^4.14.198",
     "@types/react": "^18.3.1",
     "@vitest/browser-playwright": "^4.0.4",
+    "playwright": "^1.54.1",
     "typescript": "^5.8.2",
-    "vitest-browser-react": "^2.0.2",
-    "playwright": "^1.54.1"
+    "vitest-browser-react": "^2.0.2"
   },
   "dependencies": {
     "@blueprintjs/core": "^5.10.2",

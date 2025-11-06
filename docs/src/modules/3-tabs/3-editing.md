@@ -13,6 +13,10 @@ yarn workspaces focus @sourceacademy/Tab-[desired tab]
 > [!TIP]
 > You may require functionalities from the root package, or other packages from this repository.
 > It is possible to focus multiple workspaces at once:
+<<<<<<< HEAD
+=======
+>
+>>>>>>> workspaces-fix
 > ```sh
 > yarn workspaces focus @sourceacademy/Tab-[desired tab] @sourceacademy/modules
 > ```

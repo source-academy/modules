@@ -3,9 +3,21 @@
   "compilerOptions": {
     "declaration": true,
     "paths": {
+<<<<<<< HEAD
       "js-slang/context": ["./context.d.ts"],
       "plotly.js-dist": ["../../node_modules/@types/plotly.js/index.d.ts"]
     }
   },
   "extends": ["../tsconfig.json"]
+=======
+      "js-slang/context": [
+        "./context.d.ts"
+      ],
+      "plotly.js-dist": [
+        "../../node_modules/@types/plotly.js/index.d.ts"
+      ]
+    }
+  },
+  "extends": "../tsconfig.json"
+>>>>>>> workspaces-fix
 }

@@ -8,18 +8,18 @@ The [Source Academy](https://sourceacademy.org) and [Source Academy @ NUS](https
 
 If you are looking for the documentation for the default modules, that can be found [here](https://source-academy.github.io/modules/documentation).
 
-If you are a developer looking to do things like create a new bundle or work with the repository, the developer documentation can be found [here](https://source-academy.github.io/devdocs).
+If you are a developer looking to do things like create a new bundle or work with the repository, the developer documentation can be found [here](https://source-academy.github.io/modules/devdocs).
 
 ## Quick Links
 
-| Site | Link |
-| ---- | ---- |
-| Source Academy | https://sourceacademy.org |
-| Default Modules Deployment | https://source-academy.github.io/modules |
-| Default Modules Documentation | https://source-academy.github.io/modules/documentation |
-| Developer Documentation | https://source-academy.github.io/devdocs |
-| `js-slang` | https://github.com/source-academy/js-slang |
-| Frontend | https://github.com/source-academy/frontend |
+| Site                          | Link                                                     |
+|-------------------------------|----------------------------------------------------------|
+| Source Academy                | <https://sourceacademy.org>                              |
+| Default Modules Deployment    | <https://source-academy.github.io/modules>               |
+| Default Modules Documentation | <https://source-academy.github.io/modules/documentation> |
+| Developer Documentation       | <https://source-academy.github.io/modules/devdocs        |
+| `js-slang`                    | <https://github.com/source-academy/js-slang>             |
+| Frontend                      | <https://github.com/source-academy/frontend>             |
 
 ## Repository Structure
 
@@ -31,18 +31,12 @@ If you are a developer looking to do things like create a new bundle or work wit
 ├── build              // Output for compiled assets
 ├── devserver          // Development Server
 ├── docs               // Documentation Server
-├── lib
-│   ├── __test_mocks__ // Mock bundles and tabs used for testing
-│   ├── buildtools     // Command line tools for bundles and tabs
-│   ├── lintplugin     // ESLint Plugin
-│   ├── markdown-tree  // Markdown-It plugin for generating directory trees
-│   ├── modules-lib    // Common library for utilities used by bundles and tabs
-│   └── repotools      // Repository wide tooling
+├── lib                // Common libraries used throughout the repo
 ├── src                // Code for bundles, tabs and java-slang
 │   ├── bundles
 │   ├── tabs
 │   └── java
-├── vitest.config.js   // Root Vitest Config
+├── vitest.config.ts   // Root Vitest Config
 ├── eslint.config.js   // ESLint Config
 └── yarn.config.cjs    // Yarn Constraints file
 ```

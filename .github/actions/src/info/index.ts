@@ -16,6 +16,9 @@ const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
 export async function getRawPackages(gitRoot: string, maxDepth?: number) {
   const output: Record<string, RawPackageRecord> = {};
 
+  /**
+   * Search the given directory for package.json files
+   */
   async function recurser(currentDir: string, currentDepth: number) {
     const items = await fs.readdir(currentDir, { withFileTypes: true });
     await Promise.all(items.map(async item => {
@@ -93,16 +96,18 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
     if (!packageInfo.hasChanges) {
       if (packageInfo.package.dependencies) {
         for (const name of Object.keys(packageInfo.package.dependencies)) {
-          if (packages[name].hasChanges) {
+          if (packages[name]?.hasChanges) {
             packageInfo.hasChanges = true;
             break;
           }
         }
       }
 
+      // If hasChanges still hasn't been set yet, we can proceed to iterate
+      // through devDependencies as well
       if (!packageInfo.hasChanges && packageInfo.package.devDependencies) {
         for (const name of Object.keys(packageInfo.package.devDependencies)) {
-          if (packages[name].hasChanges) {
+          if (packages[name]?.hasChanges) {
             packageInfo.hasChanges = true;
             break;
           }
@@ -203,14 +208,14 @@ function setOutputs(
   devserver: PackageRecord,
   docserver: PackageRecord
 ) {
-  core.setOutput('bundles', bundles);
-  core.setOutput('tabs', tabs);
-  core.setOutput('libs', libs);
+  core.setOutput('bundles', bundles.filter(x => x.changes));
+  core.setOutput('tabs', tabs.filter(x => x.changes));
+  core.setOutput('libs', libs.filter(x => x.changes));
   core.setOutput('devserver', devserver);
   core.setOutput('docserver', docserver);
 }
 
-async function main() {
+export async function main() {
   const gitRoot = await getGitRoot();
   const { packages, bundles, tabs, libs } = await getAllPackages(gitRoot);
 
@@ -269,6 +274,6 @@ if (process.env.GITHUB_ACTIONS) {
   try {
     await main();
   } catch (error: any) {
-    core.setFailed(error.message);
+    core.setFailed(error);
   }
 }

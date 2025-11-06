@@ -32,7 +32,6 @@ export default defineConfig(
       '.yarn',
       'build/**',
       'docs/.vitepress/cache',
-      'devserver/vite.config.ts', // Don't lint this because there's no tsconfig properly configured for it
       '**/node_modules',
       'lib/buildtools/bin',
       'lib/buildtools/src/build/__test_mocks__',
@@ -480,10 +479,19 @@ export default defineConfig(
       'lib/repotools/**/*.ts',
       'lib/vitest-reporter/**/*.ts',
       '.github/actions/**/*.ts',
-      '**/vitest.config.js'
+      '**/vitest.config.{js,ts}'
     ],
     rules: {
       'import/extensions': ['error', 'ignorePackages'],
+    }
+  },
+  {
+    name: 'Rules for Vitest configs',
+    files: ['**/vitest.config.ts', './devserver/vite.config.ts'],
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.json'
+      }
     }
   },
   {
