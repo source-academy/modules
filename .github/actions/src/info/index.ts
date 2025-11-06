@@ -208,14 +208,14 @@ function setOutputs(
   devserver: PackageRecord,
   docserver: PackageRecord
 ) {
-  core.setOutput('bundles', bundles);
-  core.setOutput('tabs', tabs);
-  core.setOutput('libs', libs);
+  core.setOutput('bundles', bundles.filter(x => x.changes));
+  core.setOutput('tabs', tabs.filter(x => x.changes));
+  core.setOutput('libs', libs.filter(x => x.changes));
   core.setOutput('devserver', devserver);
   core.setOutput('docserver', docserver);
 }
 
-async function main() {
+export async function main() {
   const gitRoot = await getGitRoot();
   const { packages, bundles, tabs, libs } = await getAllPackages(gitRoot);
 
