@@ -174,7 +174,14 @@ jobs:
       - find-packages
       - tabs
 
-    if: ${{ fromJson(needs.find-packages.outputs.devserver).changes }}
+    if: >-
+      ${{
+        always() &&
+        !cancelled() &&
+        fromJson(needs.find-packages.outputs.devserver).changes &&
+        needs.find-packages.result == 'success' &&
+        (needs.find-packages.outputs.tabs == '[]' || needs.tabs.result == 'success')
+      }}
 
     steps:
       - name: Check out source code
@@ -189,7 +196,7 @@ jobs:
       - name: Load/Build all tabs
         uses: ./.github/actions/src/load-artifacts
 
-      - name: Initialize Repo
+      - name: Initialize Devserver
         uses: ./.github/actions/src/init
         with:
           package-name: '@sourceacademy/modules-devserver'
@@ -216,13 +223,21 @@ jobs:
     needs:
       - libraries
       - find-packages
-    if: ${{ fromJson(needs.find-packages.outputs.docserver).changes }}
+
+    if: >-
+      ${{
+        always() &&
+        !cancelled() &&
+        fromJson(needs.find-packages.outputs.docserver).changes &&
+        needs.find-packages.result == 'success' &&
+        (needs.find-packages.outputs.libs == '[]' || needs.libraries.result == 'success')
+      }}
 
     steps:
       - name: Check out source code
         uses: actions/checkout@v5
 
-      - name: Initialize Repo
+      - name: Initialize Docserver
         uses: ./.github/actions/src/init
         with:
           package-name: '@sourceacademy/modules-docserver'
