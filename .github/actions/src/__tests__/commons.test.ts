@@ -8,7 +8,7 @@ vi.mock(import('lodash/memoize.js'), () => ({
 
 const mockedExecOutput = vi.spyOn(exec, 'getExecOutput');
 
-describe(commons.checkForChanges, () => {
+describe(commons.checkDirForChanges, () => {
   function mockChanges(value: boolean) {
     mockedExecOutput.mockResolvedValueOnce({
       exitCode: value ? 1 : 0, stdout: '', stderr: ''
@@ -17,14 +17,14 @@ describe(commons.checkForChanges, () => {
 
   it('should return true if git diff exits with non zero code', async () => {
     mockChanges(true);
-    await expect(commons.checkForChanges('/')).resolves.toEqual(true);
+    await expect(commons.checkDirForChanges('/')).resolves.toEqual(true);
     expect(mockedExecOutput).toHaveBeenCalledOnce();
   });
 
   it('should return false if git diff exits with 0', async () => {
     mockChanges(false);
 
-    await expect(commons.checkForChanges('/')).resolves.toEqual(false);
+    await expect(commons.checkDirForChanges('/')).resolves.toEqual(false);
     expect(mockedExecOutput).toHaveBeenCalledOnce();
   });
 });

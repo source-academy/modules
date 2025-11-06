@@ -4,8 +4,10 @@ import utils from 'util';
 import * as core from '@actions/core';
 import type { SummaryTableRow } from '@actions/core/lib/summary.js';
 import packageJson from '../../../../package.json' with { type: 'json' };
-import { checkForChanges, getGitRoot, type PackageRecord, type RawPackageRecord } from '../commons.js';
+import { checkDirForChanges, type PackageRecord, type RawPackageRecord } from '../commons.js';
+import { getPackagesWithResolutionChanges, hasLockFileChanged } from '../lockfiles.js'
 import { topoSortPackages } from './sorter.js';
+import { gitRoot } from '../gitRoot';
 
 const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
 
@@ -14,6 +16,14 @@ const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
  * an unprocessed format
  */
 export async function getRawPackages(gitRoot: string, maxDepth?: number) {
+  let packagesWithResolutionChanges: string[] = [];
+
+  // If there are lock file changes we need to set hasChanges to true for
+  // that package even if that package's directory has no changes
+  if (await hasLockFileChanged()) {
+    packagesWithResolutionChanges = await getPackagesWithResolutionChanges();
+  }
+
   const output: Record<string, RawPackageRecord> = {};
 
   /**
@@ -26,14 +36,14 @@ export async function getRawPackages(gitRoot: string, maxDepth?: number) {
         if (item.name === 'package.json') {
           try {
             const [hasChanges, packageJson] = await Promise.all([
-              checkForChanges(currentDir),
+              checkDirForChanges(currentDir),
               fs.readFile(pathlib.join(currentDir, 'package.json'), 'utf-8')
                 .then(JSON.parse)
             ]);
 
             output[packageJson.name] = {
               directory: currentDir,
-              hasChanges,
+              hasChanges: hasChanges || packagesWithResolutionChanges.includes(packageJson.name),
               package: packageJson
             };
           } catch (error) {
@@ -216,7 +226,6 @@ function setOutputs(
 }
 
 export async function main() {
-  const gitRoot = await getGitRoot();
   const { packages, bundles, tabs, libs } = await getAllPackages(gitRoot);
 
   const { repository } = packageJson;
@@ -265,7 +274,7 @@ export async function main() {
     packages['@sourceacademy/modules-docserver']
   );
 
-  const workflows = await checkForChanges(pathlib.join(gitRoot, '.github/workflows'));
+  const workflows = await checkDirForChanges(pathlib.join(gitRoot, '.github/workflows'));
   core.setOutput('workflows', workflows);
 }
 
