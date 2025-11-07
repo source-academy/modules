@@ -1,6 +1,5 @@
 import { getExecOutput } from '@actions/exec';
 import memoize from 'lodash/memoize.js';
-import uniq from 'lodash/uniq.js';
 import { getPackageDiffs, getPackageReason } from './utils.js';
 
 /**
@@ -27,5 +26,5 @@ export const hasLockFileChanged = memoize(async () => {
 export async function getPackagesWithResolutionChanges() {
   const packages = [...await getPackageDiffs()];
   const workspaces = await Promise.all(packages.map(getPackageReason));
-  return uniq(workspaces.flat());
+  return new Set(workspaces.flat());
 }

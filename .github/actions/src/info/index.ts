@@ -16,7 +16,7 @@ const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
  * an unprocessed format
  */
 export async function getRawPackages(gitRoot: string, maxDepth?: number) {
-  let packagesWithResolutionChanges: string[] = [];
+  let packagesWithResolutionChanges: Set<string> | null = null;
 
   // If there are lock file changes we need to set hasChanges to true for
   // that package even if that package's directory has no changes
@@ -43,7 +43,7 @@ export async function getRawPackages(gitRoot: string, maxDepth?: number) {
 
             output[packageJson.name] = {
               directory: currentDir,
-              hasChanges: hasChanges || packagesWithResolutionChanges.includes(packageJson.name),
+              hasChanges: packagesWithResolutionChanges?.has(packageJson.name) ?? hasChanges,
               package: packageJson
             };
           } catch (error) {
