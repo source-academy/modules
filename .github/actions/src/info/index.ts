@@ -6,7 +6,7 @@ import type { SummaryTableRow } from '@actions/core/lib/summary.js';
 import packageJson from '../../../../package.json' with { type: 'json' };
 import { checkDirForChanges, type PackageRecord, type RawPackageRecord } from '../commons.js';
 import { gitRoot } from '../gitRoot.js';
-import { getPackagesWithResolutionChanges, hasLockFileChanged } from '../lockfiles.js';
+import { getPackagesWithResolutionChanges, hasLockFileChanged } from '../lockfiles/index.js';
 import { topoSortPackages } from './sorter.js';
 
 const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;

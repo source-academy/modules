@@ -1,8 +1,13 @@
 {
-  "include": ["src/**/*.ts", "vitest.setup.ts"],
+  "include": [
+    "src/**/*.ts",
+    "vitest.setup.ts"
+  ],
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
-    "lib": ["ES2020"],
+    "lib": [
+      "ES2020"
+    ],
     "module": "esnext",
     "moduleResolution": "bundler",
     "noEmit": true,
