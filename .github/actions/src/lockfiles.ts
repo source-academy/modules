@@ -87,7 +87,11 @@ async function getPackageDiffs() {
     }
 
     if (needToAdd) {
-      packages.push(args[0]);
+      if (depName.startsWith('@')) {
+        packages.push(args[1]);
+      } else {
+        packages.push(args[0]);
+      }
     }
   }
 
@@ -101,8 +105,9 @@ async function getPackageDiffs() {
 async function getPackageReason(pkg: string) {
   const packageNameRE = /^(@?sourceacademy\/.+)@.+$/;
 
-  const { stdout, exitCode } = await getExecOutput('yarn why', [pkg, '-R', '--json']);
+  const { stdout, stderr, exitCode } = await getExecOutput('yarn why', [pkg, '-R', '--json'], { silent: true });
   if (exitCode !== 0) {
+    core.error(stderr);
     throw new Error(`yarn why for ${pkg} exited with non-zero exit code!`);
   }
 
