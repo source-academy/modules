@@ -1,10 +1,10 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
-import memoize from 'lodash/memoize';
-import uniq from 'lodash/uniq';
 import * as core from '@actions/core';
 import { getExecOutput } from '@actions/exec';
-import { extractPkgsFromYarnLockV2 } from "snyk-nodejs-lockfile-parser";
+import memoize from 'lodash/memoize.js';
+import uniq from 'lodash/uniq.js';
+import { extractPkgsFromYarnLockV2 } from 'snyk-nodejs-lockfile-parser';
 import { gitRoot } from './gitRoot.js';
 
 /**
@@ -17,7 +17,7 @@ function processLockFileText(contents: string) {
     const newKey = key.split('@')[0];
 
     if (!(newKey in res)) {
-      res[newKey] = new Set()
+      res[newKey] = new Set();
     }
 
     res[newKey].add(version);
@@ -85,7 +85,7 @@ async function getPackageDiffs() {
         needToAdd = true;
       }
     }
-    
+
     if (needToAdd) {
       packages.push(args[0]);
     }
@@ -99,11 +99,11 @@ async function getPackageDiffs() {
  * lockfile.
  */
 async function getPackageReason(pkg: string) {
-  const packageNameRE = /^(@?sourceacademy\/.+)@.+$/ 
- 
+  const packageNameRE = /^(@?sourceacademy\/.+)@.+$/;
+
   const { stdout, exitCode } = await getExecOutput('yarn why', [pkg, '-R', '--json']);
   if (exitCode !== 0) {
-    throw new Error('yarn why exited with non-zero exit code!');
+    throw new Error(`yarn why for ${pkg} exited with non-zero exit code!`);
   }
 
   return stdout.trim().split('\n').map(each => {
@@ -112,7 +112,7 @@ async function getPackageReason(pkg: string) {
     if (!match) {
       throw new Error('failed to identify a package!');
     }
-    
+
     return match[1];
   });
 }
