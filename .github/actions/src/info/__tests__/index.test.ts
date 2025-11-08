@@ -4,9 +4,10 @@ import pathlib from 'path';
 import * as core from '@actions/core';
 import { describe, expect, test, vi } from 'vitest';
 import * as git from '../../commons.js';
+import * as lockfiles from '../../lockfiles/index.js';
 import { getAllPackages, getRawPackages, main } from '../index.js';
 
-const mockedCheckChanges = vi.spyOn(git, 'checkForChanges');
+const mockedCheckChanges = vi.spyOn(git, 'checkDirForChanges');
 
 vi.mock(import('path'), async importOriginal => {
   const { posix } = await importOriginal();
@@ -16,6 +17,10 @@ vi.mock(import('path'), async importOriginal => {
     posix,
   };
 });
+
+vi.mock(import('../../gitRoot.js'), () => ({
+  gitRoot: 'root'
+}));
 
 class NodeError extends Error {
   constructor(public readonly code: string) {
@@ -116,6 +121,7 @@ function mockReadFile(path: string) {
 
 vi.spyOn(fs, 'readdir').mockImplementation(mockReaddir as any);
 vi.spyOn(fs, 'readFile').mockImplementation(mockReadFile as any);
+vi.spyOn(lockfiles, 'hasLockFileChanged').mockResolvedValue(false);
 
 describe(getRawPackages, () => {
   test('maxDepth = 1', async () => {
@@ -127,7 +133,7 @@ describe(getRawPackages, () => {
     const [[name, packageData]] = results;
     expect(name).toEqual('@sourceacademy/modules');
     expect(packageData.hasChanges).toEqual(true);
-    expect(git.checkForChanges).toHaveBeenCalledOnce();
+    expect(git.checkDirForChanges).toHaveBeenCalledOnce();
   });
 
   test('maxDepth = 3', async () => {
@@ -215,7 +221,6 @@ describe(getAllPackages, () => {
 });
 
 describe(main, () => {
-  vi.spyOn(git, 'getGitRoot').mockResolvedValue('root');
   const mockedSetOutput = vi.spyOn(core, 'setOutput');
 
   vi.spyOn(core.summary, 'addHeading').mockImplementation(() => core.summary);

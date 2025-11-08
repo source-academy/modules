@@ -14,7 +14,7 @@ export type Note = {} & (NoteName | `${NoteName}${Accidental.NATURAL}` | `${Note
 export type NoteWithOctave = (Note | `${Note}${number}`);
 
 /**
- * An integer representing a MIDI note value. Refer to {@link https://i.imgur.com/qGQgmYr.png"|this} mapping from
+ * An integer representing a MIDI note value. Refer to {@link https://i.imgur.com/qGQgmYr.png|this} mapping from
  * letter name to midi notes.
  */
 export type MIDINote = number;
