@@ -246,7 +246,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
       if (!bundleResult) {
         return {
           severity: 'error',
-          errors: [`Invalid bundle present at ${jsonDir}`]
+          errors: [`No bundle present at ${jsonDir}`]
         };
       } else if (bundleResult.severity === 'error') {
         return bundleResult;

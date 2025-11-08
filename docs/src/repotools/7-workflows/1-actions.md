@@ -24,6 +24,9 @@ The information action retrieves information about each package present in the r
 
 In the case of bundles or tabs, it also retrieves the name of the bundle or tab.
 
+In case of changes to the lockfile, it also determines which packages need to be rebuilt. This can happen when dependencies of dependencies change,
+so no change is present in the package's source code itself, but the lockfile itself has changed.
+
 This information is used by both the initializer action and the workflows to determine the what tasks need to be executed.
 
 ## Initializer Action (`init/action.yml`)
