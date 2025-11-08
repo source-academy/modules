@@ -1,17 +1,13 @@
-// @ts-check
-// Rune Tab vitest.config.js
+// Matrix Tab Vitest Config
 import { defineProject } from 'vitest/config';
 
 export default defineProject({
   optimizeDeps: {
-    include: [
-      'lodash/clamp',
-      'js-slang/dist/utils/stringify'
-    ]
+    include: ['lodash/range']
   },
   test: {
     root: import.meta.dirname,
-    name: 'Rune Tab',
+    name: 'Matrix Tab',
     browser: {
       enabled: true,
     }
