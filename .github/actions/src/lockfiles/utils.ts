@@ -22,8 +22,8 @@ export function extractPackageName(raw: string) {
 }
 
 /**
- * Using `yarn why`, determine why the given package is present in the
- * lockfile.
+ * Using `yarn why`, determine which repository package is the reason why the
+ * given package is present in the lockfile.
  */
 export async function getPackageReason(pkg: string) {
   const { stdout, stderr, exitCode } = await getExecOutput('yarn why', [pkg, '-R', '--json'], { silent: true });
@@ -91,7 +91,7 @@ export async function getCurrentLockFile() {
  * Retrieves the contents of the lockfile on the master branch
  */
 export async function getMasterLockFile() {
-  const { stdout, exitCode } = await getExecOutput(
+  const { stdout, stderr, exitCode } = await getExecOutput(
     'git',
     [
       '--no-pager',
@@ -102,6 +102,7 @@ export async function getMasterLockFile() {
   );
 
   if (exitCode !== 0) {
+    core.error(stderr);
     throw new Error('git show exited with non-zero error-code');
   }
 
