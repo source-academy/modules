@@ -19,7 +19,7 @@ const coverageOption = new Option('--coverage', 'Run coverage testing');
 export const silentOption = new Option('--silent [option]', 'Silent mode')
   .choices(['passed-only', 'false', 'true'] as const)
   .argParser(value => {
-    switch (value) {
+    switch (value.toLowerCase()) {
       case 'passed-only':
         return 'passed-only';
       case 'false':
