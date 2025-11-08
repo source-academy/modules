@@ -20,7 +20,7 @@ interface MatrixButtonProps {
    */
   hover?: boolean;
 
-  label?: string;
+  label: string;
 
   /**
    * Title attribute to be applied to the button. Only needed for testing
@@ -59,6 +59,6 @@ export default function MatrixButton({
     onMouseEnter={onMouseEnter}
     onMouseLeave={onMouseLeave}
   >
-    {label !== undefined && <>{label}</>}
+    {label}
   </Button>;
 }

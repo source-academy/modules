@@ -309,7 +309,7 @@ export default defineConfig(
       '@typescript-eslint/no-import-type-side-effects': 'error',
       '@typescript-eslint/no-redundant-type-constituents': 'off', // Was 'error'
       // This rule doesn't seem to fail locally but fails on the CI
-      // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
       '@typescript-eslint/only-throw-error': 'error'
     }
@@ -466,10 +466,6 @@ export default defineConfig(
       'vitest/valid-describe-callback': 'off', // was 'error'
       'vitest/valid-expect-in-promise': 'error',
       'vitest/valid-title': ['error', { ignoreTypeOfDescribeName: true }],
-
-      'import/extensions': ['error', 'never', {
-        config: 'ignore'
-      }]
     }
   },
   {

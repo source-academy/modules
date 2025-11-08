@@ -4243,7 +4243,9 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
+    "@types/lodash": "npm:^4.14.198"
     js-slang: "npm:^1.0.81"
+    lodash: "npm:^4.17.21"
     typescript: "npm:^5.8.2"
   languageName: unknown
   linkType: soft

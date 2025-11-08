@@ -1,9 +1,9 @@
 import type { List } from 'js-slang/dist/stdlib/list';
+import clamp from 'lodash/clamp';
 import type { CellCallback, Matrix } from './types';
 
 /**
- * Ensure that user inputs are within the proper bounds. Only `get_cell` and `set_cell` really
- * need to use this, for the rest the extra bounds checking is extraneous.
+ * Ensure that user inputs are within the proper bounds
  */
 function checkDimensions(func_name: string, matrix: Matrix, row: number, col: number) {
   // console.log(matrix instanceof Matrix);
@@ -41,13 +41,16 @@ export function create_matrix(rows: number, cols: number, name: string | undefin
   if (rows > MAX_ROWS) throw new Error(`${create_matrix.name}: Cannot create a matrix with greater than ${MAX_ROWS} rows!`);
   if (cols > MAX_COLS) throw new Error(`${create_matrix.name}: Cannot create a matrix with greater than ${MAX_COLS} columns!`);
 
-  const values = new Array(rows);
-  const labels = new Array(rows);
+  const values: boolean[][] = new Array(rows);
+  const labels: string[][] = new Array(rows);
   for (let i = 0; i < rows; i++) {
     values[i] = new Array(cols);
     labels[i] = new Array(cols);
 
-    for (let j = 0; j < cols; j++) values[i][j] = false;
+    for (let j = 0; j < cols; j++) {
+      values[i][j] = false;
+      labels[i][j] = '';
+    }
   }
   return {
     name,
@@ -261,7 +264,11 @@ export function on_row_click(matrix: Matrix, callback: (row: number, value: bool
  * @param probability Probability between 0 and 1 to use
  */
 export function randomise_matrix(matrix: Matrix, probability: number): void {
-  clear_matrix(matrix);
+  if (typeof probability !== 'number') {
+    throw new Error(`${randomise_matrix.name}: Expected a number between 0 and 1 for probability, got ${probability}`);
+  }
+
+  probability = clamp(probability, 0, 1);
 
   // draw the randomised matrix
   for (let i = 0; i < matrix.rows; i++) {

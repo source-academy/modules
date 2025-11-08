@@ -1,6 +1,6 @@
-import { getDefaultCellCallback, getDefaultColCallback, getDefaultRowCallback } from '@sourceacademy/bundle-matrix/callbacks';
 import type { Matrix } from '@sourceacademy/bundle-matrix/types';
 import range from 'lodash/range';
+import { getDefaultCellCallback, getDefaultColCallback, getDefaultRowCallback } from './callbacks';
 import IndexLabel from './IndexLabel';
 import MatrixButton from './MatrixButton';
 
