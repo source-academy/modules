@@ -20,7 +20,7 @@ export const logLevelOption = new Option('--logLevel <level>', 'Log level that T
   .argParser((val): LogLevel => {
     const numVal = parseInt(val);
     if (!Number.isNaN(numVal)) {
-      const result = objectValues(LogLevel).some(value => value === numVal)
+      const result = objectValues(LogLevel).some(value => value === numVal);
       if (result) {
         return numVal as unknown as LogLevel;
       }
