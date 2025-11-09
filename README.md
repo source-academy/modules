@@ -17,7 +17,7 @@ If you are a developer looking to do things like create a new bundle or work wit
 | Source Academy                | <https://sourceacademy.org>                              |
 | Default Modules Deployment    | <https://source-academy.github.io/modules>               |
 | Default Modules Documentation | <https://source-academy.github.io/modules/documentation> |
-| Developer Documentation       | <https://source-academy.github.io/modules/devdocs        |
+| Developer Documentation       | <https://source-academy.github.io/modules/devdocs>       |
 | `js-slang`                    | <https://github.com/source-academy/js-slang>             |
 | Frontend                      | <https://github.com/source-academy/frontend>             |
 
