@@ -3,11 +3,11 @@ description: Gets which packages are currently present in the repository
 
 outputs:
   libs:
-    description: The list of library packages present
+    description: The list of library packages that have changes
   bundles:
-    description: The list of bundles packages present
+    description: The list of bundles packages that have changes
   tabs:
-    description: The list of tabs packages present
+    description: The list of tabs packages that have changes
   devserver:
     description: Information for the devserver
   docserver:

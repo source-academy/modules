@@ -3,17 +3,17 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
 import react from '@vitejs/plugin-react';
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import { loadEnv } from 'vite'
 import { playwright } from '@vitest/browser-playwright';
+import { loadEnv } from 'vite';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { defineProject } from 'vitest/config';
 import type { BrowserCommand } from 'vitest/node';
 
 const setLocalStorage: BrowserCommand<[key: string, value: any]> = async (ctx, key, value) => {
   if (ctx.provider.name === 'playwright') {
-    await ctx.page.evaluate(([key, value]) => localStorage.setItem(key, value), [key, value])
+    await ctx.page.evaluate(([key, value]) => localStorage.setItem(key, value), [key, value]);
   }
-}
+};
 
 export default defineProject(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
@@ -61,13 +61,13 @@ export default defineProject(({ mode }) => {
         find: /^@sourceacademy\/modules-lib/,
         replacement: '.',
         async customResolver(source) {
-          const newSource = pathlib.resolve(import.meta.dirname, '../lib/modules-lib/src', source)
-          const extensions = ['.tsx', '.ts', '/index.ts']
+          const newSource = pathlib.resolve(import.meta.dirname, '../lib/modules-lib/src', source);
+          const extensions = ['.tsx', '.ts', '/index.ts'];
 
           for (const each of extensions) {
             try {
-              await fs.access(`${newSource}${each}`, fs.constants.R_OK)
-              return `${newSource}${each}`
+              await fs.access(`${newSource}${each}`, fs.constants.R_OK);
+              return `${newSource}${each}`;
             } catch { }
           }
 
@@ -105,9 +105,9 @@ export default defineProject(({ mode }) => {
         'react-ace',
         'react-ace/lib/ace',
         're-resizable',
-        "vite-plugin-node-polyfills/shims/buffer",
-        "vite-plugin-node-polyfills/shims/global",
-        "vite-plugin-node-polyfills/shims/process",
+        'vite-plugin-node-polyfills/shims/buffer',
+        'vite-plugin-node-polyfills/shims/global',
+        'vite-plugin-node-polyfills/shims/process',
         'vitest-browser-react'
       ],
     },
@@ -126,5 +126,5 @@ export default defineProject(({ mode }) => {
         }
       }
     }
-  }
+  };
 });

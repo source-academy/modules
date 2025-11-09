@@ -4,7 +4,9 @@ import utils from 'util';
 import * as core from '@actions/core';
 import type { SummaryTableRow } from '@actions/core/lib/summary.js';
 import packageJson from '../../../../package.json' with { type: 'json' };
-import { checkForChanges, getGitRoot, type PackageRecord, type RawPackageRecord } from '../commons.js';
+import { checkDirForChanges, type PackageRecord, type RawPackageRecord } from '../commons.js';
+import { gitRoot } from '../gitRoot.js';
+import { getPackagesWithResolutionChanges, hasLockFileChanged } from '../lockfiles/index.js';
 import { topoSortPackages } from './sorter.js';
 
 const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
@@ -14,8 +16,19 @@ const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
  * an unprocessed format
  */
 export async function getRawPackages(gitRoot: string, maxDepth?: number) {
+  let packagesWithResolutionChanges: Set<string> | null = null;
+
+  // If there are lock file changes we need to set hasChanges to true for
+  // that package even if that package's directory has no changes
+  if (await hasLockFileChanged()) {
+    packagesWithResolutionChanges = await getPackagesWithResolutionChanges();
+  }
+
   const output: Record<string, RawPackageRecord> = {};
 
+  /**
+   * Search the given directory for package.json files
+   */
   async function recurser(currentDir: string, currentDepth: number) {
     const items = await fs.readdir(currentDir, { withFileTypes: true });
     await Promise.all(items.map(async item => {
@@ -23,14 +36,14 @@ export async function getRawPackages(gitRoot: string, maxDepth?: number) {
         if (item.name === 'package.json') {
           try {
             const [hasChanges, packageJson] = await Promise.all([
-              checkForChanges(currentDir),
+              checkDirForChanges(currentDir),
               fs.readFile(pathlib.join(currentDir, 'package.json'), 'utf-8')
                 .then(JSON.parse)
             ]);
 
             output[packageJson.name] = {
               directory: currentDir,
-              hasChanges,
+              hasChanges: packagesWithResolutionChanges?.has(packageJson.name) ?? hasChanges,
               package: packageJson
             };
           } catch (error) {
@@ -93,16 +106,18 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
     if (!packageInfo.hasChanges) {
       if (packageInfo.package.dependencies) {
         for (const name of Object.keys(packageInfo.package.dependencies)) {
-          if (packages[name].hasChanges) {
+          if (packages[name]?.hasChanges) {
             packageInfo.hasChanges = true;
             break;
           }
         }
       }
 
+      // If hasChanges still hasn't been set yet, we can proceed to iterate
+      // through devDependencies as well
       if (!packageInfo.hasChanges && packageInfo.package.devDependencies) {
         for (const name of Object.keys(packageInfo.package.devDependencies)) {
-          if (packages[name].hasChanges) {
+          if (packages[name]?.hasChanges) {
             packageInfo.hasChanges = true;
             break;
           }
@@ -203,15 +218,14 @@ function setOutputs(
   devserver: PackageRecord,
   docserver: PackageRecord
 ) {
-  core.setOutput('bundles', bundles);
-  core.setOutput('tabs', tabs);
-  core.setOutput('libs', libs);
+  core.setOutput('bundles', bundles.filter(x => x.changes));
+  core.setOutput('tabs', tabs.filter(x => x.changes));
+  core.setOutput('libs', libs.filter(x => x.changes));
   core.setOutput('devserver', devserver);
   core.setOutput('docserver', docserver);
 }
 
-async function main() {
-  const gitRoot = await getGitRoot();
+export async function main() {
   const { packages, bundles, tabs, libs } = await getAllPackages(gitRoot);
 
   const { repository } = packageJson;
@@ -260,7 +274,7 @@ async function main() {
     packages['@sourceacademy/modules-docserver']
   );
 
-  const workflows = await checkForChanges(pathlib.join(gitRoot, '.github/workflows'));
+  const workflows = await checkDirForChanges(pathlib.join(gitRoot, '.github/workflows'));
   core.setOutput('workflows', workflows);
 }
 
@@ -269,6 +283,6 @@ if (process.env.GITHUB_ACTIONS) {
   try {
     await main();
   } catch (error: any) {
-    core.setFailed(error.message);
+    core.setFailed(error);
   }
 }
