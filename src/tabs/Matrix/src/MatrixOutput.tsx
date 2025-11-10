@@ -15,32 +15,32 @@ interface MatrixOutputProps {
 }
 
 export default function MatrixOutput({ errors }: MatrixOutputProps) {
-  return <Card elevation={2} style={{overflowX: 'auto', height: '10vh'}}>
+  return <Card elevation={2} style={{ overflowX: 'auto', height: '10vh' }}>
     {errors.length > 0
-    ? <Pre
-      style={{
-        backgroundColor: 'transparent',
-        boxShadow: 'none',
-        padding: '0px',
-        margin: '0px',
-        /**
-          * white-space, word-wrap and word-break
-          * are specified to allow all output to wrap.
-          */
-        whiteSpace: 'pre-wrap',
-        wordWrap: 'break-word',
-        wordBreak: 'break-word',
-        /**
-          * Use same fonts as ace-editor for
-          * output. Taken from react-ace
-          * sourcecode, font size modified.
-          */
-        font: "16px / normal 'Inconsolata', 'Consolas', monospace",
-        color: "#ff4444",
-      }}
-    >
-      {safeParseErrors(errors)}
-    </Pre>
-    : <p>If any errors occur while your matrix's callbacks are executing, they will appear here</p>}
+      ? <Pre
+        style={{
+          backgroundColor: 'transparent',
+          boxShadow: 'none',
+          padding: '0px',
+          margin: '0px',
+          /**
+           * white-space, word-wrap and word-break
+           * are specified to allow all output to wrap.
+           */
+          whiteSpace: 'pre-wrap',
+          wordWrap: 'break-word',
+          wordBreak: 'break-word',
+          /**
+           * Use same fonts as ace-editor for
+           * output. Taken from react-ace
+           * sourcecode, font size modified.
+           */
+          font: "16px / normal 'Inconsolata', 'Consolas', monospace",
+          color: '#ff4444',
+        }}
+      >
+        {safeParseErrors(errors)}
+      </Pre>
+      : <p>If any errors occur while your matrix&apos;s callbacks are executing, they will appear here</p>}
   </Card>;
 }

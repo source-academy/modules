@@ -74,11 +74,7 @@ function MatrixInstance({ matrix, index }: MatrixInstanceProps) {
   />;
 
   const userButtons = matrix.buttons.length > 0
-    ? <UserToolbar
-        max={5}
-        buttons={matrix.buttons}
-        onClick={rerender}
-    />
+    ? <UserToolbar max={5} buttons={matrix.buttons} onClick={rerender} />
     : <p style={{
       fontSize: '12px',
       textAlign: 'center',
