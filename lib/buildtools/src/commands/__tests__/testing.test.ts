@@ -141,18 +141,11 @@ describe('Test silent option', () => {
   const runCommand = (...args: string[]) => new Promise<undefined | boolean | 'passed-only'>(
     (resolve, reject) => {
       const command = new Command()
-        .exitOverride()
+        .exitOverride(reject)
         .addOption(silentOption)
         .configureOutput({ writeErr: () => { } })
-        .action(option => {
-          resolve(option.silent);
-        });
-
-      try {
-        command.parse(args, { from: 'user' });
-      } catch (error) {
-        reject(error);
-      }
+        .action(option => resolve(option.silent))
+        .parse(args, { from: 'user' });
     }
   );
 
@@ -178,6 +171,11 @@ describe('Test silent option', () => {
 
   test('running command with \'passed-only\'', async () => {
     const value = await runCommand('--silent', 'passed-only');
+    expect(value).toEqual('passed-only');
+  });
+
+  test('option is case insensitive', async () => {
+    const value = await runCommand('--silent', 'Passed-OnLy');
     expect(value).toEqual('passed-only');
   });
 
