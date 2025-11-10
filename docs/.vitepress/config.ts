@@ -88,10 +88,15 @@ const vitepressOptions: UserConfig = {
     ],
     siteTitle: 'SA Modules',
     socialLinks: [
-      { icon: 'github', link: _package.repository },
+      {
+        icon: 'github',
+        link: _package.repository,
+        title: 'Github Repository'
+      },
       {
         icon: 'gitbook',
-        link: 'https://source-academy.github.io/modules/documentation/'
+        link: 'https://source-academy.github.io/modules/documentation/',
+        title: 'Modules Documentation'
       }
     ],
     search: {
