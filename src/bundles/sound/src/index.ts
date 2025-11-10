@@ -36,7 +36,6 @@ export {
   noise_sound,
   phase_mod,
   piano,
-  play_in_tab,
   play,
   play_wave,
   record,
@@ -58,3 +57,5 @@ export {
   letter_name_to_frequency,
   midi_note_to_frequency
 } from '@sourceacademy/bundle-midi';
+
+export { play_in_tab } from './play_in_tab';
