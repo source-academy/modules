@@ -43,7 +43,7 @@ export async function getRawPackages(gitRoot: string, maxDepth?: number) {
 
             output[packageJson.name] = {
               directory: currentDir,
-              hasChanges: packagesWithResolutionChanges?.includes(packageJson.name) ?? hasChanges,
+              hasChanges: hasChanges || packagesWithResolutionChanges?.includes(packageJson.name),
               package: packageJson
             };
           } catch (error) {
