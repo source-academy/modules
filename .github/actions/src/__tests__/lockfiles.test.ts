@@ -15,4 +15,9 @@ describe(utils.extractPackageName, () => {
     expect(utils.extractPackageName('lodash@npm:^4.17.20'))
       .toEqual('lodash');
   });
+
+  it('throws on invalid package name', () => {
+    expect(() => utils.extractPackageName('something weird'))
+      .toThrowError('Invalid package name: something weird');
+  });
 });
