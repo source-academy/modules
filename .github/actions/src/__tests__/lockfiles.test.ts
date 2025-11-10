@@ -2,9 +2,9 @@ import type fs from 'fs/promises';
 import type pathlib from 'path';
 import * as exec from '@actions/exec';
 import { describe, expect, it, vi } from 'vitest';
-import * as utils from '../utils.js';
+import * as utils from '../lockfiles.js';
 
-vi.mock(import('../../gitRoot.js'), () => ({
+vi.mock(import('../gitRoot.js'), () => ({
   gitRoot: 'root'
 }));
 
