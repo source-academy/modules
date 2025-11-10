@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import * as utils from '../utils.js';
+import * as utils from '../lockfiles.js';
 
-vi.mock(import('../../gitRoot.js'), () => ({
+vi.mock(import('../gitRoot.js'), () => ({
   gitRoot: 'root'
 }));
 
