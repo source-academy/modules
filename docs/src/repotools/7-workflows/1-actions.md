@@ -10,8 +10,7 @@ makes use of two:
 - Initializer Action
 - Information Action
 
-Creating custom actions is detailed [here](https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax). The convention for each action is have its metadata file (`action.yml`) in the same
-directory as its source code (if necessary).
+Creating custom actions is detailed [here](https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax). The convention for each action is have its metadata file (`action.yml`) in the same directory as its source code (if necessary).
 
 ## Information Action (`info/action.yml`)
 
@@ -24,8 +23,7 @@ The information action retrieves information about each package present in the r
 
 In the case of bundles or tabs, it also retrieves the name of the bundle or tab.
 
-In case of changes to the lockfile, it also determines which packages need to be rebuilt. This can happen when dependencies of dependencies change,
-so no change is present in the package's source code itself, but the lockfile itself has changed.
+In case of changes to the lockfile, it also determines which packages need to be rebuilt. This can happen when dependencies of dependencies change, so no change is present in the package's source code itself, but the lockfile itself has changed.
 
 This information is used by both the initializer action and the workflows to determine the what tasks need to be executed.
 

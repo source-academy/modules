@@ -4,7 +4,7 @@ import pathlib from 'path';
 import * as core from '@actions/core';
 import { describe, expect, test, vi } from 'vitest';
 import * as git from '../../commons.js';
-import * as lockfiles from '../../lockfiles/index.js';
+import * as lockfiles from '../../lockfiles.js';
 import { getAllPackages, getRawPackages, main } from '../index.js';
 
 const mockedCheckChanges = vi.spyOn(git, 'checkDirForChanges');

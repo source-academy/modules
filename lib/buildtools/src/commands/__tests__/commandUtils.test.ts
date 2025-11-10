@@ -1,7 +1,7 @@
+import { Command } from '@commander-js/extra-typings';
 import type { Severity } from '@sourceacademy/modules-repotools/types';
 import { describe, expect, test } from 'vitest';
 import { logLevelOption, processResult } from '../commandUtils.js';
-import { Command } from '@commander-js/extra-typings';
 import { LogLevel } from 'typedoc';
 
 describe(processResult, () => {
