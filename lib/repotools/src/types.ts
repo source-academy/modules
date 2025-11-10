@@ -6,37 +6,24 @@ export const severity = {
 
 export type Severity = (typeof severity)[keyof typeof severity];
 
-<<<<<<< HEAD
-=======
 /**
  * A bundle manifest, including the `version` field from `package.json`
  */
->>>>>>> workspaces-fix
 export interface BundleManifest {
   requires?: number;
   version?: string;
   tabs?: string[];
 }
 
-<<<<<<< HEAD
-export type ModulesManifest = {
-=======
 /**
  * The combined modules manifest. Keys are bundle names and values are their
  * corresponding {@link BundleManifest}.
  */
 export interface ModulesManifest {
->>>>>>> workspaces-fix
   [name: string]: BundleManifest;
 };
 
 // #region ResolvedBundle
-<<<<<<< HEAD
-export interface ResolvedBundle {
-  type: 'bundle';
-  name: string;
-  manifest: BundleManifest;
-=======
 /**
  * Represents all the information about a bundle.
  */
@@ -55,7 +42,6 @@ export interface ResolvedBundle {
   /**
    * The path to the directory that contains the bundle
    */
->>>>>>> workspaces-fix
   directory: string;
 }
 // #endregion ResolvedBundle

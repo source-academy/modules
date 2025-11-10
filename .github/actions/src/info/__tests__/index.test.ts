@@ -3,10 +3,12 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import * as core from '@actions/core';
 import { describe, expect, test, vi } from 'vitest';
-import * as git from '../../commons.js';
+import * as commons from '../../commons.js';
+import * as git from '../../gitRoot.js';
+import * as lockfiles from '../../lockfiles/index.js';
 import { getAllPackages, getRawPackages, main } from '../index.js';
 
-const mockedCheckChanges = vi.spyOn(git, 'checkDirForChanges');
+const mockedCheckChanges = vi.spyOn(commons, 'checkDirForChanges');
 
 vi.mock(import('path'), async importOriginal => {
   const { posix } = await importOriginal();
@@ -132,7 +134,7 @@ describe(getRawPackages, () => {
     const [[name, packageData]] = results;
     expect(name).toEqual('@sourceacademy/modules');
     expect(packageData.hasChanges).toEqual(true);
-    expect(git.checkDirForChanges).toHaveBeenCalledOnce();
+    expect(commons.checkDirForChanges).toHaveBeenCalledOnce();
   });
 
   test('maxDepth = 3', async () => {
