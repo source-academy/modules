@@ -18225,8 +18225,8 @@ __metadata:
   linkType: hard
 
 "vitepress@npm:^1.6.3":
-  version: 1.6.3
-  resolution: "vitepress@npm:1.6.3"
+  version: 1.6.4
+  resolution: "vitepress@npm:1.6.4"
   dependencies:
     "@docsearch/css": "npm:3.8.2"
     "@docsearch/js": "npm:3.8.2"
@@ -18256,7 +18256,7 @@ __metadata:
       optional: true
   bin:
     vitepress: bin/vitepress.js
-  checksum: 10c0/7a22868ae9c985fb8b4bc9df75f1ca20e2a0900d1620e38fbe0c3cc830e707029babd997aab6b0503f09a94d5df13037577bba17d9a294f5109ee78246060a25
+  checksum: 10c0/bffdd6fcfdfa72ff48228f7361d596e2279ebdbde9684b87cf66f7ef12ba096cb6eb931a1aff82038bdc579bb287e0982ba28f9416ed47af18e720a93b332d71
   languageName: node
   linkType: hard
 
