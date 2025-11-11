@@ -4291,7 +4291,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/react": "npm:^18.3.1"
     "@vitest/browser-playwright": "npm:^4.0.4"
-    playwright: "npm:^1.54.1"
+    playwright: "npm:^1.55.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     typescript: "npm:^5.8.2"
@@ -4555,7 +4555,7 @@ __metadata:
     commander: "npm:^14.0.0"
     eslint: "npm:^9.35.0"
     js-slang: "npm:^1.0.81"
-    playwright: "npm:^1.54.1"
+    playwright: "npm:^1.55.1"
     re-resizable: "npm:^6.9.11"
     react: "npm:^18.3.1"
     react-ace: "npm:^10.1.0"
@@ -4616,7 +4616,7 @@ __metadata:
     "@vitest/browser-playwright": "npm:^4.0.4"
     eslint: "npm:^9.35.0"
     js-slang: "npm:^1.0.81"
-    playwright: "npm:^1.54.1"
+    playwright: "npm:^1.55.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     typedoc: "npm:^0.28.9"
@@ -4766,7 +4766,7 @@ __metadata:
     "@types/react-dom": "npm:^18.3.1"
     "@vitest/browser-playwright": "npm:^4.0.4"
     "@vitest/coverage-v8": "npm:^4.0.4"
-    playwright: "npm:^1.54.1"
+    playwright: "npm:^1.55.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     vitest: "npm:^4.0.4"
@@ -4920,7 +4920,7 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
     "@vitest/browser-playwright": "npm:^4.0.4"
-    playwright: "npm:^1.54.1"
+    playwright: "npm:^1.55.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     vitest: "npm:^4.0.4"
@@ -15129,27 +15129,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-core@npm:1.54.1":
-  version: 1.54.1
-  resolution: "playwright-core@npm:1.54.1"
+"playwright-core@npm:1.56.1":
+  version: 1.56.1
+  resolution: "playwright-core@npm:1.56.1"
   bin:
     playwright-core: cli.js
-  checksum: 10c0/b821262b024d7753b1bfa71eb2bc99f2dda12a869d175b2e1bc6ac2764bd661baf36d9d42f45caf622854ad7e4a6077b9b57014c74bb5a78fe339c9edf1c9019
+  checksum: 10c0/ffd40142b99c68678b387445d5b42f1fee4ab0b65d983058c37f342e5629f9cdbdac0506ea80a0dfd41a8f9f13345bad54e9a8c35826ef66dc765f4eb3db8da7
   languageName: node
   linkType: hard
 
-"playwright@npm:^1.54.1":
-  version: 1.54.1
-  resolution: "playwright@npm:1.54.1"
+"playwright@npm:^1.55.1":
+  version: 1.56.1
+  resolution: "playwright@npm:1.56.1"
   dependencies:
     fsevents: "npm:2.3.2"
-    playwright-core: "npm:1.54.1"
+    playwright-core: "npm:1.56.1"
   dependenciesMeta:
     fsevents:
       optional: true
   bin:
     playwright: cli.js
-  checksum: 10c0/c5fedae31a03a1f4c4846569aef3ffb98da23000a4d255abfc8c2ede15b43cc7cd87b80f6fa078666c030373de8103787cf77ef7653ae9458aabbbd4320c2599
+  checksum: 10c0/8e9965aede86df0f4722063385748498977b219630a40a10d1b82b8bd8d4d4e9b6b65ecbfa024331a30800163161aca292fb6dd7446c531a1ad25f4155625ab4
   languageName: node
   linkType: hard
 
