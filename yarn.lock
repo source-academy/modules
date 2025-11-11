@@ -1906,7 +1906,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dimforge/rapier3d-compat@npm:^0.12.0":
+"@dimforge/rapier3d-compat@npm:^0.12.0, @dimforge/rapier3d-compat@npm:~0.12.0":
   version: 0.12.0
   resolution: "@dimforge/rapier3d-compat@npm:0.12.0"
   checksum: 10c0/c66c24f90649c0fc870679c12e7fec1a111080d44450169b57561f957d7b6b284ad8a3ceeba95533e213176ea171351acebd3dd43885fafb33f18bfbd9d507db
@@ -4248,10 +4248,10 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/plotly.js": "npm:^2.35.4"
-    "@types/three": "npm:^0.175.0"
+    "@types/three": "npm:^0.181.0"
     nbody: "npm:^0.2.0"
     plotly.js-dist: "npm:^2.17.1"
-    three: "npm:^0.175.0"
+    three: "npm:^0.181.0"
     typescript: "npm:^5.8.2"
   languageName: unknown
   linkType: soft
@@ -4345,8 +4345,8 @@ __metadata:
     "@dimforge/rapier3d-compat": "npm:^0.11.2"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    "@types/three": "npm:^0.175.0"
-    three: "npm:^0.175.0"
+    "@types/three": "npm:^0.181.0"
+    three: "npm:^0.181.0"
     typescript: "npm:^5.8.2"
   languageName: unknown
   linkType: soft
@@ -4801,12 +4801,12 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/plotly.js": "npm:^2.35.4"
     "@types/react": "npm:^18.3.1"
-    "@types/three": "npm:^0.175.0"
+    "@types/three": "npm:^0.181.0"
     nbody: "npm:^0.2.0"
     plotly.js-dist: "npm:^2.17.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    three: "npm:^0.175.0"
+    three: "npm:^0.181.0"
   languageName: unknown
   linkType: soft
 
@@ -5772,17 +5772,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/three@npm:^0.175.0":
-  version: 0.175.0
-  resolution: "@types/three@npm:0.175.0"
+"@types/three@npm:^0.181.0":
+  version: 0.181.0
+  resolution: "@types/three@npm:0.181.0"
   dependencies:
+    "@dimforge/rapier3d-compat": "npm:~0.12.0"
     "@tweenjs/tween.js": "npm:~23.1.3"
     "@types/stats.js": "npm:*"
     "@types/webxr": "npm:*"
     "@webgpu/types": "npm:*"
     fflate: "npm:~0.8.2"
-    meshoptimizer: "npm:~0.18.1"
-  checksum: 10c0/9e4b4a0aeba942b4dc5fc3648eb7932f8b7b6c03f2f9d69549f967bb5e581bb48022d15494b4e95eac21982d107bc4db2eecfb539a34451d2876ca3bd22a001c
+    meshoptimizer: "npm:~0.22.0"
+  checksum: 10c0/c110de1a1934ef4cceb9071a52ccdab6df0c6502600322004a29c4b273c196a0e700fed4257a421190d8618a27f0e418e3ba14da3e3a7168cc014007be1b8f04
   languageName: node
   linkType: hard
 
@@ -13418,6 +13419,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"meshoptimizer@npm:~0.22.0":
+  version: 0.22.0
+  resolution: "meshoptimizer@npm:0.22.0"
+  checksum: 10c0/df5c10c897a9eea3085cd2ae077dd4b904df3d71855eb3cbaa624d05e62eb4e893b3e2492cae070122561addb90fbfe092c53b7e68fdd391d0009f267af3f348
+  languageName: node
+  linkType: hard
+
 "micromark-core-commonmark@npm:^2.0.0":
   version: 2.0.3
   resolution: "micromark-core-commonmark@npm:2.0.3"
@@ -17251,10 +17259,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three@npm:^0.175.0":
-  version: 0.175.0
-  resolution: "three@npm:0.175.0"
-  checksum: 10c0/eb47d45aaee376cfbbe7334ec4e9f3ea9cb03f9ecce5a313a08f56a01834e7f514a0c657cf2c4abeff9956079721cd542e2913fede50553d935e7fa390921452
+"three@npm:^0.181.0":
+  version: 0.181.1
+  resolution: "three@npm:0.181.1"
+  checksum: 10c0/ca848798fa75ac6f4a20b7da085e99b7eba18cc8bd51268e91cefa405a021e045561475fe8cea3841439e39e7723055d80ba942ad4c63f651713ac874f6d4e4a
   languageName: node
   linkType: hard
 
