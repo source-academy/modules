@@ -32,10 +32,12 @@ export async function getPackageReason(pkg: string) {
     throw new Error(`yarn why for '${pkg}' exited with non-zero exit code!`);
   }
 
-  return stdout.trim().split('\n').map(each => {
-    const entry = JSON.parse(each).value;
-    return extractPackageName(entry);
-  });
+  return stdout.trim().split('\n')
+    .filter(l => l.trim().length > 0)
+    .map(each => {
+      const entry = JSON.parse(each).value;
+      return extractPackageName(entry);
+    });
 }
 
 /**
