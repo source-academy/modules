@@ -9,7 +9,7 @@
         "GameObject"
       ]
     ],
-    "retType": "undefined | GameObject"
+    "retType": "GameObject | undefined"
   },
   "add_listener": {
     "kind": "function",
@@ -29,7 +29,7 @@
         "Function"
       ]
     ],
-    "retType": "undefined | GameObject"
+    "retType": "GameObject | undefined"
   },
   "add_keyboard_listener": {
     "kind": "function",
@@ -65,7 +65,7 @@
         "GameObject"
       ]
     ],
-    "retType": "undefined | GameObject"
+    "retType": "GameObject | undefined"
   },
   "add_tween": {
     "kind": "function",
@@ -81,7 +81,7 @@
         "ObjectConfig"
       ]
     ],
-    "retType": "Promise<undefined | GameObject>"
+    "retType": "Promise<GameObject | undefined>"
   },
   "create_anim": {
     "kind": "function",
@@ -165,7 +165,7 @@
         "string"
       ]
     ],
-    "retType": "undefined | ObjectConfig[]"
+    "retType": "ObjectConfig[] | undefined"
   },
   "create_award": {
     "kind": "function",
@@ -265,7 +265,7 @@
         "string"
       ]
     ],
-    "retType": "undefined | GameObject"
+    "retType": "GameObject | undefined"
   },
   "create_interactive_config": {
     "kind": "function",
@@ -597,7 +597,7 @@
         "string"
       ]
     ],
-    "retType": "undefined | GameObject"
+    "retType": "GameObject | undefined"
   },
   "play_sound": {
     "kind": "function",
@@ -653,7 +653,7 @@
         "number"
       ]
     ],
-    "retType": "undefined | GameObject"
+    "retType": "GameObject | undefined"
   },
   "set_display_size": {
     "kind": "function",
@@ -673,7 +673,7 @@
         "number"
       ]
     ],
-    "retType": "undefined | GameObject"
+    "retType": "GameObject | undefined"
   },
   "set_flip": {
     "kind": "function",
@@ -693,7 +693,7 @@
         "boolean"
       ]
     ],
-    "retType": "undefined | GameObject"
+    "retType": "GameObject | undefined"
   },
   "set_interactive": {
     "kind": "function",
@@ -709,7 +709,7 @@
         "ObjectConfig"
       ]
     ],
-    "retType": "undefined | GameObject"
+    "retType": "GameObject | undefined"
   },
   "set_origin": {
     "kind": "function",
@@ -729,7 +729,7 @@
         "number"
       ]
     ],
-    "retType": "undefined | GameObject"
+    "retType": "GameObject | undefined"
   },
   "set_position": {
     "kind": "function",
@@ -749,7 +749,7 @@
         "number"
       ]
     ],
-    "retType": "undefined | GameObject"
+    "retType": "GameObject | undefined"
   },
   "set_rotation": {
     "kind": "function",
@@ -765,7 +765,7 @@
         "number"
       ]
     ],
-    "retType": "undefined | GameObject"
+    "retType": "GameObject | undefined"
   },
   "set_scale": {
     "kind": "function",
@@ -785,6 +785,6 @@
         "number"
       ]
     ],
-    "retType": "undefined | GameObject"
+    "retType": "GameObject | undefined"
   }
 }

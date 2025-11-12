@@ -266,7 +266,7 @@
     "name": "getFrontObject",
     "description": "<p>Obtains the first object in the user's line of sight, if any.</p>",
     "params": [],
-    "retType": "undefined | ARObject"
+    "retType": "ARObject | undefined"
   },
   "getJsonChild": {
     "kind": "function",

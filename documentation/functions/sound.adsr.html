@@ -6,10 +6,10 @@ attack proportion, then decreases from 1 to sustain level over the
 decay proportion, and remains at that level until the release
 proportion when it decays back to 0.</p>
 </div><div class="tsd-parameters"><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameter-list"><li><span><span class="tsd-kind-parameter">attack_ratio</span>: <span class="tsd-signature-type">number</span></span><div class="tsd-comment tsd-typography"><p>proportion of Sound in attack phase</p>
-</div><div class="tsd-comment tsd-typography"></div></li><li><span><span class="tsd-kind-parameter">decay_ratio</span>: <span class="tsd-signature-type">number</span></span><div class="tsd-comment tsd-typography"><p>proportion of Sound decay phase</p>
-</div><div class="tsd-comment tsd-typography"></div></li><li><span><span class="tsd-kind-parameter">sustain_level</span>: <span class="tsd-signature-type">number</span></span><div class="tsd-comment tsd-typography"><p>sustain level between 0 and 1</p>
-</div><div class="tsd-comment tsd-typography"></div></li><li><span><span class="tsd-kind-parameter">release_ratio</span>: <span class="tsd-signature-type">number</span></span><div class="tsd-comment tsd-typography"><p>proportion of Sound in release phase</p>
-</div><div class="tsd-comment tsd-typography"></div></li></ul></div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">SoundTransformer</span></h4><p>Envelope a function from Sound to Sound</p>
+</div></li><li><span><span class="tsd-kind-parameter">decay_ratio</span>: <span class="tsd-signature-type">number</span></span><div class="tsd-comment tsd-typography"><p>proportion of Sound decay phase</p>
+</div></li><li><span><span class="tsd-kind-parameter">sustain_level</span>: <span class="tsd-signature-type">number</span></span><div class="tsd-comment tsd-typography"><p>sustain level between 0 and 1</p>
+</div></li><li><span><span class="tsd-kind-parameter">release_ratio</span>: <span class="tsd-signature-type">number</span></span><div class="tsd-comment tsd-typography"><p>proportion of Sound in release phase</p>
+</div></li></ul></div><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">SoundTransformer</span></h4><p>Envelope a function from Sound to Sound</p>
 <div class="tsd-comment tsd-typography"><div class="tsd-tag-example"><h4 class="tsd-anchor-link" id="example">Example<a href="#example" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><pre><code class="ts"><span class="hl-4">adsr</span><span class="hl-1">(</span><span class="hl-5">0.2</span><span class="hl-1">, </span><span class="hl-5">0.3</span><span class="hl-1">, </span><span class="hl-5">0.3</span><span class="hl-1">, </span><span class="hl-5">0.1</span><span class="hl-1">)(</span><span class="hl-2">sound</span><span class="hl-1">);</span>
 </code><button type="button">Copy</button></pre>
 
