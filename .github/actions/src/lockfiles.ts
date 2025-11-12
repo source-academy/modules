@@ -110,21 +110,18 @@ export async function getPackagesWithResolutionChanges() {
       throw new Error(`yarn why for ${pkgName} failed!`);
     }
 
-    const toAdd = output.split('\n').reduce<ResolutionSpec[]>((res, each) => {
+    output.split('\n').forEach(each => {
       each = each.trim();
-      if (each === '') return res;
+      if (each === '') return;
 
       const pkg = JSON.parse(each) as YarnWhyOutput;
       const childrenSpecifiers = Object.values(pkg.children).map(({ descriptor }) => descriptor);
-      if (!childrenSpecifiers.includes(pkgSpecifier)) return res;
-      return [
-        ...res,
-        { pkgSpecifier: pkg.value, pkgName: extractPackageName(pkg.value) }
-      ];
-    }, []);
+      if (!childrenSpecifiers.includes(pkgSpecifier)) return;
 
-    frontier.push(...toAdd);
-    changedDeps.push(...toAdd);
+      const toAdd: ResolutionSpec = { pkgSpecifier: pkg.value, pkgName: extractPackageName(pkg.value) }
+      frontier.push(toAdd);
+      changedDeps.push(toAdd);
+    });
   }
 
   core.info('=== Summary of dirty monorepo packages ===\n');
