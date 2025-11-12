@@ -12,7 +12,7 @@ import _package from '../../package.json' with { type: 'json' };
 const vitepressOptions: UserConfig = {
   base: '/modules/devdocs/',
   description: 'Developer documentation for the Source Academy modules repository',
-  head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
+  head: [['link', { rel: 'icon', href: '/modules/devdocs/favicon.ico' }]],
   ignoreDeadLinks: 'localhostLinks',
   lastUpdated: true,
   markdown: {
@@ -88,10 +88,15 @@ const vitepressOptions: UserConfig = {
     ],
     siteTitle: 'SA Modules',
     socialLinks: [
-      { icon: 'github', link: _package.repository },
+      {
+        icon: 'github',
+        link: _package.repository,
+        title: 'Github Repository'
+      },
       {
         icon: 'gitbook',
-        link: 'https://source-academy.github.io/modules/documentation/'
+        link: 'https://source-academy.github.io/modules/documentation/',
+        title: 'Modules Documentation'
       }
     ],
     search: {

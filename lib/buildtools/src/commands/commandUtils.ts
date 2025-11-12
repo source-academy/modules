@@ -1,7 +1,8 @@
 import { InvalidArgumentError, Option } from '@commander-js/extra-typings';
 import type { ErrorResult, Severity } from '@sourceacademy/modules-repotools/types';
-import { isSeverity, objectKeys } from '@sourceacademy/modules-repotools/utils';
+import { isSeverity, objectKeys, objectValues } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
+import capitalize from 'lodash/capitalize.js';
 import { LogLevel } from 'typedoc';
 
 export const lintOption = new Option('--lint', 'Run ESLint when building')
@@ -14,12 +15,21 @@ export const watchOption = new Option('-w, --watch', 'Run in watch mode')
   .default(false);
 
 export const logLevelOption = new Option('--logLevel <level>', 'Log level that Typedoc should use')
-  .choices(objectKeys(LogLevel))
+  .choices(objectKeys(LogLevel).map(x => x.toLowerCase()))
   .default(LogLevel.Error)
   .argParser((val): LogLevel => {
-    if (val in LogLevel) {
+    const numVal = parseInt(val);
+    if (!Number.isNaN(numVal)) {
+      const result = objectValues(LogLevel).some(value => value === numVal)
+      if (result) {
+        return numVal as unknown as LogLevel;
+      }
+    }
+
+    const capVal = capitalize(val);
+    if (capVal in LogLevel) {
       // @ts-expect-error Enums kind of behave weirdly in Typescript
-      return LogLevel[val];
+      return LogLevel[capVal];
     }
 
     throw new InvalidArgumentError(`Invalid log level: ${val}`);
