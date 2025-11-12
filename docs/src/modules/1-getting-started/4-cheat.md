@@ -34,7 +34,7 @@ All commands have a `-h` or `--help` option that can be used to get more informa
     <tr>
       <td><code>yarn add -D &lt;package&gt;</code></td>
       <td>
-        Adds a package to the current bundle or tab that will only be used during runtime <br />
+        Adds a package to the current bundle or tab that will is not required at runtime <br />
       </td>
     </tr>
   </tbody>
