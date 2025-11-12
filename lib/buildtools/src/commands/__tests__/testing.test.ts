@@ -140,7 +140,7 @@ describe('Test regular test command', () => {
 describe('Test silent option', () => {
   const runCommand = (...args: string[]) => new Promise<undefined | boolean | 'passed-only'>(
     (resolve, reject) => {
-      const command = new Command()
+      new Command()
         .exitOverride(reject)
         .addOption(silentOption)
         .configureOutput({ writeErr: () => { } })
