@@ -32,3 +32,5 @@ export function directoryTreePlugin(md: MarkdownIt, options: DirectoryTreePlugin
     return fence(...args);
   };
 }
+
+export { dirtreeTransformer, grammar } from './transformer';

@@ -1,6 +1,6 @@
 // Vitepress config
 import pathlib from 'path';
-import { directoryTreePlugin } from '@sourceacademy/markdown-plugin-directory-tree';
+import { directoryTreePlugin, dirtreeTransformer, grammar as dirtreetm } from '@sourceacademy/markdown-plugin-directory-tree';
 import { defineConfig, type UserConfig } from 'vitepress';
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons';
 import { withMermaid } from 'vitepress-plugin-mermaid';
@@ -20,9 +20,8 @@ const vitepressOptions: UserConfig = {
       md.use(groupIconMdPlugin);
       md.use(directoryTreePlugin);
     },
-    languageAlias: {
-      dirtree: 'yml'
-    }
+    codeTransformers: [dirtreeTransformer()],
+    languages: [dirtreetm]
   },
   outDir: pathlib.join(import.meta.dirname, '..', '..', 'build', 'devdocs'),
   srcDir: 'src',

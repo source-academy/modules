@@ -4529,15 +4529,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/markdown-plugin-directory-tree@workspace:lib/markdown-tree"
   dependencies:
+    "@shikijs/types": "npm:^3.15.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-repotools": "workspace:^"
     "@types/lodash": "npm:^4.14.198"
     "@types/markdown-it": "npm:^14.1.2"
     lodash: "npm:^4.17.21"
+    tm-themes: "npm:^1.10.12"
     typescript: "npm:^5.8.2"
     yaml: "npm:^2.8.0"
   peerDependencies:
     markdown-it: "*"
+    shiki: ">=2"
   languageName: unknown
   linkType: soft
 
@@ -17175,6 +17178,13 @@ __metadata:
   bin:
     tldts: bin/cli.js
   checksum: 10c0/27ae7526d9d78cb97b2de3f4d102e0b4321d1ccff0648a7bb0e039ed54acbce86bacdcd9cd3c14310e519b457854e7bafbef1f529f58a1e217a737ced63f0940
+  languageName: node
+  linkType: hard
+
+"tm-themes@npm:^1.10.12":
+  version: 1.10.12
+  resolution: "tm-themes@npm:1.10.12"
+  checksum: 10c0/dcb3ef2fede7ed373909caed11d8c6a89837eb7682515182cc9f52f0c580b5bb4d9f0019cb1c1199fea416bb8d327f31d5b696903aeaf66b2a88cbcad80cf632
   languageName: node
   linkType: hard
 
