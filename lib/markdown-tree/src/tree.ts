@@ -25,19 +25,11 @@ interface LineStringSet {
 }
 
 /** Contains all strings for tree rendering */
-const LINE_STRINGS: { [charset: string]: LineStringSet } = {
-  ascii: {
-    CHILD: '|-- ',
-    LAST_CHILD: '`-- ',
-    DIRECTORY: '|   ',
-    EMPTY: '    ',
-  },
-  'utf-8': {
-    CHILD: '├── ',
-    LAST_CHILD: '└── ',
-    DIRECTORY: '│   ',
-    EMPTY: '    ',
-  },
+export const LINE_STRINGS: LineStringSet = {
+  CHILD: '├── ',
+  LAST_CHILD: '└── ',
+  DIRECTORY: '│   ',
+  EMPTY: '    ',
 };
 
 /**
@@ -111,7 +103,7 @@ function getAsciiLine(
   commentLoc: number,
   options: GenerateTreeOptions
 ): string | null {
-  const lines = LINE_STRINGS[options.charset as string];
+  const lines = LINE_STRINGS;
 
   // Special case for the root element
   if (!structure.parent) {
