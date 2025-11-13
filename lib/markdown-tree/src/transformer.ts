@@ -1,24 +1,24 @@
 import type { LanguageInput, ShikiTransformer, ThemedToken } from 'shiki/core';
-import { LINE_STRINGS } from './tree';
-import githubLight from 'tm-themes/themes/github-light.json' with { type: 'json' };
 import githubDark from 'tm-themes/themes/github-dark.json' with { type: 'json' };
+import githubLight from 'tm-themes/themes/github-light.json' with { type: 'json' };
+import { LINE_STRINGS } from './tree';
 
 // Vitepress uses the github themes by default, so we use the colours from
 // those themes here
 const githubLightColours = [
   githubLight.colors['terminal.ansiBlue'],
-  githubLight.colors["terminal.ansiMagenta"],
-  githubLight.colors["terminal.ansiCyan"],
-  githubLight.colors["terminal.ansiRed"],
-  githubLight.colors["terminal.ansiGreen"]
+  githubLight.colors['terminal.ansiMagenta'],
+  githubLight.colors['terminal.ansiCyan'],
+  githubLight.colors['terminal.ansiRed'],
+  githubLight.colors['terminal.ansiGreen']
 ];
 
 const githubDarkColours = [
   githubDark.colors['terminal.ansiBlue'],
-  githubDark.colors["terminal.ansiMagenta"],
-  githubDark.colors["terminal.ansiCyan"],
-  githubDark.colors["terminal.ansiRed"],
-  githubDark.colors["terminal.ansiGreen"]
+  githubDark.colors['terminal.ansiMagenta'],
+  githubDark.colors['terminal.ansiCyan'],
+  githubDark.colors['terminal.ansiRed'],
+  githubDark.colors['terminal.ansiGreen']
 ];
 
 // Assemble the Regex expression using the line strings
@@ -51,15 +51,15 @@ export const grammar: LanguageInput = {
   repository: {
     comment: {
       match: /\/\/.+$/,
-      name: "comment.line.dirtree"
+      name: 'comment.line.dirtree'
     },
     branch: {
       match: branchRE,
-      name: "dirtree.branch"
+      name: 'dirtree.branch'
     },
     identifier: {
       match: new RegExp(`(?<=(?:${LINE_STRINGS.LAST_CHILD})|(?:${LINE_STRINGS.CHILD})|^)[.\\w-]+`),
-      name: "entity.name"
+      name: 'entity.name'
     },
   },
   patterns: [
@@ -108,14 +108,14 @@ export function dirtreeTransformer(options: TransformerOptions = {}): ShikiTrans
                 '--shiki-light': lightColours[indentLevel % lightColours.length],
                 '--shiki-dark': darkColours[indentLevel % darkColours.length]
               }
-            }
+            };
           });
 
           const newIdentifier: ThemedToken = {
             content: identifier.content,
             offset: identifier.offset,
             htmlStyle: branchTokens[branchTokens.length - 1].htmlStyle
-          }
+          };
 
           if (firstBranch[0] !== firstToken.offset) {
             // First branch starts with some spaces, so we add them back
@@ -129,7 +129,7 @@ export function dirtreeTransformer(options: TransformerOptions = {}): ShikiTrans
             ...branchTokens,
             newIdentifier,
             ...otherTokens
-          ]
+          ];
         } else {
           // Root identifier with comment, do nothing
           return line;
@@ -138,5 +138,5 @@ export function dirtreeTransformer(options: TransformerOptions = {}): ShikiTrans
 
       return newTokens;
     }
-  }
+  };
 }

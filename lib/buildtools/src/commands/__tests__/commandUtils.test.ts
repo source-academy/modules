@@ -1,8 +1,8 @@
 import { Command } from '@commander-js/extra-typings';
 import type { Severity } from '@sourceacademy/modules-repotools/types';
+import { LogLevel } from 'typedoc';
 import { describe, expect, test } from 'vitest';
 import { logLevelOption, processResult } from '../commandUtils.js';
-import { LogLevel } from 'typedoc';
 
 describe(processResult, () => {
   const testCases: [any, Severity][] = [
@@ -46,9 +46,8 @@ describe('Log Level option', () => {
         .configureOutput({ writeErr: () => {} })
         .addOption(logLevelOption)
         .action(({ logLevel }) => resolve(logLevel))
-        .parse(args, { from: 'user' })
-      }
-    );
+        .parse(args, { from: 'user' });
+    });
   }
 
   test('no value means LogLevel.Error', () => {

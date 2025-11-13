@@ -118,7 +118,7 @@ export async function getPackagesWithResolutionChanges() {
       const childrenSpecifiers = Object.values(pkg.children).map(({ descriptor }) => descriptor);
       if (!childrenSpecifiers.includes(pkgSpecifier)) return;
 
-      const toAdd: ResolutionSpec = { pkgSpecifier: pkg.value, pkgName: extractPackageName(pkg.value) }
+      const toAdd: ResolutionSpec = { pkgSpecifier: pkg.value, pkgName: extractPackageName(pkg.value) };
       frontier.push(toAdd);
       changedDeps.push(toAdd);
     });
