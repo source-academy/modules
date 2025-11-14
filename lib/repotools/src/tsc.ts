@@ -135,7 +135,7 @@ export function runTscCompile(tsconfig: ts.CompilerOptions, fileNames: string[],
 /**
  * Wrapper for running the tsc functions that also resolves the tsconfig
  */
-export async function runWithTsconfig<T>(
+async function runWithTsconfig<T>(
   srcDir: string,
   func: (tsconfig: ts.CompilerOptions, fileNames: string[]) => T,
 ) {
@@ -146,6 +146,14 @@ export async function runWithTsconfig<T>(
 
   const { tsconfig, fileNames } = tsconfigResult;
   return func(tsconfig, fileNames);
+}
+
+export function runTypecheckingFromTsconfig(directory: string) {
+  return runWithTsconfig(directory, runTypechecking);
+}
+
+export function runTscCompileFromTsconfig(directory: string) {
+  return runWithTsconfig(directory, runTscCompile);
 }
 
 export function formatTscResult(tscResult: FormattableTscResult): string {

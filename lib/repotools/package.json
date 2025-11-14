@@ -23,7 +23,7 @@
     "typescript": "^5.8.2"
   },
   "peerDependencies": {
-    "@vitejs/plugin-react": ">=4",
+    "@vitejs/plugin-react": ">=5",
     "vitest-browser-react": ">=2"
   },
   "exports": {
