@@ -10,7 +10,6 @@
     "@types/node": "^22.15.30",
     "@vitejs/plugin-react": "^5.1.0",
     "@vitest/coverage-v8": "^4.0.4",
-    "typescript": "^5.8.2",
     "vitest": "^4.0.4",
     "vitest-browser-react": "^2.0.2"
   },
@@ -20,11 +19,12 @@
     "commander": "^14.0.0",
     "esbuild": "^0.27.0",
     "jsonschema": "^1.5.0",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "typescript": "^5.8.2"
   },
   "peerDependencies": {
-    "@vitejs/plugin-react": "*",
-    "vitest-browser-react": "*"
+    "@vitejs/plugin-react": ">=4",
+    "vitest-browser-react": ">=2"
   },
   "exports": {
     "./testing": "./dist/testing/index.js",

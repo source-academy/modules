@@ -1,7 +1,7 @@
 import pathlib from 'path';
 import ts from 'typescript';
 import { describe, expect, test, vi } from 'vitest';
-import { testMocksDir } from '../../__tests__/fixtures.js';
+import { testMocksDir } from '../../../buildtools/src/__tests__/fixtures.js';
 import { runTsc } from '../tsc.js';
 
 const mockedWriteFile = vi.hoisted(() => vi.fn<(arg0: string, arg1: string) => void>(() => undefined));

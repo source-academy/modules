@@ -3,7 +3,7 @@ import { compareSeverity } from '@sourceacademy/modules-repotools/utils';
 import type { LogLevel } from 'typedoc';
 import type { PrebuildOptions } from '../prebuild/index.js';
 import { runEslint, type LintResult } from '../prebuild/lint.js';
-import { runTsc, type TscResult } from '../prebuild/tsc.js';
+import { runTsc, type TscResult } from '../../../repotools/src/tsc.js';
 import { buildSingleBundleDocs } from './docs/index.js';
 import { buildBundle, buildTab } from './modules/index.js';
 

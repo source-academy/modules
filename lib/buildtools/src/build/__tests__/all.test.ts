@@ -6,7 +6,7 @@ import * as modules from '../../build/modules/index.js';
 import { getCommandRunner } from '../../commands/__tests__/testingUtils.js';
 import { getBuildAllCommand } from '../../commands/build.js';
 import * as lint from '../../prebuild/lint.js';
-import * as tsc from '../../prebuild/tsc.js';
+import * as tsc from '../../../../repotools/src/tsc.js';
 import * as all from '../all.js';
 
 vi.spyOn(all, 'buildAll');

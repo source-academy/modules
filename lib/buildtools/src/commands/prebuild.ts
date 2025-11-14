@@ -5,9 +5,9 @@ import { resolveEitherBundleOrTab } from '@sourceacademy/modules-repotools/manif
 import { divideAndRound } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
 import { ESLint } from 'eslint';
+import { formatTscResult, runTypechecking, runWithTsconfig } from '../../../repotools/src/tsc.js';
 import { runPrebuild } from '../prebuild/index.js';
 import { formatLintResult, lintGlobal, runEslint } from '../prebuild/lint.js';
-import { formatTscResult, runTsc } from '../prebuild/tsc.js';
 import { logCommandErrorAndExit } from './commandUtils.js';
 
 export const concurrencyOption = new Option('--concurrency <value>')
@@ -84,7 +84,7 @@ export const getLintGlobalCommand = () => new Command('lintglobal')
     console.log(`${prefix} ${chalk.cyanBright(`Running ESLint v${ESLint.version}`)}`);
     console.log(`${prefix} ${chalk.cyanBright('Beginning linting with the following options:')}`);
     Object.entries(opts).forEach(([key, value], i) => {
-      console.log(`  ${i+1}. ${chalk.greenBright(key)}: ${chalk.cyanBright(value)}`);
+      console.log(`  ${i + 1}. ${chalk.greenBright(key)}: ${chalk.cyanBright(value)}`);
     });
 
     const result = await lintGlobal(opts);
@@ -117,11 +117,10 @@ export const getLintGlobalCommand = () => new Command('lintglobal')
 // This command is provided as an augmented way to run tsc, automatically
 // filtering out test files
 export const getTscCommand = () => new Command('tsc')
-  .description('Run tsc for the given directory, or the current directory if no directory is specified')
+  .description('Run type checking for the given directory, or the current directory if no directory is specified')
   .argument('[directory]', 'Directory to run tsc in', process.cwd())
-  .option('--no-emit', 'Prevent the typescript compiler from outputting files regardless of the tsconfig setting')
   .option('--ci', process.env.CI)
-  .action(async (directory, { emit, ci }) => {
+  .action(async (directory, { ci }) => {
     const fullyResolved = pathlib.resolve(directory);
     const resolveResult = await resolveEitherBundleOrTab(fullyResolved);
 
@@ -133,7 +132,7 @@ export const getTscCommand = () => new Command('tsc')
       logCommandErrorAndExit(resolveResult);
     }
 
-    const result = await runTsc(resolveResult.asset, !emit);
+    const result = await runWithTsconfig(resolveResult.asset.directory, runTypechecking);
     console.log(formatTscResult(result));
 
     switch (result.severity) {

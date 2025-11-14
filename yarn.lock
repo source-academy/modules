@@ -4686,8 +4686,8 @@ __metadata:
     vitest: "npm:^4.0.4"
     vitest-browser-react: "npm:^2.0.2"
   peerDependencies:
-    "@vitejs/plugin-react": "*"
-    vitest-browser-react: "*"
+    "@vitejs/plugin-react": ">=4"
+    vitest-browser-react: ">=2"
   languageName: unknown
   linkType: soft
 
