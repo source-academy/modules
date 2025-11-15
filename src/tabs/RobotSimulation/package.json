@@ -6,12 +6,12 @@
     "@dimforge/rapier3d-compat": "^0.11.2",
     "@sourceacademy/bundle-robot_simulation": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@types/react": "^18.3.1"
+    "@types/react": "^19.0.0"
   },
   "scripts": {
     "build": "buildtools build tab .",
