@@ -14985,9 +14985,9 @@ __metadata:
   linkType: hard
 
 "plotly.js-dist@npm:^3.0.0":
-  version: 3.0.1
-  resolution: "plotly.js-dist@npm:3.0.1"
-  checksum: 10c0/cc5725d043fb052a28952fa8b7f72bbf91cc4460d2742e68f49801fe34cf7164ad0d55fe262da0c2e530ef4541845a030d129aab8d90795987052236bb8372c4
+  version: 3.3.0
+  resolution: "plotly.js-dist@npm:3.3.0"
+  checksum: 10c0/26b5c28ed57fe6530bd9dfe0006f15f020c192ab8631133a71167f3eb038d2ee9f3116cf00ebf934587e60633ce6ea2fd32cfca7af011383e796df3d116caf5a
   languageName: node
   linkType: hard
 
