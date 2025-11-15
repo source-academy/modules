@@ -41,7 +41,7 @@ const TextBox = require('Textbox').default;
 ## Ignoring Files
 
 By default, ESLint has been configured to not lint files in specific directories or matching specific patterns. You can see the ignore patterns in `eslint.config.js` under the section labelled "Global Ignores". Please
-note that if any of your code files matche these ignore patterns, they will not be properly linted by ESLint.
+note that if any of your code files matches these ignore patterns, they will not be properly linted by ESLint.
 
 ## Integration with Git Hooks
 

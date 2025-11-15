@@ -6,7 +6,7 @@ import type { SummaryTableRow } from '@actions/core/lib/summary.js';
 import packageJson from '../../../../package.json' with { type: 'json' };
 import { checkDirForChanges, type PackageRecord, type RawPackageRecord } from '../commons.js';
 import { gitRoot } from '../gitRoot.js';
-import { getPackagesWithResolutionChanges, hasLockFileChanged } from '../lockfiles/index.js';
+import { getPackagesWithResolutionChanges, hasLockFileChanged } from '../lockfiles.js';
 import { topoSortPackages } from './sorter.js';
 
 const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
@@ -16,7 +16,7 @@ const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
  * an unprocessed format
  */
 export async function getRawPackages(gitRoot: string, maxDepth?: number) {
-  let packagesWithResolutionChanges: Set<string> | null = null;
+  let packagesWithResolutionChanges: string[] | null = null;
 
   // If there are lock file changes we need to set hasChanges to true for
   // that package even if that package's directory has no changes
@@ -43,7 +43,7 @@ export async function getRawPackages(gitRoot: string, maxDepth?: number) {
 
             output[packageJson.name] = {
               directory: currentDir,
-              hasChanges: packagesWithResolutionChanges?.has(packageJson.name) ?? hasChanges,
+              hasChanges: hasChanges || !!packagesWithResolutionChanges?.includes(packageJson.name),
               package: packageJson
             };
           } catch (error) {

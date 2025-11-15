@@ -41,6 +41,10 @@ Make sure that the branch is named appropriately. For example, if you were creat
 When you're ready for your work to be incorporated into the `master` branch, [open](https://github.com/source-academy/modules/compare) a pull request with the modules repository to merge your
 changes into `master` branch. Make sure that your branch is up-to-date with the `master` branch (by performing a `git merge` from the `master` branch to your own branch).
 
+When you open a PR in Github, Github will automatically scaffold the PR for you with some helpful headers and checklists. Do provide an informative description
+of what your PR intends to achieve as well as mark off the relevant checklist items. You can refer to other PRs (both open as well as ones that have been closed)
+for further examples of what to write.
+
 This will automatically trigger the repository's workflows, which will verify that your changes don't break any of the existing code. If the
 workflow fails, check the summary and determine where the errors lie, then fix your code as necessary.
 

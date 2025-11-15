@@ -43,7 +43,7 @@ describe('Log Level option', () => {
     return new Promise<LogLevel>((resolve, reject) => {
       new Command()
         .exitOverride(reject)
-        .configureOutput({ writeErr: () => { } })
+        .configureOutput({ writeErr: () => {} })
         .addOption(logLevelOption)
         .action(({ logLevel }) => resolve(logLevel))
         .parse(args, { from: 'user' });

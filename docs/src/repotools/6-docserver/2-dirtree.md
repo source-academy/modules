@@ -3,11 +3,11 @@
 The idea behind this plugin was inspired by [this](https://tree.nathanfriend.com/?) ASCII tree generator.
 
 ::: details Creating a Markdown-It Plugin
+
 The documentation for developers looking to create a Markdown-It plugin are woefully inadequate. Thus, most of this plugin was written based on the implementations of other plugins, such as the Vitepress Mermaid plugin and Vitepress Code snippet plugin.
 
 It basically works by detecting when a code block has been assigned the `dirtree` language, parses the code block's content as YAML and converts that object into the directory structure that can then be rendered as text.
 
-Using the `languageAlias` markdown configuration, we can get Vitepress to highlight and colour the rendered directory trees.
 :::
 
 To create your own directory tree, use the `dirtree` language with your markdown code block:
@@ -60,7 +60,7 @@ children:
   - name: item2
     comment: Notice how all comments are
     children:
-      - name: item 3
+      - name: item3
         comment: aligned at the end
   - this_item_has_a_very_long_name
 ```
@@ -92,3 +92,15 @@ It would also check that `docs/root/item1` exists and that is is a directory (si
 If the check fails a warning will be printed to the console stating which files it wasn't able to locate.
 
 Path validation is optional; Not providing a path means that no validation is performed, so `dirtree`s can reflect arbitrary directory structures.
+
+## Highlighting
+
+Each level of nesting is given its own colour retrieved from the Github set of colours. Code highlighting in Vitepress is powered by [`shiki`](https://shiki.style).
+After the initial YML gets parsed and transformed into the raw uncoloured directory tree, the rendered code block gets passed to a code transformer, which parses
+the directory tree according to its own Textmate Grammar. Then, colours are applied to each line.
+
+The grammar and code transformer are also exported from the Markdown Tree plugin and are applied in the Vitepress configuration. Refer to the
+`codeTransformers` and `languages` under the `markdown` set of options.
+
+Do note that directory trees are intended to reflect actual structures within an actual file system. Therefore, if you use names for items that aren't valid
+as file names you might get incorrect highlighting.

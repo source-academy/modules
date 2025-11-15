@@ -74,7 +74,7 @@ Note that `curve/functions.ts` exports both `createDrawFunction` and `make_point
 export { make_point } from './functions';
 ```
 
-However, only `make_point` is exported at the bundle's entry point however `createDrawFunction` is not, so cadets will not be able to access it, identical to how ES modules behave.
+However, only `make_point` is exported at the bundle's entry point while `createDrawFunction` is not, so cadets will not be able to access it, identical to how ES modules behave.
 
 ```js
 // User's Source program

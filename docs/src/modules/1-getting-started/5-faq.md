@@ -43,17 +43,6 @@ As described in the paragraphs above, this return value of the `init()` function
 
 ## Set Up and Configuration
 
-### How do we use our own local version of the js-slang interpreter with the modules?
-
-> I have made some code changes to js-slang library and I want to test them out with my own local modules.
-
-To use your local `js-slang` interpreter with your local modules, you will need to follow the steps below.
-
-1. Serve your modules on a local server, done by transpiling your modules into JavaScript (`yarn build`) and then serving them as static assets (`yarn serve`). The default url for the local server is `http://localhost:8022`. Note that `yarn serve` serves the contents of the `build` folder.
-2. Ensure that your local version of `js-slang` is linked to your local `cadet-frontend`. This is achieved by `yarn link` at the local `js-slang` root folder and `yarn link js-slang` at the local `cadet-frontend` root folder.
-3. Ensure that your `cadet-frontend` environment variable `REACT_APP_MODULE_BACKEND_URL` is set to the address of your locally served modules server (from step 1). Again, the default url for the local server is `http://localhost:8022`.
-4. Start your `cadet-frontend` web server locally to test your module.
-
 ### Is it possible to be using modules served from more than one location simultaneously?
 
 > I want to use my own modules served from `http://localhost:8022` and the official modules from `https://source-academy.github.io/modules` at the same time. Is it going to be possible?
@@ -96,13 +85,3 @@ Currently, two options are supported.
 
 * [Inline styles](https://www.w3schools.com/react/react_css.asp), where styles are added as an object to the react component's `style` prop
 * CSS inside JavaScript (eg. [Styled Components](https://styled-components.com/))
-
-## Interaction with `js-slang`
-
-### How can we switch to the Source interpreter rather than the Source transpiler?
-
-> I am modifying `js-slang`'s Source interpreter and need to change the mode of evaluation from the Source transpiler (default) to the Source interpreter.
-
-Include `"enable verbose";` as the first line of your program. Other functions of this setting can be found [here](https://github.com/source-academy/js-slang/blob/master/README.md#error-messages).
-
-Note that the Source Academy frontend also switches to the interpreter as soon as a breakpoint is set. An example of a system that requires that the interpreter is run instead of the transpiler is the environment model visualizer.

@@ -19,7 +19,7 @@ export function bar() { return 1; }
 Now consider a tab that wants to display something to the user depending on what function
 the user passed to the tab:
 
-```tsx [tab.tsx] {9,11}
+```tsx [tab.tsx] {8,10}
 import { foo, bar } from '@sourceacademy/modules-bundle0';
 
 interface Props {

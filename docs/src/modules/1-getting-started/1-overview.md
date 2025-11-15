@@ -3,6 +3,54 @@
 This page contains information regarding the overview of the Source Modules system. If you want to skip this overview, navigate to the bottom of the page
 where the **next page** button is located.
 
+## Repository Structure
+
+```dirtree
+name: modules
+path: ../../../..
+children:
+- name: .github
+  children:
+  - name: actions
+    comment: Source code for custom Github Actions needed by the repo
+  
+  - name: workflows
+    comment: Directory containing Github workflow configurations
+
+- name: build
+  comment: Output directory for bundles and tabs
+
+- name: devserver
+  comment: Source files for devserver
+
+- name: docs
+  comment: Source files for modules documentation
+
+- name: lib
+  comment: Common libraries for use throughout the repository
+
+- name: src
+  children:
+  - name: bundles
+    comment: Directories containing bundles
+  - name: tabs
+    comment: Directories containing tabs
+  - name: java
+    comment: Files for java-slang
+
+- name: eslint.config.js
+  comment: ESLint configuration for the entire repository
+
+- name: tsconfig.json
+  comment: tsconfig for vitest configuration files
+
+- name: vitest.config.ts
+  comment: Root Vitest configuration for the entire repository
+
+- name: yarn.config.cjs
+  comment: Yarn constraints file
+```
+
 ## Terminology
 
 The module system imitates ESM Javascript, allowing the use of `import` statements to import external code into Source programs:
@@ -58,3 +106,4 @@ The project was suggested by Professor Martin Henz who first proposed to include
 > The Source Academy frontend will fetch the module from the backend, which of course will cache it. Our modules can still be written in JavaScript and loaded in the frontend in whatever way works (e.g. `eval`).
 >
 > In the future, we can allow for a more flexible scheme where users can import Source programs using the same syntax.
+
