@@ -5,7 +5,7 @@ import { generate } from 'astring';
 import chalk from 'chalk';
 import type { BuildOptions as ESBuildOptions, OutputFile, Plugin as ESBuildPlugin } from 'esbuild';
 import type es from 'estree';
-import type { BuildDiagnostic, DiagnosticWithoutWarn } from '../../operations.js';
+import type { BuildDiagnostic, DiagnosticWithoutWarn } from '../../types.js';
 import type { InputAsset } from '../../types.js';
 
 export const commonEsbuildOptions = {

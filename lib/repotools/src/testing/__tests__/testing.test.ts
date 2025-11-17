@@ -368,7 +368,10 @@ describe(configs.getTestConfiguration, () => {
         .resolves
         .toMatchObject({
           severity: 'error',
-          errors: [`Tests were found for ${libPath}, but no vitest config could be located`]
+          diagnostics: [{
+            severity: 'error',
+            error: `Tests were found for ${libPath}, but no vitest config could be located`
+          }]
         });
 
       expect(mockedIsTestDirectory).toHaveBeenCalledOnce();
@@ -479,7 +482,7 @@ describe(configs.getAllTestConfigurations, () => {
     // Force everything to be resolved as neither a tab nor a bundle
     mockedResolver.mockResolvedValue({
       severity: 'error',
-      errors: []
+      diagnostics: []
     });
 
     // Once for the root config

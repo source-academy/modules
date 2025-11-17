@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
 import * as td from 'typedoc';
-import type { Diagnostic, JsonResult, ResultType } from '../../operations.js';
+import type { Diagnostic, JsonResult, ResultType } from '../../types.js';
 import type { ResolvedBundle } from '../../types.js';
 import { mapAsync } from '../../utils.js';
 import { buildJson } from './json.js';

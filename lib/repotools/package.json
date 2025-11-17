@@ -20,7 +20,8 @@
     "esbuild": "^0.27.0",
     "jsonschema": "^1.5.0",
     "lodash": "^4.17.21",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "typedoc": "^0.28.9"
   },
   "peerDependencies": {
     "@vitejs/plugin-react": ">=5",
@@ -28,6 +29,7 @@
   },
   "exports": {
     "./testing": "./dist/testing/index.js",
+    "./tsc": "./dist/tsc/index.js",
     "./*": "./dist/*.js"
   },
   "scripts": {

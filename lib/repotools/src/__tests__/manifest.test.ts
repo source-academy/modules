@@ -48,12 +48,13 @@ describe(manifest.resolveSingleTab, () => {
     });
   });
 
-  it('doesn\'t consider a non-directory a tab', () => {
+  it('doesn\'t consider a non-directory a tab', async () => {
     mockedFsStat.mockResolvedValueOnce({
       isDirectory: () => false
     } as any);
 
-    return expect(manifest.resolveSingleTab(pathlib.join(tabsDir, 'tab1'))).resolves.toBeUndefined();
+    await expect(manifest.resolveSingleTab(pathlib.join(tabsDir, 'tab1'))).resolves.toBeUndefined();
+    expect(fs.stat).toHaveBeenCalledOnce();
   });
 
   it('returns undefined when the specified path doesn\'t exist', async ({ ENOENT }) => {
@@ -62,9 +63,10 @@ describe(manifest.resolveSingleTab, () => {
     expect(fs.stat).toHaveBeenCalledOnce();
   });
 
-  it('throws the error when the error is of an unknown type', () => {
+  it('throws the error when the error is of an unknown type', async () => {
     mockedFsStat.mockRejectedValueOnce({});
-    return expect(manifest.resolveSingleTab('/')).rejects.toEqual({});
+    await expect(manifest.resolveSingleTab('/')).rejects.toEqual({});
+    expect(fs.stat).toHaveBeenCalledOnce();
   });
 });
 
@@ -110,11 +112,14 @@ describe(manifest.getBundleManifest, () => {
       .resolves
       .toEqual({
         severity: 'error',
-        errors: [
-          'test0: instance is not allowed to have the additional property "unknown"'
-        ]
+        diagnostics: [{
+          severity: 'error',
+          bundleName: 'test0',
+          error: 'instance is not allowed to have the additional property "unknown"'
+        }]
       });
     expect(fs.stat).not.toHaveBeenCalled();
+    expect(fs.readFile).toHaveBeenCalledOnce();
   });
 
   test('invalid package name should not pass', async () => {
@@ -124,8 +129,14 @@ describe(manifest.getBundleManifest, () => {
     const result = await manifest.getBundleManifest(bundle0Path, false);
     expect(result).toEqual({
       severity: 'error',
-      errors: ['test0: The package name "invalid_name" does not follow the correct format!']
+      diagnostics: [{
+        severity: 'error',
+        bundleName: 'test0',
+        error: 'The package name "invalid_name" does not follow the correct format!'
+      }]
     });
+
+    expect(fs.readFile).toHaveBeenCalledTimes(2);
   });
 
   test('unknown tabs should pass without tab check', async () => {
@@ -141,6 +152,7 @@ describe(manifest.getBundleManifest, () => {
     });
 
     expect(fs.stat).not.toHaveBeenCalled();
+    expect(fs.readFile).toHaveBeenCalledTimes(2);
   });
 
   test('unknown tab cannot pass tab check', async () => {
@@ -149,12 +161,17 @@ describe(manifest.getBundleManifest, () => {
     const result = await manifest.getBundleManifest(bundle0Path, true);
     expect(result).toEqual({
       severity: 'error',
-      errors: ['test0: Unknown tab "unknown"']
+      diagnostics: [{
+        severity: 'error',
+        bundleName: 'test0',
+        error: 'Unknown tab "unknown"'
+      }]
     });
 
     expect(fs.stat).toHaveBeenCalledTimes(1);
     const [[path0]] = vi.mocked(fs.stat).mock.calls;
     expect(path0).toEqual(pathlib.join(tabsDir, 'unknown'));
+    expect(fs.readFile).toHaveBeenCalledOnce();
   });
 
   test('unknown tabs cannot pass tab check', async () => {
@@ -163,13 +180,19 @@ describe(manifest.getBundleManifest, () => {
     const result = await manifest.getBundleManifest(bundle0Path, true);
     expect(result).toEqual({
       severity: 'error',
-      errors: [
-        'test0: Unknown tab "unknown1"',
-        'test0: Unknown tab "unknown2"',
-      ]
+      diagnostics: [{
+        severity: 'error',
+        bundleName: 'test0',
+        error: 'Unknown tab "unknown1"'
+      }, {
+        severity: 'error',
+        bundleName: 'test0',
+        error: 'Unknown tab "unknown2"'
+      }]
     });
 
     expect(fs.stat).toHaveBeenCalledTimes(2);
+    expect(fs.readFile).toHaveBeenCalledOnce();
     const [[path0], [path1]] = vi.mocked(fs.stat).mock.calls;
     expect(path0).toEqual(pathlib.join(tabsDir, 'unknown1'));
     expect(path1).toEqual(pathlib.join(tabsDir, 'unknown2'));
@@ -232,9 +255,17 @@ describe(manifest.getBundleManifests, () => {
 
       await expect(manifest.getBundleManifests(bundlesDir)).resolves.toEqual({
         severity: 'error',
-        errors: [
-          'test0: instance is not allowed to have the additional property "unknown"',
-          'test1: instance is not allowed to have the additional property "unknown"',
+        diagnostics: [
+          {
+            severity: 'error',
+            error: 'instance is not allowed to have the additional property "unknown"',
+            bundleName: 'test0',
+          },
+          {
+            severity: 'error',
+            error: 'instance is not allowed to have the additional property "unknown"',
+            bundleName: 'test1'
+          }
         ]
       });
     } finally {
@@ -268,7 +299,10 @@ describe(manifest.resolveSingleBundle, () => {
 
     await expect(manifest.resolveSingleBundle(pathlib.join(bundlePath))).resolves.toEqual({
       severity: 'error',
-      errors: [`${bundlePath} is not a directory!`]
+      diagnostics: [{
+        severity: 'error',
+        error: `${bundlePath} is not a directory!`
+      }]
     });
 
     expect(fs.stat).toHaveBeenCalledOnce();
@@ -279,7 +313,10 @@ describe(manifest.resolveSingleBundle, () => {
 
     await expect(manifest.resolveSingleBundle(bundlePath)).resolves.toEqual({
       severity: 'error',
-      errors: [`An error occurred while trying to read from ${bundlePath}: Error: Unknown message`]
+      diagnostics: [{
+        severity: 'error',
+        error: `An error occurred while trying to read from ${bundlePath}: Error: Unknown message`
+      }]
     });
 
     expect(fs.stat).toHaveBeenCalledOnce();
@@ -290,7 +327,10 @@ describe(manifest.resolveSingleBundle, () => {
 
     await expect(manifest.resolveSingleBundle(bundlePath)).resolves.toEqual({
       severity: 'error',
-      errors: [`${bundlePath} does not exist!`]
+      diagnostics: [{
+        severity: 'error',
+        error: `${bundlePath} does not exist!`
+      }]
     });
 
     expect(fs.stat).toHaveBeenCalledOnce();
@@ -303,7 +343,10 @@ describe(manifest.resolveSingleBundle, () => {
 
       await expect(manifest.resolveSingleBundle(bundlePath)).resolves.toEqual({
         severity: 'error',
-        errors: [`${pathlib.join(bundlePath, 'src', 'index.ts')} is not a file!`]
+        diagnostics: [{
+          severity: 'error',
+          error: `${pathlib.join(bundlePath, 'src', 'index.ts')} is not a file!`
+        }]
       });
 
       expect(fs.stat).toHaveBeenCalledTimes(2);
@@ -323,7 +366,10 @@ describe(manifest.resolveSingleBundle, () => {
 
       await expect(manifest.resolveSingleBundle(bundlePath)).resolves.toEqual({
         severity: 'error',
-        errors: ['Could not find entrypoint!']
+        diagnostics: [{
+          severity: 'error',
+          error: 'Could not find entrypoint!'
+        }]
       });
 
       expect(fs.stat).toHaveBeenCalledTimes(2);
@@ -348,13 +394,19 @@ describe(manifest.resolveEitherBundleOrTab, () => {
     });
   });
 
-  test('resolving bundle with manifest error returns the error', () => {
+  test('resolving bundle with manifest error returns the error', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "unknown": true }');
 
-    return expect(manifest.resolveEitherBundleOrTab(bundle0Path)).resolves.toEqual({
+    await expect(manifest.resolveEitherBundleOrTab(bundle0Path)).resolves.toEqual({
       severity: 'error',
-      errors: ['test0: instance is not allowed to have the additional property "unknown"']
+      diagnostics: [{
+        severity: 'error',
+        bundleName: 'test0',
+        error: 'instance is not allowed to have the additional property "unknown"'
+      }]
     });
+
+    expect(mockedReadFile).toHaveBeenCalledOnce();
   });
 
   const tab0OPath = pathlib.join(tabsDir, 'tab0');
@@ -373,7 +425,7 @@ describe(manifest.resolveEitherBundleOrTab, () => {
   test('resolving to nothing returns error severity and empty errors array', () => {
     return expect(manifest.resolveEitherBundleOrTab(testMocksDir)).resolves.toEqual({
       severity: 'error',
-      errors : []
+      diagnostics: []
     });
   });
 });

@@ -10,7 +10,7 @@ import { defineProject, mergeConfig, type TestProjectInlineConfiguration, type V
 import type { BrowserConfigOptions, ProjectConfig } from 'vitest/node';
 import { gitRoot, rootVitestConfigPath } from '../getGitRoot.js';
 import { resolveSingleBundle, resolveSingleTab } from '../manifest.js';
-import type { ErrorResult } from '../types.js';
+import type { ErrorDiagnostic, ResultTypeWithoutWarn } from '../types.js';
 import { isNodeError, isSamePath, mapAsync } from '../utils.js';
 import loadVitestConfigFromDir from './loader.js';
 import { isTestDirectory, testIncludePattern } from './testUtils.js';
@@ -132,10 +132,9 @@ export function setBrowserOptions(indivConfig: TestProjectInlineConfiguration, w
   return combinedConfig;
 }
 
-export type GetTestConfigurationResult = ErrorResult | {
-  severity: 'success';
+export type GetTestConfigurationResult = ResultTypeWithoutWarn<ErrorDiagnostic, {
   config: TestProjectInlineConfiguration | null;
-};
+}>;
 
 /**
  * Based on a starting directory, locate the package.json that directory belongs to, then check
@@ -194,7 +193,10 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
         if (await isTestDirectory(jsonDir)) {
           return {
             severity: 'error',
-            errors: [`Tests were found for ${directory}, but no vitest config could be located`]
+            diagnostics: [{
+              severity: 'error',
+              error: `Tests were found for ${directory}, but no vitest config could be located`
+            }]
           };
         }
 
@@ -221,7 +223,10 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
       if (!tab) {
         return {
           severity: 'error',
-          errors: [`Invalid tab located at ${jsonDir}`]
+          diagnostics: [{
+            severity: 'error',
+            error: `Tests were found for ${directory}, but no vitest config could be located`
+          }]
         };
       }
 
@@ -246,7 +251,10 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
       if (!bundleResult) {
         return {
           severity: 'error',
-          errors: [`No bundle present at ${jsonDir}`]
+          diagnostics: [{
+            severity: 'error',
+            error: `No bundle present at ${jsonDir}`,
+          }]
         };
       } else if (bundleResult.severity === 'error') {
         return bundleResult;
@@ -278,7 +286,6 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
     severity: 'success',
     config: finalConfig
   };
-
 }
 
 /**

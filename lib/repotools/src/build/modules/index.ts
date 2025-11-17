@@ -1,7 +1,7 @@
 import pathlib from 'path';
 import * as esbuild from 'esbuild';
 import { endBuildPlugin } from '../../builder.js';
-import type { BuildDiagnostic } from '../../operations.js';
+import type { BuildDiagnostic } from '../../types.js';
 import type { ResolvedBundle, ResolvedTab } from '../../types.js';
 import { builderPlugin, commonEsbuildOptions, outputBundleOrTab } from './commons.js';
 

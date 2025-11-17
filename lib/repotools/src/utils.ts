@@ -33,11 +33,28 @@ export function compareSeverity(lhs: Severity, rhs: Severity): Severity {
  * Given an array of items, map them to {@link Severity | Severity} objects and then
  * determine the overall severity of all the given items
  */
-export function findSeverity<T>(items: T[], mapper: (each: T) => Severity): Severity {
+export function findSeverity(items: { severity: Severity }[]): Severity;
+export function findSeverity<T>(items: T[], mapper: (each: T) => Severity): Severity;
+export function findSeverity<T>(items: T[], mapper?: (each: T) => Severity): Severity {
   let output: Severity = 'success';
 
   for (const item of items) {
-    const severity = mapper(item);
+    let severity: Severity;
+
+    if (mapper) {
+      severity = mapper(item);
+    } else if (isSeverity(item)) {
+      severity = item;
+    } else if (typeof item !== 'object' || item === null) {
+      throw new Error(`${item} is not convertible to severity!`);
+    } else {
+      if (!('severity' in item) || !isSeverity(item.severity)) {
+        throw new Error(`${item} is not convertible to severity!`);
+      } else {
+        severity = item.severity;
+      }
+    }
+
     output = compareSeverity(output, severity);
     if (output === 'error') return 'error';
   }

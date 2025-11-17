@@ -4,7 +4,83 @@ export const severity = {
   SUCCESS: 'success'
 } as const;
 
+interface DefaultErrorInfo<TError = any> {
+  error: TError;
+};
+
 export type Severity = (typeof severity)[keyof typeof severity];
+
+export type BaseDiagnostic<T extends Severity, Info extends object = object> = {
+  severity: T;
+} & Info;
+
+export type ErrorDiagnostic<Info extends object = DefaultErrorInfo> = BaseDiagnostic<'error', Info>;
+export type WarnDiagnostic<Info extends object = object> = BaseDiagnostic<'warn', Info>;
+export type SuccessDiagnostic<Info extends object = object> = BaseDiagnostic<'success', Info>;
+
+export type DiagnosticWithoutWarn<
+  SuccessInfo extends object = object,
+  ErrorInfo extends object = DefaultErrorInfo
+> = ErrorDiagnostic<ErrorInfo> | SuccessDiagnostic<SuccessInfo>;
+
+export type Diagnostic<
+  SuccessInfo extends object = object,
+  ErrorInfo extends object = DefaultErrorInfo,
+  WarnInfo extends object = object,
+> = DiagnosticWithoutWarn<SuccessInfo, ErrorInfo> | WarnDiagnostic<WarnInfo>;
+
+export type ExtractDiagnosticSeverity<T extends Severity, U extends Diagnostic<any, any, any>> =
+  T extends 'success'
+  ? Extract<U, { severity: 'success' }>
+  : T extends 'warn'
+  ? Extract<U, { severity: 'success' | 'warn' }>
+  : T extends 'error'
+  ? Extract<U, { severity: 'error' | 'success' | 'warn' }>
+  : never;
+
+export type ResultTypeWithoutWarn<
+  T extends (SuccessDiagnostic<any> | ErrorDiagnostic<any>),
+  SuccInfo extends object = object,
+  ErrInfo extends object = object
+> = ({
+  severity: 'error';
+  diagnostics: ExtractDiagnosticSeverity<'error', T>[];
+} & ErrInfo) | ({
+  severity: 'success';
+  // diagnostics: ExtractDiagnosticSeverity<'success', T>;
+} & SuccInfo);
+
+export type ResultType<
+  T extends Diagnostic<any, any, any> = Diagnostic,
+  SuccInfo extends object = object,
+  ErrInfo extends object = object,
+  WarnInfo extends object = object
+> = (SuccInfo & {
+  severity: 'success';
+}) | (WarnInfo & {
+  severity: 'warn';
+  diagnostics: ExtractDiagnosticSeverity<'warn', T>[];
+}) | (ErrInfo & {
+  severity: 'error';
+  diagnostics: ExtractDiagnosticSeverity<'error', T>[];
+});
+
+/**
+ * Represents the result of building either a tab or a bundle
+ */
+export type BuildDiagnostic = DiagnosticWithoutWarn<{ outpath: string }> & { input: InputAsset };
+
+/**
+ * Represnts the overall results of building either a tab or a bundle
+ */
+export type BuildResult = ResultTypeWithoutWarn<BuildDiagnostic>;
+
+/**
+ * Represnts the result of building JSON documentation
+ */
+export type JsonDiagnostic = Diagnostic<object, DefaultErrorInfo, { warning: string }>;
+
+export type JsonResult = ResultType<JsonDiagnostic, { outpath: string }, object, { outpath: string }>;
 
 /**
  * A bundle manifest, including the `version` field from `package.json`
@@ -71,48 +147,4 @@ export interface ResolvedTab {
 }
 // #endregion ResolvedTab
 
-export interface ErrorResult {
-  severity: 'error';
-  errors: string[];
-}
-
-export type WarningResult<T = { path: string }> = {
-  severity: 'warn';
-  warnings: string[];
-} & T;
-
-export type SuccessResult<T = { path: string }> = {
-  severity: 'success';
-} & T;
-
 export type InputAsset = ResolvedBundle | ResolvedTab;
-
-export type ResultType<T = { path: string }> = ErrorResult | SuccessResult<T>;
-
-export type ResultTypeWithWarn<T = { path: string }> = ResultType<T> | WarningResult<T>;
-
-/**
- * Represents the result of building a tab
- */
-export type TabResult = ResultType & {
-  type: 'tab';
-  input: ResolvedTab;
-};
-
-/**
- * Represents the result of building a bundle
- */
-export type BundleResult = ResultType & {
-  type: 'bundle';
-  input: ResolvedBundle;
-};
-
-/**
- * Represents the result of building JSON documentation
- */
-export type DocsResult = ResultTypeWithWarn & {
-  type: 'docs';
-  input: ResolvedBundle;
-};
-
-export type BuildResult = BundleResult | DocsResult | TabResult;

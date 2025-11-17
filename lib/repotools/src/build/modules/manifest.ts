@@ -1,12 +1,14 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
-import type { BundleManifest, ResolvedBundle, SuccessResult } from '../../types.js';
+import type { BundleManifest, ErrorDiagnostic, ResolvedBundle, ResultTypeWithoutWarn } from '../../types.js';
 import { isNodeError, objectEntries } from '../../utils.js';
+
+type BuildManifestResult = ResultTypeWithoutWarn<ErrorDiagnostic, { path: string }>;
 
 /**
  * Writes the combined modules' manifest to the output directory
  */
-export async function buildManifest(bundles: Record<string, ResolvedBundle>, outDir: string): Promise<SuccessResult> {
+export async function buildManifest(bundles: Record<string, ResolvedBundle>, outDir: string): Promise<BuildManifestResult> {
   const finalManifest = objectEntries(bundles).reduce<Record<string, BundleManifest>>((res, [name, { manifest }]) => ({
     ...res,
     [name]: manifest

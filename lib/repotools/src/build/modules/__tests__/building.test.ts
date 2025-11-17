@@ -85,10 +85,17 @@ test('build tab', async () => {
   expect(fs.open).toHaveBeenCalledExactlyOnceWith(pathlib.join(outDir, 'tabs', 'tab0.js'), 'w');
 
   function mockRequire(path: string) {
-    console.log(path);
+    path = path.trim();
+    // console.log(path);
     if (path === '@sourceacademy/modules-lib/tabs/utils') {
       return {
         defineTab: (x: any) => x
+      };
+    }
+
+    if (path === 'react/jsx-runtime') {
+      return {
+        jsx: (x: any) => x
       };
     }
 
@@ -99,7 +106,7 @@ test('build tab', async () => {
   const trimmed = data.slice('export default'.length);
 
   const { default: tab } = eval(trimmed)(mockRequire);
-  expect(tab.body(0)).toEqual(0);
+  expect(tab.body(0)).toEqual('p');
   expect(tab.toSpawn()).toEqual(true);
 });
 

@@ -10,7 +10,8 @@ const config: ViteUserConfig = {
     root: import.meta.dirname,
     include: ['**/__tests__/**/*.test.ts'],
     watch: false,
-    projects: undefined
+    projects: undefined,
+    setupFiles: ['vitest.setup.ts'],
   }
 };
 
