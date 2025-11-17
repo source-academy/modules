@@ -7,7 +7,7 @@ import { testMocksDir } from '../../__tests__/fixtures.js';
 import * as json from '../../build/docs/json.js';
 import * as modules from '../../build/modules/index.js';
 import * as lintRunner from '../../prebuild/lint.js';
-import * as tscRunner from '../../../../repotools/src/tsc.js';
+import * as tscRunner from '../../../../repotools/src/tsc/index.js';
 import * as commands from '../build.js';
 import { getCommandRunner } from './testingUtils.js';
 

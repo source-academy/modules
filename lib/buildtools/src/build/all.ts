@@ -1,16 +1,15 @@
+import { runTypecheckingFromTsconfig, type TypecheckResult } from '@sourceacademy/modules-repotools/tsc';
 import type { BuildResult, InputAsset, Severity } from '@sourceacademy/modules-repotools/types';
 import { compareSeverity } from '@sourceacademy/modules-repotools/utils';
 import type { LogLevel } from 'typedoc';
 import type { PrebuildOptions } from '../prebuild/index.js';
 import { runEslint, type LintResult } from '../prebuild/lint.js';
-import { runTsc, type TscResult } from '../../../repotools/src/tsc.js';
 import { buildSingleBundleDocs } from './docs/index.js';
 import { buildBundle, buildTab } from './modules/index.js';
 
 interface BuildAllPrebuildError {
   severity: 'error';
-
-  tsc: TscResult | undefined;
+  tsc: TypecheckResult | undefined;
   lint: LintResult | undefined;
 }
 
@@ -19,7 +18,7 @@ interface BuildAllBundleResult {
   results: BuildResult;
   docs: BuildResult;
 
-  tsc: TscResult | undefined;
+  tsc: TypecheckResult | undefined;
   lint: LintResult | undefined;
 }
 
@@ -27,7 +26,7 @@ interface BuildAllTabResult {
   severity: Severity;
   results: BuildResult;
 
-  tsc: TscResult | undefined;
+  tsc: TypecheckResult | undefined;
   lint: LintResult | undefined;
 }
 
@@ -39,7 +38,7 @@ export type BuildAllResult = BuildAllPrebuildError | BuildAllBundleResult | Buil
  */
 export async function buildAll(input: InputAsset, prebuild: PrebuildOptions, outDir: string, logLevel: LogLevel): Promise<BuildAllResult> {
   const [tscResult, lintResult] = await Promise.all([
-    prebuild.tsc ? runTsc(input, true) : Promise.resolve(undefined),
+    prebuild.tsc ? runTypecheckingFromTsconfig(input.directory) : Promise.resolve(undefined),
     prebuild.lint ? runEslint(input) : Promise.resolve(undefined)
   ]);
 

@@ -2,10 +2,10 @@ import pathlib from 'path';
 import { Command, InvalidArgumentError, Option } from '@commander-js/extra-typings';
 import { outDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import { resolveEitherBundleOrTab } from '@sourceacademy/modules-repotools/manifest';
+import { formatTscResult, runTypecheckingFromTsconfig } from '@sourceacademy/modules-repotools/tsc/index';
 import { divideAndRound } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
 import { ESLint } from 'eslint';
-import { formatTscResult, runTypechecking, runWithTsconfig } from '../../../repotools/src/tsc.js';
 import { runPrebuild } from '../prebuild/index.js';
 import { formatLintResult, lintGlobal, runEslint } from '../prebuild/lint.js';
 import { logCommandErrorAndExit } from './commandUtils.js';
@@ -132,7 +132,7 @@ export const getTscCommand = () => new Command('tsc')
       logCommandErrorAndExit(resolveResult);
     }
 
-    const result = await runWithTsconfig(resolveResult.asset.directory, runTypechecking);
+    const result = await runTypecheckingFromTsconfig(directory);
     console.log(formatTscResult(result));
 
     switch (result.severity) {

@@ -2,10 +2,9 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import ts from 'typescript';
 import { resolveSingleBundle } from '../../manifest.js';
-import { convertTsDiagnostic } from '../../tsc/utils.js';
 import type { ResultType } from '../../types.js';
 import { findSeverity } from '../../utils.js';
-import type { FormattableTscResult } from './types.js';
+import type { FormattableTscResult, TSDiagnostic } from './types.js';
 
 export function getDiagnosticSeverity(diagnostics: ts.Diagnostic[]) {
   return findSeverity(diagnostics, ({ category }) => {
@@ -18,6 +17,26 @@ export function getDiagnosticSeverity(diagnostics: ts.Diagnostic[]) {
         return 'success';
     }
   });
+}
+
+export function convertTsDiagnostic(diagnostic: ts.Diagnostic): TSDiagnostic {
+  switch (diagnostic.category) {
+    case ts.DiagnosticCategory.Error:
+      return {
+        severity: 'error',
+        ...diagnostic,
+      };
+    case ts.DiagnosticCategory.Warning:
+      return {
+        severity: 'warn',
+        ...diagnostic
+      };
+    default:
+      return {
+        severity: 'success',
+        ...diagnostic
+      };
+  }
 }
 
 /**

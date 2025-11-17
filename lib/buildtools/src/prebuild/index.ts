@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
+import { runTypecheckingFromTsconfig, type TypecheckResult } from '@sourceacademy/modules-repotools/tsc/index';
 import type { InputAsset } from '@sourceacademy/modules-repotools/types';
 import { compareSeverity } from '@sourceacademy/modules-repotools/utils';
-import { runTypecheckingFromTsconfig, type TypecheckResult } from '../../../repotools/src/tsc.js';
 import { runEslint, type LintResult } from './lint.js';
 
 export type PrebuildOptions = {

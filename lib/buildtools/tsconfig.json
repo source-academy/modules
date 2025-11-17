@@ -10,8 +10,6 @@
     "./src",
     "vitest.setup.ts",
     "vitest.d.ts",
-    "../repotools/src/tsc.ts",
-    "../repotools/src/__tests__/tsc.test.ts"
   ],
   "exclude": [
     "dist",

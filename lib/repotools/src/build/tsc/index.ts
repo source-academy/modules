@@ -1,10 +1,9 @@
 import pathlib from 'path';
 import partition from 'lodash/partition.js';
 import ts from 'typescript';
-import { convertTsDiagnostic } from '../../tsc/utils.js';
 import { findSeverity } from '../../utils.js';
 import type { FormattableTscResult } from './types.js';
-import { getDiagnosticSeverity, runWithTsconfig } from './utils.js';
+import { convertTsDiagnostic, getDiagnosticSeverity, runWithTsconfig } from './utils.js';
 
 /**
  * Represents the result of running the typecheck operation
@@ -66,6 +65,7 @@ export function runTscCompile(tsconfig: ts.CompilerOptions, fileNames: string[],
 
   return {
     severity: compileSeverity,
+    // @ts-expect-error Typescript can't narrow the types properly
     diagnostics: diagnostics.map(convertTsDiagnostic)
   };
 }

@@ -1,4 +1,7 @@
 {
+  "extends": [
+    "../../../src/tabs/tsconfig.json"
+  ],
   "compilerOptions": {
     "noEmit": true
   }

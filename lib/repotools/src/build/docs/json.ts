@@ -2,8 +2,7 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
 import * as td from 'typedoc';
-import type { JsonResult } from '../../types.js';
-import type { ResolvedBundle } from '../../types.js';
+import type { JsonResult, ResolvedBundle } from '../../types.js';
 import drawdown from './drawdown.js';
 
 interface VariableDocEntry {

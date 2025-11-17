@@ -1,10 +1,12 @@
+import pathlib from 'path';
+import type { FormattableTscResult, TypecheckResult } from '@sourceacademy/modules-repotools/tsc';
 import type { BuildResult, ResultTypeWithWarn } from '@sourceacademy/modules-repotools/types';
 import chalk from 'chalk';
+import ts from 'typescript';
 import { formatLintResult, type LintResult } from '../prebuild/lint.js';
-import { formatTscResult, type TscResult } from '../../../repotools/src/tsc.js';
 
 interface ResultsObject {
-  tsc?: TscResult;
+  tsc?: TypecheckResult;
   lint?: LintResult;
   docs?: BuildResult;
   results?: BuildResult;
@@ -29,6 +31,29 @@ export function formatResult(result: ResultTypeWithWarn, type?: 'docs' | 'bundle
   }
 
   return successStr;
+}
+
+export function formatTscResult(tscResult: FormattableTscResult): string {
+  const prefix = chalk.cyanBright('tsc completed');
+
+  if (tscResult.severity === 'error' && 'errors' in tscResult) {
+    return formatResult(tscResult);
+  }
+
+  const diagStr = ts.formatDiagnosticsWithColorAndContext(tscResult.results, {
+    getNewLine: () => '\n',
+    getCurrentDirectory: () => process.cwd(),
+    getCanonicalFileName: name => pathlib.basename(name)
+  });
+
+  switch (tscResult.severity) {
+    case 'error':
+      return `${prefix} ${chalk.cyanBright('with')} ${chalk.redBright('errors')}\n${diagStr}`;
+    case 'warn':
+      return `${prefix} ${chalk.cyanBright('with')} ${chalk.yellowBright('warnings')}\n${diagStr}`;
+    case 'success':
+      return `${prefix} ${chalk.greenBright('successfully')}`;
+  }
 }
 
 /**
