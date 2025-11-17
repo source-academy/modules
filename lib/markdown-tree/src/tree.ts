@@ -38,12 +38,6 @@ export const LINE_STRINGS: LineStringSet = {
  */
 interface GenerateTreeOptions {
   /**
-   * Which set of characters to use when
-   * rendering directory lines
-   */
-  charset?: 'ascii' | 'utf-8';
-
-  /**
    * Whether or not to append trailing slashes
    * to directories. Items that already include a
    * trailing slash will not have another appended.
@@ -64,7 +58,6 @@ interface GenerateTreeOptions {
 
 /** The default options if no options are provided */
 const defaultOptions: GenerateTreeOptions = {
-  charset: 'utf-8',
   trailingDirSlash: false,
   fullPath: false,
   rootDot: true,
