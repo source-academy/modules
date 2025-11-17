@@ -100,7 +100,7 @@ describe(buildHtml, () => {
 
     const result = await buildHtml(bundles, outDir, td.LogLevel.None);
     expectSuccess(result.severity);
-    expect(result.outpath).toEqual(pathlib.join(outDir, 'documentation'));
+    expect(result.path).toEqual(pathlib.join(outDir, 'documentation'));
     expect(generateDocs).toHaveBeenCalledExactlyOnceWith(project, pathlib.join(outDir, 'documentation'));
   });
 

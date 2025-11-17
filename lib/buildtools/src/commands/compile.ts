@@ -1,6 +1,6 @@
 import { Command } from '@commander-js/extra-typings';
 import { runTscCompileFromTsconfig } from '@sourceacademy/modules-repotools/tsc';
-import { formatTscResult } from '../build/formatter.js';
+import { formatTscResult } from '../formatter.js';
 import { logCommandErrorAndExit } from './commandUtils.js';
 
 // TODO: Possibly look into supporting watch mode

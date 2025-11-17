@@ -149,7 +149,7 @@ jobs:
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.bundleInfo.name }}
-          playwright: ${{ matrix.bundleInfo.needsPlaywright }}
+          playwright: ${{ matrix.bundleInfo.needsPlaywright && matrix.bundleInfo.changes }}
 
       - name: Build Bundle
         run: |

@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
 import ts from 'typescript';
-import { resolveSingleBundle } from '../../manifest.js';
+import { resolveSingleBundle, type ResolveSingleBundleResult } from '../../manifest.js';
 import type { ResultType } from '../../types.js';
 import { findSeverity } from '../../utils.js';
 import type { FormattableTscResult, TSDiagnostic } from './types.js';
@@ -39,6 +39,11 @@ export function convertTsDiagnostic(diagnostic: ts.Diagnostic): TSDiagnostic {
   }
 }
 
+type RunWithTsconfigResult<T extends ResultType<any, any, any>> =
+  T |
+  TsconfigResult |
+  Extract<ResolveSingleBundleResult, { severity: 'error' }>;
+
 /**
  * Wrapper for running the tsc functions that also resolves the tsconfig
  */
@@ -46,7 +51,7 @@ export async function runWithTsconfig<T extends ResultType<any, any, any>>(
   srcDir: string,
   func: (tsconfig: ts.CompilerOptions, fileNames: string[]) => T,
   requireBundle?: boolean
-) {
+): Promise<RunWithTsconfigResult<T>> {
   if (requireBundle) {
     const resolveResult = await resolveSingleBundle(srcDir);
     if (resolveResult === undefined) {

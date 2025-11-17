@@ -2,11 +2,8 @@ import { Command } from '@commander-js/extra-typings';
 import { bundlesDir, outDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import { resolveAllBundles, resolveEitherBundleOrTab, resolveSingleBundle, resolveSingleTab } from '@sourceacademy/modules-repotools/manifest';
 import chalk from 'chalk';
-import { buildAll } from '../build/all.js';
-import { buildHtml, buildSingleBundleDocs } from '../build/docs/index.js';
-import { formatResult, formatResultObject } from '../build/formatter.js';
-import { buildBundle, buildTab } from '../build/modules/index.js';
-import { buildManifest } from '../build/modules/manifest.js';
+import * as builders from '@sourceacademy/modules-repotools/build';
+import { formatResult, formatResultObject } from '../formatter.js';
 import { runBuilderWithPrebuild } from '../prebuild/index.js';
 import * as cmdUtils from './commandUtils.js';
 
@@ -33,11 +30,11 @@ export const getBuildBundleCommand = () => new Command('bundle')
         console.warn(chalk.yellowBright('--tsc was specified with --watch, ignoring...'));
       }
 
-      await buildBundle(outDir, result.bundle, true);
+      await builders.buildBundle(outDir, result.bundle, true);
       return;
     }
 
-    const results = await runBuilderWithPrebuild(buildBundle, opts, result.bundle, outDir, 'bundle', false);
+    const results = await runBuilderWithPrebuild(builders.buildBundle, opts, result.bundle, outDir, 'bundle', false);
     console.log(formatResultObject(results));
     cmdUtils.processResult(results, opts.ci);
   });
@@ -61,11 +58,11 @@ export const getBuildTabCommand = () => new Command('tab')
         console.warn(chalk.yellowBright('--tsc was specified with --watch, ignoring...'));
       }
 
-      await buildTab(outDir, tab, true);
+      await builders.buildTab(outDir, tab, true);
       return;
     }
 
-    const results = await runBuilderWithPrebuild(buildTab, opts, tab, outDir, 'tab', false);
+    const results = await runBuilderWithPrebuild(builders.buildTab, opts, tab, outDir, 'tab', false);
     console.log(formatResultObject(results));
     cmdUtils.processResult(results, opts.ci);
   });
@@ -80,7 +77,7 @@ export const getBuildDocsCommand = () => new Command('docs')
     if (manifestResult === undefined) {
       cmdUtils.logCommandErrorAndExit(`No bundle found at ${directory}!`);
     } else if (manifestResult.severity === 'success') {
-      const docResult = await buildSingleBundleDocs(manifestResult.bundle, outDir, logLevel);
+      const docResult = await builders.buildSingleBundleDocs(manifestResult.bundle, outDir, logLevel);
       console.log(formatResultObject({ docs: docResult }));
       cmdUtils.processResult({ results: docResult }, ci);
     } else {
@@ -98,7 +95,7 @@ export const getBuildAllCommand = () => new Command('all')
   .action(async (directory, opts) => {
     const resolvedResult = await resolveEitherBundleOrTab(directory);
     if (resolvedResult.severity === 'error') {
-      if (resolvedResult.errors.length === 0) {
+      if (resolvedResult.asset === undefined) {
         cmdUtils.logCommandErrorAndExit(`Could not locate tab/bundle at ${directory}`);
       } else {
         const errStr = resolvedResult.errors.join('\n');
@@ -106,7 +103,7 @@ export const getBuildAllCommand = () => new Command('all')
       }
     }
 
-    const result = await buildAll(resolvedResult.asset, opts, outDir, opts.logLevel);
+    const result = await builders.buildAll(resolvedResult.asset, opts, outDir, opts.logLevel);
     console.log(formatResultObject(result));
     cmdUtils.processResult(result, opts.ci);
   });
@@ -126,7 +123,7 @@ export const getManifestCommand = () => new Command('manifest')
       cmdUtils.logCommandErrorAndExit(resolveResult);
     }
 
-    const manifestResult = await buildManifest(resolveResult.bundles, outDir);
+    const manifestResult = await builders.buildManifest(resolveResult.bundles, outDir);
     console.log(formatResult(manifestResult));
   });
 
@@ -139,7 +136,7 @@ export const getBuildHtmlCommand = () => new Command('html')
       cmdUtils.logCommandErrorAndExit(resolveResult);
     }
 
-    const htmlResult = await buildHtml(resolveResult.bundles, outDir, logLevel);
+    const htmlResult = await builders.buildHtml(resolveResult.bundles, outDir, logLevel);
     console.log(formatResult(htmlResult, 'html'));
     cmdUtils.processResult(htmlResult, false);
   });

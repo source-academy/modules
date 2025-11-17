@@ -3,7 +3,7 @@ import pathlib from 'path';
 import type { BundleManifest, ErrorDiagnostic, ResolvedBundle, ResultTypeWithoutWarn } from '../../types.js';
 import { isNodeError, objectEntries } from '../../utils.js';
 
-type BuildManifestResult = ResultTypeWithoutWarn<ErrorDiagnostic, { path: string }>;
+export type BuildManifestResult = ResultTypeWithoutWarn<ErrorDiagnostic, { path: string }>;
 
 /**
  * Writes the combined modules' manifest to the output directory

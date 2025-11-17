@@ -209,7 +209,7 @@ export async function getBundleManifests(bundlesDir: string, tabCheck?: boolean)
   };
 }
 
-type ResolveSingleBundleResult = resultTypes.ResultTypeWithoutWarn<
+export type ResolveSingleBundleResult = resultTypes.ResultTypeWithoutWarn<
   BundleErrorDiagnostic,
   { bundle: resultTypes.ResolvedBundle }
 >;

@@ -5,7 +5,7 @@ import { getBundleManifests } from '@sourceacademy/modules-repotools/manifest';
 import type { BundleManifest, ModulesManifest } from '@sourceacademy/modules-repotools/types';
 import omit from 'lodash/omit.js';
 import _package from '../../../../package.json' with { type: 'json' };
-import { formatResult } from '../build/formatter.js';
+import { formatResult } from '../formatter.js';
 import { askQuestion, error, success, warn } from './print.js';
 import { check, isPascalCase } from './utilities.js';
 

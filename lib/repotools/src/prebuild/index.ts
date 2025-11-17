@@ -1,15 +1,15 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
-import { runTypecheckingFromTsconfig } from '@sourceacademy/modules-repotools/build/tsc/index';
-import type { InputAsset } from '@sourceacademy/modules-repotools/types';
-import { compareSeverity } from '@sourceacademy/modules-repotools/utils';
 import { runEslint, type LintResult } from './lint.js';
+import { runTypecheckingFromTsconfig } from '../build/tsc/index.js';
+import type { InputAsset } from '../types.js';
+import { compareSeverity } from '../utils.js';
 
-export type PrebuildOptions = {
+export interface PrebuildOptions {
   tsc?: boolean;
   lint?: boolean;
   ci?: boolean;
-};
+}
 
 type TypecheckResult = Awaited<ReturnType<typeof runTypecheckingFromTsconfig>> | undefined;
 
