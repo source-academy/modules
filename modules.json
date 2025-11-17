@@ -1,0 +1,156 @@
+{
+  "ar": {
+    "tabs": [
+      "AugmentedReality"
+    ],
+    "version": "1.0.0"
+  },
+  "arcade_2d": {
+    "tabs": [
+      "ArcadeTwod"
+    ],
+    "version": "1.0.0"
+  },
+  "binary_tree": {
+    "tabs": [],
+    "version": "1.0.0"
+  },
+  "communication": {
+    "tabs": [],
+    "version": "1.0.0"
+  },
+  "copy_gc": {
+    "tabs": [
+      "CopyGc"
+    ],
+    "version": "1.0.0"
+  },
+  "csg": {
+    "tabs": [
+      "Csg"
+    ],
+    "version": "1.0.0"
+  },
+  "curve": {
+    "tabs": [
+      "Curve"
+    ],
+    "version": "1.0.0"
+  },
+  "game": {
+    "tabs": [
+      "Game"
+    ],
+    "version": "1.0.0"
+  },
+  "mark_sweep": {
+    "tabs": [
+      "MarkSweep"
+    ],
+    "version": "1.0.0"
+  },
+  "midi": {
+    "tabs": [],
+    "version": "1.0.0"
+  },
+  "nbody": {
+    "tabs": [
+      "Nbody"
+    ],
+    "version": "1.0.0"
+  },
+  "painter": {
+    "tabs": [
+      "Painter"
+    ],
+    "version": "1.0.0"
+  },
+  "physics_2d": {
+    "tabs": [
+      "Physics2D"
+    ],
+    "version": "1.0.0"
+  },
+  "pix_n_flix": {
+    "tabs": [
+      "Pixnflix"
+    ],
+    "version": "1.0.0"
+  },
+  "plotly": {
+    "tabs": [
+      "Plotly"
+    ],
+    "version": "1.0.0"
+  },
+  "remote_execution": {
+    "tabs": [],
+    "version": "1.0.0"
+  },
+  "repeat": {
+    "tabs": [
+      "Repeat"
+    ],
+    "version": "1.0.0"
+  },
+  "repl": {
+    "tabs": [
+      "Repl"
+    ],
+    "version": "1.0.0"
+  },
+  "robot_simulation": {
+    "tabs": [
+      "RobotSimulation"
+    ],
+    "version": "1.0.0"
+  },
+  "rune": {
+    "tabs": [
+      "Rune"
+    ],
+    "version": "1.0.0"
+  },
+  "rune_in_words": {
+    "tabs": [],
+    "version": "1.0.0"
+  },
+  "scrabble": {
+    "tabs": [],
+    "version": "1.0.0"
+  },
+  "sound": {
+    "tabs": [
+      "Sound"
+    ],
+    "version": "1.0.0"
+  },
+  "sound_matrix": {
+    "tabs": [
+      "SoundMatrix"
+    ],
+    "version": "1.0.0"
+  },
+  "stereo_sound": {
+    "tabs": [
+      "StereoSound"
+    ],
+    "version": "1.0.0"
+  },
+  "unittest": {
+    "tabs": [
+      "Unittest"
+    ],
+    "version": "1.0.0"
+  },
+  "unity_academy": {
+    "tabs": [
+      "UnityAcademy"
+    ],
+    "version": "1.0.0"
+  },
+  "wasm": {
+    "tabs": [],
+    "version": "1.0.0"
+  }
+}
