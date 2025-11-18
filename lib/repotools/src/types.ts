@@ -8,6 +8,10 @@ interface DefaultErrorInfo<TError = any> {
   error: TError;
 };
 
+interface DefaultWarnInfo<TWarn = any> {
+  warning: TWarn
+};
+
 export type Severity = (typeof severity)[keyof typeof severity];
 
 export type BaseDiagnostic<T extends Severity, Info extends object = object> = {
@@ -15,7 +19,7 @@ export type BaseDiagnostic<T extends Severity, Info extends object = object> = {
 } & Info;
 
 export type ErrorDiagnostic<Info extends object = DefaultErrorInfo> = BaseDiagnostic<'error', Info>;
-export type WarnDiagnostic<Info extends object = object> = BaseDiagnostic<'warn', Info>;
+export type WarnDiagnostic<Info extends object = DefaultWarnInfo> = BaseDiagnostic<'warn', Info>;
 export type SuccessDiagnostic<Info extends object = object> = BaseDiagnostic<'success', Info>;
 
 export type DiagnosticWithoutWarn<
@@ -26,7 +30,7 @@ export type DiagnosticWithoutWarn<
 export type Diagnostic<
   SuccessInfo extends object = object,
   ErrorInfo extends object = DefaultErrorInfo,
-  WarnInfo extends object = object,
+  WarnInfo extends object = DefaultWarnInfo
 > = DiagnosticWithoutWarn<SuccessInfo, ErrorInfo> | WarnDiagnostic<WarnInfo>;
 
 export type ExtractDiagnosticSeverity<T extends Severity, U extends Diagnostic<any, any, any>> =
@@ -78,7 +82,7 @@ export type BuildResult = ResultTypeWithoutWarn<BuildDiagnostic>;
 /**
  * Represnts the result of building JSON documentation
  */
-export type JsonDiagnostic = Diagnostic<object, DefaultErrorInfo, { warning: string }>;
+export type JsonDiagnostic = Diagnostic;
 
 export type JsonResult = ResultType<JsonDiagnostic, { outpath: string }, object, { outpath: string }>;
 

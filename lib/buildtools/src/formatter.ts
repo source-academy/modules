@@ -2,12 +2,12 @@ import pathlib from 'path';
 import chalk from 'chalk';
 import partition from 'lodash/partition.js';
 import ts from 'typescript';
-import type { OverallResultType, FormattableTscResult, JsonResult } from '@sourceacademy/modules-repotools/build';
+import type { OverallResultType, FormattableTscResult } from '@sourceacademy/modules-repotools/build';
+import type { LintResult } from '@sourceacademy/modules-repotools/prebuild/lint';
 
 interface ResultsObject {
   tsc?: FormattableTscResult;
   lint: LintResult;
-  results?: OverallResultType;
 }
 
 export function formatLintResult({ severity, formatted, input }: LintResult): string {
@@ -21,27 +21,6 @@ export function formatLintResult({ severity, formatted, input }: LintResult): st
     case 'success':
       return `${prefix} ${chalk.greenBright('successfully')}`;
   }
-}
-
-/**
- * Formats a single result object into a string
- */
-export function formatResult(result: OverallResultType) {
-  if (result.severity === 'error') {
-    return result.errors.join('\n');
-  }
-
-  const typeStr = type ?? 'output';
-  const successStr = chalk.greenBright(`${typeStr} written to ${result.path}`);
-
-  if (result.severity === 'warn') {
-    return [
-      ...result.warnings,
-      successStr
-    ].join('\n');
-  }
-
-  return successStr;
 }
 
 export function formatTscResult(tscResult: FormattableTscResult): string {
@@ -80,18 +59,22 @@ export function formatTscResult(tscResult: FormattableTscResult): string {
 /**
  * Formats a larger result object, particularly one with prebuild results too.
  */
-export function formatResultObject(results: ResultsObject): string {
+export function formatResultObject({ tsc, lint }: ResultsObject, result: OverallResultType): string {
   const args: string[] = [];
 
-  if (results.tsc) {
-    args.push(formatTscResult(results.tsc));
+  if (tsc) {
+    args.push(formatTscResult(tsc));
   }
 
-  if (results.lint) {
-    args.push(formatLintResult(results.lint));
+  if (lint) {
+    args.push(formatLintResult(lint));
   }
 
-  if (results.results !== undefined) {
+  if (result.severity === 'error') {
+    result.diagnostics !== undefined
+  }
+
+  if (result.diagnostics !== undefined) {
     args.push(formatResult(results.results));
   }
 

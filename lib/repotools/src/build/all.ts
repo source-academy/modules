@@ -10,11 +10,11 @@ import type { PrebuildOptions } from "../prebuild/index.js";
 type TypecheckResult = Awaited<ReturnType<typeof runTypecheckingFromTsconfig>>;
 
 interface BuildAllTabResult {
-  results: Awaited<ReturnType<typeof buildTab>>;
+  diagnostics: Awaited<ReturnType<typeof buildTab>>;
 }
 
 interface BuildAllBundleResult {
-  results: Awaited<ReturnType<typeof buildBundle>>;
+  diagnostics: Awaited<ReturnType<typeof buildBundle>>;
   docs: Awaited<ReturnType<typeof buildSingleBundleDocs>>;
 }
 
@@ -25,7 +25,7 @@ export type BuildAllResult<
   lint: LintResult | undefined;
   tsc: TypecheckResult | undefined;
 } & ({
-  results: undefined
+  diagnostics: undefined
 } | TResult);
 
 /**
@@ -46,7 +46,7 @@ export async function buildAll(input: InputAsset, prebuild: PrebuildOptions, out
       severity: 'error',
       lint: lintResult,
       tsc: tscResult,
-      results: undefined
+      diagnostics: undefined
     };
   }
 
@@ -58,7 +58,7 @@ export async function buildAll(input: InputAsset, prebuild: PrebuildOptions, out
 
     return {
       severity: compareSeverity(bundleResult.severity, docsResult.severity),
-      results: bundleResult,
+      diagnostics: bundleResult,
       docs: docsResult,
       lint: lintResult,
       tsc: tscResult,
@@ -67,7 +67,7 @@ export async function buildAll(input: InputAsset, prebuild: PrebuildOptions, out
     const tabResult = await buildTab(outDir, input, false);
     return {
       severity: tabResult.severity,
-      results: tabResult,
+      diagnostics: tabResult,
       lint: lintResult,
       tsc: tscResult,
     };

@@ -35,7 +35,7 @@ export const getBuildBundleCommand = () => new Command('bundle')
     }
 
     const results = await runBuilderWithPrebuild(builders.buildBundle, opts, result.bundle, outDir, 'bundle', false);
-    console.log(formatResultObject(results));
+    console.log(formatResultObject({ prebuild: results }));
     cmdUtils.processResult(results, opts.ci);
   });
 
@@ -63,7 +63,7 @@ export const getBuildTabCommand = () => new Command('tab')
     }
 
     const results = await runBuilderWithPrebuild(builders.buildTab, opts, tab, outDir, 'tab', false);
-    console.log(formatResultObject(results));
+    console.log(formatResultObject({ prebuild: results }));
     cmdUtils.processResult(results, opts.ci);
   });
 
@@ -78,7 +78,7 @@ export const getBuildDocsCommand = () => new Command('docs')
       cmdUtils.logCommandErrorAndExit(`No bundle found at ${directory}!`);
     } else if (manifestResult.severity === 'success') {
       const docResult = await builders.buildSingleBundleDocs(manifestResult.bundle, outDir, logLevel);
-      console.log(formatResultObject({ docs: docResult }));
+      console.log(formatResultObject({ prebuild: { docs: docResult } }));
       cmdUtils.processResult({ results: docResult }, ci);
     } else {
       cmdUtils.logCommandErrorAndExit(manifestResult);
@@ -104,7 +104,7 @@ export const getBuildAllCommand = () => new Command('all')
     }
 
     const result = await builders.buildAll(resolvedResult.asset, opts, outDir, opts.logLevel);
-    console.log(formatResultObject(result));
+    console.log(formatResultObject({ prebuild: result }));
     cmdUtils.processResult(result, opts.ci);
   });
 
