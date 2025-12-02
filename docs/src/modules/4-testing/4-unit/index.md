@@ -4,4 +4,5 @@ title: Unit Testing
 
 - [General Overview](./1-general)
 - [Unit Testing Specifics](./2-unit)
-- [Browser Mode](./3-browser)
+- [Mocking](./3-mock)
+- [Browser Mode](./4-browser)

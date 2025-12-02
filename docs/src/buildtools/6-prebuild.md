@@ -6,9 +6,7 @@ The buildtools call both ESLint and `tsc` in parallel since they are not depende
 
 ## Running ESLint from the Command Line
 
-ESLint provides [documentation](https://eslint.org/docs/latest/integrate/nodejs-api) detailing how to use its Node API. Below is the code that does just that:
-
-<<< ../../../lib/buildtools/src/prebuild/lint.ts#runEslint {ts:line-numbers}
+ESLint provides [documentation](https://eslint.org/docs/latest/integrate/nodejs-api) detailing how to use its Node API.
 
 Because the configuration file for the repository is located at the root of the repository, we need to set the `cwd` to the path to the root of the repository when
 initializing the `ESLint` instance. This allows ESLint to resolve the configuration correctly.
@@ -36,8 +34,6 @@ That's why there's a `lint` command and also a `lintglobal` command.
 ## Calling Typescript from Node
 
 Most of the code for running Typescript functionality from Node was taken from [this](https://github.com/Microsoft/TypeScript/issues/6387) Github issue.
-
-<<< ../../../lib/buildtools/src/prebuild/tsc.ts {ts:line-numbers}
 
 The high level overview of this process is as follows:
 
