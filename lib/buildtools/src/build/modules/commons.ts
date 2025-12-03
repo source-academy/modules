@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
-import { bundlesDir } from '@sourceacademy/modules-repotools/getGitRoot';
+import { gitRoot } from '@sourceacademy/modules-repotools/getGitRoot';
 import type { BuildResult, InputAsset } from '@sourceacademy/modules-repotools/types';
 import { parse } from 'acorn';
 import { generate } from 'astring';
@@ -33,14 +33,15 @@ export const commonEsbuildOptions = {
  * Returns an ESBuild plugin that enforces that only
  * the current bundle can import 'js-slang/context'
  */
-export function getBundleContextPlugin(currentBundle: string) {
+export function getContextPlugin(asset: InputAsset) {
   return {
     name: 'context-plugin',
     setup({ onResolve }) {
       onResolve({ filter: /js-slang\/context/ }, args => {
-        const relpath = pathlib.relative(bundlesDir, args.importer);
+        const relpath = pathlib.relative(gitRoot, args.importer);
+        const pathArgs = relpath.split(pathlib.sep);
 
-        if (relpath.startsWith('..')) {
+        if (pathArgs.length < 2) {
           return {
             errors: [{
               text: 'js-slang/context can only be imported by bundles.'
@@ -48,11 +49,21 @@ export function getBundleContextPlugin(currentBundle: string) {
           };
         }
 
-        const [importerBundle] = relpath.split(pathlib.sep);
-        if (importerBundle !== currentBundle) {
+        const [arg0, assetFolder, assetName] = relpath.split(pathlib.sep);
+        if (arg0 !== 'src' || assetFolder !== 'bundles') {
           return {
             errors: [{
-              text: `Bundle "${importerBundle}" is attempting to import js-slang/context via bundle "${currentBundle}", which is not allowed.`
+              text: 'js-slang/context can only be imported by bundles.'
+            }]
+          };
+        }
+
+        const pathType = assetFolder === 'bundles' ? 'bundle' : 'tab';
+
+        if (asset.name !== assetName || asset.type !== pathType) {
+          return {
+            errors: [{
+              text: `${asset.name} ${asset.type} is attempting to import js-slang/context via ${assetName} ${pathType}, which is not allowed.`
             }]
           };
         }

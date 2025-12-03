@@ -2,7 +2,7 @@ import pathlib from 'path';
 import { endBuildPlugin } from '@sourceacademy/modules-repotools/builder';
 import type { BuildResult, ResolvedBundle, ResolvedTab } from '@sourceacademy/modules-repotools/types';
 import * as esbuild from 'esbuild';
-import { builderPlugin, commonEsbuildOptions, getBundleContextPlugin, outputBundleOrTab } from './commons.js';
+import { builderPlugin, commonEsbuildOptions, getContextPlugin, outputBundleOrTab } from './commons.js';
 
 /**
  * Use ESBuild to compile a single bundle and write its output to the
@@ -16,7 +16,7 @@ export async function buildBundle(outDir: string, bundle: ResolvedBundle, watch:
     entryPoints: [pathlib.join(bundle.directory, 'src', 'index.ts')],
     tsconfig: pathlib.join(bundle.directory, 'tsconfig.json'),
     outfile: pathlib.join(outDir, 'bundles', `${bundle.name}.js`),
-    plugins: [getBundleContextPlugin(bundle.name)]
+    plugins: [getContextPlugin(bundle)]
   } satisfies esbuild.BuildOptions;
 
   if (watch) {
@@ -33,17 +33,6 @@ export async function buildBundle(outDir: string, bundle: ResolvedBundle, watch:
   const { outputFiles: [result] } = await esbuild.build(bundleOptions);
   return outputBundleOrTab(result, bundle, outDir);
 }
-
-const tabContextPlugin: esbuild.Plugin = {
-  name: 'Tab Context',
-  setup(build) {
-    build.onResolve({ filter: /^js-slang\/context/ }, () => ({
-      errors: [{
-        text: 'If you see this message, it means that your tab code is importing js-slang/context directly or indirectly. Do not do this'
-      }]
-    }));
-  }
-};
 
 /**
  * Use ESBuild to compile a single tab and write its output to the
@@ -65,7 +54,7 @@ export async function buildTab(outDir: string, tab: ResolvedTab, watch: boolean)
     ],
     tsconfig: pathlib.join(tab.directory, 'tsconfig.json'),
     outfile: pathlib.join(outDir, 'tabs', `${tab.name}.js`),
-    plugins: [tabContextPlugin],
+    plugins: [getContextPlugin(tab)],
   } satisfies esbuild.BuildOptions;
 
   if (watch) {

@@ -1,9 +1,9 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
 import type { Command } from '@commander-js/extra-typings';
+import { bundlesDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import type { BuildResult, Severity } from '@sourceacademy/modules-repotools/types';
 import { beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
-import { testMocksDir } from '../../__tests__/fixtures.js';
 import * as json from '../../build/docs/json.js';
 import * as modules from '../../build/modules/index.js';
 import * as lintRunner from '../../prebuild/lint.js';
@@ -131,7 +131,7 @@ function testBuildCommand<T extends Record<string, any>>(
     if (typeof prebuild === 'boolean') {
       tsc = lint = prebuild;
     } else {
-      ;({ tsc, lint } = prebuild);
+      ; ({ tsc, lint } = prebuild);
     }
 
     if (lint) {
@@ -281,6 +281,9 @@ function testBuildCommand<T extends Record<string, any>>(
   });
 }
 
-testBuildCommand('Docs', commands.getBuildDocsCommand, json, 'buildJson', false, ['jsons'], `${testMocksDir}/bundles/test0`);
-testBuildCommand('Bundles', commands.getBuildBundleCommand, modules, 'buildBundle', true, ['bundles'], `${testMocksDir}/bundles/test0`);
-testBuildCommand('Tabs', commands.getBuildTabCommand, modules, 'buildTab', true, ['tabs'], `${testMocksDir}/tabs/tab0`);
+const bundlePath = pathlib.join(bundlesDir, 'test0');
+const tabPath = pathlib.join(tabsDir, 'tab0');
+
+testBuildCommand('Docs', commands.getBuildDocsCommand, json, 'buildJson', false, ['jsons'], bundlePath);
+testBuildCommand('Bundles', commands.getBuildBundleCommand, modules, 'buildBundle', true, ['bundles'], bundlePath);
+testBuildCommand('Tabs', commands.getBuildTabCommand, modules, 'buildTab', true, ['tabs'], tabPath);
