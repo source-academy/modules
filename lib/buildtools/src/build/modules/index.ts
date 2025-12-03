@@ -2,7 +2,7 @@ import pathlib from 'path';
 import { endBuildPlugin } from '@sourceacademy/modules-repotools/builder';
 import type { BuildResult, ResolvedBundle, ResolvedTab } from '@sourceacademy/modules-repotools/types';
 import * as esbuild from 'esbuild';
-import { builderPlugin, commonEsbuildOptions, outputBundleOrTab } from './commons.js';
+import { builderPlugin, commonEsbuildOptions, getBundleContextPlugin, outputBundleOrTab } from './commons.js';
 
 /**
  * Use ESBuild to compile a single bundle and write its output to the
@@ -16,6 +16,7 @@ export async function buildBundle(outDir: string, bundle: ResolvedBundle, watch:
     entryPoints: [pathlib.join(bundle.directory, 'src', 'index.ts')],
     tsconfig: pathlib.join(bundle.directory, 'tsconfig.json'),
     outfile: pathlib.join(outDir, 'bundles', `${bundle.name}.js`),
+    plugins: [getBundleContextPlugin(bundle.name)]
   } satisfies esbuild.BuildOptions;
 
   if (watch) {
