@@ -82,6 +82,11 @@ If you do so, remember to run your installation command (same as the one above) 
 To ensure that bundles conform to the different Source language specifications, there are a few rules that bundles need to abide by.
 Refer to [this list](./4-conventions/index) for more information.
 
+## Module Contexts
+
+Module contexts are a way for bundles to send information between bundles and tabs. Refer to [this](../5-advanced/context) section for
+instructions on how to use them.
+
 ## Common Modules Library
 
 There are common functions such as `hexToColor` available in the Common Modules Library. You can make use of these functions

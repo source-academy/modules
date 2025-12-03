@@ -103,8 +103,10 @@ const vitepressOptions: UserConfig = {
     }
   },
   vite: {
-    // @ts-expect-error groupIconVitePlugin is probably built for an incorrect version of Vite
-    plugins: [groupIconVitePlugin()]
+    plugins: [
+      // @ts-expect-error groupIconVitePlugin is probably built for an incorrect version of Vite
+      groupIconVitePlugin(),
+    ]
   }
 };
 
