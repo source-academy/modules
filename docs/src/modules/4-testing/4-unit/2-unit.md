@@ -164,11 +164,22 @@ describe('Only Test 2 will run!', () => {
 });
 ```
 
+If `.only` is used mulitple times in a file, then all tests with `.only` get executed:
+
+```ts
+test.only('test1', () => {}); // will execute
+test('test2', () => {});      // won't execute
+test.only('test3', () => {}); // will execute
+```
+
+If `.only` is used with a `describe` block, then all the tests within that block will also execute. In effect, `.only` allows you
+to 'select' which tests to run.
+
 The main runner that runs unit tests on the CI/CD pipeline does not allow for `.only`. You can simulate this behaviour by running your tests with the
-`--no-allow-only` flag.  This behaviour is intended to prevent you from causing only part of your tests to run.
+`--no-allow-only` flag.  This behaviour is intended to prevent you from causing only part of your tests to run on the CI/CD pipeline.
 
 > [!INFO] Linting
-> There is an ESLint rule configured to warn you if you use focused tests (using `.only`). This is not an issue, so long as you remember
+> There is an ESLint rule configured to warn you if you use focused tests (using `.only`). This is not an issue so long as you remember
 > to remove `.only` before pushing to the main repository.
 
 Pushing with skipped tests however, is allowed. Do leave a comment explaining why the test is skipped:

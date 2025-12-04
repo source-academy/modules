@@ -158,7 +158,7 @@ export async function getPackagesWithResolutionChanges() {
 /**
  * Returns `true` if there are changes present in the given directory relative to
  * the master branch\
- * Used to determine, particularly for libraries, if running tests and tsc are necessary
+ * Used to determine if the lockfile has changed
  */
 export const hasLockFileChanged = memoize(async () => {
   const { exitCode } = await getExecOutput(

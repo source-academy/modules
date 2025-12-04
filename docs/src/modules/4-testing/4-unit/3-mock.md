@@ -2,9 +2,6 @@
 
 Mocking is a way to create "fake" versions of your code. For more information, look [here](https://vitest.dev/guide/mocking.html).
 
-Vitest allows you to mock a variety of aspects of Javascript code. In particular, this section focuses on the details of mocking classes and
-Javascript modules.
-
 Mocks are isolated to each test file, meaning that a call to `vi.mock` etc. will only apply those mocks to the tests located in the **same**
 file as the call.
 
@@ -106,6 +103,9 @@ vi.mock(import('./bar'), async importOriginal => {
 > 
 > vi.spyOn(bar, 'bar').mockReturnValue(1);
 > ```
+>
+> Spying however, doesn't replace the underlying implementation. You must still call `mockImplementation` or any
+> of the other methods to change the behaviour of the spied function.
 
 ## Mocking Classes
 
@@ -116,10 +116,11 @@ a class or a function expression:
 
 ```ts [index.test.ts]
 vi.mock(import('./index'), () => ({
+  // class expression
   Foo: vi.fn(class {} as any),
-  // or
+  // or function expression
   Foo: vi.fn(function () {}),
-  // but NOT
+  // but NOT arrow function
   Foo: vi.fn(() => {}),
 }));
 
@@ -130,7 +131,6 @@ expect(Foo).toHaveBeenCalledOnce();
 ```ts [index.ts]
 export class Foo {}
 ```
-
 :::
 
 ## Mocking "Global" Properties
@@ -198,6 +198,146 @@ test('play works', () => {
   expect(() => play(sound)).not.toThrow();
 });
 ```
+
+## Mocking 'Function-Like's and Mocking Return Values
+
+There are a variety of things in Typescript that behave like functions you can call (e.g. class constructors, getters). Often times,
+you will find yourself needing to mock the return value of these functions only once for a specific test:
+
+::: code-group
+```ts [src/__tests__/foo.test.ts]
+import { expect, test, vi } from 'vitest';
+import * as foo from './foo';
+import * as bar from './bar';
+
+test('mocked foo', () => {
+  vi.spyOn(bar, 'bar').mockReturnValueOnce(0);
+  expect(foo.foo(0)).toEqual(0);
+});
+
+test('regular foo', () => {
+  expect(foo.foo(0)).toEqual(1);
+});
+```
+
+```ts [src/foo.ts]
+import { bar } from './bar';
+
+export function foo(x: number) {
+  if (!doSomeOtherthings()) {
+    return 100;
+  }
+
+  return bar() + x;
+}
+```
+
+```ts [src/bar.ts]
+export function bar() {
+  return 1;
+}
+```
+:::
+
+Now consider, what happens if in `foo`, `doSomeOtherThings` returns `false`? `bar` never gets called, so its mock implementation
+never gets cleared. This means that when the second test executes, `bar`'s return value is still mocked as 0, and this will cause
+the second test to fail:
+
+```ts [src/__tests__/foo.test.ts]
+import { expect, test, vi } from 'vitest';
+import * as foo from './foo';
+import * as bar from './bar';
+
+test('mocked foo', () => {
+  // bar never gets called during this test
+  vi.spyOn(bar, 'bar').mockReturnValueOnce(0);
+  expect(foo.foo(0)).toEqual(0);
+});
+
+// so it still has a 'mocked' return value of 0 here
+test('regular foo', () => {
+  expect(foo.foo(0)).toEqual(1);
+});
+```
+
+Of course, `doSomeOtherThings` should be also have an appropriate mocked value, but what if its implementation details change, or you
+simply forget to do the mock?
+
+This is why whenever `mockReturnValueOnce` (or any of the mock once methods) are called, you should also have an assertion checking
+that the function you are calling was indeed called:
+
+```ts [src/__tests__/foo.test.ts]
+import { expect, test, vi } from 'vitest';
+import * as foo from './foo';
+import * as bar from './bar';
+
+test('mocked foo', () => {
+  vi.spyOn(bar, 'bar').mockReturnValueOnce(0);
+  expect(foo.foo(0)).toEqual(0);
+
+  // Assert that bar was called so that if it was not the
+  // test fails and might at least help explain why subsequent
+  // tests also fail
+  expect(bar.bar).toHaveBeenCalledOnce();
+
+});
+
+test('regular foo', () => {
+  expect(foo.foo(0)).toEqual(1);
+});
+```
+
+Of course if you called `mockReturnValueOnce` more than once, you should assert that your function was called at least that many times:
+
+```ts [src/__tests__/foo.test.ts]
+import { expect, test, vi } from 'vitest';
+import * as foo from './foo';
+import * as bar from './bar';
+
+test('mocked foo', () => {
+  vi.spyOn(bar, 'bar')
+    .mockReturnValueOnce(0)
+    // .mockRejectedValueOnce(new Error()) or even with mockRejectedValue!
+    .mockReturnValueOnce(1);
+
+  expect(foo.foo(0)).toEqual(0);
+
+  expect(bar.bar).toHaveBeenCalledTimes(2);
+});
+
+test('regular foo', () => {
+  expect(foo.foo(0)).toEqual(1);
+});
+```
+
+The alternative would be to clear all your mocks after every test:
+
+```ts [src/__tests__/foo.test.ts]
+import { afterEach, expect, test, vi } from 'vitest';
+import * as foo from './foo';
+import * as bar from './bar';
+
+const mockedBar = vi.spyOn(bar, 'bar');
+
+afterEach(() => {
+  mockedBar.mockClear();
+});
+
+test('mocked foo', () => {
+  mockedBar
+    .mockReturnValueOnce(0)
+    .mockReturnValueOnce(1);
+
+  expect(foo.foo(0)).toEqual(0);
+});
+
+test('regular foo', () => {
+  expect(foo.foo(0)).toEqual(1);
+});
+```
+
+but if you are going to be mocking the return value of a function three times specifically, you probably wanted to make
+sure that it was called three times anyway.
 
 ## Auto-Mocking
 
@@ -342,7 +482,7 @@ vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve(true));
 
 Consider the following folder structure:
 
-```dirtree by Vitest
+```dirtree
 name: src
 children:
 - functions.ts
@@ -422,7 +562,7 @@ export function foo() {
 }
 ```
 
-Then we no longer need to provide the implementation in our tests:
+Then we no longer need to provide the implementation directly in our tests:
 
 ::: code-group
 
@@ -456,3 +596,13 @@ Vitest will automatically load the implementation provided by the `__mocks__` fo
 > `__mocks__` folders should also be included (or rather you should not configure them to be explicitly included or excluded).
 >
 > The buildtools will automatically filter them out when running Typescript compilation.
+
+This approach can be combined with the setup file approach above:
+
+```ts [vitest.setup.ts]
+import { vi } from 'vitest';
+
+vi.mock(import('./src/functions'));
+```
+
+Then the implementation inside the `__mocks__` folder gets automatically loaded for every test file.
