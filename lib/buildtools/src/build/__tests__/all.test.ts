@@ -1,6 +1,6 @@
 import pathlib from 'path';
+import { bundlesDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import { afterEach, describe, expect, test, vi } from 'vitest';
-import { testMocksDir } from '../../__tests__/fixtures.js';
 import * as docs from '../../build/docs/index.js';
 import * as modules from '../../build/modules/index.js';
 import { getCommandRunner } from '../../commands/__tests__/testingUtils.js';
@@ -34,7 +34,7 @@ describe('Test the buildAll command', () => {
   });
 
   describe('Test command with a bundle', () => {
-    const bundlePath = pathlib.join(testMocksDir, 'bundles', 'test0');
+    const bundlePath = pathlib.join(bundlesDir, 'test0');
 
     test('Regular execution for a bundle', async () => {
       mockedBuildBundle.mockResolvedValueOnce({
@@ -164,7 +164,7 @@ describe('Test the buildAll command', () => {
   });
 
   describe('Test command with a tab', () => {
-    const tabPath = pathlib.join(testMocksDir, 'tabs', 'tab0');
+    const tabPath = pathlib.join(tabsDir, 'tab0');
 
     test('Regular execution for a tab', async () => {
       mockedBuildTab.mockResolvedValueOnce({

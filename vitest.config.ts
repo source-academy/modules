@@ -37,12 +37,19 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: coverageReporters,
+      include: [
+        './src/{bundles,tabs}/**/*.{ts,tsx}',
+        './lib/*/src/**/*.{ts,tsx}',
+        './devserver/src/**/*.{ts,tsx}',
+        './.github/actions/src/**/*.ts'
+      ],
       exclude: [
         '**/__mocks__',
         '**/__tests__',
+        '**/__test_mocks__',
         '**/build/**',
         '**/dist',
-        '**/src/**/samples/**',
+        '**/samples',
         pathlib.join(import.meta.dirname, 'lib/buildtools/src/build/docs/drawdown.ts'),
       ]
     },

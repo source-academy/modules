@@ -5,7 +5,11 @@ import { describe, expect, it as baseIt, test, vi } from 'vitest';
 import { bundlesDir, tabsDir } from '../getGitRoot.js';
 import * as manifest from '../manifest.js';
 
-const testMocksDir = pathlib.resolve(import.meta.dirname, '../../../__test_mocks__');
+const bundle0Path = pathlib.join(bundlesDir, 'test0');
+
+const tab0Path = pathlib.join(tabsDir, 'tab0');
+const tab1Path = pathlib.join(tabsDir, 'tab1');
+
 const mockedFsStat = vi.spyOn(fs, 'stat');
 const mockedReadFile = vi.spyOn(fs, 'readFile');
 
@@ -27,33 +31,34 @@ const it = baseIt.extend<Fixtures>({
 
 describe(manifest.resolveSingleTab, () => {
   it('properly detects a tab with the src/index.tsx entrypoint', async () => {
-    const resolved = await manifest.resolveSingleTab(pathlib.join(tabsDir, 'tab0'));
+    const resolved = await manifest.resolveSingleTab(tab0Path);
 
     expect(resolved).not.toBeUndefined();
     expect(resolved).toMatchObject({
-      entryPoint: pathlib.join(tabsDir, 'tab0', 'src', 'index.tsx'),
-      directory: pathlib.join(tabsDir, 'tab0'),
+      entryPoint: pathlib.join(tab0Path, 'src', 'index.tsx'),
+      directory: tab0Path,
       name: 'tab0'
     });
   });
 
   it('properly detects a bundle with the index.tsx entrypoint', async () => {
-    const resolved = await manifest.resolveSingleTab(pathlib.join(tabsDir, 'tab1'));
+    const resolved = await manifest.resolveSingleTab(tab1Path);
 
     expect(resolved).not.toBeUndefined();
     expect(resolved).toMatchObject({
-      entryPoint: pathlib.join(tabsDir, 'tab1', 'index.tsx'),
-      directory: pathlib.join(tabsDir, 'tab1'),
+      entryPoint: pathlib.join(tab1Path, 'index.tsx'),
+      directory: tab1Path,
       name: 'tab1'
     });
   });
 
-  it('doesn\'t consider a non-directory a tab', () => {
+  it('doesn\'t consider a non-directory a tab', async () => {
     mockedFsStat.mockResolvedValueOnce({
       isDirectory: () => false
     } as any);
 
-    return expect(manifest.resolveSingleTab(pathlib.join(tabsDir, 'tab1'))).resolves.toBeUndefined();
+    await expect(manifest.resolveSingleTab(tab1Path)).resolves.toBeUndefined();
+    expect(fs.stat).toHaveBeenCalledOnce();
   });
 
   it('returns undefined when the specified path doesn\'t exist', async ({ ENOENT }) => {
@@ -62,15 +67,14 @@ describe(manifest.resolveSingleTab, () => {
     expect(fs.stat).toHaveBeenCalledOnce();
   });
 
-  it('throws the error when the error is of an unknown type', () => {
+  it('throws the error when the error is of an unknown type', async () => {
     mockedFsStat.mockRejectedValueOnce({});
-    return expect(manifest.resolveSingleTab('/')).rejects.toEqual({});
+    await expect(manifest.resolveSingleTab('/')).rejects.toEqual({});
+    expect(fs.stat).toHaveBeenCalledOnce();
   });
 });
 
 describe(manifest.getBundleManifest, () => {
-  const bundle0Path = pathlib.join(bundlesDir, 'test0');
-
   test('valid manifest with tab check', async () => {
     const result = await manifest.getBundleManifest(bundle0Path, true);
     expect(result).toEqual({
@@ -85,8 +89,8 @@ describe(manifest.getBundleManifest, () => {
     expect(fs.stat).toHaveBeenCalledTimes(2);
 
     const [[path0], [path1]] = vi.mocked(fs.stat).mock.calls;
-    expect(path0).toEqual(pathlib.join(tabsDir, 'tab0'));
-    expect(path1).toEqual(pathlib.join(tabsDir, 'tab0', 'src', 'index.tsx'));
+    expect(path0).toEqual(tab0Path);
+    expect(path1).toEqual(pathlib.join(tab0Path, 'src', 'index.tsx'));
   });
 
   test('valid manifest without tab check', async () => {
@@ -244,10 +248,8 @@ describe(manifest.getBundleManifests, () => {
 });
 
 describe(manifest.resolveSingleBundle, () => {
-  const bundlePath = pathlib.join(bundlesDir, 'test0');
-
   test('normal function', () => {
-    return expect(manifest.resolveSingleBundle(bundlePath)).resolves.toEqual({
+    return expect(manifest.resolveSingleBundle(bundle0Path)).resolves.toEqual({
       severity: 'success',
       bundle: {
         type: 'bundle',
@@ -256,7 +258,7 @@ describe(manifest.resolveSingleBundle, () => {
           tabs: ['tab0'],
           version: '1.0.0'
         },
-        directory: bundlePath
+        directory: bundle0Path
       }
     });
   });
@@ -266,9 +268,9 @@ describe(manifest.resolveSingleBundle, () => {
       isDirectory: () => false
     } as any);
 
-    await expect(manifest.resolveSingleBundle(pathlib.join(bundlePath))).resolves.toEqual({
+    await expect(manifest.resolveSingleBundle(bundle0Path)).resolves.toEqual({
       severity: 'error',
-      errors: [`${bundlePath} is not a directory!`]
+      errors: [`${bundle0Path} is not a directory!`]
     });
 
     expect(fs.stat).toHaveBeenCalledOnce();
@@ -277,9 +279,9 @@ describe(manifest.resolveSingleBundle, () => {
   it('returns the error message if stat throws an error that isn\'t ENOENT', async () => {
     mockedFsStat.mockRejectedValueOnce(new Error('Unknown message'));
 
-    await expect(manifest.resolveSingleBundle(bundlePath)).resolves.toEqual({
+    await expect(manifest.resolveSingleBundle(bundle0Path)).resolves.toEqual({
       severity: 'error',
-      errors: [`An error occurred while trying to read from ${bundlePath}: Error: Unknown message`]
+      errors: [`An error occurred while trying to read from ${bundle0Path}: Error: Unknown message`]
     });
 
     expect(fs.stat).toHaveBeenCalledOnce();
@@ -288,9 +290,9 @@ describe(manifest.resolveSingleBundle, () => {
   it('returns a different error message if stat throws ENOENT', async ({ ENOENT }) => {
     mockedFsStat.mockRejectedValueOnce(ENOENT);
 
-    await expect(manifest.resolveSingleBundle(bundlePath)).resolves.toEqual({
+    await expect(manifest.resolveSingleBundle(bundle0Path)).resolves.toEqual({
       severity: 'error',
-      errors: [`${bundlePath} does not exist!`]
+      errors: [`${bundle0Path} does not exist!`]
     });
 
     expect(fs.stat).toHaveBeenCalledOnce();
@@ -301,9 +303,9 @@ describe(manifest.resolveSingleBundle, () => {
       mockedFsStat.mockResolvedValueOnce({ isDirectory: () => true } as any)
         .mockResolvedValueOnce({ isFile: () => false } as any);
 
-      await expect(manifest.resolveSingleBundle(bundlePath)).resolves.toEqual({
+      await expect(manifest.resolveSingleBundle(bundle0Path)).resolves.toEqual({
         severity: 'error',
-        errors: [`${pathlib.join(bundlePath, 'src', 'index.ts')} is not a file!`]
+        errors: [`${pathlib.join(bundle0Path, 'src', 'index.ts')} is not a file!`]
       });
 
       expect(fs.stat).toHaveBeenCalledTimes(2);
@@ -313,7 +315,7 @@ describe(manifest.resolveSingleBundle, () => {
       mockedFsStat.mockResolvedValueOnce({ isDirectory: () => true } as any)
         .mockRejectedValueOnce({});
 
-      await expect(manifest.resolveSingleBundle(bundlePath)).rejects.toEqual({});
+      await expect(manifest.resolveSingleBundle(bundle0Path)).rejects.toEqual({});
       expect(fs.stat).toHaveBeenCalledTimes(2);
     });
 
@@ -321,7 +323,7 @@ describe(manifest.resolveSingleBundle, () => {
       mockedFsStat.mockResolvedValueOnce({ isDirectory: () => true } as any)
         .mockRejectedValueOnce(ENOENT);
 
-      await expect(manifest.resolveSingleBundle(bundlePath)).resolves.toEqual({
+      await expect(manifest.resolveSingleBundle(bundle0Path)).resolves.toEqual({
         severity: 'error',
         errors: ['Could not find entrypoint!']
       });
@@ -332,7 +334,6 @@ describe(manifest.resolveSingleBundle, () => {
 });
 
 describe(manifest.resolveEitherBundleOrTab, () => {
-  const bundle0Path = pathlib.join(bundlesDir, 'test0');
   test('resolving bundle', () => {
     return expect(manifest.resolveEitherBundleOrTab(bundle0Path)).resolves.toEqual({
       severity: 'success',
@@ -348,32 +349,33 @@ describe(manifest.resolveEitherBundleOrTab, () => {
     });
   });
 
-  test('resolving bundle with manifest error returns the error', () => {
+  test('resolving bundle with manifest error returns the error', async () => {
     mockedReadFile.mockResolvedValueOnce('{ "unknown": true }');
 
-    return expect(manifest.resolveEitherBundleOrTab(bundle0Path)).resolves.toEqual({
+    await expect(manifest.resolveEitherBundleOrTab(bundle0Path)).resolves.toEqual({
       severity: 'error',
       errors: ['test0: instance is not allowed to have the additional property "unknown"']
     });
+
+    expect(fs.readFile).toHaveBeenCalledOnce();
   });
 
-  const tab0OPath = pathlib.join(tabsDir, 'tab0');
   test('resolving tab', () => {
-    return expect(manifest.resolveEitherBundleOrTab(tab0OPath)).resolves.toEqual({
+    return expect(manifest.resolveEitherBundleOrTab(tab0Path)).resolves.toEqual({
       severity: 'success',
       asset: {
         type: 'tab',
-        directory: tab0OPath,
-        entryPoint: pathlib.join(tab0OPath, 'src', 'index.tsx'),
+        directory: tab0Path,
+        entryPoint: pathlib.join(tab0Path, 'src', 'index.tsx'),
         name: 'tab0',
       }
     });
   });
 
   test('resolving to nothing returns error severity and empty errors array', () => {
-    return expect(manifest.resolveEitherBundleOrTab(testMocksDir)).resolves.toEqual({
+    return expect(manifest.resolveEitherBundleOrTab('/')).resolves.toEqual({
       severity: 'error',
-      errors : []
+      errors: []
     });
   });
 });
@@ -387,15 +389,15 @@ describe(manifest.resolveAllTabs, () => {
 
     expect(tabs).toHaveProperty('tab0');
     expect(tabs.tab0).toMatchObject({
-      entryPoint: pathlib.join(testMocksDir, 'tabs', 'tab0', 'src', 'index.tsx'),
-      directory: pathlib.join(testMocksDir, 'tabs', 'tab0'),
+      entryPoint: pathlib.join(tab0Path, 'src', 'index.tsx'),
+      directory: tab0Path,
       name: 'tab0'
     });
 
     expect(tabs).toHaveProperty('tab1');
     expect(tabs.tab1).toMatchObject({
-      entryPoint: pathlib.join(testMocksDir, 'tabs', 'tab1', 'index.tsx'),
-      directory: pathlib.join(testMocksDir, 'tabs', 'tab1'),
+      entryPoint: pathlib.join(tab1Path, 'index.tsx'),
+      directory: tab1Path,
       name: 'tab1'
     });
   });

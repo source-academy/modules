@@ -29,6 +29,9 @@ jobs:
       - name: Build Modules 🔧
         run: yarn workspaces foreach -ptW --from "./src/{bundles,tabs}/*" run build
 
+      - name: Build Manifest
+        run: yarn buildtools manifest
+
       - name: Build All Docs
         run: yarn build:docs
 

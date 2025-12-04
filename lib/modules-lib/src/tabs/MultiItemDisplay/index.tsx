@@ -96,7 +96,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
                   // Disallow numbers that have too many digits
                   if (newValue.length > elementsDigitCount) return;
                   setStepEditorValue(newValue);
-                } }
+                }}
                 onConfirm={(value) => {
                   if (value) {
                     const newStep = parseInt(value);
@@ -117,11 +117,11 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
 
                   // Indicate that the editor is no longer focused
                   setStepEditorFocused(false);
-                } }
+                }}
                 onCancel={() => {
                   resetStepEditor();
                   setStepEditorFocused(false);
-                } }
+                }}
                 onEdit={() => setStepEditorFocused(true)} />
             </div>
             {stepEditorFocused && <>&nbsp;</>}/{props.elements.length}
@@ -139,7 +139,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
           onClick={() => {
             changeStep(currentStep + 1);
             setStepEditorValue((currentStep + 2).toString());
-          } }
+          }}
           disabled={currentStep === props.elements.length - 1}
         >
           Next

@@ -35,24 +35,10 @@
  * @author Ng Yong Xiang
  */
 export {
-  animate_3D_curve,
-  animate_curve,
   arc,
   b_of,
   connect_ends,
   connect_rigidly,
-  draw_3D_connected,
-  draw_3D_connected_full_view,
-  draw_3D_connected_full_view_proportional,
-  draw_3D_points,
-  draw_3D_points_full_view,
-  draw_3D_points_full_view_proportional,
-  draw_connected,
-  draw_connected_full_view,
-  draw_connected_full_view_proportional,
-  draw_points,
-  draw_points_full_view,
-  draw_points_full_view_proportional,
   g_of,
   invert,
   make_3D_color_point,
@@ -72,5 +58,22 @@ export {
   y_of,
   z_of
 } from './functions';
+
+export {
+  animate_3D_curve,
+  animate_curve,
+  draw_3D_connected,
+  draw_3D_connected_full_view,
+  draw_3D_connected_full_view_proportional,
+  draw_3D_points,
+  draw_3D_points_full_view,
+  draw_3D_points_full_view_proportional,
+  draw_connected,
+  draw_connected_full_view,
+  draw_connected_full_view_proportional,
+  draw_points,
+  draw_points_full_view,
+  draw_points_full_view_proportional,
+} from './drawers';
 
 export { type_map } from './type_interface';

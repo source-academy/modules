@@ -5,7 +5,7 @@ import * as core from '@actions/core';
 import { describe, expect, test, vi } from 'vitest';
 import * as commons from '../../commons.js';
 import * as git from '../../gitRoot.js';
-import * as lockfiles from '../../lockfiles/index.js';
+import * as lockfiles from '../../lockfiles.js';
 import { getAllPackages, getRawPackages, main } from '../index.js';
 
 const mockedCheckChanges = vi.spyOn(commons, 'checkDirForChanges');
