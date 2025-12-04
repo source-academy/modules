@@ -98,11 +98,7 @@ export function list_to_vector(lst) {
 // vector_to_list throws an exception if the argument is not a vector
 // LOW-LEVEL FUNCTION, NOT SOURCE
 export function vector_to_list(vector) {
-  let result: any = null;
-  for (let i = vector.length - 1; i >= 0; i = i - 1) {
-    result = pair(vector[i], result);
-  }
-  return result;
+  return list(...vector);
 }
 
 // returns the length of a given argument list
