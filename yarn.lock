@@ -2588,15 +2588,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/core@npm:^0.14.0":
-  version: 0.14.0
-  resolution: "@eslint/core@npm:0.14.0"
-  dependencies:
-    "@types/json-schema": "npm:^7.0.15"
-  checksum: 10c0/259f279445834ba2d2cbcc18e9d43202a4011fde22f29d5fb802181d66e0f6f0bd1f6b4b4b46663451f545d35134498231bd5e656e18d9034a457824b92b7741
-  languageName: node
-  linkType: hard
-
 "@eslint/core@npm:^0.17.0":
   version: 0.17.0
   resolution: "@eslint/core@npm:0.17.0"
@@ -2630,19 +2621,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/markdown@npm:^6.6.0":
-  version: 6.6.0
-  resolution: "@eslint/markdown@npm:6.6.0"
+"@eslint/markdown@npm:^7.5.1":
+  version: 7.5.1
+  resolution: "@eslint/markdown@npm:7.5.1"
   dependencies:
-    "@eslint/core": "npm:^0.14.0"
-    "@eslint/plugin-kit": "npm:^0.3.1"
+    "@eslint/core": "npm:^0.17.0"
+    "@eslint/plugin-kit": "npm:^0.4.1"
     github-slugger: "npm:^2.0.0"
     mdast-util-from-markdown: "npm:^2.0.2"
     mdast-util-frontmatter: "npm:^2.0.1"
-    mdast-util-gfm: "npm:^3.0.0"
+    mdast-util-gfm: "npm:^3.1.0"
     micromark-extension-frontmatter: "npm:^2.0.0"
     micromark-extension-gfm: "npm:^3.0.0"
-  checksum: 10c0/53abb2a68e418a11c92f3c871e67e0e4cf1144a94218634f4f829888918853022abf227b21cff16beacd881574f7e01b402c51e35c3ddf12953ce582bd165daa
+    micromark-util-normalize-identifier: "npm:^2.0.1"
+  checksum: 10c0/05b9435c43658532cb6dc0ab19c3301ab9dd26c6487698a9d332e386bb149d4d9c03ee16759599bfbf757c6626d73ffd49fee7c10cea260f2e9071e7640b2489
   languageName: node
   linkType: hard
 
@@ -2650,16 +2642,6 @@ __metadata:
   version: 2.1.7
   resolution: "@eslint/object-schema@npm:2.1.7"
   checksum: 10c0/936b6e499853d1335803f556d526c86f5fe2259ed241bc665000e1d6353828edd913feed43120d150adb75570cae162cf000b5b0dfc9596726761c36b82f4e87
-  languageName: node
-  linkType: hard
-
-"@eslint/plugin-kit@npm:^0.3.1":
-  version: 0.3.1
-  resolution: "@eslint/plugin-kit@npm:0.3.1"
-  dependencies:
-    "@eslint/core": "npm:^0.14.0"
-    levn: "npm:^0.4.1"
-  checksum: 10c0/a75f0b5d38430318a551b83e27bee570747eb50beeb76b03f64b0e78c2c27ef3d284cfda3443134df028db3251719bc0850c105f778122f6ad762d5270ec8063
   languageName: node
   linkType: hard
 
@@ -4496,7 +4478,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/lint-plugin@workspace:lib/lintplugin"
   dependencies:
-    "@eslint/markdown": "npm:^6.6.0"
+    "@eslint/markdown": "npm:^7.5.1"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-repotools": "workspace:^"
     "@stylistic/eslint-plugin": "npm:^4.4.1"
@@ -4695,7 +4677,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/modules@workspace:."
   dependencies:
-    "@eslint/markdown": "npm:^6.6.0"
+    "@eslint/markdown": "npm:^7.5.1"
     "@sourceacademy/lint-plugin": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-repotools": "workspace:^"
@@ -4714,7 +4696,7 @@ __metadata:
     eslint-plugin-mdx: "npm:^3.6.2"
     eslint-plugin-react: "npm:^7.37.4"
     eslint-plugin-react-hooks: "npm:^5.1.0"
-    eslint-plugin-yml: "npm:^1.18.0"
+    eslint-plugin-yml: "npm:^1.19.0"
     husky: "npm:^9.1.7"
     js-slang: "npm:^1.0.81"
     jsdom: "npm:^26.1.0"
@@ -9959,7 +9941,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-yml@npm:^1.18.0":
+"eslint-plugin-yml@npm:^1.19.0":
   version: 1.19.0
   resolution: "eslint-plugin-yml@npm:1.19.0"
   dependencies:
@@ -13048,7 +13030,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mdast-util-gfm@npm:^3.0.0":
+"mdast-util-gfm@npm:^3.1.0":
   version: 3.1.0
   resolution: "mdast-util-gfm@npm:3.1.0"
   dependencies:
@@ -13628,7 +13610,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"micromark-util-normalize-identifier@npm:^2.0.0":
+"micromark-util-normalize-identifier@npm:^2.0.0, micromark-util-normalize-identifier@npm:^2.0.1":
   version: 2.0.1
   resolution: "micromark-util-normalize-identifier@npm:2.0.1"
   dependencies:

@@ -94,7 +94,7 @@ export default defineConfig(
     extends: [ymlPlugin.configs['flat/recommended']],
     files: ['**/*.yml', '**/*.yaml'],
     plugins: {
-      // @ts-expect-error yml plugin causes errors
+      // @ts-expect-error Incorrect plugin type
       yml: ymlPlugin
     },
     rules: {
