@@ -1,4 +1,4 @@
-import type { LanguageInput, ShikiTransformer, ThemedToken } from 'shiki/core';
+import type { LanguageInput, ShikiTransformer, ThemedToken } from 'shiki';
 import githubDark from 'tm-themes/themes/github-dark.json' with { type: 'json' };
 import githubLight from 'tm-themes/themes/github-light.json' with { type: 'json' };
 import { LINE_STRINGS } from './tree';
