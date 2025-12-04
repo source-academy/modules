@@ -26,7 +26,7 @@
     "typescript-eslint": "^8.33.1"
   },
   "devDependencies": {
-    "@eslint/markdown": "^6.6.0",
+    "@eslint/markdown": "^7.5.1",
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-repotools": "workspace:^",
     "@stylistic/eslint-plugin": "^4.4.1",

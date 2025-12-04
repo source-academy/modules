@@ -14,8 +14,9 @@ export function directoryTreePlugin(md: MarkdownIt, options: DirectoryTreePlugin
   md.renderer.rules.fence = (...args) => {
     const [tokens, idx,, env] = args;
     const token = tokens[idx];
+    const infoTokens = token.info.split(' ');
 
-    if (token.info.trim() === 'dirtree') {
+    if (infoTokens.length > 0 && infoTokens[0] === 'dirtree') {
       const { realPath, path: _path } = env;
       const docdir = pathlib.resolve(pathlib.dirname(realPath ?? _path));
       const [content, warnings] = parseContent(token.content, docdir, options);
@@ -32,3 +33,5 @@ export function directoryTreePlugin(md: MarkdownIt, options: DirectoryTreePlugin
     return fence(...args);
   };
 }
+
+export { dirtreeTransformer, grammar } from './transformer';

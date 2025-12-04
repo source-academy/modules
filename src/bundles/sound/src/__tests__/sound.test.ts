@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, test, vi } from 'vitest';
 import * as funcs from '../functions';
+import * as play_in_tab from '../play_in_tab';
 import type { Sound, Wave } from '../types';
 import { mockAudioContext } from './utils';
 
@@ -89,27 +90,27 @@ describe('Concurrent playback functions', () => {
   });
 });
 
-describe(funcs.play_in_tab, () => {
+describe(play_in_tab.play_in_tab, () => {
   it('Should error gracefully when duration is negative', () => {
     const sound = [() => 0, -1];
-    expect(() => funcs.play_in_tab(sound as any))
+    expect(() => play_in_tab.play_in_tab(sound as any))
       .toThrow('play_in_tab: duration of sound is negative');
   });
 
   it('Should not error when duration is zero', () => {
     const sound = funcs.make_sound(() => 0, 0);
-    expect(() => funcs.play_in_tab(sound)).not.toThrow();
+    expect(() => play_in_tab.play_in_tab(sound)).not.toThrow();
   });
 
   it('Should throw error when given not a sound', () => {
-    expect(() => funcs.play_in_tab(0 as any)).toThrow('play_in_tab is expecting sound, but encountered 0');
+    expect(() => play_in_tab.play_in_tab(0 as any)).toThrow('play_in_tab is expecting sound, but encountered 0');
   });
 
   test('Multiple calls does not cause an error', () => {
     const sound = funcs.silence_sound(10);
-    expect(() => funcs.play_in_tab(sound)).not.toThrow();
-    expect(() => funcs.play_in_tab(sound)).not.toThrow();
-    expect(() => funcs.play_in_tab(sound)).not.toThrow();
+    expect(() => play_in_tab.play_in_tab(sound)).not.toThrow();
+    expect(() => play_in_tab.play_in_tab(sound)).not.toThrow();
+    expect(() => play_in_tab.play_in_tab(sound)).not.toThrow();
   });
 });
 

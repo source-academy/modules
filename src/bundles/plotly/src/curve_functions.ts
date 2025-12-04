@@ -1,5 +1,5 @@
-import { b_of, g_of, r_of, x_of, y_of, z_of } from '@sourceacademy/bundle-curve';
 import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
+import { b_of, g_of, r_of, x_of, y_of, z_of } from '@sourceacademy/bundle-curve/functions';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { CurvePlot } from './plotly';
 

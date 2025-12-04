@@ -6,7 +6,7 @@ to test interactive features.
 This is particularly useful for tabs, but bundles can also leverage browser mode to test browser-only functionalities. Refer to the `pix_n_flix`
 bundle for such an example.
 
-The default testing configuration has browser mode disabled. This is so that if your dom't need the features that Playwright provides,
+The default testing configuration has browser mode disabled. This is so that if your don't need the features that Playwright provides,
 `vitest` won't need to spin up the Playwright instance.
 
 ## Setting up Browser Mode
@@ -27,7 +27,7 @@ export default defineProject({
 });
 ```
 
-You will also need to add (to your dev dependencies) other packages:
+You will also need to add (to your dev dependencies) some other packages:
 
 - `@vitest/browser-playwright`
 - `vitest-browser-react`

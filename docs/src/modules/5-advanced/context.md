@@ -185,3 +185,137 @@ export default function gameFuncs() {
   // do other things...
 }
 ```
+
+
+## Working with Module Contexts from within Bundles
+
+Bundles will generally have two kinds of functions: those that interact with the module context and those that don't.
+Consider an example from the `curve` bundle:
+
+```ts [curve/functions.ts]
+import context from 'js-slang/context';
+const curvesDrawn: CurveDrawn[] = [];
+context.moduleContexts.curve.state = {
+  curvesDrawn
+};
+
+// Relies on module context
+export function draw_connected(points: number) {
+  return (c: Curve) => {
+    const rendered = renderCurve(c);
+    curvesDrawn.append(c);
+  };
+}
+
+// Doesn't rely on the module context
+export function x_of(p: Point) {
+  return p.x;
+}
+```
+
+Accessing the `js-slang/context` import and the module context object should only ever be done from the current bundle. This
+usually isn't an issue, unless your bundle is being depended upon by other bundles or tabs. For example, the `plotly` bundle depends
+on the `curve` bundle:
+
+```ts [plotly/functions.ts]
+import { x_of } from '@sourceacademy/bundle-curve';
+
+// does things with x_of
+```
+
+When `x_of` gets imported from the `curve` bundle, `curve/functions.ts` gets evaluated, which causes the context import in the `curve`
+bundle to get evaluated.
+
+To prevent this from happening, you should define the two types of functions in separate files:
+
+::: code-group
+```ts [curve/drawers.ts]
+import context from 'js-slang/context';
+const curvesDrawn: CurveDrawn[] = [];
+context.moduleContexts.curve.state = {
+  curvesDrawn
+};
+
+// Relies on module context
+export function draw_connected(points: number) {
+  return (c: Curve) => {
+    const rendered = renderCurve(c);
+    curvesDrawn.append(c);
+  };
+}
+```
+
+```ts [curve/functions.ts]
+// Doesn't rely on the module context
+export function x_of(p: Point) {
+  return p.x;
+}
+```
+:::
+
+Then, when importing, you should only import the specific file you need:
+
+```ts [plotly/functions.ts]
+import { x_of } from '@sourceacademy/bundle-curve/functions';
+
+// does things with x_of
+```
+
+> [!WARNING] Importing from 'index.ts'
+> All bundles must export all their functions via their `index.ts` file so that `esbuild` can
+> correctly transpile them for use with Source. This, however, also allows those functions
+> to be imported via the `index.ts` path in Typescript.
+>
+> If you import via this path, you end up including both types of bundle functions:
+> ```ts
+> import { x_of } from '@sourceacademy/bundle-curve'; // will also import the drawers.ts file!
+> import { x_of } from '@sourceacademy/bundle-curve/functions'; // only imports functions.ts
+> ```
+>
+> This means that if you import via the `index.ts` file, you will still encounter the above error where the
+> module context gets loaded transitively.
+
+To ensure that these files that import from `js-slang/context` don't get imported by external bundles and tabs,
+you should configure your `package.json` to restrict that export:
+
+```jsonc
+{
+  "exports": {
+    "./drawers": null,
+    "./dist/drawers": null,
+    "./*": "./dist/*.js",
+    ".": "./dist/index.js",
+  }
+}
+```
+
+Note that both entries come before the two default `exports` configurations so that they take priority.
+
+The buildtools have a built in ESBuild plugin to detect when this situation occurs and will raise an
+error if it detects that `js-slang/context` is being loaded transitively.
+
+## Working with Module Contexts from within Tabs
+
+Usually, a bundle will write data to the module context, and then the tab will retrieve that information to generate
+its content.
+
+Tabs access the context via a different mechanism: the context is provided to them as a prop they can use with the
+`toSpawn` and `body` functions:
+
+```tsx
+export default defineTab({
+  toSpawn(context) {
+    // use the context to determine whether the tab should be spawned
+    return context.moduleContexts.curve?.state?.curvesDrawn?.length > 0;
+  },
+  body(context) {
+    // use the context to generate the React content for the tab
+    const { curvesDrawn } = context.moduleContexts.curve!.state;
+    return <CurveRenderer curves={curvesDrawn} />;
+  }
+});
+```
+
+The caveats from the previous still apply: if you're depending on a bundle, you need to make sure that you're not
+transitively importing `js-slang/context`. If you need the context, you should use it as provided in the `toSpawn`
+and `body` functions.

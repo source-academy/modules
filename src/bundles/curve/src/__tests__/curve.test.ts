@@ -1,6 +1,7 @@
 import { stringify } from 'js-slang/dist/utils/stringify';
 import { describe, expect, it, test } from 'vitest';
 import type { Color, Curve } from '../curves_webgl';
+import * as drawers from '../drawers';
 import * as funcs from '../functions';
 
 /**
@@ -19,24 +20,24 @@ function evaluatePoints(curve: Curve) {
 }
 
 test('Ensure that invalid curves error gracefully', () => {
-  expect(() => funcs.draw_connected(200)(() => 1 as any))
+  expect(() => drawers.draw_connected(200)(() => 1 as any))
     .toThrow('Expected curve to return a point, got \'1\' at t=0');
 });
 
 test('Using 3D render functions with animate_curve should throw errors', () => {
-  expect(() => funcs.animate_curve(1, 60, funcs.draw_3D_connected(200), (t0) => (t1) => funcs.make_point(t0, t1)))
+  expect(() => drawers.animate_curve(1, 60, drawers.draw_3D_connected(200), (t0) => (t1) => funcs.make_point(t0, t1)))
     .toThrow('animate_curve cannot be used with 3D draw function!');
 });
 
 test('Using 2D render functions with animate_3D_curve should throw errors', () => {
-  expect(() => funcs.animate_3D_curve(1, 60, funcs.draw_connected(200), (t0) => (t1) => funcs.make_point(t0, t1)))
+  expect(() => drawers.animate_3D_curve(1, 60, drawers.draw_connected(200), (t0) => (t1) => funcs.make_point(t0, t1)))
     .toThrow('animate_3D_curve cannot be used with 2D draw function!');
 });
 
 test('Render functions have nice string representations', () => {
-  expect(stringify(funcs.draw_connected(200))).toEqual('<RenderFunction(200)>');
-  expect(stringify(funcs.draw_connected_full_view_proportional(400))).toEqual('<RenderFunction(400)>');
-  expect(stringify(funcs.draw_3D_connected(400))).toEqual('<3DRenderFunction(400)>');
+  expect(stringify(drawers.draw_connected(200))).toEqual('<RenderFunction(200)>');
+  expect(stringify(drawers.draw_connected_full_view_proportional(400))).toEqual('<RenderFunction(400)>');
+  expect(stringify(drawers.draw_3D_connected(400))).toEqual('<3DRenderFunction(400)>');
 });
 
 describe('Coloured Points', () => {
@@ -119,7 +120,7 @@ describe(funcs.translate, () => {
 
     const points = evaluatePoints(newCurve);
     for (let i = 0; i < points.length; i++) {
-      const [x, y,,[r, g]] = points[i];
+      const [x, y, , [r, g]] = points[i];
       expect(x).toBeCloseTo(i / points.length + 0.5);
       expect(y).toEqual(1);
 
@@ -148,7 +149,7 @@ describe(funcs.scale, () => {
 
     const points = evaluatePoints(newCurve);
     for (let i = 0; i < points.length; i++) {
-      const [x, y,,[r, g]] = points[i];
+      const [x, y, , [r, g]] = points[i];
       expect(x).toBeCloseTo(i / points.length);
       expect(y).toEqual(0.5);
 

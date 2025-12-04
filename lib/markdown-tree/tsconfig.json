@@ -1,5 +1,16 @@
 // Markdown-Tree plugin tsconfig
 {
-  "extends": ["../tsconfig.json"],
-  "include": ["./src"]
+  "extends": [
+    "../tsconfig.json"
+  ],
+  "include": [
+    "./src"
+  ],
+  "compilerOptions": {
+    "paths": {
+      "shiki": [
+        "../../node_modules/@shikijs/types"
+      ]
+    }
+  }
 }

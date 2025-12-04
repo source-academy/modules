@@ -94,7 +94,7 @@ export default defineConfig(
     extends: [ymlPlugin.configs['flat/recommended']],
     files: ['**/*.yml', '**/*.yaml'],
     plugins: {
-      // @ts-expect-error yml plugin causes errors
+      // @ts-expect-error Incorrect plugin type
       yml: ymlPlugin
     },
     rules: {
@@ -281,9 +281,11 @@ export default defineConfig(
     extends: tseslint.configs.recommended,
     name: 'Global Typescript Rules',
     files: ['**/*.{ts,cts,tsx}'],
-    // Markdown virtual files need to be ignored because the type-aware rules
-    // don't work with them
-    ignores: ['**/*.md/**/*.{ts,tsx}'],
+    ignores: [
+      // Markdown virtual files need to be ignored because the type-aware rules
+      // don't work with them
+      '**/*.md/**/*.{ts,tsx}',
+    ],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
@@ -487,8 +489,8 @@ export default defineConfig(
     }
   },
   {
-    name: 'Rules for Vitest configs',
-    files: ['**/vitest.config.ts', './devserver/vite.config.ts'],
+    name: 'Rules for Vitest files',
+    files: ['**/vitest.{config,setup}.ts', './devserver/vite.config.ts'],
     languageOptions: {
       parserOptions: {
         project: './tsconfig.json'

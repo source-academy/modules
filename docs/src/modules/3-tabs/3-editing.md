@@ -172,6 +172,10 @@ test('Matches snapshot', () => {
 
 :::
 
+## Working with Module Contexts from within Tabs
+
+Refer to [this](../5-advanced/context) about using module contexts.
+
 ## Quick FAQs
 
 ### When to spawn the tab?
