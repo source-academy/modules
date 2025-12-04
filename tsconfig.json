@@ -2,7 +2,8 @@
 // so that ESLint doesn't complain
 {
   "include": [
-    "**/vitest.{config,setup}.ts",
+    "**/vitest.config.ts",
+    "**/vitest.setup.ts",
     "./.github/actions/vitest.config.ts",
     "./devserver/vite.config.ts"
   ],
