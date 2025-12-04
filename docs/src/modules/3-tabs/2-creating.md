@@ -54,4 +54,4 @@ NewTab
 
 This will create a new folder `src/tab/NewTab` with all the necessary files for creating your tab.
 
-When you are ready to compile you can refer to [this](./5-compiling) page.
+When you are ready to compile you can refer to [this](./4-compiling) page.

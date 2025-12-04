@@ -293,3 +293,29 @@ Note that both entries come before the two default `exports` configurations so t
 
 The buildtools have a built in ESBuild plugin to detect when this situation occurs and will raise an
 error if it detects that `js-slang/context` is being loaded transitively.
+
+## Working with Module Contexts from within Tabs
+
+Usually, a bundle will write data to the module context, and then the tab will retrieve that information to generate
+its content.
+
+Tabs access the context via a different mechanism: the context is provided to them as a prop they can use with the
+`toSpawn` and `body` functions:
+
+```tsx
+export default defineTab({
+  toSpawn(context) {
+    // use the context to determine whether the tab should be spawned
+    return context.moduleContexts.curve?.state?.curvesDrawn?.length > 0;
+  },
+  body(context) {
+    // use the context to generate the React content for the tab
+    const { curvesDrawn } = context.moduleContexts.curve!.state;
+    return <CurveRenderer curves={curvesDrawn} />;
+  }
+});
+```
+
+The caveats from the previous still apply: if you're depending on a bundle, you need to make sure that you're not
+transitively importing `js-slang/context`. If you need the context, you should use it as provided in the `toSpawn`
+and `body` functions.

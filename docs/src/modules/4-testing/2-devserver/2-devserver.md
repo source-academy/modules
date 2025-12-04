@@ -22,7 +22,7 @@ yarn devserver
 
 > [!NOTE] Pre-Compiling Tabs
 > Because the dev server relies on Vite which needs to pre-bundle its dependencies, you will need to have compiled any tabs you're
-> intending to test using the steps listed [here](../../3-tabs/5-compiling.md) before starting the dev server.
+> intending to test using the steps listed [here](../../3-tabs/4-compiling) before starting the dev server.
 
 You will also need to start the modules server using `yarn buildtools serve`. The caveats from [that section](../1-desktop#the-modules-server) still apply.
 
