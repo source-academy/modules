@@ -164,7 +164,7 @@ describe('Only Test 2 will run!', () => {
 });
 ```
 
-If `.only` is used mulitple times in a file, then all tests with `.only` get executed:
+If `.only` is used multiple times in a file, then all tests with `.only` get executed:
 
 ```ts
 test.only('test1', () => {}); // will execute
