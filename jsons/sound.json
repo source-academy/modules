@@ -174,18 +174,6 @@
     ],
     "retType": "Sound"
   },
-  "play_in_tab": {
-    "kind": "function",
-    "name": "play_in_tab",
-    "description": "<p>Adds the given Sound to a list of sounds to be played one-at-a-time\nin a Source Academy tab.</p>",
-    "params": [
-      [
-        "sound",
-        "Sound"
-      ]
-    ],
-    "retType": "Sound"
-  },
   "play": {
     "kind": "function",
     "name": "play",
@@ -428,5 +416,17 @@
       ]
     ],
     "retType": "number"
+  },
+  "play_in_tab": {
+    "kind": "function",
+    "name": "play_in_tab",
+    "description": "<p>Adds the given Sound to a list of sounds to be played one-at-a-time\nin a Source Academy tab.</p>",
+    "params": [
+      [
+        "sound",
+        "Sound"
+      ]
+    ],
+    "retType": "Sound"
   }
 }

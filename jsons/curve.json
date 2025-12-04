@@ -1,52 +1,4 @@
 {
-  "animate_3D_curve": {
-    "kind": "function",
-    "name": "animate_3D_curve",
-    "description": "<p>Create a animation of curves using a curve generating function.</p>",
-    "params": [
-      [
-        "duration",
-        "number"
-      ],
-      [
-        "fps",
-        "number"
-      ],
-      [
-        "drawer",
-        "RenderFunction"
-      ],
-      [
-        "func",
-        "CurveAnimation"
-      ]
-    ],
-    "retType": "AnimatedCurve"
-  },
-  "animate_curve": {
-    "kind": "function",
-    "name": "animate_curve",
-    "description": "<p>Create a animation of curves using a curve generating function.</p>",
-    "params": [
-      [
-        "duration",
-        "number"
-      ],
-      [
-        "fps",
-        "number"
-      ],
-      [
-        "drawer",
-        "RenderFunction"
-      ],
-      [
-        "func",
-        "CurveAnimation"
-      ]
-    ],
-    "retType": "AnimatedCurve"
-  },
   "arc": {
     "kind": "variable",
     "name": "arc",
@@ -96,150 +48,6 @@
       ]
     ],
     "retType": "Curve"
-  },
-  "draw_3D_connected": {
-    "kind": "function",
-    "name": "draw_3D_connected",
-    "description": "<p>Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at <code>num</code> sample points and connecting each pair with\na line. The parts between (0,0,0) and (1,1,1) of the resulting Drawing are\nshown within the unit cube.</p>",
-    "params": [
-      [
-        "numPoints",
-        "number"
-      ]
-    ],
-    "retType": "RenderFunction"
-  },
-  "draw_3D_connected_full_view": {
-    "kind": "function",
-    "name": "draw_3D_connected_full_view",
-    "description": "<p>Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at <code>num</code> sample points and connecting each pair with\na line. The Drawing is translated and stretched/shrunk to show the full\ncurve and maximize its width and height within the cube.</p>",
-    "params": [
-      [
-        "numPoints",
-        "number"
-      ]
-    ],
-    "retType": "RenderFunction"
-  },
-  "draw_3D_connected_full_view_proportional": {
-    "kind": "function",
-    "name": "draw_3D_connected_full_view_proportional",
-    "description": "<p>Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at <code>num</code> sample points and connecting each pair with\na line. The Drawing is translated and scaled proportionally with its size\nmaximized to fit entirely inside the cube.</p>",
-    "params": [
-      [
-        "numPoints",
-        "number"
-      ]
-    ],
-    "retType": "RenderFunction"
-  },
-  "draw_3D_points": {
-    "kind": "function",
-    "name": "draw_3D_points",
-    "description": "<p>Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at <code>num</code> sample points. The Drawing consists of\nisolated points, and does not connect them. The parts between (0,0,0)\nand (1,1,1) of the resulting Drawing are shown within the unit cube.</p>",
-    "params": [
-      [
-        "numPoints",
-        "number"
-      ]
-    ],
-    "retType": "RenderFunction"
-  },
-  "draw_3D_points_full_view": {
-    "kind": "function",
-    "name": "draw_3D_points_full_view",
-    "description": "<p>Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at <code>num</code> sample points. The Drawing consists of\nisolated points, and does not connect them. The Drawing is translated and\nstretched/shrunk to maximize its size to fit entirely inside the cube.</p>",
-    "params": [
-      [
-        "numPoints",
-        "number"
-      ]
-    ],
-    "retType": "RenderFunction"
-  },
-  "draw_3D_points_full_view_proportional": {
-    "kind": "function",
-    "name": "draw_3D_points_full_view_proportional",
-    "description": "<p>Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at <code>num</code> sample points. The Drawing consists of\nisolated points, and does not connect them. The Drawing is translated and\nscaled proportionally with its size maximized to fit entirely inside the cube.</p>",
-    "params": [
-      [
-        "numPoints",
-        "number"
-      ]
-    ],
-    "retType": "RenderFunction"
-  },
-  "draw_connected": {
-    "kind": "function",
-    "name": "draw_connected",
-    "description": "<p>Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at <code>num</code> sample points and connecting each pair with a line.\nThe parts between (0,0) and (1,1) of the resulting Drawing are shown in the window.</p>",
-    "params": [
-      [
-        "numPoints",
-        "number"
-      ]
-    ],
-    "retType": "RenderFunction"
-  },
-  "draw_connected_full_view": {
-    "kind": "function",
-    "name": "draw_connected_full_view",
-    "description": "<p>Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at <code>num</code> sample points and connecting each pair with a line. The Drawing is\ntranslated and stretched/shrunk to show the full curve and maximize its width\nand height, with some padding.</p>",
-    "params": [
-      [
-        "numPoints",
-        "number"
-      ]
-    ],
-    "retType": "RenderFunction"
-  },
-  "draw_connected_full_view_proportional": {
-    "kind": "function",
-    "name": "draw_connected_full_view_proportional",
-    "description": "<p>Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at <code>num</code> sample points and connecting each pair with a line. The Drawing\nis translated and scaled proportionally to show the full curve and maximize\nits size, with some padding.</p>",
-    "params": [
-      [
-        "numPoints",
-        "number"
-      ]
-    ],
-    "retType": "RenderFunction"
-  },
-  "draw_points": {
-    "kind": "function",
-    "name": "draw_points",
-    "description": "<p>Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at <code>num</code> sample points. The Drawing consists of isolated\npoints, and does not connect them. The parts between (0,0) and (1,1) of the\nresulting Drawing are shown in the window.</p>",
-    "params": [
-      [
-        "numPoints",
-        "number"
-      ]
-    ],
-    "retType": "RenderFunction"
-  },
-  "draw_points_full_view": {
-    "kind": "function",
-    "name": "draw_points_full_view",
-    "description": "<p>Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at <code>num</code> sample points. The Drawing consists of isolated\npoints, and does not connect them. The Drawing is translated and\nstretched/shrunk to show the full curve and maximize its width and height,\nwith some padding.</p>",
-    "params": [
-      [
-        "numPoints",
-        "number"
-      ]
-    ],
-    "retType": "RenderFunction"
-  },
-  "draw_points_full_view_proportional": {
-    "kind": "function",
-    "name": "draw_points_full_view_proportional",
-    "description": "<p>Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at <code>num</code> sample points. The Drawing consists of isolated\npoints, and does not connect them. The Drawing is translated and scaled\nproportionally with its size maximized to fit entirely inside the window,\nwith some padding.</p>",
-    "params": [
-      [
-        "numPoints",
-        "number"
-      ]
-    ],
-    "retType": "RenderFunction"
   },
   "g_of": {
     "kind": "function",
@@ -496,5 +304,197 @@
       ]
     ],
     "retType": "number"
+  },
+  "animate_3D_curve": {
+    "kind": "function",
+    "name": "animate_3D_curve",
+    "description": "<p>Create a animation of curves using a curve generating function.</p>",
+    "params": [
+      [
+        "duration",
+        "number"
+      ],
+      [
+        "fps",
+        "number"
+      ],
+      [
+        "drawer",
+        "RenderFunction"
+      ],
+      [
+        "func",
+        "CurveAnimation"
+      ]
+    ],
+    "retType": "AnimatedCurve"
+  },
+  "animate_curve": {
+    "kind": "function",
+    "name": "animate_curve",
+    "description": "<p>Create a animation of curves using a curve generating function.</p>",
+    "params": [
+      [
+        "duration",
+        "number"
+      ],
+      [
+        "fps",
+        "number"
+      ],
+      [
+        "drawer",
+        "RenderFunction"
+      ],
+      [
+        "func",
+        "CurveAnimation"
+      ]
+    ],
+    "retType": "AnimatedCurve"
+  },
+  "draw_3D_connected": {
+    "kind": "function",
+    "name": "draw_3D_connected",
+    "description": "<p>Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at <code>num</code> sample points and connecting each pair with\na line. The parts between (0,0,0) and (1,1,1) of the resulting Drawing are\nshown within the unit cube.</p>",
+    "params": [
+      [
+        "numPoints",
+        "number"
+      ]
+    ],
+    "retType": "RenderFunction"
+  },
+  "draw_3D_connected_full_view": {
+    "kind": "function",
+    "name": "draw_3D_connected_full_view",
+    "description": "<p>Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at <code>num</code> sample points and connecting each pair with\na line. The Drawing is translated and stretched/shrunk to show the full\ncurve and maximize its width and height within the cube.</p>",
+    "params": [
+      [
+        "numPoints",
+        "number"
+      ]
+    ],
+    "retType": "RenderFunction"
+  },
+  "draw_3D_connected_full_view_proportional": {
+    "kind": "function",
+    "name": "draw_3D_connected_full_view_proportional",
+    "description": "<p>Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at <code>num</code> sample points and connecting each pair with\na line. The Drawing is translated and scaled proportionally with its size\nmaximized to fit entirely inside the cube.</p>",
+    "params": [
+      [
+        "numPoints",
+        "number"
+      ]
+    ],
+    "retType": "RenderFunction"
+  },
+  "draw_3D_points": {
+    "kind": "function",
+    "name": "draw_3D_points",
+    "description": "<p>Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at <code>num</code> sample points. The Drawing consists of\nisolated points, and does not connect them. The parts between (0,0,0)\nand (1,1,1) of the resulting Drawing are shown within the unit cube.</p>",
+    "params": [
+      [
+        "numPoints",
+        "number"
+      ]
+    ],
+    "retType": "RenderFunction"
+  },
+  "draw_3D_points_full_view": {
+    "kind": "function",
+    "name": "draw_3D_points_full_view",
+    "description": "<p>Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at <code>num</code> sample points. The Drawing consists of\nisolated points, and does not connect them. The Drawing is translated and\nstretched/shrunk to maximize its size to fit entirely inside the cube.</p>",
+    "params": [
+      [
+        "numPoints",
+        "number"
+      ]
+    ],
+    "retType": "RenderFunction"
+  },
+  "draw_3D_points_full_view_proportional": {
+    "kind": "function",
+    "name": "draw_3D_points_full_view_proportional",
+    "description": "<p>Returns a function that turns a given 3D Curve into a Drawing, by sampling\nthe 3D Curve at <code>num</code> sample points. The Drawing consists of\nisolated points, and does not connect them. The Drawing is translated and\nscaled proportionally with its size maximized to fit entirely inside the cube.</p>",
+    "params": [
+      [
+        "numPoints",
+        "number"
+      ]
+    ],
+    "retType": "RenderFunction"
+  },
+  "draw_connected": {
+    "kind": "function",
+    "name": "draw_connected",
+    "description": "<p>Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at <code>num</code> sample points and connecting each pair with a line.\nThe parts between (0,0) and (1,1) of the resulting Drawing are shown in the window.</p>",
+    "params": [
+      [
+        "numPoints",
+        "number"
+      ]
+    ],
+    "retType": "RenderFunction"
+  },
+  "draw_connected_full_view": {
+    "kind": "function",
+    "name": "draw_connected_full_view",
+    "description": "<p>Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at <code>num</code> sample points and connecting each pair with a line. The Drawing is\ntranslated and stretched/shrunk to show the full curve and maximize its width\nand height, with some padding.</p>",
+    "params": [
+      [
+        "numPoints",
+        "number"
+      ]
+    ],
+    "retType": "RenderFunction"
+  },
+  "draw_connected_full_view_proportional": {
+    "kind": "function",
+    "name": "draw_connected_full_view_proportional",
+    "description": "<p>Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at <code>num</code> sample points and connecting each pair with a line. The Drawing\nis translated and scaled proportionally to show the full curve and maximize\nits size, with some padding.</p>",
+    "params": [
+      [
+        "numPoints",
+        "number"
+      ]
+    ],
+    "retType": "RenderFunction"
+  },
+  "draw_points": {
+    "kind": "function",
+    "name": "draw_points",
+    "description": "<p>Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at <code>num</code> sample points. The Drawing consists of isolated\npoints, and does not connect them. The parts between (0,0) and (1,1) of the\nresulting Drawing are shown in the window.</p>",
+    "params": [
+      [
+        "numPoints",
+        "number"
+      ]
+    ],
+    "retType": "RenderFunction"
+  },
+  "draw_points_full_view": {
+    "kind": "function",
+    "name": "draw_points_full_view",
+    "description": "<p>Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at <code>num</code> sample points. The Drawing consists of isolated\npoints, and does not connect them. The Drawing is translated and\nstretched/shrunk to show the full curve and maximize its width and height,\nwith some padding.</p>",
+    "params": [
+      [
+        "numPoints",
+        "number"
+      ]
+    ],
+    "retType": "RenderFunction"
+  },
+  "draw_points_full_view_proportional": {
+    "kind": "function",
+    "name": "draw_points_full_view_proportional",
+    "description": "<p>Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at <code>num</code> sample points. The Drawing consists of isolated\npoints, and does not connect them. The Drawing is translated and scaled\nproportionally with its size maximized to fit entirely inside the window,\nwith some padding.</p>",
+    "params": [
+      [
+        "numPoints",
+        "number"
+      ]
+    ],
+    "retType": "RenderFunction"
   }
 }

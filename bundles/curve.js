@@ -312,7 +312,6 @@ export default require => {
   });
   init_define_process();
   init_define_process();
-  var import_context = __toESM(__require("js-slang/context"), 1);
   var import_clamp = __toESM(require_clamp(), 1);
   init_define_process();
   init_define_process();
@@ -2227,68 +2226,6 @@ void main() {
     }
     return new CurveDrawn(drawMode, numPoints, space, drawCubeArray, curvePosArray, curveColorArray);
   }
-  init_define_process();
-  init_define_process();
-  var glAnimation = class {
-    constructor(duration, fps) {
-      this.duration = duration;
-      this.fps = fps;
-    }
-  };
-  glAnimation.isAnimation = obj => obj instanceof glAnimation;
-  var AnimatedCurve = class extends glAnimation {
-    constructor(duration, fps, func, drawer, is3D) {
-      super(duration, fps);
-      this.func = func;
-      this.drawer = drawer;
-      this.is3D = is3D;
-      this.toReplString = () => "<AnimatedCurve>";
-      this.angle = 0;
-    }
-    getFrame(timestamp) {
-      const curve = this.func(timestamp);
-      curve.shouldNotAppend = true;
-      const curveDrawn = this.drawer(curve);
-      return {
-        draw: canvas => {
-          curveDrawn.init(canvas);
-          curveDrawn.redraw(this.angle);
-        }
-      };
-    }
-  };
-  var drawnCurves = [];
-  import_context.default.moduleContexts.curve.state = {
-    drawnCurves
-  };
-  function createDrawFunction(scaleMode, drawMode, space, isFullView) {
-    return numPoints => {
-      const func = curve => {
-        const curveDrawn = generateCurve(scaleMode, drawMode, numPoints, curve, space, isFullView);
-        if (!curve.shouldNotAppend) {
-          drawnCurves.push(curveDrawn);
-        }
-        return curveDrawn;
-      };
-      func.is3D = space === "3D";
-      const stringifier = () => `<${space === "3D" ? "3D" : ""}RenderFunction(${numPoints})>`;
-      func.toString = stringifier;
-      func.toReplString = stringifier;
-      return func;
-    };
-  }
-  var draw_connected = createDrawFunction("none", "lines", "2D", false);
-  var draw_connected_full_view = createDrawFunction("stretch", "lines", "2D", true);
-  var draw_connected_full_view_proportional = createDrawFunction("fit", "lines", "2D", true);
-  var draw_points = createDrawFunction("none", "points", "2D", false);
-  var draw_points_full_view = createDrawFunction("stretch", "points", "2D", true);
-  var draw_points_full_view_proportional = createDrawFunction("fit", "points", "2D", true);
-  var draw_3D_connected = createDrawFunction("none", "lines", "3D", false);
-  var draw_3D_connected_full_view = createDrawFunction("stretch", "lines", "3D", false);
-  var draw_3D_connected_full_view_proportional = createDrawFunction("fit", "lines", "3D", false);
-  var draw_3D_points = createDrawFunction("none", "points", "3D", false);
-  var draw_3D_points_full_view = createDrawFunction("stretch", "points", "3D", false);
-  var draw_3D_points_full_view_proportional = createDrawFunction("fit", "points", "3D", false);
   function make_point(x, y) {
     return new Point(x, y, 0, [0, 0, 0, 1]);
   }
@@ -2409,6 +2346,70 @@ void main() {
   var arc = t => {
     return make_point(Math.sin(Math.PI * t), Math.cos(Math.PI * t));
   };
+  init_define_process();
+  var import_context = __toESM(__require("js-slang/context"), 1);
+  init_define_process();
+  init_define_process();
+  var glAnimation = class {
+    constructor(duration, fps) {
+      this.duration = duration;
+      this.fps = fps;
+    }
+  };
+  glAnimation.isAnimation = obj => obj instanceof glAnimation;
+  var AnimatedCurve = class extends glAnimation {
+    constructor(duration, fps, func, drawer, is3D) {
+      super(duration, fps);
+      this.func = func;
+      this.drawer = drawer;
+      this.is3D = is3D;
+      this.toReplString = () => "<AnimatedCurve>";
+      this.angle = 0;
+    }
+    getFrame(timestamp) {
+      const curve = this.func(timestamp);
+      curve.shouldNotAppend = true;
+      const curveDrawn = this.drawer(curve);
+      return {
+        draw: canvas => {
+          curveDrawn.init(canvas);
+          curveDrawn.redraw(this.angle);
+        }
+      };
+    }
+  };
+  var drawnCurves = [];
+  import_context.default.moduleContexts.curve.state = {
+    drawnCurves
+  };
+  function createDrawFunction(scaleMode, drawMode, space, isFullView) {
+    return numPoints => {
+      const func = curve => {
+        const curveDrawn = generateCurve(scaleMode, drawMode, numPoints, curve, space, isFullView);
+        if (!curve.shouldNotAppend) {
+          drawnCurves.push(curveDrawn);
+        }
+        return curveDrawn;
+      };
+      func.is3D = space === "3D";
+      const stringifier = () => `<${space === "3D" ? "3D" : ""}RenderFunction(${numPoints})>`;
+      func.toString = stringifier;
+      func.toReplString = stringifier;
+      return func;
+    };
+  }
+  var draw_connected = createDrawFunction("none", "lines", "2D", false);
+  var draw_connected_full_view = createDrawFunction("stretch", "lines", "2D", true);
+  var draw_connected_full_view_proportional = createDrawFunction("fit", "lines", "2D", true);
+  var draw_points = createDrawFunction("none", "points", "2D", false);
+  var draw_points_full_view = createDrawFunction("stretch", "points", "2D", true);
+  var draw_points_full_view_proportional = createDrawFunction("fit", "points", "2D", true);
+  var draw_3D_connected = createDrawFunction("none", "lines", "3D", false);
+  var draw_3D_connected_full_view = createDrawFunction("stretch", "lines", "3D", false);
+  var draw_3D_connected_full_view_proportional = createDrawFunction("fit", "lines", "3D", false);
+  var draw_3D_points = createDrawFunction("none", "points", "3D", false);
+  var draw_3D_points_full_view = createDrawFunction("stretch", "points", "3D", false);
+  var draw_3D_points_full_view_proportional = createDrawFunction("fit", "points", "3D", false);
   function animate_curve(duration, fps, drawer, func) {
     if (drawer.is3D) {
       throw new Error("animate_curve cannot be used with 3D draw function!");

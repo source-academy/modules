@@ -169,99 +169,11 @@ export default require => {
   var SHARP = Accidental.SHARP;
   var FLAT = Accidental.FLAT;
   var NATURAL = Accidental.NATURAL;
-  var import_context = __toESM(__require("js-slang/context"), 1);
   var import_list2 = __require("js-slang/dist/stdlib/list");
-  var FastBase64 = {
-    chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-    encLookup: String,
-    Init: function () {
-      for (var i = 0; i < 4096; i++) {
-        this.encLookup[i] = this.chars[i >> 6] + this.chars[i & 63];
-      }
-    },
-    Encode: function (src) {
-      var len = src.length;
-      var dst = "";
-      var i = 0;
-      var n;
-      while (len > 2) {
-        n = src[i] << 16 | src[i + 1] << 8 | src[i + 2];
-        dst += this.encLookup[n >> 12] + this.encLookup[n & 4095];
-        len -= 3;
-        i += 3;
-      }
-      if (len > 0) {
-        var n1 = (src[i] & 252) >> 2;
-        var n2 = (src[i] & 3) << 4;
-        if (len > 1) n2 |= (src[++i] & 240) >> 4;
-        dst += this.chars[n1];
-        dst += this.chars[n2];
-        if (len == 2) {
-          var n3 = (src[i++] & 15) << 2;
-          n3 |= (src[i] & 192) >> 6;
-          dst += this.chars[n3];
-        }
-        if (len == 1) dst += "=";
-        dst += "=";
-      }
-      return dst;
-    }
-  };
-  FastBase64.Init();
-  function RIFFWAVE(data) {
-    this.data = [];
-    this.wav = [];
-    this.dataURI = "";
-    this.header = {
-      chunkId: [82, 73, 70, 70],
-      chunkSize: 0,
-      format: [87, 65, 86, 69],
-      subChunk1Id: [102, 109, 116, 32],
-      subChunk1Size: 16,
-      audioFormat: 1,
-      numChannels: 1,
-      sampleRate: 8e3,
-      byteRate: 0,
-      blockAlign: 0,
-      bitsPerSample: 8,
-      subChunk2Id: [100, 97, 116, 97],
-      subChunk2Size: 0
-    };
-    function u32ToArray(i) {
-      return [i & 255, i >> 8 & 255, i >> 16 & 255, i >> 24 & 255];
-    }
-    function u16ToArray(i) {
-      return [i & 255, i >> 8 & 255];
-    }
-    function split16bitArray(data2) {
-      var r = [];
-      var j = 0;
-      var len = data2.length;
-      for (var i = 0; i < len; i++) {
-        r[j++] = data2[i] & 255;
-        r[j++] = data2[i] >> 8 & 255;
-      }
-      return r;
-    }
-    this.Make = function (data2) {
-      if (data2 instanceof Array) this.data = data2;
-      this.header.blockAlign = this.header.numChannels * this.header.bitsPerSample >> 3;
-      this.header.byteRate = this.header.blockAlign * this.sampleRate;
-      this.header.subChunk2Size = this.data.length * (this.header.bitsPerSample >> 3);
-      this.header.chunkSize = 36 + this.header.subChunk2Size;
-      this.wav = this.header.chunkId.concat(u32ToArray(this.header.chunkSize), this.header.format, this.header.subChunk1Id, u32ToArray(this.header.subChunk1Size), u16ToArray(this.header.audioFormat), u16ToArray(this.header.numChannels), u32ToArray(this.header.sampleRate), u32ToArray(this.header.byteRate), u16ToArray(this.header.blockAlign), u16ToArray(this.header.bitsPerSample), this.header.subChunk2Id, u32ToArray(this.header.subChunk2Size), this.header.bitsPerSample == 16 ? split16bitArray(this.data) : this.data);
-      this.dataURI = "data:audio/wav;base64," + FastBase64.Encode(this.wav);
-    };
-    if (data instanceof Array) this.Make(data);
-  }
   var FS = 44100;
   var fourier_expansion_level = 5;
   var recording_signal_ms = 100;
   var pre_recording_signal_pause_ms = 200;
-  var audioPlayed = [];
-  import_context.default.moduleContexts.sound.state = {
-    audioPlayed
-  };
   var globalVars = {
     stream: null,
     recordedSound: null,
@@ -424,50 +336,6 @@ export default require => {
     validateDuration(play_wave.name, duration);
     validateWave(play_wave.name, wave);
     return play(make_sound(wave, duration));
-  }
-  function play_in_tab(sound) {
-    if (!is_sound(sound)) {
-      throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
-    }
-    const duration = get_duration(sound);
-    if (duration < 0) {
-      throw new Error(`${play_in_tab.name}: duration of sound is negative`);
-    } else if (duration === 0) {
-      return sound;
-    }
-    const channel = [];
-    const len = Math.ceil(FS * duration);
-    let temp;
-    let prev_value = 0;
-    const wave = get_wave(sound);
-    for (let i = 0; i < len; i += 1) {
-      temp = wave(i / FS);
-      if (temp > 1) {
-        channel[i] = 1;
-      } else if (temp < -1) {
-        channel[i] = -1;
-      } else {
-        channel[i] = temp;
-      }
-      if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
-        channel[i] = prev_value * 0.999;
-      }
-      prev_value = channel[i];
-    }
-    for (let i = 0; i < channel.length; i += 1) {
-      channel[i] = Math.floor(channel[i] * 32767.999);
-    }
-    const riffwave = new RIFFWAVE([]);
-    riffwave.header.sampleRate = FS;
-    riffwave.header.numChannels = 1;
-    riffwave.header.bitsPerSample = 16;
-    riffwave.Make(channel);
-    const soundToPlay = {
-      toReplString: () => "<AudioPlayed>",
-      dataUri: riffwave.dataURI
-    };
-    audioPlayed.push(soundToPlay);
-    return sound;
   }
   function play(sound) {
     if (!is_sound(sound)) {
@@ -649,6 +517,138 @@ export default require => {
   }
   function violin(note, duration) {
     return stacking_adsr(sawtooth_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0.35, 0, 1, 0.15), adsr(0.35, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15)));
+  }
+  var import_context = __toESM(__require("js-slang/context"), 1);
+  var FastBase64 = {
+    chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+    encLookup: String,
+    Init: function () {
+      for (var i = 0; i < 4096; i++) {
+        this.encLookup[i] = this.chars[i >> 6] + this.chars[i & 63];
+      }
+    },
+    Encode: function (src) {
+      var len = src.length;
+      var dst = "";
+      var i = 0;
+      var n;
+      while (len > 2) {
+        n = src[i] << 16 | src[i + 1] << 8 | src[i + 2];
+        dst += this.encLookup[n >> 12] + this.encLookup[n & 4095];
+        len -= 3;
+        i += 3;
+      }
+      if (len > 0) {
+        var n1 = (src[i] & 252) >> 2;
+        var n2 = (src[i] & 3) << 4;
+        if (len > 1) n2 |= (src[++i] & 240) >> 4;
+        dst += this.chars[n1];
+        dst += this.chars[n2];
+        if (len == 2) {
+          var n3 = (src[i++] & 15) << 2;
+          n3 |= (src[i] & 192) >> 6;
+          dst += this.chars[n3];
+        }
+        if (len == 1) dst += "=";
+        dst += "=";
+      }
+      return dst;
+    }
+  };
+  FastBase64.Init();
+  function RIFFWAVE(data) {
+    this.data = [];
+    this.wav = [];
+    this.dataURI = "";
+    this.header = {
+      chunkId: [82, 73, 70, 70],
+      chunkSize: 0,
+      format: [87, 65, 86, 69],
+      subChunk1Id: [102, 109, 116, 32],
+      subChunk1Size: 16,
+      audioFormat: 1,
+      numChannels: 1,
+      sampleRate: 8e3,
+      byteRate: 0,
+      blockAlign: 0,
+      bitsPerSample: 8,
+      subChunk2Id: [100, 97, 116, 97],
+      subChunk2Size: 0
+    };
+    function u32ToArray(i) {
+      return [i & 255, i >> 8 & 255, i >> 16 & 255, i >> 24 & 255];
+    }
+    function u16ToArray(i) {
+      return [i & 255, i >> 8 & 255];
+    }
+    function split16bitArray(data2) {
+      var r = [];
+      var j = 0;
+      var len = data2.length;
+      for (var i = 0; i < len; i++) {
+        r[j++] = data2[i] & 255;
+        r[j++] = data2[i] >> 8 & 255;
+      }
+      return r;
+    }
+    this.Make = function (data2) {
+      if (data2 instanceof Array) this.data = data2;
+      this.header.blockAlign = this.header.numChannels * this.header.bitsPerSample >> 3;
+      this.header.byteRate = this.header.blockAlign * this.sampleRate;
+      this.header.subChunk2Size = this.data.length * (this.header.bitsPerSample >> 3);
+      this.header.chunkSize = 36 + this.header.subChunk2Size;
+      this.wav = this.header.chunkId.concat(u32ToArray(this.header.chunkSize), this.header.format, this.header.subChunk1Id, u32ToArray(this.header.subChunk1Size), u16ToArray(this.header.audioFormat), u16ToArray(this.header.numChannels), u32ToArray(this.header.sampleRate), u32ToArray(this.header.byteRate), u16ToArray(this.header.blockAlign), u16ToArray(this.header.bitsPerSample), this.header.subChunk2Id, u32ToArray(this.header.subChunk2Size), this.header.bitsPerSample == 16 ? split16bitArray(this.data) : this.data);
+      this.dataURI = "data:audio/wav;base64," + FastBase64.Encode(this.wav);
+    };
+    if (data instanceof Array) this.Make(data);
+  }
+  var audioPlayed = [];
+  import_context.default.moduleContexts.sound.state = {
+    audioPlayed
+  };
+  function play_in_tab(sound) {
+    if (!is_sound(sound)) {
+      throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
+    }
+    const duration = get_duration(sound);
+    if (duration < 0) {
+      throw new Error(`${play_in_tab.name}: duration of sound is negative`);
+    } else if (duration === 0) {
+      return sound;
+    }
+    const channel = [];
+    const len = Math.ceil(FS * duration);
+    let temp;
+    let prev_value = 0;
+    const wave = get_wave(sound);
+    for (let i = 0; i < len; i += 1) {
+      temp = wave(i / FS);
+      if (temp > 1) {
+        channel[i] = 1;
+      } else if (temp < -1) {
+        channel[i] = -1;
+      } else {
+        channel[i] = temp;
+      }
+      if (channel[i] === 0 && Math.abs(channel[i] - prev_value) > 0.01) {
+        channel[i] = prev_value * 0.999;
+      }
+      prev_value = channel[i];
+    }
+    for (let i = 0; i < channel.length; i += 1) {
+      channel[i] = Math.floor(channel[i] * 32767.999);
+    }
+    const riffwave = new RIFFWAVE([]);
+    riffwave.header.sampleRate = FS;
+    riffwave.header.numChannels = 1;
+    riffwave.header.bitsPerSample = 16;
+    riffwave.Make(channel);
+    const soundToPlay = {
+      toReplString: () => "<AudioPlayed>",
+      dataUri: riffwave.dataURI
+    };
+    audioPlayed.push(soundToPlay);
+    return sound;
   }
   return __toCommonJS(index_exports);
 };
