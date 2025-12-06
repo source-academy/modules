@@ -286,5 +286,6 @@ if (process.env.GITHUB_ACTIONS) {
     await main();
   } catch (error: any) {
     core.setFailed(error);
+    throw error;
   }
 }
