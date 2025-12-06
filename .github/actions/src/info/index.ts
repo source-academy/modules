@@ -1,9 +1,9 @@
 import pathlib from 'path';
 import * as core from '@actions/core';
 import type { SummaryTableRow } from '@actions/core/lib/summary.js';
+import { getPluginConfiguration } from '@yarnpkg/cli';
 import { Configuration, Project, structUtils, type Workspace } from '@yarnpkg/core';
 import { npath, ppath, type PortablePath } from '@yarnpkg/fslib';
-import pnpPlugin from '@yarnpkg/plugin-pnp';
 import packageJson from '../../../../package.json' with { type: 'json' };
 import { checkDirForChanges } from '../commons.js';
 import { gitRoot } from '../gitRoot.js';
@@ -100,12 +100,10 @@ function determinePkgType(workspace: Workspace, libDir: PortablePath): Determine
 export async function getAllPackages(rawGitRoot: string) {
   const gitRoot = npath.toPortablePath(rawGitRoot);
 
-  // Apparently just the pnp plugin is sufficient for our purposes
-  const config = await Configuration.find(gitRoot, {
-    plugins: new Set(['@yarnpkg/plugin-pnp']),
-    modules: new Map([['@yarnpkg/plugin-pnp', pnpPlugin]])
-  });
+  const pluginConfig = getPluginConfiguration();
+  const config = await Configuration.find(gitRoot, pluginConfig);
   const { project } = await Project.find(config, gitRoot);
+
   const libDir = ppath.join(gitRoot, 'lib');
   const playwright = structUtils.makeIdent(null, 'playwright');
 
