@@ -105,7 +105,7 @@ jobs:
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.tabInfo.name }}
-          playwright: ${{ matrix.tabInfo.needsPlaywright && matrix.tabInfo.changes }}
+          playwright: ${{ matrix.tabInfo.needsPlaywright && matrix.tabInfo.hasChanges }}
 
       - name: Build Tab
         run: |
@@ -149,7 +149,7 @@ jobs:
         uses: ./.github/actions/src/init
         with:
           package-name: ${{ matrix.bundleInfo.name }}
-          playwright: ${{ matrix.bundleInfo.needsPlaywright }}
+          playwright: ${{ matrix.bundleInfo.needsPlaywright && matrix.bundleInfo.hasChanges }}
 
       - name: Build Bundle
         run: |
@@ -178,7 +178,7 @@ jobs:
       ${{
         always() &&
         !cancelled() &&
-        fromJson(needs.find-packages.outputs.devserver).changes &&
+        fromJson(needs.find-packages.outputs.devserver).hasChanges &&
         needs.find-packages.result == 'success' &&
         (needs.find-packages.outputs.tabs == '[]' || needs.tabs.result == 'success')
       }}
@@ -228,7 +228,7 @@ jobs:
       ${{
         always() &&
         !cancelled() &&
-        fromJson(needs.find-packages.outputs.docserver).changes &&
+        fromJson(needs.find-packages.outputs.docserver).hasChanges &&
         needs.find-packages.result == 'success' &&
         (needs.find-packages.outputs.libs == '[]' || needs.libraries.result == 'success')
       }}
@@ -300,8 +300,8 @@ jobs:
         (needs.find-packages.outputs.libs == '[]' || needs.libraries.result == 'success') &&
         (needs.find-packages.outputs.tabs == '[]' || needs.tabs.result == 'success') &&
         (needs.find-packages.outputs.bundles == '[]' || needs.bundles.result == 'success') &&
-        !(!fromJson(needs.find-packages.outputs.docserver).changes || needs.docserver.result != 'success') &&
-        !(!fromJson(needs.find-packages.outputs.devserver).changes || needs.devserver.result != 'success') &&
+        !(!fromJson(needs.find-packages.outputs.docserver).hasChanges || needs.docserver.result != 'success') &&
+        !(!fromJson(needs.find-packages.outputs.devserver).hasChanges || needs.devserver.result != 'success') &&
         needs.repo-tasks.result == 'success'
       }}
 
