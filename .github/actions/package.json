@@ -20,7 +20,7 @@
     "snyk-nodejs-lockfile-parser": "^2.4.2"
   },
   "scripts": {
-    "build": "node ./build.js",
+    "build": "node ./build.js --dev",
     "postinstall": "yarn build",
     "test": "vitest",
     "tsc": "tsc --project ./tsconfig.json"
