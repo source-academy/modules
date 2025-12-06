@@ -83,7 +83,7 @@ function determinePkgType(workspace: Workspace, libDir: PortablePath): Determine
   const match = moduleNameRE.exec(name!.name);
 
   if (match) {
-    const [assetType, assetName] = match;
+    const [, assetType, assetName] = match;
     return [assetType as 'tab' | 'bundle', assetName];
   }
 
@@ -188,6 +188,8 @@ export async function getAllPackages(rawGitRoot: string) {
         };
         break;
       }
+      default:
+        throw new Error(`Unknown pkgType: ${pkgType}`);
     }
 
     packages[name.name] = pkgInfo;
