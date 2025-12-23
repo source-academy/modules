@@ -4540,6 +4540,7 @@ __metadata:
     "@vitest/browser-playwright": "npm:^4.0.4"
     "@vitest/coverage-v8": "npm:^4.0.4"
     acorn: "npm:^8.8.1"
+    acorn-typescript: "npm:^1.4.13"
     astring: "npm:^1.8.6"
     chalk: "npm:^5.0.1"
     commander: "npm:^14.0.0"
@@ -6635,6 +6636,15 @@ __metadata:
   peerDependencies:
     acorn: ^6.1.0 || ^7 || ^8
   checksum: 10c0/26632c7d65957a1f3ee00aaec600901b9c69f0de132f4131f876ca230e38cca002dbf2c2bf83563445f1a5d187c4fd25ed9d35b11297e4834e81c8b5d49e36c6
+  languageName: node
+  linkType: hard
+
+"acorn-typescript@npm:^1.4.13":
+  version: 1.4.13
+  resolution: "acorn-typescript@npm:1.4.13"
+  peerDependencies:
+    acorn: ">=8.9.0"
+  checksum: 10c0/f2f17cf03379d63beeb007f0feea02cebbd9af261f6b5619ea7345b177bd7a5f99752927cbf652baa3fc97962ae4561592093ab0a1c3e00ca4f354ba23c557ae
   languageName: node
   linkType: hard
 

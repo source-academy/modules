@@ -16,16 +16,29 @@ const typedocPackageOptions: td.Configuration.TypeDocOptions = {
 /**
  * Initialize Typedoc to build the JSON documentation for each bundle
  */
-export function initTypedocForJson(bundle: ResolvedBundle, logLevel: td.LogLevel) {
+export async function initTypedocForJson(bundle: ResolvedBundle, logLevel: td.LogLevel) {
   // TypeDoc expects POSIX paths
   const directoryAsPosix = bundle.directory.replace(/\\/g, '/');
-  return td.Application.bootstrapWithPlugins({
+  const app = await td.Application.bootstrapWithPlugins({
     ...typedocPackageOptions,
     name: bundle.name,
     logLevel,
     entryPoints: [`${directoryAsPosix}/src/index.ts`],
     tsconfig: `${directoryAsPosix}/tsconfig.json`,
   });
+
+  app.converter.on(td.Converter.EVENT_CREATE_SIGNATURE, (ctx, signature) => {
+    // Make sure that type guards get replaced with the appropriate intrinsic types
+    if (signature.type instanceof td.PredicateType) {
+      if (signature.type.asserts) {
+        signature.type = new td.IntrinsicType('void');
+      } else {
+        signature.type = new td.IntrinsicType('boolean');
+      }
+    }
+  });
+
+  return app;
 }
 
 /**
