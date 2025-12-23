@@ -66,7 +66,7 @@ function createDrawFunction(
  * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @returns function of type Curve → Drawing
  * @example
  * ```
  * draw_connected(100)(t => make_point(t, t));
@@ -83,7 +83,7 @@ export const draw_connected = createDrawFunction('none', 'lines', '2D', false);
  * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @returns function of type Curve → Drawing
  * @example
  * ```
  * draw_connected_full_view(100)(t => make_point(t, t));
@@ -105,7 +105,7 @@ export const draw_connected_full_view = createDrawFunction(
  * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @returns function of type Curve → Drawing
  * @example
  * ```
  * draw_connected_full_view_proportional(100)(t => make_point(t, t));
@@ -127,7 +127,7 @@ export const draw_connected_full_view_proportional = createDrawFunction(
  * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1,there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @returns function of type Curve → Drawing
  * @example
  * ```
  * draw_points(100)(t => make_point(t, t));
@@ -145,7 +145,7 @@ export const draw_points = createDrawFunction('none', 'points', '2D', false);
  * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @returns function of type Curve → Drawing
  * @example
  * ```
  * draw_points_full_view(100)(t => make_point(t, t));
@@ -168,7 +168,7 @@ export const draw_points_full_view = createDrawFunction(
  * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @returns function of type Curve → Drawing
  * @example
  * ```
  * draw_points_full_view_proportional(100)(t => make_point(t, t));
@@ -190,7 +190,7 @@ export const draw_points_full_view_proportional = createDrawFunction(
  * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @returns function of type Curve → Drawing
  * @example
  * ```
  * draw_3D_connected(100)(t => make_3D_point(t, t, t));
@@ -212,7 +212,7 @@ export const draw_3D_connected = createDrawFunction(
  * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @returns function of type Curve → Drawing
  * @example
  * ```
  * draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));
@@ -234,7 +234,7 @@ export const draw_3D_connected_full_view = createDrawFunction(
  * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @returns function of type Curve → Drawing
  * @example
  * ```
  * draw_3D_connected_full_view_proportional(100)(t => make_3D_point(t, t, t));
@@ -256,7 +256,7 @@ export const draw_3D_connected_full_view_proportional = createDrawFunction(
  * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @returns function of type Curve → Drawing
  * @example
  * ```
  * draw_3D_points(100)(t => make_3D_point(t, t, t));
@@ -273,7 +273,7 @@ export const draw_3D_points = createDrawFunction('none', 'points', '3D', false);
  * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @returns function of type Curve → Drawing
  * @example
  * ```
  * draw_3D_points_full_view(100)(t => make_3D_point(t, t, t));
@@ -295,7 +295,7 @@ export const draw_3D_points_full_view = createDrawFunction(
  * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @returns function of type Curve → Drawing
  * @example
  * ```
  * draw_3D_points_full_view_proportional(100)(t => make_3D_point(t, t, t));
@@ -314,7 +314,7 @@ export const draw_3D_points_full_view_proportional = createDrawFunction(
  * @param fps Framerate of the animation in frames per second
  * @param drawer Draw function to the generated curves with
  * @param func Curve generating function. Takes in a timestamp value and returns a curve
- * @return Curve Animation
+ * @returns Curve Animation
  */
 export function animate_curve(
   duration: number,
@@ -337,7 +337,7 @@ export function animate_curve(
  * @param fps Framerate of the animation in frames per second
  * @param drawer Draw function to the generated curves with
  * @param func Curve generating function. Takes in a timestamp value and returns a curve
- * @return 3D Curve Animation
+ * @returns 3D Curve Animation
  */
 export function animate_3D_curve(
   duration: number,

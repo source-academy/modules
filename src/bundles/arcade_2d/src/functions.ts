@@ -71,7 +71,7 @@ export const config = {
   fps: DEFAULT_FPS,
   isDebugEnabled: DEFAULT_DEBUG_STATE,
   // User update function
-  userUpdateFunction: (() => {}) as UpdateFunction
+  userUpdateFunction: (() => { }) as UpdateFunction
 };
 
 // =============================================================================
@@ -101,7 +101,8 @@ export function create_rectangle(width: number, height: number): ShapeGameObject
  * Creates a CircleGameObject that takes in circle shape properties.
  *
  * @param radius Radius of the circle to create
- * @example```ts
+ * @example
+ * ```ts
  * const circle = create_circle(100);
  * ```
  * @category GameObject
@@ -519,15 +520,15 @@ export function query_pointer_position(): PositionXY {
  * @hidden
  */
 const withinRange: (num: number, min: number, max: number) => number
-= (num: number, min: number, max: number) => {
-  if (num > max) {
-    return max;
-  }
-  if (num < min) {
-    return min;
-  }
-  return num;
-};
+  = (num: number, min: number, max: number) => {
+    if (num > max) {
+      return max;
+    }
+    if (num < min) {
+      return min;
+    }
+    return num;
+  };
 
 /**
  * Sets the frames per second of the canvas, which should be between the MIN_FPS and MAX_FPS.

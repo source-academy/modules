@@ -7,7 +7,7 @@ import type { BinaryTree, EmptyBinaryTree, NonEmptyBinaryTree } from './types';
  * ```typescript
  * display(make_empty_tree()); // Shows "null" in the REPL
  * ```
- * @return An empty binary tree
+ * @returns An empty binary tree
  */
 export function make_empty_tree(): BinaryTree {
   return null;

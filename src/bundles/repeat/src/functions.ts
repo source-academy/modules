@@ -13,7 +13,7 @@
  * ```
  * @param func the function to be repeated
  * @param n the number of times to repeat the function
- * @return the new function that has the same effect as func repeated n times
+ * @returns the new function that has the same effect as func repeated n times
  */
 export function repeat(func: Function, n: number): Function {
   return n === 0 ? (x: any) => x : (x: any) => func(repeat(func, n - 1)(x));
@@ -28,7 +28,7 @@ export function repeat(func: Function, n: number): Function {
  * plusTwo(2); // Returns 4
  * ```
  * @param func the function to be repeated
- * @return the new function that has the same effect as `(x => func(func(x)))`
+ * @returns the new function that has the same effect as `(x => func(func(x)))`
  */
 export function twice(func: Function): Function {
   return repeat(func, 2);
@@ -43,7 +43,7 @@ export function twice(func: Function): Function {
  * plusNine(0); // Returns 9
  * ```
  * @param func the function to be repeated
- * @return the new function that has the same effect as `(x => func(func(func(x))))`
+ * @returns the new function that has the same effect as `(x => func(func(func(x))))`
  */
 export function thrice(func: Function): Function {
   return repeat(func, 3);

@@ -13,12 +13,15 @@ import { midiNoteToNoteName, noteToValues } from './utils';
  * Converts a letter name to its corresponding MIDI note.
  * The letter name is represented in standard pitch notation.
  * Examples are "A5", "Db3", "C#7".
- * Refer to <a href="https://i.imgur.com/qGQgmYr.png">this mapping from
+ * Refer to [this](https://i.imgur.com/qGQgmYr.png) mapping from
  * letter name to midi notes.
  *
  * @param note given letter name
- * @return the corresponding midi note
- * @example letter_name_to_midi_note("C4"); // Returns 60
+ * @returns the corresponding midi note
+ * @example
+ * ```
+ * letter_name_to_midi_note("C4"); // Returns 60
+ * ```
  * @function
  */
 export function letter_name_to_midi_note(note: NoteWithOctave): MIDINote {
@@ -88,9 +91,9 @@ export function midi_note_to_letter_name(midiNote: MIDINote, accidental: 'flat' 
  * Converts a MIDI note to its corresponding frequency.
  *
  * @param note given MIDI note
- * @return the frequency of the MIDI note
- * @example midi_note_to_frequency(69); // Returns 440
+ * @returns the frequency of the MIDI note
  * @function
+ * @example midi_note_to_frequency(69); // Returns 440
  */
 export function midi_note_to_frequency(note: MIDINote): number {
   // A4 = 440Hz = midi note 69
@@ -101,7 +104,7 @@ export function midi_note_to_frequency(note: MIDINote): number {
  * Converts a letter name to its corresponding frequency.
  *
  * @param note given letter name
- * @return the corresponding frequency
+ * @returns the corresponding frequency
  * @example letter_name_to_frequency("A4"); // Returns 440
  */
 export function letter_name_to_frequency(note: NoteWithOctave): number {

@@ -236,6 +236,14 @@ export default defineConfig(
         checkDestructured: false,
         disableMissingParamChecks: true
       }],
+      'jsdoc/check-tag-names': ['error', {
+        // NOTE: Not all Typedoc supported tags are present here. Feel free to add any other
+        // Typedoc supported tags to this list
+        definedTags: ['category', 'categoryDescription', 'hidden']
+      }],
+      'jsdoc/empty-tags': ['error', {
+        tags: ['hidden']
+      }],
 
       'import/first': 'warn',
       'import/newline-after-import': 'warn',
