@@ -142,7 +142,7 @@ export function create_triangle(width: number, height: number): ShapeGameObject 
  * @param text Text string displayed
  * @example
  * ```
- * const helloworld = create_text("Hello\nworld!");
+ * const helloworld = create_text('Hello\nworld!');
  * ```
  * @category GameObject
  */

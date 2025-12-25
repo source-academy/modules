@@ -20,7 +20,7 @@ import { midiNoteToNoteName, noteToValues } from './utils';
  * @returns the corresponding midi note
  * @example
  * ```
- * letter_name_to_midi_note("C4"); // Returns 60
+ * letter_name_to_midi_note('C4'); // Returns 60
  * ```
  * @function
  */

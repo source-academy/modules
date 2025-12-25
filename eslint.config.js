@@ -8,7 +8,7 @@ import stylePlugin from '@stylistic/eslint-plugin';
 import vitestPlugin from '@vitest/eslint-plugin';
 import { defineConfig } from 'eslint/config';
 import * as importPlugin from 'eslint-plugin-import';
-import jsdocPlugin from 'eslint-plugin-jsdoc';
+import jsdocPlugin, { getJsdocProcessorPlugin } from 'eslint-plugin-jsdoc';
 import * as mdx from 'eslint-plugin-mdx';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
@@ -123,7 +123,13 @@ export default defineConfig(
     name: 'Global JS/TS Stylistic Rules',
     plugins: {
       jsdoc: jsdocPlugin,
+      jsdocExamples: getJsdocProcessorPlugin({
+        parser: tseslint.parser,
+        // Only lint markdown code blocks
+        exampleCodeRegex: /^[\s*]*```(?:[jt]s\s)?([\s\S]*)```\s*/
+      })
     },
+    processor: 'jsdocExamples/examples',
     files: [
       '**/*.{js,cjs,mjs}',
       '**/*.{ts,cts,tsx}',
@@ -239,7 +245,7 @@ export default defineConfig(
       'jsdoc/check-tag-names': ['error', {
         // NOTE: Not all Typedoc supported tags are present here. Feel free to add any other
         // Typedoc supported tags to this list
-        definedTags: ['category', 'categoryDescription', 'hidden']
+        definedTags: ['category', 'categoryDescription', 'hidden', 'see']
       }],
       'jsdoc/empty-tags': ['error', {
         tags: ['hidden']
