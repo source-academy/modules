@@ -1,5 +1,6 @@
 import pathlib from 'path';
 import type { ResolvedBundle } from '@sourceacademy/modules-repotools/types';
+import { convertToPosixPath } from '@sourceacademy/modules-repotools/utils';
 import * as td from 'typedoc';
 
 // #region commonOpts
@@ -18,7 +19,7 @@ const typedocPackageOptions: td.Configuration.TypeDocOptions = {
  */
 export async function initTypedocForJson(bundle: ResolvedBundle, logLevel: td.LogLevel) {
   // TypeDoc expects POSIX paths
-  const directoryAsPosix = bundle.directory.replace(/\\/g, '/');
+  const directoryAsPosix = convertToPosixPath(bundle.directory);
   const app = await td.Application.bootstrapWithPlugins({
     ...typedocPackageOptions,
     name: bundle.name,
@@ -52,7 +53,7 @@ export function initTypedocForHtml(bundles: Record<string, ResolvedBundle>, logL
     logLevel,
     entryPoints: Object.values(bundles).map(({ directory }) => {
       // TypeDoc expects POSIX paths
-      const directoryAsPosix = directory.replace(/\\/g, '/');
+      const directoryAsPosix = convertToPosixPath(directory);
       return `${directoryAsPosix}/dist/docs.json`;
     }),
     entryPointStrategy: 'merge',

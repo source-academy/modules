@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
-import type { InputAsset, Severity } from '@sourceacademy/modules-repotools/types';
+import type { InputAsset, ResolvedBundle, Severity } from '@sourceacademy/modules-repotools/types';
 import { findSeverity } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
 import ts from 'typescript';
@@ -27,6 +27,9 @@ export type TscResult = {
   results: ts.Diagnostic[];
 });
 
+/**
+ * Find a tsconfig.json in the given directory, then read and parse it.
+ */
 async function getTsconfig(srcDir: string): Promise<TsconfigResult> {
   // Step 1: Read the text from tsconfig.json
   const tsconfigLocation = pathlib.join(srcDir, 'tsconfig.json');
@@ -64,18 +67,37 @@ async function getTsconfig(srcDir: string): Promise<TsconfigResult> {
   }
 }
 
-export async function runTsc(input: InputAsset, noEmit: boolean): Promise<TscResult> {
-  const tsconfigRes = await getTsconfig(input.directory);
-  if (tsconfigRes.severity === 'error') {
-    return {
-      ...tsconfigRes,
-      input
-    };
-  }
+/**
+ * Convert a collection of Typescript diagnostics to a Severity
+ */
+function processDiagnostics(diagnostics: ts.Diagnostic[]) {
+  return findSeverity(diagnostics, ({ category }) => {
+    switch (category) {
+      case ts.DiagnosticCategory.Error:
+        return 'error';
+      case ts.DiagnosticCategory.Warning:
+        return 'warn';
+      default:
+        return 'success';
+    }
+  });
+}
 
-  const { results: tsconfig, fileNames } = tsconfigRes;
-
+/**
+ * Run tsc but only for typechecking
+ */
+export async function runTypechecking(input: InputAsset): Promise<TscResult> {
   try {
+
+    const tsconfigRes = await getTsconfig(input.directory);
+    if (tsconfigRes.severity === 'error') {
+      return {
+        ...tsconfigRes,
+        input
+      };
+    }
+
+    const { results: tsconfig, fileNames } = tsconfigRes;
     // tsc instance that only does typechecking
     // Type checking for both tests and source code is performed
     const typecheckProgram = ts.createProgram({
@@ -89,47 +111,66 @@ export async function runTsc(input: InputAsset, noEmit: boolean): Promise<TscRes
     const diagnostics = ts.getPreEmitDiagnostics(typecheckProgram)
       .concat(results.diagnostics);
 
-    const severity = findSeverity(diagnostics, ({ category }) => {
-      switch (category) {
-        case ts.DiagnosticCategory.Error:
-          return 'error';
-        case ts.DiagnosticCategory.Warning:
-          return 'warn';
-        default:
-          return 'success';
-      }
-    });
-
-    if (input.type === 'bundle' && severity !== 'error' && !noEmit) {
-      // If noEmit isn't specified, then run tsc again without including test
-      // files and actually output the files
-      const filesWithoutTests = fileNames.filter(p => {
-        const segments = p.split(pathlib.posix.sep);
-        return !segments.includes('__tests__');
-      });
-      // tsc instance that does compilation
-      // only compiles non test files
-      const compileProgram = ts.createProgram({
-        rootNames: filesWithoutTests,
-        options: {
-          ...tsconfig,
-          noEmit: false
-        },
-        oldProgram: typecheckProgram
-      });
-      compileProgram.emit();
-    }
-
+    const severity = processDiagnostics(diagnostics);
     return {
       severity,
-      results: diagnostics,
-      input
+      input,
+      results: diagnostics
     };
   } catch (error) {
     return {
       severity: 'error',
+      error,
+      input
+    };
+  }
+}
+
+/**
+ * Run tsc but for compiling bundles
+ */
+export async function runTscCompile(input: ResolvedBundle, oldProgram?: ts.Program): Promise<TscResult> {
+  try {
+    const tsconfigRes = await getTsconfig(input.directory);
+    if (tsconfigRes.severity === 'error') {
+      return {
+        ...tsconfigRes,
+        input
+      };
+    }
+
+    const { results: tsconfig, fileNames } = tsconfigRes;
+    const filesWithoutTests = fileNames.filter(p => {
+      const segments = p.split(pathlib.posix.sep);
+      return !segments.includes('__tests__') && !segments.includes('__mocks__');
+    });
+    // tsc instance that does compilation
+    // only compiles non test files
+    const compileProgram = ts.createProgram({
+      rootNames: filesWithoutTests,
+      options: {
+        ...tsconfig,
+        noEmit: false
+      },
+      oldProgram
+    });
+    compileProgram.emit();
+
+    const results = compileProgram.emit();
+    const diagnostics = ts.getPreEmitDiagnostics(compileProgram)
+      .concat(results.diagnostics);
+
+    const severity = processDiagnostics(diagnostics);
+    return {
+      severity,
       input,
-      error
+      results: diagnostics
+    };
+  } catch (error) {
+    return {
+      severity: 'error',
+      error,
+      input
     };
   }
 }
