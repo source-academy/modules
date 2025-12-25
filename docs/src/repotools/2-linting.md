@@ -25,7 +25,7 @@ When changing a rule's configuration, leave a comment explaining what the origin
 
 Where possible, also provide an explanation for why that rule has been configured as such:
 
-<<< ../../../eslint.config.js#typescript {21}
+<<< ../../../eslint.config.js#typescript {23}
 
 ## Linting Markdown Code Examples
 
@@ -34,6 +34,15 @@ provides a processor that makes these code blocks available to ESLint.
 
 Because `typescript-eslint` requires a `tsconfig` to be able to lint any kind of Typescript code, it can't actually be used with any type-aware rules. Furthermore, code examples
 are usually incomplete snippets of Typescript/Javascript, so a lot of the typical rules in use don't really apply to these. Thus, code examples have their own separate configurations.
+
+## Linting JSDoc Code Examples
+
+The `eslint-plugin-jsdoc` package provides an ESLint processor that can be used to extract `@example` code blocks and process them for linting. The processor actually
+considers the example code blocks as Markdown code examples, so the same block used for configuring those is also used to configure JSDoc code examples.
+
+Similar to Markdown code blocks, the type-aware rules also do not work with JSDoc code examples.
+
+The code example processor is configured to only lint code examples that are contained within Markdown code blocks.
 
 ## Linting JSON Files
 

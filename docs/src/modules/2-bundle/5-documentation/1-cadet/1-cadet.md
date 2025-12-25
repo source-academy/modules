@@ -21,6 +21,7 @@ Documentation should be written in [Markdown](https://www.markdownguide.org/gett
 the markdown is converted to raw HTML.
 
 ::: details Type Aware annotations
+
 [JSDoc](https://jsdoc.app) (and TSDoc) both support annotations that express type information directly like `@type` or annotations that can optionally contain type information like `@param` and `@returns`.
 Since modules are already written in Typescript, there is no need to use type-aware annotations to document the type of an object.
 
@@ -213,7 +214,7 @@ used. Consider an example from the `midi` bundle below:
  * @return the corresponding midi note
  * @example
  * ```
- * letter_name_to_midi_note("C4"); // Returns 60
+ * letter_name_to_midi_note('C4'); // Returns 60
  * ```
  * @function
  */
@@ -263,6 +264,13 @@ valid Typescript code. It will print a warning message if your example code does
 
 There are a variety of tags that Typedoc supports. This list can be found [here](https://typedoc.org/documents/Tags.html). When writing your documentation you should use these tags
 to the best of your ability to help make your documentation as comprehensive as possible.
+
+> [!INFO] Configuring Supported Tags
+> There is an ESLint rule configured to error when you use an unknown tag. By default, the rule includes all tags supported by JSDoc, but Typedoc
+> actually supports many more tags intended for customizing documentaton output.
+> 
+> If you want to use a Typedoc supported tag that hasn't been configured for use, you can simply modify the `jsdoc/check-tag-names`
+> rule to include your tag.
 
 ## HTML Documentation
 
