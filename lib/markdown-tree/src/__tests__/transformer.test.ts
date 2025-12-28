@@ -1,7 +1,7 @@
 import { createHighlighter, type ShikiTransformer, type ThemedToken } from 'shiki';
 import { describe, expect, it as baseIt } from 'vitest';
-import { dirtreeTransformer, grammar } from '../transformer.js';
-import { parseContent } from '../structure.js';
+import { parseContent } from '../structure';
+import { dirtreeTransformer, grammar } from '../transformer';
 
 interface Fixtures {
   transformer: ShikiTransformer;
@@ -26,7 +26,7 @@ const it = baseIt.extend<Fixtures>({
   },
   transform: ({ highlighter, transformer }, use) => use((input: string) => {
     const [generated] = parseContent(input, '/dummy/dir', {});
-    
+
     const { tokens } = highlighter.codeToTokens(generated, {
       theme: 'github-light',
       transformers: [transformer],
@@ -37,7 +37,7 @@ const it = baseIt.extend<Fixtures>({
       options: {
         lang: 'dirtree'
       }
-    } as any, tokens)!
+    } as any, tokens)!;
   })
 });
 
@@ -48,9 +48,9 @@ const it = baseIt.extend<Fixtures>({
  * Also collects the colours used in each line
  */
 function tokenJoiner(tokens: ThemedToken[][]): {
-  lines: string[],
-  colours: string[][]
- } {
+  lines: string[];
+  colours: string[][];
+} {
   let lineOffset = 0;
 
   const output: string[] = [];
