@@ -22,9 +22,8 @@ const githubDarkColours = [
 ];
 
 // Assemble the Regex expression using the line strings
-const reString = Object.entries(LINE_STRINGS)
-  .filter(([key]) => key !== 'EMPTY')
-  .map(([, value]) => `(?:${value})`)
+const reString = Object.values(LINE_STRINGS)
+  .map(value => `(?:${value})`)
   .join('|');
 const branchRE = new RegExp(reString, 'g');
 
