@@ -76,7 +76,7 @@ export interface TransformerOptions {
 /**
  * Returns a {@link ShikiTransformer} for colouring dirtree diagrams
  */
-export function dirtreeTransformer(options: TransformerOptions = {}): ShikiTransformer {
+export function dirtreeTransformer(options: TransformerOptions = {}) {
   const lightColours = options?.lightColours || githubLightColours;
   const darkColours = options?.darkColours || githubDarkColours;
 
@@ -137,5 +137,5 @@ export function dirtreeTransformer(options: TransformerOptions = {}): ShikiTrans
 
       return newTokens;
     }
-  };
+  } satisfies ShikiTransformer;
 }
