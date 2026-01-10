@@ -60,7 +60,7 @@
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "@vitest/coverage-v8": "^4.0.4",
-    "@vitest/eslint-plugin": "^1.3.4",
+    "@vitest/eslint-plugin": "^1.6.6",
     "@yarnpkg/types": "^4.0.1",
     "esbuild": "^0.27.0",
     "eslint": "^9.35.0",

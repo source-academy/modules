@@ -476,10 +476,13 @@ export default defineConfig(
       'vitest/expect-expect': ['error', {
         assertFunctionNames: ['expect*'],
       }],
+      'vitest/hoisted-apis-on-top': 'error',
       'vitest/no-alias-methods': 'off', // was 'error'
       'vitest/no-conditional-expect': 'off', // was 'error'
       'vitest/no-focused-tests': ['warn', { fixable: false }],
+      'vitest/no-standalone-expect': 'off', // was 'error'
       'vitest/prefer-describe-function-title': 'warn',
+      'vitest/prefer-import-in-mock': 'warn',
       'vitest/require-top-level-describe': 'off', // was 'error'
       'vitest/valid-describe-callback': 'off', // was 'error'
       'vitest/valid-expect-in-promise': 'error',
