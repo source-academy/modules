@@ -84,7 +84,7 @@ test('build tab', async () => {
   expect(fs.open).toHaveBeenCalledExactlyOnceWith(pathlib.join(outDir, 'tabs', 'tab0.js'), 'w');
 
   function mockRequire(path: string) {
-    console.log(path);
+    // console.log(path);
     if (path === '@sourceacademy/modules-lib/tabs/utils') {
       return {
         defineTab: (x: any) => x

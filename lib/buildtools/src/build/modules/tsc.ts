@@ -83,6 +83,10 @@ function processDiagnostics(diagnostics: ts.Diagnostic[]) {
   });
 }
 
+// Note that in both cases, we use the createProgram overload that takes
+// a configuration object rather than each parameter separately. This is
+// because this is the overload we mock for testing.
+
 /**
  * Run tsc but only for typechecking
  */
@@ -144,6 +148,7 @@ export async function runTscCompile(input: ResolvedBundle, oldProgram?: ts.Progr
       const segments = p.split(pathlib.posix.sep);
       return !segments.includes('__tests__') && !segments.includes('__mocks__');
     });
+
     // tsc instance that does compilation
     // only compiles non test files
     const compileProgram = ts.createProgram({
@@ -154,7 +159,6 @@ export async function runTscCompile(input: ResolvedBundle, oldProgram?: ts.Progr
       },
       oldProgram
     });
-    compileProgram.emit();
 
     const results = compileProgram.emit();
     const diagnostics = ts.getPreEmitDiagnostics(compileProgram)
