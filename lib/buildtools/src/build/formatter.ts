@@ -1,7 +1,7 @@
 import type { BuildResult, ResultTypeWithWarn } from '@sourceacademy/modules-repotools/types';
 import chalk from 'chalk';
 import { formatLintResult, type LintResult } from '../prebuild/lint.js';
-import { formatTscResult, type TscResult } from '../prebuild/tsc.js';
+import { formatTscResult, type TscResult } from './modules/tsc.js';
 
 interface ResultsObject {
   tsc?: TscResult;

@@ -7,6 +7,7 @@ import { buildHtml, buildSingleBundleDocs } from '../build/docs/index.js';
 import { formatResult, formatResultObject } from '../build/formatter.js';
 import { buildBundle, buildTab } from '../build/modules/index.js';
 import { buildManifest } from '../build/modules/manifest.js';
+import { formatTscResult, runTscCompile } from '../build/modules/tsc.js';
 import { runBuilderWithPrebuild } from '../prebuild/index.js';
 import * as cmdUtils from './commandUtils.js';
 
@@ -142,4 +143,25 @@ export const getBuildHtmlCommand = () => new Command('html')
     const htmlResult = await buildHtml(resolveResult.bundles, outDir, logLevel);
     console.log(formatResult(htmlResult, 'html'));
     cmdUtils.processResult(htmlResult, false);
+  });
+
+export const getCompileCommand = () => new Command('compile')
+  .description('Compiles the bundle at the given directory using tsc')
+  .argument('[bundle]', 'Directory in which the bundle\'s source files are located', process.cwd())
+  .action(async directory => {
+    const bundle = await resolveSingleBundle(directory);
+    if (!bundle) {
+      cmdUtils.logCommandErrorAndExit(`No bundle was found at ${directory}`);
+    }
+
+    if (bundle.severity === 'error') {
+      cmdUtils.logCommandErrorAndExit(bundle);
+    }
+
+    const compileResult = await runTscCompile(bundle.bundle);
+    if (compileResult.severity === 'error') {
+      cmdUtils.logCommandErrorAndExit(formatTscResult(compileResult));
+    }
+
+    console.log(chalk.greenBright(`Finished compiling ${bundle.bundle.name}`));
   });

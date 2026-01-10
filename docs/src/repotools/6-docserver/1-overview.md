@@ -7,13 +7,31 @@ Originally most of the developer documentation was contained within the Github r
 
 This documentation server is powered by [Vitepress](https://vitepress.dev), which takes Markdown files and renders them into a (mostly) static site.
 
-## File Structure
+## Base URL
+
+The entire developer documentation server is designed to be deployed at [](https://source-academy.github.io/modules/devdocs), which means that all links throughout
+the docserver's source code will be calculated relative to this URL. This setting is controlled by the `base` option in the Vitepress config file.
+
+## Directory Structure
 
 All pages for the server are contained under `src`.
 
 [`vitepress-sidebar`](https://vitepress-sidebar.cdget.com) is being used to generate the sidebar for the server. This means that entries in the sidebar appear sorted according to the file/folder names from which they originate. This is why some folder have contents that are labelled `1-something`, `2-something` etc. Each item's value is taken from file's frontmatter, or if not present, the file's first header.
 
-Folders produce item groups, the name of which can be customized using an `index.md` file within that folder.
+If there is a file with the same name as its parent folder, then that file is used as the target for the path. For example:
+
+```dirtree
+name: 1-bundles
+children:
+- 1-bundles.md
+- name: example.png
+  comment: Picture that's displayed in 1-bundles.md
+```
+
+then the link `./1-bundles.html` will automatically display the `1-bundles.md` page. Using a folder this way lets you group assets intended for a single page.
+
+If instead you use an `index.md` page, then the the sidebar displays a menu group, the title of which is taken from the `index.md` page.
+For example:
 
 ```dirtree
 name: bundles
@@ -45,6 +63,8 @@ children:
 
 The above file structure produces the menu below:
 ![image](./menu.png)
+
+Each page can then be referred to using `./bundles/1-getting-started/1-overview.html` or `./bundles/2-bundle/1-overview.html` etc.
 
 Each item takes its title value from either the frontmatter (if available) or the first heading of each page.
 

@@ -28,7 +28,17 @@ def get_assets(git_root: str, asset: Literal['bundle', 'tab']):
       continue
     yield name, full_path
 
-def update_json(git_root: str, asset: Literal['bundle', 'tab'], file_name: Literal['package','tsconfig'], updater: Callable[[str, str, Any], Any]):
+def update_jsons(git_root: str, asset: Literal['bundle', 'tab'], file_name: Literal['package','tsconfig'], updater: Callable[[str, str, Any], Any]):
+  """
+  For each bundle or tab (as specified by the asset parameter), load either the tsconfig.json or package.json (as specified by the file_name parameter)
+  and use the provided updater function to modify its contents. Then save the modified JSON object back to the file it was read from.
+  
+  :param git_root: Path to the root of the git repository
+  :param asset: Asset type. Either 'bundle' or 'tab'.
+  :param file_name: File to modify. Either 'tsconfig', for tsconfig.jsons or 'package' for package.jsons
+  :param updater: Function that gets passed the JSON object that is either the tsconfig.json or package.json
+  for the bundle/tab being processed. It should return the JSON object that represents the new tsconfig or package.json value.
+  """
   for name, full_path in get_assets(git_root, asset):
     try:
       with open(f'{full_path}/{file_name}.json') as file:
@@ -36,22 +46,24 @@ def update_json(git_root: str, asset: Literal['bundle', 'tab'], file_name: Liter
         updated = updater(name, full_path, original)
 
         if not updated:
-          raise RuntimeError(f'Updated returned an empty object for {asset} {name}')
+          raise RuntimeError(f'Updater returned an empty object for {asset} {name}')
 
       with open(f'{full_path}/{file_name}.json', 'w') as file:
         json.dump(updated, file, indent=2)
         file.write('\n')
 
     except Exception as e:
-      print(f'{e} occurred with {full_path}/{file_name}.json')
+      print(f'Error occurred with {full_path}/{file_name}.json: {e}')
 
 async def main():
   git_root = await get_git_root()
   def updater(name: str, full_path: str, obj: Any):
-    del obj['compilerOptions']['noEmit']
+    if 'postinstall' in obj['scripts']:
+      obj['scripts']['postinstall'] = 'buildtools compile'
+    
     return obj
 
-  update_json(git_root, 'bundle', 'tsconfig', updater)
+  update_jsons(git_root, 'bundle', 'package', updater)
 
 if __name__ == '__main__':
   aio.run(main())

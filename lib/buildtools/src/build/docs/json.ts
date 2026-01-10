@@ -2,6 +2,8 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
 import type { BuildResult, ResolvedBundle } from '@sourceacademy/modules-repotools/types';
+import { Parser } from 'acorn';
+import { tsPlugin } from 'acorn-typescript';
 import * as td from 'typedoc';
 import drawdown from './drawdown.js';
 
@@ -33,6 +35,34 @@ export interface ParserError {
 
 export type ParserResult = ParserError | ParserSuccess;
 
+const markdownRegex = /^```[jt]sx?([\s\S]*)```\s*$/;
+
+/**
+ * Checks the declaration's comment for `@example` tags and validates their contents
+ * to make sure that they are valid Javascript
+ *
+ * @returns True if there is an example that doesn't validate, false otherwise
+ */
+function getInvalidExamples(parts: td.CommentTag[]): string[] {
+  // @ts-expect-error Idk what the type error here is
+  const parser = Parser.extend(tsPlugin());
+
+  return parts.flatMap(part => part.content.map(content => {
+    if (content.kind !== 'code') return false;
+
+    const match = markdownRegex.exec(content.text);
+    const text = match ? match[1] : content.text;
+
+    try {
+      parser.parse(text, { ecmaVersion: 6, sourceType: 'module' });
+      return false;
+    } catch {
+      return text;
+    }
+  }))
+    .filter(x => x !== false);
+}
+
 const typeToName = (type: td.SomeType) => type.stringify(td.TypeContext.none);
 export const parsers: {
   [K in td.ReflectionKind]?: (obj: td.DeclarationReflection) => ParserResult
@@ -62,6 +92,10 @@ export const parsers: {
     if (signature.comment) {
       description = drawdown(signature.comment.summary.map(({ text }) => text)
         .join(''));
+      const invalidExamples = getInvalidExamples(signature.comment.blockTags);
+      invalidExamples.forEach(example => {
+        warnings.push(`${obj.name} has an example tag that did not validate: ${example}`);
+      });
     } else {
       description = '<p>No description available</p>';
     }
@@ -80,10 +114,19 @@ export const parsers: {
     };
   },
   [td.ReflectionKind.Variable](obj) {
+    const warnings: string[] = [];
+    if (obj.signatures) {
+      warnings.push(`${obj.name} is typed as a Variable, but function signatures were detected. Did you forget a @function tag?`);
+    }
+
     let description: string;
     if (obj.comment) {
       description = drawdown(obj.comment.summary.map(({ text }) => text)
         .join(''));
+      const invalidExamples = getInvalidExamples(obj.comment.blockTags);
+      invalidExamples.forEach(example => {
+        warnings.push(`${obj.name} has an example tag that did not validate: ${example}`);
+      });
     } else {
       description = '<p>No description available</p>';
     }
@@ -101,7 +144,7 @@ export const parsers: {
         description,
         type: typeToName(obj.type)
       },
-      warnings: []
+      warnings
     };
   }
 };

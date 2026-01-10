@@ -16,7 +16,7 @@
     "prepare": "yarn tsc",
     "tsc": "buildtools tsc .",
     "test": "buildtools test --project .",
-    "postinstall": "yarn tsc",
+    "postinstall": "buildtools compile",
     "serve": "yarn buildtools serve"
   },
   "exports": {

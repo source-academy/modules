@@ -5,11 +5,11 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "@shikijs/types": "^3.15.0",
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-repotools": "workspace:^",
     "@types/lodash": "^4.14.198",
     "@types/markdown-it": "^14.1.2",
+    "shiki": "^3.15.0",
     "typescript": "^5.8.2"
   },
   "exports": {
