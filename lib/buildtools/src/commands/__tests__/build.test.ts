@@ -284,9 +284,9 @@ function testBuildCommand<T extends Record<string, any>>(
   });
 }
 
-testBuildCommand.skip = function(...args: Parameters<typeof testBuildCommand>) {
+testBuildCommand.skip = function (...args: Parameters<typeof testBuildCommand>) {
   return testBuildCommand.call(true, ...args);
-}
+};
 
 const bundlePath = pathlib.join(bundlesDir, 'test0');
 const tabPath = pathlib.join(tabsDir, 'tab0');
