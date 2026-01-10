@@ -7,7 +7,7 @@
  * Returns a new function which when applied to an argument, has the same effect
  * as applying the specified function to the same argument n times.
  * @example
- * ```typescript
+ * ```
  * const plusTen = repeat(x => x + 2, 5);
  * plusTen(0); // Returns 10
  * ```
@@ -23,7 +23,7 @@ export function repeat(func: Function, n: number): Function {
  * Returns a new function which when applied to an argument, has the same effect
  * as applying the specified function to the same argument 2 times.
  * @example
- * ```typescript
+ * ```
  * const plusTwo = twice(x => x + 1);
  * plusTwo(2); // Returns 4
  * ```
@@ -38,7 +38,7 @@ export function twice(func: Function): Function {
  * Returns a new function which when applied to an argument, has the same effect
  * as applying the specified function to the same argument 3 times.
  * @example
- * ```typescript
+ * ```
  * const plusNine = thrice(x => x + 3);
  * plusNine(0); // Returns 9
  * ```

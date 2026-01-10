@@ -156,7 +156,7 @@ export function create_text(text: string): TextGameObject {
 /**
  * Creates a GameObject that contains a Sprite image reference.
  * Source Academy assets can be used by specifying path without the prepend.
- * Source Academy assets can be found at https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/ with Ctrl+f ".png".
+ * Source Academy assets can be found at https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/ with Ctrl+f '.png'.
  * Phaser assets can be found at https://labs.phaser.io/assets/.
  * If Phaser assets are unavailable, go to https://github.com/photonstorm/phaser3-examples/tree/master/public/assets
  * to get the asset path and append it to `https://labs.phaser.io/assets/`.
@@ -165,8 +165,8 @@ export function create_text(text: string): TextGameObject {
  * @param image_url The image URL of the sprite
  * @example
  * ```
- * const shortpath = create_sprite("objects/cmr/splendall.png");
- * const fullpath = create_sprite("https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/objects/cmr/splendall.png");
+ * const shortpath = create_sprite('objects/cmr/splendall.png');
+ * const fullpath = create_sprite('https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/objects/cmr/splendall.png');
  * ```
  * @category GameObject
  */
@@ -195,7 +195,7 @@ export function create_sprite(image_url: string): SpriteGameObject {
  * @returns the GameObject reference passed in
  * @example
  * ```
- * update_position(create_text("Hello world!"), [1, 2]);
+ * update_position(create_text('Hello world!'), [1, 2]);
  * ```
  * @category GameObject
  */
@@ -218,7 +218,7 @@ export function update_position(gameObject: GameObject, [x, y]: PositionXY): Gam
  * @returns the GameObject reference passed in
  * @example
  * ```
- * update_scale(create_text("Hello world!"), [2, 0.5]);
+ * update_scale(create_text('Hello world!'), [2, 0.5]);
  * ```
  * @category GameObject
  */
@@ -241,7 +241,7 @@ export function update_scale(gameObject: GameObject, [x, y]: ScaleXY): GameObjec
  * @returns the GameObject reference passed in
  * @example
  * ```
- * update_rotation(create_text("Hello world!"), math_PI);
+ * update_rotation(create_text('Hello world!'), math_PI);
  * ```
  * @category GameObject
  */
@@ -318,7 +318,7 @@ export function update_flip(gameObject: GameObject, flip: FlipXY): GameObject {
  * @throws Error if not a TextGameObject is passed in
  * @example
  * ```
- * update_text(create_text("Hello world!"), "Goodbye world!");
+ * update_text(create_text('Hello world!'), 'Goodbye world!');
  * ```
  * @category GameObject
  */
@@ -338,7 +338,7 @@ export function update_text(textGameObject: TextGameObject, text: string): GameO
  * @param gameObject GameObject reference
  * @example
  * ```
- * update_to_top(create_text("Hello world!"));
+ * update_to_top(create_text('Hello world!'));
  * ```
  * @category GameObject
  */
@@ -362,9 +362,9 @@ export function update_to_top(gameObject: GameObject): GameObject {
  * @returns the id of the GameObject reference
  * @example
  * ```
- * const id0 = create_text("This has id 0");
- * const id1 = create_text("This has id 1");
- * const id2 = create_text("This has id 2");
+ * const id0 = create_text('This has id 0');
+ * const id1 = create_text('This has id 1');
+ * const id2 = create_text('This has id 2');
  * queryGameObjectId(id2);
  * ```
  * @category GameObject
@@ -479,7 +479,7 @@ export function query_flip(gameObject: RenderableGameObject): FlipXY {
  * @throws Error if not a TextGameObject is passed in
  * @example
  * ```
- * const text = create_text("Hello World!");
+ * const text = create_text('Hello World!');
  * query_text(text);
  * ```
  * @category GameObject
@@ -633,8 +633,8 @@ export function debug_log(info: string) {
  * @returns True, in the frame the key is pressed down.
  * @example
  * ```
- * if (input_key_down("a")) {
- *   // "a" key is pressed down
+ * if (input_key_down('a')) {
+ *   // 'a' key is pressed down
  * }
  * ```
  * @category Logic
@@ -650,7 +650,7 @@ export function input_key_down(key_name: string) {
  * @returns True, if the left mouse button is pressed down.
  * @example
  * ```
- * if(input_left_mouse_down()) {
+ * if (input_left_mouse_down()) {
  *   // Left mouse button down
  * }
  * ```
@@ -686,7 +686,7 @@ export function input_right_mouse_down() {
  * @example
  * ```
  * // Creating a button using a gameobject
- * const button = createTextGameObject("click me");
+ * const button = createTextGameObject('click me');
  * // Test if button is clicked
  * if (pointer_over_gameobject(button) && input_left_mouse_down()) {
  *   // Button is clicked
@@ -779,7 +779,7 @@ export function get_loop_count() {
  *     game_state[0] = 0;
  *   }
  *   game_state[0] = game_state[0] + 1;
- * })
+ * });
  * ```
  */
 export function update_loop(update_function: UpdateFunction) {
@@ -844,7 +844,7 @@ export function build_game(): BuildGame {
 
 /**
  * Create an audio clip that can be referenced.
- * Source Academy assets can be found at https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/ with Ctrl+f ".mp3".
+ * Source Academy assets can be found at https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/ with Ctrl+f '.mp3'.
  * Phaser audio assets can be found at https://labs.phaser.io/assets/audio.
  * Phaser sound effects assets can be found at https://labs.phaser.io/assets/audio/SoundEffects/.
  * If Phaser assets are unavailable, go to https://github.com/photonstorm/phaser3-examples/tree/master/public/assets
@@ -856,7 +856,7 @@ export function build_game(): BuildGame {
  * @returns The AudioClip reference
  * @example
  * ```
- * const audioClip = create_audio("bgm/GalacticHarmony.mp3", 0.5);
+ * const audioClip = create_audio('bgm/GalacticHarmony.mp3', 0.5);
  * ```
  * @category Audio
  */
@@ -878,7 +878,7 @@ export function create_audio(audio_url: string, volume_level: number) {
  * @returns The AudioClip reference
  * @example
  * ```
- * const audioClip = loop_audio(create_audio("bgm/GalacticHarmony.mp3", 0.5));
+ * const audioClip = loop_audio(create_audio('bgm/GalacticHarmony.mp3', 0.5));
  * ```
  * @category Audio
  */
@@ -897,7 +897,7 @@ export function loop_audio(audio_clip: AudioClip) {
  * @returns The AudioClip reference
  * @example
  * ```
- * const audioClip = play_audio(create_audio("bgm/GalacticHarmony.mp3", 0.5));
+ * const audioClip = play_audio(create_audio('bgm/GalacticHarmony.mp3', 0.5));
  * ```
  * @category Audio
  */
@@ -916,7 +916,7 @@ export function play_audio(audio_clip: AudioClip) {
  * @returns The AudioClip reference
  * @example
  * ```
- * const audioClip = play_audio(create_audio("bgm/GalacticHarmony.mp3", 0.5));
+ * const audioClip = play_audio(create_audio('bgm/GalacticHarmony.mp3', 0.5));
  * ```
  * @category Audio
  */

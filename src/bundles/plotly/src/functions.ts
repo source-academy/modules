@@ -25,7 +25,7 @@ context.moduleContexts.plotly.state = {
 /**
  * Adds a new plotly plot to the context which will be rendered in the Plotly Tabs
  * @example
- * ```ts
+ * ```
  * const z1 = [
  *   [8.83,8.89,8.81,8.87,8.9,8.87],
  *   [8.89,8.94,8.85,8.94,8.96,8.92],
@@ -42,8 +42,8 @@ context.moduleContexts.plotly.state = {
  *   [9,9.01,9,9.2,9.23,9.2],
  *   [8.99,8.99,8.98,9.18,9.2,9.19],
  *   [8.93,8.97,8.97,9.18,9.2,9.18]
- *  ];
- *  new_plot(list(pair("z", z1), pair("type", "surface"))) // creates a surface plot in Plotly Tab
+ * ];
+ * new_plot(list(pair('z', z1), pair('type', 'surface'))); // creates a surface plot in Plotly Tab
  * ```
  * @param data The data in the form of list of pair, with the first term in the pair is
  *             the name of the field as a string and the second term is the value of the field
@@ -56,8 +56,7 @@ export function new_plot(data: ListOfPairs): void {
 /**
  * Adds a new plotly plot to the context which will be rendered in the Plotly Tabs
  * @example
- * ```typescript
- *
+ * ```
  * const z1 = [
  *   [8.83,8.89,8.81,8.87,8.9,8.87],
  *   [8.89,8.94,8.85,8.94,8.96,8.92],
@@ -74,12 +73,12 @@ export function new_plot(data: ListOfPairs): void {
  *   [9,9.01,9,9.2,9.23,9.2],
  *   [8.99,8.99,8.98,9.18,9.2,9.19],
  *   [8.93,8.97,8.97,9.18,9.2,9.18]
- *  ];
+ * ];
  *
  * let z2 = [];
- * for (var i=0;i<z1.length;i++ ) {
+ * for (let i = 0; i < array_length(z1); i = i + 1) {
  *   let z2_row = [];
- *     for(var j=0;j<z1[i].length;j++) {
+ *     for (let j = 0; j < array_length(z1[i]); j = j + 1) {
  *       z2_row.push(z1[i][j]+1);
  *     }
  *     z2.push(z2_row);
