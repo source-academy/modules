@@ -78,13 +78,13 @@ export function new_plot(data: ListOfPairs): void {
  * let z2 = [];
  * for (let i = 0; i < array_length(z1); i = i + 1) {
  *   let z2_row = [];
- *     for (let j = 0; j < array_length(z1[i]); j = j + 1) {
- *       z2_row.push(z1[i][j]+1);
- *     }
- *     z2.push(z2_row);
+ *   for (let j = 0; j < array_length(z1[i]); j = j + 1) {
+ *     z2_row.push(z1[i][j]+1);
+ *   }
+ *   z2.push(z2_row);
  * }
- * const data = [{z: z1, type: 'surface'}, {z: z2 , type: 'surface'}];
- * new_plot_json(data) // creates a surface plot in Plotly Tab
+ * const data = [{ z: z1, type: 'surface' }, { z: z2 , type: 'surface' }];
+ * new_plot_json(data); // creates a surface plot in Plotly Tab
  * ```
  * @param data The data as an array of json objects having some or all of the given fields
  */
