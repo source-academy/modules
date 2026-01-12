@@ -1339,6 +1339,7 @@ export default require => {
               if (left + el2.offsetWidth > screenWidth) left = screenWidth - el2.offsetWidth;
               el2.style.left = left + "px";
               el2.style.right = "";
+              dom.$fixPositionBug(el2);
               if (!popup.isOpen) {
                 popup.isOpen = true;
                 this._signal("show");
@@ -1993,19 +1994,19 @@ export default require => {
             var scrollBarSize = popup.renderer.scrollBar.width || 10;
             var leftSize = rect.left;
             var rightSize = window.innerWidth - rect.right - scrollBarSize;
-            var topSize = popup.isTopdown ? rect.top : window.innerHeight - scrollBarSize - rect.bottom;
-            var scores = [Math.min(rightSize / targetWidth, 1), Math.min(leftSize / targetWidth, 1), Math.min(topSize / targetHeight * 0.9)];
+            var topSize = popup.isTopdown ? window.innerHeight - scrollBarSize - rect.bottom : rect.top;
+            var scores = [Math.min(rightSize / targetWidth, 1), Math.min(leftSize / targetWidth, 1), Math.min(topSize / targetHeight, 1) * 0.9];
             var max = Math.max.apply(Math, scores);
             var tooltipStyle = tooltipNode.style;
             tooltipStyle.display = "block";
-            if (max == scores[0]) {
+            if (max == scores[0] || scores[0] >= 1) {
               tooltipStyle.left = rect.right + 1 + "px";
               tooltipStyle.right = "";
               tooltipStyle.maxWidth = targetWidth * max + "px";
               tooltipStyle.top = rect.top + "px";
               tooltipStyle.bottom = "";
               tooltipStyle.maxHeight = Math.min(window.innerHeight - scrollBarSize - rect.top, targetHeight) + "px";
-            } else if (max == scores[1]) {
+            } else if (max == scores[1] || scores[1] >= 1) {
               tooltipStyle.right = window.innerWidth - rect.left + "px";
               tooltipStyle.left = "";
               tooltipStyle.maxWidth = targetWidth * max + "px";
@@ -2013,22 +2014,20 @@ export default require => {
               tooltipStyle.bottom = "";
               tooltipStyle.maxHeight = Math.min(window.innerHeight - scrollBarSize - rect.top, targetHeight) + "px";
             } else if (max == scores[2]) {
-              tooltipStyle.left = window.innerWidth - rect.left + "px";
-              tooltipStyle.maxWidth = Math.min(targetWidth, window.innerWidth) + "px";
+              tooltipStyle.left = rect.left + "px";
+              tooltipStyle.right = "";
+              tooltipStyle.maxWidth = Math.min(targetWidth, window.innerWidth - rect.left) + "px";
               if (popup.isTopdown) {
                 tooltipStyle.top = rect.bottom + "px";
-                tooltipStyle.left = rect.left + "px";
-                tooltipStyle.right = "";
                 tooltipStyle.bottom = "";
                 tooltipStyle.maxHeight = Math.min(window.innerHeight - scrollBarSize - rect.bottom, targetHeight) + "px";
               } else {
-                tooltipStyle.top = popup.container.offsetTop - tooltipNode.offsetHeight + "px";
-                tooltipStyle.left = rect.left + "px";
-                tooltipStyle.right = "";
-                tooltipStyle.bottom = "";
-                tooltipStyle.maxHeight = Math.min(popup.container.offsetTop, targetHeight) + "px";
+                tooltipStyle.top = "";
+                tooltipStyle.bottom = window.innerHeight - rect.top + "px";
+                tooltipStyle.maxHeight = Math.min(rect.top, targetHeight) + "px";
               }
             }
+            dom.$fixPositionBug(tooltipNode);
           };
           Autocomplete2.prototype.hideDocTooltip = function () {
             this.tooltipTimer.cancel();
@@ -2338,6 +2337,72 @@ export default require => {
         exports2.CompletionProvider = CompletionProvider;
         exports2.FilteredList = FilteredList;
       });
+      ace.define("ace/marker_group", ["require", "exports", "module"], function (require2, exports2, module2) {
+        "use strict";
+        var MarkerGroup = (function () {
+          function MarkerGroup2(session, options) {
+            if (options) this.markerType = options.markerType;
+            this.markers = [];
+            this.session = session;
+            session.addDynamicMarker(this);
+          }
+          MarkerGroup2.prototype.getMarkerAtPosition = function (pos) {
+            return this.markers.find(function (marker) {
+              return marker.range.contains(pos.row, pos.column);
+            });
+          };
+          MarkerGroup2.prototype.markersComparator = function (a, b) {
+            return a.range.start.row - b.range.start.row;
+          };
+          MarkerGroup2.prototype.setMarkers = function (markers) {
+            this.markers = markers.sort(this.markersComparator).slice(0, this.MAX_MARKERS);
+            this.session._signal("changeBackMarker");
+          };
+          MarkerGroup2.prototype.update = function (html, markerLayer, session, config) {
+            if (!this.markers || !this.markers.length) return;
+            var visibleRangeStartRow = config.firstRow, visibleRangeEndRow = config.lastRow;
+            var foldLine;
+            var markersOnOneLine = 0;
+            var lastRow = 0;
+            for (var i = 0; i < this.markers.length; i++) {
+              var marker = this.markers[i];
+              if (marker.range.end.row < visibleRangeStartRow) continue;
+              if (marker.range.start.row > visibleRangeEndRow) continue;
+              if (marker.range.start.row === lastRow) {
+                markersOnOneLine++;
+              } else {
+                lastRow = marker.range.start.row;
+                markersOnOneLine = 0;
+              }
+              if (markersOnOneLine > 200) {
+                continue;
+              }
+              var markerVisibleRange = marker.range.clipRows(visibleRangeStartRow, visibleRangeEndRow);
+              if (markerVisibleRange.start.row === markerVisibleRange.end.row && markerVisibleRange.start.column === markerVisibleRange.end.column) {
+                continue;
+              }
+              var screenRange = markerVisibleRange.toScreenRange(session);
+              if (screenRange.isEmpty()) {
+                foldLine = session.getNextFoldLine(markerVisibleRange.end.row, foldLine);
+                if (foldLine && foldLine.end.row > markerVisibleRange.end.row) {
+                  visibleRangeStartRow = foldLine.end.row;
+                }
+                continue;
+              }
+              if (this.markerType === "fullLine") {
+                markerLayer.drawFullLineMarker(html, screenRange, marker.className, config);
+              } else if (screenRange.isMultiLine()) {
+                if (this.markerType === "line") markerLayer.drawMultiLineMarker(html, screenRange, marker.className, config); else markerLayer.drawTextMarker(html, screenRange, marker.className, config);
+              } else {
+                markerLayer.drawSingleLineMarker(html, screenRange, marker.className + " ace_br15", config);
+              }
+            }
+          };
+          return MarkerGroup2;
+        })();
+        MarkerGroup.prototype.MAX_MARKERS = 1e4;
+        exports2.MarkerGroup = MarkerGroup;
+      });
       ace.define("ace/autocomplete/text_completer", ["require", "exports", "module", "ace/range"], function (require2, exports2, module2) {
         var Range = require2("../range").Range;
         var splitRegex = /[^a-zA-Z_0-9\$\-\u00C0-\u1FFF\u2C00-\uD7FF\w]+/;
@@ -2378,13 +2443,14 @@ export default require => {
           }));
         };
       });
-      ace.define("ace/ext/language_tools", ["require", "exports", "module", "ace/snippets", "ace/autocomplete", "ace/config", "ace/lib/lang", "ace/autocomplete/util", "ace/autocomplete/text_completer", "ace/editor", "ace/config"], function (require2, exports2, module2) {
+      ace.define("ace/ext/language_tools", ["require", "exports", "module", "ace/snippets", "ace/autocomplete", "ace/config", "ace/lib/lang", "ace/autocomplete/util", "ace/marker_group", "ace/autocomplete/text_completer", "ace/editor", "ace/config"], function (require2, exports2, module2) {
         "use strict";
         var snippetManager = require2("../snippets").snippetManager;
         var Autocomplete = require2("../autocomplete").Autocomplete;
         var config = require2("../config");
         var lang = require2("../lib/lang");
         var util = require2("../autocomplete/util");
+        var MarkerGroup = require2("../marker_group").MarkerGroup;
         var textCompleter = require2("../autocomplete/text_completer");
         var keyWordCompleter = {
           getCompletions: function (editor, session, pos, prefix, callback) {
@@ -2518,6 +2584,7 @@ export default require => {
           enableBasicAutocompletion: {
             set: function (val) {
               if (val) {
+                Autocomplete.for(this);
                 if (!this.completers) this.completers = Array.isArray(val) ? val : completers;
                 this.commands.addCommand(Autocomplete.startCommand);
               } else {
@@ -2557,6 +2624,7 @@ export default require => {
             value: false
           }
         });
+        exports2.MarkerGroup = MarkerGroup;
       });
       (function () {
         ace.require(["ace/ext/language_tools"], function (m) {
