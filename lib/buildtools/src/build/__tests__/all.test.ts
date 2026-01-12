@@ -1,6 +1,6 @@
 import pathlib from 'path';
 import { bundlesDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
-import { afterEach, describe, expect, test, vi } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import * as docs from '../../build/docs/index.js';
 import * as modules from '../../build/modules/index.js';
 import { getCommandRunner } from '../../commands/__tests__/testingUtils.js';
@@ -29,10 +29,6 @@ const mockedRunEslint = vi.spyOn(lint, 'runEslint').mockResolvedValue({
 describe('Test the buildAll command', () => {
   const runCommand = getCommandRunner(getBuildAllCommand);
 
-  afterEach(() => {
-    expect(all.buildAll).toHaveBeenCalledTimes(1);
-  });
-
   describe('Test command with a bundle', () => {
     const bundlePath = pathlib.join(bundlesDir, 'test0');
 
@@ -52,6 +48,7 @@ describe('Test the buildAll command', () => {
       });
 
       await expect(runCommand(bundlePath)).commandSuccess();
+      expect(all.buildAll).toHaveBeenCalledTimes(1);
     });
 
     test('Regular execution for a bundle with --tsc', async () => {
@@ -71,6 +68,7 @@ describe('Test the buildAll command', () => {
 
       await expect(runCommand(bundlePath, '--tsc')).commandSuccess();
       expect(tsc.runTsc).toHaveBeenCalledTimes(1);
+      expect(all.buildAll).toHaveBeenCalledTimes(1);
     });
 
     test('Regular execution for a bundle with --lint', async () => {
@@ -90,6 +88,7 @@ describe('Test the buildAll command', () => {
 
       await expect(runCommand(bundlePath, '--lint')).commandSuccess();
       expect(lint.runEslint).toHaveBeenCalledTimes(1);
+      expect(all.buildAll).toHaveBeenCalledTimes(1);
     });
 
     test('Lint error should avoid building bundle and json', async () => {
@@ -104,6 +103,7 @@ describe('Test the buildAll command', () => {
       expect(lint.runEslint).toHaveBeenCalledTimes(1);
       expect(modules.buildBundle).not.toHaveBeenCalled();
       expect(docs.buildSingleBundleDocs).not.toHaveBeenCalled();
+      expect(all.buildAll).toHaveBeenCalledTimes(1);
     });
 
     test('Tsc error should avoid building bundle and json', async () => {
@@ -118,6 +118,7 @@ describe('Test the buildAll command', () => {
       expect(tsc.runTsc).toHaveBeenCalledTimes(1);
       expect(modules.buildBundle).not.toHaveBeenCalled();
       expect(docs.buildSingleBundleDocs).not.toHaveBeenCalled();
+      expect(all.buildAll).toHaveBeenCalledTimes(1);
     });
 
     test('Bundle error doesn\'t affect building json', async () => {
@@ -139,6 +140,7 @@ describe('Test the buildAll command', () => {
 
       expect(modules.buildBundle).toHaveBeenCalledTimes(1);
       expect(docs.buildSingleBundleDocs).toHaveBeenCalledTimes(1);
+      expect(all.buildAll).toHaveBeenCalledTimes(1);
     });
 
     test('JSON error doesn\'t affect building bundle', async () => {
@@ -160,6 +162,7 @@ describe('Test the buildAll command', () => {
 
       expect(modules.buildBundle).toHaveBeenCalledTimes(1);
       expect(docs.buildSingleBundleDocs).toHaveBeenCalledTimes(1);
+      expect(all.buildAll).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -175,6 +178,7 @@ describe('Test the buildAll command', () => {
       });
 
       await expect(runCommand(tabPath)).commandSuccess();
+      expect(all.buildAll).toHaveBeenCalledTimes(1);
     });
 
     test('Regular execution for a tab with --tsc', async () => {
@@ -187,6 +191,7 @@ describe('Test the buildAll command', () => {
 
       await expect(runCommand(tabPath, '--tsc')).commandSuccess();
       expect(tsc.runTsc).toHaveBeenCalledTimes(1);
+      expect(all.buildAll).toHaveBeenCalledTimes(1);
     });
 
     test('Regular execution for a tab with --lint', async () => {
@@ -199,6 +204,7 @@ describe('Test the buildAll command', () => {
 
       await expect(runCommand(tabPath, '--lint')).commandSuccess();
       expect(lint.runEslint).toHaveBeenCalledTimes(1);
+      expect(all.buildAll).toHaveBeenCalledTimes(1);
     });
 
     test('Lint error should avoid building tab', async () => {
@@ -212,6 +218,7 @@ describe('Test the buildAll command', () => {
 
       expect(lint.runEslint).toHaveBeenCalledTimes(1);
       expect(modules.buildTab).not.toHaveBeenCalled();
+      expect(all.buildAll).toHaveBeenCalledTimes(1);
     });
 
     test('Tsc error should avoid building tab', async () => {
@@ -225,6 +232,7 @@ describe('Test the buildAll command', () => {
 
       expect(tsc.runTsc).toHaveBeenCalledTimes(1);
       expect(modules.buildTab).not.toHaveBeenCalled();
+      expect(all.buildAll).toHaveBeenCalledTimes(1);
     });
   });
 });
