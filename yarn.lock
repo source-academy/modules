@@ -14853,11 +14853,11 @@ __metadata:
   linkType: hard
 
 "phaser@npm:^3.54.0":
-  version: 3.88.2
-  resolution: "phaser@npm:3.88.2"
+  version: 3.90.0
+  resolution: "phaser@npm:3.90.0"
   dependencies:
     eventemitter3: "npm:^5.0.1"
-  checksum: 10c0/eb583f741aaa42975180c56e3149dfa762de78c9c2d80c74c545f62bcc1ab8e88be84d99d82bef32aa931a79cc2416f92109a076e051d998b3f173595d8e908e
+  checksum: 10c0/43d405832fc84c8641e22842fe8d4ca954950ffde364bfb60e4d07b05a29f33eb0c9d4a64acda088122ee6649b7b3ed6d9b3b99bbb67671a528c6ceb10d71689
   languageName: node
   linkType: hard
 
