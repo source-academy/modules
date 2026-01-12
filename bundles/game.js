@@ -1153,7 +1153,7 @@ export default require => {
                 },
                 getFirstTick: function (state) {
                   state.accumulator = 0;
-                  state.nextTick = state.msPerFrame || state.currentFrame.duration;
+                  state.nextTick = state.frameRate === state.currentAnim.frameRate ? state.currentFrame.duration || state.msPerFrame : state.msPerFrame;
                 },
                 getFrameAt: function (index) {
                   return this.frames[index];
@@ -1226,7 +1226,7 @@ export default require => {
                 },
                 getNextTick: function (state) {
                   state.accumulator -= state.nextTick;
-                  state.nextTick = state.msPerFrame || state.currentFrame.duration;
+                  state.nextTick = state.frameRate === state.currentAnim.frameRate ? state.currentFrame.duration || state.msPerFrame : state.msPerFrame;
                 },
                 getFrameByProgress: function (value) {
                   value = Clamp(value, 0, 1);
@@ -4580,8 +4580,8 @@ export default require => {
             },
             8054: (module2, __unused_webpack_exports, __webpack_require__2) => {
               var CONST = {
-                VERSION: "3.88.2",
-                LOG_VERSION: "v388",
+                VERSION: "3.90.0",
+                LOG_VERSION: "v390",
                 BlendModes: __webpack_require__2(10312),
                 ScaleModes: __webpack_require__2(29795),
                 AUTO: 0,
@@ -10437,7 +10437,9 @@ export default require => {
                   var list = this.list;
                   var i = list.length;
                   while (i--) {
-                    list[i].destroy(true);
+                    if (list[i]) {
+                      list[i].destroy(true);
+                    }
                   }
                   list.length = 0;
                   this.events.off(SceneEvents.SHUTDOWN, this.shutdown, this);
@@ -12049,6 +12051,14 @@ export default require => {
                   }
                   return this;
                 },
+                setDisplaySize: function (displayWidth, displayHeight) {
+                  this.setScale(1, 1);
+                  this.getTextBounds(false);
+                  var scaleX = displayWidth / this.width;
+                  var scaleY = displayHeight / this.height;
+                  this.setScale(scaleX, scaleY);
+                  return this;
+                },
                 align: {
                   set: function (value) {
                     this._align = value;
@@ -12115,11 +12125,23 @@ export default require => {
                   }
                 },
                 displayWidth: {
+                  set: function (value) {
+                    this.setScaleX(1);
+                    this.getTextBounds(false);
+                    var scale = value / this.width;
+                    this.setScaleX(scale);
+                  },
                   get: function () {
                     return this.width;
                   }
                 },
                 displayHeight: {
+                  set: function (value) {
+                    this.setScaleY(1);
+                    this.getTextBounds(false);
+                    var scale = value / this.height;
+                    this.setScaleY(scale);
+                  },
                   get: function () {
                     return this.height;
                   }
@@ -15352,6 +15374,9 @@ export default require => {
                 initialize: function DOMElement2(scene2, x, y, element, style, innerText) {
                   GameObject.call(this, scene2, "DOMElement");
                   this.parent = scene2.sys.game.domContainer;
+                  if (!this.parent) {
+                    throw new Error("No DOM Container set in game config");
+                  }
                   this.cache = scene2.sys.cache.html;
                   this.node;
                   this.transformOnly = false;
@@ -15459,9 +15484,7 @@ export default require => {
                   target.style.display = "inline";
                   target.style.position = "absolute";
                   target.phaser = this;
-                  if (this.parent) {
-                    this.parent.appendChild(target);
-                  }
+                  this.parent.appendChild(target);
                   if (innerText) {
                     target.innerText = innerText;
                   }
@@ -15485,9 +15508,7 @@ export default require => {
                   element.style.display = "inline";
                   element.style.position = "absolute";
                   element.phaser = this;
-                  if (this.parent) {
-                    this.parent.appendChild(element);
-                  }
+                  this.parent.appendChild(element);
                   element.innerHTML = html;
                   return this.updateSize();
                 },
@@ -18939,6 +18960,9 @@ export default require => {
                     onUpdate = this.easeValueUpdate;
                     current = value[0];
                     this.active = true;
+                    this.r.length = 0;
+                    this.g.length = 0;
+                    this.b.length = 0;
                     for (var i = 0; i < value.length; i++) {
                       var color = IntegerToRGB(value[i]);
                       this.r.push(color.r);
@@ -19728,6 +19752,7 @@ export default require => {
               var GetFastValue = __webpack_require__2(95540);
               var GetRandom = __webpack_require__2(26546);
               var GravityWell = __webpack_require__2(24502);
+              var HasAll = __webpack_require__2(69036);
               var HasAny = __webpack_require__2(1985);
               var HasValue = __webpack_require__2(97022);
               var Inflate = __webpack_require__2(86091);
@@ -19853,7 +19878,7 @@ export default require => {
                     }
                   }
                   this.acceleration = this.accelerationX !== 0 || this.accelerationY !== 0;
-                  this.moveTo = this.moveToX !== 0 && this.moveToY !== 0;
+                  this.moveTo = HasAll(config, ["moveToX", "moveToY"]);
                   if (HasValue(config, "speed")) {
                     ops.speedX.loadConfig(config, "speed");
                     ops.speedY.active = false;
@@ -23964,11 +23989,11 @@ export default require => {
                   strokeTint.BR = color;
                   for (x = 1; x < gridWidth; x++) {
                     var x1 = x * cellWidth;
-                    pipeline.batchLine(x1, 0, x1, height, 1, 1, 1, 0, false);
+                    pipeline.batchLine(x1, 0, x1, height, src.lineWidth, src.lineWidth, 1, 0, false);
                   }
                   for (y = 1; y < gridHeight; y++) {
                     var y1 = y * cellHeight;
-                    pipeline.batchLine(0, y1, width, y1, 1, 1, 1, 0, false);
+                    pipeline.batchLine(0, y1, width, y1, src.lineWidth, src.lineWidth, 1, 0, false);
                   }
                 }
                 renderer.pipelines.postBatch(src);
@@ -24685,6 +24710,7 @@ export default require => {
             },
             74561: (module2, __unused_webpack_exports, __webpack_require__2) => {
               var Class = __webpack_require__2(83419);
+              var Earcut = __webpack_require__2(94811);
               var GeomRectangle = __webpack_require__2(87841);
               var Shape = __webpack_require__2(17803);
               var RectangleRender = __webpack_require__2(95597);
@@ -24705,6 +24731,8 @@ export default require => {
                     height = 128;
                   }
                   Shape.call(this, scene2, "Rectangle", new GeomRectangle(0, 0, width, height));
+                  this.radius = 20;
+                  this.isRounded = false;
                   this.setPosition(x, y);
                   this.setSize(width, height);
                   if (fillColor !== void 0) {
@@ -24712,6 +24740,14 @@ export default require => {
                   }
                   this.updateDisplayOrigin();
                   this.updateData();
+                },
+                setRounded: function (radius) {
+                  if (radius === void 0) {
+                    radius = 16;
+                  }
+                  this.radius = radius;
+                  this.isRounded = radius > 0;
+                  return this.updateRoundedData();
                 },
                 setSize: function (width, height) {
                   this.width = width;
@@ -24727,6 +24763,9 @@ export default require => {
                   return this;
                 },
                 updateData: function () {
+                  if (this.isRounded) {
+                    return this.updateRoundedData();
+                  }
                   var path = [];
                   var rect = this.geom;
                   var line = this._tempLine;
@@ -24740,6 +24779,34 @@ export default require => {
                   path.push(line.x2, line.y2);
                   this.pathData = path;
                   return this;
+                },
+                updateRoundedData: function () {
+                  var path = [];
+                  var halfWidth = this.width / 2;
+                  var halfHeight = this.height / 2;
+                  var maxRadius = Math.min(halfWidth, halfHeight);
+                  var radius = Math.min(this.radius, maxRadius);
+                  var x = halfWidth;
+                  var y = halfHeight;
+                  var segments = Math.max(1, Math.floor(radius / 5));
+                  this.arcTo(path, x - halfWidth + radius, y - halfHeight + radius, radius, Math.PI, Math.PI * 1.5, segments);
+                  path.push(x + halfWidth - radius, y - halfHeight);
+                  this.arcTo(path, x + halfWidth - radius, y - halfHeight + radius, radius, Math.PI * 1.5, Math.PI * 2, segments);
+                  path.push(x + halfWidth, y + halfHeight - radius);
+                  this.arcTo(path, x + halfWidth - radius, y + halfHeight - radius, radius, 0, Math.PI * 0.5, segments);
+                  path.push(x - halfWidth + radius, y + halfHeight);
+                  this.arcTo(path, x - halfWidth + radius, y + halfHeight - radius, radius, Math.PI * 0.5, Math.PI, segments);
+                  path.push(x - halfWidth, y - halfHeight + radius);
+                  this.pathIndexes = Earcut(path);
+                  this.pathData = path;
+                  return this;
+                },
+                arcTo: function (path, centerX, centerY, radius, startAngle, endAngle, segments) {
+                  var angleInc = (endAngle - startAngle) / segments;
+                  for (var i = 0; i <= segments; i++) {
+                    var angle = startAngle + angleInc * i;
+                    path.push(centerX + Math.cos(angle) * radius, centerY + Math.sin(angle) * radius);
+                  }
                 }
               });
               module2.exports = Rectangle;
@@ -24748,6 +24815,24 @@ export default require => {
               var FillStyleCanvas = __webpack_require__2(65960);
               var LineStyleCanvas = __webpack_require__2(75177);
               var SetTransform = __webpack_require__2(20926);
+              var DrawRoundedRect = function (ctx, x, y, width, height, radius) {
+                var maxRadius = Math.min(width / 2, height / 2);
+                var r = Math.min(radius, maxRadius);
+                if (r === 0) {
+                  ctx.rect(x, y, width, height);
+                  return;
+                }
+                ctx.moveTo(x + r, y);
+                ctx.lineTo(x + width - r, y);
+                ctx.arcTo(x + width, y, x + width, y + r, r);
+                ctx.lineTo(x + width, y + height - r);
+                ctx.arcTo(x + width, y + height, x + width - r, y + height, r);
+                ctx.lineTo(x + r, y + height);
+                ctx.arcTo(x, y + height, x, y + height - r, r);
+                ctx.lineTo(x, y + r);
+                ctx.arcTo(x, y, x + r, y, r);
+                ctx.closePath();
+              };
               var RectangleCanvasRenderer = function (renderer, src, camera, parentMatrix) {
                 camera.addToRenderList(src);
                 var ctx = renderer.currentContext;
@@ -24756,12 +24841,22 @@ export default require => {
                   var dy = src._displayOriginY;
                   if (src.isFilled) {
                     FillStyleCanvas(ctx, src);
-                    ctx.fillRect(-dx, -dy, src.width, src.height);
+                    if (src.isRounded) {
+                      ctx.beginPath();
+                      DrawRoundedRect(ctx, -dx, -dy, src.width, src.height, src.radius);
+                      ctx.fill();
+                    } else {
+                      ctx.fillRect(-dx, -dy, src.width, src.height);
+                    }
                   }
                   if (src.isStroked) {
                     LineStyleCanvas(ctx, src);
                     ctx.beginPath();
-                    ctx.rect(-dx, -dy, src.width, src.height);
+                    if (src.isRounded) {
+                      DrawRoundedRect(ctx, -dx, -dy, src.width, src.height, src.radius);
+                    } else {
+                      ctx.rect(-dx, -dy, src.width, src.height);
+                    }
                     ctx.stroke();
                   }
                   ctx.restore();
@@ -24792,6 +24887,7 @@ export default require => {
               };
             },
             52059: (module2, __unused_webpack_exports, __webpack_require__2) => {
+              var FillPathWebGL = __webpack_require__2(10441);
               var GetCalcMatrix = __webpack_require__2(91296);
               var StrokePathWebGL = __webpack_require__2(34682);
               var Utils = __webpack_require__2(70554);
@@ -24804,7 +24900,9 @@ export default require => {
                 var dy = src._displayOriginY;
                 var alpha = camera.alpha * src.alpha;
                 renderer.pipelines.preBatch(src);
-                if (src.isFilled) {
+                if (src.isRounded && src.isFilled) {
+                  FillPathWebGL(pipeline, result.calc, src, alpha, dx, dy);
+                } else if (src.isFilled) {
                   var fillTint = pipeline.fillTint;
                   var fillTintColor = Utils.getTintAppendFloatAlpha(src.fillColor, src.fillAlpha * alpha);
                   fillTint.TL = fillTintColor;
@@ -25487,6 +25585,8 @@ export default require => {
                 },
                 initRTL: function () {
                   if (!this.style.rtl) {
+                    this.canvas.dir = "ltr";
+                    this.context.direction = "ltr";
                     return;
                   }
                   this.canvas.dir = "rtl";
@@ -25534,7 +25634,6 @@ export default require => {
                       var wordWithSpace = word + " ";
                       var letterSpacingWidth = wordWithSpace.length * this.letterSpacing;
                       var wordWidth = context2.measureText(wordWithSpace).width + letterSpacingWidth;
-                      console.log(words.length, word);
                       if (wordWidth > currentLineWidth) {
                         if (j === 0) {
                           var newWord = wordWithSpace;
@@ -37565,9 +37664,18 @@ export default require => {
                 var config = MergeXHRSettings(globalXHRSettings, file.xhrSettings);
                 if (file.base64) {
                   var base64Data = file.url.split(";base64,").pop() || file.url.split(",").pop();
-                  var fakeXHR = {
-                    responseText: atob(base64Data)
-                  };
+                  var fakeXHR;
+                  if (file.xhrSettings.responseType === "arraybuffer") {
+                    fakeXHR = {
+                      response: Uint8Array.from(atob(base64Data), function (c) {
+                        return c.charCodeAt(0);
+                      }).buffer
+                    };
+                  } else {
+                    fakeXHR = {
+                      responseText: atob(base64Data)
+                    };
+                  }
                   file.onBase64Load(fakeXHR);
                   return;
                 }
@@ -43095,6 +43203,32 @@ export default require => {
               };
               module2.exports = CounterClockwise;
             },
+            49127: (module2, __unused_webpack_exports, __webpack_require__2) => {
+              var NormalizeAngle = __webpack_require__2(12407);
+              var GetClockwiseDistance = function (angle1, angle2) {
+                return NormalizeAngle(angle2 - angle1);
+              };
+              module2.exports = GetClockwiseDistance;
+            },
+            52285: (module2, __unused_webpack_exports, __webpack_require__2) => {
+              var NormalizeAngle = __webpack_require__2(12407);
+              var TAU = 2 * Math.PI;
+              var GetCounterClockwiseDistance = function (angle1, angle2) {
+                var distance = NormalizeAngle(angle2 - angle1);
+                if (distance > 0) {
+                  distance -= TAU;
+                }
+                return distance;
+              };
+              module2.exports = GetCounterClockwiseDistance;
+            },
+            67317: (module2, __unused_webpack_exports, __webpack_require__2) => {
+              var WrapAngle = __webpack_require__2(86554);
+              var GetShortestDistance = function (angle1, angle2) {
+                return WrapAngle(angle2 - angle1);
+              };
+              module2.exports = GetShortestDistance;
+            },
             12407: module2 => {
               var Normalize = function (angle) {
                 angle = angle % (2 * Math.PI);
@@ -43188,6 +43322,9 @@ export default require => {
                 BetweenPointsY: __webpack_require__2(128),
                 BetweenY: __webpack_require__2(41273),
                 CounterClockwise: __webpack_require__2(1432),
+                GetClockwiseDistance: __webpack_require__2(49127),
+                GetCounterClockwiseDistance: __webpack_require__2(52285),
+                GetShortestDistance: __webpack_require__2(67317),
                 Normalize: __webpack_require__2(12407),
                 Random: __webpack_require__2(53993),
                 RandomDegrees: __webpack_require__2(86564),
@@ -44368,8 +44505,8 @@ export default require => {
                 collideTiles: function (sprite, tiles, collideCallback, processCallback, callbackContext) {
                   return this.world.collideTiles(sprite, tiles, collideCallback, processCallback, callbackContext);
                 },
-                overlapTiles: function (sprite, tiles, collideCallback, processCallback, callbackContext) {
-                  return this.world.overlapTiles(sprite, tiles, collideCallback, processCallback, callbackContext);
+                overlapTiles: function (sprite, tiles, overlapCallback, processCallback, callbackContext) {
+                  return this.world.overlapTiles(sprite, tiles, overlapCallback, processCallback, callbackContext);
                 },
                 pause: function () {
                   return this.world.pause();
@@ -46972,7 +47109,7 @@ export default require => {
                   var overlapY;
                   var result = false;
                   var runSeparation = true;
-                  if (!body1.enable || !body2.enable || body1.checkCollision.none || body2.checkCollision.none || !this.intersects(body1, body2)) {
+                  if (!body1.enable || !body2.enable || body1.checkCollision.none || body2.checkCollision.none || !this.intersects(body1, body2) || (body1.collisionMask & body2.collisionCategory) === 0 || (body2.collisionMask & body1.collisionCategory) === 0) {
                     return result;
                   }
                   if (processCallback && processCallback.call(callbackContext, body1.gameObject || body1, body2.gameObject || body2) === false) {
@@ -47125,12 +47262,12 @@ export default require => {
                     }
                     results.result = true;
                   } else {
-                    if (!body1Immovable || body1.pushable || deadlock) {
+                    if (!body1Immovable && (body1.pushable || deadlock)) {
                       body1.x -= overlapX;
                       body1.y -= overlapY;
                       body1.updateCenter();
                     }
-                    if (!body2Immovable || body2.pushable || deadlock) {
+                    if (!body2Immovable && (body2.pushable || deadlock)) {
                       body2.x += overlapX;
                       body2.y += overlapY;
                       body2.updateCenter();
@@ -47349,11 +47486,11 @@ export default require => {
                     return this.collideSpriteVsTilesHandler(sprite, tiles, collideCallback, processCallback, callbackContext, false, false);
                   }
                 },
-                overlapTiles: function (sprite, tiles, collideCallback, processCallback, callbackContext) {
+                overlapTiles: function (sprite, tiles, overlapCallback, processCallback, callbackContext) {
                   if (tiles.length === 0 || sprite.body && !sprite.body.enable || sprite.isBody && !sprite.enable) {
                     return false;
                   } else {
-                    return this.collideSpriteVsTilesHandler(sprite, tiles, collideCallback, processCallback, callbackContext, true, false);
+                    return this.collideSpriteVsTilesHandler(sprite, tiles, overlapCallback, processCallback, callbackContext, true, false);
                   }
                 },
                 collideSpriteVsTilemapLayer: function (sprite, tilemapLayer, collideCallback, processCallback, callbackContext, overlapOnly) {
@@ -62204,6 +62341,7 @@ export default require => {
             76531: (module2, __unused_webpack_exports, __webpack_require__2) => {
               var CONST = __webpack_require__2(13560);
               var Class = __webpack_require__2(83419);
+              var Clamp = __webpack_require__2(45319);
               var EventEmitter = __webpack_require__2(50792);
               var Events = __webpack_require__2(97480);
               var GameEvents = __webpack_require__2(8443);
@@ -62538,7 +62676,32 @@ export default require => {
                   } else if (this.scaleMode === CONST.SCALE_MODE.EXPAND) {
                     var baseWidth = this.game.config.width;
                     var baseHeight = this.game.config.height;
-                    this.displaySize.setSize(this.parentSize.width, this.parentSize.height);
+                    var windowWidth = this.parentSize.width;
+                    var windowHeight = this.parentSize.height;
+                    var scaleX = windowWidth / baseWidth;
+                    var scaleY = windowHeight / baseHeight;
+                    var canvasWidth;
+                    var canvasHeight;
+                    if (scaleX < scaleY) {
+                      canvasWidth = baseWidth;
+                      canvasHeight = scaleX !== 0 ? windowHeight / scaleX : baseHeight;
+                    } else {
+                      canvasWidth = scaleY !== 0 ? windowWidth / scaleY : baseWidth;
+                      canvasHeight = baseHeight;
+                    }
+                    var clampedCanvasWidth = Clamp(canvasWidth, this.displaySize.minWidth, this.displaySize.maxWidth);
+                    var clampedCanvasHeight = Clamp(canvasHeight, this.displaySize.minHeight, this.displaySize.maxHeight);
+                    this.baseSize.setSize(clampedCanvasWidth, clampedCanvasHeight);
+                    this.gameSize.setSize(clampedCanvasWidth, clampedCanvasHeight);
+                    if (autoRound) {
+                      clampedCanvasWidth = Math.floor(clampedCanvasWidth);
+                      clampedCanvasHeight = Math.floor(clampedCanvasHeight);
+                    }
+                    this.canvas.width = clampedCanvasWidth;
+                    this.canvas.height = clampedCanvasHeight;
+                    var clampedWindowWidth = windowWidth * (clampedCanvasWidth / canvasWidth);
+                    var clampedWindowHeight = windowHeight * (clampedCanvasHeight / canvasHeight);
+                    this.displaySize.setSize(clampedWindowWidth, clampedWindowHeight);
                     styleWidth = this.displaySize.width;
                     styleHeight = this.displaySize.height;
                     if (autoRound) {
@@ -62547,22 +62710,6 @@ export default require => {
                     }
                     style.width = styleWidth + "px";
                     style.height = styleHeight + "px";
-                    var scaleX = this.parentSize.width / baseWidth;
-                    var scaleY = this.parentSize.height / baseHeight;
-                    if (scaleX < scaleY && scaleX !== 0) {
-                      this.baseSize.setSize(baseWidth, this.parentSize.height / scaleX);
-                    } else if (scaleY !== 0) {
-                      this.baseSize.setSize(this.displaySize.width / scaleY, baseHeight);
-                    }
-                    this.gameSize.setSize(this.baseSize.width, this.baseSize.height);
-                    styleWidth = this.baseSize.width;
-                    styleHeight = this.baseSize.height;
-                    if (autoRound) {
-                      styleWidth = Math.floor(styleWidth);
-                      styleHeight = Math.floor(styleHeight);
-                    }
-                    this.canvas.width = styleWidth;
-                    this.canvas.height = styleHeight;
                   } else {
                     this.displaySize.setSize(this.parentSize.width, this.parentSize.height);
                     styleWidth = this.displaySize.width;
@@ -66177,15 +66324,24 @@ export default require => {
                 },
                 update: function (time, delta) {
                   var listener = this.context.listener;
+                  var x = GetFastValue(this.listenerPosition, "x", null);
+                  var y = GetFastValue(this.listenerPosition, "y", null);
                   if (listener && listener.positionX !== void 0) {
-                    var x = GetFastValue(this.listenerPosition, "x", null);
-                    var y = GetFastValue(this.listenerPosition, "y", null);
                     if (x && x !== this._spatialx) {
                       this._spatialx = listener.positionX.value = x;
                     }
                     if (y && y !== this._spatialy) {
                       this._spatialy = listener.positionY.value = y;
                     }
+                  } else if (listener) {
+                    if (x && x !== this._spatialx) {
+                      this._spatialx = x;
+                    }
+                    if (y && y !== this._spatialy) {
+                      this._spatialy = y;
+                    }
+                    var z = GetFastValue(listener, "z", 0);
+                    listener.setPosition(this._spatialx || 0, this._spatialy || 0, z);
                   }
                   BaseSoundManager.prototype.update.call(this, time, delta);
                   if (!this.gameLostFocus) {
@@ -72336,7 +72492,7 @@ export default require => {
                     }
                     if (config.hasOwnProperty("useSpriteSheet")) {
                       config.key = tile.tileset.image;
-                      config.frame = tile.index - 1;
+                      config.frame = tile.index - tile.tileset.firstgid;
                     }
                     sprites.push(scene2.make.sprite(config));
                   }
@@ -74439,7 +74595,7 @@ export default require => {
                       x: 0,
                       y: image.height - mapData.tileHeight
                     };
-                    set = new Tileset(image.image, image.gid, image.width, image.height, 0, 0, null, null, offset);
+                    set = new Tileset(image.image, image.gid, image.width, image.height, 0, 0, void 0, void 0, offset);
                     set.updateTileData(image.width, image.height);
                     mapData.tilesets.push(set);
                   }
@@ -77432,6 +77588,10 @@ export default require => {
                 },
                 update: function (delta) {
                   if (this.isPendingRemove() || this.isDestroyed()) {
+                    if (this.persist) {
+                      this.setFinishedState();
+                      return false;
+                    }
                     return true;
                   } else if (this.isFinished() || this.paused) {
                     return false;
