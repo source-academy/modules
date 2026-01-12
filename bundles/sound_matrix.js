@@ -32,12 +32,15 @@ export default require => {
   function pair(x, xs) {
     return [x, xs];
   }
-  function vector_to_list(vector) {
-    let result = null;
-    for (let i = vector.length - 1; i >= 0; i = i - 1) {
-      result = pair(vector[i], result);
+  function list(...args) {
+    let the_list = null;
+    for (let i = args.length - 1; i >= 0; i--) {
+      the_list = pair(args[i], the_list);
     }
-    return result;
+    return the_list;
+  }
+  function vector_to_list(vector) {
+    return list(...vector);
   }
   var ToneMatrix = {
     initialise_matrix,
