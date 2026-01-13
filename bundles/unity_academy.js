@@ -17114,12 +17114,7 @@ export default require => {
       var Fa = Symbol.for("react.suspense_list");
       var Ga = Symbol.for("react.memo");
       var Ha = Symbol.for("react.lazy");
-      Symbol.for("react.scope");
-      Symbol.for("react.debug_trace_mode");
       var Ia = Symbol.for("react.offscreen");
-      Symbol.for("react.legacy_hidden");
-      Symbol.for("react.cache");
-      Symbol.for("react.tracing_marker");
       var Ja = Symbol.iterator;
       function Ka(a) {
         if (null === a || "object" !== typeof a) return null;
