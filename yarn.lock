@@ -17271,13 +17271,13 @@ __metadata:
   linkType: hard
 
 "typedoc-plugin-frontmatter@npm:^1.3.0":
-  version: 1.3.0
-  resolution: "typedoc-plugin-frontmatter@npm:1.3.0"
+  version: 1.3.1
+  resolution: "typedoc-plugin-frontmatter@npm:1.3.1"
   dependencies:
-    yaml: "npm:^2.7.0"
+    yaml: "npm:^2.8.1"
   peerDependencies:
-    typedoc-plugin-markdown: ">=4.5.0"
-  checksum: 10c0/967ee5c38ab64b94489b9001744bbecc1cb6951bb07232caf2f4925f6a4dc0ac53305c4305e34ba10d6fddaab8f939642a2fbf10f1da884d6d6885d370c94cf3
+    typedoc-plugin-markdown: ">=4.9.0"
+  checksum: 10c0/8bdda87c7a89b2a9dfdd3925c4b1a633c92696ca3fa110d96870a9d9bc2433afbe6d48e2b1b899bad4c7ae00970a8af1543d58e3e122db6d61055d1a2aff7dab
   languageName: node
   linkType: hard
 
@@ -18589,7 +18589,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:^2.0.0, yaml@npm:^2.7.0, yaml@npm:^2.8.0, yaml@npm:^2.8.1":
+"yaml@npm:^2.0.0, yaml@npm:^2.8.0, yaml@npm:^2.8.1":
   version: 2.8.2
   resolution: "yaml@npm:2.8.2"
   bin:
