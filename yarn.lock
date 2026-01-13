@@ -17015,9 +17015,9 @@ __metadata:
   linkType: hard
 
 "tm-themes@npm:^1.10.12":
-  version: 1.10.12
-  resolution: "tm-themes@npm:1.10.12"
-  checksum: 10c0/dcb3ef2fede7ed373909caed11d8c6a89837eb7682515182cc9f52f0c580b5bb4d9f0019cb1c1199fea416bb8d327f31d5b696903aeaf66b2a88cbcad80cf632
+  version: 1.10.15
+  resolution: "tm-themes@npm:1.10.15"
+  checksum: 10c0/e12fb730b445dbc8b6a69cc85c3d6e974413c95b7757e62f56086ce338f58232ac6b3500cdcd2de609451678b6a075bd12182aa4d0c64412768a747390075007
   languageName: node
   linkType: hard
 
