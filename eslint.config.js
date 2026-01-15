@@ -479,6 +479,7 @@ export default defineConfig(
       'vitest/hoisted-apis-on-top': 'error',
       'vitest/no-alias-methods': 'off', // was 'error'
       'vitest/no-conditional-expect': 'off', // was 'error'
+      'vitest/no-disabled-tests': 'off', // was 'warn'
       'vitest/no-focused-tests': ['warn', { fixable: false }],
       'vitest/no-standalone-expect': 'off', // was 'error'
       'vitest/prefer-describe-function-title': 'warn',

@@ -221,6 +221,7 @@ export const draw_connected_3d = createPlotFunction(
  * @example
  * ```
  * draw_points_2d(100)(t => make_point(t, t));
+ * ```
  */
 export const draw_points_2d = createPlotFunction(
   'scatter',
@@ -247,6 +248,7 @@ export const draw_points_2d = createPlotFunction(
  * @example
  * ```
  * draw_points_3d(100)(t => make_point(t, t));
+ * ```
  */
 export const draw_points_3d = createPlotFunction(
   'scatter3d',
