@@ -6,12 +6,12 @@
     "@box2d/debug-draw": "^0.10.0",
     "@sourceacademy/bundle-physics_2d": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@types/react": "^18.3.1"
+    "@types/react": "^19.0.0"
   },
   "scripts": {
     "build": "buildtools build tab .",
