@@ -2560,12 +2560,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iconify-json/logos@npm:^1.2.9":
-  version: 1.2.9
-  resolution: "@iconify-json/logos@npm:1.2.9"
+"@iconify-json/logos@npm:^1.2.10":
+  version: 1.2.10
+  resolution: "@iconify-json/logos@npm:1.2.10"
   dependencies:
     "@iconify/types": "npm:*"
-  checksum: 10c0/7f5e2c8026560fb63489566cfc90497375543ca3649e7c7d13079f0a166dc4a738cf5686ec66a4cb9a319b8213303bc7c5ae74070e88d4bf0e5c1ef57cb3bacc
+  checksum: 10c0/0d9722cfd1bf333e3b1fe164b4e148d3420f8e809c392dad79846e16f336eef33e18cd6b18c09d38f8d4d4854892b1a8c19a334bb7a4e3d36d1825c1669cc6e9
   languageName: node
   linkType: hard
 
@@ -2578,12 +2578,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iconify-json/vscode-icons@npm:^1.2.32":
-  version: 1.2.33
-  resolution: "@iconify-json/vscode-icons@npm:1.2.33"
+"@iconify-json/vscode-icons@npm:^1.2.39":
+  version: 1.2.40
+  resolution: "@iconify-json/vscode-icons@npm:1.2.40"
   dependencies:
     "@iconify/types": "npm:*"
-  checksum: 10c0/b55c3b263643d08a5e7ef9d35e1dd63c11c911b86e344cfaa8e7fe639bdbf5940ca4164d05f2ec5de89627c934bec4e93a4be480be2c3bcc3ade9c57fd119073
+  checksum: 10c0/29dce75c16279709cffac19bfffb0d80b19046bc5ffedb172dd00a3d80f34d741ee2b8aacbc053ac8f59f6f9ce066e6e76fd649743d68aa503cb7605432ec091
   languageName: node
   linkType: hard
 
@@ -2594,7 +2594,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iconify/utils@npm:^3.0.1, @iconify/utils@npm:^3.0.2":
+"@iconify/utils@npm:^3.0.1":
   version: 3.0.2
   resolution: "@iconify/utils@npm:3.0.2"
   dependencies:
@@ -2607,6 +2607,17 @@ __metadata:
     local-pkg: "npm:^1.1.1"
     mlly: "npm:^1.7.4"
   checksum: 10c0/ac9f9362b0d0143dd9861bcc64a0699f607f4f9df902aab3875b06832a89dd6a0e8ba2e1c43e927073a84661bf2882f1c79b5a3159a3cee53570d080b535c12c
+  languageName: node
+  linkType: hard
+
+"@iconify/utils@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "@iconify/utils@npm:3.1.0"
+  dependencies:
+    "@antfu/install-pkg": "npm:^1.1.0"
+    "@iconify/types": "npm:^2.0.0"
+    mlly: "npm:^1.8.0"
+  checksum: 10c0/a39445e892b248486c186306e1ccba4b07ed1d5b21b143ddf279b33062063173feb84954b9a82e05713b927872787d6c0081073d23f55c44294de37615d4a1f7
   languageName: node
   linkType: hard
 
@@ -13788,6 +13799,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mlly@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "mlly@npm:1.8.0"
+  dependencies:
+    acorn: "npm:^8.15.0"
+    pathe: "npm:^2.0.3"
+    pkg-types: "npm:^1.3.1"
+    ufo: "npm:^1.6.1"
+  checksum: 10c0/f174b844ae066c71e9b128046677868e2e28694f0bbeeffbe760b2a9d8ff24de0748d0fde6fabe706700c1d2e11d3c0d7a53071b5ea99671592fac03364604ab
+  languageName: node
+  linkType: hard
+
 "mqtt-packet@npm:^6.8.0":
   version: 6.10.0
   resolution: "mqtt-packet@npm:6.10.0"
@@ -14749,7 +14772,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pkg-types@npm:^1.3.0":
+"pkg-types@npm:^1.3.0, pkg-types@npm:^1.3.1":
   version: 1.3.1
   resolution: "pkg-types@npm:1.3.1"
   dependencies:
@@ -17500,6 +17523,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ufo@npm:^1.6.1":
+  version: 1.6.3
+  resolution: "ufo@npm:1.6.3"
+  checksum: 10c0/bf0e4ebff99e54da1b9c7182ac2f40475988b41faa881d579bc97bc2a0509672107b0a0e94c4b8d31a0ab8c4bf07f4aa0b469ac6da8536d56bda5b085ea2e953
+  languageName: node
+  linkType: hard
+
 "unbox-primitive@npm:^1.1.0":
   version: 1.1.0
   resolution: "unbox-primitive@npm:1.1.0"
@@ -18042,18 +18072,18 @@ __metadata:
   linkType: hard
 
 "vitepress-plugin-group-icons@npm:^1.6.5":
-  version: 1.6.5
-  resolution: "vitepress-plugin-group-icons@npm:1.6.5"
+  version: 1.7.1
+  resolution: "vitepress-plugin-group-icons@npm:1.7.1"
   dependencies:
-    "@iconify-json/logos": "npm:^1.2.9"
-    "@iconify-json/vscode-icons": "npm:^1.2.32"
-    "@iconify/utils": "npm:^3.0.2"
+    "@iconify-json/logos": "npm:^1.2.10"
+    "@iconify-json/vscode-icons": "npm:^1.2.39"
+    "@iconify/utils": "npm:^3.1.0"
   peerDependencies:
     vite: ">=3"
   peerDependenciesMeta:
     vite:
       optional: true
-  checksum: 10c0/8e30800925cdc2ae1aeafcb42d9aae5da4a3c922e8aa0bd629461f29ff1ba3a766cb45f7ee66a350a4be8acce5f7069457da36a3977255bf241858ba8a5dad36
+  checksum: 10c0/9d24c09ef38155d5f2efb61e27162350bb90e9b89677f4af5e4287bebff2899506751ea8ef305f30feeead4416422955c45dbc0c38e48de884ec62c40b04dc56
   languageName: node
   linkType: hard
 
