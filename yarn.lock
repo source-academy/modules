@@ -3943,9 +3943,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@snyk/dep-graph@npm:^2.3.0":
-  version: 2.9.0
-  resolution: "@snyk/dep-graph@npm:2.9.0"
+"@snyk/dep-graph@npm:^2.12.0":
+  version: 2.12.1
+  resolution: "@snyk/dep-graph@npm:2.12.1"
   dependencies:
     event-loop-spinner: "npm:^2.1.0"
     lodash.clone: "npm:^4.5.0"
@@ -3963,10 +3963,10 @@ __metadata:
     lodash.union: "npm:^4.6.0"
     lodash.values: "npm:^4.3.0"
     object-hash: "npm:^3.0.0"
-    packageurl-js: "npm:1.2.0"
+    packageurl-js: "npm:2.0.1"
     semver: "npm:^7.0.0"
     tslib: "npm:^2"
-  checksum: 10c0/709116c589216b130e51bc7750bb9151ec382f749a9ccb124950a4390f6bb470e42cb6e64b56a8bff35602056685a97b66eda0b2eee2584f759d1e046293cb6e
+  checksum: 10c0/1d9c9ba1c356f24135d7b8da19bdbd09068521eafa84f173bdd18a2ba6678038feea9df253e5df53eb31ffa853b3345e9f8d2649995d34f31bc32ddf621173e1
   languageName: node
   linkType: hard
 
@@ -14462,10 +14462,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"packageurl-js@npm:1.2.0":
-  version: 1.2.0
-  resolution: "packageurl-js@npm:1.2.0"
-  checksum: 10c0/4ab4f63483e3ae516ec458bc8113d7e86c199698fa66a4b290c039f92415a9d8908a9421155677fe56bc6ba682c5930bf1db432401ad8dbf0a3350a6d92bd3d8
+"packageurl-js@npm:2.0.1":
+  version: 2.0.1
+  resolution: "packageurl-js@npm:2.0.1"
+  checksum: 10c0/8a45bc925243bea0fd7f027b54bf7c363ab70dae2b01676d67856eb788352d7344f38b86c8cfa510410220c6848dc57bc152146bf6518fb06c272d3dbe003b55
   languageName: node
   linkType: hard
 
@@ -16233,10 +16233,10 @@ __metadata:
   linkType: hard
 
 "snyk-nodejs-lockfile-parser@npm:^2.4.2":
-  version: 2.4.2
-  resolution: "snyk-nodejs-lockfile-parser@npm:2.4.2"
+  version: 2.5.0
+  resolution: "snyk-nodejs-lockfile-parser@npm:2.5.0"
   dependencies:
-    "@snyk/dep-graph": "npm:^2.3.0"
+    "@snyk/dep-graph": "npm:^2.12.0"
     "@snyk/error-catalog-nodejs-public": "npm:^5.16.0"
     "@snyk/graphlib": "npm:2.1.9-patch.3"
     "@yarnpkg/core": "npm:^4.4.1"
@@ -16256,7 +16256,7 @@ __metadata:
     uuid: "npm:^8.3.0"
   bin:
     parse-nodejs-lockfile: bin/index.js
-  checksum: 10c0/205aff1ea79306975a881f63d857af446e61ff7537d94efb591b993bd152e413b8688f360d58f5bcaef833e00395898c35b31ab179d6aa07dce9d1f753617fe0
+  checksum: 10c0/9cc7d03322d76dd66df9372f542b3d980a0278e458a9402d29c4320e2054dab3821c59b0ac6c43b85fbaa0d216353e2b411b4c61efe8f60bf551c5c481a86518
   languageName: node
   linkType: hard
 
