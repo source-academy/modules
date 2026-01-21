@@ -4308,7 +4308,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/lodash": "npm:^4.14.198"
     js-slang: "npm:^1.0.81"
-    lodash: "npm:^4.17.21"
+    lodash: "npm:^4.17.23"
     typescript: "npm:^5.8.2"
   languageName: unknown
   linkType: soft
@@ -4381,7 +4381,7 @@ __metadata:
     "@sourceacademy/modules-repotools": "workspace:^"
     "@types/lodash": "npm:^4.14.198"
     "@types/markdown-it": "npm:^14.1.2"
-    lodash: "npm:^4.17.21"
+    lodash: "npm:^4.17.23"
     tm-themes: "npm:^1.10.12"
     typescript: "npm:^5.8.2"
     yaml: "npm:^2.8.0"
@@ -4412,7 +4412,7 @@ __metadata:
     eslint: "npm:^9.35.0"
     http-server: "npm:^14.1.1"
     jsdom: "npm:^26.1.0"
-    lodash: "npm:^4.17.21"
+    lodash: "npm:^4.17.23"
     typedoc: "npm:^0.28.9"
     typescript: "npm:^5.8.2"
     vite: "npm:^7.1.11"
@@ -4481,7 +4481,7 @@ __metadata:
     "@actions/exec": "npm:^1.1.1"
     "@sourceacademy/modules-repotools": "workspace:^"
     "@types/node": "npm:^22.15.30"
-    lodash: "npm:^4.17.21"
+    lodash: "npm:^4.17.23"
     snyk-nodejs-lockfile-parser: "npm:^2.4.2"
     typescript: "npm:^5.8.2"
     vitest: "npm:^4.0.4"
@@ -4528,7 +4528,7 @@ __metadata:
     commander: "npm:^14.0.0"
     esbuild: "npm:^0.27.0"
     jsonschema: "npm:^1.5.0"
-    lodash: "npm:^4.17.21"
+    lodash: "npm:^4.17.23"
     typescript: "npm:^5.8.2"
     vitest: "npm:^4.0.4"
     vitest-browser-react: "npm:^2.0.2"
@@ -4566,7 +4566,7 @@ __metadata:
     js-slang: "npm:^1.0.81"
     jsdom: "npm:^26.1.0"
     jsonc-eslint-parser: "npm:^2.4.0"
-    lodash: "npm:^4.17.21"
+    lodash: "npm:^4.17.23"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     typescript: "npm:^5.8.2"
@@ -12525,6 +12525,13 @@ __metadata:
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: 10c0/d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
+  languageName: node
+  linkType: hard
+
+"lodash@npm:^4.17.23":
+  version: 4.17.23
+  resolution: "lodash@npm:4.17.23"
+  checksum: 10c0/1264a90469f5bb95d4739c43eb6277d15b6d9e186df4ac68c3620443160fc669e2f14c11e7d8b2ccf078b81d06147c01a8ccced9aab9f9f63d50dcf8cace6bf6
   languageName: node
   linkType: hard
 
