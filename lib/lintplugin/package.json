@@ -30,8 +30,8 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-repotools": "workspace:^",
     "@stylistic/eslint-plugin": "^4.4.1",
-    "@typescript-eslint/rule-tester": "^8.39.0",
-    "@typescript-eslint/utils": "^8.39.0",
+    "@typescript-eslint/rule-tester": "^8.53.1",
+    "@typescript-eslint/utils": "^8.53.1",
     "@vitest/eslint-plugin": "^1.6.6",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsdoc": "^62.0.0",
@@ -39,7 +39,7 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "globals": "^15.11.0",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.33.1"
+    "typescript-eslint": "^8.53.1"
   },
   "scripts": {
     "build": "node ./build.js",
