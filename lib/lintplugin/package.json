@@ -34,7 +34,7 @@
     "@typescript-eslint/utils": "^8.39.0",
     "@vitest/eslint-plugin": "^1.6.6",
     "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-jsdoc": "^61.5.0",
+    "eslint-plugin-jsdoc": "^62.0.0",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
     "globals": "^15.11.0",
