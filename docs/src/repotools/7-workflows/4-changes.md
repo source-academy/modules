@@ -27,7 +27,7 @@ For this section, it is important to understand the distinction between workspac
   </tbody>
 </table>
 
-Specificailly, we are concerned with detecting when to rebuild a workspace package.
+Specifically, we are concerned with detecting when to rebuild a workspace package.
 
 There are many workspace packages contained within this repository. It would be entirely unnecessary to rerun building and
 testing for every single workspace package if changes were only made to one. It thus makes sense to implement some kind of
@@ -143,7 +143,7 @@ graph LR
 Now, suppose that the publishers of `lodash` find a minor bug in one of their functions and release a small patch to rectify it. They
 publish this new version as version `4.17.1`. Notice that this version is still compatible with the `^4.17.0` specification.
 
-When the repository's automated depedency upgrading bot (Renovate Bot) detects this, it will attempt to cause Yarn to install version `4.17.1`
+When the repository's automated dependency upgrading bot (Renovate Bot) detects this, it will attempt to cause Yarn to install version `4.17.1`
 instead of `4.17.0` for `lodash`. It does this by updating the lockfile. But now we have a problem: the `curve` bundle transitively relies
 on `lodash` through `gl-matrix`. 
 
@@ -164,7 +164,7 @@ graph LR
   C -- resolved to --> F
 ```
 
-The `curve` bundle's dependency tree has changed, so we need to rebuiid and test it (to make sure that it works with this new version of `lodash`).
+The `curve` bundle's dependency tree has changed, so we need to rebuild and test it (to make sure that it works with this new version of `lodash`).
 
 Yet, because there were no changes made to its `package.json` or to the code of the `curve` bundle, the `git diff` method won't be able
 to detect that we need to rebuild the `curve` bundle.
