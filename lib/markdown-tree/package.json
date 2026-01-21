@@ -23,7 +23,7 @@
     "shiki": ">=2"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "tm-themes": "^1.10.12",
     "yaml": "^2.8.0"
   },
