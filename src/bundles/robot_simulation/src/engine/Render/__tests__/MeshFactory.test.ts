@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { describe, expect, it, vi } from 'vitest';
-import { addCuboid } from '../../Render/helpers/MeshFactory';
+import { addCuboid } from '../helpers/MeshFactory';
 
 // Mock the necessary Three.js methods and classes
 vi.mock(import('three'), async importOriginal => {

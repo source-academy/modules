@@ -316,6 +316,13 @@ export default defineConfig(
     rules: {
       'no-unused-vars': 'off', // Use the typescript eslint rule instead
 
+      'import/no-unresolved': ['error', {
+        ignore: [
+          'js-slang/context',
+          '^virtual:.+$'
+        ]
+      }],
+
       'jsdoc/no-types': 'warn',
 
       '@stylistic/type-annotation-spacing': ['warn', { overrides: { colon: { before: false, after: true } } }],
@@ -330,6 +337,12 @@ export default defineConfig(
       // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
       '@typescript-eslint/only-throw-error': 'error'
+    },
+    settings: {
+      'import/resolver': {
+        typescript: true,
+        node: true
+      }
     }
   },
   // #endregion typescript
@@ -504,7 +517,10 @@ export default defineConfig(
       '**/vitest.config.{js,ts}'
     ],
     rules: {
-      'import/extensions': ['error', 'ignorePackages'],
+      'import/extensions': ['error', 'ignorePackages', {
+        ts: 'never',
+        cts: 'never'
+      }],
     }
   },
   {

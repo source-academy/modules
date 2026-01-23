@@ -1,13 +1,13 @@
 import pathlib from 'path';
 import { bundlesDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import { describe, expect, test, vi } from 'vitest';
-import * as docs from '../../build/docs/index.js';
-import * as modules from '../../build/modules/index.js';
-import * as tsc from '../../build/modules/tsc.js';
 import { getCommandRunner } from '../../commands/__tests__/testingUtils.js';
 import { getBuildAllCommand } from '../../commands/build.js';
 import * as lint from '../../prebuild/lint.js';
 import * as all from '../all.js';
+import * as docs from '../docs/index.js';
+import * as modules from '../modules/index.js';
+import * as tsc from '../modules/tsc.js';
 
 vi.spyOn(all, 'buildAll');
 const mockedBuildBundle = vi.spyOn(modules, 'buildBundle');
