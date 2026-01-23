@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
-    "gl-matrix": "^3.3.0"
+    "gl-matrix": "^3.3.0",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
+    "@types/lodash": "^4.14.198",
     "js-slang": "^1.0.85",
     "typescript": "^5.8.2"
   },

@@ -64,6 +64,7 @@
     "@yarnpkg/types": "^4.0.1",
     "esbuild": "^0.27.0",
     "eslint": "^9.35.0",
+    "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsdoc": "^62.0.0",
     "eslint-plugin-mdx": "^3.6.2",
