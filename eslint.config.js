@@ -316,12 +316,17 @@ export default defineConfig(
     rules: {
       'no-unused-vars': 'off', // Use the typescript eslint rule instead
 
-      'import/no-unresolved': ['error', {
-        ignore: [
-          'js-slang/context',
-          '^virtual:.+$'
-        ]
-      }],
+      'import/no-unresolved': [
+        // disable in the CI since we don't install packages so all node packages
+        // become unresolvable
+        process.env.CI ? 'off' : 'error',
+        {
+          ignore: [
+            'js-slang/context',
+            '^virtual:.+$'
+          ]
+        }]
+      ,
 
       'jsdoc/no-types': 'warn',
 
