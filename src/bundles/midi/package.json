@@ -7,7 +7,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "js-slang": "^1.0.81"
+    "js-slang": "^1.0.85"
   },
   "type": "module",
   "scripts": {

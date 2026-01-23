@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "js-slang": "^1.0.81",
+    "js-slang": "^1.0.85",
     "typescript": "^5.8.2"
   },
   "type": "module",

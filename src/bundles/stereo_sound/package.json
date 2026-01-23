@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@sourceacademy/bundle-midi": "workspace:^",
-    "js-slang": "^1.0.81"
+    "js-slang": "^1.0.85"
   },
   "type": "module",
   "exports": {

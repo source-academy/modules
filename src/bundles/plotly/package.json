@@ -5,7 +5,7 @@
   "dependencies": {
     "@sourceacademy/bundle-curve": "workspace:^",
     "@sourceacademy/bundle-sound": "workspace:^",
-    "js-slang": "^1.0.81",
+    "js-slang": "^1.0.85",
     "plotly.js-dist": "^3.0.0"
   },
   "devDependencies": {

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "js-slang": "^1.0.81",
+    "js-slang": "^1.0.85",
     "lodash": "^4.17.21"
   },
   "devDependencies": {

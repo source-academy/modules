@@ -32,8 +32,6 @@ module.exports = defineConfig({
     rootWorkspace.set('resolutions.js-slang', undefined);
 
     for (const workspaceDep of Yarn.dependencies({ workspace: rootWorkspace })) {
-      if (workspaceDep.type === 'peerDependencies') continue;
-
       for (const otherDep of Yarn.dependencies({ ident: workspaceDep.ident })) {
         if (otherDep.type === 'peerDependencies') continue;
 

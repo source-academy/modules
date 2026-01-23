@@ -50,7 +50,7 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
 
   await fs.mkdir(tabsDir, { recursive: true });
 
-  const reactVersion = _package.dependencies.react;
+  const reactVersion = _package.peerDependencies.react;
   const {
     '@types/react': reactTypesVersion,
     typescript: typescriptVersion

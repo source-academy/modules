@@ -5,7 +5,7 @@
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
     "gl-matrix": "^3.3.0",
-    "js-slang": "^1.0.81"
+    "js-slang": "^1.0.85"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
