@@ -59,7 +59,7 @@
     "@types/node": "^22.15.30",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
-    "@vitest/coverage-v8": "^4.0.4",
+    "@vitest/coverage-v8": "^4.0.18",
     "@vitest/eslint-plugin": "^1.6.6",
     "@yarnpkg/types": "^4.0.1",
     "esbuild": "^0.27.0",
@@ -76,8 +76,8 @@
     "jsonc-eslint-parser": "^2.4.0",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.53.1",
-    "vitest": "^4.0.4",
-    "vitest-browser-react": "^2.0.2"
+    "vitest": "^4.0.18",
+    "vitest-browser-react": "^2.0.4"
   },
   "peerDependencies": {
     "@blueprintjs/core": "^6.0.0",

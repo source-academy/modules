@@ -320,13 +320,8 @@ export default defineConfig(
         // disable in the CI since we don't install packages so all node packages
         // become unresolvable
         process.env.CI ? 'off' : 'error',
-        {
-          ignore: [
-            'js-slang/context',
-            '^virtual:.+$'
-          ]
-        }]
-      ,
+        { ignore: [ 'js-slang/context', '^virtual:.+$' ] }
+      ],
 
       'jsdoc/no-types': 'warn',
 
