@@ -52,21 +52,32 @@ void main(void) {
 `;
 /**
  * The basic data-representation of a Rune. When the Rune is drawn, every 3 consecutive vertex will form a triangle.
- * @field vertices - A list of vertex coordinates, each vertex has 4 coordiante (x,y,z,t).
- * @field colors - A list of vertex colors, each vertex has a color (r,g,b,a).
- * @field transformMatrix - A mat4 that is applied to all the vertices and the sub runes
- * @field subRune - A (potentially empty) list of Runes
  */
 @classDeclaration('Rune')
 export class Rune {
   constructor(
+    /**
+     * A list of vertex coordinates, each vertex has 4 coordiante (x,y,z,t).
+     */
     public vertices: Float32Array,
+
+    /**
+     * A list of vertex colors, each vertex has a color (r,g,b,a).
+     */
     public colors: Float32Array | null,
+
+    /**
+     * A mat4 that is applied to all the vertices and the sub runes
+     */
     public transformMatrix: mat4,
+
+    /**
+     * A (potentially empty) list of Runes
+     */
     public subRunes: Rune[],
     public texture: HTMLImageElement | null,
     public hollusionDistance: number
-  ) {}
+  ) { }
 
   public copy = () => new Rune(
     this.vertices,
@@ -79,7 +90,7 @@ export class Rune {
 
   /**
    * Flatten the subrunes to return a list of runes
-   * @return Rune[], a list of runes
+   * @returns Rune[], a list of runes
    */
   public flatten = () => {
     const runeList: Rune[] = [];
@@ -357,7 +368,7 @@ export abstract class DrawnRune implements ReplResult {
   constructor(
     protected readonly rune: Rune,
     public readonly isHollusion: boolean
-  ) {}
+  ) { }
 
   public toReplString = () => '<Rune>';
 

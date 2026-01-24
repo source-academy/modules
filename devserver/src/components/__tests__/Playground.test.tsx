@@ -48,7 +48,8 @@ describe('Playground tests', () => {
     const settingsButton = component.getByRole('button').filter({ hasText: /^$/ });
     await userEvent.click(settingsButton);
 
-    const compiledTabsToggle = component.baseElement.getElementsByClassName('bp5-switch').item(0);
+    const compiledTabsToggle = component.baseElement.getElementsByClassName('bp6-switch').item(0);
+    expect(compiledTabsToggle).not.toBeNull();
     await userEvent.click(compiledTabsToggle!);
 
     await userEvent.click(settingsButton);

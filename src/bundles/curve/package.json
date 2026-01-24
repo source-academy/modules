@@ -5,7 +5,7 @@
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
     "gl-matrix": "^3.3.0",
-    "js-slang": "^1.0.81"
+    "js-slang": "^1.0.85"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
@@ -24,7 +24,7 @@
     "prepare": "yarn tsc",
     "test": "buildtools test --project .",
     "tsc": "buildtools tsc .",
-    "postinstall": "yarn tsc",
+    "postinstall": "buildtools compile",
     "serve": "yarn buildtools serve"
   },
   "scripts-info": {

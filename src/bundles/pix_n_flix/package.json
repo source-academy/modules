@@ -5,13 +5,13 @@
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/react": "^18.3.1",
-    "@vitest/browser-playwright": "^4.0.4",
+    "@vitest/browser-playwright": "^4.0.18",
     "playwright": "^1.55.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "typescript": "^5.8.2",
-    "vitest": "^4.0.4",
-    "vitest-browser-react": "^2.0.2"
+    "vitest": "^4.0.18",
+    "vitest-browser-react": "^2.0.4"
   },
   "type": "module",
   "exports": {
@@ -23,7 +23,7 @@
     "build": "buildtools build bundle .",
     "lint": "buildtools lint .",
     "test": "buildtools test --project .",
-    "postinstall": "yarn tsc",
+    "postinstall": "buildtools compile",
     "serve": "yarn buildtools serve"
   },
   "scripts-info": {

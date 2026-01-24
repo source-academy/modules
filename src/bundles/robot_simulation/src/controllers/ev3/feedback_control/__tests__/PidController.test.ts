@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { NumberPidController, VectorPidController } from '../../../ev3/feedback_control/PidController';
+import { NumberPidController, VectorPidController } from '../PidController';
 
 const resetPid = (pidController: NumberPidController) => {
   pidController.errorsSum = 0;

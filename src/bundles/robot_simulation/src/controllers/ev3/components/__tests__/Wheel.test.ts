@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { Wheel } from '../../../ev3/components/Wheel';
+import { Wheel } from '../Wheel';
 
 vi.mock(import('../../../../engine/Render/debug/DebugArrow'), () => ({
   DebugArrow: class {

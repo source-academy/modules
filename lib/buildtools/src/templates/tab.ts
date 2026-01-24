@@ -50,7 +50,7 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
 
   await fs.mkdir(tabsDir, { recursive: true });
 
-  const reactVersion = _package.dependencies.react;
+  const reactVersion = _package.peerDependencies.react;
   const {
     '@types/react': reactTypesVersion,
     typescript: typescriptVersion
@@ -79,7 +79,7 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
   };
 
   // Version property gets stored in package.json, not manifest.json
-  const requiredProperties = omit(manifest[moduleName], ['version']);
+  const requiredProperties = omit(manifest[moduleName], 'version');
 
   const newManifest: BundleManifest = {
     ...requiredProperties,

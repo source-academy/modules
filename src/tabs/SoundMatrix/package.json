@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@blueprintjs/core": "^6.0.0",
     "@sourceacademy/modules-lib": "workspace:^",
     "classnames": "^2.3.1",
     "react": "^18.3.1",

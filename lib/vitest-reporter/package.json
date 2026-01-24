@@ -5,12 +5,12 @@
   "type": "module",
   "dependencies": {
     "istanbul-lib-report": "^3.0.1",
-    "vitest": "^4.0.4"
+    "vitest": "^4.0.18"
   },
   "devDependencies": {
     "@types/istanbul-lib-report": "^3.0.3",
     "@types/node": "^22.15.30",
-    "@vitest/coverage-v8": "^4.0.4",
+    "@vitest/coverage-v8": "^4.0.18",
     "esbuild": "^0.27.0",
     "typescript": "^5.8.2"
   },

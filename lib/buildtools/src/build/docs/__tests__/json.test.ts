@@ -25,38 +25,48 @@ describe(buildJson, () => {
       type: 'bundle',
       name: 'test0',
       manifest: {},
-      directory: `${bundlesDir}/test0`
+      directory: pathlib.join(bundlesDir, 'test0')
     }),
     project: async ({ testBundle }, use) => {
-      const app = await initTypedocForJson(testBundle, td.LogLevel.None);
+      const app = await initTypedocForJson(testBundle, td.LogLevel.Info);
       const project = await app.convert();
       use(project!);
     }
   });
 
-  test('Regular function', async ({ testBundle, project }) => {
+  test('Regular execution', async ({ testBundle, project }) => {
     const result = await buildJson(testBundle, outDir, project);
     expect(result.severity).toEqual('success');
 
     expect(fs.writeFile).toHaveBeenCalledOnce();
     const { calls: [[path, data]] } = mockedWriteFile.mock;
     expect(path).toEqual(pathlib.join(outDir, 'jsons', 'test0.json'));
-    expect(data).toMatchInlineSnapshot(`
-      "{
-        "test_function": {
-          "kind": "function",
-          "name": "test_function",
-          "description": "<p>This is just some test function</p>",
-          "params": [
-            [
-              "_param0",
-              "string"
-            ]
-          ],
-          "retType": "number"
-        }
-      }"
-    `);
+
+    const parsed = JSON.parse(data as string);
+
+    expect(parsed).toHaveProperty('test_function', {
+      kind: 'function',
+      name: 'test_function',
+      description: '<p>This is just some test function</p>',
+      params: [
+        ['_param0', 'string']
+      ],
+      retType: 'number'
+    });
+
+    expect(parsed).toHaveProperty('is_number', {
+      kind: 'function',
+      name: 'is_number',
+      description: '<p>No description available</p>',
+      params: [
+        ['x', 'unknown']
+      ],
+      // validate that type guards have their return types correctly parsed
+      retType: 'boolean'
+    });
+
+    // @hidden or @internal tags should be respected
+    expect(parsed).not.toHaveProperty('test_function2');
   });
 
   test('Encountering an unrecognized type', async ({ testBundle, project }) => {
@@ -74,25 +84,9 @@ describe(buildJson, () => {
     expect(fs.writeFile).toHaveBeenCalledOnce();
     const { calls: [[path, data]] } = mockedWriteFile.mock;
     expect(path).toEqual(pathlib.join(outDir, 'jsons', 'test0.json'));
-    expect(data).toMatchInlineSnapshot(`
-      "{
-        "test_function": {
-          "kind": "function",
-          "name": "test_function",
-          "description": "<p>This is just some test function</p>",
-          "params": [
-            [
-              "_param0",
-              "string"
-            ]
-          ],
-          "retType": "number"
-        },
-        "TestType": {
-          "kind": "unknown"
-        }
-      }"
-    `);
+
+    const parsed = JSON.parse(data as string);
+    expect(parsed).toHaveProperty('TestType', { kind: 'unknown' });
   });
 
   test('TypeAliases are ignored for JSON building', async ({ testBundle, project }) => {
@@ -107,23 +101,19 @@ describe(buildJson, () => {
 
     expect(fs.writeFile).toHaveBeenCalledOnce();
     const { calls: [[path, data]] } = mockedWriteFile.mock;
+
     expect(path).toEqual(pathlib.join(outDir, 'jsons', 'test0.json'));
-    expect(data).toMatchInlineSnapshot(`
-      "{
-        "test_function": {
-          "kind": "function",
-          "name": "test_function",
-          "description": "<p>This is just some test function</p>",
-          "params": [
-            [
-              "_param0",
-              "string"
-            ]
-          ],
-          "retType": "number"
-        }
-      }"
-    `);
+
+    const parsed = JSON.parse(data as string);
+    expect(parsed).toHaveProperty('test_function', {
+      kind: 'function',
+      name: 'test_function',
+      description: '<p>This is just some test function</p>',
+      params: [
+        ['_param0', 'string']
+      ],
+      retType: 'number'
+    });
   });
 });
 
@@ -144,7 +134,8 @@ describe('Test parsers', () => {
       const signature = new td.SignatureReflection('testFunction', td.ReflectionKind.CallSignature, decl);
       signature.type = new td.IntrinsicType('void');
       signature.comment = {
-        summary: [{ kind:'text', text: 'This is a summary' }]
+        summary: [{ kind:'text', text: 'This is a summary' }],
+        blockTags: [] as td.CommentTag[]
       } as td.Comment;
       decl.signatures = [signature];
 
@@ -241,7 +232,8 @@ describe('Test parsers', () => {
       const decl = new td.DeclarationReflection('testVar', td.ReflectionKind.Variable);
       decl.type = new td.IntrinsicType('string');
       decl.comment = {
-        summary: [{ kind: 'text', text: 'This is a summary' }]
+        summary: [{ kind: 'text', text: 'This is a summary' }],
+        blockTags: [] as td.CommentTag[]
       } as td.Comment;
 
       const result = variableParser(decl);

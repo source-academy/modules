@@ -2,7 +2,7 @@ import pathlib from 'path';
 import { bundlesDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import ts from 'typescript';
 import { describe, expect, test, vi } from 'vitest';
-import { runTsc } from '../tsc.js';
+import { runTscCompile, runTypechecking } from '../tsc.js';
 
 const mockedWriteFile = vi.hoisted(() => vi.fn<(arg0: string, arg1: string) => void>(() => undefined));
 
@@ -36,47 +36,57 @@ vi.mock(import('typescript'), async importOriginal => {
   };
 });
 
-describe('Test the augmented tsc functionality', () => {
-  const bundlePath = pathlib.join(bundlesDir, 'test0');
-
+describe(runTypechecking, () => {
   test('tsc on a bundle', async () => {
-    await runTsc({
+    const bundlePath = pathlib.join(bundlesDir, 'test0');
+    await runTypechecking({
       type: 'bundle',
       directory: bundlePath,
       name: 'test0',
       manifest: {}
-    }, false);
-
-    expect(ts.createProgram).toHaveBeenCalledTimes(2);
-    console.log(mockedWriteFile.mock.calls);
-    expect(mockedWriteFile).toHaveBeenCalledTimes(1);
-    const [[writePath]] = mockedWriteFile.mock.calls;
-
-    expect(writePath).not.toEqual(pathlib.join(bundlePath, 'src', '__tests__', 'test0.test.js'));
-  });
-
-  test('tsc on a bundle with --noEmit', async () => {
-    await runTsc({
-      type: 'bundle',
-      directory: bundlePath,
-      name: 'test0',
-      manifest: {}
-    }, true);
+    });
 
     expect(ts.createProgram).toHaveBeenCalledTimes(1);
-    expect(mockedWriteFile).not.toBeCalled();
+    expect(mockedWriteFile).not.toHaveBeenCalled();
   });
 
   test('tsc on a tab', async () => {
     const tabPath = pathlib.join(tabsDir, 'tab0');
-    await runTsc({
+    await runTypechecking({
       type: 'tab',
       directory: tabPath,
       entryPoint: pathlib.join(tabPath, 'src', 'index.tsx'),
       name: 'tab0'
-    }, false);
+    });
 
     expect(ts.createProgram).toHaveBeenCalledTimes(1);
-    expect(mockedWriteFile).not.toBeCalled();
+    expect(mockedWriteFile).not.toHaveBeenCalled();
+  });
+});
+
+describe(runTscCompile, () => {
+  const bundlePath = pathlib.join(bundlesDir, 'test0');
+
+  test('tsc compile for bundle', async () => {
+    await runTscCompile({
+      type: 'bundle',
+      directory: bundlePath,
+      name: 'test0',
+      manifest: {}
+    });
+
+    expect(ts.createProgram).toHaveBeenCalledOnce();
+    expect(mockedWriteFile).toHaveBeenCalledOnce();
+
+    const [[writePath]] = mockedWriteFile.mock.calls;
+
+    const testOutPath = pathlib.relative(
+      pathlib.join(bundlesDir, 'dist'),
+      '__tests__/test0.test.js'
+    );
+    expect(writePath).not.toMatchPath(testOutPath);
+
+    const indexOutPath = pathlib.relative(pathlib.join(bundlesDir, 'dist'), 'index.js');
+    expect(writePath).not.toMatchPath(indexOutPath);
   });
 });

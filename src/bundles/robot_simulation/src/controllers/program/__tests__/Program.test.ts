@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CallbackHandler } from '../../../engine/Core/CallbackHandler';
-import { Program, program_controller_identifier } from '../../program/Program';
-import { runECEvaluator } from '../../program/evaluate';
+import { Program, program_controller_identifier } from '../Program';
+import { runECEvaluator } from '../evaluate';
 
 vi.mock(import('../../../engine/Core/CallbackHandler'));
-vi.mock(import('../../program/evaluate'));
+vi.mock(import('../evaluate'));
 
 const mockedRunECEvaluator = vi.mocked(runECEvaluator);
 const mockedCallbackHandler = vi.mocked(CallbackHandler);
