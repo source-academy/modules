@@ -129,7 +129,7 @@ export default require => {
       init_define_process();
       (function () {
         var undefined2;
-        var VERSION = "4.17.21";
+        var VERSION = "4.17.23";
         var LARGE_ARRAY_SIZE = 200;
         var CORE_ERROR_TEXT = "Unsupported core-js use. Try https://npms.io/search?q=ponyfill.", FUNC_ERROR_TEXT = "Expected a function", INVALID_TEMPL_VAR_ERROR_TEXT = "Invalid `variable` option passed into `_.template`";
         var HASH_UNDEFINED = "__lodash_hash_undefined__";
@@ -1956,8 +1956,28 @@ export default require => {
           }
           function baseUnset(object, path) {
             path = castPath(path, object);
-            object = parent(object, path);
-            return object == null || delete object[toKey(last(path))];
+            var index = -1, length = path.length;
+            if (!length) {
+              return true;
+            }
+            var isRootPrimitive = object == null || typeof object !== "object" && typeof object !== "function";
+            while (++index < length) {
+              var key = path[index];
+              if (typeof key !== "string") {
+                continue;
+              }
+              if (key === "__proto__" && !hasOwnProperty.call(object, "__proto__")) {
+                return false;
+              }
+              if (key === "constructor" && index + 1 < length && typeof path[index + 1] === "string" && path[index + 1] === "prototype") {
+                if (isRootPrimitive && index === 0) {
+                  continue;
+                }
+                return false;
+              }
+            }
+            var obj = parent(object, path);
+            return obj == null || delete obj[toKey(last(path))];
           }
           function baseUpdate(object, path, updater, customizer) {
             return baseSet(object, path, updater(baseGet(object, path)), customizer);
