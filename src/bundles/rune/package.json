@@ -5,7 +5,7 @@
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
     "gl-matrix": "^3.3.0",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.23"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
