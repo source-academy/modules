@@ -1,5 +1,8 @@
+import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
+
 import { generateCurve, type Curve, type CurveDrawn } from './curves_webgl';
+import { functionDeclaration } from './type_interface';
 import {
   AnimatedCurve,
   type CurveAnimation,
@@ -18,10 +21,26 @@ function createDrawFunction(
   scaleMode: ScaleMode,
   drawMode: DrawMode,
   space: CurveSpace,
-  isFullView: boolean
+  isFullView: boolean,
+  name: string
 ): (numPoints: number) => RenderFunction {
-  return (numPoints: number) => {
-    const func = (curve: Curve) => {
+  function renderFuncCreator(numPoints: number) {
+    if (numPoints <= 0 || numPoints > 65535 || !Number.isInteger(numPoints)) {
+      throw new Error(
+        `${name}: The number of points must be a positive integer less than or equal to 65535. ` +
+        `Got: ${numPoints}`
+      );
+    }
+
+    function renderFunc(curve: Curve) {
+      if (!isFunctionOfLength(curve, 1)) {
+        throw new Error(
+          'The provided curve is not a valid Curve function. ' +
+          'A Curve function must take exactly one parameter (a number t between 0 and 1) ' +
+          'and return a Point or 3D Point depending on whether it is a 2D or 3D curve.'
+        );
+      }
+
       const curveDrawn = generateCurve(
         scaleMode,
         drawMode,
@@ -36,18 +55,22 @@ function createDrawFunction(
       }
 
       return curveDrawn;
-    };
+    }
+
     // Because the draw functions are actually functions
     // we need hacky workarounds like these to pass information around
-    func.is3D = space === '3D';
+    renderFunc.is3D = space === '3D';
     const stringifier = () => `<${space === '3D' ? '3D' : ''}RenderFunction(${numPoints})>`;
 
     // Retain both properties for compatibility
-    func.toString = stringifier;
-    func.toReplString = stringifier;
+    renderFunc.toString = stringifier;
+    renderFunc.toReplString = stringifier;
 
-    return func;
-  };
+    return renderFunc;
+  }
+
+  Object.defineProperty(renderFuncCreator, 'name', { value: name });
+  return renderFuncCreator;
 }
 
 // =============================================================================
@@ -57,6 +80,90 @@ function createDrawFunction(
 // functions of the module. For private functions dealing with the browser's
 // graphics library context, see './curves_webgl.ts'.
 // =============================================================================
+
+/** @hidden */
+export class RenderFunctionCreators {
+  @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
+  static draw_connected = createDrawFunction('none', 'lines', '2D', false, 'draw_connected');
+
+  @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
+  static draw_connected_full_view = createDrawFunction(
+    'stretch',
+    'lines',
+    '2D',
+    true,
+    'draw_connected_full_view'
+  );
+
+  @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
+  static draw_connected_full_view_proportional = createDrawFunction(
+    'fit',
+    'lines',
+    '2D',
+    true,
+    'draw_connected_full_view_proportional'
+  );
+
+  @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
+  static draw_points = createDrawFunction('none', 'points', '2D', false, 'draw_points');
+
+  @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
+  static draw_points_full_view = createDrawFunction(
+    'stretch',
+    'points',
+    '2D',
+    true,
+    'draw_points_full_view'
+  );
+
+  @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
+  static draw_points_full_view_proportional = createDrawFunction(
+    'fit',
+    'points',
+    '2D',
+    true,
+    'draw_points_full_view_proportional'
+  );
+
+  @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
+  static draw_3D_connected = createDrawFunction(
+    'none',
+    'lines',
+    '3D',
+    false,
+    'draw_3D_connected'
+  );
+
+  @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
+  static draw_3D_connected_full_view = createDrawFunction(
+    'stretch',
+    'lines',
+    '3D',
+    false,
+    'draw_3D_connected_full_view'
+  );
+
+  @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
+  static draw_3D_points = createDrawFunction('none', 'points', '3D', false, 'draw_3D_points');
+
+  @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
+  static draw_3D_points_full_view = createDrawFunction(
+    'stretch',
+    'points',
+    '3D',
+    false,
+    'draw_3D_points_full_view'
+  );
+
+  @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
+  static draw_3D_points_full_view_proportional = createDrawFunction(
+    'fit',
+    'points',
+    '3D',
+    false,
+    'draw_3D_points_full_view_proportional'
+  );
+}
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -72,7 +179,7 @@ function createDrawFunction(
  * draw_connected(100)(t => make_point(t, t));
  * ```
  */
-export const draw_connected = createDrawFunction('none', 'lines', '2D', false);
+export const draw_connected = RenderFunctionCreators.draw_connected;
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -89,12 +196,7 @@ export const draw_connected = createDrawFunction('none', 'lines', '2D', false);
  * draw_connected_full_view(100)(t => make_point(t, t));
  * ```
  */
-export const draw_connected_full_view = createDrawFunction(
-  'stretch',
-  'lines',
-  '2D',
-  true
-);
+export const draw_connected_full_view = RenderFunctionCreators.draw_connected_full_view;
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -111,12 +213,7 @@ export const draw_connected_full_view = createDrawFunction(
  * draw_connected_full_view_proportional(100)(t => make_point(t, t));
  * ```
  */
-export const draw_connected_full_view_proportional = createDrawFunction(
-  'fit',
-  'lines',
-  '2D',
-  true
-);
+export const draw_connected_full_view_proportional = RenderFunctionCreators.draw_connected_full_view_proportional;
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -133,7 +230,7 @@ export const draw_connected_full_view_proportional = createDrawFunction(
  * draw_points(100)(t => make_point(t, t));
  * ```
  */
-export const draw_points = createDrawFunction('none', 'points', '2D', false);
+export const draw_points = RenderFunctionCreators.draw_points;
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -151,12 +248,7 @@ export const draw_points = createDrawFunction('none', 'points', '2D', false);
  * draw_points_full_view(100)(t => make_point(t, t));
  * ```
  */
-export const draw_points_full_view = createDrawFunction(
-  'stretch',
-  'points',
-  '2D',
-  true
-);
+export const draw_points_full_view = RenderFunctionCreators.draw_points_full_view;
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
@@ -174,12 +266,7 @@ export const draw_points_full_view = createDrawFunction(
  * draw_points_full_view_proportional(100)(t => make_point(t, t));
  * ```
  */
-export const draw_points_full_view_proportional = createDrawFunction(
-  'fit',
-  'points',
-  '2D',
-  true
-);
+export const draw_points_full_view_proportional = RenderFunctionCreators.draw_points_full_view_proportional;
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -196,12 +283,7 @@ export const draw_points_full_view_proportional = createDrawFunction(
  * draw_3D_connected(100)(t => make_3D_point(t, t, t));
  * ```
  */
-export const draw_3D_connected = createDrawFunction(
-  'none',
-  'lines',
-  '3D',
-  false
-);
+export const draw_3D_connected = RenderFunctionCreators.draw_3D_connected;
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -218,12 +300,7 @@ export const draw_3D_connected = createDrawFunction(
  * draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));
  * ```
  */
-export const draw_3D_connected_full_view = createDrawFunction(
-  'stretch',
-  'lines',
-  '3D',
-  false
-);
+export const draw_3D_connected_full_view = RenderFunctionCreators.draw_3D_connected_full_view;
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -240,12 +317,7 @@ export const draw_3D_connected_full_view = createDrawFunction(
  * draw_3D_connected_full_view_proportional(100)(t => make_3D_point(t, t, t));
  * ```
  */
-export const draw_3D_connected_full_view_proportional = createDrawFunction(
-  'fit',
-  'lines',
-  '3D',
-  false
-);
+export const draw_3D_connected_full_view_proportional = RenderFunctionCreators.draw_3D_points_full_view_proportional;
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -262,7 +334,7 @@ export const draw_3D_connected_full_view_proportional = createDrawFunction(
  * draw_3D_points(100)(t => make_3D_point(t, t, t));
  * ```
  */
-export const draw_3D_points = createDrawFunction('none', 'points', '3D', false);
+export const draw_3D_points = RenderFunctionCreators.draw_3D_points;
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -279,12 +351,7 @@ export const draw_3D_points = createDrawFunction('none', 'points', '3D', false);
  * draw_3D_points_full_view(100)(t => make_3D_point(t, t, t));
  * ```
  */
-export const draw_3D_points_full_view = createDrawFunction(
-  'stretch',
-  'points',
-  '3D',
-  false
-);
+export const draw_3D_points_full_view = RenderFunctionCreators.draw_3D_points_full_view;
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
@@ -301,12 +368,41 @@ export const draw_3D_points_full_view = createDrawFunction(
  * draw_3D_points_full_view_proportional(100)(t => make_3D_point(t, t, t));
  * ```
  */
-export const draw_3D_points_full_view_proportional = createDrawFunction(
-  'fit',
-  'points',
-  '3D',
-  false
-);
+export const draw_3D_points_full_view_proportional = RenderFunctionCreators.draw_3D_points_full_view_proportional;
+
+class CurveAnimators {
+  @functionDeclaration('duration: number, fps: number, drawer: (func: Curve) => Curve, func: (func: Curve) => Curve', 'AnimatedCurve')
+  static animate_curve(
+    duration: number,
+    fps: number,
+    drawer: RenderFunction,
+    func: CurveAnimation
+  ): AnimatedCurve {
+    if (drawer.is3D) {
+      throw new Error(`${animate_curve.name} cannot be used with 3D draw function!`);
+    }
+
+    const anim = new AnimatedCurve(duration, fps, func, drawer, false);
+    drawnCurves.push(anim);
+    return anim;
+  }
+
+  @functionDeclaration('duration: number, fps: number, drawer: (func: Curve) => Curve, func: (func: Curve) => Curve', 'AnimatedCurve')
+  static animate_3D_curve(
+    duration: number,
+    fps: number,
+    drawer: RenderFunction,
+    func: CurveAnimation
+  ): AnimatedCurve {
+    if (!drawer.is3D) {
+      throw new Error(`${animate_3D_curve.name} cannot be used with 2D draw function!`);
+    }
+
+    const anim = new AnimatedCurve(duration, fps, func, drawer, true);
+    drawnCurves.push(anim);
+    return anim;
+  }
+}
 
 /**
  * Create a animation of curves using a curve generating function.
@@ -316,20 +412,7 @@ export const draw_3D_points_full_view_proportional = createDrawFunction(
  * @param func Curve generating function. Takes in a timestamp value and returns a curve
  * @returns Curve Animation
  */
-export function animate_curve(
-  duration: number,
-  fps: number,
-  drawer: RenderFunction,
-  func: CurveAnimation
-): AnimatedCurve {
-  if (drawer.is3D) {
-    throw new Error('animate_curve cannot be used with 3D draw function!');
-  }
-
-  const anim = new AnimatedCurve(duration, fps, func, drawer, false);
-  drawnCurves.push(anim);
-  return anim;
-}
+export const animate_curve = CurveAnimators.animate_curve;
 
 /**
  * Create a animation of curves using a curve generating function.
@@ -339,17 +422,4 @@ export function animate_curve(
  * @param func Curve generating function. Takes in a timestamp value and returns a curve
  * @returns 3D Curve Animation
  */
-export function animate_3D_curve(
-  duration: number,
-  fps: number,
-  drawer: RenderFunction,
-  func: CurveAnimation
-): AnimatedCurve {
-  if (!drawer.is3D) {
-    throw new Error('animate_3D_curve cannot be used with 2D draw function!');
-  }
-
-  const anim = new AnimatedCurve(duration, fps, func, drawer, true);
-  drawnCurves.push(anim);
-  return anim;
-}
+export const animate_3D_curve = CurveAnimators.animate_3D_curve;

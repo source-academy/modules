@@ -3,6 +3,7 @@ import { describe, expect, it, test } from 'vitest';
 import type { Color, Curve } from '../curves_webgl';
 import * as drawers from '../drawers';
 import * as funcs from '../functions';
+import type { RenderFunction } from '../types';
 
 /**
  * Evaluates the curve at 200 points, then
@@ -19,25 +20,70 @@ function evaluatePoints(curve: Curve) {
   return points;
 }
 
-test('Ensure that invalid curves error gracefully', () => {
-  expect(() => drawers.draw_connected(200)(() => 1 as any))
-    .toThrow('Expected curve to return a point, got \'1\' at t=0');
+describe('Ensure that invalid curves and animations error gracefully', () => {
+  test('Curve that returns non-point should throw error', () => {
+    expect(() => drawers.draw_connected(200)(_x => 1 as any))
+      .toThrow('Expected curve to return a point, got \'1\' at t=0');
+  });
+
+  test('Curve that takes multiple parameters should throw error', () => {
+    expect(() => drawers.draw_connected(200)(((t, u) => funcs.make_point(t, u)) as any))
+      .toThrow(
+        'The provided curve is not a valid Curve function. ' +
+        'A Curve function must take exactly one parameter (a number t between 0 and 1) ' +
+        'and return a Point or 3D Point depending on whether it is a 2D or 3D curve.'
+      );
+  });
+
+  test('Using 3D render functions with animate_curve should throw errors', () => {
+    expect(() => drawers.animate_curve(1, 60, drawers.draw_3D_connected(200), (t0) => (t1) => funcs.make_point(t0, t1)))
+      .toThrow('animate_curve cannot be used with 3D draw function!');
+  });
+
+  test('Using 2D render functions with animate_3D_curve should throw errors', () => {
+    expect(() => drawers.animate_3D_curve(1, 60, drawers.draw_connected(200), (t0) => (t1) => funcs.make_point(t0, t1)))
+      .toThrow('animate_3D_curve cannot be used with 2D draw function!');
+  });
 });
 
-test('Using 3D render functions with animate_curve should throw errors', () => {
-  expect(() => drawers.animate_curve(1, 60, drawers.draw_3D_connected(200), (t0) => (t1) => funcs.make_point(t0, t1)))
-    .toThrow('animate_curve cannot be used with 3D draw function!');
-});
+describe('Render function creators', () => {
+  const names = Object.getOwnPropertyNames(drawers.RenderFunctionCreators);
+  const renderFuncCreators = names.reduce<[string, (pts: number) => RenderFunction][]>((res, name) => {
+    if (typeof drawers.RenderFunctionCreators[name] !== 'function') return res;
+    return [...res, [name, drawers.RenderFunctionCreators[name]]];
+  }, []);
+  describe.each(renderFuncCreators)('%s', (name, func) => {
+    test('name property is correct', () => {
+      expect(func.name).toEqual(name);
+    });
 
-test('Using 2D render functions with animate_3D_curve should throw errors', () => {
-  expect(() => drawers.animate_3D_curve(1, 60, drawers.draw_connected(200), (t0) => (t1) => funcs.make_point(t0, t1)))
-    .toThrow('animate_3D_curve cannot be used with 2D draw function!');
-});
+    it('throws when numPoints is less than 0', () => {
+      expect(() => func(0)).toThrowError(
+        `${name}: The number of points must be a positive integer less than or equal to 65535. Got: 0`
+      );
+    });
 
-test('Render functions have nice string representations', () => {
-  expect(stringify(drawers.draw_connected(200))).toEqual('<RenderFunction(200)>');
-  expect(stringify(drawers.draw_connected_full_view_proportional(400))).toEqual('<RenderFunction(400)>');
-  expect(stringify(drawers.draw_3D_connected(400))).toEqual('<3DRenderFunction(400)>');
+    it('throws when numPoints is greater than 65535', () => {
+      expect(() => func(70000)).toThrowError(
+        `${name}: The number of points must be a positive integer less than or equal to 65535. Got: 70000`
+      );
+    });
+
+    it('throws when numPoints is not an integer', () => {
+      expect(() => func(3.14)).toThrowError(
+        `${name}: The number of points must be a positive integer less than or equal to 65535. Got: 3.14`
+      );
+    });
+
+    test('returned render functions have nice string represnentations', () => {
+      const renderFunc = func(250);
+      if (renderFunc.is3D) {
+        expect(stringify(renderFunc)).toEqual('<3DRenderFunction(250)>');
+      } else {
+        expect(stringify(renderFunc)).toEqual('<RenderFunction(250)>');
+      }
+    });
+  });
 });
 
 describe('Coloured Points', () => {
