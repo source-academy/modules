@@ -1,6 +1,5 @@
 // Devserver Vite Config
 
-import fs from 'fs/promises';
 import pathlib from 'path';
 import react from '@vitejs/plugin-react';
 import { playwright } from '@vitest/browser-playwright';
@@ -25,29 +24,6 @@ export default defineProject(({ mode }) => {
         include: ['path']
       }),
       react(),
-      // TODO: Investigate how to include bundles into hot reload
-      // {
-      //   name: 'Bundle Provider',
-      //   resolveId(source) {
-      //     const RE =  /^@sourceacademy\/bundle-.+(?:$|\/(.+)$)/
-      //     const match = RE.exec(source);
-      //     if (source.startsWith('@sourceacademy')) {
-      //       console.log('trying to resolve', source)
-      //     }
-
-      //     if (!match) return undefined;
-
-      //     const [, bundleName, path] = match!;
-      //     if (!path) {
-      //       const newPath = pathlib.resolve(import.meta.dirname, '../src/bundles', bundleName, 'src/index.ts')
-      //       console.log('oldPath', source, 'newPath', newPath)
-      //     } else {
-      //       const newPath = pathlib.resolve(import.meta.dirname, '../src/bundles', bundleName, 'src', `${path}.ts`)
-      //       console.log('oldPath', source, 'newPath', newPath)
-      //     }
-      //     return undefined;
-      //   }
-      // }
     ],
     resolve: {
       preserveSymlinks: true,
@@ -59,18 +35,17 @@ export default defineProject(({ mode }) => {
         // be reflected in real time when in hot-reload mode
         find: /^@sourceacademy\/modules-lib/,
         replacement: '.',
-        async customResolver(source) {
+        customResolver(source, importer, options) {
           const newSource = pathlib.resolve(import.meta.dirname, '../lib/modules-lib/src', source);
-          const extensions = ['.tsx', '.ts', '/index.ts'];
-
-          for (const each of extensions) {
-            try {
-              await fs.access(`${newSource}${each}`, fs.constants.R_OK);
-              return `${newSource}${each}`;
-            } catch { }
-          }
-
-          return undefined;
+          return this.resolve(newSource, importer, options);
+        },
+      }, {
+        find: /^@sourceacademy\/bundle-(.+)/,
+        replacement: '$1',
+        customResolver(source, importer, options) {
+          const [bundleName, everythingElse] = source.split('/', 2);
+          const newSource = pathlib.resolve(import.meta.dirname, '../src/bundles', bundleName, 'src', everythingElse);
+          return this.resolve(newSource, importer, options);
         },
       }],
     },

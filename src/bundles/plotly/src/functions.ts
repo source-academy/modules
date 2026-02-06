@@ -4,7 +4,7 @@
  */
 
 import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
-import { get_duration, get_wave, is_sound } from '@sourceacademy/bundle-sound';
+import { get_duration, get_wave, is_sound } from '@sourceacademy/bundle-sound/functions';
 import type { Sound } from '@sourceacademy/bundle-sound/types';
 import context from 'js-slang/context';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';

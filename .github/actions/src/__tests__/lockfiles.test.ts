@@ -16,7 +16,7 @@ describe(utils.extractPackageName, () => {
       .toEqual('lodash');
   });
 
-  it('throws on invalid package name', () => {
+  it('throws an error on an invalid package name', () => {
     expect(() => utils.extractPackageName('something weird'))
       .toThrowError('Invalid package name: something weird');
   });

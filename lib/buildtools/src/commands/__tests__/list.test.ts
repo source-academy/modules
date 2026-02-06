@@ -1,7 +1,8 @@
 import fs from 'fs/promises';
+import pathlib from 'path';
+import { tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import * as manifest from '@sourceacademy/modules-repotools/manifest';
 import { describe, test, vi } from 'vitest';
-import { testMocksDir } from '../../__tests__/fixtures.js';
 import { getListBundlesCommand, getListTabsCommand } from '../list.js';
 import { getCommandRunner } from './testingUtils.js';
 
@@ -89,7 +90,7 @@ describe('Test list command with tabs', () => {
   });
 
   test('Running command in a directory that has a tab', async ({ expect }) => {
-    await expect(runCommand(`${testMocksDir}/tabs/tab0`)).commandSuccess();
+    await expect(runCommand(pathlib.join(tabsDir, 'tab0'))).commandSuccess();
 
     expect(console.log).toHaveBeenCalledTimes(1);
     const [[data]] = mockedConsoleLog.mock.calls;

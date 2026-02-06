@@ -1,6 +1,6 @@
 // Vitepress config
 import pathlib from 'path';
-import { directoryTreePlugin } from '@sourceacademy/markdown-plugin-directory-tree';
+import { directoryTreePlugin, dirtreeTransformer, grammar as dirtreetm } from '@sourceacademy/markdown-plugin-directory-tree';
 import { defineConfig, type UserConfig } from 'vitepress';
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons';
 import { withMermaid } from 'vitepress-plugin-mermaid';
@@ -12,7 +12,7 @@ import _package from '../../package.json' with { type: 'json' };
 const vitepressOptions: UserConfig = {
   base: '/modules/devdocs/',
   description: 'Developer documentation for the Source Academy modules repository',
-  head: [['link', { rel: 'icon', href: '/modules/devdocs/favicon.ico' }]],
+  head: [['link', { rel: 'icon', href: '/favicon.ico' }]],
   ignoreDeadLinks: 'localhostLinks',
   lastUpdated: true,
   markdown: {
@@ -20,9 +20,8 @@ const vitepressOptions: UserConfig = {
       md.use(groupIconMdPlugin);
       md.use(directoryTreePlugin);
     },
-    languageAlias: {
-      dirtree: 'yml'
-    }
+    codeTransformers: [dirtreeTransformer()],
+    languages: [dirtreetm]
   },
   outDir: pathlib.join(import.meta.dirname, '..', '..', 'build', 'devdocs'),
   srcDir: 'src',
@@ -104,8 +103,10 @@ const vitepressOptions: UserConfig = {
     }
   },
   vite: {
-    // @ts-expect-error groupIconVitePlugin is probably built for an incorrect version of Vite
-    plugins: [groupIconVitePlugin()]
+    plugins: [
+      // @ts-expect-error groupIconVitePlugin is probably built for an incorrect version of Vite
+      groupIconVitePlugin(),
+    ]
   }
 };
 

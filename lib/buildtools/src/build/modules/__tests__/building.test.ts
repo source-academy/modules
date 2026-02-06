@@ -1,9 +1,8 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
-import { outDir } from '@sourceacademy/modules-repotools/getGitRoot';
+import { bundlesDir, outDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import type { ResolvedBundle } from '@sourceacademy/modules-repotools/types';
 import { beforeEach, expect, test, vi } from 'vitest';
-import { testMocksDir } from '../../../__tests__/fixtures.js';
 import { buildBundle, buildTab } from '../index.js';
 import { buildManifest } from '../manifest.js';
 
@@ -43,7 +42,7 @@ test('build bundle', async () => {
     type: 'bundle',
     manifest: {},
     name: 'test0',
-    directory: pathlib.join(testMocksDir, 'bundles', 'test0'),
+    directory: pathlib.join(bundlesDir, 'test0'),
   }, false);
 
   expect(fs.open).toHaveBeenCalledExactlyOnceWith(pathlib.join(outDir, 'bundles', 'test0.js'), 'w');
@@ -78,9 +77,9 @@ test('build bundle', async () => {
 test('build tab', async () => {
   await buildTab(outDir, {
     type: 'tab',
-    directory: pathlib.join(testMocksDir, 'tabs', 'tab0'),
+    directory: pathlib.join(tabsDir, 'tab0'),
     name: 'tab0',
-    entryPoint: pathlib.join(testMocksDir, 'tabs', 'tab0', 'src', 'index.tsx'),
+    entryPoint: pathlib.join(tabsDir, 'tab0', 'src', 'index.tsx'),
   }, false);
   expect(fs.open).toHaveBeenCalledExactlyOnceWith(pathlib.join(outDir, 'tabs', 'tab0.js'), 'w');
 

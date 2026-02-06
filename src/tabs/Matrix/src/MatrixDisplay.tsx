@@ -3,6 +3,7 @@ import range from 'lodash/range';
 import { getDefaultCellCallback, getDefaultColCallback, getDefaultRowCallback } from './callbacks';
 import IndexLabel from './IndexLabel';
 import MatrixButton from './MatrixButton';
+import { getDefaultCellCallback, getDefaultColCallback, getDefaultRowCallback } from './callbacks';
 
 type ErrorLocations = 'cell' | 'col' | 'row';
 

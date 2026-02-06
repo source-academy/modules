@@ -68,6 +68,9 @@ async function getMasterLockFile() {
 
 interface ResolutionSpec { pkgSpecifier: string, pkgName: string }
 
+/**
+ * Parsed output entry returned by `yarn why`
+ */
 interface YarnWhyOutput {
   value: string;
   children: {
@@ -77,6 +80,28 @@ interface YarnWhyOutput {
     };
   };
 }
+
+/**
+ * Run `yarn why <package_name>` to see why a package is included
+ * Don't use recursive (-R) since we want to build the graph ourselves
+ * @function
+ */
+const runYarnWhy = memoize(async (pkgName: string) => {
+  // Memoize the call so that we don't need to call yarn why multiple times for each package
+  const { stdout: output, exitCode, stderr } = await getExecOutput('yarn', ['why', pkgName, '--json'], { silent: true });
+  if (exitCode !== 0) {
+    core.error(stderr);
+    throw new Error(`yarn why for ${pkgName} failed!`);
+  }
+
+  return output.split('\n').reduce<YarnWhyOutput[]>((res, each) => {
+    each = each.trim();
+    if (each === '') return res;
+
+    const pkg = JSON.parse(each) as YarnWhyOutput;
+    return [...res, pkg];
+  }, []);
+});
 
 /**
  * Determines the names of the packages that have changed versions
@@ -92,51 +117,48 @@ export async function getPackagesWithResolutionChanges() {
     changes.delete(edge);
   }
 
-  const changedDeps: ResolutionSpec[] = [];
+  const frontier: ResolutionSpec[] = [];
+  const changedDeps = new Set<string>();
   for (const edge of changes) {
     const [pkgSpecifier] = edge.split(' -> ');
-    changedDeps.push({ pkgSpecifier, pkgName: extractPackageName(pkgSpecifier) });
+    changedDeps.add(pkgSpecifier);
+    frontier.push({
+      pkgSpecifier,
+      pkgName: extractPackageName(pkgSpecifier)
+    });
   }
 
-  const frontier = [...changedDeps];
   while (frontier.length > 0) {
     const { pkgName, pkgSpecifier } = frontier.shift()!;
 
-    // Run `yarn why <package_name>` to see why a package is included
-    // Don't use recursive (-R) since we want to build the graph ourselves
-    const { stdout: output, exitCode, stderr } = await getExecOutput('yarn', ['why', pkgName, '--json'], { silent: true });
-    if (exitCode !== 0) {
-      core.error(stderr);
-      throw new Error(`yarn why for ${pkgName} failed!`);
-    }
+    const reasons = await runYarnWhy(pkgName);
+    reasons.forEach(pkg => {
+      if (changedDeps.has(pkg.value)) {
+        // If we've already added this pkg specifier, don't need to explore it again
+        return;
+      }
 
-    output.split('\n').forEach(each => {
-      each = each.trim();
-      if (each === '') return;
-
-      const pkg = JSON.parse(each) as YarnWhyOutput;
       const childrenSpecifiers = Object.values(pkg.children).map(({ descriptor }) => descriptor);
       if (!childrenSpecifiers.includes(pkgSpecifier)) return;
 
-      const toAdd: ResolutionSpec = { pkgSpecifier: pkg.value, pkgName: extractPackageName(pkg.value) }
-      frontier.push(toAdd);
-      changedDeps.push(toAdd);
+      frontier.push({ pkgSpecifier: pkg.value, pkgName: extractPackageName(pkg.value) });
+      changedDeps.add(pkg.value);
     });
   }
 
   core.info('=== Summary of dirty monorepo packages ===\n');
-  const pkgsToRebuild = changedDeps.filter(({ pkgSpecifier }) => pkgSpecifier.includes('@workspace:'));
-  for (const { pkgName } of pkgsToRebuild) {
+  const pkgsToRebuild = [...changedDeps].filter(pkgSpecifier => pkgSpecifier.includes('@workspace:'));
+  for (const pkgName of pkgsToRebuild) {
     core.info(`- ${pkgName}`);
   }
 
-  return pkgsToRebuild.map(({ pkgName }) => pkgName);
+  return pkgsToRebuild.map(extractPackageName);
 }
 
 /**
  * Returns `true` if there are changes present in the given directory relative to
  * the master branch\
- * Used to determine, particularly for libraries, if running tests and tsc are necessary
+ * Used to determine if the lockfile has changed
  */
 export const hasLockFileChanged = memoize(async () => {
   const { exitCode } = await getExecOutput(

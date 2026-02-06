@@ -137,7 +137,21 @@ export function arrayIsLength<T extends number>(obj: unknown, length: T): obj is
  * Otherwise, it will return Windows paths with the path separators replaced.
  */
 export function convertToPosixPath(p: string) {
-  return pathlib.posix.join(...p.split(pathlib.sep));
+  if (p.startsWith('/')) {
+    // Assume that this is already a posix path
+    return p;
+  }
+
+  const { root } = pathlib.parse(p);
+  const pathArgs = p.split(pathlib.sep);
+
+  if (root.endsWith(':\\')) {
+    // This is a Windows path with a drive letter
+    const driveLetter = p[0];
+    return pathlib.posix.join('/', driveLetter, ...pathArgs.slice(1));
+  }
+
+  return pathlib.posix.join(...pathArgs);
 }
 
 /**

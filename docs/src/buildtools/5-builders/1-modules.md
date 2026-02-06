@@ -14,11 +14,8 @@ Currently, there are several bundlers available such as RollupJS, Babel and Webp
 
 ## How Source Modules are Bundled
 
-Bundles and tabs are transpiled with esbuild using the following common options set:
-
-<<< ../../../../lib/buildtools/src/build/modules/commons.ts#esbuildOptions
-
-This converts each bundle and tab into an [IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE). Here is the `curve` bundle passed through `esbuild`:
+Bundles and tabs are transpiled with esbuild. This converts each bundle and tab into an [IIFE](https://developer.mozilla.org/en-US/docs/Glossary/IIFE).
+Here is the `curve` bundle passed through `esbuild`:
 
 ```js
 // All of the code within the curve bundle is combined into a single file

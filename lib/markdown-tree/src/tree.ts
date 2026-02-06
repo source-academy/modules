@@ -25,19 +25,11 @@ interface LineStringSet {
 }
 
 /** Contains all strings for tree rendering */
-const LINE_STRINGS: { [charset: string]: LineStringSet } = {
-  ascii: {
-    CHILD: '|-- ',
-    LAST_CHILD: '`-- ',
-    DIRECTORY: '|   ',
-    EMPTY: '    ',
-  },
-  'utf-8': {
-    CHILD: '├── ',
-    LAST_CHILD: '└── ',
-    DIRECTORY: '│   ',
-    EMPTY: '    ',
-  },
+export const LINE_STRINGS: LineStringSet = {
+  CHILD: '├── ',
+  LAST_CHILD: '└── ',
+  DIRECTORY: '│   ',
+  EMPTY: '    ',
 };
 
 /**
@@ -45,12 +37,6 @@ const LINE_STRINGS: { [charset: string]: LineStringSet } = {
  * when calling `generateTree`
  */
 interface GenerateTreeOptions {
-  /**
-   * Which set of characters to use when
-   * rendering directory lines
-   */
-  charset?: 'ascii' | 'utf-8';
-
   /**
    * Whether or not to append trailing slashes
    * to directories. Items that already include a
@@ -72,7 +58,6 @@ interface GenerateTreeOptions {
 
 /** The default options if no options are provided */
 const defaultOptions: GenerateTreeOptions = {
-  charset: 'utf-8',
   trailingDirSlash: false,
   fullPath: false,
   rootDot: true,
@@ -111,7 +96,7 @@ function getAsciiLine(
   commentLoc: number,
   options: GenerateTreeOptions
 ): string | null {
-  const lines = LINE_STRINGS[options.charset as string];
+  const lines = LINE_STRINGS;
 
   // Special case for the root element
   if (!structure.parent) {

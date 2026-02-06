@@ -30,6 +30,16 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
     return { severity: 'error', errors: [`${error}`] };
   }
 
+  const rawManifest = JSON.parse(manifestStr) as BundleManifest;
+  const validateResult = validate(rawManifest, manifestSchema, { throwError: false });
+
+  if (validateResult.errors.length > 0) {
+    return {
+      severity: 'error',
+      errors: validateResult.errors.map(each => `${bundleName}: ${each.toString()}`)
+    };
+  }
+
   let versionStr: string | undefined;
   try {
     let packageName: string;
@@ -48,16 +58,6 @@ export async function getBundleManifest(directory: string, tabCheck?: boolean): 
       return undefined;
     }
     return { severity: 'error', errors: [`${error}`] };
-  }
-
-  const rawManifest = JSON.parse(manifestStr) as BundleManifest;
-  const validateResult = validate(rawManifest, manifestSchema, { throwError: false });
-
-  if (validateResult.errors.length > 0) {
-    return {
-      severity: 'error',
-      errors: validateResult.errors.map(each => `${bundleName}: ${each.toString()}`)
-    };
   }
 
   const manifest: BundleManifest = {
