@@ -88,7 +88,7 @@ function checkParameterType(parameter: any, expectedType: string, numberAllowInf
  *
  * @param first The first GameObject identifier to compare with.
  * @param second The second GameObject identifier to compare with.
- * @return Returns true if the two GameObject identifiers refers to the same GameObject and false otherwise.
+ * @returns Returns true if the two GameObject identifiers refers to the same GameObject and false otherwise.
  * @category Common
  */
 export function same_gameobject(first: GameObjectIdentifier, second: GameObjectIdentifier): boolean {
@@ -143,7 +143,7 @@ export function set_update(gameObjectIdentifier: GameObjectIdentifier, updateFun
  * Available Prefab Information: <a href = 'https://unity-academy.s3.ap-southeast-1.amazonaws.com/webgl_assetbundles/prefab_info.html' rel="noopener noreferrer" target="_blank">Click Here</a>
  *
  * @param prefab_name The prefab name
- * @return the identifier of the newly created GameObject
+ * @returns the identifier of the newly created GameObject
  *
  * @category Common
  * @category Outside Lifecycle
@@ -166,7 +166,7 @@ export function instantiate(prefab_name: string): GameObjectIdentifier {
  * **2D mode only**
  *
  * @param sourceImageUrl The image url for the sprite.
- * @return the identifier of the newly created GameObject
+ * @returns the identifier of the newly created GameObject
  *
  * @category Common
  * @category Outside Lifecycle
@@ -186,7 +186,7 @@ export function instantiate_sprite(sourceImageUrl: string) {
  *
  * You may use the empty GameObject to run some general game management code or use the position of the empty GameObject to represent a point in the scene that the rest of your codes can access and utilize.
  *
- * @return the identifier of the newly created GameObject
+ * @returns the identifier of the newly created GameObject
  *
  * @category Common
  * @category Outside Lifecycle
@@ -212,7 +212,7 @@ export function instantiate_empty(): GameObjectIdentifier {
  * By assigning the above code to a GameObject with `set_update`, that GameObject will move in a constant speed for about 3 units per second along world +Z axis.
  *
  * For more information, see https://docs.unity3d.com/ScriptReference/Time-deltaTime.html
- * @return the delta time value in decimal
+ * @returns the delta time value in decimal
  *
  * @category Common
  */
@@ -242,7 +242,7 @@ export function destroy(gameObjectIdentifier: GameObjectIdentifier): void {
 /**
  * Returns the world position of a given GameObject
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get position for.
- * @return The position represented in a Vector3.
+ * @returns The position represented in a Vector3.
  *
  * @category Transform
  */
@@ -271,7 +271,7 @@ export function set_position(gameObjectIdentifier: GameObjectIdentifier, positio
 /**
  * Returns the world Euler angle rotation of a given GameObject
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get rotation for.
- * @return The Euler angle rotation represented in a Vector3.
+ * @returns The Euler angle rotation represented in a Vector3.
  *
  * @category Transform
  */
@@ -302,7 +302,7 @@ export function set_rotation_euler(gameObjectIdentifier: GameObjectIdentifier, r
  *
  * By default the scale of a GameObject is (1, 1, 1)
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get scale for.
- * @return The scale represented in a Vector3.
+ * @returns The scale represented in a Vector3.
  *
  * @category Transform
  */
@@ -468,7 +468,7 @@ export function look_at(gameObjectIdentifier: GameObjectIdentifier, position: Ve
  * @param gameObjectIdentifier_B The identifier for the second GameObject
  *
  *
- * @return The value of the distance between these two GameObjects
+ * @returns The value of the distance between these two GameObjects
  * @category Transform
  */
 export function gameobject_distance(gameObjectIdentifier_A: GameObjectIdentifier, gameObjectIdentifier_B: GameObjectIdentifier): number {
@@ -495,7 +495,7 @@ function checkKeyCodeValidityAndToLowerCase(keyCode: string): string {
  * When user presses a key on the keyboard or mouse button, this function will return true only at the frame when the key is just pressed down and return false afterwards.
  *
  * For more information, see https://docs.unity3d.com/ScriptReference/Input.GetKeyDown.html
- * @return A boolean value equivalent to Input.GetKeyDown(keyCode) in Unity.
+ * @returns A boolean value equivalent to Input.GetKeyDown(keyCode) in Unity.
  *
  * @param keyCode The key to detact input for.
  * @category Input
@@ -511,7 +511,7 @@ export function get_key_down(keyCode: string): boolean {
  * When user presses a key on the keyboard or mouse button, this function will return true in every frame that the key is still being pressed and false otherwise.
  *
  * For more information, see https://docs.unity3d.com/ScriptReference/Input.GetKey.html
- * @return A boolean value equivalent to Input.GetKey(keyCode) in Unity.
+ * @returns A boolean value equivalent to Input.GetKey(keyCode) in Unity.
  *
  * @param keyCode The key to detact input for.
  * @category Input
@@ -528,7 +528,7 @@ export function get_key(keyCode: string): boolean {
  * When user releases a pressed key on the keyboard or mouse button, this function will return true only at the frame when the key is just released up and return false otherwise.
  *
  * For more information, see https://docs.unity3d.com/ScriptReference/Input.GetKeyUp.html
- * @return A boolean value equivalent to Input.GetKeyUp(keyCode) in Unity.
+ * @returns A boolean value equivalent to Input.GetKeyUp(keyCode) in Unity.
  *
  * @param keyCode The key to detact input for.
  * @category Input
@@ -585,7 +585,7 @@ export function apply_rigidbody(gameObjectIdentifier: GameObjectIdentifier): voi
  * Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get mass for.
- * @return The mass of the rigidbody attached on the GameObject
+ * @returns The mass of the rigidbody attached on the GameObject
  * @category Physics - Rigidbody
  */
 export function get_mass(gameObjectIdentifier: GameObjectIdentifier): number {
@@ -618,7 +618,7 @@ export function set_mass(gameObjectIdentifier: GameObjectIdentifier, mass: numbe
  * Usage of all physics functions under the Physics - Rigidbody category requires calling `apply_rigidbody` first on the applied game objects.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get velocity for.
- * @return the velocity at this moment represented in a Vector3.
+ * @returns the velocity at this moment represented in a Vector3.
  * @category Physics - Rigidbody
  */
 export function get_velocity(gameObjectIdentifier: GameObjectIdentifier): Vector3 {
@@ -653,7 +653,7 @@ export function set_velocity(gameObjectIdentifier: GameObjectIdentifier, velocit
  * **2D Mode Special: **In 2D mode there is no angular velocity on X nor Y axis, so in the X and Y values in the returned Vector3 will always be zero.
  *
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get angular velocity for.
- * @return the angular velocity at this moment represented in a Vector3.
+ * @returns the angular velocity at this moment represented in a Vector3.
  * @category Physics - Rigidbody
  */
 export function get_angular_velocity(gameObjectIdentifier: GameObjectIdentifier): Vector3 {
@@ -938,7 +938,7 @@ export function gui_button(text: string, x: number, y: number, width: number, he
  *
  * **If default main camera controllers are disabled (you have called `request_for_main_camera_control`), then the following target GameObject is useless.**
  *
- * @return The GameObject idenfitier for the main camera following target GameObject.
+ * @returns The GameObject idenfitier for the main camera following target GameObject.
  * @category Camera
  * @category Outside Lifecycle
  */
@@ -955,7 +955,7 @@ export function get_main_camera_following_target(): GameObjectIdentifier {
  *
  * This function is for totally customizing the position and rotation of the main camera. If you'd like to simplify the camera controlling with the help of the default camera controllers in Unity Academy, please consider use `get_main_camera_following_target` function.
  *
- * @return The GameObject identifier that can directly be used to control the main camera's position and rotation
+ * @returns The GameObject identifier that can directly be used to control the main camera's position and rotation
  * @category Camera
  * @category Outside Lifecycle
  */
@@ -988,7 +988,7 @@ export function set_custom_prop(gameObjectIdentifier: GameObjectIdentifier, prop
  * @param gameObjectIdentifier The identifier for the GameObject that you want to get the custom property on.
  * @param propName The name (a string) of the custom property
  *
- * @return The value of the custom property with the given name on the given GameObject. If the property value is not set, this function will return `undefined`.
+ * @returns The value of the custom property with the given name on the given GameObject. If the property value is not set, this function will return `undefined`.
  *
  * @category Common
  */
@@ -1006,7 +1006,7 @@ export function get_custom_prop(gameObjectIdentifier: GameObjectIdentifier, prop
  * @param y The y component of the new vector
  * @param z The z component of the new vector
  *
- * @return The 3D vector (x, y, z)
+ * @returns The 3D vector (x, y, z)
  *
  * @category Maths
  */
@@ -1021,7 +1021,7 @@ export function vector3(x: number, y: number, z: number): Vector3 {
  * Get the X component of a 3D vector
  * @param vector The 3D vector
  *
- * @return The X component of the given vector
+ * @returns The X component of the given vector
  *
  * @category Maths
  */
@@ -1034,7 +1034,7 @@ export function get_x(vector: Vector3): number {
  * Get the Y component of a 3D vector
  * @param vector The 3D vector
  *
- * @return The Y component of the given vector
+ * @returns The Y component of the given vector
  *
  * @category Maths
  */
@@ -1047,7 +1047,7 @@ export function get_y(vector: Vector3): number {
  * Get the Z component of a 3D vector
  * @param vector The 3D vector
  *
- * @return The Z component of the given vector
+ * @returns The Z component of the given vector
  *
  * @category Maths
  */
@@ -1060,7 +1060,7 @@ export function get_z(vector: Vector3): number {
  * Scales a 3D vector with the given factor.
  * @param vector The original vector
  * @param factor The scaling factor.
- * @return The scaled vector
+ * @returns The scaled vector
  *
  * @category Maths
  */
@@ -1074,7 +1074,7 @@ export function scale_vector(vector: Vector3, factor: number): Vector3 {
  * Add two 3D vectors together.
  * @param vectorA The first vector
  * @param vectorB The second vector.
- * @return The sum of the two vectors
+ * @returns The sum of the two vectors
  *
  * @category Maths
  */
@@ -1088,7 +1088,7 @@ export function add_vectors(vectorA: Vector3, vectorB: Vector3): Vector3 {
  * Calcuate the vector difference between two vectors (vectorA - vectorB).
  * @param vectorA The minuend vector.
  * @param vectorB The subtrahend vector.
- * @return The result for vectorA - vectorB
+ * @returns The result for vectorA - vectorB
  *
  * @category Maths
  */
@@ -1102,7 +1102,7 @@ export function vector_difference(vectorA: Vector3, vectorB: Vector3): Vector3 {
  * Calcuate the dot product of two 3D vectors.
  * @param vectorA The first vector
  * @param vectorB The second vector.
- * @return The dot product
+ * @returns The dot product
  *
  * @category Maths
  */
@@ -1116,7 +1116,7 @@ export function dot(vectorA: Vector3, vectorB: Vector3): number {
  * Calcuate the cross product of two 3D vectors.
  * @param vectorA The first vector
  * @param vectorB The second vector.
- * @return The cross product
+ * @returns The cross product
  *
  * @category Maths
  */
@@ -1129,7 +1129,7 @@ export function cross(vectorA: Vector3, vectorB: Vector3): Vector3 {
 /**
  * Normalize a vector. The returned vector will have the same direction as the original vector but have a magnitude of 1.
  * @param vector The original vector
- * @return The normalized vector. This function will return a zero vector if the original vector is a zero vector.
+ * @returns The normalized vector. This function will return a zero vector if the original vector is a zero vector.
  *
  * @category Maths
  */
@@ -1141,7 +1141,7 @@ export function normalize(vector: Vector3): Vector3 {
 /**
  * Calcuate the magnitude of a vector
  * @param vector The vector
- * @return The magnitude of the vector
+ * @returns The magnitude of the vector
  *
  * @category Maths
  */
@@ -1152,7 +1152,7 @@ export function magnitude(vector: Vector3): number {
 
 /**
  * Get the zero vector
- * @return The zero vector
+ * @returns The zero vector
  *
  * @category Maths
  */
@@ -1166,7 +1166,7 @@ export function zero_vector(): Vector3 {
  * @param pointA The first point
  * @param pointB The second point
  *
- * @return The value of the distance between the two points
+ * @returns The value of the distance between the two points
  *
  * @category Maths
  */
@@ -1226,7 +1226,7 @@ export function load_audio_clip_wav(audioUrl: string): AudioClipIdentifier {
  * So you can still use the audio source as a regular GameObject, like setting its position with `set_position`, using `set_start` and `set_update` to set its `Start` and `Update` funtions, etc.
  *
  * @param audioClip the audio clip that you want to use for this audio source
- * @return the identifier of the newly created GameObject
+ * @returns the identifier of the newly created GameObject
  *
  * @category Sound / Audio
  * @category Outside Lifecycle

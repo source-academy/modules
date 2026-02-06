@@ -5,9 +5,9 @@ import { resolveEitherBundleOrTab } from '@sourceacademy/modules-repotools/manif
 import { divideAndRound } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
 import { ESLint } from 'eslint';
+import { formatTscResult, runTypechecking } from '../build/modules/tsc.js';
 import { runPrebuild } from '../prebuild/index.js';
 import { formatLintResult, lintGlobal, runEslint } from '../prebuild/lint.js';
-import { formatTscResult, runTsc } from '../prebuild/tsc.js';
 import { logCommandErrorAndExit } from './commandUtils.js';
 
 export const concurrencyOption = new Option('--concurrency <value>')
@@ -119,9 +119,8 @@ export const getLintGlobalCommand = () => new Command('lintglobal')
 export const getTscCommand = () => new Command('tsc')
   .description('Run tsc for the given directory, or the current directory if no directory is specified')
   .argument('[directory]', 'Directory to run tsc in', process.cwd())
-  .option('--no-emit', 'Prevent the typescript compiler from outputting files regardless of the tsconfig setting')
   .option('--ci', process.env.CI)
-  .action(async (directory, { emit, ci }) => {
+  .action(async (directory, { ci }) => {
     const fullyResolved = pathlib.resolve(directory);
     const resolveResult = await resolveEitherBundleOrTab(fullyResolved);
 
@@ -133,7 +132,7 @@ export const getTscCommand = () => new Command('tsc')
       logCommandErrorAndExit(resolveResult);
     }
 
-    const result = await runTsc(resolveResult.asset, !emit);
+    const result = await runTypechecking(resolveResult.asset);
     console.log(formatTscResult(result));
 
     switch (result.severity) {

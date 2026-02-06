@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@sourceacademy/bundle-midi": "workspace:^",
-    "js-slang": "^1.0.81"
+    "js-slang": "^1.0.85"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
@@ -23,7 +23,7 @@
     "lint": "buildtools lint .",
     "tsc": "buildtools tsc .",
     "test": "buildtools test --project .",
-    "postinstall": "yarn tsc",
+    "postinstall": "buildtools compile",
     "serve": "yarn buildtools serve"
   },
   "scripts-info": {

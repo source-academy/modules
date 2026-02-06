@@ -5,12 +5,5 @@
   ],
   "include": [
     "./src"
-  ],
-  "compilerOptions": {
-    "paths": {
-      "shiki": [
-        "../../node_modules/@shikijs/types"
-      ]
-    }
-  }
+  ]
 }

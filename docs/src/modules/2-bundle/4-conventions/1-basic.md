@@ -2,6 +2,8 @@
 
 This section contains some conventions to follow when writing your bundle.
 
+[[toc]]
+
 ## 1. Cadet facing functions should not have default or rest parameters
 
 The function signature below takes in two booleans, the second of which is optional. This is not supported for Module functions in Source, but is fine if your function
@@ -205,3 +207,55 @@ Note that not every export from `js-slang` is currently supported. Below is the 
 - `js-slang/dist/utils/stringify`
 - `js-slang/dist/parser/parser`
 - `js-slang/dist/cse-machine/interpreter`
+
+## 6. Cadet Facing Type Guard Conventions
+
+A [type guard](https://www.typescriptlang.org/docs/handbook/2/narrowing.html) is a function that checks if the provided object has the desired type.
+In Typescript, there are two kinds of type guards.  Cadet facing type guards should favour the boolean returning form and should begin with the
+`is` prefix. Also, the parameter the type guard validates should be of type `unknown`.
+
+Anywhere you use a boolean check followed by a type assertion:
+```ts
+// Simple boolean type guard
+export function is_sound(obj: unknown): boolean {
+  return obj instanceof Sound;
+}
+
+function play(obj: Sound) {
+  // Simple boolean check
+  if (!is_sound(obj)) return false;
+
+  // followed by type assertion, since obj is still of type unknown
+  const sound = obj as Sound;
+  // ...implementatation details
+}
+```
+
+you should replace with a type guard:
+```ts
+// Typescript boolean Type Guard
+export function is_sound(obj: unknown): obj is Sound {
+  return obj instanceof Sound;
+}
+
+function play(obj: Sound) {
+  // Check using a type guard
+  if (!is_sound(obj)) return false;
+
+  // Type assertion is no longer required. Typescript knows that obj
+  // is a Sound here
+
+  // ...implementatation details
+}
+```
+
+Note that for simple checks (like `instanceof`), Typescript (later versions) is able to automatically infer when you are writing a type guard,
+meaning that explicitly typing your type guard may be unnecessary.
+
+However, if the checks you need to perform are complex, Typescript might
+only be able to narrow the return type of your type guard to `boolean`. In such a case you will have to write the return type explicitly.
+
+> [!TIP] Type Guards in Documentation
+> Type guards have a specific syntax for their return types (e.g. `value is null`) that isn't Source compliant.
+> These types get replaced with `boolean` when the documentation is generated, so you don't have to worry
+> about type guard types appearing in your documentation.

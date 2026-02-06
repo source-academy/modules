@@ -217,7 +217,6 @@ export const vitestConfig = defineConfig({
   name: 'SA Recommended Vitest Config',
   extends: [vitestPlugin.configs.recommended],
   plugins: {
-    // @ts-expect-error Something weird going on with the type of the plugin
     vitest: vitestPlugin,
   },
   files: [

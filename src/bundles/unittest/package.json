@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "js-slang": "^1.0.81",
-    "lodash": "^4.17.21"
+    "js-slang": "^1.0.85",
+    "lodash": "^4.17.23"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
@@ -21,7 +21,7 @@
     "test": "buildtools test --project .",
     "tsc": "buildtools tsc .",
     "lint": "buildtools lint .",
-    "postinstall": "yarn tsc",
+    "postinstall": "buildtools compile",
     "serve": "yarn buildtools serve"
   },
   "scripts-info": {

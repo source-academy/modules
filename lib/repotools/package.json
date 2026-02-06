@@ -9,18 +9,18 @@
     "@types/lodash": "^4.14.198",
     "@types/node": "^22.15.30",
     "@vitejs/plugin-react": "^5.1.0",
-    "@vitest/coverage-v8": "^4.0.4",
+    "@vitest/coverage-v8": "^4.0.18",
     "typescript": "^5.8.2",
-    "vitest": "^4.0.4",
-    "vitest-browser-react": "^2.0.2"
+    "vitest": "^4.0.18",
+    "vitest-browser-react": "^2.0.4"
   },
   "dependencies": {
-    "@vitest/browser-playwright": "^4.0.4",
+    "@vitest/browser-playwright": "^4.0.18",
     "chalk": "^5.0.1",
     "commander": "^14.0.0",
     "esbuild": "^0.27.0",
     "jsonschema": "^1.5.0",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.23"
   },
   "peerDependencies": {
     "@vitejs/plugin-react": "*",

@@ -68,7 +68,7 @@ class RuneDisplay {
  * Renders the specified Rune in a tab as a basic drawing.
  * @function
  * @param rune - The Rune to render
- * @return {Rune} The specified Rune
+ * @returns {Rune} The specified Rune
  *
  * @category Main
  */
@@ -79,7 +79,7 @@ export const show = RuneDisplay.show;
  * anaglyph.
  * @function
  * @param rune - The Rune to render
- * @return {Rune} The specified Rune
+ * @returns {Rune} The specified Rune
  *
  * @category Main
  */
@@ -90,7 +90,7 @@ export const anaglyph = RuneDisplay.anaglyph;
  * of 0.1.
  * @function
  * @param rune - The Rune to render
- * @return {Rune} The specified Rune
+ * @returns {Rune} The specified Rune
  *
  * @category Main
  */
@@ -102,7 +102,7 @@ export const hollusion = RuneDisplay.hollusion;
  * @function
  * @param rune - The Rune to render
  * @param {number} magnitude - The hollusion's magnitude
- * @return {Rune} The specified Rune
+ * @returns {Rune} The specified Rune
  *
  * @category Main
  */

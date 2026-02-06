@@ -21,6 +21,7 @@ Documentation should be written in [Markdown](https://www.markdownguide.org/gett
 the markdown is converted to raw HTML.
 
 ::: details Type Aware annotations
+
 [JSDoc](https://jsdoc.app) (and TSDoc) both support annotations that express type information directly like `@type` or annotations that can optionally contain type information like `@param` and `@returns`.
 Since modules are already written in Typescript, there is no need to use type-aware annotations to document the type of an object.
 
@@ -130,7 +131,8 @@ export const draw_connected = createDrawFunction('none', 'lines', '2D', false);
 The export will now be correctly recognized as a function:
 ![](./drawFunc.png)
 
-There is no automatic way to make this distinction, so it is up to the bundle authors to make sure that this convention is adhered to.
+The buildtools are configured to emit a warning if a variable is detected to have function signatures but cannot automatically rectify
+this problem.
 
 ### Variables/Constants
 
@@ -193,10 +195,80 @@ This causes `type_map` to be removed from the documentation, even if it is expor
 > Bundle `type_map`s are supposed to be internal implementation details hidden from users. If you forget to apply a `@hidden` tag to
 > your bundle's type map export, the build tools will show a warning.
 
+### Use of `@example`
+
+`@example` blocks allow the developer to provide code snippets that serve as examples for for how the function/variable is intended to be
+used. Consider an example from the `midi` bundle below:
+
+```ts {10-13}
+/**
+ * Converts a letter name to its corresponding MIDI note.
+ * The letter name is represented in standard pitch notation.
+ * Examples are "A5", "Db3", "C#7".
+ * Refer to <a href="https://i.imgur.com/qGQgmYr.png">this</a> mapping from
+ * letter name to midi notes.
+ *
+ * @param note given letter name
+ * @return the corresponding midi note
+ * @example
+ * ```
+ * letter_name_to_midi_note('C4'); // Returns 60
+ * ```
+ * @function
+ */
+export function letter_name_to_midi_note(note: NoteWithOctave): MIDINote {}
+```
+
+When the documentation is renderered, a code block is produced:
+
+![](./docExample.png)
+
+Note that your code examples should be surrounded in a Markdown code block (using the triple backticks ```` ``` ````). This will
+help Typedoc figure out what content belongs to your code block. The language specifier is not required here as it is assumed that
+your code examples are written in Typescript.
+
+::: details Why you should use a code block
+
+If you use an inline code example, Typedoc might include things in your example that you didn't mean to include. Consider
+a modified version of the example above:
+
+```ts {10}
+/**
+ * Converts a letter name to its corresponding MIDI note.
+ * The letter name is represented in standard pitch notation.
+ * Examples are "A5", "Db3", "C#7".
+ * Refer to <a href="https://i.imgur.com/qGQgmYr.png">this</a> mapping from
+ * letter name to midi notes.
+ *
+ * @param note given letter name
+ * @return the corresponding midi note
+ * @example letter_name_to_midi_note("C4"); // Returns 60
+ * @function
+ */
+export function letter_name_to_midi_note(note: NoteWithOctave): MIDINote {}
+```
+
+Typedoc ends up including the `@function` tag as part of the code block:
+
+![](./wrongDocExample.png)
+
+Using a code block makes it clear exactly what is intended to be part of your example code block.
+:::
+
+During documentation generation, the code in your code block will be parsed by a Typescript parser to ensure that you have written
+valid Typescript code. It will print a warning message if your example code doesn't produce syntactically valid Typescript.
+
 ### Other Tags
 
 There are a variety of tags that Typedoc supports. This list can be found [here](https://typedoc.org/documents/Tags.html). When writing your documentation you should use these tags
 to the best of your ability to help make your documentation as comprehensive as possible.
+
+> [!INFO] Configuring Supported Tags
+> There is an ESLint rule configured to error when you use an unknown tag. By default, the rule includes all tags supported by JSDoc, but Typedoc
+> actually supports many more tags intended for customizing documentaton output.
+> 
+> If you want to use a Typedoc supported tag that hasn't been configured for use, you can simply modify the `jsdoc/check-tag-names`
+> rule to include your tag.
 
 ## HTML Documentation
 

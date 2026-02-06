@@ -59,3 +59,18 @@ export function mockDebuggerContext<T>(moduleState: T, name: string) {
     }
   } as unknown as DebuggerContext;
 }
+
+type ArrayOfLengthHelper<T extends number, U, V extends U[] = []> =
+  V['length'] extends T ? V : ArrayOfLengthHelper<T, U, [...V, U]>;
+
+/**
+ * Utility type that represents a tuple of a specific length
+ */
+export type ArrayOfLength<T extends number, U = unknown> = ArrayOfLengthHelper<T, U>;
+
+/**
+ * Type guard for checking that a function has the specified number of parameters.
+ */
+export function isFunctionOfLength<T extends number>(f: unknown, l: T): f is (...args: ArrayOfLength<T>) => unknown {
+  return typeof f === 'function' && f.length === l;
+}

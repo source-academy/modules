@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Initialize Github Actions
         uses: ./.github/actions/src/init
@@ -65,7 +65,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Initialize ${{ matrix.lib.name }}
         uses: ./.github/actions/src/init
@@ -99,7 +99,7 @@ jobs:
     name: ${{ matrix.tabInfo.tabName }} Tab
     steps:
       - name: Check out source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Initialize ${{ matrix.tabInfo.tabName }}
         uses: ./.github/actions/src/init
@@ -143,7 +143,7 @@ jobs:
     name: ${{ matrix.bundleInfo.bundleName }} Bundle
     steps:
       - name: Check out source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Initialize ${{ matrix.bundleInfo.name }}
         uses: ./.github/actions/src/init
@@ -185,7 +185,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Enable Corepack
         run: corepack enable
@@ -235,7 +235,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Initialize Docserver
         uses: ./.github/actions/src/init
@@ -258,7 +258,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Initialize Repo
         uses: ./.github/actions/src/init
