@@ -151,7 +151,7 @@ export class RenderFunctionCreators {
     'stretch',
     'points',
     '3D',
-    false,
+    true,
     'draw_3D_points_full_view'
   );
 
@@ -160,7 +160,7 @@ export class RenderFunctionCreators {
     'fit',
     'points',
     '3D',
-    false,
+    true,
     'draw_3D_points_full_view_proportional'
   );
 }

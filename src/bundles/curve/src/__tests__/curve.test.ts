@@ -52,6 +52,7 @@ describe('Render function creators', () => {
     if (typeof drawers.RenderFunctionCreators[name] !== 'function') return res;
     return [...res, [name, drawers.RenderFunctionCreators[name]]];
   }, []);
+
   describe.each(renderFuncCreators)('%s', (name, func) => {
     test('name property is correct', () => {
       expect(func.name).toEqual(name);
