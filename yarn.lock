@@ -4568,7 +4568,7 @@ __metadata:
   dependencies:
     "@actions/artifact": "npm:^6.0.0"
     "@actions/core": "npm:^1.11.1"
-    "@actions/exec": "npm:^1.1.1"
+    "@actions/exec": "npm:^3.0.0"
     "@sourceacademy/modules-repotools": "workspace:^"
     "@types/node": "npm:^22.15.30"
     lodash: "npm:^4.17.23"
