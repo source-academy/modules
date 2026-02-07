@@ -4443,7 +4443,7 @@ __metadata:
     playwright: "npm:^1.55.1"
     re-resizable: "npm:^6.9.11"
     react: "npm:^18.3.1"
-    react-ace: "npm:^10.1.0"
+    react-ace: "npm:^14.0.0"
     react-dom: "npm:^18.3.1"
     sass: "npm:^1.85.0"
     typescript: "npm:^5.8.2"
@@ -4777,7 +4777,7 @@ __metadata:
     "@types/react-dom": "npm:^18.3.1"
     ace-builds: "npm:^1.25.1"
     react: "npm:^18.3.1"
-    react-ace: "npm:^10.1.0"
+    react-ace: "npm:^14.0.0"
     react-dom: "npm:^18.3.1"
   languageName: unknown
   linkType: soft
@@ -6483,10 +6483,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ace-builds@npm:^1.25.1, ace-builds@npm:^1.4.14":
+"ace-builds@npm:^1.25.1":
   version: 1.43.5
   resolution: "ace-builds@npm:1.43.5"
   checksum: 10c0/ee155b912e177bc37ba619979be08730ed5ed142f5bd6a3ca9ee6359685e5372b6a646625b7a1c2ce31b44ce3b7c0d6a47af3e18c4db1b75e1d892bffc5c3038
+  languageName: node
+  linkType: hard
+
+"ace-builds@npm:^1.36.3":
+  version: 1.43.6
+  resolution: "ace-builds@npm:1.43.6"
+  checksum: 10c0/33d0159a99650602de83b95766643b8f4f6029fc1ab582e47f7678288cae8e1c89b91747d23be42ec153a88d784fb9488935973f7a100b9093f837ac988f5c96
   languageName: node
   linkType: hard
 
@@ -14981,7 +14988,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -15117,19 +15124,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-ace@npm:^10.1.0":
-  version: 10.1.0
-  resolution: "react-ace@npm:10.1.0"
+"react-ace@npm:^14.0.0":
+  version: 14.0.1
+  resolution: "react-ace@npm:14.0.1"
   dependencies:
-    ace-builds: "npm:^1.4.14"
+    ace-builds: "npm:^1.36.3"
     diff-match-patch: "npm:^1.0.5"
     lodash.get: "npm:^4.4.2"
     lodash.isequal: "npm:^4.5.0"
-    prop-types: "npm:^15.7.2"
+    prop-types: "npm:^15.8.1"
   peerDependencies:
-    react: ^0.13.0 || ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^0.13.0 || ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/c7f4b08ec9873662b33b1e3d3e9312a5172120425b3842310438430ed0618a00de0e076defed057658ae0ae565d943fd573ae6decf13b7d1ca3f27eb26b0ce81
+    react: ^0.13.0 || ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^0.13.0 || ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/dbc77970836f13bad88365903d077edd68cc1955857290475bc067e0b801181c1d60a9ee08cf89b20895fe312dbb169c072c5b23338d7176f9f658db7929732f
   languageName: node
   linkType: hard
 
