@@ -8,37 +8,43 @@ import type { Pair } from 'js-slang/dist/stdlib/list';
 export type CellCallback = (row: number, col: number, currentValue: boolean, click: 'left' | 'right') => void;
 
 /**
- * Representation of a 2D matrix of values
+ * Representation of a 2D matrix of booleans with associated button labels
+ * and click callbacks.
  */
-export interface Matrix extends ReplResult {
-  name: string | undefined;
+export class Matrix implements ReplResult {
+  constructor(
+    public name: string | undefined,
 
-  /**
-   * Values of the matrix. Should be indexed as values[row][col].
-   */
-  values: boolean[][];
+    /**
+     * Values of the matrix. Should be indexed as values[row][col].
+     */
+    public values: boolean[][],
 
-  /**
-   * Button labels for the matrix. Should be indexed as labels[row][col].
-   */
-  labels: string[][];
+    /**
+     * Button labels for the matrix. Should be indexed as labels[row][col].
+     */
+    public labels: string[][],
 
-  /**
-   * Number of rows
-   */
-  readonly rows: number;
+    /**
+     * Number of rows
+     */
+    public readonly rows: number,
 
-  /**
-   * Number of columns
-   */
-  readonly cols: number;
+    /**
+     * Number of columns
+     */
+    public readonly cols: number,
 
-  toReplString: () => string;
+    public buttons: Pair<string, () => void>[]
+  ) {}
 
-  buttons: Pair<string, () => void>[];
-  onCellClick?: CellCallback;
-  onColClick?: (col: number, value: boolean) => void;
-  onRowClick?: (row: number, value: boolean) => void;
+  public toReplString(): string {
+    return `<Matrix (${this.rows}, ${this.cols})>`;
+  }
+
+  public onCellClick?: CellCallback;
+  public onColClick?: (col: number, value: boolean) => void;
+  public onRowClick?: (row: number, value: boolean) => void;
 };
 
 export interface MatrixModuleState {

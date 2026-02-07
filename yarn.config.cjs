@@ -1,12 +1,15 @@
 // @ts-check
 
+const fs = require('fs/promises');
+const pathlib = require('path');
 const { defineConfig } = require('@yarnpkg/types');
-const { name } = require('./package.json');
+
+const { name: rootWorkspaceName } = require(pathlib.join(__dirname, './package.json'));
 
 module.exports = defineConfig({
   async constraints({ Yarn }) {
-    // Make sure all workspaces have type: "module"
     for (const workspace of Yarn.workspaces()) {
+      // Make sure all workspaces have type: "module"
       workspace.set('type', 'module');
 
       // All the vitest dependencies should have the same version as vitest
@@ -21,11 +24,25 @@ module.exports = defineConfig({
           }
         }
       }
+
+      // If react is present, @types/react should also be present and use
+      // the same version range
+      const reactDep = Yarn.dependency({ workspace, ident: 'react' });
+      if (reactDep !== null && reactDep.type === 'dependencies') {
+        workspace.set('devDependencies.@types/react', reactDep.range);
+      }
+
+      // If react-dom is present, @types/react-dom should also be present and use
+      // the same version range
+      const reactDomDep = Yarn.dependency({ workspace, ident: 'react-dom' });
+      if (reactDomDep !== null && reactDomDep.type === 'dependencies') {
+        workspace.set('devDependencies.@types/react-dom', reactDomDep.range);
+      }
     }
 
     // Make sure that if the dependency is defined in the root workspace
     // that all child workspaces use the same version of that dependency
-    const [rootWorkspace] = Yarn.workspaces({ ident: name });
+    const [rootWorkspace] = Yarn.workspaces({ ident: rootWorkspaceName });
 
     // There should not be any resolutions value for js-slang,
     // which might be present if you linked js-slang to a local copy
@@ -39,6 +56,8 @@ module.exports = defineConfig({
       }
     }
 
+    const nodeVersion = await fs.readFile(pathlib.join(__dirname, '.node-version'), 'utf8');
+
     for (const dep of Yarn.dependencies()) {
       // Dependencies that are from this repository should use
       // the correct version
@@ -48,6 +67,19 @@ module.exports = defineConfig({
         dep.ident.startsWith('@sourceacademy/tab')
       ) {
         dep.update('workspace:^');
+      }
+
+      // All @types dependencies should be in devDependencies
+      if (dep.ident.startsWith('@types') && dep.type === 'dependencies') {
+        const workspace = dep.workspace;
+        workspace.set(`devDependencies.${dep.ident}`, dep.range);
+        workspace.set(`dependencies.${dep.ident}`, undefined);
+      }
+
+      // All @types/node dependencies should be compatible with the version
+      // specified in the .node-version file
+      if (dep.ident === '@types/node') {
+        dep.update(`^${nodeVersion.trim()}`);
       }
     }
 

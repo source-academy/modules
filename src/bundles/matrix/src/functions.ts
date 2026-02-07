@@ -1,13 +1,16 @@
+import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import type { List } from 'js-slang/dist/stdlib/list';
 import clamp from 'lodash/clamp';
-import type { CellCallback, Matrix } from './types';
+import { Matrix, type CellCallback } from './types';
 
 /**
  * Ensure that user inputs are within the proper bounds
  */
-function checkDimensions(func_name: string, matrix: Matrix, row: number, col: number) {
-  // console.log(matrix instanceof Matrix);
-  // if (!(matrix instanceof Matrix)) throw new Error(`Expected a matrix, got: ${typeof matrix}`);
+function checkMatrixBounds(func_name: string, matrix: unknown, row: number, col: number): asserts matrix is Matrix {
+  if (!(matrix instanceof Matrix)) {
+    throw new Error(`${func_name}: Expected a matrix, got: ${typeof matrix}`);
+  }
+
   if (row < 0 || row >= matrix.rows) {
     throw new Error(`${func_name}: Row index of ${row} out of bounds for matrix of size (${matrix.rows}, ${matrix.cols})`);
   }
@@ -43,6 +46,7 @@ export function create_matrix(rows: number, cols: number, name: string | undefin
 
   const values: boolean[][] = new Array(rows);
   const labels: string[][] = new Array(rows);
+
   for (let i = 0; i < rows; i++) {
     values[i] = new Array(cols);
     labels[i] = new Array(cols);
@@ -52,20 +56,22 @@ export function create_matrix(rows: number, cols: number, name: string | undefin
       labels[i][j] = '';
     }
   }
-  return {
+
+  return new Matrix(
     name,
-    labels,
     values,
+    labels,
     rows,
     cols,
-    toReplString: () => `<Matrix (${rows}, ${cols})>`,
-    buttons: [],
-  };
+    [],
+  );
 }
 
 /**
  * Creates a copy of an existing matrix. The copy will not have the existing's registered buttons
- * or callbacks. Its name will be the name of the existing matrix with "Copy" appended
+ * or callbacks. Its name will be the name of the existing matrix with "Copy" appended if the
+ * original had a name.
+ *
  * @param matrix Matrix to copy
  * @returns A new matrix with the same values and labels as the first
  */
@@ -79,13 +85,15 @@ export function copy_matrix(matrix: Matrix): Matrix {
       labels[i] = [...matrix.labels[i]];
     }
   }
-  return {
-    ...matrix,
-    name: `${matrix.name} Copy`,
+
+  return new Matrix(
+    matrix.name === undefined ? `${matrix.name} Copy` : undefined,
     values,
     labels,
-    buttons: [],
-  };
+    matrix.rows,
+    matrix.cols,
+    [],
+  );
 }
 
 /**
@@ -117,7 +125,7 @@ export function clear_matrix(matrix: Matrix): void {
  * @returns Boolean value of cell
  */
 export function get_cell_value(matrix: Matrix, row: number, col: number): boolean {
-  checkDimensions(get_cell_value.name, matrix, row, col);
+  checkMatrixBounds(get_cell_value.name, matrix, row, col);
   return matrix.values[row][col];
 }
 
@@ -129,7 +137,7 @@ export function get_cell_value(matrix: Matrix, row: number, col: number): boolea
  * @returns Boolean value of cell
  */
 export function get_cell_label(matrix: Matrix, row: number, col: number): string {
-  checkDimensions(get_cell_label.name, matrix, row, col);
+  checkMatrixBounds(get_cell_label.name, matrix, row, col);
   return matrix.labels[row][col];
 }
 
@@ -182,13 +190,14 @@ export function get_num_rows(matrix: Matrix) {
  * of the final call.
  * @param matrix Matrix to install buttons on
  * @param list List containing pairs of strings and functions
- * @example ```ts
- *  import { clear_matrix, install_buttons, randomize_matrix } from 'matrix';
+ * @example
+ * ```
+ * import { clear_matrix, install_buttons, randomize_matrix } from 'matrix';
  *
- *  install_buttons(matrix, list(
- *    pair('Clear', () => clear_matrix(matrix)),
- *    pair('Randomize', () => randomize_matrix(matrix, 0.5))
- *  ));
+ * install_buttons(matrix, list(
+ *   pair('Clear', () => clear_matrix(matrix)),
+ *   pair('Randomize', () => randomize_matrix(matrix, 0.5))
+ * ));
  * ```
  */
 export function install_buttons(matrix: Matrix, list: List): void {
@@ -202,8 +211,8 @@ export function install_buttons(matrix: Matrix, list: List): void {
 
     const [head, tail] = lst;
     // Check the types of the head
-    if (typeof head[0] !== 'string' || typeof head[1] !== 'function') {
-      throw new Error(`${install_buttons.name}: Expected a list containing only of pairs of strings and functions`);
+    if (typeof head[0] !== 'string' || !isFunctionOfLength(head[1], 0)) {
+      throw new Error(`${install_buttons.name}: Expected a list containing only of pairs of strings and nullary functions`);
     }
 
     return [head, ...list_to_array(tail)];
@@ -214,14 +223,15 @@ export function install_buttons(matrix: Matrix, list: List): void {
 
 /**
  * Attach a callback that will be executed every time the user clicks on a cell. The callback is passed
- * the row index, column index and current value of the cell.
+ * the row index, column index, current value of the cell as well as the type of click.
  *
  * @param matrix Matrix to attach to
  * @param callback Callback to use
  */
 export function on_cell_click(matrix: Matrix, callback: CellCallback): void {
-  if (typeof callback !== 'function') throw new Error(`${on_cell_click.name} expects a function for its callback parameter!`);
-  if (callback.length !== 4) throw new Error(`${on_cell_click.name} expects a function that takes 4 parameters for its callback!`);
+  if (!isFunctionOfLength(callback, 4)) {
+    throw new Error(`${on_cell_click.name} expects a function that takes 4 parameters for its callback!`);
+  }
 
   matrix.onCellClick = callback;
 }
@@ -236,8 +246,9 @@ export function on_cell_click(matrix: Matrix, callback: CellCallback): void {
  * @param callback Callback to use
  */
 export function on_col_click(matrix: Matrix, callback: (col: number, value: boolean) => void) {
-  if (typeof callback !== 'function') throw new Error(`${on_col_click.name} expects a function for its callback parameter!`);
-  if (callback.length !== 2) throw new Error(`${on_col_click.name} expects a function that takes 2 parameters for its callback!`);
+  if (!isFunctionOfLength(callback, 2)) {
+    throw new Error(`${on_col_click.name} expects a function that takes 2 parameters for its callback!`);
+  }
 
   matrix.onColClick = callback;
 }
@@ -252,8 +263,9 @@ export function on_col_click(matrix: Matrix, callback: (col: number, value: bool
  * @param callback Callback to use
  */
 export function on_row_click(matrix: Matrix, callback: (row: number, value: boolean) => void) {
-  if (typeof callback !== 'function') throw new Error(`${on_row_click.name} expects a function for its callback parameter!`);
-  if (callback.length !== 2) throw new Error(`${on_row_click.name} expects a function that takes 2 parameters for its callback!`);
+  if (!isFunctionOfLength(callback, 2)) {
+    throw new Error(`${on_row_click.name} expects a function that takes 2 parameters for its callback!`);
+  }
 
   matrix.onRowClick = callback;
 }
@@ -279,9 +291,9 @@ export function randomise_matrix(matrix: Matrix, probability: number): void {
 }
 
 /**
- * @inheritDoc randomise_matrix
+ * {@inheritDoc randomise_matrix}
  */
-export const randomize_matrix = randomise_matrix;
+export const randomize_matrix = Object.defineProperty(randomise_matrix, 'name', { value: 'randomize_matrix' });
 
 /**
  * Set the value of the cell at the specified column and row indices
@@ -291,7 +303,7 @@ export const randomize_matrix = randomise_matrix;
  * @param value Value to set the cell to
  */
 export function set_cell_value(matrix: Matrix, row: number, col: number, value: boolean): void {
-  checkDimensions(set_cell_value.name, matrix, row, col);
+  checkMatrixBounds(set_cell_value.name, matrix, row, col);
   matrix.values[row][col] = value;
 }
 
@@ -303,7 +315,7 @@ export function set_cell_value(matrix: Matrix, row: number, col: number, value: 
  * @param label New label for the cell
  */
 export function set_cell_label(matrix: Matrix, row: number, col: number, label: string): void {
-  checkDimensions(set_cell_label.name, matrix, row, col);
+  checkMatrixBounds(set_cell_label.name, matrix, row, col);
   matrix.labels[row][col] = label;
 }
 

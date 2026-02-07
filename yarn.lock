@@ -1174,43 +1174,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/colors@npm:^5.1.8":
-  version: 5.1.8
-  resolution: "@blueprintjs/colors@npm:5.1.8"
-  dependencies:
-    tslib: "npm:~2.6.2"
-  checksum: 10c0/d0a3d500628f60415f830df872244370efb0268f43b03a5c7c27d473ea1be5b8c9fb35fbc47330d7c022f3ddecd7afefb6ee4ef94789fe98feb2be95b15753ac
-  languageName: node
-  linkType: hard
-
-"@blueprintjs/core@npm:^5.10.2":
-  version: 5.19.1
-  resolution: "@blueprintjs/core@npm:5.19.1"
-  dependencies:
-    "@blueprintjs/colors": "npm:^5.1.8"
-    "@blueprintjs/icons": "npm:^5.23.0"
-    "@popperjs/core": "npm:^2.11.8"
-    classnames: "npm:^2.3.1"
-    normalize.css: "npm:^8.0.1"
-    react-popper: "npm:^2.3.0"
-    react-transition-group: "npm:^4.4.5"
-    react-uid: "npm:^2.3.3"
-    tslib: "npm:~2.6.2"
-    use-sync-external-store: "npm:^1.2.0"
-  peerDependencies:
-    "@types/react": ^16.14.41 || 17 || 18
-    react: ^16.8 || 17 || 18
-    react-dom: ^16.8 || 17 || 18
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-  bin:
-    upgrade-blueprint-2.0.0-rename: scripts/upgrade-blueprint-2.0.0-rename.sh
-    upgrade-blueprint-3.0.0-rename: scripts/upgrade-blueprint-3.0.0-rename.sh
-  checksum: 10c0/0805c88b3da989fa242c5acf4dda0bfaf20e937f61e8c3b8e9189f34d5e4b6bde90bf7e55eefb07c18716fed77df9b76bc6197c2e53e2e662d4b82569015253c
-  languageName: node
-  linkType: hard
-
 "@blueprintjs/core@npm:^6.0.0":
   version: 6.6.1
   resolution: "@blueprintjs/core@npm:6.6.1"
@@ -1235,24 +1198,6 @@ __metadata:
     upgrade-blueprint-2.0.0-rename: scripts/upgrade-blueprint-2.0.0-rename.sh
     upgrade-blueprint-3.0.0-rename: scripts/upgrade-blueprint-3.0.0-rename.sh
   checksum: 10c0/a9f90ee376a3a1d16314160f853460d8b279514437deeb907844bebe9749d47a2cb3bcf1f5ff82df4c2f87f7b7ca4fb2e136d3ec8706c650e15cd39dd399c1c1
-  languageName: node
-  linkType: hard
-
-"@blueprintjs/icons@npm:^5.23.0":
-  version: 5.23.0
-  resolution: "@blueprintjs/icons@npm:5.23.0"
-  dependencies:
-    change-case: "npm:^4.1.2"
-    classnames: "npm:^2.3.1"
-    tslib: "npm:~2.6.2"
-  peerDependencies:
-    "@types/react": ^16.14.41 || 17 || 18
-    react: ^16.8 || 17 || 18
-    react-dom: ^16.8 || 17 || 18
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-  checksum: 10c0/9af904e3b5c2c5e9ac7c9b12e1612184805f60d560a554df8917dafd715bed1cf1586ce31d64c59c2a7c84f595b8999c770036b9ff7f9c9f480ac1b82ccfae70
   languageName: node
   linkType: hard
 
@@ -4447,8 +4392,8 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/lodash": "npm:^4.14.198"
-    js-slang: "npm:^1.0.81"
-    lodash: "npm:^4.17.21"
+    js-slang: "npm:^1.0.85"
+    lodash: "npm:^4.17.23"
     typescript: "npm:^5.8.2"
   languageName: unknown
   linkType: soft
@@ -4738,7 +4683,7 @@ __metadata:
     "@types/estree": "npm:^1.0.0"
     "@types/http-server": "npm:^0.12.4"
     "@types/lodash": "npm:^4.14.198"
-    "@types/node": "npm:^22.15.30"
+    "@types/node": "npm:^22.17.0"
     "@vitejs/plugin-react": "npm:^5.1.0"
     "@vitest/browser-playwright": "npm:^4.0.18"
     "@vitest/coverage-v8": "npm:^4.0.18"
@@ -4820,7 +4765,7 @@ __metadata:
     "@actions/exec": "npm:^1.1.1"
     "@sourceacademy/modules-repotools": "workspace:^"
     "@types/lodash": "npm:^4.14.198"
-    "@types/node": "npm:^22.15.30"
+    "@types/node": "npm:^22.17.0"
     lodash: "npm:^4.17.23"
     snyk-nodejs-lockfile-parser: "npm:^2.4.2"
     typescript: "npm:^5.8.2"
@@ -4862,7 +4807,7 @@ __metadata:
   dependencies:
     "@commander-js/extra-typings": "npm:^14.0.0"
     "@types/lodash": "npm:^4.14.198"
-    "@types/node": "npm:^22.15.30"
+    "@types/node": "npm:^22.17.0"
     "@vitejs/plugin-react": "npm:^5.1.0"
     "@vitest/browser-playwright": "npm:^4.0.18"
     "@vitest/coverage-v8": "npm:^4.0.18"
@@ -5013,6 +4958,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
+    "@types/react-dom": "npm:^18.3.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
   languageName: unknown
@@ -5026,6 +4972,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
+    "@types/react-dom": "npm:^18.3.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
   languageName: unknown
@@ -5035,18 +4982,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/tab-Matrix@workspace:src/tabs/Matrix"
   dependencies:
-    "@blueprintjs/core": "npm:^5.10.2"
+    "@blueprintjs/core": "npm:^6.0.0"
     "@sourceacademy/bundle-matrix": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/lodash": "npm:^4.14.198"
     "@types/react": "npm:^18.3.1"
     "@vitest/browser-playwright": "npm:^4.0.4"
-    lodash: "npm:^4.17.21"
+    lodash: "npm:^4.17.23"
     playwright: "npm:^1.54.1"
     react: "npm:^18.3.1"
     typescript: "npm:^5.8.2"
-    vitest-browser-react: "npm:^2.0.2"
+    vitest-browser-react: "npm:^2.0.4"
   languageName: unknown
   linkType: soft
 
@@ -5060,6 +5007,7 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/plotly.js": "npm:^2.35.4"
     "@types/react": "npm:^18.3.1"
+    "@types/react-dom": "npm:^18.3.1"
     "@types/three": "npm:^0.181.0"
     nbody: "npm:^0.2.0"
     plotly.js-dist: "npm:^2.17.1"
@@ -5094,6 +5042,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
+    "@types/react-dom": "npm:^18.3.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
   languageName: unknown
@@ -5109,6 +5058,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
+    "@types/react-dom": "npm:^18.3.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
   languageName: unknown
@@ -5122,6 +5072,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
+    "@types/react-dom": "npm:^18.3.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
   languageName: unknown
@@ -5134,6 +5085,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
+    "@types/react-dom": "npm:^18.3.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
   languageName: unknown
@@ -5167,6 +5119,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
+    "@types/react-dom": "npm:^18.3.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
   languageName: unknown
@@ -5180,6 +5133,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
+    "@types/react-dom": "npm:^18.3.1"
     "@vitest/browser-playwright": "npm:^4.0.18"
     lodash: "npm:^4.17.23"
     playwright: "npm:^1.55.1"
@@ -5198,6 +5152,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
+    "@types/react-dom": "npm:^18.3.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
   languageName: unknown
@@ -5240,6 +5195,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
+    "@types/react-dom": "npm:^18.3.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
   languageName: unknown
@@ -5266,7 +5222,7 @@ __metadata:
   resolution: "@sourceacademy/vitest-reporter@workspace:lib/vitest-reporter"
   dependencies:
     "@types/istanbul-lib-report": "npm:^3.0.3"
-    "@types/node": "npm:^22.15.30"
+    "@types/node": "npm:^22.17.0"
     "@vitest/coverage-v8": "npm:^4.0.18"
     esbuild: "npm:^0.27.0"
     istanbul-lib-report: "npm:^3.0.1"
@@ -5899,6 +5855,15 @@ __metadata:
   dependencies:
     undici-types: "npm:~6.21.0"
   checksum: 10c0/6edd93aea86da740cb7872626839cd6f4a67a049d3a3a6639cb592c620ec591408a30989ab7410008d1a0b2d4985ce50f1e488e79c033e4476d3bec6833b0a2f
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^22.17.0":
+  version: 22.19.9
+  resolution: "@types/node@npm:22.19.9"
+  dependencies:
+    undici-types: "npm:~6.21.0"
+  checksum: 10c0/7a15c8f6c5e3ce000f5e3589f6e30d3296899fb9f6bf502057d105e19b20e70ca560b4526e032cc6187524aee5593c0a092c21c23845d19dd3185977c83582f3
   languageName: node
   linkType: hard
 
@@ -12854,7 +12819,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-slang@npm:^1.0.81, js-slang@npm:^1.0.85":
+"js-slang@npm:^1.0.85":
   version: 1.0.85
   resolution: "js-slang@npm:1.0.85"
   dependencies:
@@ -16130,21 +16095,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-uid@npm:^2.3.3":
-  version: 2.4.0
-  resolution: "react-uid@npm:2.4.0"
-  dependencies:
-    tslib: "npm:^2.0.0"
-  peerDependencies:
-    "@types/react": ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-  checksum: 10c0/5e01e8d3a4144d160af26f7ea8300887ed8379ee14b1fad7979ea755d5bfa4badfdab531cb7d4495488e94083f829bd5b28a8f6661522b11729fceb42dcf73ea
-  languageName: node
-  linkType: hard
-
 "react-use-measure@npm:^2.1.7":
   version: 2.1.7
   resolution: "react-use-measure@npm:2.1.7"
@@ -18193,7 +18143,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2, tslib@npm:^2.0.0, tslib@npm:^2.0.3, tslib@npm:^2.4.0, tslib@npm:^2.6.2, tslib@npm:^2.6.3, tslib@npm:^2.8.1":
+"tslib@npm:^2, tslib@npm:^2.0.3, tslib@npm:^2.4.0, tslib@npm:^2.6.2, tslib@npm:^2.6.3, tslib@npm:^2.8.1":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
@@ -19162,24 +19112,6 @@ __metadata:
   bin:
     vitepress: bin/vitepress.js
   checksum: 10c0/bffdd6fcfdfa72ff48228f7361d596e2279ebdbde9684b87cf66f7ef12ba096cb6eb931a1aff82038bdc579bb287e0982ba28f9416ed47af18e720a93b332d71
-  languageName: node
-  linkType: hard
-
-"vitest-browser-react@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "vitest-browser-react@npm:2.0.2"
-  peerDependencies:
-    "@types/react": ^18.0.0 || ^19.0.0
-    "@types/react-dom": ^18.0.0 || ^19.0.0
-    react: ^18.0.0 || ^19.0.0
-    react-dom: ^18.0.0 || ^19.0.0
-    vitest: ^4.0.0
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-    "@types/react-dom":
-      optional: true
-  checksum: 10c0/95941efb09fa26533974029c70f5bc295b35de0ddef36e8852ce2e97221e10c660d4251af837f875a264a5b08ced965145a2d90a67d11dc595e91b16adbf3808
   languageName: node
   linkType: hard
 

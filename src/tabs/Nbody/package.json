@@ -16,6 +16,7 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/plotly.js": "^2.35.4",
     "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
     "@types/three": "^0.181.0"
   },
   "scripts": {

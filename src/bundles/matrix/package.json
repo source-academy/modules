@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
-    "js-slang": "^1.0.81",
-    "lodash": "^4.17.21"
+    "js-slang": "^1.0.85",
+    "lodash": "^4.17.23"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
@@ -21,6 +21,8 @@
     "tsc": "tsc --project ./tsconfig.json"
   },
   "exports": {
+    "./display": null,
+    "./dist/display": null,
     ".": "./dist/index.js",
     "./*": "./dist/*.js"
   }
