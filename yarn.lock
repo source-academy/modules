@@ -18195,8 +18195,8 @@ __metadata:
   linkType: hard
 
 "vitest-browser-react@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "vitest-browser-react@npm:2.0.2"
+  version: 2.0.5
+  resolution: "vitest-browser-react@npm:2.0.5"
   peerDependencies:
     "@types/react": ^18.0.0 || ^19.0.0
     "@types/react-dom": ^18.0.0 || ^19.0.0
@@ -18208,7 +18208,7 @@ __metadata:
       optional: true
     "@types/react-dom":
       optional: true
-  checksum: 10c0/95941efb09fa26533974029c70f5bc295b35de0ddef36e8852ce2e97221e10c660d4251af837f875a264a5b08ced965145a2d90a67d11dc595e91b16adbf3808
+  checksum: 10c0/ae972fa20895c73622c2e724a2e2a716cc2a2e5148da19a60d1185323aeb5f5bd0653cfe3048d081bb086ee0efa68c0c360d28cdf42ddd8df6a5f2d17ffd0c9e
   languageName: node
   linkType: hard
 
