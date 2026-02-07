@@ -268,7 +268,7 @@ to the best of your ability to help make your documentation as comprehensive as 
 > [!INFO] Configuring Supported Tags
 > There is an ESLint rule configured to error when you use an unknown tag. By default, the rule includes all tags supported by JSDoc, but Typedoc
 > actually supports many more tags intended for customizing documentaton output.
-> 
+>
 > If you want to use a Typedoc supported tag that hasn't been configured for use, you can simply modify the `jsdoc/check-tag-names`
 > rule to include your tag.
 
@@ -318,8 +318,8 @@ When building the json documentation for a bundle, the following steps are taken
     - For constants, their names and types are extracted
     - For functions, their name, the names and types of each parameter, and return types are extracted.\
     The descriptions of both functions are constants are also included, but first they are passed through a Markdown to HTML converter called [drawdown](https://github.com/adamvleggett/drawdown), included in this project as `drawdown.ts`
-3. The code then converts it to the HTML format expected by the frontend
-3. All the processed strings then get written to a json file in the `jsons` folder.
+1. The code then converts it to the HTML format expected by the frontend
+1. All the processed strings then get written to a json file in the `jsons` folder.
 
 If no documentation could be found, or there was an error parsing the documented code, the system will still output JSONs, just with warnings.
 

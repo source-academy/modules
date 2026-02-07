@@ -36,6 +36,7 @@ dependency tracking system to rebuild workspace packages only if they were affec
 Importantly, for the CI/CD pipeline, we are concerned only with changes relative to the **master** branch.
 
 For each workspace package, there are two main kinds of changes we must detect:
+
 1. Non-transitive
 2. Transitive
 
@@ -65,10 +66,7 @@ return exitCode !== 0;
 
 ## Transitive Changes
 
-Transitive changes occur when one of the current workspace package's dependencies contain changes. For example, the `sound` bundle
-relies on the `midi` bundle, so if the `midi` bundle has changes (and thus needs to be rebuilt), the `sound` bundle would
-also need to be rebuilt, even if the `sound` bundle did not contain any changes. 
-Since the `plotly` bundle relies on the `sound` bundle, it too would also need to be rebuilt.
+Transitive changes occur when one of the current workspace package's dependencies contain changes. For example, the `sound` bundle relies on the `midi` bundle, so if the `midi` bundle has changes (and thus needs to be rebuilt), the `sound` bundle would also need to be rebuilt, even if the `sound` bundle did not contain any changes. Since the `plotly` bundle relies on the `sound` bundle, it too would also need to be rebuilt.
 
 ```mermaid
 graph LR
@@ -145,7 +143,7 @@ publish this new version as version `4.17.1`. Notice that this version is still 
 
 When the repository's automated dependency upgrading bot (Renovate Bot) detects this, it will attempt to cause Yarn to install version `4.17.1`
 instead of `4.17.0` for `lodash`. It does this by updating the lockfile. But now we have a problem: the `curve` bundle transitively relies
-on `lodash` through `gl-matrix`. 
+on `lodash` through `gl-matrix`.
 
 ```mermaid
 graph LR
@@ -176,6 +174,7 @@ Then, using the `yarn why` command, we can determine which package is reliant on
 until we reach one of our workspace packages, at which point we know that that particular workspace needs to be rebuilt.
 
 Let us work through the above example:
+
 1. Using `git diff`, we determine that the lockfile has changed relative to the master branch.
 2. We compare the local lockfile with the master lockfile and determine that that `lodash@4.17.0` is present in the master lockfile,
 while `lodash@4.17.1` is not. So now we know that we need to determine why `lodash@4.17.1` has been included.
