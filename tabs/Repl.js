@@ -2430,6 +2430,7 @@ export default require => {
           });
           return wordScores;
         }
+        exports2.id = "textCompleter";
         exports2.getCompletions = function (editor, session, pos, prefix, callback) {
           var wordScore = wordDistance(session, pos);
           var wordList = Object.keys(wordScore);
