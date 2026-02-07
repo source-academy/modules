@@ -10,7 +10,7 @@
     "vitest": "^4.0.4"
   },
   "dependencies": {
-    "@actions/artifact": "^2.3.2",
+    "@actions/artifact": "^6.0.0",
     "@actions/core": "^1.11.1",
     "@actions/exec": "^1.1.1",
     "lodash": "^4.17.23",
