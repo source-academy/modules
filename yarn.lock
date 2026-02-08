@@ -4469,7 +4469,7 @@ __metadata:
     typescript-eslint: "npm:^8.33.1"
   peerDependencies:
     "@eslint/markdown": ^7.0.0
-    "@stylistic/eslint-plugin": ^4.4.1
+    "@stylistic/eslint-plugin": ^5.0.0
     "@vitest/eslint-plugin": ^1.3.4
     eslint: ">=9"
     eslint-plugin-import: ^2.32.0
