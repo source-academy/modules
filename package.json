@@ -104,5 +104,8 @@
     "./lib/*",
     "./src/bundles/*",
     "./src/tabs/*"
-  ]
+  ],
+  "resolutions": {
+    "cssstyle": "^4.6.0"
+  }
 }
