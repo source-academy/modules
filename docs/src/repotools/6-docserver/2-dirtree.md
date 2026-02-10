@@ -2,8 +2,6 @@
 
 The idea behind this plugin was inspired by [this](https://tree.nathanfriend.com/?) ASCII tree generator.
 
-
-
 ## Plugin Structure
 
 The plugin itself consists of 3 components:

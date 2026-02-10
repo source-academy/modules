@@ -221,6 +221,7 @@ In Typescript, there are two kinds of type guards.  Cadet facing type guards sho
 `is` prefix. Also, the parameter the type guard validates should be of type `unknown`.
 
 Anywhere you use a boolean check followed by a type assertion:
+
 ```ts
 // Simple boolean type guard
 export function is_sound(obj: unknown): boolean {
@@ -238,6 +239,7 @@ function play(obj: Sound) {
 ```
 
 you should replace with a type guard:
+
 ```ts
 // Typescript boolean Type Guard
 export function is_sound(obj: unknown): obj is Sound {
