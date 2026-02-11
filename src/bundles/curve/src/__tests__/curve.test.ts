@@ -3,7 +3,7 @@ import { describe, expect, it, test } from 'vitest';
 import type { Color, Curve } from '../curves_webgl';
 import * as drawers from '../drawers';
 import * as funcs from '../functions';
-import type { RenderFunction } from '../types';
+import type { RenderFunctionCreator } from '../types';
 
 /**
  * Evaluates the curve at 200 points, then
@@ -48,7 +48,7 @@ describe('Ensure that invalid curves and animations error gracefully', () => {
 
 describe('Render function creators', () => {
   const names = Object.getOwnPropertyNames(drawers.RenderFunctionCreators);
-  const renderFuncCreators = names.reduce<[string, (pts: number) => RenderFunction][]>((res, name) => {
+  const renderFuncCreators = names.reduce<[string, RenderFunctionCreator][]>((res, name) => {
     if (typeof drawers.RenderFunctionCreators[name] !== 'function') return res;
     return [...res, [name, drawers.RenderFunctionCreators[name]]];
   }, []);
@@ -56,6 +56,24 @@ describe('Render function creators', () => {
   describe.each(renderFuncCreators)('%s', (name, func) => {
     test('name property is correct', () => {
       expect(func.name).toEqual(name);
+
+      expect(func.isFullView).toEqual(func.name.includes('full_view'));
+
+      if (func.name.includes('full_view_proportional')) {
+        expect(func.scaleMode).toEqual('fit');
+      } else if (func.name.includes('full_view')) {
+        expect(func.scaleMode).toEqual('stretch');
+      } else {
+        expect(func.scaleMode).toEqual('none');
+      }
+
+      if (func.name.includes('points')) {
+        expect(func.drawMode).toEqual('points');
+      } else if (func.name.includes('connected')) {
+        expect(func.drawMode).toEqual('lines');
+      } else {
+        throw new Error(`Unknown draw mode for render function creator: ${func.name}`);
+      }
     });
 
     it('throws when numPoints is less than 0', () => {

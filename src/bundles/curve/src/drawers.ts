@@ -9,6 +9,7 @@ import {
   type CurveSpace,
   type DrawMode,
   type RenderFunction,
+  type RenderFunctionCreator,
   type ScaleMode
 } from './types';
 
@@ -23,7 +24,7 @@ function createDrawFunction(
   space: CurveSpace,
   isFullView: boolean,
   name: string
-): (numPoints: number) => RenderFunction {
+): RenderFunctionCreator {
   function renderFuncCreator(numPoints: number) {
     if (numPoints <= 0 || numPoints > 65535 || !Number.isInteger(numPoints)) {
       throw new Error(
@@ -57,9 +58,8 @@ function createDrawFunction(
       return curveDrawn;
     }
 
-    // Because the draw functions are actually functions
-    // we need hacky workarounds like these to pass information around
     renderFunc.is3D = space === '3D';
+
     const stringifier = () => `<${space === '3D' ? '3D' : ''}RenderFunction(${numPoints})>`;
 
     // Retain both properties for compatibility
@@ -70,6 +70,11 @@ function createDrawFunction(
   }
 
   Object.defineProperty(renderFuncCreator, 'name', { value: name });
+  renderFuncCreator.scaleMode = scaleMode;
+  renderFuncCreator.drawMode = drawMode;
+  renderFuncCreator.space = space;
+  renderFuncCreator.isFullView = isFullView;
+
   return renderFuncCreator;
 }
 
@@ -139,8 +144,17 @@ export class RenderFunctionCreators {
     'stretch',
     'lines',
     '3D',
-    false,
+    true,
     'draw_3D_connected_full_view'
+  );
+
+  @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
+  static draw_3D_connected_full_view_proportional = createDrawFunction(
+    'fit',
+    'lines',
+    '3D',
+    true,
+    'draw_3D_connected_full_view_proportional'
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
@@ -317,7 +331,7 @@ export const draw_3D_connected_full_view = RenderFunctionCreators.draw_3D_connec
  * draw_3D_connected_full_view_proportional(100)(t => make_3D_point(t, t, t));
  * ```
  */
-export const draw_3D_connected_full_view_proportional = RenderFunctionCreators.draw_3D_points_full_view_proportional;
+export const draw_3D_connected_full_view_proportional = RenderFunctionCreators.draw_3D_connected_full_view_proportional;
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling

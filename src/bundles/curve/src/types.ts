@@ -26,6 +26,19 @@ export interface RenderFunction extends ReplResult {
   is3D: boolean;
 };
 
+/**
+ * A function that returns a {@link RenderFunction|RenderFunction} that is bound to
+ * the specified number of points
+ */
+export interface RenderFunctionCreator {
+  (numPoints: number): RenderFunction;
+
+  scaleMode: ScaleMode;
+  drawMode: DrawMode;
+  space: CurveSpace;
+  isFullView: boolean;
+}
+
 export class AnimatedCurve extends glAnimation implements ReplResult {
   constructor(
     duration: number,
