@@ -71,6 +71,9 @@ export type ArrayOfLength<T extends number, U = unknown> = ArrayOfLengthHelper<T
 /**
  * Type guard for checking that a function has the specified number of parameters.
  */
-export function isFunctionOfLength<T extends number>(f: unknown, l: T): f is (...args: ArrayOfLength<T>) => unknown {
+export function isFunctionOfLength<T extends (...args: any[]) => any>(f: unknown, l: Parameters<T>['length']): f is T
+export function isFunctionOfLength<T extends number>(f: unknown, l: T): f is (...args: ArrayOfLength<T>) => unknown
+export function isFunctionOfLength(f: unknown, l: number) {
+  // TODO: Need a variation for rest parameters
   return typeof f === 'function' && f.length === l;
 }
