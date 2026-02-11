@@ -1,4 +1,4 @@
-# Error Handling
+# Error Handling and Type Checking
 
 As a continuation of the previous section, and important part of hiding a bundle's implementation details involves handling error conditions and errors
 that could be thrown.
@@ -100,3 +100,73 @@ all cadets would see.
 
 As the typing system is improved, we may be able to use one set of typing for cadets and another for internal implementation.
 :::
+
+## Validating the number of expected parameters for callbacks
+
+By default, Javascript doesn't really mind if you call a function with fewer arguments than it was defined with:
+
+```js
+function foo(x, y) {
+  return `${x}, ${y}`;
+}
+
+foo(); // is fine, x and y are just `undefined`
+```
+
+Javascript also doesn't mind if you call a function with more arguments than it was defined with:
+
+```js
+function foo(a, b) {
+  return a + b;
+}
+
+foo(1, 2, 'z'); // is fine, 3 is returned, last parameter is ignored
+```
+
+However in Source, both of the above examples will result in evaluation errors like the one below:
+
+![](./argcount-error.png)
+
+Source doesn't allow for a mismatch between the number of arguments expected by a function and the number of arguments provided.
+
+Thus, if your bundle's functions take callback parameters, it is essential that you check that the provided callback accepts the
+correct number of parameters. This is done with the `isFunctionOfLength` utility provided by `modules-lib`:
+
+```ts
+import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+
+function draw_connected(pts: number): (c: Curve) => void {
+  function renderFunction(c: Curve) {
+    if (!isFunctionOfLength(curve, 1)) {
+      throw new Error(
+        `${renderFunction.name}: The provided curve is not a valid Curve function. ` +
+        'A Curve function must take exactly one parameter (a number t between 0 and 1) ' +
+        'and return a Point or 3D Point depending on whether it is a 2D or 3D curve.'
+      );
+    }
+
+    // ...implementation details
+  }
+
+  return renderFunction
+}
+
+```
+
+Then, in Source, if the cadet provides an invalid curve (a function that takes only 1 parameter), an error is thrown:
+
+```js
+import { draw_connected, make_point } from 'curve';
+
+draw_connected(200)((a, b) => make_point(a, 0)); // error: The provided curve is not a valid Curve function.
+```
+
+The `isFunctionOfLength` function is a type guard that also checks if the given input is a function at all, so it is
+not necessary to check for that separately:
+
+```ts
+// A summarized implementation
+function isFunctionOfLength(f: unknown, l: number): f is Function {
+  return typeof f === 'function' && f.length === l;
+}
+```
