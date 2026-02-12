@@ -1,6 +1,6 @@
 import { Button, EditableText } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import clamp from 'lodash/clamp';
+import { clamp } from 'es-toolkit';
 import { useState } from 'react';
 
 export interface MultiItemDisplayProps {
@@ -31,7 +31,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
   const elementsDigitCount = Math.floor(Math.log10(Math.max(1, props.elements.length))) + 1;
 
   return (
-    <div
+    (<div
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -157,6 +157,6 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
       >
         {props.elements[currentStep]}
       </div>
-    </div>
+    </div>)
   );
 }

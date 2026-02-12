@@ -79,8 +79,8 @@
     "vitest-browser-react": "^2.0.2"
   },
   "dependencies": {
+    "es-toolkit": "^1.44.0",
     "js-slang": "^1.0.81",
-    "lodash": "^4.17.23",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

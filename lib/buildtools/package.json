@@ -7,7 +7,6 @@
     "@commander-js/extra-typings": "^14.0.0",
     "@types/estree": "^1.0.0",
     "@types/http-server": "^0.12.4",
-    "@types/lodash": "^4.14.198",
     "@types/node": "^22.15.30",
     "typescript": "^5.8.2"
   },
@@ -25,11 +24,11 @@
     "astring": "^1.8.6",
     "chalk": "^5.0.1",
     "commander": "^14.0.0",
+    "es-toolkit": "^1.44.0",
     "esbuild": "^0.27.0",
     "eslint": "^9.35.0",
     "http-server": "^14.1.1",
     "jsdom": "^26.1.0",
-    "lodash": "^4.17.23",
     "typedoc": "^0.28.9",
     "vite": "^7.1.11",
     "vitest": "^4.0.4"

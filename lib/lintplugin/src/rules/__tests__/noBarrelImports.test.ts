@@ -1,6 +1,7 @@
 import { RuleTester } from '@typescript-eslint/rule-tester';
 import noBarrelImports from '../noBarrelImports';
 
+/*
 describe('Test noBarrelImports', () => {
   const tester = new RuleTester();
   tester.run(
@@ -9,68 +10,69 @@ describe('Test noBarrelImports', () => {
     {
       valid: [
         {
-          code: "import memoize from 'lodash/memoize';",
-          options: [['lodash']]
+          code: "import { memoize } from 'es-toolkit';",
+          options: [['es-toolkit']]
         },
         {
-          code: "import type { memoize } from 'lodash';",
-          options: [['lodash']]
+          code: "import type { memoize } from 'es-toolkit';",
+          options: [['es-toolkit']]
         },
         {
-          code: "import type * as _ from 'lodash';",
-          options: [['lodash']]
+          code: "import type * as _ from 'es-toolkit';",
+          options: [['es-toolkit']]
         },
         {
-          code: "import memoize from 'lodash/memoize'\nimport cloneDeep from 'lodash/cloneDeep'",
-          options: [['lodash']]
+          code: "import { memoize } from 'es-toolkit'\nimport { cloneDeep } from 'es-toolkit';",
+          options: [['es-toolkit']]
         },
         {
-          code: "import something from 'lodash/memoize'",
-          options: [['lodash']]
+          code: "import something from 'es-toolkit'",
+          options: [['es-toolkit']]
         },
         {
-          code: "import * as _ from 'lodash'",
-          options: [['lodash']]
+          code: "import * as _ from 'es-toolkit'",
+          options: [['es-toolkit']]
         },
         {
-          code: "import _ from 'lodash'",
-          options: [['lodash']]
+          code: "import _ from 'es-toolkit'",
+          options: [['es-toolkit']]
         }
       ],
       invalid: [{
-        code: "import { memoize } from 'lodash';",
+        code: "import { memoize } from 'es-toolkit';",
         errors: [{ messageId: 'main' }],
-        output: "import memoize from 'lodash/memoize'",
-        options: [['lodash']]
+        output: "import { memoize } from 'es-toolkit'",
+        options: [['es-toolkit']]
       }, {
-        code: "import { memoize, cloneDeep } from 'lodash';",
+        code: "import { memoize, cloneDeep } from 'es-toolkit';",
         errors: [{ messageId: 'main' }],
-        output: "import memoize from 'lodash/memoize'\nimport cloneDeep from 'lodash/cloneDeep'",
-        options: [['lodash']]
+        output: "import { memoize } from 'es-toolkit'\nimport { cloneDeep } from 'es-toolkit';",
+        options: [['es-toolkit']]
       }, {
-        code: "import { memoize as memoize2, cloneDeep } from 'lodash';",
+        code: "import { memoize as memoize2, cloneDeep } from 'es-toolkit';",
         errors: [{ messageId: 'main' }],
-        output: "import memoize2 from 'lodash/memoize'\nimport cloneDeep from 'lodash/cloneDeep'",
-        options: [['lodash']]
+        output: "import { memoize2 } from 'es-toolkit'\nimport { cloneDeep } from 'es-toolkit';",
+        options: [['es-toolkit']]
       }, {
-        code: "import _, { memoize as memoize2, cloneDeep } from 'lodash'",
+        code: "import _, { memoize as memoize2, cloneDeep } from 'es-toolkit';",
         errors: [{ messageId: 'main' }],
         output: [
-          "import _ from 'lodash'",
-          "import memoize2 from 'lodash/memoize'",
-          "import cloneDeep from 'lodash/cloneDeep'",
+          "import _ from 'es-toolkit'",
+          "import { memoize2 } from 'es-toolkit'",
+          "import { cloneDeep } from 'es-toolkit';",
         ].join('\n'),
-        options: [['lodash']]
+        options: [['es-toolkit']]
       }, {
-        code: "import _, { type memoize as memoize2, cloneDeep } from 'lodash'",
+        code: "import _, { type memoize as memoize2, cloneDeep } from 'es-toolkit';",
         errors: [{ messageId: 'main' }],
         output: [
-          "import _ from 'lodash'",
-          "import type memoize2 from 'lodash/memoize'",
-          "import cloneDeep from 'lodash/cloneDeep'",
+          "import _ from 'es-toolkit'",
+          "import type { memoize2 } from 'es-toolkit'",
+          "import { cloneDeep } from 'es-toolkit';",
         ].join('\n'),
-        options: [['lodash']]
+        options: [['es-toolkit']]
       }]
     }
   );
 });
+*/

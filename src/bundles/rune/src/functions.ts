@@ -1,5 +1,5 @@
 import { mat4, vec3 } from 'gl-matrix';
-import clamp from 'lodash/clamp';
+import { clamp } from 'es-toolkit';
 import {
   DrawnRune,
   Rune,
@@ -633,7 +633,7 @@ export class HollusionRune extends DrawnRune {
       lastTime = timeInMs;
 
       const framePos
-          = Math.floor(timeInMs / (period / frameCount)) % frameCount;
+        = Math.floor(timeInMs / (period / frameCount)) % frameCount;
       const fbObject = frameBuffer[framePos];
       gl.clearColor(1.0, 1.0, 1.0, 1.0); // Set clear color to white, fully opaque
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the viewport

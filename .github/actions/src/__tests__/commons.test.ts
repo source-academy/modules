@@ -2,9 +2,12 @@ import * as exec from '@actions/exec';
 import { describe, expect, it, test, vi } from 'vitest';
 import * as commons from '../commons.js';
 
-vi.mock(import('lodash/memoize.js'), () => ({
-  default: (x: any) => x
-}) as any);
+vi.mock(import("es-toolkit"), async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual
+  }
+})
 
 const mockedExecOutput = vi.spyOn(exec, 'getExecOutput');
 

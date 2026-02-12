@@ -2,8 +2,7 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import react from '@vitejs/plugin-react';
 import { playwright } from '@vitest/browser-playwright';
-import cloneDeep from 'lodash/cloneDeep.js';
-import partition from 'lodash/partition.js';
+import { cloneDeep, partition } from 'es-toolkit';
 import { loadConfigFromFile } from 'vite';
 import type { LabelColor } from 'vitest';
 import { defineProject, mergeConfig, type TestProjectInlineConfiguration, type ViteUserConfig } from 'vitest/config';
@@ -82,7 +81,7 @@ export const sharedTabsConfig = mergeConfig(
         '@blueprintjs/icons',
         'gl-matrix',
         'js-slang',
-        'lodash',
+        'es-toolkit',
         'vitest-browser-react'
       ]
     },
@@ -226,7 +225,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
       }
 
       if (config === null) {
-        if (!await isTestDirectory(jsonDir)) {
+        if (!(await isTestDirectory(jsonDir))) {
           return {
             severity: 'success',
             config: null
@@ -254,7 +253,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
 
       const { bundle } = bundleResult;
       if (config === null) {
-        if (!await isTestDirectory(jsonDir)) {
+        if (!(await isTestDirectory(jsonDir))) {
           return {
             severity: 'success',
             config: null

@@ -5,7 +5,7 @@
 
 import type { SuiteResult, UnittestModuleState } from '@sourceacademy/bundle-unittest/types';
 import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
-import partition from 'lodash/partition';
+import { partition } from 'es-toolkit';
 
 const colfixed = {
   border: '1px solid gray',

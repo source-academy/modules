@@ -1,5 +1,5 @@
 import { EditableText, type EditableTextProps } from '@blueprintjs/core';
-import clamp from 'lodash/clamp';
+import { clamp } from 'es-toolkit';
 import { useState } from 'react';
 
 export type NumberSelectorProps = {
