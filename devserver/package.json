@@ -9,7 +9,7 @@
     "devserver": "./bin.js"
   },
   "dependencies": {
-    "@blueprintjs/core": "^5.10.2",
+    "@blueprintjs/core": "^6.0.0",
     "@blueprintjs/icons": "^5.9.0",
     "@commander-js/extra-typings": "^14.0.0",
     "@sourceacademy/modules-lib": "workspace:^",
