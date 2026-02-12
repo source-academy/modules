@@ -5,7 +5,8 @@ import * as commons from '../commons.js';
 vi.mock(import("es-toolkit"), async (importOriginal) => {
   const actual = await importOriginal()
   return {
-    ...actual
+    ...actual,
+    memoize: (x : any) => x
   }
 })
 
