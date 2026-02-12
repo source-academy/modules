@@ -1267,7 +1267,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/icons@npm:^5.23.0, @blueprintjs/icons@npm:^5.9.0":
+"@blueprintjs/icons@npm:^5.23.0":
   version: 5.23.0
   resolution: "@blueprintjs/icons@npm:5.23.0"
   dependencies:
@@ -1282,6 +1282,24 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10c0/9af904e3b5c2c5e9ac7c9b12e1612184805f60d560a554df8917dafd715bed1cf1586ce31d64c59c2a7c84f595b8999c770036b9ff7f9c9f480ac1b82ccfae70
+  languageName: node
+  linkType: hard
+
+"@blueprintjs/icons@npm:^6.0.0":
+  version: 6.5.2
+  resolution: "@blueprintjs/icons@npm:6.5.2"
+  dependencies:
+    change-case: "npm:^4.1.2"
+    classnames: "npm:^2.3.1"
+    tslib: "npm:~2.6.2"
+  peerDependencies:
+    "@types/react": 18
+    react: 18
+    react-dom: 18
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/8db484ab22d61d86d37704207c84626bfbe95927b311d459d855add6150826a59f5b182d3042b0dd5c6241e1772164dce87f3b1ff356fd8840469518aaa9d773
   languageName: node
   linkType: hard
 
@@ -4427,7 +4445,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-unity_academy@workspace:src/bundles/unity_academy"
   dependencies:
     "@blueprintjs/core": "npm:^5.10.2"
-    "@blueprintjs/icons": "npm:^5.9.0"
+    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
@@ -4536,7 +4554,7 @@ __metadata:
   resolution: "@sourceacademy/modules-devserver@workspace:devserver"
   dependencies:
     "@blueprintjs/core": "npm:^5.10.2"
-    "@blueprintjs/icons": "npm:^5.9.0"
+    "@blueprintjs/icons": "npm:^6.0.0"
     "@commander-js/extra-typings": "npm:^14.0.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
@@ -4602,7 +4620,7 @@ __metadata:
   resolution: "@sourceacademy/modules-lib@workspace:lib/modules-lib"
   dependencies:
     "@blueprintjs/core": "npm:^5.10.2"
-    "@blueprintjs/icons": "npm:^5.9.0"
+    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
@@ -4690,7 +4708,7 @@ __metadata:
   resolution: "@sourceacademy/tab-ArcadeTwod@workspace:src/tabs/ArcadeTwod"
   dependencies:
     "@blueprintjs/core": "npm:^5.10.2"
-    "@blueprintjs/icons": "npm:^5.9.0"
+    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
@@ -4705,7 +4723,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/tab-AugmentedReality@workspace:src/tabs/AugmentedReality"
   dependencies:
-    "@blueprintjs/icons": "npm:^5.9.0"
+    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/bundle-ar": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
@@ -4736,7 +4754,7 @@ __metadata:
   resolution: "@sourceacademy/tab-Csg@workspace:src/tabs/Csg"
   dependencies:
     "@blueprintjs/core": "npm:^5.10.2"
-    "@blueprintjs/icons": "npm:^5.9.0"
+    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/bundle-csg": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
@@ -4752,7 +4770,7 @@ __metadata:
   resolution: "@sourceacademy/tab-Curve@workspace:src/tabs/Curve"
   dependencies:
     "@blueprintjs/core": "npm:^5.10.2"
-    "@blueprintjs/icons": "npm:^5.9.0"
+    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/bundle-curve": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
@@ -4981,7 +4999,7 @@ __metadata:
   resolution: "@sourceacademy/tab-UnityAcademy@workspace:src/tabs/UnityAcademy"
   dependencies:
     "@blueprintjs/core": "npm:^5.10.2"
-    "@blueprintjs/icons": "npm:^5.9.0"
+    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/bundle-unity_academy": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"

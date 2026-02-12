@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^5.10.2",
-    "@blueprintjs/icons": "^5.9.0",
+    "@blueprintjs/icons": "^6.0.0",
     "js-slang": "^1.0.81",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
