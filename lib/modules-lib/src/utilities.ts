@@ -18,7 +18,7 @@ export function degreesToRadians(degrees: number): number {
 
 /**
  * Converts an angle in radians into degrees
- * @param degrees Angle in radians
+ * @param radians Angle in radians
  * @returns Angle in degrees
  */
 export function radiansToDegrees(radians: number): number {
@@ -78,8 +78,8 @@ export type TupleOfLength<T extends number, U = unknown> = TupleOfLengthHelper<T
  * 
  * If the function's length property is undefined, the parameter count check is skipped.
  */
-export function isFunctionOfLength<T extends (...args: any[]) => any>(f: (...args: any) => any, l: Parameters<T>['length']): f is T
-export function isFunctionOfLength<T extends number>(f: unknown, l: T): f is (...args: TupleOfLength<T>) => unknown
+export function isFunctionOfLength<T extends (...args: any[]) => any>(f: (...args: any) => any, l: Parameters<T>['length']): f is T;
+export function isFunctionOfLength<T extends number>(f: unknown, l: T): f is (...args: TupleOfLength<T>) => unknown;
 export function isFunctionOfLength(f: unknown, l: number) {
   // TODO: Need a variation for rest parameters
   if (typeof f !== 'function') return false;
