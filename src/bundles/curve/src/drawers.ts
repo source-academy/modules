@@ -12,6 +12,7 @@ import {
   type RenderFunctionCreator,
   type ScaleMode
 } from './types';
+import { InvalidCallbackError } from '@sourceacademy/modules-lib/errors';
 
 const drawnCurves: (AnimatedCurve | CurveDrawn)[] = [];
 context.moduleContexts.curve.state = {
@@ -35,11 +36,7 @@ function createDrawFunction(
 
     function renderFunc(curve: Curve) {
       if (!isFunctionOfLength(curve, 1)) {
-        throw new Error(
-          'The provided curve is not a valid Curve function. ' +
-          'A Curve function must take exactly one parameter (a number t between 0 and 1) ' +
-          'and return a Point or 3D Point depending on whether it is a 2D or 3D curve.'
-        );
+        throw new InvalidCallbackError('Curve', curve, name);
       }
 
       const curveDrawn = generateCurve(

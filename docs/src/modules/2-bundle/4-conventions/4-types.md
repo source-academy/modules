@@ -50,6 +50,18 @@ all cadets would see.
 As the typing system is improved, we may be able to use one set of typing for cadets and another for internal implementation.
 :::
 
+When throwing errors related to type checking, you should throw an `InvalidParameterTypeError`, which can be imported from the `modules-lib`:
+
+```ts
+export function play(value: unknown) {
+  if (!is_sound(value)) {
+    throw new InvalidParameterTypeError('Sound', value, play.name);
+  }
+
+  // ...implementation
+}
+```
+
 As part of ensuring type safety, there are several conventions bundle code should abide by:
 
 ## 1. Cadet facing functions should not have default or rest parameters
@@ -208,11 +220,7 @@ import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 function draw_connected(pts: number): (c: Curve) => void {
   function renderFunction(c: Curve) {
     if (!isFunctionOfLength(curve, 1)) {
-      throw new Error(
-        `${renderFunction.name}: The provided curve is not a valid Curve function. ` +
-        'A Curve function must take exactly one parameter (a number t between 0 and 1) ' +
-        'and return a Point or 3D Point depending on whether it is a 2D or 3D curve.'
-      );
+      throw new InvalidCallbackError('Curve', curve, draw_connected.name);
     }
 
     // ...implementation details
@@ -220,7 +228,6 @@ function draw_connected(pts: number): (c: Curve) => void {
 
   return renderFunction
 }
-
 ```
 
 Then, in Source, if the cadet provides an invalid curve (a function that takes only 1 parameter), an error is thrown:
@@ -230,6 +237,9 @@ import { draw_connected, make_point } from 'curve';
 
 draw_connected(200)((a, b) => make_point(a, 0)); // error: The provided curve is not a valid Curve function.
 ```
+
+The `InvalidCallbackError` is a subclass of the `InvalidParameterTypeError`, specifically to be used for the error to be thrown
+for invalid callbacks.
 
 The `isFunctionOfLength` function is a type guard that also checks if the given input is a function at all, so it is
 not necessary to check for that separately:
@@ -249,7 +259,7 @@ the specified number of parameters. It won't actually guarantee at runtime that 
 ```ts
 export function call_callback(f: (a: string, b: string) => void) {
   if (!isFunctionOfLength(f, 2)) {
-    throw new Error();
+    throw new InvalidCallbackError(2, f, call_callback.name);
   }
 
   return f('a', 'b');
@@ -265,25 +275,10 @@ and returns a value with type `unknown`:
 ```ts
 export function call_callback(f: unknown) {
   if (!isFunctionOfLength(f, 2)) {
-    throw new Error();
+    throw new InvalidCallbackError(2, f, call_callback.name);
   }
 
   // Then f here gets narrowed to (a: unknown, b: unknown) => unknown
-  return f('a', 'b');
-}
-```
-
-For such a case, you can provide the type you want to narrow to as a generic type parameter:
-
-```ts
-type Callback = (a: string, b: string) => void;
-
-export function call_callback(f: unknown) {
-  if (!isFunctionOfLength<Callback>(f, 2)) {
-    throw new Error();
-  }
-
-  // Then f here gets narrowed to Callback
   return f('a', 'b');
 }
 ```

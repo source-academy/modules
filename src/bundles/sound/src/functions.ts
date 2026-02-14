@@ -1,3 +1,4 @@
+import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import { midi_note_to_frequency } from '@sourceacademy/bundle-midi';
 import {
   accumulate,
@@ -17,6 +18,8 @@ import type {
   SoundTransformer,
   Wave
 } from './types';
+import type { MIDINote } from '@sourceacademy/bundle-midi/types';
+import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 
 // Global Constants and Variables
 export const FS: number = 44100; // Output sample rate
@@ -286,7 +289,7 @@ export function record_for(duration: number, buffer: number): SoundPromise {
  */
 function validateDuration(func_name: string, duration: unknown): asserts duration is number {
   if (typeof duration !== 'number') {
-    throw new Error(`${func_name} expects a number for duration, got ${duration}`);
+    throw new InvalidParameterTypeError('number', duration, func_name, 'duration');
   }
 
   if (duration < 0) {
@@ -298,8 +301,8 @@ function validateDuration(func_name: string, duration: unknown): asserts duratio
  * Throws an exception if wave is not a function
  */
 function validateWave(func_name: string, wave: unknown): asserts wave is Wave {
-  if (typeof wave !== 'function') {
-    throw new Error(`${func_name} expects a wave, got ${wave}`);
+  if (!isFunctionOfLength(wave, 1)) {
+    throw new InvalidCallbackError('Wave', wave, func_name);
   }
 }
 
@@ -637,6 +640,25 @@ export function simultaneously(list_of_sounds: List): Sound {
 }
 
 /**
+ * Utility function for wrapping Sound transformers. Adds the toReplString representation
+ * and adds check for verifying that the given input is a Sound.
+ */
+function wrapSoundTransformer(transformer: SoundTransformer): SoundTransformer {
+  function wrapped(sound: Sound) {
+    if (!is_sound(sound)) {
+      throw new InvalidParameterTypeError('Sound', sound, 'SoundTransformer');
+    }
+
+    return transformer(sound);
+  }
+
+  wrapped.toReplString = () => '<SoundTransformer>';
+  // TODO: Remove when ReplResult is properly implemented
+  wrapped.toString = () => '<SoundTransformer>';
+  return wrapped;
+}
+
+/**
  * Returns an envelope: a function from Sound to Sound.
  * When the adsr envelope is applied to a Sound, it returns
  * a new Sound with its amplitude modified according to parameters
@@ -657,12 +679,14 @@ export function adsr(
   sustain_level: number,
   release_ratio: number
 ): SoundTransformer {
-  return sound => {
+  return wrapSoundTransformer(sound => {
     const wave = get_wave(sound);
     const duration = get_duration(sound);
+
     const attack_time = duration * attack_ratio;
     const decay_time = duration * decay_ratio;
     const release_time = duration * release_ratio;
+
     return make_sound((x) => {
       if (x < attack_time) {
         return wave(x) * (x / attack_time);
@@ -683,7 +707,7 @@ export function adsr(
         * linear_decay(release_time)(x - (duration - release_time))
       );
     }, duration);
-  };
+  });
 }
 
 /**
@@ -741,13 +765,13 @@ export function phase_mod(
   duration: number,
   amount: number
 ): SoundTransformer {
-  return modulator => {
+  return wrapSoundTransformer(modulator => {
     const wave = get_wave(modulator);
     return make_sound(
       t => Math.sin(2 * Math.PI * t * freq + amount * wave(t)),
       duration
     );
-  };
+  });
 }
 
 // Instruments
@@ -761,7 +785,7 @@ export function phase_mod(
  * @example bell(40, 1);
  * @category Instrument
  */
-export function bell(note: number, duration: number): Sound {
+export function bell(note: MIDINote, duration: number): Sound {
   return stacking_adsr(
     square_sound,
     midi_note_to_frequency(note),
@@ -784,7 +808,7 @@ export function bell(note: number, duration: number): Sound {
  * @example cello(36, 5);
  * @category Instrument
  */
-export function cello(note: number, duration: number): Sound {
+export function cello(note: MIDINote, duration: number): Sound {
   return stacking_adsr(
     square_sound,
     midi_note_to_frequency(note),
@@ -803,7 +827,7 @@ export function cello(note: number, duration: number): Sound {
  * @category Instrument
  *
  */
-export function piano(note: number, duration: number): Sound {
+export function piano(note: MIDINote, duration: number): Sound {
   return stacking_adsr(
     triangle_sound,
     midi_note_to_frequency(note),
@@ -821,7 +845,7 @@ export function piano(note: number, duration: number): Sound {
  * @example trombone(60, 2);
  * @category Instrument
  */
-export function trombone(note: number, duration: number): Sound {
+export function trombone(note: MIDINote, duration: number): Sound {
   return stacking_adsr(
     square_sound,
     midi_note_to_frequency(note),
@@ -839,7 +863,7 @@ export function trombone(note: number, duration: number): Sound {
  * @example violin(53, 4);
  * @category Instrument
  */
-export function violin(note: number, duration: number): Sound {
+export function violin(note: MIDINote, duration: number): Sound {
   return stacking_adsr(
     sawtooth_sound,
     midi_note_to_frequency(note),

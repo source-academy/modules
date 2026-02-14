@@ -4,6 +4,7 @@
  * @title Utilities
  */
 
+import { InvalidCallbackError, InvalidParameterTypeError } from './errors';
 import type { DebuggerContext } from './types';
 
 /**
@@ -72,12 +73,16 @@ type TupleOfLengthHelper<T extends number, U, V extends U[] = []> =
 export type TupleOfLength<T extends number, U = unknown> = TupleOfLengthHelper<T, U>;
 
 /**
- * Type guard for checking that a function has the specified number of parameters. Of course at runtime parameter types
- * are not checked, so this is only useful when combined with TypeScript types.
+ * Type guard for checking that the provided value is a function and that it has the specified number of parameters.
+ * Of course at runtime parameter types are not checked, so this is only useful when combined with TypeScript types.
+ * 
+ * If the function's length property is undefined, the parameter count check is skipped.
  */
 export function isFunctionOfLength<T extends (...args: any[]) => any>(f: (...args: any) => any, l: Parameters<T>['length']): f is T
 export function isFunctionOfLength<T extends number>(f: unknown, l: T): f is (...args: TupleOfLength<T>) => unknown
 export function isFunctionOfLength(f: unknown, l: number) {
   // TODO: Need a variation for rest parameters
-  return typeof f === 'function' && f.length === l;
+  if (typeof f !== 'function') return false;
+
+  return f.length === undefined || f.length === l;
 }

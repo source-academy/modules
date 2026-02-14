@@ -4,6 +4,7 @@ import type { Color, Curve } from '../curves_webgl';
 import * as drawers from '../drawers';
 import * as funcs from '../functions';
 import type { RenderFunctionCreator } from '../types';
+import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 
 /**
  * Evaluates the curve at 200 points, then
@@ -28,11 +29,7 @@ describe('Ensure that invalid curves and animations error gracefully', () => {
 
   test('Curve that takes multiple parameters should throw error', () => {
     expect(() => drawers.draw_connected(200)(((t, u) => funcs.make_point(t, u)) as any))
-      .toThrow(
-        'The provided curve is not a valid Curve function. ' +
-        'A Curve function must take exactly one parameter (a number t between 0 and 1) ' +
-        'and return a Point or 3D Point depending on whether it is a 2D or 3D curve.'
-      );
+      .toThrow(InvalidCallbackError);
   });
 
   test('Using 3D render functions with animate_curve should throw errors', () => {
@@ -120,7 +117,8 @@ describe('Coloured Points', () => {
     });
 
     it('throws when argument is not a point', () => {
-      expect(() => funcs.r_of(0 as any)).toThrowError('r_of expects a point as argument');
+      expect(() => funcs.r_of(0 as any)).toThrowError(InvalidParameterTypeError);
+      // expect(() => funcs.r_of(0 as any)).toThrowError('r_of: Expected Point, got 0');
     });
   });
 
@@ -131,7 +129,8 @@ describe('Coloured Points', () => {
     });
 
     it('throws when argument is not a point', () => {
-      expect(() => funcs.g_of(0 as any)).toThrowError('g_of expects a point as argument');
+      expect(() => funcs.g_of(0 as any)).toThrowError(InvalidParameterTypeError);
+      // expect(() => funcs.g_of(0 as any)).toThrowError('g_of: Expected Point, got 0');
     });
   });
 
@@ -142,7 +141,8 @@ describe('Coloured Points', () => {
     });
 
     it('throws when argument is not a point', () => {
-      expect(() => funcs.b_of(0 as any)).toThrowError('b_of expects a point as argument');
+      expect(() => funcs.b_of(0 as any)).toThrowError(InvalidParameterTypeError);
+      // expect(() => funcs.b_of(0 as any)).toThrowError('b_of: Expected Point, got 0');
     });
   });
 });

@@ -2,6 +2,7 @@ import context from 'js-slang/context';
 import { FS, get_duration, get_wave, is_sound } from './functions';
 import { RIFFWAVE } from './riffwave';
 import type { AudioPlayed, Sound } from './types';
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 
 export const audioPlayed: AudioPlayed[] = [];
 context.moduleContexts.sound.state = { audioPlayed };
@@ -18,7 +19,7 @@ context.moduleContexts.sound.state = { audioPlayed };
 export function play_in_tab(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
+    throw new InvalidParameterTypeError('Sound', sound, play_in_tab.name);
   }
 
   const duration = get_duration(sound);
