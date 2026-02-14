@@ -169,8 +169,6 @@ export function bar2(obj: Bar2Params) {
 }
 ```
 
-
-
 ## 3. If a callback is passed as a parameter, its number of parameters should be validated
 
 By default, Javascript doesn't really mind if you call a function with fewer arguments than it was defined with:
@@ -218,9 +216,8 @@ function draw_connected(pts: number): (c: Curve) => void {
     // ...implementation details
   }
 
-  return renderFunction
+  return renderFunction;
 }
-
 ```
 
 Then, in Source, if the cadet provides an invalid curve (a function that takes only 1 parameter), an error is thrown:
