@@ -4,127 +4,7 @@ This section contains some conventions to follow when writing your bundle.
 
 [[toc]]
 
-## 1. Cadet facing functions should not have default or rest parameters
-
-The function signature below takes in two booleans, the second of which is optional. This is not supported for Module functions in Source, but is fine if your function
-isn't being exposed to cadets.
-
-```ts
-// Don't expose this to cadets!
-function configure_options(option_1: boolean, option_2: boolean = false) {
-  // ...implementation
-}
-
-// or this
-function concat_strings(...args: string[]) {
-  return args.join(',');
-}
-
-// But default and rest parameters are okay for internal use
-export function exposed_function() {
-  configure_options(true);
-  concat_strings('str1', 'str2');
-}
-```
-
-::: details Integration with `js-slang`
-Neither default nor rest parameters are currently supported due to an [issue](https://github.com/source-academy/js-slang/issues/1238) on the `js-slang` side.
-:::
-
-## 2. Cadet facing functions should not use destructuring for parameters
-
-Javascript allows us to destruct iterables directly within a function's parameters:
-
-```ts
-export function foo([x, y]: [string, string]) {
-  return x;
-}
-```
-
-There's nothing inherently wrong with this, but if cadets pass a non-iterable object into the function,
-Javascript is going to throw a fairly mysterious error:
-
-```sh
-foo(0);
-
-function foo([x, y]) {
-            ^
-TypeError: number 0 is not iterable (cannot read property Symbol(Symbol.iterator))
-```
-
-Javascript also supports object destructuring in parameters:
-
-```ts
-interface BarParams {
-  x: string;
-  y: string;
-}
-
-function bar({ x, y }: BarParams) {
-  return x;
-}
-```
-
-However, Javascript doesn't actually throw an error if you pass an invalid object into the function:
-
-```ts
-function bar({ x, y }: BarParams) {
-  return x;
-}
-
-console.log(bar(0)); // prints undefined
-```
-
-If an invalid argument gets passed, no error is thrown and the destructured values just take on the value of `undefined` (which you might want to check for).
-
-However, if you use nested destructuring, Javascript _will_ throw an error:
-
-```ts
-interface Bar2Params {
-  x: {
-    a: string;
-    b: string;
-  };
-}
-
-function bar2({ x: { a, b } }: Bar2Params) {
-  return a;
-}
-
-console.log(bar2(0));
-```
-
-The call to `bar2` causes an error like the one below:
-
-```sh
-Uncaught TypeError: Cannot read properties of undefined (reading 'a')
-  at bar2 (<anonymous>:1:21)
-  at <anonymous>:1:1
-```
-
-because of course, when `bar2` is called with `0`, `x` becomes `undefined` and trying to destructure `undefined` causes the `TypeError`.
-
-If instead the parameter isn't destructured, it gives you the chance to perform type checking:
-
-```ts
-export function foo(arr: [string, string]) {
-  if (!Array.isArray(arr)) throw new Error();
-  return arr[0];
-}
-
-export function bar2(obj: Bar2Params) {
-  if (typeof obj !== 'object' || !('x' in obj)) {
-    // throw an error....
-  }
-
-  return obj.x;
-}
-```
-
-> [!IMPORTANT]
-> More information about throwing errors and why this kind of type checking is important can be found [here](./3-errors#source-type-checking).
-
-## 3. If your bundle requires specific Source features, make sure to indicate it in the manifest
+## 1. If your bundle requires specific Source features, make sure to indicate it in the manifest
 
 Consider the bundle function below:
 
@@ -169,7 +49,7 @@ Lists are actually introduced in Source 1, which would make the above function c
 functionality specific to arrays, then consider using Source Lists instead.
 :::
 
-## 4. Semantic Versioning
+## 2. Semantic Versioning
 
 [Semantic Versioning](https://semver.org) refers to a convention on how version numbers should be specified. In your bundle's `package.json`, a `version` field should
 be specified:
@@ -184,7 +64,7 @@ be specified:
 This version number should follow the rules of semantic versioning. `js-slang` will use this version number to determine if it currently has the latest version of your bundle
 compatible with its current version.
 
-## 5. Making use of `js-slang`
+## 3. Making use of `js-slang`
 
 Bundles, where necessary, should use the implementations from `js-slang`:
 
@@ -214,7 +94,7 @@ Note that not every export from `js-slang` is currently supported. Below is the 
 - `js-slang/dist/parser/parser`
 - `js-slang/dist/cse-machine/interpreter`
 
-## 6. Cadet Facing Type Guard Conventions
+## 4. Cadet Facing Type Guard Conventions
 
 A [type guard](https://www.typescriptlang.org/docs/handbook/2/narrowing.html) is a function that checks if the provided object has the desired type.
 In Typescript, there are two kinds of type guards.  Cadet facing type guards should favour the boolean returning form and should begin with the
