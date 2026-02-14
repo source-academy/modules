@@ -82,7 +82,5 @@ export function isFunctionOfLength<T extends (...args: any[]) => any>(f: (...arg
 export function isFunctionOfLength<T extends number>(f: unknown, l: T): f is (...args: TupleOfLength<T>) => unknown;
 export function isFunctionOfLength(f: unknown, l: number) {
   // TODO: Need a variation for rest parameters
-  if (typeof f !== 'function') return false;
-
-  return f.length === undefined || f.length === l;
+  return typeof f === 'function' && f.length === l;
 }
