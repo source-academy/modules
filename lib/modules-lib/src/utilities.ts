@@ -17,7 +17,7 @@ export function degreesToRadians(degrees: number): number {
 
 /**
  * Converts an angle in radians into degrees
- * @param degrees Angle in radians
+ * @param radians Angle in radians
  * @returns Angle in degrees
  */
 export function radiansToDegrees(radians: number): number {
@@ -75,8 +75,8 @@ export type TupleOfLength<T extends number, U = unknown> = TupleOfLengthHelper<T
  * Type guard for checking that a function has the specified number of parameters. Of course at runtime parameter types
  * are not checked, so this is only useful when combined with TypeScript types.
  */
-export function isFunctionOfLength<T extends (...args: any[]) => any>(f: (...args: any) => any, l: Parameters<T>['length']): f is T
-export function isFunctionOfLength<T extends number>(f: unknown, l: T): f is (...args: TupleOfLength<T>) => unknown
+export function isFunctionOfLength<T extends (...args: any[]) => any>(f: (...args: any) => any, l: Parameters<T>['length']): f is T;
+export function isFunctionOfLength<T extends number>(f: unknown, l: T): f is (...args: TupleOfLength<T>) => unknown;
 export function isFunctionOfLength(f: unknown, l: number) {
   // TODO: Need a variation for rest parameters
   return typeof f === 'function' && f.length === l;
