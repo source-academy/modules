@@ -19,7 +19,7 @@ export type CurveAnimation = (t: number) => Curve;
 
 /**
  * A function that specifies additional rendering information when taking in
- * a CurveFunction and returns a ShapeDrawn based on its specifications.
+ * a {@link Curve|Curve} and returns a ShapeDrawn based on its specifications.
  */
 export interface RenderFunction extends ReplResult {
   (func: Curve): CurveDrawn;

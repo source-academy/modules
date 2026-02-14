@@ -94,7 +94,7 @@ describe('Render function creators', () => {
       );
     });
 
-    test('returned render functions have nice string represnentations', () => {
+    test('returned render functions have nice string representations', () => {
       const renderFunc = func(250);
       if (renderFunc.is3D) {
         expect(stringify(renderFunc)).toEqual('<3DRenderFunction(250)>');

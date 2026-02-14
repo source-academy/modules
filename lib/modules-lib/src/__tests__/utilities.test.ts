@@ -1,4 +1,4 @@
-import { describe, expect, it, test } from 'vitest';
+import { assert, describe, expect, expectTypeOf, it, test } from 'vitest';
 import { hexToColor, isFunctionOfLength } from '../utilities';
 
 describe(hexToColor, () => {
@@ -16,19 +16,30 @@ describe(hexToColor, () => {
   });
 
   it('throws an error when an invalid hex string is passed', () => {
-    expect(() => hexToColor('GGGGGG')).toThrowErrorMatchingInlineSnapshot('[Error: Invalid color hex string: GGGGGG]');
+    expect(() => hexToColor('GGGGGG')).toThrowErrorMatchingInlineSnapshot('[Error: hexToColor: Invalid color hex string: GGGGGG]');
   });
 });
 
 describe(isFunctionOfLength, () => {
   it('correctly identifies functions with the specified number of parameters', () => {
     const func0 = () => { };
-    expect(isFunctionOfLength(func0, 0)).toBe(true);
+    assert(isFunctionOfLength(func0, 0));
+    expectTypeOf(func0).toEqualTypeOf<() => void>();
 
-    const func1 = (_a: number) => { };
-    expect(isFunctionOfLength(func1, 1)).toBe(true);
+    const func1 = (a: number) => a;
+    assert(isFunctionOfLength(func1, 1));
+    expectTypeOf(func1).toEqualTypeOf<(a: number) => number>();
 
     const func2 = (_a: number, _b: string) => { };
-    expect(isFunctionOfLength(func2, 2)).toBe(true);
+    assert(isFunctionOfLength(func2, 2));
+    expectTypeOf(func2).toEqualTypeOf<(a: number, b: string) => void>();
+
+    const func3: unknown = (_a: any) => {};
+    if (isFunctionOfLength(func3, 1)) {
+      expectTypeOf(func3).toEqualTypeOf<(a: unknown) => unknown>();
+    } else {
+      expectTypeOf(func3).toEqualTypeOf<unknown>();
+      throw new Error('Type guard failed unexpectedly');
+    }
   });
 });
