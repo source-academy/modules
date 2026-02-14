@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@actions/artifact": "^6.0.0",
-    "@actions/core": "^1.11.1",
+    "@actions/core": "^3.0.0",
     "@actions/exec": "^3.0.0",
     "lodash": "^4.17.23",
     "snyk-nodejs-lockfile-parser": "^2.4.2"
