@@ -11,7 +11,7 @@ class MockProcessExit extends Error {
   }
 };
 
-vi.mock('chalk', () => {
+vi.mock(import('chalk'), () => {
   const mockChalkFunction = new Proxy((x: string) => x, {
     get: () => mockChalkFunction
   });
@@ -20,7 +20,7 @@ vi.mock('chalk', () => {
     default: new Proxy({}, {
       get: () => mockChalkFunction
     })
-  };
+  } as any;
 });
 
 vi.mock(import('fs/promises'), async importOriginal => {

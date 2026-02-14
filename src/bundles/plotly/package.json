@@ -5,7 +5,7 @@
   "dependencies": {
     "@sourceacademy/bundle-curve": "workspace:^",
     "@sourceacademy/bundle-sound": "workspace:^",
-    "js-slang": "^1.0.81",
+    "js-slang": "^1.0.85",
     "plotly.js-dist": "^3.0.0"
   },
   "devDependencies": {
@@ -23,7 +23,7 @@
     "build": "buildtools build bundle .",
     "lint": "buildtools lint .",
     "test": "buildtools test --project .",
-    "postinstall": "yarn tsc",
+    "postinstall": "buildtools compile",
     "serve": "yarn buildtools serve"
   },
   "scripts-info": {

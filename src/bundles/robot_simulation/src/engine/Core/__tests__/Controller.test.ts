@@ -1,10 +1,10 @@
 import { describe, expect, test, vi, type Mock } from 'vitest';
+import type { PhysicsTimingInfo } from '../../Physics';
 import {
   ControllerGroup,
   ControllerMap,
   type Controller,
-} from '../../Core/Controller';
-import type { PhysicsTimingInfo } from '../../Physics';
+} from '../Controller';
 
 // Helper function to create a PhysicsTimingInfo object
 // CallbackHandler only uses the stepCount and timestep properties

@@ -67,7 +67,7 @@ The Frontend expects each tab's entry point to provide a default export of an ob
 ```ts
 interface ModuleSideContent {
   toSpawn: ((context: DebuggerContext) => boolean) | undefined;
-  body: ((context: DebuggerContext) => JSX.Element);
+  body: (context: DebuggerContext) => JSX.Element;
   label: string;
   iconName: string;
 }
