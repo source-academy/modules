@@ -67,7 +67,7 @@ describe('Recording functions', () => {
     });
 
     test('throws error if called concurrently with another sound', () => {
-      funcs.play_wave(() => 0, 10);
+      funcs.play_wave(_t => 0, 10);
       expect(() => funcs.record(1)).toThrowError('record: Cannot record while another sound is playing!');
     });
 
@@ -105,7 +105,7 @@ describe('Recording functions', () => {
     });
 
     test('throws error if called concurrently with another sound', () => {
-      funcs.play_wave(() => 0, 10);
+      funcs.play_wave(_t => 0, 10);
       expect(() => funcs.record_for(1, 1)).toThrowError('record_for: Cannot record while another sound is playing!');
     });
 

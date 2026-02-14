@@ -21,6 +21,11 @@ describe(funcs.make_sound, () => {
     expect(() => funcs.make_sound(true as any, 1))
       .toThrow('make_sound: Expected Wave, got true');
   });
+
+  it('Should error if the provided function does not take exactly one parameter', () => {
+    expect(() => funcs.make_sound(((_t, _u) => 0) as any, 1))
+      .toThrow('make_sound: Expected Wave, got (_t, _u) => 0.');
+  });
 });
 
 describe('Concurrent playback functions', () => {
