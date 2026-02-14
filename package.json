@@ -90,7 +90,7 @@
   "devEngines": {
     "packageManager": {
       "name": "yarn",
-      "version": "^4.8.1",
+      "version": "^4.12.0",
       "onFail": "warn"
     },
     "runtime": {
