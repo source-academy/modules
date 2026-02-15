@@ -4,7 +4,6 @@
  * @title Utilities
  */
 
-import { InvalidCallbackError, InvalidParameterTypeError } from './errors';
 import type { DebuggerContext } from './types';
 
 /**
@@ -31,6 +30,11 @@ export function radiansToDegrees(radians: number): number {
  * @returns Tuple of three numbers representing the R, G and B components
  */
 export function hexToColor(hex: string, func_name?: string): [r: number, g: number, b: number] {
+  if (typeof hex !== 'string') {
+    func_name = func_name ?? hexToColor.name;
+    throw new Error(`${func_name}: Expected a string, got ${typeof hex}`);
+  }
+
   const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
   const groups = regex.exec(hex);
 
@@ -75,7 +79,7 @@ export type TupleOfLength<T extends number, U = unknown> = TupleOfLengthHelper<T
 /**
  * Type guard for checking that the provided value is a function and that it has the specified number of parameters.
  * Of course at runtime parameter types are not checked, so this is only useful when combined with TypeScript types.
- * 
+ *
  * If the function's length property is undefined, the parameter count check is skipped.
  */
 export function isFunctionOfLength<T extends (...args: any[]) => any>(f: (...args: any) => any, l: Parameters<T>['length']): f is T;

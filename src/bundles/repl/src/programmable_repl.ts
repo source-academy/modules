@@ -10,7 +10,7 @@ import { COLOR_ERROR_MESSAGE, COLOR_RUN_CODE_RESULT, DEFAULT_EDITOR_HEIGHT } fro
 import { evaluatorSymbol } from './functions';
 
 export class ProgrammableRepl {
-  public evalFunction: ((code: string) => any);
+  public evalFunction: (code: string) => any;
   public userCodeInEditor: string;
   public outputStrings: any[];
   private _editorInstance;

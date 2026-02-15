@@ -1,8 +1,8 @@
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import clamp from 'lodash/clamp';
 import { Point, type Curve } from './curves_webgl';
 import { functionDeclaration } from './type_interface';
 import type { CurveTransformer } from './types';
-import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 
 function throwIfNotPoint(obj: unknown, func_name: string): asserts obj is Point {
   if (!(obj instanceof Point)) {

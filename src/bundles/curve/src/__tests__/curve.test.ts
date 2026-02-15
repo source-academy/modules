@@ -1,10 +1,10 @@
+import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import { describe, expect, it, test } from 'vitest';
 import type { Color, Curve } from '../curves_webgl';
 import * as drawers from '../drawers';
 import * as funcs from '../functions';
 import type { RenderFunctionCreator } from '../types';
-import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 
 /**
  * Evaluates the curve at 200 points, then

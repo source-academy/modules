@@ -1,5 +1,7 @@
-import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import { midi_note_to_frequency } from '@sourceacademy/bundle-midi';
+import type { MIDINote } from '@sourceacademy/bundle-midi/types';
+import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import {
   accumulate,
   head,
@@ -18,8 +20,6 @@ import type {
   SoundTransformer,
   Wave
 } from './types';
-import type { MIDINote } from '@sourceacademy/bundle-midi/types';
-import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 
 // Global Constants and Variables
 export const FS: number = 44100; // Output sample rate

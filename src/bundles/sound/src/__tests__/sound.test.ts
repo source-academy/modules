@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, describe, expect, it, test, vi } from 'vitest';
 import { stringify } from 'js-slang/dist/utils/stringify';
+import { afterEach, beforeEach, describe, expect, it, test, vi } from 'vitest';
 import * as funcs from '../functions';
 import * as play_in_tab from '../play_in_tab';
 import type { Sound, Wave } from '../types';

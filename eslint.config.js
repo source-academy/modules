@@ -168,7 +168,9 @@ export default defineConfig(
         }
       ],
       '@stylistic/no-extra-parens': ['warn', 'all', {
-        enforceForArrowConditionals: false,
+        ignoredNodes: [
+          'ArrowFunctionExpression[body.type=ConditionalExpression]'
+        ],
         ignoreJSX: 'all',
         nestedBinaryExpressions: false,
       }],
@@ -336,7 +338,13 @@ export default defineConfig(
       // This rule doesn't seem to fail locally but fails on the CI
       // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
-      '@typescript-eslint/only-throw-error': 'error'
+      '@typescript-eslint/only-throw-error': ['error', {
+        allow: [{
+          from: 'package',
+          name: ['InvalidParameterTypeError', 'InvalidCallbackError'],
+          package: '@sourceacademy/modules-lib/errors',
+        }]
+      }]
     },
     settings: {
       'import/resolver': {
@@ -371,7 +379,6 @@ export default defineConfig(
 
       '@stylistic/jsx-equals-spacing': ['warn', 'never'],
       '@stylistic/jsx-indent-props': ['warn', 2],
-      '@stylistic/jsx-props-no-multi-spaces': 'warn',
       '@stylistic/jsx-self-closing-comp': 'warn',
     },
     settings: {

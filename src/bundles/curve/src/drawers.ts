@@ -1,3 +1,4 @@
+import { InvalidCallbackError } from '@sourceacademy/modules-lib/errors';
 import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 
@@ -12,7 +13,6 @@ import {
   type RenderFunctionCreator,
   type ScaleMode
 } from './types';
-import { InvalidCallbackError } from '@sourceacademy/modules-lib/errors';
 
 const drawnCurves: (AnimatedCurve | CurveDrawn)[] = [];
 context.moduleContexts.curve.state = {

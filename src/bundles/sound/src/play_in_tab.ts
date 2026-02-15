@@ -1,8 +1,8 @@
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import context from 'js-slang/context';
 import { FS, get_duration, get_wave, is_sound } from './functions';
 import { RIFFWAVE } from './riffwave';
 import type { AudioPlayed, Sound } from './types';
-import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 
 export const audioPlayed: AudioPlayed[] = [];
 context.moduleContexts.sound.state = { audioPlayed };
