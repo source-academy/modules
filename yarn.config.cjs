@@ -23,17 +23,15 @@ module.exports = defineConfig({
       }
     }
 
-    // Make sure that if the dependency is defined in the root workspace
-    // that all child workspaces use the same version of that dependency
     const [rootWorkspace] = Yarn.workspaces({ ident: name });
 
     // There should not be any resolutions value for js-slang,
     // which might be present if you linked js-slang to a local copy
     rootWorkspace.set('resolutions.js-slang', undefined);
 
+    // Make sure that if the dependency is defined in the root workspace
+    // that all child workspaces use the same version of that dependency
     for (const workspaceDep of Yarn.dependencies({ workspace: rootWorkspace })) {
-      if (workspaceDep.type === 'peerDependencies') continue;
-
       for (const otherDep of Yarn.dependencies({ ident: workspaceDep.ident })) {
         if (otherDep.type === 'peerDependencies') continue;
 
@@ -50,6 +48,12 @@ module.exports = defineConfig({
         dep.ident.startsWith('@sourceacademy/tab')
       ) {
         dep.update('workspace:^');
+      }
+
+      // @types dependencies should be devDependencies, not dependencies
+      if (dep.ident.startsWith('@types') && dep.type === 'dependencies') {
+        dep.workspace.set(`devDependencies.${dep.ident}`, dep.range);
+        dep.update(undefined);
       }
     }
 

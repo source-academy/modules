@@ -15,6 +15,11 @@ export function degreesToRadians(degrees: number): number {
   return (degrees / 360) * (2 * Math.PI);
 }
 
+/**
+ * Converts an angle in radians into degrees
+ * @param radians Angle in radians
+ * @returns Angle in degrees
+ */
 export function radiansToDegrees(radians: number): number {
   return radians / Math.PI * 180;
 }
@@ -24,14 +29,12 @@ export function radiansToDegrees(radians: number): number {
  * between 0 and 1. The leading `#` is optional.
  * @returns Tuple of three numbers representing the R, G and B components
  */
-export function hexToColor(hex: string, func_name?: string): [number, number, number] {
+export function hexToColor(hex: string, func_name?: string): [r: number, g: number, b: number] {
   const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
   const groups = regex.exec(hex);
 
   if (groups == undefined) {
-    if (func_name === undefined) {
-      throw new Error(`Invalid color hex string: ${hex}`);
-    }
+    func_name = func_name ?? hexToColor.name;
     throw new Error(`${func_name}: Invalid color hex string: ${hex}`);
   };
 
@@ -58,4 +61,23 @@ export function mockDebuggerContext<T>(moduleState: T, name: string) {
       }
     }
   } as unknown as DebuggerContext;
+}
+
+type TupleOfLengthHelper<T extends number, U, V extends U[] = []> =
+  V['length'] extends T ? V : TupleOfLengthHelper<T, U, [...V, U]>;
+
+/**
+ * Utility type that represents a tuple of a specific length
+ */
+export type TupleOfLength<T extends number, U = unknown> = TupleOfLengthHelper<T, U>;
+
+/**
+ * Type guard for checking that a function has the specified number of parameters. Of course at runtime parameter types
+ * are not checked, so this is only useful when combined with TypeScript types.
+ */
+export function isFunctionOfLength<T extends (...args: any[]) => any>(f: (...args: any) => any, l: Parameters<T>['length']): f is T;
+export function isFunctionOfLength<T extends number>(f: unknown, l: T): f is (...args: TupleOfLength<T>) => unknown;
+export function isFunctionOfLength(f: unknown, l: number) {
+  // TODO: Need a variation for rest parameters
+  return typeof f === 'function' && f.length === l;
 }

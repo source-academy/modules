@@ -25,7 +25,7 @@ context.moduleContexts.plotly.state = {
 /**
  * Adds a new plotly plot to the context which will be rendered in the Plotly Tabs
  * @example
- * ```typescript
+ * ```
  * const z1 = [
  *   [8.83,8.89,8.81,8.87,8.9,8.87],
  *   [8.89,8.94,8.85,8.94,8.96,8.92],
@@ -42,79 +42,8 @@ context.moduleContexts.plotly.state = {
  *   [9,9.01,9,9.2,9.23,9.2],
  *   [8.99,8.99,8.98,9.18,9.2,9.19],
  *   [8.93,8.97,8.97,9.18,9.2,9.18]
- *  ];
- *  new_plot(list(pair("z", z1), pair("type", "surface"))) // creates a surface plot in Plotly Tab
- * ```
- *
- *
- * @Types
- * ``` typescript
- * // The data format for input [{field_name}, value] from among the following fields
- *  data = {
- *    type: PlotType;
- *    x: Datum[] | Datum[][];
- *    y: Datum[] | Datum[][];
- *    z: Datum[] | Datum[][] | Datum[][][];
- *    mode:
- *       | 'lines'
- *       | 'markers'
- *       | 'text'
- *       | 'lines+markers'
- *       | 'text+markers'
- *       | 'text+lines'
- *       | 'text+lines+markers'
- *  }
- *
- *
- *  type Datum = string | number | Date | null;
- *  type PlotType =
- *  | 'bar'
- *  | 'barpolar'
- *  | 'box'
- *  | 'candlestick'
- *  | 'carpet'
- *  | 'choropleth'
- *  | 'choroplethmapbox'
- *  | 'cone'
- *  | 'contour'
- *  | 'contourcarpet'
- *  | 'densitymapbox'
- *  | 'funnel'
- *  | 'funnelarea'
- *  | 'heatmap'
- *  | 'heatmapgl'
- *  | 'histogram'
- *  | 'histogram2d'
- *  | 'histogram2dcontour'
- *  | 'image'
- *  | 'indicator'
- *  | 'isosurface'
- *  | 'mesh3d'
- *  | 'ohlc'
- *  | 'parcats'
- *  | 'parcoords'
- *  | 'pie'
- *  | 'pointcloud'
- *  | 'sankey'
- *  | 'scatter'
- *  | 'scatter3d'
- *  | 'scattercarpet'
- *  | 'scattergeo'
- *  | 'scattergl'
- *  | 'scattermapbox'
- *  | 'scatterpolar'
- *  | 'scatterpolargl'
- *  | 'scatterternary'
- *  | 'splom'
- *  | 'streamtube'
- *  | 'sunburst'
- *  | 'surface'
- *  | 'table'
- *  | 'treemap'
- *  | 'violin'
- *  | 'volume'
- *  | 'waterfall';
- *
+ * ];
+ * new_plot(list(pair('z', z1), pair('type', 'surface'))); // creates a surface plot in Plotly Tab
  * ```
  * @param data The data in the form of list of pair, with the first term in the pair is
  *             the name of the field as a string and the second term is the value of the field
@@ -127,8 +56,7 @@ export function new_plot(data: ListOfPairs): void {
 /**
  * Adds a new plotly plot to the context which will be rendered in the Plotly Tabs
  * @example
- * ```typescript
- *
+ * ```
  * const z1 = [
  *   [8.83,8.89,8.81,8.87,8.9,8.87],
  *   [8.89,8.94,8.85,8.94,8.96,8.92],
@@ -145,92 +73,18 @@ export function new_plot(data: ListOfPairs): void {
  *   [9,9.01,9,9.2,9.23,9.2],
  *   [8.99,8.99,8.98,9.18,9.2,9.19],
  *   [8.93,8.97,8.97,9.18,9.2,9.18]
- *  ];
+ * ];
  *
  * let z2 = [];
- * for (var i=0;i<z1.length;i++ ) {
+ * for (let i = 0; i < array_length(z1); i = i + 1) {
  *   let z2_row = [];
- *     for(var j=0;j<z1[i].length;j++) {
- *       z2_row.push(z1[i][j]+1);
- *     }
- *     z2.push(z2_row);
+ *   for (let j = 0; j < array_length(z1[i]); j = j + 1) {
+ *     z2_row.push(z1[i][j]+1);
+ *   }
+ *   z2.push(z2_row);
  * }
- * const data = [{z: z1, type: 'surface'}, {z: z2 , type: 'surface'}];
- * new_plot_json(data) // creates a surface plot in Plotly Tab
- *
- *
- *
- * ```
- *
- *
- * @Types
- * ``` typescript
- * // The data format for input [{field_name}, value] from among the following fields
- *  data = {
- *    type: PlotType;
- *    x: Datum[] | Datum[][];
- *    y: Datum[] | Datum[][];
- *    z: Datum[] | Datum[][] | Datum[][][];
- *    mode:
- *       | 'lines'
- *       | 'markers'
- *       | 'text'
- *       | 'lines+markers'
- *       | 'text+markers'
- *       | 'text+lines'
- *       | 'text+lines+markers'
- *  }[]
- *
- *
- *  type Datum = string | number | Date | null;
- *  type PlotType =
- *  | 'bar'
- *  | 'barpolar'
- *  | 'box'
- *  | 'candlestick'
- *  | 'carpet'
- *  | 'choropleth'
- *  | 'choroplethmapbox'
- *  | 'cone'
- *  | 'contour'
- *  | 'contourcarpet'
- *  | 'densitymapbox'
- *  | 'funnel'
- *  | 'funnelarea'
- *  | 'heatmap'
- *  | 'heatmapgl'
- *  | 'histogram'
- *  | 'histogram2d'
- *  | 'histogram2dcontour'
- *  | 'image'
- *  | 'indicator'
- *  | 'isosurface'
- *  | 'mesh3d'
- *  | 'ohlc'
- *  | 'parcats'
- *  | 'parcoords'
- *  | 'pie'
- *  | 'pointcloud'
- *  | 'sankey'
- *  | 'scatter'
- *  | 'scatter3d'
- *  | 'scattercarpet'
- *  | 'scattergeo'
- *  | 'scattergl'
- *  | 'scattermapbox'
- *  | 'scatterpolar'
- *  | 'scatterpolargl'
- *  | 'scatterternary'
- *  | 'splom'
- *  | 'streamtube'
- *  | 'sunburst'
- *  | 'surface'
- *  | 'table'
- *  | 'treemap'
- *  | 'violin'
- *  | 'volume'
- *  | 'waterfall';
- *
+ * const data = [{ z: z1, type: 'surface' }, { z: z2 , type: 'surface' }];
+ * new_plot_json(data); // creates a surface plot in Plotly Tab
  * ```
  * @param data The data as an array of json objects having some or all of the given fields
  */
@@ -314,7 +168,7 @@ function createPlotFunction(
  * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
+ * @returns function of type Curve → Drawing
  * @example
  * ```
  * draw_connected_2d(100)(t => make_point(t, t));
@@ -342,7 +196,7 @@ export const draw_connected_2d = createPlotFunction(
  * @function
  * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type 3D Curve → Drawing
+ * @returns function of type 3D Curve → Drawing
  * @example
  * ```
  * draw_connected_3d(100)(t => make_point(t, t));
@@ -363,10 +217,11 @@ export const draw_connected_3d = createPlotFunction(
  * * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @function
- * @return function of type 2D Curve → Drawing
+ * @returns function of type 2D Curve → Drawing
  * @example
  * ```
  * draw_points_2d(100)(t => make_point(t, t));
+ * ```
  */
 export const draw_points_2d = createPlotFunction(
   'scatter',
@@ -389,10 +244,11 @@ export const draw_points_2d = createPlotFunction(
  * * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @function
- * @return function of type 3D Curve → Drawing
+ * @returns function of type 3D Curve → Drawing
  * @example
  * ```
  * draw_points_3d(100)(t => make_point(t, t));
+ * ```
  */
 export const draw_points_3d = createPlotFunction(
   'scatter3d',

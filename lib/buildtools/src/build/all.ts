@@ -3,9 +3,9 @@ import { compareSeverity } from '@sourceacademy/modules-repotools/utils';
 import type { LogLevel } from 'typedoc';
 import type { PrebuildOptions } from '../prebuild/index.js';
 import { runEslint, type LintResult } from '../prebuild/lint.js';
-import { runTsc, type TscResult } from '../prebuild/tsc.js';
 import { buildSingleBundleDocs } from './docs/index.js';
 import { buildBundle, buildTab } from './modules/index.js';
+import { runTypechecking, type TscResult } from './modules/tsc.js';
 
 interface BuildAllPrebuildError {
   severity: 'error';
@@ -39,7 +39,7 @@ export type BuildAllResult = BuildAllPrebuildError | BuildAllBundleResult | Buil
  */
 export async function buildAll(input: InputAsset, prebuild: PrebuildOptions, outDir: string, logLevel: LogLevel): Promise<BuildAllResult> {
   const [tscResult, lintResult] = await Promise.all([
-    prebuild.tsc ? runTsc(input, true) : Promise.resolve(undefined),
+    prebuild.tsc ? runTypechecking(input) : Promise.resolve(undefined),
     prebuild.lint ? runEslint(input) : Promise.resolve(undefined)
   ]);
 

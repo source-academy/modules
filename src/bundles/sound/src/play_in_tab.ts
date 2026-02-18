@@ -11,7 +11,7 @@ context.moduleContexts.sound.state = { audioPlayed };
  * in a Source Academy tab.
  *
  * @param sound the Sound to play
- * @return the given Sound
+ * @returns the given Sound
  * @example play_in_tab(sine_sound(440, 5));
  */
 

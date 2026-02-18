@@ -4,23 +4,23 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { Physics } from '../Physics';
 
 // Mock rapier
-vi.mock('@dimforge/rapier3d-compat', () => {
-  return {
-    default: {
-      init: vi.fn(),
-      World: class {
-        timestep = vi.fn();
-        createRigidBody = vi.fn();
-        createCollider = vi.fn();
-        castRayAndGetNormal = vi.fn();
-        step = vi.fn();
-        castRay = vi.fn();
-      },
-      Ray: vi.fn(),
-      RigidBodyDesc: vi.fn(),
-      ColliderDesc: vi.fn(),
-    }
-  };
+vi.mock(import('@dimforge/rapier3d-compat'), () => {
+  const mocked: typeof rapier = {
+    init: vi.fn(),
+    World: class {
+      timestep = vi.fn();
+      createRigidBody = vi.fn();
+      createCollider = vi.fn();
+      castRayAndGetNormal = vi.fn();
+      step = vi.fn();
+      castRay = vi.fn();
+    },
+    Ray: vi.fn(),
+    RigidBodyDesc: vi.fn(),
+    ColliderDesc: vi.fn(),
+  } as any;
+
+  return { default: mocked };
 });
 
 describe(Physics, () => {

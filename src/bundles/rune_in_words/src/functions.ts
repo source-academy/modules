@@ -116,7 +116,7 @@ export function from_url(imageUrl: string): string {
  * @param ratio_x - Scaling factor in x direction
  * @param ratio_y - Scaling factor in y direction
  * @param rune - Given Rune
- * @return Resulting scaled Rune
+ * @returns Resulting scaled Rune
  *
  * @category Main
  */
@@ -133,7 +133,7 @@ export function scale_independent(
  * Scales a given Rune by a given factor in both x and y direction
  * @param ratio - Scaling factor
  * @param rune - Given Rune
- * @return Resulting scaled Rune
+ * @returns Resulting scaled Rune
  *
  * @category Main
  */
@@ -147,7 +147,7 @@ export function scale(ratio: number, rune: string): string {
  * @param x - Translation in x direction
  * @param y - Translation in y direction
  * @param rune - Given Rune
- * @return Resulting translated Rune
+ * @returns Resulting translated Rune
  *
  * @category Main
  */
@@ -163,7 +163,7 @@ export function translate(x: number, y: number, rune: string): string {
  * may be cropped as a result.
  * @param rad - Angle in radians
  * @param rune - Given Rune
- * @return Rotated Rune
+ * @returns Rotated Rune
  *
  * @category Main
  */
@@ -181,7 +181,7 @@ export function rotate(rad: number, rune: string): string {
  * @param frac - Fraction between 0 and 1 (inclusive)
  * @param rune1 - Given Rune
  * @param rune2 - Given Rune
- * @return Resulting Rune
+ * @returns Resulting Rune
  *
  * @category Main
  */
@@ -199,7 +199,7 @@ export function stack_frac(frac: number, rune1: string, rune2: string): string {
  * result
  * @param rune1 - Given Rune
  * @param rune2 - Given Rune
- * @return Resulting Rune
+ * @returns Resulting Rune
  *
  * @category Main
  */
@@ -213,7 +213,7 @@ export function stack(rune1: string, rune2: string): string {
  * by vertically stacking n copies of it
  * @param n - Positive integer
  * @param rune - Given Rune
- * @return Resulting Rune
+ * @returns Resulting Rune
  *
  * @category Main
  */
@@ -228,7 +228,7 @@ export function stackn(n: number, rune: string): string {
  * by turning it a quarter-turn around the centre in
  * clockwise direction.
  * @param rune - Given Rune
- * @return Resulting Rune
+ * @returns Resulting Rune
  *
  * @category Main
  */
@@ -242,7 +242,7 @@ export function quarter_turn_right(rune: string): string {
  * by turning it a quarter-turn in
  * anti-clockwise direction.
  * @param rune - Given Rune
- * @return Resulting Rune
+ * @returns Resulting Rune
  *
  * @category Main
  */
@@ -255,7 +255,7 @@ export function quarter_turn_left(rune: string): string {
  * Makes a new Rune from a given Rune
  * by turning it upside-down
  * @param rune - Given Rune
- * @return Resulting Rune
+ * @returns Resulting Rune
  *
  * @category Main
  */
@@ -273,7 +273,7 @@ export function turn_upside_down(rune: string): string {
  * @param frac - Fraction between 0 and 1 (inclusive)
  * @param rune1 - Given Rune
  * @param rune2 - Given Rune
- * @return Resulting Rune
+ * @returns Resulting Rune
  *
  * @category Main
  */
@@ -290,7 +290,7 @@ export function beside_frac(frac: number, rune1: string, rune2: string): string 
  * of the result
  * @param rune1 - Given Rune
  * @param rune2 - Given Rune
- * @return Resulting Rune
+ * @returns Resulting Rune
  *
  * @category Main
  */
@@ -304,7 +304,7 @@ export function beside(rune1: string, rune2: string): string {
  * flipping it around a horizontal axis,
  * turning it upside down
  * @param rune - Given Rune
- * @return Resulting Rune
+ * @returns Resulting Rune
  *
  * @category Main
  */
@@ -318,7 +318,7 @@ export function flip_vert(rune: string): string {
  * flipping it around a vertical axis,
  * creating a mirror image
  * @param rune - Given Rune
- * @return Resulting Rune
+ * @returns Resulting Rune
  *
  * @category Main
  */
@@ -332,7 +332,7 @@ export function flip_horiz(rune: string): string {
  * arranging into a square for copies of the
  * given Rune in different orientations
  * @param rune - Given Rune
- * @return Resulting Rune
+ * @returns Resulting Rune
  *
  * @category Main
  */
@@ -349,7 +349,7 @@ export function make_cross(rune: string): string {
  * @param n - A non-negative integer
  * @param pattern - Unary function from Rune to Rune
  * @param initial - The initial Rune
- * @return - Result of n times application of pattern to initial:
+ * @returns - Result of n times application of pattern to initial:
  * pattern(pattern(...pattern(pattern(initial))...))
  *
  * @category Main
@@ -374,7 +374,7 @@ export function repeat_pattern(
  * @param frac - Fraction between 0 and 1 (inclusive)
  * @param rune1 - Given Rune
  * @param rune2 - Given Rune
- * @return Resulting Rune
+ * @returns Resulting Rune
  *
  * @category Main
  */
@@ -388,7 +388,7 @@ export function overlay_frac(frac: number, rune1: string, rune2: string): string
  * The depth range of the z-axis of a rune is [0,-1], this function maps the depth range of rune1 and rune2 to [0,-0.5] and [-0.5,-1] respectively.
  * @param rune1 - Given Rune
  * @param rune2 - Given Rune
- * @return Resulting Runes
+ * @returns Resulting Runes
  *
  * @category Main
  */
@@ -573,7 +573,7 @@ export function white(rune: string): string {
 /**
  * Renders the specified Rune in a tab as a basic drawing.
  * @param rune - The Rune to render
- * @return The specified Rune
+ * @returns The specified Rune
  *
  * @category Main
  */
@@ -586,7 +586,7 @@ export function show(rune: string): string {
  * Renders the specified Rune in a tab as an anaglyph. Use 3D glasses to view the
  * anaglyph.
  * @param rune - The Rune to render
- * @return The specified Rune
+ * @returns The specified Rune
  *
  * @category Main
  */
@@ -599,7 +599,7 @@ export function anaglyph(rune: string): string {
  * Renders the specified Rune in a tab as a hollusion, with a default magnitude
  * of 0.1.
  * @param rune - The Rune to render
- * @return The specified Rune
+ * @returns The specified Rune
  *
  * @category Main
  */

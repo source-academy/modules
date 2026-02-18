@@ -5,9 +5,10 @@
   "type": "module",
   "devDependencies": {
     "@sourceacademy/modules-repotools": "workspace:^",
+    "@types/lodash": "^4.14.198",
     "@types/node": "^22.15.30",
     "typescript": "^5.8.2",
-    "vitest": "^4.0.4"
+    "vitest": "^4.0.18"
   },
   "dependencies": {
     "@actions/artifact": "^6.0.0",

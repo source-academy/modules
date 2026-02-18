@@ -659,7 +659,7 @@ export const isHollusionRune = (rune: DrawnRune): rune is HollusionRune => rune 
  * of the result
  * @param {Rune} rune1 - Given Rune
  * @param {Rune} rune2 - Given Rune
- * @return {Rune} Resulting Rune
+ * @returns {Rune} Resulting Rune
  * @function
  *
  * @category Main
@@ -675,7 +675,7 @@ export const beside = RuneFunctions.beside;
  * @param {number} frac - Fraction between 0 and 1 (inclusive)
  * @param {Rune} rune1 - Given Rune
  * @param {Rune} rune2 - Given Rune
- * @return {Rune} Resulting Rune
+ * @returns {Rune} Resulting Rune
  * @function
  *
  * @category Main
@@ -755,7 +755,7 @@ export const corner = RuneFunctions.corner;
  * flipping it around a vertical axis,
  * creating a mirror image
  * @param {Rune} rune - Given Rune
- * @return {Rune} Resulting Rune
+ * @returns {Rune} Resulting Rune
  * @function
  *
  * @category Main
@@ -767,7 +767,7 @@ export const flip_horiz = RuneFunctions.flip_horiz;
  * flipping it around a horizontal axis,
  * turning it upside down
  * @param {Rune} rune - Given Rune
- * @return {Rune} Resulting Rune
+ * @returns {Rune} Resulting Rune
  * @function
  *
  * @category Main
@@ -817,7 +817,7 @@ export const indigo = RuneColours.indigo;
  * arranging into a square for copies of the
  * given Rune in different orientations
  * @param {Rune} rune - Given Rune
- * @return {Rune} Resulting Rune
+ * @returns {Rune} Resulting Rune
  * @function
  *
  * @category Main
@@ -847,7 +847,7 @@ export const orange = RuneColours.orange;
  * The depth range of the z-axis of a rune is [0,-1], this function maps the depth range of rune1 and rune2 to [0,-0.5] and [-0.5,-1] respectively.
  * @param {Rune} rune1 - Given Rune
  * @param {Rune} rune2 - Given Rune
- * @return {Rune} Resulting Runes
+ * @returns {Rune} Resulting Runes
  * @function
  *
  * @category Main
@@ -859,7 +859,7 @@ export const overlay = RuneFunctions.overlay;
  * @param {number} frac - Fraction between 0 and 1 (inclusive)
  * @param {Rune} rune1 - Given Rune
  * @param {Rune} rune2 - Given Rune
- * @return {Rune} Resulting Rune
+ * @returns {Rune} Resulting Rune
  * @function
  *
  * @category Main
@@ -898,7 +898,7 @@ export const purple = RuneColours.purple;
  * by turning it a quarter-turn in
  * anti-clockwise direction.
  * @param {Rune} rune - Given Rune
- * @return {Rune} Resulting Rune
+ * @returns {Rune} Resulting Rune
  * @function
  *
  * @category Main
@@ -910,7 +910,7 @@ export const quarter_turn_left = RuneFunctions.quarter_turn_left;
  * by turning it a quarter-turn around the centre in
  * clockwise direction.
  * @param {Rune} rune - Given Rune
- * @return {Rune} Resulting Rune
+ * @returns {Rune} Resulting Rune
  * @function
  *
  * @category Main
@@ -954,7 +954,7 @@ export const red = RuneColours.red;
  * @param {number} n - A non-negative integer
  * @param {function} pattern - Unary function from Rune to Rune
  * @param {Rune} initial - The initial Rune
- * @return {Rune} - Result of n times application of pattern to initial:
+ * @returns {Rune} - Result of n times application of pattern to initial:
  * pattern(pattern(...pattern(pattern(initial))...))
  * @function
  *
@@ -977,7 +977,7 @@ export const ribbon = RuneFunctions.ribbon;
  * may be cropped as a result.
  * @param {number} rad - Angle in radians
  * @param {Rune} rune - Given Rune
- * @return {Rune} Rotated Rune
+ * @returns {Rune} Rotated Rune
  * @function
  *
  * @category Main
@@ -995,7 +995,7 @@ export const sail = RuneFunctions.sail;
  * Scales a given Rune by a given factor in both x and y direction
  * @param {number} ratio - Scaling factor
  * @param {Rune} rune - Given Rune
- * @return {Rune} Resulting scaled Rune
+ * @returns {Rune} Resulting scaled Rune
  * @function
  *
  * @category Main
@@ -1007,7 +1007,7 @@ export const scale = RuneFunctions.scale;
  * @param {number} ratio_x - Scaling factor in x direction
  * @param {number} ratio_y - Scaling factor in y direction
  * @param {Rune} rune - Given Rune
- * @return {Rune} Resulting scaled Rune
+ * @returns {Rune} Resulting scaled Rune
  * @function
  *
  * @category Main
@@ -1021,7 +1021,7 @@ export const scale_independent = RuneFunctions.scale_independent;
  * result
  * @param {Rune} rune1 - Given Rune
  * @param {Rune} rune2 - Given Rune
- * @return {Rune} Resulting Rune
+ * @returns {Rune} Resulting Rune
  * @function
  *
  * @category Main
@@ -1037,7 +1037,7 @@ export const stack = RuneFunctions.stack;
  * @param {number} frac - Fraction between 0 and 1 (inclusive)
  * @param {Rune} rune1 - Given Rune
  * @param {Rune} rune2 - Given Rune
- * @return {Rune} Resulting Rune
+ * @returns {Rune} Resulting Rune
  * @function
  *
  * @category Main
@@ -1049,7 +1049,7 @@ export const stack_frac = RuneFunctions.stack_frac;
  * by vertically stacking n copies of it
  * @param {number} n - Positive integer
  * @param {Rune} rune - Given Rune
- * @return {Rune} Resulting Rune
+ * @returns {Rune} Resulting Rune
  * @function
  *
  * @category Main
@@ -1068,7 +1068,7 @@ export const square = RuneFunctions.square;
  * @param {number} x - Translation in x direction
  * @param {number} y - Translation in y direction
  * @param {Rune} rune - Given Rune
- * @return {Rune} Resulting translated Rune
+ * @returns {Rune} Resulting translated Rune
  * @function
  *
  * @category Main
@@ -1086,7 +1086,7 @@ export const triangle = RuneFunctions.triangle;
  * Makes a new Rune from a given Rune
  * by turning it upside-down
  * @param {Rune} rune - Given Rune
- * @return {Rune} Resulting Rune
+ * @returns {Rune} Resulting Rune
  * @function
  *
  * @category Main

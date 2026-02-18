@@ -8,7 +8,7 @@ import stylePlugin from '@stylistic/eslint-plugin';
 import vitestPlugin from '@vitest/eslint-plugin';
 import { defineConfig } from 'eslint/config';
 import * as importPlugin from 'eslint-plugin-import';
-import jsdocPlugin from 'eslint-plugin-jsdoc';
+import jsdocPlugin, { getJsdocProcessorPlugin } from 'eslint-plugin-jsdoc';
 import * as mdx from 'eslint-plugin-mdx';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
@@ -123,7 +123,13 @@ export default defineConfig(
     name: 'Global JS/TS Stylistic Rules',
     plugins: {
       jsdoc: jsdocPlugin,
+      jsdocExamples: getJsdocProcessorPlugin({
+        parser: tseslint.parser,
+        // Only lint markdown code blocks
+        exampleCodeRegex: /^[\s*]*```(?:[jt]s\s)?([\s\S]*)```\s*/
+      })
     },
+    processor: 'jsdocExamples/examples',
     files: [
       '**/*.{js,cjs,mjs}',
       '**/*.{ts,cts,tsx}',
@@ -236,6 +242,15 @@ export default defineConfig(
         checkDestructured: false,
         disableMissingParamChecks: true
       }],
+      'jsdoc/check-tag-names': ['error', {
+        // NOTE: Not all Typedoc supported tags are present here. Feel free to add any other
+        // Typedoc supported tags to this list
+        definedTags: ['category', 'categoryDescription', 'hidden', 'title'],
+        inlineTags: ['link', 'see'],
+      }],
+      'jsdoc/empty-tags': ['error', {
+        tags: ['hidden']
+      }],
 
       'import/first': 'warn',
       'import/newline-after-import': 'warn',
@@ -300,6 +315,13 @@ export default defineConfig(
     rules: {
       'no-unused-vars': 'off', // Use the typescript eslint rule instead
 
+      'import/no-unresolved': [
+        // disable in the CI since we don't install packages so all node packages
+        // become unresolvable
+        process.env.CI ? 'off' : 'error',
+        { ignore: [ 'js-slang/context', '^virtual:.+$' ] }
+      ],
+
       'jsdoc/no-types': 'warn',
 
       '@stylistic/type-annotation-spacing': ['warn', { overrides: { colon: { before: false, after: true } } }],
@@ -314,6 +336,12 @@ export default defineConfig(
       // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
       '@typescript-eslint/only-throw-error': 'error'
+    },
+    settings: {
+      'import/resolver': {
+        typescript: true,
+        node: true
+      }
     }
   },
   // #endregion typescript
@@ -460,10 +488,14 @@ export default defineConfig(
       'vitest/expect-expect': ['error', {
         assertFunctionNames: ['expect*'],
       }],
+      'vitest/hoisted-apis-on-top': 'error',
       'vitest/no-alias-methods': 'off', // was 'error'
       'vitest/no-conditional-expect': 'off', // was 'error'
+      'vitest/no-disabled-tests': 'off', // was 'warn'
       'vitest/no-focused-tests': ['warn', { fixable: false }],
+      'vitest/no-standalone-expect': 'off', // was 'error'
       'vitest/prefer-describe-function-title': 'warn',
+      'vitest/prefer-import-in-mock': 'warn',
       'vitest/require-top-level-describe': 'off', // was 'error'
       'vitest/valid-describe-callback': 'off', // was 'error'
       'vitest/valid-expect-in-promise': 'error',
@@ -484,7 +516,10 @@ export default defineConfig(
       '**/vitest.config.{js,ts}'
     ],
     rules: {
-      'import/extensions': ['error', 'ignorePackages'],
+      'import/extensions': ['error', 'ignorePackages', {
+        ts: 'never',
+        cts: 'never'
+      }],
     }
   },
   {

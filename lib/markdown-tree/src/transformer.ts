@@ -22,9 +22,8 @@ const githubDarkColours = [
 ];
 
 // Assemble the Regex expression using the line strings
-const reString = Object.entries(LINE_STRINGS)
-  .filter(([key]) => key !== 'EMPTY')
-  .map(([, value]) => `(?:${value})`)
+const reString = Object.values(LINE_STRINGS)
+  .map(value => `(?:${value})`)
   .join('|');
 const branchRE = new RegExp(reString, 'g');
 
@@ -77,7 +76,7 @@ export interface TransformerOptions {
 /**
  * Returns a {@link ShikiTransformer} for colouring dirtree diagrams
  */
-export function dirtreeTransformer(options: TransformerOptions = {}): ShikiTransformer {
+export function dirtreeTransformer(options: TransformerOptions = {}) {
   const lightColours = options?.lightColours || githubLightColours;
   const darkColours = options?.darkColours || githubDarkColours;
 
@@ -138,5 +137,5 @@ export function dirtreeTransformer(options: TransformerOptions = {}): ShikiTrans
 
       return newTokens;
     }
-  };
+  } satisfies ShikiTransformer;
 }
