@@ -225,7 +225,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
       }
 
       if (config === null) {
-        if (!(await isTestDirectory(jsonDir))) {
+        if (!await isTestDirectory(jsonDir)) {
           return {
             severity: 'success',
             config: null
@@ -253,7 +253,7 @@ export async function getTestConfiguration(directory: string, watch: boolean): P
 
       const { bundle } = bundleResult;
       if (config === null) {
-        if (!(await isTestDirectory(jsonDir))) {
+        if (!await isTestDirectory(jsonDir)) {
           return {
             severity: 'success',
             config: null

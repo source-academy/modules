@@ -519,15 +519,15 @@ export function query_pointer_position(): PositionXY {
  * @hidden
  */
 const withinRange: (num: number, min: number, max: number) => number
-= (num: number, min: number, max: number) => {
-  if (num > max) {
-    return max;
-  }
-  if (num < min) {
-    return min;
-  }
-  return num;
-};
+  = (num: number, min: number, max: number) => {
+    if (num > max) {
+      return max;
+    }
+    if (num < min) {
+      return min;
+    }
+    return num;
+  };
 
 /**
  * Sets the frames per second of the canvas, which should be between the MIN_FPS and MAX_FPS.

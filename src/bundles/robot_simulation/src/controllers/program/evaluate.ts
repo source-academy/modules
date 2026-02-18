@@ -1,3 +1,4 @@
+import { merge } from 'es-toolkit';
 import {
   Control,
   Stash,
@@ -5,7 +6,6 @@ import {
 } from 'js-slang/dist/cse-machine/interpreter';
 import { parse } from 'js-slang/dist/parser/parser';
 import { Variant, type Context } from 'js-slang/dist/types';
-import { merge } from 'es-toolkit';
 
 export const DEFAULT_SOURCE_OPTIONS = {
   scheduler: 'async',
