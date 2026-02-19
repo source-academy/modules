@@ -74,6 +74,8 @@
     "husky": "^9.1.7",
     "jsdom": "^26.1.0",
     "jsonc-eslint-parser": "^2.4.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.53.1",
     "vitest": "^4.0.18",
@@ -82,8 +84,8 @@
   "peerDependencies": {
     "@blueprintjs/core": "^6.0.0",
     "@blueprintjs/icons": "^6.0.0",
+    "es-toolkit": "^1.44.0",
     "js-slang": "^1.0.85",
-    "lodash": "^4.17.23",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

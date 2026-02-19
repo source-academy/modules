@@ -62,6 +62,7 @@ import path from 'pathlib';
 
 ## `no-barrel-imports`
 
+_Note: Due to the migration to es-toolkit, this rule is no longer used_
 Enforces that imports from a certain source uses individual imports instead of the main barrel import.
 
 This rule was primarily motivated by packages like `lodash` and `@mui`, which re-export all their functionalities

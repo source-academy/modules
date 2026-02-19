@@ -12,8 +12,8 @@ describe(utils.extractPackageName, () => {
   });
 
   it('works with regular package names', () => {
-    expect(utils.extractPackageName('lodash@npm:^4.17.20'))
-      .toEqual('lodash');
+    expect(utils.extractPackageName('es-toolkit@npm:^1.44.0'))
+      .toEqual('es-toolkit');
   });
 
   it('throws an error on an invalid package name', () => {
