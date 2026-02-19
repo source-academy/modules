@@ -74,6 +74,8 @@
     "husky": "^9.1.7",
     "jsdom": "^26.1.0",
     "jsonc-eslint-parser": "^2.4.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.53.1",
     "vitest": "^4.0.18",

@@ -73,7 +73,7 @@ export const getValidateCommand = () => new Command('validate')
     } else if (manifestResult.severity === 'error') {
       logCommandErrorAndExit(manifestResult);
     } else {
-      const bundle = omit(manifestResult.bundle, 'type');
+      const bundle = omit(manifestResult.bundle, ['type']);
       const manifestStr = JSON.stringify(bundle, null, 2);
       console.log(`${chalk.magentaBright(`Bundle '${manifestResult.bundle.name}' found in ${directory}`)}:\n${manifestStr}`);
     }

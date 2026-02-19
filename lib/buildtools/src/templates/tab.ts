@@ -79,7 +79,7 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
   };
 
   // Version property gets stored in package.json, not manifest.json
-  const requiredProperties = omit(manifest[moduleName], 'version');
+  const requiredProperties = omit(manifest[moduleName], ['version']);
 
   const newManifest: BundleManifest = {
     ...requiredProperties,

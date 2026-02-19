@@ -4820,6 +4820,8 @@ __metadata:
     husky: "npm:^9.1.7"
     jsdom: "npm:^26.1.0"
     jsonc-eslint-parser: "npm:^2.4.0"
+    react: "npm:^18.3.1"
+    react-dom: "npm:^18.3.1"
     typescript: "npm:^5.8.2"
     typescript-eslint: "npm:^8.53.1"
     vitest: "npm:^4.0.18"
@@ -5133,6 +5135,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
+    es-toolkit: "npm:^1.44.0"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
   languageName: unknown
