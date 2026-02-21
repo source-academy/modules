@@ -19,12 +19,25 @@ export type CurveAnimation = (t: number) => Curve;
 
 /**
  * A function that specifies additional rendering information when taking in
- * a CurveFunction and returns a ShapeDrawn based on its specifications.
+ * a {@link Curve|Curve} and returns a ShapeDrawn based on its specifications.
  */
 export interface RenderFunction extends ReplResult {
   (func: Curve): CurveDrawn;
   is3D: boolean;
 };
+
+/**
+ * A function that returns a {@link RenderFunction|RenderFunction} that is bound to
+ * the specified number of points
+ */
+export interface RenderFunctionCreator {
+  (numPoints: number): RenderFunction;
+
+  scaleMode: ScaleMode;
+  drawMode: DrawMode;
+  space: CurveSpace;
+  isFullView: boolean;
+}
 
 export class AnimatedCurve extends glAnimation implements ReplResult {
   constructor(

@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 import { describe, expect, it, vi } from 'vitest';
-import { addCuboid } from '../../Render/helpers/MeshFactory';
+import { addCuboid } from '../helpers/MeshFactory';
 
 // Mock the necessary Three.js methods and classes
-vi.mock('three', async importOriginal => {
-  const originalModule: any = await importOriginal();
+vi.mock(import('three'), async importOriginal => {
+  const originalModule = await importOriginal();
 
   class Vector3 {
     x: number;
@@ -46,6 +46,7 @@ vi.mock('three', async importOriginal => {
     }
   }
 
+  // @ts-expect-error Not a complete mock of threejs
   return {
     ...originalModule,
     BoxGeometry: vi.fn(),
@@ -61,7 +62,7 @@ vi.mock('three', async importOriginal => {
     Color: vi.fn().mockImplementation(function (color) {
       return { color };
     }),
-  };
+  } as typeof THREE;
 });
 
 describe(addCuboid, () => {

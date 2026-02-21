@@ -37,7 +37,7 @@ interface TabIconProps {
 function TabIcon({ iconName, tooltip, shouldAlert }: TabIconProps) {
   return <Tooltip content={tooltip}>
     <div className={!shouldAlert ? 'side-content-tooltip' : 'side-content-tooltip side-content-tab-alert'}>
-      <Icon icon={iconName} iconSize={20} />
+      <Icon icon={iconName} size={20} />
     </div>
   </Tooltip>;
 }

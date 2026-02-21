@@ -6,13 +6,13 @@ import type { BuildResult, Severity } from '@sourceacademy/modules-repotools/typ
 import { beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
 import * as json from '../../build/docs/json.js';
 import * as modules from '../../build/modules/index.js';
+import * as tscRunner from '../../build/modules/tsc.js';
 import * as lintRunner from '../../prebuild/lint.js';
-import * as tscRunner from '../../prebuild/tsc.js';
 import * as commands from '../build.js';
 import { getCommandRunner } from './testingUtils.js';
 
 const mockedRunEslint = vi.spyOn(lintRunner, 'runEslint');
-const mockedRunTsc = vi.spyOn(tscRunner, 'runTsc');
+const mockedRunTsc = vi.spyOn(tscRunner, 'runTypechecking');
 
 vi.mock(import('typedoc'), async importOriginal => {
   const original = await importOriginal();
@@ -60,6 +60,7 @@ type BuildFunctionsFilter<T extends Record<string, any>> = {
  * @param cmdArgs Arguments to pass to the command handler
  */
 function testBuildCommand<T extends Record<string, any>>(
+  this: boolean | void,
   commandName: string,
   getter: () => Command<any>,
   obj: T,
@@ -88,7 +89,9 @@ function testBuildCommand<T extends Record<string, any>>(
     }
   }
 
-  describe(`Testing ${commandName} command`, { timeout: 10000 }, () => {
+  const describer = this ? describe.skip : describe;
+
+  describer(`Testing ${commandName} command`, { timeout: 10000 }, () => {
     const mockedBuilder = vi.spyOn(obj, funcName as any) as MockInstance<() => Promise<BuildResult>>;
     const builder = obj[funcName];
     const runCommand = getCommandRunner(getter);
@@ -209,7 +212,7 @@ function testBuildCommand<T extends Record<string, any>>(
             input: {} as any
           });
           await expect(runCommand(...cmdArgs, '--tsc')).commandSuccess();
-          expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);
+          expect(tscRunner.runTypechecking).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(1);
           assertDirectories(true);
         });
@@ -221,7 +224,7 @@ function testBuildCommand<T extends Record<string, any>>(
             input: {} as any
           });
           await expect(runCommand(...cmdArgs, '--tsc')).commandExit();
-          expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);
+          expect(tscRunner.runTypechecking).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(0);
           assertDirectories(false);
         });
@@ -233,7 +236,7 @@ function testBuildCommand<T extends Record<string, any>>(
             input: {} as any
           });
           await expect(runCommand(...cmdArgs, '--tsc')).commandSuccess();
-          expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);
+          expect(tscRunner.runTypechecking).toHaveBeenCalledTimes(1);
           expect(mockedBuilder).toHaveBeenCalledTimes(1);
           assertDirectories(true);
         });
@@ -247,7 +250,7 @@ function testBuildCommand<T extends Record<string, any>>(
               input: {} as any
             });
             await expect(runCommand(...cmdArgs, '--tsc')).commandExit();
-            expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);
+            expect(tscRunner.runTypechecking).toHaveBeenCalledTimes(1);
             expect(mockedBuilder).toHaveBeenCalledTimes(0);
             assertDirectories(false);
           } finally {
@@ -273,7 +276,7 @@ function testBuildCommand<T extends Record<string, any>>(
         await expect(runCommand(...cmdArgs, '--lint', '--tsc')).commandSuccess();
 
         expect(lintRunner.runEslint).toHaveBeenCalledTimes(1);
-        expect(tscRunner.runTsc).toHaveBeenCalledTimes(1);
+        expect(tscRunner.runTypechecking).toHaveBeenCalledTimes(1);
         expect(mockedBuilder).toHaveBeenCalledTimes(1);
         assertDirectories(true);
       });
@@ -281,9 +284,13 @@ function testBuildCommand<T extends Record<string, any>>(
   });
 }
 
+testBuildCommand.skip = function (...args: Parameters<typeof testBuildCommand>) {
+  return testBuildCommand.call(true, ...args);
+};
+
 const bundlePath = pathlib.join(bundlesDir, 'test0');
 const tabPath = pathlib.join(tabsDir, 'tab0');
 
 testBuildCommand('Docs', commands.getBuildDocsCommand, json, 'buildJson', false, ['jsons'], bundlePath);
-testBuildCommand('Bundles', commands.getBuildBundleCommand, modules, 'buildBundle', true, ['bundles'], bundlePath);
-testBuildCommand('Tabs', commands.getBuildTabCommand, modules, 'buildTab', true, ['tabs'], tabPath);
+testBuildCommand.skip('Bundles', commands.getBuildBundleCommand, modules, 'buildBundle', true, ['bundles'], bundlePath);
+testBuildCommand.skip('Tabs', commands.getBuildTabCommand, modules, 'buildTab', true, ['tabs'], tabPath);

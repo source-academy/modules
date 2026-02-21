@@ -2,8 +2,8 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import type { InputAsset } from '@sourceacademy/modules-repotools/types';
 import { compareSeverity } from '@sourceacademy/modules-repotools/utils';
+import { runTypechecking, type TscResult } from '../build/modules/tsc.js';
 import { runEslint, type LintResult } from './lint.js';
-import { runTsc, type TscResult } from './tsc.js';
 
 export type PrebuildOptions = {
   tsc?: boolean;
@@ -30,7 +30,7 @@ export async function runBuilderWithPrebuild<T extends InputAsset, U extends any
   ...args: U
 ): Promise<RunPrebuildResult<V>> {
   const promises: [Promise<TscResult | undefined>, Promise<LintResult | undefined>] = [
-    !tsc ? Promise.resolve(undefined) : runTsc(asset, false),
+    !tsc ? Promise.resolve(undefined) : runTypechecking(asset),
     !lint ? Promise.resolve(undefined) : runEslint(asset),
   ];
 
@@ -63,7 +63,7 @@ export async function runBuilderWithPrebuild<T extends InputAsset, U extends any
  */
 export async function runPrebuild(asset: InputAsset) {
   const [tscResult, lintResult] = await Promise.all([
-    runTsc(asset, false),
+    runTypechecking(asset),
     runEslint(asset)
   ]);
 

@@ -4,15 +4,18 @@ import { EntityFactory, MeshFactory, Physics, Renderer } from '../../../../engin
 
 import { ChassisWrapper } from '../Chassis';
 
-vi.mock('../../../../engine', () => ({
+// @ts-expect-error not a complete mock of engine
+vi.mock(import('../../../../engine'), () => ({
   Physics: vi.fn(),
   Renderer: vi.fn(),
   EntityFactory: { addCuboid: vi.fn() },
   MeshFactory: { addCuboid: vi.fn() }
 }));
-vi.mock('../../../../engine/Entity/EntityFactory');
 
-vi.mock('three', async importOriginal => {
+vi.mock(import('../../../../engine/Entity/EntityFactory'));
+
+vi.mock(import('three'), async importOriginal => {
+  // @ts-expect-error Not a complete mock of three.js
   return {
     ...await importOriginal(),
     Mesh: vi.fn(class {
@@ -21,7 +24,7 @@ vi.mock('three', async importOriginal => {
       visible = false;
     }),
     Color: vi.fn()
-  };
+  } as typeof THREE;
 });
 
 const mockedMeshFactory = vi.mocked(MeshFactory);

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@blueprintjs/core": "^6.0.0",
     "@dimforge/rapier3d-compat": "^0.11.2",
     "@sourceacademy/bundle-robot_simulation": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
