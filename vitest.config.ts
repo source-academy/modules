@@ -23,6 +23,7 @@ export default defineConfig({
     }]
   },
   test: {
+    setupFiles: [pathlib.join(import.meta.dirname, 'vitest.setup.ts')],
     projects: [
       './.github/actions',
       './devserver',
