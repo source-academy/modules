@@ -94,7 +94,6 @@ export default defineConfig(
     extends: [ymlPlugin.configs['flat/recommended']],
     files: ['**/*.yml', '**/*.yaml'],
     plugins: {
-      // @ts-expect-error Incorrect plugin type
       yml: ymlPlugin
     },
     rules: {
@@ -211,10 +210,11 @@ export default defineConfig(
       'no-dupe-keys': 'off',
       'no-redeclare': 'off',
       'no-undef': 'off',
+      'no-unreachable': 'off',
       'no-unused-expressions': 'off',
-      'react/jsx-no-undef': 'off',
       'no-unused-vars': 'off',
       'padded-blocks': 'off',
+      'react/jsx-no-undef': 'off',
 
       // Adding a "use strict" directive at the top of every
       // code block is tedious and distracting. The config
@@ -339,11 +339,16 @@ export default defineConfig(
       // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
       '@typescript-eslint/only-throw-error': ['error', {
-        allow: [{
-          from: 'package',
-          name: ['InvalidParameterTypeError', 'InvalidCallbackError'],
-          package: '@sourceacademy/modules-lib/errors',
-        }]
+        allowRethrowing: true,
+        allow: [
+          // TODO: Remove these exceptions when js-slang errors inherit from Error
+          'InvalidParameterTypeError', 'InvalidCallbackError',
+          // {
+          //   from: 'package',
+          //   name: ['InvalidParameterTypeError', 'InvalidCallbackError'],
+          //   package: '@sourceacademy/modules-lib',
+          // }
+        ]
       }]
     },
     settings: {

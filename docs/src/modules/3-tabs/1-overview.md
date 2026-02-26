@@ -40,9 +40,9 @@ children:
     children:
       - name: __tests__
         children:
-          - name: test.tsx
+          - name: index.test.tsx
             comment: You can use a tsx file
-          - name: test2.ts
+          - name: index.test.ts
             comment: Or a regular ts file
       - index.tsx
       - component.tsx

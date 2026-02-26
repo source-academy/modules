@@ -48,25 +48,52 @@ Currently, bundle documentation for cadets relies on these type annotations bein
 all cadets would see.
 
 As the typing system is improved, we may be able to use one set of typing for cadets and another for internal implementation.
+
+In effect, all bundle functions really look like this:
+
+```ts
+// Typescript style function overloads
+export function show(rune: Rune): Rune;
+export function show(rune: unknown) {
+  throwIfNotRune(show.name, rune);
+  drawnRunes.push(new NormalRune(rune));
+  return rune;
+}
+```
 :::
+
+## `InvalidTypeParameterError`
 
 When throwing errors related to type checking, you should throw an `InvalidParameterTypeError`, which can be imported from the `modules-lib`:
 
 ```ts
-export function play(value: unknown) {
+import { InvalidTypeParameterError } from '@sourceacademy/modules-lib/errors';
+
+export function play(value: unknown): asserts value is Sound {
   if (!is_sound(value)) {
     throw new InvalidParameterTypeError('Sound', value, play.name);
+
+    // you can provide the name of the parameter too!
+    throw new InvalidParameterTypeError('Sound', value, play.name, 'value');
   }
 
   // ...implementation
 }
 ```
 
-As part of ensuring type safety, there are several conventions bundle code should abide by:
+The parameters of the constructor for `InvalidParameterTypeError` are as follows:
+1. String representation of the expected type
+2. Actual value passed in by the user
+3. _Optional_: The name of the function that the error was thrown from (see [here](./3-errors) for more information)
+4. _Optional_: The name of the parameter that is being validated
 
-## 1. Cadet facing functions should not have default or rest parameters
+## Type Safety Conventions
 
-The function signature below takes in two booleans, the second of which is optional. This is not supported for Module functions in Source, but is fine if your function
+As part of ensuring type safety, there are several function related conventions bundle code should abide by:
+
+### 1. Cadet facing functions should not have default, optional or rest parameters
+
+The functions make use of default, optional and rest parameters. This is not supported for Module functions in Source, but is fine if your function
 isn't being exposed to cadets.
 
 ```ts
@@ -80,6 +107,11 @@ function concat_strings(...args: string[]) {
   return args.join(',');
 }
 
+// or this
+function configure_other_option(other_option?: boolean) {
+  // ...implementation
+}
+
 // But default and rest parameters are okay for internal use
 export function exposed_function() {
   configure_options(true);
@@ -91,7 +123,19 @@ export function exposed_function() {
 Neither default nor rest parameters are currently supported due to an [issue](https://github.com/source-academy/js-slang/issues/1238) on the `js-slang` side.
 :::
 
-## 2. Cadet facing functions should not use destructuring for parameters
+Instead, if you require such functionality, they should be defined as separate functions:
+
+```ts
+// Equivalent implementation of configure_options from the above example
+
+export function configure_options_1_and_2(option_1: boolean, option_2: boolean) {}
+
+export function configure_option_1_only(option_1: boolean) {
+  configure_options_1_and_2(option_1, false);
+}
+```
+
+### 2. Cadet facing functions should not use destructuring for parameters
 
 Javascript allows us to destruct iterables directly within a function's parameters:
 
@@ -125,7 +169,7 @@ function bar({ x, y }: BarParams) {
 }
 ```
 
-However, Javascript doesn't actually throw an error if you pass an invalid object into the function:
+In this case, Javascript doesn't actually throw an error if you pass an invalid object into the function:
 
 ```ts
 function bar({ x, y }: BarParams) {
@@ -164,11 +208,13 @@ Uncaught TypeError: Cannot read properties of undefined (reading 'a')
 
 because of course, when `bar2` is called with `0`, `x` becomes `undefined` and trying to destructure `undefined` causes the `TypeError`.
 
-If instead the parameter isn't destructured, it gives you the chance to perform type checking:
+In both cases, if instead the parameter isn't destructured, you have the chance to perform type checking:
 
 ```ts
 export function foo(arr: [string, string]) {
-  if (!Array.isArray(arr)) throw new Error();
+  if (!Array.isArray(arr) && arr.length !== 2) {
+    throw new InvalidParameterTypeError('Tuple of length 2', arr, foo.name, 'arr');
+  }
   return arr[0];
 }
 
@@ -181,7 +227,7 @@ export function bar2(obj: Bar2Params) {
 }
 ```
 
-## 3. If a callback is passed as a parameter, its number of parameters should be validated
+### 3. If a callback is passed as a parameter, its number of parameters should be validated
 
 By default, Javascript doesn't really mind if you call a function with fewer arguments than it was defined with:
 
@@ -236,8 +282,17 @@ import { draw_connected, make_point } from 'curve';
 draw_connected(200)((a, b) => make_point(a, 0)); // error: The provided curve is not a valid Curve function.
 ```
 
-The `InvalidCallbackError` is a subclass of the `InvalidParameterTypeError`, specifically to be used for the error to be thrown
-for invalid callbacks.
+> [!INFO] `InvalidCallbackError`
+>
+> The `InvalidCallbackError` is a subclass of the `InvalidParameterTypeError`, specifically to be used for the error to be thrown
+> for invalid callbacks. The parameters for its constructor are as follows:
+> 
+> 1. Number of Parameters/String representation of expected function:
+>   - If a number is given, it is assumed that a function with that number of parameters is expected
+>   - If a string is given, that will be used as a name for the function type.
+> 2. The actual value passed in by the user
+> 3. _Optional_: The name of the function that the error was thrown from (see [here](./3-errors) for more information)
+> 4. _Optional_: The name of the parameter that is being validated
 
 The `isFunctionOfLength` function is a type guard that also checks if the given input is a function at all, so it is
 not necessary to check for that separately:
@@ -249,34 +304,34 @@ function isFunctionOfLength(f: unknown, l: number): f is Function {
 }
 ```
 
-### Limitations of `isFunctionOfLength`
-
-Of course, `isFunctionOfLength` can only guarantee that the object passed to it is indeed a function and that it takes
-the specified number of parameters. It won't actually guarantee at runtime that the provided parameters are of the defined types. For example:
-
-```ts
-export function call_callback(f: (a: string, b: string) => void) {
-  if (!isFunctionOfLength(f, 2)) {
-    throw new InvalidCallbackError(2, f, call_callback.name);
-  }
-
-  return f('a', 'b');
-}
-
-// isFunctionOfLength won't be able to guarantee that x and y are strings
-call_callback((x, y) => x * y);
-```
-
-In fact, if you give it something of type `unknown`, the best it can do is narrow it down to a function that takes parameters of type `unknown`
-and returns a value with type `unknown`:
-
-```ts
-export function call_callback(f: unknown) {
-  if (!isFunctionOfLength(f, 2)) {
-    throw new InvalidCallbackError(2, f, call_callback.name);
-  }
-
-  // Then f here gets narrowed to (a: unknown, b: unknown) => unknown
-  return f('a', 'b');
-}
-```
+> [!WARN] Limitations of `isFunctionOfLength`
+> 
+> Of course, `isFunctionOfLength` can only guarantee that the object passed to it is indeed a function and that it takes
+> the specified number of parameters. It won't actually guarantee at runtime that the provided parameters are of the defined types. For example:
+> 
+> ```ts
+> export function call_callback(f: (a: string, b: string) => void) {
+>   if (!isFunctionOfLength(f, 2)) {
+>     throw new InvalidCallbackError(2, f, call_callback.name);
+>   }
+> 
+>   return f('a', 'b');
+> }
+>
+> // isFunctionOfLength won't be able to guarantee that x and y are strings
+> call_callback((x, y) => x * y);
+> ```
+> 
+> In fact, if you give it something of type `unknown`, the best it can do is narrow it down to a function that takes parameters of type `unknown`
+> and returns a value with type `unknown`:
+> 
+> ```ts
+> export function call_callback(f: unknown) {
+>   if (!isFunctionOfLength(f, 2)) {
+>     throw new InvalidCallbackError(2, f, call_callback.name);
+>   }
+> 
+>   // Then f here gets narrowed to (a: unknown, b: unknown) => unknown
+>   return f('a', 'b');
+> }
+> ```

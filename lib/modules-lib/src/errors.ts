@@ -12,7 +12,7 @@ import { stringify } from 'js-slang/dist/utils/stringify';
  *
  * @example
  * ```
- * function play_sound(sound: unknown) {
+ * function play_sound(sound: unknown): asserts sound is Sound {
  *   if (!is_sound(sound)) {
  *     throw new InvalidParameterTypeError('Sound', sound, play_sound.name, 'sound');
  *   }

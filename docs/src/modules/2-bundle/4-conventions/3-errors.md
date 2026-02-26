@@ -53,4 +53,45 @@ Then, the error can be thrown with the correct function name. Otherwise, cadets 
 that is visible to them. Many other functions might rely on `throwIfNotRune`. If they were all called in the same program, it doesn't tell the cadet which function the error was thrown from
 (was it `show`? or `anaglyph`? or something else?)
 
-An important use for error handling is when it comes to validating types. More information about type checking can be found in the next section.
+An important use for error handling is when it comes to validating types. More information about type checking can be found in the [next](./4-types) section.
+
+> [!WARNING] Undefined Name Property
+>
+> It's possible to create functions without names using anonymous expressions:
+>
+> ```ts
+> function getFunc(value: string) {
+>   return () => value;
+> }
+>
+> export const getFoo = getFunc('foo');
+> 
+> // getFoo.name is undefined!
+> console.log(getFoo.name);
+> ```
+>
+> A common case (especially if you are using type maps) is using an expression when defining a class function. This causes an anonymous function to be assigned to that property:
+>
+> ```ts
+> class Functions {
+>   static bar = () => 'bar';
+> }
+> 
+> // the name is also undefined!
+> console.log(Functions.bar.name);
+> ```
+>
+> In such a case, you should take care to define the `name` property manually (at least on the exported version):
+>
+> ```ts
+> function getFunc(value: string, func_name: string) {
+>   const func = () => value;
+>   Object.defineProperty(func, 'name', { value: func_name });
+>   return func;
+> }
+>
+> export const getFoo = getFunc('foo', 'foo');
+> 
+> // Now correctly prints foo!
+> console.log(getFoo.name);
+> ```

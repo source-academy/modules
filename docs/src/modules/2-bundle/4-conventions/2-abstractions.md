@@ -257,12 +257,20 @@ interface TextOptions {
   color: string;
   size: number;
 }
-export function create_text_options(color: string, size: number): TextOptions;
+export function create_text_options(color: string, size: number): TextOptions {
+  return {
+    color,
+    size,
+    // Of course, don't forget to implement `ReplResult`:
+    toReplString: () => '<TextOptions>'
+  };
+}
 export function change_text_options(options: TextOptions): void;
 
 // Used like this:
 const options = create_text_options('blue', 20);
 change_text_options(options);
 ```
+
 
 The idea is that the abstraction of the `TextOptions` type is never broken and that the cadet never interacts with the object's component parts directly.
