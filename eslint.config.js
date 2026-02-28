@@ -152,6 +152,7 @@ export default defineConfig(
       '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
       '@stylistic/function-call-spacing': ['warn', 'never'],
       '@stylistic/function-paren-newline': ['warn', 'multiline-arguments'],
+      '@stylistic/implicit-arrow-linebreak': ['error', 'beside'],
       '@stylistic/keyword-spacing': 'warn',
       '@stylistic/member-delimiter-style': [
         'warn',
@@ -185,7 +186,8 @@ export default defineConfig(
         anonymous: 'always',
         asyncArrow: 'always',
         named: 'never'
-      }]
+      }],
+      '@stylistic/template-curly-spacing': 'warn'
     }
   },
   {
