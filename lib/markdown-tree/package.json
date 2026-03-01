@@ -7,7 +7,6 @@
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-repotools": "workspace:^",
-    "@types/lodash": "^4.14.198",
     "@types/markdown-it": "^14.1.2",
     "shiki": "^3.15.0",
     "typescript": "^5.8.2"
@@ -23,7 +22,7 @@
     "shiki": ">=2"
   },
   "dependencies": {
-    "lodash": "^4.17.23",
+    "es-toolkit": "^1.44.0",
     "tm-themes": "^1.10.12",
     "yaml": "^2.8.0"
   },

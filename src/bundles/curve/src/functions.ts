@@ -1,4 +1,4 @@
-import clamp from 'lodash/clamp';
+import { clamp } from 'es-toolkit';
 import { Point, type Curve } from './curves_webgl';
 import { functionDeclaration } from './type_interface';
 import type { CurveTransformer } from './types';

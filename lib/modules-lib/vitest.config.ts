@@ -12,7 +12,7 @@ export default mergeConfig(
       include: [
         '@blueprintjs/core',
         '@blueprintjs/icons',
-        'lodash',
+        'es-toolkit',
         'vitest-browser-react',
       ]
     },

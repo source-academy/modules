@@ -2,7 +2,7 @@ import { InvalidArgumentError, Option } from '@commander-js/extra-typings';
 import type { ErrorResult, Severity } from '@sourceacademy/modules-repotools/types';
 import { isSeverity, objectKeys, objectValues } from '@sourceacademy/modules-repotools/utils';
 import chalk from 'chalk';
-import capitalize from 'lodash/capitalize.js';
+import { capitalize } from 'es-toolkit';
 import { LogLevel } from 'typedoc';
 
 export const lintOption = new Option('--lint', 'Run ESLint when building')

@@ -286,7 +286,6 @@ export default defineConfig(
       'prefer-const': ['warn', { destructuring: 'all' }],
 
       '@sourceacademy/default-import-name': ['warn', { path: 'pathlib' }],
-      '@sourceacademy/no-barrel-imports': ['error', ['lodash']],
       '@sourceacademy/region-comment': 'error',
     }
   },

@@ -2,7 +2,7 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import * as core from '@actions/core';
 import { getExecOutput } from '@actions/exec';
-import memoize from 'lodash/memoize.js';
+import { memoize } from 'es-toolkit';
 import { extractPkgsFromYarnLockV2 } from 'snyk-nodejs-lockfile-parser';
 import { gitRoot } from './gitRoot.js';
 
