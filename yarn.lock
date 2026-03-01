@@ -3028,15 +3028,15 @@ __metadata:
   linkType: hard
 
 "@jscad/regl-renderer@npm:^2.6.1":
-  version: 2.6.12
-  resolution: "@jscad/regl-renderer@npm:2.6.12"
+  version: 2.6.15
+  resolution: "@jscad/regl-renderer@npm:2.6.15"
   dependencies:
     "@jscad/array-utils": "npm:2.1.4"
     camera-unproject: "npm:1.0.1"
     gl-mat4: "npm:1.2.0"
     gl-vec3: "npm:1.1.3"
     regl: "npm:2.1.0"
-  checksum: 10c0/4324e7d08581b9df63f903a980d91e9e1090526bc3e3f8681243a045a672f055573ce03aa95342ef31997b1c97246de3af0f5336daa1f6274af42e781e2faa10
+  checksum: 10c0/043b41d6870df76fa23edbd3f152df26bfd163482d3557b7017c681fa35017147756d4cf062d22ba696ec2fa50f1469c59ec8d65ace824fafd4f8566333df3e3
   languageName: node
   linkType: hard
 
