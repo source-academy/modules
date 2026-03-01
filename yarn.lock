@@ -4408,10 +4408,10 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/plotly.js": "npm:^2.35.4"
-    "@types/three": "npm:^0.181.0"
+    "@types/three": "npm:^0.183.0"
     nbody: "npm:^0.2.0"
     plotly.js-dist: "npm:^2.17.1"
-    three: "npm:^0.181.0"
+    three: "npm:^0.183.0"
     typescript: "npm:^5.8.2"
   languageName: unknown
   linkType: soft
@@ -4505,9 +4505,9 @@ __metadata:
     "@dimforge/rapier3d-compat": "npm:^0.11.2"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    "@types/three": "npm:^0.181.0"
+    "@types/three": "npm:^0.183.0"
     js-slang: "npm:^1.0.85"
-    three: "npm:^0.181.0"
+    three: "npm:^0.183.0"
     typescript: "npm:^5.8.2"
   languageName: unknown
   linkType: soft
@@ -4979,12 +4979,12 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/plotly.js": "npm:^2.35.4"
     "@types/react": "npm:^18.3.1"
-    "@types/three": "npm:^0.181.0"
+    "@types/three": "npm:^0.183.0"
     nbody: "npm:^0.2.0"
     plotly.js-dist: "npm:^2.17.1"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    three: "npm:^0.181.0"
+    three: "npm:^0.183.0"
   languageName: unknown
   linkType: soft
 
@@ -5953,18 +5953,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/three@npm:^0.181.0":
-  version: 0.181.0
-  resolution: "@types/three@npm:0.181.0"
+"@types/three@npm:^0.183.0":
+  version: 0.183.1
+  resolution: "@types/three@npm:0.183.1"
   dependencies:
     "@dimforge/rapier3d-compat": "npm:~0.12.0"
     "@tweenjs/tween.js": "npm:~23.1.3"
     "@types/stats.js": "npm:*"
-    "@types/webxr": "npm:*"
+    "@types/webxr": "npm:>=0.5.17"
     "@webgpu/types": "npm:*"
     fflate: "npm:~0.8.2"
-    meshoptimizer: "npm:~0.22.0"
-  checksum: 10c0/c110de1a1934ef4cceb9071a52ccdab6df0c6502600322004a29c4b273c196a0e700fed4257a421190d8618a27f0e418e3ba14da3e3a7168cc014007be1b8f04
+    meshoptimizer: "npm:~1.0.1"
+  checksum: 10c0/ceb62a5a6e04b0c09d2641bb515c4b4b24e9e57135761f1f6a8c75a5e41f7feffc9ad37de772100b222f723f2c61cea2b87c3eea30cd5b58b2465a402f1a898f
   languageName: node
   linkType: hard
 
@@ -6014,6 +6014,13 @@ __metadata:
   version: 0.5.22
   resolution: "@types/webxr@npm:0.5.22"
   checksum: 10c0/dd015cadd71b2cdd3b7bab18152e579d33ff66652b2eab26f371f3583ca607e9a1f1bd5af5e2f7ff861a50aa352f44b3be40f26b64561e365d1fec254c7dfdcd
+  languageName: node
+  linkType: hard
+
+"@types/webxr@npm:>=0.5.17":
+  version: 0.5.24
+  resolution: "@types/webxr@npm:0.5.24"
+  checksum: 10c0/ff59ffd390d06ca3f89ab2531d583ac10bc5e2ab82e5a01ecc40fbc365224a3375e7caa5b14649cf6141db21fb024940da7ad2bd8faa3cd497a6665257cb53b5
   languageName: node
   linkType: hard
 
@@ -13603,10 +13610,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"meshoptimizer@npm:~0.22.0":
-  version: 0.22.0
-  resolution: "meshoptimizer@npm:0.22.0"
-  checksum: 10c0/df5c10c897a9eea3085cd2ae077dd4b904df3d71855eb3cbaa624d05e62eb4e893b3e2492cae070122561addb90fbfe092c53b7e68fdd391d0009f267af3f348
+"meshoptimizer@npm:~1.0.1":
+  version: 1.0.1
+  resolution: "meshoptimizer@npm:1.0.1"
+  checksum: 10c0/55a1164370474e1acd9f1116843a6ca9de27b4138b5d8cc13160652d50962eff29c91e8b05c9dfed97ddc41544f37509ed2ca382bebc8b332ddbcecdaa692027
   languageName: node
   linkType: hard
 
@@ -17548,10 +17555,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"three@npm:^0.181.0":
-  version: 0.181.1
-  resolution: "three@npm:0.181.1"
-  checksum: 10c0/ca848798fa75ac6f4a20b7da085e99b7eba18cc8bd51268e91cefa405a021e045561475fe8cea3841439e39e7723055d80ba942ad4c63f651713ac874f6d4e4a
+"three@npm:^0.183.0":
+  version: 0.183.2
+  resolution: "three@npm:0.183.2"
+  checksum: 10c0/dd42957a99f5ea3e6f907e17eaa3c99a931180bac24be68b8e0ff13674bc44314d3255839ec1802ad1251d9e508f542b8d26b2cc86a6b44ac9b06de34b37fdc7
   languageName: node
   linkType: hard
 
