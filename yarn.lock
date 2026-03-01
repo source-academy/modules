@@ -2033,17 +2033,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dimforge/rapier3d-compat@npm:^0.11.2":
-  version: 0.11.2
-  resolution: "@dimforge/rapier3d-compat@npm:0.11.2"
-  checksum: 10c0/41cabb96219f493000a8785a003dd7dee007f8f2983bae4703c9862bb24328b2ec69255187f3d9a244ac28b390bddf55949f6dbf09db6a051a90d3db2915df3a
-  languageName: node
-  linkType: hard
-
 "@dimforge/rapier3d-compat@npm:^0.12.0, @dimforge/rapier3d-compat@npm:~0.12.0":
   version: 0.12.0
   resolution: "@dimforge/rapier3d-compat@npm:0.12.0"
   checksum: 10c0/c66c24f90649c0fc870679c12e7fec1a111080d44450169b57561f957d7b6b284ad8a3ceeba95533e213176ea171351acebd3dd43885fafb33f18bfbd9d507db
+  languageName: node
+  linkType: hard
+
+"@dimforge/rapier3d-compat@npm:^0.19.0":
+  version: 0.19.3
+  resolution: "@dimforge/rapier3d-compat@npm:0.19.3"
+  checksum: 10c0/e056552cbfe07d7036485241b803ee3cb094e178021e27b0e33b2a9c9b1afa9c13e8d6d6825f21e37b75f60fa1ee80640becb5e75040b0245ec2c453b305c679
   languageName: node
   linkType: hard
 
@@ -4502,7 +4502,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-robot_simulation@workspace:src/bundles/robot_simulation"
   dependencies:
-    "@dimforge/rapier3d-compat": "npm:^0.11.2"
+    "@dimforge/rapier3d-compat": "npm:^0.19.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/three": "npm:^0.181.0"
@@ -5081,7 +5081,7 @@ __metadata:
   resolution: "@sourceacademy/tab-RobotSimulation@workspace:src/tabs/RobotSimulation"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
-    "@dimforge/rapier3d-compat": "npm:^0.11.2"
+    "@dimforge/rapier3d-compat": "npm:^0.19.0"
     "@sourceacademy/bundle-robot_simulation": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
