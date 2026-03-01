@@ -3013,6 +3013,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jscad/modeling@npm:2.13.0":
+  version: 2.13.0
+  resolution: "@jscad/modeling@npm:2.13.0"
+  checksum: 10c0/f45ea30a5b6297d45f28eb269caf8739c99a003fc5f9d20734b75b2f34df68cf05566fdf74817ed3f0ba8625f3c6c1c4452fc99867bef6373041c9807361a5a8
+  languageName: node
+  linkType: hard
+
 "@jscad/modeling@npm:2.9.6":
   version: 2.9.6
   resolution: "@jscad/modeling@npm:2.9.6"
@@ -3040,13 +3047,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jscad/stl-serializer@npm:2.1.11":
-  version: 2.1.11
-  resolution: "@jscad/stl-serializer@npm:2.1.11"
+"@jscad/stl-serializer@npm:2.1.23":
+  version: 2.1.23
+  resolution: "@jscad/stl-serializer@npm:2.1.23"
   dependencies:
     "@jscad/array-utils": "npm:2.1.4"
-    "@jscad/modeling": "npm:2.9.6"
-  checksum: 10c0/6835b58077a20e74a05a300c9d0cf1fe3b8879cccd64fe64b1626e12d1aa261866c11c173d1020a4125ef9d1a0aee0c803401010ee9e9dbb2c9137c65e2c95b8
+    "@jscad/modeling": "npm:2.13.0"
+  checksum: 10c0/702a0962d0888b1b45512568b312cc46f02763055ef3e0c9cfe5c8ee691076547f20e4508d4ab4eb39daca65da9066473712b76d7e93668f6c0150cba84ea69a
   languageName: node
   linkType: hard
 
@@ -4351,7 +4358,7 @@ __metadata:
   dependencies:
     "@jscad/modeling": "patch:@jscad/modeling@npm%3A2.9.6#~/.yarn/patches/@jscad-modeling-npm-2.9.6-71e6aa3a91.patch"
     "@jscad/regl-renderer": "npm:^2.6.1"
-    "@jscad/stl-serializer": "npm:2.1.11"
+    "@jscad/stl-serializer": "npm:2.1.23"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     js-slang: "npm:^1.0.85"
