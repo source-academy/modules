@@ -272,5 +272,4 @@ const options = create_text_options('blue', 20);
 change_text_options(options);
 ```
 
-
 The idea is that the abstraction of the `TextOptions` type is never broken and that the cadet never interacts with the object's component parts directly.
