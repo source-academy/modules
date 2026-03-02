@@ -1,4 +1,5 @@
 import context from 'js-slang/context';
+import { throwIfNotMatrix } from './functions';
 import type { Matrix } from './types';
 
 const matrices: Matrix[] = [];
@@ -25,5 +26,7 @@ context.moduleContexts.matrix.state = {
  * @returns Original matrix
  */
 export function display_matrix(matrix: Matrix): void {
+  throwIfNotMatrix(matrix, display_matrix.name);
+
   if (!matrices.includes(matrix)) matrices.push(matrix);
 }

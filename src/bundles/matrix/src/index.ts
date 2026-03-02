@@ -28,4 +28,4 @@
 
 export * from './display';
 export * from './functions';
-export type { CellCallback as MatrixCallback } from './types';
+export type { CellCallback } from './types';

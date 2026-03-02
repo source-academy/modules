@@ -1,15 +1,20 @@
+import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
-import type { List } from 'js-slang/dist/stdlib/list';
+import { is_pair, type List } from 'js-slang/dist/stdlib/list';
 import clamp from 'lodash/clamp';
 import { Matrix, type CellCallback } from './types';
+
+export function throwIfNotMatrix(matrix: unknown, func_name: string, param_name?: string): asserts matrix is Matrix {
+  if (!(matrix instanceof Matrix)) {
+    throw new InvalidParameterTypeError('Matrix', matrix, func_name, param_name);
+  }
+}
 
 /**
  * Ensure that user inputs are within the proper bounds
  */
 function checkMatrixBounds(func_name: string, matrix: unknown, row: number, col: number): asserts matrix is Matrix {
-  if (!(matrix instanceof Matrix)) {
-    throw new Error(`${func_name}: Expected a matrix, got: ${typeof matrix}`);
-  }
+  throwIfNotMatrix(matrix, func_name);
 
   if (row < 0 || row >= matrix.rows) {
     throw new Error(`${func_name}: Row index of ${row} out of bounds for matrix of size (${matrix.rows}, ${matrix.cols})`);
@@ -44,6 +49,10 @@ export function create_matrix(rows: number, cols: number, name: string | undefin
   if (rows > MAX_ROWS) throw new Error(`${create_matrix.name}: Cannot create a matrix with greater than ${MAX_ROWS} rows!`);
   if (cols > MAX_COLS) throw new Error(`${create_matrix.name}: Cannot create a matrix with greater than ${MAX_COLS} columns!`);
 
+  if (name !== undefined && typeof name !== 'string') {
+    throw new InvalidParameterTypeError('string or undefined', name, create_matrix.name, 'name');
+  }
+
   const values: boolean[][] = new Array(rows);
   const labels: string[][] = new Array(rows);
 
@@ -76,6 +85,8 @@ export function create_matrix(rows: number, cols: number, name: string | undefin
  * @returns A new matrix with the same values and labels as the first
  */
 export function copy_matrix(matrix: Matrix): Matrix {
+  throwIfNotMatrix(matrix, copy_matrix.name);
+
   const values = new Array(matrix.rows);
   const labels = new Array(matrix.cols);
 
@@ -87,7 +98,7 @@ export function copy_matrix(matrix: Matrix): Matrix {
   }
 
   return new Matrix(
-    matrix.name === undefined ? `${matrix.name} Copy` : undefined,
+    matrix.name !== undefined ? `${matrix.name} Copy` : undefined,
     values,
     labels,
     matrix.rows,
@@ -97,12 +108,17 @@ export function copy_matrix(matrix: Matrix): Matrix {
 }
 
 /**
- * Set all the values in the matrix to the given value
+ * Set all the values in the matrix to the given boolean value
+ *
  * @param matrix Matrix to fill
  * @param value New value for all cells
  */
 export function fill_matrix(matrix: Matrix, value: boolean): void {
-  if (typeof value !== 'boolean') throw new Error(`${fill_matrix.name}: Value should be a boolean, got ${value}`);
+  throwIfNotMatrix(matrix, fill_matrix.name);
+
+  if (typeof value !== 'boolean') {
+    throw new InvalidParameterTypeError('boolean', value, fill_matrix.name);
+  }
 
   for (let i = 0; i < matrix.rows; i++) {
     for (let j = 0; j < matrix.cols; j++) matrix.values[i][j] = value;
@@ -110,7 +126,7 @@ export function fill_matrix(matrix: Matrix, value: boolean): void {
 }
 
 /**
- * Set all the values in the matrix to false
+ * Set all the values in the matrix to `false`
  * @param matrix Matrix to clear
  */
 export function clear_matrix(matrix: Matrix): void {
@@ -149,6 +165,7 @@ export function get_cell_label(matrix: Matrix, row: number, col: number): string
 // It is necessary to make a copy of the 2D array, otherwise changes to the array will change
 // the values in the matrix
 export function get_cell_values(matrix: Matrix): boolean[][] {
+  throwIfNotMatrix(matrix, get_cell_values.name);
   return copy_matrix(matrix).values;
 }
 
@@ -160,6 +177,7 @@ export function get_cell_values(matrix: Matrix): boolean[][] {
 // It is necessary to make a copy of the 2D array, otherwise changes to the array will change
 // the values in the matrix
 export function get_cell_labels(matrix: Matrix): string[][] {
+  throwIfNotMatrix(matrix, get_cell_labels.name);
   return copy_matrix(matrix).labels;
 }
 
@@ -169,6 +187,7 @@ export function get_cell_labels(matrix: Matrix): string[][] {
  * @returns Number of cols in the matrix
  */
 export function get_num_cols(matrix: Matrix) {
+  throwIfNotMatrix(matrix, get_num_cols.name);
   return matrix.cols;
 }
 
@@ -178,6 +197,7 @@ export function get_num_cols(matrix: Matrix) {
  * @returns Number of rows in the matrix
  */
 export function get_num_rows(matrix: Matrix) {
+  throwIfNotMatrix(matrix, get_num_rows.name);
   return matrix.rows;
 }
 
@@ -201,11 +221,17 @@ export function get_num_rows(matrix: Matrix) {
  * ```
  */
 export function install_buttons(matrix: Matrix, list: List): void {
+  throwIfNotMatrix(matrix, install_buttons.name);
+
   // Guard against circular lists
   const visited: List[] = [];
 
   const list_to_array = (lst: List) => {
     if (lst === null || visited.includes(lst)) return [];
+
+    if (!is_pair(lst)) {
+      throw new Error(`${install_buttons.name}: Expected a list containing only of pairs of strings and nullary functions`);
+    }
 
     visited.push(lst);
 
@@ -229,8 +255,10 @@ export function install_buttons(matrix: Matrix, list: List): void {
  * @param callback Callback to use
  */
 export function on_cell_click(matrix: Matrix, callback: CellCallback): void {
+  throwIfNotMatrix(matrix, on_cell_click.name);
+
   if (!isFunctionOfLength(callback, 4)) {
-    throw new Error(`${on_cell_click.name} expects a function that takes 4 parameters for its callback!`);
+    throw new InvalidCallbackError(4, callback, on_cell_click.name, 'callback');
   }
 
   matrix.onCellClick = callback;
@@ -246,8 +274,10 @@ export function on_cell_click(matrix: Matrix, callback: CellCallback): void {
  * @param callback Callback to use
  */
 export function on_col_click(matrix: Matrix, callback: (col: number, value: boolean) => void) {
+  throwIfNotMatrix(matrix, on_col_click.name);
+
   if (!isFunctionOfLength(callback, 2)) {
-    throw new Error(`${on_col_click.name} expects a function that takes 2 parameters for its callback!`);
+    throw new InvalidCallbackError(2, callback, on_col_click.name, 'callback');
   }
 
   matrix.onColClick = callback;
@@ -263,8 +293,10 @@ export function on_col_click(matrix: Matrix, callback: (col: number, value: bool
  * @param callback Callback to use
  */
 export function on_row_click(matrix: Matrix, callback: (row: number, value: boolean) => void) {
+  throwIfNotMatrix(matrix, on_row_click.name);
+
   if (!isFunctionOfLength(callback, 2)) {
-    throw new Error(`${on_row_click.name} expects a function that takes 2 parameters for its callback!`);
+    throw new InvalidCallbackError(2, callback, on_row_click.name, 'callback');
   }
 
   matrix.onRowClick = callback;
@@ -304,6 +336,10 @@ export const randomize_matrix = Object.defineProperty(randomise_matrix, 'name', 
  */
 export function set_cell_value(matrix: Matrix, row: number, col: number, value: boolean): void {
   checkMatrixBounds(set_cell_value.name, matrix, row, col);
+  if (typeof value !== 'boolean') {
+    throw new InvalidParameterTypeError('boolean', value, set_cell_value.name, 'value');
+  }
+
   matrix.values[row][col] = value;
 }
 
@@ -316,6 +352,10 @@ export function set_cell_value(matrix: Matrix, row: number, col: number, value: 
  */
 export function set_cell_label(matrix: Matrix, row: number, col: number, label: string): void {
   checkMatrixBounds(set_cell_label.name, matrix, row, col);
+  if (typeof label !== 'string') {
+    throw new InvalidParameterTypeError('string', label, set_cell_label.name, 'label');
+  }
+
   matrix.labels[row][col] = label;
 }
 
@@ -326,8 +366,14 @@ export function set_cell_label(matrix: Matrix, row: number, col: number, label: 
  * @param values Values to use
  */
 export function set_cell_values(matrix: Matrix, values: boolean[][]): void {
+  throwIfNotMatrix(matrix, set_cell_values.name);
+
   for (let i = 0; i < Math.min(matrix.rows, values.length); i++) {
     for (let j = 0; j < Math.min(matrix.cols, values[i].length); j++) {
+      if (typeof values[i][j] !== 'boolean') {
+        throw new InvalidParameterTypeError('2D boolean array', values, set_cell_values.name);
+      }
+
       matrix.values[i][j] = values[i][j];
     }
   }
@@ -340,16 +386,28 @@ export function set_cell_values(matrix: Matrix, values: boolean[][]): void {
  * @param labels Labels to use
  */
 export function set_cell_labels(matrix: Matrix, labels: string[][]): void {
+  throwIfNotMatrix(matrix, set_cell_labels.name);
+
   for (let i = 0; i < Math.min(matrix.rows, labels.length); i++) {
     for (let j = 0; j < Math.min(matrix.cols, labels[i].length); j++) {
+      if (typeof labels[i][j] !== 'string') {
+        throw new InvalidParameterTypeError('2D string array', labels, set_cell_labels.name);
+      }
+
       matrix.labels[i][j] = labels[i][j];
     }
   }
 }
 
 /**
- * Sets the name of the provided matrix
+ * Sets the name of the provided matrix to the provided string value. If `undefined`
+ * is provided, the name of the matrix is removed.
  */
 export function set_matrix_name(matrix: Matrix, name: string | undefined): void {
+  throwIfNotMatrix(matrix, set_matrix_name.name);
+  if (name !== undefined && typeof name !== 'string') {
+    throw new InvalidParameterTypeError('string or undefined', name, set_matrix_name.name, 'name');
+  }
+
   matrix.name = name;
 }
