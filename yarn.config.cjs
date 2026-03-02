@@ -1,6 +1,5 @@
 // @ts-check
 
-const fs = require('fs/promises');
 const pathlib = require('path');
 const { defineConfig } = require('@yarnpkg/types');
 
@@ -48,6 +47,8 @@ module.exports = defineConfig({
     // which might be present if you linked js-slang to a local copy
     rootWorkspace.set('resolutions.js-slang', undefined);
 
+    // Make sure that if the dependency is defined in the root workspace
+    // that all child workspaces use the same version of that dependency
     for (const workspaceDep of Yarn.dependencies({ workspace: rootWorkspace })) {
       for (const otherDep of Yarn.dependencies({ ident: workspaceDep.ident })) {
         if (otherDep.type === 'peerDependencies') continue;
@@ -55,8 +56,6 @@ module.exports = defineConfig({
         otherDep.update(workspaceDep.range);
       }
     }
-
-    const nodeVersion = await fs.readFile(pathlib.join(__dirname, '.node-version'), 'utf8');
 
     for (const dep of Yarn.dependencies()) {
       // Dependencies that are from this repository should use
@@ -69,17 +68,10 @@ module.exports = defineConfig({
         dep.update('workspace:^');
       }
 
-      // All @types dependencies should be in devDependencies
+      // @types dependencies should be devDependencies, not dependencies
       if (dep.ident.startsWith('@types') && dep.type === 'dependencies') {
-        const workspace = dep.workspace;
-        workspace.set(`devDependencies.${dep.ident}`, dep.range);
-        workspace.set(`dependencies.${dep.ident}`, undefined);
-      }
-
-      // All @types/node dependencies should be compatible with the version
-      // specified in the .node-version file
-      if (dep.ident === '@types/node') {
-        dep.update(`^${nodeVersion.trim()}`);
+        dep.workspace.set(`devDependencies.${dep.ident}`, dep.range);
+        dep.update(undefined);
       }
     }
 

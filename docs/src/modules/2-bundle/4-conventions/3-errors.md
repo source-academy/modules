@@ -53,50 +53,45 @@ Then, the error can be thrown with the correct function name. Otherwise, cadets 
 that is visible to them. Many other functions might rely on `throwIfNotRune`. If they were all called in the same program, it doesn't tell the cadet which function the error was thrown from
 (was it `show`? or `anaglyph`? or something else?)
 
-## Source Type Checking
+An important use for error handling is when it comes to validating types. More information about type checking can be found in the [next](./4-types) section.
 
-Though bundles are written in Typescript, Source (except for the Typed Variant) does not support anything beyond rudimentary type checking. This means that it can determine that an expression
-like `1 - "string"` is badly typed, but it can't type check more complex programs like the one below, especially when bundle functions are involved:
-
-```ts
-import { show } from 'rune';
-
-// Error: show expects a rune!
-show(1);
-```
-
-::: details Type Maps
-Source is moving toward enabling compile-time (or at least pre-execution since Source programs don't really have a "compilation" step) type checking for Source Modules using a feature known as [type maps](../7-type_map).
-:::
-
-The above call to `show` **won't** a throw compile-time error. Instead, the error is thrown at runtime by bundle code or even in tab code. This is the case even if the function has been annotated with Typescript types.
-
-In the case of `show`, if no runtime type-checking was performed, no error would be thrown when `show` is called. The error only manifests itself when the Rune tab is displayed:
-
-![](./rune-error.png)
-
-This is not helpful for the cadet's debugging, as the error occurred in `show`. Thus, by checking if the passed parameter is indeed a `Rune` before
-passing it on to other `rune` bundle functions, we make error tracing a lot simpler for cadets.
-
-::: details Use the `unknown` or `any` types?
-In Typescript, the `any` and `unknown` types represent an object of an unknown type. More information can be found [here](https://www.typescriptlang.org/docs/handbook/type-compatibility.html#any-unknown-object-void-undefined-null-and-never-assignability). This is where type guards really shine, as they allow the compiler to "narrow" the object's type from being anything down to a specific type. In the case of
-`show`, it would work like this:
-
-```ts
-export function show(rune: unknown) {
-  // Compiler only knows that rune has type unknown
-  throwIfNotRune(show.name, rune);
-
-  // Compiler is able to know that rune here has type Rune!
-  drawnRunes.push(new NormalRune(rune));
-  return rune;
-}
-```
-
-If we're expecting cadets to be able to pass any type of object in, why not use `unknown` in all these places?
-
-Currently, bundle documentation for cadets relies on these type annotations being present and properly typed. If everything were typed as `unknown`, that's
-all cadets would see.
-
-As the typing system is improved, we may be able to use one set of typing for cadets and another for internal implementation.
-:::
+> [!WARNING] Undefined Name Property
+>
+> It's possible to create functions without names using anonymous expressions:
+>
+> ```ts
+> function getFunc(value: string) {
+>   return () => value;
+> }
+>
+> export const getFoo = getFunc('foo');
+> 
+> // getFoo.name is undefined!
+> console.log(getFoo.name);
+> ```
+>
+> A common case (especially if you are using type maps) is using an expression when defining a class function. This causes an anonymous function to be assigned to that property:
+>
+> ```ts
+> class Functions {
+>   static bar = () => 'bar';
+> }
+> 
+> // the name is also undefined!
+> console.log(Functions.bar.name);
+> ```
+>
+> In such a case, you should take care to define the `name` property manually (at least on the exported version):
+>
+> ```ts
+> function getFunc(value: string, func_name: string) {
+>   const func = () => value;
+>   Object.defineProperty(func, 'name', { value: func_name });
+>   return func;
+> }
+>
+> export const getFoo = getFunc('foo', 'foo');
+> 
+> // Now correctly prints foo!
+> console.log(getFoo.name);
+> ```

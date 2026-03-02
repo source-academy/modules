@@ -34,7 +34,7 @@ is the case, then we print a warning advising the developer that they may have f
 
 ### Hiding Type Guards
 
-Typescript has a feature called type guards that allow the compiler to better narrow types, increasing the type safety of module code. 
+Typescript has a feature called type guards that allow the compiler to better narrow types, increasing the type safety of module code.
 
 When Typedoc encounters a type guard, it documents the return type of that type guard as is.
 

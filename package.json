@@ -55,7 +55,7 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-repotools": "workspace:^",
     "@sourceacademy/vitest-reporter": "workspace:^",
-    "@stylistic/eslint-plugin": "^4.4.1",
+    "@stylistic/eslint-plugin": "^5.0.0",
     "@types/node": "^22.15.30",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
@@ -70,7 +70,7 @@
     "eslint-plugin-mdx": "^3.6.2",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
-    "eslint-plugin-yml": "^1.19.0",
+    "eslint-plugin-yml": "^3.0.0",
     "husky": "^9.1.7",
     "jsdom": "^26.1.0",
     "jsonc-eslint-parser": "^2.4.0",
@@ -90,7 +90,7 @@
   "devEngines": {
     "packageManager": {
       "name": "yarn",
-      "version": "^4.8.1",
+      "version": "^4.12.0",
       "onFail": "warn"
     },
     "runtime": {
@@ -99,7 +99,7 @@
       "onFail": "error"
     }
   },
-  "packageManager": "yarn@4.8.1",
+  "packageManager": "yarn@4.12.0+sha512.f45ab632439a67f8bc759bf32ead036a1f413287b9042726b7cc4818b7b49e14e9423ba49b18f9e06ea4941c1ad062385b1d8760a8d5091a1a31e5f6219afca8",
   "workspaces": [
     "./.github/actions",
     "./devserver",

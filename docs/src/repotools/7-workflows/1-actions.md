@@ -25,7 +25,7 @@ In the case of bundles or tabs, it also retrieves the name of the bundle or tab.
 
 In case of changes to the lockfile, it also determines which packages need to be rebuilt. This can happen when dependencies of dependencies change, so no change is present in the package's source code itself, but the lockfile itself has changed.
 
-More detail about detecting changes can be found in [this section](./4-changes.md). 
+More detail about detecting changes can be found in [this section](./4-changes.md).
 
 This information is used by both the initializer action and the workflows to determine the what tasks need to be executed.
 

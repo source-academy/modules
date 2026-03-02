@@ -40,9 +40,9 @@ children:
     children:
       - name: __tests__
         children:
-          - name: test.tsx
+          - name: index.test.tsx
             comment: You can use a tsx file
-          - name: test2.ts
+          - name: index.test.ts
             comment: Or a regular ts file
       - index.tsx
       - component.tsx
@@ -67,7 +67,7 @@ The Frontend expects each tab's entry point to provide a default export of an ob
 ```ts
 interface ModuleSideContent {
   toSpawn: ((context: DebuggerContext) => boolean) | undefined;
-  body: ((context: DebuggerContext) => JSX.Element);
+  body: (context: DebuggerContext) => JSX.Element;
   label: string;
   iconName: string;
 }

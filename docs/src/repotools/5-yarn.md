@@ -54,6 +54,11 @@ other package within this repository.
 Aside from `vitest-browser-react` and `@vitest/eslint-plugin`, all Vitest packages should have the same version range
 as Vitest throughout the repository.
 
+### 6. `@types` dependencies are specified as Dev Dependencies
+
+The `@types` packages provide Typescript types for packages that don't come with them bundled. Typescript types should not ever be required at runtime,
+so they should be specified as a `devDependency`.
+
 ## Parallel Execution of Scripts
 
 Using the various options of the `yarn workspaces foreach` command, you can execute multiple tasks in parallel, which is how many of the commands in the root repository have been set up.
