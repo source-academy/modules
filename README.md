@@ -32,10 +32,11 @@ If you are a developer looking to do things like create a new bundle or work wit
 ├── devserver          // Development Server
 ├── docs               // Documentation Server
 ├── lib                // Common libraries used throughout the repo
-├── src                // Code for bundles, tabs and java-slang
-│   ├── bundles
-│   ├── tabs
-│   └── java
+├── src
+│   ├── archive        // Archived bundles and tabs
+│   ├── bundles        // Source Bundles
+│   ├── tabs           // Source Tabs
+│   └── java           // java-slang
 ├── vitest.config.ts   // Root Vitest Config
 ├── eslint.config.js   // ESLint Config
 └── yarn.config.cjs    // Yarn Constraints file
