@@ -36,6 +36,7 @@ export default defineConfig(
       'lib/buildtools/bin',
       'lib/buildtools/src/build/__test_mocks__',
       'lib/vitest-reporter/build',
+      'src/archive/**',
       'src/**/samples/**',
       'src/bundles/scrabble/src/words.json', // Don't lint this because its way too big
       'src/java/**',
