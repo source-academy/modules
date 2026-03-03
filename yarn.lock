@@ -4065,6 +4065,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-binary_tree@workspace:src/bundles/binary_tree"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     js-slang: "npm:^1.0.85"
     typescript: "npm:^5.8.2"
   languageName: unknown
@@ -4157,6 +4158,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-midi@workspace:src/bundles/midi"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     js-slang: "npm:^1.0.85"
     typescript: "npm:^5.8.2"
   languageName: unknown

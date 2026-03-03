@@ -1,3 +1,5 @@
+import { InvalidCallbackError } from '@sourceacademy/modules-lib/errors';
+import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 import { AnaglyphRune, HollusionRune } from './functions';
 import { AnimatedRune, NormalRune, Rune, type DrawnRune, type RuneAnimation } from './rune';
@@ -43,6 +45,10 @@ class RuneDisplay {
 
   @functionDeclaration('duration: number, fps: number, func: RuneAnimation', 'AnimatedRune')
   static animate_rune(duration: number, fps: number, func: RuneAnimation) {
+    if (!isFunctionOfLength(func, 1)) {
+      throw new InvalidCallbackError('RuneAnimation', func, RuneDisplay.animate_rune.name);
+    }
+
     const anim = new AnimatedRune(duration, fps, (n) => {
       const rune = func(n);
       throwIfNotRune(RuneDisplay.animate_rune.name, rune);
@@ -54,6 +60,10 @@ class RuneDisplay {
 
   @functionDeclaration('duration: number, fps: number, func: RuneAnimation', 'AnimatedRune')
   static animate_anaglyph(duration: number, fps: number, func: RuneAnimation) {
+    if (!isFunctionOfLength(func, 1)) {
+      throw new InvalidCallbackError('RuneAnimation', func, RuneDisplay.animate_anaglyph.name);
+    }
+
     const anim = new AnimatedRune(duration, fps, (n) => {
       const rune = func(n);
       throwIfNotRune(RuneDisplay.animate_anaglyph.name, rune);

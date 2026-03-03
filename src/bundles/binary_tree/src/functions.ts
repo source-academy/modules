@@ -1,3 +1,4 @@
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { head, is_list, is_pair, list, tail } from 'js-slang/dist/stdlib/list';
 import type { BinaryTree, EmptyBinaryTree, NonEmptyBinaryTree } from './types';
 
@@ -71,11 +72,11 @@ export function is_empty_tree(value: BinaryTree): value is EmptyBinaryTree {
 
 function throwIfNotNonEmptyTree(value: unknown, func_name: string): asserts value is NonEmptyBinaryTree {
   if (!is_tree(value)) {
-    throw new Error(`${func_name} expects binary tree, received: ${value}`);
+    throw new InvalidParameterTypeError('binary tree', value, func_name);
   }
 
   if (is_empty_tree(value)) {
-    throw new Error(`${func_name} received an empty binary tree!`);
+    throw new InvalidParameterTypeError('non-empty binary tree', value, func_name);
   }
 }
 
