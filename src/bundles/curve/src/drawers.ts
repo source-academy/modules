@@ -393,6 +393,10 @@ class CurveAnimators {
       throw new Error(`${animate_curve.name} cannot be used with 3D draw function!`);
     }
 
+    if (!isFunctionOfLength(func, 1)) {
+      throw new InvalidCallbackError('CurveAnimation', func, animate_curve.name);
+    }
+
     const anim = new AnimatedCurve(duration, fps, func, drawer, false);
     drawnCurves.push(anim);
     return anim;
@@ -407,6 +411,10 @@ class CurveAnimators {
   ): AnimatedCurve {
     if (!drawer.is3D) {
       throw new Error(`${animate_3D_curve.name} cannot be used with 2D draw function!`);
+    }
+
+    if (!isFunctionOfLength(func, 1)) {
+      throw new InvalidCallbackError('CurveAnimation', func, animate_3D_curve.name);
     }
 
     const anim = new AnimatedCurve(duration, fps, func, drawer, true);
