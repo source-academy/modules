@@ -4870,6 +4870,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
+    lodash: "npm:^4.17.23"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
   languageName: unknown
