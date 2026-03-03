@@ -12,12 +12,19 @@ interface MatrixDisplayProps {
    * if none
    */
   hoverCoords?: [r: number | false, c: number | false] | false;
+
   /**
    * Callback that is called whenever hover state is changed.
    */
   onHoverChange?: (coords: [r: number | false, c: number | false] | false) => void;
+
+  /**
+   * Callback that is called whenever React should re-render the component
+   */
   rerenderCallback: () => void;
+
   matrix: Matrix;
+
   showColLabels?: boolean;
 
   /**

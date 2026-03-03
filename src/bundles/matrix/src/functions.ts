@@ -182,6 +182,14 @@ export function get_cell_labels(matrix: Matrix): string[][] {
 }
 
 /**
+ * Retrieve the name of a matrix, or `undefined` if it doesn't have one.
+ */
+export function get_name(matrix: Matrix): string | undefined {
+  throwIfNotMatrix(matrix, get_name.name);
+  return matrix.name;
+}
+
+/**
  * Retrieve the number of cols in a matrix
  * @param matrix Matrix to check
  * @returns Number of cols in the matrix

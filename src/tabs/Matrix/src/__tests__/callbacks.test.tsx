@@ -11,14 +11,14 @@ interface Fixtures {
 }
 
 const testWithMatrix = test.extend<Fixtures>({
-  matrix: ({}, useValue) => useValue(create_matrix(3, 3, undefined)),
-  display: async ({ matrix }, useValue) => {
+  matrix: ({}, fixtureVal) => fixtureVal(create_matrix(3, 3, undefined)),
+  display: async ({ matrix }, fixtureVal) => {
     const component = await render(<MatrixDisplay
       showColLabels
       matrix={matrix}
       rerenderCallback={() => {}}
     />);
-    await useValue(component);
+    await fixtureVal(component);
     cleanup();
   }
 });
@@ -134,5 +134,19 @@ describe('Default cell callback', () => {
     expect(callback).toHaveBeenCalledExactlyOnceWith(1, 0, false, 'left');
     // This new callback doesn't change anything, so no values in the matrix should change
     expect(matrix.values[1][0]).toEqual(false);
+  });
+
+  testWithMatrix('Callback that errors', async ({ matrix }) => {
+    const callback = vi.fn(() => {
+      throw new Error('Error in callback');
+    });
+
+    on_cell_click(matrix, callback);
+
+    const display = await render(<MatrixDisplay matrix={matrix} rerenderCallback={() => {}}/>);
+    const label = display.getByTitle('cell_1_0_button');
+    await userEvent.click(label);
+
+    expect(callback).toHaveBeenCalledExactlyOnceWith(1, 0, false, 'left');
   });
 });

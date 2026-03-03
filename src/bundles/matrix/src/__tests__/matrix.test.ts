@@ -22,6 +22,11 @@ describe(funcs.create_matrix, () => {
     expect(() => funcs.create_matrix(1, 0, ''))
       .toThrowError('create_matrix: Cannot create a matrix with fewer than 1 row or column!');
   });
+
+  it('throws an error when name is not a string or undefined', () => {
+    expect(() => funcs.create_matrix(1, 1, 0 as any))
+      .toThrowError('create_matrix: Expected string or undefined for name, got 0.');
+  });
 });
 
 describe(funcs.copy_matrix, () => {
@@ -230,14 +235,13 @@ describe(funcs.on_row_click, () => {
 });
 
 describe(funcs.set_cell_values, () => {
-  const matrix = funcs.create_matrix(2, 2, undefined);
-
   it('throws an error when the first parameter is not a matrix', () => {
     expect(() => funcs.set_cell_values(0 as any, [[]]))
       .toThrowError('set_cell_values: Expected Matrix, got 0.');
   });
 
   it('throws an error when the second parameter is not a 2D array of booleans', () => {
+    const matrix = funcs.create_matrix(2, 2, undefined);
     expect(() => funcs.set_cell_values(matrix, [
       [true, true],
       [1, 0] as any
@@ -271,6 +275,13 @@ describe(funcs.set_cell_values, () => {
           "type": "Runtime",
         }
       `);
+  });
+
+  it('works even if the shape of the array doesn\'t match the shape of the matrix', () => {
+    const matrix = funcs.create_matrix(2, 2, undefined);
+    expect(() => funcs.set_cell_values(matrix, [[true], [false, true, false], [true]]))
+      .not.toThrow();
+    expect(matrix.values).toEqual([[true, false], [false, true]]);
   });
 });
 

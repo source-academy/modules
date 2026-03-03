@@ -183,11 +183,14 @@ function reveal_cell(row, col) {
 
 function cell_click_callback(row, col, value, click) {
   if (game_result !== 'not_in_game') {
+    // Clicking any cell while not in game creates a new game
     reset_game();
   } else if (!value) {
     if (click === 'left') {
       if (!flags[row][col]) {
+        // Left clicking a non-flagged cell reveals it
         if (!board[row][col]) {
+          // Cell is not a mine, so call reveal_cell to reveal it and its neighbours
           const revealed_cells = reveal_cell(row, col);
           closed_cell_count = closed_cell_count - revealed_cells;
 
@@ -197,13 +200,14 @@ function cell_click_callback(row, col, value, click) {
             set_matrix_name(mat, stringify(closed_cell_count) + ' left to open');
           }
         } else {
-          // Clicking on a mine means you die!
+          // Cell was a mine, you die!
           set_cell_label(mat, row, col, '💣');
           set_cell_value(mat, row, col, true);
           game_over('loss');
         }
       }
     } else {
+      // Right clicking a cell toggles a flag on it
       if (flags[row][col]) {
         flags[row][col] = false;
         set_cell_label(mat, row, col, '');
