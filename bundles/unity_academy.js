@@ -3398,6 +3398,14 @@ export default require => {
       add_default = ["M10.99 6.99h-2v-2c0-.55-.45-1-1-1s-1 .45-1 1v2h-2c-.55 0-1 .45-1 1s.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1v-2h2c.55 0 1-.45 1-1s-.45-1-1-1zm-3-7c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.68 6-6 6z"];
     }
   });
+  var add_application_default;
+  var init_add_application = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/16px/paths/add-application.js"() {
+      "use strict";
+      init_define_process();
+      add_application_default = ["M13 0a1 1 0 00-1 1v1h-1a1 1 0 100 2h1v1a1 1 0 102 0V4h1a1 1 0 100-2h-1V1a1 1 0 00-1-1z", "M8.765 1A2.987 2.987 0 008 3c0 .769.29 1.47.765 2H2v8h12V7.827a3.006 3.006 0 001.87-1.957l.001.001.129.425V14c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V2c0-.55.45-1 1-1h7.765z", "M8.5 10c.28 0 .5.22.5.5s-.22.5-.5.5h-5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h5zM7.5 8c.28 0 .5.22.5.5s-.22.5-.5.5h-4c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h4zM10.174 6c.124.35.31.67.547.947A.503.503 0 0110.5 7h-7c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h6.674z"];
+    }
+  });
   var add_child_default;
   var init_add_child = __esm({
     "node_modules/@blueprintjs/icons/lib/esm/generated/16px/paths/add-child.js"() {
@@ -8954,6 +8962,7 @@ export default require => {
   var paths_exports = {};
   __export(paths_exports, {
     Add: () => add_default,
+    AddApplication: () => add_application_default,
     AddChild: () => add_child_default,
     AddClip: () => add_clip_default,
     AddColumnLeft: () => add_column_left_default,
@@ -9654,6 +9663,7 @@ export default require => {
       "use strict";
       init_define_process();
       init_add();
+      init_add_application();
       init_add_child();
       init_add_clip();
       init_add_column_left();
@@ -10356,6 +10366,14 @@ export default require => {
       "use strict";
       init_define_process();
       add_default2 = ["M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm5-9h-4V5c0-.55-.45-1-1-1s-1 .45-1 1v4H5c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1v-4h4c.55 0 1-.45 1-1s-.45-1-1-1z"];
+    }
+  });
+  var add_application_default2;
+  var init_add_application2 = __esm({
+    "node_modules/@blueprintjs/icons/lib/esm/generated/20px/paths/add-application.js"() {
+      "use strict";
+      init_define_process();
+      add_application_default2 = ["M15 1a1 1 0 012 0v2h2a1 1 0 010 2h-2v2a1 1 0 01-2 0V5h-2a1 1 0 010-2h2V1z", "M13 1a3 3 0 00-3 3c0 .77.292 1.469.769 2H2v11h16V9.231c.612-.549 1-1.344 1-2.231a2.99 2.99 0 001-.175V18c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V2c0-.55.45-1 1-1h12z", "M10.5 12c.28 0 .5.22.5.5s-.22.5-.5.5h-7c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h7zM8.5 10c.28 0 .5.22.5.5s-.22.5-.5.5h-5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h5zM12.5 8c.28 0 .5.22.5.5s-.22.5-.5.5h-9c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h9z"];
     }
   });
   var add_child_default2;
@@ -15914,6 +15932,7 @@ export default require => {
   var paths_exports2 = {};
   __export(paths_exports2, {
     Add: () => add_default2,
+    AddApplication: () => add_application_default2,
     AddChild: () => add_child_default2,
     AddClip: () => add_clip_default2,
     AddColumnLeft: () => add_column_left_default2,
@@ -16614,6 +16633,7 @@ export default require => {
       "use strict";
       init_define_process();
       init_add2();
+      init_add_application2();
       init_add_child2();
       init_add_clip2();
       init_add_column_left2();
@@ -46782,6 +46802,7 @@ export default require => {
   init_define_process();
   var BlueprintIcons_16;
   (function (BlueprintIcons_162) {
+    BlueprintIcons_162["AddApplication"] = "add-application";
     BlueprintIcons_162["AddChild"] = "add-child";
     BlueprintIcons_162["AddClip"] = "add-clip";
     BlueprintIcons_162["AddColumnLeft"] = "add-column-left";
@@ -47479,6 +47500,7 @@ export default require => {
     BlueprintIcons_162["ZoomToFit"] = "zoom-to-fit";
   })(BlueprintIcons_16 || (BlueprintIcons_16 = {}));
   var BLUEPRINT_ICONS_16_CODEPOINTS = {
+    [BlueprintIcons_16.AddApplication]: "62392",
     [BlueprintIcons_16.AddChild]: "62365",
     [BlueprintIcons_16.AddClip]: "61697",
     [BlueprintIcons_16.AddColumnLeft]: "61698",
