@@ -81,7 +81,7 @@
         "unknown"
       ]
     ],
-    "retType": "x is Sound"
+    "retType": "boolean"
   },
   "squash": {
     "kind": "function",
@@ -484,7 +484,7 @@
   "letter_name_to_midi_note": {
     "kind": "function",
     "name": "letter_name_to_midi_note",
-    "description": "<p>Converts a letter name to its corresponding MIDI note.\nThe letter name is represented in standard pitch notation.\nExamples are \"A5\", \"Db3\", \"C#7\".\nRefer to &lt;a href=\"https://i.imgur.com/qGQgmYr.png\"&gt;this mapping from\nletter name to midi notes.</p>",
+    "description": "<p>Converts a letter name to its corresponding MIDI note.\nThe letter name is represented in standard pitch notation.\nExamples are \"A5\", \"Db3\", \"C#7\".\nRefer to <a href=\"https://i.imgur.com/qGQgmYr.png\">this</a> mapping from\nletter name to midi notes.</p>",
     "params": [
       [
         "note",

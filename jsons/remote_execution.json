@@ -1,8 +1,0 @@
-{
-  "EV3": {
-    "kind": "variable",
-    "name": "EV3",
-    "description": "<p>No description available</p>",
-    "type": "{ id: string; name: string; internalFunctions: string[]; languageChapter: Chapter }"
-  }
-}

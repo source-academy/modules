@@ -15344,9 +15344,7 @@ void main () {
     const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
     const groups = regex.exec(hex);
     if (groups == void 0) {
-      if (func_name === void 0) {
-        throw new Error(`Invalid color hex string: ${hex}`);
-      }
+      func_name = func_name !== null && func_name !== void 0 ? func_name : hexToColor.name;
       throw new Error(`${func_name}: Invalid color hex string: ${hex}`);
     }
     ;

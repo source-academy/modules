@@ -45,7 +45,7 @@ export default require => {
     "<define:process>"() {}
   });
   var require_baseClamp = __commonJS({
-    "../../../node_modules/lodash/_baseClamp.js"(exports, module) {
+    "../../bundles/rune/node_modules/lodash/_baseClamp.js"(exports, module) {
       "use strict";
       init_define_process();
       function baseClamp(number, lower, upper) {
@@ -63,7 +63,7 @@ export default require => {
     }
   });
   var require_trimmedEndIndex = __commonJS({
-    "../../../node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
+    "../../bundles/rune/node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
       "use strict";
       init_define_process();
       var reWhitespace = /\s/;
@@ -76,7 +76,7 @@ export default require => {
     }
   });
   var require_baseTrim = __commonJS({
-    "../../../node_modules/lodash/_baseTrim.js"(exports, module) {
+    "../../bundles/rune/node_modules/lodash/_baseTrim.js"(exports, module) {
       "use strict";
       init_define_process();
       var trimmedEndIndex = require_trimmedEndIndex();
@@ -88,7 +88,7 @@ export default require => {
     }
   });
   var require_isObject = __commonJS({
-    "../../../node_modules/lodash/isObject.js"(exports, module) {
+    "../../bundles/rune/node_modules/lodash/isObject.js"(exports, module) {
       "use strict";
       init_define_process();
       function isObject(value) {
@@ -99,7 +99,7 @@ export default require => {
     }
   });
   var require_freeGlobal = __commonJS({
-    "../../../node_modules/lodash/_freeGlobal.js"(exports, module) {
+    "../../bundles/rune/node_modules/lodash/_freeGlobal.js"(exports, module) {
       "use strict";
       init_define_process();
       var freeGlobal = typeof globalThis == "object" && globalThis && globalThis.Object === Object && globalThis;
@@ -107,7 +107,7 @@ export default require => {
     }
   });
   var require_root = __commonJS({
-    "../../../node_modules/lodash/_root.js"(exports, module) {
+    "../../bundles/rune/node_modules/lodash/_root.js"(exports, module) {
       "use strict";
       init_define_process();
       var freeGlobal = require_freeGlobal();
@@ -117,7 +117,7 @@ export default require => {
     }
   });
   var require_Symbol = __commonJS({
-    "../../../node_modules/lodash/_Symbol.js"(exports, module) {
+    "../../bundles/rune/node_modules/lodash/_Symbol.js"(exports, module) {
       "use strict";
       init_define_process();
       var root = require_root();
@@ -126,7 +126,7 @@ export default require => {
     }
   });
   var require_getRawTag = __commonJS({
-    "../../../node_modules/lodash/_getRawTag.js"(exports, module) {
+    "../../bundles/rune/node_modules/lodash/_getRawTag.js"(exports, module) {
       "use strict";
       init_define_process();
       var Symbol2 = require_Symbol();
@@ -154,7 +154,7 @@ export default require => {
     }
   });
   var require_objectToString = __commonJS({
-    "../../../node_modules/lodash/_objectToString.js"(exports, module) {
+    "../../bundles/rune/node_modules/lodash/_objectToString.js"(exports, module) {
       "use strict";
       init_define_process();
       var objectProto = Object.prototype;
@@ -166,7 +166,7 @@ export default require => {
     }
   });
   var require_baseGetTag = __commonJS({
-    "../../../node_modules/lodash/_baseGetTag.js"(exports, module) {
+    "../../bundles/rune/node_modules/lodash/_baseGetTag.js"(exports, module) {
       "use strict";
       init_define_process();
       var Symbol2 = require_Symbol();
@@ -185,7 +185,7 @@ export default require => {
     }
   });
   var require_isObjectLike = __commonJS({
-    "../../../node_modules/lodash/isObjectLike.js"(exports, module) {
+    "../../bundles/rune/node_modules/lodash/isObjectLike.js"(exports, module) {
       "use strict";
       init_define_process();
       function isObjectLike(value) {
@@ -195,7 +195,7 @@ export default require => {
     }
   });
   var require_isSymbol = __commonJS({
-    "../../../node_modules/lodash/isSymbol.js"(exports, module) {
+    "../../bundles/rune/node_modules/lodash/isSymbol.js"(exports, module) {
       "use strict";
       init_define_process();
       var baseGetTag = require_baseGetTag();
@@ -208,7 +208,7 @@ export default require => {
     }
   });
   var require_toNumber = __commonJS({
-    "../../../node_modules/lodash/toNumber.js"(exports, module) {
+    "../../bundles/rune/node_modules/lodash/toNumber.js"(exports, module) {
       "use strict";
       init_define_process();
       var baseTrim = require_baseTrim();
@@ -241,11 +241,231 @@ export default require => {
     }
   });
   var require_clamp = __commonJS({
-    "../../../node_modules/lodash/clamp.js"(exports, module) {
+    "../../bundles/rune/node_modules/lodash/clamp.js"(exports, module) {
       "use strict";
       init_define_process();
       var baseClamp = require_baseClamp();
       var toNumber = require_toNumber();
+      function clamp3(number, lower, upper) {
+        if (upper === void 0) {
+          upper = lower;
+          lower = void 0;
+        }
+        if (upper !== void 0) {
+          upper = toNumber(upper);
+          upper = upper === upper ? upper : 0;
+        }
+        if (lower !== void 0) {
+          lower = toNumber(lower);
+          lower = lower === lower ? lower : 0;
+        }
+        return baseClamp(toNumber(number), lower, upper);
+      }
+      module.exports = clamp3;
+    }
+  });
+  var require_baseClamp2 = __commonJS({
+    "../../../lib/modules-lib/node_modules/lodash/_baseClamp.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      function baseClamp(number, lower, upper) {
+        if (number === number) {
+          if (upper !== void 0) {
+            number = number <= upper ? number : upper;
+          }
+          if (lower !== void 0) {
+            number = number >= lower ? number : lower;
+          }
+        }
+        return number;
+      }
+      module.exports = baseClamp;
+    }
+  });
+  var require_trimmedEndIndex2 = __commonJS({
+    "../../../lib/modules-lib/node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var reWhitespace = /\s/;
+      function trimmedEndIndex(string) {
+        var index = string.length;
+        while (index-- && reWhitespace.test(string.charAt(index))) {}
+        return index;
+      }
+      module.exports = trimmedEndIndex;
+    }
+  });
+  var require_baseTrim2 = __commonJS({
+    "../../../lib/modules-lib/node_modules/lodash/_baseTrim.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var trimmedEndIndex = require_trimmedEndIndex2();
+      var reTrimStart = /^\s+/;
+      function baseTrim(string) {
+        return string ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, "") : string;
+      }
+      module.exports = baseTrim;
+    }
+  });
+  var require_isObject2 = __commonJS({
+    "../../../lib/modules-lib/node_modules/lodash/isObject.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      function isObject(value) {
+        var type = typeof value;
+        return value != null && (type == "object" || type == "function");
+      }
+      module.exports = isObject;
+    }
+  });
+  var require_freeGlobal2 = __commonJS({
+    "../../../lib/modules-lib/node_modules/lodash/_freeGlobal.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var freeGlobal = typeof globalThis == "object" && globalThis && globalThis.Object === Object && globalThis;
+      module.exports = freeGlobal;
+    }
+  });
+  var require_root2 = __commonJS({
+    "../../../lib/modules-lib/node_modules/lodash/_root.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var freeGlobal = require_freeGlobal2();
+      var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+      var root = freeGlobal || freeSelf || Function("return this")();
+      module.exports = root;
+    }
+  });
+  var require_Symbol2 = __commonJS({
+    "../../../lib/modules-lib/node_modules/lodash/_Symbol.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var root = require_root2();
+      var Symbol2 = root.Symbol;
+      module.exports = Symbol2;
+    }
+  });
+  var require_getRawTag2 = __commonJS({
+    "../../../lib/modules-lib/node_modules/lodash/_getRawTag.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var Symbol2 = require_Symbol2();
+      var objectProto = Object.prototype;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      var nativeObjectToString = objectProto.toString;
+      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+      function getRawTag(value) {
+        var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
+        try {
+          value[symToStringTag] = void 0;
+          var unmasked = true;
+        } catch (e) {}
+        var result = nativeObjectToString.call(value);
+        if (unmasked) {
+          if (isOwn) {
+            value[symToStringTag] = tag;
+          } else {
+            delete value[symToStringTag];
+          }
+        }
+        return result;
+      }
+      module.exports = getRawTag;
+    }
+  });
+  var require_objectToString2 = __commonJS({
+    "../../../lib/modules-lib/node_modules/lodash/_objectToString.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var objectProto = Object.prototype;
+      var nativeObjectToString = objectProto.toString;
+      function objectToString(value) {
+        return nativeObjectToString.call(value);
+      }
+      module.exports = objectToString;
+    }
+  });
+  var require_baseGetTag2 = __commonJS({
+    "../../../lib/modules-lib/node_modules/lodash/_baseGetTag.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var Symbol2 = require_Symbol2();
+      var getRawTag = require_getRawTag2();
+      var objectToString = require_objectToString2();
+      var nullTag = "[object Null]";
+      var undefinedTag = "[object Undefined]";
+      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+      function baseGetTag(value) {
+        if (value == null) {
+          return value === void 0 ? undefinedTag : nullTag;
+        }
+        return symToStringTag && (symToStringTag in Object(value)) ? getRawTag(value) : objectToString(value);
+      }
+      module.exports = baseGetTag;
+    }
+  });
+  var require_isObjectLike2 = __commonJS({
+    "../../../lib/modules-lib/node_modules/lodash/isObjectLike.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      function isObjectLike(value) {
+        return value != null && typeof value == "object";
+      }
+      module.exports = isObjectLike;
+    }
+  });
+  var require_isSymbol2 = __commonJS({
+    "../../../lib/modules-lib/node_modules/lodash/isSymbol.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var baseGetTag = require_baseGetTag2();
+      var isObjectLike = require_isObjectLike2();
+      var symbolTag = "[object Symbol]";
+      function isSymbol(value) {
+        return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
+      }
+      module.exports = isSymbol;
+    }
+  });
+  var require_toNumber2 = __commonJS({
+    "../../../lib/modules-lib/node_modules/lodash/toNumber.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var baseTrim = require_baseTrim2();
+      var isObject = require_isObject2();
+      var isSymbol = require_isSymbol2();
+      var NAN = 0 / 0;
+      var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+      var reIsBinary = /^0b[01]+$/i;
+      var reIsOctal = /^0o[0-7]+$/i;
+      var freeParseInt = parseInt;
+      function toNumber(value) {
+        if (typeof value == "number") {
+          return value;
+        }
+        if (isSymbol(value)) {
+          return NAN;
+        }
+        if (isObject(value)) {
+          var other = typeof value.valueOf == "function" ? value.valueOf() : value;
+          value = isObject(other) ? other + "" : other;
+        }
+        if (typeof value != "string") {
+          return value === 0 ? value : +value;
+        }
+        value = baseTrim(value);
+        var isBinary = reIsBinary.test(value);
+        return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
+      }
+      module.exports = toNumber;
+    }
+  });
+  var require_clamp2 = __commonJS({
+    "../../../lib/modules-lib/node_modules/lodash/clamp.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var baseClamp = require_baseClamp2();
+      var toNumber = require_toNumber2();
       function clamp3(number, lower, upper) {
         if (upper === void 0) {
           upper = lower;
@@ -2297,9 +2517,7 @@ void main(void) {
     const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
     const groups = regex.exec(hex);
     if (groups == void 0) {
-      if (func_name === void 0) {
-        throw new Error(`Invalid color hex string: ${hex}`);
-      }
+      func_name = func_name !== null && func_name !== void 0 ? func_name : hexToColor.name;
       throw new Error(`${func_name}: Invalid color hex string: ${hex}`);
     }
     ;
@@ -3319,7 +3537,7 @@ void main(void) {
   var import_jsx_runtime7 = __require("react/jsx-runtime");
   var import_core7 = __require("@blueprintjs/core");
   var import_icons4 = __require("@blueprintjs/icons");
-  var import_clamp2 = __toESM(require_clamp(), 1);
+  var import_clamp2 = __toESM(require_clamp2(), 1);
   var import_react4 = __require("react");
   function MultiItemDisplay(props) {
     const [currentStep, setCurrentStep] = (0, import_react4.useState)(0);

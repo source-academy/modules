@@ -1,10 +1,4 @@
 {
-  "ar": {
-    "tabs": [
-      "AugmentedReality"
-    ],
-    "version": "1.0.0"
-  },
   "arcade_2d": {
     "tabs": [
       "ArcadeTwod"
@@ -81,10 +75,6 @@
     "tabs": [
       "Plotly"
     ],
-    "version": "1.0.0"
-  },
-  "remote_execution": {
-    "tabs": [],
     "version": "1.0.0"
   },
   "repeat": {

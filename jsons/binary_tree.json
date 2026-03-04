@@ -21,7 +21,7 @@
         "BinaryTree"
       ]
     ],
-    "retType": "value is null"
+    "retType": "boolean"
   },
   "is_tree": {
     "kind": "function",
@@ -33,7 +33,7 @@
         "any"
       ]
     ],
-    "retType": "value is BinaryTree"
+    "retType": "boolean"
   },
   "left_branch": {
     "kind": "function",

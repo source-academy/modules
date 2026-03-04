@@ -70,7 +70,7 @@ export default require => {
     const octave = octaveStr === "" ? 4 : parseInt(octaveStr);
     return [noteName.toUpperCase(), accidental !== "" ? accidental : "\u266E", octave];
   }
-  function midiNoteToNoteName(midiNote, accidental, func_name = midiNoteToNoteName.name) {
+  function midiNoteToNoteName(midiNote, accidental, func_name) {
     switch (midiNote % 12) {
       case 0:
         return "C";

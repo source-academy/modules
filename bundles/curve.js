@@ -51,7 +51,7 @@ export default require => {
     "<define:process>"() {}
   });
   var require_baseClamp = __commonJS({
-    "../../../node_modules/lodash/_baseClamp.js"(exports, module) {
+    "node_modules/lodash/_baseClamp.js"(exports, module) {
       "use strict";
       init_define_process();
       function baseClamp(number, lower, upper) {
@@ -69,7 +69,7 @@ export default require => {
     }
   });
   var require_trimmedEndIndex = __commonJS({
-    "../../../node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
+    "node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
       "use strict";
       init_define_process();
       var reWhitespace = /\s/;
@@ -82,7 +82,7 @@ export default require => {
     }
   });
   var require_baseTrim = __commonJS({
-    "../../../node_modules/lodash/_baseTrim.js"(exports, module) {
+    "node_modules/lodash/_baseTrim.js"(exports, module) {
       "use strict";
       init_define_process();
       var trimmedEndIndex = require_trimmedEndIndex();
@@ -94,7 +94,7 @@ export default require => {
     }
   });
   var require_isObject = __commonJS({
-    "../../../node_modules/lodash/isObject.js"(exports, module) {
+    "node_modules/lodash/isObject.js"(exports, module) {
       "use strict";
       init_define_process();
       function isObject(value) {
@@ -105,7 +105,7 @@ export default require => {
     }
   });
   var require_freeGlobal = __commonJS({
-    "../../../node_modules/lodash/_freeGlobal.js"(exports, module) {
+    "node_modules/lodash/_freeGlobal.js"(exports, module) {
       "use strict";
       init_define_process();
       var freeGlobal = typeof globalThis == "object" && globalThis && globalThis.Object === Object && globalThis;
@@ -113,7 +113,7 @@ export default require => {
     }
   });
   var require_root = __commonJS({
-    "../../../node_modules/lodash/_root.js"(exports, module) {
+    "node_modules/lodash/_root.js"(exports, module) {
       "use strict";
       init_define_process();
       var freeGlobal = require_freeGlobal();
@@ -123,7 +123,7 @@ export default require => {
     }
   });
   var require_Symbol = __commonJS({
-    "../../../node_modules/lodash/_Symbol.js"(exports, module) {
+    "node_modules/lodash/_Symbol.js"(exports, module) {
       "use strict";
       init_define_process();
       var root = require_root();
@@ -132,7 +132,7 @@ export default require => {
     }
   });
   var require_getRawTag = __commonJS({
-    "../../../node_modules/lodash/_getRawTag.js"(exports, module) {
+    "node_modules/lodash/_getRawTag.js"(exports, module) {
       "use strict";
       init_define_process();
       var Symbol2 = require_Symbol();
@@ -160,7 +160,7 @@ export default require => {
     }
   });
   var require_objectToString = __commonJS({
-    "../../../node_modules/lodash/_objectToString.js"(exports, module) {
+    "node_modules/lodash/_objectToString.js"(exports, module) {
       "use strict";
       init_define_process();
       var objectProto = Object.prototype;
@@ -172,7 +172,7 @@ export default require => {
     }
   });
   var require_baseGetTag = __commonJS({
-    "../../../node_modules/lodash/_baseGetTag.js"(exports, module) {
+    "node_modules/lodash/_baseGetTag.js"(exports, module) {
       "use strict";
       init_define_process();
       var Symbol2 = require_Symbol();
@@ -191,7 +191,7 @@ export default require => {
     }
   });
   var require_isObjectLike = __commonJS({
-    "../../../node_modules/lodash/isObjectLike.js"(exports, module) {
+    "node_modules/lodash/isObjectLike.js"(exports, module) {
       "use strict";
       init_define_process();
       function isObjectLike(value) {
@@ -201,7 +201,7 @@ export default require => {
     }
   });
   var require_isSymbol = __commonJS({
-    "../../../node_modules/lodash/isSymbol.js"(exports, module) {
+    "node_modules/lodash/isSymbol.js"(exports, module) {
       "use strict";
       init_define_process();
       var baseGetTag = require_baseGetTag();
@@ -214,7 +214,7 @@ export default require => {
     }
   });
   var require_toNumber = __commonJS({
-    "../../../node_modules/lodash/toNumber.js"(exports, module) {
+    "node_modules/lodash/toNumber.js"(exports, module) {
       "use strict";
       init_define_process();
       var baseTrim = require_baseTrim();
@@ -247,7 +247,7 @@ export default require => {
     }
   });
   var require_clamp = __commonJS({
-    "../../../node_modules/lodash/clamp.js"(exports, module) {
+    "node_modules/lodash/clamp.js"(exports, module) {
       "use strict";
       init_define_process();
       var baseClamp = require_baseClamp();
@@ -2226,206 +2226,6 @@ void main() {
     }
     return new CurveDrawn(drawMode, numPoints, space, drawCubeArray, curvePosArray, curveColorArray);
   }
-  function make_point(x, y) {
-    return new Point(x, y, 0, [0, 0, 0, 1]);
-  }
-  function make_3D_point(x, y, z) {
-    return new Point(x, y, z, [0, 0, 0, 1]);
-  }
-  function make_color_point(x, y, r, g, b) {
-    r = (0, import_clamp.default)(r, 0, 255);
-    g = (0, import_clamp.default)(g, 0, 255);
-    b = (0, import_clamp.default)(b, 0, 255);
-    return new Point(x, y, 0, [r / 255, g / 255, b / 255, 1]);
-  }
-  function make_3D_color_point(x, y, z, r, g, b) {
-    r = (0, import_clamp.default)(r, 0, 255);
-    g = (0, import_clamp.default)(g, 0, 255);
-    b = (0, import_clamp.default)(b, 0, 255);
-    return new Point(x, y, z, [r / 255, g / 255, b / 255, 1]);
-  }
-  function throwIfNotPoint(obj, func_name) {
-    if (!(obj instanceof Point)) {
-      throw new Error(`${func_name} expects a point as argument`);
-    }
-  }
-  function x_of(pt) {
-    throwIfNotPoint(pt, x_of.name);
-    return pt.x;
-  }
-  function y_of(pt) {
-    throwIfNotPoint(pt, y_of.name);
-    return pt.y;
-  }
-  function z_of(pt) {
-    throwIfNotPoint(pt, z_of.name);
-    return pt.z;
-  }
-  function r_of(pt) {
-    throwIfNotPoint(pt, r_of.name);
-    return Math.floor(pt.color[0] * 255);
-  }
-  function g_of(pt) {
-    throwIfNotPoint(pt, g_of.name);
-    return Math.floor(pt.color[1] * 255);
-  }
-  function b_of(pt) {
-    throwIfNotPoint(pt, b_of.name);
-    return Math.floor(pt.color[2] * 255);
-  }
-  var invert2 = original => t => original(1 - t);
-  function translate2(x0, y0, z0) {
-    return curve => t => {
-      const ct = curve(t);
-      return new Point(x0 + ct.x, y0 + ct.y, z0 + ct.z, [ct.color[0], ct.color[1], ct.color[2], 1]);
-    };
-  }
-  function rotate_around_origin_3D(a, b, c) {
-    const cthx = Math.cos(a);
-    const sthx = Math.sin(a);
-    const cthy = Math.cos(b);
-    const sthy = Math.sin(b);
-    const cthz = Math.cos(c);
-    const sthz = Math.sin(c);
-    return curve => t => {
-      const ct = curve(t);
-      const coord = [ct.x, ct.y, ct.z];
-      const mat = [[cthz * cthy, cthz * sthy * sthx - sthz * cthx, cthz * sthy * cthx + sthz * sthx], [sthz * cthy, sthz * sthy * sthx + cthz * cthx, sthz * sthy * cthx - cthz * sthx], [-sthy, cthy * sthx, cthy * cthx]];
-      let xf = 0;
-      let yf = 0;
-      let zf = 0;
-      for (let i = 0; i < 3; i += 1) {
-        xf += mat[0][i] * coord[i];
-        yf += mat[1][i] * coord[i];
-        zf += mat[2][i] * coord[i];
-      }
-      return new Point(xf, yf, zf, [ct.color[0], ct.color[1], ct.color[2], 1]);
-    };
-  }
-  function rotate_around_origin(a) {
-    const cth = Math.cos(a);
-    const sth = Math.sin(a);
-    return curve => t => {
-      const ct = curve(t);
-      return new Point(cth * ct.x - sth * ct.y, sth * ct.x + cth * ct.y, ct.z, [ct.color[0], ct.color[1], ct.color[2], 1]);
-    };
-  }
-  function scale3(x, y, z) {
-    return curve => t => {
-      const ct = curve(t);
-      return new Point(x * ct.x, y * ct.y, z * ct.z, [ct.color[0], ct.color[1], ct.color[2], 1]);
-    };
-  }
-  function scale_proportional(s) {
-    return scale3(s, s, s);
-  }
-  var put_in_standard_position = curve => {
-    const start_point = curve(0);
-    const curve_started_at_origin = translate2(-x_of(start_point), -y_of(start_point), 0)(curve);
-    const new_end_point = curve_started_at_origin(1);
-    const theta = Math.atan2(y_of(new_end_point), x_of(new_end_point));
-    const curve_ended_at_x_axis = rotate_around_origin_3D(0, 0, -theta)(curve_started_at_origin);
-    const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1));
-    return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
-  };
-  function connect_rigidly(curve1, curve2) {
-    return t => t < 1 / 2 ? curve1(2 * t) : curve2(2 * t - 1);
-  }
-  function connect_ends(curve1, curve2) {
-    const startPointOfCurve2 = curve2(0);
-    const endPointOfCurve1 = curve1(1);
-    return connect_rigidly(curve1, translate2(x_of(endPointOfCurve1) - x_of(startPointOfCurve2), y_of(endPointOfCurve1) - y_of(startPointOfCurve2), z_of(endPointOfCurve1) - z_of(startPointOfCurve2))(curve2));
-  }
-  var unit_circle = t => {
-    return make_point(Math.cos(2 * Math.PI * t), Math.sin(2 * Math.PI * t));
-  };
-  var unit_line = t => make_point(t, 0);
-  function unit_line_at(y) {
-    return t => make_point(t, y);
-  }
-  var arc = t => {
-    return make_point(Math.sin(Math.PI * t), Math.cos(Math.PI * t));
-  };
-  init_define_process();
-  var import_context = __toESM(__require("js-slang/context"), 1);
-  init_define_process();
-  init_define_process();
-  var glAnimation = class {
-    constructor(duration, fps) {
-      this.duration = duration;
-      this.fps = fps;
-    }
-  };
-  glAnimation.isAnimation = obj => obj instanceof glAnimation;
-  var AnimatedCurve = class extends glAnimation {
-    constructor(duration, fps, func, drawer, is3D) {
-      super(duration, fps);
-      this.func = func;
-      this.drawer = drawer;
-      this.is3D = is3D;
-      this.toReplString = () => "<AnimatedCurve>";
-      this.angle = 0;
-    }
-    getFrame(timestamp) {
-      const curve = this.func(timestamp);
-      curve.shouldNotAppend = true;
-      const curveDrawn = this.drawer(curve);
-      return {
-        draw: canvas => {
-          curveDrawn.init(canvas);
-          curveDrawn.redraw(this.angle);
-        }
-      };
-    }
-  };
-  var drawnCurves = [];
-  import_context.default.moduleContexts.curve.state = {
-    drawnCurves
-  };
-  function createDrawFunction(scaleMode, drawMode, space, isFullView) {
-    return numPoints => {
-      const func = curve => {
-        const curveDrawn = generateCurve(scaleMode, drawMode, numPoints, curve, space, isFullView);
-        if (!curve.shouldNotAppend) {
-          drawnCurves.push(curveDrawn);
-        }
-        return curveDrawn;
-      };
-      func.is3D = space === "3D";
-      const stringifier = () => `<${space === "3D" ? "3D" : ""}RenderFunction(${numPoints})>`;
-      func.toString = stringifier;
-      func.toReplString = stringifier;
-      return func;
-    };
-  }
-  var draw_connected = createDrawFunction("none", "lines", "2D", false);
-  var draw_connected_full_view = createDrawFunction("stretch", "lines", "2D", true);
-  var draw_connected_full_view_proportional = createDrawFunction("fit", "lines", "2D", true);
-  var draw_points = createDrawFunction("none", "points", "2D", false);
-  var draw_points_full_view = createDrawFunction("stretch", "points", "2D", true);
-  var draw_points_full_view_proportional = createDrawFunction("fit", "points", "2D", true);
-  var draw_3D_connected = createDrawFunction("none", "lines", "3D", false);
-  var draw_3D_connected_full_view = createDrawFunction("stretch", "lines", "3D", false);
-  var draw_3D_connected_full_view_proportional = createDrawFunction("fit", "lines", "3D", false);
-  var draw_3D_points = createDrawFunction("none", "points", "3D", false);
-  var draw_3D_points_full_view = createDrawFunction("stretch", "points", "3D", false);
-  var draw_3D_points_full_view_proportional = createDrawFunction("fit", "points", "3D", false);
-  function animate_curve(duration, fps, drawer, func) {
-    if (drawer.is3D) {
-      throw new Error("animate_curve cannot be used with 3D draw function!");
-    }
-    const anim = new AnimatedCurve(duration, fps, func, drawer, false);
-    drawnCurves.push(anim);
-    return anim;
-  }
-  function animate_3D_curve(duration, fps, drawer, func) {
-    if (!drawer.is3D) {
-      throw new Error("animate_3D_curve cannot be used with 2D draw function!");
-    }
-    const anim = new AnimatedCurve(duration, fps, func, drawer, true);
-    drawnCurves.push(anim);
-    return anim;
-  }
   init_define_process();
   init_define_process();
   function createTypeMap() {
@@ -2504,86 +2304,309 @@ ${variableDeclaration2};`);
   var {classDeclaration, functionDeclaration, typeDeclaration} = typeMapCreator;
   var Point2 = class {};
   Point2 = __decorateClass([classDeclaration("Point")], Point2);
-  var AnimatedCurve2 = class {};
-  AnimatedCurve2 = __decorateClass([classDeclaration("AnimatedCurve")], AnimatedCurve2);
+  var AnimatedCurve = class {};
+  AnimatedCurve = __decorateClass([classDeclaration("AnimatedCurve")], AnimatedCurve);
   var Curve = class {};
   Curve = __decorateClass([typeDeclaration("(u: number) => Point")], Curve);
   var CurveAnimation = class {};
   CurveAnimation = __decorateClass([typeDeclaration("(t: number) => Curve")], CurveAnimation);
-  var TypeInterface = class {
-    animate_3D_curve() {}
-    animate_curve() {}
-    arc() {}
-    b_of() {}
-    connect_ends() {}
-    connect_rigidly() {}
-    draw_3D_connected() {}
-    draw_3D_connected_full_view() {}
-    draw_3D_connected_full_view_proportional() {}
-    draw_3D_points() {}
-    draw_3D_points_full_view() {}
-    draw_3D_points_full_view_proportional() {}
-    draw_connected() {}
-    draw_connected_full_view() {}
-    draw_connected_full_view_proportional() {}
-    draw_points() {}
-    draw_points_full_view() {}
-    draw_points_full_view_proportional() {}
-    g_of() {}
-    invert() {}
-    make_3D_color_point() {}
-    make_3D_point() {}
-    make_color_point() {}
-    make_point() {}
-    put_in_standard_position() {}
-    r_of() {}
-    rotate_around_origin() {}
-    scale() {}
-    scale_proportional() {}
-    translate() {}
-    unit_circle() {}
-    unit_line() {}
-    unit_line_at() {}
-    x_of() {}
-    y_of() {}
-    z_of() {}
-  };
-  __decorateClass([functionDeclaration("duration: number, fps: number, drawer: (func: Curve) => Curve, func: (func: Curve) => Curve", "AnimatedCurve")], TypeInterface.prototype, "animate_3D_curve", 1);
-  __decorateClass([functionDeclaration("duration: number, fps: number, drawer: (func: Curve) => Curve, func: (func: Curve) => Curve", "AnimatedCurve")], TypeInterface.prototype, "animate_curve", 1);
-  __decorateClass([functionDeclaration("t: number", "number")], TypeInterface.prototype, "arc", 1);
-  __decorateClass([functionDeclaration("p: Point", "number")], TypeInterface.prototype, "b_of", 1);
-  __decorateClass([functionDeclaration("curve1: Curve, curve2: Curve", "Curve")], TypeInterface.prototype, "connect_ends", 1);
-  __decorateClass([functionDeclaration("curve1: Curve, curve2: Curve", "Curve")], TypeInterface.prototype, "connect_rigidly", 1);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_3D_connected", 1);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_3D_connected_full_view", 1);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_3D_connected_full_view_proportional", 1);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_3D_points", 1);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_3D_points_full_view", 1);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_3D_points_full_view_proportional", 1);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_connected", 1);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_connected_full_view", 1);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_connected_full_view_proportional", 1);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_points", 1);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_points_full_view", 1);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], TypeInterface.prototype, "draw_points_full_view_proportional", 1);
-  __decorateClass([functionDeclaration("p: Point", "number")], TypeInterface.prototype, "g_of", 1);
-  __decorateClass([functionDeclaration("curve: Curve", "Curve")], TypeInterface.prototype, "invert", 1);
-  __decorateClass([functionDeclaration("x: number, y: number, z: number, r: number, g: number, b: number", "Point")], TypeInterface.prototype, "make_3D_color_point", 1);
-  __decorateClass([functionDeclaration("x: number, y: number, z: number", "Point")], TypeInterface.prototype, "make_3D_point", 1);
-  __decorateClass([functionDeclaration("x: number, y: number, r: number, g: number, b: number", "Point")], TypeInterface.prototype, "make_color_point", 1);
-  __decorateClass([functionDeclaration("x: number, y: number", "Point")], TypeInterface.prototype, "make_point", 1);
-  __decorateClass([functionDeclaration("curve: Curve", "Curve")], TypeInterface.prototype, "put_in_standard_position", 1);
-  __decorateClass([functionDeclaration("p: Point", "number")], TypeInterface.prototype, "r_of", 1);
-  __decorateClass([functionDeclaration("theta1: number, theta2: number, theta3: number", "(c: Curve) => Curve")], TypeInterface.prototype, "rotate_around_origin", 1);
-  __decorateClass([functionDeclaration("x: number, y: number", "(c: Curve) => Curve")], TypeInterface.prototype, "scale", 1);
-  __decorateClass([functionDeclaration("s: number", "(c: Curve) => Curve")], TypeInterface.prototype, "scale_proportional", 1);
-  __decorateClass([functionDeclaration("x0: number, y0: number, z0: number", "(c: Curve) => Curve")], TypeInterface.prototype, "translate", 1);
-  __decorateClass([functionDeclaration("t: number", "Point")], TypeInterface.prototype, "unit_circle", 1);
-  __decorateClass([functionDeclaration("t: number", "Point")], TypeInterface.prototype, "unit_line", 1);
-  __decorateClass([functionDeclaration("t: number", "Curve")], TypeInterface.prototype, "unit_line_at", 1);
-  __decorateClass([functionDeclaration("p: Point", "number")], TypeInterface.prototype, "x_of", 1);
-  __decorateClass([functionDeclaration("p: Point", "number")], TypeInterface.prototype, "y_of", 1);
-  __decorateClass([functionDeclaration("p: Point", "number")], TypeInterface.prototype, "z_of", 1);
   var type_map = typeMapCreator.type_map;
+  function throwIfNotPoint(obj, func_name) {
+    if (!(obj instanceof Point)) {
+      throw new Error(`${func_name} expects a point as argument`);
+    }
+  }
+  var CurveFunctions = class {
+    static make_point(x, y) {
+      return new Point(x, y, 0, [0, 0, 0, 1]);
+    }
+    static make_3D_point(x, y, z) {
+      return new Point(x, y, z, [0, 0, 0, 1]);
+    }
+    static make_color_point(x, y, r, g, b) {
+      r = (0, import_clamp.default)(r, 0, 255);
+      g = (0, import_clamp.default)(g, 0, 255);
+      b = (0, import_clamp.default)(b, 0, 255);
+      return new Point(x, y, 0, [r / 255, g / 255, b / 255, 1]);
+    }
+    static make_3D_color_point(x, y, z, r, g, b) {
+      r = (0, import_clamp.default)(r, 0, 255);
+      g = (0, import_clamp.default)(g, 0, 255);
+      b = (0, import_clamp.default)(b, 0, 255);
+      return new Point(x, y, z, [r / 255, g / 255, b / 255, 1]);
+    }
+    static connect_ends(curve1, curve2) {
+      const startPointOfCurve2 = curve2(0);
+      const endPointOfCurve1 = curve1(1);
+      return connect_rigidly(curve1, translate2(x_of(endPointOfCurve1) - x_of(startPointOfCurve2), y_of(endPointOfCurve1) - y_of(startPointOfCurve2), z_of(endPointOfCurve1) - z_of(startPointOfCurve2))(curve2));
+    }
+    static connect_rigidly(curve1, curve2) {
+      return t => t < 1 / 2 ? curve1(2 * t) : curve2(2 * t - 1);
+    }
+    static translate(x0, y0, z0) {
+      return curve => t => {
+        const ct = curve(t);
+        return new Point(x0 + ct.x, y0 + ct.y, z0 + ct.z, [ct.color[0], ct.color[1], ct.color[2], 1]);
+      };
+    }
+    static rotate_around_origin_3D(a, b, c) {
+      const cthx = Math.cos(a);
+      const sthx = Math.sin(a);
+      const cthy = Math.cos(b);
+      const sthy = Math.sin(b);
+      const cthz = Math.cos(c);
+      const sthz = Math.sin(c);
+      return curve => t => {
+        const ct = curve(t);
+        const coord = [ct.x, ct.y, ct.z];
+        const mat = [[cthz * cthy, cthz * sthy * sthx - sthz * cthx, cthz * sthy * cthx + sthz * sthx], [sthz * cthy, sthz * sthy * sthx + cthz * cthx, sthz * sthy * cthx - cthz * sthx], [-sthy, cthy * sthx, cthy * cthx]];
+        let xf = 0;
+        let yf = 0;
+        let zf = 0;
+        for (let i = 0; i < 3; i += 1) {
+          xf += mat[0][i] * coord[i];
+          yf += mat[1][i] * coord[i];
+          zf += mat[2][i] * coord[i];
+        }
+        return new Point(xf, yf, zf, [ct.color[0], ct.color[1], ct.color[2], 1]);
+      };
+    }
+    static rotate_around_origin(a) {
+      const cth = Math.cos(a);
+      const sth = Math.sin(a);
+      return curve => t => {
+        const ct = curve(t);
+        return new Point(cth * ct.x - sth * ct.y, sth * ct.x + cth * ct.y, ct.z, [ct.color[0], ct.color[1], ct.color[2], 1]);
+      };
+    }
+    static scale(x, y, z) {
+      return curve => t => {
+        const ct = curve(t);
+        return new Point(x * ct.x, y * ct.y, z * ct.z, [ct.color[0], ct.color[1], ct.color[2], 1]);
+      };
+    }
+    static scale_proportional(s) {
+      return scale3(s, s, s);
+    }
+    static x_of(pt) {
+      throwIfNotPoint(pt, x_of.name);
+      return pt.x;
+    }
+    static y_of(pt) {
+      throwIfNotPoint(pt, y_of.name);
+      return pt.y;
+    }
+    static z_of(pt) {
+      throwIfNotPoint(pt, z_of.name);
+      return pt.z;
+    }
+    static r_of(pt) {
+      throwIfNotPoint(pt, r_of.name);
+      return Math.floor(pt.color[0] * 255);
+    }
+    static g_of(pt) {
+      throwIfNotPoint(pt, g_of.name);
+      return Math.floor(pt.color[1] * 255);
+    }
+    static b_of(pt) {
+      throwIfNotPoint(pt, b_of.name);
+      return Math.floor(pt.color[2] * 255);
+    }
+    static unit_line_at(y) {
+      return t => make_point(t, y);
+    }
+  };
+  CurveFunctions.invert = original => t => original(1 - t);
+  CurveFunctions.put_in_standard_position = curve => {
+    const start_point = curve(0);
+    const curve_started_at_origin = translate2(-x_of(start_point), -y_of(start_point), 0)(curve);
+    const new_end_point = curve_started_at_origin(1);
+    const theta = Math.atan2(y_of(new_end_point), x_of(new_end_point));
+    const curve_ended_at_x_axis = rotate_around_origin_3D(0, 0, -theta)(curve_started_at_origin);
+    const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1));
+    return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
+  };
+  CurveFunctions.unit_circle = t => {
+    return make_point(Math.cos(2 * Math.PI * t), Math.sin(2 * Math.PI * t));
+  };
+  CurveFunctions.unit_line = t => make_point(t, 0);
+  CurveFunctions.arc = t => {
+    return make_point(Math.sin(Math.PI * t), Math.cos(Math.PI * t));
+  };
+  __decorateClass([functionDeclaration("x: number, y: number", "Point")], CurveFunctions, "make_point", 1);
+  __decorateClass([functionDeclaration("x: number, y: number, z: number", "Point")], CurveFunctions, "make_3D_point", 1);
+  __decorateClass([functionDeclaration("x: number, y: number, r: number, g: number, b: number", "Point")], CurveFunctions, "make_color_point", 1);
+  __decorateClass([functionDeclaration("x: number, y: number, z: number, r: number, g: number, b: number", "Point")], CurveFunctions, "make_3D_color_point", 1);
+  __decorateClass([functionDeclaration("curve1: Curve, curve2: Curve", "Curve")], CurveFunctions, "connect_ends", 1);
+  __decorateClass([functionDeclaration("curve1: Curve, curve2: Curve", "Curve")], CurveFunctions, "connect_rigidly", 1);
+  __decorateClass([functionDeclaration("x0: number, y0: number, z0: number", "(c: Curve) => Curve")], CurveFunctions, "translate", 1);
+  __decorateClass([functionDeclaration("curve: Curve", "Curve")], CurveFunctions, "invert", 2);
+  __decorateClass([functionDeclaration("curve: Curve", "Curve")], CurveFunctions, "put_in_standard_position", 2);
+  __decorateClass([functionDeclaration("a: number, b: number, c: number", "(c: Curve) => Curve")], CurveFunctions, "rotate_around_origin_3D", 1);
+  __decorateClass([functionDeclaration("a: number", "(c: Curve) => Curve")], CurveFunctions, "rotate_around_origin", 1);
+  __decorateClass([functionDeclaration("x: number, y: number, z: number", "(c: Curve) => Curve")], CurveFunctions, "scale", 1);
+  __decorateClass([functionDeclaration("s: number", "(c: Curve) => Curve")], CurveFunctions, "scale_proportional", 1);
+  __decorateClass([functionDeclaration("p: Point", "number")], CurveFunctions, "x_of", 1);
+  __decorateClass([functionDeclaration("p: Point", "number")], CurveFunctions, "y_of", 1);
+  __decorateClass([functionDeclaration("p: Point", "number")], CurveFunctions, "z_of", 1);
+  __decorateClass([functionDeclaration("p: Point", "number")], CurveFunctions, "r_of", 1);
+  __decorateClass([functionDeclaration("p: Point", "number")], CurveFunctions, "g_of", 1);
+  __decorateClass([functionDeclaration("p: Point", "number")], CurveFunctions, "b_of", 1);
+  __decorateClass([functionDeclaration("t: number", "Point")], CurveFunctions, "unit_circle", 2);
+  __decorateClass([functionDeclaration("t: number", "Point")], CurveFunctions, "unit_line", 2);
+  __decorateClass([functionDeclaration("t: number", "Curve")], CurveFunctions, "unit_line_at", 1);
+  __decorateClass([functionDeclaration("t: number", "Point")], CurveFunctions, "arc", 2);
+  var make_point = CurveFunctions.make_point;
+  var make_3D_point = CurveFunctions.make_3D_point;
+  var make_color_point = CurveFunctions.make_color_point;
+  var make_3D_color_point = CurveFunctions.make_3D_color_point;
+  var x_of = CurveFunctions.x_of;
+  var y_of = CurveFunctions.y_of;
+  var z_of = CurveFunctions.z_of;
+  var r_of = CurveFunctions.r_of;
+  var g_of = CurveFunctions.g_of;
+  var b_of = CurveFunctions.b_of;
+  var invert2 = CurveFunctions.invert;
+  var translate2 = CurveFunctions.translate;
+  var rotate_around_origin_3D = CurveFunctions.rotate_around_origin_3D;
+  var rotate_around_origin = CurveFunctions.rotate_around_origin;
+  var scale3 = CurveFunctions.scale;
+  var scale_proportional = CurveFunctions.scale_proportional;
+  var put_in_standard_position = CurveFunctions.put_in_standard_position;
+  var connect_rigidly = CurveFunctions.connect_rigidly;
+  var connect_ends = CurveFunctions.connect_ends;
+  var unit_circle = CurveFunctions.unit_circle;
+  var unit_line = CurveFunctions.unit_line;
+  var unit_line_at = CurveFunctions.unit_line_at;
+  var arc = CurveFunctions.arc;
+  init_define_process();
+  init_define_process();
+  function isFunctionOfLength(f, l) {
+    return typeof f === "function" && f.length === l;
+  }
+  var import_context = __toESM(__require("js-slang/context"), 1);
+  init_define_process();
+  init_define_process();
+  var glAnimation = class {
+    constructor(duration, fps) {
+      this.duration = duration;
+      this.fps = fps;
+    }
+  };
+  glAnimation.isAnimation = obj => obj instanceof glAnimation;
+  var AnimatedCurve2 = class extends glAnimation {
+    constructor(duration, fps, func, drawer, is3D) {
+      super(duration, fps);
+      this.func = func;
+      this.drawer = drawer;
+      this.is3D = is3D;
+      this.toReplString = () => "<AnimatedCurve>";
+      this.angle = 0;
+    }
+    getFrame(timestamp) {
+      const curve = this.func(timestamp);
+      curve.shouldNotAppend = true;
+      const curveDrawn = this.drawer(curve);
+      return {
+        draw: canvas => {
+          curveDrawn.init(canvas);
+          curveDrawn.redraw(this.angle);
+        }
+      };
+    }
+  };
+  var drawnCurves = [];
+  import_context.default.moduleContexts.curve.state = {
+    drawnCurves
+  };
+  function createDrawFunction(scaleMode, drawMode, space, isFullView, name) {
+    function renderFuncCreator(numPoints) {
+      if (numPoints <= 0 || numPoints > 65535 || !Number.isInteger(numPoints)) {
+        throw new Error(`${name}: The number of points must be a positive integer less than or equal to 65535. Got: ${numPoints}`);
+      }
+      function renderFunc(curve) {
+        if (!isFunctionOfLength(curve, 1)) {
+          throw new Error("The provided curve is not a valid Curve function. A Curve function must take exactly one parameter (a number t between 0 and 1) and return a Point or 3D Point depending on whether it is a 2D or 3D curve.");
+        }
+        const curveDrawn = generateCurve(scaleMode, drawMode, numPoints, curve, space, isFullView);
+        if (!curve.shouldNotAppend) {
+          drawnCurves.push(curveDrawn);
+        }
+        return curveDrawn;
+      }
+      renderFunc.is3D = space === "3D";
+      const stringifier = () => `<${space === "3D" ? "3D" : ""}RenderFunction(${numPoints})>`;
+      renderFunc.toString = stringifier;
+      renderFunc.toReplString = stringifier;
+      return renderFunc;
+    }
+    Object.defineProperty(renderFuncCreator, "name", {
+      value: name
+    });
+    renderFuncCreator.scaleMode = scaleMode;
+    renderFuncCreator.drawMode = drawMode;
+    renderFuncCreator.space = space;
+    renderFuncCreator.isFullView = isFullView;
+    return renderFuncCreator;
+  }
+  var RenderFunctionCreators = class {};
+  RenderFunctionCreators.draw_connected = createDrawFunction("none", "lines", "2D", false, "draw_connected");
+  RenderFunctionCreators.draw_connected_full_view = createDrawFunction("stretch", "lines", "2D", true, "draw_connected_full_view");
+  RenderFunctionCreators.draw_connected_full_view_proportional = createDrawFunction("fit", "lines", "2D", true, "draw_connected_full_view_proportional");
+  RenderFunctionCreators.draw_points = createDrawFunction("none", "points", "2D", false, "draw_points");
+  RenderFunctionCreators.draw_points_full_view = createDrawFunction("stretch", "points", "2D", true, "draw_points_full_view");
+  RenderFunctionCreators.draw_points_full_view_proportional = createDrawFunction("fit", "points", "2D", true, "draw_points_full_view_proportional");
+  RenderFunctionCreators.draw_3D_connected = createDrawFunction("none", "lines", "3D", false, "draw_3D_connected");
+  RenderFunctionCreators.draw_3D_connected_full_view = createDrawFunction("stretch", "lines", "3D", true, "draw_3D_connected_full_view");
+  RenderFunctionCreators.draw_3D_connected_full_view_proportional = createDrawFunction("fit", "lines", "3D", true, "draw_3D_connected_full_view_proportional");
+  RenderFunctionCreators.draw_3D_points = createDrawFunction("none", "points", "3D", false, "draw_3D_points");
+  RenderFunctionCreators.draw_3D_points_full_view = createDrawFunction("stretch", "points", "3D", true, "draw_3D_points_full_view");
+  RenderFunctionCreators.draw_3D_points_full_view_proportional = createDrawFunction("fit", "points", "3D", true, "draw_3D_points_full_view_proportional");
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_connected", 2);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_connected_full_view", 2);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_connected_full_view_proportional", 2);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_points", 2);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_points_full_view", 2);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_points_full_view_proportional", 2);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_3D_connected", 2);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_3D_connected_full_view", 2);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_3D_connected_full_view_proportional", 2);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_3D_points", 2);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_3D_points_full_view", 2);
+  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_3D_points_full_view_proportional", 2);
+  var draw_connected = RenderFunctionCreators.draw_connected;
+  var draw_connected_full_view = RenderFunctionCreators.draw_connected_full_view;
+  var draw_connected_full_view_proportional = RenderFunctionCreators.draw_connected_full_view_proportional;
+  var draw_points = RenderFunctionCreators.draw_points;
+  var draw_points_full_view = RenderFunctionCreators.draw_points_full_view;
+  var draw_points_full_view_proportional = RenderFunctionCreators.draw_points_full_view_proportional;
+  var draw_3D_connected = RenderFunctionCreators.draw_3D_connected;
+  var draw_3D_connected_full_view = RenderFunctionCreators.draw_3D_connected_full_view;
+  var draw_3D_connected_full_view_proportional = RenderFunctionCreators.draw_3D_connected_full_view_proportional;
+  var draw_3D_points = RenderFunctionCreators.draw_3D_points;
+  var draw_3D_points_full_view = RenderFunctionCreators.draw_3D_points_full_view;
+  var draw_3D_points_full_view_proportional = RenderFunctionCreators.draw_3D_points_full_view_proportional;
+  var CurveAnimators = class {
+    static animate_curve(duration, fps, drawer, func) {
+      if (drawer.is3D) {
+        throw new Error(`${animate_curve.name} cannot be used with 3D draw function!`);
+      }
+      const anim = new AnimatedCurve2(duration, fps, func, drawer, false);
+      drawnCurves.push(anim);
+      return anim;
+    }
+    static animate_3D_curve(duration, fps, drawer, func) {
+      if (!drawer.is3D) {
+        throw new Error(`${animate_3D_curve.name} cannot be used with 2D draw function!`);
+      }
+      const anim = new AnimatedCurve2(duration, fps, func, drawer, true);
+      drawnCurves.push(anim);
+      return anim;
+    }
+  };
+  __decorateClass([functionDeclaration("duration: number, fps: number, drawer: (func: Curve) => Curve, func: (func: Curve) => Curve", "AnimatedCurve")], CurveAnimators, "animate_curve", 1);
+  __decorateClass([functionDeclaration("duration: number, fps: number, drawer: (func: Curve) => Curve, func: (func: Curve) => Curve", "AnimatedCurve")], CurveAnimators, "animate_3D_curve", 1);
+  var animate_curve = CurveAnimators.animate_curve;
+  var animate_3D_curve = CurveAnimators.animate_3D_curve;
   return __toCommonJS(index_exports);
 };
