@@ -23,10 +23,15 @@ context.moduleContexts.matrix.state = {
  * ```
  * will altogether only cause `mat` to be displayed once in the tab
  * @param matrix Matrix to display
- * @returns Original matrix
+ * @returns `true` if the matrix was successfully displayed, and
+ * `false` if the matrix was already displayed
  */
-export function display_matrix(matrix: Matrix): void {
+export function display_matrix(matrix: Matrix): boolean {
   throwIfNotMatrix(matrix, display_matrix.name);
 
-  if (!matrices.includes(matrix)) matrices.push(matrix);
+  if (!matrices.includes(matrix)) {
+    matrices.push(matrix);
+    return true;
+  }
+  return false;
 }

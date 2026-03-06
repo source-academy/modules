@@ -21,7 +21,7 @@ function checkMatrixBounds(func_name: string, matrix: unknown, row: number, col:
   }
 
   if (col < 0 || col >= matrix.cols) {
-    throw new Error(`${func_name}: Column index of ${row} out of bounds for matrix of size (${matrix.rows}, ${matrix.cols}`);
+    throw new Error(`${func_name}: Column index of ${col} out of bounds for matrix of size (${matrix.rows}, ${matrix.cols})`);
   }
 }
 
@@ -210,14 +210,16 @@ export function get_num_rows(matrix: Matrix) {
 }
 
 /**
- * By providing a list containing pairs of strings and functions, the matrix will render
+ * By providing a list containing pairs of strings and nullary functions, the matrix will render
  * each pair as a button with the given text. When the button is clicked its associated function
- * will be executed
+ * will be executed.
  *
- * Calling `install_buttons` multiple times on the same matrix will only preserve the results
- * of the final call.
- * @param matrix Matrix to install buttons on
- * @param list List containing pairs of strings and functions
+ * Every call to `install_buttons` is treated as a complete replacement of the existing buttons. To add
+ * buttons without removing the existing ones, append the new buttons to the list and call `install_buttons`
+ * with the new list.
+ *
+ * @param matrix Matrix to install buttons for
+ * @param list List containing pairs of strings and nullary functions
  * @example
  * ```
  * import { clear_matrix, install_buttons, randomize_matrix } from 'matrix';
@@ -261,6 +263,17 @@ export function install_buttons(matrix: Matrix, list: List): void {
  *
  * @param matrix Matrix to attach to
  * @param callback Callback to use
+ *
+ * @example
+ * ```
+ * import { create_matrix, on_cell_click } from 'matrix';
+ *
+ * const matrix = create_matrix(3, 3);
+ *
+ * on_cell_click(matrix, (row, col, value, clickType) => {
+ *   display('Cell at row (' + row + ', ' + col + ') was ' + (value ? 'selected' : 'deselected') + ' by a ' + clickType + ' click!');
+ * });
+ * ```
  */
 export function on_cell_click(matrix: Matrix, callback: CellCallback): void {
   throwIfNotMatrix(matrix, on_cell_click.name);
@@ -370,6 +383,8 @@ export function set_cell_label(matrix: Matrix, row: number, col: number, label: 
 /**
  * Set the value of all cells in the matrix using the given 2D boolean array. If there are fewer provided values than the size
  * of the matrix, the extra cells' values will not be changed. Extraneous values are ignored.
+ *
+ * Values should be indexed as `values[row][col]`
  * @param matrix Matrix to modify
  * @param values Values to use
  */
@@ -390,6 +405,8 @@ export function set_cell_values(matrix: Matrix, values: boolean[][]): void {
 /**
  * Set the label of all cells in the matrix using the given 2D string array. If there are fewer provided values than the size
  * of the matrix, the extra cells' labels will not be changed. Extraneous values are ignored.
+ *
+ * Labels should be indexed as `labels[row][col]`
  * @param matrix Matrix to modify
  * @param labels Labels to use
  */
