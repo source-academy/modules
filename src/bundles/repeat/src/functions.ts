@@ -3,7 +3,7 @@
  * @module repeat
  */
 
-import { InvalidCallbackError } from '@sourceacademy/modules-lib/errors';
+import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 
 /**
@@ -12,7 +12,11 @@ import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
  */
 type UnaryFunction<T> = (x: T) => T;
 
-function repeatInternal<T>(f: UnaryFunction<T>, n: number): UnaryFunction<T> {
+/**
+ * Internal implementation of the repeat functions so that doesn't perform type checking
+ * @hidden
+ */
+export function repeat_internal<T>(f: UnaryFunction<T>, n: number): UnaryFunction<T> {
   return n === 0 ? x => x : x => f(repeat(f, n - 1)(x));
 }
 
@@ -34,10 +38,10 @@ export function repeat(func: Function, n: number): Function {
   }
 
   if (!Number.isInteger(n) || n < 0) {
-    throw new Error(`${repeat.name}: Expected non-negative integer, got ${n}`);
+    throw new InvalidParameterTypeError('non-negative integer', n, repeat.name);
   }
 
-  return repeatInternal(func as UnaryFunction<any>, n);
+  return repeat_internal(func, n);
 }
 
 /**
@@ -56,7 +60,7 @@ export function twice(func: Function): Function {
     throw new InvalidCallbackError(1, func, twice.name);
   }
 
-  return repeat(func, 2);
+  return repeat_internal(func, 2);
 }
 
 /**
@@ -75,5 +79,5 @@ export function thrice(func: Function): Function {
     throw new InvalidCallbackError(1, func, thrice.name);
   }
 
-  return repeat(func, 3);
+  return repeat_internal(func, 3);
 }
