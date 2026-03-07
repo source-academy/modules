@@ -4213,6 +4213,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-repeat@workspace:src/bundles/repeat"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     typescript: "npm:^5.8.2"
   languageName: unknown
   linkType: soft
