@@ -1,6 +1,6 @@
 import { Accidental, type MIDINote, type Note, type NoteName, type NoteWithOctave } from './types';
 
-export function parseNoteWithOctave(note: NoteWithOctave): [NoteName, Accidental, number] | null;
+export function parseNoteWithOctave(note: NoteWithOctave): [NoteName, Accidental, number];
 export function parseNoteWithOctave(note: unknown): [NoteName, Accidental, number] | null;
 export function parseNoteWithOctave(note: unknown): [NoteName, Accidental, number] | null {
   if (typeof note !== 'string') return null;
@@ -37,7 +37,11 @@ export function noteToValues(note: NoteWithOctave, func_name: string): [NoteName
   return res;
 }
 
-export function midiNoteToNoteName(midiNote: MIDINote, accidental: Accidental.FLAT | Accidental.SHARP, func_name: string): Note {
+export function midiNoteToNoteName(
+  midiNote: MIDINote,
+  accidental: Accidental.FLAT | Accidental.SHARP,
+  func_name: string
+): Note {
   switch (midiNote % 12) {
     case 0:
       return 'C';

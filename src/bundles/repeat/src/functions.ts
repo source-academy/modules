@@ -17,7 +17,7 @@ type UnaryFunction<T> = (x: T) => T;
  * @hidden
  */
 export function repeat_internal<T>(f: UnaryFunction<T>, n: number): UnaryFunction<T> {
-  return n === 0 ? x => x : x => f(repeat(f, n - 1)(x));
+  return n === 0 ? x => x : x => f(repeat_internal(f, n - 1)(x));
 }
 
 /**
