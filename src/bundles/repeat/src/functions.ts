@@ -13,7 +13,7 @@ import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 type UnaryFunction<T> = (x: T) => T;
 
 /**
- * Internal implementation of the repeat functions so that doesn't perform type checking
+ * Internal implementation of the repeat function that doesn't perform type checking
  * @hidden
  */
 export function repeat_internal<T>(f: UnaryFunction<T>, n: number): UnaryFunction<T> {

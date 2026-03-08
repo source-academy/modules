@@ -47,6 +47,16 @@ describe(funcs.is_tree, () => {
   });
 });
 
+describe(funcs.make_tree, () => {
+  it('throws an error when \'left\' is not a tree', () => {
+    expect(() => funcs.make_tree(0, 0 as any, null)).toThrowError('make_tree: Expected binary tree for left, got 0.');
+  });
+
+  it('throws an error when \'right\' is not a tree', () => {
+    expect(() => funcs.make_tree(0, null, 0 as any)).toThrowError('make_tree: Expected binary tree for right, got 0.');
+  });
+});
+
 describe(funcs.entry, () => {
   it('throws when argument is not a tree', () => {
     expect(() => funcs.entry(0 as any)).toThrowError('entry: Expected binary tree, got 0.');
