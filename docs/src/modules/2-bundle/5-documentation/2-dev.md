@@ -96,7 +96,7 @@ You should document:
 - Any interesting quirks or configurations required to get your bundle working
 - How the underlying implementation of your bundle actually works
 - Some way for other developers to contact you about your code
-- A list of places where your bundle is deployed or used (e.g. frontend assessements)
+- A list of places where your bundle is deployed or used (e.g. frontend assessments)
 
 ::: details The `pix_n_flix` bundle
 A good example for the last point is the `pix_n_flix` bundle, where many of the cadet facing functions, when called,

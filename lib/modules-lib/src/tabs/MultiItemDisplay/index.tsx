@@ -69,7 +69,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
         >
           Previous
         </Button>
-        <h3 className="bp3-text-large">
+        <h3 className="bp6-text-large">
           <div
             style={{
               display: 'flex',
