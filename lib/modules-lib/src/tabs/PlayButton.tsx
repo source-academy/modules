@@ -26,7 +26,9 @@ export type PlayButtonProps = ButtonComponentProps & {
 };
 
 /**
- * A button that toggles between two states: playing and not playing.
+ * A {@link ButtonComponent|Button} that toggles between two states: playing and not playing.
+ *
+ * @category Components
  */
 export default function PlayButton({
   playingText = 'Pause',

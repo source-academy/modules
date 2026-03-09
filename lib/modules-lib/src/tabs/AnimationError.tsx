@@ -6,6 +6,7 @@ export interface AnimationErrorProps {
 
 /**
  * React component for displaying errors related to animations
+ * @category Components
  */
 export default function AnimationError({ error }: AnimationErrorProps) {
   return <div style={{

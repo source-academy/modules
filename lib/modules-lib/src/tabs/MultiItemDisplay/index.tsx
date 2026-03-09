@@ -10,6 +10,8 @@ export interface MultiItemDisplayProps {
 /**
  * React Component for displaying multiple items
  * ![image](./image.png)
+ * 
+ * @category Components
  */
 export default function MultiItemDisplay(props: MultiItemDisplayProps) {
   // The actual index of the currently selected element

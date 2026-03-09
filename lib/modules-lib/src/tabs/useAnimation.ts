@@ -102,9 +102,9 @@ function useRerender() {
 
 /**
  * Hook for animations based around the `requestAnimationFrame` function. Calls the provided callback periodically.
+ * @category Hooks
  * @returns Animation Hook utilities
  */
-
 export function useAnimation({
   animationDuration,
   autoLoop,
