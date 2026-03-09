@@ -1,5 +1,4 @@
 import { Icon, Slider, Tooltip } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
 import { useMemo, useState } from 'react';
 import type { glAnimation } from '../types';
 import AnimationError from './AnimationError';
@@ -71,7 +70,7 @@ export default function AnimationCanvas(props: AnimCanvasProps) {
           disabled={Boolean(errored)}
           onClick={reset}
         >
-          <Icon icon={IconNames.RESET} />
+          <Icon icon='reset' />
         </ButtonComponent>
       </Tooltip>
       <Slider
