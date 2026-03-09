@@ -6,7 +6,7 @@
   "description": "Common library for tooling used by the modules repository",
   "devDependencies": {
     "@commander-js/extra-typings": "^14.0.0",
-    "@types/node": "^22.15.30",
+    "@types/node": "^24.0.0",
     "@vitejs/plugin-react": "^5.1.0",
     "@vitest/coverage-v8": "^4.0.18",
     "typescript": "^5.8.2",
