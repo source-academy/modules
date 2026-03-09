@@ -1,5 +1,5 @@
 import { Button, EditableText } from '@blueprintjs/core';
-import { ArrowRight, ArrowLeft } from '@blueprintjs/icons';
+import { ArrowLeft, ArrowRight } from '@blueprintjs/icons';
 import { clamp } from 'es-toolkit';
 import { useState } from 'react';
 

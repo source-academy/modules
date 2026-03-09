@@ -50,6 +50,7 @@ const renderTab = (
 ) => {
   const tabProps: TabProps = {
     id: tab.id,
+    // @ts-expect-error Disable until we migrate tabs to the new icon format?
     title: <TabIcon iconName={tab.iconName} tooltip={tab.label} shouldAlert={shouldAlert} />,
     // disabled: tab.disabled,
     className: 'side-content-tab'

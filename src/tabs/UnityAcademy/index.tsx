@@ -5,7 +5,7 @@
  */
 
 import { Button, Checkbox, NumericInput } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { IconNames, SendTo, Refresh } from '@blueprintjs/icons';
 import { getInstance } from '@sourceacademy/bundle-unity_academy/UnityAcademy';
 import { UNITY_ACADEMY_BACKEND_URL } from '@sourceacademy/bundle-unity_academy/config';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
@@ -42,7 +42,7 @@ class Unity3DTab extends React.Component<Props> {
         <p><b>Note that you need to use a <u>&apos;Native&apos;</u> variant of Source language in order to use this module.</b> If any strange error happens when using this module, please check whether you are using the &apos;Native&apos; variant of Source language or not.</p>
         <br/>
         <Button
-          icon={IconNames.SEND_TO}
+          icon={<SendTo />}
           active={true}
           onClick={() => {
             this.openUnityWindow(100);
@@ -54,7 +54,7 @@ class Unity3DTab extends React.Component<Props> {
         <p>If the frame rate is low when you are using Unity Academy with the default resolution, try using Unity Academy with 50% resolution here:</p>
         <p>50% resolution will display Unity Academy in a smaller area with lower quality and less detailed graphics but requires less device (especially GPU) performance than the default resolution.</p>
         <Button
-          icon={IconNames.SEND_TO}
+          icon={<SendTo />}
           active={true}
           onClick={() => {
             this.openUnityWindow(50);
@@ -67,7 +67,7 @@ class Unity3DTab extends React.Component<Props> {
         <div style={{ display: 'inline-flex' }}>
           <NumericInput
             style={{ width: 100 }}
-            leftIcon={IconNames.REFRESH}
+            leftIcon={<Refresh />}
             value={currentTargetFrameRate}
             max={120}
             min={15}
