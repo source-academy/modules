@@ -239,13 +239,13 @@ export default require => {
             children: (0, import_jsx_runtime.jsxs)(import_core.ButtonGroup, {
               children: [(0, import_jsx_runtime.jsx)(import_core.Button, {
                 className: "sa-live-video-button",
-                icon: import_icons.IconNames.VIDEO,
+                icon: (0, import_jsx_runtime.jsx)(import_icons.Video, {}),
                 active: videoIsActive,
                 onClick: this.onClickVideo,
                 text: "Play Video"
               }), (0, import_jsx_runtime.jsx)(import_core.Button, {
                 className: "sa-still-image-button",
-                icon: import_icons.IconNames.CAMERA,
+                icon: (0, import_jsx_runtime.jsx)(import_icons.Camera, {}),
                 active: !videoIsActive,
                 onClick: this.onClickStill,
                 text: "Pause Video"
@@ -260,7 +260,7 @@ export default require => {
               className: "sa-video-header-numeric-input",
               children: (0, import_jsx_runtime.jsx)(import_core.NumericInput, {
                 disabled: true,
-                leftIcon: import_icons.IconNames.HORIZONTAL_DISTRIBUTION,
+                leftIcon: (0, import_jsx_runtime.jsx)(import_icons.HorizontalDistribution, {}),
                 style: {
                   width: 70
                 },
@@ -276,7 +276,7 @@ export default require => {
               className: "sa-video-header-numeric-input",
               children: (0, import_jsx_runtime.jsx)(import_core.NumericInput, {
                 disabled: true,
-                leftIcon: import_icons.IconNames.VERTICAL_DISTRIBUTION,
+                leftIcon: (0, import_jsx_runtime.jsx)(import_icons.VerticalDistribution, {}),
                 style: {
                   width: 70
                 },
@@ -291,7 +291,7 @@ export default require => {
             }), (0, import_jsx_runtime.jsx)("div", {
               className: "sa-video-header-numeric-input",
               children: (0, import_jsx_runtime.jsx)(import_core.NumericInput, {
-                leftIcon: import_icons.IconNames.STOPWATCH,
+                leftIcon: (0, import_jsx_runtime.jsx)(import_icons.Stopwatch, {}),
                 style: {
                   width: 60
                 },

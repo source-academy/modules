@@ -11,14 +11,6 @@ export default require => {
     if (typeof require !== "undefined") return require.apply(this, arguments);
     throw Error('Dynamic require of "' + x + '" is not supported');
   });
-  var __esm = (fn, res) => function __init() {
-    return (fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res);
-  };
-  var __commonJS = (cb, mod) => function __require2() {
-    return (mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = {
-      exports: {}
-    }).exports, mod), mod.exports);
-  };
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
       get: all[name],
@@ -47,229 +39,6 @@ export default require => {
     if (kind && result) __defProp(target, key, result);
     return result;
   };
-  var init_define_process = __esm({
-    "<define:process>"() {}
-  });
-  var require_baseClamp = __commonJS({
-    "node_modules/lodash/_baseClamp.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      function baseClamp(number, lower, upper) {
-        if (number === number) {
-          if (upper !== void 0) {
-            number = number <= upper ? number : upper;
-          }
-          if (lower !== void 0) {
-            number = number >= lower ? number : lower;
-          }
-        }
-        return number;
-      }
-      module.exports = baseClamp;
-    }
-  });
-  var require_trimmedEndIndex = __commonJS({
-    "node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var reWhitespace = /\s/;
-      function trimmedEndIndex(string) {
-        var index = string.length;
-        while (index-- && reWhitespace.test(string.charAt(index))) {}
-        return index;
-      }
-      module.exports = trimmedEndIndex;
-    }
-  });
-  var require_baseTrim = __commonJS({
-    "node_modules/lodash/_baseTrim.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var trimmedEndIndex = require_trimmedEndIndex();
-      var reTrimStart = /^\s+/;
-      function baseTrim(string) {
-        return string ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, "") : string;
-      }
-      module.exports = baseTrim;
-    }
-  });
-  var require_isObject = __commonJS({
-    "node_modules/lodash/isObject.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      function isObject(value) {
-        var type = typeof value;
-        return value != null && (type == "object" || type == "function");
-      }
-      module.exports = isObject;
-    }
-  });
-  var require_freeGlobal = __commonJS({
-    "node_modules/lodash/_freeGlobal.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var freeGlobal = typeof globalThis == "object" && globalThis && globalThis.Object === Object && globalThis;
-      module.exports = freeGlobal;
-    }
-  });
-  var require_root = __commonJS({
-    "node_modules/lodash/_root.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var freeGlobal = require_freeGlobal();
-      var freeSelf = typeof self == "object" && self && self.Object === Object && self;
-      var root = freeGlobal || freeSelf || Function("return this")();
-      module.exports = root;
-    }
-  });
-  var require_Symbol = __commonJS({
-    "node_modules/lodash/_Symbol.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var root = require_root();
-      var Symbol2 = root.Symbol;
-      module.exports = Symbol2;
-    }
-  });
-  var require_getRawTag = __commonJS({
-    "node_modules/lodash/_getRawTag.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var Symbol2 = require_Symbol();
-      var objectProto = Object.prototype;
-      var hasOwnProperty = objectProto.hasOwnProperty;
-      var nativeObjectToString = objectProto.toString;
-      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
-      function getRawTag(value) {
-        var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
-        try {
-          value[symToStringTag] = void 0;
-          var unmasked = true;
-        } catch (e) {}
-        var result = nativeObjectToString.call(value);
-        if (unmasked) {
-          if (isOwn) {
-            value[symToStringTag] = tag;
-          } else {
-            delete value[symToStringTag];
-          }
-        }
-        return result;
-      }
-      module.exports = getRawTag;
-    }
-  });
-  var require_objectToString = __commonJS({
-    "node_modules/lodash/_objectToString.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var objectProto = Object.prototype;
-      var nativeObjectToString = objectProto.toString;
-      function objectToString(value) {
-        return nativeObjectToString.call(value);
-      }
-      module.exports = objectToString;
-    }
-  });
-  var require_baseGetTag = __commonJS({
-    "node_modules/lodash/_baseGetTag.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var Symbol2 = require_Symbol();
-      var getRawTag = require_getRawTag();
-      var objectToString = require_objectToString();
-      var nullTag = "[object Null]";
-      var undefinedTag = "[object Undefined]";
-      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
-      function baseGetTag(value) {
-        if (value == null) {
-          return value === void 0 ? undefinedTag : nullTag;
-        }
-        return symToStringTag && (symToStringTag in Object(value)) ? getRawTag(value) : objectToString(value);
-      }
-      module.exports = baseGetTag;
-    }
-  });
-  var require_isObjectLike = __commonJS({
-    "node_modules/lodash/isObjectLike.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      function isObjectLike(value) {
-        return value != null && typeof value == "object";
-      }
-      module.exports = isObjectLike;
-    }
-  });
-  var require_isSymbol = __commonJS({
-    "node_modules/lodash/isSymbol.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var baseGetTag = require_baseGetTag();
-      var isObjectLike = require_isObjectLike();
-      var symbolTag = "[object Symbol]";
-      function isSymbol(value) {
-        return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
-      }
-      module.exports = isSymbol;
-    }
-  });
-  var require_toNumber = __commonJS({
-    "node_modules/lodash/toNumber.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var baseTrim = require_baseTrim();
-      var isObject = require_isObject();
-      var isSymbol = require_isSymbol();
-      var NAN = 0 / 0;
-      var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-      var reIsBinary = /^0b[01]+$/i;
-      var reIsOctal = /^0o[0-7]+$/i;
-      var freeParseInt = parseInt;
-      function toNumber(value) {
-        if (typeof value == "number") {
-          return value;
-        }
-        if (isSymbol(value)) {
-          return NAN;
-        }
-        if (isObject(value)) {
-          var other = typeof value.valueOf == "function" ? value.valueOf() : value;
-          value = isObject(other) ? other + "" : other;
-        }
-        if (typeof value != "string") {
-          return value === 0 ? value : +value;
-        }
-        value = baseTrim(value);
-        var isBinary = reIsBinary.test(value);
-        return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
-      }
-      module.exports = toNumber;
-    }
-  });
-  var require_clamp = __commonJS({
-    "node_modules/lodash/clamp.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var baseClamp = require_baseClamp();
-      var toNumber = require_toNumber();
-      function clamp2(number, lower, upper) {
-        if (upper === void 0) {
-          upper = lower;
-          lower = void 0;
-        }
-        if (upper !== void 0) {
-          upper = toNumber(upper);
-          upper = upper === upper ? upper : 0;
-        }
-        if (lower !== void 0) {
-          lower = toNumber(lower);
-          lower = lower === lower ? lower : 0;
-        }
-        return baseClamp(toNumber(number), lower, upper);
-      }
-      module.exports = clamp2;
-    }
-  });
   var index_exports = {};
   __export(index_exports, {
     animate_3D_curve: () => animate_3D_curve,
@@ -310,12 +79,12 @@ export default require => {
     y_of: () => y_of,
     z_of: () => z_of
   });
-  init_define_process();
-  init_define_process();
-  var import_clamp = __toESM(require_clamp(), 1);
-  init_define_process();
-  init_define_process();
-  init_define_process();
+  function clamp(value, bound1, bound2) {
+    if (bound2 == null) {
+      return Math.min(value, bound1);
+    }
+    return Math.min(Math.max(value, bound1), bound2);
+  }
   var EPSILON = 1e-6;
   var ARRAY_TYPE = typeof Float32Array !== "undefined" ? Float32Array : Array;
   var RANDOM = Math.random;
@@ -381,7 +150,6 @@ export default require => {
     translate: () => translate,
     transpose: () => transpose
   });
-  init_define_process();
   function create() {
     var out = new ARRAY_TYPE(16);
     if (ARRAY_TYPE != Float32Array) {
@@ -1629,7 +1397,6 @@ export default require => {
     transformQuat: () => transformQuat,
     zero: () => zero
   });
-  init_define_process();
   function create2() {
     var out = new ARRAY_TYPE(3);
     if (ARRAY_TYPE != Float32Array) {
@@ -2226,8 +1993,6 @@ void main() {
     }
     return new CurveDrawn(drawMode, numPoints, space, drawCubeArray, curvePosArray, curveColorArray);
   }
-  init_define_process();
-  init_define_process();
   function createTypeMap() {
     const type_map2 = {};
     function registerType(name, declaration) {
@@ -2324,15 +2089,15 @@ ${variableDeclaration2};`);
       return new Point(x, y, z, [0, 0, 0, 1]);
     }
     static make_color_point(x, y, r, g, b) {
-      r = (0, import_clamp.default)(r, 0, 255);
-      g = (0, import_clamp.default)(g, 0, 255);
-      b = (0, import_clamp.default)(b, 0, 255);
+      r = clamp(r, 0, 255);
+      g = clamp(g, 0, 255);
+      b = clamp(b, 0, 255);
       return new Point(x, y, 0, [r / 255, g / 255, b / 255, 1]);
     }
     static make_3D_color_point(x, y, z, r, g, b) {
-      r = (0, import_clamp.default)(r, 0, 255);
-      g = (0, import_clamp.default)(g, 0, 255);
-      b = (0, import_clamp.default)(b, 0, 255);
+      r = clamp(r, 0, 255);
+      g = clamp(g, 0, 255);
+      b = clamp(b, 0, 255);
       return new Point(x, y, z, [r / 255, g / 255, b / 255, 1]);
     }
     static connect_ends(curve1, curve2) {
@@ -2479,14 +2244,10 @@ ${variableDeclaration2};`);
   var unit_line = CurveFunctions.unit_line;
   var unit_line_at = CurveFunctions.unit_line_at;
   var arc = CurveFunctions.arc;
-  init_define_process();
-  init_define_process();
   function isFunctionOfLength(f, l) {
     return typeof f === "function" && f.length === l;
   }
   var import_context = __toESM(__require("js-slang/context"), 1);
-  init_define_process();
-  init_define_process();
   var glAnimation = class {
     constructor(duration, fps) {
       this.duration = duration;

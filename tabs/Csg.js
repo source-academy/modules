@@ -15283,7 +15283,7 @@ void main () {
     default: () => index_default
   });
   init_define_process();
-  var import_icons2 = __require("@blueprintjs/icons");
+  var import_icons = __require("@blueprintjs/icons");
   init_define_process();
   var Core = class _Core {
     static initialize(csgModuleState) {
@@ -15305,7 +15305,6 @@ void main () {
   }
   init_define_process();
   var import_core4 = __require("@blueprintjs/core");
-  var import_icons = __require("@blueprintjs/icons");
   init_define_process();
   init_define_process();
   var import_vec3 = __toESM(require_vec3(), 1);
@@ -15792,19 +15791,19 @@ void main () {
             },
             children: [(0, import_jsx_runtime2.jsx)(HoverControlHint, {
               tooltipText: "Zoom in: Scroll up",
-              iconName: import_icons.IconNames.ZOOM_IN
+              iconName: "zoom-in"
             }), (0, import_jsx_runtime2.jsx)(HoverControlHint, {
               tooltipText: "Zoom out: Scroll down",
-              iconName: import_icons.IconNames.ZOOM_OUT
+              iconName: "zoom-out"
             }), (0, import_jsx_runtime2.jsx)(HoverControlHint, {
               tooltipText: "Zoom to fit: Double left-click",
-              iconName: import_icons.IconNames.ZOOM_TO_FIT
+              iconName: "zoom-to-fit"
             }), (0, import_jsx_runtime2.jsx)(HoverControlHint, {
               tooltipText: "Rotate: Left-click",
-              iconName: import_icons.IconNames.REPEAT
+              iconName: "repeat"
             }), (0, import_jsx_runtime2.jsx)(HoverControlHint, {
               tooltipText: "Pan: Middle-click OR shift + left-click",
-              iconName: import_icons.IconNames.MOVE
+              iconName: "move"
             })]
           }), (0, import_jsx_runtime2.jsx)("div", {
             style: {
@@ -15860,7 +15859,7 @@ void main () {
         componentNumber: Core.nextComponent()
       });
     },
-    iconName: import_icons2.IconNames.SHAPES,
+    iconName: import_icons.IconNames.SHAPES,
     label: "CSG Tab"
   });
   return __toCommonJS(index_exports);

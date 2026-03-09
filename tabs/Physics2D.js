@@ -12207,7 +12207,7 @@ export default require => {
             children: (0, import_jsx_runtime2.jsx)(import_core2.Button, {
               onClick: this.onPlayButtonClick,
               children: (0, import_jsx_runtime2.jsx)(import_core2.Icon, {
-                icon: this.state.isPlaying ? import_icons.IconNames.PAUSE : import_icons.IconNames.PLAY
+                icon: this.state.isPlaying ? (0, import_jsx_runtime2.jsx)(import_icons.Pause, {}) : (0, import_jsx_runtime2.jsx)(import_icons.Play, {})
               })
             })
           })

@@ -90,7 +90,7 @@ export default require => {
             }
           })
         }), (0, import_jsx_runtime.jsx)(import_core.Button, {
-          icon: import_icons.IconNames.CROSS,
+          icon: (0, import_jsx_runtime.jsx)(import_icons.Cross, {}),
           active: true,
           onClick: () => {
             moduleInstance.setShowUnityComponent(0);
@@ -103,7 +103,7 @@ export default require => {
             width: "15%"
           }
         }), (0, import_jsx_runtime.jsx)(import_core.Button, {
-          icon: import_icons.IconNames.DISABLE,
+          icon: (0, import_jsx_runtime.jsx)(import_icons.Disable, {}),
           active: true,
           onClick: () => {
             moduleInstance.terminate();
@@ -183,7 +183,7 @@ export default require => {
             }), " variant of Source language in order to use this module."]
           }), " If any strange error happens when using this module, please check whether you are using the 'Native' variant of Source language or not."]
         }), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)(import_core2.Button, {
-          icon: import_icons2.IconNames.SEND_TO,
+          icon: (0, import_jsx_runtime2.jsx)(import_icons2.SendTo, {}),
           active: true,
           onClick: () => {
             this.openUnityWindow(100);
@@ -194,7 +194,7 @@ export default require => {
         }), (0, import_jsx_runtime2.jsx)("p", {
           children: "50% resolution will display Unity Academy in a smaller area with lower quality and less detailed graphics but requires less device (especially GPU) performance than the default resolution."
         }), (0, import_jsx_runtime2.jsx)(import_core2.Button, {
-          icon: import_icons2.IconNames.SEND_TO,
+          icon: (0, import_jsx_runtime2.jsx)(import_icons2.SendTo, {}),
           active: true,
           onClick: () => {
             this.openUnityWindow(50);
@@ -210,7 +210,7 @@ export default require => {
             style: {
               width: 100
             },
-            leftIcon: import_icons2.IconNames.REFRESH,
+            leftIcon: (0, import_jsx_runtime2.jsx)(import_icons2.Refresh, {}),
             value: currentTargetFrameRate,
             max: 120,
             min: 15,

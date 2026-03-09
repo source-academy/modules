@@ -3853,13 +3853,13 @@ export default require => {
       return (0, import_jsx_runtime.jsxs)("div", {
         children: [(0, import_jsx_runtime.jsx)(import_core.Button, {
           className: "programmable-repl-button",
-          icon: import_icons.IconNames.PLAY,
+          icon: (0, import_jsx_runtime.jsx)(import_icons.Play, {}),
           active: true,
           onClick: () => this.replInstance.runCode(),
           text: "Run"
         }), (0, import_jsx_runtime.jsx)(import_core.Button, {
           className: "programmable-repl-button",
-          icon: import_icons.IconNames.FLOPPY_DISK,
+          icon: (0, import_jsx_runtime.jsx)(import_icons.FloppyDisk, {}),
           active: true,
           onClick: () => this.replInstance.saveEditorContent(),
           text: "Save"

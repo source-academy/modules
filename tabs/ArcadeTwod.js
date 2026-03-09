@@ -79621,7 +79621,7 @@ export default require => {
       return (0, import_jsx_runtime.jsx)(import_core.ButtonGroup, {
         children: (0, import_jsx_runtime.jsx)(import_core.Button, {
           className: "a2d-play-toggle-button",
-          icon: this.state.isPaused ? import_icons.IconNames.PLAY : import_icons.IconNames.PAUSE,
+          icon: this.state.isPaused ? (0, import_jsx_runtime.jsx)(import_icons.Play, {}) : (0, import_jsx_runtime.jsx)(import_icons.Pause, {}),
           active: false,
           onClick: () => this.toggleGamePause(),
           text: this.state.isPaused ? "Resume Game" : "Pause Game"

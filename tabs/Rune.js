@@ -11,14 +11,6 @@ export default require => {
     if (typeof require !== "undefined") return require.apply(this, arguments);
     throw Error('Dynamic require of "' + x + '" is not supported');
   });
-  var __esm = (fn, res) => function __init() {
-    return (fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res);
-  };
-  var __commonJS = (cb, mod) => function __require2() {
-    return (mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = {
-      exports: {}
-    }).exports, mod), mod.exports);
-  };
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
       get: all[name],
@@ -41,458 +33,17 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var init_define_process = __esm({
-    "<define:process>"() {}
-  });
-  var require_baseClamp = __commonJS({
-    "../../bundles/rune/node_modules/lodash/_baseClamp.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      function baseClamp(number, lower, upper) {
-        if (number === number) {
-          if (upper !== void 0) {
-            number = number <= upper ? number : upper;
-          }
-          if (lower !== void 0) {
-            number = number >= lower ? number : lower;
-          }
-        }
-        return number;
-      }
-      module.exports = baseClamp;
-    }
-  });
-  var require_trimmedEndIndex = __commonJS({
-    "../../bundles/rune/node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var reWhitespace = /\s/;
-      function trimmedEndIndex(string) {
-        var index = string.length;
-        while (index-- && reWhitespace.test(string.charAt(index))) {}
-        return index;
-      }
-      module.exports = trimmedEndIndex;
-    }
-  });
-  var require_baseTrim = __commonJS({
-    "../../bundles/rune/node_modules/lodash/_baseTrim.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var trimmedEndIndex = require_trimmedEndIndex();
-      var reTrimStart = /^\s+/;
-      function baseTrim(string) {
-        return string ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, "") : string;
-      }
-      module.exports = baseTrim;
-    }
-  });
-  var require_isObject = __commonJS({
-    "../../bundles/rune/node_modules/lodash/isObject.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      function isObject(value) {
-        var type = typeof value;
-        return value != null && (type == "object" || type == "function");
-      }
-      module.exports = isObject;
-    }
-  });
-  var require_freeGlobal = __commonJS({
-    "../../bundles/rune/node_modules/lodash/_freeGlobal.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var freeGlobal = typeof globalThis == "object" && globalThis && globalThis.Object === Object && globalThis;
-      module.exports = freeGlobal;
-    }
-  });
-  var require_root = __commonJS({
-    "../../bundles/rune/node_modules/lodash/_root.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var freeGlobal = require_freeGlobal();
-      var freeSelf = typeof self == "object" && self && self.Object === Object && self;
-      var root = freeGlobal || freeSelf || Function("return this")();
-      module.exports = root;
-    }
-  });
-  var require_Symbol = __commonJS({
-    "../../bundles/rune/node_modules/lodash/_Symbol.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var root = require_root();
-      var Symbol2 = root.Symbol;
-      module.exports = Symbol2;
-    }
-  });
-  var require_getRawTag = __commonJS({
-    "../../bundles/rune/node_modules/lodash/_getRawTag.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var Symbol2 = require_Symbol();
-      var objectProto = Object.prototype;
-      var hasOwnProperty = objectProto.hasOwnProperty;
-      var nativeObjectToString = objectProto.toString;
-      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
-      function getRawTag(value) {
-        var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
-        try {
-          value[symToStringTag] = void 0;
-          var unmasked = true;
-        } catch (e) {}
-        var result = nativeObjectToString.call(value);
-        if (unmasked) {
-          if (isOwn) {
-            value[symToStringTag] = tag;
-          } else {
-            delete value[symToStringTag];
-          }
-        }
-        return result;
-      }
-      module.exports = getRawTag;
-    }
-  });
-  var require_objectToString = __commonJS({
-    "../../bundles/rune/node_modules/lodash/_objectToString.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var objectProto = Object.prototype;
-      var nativeObjectToString = objectProto.toString;
-      function objectToString(value) {
-        return nativeObjectToString.call(value);
-      }
-      module.exports = objectToString;
-    }
-  });
-  var require_baseGetTag = __commonJS({
-    "../../bundles/rune/node_modules/lodash/_baseGetTag.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var Symbol2 = require_Symbol();
-      var getRawTag = require_getRawTag();
-      var objectToString = require_objectToString();
-      var nullTag = "[object Null]";
-      var undefinedTag = "[object Undefined]";
-      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
-      function baseGetTag(value) {
-        if (value == null) {
-          return value === void 0 ? undefinedTag : nullTag;
-        }
-        return symToStringTag && (symToStringTag in Object(value)) ? getRawTag(value) : objectToString(value);
-      }
-      module.exports = baseGetTag;
-    }
-  });
-  var require_isObjectLike = __commonJS({
-    "../../bundles/rune/node_modules/lodash/isObjectLike.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      function isObjectLike(value) {
-        return value != null && typeof value == "object";
-      }
-      module.exports = isObjectLike;
-    }
-  });
-  var require_isSymbol = __commonJS({
-    "../../bundles/rune/node_modules/lodash/isSymbol.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var baseGetTag = require_baseGetTag();
-      var isObjectLike = require_isObjectLike();
-      var symbolTag = "[object Symbol]";
-      function isSymbol(value) {
-        return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
-      }
-      module.exports = isSymbol;
-    }
-  });
-  var require_toNumber = __commonJS({
-    "../../bundles/rune/node_modules/lodash/toNumber.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var baseTrim = require_baseTrim();
-      var isObject = require_isObject();
-      var isSymbol = require_isSymbol();
-      var NAN = 0 / 0;
-      var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-      var reIsBinary = /^0b[01]+$/i;
-      var reIsOctal = /^0o[0-7]+$/i;
-      var freeParseInt = parseInt;
-      function toNumber(value) {
-        if (typeof value == "number") {
-          return value;
-        }
-        if (isSymbol(value)) {
-          return NAN;
-        }
-        if (isObject(value)) {
-          var other = typeof value.valueOf == "function" ? value.valueOf() : value;
-          value = isObject(other) ? other + "" : other;
-        }
-        if (typeof value != "string") {
-          return value === 0 ? value : +value;
-        }
-        value = baseTrim(value);
-        var isBinary = reIsBinary.test(value);
-        return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
-      }
-      module.exports = toNumber;
-    }
-  });
-  var require_clamp = __commonJS({
-    "../../bundles/rune/node_modules/lodash/clamp.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var baseClamp = require_baseClamp();
-      var toNumber = require_toNumber();
-      function clamp3(number, lower, upper) {
-        if (upper === void 0) {
-          upper = lower;
-          lower = void 0;
-        }
-        if (upper !== void 0) {
-          upper = toNumber(upper);
-          upper = upper === upper ? upper : 0;
-        }
-        if (lower !== void 0) {
-          lower = toNumber(lower);
-          lower = lower === lower ? lower : 0;
-        }
-        return baseClamp(toNumber(number), lower, upper);
-      }
-      module.exports = clamp3;
-    }
-  });
-  var require_baseClamp2 = __commonJS({
-    "../../../lib/modules-lib/node_modules/lodash/_baseClamp.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      function baseClamp(number, lower, upper) {
-        if (number === number) {
-          if (upper !== void 0) {
-            number = number <= upper ? number : upper;
-          }
-          if (lower !== void 0) {
-            number = number >= lower ? number : lower;
-          }
-        }
-        return number;
-      }
-      module.exports = baseClamp;
-    }
-  });
-  var require_trimmedEndIndex2 = __commonJS({
-    "../../../lib/modules-lib/node_modules/lodash/_trimmedEndIndex.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var reWhitespace = /\s/;
-      function trimmedEndIndex(string) {
-        var index = string.length;
-        while (index-- && reWhitespace.test(string.charAt(index))) {}
-        return index;
-      }
-      module.exports = trimmedEndIndex;
-    }
-  });
-  var require_baseTrim2 = __commonJS({
-    "../../../lib/modules-lib/node_modules/lodash/_baseTrim.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var trimmedEndIndex = require_trimmedEndIndex2();
-      var reTrimStart = /^\s+/;
-      function baseTrim(string) {
-        return string ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, "") : string;
-      }
-      module.exports = baseTrim;
-    }
-  });
-  var require_isObject2 = __commonJS({
-    "../../../lib/modules-lib/node_modules/lodash/isObject.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      function isObject(value) {
-        var type = typeof value;
-        return value != null && (type == "object" || type == "function");
-      }
-      module.exports = isObject;
-    }
-  });
-  var require_freeGlobal2 = __commonJS({
-    "../../../lib/modules-lib/node_modules/lodash/_freeGlobal.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var freeGlobal = typeof globalThis == "object" && globalThis && globalThis.Object === Object && globalThis;
-      module.exports = freeGlobal;
-    }
-  });
-  var require_root2 = __commonJS({
-    "../../../lib/modules-lib/node_modules/lodash/_root.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var freeGlobal = require_freeGlobal2();
-      var freeSelf = typeof self == "object" && self && self.Object === Object && self;
-      var root = freeGlobal || freeSelf || Function("return this")();
-      module.exports = root;
-    }
-  });
-  var require_Symbol2 = __commonJS({
-    "../../../lib/modules-lib/node_modules/lodash/_Symbol.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var root = require_root2();
-      var Symbol2 = root.Symbol;
-      module.exports = Symbol2;
-    }
-  });
-  var require_getRawTag2 = __commonJS({
-    "../../../lib/modules-lib/node_modules/lodash/_getRawTag.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var Symbol2 = require_Symbol2();
-      var objectProto = Object.prototype;
-      var hasOwnProperty = objectProto.hasOwnProperty;
-      var nativeObjectToString = objectProto.toString;
-      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
-      function getRawTag(value) {
-        var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
-        try {
-          value[symToStringTag] = void 0;
-          var unmasked = true;
-        } catch (e) {}
-        var result = nativeObjectToString.call(value);
-        if (unmasked) {
-          if (isOwn) {
-            value[symToStringTag] = tag;
-          } else {
-            delete value[symToStringTag];
-          }
-        }
-        return result;
-      }
-      module.exports = getRawTag;
-    }
-  });
-  var require_objectToString2 = __commonJS({
-    "../../../lib/modules-lib/node_modules/lodash/_objectToString.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var objectProto = Object.prototype;
-      var nativeObjectToString = objectProto.toString;
-      function objectToString(value) {
-        return nativeObjectToString.call(value);
-      }
-      module.exports = objectToString;
-    }
-  });
-  var require_baseGetTag2 = __commonJS({
-    "../../../lib/modules-lib/node_modules/lodash/_baseGetTag.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var Symbol2 = require_Symbol2();
-      var getRawTag = require_getRawTag2();
-      var objectToString = require_objectToString2();
-      var nullTag = "[object Null]";
-      var undefinedTag = "[object Undefined]";
-      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
-      function baseGetTag(value) {
-        if (value == null) {
-          return value === void 0 ? undefinedTag : nullTag;
-        }
-        return symToStringTag && (symToStringTag in Object(value)) ? getRawTag(value) : objectToString(value);
-      }
-      module.exports = baseGetTag;
-    }
-  });
-  var require_isObjectLike2 = __commonJS({
-    "../../../lib/modules-lib/node_modules/lodash/isObjectLike.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      function isObjectLike(value) {
-        return value != null && typeof value == "object";
-      }
-      module.exports = isObjectLike;
-    }
-  });
-  var require_isSymbol2 = __commonJS({
-    "../../../lib/modules-lib/node_modules/lodash/isSymbol.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var baseGetTag = require_baseGetTag2();
-      var isObjectLike = require_isObjectLike2();
-      var symbolTag = "[object Symbol]";
-      function isSymbol(value) {
-        return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
-      }
-      module.exports = isSymbol;
-    }
-  });
-  var require_toNumber2 = __commonJS({
-    "../../../lib/modules-lib/node_modules/lodash/toNumber.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var baseTrim = require_baseTrim2();
-      var isObject = require_isObject2();
-      var isSymbol = require_isSymbol2();
-      var NAN = 0 / 0;
-      var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-      var reIsBinary = /^0b[01]+$/i;
-      var reIsOctal = /^0o[0-7]+$/i;
-      var freeParseInt = parseInt;
-      function toNumber(value) {
-        if (typeof value == "number") {
-          return value;
-        }
-        if (isSymbol(value)) {
-          return NAN;
-        }
-        if (isObject(value)) {
-          var other = typeof value.valueOf == "function" ? value.valueOf() : value;
-          value = isObject(other) ? other + "" : other;
-        }
-        if (typeof value != "string") {
-          return value === 0 ? value : +value;
-        }
-        value = baseTrim(value);
-        var isBinary = reIsBinary.test(value);
-        return isBinary || reIsOctal.test(value) ? freeParseInt(value.slice(2), isBinary ? 2 : 8) : reIsBadHex.test(value) ? NAN : +value;
-      }
-      module.exports = toNumber;
-    }
-  });
-  var require_clamp2 = __commonJS({
-    "../../../lib/modules-lib/node_modules/lodash/clamp.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var baseClamp = require_baseClamp2();
-      var toNumber = require_toNumber2();
-      function clamp3(number, lower, upper) {
-        if (upper === void 0) {
-          upper = lower;
-          lower = void 0;
-        }
-        if (upper !== void 0) {
-          upper = toNumber(upper);
-          upper = upper === upper ? upper : 0;
-        }
-        if (lower !== void 0) {
-          lower = toNumber(lower);
-          lower = lower === lower ? lower : 0;
-        }
-        return baseClamp(toNumber(number), lower, upper);
-      }
-      module.exports = clamp3;
-    }
-  });
   var index_exports = {};
   __export(index_exports, {
     RuneTab: () => RuneTab,
     default: () => index_default
   });
-  init_define_process();
-  init_define_process();
-  init_define_process();
-  init_define_process();
+  function clamp(value, bound1, bound2) {
+    if (bound2 == null) {
+      return Math.min(value, bound1);
+    }
+    return Math.min(Math.max(value, bound1), bound2);
+  }
   var EPSILON = 1e-6;
   var ARRAY_TYPE = typeof Float32Array !== "undefined" ? Float32Array : Array;
   var RANDOM = Math.random;
@@ -558,7 +109,6 @@ export default require => {
     translate: () => translate,
     transpose: () => transpose
   });
-  init_define_process();
   function create() {
     var out = new ARRAY_TYPE(16);
     if (ARRAY_TYPE != Float32Array) {
@@ -1806,7 +1356,6 @@ export default require => {
     transformQuat: () => transformQuat,
     zero: () => zero
   });
-  init_define_process();
   function create2() {
     var out = new ARRAY_TYPE(3);
     if (ARRAY_TYPE != Float32Array) {
@@ -2138,9 +1687,6 @@ export default require => {
       return a;
     };
   })();
-  var import_clamp = __toESM(require_clamp(), 1);
-  init_define_process();
-  init_define_process();
   var glAnimation = class {
     constructor(duration, fps) {
       this.duration = duration;
@@ -2148,7 +1694,6 @@ export default require => {
     }
   };
   glAnimation.isAnimation = obj => obj instanceof glAnimation;
-  init_define_process();
   function loadShader(gl, type, source) {
     const shader = gl.createShader(type);
     if (!shader) {
@@ -2219,8 +1764,6 @@ export default require => {
       texture
     };
   }
-  init_define_process();
-  init_define_process();
   function createTypeMap() {
     const type_map2 = {};
     function registerType(name, declaration) {
@@ -2511,8 +2054,6 @@ void main(void) {
     gl_FragColor.a = 1.0;
   }
   `;
-  init_define_process();
-  init_define_process();
   function hexToColor(hex, func_name) {
     const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
     const groups = regex.exec(hex);
@@ -2864,7 +2405,7 @@ void main(void) {
       throwIfNotFraction(frac, "frac", _RuneFunctions.overlay_frac.name);
       const minFrac = 1e-6;
       const maxFrac = 1 - minFrac;
-      const useFrac = (0, import_clamp.default)(frac, minFrac, maxFrac);
+      const useFrac = clamp(frac, minFrac, maxFrac);
       const frontMat = mat4_exports.create();
       mat4_exports.scale(frontMat, frontMat, vec3_exports.fromValues(1, 1, useFrac));
       const front = Rune.of({
@@ -3194,12 +2735,10 @@ void main(void) {
   var turn_upside_down = RuneFunctions.turn_upside_down;
   var yellow = RuneColours.yellow;
   var white = RuneColours.white;
-  init_define_process();
   var import_jsx_runtime6 = __require("react/jsx-runtime");
   var import_core6 = __require("@blueprintjs/core");
   var import_icons3 = __require("@blueprintjs/icons");
   var import_react3 = __require("react");
-  init_define_process();
   var import_jsx_runtime = __require("react/jsx-runtime");
   var import_core = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
@@ -3217,7 +2756,7 @@ void main(void) {
           alignItems: "center"
         },
         children: [(0, import_jsx_runtime.jsx)(import_core.Icon, {
-          icon: import_icons.IconNames.WARNING_SIGN,
+          icon: (0, import_jsx_runtime.jsx)(import_icons.WarningSign, {}),
           size: 90
         }), (0, import_jsx_runtime.jsxs)("div", {
           style: {
@@ -3243,7 +2782,6 @@ void main(void) {
       })]
     });
   }
-  init_define_process();
   var import_jsx_runtime2 = __require("react/jsx-runtime");
   var import_core2 = __require("@blueprintjs/core");
   var __rest = function (s, e) {
@@ -3265,7 +2803,6 @@ void main(void) {
       checked: isAutoLooping
     }, props));
   }
-  init_define_process();
   var import_jsx_runtime3 = __require("react/jsx-runtime");
   var import_core3 = __require("@blueprintjs/core");
   var defaultOptions = {
@@ -3279,7 +2816,6 @@ void main(void) {
     const buttonProps = Object.assign(Object.assign({}, defaultOptions), props);
     return props.disabled ? (0, import_jsx_runtime3.jsx)(import_core3.AnchorButton, Object.assign({}, buttonProps)) : (0, import_jsx_runtime3.jsx)(import_core3.Button, Object.assign({}, buttonProps));
   }
-  init_define_process();
   var import_jsx_runtime4 = __require("react/jsx-runtime");
   var import_core4 = __require("@blueprintjs/core");
   var import_icons2 = __require("@blueprintjs/icons");
@@ -3289,15 +2825,13 @@ void main(void) {
       placement: "top",
       children: (0, import_jsx_runtime4.jsx)(ButtonComponent, Object.assign({}, props, {
         children: (0, import_jsx_runtime4.jsx)(import_core4.Icon, {
-          icon: props.isPlaying ? import_icons2.IconNames.PAUSE : import_icons2.IconNames.PLAY
+          icon: props.isPlaying ? (0, import_jsx_runtime4.jsx)(import_icons2.Pause, {}) : (0, import_jsx_runtime4.jsx)(import_icons2.Play, {})
         })
       }))
     });
   }
-  init_define_process();
   var import_jsx_runtime5 = __require("react/jsx-runtime");
   var import_react = __require("react");
-  init_define_process();
   var import_core5 = __require("@blueprintjs/core");
   var SA_TAB_ICON_SIZE = import_core5.IconSize.LARGE;
   var BP_TAB_BUTTON_MARGIN = "20px";
@@ -3319,7 +2853,6 @@ void main(void) {
   });
   WebGLCanvas.displayName = "WebGLCanvas";
   var WebGLCanvas_default = WebGLCanvas;
-  init_define_process();
   var import_react2 = __require("react");
   function useRerender() {
     const [, setRenderer] = (0, import_react2.useState)(true);
@@ -3474,7 +3007,7 @@ void main(void) {
           disabled: Boolean(errored),
           onClick: reset,
           children: (0, import_jsx_runtime6.jsx)(import_core6.Icon, {
-            icon: import_icons3.IconNames.RESET
+            icon: (0, import_jsx_runtime6.jsx)(import_icons3.Reset, {})
           })
         })
       }), (0, import_jsx_runtime6.jsx)(import_core6.Slider, {
@@ -3533,11 +3066,15 @@ void main(void) {
       })]
     });
   }
-  init_define_process();
   var import_jsx_runtime7 = __require("react/jsx-runtime");
   var import_core7 = __require("@blueprintjs/core");
   var import_icons4 = __require("@blueprintjs/icons");
-  var import_clamp2 = __toESM(require_clamp2(), 1);
+  function clamp2(value, bound1, bound2) {
+    if (bound2 == null) {
+      return Math.min(value, bound1);
+    }
+    return Math.min(Math.max(value, bound1), bound2);
+  }
   var import_react4 = __require("react");
   function MultiItemDisplay(props) {
     const [currentStep, setCurrentStep] = (0, import_react4.useState)(0);
@@ -3575,7 +3112,7 @@ void main(void) {
           tabIndex: 0,
           large: true,
           outlined: true,
-          icon: import_icons4.IconNames.ARROW_LEFT,
+          icon: (0, import_jsx_runtime7.jsx)(import_icons4.ArrowLeft, {}),
           onClick: () => {
             changeStep(currentStep - 1);
             setStepEditorValue(currentStep.toString());
@@ -3610,7 +3147,7 @@ void main(void) {
                 onConfirm: value => {
                   if (value) {
                     const newStep = parseInt(value);
-                    const clampedStep = (0, import_clamp2.default)(newStep, 1, props.elements.length);
+                    const clampedStep = clamp2(newStep, 1, props.elements.length);
                     if (clampedStep - 1 !== currentStep) {
                       changeStep(clampedStep - 1);
                     }
@@ -3638,7 +3175,7 @@ void main(void) {
           },
           large: true,
           outlined: true,
-          icon: import_icons4.IconNames.ARROW_RIGHT,
+          icon: (0, import_jsx_runtime7.jsx)(import_icons4.ArrowRight, {}),
           tabIndex: 0,
           onClick: () => {
             changeStep(currentStep + 1);
@@ -3660,14 +3197,12 @@ void main(void) {
       })]
     });
   }
-  init_define_process();
   function getModuleState(debuggerContext, name) {
     return debuggerContext.context.moduleContexts[name].state;
   }
   function defineTab(tab) {
     return tab;
   }
-  init_define_process();
   var import_react5 = __toESM(__require("react"), 1);
   var import_jsx_runtime8 = __require("react/jsx-runtime");
   function HollusionCanvas({rune}) {

@@ -93,7 +93,7 @@ export default require => {
           },
           children: [(0, import_jsx_runtime.jsx)(import_core.Button, {
             className: "nbody-pause-toggle-button",
-            icon: this.state.isPlaying ? import_icons.IconNames.PAUSE : import_icons.IconNames.PLAY,
+            icon: this.state.isPlaying ? (0, import_jsx_runtime.jsx)(import_icons.Pause, {}) : (0, import_jsx_runtime.jsx)(import_icons.Play, {}),
             active: false,
             onClick: () => this.toggleSimPause(),
             text: this.state.isPlaying ? "Pause" : "Play",
@@ -102,7 +102,7 @@ export default require => {
             }
           }), (0, import_jsx_runtime.jsx)(import_core.Button, {
             className: "nbody-trails-toggle-button",
-            icon: import_icons.IconNames.ROUTE,
+            icon: (0, import_jsx_runtime.jsx)(import_icons.Route, {}),
             active: this.state.showTrails,
             onClick: () => this.toggleShowTrails(),
             style: {
