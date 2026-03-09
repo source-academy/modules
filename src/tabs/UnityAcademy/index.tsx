@@ -5,7 +5,7 @@
  */
 
 import { Button, Checkbox, NumericInput } from '@blueprintjs/core';
-import { IconNames, SendTo, Refresh } from '@blueprintjs/icons';
+import { IconNames, Refresh, SendTo } from '@blueprintjs/icons';
 import { getInstance } from '@sourceacademy/bundle-unity_academy/UnityAcademy';
 import { UNITY_ACADEMY_BACKEND_URL } from '@sourceacademy/bundle-unity_academy/config';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';

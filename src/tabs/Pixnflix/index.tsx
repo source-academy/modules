@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, Divider, NumericInput } from '@blueprintjs/core';
-import { Camera, Video, HorizontalDistribution, VerticalDistribution, Stopwatch } from '@blueprintjs/icons';
+import { Camera, HorizontalDistribution, Stopwatch, VerticalDistribution, Video } from '@blueprintjs/icons';
 import {
   DEFAULT_FPS,
   DEFAULT_HEIGHT,
