@@ -183,7 +183,6 @@ test('Matches snapshot', () => {
   expect(<Component />).toMatchSnapshot();
 });
 ```
-
 :::
 
 ## Working with Module Contexts from within Tabs
