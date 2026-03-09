@@ -55,7 +55,7 @@ const mockDirectory: Record<string, string | Record<string, unknown>> = {
         'package.json': JSON.stringify({
           name: '@sourceacademy/tab-Tab0',
           dependencies: {
-            'es-toolkit': '^1.44.0',
+            'lodash': '^4.17.20',
             '@sourceacademy/bundle-bundle0': 'workspace:^',
           },
           devDependencies: {
