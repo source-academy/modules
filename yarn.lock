@@ -4419,7 +4419,7 @@ __metadata:
     "@sourceacademy/modules-repotools": "workspace:^"
     "@types/estree": "npm:^1.0.0"
     "@types/http-server": "npm:^0.12.4"
-    "@types/node": "npm:^22.15.30"
+    "@types/node": "npm:^24.0.0"
     "@vitejs/plugin-react": "npm:^5.1.0"
     "@vitest/browser-playwright": "npm:^4.0.18"
     "@vitest/coverage-v8": "npm:^4.0.18"
@@ -4500,7 +4500,7 @@ __metadata:
     "@actions/core": "npm:^1.11.1"
     "@actions/exec": "npm:^3.0.0"
     "@sourceacademy/modules-repotools": "workspace:^"
-    "@types/node": "npm:^22.15.30"
+    "@types/node": "npm:^24.0.0"
     es-toolkit: "npm:^1.44.0"
     snyk-nodejs-lockfile-parser: "npm:^2.4.2"
     typescript: "npm:^5.8.2"
@@ -4540,7 +4540,7 @@ __metadata:
   resolution: "@sourceacademy/modules-repotools@workspace:lib/repotools"
   dependencies:
     "@commander-js/extra-typings": "npm:^14.0.0"
-    "@types/node": "npm:^22.15.30"
+    "@types/node": "npm:^24.0.0"
     "@vitejs/plugin-react": "npm:^5.1.0"
     "@vitest/browser-playwright": "npm:^4.0.18"
     "@vitest/coverage-v8": "npm:^4.0.18"
@@ -4568,7 +4568,7 @@ __metadata:
     "@sourceacademy/modules-repotools": "workspace:^"
     "@sourceacademy/vitest-reporter": "workspace:^"
     "@stylistic/eslint-plugin": "npm:^5.0.0"
-    "@types/node": "npm:^22.15.30"
+    "@types/node": "npm:^24.0.0"
     "@types/react": "npm:^18.3.1"
     "@types/react-dom": "npm:^18.3.1"
     "@vitest/coverage-v8": "npm:^4.0.18"
@@ -4912,7 +4912,7 @@ __metadata:
   resolution: "@sourceacademy/vitest-reporter@workspace:lib/vitest-reporter"
   dependencies:
     "@types/istanbul-lib-report": "npm:^3.0.3"
-    "@types/node": "npm:^22.15.30"
+    "@types/node": "npm:^24.0.0"
     "@vitest/coverage-v8": "npm:^4.0.18"
     esbuild: "npm:^0.27.0"
     istanbul-lib-report: "npm:^3.0.1"
@@ -5526,12 +5526,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.0.0, @types/node@npm:^22.15.30":
+"@types/node@npm:^22.0.0":
   version: 22.19.10
   resolution: "@types/node@npm:22.19.10"
   dependencies:
     undici-types: "npm:~6.21.0"
   checksum: 10c0/fb1484f68c259abb73b018e6a521dba2ffe7846128d3aacc7fba5672f354ddb364cb4c81b5a0e686cf58ea0067df4d68d4159f668c864238a0c3fe7fee603341
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^24.0.0":
+  version: 24.12.0
+  resolution: "@types/node@npm:24.12.0"
+  dependencies:
+    undici-types: "npm:~7.16.0"
+  checksum: 10c0/8b31c0af5b5474f13048a4e77c57f22cd4f8fe6e58c4b6fde9456b0c13f46a5bfaf5744ff88fd089581de9f0d6e99c584e022681de7acb26a58d258c654c4843
   languageName: node
   linkType: hard
 
