@@ -33,15 +33,16 @@ export default function PlayButton({
   playingIcon = 'pause',
   pausedText = 'Play',
   pausedIcon = 'play',
+  isPlaying,
   ...props
 }: PlayButtonProps) {
   return <Tooltip
-    content={props.isPlaying ? playingText : pausedText}
+    content={isPlaying ? playingText : pausedText}
     placement="top"
   >
     <ButtonComponent {...props} >
       <Icon
-        icon={props.isPlaying ? playingIcon : pausedIcon}
+        icon={isPlaying ? playingIcon : pausedIcon}
       />
     </ButtonComponent>
   </Tooltip>;
