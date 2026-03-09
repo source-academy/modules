@@ -1,10 +1,11 @@
 import { Button, Classes, Intent, OverlayToaster, Popover, Tooltip, type ToastProps } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { Settings } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import { SourceDocumentation, getNames, runInContext, type Context } from 'js-slang';
 // Importing this straight from js-slang doesn't work for whatever reason
 import createContext from 'js-slang/dist/createContext';
 import { setModulesStaticURL } from 'js-slang/dist/modules/loader';
+import { ModuleInternalError } from 'js-slang/dist/modules/errors';
 import { Chapter, Variant } from 'js-slang/dist/types';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import React from 'react';
@@ -159,6 +160,12 @@ const Playground: React.FC = () => {
             value: stringify(result.value)
           });
         } else if (result.status === 'error') {
+          codeContext.errors.forEach(error => {
+            if (error instanceof ModuleInternalError) {
+              console.error(error.error)
+            }
+          })
+
           setReplOutput({
             type: 'errors',
             errors: codeContext.errors,
@@ -210,7 +217,7 @@ const Playground: React.FC = () => {
               <Tooltip content="Settings">
                 <Button
                   {...targetProps}
-                  icon={IconNames.SETTINGS}
+                  icon={<Settings />}
                 />
               </Tooltip>
             );

@@ -1,5 +1,5 @@
 import { Button, EditableText } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { ArrowRight, ArrowLeft } from '@blueprintjs/icons';
 import { clamp } from 'es-toolkit';
 import { useState } from 'react';
 
@@ -60,7 +60,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
           tabIndex={0}
           large
           outlined
-          icon={IconNames.ARROW_LEFT}
+          icon={<ArrowLeft />}
           onClick={() => {
             changeStep(currentStep - 1);
             setStepEditorValue(currentStep.toString());
@@ -134,7 +134,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
           }}
           large
           outlined
-          icon={IconNames.ARROW_RIGHT}
+          icon={<ArrowRight />}
           tabIndex={0}
           onClick={() => {
             changeStep(currentStep + 1);
