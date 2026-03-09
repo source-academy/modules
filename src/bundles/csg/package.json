@@ -5,7 +5,7 @@
   "dependencies": {
     "@jscad/modeling": "patch:@jscad/modeling@npm%3A2.9.6#~/.yarn/patches/@jscad-modeling-npm-2.9.6-71e6aa3a91.patch",
     "@jscad/regl-renderer": "^2.6.1",
-    "@jscad/stl-serializer": "2.1.11",
+    "@jscad/stl-serializer": "2.1.23",
     "@sourceacademy/modules-lib": "workspace:^",
     "js-slang": "^1.0.85",
     "save-file": "^2.3.1"
