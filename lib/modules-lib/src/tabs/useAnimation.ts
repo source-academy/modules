@@ -102,9 +102,9 @@ function useRerender() {
 
 /**
  * Hook for animations based around the `requestAnimationFrame` function. Calls the provided callback periodically.
+ * @category Hooks
  * @returns Animation Hook utilities
  */
-
 export function useAnimation({
   animationDuration,
   autoLoop,
@@ -172,7 +172,7 @@ export function useAnimation({
    * - Sets elapsed to 0 and draws the 0 frame to the canvas
    * - Sets lastFrameTimestamp to null
    * - Cancels the current animation request
-   * - If there was a an animation callback scheduled, call `requestFrame` again
+   * - If there was an animation callback scheduled, call `requestFrame` again
    */
   function reset() {
     setElapsed(0);

@@ -1,5 +1,4 @@
 import { Icon, Slider, Tooltip } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
 import type { AnimatedCurve } from '@sourceacademy/bundle-curve/types';
 import AnimationError from '@sourceacademy/modules-lib/tabs/AnimationError';
 import AutoLoopSwitch from '@sourceacademy/modules-lib/tabs/AutoLoopSwitch';
@@ -79,7 +78,7 @@ export default function Curve3DAnimationCanvas({ animation }: Props) {
             disabled={Boolean(errored)}
             onClick={reset}
           >
-            <Icon icon={IconNames.RESET} />
+            <Icon icon='reset' />
           </ButtonComponent>
         </Tooltip>
         <div

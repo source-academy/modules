@@ -1,4 +1,3 @@
-import { IconNames } from '@blueprintjs/icons';
 import type { CurveModuleState } from '@sourceacademy/bundle-curve/types';
 import AnimationCanvas from '@sourceacademy/modules-lib/tabs/AnimationCanvas';
 import MultiItemDisplay from '@sourceacademy/modules-lib/tabs/MultiItemDisplay';
@@ -45,5 +44,5 @@ export default defineTab({
     return <CurveTab context={context} />;
   },
   label: 'Curves Tab',
-  iconName: IconNames.MEDIA // See https://blueprintjs.com/docs/#icons for more options
+  iconName: 'media'
 });

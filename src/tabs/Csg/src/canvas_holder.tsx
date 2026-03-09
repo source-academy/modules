@@ -1,6 +1,5 @@
 /* [Imports] */
 import { Spinner, SpinnerSize } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
 import { Core } from '@sourceacademy/bundle-csg/core';
 import StatefulRenderer from '@sourceacademy/bundle-csg/stateful_renderer';
 import type { RenderGroup } from '@sourceacademy/bundle-csg/utilities';
@@ -78,23 +77,23 @@ export default class CanvasHolder extends React.Component<
         >
           <HoverControlHint
             tooltipText="Zoom in: Scroll up"
-            iconName={IconNames.ZOOM_IN}
+            iconName='zoom-in'
           />
           <HoverControlHint
             tooltipText="Zoom out: Scroll down"
-            iconName={IconNames.ZOOM_OUT}
+            iconName='zoom-out'
           />
           <HoverControlHint
             tooltipText="Zoom to fit: Double left-click"
-            iconName={IconNames.ZOOM_TO_FIT}
+            iconName='zoom-to-fit'
           />
           <HoverControlHint
             tooltipText="Rotate: Left-click"
-            iconName={IconNames.REPEAT}
+            iconName='repeat'
           />
           <HoverControlHint
             tooltipText="Pan: Middle-click OR shift + left-click"
-            iconName={IconNames.MOVE}
+            iconName='move'
           />
         </div>
 
@@ -135,7 +134,7 @@ export default class CanvasHolder extends React.Component<
       <div
         // Explicit dark theme as mobile view switches to dark text with light
         // spinner
-        className="bp3-dark"
+        className="bp6-dark"
         style={{
           display: this.state.isContextLost ? 'block' : 'none',
 

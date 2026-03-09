@@ -1,3 +1,4 @@
+import { InvalidCallbackError } from '@sourceacademy/modules-lib/errors';
 import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 
@@ -35,11 +36,7 @@ function createDrawFunction(
 
     function renderFunc(curve: Curve) {
       if (!isFunctionOfLength(curve, 1)) {
-        throw new Error(
-          'The provided curve is not a valid Curve function. ' +
-          'A Curve function must take exactly one parameter (a number t between 0 and 1) ' +
-          'and return a Point or 3D Point depending on whether it is a 2D or 3D curve.'
-        );
+        throw new InvalidCallbackError('Curve', curve, name);
       }
 
       const curveDrawn = generateCurve(
@@ -396,6 +393,10 @@ class CurveAnimators {
       throw new Error(`${animate_curve.name} cannot be used with 3D draw function!`);
     }
 
+    if (!isFunctionOfLength(func, 1)) {
+      throw new InvalidCallbackError('CurveAnimation', func, animate_curve.name);
+    }
+
     const anim = new AnimatedCurve(duration, fps, func, drawer, false);
     drawnCurves.push(anim);
     return anim;
@@ -410,6 +411,10 @@ class CurveAnimators {
   ): AnimatedCurve {
     if (!drawer.is3D) {
       throw new Error(`${animate_3D_curve.name} cannot be used with 2D draw function!`);
+    }
+
+    if (!isFunctionOfLength(func, 1)) {
+      throw new InvalidCallbackError('CurveAnimation', func, animate_3D_curve.name);
     }
 
     const anim = new AnimatedCurve(duration, fps, func, drawer, true);

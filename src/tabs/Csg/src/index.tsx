@@ -1,5 +1,4 @@
 /* [Imports] */
-import { IconNames } from '@blueprintjs/icons';
 import { Core } from '@sourceacademy/bundle-csg/core';
 import type { CsgModuleState } from '@sourceacademy/bundle-csg/utilities';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
@@ -27,7 +26,7 @@ export default defineTab({
   },
 
   // BlueprintJS icon name
-  iconName: IconNames.SHAPES,
+  iconName: 'shapes',
 
   // Icon tooltip in sidebar
   label: 'CSG Tab'

@@ -4072,6 +4072,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-binary_tree@workspace:src/bundles/binary_tree"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     js-slang: "npm:^1.0.85"
     typescript: "npm:^5.8.2"
   languageName: unknown
@@ -4151,6 +4152,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-midi@workspace:src/bundles/midi"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     js-slang: "npm:^1.0.85"
     typescript: "npm:^5.8.2"
   languageName: unknown
@@ -4228,6 +4230,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-repeat@workspace:src/bundles/repeat"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     typescript: "npm:^5.8.2"
   languageName: unknown
   linkType: soft
@@ -4326,6 +4329,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-unittest@workspace:src/bundles/unittest"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     "@types/lodash": "npm:^4.14.198"
     js-slang: "npm:^1.0.85"
     lodash: "npm:^4.17.23"
@@ -4609,7 +4613,6 @@ __metadata:
   resolution: "@sourceacademy/tab-ArcadeTwod@workspace:src/tabs/ArcadeTwod"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
-    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^18.3.1"
@@ -4640,7 +4643,6 @@ __metadata:
   resolution: "@sourceacademy/tab-Csg@workspace:src/tabs/Csg"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
-    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/bundle-csg": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
@@ -4656,7 +4658,6 @@ __metadata:
   resolution: "@sourceacademy/tab-Curve@workspace:src/tabs/Curve"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
-    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/bundle-curve": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
@@ -4702,7 +4703,6 @@ __metadata:
   resolution: "@sourceacademy/tab-Nbody@workspace:src/tabs/Nbody"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
-    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/plotly.js": "npm:^2.35.4"
@@ -4751,7 +4751,6 @@ __metadata:
   resolution: "@sourceacademy/tab-Pixnflix@workspace:src/tabs/Pixnflix"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
-    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/bundle-pix_n_flix": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
@@ -4791,7 +4790,6 @@ __metadata:
   resolution: "@sourceacademy/tab-Repl@workspace:src/tabs/Repl"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
-    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/bundle-repl": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
@@ -4898,7 +4896,6 @@ __metadata:
   resolution: "@sourceacademy/tab-UnityAcademy@workspace:src/tabs/UnityAcademy"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
-    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/bundle-unity_academy": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"

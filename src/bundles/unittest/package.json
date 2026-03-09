@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^",
     "js-slang": "^1.0.85",
     "lodash": "^4.17.23"
   },

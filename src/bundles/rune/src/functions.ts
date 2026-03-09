@@ -35,7 +35,9 @@ export type RuneModuleState = {
 };
 
 function throwIfNotFraction(val: unknown, param_name: string, func_name: string): asserts val is number {
-  if (typeof val !== 'number') throw new Error(`${func_name}: ${param_name} must be a number!`);
+  if (typeof val !== 'number') {
+    throw new Error(`${func_name}: ${param_name} must be a number!`);
+  }
 
   if (val < 0) {
     throw new Error(`${func_name}: ${param_name} cannot be less than 0!`);

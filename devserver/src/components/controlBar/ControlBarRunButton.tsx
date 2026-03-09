@@ -1,5 +1,4 @@
 import { Position, Tooltip } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
 import React from 'react';
 
 import ControlButton from '../ControlButton';
@@ -22,7 +21,7 @@ export const ControlBarRunButton: React.FC<ControlButtonRunButtonProps> = (props
     <Tooltip content={tooltipContent} placement={Position.TOP}>
       <ControlButton
         label="Run"
-        icon={IconNames.PLAY}
+        icon='play'
         onClick={props.handleEditorEval}
         options={{
           iconColor: props.color,

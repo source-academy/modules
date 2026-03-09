@@ -18,6 +18,10 @@ describe(hexToColor, () => {
   it('throws an error when an invalid hex string is passed', () => {
     expect(() => hexToColor('GGGGGG')).toThrowErrorMatchingInlineSnapshot('[Error: hexToColor: Invalid color hex string: GGGGGG]');
   });
+
+  it('throws an error when a non-string is passed', () => {
+    expect(() => hexToColor(123 as any)).toThrowErrorMatchingInlineSnapshot('[Error: hexToColor: Expected a string, got number]');
+  });
 });
 
 describe(isFunctionOfLength, () => {

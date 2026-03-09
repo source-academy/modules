@@ -3,6 +3,23 @@
  * @module repeat
  */
 
+import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+
+/**
+ * Represents a function that takes in 1 parameter and returns a
+ * value of the same type
+ */
+type UnaryFunction<T> = (x: T) => T;
+
+/**
+ * Internal implementation of the repeat function that doesn't perform type checking
+ * @hidden
+ */
+export function repeat_internal<T>(f: UnaryFunction<T>, n: number): UnaryFunction<T> {
+  return n === 0 ? x => x : x => f(repeat_internal(f, n - 1)(x));
+}
+
 /**
  * Returns a new function which when applied to an argument, has the same effect
  * as applying the specified function to the same argument n times.
@@ -16,7 +33,15 @@
  * @returns the new function that has the same effect as func repeated n times
  */
 export function repeat(func: Function, n: number): Function {
-  return n === 0 ? (x: any) => x : (x: any) => func(repeat(func, n - 1)(x));
+  if (!isFunctionOfLength(func, 1)) {
+    throw new InvalidCallbackError(1, func, repeat.name);
+  }
+
+  if (!Number.isInteger(n) || n < 0) {
+    throw new InvalidParameterTypeError('non-negative integer', n, repeat.name);
+  }
+
+  return repeat_internal(func, n);
 }
 
 /**
@@ -31,7 +56,11 @@ export function repeat(func: Function, n: number): Function {
  * @returns the new function that has the same effect as `(x => func(func(x)))`
  */
 export function twice(func: Function): Function {
-  return repeat(func, 2);
+  if (!isFunctionOfLength(func, 1)) {
+    throw new InvalidCallbackError(1, func, twice.name);
+  }
+
+  return repeat_internal(func, 2);
 }
 
 /**
@@ -46,5 +75,9 @@ export function twice(func: Function): Function {
  * @returns the new function that has the same effect as `(x => func(func(func(x))))`
  */
 export function thrice(func: Function): Function {
-  return repeat(func, 3);
+  if (!isFunctionOfLength(func, 1)) {
+    throw new InvalidCallbackError(1, func, thrice.name);
+  }
+
+  return repeat_internal(func, 3);
 }
