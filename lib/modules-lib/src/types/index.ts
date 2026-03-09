@@ -1,4 +1,4 @@
-import type { IconName } from '@blueprintjs/icons';
+import type { IconName } from '@blueprintjs/core';
 import type { Context } from 'js-slang';
 import type React from 'react';
 
