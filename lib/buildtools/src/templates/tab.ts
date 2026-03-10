@@ -3,7 +3,7 @@ import pathlib from 'path';
 import type { Interface } from 'readline/promises';
 import { getBundleManifests } from '@sourceacademy/modules-repotools/manifest';
 import type { BundleManifest, ModulesManifest } from '@sourceacademy/modules-repotools/types';
-import omit from 'lodash/omit.js';
+import { omit } from 'es-toolkit/object';
 import _package from '../../../../package.json' with { type: 'json' };
 import { formatResult } from '../build/formatter.js';
 import { askQuestion, error, success, warn } from './print.js';
@@ -79,7 +79,7 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
   };
 
   // Version property gets stored in package.json, not manifest.json
-  const requiredProperties = omit(manifest[moduleName], 'version');
+  const requiredProperties = omit(manifest[moduleName], ['version']);
 
   const newManifest: BundleManifest = {
     ...requiredProperties,

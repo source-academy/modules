@@ -1,9 +1,9 @@
-import { Button, Icon, Slider, Tooltip } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { Slider } from '@blueprintjs/core';
 import { DrawShapes, type b2World } from '@box2d/core';
 import { DebugDraw } from '@box2d/debug-draw';
 
 import type { PhysicsWorld } from '@sourceacademy/bundle-physics_2d/PhysicsWorld';
+import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
 import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebGLCanvas';
 import React from 'react';
 
@@ -204,13 +204,10 @@ export default class DebugDrawCanvas extends React.Component<
             marginRight: '20px'
           }}
         >
-          <Tooltip content={this.state.isPlaying ? 'Pause' : 'Play'}>
-            <Button onClick={this.onPlayButtonClick}>
-              <Icon
-                icon={this.state.isPlaying ? IconNames.PAUSE : IconNames.PLAY}
-              />
-            </Button>
-          </Tooltip>
+          <PlayButton
+            isPlaying={this.state.isPlaying}
+            onClick={this.onPlayButtonClick}
+          />
         </div>
         <div
           style={{

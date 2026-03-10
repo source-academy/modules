@@ -62,7 +62,7 @@ You can also add the dependency directly by modifying your `package.json`:
 {
   "name": "@sourceacademy/tab-Tab0",
   "dependencies": {
-    "lodash": "^4.0.0"
+    "es-toolkit": "^1.44.0"
   }
 }
 ```

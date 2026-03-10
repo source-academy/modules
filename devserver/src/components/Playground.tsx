@@ -161,7 +161,7 @@ const Playground: React.FC = () => {
         } else if (result.status === 'error') {
           codeContext.errors.forEach(error => {
             if (error instanceof ModuleInternalError) {
-              console.error(error);
+              console.error(error.error);
             }
           });
 

@@ -1,5 +1,5 @@
 import { Button, EditableText } from '@blueprintjs/core';
-import clamp from 'lodash/clamp';
+import { clamp } from 'es-toolkit';
 import { useState } from 'react';
 
 export interface MultiItemDisplayProps {
@@ -10,7 +10,7 @@ export interface MultiItemDisplayProps {
 /**
  * React Component for displaying multiple items
  * ![image](./image.png)
- * 
+ *
  * @category Components
  */
 export default function MultiItemDisplay(props: MultiItemDisplayProps) {
@@ -32,7 +32,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
   const elementsDigitCount = Math.floor(Math.log10(Math.max(1, props.elements.length))) + 1;
 
   return (
-    <div
+    (<div
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -158,6 +158,6 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
       >
         {props.elements[currentStep]}
       </div>
-    </div>
+    </div>)
   );
 }

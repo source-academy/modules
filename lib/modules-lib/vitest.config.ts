@@ -12,8 +12,6 @@ export default mergeConfig(
       include: [
         '@blueprintjs/core',
         '@blueprintjs/icons',
-        'lodash',
-        'lodash/clamp',
         'vitest-browser-react',
         'js-slang/dist/errors/runtimeSourceError',
         'js-slang/dist/utils/stringify'
