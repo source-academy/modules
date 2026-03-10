@@ -282,10 +282,16 @@ export default defineConfig(
       'no-restricted-imports': [
         'error',
         {
-          paths: [{
-            name: 'commander',
-            message: 'Import from @commander-js/extra-typings instead'
-          }]
+          paths: [
+            {
+              name: 'commander',
+              message: 'Import from @commander-js/extra-typings instead'
+            },
+            {
+              name: 'lodash',
+              message: 'Use es-toolkit instead'
+            }
+          ]
         }
       ],
       'prefer-const': ['warn', { destructuring: 'all' }],
