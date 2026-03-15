@@ -23,10 +23,10 @@ describe(funcs.repeat, () => {
 
   test('throws an error when provided incorrect integers', () => {
     expect(() => funcs.repeat((x: number) => x, -1))
-      .toThrowError('repeat: Expected non-negative integer, got -1.');
+      .toThrowError('repeat: Expected integer greater than 0, got -1.');
 
     expect(() => funcs.repeat((x: number) => x, 1.5))
-      .toThrowError('repeat: Expected non-negative integer, got 1.5.');
+      .toThrowError('repeat: Expected integer greater than 0, got 1.5.');
   });
 });
 

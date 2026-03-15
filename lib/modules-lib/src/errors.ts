@@ -90,3 +90,59 @@ export class InvalidCallbackError extends InvalidParameterTypeError {
     );
   }
 }
+
+export interface InvalidNumberParameterErrorOptions {
+  /**
+   * Maximum allowable value (inclusive). Set to `undefined` to not perform a maximum check.
+   */
+  max?: number;
+
+  /**
+   * Minimum allowable value (inclusive). Set to `undefined` to not perform a minimum check.
+   */
+  min?: number;
+
+  /**
+   * `true` by default. Set to `false` to allow non integer values
+   */
+  integer?: boolean;
+};
+
+/**
+ * Subclass of {@link InvalidParameterTypeError|InvalidParameterTypeError} intended for
+ * use with numeric values
+ */
+export class InvalidNumberParameterError extends InvalidParameterTypeError {
+  constructor(
+    value: unknown,
+    options: InvalidNumberParameterErrorOptions | string,
+    func_name: string,
+    param_name?: string
+  ) {
+    let expectedStr: string;
+
+    if (typeof options === 'string') {
+      expectedStr = options;
+    } else {
+      const { max, min, integer = true } = options;
+      const typeStr = integer ? 'integer' : 'number';
+
+      if (max !== undefined) {
+        expectedStr = min === undefined
+          ? `${typeStr} less than ${max}`
+          : `${typeStr} between ${min} and ${max}`;
+      } else {
+        expectedStr = min === undefined
+          ? typeStr
+          : `${typeStr} greater than ${min}`;
+      }
+    }
+
+    super(
+      expectedStr,
+      value,
+      func_name,
+      param_name
+    );
+  }
+}

@@ -351,7 +351,7 @@ export default defineConfig(
         allowRethrowing: true,
         allow: [
           // TODO: Remove these exceptions when js-slang errors inherit from Error
-          'InvalidParameterTypeError', 'InvalidCallbackError',
+          'InvalidParameterTypeError', 'InvalidCallbackError', 'InvalidNumberParameterError'
           // {
           //   from: 'package',
           //   name: ['InvalidParameterTypeError', 'InvalidCallbackError'],

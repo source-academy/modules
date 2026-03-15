@@ -7,6 +7,7 @@
  */
 
 import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
 import { Accidental, type MIDINote, type Note, type NoteWithOctave } from './types';
 import { midiNoteToNoteName, noteToValues, parseNoteWithOctave } from './utils';
 
@@ -116,6 +117,7 @@ export function midi_note_to_letter_name(midiNote: MIDINote, accidental: Acciden
  * @example midi_note_to_frequency(69); // Returns 440
  */
 export function midi_note_to_frequency(note: MIDINote): number {
+  assertNumberWithinRange(note, midi_note_to_frequency.name);
   // A4 = 440Hz = midi note 69
   return 440 * 2 ** ((note - 69) / 12);
 }
@@ -139,10 +141,7 @@ export function letter_name_to_frequency(note: NoteWithOctave): number {
  * ```
  */
 export function add_octave_to_note(note: Note, octave: number): NoteWithOctave {
-  if (!Number.isInteger(octave) || octave < 0) {
-    throw new Error(`${add_octave_to_note.name}: Octave must be an integer greater than 0`);
-  }
-
+  assertNumberWithinRange(octave, add_octave_to_note.name, 0, undefined, true, 'octave');
   return `${note}${octave}`;
 }
 
@@ -184,9 +183,7 @@ export function get_accidental(note: NoteWithOctave): Accidental {
  * ```
  */
 export function key_signature_to_keys(accidental: Accidental.FLAT | Accidental.SHARP, numAccidentals: number): Note {
-  if (!Number.isInteger(numAccidentals) || numAccidentals < 0 || numAccidentals > 6) {
-    throw new Error(`${key_signature_to_keys.name}: Number of accidentals must be a number between 0 and 6`);
-  }
+  assertNumberWithinRange(numAccidentals, key_signature_to_keys.name, 0, 6, true, 'numAccidentals');
 
   switch (accidental) {
     case Accidental.SHARP: {
@@ -198,7 +195,7 @@ export function key_signature_to_keys(accidental: Accidental.FLAT | Accidental.S
       return keys[numAccidentals];
     }
     default:
-      throw new InvalidParameterTypeError('accidental', accidental, key_signature_to_keys.name);
+      throw new InvalidParameterTypeError('sharp or flat', accidental, key_signature_to_keys.name, 'accidental');
   }
 }
 

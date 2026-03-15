@@ -3,8 +3,7 @@
  * @module repeat
  */
 
-import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
 
 /**
  * Represents a function that takes in 1 parameter and returns a
@@ -33,13 +32,8 @@ export function repeat_internal<T>(f: UnaryFunction<T>, n: number): UnaryFunctio
  * @returns the new function that has the same effect as func repeated n times
  */
 export function repeat(func: Function, n: number): Function {
-  if (!isFunctionOfLength(func, 1)) {
-    throw new InvalidCallbackError(1, func, repeat.name);
-  }
-
-  if (!Number.isInteger(n) || n < 0) {
-    throw new InvalidParameterTypeError('non-negative integer', n, repeat.name);
-  }
+  assertFunctionOfLength(func, 1, repeat.name);
+  assertNumberWithinRange(n, repeat.name, 0);
 
   return repeat_internal(func, n);
 }
@@ -56,10 +50,7 @@ export function repeat(func: Function, n: number): Function {
  * @returns the new function that has the same effect as `(x => func(func(x)))`
  */
 export function twice(func: Function): Function {
-  if (!isFunctionOfLength(func, 1)) {
-    throw new InvalidCallbackError(1, func, twice.name);
-  }
-
+  assertFunctionOfLength(func, 1, twice.name);
   return repeat_internal(func, 2);
 }
 
@@ -75,9 +66,6 @@ export function twice(func: Function): Function {
  * @returns the new function that has the same effect as `(x => func(func(func(x))))`
  */
 export function thrice(func: Function): Function {
-  if (!isFunctionOfLength(func, 1)) {
-    throw new InvalidCallbackError(1, func, thrice.name);
-  }
-
+  assertFunctionOfLength(func, 1, thrice.name);
   return repeat_internal(func, 3);
 }

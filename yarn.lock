@@ -4226,7 +4226,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/bundle-repeat@workspace:src/bundles/repeat":
+"@sourceacademy/bundle-repeat@workspace:^, @sourceacademy/bundle-repeat@workspace:src/bundles/repeat":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-repeat@workspace:src/bundles/repeat"
   dependencies:
@@ -4241,6 +4241,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-repl@workspace:src/bundles/repl"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     js-slang: "npm:^1.0.85"
     typescript: "npm:^5.8.2"
   languageName: unknown
@@ -4265,6 +4266,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-rune@workspace:src/bundles/rune"
   dependencies:
+    "@sourceacademy/bundle-repeat": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     es-toolkit: "npm:^1.44.0"

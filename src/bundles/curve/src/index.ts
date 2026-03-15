@@ -1,10 +1,10 @@
 /**
- * drawing *curves*, i.e. collections of *points*, on a canvas in a tools tab
+ * Module for drawing *curves*, i.e. collections of *points*, on a canvas in a tools tab
  *
  * A *point* is defined by its coordinates (x, y and z), and the color assigned to
  * it (r, g, and b). A few constructors for points is given, for example
- * `make_color_point`. Selectors allow access to the coordinates and color
- * components, for example `x_of`.
+ * {@link make_color_point}. Selectors allow access to the coordinates and color
+ * components, for example {@link x_of}.
  *
  * A *curve* is a
  * unary function which takes a number argument within the unit interval `[0,1]`
@@ -12,13 +12,13 @@
  * is always `C(0)`, and the ending point is always `C(1)`.
  *
  * A *curve transformation* is a function that takes a curve as argument and
- * returns a curve. Examples of curve transformations are `scale` and `translate`.
+ * returns a curve. Examples of curve transformations are {@link scale|scale} and {@link translate|translate}.
  *
  * A *render function* is function that takes a number argument and returns
  * a function that takes a curve as argument and visualises it in the output screen is
  * shown in the Source Academy in the tab with the "Curves Canvas" icon (image).
  * The following [example](https://share.sourceacademy.org/unitcircle) uses
- * the render function `draw_connected_full_view` to display a curve called
+ * the render function {@link draw_connected_full_view|draw_connected_full_view} to display a curve called
  * `unit_circle`.
  * ```
  * import { make_point, draw_connected_full_view } from "curve";
@@ -35,6 +35,12 @@
  * @author Ng Yong Xiang
  */
 
+import { draw_connected_full_view } from './drawers';
+import { scale, translate, x_of } from './functions';
+
+// import and re-export to make links in the module summary work
+export { draw_connected_full_view, scale, translate, x_of };
+
 export {
   arc,
   b_of,
@@ -49,13 +55,10 @@ export {
   put_in_standard_position,
   r_of,
   rotate_around_origin,
-  scale,
   scale_proportional,
-  translate,
   unit_circle,
   unit_line,
   unit_line_at,
-  x_of,
   y_of,
   z_of
 } from './functions';
@@ -70,7 +73,6 @@ export {
   draw_3D_points_full_view,
   draw_3D_points_full_view_proportional,
   draw_connected,
-  draw_connected_full_view,
   draw_connected_full_view_proportional,
   draw_points,
   draw_points_full_view,

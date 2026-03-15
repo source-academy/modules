@@ -62,7 +62,7 @@ export function show(rune: unknown) {
 ```
 :::
 
-## `InvalidTypeParameterError`
+## `InvalidParameterTypeError`
 
 When throwing errors related to type checking, you should throw an `InvalidParameterTypeError`, which can be imported from the `modules-lib`:
 
@@ -87,7 +87,131 @@ The parameters of the constructor for `InvalidParameterTypeError` are as follows
 3. _Optional_: The name of the function that the error was thrown from (see [here](./3-errors) for more information)
 4. _Optional_: The name of the parameter that is being validated
 
-## Type Safety Conventions
+## Number Related Errors
+
+Numbers in Javascript and Typescript are stored as floats, but most oftenly we want to deal only with integers. Also, we may want to check that a
+number is greater than a given minimum, less than a given maximum, or both.
+
+`modules-lib` provides a two functions and a dedicated error type for this purpose:
+
+### `isNumberWithinRange`
+
+The `isNumberWithinRange` function checks that a given value is indeed a `number` and that it falls within the specified parameters. You can use it
+to validate that the given number is an integer within a given range:
+
+```ts
+function foo(val: unknown) {
+  if (!isNumberWithinRange(val, 0, 2)) {
+    throw new InvalidNumberParameterError(val, foo.name, { min: 0, max: 2 });
+  }
+}
+
+foo(1.5); // Error: foo expected integer between 0 and 2, got 1.5.
+foo(-1); // Error: foo expected integer between 0 and 2, got -1.
+```
+
+You can not specify a maximum, in which case only the lower bound is validated. Similarly, not providing a minimum means that only an upper bound
+is validated:
+
+```ts
+function isGreaterThan0(val: unknown) {
+  if (!isNumberWithinRange(val, 1)) {
+    throw new InvalidNumberParameterError(val, isGreaterThan0.name, { min: 1 });
+  }
+}
+
+isGreaterThan(0); // Error: isGreaterThan0 expected integer greater than 0
+
+function isLessThan10(val: unknown) {
+  // 1st parameter is for min, 2nd parameter is max
+  if (!isNumberWithinRange(val, undefined, 10)) {
+    throw new InvalidNumberParameterError(val, isLessThan10.name, { max: 10 });
+  }
+}
+
+isLessThan10(100); // Error: isLessThan10 expected integer less than 100
+```
+
+Specifying neither a minimum nor a maximum causes the function to act purely as a typecheck:
+
+```ts
+function isInteger(val: unknown) {
+  if (!isNumberWithinRange(val)) {
+    throw new InvalidNumberParameterError(val, isInteger.name, {});
+  }
+}
+
+isInteger(0.5); // Error: isInteger expects integer
+```
+
+The fourth parameter of `isNumberWithinRange` takes a boolean. Setting this to `false` disables the integer check. This is useful if you want to
+assert that a given number is a float within a given range:
+
+```ts
+function isFraction(val: unknown) {
+  if (!isNumberWithinRange(val, 0, 1, false)) {
+    throw new InvalidNumberParameterError(val, isFraction.name, { min: 0, max: 1, integer: false });
+  }
+}
+
+isFraction(2);   // Error: isFraction expects a number between 0 and 1
+isFraction(0.5); // no error thrown
+```
+
+Specifying the different options as different parameters might be inconvenient. You can use the options object overload instead:
+
+```ts
+function isFraction(val: unknown) {
+  if (!isNumberWithinRange(val, { min: 0, max: 1, integer: false })) {
+    throw new InvalidNumberParameterError(val, isFraction.name, { min: 0, max: 1, integer: false });
+  }
+}
+```
+
+If you don't specify a minimum or a maximum and you disable the integer check, then the function only checks if the provided value has type `number` and is not `NaN`:
+
+```ts
+function isNumber(val: unknown) {
+  if (!isNumberWithinRange(val, { integer: false })) {
+    throw new InvalidNumberParameterEror(val, isNumber.name, { integer: false });
+  }
+}
+
+isNumber(NaN);        // Error: isNumber expected number.
+isNumber('whatever'); // Error: isNumber expected number.
+```
+
+### `assertNumberIsWithinRange`
+
+`assertNumberIsWithinRange` is the assertion version of `isNumberWithinRange`. You can use this function instead of doing the boolean check:
+
+```ts
+function foo(val: unknown) {
+  if (!isNumberWithinRange(val, 0, 1)) {
+    throw new InvalidNumberParameterError(val, { max: 1, min: 0, func_name: foo.name });
+  }
+}
+
+// can be written as
+function foo(val: unknown) {
+  assertNumberWithinRange(val, { max: 1, min: 0, func_name: foo.name });
+}
+```
+
+### `InvalidNumberParameterError`
+
+This is a subclass of the `InvalidParameterTypeError` that is thrown when a parameter is expecting a number, but the provided value is either not a number
+or doesn't fall within the expected range.
+
+Here are the parameters of the constructor:
+1. `value`: The actual value that was validated
+2. `options`: Either a `string` or an `InvalidNumberParameterErrorOptions` object.
+  - If a string is provided, then that is taken as the name of the expected type
+  - Otherwise, the options object controls what error message is shown to the user (i.e whether an integer or a number was expected, or if it was outside of the desired range)
+3. `func_name`: Name of the function that the validation was performed for.
+4. `param_name` _optional_: Name of the parameter that the validation was performed for.
+
+## Type Safety Conventions for functions
 
 As part of ensuring type safety, there are several function related conventions bundle code should abide by:
 
@@ -335,3 +459,15 @@ function isFunctionOfLength(f: unknown, l: number): f is Function {
 >   return f('a', 'b');
 > }
 > ```
+
+There is an assertion version of the function available: `assertFunctionOfLength`:
+
+```ts
+import { assertFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+
+type Curve = (t: number) => number;
+
+function foo(callback: Curve) {
+  assertFunctionOfLength(callback, 1, foo.name, 'Curve', 'callback');
+}
+```

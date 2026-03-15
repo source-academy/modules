@@ -1,7 +1,7 @@
 import { midi_note_to_frequency } from '@sourceacademy/bundle-midi';
 import type { MIDINote } from '@sourceacademy/bundle-midi/types';
-import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { assertFunctionOfLength, assertNumberWithinRange, isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import {
   accumulate,
   head,
@@ -190,9 +190,7 @@ export function init_record(): string {
  * @param buffer - pause before recording, in seconds
  */
 export function record(buffer: number): () => SoundPromise {
-  if (typeof buffer !== 'number' || buffer < 0) {
-    throw new Error(`${record.name}: Expected a positive number for buffer, got ${buffer}`);
-  }
+  assertNumberWithinRange(buffer, record.name, 0, undefined, false);
 
   if (globalVars.isPlaying) {
     throw new Error(`${record.name}: Cannot record while another sound is playing!`);
@@ -287,23 +285,15 @@ export function record_for(duration: number, buffer: number): SoundPromise {
  * Throws an exception if duration is not a number or if
  * number is negative
  */
-function validateDuration(func_name: string, duration: unknown): asserts duration is number {
-  if (typeof duration !== 'number') {
-    throw new InvalidParameterTypeError('number', duration, func_name, 'duration');
-  }
-
-  if (duration < 0) {
-    throw new Error(`${func_name}: Sound duration must be greater than or equal to 0`);
-  }
+export function validateDuration(func_name: string, duration: unknown): asserts duration is number {
+  assertNumberWithinRange(duration, func_name, 0, undefined, false, 'duration');
 }
 
 /**
  * Throws an exception if wave is not a function
  */
 function validateWave(func_name: string, wave: unknown): asserts wave is Wave {
-  if (!isFunctionOfLength(wave, 1)) {
-    throw new InvalidCallbackError('Wave', wave, func_name);
-  }
+  assertFunctionOfLength(wave, 1, func_name, 'Wave');
 }
 
 /**
@@ -356,7 +346,7 @@ export function get_duration(sound: Sound): number {
 export function is_sound(x: unknown): x is Sound {
   return (
     is_pair(x)
-    && typeof get_wave(x) === 'function'
+    && isFunctionOfLength(get_wave(x), 1)
     && typeof get_duration(x) === 'number'
   );
 }
@@ -387,17 +377,15 @@ export function play_wave(wave: Wave, duration: number): Sound {
 export function play(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
+    throw new InvalidParameterTypeError('sound', sound, play.name);
   } else if (globalVars.isPlaying) {
     throw new Error(`${play.name}: Previous sound still playing!`);
   }
 
   const duration = get_duration(sound);
-  if (duration < 0) {
-    throw new Error(`${play.name}: duration of sound is negative`);
-  } else if (duration === 0) {
-    return sound;
-  }
+  validateDuration(play.name, duration);
+
+  if (duration === 0) return sound;
 
   const audioplayer = getAudioContext();
 

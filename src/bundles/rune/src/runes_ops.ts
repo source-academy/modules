@@ -8,9 +8,9 @@ import { Rune } from './rune';
 // =============================================================================
 // Utility Functions
 // =============================================================================
-export function throwIfNotRune(name: string, rune: unknown): asserts rune is Rune {
+export function throwIfNotRune(func_name: string, rune: unknown, param_name?: string): asserts rune is Rune {
   if (!(rune instanceof Rune)) {
-    throw new InvalidParameterTypeError('Rune', rune, name);
+    throw new InvalidParameterTypeError('Rune', rune, func_name, param_name);
   }
 }
 

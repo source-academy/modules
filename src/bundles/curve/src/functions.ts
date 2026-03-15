@@ -1,4 +1,5 @@
 import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
 import { clamp } from 'es-toolkit';
 import { Point, type Curve } from './curves_webgl';
 import { functionDeclaration } from './type_interface';
@@ -10,14 +11,40 @@ function throwIfNotPoint(obj: unknown, func_name: string): asserts obj is Point 
   }
 }
 
+function throwIfNotCurve(obj: unknown, func_name: string, param_name?: string): asserts obj is Curve {
+  assertFunctionOfLength(obj, 1, func_name, 'Curve', param_name);
+}
+
+function defineCurveTransformer(f: (arg: Curve) => Curve, name?: string): CurveTransformer {
+  const transformer: CurveTransformer = curve => {
+    throwIfNotCurve(curve, 'CurveTransformer');
+    return f(curve);
+  };
+
+  transformer.toReplString = () => '<CurveTransformer>';
+
+  if (name !== undefined) {
+    Object.defineProperty(transformer, 'name', { value: name });
+  }
+
+  return transformer;
+}
+
 class CurveFunctions {
   @functionDeclaration('x: number, y: number', 'Point')
   static make_point(x: number, y: number): Point {
+    assertNumberWithinRange(x, { func_name: CurveFunctions.make_point.name, param_name: 'x', integer: false });
+    assertNumberWithinRange(y, { func_name: CurveFunctions.make_point.name, param_name: 'y', integer: false });
+
     return new Point(x, y, 0, [0, 0, 0, 1]);
   }
 
   @functionDeclaration('x: number, y: number, z: number', 'Point')
   static make_3D_point(x: number, y: number, z: number): Point {
+    assertNumberWithinRange(x, { func_name: CurveFunctions.make_3D_point.name, param_name: 'x', integer: false });
+    assertNumberWithinRange(y, { func_name: CurveFunctions.make_3D_point.name, param_name: 'y', integer: false });
+    assertNumberWithinRange(z, { func_name: CurveFunctions.make_3D_point.name, param_name: 'z', integer: false });
+
     return new Point(x, y, z, [0, 0, 0, 1]);
   }
 
@@ -54,6 +81,9 @@ class CurveFunctions {
 
   @functionDeclaration('curve1: Curve, curve2: Curve', 'Curve')
   static connect_ends(curve1: Curve, curve2: Curve): Curve {
+    throwIfNotCurve(curve1, CurveFunctions.connect_ends.name, 'curve1');
+    throwIfNotCurve(curve2, CurveFunctions.connect_ends.name, 'curve2');
+
     const startPointOfCurve2 = curve2(0);
     const endPointOfCurve1 = curve1(1);
     return connect_rigidly(
@@ -68,12 +98,19 @@ class CurveFunctions {
 
   @functionDeclaration('curve1: Curve, curve2: Curve', 'Curve')
   static connect_rigidly(curve1: Curve, curve2: Curve): Curve {
-    return (t) => (t < 1 / 2 ? curve1(2 * t) : curve2(2 * t - 1));
+    throwIfNotCurve(curve1, CurveFunctions.connect_rigidly.name, 'curve1');
+    throwIfNotCurve(curve2, CurveFunctions.connect_rigidly.name, 'curve2');
+
+    return t => (t < 0.5 ? curve1(2 * t) : curve2(2 * t - 1));
   }
 
   @functionDeclaration('x0: number, y0: number, z0: number', '(c: Curve) => Curve')
   static translate(x0: number, y0: number, z0: number): CurveTransformer {
-    return curve => t => {
+    assertNumberWithinRange(x0, { func_name: CurveFunctions.translate.name, param_name: 'x0', integer: false });
+    assertNumberWithinRange(y0, { func_name: CurveFunctions.translate.name, param_name: 'y0', integer: false });
+    assertNumberWithinRange(z0, { func_name: CurveFunctions.translate.name, param_name: 'z0', integer: false });
+
+    return defineCurveTransformer(curve => t => {
       const ct = curve(t);
       return new Point(
         x0 + ct.x,
@@ -81,14 +118,14 @@ class CurveFunctions {
         z0 + ct.z,
         [ct.color[0], ct.color[1], ct.color[2], 1]
       );
-    };
+    });
   }
 
   @functionDeclaration('curve: Curve', 'Curve')
-  static invert: CurveTransformer = original => t => original(1 - t);
+  static invert: CurveTransformer = defineCurveTransformer(original => t => original(1 - t), 'invert');
 
   @functionDeclaration('curve: Curve', 'Curve')
-  static put_in_standard_position: CurveTransformer = curve => {
+  static put_in_standard_position: CurveTransformer = defineCurveTransformer(curve => {
     const start_point = curve(0);
     const curve_started_at_origin = translate(
       -x_of(start_point),
@@ -104,18 +141,23 @@ class CurveFunctions {
     )(curve_started_at_origin);
     const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1));
     return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
-  };
+  }, 'put_in_standard_position');
 
   @functionDeclaration('a: number, b: number, c: number', '(c: Curve) => Curve')
   static rotate_around_origin_3D(a: number, b: number, c: number): CurveTransformer {
+    assertNumberWithinRange(a, { func_name: CurveFunctions.rotate_around_origin_3D.name, integer: false, param_name: 'a' });
     const cthx = Math.cos(a);
     const sthx = Math.sin(a);
+
+    assertNumberWithinRange(b, { func_name: CurveFunctions.rotate_around_origin_3D.name, integer: false, param_name: 'b' });
     const cthy = Math.cos(b);
     const sthy = Math.sin(b);
+
+    assertNumberWithinRange(c, { func_name: CurveFunctions.rotate_around_origin_3D.name, integer: false, param_name: 'c' });
     const cthz = Math.cos(c);
     const sthz = Math.sin(c);
 
-    return curve => t => {
+    return defineCurveTransformer(curve => t => {
       const ct = curve(t);
       const coord = [ct.x, ct.y, ct.z];
       const mat = [
@@ -140,15 +182,18 @@ class CurveFunctions {
         zf += mat[2][i] * coord[i];
       }
       return new Point(xf, yf, zf, [ct.color[0], ct.color[1], ct.color[2], 1]);
-    };
+    });
   }
 
   @functionDeclaration('a: number', '(c: Curve) => Curve')
   static rotate_around_origin(a: number): CurveTransformer {
+    assertNumberWithinRange(a, { func_name: CurveFunctions.rotate_around_origin.name, integer: false });
+
     // 1 args
     const cth = Math.cos(a);
     const sth = Math.sin(a);
-    return curve => t => {
+
+    return defineCurveTransformer(curve => t => {
       const ct = curve(t);
       return new Point(
         cth * ct.x - sth * ct.y,
@@ -156,12 +201,16 @@ class CurveFunctions {
         ct.z,
         [ct.color[0], ct.color[1], ct.color[2], 1]
       );
-    };
+    });
   }
 
   @functionDeclaration('x: number, y: number, z: number', '(c: Curve) => Curve')
   static scale(x: number, y: number, z: number): CurveTransformer {
-    return curve => t => {
+    assertNumberWithinRange(x, { func_name: CurveFunctions.scale.name, param_name: 'x', integer: false });
+    assertNumberWithinRange(y, { func_name: CurveFunctions.scale.name, param_name: 'y', integer: false });
+    assertNumberWithinRange(z, { func_name: CurveFunctions.scale.name, param_name: 'z', integer: false });
+
+    return defineCurveTransformer(curve => t => {
       const ct = curve(t);
 
       return new Point(
@@ -170,7 +219,7 @@ class CurveFunctions {
         z * ct.z,
         [ct.color[0], ct.color[1], ct.color[2], 1]
       );
-    };
+    });
   }
 
   @functionDeclaration('s: number', '(c: Curve) => Curve')
@@ -215,22 +264,19 @@ class CurveFunctions {
   }
 
   @functionDeclaration('t: number', 'Point')
-  static unit_circle: Curve = t => {
-    return make_point(Math.cos(2 * Math.PI * t), Math.sin(2 * Math.PI * t));
-  };
+  static unit_circle: Curve = t => make_point(Math.cos(2 * Math.PI * t), Math.sin(2 * Math.PI * t));
 
   @functionDeclaration('t: number', 'Point')
   static unit_line: Curve = t => make_point(t, 0);
 
   @functionDeclaration('t: number', 'Curve')
   static unit_line_at(y: number): Curve {
+    assertNumberWithinRange(y, { func_name: CurveFunctions.unit_line_at.name, integer: false });
     return t => make_point(t, y);
   }
 
   @functionDeclaration('t: number', 'Point')
-  static arc: Curve = t => {
-    return make_point(Math.sin(Math.PI * t), Math.cos(Math.PI * t));
-  };
+  static arc: Curve = t => make_point(Math.sin(Math.PI * t), Math.cos(Math.PI * t));
 }
 
 /**
@@ -239,6 +285,7 @@ class CurveFunctions {
  * @param x x-coordinate of new point
  * @param y y-coordinate of new point
  * @returns with x and y as coordinates
+ * @function
  * @example
  * ```
  * const point = make_point(0.5, 0.5);
@@ -252,6 +299,7 @@ export const make_point = CurveFunctions.make_point;
  * @param x x-coordinate of new point
  * @param y y-coordinate of new point
  * @param z z-coordinate of new point
+ * @function
  * @returns with x, y and z as coordinates
  * @example
  * ```
@@ -270,6 +318,7 @@ export const make_3D_point = CurveFunctions.make_3D_point;
  * @param r red component of new point
  * @param g green component of new point
  * @param b blue component of new point
+ * @function
  * @returns with x and y as coordinates, and r, g and b as RGB values
  * @example
  * ```
@@ -289,6 +338,7 @@ export const make_color_point = CurveFunctions.make_color_point;
  * @param r red component of new point
  * @param g green component of new point
  * @param b blue component of new point
+ * @function
  * @returns with x, y and z as coordinates, and r, g and b as RGB values
  * @example
  * ```
@@ -302,6 +352,7 @@ export const make_3D_color_point = CurveFunctions.make_3D_color_point;
  *
  * @param pt given point
  * @returns x-coordinate of the Point
+ * @function
  * @example
  * ```
  * const point = make_color_point(1, 2, 3, 50, 100, 150);
@@ -328,6 +379,7 @@ export const y_of = CurveFunctions.y_of;
  *
  * @param pt given point
  * @returns z-coordinate of the Point
+ * @function
  * @example
  * ```
  * const point = make_color_point(1, 2, 3, 50, 100, 150);
@@ -354,6 +406,7 @@ export const r_of = CurveFunctions.r_of;
  *
  * @param pt given point
  * @returns Green component of the Point as a value between [0,255]
+ * @function
  * @example
  * ```
  * const point = make_color_point(1, 2, 3, 50, 100, 150);
@@ -367,6 +420,7 @@ export const g_of = CurveFunctions.g_of;
  *
  * @param pt given point
  * @returns Blue component of the Point as a value between [0,255]
+ * @function
  * @example
  * ```
  * const point = make_color_point(1, 2, 3, 50, 100, 150);
@@ -410,6 +464,7 @@ export const translate = CurveFunctions.translate;
  * @param b given angle
  * @param c given angle
  * @returns function that takes a Curve and returns a Curve
+ * @function
  */
 export const rotate_around_origin_3D = CurveFunctions.rotate_around_origin_3D;
 
@@ -421,6 +476,7 @@ export const rotate_around_origin_3D = CurveFunctions.rotate_around_origin_3D;
  *
  * @param a given angle
  * @returns function that takes a Curve and returns a Curve
+ * @function
  */
 export const rotate_around_origin = CurveFunctions.rotate_around_origin;
 
@@ -434,6 +490,7 @@ export const rotate_around_origin = CurveFunctions.rotate_around_origin;
  * @param y scaling factor in y-direction
  * @param z scaling factor in z-direction
  * @returns function that takes a Curve and returns a Curve
+ * @function
  */
 export const scale = CurveFunctions.scale;
 
@@ -443,6 +500,7 @@ export const scale = CurveFunctions.scale;
  *
  * @param s scaling factor
  * @returns function that takes a Curve and returns a Curve
+ * @function
  */
 export const scale_proportional = CurveFunctions.scale_proportional;
 
@@ -470,6 +528,7 @@ export const put_in_standard_position = CurveFunctions.put_in_standard_position;
  * @param curve1 first Curve
  * @param curve2 second Curve
  * @returns result Curve
+ * @function
  */
 export const connect_rigidly = CurveFunctions.connect_rigidly;
 
@@ -484,6 +543,7 @@ export const connect_rigidly = CurveFunctions.connect_rigidly;
  * @param curve1 first Curve
  * @param curve2 second Curve
  * @returns result Curve
+ * @function
  */
 export const connect_ends = CurveFunctions.connect_ends;
 
@@ -513,6 +573,7 @@ export const unit_line = CurveFunctions.unit_line;
  *
  * @param y fraction between 0 and 1
  * @returns horizontal Curve
+ * @function
  */
 export const unit_line_at = CurveFunctions.unit_line_at;
 

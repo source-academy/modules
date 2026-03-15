@@ -9,8 +9,8 @@ vi.stubGlobal('AudioContext', function () { return mockAudioContext; });
 
 describe(funcs.make_sound, () => {
   it('Should error gracefully when duration is negative', () => {
-    expect(() => funcs.make_sound(() => 0, -1))
-      .toThrow('make_sound: Sound duration must be greater than or equal to 0');
+    expect(() => funcs.make_sound(_t => 0, -1))
+      .toThrow('make_sound: Expected number greater than 0 for duration, got -1.');
   });
 
   it('Should not error when duration is zero', () => {
@@ -39,9 +39,9 @@ describe('Concurrent playback functions', () => {
 
   describe(funcs.play, () => {
     it('Should error gracefully when duration is negative', () => {
-      const sound: Sound = [() => 0, -1];
+      const sound: Sound = [_t => 0, -1];
       expect(() => funcs.play(sound))
-        .toThrow('play: duration of sound is negative');
+        .toThrow('play: Expected number greater than 0 for duration, got -1.');
     });
 
     it('Should not error when duration is zero', () => {
@@ -50,7 +50,7 @@ describe('Concurrent playback functions', () => {
     });
 
     it('Should throw error when given not a sound', () => {
-      expect(() => funcs.play(0 as any)).toThrow('play is expecting sound, but encountered 0');
+      expect(() => funcs.play(0 as any)).toThrow('play: Expected sound, got 0.');
     });
 
     test('Concurrently playing two sounds should error', () => {
@@ -63,12 +63,12 @@ describe('Concurrent playback functions', () => {
   describe(funcs.play_wave, () => {
     it('Should error gracefully when duration is negative', () => {
       expect(() => funcs.play_wave(_t => 0, -1))
-        .toThrow('play_wave: Sound duration must be greater than or equal to 0');
+        .toThrow('play_wave: Expected number greater than 0 for duration, got -1.');
     });
 
     it('Should error gracefully when duration is not a number', () => {
       expect(() => funcs.play_wave(_t => 0, true as any))
-        .toThrow('play_wave: Expected number for duration, got true');
+        .toThrow('play_wave: Expected number greater than 0 for duration, got true.');
     });
 
     it('Should error gracefully when wave is not a function', () => {
@@ -100,7 +100,7 @@ describe(play_in_tab.play_in_tab, () => {
   it('Should error gracefully when duration is negative', () => {
     const sound = [_t => 0, -1];
     expect(() => play_in_tab.play_in_tab(sound as any))
-      .toThrow('play_in_tab: duration of sound is negative');
+      .toThrow('play_in_tab: Expected number greater than 0 for duration, got -1.');
   });
 
   it('Should not error when duration is zero', () => {
@@ -109,7 +109,7 @@ describe(play_in_tab.play_in_tab, () => {
   });
 
   it('Should throw error when given not a sound', () => {
-    expect(() => play_in_tab.play_in_tab(0 as any)).toThrow('play_in_tab: Expected Sound, got 0');
+    expect(() => play_in_tab.play_in_tab(0 as any)).toThrow('play_in_tab: Expected Sound, got 0.');
   });
 
   test('Multiple calls does not cause an error', () => {
