@@ -1,12 +1,11 @@
 /* [Imports] */
 import { Icon, Tooltip } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { Pause, Play } from '@blueprintjs/icons';
 import ButtonComponent, { type ButtonComponentProps } from './ButtonComponent';
 
 /* [Exports] */
 export type PlayButtonProps = ButtonComponentProps & {
   isPlaying: boolean;
-  // onClickCallback: () => void,
 };
 
 /* [Main] */
@@ -17,7 +16,7 @@ export default function PlayButton(props: PlayButtonProps) {
   >
     <ButtonComponent {...props} >
       <Icon
-        icon={props.isPlaying ? IconNames.PAUSE : IconNames.PLAY}
+        icon={props.isPlaying ? <Pause /> : <Play />}
       />
     </ButtonComponent>
   </Tooltip>;

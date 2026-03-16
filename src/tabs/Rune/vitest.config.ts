@@ -11,7 +11,6 @@ export default defineProject({
   },
   optimizeDeps: {
     include: [
-      'lodash/clamp',
       'js-slang',
       'js-slang/dist/utils/stringify'
     ]

@@ -13,7 +13,6 @@ export default defineProject({
     include: [
       'js-slang',
       'js-slang/dist/utils/stringify',
-      'lodash/clamp',
     ]
   },
   test: {

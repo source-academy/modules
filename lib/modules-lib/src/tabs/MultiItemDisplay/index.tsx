@@ -1,6 +1,6 @@
 import { Button, EditableText } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
-import clamp from 'lodash/clamp';
+import { ArrowLeft, ArrowRight } from '@blueprintjs/icons';
+import { clamp } from 'es-toolkit';
 import { useState } from 'react';
 
 export interface MultiItemDisplayProps {
@@ -31,7 +31,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
   const elementsDigitCount = Math.floor(Math.log10(Math.max(1, props.elements.length))) + 1;
 
   return (
-    <div
+    (<div
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -60,7 +60,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
           tabIndex={0}
           large
           outlined
-          icon={IconNames.ARROW_LEFT}
+          icon={<ArrowLeft />}
           onClick={() => {
             changeStep(currentStep - 1);
             setStepEditorValue(currentStep.toString());
@@ -134,7 +134,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
           }}
           large
           outlined
-          icon={IconNames.ARROW_RIGHT}
+          icon={<ArrowRight />}
           tabIndex={0}
           onClick={() => {
             changeStep(currentStep + 1);
@@ -157,6 +157,6 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
       >
         {props.elements[currentStep]}
       </div>
-    </div>
+    </div>)
   );
 }

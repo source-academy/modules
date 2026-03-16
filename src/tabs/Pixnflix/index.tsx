@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, Divider, NumericInput } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { Camera, HorizontalDistribution, Stopwatch, VerticalDistribution, Video } from '@blueprintjs/icons';
 import {
   DEFAULT_FPS,
   DEFAULT_HEIGHT,
@@ -288,14 +288,14 @@ class PixNFlix extends React.Component<Props, State> {
             <ButtonGroup>
               <Button
                 className="sa-live-video-button"
-                icon={IconNames.VIDEO}
+                icon={<Video />}
                 active={videoIsActive}
                 onClick={this.onClickVideo}
                 text="Play Video"
               />
               <Button
                 className="sa-still-image-button"
-                icon={IconNames.CAMERA}
+                icon={<Camera />}
                 active={!videoIsActive}
                 onClick={this.onClickStill}
                 text="Pause Video"
@@ -311,7 +311,7 @@ class PixNFlix extends React.Component<Props, State> {
               {/* <Tooltip2 content='Change width'> */}
               <NumericInput
                 disabled
-                leftIcon={IconNames.HORIZONTAL_DISTRIBUTION}
+                leftIcon={<HorizontalDistribution />}
                 style={{ width: 70 }}
                 value={width}
                 onValueChange={this.handleWidthChange}
@@ -327,7 +327,7 @@ class PixNFlix extends React.Component<Props, State> {
               {/* <Tooltip2 content='Change height'> */}
               <NumericInput
                 disabled
-                leftIcon={IconNames.VERTICAL_DISTRIBUTION}
+                leftIcon={<VerticalDistribution />}
                 style={{ width: 70 }}
                 value={height}
                 onValueChange={this.handleHeightChange}
@@ -342,7 +342,7 @@ class PixNFlix extends React.Component<Props, State> {
             <div className="sa-video-header-numeric-input">
               {/* <Tooltip2 content='Change FPS'> */}
               <NumericInput
-                leftIcon={IconNames.STOPWATCH}
+                leftIcon={<Stopwatch />}
                 style={{ width: 60 }}
                 value={FPS}
                 onValueChange={this.handleFPSChange}

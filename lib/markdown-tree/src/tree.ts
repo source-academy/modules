@@ -1,9 +1,6 @@
 // Adapted from: https://gitlab.com/nfriend/tree-online/-/tree/master?ref_type=heads
 
-import type { RecursiveArray } from 'lodash';
-import defaultsDeep from 'lodash/defaultsDeep';
-import flattenDeep from 'lodash/flattenDeep';
-import last from 'lodash/last';
+import { flattenDeep, last } from 'es-toolkit';
 import type { FileStructure } from './types';
 
 /**
@@ -73,11 +70,11 @@ export function generateTree(
   commentLoc: number,
   options?: GenerateTreeOptions
 ): string {
-  const combinedOptions = defaultsDeep({}, options, defaultOptions);
+  const combinedOptions = { ...defaultOptions, ...options };
 
   return flattenDeep([
     getAsciiLine(structure, commentLoc, combinedOptions),
-    structure.children.map(c => generateTree(c, commentLoc, options)) as RecursiveArray<string>,
+    structure.children.map(c => generateTree(c, commentLoc, options)),
   ])
     // Remove null entries. Should only occur for the very first node
     // when `options.rootDot === false`
@@ -161,7 +158,7 @@ const getName = (
     nameChunks.unshift(
       getName(
         structure.parent,
-        defaultsDeep({}, { trailingDirSlash: true }, options),
+        { ...{ trailingDirSlash: true }, ...options },
       ),
     );
   }
