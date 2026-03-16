@@ -33,6 +33,6 @@
     "build": "tsc --project ./tsconfig.prod.json",
     "postinstall": "yarn build",
     "tsc": "tsc --project ./tsconfig.json",
-    "test": "vitest"
+    "test": "vitest run"
   }
 }
