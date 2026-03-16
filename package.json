@@ -72,7 +72,7 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-yml": "^3.0.0",
     "husky": "^9.1.7",
-    "jsdom": "^28.0.0",
+    "jsdom": "^29.0.0",
     "jsonc-eslint-parser": "^2.4.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -109,8 +109,5 @@
     "./lib/*",
     "./src/bundles/*",
     "./src/tabs/*"
-  ],
-  "resolutions": {
-    "cssstyle": "^4.6.0"
-  }
+  ]
 }
