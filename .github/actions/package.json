@@ -7,7 +7,7 @@
     "@sourceacademy/modules-repotools": "workspace:^",
     "@types/node": "^22.15.30",
     "typescript": "^5.8.2",
-    "vitest": "^4.0.18"
+    "vitest": "4.1.0"
   },
   "dependencies": {
     "@actions/artifact": "^6.0.0",
