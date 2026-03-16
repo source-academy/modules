@@ -4050,7 +4050,7 @@ __metadata:
     react-dom: "npm:^18.3.1"
     typescript: "npm:^5.8.2"
     vitest: "npm:4.1.0"
-    vitest-browser-react: "npm:^2.1.0"
+    vitest-browser-react: "npm:^2.0.4"
   languageName: unknown
   linkType: soft
 
@@ -4313,7 +4313,7 @@ __metadata:
     vite: "npm:^8.0.0"
     vite-plugin-node-polyfills: "npm:^0.25.0"
     vitest: "npm:4.1.0"
-    vitest-browser-react: "npm:^2.1.0"
+    vitest-browser-react: "npm:^2.0.4"
   bin:
     devserver: ./bin.js
   languageName: unknown
@@ -4434,7 +4434,7 @@ __metadata:
     typescript: "npm:^5.8.2"
     typescript-eslint: "npm:^8.56.1"
     vitest: "npm:4.1.0"
-    vitest-browser-react: "npm:^2.1.0"
+    vitest-browser-react: "npm:^2.0.4"
   peerDependencies:
     "@blueprintjs/core": ^6.0.0
     "@blueprintjs/icons": ^6.0.0
@@ -4509,7 +4509,7 @@ __metadata:
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     vitest: "npm:4.1.0"
-    vitest-browser-react: "npm:^2.1.0"
+    vitest-browser-react: "npm:^2.0.4"
   languageName: unknown
   linkType: soft
 
@@ -4674,7 +4674,7 @@ __metadata:
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     vitest: "npm:4.1.0"
-    vitest-browser-react: "npm:^2.1.0"
+    vitest-browser-react: "npm:^2.0.4"
   languageName: unknown
   linkType: soft
 
@@ -17889,24 +17889,6 @@ __metadata:
     "@types/react-dom":
       optional: true
   checksum: 10c0/ae972fa20895c73622c2e724a2e2a716cc2a2e5148da19a60d1185323aeb5f5bd0653cfe3048d081bb086ee0efa68c0c360d28cdf42ddd8df6a5f2d17ffd0c9e
-  languageName: node
-  linkType: hard
-
-"vitest-browser-react@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "vitest-browser-react@npm:2.1.0"
-  peerDependencies:
-    "@types/react": ^18.0.0 || ^19.0.0
-    "@types/react-dom": ^18.0.0 || ^19.0.0
-    react: ^18.0.0 || ^19.0.0
-    react-dom: ^18.0.0 || ^19.0.0
-    vitest: ^4.0.0
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-    "@types/react-dom":
-      optional: true
-  checksum: 10c0/739575a803ea048dc6a81a2027abf619529fb715ce2f3fc9b00c3bba315b042bd45c9b62bef9c3c4a48a6879e8952ee4fac30bc0378aa125eee6fdfb28e6b56b
   languageName: node
   linkType: hard
 
