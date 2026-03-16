@@ -17,7 +17,7 @@
   "type": "module",
   "dependencies": {
     "@sourceacademy/modules-repotools": "workspace:^",
-    "@vitejs/plugin-react": "^5.1.4",
+    "@vitejs/plugin-react": "^6.0.1",
     "@vitest/browser-playwright": "4.1.0",
     "@vitest/coverage-v8": "4.1.0",
     "acorn": "^8.8.1",
@@ -31,7 +31,7 @@
     "http-server": "^14.1.1",
     "jsdom": "^29.0.0",
     "typedoc": "^0.28.9",
-    "vite": "^7.3.1",
+    "vite": "^8.0.0",
     "vitest": "4.1.0"
   },
   "scripts": {
