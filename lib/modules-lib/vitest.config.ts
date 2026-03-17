@@ -25,7 +25,6 @@ export default mergeConfig(
       environment: 'jsdom',
       browser: {
         enabled: true,
-        // headless: true,
         provider: playwright(),
         instances: [{
           browser: 'chromium',
