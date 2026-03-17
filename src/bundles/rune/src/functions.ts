@@ -103,6 +103,9 @@ export class RuneFunctions {
     rune: Rune
   ): Rune {
     throwIfNotRune(RuneFunctions.scale_independent.name, rune);
+    assertNumberWithinRange(ratio_x, { func_name: RuneFunctions.scale_independent.name, param_name: 'ratio_x', integer: false });
+    assertNumberWithinRange(ratio_y, { func_name: RuneFunctions.scale_independent.name, param_name: 'ratio_y', integer: false });
+
     const scaleVec = vec3.fromValues(ratio_x, ratio_y, 1);
     const scaleMat = mat4.create();
     mat4.scale(scaleMat, scaleMat, scaleVec);
@@ -152,8 +155,8 @@ export class RuneFunctions {
 
   @functionDeclaration('frac: number, rune1: Rune, rune2: Rune', 'Rune')
   static stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
-    throwIfNotRune(RuneFunctions.stack_frac.name, rune1);
-    throwIfNotRune(RuneFunctions.stack_frac.name, rune2);
+    throwIfNotRune(RuneFunctions.stack_frac.name, rune1, 'rune1');
+    throwIfNotRune(RuneFunctions.stack_frac.name, rune2, 'rune2');
     throwIfNotFraction(frac, 'frac', RuneFunctions.stack_frac.name);
 
     const upper = RuneFunctions.translate(0, -(1 - frac), RuneFunctions.scale_independent(1, frac, rune1));
@@ -165,8 +168,8 @@ export class RuneFunctions {
 
   @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   static stack(rune1: Rune, rune2: Rune): Rune {
-    throwIfNotRune(RuneFunctions.stack.name, rune1);
-    throwIfNotRune(RuneFunctions.stack.name, rune2);
+    throwIfNotRune(RuneFunctions.stack.name, rune1, 'rune1');
+    throwIfNotRune(RuneFunctions.stack.name, rune2, 'rune2');
     return RuneFunctions.stack_frac(1 / 2, rune1, rune2);
   }
 
@@ -205,8 +208,8 @@ export class RuneFunctions {
 
   @functionDeclaration('frac: number, rune1: Rune, rune2: Rune', 'Rune')
   static beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
-    throwIfNotRune(RuneFunctions.beside_frac.name, rune1);
-    throwIfNotRune(RuneFunctions.beside_frac.name, rune2);
+    throwIfNotRune(RuneFunctions.beside_frac.name, rune1, 'rune1');
+    throwIfNotRune(RuneFunctions.beside_frac.name, rune2, 'rune2');
     throwIfNotFraction(frac, 'frac', RuneFunctions.beside_frac.name);
 
     const left = RuneFunctions.translate(-(1 - frac), 0, RuneFunctions.scale_independent(frac, 1, rune1));
@@ -218,8 +221,8 @@ export class RuneFunctions {
 
   @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   static beside(rune1: Rune, rune2: Rune): Rune {
-    throwIfNotRune(RuneFunctions.beside.name, rune1);
-    throwIfNotRune(RuneFunctions.beside.name, rune2);
+    throwIfNotRune(RuneFunctions.beside.name, rune1, 'rune1');
+    throwIfNotRune(RuneFunctions.beside.name, rune2, 'rune2');
     return RuneFunctions.beside_frac(0.5, rune1, rune2);
   }
 

@@ -18,7 +18,7 @@ context.moduleContexts.curve.state = {
   drawnCurves
 };
 
-function createDrawFunction(
+function getRenderFunctionCreator(
   scaleMode: ScaleMode,
   drawMode: DrawMode,
   space: CurveSpace,
@@ -78,10 +78,10 @@ function createDrawFunction(
 /** @hidden */
 export class RenderFunctionCreators {
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_connected = createDrawFunction('none', 'lines', '2D', false, 'draw_connected');
+  static draw_connected = getRenderFunctionCreator('none', 'lines', '2D', false, 'draw_connected');
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_connected_full_view = createDrawFunction(
+  static draw_connected_full_view = getRenderFunctionCreator(
     'stretch',
     'lines',
     '2D',
@@ -90,7 +90,7 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_connected_full_view_proportional = createDrawFunction(
+  static draw_connected_full_view_proportional = getRenderFunctionCreator(
     'fit',
     'lines',
     '2D',
@@ -99,10 +99,10 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_points = createDrawFunction('none', 'points', '2D', false, 'draw_points');
+  static draw_points = getRenderFunctionCreator('none', 'points', '2D', false, 'draw_points');
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_points_full_view = createDrawFunction(
+  static draw_points_full_view = getRenderFunctionCreator(
     'stretch',
     'points',
     '2D',
@@ -111,7 +111,7 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_points_full_view_proportional = createDrawFunction(
+  static draw_points_full_view_proportional = getRenderFunctionCreator(
     'fit',
     'points',
     '2D',
@@ -120,7 +120,7 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_3D_connected = createDrawFunction(
+  static draw_3D_connected = getRenderFunctionCreator(
     'none',
     'lines',
     '3D',
@@ -129,7 +129,7 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_3D_connected_full_view = createDrawFunction(
+  static draw_3D_connected_full_view = getRenderFunctionCreator(
     'stretch',
     'lines',
     '3D',
@@ -138,7 +138,7 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_3D_connected_full_view_proportional = createDrawFunction(
+  static draw_3D_connected_full_view_proportional = getRenderFunctionCreator(
     'fit',
     'lines',
     '3D',
@@ -147,10 +147,10 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_3D_points = createDrawFunction('none', 'points', '3D', false, 'draw_3D_points');
+  static draw_3D_points = getRenderFunctionCreator('none', 'points', '3D', false, 'draw_3D_points');
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_3D_points_full_view = createDrawFunction(
+  static draw_3D_points_full_view = getRenderFunctionCreator(
     'stretch',
     'points',
     '3D',
@@ -159,7 +159,7 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_3D_points_full_view_proportional = createDrawFunction(
+  static draw_3D_points_full_view_proportional = getRenderFunctionCreator(
     'fit',
     'points',
     '3D',

@@ -150,3 +150,10 @@ describe(funcs.isNumberWithinRange, () => {
     });
   });
 });
+
+describe(funcs.assertNumberWithinRange, () => {
+  it('throws InvalidNumberParameterError', () => {
+    expect(() => funcs.assertNumberWithinRange(0, 'foo', 1))
+      .toThrowError('foo: Expected integer greater than 1, got 0.');
+  });
+});
