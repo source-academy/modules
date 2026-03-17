@@ -24,8 +24,9 @@ In the case of `show`, if no runtime type-checking was performed, no error would
 
 ![](./rune-error.png)
 
-This is not helpful for the cadet's debugging, as the error occurred in `show`. Thus, by checking if the passed parameter is indeed a `Rune` before
-passing it on to other `rune` bundle functions, we make error tracing a lot simpler for cadets.
+Since cadets interact with the bundle entirely through its exported functions, checking the runtime types of passed parameters is the main way this kind of type checking needs to be done.
+For example, by checking if the passed parameter is indeed a `Rune` before passing it on to other `rune` bundle functions, we make error tracing a lot simpler for cadets.
+This lets us highlight that the error occurred with `show`.
 
 ::: details Use the `unknown` or `any` types?
 In Typescript, the `any` and `unknown` types represent an object of an unknown type. More information can be found [here](https://www.typescriptlang.org/docs/handbook/type-compatibility.html#any-unknown-object-void-undefined-null-and-never-assignability). This is where type guards really shine, as they allow the compiler to "narrow" the object's type from being anything down to a specific type. In the case of
@@ -62,6 +63,9 @@ export function show(rune: unknown) {
 ```
 :::
 
+Errors related to type checking the values passed in as parameters should make use of the provided error types to ensure that error messages remain consistent
+across bundles. The following sections discuss how to use the validation functions and errors provided by `modules-lib`.
+
 ## `InvalidParameterTypeError`
 
 When throwing errors related to type checking, you should throw an `InvalidParameterTypeError`, which can be imported from the `modules-lib`:
@@ -89,7 +93,7 @@ The parameters of the constructor for `InvalidParameterTypeError` are as follows
 
 ## Number Related Errors
 
-Numbers in Javascript and Typescript are stored as floats, but most oftenly we want to deal only with integers. Also, we may want to check that a
+Numbers in Javascript and Typescript are stored as floats, but most often we want to deal only with integers. Also, we may want to check that a
 number is greater than a given minimum, less than a given maximum, or both.
 
 `modules-lib` provides a two functions and a dedicated error type for this purpose:
@@ -204,12 +208,12 @@ This is a subclass of the `InvalidParameterTypeError` that is thrown when a para
 or doesn't fall within the expected range.
 
 Here are the parameters of the constructor:
-1. `value`: The actual value that was validated
-2. `options`: Either a `string` or an `InvalidNumberParameterErrorOptions` object.
+1. The actual value that was validated
+2. Either a `string` or an `InvalidNumberParameterErrorOptions` object.
   - If a string is provided, then that is taken as the name of the expected type
   - Otherwise, the options object controls what error message is shown to the user (i.e whether an integer or a number was expected, or if it was outside of the desired range)
-3. `func_name`: Name of the function that the validation was performed for.
-4. `param_name` _optional_: Name of the parameter that the validation was performed for.
+3. Name of the function that the validation was performed for.
+4. `param_name` _Optional_: Name of the parameter that the validation was performed for.
 
 ## Type Safety Conventions for functions
 
