@@ -1,7 +1,6 @@
-import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { assertFunctionOfLength, assertNumberWithinRange, isFunctionOfLength, isNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
 import { is_pair, type List } from 'js-slang/dist/stdlib/list';
-import clamp from 'lodash/clamp';
 import { Matrix, type CellCallback } from './types';
 
 export function throwIfNotMatrix(matrix: unknown, func_name: string, param_name?: string): asserts matrix is Matrix {
@@ -16,11 +15,11 @@ export function throwIfNotMatrix(matrix: unknown, func_name: string, param_name?
 function checkMatrixBounds(func_name: string, matrix: unknown, row: number, col: number): asserts matrix is Matrix {
   throwIfNotMatrix(matrix, func_name);
 
-  if (row < 0 || row >= matrix.rows) {
+  if (!isNumberWithinRange(row, 0, matrix.rows - 1)) {
     throw new Error(`${func_name}: Row index of ${row} out of bounds for matrix of size (${matrix.rows}, ${matrix.cols})`);
   }
 
-  if (col < 0 || col >= matrix.cols) {
+  if (!isNumberWithinRange(col, 0, matrix.cols - 1)) {
     throw new Error(`${func_name}: Column index of ${col} out of bounds for matrix of size (${matrix.rows}, ${matrix.cols})`);
   }
 }
@@ -42,12 +41,8 @@ export const MAX_COLS: number = 256;
  * @returns Matrix
  */
 export function create_matrix(rows: number, cols: number, name: string | undefined): Matrix {
-  if (!Number.isInteger(rows)) throw new Error(`${create_matrix.name}: Expected an integer value for rows, got: ${rows}`);
-  if (!Number.isInteger(cols)) throw new Error(`${create_matrix.name}: Expected an integer value for columns, got: ${cols}`);
-
-  if (rows < 1 || cols < 1) throw new Error(`${create_matrix.name}: Cannot create a matrix with fewer than 1 row or column!`);
-  if (rows > MAX_ROWS) throw new Error(`${create_matrix.name}: Cannot create a matrix with greater than ${MAX_ROWS} rows!`);
-  if (cols > MAX_COLS) throw new Error(`${create_matrix.name}: Cannot create a matrix with greater than ${MAX_COLS} columns!`);
+  assertNumberWithinRange(rows, create_matrix.name, 1, MAX_ROWS, true, 'rows');
+  assertNumberWithinRange(cols, create_matrix.name, 1, MAX_COLS, true, 'cols');
 
   if (name !== undefined && typeof name !== 'string') {
     throw new InvalidParameterTypeError('string or undefined', name, create_matrix.name, 'name');
@@ -182,7 +177,7 @@ export function get_cell_labels(matrix: Matrix): string[][] {
 }
 
 /**
- * Retrieve the name of a matrix, or `undefined` if it doesn't have one.
+ * Returns the name of a matrix, or `undefined` if it doesn't have one.
  */
 export function get_name(matrix: Matrix): string | undefined {
   throwIfNotMatrix(matrix, get_name.name);
@@ -222,8 +217,9 @@ export function get_num_rows(matrix: Matrix) {
  * @param list List containing pairs of strings and nullary functions
  * @example
  * ```
- * import { clear_matrix, install_buttons, randomize_matrix } from 'matrix';
+ * import { create_matrix, clear_matrix, install_buttons, randomize_matrix } from 'matrix';
  *
+ * const matrix = create_matrix(10, 10);
  * install_buttons(matrix, list(
  *   pair('Clear', () => clear_matrix(matrix)),
  *   pair('Randomize', () => randomize_matrix(matrix, 0.5))
@@ -277,10 +273,7 @@ export function install_buttons(matrix: Matrix, list: List): void {
  */
 export function on_cell_click(matrix: Matrix, callback: CellCallback): void {
   throwIfNotMatrix(matrix, on_cell_click.name);
-
-  if (!isFunctionOfLength(callback, 4)) {
-    throw new InvalidCallbackError(4, callback, on_cell_click.name, 'callback');
-  }
+  assertFunctionOfLength(callback, 4, on_cell_click.name, 'callback');
 
   matrix.onCellClick = callback;
 }
@@ -296,10 +289,7 @@ export function on_cell_click(matrix: Matrix, callback: CellCallback): void {
  */
 export function on_col_click(matrix: Matrix, callback: (col: number, value: boolean) => void) {
   throwIfNotMatrix(matrix, on_col_click.name);
-
-  if (!isFunctionOfLength(callback, 2)) {
-    throw new InvalidCallbackError(2, callback, on_col_click.name, 'callback');
-  }
+  assertFunctionOfLength(callback, 2, on_col_click.name, 'callback');
 
   matrix.onColClick = callback;
 }
@@ -315,10 +305,7 @@ export function on_col_click(matrix: Matrix, callback: (col: number, value: bool
  */
 export function on_row_click(matrix: Matrix, callback: (row: number, value: boolean) => void) {
   throwIfNotMatrix(matrix, on_row_click.name);
-
-  if (!isFunctionOfLength(callback, 2)) {
-    throw new InvalidCallbackError(2, callback, on_row_click.name, 'callback');
-  }
+  assertFunctionOfLength(callback, 2, on_row_click.name, 'callback');
 
   matrix.onRowClick = callback;
 }
@@ -329,11 +316,7 @@ export function on_row_click(matrix: Matrix, callback: (row: number, value: bool
  * @param probability Probability between 0 and 1 to use
  */
 export function randomise_matrix(matrix: Matrix, probability: number): void {
-  if (typeof probability !== 'number') {
-    throw new Error(`${randomise_matrix.name}: Expected a number between 0 and 1 for probability, got ${probability}`);
-  }
-
-  probability = clamp(probability, 0, 1);
+  assertNumberWithinRange(probability, randomise_matrix.name, 0, 1, false, 'probability');
 
   // draw the randomised matrix
   for (let i = 0; i < matrix.rows; i++) {
