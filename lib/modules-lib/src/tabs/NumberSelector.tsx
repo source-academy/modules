@@ -1,5 +1,5 @@
 import { EditableText, type EditableTextProps } from '@blueprintjs/core';
-import clamp from 'lodash/clamp';
+import { clamp } from 'es-toolkit';
 import { useState } from 'react';
 
 export type NumberSelectorProps = {
@@ -24,6 +24,8 @@ export type NumberSelectorProps = {
 /**
  * React component for wrapping around a {@link EditableText} to provide automatic
  * validation for number values
+ *
+ * @category Components
  */
 export default function NumberSelector({
   value,

@@ -1,5 +1,5 @@
 import { getExecOutput } from '@actions/exec';
-import memoize from 'lodash/memoize.js';
+import { memoize } from 'es-toolkit';
 
 export interface RawPackageRecord {
   directory: string;

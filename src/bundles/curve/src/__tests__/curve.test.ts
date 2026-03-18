@@ -74,21 +74,26 @@ describe('Render function creators', () => {
     });
 
     it('throws when numPoints is less than 0', () => {
-      expect(() => func(0)).toThrowError(
-        `${name}: The number of points must be a positive integer less than or equal to 65535. Got: 0`
+      expect(() => func(-1)).toThrowError(
+        `${name}: Expected integer between 0 and 65535, got -1.`
       );
     });
 
     it('throws when numPoints is greater than 65535', () => {
       expect(() => func(70000)).toThrowError(
-        `${name}: The number of points must be a positive integer less than or equal to 65535. Got: 70000`
+        `${name}: Expected integer between 0 and 65535, got 70000.`
       );
     });
 
     it('throws when numPoints is not an integer', () => {
       expect(() => func(3.14)).toThrowError(
-        `${name}: The number of points must be a positive integer less than or equal to 65535. Got: 3.14`
+        `${name}: Expected integer between 0 and 65535, got 3.14.`
       );
+    });
+
+    test('returned render function throws when called with an invalid curve', () => {
+      const creator = func(200);
+      expect(() => creator(0 as any)).toThrowError(`${name}: Expected Curve, got 0.`);
     });
 
     test('returned render functions have nice string representations', () => {
@@ -156,6 +161,11 @@ describe(funcs.unit_line_at, () => {
       expect(y).toEqual(0.5);
     }
   });
+
+  it('throws an error when argument is not a number', () => {
+    expect(() => funcs.unit_line_at('a' as any))
+      .toThrowError('unit_line_at: Expected number, got "a".');
+  });
 });
 
 describe(funcs.translate, () => {
@@ -193,6 +203,11 @@ describe(funcs.translate, () => {
       expect(g).toBeCloseTo(0.5);
     }
   });
+
+  test('toReplString representation', () => {
+    const transformer = funcs.translate(1, 1, 1);
+    expect(stringify(transformer)).toEqual('<CurveTransformer>');
+  });
 });
 
 describe(funcs.scale, () => {
@@ -222,6 +237,11 @@ describe(funcs.scale, () => {
       expect(g).toBeCloseTo(0.5);
     }
   });
+
+  test('toReplString representation', () => {
+    const transformer = funcs.scale(1, 1, 1);
+    expect(stringify(transformer)).toEqual('<CurveTransformer>');
+  });
 });
 
 describe(funcs.put_in_standard_position, () => {
@@ -237,5 +257,10 @@ describe(funcs.put_in_standard_position, () => {
     const [xn, yn] = points[points.length - 1];
     expect(xn).toBeCloseTo(1, 1);
     expect(yn).toBeCloseTo(0, 1);
+  });
+
+  test('toReplString representation', () => {
+    const transformer = funcs.put_in_standard_position(x => funcs.make_point(x, x));
+    expect(stringify(transformer)).toEqual('<CurveTransformer>');
   });
 });

@@ -2,7 +2,7 @@ import { Command } from '@commander-js/extra-typings';
 import { bundlesDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import { resolveAllBundles, resolveAllTabs, resolveSingleBundle, resolveSingleTab } from '@sourceacademy/modules-repotools/manifest';
 import chalk from 'chalk';
-import omit from 'lodash/omit.js';
+import { omit } from 'es-toolkit';
 import { logCommandErrorAndExit } from './commandUtils.js';
 
 export const getListBundlesCommand = () => new Command('bundle')
@@ -23,7 +23,7 @@ export const getListBundlesCommand = () => new Command('bundle')
         return;
       }
 
-      const bundlesStr = bundleNames.map((each, i) => `${i+1}. ${each}`).join('\n');
+      const bundlesStr = bundleNames.map((each, i) => `${i + 1}. ${each}`).join('\n');
       console.log(`${chalk.magentaBright(`Detected ${bundleNames.length} bundles in ${bundlesDir}:`)}\n${bundlesStr}`);
     } else {
       logCommandErrorAndExit(`No bundles in ${bundlesDir}!`);
@@ -49,7 +49,7 @@ export const getListTabsCommand = () => new Command('tabs')
           return;
         }
 
-        const tabsStr = tabNames.map((each, i) => `${i+1}. ${each}`).join('\n');
+        const tabsStr = tabNames.map((each, i) => `${i + 1}. ${each}`).join('\n');
         console.log(`${chalk.magentaBright(`Detected ${tabNames.length} tabs in ${tabsDir}:`)}\n${tabsStr}`);
       } else {
         logCommandErrorAndExit(`No tabs in ${tabsDir}`);
@@ -73,7 +73,7 @@ export const getValidateCommand = () => new Command('validate')
     } else if (manifestResult.severity === 'error') {
       logCommandErrorAndExit(manifestResult);
     } else {
-      const bundle = omit(manifestResult.bundle, 'type');
+      const bundle = omit(manifestResult.bundle, ['type']);
       const manifestStr = JSON.stringify(bundle, null, 2);
       console.log(`${chalk.magentaBright(`Bundle '${manifestResult.bundle.name}' found in ${directory}`)}:\n${manifestStr}`);
     }

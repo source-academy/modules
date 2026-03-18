@@ -64,12 +64,18 @@ const vitepressOptions: UserConfig = {
         text: 'Libraries',
         items: [
           {
-            text: 'Common Libraries',
-            link: '/lib'
-          }, {
+            text: 'Common Library',
+            link: '/lib/modules-lib'
+          },
+          {
             text: 'Developer Docs',
             link: '/lib/dev'
-          }]
+          },
+          {
+            text: 'Lint Plugin',
+            link: '/lib/lintplugin/1-overview'
+          }
+        ]
       },
       {
         text: 'Dev Tools',

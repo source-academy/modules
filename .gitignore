@@ -50,3 +50,4 @@ ehthumbs.db
 Thumbs.db
 
 **/__tests__/**/__screenshots__
+**/.vitest-attachments

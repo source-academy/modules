@@ -1,8 +1,8 @@
 import type { Dirent } from 'fs';
 import fs from 'fs/promises';
 import pathlib from 'path';
+import { uniq } from 'es-toolkit';
 import { validate } from 'jsonschema';
-import uniq from 'lodash/uniq.js';
 import { tabsDir } from './getGitRoot.js';
 import manifestSchema from './manifest.schema.json' with { type: 'json' };
 import type { BundleManifest, InputAsset, ResolvedBundle, ResolvedTab, ResultType } from './types.js';

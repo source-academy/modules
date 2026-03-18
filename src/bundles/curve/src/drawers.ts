@@ -1,5 +1,4 @@
-import { InvalidCallbackError } from '@sourceacademy/modules-lib/errors';
-import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 
 import { generateCurve, type Curve, type CurveDrawn } from './curves_webgl';
@@ -19,7 +18,7 @@ context.moduleContexts.curve.state = {
   drawnCurves
 };
 
-function createDrawFunction(
+function getRenderFunctionCreator(
   scaleMode: ScaleMode,
   drawMode: DrawMode,
   space: CurveSpace,
@@ -27,17 +26,10 @@ function createDrawFunction(
   name: string
 ): RenderFunctionCreator {
   function renderFuncCreator(numPoints: number) {
-    if (numPoints <= 0 || numPoints > 65535 || !Number.isInteger(numPoints)) {
-      throw new Error(
-        `${name}: The number of points must be a positive integer less than or equal to 65535. ` +
-        `Got: ${numPoints}`
-      );
-    }
+    assertNumberWithinRange(numPoints, name, 0, 65535);
 
     function renderFunc(curve: Curve) {
-      if (!isFunctionOfLength(curve, 1)) {
-        throw new InvalidCallbackError('Curve', curve, name);
-      }
+      assertFunctionOfLength(curve, 1, name, 'Curve');
 
       const curveDrawn = generateCurve(
         scaleMode,
@@ -86,10 +78,10 @@ function createDrawFunction(
 /** @hidden */
 export class RenderFunctionCreators {
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_connected = createDrawFunction('none', 'lines', '2D', false, 'draw_connected');
+  static draw_connected = getRenderFunctionCreator('none', 'lines', '2D', false, 'draw_connected');
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_connected_full_view = createDrawFunction(
+  static draw_connected_full_view = getRenderFunctionCreator(
     'stretch',
     'lines',
     '2D',
@@ -98,7 +90,7 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_connected_full_view_proportional = createDrawFunction(
+  static draw_connected_full_view_proportional = getRenderFunctionCreator(
     'fit',
     'lines',
     '2D',
@@ -107,10 +99,10 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_points = createDrawFunction('none', 'points', '2D', false, 'draw_points');
+  static draw_points = getRenderFunctionCreator('none', 'points', '2D', false, 'draw_points');
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_points_full_view = createDrawFunction(
+  static draw_points_full_view = getRenderFunctionCreator(
     'stretch',
     'points',
     '2D',
@@ -119,7 +111,7 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_points_full_view_proportional = createDrawFunction(
+  static draw_points_full_view_proportional = getRenderFunctionCreator(
     'fit',
     'points',
     '2D',
@@ -128,7 +120,7 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_3D_connected = createDrawFunction(
+  static draw_3D_connected = getRenderFunctionCreator(
     'none',
     'lines',
     '3D',
@@ -137,7 +129,7 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_3D_connected_full_view = createDrawFunction(
+  static draw_3D_connected_full_view = getRenderFunctionCreator(
     'stretch',
     'lines',
     '3D',
@@ -146,7 +138,7 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_3D_connected_full_view_proportional = createDrawFunction(
+  static draw_3D_connected_full_view_proportional = getRenderFunctionCreator(
     'fit',
     'lines',
     '3D',
@@ -155,10 +147,10 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_3D_points = createDrawFunction('none', 'points', '3D', false, 'draw_3D_points');
+  static draw_3D_points = getRenderFunctionCreator('none', 'points', '3D', false, 'draw_3D_points');
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_3D_points_full_view = createDrawFunction(
+  static draw_3D_points_full_view = getRenderFunctionCreator(
     'stretch',
     'points',
     '3D',
@@ -167,7 +159,7 @@ export class RenderFunctionCreators {
   );
 
   @functionDeclaration('numPoints: number', '(func: Curve) => Curve')
-  static draw_3D_points_full_view_proportional = createDrawFunction(
+  static draw_3D_points_full_view_proportional = getRenderFunctionCreator(
     'fit',
     'points',
     '3D',
@@ -393,9 +385,7 @@ class CurveAnimators {
       throw new Error(`${animate_curve.name} cannot be used with 3D draw function!`);
     }
 
-    if (!isFunctionOfLength(func, 1)) {
-      throw new InvalidCallbackError('CurveAnimation', func, animate_curve.name);
-    }
+    assertFunctionOfLength(func, 1, CurveAnimators.animate_curve.name, 'CurveAnimation');
 
     const anim = new AnimatedCurve(duration, fps, func, drawer, false);
     drawnCurves.push(anim);
@@ -413,9 +403,7 @@ class CurveAnimators {
       throw new Error(`${animate_3D_curve.name} cannot be used with 2D draw function!`);
     }
 
-    if (!isFunctionOfLength(func, 1)) {
-      throw new InvalidCallbackError('CurveAnimation', func, animate_3D_curve.name);
-    }
+    assertFunctionOfLength(func, 1, CurveAnimators.animate_3D_curve.name, 'CurveAnimation');
 
     const anim = new AnimatedCurve(duration, fps, func, drawer, true);
     drawnCurves.push(anim);
@@ -430,6 +418,7 @@ class CurveAnimators {
  * @param drawer Draw function to the generated curves with
  * @param func Curve generating function. Takes in a timestamp value and returns a curve
  * @returns Curve Animation
+ * @function
  */
 export const animate_curve = CurveAnimators.animate_curve;
 
@@ -440,5 +429,6 @@ export const animate_curve = CurveAnimators.animate_curve;
  * @param drawer Draw function to the generated curves with
  * @param func Curve generating function. Takes in a timestamp value and returns a curve
  * @returns 3D Curve Animation
+ * @function
  */
 export const animate_3D_curve = CurveAnimators.animate_3D_curve;

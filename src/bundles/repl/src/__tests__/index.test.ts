@@ -51,11 +51,11 @@ describe(funcs.default_js_slang, () => {
 
 describe(funcs.set_evaluator, () => {
   it('returns a value that indicates that the repl is initialized', () => {
-    expect(stringify(funcs.set_evaluator(() => 0))).toEqual('<Programmable Repl Initialized>');
+    expect(stringify(funcs.set_evaluator(_t => 0))).toEqual('<Programmable Repl Initialized>');
   });
 
   it('throws when the parameter isn\'t a function', () => {
     expect(() => funcs.set_evaluator(0 as any))
-      .toThrowError('set_evaluator expects a function as parameter');
+      .toThrowError('set_evaluator: Expected function with 1 parameter, got 0.');
   });
 });

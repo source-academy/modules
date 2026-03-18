@@ -282,10 +282,16 @@ export default defineConfig(
       'no-restricted-imports': [
         'error',
         {
-          paths: [{
-            name: 'commander',
-            message: 'Import from @commander-js/extra-typings instead'
-          }]
+          paths: [
+            {
+              name: 'commander',
+              message: 'Import from @commander-js/extra-typings instead'
+            },
+            {
+              name: 'lodash',
+              message: 'Use es-toolkit instead'
+            }
+          ]
         }
       ],
       'prefer-const': ['warn', { destructuring: 'all' }],
@@ -324,7 +330,7 @@ export default defineConfig(
         // disable in the CI since we don't install packages so all node packages
         // become unresolvable
         process.env.CI ? 'off' : 'error',
-        { ignore: [ 'js-slang/context', '^virtual:.+$' ] }
+        { ignore: ['js-slang/context', '^virtual:.+$'] }
       ],
 
       'jsdoc/no-types': 'warn',
@@ -344,7 +350,7 @@ export default defineConfig(
         allowRethrowing: true,
         allow: [
           // TODO: Remove these exceptions when js-slang errors inherit from Error
-          'InvalidParameterTypeError', 'InvalidCallbackError',
+          'InvalidParameterTypeError', 'InvalidCallbackError', 'InvalidNumberParameterError'
           // {
           //   from: 'package',
           //   name: ['InvalidParameterTypeError', 'InvalidCallbackError'],

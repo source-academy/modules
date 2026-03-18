@@ -65,7 +65,7 @@ You can also add the dependency directly by modifying your `package.json`:
 {
   "name": "@sourceacademy/tab-Tab0",
   "dependencies": {
-    "lodash": "^4.0.0"
+    "es-toolkit": "^1.44.0"
   }
 }
 ```
@@ -106,6 +106,20 @@ in the root `tsconfig.json` used by tabs. `esbuild` reads from `tsconfig.json` a
 There are also several React components defined under `@sourceacademy/modules-lib/tabs` that perform functions common across tabs.
 
 You can see the documentation for these components [here](/lib/modules-lib/)
+
+### Styles from `@blueprintjs`
+
+Besides providing components, Blueprint also provides CSS Styles that can be attached to your own components:
+
+```jsx
+const component = <div className="bp6-dark">
+  <h1 className="bp6-text-large">Hello World!</h1>
+</div>;
+```
+You can use these styles directly instead of having to come up with your own.
+
+Often, these styles will be prefixed with `bp` and the version number (i.e `bp6`). Take care to ensure that this prefix matches the version of Blueprint that
+is in use.
 
 ## Export Interface
 
@@ -172,7 +186,6 @@ test('Matches snapshot', () => {
   expect(<Component />).toMatchSnapshot();
 });
 ```
-
 :::
 
 ## Working with Module Contexts from within Tabs

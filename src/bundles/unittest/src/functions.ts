@@ -1,3 +1,4 @@
+import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 
 import {
@@ -36,6 +37,10 @@ function handleErr(err: any) {
 }
 
 function runTest(name: string, funcName: string, func: Test) {
+  if (!isFunctionOfLength(func, 0)) {
+    throw new UnitestBundleInternalError(`${funcName}: A test or test suite must be a nullary function!`);
+  }
+
   if (currentSuite === null) {
     throw new UnitestBundleInternalError(`${funcName} must be called from within a test suite!`);
   }
@@ -104,6 +109,10 @@ function determinePassCount(results: (TestResult | SuiteResult)[]): number {
  * @param func Function containing tests.
  */
 export function describe(msg: string, func: TestSuite): void {
+  if (!isFunctionOfLength(func, 0)) {
+    throw new UnitestBundleInternalError(`${describe.name}: A test or test suite must be a nullary function!`);
+  }
+
   const oldSuite = currentSuite;
   const newSuite = getNewSuite(msg);
 

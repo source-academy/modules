@@ -1,6 +1,5 @@
 import { Button, EditableText } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
-import clamp from 'lodash/clamp';
+import { clamp } from 'es-toolkit';
 import { useState } from 'react';
 
 export interface MultiItemDisplayProps {
@@ -11,6 +10,8 @@ export interface MultiItemDisplayProps {
 /**
  * React Component for displaying multiple items
  * ![image](./image.png)
+ *
+ * @category Components
  */
 export default function MultiItemDisplay(props: MultiItemDisplayProps) {
   // The actual index of the currently selected element
@@ -31,7 +32,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
   const elementsDigitCount = Math.floor(Math.log10(Math.max(1, props.elements.length))) + 1;
 
   return (
-    <div
+    (<div
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -60,7 +61,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
           tabIndex={0}
           large
           outlined
-          icon={IconNames.ARROW_LEFT}
+          icon='arrow-left'
           onClick={() => {
             changeStep(currentStep - 1);
             setStepEditorValue(currentStep.toString());
@@ -69,7 +70,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
         >
           Previous
         </Button>
-        <h3 className="bp3-text-large">
+        <h3 className="bp6-text-large">
           <div
             style={{
               display: 'flex',
@@ -134,7 +135,7 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
           }}
           large
           outlined
-          icon={IconNames.ARROW_RIGHT}
+          icon='arrow-right'
           tabIndex={0}
           onClick={() => {
             changeStep(currentStep + 1);
@@ -157,6 +158,6 @@ export default function MultiItemDisplay(props: MultiItemDisplayProps) {
       >
         {props.elements[currentStep]}
       </div>
-    </div>
+    </div>)
   );
 }

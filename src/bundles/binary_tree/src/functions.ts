@@ -27,6 +27,14 @@ export function make_empty_tree(): BinaryTree {
  * @returns A binary tree
  */
 export function make_tree(value: any, left: BinaryTree, right: BinaryTree): BinaryTree {
+  if (!is_tree(left)) {
+    throw new InvalidParameterTypeError('binary tree', left, make_tree.name, 'left');
+  }
+
+  if (!is_tree(right)) {
+    throw new InvalidParameterTypeError('binary tree', right, make_tree.name, 'right');
+  }
+
   return list(value, left, right);
 }
 
@@ -66,7 +74,7 @@ export function is_tree(value: any): value is BinaryTree {
  * @param value Value to be tested
  * @returns bool
  */
-export function is_empty_tree(value: BinaryTree): value is EmptyBinaryTree {
+export function is_empty_tree(value: unknown): value is EmptyBinaryTree {
   return value === null;
 }
 

@@ -5,7 +5,6 @@
  */
 
 import { Button } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
 
 import { FONT_MESSAGE, MINIMUM_EDITOR_HEIGHT } from '@sourceacademy/bundle-repl/config';
 import type { ProgrammableRepl } from '@sourceacademy/bundle-repl/programmable_repl';
@@ -93,14 +92,14 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
       <div>
         <Button
           className="programmable-repl-button"
-          icon={IconNames.PLAY}
+          icon='play'
           active={true}
           onClick={() => this.replInstance.runCode()}// Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
           text="Run"
         />
         <Button
           className="programmable-repl-button"
-          icon={IconNames.FLOPPY_DISK}
+          icon='floppy-disk'
           active={true}
           onClick={() => this.replInstance.saveEditorContent()}// Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
           text="Save"

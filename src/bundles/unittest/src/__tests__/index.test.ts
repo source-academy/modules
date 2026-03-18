@@ -13,7 +13,7 @@ describe('Test \'it\' and \'describe\'', () => {
     testing.suiteResults.splice(0);
   });
 
-  test('it and describe correctly set and resets the value of current test and suite', () => {
+  test('it() and describe() correctly set and resets the value of current test and suite', () => {
     expect(testing.currentTest).toBeNull();
     expect(testing.currentSuite).toBeNull();
     testing.describe('suite', () => {
@@ -124,12 +124,29 @@ describe('Test \'it\' and \'describe\'', () => {
 
     expect(f).toThrowError('it cannot be called from within another test!');
   });
+
+  test('it() and describe() throw when provided a non-nullary function', () => {
+    expect(() => testing.it('test name', 0 as any)).toThrow(
+      'it: A test or test suite must be a nullary function!'
+    );
+
+    expect(() => testing.describe('test name', 0 as any)).toThrow(
+      'describe: A test or test suite must be a nullary function!'
+    );
+  });
 });
 
 describe('Test assertion functions', () => {
-  test('assert', () => {
-    expect(() => asserts.assert(() => true)).not.toThrow();
-    expect(() => asserts.assert(() => false)).toThrow('Assert failed');
+  describe(asserts.assert, () => {
+    it('works', () => {
+      expect(() => asserts.assert(() => true)).not.toThrow();
+      expect(() => asserts.assert(() => false)).toThrow('Assert failed');
+    });
+
+    it('will throw an error if not provided a nullary function', () => {
+      expect(() => asserts.assert(0 as any)).toThrow(`${asserts.assert.name} expects a nullary function that returns a boolean!`);
+      expect(() => asserts.assert((x => x === true) as any)).toThrow(`${asserts.assert.name} expects a nullary function that returns a boolean!`);
+    });
   });
 
   describe(asserts.assert_equals, () => {
@@ -375,19 +392,19 @@ describe('Mocking functions', () => {
 
   describe(mocks.get_arg_list, () => {
     it('throws when function isn\'t a mocked function', () => {
-      expect(() => mocks.get_arg_list((() => 0) as any)).toThrowError('get_arg_list expects a mocked function as argument');
+      expect(() => mocks.get_arg_list((() => 0) as any)).toThrowError('get_arg_list: Expected mocked function, got () => 0.');
     });
   });
 
   describe(mocks.get_ret_vals, () => {
     it('throws when function isn\'t a mocked function', () => {
-      expect(() => mocks.get_ret_vals((() => 0) as any)).toThrowError('get_ret_vals expects a mocked function as argument');
+      expect(() => mocks.get_ret_vals((() => 0) as any)).toThrowError('get_ret_vals: Expected mocked function, got () => 0.');
     });
   });
 
   describe(mocks.clear_mock, () => {
     it('throws when function isn\'t a mocked function', () => {
-      expect(() => mocks.clear_mock((() => 0) as any)).toThrowError('clear_mock expects a mocked function as argument');
+      expect(() => mocks.clear_mock((() => 0) as any)).toThrowError('clear_mock: Expected mocked function, got () => 0.');
     });
 
     it('works', () => {
@@ -402,7 +419,7 @@ describe('Mocking functions', () => {
 
   describe(mocks.mock_function, () => {
     it('throws when passed not a function', () => {
-      expect(() => mocks.mock_function(0 as any)).toThrowError('mock_function expects a function as argument');
+      expect(() => mocks.mock_function(0 as any)).toThrowError('mock_function: Expected function, got 0.');
     });
   });
 });

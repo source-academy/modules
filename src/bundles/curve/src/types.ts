@@ -6,7 +6,9 @@ export type CurveModuleState = {
 };
 
 /** A function that takes in CurveFunction and returns a tranformed CurveFunction. */
-export type CurveTransformer = (c: Curve) => Curve;
+export interface CurveTransformer extends ReplResult {
+  (c: Curve): Curve;
+}
 
 export type DrawMode = 'lines' | 'points';
 export type ScaleMode = 'fit' | 'none' | 'stretch';

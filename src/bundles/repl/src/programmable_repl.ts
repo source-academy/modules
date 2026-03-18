@@ -6,6 +6,7 @@
 
 import { runFilesInContext, type IOptions } from 'js-slang';
 import context from 'js-slang/context';
+import { head, is_pair, tail } from 'js-slang/dist/stdlib/list';
 import { COLOR_ERROR_MESSAGE, COLOR_RUN_CODE_RESULT, DEFAULT_EDITOR_HEIGHT } from './config';
 import { evaluatorSymbol } from './functions';
 
@@ -94,9 +95,6 @@ export class ProgrammableRepl {
 
   richDisplayInternal(pair_rich_text) {
     developmentLog(pair_rich_text);
-    const head = (pair) => pair[0];
-    const tail = (pair) => pair[1];
-    const is_pair = (obj) => obj instanceof Array && obj.length === 2;
     if (!is_pair(pair_rich_text)) return 'not_rich_text_pair';
     function checkColorStringValidity(htmlColor: string) {
       if (htmlColor.length !== 7) return false;

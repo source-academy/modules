@@ -6,7 +6,7 @@
  */
 
 import { Button } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { Cross, Disable } from '@blueprintjs/icons';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Vector3, normalizeVector, pointDistance, zeroVector } from './UnityAcademyMaths';
@@ -120,7 +120,7 @@ class UnityComponent extends React.Component<any> {
           }} />
         </div>
         <Button
-          icon={IconNames.CROSS}
+          icon={<Cross />}
           active={true}
           onClick={() => {
             moduleInstance.setShowUnityComponent(0);
@@ -134,7 +134,7 @@ class UnityComponent extends React.Component<any> {
           }}
         />
         <Button
-          icon={IconNames.DISABLE}
+          icon={<Disable />}
           active={true}
           onClick={() => {
             moduleInstance.terminate();

@@ -8,14 +8,18 @@ import RuneSideContent, { RuneTab } from '..';
 import HollusionCanvas from '../hollusion_canvas';
 
 test('Ensure that rune animations error gracefully', () => {
-  const badAnimation = animate_rune(1, 60, _t => 1 as any);
+  const badAnimation = animate_rune(1, 60, _t => {
+    throw new Error();
+  });
   const mockContext = mockDebuggerContext<RuneModuleState>({ drawnRunes: [badAnimation] }, 'rune');
   expect(<RuneTab context={mockContext} />)
     .toMatchSnapshot();
 });
 
 test('Ensure that anaglyph animations error gracefully', () => {
-  const badAnimation = animate_anaglyph(1, 60, _t => 1 as any);
+  const badAnimation = animate_anaglyph(1, 60, _t => {
+    throw new Error();
+  });
   const mockContext = mockDebuggerContext<RuneModuleState>({ drawnRunes: [badAnimation] }, 'rune');
   expect(<RuneTab context={mockContext} />)
     .toMatchSnapshot();

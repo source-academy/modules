@@ -1,4 +1,4 @@
-import { AnchorButton, Button, Icon, Intent, type IconName } from '@blueprintjs/core';
+import { AnchorButton, Button, Icon, Intent, type IconProps } from '@blueprintjs/core';
 import React from 'react';
 
 type ButtonOptions = {
@@ -13,7 +13,7 @@ type ButtonOptions = {
 
 type ControlButtonProps = {
   label?: string;
-  icon?: IconName;
+  icon?: IconProps['icon'];
   onClick?: () => void;
   options?: Partial<ButtonOptions>;
   isDisabled?: boolean;

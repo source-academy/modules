@@ -2,6 +2,7 @@ import type { DebuggerContext, ModuleSideContent } from '../types';
 
 /**
  * Helper function for extracting the state object for your bundle
+ * @category Utilities
  * @template T The type of your bundle's state object
  * @param debuggerContext DebuggerContext as returned by the frontend
  * @param name Name of your bundle
@@ -13,6 +14,7 @@ export function getModuleState<T>(debuggerContext: DebuggerContext, name: string
 
 /**
  * Helper for typing tabs
+ * @category Utilities
  */
 export function defineTab<T extends ModuleSideContent>(tab: T) {
   return tab;

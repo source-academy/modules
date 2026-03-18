@@ -4,6 +4,7 @@
  * @author Wang Zihan
  */
 
+import { assertFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 import { COLOR_REPL_DISPLAY_DEFAULT } from './config';
 import { ProgrammableRepl } from './programmable_repl';
@@ -25,9 +26,8 @@ context.moduleContexts.repl.state = INSTANCE;
  * @category Main
  */
 export function set_evaluator(evalFunc: (code: string) => any) {
-  if (typeof evalFunc !== 'function') {
-    throw new Error(`${set_evaluator.name} expects a function as parameter`);
-  }
+  assertFunctionOfLength(evalFunc, 1, set_evaluator.name);
+
   INSTANCE.evalFunction = evalFunc;
   return {
     toReplString: () => '<Programmable Repl Initialized>'

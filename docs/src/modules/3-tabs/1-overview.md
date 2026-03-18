@@ -65,11 +65,13 @@ The entry point for a tab is either `index.tsx` or `src/index.tsx`. No other ent
 The Frontend expects each tab's entry point to provide a default export of an object conforming to the following interface:
 
 ```ts
+import type { IconName } from '@blueprintjs/core';
+
 interface ModuleSideContent {
   toSpawn: ((context: DebuggerContext) => boolean) | undefined;
   body: (context: DebuggerContext) => JSX.Element;
   label: string;
-  iconName: string;
+  iconName: IconName;
 }
 ```
 
@@ -106,7 +108,7 @@ export default defineTab({
     return <MultiItemDisplay elements={canvases} />;
   },
   label: 'Curves Tab',
-  iconName: 'media',
+  iconName: 'media'
 });
 ```
 
@@ -142,4 +144,6 @@ A string containing the text for the tooltip to display when the user hovers ove
 
 ### `iconName`
 
-The name of the BlueprintJS icon to use for the tab icon. You can refer to the list of icon names [here](https://blueprintjs.com/docs/#icons)
+The name of the BlueprintJS icon to use for the tab icon. You can refer to the list of icon names [here](https://blueprintjs.com/docs/#icons).
+
+Note that `IconName`s are defined in `@blueprintjs/core`, but it is not necessary to import that type.

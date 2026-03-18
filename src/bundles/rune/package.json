@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/bundle-repeat": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
-    "gl-matrix": "^3.3.0",
-    "lodash": "^4.17.23"
+    "es-toolkit": "^1.44.0",
+    "gl-matrix": "^3.3.0"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@types/lodash": "^4.14.198",
     "js-slang": "^1.0.85",
     "typescript": "^5.8.2"
   },
