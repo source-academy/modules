@@ -21,7 +21,7 @@ describe(funcs.repeat, () => {
       .toThrowError('repeat: Expected function with 1 parameter, got () => 2.');
   });
 
-  test('throws an error when provided incorrect integers', () => {
+  test('throws an error when provided incorrect values', () => {
     expect(() => funcs.repeat((x: number) => x, -1))
       .toThrowError('repeat: Expected integer greater than 0, got -1.');
 

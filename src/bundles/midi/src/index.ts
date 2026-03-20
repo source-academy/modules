@@ -114,7 +114,10 @@ export function midi_note_to_letter_name(midiNote: MIDINote, accidental: Acciden
  * @param note given MIDI note
  * @returns the frequency of the MIDI note
  * @function
- * @example midi_note_to_frequency(69); // Returns 440
+ * @example
+ * ```
+ * midi_note_to_frequency(69); // Returns 440
+ * ```
  */
 export function midi_note_to_frequency(note: MIDINote): number {
   assertNumberWithinRange(note, midi_note_to_frequency.name);
@@ -127,7 +130,10 @@ export function midi_note_to_frequency(note: MIDINote): number {
  *
  * @param note given letter name
  * @returns the corresponding frequency (in Hz)
- * @example letter_name_to_frequency("A4"); // Returns 440
+ * @example
+ * ```
+ * letter_name_to_frequency('A4'); // Returns 440
+ * ```
  */
 export function letter_name_to_frequency(note: NoteWithOctave): number {
   return midi_note_to_frequency(letter_name_to_midi_note(note));

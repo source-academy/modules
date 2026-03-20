@@ -953,7 +953,7 @@ export const red = RuneColours.red;
  * @param {function} pattern - Unary function from Rune to Rune
  * @param {Rune} initial - The initial Rune
  * @returns {Rune} - Result of n times application of pattern to initial:
- * pattern(pattern(...pattern(pattern(initial))...))
+ * `pattern(pattern(...pattern(pattern(initial))...))`
  * @function
  *
  * @category Main

@@ -10,7 +10,7 @@ vi.spyOn(performance, 'now').mockReturnValue(0);
 
 describe('Test \'it\' and \'describe\'', () => {
   beforeEach(() => {
-    testing.suiteResults.splice(0);
+    testing.topLevelSuiteResults.splice(0);
   });
 
   test('it() and describe() correctly set and resets the value of current test and suite', () => {
@@ -53,8 +53,8 @@ describe('Test \'it\' and \'describe\'', () => {
       testing.it('test2', () => {});
     });
 
-    expect(testing.suiteResults.length).toEqual(2);
-    const [result1, result2] = testing.suiteResults;
+    expect(testing.topLevelSuiteResults.length).toEqual(2);
+    const [result1, result2] = testing.topLevelSuiteResults;
     expect(result1).toMatchObject({
       name: 'block1',
       results: [{ name: 'test1', passed: true }],
@@ -84,8 +84,8 @@ describe('Test \'it\' and \'describe\'', () => {
       testing.it('test2', () => {});
     });
 
-    expect(testing.suiteResults.length).toEqual(2);
-    const [result1, result2] = testing.suiteResults;
+    expect(testing.topLevelSuiteResults.length).toEqual(2);
+    const [result1, result2] = testing.topLevelSuiteResults;
     // Verify Result 1 first
     expect(result1.results.length).toEqual(2);
     const [subResult1, subResult2] = result1.results;
@@ -133,6 +133,12 @@ describe('Test \'it\' and \'describe\'', () => {
     expect(() => testing.describe('test name', 0 as any)).toThrow(
       'describe: A test or test suite must be a nullary function!'
     );
+  });
+
+  test('internal errors are not handled', () => {
+    expect(testing.describe('suite', () => {
+      testing.test('test', () => { throw new UnitestBundleInternalError(); });
+    })).toThrowError(UnitestBundleInternalError);
   });
 });
 
@@ -422,10 +428,4 @@ describe('Mocking functions', () => {
       expect(() => mocks.mock_function(0 as any)).toThrowError('mock_function: Expected function, got 0.');
     });
   });
-});
-
-test('internal errors are not handled', () => {
-  expect(() => {
-    throw new UnitestBundleInternalError();
-  }).toThrow();
 });
