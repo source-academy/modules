@@ -29,8 +29,7 @@ describe('Test 3D Curve Canvas', () => {
     }
   });
 
-  // TODO: Fix
-  test.skip('Setting angle to a valid value using textbox', async ({ curve, mockedRedraw }) => {
+  test('Setting angle to a valid value using textbox', async ({ curve, mockedRedraw }) => {
     await render(<Canvas3DCurve curve={curve} />);
     await userEvent.keyboard('[Tab][Tab][Tab][Backspace]{10}[Enter]');
     await expect.poll(() => mockedRedraw).toHaveBeenCalledTimes(2);
@@ -40,8 +39,7 @@ describe('Test 3D Curve Canvas', () => {
     expect(call1).toBeCloseTo(degreesToRadians(10));
   });
 
-  // TODO: Fix
-  test.skip('Setting angle to less than 0 using textbox sets it to 0', async ({ curve, mockedRedraw }) => {
+  test('Setting angle to less than 0 using textbox sets it to 0', async ({ curve, mockedRedraw }) => {
     await render(<Canvas3DCurve curve={curve} />);
     await userEvent.keyboard('[Tab][Tab][Tab][Backspace]{-}{1}[Enter]');
     await expect.poll(() => mockedRedraw).toHaveBeenCalledTimes(2);
@@ -51,8 +49,7 @@ describe('Test 3D Curve Canvas', () => {
     expect(call1).toEqual(0);
   });
 
-  // TODO: Fix
-  test.skip('Setting angle to greater than 360 using textbox sets it to 360', async ({ curve, mockedRedraw }) => {
+  test('Setting angle to greater than 360 using textbox sets it to 360', async ({ curve, mockedRedraw }) => {
     await render(<Canvas3DCurve curve={curve} />);
     await userEvent.keyboard('[Tab][Tab][Tab][Backspace]400[Enter]');
     await expect.poll(() => mockedRedraw).toHaveBeenCalledTimes(2);
@@ -62,15 +59,13 @@ describe('Test 3D Curve Canvas', () => {
     expect(call1).toBeCloseTo(2 * Math.PI);
   });
 
-  // TODO: Fix
-  test.skip('Clearing the value from the textbox doesn\'t change the angle', async ({ curve, mockedRedraw }) => {
+  test('Clearing the value from the textbox doesn\'t change the angle', async ({ curve, mockedRedraw }) => {
     await render(<Canvas3DCurve curve={curve} />);
     await userEvent.keyboard('[Tab][Tab][Tab][Backspace][Enter]');
     await expect.poll(() => mockedRedraw).toHaveBeenCalledExactlyOnceWith(0);
   });
 
-  // TODO: Fix
-  test.skip('Play button actually automatically rotates the viewpoint', async ({ curve, mockedRedraw }) => {
+  test('Play button actually automatically rotates the viewpoint', async ({ curve, mockedRedraw }) => {
     vi.useFakeTimers();
 
     try {
@@ -149,8 +144,7 @@ describe('Test 3D Animated Curve Canvas', () => {
     },
   });
 
-  // TODO: Fix
-  test.skip('Clicking play button runs through the entire animation', async ({ curve, mockAngleRedraw, mockGetFrame }) => {
+  test('Clicking play button runs through the entire animation', async ({ curve, mockAngleRedraw, mockGetFrame }) => {
     const screen = await render(<Curve3DAnimationCanvas animation={curve} />);
     const playButton = screen.getByTitle('PlayButton');
     const autoPlaySwitch = screen.getByRole('checkbox');
@@ -174,8 +168,7 @@ describe('Test 3D Animated Curve Canvas', () => {
     expect(mockGetFrame.mock.calls[9][0]).toEqual(1);
   });
 
-  // TODO: Fix
-  test.skip('Changing the angle', async ({ curve, mockAngleRedraw, mockGetFrame }) => {
+  test('Changing the angle', async ({ curve, mockAngleRedraw, mockGetFrame }) => {
     curve.angle = Math.PI;
     const screen = await render(<Curve3DAnimationCanvas animation={curve} />);
 
