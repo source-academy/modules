@@ -37,6 +37,9 @@
     "vitest": "4.1.0",
     "vitest-browser-react": "^2.0.4"
   },
+  "peerDependencies": {
+    "es-toolkit": "^1.44.0"
+  },
   "scripts": {
     "dev": "vite",
     "lint": "eslint src",

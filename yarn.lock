@@ -4314,6 +4314,8 @@ __metadata:
     vite-plugin-node-polyfills: "npm:^0.25.0"
     vitest: "npm:4.1.0"
     vitest-browser-react: "npm:^2.0.4"
+  peerDependencies:
+    es-toolkit: ^1.44.0
   bin:
     devserver: ./bin.js
   languageName: unknown
