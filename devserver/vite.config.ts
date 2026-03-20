@@ -25,6 +25,9 @@ export default defineProject(({ mode }) => {
       }),
       react(),
     ],
+    legacy: {
+      inconsistentCjsInterop: true
+    },
     resolve: {
       preserveSymlinks: true,
       alias: [{
