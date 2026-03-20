@@ -25,15 +25,13 @@ describe('Playground tests', () => {
     return userEvent.click(runButton);
   }
 
-  // TODO: Fix
-  test.skip('Running js-slang by clicking the run button', async () => {
+  test('Running js-slang by clicking the run button', async () => {
     const component = await render(<Playground />);
     await clickRunButton(component);
     await expect.poll(() => runInContext).toHaveBeenCalled();
   });
 
-  // TODO: Fix
-  test.skip('Loading tabs via Vite', async () => {
+  test('Loading tabs via Vite', async () => {
     await commands.setLocalStorage('editorValue', '0;');
 
     const component = await render(<Playground />);
@@ -43,8 +41,7 @@ describe('Playground tests', () => {
     expect(importers.getDynamicTabs).toHaveBeenCalled();
   });
 
-  // TODO: Fix
-  test.skip('Loading compiled tabs', async () => {
+  test('Loading compiled tabs', async () => {
     await commands.setLocalStorage('editorValue', '0;');
     const component = await render(<Playground />);
 
