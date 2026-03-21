@@ -1,5 +1,5 @@
 import { Button, ButtonGroup, NumericInput } from '@blueprintjs/core';
-import { Pause, Play, Route } from '@blueprintjs/icons';
+import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import type { DebuggerContext } from '@sourceacademy/modules-lib/types/index';
 import type { Simulation } from 'nbody';
@@ -86,18 +86,15 @@ class SimulationControl extends React.Component<SimControlProps, SimControlState
     return (
       <>
         <ButtonGroup style={{ width: '100%', margin: '4px auto' }}>
-          <Button
-            className="nbody-pause-toggle-button"
-            icon={this.state.isPlaying ? <Pause /> : <Play />}
+          <PlayButton
+            isPlaying={this.state.isPlaying}
             active={false}
             onClick={() => this.toggleSimPause()}
-            text={this.state.isPlaying ? 'Pause' : 'Play'}
             style={{ margin: '4px' }}
           />
-
           <Button
             className="nbody-trails-toggle-button"
-            icon={<Route />}
+            icon='route'
             active={this.state.showTrails}
             onClick={() => this.toggleShowTrails()}
             style={{ margin: '4px' }}

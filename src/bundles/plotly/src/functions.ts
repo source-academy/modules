@@ -7,6 +7,7 @@ import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
 import { get_duration, get_wave, is_sound } from '@sourceacademy/bundle-sound/functions';
 import type { Sound } from '@sourceacademy/bundle-sound/types';
 import context from 'js-slang/context';
+import { accumulate, head, is_pair, tail, type List } from 'js-slang/dist/stdlib/list';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { generatePlot } from './curve_functions';
 import {
@@ -97,7 +98,8 @@ export function new_plot_json(data: any): void {
  * @param divId The id of the div element on which the plot will be displayed
  */
 function draw_new_plot(data: ListOfPairs, divId: string) {
-  const plotlyData = convert_to_plotly_data(data);
+  const plotlyData: Data = {};
+  add_fields_to_data(plotlyData, data);
   Plotly.newPlot(divId, [plotlyData]);
 }
 
@@ -111,29 +113,27 @@ function draw_new_plot_json(data: any, divId: string) {
 }
 
 /**
- * @param data The list of pairs given by the user
- * @returns The converted data that can be used by the plotly.js function
- */
-function convert_to_plotly_data(data: ListOfPairs): Data {
-  const convertedData: Data = {};
-  if (Array.isArray(data) && data.length === 2) {
-    add_fields_to_data(convertedData, data);
-  }
-  return convertedData;
-}
-
-/**
  * @param convertedData Stores the Javascript object which is used by plotly.js
  * @param data The list of pairs data used by source
+ * @hidden
  */
+export function add_fields_to_data(convertedData: Data, data: ListOfPairs) {
+  accumulate((entry, result) => {
+    if (!is_pair(entry)) {
+      throw new Error(`${add_fields_to_data.name}: Expected list of pairs, got ${entry}`);
+    }
 
-function add_fields_to_data(convertedData: Data, data: ListOfPairs) {
-  if (Array.isArray(data) && data.length === 2 && data[0].length === 2) {
-    const field = data[0][0];
-    const value = data[0][1];
-    convertedData[field] = value;
-    add_fields_to_data(convertedData, data[1]);
-  }
+    const field = head(entry);
+
+    if (typeof field !== 'string') {
+      throw new Error(`${add_fields_to_data.name}: Expected head of pair to be string, got ${field}`);
+    }
+
+    const value = tail(entry);
+
+    result[field] = value;
+    return result;
+  }, convertedData, data as List);
 }
 
 function createPlotFunction(
@@ -214,7 +214,7 @@ export const draw_connected_3d = createPlotFunction(
  * Curve at num sample points. The Drawing consists of isolated points, and does not connect them.
  * When a program evaluates to a Drawing, the Source system displays it graphically, in a window,
  *
- * * @param num determines the number of points, lower than 65535, to be sampled.
+ * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @function
  * @returns function of type 2D Curve → Drawing
@@ -241,7 +241,7 @@ export const draw_points_2d = createPlotFunction(
  * 3D Curve at num sample points. The Drawing consists of isolated points, and does not connect them.
  * When a program evaluates to a Drawing, the Source system displays it graphically, in a window,
  *
- * * @param num determines the number of points, lower than 65535, to be sampled.
+ * @param num determines the number of points, lower than 65535, to be sampled.
  * Including 0 and 1, there are `num + 1` evenly spaced sample points
  * @function
  * @returns function of type 3D Curve → Drawing

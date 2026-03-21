@@ -47,13 +47,23 @@ describe(funcs.is_tree, () => {
   });
 });
 
+describe(funcs.make_tree, () => {
+  it('throws an error when \'left\' is not a tree', () => {
+    expect(() => funcs.make_tree(0, 0 as any, null)).toThrowError('make_tree: Expected binary tree for left, got 0.');
+  });
+
+  it('throws an error when \'right\' is not a tree', () => {
+    expect(() => funcs.make_tree(0, null, 0 as any)).toThrowError('make_tree: Expected binary tree for right, got 0.');
+  });
+});
+
 describe(funcs.entry, () => {
   it('throws when argument is not a tree', () => {
-    expect(() => funcs.entry(0 as any)).toThrowError('entry expects binary tree, received: 0');
+    expect(() => funcs.entry(0 as any)).toThrowError('entry: Expected binary tree, got 0.');
   });
 
   it('throws when argument is an empty tree', () => {
-    expect(() => funcs.entry(null)).toThrowError('entry received an empty binary tree!');
+    expect(() => funcs.entry(null)).toThrowError('entry: Expected non-empty binary tree, got null.');
   });
 
   it('works', () => {
@@ -64,11 +74,11 @@ describe(funcs.entry, () => {
 
 describe(funcs.left_branch, () => {
   it('throws when argument is not a tree', () => {
-    expect(() => funcs.left_branch(0 as any)).toThrowError('left_branch expects binary tree, received: 0');
+    expect(() => funcs.left_branch(0 as any)).toThrowError('left_branch: Expected binary tree, got 0.');
   });
 
   it('throws when argument is an empty tree', () => {
-    expect(() => funcs.left_branch(null)).toThrowError('left_branch received an empty binary tree!');
+    expect(() => funcs.left_branch(null)).toThrowError('left_branch: Expected non-empty binary tree, got null.');
   });
 
   it('works (simple)', () => {
@@ -87,11 +97,11 @@ describe(funcs.left_branch, () => {
 
 describe(funcs.right_branch, () => {
   it('throws when argument is not a tree', () => {
-    expect(() => funcs.right_branch(0 as any)).toThrowError('right_branch expects binary tree, received: 0');
+    expect(() => funcs.right_branch(0 as any)).toThrowError('right_branch: Expected binary tree, got 0.');
   });
 
   it('throws when argument is an empty tree', () => {
-    expect(() => funcs.right_branch(null)).toThrowError('right_branch received an empty binary tree!');
+    expect(() => funcs.right_branch(null)).toThrowError('right_branch: Expected non-empty binary tree, got null.');
   });
 
   it('works (simple)', () => {

@@ -1,5 +1,5 @@
-import { Button, ButtonGroup } from '@blueprintjs/core';
-import { IconNames, Pause, Play } from '@blueprintjs/icons';
+import { ButtonGroup } from '@blueprintjs/core';
+import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import Phaser from 'phaser';
 import React from 'react';
@@ -65,12 +65,14 @@ class A2dUiButtons extends React.Component<UiProps, UiState> {
   public render() {
     return (
       <ButtonGroup>
-        <Button
+        <PlayButton
           className="a2d-play-toggle-button"
-          icon={this.state.isPaused ? <Play /> : <Pause />}
+          isPlaying={!this.state.isPaused}
           active={false}
+
+          playingText='Pause Game'
+          pausedText='Resume Game'
           onClick={() => this.toggleGamePause()}
-          text={this.state.isPaused ? 'Resume Game' : 'Pause Game'}
         />
       </ButtonGroup>
     );
@@ -152,5 +154,5 @@ export default defineTab({
   },
   body: context => <GameTab context={context} />,
   label: 'Arcade2D Tab',
-  iconName: IconNames.SHAPES
+  iconName: 'shapes'
 });

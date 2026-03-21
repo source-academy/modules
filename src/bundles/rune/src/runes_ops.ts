@@ -1,14 +1,17 @@
 /**
  * This file contains the bundle's private functions for runes.
  */
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { hexToColor as hexToColorUtil } from '@sourceacademy/modules-lib/utilities';
 import { Rune } from './rune';
 
 // =============================================================================
 // Utility Functions
 // =============================================================================
-export function throwIfNotRune(name: string, rune: unknown): asserts rune is Rune {
-  if (!(rune instanceof Rune)) throw new Error(`${name} expects a rune as argument.`);
+export function throwIfNotRune(func_name: string, rune: unknown, param_name?: string): asserts rune is Rune {
+  if (!(rune instanceof Rune)) {
+    throw new InvalidParameterTypeError('Rune', rune, func_name, param_name);
+  }
 }
 
 // =============================================================================

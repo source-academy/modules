@@ -104,6 +104,20 @@ There are also several React components defined under `@sourceacademy/modules-li
 
 You can see the documentation for these components [here](/lib/modules-lib/)
 
+### Styles from `@blueprintjs`
+
+Besides providing components, Blueprint also provides CSS Styles that can be attached to your own components:
+
+```jsx
+const component = <div className="bp6-dark">
+  <h1 className="bp6-text-large">Hello World!</h1>
+</div>;
+```
+You can use these styles directly instead of having to come up with your own.
+
+Often, these styles will be prefixed with `bp` and the version number (i.e `bp6`). Take care to ensure that this prefix matches the version of Blueprint that
+is in use.
+
 ## Export Interface
 
 As mentioned in the [overview](./1-overview), all tabs should export a single default export from their entry point using the `defineTab` helper from `@sourceacademy/modules-lib/tabs`:
@@ -169,7 +183,6 @@ test('Matches snapshot', () => {
   expect(<Component />).toMatchSnapshot();
 });
 ```
-
 :::
 
 ## Working with Module Contexts from within Tabs

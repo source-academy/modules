@@ -1,5 +1,4 @@
 import { Icon } from '@blueprintjs/core';
-import { WarningSign } from '@blueprintjs/icons';
 
 export interface AnimationErrorProps {
   error: Error;
@@ -7,6 +6,7 @@ export interface AnimationErrorProps {
 
 /**
  * React component for displaying errors related to animations
+ * @category Components
  */
 export default function AnimationError({ error }: AnimationErrorProps) {
   return <div style={{
@@ -19,7 +19,7 @@ export default function AnimationError({ error }: AnimationErrorProps) {
       flexDirection: 'row',
       alignItems: 'center'
     }}>
-      <Icon icon={<WarningSign />} size={90} />
+      <Icon icon='warning-sign' size={90} />
       <div style={{
         display: 'flex',
         flexDirection: 'column',

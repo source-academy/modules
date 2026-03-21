@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/bundle-repeat": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
     "es-toolkit": "^1.44.0",
     "gl-matrix": "^3.3.0"

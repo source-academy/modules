@@ -31,6 +31,8 @@ children:
 
 - name: src
   children:
+  - name: archive
+    comment: Archived bundles and tabs
   - name: bundles
     comment: Directories containing bundles
   - name: tabs

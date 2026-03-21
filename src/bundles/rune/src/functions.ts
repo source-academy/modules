@@ -1,3 +1,5 @@
+import { repeat_internal } from '@sourceacademy/bundle-repeat/functions';
+import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
 import { clamp } from 'es-toolkit';
 import { mat4, vec3 } from 'gl-matrix';
 import {
@@ -35,15 +37,7 @@ export type RuneModuleState = {
 };
 
 function throwIfNotFraction(val: unknown, param_name: string, func_name: string): asserts val is number {
-  if (typeof val !== 'number') throw new Error(`${func_name}: ${param_name} must be a number!`);
-
-  if (val < 0) {
-    throw new Error(`${func_name}: ${param_name} cannot be less than 0!`);
-  }
-
-  if (val > 1) {
-    throw new Error(`${func_name}: ${param_name} cannot be greater than 1!`);
-  }
+  assertNumberWithinRange(val, func_name, 0, 1, false, param_name);
 }
 
 // =============================================================================
@@ -109,6 +103,9 @@ export class RuneFunctions {
     rune: Rune
   ): Rune {
     throwIfNotRune(RuneFunctions.scale_independent.name, rune);
+    assertNumberWithinRange(ratio_x, { func_name: RuneFunctions.scale_independent.name, param_name: 'ratio_x', integer: false });
+    assertNumberWithinRange(ratio_y, { func_name: RuneFunctions.scale_independent.name, param_name: 'ratio_y', integer: false });
+
     const scaleVec = vec3.fromValues(ratio_x, ratio_y, 1);
     const scaleMat = mat4.create();
     mat4.scale(scaleMat, scaleMat, scaleVec);
@@ -158,8 +155,8 @@ export class RuneFunctions {
 
   @functionDeclaration('frac: number, rune1: Rune, rune2: Rune', 'Rune')
   static stack_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
-    throwIfNotRune(RuneFunctions.stack_frac.name, rune1);
-    throwIfNotRune(RuneFunctions.stack_frac.name, rune2);
+    throwIfNotRune(RuneFunctions.stack_frac.name, rune1, 'rune1');
+    throwIfNotRune(RuneFunctions.stack_frac.name, rune2, 'rune2');
     throwIfNotFraction(frac, 'frac', RuneFunctions.stack_frac.name);
 
     const upper = RuneFunctions.translate(0, -(1 - frac), RuneFunctions.scale_independent(1, frac, rune1));
@@ -171,21 +168,23 @@ export class RuneFunctions {
 
   @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   static stack(rune1: Rune, rune2: Rune): Rune {
-    throwIfNotRune(RuneFunctions.stack.name, rune1);
-    throwIfNotRune(RuneFunctions.stack.name, rune2);
+    throwIfNotRune(RuneFunctions.stack.name, rune1, 'rune1');
+    throwIfNotRune(RuneFunctions.stack.name, rune2, 'rune2');
     return RuneFunctions.stack_frac(1 / 2, rune1, rune2);
   }
 
   @functionDeclaration('n: number, rune: Rune', 'Rune')
   static stackn(n: number, rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.stackn.name, rune);
-    if (!Number.isInteger(n)) {
-      throw new Error(`${RuneFunctions.stackn.name} expects an integer!`);
-    }
+
+    assertNumberWithinRange(n, {
+      func_name: RuneFunctions.stackn.name
+    });
 
     if (n <= 1) {
       return rune;
     }
+
     return RuneFunctions.stack_frac(1 / n, rune, RuneFunctions.stackn(n - 1, rune));
   }
 
@@ -209,8 +208,8 @@ export class RuneFunctions {
 
   @functionDeclaration('frac: number, rune1: Rune, rune2: Rune', 'Rune')
   static beside_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
-    throwIfNotRune(RuneFunctions.beside_frac.name, rune1);
-    throwIfNotRune(RuneFunctions.beside_frac.name, rune2);
+    throwIfNotRune(RuneFunctions.beside_frac.name, rune1, 'rune1');
+    throwIfNotRune(RuneFunctions.beside_frac.name, rune2, 'rune2');
     throwIfNotFraction(frac, 'frac', RuneFunctions.beside_frac.name);
 
     const left = RuneFunctions.translate(-(1 - frac), 0, RuneFunctions.scale_independent(frac, 1, rune1));
@@ -222,8 +221,8 @@ export class RuneFunctions {
 
   @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   static beside(rune1: Rune, rune2: Rune): Rune {
-    throwIfNotRune(RuneFunctions.beside.name, rune1);
-    throwIfNotRune(RuneFunctions.beside.name, rune2);
+    throwIfNotRune(RuneFunctions.beside.name, rune1, 'rune1');
+    throwIfNotRune(RuneFunctions.beside.name, rune2, 'rune2');
     return RuneFunctions.beside_frac(0.5, rune1, rune2);
   }
 
@@ -254,11 +253,10 @@ export class RuneFunctions {
     pattern: (a: Rune) => Rune,
     initial: Rune
   ): Rune {
-    if (n <= 0) {
-      return initial;
-    }
-
-    return pattern(RuneFunctions.repeat_pattern(n - 1, pattern, initial));
+    throwIfNotRune(RuneFunctions.repeat_pattern.name, initial, 'initial');
+    assertFunctionOfLength(pattern, 1, RuneFunctions.repeat_pattern.name);
+    const repeated = repeat_internal(pattern, n);
+    return repeated(initial);
   }
 
   // =============================================================================
@@ -269,8 +267,8 @@ export class RuneFunctions {
   static overlay_frac(frac: number, rune1: Rune, rune2: Rune): Rune {
     // to developer: please read https://www.tutorialspoint.com/webgl/webgl_basics.htm to understand the webgl z-axis interpretation.
     // The key point is that positive z is closer to the screen. Hence, the image at the back should have smaller z value. Primitive runes have z = 0.
-    throwIfNotRune(RuneFunctions.overlay_frac.name, rune1);
-    throwIfNotRune(RuneFunctions.overlay_frac.name, rune2);
+    throwIfNotRune(RuneFunctions.overlay_frac.name, rune1, 'rune1');
+    throwIfNotRune(RuneFunctions.overlay_frac.name, rune2, 'rune2');
     throwIfNotFraction(frac, 'frac', RuneFunctions.overlay_frac.name);
 
     // by definition, when frac == 0 or 1, the back rune will overlap with the front rune.
@@ -305,8 +303,8 @@ export class RuneFunctions {
 
   @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   static overlay(rune1: Rune, rune2: Rune): Rune {
-    throwIfNotRune(RuneFunctions.overlay.name, rune1);
-    throwIfNotRune(RuneFunctions.overlay.name, rune2);
+    throwIfNotRune(RuneFunctions.overlay.name, rune1, 'rune1');
+    throwIfNotRune(RuneFunctions.overlay.name, rune2, 'rune2');
     return RuneFunctions.overlay_frac(0.5, rune1, rune2);
   }
 
@@ -955,7 +953,7 @@ export const red = RuneColours.red;
  * @param {function} pattern - Unary function from Rune to Rune
  * @param {Rune} initial - The initial Rune
  * @returns {Rune} - Result of n times application of pattern to initial:
- * pattern(pattern(...pattern(pattern(initial))...))
+ * `pattern(pattern(...pattern(pattern(initial))...))`
  * @function
  *
  * @category Main

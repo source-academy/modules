@@ -1,6 +1,8 @@
+import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import { isEqualWith } from 'es-toolkit';
 import * as list from 'js-slang/dist/stdlib/list';
 import { stringify } from 'js-slang/dist/utils/stringify';
+import { UnitestBundleInternalError } from './types';
 
 /**
  * Asserts that a predicate returns true.
@@ -8,6 +10,10 @@ import { stringify } from 'js-slang/dist/utils/stringify';
  * @returns
  */
 export function assert(pred: () => boolean) {
+  if (!isFunctionOfLength(pred, 0)) {
+    throw new UnitestBundleInternalError(`${assert.name} expects a nullary function that returns a boolean!`);
+  }
+
   if (!pred()) {
     throw new Error('Assert failed!');
   }

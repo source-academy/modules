@@ -1,14 +1,14 @@
 {
   "name": "@sourceacademy/bundle-sound",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "dependencies": {
     "@sourceacademy/bundle-midi": "workspace:^",
+    "@sourceacademy/modules-lib": "workspace:^",
     "js-slang": "^1.0.85"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@sourceacademy/modules-lib": "workspace:^",
     "typescript": "^5.8.2"
   },
   "type": "module",

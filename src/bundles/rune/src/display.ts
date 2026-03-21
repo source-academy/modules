@@ -1,3 +1,4 @@
+import { assertFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 import { AnaglyphRune, HollusionRune } from './functions';
 import { AnimatedRune, NormalRune, Rune, type DrawnRune, type RuneAnimation } from './rune';
@@ -43,7 +44,9 @@ class RuneDisplay {
 
   @functionDeclaration('duration: number, fps: number, func: RuneAnimation', 'AnimatedRune')
   static animate_rune(duration: number, fps: number, func: RuneAnimation) {
-    const anim = new AnimatedRune(duration, fps, (n) => {
+    assertFunctionOfLength(func, 1, RuneDisplay.animate_rune.name, 'RuneAnimation');
+
+    const anim = new AnimatedRune(duration, fps, n => {
       const rune = func(n);
       throwIfNotRune(RuneDisplay.animate_rune.name, rune);
       return new NormalRune(rune);
@@ -54,7 +57,9 @@ class RuneDisplay {
 
   @functionDeclaration('duration: number, fps: number, func: RuneAnimation', 'AnimatedRune')
   static animate_anaglyph(duration: number, fps: number, func: RuneAnimation) {
-    const anim = new AnimatedRune(duration, fps, (n) => {
+    assertFunctionOfLength(func, 1, RuneDisplay.animate_anaglyph.name, 'RuneAnimation');
+
+    const anim = new AnimatedRune(duration, fps, n => {
       const rune = func(n);
       throwIfNotRune(RuneDisplay.animate_anaglyph.name, rune);
       return new AnaglyphRune(rune);

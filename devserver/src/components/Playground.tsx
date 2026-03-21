@@ -1,5 +1,4 @@
 import { Button, Classes, Intent, OverlayToaster, Popover, Tooltip, type ToastProps } from '@blueprintjs/core';
-import { Settings } from '@blueprintjs/icons';
 import classNames from 'classnames';
 import { SourceDocumentation, getNames, runInContext, type Context } from 'js-slang';
 // Importing this straight from js-slang doesn't work for whatever reason
@@ -217,7 +216,7 @@ const Playground: React.FC = () => {
               <Tooltip content="Settings">
                 <Button
                   {...targetProps}
-                  icon={<Settings />}
+                  icon='settings'
                 />
               </Tooltip>
             );

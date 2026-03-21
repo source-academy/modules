@@ -1,3 +1,4 @@
+import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { pair, vector_to_list, type List } from 'js-slang/dist/stdlib/list';
 
 /**
@@ -13,9 +14,9 @@ interface MockedFunction {
   };
 }
 
-function throwIfNotMockedFunction(obj: (...args: any[]) => any, func_name: string): asserts obj is MockedFunction {
+function throwIfNotMockedFunction(obj: (...args: any[]) => any, func_name: string, param_name?: string): asserts obj is MockedFunction {
   if (!(mockSymbol in obj)) {
-    throw new Error(`${func_name} expects a mocked function as argument`);
+    throw new InvalidCallbackError('mocked function', obj, func_name, param_name);
   }
 }
 
@@ -25,10 +26,17 @@ function throwIfNotMockedFunction(obj: (...args: any[]) => any, func_name: strin
  * original value you passed in if you want the mocked function to be properly tracked.
  * @param fn Function to mock
  * @returns A mocked version of the given function.
+ * @example
+ * ```
+ * const fn = mock_function(x => x + 1);
+ * fn(1);
+ * head(get_arg_list(fn)) === 1; // is true
+ * head(get_ret_vals(fn)) === 2; // is true
+ * ```
  */
 export function mock_function(fn: (...args: any[]) => any): MockedFunction {
   if (typeof fn !== 'function') {
-    throw new Error(`${mock_function.name} expects a function as argument`);
+    throw new InvalidParameterTypeError('function', fn, mock_function.name);
   }
 
   const arglist: any[] = [];

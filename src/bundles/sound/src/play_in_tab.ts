@@ -1,5 +1,6 @@
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import context from 'js-slang/context';
-import { FS, get_duration, get_wave, is_sound } from './functions';
+import { FS, get_duration, get_wave, is_sound, validateDuration } from './functions';
 import { RIFFWAVE } from './riffwave';
 import type { AudioPlayed, Sound } from './types';
 
@@ -18,15 +19,12 @@ context.moduleContexts.sound.state = { audioPlayed };
 export function play_in_tab(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
+    throw new InvalidParameterTypeError('Sound', sound, play_in_tab.name);
   }
 
   const duration = get_duration(sound);
-  if (duration < 0) {
-    throw new Error(`${play_in_tab.name}: duration of sound is negative`);
-  } else if (duration === 0) {
-    return sound;
-  }
+  validateDuration(play_in_tab.name, duration);
+  if (duration === 0) return sound;
 
   // Create mono buffer
   const channel: number[] = [];

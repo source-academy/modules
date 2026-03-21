@@ -134,7 +134,7 @@ export default class CanvasHolder extends React.Component<
       <div
         // Explicit dark theme as mobile view switches to dark text with light
         // spinner
-        className="bp3-dark"
+        className="bp6-dark"
         style={{
           display: this.state.isContextLost ? 'block' : 'none',
 

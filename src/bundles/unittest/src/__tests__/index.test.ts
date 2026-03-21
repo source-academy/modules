@@ -10,10 +10,10 @@ vi.spyOn(performance, 'now').mockReturnValue(0);
 
 describe('Test \'it\' and \'describe\'', () => {
   beforeEach(() => {
-    testing.suiteResults.splice(0);
+    testing.topLevelSuiteResults.splice(0);
   });
 
-  test('it and describe correctly set and resets the value of current test and suite', () => {
+  test('it() and describe() correctly set and resets the value of current test and suite', () => {
     expect(testing.currentTest).toBeNull();
     expect(testing.currentSuite).toBeNull();
     testing.describe('suite', () => {
@@ -53,8 +53,8 @@ describe('Test \'it\' and \'describe\'', () => {
       testing.it('test2', () => {});
     });
 
-    expect(testing.suiteResults.length).toEqual(2);
-    const [result1, result2] = testing.suiteResults;
+    expect(testing.topLevelSuiteResults.length).toEqual(2);
+    const [result1, result2] = testing.topLevelSuiteResults;
     expect(result1).toMatchObject({
       name: 'block1',
       results: [{ name: 'test1', passed: true }],
@@ -84,8 +84,8 @@ describe('Test \'it\' and \'describe\'', () => {
       testing.it('test2', () => {});
     });
 
-    expect(testing.suiteResults.length).toEqual(2);
-    const [result1, result2] = testing.suiteResults;
+    expect(testing.topLevelSuiteResults.length).toEqual(2);
+    const [result1, result2] = testing.topLevelSuiteResults;
     // Verify Result 1 first
     expect(result1.results.length).toEqual(2);
     const [subResult1, subResult2] = result1.results;
@@ -124,12 +124,35 @@ describe('Test \'it\' and \'describe\'', () => {
 
     expect(f).toThrowError('it cannot be called from within another test!');
   });
+
+  test('it() and describe() throw when provided a non-nullary function', () => {
+    expect(() => testing.it('test name', 0 as any)).toThrow(
+      'it: A test or test suite must be a nullary function!'
+    );
+
+    expect(() => testing.describe('test name', 0 as any)).toThrow(
+      'describe: A test or test suite must be a nullary function!'
+    );
+  });
+
+  test('internal errors are not handled', () => {
+    expect(testing.describe('suite', () => {
+      testing.test('test', () => { throw new UnitestBundleInternalError(); });
+    })).toThrowError(UnitestBundleInternalError);
+  });
 });
 
 describe('Test assertion functions', () => {
-  test('assert', () => {
-    expect(() => asserts.assert(() => true)).not.toThrow();
-    expect(() => asserts.assert(() => false)).toThrow('Assert failed');
+  describe(asserts.assert, () => {
+    it('works', () => {
+      expect(() => asserts.assert(() => true)).not.toThrow();
+      expect(() => asserts.assert(() => false)).toThrow('Assert failed');
+    });
+
+    it('will throw an error if not provided a nullary function', () => {
+      expect(() => asserts.assert(0 as any)).toThrow(`${asserts.assert.name} expects a nullary function that returns a boolean!`);
+      expect(() => asserts.assert((x => x === true) as any)).toThrow(`${asserts.assert.name} expects a nullary function that returns a boolean!`);
+    });
   });
 
   describe(asserts.assert_equals, () => {
@@ -375,19 +398,19 @@ describe('Mocking functions', () => {
 
   describe(mocks.get_arg_list, () => {
     it('throws when function isn\'t a mocked function', () => {
-      expect(() => mocks.get_arg_list((() => 0) as any)).toThrowError('get_arg_list expects a mocked function as argument');
+      expect(() => mocks.get_arg_list((() => 0) as any)).toThrowError('get_arg_list: Expected mocked function, got () => 0.');
     });
   });
 
   describe(mocks.get_ret_vals, () => {
     it('throws when function isn\'t a mocked function', () => {
-      expect(() => mocks.get_ret_vals((() => 0) as any)).toThrowError('get_ret_vals expects a mocked function as argument');
+      expect(() => mocks.get_ret_vals((() => 0) as any)).toThrowError('get_ret_vals: Expected mocked function, got () => 0.');
     });
   });
 
   describe(mocks.clear_mock, () => {
     it('throws when function isn\'t a mocked function', () => {
-      expect(() => mocks.clear_mock((() => 0) as any)).toThrowError('clear_mock expects a mocked function as argument');
+      expect(() => mocks.clear_mock((() => 0) as any)).toThrowError('clear_mock: Expected mocked function, got () => 0.');
     });
 
     it('works', () => {
@@ -402,13 +425,7 @@ describe('Mocking functions', () => {
 
   describe(mocks.mock_function, () => {
     it('throws when passed not a function', () => {
-      expect(() => mocks.mock_function(0 as any)).toThrowError('mock_function expects a function as argument');
+      expect(() => mocks.mock_function(0 as any)).toThrowError('mock_function: Expected function, got 0.');
     });
   });
-});
-
-test('internal errors are not handled', () => {
-  expect(() => {
-    throw new UnitestBundleInternalError();
-  }).toThrow();
 });
