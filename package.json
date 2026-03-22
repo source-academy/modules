@@ -56,7 +56,7 @@
     "@sourceacademy/modules-repotools": "workspace:^",
     "@sourceacademy/vitest-reporter": "workspace:^",
     "@stylistic/eslint-plugin": "^5.0.0",
-    "@types/node": "^22.15.30",
+    "@types/node": "^24.0.0",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
     "@vitest/coverage-v8": "4.1.0",
