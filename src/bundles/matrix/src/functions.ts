@@ -327,7 +327,8 @@ export function randomise_matrix(matrix: Matrix, probability: number): void {
 }
 
 /**
- * {@inheritDoc randomise_matrix}
+ * Alias for {@link randomise_matrix}
+ * @function
  */
 export const randomize_matrix = Object.defineProperty(randomise_matrix, 'name', { value: 'randomize_matrix' });
 
