@@ -226,8 +226,28 @@ When the documentation is renderered, a code block is produced:
 ![](./docExample.png)
 
 Note that your code examples should be surrounded in a Markdown code block (using the triple backticks ```` ``` ````). This will
-help Typedoc figure out what content belongs to your code block. The language specifier is not required here as it is assumed that
-your code examples are written in Typescript.
+help Typedoc figure out what content belongs to your code block. The code block should begin the line after the `@example` tag
+
+```ts
+/**
+ * @example
+ * ```
+ * const x = 10 + 10;
+ * ```
+ */
+```
+
+rather than on the same line:
+
+```ts
+/**
+ * @example ```
+ * const x = 10 + 10;
+ * ```
+ */
+```
+
+The language specifier is not required here as it is assumed that your code examples are written in Typescript.
 
 ::: details Why you should use a code block
 

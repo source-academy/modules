@@ -13,7 +13,10 @@ context.moduleContexts.sound.state = { audioPlayed };
  *
  * @param sound the Sound to play
  * @returns the given Sound
- * @example play_in_tab(sine_sound(440, 5));
+ * @example
+ * ```
+ * play_in_tab(sine_sound(440, 5));
+ * ```
  */
 
 export function play_in_tab(sound: Sound): Sound {
