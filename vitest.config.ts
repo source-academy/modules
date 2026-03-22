@@ -16,6 +16,9 @@ if (process.env.GITHUB_ACTIONS) {
 }
 
 export default defineConfig({
+  legacy: {
+    inconsistentCjsInterop: true
+  },
   resolve: {
     alias: [{
       find: /^js-slang\/context/,
