@@ -17,7 +17,7 @@
     "typedoc-plugin-rename-defaults": "^0.7.3",
     "typescript": "^5.8.2",
     "vitest": "4.1.0",
-    "vitest-browser-react": "^2.0.4"
+    "vitest-browser-react": "^2.1.0"
   },
   "exports": {
     "./tabs/index": null,

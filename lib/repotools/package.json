@@ -11,7 +11,7 @@
     "@vitest/coverage-v8": "4.1.0",
     "typescript": "^5.8.2",
     "vitest": "4.1.0",
-    "vitest-browser-react": "^2.0.4"
+    "vitest-browser-react": "^2.1.0"
   },
   "dependencies": {
     "@vitest/browser-playwright": "4.1.0",

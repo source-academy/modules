@@ -35,7 +35,7 @@
     "sass": "^1.85.0",
     "typescript": "^5.8.2",
     "vitest": "4.1.0",
-    "vitest-browser-react": "^2.0.4"
+    "vitest-browser-react": "^2.1.0"
   },
   "peerDependencies": {
     "es-toolkit": "^1.44.0"
