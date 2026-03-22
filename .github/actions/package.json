@@ -5,7 +5,7 @@
   "type": "module",
   "devDependencies": {
     "@sourceacademy/modules-repotools": "workspace:^",
-    "@types/node": "^22.15.30",
+    "@types/node": "^24.0.0",
     "typescript": "^5.8.2",
     "vitest": "4.1.0"
   },
