@@ -7,14 +7,14 @@
   "devDependencies": {
     "@commander-js/extra-typings": "^14.0.0",
     "@types/node": "^22.15.30",
-    "@vitejs/plugin-react": "^5.1.0",
-    "@vitest/coverage-v8": "^4.0.18",
+    "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/coverage-v8": "4.1.0",
     "typescript": "^5.8.2",
-    "vitest": "^4.0.18",
-    "vitest-browser-react": "^2.0.4"
+    "vitest": "4.1.0",
+    "vitest-browser-react": "^2.1.0"
   },
   "dependencies": {
-    "@vitest/browser-playwright": "^4.0.18",
+    "@vitest/browser-playwright": "4.1.0",
     "chalk": "^5.0.1",
     "commander": "^14.0.0",
     "es-toolkit": "^1.44.0",
@@ -33,6 +33,6 @@
     "build": "tsc --project ./tsconfig.prod.json",
     "postinstall": "yarn build",
     "tsc": "tsc --project ./tsconfig.json",
-    "test": "vitest"
+    "test": "vitest run"
   }
 }

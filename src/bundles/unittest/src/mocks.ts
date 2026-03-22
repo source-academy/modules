@@ -26,6 +26,13 @@ function throwIfNotMockedFunction(obj: (...args: any[]) => any, func_name: strin
  * original value you passed in if you want the mocked function to be properly tracked.
  * @param fn Function to mock
  * @returns A mocked version of the given function.
+ * @example
+ * ```
+ * const fn = mock_function(x => x + 1);
+ * fn(1);
+ * head(get_arg_list(fn)) === 1; // is true
+ * head(get_ret_vals(fn)) === 2; // is true
+ * ```
  */
 export function mock_function(fn: (...args: any[]) => any): MockedFunction {
   if (typeof fn !== 'function') {

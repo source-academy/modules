@@ -17,9 +17,9 @@
   "type": "module",
   "dependencies": {
     "@sourceacademy/modules-repotools": "workspace:^",
-    "@vitejs/plugin-react": "^5.1.0",
-    "@vitest/browser-playwright": "^4.0.18",
-    "@vitest/coverage-v8": "^4.0.18",
+    "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/browser-playwright": "4.1.0",
+    "@vitest/coverage-v8": "4.1.0",
     "acorn": "^8.8.1",
     "acorn-typescript": "^1.4.13",
     "astring": "^1.8.6",
@@ -31,8 +31,8 @@
     "http-server": "^14.1.1",
     "jsdom": "^29.0.0",
     "typedoc": "^0.28.9",
-    "vite": "^7.1.11",
-    "vitest": "^4.0.18"
+    "vite": "^8.0.0",
+    "vitest": "4.1.0"
   },
   "scripts": {
     "build": "node ./build.js --dev",

@@ -21,7 +21,7 @@ function getNewSuite(name?: string): Suite {
  * If describe was called multiple times from the root level, we need somewhere
  * to collect those Suite Results since none of them will have a parent suite
  */
-export const suiteResults: SuiteResult[] = [];
+export const topLevelSuiteResults: SuiteResult[] = [];
 
 export let currentSuite: Suite | null = null;
 export let currentTest: string | null = null;
@@ -113,13 +113,17 @@ export function describe(msg: string, func: TestSuite): void {
     throw new UnitestBundleInternalError(`${describe.name}: A test or test suite must be a nullary function!`);
   }
 
-  const oldSuite = currentSuite;
+  const parentSuite = currentSuite;
   const newSuite = getNewSuite(msg);
 
   currentSuite = newSuite;
   newSuite.startTime = performance.now();
-  func();
-  currentSuite = oldSuite;
+
+  try {
+    func();
+  } finally {
+    currentSuite = parentSuite;
+  }
 
   const passCount = determinePassCount(newSuite.results);
   const suiteResult: SuiteResult = {
@@ -130,13 +134,13 @@ export function describe(msg: string, func: TestSuite): void {
     runtime: performance.now() - newSuite.startTime
   };
 
-  if (oldSuite !== null) {
-    oldSuite.results.push(suiteResult);
+  if (parentSuite !== null) {
+    parentSuite.results.push(suiteResult);
   } else {
-    suiteResults.push(suiteResult);
+    topLevelSuiteResults.push(suiteResult);
   }
 }
 
 context.moduleContexts.unittest.state = {
-  suiteResults
+  suiteResults: topLevelSuiteResults
 };

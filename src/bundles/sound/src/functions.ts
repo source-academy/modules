@@ -305,13 +305,15 @@ function validateWave(func_name: string, wave: unknown): asserts wave is Wave {
  * @param wave wave function of the Sound
  * @param duration duration of the Sound
  * @returns with wave as wave function and duration as duration
- * @example const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);
+ * @example ```
+ * const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);
+ * ```
  */
 export function make_sound(wave: Wave, duration: number): Sound {
   validateDuration(make_sound.name, duration);
   validateWave(make_sound.name, wave);
 
-  return pair((t: number) => (t >= duration ? 0 : wave(t)), duration);
+  return pair(t => (t >= duration ? 0 : wave(t)), duration);
 }
 
 /**
@@ -319,7 +321,9 @@ export function make_sound(wave: Wave, duration: number): Sound {
  *
  * @param sound given Sound
  * @returns the wave function of the Sound
- * @example get_wave(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns t => Math_sin(2 * Math_PI * 440 * t)
+ * @example ```
+ * get_wave(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns t => Math_sin(2 * Math_PI * 440 * t)
+ * ```
  */
 export function get_wave(sound: Sound): Wave {
   return head(sound);
@@ -357,7 +361,9 @@ export function is_sound(x: unknown): x is Sound {
  *
  * @param wave the wave function to play, starting at 0
  * @returns the resulting Sound
- * @example play_wave(t => math_sin(t * 3000), 5);
+ * @example ```
+ * play_wave(t => math_sin(t * 3000), 5);
+ * ```
  */
 export function play_wave(wave: Wave, duration: number): Sound {
   validateDuration(play_wave.name, duration);
@@ -372,7 +378,9 @@ export function play_wave(wave: Wave, duration: number): Sound {
  *
  * @param sound the Sound to play
  * @returns the given Sound
- * @example play(sine_sound(440, 5));
+ * @example ```
+ * play(sine_sound(440, 5));
+ * ```
  */
 export function play(sound: Sound): Sound {
   // Type-check sound
@@ -451,7 +459,10 @@ export function stop(): void {
  *
  * @param duration the duration of the noise sound
  * @returns resulting noise Sound
- * @example noise_sound(5);
+ * @example ```
+ * noise_sound(5);
+ * ```
+ *
  * @category Primitive
  */
 export function noise_sound(duration: number): Sound {
@@ -464,7 +475,10 @@ export function noise_sound(duration: number): Sound {
  *
  * @param duration the duration of the silence Sound
  * @returns resulting silence Sound
- * @example silence_sound(5);
+ * @example ```
+ * silence_sound(5);
+ * ```
+ *
  * @category Primitive
  */
 export function silence_sound(duration: number): Sound {
@@ -478,7 +492,10 @@ export function silence_sound(duration: number): Sound {
  * @param freq the frequency of the sine wave Sound
  * @param duration the duration of the sine wave Sound
  * @returns resulting sine wave Sound
- * @example sine_sound(440, 5);
+ * @example ```
+ * sine_sound(440, 5);
+ * ```
+ *
  * @category Primitive
  */
 export function sine_sound(freq: number, duration: number): Sound {
@@ -492,7 +509,10 @@ export function sine_sound(freq: number, duration: number): Sound {
  * @param f the frequency of the square wave Sound
  * @param duration the duration of the square wave Sound
  * @returns resulting square wave Sound
- * @example square_sound(440, 5);
+ * @example ```
+ * square_sound(440, 5);
+ * ```
+ *
  * @category Primitive
  */
 export function square_sound(f: number, duration: number): Sound {
@@ -516,7 +536,10 @@ export function square_sound(f: number, duration: number): Sound {
  * @param freq the frequency of the triangle wave Sound
  * @param duration the duration of the triangle wave Sound
  * @returns resulting triangle wave Sound
- * @example triangle_sound(440, 5);
+ * @example ```
+ * triangle_sound(440, 5);
+ * ```
+ *
  * @category Primitive
  */
 export function triangle_sound(freq: number, duration: number): Sound {
@@ -542,7 +565,10 @@ export function triangle_sound(freq: number, duration: number): Sound {
  * @param freq the frequency of the sawtooth wave Sound
  * @param duration the duration of the sawtooth wave Sound
  * @returns resulting sawtooth wave Sound
- * @example sawtooth_sound(440, 5);
+ * @example ```
+ * sawtooth_sound(440, 5);
+ * ```
+ *
  * @category Primitive
  */
 export function sawtooth_sound(freq: number, duration: number): Sound {
@@ -570,7 +596,10 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
  *
  * @param list_of_sounds given list of Sounds
  * @returns the combined Sound
- * @example consecutively(list(sine_sound(200, 2), sine_sound(400, 3)));
+ * @example ```
+ * const sound = consecutively(list(sine_sound(200, 2), sine_sound(400, 3)));
+ * play(sound);
+ * ```
  */
 export function consecutively(list_of_sounds: List): Sound {
   function consec_two(ss1: Sound, ss2: Sound) {
@@ -593,7 +622,10 @@ export function consecutively(list_of_sounds: List): Sound {
  *
  * @param list_of_sounds given list of Sounds
  * @returns the combined Sound
- * @example simultaneously(list(sine_sound(200, 2), sine_sound(400, 3)))
+ * @example ```
+ * const new_sound = simultaneously(list(sine_sound(200, 2), sine_sound(400, 3)));
+ * play(new_sound);
+ * ```
  */
 export function simultaneously(list_of_sounds: List): Sound {
   function simul_two(ss1: Sound, ss2: Sound) {
@@ -659,7 +691,9 @@ function wrapSoundTransformer(transformer: SoundTransformer): SoundTransformer {
  * @param sustain_level sustain level between 0 and 1
  * @param release_ratio proportion of Sound in release phase
  * @returns Envelope a function from Sound to Sound
- * @example adsr(0.2, 0.3, 0.3, 0.1)(sound);
+ * @example ```
+ * adsr(0.2, 0.3, 0.3, 0.1)(sound);
+ * ```
  */
 export function adsr(
   attack_ratio: number,
@@ -712,7 +746,10 @@ export function adsr(
  * @param duration duration of the produced Sound, in seconds
  * @param envelopes – list of envelopes, which are functions from Sound to Sound
  * @returns Sound resulting Sound
- * @example stacking_adsr(sine_sound, 300, 5, list(adsr(0.1, 0.3, 0.2, 0.5), adsr(0.2, 0.5, 0.6, 0.1), adsr(0.3, 0.1, 0.7, 0.3)));
+ * @example ```
+ * const sound = stacking_adsr(sine_sound, 300, 5, list(adsr(0.1, 0.3, 0.2, 0.5), adsr(0.2, 0.5, 0.6, 0.1), adsr(0.3, 0.1, 0.7, 0.3)));
+ * play(sound);
+ * ```
  */
 export function stacking_adsr(
   waveform: SoundProducer,
@@ -746,7 +783,9 @@ export function stacking_adsr(
  * @param duration the duration of the output Sound
  * @param amount the amount of modulation to apply to the carrier sine wave
  * @returns function which takes in a Sound and returns a Sound
- * @example phase_mod(440, 5, 1)(sine_sound(220, 5));
+ * @example ```
+ * phase_mod(440, 5, 1)(sine_sound(220, 5));
+ * ```
  */
 export function phase_mod(
   freq: number,
@@ -770,7 +809,10 @@ export function phase_mod(
  * @param note MIDI note
  * @param duration duration in seconds
  * @returns Sound resulting bell Sound with given pitch and duration
- * @example bell(40, 1);
+ * @example ```
+ * bell(40, 1);
+ * ```
+ *
  * @category Instrument
  */
 export function bell(note: MIDINote, duration: number): Sound {
@@ -793,7 +835,9 @@ export function bell(note: MIDINote, duration: number): Sound {
  * @param note MIDI note
  * @param duration duration in seconds
  * @returns Sound resulting cello Sound with given pitch and duration
- * @example cello(36, 5);
+ * @example ```
+ * cello(36, 5);
+ * ```
  * @category Instrument
  */
 export function cello(note: MIDINote, duration: number): Sound {
@@ -811,7 +855,9 @@ export function cello(note: MIDINote, duration: number): Sound {
  * @param note MIDI note
  * @param duration duration in seconds
  * @returns Sound resulting piano Sound with given pitch and duration
- * @example piano(48, 5);
+ * @example ```
+ * piano(48, 5);
+ * ```
  * @category Instrument
  *
  */
@@ -830,7 +876,9 @@ export function piano(note: MIDINote, duration: number): Sound {
  * @param note MIDI note
  * @param duration duration in seconds
  * @returns Sound resulting trombone Sound with given pitch and duration
- * @example trombone(60, 2);
+ * @example ```
+ * trombone(60, 2);
+ * ```
  * @category Instrument
  */
 export function trombone(note: MIDINote, duration: number): Sound {
@@ -848,7 +896,9 @@ export function trombone(note: MIDINote, duration: number): Sound {
  * @param note MIDI note
  * @param duration duration in seconds
  * @returns Sound resulting violin Sound with given pitch and duration
- * @example violin(53, 4);
+ * @example ```
+ * violin(53, 4);
+ * ```
  * @category Instrument
  */
 export function violin(note: MIDINote, duration: number): Sound {

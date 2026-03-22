@@ -25,40 +25,37 @@ export default defineProject(({ mode }) => {
       }),
       react(),
     ],
+    legacy: {
+      inconsistentCjsInterop: true
+    },
     resolve: {
       preserveSymlinks: true,
-      alias: [{
-        find: /^js-slang\/context/,
-        replacement: pathlib.resolve(import.meta.dirname, 'src', 'mockModuleContext.ts')
-      }, {
-        // This alias configuration allows us to edit the modules library and have the changes
+      alias: [
+        {
+          find: /^js-slang\/context/,
+          replacement: pathlib.resolve(import.meta.dirname, 'src', 'mockModuleContext.ts')
+        },
+        {
+        // This alias configuration allows us to edit the modules library and bundles and have those changes
         // be reflected in real time when in hot-reload mode
-        find: /^@sourceacademy\/modules-lib/,
-        replacement: '.',
-        customResolver(source, importer, options) {
-          const newSource = pathlib.resolve(import.meta.dirname, '../lib/modules-lib/src', source);
-          return this.resolve(newSource, importer, options);
+          find: /^@sourceacademy\/modules-lib\/(.+)/,
+          replacement: pathlib.resolve(import.meta.dirname, '../lib/modules-lib/src/$1')
         },
-      }, {
-        find: /^@sourceacademy\/bundle-(.+)/,
-        replacement: '$1',
-        customResolver(source, importer, options) {
-          const [bundleName, everythingElse] = source.split('/', 2);
-          const newSource = pathlib.resolve(import.meta.dirname, '../src/bundles', bundleName, 'src', everythingElse);
-          return this.resolve(newSource, importer, options);
+        {
+          find: /^@sourceacademy\/bundle-(\w+)$/,
+          replacement: pathlib.resolve(import.meta.dirname, '../src/bundles/$1/src/index.ts')
         },
-      }],
+        {
+          find: /^@sourceacademy\/bundle-(\w+?)\/(.+)$/,
+          replacement: pathlib.resolve(import.meta.dirname, '../src/bundles/$1/src/$2')
+        }
+      ],
     },
     define: {
-      'process.env': env
+      'process.env': env,
+      global: 'globalThis'
     },
     optimizeDeps: {
-      esbuildOptions: {
-        // Node.js global to browser globalThis
-        define: {
-          global: 'globalThis'
-        }
-      },
       include: [
         '../build/tabs/*.js',
         '@blueprintjs/core',
@@ -68,6 +65,8 @@ export default defineProject(({ mode }) => {
         'ace-builds/src-noconflict/ext-language_tools',
         'ace-builds/src-noconflict/ext-searchbox',
         'classnames',
+        'es-toolkit',
+        'gl-matrix',
         'js-slang',
         'js-slang/dist/createContext',
         'js-slang/dist/editors/ace/modes/source',

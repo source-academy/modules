@@ -3,8 +3,8 @@ import { defineConfig } from 'vitest/config';
 import rootConfig from '../../vitest.config.js';
 
 export default defineConfig({
-  esbuild: {
-    include: ['**/*.{cts,ts}']
+  oxc: {
+    include: ['**/*.{cts,ts}'],
   },
   optimizeDeps: {
     include: ['istanbul-lib-report'],
