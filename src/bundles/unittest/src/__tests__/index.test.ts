@@ -28,12 +28,12 @@ describe('Test \'it\' and \'describe\'', () => {
   });
 
   test('it() throws an error when called without describe', () => {
-    expect(() => testing.it('desc', () => {})).toThrowError('it must be called from within a test suite!');
+    expect(() => testing.it('desc', () => {})).toThrow('it must be called from within a test suite!');
   });
 
   test('it() throws an error even if it is called after describe', () => {
     testing.describe('a test', () => {});
-    expect(() => testing.it('desc', () => {})).toThrowError('it must be called from within a test suite!');
+    expect(() => testing.it('desc', () => {})).toThrow('it must be called from within a test suite!');
   });
 
   test('it() works fine from within a describe block', () => {
@@ -122,7 +122,7 @@ describe('Test \'it\' and \'describe\'', () => {
       });
     });
 
-    expect(f).toThrowError('it cannot be called from within another test!');
+    expect(f).toThrow('it cannot be called from within another test!');
   });
 
   test('it() and describe() throw when provided a non-nullary function', () => {
@@ -136,9 +136,9 @@ describe('Test \'it\' and \'describe\'', () => {
   });
 
   test('internal errors are not handled', () => {
-    expect(testing.describe('suite', () => {
+    expect(() => testing.describe('suite', () => {
       testing.test('test', () => { throw new UnitestBundleInternalError(); });
-    })).toThrowError(UnitestBundleInternalError);
+    })).toThrow(UnitestBundleInternalError);
   });
 });
 
@@ -396,9 +396,15 @@ describe('Mocking functions', () => {
     expect(mocks.get_ret_vals(fn)).toEqual(null);
   });
 
+  describe(mocks.mock_function, () => {
+    it('throws when passed not a function', () => {
+      expect(() => mocks.mock_function(0 as any)).toThrow('mock_function: Expected function, got 0.');
+    });
+  });
+
   describe(mocks.get_arg_list, () => {
     it('throws when function isn\'t a mocked function', () => {
-      expect(() => mocks.get_arg_list((() => 0) as any)).toThrowError('get_arg_list: Expected mocked function, got () => 0.');
+      expect(() => mocks.get_arg_list((() => 0) as any)).toThrow('get_arg_list: Expected mocked function, got () => 0.');
     });
   });
 
@@ -420,12 +426,6 @@ describe('Mocking functions', () => {
       expect(mocks.get_num_calls(fn)).toEqual(1);
       expect(mocks.clear_mock(fn)).toBe(fn);
       expect(mocks.get_num_calls(fn)).toEqual(0);
-    });
-  });
-
-  describe(mocks.mock_function, () => {
-    it('throws when passed not a function', () => {
-      expect(() => mocks.mock_function(0 as any)).toThrowError('mock_function: Expected function, got 0.');
     });
   });
 });

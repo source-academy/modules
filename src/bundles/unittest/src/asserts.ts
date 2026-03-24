@@ -19,11 +19,13 @@ export function assert(pred: () => boolean) {
   }
 }
 
-function equalityComparer(expected: any, received: any): boolean | undefined {
+function equalityComparer(expected: unknown, received: unknown): boolean | undefined {
   if (typeof expected === 'number') {
+    if (typeof received !== 'number') return false;
+
     // if either is a float, use approximate checking
     if (!Number.isInteger(expected) || !Number.isInteger(received)) {
-      return Math.abs(expected - received) <= 0.001;
+      return Math.abs(expected - received) <= 0.0001;
     }
 
     return expected === received;
@@ -45,6 +47,7 @@ function equalityComparer(expected: any, received: any): boolean | undefined {
         return true;
       }
 
+      // TODO: Need to account for circular lists
       if (!isEqualWith(list.head(list0), list.head(list1), equalityComparer)) {
         return false;
       }
@@ -62,7 +65,19 @@ function equalityComparer(expected: any, received: any): boolean | undefined {
     return true;
   }
 
-  // TODO: A comparison for streams/arrays?
+  if (Array.isArray(expected)) {
+    if (!Array.isArray(received) || received.length !== expected.length) return false;
+
+    for (let i = 0; i < expected.length; i++) {
+      const expectedItem = expected[i];
+      const receivedItem = received[i];
+
+      if (!isEqualWith(expectedItem, receivedItem, equalityComparer)) return false;
+    }
+    return true;
+  }
+
+  // TODO: A comparison for streams?
   return undefined;
 }
 

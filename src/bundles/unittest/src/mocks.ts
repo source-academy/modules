@@ -1,5 +1,5 @@
 import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { pair, vector_to_list, type List } from 'js-slang/dist/stdlib/list';
+import { vector_to_list, type List } from 'js-slang/dist/stdlib/list';
 
 /**
  * Symbol for identifying the mock properties. Should not be exposed to cadets.
@@ -14,8 +14,8 @@ interface MockedFunction {
   };
 }
 
-function throwIfNotMockedFunction(obj: (...args: any[]) => any, func_name: string, param_name?: string): asserts obj is MockedFunction {
-  if (!(mockSymbol in obj)) {
+function throwIfNotMockedFunction(obj: unknown, func_name: string, param_name?: string): asserts obj is MockedFunction {
+  if (typeof obj !== 'function' || !(mockSymbol in obj)) {
     throw new InvalidCallbackError('mocked function', obj, func_name, param_name);
   }
 }
@@ -39,13 +39,13 @@ export function mock_function(fn: (...args: any[]) => any): MockedFunction {
     throw new InvalidParameterTypeError('function', fn, mock_function.name);
   }
 
-  const arglist: any[] = [];
+  const arglist: List[] = [];
   const retVals: any[] = [];
 
   // TODO: Check if some kind of function copying is required
   // js-slang has its own set of utils for doing this
   function func(...args: any[]) {
-    arglist.push(args);
+    arglist.push(vector_to_list(args));
     const retVal = fn.apply(fn, args);
     if (retVal !== undefined) {
       retVals.push(retVal);
@@ -78,11 +78,7 @@ export function get_num_calls(fn: MockedFunction) {
 export function get_arg_list(fn: MockedFunction) {
   throwIfNotMockedFunction(fn, get_arg_list.name);
   const { arglist } = fn[mockSymbol];
-
-  return arglist.reduceRight<List>((res, args) => {
-    const argsAsList = vector_to_list(args);
-    return pair(argsAsList, res);
-  }, null);
+  return vector_to_list(arglist);
 }
 
 /**
