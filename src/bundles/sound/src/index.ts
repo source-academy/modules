@@ -13,7 +13,7 @@
  * `(get_wave(sound))(get_duration(sound) + x) === 0` for any x >= 0.
  *
  * Two functions which combine Sounds, `consecutively` and `simultaneously` are given.
- * Additionally, we provide sound transformation functions `adsr` and `phase_mod`
+ * Additionally, we provide sound transformation functions like `adsr` and `phase_mod`
  * which take in a Sound and return a Sound.
  *
  * Finally, the provided `play` function takes in a Sound and plays it using your

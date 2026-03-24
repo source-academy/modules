@@ -13,6 +13,7 @@ import {
   tail,
   type List
 } from 'js-slang/dist/stdlib/list';
+import { stringify } from 'js-slang/dist/utils/stringify';
 import type {
   Sound,
   SoundProducer,
@@ -416,12 +417,16 @@ export function play(sound: Sound): Sound {
 
   const channel = theBuffer.getChannelData(0);
 
-  let temp: number;
   let prev_value = 0;
 
   const wave = get_wave(sound);
-  for (let i = 0; i < channel.length; i += 1) {
-    temp = wave(i / FS);
+  for (let i = 0; i < channel.length; i++) {
+    const temp = wave(i / FS);
+
+    if (typeof temp !== 'number') {
+      throw new Error(`${play.name}: Provided Sound returned a non-numeric value ${stringify(temp)}.`);
+    }
+
     // clip amplitude
     if (temp > 1) {
       channel[i] = 1;
@@ -482,7 +487,7 @@ export function noise_sound(duration: number): Sound {
 }
 
 /**
- * Makes a silence Sound with given duration
+ * Makes a silent Sound with given duration
  *
  * @param duration the duration of the silence Sound
  * @returns resulting silence Sound
@@ -708,7 +713,7 @@ function wrapSoundTransformer(transformer: SoundTransformer): SoundTransformer {
  * @param decay_ratio proportion of Sound decay phase
  * @param sustain_level sustain level between 0 and 1
  * @param release_ratio proportion of Sound in release phase
- * @returns Envelope a function from Sound to Sound
+ * @function
  * @example
  * ```
  * adsr(0.2, 0.3, 0.3, 0.1)(sound);
@@ -720,6 +725,11 @@ export function adsr(
   sustain_level: number,
   release_ratio: number
 ): SoundTransformer {
+  assertNumberWithinRange(attack_ratio, adsr.name, undefined, undefined, false, 'attack_ratio');
+  assertNumberWithinRange(decay_ratio, adsr.name, undefined, undefined, false, 'decay_ratio');
+  assertNumberWithinRange(sustain_level, adsr.name, 0, undefined, false, 'sustain_level');
+  assertNumberWithinRange(release_ratio, adsr.name, undefined, undefined, false, 'release_ratio');
+
   return wrapSoundTransformer(sound => {
     const wave = get_wave(sound);
     const duration = get_duration(sound);
@@ -764,10 +774,19 @@ export function adsr(
  * @param base_frequency frequency of the first harmonic
  * @param duration duration of the produced Sound, in seconds
  * @param envelopes – list of envelopes, which are functions from Sound to Sound
- * @returns Sound resulting Sound
+ * @returns resulting Sound
  * @example
  * ```
- * const sound = stacking_adsr(sine_sound, 300, 5, list(adsr(0.1, 0.3, 0.2, 0.5), adsr(0.2, 0.5, 0.6, 0.1), adsr(0.3, 0.1, 0.7, 0.3)));
+ * const sound = stacking_adsr(
+ *   sine_sound,
+ *   300,
+ *   5,
+ *   list(
+ *     adsr(0.1, 0.3, 0.2, 0.5),
+ *     adsr(0.2, 0.5, 0.6, 0.1),
+ *     adsr(0.3, 0.1, 0.7, 0.3)
+ *   )
+ * );
  * play(sound);
  * ```
  */
@@ -802,7 +821,6 @@ export function stacking_adsr(
  * @param freq the frequency of the sine wave to be modulated
  * @param duration the duration of the output Sound
  * @param amount the amount of modulation to apply to the carrier sine wave
- * @returns function which takes in a Sound and returns a Sound
  * @example
  * ```
  * phase_mod(440, 5, 1)(sine_sound(220, 5));
@@ -813,6 +831,10 @@ export function phase_mod(
   duration: number,
   amount: number
 ): SoundTransformer {
+  assertNumberWithinRange(freq, phase_mod.name, 0, undefined, false);
+  validateDuration(phase_mod.name, duration);
+  assertNumberWithinRange(amount, phase_mod.name, undefined, undefined, false);
+
   return wrapSoundTransformer(modulator => {
     const wave = get_wave(modulator);
     return make_sound(
@@ -838,6 +860,8 @@ export function phase_mod(
  * @category Instrument
  */
 export function bell(note: MIDINote, duration: number): Sound {
+  validateDuration(bell.name, duration);
+
   return stacking_adsr(
     square_sound,
     midi_note_to_frequency(note),
@@ -864,6 +888,8 @@ export function bell(note: MIDINote, duration: number): Sound {
  * @category Instrument
  */
 export function cello(note: MIDINote, duration: number): Sound {
+  validateDuration(cello.name, duration);
+
   return stacking_adsr(
     square_sound,
     midi_note_to_frequency(note),
@@ -886,6 +912,8 @@ export function cello(note: MIDINote, duration: number): Sound {
  *
  */
 export function piano(note: MIDINote, duration: number): Sound {
+  validateDuration(piano.name, duration);
+
   return stacking_adsr(
     triangle_sound,
     midi_note_to_frequency(note),
@@ -907,6 +935,8 @@ export function piano(note: MIDINote, duration: number): Sound {
  * @category Instrument
  */
 export function trombone(note: MIDINote, duration: number): Sound {
+  validateDuration(trombone.name, duration);
+
   return stacking_adsr(
     square_sound,
     midi_note_to_frequency(note),
@@ -928,6 +958,8 @@ export function trombone(note: MIDINote, duration: number): Sound {
  * @category Instrument
  */
 export function violin(note: MIDINote, duration: number): Sound {
+  validateDuration(violin.name, duration);
+
   return stacking_adsr(
     sawtooth_sound,
     midi_note_to_frequency(note),
