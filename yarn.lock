@@ -4166,6 +4166,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@sourceacademy/bundle-torch@workspace:src/bundles/torch":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/bundle-torch@workspace:src/bundles/torch"
+  dependencies:
+    "@sourceacademy/modules-buildtools": "workspace:^"
+    "@veehz/torch": "npm:^0.1.2"
+    typescript: "npm:^5.8.2"
+  languageName: unknown
+  linkType: soft
+
 "@sourceacademy/bundle-unittest@workspace:^, @sourceacademy/bundle-unittest@workspace:src/bundles/unittest":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-unittest@workspace:src/bundles/unittest"
@@ -5843,6 +5853,13 @@ __metadata:
   version: 1.11.1
   resolution: "@unrs/resolver-binding-win32-x64-msvc@npm:1.11.1"
   conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@veehz/torch@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "@veehz/torch@npm:0.1.2"
+  checksum: 10c0/09e531a2ca7db3b3bd6e38a0ffde9667b90975f506093a817f05b4c92145c32a944cb8c3052fdbbcdc0a18bc4f48410693be6a0f569fceb54fa7ba348ca1fbe7
   languageName: node
   linkType: hard
 
