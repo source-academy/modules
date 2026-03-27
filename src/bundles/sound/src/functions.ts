@@ -9,9 +9,11 @@ import {
   is_pair,
   length,
   list,
+  map,
   pair,
   tail,
-  type List
+  type List,
+  type Pair
 } from 'js-slang/dist/stdlib/list';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import type {
@@ -220,7 +222,6 @@ export function record(buffer: number): () => SoundPromise {
 
     // TODO: Remove when ReplResult is properly implemented
     promise.toReplString = () => '<SoundPromise>';
-    promise.toString = () => '<SoundPromise>';
     return promise;
   };
 }
@@ -277,8 +278,6 @@ export function record_for(duration: number, buffer: number): SoundPromise {
   };
 
   promise.toReplString = () => '<SoundPromise>';
-  // TODO: Remove when ReplResult is properly implemented
-  promise.toString = () => '<SoundPromise>';
   return promise;
 }
 
@@ -359,8 +358,8 @@ export function get_duration(sound: Sound): number {
 export function is_sound(x: unknown): x is Sound {
   return (
     is_pair(x)
-    && isFunctionOfLength(get_wave(x), 1)
-    && typeof get_duration(x) === 'number'
+    && isFunctionOfLength(head(x), 1)
+    && typeof tail(x) === 'number'
   );
 }
 
@@ -623,7 +622,7 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
  * play(sound);
  * ```
  */
-export function consecutively(list_of_sounds: List): Sound {
+export function consecutively(list_of_sounds: List<Sound>): Sound {
   function consec_two(ss1: Sound, ss2: Sound) {
     const wave1 = get_wave(ss1);
     const wave2 = get_wave(ss2);
@@ -650,7 +649,7 @@ export function consecutively(list_of_sounds: List): Sound {
  * play(new_sound);
  * ```
  */
-export function simultaneously(list_of_sounds: List): Sound {
+export function simultaneously(list_of_sounds: List<Sound>): Sound {
   function simul_two(ss1: Sound, ss2: Sound) {
     const wave1 = get_wave(ss1);
     const wave2 = get_wave(ss2);
@@ -696,8 +695,6 @@ function wrapSoundTransformer(transformer: SoundTransformer): SoundTransformer {
   }
 
   wrapped.toReplString = () => '<SoundTransformer>';
-  // TODO: Remove when ReplResult is properly implemented
-  wrapped.toString = () => '<SoundTransformer>';
   return wrapped;
 }
 
@@ -794,20 +791,17 @@ export function stacking_adsr(
   waveform: SoundProducer,
   base_frequency: number,
   duration: number,
-  envelopes: List
+  envelopes: List<SoundTransformer>
 ): Sound {
-  function zip(lst: List, n: number) {
+  function zip(lst: List<SoundTransformer>, n: number): List<Pair<number, SoundTransformer>> {
     if (is_null(lst)) {
       return lst;
     }
     return pair(pair(n, head(lst)), zip(tail(lst), n + 1));
   }
 
-  return simultaneously(accumulate(
-    (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
-    null,
-    zip(envelopes, 1)
-  ));
+  const new_list = map(x => tail(x)(waveform(base_frequency * head(x), duration)), zip(envelopes, 1));
+  return simultaneously(new_list);
 }
 
 /**

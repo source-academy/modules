@@ -1,4 +1,5 @@
 import { midi_note_to_frequency } from '@sourceacademy/bundle-midi';
+import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 import {
   accumulate,
@@ -7,9 +8,11 @@ import {
   is_pair,
   length,
   list,
+  map,
   pair,
   tail,
-  type List
+  type List,
+  type Pair
 } from 'js-slang/dist/stdlib/list';
 import { RIFFWAVE } from './riffwave';
 import type {
@@ -339,12 +342,19 @@ export function get_duration(sound: Sound): number {
  * @example is_sound(make_sound(t => 0, 2)); // Returns true
  */
 export function is_sound(x: unknown): x is Sound {
-  return (
-    is_pair(x)
-    && typeof get_left_wave(x) === 'function'
-    && typeof get_right_wave(x) === 'function'
-    && typeof get_duration(x) === 'number'
-  );
+  if (!is_pair(x)) return false;
+
+  const waves = head(x);
+  if (!is_pair(waves)) return false;
+
+  const left_wave = head(waves);
+  if (!isFunctionOfLength(left_wave, 1)) return false;
+
+  const right_wave = head(waves);
+  if (!isFunctionOfLength(right_wave, 1)) return false;
+
+  const duration = tail(x);
+  return typeof duration === 'number';
 }
 
 /**
@@ -789,7 +799,7 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
  * @returns the combined Sound
  * @example consecutively(list(sine_sound(200, 2), sine_sound(400, 3)));
  */
-export function consecutively(list_of_sounds: List): Sound {
+export function consecutively(list_of_sounds: List<Sound>): Sound {
   function stereo_cons_two(sound1: Sound, sound2: Sound) {
     const Lwave1 = get_left_wave(sound1);
     const Rwave1 = get_right_wave(sound1);
@@ -815,7 +825,7 @@ export function consecutively(list_of_sounds: List): Sound {
  * @returns the combined Sound
  * @example simultaneously(list(sine_sound(200, 2), sine_sound(400, 3)))
  */
-export function simultaneously(list_of_sounds: List): Sound {
+export function simultaneously(list_of_sounds: List<Sound>): Sound {
   function stereo_simul_two(sound1: Sound, sound2: Sound) {
     const Lwave1 = get_left_wave(sound1);
     const Rwave1 = get_right_wave(sound1);
@@ -916,20 +926,17 @@ export function stacking_adsr(
   waveform: SoundProducer,
   base_frequency: number,
   duration: number,
-  envelopes: List
+  envelopes: List<SoundTransformer>
 ): Sound {
-  function zip(lst: List, n: number) {
+  function zip(lst: List<SoundTransformer>, n: number): List<Pair<number, SoundTransformer>> {
     if (is_null(lst)) {
       return lst;
     }
     return pair(pair(n, head(lst)), zip(tail(lst), n + 1));
   }
 
-  return simultaneously(accumulate(
-    (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
-    null,
-    zip(envelopes, 1)
-  ));
+  const new_list = map(x => tail(x)(waveform(base_frequency * head(x), duration)), zip(envelopes, 1));
+  return simultaneously(new_list);
 }
 
 /**
