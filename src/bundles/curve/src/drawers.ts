@@ -48,12 +48,7 @@ function getRenderFunctionCreator(
     }
 
     renderFunc.is3D = space === '3D';
-
-    const stringifier = () => `<${space === '3D' ? '3D' : ''}RenderFunction(${numPoints})>`;
-
-    // Retain both properties for compatibility
-    renderFunc.toString = stringifier;
-    renderFunc.toReplString = stringifier;
+    renderFunc.toReplString = () => `<${space === '3D' ? '3D' : ''}RenderFunction(${numPoints})>`;
 
     return renderFunc;
   }
