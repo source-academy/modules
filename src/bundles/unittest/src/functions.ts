@@ -38,7 +38,7 @@ function handleErr(err: any) {
 
 function runTest(name: string, funcName: string, func: Test) {
   if (!isFunctionOfLength(func, 0)) {
-    throw new UnitestBundleInternalError(`${funcName}: A test or test suite must be a nullary function!`);
+    throw new UnitestBundleInternalError(`${funcName}: A test must be a nullary function!`);
   }
 
   if (currentSuite === null) {
@@ -110,7 +110,7 @@ function determinePassCount(results: (TestResult | SuiteResult)[]): number {
  */
 export function describe(msg: string, func: TestSuite): void {
   if (!isFunctionOfLength(func, 0)) {
-    throw new UnitestBundleInternalError(`${describe.name}: A test or test suite must be a nullary function!`);
+    throw new UnitestBundleInternalError(`${describe.name}: A test suite must be a nullary function!`);
   }
 
   const parentSuite = currentSuite;

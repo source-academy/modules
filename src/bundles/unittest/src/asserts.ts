@@ -130,11 +130,12 @@ export function assert_contains(xs: any, toContain: any) {
         isEqualWith(list.tail(xs), item, equalityComparer)
       ) return true;
 
-      if (list.is_pair(list.head(xs)) && member(list.head(xs), item)) {
-        return true;
-      }
+      const head_element = list.head(xs);
+      if (list.is_pair(head_element) && member(head_element, item)) return true;
 
-      return list.is_pair(list.tail(xs)) && member(list.tail(xs), item);
+      const tail_element = list.tail(xs);
+
+      return list.is_pair(tail_element) && member(tail_element, item);
     }
 
     throw new Error(`First argument to ${assert_contains.name} must be a list or a pair, got \`${stringify(xs)}\`.`);
