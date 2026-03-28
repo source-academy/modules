@@ -229,8 +229,6 @@ export class ProgrammableRepl {
       }
     );
 
-    evalContext.moduleContexts = context.moduleContexts;
-
     const evalResult = await runInContext(code, evalContext, options);
     if (evalResult.status === 'suspended-cse-eval') {
       throw new Error('This should not happen');
