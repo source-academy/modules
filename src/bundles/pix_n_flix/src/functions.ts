@@ -1,3 +1,6 @@
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+import context from 'js-slang/context';
 import {
   DEFAULT_FPS,
   DEFAULT_HEIGHT,
@@ -21,7 +24,6 @@ import {
   type Pixel,
   type Pixels,
   type Queue,
-  type StartPacket,
   type TabsPacket,
   type VideoElement
 } from './types';
@@ -107,7 +109,8 @@ function setupData(): void {
 export function isPixelValid(pixel: Pixel): boolean {
   let ok = true;
   for (let i = 0; i < 4; i += 1) {
-    if (pixel[i] >= 0 && pixel[i] <= 255) {
+    const value = pixel[i];
+    if (typeof value === 'number' && value >= 0 && value <= 255) {
       continue;
     }
     ok = false;
@@ -281,7 +284,7 @@ function setAspectRatioDimensions(w: number, h: number): void {
 
 /** @hidden */
 function loadMedia(): void {
-  if (!navigator.mediaDevices.getUserMedia) {
+  if (!navigator.mediaDevices?.getUserMedia) {
     const errMsg = 'The browser you are using does not support getUserMedia';
     console.error(errMsg);
     errorLogger(errMsg, false);
@@ -290,8 +293,7 @@ function loadMedia(): void {
   // If video is already part of bundle state
   if (videoElement.srcObject) return;
 
-  navigator.mediaDevices
-    .getUserMedia({ video: true })
+  navigator.mediaDevices?.getUserMedia({ video: true })
     .then((stream) => {
       videoElement.srcObject = stream;
       videoElement.onloadedmetadata = () => setAspectRatioDimensions(
@@ -503,6 +505,16 @@ function deinit(): void {
     });
 }
 
+function throwIfNotPixel(obj: unknown, func_name: string, param_name?: string): asserts obj is Pixel {
+  if (
+    !Array.isArray(obj) ||
+    obj.length !== 4 ||
+    obj.some(each => typeof each !== 'number')
+  ) {
+    throw new InvalidParameterTypeError('pixel', obj, func_name, param_name);
+  }
+}
+
 // =============================================================================
 // Module's Exposed Functions
 // =============================================================================
@@ -510,16 +522,23 @@ function deinit(): void {
 /**
  * Starts processing the image or video using the installed filter.
  */
-export function start(): StartPacket {
+export function start() {
+  if (!context.moduleContexts.pix_n_flix.state) {
+    context.moduleContexts.pix_n_flix.state = {
+      pixnflix: {
+        init,
+        deinit,
+        startVideo,
+        stopVideo,
+        updateFPS,
+        updateVolume,
+        updateDimensions
+      }
+    };
+  }
+
   return {
     toReplString: () => '[Pix N Flix]',
-    init,
-    deinit,
-    startVideo,
-    stopVideo,
-    updateFPS,
-    updateVolume,
-    updateDimensions
   };
 }
 
@@ -530,7 +549,7 @@ export function start(): StartPacket {
  * @returns The red component as a number between 0 and 255
  */
 export function red_of(pixel: Pixel): number {
-  // returns the red value of pixel respectively
+  throwIfNotPixel(pixel, red_of.name);
   return pixel[0];
 }
 
@@ -541,7 +560,7 @@ export function red_of(pixel: Pixel): number {
  * @returns The green component as a number between 0 and 255
  */
 export function green_of(pixel: Pixel): number {
-  // returns the green value of pixel respectively
+  throwIfNotPixel(pixel, green_of.name);
   return pixel[1];
 }
 
@@ -552,7 +571,7 @@ export function green_of(pixel: Pixel): number {
  * @returns The blue component as a number between 0 and 255
  */
 export function blue_of(pixel: Pixel): number {
-  // returns the blue value of pixel respectively
+  throwIfNotPixel(pixel, blue_of.name);
   return pixel[2];
 }
 
@@ -563,7 +582,7 @@ export function blue_of(pixel: Pixel): number {
  * @returns The alpha component as a number between 0 and 255
  */
 export function alpha_of(pixel: Pixel): number {
-  // returns the alpha value of pixel respectively
+  throwIfNotPixel(pixel, alpha_of.name);
   return pixel[3];
 }
 
@@ -584,6 +603,12 @@ export function set_rgba(
   b: number,
   a: number
 ): void {
+  throwIfNotPixel(pixel, set_rgba.name, 'pixel');
+  assertNumberWithinRange(r, set_rgba.name, 0, 255, true, 'r');
+  assertNumberWithinRange(g, set_rgba.name, 0, 255, true, 'g');
+  assertNumberWithinRange(b, set_rgba.name, 0, 255, true, 'b');
+  assertNumberWithinRange(a, set_rgba.name, 0, 255, true, 'a');
+
   // assigns the r,g,b values to this pixel
   pixel[0] = r;
   pixel[1] = g;
@@ -618,7 +643,7 @@ export function image_width(): number {
  * @param src Source image
  * @param dest Destination image
  */
-export function copy_image(src: Pixels, dest: Pixels): void {
+export function copy_image(src: Pixels, dest: Pixels) {
   for (let i = 0; i < HEIGHT; i += 1) {
     for (let j = 0; j < WIDTH; j += 1) {
       dest[i][j] = src[i][j];
@@ -638,6 +663,7 @@ export function copy_image(src: Pixels, dest: Pixels): void {
  * @param _filter The filter to be installed
  */
 export function install_filter(_filter: Filter): void {
+  assertFunctionOfLength(_filter, 2, install_filter.name, 'filter');
   filter = _filter;
 }
 
@@ -657,6 +683,9 @@ export function reset_filter(): void {
  * @returns The filter equivalent to applying filter1 and then filter2
  */
 export function compose_filter(filter1: Filter, filter2: Filter): Filter {
+  assertFunctionOfLength(filter1, 2, compose_filter.name, 'filter', 'filter1');
+  assertFunctionOfLength(filter2, 2, compose_filter.name, 'filter', 'filter2');
+
   return (src, dest) => {
     const temp = new_image();
     filter1(src, temp);
@@ -670,11 +699,12 @@ export function compose_filter(filter1: Filter, filter2: Filter): Filter {
  * @param pause_time Time in ms after the video starts.
  */
 export function pause_at(pause_time: number): void {
-  // prevent negative pause_time
+  assertNumberWithinRange(pause_time, pause_at.name, 0);
+
   lateEnqueue(() => {
     setTimeout(
       tabsPackage.onClickStill,
-      pause_time >= 0 ? pause_time : -pause_time
+      pause_time
     );
   });
 }
@@ -687,6 +717,9 @@ export function pause_at(pause_time: number): void {
  * @param height The height of the displayed images (default value: 400)
  */
 export function set_dimensions(width: number, height: number): void {
+  assertNumberWithinRange(width, set_dimensions.name, MIN_WIDTH, MAX_WIDTH, true, 'width');
+  assertNumberWithinRange(height, set_dimensions.name, MIN_HEIGHT, MAX_HEIGHT, true, 'height');
+
   enqueue(() => updateDimensions(width, height));
 }
 
@@ -697,6 +730,7 @@ export function set_dimensions(width: number, height: number): void {
  * @param fps FPS of video (default value: 10)
  */
 export function set_fps(fps: number): void {
+  assertNumberWithinRange(fps, set_fps.name, MIN_FPS, MAX_FPS);
   enqueue(() => updateFPS(fps));
 }
 
@@ -707,7 +741,14 @@ export function set_fps(fps: number): void {
  * @param volume Volume of video (Default value of 50)
  */
 export function set_volume(volume: number): void {
-  enqueue(() => updateVolume(Math.max(0, Math.min(100, volume) / 100.0)));
+  assertNumberWithinRange(volume, set_volume.name);
+
+  if (volume > 100) volume = 100;
+  else if (volume < 0) volume = 0;
+
+  volume /= 100;
+
+  enqueue(() => updateVolume(volume));
 }
 
 /**
@@ -725,6 +766,10 @@ export function use_local_file(): void {
  * @param URL URL of the image
  */
 export function use_image_url(URL: string): void {
+  if (typeof URL !== 'string') {
+    throw new InvalidParameterTypeError('string', URL, use_image_url.name);
+  }
+
   inputFeed = InputFeed.ImageURL;
   url = URL;
 }
@@ -736,6 +781,10 @@ export function use_image_url(URL: string): void {
  * @param URL URL of the video
  */
 export function use_video_url(URL: string): void {
+  if (typeof URL !== 'string') {
+    throw new InvalidParameterTypeError('string', URL, use_video_url.name);
+  }
+
   inputFeed = InputFeed.VideoURL;
   url = URL;
 }
@@ -755,6 +804,10 @@ export function get_video_time(): number {
  * @param _keepAspectRatio to keep aspect ratio. (Default value of true)
  */
 export function keep_aspect_ratio(_keepAspectRatio: boolean): void {
+  if (typeof _keepAspectRatio !== 'boolean') {
+    throw new InvalidParameterTypeError('boolean', URL, keep_aspect_ratio.name);
+  }
+
   keepAspectRatio = _keepAspectRatio;
 }
 
@@ -765,5 +818,7 @@ export function keep_aspect_ratio(_keepAspectRatio: boolean): void {
  * @param n number of times the video repeats after the first iteration. If n < 1, n will be taken to be 1. (Default value of Infinity)
  */
 export function set_loop_count(n: number): void {
+  assertNumberWithinRange(n, set_loop_count.name);
+
   LOOP_COUNT = n;
 }

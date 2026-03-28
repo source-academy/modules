@@ -13,6 +13,9 @@
     "vitest": "4.1.0",
     "vitest-browser-react": "^2.1.0"
   },
+  "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^"
+  },
   "type": "module",
   "exports": {
     ".": "./dist/index.js",

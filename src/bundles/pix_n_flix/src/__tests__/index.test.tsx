@@ -70,11 +70,19 @@ describe('pixel manipulation functions', () => {
     it('works', () => {
       expect(funcs.alpha_of([0, 0, 0, 255])).toEqual(255);
     });
+
+    it('throws error when argument is not a pixel', () => {
+      expect(() => funcs.alpha_of(0 as any)).toThrow('alpha_of: Expected pixel, got 0.');
+    });
   });
 
   describe(funcs.red_of, () => {
     it('works', () => {
       expect(funcs.red_of([255, 0, 0, 0])).toEqual(255);
+    });
+
+    it('throws error when argument is not a pixel', () => {
+      expect(() => funcs.red_of(0 as any)).toThrow('red_of: Expected pixel, got 0.');
     });
   });
 
@@ -82,11 +90,19 @@ describe('pixel manipulation functions', () => {
     it('works', () => {
       expect(funcs.green_of([0, 255, 0, 0])).toEqual(255);
     });
+
+    it('throws error when argument is not a pixel', () => {
+      expect(() => funcs.green_of(0 as any)).toThrow('green_of: Expected pixel, got 0.');
+    });
   });
 
   describe(funcs.blue_of, () => {
     it('works', () => {
       expect(funcs.blue_of([0, 0, 255, 0])).toEqual(255);
+    });
+
+    it('throws error when argument is not a pixel', () => {
+      expect(() => funcs.blue_of(0 as any)).toThrow('blue_of: Expected pixel, got 0.');
     });
   });
 
@@ -97,6 +113,10 @@ describe('pixel manipulation functions', () => {
       for (let i = 0; i < 4; i++) {
         expect(pixel[i]).toEqual(i + 1);
       }
+    });
+
+    it('throws error when first argument is not a pixel', () => {
+      expect(() => funcs.set_rgba(0 as any, 1, 2, 3, 4)).toThrow('set_rgba: Expected pixel for pixel, got 0.');
     });
   });
 });
@@ -153,6 +173,19 @@ describe(funcs.writeToBuffer, () => {
   });
 });
 
+describe(funcs.install_filter, () => {
+  it('throws an error when passed an invalid filter', () => {
+    expect(() => funcs.install_filter(0 as any)).toThrow('install_filter: Expected filter, got 0.');
+  });
+});
+
+describe(funcs.compose_filter, () => {
+  it('throws an error when passed invalid filters', () => {
+    expect(() => funcs.compose_filter(0 as any, (_s, _d) => {})).toThrow('compose_filter: Expected filter for filter1, got 0.');
+    expect(() => funcs.compose_filter((_s, _d) => {}, 0 as any)).toThrow('compose_filter: Expected filter for filter2, got 0.');
+  });
+});
+
 describe('video functions', () => {
   test('startVideo and stopVideo', ({ fixtures: { errLogger } }) => {
     const filter = vi.fn(funcs.copy_image);
@@ -195,6 +228,13 @@ describe('video functions', () => {
       expect(() => funcs.set_fps(999)).not.toThrow();
       const { FPS } = reinit();
       expect(FPS).toEqual(60);
+    });
+  });
+
+  describe(funcs.set_loop_count, () => {
+    it('throws an error when given not an integer', () => {
+      expect(() => funcs.set_loop_count('a' as any)).toThrow('set_loop_count: Expected integer, got "a".');
+      expect(() => funcs.set_loop_count(0.5)).toThrow('set_loop_count: Expected integer, got 0.5.');
     });
   });
 });

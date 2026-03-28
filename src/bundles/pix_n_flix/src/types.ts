@@ -1,3 +1,5 @@
+import type { ReplResult } from '@sourceacademy/modules-lib/types';
+
 export type VideoElement = HTMLVideoElement & { srcObject?: MediaStream };
 export type ImageElement = HTMLImageElement;
 export type CanvasElement = HTMLCanvasElement;
@@ -23,7 +25,8 @@ export type BundlePacket = {
   inputFeed: InputFeed;
 };
 export type Queue = () => void;
-export type StartPacket = {
+
+export interface StartPacket extends ReplResult {
   toReplString: () => string;
   init: (
     image: ImageElement,
@@ -38,7 +41,17 @@ export type StartPacket = {
   updateFPS: (fps: number) => void;
   updateVolume: (volume: number) => void;
   updateDimensions: (width: number, height: number) => void;
-};
+}
+
+export interface PixNFlixModuleState {
+  pixnflix: StartPacket | null;
+}
+
 export type Pixel = [r: number, g: number, b: number, a: number];
 export type Pixels = Pixel[][];
+
+/**
+ * A `void` returning function that takes the pixel data in `src`,
+ * transforms it, and then writes the output to `dest`.
+ */
 export type Filter = (src: Pixels, dest: Pixels) => void;
