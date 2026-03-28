@@ -18,9 +18,10 @@
   "scripts": {
     "tsc": "buildtools tsc .",
     "build": "buildtools build bundle .",
+    "compile": "buildtools compile",
     "lint": "buildtools lint .",
     "test": "buildtools test --project .",
-    "postinstall": "buildtools compile",
+    "postinstall": "yarn compile",
     "serve": "buildtools serve"
   },
   "scripts-info": {

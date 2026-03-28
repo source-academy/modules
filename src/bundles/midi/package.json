@@ -17,8 +17,9 @@
     "prepare": "yarn tsc",
     "tsc": "buildtools tsc .",
     "test": "buildtools test --project .",
-    "postinstall": "buildtools compile",
-    "serve": "yarn buildtools serve"
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
   },
   "exports": {
     ".": "./dist/index.js",
