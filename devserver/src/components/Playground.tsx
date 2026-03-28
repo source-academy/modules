@@ -3,9 +3,9 @@ import classNames from 'classnames';
 import { SourceDocumentation, getNames, runInContext, type Context } from 'js-slang';
 // Importing this straight from js-slang doesn't work for whatever reason
 import createContext from 'js-slang/dist/createContext';
+import { Chapter, Variant } from 'js-slang/dist/langs';
 import { ModuleInternalError } from 'js-slang/dist/modules/errors';
 import { setModulesStaticURL } from 'js-slang/dist/modules/loader';
-import { Chapter, Variant } from 'js-slang/dist/types';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import React from 'react';
 import mockModuleContext from '../mockModuleContext';
