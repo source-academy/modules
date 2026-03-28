@@ -30,7 +30,7 @@ export function noteToValues(note: NoteWithOctave, func_name: string = noteToVal
   ] as [NoteName, Accidental, number];
 }
 
-export function midiNoteToNoteName(midiNote: MIDINote, accidental: 'flat' | 'sharp', func_name: string = midiNoteToNoteName.name): Note {
+export function midiNoteToNoteName(midiNote: MIDINote, accidental: 'flat' | 'sharp', func_name: string): Note {
   switch (midiNote % 12) {
     case 0:
       return 'C';

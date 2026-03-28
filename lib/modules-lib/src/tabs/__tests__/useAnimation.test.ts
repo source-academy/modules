@@ -132,7 +132,7 @@ test('Animation should not auto start if autoStart is false', async ({ callback,
   expect(hook.current.isPlaying).toEqual(false);
 });
 
-test('animation reset', async ({ callback, canvas }) => {
+test('Animation reset', async ({ callback, canvas }) => {
   const { hook, act, advanceFrames } = await getAnimationHook({
     autoLoop: false,
     animationDuration: 1000,

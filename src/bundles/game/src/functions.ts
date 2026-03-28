@@ -60,7 +60,7 @@ enum ObjectTypes {
 
 const ObjTypes = Object.values(ObjectTypes);
 
-const nullFn = () => {};
+const nullFn = () => { };
 
 const mandatory = (obj, errMsg: string) => {
   if (!obj) {
@@ -450,7 +450,7 @@ export function create_spritesheet_config(
 /**
  * Get in-game screen width.
  *
- * @return screen width
+ * @returns screen width
  */
 export function get_screen_width(): number {
   return screenSize.x;
@@ -459,7 +459,7 @@ export function get_screen_width(): number {
 /**
  * Get in-game screen height.
  *
- * @return screen height
+ * @returns screen height
  */
 export function get_screen_height(): number {
   return screenSize.y;
@@ -468,7 +468,7 @@ export function get_screen_height(): number {
 /**
  * Get game screen display width (accounting window size).
  *
- * @return screen display width
+ * @returns screen display width
  */
 export function get_screen_display_width(): number {
   return scene().scale.displaySize.width;
@@ -477,7 +477,7 @@ export function get_screen_display_width(): number {
 /**
  * Get game screen display height (accounting window size).
  *
- * @return screen display height
+ * @returns screen display height
  */
 export function get_screen_display_height(): number {
   return scene().scale.displaySize.height;

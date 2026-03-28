@@ -19,3 +19,7 @@ export function test_function(_param0: string) {
 export function test_function2() {
   return context.moduleContexts.test0.state.data;
 }
+
+export function is_number(x: unknown): x is number {
+  return typeof x === 'number';
+}

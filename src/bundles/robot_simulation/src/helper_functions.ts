@@ -235,17 +235,17 @@ export function createWorld(
  * @example
  * ```
  * init_simulation(() => {
- *     const physics = createPhysics();
- *     const renderer = createRenderer();
- *     const timer = createTimer();
- *     const robot_console = createRobotConsole();
- *     const world = createWorld(physics, renderer, timer, robot_console);
+ *   const physics = createPhysics();
+ *   const renderer = createRenderer();
+ *   const timer = createTimer();
+ *   const robot_console = createRobotConsole();
+ *   const world = createWorld(physics, renderer, timer, robot_console);
  *
- *     const cuboid = createCuboid(...);
- *     addControllerToWorld(cuboid, world);
+ *   const cuboid = createCuboid();
+ *   addControllerToWorld(cuboid, world);
  *
- *     return world;
- *   });
+ *   return world;
+ * });
  * ```
  *
  * @category Controller
@@ -473,10 +473,10 @@ export function saveToContext(key: string, value: any) {
  * @example
  * ```
  * init_simulation(() => {
- *   ...
+ *   // ... other code
  *   const ev3 = createEv3(physics, renderer);
  *   saveToContext('ev3', ev3);
- * })
+ * });
  * ```
  *
  * @param physics The physics engine of the world. See {@link createPhysics}

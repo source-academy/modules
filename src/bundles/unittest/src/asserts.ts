@@ -1,6 +1,6 @@
+import { isEqualWith } from 'es-toolkit';
 import * as list from 'js-slang/dist/stdlib/list';
 import { stringify } from 'js-slang/dist/utils/stringify';
-import isEqualWith from 'lodash/isEqualWith';
 
 /**
  * Asserts that a predicate returns true.

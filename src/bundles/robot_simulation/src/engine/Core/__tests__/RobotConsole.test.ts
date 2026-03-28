@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from 'vitest';
-import { RobotConsole } from '../../Core/RobotConsole'; // Adjust the import path as necessary
+import { RobotConsole } from '../RobotConsole';
 
 describe(RobotConsole, () => {
   let robotConsole: RobotConsole;

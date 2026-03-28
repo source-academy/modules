@@ -7,19 +7,19 @@
     "@sourceacademy/modules-repotools": "workspace:^",
     "@types/node": "^22.15.30",
     "typescript": "^5.8.2",
-    "vitest": "^4.0.4"
+    "vitest": "4.1.0"
   },
   "dependencies": {
-    "@actions/artifact": "^2.3.2",
+    "@actions/artifact": "^6.0.0",
     "@actions/core": "^1.11.1",
-    "@actions/exec": "^1.1.1",
-    "lodash": "^4.17.23",
+    "@actions/exec": "^3.0.0",
+    "es-toolkit": "^1.44.0",
     "snyk-nodejs-lockfile-parser": "^2.4.2"
   },
   "scripts": {
     "build": "node ./build.js",
     "postinstall": "yarn build",
-    "test": "vitest",
+    "test": "vitest run",
     "tsc": "tsc --project ./tsconfig.json"
   }
 }

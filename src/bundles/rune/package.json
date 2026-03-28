@@ -4,11 +4,12 @@
   "private": true,
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
+    "es-toolkit": "^1.44.0",
     "gl-matrix": "^3.3.0"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "js-slang": "^1.0.81",
+    "js-slang": "^1.0.85",
     "typescript": "^5.8.2"
   },
   "type": "module",
@@ -21,7 +22,7 @@
     "build": "buildtools build bundle .",
     "lint": "buildtools lint .",
     "test": "buildtools test --project .",
-    "postinstall": "yarn tsc",
+    "postinstall": "buildtools compile",
     "serve": "yarn buildtools serve"
   },
   "scripts-info": {

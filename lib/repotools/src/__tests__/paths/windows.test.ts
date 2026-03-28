@@ -41,4 +41,8 @@ describe('Test convertToPosixPath with Windows paths', () => {
   test('Converts Windows root paths correctly', () => {
     expect(convertToPosixPath('D:\\')).toEqual('/D');
   });
+
+  test('Converts Windows absolute path correctly', () => {
+    expect(convertToPosixPath('E:\\folder\\subfolder\\file.txt')).toEqual('/E/folder/subfolder/file.txt');
+  });
 });

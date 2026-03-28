@@ -62,7 +62,7 @@ You can also add the dependency directly by modifying your `package.json`:
 {
   "name": "@sourceacademy/bundle-bundle0",
   "dependencies": {
-    "lodash": "^4.0.0"
+    "es-toolkit": "^1.44.0"
   }
 }
 ```
@@ -89,7 +89,7 @@ instructions on how to use them.
 
 ## Common Modules Library
 
-There are common functions such as `hexToColor` available in the Common Modules Library. You can make use of these functions
+There are common functions such as `hexToColor` available in the Common Modules Library (available as the `@sourceacademy/modules-lib` package). You can make use of these functions
 instead of implementing your own versions of them.
 
 ## Adding Unit Tests

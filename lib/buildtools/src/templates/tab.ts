@@ -3,7 +3,7 @@ import pathlib from 'path';
 import type { Interface } from 'readline/promises';
 import { getBundleManifests } from '@sourceacademy/modules-repotools/manifest';
 import type { BundleManifest, ModulesManifest } from '@sourceacademy/modules-repotools/types';
-import omit from 'lodash/omit.js';
+import { omit } from 'es-toolkit/object';
 import _package from '../../../../package.json' with { type: 'json' };
 import { formatResult } from '../build/formatter.js';
 import { askQuestion, error, success, warn } from './print.js';
@@ -50,7 +50,7 @@ export async function addNew(bundlesDir: string, tabsDir: string, rl: Interface)
 
   await fs.mkdir(tabsDir, { recursive: true });
 
-  const reactVersion = _package.dependencies.react;
+  const reactVersion = _package.peerDependencies.react;
   const {
     '@types/react': reactTypesVersion,
     typescript: typescriptVersion

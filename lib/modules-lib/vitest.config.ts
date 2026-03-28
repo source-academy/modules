@@ -12,7 +12,7 @@ export default mergeConfig(
       include: [
         '@blueprintjs/core',
         '@blueprintjs/icons',
-        'lodash',
+        'es-toolkit',
         'vitest-browser-react',
       ]
     },
@@ -24,7 +24,6 @@ export default mergeConfig(
       environment: 'jsdom',
       browser: {
         enabled: true,
-        // headless: true,
         provider: playwright(),
         instances: [{
           browser: 'chromium',

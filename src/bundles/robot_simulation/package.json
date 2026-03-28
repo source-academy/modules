@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
+    "es-toolkit": "^1.44.0",
+    "js-slang": "^1.0.85",
     "three": "^0.181.0"
   },
   "devDependencies": {
@@ -24,7 +26,7 @@
     "test": "buildtools test --project .",
     "tsc": "buildtools tsc .",
     "lint": "buildtools lint .",
-    "postinstall": "yarn tsc",
+    "postinstall": "buildtools compile",
     "serve": "yarn buildtools serve"
   },
   "scripts-info": {

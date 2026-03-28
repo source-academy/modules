@@ -49,20 +49,20 @@ function getUncoveredLines(node: report.ReportNode) {
   let newRange = true;
   const ranges = coveredLines
     .reduce<([number] | [number, number])[]>((acum, [line, hit]) => {
-    if (hit) {
-      newRange = true;
-    } else {
-      const linenum = parseInt(line);
-      if (newRange) {
-        acum.push([linenum]);
-        newRange = false;
+      if (hit) {
+        newRange = true;
       } else {
-        acum[acum.length - 1][1] = linenum;
+        const linenum = parseInt(line);
+        if (newRange) {
+          acum.push([linenum]);
+          newRange = false;
+        } else {
+          acum[acum.length - 1][1] = linenum;
+        }
       }
-    }
 
-    return acum;
-  }, []);
+      return acum;
+    }, []);
 
   return ranges;
 }
