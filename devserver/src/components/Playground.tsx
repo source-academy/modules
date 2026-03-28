@@ -17,6 +17,7 @@ import { ControlBarRefreshButton } from './controlBar/ControlBarRefreshButton';
 import { ControlBarRunButton } from './controlBar/ControlBarRunButton';
 import testTabContent from './sideContent/TestTab';
 import loadDynamicTabs from './sideContent/importers';
+import { getBundleUsingVite } from './sideContent/importers/importers';
 import type { SideContentTab } from './sideContent/types';
 
 const refreshSuccessToast: ToastProps = {
@@ -140,7 +141,8 @@ const Playground: React.FC = () => {
 
     runInContext(editorValue, codeContext, {
       importOptions: {
-        loadTabs: useCompiledTabs
+        loadTabs: useCompiledTabs,
+        sourceBundleImporter: useCompiledTabs ? undefined : getBundleUsingVite
       }
     })
       .then((result) => {
@@ -205,7 +207,7 @@ const Playground: React.FC = () => {
               setModulesStaticURL(value);
               localStorage.setItem('backend', value);
             }}
-            useCompiledForTabs={useCompiledTabs}
+            useCompiled={useCompiledTabs}
             onUseCompiledChange={value => {
               setUseCompiledTabs(value);
               localStorage.setItem('compiledTabs', value ? 'true' : '');

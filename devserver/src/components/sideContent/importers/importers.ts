@@ -66,3 +66,19 @@ export async function getCompiledTabs(context: Context) {
       body: tab.body({ context })
     }));
 };
+
+/**
+ * Use dyanamic imports to directly load the Typescript of a bundle. This allows Vite to
+ * detect file changes and reload in real time
+ */
+export async function getBundleUsingVite(bundlePath: string) {
+  try {
+    const funcs = await import(`../../../../../src/bundles/${bundlePath}/src/index.ts`);
+    return {
+      default: (_require: any) => funcs,
+    };
+  } catch (err) {
+    console.error(`Error importing bundle from path ${bundlePath}:`, err);
+    throw err;
+  }
+}
