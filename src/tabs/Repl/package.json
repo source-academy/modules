@@ -7,6 +7,8 @@
     "@sourceacademy/bundle-repl": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
     "ace-builds": "^1.25.1",
+    "es-toolkit": "^1.44.0",
+    "js-slang": "^1.0.85",
     "react": "^18.3.1",
     "react-ace": "^14.0.0",
     "react-dom": "^18.3.1"
