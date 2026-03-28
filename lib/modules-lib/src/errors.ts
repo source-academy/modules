@@ -4,7 +4,7 @@
  * @title Errors
  */
 
-import { RuntimeSourceError } from 'js-slang/dist/errors/runtimeSourceError';
+import { GeneralRuntimeError } from 'js-slang/dist/errors/base';
 import { stringify } from 'js-slang/dist/utils/stringify';
 
 /**
@@ -19,7 +19,7 @@ import { stringify } from 'js-slang/dist/utils/stringify';
  * }
  * ```
  */
-export class InvalidParameterTypeError extends RuntimeSourceError {
+export class InvalidParameterTypeError extends GeneralRuntimeError {
   constructor(
     /**
      * String representation of the expected type. Examples include "number", "string", or "Point".
@@ -41,12 +41,9 @@ export class InvalidParameterTypeError extends RuntimeSourceError {
      */
     public readonly param_name?: string
   ) {
-    super();
-  }
-
-  public override explain(): string {
-    const paramString = this.param_name ? ` for ${this.param_name}` : '';
-    return `${this.func_name}: Expected ${this.expectedType}${paramString}, got ${stringify(this.actualValue)}.`;
+    const paramString = param_name ? ` for ${param_name}` : '';
+    const explanation = `${func_name}: Expected ${expectedType}${paramString}, got ${stringify(actualValue)}.`;
+    super(explanation);
   }
 
   public get message() {
