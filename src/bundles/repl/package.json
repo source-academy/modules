@@ -21,7 +21,7 @@
     "lint": "buildtools lint .",
     "test": "buildtools test --project .",
     "postinstall": "buildtools compile",
-    "serve": "yarn buildtools serve"
+    "serve": "buildtools serve"
   },
   "scripts-info": {
     "build": "Compiles the given bundle to the output directory",
