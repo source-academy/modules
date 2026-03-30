@@ -37,10 +37,10 @@ const updateSavedCode = throttle((code: string) => {
 
 class ProgrammableReplGUI extends React.Component<Props, State> {
   public readonly replInstance: ProgrammableRepl;
+  private readonly evalContext: Context;
+
   private editorAreaRect?: DOMRect;
   private editorInstance?: IAceEditor;
-
-  private evalContext: Context;
 
   constructor(data: Props) {
     super(data);
@@ -103,7 +103,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
     const outputDivs = this.replInstance.outputStrings.map((str): React.JSX.Element => {
       if (str.outputMethod === 'richtext') {
         if (str.color === '') {
-          return <div style={ FONT_MESSAGE } dangerouslySetInnerHTML={ { __html: str.content }} />;
+          return <div style={FONT_MESSAGE} dangerouslySetInnerHTML={{ __html: str.content }} />;
         } else {
           return (<div style={{
             ...FONT_MESSAGE,
@@ -179,9 +179,6 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
 }
 
 export default defineTab({
-  toSpawn() {
-    return true;
-  },
   body(context) {
     return <ProgrammableReplGUI context={context} />;
   },
