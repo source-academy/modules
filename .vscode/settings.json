@@ -66,6 +66,5 @@
     "typescriptreact",
     "yml",
     "yaml"
-  ],
-  "vue.server.includeLanguages": ["vue", "markdown"]
+  ]
 }

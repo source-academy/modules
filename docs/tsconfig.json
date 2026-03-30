@@ -6,13 +6,5 @@
     "resolveJsonModule": true,
     "verbatimModuleSyntax": true
   },
-  "include": [
-    "./.vitepress/**/*.ts",
-    "./src/**/*.md",
-    "./src/**/*.ts",
-    "./src/**/*.vue",
-  ],
-  "vueCompilerOptions": {
-    "vitePressExtensions": [".md"]
-  }
+  "include": ["./.vitepress/**/*.ts", "src"]
 }
