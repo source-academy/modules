@@ -58,8 +58,10 @@ def update_jsons(git_root: str, asset: Literal['bundle', 'tab'], file_name: Lite
 async def main():
   git_root = await get_git_root()
   def updater(name: str, full_path: str, obj: Any):
+
     if 'postinstall' in obj['scripts']:
-      obj['scripts']['postinstall'] = 'buildtools compile'
+      obj['scripts']['compile'] = 'buildtools compile'
+      obj['scripts']['postinstall'] = 'yarn compile'
     
     return obj
 

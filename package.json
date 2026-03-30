@@ -109,5 +109,8 @@
     "./lib/*",
     "./src/bundles/*",
     "./src/tabs/*"
-  ]
+  ],
+  "resolutions": {
+    "js-slang": "portal:/C:/source/source_academy/js-slang"
+  }
 }
