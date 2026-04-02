@@ -8,7 +8,7 @@ import { GeneralRuntimeError } from 'js-slang/dist/errors/base';
 import { stringify } from 'js-slang/dist/utils/stringify';
 
 /**
- * A specific {@link RuntimeSourceError|RuntimeSourceError} that is thrown when a function receives a parameter of the wrong type.
+ * A specific {@link GeneralRuntimeError} that is thrown when a function receives a parameter of the wrong type.
  *
  * @example
  * ```
@@ -56,7 +56,7 @@ export class InvalidParameterTypeError extends GeneralRuntimeError {
 }
 
 /**
- * A subclass of the {@link InvalidParameterTypeError|InvalidParameterTypeError} that is thrown when a function receives a callback parameter
+ * A subclass of the {@link InvalidParameterTypeError} that is thrown when a function receives a callback parameter
  * that is not a function or does not have the expected number of parameters.
  *
  * @example
@@ -106,7 +106,7 @@ export interface InvalidNumberParameterErrorOptions {
 };
 
 /**
- * Subclass of {@link InvalidParameterTypeError|InvalidParameterTypeError} intended for
+ * Subclass of {@link InvalidParameterTypeError} intended for
  * use with numeric values
  */
 export class InvalidNumberParameterError extends InvalidParameterTypeError {
