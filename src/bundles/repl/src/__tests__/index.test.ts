@@ -32,7 +32,7 @@ describe(ProgrammableRepl, () => {
     });
 
     repl.InvokeREPL_Internal(funcs.default_js_slang);
-    await repl.runCode(slang.createContext());
+    await repl.runCode('display();', slang.createContext());
 
     expect(slang.runInContext).toHaveBeenCalledOnce();
     expect(tabRerender).toHaveBeenCalledOnce();
@@ -41,14 +41,14 @@ describe(ProgrammableRepl, () => {
   it('calls the evaluator when another evaluator is provided', async () => {
     const evaller = vi.fn(() => 0);
     repl.InvokeREPL_Internal(evaller);
-    await repl.runCode({} as any);
+    await repl.runCode('display();', {} as any);
 
     expect(evaller).toHaveBeenCalledOnce();
     expect(tabRerender).toHaveBeenCalledOnce();
   });
 
   it('calls the easter egg function when no evaluator is provided', async () => {
-    await repl.runCode({} as any);
+    await repl.runCode('display();', {} as any);
 
     expect(repl.easterEggFunction).toHaveBeenCalledOnce();
     expect(tabRerender).toHaveBeenCalledOnce();
