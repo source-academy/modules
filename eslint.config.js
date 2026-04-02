@@ -207,6 +207,7 @@ export default defineConfig(
       // The Markdown parser automatically trims trailing
       // newlines from code blocks.
       '@stylistic/eol-last': 'off',
+      '@stylistic/no-multiple-empty-lines': 'off',
 
       // In code snippets and examples, these rules are often
       // counterproductive to clarity and brevity.
