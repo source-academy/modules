@@ -2,7 +2,7 @@
 title: Developer Type Checking
 ---
 
-# Developer Type Checking in Source
+# Developer Runtime Type Checking in Source
 
 Though bundles are written in Typescript, Source (except for the Typed Variant) does not support anything beyond rudimentary type checking. This means that it can determine that an expression
 like `1 - "string"` is badly typed, but it can't type check more complex programs like the one below, especially when bundle functions are involved:
@@ -70,8 +70,11 @@ across bundles. The following sections discuss how to use the validation functio
 
 When throwing errors related to type checking, you should throw an `InvalidParameterTypeError`, which can be imported from the `modules-lib`:
 
-```ts
-import { InvalidTypeParameterError } from '@sourceacademy/modules-lib/errors';
+```ts twoslash
+type Sound = [(t: number) => number, number];
+declare function is_sound(obj: unknown): obj is Sound;
+// ---cut---
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 
 export function play(value: unknown): asserts value is Sound {
   if (!is_sound(value)) {
@@ -100,36 +103,42 @@ number is greater than a given minimum, less than a given maximum, or both.
 
 ### `isNumberWithinRange`
 
-The `isNumberWithinRange` function checks that a given value is indeed a `number` and that it falls within the specified parameters. You can use it
+The [`isNumberWithinRange`](../../../lib/modules-lib/Utilities#isnumberwithinrange) function checks that a given value is indeed a `number` and that it falls within the specified parameters. You can use it
 to validate that the given number is an integer within a given range:
 
-```ts
+```ts twoslash
+import { InvalidNumberParameterError } from '@sourceacademy/modules-lib/errors';
+import { isNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+
 function foo(val: unknown) {
   if (!isNumberWithinRange(val, 0, 2)) {
-    throw new InvalidNumberParameterError(val, foo.name, { min: 0, max: 2 });
+    throw new InvalidNumberParameterError(val, { min: 0, max: 2 }, foo.name);
   }
 }
 
 foo(1.5); // Error: foo expected integer between 0 and 2, got 1.5.
-foo(-1); // Error: foo expected integer between 0 and 2, got -1.
+foo(-1);  // Error: foo expected integer between 0 and 2, got -1.
 ```
 
 You can not specify a maximum, in which case only the lower bound is validated. Similarly, not providing a minimum means that only an upper bound
 is validated:
 
-```ts
+```ts twoslash
+import { InvalidNumberParameterError } from '@sourceacademy/modules-lib/errors';
+import { isNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+// ---cut---
 function isGreaterThan0(val: unknown) {
   if (!isNumberWithinRange(val, 1)) {
-    throw new InvalidNumberParameterError(val, isGreaterThan0.name, { min: 1 });
+    throw new InvalidNumberParameterError(val, { min: 1 }, isGreaterThan0.name);
   }
 }
 
-isGreaterThan(0); // Error: isGreaterThan0 expected integer greater than 0
+isGreaterThan0(0); // Error: isGreaterThan0 expected integer greater than 0
 
 function isLessThan10(val: unknown) {
   // 1st parameter is for min, 2nd parameter is max
   if (!isNumberWithinRange(val, undefined, 10)) {
-    throw new InvalidNumberParameterError(val, isLessThan10.name, { max: 10 });
+    throw new InvalidNumberParameterError(val, { max: 10 }, isLessThan10.name);
   }
 }
 
@@ -138,10 +147,13 @@ isLessThan10(100); // Error: isLessThan10 expected integer less than 100
 
 Specifying neither a minimum nor a maximum causes the function to act purely as a typecheck:
 
-```ts
+```ts twoslash
+import { InvalidNumberParameterError } from '@sourceacademy/modules-lib/errors';
+import { isNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+// ---cut---
 function isInteger(val: unknown) {
   if (!isNumberWithinRange(val)) {
-    throw new InvalidNumberParameterError(val, isInteger.name, {});
+    throw new InvalidNumberParameterError(val, {}, isInteger.name);
   }
 }
 
@@ -151,10 +163,13 @@ isInteger(0.5); // Error: isInteger expects integer
 The fourth parameter of `isNumberWithinRange` takes a boolean. Setting this to `false` disables the integer check. This is useful if you want to
 assert that a given number is a float within a given range:
 
-```ts
+```ts twoslash
+import { InvalidNumberParameterError } from '@sourceacademy/modules-lib/errors';
+import { isNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+// ---cut---
 function isFraction(val: unknown) {
   if (!isNumberWithinRange(val, 0, 1, false)) {
-    throw new InvalidNumberParameterError(val, isFraction.name, { min: 0, max: 1, integer: false });
+    throw new InvalidNumberParameterError(val, { min: 0, max: 1, integer: false }, isFraction.name);
   }
 }
 
@@ -164,20 +179,26 @@ isFraction(0.5); // no error thrown
 
 Specifying the different options as different parameters might be inconvenient. You can use the options object overload instead:
 
-```ts
+```ts twoslash
+import { InvalidNumberParameterError } from '@sourceacademy/modules-lib/errors';
+import { isNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+// ---cut---
 function isFraction(val: unknown) {
   if (!isNumberWithinRange(val, { min: 0, max: 1, integer: false })) {
-    throw new InvalidNumberParameterError(val, isFraction.name, { min: 0, max: 1, integer: false });
+    throw new InvalidNumberParameterError(val, { min: 0, max: 1, integer: false }, isFraction.name);
   }
 }
 ```
 
 If you don't specify a minimum or a maximum and you disable the integer check, then the function only checks if the provided value has type `number` and is not `NaN`:
 
-```ts
+```ts twoslash
+import { InvalidNumberParameterError } from '@sourceacademy/modules-lib/errors';
+import { isNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+// ---cut---
 function isNumber(val: unknown) {
   if (!isNumberWithinRange(val, { integer: false })) {
-    throw new InvalidNumberParameterEror(val, isNumber.name, { integer: false });
+    throw new InvalidNumberParameterError(val, { integer: false }, isNumber.name);
   }
 }
 
@@ -187,12 +208,17 @@ isNumber('whatever'); // Error: isNumber expected number.
 
 ### `assertNumberIsWithinRange`
 
-`assertNumberIsWithinRange` is the assertion version of `isNumberWithinRange`. You can use this function instead of doing the boolean check:
+[`assertNumberIsWithinRange`](../../../lib/modules-lib/Utilities#assertnumberwithinrange) is the assertion version of `isNumberWithinRange`.
+You can use this function instead of doing the boolean check:
 
-```ts
+```ts twoslash
+// @noErrors: 2393
+import { InvalidNumberParameterError } from '@sourceacademy/modules-lib/errors';
+import { assertNumberWithinRange, isNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+
 function foo(val: unknown) {
   if (!isNumberWithinRange(val, 0, 1)) {
-    throw new InvalidNumberParameterError(val, { max: 1, min: 0, func_name: foo.name });
+    throw new InvalidNumberParameterError(val, { max: 1, min: 0 }, foo.name);
   }
 }
 
@@ -274,7 +300,7 @@ export function foo([x, y]: [string, string]) {
 ```
 
 There's nothing inherently wrong with this, but if cadets pass a non-iterable object into the function,
-Javascript is going to throw a fairly mysterious error:
+Javascript is going to throw a fairly mysterious (to them) error:
 
 ```sh
 foo(0);
@@ -307,7 +333,7 @@ function bar({ x, y }: BarParams) {
 console.log(bar(0)); // prints undefined
 ```
 
-If an invalid argument gets passed, no error is thrown and the destructured values just take on the value of `undefined` (which you might want to check for).
+If an invalid argument gets passed, no error is thrown and the destructured values just take on the value of `undefined` (which you will have to check for).
 
 However, if you use nested destructuring, Javascript _will_ throw an error:
 
@@ -384,7 +410,7 @@ However in Source, both of the above examples will result in evaluation errors l
 This is because Source doesn't allow for a mismatch between the number of arguments expected by a function and the number of arguments provided.
 
 Thus, if your bundle's functions take callback parameters, it is essential that you check that the provided callback accepts the
-correct number of parameters. This is done with the `isFunctionOfLength` utility provided by `modules-lib`:
+correct number of parameters. This is done with the [`isFunctionOfLength`](../../../lib/modules-lib/Utilities#isfunctionoflength) utility provided by `modules-lib`:
 
 ```ts
 import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
@@ -402,7 +428,7 @@ function draw_connected(pts: number): (c: Curve) => void {
 }
 ```
 
-Then, in Source, if the cadet provides an invalid curve (a function that takes only 1 parameter), an error is thrown:
+Then, in Source, if the cadet provides an invalid curve (which would be functions that take only 1 parameter), an error is thrown:
 
 ```js
 import { draw_connected, make_point } from 'curve';
@@ -410,7 +436,7 @@ import { draw_connected, make_point } from 'curve';
 draw_connected(200)((a, b) => make_point(a, 0)); // error: The provided curve is not a valid Curve function.
 ```
 
-> [!INFO] `InvalidCallbackError`
+> [!INFO] InvalidCallbackError
 >
 > The `InvalidCallbackError` is a subclass of the `InvalidParameterTypeError`, specifically to be used for the error to be thrown
 > for invalid callbacks. The parameters for its constructor are as follows:
@@ -432,12 +458,16 @@ function isFunctionOfLength(f: unknown, l: number): f is Function {
 }
 ```
 
-> [!WARN] Limitations of `isFunctionOfLength`
+> [!WARNING] Limitations of isFunctionOfLength
 > 
 > Of course, `isFunctionOfLength` can only guarantee that the object passed to it is indeed a function and that it takes
 > the specified number of parameters. It won't actually guarantee at runtime that the provided parameters are of the defined types. For example:
 > 
-> ```ts
+> ```ts twoslash
+> // @noErrors: 2345
+> import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+> import { InvalidCallbackError } from '@sourceacademy/modules-lib/errors';
+> // ---cut---
 > export function call_callback(f: (a: string, b: string) => void) {
 >   if (!isFunctionOfLength(f, 2)) {
 >     throw new InvalidCallbackError(2, f, call_callback.name);
@@ -446,27 +476,39 @@ function isFunctionOfLength(f: unknown, l: number): f is Function {
 >   return f('a', 'b');
 > }
 >
-> // isFunctionOfLength won't be able to guarantee that x and y are strings
-> call_callback((x, y) => x * y);
+> // isFunctionOfLength won't be able to guarantee that the passed callback is of type
+> // (x: string, y: string) => void
+> const callback = (x: number, y: number) => x * y;
+> //    ^?
+>
+>
+> // call_callback is being called here with a function of
+> // type (x: number, y: number) => number
+> call_callback(callback);
 > ```
 > 
 > In fact, if you give it something of type `unknown`, the best it can do is narrow it down to a function that takes parameters of type `unknown`
 > and returns a value with type `unknown`:
 > 
-> ```ts
+> ```ts twoslash
+> import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+> import { InvalidCallbackError } from '@sourceacademy/modules-lib/errors';
+> // ---cut---
 > export function call_callback(f: unknown) {
 >   if (!isFunctionOfLength(f, 2)) {
 >     throw new InvalidCallbackError(2, f, call_callback.name);
 >   }
 > 
->   // Then f here gets narrowed to (a: unknown, b: unknown) => unknown
 >   return f('a', 'b');
+>   //     ^?
+>
+>
 > }
 > ```
 
-There is an assertion version of the function available: `assertFunctionOfLength`:
+There is an assertion version of the function available: [`assertFunctionOfLength`](../../../lib/modules-lib/Utilities#assertfunctionoflength):
 
-```ts
+```ts twoslash
 import { assertFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 
 type Curve = (t: number) => number;

@@ -250,7 +250,7 @@ interface TextOptions {
 export function change_text_options(options: TextOptions): void;
 ```
 
-Alternatively, you could do something like this:
+If you do want to use the latter style, you could do something like this:
 
 ```ts
 interface TextOptions {
@@ -261,7 +261,7 @@ export function create_text_options(color: string, size: number): TextOptions {
   return {
     color,
     size,
-    // Of course, don't forget to implement `ReplResult`:
+    // Of course, don't forget to implement ReplResult:
     toReplString: () => '<TextOptions>'
   };
 }

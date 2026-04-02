@@ -1,10 +1,10 @@
-# Compiling a Tab
+# Building a Tab
 
-This page contains information on compiling tabs for the Source Academy Frontend.
+This page contains information on building tabs for the Source Academy Frontend.
 
 > [!WARNING]
 > The build tools automatically ignore files under a `__tests__` directory. Such files are considered
-> test files and will not be included in the compiled output.
+> test files and will not be included in the built output.
 
 Run the following command from within your bundle directory:
 

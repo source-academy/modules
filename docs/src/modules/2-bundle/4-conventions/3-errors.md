@@ -19,13 +19,15 @@ export function make_sound(wave: Wave, duration: number): Sound {
 
 This helps prevent the stack trace from going deeper into internal bundle implementations, which would only serve to confuse a cadet and break abstractions.
 
-If the error is thrown from a function that's only meant for internal use, then that function should take a `name` string parameter instead:
+If the error is thrown from a function that's only meant for internal use, then that function should take a `func_name` string parameter instead:
 
 ```ts
 // throwIfNotRune isn't exported, it is supposed to be called
 // from functions that are
 function throwIfNotRune(func_name: string, obj: unknown): asserts obj is Rune {
-  if (!(rune instanceof Rune)) throw new Error(`${func_name} expects a rune as argument.`);
+  if (!(rune instanceof Rune)) {
+    throw new Error(`${func_name} expects a rune as argument.`);
+  }
 }
 
 // like show

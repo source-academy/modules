@@ -35,10 +35,12 @@ Then to start the devserver, simply run the following command from the **root** 
 yarn devserver
 ```
 
-> [!NOTE] Pre-Compiling Tabs
+> [!NOTE] Pre-Compilation
 >
 > Because the dev server relies on Vite which needs to pre-bundle its dependencies, you will need to have compiled any tabs you're
 > intending to test using the steps listed [here](../../3-tabs/4-compiling) before starting the dev server.
+>
+> You should also ensure that modules manifest has been built.
 
 The dev server can then be viewed from the web browser.
 

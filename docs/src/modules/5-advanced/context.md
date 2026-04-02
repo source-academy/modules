@@ -7,20 +7,22 @@ Some times, a bundle needs to be able to maintain some state information, or sen
 
 Every time `js-slang` evaluates Source code, it creates an evaluation context. Bundles can access this context by using this import:
 
-```ts
-// curve/functions.ts
+```ts twoslash [sound/functions.ts]
+// @paths: { "js-slang/context": ["./context.d.ts"] }
+// @filename: context.d.ts
+import type { Context } from 'js-slang';
+declare const ctx: Context;
+export default ctx;
+
+// @filename: curve.ts
+import type { AudioPlayed } from '@sourceacademy/bundle-sound/types';
+// ---cut---
 import context from 'js-slang/context';
 
-const drawnCurves = [];
-context.moduleContexts.curve.state = {
-  drawnCurves,
+const audioPlayed: AudioPlayed[] = [];
+context.moduleContexts.sound.state = {
+  audioPlayed
 };
-```
-
-`context.moduleContexts` will not be null here, and is of the type:
-
-```ts
-type ModuleContexts = Record<string, { tabs: any[], state: any }>;
 ```
 
 To access a module's context, simply index the `moduleContexts` object using the bundle's name.
@@ -29,18 +31,22 @@ The `state` object can be of any type - it is up to the developer to decide what
 
 This `state` object can then be accessed by the module's tab, for example:
 
-```ts
-// Curve/index.tsx
-export default {
-  toSpawn: (debuggerContext) => {
-    return debuggerContext.context.moduleContexts.curve.state.drawnCurves.length > 0;
+```tsx twoslash [Sound/index.tsx]
+// @jsx: react-jsx
+import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
+declare function SoundTab(props: { context: DebuggerContext }): JSX.Element;
+// ---cut---
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+
+export default defineTab({
+  toSpawn: ({ context: { moduleContexts } }) => {
+    return moduleContexts.sound.state.audioPlayed.length > 0;
   },
-  body: (context) => { /* implementation */ },
-};
+  body: (context) => <SoundTab context={context} />,
+  label: 'Sounds',
+  iconName: 'music'
+});
 ```
-
-`js-slang` guarantees that each module is only evaluated once per code evaluation, no matter how many import statements there are in a Source program.
-
 > [!IMPORTANT]
 > Module Contexts are reset on each evaluation and are not capable of storing information that persists across evaluations
 
@@ -194,6 +200,7 @@ Consider an example from the `curve` bundle:
 
 ```ts [curve/functions.ts]
 import context from 'js-slang/context';
+
 const curvesDrawn: CurveDrawn[] = [];
 context.moduleContexts.curve.state = {
   curvesDrawn
@@ -231,6 +238,7 @@ To prevent this from happening, you should define the two types of functions in 
 ::: code-group
 ```ts [curve/drawers.ts]
 import context from 'js-slang/context';
+
 const curvesDrawn: CurveDrawn[] = [];
 context.moduleContexts.curve.state = {
   curvesDrawn
@@ -278,7 +286,7 @@ import { x_of } from '@sourceacademy/bundle-curve/functions';
 To ensure that these files that import from `js-slang/context` don't get imported by external bundles and tabs,
 you should configure your `package.json` to restrict that export:
 
-```jsonc
+```jsonc {3,4}
 {
   "exports": {
     "./drawers": null,

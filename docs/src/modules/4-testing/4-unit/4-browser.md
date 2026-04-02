@@ -13,7 +13,7 @@ The default testing configuration has browser mode disabled. This is so that if 
 
 Should you wish to enable browser mode, [create](./1-general#custom-test-configuration) a custom `vitest` configuration file for your tab with the `browser.enabled` option set to `true`:
 
-```js {8}
+```js twoslash {8}
 import { defineProject } from 'vitest/config';
 
 export default defineProject({
@@ -57,7 +57,11 @@ Writing interactive tests is not very different from writing regular tests. Most
 Use the `render` function provided `vitest-browser-react` to render your tab/component to a screen. Note that it should be awaited.
 The returned value can then be interacted with:
 
-```tsx
+```tsx twoslash
+// @jsx: react-jsx
+declare function MyComponent(): JSX.Element;
+// ---cut---
+import { test } from 'vitest';
 import { render } from 'vitest-browser-react';
 
 test('Testing my component', async () => {
@@ -65,8 +69,6 @@ test('Testing my component', async () => {
   const button = screen.getByRole('button');
 
   await button.click();
-
-  expect().somethingToHaveHappened();
 });
 ```
 
@@ -78,7 +80,7 @@ test('Testing my component', async () => {
 >
 > You can use it with `afterEach` from `vitest`:
 >
-> ```ts
+> ```ts twoslash
 > import { afterEach } from 'vitest';
 > import { cleanup } from 'vitest-browser-react';
 >
@@ -90,7 +92,11 @@ test('Testing my component', async () => {
 Sometimes, visual elements take a while to finish or an element might take a while to load. If you just used an assertion normally, the assertion
 might fail because the element hasn't displayed yet:
 
-```tsx
+```tsx twoslash
+// @jsx: react-jsx
+declare function Animation(): JSX.Element;
+// ---cut---
+import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 
 test('An animation', async () => {
@@ -103,7 +109,11 @@ test('An animation', async () => {
 
 Instead, `vitest` provides a special set of matchers that can be used to "retry" the assertion until it passes or when it times out:
 
-```tsx
+```tsx twoslash
+// @jsx: react-jsx
+declare function Animation(): JSX.Element;
+// ---cut---
+import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
 
 test('An animation', async () => {
@@ -122,7 +132,7 @@ If you're using `requestAnimationFrame` to trigger animations, you can also test
 
 Firstly, add the following setup and teardown function calls to your code:
 
-```ts
+```ts twoslash
 import { afterEach, beforeEach, vi } from 'vitest';
 
 beforeEach(() => {
@@ -137,8 +147,11 @@ afterEach(() => {
 
 Then you can use calls `vi.advanceTimersToNextFrame()` to simulate `requestAnimationFrame` being called:
 
-```tsx
-import { afterEach, beforeEach, vi } from 'vitest';
+```tsx twoslash
+// @jsx: react-jsx
+declare function Animation(): JSX.Element;
+// ---cut---
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { cleanup, render } from 'vitest-browser-react';
 
 beforeEach(() => {
@@ -174,7 +187,11 @@ assertions or clicking).
 While writing components, if we believe they will need to be interacted with during unit testing, we can use attributes like `title` to make it
 easier to refer to these elements:
 
-```tsx
+```tsx twoslash
+// @jsx: react-jsx
+import { expect, test } from 'vitest';
+import { render } from 'vitest-browser-react';
+// ---cut---
 export function Foo() {
   return <p title="important" />;
 }
@@ -191,7 +208,10 @@ test('test0', async () => {
 
 You can simulate user input by using the `userEvent` utility from `vitest/browser`:
 
-```tsx
+```tsx twoslash
+import React, { useState } from 'react';
+import { expect, test } from 'vitest';
+// ---cut---
 export function Foo() {
   const [text, setText] = useState('');
   return <div>

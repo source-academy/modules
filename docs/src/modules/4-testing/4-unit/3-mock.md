@@ -11,11 +11,24 @@ Mocking modules should be done with the `vi.mock` utility:
 
 ::: code-group
 
-```ts [index.test.ts]
-import { foo } from './index';
+```ts twoslash [__tests__/index.test.ts]
+// @filename: bar.ts
+export function bar() {
+  return 0;
+}
+// @filename: index.ts
+// ---cut---
+import { bar } from './bar';
+
+export function foo() {
+  return bar();
+}
+// @filename: __tests__/index.test.ts
+// ---cut---
+import { foo } from '..';
 import { expect, test, vi } from 'vitest';
 
-vi.mock(import('./bar'), () => {
+vi.mock(import('../bar'), () => {
   return {
     bar: () => 1,
   };
@@ -26,7 +39,13 @@ test('foo returns 1', () => {
 });
 ```
 
-```ts [index.ts]
+```ts twoslash [index.ts]
+// @filename: bar.ts
+export function bar() {
+  return 0;
+}
+// @filename: index.ts
+// ---cut---
 import { bar } from './bar';
 
 export function foo() {
@@ -34,7 +53,7 @@ export function foo() {
 }
 ```
 
-```ts [bar.ts]
+```ts twoslash [bar.ts]
 export function bar() {
   return 0;
 }
@@ -43,7 +62,6 @@ export function bar2() {
   return 2;
 }
 ```
-
 :::
 
 Though `vi.mock` accepts a string path, you should always use the import expression syntax where possible,
@@ -51,7 +69,10 @@ since it will allow Typescript to provide typing and ensure that the path refers
 relocate the file you're importing from or the test file itself, the path will automatically get rewritten
 (if you're using an editor like VSCode).
 
-```ts
+```ts twoslash
+import { vi } from 'vitest';
+// @noErrors: 2307
+// ---cut---
 // do this
 vi.mock(import('./wherever'));
 
@@ -64,7 +85,14 @@ will likely report type errors since your mock implementation will likely omit a
 
 In this case, it is fine to use an `as any` type assertion:
 
-```ts
+```ts twoslash
+// @filename: bar.ts
+export function bar() {
+  return 0;
+}
+// @filename: index.ts
+import { vi } from 'vitest';
+// ---cut---
 // We're only concerned with bar, so we're not
 // providing an implementation for bar2,
 // so Typescript will complain
@@ -80,7 +108,14 @@ The [`vi.fn`](https://vitest.dev/api/vi.html#vi-fn) utility returns a function t
 Sometimes you might want to mock only a specific function while retaining the original functionality everywhere
 else. For this case, the factory function is provided a function (as an argument) that will return the original module:
 
-```ts
+```ts twoslash
+// @filename: bar.ts
+export function bar() {
+  return 0;
+}
+// @filename: index.ts
+import { vi } from 'vitest';
+// ---cut---
 // You could also use
 // vi.importActual();
 // but that's not necessary
@@ -98,7 +133,14 @@ vi.mock(import('./bar'), async importOriginal => {
 > For the above case, you can also use the `vi.spyOn` utility, which automatically replaces the
 > specified property with a mock instance.
 >
-> ```ts
+> ```ts twoslash
+> // @filename: bar.ts
+> export function bar() {
+>   return 0;
+> }
+> // @filename: index.ts
+> import { vi } from 'vitest';
+> // ---cut---
 > import * as bar from './bar';
 > 
 > vi.spyOn(bar, 'bar').mockReturnValue(1);
@@ -114,7 +156,15 @@ a class or a function expression:
 
 ::: code-group
 
-```ts [index.test.ts]
+```ts twoslash [index.test.ts]
+// @noErrors: 1117 2769
+// @filename: index.ts
+export class Foo {}
+
+// @filename: index.test.ts
+import { Foo } from './index';
+import { expect, vi } from 'vitest';
+// ---cut---
 vi.mock(import('./index'), () => ({
   // class expression
   Foo: vi.fn(class {} as any),
@@ -138,7 +188,9 @@ export class Foo {}
 Since the bundles are intended to be executed in a browser environment, you might find that some functionality
 isn't available in the testing environment:
 
-```ts [sound/functions.ts]
+```ts twoslash [sound/functions.ts]
+import type { Sound } from '@sourceacademy/bundle-sound/types';
+// ---cut---
 // Example from the sound bundle
 export function play(sound: Sound) {
   // AudioContext is a browser only feature
@@ -151,7 +203,12 @@ export function play(sound: Sound) {
 In this case, unit tests will not be able to run correctly because `AudioContext` is not defined in
 the test environment. For example, the test below:
 
-```ts [sound.test.ts]
+```ts twoslash [sound.test.ts]
+// @filename: functions.ts
+export { play, silence_sound } from '@sourceacademy/bundle-sound/functions';
+
+// @filename: __tests__/sound.test.ts
+// ---cut---
 import { expect, test } from 'vitest';
 import { play, silence_sound } from '../functions';
 
@@ -187,7 +244,12 @@ don't need any of the interactive testing features like `render`.
 
 Instead, use `vi.stubGlobal`:
 
-```ts
+```ts twoslash
+// @filename: functions.ts
+export { play, silence_sound } from '@sourceacademy/bundle-sound/functions';
+
+// @filename: __tests__/sound.test.ts
+// ---cut---
 import { expect, test, vi } from 'vitest';
 import { play, silence_sound } from '../functions';
 
@@ -205,10 +267,27 @@ There are a variety of things in Typescript that behave like functions you can c
 you will find yourself needing to mock the return value of these functions only once for a specific test:
 
 ::: code-group
-```ts [src/__tests__/foo.test.ts]
+```ts twoslash [src/__tests__/foo.test.ts]
+// @filename: src/bar.ts
+export function bar() {
+  return 1;
+}
+// @filename: src/foo.ts
+declare function doSomeOtherThings(): boolean;
+import { bar } from './bar';
+
+export function foo(x: number) {
+  if (!doSomeOtherThings()) {
+    return 100;
+  }
+
+  return bar() + x;
+}
+// @filename: src/__test__/foo.test.ts
+// ---cut---
 import { expect, test, vi } from 'vitest';
-import * as foo from './foo';
-import * as bar from './bar';
+import * as foo from '../foo';
+import * as bar from '../bar';
 
 test('mocked foo', () => {
   vi.spyOn(bar, 'bar').mockReturnValueOnce(0);
@@ -220,11 +299,18 @@ test('regular foo', () => {
 });
 ```
 
-```ts [src/foo.ts]
+```ts twoslash [src/foo.ts]
+// @filename: src/bar.ts
+export function bar() {
+  return 1;
+}
+// @filename: src/foo.ts
+declare function doSomeOtherThings(): boolean;
+// ---cut---
 import { bar } from './bar';
 
 export function foo(x: number) {
-  if (!doSomeOtherthings()) {
+  if (!doSomeOtherThings()) {
     return 100;
   }
 
@@ -243,10 +329,27 @@ Now consider, what happens if in `foo`, `doSomeOtherThings` returns `false`? `ba
 never gets cleared. This means that when the second test executes, `bar`'s return value is still mocked as 0, and this will cause
 the second test to fail:
 
-```ts [src/__tests__/foo.test.ts]
+```ts twoslash [src/__tests__/foo.test.ts]
+// @filename: src/bar.ts
+export function bar() {
+  return 1;
+}
+// @filename: src/foo.ts
+declare function doSomeOtherThings(): boolean;
+import { bar } from './bar';
+
+export function foo(x: number) {
+  if (!doSomeOtherThings()) {
+    return 100;
+  }
+
+  return bar() + x;
+}
+// @filename: src/__tests__/foo.test.ts
+// ---cut---
 import { expect, test, vi } from 'vitest';
-import * as foo from './foo';
-import * as bar from './bar';
+import * as foo from '../foo';
+import * as bar from '../bar';
 
 test('mocked foo', () => {
   // bar never gets called during this test
@@ -266,10 +369,27 @@ simply forget to do the mock?
 This is why whenever `mockReturnValueOnce` (or any of the mock once methods) are called, you should also have an assertion checking
 that the function you are calling was indeed called:
 
-```ts [src/__tests__/foo.test.ts]
+```ts twoslash [src/__tests__/foo.test.ts]
+// @filename: src/bar.ts
+export function bar() {
+  return 1;
+}
+// @filename: src/foo.ts
+declare function doSomeOtherThings(): boolean;
+import { bar } from './bar';
+
+export function foo(x: number) {
+  if (!doSomeOtherThings()) {
+    return 100;
+  }
+
+  return bar() + x;
+}
+// @filename: src/__tests__/foo.test.ts
+// ---cut---
 import { expect, test, vi } from 'vitest';
-import * as foo from './foo';
-import * as bar from './bar';
+import * as foo from '../foo';
+import * as bar from '../bar';
 
 test('mocked foo', () => {
   vi.spyOn(bar, 'bar').mockReturnValueOnce(0);
@@ -289,10 +409,27 @@ test('regular foo', () => {
 
 Of course if you called `mockReturnValueOnce` more than once, you should assert that your function was called at least that many times:
 
-```ts [src/__tests__/foo.test.ts]
+```ts twoslash [src/__tests__/foo.test.ts]
+// @filename: src/bar.ts
+export function bar() {
+  return 1;
+}
+// @filename: src/foo.ts
+declare function doSomeOtherThings(): boolean;
+import { bar } from './bar';
+
+export function foo(x: number) {
+  if (!doSomeOtherThings()) {
+    return 100;
+  }
+
+  return bar() + x;
+}
+// @filename: src/__tests__/foo.test.ts
+// ---cut---
 import { expect, test, vi } from 'vitest';
-import * as foo from './foo';
-import * as bar from './bar';
+import * as foo from '../foo';
+import * as bar from '../bar';
 
 test('mocked foo', () => {
   vi.spyOn(bar, 'bar')
@@ -312,10 +449,27 @@ test('regular foo', () => {
 
 The alternative would be to clear all your mocks after every test:
 
-```ts [src/__tests__/foo.test.ts]
+```ts twoslash [src/__tests__/foo.test.ts]
+// @filename: src/bar.ts
+export function bar() {
+  return 1;
+}
+// @filename: src/foo.ts
+declare function doSomeOtherThings(): boolean;
+import { bar } from './bar';
+
+export function foo(x: number) {
+  if (!doSomeOtherThings()) {
+    return 100;
+  }
+
+  return bar() + x;
+}
+// @filename: src/__tests__/foo.test.ts
+// ---cut---
 import { afterEach, expect, test, vi } from 'vitest';
-import * as foo from './foo';
-import * as bar from './bar';
+import * as foo from '../foo';
+import * as bar from '../bar';
 
 const mockedBar = vi.spyOn(bar, 'bar');
 
@@ -415,7 +569,12 @@ children:
 Then we can write our mock as part of a function in the `utils.ts` file:
 
 ::: code-group
-```ts [__tests__/utils.ts]
+```ts twoslash [__tests__/utils.ts]
+// @filename: functions.ts
+export declare function foo(x: number): number;
+
+// @filename: __tests__/utils.ts
+// ---cut---
 import { vi } from 'vitest';
 import * as funcs from '../functions';
 
@@ -424,7 +583,15 @@ export function mockFoo() {
 }
 ```
 
-```ts [__tests__/functions.test.ts]
+```ts twoslash [__tests__/functions.test.ts]
+// @filename: functions.ts
+export declare function foo(x: number): number;
+
+// @filename: __tests__/utils.ts
+export declare function mockFoo(): void;
+
+// @filename: __tests__/functions.test.ts
+// ---cut---
 import { beforeEach, expect, test } from 'vitest';
 import { mockFoo } from './utils';
 import { foo } from '../functions';
@@ -457,7 +624,7 @@ to set up your mocks before all your tests.
 
 Example:
 
-```ts [vitest.setup.ts]
+```ts twoslash [vitest.setup.ts]
 import fs from 'fs/promises';
 import { vi } from 'vitest';
 
@@ -472,7 +639,7 @@ vi.mock(import('path'), async importOriginal => {
 
 // Mock fs.writeFile so that we never actually write to the file system
 // no matter the test
-vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve(true));
+vi.spyOn(fs, 'writeFile').mockImplementation(() => Promise.resolve());
 ```
 
 ### 3. Use an 'automock'
@@ -495,7 +662,11 @@ children:
 
 ::: code-group
 
-```ts [functions.test.ts]
+```ts twoslash [__tests__/functions.test.ts]
+// @filename: functions.ts
+export declare function foo(x: number): number;
+// @filename: __tests__/functions.test.ts
+// ---cut---
 import { expect, test, vi } from 'vitest';
 import { foo } from '../functions';
 
@@ -508,7 +679,13 @@ test('a test', () => {
 });
 ```
 
-```ts [more.test.ts]
+```ts twoslash [__tests__/more.test.ts]
+// @filename: functions.ts
+export declare function foo(x: number): number;
+// @filename: more.ts
+export declare function bar(x: number): number;
+// @filename: __tests__/more.test.ts
+// ---cut---
 import { expect, test, vi } from 'vitest';
 import { bar } from '../more';
 
@@ -527,7 +704,11 @@ export function foo(x: number) {
 }
 ```
 
-```ts [more.ts]
+```ts twoslash [more.ts]
+// @filename: functions.ts
+export declare function foo(x: number): number;
+// @filename: more.ts
+// ---cut---
 import { foo } from './functions';
 
 export function bar(x: number) {
@@ -566,7 +747,11 @@ Then we no longer need to provide the implementation directly in our tests:
 
 ::: code-group
 
-```ts [functions.test.ts]
+```ts twoslash [__tests__/functions.test.ts]
+// @filename: functions.ts
+export declare function foo(x: number): number;
+// @filename: __tests__/functions.test.ts
+// ---cut---
 import { expect, test, vi } from 'vitest';
 import { foo } from '../functions';
 
@@ -577,7 +762,13 @@ test('a test', () => {
 });
 ```
 
-```ts [more.test.ts]
+```ts twoslash [__tests__/more.test.ts]
+// @filename: functions.ts
+export declare function foo(x: number): number;
+// @filename: more.ts
+export declare function bar(x: number): number;
+// @filename: __tests__/more.test.ts
+// ---cut---
 import { expect, test, vi } from 'vitest';
 import { bar } from '../more';
 
