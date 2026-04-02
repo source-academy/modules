@@ -23,10 +23,10 @@ const vitepressOptions: UserConfig = {
       md.use(directoryTreePlugin);
     },
     codeTransformers: [
-      dirtreeTransformer(),
       transformerTwoslash({
         typesCache: createFileSystemTypesCache()
-      })
+      }),
+      dirtreeTransformer()
     ],
     languages: [dirtreetm]
   },
