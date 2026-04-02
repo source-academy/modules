@@ -71,7 +71,6 @@ These commands are only applicable to bundles or tabs and should only be run fro
       <td><nobr><code>yarn build --tsc</code></nobr></td>
       <td>
         Same as <code>yarn build</code> but also runs <code>tsc</code> for type checking. <br/>
-        For bundles, this will also output the library form of the bundle
       </td>
     </tr>
     <tr>
@@ -100,7 +99,7 @@ Both the `--tsc` and `--lint` options can be used together to run `tsc` and ESLi
     </tr>
     <tr>
       <td><code>yarn tsc</code></td>
-      <td>Run the typescript compiler. For bundles, this will <br/> also output the library form of the bundle.</td>
+      <td>Run the typescript compiler for type checking.</td>
     </tr>
     <tr>
       <td><code>yarn prebuild</code></td>
