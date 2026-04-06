@@ -5,10 +5,15 @@ import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebGLCanvas';
 import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 import { glAnimation, type ModuleTab } from '@sourceacademy/modules-lib/types';
 import HollusionCanvas from './hollusion_canvas';
+import { serializeDrawnRune, deserializeDrawnRune } from '@sourceacademy/bundle-rune/rune';
 
 export const RuneTab: ModuleTab = ({ context }) => {
-  const { drawnRunes } = getModuleState<RuneModuleState>(context, 'rune');
-  const runeCanvases = drawnRunes.map((rune, i) => {
+  // const { drawnRunes } = getModuleState<RuneModuleState>(context, 'rune');
+  const deserializedDrawnRunes = context.context.moduleContexts.rune.state.deserializedDrawnRunes
+  console.log("deserializedDrawnRune inside Tab Render");
+  console.log(deserializedDrawnRunes);
+
+  const runeCanvases = deserializedDrawnRunes.map((rune, i) => {
     const elemKey = i.toString();
 
     if (glAnimation.isAnimation(rune)) {
@@ -33,9 +38,19 @@ export const RuneTab: ModuleTab = ({ context }) => {
 };
 
 export default defineTab({
-  toSpawn(context) {
-    const drawnRunes = context.context?.moduleContexts?.rune?.state?.drawnRunes;
-    return drawnRunes.length > 0;
+  serialize(debuggerContext) {
+    const drawnRunes = debuggerContext.context?.moduleContexts?.rune?.state?.drawnRunes ?? [];
+    debuggerContext.context.moduleContexts.rune.state.serializedDrawnRunes = drawnRunes.map((r: any) => serializeDrawnRune(r));
+    return debuggerContext;
+  },
+  deserialize(debuggerContext) {
+    const serializedDrawnRunes = debuggerContext.context?.moduleContexts?.rune?.state?.serializedDrawnRunes ?? [];
+    debuggerContext.context.moduleContexts.rune.state.deserializedDrawnRunes = serializedDrawnRunes.map((s: any) => deserializeDrawnRune(s));
+    return debuggerContext;
+  },
+  toSpawn(debuggerContext) {
+    const serializedDrawnRunes = debuggerContext.context?.moduleContexts?.rune?.state?.serializedDrawnRunes ?? [];
+    return serializedDrawnRunes.length > 0;
   },
   body(context) {
     return <RuneTab context={context} />;

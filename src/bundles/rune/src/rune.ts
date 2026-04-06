@@ -419,3 +419,135 @@ export class AnimatedRune extends glAnimation implements ReplResult {
 
   public toReplString = () => '<AnimatedRune>';
 }
+
+export type SerializedRune = {
+  vertices: Float32Array;
+  colors: Float32Array | null;
+  transformMatrix: mat4;
+  hollusionDistance: number;
+  texture?: null;
+};
+
+export function serializeRune(rune: Rune): SerializedRune {
+  return {
+    vertices: rune.vertices,
+    colors: rune.colors,
+    transformMatrix: rune.transformMatrix,
+    hollusionDistance: rune.hollusionDistance,
+    texture: null
+  } as SerializedRune;
+}
+
+export function deserializeRune(serializedRune: SerializedRune): Rune {
+  const vertices = serializedRune.vertices;
+  const colors = serializedRune.colors;
+  const transformMatrix = serializedRune.transformMatrix;
+  const hollusionDistance = serializedRune.hollusionDistance;
+  const texture = serializedRune.texture || null;
+
+  return Rune.of({
+    vertices,
+    colors,
+    transformMatrix,
+    hollusionDistance,
+    texture
+  });
+}
+
+export type SerializedDrawnRune =
+  | {
+      kind: 'normal';
+      rune: SerializedRune;
+      isHollusion: boolean;
+    }
+  | {
+      kind: 'animated';
+      duration: number;
+      fps: number;
+      frames: SerializedDrawnRune[];
+    };
+
+/**
+ * Serialize a DrawnRune (NormalRune) or AnimatedRune to a plain data structure.
+ * - Normal: serialize the contained Rune
+ * - Animated: precompute each frame using the animation function and serialize each frame
+ */
+export function serializeDrawnRune(drawn: DrawnRune | AnimatedRune): SerializedDrawnRune {
+  // AnimatedRune is a subclass of glAnimation and defined below in this file
+  if (drawn instanceof AnimatedRune) {
+    const duration = drawn.duration;
+    const fps = drawn.fps;
+    const totalFrames = Math.max(1, Math.round(duration * fps));
+
+    // Access the private func stored on AnimatedRune instance. Use any to bypass TS visibility.
+    const func = (drawn as any).func as (frame: number) => DrawnRune;
+
+    const frames: SerializedDrawnRune[] = [];
+    for (let i = 0; i < totalFrames; i++) {
+      const frameDrawn = func(i);
+      frames.push(serializeDrawnRune(frameDrawn));
+    }
+
+    return {
+      kind: 'animated',
+      duration,
+      fps,
+      frames
+    };
+  }
+
+  // Normal case: any DrawnRune that is not AnimatedRune - serialize its underlying Rune
+  const innerRune: Rune = (drawn as any).rune as Rune;
+  const isHollusion = (drawn as any).isHollusion as boolean;
+
+  return {
+    kind: 'normal',
+    rune: serializeRune(innerRune),
+    isHollusion
+  };
+}
+
+/**
+ * Deserialize a SerializedDrawnRune back into a DrawnRune (NormalRune or AnimatedRune).
+ */
+export function deserializeDrawnRune(serialized: SerializedDrawnRune): DrawnRune | AnimatedRune {
+  if (serialized.kind === 'normal') {
+    const rune = deserializeRune(serialized.rune);
+
+    // Create a small subclass instance to preserve isHollusion flag and draw behaviour
+    class RehydratedNormalRune extends DrawnRune {
+      constructor(r: Rune, isH: boolean) {
+        super(r, isH);
+      }
+
+      public draw = (canvas: HTMLCanvasElement) => {
+        const gl = getWebGlFromCanvas(canvas);
+        const cameraMatrix = mat4.create();
+        drawRunesToFrameBuffer(
+          gl,
+          this.rune.flatten(),
+          cameraMatrix,
+          new Float32Array([1, 1, 1, 1]),
+          null,
+          true
+        );
+      };
+    }
+
+    return new RehydratedNormalRune(rune, serialized.isHollusion);
+  }
+
+  // animated
+  const { duration, fps, frames } = serialized;
+
+  const func = (frame: number) => {
+    const frameIndex = frame % frames.length;
+    const des = deserializeDrawnRune(frames[frameIndex]);
+    if (des instanceof AnimatedRune) {
+      throw new Error('Nested animated frames are not supported when deserializing an AnimatedRune');
+    }
+    return des as DrawnRune;
+  };
+
+  return new AnimatedRune(duration, fps, func);
+}

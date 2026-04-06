@@ -61,3 +61,11 @@ export {
   hollusion_magnitude,
   show
 } from './display';
+
+
+export {
+  serializeRune,
+  serializeDrawnRune,
+  deserializeRune,
+  deserializeDrawnRune
+} from './rune'

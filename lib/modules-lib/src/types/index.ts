@@ -72,4 +72,7 @@ export interface ModuleSideContent {
    * on Source Academy frontend.
    */
   body: (context: DebuggerContext) => JSX.Element;
+
+  serialize: (context: DebuggerContext) => DebuggerContext;
+  deserialize: (context: DebuggerContext) => DebuggerContext;
 };
