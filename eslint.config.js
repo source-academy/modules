@@ -14,7 +14,7 @@ import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import ymlPlugin from 'eslint-plugin-yml';
 import globals from 'globals';
-import jsonParser from 'jsonc-eslint-parser';
+import * as jsonParser from 'jsonc-eslint-parser';
 import tseslint from 'typescript-eslint';
 
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
@@ -168,8 +168,8 @@ export default defineConfig(
         }
       ],
       '@stylistic/no-extra-parens': ['warn', 'all', {
-        enforceForArrowConditionals: false,
         ignoreJSX: 'all',
+        ignoredNodes: ['ArrowFunctionExpression[body.type=ConditionalExpression]'],
         nestedBinaryExpressions: false,
       }],
       '@stylistic/nonblock-statement-body-position': ['error', 'beside'],
@@ -374,7 +374,6 @@ export default defineConfig(
 
       '@stylistic/jsx-equals-spacing': ['warn', 'never'],
       '@stylistic/jsx-indent-props': ['warn', 2],
-      '@stylistic/jsx-props-no-multi-spaces': 'warn',
       '@stylistic/jsx-self-closing-comp': 'warn',
     },
     settings: {

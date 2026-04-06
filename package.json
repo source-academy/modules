@@ -52,7 +52,8 @@
     "tsc:modules": "yarn workspaces foreach -ptW --from \"./src/{bundles,tabs}/*\" run tsc"
   },
   "devDependencies": {
-    "@eslint/markdown": "^8.0.1",
+    "@eslint/js": "^9.35.0",
+    "@eslint/markdown": "^7.5.1",
     "@sourceacademy/lint-plugin": "workspace:^",
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-repotools": "workspace:^",
@@ -65,7 +66,7 @@
     "@vitest/eslint-plugin": "^1.6.12",
     "@yarnpkg/types": "^4.0.1",
     "esbuild": "^0.27.0",
-    "eslint": "^10.2.0",
+    "eslint": "^9.35.0",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsdoc": "^62.0.0",
