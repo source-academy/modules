@@ -2,12 +2,13 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import utils from 'util';
 import * as core from '@actions/core';
-import type { SummaryTableRow } from '@actions/core/lib/summary.js';
 import packageJson from '../../../../package.json' with { type: 'json' };
 import { checkDirForChanges, type PackageRecord, type RawPackageRecord } from '../commons.js';
 import { gitRoot } from '../gitRoot.js';
 import { getPackagesWithResolutionChanges, hasLockFileChanged } from '../lockfiles.js';
 import { topoSortPackages } from './sorter.js';
+
+type SummaryTableRow = Parameters<(typeof core['summary']['addTable'])>[0][number];
 
 const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
 
