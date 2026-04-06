@@ -2676,12 +2676,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iconify-json/vscode-icons@npm:^1.2.39":
-  version: 1.2.40
-  resolution: "@iconify-json/vscode-icons@npm:1.2.40"
+"@iconify-json/vscode-icons@npm:^1.2.45":
+  version: 1.2.45
+  resolution: "@iconify-json/vscode-icons@npm:1.2.45"
   dependencies:
     "@iconify/types": "npm:*"
-  checksum: 10c0/29dce75c16279709cffac19bfffb0d80b19046bc5ffedb172dd00a3d80f34d741ee2b8aacbc053ac8f59f6f9ce066e6e76fd649743d68aa503cb7605432ec091
+  checksum: 10c0/da3fa7cd3517a42db8694b28647a8dfdb464b48477bf1a7ed6e40b7b2fa5594de296a1b1b9eef8539824fd83e02bf86d0ca709b9800d27bde8979f7cee3be844
   languageName: node
   linkType: hard
 
@@ -3815,18 +3815,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shikijs/core@npm:3.23.0":
-  version: 3.23.0
-  resolution: "@shikijs/core@npm:3.23.0"
-  dependencies:
-    "@shikijs/types": "npm:3.23.0"
-    "@shikijs/vscode-textmate": "npm:^10.0.2"
-    "@types/hast": "npm:^3.0.4"
-    hast-util-to-html: "npm:^9.0.5"
-  checksum: 10c0/c595f1f2ec09cab102d2b3e03a3c64bfaace5fe52760cfbcced961d3e16571aa646c7e6f85b3d2d0242efd2c832ce4d150b5f1b7332982c17cfbe72f32bd0850
-  languageName: node
-  linkType: hard
-
 "@shikijs/core@npm:4.0.2":
   version: 4.0.2
   resolution: "@shikijs/core@npm:4.0.2"
@@ -3851,17 +3839,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shikijs/engine-javascript@npm:3.23.0":
-  version: 3.23.0
-  resolution: "@shikijs/engine-javascript@npm:3.23.0"
-  dependencies:
-    "@shikijs/types": "npm:3.23.0"
-    "@shikijs/vscode-textmate": "npm:^10.0.2"
-    oniguruma-to-es: "npm:^4.3.4"
-  checksum: 10c0/884ebb7f66312c9f43e71fb33a3ac0e52f925fc6932de9f68f1bf171019c011c988a4bc0217212589985b1e1bc49452ed67eacbf3d74200b4a3725f11fd8ad98
-  languageName: node
-  linkType: hard
-
 "@shikijs/engine-javascript@npm:4.0.2":
   version: 4.0.2
   resolution: "@shikijs/engine-javascript@npm:4.0.2"
@@ -3880,16 +3857,6 @@ __metadata:
     "@shikijs/types": "npm:2.5.0"
     "@shikijs/vscode-textmate": "npm:^10.0.2"
   checksum: 10c0/7c1ae4cf0196b51b8a1da9496ca2ba5fbd9d1765629e312922804507b07d794208ff6562ece555518c641c99f190ec2c22202edddd5d78c7983a163677883dfe
-  languageName: node
-  linkType: hard
-
-"@shikijs/engine-oniguruma@npm:3.23.0":
-  version: 3.23.0
-  resolution: "@shikijs/engine-oniguruma@npm:3.23.0"
-  dependencies:
-    "@shikijs/types": "npm:3.23.0"
-    "@shikijs/vscode-textmate": "npm:^10.0.2"
-  checksum: 10c0/40dbda7aef55d5946c45b8cfe56f484eadb611f9f7c9eb77ff21f0dfce2bcc775686a61eda9e06401ddd71195945a522293f51d6522fce49244b1a6b9c0f61f7
   languageName: node
   linkType: hard
 
@@ -3919,15 +3886,6 @@ __metadata:
   dependencies:
     "@shikijs/types": "npm:2.5.0"
   checksum: 10c0/bf8007f33aa9e8d5009054e9ab00fa608605bd203090bd3a648316cb632a63b6b99009a674198f386bb0647e1ce8f0d91adac3324999a8697eb6eafc12a6f0ed
-  languageName: node
-  linkType: hard
-
-"@shikijs/langs@npm:3.23.0":
-  version: 3.23.0
-  resolution: "@shikijs/langs@npm:3.23.0"
-  dependencies:
-    "@shikijs/types": "npm:3.23.0"
-  checksum: 10c0/513b90cfee0fa167d2063b7fbc2318b303a604f2e1fa156aa8b4659b49792401531a74acf68de622ecfff15738e1947a46cfe92a32fcd6a4ee5e70bcf1d06c66
   languageName: node
   linkType: hard
 
@@ -3969,16 +3927,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shikijs/themes@npm:3.23.0":
-  version: 3.23.0
-  resolution: "@shikijs/themes@npm:3.23.0"
-  dependencies:
-    "@shikijs/types": "npm:3.23.0"
-  checksum: 10c0/5c99036d4a765765018f9106a354ebe5ccac204c69f00e3cda265828d493f005412659213f6574fa0e187c7d4437b3327bd6dad2e2146b2c472d2bf493d790dd
-  languageName: node
-  linkType: hard
-
-"@shikijs/themes@npm:4.0.2":
+"@shikijs/themes@npm:4.0.2, @shikijs/themes@npm:^4.0.2":
   version: 4.0.2
   resolution: "@shikijs/themes@npm:4.0.2"
   dependencies:
@@ -4036,16 +3985,6 @@ __metadata:
     "@shikijs/vscode-textmate": "npm:^10.0.2"
     "@types/hast": "npm:^3.0.4"
   checksum: 10c0/a86038c7ad10bb8104ea07cfa0dddf1e0646cf3b70a382978939c6144b21e5891395f5e705b7393476320f6196d86c6d8cd7ad6b3e1b356eb6a7e40c298c98f3
-  languageName: node
-  linkType: hard
-
-"@shikijs/types@npm:3.23.0":
-  version: 3.23.0
-  resolution: "@shikijs/types@npm:3.23.0"
-  dependencies:
-    "@shikijs/vscode-textmate": "npm:^10.0.2"
-    "@types/hast": "npm:^3.0.4"
-  checksum: 10c0/bd0d1593f830a6b4e55c77871ec1b95cc44855d6e0e26282a948a3c58827237826e4110af27eb4d3231361f1e182c4410434a1dc15ec40aea988dc92dc97e9d6
   languageName: node
   linkType: hard
 
@@ -4519,12 +4458,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/markdown-plugin-directory-tree@workspace:lib/markdown-tree"
   dependencies:
+    "@shikijs/themes": "npm:^4.0.2"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-repotools": "workspace:^"
     "@types/markdown-it": "npm:^14.1.2"
     es-toolkit: "npm:^1.44.0"
-    shiki: "npm:^3.15.0"
-    tm-themes: "npm:^1.10.12"
+    shiki: "npm:^4.0.2"
     typescript: "npm:^5.8.2"
     yaml: "npm:^2.8.0"
   peerDependencies:
@@ -4610,10 +4549,10 @@ __metadata:
     cspell: "npm:^9.2.1"
     js-slang: "npm:^1.0.85"
     mermaid: "npm:^11.10.0"
-    vitepress: "npm:^1.6.3"
-    vitepress-plugin-group-icons: "npm:^1.6.5"
+    vitepress: "npm:^1.6.4"
+    vitepress-plugin-group-icons: "npm:^1.7.3"
     vitepress-plugin-mermaid: "npm:^2.0.17"
-    vitepress-sidebar: "npm:^1.31.1"
+    vitepress-sidebar: "npm:^1.33.1"
   languageName: unknown
   linkType: soft
 
@@ -16371,7 +16310,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"shiki@npm:4.0.2":
+"shiki@npm:4.0.2, shiki@npm:^4.0.2":
   version: 4.0.2
   resolution: "shiki@npm:4.0.2"
   dependencies:
@@ -16400,22 +16339,6 @@ __metadata:
     "@shikijs/vscode-textmate": "npm:^10.0.2"
     "@types/hast": "npm:^3.0.4"
   checksum: 10c0/1f7adf5dae47e37a828f8a442dc98a378014c2f8793e4e1f3562b85be23b295456ba82fded08da61d1f9d35917e6fb98517c6b6f43c65d972f7cbca6ecd596c9
-  languageName: node
-  linkType: hard
-
-"shiki@npm:^3.15.0":
-  version: 3.23.0
-  resolution: "shiki@npm:3.23.0"
-  dependencies:
-    "@shikijs/core": "npm:3.23.0"
-    "@shikijs/engine-javascript": "npm:3.23.0"
-    "@shikijs/engine-oniguruma": "npm:3.23.0"
-    "@shikijs/langs": "npm:3.23.0"
-    "@shikijs/themes": "npm:3.23.0"
-    "@shikijs/types": "npm:3.23.0"
-    "@shikijs/vscode-textmate": "npm:^10.0.2"
-    "@types/hast": "npm:^3.0.4"
-  checksum: 10c0/b06a3eddac4bd0a838f9bd79bea70b0a01195570cb11d70fd2ff7ab0a42c33a8c4980ee52174173aae0476cc152b4c1a68c081a82d94ee340cb3ef9d772ae4ba
   languageName: node
   linkType: hard
 
@@ -17282,13 +17205,6 @@ __metadata:
   bin:
     tldts: bin/cli.js
   checksum: 10c0/de7df3cfb03517afa09c3f3ad08d5e68d1735d5a65af83d978a4032a5784bbd4171f3d4b029575981f9a3045620152b55fb3c24445d76f7735a5c18f3b0d9c69
-  languageName: node
-  linkType: hard
-
-"tm-themes@npm:^1.10.12":
-  version: 1.11.1
-  resolution: "tm-themes@npm:1.11.1"
-  checksum: 10c0/65e95f21e66723a67d62c04b697a22bac94eaccf61c6f75a0eb26816237ec68d5e507c770802253cccb2d1e0957a7f05f379e190edb32e346d19809dade3eaed
   languageName: node
   linkType: hard
 
@@ -18372,19 +18288,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitepress-plugin-group-icons@npm:^1.6.5":
-  version: 1.7.1
-  resolution: "vitepress-plugin-group-icons@npm:1.7.1"
+"vitepress-plugin-group-icons@npm:^1.7.3":
+  version: 1.7.3
+  resolution: "vitepress-plugin-group-icons@npm:1.7.3"
   dependencies:
     "@iconify-json/logos": "npm:^1.2.10"
-    "@iconify-json/vscode-icons": "npm:^1.2.39"
+    "@iconify-json/vscode-icons": "npm:^1.2.45"
     "@iconify/utils": "npm:^3.1.0"
   peerDependencies:
     vite: ">=3"
   peerDependenciesMeta:
     vite:
       optional: true
-  checksum: 10c0/9d24c09ef38155d5f2efb61e27162350bb90e9b89677f4af5e4287bebff2899506751ea8ef305f30feeead4416422955c45dbc0c38e48de884ec62c40b04dc56
+  checksum: 10c0/98aff8f71b3d8b23067552371368be57bcea0f18472f61396e00e65c34b6f78a5684128b3b746837f42a73650571f65a9958bca21d6ca0888cd7829ada55e408
   languageName: node
   linkType: hard
 
@@ -18403,7 +18319,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitepress-sidebar@npm:^1.31.1":
+"vitepress-sidebar@npm:^1.33.1":
   version: 1.33.1
   resolution: "vitepress-sidebar@npm:1.33.1"
   dependencies:
@@ -18414,7 +18330,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitepress@npm:^1.6.3":
+"vitepress@npm:^1.6.4":
   version: 1.6.4
   resolution: "vitepress@npm:1.6.4"
   dependencies:
