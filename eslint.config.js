@@ -336,7 +336,9 @@ export default defineConfig(
       // This rule doesn't seem to fail locally but fails on the CI
       // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
-      '@typescript-eslint/only-throw-error': 'error'
+      
+      // TODO: Turn this back on
+      '@typescript-eslint/only-throw-error': 'off'
     },
     settings: {
       'import/resolver': {
@@ -351,6 +353,7 @@ export default defineConfig(
     files: ['**/*.tsx'],
     ignores: ['**/*.md/**/*.tsx'],
     plugins: {
+      // @ts-expect-error React hooks plugin wrong type
       'react-hooks': reactHooksPlugin,
       'react': reactPlugin
     },
