@@ -12,7 +12,8 @@
       "js-slang/context": [
         "../context.d.ts"
       ]
-    }
+    },
+    "rootDir": "./src"
   },
   "typedocOptions": {
     "name": "communication"

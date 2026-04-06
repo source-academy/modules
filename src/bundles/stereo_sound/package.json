@@ -4,7 +4,7 @@
   "private": true,
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "typescript": "^5.8.2"
+    "typescript": "^6.0.2"
   },
   "dependencies": {
     "@sourceacademy/bundle-midi": "workspace:^",
