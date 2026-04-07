@@ -10,6 +10,7 @@ import Curve3DAnimationCanvas from './curve_3d_animation_canvas';
 
 export const CurveTab: ModuleTab = ({ context }) => {
   const { drawnCurves } = getModuleState<CurveModuleState>(context, 'curve');
+
   const canvases = drawnCurves.map((curve, i) => {
     const elemKey = i.toString();
 
@@ -18,7 +19,7 @@ export const CurveTab: ModuleTab = ({ context }) => {
         ? <Curve3DAnimationCanvas animation={curve} key={elemKey} />
         : <AnimationCanvas animation={curve} key={elemKey} />;
     }
-    return curve.is3D()
+    return curve.is3D
       ? <CurveCanvas3D curve={curve} key={elemKey} />
       : (
         <WebGLCanvas
