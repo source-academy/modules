@@ -22,6 +22,14 @@ vi.mock(import('../../gitRoot.js'), () => ({
   gitRoot: 'root'
 }));
 
+vi.mock(import('@actions/core'), async importOriginal => {
+  const original = await importOriginal();
+  return {
+    ...original,
+    setOutput: vi.fn((_name, _value) => {})
+  }
+})
+
 class NodeError extends Error {
   constructor(public readonly code: string) {
     super();
@@ -221,7 +229,7 @@ describe(getAllPackages, () => {
 });
 
 describe(main, () => {
-  const mockedSetOutput = vi.spyOn(core, 'setOutput');
+  const mockedSetOutput = vi.mocked(core.setOutput);
 
   vi.spyOn(core.summary, 'addHeading').mockImplementation(() => core.summary);
   vi.spyOn(core.summary, 'addTable').mockImplementation(() => core.summary);
