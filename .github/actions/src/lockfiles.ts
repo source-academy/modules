@@ -165,6 +165,7 @@ export const hasLockFileChanged = memoize(async () => {
     'git --no-pager diff --quiet origin/master -- yarn.lock',
     [],
     {
+      silent: true,
       failOnStdErr: false,
       ignoreReturnCode: true
     }
