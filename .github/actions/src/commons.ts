@@ -77,3 +77,13 @@ export const checkDirForChanges = memoize(async (directory: string) => {
   );
   return exitCode !== 0;
 });
+
+export interface YarnWorkspaceRecord {
+  location: string;
+  name: string;
+}
+
+export async function runYarnWorkspacesList() {
+  const { stdout } = await getExecOutput('yarn workspaces list --json', [], { silent: true });
+  return stdout.trim();
+}

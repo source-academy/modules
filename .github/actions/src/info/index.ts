@@ -1,20 +1,20 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
 import * as core from '@actions/core';
-import { getExecOutput } from '@actions/exec';
 import { mapAsync, mapValues } from 'es-toolkit';
 import packageJson from '../../../../package.json' with { type: 'json' };
-import { checkDirForChanges, type PackageRecord, type RawPackageRecord } from '../commons.js';
+import {
+  checkDirForChanges,
+  runYarnWorkspacesList,
+  type PackageRecord,
+  type RawPackageRecord,
+  type YarnWorkspaceRecord
+} from '../commons.js';
 import { gitRoot } from '../gitRoot.js';
 import { getPackagesWithResolutionChanges, hasLockFileChanged } from '../lockfiles.js';
 import { topoSortPackages } from './sorter.js';
 
 type SummaryTableRow = Parameters<(typeof core['summary']['addTable'])>[0][number];
-
-interface YarnWorkspaceRecord {
-  location: string;
-  name: string;
-}
 
 const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
 
@@ -34,8 +34,8 @@ export async function getRawPackages(gitRoot: string) {
 
   core.info(`Determined if lockfile has changed: ${packagesWithResolutionChanges !== null}`);
 
+  const stdout = await runYarnWorkspacesList();
   const output: Record<string, RawPackageRecord> = {};
-  const { stdout } = await getExecOutput('yarn workspaces list --json', [], { silent: true });
 
   await mapAsync(stdout.trim().split('\n'), async line => {
     const { location } = JSON.parse(line) as YarnWorkspaceRecord;

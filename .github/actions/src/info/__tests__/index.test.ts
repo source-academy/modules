@@ -3,11 +3,11 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import * as core from '@actions/core';
 import { describe, expect, test, vi } from 'vitest';
-import * as git from '../../commons.js';
+import * as commons from '../../commons.js';
 import * as lockfiles from '../../lockfiles.js';
-import { getAllPackages, main } from '../index.js';
+import { getAllPackages, getRawPackages, main } from '../index.js';
 
-const mockedCheckChanges = vi.spyOn(git, 'checkDirForChanges');
+const mockedCheckChanges = vi.spyOn(commons, 'checkDirForChanges');
 
 vi.mock(import('path'), async importOriginal => {
   const { posix } = await importOriginal();
@@ -127,72 +127,84 @@ function mockReadFile(path: string) {
   return recurser(segments, { root: mockDirectory });
 }
 
+function getMockYarnWorkspaceRecords(): commons.YarnWorkspaceRecord[] {
+  return [
+    { location: '.', name: '@sourceacademy/modules' },
+    { location: 'lib/modules-lib', name: '@sourceacademy/modules-lib' },
+    { location: 'src/bundles/bundle0', name: '@sourceacademy/bundle-bundle0' },
+    { location: 'src/tabs/tab0', name: '@sourceacademy/tab-Tab0' },
+  ];
+}
+
 vi.spyOn(fs, 'readdir').mockImplementation(mockReaddir as any);
 vi.spyOn(fs, 'readFile').mockImplementation(mockReadFile as any);
 vi.spyOn(lockfiles, 'hasLockFileChanged').mockResolvedValue(false);
+vi.spyOn(commons, 'runYarnWorkspacesList').mockResolvedValue(
+  getMockYarnWorkspaceRecords().map(each => JSON.stringify(each)).join('\n')
+);
 
-// describe(getRawPackages, () => {
+describe(getRawPackages, () => {
 //   test('maxDepth = 1', async () => {
 //     mockedCheckChanges.mockResolvedValueOnce(true);
 //     const results = Object.entries(await getRawPackages('root', 1));
 //     expect(fs.readdir).toHaveBeenCalledTimes(3);
 //     expect(results.length).toEqual(1);
 
-//     const [[name, packageData]] = results;
-//     expect(name).toEqual('@sourceacademy/modules');
-//     expect(packageData.hasChanges).toEqual(true);
-//     expect(git.checkDirForChanges).toHaveBeenCalledOnce();
-//   });
+  //     const [[name, packageData]] = results;
+  //     expect(name).toEqual('@sourceacademy/modules');
+  //     expect(packageData.hasChanges).toEqual(true);
+  //     expect(git.checkDirForChanges).toHaveBeenCalledOnce();
+  //   });
 
-//   test('maxDepth = 3', async () => {
-//     mockedCheckChanges.mockResolvedValue(true);
-//     const results = await getRawPackages('root', 3);
-//     expect(Object.values(results).length).toEqual(4);
-//     expect(fs.readdir).toHaveBeenCalledTimes(8);
+  //   test('maxDepth = 3', async () => {
+  //     mockedCheckChanges.mockResolvedValue(true);
+  //     const results = await getRawPackages('root', 3);
+  //     expect(Object.values(results).length).toEqual(4);
+  //     expect(fs.readdir).toHaveBeenCalledTimes(8);
 
-//     expect(results).toHaveProperty('@sourceacademy/bundle-bundle0');
-//     const bundleResult = results['@sourceacademy/bundle-bundle0'];
-//     expect(bundleResult.hasChanges).toEqual(true);
+  //     expect(results).toHaveProperty('@sourceacademy/bundle-bundle0');
+  //     const bundleResult = results['@sourceacademy/bundle-bundle0'];
+  //     expect(bundleResult.hasChanges).toEqual(true);
 
-//     expect(results).toHaveProperty('@sourceacademy/tab-Tab0');
-//     const tabResult = results['@sourceacademy/tab-Tab0'];
-//     expect(tabResult.hasChanges).toEqual(true);
+  //     expect(results).toHaveProperty('@sourceacademy/tab-Tab0');
+  //     const tabResult = results['@sourceacademy/tab-Tab0'];
+  //     expect(tabResult.hasChanges).toEqual(true);
 
-//     expect(results).toHaveProperty('@sourceacademy/modules-lib');
-//     const libResult = results['@sourceacademy/modules-lib'];
-//     expect(libResult.hasChanges).toEqual(true);
-//   });
+  //     expect(results).toHaveProperty('@sourceacademy/modules-lib');
+  //     const libResult = results['@sourceacademy/modules-lib'];
+  //     expect(libResult.hasChanges).toEqual(true);
+  //   });
 
-//   test('hasChanges fields accurately reflects value returned from checkChanges', async () => {
-//     mockedCheckChanges.mockImplementation(p => {
-//       switch (p) {
-//         case 'root/src/bundles/bundle0':
-//           return Promise.resolve(false);
-//         case 'root/src/tabs/tab0':
-//           return Promise.resolve(false);
-//         case 'root':
-//           return Promise.resolve(true);
-//       }
+  test('hasChanges fields accurately reflects value returned from checkChanges', async () => {
+    mockedCheckChanges.mockImplementation(p => {
+      switch (p) {
+        case 'root/src/bundles/bundle0':
+          return Promise.resolve(false);
+        case 'root/src/tabs/tab0':
+          return Promise.resolve(false);
+        case 'root':
+          return Promise.resolve(true);
+      }
 
-//       return Promise.resolve(false);
-//     });
+      return Promise.resolve(false);
+    });
 
-//     const results = await getRawPackages('root');
-//     expect(Object.keys(results).length).toEqual(4);
+    const results = await getRawPackages('root');
+    expect(Object.keys(results).length).toEqual(4);
 
-//     expect(results).toHaveProperty('@sourceacademy/modules');
-//     expect(results['@sourceacademy/modules'].hasChanges).toEqual(true);
+    expect(results).toHaveProperty('@sourceacademy/modules');
+    expect(results['@sourceacademy/modules'].hasChanges).toEqual(true);
 
-//     expect(results).toHaveProperty('@sourceacademy/bundle-bundle0');
-//     expect(results['@sourceacademy/bundle-bundle0'].hasChanges).toEqual(false);
+    expect(results).toHaveProperty('@sourceacademy/bundle-bundle0');
+    expect(results['@sourceacademy/bundle-bundle0'].hasChanges).toEqual(false);
 
-//     expect(results).toHaveProperty('@sourceacademy/tab-Tab0');
-//     expect(results['@sourceacademy/tab-Tab0'].hasChanges).toEqual(false);
+    expect(results).toHaveProperty('@sourceacademy/tab-Tab0');
+    expect(results['@sourceacademy/tab-Tab0'].hasChanges).toEqual(false);
 
-//     expect(results).toHaveProperty('@sourceacademy/modules-lib');
-//     expect(results['@sourceacademy/modules-lib'].hasChanges).toEqual(false);
-//   });
-// });
+    expect(results).toHaveProperty('@sourceacademy/modules-lib');
+    expect(results['@sourceacademy/modules-lib'].hasChanges).toEqual(false);
+  });
+});
 
 describe(getAllPackages, () => {
   test('Transitive change dependencies', async () => {
