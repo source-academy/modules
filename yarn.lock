@@ -4356,6 +4356,7 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     cspell: "npm:^9.2.1"
     mermaid: "npm:^11.10.0"
+    typescript: "npm:^6.0.2"
     vitepress: "npm:^1.6.3"
     vitepress-plugin-group-icons: "npm:^1.6.5"
     vitepress-plugin-mermaid: "npm:^2.0.17"

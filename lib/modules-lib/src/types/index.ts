@@ -27,7 +27,7 @@ export abstract class glAnimation {
    * Instead, we hide a special symbol which should be the same no matter which instance of `glAnimation` to
    * perform the `isAnimation` check.
    */
-  public get _anim_symbol(): typeof glAnimationSymbol {
+  private get _anim_symbol(): typeof glAnimationSymbol {
     return glAnimationSymbol;
   }
 

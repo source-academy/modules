@@ -8,16 +8,16 @@ type Script = {
 export default {
   watch: ['../../../../package.json'],
   load() {
-    const [globalScripts, rootScripts] = Object.keys(_package.scripts).reduce<[Script[], Script[]]>(([globals, roots], scriptNames) => {
-      const scriptInfo = _package['scripts-info'][scriptNames];
+    const [globalScripts, rootScripts] = Object.keys(_package.scripts).reduce<[Script[], Script[]]>(([globals, roots], scriptName) => {
+      const scriptInfo = _package['scripts-info'][scriptName as keyof typeof _package['scripts-info']];
 
       if (scriptInfo === undefined) return [globals, roots];
       const script: Script = {
-        name: scriptNames,
+        name: scriptName,
         info: scriptInfo
       };
 
-      if (scriptNames.includes(':')) {
+      if (scriptName.includes(':')) {
         return [[...globals, script ], roots];
       } else {
         return [globals, [...roots, script]];
