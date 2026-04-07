@@ -26,15 +26,15 @@ export async function getRawPackages(gitRoot: string) {
   core.info('Beginning to load all raw packages.');
   let packagesWithResolutionChanges: string[] | null = null;
 
-  try {
   // If there are lock file changes we need to set hasChanges to true for
   // that package even if that package's directory has no changes
-    if (await hasLockFileChanged()) {
+  if (await hasLockFileChanged()) {
+    try {
       packagesWithResolutionChanges = await getPackagesWithResolutionChanges();
+    } catch (error) {
+      core.info(`Error occurred while getting packagesWithResolutionChanges: ${error}`);
+      throw error;
     }
-  } catch (error) {
-    core.info(`Error occurred while checking lockfile: ${error}`);
-    throw error;
   }
   core.info(`Determined if lockfile has changed: ${packagesWithResolutionChanges !== null}`);
 

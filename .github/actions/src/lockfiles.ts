@@ -88,7 +88,7 @@ interface YarnWhyOutput {
  */
 const runYarnWhy = memoize(async (pkgName: string) => {
   // Memoize the call so that we don't need to call yarn why multiple times for each package
-  const { stdout: output, exitCode, stderr } = await getExecOutput('yarn', ['why', pkgName, '--json'], { silent: true });
+  const { stdout: output, exitCode, stderr } = await getExecOutput('yarn', ['why', pkgName, '--json'], { silent: false });
   if (exitCode !== 0) {
     core.error(stderr);
     throw new Error(`yarn why for ${pkgName} failed!`);
@@ -111,6 +111,8 @@ export async function getPackagesWithResolutionChanges() {
     getCurrentLockFile(),
     getMasterLockFile()
   ]);
+
+  core.info('Retrieved both lockfiles');
 
   const changes = new Set(masterLockFileMappings);
   for (const edge of currentLockFileMappings) {
@@ -160,7 +162,7 @@ export async function getPackagesWithResolutionChanges() {
  * the master branch\
  * Used to determine if the lockfile has changed
  */
-export const hasLockFileChanged = (async () => {
+export const hasLockFileChanged = memoize(async () => {
   const { exitCode } = await getExecOutput(
     'git --no-pager diff --quiet origin/master -- yarn.lock',
     [],
