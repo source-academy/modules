@@ -161,8 +161,6 @@ export async function getPackagesWithResolutionChanges() {
  * Used to determine if the lockfile has changed
  */
 export const hasLockFileChanged = memoize(async () => {
-  try {
-
   const { exitCode } = await getExecOutput(
     'git --no-pager diff --quiet origin/master -- yarn.lock',
     [],
@@ -171,10 +169,6 @@ export const hasLockFileChanged = memoize(async () => {
       ignoreReturnCode: true
     }
   );
+  core.info('i finished executing')
   return exitCode !== 0;
-  } catch (error) {
-    core.error('I am here!')
-    core.error(error as any)
-    throw error
-  }
 });
