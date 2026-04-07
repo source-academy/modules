@@ -252,6 +252,7 @@ export default defineConfig(
         tags: ['hidden']
       }],
 
+      'import/extensions': ['error', { json: 'always' }],
       'import/first': 'warn',
       'import/newline-after-import': 'warn',
       // This rule is very time intensive.
@@ -336,7 +337,7 @@ export default defineConfig(
       // This rule doesn't seem to fail locally but fails on the CI
       // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
-      
+
       // TODO: Turn this back on
       '@typescript-eslint/only-throw-error': 'off'
     },
@@ -505,7 +506,8 @@ export default defineConfig(
       'vitest/valid-title': ['error', { ignoreTypeOfDescribeName: true }],
 
       'import/extensions': ['error', 'never', {
-        config: 'ignore'
+        config: 'ignore',
+        json: 'always'
       }]
     }
   },
@@ -521,7 +523,8 @@ export default defineConfig(
     rules: {
       'import/extensions': ['error', 'ignorePackages', {
         ts: 'never',
-        cts: 'never'
+        cts: 'never',
+        json: 'always'
       }],
     }
   },
