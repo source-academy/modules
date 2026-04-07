@@ -22,7 +22,6 @@ export async function getRawPackages(gitRoot: string, maxDepth?: number) {
   // If there are lock file changes we need to set hasChanges to true for
   // that package even if that package's directory has no changes
   if (await hasLockFileChanged()) {
-    core.info('i am now here')
     packagesWithResolutionChanges = await getPackagesWithResolutionChanges();
   }
 
@@ -229,6 +228,7 @@ function setOutputs(
 
 export async function main() {
   const { packages, bundles, tabs, libs } = await getAllPackages(gitRoot);
+  core.info('Retrieved all packages');
 
   const { repository } = packageJson;
   const repoUrl = repository.substring(0, repository.length - 4); // Remove the .git at the end
@@ -268,6 +268,7 @@ export async function main() {
   core.summary.addTable(summaryItems);
   await core.summary.write();
 
+
   setOutputs(
     Object.values(bundles),
     Object.values(tabs),
@@ -276,7 +277,11 @@ export async function main() {
     packages['@sourceacademy/modules-docserver']
   );
 
+  core.info('Outputs written');
+
   const workflows = await checkDirForChanges(pathlib.join(gitRoot, '.github/workflows'));
+
+  core.info('Dirs checked for changes');
   core.setOutput('workflows', workflows);
 }
 
