@@ -148,7 +148,7 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
     return {
       ...res,
       [packageName]: {
-        type: null,
+        type: packageInfo.type as 'lib' | null,
         changes: packageInfo.hasChanges,
         directory: packageInfo.directory,
         name: packageName,
