@@ -16,7 +16,7 @@ import { topoSortPackages } from './sorter.js';
 
 type SummaryTableRow = Parameters<(typeof core['summary']['addTable'])>[0][number];
 
-const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
+const packageNameRE = /^@sourceacademy\/.+?-(.+)$/u;
 
 /**
  * Retrieves the information for all packages in the repository, but in
@@ -37,7 +37,6 @@ export async function getRawPackages(gitRoot: string) {
   await mapAsync(stdout.trim().split('\n'), async line => {
     const { location } = JSON.parse(line) as YarnWorkspaceRecord;
     const currentDir = pathlib.join(gitRoot, location);
-    core.info(`Determining state for ${currentDir}`);
 
     const [hasChanges, packageJson] = await Promise.all([
       checkDirForChanges(currentDir),
@@ -117,13 +116,14 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
       const match = packageNameRE.exec(packageName);
       if (!match) throw new Error(`Unknown package ${packageName}`);
 
-      const [, packageType, baseName] = match;
+      const [, baseName] = match;
 
-      switch (packageType) {
+      switch (packageInfo.type) {
         case 'bundle':
           return {
             ...res,
             [packageName]: {
+              type: 'bundle',
               changes: packageInfo.hasChanges,
               directory: packageInfo.directory,
               name: packageName,
@@ -135,6 +135,7 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
           return {
             ...res,
             [packageName]: {
+              type: 'tab',
               changes: packageInfo.hasChanges,
               directory: packageInfo.directory,
               name: packageName,
@@ -144,10 +145,10 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
           };
       }
     }
-
     return {
       ...res,
       [packageName]: {
+        type: null,
         changes: packageInfo.hasChanges,
         directory: packageInfo.directory,
         name: packageName,
@@ -215,7 +216,6 @@ function setOutputs(
 
 export async function main() {
   const { packages, bundles, tabs, libs } = await getAllPackages(gitRoot);
-  core.info('Retrieved all packages');
 
   const { repository } = packageJson;
   const repoUrl = repository.substring(0, repository.length - 4); // Remove the .git at the end
@@ -227,6 +227,7 @@ export async function main() {
     return [
       `<code>${packageInfo.name}</code>`,
       `<a href="${url}">${relpath}</a>`,
+      packageInfo.type ?? '-',
       `<code>${packageInfo.changes ? 'true' : 'false'}</code>`,
       `<code>${packageInfo.needsPlaywright ? 'true' : 'false'}</code>`
     ];
@@ -240,6 +241,10 @@ export async function main() {
     {
       data: 'Package Path',
       header: true
+    },
+    {
+      data: 'Package Type',
+      header: true,
     },
     {
       data: 'Has Changes',
@@ -263,11 +268,8 @@ export async function main() {
     packages['@sourceacademy/modules-docserver']
   );
 
-  core.info('Outputs written');
-
   const workflows = await checkDirForChanges(pathlib.join(gitRoot, '.github/workflows'));
 
-  core.info('Dirs checked for changes');
   core.setOutput('workflows', workflows);
 }
 

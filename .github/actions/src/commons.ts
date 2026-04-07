@@ -1,6 +1,8 @@
 import { getExecOutput } from '@actions/exec';
 import { memoize } from 'es-toolkit';
 
+type PackageType = 'bundle' | 'tab' | 'lib' | null;
+
 export interface RawPackageRecord {
   directory: string;
   hasChanges: boolean;
@@ -9,10 +11,10 @@ export interface RawPackageRecord {
     devDependencies: Record<string, string>;
     dependencies: Record<string, string>;
   };
-  type: 'bundle' | 'tab' | 'lib' | null;
+  type: PackageType;
 }
 
-interface BasePackageRecord {
+interface BasePackageRecord<T extends PackageType> {
   /**
    * Directory within which the `package.json` file was found
    */
@@ -32,17 +34,19 @@ interface BasePackageRecord {
    * might need playwright for its tests
    */
   needsPlaywright: boolean;
+
+  type: T;
 }
 
-export interface BundlePackageRecord extends BasePackageRecord {
+export interface BundlePackageRecord extends BasePackageRecord<'bundle'> {
   bundleName: string;
 }
 
-export interface TabPackageRecord extends BasePackageRecord {
+export interface TabPackageRecord extends BasePackageRecord<'tab'> {
   tabName: string;
 }
 
-export type PackageRecord = BundlePackageRecord | TabPackageRecord | BasePackageRecord;
+export type PackageRecord = BundlePackageRecord | TabPackageRecord | BasePackageRecord<'lib' | null>;
 
 export function isPackageRecord(obj: unknown): obj is PackageRecord {
   if (typeof obj !== 'object' || obj === null) return false;
