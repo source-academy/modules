@@ -160,7 +160,7 @@ export async function getPackagesWithResolutionChanges() {
  * the master branch\
  * Used to determine if the lockfile has changed
  */
-export const hasLockFileChanged = memoize(async () => {
+export const hasLockFileChanged = (async () => {
   const { exitCode } = await getExecOutput(
     'git --no-pager diff --quiet origin/master -- yarn.lock',
     [],
