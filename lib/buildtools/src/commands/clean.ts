@@ -5,7 +5,9 @@ import { bundlesDir, outDir, tabsDir } from '@sourceacademy/modules-repotools/ge
 import { resolveAllBundles, resolveAllTabs } from '@sourceacademy/modules-repotools/manifest';
 import type { ResultType } from '@sourceacademy/modules-repotools/types';
 import { isNodeError } from '@sourceacademy/modules-repotools/utils';
+import chalk from 'chalk';
 import { mapAsync } from 'es-toolkit';
+import { logCommandErrorAndExit } from './commandUtils.js';
 
 type HandleEnoentResult<T> = {
   ok: true;
@@ -49,17 +51,9 @@ async function cleanBundles(bundlesDir: string, outDir: string): Promise<CleanRe
   const results = await mapAsync(Object.values(bundleResult.bundles), async (bundle): Promise<string | undefined> => {
     const tsPath = pathlib.join(bundle.directory, 'dist');
 
-    const dirStats = await handleEnoent(fs.stat(tsPath));
-    if (!dirStats.ok) {
-      return `Error occurred while cleaning ${bundle.name}: ${dirStats.error}`;
-    }
-
-    try {
-      if (dirStats.result?.isDirectory()) {
-        await fs.rm(tsPath, { recursive: true, force: true });
-      }
-    } catch (error) {
-      return `Error occurred while cleaning ${bundle.name}: ${error}`;
+    const rmResult = await handleEnoent(fs.rm(tsPath, { recursive: true, force: true }));
+    if (!rmResult.ok) {
+      return `Error occurred while cleaning ${bundle.name}: ${rmResult.error}`;
     }
 
     const buildPath = pathlib.join(outDir, 'bundles', `${bundle.name}.js`);
@@ -119,14 +113,21 @@ export const getCleanCommand = () => new Command('clean')
       .default('bundles')
   )
   .action(async asset => {
+    let result: CleanResult;
     switch (asset) {
       case 'bundles': {
-        await cleanBundles(bundlesDir, outDir);
+        result = await cleanBundles(bundlesDir, outDir);
         break;
       }
       case 'tabs': {
-        await cleanTabs(bundlesDir, tabsDir, outDir);
+        result = await cleanTabs(bundlesDir, tabsDir, outDir);
         break;
       }
     }
+
+    if (result.severity === 'error') {
+      logCommandErrorAndExit(result);
+    }
+
+    console.log(chalk.greenBright('Clean completed.'));
   });
