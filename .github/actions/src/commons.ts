@@ -78,6 +78,9 @@ export const checkDirForChanges = memoize(async (directory: string) => {
   return exitCode !== 0;
 });
 
+/**
+ * Format of each entry produced when running the command `yarn workspaces list --json`.
+ */
 export interface YarnWorkspaceRecord {
   location: string;
   name: string;
