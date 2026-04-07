@@ -23,20 +23,13 @@ const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
  * an unprocessed format
  */
 export async function getRawPackages(gitRoot: string) {
-  core.info('Beginning to load all raw packages.');
   let packagesWithResolutionChanges: string[] | null = null;
 
   // If there are lock file changes we need to set hasChanges to true for
   // that package even if that package's directory has no changes
   if (await hasLockFileChanged()) {
-    try {
-      packagesWithResolutionChanges = await getPackagesWithResolutionChanges();
-    } catch (error) {
-      core.info(`Error occurred while getting packagesWithResolutionChanges: ${error}`);
-      throw error;
-    }
+    packagesWithResolutionChanges = await getPackagesWithResolutionChanges();
   }
-  core.info(`Determined if lockfile has changed: ${packagesWithResolutionChanges !== null}`);
 
   const stdout = await runYarnWorkspacesList();
   const output: Record<string, RawPackageRecord> = {};
@@ -67,11 +60,8 @@ export async function getRawPackages(gitRoot: string) {
       package: packageJson,
       type
     };
-
-    core.info(`Finished determining state for ${currentDir}`);
   });
 
-  core.info('Loaded all raw packages.');
   return output;
 }
 

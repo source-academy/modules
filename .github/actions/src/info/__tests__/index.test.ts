@@ -144,37 +144,6 @@ vi.spyOn(commons, 'runYarnWorkspacesList').mockResolvedValue(
 );
 
 describe(getRawPackages, () => {
-//   test('maxDepth = 1', async () => {
-//     mockedCheckChanges.mockResolvedValueOnce(true);
-//     const results = Object.entries(await getRawPackages('root', 1));
-//     expect(fs.readdir).toHaveBeenCalledTimes(3);
-//     expect(results.length).toEqual(1);
-
-  //     const [[name, packageData]] = results;
-  //     expect(name).toEqual('@sourceacademy/modules');
-  //     expect(packageData.hasChanges).toEqual(true);
-  //     expect(git.checkDirForChanges).toHaveBeenCalledOnce();
-  //   });
-
-  //   test('maxDepth = 3', async () => {
-  //     mockedCheckChanges.mockResolvedValue(true);
-  //     const results = await getRawPackages('root', 3);
-  //     expect(Object.values(results).length).toEqual(4);
-  //     expect(fs.readdir).toHaveBeenCalledTimes(8);
-
-  //     expect(results).toHaveProperty('@sourceacademy/bundle-bundle0');
-  //     const bundleResult = results['@sourceacademy/bundle-bundle0'];
-  //     expect(bundleResult.hasChanges).toEqual(true);
-
-  //     expect(results).toHaveProperty('@sourceacademy/tab-Tab0');
-  //     const tabResult = results['@sourceacademy/tab-Tab0'];
-  //     expect(tabResult.hasChanges).toEqual(true);
-
-  //     expect(results).toHaveProperty('@sourceacademy/modules-lib');
-  //     const libResult = results['@sourceacademy/modules-lib'];
-  //     expect(libResult.hasChanges).toEqual(true);
-  //   });
-
   test('hasChanges fields accurately reflects value returned from checkChanges', async () => {
     mockedCheckChanges.mockImplementation(p => {
       switch (p) {

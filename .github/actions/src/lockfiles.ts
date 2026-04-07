@@ -6,7 +6,7 @@ import { memoize } from 'es-toolkit';
 import { extractPkgsFromYarnLockV2 } from 'snyk-nodejs-lockfile-parser';
 import { gitRoot } from './gitRoot.js';
 
-const packageNameRE = /^(.+)@.+$/;
+const packageNameRE = /(^@?.+?)@.+$/;
 
 /**
  * Lockfile specifications come in the form of package_name@resolution, but
@@ -88,7 +88,11 @@ interface YarnWhyOutput {
  */
 const runYarnWhy = memoize(async (pkgName: string) => {
   // Memoize the call so that we don't need to call yarn why multiple times for each package
-  const { stdout: output, exitCode, stderr } = await getExecOutput('yarn', ['why', pkgName, '--json'], { silent: false });
+  const { stdout: output, exitCode, stderr } = await getExecOutput('yarn', ['why', pkgName, '--json'], {
+    silent: true,
+    failOnStdErr: false,
+    ignoreReturnCode: true
+  });
   if (exitCode !== 0) {
     core.error(stderr);
     throw new Error(`yarn why for ${pkgName} failed!`);
@@ -111,8 +115,6 @@ export async function getPackagesWithResolutionChanges() {
     getCurrentLockFile(),
     getMasterLockFile()
   ]);
-
-  core.info('Retrieved both lockfiles');
 
   const changes = new Set(masterLockFileMappings);
   for (const edge of currentLockFileMappings) {
