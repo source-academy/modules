@@ -16,7 +16,8 @@ const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
  * Retrieves the information for all packages in the repository, but in
  * an unprocessed format
  */
-export async function getRawPackages(gitRoot: string, maxDepth?: number) {
+export async function getRawPackages(rootDir: string, maxDepth?: number) {
+  core.info(`Retrieving raw packages from ${rootDir}`)
   let packagesWithResolutionChanges: string[] | null = null;
 
   // If there are lock file changes we need to set hasChanges to true for
@@ -75,7 +76,8 @@ export async function getRawPackages(gitRoot: string, maxDepth?: number) {
     }));
   }
 
-  await recurser(gitRoot, 0);
+  await recurser(rootDir, 0);
+  core.info(`Done retrieving packages from ${rootDir}`)
   return output;
 }
 
