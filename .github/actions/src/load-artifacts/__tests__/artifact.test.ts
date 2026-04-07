@@ -32,7 +32,7 @@ vi.mock(import('@actions/artifact'), async importOriginal => {
 
 vi.mock(import('../../gitRoot.js'), () => ({
   gitRoot: 'root'
-}))
+}));
 
 const mockedResolveAllTabs = vi.spyOn(manifest, 'resolveAllTabs');
 const mockedGetArtifact = vi.fn();

@@ -169,6 +169,6 @@ export const hasLockFileChanged = memoize(async () => {
       ignoreReturnCode: true
     }
   );
-  core.info('i finished executing')
+  core.info('i finished executing');
   return exitCode !== 0;
 });

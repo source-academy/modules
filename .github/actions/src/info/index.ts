@@ -1,7 +1,8 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
-import utils from 'util';
 import * as core from '@actions/core';
+import { getExecOutput } from '@actions/exec';
+import { mapAsync, mapValues } from 'es-toolkit';
 import packageJson from '../../../../package.json' with { type: 'json' };
 import { checkDirForChanges, type PackageRecord, type RawPackageRecord } from '../commons.js';
 import { gitRoot } from '../gitRoot.js';
@@ -10,14 +11,19 @@ import { topoSortPackages } from './sorter.js';
 
 type SummaryTableRow = Parameters<(typeof core['summary']['addTable'])>[0][number];
 
+interface YarnWorkspaceRecord {
+  location: string;
+  name: string;
+}
+
 const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
 
 /**
  * Retrieves the information for all packages in the repository, but in
  * an unprocessed format
  */
-export async function getRawPackages(rootDir: string, maxDepth?: number) {
-  core.info(`Retrieving raw packages from ${rootDir}`)
+export async function getRawPackages(gitRoot: string) {
+  core.info('Beginning to load all raw packages.');
   let packagesWithResolutionChanges: string[] | null = null;
 
   // If there are lock file changes we need to set hasChanges to true for
@@ -26,58 +32,42 @@ export async function getRawPackages(rootDir: string, maxDepth?: number) {
     packagesWithResolutionChanges = await getPackagesWithResolutionChanges();
   }
 
+  core.info(`Determined if lockfile has changed: ${packagesWithResolutionChanges !== null}`);
+
   const output: Record<string, RawPackageRecord> = {};
+  const { stdout } = await getExecOutput('yarn workspaces list --json', [], { silent: true });
 
-  /**
-   * Search the given directory for package.json files
-   */
-  async function recurser(currentDir: string, currentDepth: number) {
-    const items = await fs.readdir(currentDir, { withFileTypes: true });
-    await Promise.all(items.map(async item => {
-      if (item.isFile()) {
-        if (item.name === 'package.json') {
-          try {
-            const [hasChanges, packageJson] = await Promise.all([
-              checkDirForChanges(currentDir),
-              fs.readFile(pathlib.join(currentDir, 'package.json'), 'utf-8')
-                .then(JSON.parse)
-            ]);
+  await mapAsync(stdout.trim().split('\n'), async line => {
+    const { location } = JSON.parse(line) as YarnWorkspaceRecord;
+    const currentDir = pathlib.join(gitRoot, location);
+    core.info(`Determining state for ${currentDir}`);
 
-            output[packageJson.name] = {
-              directory: currentDir,
-              hasChanges: hasChanges || !!packagesWithResolutionChanges?.includes(packageJson.name),
-              package: packageJson
-            };
-          } catch (error) {
-            if (!utils.types.isNativeError(error)) {
-              core.error(`Unknown error occurred ${error}`);
-              throw error;
-            }
+    const [hasChanges, packageJson] = await Promise.all([
+      checkDirForChanges(currentDir),
+      fs.readFile(pathlib.join(currentDir, 'package.json'), 'utf-8')
+        .then(JSON.parse)
+    ]);
 
-            if ('code' in error && error.code !== 'ENOENT') {
-              core.error(error);
-              throw error;
-            }
-            console.error(error);
-          }
-        }
-        return;
-      }
+    let type: RawPackageRecord['type'] = null;
+    if (location.startsWith('src/bundles')) {
+      type = 'bundle';
+    } else if (location.startsWith('src/tabs')) {
+      type = 'tab';
+    } else if (location.startsWith('lib')) {
+      type = 'lib';
+    }
 
-      if (
-        (maxDepth === undefined || currentDepth < maxDepth) &&
-        item.isDirectory() &&
-        item.name !== 'node_modules' &&
-        !item.name.startsWith('__')
-      ) {
-        const fullPath = pathlib.join(currentDir, item.name);
-        await recurser(fullPath, currentDepth + 1);
-      }
-    }));
-  }
+    output[packageJson.name] = {
+      directory: currentDir,
+      hasChanges: hasChanges || !!packagesWithResolutionChanges?.includes(packageJson.name),
+      package: packageJson,
+      type
+    };
 
-  await recurser(rootDir, 0);
-  core.info(`Done retrieving packages from ${rootDir}`)
+    core.info(`Finished determining state for ${currentDir}`);
+  });
+
+  core.info('Loaded all raw packages.');
   return output;
 }
 
@@ -90,10 +80,7 @@ function mergeObjects<
   RHS extends Record<string | symbol | number, any>,
   LHS extends Record<keyof RHS, any>
 >(lhs: LHS, rhs: RHS) {
-  return Object.keys(lhs).reduce((res, key) => ({
-    ...res,
-    [key]: rhs[key]
-  }), {} as Record<keyof LHS, RHS[keyof LHS]>);
+  return mapValues(lhs, (_, key) => rhs[key]);
 }
 
 /**
@@ -180,24 +167,28 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
  * Retrieve all packages from within the git repository, sorted into the different types
  */
 export async function getAllPackages(gitRoot: string) {
-  const [
-    bundles,
-    tabs,
-    libs,
-    rootPackages
-  ] = await Promise.all([
-    getRawPackages(pathlib.join(gitRoot, 'src', 'bundles')),
-    getRawPackages(pathlib.join(gitRoot, 'src', 'tabs')),
-    getRawPackages(pathlib.join(gitRoot, 'lib')),
-    getRawPackages(pathlib.join(gitRoot), 1)
-  ]);
+  const packages = await getRawPackages(gitRoot);
 
-  const packages = {
-    ...rootPackages,
-    ...bundles,
-    ...tabs,
-    ...libs
-  };
+  const bundles: Record<string, RawPackageRecord> = {};
+  const tabs: Record<string, RawPackageRecord> = {};
+  const libs: Record<string, RawPackageRecord> = {};
+
+  Object.entries(packages).forEach(([name, pkgInfo]) => {
+    switch (pkgInfo.type) {
+      case 'bundle': {
+        bundles[name] = pkgInfo;
+        break;
+      }
+      case 'tab': {
+        tabs[name] = pkgInfo;
+        break;
+      }
+      case 'lib': {
+        libs[name] = pkgInfo;
+        break;
+      }
+    }
+  });
 
   const sort = topoSortPackages(packages);
   const processed = processRawPackages(sort, packages);
@@ -269,7 +260,6 @@ export async function main() {
   core.summary.addHeading('Package Information');
   core.summary.addTable(summaryItems);
   await core.summary.write();
-
 
   setOutputs(
     Object.values(bundles),

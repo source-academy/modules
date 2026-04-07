@@ -9,6 +9,7 @@ export interface RawPackageRecord {
     devDependencies: Record<string, string>;
     dependencies: Record<string, string>;
   };
+  type: 'bundle' | 'tab' | 'lib' | null;
 }
 
 interface BasePackageRecord {
