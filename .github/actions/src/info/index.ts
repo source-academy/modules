@@ -22,6 +22,7 @@ export async function getRawPackages(gitRoot: string, maxDepth?: number) {
   // If there are lock file changes we need to set hasChanges to true for
   // that package even if that package's directory has no changes
   if (await hasLockFileChanged()) {
+    core.info('i am now here')
     packagesWithResolutionChanges = await getPackagesWithResolutionChanges();
   }
 
