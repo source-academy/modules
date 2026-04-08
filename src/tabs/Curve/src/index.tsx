@@ -8,8 +8,8 @@ import { glAnimation, type ModuleTab } from '@sourceacademy/modules-lib/types';
 import CurveCanvas3D from './canvas_3d_curve';
 import Curve3DAnimationCanvas from './curve_3d_animation_canvas';
 
-export const CurveTab: ModuleTab = ({ context }) => {
-  const { drawnCurves } = getModuleState<CurveModuleState>(context, 'curve');
+export const CurveTab: ModuleTab = ({ debuggerCtx: context }) => {
+  const { drawnCurves } = getModuleState<CurveModuleState>(context, 'curve')!;
 
   const canvases = drawnCurves.map((curve, i) => {
     const elemKey = i.toString();
@@ -39,11 +39,11 @@ export const CurveTab: ModuleTab = ({ context }) => {
 
 export default defineTab({
   toSpawn(context) {
-    const drawnCurves = context.context?.moduleContexts?.curve?.state?.drawnCurves;
-    return drawnCurves.length > 0;
+    const moduleState = getModuleState<CurveModuleState>(context, 'curve');
+    return !!moduleState && moduleState.drawnCurves.length > 0;
   },
   body(context) {
-    return <CurveTab context={context} />;
+    return <CurveTab debuggerCtx={context} />;
   },
   label: 'Curves Tab',
   iconName: IconNames.MEDIA // See https://blueprintjs.com/docs/#icons for more options

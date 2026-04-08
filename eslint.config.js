@@ -400,6 +400,8 @@ export default defineConfig(
         }
       }],
 
+      'import/extensions': 'off',
+
       '@typescript-eslint/no-empty-object-type': ['error', {
         allowInterfaces: 'with-single-extends',
         allowWithName: '(?:Props)|(?:State)$'

@@ -109,11 +109,12 @@ function TestSuitesTab({ results }: Props) {
 }
 
 export default defineTab({
-  toSpawn: ({ context: { moduleContexts } }) => {
-    return moduleContexts.unittest?.state.suiteResults.length > 0;
+  toSpawn: context => {
+    const moduleState = getModuleState<UnittestModuleState>(context, 'unittest');
+    return !!moduleState && moduleState.suiteResults.length > 0;
   },
   body: context => {
-    const moduleContext = getModuleState<UnittestModuleState>(context, 'unittest');
+    const moduleContext = getModuleState<UnittestModuleState>(context, 'unittest')!;
     return <TestSuitesTab results={moduleContext.suiteResults} />;
   },
   label: 'Test suites',

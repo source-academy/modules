@@ -71,7 +71,7 @@ export interface ReplResult {
   toReplString: () => string;
 }
 
-export type ModuleTab = (props: { context: DebuggerContext }) => React.ReactNode;
+export type ModuleTab = (props: { debuggerCtx: DebuggerContext }) => React.ReactNode;
 
 export interface ModuleSideContent {
   /**

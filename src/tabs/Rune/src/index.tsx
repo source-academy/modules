@@ -6,8 +6,8 @@ import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils
 import { glAnimation, type ModuleTab } from '@sourceacademy/modules-lib/types';
 import HollusionCanvas from './hollusion_canvas';
 
-export const RuneTab: ModuleTab = ({ context }) => {
-  const { drawnRunes } = getModuleState<RuneModuleState>(context, 'rune');
+export const RuneTab: ModuleTab = ({ debuggerCtx: context }) => {
+  const { drawnRunes } = getModuleState<RuneModuleState>(context, 'rune')!;
   const runeCanvases = drawnRunes.map((rune, i) => {
     const elemKey = i.toString();
 
@@ -34,11 +34,11 @@ export const RuneTab: ModuleTab = ({ context }) => {
 
 export default defineTab({
   toSpawn(context) {
-    const drawnRunes = context.context?.moduleContexts?.rune?.state?.drawnRunes;
-    return drawnRunes.length > 0;
+    const moduleState = getModuleState<RuneModuleState>(context, 'rune');
+    return !!moduleState && moduleState.drawnRunes.length > 0;
   },
   body(context) {
-    return <RuneTab context={context} />;
+    return <RuneTab debuggerCtx={context} />;
   },
   label: 'Runes Tab',
   iconName: 'group-objects'
