@@ -1,0 +1,17 @@
+{
+  "extends": ["../tsconfig.json"],
+  "include": [
+    "__tests__",
+    "./types",
+    "index.ts"
+  ],
+  "compilerOptions": {
+    "declaration": false,
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "paths": {
+      "#bundle/*": ["./types/bundle.d.ts"],
+      "#tab/*": ["./types/tab.d.ts"],
+    }
+  }
+}

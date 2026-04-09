@@ -4430,6 +4430,32 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@sourceacademy/modules-validator@workspace:lib/validator":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/modules-validator@workspace:lib/validator"
+  dependencies:
+    "@blueprintjs/core": "npm:^6.0.0"
+    "@blueprintjs/icons": "npm:^6.0.0"
+    "@sourceacademy/modules-repotools": "workspace:^"
+    "@vitejs/plugin-react": "npm:^6.0.1"
+    "@vitest/browser-playwright": "npm:4.1.0"
+    js-slang: "npm:^1.0.85"
+    playwright: "npm:^1.55.1"
+    react: "npm:^18.3.1"
+    react-dom: "npm:^18.3.1"
+    typescript: "npm:^6.0.2"
+    vite-plugin-node-polyfills: "npm:^0.26.0"
+    vitest: "npm:4.1.0"
+    vitest-browser-react: "npm:^2.1.0"
+  peerDependencies:
+    "@sourceacademy/bundle-curve": "workspace:^"
+    "@sourceacademy/bundle-repl": "workspace:^"
+    "@sourceacademy/bundle-rune": "workspace:^"
+    "@sourceacademy/bundle-sound": "workspace:^"
+    "@sourceacademy/bundle-unittest": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
 "@sourceacademy/modules@workspace:.":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/modules@workspace:."
@@ -4580,6 +4606,7 @@ __metadata:
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
     "@blueprintjs/icons": "npm:^6.0.0"
+    "@sourceacademy/bundle-nbody": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/plotly.js": "npm:^2.35.4"

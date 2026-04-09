@@ -518,6 +518,7 @@ export default defineConfig(
     files: [
       'lib/buildtools/**/*.ts',
       'lib/repotools/**/*.ts',
+      'lib/validator/**/*.ts',
       'lib/vitest-reporter/**/*.ts',
       '.github/actions/**/*.ts',
       '**/vitest.config.{js,ts}'
@@ -536,6 +537,17 @@ export default defineConfig(
     languageOptions: {
       parserOptions: {
         project: './tsconfig.json'
+      }
+    }
+  },
+  {
+    name: 'Rules for Validator',
+    files: ['./lib/validator/**/*.ts'],
+    settings: {
+      'import/resolver': {
+        typescript: {
+          project: './lib/validator/tsconfig.json'
+        }
       }
     }
   },
