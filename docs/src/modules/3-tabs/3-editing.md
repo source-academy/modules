@@ -180,13 +180,13 @@ The `ModuleTab` type exported from the common library can be used to type your c
 import type { ModuleTab } from '@sourceacademy/modules-lib/types';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 
-const Repeat: ModuleTab = ({ context }) => {
+const Repeat: ModuleTab = ({ debuggerCtx: context }) => {
   return <div>This is spawned from the repeat package</div>;
 };
 
 export default defineTab({
   toSpawn: () => true,
-  body: () => <Repeat />,
+  body: context => <Repeat debuggerCtx={context} />,
   label: 'Repeat Test Tab',
   iconName: 'build'
 });
