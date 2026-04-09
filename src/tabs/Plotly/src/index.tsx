@@ -1,12 +1,16 @@
 import { DrawnPlot } from '@sourceacademy/bundle-plotly/plotly';
 import Modal from '@sourceacademy/modules-lib/tabs/ModalDiv';
-import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 import type { ModuleTab } from '@sourceacademy/modules-lib/types/index';
 import { useState } from 'react';
 
+interface PlotlyModuleState {
+  drawnPlots: DrawnPlot[];
+}
+
 export const Plotly: ModuleTab = ({ debuggerCtx: context }) => {
   const [selectedPlot, setSelectedPlot] = useState<DrawnPlot | null>(null);
-  const { context: { moduleContexts: { plotly: { state: { drawnPlots } } } } } = context;
+  const { drawnPlots } = getModuleState<PlotlyModuleState>(context, 'plotly')!;
 
   return <div>
     <Modal
@@ -26,7 +30,7 @@ export const Plotly: ModuleTab = ({ debuggerCtx: context }) => {
       />
     </Modal>
     {
-      drawnPlots.map((drawnPlot: any, id: number) => {
+      drawnPlots.map((drawnPlot, id) => {
         const divId = `plotDiv${id}`;
         return (
           <div style={{
@@ -60,8 +64,8 @@ export const Plotly: ModuleTab = ({ debuggerCtx: context }) => {
 
 export default defineTab({
   toSpawn(context) {
-    const drawnPlots = context.context?.moduleContexts?.plotly.state.drawnPlots;
-    return !!drawnPlots && drawnPlots.length > 0;
+    const state = getModuleState<PlotlyModuleState>(context, 'plotly');
+    return !!state && state.drawnPlots.length > 0;
   },
   body: debuggerContext => <Plotly debuggerCtx={debuggerContext} />,
   label: 'Plotly',

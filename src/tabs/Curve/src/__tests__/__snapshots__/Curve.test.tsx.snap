@@ -2,7 +2,7 @@
 
 exports[`Curve 3D animations error gracefully 1`] = `
 <CurveTab
-  context={
+  debuggerCtx={
     {
       "context": {
         "moduleContexts": {
@@ -31,7 +31,7 @@ exports[`Curve 3D animations error gracefully 1`] = `
 
 exports[`Curve animations error gracefully 1`] = `
 <CurveTab
-  context={
+  debuggerCtx={
     {
       "context": {
         "moduleContexts": {
