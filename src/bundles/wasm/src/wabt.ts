@@ -19,6 +19,7 @@ export const wrun = (buffer: number[] | Uint8Array) => {
     buffer = new Uint8Array(buffer);
   }
 
+  // @ts-ignore
   const exps = new WebAssembly.Instance(new WebAssembly.Module(buffer)).exports;
   return objectToLinkedList(exps);
 };

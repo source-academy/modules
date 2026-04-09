@@ -46,7 +46,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
     super(data);
 
     this.evalContext = data.context.context;
-    this.replInstance = getModuleState<ProgrammableRepl>(data.context, 'repl');
+    this.replInstance = getModuleState<ProgrammableRepl>(data.context, 'repl')!;
     this.replInstance.tabRerenderer = () => this.setState({});
     this.replInstance.updateUserCode = this.onCodeChanged;
 

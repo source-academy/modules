@@ -9,7 +9,7 @@
     "@types/node": "^22.15.30",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/coverage-v8": "4.1.0",
-    "typescript": "^5.8.2",
+    "typescript": "^6.0.2",
     "vitest": "4.1.0",
     "vitest-browser-react": "^2.1.0"
   },

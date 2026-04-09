@@ -9,7 +9,8 @@
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "typescript": "^5.8.2"
+    "@sourceacademy/modules-lib": "workspace:^",
+    "typescript": "^6.0.2"
   },
   "type": "module",
   "exports": {

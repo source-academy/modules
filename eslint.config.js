@@ -14,7 +14,7 @@ import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import ymlPlugin from 'eslint-plugin-yml';
 import globals from 'globals';
-import jsonParser from 'jsonc-eslint-parser';
+import * as jsonParser from 'jsonc-eslint-parser';
 import tseslint from 'typescript-eslint';
 
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
@@ -169,10 +169,14 @@ export default defineConfig(
         }
       ],
       '@stylistic/no-extra-parens': ['warn', 'all', {
+<<<<<<< HEAD
         ignoredNodes: [
           'ArrowFunctionExpression[body.type=ConditionalExpression]'
         ],
+=======
+>>>>>>> ts-6
         ignoreJSX: 'all',
+        ignoredNodes: ['ArrowFunctionExpression[body.type=ConditionalExpression]'],
         nestedBinaryExpressions: false,
       }],
       '@stylistic/nonblock-statement-body-position': ['error', 'beside'],
@@ -258,6 +262,7 @@ export default defineConfig(
         tags: ['hidden']
       }],
 
+      'import/extensions': ['error', { json: 'always' }],
       'import/first': 'warn',
       'import/newline-after-import': 'warn',
       // This rule is very time intensive.
@@ -374,6 +379,7 @@ export default defineConfig(
     files: ['**/*.tsx'],
     ignores: ['**/*.md/**/*.tsx'],
     plugins: {
+      // @ts-expect-error React hooks plugin wrong type
       'react-hooks': reactHooksPlugin,
       'react': reactPlugin
     },
@@ -418,6 +424,8 @@ export default defineConfig(
           namedExports: 'declaration'
         }
       }],
+
+      'import/extensions': 'off',
 
       '@typescript-eslint/no-empty-object-type': ['error', {
         allowInterfaces: 'with-single-extends',
@@ -525,7 +533,8 @@ export default defineConfig(
       'vitest/valid-title': ['error', { ignoreTypeOfDescribeName: true }],
 
       'import/extensions': ['error', 'never', {
-        config: 'ignore'
+        config: 'ignore',
+        json: 'always'
       }]
     }
   },
@@ -541,7 +550,8 @@ export default defineConfig(
     rules: {
       'import/extensions': ['error', 'ignorePackages', {
         ts: 'never',
-        cts: 'never'
+        cts: 'never',
+        json: 'always'
       }],
     }
   },

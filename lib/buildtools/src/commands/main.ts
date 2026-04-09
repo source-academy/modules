@@ -1,5 +1,6 @@
 import { Command } from '@commander-js/extra-typings';
 import { getBuildCommand, getBuildHtmlCommand, getCompileCommand, getManifestCommand } from './build.js';
+import { getCleanCommand } from './clean.js';
 import { getListCommand, getValidateCommand } from './list.js';
 import { getLintCommand, getLintGlobalCommand, getPrebuildAllCommand, getTscCommand } from './prebuild.js';
 import getHttpServerCommand from './server.js';
@@ -9,6 +10,7 @@ import { getTestAllCommand, getTestCommand } from './testing.js';
 const commands: (() => Command<any>)[] = [
   getBuildCommand,
   getBuildHtmlCommand,
+  getCleanCommand,
   getCompileCommand,
   getHttpServerCommand,
   getLintCommand,

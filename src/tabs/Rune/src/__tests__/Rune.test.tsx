@@ -12,7 +12,7 @@ test('Ensure that rune animations error gracefully', () => {
     throw new Error();
   });
   const mockContext = mockDebuggerContext<RuneModuleState>({ drawnRunes: [badAnimation] }, 'rune');
-  expect(<RuneTab context={mockContext} />)
+  expect(<RuneTab debuggerCtx={mockContext} />)
     .toMatchSnapshot();
 });
 
@@ -21,7 +21,7 @@ test('Ensure that anaglyph animations error gracefully', () => {
     throw new Error();
   });
   const mockContext = mockDebuggerContext<RuneModuleState>({ drawnRunes: [badAnimation] }, 'rune');
-  expect(<RuneTab context={mockContext} />)
+  expect(<RuneTab debuggerCtx={mockContext} />)
     .toMatchSnapshot();
 });
 
@@ -51,15 +51,20 @@ describe(HollusionCanvas, () => {
 });
 
 describe('Test Rune Side Content', () => {
-  const propertyAccessor = vi.fn(() => ({
-    state: {
-      drawnRunes: []
-    }
-  }));
+  const propertyAccessor = vi.fn((target: any, prop: string) => {
+    return target[prop];
+  });
 
   const contextObject: DebuggerContext = {
     context: {
-      moduleContexts: new Proxy({}, {
+      moduleContexts: new Proxy({
+        rune: {
+          state: {
+            drawnRunes: []
+          },
+          tabs: null
+        }
+      }, {
         get: propertyAccessor
       })
     }

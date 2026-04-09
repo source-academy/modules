@@ -15,7 +15,7 @@ const mockStream = {} as MediaStream;
 const mockedGetUserMedia: Mock<typeof navigator.mediaDevices.getUserMedia> = vi.fn()
   .mockResolvedValue(mockStream);
 
-vi.spyOn(global, 'navigator', 'get').mockReturnValue({
+vi.spyOn(globalThis, 'navigator', 'get').mockReturnValue({
   get mediaDevices() {
     return {
       getUserMedia: mockedGetUserMedia

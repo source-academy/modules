@@ -6,12 +6,12 @@
   "devDependencies": {
     "@sourceacademy/modules-repotools": "workspace:^",
     "@types/node": "^22.15.30",
-    "typescript": "^5.8.2",
+    "typescript": "^6.0.2",
     "vitest": "4.1.0"
   },
   "dependencies": {
     "@actions/artifact": "^6.0.0",
-    "@actions/core": "^1.11.1",
+    "@actions/core": "^3.0.0",
     "@actions/exec": "^3.0.0",
     "es-toolkit": "^1.44.0",
     "snyk-nodejs-lockfile-parser": "^2.4.2"

@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "typescript": "^5.8.2"
+    "typescript": "^6.0.2"
   },
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",

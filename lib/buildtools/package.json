@@ -8,7 +8,7 @@
     "@types/estree": "^1.0.0",
     "@types/http-server": "^0.12.4",
     "@types/node": "^22.15.30",
-    "typescript": "^5.8.2"
+    "typescript": "^6.0.2"
   },
   "exports": null,
   "bin": {
@@ -30,7 +30,7 @@
     "eslint": "^9.35.0",
     "http-server": "^14.1.1",
     "jsdom": "^29.0.0",
-    "typedoc": "^0.28.9",
+    "typedoc": "^0.28.18",
     "vite": "^8.0.0",
     "vitest": "4.1.0"
   },

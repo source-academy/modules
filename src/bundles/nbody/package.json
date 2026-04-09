@@ -11,7 +11,7 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/plotly.js": "^2.35.4",
     "@types/three": "^0.181.0",
-    "typescript": "^5.8.2"
+    "typescript": "^6.0.2"
   },
   "type": "module",
   "exports": {

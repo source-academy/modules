@@ -26,15 +26,16 @@ function suiteResultToDiv(suiteResult: SuiteResult) {
   const { name, results, runtime, passCount } = suiteResult;
   const [suiteResults, testResults] = partition(results, each => 'results' in each);
 
-  const tablestyle = {
-    'table-layout': 'fixed',
-    width: '100%',
-  };
   const testsPassed = testResults.filter(each => each.passed);
   const testResultsTable = (
     <details>
-      <summary><strong>Test Cases</strong> Passed {testsPassed.length}/{testResults.length}</summary>
-      <table style={tablestyle}>
+      <summary>
+        <strong>Test Cases</strong> Passed {testsPassed.length}/{testResults.length}
+      </summary>
+      <table style={{
+        width: '100%',
+        tableLayout: 'fixed'
+      }}>
         <thead>
           <tr>
             <th style={colfixed}>Test Cases</th>
@@ -109,11 +110,12 @@ function TestSuitesTab({ results }: Props) {
 }
 
 export default defineTab({
-  toSpawn: ({ context: { moduleContexts } }) => {
-    return moduleContexts.unittest?.state.suiteResults.length > 0;
+  toSpawn: context => {
+    const moduleState = getModuleState<UnittestModuleState>(context, 'unittest');
+    return !!moduleState && moduleState.suiteResults.length > 0;
   },
   body: context => {
-    const moduleContext = getModuleState<UnittestModuleState>(context, 'unittest');
+    const moduleContext = getModuleState<UnittestModuleState>(context, 'unittest')!;
     return <TestSuitesTab results={moduleContext.suiteResults} />;
   },
   label: 'Test suites',

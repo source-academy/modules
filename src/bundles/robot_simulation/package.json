@@ -12,7 +12,7 @@
     "@dimforge/rapier3d-compat": "^0.11.2",
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/three": "^0.181.0",
-    "typescript": "^5.8.2"
+    "typescript": "^6.0.2"
   },
   "type": "module",
   "exports": {

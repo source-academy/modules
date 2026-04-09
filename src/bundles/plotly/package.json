@@ -12,7 +12,7 @@
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/plotly.js": "^3.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^6.0.2"
   },
   "type": "module",
   "exports": {
