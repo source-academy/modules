@@ -4580,6 +4580,7 @@ __metadata:
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
     "@blueprintjs/icons": "npm:^6.0.0"
+    "@sourceacademy/bundle-nbody": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/plotly.js": "npm:^2.35.4"
