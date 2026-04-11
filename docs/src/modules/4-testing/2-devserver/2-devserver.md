@@ -6,18 +6,6 @@ that they can run their bundle code and see the actual graphic interface of thei
 There are many features absent from the devserver (such as assessments). If you need to test your bundles and tabs with those features, you will
 need to test with the frontend instead.
 
-> [!IMPORTANT] Developing with bundles
->
-> When changes are made to tabs, the resulting changes in the UI can be visualized immediately since Vite is constantly refreshing the displayed UI.
-> However, bundles are only evaluated once per Source evaluation, which means that changes to bundles cannot be automatically reflected.
->
-> A possible development workflow would look like this:
-> 1. Run code and spawn the tab
-> 2. Make changes to the bundle code
-> 3. Re-run code for changes to be reflected
->
-> You don't have to rebuild or recompile your bundle after making changes.
-
 The REPL provided by the devserver will display output as seen by cadets. Detailed error information can be found
 in the browser console (as well as any `console.log` calls made by your code).
 
@@ -46,8 +34,17 @@ The dev server can then be viewed from the web browser.
 
 ## Hot-Reload Mode
 
-By default, the dev server is in hot reload mode. This means the dev server can detect changes to tabs and bundles (and their dependencies) as they are being made
+By default, the dev server is in hot reload mode. This means the dev server can detect changes as they are being made
 and automatically reload the displayed tab without requiring a refresh of the page or for the user to rerun code.
+
+> [!IMPORTANT] Working with Bundles in Hot-Reload Mode
+>
+> Tabs depend on bundles in 1 of 2 ways:
+> - Javascript dependency (i.e if you import from `@sourceacademy/bundle-curve`)
+> - Source dependency (i.e. if the bundle was imported and evaluated through `js-slang`)
+>
+> Vite can detect changes for Javascript dependencies, but if your tab imports your bundle through `js-slang` as well
+> then you will need to rebuild your bundle for the new version to be loaded by `js-slang`.
 
 ## Compiled Mode
 
@@ -70,15 +67,7 @@ after switching this setting for the server to load the asset you've selected.
 
 You will also need to start the modules server using `yarn buildtools serve`. The caveats from [that section](../1-desktop#the-modules-server) still apply.
 
-> [!IMPORTANT] Working with Bundles
+> [!IMPORTANT] Working with Bundles in Compiled Mode
 >
-> In compiled mode, transitive changes won't be automatically detected by Vite, so you will have to rebuild/recompile the bundle manually
-> after each change you make.
->
-> Tabs depend on bundles in 1 of 2 ways:
-> - Javascript dependency (i.e if you import from `@sourceacademy/bundle-curve`)
->   - You will need to recompile after every change (`yarn compile`)
-> - Source dependency (i.e. if the bundle was imported and evaluated through `js-slang`)
->   - You will need to rebuild after every change (`yarn build`)
->
-> Following which, you will have to rerun your code to see the changes in effect.
+> The limitations for hot-reload mode also apply to compiled mode, but you must recompile and rebuild your bundle
+> before rebuilding your tab, following which, you can then rerun your code to see the changes in effect.

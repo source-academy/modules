@@ -4,9 +4,6 @@ import { stringify } from 'js-slang/dist/utils/stringify';
 
 import type { CurveSpace, DrawMode, ScaleMode } from './types';
 
-/** @hidden */
-export const drawnCurves: CurveDrawn[] = [];
-
 // Vertex shader program
 const vsS: string = `
 attribute vec4 aFragColor;

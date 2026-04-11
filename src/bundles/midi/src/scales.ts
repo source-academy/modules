@@ -6,14 +6,14 @@ const major_intervals = [2, 2, 1, 2, 2, 2, 1];
 /**
  * A musical scale is simply a list of {@link MIDINote| MIDI notes}.
  */
-export type Scale = List;
+export type Scale = List<MIDINote>;
 
 /**
  * There are 7 modes of the major scale that are just made by shuffling the major scale's
  * intervals around, so we can reuse this function.
  */
 function make_from_major_scale(root: MIDINote, mode: number): Scale {
-  let output: List = pair(root + 12, null);
+  let output: List<MIDINote> = pair(root + 12, null);
   let note = root + 12;
 
   for (let i = major_intervals.length - 1; i >= 0; i--) {

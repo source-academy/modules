@@ -1,5 +1,6 @@
 ---
 title: Developer Type Checking
+outline: [2, 3]
 ---
 
 # Developer Runtime Type Checking in Source

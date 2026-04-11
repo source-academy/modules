@@ -268,4 +268,8 @@ describe(funcs.put_in_standard_position, () => {
     const transformer = funcs.put_in_standard_position(x => funcs.make_point(x, x));
     expect(stringify(transformer)).toEqual('<CurveTransformer>');
   });
+
+  test('name', () => {
+    expect(funcs.put_in_standard_position.name).toEqual('put_in_standard_position')
+  })
 });
