@@ -40,7 +40,7 @@ export const getTestCommand = () => new Command('test')
   .addOption(updateOption)
   .addOption(coverageOption)
   .addOption(silentOption)
-  .option('--no-allow-only', 'Allow the use of .only in tests', !process.env.CI)
+  .option('--no-allow-only', 'Disallow the use of .only in tests', !process.env.CI)
   .option('-p, --project <directory>', 'Path to the directory that is the root of your test project')
   .argument('[patterns...]', 'Test patterns to filter by.')
   .action(async (patterns, { mode, project, ...options }) => {
@@ -78,7 +78,7 @@ export const getTestAllCommand = () => new Command('testall')
   .addOption(updateOption)
   .addOption(coverageOption)
   .addOption(silentOption)
-  .option('--no-allow-only', 'Allow the use of .only in tests', !process.env.CI)
+  .option('--no-allow-only', 'Disallow the use of .only in tests', !process.env.CI)
   .action(async (patterns, { mode, ...options }) => {
     const configs = await getAllTestConfigurations(!!options.watch);
     if (configs.length === 0) {
