@@ -66,26 +66,26 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
   }
   public render() {
     const { editorHeight } = this.state;
-    const outputDivs: React.JSX.Element[] = [];
+    const outputDivs: React.ReactElement[] = [];
     const outputStringCount = this.replInstance.outputStrings.length;
     for (let i = 0; i < outputStringCount; i++) {
       const str = this.replInstance.outputStrings[i];
       if (str.outputMethod === 'richtext') {
         if (str.color === '') {
-          outputDivs.push(<div style={ FONT_MESSAGE } dangerouslySetInnerHTML={ { __html: str.content }} />);
+          outputDivs.push(<div style={FONT_MESSAGE} dangerouslySetInnerHTML={{ __html: str.content }} />);
         } else {
           outputDivs.push(<div style={{
             ...FONT_MESSAGE,
             ...{ color: str.color }
-          }} dangerouslySetInnerHTML={ { __html: str.content }} />);
+          }} dangerouslySetInnerHTML={{ __html: str.content }} />);
         }
       } else if (str.color === '') {
-        outputDivs.push(<div style={ FONT_MESSAGE }>{ str.content }</div>);
+        outputDivs.push(<div style={FONT_MESSAGE}>{str.content}</div>);
       } else {
         outputDivs.push(<div style={{
           ...FONT_MESSAGE,
           ...{ color: str.color }
-        }}>{ str.content }
+        }}>{str.content}
         </div>);
       }
     }
@@ -105,18 +105,18 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
           onClick={() => this.replInstance.saveEditorContent()}// Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
           text="Save"
         />
-        <div ref={ (e) => {
+        <div ref={(e) => {
           this.editorAreaRect = e?.getBoundingClientRect();
         }} style={{
           padding: `${BOX_PADDING_VALUE}px`,
           border: '2px solid #6f8194'
         }}>
           <AceEditor
-            ref={ (e) => {
+            ref={(e) => {
               this.editorInstance = e?.editor;
               this.replInstance.setEditorInstance(e?.editor);
             }}
-            style={ {
+            style={{
               width: '100%',
               height: `${editorHeight}px`,
               ...this.replInstance.customizedEditorProps.backgroundImageUrl !== 'no-background-image' && {
@@ -125,9 +125,9 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
                 backgroundSize: '100%',
                 backgroundRepeat: 'no-repeat'
               }
-            } }
+            }}
             mode="javascript" theme="twilight"
-            onChange={ (newValue) => this.replInstance.updateUserCode(newValue) }
+            onChange={(newValue) => this.replInstance.updateUserCode(newValue)}
             value={this.replInstance.userCodeInEditor.toString()}
           />
         </div>
