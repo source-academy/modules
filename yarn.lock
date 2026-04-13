@@ -2529,12 +2529,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iconify-json/vscode-icons@npm:^1.2.39":
-  version: 1.2.40
-  resolution: "@iconify-json/vscode-icons@npm:1.2.40"
+"@iconify-json/vscode-icons@npm:^1.2.45":
+  version: 1.2.45
+  resolution: "@iconify-json/vscode-icons@npm:1.2.45"
   dependencies:
     "@iconify/types": "npm:*"
-  checksum: 10c0/29dce75c16279709cffac19bfffb0d80b19046bc5ffedb172dd00a3d80f34d741ee2b8aacbc053ac8f59f6f9ce066e6e76fd649743d68aa503cb7605432ec091
+  checksum: 10c0/da3fa7cd3517a42db8694b28647a8dfdb464b48477bf1a7ed6e40b7b2fa5594de296a1b1b9eef8539824fd83e02bf86d0ca709b9800d27bde8979f7cee3be844
   languageName: node
   linkType: hard
 
@@ -17823,18 +17823,18 @@ __metadata:
   linkType: hard
 
 "vitepress-plugin-group-icons@npm:^1.6.5":
-  version: 1.7.1
-  resolution: "vitepress-plugin-group-icons@npm:1.7.1"
+  version: 1.7.3
+  resolution: "vitepress-plugin-group-icons@npm:1.7.3"
   dependencies:
     "@iconify-json/logos": "npm:^1.2.10"
-    "@iconify-json/vscode-icons": "npm:^1.2.39"
+    "@iconify-json/vscode-icons": "npm:^1.2.45"
     "@iconify/utils": "npm:^3.1.0"
   peerDependencies:
     vite: ">=3"
   peerDependenciesMeta:
     vite:
       optional: true
-  checksum: 10c0/9d24c09ef38155d5f2efb61e27162350bb90e9b89677f4af5e4287bebff2899506751ea8ef305f30feeead4416422955c45dbc0c38e48de884ec62c40b04dc56
+  checksum: 10c0/98aff8f71b3d8b23067552371368be57bcea0f18472f61396e00e65c34b6f78a5684128b3b746837f42a73650571f65a9958bca21d6ca0888cd7829ada55e408
   languageName: node
   linkType: hard
 
