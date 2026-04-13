@@ -292,29 +292,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@asamuzakjp/css-color@npm:^5.0.1":
-  version: 5.0.1
-  resolution: "@asamuzakjp/css-color@npm:5.0.1"
+"@asamuzakjp/css-color@npm:^5.1.5":
+  version: 5.1.10
+  resolution: "@asamuzakjp/css-color@npm:5.1.10"
   dependencies:
     "@csstools/css-calc": "npm:^3.1.1"
     "@csstools/css-color-parser": "npm:^4.0.2"
     "@csstools/css-parser-algorithms": "npm:^4.0.0"
     "@csstools/css-tokenizer": "npm:^4.0.0"
-    lru-cache: "npm:^11.2.6"
-  checksum: 10c0/3e8d74a3b7f3005a325cb8e7f3da1aa32aeac4cd9ce387826dc25b16eaab4dc0e4a6faded8ccc1895959141f4a4a70e8bc38723347b89667b7b224990d16683c
+  checksum: 10c0/b85c1e941463c908812c69409b73436aa967ffcd62c551f9ee03e9d0e3b14491e80231a935e1267037148cecce3d33d79e09f3176d4f987a2888ea079d9489d7
   languageName: node
   linkType: hard
 
-"@asamuzakjp/dom-selector@npm:^7.0.2":
-  version: 7.0.3
-  resolution: "@asamuzakjp/dom-selector@npm:7.0.3"
+"@asamuzakjp/dom-selector@npm:^7.0.6":
+  version: 7.0.9
+  resolution: "@asamuzakjp/dom-selector@npm:7.0.9"
   dependencies:
     "@asamuzakjp/nwsapi": "npm:^2.3.9"
     bidi-js: "npm:^1.0.3"
     css-tree: "npm:^3.2.1"
     is-potential-custom-element-name: "npm:^1.0.1"
-    lru-cache: "npm:^11.2.7"
-  checksum: 10c0/c64b06a23479970ded4f38bec34069e98f4062b4ecb798b81b1fc37b5472ec6110d5bd9d8a267bfc431503f6ee3080c2e94eb3d99e30aaa1b6d9f83fbd2744fa
+  checksum: 10c0/f19f8ba0b3d94325f68384d4f97f5021d1bbcafc8218a793ef66646981e0865d3b47d0bb36fb12196eaf32e0ec8efcb182d98c89db09d2daa5c9995e47bb0fc1
   languageName: node
   linkType: hard
 
@@ -4414,8 +4412,8 @@ __metadata:
     "@blueprintjs/icons": ^6.0.0
     es-toolkit: ^1.44.0
     js-slang: ^1.0.85
-    react: ^18.3.1
-    react-dom: ^18.3.1
+    react: ^19.0.0
+    react-dom: ^19.0.0
   languageName: unknown
   linkType: soft
 
@@ -11819,11 +11817,11 @@ __metadata:
   linkType: hard
 
 "jsdom@npm:^29.0.0":
-  version: 29.0.0
-  resolution: "jsdom@npm:29.0.0"
+  version: 29.0.2
+  resolution: "jsdom@npm:29.0.2"
   dependencies:
-    "@asamuzakjp/css-color": "npm:^5.0.1"
-    "@asamuzakjp/dom-selector": "npm:^7.0.2"
+    "@asamuzakjp/css-color": "npm:^5.1.5"
+    "@asamuzakjp/dom-selector": "npm:^7.0.6"
     "@bramus/specificity": "npm:^2.4.2"
     "@csstools/css-syntax-patches-for-csstree": "npm:^1.1.1"
     "@exodus/bytes": "npm:^1.15.0"
@@ -11837,7 +11835,7 @@ __metadata:
     saxes: "npm:^6.0.0"
     symbol-tree: "npm:^3.2.4"
     tough-cookie: "npm:^6.0.1"
-    undici: "npm:^7.24.3"
+    undici: "npm:^7.24.5"
     w3c-xmlserializer: "npm:^5.0.0"
     webidl-conversions: "npm:^8.0.1"
     whatwg-mimetype: "npm:^5.0.0"
@@ -11848,7 +11846,7 @@ __metadata:
   peerDependenciesMeta:
     canvas:
       optional: true
-  checksum: 10c0/8bbb4f89bfb7013a729bf50419fa5878086b52068a5d3836b51b99be5faf7cf9f871818954d468ce1f2f1c6b86d16af6ed5167f4084f7df7de517b104b451454
+  checksum: 10c0/a325324117932de83d13f00c74ff91a5f6b4bbbf11f45e7e31189fea06d007f764aac286dad80f643430c81b618b9fb20eac1ef03f120cec4c68df271e7547e2
   languageName: node
   linkType: hard
 
@@ -12431,7 +12429,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lru-cache@npm:^11.0.0, lru-cache@npm:^11.2.6, lru-cache@npm:^11.2.7":
+"lru-cache@npm:^11.0.0, lru-cache@npm:^11.2.7":
   version: 11.2.7
   resolution: "lru-cache@npm:11.2.7"
   checksum: 10c0/549cdb59488baa617135fc12159cafb1a97f91079f35093bb3bcad72e849fc64ace636d244212c181dfdf1a99bbfa90757ff303f98561958ee4d0f885d9bd5f7
@@ -17222,10 +17220,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^7.24.3":
-  version: 7.24.4
-  resolution: "undici@npm:7.24.4"
-  checksum: 10c0/cb302e81fadb7f0b7946ab77595715c0961b46a025ccecae79ba599432d0bc8d1e3da4dfe7ff66bc74f115c1b8ff0f099bc4e9bf313db4562da23995872c6d17
+"undici@npm:^7.24.5":
+  version: 7.25.0
+  resolution: "undici@npm:7.25.0"
+  checksum: 10c0/02a0b45dc14eb91bc488948750232450fe52f27a6b08086d6ac6736bb47908d600fe3a96d346f12eab24729c782e5c2f693bc8e8eca6696d4e4c09b1ed4cb4ec
   languageName: node
   linkType: hard
 
