@@ -10575,10 +10575,7 @@ export default require => {
   var import_source_academy_wabt = __toESM(require_source_academy_wabt(), 1);
   var wcompile = program => Array.from((0, import_source_academy_wabt.compile)(program));
   var wrun = buffer => {
-    if (buffer instanceof Array) {
-      buffer = new Uint8Array(buffer);
-    }
-    const exps = new WebAssembly.Instance(new WebAssembly.Module(buffer)).exports;
+    const exps = new WebAssembly.Instance(new WebAssembly.Module(new Uint8Array(buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer)))).exports;
     return (0, import_source_academy_utils.objectToLinkedList)(exps);
   };
   return __toCommonJS(index_exports);

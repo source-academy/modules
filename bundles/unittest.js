@@ -35,6 +35,7 @@ export default require => {
   }), mod);
   var index_exports = {};
   __export(index_exports, {
+    assert: () => assert,
     assert_contains: () => assert_contains,
     assert_equals: () => assert_equals,
     assert_greater: () => assert_greater,
@@ -291,6 +292,11 @@ export default require => {
   }
   var list = __toESM(__require("js-slang/dist/stdlib/list"), 1);
   var import_stringify = __require("js-slang/dist/utils/stringify");
+  function assert(pred) {
+    if (!pred()) {
+      throw new Error("Assert failed!");
+    }
+  }
   function equalityComparer(expected, received) {
     if (typeof expected === "number") {
       if (!Number.isInteger(expected) || !Number.isInteger(received)) {

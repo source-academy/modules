@@ -87,14 +87,18 @@ export default require => {
     })
   });
   var ModalDiv_default = Modal;
+  function getModuleState(debuggerContext, name) {
+    const {context: {moduleContexts}} = debuggerContext;
+    return (name in moduleContexts) ? moduleContexts[name].state : null;
+  }
   function defineTab(tab) {
     return tab;
   }
   var import_react = __require("react");
   var import_jsx_runtime2 = __require("react/jsx-runtime");
-  var Painter = ({context}) => {
+  var Painter = ({debuggerCtx: context}) => {
     const [selectedPainter, setSelectedPainter] = (0, import_react.useState)(null);
-    const {context: {moduleContexts: {painter: {state: {drawnPainters}}}}} = context;
+    const {drawnPainters} = getModuleState(context, "painter");
     return (0, import_jsx_runtime2.jsxs)("div", {
       children: [(0, import_jsx_runtime2.jsx)(ModalDiv_default, {
         open: selectedPainter !== null,
@@ -140,13 +144,11 @@ export default require => {
   };
   var index_default = defineTab({
     toSpawn(context) {
-      var _a, _b;
-      const drawnPainters = (_b = (_a = context.context) == null ? void 0 : _a.moduleContexts) == null ? void 0 : _b.painter.state.drawnPainters;
-      console.log(drawnPainters);
-      return drawnPainters.length > 0;
+      const state = getModuleState(context, "painter");
+      return !!state && state.drawnPainters.length > 0;
     },
     body: debuggerContext => (0, import_jsx_runtime2.jsx)(Painter, {
-      context: debuggerContext
+      debuggerCtx: debuggerContext
     }),
     label: "Painter Test Tab",
     iconName: "scatter-plot"

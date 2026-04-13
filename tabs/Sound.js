@@ -163,13 +163,14 @@ export default require => {
     });
   }
   function getModuleState(debuggerContext, name) {
-    return debuggerContext.context.moduleContexts[name].state;
+    const {context: {moduleContexts}} = debuggerContext;
+    return (name in moduleContexts) ? moduleContexts[name].state : null;
   }
   function defineTab(tab) {
     return tab;
   }
   var import_jsx_runtime2 = __require("react/jsx-runtime");
-  var SoundTab = ({context}) => {
+  var SoundTab = ({debuggerCtx: context}) => {
     const {audioPlayed} = getModuleState(context, "sound");
     const elements = audioPlayed.map(audio => (0, import_jsx_runtime2.jsx)("audio", {
       src: audio.dataUri,
@@ -190,13 +191,12 @@ export default require => {
   };
   var index_default = defineTab({
     toSpawn(context) {
-      var _a, _b, _c, _d;
-      const audioPlayed = (_d = (_c = (_b = (_a = context.context) == null ? void 0 : _a.moduleContexts) == null ? void 0 : _b.sound) == null ? void 0 : _c.state) == null ? void 0 : _d.audioPlayed;
-      return audioPlayed.length > 0;
+      const moduleState = getModuleState(context, "sound");
+      return !!moduleState && moduleState.audioPlayed.length > 0;
     },
     body(context) {
       return (0, import_jsx_runtime2.jsx)(SoundTab, {
-        context
+        debuggerCtx: context
       });
     },
     label: "Sounds",

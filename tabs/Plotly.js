@@ -87,14 +87,18 @@ export default require => {
     })
   });
   var ModalDiv_default = Modal;
+  function getModuleState(debuggerContext, name) {
+    const {context: {moduleContexts}} = debuggerContext;
+    return (name in moduleContexts) ? moduleContexts[name].state : null;
+  }
   function defineTab(tab) {
     return tab;
   }
   var import_react = __require("react");
   var import_jsx_runtime2 = __require("react/jsx-runtime");
-  var Plotly = ({context}) => {
+  var Plotly = ({debuggerCtx: context}) => {
     const [selectedPlot, setSelectedPlot] = (0, import_react.useState)(null);
-    const {context: {moduleContexts: {plotly: {state: {drawnPlots}}}}} = context;
+    const {drawnPlots} = getModuleState(context, "plotly");
     return (0, import_jsx_runtime2.jsxs)("div", {
       children: [(0, import_jsx_runtime2.jsx)(ModalDiv_default, {
         open: selectedPlot !== null,
@@ -145,12 +149,11 @@ export default require => {
   };
   var index_default = defineTab({
     toSpawn(context) {
-      var _a, _b;
-      const drawnPlots = (_b = (_a = context.context) == null ? void 0 : _a.moduleContexts) == null ? void 0 : _b.plotly.state.drawnPlots;
-      return drawnPlots.length > 0;
+      const state = getModuleState(context, "plotly");
+      return !!state && state.drawnPlots.length > 0;
     },
     body: debuggerContext => (0, import_jsx_runtime2.jsx)(Plotly, {
-      context: debuggerContext
+      debuggerCtx: debuggerContext
     }),
     label: "Plotly",
     iconName: "scatter-plot"

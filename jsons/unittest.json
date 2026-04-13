@@ -11,6 +11,18 @@
     ],
     "retType": "number"
   },
+  "assert": {
+    "kind": "function",
+    "name": "assert",
+    "description": "<p>Asserts that a predicate returns true.</p>",
+    "params": [
+      [
+        "pred",
+        "() => boolean"
+      ]
+    ],
+    "retType": "void"
+  },
   "assert_equals": {
     "kind": "function",
     "name": "assert_equals",

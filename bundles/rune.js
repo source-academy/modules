@@ -1741,13 +1741,20 @@ export default require => {
       return a;
     };
   })();
+  var glAnimationSymbol = Symbol.for("glAnimation");
   var glAnimation = class {
     constructor(duration, fps) {
       this.duration = duration;
       this.fps = fps;
     }
+    get _anim_symbol() {
+      return glAnimationSymbol;
+    }
+    static isAnimation(obj) {
+      if (typeof obj !== "object" || obj === null) return false;
+      return ("_anim_symbol" in obj) && obj._anim_symbol === glAnimationSymbol;
+    }
   };
-  glAnimation.isAnimation = obj => obj instanceof glAnimation;
   function loadShader(gl, type, source) {
     const shader = gl.createShader(type);
     if (!shader) {

@@ -1687,13 +1687,20 @@ export default require => {
       return a;
     };
   })();
+  var glAnimationSymbol = Symbol.for("glAnimation");
   var glAnimation = class {
     constructor(duration, fps) {
       this.duration = duration;
       this.fps = fps;
     }
+    get _anim_symbol() {
+      return glAnimationSymbol;
+    }
+    static isAnimation(obj) {
+      if (typeof obj !== "object" || obj === null) return false;
+      return ("_anim_symbol" in obj) && obj._anim_symbol === glAnimationSymbol;
+    }
   };
-  glAnimation.isAnimation = obj => obj instanceof glAnimation;
   function loadShader(gl, type, source) {
     const shader = gl.createShader(type);
     if (!shader) {
@@ -2691,7 +2698,9 @@ void main(void) {
         gl_FragColor = texture2D(uTexture, v_texturePosition);
     }
     `;
-  var isHollusionRune = rune => rune instanceof HollusionRune;
+  function isHollusionRune(rune) {
+    return rune.isHollusion;
+  }
   var beside = RuneFunctions.beside;
   var beside_frac = RuneFunctions.beside_frac;
   var black = RuneColours.black;
@@ -3198,7 +3207,8 @@ void main(void) {
     });
   }
   function getModuleState(debuggerContext, name) {
-    return debuggerContext.context.moduleContexts[name].state;
+    const {context: {moduleContexts}} = debuggerContext;
+    return (name in moduleContexts) ? moduleContexts[name].state : null;
   }
   function defineTab(tab) {
     return tab;
@@ -3225,7 +3235,7 @@ void main(void) {
     });
   }
   var import_jsx_runtime9 = __require("react/jsx-runtime");
-  var RuneTab = ({context}) => {
+  var RuneTab = ({debuggerCtx: context}) => {
     const {drawnRunes} = getModuleState(context, "rune");
     const runeCanvases = drawnRunes.map((rune, i) => {
       const elemKey = i.toString();
@@ -3253,13 +3263,12 @@ void main(void) {
   };
   var index_default = defineTab({
     toSpawn(context) {
-      var _a, _b, _c, _d;
-      const drawnRunes = (_d = (_c = (_b = (_a = context.context) == null ? void 0 : _a.moduleContexts) == null ? void 0 : _b.rune) == null ? void 0 : _c.state) == null ? void 0 : _d.drawnRunes;
-      return drawnRunes.length > 0;
+      const moduleState = getModuleState(context, "rune");
+      return !!moduleState && moduleState.drawnRunes.length > 0;
     },
     body(context) {
       return (0, import_jsx_runtime9.jsx)(RuneTab, {
-        context
+        debuggerCtx: context
       });
     },
     label: "Runes Tab",

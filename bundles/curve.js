@@ -1787,7 +1787,6 @@ void main() {
       this.curvePosArray = curvePosArray;
       this.curveColorArray = curveColorArray;
       this.toReplString = () => "<CurveDrawn>";
-      this.is3D = () => this.space === "3D";
       this.init = canvas => {
         this.renderingContext = canvas.getContext("webgl");
         if (!this.renderingContext) {
@@ -1876,6 +1875,9 @@ void main() {
       this.renderingContext = null;
       this.programs = null;
       this.buffersInfo = null;
+    }
+    get is3D() {
+      return this.space === "3D";
     }
   };
   function generateCurve(scaleMode, drawMode, numPoints, func, space, isFullView) {
@@ -2248,13 +2250,20 @@ ${variableDeclaration2};`);
     return typeof f === "function" && f.length === l;
   }
   var import_context = __toESM(__require("js-slang/context"), 1);
+  var glAnimationSymbol = Symbol.for("glAnimation");
   var glAnimation = class {
     constructor(duration, fps) {
       this.duration = duration;
       this.fps = fps;
     }
+    get _anim_symbol() {
+      return glAnimationSymbol;
+    }
+    static isAnimation(obj) {
+      if (typeof obj !== "object" || obj === null) return false;
+      return ("_anim_symbol" in obj) && obj._anim_symbol === glAnimationSymbol;
+    }
   };
-  glAnimation.isAnimation = obj => obj instanceof glAnimation;
   var AnimatedCurve2 = class extends glAnimation {
     constructor(duration, fps, func, drawer, is3D) {
       super(duration, fps);
@@ -2266,6 +2275,9 @@ ${variableDeclaration2};`);
     }
     getFrame(timestamp) {
       const curve = this.func(timestamp);
+      if (!isFunctionOfLength(curve, 1)) {
+        throw new Error(`CurveAnimation did not return a Curve at timestamp ${timestamp}`);
+      }
       curve.shouldNotAppend = true;
       const curveDrawn = this.drawer(curve);
       return {

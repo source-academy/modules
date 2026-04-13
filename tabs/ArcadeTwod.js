@@ -79603,32 +79603,22 @@ export default require => {
   var import_phaser = __toESM(require_phaser(), 1);
   var import_react = __toESM(__require("react"), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
-  var A2dUiButtons = class extends import_react.default.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        isPaused: false
-      };
-    }
-    toggleGamePause() {
-      const currentState = this.state.isPaused;
-      this.props.onClick(!currentState);
-      this.setState({
-        isPaused: !currentState
-      });
-    }
-    render() {
-      return (0, import_jsx_runtime.jsx)(import_core.ButtonGroup, {
-        children: (0, import_jsx_runtime.jsx)(import_core.Button, {
-          className: "a2d-play-toggle-button",
-          icon: this.state.isPaused ? (0, import_jsx_runtime.jsx)(import_icons.Play, {}) : (0, import_jsx_runtime.jsx)(import_icons.Pause, {}),
-          active: false,
-          onClick: () => this.toggleGamePause(),
-          text: this.state.isPaused ? "Resume Game" : "Pause Game"
-        })
-      });
-    }
-  };
+  function A2dUiButtons(props) {
+    const [isPaused, setIsPaused] = import_react.default.useState(false);
+    const toggleGamePause = () => {
+      props.onClick(!isPaused);
+      setIsPaused(!isPaused);
+    };
+    return (0, import_jsx_runtime.jsx)(import_core.ButtonGroup, {
+      children: (0, import_jsx_runtime.jsx)(import_core.Button, {
+        className: "a2d-play-toggle-button",
+        icon: isPaused ? (0, import_jsx_runtime.jsx)(import_icons.Play, {}) : (0, import_jsx_runtime.jsx)(import_icons.Pause, {}),
+        active: false,
+        onClick: toggleGamePause,
+        text: isPaused ? "Resume Game" : "Pause Game"
+      })
+    });
+  }
   var GameTab = class extends import_react.default.Component {
     constructor(props) {
       super(props);
@@ -79641,7 +79631,7 @@ export default require => {
       if (((_a = document.querySelector('[id="bp4-tab-panel_side-content-tabs_Arcade2D Tab"]')) == null ? void 0 : _a.ariaHidden) === "true") {
         return;
       }
-      const config = (_c = (_b = this.props.context.result) == null ? void 0 : _b.value) == null ? void 0 : _c.gameConfig;
+      const config = (_c = (_b = this.props.debuggerCtx.result) == null ? void 0 : _b.value) == null ? void 0 : _c.gameConfig;
       this.setState({
         game: new import_phaser.default.Game(config)
       });
@@ -79691,7 +79681,7 @@ export default require => {
       return false;
     },
     body: context => (0, import_jsx_runtime.jsx)(GameTab, {
-      context
+      debuggerCtx: context
     }),
     label: "Arcade2D Tab",
     iconName: import_icons.IconNames.SHAPES

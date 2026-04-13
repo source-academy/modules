@@ -32,7 +32,8 @@ export default require => {
     default: () => index_default
   });
   function getModuleState(debuggerContext, name) {
-    return debuggerContext.context.moduleContexts[name].state;
+    const {context: {moduleContexts}} = debuggerContext;
+    return (name in moduleContexts) ? moduleContexts[name].state : null;
   }
   function defineTab(tab) {
     return tab;
@@ -64,10 +65,6 @@ export default require => {
   function suiteResultToDiv(suiteResult) {
     const {name, results, runtime, passCount} = suiteResult;
     const [suiteResults, testResults] = partition(results, each => ("results" in each));
-    const tablestyle = {
-      "table-layout": "fixed",
-      width: "100%"
-    };
     const testsPassed = testResults.filter(each => each.passed);
     const testResultsTable = (0, import_jsx_runtime.jsxs)("details", {
       children: [(0, import_jsx_runtime.jsxs)("summary", {
@@ -75,7 +72,10 @@ export default require => {
           children: "Test Cases"
         }), " Passed ", testsPassed.length, "/", testResults.length]
       }), (0, import_jsx_runtime.jsxs)("table", {
-        style: tablestyle,
+        style: {
+          width: "100%",
+          tableLayout: "fixed"
+        },
         children: [(0, import_jsx_runtime.jsx)("thead", {
           children: (0, import_jsx_runtime.jsxs)("tr", {
             children: [(0, import_jsx_runtime.jsx)("th", {
@@ -159,9 +159,9 @@ export default require => {
     });
   }
   var index_default = defineTab({
-    toSpawn: ({context: {moduleContexts}}) => {
-      var _a;
-      return ((_a = moduleContexts.unittest) == null ? void 0 : _a.state.suiteResults.length) > 0;
+    toSpawn: context => {
+      const moduleState = getModuleState(context, "unittest");
+      return !!moduleState && moduleState.suiteResults.length > 0;
     },
     body: context => {
       const moduleContext = getModuleState(context, "unittest");

@@ -496,18 +496,26 @@ export default require => {
     });
   }
   function getModuleState(debuggerContext, name) {
-    return debuggerContext.context.moduleContexts[name].state;
+    const {context: {moduleContexts}} = debuggerContext;
+    return (name in moduleContexts) ? moduleContexts[name].state : null;
   }
   function defineTab(tab) {
     return tab;
   }
+  var glAnimationSymbol = Symbol.for("glAnimation");
   var glAnimation = class {
     constructor(duration, fps) {
       this.duration = duration;
       this.fps = fps;
     }
+    get _anim_symbol() {
+      return glAnimationSymbol;
+    }
+    static isAnimation(obj) {
+      if (typeof obj !== "object" || obj === null) return false;
+      return ("_anim_symbol" in obj) && obj._anim_symbol === glAnimationSymbol;
+    }
   };
-  glAnimation.isAnimation = obj => obj instanceof glAnimation;
   var import_core9 = __require("@blueprintjs/core");
   var import_jsx_runtime8 = __require("react/jsx-runtime");
   var import_core8 = __require("@blueprintjs/core");
@@ -778,7 +786,7 @@ export default require => {
     });
   }
   var import_jsx_runtime11 = __require("react/jsx-runtime");
-  var CurveTab = ({context}) => {
+  var CurveTab = ({debuggerCtx: context}) => {
     const {drawnCurves} = getModuleState(context, "curve");
     const canvases = drawnCurves.map((curve, i) => {
       const elemKey = i.toString();
@@ -789,7 +797,7 @@ export default require => {
           animation: curve
         }, elemKey);
       }
-      return curve.is3D() ? (0, import_jsx_runtime11.jsx)(Canvas3DCurve, {
+      return curve.is3D ? (0, import_jsx_runtime11.jsx)(Canvas3DCurve, {
         curve
       }, elemKey) : (0, import_jsx_runtime11.jsx)(WebGLCanvas_default, {
         ref: r => {
@@ -806,13 +814,12 @@ export default require => {
   };
   var index_default = defineTab({
     toSpawn(context) {
-      var _a, _b, _c, _d;
-      const drawnCurves = (_d = (_c = (_b = (_a = context.context) == null ? void 0 : _a.moduleContexts) == null ? void 0 : _b.curve) == null ? void 0 : _c.state) == null ? void 0 : _d.drawnCurves;
-      return drawnCurves.length > 0;
+      const moduleState = getModuleState(context, "curve");
+      return !!moduleState && moduleState.drawnCurves.length > 0;
     },
     body(context) {
       return (0, import_jsx_runtime11.jsx)(CurveTab, {
-        context
+        debuggerCtx: context
       });
     },
     label: "Curves Tab",

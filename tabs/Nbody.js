@@ -39,6 +39,10 @@ export default require => {
   });
   var import_core = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
+  function getModuleState(debuggerContext, name) {
+    const {context: {moduleContexts}} = debuggerContext;
+    return (name in moduleContexts) ? moduleContexts[name].state : null;
+  }
   function defineTab(tab) {
     return tab;
   }
@@ -135,53 +139,45 @@ export default require => {
       });
     }
   };
-  var Nbody = class extends import_react.default.Component {
-    constructor(props) {
-      super(props);
-      this.state = {};
-    }
-    render() {
-      const {context: {moduleContexts: {nbody: {state: {simulations, recordInfo}}}}} = this.props.context;
-      return (0, import_jsx_runtime.jsxs)("div", {
-        children: [simulations.length === 0 ? (0, import_jsx_runtime.jsx)("div", {
-          children: "No simulations found"
-        }) : (0, import_jsx_runtime.jsx)(SimulationControl, {
-          sim: simulations[0]
-        }), simulations.map((sim, i) => {
-          const divId = `nbody-${i}`;
-          return (0, import_jsx_runtime.jsx)("div", {
+  var Nbody = ({debuggerCtx: context}) => {
+    const {simulations, recordInfo} = getModuleState(context, "nbody");
+    return (0, import_jsx_runtime.jsxs)("div", {
+      children: [simulations.length === 0 ? (0, import_jsx_runtime.jsx)("div", {
+        children: "No simulations found"
+      }) : (0, import_jsx_runtime.jsx)(SimulationControl, {
+        sim: simulations[0]
+      }), simulations.map((sim, i) => {
+        const divId = `nbody-${i}`;
+        return (0, import_jsx_runtime.jsx)("div", {
+          style: {
+            height: "80vh",
+            marginBottom: "5vh"
+          },
+          children: (0, import_jsx_runtime.jsx)("div", {
+            id: divId,
             style: {
-              height: "80vh",
-              marginBottom: "5vh"
+              height: "500px",
+              width: "500px"
             },
-            children: (0, import_jsx_runtime.jsx)("div", {
-              id: divId,
-              style: {
-                height: "500px",
-                width: "500px"
-              },
-              ref: () => {
-                if (recordInfo.isRecording) {
-                  sim.start(divId, 500, 500, 1, true, recordInfo.recordFor, recordInfo.recordSpeed);
-                } else {
-                  sim.start(divId, 500, 500, 1, true);
-                }
+            ref: () => {
+              if (recordInfo.isRecording) {
+                sim.start(divId, 500, 500, 1, true, recordInfo.recordFor, recordInfo.recordSpeed);
+              } else {
+                sim.start(divId, 500, 500, 1, true);
               }
-            })
-          }, divId);
-        })]
-      });
-    }
+            }
+          })
+        }, divId);
+      })]
+    });
   };
   var index_default = defineTab({
     toSpawn(context) {
-      var _a, _b;
-      console.log("Nbody tospawn");
-      const simulations = (_b = (_a = context.context) == null ? void 0 : _a.moduleContexts) == null ? void 0 : _b.nbody.state.simulations;
-      return simulations.length > 0;
+      const state = getModuleState(context, "nbody");
+      return !!state && state.simulations.length > 0;
     },
     body: context => (0, import_jsx_runtime.jsx)(Nbody, {
-      context
+      debuggerCtx: context
     }),
     label: "Nbody Viz Tab",
     iconName: "clean"
