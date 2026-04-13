@@ -5374,16 +5374,16 @@ __metadata:
   linkType: hard
 
 "@types/plotly.js@npm:^2.35.4":
-  version: 2.35.13
-  resolution: "@types/plotly.js@npm:2.35.13"
-  checksum: 10c0/2fefdca78184462869ea91637f7ba730651b5bf82f8971c5a2445544696c538e4bbcd750e1bf96050736403af4ccf81c6d85504454bb41fd61b5432864117518
+  version: 2.35.14
+  resolution: "@types/plotly.js@npm:2.35.14"
+  checksum: 10c0/219fe2b49dfc47ba63dec63c2f6144de092da48065e2885c5d9276f992a760f49fb6733677f0f9b0255a2122cc3544a71671ae8f786dea04e34fc0668779864b
   languageName: node
   linkType: hard
 
 "@types/plotly.js@npm:^3.0.0":
-  version: 3.0.9
-  resolution: "@types/plotly.js@npm:3.0.9"
-  checksum: 10c0/8f5aa3cc96f6351e978d491356407e69cd417f6fc64df458cb90a5e382515b37e61dff7fe7416ed7d8ad2f3cdbbe1d7c1629d184bcf33e00111c39b3dce0b28e
+  version: 3.0.10
+  resolution: "@types/plotly.js@npm:3.0.10"
+  checksum: 10c0/72f33ce44df74b53bcde5c0e503d5bf89424bed89791aed030da33c82d787d1d49c40748b764d3c65715a6b28b0c3bc78761a99f576e40fcd2078a9764d19192
   languageName: node
   linkType: hard
 
