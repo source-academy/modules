@@ -4,7 +4,7 @@ import { clamp } from 'es-toolkit';
 import { useState } from 'react';
 
 export interface MultiItemDisplayProps {
-  elements: JSX.Element[];
+  elements: React.ReactElement[];
   onStepChange?: (newIndex: number, oldIndex: number) => void;
 };
 

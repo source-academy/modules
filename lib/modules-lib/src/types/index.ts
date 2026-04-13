@@ -93,5 +93,5 @@ export interface ModuleSideContent {
    * This function will be called to render the module tab in the side contents
    * on Source Academy frontend.
    */
-  body: (context: DebuggerContext) => JSX.Element;
+  body: (context: DebuggerContext) => React.ReactElement;
 };
