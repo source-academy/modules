@@ -26,7 +26,7 @@
     "chalk": "^5.0.1",
     "commander": "^14.0.0",
     "es-toolkit": "^1.44.0",
-    "esbuild": "^0.27.0",
+    "esbuild": "^0.28.0",
     "eslint": "^9.35.0",
     "http-server": "^14.1.1",
     "jsdom": "^29.0.0",
