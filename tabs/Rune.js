@@ -3290,7 +3290,7 @@ void main(void) {
   var import_react5 = __toESM(__require("react"), 1);
   var import_jsx_runtime8 = __require("react/jsx-runtime");
   function HollusionCanvas({rune}) {
-    const renderFuncRef = import_react5.default.useRef();
+    const renderFuncRef = import_react5.default.useRef(void 0);
     const {setCanvas} = useAnimation({
       callback(timestamp, canvas) {
         if (renderFuncRef.current === void 0) {
