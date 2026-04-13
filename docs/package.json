@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@sourceacademy/lint-plugin": "workspace:^",
+    "@sourceacademy/markdown-plugin-directory-tree": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
     "mermaid": "^11.10.0",
     "vitepress": "^1.6.3",
@@ -22,7 +23,7 @@
     "vitepress-sidebar": "^1.31.1"
   },
   "devDependencies": {
-    "@sourceacademy/markdown-plugin-directory-tree": "workspace:^",
-    "cspell": "^9.2.1"
+    "cspell": "^9.2.1",
+    "typescript": "^6.0.2"
   }
 }

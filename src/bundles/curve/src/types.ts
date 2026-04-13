@@ -1,4 +1,5 @@
 import { glAnimation, type AnimFrame, type ReplResult } from '@sourceacademy/modules-lib/types';
+import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import type { Curve, CurveDrawn } from './curves_webgl';
 
 export type CurveModuleState = {
@@ -53,6 +54,11 @@ export class AnimatedCurve extends glAnimation implements ReplResult {
 
   public getFrame(timestamp: number): AnimFrame {
     const curve = this.func(timestamp);
+
+    if (!isFunctionOfLength(curve, 1)) {
+      throw new Error(`CurveAnimation did not return a Curve at timestamp ${timestamp}`);
+    }
+
     curve.shouldNotAppend = true;
     const curveDrawn = this.drawer(curve);
 

@@ -1,6 +1,7 @@
 import { Button, ButtonGroup } from '@blueprintjs/core';
 import { IconNames, Pause, Play } from '@blueprintjs/icons';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
 import Phaser from 'phaser';
 import React from 'react';
 
@@ -16,9 +17,7 @@ import React from 'react';
  * React Component props for the Tab.
  */
 type Props = {
-  children?: never;
-  className?: never;
-  context?: any;
+  debuggerCtx: DebuggerContext;
 };
 
 /**
@@ -29,52 +28,33 @@ type GameState = {
 };
 
 /**
- * React component state for the UI buttons.
- */
-type UiState = {
-  isPaused: boolean;
-};
-
-/**
  * React component props for the UI buttons.
  */
 type UiProps = {
-  children?: never;
-  className?: never;
-  context?: any;
+  context?: DebuggerContext;
   onClick: (b: boolean) => void;
 };
 
 /**
  * Component for UI buttons within tab e.g play/pause.
  */
-class A2dUiButtons extends React.Component<UiProps, UiState> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isPaused: false
-    };
-  }
+function A2dUiButtons(props: UiProps) {
+  const [isPaused, setIsPaused] = React.useState(false);
 
-  toggleGamePause(): void {
-    const currentState = this.state.isPaused;
-    this.props.onClick(!currentState);
-    this.setState({ isPaused: !currentState });
-  }
+  const toggleGamePause = () => {
+    props.onClick(!isPaused);
+    setIsPaused(!isPaused);
+  };
 
-  public render() {
-    return (
-      <ButtonGroup>
-        <Button
-          className="a2d-play-toggle-button"
-          icon={this.state.isPaused ? <Play /> : <Pause />}
-          active={false}
-          onClick={() => this.toggleGamePause()}
-          text={this.state.isPaused ? 'Resume Game' : 'Pause Game'}
-        />
-      </ButtonGroup>
-    );
-  }
+  return <ButtonGroup>
+    <Button
+      className="a2d-play-toggle-button"
+      icon={isPaused ? <Play /> : <Pause />}
+      active={false}
+      onClick={toggleGamePause}
+      text={isPaused ? 'Resume Game' : 'Pause Game'}
+    />
+  </ButtonGroup>;
 }
 
 /**
@@ -95,7 +75,7 @@ class GameTab extends React.Component<Props, GameState> {
     }
 
     // Config will exist since it is checked in toSpawn
-    const config = this.props.context.result?.value?.gameConfig;
+    const config = this.props.debuggerCtx.result?.value?.gameConfig;
     this.setState({
       game: new Phaser.Game(config)
     });
@@ -150,7 +130,7 @@ export default defineTab({
     }
     return false;
   },
-  body: context => <GameTab context={context} />,
+  body: context => <GameTab debuggerCtx={context} />,
   label: 'Arcade2D Tab',
   iconName: IconNames.SHAPES
 });

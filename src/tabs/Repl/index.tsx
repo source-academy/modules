@@ -5,7 +5,7 @@
  */
 
 import { Button } from '@blueprintjs/core';
-import { FloppyDisk, IconNames, Play } from '@blueprintjs/icons';
+import { FloppyDisk, Play } from '@blueprintjs/icons';
 
 import { FONT_MESSAGE, MINIMUM_EDITOR_HEIGHT } from '@sourceacademy/bundle-repl/config';
 import type { ProgrammableRepl } from '@sourceacademy/bundle-repl/programmable_repl';

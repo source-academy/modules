@@ -10,27 +10,32 @@ import CurveSideContent, { CurveTab } from '..';
 test('Curve animations error gracefully', () => {
   const badAnimation = animate_curve(1, 60, draw_connected(200), t => 1 as any);
   const mockContext = mockDebuggerContext<CurveModuleState>({ drawnCurves: [badAnimation] }, 'curve');
-  expect(<CurveTab context={mockContext} />)
+  expect(<CurveTab debuggerCtx={mockContext} />)
     .toMatchSnapshot();
 });
 
 test('Curve 3D animations error gracefully', () => {
   const badAnimation = animate_3D_curve(1, 60, draw_3D_connected(200), t => 1 as any);
   const mockContext = mockDebuggerContext<CurveModuleState>({ drawnCurves: [badAnimation] }, 'curve');
-  expect(<CurveTab context={mockContext} />)
+  expect(<CurveTab debuggerCtx={mockContext} />)
     .toMatchSnapshot();
 });
 
 describe('Test Curve Side Content', () => {
-  const propertyAccessor = vi.fn(() => ({
-    state: {
-      drawnCurves: []
-    }
-  }));
+  const propertyAccessor = vi.fn((target: any, prop: string) => {
+    return target[prop];
+  });
 
   const contextObject: DebuggerContext = {
     context: {
-      moduleContexts: new Proxy({}, {
+      moduleContexts: new Proxy({
+        curve: {
+          state: {
+            drawnCurves: [],
+          },
+          tabs: null
+        }
+      }, {
         get: propertyAccessor
       })
     }

@@ -1,21 +1,28 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
-import utils from 'util';
 import * as core from '@actions/core';
-import type { SummaryTableRow } from '@actions/core/lib/summary.js';
+import { mapAsync, mapValues } from 'es-toolkit';
 import packageJson from '../../../../package.json' with { type: 'json' };
-import { checkDirForChanges, type PackageRecord, type RawPackageRecord } from '../commons.js';
+import {
+  checkDirForChanges,
+  runYarnWorkspacesList,
+  type PackageRecord,
+  type RawPackageRecord,
+  type YarnWorkspaceRecord
+} from '../commons.js';
 import { gitRoot } from '../gitRoot.js';
 import { getPackagesWithResolutionChanges, hasLockFileChanged } from '../lockfiles.js';
 import { topoSortPackages } from './sorter.js';
 
-const packageNameRE = /^@sourceacademy\/(.+?)-(.+)$/u;
+type SummaryTableRow = Parameters<(typeof core['summary']['addTable'])>[0][number];
+
+const packageNameRE = /^@sourceacademy\/.+?-(.+)$/u;
 
 /**
  * Retrieves the information for all packages in the repository, but in
  * an unprocessed format
  */
-export async function getRawPackages(gitRoot: string, maxDepth?: number) {
+export async function getRawPackages(gitRoot: string) {
   let packagesWithResolutionChanges: string[] | null = null;
 
   // If there are lock file changes we need to set hasChanges to true for
@@ -24,57 +31,36 @@ export async function getRawPackages(gitRoot: string, maxDepth?: number) {
     packagesWithResolutionChanges = await getPackagesWithResolutionChanges();
   }
 
+  const stdout = await runYarnWorkspacesList();
   const output: Record<string, RawPackageRecord> = {};
 
-  /**
-   * Search the given directory for package.json files
-   */
-  async function recurser(currentDir: string, currentDepth: number) {
-    const items = await fs.readdir(currentDir, { withFileTypes: true });
-    await Promise.all(items.map(async item => {
-      if (item.isFile()) {
-        if (item.name === 'package.json') {
-          try {
-            const [hasChanges, packageJson] = await Promise.all([
-              checkDirForChanges(currentDir),
-              fs.readFile(pathlib.join(currentDir, 'package.json'), 'utf-8')
-                .then(JSON.parse)
-            ]);
+  await mapAsync(stdout.trim().split('\n'), async line => {
+    const { location } = JSON.parse(line) as YarnWorkspaceRecord;
+    const currentDir = pathlib.join(gitRoot, location);
 
-            output[packageJson.name] = {
-              directory: currentDir,
-              hasChanges: hasChanges || !!packagesWithResolutionChanges?.includes(packageJson.name),
-              package: packageJson
-            };
-          } catch (error) {
-            if (!utils.types.isNativeError(error)) {
-              core.error(`Unknown error occurred ${error}`);
-              throw error;
-            }
+    const [hasChanges, packageJson] = await Promise.all([
+      checkDirForChanges(currentDir),
+      fs.readFile(pathlib.join(currentDir, 'package.json'), 'utf-8')
+        .then(JSON.parse)
+    ]);
 
-            if ('code' in error && error.code !== 'ENOENT') {
-              core.error(error);
-              throw error;
-            }
-            console.error(error);
-          }
-        }
-        return;
-      }
+    let type: RawPackageRecord['type'] = null;
+    if (location.startsWith('src/bundles')) {
+      type = 'bundle';
+    } else if (location.startsWith('src/tabs')) {
+      type = 'tab';
+    } else if (location.startsWith('lib')) {
+      type = 'lib';
+    }
 
-      if (
-        (maxDepth === undefined || currentDepth < maxDepth) &&
-        item.isDirectory() &&
-        item.name !== 'node_modules' &&
-        !item.name.startsWith('__')
-      ) {
-        const fullPath = pathlib.join(currentDir, item.name);
-        await recurser(fullPath, currentDepth + 1);
-      }
-    }));
-  }
+    output[packageJson.name] = {
+      directory: currentDir,
+      hasChanges: hasChanges || !!packagesWithResolutionChanges?.includes(packageJson.name),
+      package: packageJson,
+      type
+    };
+  });
 
-  await recurser(gitRoot, 0);
   return output;
 }
 
@@ -87,10 +73,7 @@ function mergeObjects<
   RHS extends Record<string | symbol | number, any>,
   LHS extends Record<keyof RHS, any>
 >(lhs: LHS, rhs: RHS) {
-  return Object.keys(lhs).reduce((res, key) => ({
-    ...res,
-    [key]: rhs[key]
-  }), {} as Record<keyof LHS, RHS[keyof LHS]>);
+  return mapValues(lhs, (_, key) => rhs[key]);
 }
 
 /**
@@ -133,13 +116,14 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
       const match = packageNameRE.exec(packageName);
       if (!match) throw new Error(`Unknown package ${packageName}`);
 
-      const [, packageType, baseName] = match;
+      const [, baseName] = match;
 
-      switch (packageType) {
+      switch (packageInfo.type) {
         case 'bundle':
           return {
             ...res,
             [packageName]: {
+              type: 'bundle',
               changes: packageInfo.hasChanges,
               directory: packageInfo.directory,
               name: packageName,
@@ -151,6 +135,7 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
           return {
             ...res,
             [packageName]: {
+              type: 'tab',
               changes: packageInfo.hasChanges,
               directory: packageInfo.directory,
               name: packageName,
@@ -160,10 +145,10 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
           };
       }
     }
-
     return {
       ...res,
       [packageName]: {
+        type: packageInfo.type as 'lib' | null,
         changes: packageInfo.hasChanges,
         directory: packageInfo.directory,
         name: packageName,
@@ -177,24 +162,28 @@ export function processRawPackages(topoOrder: string[], packages: Record<string,
  * Retrieve all packages from within the git repository, sorted into the different types
  */
 export async function getAllPackages(gitRoot: string) {
-  const [
-    bundles,
-    tabs,
-    libs,
-    rootPackages
-  ] = await Promise.all([
-    getRawPackages(pathlib.join(gitRoot, 'src', 'bundles')),
-    getRawPackages(pathlib.join(gitRoot, 'src', 'tabs')),
-    getRawPackages(pathlib.join(gitRoot, 'lib')),
-    getRawPackages(pathlib.join(gitRoot), 1)
-  ]);
+  const packages = await getRawPackages(gitRoot);
 
-  const packages = {
-    ...rootPackages,
-    ...bundles,
-    ...tabs,
-    ...libs
-  };
+  const bundles: Record<string, RawPackageRecord> = {};
+  const tabs: Record<string, RawPackageRecord> = {};
+  const libs: Record<string, RawPackageRecord> = {};
+
+  Object.entries(packages).forEach(([name, pkgInfo]) => {
+    switch (pkgInfo.type) {
+      case 'bundle': {
+        bundles[name] = pkgInfo;
+        break;
+      }
+      case 'tab': {
+        tabs[name] = pkgInfo;
+        break;
+      }
+      case 'lib': {
+        libs[name] = pkgInfo;
+        break;
+      }
+    }
+  });
 
   const sort = topoSortPackages(packages);
   const processed = processRawPackages(sort, packages);
@@ -238,6 +227,7 @@ export async function main() {
     return [
       `<code>${packageInfo.name}</code>`,
       `<a href="${url}">${relpath}</a>`,
+      packageInfo.type ?? '-',
       `<code>${packageInfo.changes ? 'true' : 'false'}</code>`,
       `<code>${packageInfo.needsPlaywright ? 'true' : 'false'}</code>`
     ];
@@ -251,6 +241,10 @@ export async function main() {
     {
       data: 'Package Path',
       header: true
+    },
+    {
+      data: 'Package Type',
+      header: true,
     },
     {
       data: 'Has Changes',
@@ -275,6 +269,7 @@ export async function main() {
   );
 
   const workflows = await checkDirForChanges(pathlib.join(gitRoot, '.github/workflows'));
+
   core.setOutput('workflows', workflows);
 }
 

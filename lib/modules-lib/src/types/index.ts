@@ -2,6 +2,8 @@ import type { IconName } from '@blueprintjs/icons';
 import type { Context } from 'js-slang';
 import type React from 'react';
 
+const glAnimationSymbol = Symbol.for('glAnimation');
+
 /**
  * Represents an animation drawn using WebGL
  */
@@ -17,9 +19,29 @@ export abstract class glAnimation {
     public readonly fps: number
   ) { }
 
+  /**
+   * Because of the way bundles and tabs are built, the tab and the bundle might end up with two
+   * separate instances of `@sourceacademy/modules-lib` bundled. Then there are two instances of
+   * the `glAnimation` class, so using an `instanceof` check no longer works properly.
+   *
+   * Instead, we hide a special symbol which should be the same no matter which instance of `glAnimation` to
+   * perform the `isAnimation` check.
+   */
+  public get _anim_symbol(): typeof glAnimationSymbol {
+    return glAnimationSymbol;
+  }
+
   public abstract getFrame(timestamp: number): AnimFrame;
 
-  public static isAnimation = (obj: any): obj is glAnimation => obj instanceof glAnimation;
+  /**
+   * Because of some quirks in the way tabs and bundles are built, an `instanceof` check might fail at runtime.
+   * You should use this function instead of an `instanceof` check to check for `glAnimations`.
+   */
+  public static isAnimation(obj: unknown): obj is glAnimation {
+    if (typeof obj !== 'object' || obj === null) return false;
+
+    return '_anim_symbol' in obj && obj._anim_symbol === glAnimationSymbol;
+  }
 }
 export interface AnimFrame {
   draw: (canvas: HTMLCanvasElement) => void;
@@ -49,7 +71,7 @@ export interface ReplResult {
   toReplString: () => string;
 }
 
-export type ModuleTab = (props: { context: DebuggerContext }) => React.ReactNode;
+export type ModuleTab = (props: { debuggerCtx: DebuggerContext }) => React.ReactNode;
 
 export interface ModuleSideContent {
   /**

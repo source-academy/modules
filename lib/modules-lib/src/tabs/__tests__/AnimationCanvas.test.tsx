@@ -19,6 +19,7 @@ test('Animations are played entirely and stops', async () => {
   const testAnimation: glAnimation = {
     duration: 1,
     fps: 10,
+    _anim_symbol: Symbol.for('glAnimation') as any,
     getFrame(timestamp) {
       return {
         draw: () => {
@@ -61,6 +62,7 @@ test('Gracefully handles animations that error halfway through and can be restar
   });
 
   const errorAnimation: glAnimation = {
+    _anim_symbol: Symbol.for('glAnimation') as any,
     duration: 1,
     fps: 10,
     getFrame: testFrame

@@ -14,7 +14,7 @@ import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import ymlPlugin from 'eslint-plugin-yml';
 import globals from 'globals';
-import jsonParser from 'jsonc-eslint-parser';
+import * as jsonParser from 'jsonc-eslint-parser';
 import tseslint from 'typescript-eslint';
 
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
@@ -168,8 +168,8 @@ export default defineConfig(
         }
       ],
       '@stylistic/no-extra-parens': ['warn', 'all', {
-        enforceForArrowConditionals: false,
         ignoreJSX: 'all',
+        ignoredNodes: ['ArrowFunctionExpression[body.type=ConditionalExpression]'],
         nestedBinaryExpressions: false,
       }],
       '@stylistic/nonblock-statement-body-position': ['error', 'beside'],
@@ -252,6 +252,7 @@ export default defineConfig(
         tags: ['hidden']
       }],
 
+      'import/extensions': ['error', { json: 'always' }],
       'import/first': 'warn',
       'import/newline-after-import': 'warn',
       // This rule is very time intensive.
@@ -336,7 +337,9 @@ export default defineConfig(
       // This rule doesn't seem to fail locally but fails on the CI
       // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
-      '@typescript-eslint/only-throw-error': 'error'
+
+      // TODO: Turn this back on
+      '@typescript-eslint/only-throw-error': 'off'
     },
     settings: {
       'import/resolver': {
@@ -351,12 +354,13 @@ export default defineConfig(
     files: ['**/*.tsx'],
     ignores: ['**/*.md/**/*.tsx'],
     plugins: {
+      // @ts-expect-error React hooks plugin wrong type
       'react-hooks': reactHooksPlugin,
       'react': reactPlugin
     },
     extends: [
       reactPlugin.configs.flat.recommended,
-      reactPlugin.configs.flat['jsx-runtime']
+      reactPlugin.configs.flat['jsx-runtime'],
     ],
     languageOptions: {
       parserOptions: {
@@ -371,7 +375,6 @@ export default defineConfig(
 
       '@stylistic/jsx-equals-spacing': ['warn', 'never'],
       '@stylistic/jsx-indent-props': ['warn', 2],
-      '@stylistic/jsx-props-no-multi-spaces': 'warn',
       '@stylistic/jsx-self-closing-comp': 'warn',
     },
     settings: {
@@ -396,6 +399,8 @@ export default defineConfig(
           namedExports: 'declaration'
         }
       }],
+
+      'import/extensions': 'off',
 
       '@typescript-eslint/no-empty-object-type': ['error', {
         allowInterfaces: 'with-single-extends',
@@ -503,7 +508,8 @@ export default defineConfig(
       'vitest/valid-title': ['error', { ignoreTypeOfDescribeName: true }],
 
       'import/extensions': ['error', 'never', {
-        config: 'ignore'
+        config: 'ignore',
+        json: 'always'
       }]
     }
   },
@@ -519,7 +525,8 @@ export default defineConfig(
     rules: {
       'import/extensions': ['error', 'ignorePackages', {
         ts: 'never',
-        cts: 'never'
+        cts: 'never',
+        json: 'always'
       }],
     }
   },

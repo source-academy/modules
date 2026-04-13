@@ -4,6 +4,7 @@
     "declaration": true,
     "noEmit": false,
     "outDir": "./dist",
+    "rootDir": "./src",
     "removeComments": false
   },
   "extends": "./tsconfig.json",
