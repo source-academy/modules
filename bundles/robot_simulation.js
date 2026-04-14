@@ -440,12 +440,13 @@ export default require => {
       return result;
     }
     if (valueToClone instanceof Error) {
-      const result = new valueToClone.constructor();
+      const result = structuredClone(valueToClone);
       stack.set(valueToClone, result);
       result.message = valueToClone.message;
       result.name = valueToClone.name;
       result.stack = valueToClone.stack;
       result.cause = valueToClone.cause;
+      result.constructor = valueToClone.constructor;
       copyProperties(result, valueToClone, objectToClone, stack, cloneValue);
       return result;
     }
