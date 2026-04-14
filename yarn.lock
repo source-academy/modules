@@ -6,8 +6,8 @@ __metadata:
   cacheKey: 10c0
 
 "@actions/artifact@npm:^6.0.0":
-  version: 6.1.0
-  resolution: "@actions/artifact@npm:6.1.0"
+  version: 6.2.1
+  resolution: "@actions/artifact@npm:6.2.1"
   dependencies:
     "@actions/core": "npm:^3.0.0"
     "@actions/github": "npm:^9.0.0"
@@ -23,7 +23,7 @@ __metadata:
     archiver: "npm:^7.0.1"
     jwt-decode: "npm:^4.0.0"
     unzip-stream: "npm:^0.3.1"
-  checksum: 10c0/e9857ee757d3ab105f3725dd6775c21f133d7f164ab48a0041b51cb5053147c1db0012cfa193d31bde1ef459f163a569213d21097744fdd604e009dc0374ecfc
+  checksum: 10c0/f019ece6b566da5a256a683009989b06ddc2dbbd1ad83a4af3b6ae75671bb32a237b40f89ec3a0b04fdf1ccc6681cff09a11978fbb7d052395e6be3b41e59312
   languageName: node
   linkType: hard
 
