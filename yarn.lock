@@ -17781,8 +17781,8 @@ __metadata:
   linkType: hard
 
 "vitepress-plugin-group-icons@npm:^1.6.5":
-  version: 1.7.3
-  resolution: "vitepress-plugin-group-icons@npm:1.7.3"
+  version: 1.7.5
+  resolution: "vitepress-plugin-group-icons@npm:1.7.5"
   dependencies:
     "@iconify-json/logos": "npm:^1.2.10"
     "@iconify-json/vscode-icons": "npm:^1.2.45"
@@ -17792,7 +17792,7 @@ __metadata:
   peerDependenciesMeta:
     vite:
       optional: true
-  checksum: 10c0/98aff8f71b3d8b23067552371368be57bcea0f18472f61396e00e65c34b6f78a5684128b3b746837f42a73650571f65a9958bca21d6ca0888cd7829ada55e408
+  checksum: 10c0/7c7ce34bd93c1b750609995190427bd86d6e1e50c0b455374482b6dd9985cf83e2ccff5f4b14cd0ad4431b91ea0c168cf6cb8ea831bbc86e023d6a5e00864078
   languageName: node
   linkType: hard
 
