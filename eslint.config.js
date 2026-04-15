@@ -169,15 +169,6 @@ export default defineConfig(
         }
       ],
       '@stylistic/no-extra-parens': ['warn', 'all', {
-<<<<<<< HEAD
-<<<<<<< HEAD
-        ignoredNodes: [
-          'ArrowFunctionExpression[body.type=ConditionalExpression]'
-        ],
-=======
->>>>>>> ts-6
-=======
->>>>>>> origin/master
         ignoreJSX: 'all',
         ignoredNodes: ['ArrowFunctionExpression[body.type=ConditionalExpression]'],
         nestedBinaryExpressions: false,
@@ -356,24 +347,7 @@ export default defineConfig(
       // This rule doesn't seem to fail locally but fails on the CI
       // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
-<<<<<<< HEAD
-      '@typescript-eslint/only-throw-error': ['error', {
-        allowRethrowing: true,
-        allow: [
-          // TODO: Remove these exceptions when js-slang errors inherit from Error
-          'InvalidParameterTypeError', 'InvalidCallbackError', 'InvalidNumberParameterError'
-          // {
-          //   from: 'package',
-          //   name: ['InvalidParameterTypeError', 'InvalidCallbackError'],
-          //   package: '@sourceacademy/modules-lib',
-          // }
-        ]
-      }]
-=======
-
-      // TODO: Turn this back on
-      '@typescript-eslint/only-throw-error': 'off'
->>>>>>> origin/master
+      '@typescript-eslint/only-throw-error': 'error'
     },
     settings: {
       'import/resolver': {

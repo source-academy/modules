@@ -8,7 +8,7 @@ import type { DebuggerContext, ModuleSideContent } from '../types';
  * @param debuggerContext DebuggerContext as returned by the frontend
  * @param name Name of your bundle
  * @returns The state object of your bundle
- * 
+ *
  * @category Utilities
  */
 export function getModuleState<T>(debuggerContext: DebuggerContext, name: string): T | null {

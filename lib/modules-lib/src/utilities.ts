@@ -4,7 +4,6 @@
  * @title Utilities
  */
 
-import { InvalidCallbackError, InvalidNumberParameterError, type InvalidNumberParameterErrorOptions } from './errors';
 import type { DebuggerContext } from './types';
 
 /**
