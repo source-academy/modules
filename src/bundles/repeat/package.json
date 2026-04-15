@@ -6,9 +6,6 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "typescript": "^6.0.2"
   },
-  "dependencies": {
-    "@sourceacademy/modules-lib": "workspace:^"
-  },
   "type": "module",
   "exports": {
     ".": "./dist/index.js",

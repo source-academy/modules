@@ -170,11 +170,14 @@ export default defineConfig(
       ],
       '@stylistic/no-extra-parens': ['warn', 'all', {
 <<<<<<< HEAD
+<<<<<<< HEAD
         ignoredNodes: [
           'ArrowFunctionExpression[body.type=ConditionalExpression]'
         ],
 =======
 >>>>>>> ts-6
+=======
+>>>>>>> origin/master
         ignoreJSX: 'all',
         ignoredNodes: ['ArrowFunctionExpression[body.type=ConditionalExpression]'],
         nestedBinaryExpressions: false,
@@ -353,6 +356,7 @@ export default defineConfig(
       // This rule doesn't seem to fail locally but fails on the CI
       // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
+<<<<<<< HEAD
       '@typescript-eslint/only-throw-error': ['error', {
         allowRethrowing: true,
         allow: [
@@ -365,6 +369,11 @@ export default defineConfig(
           // }
         ]
       }]
+=======
+
+      // TODO: Turn this back on
+      '@typescript-eslint/only-throw-error': 'off'
+>>>>>>> origin/master
     },
     settings: {
       'import/resolver': {
@@ -385,7 +394,7 @@ export default defineConfig(
     },
     extends: [
       reactPlugin.configs.flat.recommended,
-      reactPlugin.configs.flat['jsx-runtime']
+      reactPlugin.configs.flat['jsx-runtime'],
     ],
     languageOptions: {
       parserOptions: {

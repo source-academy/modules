@@ -37,6 +37,11 @@ describe('Ensure that invalid curves and animations error gracefully', () => {
     expect(() => anim.getFrame(0)).toThrow('CurveAnimation did not return a Curve at timestamp 0');
   });
 
+  test('CurveAnimation that doesn\'t return a curve should throw error', () => {
+    const anim = new AnimatedCurve(1, 30, (_t => 0) as any, drawers.draw_connected(200), false);
+    expect(() => anim.getFrame(0)).toThrow('CurveAnimation did not return a Curve at timestamp 0');
+  });
+
   test('Using 3D render functions with animate_curve should throw errors', () => {
     expect(() => drawers.animate_curve(1, 60, drawers.draw_3D_connected(200), (t0) => (t1) => funcs.make_point(t0, t1)))
       .toThrow('animate_curve cannot be used with 3D draw function!');

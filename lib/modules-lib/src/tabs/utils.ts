@@ -4,7 +4,10 @@ import type { DebuggerContext, ModuleSideContent } from '../types';
  * Helper function for extracting the state object for your bundle.
  * If the your bundle state cannot be found or is still uninitialized, then it will return `null`.
  *
+<<<<<<< HEAD
  * @category Utilities
+=======
+>>>>>>> origin/master
  * @template T The type of your bundle's state object
  * @param debuggerContext DebuggerContext as returned by the frontend
  * @param name Name of your bundle

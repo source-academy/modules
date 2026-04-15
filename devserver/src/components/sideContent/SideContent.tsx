@@ -59,7 +59,7 @@ const renderTab = (
     return <Tab key={tab.id} {...tabProps} />;
   }
 
-  const tabPanel: React.JSX.Element = <div className="side-content-text">{tab.body}</div>;
+  const tabPanel: React.ReactElement = <div className="side-content-text">{tab.body}</div>;
 
   return <Tab key={tab.id} {...tabProps} panel={tabPanel} />;
 };

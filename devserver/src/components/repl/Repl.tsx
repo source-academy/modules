@@ -68,7 +68,6 @@ const Output: React.FC<OutputProps> = (props: OutputProps) => {
 };
 
 export type ReplProps = {
-  // replButtons: Array<JSX.Element | null>;
   output: InterpreterOutput | null;
   hidden?: boolean;
   inputHidden?: boolean;
@@ -80,7 +79,7 @@ const Repl: React.FC<ReplProps> = (props: ReplProps) => (
     <div className="repl-output-parent">
       {props.output === null
         ? <Card />
-        : <Output output={props.output}/>}
+        : <Output output={props.output} />}
       {/* {cards.length > 0 ? cards : (<Card />)} */}
     </div>
   </div>

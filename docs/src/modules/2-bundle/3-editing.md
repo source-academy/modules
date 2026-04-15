@@ -44,7 +44,7 @@ third-party Typescript types (like `@types/node`).
 > specified in the root repository `package.json`:
 >
 > ```sh
-> yarn add react@^18.3.1
+> yarn add react@^19.0.0
 > ```
 >
 > You can also use the command `yarn constraints`  to check if you have incorrectly specified the version of a dependency. You can view all
