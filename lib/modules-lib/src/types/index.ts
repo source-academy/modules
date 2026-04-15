@@ -63,13 +63,7 @@ export type DebuggerContext = {
 
 export type ModuleContexts = Context['moduleContexts'];
 
-/**
- * Interface to represent objects that require a string representation in the
- * REPL
- */
-export interface ReplResult {
-  toReplString: () => string;
-}
+export type { ReplResult } from 'js-slang/dist/types';
 
 export type ModuleTab = (props: { debuggerCtx: DebuggerContext }) => React.ReactNode;
 
