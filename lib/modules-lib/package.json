@@ -8,7 +8,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^6.0.1",
-    "@vitest/browser-playwright": "4.1.0",
+    "@vitest/browser-playwright": "4.1.4",
     "eslint": "^9.35.0",
     "playwright": "^1.55.1",
     "typedoc": "^0.28.9",
@@ -16,7 +16,7 @@
     "typedoc-plugin-markdown": "^4.7.0",
     "typedoc-plugin-rename-defaults": "^0.7.3",
     "typescript": "^6.0.2",
-    "vitest": "4.1.0",
+    "vitest": "4.1.4",
     "vitest-browser-react": "^2.1.0"
   },
   "exports": {
