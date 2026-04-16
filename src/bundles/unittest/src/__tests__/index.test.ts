@@ -137,7 +137,7 @@ describe('Test \'it\' and \'describe\'', () => {
 
   test('internal errors are not handled', () => {
     expect(() => testing.describe('suite', () => {
-      testing.test('test', () => { throw new UnittestBundleInternalError(); });
+      testing.test('test', () => { throw new UnittestBundleInternalError(''); });
     })).toThrow(UnittestBundleInternalError);
   });
 });
