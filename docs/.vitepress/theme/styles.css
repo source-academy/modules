@@ -1,7 +1,0 @@
-.v-popper__popper .twoslash-popup-code span {
-  color: var(--shiki-light) !important;
-}
-
-.dark .v-popper__popper .twoslash-popup-code span {
-  color: var(--shiki-dark) !important;
-}

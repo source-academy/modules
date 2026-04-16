@@ -1,7 +1,7 @@
 import githubDark from '@shikijs/themes/github-dark';
 import githubLight from '@shikijs/themes/github-light';
 import type { LanguageInput, ShikiTransformer, ThemedToken } from 'shiki';
-import { LINE_STRINGS } from './tree';
+import { LINE_STRINGS } from './tree.js';
 
 // Vitepress uses the github themes by default, so we use the colours from
 // those themes here

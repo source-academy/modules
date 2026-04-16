@@ -8,7 +8,7 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-repotools": "workspace:^",
     "@types/markdown-it": "^14.1.2",
-    "shiki": "^4.0.2",
+    "shiki": "^2.1.0",
     "typescript": "^6.0.2"
   },
   "exports": {
@@ -22,7 +22,7 @@
     "shiki": ">=2"
   },
   "dependencies": {
-    "@shikijs/themes": "^4.0.2",
+    "@shikijs/themes": "^2.1.0",
     "es-toolkit": "^1.44.0",
     "yaml": "^2.8.0"
   },
