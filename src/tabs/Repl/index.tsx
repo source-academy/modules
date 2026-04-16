@@ -5,17 +5,11 @@
  */
 
 import { Button } from '@blueprintjs/core';
-<<<<<<< HEAD
-=======
-import { FloppyDisk, Play } from '@blueprintjs/icons';
-
->>>>>>> origin/master
 import { FONT_MESSAGE, MINIMUM_EDITOR_HEIGHT } from '@sourceacademy/bundle-repl/config';
 import type { ProgrammableRepl } from '@sourceacademy/bundle-repl/programmable_repl';
 import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
 import { throttle } from 'es-toolkit';
-import type { Context } from 'js-slang';
 import React from 'react';
 import AceEditor from 'react-ace';
 
@@ -33,6 +27,8 @@ interface State {
   editorText: string;
   isDraggingDragBar: boolean;
 }
+
+type Context = DebuggerContext['context'];
 
 const BOX_PADDING_VALUE = 4;
 
@@ -104,42 +100,17 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
   };
 
   public render() {
-<<<<<<< HEAD
     const { editorHeight, editorText } = this.state;
     const outputDivs = this.replInstance.outputStrings.map((str): React.JSX.Element => {
       if (str.outputMethod === 'richtext') {
         if (str.color === '') {
           return <div style={FONT_MESSAGE} dangerouslySetInnerHTML={{ __html: str.content }} />;
-=======
-    const { editorHeight } = this.state;
-    const outputDivs: React.ReactElement[] = [];
-    const outputStringCount = this.replInstance.outputStrings.length;
-    for (let i = 0; i < outputStringCount; i++) {
-      const str = this.replInstance.outputStrings[i];
-      if (str.outputMethod === 'richtext') {
-        if (str.color === '') {
-          outputDivs.push(<div style={FONT_MESSAGE} dangerouslySetInnerHTML={{ __html: str.content }} />);
->>>>>>> origin/master
         } else {
           return (<div style={{
             ...FONT_MESSAGE,
-<<<<<<< HEAD
             color: str.color
           }} dangerouslySetInnerHTML={{ __html: str.content }} />);
         }
-=======
-            ...{ color: str.color }
-          }} dangerouslySetInnerHTML={{ __html: str.content }} />);
-        }
-      } else if (str.color === '') {
-        outputDivs.push(<div style={FONT_MESSAGE}>{str.content}</div>);
-      } else {
-        outputDivs.push(<div style={{
-          ...FONT_MESSAGE,
-          ...{ color: str.color }
-        }}>{str.content}
-        </div>);
->>>>>>> origin/master
       }
 
       if (str.color === '') return <div style={FONT_MESSAGE}>{str.content}</div>;
@@ -161,7 +132,6 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
           onClick={() => this.replInstance.runCode(editorText, this.evalContext)}
           text="Run"
         />
-<<<<<<< HEAD
         <div
           ref={e => {
             this.editorAreaRect = e?.getBoundingClientRect();
@@ -177,25 +147,6 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
                 this.editorInstance = e.editor;
                 this.editorInstance.setOptions({ fontSize: `${this.replInstance.customizedEditorProps.fontSize}pt` });
               }
-=======
-        <Button
-          className="programmable-repl-button"
-          icon={<FloppyDisk />}
-          active={true}
-          onClick={() => this.replInstance.saveEditorContent()}// Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
-          text="Save"
-        />
-        <div ref={(e) => {
-          this.editorAreaRect = e?.getBoundingClientRect();
-        }} style={{
-          padding: `${BOX_PADDING_VALUE}px`,
-          border: '2px solid #6f8194'
-        }}>
-          <AceEditor
-            ref={(e) => {
-              this.editorInstance = e?.editor;
-              this.replInstance.setEditorInstance(e?.editor);
->>>>>>> origin/master
             }}
             style={{
               width: '100%',
@@ -206,18 +157,11 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
                 backgroundSize: '100%',
                 backgroundRepeat: 'no-repeat'
               }
-<<<<<<< HEAD
-            } }
+            }}
             mode="javascript"
             theme="twilight"
             onChange={this.onCodeChanged}
             value={editorText}
-=======
-            }}
-            mode="javascript" theme="twilight"
-            onChange={(newValue) => this.replInstance.updateUserCode(newValue)}
-            value={this.replInstance.userCodeInEditor.toString()}
->>>>>>> origin/master
           />
         </div>
         <div onMouseDown={this.dragBarOnMouseDown} style={{
