@@ -11,3 +11,5 @@ export {
   type InvalidNumberParameterErrorOptions,
   InvalidParameterTypeError,
 } from 'js-slang/dist/errors/rttcErrors';
+
+export * from 'js-slang/dist/errors/base';

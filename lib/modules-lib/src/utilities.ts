@@ -4,6 +4,7 @@
  * @title Utilities
  */
 
+import { GeneralRuntimeError, InvalidParameterTypeError } from './errors';
 import type { DebuggerContext } from './types';
 
 /**
@@ -30,17 +31,17 @@ export function radiansToDegrees(radians: number): number {
  * @returns Tuple of three numbers representing the R, G and B components
  */
 export function hexToColor(hex: string, func_name?: string): [r: number, g: number, b: number] {
+  func_name = func_name ?? hexToColor.name;
+
   if (typeof hex !== 'string') {
-    func_name = func_name ?? hexToColor.name;
-    throw new Error(`${func_name}: Expected a string, got ${typeof hex}`);
+    throw new InvalidParameterTypeError('string', hex, func_name);
   }
 
   const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
   const groups = regex.exec(hex);
 
-  if (groups == undefined) {
-    func_name = func_name ?? hexToColor.name;
-    throw new Error(`${func_name}: Invalid color hex string: ${hex}`);
+  if (!groups) {
+    throw new GeneralRuntimeError(`${func_name}: Invalid color hex string: ${hex}`);
   };
 
   return [
