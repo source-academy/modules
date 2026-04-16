@@ -16,6 +16,11 @@ describe(utils.extractPackageName, () => {
       .toEqual('lodash');
   });
 
+  it('works on this weird patch thing', () => {
+    expect(utils.extractPackageName('typescript@patch:typescript@npm:6.0.2'))
+      .toEqual('typescript');
+  });
+
   it('throws an error on an invalid package name', () => {
     expect(() => utils.extractPackageName('something weird'))
       .toThrowError('Invalid package name: something weird');

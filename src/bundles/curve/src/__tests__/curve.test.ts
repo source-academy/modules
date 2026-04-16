@@ -3,7 +3,7 @@ import { describe, expect, it, test } from 'vitest';
 import type { Color, Curve } from '../curves_webgl';
 import * as drawers from '../drawers';
 import * as funcs from '../functions';
-import type { RenderFunctionCreator } from '../types';
+import { AnimatedCurve, type RenderFunctionCreator } from '../types';
 
 /**
  * Evaluates the curve at 200 points, then
@@ -33,6 +33,11 @@ describe('Ensure that invalid curves and animations error gracefully', () => {
         'A Curve function must take exactly one parameter (a number t between 0 and 1) ' +
         'and return a Point or 3D Point depending on whether it is a 2D or 3D curve.'
       );
+  });
+
+  test('CurveAnimation that doesn\'t return a curve should throw error', () => {
+    const anim = new AnimatedCurve(1, 30, (_t => 0) as any, drawers.draw_connected(200), false);
+    expect(() => anim.getFrame(0)).toThrow('CurveAnimation did not return a Curve at timestamp 0');
   });
 
   test('Using 3D render functions with animate_curve should throw errors', () => {

@@ -43,7 +43,7 @@ This adds the dependency to `devDependencies` instead.
 > specified in the root repository `package.json`:
 >
 > ```sh
-> yarn add react@^18.3.1
+> yarn add react@^19.0.0
 > ```
 >
 > You can also use the command `yarn constraints`  to check if you have incorrectly specified the version of a dependency. You can view all
@@ -171,6 +171,28 @@ test('Matches snapshot', () => {
 ```
 
 :::
+
+## The `ModuleTab` Type
+
+The `ModuleTab` type exported from the common library can be used to type your components:
+
+```tsx {4}
+import type { ModuleTab } from '@sourceacademy/modules-lib/types';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+
+const Repeat: ModuleTab = ({ debuggerCtx: context }) => {
+  return <div>This is spawned from the repeat package</div>;
+};
+
+export default defineTab({
+  toSpawn: () => true,
+  body: context => <Repeat debuggerCtx={context} />,
+  label: 'Repeat Test Tab',
+  iconName: 'build'
+});
+```
+
+This isn't necessary, but it will provide you type information without you having to import each type separately from the library.
 
 ## Working with Module Contexts from within Tabs
 

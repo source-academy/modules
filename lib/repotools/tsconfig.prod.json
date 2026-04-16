@@ -6,6 +6,7 @@
   "compilerOptions": {
     "declaration": true,
     "noEmit": false,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "rootDir": "./src"
   }
 }

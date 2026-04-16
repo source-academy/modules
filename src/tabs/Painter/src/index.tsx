@@ -1,12 +1,16 @@
 import type { LinePlot } from '@sourceacademy/bundle-painter/painter';
 import Modal from '@sourceacademy/modules-lib/tabs/ModalDiv';
-import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 import type { ModuleTab } from '@sourceacademy/modules-lib/types/index';
 import { useState } from 'react';
 
-export const Painter: ModuleTab = ({ context }) => {
+interface PainterModuleState {
+  drawnPainters: LinePlot[];
+}
+
+export const Painter: ModuleTab = ({ debuggerCtx: context }) => {
   const [selectedPainter, setSelectedPainter] = useState<LinePlot | null>( null);
-  const { context: { moduleContexts: { painter: { state: { drawnPainters } } } } } = context;
+  const { drawnPainters } = getModuleState<PainterModuleState>(context, 'painter')!;
 
   return (
     <div>
@@ -62,11 +66,10 @@ export const Painter: ModuleTab = ({ context }) => {
 
 export default defineTab({
   toSpawn(context) {
-    const drawnPainters = context.context?.moduleContexts?.painter.state.drawnPainters;
-    console.log(drawnPainters);
-    return drawnPainters.length > 0;
+    const state = getModuleState<PainterModuleState>(context, 'painter');
+    return !!state && state.drawnPainters.length > 0;
   },
-  body: debuggerContext => <Painter context={debuggerContext} />,
+  body: debuggerContext => <Painter debuggerCtx={debuggerContext} />,
   label: 'Painter Test Tab',
   iconName: 'scatter-plot'
 });

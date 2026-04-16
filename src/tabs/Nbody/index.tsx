@@ -1,7 +1,8 @@
 import { Button, ButtonGroup, NumericInput } from '@blueprintjs/core';
 import { Pause, Play, Route } from '@blueprintjs/icons';
-import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
-import type { DebuggerContext } from '@sourceacademy/modules-lib/types/index';
+import type { NBodyModuleState } from '@sourceacademy/bundle-nbody/types';
+import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
+import type { ModuleTab } from '@sourceacademy/modules-lib/types/index';
 import type { Simulation } from 'nbody';
 import React from 'react';
 
@@ -9,18 +10,6 @@ import React from 'react';
  * Visualize n-body simulations.
  * @author Yeluri Ketan
  */
-
-/**
- * React Component props for the Tab.
- */
-type Props = {
-  context: DebuggerContext;
-};
-
-/**
- * React component state for the viz tab.
- */
-type State = {};
 
 /**
  * React component props for the control buttons.
@@ -94,14 +83,14 @@ class SimulationControl extends React.Component<SimControlProps, SimControlState
             text={this.state.isPlaying ? 'Pause' : 'Play'}
             style={{ margin: '4px' }}
           />
-
           <Button
             className="nbody-trails-toggle-button"
             icon={<Route />}
             active={this.state.showTrails}
             onClick={() => this.toggleShowTrails()}
             style={{ margin: '4px' }}
-            text={(this.state.showTrails ? 'Hide' : 'Show') + ' Trails'} />
+            text={(this.state.showTrails ? 'Hide' : 'Show') + ' Trails'}
+          />
         </ButtonGroup>
         <NumericInput defaultValue={this.state.speed} onValueChange={(value) => this.setSpeed(value)} style={{
           margin: '4px auto'
@@ -132,63 +121,50 @@ class SimulationControl extends React.Component<SimControlProps, SimControlState
 /**
  * The main React Component of the Tab.
  */
-/**
- * The main React Component of the Tab.
- */
-class Nbody extends React.Component<Props, State> {
-  constructor(props) {
-    super(props);
-    this.state = { };
-  }
+const Nbody: ModuleTab = ({ debuggerCtx: context }) => {
+  const { simulations, recordInfo } = getModuleState<NBodyModuleState>(context, 'nbody')!;
 
-  public render() {
-    const { context: { moduleContexts: { nbody: { state: { simulations, recordInfo } } } } } = this.props.context;
+  return <div>
+    {simulations.length === 0
+      ? <div>No simulations found</div>
+      : <SimulationControl sim={simulations[0]} />
+    }
+    {
+      simulations.map((sim, i) => {
+        const divId = `nbody-${i}`;
+        return (
+          <div style={{
+            height: '80vh',
+            marginBottom: '5vh',
+          }} key={divId}>
+            <div
+              id={divId}
+              style={{
+                height: '500px',
+                width: '500px',
+              }}
+              ref={() => {
+                if (recordInfo.isRecording) {
+                  sim.start(divId, 500, 500, 1, true, recordInfo.recordFor, recordInfo.recordSpeed);
+                } else {
+                  sim.start(divId, 500, 500, 1, true);
+                }
+              }}
+            />
+          </div>
+        );
+      })
+    }
 
-    return (
-      <div>
-        {simulations.length === 0
-          ? <div>No simulations found</div>
-          : <SimulationControl sim={simulations[0]} />
-        }
-        {
-          simulations.map((sim, i) => {
-            const divId = `nbody-${i}`;
-            return (
-              <div style={{
-                height: '80vh',
-                marginBottom: '5vh',
-              }} key={divId}>
-                <div
-                  id={divId}
-                  style={{
-                    height: '500px',
-                    width: '500px',
-                  }}
-                  ref={() => {
-                    if (recordInfo.isRecording) {
-                      sim.start(divId, 500, 500, 1, true, recordInfo.recordFor, recordInfo.recordSpeed);
-                    } else {
-                      sim.start(divId, 500, 500, 1, true);
-                    }
-                  }}
-                />
-              </div>
-            );
-          })
-        }
-
-      </div>
-    );
-  }
-}
+  </div>;
+};
 
 export default defineTab({
   toSpawn(context) {
-    console.log('Nbody tospawn');
-    const simulations = context.context?.moduleContexts?.nbody.state.simulations;
-    return simulations.length > 0;
+    const state = getModuleState<NBodyModuleState>(context, 'nbody');
+    return !!state && state.simulations.length > 0;
   },
-  body: (context) => <Nbody context={context} />,
+  body: (context) => <Nbody debuggerCtx={context} />,
   label: 'Nbody Viz Tab',
   iconName: 'clean',
 });

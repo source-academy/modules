@@ -6,13 +6,13 @@
     "@sourceacademy/modules-lib": "workspace:^",
     "es-toolkit": "^1.44.0",
     "js-slang": "^1.0.85",
-    "three": "^0.181.0"
+    "three": "^0.183.0"
   },
   "devDependencies": {
     "@dimforge/rapier3d-compat": "^0.11.2",
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@types/three": "^0.181.0",
-    "typescript": "^5.8.2"
+    "@types/three": "^0.183.0",
+    "typescript": "^6.0.2"
   },
   "type": "module",
   "exports": {

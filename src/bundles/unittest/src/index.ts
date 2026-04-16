@@ -5,6 +5,7 @@
  */
 
 export {
+  assert,
   assert_equals,
   assert_not_equals,
   assert_contains,
