@@ -14,9 +14,11 @@
   },
   "dependencies": {
     "@shikijs/vitepress-twoslash": "^4.0.2",
+    "@sourceacademy/bundle-sound": "workspace:^",
     "@sourceacademy/lint-plugin": "workspace:^",
     "@sourceacademy/markdown-plugin-directory-tree": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
+    "js-slang": "^1.0.85",
     "mermaid": "^11.10.0",
     "vitepress": "^1.6.3",
     "vitepress-plugin-group-icons": "^1.6.5",

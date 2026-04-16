@@ -3,6 +3,19 @@
 As a continuation of the previous section, and important part of hiding a bundle's implementation details involves handling error conditions and errors
 that could be thrown.
 
+All objects thrown by `throw` statements should be a type that extends from `Error`:
+
+```js
+throw new Error('this is an error!'); // throw error objects
+throw 'string';                       // don't throw anything else!
+```
+
+> [!INFO] ESLint's only-throw-error
+>
+> There is an ESLint rule configured to highlight whenever the object you are throwing is not a valid error. There
+> shouldn't be a case where you are throwing a non-error object, but if ESLint doesn't properly recognize that the
+> type you are throwing is an error, you can configure ESLint to ignore that specific type.
+
 ## The `name` Property on Functions
 
 Specific to error handling, thrown errors should contain a reference to the calling function's name (using the `name` property):
@@ -97,3 +110,80 @@ An important use for error handling is when it comes to validating types. More i
 > // Now correctly prints foo!
 > console.log(getFoo.name);
 > ```
+
+## Runtime Errors
+
+Runtime errors that are bubbled all the way through to cadet code should make use of the error types exported by `js-slang`. The main error type to use
+is the `GeneralRuntimeError`:
+
+```ts twoslash
+// @noErrors: 2300 2307
+// ---cut---
+// You can import it directly from js-slang
+import { GeneralRuntimeError } from 'js-slang/dist/errors/base';
+
+// or from the modules-lib
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
+
+export function foo() {
+  throw new GeneralRuntimeError(`${foo.name} encountered an error!`);
+}
+```
+
+`GeneralRuntimeError` is a non-specific runtime error type. If you have runtime errors that are supposed to be of a certain category,
+you can always create your own error type by extending from `RuntimeSourceError`:
+
+```ts twoslash
+import { RuntimeSourceError } from 'js-slang/dist/errors/base'; // also exported from modules-lib
+
+class FooRuntimeError extends RuntimeSourceError {
+  public override explain(): string {
+    return 'this is a foo error!';
+  }
+}
+```
+
+## Internal Errors
+
+For errors that are thrown at runtime but are a result of an invalid or (theoretically) unreachable state, you can throw `InternalRuntimeError`s:
+
+```ts twoslash
+import { InternalRuntimeError } from '@sourceacademy/modules-lib/errors';
+
+export function get_zero() {
+  return 0;
+}
+
+export function error_if_not_zero() {
+  if (get_zero() !== 0) {
+    // Should never happen!
+    throw new InternalRuntimeError('Something went wrong with get_zero!');
+  }
+}
+```
+
+In cases like the one above where you are trying to verify a condition, you can use the `assert` function provided by `js-slang`:
+
+```ts twoslash
+import assert from 'js-slang/dist/utils/assert';
+
+export function get_zero() {
+  return 0;
+}
+
+export function error_if_not_zero() {
+  const x: unknown = get_zero();
+  assert(x === 0, 'Something went wrong with get_zero!');
+
+  return x;
+  //     ^?
+}
+```
+
+If the condition is false, an `AssertionError` (which is a subclass of `InternalRuntimeError`) is thrown with the provided message.
+`assert` is a type guard, so you can make use of it to type check `unknown` parameters and variables.
+
+> [!WARNING]
+>
+> The `assert` function exported by `js-slang` is different from the one exported from NodeJS. Take care to use the one
+> exported from `js-slang`.

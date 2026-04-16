@@ -70,13 +70,8 @@ type IconName = _Content['iconName'];
 // ---cut---
 
 interface ModuleSideContent {
-<<<<<<< HEAD
-  toSpawn?: (context: DebuggerContext) => boolean;
-  body: (context: DebuggerContext) => JSX.Element;
-=======
   toSpawn: ((context: DebuggerContext) => boolean) | undefined;
   body: (context: DebuggerContext) => React.ReactElement;
->>>>>>> origin/master
   label: string;
   // @blueprintjs/core icon names
   iconName: IconName;
