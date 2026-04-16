@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, test as baseTest, vi } from 'vitest';
 import { cleanup, render, type RenderResult } from 'vitest-browser-react';
 import * as funcs from '../functions';
-import type { Pixel, VideoElement } from '../types';
+import type { BundlePacket, Pixel, VideoElement } from '../types';
 
 interface Fixtures {
   canvas: HTMLCanvasElement;
   image: HTMLImageElement;
   video: VideoElement;
-  reinit: () => ReturnType<ReturnType<typeof funcs.start>['init']>;
+  reinit: () => BundlePacket;
   errLogger: () => void;
 }
 
@@ -26,6 +26,7 @@ const test = baseTest.extend<{
     cleanup();
   },
   fixtures: async ({ screen }, fixture) => {
+    funcs.start();
     const { init, deinit } = funcs.start();
     const errLogger = vi.fn();
     const canvas = screen

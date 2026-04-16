@@ -24,6 +24,7 @@ import {
   type Pixel,
   type Pixels,
   type Queue,
+  type StartPacket,
   type TabsPacket,
   type VideoElement
 } from './types';
@@ -523,23 +524,24 @@ function throwIfNotPixel(obj: unknown, func_name: string, param_name?: string): 
  * Starts processing the image or video using the installed filter.
  */
 export function start() {
+  const startPacket: StartPacket = {
+    init,
+    deinit,
+    startVideo,
+    stopVideo,
+    updateFPS,
+    updateVolume,
+    updateDimensions,
+    toReplString: () => '[Pix N Flix]',
+  };
+
   if (!context.moduleContexts.pix_n_flix.state) {
     context.moduleContexts.pix_n_flix.state = {
-      pixnflix: {
-        init,
-        deinit,
-        startVideo,
-        stopVideo,
-        updateFPS,
-        updateVolume,
-        updateDimensions
-      }
+      pixnflix: startPacket
     };
   }
 
-  return {
-    toReplString: () => '[Pix N Flix]',
-  };
+  return startPacket;
 }
 
 /**
