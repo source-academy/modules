@@ -2,7 +2,7 @@ import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 
 import {
-  UnitestBundleInternalError,
+  UnittestBundleInternalError,
   type Suite,
   type SuiteResult,
   type Test,
@@ -38,15 +38,15 @@ function handleErr(err: any) {
 
 function runTest(name: string, funcName: string, func: Test) {
   if (!isFunctionOfLength(func, 0)) {
-    throw new UnitestBundleInternalError(`${funcName}: A test must be a nullary function!`);
+    throw new UnittestBundleInternalError(`${funcName}: A test must be a nullary function!`);
   }
 
   if (currentSuite === null) {
-    throw new UnitestBundleInternalError(`${funcName} must be called from within a test suite!`);
+    throw new UnittestBundleInternalError(`${funcName} must be called from within a test suite!`);
   }
 
   if (currentTest !== null) {
-    throw new UnitestBundleInternalError(`${funcName} cannot be called from within another test!`);
+    throw new UnittestBundleInternalError(`${funcName} cannot be called from within another test!`);
   }
 
   try {
@@ -57,7 +57,7 @@ function runTest(name: string, funcName: string, func: Test) {
       passed: true,
     });
   } catch (err) {
-    if (err instanceof UnitestBundleInternalError) {
+    if (err instanceof UnittestBundleInternalError) {
       throw err;
     }
 
@@ -110,7 +110,7 @@ function determinePassCount(results: (TestResult | SuiteResult)[]): number {
  */
 export function describe(msg: string, func: TestSuite): void {
   if (!isFunctionOfLength(func, 0)) {
-    throw new UnitestBundleInternalError(`${describe.name}: A test suite must be a nullary function!`);
+    throw new UnittestBundleInternalError(`${describe.name}: A test suite must be a nullary function!`);
   }
 
   const parentSuite = currentSuite;

@@ -2,7 +2,7 @@ import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import { isEqualWith } from 'es-toolkit';
 import * as list from 'js-slang/dist/stdlib/list';
 import { stringify } from 'js-slang/dist/utils/stringify';
-import { UnitestBundleInternalError } from './types';
+import { UnittestAssertionError, UnittestBundleInternalError } from './types';
 
 /**
  * Asserts that a predicate returns true.
@@ -11,11 +11,11 @@ import { UnitestBundleInternalError } from './types';
  */
 export function assert(pred: () => boolean) {
   if (!isFunctionOfLength(pred, 0)) {
-    throw new UnitestBundleInternalError(`${assert.name} expects a nullary function that returns a boolean!`);
+    throw new UnittestBundleInternalError(`${assert.name} expects a nullary function that returns a boolean!`);
   }
 
   if (!pred()) {
-    throw new Error('Assert failed!');
+    throw new UnittestAssertionError('Assert failed!');
   }
 }
 
@@ -90,7 +90,7 @@ function equalityComparer(expected: unknown, received: unknown): boolean | undef
  */
 export function assert_equals(expected: any, received: any) {
   if (!isEqualWith(expected, received, equalityComparer)) {
-    throw new Error(`Expected \`${expected}\`, got \`${received}\`!`);
+    throw new UnittestAssertionError(`Expected \`${expected}\`, got \`${received}\`!`);
   }
 }
 
@@ -102,7 +102,7 @@ export function assert_equals(expected: any, received: any) {
  */
 export function assert_not_equals(expected: any, received: any) {
   if (!isEqualWith(expected, received, equalityComparer)) {
-    throw new Error(`Expected \`${expected}\` to not equal \`${received}\`!`);
+    throw new UnittestAssertionError(`Expected \`${expected}\` to not equal \`${received}\`!`);
   }
 }
 
@@ -113,7 +113,7 @@ export function assert_not_equals(expected: any, received: any) {
  */
 export function assert_contains(xs: any, toContain: any) {
   const fail = () => {
-    throw new Error(`Expected \`${stringify(xs)}\` to contain \`${toContain}\`.`);
+    throw new UnittestAssertionError(`Expected \`${stringify(xs)}\` to contain \`${toContain}\`.`);
   };
 
   function member(xs: list.List | list.Pair<any, any>, item: any): boolean {
@@ -138,7 +138,7 @@ export function assert_contains(xs: any, toContain: any) {
       return list.is_pair(tail_element) && member(tail_element, item);
     }
 
-    throw new Error(`First argument to ${assert_contains.name} must be a list or a pair, got \`${stringify(xs)}\`.`);
+    throw new UnittestAssertionError(`First argument to ${assert_contains.name} must be a list or a pair, got \`${stringify(xs)}\`.`);
   }
   if (!member(xs, toContain)) fail();
 }
@@ -162,15 +162,15 @@ export function assert_length(xs: any, len: number) {
  */
 export function assert_greater(item: any, expected: number) {
   if (typeof expected !== 'number') {
-    throw new Error(`${assert_greater.name}: Expected value should be a number!`);
+    throw new UnittestAssertionError(`${assert_greater.name}: Expected value should be a number!`);
   }
 
   if (typeof item !== 'number') {
-    throw new Error(`Expected ${item} to be a number!`);
+    throw new UnittestAssertionError(`Expected ${item} to be a number!`);
   }
 
   if (item <= expected) {
-    throw new Error(`Expected ${item} to be greater than ${expected}`);
+    throw new UnittestAssertionError(`Expected ${item} to be greater than ${expected}`);
   }
 }
 
@@ -181,14 +181,14 @@ export function assert_greater(item: any, expected: number) {
  */
 export function assert_greater_equals(item: any, expected: number) {
   if (typeof expected !== 'number') {
-    throw new Error(`${assert_greater_equals.name}: Expected value should be a number!`);
+    throw new UnittestAssertionError(`${assert_greater_equals.name}: Expected value should be a number!`);
   }
 
   if (typeof item !== 'number') {
-    throw new Error(`Expected ${item} to be a number!`);
+    throw new UnittestAssertionError(`Expected ${item} to be a number!`);
   }
 
   if (item < expected) {
-    throw new Error(`Expected ${item} to be greater than or equal to ${expected}`);
+    throw new UnittestAssertionError(`Expected ${item} to be greater than or equal to ${expected}`);
   }
 }

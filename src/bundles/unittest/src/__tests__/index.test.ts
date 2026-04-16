@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, test, vi } from 'vitest';
 import * as asserts from '../asserts';
 import * as testing from '../functions';
 import * as mocks from '../mocks';
-import { UnitestBundleInternalError } from '../types';
+import { UnittestBundleInternalError } from '../types';
 
 vi.spyOn(performance, 'now').mockReturnValue(0);
 
@@ -28,29 +28,29 @@ describe('Test \'it\' and \'describe\'', () => {
   });
 
   test('it() throws an error when called without describe', () => {
-    expect(() => testing.it('desc', () => {})).toThrow('it must be called from within a test suite!');
+    expect(() => testing.it('desc', () => { })).toThrow('it must be called from within a test suite!');
   });
 
   test('it() throws an error even if it is called after describe', () => {
-    testing.describe('a test', () => {});
-    expect(() => testing.it('desc', () => {})).toThrow('it must be called from within a test suite!');
+    testing.describe('a test', () => { });
+    expect(() => testing.it('desc', () => { })).toThrow('it must be called from within a test suite!');
   });
 
   test('it() works fine from within a describe block', () => {
     expect(() => {
       testing.describe('desc', () => {
-        testing.it('desc', () => {});
+        testing.it('desc', () => { });
       });
     }).not.toThrow();
   });
 
   test('it() correctly assigns results to the correct suite', () => {
     testing.describe('block1', () => {
-      testing.it('test1', () => {});
+      testing.it('test1', () => { });
     });
 
     testing.describe('block2', () => {
-      testing.it('test2', () => {});
+      testing.it('test2', () => { });
     });
 
     expect(testing.topLevelSuiteResults.length).toEqual(2);
@@ -75,13 +75,13 @@ describe('Test \'it\' and \'describe\'', () => {
   test('it() correctly assigns results to child suites', () => {
     testing.describe('block1', () => {
       testing.describe('block3', () => {
-        testing.it('test3', () => {});
+        testing.it('test3', () => { });
       });
-      testing.it('test1', () => {});
+      testing.it('test1', () => { });
     });
 
     testing.describe('block2', () => {
-      testing.it('test2', () => {});
+      testing.it('test2', () => { });
     });
 
     expect(testing.topLevelSuiteResults.length).toEqual(2);
@@ -118,7 +118,7 @@ describe('Test \'it\' and \'describe\'', () => {
   test('it() throws when called within another it block', () => {
     const f = () => testing.describe('suite', () => {
       testing.it('test0', () => {
-        testing.it('test1', () => {});
+        testing.it('test1', () => { });
       });
     });
 
@@ -137,8 +137,8 @@ describe('Test \'it\' and \'describe\'', () => {
 
   test('internal errors are not handled', () => {
     expect(() => testing.describe('suite', () => {
-      testing.test('test', () => { throw new UnitestBundleInternalError(); });
-    })).toThrow(UnitestBundleInternalError);
+      testing.test('test', () => { throw new UnittestBundleInternalError(); });
+    })).toThrow(UnittestBundleInternalError);
   });
 });
 
