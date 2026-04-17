@@ -55,9 +55,7 @@ export function mock_function(fn: (...args: any[]) => any): MockedFunction {
   }
 
   func[mockSymbol] = { arglist, retVals };
-  if (typeof func.toReplString === 'function') {
-    func.toReplString = () => (fn as any).toReplString();
-  }
+  func.toReplString = () => '<MockedFunction>';
 
   return func;
 }

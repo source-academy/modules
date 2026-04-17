@@ -127,11 +127,11 @@ describe('Test \'it\' and \'describe\'', () => {
 
   test('it() and describe() throw when provided a non-nullary function', () => {
     expect(() => testing.it('test name', 0 as any)).toThrow(
-      'it: A test or test suite must be a nullary function!'
+      'it: A test must be a nullary function!'
     );
 
     expect(() => testing.describe('test name', 0 as any)).toThrow(
-      'describe: A test or test suite must be a nullary function!'
+      'describe: A test suite must be a nullary function!'
     );
   });
 
@@ -326,11 +326,11 @@ describe('Mocking functions', () => {
     expect(testFunc).toHaveBeenCalledOnce();
   });
 
-  test('mocked functions retain the stringify of the original function', () => {
+  test('mocked functions have nice string representation', () => {
     const fn = () => 2;
     const mocked = mocks.mock_function(fn);
 
-    expect(stringify(fn)).toEqual(stringify(mocked));
+    expect(stringify(mocked)).toEqual('<MockedFunction>');
   });
 
   test('no calls', () => {
