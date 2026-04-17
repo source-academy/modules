@@ -15,6 +15,11 @@ const vitestModeOption = new Option('--mode <mode>', 'Vitest Run Mode. See https
 const watchOption = new Option('-w, --watch', 'Run tests in watch mode');
 const updateOption = new Option('-u, --update', 'Update snapshots');
 const coverageOption = new Option('--coverage', 'Run coverage testing');
+const uiOption = new Option('--ui', 'Use the Vitest UI mode')
+  .default(false);
+
+const allowOnlyOption = new Option('--no-allow-only', 'Disallow the use of .only in tests')
+  .default(!process.env.CI);
 
 export const silentOption = new Option('--silent [option]', 'Silent mode')
   .choices(['passed-only', 'false', 'true'] as const)
@@ -40,7 +45,8 @@ export const getTestCommand = () => new Command('test')
   .addOption(updateOption)
   .addOption(coverageOption)
   .addOption(silentOption)
-  .option('--no-allow-only', 'Disallow the use of .only in tests', !process.env.CI)
+  .addOption(uiOption)
+  .addOption(allowOnlyOption)
   .option('-p, --project <directory>', 'Path to the directory that is the root of your test project')
   .argument('[patterns...]', 'Test patterns to filter by.')
   .action(async (patterns, { mode, project, ...options }) => {
@@ -67,6 +73,10 @@ export const getTestCommand = () => new Command('test')
       return;
     }
 
+    if (options.ui) {
+      options.watch = true;
+    }
+
     await runVitest(mode, fullyResolvedPatterns, [configResult.config], options);
   });
 
@@ -78,12 +88,17 @@ export const getTestAllCommand = () => new Command('testall')
   .addOption(updateOption)
   .addOption(coverageOption)
   .addOption(silentOption)
-  .option('--no-allow-only', 'Disallow the use of .only in tests', !process.env.CI)
+  .addOption(uiOption)
+  .addOption(allowOnlyOption)
   .action(async (patterns, { mode, ...options }) => {
     const configs = await getAllTestConfigurations(!!options.watch);
     if (configs.length === 0) {
       console.log(chalk.yellowBright('No tests found.'));
       return;
+    }
+
+    if (options.ui) {
+      options.watch = true;
     }
 
     await runVitest(mode, patterns, configs, options);
