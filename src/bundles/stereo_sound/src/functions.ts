@@ -1,4 +1,5 @@
 import { midi_note_to_frequency } from '@sourceacademy/bundle-midi';
+import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 import {
@@ -350,11 +351,37 @@ export function is_sound(x: unknown): x is Sound {
   const left_wave = head(waves);
   if (!isFunctionOfLength(left_wave, 1)) return false;
 
-  const right_wave = head(waves);
+  const right_wave = tail(waves);
   if (!isFunctionOfLength(right_wave, 1)) return false;
 
   const duration = tail(x);
   return typeof duration === 'number';
+}
+
+function throwIfNotSound(obj: unknown, func_name: string, param_name?: string): asserts obj is Sound {
+  if (!is_pair(obj)) {
+    throw new InvalidParameterTypeError('sound', obj, func_name, param_name);
+  }
+
+  const waves = head(obj);
+  if (!is_pair(waves)) {
+    throw new GeneralRuntimeError(`${func_name}: head of sound should be a pair of waves.`);
+  }
+
+  const left_wave = head(waves);
+  if (!isFunctionOfLength(left_wave, 1)) {
+    throw new GeneralRuntimeError(`${func_name}: left wave is not a valid wave.`);
+  }
+
+  const right_wave = tail(waves);
+  if (!isFunctionOfLength(right_wave, 1)) {
+    throw new GeneralRuntimeError(`${func_name}: right wave is not a valid wave.`);
+  }
+
+  const duration = tail(obj);
+  if (typeof duration !== 'number') {
+    throw new GeneralRuntimeError(`${func_name}: Duration of sound is not a number!`);
+  }
 }
 
 /**
@@ -403,17 +430,16 @@ export function play_waves(
  * @example play_in_tab(sine_sound(440, 5));
  */
 export function play_in_tab(sound: Sound): Sound {
-  // Type-check sound
-  if (!is_sound(sound)) {
-    throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
+  throwIfNotSound(sound, play_in_tab.name);
+
+  if (isPlaying) {
     // If a sound is already playing, terminate execution.
-  } else if (isPlaying) {
-    throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
+    throw new GeneralRuntimeError(`${play_in_tab.name}: audio system still playing previous sound`);
   }
 
   const duration = get_duration(sound);
   if (duration < 0) {
-    throw new Error(`${play_in_tab.name}: duration of sound is negative`);
+    throw new GeneralRuntimeError(`${play_in_tab.name}: duration of sound is negative`);
   } else if (duration === 0) {
     return sound;
   }
@@ -504,16 +530,16 @@ export function play_in_tab(sound: Sound): Sound {
  */
 export function play(sound: Sound): Sound {
   // Type-check sound
-  if (!is_sound(sound)) {
-    throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
+  throwIfNotSound(sound, play.name);
+
+  if (isPlaying) {
     // If a sound is already playing, terminate execution.
-  } else if (isPlaying) {
-    throw new Error(`${play.name}: audio system still playing previous sound`);
+    throw new GeneralRuntimeError(`${play.name}: audio system still playing previous sound`);
   }
 
   const duration = get_duration(sound);
   if (duration < 0) {
-    throw new Error(`${play.name}: duration of sound is negative`);
+    throw new GeneralRuntimeError(`${play.name}: duration of sound is negative`);
   } else if (duration === 0) {
     return sound;
   }
