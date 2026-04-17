@@ -540,15 +540,6 @@ export default defineConfig(
     }
   },
   {
-    name: 'Rules for Vitest files',
-    files: ['**/vitest.{config,setup}.ts', './devserver/vite.config.ts'],
-    languageOptions: {
-      parserOptions: {
-        project: './tsconfig.json'
-      }
-    }
-  },
-  {
     name: 'Rules for commonjs files',
     files: ['**/*.{cjs,cts}'],
     rules: {
