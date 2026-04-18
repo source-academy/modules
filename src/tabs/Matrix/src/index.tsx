@@ -15,7 +15,7 @@ import {
 
 import type { Matrix, MatrixModuleState } from '@sourceacademy/bundle-matrix/types';
 import MultiItemDisplay from '@sourceacademy/modules-lib/tabs/MultiItemDisplay/index';
-import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 import { useState, type ReactNode } from 'react';
 import MatrixDisplay from './MatrixDisplay';
 import MatrixOutput from './MatrixOutput';
@@ -171,8 +171,14 @@ function MatrixTab({ moduleState: state }: MatrixTabProps) {
 }
 
 export default defineTab({
-  toSpawn: ({ context }) => context.moduleContexts.matrix?.state.matrices.length > 0,
-  body: ({ context: { moduleContexts: { matrix } } }) => <MatrixTab moduleState={matrix.state} />,
+  toSpawn: context => {
+    const state = getModuleState<MatrixModuleState>(context, 'matrix');
+    return !!state && state.matrices.length > 0;
+  },
+  body: context => {
+    const state = getModuleState<MatrixModuleState>(context, 'matrix')!;
+    return <MatrixTab moduleState={state} />;
+  },
   iconName: 'heat-grid',
   label: 'Matrix Tab',
 });

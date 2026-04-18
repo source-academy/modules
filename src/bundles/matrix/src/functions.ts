@@ -1,6 +1,6 @@
-import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { assertFunctionOfLength, assertNumberWithinRange, isFunctionOfLength, isNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
-import { is_pair, type List } from 'js-slang/dist/stdlib/list';
+import { head, is_pair, pair, tail, type List, type Pair } from 'js-slang/dist/stdlib/list';
 import { Matrix, type CellCallback } from './types';
 
 export function throwIfNotMatrix(matrix: unknown, func_name: string, param_name?: string): asserts matrix is Matrix {
@@ -16,11 +16,11 @@ function checkMatrixBounds(func_name: string, matrix: unknown, row: number, col:
   throwIfNotMatrix(matrix, func_name);
 
   if (!isNumberWithinRange(row, 0, matrix.rows - 1)) {
-    throw new Error(`${func_name}: Row index of ${row} out of bounds for matrix of size (${matrix.rows}, ${matrix.cols})`);
+    throw new GeneralRuntimeError(`${func_name}: Row index of ${row} out of bounds for matrix of size (${matrix.rows}, ${matrix.cols})`);
   }
 
   if (!isNumberWithinRange(col, 0, matrix.cols - 1)) {
-    throw new Error(`${func_name}: Column index of ${col} out of bounds for matrix of size (${matrix.rows}, ${matrix.cols})`);
+    throw new GeneralRuntimeError(`${func_name}: Column index of ${col} out of bounds for matrix of size (${matrix.rows}, ${matrix.cols})`);
   }
 }
 
@@ -232,22 +232,28 @@ export function install_buttons(matrix: Matrix, list: List): void {
   // Guard against circular lists
   const visited: List[] = [];
 
-  const list_to_array = (lst: List) => {
+  const list_to_array = (lst: List): Pair<string, () => void>[] => {
     if (lst === null || visited.includes(lst)) return [];
 
     if (!is_pair(lst)) {
-      throw new Error(`${install_buttons.name}: Expected a list containing only of pairs of strings and nullary functions`);
+      throw new GeneralRuntimeError(`${install_buttons.name}: Expected a list containing only of pairs of strings and nullary functions`);
     }
 
     visited.push(lst);
 
-    const [head, tail] = lst;
-    // Check the types of the head
-    if (typeof head[0] !== 'string' || !isFunctionOfLength(head[1], 0)) {
-      throw new Error(`${install_buttons.name}: Expected a list containing only of pairs of strings and nullary functions`);
+    const [entry, rest] = lst;
+    if (!is_pair(entry)) {
+      throw new GeneralRuntimeError(`${install_buttons.name}: Expected a list containing only of pairs of strings and nullary functions`);
     }
 
-    return [head, ...list_to_array(tail)];
+    const possibleString = head(entry);
+    const possibleFunc = tail(entry);
+
+    if (typeof possibleString !== 'string' || !isFunctionOfLength(possibleFunc, 0)) {
+      throw new GeneralRuntimeError(`${install_buttons.name}: Expected a list containing only of pairs of strings and nullary functions`);
+    }
+
+    return [pair(possibleString, possibleFunc), ...list_to_array(rest)];
   };
 
   matrix.buttons = list_to_array(list);
