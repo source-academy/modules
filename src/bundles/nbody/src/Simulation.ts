@@ -1,5 +1,6 @@
 import context from 'js-slang/context';
 import { RecordingVisualizer3D, RecordingVisualizer, Simulation, type Universe, type VisType } from 'nbody';
+import type { RecordInfo } from './types';
 
 /**
  * Create a new simulation.
@@ -31,7 +32,7 @@ export function createSimulation(
 }
 
 const simulations: Simulation[] = [];
-const recordInfo = {
+const recordInfo: RecordInfo = {
   isRecording: false,
   recordFor: 0,
   recordSpeed: 0,

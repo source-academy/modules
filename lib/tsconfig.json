@@ -4,6 +4,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
     "noEmit": true,
@@ -11,7 +12,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "ESNext",
-    "isolatedModules": true,
+    "types": ["node"],
     "verbatimModuleSyntax": true
   }
 }

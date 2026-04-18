@@ -66,3 +66,39 @@ export async function getCompiledTabs(context: Context) {
       body: tab.body({ context })
     }));
 };
+
+/**
+ * Use dyanamic imports to directly load the Typescript of a bundle. This allows Vite to
+ * detect file changes and reload in real time
+ */
+export async function getBundleUsingVite(bundlePath: string) {
+  try {
+    const funcs = await import(`../../../../../src/bundles/${bundlePath}/src/index.ts`);
+    return {
+      default: (_require: any) => funcs,
+    };
+  } catch (err) {
+    console.error(`Error importing bundle from path ${bundlePath}:`, err);
+    throw err;
+  }
+}
+
+export async function getBundleDocsUsingVite(bundlePath: string) {
+  try {
+    const manifest = await import(/* @vite-ignore */ `../../../../../build/jsons/${bundlePath}.json`, { with: { type: 'json' } });
+    return manifest;
+  } catch (error) {
+    console.error(error);
+    throw new Error(`Failed to load documentation for ${bundlePath}`);
+  }
+}
+
+export async function getModulesManifest() {
+  try {
+    const manifest = await import('../../../../../build/modules.json', { with: { type: 'json' } });
+    return manifest;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to load modules manifest, have you run the manifest build command?' + error);
+  }
+}

@@ -57,7 +57,7 @@ void main(void) {
 export class Rune {
   constructor(
     /**
-     * A list of vertex coordinates, each vertex has 4 coordiante (x,y,z,t).
+     * A list of vertex coordinates, each vertex has 4 coordiants (x,y,z,t).
      */
     public vertices: Float32Array,
 
@@ -128,7 +128,7 @@ export class Rune {
     texture?: HTMLImageElement | null;
     hollusionDistance?: number;
   } = {}) => {
-    const paramGetter = (name: string, defaultValue: () => any) => (params[name] === undefined ? defaultValue() : params[name]);
+    const paramGetter = (name: string, defaultValue: () => any) => params[name] ?? defaultValue();
 
     return new Rune(
       paramGetter('vertices', () => new Float32Array()),

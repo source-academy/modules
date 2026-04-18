@@ -85,7 +85,7 @@ function getRuleUrl(name: string): string | undefined {
  */
 function processConfigObject(configKey: string, config: Linter.Config): SingleConfig {
   const info: SingleConfig = {
-    files: typeof config.files === 'string' ? [config.files] : config.files,
+    files: config.files ?? [],
     ignores: config.ignores,
     name: config.name ?? configKey,
     rules: [],
@@ -106,7 +106,7 @@ function processConfigObject(configKey: string, config: Linter.Config): SingleCo
     if (!Array.isArray(ruleOptions)) {
       info.rules.push({
         name: ruleName,
-        severity: processRuleLevel(ruleOptions),
+        severity: processRuleLevel(ruleOptions!),
         url: getRuleUrl(ruleName)
       });
     } else {

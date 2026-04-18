@@ -2,7 +2,7 @@
 
 exports[`painter tab 1`] = `
 <Painter
-  context={
+  debuggerCtx={
     {
       "context": {
         "moduleContexts": {

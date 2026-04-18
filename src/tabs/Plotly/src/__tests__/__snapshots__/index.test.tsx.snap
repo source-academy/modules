@@ -2,7 +2,7 @@
 
 exports[`plotly tab 1`] = `
 <Plotly
-  context={
+  debuggerCtx={
     {
       "context": {
         "moduleContexts": {

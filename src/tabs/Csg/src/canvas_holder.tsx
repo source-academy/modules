@@ -13,7 +13,7 @@ export default class CanvasHolder extends React.Component<
   CanvasHolderProps,
   CanvasHolderState
 > {
-  private readonly canvasReference: React.RefObject<HTMLCanvasElement> = React.createRef();
+  private readonly canvasReference: React.RefObject<HTMLCanvasElement | null> = React.createRef();
 
   private statefulRenderer: StatefulRenderer | null = null;
 

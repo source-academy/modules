@@ -1,7 +1,7 @@
 // Adapted from: https://gitlab.com/nfriend/tree-online/-/tree/master?ref_type=heads
 
 import { flattenDeep, last } from 'es-toolkit';
-import type { FileStructure } from './types';
+import type { FileStructure } from './types.js';
 
 /**
  * Represents an object that contains the

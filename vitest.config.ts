@@ -35,7 +35,7 @@ export default defineConfig({
       './src/tabs/*'
     ],
     include: ['**/__tests__/**/*.test.{ts,tsx}'],
-    exclude: ['**/dist'],
+    exclude: ['**/dist', '**/node_modules'],
     reporters: testReporters,
     clearMocks: true,
     coverage: {

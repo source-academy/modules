@@ -46,7 +46,7 @@ This adds the dependency to `devDependencies` instead.
 > specified in the root repository `package.json`:
 >
 > ```sh
-> yarn add react@^18.3.1
+> yarn add react@^19.0.0
 > ```
 >
 > You can also use the command `yarn constraints`  to check if you have incorrectly specified the version of a dependency. You can view all
@@ -74,7 +74,7 @@ If you do so, remember to run your installation command (same as the one above) 
 
 ## React/UI Components
 
-Tabs are written using the React (JSX) syntax. In React, each UI element is referred to as a "component". Documentation on how to create UIs and use React can be found [here](https://react.dev). Where possible,
+Tabs are written using the React (JSX) syntax. In React, each UI element is referred to as a "component". Documentation on how to use React can be found [here](https://react.dev). Where possible,
 you should aim to write components using the functional syntax.
 
 ::: details Functional vs Class Components
@@ -123,11 +123,13 @@ is in use.
 
 ## Export Interface
 
-As mentioned in the [overview](./1-overview), all tabs should export a single default export from their entry point using the `defineTab` helper from `@sourceacademy/modules-lib/tabs`:
+As mentioned in the [overview](./1-overview), all tabs should export a single default export from their entry point using the `defineTab` helper from `@sourceacademy/modules-lib/tabs/utils`:
 
-```tsx
+```tsx twoslash
+// @jsx: react-jsx
+// ---cut---
 // tabName/src/index.tsx OR tabName/index.tsx
-import { defineTab } from '@sourceacademy/modules-lib/tabs';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 
 function Component() {
   return <p>This is a react component!</p>;
@@ -137,7 +139,7 @@ export default defineTab({
   toSpawn: () => true,
   body: () => <Component />,
   label: 'some-tab',
-  iconName: 'some icon'
+  iconName: 'saved'
 });
 ```
 
@@ -164,7 +166,7 @@ Only the default export is used by the Frontend for displaying your tab. It is n
 ::: code-group
 
 ```tsx [index.tsx]
-import { defineTab } from '@sourceacademy/modules-lib/tabs';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 
 export function Component() {
   return <p>This is a react component!</p>;
@@ -187,6 +189,28 @@ test('Matches snapshot', () => {
 });
 ```
 :::
+
+## The `ModuleTab` Type
+
+The `ModuleTab` type exported from the common library can be used to type your components:
+
+```tsx {4}
+import type { ModuleTab } from '@sourceacademy/modules-lib/types';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+
+const Repeat: ModuleTab = ({ debuggerCtx: context }) => {
+  return <div>This is spawned from the repeat package</div>;
+};
+
+export default defineTab({
+  toSpawn: () => true,
+  body: context => <Repeat debuggerCtx={context} />,
+  label: 'Repeat Test Tab',
+  iconName: 'build'
+});
+```
+
+This isn't necessary, but it will provide you type information without you having to import each type separately from the library.
 
 ## Working with Module Contexts from within Tabs
 

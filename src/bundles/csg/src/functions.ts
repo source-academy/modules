@@ -13,13 +13,7 @@ import {
 import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { serialize } from '@jscad/stl-serializer';
 import { degreesToRadians, hexToColor } from '@sourceacademy/modules-lib/utilities';
-import {
-  head,
-  is_list,
-  list,
-  tail,
-  type List
-} from 'js-slang/dist/stdlib/list';
+import { is_list, list_to_vector, vector_to_list, type List } from 'js-slang/dist/stdlib/list';
 import save from 'save-file';
 import { Core } from './core';
 import type { Solid } from './jscad/types';
@@ -44,20 +38,6 @@ import {
   When a user passes in a List, we convert it to arrays here so that the rest of
   the underlying code is free to operate with arrays.
 */
-export function listToArray(l: List): Operable[] {
-  const operables: Operable[] = [];
-  while (l !== null) {
-    const operable: Operable = head(l);
-    operables.push(operable);
-    l = tail(l);
-  }
-  return operables;
-}
-
-export function arrayToList(array: Operable[]): List {
-  return list(...array);
-}
-
 /* [Exports] */
 
 // [Variables - Colors]
@@ -544,12 +524,12 @@ export function scale(
  *
  * @category Utilities
  */
-export function group(operables: List): Group {
+export function group(operables: List<Operable>): Group {
   if (!is_list(operables)) {
     throw new Error('Only lists of Operables can be grouped');
   }
 
-  return new Group(listToArray(operables));
+  return new Group(list_to_vector(operables));
 }
 
 /**
@@ -566,7 +546,7 @@ export function ungroup(g: Group): List {
     throw new Error('Only Groups can be ungrouped');
   }
 
-  return arrayToList(g.ungroup());
+  return vector_to_list(g.ungroup());
 }
 
 /**

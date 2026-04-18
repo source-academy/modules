@@ -7,7 +7,8 @@
     "./src"
   ],
   "compilerOptions": {
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "rootDir": "./src"
   },
   "typedocOptions": {
     "name": "copy_gc"

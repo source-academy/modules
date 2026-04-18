@@ -14,7 +14,7 @@ import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import ymlPlugin from 'eslint-plugin-yml';
 import globals from 'globals';
-import jsonParser from 'jsonc-eslint-parser';
+import * as jsonParser from 'jsonc-eslint-parser';
 import tseslint from 'typescript-eslint';
 
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
@@ -169,10 +169,8 @@ export default defineConfig(
         }
       ],
       '@stylistic/no-extra-parens': ['warn', 'all', {
-        ignoredNodes: [
-          'ArrowFunctionExpression[body.type=ConditionalExpression]'
-        ],
         ignoreJSX: 'all',
+        ignoredNodes: ['ArrowFunctionExpression[body.type=ConditionalExpression]'],
         nestedBinaryExpressions: false,
       }],
       '@stylistic/nonblock-statement-body-position': ['error', 'beside'],
@@ -207,6 +205,7 @@ export default defineConfig(
       // The Markdown parser automatically trims trailing
       // newlines from code blocks.
       '@stylistic/eol-last': 'off',
+      '@stylistic/no-multiple-empty-lines': 'off',
 
       // In code snippets and examples, these rules are often
       // counterproductive to clarity and brevity.
@@ -257,6 +256,7 @@ export default defineConfig(
         tags: ['hidden']
       }],
 
+      'import/extensions': ['error', { json: 'always' }],
       'import/first': 'warn',
       'import/newline-after-import': 'warn',
       // This rule is very time intensive.
@@ -317,7 +317,8 @@ export default defineConfig(
         // Prevent the parser from going any higher in the directory tree
         // to find a tsconfig
         tsconfigRootDir: import.meta.dirname,
-        project: true
+        projectService: true,
+        // project: true
       }
     },
     plugins: {
@@ -346,18 +347,7 @@ export default defineConfig(
       // This rule doesn't seem to fail locally but fails on the CI
       '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
-      '@typescript-eslint/only-throw-error': ['error', {
-        allowRethrowing: true,
-        allow: [
-          // TODO: Remove these exceptions when js-slang errors inherit from Error
-          'InvalidParameterTypeError', 'InvalidCallbackError', 'InvalidNumberParameterError'
-          // {
-          //   from: 'package',
-          //   name: ['InvalidParameterTypeError', 'InvalidCallbackError'],
-          //   package: '@sourceacademy/modules-lib',
-          // }
-        ]
-      }]
+      '@typescript-eslint/only-throw-error': 'error'
     },
     settings: {
       'import/resolver': {
@@ -372,12 +362,13 @@ export default defineConfig(
     files: ['**/*.tsx'],
     ignores: ['**/*.md/**/*.tsx'],
     plugins: {
+      // @ts-expect-error React hooks plugin wrong type
       'react-hooks': reactHooksPlugin,
       'react': reactPlugin
     },
     extends: [
       reactPlugin.configs.flat.recommended,
-      reactPlugin.configs.flat['jsx-runtime']
+      reactPlugin.configs.flat['jsx-runtime'],
     ],
     languageOptions: {
       parserOptions: {
@@ -416,6 +407,8 @@ export default defineConfig(
           namedExports: 'declaration'
         }
       }],
+
+      'import/extensions': 'off',
 
       '@typescript-eslint/no-empty-object-type': ['error', {
         allowInterfaces: 'with-single-extends',
@@ -521,6 +514,11 @@ export default defineConfig(
       'vitest/valid-describe-callback': 'off', // was 'error'
       'vitest/valid-expect-in-promise': 'error',
       'vitest/valid-title': ['error', { ignoreTypeOfDescribeName: true }],
+
+      'import/extensions': ['error', 'never', {
+        config: 'ignore',
+        json: 'always'
+      }]
     }
   },
   {
@@ -535,17 +533,9 @@ export default defineConfig(
     rules: {
       'import/extensions': ['error', 'ignorePackages', {
         ts: 'never',
-        cts: 'never'
+        cts: 'never',
+        json: 'always'
       }],
-    }
-  },
-  {
-    name: 'Rules for Vitest files',
-    files: ['**/vitest.{config,setup}.ts', './devserver/vite.config.ts'],
-    languageOptions: {
-      parserOptions: {
-        project: './tsconfig.json'
-      }
     }
   },
   {

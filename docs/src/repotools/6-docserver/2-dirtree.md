@@ -86,7 +86,7 @@ Vitepress uses the themes from Github by default, so the transformer is configur
 To create your own directory tree, use the `dirtree` language with your markdown code block:
 
 ````md {1}
-``` dirtree
+```dirtree
 
 ```
 ````
@@ -94,7 +94,7 @@ To create your own directory tree, use the `dirtree` language with your markdown
 Within the `dirtree` code block, YAML is used for configuring the output. Start by first configuring your root object:
 
 ````md {2}
-``` dirtree
+```dirtree
 name: root directory
 ```
 ````
@@ -102,7 +102,7 @@ name: root directory
 If you do not specify a name for your root directory, then it will have the default name of `"root"`. Now you can proceed to create children elements using a YAML list:
 
 ````md
-``` dirtree
+```dirtree
 name: root directory
 children:
   - item0
@@ -144,7 +144,7 @@ In the case you intend for your displayed directory tree to reflect the structur
 
 ````md {4}
 <!-- Located in docs/index.md -->
-``` dirtree
+```dirtree
 name: root directory
 path: ./root   # gets resolved to docs/root
 children:

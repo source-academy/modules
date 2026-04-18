@@ -5,6 +5,7 @@ describe(topoSortPackages, () => {
   test('Without a cycle', () => {
     const result = topoSortPackages({
       '@sourceacademy/0': {
+        type: null,
         hasChanges: false,
         directory: '/',
         package: {
@@ -16,6 +17,7 @@ describe(topoSortPackages, () => {
         }
       },
       '@sourceacademy/1': {
+        type: null,
         hasChanges: false,
         directory: '/',
         package: {
@@ -27,6 +29,7 @@ describe(topoSortPackages, () => {
         }
       },
       '@sourceacademy/2': {
+        type: null,
         hasChanges: false,
         directory: '/',
         package: {
@@ -47,6 +50,7 @@ describe(topoSortPackages, () => {
   test('With a cycle', () => {
     const func = () => topoSortPackages({
       '@sourceacademy/0': {
+        type: null,
         hasChanges: false,
         directory: '/',
         package: {
@@ -58,6 +62,7 @@ describe(topoSortPackages, () => {
         }
       },
       '@sourceacademy/1': {
+        type: null,
         hasChanges: false,
         directory: '/',
         package: {
@@ -69,6 +74,7 @@ describe(topoSortPackages, () => {
         }
       },
       '@sourceacademy/2': {
+        type: null,
         hasChanges: false,
         directory: '/',
         package: {

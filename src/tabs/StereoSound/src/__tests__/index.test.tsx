@@ -3,15 +3,20 @@ import { expect, test, vi, type MockedFunction } from 'vitest';
 import StereoSoundTab from '..';
 
 function getContextObject() {
-  const propertyAccessor = vi.fn((_target: any, _p: string, _receiver: any) => ({
-    state: {
-      audioPlayed: []
-    }
-  }));
+  const propertyAccessor = vi.fn((target: any, prop: string, _receiver: any) => {
+    return target[prop];
+  });
 
   const contextObject: DebuggerContext = {
     context: {
-      moduleContexts: new Proxy({}, {
+      moduleContexts: new Proxy({
+        stereo_sound: {
+          state: {
+            audioPlayed: [],
+          },
+          tabs: null,
+        }
+      }, {
         get: propertyAccessor,
       })
     }

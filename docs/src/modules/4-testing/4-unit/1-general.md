@@ -39,7 +39,9 @@ For bundles and tabs, the test environment should always be `jsdom`, since they 
 > Vitest to fail, since the original import would have failed. To fix this, you should create your own `vitest.config.ts` and add those
 > dependencies to `optimizeDeps`:
 >
-> ```js
+> ```js twoslash
+> import { defineProject } from 'vitest/config';
+> // ---cut---
 > export default defineProject({
 >   optimizeDeps: {
 >     include: ['react/jsx-dev-runtime']
@@ -66,6 +68,11 @@ For bundles and tabs, the test environment should always be `jsdom`, since they 
     <tr>
       <td><code>--watch</code></td>
       <td>Run tests in watch mode</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><code>--ui</code></td>
+      <td>Opens Vitest UI in a browser. Automatically activates <code>watch</code> mode</td>
       <td></td>
     </tr>
     <tr>

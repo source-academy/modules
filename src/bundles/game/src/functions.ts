@@ -15,7 +15,7 @@
  */
 
 import context from 'js-slang/context';
-import { accumulate, head, is_pair, tail, type List } from 'js-slang/dist/stdlib/list';
+import { for_each, head, is_pair, tail, type List, type Pair } from 'js-slang/dist/stdlib/list';
 import Phaser from 'phaser';
 import {
   defaultGameParams,
@@ -177,15 +177,16 @@ export function prepend_remote_url(asset_key: string): string {
  * @param lst the list to be turned into object config.
  * @returns object config
  */
-export function create_config(lst: List): ObjectConfig {
+export function create_config(lst: List<Pair<string, any>>): ObjectConfig {
   const config = {};
-  accumulate((xs: [any, any], _) => {
+
+  for_each(xs => {
     if (!is_pair(xs)) {
       throw_error('config element is not a pair!');
     }
     config[head(xs)] = tail(xs);
-    return null;
-  }, null, lst);
+  }, lst);
+
   return config;
 }
 

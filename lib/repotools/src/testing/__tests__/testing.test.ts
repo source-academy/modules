@@ -31,9 +31,10 @@ describe(testUtils.isTestDirectory, () => {
   function mockGlobTestsOnce(retValue: boolean) {
     mockedFsGlob.mockImplementationOnce(retValue ? async function* () {
       yield Promise.resolve('');
+      return undefined;
       // eslint-disable-next-line require-yield, @typescript-eslint/require-await
     } : async function* () {
-      return;
+      return undefined;
     });
   }
 
@@ -526,6 +527,7 @@ describe(configs.getAllTestConfigurations, () => {
         name: 'node_modules',
         parentPath: dirpath
       } as Dirent;
+      return undefined;
     });
 
     const results = await configs.getAllTestConfigurations(false);

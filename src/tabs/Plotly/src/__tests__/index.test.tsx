@@ -4,5 +4,5 @@ import { Plotly } from '..';
 
 test('plotly tab', () => {
   const context = mockDebuggerContext({}, 'plotly');
-  expect(<Plotly context={context} />).toMatchSnapshot();
+  expect(<Plotly debuggerCtx={context} />).toMatchSnapshot();
 });

@@ -17,6 +17,33 @@ function evaluateSound(sound: Sound) {
   return output;
 }
 
+describe(funcs.is_sound, () => {
+  it('returns true for a stereo sound', () => {
+    const x: Sound = [[_t => 0, _t => 1], 1];
+    expect(funcs.is_sound(x)).toEqual(true);
+  });
+
+  it('returns false when duration is not a number', () => {
+    const x = [[_t => 0, _t => 1], '1'];
+    expect(funcs.is_sound(x)).toEqual(false);
+  });
+
+  it('returns false when left wave is not a wave', () => {
+    const x = [[0, _t => 1], 1];
+    expect(funcs.is_sound(x)).toEqual(false);
+  });
+
+  it('returns false when right wave is not a wave', () => {
+    const x = [[_t => 0, 0], 1];
+    expect(funcs.is_sound(x)).toEqual(false);
+  });
+
+  it('returns false when waves are not a pair', () => {
+    const x = [0, 1];
+    expect(funcs.is_sound(x)).toEqual(false);
+  });
+});
+
 describe(funcs.pan, () => {
   it('should mute the left channel when panned all the way right', () => {
     const sound = funcs.make_stereo_sound(
@@ -144,7 +171,7 @@ describe(funcs.make_sound, () => {
 
 describe(funcs.play, () => {
   it('Should error gracefully when duration is negative', () => {
-    const sound: Sound = [[() => 0, () => 0], -1];
+    const sound: Sound = [[_t => 0, _t => 0], -1];
     expect(() => funcs.play(sound))
       .toThrow('play: duration of sound is negative');
   });
@@ -155,7 +182,7 @@ describe(funcs.play, () => {
   });
 
   it('Should throw error when given not a sound', () => {
-    expect(() => funcs.play(0 as any)).toThrow('play is expecting sound, but encountered 0');
+    expect(() => funcs.play(0 as any)).toThrow('play: Expected sound, got 0.');
   });
 });
 
@@ -178,17 +205,17 @@ describe(funcs.play_wave, () => {
 
 describe(funcs.play_in_tab, () => {
   it('Should error gracefully when duration is negative', () => {
-    const sound: Sound = [[() => 0, () => 0], -1];
+    const sound: Sound = [[_t => 0, _t => 0], -1];
     expect(() => funcs.play_in_tab(sound))
       .toThrow('play_in_tab: duration of sound is negative');
   });
 
   it('Should not error when duration is zero', () => {
-    const sound: Sound = [[() => 0, () => 0], 0];
+    const sound: Sound = [[_t => 0, _t => 0], 0];
     expect(() => funcs.play_in_tab(sound)).not.toThrow();
   });
 
   it('Should throw error when given not a sound', () => {
-    expect(() => funcs.play_in_tab(0 as any)).toThrow('play_in_tab is expecting sound, but encountered 0');
+    expect(() => funcs.play_in_tab(0 as any)).toThrow('play_in_tab: Expected sound, got 0.');
   });
 });

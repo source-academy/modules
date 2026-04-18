@@ -1,7 +1,7 @@
 import { Icon, Tooltip, type IconProps } from '@blueprintjs/core';
 import ButtonComponent, { type ButtonComponentProps } from './ButtonComponent';
 
-export type PlayButtonProps = ButtonComponentProps & {
+export type PlayButtonProps = Omit<ButtonComponentProps, 'text' | 'icon'> & {
   isPlaying: boolean;
 
   /**

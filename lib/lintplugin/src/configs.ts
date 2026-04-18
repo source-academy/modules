@@ -180,6 +180,7 @@ export const tsxConfig = defineConfig({
   name: 'SA TSX Config',
   files: ['**/*.tsx'],
   plugins: {
+    // @ts-expect-error React hooks plugin wrong type
     'react-hooks': reactHooksPlugin,
     'react': reactPlugin
   },

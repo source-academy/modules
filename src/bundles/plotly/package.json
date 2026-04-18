@@ -12,7 +12,7 @@
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/plotly.js": "^3.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^6.0.2"
   },
   "type": "module",
   "exports": {
@@ -24,8 +24,9 @@
     "build": "buildtools build bundle .",
     "lint": "buildtools lint .",
     "test": "buildtools test --project .",
-    "postinstall": "buildtools compile",
-    "serve": "yarn buildtools serve"
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
   },
   "scripts-info": {
     "build": "Compiles the given bundle to the output directory",

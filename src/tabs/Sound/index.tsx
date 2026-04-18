@@ -8,8 +8,8 @@ import type { ModuleTab } from '@sourceacademy/modules-lib/types';
  * @author Koh Shang Hui
  * @author Samyukta Sounderraman
  */
-const SoundTab: ModuleTab = ({ context }) => {
-  const { audioPlayed } = getModuleState<SoundModuleState>(context, 'sound');
+const SoundTab: ModuleTab = ({ debuggerCtx: context }) => {
+  const { audioPlayed } = getModuleState<SoundModuleState>(context, 'sound')!;
 
   const elements = audioPlayed.map((audio) => (
     <audio
@@ -36,11 +36,11 @@ const SoundTab: ModuleTab = ({ context }) => {
 
 export default defineTab({
   toSpawn(context) {
-    const audioPlayed = context.context?.moduleContexts?.sound?.state?.audioPlayed;
-    return audioPlayed.length > 0;
+    const moduleState = getModuleState<SoundModuleState>(context, 'sound')!;
+    return !!moduleState && moduleState.audioPlayed.length > 0;
   },
   body(context) {
-    return <SoundTab context={context} />;
+    return <SoundTab debuggerCtx={context} />;
   },
   label: 'Sounds',
   iconName: 'music'

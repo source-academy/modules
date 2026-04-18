@@ -17,9 +17,7 @@ vi.mock(import('@actions/core'), async importOriginal => {
     endGroup: () => { }
   };
 });
-const mockedResolveAllTabs = vi.spyOn(manifest, 'resolveAllTabs');
 
-const mockedGetArtifact = vi.fn();
 vi.mock(import('@actions/artifact'), async importOriginal => {
   const original = await importOriginal();
 
@@ -32,6 +30,12 @@ vi.mock(import('@actions/artifact'), async importOriginal => {
   };
 });
 
+vi.mock(import('../../gitRoot.js'), () => ({
+  gitRoot: 'root'
+}));
+
+const mockedResolveAllTabs = vi.spyOn(manifest, 'resolveAllTabs');
+const mockedGetArtifact = vi.fn();
 const mockedExec = vi.spyOn(exec, 'exec').mockResolvedValue(0);
 
 test('tab resolution errors cause setFailed to be called', async () => {

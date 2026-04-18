@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 type SettingsPopupProps = {
   backend: string;
-  useCompiledForTabs: boolean;
+  useCompiled: boolean;
   onUseCompiledChange?: (newValue: boolean) => void;
   onBackendChange?: (newValue: string) => void;
 };
@@ -34,15 +34,15 @@ export default function SettingsPopup(props: SettingsPopupProps) {
         />
       </div>
       <br/>
-      <Tooltip content="Load compiled tabs instead of the raw Typescript">
+      <Tooltip content="Load compiled assets instead of the raw Typescript">
         <Switch
-          checked={props.useCompiledForTabs}
+          checked={props.useCompiled}
           onChange={() => {
             if (props.onUseCompiledChange) {
-              props.onUseCompiledChange(!props.useCompiledForTabs);
+              props.onUseCompiledChange(!props.useCompiled);
             }
           }}
-          label="Use compiled tabs"
+          label="Use compiled"
         />
       </Tooltip>
     </div>

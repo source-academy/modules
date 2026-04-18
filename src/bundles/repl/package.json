@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "typescript": "^5.8.2"
+    "typescript": "^6.0.2"
   },
   "type": "module",
   "exports": {
@@ -18,10 +18,11 @@
   "scripts": {
     "tsc": "buildtools tsc .",
     "build": "buildtools build bundle .",
+    "compile": "buildtools compile",
     "lint": "buildtools lint .",
     "test": "buildtools test --project .",
-    "postinstall": "buildtools compile",
-    "serve": "yarn buildtools serve"
+    "postinstall": "yarn compile",
+    "serve": "buildtools serve"
   },
   "scripts-info": {
     "build": "Compiles the given bundle to the output directory",

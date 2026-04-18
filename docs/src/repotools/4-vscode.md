@@ -15,3 +15,19 @@ should also automatically receive validation and IntelliSense autocompletion.
 
 By default, the VSCode ESLint extension doesn't also lint YAML files. This means that although ESLint will lint YAML files, the linting warnings and errors
 for YAML files will not appear in VSCode. Thus, we need to provide a specific configuration to tell the extension to lint YAML files.
+
+> [!INFO] Working in a Workspace
+>
+> VSCode allows you to add multiple folders to a single VSCode workspace. This is useful if your work is spread across multiple packages, located in
+> multiple folders.
+>
+> You might find that the VSCode ESLint extension doesn't work properly or at all when you're in the workspace. To fix that, add to the `settings.json`
+> for your workspace the following:
+>
+> ```jsonc
+> {
+>   "eslint.workingDirectories": [{
+>     "mode": "auto"
+>   }]
+> }
+> ```

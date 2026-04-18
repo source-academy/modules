@@ -2,7 +2,7 @@
 
 exports[`Ensure that anaglyph animations error gracefully 1`] = `
 <RuneTab
-  context={
+  debuggerCtx={
     {
       "context": {
         "moduleContexts": {
@@ -28,7 +28,7 @@ exports[`Ensure that anaglyph animations error gracefully 1`] = `
 
 exports[`Ensure that rune animations error gracefully 1`] = `
 <RuneTab
-  context={
+  debuggerCtx={
     {
       "context": {
         "moduleContexts": {

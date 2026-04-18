@@ -1,7 +1,7 @@
 import { stringify } from 'js-slang/dist/utils/stringify';
 import { afterEach, beforeEach, describe, expect, it, test, vi } from 'vitest';
 import * as funcs from '../functions';
-import * as play_in_tab from '../play_in_tab';
+import { play_in_tab } from '../play_in_tab';
 import type { Sound, Wave } from '../types';
 import { mockAudioContext } from './utils';
 
@@ -53,10 +53,15 @@ describe('Concurrent playback functions', () => {
       expect(() => funcs.play(0 as any)).toThrow('play: Expected sound, got 0.');
     });
 
+    it('Should throw error if sound returns non-number', () => {
+      expect(() => funcs.play(funcs.make_sound(t => t > 0.5 ? 1 : 'a' as any, 5)))
+        .toThrow('play: Provided Sound returned a non-numeric value "a".');
+    });
+
     test('Concurrently playing two sounds should error', () => {
       const sound = funcs.silence_sound(10);
       expect(() => funcs.play(sound)).not.toThrow();
-      expect(() => funcs.play(sound)).toThrowError('play: Previous sound still playing');
+      expect(() => funcs.play(sound)).toThrow('play: Previous sound still playing');
     });
   });
 
@@ -79,44 +84,49 @@ describe('Concurrent playback functions', () => {
     test('Concurrently playing two sounds should error', () => {
       const wave: Wave = _t => 0;
       expect(() => funcs.play_wave(wave, 10)).not.toThrow();
-      expect(() => funcs.play_wave(wave, 10)).toThrowError('play: Previous sound still playing');
+      expect(() => funcs.play_wave(wave, 10)).toThrow('play: Previous sound still playing');
     });
   });
 
   describe(funcs.stop, () => {
     test('Calling stop without ever calling any playback functions should not throw an error', () => {
-      expect(funcs.stop).not.toThrowError();
+      expect(funcs.stop).not.toThrow();
     });
 
     it('sets isPlaying to false', () => {
       funcs.globalVars.isPlaying = true;
-      funcs.stop();
+      expect(funcs.stop).not.toThrow();
       expect(funcs.globalVars.isPlaying).toEqual(false);
     });
   });
 });
 
-describe(play_in_tab.play_in_tab, () => {
+describe(play_in_tab, () => {
   it('Should error gracefully when duration is negative', () => {
     const sound = [_t => 0, -1];
-    expect(() => play_in_tab.play_in_tab(sound as any))
+    expect(() => play_in_tab(sound as any))
       .toThrow('play_in_tab: Expected number greater than 0 for duration, got -1.');
   });
 
   it('Should not error when duration is zero', () => {
     const sound = funcs.make_sound(_t => 0, 0);
-    expect(() => play_in_tab.play_in_tab(sound)).not.toThrow();
+    expect(() => play_in_tab(sound)).not.toThrow();
+  });
+
+  it('Should throw error if sound returns non-number', () => {
+    expect(() => play_in_tab(funcs.make_sound(t => t > 0.5 ? 1 : 'a' as any, 5)))
+      .toThrow('play_in_tab: Provided Sound returned a non-numeric value "a".');
   });
 
   it('Should throw error when given not a sound', () => {
-    expect(() => play_in_tab.play_in_tab(0 as any)).toThrow('play_in_tab: Expected Sound, got 0.');
+    expect(() => play_in_tab(0 as any)).toThrow('play_in_tab: Expected Sound, got 0.');
   });
 
   test('Multiple calls does not cause an error', () => {
     const sound = funcs.silence_sound(10);
-    expect(() => play_in_tab.play_in_tab(sound)).not.toThrow();
-    expect(() => play_in_tab.play_in_tab(sound)).not.toThrow();
-    expect(() => play_in_tab.play_in_tab(sound)).not.toThrow();
+    expect(() => play_in_tab(sound)).not.toThrow();
+    expect(() => play_in_tab(sound)).not.toThrow();
+    expect(() => play_in_tab(sound)).not.toThrow();
   });
 });
 
@@ -185,7 +195,7 @@ describe(funcs.consecutively, () => {
 describe('Sound transformers', () => {
   describe(funcs.phase_mod, () => {
     it('throws when given not a sound', () => {
-      expect(() => funcs.phase_mod(0, 1, 1)(0 as any)).toThrowError('SoundTransformer: Expected Sound, got 0');
+      expect(() => funcs.phase_mod(0, 1, 1)(0 as any)).toThrow('SoundTransformer: Expected Sound, got 0');
     });
 
     test('returned transformer toReplString representation', () => {

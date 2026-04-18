@@ -4,9 +4,6 @@ import { stringify } from 'js-slang/dist/utils/stringify';
 
 import type { CurveSpace, DrawMode, ScaleMode } from './types';
 
-/** @hidden */
-export const drawnCurves: CurveDrawn[] = [];
-
 // Vertex shader program
 const vsS: string = `
 attribute vec4 aFragColor;
@@ -152,7 +149,9 @@ export class CurveDrawn implements ReplResult {
 
   public toReplString = () => '<CurveDrawn>';
 
-  public is3D = () => this.space === '3D';
+  public get is3D() {
+    return this.space === '3D';
+  }
 
   public init = (canvas: HTMLCanvasElement) => {
     this.renderingContext = canvas.getContext('webgl');

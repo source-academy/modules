@@ -11,14 +11,14 @@ export type SideContentTab = {
   id: string;
   label: string;
   iconName: IconName;
-  body: React.JSX.Element;
+  body: React.ReactElement;
 };
 
 export type ModuleSideContent = {
   label: string;
   iconName: IconName;
   toSpawn?: (context: DebuggerContext) => boolean;
-  body: (context: DebuggerContext) => React.JSX.Element;
+  body: (context: DebuggerContext) => React.ReactElement;
 };
 
 export type RawTab = (provider: ReturnType<typeof requireProvider>, react: typeof React) => Promise<{ default: ModuleSideContent }>;
