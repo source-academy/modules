@@ -29,7 +29,7 @@ function getRenderFunctionCreator(
     assertNumberWithinRange(numPoints, name, 0, 65535);
 
     function renderFunc(curve: Curve) {
-      assertFunctionOfLength(curve, 1, name, 'Curve');
+      assertFunctionOfLength(curve, 1, 'RenderFunction', 'Curve');
 
       const curveDrawn = generateCurve(
         scaleMode,

@@ -1,4 +1,4 @@
-import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import { describe, expect, it, test } from 'vitest';
 import type { Color, Curve } from '../curves_webgl';
@@ -29,12 +29,7 @@ describe('Ensure that invalid curves and animations error gracefully', () => {
 
   test('Curve that takes multiple parameters should throw error', () => {
     expect(() => drawers.draw_connected(200)(((t, u) => funcs.make_point(t, u)) as any))
-      .toThrow(InvalidCallbackError);
-  });
-
-  test('CurveAnimation that doesn\'t return a curve should throw error', () => {
-    const anim = new AnimatedCurve(1, 30, (_t => 0) as any, drawers.draw_connected(200), false);
-    expect(() => anim.getFrame(0)).toThrow('CurveAnimation did not return a Curve at timestamp 0');
+      .toThrowErrorMatchingInlineSnapshot(`[Error: RenderFunction: Expected Curve, got (t, u) => __vite_ssr_import_4__.make_point(t, u).]`);
   });
 
   test('CurveAnimation that doesn\'t return a curve should throw error', () => {
@@ -79,31 +74,31 @@ describe('Render function creators', () => {
       } else if (func.name.includes('connected')) {
         expect(func.drawMode).toEqual('lines');
       } else {
-        throw new Error(`Unknown draw mode for render function creator: ${func.name}`);
+        expect.fail(`Unknown draw mode for render function creator: ${func.name}`);
       }
     });
 
     it('throws when numPoints is less than 0', () => {
-      expect(() => func(-1)).toThrowError(
+      expect(() => func(-1)).toThrow(
         `${name}: Expected integer between 0 and 65535, got -1.`
       );
     });
 
     it('throws when numPoints is greater than 65535', () => {
-      expect(() => func(70000)).toThrowError(
+      expect(() => func(70000)).toThrow(
         `${name}: Expected integer between 0 and 65535, got 70000.`
       );
     });
 
     it('throws when numPoints is not an integer', () => {
-      expect(() => func(3.14)).toThrowError(
+      expect(() => func(3.14)).toThrow(
         `${name}: Expected integer between 0 and 65535, got 3.14.`
       );
     });
 
     test('returned render function throws when called with an invalid curve', () => {
       const creator = func(200);
-      expect(() => creator(0 as any)).toThrowError(`${name}: Expected Curve, got 0.`);
+      expect(() => creator(0 as any)).toThrow('RenderFunction: Expected Curve, got 0.');
     });
 
     test('returned render functions have nice string representations', () => {
@@ -132,7 +127,7 @@ describe('Coloured Points', () => {
     });
 
     it('throws when argument is not a point', () => {
-      expect(() => funcs.r_of(0 as any)).toThrowError(InvalidParameterTypeError);
+      expect(() => funcs.r_of(0 as any)).toThrow(InvalidParameterTypeError);
       // expect(() => funcs.r_of(0 as any)).toThrowError('r_of: Expected Point, got 0');
     });
   });
@@ -144,7 +139,7 @@ describe('Coloured Points', () => {
     });
 
     it('throws when argument is not a point', () => {
-      expect(() => funcs.g_of(0 as any)).toThrowError(InvalidParameterTypeError);
+      expect(() => funcs.g_of(0 as any)).toThrow(InvalidParameterTypeError);
       // expect(() => funcs.g_of(0 as any)).toThrowError('g_of: Expected Point, got 0');
     });
   });
@@ -156,7 +151,7 @@ describe('Coloured Points', () => {
     });
 
     it('throws when argument is not a point', () => {
-      expect(() => funcs.b_of(0 as any)).toThrowError(InvalidParameterTypeError);
+      expect(() => funcs.b_of(0 as any)).toThrow(InvalidParameterTypeError);
       // expect(() => funcs.b_of(0 as any)).toThrowError('b_of: Expected Point, got 0');
     });
   });
@@ -270,11 +265,11 @@ describe(funcs.put_in_standard_position, () => {
   });
 
   test('toReplString representation', () => {
-    const transformer = funcs.put_in_standard_position(x => funcs.make_point(x, x));
+    const transformer = funcs.put_in_standard_position;
     expect(stringify(transformer)).toEqual('<CurveTransformer>');
   });
 
   test('name', () => {
-    expect(funcs.put_in_standard_position.name).toEqual('put_in_standard_position')
-  })
+    expect(funcs.put_in_standard_position.name).toEqual('put_in_standard_position');
+  });
 });
