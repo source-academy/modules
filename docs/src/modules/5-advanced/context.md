@@ -314,11 +314,12 @@ Tabs access the context via a different mechanism: the context is provided to th
 export default defineTab({
   toSpawn(context) {
     // use the context to determine whether the tab should be spawned
-    return context.moduleContexts.curve?.state?.curvesDrawn?.length > 0;
+    const state = getModuleState<CurveModuleState>(context, 'curve');
+    return !!state && state.curvesDrawn.length > 0;
   },
   body(context) {
     // use the context to generate the React content for the tab
-    const { curvesDrawn } = context.moduleContexts.curve!.state;
+    const { curvesDrawn } = getModuleState<CurveModuleState>(context, 'curve')!;
     return <CurveRenderer curves={curvesDrawn} />;
   }
 });

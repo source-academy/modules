@@ -71,6 +71,11 @@ For bundles and tabs, the test environment should always be `jsdom`, since they 
       <td></td>
     </tr>
     <tr>
+      <td><code>--ui</code></td>
+      <td>Opens Vitest UI in a browser. Automatically activates <code>watch</code> mode</td>
+      <td></td>
+    </tr>
+    <tr>
       <td><code>--update</code></td>
       <td>Cause snapshots to be updated</td>
       <td></td>

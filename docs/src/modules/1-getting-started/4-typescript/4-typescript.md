@@ -255,3 +255,10 @@ This should show a small window where VSCode will show you what version of Types
 
 You can use then use the "Select Version" button to change the version it is running. Ultimately, the version that the repository has specified will be the version that is used to verify
 your code when you push to the Github repository.
+
+If the errors are still not showing up, you can use the VSCode command palette to "Restart TS Server".
+
+> [!WARNING] Missing Typescript Versions
+>
+> By default, VSCode will detect and use whichever version of Typescript is present in the folder you've opened. However
+> if you have multiple "root" folders open in VSCode (such as with a workspace), the "use workspace version" option might not be available.

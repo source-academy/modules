@@ -1,3 +1,7 @@
+---
+outline: [2, 3]
+---
+
 # Mocking
 
 Mocking is a way to create "fake" versions of your code. For more information, look [here](https://vitest.dev/guide/mocking.html).

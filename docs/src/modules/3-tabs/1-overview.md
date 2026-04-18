@@ -68,7 +68,6 @@ The Frontend expects each tab's entry point to provide a default export of an ob
 import type { ModuleSideContent as _Content, DebuggerContext } from '@sourceacademy/modules-lib/types';
 type IconName = _Content['iconName'];
 // ---cut---
-
 interface ModuleSideContent {
   toSpawn: ((context: DebuggerContext) => boolean) | undefined;
   body: (context: DebuggerContext) => React.ReactElement;
@@ -80,8 +79,9 @@ interface ModuleSideContent {
 
 To ensure that your tab conforms to this interface, use the `defineTab` helper:
 
-```ts
-import { defineTab } from '@sourceacademy/modules-lib/tabs';
+```ts twoslash
+// @noErrors: 2345
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 
 export default defineTab({
   // ...details
@@ -93,26 +93,85 @@ Here is an example of a tab object:
 ```tsx twoslash [Sound/src/index.tsx]
 // @jsx: react-jsx
 import type { AudioPlayed } from '@sourceacademy/bundle-sound/types';
-declare function SoundTab(props: { elements: AudioPlayed[] }): JSX.Element;
+declare function SoundTab(props: { elements: AudioPlayed[] }): React.ReactElement;
 // ---cut---
 import type { SoundModuleState } from '@sourceacademy/bundle-sound/types';
 import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 
 export default defineTab({
   toSpawn(context) {
-    const { context: { moduleContexts: { sound: { state: { audioPlayed } } } } } = context;
-    return audioPlayed.length > 0;
+    const state = getModuleState<SoundModuleState>(context, 'sound');
+    return !!state && state.audioPlayed.length > 0;
   },
   body(context) {
-    // You can use the getModuleState helper instead of the destructuring pattern above
-    // but you will need to provide typing for the returned state object
-    const { audioPlayed } = getModuleState<SoundModuleState>(context, 'sound');
+    const { audioPlayed } = getModuleState<SoundModuleState>(context, 'sound')!;
     return <SoundTab elements={audioPlayed} />;
   },
   label: 'Sound Tab',
   iconName: 'music'
 });
 ```
+
+> [!TIP] Using getModuleState
+>
+> Often, to access your module state using plain Javascript, you would probably have to use a long chain of
+> property accesses or object destructurings:
+>
+> ```ts
+> const { context: { moduleContexts: { sound: { state: { audioPlayed } } } } } = context;
+> // or
+> const audioPlayed = context.context.moduleContexts.sound.state.audioPlayed;
+> ```
+>
+> The risk here is that each one of these property accesses could return `null` or `undefined`, resulting
+> in a `TypeError` at runtime. What you would need to do is "null-coalesce" - propagate the `null` or `undefined`
+> all the way to the end:
+>
+> ```ts
+> const toSpawn = (context: DebuggerContext): boolean => {
+>   // Can't use destructuring with null coalescing
+>   const audioPlayed = context.context.moduleContexts?.sound?.state?.audioPlayed;
+>   return audioPlayed && audioPlayed.length > 0;
+> };
+> ```
+>
+> To remedy all of this, you can simply call `getModuleState` instead, which
+> abstracts the all of the accessing and destructuring for you:
+>
+> ```ts twoslash
+> import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
+> import type { SoundModuleState } from '@sourceacademy/bundle-sound/types';
+> // ---cut---
+> import { getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
+>
+> const toSpawn = (context: DebuggerContext): boolean => {
+>   // Can't use destructuring with null coalescing
+>   const state = getModuleState<SoundModuleState>(context, 'sound');
+>   return !!state && state.audioPlayed.length > 0;
+> };
+> ```
+>
+> Then in your `body` function, you can use a non-null assertion. 
+> 
+> ```tsx twoslash
+> // @jsx: react-jsx
+> import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
+> import type { AudioPlayed, SoundModuleState } from '@sourceacademy/bundle-sound/types';
+> declare function SoundTab(props: { elements: AudioPlayed[] }): React.ReactElement;
+> // ---cut---
+> import { getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
+>
+> const body = (context: DebuggerContext): React.ReactElement => {
+>   const { audioPlayed } = getModuleState<SoundModuleState>(context, 'sound')!;
+>   return <SoundTab elements={audioPlayed} />;
+> };
+> ```
+>
+> As long as your `toSpawn` code is correct, accessing your module context should not throw a `TypeError`
+> because of attempting to access a property on `undefined` or other similar errors.
+>
+> You will need to explicitly pass in the type of your state object, since `getModuleState` won't be able
+> to infer it by itself.
 
 Here are explanations for each member of the tab interface:
 
@@ -125,8 +184,8 @@ Otherwise, the tab will be spawned depending on the return value of the function
 ```ts
 // Will spawn the Curve tab if there are any drawn curves
 const toSpawn = (context: DebuggerContext) => {
-  const { context: { moduleContexts: { curve: { state: { drawnCurves } } } } } = context;
-  return drawCurves.length > 0;
+  const state = getModuleState<CurveModuleState>(context, 'curve');
+  return !!state && state.drawCurves.length > 0;
 };
 ```
 
@@ -135,7 +194,7 @@ const toSpawn = (context: DebuggerContext) => {
 If `toSpawn` returns true, this function will be called to generate the content to be displayed. You can use JSX syntax for this.
 
 ```tsx
-const body = (context) => <div>This is the repeat tab</div>;
+const body = (context: DebuggerContext) => <div>This is the repeat tab</div>;
 ```
 
 Similarly, the debugger context is available here, which allows you to access module contexts or the result of the program that was just evaluated.

@@ -253,15 +253,16 @@ export function change_text_options(options: TextOptions): void;
 If you do want to use the latter style, you could do something like this:
 
 ```ts
-interface TextOptions {
+// Of course, don't forget to implement ReplResult:
+interface TextOptions extends ReplResult {
   color: string;
   size: number;
 }
+
 export function create_text_options(color: string, size: number): TextOptions {
   return {
     color,
     size,
-    // Of course, don't forget to implement ReplResult:
     toReplString: () => '<TextOptions>'
   };
 }
