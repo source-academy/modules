@@ -1,16 +1,18 @@
 import fs from 'fs/promises';
 import pathlib from 'path';
-import type { BundleManifest, ResolvedBundle, SuccessResult } from '@sourceacademy/modules-repotools/types';
-import { isNodeError, objectEntries } from '@sourceacademy/modules-repotools/utils';
+import type { ResolvedBundle, SuccessResult } from '@sourceacademy/modules-repotools/types';
+import { isNodeError } from '@sourceacademy/modules-repotools/utils';
+import { mapValues } from 'es-toolkit';
+
+export function collateManifest(bundles: Record<string, ResolvedBundle>) {
+  return mapValues(bundles, ({ manifest }) => manifest);
+}
 
 /**
  * Writes the combined modules' manifest to the output directory
  */
 export async function buildManifest(bundles: Record<string, ResolvedBundle>, outDir: string): Promise<SuccessResult> {
-  const finalManifest = objectEntries(bundles).reduce<Record<string, BundleManifest>>((res, [name, { manifest }]) => ({
-    ...res,
-    [name]: manifest
-  }), {});
+  const finalManifest = collateManifest(bundles);
 
   // TODO: Just use fs-extra which has .ensureDir (graceful-fs under the hood)
   try {

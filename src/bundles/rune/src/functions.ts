@@ -1,6 +1,6 @@
 import { repeat_internal } from '@sourceacademy/bundle-repeat/functions';
 import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
-import { clamp } from 'es-toolkit';
+import { clamp, sample } from 'es-toolkit';
 import { mat4, vec3 } from 'gl-matrix';
 import {
   DrawnRune,
@@ -410,9 +410,8 @@ export class RuneColours {
   @functionDeclaration('rune: Rune', 'Rune')
   static random_color(rune: Rune): Rune {
     throwIfNotRune(RuneColours.random_color.name, rune);
-    const colourNames = Object.keys(RuneColours.colours);
-    const colourName = colourNames[Math.floor(Math.random() * colourNames.length)];
-    const randomColor = hexToColor(RuneColours.colours[colourName]);
+    const colorVal = sample(Object.values(RuneColours.colours));
+    const randomColor = hexToColor(colorVal);
 
     return Rune.of({
       colors: new Float32Array(randomColor),

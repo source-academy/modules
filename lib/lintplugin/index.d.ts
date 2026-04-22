@@ -1,4 +1,5 @@
 import type { ESLint, Rule } from 'eslint';
+
 declare const plugin: {
   rules: {
     'default-import-name': Rule.RuleModule
@@ -15,4 +16,3 @@ declare const plugin: {
 }
 
 export default plugin;
-

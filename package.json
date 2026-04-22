@@ -62,9 +62,9 @@
     "@types/node": "^24.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@vitest/coverage-v8": "4.1.4",
+    "@vitest/coverage-v8": "4.1.5",
     "@vitest/eslint-plugin": "^1.6.14",
-    "@vitest/ui": "4.1.4",
+    "@vitest/ui": "4.1.5",
     "@yarnpkg/types": "^4.0.1",
     "esbuild": "^0.28.0",
     "eslint": "^9.35.0",
@@ -82,7 +82,7 @@
     "react-dom": "^19.0.0",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.58.2",
-    "vitest": "4.1.4",
+    "vitest": "4.1.5",
     "vitest-browser-react": "^2.1.0"
   },
   "peerDependencies": {
@@ -113,8 +113,5 @@
     "./lib/*",
     "./src/bundles/*",
     "./src/tabs/*"
-  ],
-  "resolutions": {
-    "js-slang": "portal:/C:/source/source_academy/js-slang"
-  }
+  ]
 }
