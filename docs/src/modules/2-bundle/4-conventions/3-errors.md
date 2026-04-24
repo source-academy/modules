@@ -162,7 +162,7 @@ export function error_if_not_zero() {
 }
 ```
 
-In cases like the one above where you are trying to verify a condition, you can use the `assert` function provided by `js-slang`:
+In cases like the one above where you are trying to validate a condition, you can use the `assert` function provided by `js-slang`:
 
 ```ts twoslash
 import assert from 'js-slang/dist/utils/assert';
@@ -187,3 +187,6 @@ If the condition is false, an `AssertionError` (which is a subclass of `Internal
 >
 > The `assert` function exported by `js-slang` is different from the one exported from NodeJS. Take care to use the one
 > exported from `js-slang`.
+
+Just like `GeneralRuntimeError`, `InternalRuntimeError` can be extended should you wish to create a specific class to represent
+a specific type of internal error.

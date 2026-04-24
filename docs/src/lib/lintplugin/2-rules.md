@@ -1,7 +1,5 @@
 # Rules Reference
 
-[[toc]]
-
 ## `default-import-name`
 
 Enforces that the name assigned to a default or namespace import is consistent.

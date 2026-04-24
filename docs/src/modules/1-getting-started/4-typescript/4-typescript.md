@@ -150,7 +150,18 @@ Once again, this should be kept to a minimum. After all, there's no point in run
 
 ## Type Assertions
 
-A main design philosophy of Typescript is compatibility with Javscript behaviours. This means that in some cases, Typescript cannot guarantee type-safety. A good example would be with maps:
+Typescript is usually very good about determining and narrowing the types of variables. For examples, the `typeof` check below allows Typescript to narrow the type of `x`:
+
+```ts twoslash
+function foo(x: string | number) {
+  if (typeof x === 'number') {
+    const result = x / 10;
+    //             ^?
+  }
+}
+```
+
+However, a main design philosophy of Typescript is compatibility with Javscript behaviours. This means that in some cases, Typescript alone cannot guarantee type-safety. A good example would be with maps:
 
 ```ts twoslash
 const values = new Map<string, string>([
@@ -239,6 +250,27 @@ const y = x / 10; // Now compiles with no problem
 Type assertions should be kept to a minimum to make the best use of the Typescript compiler. This also reduces the chances of a mistake being made and making it through to production
 code undetected.
 
+An ESLint rule has been configured to highlight whenever a type assertion is unnecessary and thus should be removed.
+
+## Implicit Any
+
+If you don't provide a type for a function parameter or variable (and if Typescript is unable to infer a type for that variable), Typescript assigns that variable the `any` type:
+
+```ts twoslash
+// @noImplicitAny: false
+let x;
+//  ^?
+
+
+function foo(x) {
+  //         ^?
+}
+```
+
+Since the `any` type basically disables type checking entirely, you run the risk of writing unsafe code that might error at runtime.
+
+Currently, this is allowed so long as the `noImplicitAny` Typescript option is set to `true`. This may change in the future, so wherever possible you should avoid using the `any` type implicitly.
+
 ## Mismatched Typescript Versions
 
 If you regularly use different versions of Typescript (for example, because you use workspaces that contain projects with different versions of Typescript), you may find that VSCode highlights
@@ -262,3 +294,46 @@ If the errors are still not showing up, you can use the VSCode command palette t
 >
 > By default, VSCode will detect and use whichever version of Typescript is present in the folder you've opened. However
 > if you have multiple "root" folders open in VSCode (such as with a workspace), the "use workspace version" option might not be available.
+
+## Missing types for dependencies and overriding `tsconfig.json`
+
+Using the [`extends`](https://www.typescriptlang.org/tsconfig/#extends) property, `tsconfig.json` files can inherit options from another `tsconfig.json` file. The repository is set up with `tsconfig`s at
+different levels to share options across both bundles and tabs.
+
+
+Sometimes, your bundle might depend on packages that have published their types differently. For example, the `communication` bundle requires `mqtt`:
+
+```ts
+import { connect, type MqttClient, type QoS } from 'mqtt/dist/mqtt';
+// Need to use "mqtt/dist/mqtt" as "mqtt" requires global, which SA's compiler does not define.
+
+export const STATE_CONNECTED = 'Connected';
+export const STATE_DISCONNECTED = 'Disconnected';
+export const STATE_RECONNECTING = 'Reconnecting';
+export const STATE_OFFLINE = 'Offline';
+
+// ...other things
+```
+
+The `mqtt` dependency however, is specified as such in `package.json`:
+
+```json
+{
+  "dependencies": {
+    "mqtt": "^4.3.7",
+    "uniqid": "^5.4.0"
+  }
+}
+```
+
+The helpful comment below the import explains the discrepancy. Without further configuration, we find that Typescript is unable to find the types for the `mqtt/dist/mqtt` package:
+![](./mqtt-types.png)
+
+`tsconfig` does provide a way for you to tell Typescript where to look for types: using either the `paths` or `types` field. The `tsconfig` for the `communication` bundle looks like this:
+
+<<< ../../../../../src/bundles/communication/tsconfig.json
+
+The `paths` compiler option has been set to tell Typescript where to find the types for `mqtt/dist/mqtt`. Because of the way `tsconfig.json` file inheritance works, if you override a configuration option in a child `tsconfig`,
+you'll need to specify the options from the parent configuration again (hence the `js-slang/context` path).
+
+In other words, if you need to modify `tsconfig.json`, make sure to include the corresponding options inherited from the parent `tsconfig.json`.
