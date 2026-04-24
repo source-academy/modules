@@ -104,7 +104,7 @@ export function bar() {
 ```
 :::
 
-The raw markdown for this code ground looks like this:
+The raw markdown for this code group looks like this:
 
 ````md
 ::: code-group

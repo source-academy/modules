@@ -58,6 +58,26 @@ import path from 'pathlib';
 // both import statements will be validated!
 ```
 
+## `instanceof-check`
+
+This rule highlights whenever an `instanceof` expression is used in tab code against a type that is imported from a bundle or the modules library. Such checks might
+fail at runtime as described [here](../../modules/5-advanced/misc#instanceof-will-not-work-at-runtime).
+
+The rule can be configured with an array of regex strings to match against import sources that might cause runtime `instanceof` checks to fail. For example:
+
+```ts
+// By default, the rule matches against bundles and modules-lib
+
+const config = {
+  '@sourceacademy/instanceof-check': [
+    'error', [
+      '@sourceacademy/bundle-.+',
+      '@sourceacademy/modules-lib(?:/.+)?',
+    ]
+  ]
+};
+```
+
 ## `no-barrel-imports`
 
 Enforces that imports from a certain source uses individual imports instead of the main barrel import.

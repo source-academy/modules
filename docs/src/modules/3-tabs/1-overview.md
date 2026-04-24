@@ -115,7 +115,7 @@ export default defineTab({
 > [!TIP] Using getModuleState
 >
 > Often, to access your module state using plain Javascript, you would probably have to use a long chain of
-> property accesses or object destructurings:
+> property accesses or object destructuring:
 >
 > ```ts
 > const { context: { moduleContexts: { sound: { state: { audioPlayed } } } } } = context;
