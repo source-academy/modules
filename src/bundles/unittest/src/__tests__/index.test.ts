@@ -168,8 +168,8 @@ describe('Test assertion functions', () => {
       });
 
       test('deep equality', () => {
-        const list0 = list(1, pair(2, 3), 4);
-        const list1 = list(1, pair(2, 3), 4);
+        const list0 = list<any>(1, pair(2, 3), 4);
+        const list1 = list<any>(1, pair(2, 3), 4);
 
         expect(() => asserts.assert_equals(list0, list1)).not.toThrow();
       });

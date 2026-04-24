@@ -5,7 +5,8 @@ import {
   generateCSEMachineStateStream,
 } from 'js-slang/dist/cse-machine/interpreter';
 import { parse } from 'js-slang/dist/parser/parser';
-import { Variant, type Context } from 'js-slang/dist/types';
+import { Variant } from 'js-slang/dist/langs';
+import type { Context } from 'js-slang/dist/types';
 
 export const DEFAULT_SOURCE_OPTIONS = {
   scheduler: 'async',

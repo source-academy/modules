@@ -178,12 +178,12 @@ export function prepend_remote_url(asset_key: string): string {
  * @returns object config
  */
 export function create_config(lst: List): ObjectConfig {
-  const config = {};
-  accumulate((xs: [any, any], _) => {
+  const config: ObjectConfig = {};
+  accumulate<unknown, null>((xs, _) => {
     if (!is_pair(xs)) {
       throw_error('config element is not a pair!');
     }
-    config[head(xs)] = tail(xs);
+    config[head(xs) as string] = tail(xs);
     return null;
   }, null, lst);
   return config;

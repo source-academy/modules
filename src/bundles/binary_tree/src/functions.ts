@@ -1,4 +1,4 @@
-import { head, is_list, is_pair, list, tail } from 'js-slang/dist/stdlib/list';
+import { head, is_list, tail } from 'js-slang/dist/stdlib/list';
 import type { BinaryTree, EmptyBinaryTree, NonEmptyBinaryTree } from './types';
 
 /**
@@ -26,7 +26,7 @@ export function make_empty_tree(): BinaryTree {
  * @returns A binary tree
  */
 export function make_tree(value: any, left: BinaryTree, right: BinaryTree): BinaryTree {
-  return list(value, left, right);
+  return [value, [left, [right, null]]];
 }
 
 /**
@@ -42,16 +42,15 @@ export function make_tree(value: any, left: BinaryTree, right: BinaryTree): Bina
 export function is_tree(value: any): value is BinaryTree {
   // TODO: value parameter should be of type unknown
   if (!is_list(value)) return false;
+  if (value === null) return true;
 
-  if (is_empty_tree(value)) return true;
+  const tl1 = tail(value);
+  if (tl1 === null || !is_tree(head(tl1))) return false;
 
-  const left = tail(value);
-  if (!is_list(left) || !is_tree(head(left))) return false;
+  const tl2 = tail(tl1);
+  if (tl2 === null || !is_tree(head(tl2))) return false;
 
-  const right = tail(left);
-  if (!is_pair(right) || !is_tree(head(right))) return false;
-
-  return tail(right) === null;
+  return tail(tl2) === null;
 }
 
 /**
@@ -106,7 +105,7 @@ export function entry(t: BinaryTree): any {
  */
 export function left_branch(t: BinaryTree): BinaryTree {
   throwIfNotNonEmptyTree(t, left_branch.name);
-  return head(tail(t));
+  return t[1][0];
 }
 
 /**
@@ -121,5 +120,5 @@ export function left_branch(t: BinaryTree): BinaryTree {
  */
 export function right_branch(t: BinaryTree): BinaryTree {
   throwIfNotNonEmptyTree(t, right_branch.name);
-  return head(tail(tail(t)));
+  return t[1][1][0];
 }

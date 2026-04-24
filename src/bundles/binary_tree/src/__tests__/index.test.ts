@@ -9,7 +9,7 @@ describe(funcs.is_tree, () => {
   });
 
   it('returns false when argument is a list of 4 elements', () => {
-    const arg = list(0, funcs.make_empty_tree(), funcs.make_empty_tree(), funcs.make_empty_tree());
+    const arg = list<any>(0, funcs.make_empty_tree(), funcs.make_empty_tree(), funcs.make_empty_tree());
     expect(funcs.is_tree(arg)).toEqual(false);
   });
 
@@ -17,7 +17,7 @@ describe(funcs.is_tree, () => {
     const not_tree = list(0, 1, 2);
     expect(funcs.is_tree(not_tree)).toEqual(false);
 
-    const also_not_tree = list(1, not_tree, null);
+    const also_not_tree = list<any>(1, not_tree, null);
     expect(funcs.is_tree(also_not_tree)).toEqual(false);
   });
 

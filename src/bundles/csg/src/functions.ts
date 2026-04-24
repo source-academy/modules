@@ -47,7 +47,7 @@ import {
 export function listToArray(l: List): Operable[] {
   const operables: Operable[] = [];
   while (l !== null) {
-    const operable: Operable = head(l);
+    const operable = head(l) as Operable;
     operables.push(operable);
     l = tail(l);
   }

@@ -17,7 +17,8 @@ describe(ProgrammableRepl, () => {
 
   replIt('calls js-slang when default_js_slang is the evaluator', ({ repl }) => {
     vi.spyOn(slang, 'runFilesInContext').mockResolvedValueOnce({
-      status: 'error'
+      status: 'error',
+      context: {} as any
     });
 
     repl.InvokeREPL_Internal(funcs.default_js_slang);
