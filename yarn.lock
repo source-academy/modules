@@ -1150,15 +1150,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commander-js/extra-typings@npm:^12.0.1":
-  version: 12.1.0
-  resolution: "@commander-js/extra-typings@npm:12.1.0"
-  peerDependencies:
-    commander: ~12.1.0
-  checksum: 10c0/5d29eaa724b577e2a52a393ad54992924d2559931b8e493ab892477b7a4e878e475c6bf771260f8585d835f7d8e17ae4a2656c191e9595d210ae0b48291c0b3d
-  languageName: node
-  linkType: hard
-
 "@commander-js/extra-typings@npm:^14.0.0":
   version: 14.0.0
   resolution: "@commander-js/extra-typings@npm:14.0.0"
@@ -2640,13 +2631,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@joeychenofficial/alt-ergo-modified@npm:^2.4.0":
-  version: 2.4.0
-  resolution: "@joeychenofficial/alt-ergo-modified@npm:2.4.0"
-  checksum: 10c0/b6587dac0a76331602984ed61e482c2f7af2920d7069c873024bbc7575809ef440c7b91a7fb9a144b54abe98dd1d38a942e57f4476a0736a661c79bd66c176fa
-  languageName: node
-  linkType: hard
-
 "@jridgewell/gen-mapping@npm:^0.3.12, @jridgewell/gen-mapping@npm:^0.3.5":
   version: 0.3.12
   resolution: "@jridgewell/gen-mapping@npm:0.3.12"
@@ -3851,7 +3835,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-binary_tree@workspace:src/bundles/binary_tree"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -3887,7 +3871,7 @@ __metadata:
     "@jscad/stl-serializer": "npm:2.1.11"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     save-file: "npm:^2.3.1"
     typescript: "npm:^6.0.2"
   languageName: unknown
@@ -3901,7 +3885,7 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     es-toolkit: "npm:^1.44.0"
     gl-matrix: "npm:^3.3.0"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -3911,7 +3895,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-game@workspace:src/bundles/game"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     phaser: "npm:^3.54.0"
     typescript: "npm:^6.0.2"
   languageName: unknown
@@ -3931,7 +3915,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-midi@workspace:src/bundles/midi"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -3997,7 +3981,7 @@ __metadata:
     "@sourceacademy/bundle-sound": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/plotly.js": "npm:^3.0.0"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     plotly.js-dist: "npm:^3.0.0"
     typescript: "npm:^6.0.2"
   languageName: unknown
@@ -4017,7 +4001,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-repl@workspace:src/bundles/repl"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4031,7 +4015,7 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/three": "npm:^0.183.0"
     es-toolkit: "npm:^1.44.0"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     three: "npm:^0.183.0"
     typescript: "npm:^6.0.2"
   languageName: unknown
@@ -4045,7 +4029,7 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     es-toolkit: "npm:^1.44.0"
     gl-matrix: "npm:^3.3.0"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4075,7 +4059,7 @@ __metadata:
     "@sourceacademy/bundle-midi": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4085,7 +4069,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-sound_matrix@workspace:src/bundles/sound_matrix"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4096,7 +4080,7 @@ __metadata:
   dependencies:
     "@sourceacademy/bundle-midi": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4107,7 +4091,7 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     es-toolkit: "npm:^1.44.0"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4237,7 +4221,7 @@ __metadata:
     classnames: "npm:^2.3.1"
     commander: "npm:^14.0.0"
     eslint: "npm:^9.35.0"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     playwright: "npm:^1.55.1"
     re-resizable: "npm:^6.9.11"
     react: "npm:^19.0.0"
@@ -4302,7 +4286,7 @@ __metadata:
     "@vitest/browser-playwright": "npm:4.1.4"
     es-toolkit: "npm:^1.44.0"
     eslint: "npm:^9.35.0"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     playwright: "npm:^1.55.1"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
@@ -5177,7 +5161,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/estree@npm:*, @types/estree@npm:1.0.8, @types/estree@npm:^1.0.0, @types/estree@npm:^1.0.5, @types/estree@npm:^1.0.6, @types/estree@npm:^1.0.8":
+"@types/estree@npm:*, @types/estree@npm:1.0.8, @types/estree@npm:^1.0.0, @types/estree@npm:^1.0.6, @types/estree@npm:^1.0.8":
   version: 1.0.8
   resolution: "@types/estree@npm:1.0.8"
   checksum: 10c0/39d34d1afaa338ab9763f37ad6066e3f349444f9052b9676a7cc0252ef9485a41c6d81c9c4e0d26e9077993354edf25efc853f3224dd4b447175ef62bdcc86a5
@@ -7694,13 +7678,6 @@ __metadata:
   version: 7.2.0
   resolution: "commander@npm:7.2.0"
   checksum: 10c0/8d690ff13b0356df7e0ebbe6c59b4712f754f4b724d4f473d3cc5b3fdcf978e3a5dc3078717858a2ceb50b0f84d0660a7f22a96cdc50fb877d0c9bb31593d23a
-  languageName: node
-  linkType: hard
-
-"commander@npm:^12.0.0":
-  version: 12.1.0
-  resolution: "commander@npm:12.1.0"
-  checksum: 10c0/6e1996680c083b3b897bfc1cfe1c58dfbcd9842fd43e1aaf8a795fbc237f65efcc860a3ef457b318e73f29a4f4a28f6403c3d653d021d960e4632dd45bde54a9
   languageName: node
   linkType: hard
 
@@ -11762,27 +11739,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-slang@npm:^1.0.85":
-  version: 1.0.85
-  resolution: "js-slang@npm:1.0.85"
+"js-slang@npm:^1.0.92":
+  version: 1.0.92
+  resolution: "js-slang@npm:1.0.92"
   dependencies:
     "@babel/parser": "npm:^7.19.4"
-    "@commander-js/extra-typings": "npm:^12.0.1"
-    "@joeychenofficial/alt-ergo-modified": "npm:^2.4.0"
+    "@commander-js/extra-typings": "npm:^14.0.0"
     "@ts-morph/bootstrap": "npm:^0.18.0"
-    "@types/estree": "npm:^1.0.5"
     acorn: "npm:^8.8.2"
     acorn-class-fields: "npm:^1.0.0"
     acorn-loose: "npm:^8.0.0"
     acorn-walk: "npm:^8.0.0"
     astring: "npm:^1.4.3"
-    commander: "npm:^12.0.0"
+    commander: "npm:^14.0.0"
     js-base64: "npm:^3.7.5"
     lodash: "npm:^4.17.21"
     source-map: "npm:0.7.6"
   bin:
     js-slang: dist/repl/index.js
-  checksum: 10c0/8a206d6052e5b23a27bda4aef66675b4b7f9bebde936c789a182948478e26fa7aee6289effd0d867725a939e14674ee59fd218e1bec1fd1dc597b6bf7cbbaf42
+  checksum: 10c0/faea8ab62fa1faecf68725becfb1184a13d8163bbc18d21a14c24f709fdd657ed5b7bbc9280765ca520d554261e96b1b1591abb16406ea8aa7ddff51501ad84c
   languageName: node
   linkType: hard
 
