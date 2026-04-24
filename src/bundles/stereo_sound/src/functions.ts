@@ -341,9 +341,9 @@ export function get_duration(sound: Sound): number {
 export function is_sound(x: unknown): x is Sound {
   return (
     is_pair(x)
-    && typeof get_left_wave(x) === 'function'
-    && typeof get_right_wave(x) === 'function'
-    && typeof get_duration(x) === 'number'
+    && typeof get_left_wave(x as Sound) === 'function'
+    && typeof get_right_wave(x as Sound) === 'function'
+    && typeof get_duration(x as Sound) === 'number'
   );
 }
 
@@ -801,7 +801,7 @@ export function consecutively(list_of_sounds: List): Sound {
     const new_right: Wave = t => (t < dur1 ? Rwave1(t) : Rwave2(t - dur1));
     return make_stereo_sound(new_left, new_right, dur1 + dur2);
   }
-  return accumulate<Sound, Sound>(stereo_cons_two, silence_sound(0), list_of_sounds);
+  return accumulate<Sound, Sound>(stereo_cons_two, silence_sound(0), list_of_sounds as List<Sound>);
 }
 
 /**
@@ -832,7 +832,7 @@ export function simultaneously(list_of_sounds: List): Sound {
   const unnormed = accumulate(
     stereo_simul_two,
     silence_sound(0),
-    list_of_sounds
+    list_of_sounds as List<Sound>
   );
   const sounds_length = length(list_of_sounds);
   const normalised_left: Wave = t => head(head(unnormed))(t) / sounds_length;
@@ -926,7 +926,7 @@ export function stacking_adsr(
   }
 
   return simultaneously(accumulate(
-    (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
+    (x: any, y: any) => pair((tail(x) as any)(waveform(base_frequency * (head(x) as number), duration)), y),
     null,
     zip(envelopes, 1)
   ));

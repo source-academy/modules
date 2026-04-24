@@ -353,8 +353,8 @@ export function get_duration(sound: Sound): number {
 export function is_sound(x: unknown): x is Sound {
   return (
     is_pair(x)
-    && typeof get_wave(x) === 'function'
-    && typeof get_duration(x) === 'number'
+    && typeof get_wave(x as Sound) === 'function'
+    && typeof get_duration(x as Sound) === 'number'
   );
 }
 
@@ -590,7 +590,7 @@ export function consecutively(list_of_sounds: List): Sound {
     const new_wave: Wave = t => (t < dur1 ? wave1(t) : wave2(t - dur1));
     return make_sound(new_wave, dur1 + dur2);
   }
-  return accumulate(consec_two, silence_sound(0), list_of_sounds);
+  return accumulate(consec_two, silence_sound(0), list_of_sounds as List<Sound>);
 }
 
 /**
@@ -629,7 +629,7 @@ export function simultaneously(list_of_sounds: List): Sound {
     return make_sound(new_wave, new_dur);
   }
 
-  const mushed_sounds = accumulate(simul_two, silence_sound(0), list_of_sounds);
+  const mushed_sounds = accumulate(simul_two, silence_sound(0), list_of_sounds as List<Sound>);
   const len = length(list_of_sounds);
   const normalised_wave: Wave = t => head(mushed_sounds)(t) / len;
   const highest_duration = tail(mushed_sounds);
@@ -716,7 +716,7 @@ export function stacking_adsr(
   }
 
   return simultaneously(accumulate(
-    (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
+    (x: any, y: any) => pair((tail(x) as any)(waveform(base_frequency * (head(x) as number), duration)), y),
     null,
     zip(envelopes, 1)
   ));
