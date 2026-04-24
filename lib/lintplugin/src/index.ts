@@ -4,11 +4,14 @@ import defaultImportName from './rules/defaultImportName';
 import noBarrelImports from './rules/noBarrelImports';
 import regionComment from './rules/regionComment';
 import tabType from './rules/tabType';
+import instanceofCheck from './rules/typed/instanceofCheck';
 
 const plugin: ESLint.Plugin = {
   name: 'Source Academy Lint Plugin',
   rules: {
     'default-import-name': defaultImportName,
+    // @ts-expect-error Typescript-Eslint rules are just built different
+    'instanceof-check': instanceofCheck,
     // @ts-expect-error Typescript-Eslint rules are just built different
     'no-barrel-imports': noBarrelImports,
     'region-comment': regionComment,
