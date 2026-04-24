@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "es-toolkit": "^1.44.0",
-    "js-slang": "^1.0.85"
+    "js-slang": "^1.0.92"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",

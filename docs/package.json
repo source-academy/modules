@@ -18,7 +18,7 @@
     "@sourceacademy/lint-plugin": "workspace:^",
     "@sourceacademy/markdown-plugin-directory-tree": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
-    "js-slang": "^1.0.85",
+    "js-slang": "^1.0.92",
     "mermaid": "^11.10.0",
     "vitepress": "^1.6.4",
     "vitepress-plugin-group-icons": "^1.7.5",
