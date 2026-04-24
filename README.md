@@ -51,4 +51,4 @@ You should now have a local copy of the modules' developer documentation running
 
 ## Conductor migration
 
-For migration to the conductor framework, we have a branch `conductor-migration` with a draft PR https://github.com/source-academy/modules/pull/680 associated with it (to keep the branch up-to-date with ongoing changes). The `conductor-migration` branch is autodeployed to github pages using the `modules-conductor` repo.
+For migration to the Conductor framework, we have a branch `conductor-migration` with a [draft PR](https://github.com/source-academy/modules/pull/680) associated with it (to keep the branch up-to-date with ongoing changes). The `conductor-migration` branch is autodeployed to GitHub Pages using the `modules-conductor` repo.
