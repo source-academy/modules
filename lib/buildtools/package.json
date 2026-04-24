@@ -2,12 +2,12 @@
   "name": "@sourceacademy/modules-buildtools",
   "private": true,
   "description": "Tools for building and testing Source Academy bundles and tabs",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "devDependencies": {
     "@commander-js/extra-typings": "^14.0.0",
     "@types/estree": "^1.0.0",
     "@types/http-server": "^0.12.4",
-    "@types/node": "^24.14.1",
+    "@types/node": "^24.0.0",
     "typescript": "^6.0.2"
   },
   "exports": null,
@@ -29,7 +29,6 @@
     "esbuild": "^0.28.0",
     "eslint": "^9.35.0",
     "http-server": "^14.1.1",
-    "js-slang": "^1.0.92",
     "jsdom": "^29.0.0",
     "typedoc": "^0.28.18",
     "vite": "^8.0.5",

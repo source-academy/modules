@@ -59,10 +59,6 @@ module.exports = defineConfig({
         dep.update('workspace:^');
       }
 
-      if (dep.ident === '@types/node') {
-        dep.update(`^${nodeVersion}`);
-      }
-
       // @types dependencies should be devDependencies, not dependencies
       if (dep.ident.startsWith('@types') && dep.type === 'dependencies') {
         dep.workspace.set(`devDependencies.${dep.ident}`, dep.range);
