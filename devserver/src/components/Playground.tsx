@@ -6,7 +6,7 @@ import { SourceDocumentation, getNames, runInContext, type Context } from 'js-sl
 import createContext from 'js-slang/dist/createContext';
 import { ModuleInternalError } from 'js-slang/dist/modules/errors';
 import { setModulesStaticURL } from 'js-slang/dist/modules/loader';
-import { Chapter, Variant } from 'js-slang/dist/types';
+import { Chapter, Variant } from 'js-slang/dist/langs';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import React from 'react';
 import mockModuleContext from '../mockModuleContext';
