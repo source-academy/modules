@@ -7,7 +7,7 @@
     "@commander-js/extra-typings": "^14.0.0",
     "@types/estree": "^1.0.0",
     "@types/http-server": "^0.12.4",
-    "@types/node": "^24.0.0",
+    "@types/node": "^24.14.1",
     "typescript": "^6.0.2"
   },
   "exports": null,

@@ -1,5 +1,7 @@
 // @ts-check
 
+const fs = require('fs/promises');
+const pathlib = require('path');
 const { defineConfig } = require('@yarnpkg/types');
 const { name } = require('./package.json');
 
@@ -23,11 +25,18 @@ module.exports = defineConfig({
       }
     }
 
+    // Load the Node version that the repository is supposed to use
+    const nodeVersionFile = pathlib.join(__dirname, '.node-version');
+    const nodeVersion = (await fs.readFile(nodeVersionFile, 'utf-8')).trim();
+
     const [rootWorkspace] = Yarn.workspaces({ ident: name });
 
     // There should not be any resolutions value for js-slang,
     // which might be present if you linked js-slang to a local copy
     rootWorkspace.set('resolutions.js-slang', undefined);
+
+    // Runtime version should match the one specified
+    rootWorkspace.set('devEngines.runtime.version', `^${nodeVersion}`);
 
     // Make sure that if the dependency is defined in the root workspace
     // that all child workspaces use the same version of that dependency
@@ -48,6 +57,10 @@ module.exports = defineConfig({
         dep.ident.startsWith('@sourceacademy/tab')
       ) {
         dep.update('workspace:^');
+      }
+
+      if (dep.ident === '@types/node') {
+        dep.update(`^${nodeVersion}`);
       }
 
       // @types dependencies should be devDependencies, not dependencies
