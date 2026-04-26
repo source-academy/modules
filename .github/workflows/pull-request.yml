@@ -157,6 +157,12 @@ jobs:
           yarn build
           yarn tsc
 
+      - name: Upload Tab Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: ${{ matrix.bundleInfo.name }}-bundle
+          path: ./build/bundles/${{ matrix.bundleInfo.name }}.js
+
       - name: Build Bundle Docs
         run: |
           cd ${{ matrix.bundleInfo.directory }}
@@ -166,6 +172,32 @@ jobs:
         run: |
           cd ${{ matrix.bundleInfo.directory }}
           yarn test --coverage
+
+  validate:
+    name: Validate built bundles and tabs
+    runs-on: ubuntu-latest
+    needs:
+      - bundles
+      - tabs
+
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v6
+
+      - name: Initialize Validator
+        uses: ./.github/actions/src/init
+        with:
+          package-name: '@sourceacademy/modules-validator'
+          playwright: true
+
+      - name: Load/Build all bundles and tabs
+        uses: ./.github/actions/src/load-artifacts
+        with:
+          load-tabs: true
+          load-bundles: true
+
+      - name: Validate bundles and tabs
+        run: yarn workspaces foreach -A --include @sourceacademy/modules-validator run validate
 
   devserver:
     name: Dev Server Tasks
@@ -195,6 +227,8 @@ jobs:
 
       - name: Load/Build all tabs
         uses: ./.github/actions/src/load-artifacts
+        with:
+          load-tabs: true
 
       - name: Initialize Devserver
         uses: ./.github/actions/src/init

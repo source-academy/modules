@@ -498,7 +498,8 @@ export default defineConfig(
     files: [
       '**/__tests__/**/*.ts*',
       '**/__mocks__/**/*.ts*',
-      '**/vitest.*.ts'
+      '**/vitest.*.ts',
+      './lib/validator/tests/**/*.ts*'
     ],
     rules: {
       'no-empty-pattern': 'off', // vitest requires certain things to be destructured using an object pattern

@@ -1,7 +1,7 @@
 import { startVitest } from 'vitest/node';
-import config from './vitest.config';
+import config from './test.config';
 
-export default async function runValidationTests() {
+export async function runValidationTests() {
   const vitest = await startVitest('test', [], undefined, config);
 
   if (vitest.shouldKeepServer()) {
@@ -13,3 +13,4 @@ export default async function runValidationTests() {
     await vitest.close();
   }
 }
+ 

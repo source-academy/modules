@@ -4,17 +4,19 @@ import type { DebuggerContext, ModuleSideContent } from '@sourceacademy/modules-
 import jsslangDist from 'js-slang';
 import * as jsSlang from 'js-slang';
 import { getRequireProvider } from 'js-slang/dist/modules/loader/requireProvider';
-import type { ModuleBundle, ModuleFunctions } from 'js-slang/dist/modules/moduleTypes';
 import React from 'react';
 import JSXRuntime from 'react/jsx-runtime';
+import ace from 'react-ace';
 import ReactDOM from 'react-dom';
 import ReactDOMClient from 'react-dom/client';
 import { test as baseTest } from 'vitest';
+import type { LoadedBundle, PartialSourceModule } from 'js-slang/dist/modules/moduleTypes';
 
 export const tabRequireProvider = (x: string) => {
   const exports = {
     'react': React,
     'react/jsx-runtime': JSXRuntime,
+    'react-ace': ace,
     'react-dom': ReactDOM,
     'react-dom/client': ReactDOMClient,
     '@blueprintjs/core': bpcore,
@@ -27,15 +29,15 @@ export const tabRequireProvider = (x: string) => {
   return exports[x as keyof typeof exports] as any;
 };
 
-interface Fixtures<T extends ModuleFunctions> {
+interface Fixtures<T extends LoadedBundle> {
   context: DebuggerContext;
   bundle: T;
   tab: ModuleSideContent;
 }
 
-export function getTestFunc<T extends ModuleFunctions>(
+export function getTestFunc<T extends LoadedBundle>(
   name: string,
-  partialBundle: ModuleBundle,
+  partialBundle: PartialSourceModule,
   partialTab: (req: typeof tabRequireProvider) => { default: ModuleSideContent }
 ) {
   return baseTest.extend<Fixtures<T>>({

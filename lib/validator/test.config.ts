@@ -40,7 +40,7 @@ export default defineConfig({
         pathlib.join(outDir, 'tabs', '*.js'),
       ]
     },
-    include: ['./__tests__/**/*.test.{ts,tsx}'],
+    include: ['./tests/**/*.test.{ts,tsx}'],
     browser: {
       screenshotFailures: false,
       enabled: true,
