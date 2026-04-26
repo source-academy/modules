@@ -37,7 +37,7 @@ export async function main() {
     tabs = Object.values(tabsResult.tabs);
   }
 
-  await loadOrBuildAsset(bundles, tabs);
+  await loadOrBuildAsset(bundles, tabs, core.getInput('load-manifest') === 'true');
 }
 
 if (process.env.GITHUB_ACTIONS) {

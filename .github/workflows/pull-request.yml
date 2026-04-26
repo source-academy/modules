@@ -173,32 +173,6 @@ jobs:
           cd ${{ matrix.bundleInfo.directory }}
           yarn test --coverage
 
-  validate:
-    name: Validate built bundles and tabs
-    runs-on: ubuntu-latest
-    needs:
-      - bundles
-      - tabs
-
-    steps:
-      - name: Check out source code
-        uses: actions/checkout@v6
-
-      - name: Initialize Validator
-        uses: ./.github/actions/src/init
-        with:
-          package-name: '@sourceacademy/modules-validator'
-          playwright: true
-
-      - name: Load/Build all bundles and tabs
-        uses: ./.github/actions/src/load-artifacts
-        with:
-          load-tabs: true
-          load-bundles: true
-
-      - name: Validate bundles and tabs
-        run: yarn workspaces foreach -A --include @sourceacademy/modules-validator run validate
-
   devserver:
     name: Dev Server Tasks
     runs-on: ubuntu-latest
@@ -308,12 +282,39 @@ jobs:
       - name: Build Manifest
         run: yarn buildtools manifest
 
-      # Not sure if we need to upload this as an artifact
-      # - name: Upload Manifest
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: manifest
-      #     path: ./build/modules.json
+      - name: Upload Manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: manifest
+          path: ./build/modules.json
+
+  validate:
+    name: Validate built bundles and tabs
+    runs-on: ubuntu-latest
+    needs:
+      - repo-tasks
+      - bundles
+      - tabs
+
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v6
+
+      - name: Initialize Validator
+        uses: ./.github/actions/src/init
+        with:
+          package-name: '@sourceacademy/modules-validator'
+          playwright: true
+
+      - name: Load/Build all bundles and tabs
+        uses: ./.github/actions/src/load-artifacts
+        with:
+          load-tabs: true
+          load-bundles: true
+          load-manifest: true
+
+      - name: Validate bundles and tabs
+        run: yarn workspaces foreach -A --include @sourceacademy/modules-validator run validate
 
   test:
     name: Verify all tests pass and build success
@@ -323,6 +324,7 @@ jobs:
       - libraries
       - tabs
       - bundles
+      - validate
       - devserver
       - docserver
       - repo-tasks
@@ -335,6 +337,7 @@ jobs:
         (needs.find-packages.outputs.tabs == '[]' || needs.tabs.result == 'success') &&
         (needs.find-packages.outputs.bundles == '[]' || needs.bundles.result == 'success') &&
         !(!fromJson(needs.find-packages.outputs.docserver).changes || needs.docserver.result != 'success') &&
+        needs.validate.result == 'success' &&
         !(!fromJson(needs.find-packages.outputs.devserver).changes || needs.devserver.result != 'success') &&
         needs.repo-tasks.result == 'success'
       }}

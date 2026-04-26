@@ -1,17 +1,18 @@
+import fs from 'fs/promises';
 import pathlib from 'path';
 import { ArtifactNotFoundError, DefaultArtifactClient } from '@actions/artifact';
 import * as core from '@actions/core';
 import { exec } from '@actions/exec';
 import { outDir } from '@sourceacademy/modules-repotools/getGitRoot';
-import type { ResolvedBundle, ResolvedTab } from '@sourceacademy/modules-repotools/types';
-import { filterAsync, } from 'es-toolkit';
+import type { BundleManifest, ResolvedBundle, ResolvedTab } from '@sourceacademy/modules-repotools/types';
+import { filterAsync, mapValues } from 'es-toolkit';
 
 /**
  * If the given bundles or tabs have already been built, then restore the built version
  * using the {@link DefaultArtifactClient}. Otherwise, focus those workspaces, and then
  * run the appropriate build commands.
  */
-export async function loadOrBuildAsset(bundles: ResolvedBundle[], tabs: ResolvedTab[]) {
+export async function loadOrBuildAsset(bundles: ResolvedBundle[], tabs: ResolvedTab[], manifest?: boolean) {
   const artifact = new DefaultArtifactClient();
 
   const tabsPromise = filterAsync(tabs, async ({ name: tabName }) => {
@@ -44,7 +45,25 @@ export async function loadOrBuildAsset(bundles: ResolvedBundle[], tabs: Resolved
     }
   });
 
-  const [bundlesToBuild, tabsToBuild] = await Promise.all([bundlesPromise, tabsPromise]);
+  const manifestPromise = !manifest && bundles.length > 0 ? Promise.resolve() : artifact.getArtifact('manifest')
+    .then(async ({ artifact: { id } }) => {
+      await artifact.downloadArtifact(id, { path: outDir });
+    })
+    .catch(async error => {
+      if (!(error instanceof ArtifactNotFoundError)) {
+        throw error;
+      }
+      
+      const manifest = bundles.reduce<Record<string, BundleManifest>>((res, bundle) => ({
+        ...res,
+        [bundle.name]: bundle.manifest
+      }), {})
+
+      const outpath = pathlib.join(outDir, 'modules.json');
+      await fs.writeFile(outpath, JSON.stringify(manifest));
+    });
+
+  const [bundlesToBuild, tabsToBuild] = await Promise.all([bundlesPromise, tabsPromise, manifestPromise]);
 
   const workspaces = [
     ...bundlesToBuild.map(({ name }) => `@sourceacademy/bundle-${name}`),
