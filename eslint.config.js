@@ -348,7 +348,7 @@ export default defineConfig(
       // This rule doesn't seem to fail locally but fails on the CI
       // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
-      '@typescript-eslint/only-throw-error': 'error'
+      '@typescript-eslint/only-throw-error':'error'
     },
     settings: {
       'import/resolver': {
@@ -411,6 +411,11 @@ export default defineConfig(
 
       'import/extensions': 'off',
 
+      'no-restricted-imports': ['error', {
+        name: 'assert',
+        message: 'Please use the assert from js-slang instead'
+      }],
+
       '@typescript-eslint/no-empty-object-type': ['error', {
         allowInterfaces: 'with-single-extends',
         allowWithName: '(?:Props)|(?:State)$'
@@ -435,6 +440,14 @@ export default defineConfig(
           }
         }
       }]
+    }
+  },
+  {
+    name: 'Rules for tabs',
+    files: ['src/tabs/**/*.tsx'],
+    ignores: ['src/tabs/**/__tests__/*.tsx'],
+    rules: {
+      '@sourceacademy/instanceof-check': 'error'
     }
   },
   {
