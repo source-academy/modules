@@ -463,9 +463,9 @@ export default defineConfig(
   {
     name: 'Rules for modules libraries',
     files: ['lib/**/*.{ts,cts}'],
+    ignores: ['**/*.md/**/*.ts'],
     rules: {
       'func-style': 'off',
-      'import/extensions': ['error', 'never', { json: 'always' }],
       'no-constant-condition': 'off', // Was 'error',
       'no-fallthrough': 'off',
 
@@ -540,16 +540,38 @@ export default defineConfig(
     files: [
       'lib/buildtools/**/*.ts',
       'lib/repotools/**/*.ts',
+      'lib/validator/**/*.ts',
       'lib/vitest-reporter/**/*.ts',
       '.github/actions/**/*.ts',
       '**/vitest.config.{js,ts}'
     ],
+    ignores: ['**/*.md/**/*.ts'],
     rules: {
       'import/extensions': ['error', 'ignorePackages', {
         ts: 'never',
         cts: 'never',
         json: 'always'
       }],
+    }
+  },
+  {
+    name: 'Rules for Validator',
+    files: ['./lib/validator/**/*.ts'],
+    ignores: ['**/*.md/**/*.ts'],
+    rules: {
+      'import/extensions': ['error', {
+        pathGroupOverrides: [{
+          pattern: '#{bundle,tab}/*',
+          action: 'ignore'
+        }]
+      }]
+    },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          project: './lib/validator/tsconfig.json'
+        }
+      }
     }
   },
   {

@@ -1,0 +1,32 @@
+{
+  "name": "@sourceacademy/modules-validator",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "@blueprintjs/core": "^6.0.0",
+    "@blueprintjs/icons": "^6.0.0",
+    "@sourceacademy/modules-repotools": "workspace:^",
+    "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/browser-playwright": "4.1.0",
+    "js-slang": "^1.0.85",
+    "playwright": "^1.55.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vite-plugin-node-polyfills": "^0.26.0",
+    "vitest": "4.1.0",
+    "vitest-browser-react": "^2.1.0"
+  },
+  "peerDependencies": {
+    "@sourceacademy/bundle-curve": "workspace:^",
+    "@sourceacademy/bundle-repl": "workspace:^",
+    "@sourceacademy/bundle-rune": "workspace:^",
+    "@sourceacademy/bundle-sound": "workspace:^",
+    "@sourceacademy/bundle-unittest": "workspace:^"
+  },
+  "scripts": {
+    "validate": "vitest --config vitest.config.ts"
+  }
+}
