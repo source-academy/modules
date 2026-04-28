@@ -421,7 +421,7 @@ export class RuneColours {
 }
 
 /** @hidden */
-export class AnaglyphRune extends DrawnRune {
+export class DrawnAnaglyphRune extends DrawnRune {
   private static readonly anaglyphVertexShader = `
     precision mediump float;
     attribute vec4 a_position;
@@ -500,8 +500,8 @@ export class AnaglyphRune extends DrawnRune {
     // prepare the shader program to combine the left/right eye images
     const shaderProgram = initShaderProgram(
       gl,
-      AnaglyphRune.anaglyphVertexShader,
-      AnaglyphRune.anaglyphFragmentShader
+      DrawnAnaglyphRune.anaglyphVertexShader,
+      DrawnAnaglyphRune.anaglyphFragmentShader
     );
     gl.useProgram(shaderProgram);
     const reduPt = gl.getUniformLocation(shaderProgram, 'u_sampler_red');
@@ -531,7 +531,7 @@ export class AnaglyphRune extends DrawnRune {
 }
 
 /** @hidden */
-export class HollusionRune extends DrawnRune {
+export class DrawnHollusionRune extends DrawnRune {
   constructor(rune: Rune, magnitude: number) {
     super(rune, true);
     this.rune.hollusionDistance = magnitude;
@@ -607,8 +607,8 @@ export class HollusionRune extends DrawnRune {
     // Then, draw a frame from framebuffer for each update
     const copyShaderProgram = initShaderProgram(
       gl,
-      HollusionRune.copyVertexShader,
-      HollusionRune.copyFragmentShader
+      DrawnHollusionRune.copyVertexShader,
+      DrawnHollusionRune.copyFragmentShader
     );
     gl.useProgram(copyShaderProgram);
     const texturePt = gl.getUniformLocation(copyShaderProgram, 'uTexture');
@@ -647,7 +647,7 @@ export class HollusionRune extends DrawnRune {
 }
 
 /** @hidden */
-export function isHollusionRune(rune: DrawnRune): rune is HollusionRune {
+export function isHollusionRune(rune: DrawnRune): rune is DrawnHollusionRune {
   return rune.isHollusion;
 }
 

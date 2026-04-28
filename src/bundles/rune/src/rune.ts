@@ -375,7 +375,7 @@ export abstract class DrawnRune implements ReplResult {
   public abstract draw: (canvas: HTMLCanvasElement) => void;
 }
 
-export class NormalRune extends DrawnRune {
+export class DrawnNormalRune extends DrawnRune {
   constructor(rune: Rune) {
     super(rune, false);
   }

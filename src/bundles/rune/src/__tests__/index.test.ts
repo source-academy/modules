@@ -36,7 +36,7 @@ describe(display.show, () => {
 
 describe('Hollusion Rune tests', () => {
   it('has isHollusion as true', () => {
-    const hollusion = new funcs.HollusionRune(funcs.blank, 0);
+    const hollusion = new funcs.DrawnHollusionRune(funcs.blank, 0);
     expect(hollusion.isHollusion).toEqual(true);
   });
 });
