@@ -4,7 +4,7 @@
  * @author Wang Zihan
  */
 
-import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { createContext, parseError, runInContext, type Context, type IOptions, type Result } from 'js-slang';
 import { head, is_pair, tail } from 'js-slang/dist/stdlib/list';
 import { stringify } from 'js-slang/dist/utils/stringify';
@@ -64,7 +64,7 @@ export function processRichDisplayContent(pair_rich_text: RichDisplayContent, fu
     // There MUST be a safe check on users' strings, because users may insert something that can be interpreted as executable JavaScript code when outputing rich text.
     const safeCheckResult = xssStringCheck(pair_rich_text);
     if (safeCheckResult !== 'safe') {
-      throw new Error(`${func_name}: For safety, the character/word ${safeCheckResult} is not allowed in rich text output. Please remove it or use plain text output mode and try again.`);
+      throw new GeneralRuntimeError(`${func_name}: For safety, the character/word ${safeCheckResult} is not allowed in rich text output. Please remove it or use plain text output mode and try again.`);
     }
     return `">${pair_rich_text}</span>`;
   }
@@ -75,7 +75,7 @@ export function processRichDisplayContent(pair_rich_text: RichDisplayContent, fu
 
   const config_str = tail(pair_rich_text);
   if (typeof config_str !== 'string') {
-    throw new Error(`${func_name}: The tail in style pair should always be a string, but got ${config_str}.`);
+    throw new GeneralRuntimeError(`${func_name}: The tail in style pair should always be a string, but got ${config_str}.`);
   }
   let style = '';
   if (config_str.substring(0, 3) === 'clr') {
@@ -90,20 +90,20 @@ export function processRichDisplayContent(pair_rich_text: RichDisplayContent, fu
         break;
       }
       default:
-        throw new Error(`${func_name}: Unknown colour type "${config_str.substring(0, 4)}".`);
+        throw new GeneralRuntimeError(`${func_name}: Unknown colour type "${config_str.substring(0, 4)}".`);
     }
 
     const colorHex = config_str.substring(4);
 
     if (!checkColorStringValidity(colorHex)) {
-      throw new Error(`${func_name}: Invalid html colour string "${colorHex}". It should start with # and followed by 6 characters representing a hex number.`);
+      throw new GeneralRuntimeError(`${func_name}: Invalid html colour string "${colorHex}". It should start with # and followed by 6 characters representing a hex number.`);
     }
 
     style = `${prefix}:${colorHex};`;
   } else {
     style = pairStyleToCssStyle[config_str];
     if (style === undefined) {
-      throw new Error(`${func_name}: Found undefined style "${config_str}" while processing rich text.`);
+      throw new GeneralRuntimeError(`${func_name}: Found undefined style "${config_str}" while processing rich text.`);
     }
   }
   return style + processRichDisplayContent(head(pair_rich_text), func_name);
@@ -173,7 +173,7 @@ export class ProgrammableRepl {
     }
 
     // Here must use plain text output mode because retVal contains strings from the users.
-    this.pushOutputString(typeof retVal === 'string' ? retVal: stringify(retVal), COLOR_RUN_CODE_RESULT);
+    this.pushOutputString(typeof retVal === 'string' ? retVal : stringify(retVal), COLOR_RUN_CODE_RESULT);
     this.reRenderTab();
   }
 
