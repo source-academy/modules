@@ -4,13 +4,13 @@ import type { DebuggerContext, ModuleSideContent } from '@sourceacademy/modules-
 import jsslangDist from 'js-slang';
 import * as jsSlang from 'js-slang';
 import { getRequireProvider } from 'js-slang/dist/modules/loader/requireProvider';
+import type { LoadedBundle, PartialSourceModule } from 'js-slang/dist/modules/moduleTypes';
 import React from 'react';
 import JSXRuntime from 'react/jsx-runtime';
 import ace from 'react-ace';
 import ReactDOM from 'react-dom';
 import ReactDOMClient from 'react-dom/client';
 import { test as baseTest } from 'vitest';
-import type { LoadedBundle, PartialSourceModule } from 'js-slang/dist/modules/moduleTypes';
 
 export const tabRequireProvider = (x: string) => {
   const exports = {

@@ -1,15 +1,15 @@
-import { Button, ButtonGroup, NumericInput } from '@blueprintjs/core';
-import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
-import type { NBodyModuleState } from '@sourceacademy/bundle-nbody/types';
-import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
-import type { ModuleTab } from '@sourceacademy/modules-lib/types/index';
-import type { Simulation } from 'nbody';
-import React from 'react';
-
 /**
  * Visualize n-body simulations.
  * @author Yeluri Ketan
  */
+
+import { Button, ButtonGroup, NumericInput } from '@blueprintjs/core';
+import type { NBodyModuleState } from '@sourceacademy/bundle-nbody/types';
+import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
+import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
+import type { ModuleTab } from '@sourceacademy/modules-lib/types/index';
+import type { Simulation } from 'nbody';
+import React from 'react';
 
 /**
  * React component props for the control buttons.
@@ -68,7 +68,6 @@ class SimulationControl extends React.Component<SimControlProps, SimControlState
     this.setState({
       showUniverse: this.state.showUniverse.map((v, j) => i === j ? !v : v)
     });
-
   }
 
   public render() {
