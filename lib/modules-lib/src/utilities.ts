@@ -75,3 +75,8 @@ export {
   isFunctionOfLength,
   assertFunctionOfLength,
 } from 'js-slang/dist/utils/rttc';
+
+export {
+  callIfFuncAndRightArgs,
+  wrap as wrapFunction
+} from 'js-slang/dist/utils/operators';
