@@ -34,13 +34,15 @@ This `state` object can then be accessed by the module's tab, for example:
 ```tsx twoslash [Sound/index.tsx]
 // @jsx: react-jsx
 import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
-declare function SoundTab(props: { context: DebuggerContext }): JSX.Element;
+declare function SoundTab(props: { context: DebuggerContext }): React.ReactElement;
 // ---cut---
-import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
+import type { SoundModuleState } from '@sourceacademy/bundle-sound/types';
 
 export default defineTab({
-  toSpawn: ({ context: { moduleContexts } }) => {
-    return moduleContexts.sound.state.audioPlayed.length > 0;
+  toSpawn: context => {
+    const state = getModuleState<SoundModuleState>(context, 'sound');
+    return !!state && state.audioPlayed.length > 0;
   },
   body: (context) => <SoundTab context={context} />,
   label: 'Sounds',

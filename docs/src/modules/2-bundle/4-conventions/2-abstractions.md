@@ -55,6 +55,11 @@ curve => {
 This exposes implementation details to the cadet and "breaks" the `RenderFunction` abstraction. Thus, there is a need for such objects to be able to override the default `toString`
 implementation.
 
+> [!TIP] Functions Returned by Bundle Functions
+>
+> Javascript's default stringification for functions almost always leaks implementation details. You should take care to implement
+> the `ReplResult` interface for functions that are returned by your bundle's functions where necessary.
+
 ## The `ReplResult` interface
 
 To allow objects to provide their own `toString` implementations, objects can implement the `ReplResult` interface:
