@@ -5,7 +5,7 @@ import * as core from '@actions/core';
 import { exec } from '@actions/exec';
 import { outDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import type { BundleManifest, ResolvedBundle, ResolvedTab } from '@sourceacademy/modules-repotools/types';
-import { filterAsync } from 'es-toolkit/array';
+import { filterAsync } from 'es-toolkit';
 
 /**
  * If the given bundles or tabs have already been built, then restore the built version

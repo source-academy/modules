@@ -22,6 +22,6 @@ describe(funcs.hexToColor, () => {
   });
 
   it('throws an error when a non-string is passed', () => {
-    expect(() => funcs.hexToColor(123 as any)).toThrowErrorMatchingInlineSnapshot('[Error: hexToColor: Expected a string, got number]');
+    expect(() => funcs.hexToColor(123 as any)).toThrowErrorMatchingInlineSnapshot('[Error: hexToColor: Expected string, got 123.]');
   });
 });

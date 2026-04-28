@@ -2,7 +2,7 @@ import * as exec from '@actions/exec';
 import { describe, expect, it, test, vi } from 'vitest';
 import * as commons from '../commons.js';
 
-vi.mock(import('es-toolkit'), async (importOriginal) => {
+vi.mock(import('es-toolkit'), async importOriginal => {
   const actual = await importOriginal();
   return {
     ...actual,
@@ -10,7 +10,7 @@ vi.mock(import('es-toolkit'), async (importOriginal) => {
   };
 });
 
-const mockedExecOutput = vi.spyOn(exec, 'getExecOutput');
+const mockedExecOutput = vi.mocked(exec.getExecOutput);
 
 describe(commons.checkDirForChanges, () => {
   function mockChanges(value: boolean) {
@@ -19,16 +19,15 @@ describe(commons.checkDirForChanges, () => {
     });
   }
 
-  it('should return true if git diff exits with non zero code', async () => {
-    mockChanges(true);
-    await expect(commons.checkDirForChanges('/')).resolves.toEqual(true);
+  it('should return false if git diff exits with 0', async () => {
+    mockChanges(false);
+    await expect(commons.checkDirForChanges('/')).resolves.toEqual(false);
     expect(mockedExecOutput).toHaveBeenCalledOnce();
   });
 
-  it('should return false if git diff exits with 0', async () => {
-    mockChanges(false);
-
-    await expect(commons.checkDirForChanges('/')).resolves.toEqual(false);
+  it('should return true if git diff exits with non zero code', async () => {
+    mockChanges(true);
+    await expect(commons.checkDirForChanges('/')).resolves.toEqual(true);
     expect(mockedExecOutput).toHaveBeenCalledOnce();
   });
 });
