@@ -5,7 +5,7 @@ import * as core from '@actions/core';
 import { exec } from '@actions/exec';
 import { outDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import type { BundleManifest, ResolvedBundle, ResolvedTab } from '@sourceacademy/modules-repotools/types';
-import { filterAsync, mapValues } from 'es-toolkit';
+import { filterAsync } from 'es-toolkit/array';
 
 /**
  * If the given bundles or tabs have already been built, then restore the built version
@@ -14,6 +14,7 @@ import { filterAsync, mapValues } from 'es-toolkit';
  */
 export async function loadOrBuildAsset(bundles: ResolvedBundle[], tabs: ResolvedTab[], manifest?: boolean) {
   const artifact = new DefaultArtifactClient();
+  console.log('loading these tabs', tabs);
 
   const tabsPromise = filterAsync(tabs, async ({ name: tabName }) => {
     try {
@@ -45,23 +46,26 @@ export async function loadOrBuildAsset(bundles: ResolvedBundle[], tabs: Resolved
     }
   });
 
-  const manifestPromise = !manifest && bundles.length > 0 ? Promise.resolve() : artifact.getArtifact('manifest')
-    .then(async ({ artifact: { id } }) => {
+  const manifestPromise = (async () => {
+    if (!manifest || bundles.length === 0) return;
+
+    try {
+      const { artifact: { id } } = await artifact.getArtifact('manifest');
       await artifact.downloadArtifact(id, { path: outDir });
-    })
-    .catch(async error => {
+    } catch (error) {
       if (!(error instanceof ArtifactNotFoundError)) {
         throw error;
       }
-      
+
       const manifest = bundles.reduce<Record<string, BundleManifest>>((res, bundle) => ({
         ...res,
         [bundle.name]: bundle.manifest
-      }), {})
+      }), {});
 
       const outpath = pathlib.join(outDir, 'modules.json');
       await fs.writeFile(outpath, JSON.stringify(manifest));
-    });
+    }
+  })();
 
   const [bundlesToBuild, tabsToBuild] = await Promise.all([bundlesPromise, tabsPromise, manifestPromise]);
 

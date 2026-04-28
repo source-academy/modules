@@ -1,5 +1,5 @@
 import { getExecOutput } from '@actions/exec';
-import { memoize } from 'es-toolkit';
+import { memoize } from 'es-toolkit/function';
 
 type PackageType = 'bundle' | 'tab' | 'lib' | null;
 

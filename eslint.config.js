@@ -564,7 +564,8 @@ export default defineConfig(
         pathGroupOverrides: [{
           pattern: '#{bundle,tab}/*',
           action: 'ignore'
-        }]
+        }],
+        json: 'always'
       }]
     },
     settings: {
