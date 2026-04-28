@@ -159,7 +159,7 @@ describe(funcs.writeToBuffer, () => {
 
   test('with invalid data', ({ fixtures: { errLogger } }) => {
     const img = funcs.new_image();
-    funcs.set_rgba(img[0][0], 999, 999, 999, 999);
+    img[0][0] = [999, 999, 999, 999];
 
     const imageData = new ImageData(width, height);
     const buffer = imageData.data;
