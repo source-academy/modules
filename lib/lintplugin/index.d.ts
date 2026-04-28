@@ -3,6 +3,7 @@ import type { ESLint, Rule } from 'eslint';
 declare const plugin: {
   rules: {
     'default-import-name': Rule.RuleModule
+    'instanceof-check': Rule.RuleModule
     'no-barrel-imports': Rule.RuleModule
     'region-comment': Rule.RuleModule
     'tab-type': Rule.RuleModule

@@ -52,3 +52,13 @@ export function getRhsIdentifier(node: TSESTree.Expression): TSESTree.Identifier
 
   return null;
 }
+
+export function resolveAliasedSymbol(
+  checker: ts.TypeChecker,
+  symbol: ts.Symbol
+): ts.Symbol {
+  if (symbol.flags & ts.SymbolFlags.Alias) {
+    return checker.getAliasedSymbol(symbol);
+  }
+  return symbol;
+}

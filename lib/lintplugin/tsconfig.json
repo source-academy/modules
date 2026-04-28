@@ -1,7 +1,7 @@
 // lintplugin with tests
 {
   "compilerOptions": {
-    "types": ["vitest/globals"]
+    "types": ["node", "vitest/globals"]
   },
   "include": ["./src"],
   "extends": "../tsconfig.json"
