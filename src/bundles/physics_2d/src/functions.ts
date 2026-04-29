@@ -14,7 +14,20 @@ import { Vector2, type Force } from './types';
 
 // Global Variables
 
-let world: PhysicsWorld | null = null;
+/**
+ * exported for testing
+ * @hidden
+ */
+export let world: PhysicsWorld | null = null;
+
+/**
+ * exported for testing
+ * @hidden
+ */
+export function resetWorld() {
+  world = null;
+}
+
 const NO_WORLD = 'Please call set_gravity first!';
 const MULTIPLE_WORLDS = 'You may only call set_gravity once!';
 
@@ -71,7 +84,7 @@ export function make_force(
  * @param v gravity vector
  * @example
  * ```
- * set_gravity(0, -9.8); // gravity vector for real world
+ * set_gravity(make_vector(0, -9.8)); // gravity vector for real world
  * ```
  *
  * @category Main
@@ -97,7 +110,7 @@ export function set_gravity(v: Vector2) {
  * @category Main
  */
 export function make_ground(height: number, friction: number) {
-  throwIfNoWorld(world, set_gravity.name);
+  throwIfNoWorld(world, make_ground.name);
   world.makeGround(height, friction);
 }
 
