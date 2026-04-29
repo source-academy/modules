@@ -44,6 +44,8 @@ export abstract class GameObject implements Transformable, ReplResult {
   }
 
   public toReplString = () => '<GameObject>';
+
+  public toString = () => this.toReplString();
 }
 
 /**
@@ -159,11 +161,8 @@ export abstract class ShapeGameObject extends InteractableGameObject {
    */
   public abstract getShape();
 
-  /** @override */
-  public toReplString = () => '<ShapeGameObject>';
+  public override toReplString = () => '<ShapeGameObject>';
 
-  /** @override */
-  public toString = () => this.toReplString();
 }
 
 /**
@@ -240,11 +239,7 @@ export class SpriteGameObject extends InteractableGameObject {
     return this.sprite;
   }
 
-  /** @override */
-  public toReplString = () => '<SpriteGameObject>';
-
-  /** @override */
-  public toString = () => this.toReplString();
+  public override toReplString = () => '<SpriteGameObject>';
 }
 
 /**
@@ -275,11 +270,7 @@ export class TextGameObject extends InteractableGameObject {
     return this.displayText;
   }
 
-  /** @override */
-  public toReplString = () => '<TextGameObject>';
-
-  /** @override */
-  public toString = () => this.toReplString();
+  public override toReplString = () => '<TextGameObject>';
 }
 
 // =============================================================================
