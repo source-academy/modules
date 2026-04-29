@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^",
     "nbody": "^0.2.0",
     "plotly.js-dist": "^2.17.1",
     "three": "^0.183.0"
