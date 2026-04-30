@@ -6,6 +6,7 @@
 import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
 import { get_duration, get_wave, is_sound } from '@sourceacademy/bundle-sound/functions';
 import type { Sound } from '@sourceacademy/bundle-sound/types';
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import context from 'js-slang/context';
 import { accumulate, head, is_pair, tail, type List } from 'js-slang/dist/stdlib/list';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
@@ -120,13 +121,13 @@ function draw_new_plot_json(data: any, divId: string) {
 export function add_fields_to_data(convertedData: Data, data: ListOfPairs) {
   accumulate((entry, result) => {
     if (!is_pair(entry)) {
-      throw new Error(`${add_fields_to_data.name}: Expected list of pairs, got ${entry}`);
+      throw new GeneralRuntimeError(`${add_fields_to_data.name}: Expected list of pairs, got ${entry}`);
     }
 
     const field = head(entry);
 
     if (typeof field !== 'string') {
-      throw new Error(`${add_fields_to_data.name}: Expected head of pair to be string, got ${field}`);
+      throw new GeneralRuntimeError(`${add_fields_to_data.name}: Expected head of pair to be string, got ${field}`);
     }
 
     const value = tail(entry);
