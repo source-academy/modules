@@ -5,6 +5,7 @@ import noBarrelImports from './rules/noBarrelImports';
 import regionComment from './rules/regionComment';
 import tabType from './rules/tabType';
 import instanceofCheck from './rules/typed/instanceofCheck';
+import throwRuntimeError from './rules/typed/throwRuntimeError';
 
 const plugin: ESLint.Plugin = {
   name: 'Source Academy Lint Plugin',
@@ -16,6 +17,8 @@ const plugin: ESLint.Plugin = {
     'no-barrel-imports': noBarrelImports,
     'region-comment': regionComment,
     'tab-type': tabType,
+    // @ts-expect-error Typescript-Eslint rules are just built different
+    'throw-runtime-error': throwRuntimeError
   },
   configs: {
     'js/recommended': configs.jsConfig,

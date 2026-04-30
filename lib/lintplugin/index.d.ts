@@ -7,6 +7,7 @@ declare const plugin: {
     'no-barrel-imports': Rule.RuleModule
     'region-comment': Rule.RuleModule
     'tab-type': Rule.RuleModule
+    'throw-runtime-error': Rule.RuleModule
   },
   configs: {
     'js/recommended': ESLint.ConfigData
