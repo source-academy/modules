@@ -7,6 +7,7 @@
 import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { createContext, parseError, runInContext, type Context, type IOptions, type Result } from 'js-slang';
 import { head, is_pair, tail } from 'js-slang/dist/stdlib/list';
+import assert from 'js-slang/dist/utils/assert';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import { COLOR_ERROR_MESSAGE, COLOR_REPL_DISPLAY_DEFAULT, COLOR_RUN_CODE_RESULT, DEFAULT_EDITOR_HEIGHT } from './config';
 import { evaluatorSymbol } from './functions';
@@ -230,9 +231,7 @@ export class ProgrammableRepl {
     );
 
     const evalResult = await runInContext(code, evalContext, options);
-    if (evalResult.status === 'suspended-cse-eval') {
-      throw new Error('This should not happen');
-    }
+    assert(evalResult.status !== 'suspended-cse-eval', 'Code should not have been evaluated with cse-machine');
 
     if (evalResult.status === 'error') {
       evalContext.errors.forEach(error => {

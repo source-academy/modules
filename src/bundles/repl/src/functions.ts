@@ -4,7 +4,7 @@
  * @author Wang Zihan
  */
 
-import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 import type { Value } from 'js-slang/dist/types';
@@ -169,7 +169,7 @@ export function default_js_slang(_program: string): any {
     This function carries the evaluator symbol to allow it to be distinguished from other
     evaluator functions.
   */
-  throw new Error('Invaild Call: Function "default_js_slang" can not be directly called by user\'s code in editor. You should use it as the parameter of the function "set_evaluator"');
+  throw new GeneralRuntimeError('default_js_slang: Cannot be directly. You should use it as the parameter of the function "set_evaluator"');
 }
 
 default_js_slang[evaluatorSymbol] = true;
