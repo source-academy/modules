@@ -1,6 +1,6 @@
 import { midi_note_to_frequency } from '@sourceacademy/bundle-midi';
 import type { MIDINote } from '@sourceacademy/bundle-midi/types';
-import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { assertFunctionOfLength, assertNumberWithinRange, isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import {
   accumulate,
@@ -94,9 +94,9 @@ function linear_decay(decay_period: number): (t: number) => number {
  */
 function getAudioStream(func_name: string) {
   if (globalVars.stream === null) {
-    throw new Error(`${func_name}: Call init_record(); to obtain permission to use microphone`);
+    throw new GeneralRuntimeError(`${func_name}: Call init_record(); to obtain permission to use microphone`);
   } else if (globalVars.stream === false) {
-    throw new Error(`${func_name}: Permission has been denied.\n
+    throw new GeneralRuntimeError(`${func_name}: Permission has been denied.\n
         Re-start browser and call init_record();\n
         to obtain permission to use microphone.`);
   }
@@ -196,7 +196,7 @@ export function record(buffer: number): () => SoundPromise {
   assertNumberWithinRange(buffer, record.name, 0, undefined, false);
 
   if (globalVars.isPlaying) {
-    throw new Error(`${record.name}: Cannot record while another sound is playing!`);
+    throw new GeneralRuntimeError(`${record.name}: Cannot record while another sound is playing!`);
   }
 
   const stream = getAudioStream(record.name);
@@ -214,7 +214,7 @@ export function record(buffer: number): () => SoundPromise {
     play_recording_signal();
     const promise = () => {
       if (globalVars.recordedSound === null) {
-        throw new Error('recording still being processed');
+        throw new GeneralRuntimeError('recording still being processed');
       } else {
         return globalVars.recordedSound;
       }
@@ -248,7 +248,7 @@ export function record(buffer: number): () => SoundPromise {
  */
 export function record_for(duration: number, buffer: number): SoundPromise {
   if (globalVars.isPlaying) {
-    throw new Error(`${record_for.name}: Cannot record while another sound is playing!`);
+    throw new GeneralRuntimeError(`${record_for.name}: Cannot record while another sound is playing!`);
   }
 
   const stream = getAudioStream(record_for.name);
@@ -271,7 +271,7 @@ export function record_for(duration: number, buffer: number): SoundPromise {
 
   const promise = () => {
     if (globalVars.recordedSound === null) {
-      throw new Error('recording still being processed');
+      throw new GeneralRuntimeError('recording still being processed');
     } else {
       return globalVars.recordedSound;
     }
@@ -397,7 +397,7 @@ export function play(sound: Sound): Sound {
   if (!is_sound(sound)) {
     throw new InvalidParameterTypeError('sound', sound, play.name);
   } else if (globalVars.isPlaying) {
-    throw new Error(`${play.name}: Previous sound still playing!`);
+    throw new GeneralRuntimeError(`${play.name}: Previous sound still playing!`);
   }
 
   const duration = get_duration(sound);
@@ -423,7 +423,7 @@ export function play(sound: Sound): Sound {
     const temp = wave(i / FS);
 
     if (typeof temp !== 'number') {
-      throw new Error(`${play.name}: Provided Sound returned a non-numeric value ${stringify(temp)}.`);
+      throw new GeneralRuntimeError(`${play.name}: Provided Sound returned a non-numeric value ${stringify(temp)}.`);
     }
 
     // clip amplitude
