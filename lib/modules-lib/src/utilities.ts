@@ -74,6 +74,8 @@ export {
   assertNumberWithinRange,
   isFunctionOfLength,
   assertFunctionOfLength,
+  isTupleOfLength,
+  assertTupleOfLength
 } from 'js-slang/dist/utils/rttc';
 
 export {

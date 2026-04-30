@@ -35,14 +35,18 @@ export abstract class glAnimation {
 
   /**
    * Because of some quirks in the way tabs and bundles are built, an `instanceof` check might fail at runtime.
-   * You should use this function instead of an `instanceof` check to check for `glAnimations`.
+   * So we need to rewrite the instanceof check
    */
-  public static isAnimation(obj: unknown): obj is glAnimation {
-    if (typeof obj !== 'object' || obj === null) return false;
+  static [Symbol.hasInstance](constructor: unknown): boolean {
+    if (typeof constructor !== 'object' || constructor === null) return false;
+    return '_anim_symbol' in constructor && constructor._anim_symbol === glAnimationSymbol;
+  }
 
-    return '_anim_symbol' in obj && obj._anim_symbol === glAnimationSymbol;
+  public static isAnimation(obj: unknown): obj is glAnimation {
+    return obj instanceof glAnimation;
   }
 }
+
 export interface AnimFrame {
   draw: (canvas: HTMLCanvasElement) => void;
 }
