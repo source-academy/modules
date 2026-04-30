@@ -1,6 +1,6 @@
 import { midi_note_to_frequency } from '@sourceacademy/bundle-midi';
 import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+import { assertNumberWithinRange, isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 import {
   accumulate,
@@ -71,9 +71,9 @@ let recorded_sound: Sound | undefined;
 // to record a sound
 function check_permission() {
   if (permission === undefined) {
-    throw new Error('Call init_record(); to obtain permission to use microphone');
+    throw new GeneralRuntimeError('Call init_record(); to obtain permission to use microphone');
   } else if (permission === false) {
-    throw new Error(`Permission has been denied.\n
+    throw new GeneralRuntimeError(`Permission has been denied.\n
         Re-start browser and call init_record();\n
         to obtain permission to use microphone.`);
   } // (permission === true): do nothing
@@ -177,7 +177,7 @@ export function record(buffer: number): () => () => Sound {
     play_recording_signal();
     return () => {
       if (recorded_sound === undefined) {
-        throw new Error('recording still being processed');
+        throw new GeneralRuntimeError('recording still being processed');
       } else {
         return recorded_sound;
       }
@@ -213,28 +213,20 @@ export function record_for(duration: number, buffer: number): () => Sound {
   }, recording_signal_duration_ms + buffer * 1000);
   return () => {
     if (recorded_sound === undefined) {
-      throw new Error('recording still being processed');
+      throw new GeneralRuntimeError('recording still being processed');
     } else {
       return recorded_sound;
     }
   };
 }
 
-function validateDuration(func_name: string, duration: unknown): asserts duration is number {
-  if (typeof duration !== 'number') {
-    throw new Error(`${func_name} expects a number for duration, got ${duration}`);
-  }
-
-  if (duration < 0) {
-    throw new Error(`${func_name}: Sound duration must be greater than or equal to 0`);
-  }
+function validateDuration(func_name: string, duration: unknown, param_name?: string): asserts duration is number {
+  assertNumberWithinRange(duration, func_name, 0, undefined, true, param_name);
 }
 
 function validateWave(func_name: string, wave: unknown, lr?: 'left' | 'right'): asserts wave is Wave {
-  const direction = lr !== undefined ? `${lr}_` : '';
-
   if (typeof wave !== 'function') {
-    throw new Error(`${func_name}: ${direction}wave must be a Wave, got ${wave}`);
+    throw new InvalidParameterTypeError('Wave', wave, func_name, lr === undefined ? undefined : `${lr} wave`);
   }
 }
 
