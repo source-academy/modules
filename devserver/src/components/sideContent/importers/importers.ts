@@ -83,6 +83,16 @@ export async function getBundleUsingVite(bundlePath: string) {
   }
 }
 
+export async function getCompiledBundle(bundlePath: string) {
+  try {
+    const partialBundle = await import(`../../../../../build/bundles/${bundlePath}.js`);
+    return partialBundle;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export async function getBundleDocsUsingVite(bundlePath: string) {
   try {
     const manifest = await import(/* @vite-ignore */ `../../../../../build/jsons/${bundlePath}.json`, { with: { type: 'json' } });
@@ -95,8 +105,9 @@ export async function getBundleDocsUsingVite(bundlePath: string) {
 
 export async function getModulesManifest() {
   try {
-    const manifest = await import('../../../../../build/modules.json', { with: { type: 'json' } });
-    return manifest;
+    return {
+      default: modulesManifest
+    };
   } catch (error) {
     console.error(error);
     throw new Error('Failed to load modules manifest, have you run the manifest build command?' + error);
