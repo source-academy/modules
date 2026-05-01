@@ -4,34 +4,47 @@
  * @author Wang Zihan
  */
 
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+
 export class Vector3 {
-  x = 0;
-  y = 0;
-  z = 0;
-  constructor(x, y, z) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-  }
+  constructor(
+    public readonly x: number,
+    public readonly y: number,
+    public readonly z: number
+  ) { }
 
   toString() {
     return `(${this.x}, ${this.y}, ${this.z})`;
   }
-}
 
-export function checkVector3Parameter(parameter: any): void {
-  if (typeof parameter !== 'object') {
-    throw new Error(`The given parameter is not a valid 3D vector! Wrong parameter type: ${typeof parameter}`);
-  }
-  if (typeof parameter.x !== 'number' || typeof parameter.y !== 'number' || typeof parameter.z !== 'number') {
-    throw new Error('The given parameter is not a valid 3D vector!');
+  equals(other: Vector3): boolean {
+    return Math.abs(this.x - other.x) < 0.00001
+      && Math.abs(this.y - other.y) < 0.00001
+      && Math.abs(this.z - other.z) < 0.00001;
   }
 }
 
+export function checkVector3Parameter(parameter: unknown, func_name: string, param_name?: string): asserts parameter is Vector3 {
+  if (typeof parameter === 'object' && parameter !== null
+    && 'x' in parameter && typeof parameter.x === 'number'
+    && 'y' in parameter && typeof parameter.y === 'number'
+    && 'z' in parameter && typeof parameter.z === 'number'
+  ) {
+    return;
+  }
+  throw new InvalidParameterTypeError('3D vector', parameter, func_name, param_name);
+}
+
+/**
+ * Creates a new {@link Vector3}.
+ */
 export function makeVector3D(x: number, y: number, z: number): Vector3 {
   return new Vector3(x, y, z);
 }
 
+/**
+ * Scales the given vector by the given factor.
+ */
 export function scaleVector(vector: Vector3, factor: number): Vector3 {
   return new Vector3(vector.x * factor, vector.y * factor, vector.z * factor);
 }
@@ -49,13 +62,21 @@ export function dotProduct(vectorA: Vector3, vectorB: Vector3): number {
 }
 
 export function crossProduct(vectorA: Vector3, vectorB: Vector3): Vector3 {
-  return new Vector3(vectorA.y * vectorB.z - vectorB.y * vectorA.z, vectorB.x * vectorA.z - vectorA.x * vectorB.z, vectorA.x * vectorB.y - vectorB.x * vectorA.y);
+  return new Vector3(
+    vectorA.y * vectorB.z - vectorB.y * vectorA.z,
+    vectorB.x * vectorA.z - vectorA.x * vectorB.z,
+    vectorA.x * vectorB.y - vectorB.x * vectorA.y
+  );
 }
 
 export function vectorMagnitude(vector: Vector3): number {
   return Math.sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
 }
 
+/**
+ * Returns a "normalized" version of the provided vector, i.e the vector that has the
+ * same direction as the original one but with a magnitude of 1.
+ */
 export function normalizeVector(vector: Vector3): Vector3 {
   const magnitude = vectorMagnitude(vector);
   if (magnitude === 0) return new Vector3(0, 0, 0); // If the parameter is a zero vector, then return a new zero vector.

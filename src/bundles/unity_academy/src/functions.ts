@@ -4,6 +4,8 @@
  * @author Wang Zihan
  */
 
+import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
 import { getInstance, initializeModule, type AudioClipIdentifier, type GameObjectIdentifier } from './UnityAcademy';
 import {
   addVectors,
@@ -44,42 +46,46 @@ export function init_unity_academy_3d(): void {
   initializeModule('3d');
 }
 
-function checkUnityAcademyExistence() {
-  if (getInstance() === undefined) {
-    throw new Error('Unity module is not initialized, please call init_unity_academy_3d / init_unity_academy_2d first before calling this function');
+function checkUnityAcademyExistence(func_name: string, mode?: '3D' | '2D') {
+  const instance = getInstance();
+
+  if (instance === undefined) {
+    throw new GeneralRuntimeError(`${func_name}: Unity module is not initialized, please call init_unity_academy_3d / init_unity_academy_2d first before calling this function`);
   }
+
+  if (mode === '3D' && instance.dimensionMode !== '3d') {
+    throw new GeneralRuntimeError(`${func_name}: You are calling a "3D mode only" function in non-3d mode.`);
+  } else if (mode === '2D' && instance.dimensionMode !== '2d') {
+    throw new GeneralRuntimeError(`${func_name}: You are calling a "2D mode only" function in non-2d mode.`);
+  }
+
+  return instance;
 }
 
-function checkIs2DMode(): void {
-  if (getInstance().dimensionMode !== '2d') throw new Error('You are calling a "2D mode only" function in non-2d mode.');
-}
-
-function checkIs3DMode(): void {
-  if (getInstance().dimensionMode !== '3d') throw new Error('You are calling a "3D mode only" function in non-3d mode.');
-}
-
-function checkGameObjectIdentifierParameter(gameObjectIdentifier: any) {
+function checkGameObjectIdentifierParameter(
+  gameObjectIdentifier: unknown,
+  func_name: string,
+  param_name?: string
+): asserts gameObjectIdentifier is GameObjectIdentifier {
   // Here I can not just do "gameObjectIdentifier instanceof GameObjectIdentifier".
   // Because if I do that, when students re-run their code on the same Unity instance, (gameObjectIdentifier instanceof GameObjectIdentifier) will always evaluate to false
   // even when students provide the parameter with the correct type.
-  const instance = getInstance();
+  const instance = getInstance()!;
   if (!(gameObjectIdentifier instanceof instance.gameObjectIdentifierWrapperClass)) {
-    throw new Error(`Type "${(typeof gameObjectIdentifier).toString()}" can not be used as game object identifier!`);
+    throw new InvalidParameterTypeError('GameObjectIdentifier', gameObjectIdentifier, func_name, param_name);
   }
   if (instance.getStudentGameObject(gameObjectIdentifier).isDestroyed) {
-    throw new Error('Trying to use a GameObject that is already destroyed.');
+    throw new GeneralRuntimeError(`${func_name}: Trying to use a GameObject that is already destroyed.`);
   }
 }
 
-function checkParameterType(parameter: any, expectedType: string, numberAllowInfinity = false) {
-  const actualType = typeof parameter;
-  if (actualType !== expectedType) {
-    throw new Error(`Wrong parameter type: expected ${expectedType}, but got ${actualType}`);
-  }
-  if (actualType.toString() === 'number') {
-    if (!numberAllowInfinity && (parameter === Infinity || parameter === -Infinity)) {
-      throw new Error('Wrong parameter type: expected a finite number, but got Infinity or -Infinity');
-    }
+function validateNumber(obj: unknown, func_name: string, param_name?: string, allowInfinity: boolean = false): asserts obj is number {
+  assertNumberWithinRange(obj, {
+    func_name, param_name
+  });
+
+  if (!allowInfinity && (obj === Infinity || obj === -Infinity)) {
+    throw new InvalidParameterTypeError('finite number', obj, func_name, param_name);
   }
 }
 
@@ -92,8 +98,8 @@ function checkParameterType(parameter: any, expectedType: string, numberAllowInf
  * @category Common
  */
 export function same_gameobject(first: GameObjectIdentifier, second: GameObjectIdentifier): boolean {
-  checkUnityAcademyExistence();
-  const instance = getInstance();
+  const instance = checkUnityAcademyExistence(same_gameobject.name);
+
   if (!(first instanceof instance.gameObjectIdentifierWrapperClass) || !(second instanceof instance.gameObjectIdentifierWrapperClass)) {
     return false;
   }
@@ -108,12 +114,12 @@ export function same_gameobject(first: GameObjectIdentifier, second: GameObjectI
  * @category Common
  * @category Outside Lifecycle
  */
-export function set_start(gameObjectIdentifier: GameObjectIdentifier, startFunction: Function): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkParameterType(startFunction, 'function');
-  getInstance()
-    .setStartInternal(gameObjectIdentifier, startFunction);
+export function set_start(gameObjectIdentifier: GameObjectIdentifier, startFunction: (id: GameObjectIdentifier) => void): void {
+  const instance = checkUnityAcademyExistence(set_start.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, set_start.name);
+  assertFunctionOfLength(startFunction, 1, set_start.name);
+
+  instance.setStartInternal(gameObjectIdentifier, startFunction);
 }
 
 /**
@@ -125,12 +131,12 @@ export function set_start(gameObjectIdentifier: GameObjectIdentifier, startFunct
  * @category Common
  * @category Outside Lifecycle
  */
-export function set_update(gameObjectIdentifier: GameObjectIdentifier, updateFunction: Function): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkParameterType(updateFunction, 'function');
-  getInstance()
-    .setUpdateInternal(gameObjectIdentifier, updateFunction);
+export function set_update(gameObjectIdentifier: GameObjectIdentifier, updateFunction: (id: GameObjectIdentifier) => void): void {
+  const instance = checkUnityAcademyExistence(set_update.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, set_update.name);
+  assertFunctionOfLength(updateFunction, 1, set_update.name);
+
+  instance.setUpdateInternal(gameObjectIdentifier, updateFunction);
 }
 
 /**
@@ -149,11 +155,13 @@ export function set_update(gameObjectIdentifier: GameObjectIdentifier, updateFun
  * @category Outside Lifecycle
  */
 export function instantiate(prefab_name: string): GameObjectIdentifier {
-  checkUnityAcademyExistence();
-  checkIs3DMode();
-  checkParameterType(prefab_name, 'string');
-  return getInstance()
-    .instantiateInternal(prefab_name);
+  const instance = checkUnityAcademyExistence(instantiate.name, '3D');
+
+  if (typeof prefab_name !== 'string') {
+    throw new InvalidParameterTypeError('string', prefab_name, instantiate.name);
+  }
+
+  return instance.instantiateInternal(prefab_name);
 }
 
 /**
@@ -172,11 +180,13 @@ export function instantiate(prefab_name: string): GameObjectIdentifier {
  * @category Outside Lifecycle
  */
 export function instantiate_sprite(sourceImageUrl: string) {
-  checkUnityAcademyExistence();
-  checkIs2DMode();
-  checkParameterType(sourceImageUrl, 'string');
-  return getInstance()
-    .instantiate2DSpriteUrlInternal(sourceImageUrl);
+  const instance = checkUnityAcademyExistence(instantiate_sprite.name, '2D');
+
+  if (typeof sourceImageUrl !== 'string') {
+    throw new InvalidParameterTypeError('string', sourceImageUrl, instantiate_sprite.name);
+  }
+
+  return instance.instantiate2DSpriteUrlInternal(sourceImageUrl);
 }
 
 /**
@@ -192,9 +202,8 @@ export function instantiate_sprite(sourceImageUrl: string) {
  * @category Outside Lifecycle
  */
 export function instantiate_empty(): GameObjectIdentifier {
-  checkUnityAcademyExistence();
-  return getInstance()
-    .instantiateEmptyGameObjectInternal();
+  const instance = checkUnityAcademyExistence(instantiate_empty.name);
+  return instance.instantiateEmptyGameObjectInternal();
 }
 
 /**
@@ -217,9 +226,8 @@ export function instantiate_empty(): GameObjectIdentifier {
  * @category Common
  */
 export function delta_time() {
-  checkUnityAcademyExistence();
-  return getInstance()
-    .getDeltaTime();
+  const instance = checkUnityAcademyExistence(delta_time.name);
+  return instance.getDeltaTime();
 }
 
 /**
@@ -233,10 +241,10 @@ export function delta_time() {
  * @category Common
  */
 export function destroy(gameObjectIdentifier: GameObjectIdentifier): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  getInstance()
-    .destroyGameObjectInternal(gameObjectIdentifier);
+  const instance = checkUnityAcademyExistence(destroy.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, destroy.name);
+
+  instance.destroyGameObjectInternal(gameObjectIdentifier);
 }
 
 /**
@@ -247,10 +255,9 @@ export function destroy(gameObjectIdentifier: GameObjectIdentifier): void {
  * @category Transform
  */
 export function get_position(gameObjectIdentifier: GameObjectIdentifier): Vector3 {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  return getInstance()
-    .getGameObjectTransformProp('position', gameObjectIdentifier);
+  const instance = checkUnityAcademyExistence(get_position.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, get_position.name);
+  return instance.getGameObjectTransformProp('position', gameObjectIdentifier);
 }
 
 /**
@@ -261,11 +268,11 @@ export function get_position(gameObjectIdentifier: GameObjectIdentifier): Vector
  * @category Transform
  */
 export function set_position(gameObjectIdentifier: GameObjectIdentifier, position: Vector3): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkVector3Parameter(position);
-  return getInstance()
-    .setGameObjectTransformProp('position', gameObjectIdentifier, position);
+  const instance = checkUnityAcademyExistence(set_position.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, set_position.name);
+  checkVector3Parameter(position, set_position.name);
+
+  return instance.setGameObjectTransformProp('position', gameObjectIdentifier, position);
 }
 
 /**
@@ -276,10 +283,10 @@ export function set_position(gameObjectIdentifier: GameObjectIdentifier, positio
  * @category Transform
  */
 export function get_rotation_euler(gameObjectIdentifier: GameObjectIdentifier): Vector3 {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  return getInstance()
-    .getGameObjectTransformProp('rotation', gameObjectIdentifier);
+  const instance = checkUnityAcademyExistence(get_rotation_euler.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, get_rotation_euler.name);
+
+  return instance.getGameObjectTransformProp('rotation', gameObjectIdentifier);
 }
 
 /**
@@ -290,11 +297,11 @@ export function get_rotation_euler(gameObjectIdentifier: GameObjectIdentifier): 
  * @category Transform
  */
 export function set_rotation_euler(gameObjectIdentifier: GameObjectIdentifier, rotation: Vector3): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkVector3Parameter(rotation);
-  return getInstance()
-    .setGameObjectTransformProp('rotation', gameObjectIdentifier, rotation);
+  const instance = checkUnityAcademyExistence(set_rotation_euler.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, set_rotation_euler.name);
+  checkVector3Parameter(rotation, set_rotation_euler.name);
+
+  return instance.setGameObjectTransformProp('rotation', gameObjectIdentifier, rotation);
 }
 
 /**
@@ -307,10 +314,10 @@ export function set_rotation_euler(gameObjectIdentifier: GameObjectIdentifier, r
  * @category Transform
  */
 export function get_scale(gameObjectIdentifier: GameObjectIdentifier): Vector3 {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  return getInstance()
-    .getGameObjectTransformProp('scale', gameObjectIdentifier);
+  const instance = checkUnityAcademyExistence(get_scale.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, get_scale.name);
+
+  return instance.getGameObjectTransformProp('scale', gameObjectIdentifier);
 }
 
 /**
@@ -323,11 +330,11 @@ export function get_scale(gameObjectIdentifier: GameObjectIdentifier): Vector3 {
  * @category Transform
  */
 export function set_scale(gameObjectIdentifier: GameObjectIdentifier, scale: Vector3): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkVector3Parameter(scale);
-  return getInstance()
-    .setGameObjectTransformProp('scale', gameObjectIdentifier, scale);
+  const instance = checkUnityAcademyExistence(set_scale.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, set_scale.name);
+  checkVector3Parameter(scale, set_scale.name, 'scale');
+
+  return instance.setGameObjectTransformProp('scale', gameObjectIdentifier, scale);
 }
 
 /**
@@ -339,11 +346,11 @@ export function set_scale(gameObjectIdentifier: GameObjectIdentifier, scale: Vec
  * @category Transform
  */
 export function translate_world(gameObjectIdentifier: GameObjectIdentifier, deltaPosition: Vector3): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkVector3Parameter(deltaPosition);
-  return getInstance()
-    .translateWorldInternal(gameObjectIdentifier, deltaPosition);
+  const instance = checkUnityAcademyExistence(translate_world.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, translate_world.name);
+  checkVector3Parameter(deltaPosition, translate_world.name, 'deltaPosition');
+
+  return instance.translateWorldInternal(gameObjectIdentifier, deltaPosition);
 }
 
 /**
@@ -359,11 +366,11 @@ export function translate_world(gameObjectIdentifier: GameObjectIdentifier, delt
  * @category Transform
  */
 export function translate_local(gameObjectIdentifier: GameObjectIdentifier, deltaPosition: Vector3): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkVector3Parameter(deltaPosition);
-  return getInstance()
-    .translateLocalInternal(gameObjectIdentifier, deltaPosition);
+  const instance = checkUnityAcademyExistence(translate_local.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, translate_local.name);
+  checkVector3Parameter(deltaPosition, translate_local.name, 'deltaPosition');
+
+  return instance.translateLocalInternal(gameObjectIdentifier, deltaPosition);
 }
 
 /**
@@ -375,11 +382,11 @@ export function translate_local(gameObjectIdentifier: GameObjectIdentifier, delt
  * @category Transform
  */
 export function rotate_world(gameObjectIdentifier: GameObjectIdentifier, angles: Vector3): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkVector3Parameter(angles);
-  return getInstance()
-    .rotateWorldInternal(gameObjectIdentifier, angles);
+  const instance = checkUnityAcademyExistence(rotate_world.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, rotate_world.name);
+  checkVector3Parameter(angles, rotate_world.name, 'angles');
+
+  return instance.rotateWorldInternal(gameObjectIdentifier, angles);
 }
 
 /**
@@ -394,12 +401,12 @@ export function rotate_world(gameObjectIdentifier: GameObjectIdentifier, angles:
  * @category Transform
  */
 export function copy_position(from: GameObjectIdentifier, to: GameObjectIdentifier, deltaPosition: Vector3): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(from);
-  checkGameObjectIdentifierParameter(to);
-  checkVector3Parameter(deltaPosition);
-  return getInstance()
-    .copyTransformPropertiesInternal('position', from, to, deltaPosition);
+  const instance = checkUnityAcademyExistence(copy_position.name);
+  checkGameObjectIdentifierParameter(from, copy_position.name, 'from');
+  checkGameObjectIdentifierParameter(to, copy_position.name, 'to');
+  checkVector3Parameter(deltaPosition, copy_position.name, 'deltaPosition');
+
+  return instance.copyTransformPropertiesInternal('position', from, to, deltaPosition);
 }
 
 /**
@@ -414,12 +421,12 @@ export function copy_position(from: GameObjectIdentifier, to: GameObjectIdentifi
  * @category Transform
  */
 export function copy_rotation(from: GameObjectIdentifier, to: GameObjectIdentifier, deltaRotation: Vector3): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(from);
-  checkGameObjectIdentifierParameter(to);
-  checkVector3Parameter(deltaRotation);
-  return getInstance()
-    .copyTransformPropertiesInternal('rotation', from, to, deltaRotation);
+  const instance = checkUnityAcademyExistence(copy_rotation.name);
+  checkGameObjectIdentifierParameter(from, copy_rotation.name, 'from');
+  checkGameObjectIdentifierParameter(to, copy_rotation.name, 'to');
+  checkVector3Parameter(deltaRotation, copy_rotation.name, 'deltaRotation');
+
+  return instance.copyTransformPropertiesInternal('rotation', from, to, deltaRotation);
 }
 
 /**
@@ -434,12 +441,12 @@ export function copy_rotation(from: GameObjectIdentifier, to: GameObjectIdentifi
  * @category Transform
  */
 export function copy_scale(from: GameObjectIdentifier, to: GameObjectIdentifier, deltaScale: Vector3): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(from);
-  checkGameObjectIdentifierParameter(to);
-  checkVector3Parameter(deltaScale);
-  return getInstance()
-    .copyTransformPropertiesInternal('scale', from, to, deltaScale);
+  const instance = checkUnityAcademyExistence(copy_scale.name);
+  checkGameObjectIdentifierParameter(from, copy_scale.name, 'from');
+  checkGameObjectIdentifierParameter(to, copy_scale.name, 'to');
+  checkVector3Parameter(deltaScale, copy_scale.name, 'deltaScale');
+
+  return instance.copyTransformPropertiesInternal('scale', from, to, deltaScale);
 }
 
 /**
@@ -455,11 +462,11 @@ export function copy_scale(from: GameObjectIdentifier, to: GameObjectIdentifier,
  * @category Transform
  */
 export function look_at(gameObjectIdentifier: GameObjectIdentifier, position: Vector3): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkVector3Parameter(position);
-  getInstance()
-    .lookAtPositionInternal(gameObjectIdentifier, position);
+  const instance = checkUnityAcademyExistence(look_at.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, look_at.name);
+  checkVector3Parameter(position, look_at.name, 'position');
+
+  instance.lookAtPositionInternal(gameObjectIdentifier, position);
 }
 
 /**
@@ -472,23 +479,39 @@ export function look_at(gameObjectIdentifier: GameObjectIdentifier, position: Ve
  * @category Transform
  */
 export function gameobject_distance(gameObjectIdentifier_A: GameObjectIdentifier, gameObjectIdentifier_B: GameObjectIdentifier): number {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier_A);
-  checkGameObjectIdentifierParameter(gameObjectIdentifier_B);
-  return getInstance()
-    .gameObjectDistanceInternal(gameObjectIdentifier_A, gameObjectIdentifier_B);
+  const instance = checkUnityAcademyExistence(gameobject_distance.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier_A, gameobject_distance.name, 'gameObjectIdentifier_A');
+  checkGameObjectIdentifierParameter(gameObjectIdentifier_B, gameobject_distance.name, 'gameObjectIdentifier_B');
+  return instance.gameObjectDistanceInternal(gameObjectIdentifier_A, gameObjectIdentifier_B);
 }
 
-function checkKeyCodeValidityAndToLowerCase(keyCode: string): string {
-  if (typeof keyCode !== 'string') throw new Error(`Key code must be a string! Given type: ${typeof keyCode}`);
-  if (keyCode === 'LeftMouseBtn' || keyCode === 'RightMouseBtn' || keyCode === 'MiddleMouseBtn' || keyCode === 'Space' || keyCode === 'LeftShift' || keyCode === 'RightShift') return keyCode;
-  keyCode = keyCode.toLowerCase();
-  if (keyCode.length !== 1) throw new Error(`Key code must be either a string of length 1 or one among 'LeftMouseBtn', 'RightMouseBtn', 'MiddleMouseBtn', 'Space', 'LeftShift' or 'RightShift'! Given length: ${keyCode.length}`);
-  const char = keyCode.charAt(0);
-  if (!((char >= 'a' && char <= 'z') || (char >= '0' && char <= '9'))) {
-    throw new Error(`Key code must be either a letter between A-Z or a-z or 0-9 or one among 'LeftMouseBtn', 'RightMouseBtn', 'MiddleMouseBtn', 'Space', 'LeftShift' or 'RightShift'! Given: ${keyCode}`);
+export const BUTTON_KEY_CODES = [
+  'LeftMouseBtn',
+  'RightMouseBtn',
+  'MiddleMouseBtn',
+  'Space',
+  'LeftShift',
+  'RightShift'
+] as const;
+
+type ButtonKeyCodes = (typeof BUTTON_KEY_CODES)[number];
+
+type CharKeyCodes =
+  | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g'
+  | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n'
+  | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u'
+  | 'v' | 'w' | 'x' | 'y' | 'z'
+  | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
+
+type KeyCode = ButtonKeyCodes | CharKeyCodes | Uppercase<CharKeyCodes>;
+
+export function assertIsValidKeyCode(obj: unknown, func_name: string, param_name?: string): asserts obj is KeyCode {
+  if (typeof obj === 'string') {
+    if (BUTTON_KEY_CODES.includes(obj as any)) return;
+    if (/^[a-zA-Z0-9]$/.test(obj)) return;
   }
-  return keyCode;
+
+  throw new InvalidParameterTypeError('KeyCode', obj, func_name, param_name);
 }
 
 /**
@@ -500,11 +523,11 @@ function checkKeyCodeValidityAndToLowerCase(keyCode: string): string {
  * @param keyCode The key to detact input for.
  * @category Input
  */
-export function get_key_down(keyCode: string): boolean {
-  checkUnityAcademyExistence();
-  keyCode = checkKeyCodeValidityAndToLowerCase(keyCode);
-  return getInstance()
-    .getKeyState(keyCode) === 1;
+export function get_key_down(keyCode: KeyCode): boolean {
+  const instance = checkUnityAcademyExistence(get_key_down.name);
+  assertIsValidKeyCode(keyCode, get_key_down.name);
+
+  return instance.getKeyState(keyCode) === 1;
 }
 
 /**
@@ -516,11 +539,11 @@ export function get_key_down(keyCode: string): boolean {
  * @param keyCode The key to detact input for.
  * @category Input
  */
-export function get_key(keyCode: string): boolean {
-  checkUnityAcademyExistence();
-  keyCode = checkKeyCodeValidityAndToLowerCase(keyCode);
-  const keyState = getInstance()
-    .getKeyState(keyCode);
+export function get_key(keyCode: KeyCode): boolean {
+  const instance = checkUnityAcademyExistence(get_key.name);
+  assertIsValidKeyCode(keyCode, get_key.name);
+
+  const keyState = instance.getKeyState(keyCode);
   return keyState === 1 || keyState === 2 || keyState === 3;
 }
 
@@ -533,11 +556,11 @@ export function get_key(keyCode: string): boolean {
  * @param keyCode The key to detact input for.
  * @category Input
  */
-export function get_key_up(keyCode: string): boolean {
-  checkUnityAcademyExistence();
-  keyCode = checkKeyCodeValidityAndToLowerCase(keyCode);
-  return getInstance()
-    .getKeyState(keyCode) === 3;
+export function get_key_up(keyCode: KeyCode): boolean {
+  const instance = checkUnityAcademyExistence(get_key_up.name);
+  assertIsValidKeyCode(keyCode, get_key_up.name);
+
+  return instance.getKeyState(keyCode) === 3;
 }
 
 /**
@@ -552,12 +575,14 @@ export function get_key_up(keyCode: string): boolean {
  * @category Common
  */
 export function play_animator_state(gameObjectIdentifier: GameObjectIdentifier, animatorStateName: string): void {
-  checkUnityAcademyExistence();
-  checkIs3DMode();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkParameterType(animatorStateName, 'string');
-  getInstance()
-    .playAnimatorStateInternal(gameObjectIdentifier, animatorStateName);
+  const instance = checkUnityAcademyExistence(play_animator_state.name, '3D');
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, play_animator_state.name);
+
+  if (typeof animatorStateName !== 'string') {
+    throw new InvalidParameterTypeError('string', animatorStateName, play_animator_state.name, 'animatorStateName');
+  }
+
+  instance.playAnimatorStateInternal(gameObjectIdentifier, animatorStateName);
 }
 
 /**
@@ -573,10 +598,9 @@ export function play_animator_state(gameObjectIdentifier: GameObjectIdentifier, 
  * @category Physics - Rigidbody
  */
 export function apply_rigidbody(gameObjectIdentifier: GameObjectIdentifier): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  getInstance()
-    .applyRigidbodyInternal(gameObjectIdentifier);
+  const instance = checkUnityAcademyExistence(apply_rigidbody.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, apply_rigidbody.name);
+  instance.applyRigidbodyInternal(gameObjectIdentifier);
 }
 
 /**
@@ -589,10 +613,9 @@ export function apply_rigidbody(gameObjectIdentifier: GameObjectIdentifier): voi
  * @category Physics - Rigidbody
  */
 export function get_mass(gameObjectIdentifier: GameObjectIdentifier): number {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  return getInstance()
-    .getRigidbodyNumericalProp('mass', gameObjectIdentifier);
+  const instance = checkUnityAcademyExistence(get_mass.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, get_mass.name);
+  return instance.getRigidbodyNumericalProp('mass', gameObjectIdentifier);
 }
 
 /**
@@ -605,11 +628,11 @@ export function get_mass(gameObjectIdentifier: GameObjectIdentifier): number {
  * @category Physics - Rigidbody
  */
 export function set_mass(gameObjectIdentifier: GameObjectIdentifier, mass: number): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkParameterType(mass, 'number');
-  getInstance()
-    .setRigidbodyNumericalProp('mass', gameObjectIdentifier, mass);
+  const instance = checkUnityAcademyExistence(set_mass.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, set_mass.name);
+
+  validateNumber(mass, set_mass.name, 'mass');
+  instance.setRigidbodyNumericalProp('mass', gameObjectIdentifier, mass);
 }
 
 /**
@@ -622,10 +645,9 @@ export function set_mass(gameObjectIdentifier: GameObjectIdentifier, mass: numbe
  * @category Physics - Rigidbody
  */
 export function get_velocity(gameObjectIdentifier: GameObjectIdentifier): Vector3 {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  return getInstance()
-    .getRigidbodyVelocityVector3Prop('velocity', gameObjectIdentifier);
+  const instance = checkUnityAcademyExistence(get_velocity.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, get_velocity.name);
+  return instance.getRigidbodyVelocityVector3Prop('velocity', gameObjectIdentifier);
 }
 
 /**
@@ -638,11 +660,11 @@ export function get_velocity(gameObjectIdentifier: GameObjectIdentifier): Vector
  * @category Physics - Rigidbody
  */
 export function set_velocity(gameObjectIdentifier: GameObjectIdentifier, velocity: Vector3): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkVector3Parameter(velocity);
-  getInstance()
-    .setRigidbodyVelocityVector3Prop('velocity', gameObjectIdentifier, velocity);
+  const instance = checkUnityAcademyExistence(set_velocity.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, set_velocity.name);
+  checkVector3Parameter(velocity, set_velocity.name, 'velocity');
+
+  instance.setRigidbodyVelocityVector3Prop('velocity', gameObjectIdentifier, velocity);
 }
 
 /**
@@ -657,10 +679,9 @@ export function set_velocity(gameObjectIdentifier: GameObjectIdentifier, velocit
  * @category Physics - Rigidbody
  */
 export function get_angular_velocity(gameObjectIdentifier: GameObjectIdentifier): Vector3 {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  return getInstance()
-    .getRigidbodyVelocityVector3Prop('angularVelocity', gameObjectIdentifier);
+  const instance = checkUnityAcademyExistence(get_angular_velocity.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, get_angular_velocity.name);
+  return instance.getRigidbodyVelocityVector3Prop('angularVelocity', gameObjectIdentifier);
 }
 
 /**
@@ -675,11 +696,11 @@ export function get_angular_velocity(gameObjectIdentifier: GameObjectIdentifier)
  * @category Physics - Rigidbody
  */
 export function set_angular_velocity(gameObjectIdentifier: GameObjectIdentifier, angularVelocity: Vector3): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkVector3Parameter(angularVelocity);
-  getInstance()
-    .setRigidbodyVelocityVector3Prop('angularVelocity', gameObjectIdentifier, angularVelocity);
+  const instance = checkUnityAcademyExistence(set_angular_velocity.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, set_angular_velocity.name);
+  checkVector3Parameter(angularVelocity, set_angular_velocity.name, 'angularVelocity');
+
+  instance.setRigidbodyVelocityVector3Prop('angularVelocity', gameObjectIdentifier, angularVelocity);
 }
 
 /**
@@ -694,11 +715,11 @@ export function set_angular_velocity(gameObjectIdentifier: GameObjectIdentifier,
  * @category Physics - Rigidbody
  */
 export function set_drag(gameObjectIdentifier: GameObjectIdentifier, value: number): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkParameterType(value, 'number');
-  getInstance()
-    .setRigidbodyNumericalProp('drag', gameObjectIdentifier, value);
+  const instance = checkUnityAcademyExistence(set_drag.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, set_drag.name);
+  validateNumber(value, set_drag.name, 'value');
+
+  instance.setRigidbodyNumericalProp('drag', gameObjectIdentifier, value);
 }
 
 /**
@@ -713,11 +734,11 @@ export function set_drag(gameObjectIdentifier: GameObjectIdentifier, value: numb
  * @category Physics - Rigidbody
  */
 export function set_angular_drag(gameObjectIdentifier: GameObjectIdentifier, value: number): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkParameterType(value, 'number');
-  getInstance()
-    .setRigidbodyNumericalProp('angularDrag', gameObjectIdentifier, value);
+  const instance = checkUnityAcademyExistence(set_angular_drag.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, set_angular_drag.name);
+  validateNumber(value, set_angular_drag.name, 'value');
+
+  instance.setRigidbodyNumericalProp('angularDrag', gameObjectIdentifier, value);
 }
 
 /**
@@ -730,11 +751,14 @@ export function set_angular_drag(gameObjectIdentifier: GameObjectIdentifier, val
  * @category Physics - Rigidbody
  */
 export function set_use_gravity(gameObjectIdentifier: GameObjectIdentifier, useGravity: boolean): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkParameterType(useGravity, 'boolean');
-  getInstance()
-    .setUseGravityInternal(gameObjectIdentifier, useGravity);
+  const instance = checkUnityAcademyExistence(set_use_gravity.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, set_use_gravity.name);
+
+  if (typeof useGravity !== 'boolean') {
+    throw new InvalidParameterTypeError('boolean', useGravity, set_use_gravity.name, 'useGravity');
+  }
+
+  instance.setUseGravityInternal(gameObjectIdentifier, useGravity);
 }
 
 /**
@@ -747,11 +771,11 @@ export function set_use_gravity(gameObjectIdentifier: GameObjectIdentifier, useG
  * @category Physics - Rigidbody
  */
 export function add_impulse_force(gameObjectIdentifier: GameObjectIdentifier, force: Vector3): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkVector3Parameter(force);
-  getInstance()
-    .addImpulseForceInternal(gameObjectIdentifier, force);
+  const instance = checkUnityAcademyExistence(add_impulse_force.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, add_impulse_force.name);
+  checkVector3Parameter(force, add_impulse_force.name, 'force');
+
+  instance.addImpulseForceInternal(gameObjectIdentifier, force);
 }
 
 /**
@@ -765,11 +789,12 @@ export function add_impulse_force(gameObjectIdentifier: GameObjectIdentifier, fo
  * @category Physics - Collision
  */
 export function remove_collider_components(gameObjectIdentifier: GameObjectIdentifier): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  getInstance()
-    .removeColliderComponentsInternal(gameObjectIdentifier);
+  const instance = checkUnityAcademyExistence(remove_collider_components.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, remove_collider_components.name);
+  instance.removeColliderComponentsInternal(gameObjectIdentifier);
 }
+
+type CollisionHandler = (self: GameObjectIdentifier, other: GameObjectIdentifier) => void;
 
 /**
  * Set the lifecycle event function that will be called when the collider on this GameObject just starting colliding with another collider.
@@ -791,12 +816,12 @@ export function remove_collider_components(gameObjectIdentifier: GameObjectIdent
  * @category Physics - Collision
  * @category Outside Lifecycle
  */
-export function on_collision_enter(gameObjectIdentifier: GameObjectIdentifier, eventFunction: Function): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkParameterType(eventFunction, 'function');
-  getInstance()
-    .setOnCollisionEnterInternal(gameObjectIdentifier, eventFunction);
+export function on_collision_enter(gameObjectIdentifier: GameObjectIdentifier, eventFunction: CollisionHandler): void {
+  const instance = checkUnityAcademyExistence(on_collision_enter.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, on_collision_enter.name);
+  assertFunctionOfLength(eventFunction, 2, on_collision_enter.name, 'eventFunction');
+
+  instance.setOnCollisionEnterInternal(gameObjectIdentifier, eventFunction);
 }
 
 /**
@@ -819,12 +844,12 @@ export function on_collision_enter(gameObjectIdentifier: GameObjectIdentifier, e
  * @category Physics - Collision
  * @category Outside Lifecycle
  */
-export function on_collision_stay(gameObjectIdentifier: GameObjectIdentifier, eventFunction: Function): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkParameterType(eventFunction, 'function');
-  getInstance()
-    .setOnCollisionStayInternal(gameObjectIdentifier, eventFunction);
+export function on_collision_stay(gameObjectIdentifier: GameObjectIdentifier, eventFunction: CollisionHandler): void {
+  const instance = checkUnityAcademyExistence(on_collision_stay.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, on_collision_stay.name);
+  assertFunctionOfLength(eventFunction, 2, on_collision_stay.name, 'eventFunction');
+
+  instance.setOnCollisionStayInternal(gameObjectIdentifier, eventFunction);
 }
 
 /**
@@ -847,12 +872,12 @@ export function on_collision_stay(gameObjectIdentifier: GameObjectIdentifier, ev
  * @category Physics - Collision
  * @category Outside Lifecycle
  */
-export function on_collision_exit(gameObjectIdentifier: GameObjectIdentifier, eventFunction: Function): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkParameterType(eventFunction, 'function');
-  getInstance()
-    .setOnCollisionExitInternal(gameObjectIdentifier, eventFunction);
+export function on_collision_exit(gameObjectIdentifier: GameObjectIdentifier, eventFunction: CollisionHandler): void {
+  const instance = checkUnityAcademyExistence(on_collision_exit.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, on_collision_exit.name);
+  assertFunctionOfLength(eventFunction, 2, on_collision_exit.name, 'eventFunction');
+
+  instance.setOnCollisionExitInternal(gameObjectIdentifier, eventFunction);
 }
 
 /**
@@ -870,12 +895,16 @@ export function on_collision_exit(gameObjectIdentifier: GameObjectIdentifier, ev
  * @category Graphical User Interface
  */
 export function gui_label(text: string, x: number, y: number): void {
-  checkUnityAcademyExistence();
-  checkParameterType(text, 'string');
-  checkParameterType(x, 'number');
-  checkParameterType(y, 'number');
-  getInstance()
-    .onGUI_Label(text, x, y);
+  const instance = checkUnityAcademyExistence(gui_label.name);
+
+  if (typeof text !== 'string') {
+    throw new InvalidParameterTypeError('string', text, gui_label.name, 'text');
+  }
+
+  validateNumber(x, gui_label.name, 'x');
+  validateNumber(y, gui_label.name, 'y');
+
+  instance.onGUI_Label(text, x, y);
 }
 
 /**
@@ -917,16 +946,20 @@ export function gui_label(text: string, x: number, y: number): void {
  * @param onClick The function that will be called when user clicks the button on screen.
  * @category Graphical User Interface
  */
-export function gui_button(text: string, x: number, y: number, width: number, height: number, onClick: Function): void {
-  checkUnityAcademyExistence();
-  checkParameterType(text, 'string');
-  checkParameterType(x, 'number');
-  checkParameterType(y, 'number');
-  checkParameterType(width, 'number');
-  checkParameterType(height, 'number');
-  checkParameterType(onClick, 'function');
-  getInstance()
-    .onGUI_Button(text, x, y, width, height, onClick);
+export function gui_button(text: string, x: number, y: number, width: number, height: number, onClick: () => void): void {
+  const instance = checkUnityAcademyExistence(gui_button.name);
+
+  if (typeof text !== 'string') {
+    throw new InvalidParameterTypeError('string', text, gui_button.name, 'text');
+  }
+
+  validateNumber(x, gui_button.name, 'x');
+  validateNumber(y, gui_button.name, 'y');
+  validateNumber(width, gui_button.name, 'width');
+  validateNumber(height, gui_button.name, 'height');
+  assertFunctionOfLength(onClick, 0, gui_button.name, 'onClick');
+
+  instance.onGUI_Button(text, x, y, width, height, onClick);
 }
 
 /**
@@ -943,9 +976,8 @@ export function gui_button(text: string, x: number, y: number, width: number, he
  * @category Outside Lifecycle
  */
 export function get_main_camera_following_target(): GameObjectIdentifier {
-  checkUnityAcademyExistence();
-  return getInstance()
-    .getGameObjectIdentifierForPrimitiveGameObject('MainCameraFollowingTarget');
+  const instance = checkUnityAcademyExistence(get_main_camera_following_target.name);
+  return instance.getGameObjectIdentifierForPrimitiveGameObject('MainCameraFollowingTarget');
 }
 
 /**
@@ -960,9 +992,8 @@ export function get_main_camera_following_target(): GameObjectIdentifier {
  * @category Outside Lifecycle
  */
 export function request_for_main_camera_control(): GameObjectIdentifier {
-  checkUnityAcademyExistence();
-  return getInstance()
-    .requestForMainCameraControlInternal();
+  const instance = checkUnityAcademyExistence(request_for_main_camera_control.name);
+  return instance.requestForMainCameraControlInternal();
 }
 
 /**
@@ -975,11 +1006,14 @@ export function request_for_main_camera_control(): GameObjectIdentifier {
  * @category Common
  */
 export function set_custom_prop(gameObjectIdentifier: GameObjectIdentifier, propName: string, value: any): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkParameterType(propName, 'string');
-  getInstance()
-    .setCustomPropertyInternal(gameObjectIdentifier, propName, value);
+  const instance = checkUnityAcademyExistence(set_custom_prop.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, set_custom_prop.name);
+
+  if (typeof propName !== 'string') {
+    throw new InvalidParameterTypeError('string', propName, set_custom_prop.name, 'propName');
+  }
+
+  instance.setCustomPropertyInternal(gameObjectIdentifier, propName, value);
 }
 
 /**
@@ -993,11 +1027,14 @@ export function set_custom_prop(gameObjectIdentifier: GameObjectIdentifier, prop
  * @category Common
  */
 export function get_custom_prop(gameObjectIdentifier: GameObjectIdentifier, propName: string): any {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(gameObjectIdentifier);
-  checkParameterType(propName, 'string');
-  return getInstance()
-    .getCustomPropertyInternal(gameObjectIdentifier, propName);
+  const instance = checkUnityAcademyExistence(get_custom_prop.name);
+  checkGameObjectIdentifierParameter(gameObjectIdentifier, get_custom_prop.name);
+
+  if (typeof propName !== 'string') {
+    throw new InvalidParameterTypeError('string', propName, get_custom_prop.name, 'propName');
+  }
+
+  return instance.getCustomPropertyInternal(gameObjectIdentifier, propName);
 }
 
 /**
@@ -1011,9 +1048,10 @@ export function get_custom_prop(gameObjectIdentifier: GameObjectIdentifier, prop
  * @category Maths
  */
 export function vector3(x: number, y: number, z: number): Vector3 {
-  checkParameterType(x, 'number');
-  checkParameterType(y, 'number');
-  checkParameterType(z, 'number');
+  validateNumber(x, vector3.name, 'x');
+  validateNumber(y, vector3.name, 'y');
+  validateNumber(z, vector3.name, 'z');
+
   return makeVector3D(x, y, z);
 }
 
@@ -1026,7 +1064,7 @@ export function vector3(x: number, y: number, z: number): Vector3 {
  * @category Maths
  */
 export function get_x(vector: Vector3): number {
-  checkVector3Parameter(vector);
+  checkVector3Parameter(vector, get_x.name);
   return vector.x;
 }
 
@@ -1039,7 +1077,7 @@ export function get_x(vector: Vector3): number {
  * @category Maths
  */
 export function get_y(vector: Vector3): number {
-  checkVector3Parameter(vector);
+  checkVector3Parameter(vector, get_y.name);
   return vector.y;
 }
 
@@ -1052,7 +1090,7 @@ export function get_y(vector: Vector3): number {
  * @category Maths
  */
 export function get_z(vector: Vector3): number {
-  checkVector3Parameter(vector);
+  checkVector3Parameter(vector, get_z.name);
   return vector.z;
 }
 
@@ -1065,8 +1103,9 @@ export function get_z(vector: Vector3): number {
  * @category Maths
  */
 export function scale_vector(vector: Vector3, factor: number): Vector3 {
-  checkVector3Parameter(vector);
-  checkParameterType(factor, 'number');
+  checkVector3Parameter(vector, scale_vector.name);
+  validateNumber(factor, scale_vector.name, 'factor');
+
   return scaleVector(vector, factor);
 }
 
@@ -1079,8 +1118,9 @@ export function scale_vector(vector: Vector3, factor: number): Vector3 {
  * @category Maths
  */
 export function add_vectors(vectorA: Vector3, vectorB: Vector3): Vector3 {
-  checkVector3Parameter(vectorA);
-  checkVector3Parameter(vectorB);
+  checkVector3Parameter(vectorA, add_vectors.name, 'vectorA');
+  checkVector3Parameter(vectorB, add_vectors.name, 'vectorB');
+
   return addVectors(vectorA, vectorB);
 }
 
@@ -1093,8 +1133,9 @@ export function add_vectors(vectorA: Vector3, vectorB: Vector3): Vector3 {
  * @category Maths
  */
 export function vector_difference(vectorA: Vector3, vectorB: Vector3): Vector3 {
-  checkVector3Parameter(vectorA);
-  checkVector3Parameter(vectorB);
+  checkVector3Parameter(vectorA, vector_difference.name, 'vectorA');
+  checkVector3Parameter(vectorB, vector_difference.name, 'vectorB');
+
   return vectorDifference(vectorA, vectorB);
 }
 
@@ -1107,8 +1148,9 @@ export function vector_difference(vectorA: Vector3, vectorB: Vector3): Vector3 {
  * @category Maths
  */
 export function dot(vectorA: Vector3, vectorB: Vector3): number {
-  checkVector3Parameter(vectorA);
-  checkVector3Parameter(vectorB);
+  checkVector3Parameter(vectorA, dot.name, 'vectorA');
+  checkVector3Parameter(vectorB, dot.name, 'vectorB');
+
   return dotProduct(vectorA, vectorB);
 }
 
@@ -1121,8 +1163,9 @@ export function dot(vectorA: Vector3, vectorB: Vector3): number {
  * @category Maths
  */
 export function cross(vectorA: Vector3, vectorB: Vector3): Vector3 {
-  checkVector3Parameter(vectorA);
-  checkVector3Parameter(vectorB);
+  checkVector3Parameter(vectorA, cross.name, 'vectorA');
+  checkVector3Parameter(vectorB, cross.name, 'vectorB');
+
   return crossProduct(vectorA, vectorB);
 }
 
@@ -1134,7 +1177,7 @@ export function cross(vectorA: Vector3, vectorB: Vector3): Vector3 {
  * @category Maths
  */
 export function normalize(vector: Vector3): Vector3 {
-  checkVector3Parameter(vector);
+  checkVector3Parameter(vector, normalize.name);
   return normalizeVector(vector);
 }
 
@@ -1146,7 +1189,7 @@ export function normalize(vector: Vector3): Vector3 {
  * @category Maths
  */
 export function magnitude(vector: Vector3): number {
-  checkVector3Parameter(vector);
+  checkVector3Parameter(vector, magnitude.name);
   return vectorMagnitude(vector);
 }
 
@@ -1171,8 +1214,8 @@ export function zero_vector(): Vector3 {
  * @category Maths
  */
 export function point_distance(pointA: Vector3, pointB: Vector3): number {
-  checkVector3Parameter(pointA);
-  checkVector3Parameter(pointB);
+  checkVector3Parameter(pointA, point_distance.name, 'pointA');
+  checkVector3Parameter(pointB, point_distance.name, 'pointB');
   return pointDistance(pointA, pointB);
 }
 
@@ -1184,10 +1227,12 @@ export function point_distance(pointA: Vector3, pointB: Vector3): number {
  * @category Outside Lifecycle
  */
 export function load_audio_clip_mp3(audioUrl: string): AudioClipIdentifier {
-  checkUnityAcademyExistence();
-  checkParameterType(audioUrl, 'string');
-  return getInstance()
-    .loadAudioClipInternal(audioUrl, 'mp3');
+  const instance = checkUnityAcademyExistence(load_audio_clip_mp3.name);
+  if (typeof audioUrl !== 'string') {
+    throw new InvalidParameterTypeError('string', audioUrl, load_audio_clip_mp3.name);
+  }
+
+  return instance.loadAudioClipInternal(audioUrl, 'mp3');
 }
 
 /**
@@ -1198,10 +1243,13 @@ export function load_audio_clip_mp3(audioUrl: string): AudioClipIdentifier {
  * @category Outside Lifecycle
  */
 export function load_audio_clip_ogg(audioUrl: string): AudioClipIdentifier {
-  checkUnityAcademyExistence();
-  checkParameterType(audioUrl, 'string');
-  return getInstance()
-    .loadAudioClipInternal(audioUrl, 'ogg');
+  const instance = checkUnityAcademyExistence(load_audio_clip_ogg.name);
+
+  if (typeof audioUrl !== 'string') {
+    throw new InvalidParameterTypeError('string', audioUrl, load_audio_clip_ogg.name);
+  }
+
+  return instance.loadAudioClipInternal(audioUrl, 'ogg');
 }
 
 /**
@@ -1212,10 +1260,12 @@ export function load_audio_clip_ogg(audioUrl: string): AudioClipIdentifier {
  * @category Outside Lifecycle
  */
 export function load_audio_clip_wav(audioUrl: string): AudioClipIdentifier {
-  checkUnityAcademyExistence();
-  checkParameterType(audioUrl, 'string');
-  return getInstance()
-    .loadAudioClipInternal(audioUrl, 'wav');
+  const instance = checkUnityAcademyExistence(load_audio_clip_wav.name);
+  if (typeof audioUrl !== 'string') {
+    throw new InvalidParameterTypeError('string', audioUrl, load_audio_clip_wav.name);
+  }
+
+  return instance.loadAudioClipInternal(audioUrl, 'wav');
 }
 
 /**
@@ -1233,9 +1283,8 @@ export function load_audio_clip_wav(audioUrl: string): AudioClipIdentifier {
  */
 export function instantiate_audio_source(audioClip: AudioClipIdentifier): GameObjectIdentifier {
   // todo: check audio clip identifier type
-  checkUnityAcademyExistence();
-  return getInstance()
-    .instantiateAudioSourceInternal(audioClip);
+  const instance = checkUnityAcademyExistence(instantiate_audio_source.name);
+  return instance.instantiateAudioSourceInternal(audioClip);
 }
 
 /**
@@ -1247,10 +1296,9 @@ export function instantiate_audio_source(audioClip: AudioClipIdentifier): GameOb
  * @category Sound / Audio
  */
 export function play_audio(audioSrc: GameObjectIdentifier): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(audioSrc);
-  getInstance()
-    .setAudioSourceProp('isPlaying', audioSrc, true);
+  const instance = checkUnityAcademyExistence(play_audio.name);
+  checkGameObjectIdentifierParameter(audioSrc, play_audio.name);
+  instance.setAudioSourceProp('isPlaying', audioSrc, true);
 }
 
 /**
@@ -1262,10 +1310,9 @@ export function play_audio(audioSrc: GameObjectIdentifier): void {
  * @category Sound / Audio
  */
 export function pause_audio(audioSrc: GameObjectIdentifier): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(audioSrc);
-  getInstance()
-    .setAudioSourceProp('isPlaying', audioSrc, false);
+  const instance = checkUnityAcademyExistence(pause_audio.name);
+  checkGameObjectIdentifierParameter(audioSrc, pause_audio.name);
+  instance.setAudioSourceProp('isPlaying', audioSrc, false);
 }
 
 /**
@@ -1278,11 +1325,11 @@ export function pause_audio(audioSrc: GameObjectIdentifier): void {
  * @category Sound / Audio
  */
 export function set_audio_play_speed(audioSrc: GameObjectIdentifier, speed: number): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(audioSrc);
-  checkParameterType(speed, 'number');
-  getInstance()
-    .setAudioSourceProp('playSpeed', audioSrc, speed);
+  const instance = checkUnityAcademyExistence(set_audio_play_speed.name);
+  checkGameObjectIdentifierParameter(audioSrc, set_audio_play_speed.name);
+  validateNumber(speed, set_audio_play_speed.name, 'speed');
+
+  instance.setAudioSourceProp('playSpeed', audioSrc, speed);
 }
 
 /**
@@ -1295,10 +1342,9 @@ export function set_audio_play_speed(audioSrc: GameObjectIdentifier, speed: numb
  * @category Sound / Audio
  */
 export function get_audio_play_progress(audioSrc: GameObjectIdentifier): number {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(audioSrc);
-  return getInstance()
-    .getAudioSourceProp('playProgress', audioSrc);
+  const instance = checkUnityAcademyExistence(get_audio_play_progress.name);
+  checkGameObjectIdentifierParameter(audioSrc, get_audio_play_progress.name);
+  return instance.getAudioSourceProp('playProgress', audioSrc);
 }
 
 /**
@@ -1311,11 +1357,11 @@ export function get_audio_play_progress(audioSrc: GameObjectIdentifier): number 
  * @category Sound / Audio
  */
 export function set_audio_play_progress(audioSrc: GameObjectIdentifier, progress: number): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(audioSrc);
-  checkParameterType(progress, 'number');
-  getInstance()
-    .setAudioSourceProp('playProgress', audioSrc, progress);
+  const instance = checkUnityAcademyExistence(set_audio_play_progress.name);
+  checkGameObjectIdentifierParameter(audioSrc, set_audio_play_progress.name);
+  validateNumber(progress, set_audio_play_progress.name, 'progresss');
+
+  instance.setAudioSourceProp('playProgress', audioSrc, progress);
 }
 
 /**
@@ -1323,11 +1369,10 @@ export function set_audio_play_progress(audioSrc: GameObjectIdentifier, progress
  * @category Sound / Audio
  */
 export function change_audio_clip(audioSrc: GameObjectIdentifier, newAudioClip: AudioClipIdentifier): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(audioSrc);
+  const instance = checkUnityAcademyExistence(change_audio_clip.name);
+  checkGameObjectIdentifierParameter(audioSrc, change_audio_clip.name);
   // todo: check audio clip identifier type
-  getInstance()
-    .setAudioSourceProp('audioClipIdentifier', audioSrc, newAudioClip);
+  instance.setAudioSourceProp('audioClipIdentifier', audioSrc, newAudioClip);
 }
 
 /**
@@ -1335,11 +1380,14 @@ export function change_audio_clip(audioSrc: GameObjectIdentifier, newAudioClip: 
  * @category Sound / Audio
  */
 export function set_audio_looping(audioSrc: GameObjectIdentifier, looping: boolean): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(audioSrc);
-  checkParameterType(looping, 'boolean');
-  getInstance()
-    .setAudioSourceProp('isLooping', audioSrc, looping);
+  const instance = checkUnityAcademyExistence(set_audio_looping.name);
+  checkGameObjectIdentifierParameter(audioSrc, set_audio_looping.name);
+
+  if (typeof looping !== 'boolean') {
+    throw new InvalidParameterTypeError('boolean', looping, set_audio_looping.name, 'looping');
+  }
+
+  instance.setAudioSourceProp('isLooping', audioSrc, looping);
 }
 
 /**
@@ -1347,11 +1395,11 @@ export function set_audio_looping(audioSrc: GameObjectIdentifier, looping: boole
  * @category Sound / Audio
  */
 export function set_audio_volume(audioSrc: GameObjectIdentifier, volume: number): void {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(audioSrc);
-  checkParameterType(volume, 'number');
-  getInstance()
-    .setAudioSourceProp('volume', audioSrc, volume);
+  const instance = checkUnityAcademyExistence(set_audio_volume.name);
+  checkGameObjectIdentifierParameter(audioSrc, set_audio_volume.name);
+  validateNumber(volume, set_audio_volume.name, 'volume');
+
+  instance.setAudioSourceProp('volume', audioSrc, volume);
 }
 
 /**
@@ -1359,10 +1407,10 @@ export function set_audio_volume(audioSrc: GameObjectIdentifier, volume: number)
  * @category Sound / Audio
  */
 export function is_audio_playing(audioSrc: GameObjectIdentifier): boolean {
-  checkUnityAcademyExistence();
-  checkGameObjectIdentifierParameter(audioSrc);
-  return getInstance()
-    .getAudioSourceProp('isPlaying', audioSrc);
+  const instance = checkUnityAcademyExistence(is_audio_playing.name);
+  checkGameObjectIdentifierParameter(audioSrc, is_audio_playing.name);
+
+  return instance.getAudioSourceProp('isPlaying', audioSrc);
 }
 
 /**
@@ -1377,10 +1425,9 @@ export function is_audio_playing(audioSrc: GameObjectIdentifier): boolean {
  * @category Outside Lifecycle
  */
 export function debug_log(content: any): void {
-  checkUnityAcademyExistence();
+  const instance = checkUnityAcademyExistence(debug_log.name);
   const contentStr = content.toString();
-  getInstance()
-    .studentLogger(contentStr, 'log');
+  instance.studentLogger(contentStr, 'log');
 }
 
 /**
@@ -1395,10 +1442,9 @@ export function debug_log(content: any): void {
  * @category Outside Lifecycle
  */
 export function debug_logwarning(content: any): void {
-  checkUnityAcademyExistence();
+  const instance = checkUnityAcademyExistence(debug_logwarning.name);
   const contentStr = content.toString();
-  getInstance()
-    .studentLogger(contentStr, 'warning');
+  instance.studentLogger(contentStr, 'warning');
 }
 
 /**
@@ -1415,10 +1461,9 @@ export function debug_logwarning(content: any): void {
  * @category Outside Lifecycle
  */
 export function debug_logerror(content: any): void {
-  checkUnityAcademyExistence();
+  const instance = checkUnityAcademyExistence(debug_logerror.name);
   const contentStr = content.toString();
-  getInstance()
-    .studentLogger(contentStr, 'error');
+  instance.studentLogger(contentStr, 'error');
 }
 
 /**
@@ -1433,10 +1478,12 @@ export function debug_logerror(content: any): void {
  */
 export function set_audio_listener_position(positionX: number, positionY: number, positionZ: number) {
   // todo: check audio clip identifier type
-  checkUnityAcademyExistence();
-  checkParameterType(positionX, 'number');
-  checkParameterType(positionY, 'number');
-  checkParameterType(positionZ, 'number');
+  checkUnityAcademyExistence(set_audio_listener_position.name);
+
+  validateNumber(positionX, set_audio_listener_position.name, 'positionX');
+  validateNumber(positionY, set_audio_listener_position.name, 'positionY');
+  validateNumber(positionZ, set_audio_listener_position.name, 'positionZ');
+
   // TODO
 }
 
@@ -1452,11 +1499,15 @@ export function set_audio_listener_position(positionX: number, positionY: number
  */
 export function play_audio_clip_3d_sound(audioClip: AudioClipIdentifier, volume: number, loop: boolean, positionX: number, positionY: number, positionZ: number) {
   // todo: check audio clip identifier type
-  checkUnityAcademyExistence();
-  checkParameterType(volume, 'number');
-  checkParameterType(loop, 'boolean');
-  checkParameterType(positionX, 'number');
-  checkParameterType(positionY, 'number');
-  checkParameterType(positionZ, 'number');
+  checkUnityAcademyExistence(play_audio_clip_3d_sound.name);
+  validateNumber(volume, play_audio_clip_3d_sound.name, 'volume');
+
+  if (typeof loop !== 'boolean') {
+    throw new InvalidParameterTypeError('boolean', loop, play_audio_clip_3d_sound.name, 'loop');
+  }
+
+  validateNumber(positionX, play_audio_clip_3d_sound.name, 'positionX');
+  validateNumber(positionY, play_audio_clip_3d_sound.name, 'positionY');
+  validateNumber(positionZ, play_audio_clip_3d_sound.name, 'positionZ');
   // TODO
 }
