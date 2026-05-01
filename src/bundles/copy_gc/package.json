@@ -1,10 +1,14 @@
 {
   "name": "@sourceacademy/bundle-copy_gc",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
     "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^",
+    "es-toolkit": "^1.46.1"
   },
   "type": "module",
   "exports": {

@@ -2,64 +2,65 @@
  * @module copy_gc
  */
 
-import { COMMAND, type CommandHeapObject, type Memory, type MemoryHeaps, type Tag } from './types';
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
+import { chunk, clone, last, range } from 'es-toolkit';
+import context from 'js-slang/context';
+import { COMMAND, type CommandHeapObject, type CopyGCGlobalState } from './types';
 
-// Global Variables
-let ROW: number = 10;
-const COLUMN: number = 32;
-let MEMORY_SIZE: number = -99;
-let TO_SPACE: number;
-let FROM_SPACE: number;
-let memory: Memory;
-let memoryHeaps: Memory[] = [];
-const commandHeap: CommandHeapObject[] = [];
-let toMemoryMatrix: number[][];
-let fromMemoryMatrix: number[][];
-let tags: Tag[];
-let typeTag: string[];
-const flips: number[] = [];
-let TAG_SLOT: number = 0;
-let SIZE_SLOT: number = 1;
-let FIRST_CHILD_SLOT: number = 2;
-let LAST_CHILD_SLOT: number = 3;
-let ROOTS: number[] = [];
+function getInitialState(): CopyGCGlobalState {
+  // Global Variables
+  return {
+    ROW: 10,
+    COLUMN: 32,
+    MEMORY_SIZE: -99,
+    TO_SPACE: -1,
+    FROM_SPACE: -1,
+    memory: [],
+    memoryHeaps: [],
+    commandHeap: [],
+    toMemoryMatrix: [],
+    fromMemoryMatrix: [],
+    tags: [],
+    typeTag: [],
+    flips: [],
+    TAG_SLOT: 0,
+    SIZE_SLOT: 1,
+    FIRST_CHILD_SLOT: 2,
+    LAST_CHILD_SLOT: 3,
+    ROOTS: [],
+  };
+}
+
+/**
+ * Exported for testing
+ * @hidden
+ */
+export const globalState = getInitialState();
 
 export function initialize_tag(allTag: number[], types: string[]): void {
-  tags = allTag;
-  typeTag = types;
+  globalState.tags = allTag;
+  globalState.typeTag = types;
 }
 
 export function allHeap(newHeap: number[][]): void {
-  memoryHeaps = newHeap;
+  globalState.memoryHeaps = newHeap;
 }
 
 function updateFlip(): void {
-  flips.push(commandHeap.length - 1);
+  globalState.flips.push(globalState.commandHeap.length - 1);
 }
 
 export function generateMemory(): void {
-  toMemoryMatrix = [];
-  for (let i = 0; i < ROW / 2; i += 1) {
-    memory = [];
-    for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE / 2; j += 1) {
-      memory.push(i * COLUMN + j);
-    }
-    toMemoryMatrix.push(memory);
-  }
+  const rawToMemory = range(globalState.FROM_SPACE);
+  const rawFromMemory = range(globalState.FROM_SPACE, globalState.MEMORY_SIZE);
 
-  fromMemoryMatrix = [];
-  for (let i = ROW / 2; i < ROW; i += 1) {
-    memory = [];
-    for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
-      memory.push(i * COLUMN + j);
-    }
-    fromMemoryMatrix.push(memory);
-  }
+  globalState.toMemoryMatrix = chunk(rawToMemory, globalState.COLUMN);
+  globalState.fromMemoryMatrix = chunk(rawFromMemory, globalState.COLUMN);
 
   const obj: CommandHeapObject = {
     type: COMMAND.INIT,
-    to: TO_SPACE,
-    from: FROM_SPACE,
+    to: globalState.TO_SPACE,
+    from: globalState.FROM_SPACE,
     heap: [],
     left: -1,
     right: -1,
@@ -72,24 +73,28 @@ export function generateMemory(): void {
     free: -1
   };
 
-  commandHeap.push(obj);
+  globalState.commandHeap.push(obj);
 }
 
-export function resetFromSpace(fromSpace: number, heap: number[]): number[] {
+export function resetSpace(space: 'to' | 'from', heap: number[]): number[] {
+  if (heap.length !== globalState.MEMORY_SIZE) {
+    throw new GeneralRuntimeError(`${resetSpace.name}: Provided heap was of size ${heap.length}, required size ${globalState.MEMORY_SIZE}`);
+  }
+
   const newHeap: number[] = [];
-  if (fromSpace > 0) {
-    for (let i = 0; i < MEMORY_SIZE / 2; i += 1) {
+  if (space === 'to') {
+    for (let i = 0; i < globalState.FROM_SPACE; i += 1) {
       newHeap.push(heap[i]);
     }
-    for (let i = MEMORY_SIZE / 2; i < MEMORY_SIZE; i += 1) {
+    for (let i = globalState.FROM_SPACE; i < globalState.MEMORY_SIZE; i += 1) {
       newHeap.push(0);
     }
   } else {
     // to space between 0...M/2
-    for (let i = 0; i < MEMORY_SIZE / 2; i += 1) {
+    for (let i = 0; i < globalState.FROM_SPACE; i += 1) {
       newHeap.push(0);
     }
-    for (let i = MEMORY_SIZE / 2; i < MEMORY_SIZE; i += 1) {
+    for (let i = globalState.FROM_SPACE; i < globalState.MEMORY_SIZE; i += 1) {
       newHeap.push(heap[i]);
     }
   }
@@ -97,10 +102,16 @@ export function resetFromSpace(fromSpace: number, heap: number[]): number[] {
 }
 
 export function initialize_memory(memorySize: number): void {
-  MEMORY_SIZE = memorySize;
-  ROW = MEMORY_SIZE / COLUMN;
-  TO_SPACE = 0;
-  FROM_SPACE = MEMORY_SIZE / 2;
+  // Round up to the nearest even number
+  if (memorySize % 2 !== 0) memorySize++;
+
+  globalState.MEMORY_SIZE = memorySize;
+  globalState.ROW = Math.ceil(globalState.MEMORY_SIZE / globalState.COLUMN);
+  globalState.TO_SPACE = 0;
+  globalState.FROM_SPACE = globalState.MEMORY_SIZE / 2;
+
+  context.moduleContexts.copy_gc.state = globalState;
+
   generateMemory();
 }
 
@@ -117,16 +128,14 @@ export function newCommand(
   firstDesc: string,
   lastDesc: string
 ): void {
-  memory = [];
-  for (let j = 0; j < heap.length; j += 1) {
-    memory.push(heap[j]);
-  }
+  globalState.memory = [];
+  globalState.memory.push(...heap);
 
   const obj: CommandHeapObject = {
     type,
     to: toSpace,
     from: fromSpace,
-    heap: memory,
+    heap: globalState.memory,
     left,
     right,
     sizeLeft,
@@ -138,15 +147,13 @@ export function newCommand(
     free: -1
   };
 
-  commandHeap.push(obj);
+  globalState.commandHeap.push(obj);
 }
 
 export function newCopy(left: number, right: number, heap: number[]): void {
-  const { length } = commandHeap;
-  const toSpace = commandHeap[length - 1].to;
-  const fromSpace = commandHeap[length - 1].from;
-  const newSizeLeft = heap[left + SIZE_SLOT];
-  const newSizeRight = heap[right + SIZE_SLOT];
+  const { from: fromSpace, to: toSpace } = last(globalState.commandHeap)!;
+  const newSizeLeft = heap[left + globalState.SIZE_SLOT];
+  const newSizeRight = heap[right + globalState.SIZE_SLOT];
   const desc = `Copying node ${left} to ${right}`;
   newCommand(
     COMMAND.COPY,
@@ -164,10 +171,8 @@ export function newCopy(left: number, right: number, heap: number[]): void {
 }
 
 export function endFlip(left: number, heap: number[]): void {
-  const { length } = commandHeap;
-  const fromSpace = commandHeap[length - 1].from;
-  const toSpace = commandHeap[length - 1].to;
-  const newSizeLeft = heap[left + SIZE_SLOT];
+  const { from: fromSpace, to: toSpace } = last(globalState.commandHeap)!;
+  const newSizeLeft = heap[left + globalState.SIZE_SLOT];
   const desc = 'Flip finished';
   newCommand(
     COMMAND.FLIP,
@@ -186,13 +191,11 @@ export function endFlip(left: number, heap: number[]): void {
 }
 
 export function updateRoots(array: number[]): void {
-  for (let i = 0; i < array.length; i += 1) {
-    ROOTS.push(array[i]);
-  }
+  globalState.ROOTS.push(...array);
 }
 
 export function resetRoots(): void {
-  ROOTS = [];
+  globalState.ROOTS = [];
 }
 
 export function startFlip(toSpace: number, fromSpace: number, heap: number[]): void {
@@ -214,9 +217,7 @@ export function startFlip(toSpace: number, fromSpace: number, heap: number[]): v
 }
 
 export function newPush(left: number, right: number, heap: number[]): void {
-  const { length } = commandHeap;
-  const toSpace = commandHeap[length - 1].to;
-  const fromSpace = commandHeap[length - 1].from;
+  const { from: fromSpace, to: toSpace } = last(globalState.commandHeap)!;
   const desc = `Push OS update memory ${left} and ${right}.`;
   newCommand(
     COMMAND.PUSH,
@@ -234,9 +235,7 @@ export function newPush(left: number, right: number, heap: number[]): void {
 }
 
 export function newPop(res: any, left: number, right: number, heap: number[]): void {
-  const { length } = commandHeap;
-  const toSpace = commandHeap[length - 1].to;
-  const fromSpace = commandHeap[length - 1].from;
+  const { from: fromSpace, to: toSpace } = last(globalState.commandHeap)!;
   const newRes = res;
   const desc = `Pop OS from memory ${left}, with value ${newRes}.`;
   newCommand(
@@ -274,10 +273,8 @@ export function doneShowRoot(heap: number[]): void {
 }
 
 export function showRoots(left: number, heap: number[]): void {
-  const { length } = commandHeap;
-  const toSpace = commandHeap[length - 1].to;
-  const fromSpace = commandHeap[length - 1].from;
-  const newSizeLeft = heap[left + SIZE_SLOT];
+  const { from: fromSpace, to: toSpace } = last(globalState.commandHeap)!;
+  const newSizeLeft = heap[left + globalState.SIZE_SLOT];
   const desc = `Roots: node ${left}`;
   newCommand(
     'Showing Roots',
@@ -295,9 +292,7 @@ export function showRoots(left: number, heap: number[]): void {
 }
 
 export function newAssign(res: any, left: number, heap: number[]): void {
-  const { length } = commandHeap;
-  const toSpace = commandHeap[length - 1].to;
-  const fromSpace = commandHeap[length - 1].from;
+  const { from: fromSpace, to: toSpace } = last(globalState.commandHeap)!;
   const newRes = res;
   const desc = `Assign memory [${left}] with ${newRes}.`;
   newCommand(
@@ -316,10 +311,8 @@ export function newAssign(res: any, left: number, heap: number[]): void {
 }
 
 export function newNew(left: number, heap: number[]): void {
-  const { length } = commandHeap;
-  const toSpace = commandHeap[length - 1].to;
-  const fromSpace = commandHeap[length - 1].from;
-  const newSizeLeft = heap[left + SIZE_SLOT];
+  const { from: fromSpace, to: toSpace } = last(globalState.commandHeap)!;
+  const newSizeLeft = heap[left + globalState.SIZE_SLOT];
   const desc = `New node starts in [${left}].`;
   newCommand(
     COMMAND.NEW,
@@ -337,18 +330,9 @@ export function newNew(left: number, heap: number[]): void {
 }
 
 export function scanFlip(left: number, right: number, scan: number, free: number, heap: number[]): void {
-  const { length } = commandHeap;
-  const toSpace = commandHeap[length - 1].to;
-  const fromSpace = commandHeap[length - 1].from;
-  memory = [];
-  for (let j = 0; j < heap.length; j += 1) {
-    memory.push(heap[j]);
-  }
+  const { from: fromSpace, to: toSpace } = last(globalState.commandHeap)!;
+  globalState.memory = clone(heap);
 
-  const newLeft = left;
-  const newRight = right;
-  const newScan = scan;
-  const newFree = free;
   let newDesc = `Scanning node at ${left} for children node ${scan} and ${free}`;
   if (scan) {
     if (free) {
@@ -364,19 +348,19 @@ export function scanFlip(left: number, right: number, scan: number, free: number
     type: COMMAND.SCAN,
     to: toSpace,
     from: fromSpace,
-    heap: memory,
-    left: newLeft,
-    right: newRight,
+    heap: globalState.memory,
+    left,
+    right,
     sizeLeft: 1,
     sizeRight: 1,
-    scan: newScan,
-    free: newFree,
+    scan,
+    free,
     desc: newDesc,
     leftDesc: 'scan',
     rightDesc: 'free'
   };
 
-  commandHeap.push(obj);
+  globalState.commandHeap.push(obj);
 }
 
 export function updateSlotSegment(
@@ -386,91 +370,15 @@ export function updateSlotSegment(
   last: number
 ): void {
   if (tag >= 0) {
-    TAG_SLOT = tag;
+    globalState.TAG_SLOT = tag;
   }
   if (size >= 0) {
-    SIZE_SLOT = size;
+    globalState.SIZE_SLOT = size;
   }
   if (first >= 0) {
-    FIRST_CHILD_SLOT = first;
+    globalState.FIRST_CHILD_SLOT = first;
   }
   if (last >= 0) {
-    LAST_CHILD_SLOT = last;
+    globalState.LAST_CHILD_SLOT = last;
   }
-}
-
-function get_memory_size(): number {
-  return MEMORY_SIZE;
-}
-
-function get_tags(): Tag[] {
-  return tags;
-}
-
-function get_command(): CommandHeapObject[] {
-  return commandHeap;
-}
-
-function get_flips(): number[] {
-  return flips;
-}
-
-function get_types(): string[] {
-  return typeTag;
-}
-
-function get_from_space(): number {
-  return FROM_SPACE;
-}
-
-function get_memory_heap(): MemoryHeaps {
-  return memoryHeaps;
-}
-
-function get_to_memory_matrix(): MemoryHeaps {
-  return toMemoryMatrix;
-}
-
-function get_from_memory_matrix(): MemoryHeaps {
-  return fromMemoryMatrix;
-}
-
-function get_roots(): number[] {
-  return ROOTS;
-}
-
-function get_slots(): number[] {
-  return [TAG_SLOT, SIZE_SLOT, FIRST_CHILD_SLOT, LAST_CHILD_SLOT];
-}
-
-function get_to_space(): number {
-  return TO_SPACE;
-}
-
-function get_column_size(): number {
-  return COLUMN;
-}
-
-function get_row_size(): number {
-  return ROW;
-}
-
-export function init() {
-  return {
-    toReplString: () => '<REDACTED>',
-    get_memory_size,
-    get_from_space,
-    get_to_space,
-    get_memory_heap,
-    get_tags,
-    get_types,
-    get_column_size,
-    get_row_size,
-    get_from_memory_matrix,
-    get_to_memory_matrix,
-    get_flips,
-    get_slots,
-    get_command,
-    get_roots
-  };
 }
