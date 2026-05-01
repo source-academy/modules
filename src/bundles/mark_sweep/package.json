@@ -26,5 +26,8 @@
     "serve": "Starts the modules server",
     "test": "Runs unit tests defined for the bundle",
     "tsc": "Runs the Typescript compiler and produces the library version of the bundle"
+  },
+  "dependencies": {
+    "es-toolkit": "^1.46.1"
   }
 }

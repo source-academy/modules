@@ -2,113 +2,123 @@
  * @module mark_sweep
  */
 
-import { COMMAND, type CommandHeapObject, type Memory, type MemoryHeaps, type Tag } from './types';
+import { COMMAND, type CommandHeapObject, type MarkSweepGlobalState, type Memory, type MemoryHeaps, type Tag } from './types';
 
-// Global Variables
-let ROW: number = 10;
-const COLUMN: number = 32;
-let NODE_SIZE: number = 0;
-let MEMORY_SIZE: number = -99;
-let memory: Memory;
-let memoryHeaps: Memory[] = [];
-const commandHeap: CommandHeapObject[] = [];
-let memoryMatrix: number[][];
-let tags: Tag[];
-let typeTag: string[];
-const flips: number[] = [];
-let TAG_SLOT: number = 0;
-let SIZE_SLOT: number = 1;
-let FIRST_CHILD_SLOT: number = 2;
-let LAST_CHILD_SLOT: number = 3;
-let MARKED: number = 1;
-let UNMARKED: number = 0;
-let ROOTS: number[] = [];
-
-function generateMemory(): void {
-  memoryMatrix = [];
-  for (let i = 0; i < ROW; i += 1) {
-    memory = [];
-    for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
-      memory.push(i * COLUMN + j);
-    }
-    memoryMatrix.push(memory);
-  }
-
-  const obj: CommandHeapObject = {
-    type: COMMAND.INIT,
-    heap: [],
-    left: -1,
-    right: -1,
-    sizeLeft: 0,
-    sizeRight: 0,
-    desc: 'Memory initially empty.',
-    leftDesc: '',
-    rightDesc: '',
-    queue: []
+function getInitialState(): MarkSweepGlobalState {
+  return {
+    ROW: 10,
+    COLUMN: 32,
+    NODE_SIZE: 0,
+    MEMORY_SIZE: -99,
+    memory: [],
+    // let memory: Memory;
+    memoryHeaps: [],
+    commandHeap: [],
+    memoryMatrix: [],
+    // let memoryMatrix: number[][];
+    tags: [],
+    typeTag: [],
+    // let tags: Tag[];
+    // let typeTag: string[];
+    flips: [],
+    TAG_SLOT: 0,
+    SIZE_SLOT: 1,
+    FIRST_CHILD_SLOT: 2,
+    LAST_CHILD_SLOT: 3,
+    MARKED: 1,
+    UNMARKED: 0,
+    ROOTS: [],
   };
-
-  commandHeap.push(obj);
 }
 
-function updateRoots(array): void {
+/**
+ * Exported for testing
+ * @hidden
+ */
+export let globalState = getInitialState();
+
+/**
+ * Exported for testing
+ * @hidden
+ */
+export function resetState() {
+  globalState = getInitialState();
+}
+
+function generateMemory(): void {
+  globalState.memoryMatrix = [];
+  for (let i = 0; i < globalState.ROW; i += 1) {
+    globalState.memory = [];
+    for (let j = 0; j < globalState.COLUMN && i * globalState.COLUMN + j < globalState.MEMORY_SIZE; j += 1) {
+      globalState.memory.push(i * globalState.COLUMN + j);
+    }
+    globalState.memoryMatrix.push(globalState.memory);
+  }
+
+  newCommand(
+    COMMAND.INIT,
+    -1,
+    -1,
+    0,
+    0,
+    [],
+    'Memory initially empty.',
+    '',
+    '',
+    []
+  );
+}
+
+function updateRoots(array: number[]): void {
   for (let i = 0; i < array.length; i += 1) {
-    ROOTS.push(array[i]);
+    globalState.ROOTS.push(array[i]);
   }
 }
 
 function initialize_memory(
   memorySize: number,
-  nodeSize,
-  marked,
-  unmarked
+  nodeSize: number,
+  marked: number,
+  unmarked: number
 ): void {
-  MEMORY_SIZE = memorySize;
-  NODE_SIZE = nodeSize;
-  const excess = MEMORY_SIZE % NODE_SIZE;
-  MEMORY_SIZE -= excess;
-  ROW = MEMORY_SIZE / COLUMN;
-  MARKED = marked;
-  UNMARKED = unmarked;
+  globalState.MEMORY_SIZE = memorySize;
+  globalState.NODE_SIZE = nodeSize;
+  const excess = globalState.MEMORY_SIZE % globalState.NODE_SIZE;
+  globalState.MEMORY_SIZE -= excess;
+  globalState.ROW = Math.ceil(globalState.MEMORY_SIZE / globalState.COLUMN);
+  globalState.MARKED = marked;
+  globalState.UNMARKED = unmarked;
   generateMemory();
 }
 
 function initialize_tag(allTag: number[], types: string[]): void {
-  tags = allTag;
-  typeTag = types;
+  globalState.tags = allTag;
+  globalState.typeTag = types;
 }
 
 function allHeap(newHeap: number[][]): void {
-  memoryHeaps = newHeap;
+  globalState.memoryHeaps = newHeap;
 }
 
 function updateFlip(): void {
-  flips.push(commandHeap.length - 1);
+  globalState.flips.push(globalState.commandHeap.length - 1);
 }
 
 function newCommand(
-  type,
-  left,
-  right,
-  sizeLeft,
-  sizeRight,
-  heap,
-  description,
-  firstDesc,
-  lastDesc,
-  queue = []
+  type: COMMAND,
+  left: number,
+  right: number,
+  sizeLeft: number,
+  sizeRight: number,
+  heap: Memory,
+  description: string,
+  firstDesc: string,
+  lastDesc: string,
+  queue: number[] = []
 ): void {
-  const newType = type;
-  const newLeft = left;
-  const newRight = right;
-  const newSizeLeft = sizeLeft;
-  const newSizeRight = sizeRight;
-  const newDesc = description;
-  const newFirstDesc = firstDesc;
-  const newLastDesc = lastDesc;
-
-  memory = [];
+  globalState.memory = [];
   for (let j = 0; j < heap.length; j += 1) {
-    memory.push(heap[j]);
+    globalState.memory.push(heap[j]);
   }
   const newQueue: number[] = [];
   for (let j = 0; j < queue.length; j += 1) {
@@ -116,23 +126,23 @@ function newCommand(
   }
 
   const obj: CommandHeapObject = {
-    type: newType,
-    heap: memory,
-    left: newLeft,
-    right: newRight,
-    sizeLeft: newSizeLeft,
-    sizeRight: newSizeRight,
-    desc: newDesc,
-    leftDesc: newFirstDesc,
-    rightDesc: newLastDesc,
+    type,
+    heap: globalState.memory,
+    left,
+    right,
+    sizeLeft,
+    sizeRight,
+    desc: description,
+    leftDesc: firstDesc,
+    rightDesc: lastDesc,
     queue: newQueue
   };
 
-  commandHeap.push(obj);
+  globalState.commandHeap.push(obj);
 }
 
-function newSweep(left, heap): void {
-  const newSizeLeft = NODE_SIZE;
+function newSweep(left: number, heap: Memory): void {
+  const newSizeLeft = globalState.NODE_SIZE;
   const desc = `Freeing node ${left}`;
   newCommand(
     COMMAND.SWEEP,
@@ -147,8 +157,8 @@ function newSweep(left, heap): void {
   );
 }
 
-function newMark(left, heap, queue): void {
-  const newSizeLeft = NODE_SIZE;
+function newMark(left: number, heap: Memory, queue: number[]): void {
+  const newSizeLeft = globalState.NODE_SIZE;
   const desc = `Marking node ${left} to be live memory`;
   newCommand(
     COMMAND.MARK,
@@ -164,32 +174,32 @@ function newMark(left, heap, queue): void {
   );
 }
 
-function addRoots(arr): void {
+function addRoots(arr: number[]): void {
   for (let i = 0; i < arr.length; i += 1) {
-    ROOTS.push(arr[i]);
+    globalState.ROOTS.push(arr[i]);
   }
 }
 
-function showRoot(heap): void {
+function showRoot(heap: Memory): void {
   const desc = 'All root nodes are marked';
   newCommand(COMMAND.SHOW_MARKED, -1, -1, 0, 0, heap, desc, '', '');
 }
 
-function showRoots(heap): void {
-  for (let i = 0; i < ROOTS.length; i += 1) {
+function showRoots(heap: Memory): void {
+  for (let i = 0; i < globalState.ROOTS.length; i += 1) {
     showRoot(heap);
   }
-  ROOTS = [];
+  globalState.ROOTS = [];
 }
 
-function newUpdateSweep(right, heap): void {
+function newUpdateSweep(right: number, heap: Memory): void {
   const desc = `Set node ${right} to freelist`;
   newCommand(
     COMMAND.RESET,
     -1,
     right,
     0,
-    NODE_SIZE,
+    globalState.NODE_SIZE,
     heap,
     desc,
     'free node',
@@ -197,7 +207,7 @@ function newUpdateSweep(right, heap): void {
   );
 }
 
-function newPush(left, right, heap): void {
+function newPush(left: number, right: number, heap: Memory): void {
   const desc = `Push OS update memory ${left} and ${right}.`;
   newCommand(
     COMMAND.PUSH,
@@ -212,7 +222,7 @@ function newPush(left, right, heap): void {
   );
 }
 
-function newPop(res, left, right, heap): void {
+function newPop(res: any, left: number, right: number, heap: Memory): void {
   const newRes = res;
   const desc = `Pop OS from memory ${left}, with value ${newRes}.`;
   newCommand(
@@ -228,14 +238,14 @@ function newPop(res, left, right, heap): void {
   );
 }
 
-function newAssign(res, left, heap): void {
+function newAssign(res: any, left: number, heap: Memory): void {
   const newRes = res;
   const desc = `Assign memory [${left}] with ${newRes}.`;
   newCommand(COMMAND.ASSIGN, left, -1, 1, 1, heap, desc, 'assigned memory', '');
 }
 
-function newNew(left, heap): void {
-  const newSizeLeft = NODE_SIZE;
+function newNew(left: number, heap: Memory): void {
+  const newSizeLeft = globalState.NODE_SIZE;
   const desc = `New node starts in [${left}].`;
   newCommand(
     COMMAND.NEW,
@@ -250,13 +260,13 @@ function newNew(left, heap): void {
   );
 }
 
-function newGC(heap): void {
+function newGC(heap: Memory): void {
   const desc = 'Memory exhausted, start Mark and Sweep Algorithm';
   newCommand(COMMAND.START, -1, -1, 0, 0, heap, desc, '', '');
   updateFlip();
 }
 
-function endGC(heap): void {
+function endGC(heap: Memory): void {
   const desc = 'Result of free memory';
   newCommand(COMMAND.END, -1, -1, 0, 0, heap, desc, '', '');
   updateFlip();
@@ -269,69 +279,74 @@ function updateSlotSegment(
   last: number
 ): void {
   if (tag >= 0) {
-    TAG_SLOT = tag;
+    globalState.TAG_SLOT = tag;
   }
   if (size >= 0) {
-    SIZE_SLOT = size;
+    globalState.SIZE_SLOT = size;
   }
   if (first >= 0) {
-    FIRST_CHILD_SLOT = first;
+    globalState.FIRST_CHILD_SLOT = first;
   }
   if (last >= 0) {
-    LAST_CHILD_SLOT = last;
+    globalState.LAST_CHILD_SLOT = last;
   }
 }
 
 function get_memory_size(): number {
-  return MEMORY_SIZE;
+  return globalState.MEMORY_SIZE;
 }
 
 function get_tags(): Tag[] {
-  return tags;
+  return globalState.tags;
 }
 
 function get_command(): CommandHeapObject[] {
-  return commandHeap;
+  return globalState.commandHeap;
 }
 
 function get_flips(): number[] {
-  return flips;
+  return globalState.flips;
 }
 
 function get_types(): string[] {
-  return typeTag;
+  return globalState.typeTag;
 }
 
 function get_memory_heap(): MemoryHeaps {
-  return memoryHeaps;
+  return globalState.memoryHeaps;
 }
 
 function get_memory_matrix(): MemoryHeaps {
-  return memoryMatrix;
+  return globalState.memoryMatrix;
 }
 
 function get_roots(): number[] {
-  return ROOTS;
+  return globalState.ROOTS;
 }
 
 function get_slots(): number[] {
-  return [TAG_SLOT, SIZE_SLOT, FIRST_CHILD_SLOT, LAST_CHILD_SLOT];
+  return [
+    globalState.TAG_SLOT,
+    globalState.SIZE_SLOT,
+    globalState.FIRST_CHILD_SLOT,
+    globalState.LAST_CHILD_SLOT
+  ];
 }
 
 function get_column_size(): number {
-  return COLUMN;
+  return globalState.COLUMN;
 }
 
 function get_row_size(): number {
-  return ROW;
+  return globalState.ROW;
 }
 
 function get_unmarked(): number {
-  return UNMARKED;
+  return globalState.UNMARKED;
 }
 
 function get_marked(): number {
-  return MARKED;
+  return globalState.MARKED;
 }
 
 function init() {

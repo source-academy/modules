@@ -19,7 +19,7 @@ export enum COMMAND {
 }
 
 export type CommandHeapObject = {
-  type: string;
+  type: COMMAND;
   heap: number[];
   left: number;
   right: number;
@@ -30,3 +30,41 @@ export type CommandHeapObject = {
   rightDesc: string;
   queue: number[];
 };
+
+export interface MarkSweepModuleState {
+  memorySize: number;
+  memoryHeap: MemoryHeaps;
+  memoryMatrix: MemoryHeaps;
+  nodeSize: number;
+  tags: Tag[];
+  types: string[];
+  columnSize: number;
+  rowSize: number;
+  flips: number[];
+  slots: [number, number, number, number];
+  commandHeap: CommandHeapObject[];
+  unmarked: number;
+  marked: number;
+  roots: number[];
+}
+
+export interface MarkSweepGlobalState {
+  ROW: number;
+  readonly COLUMN: number;
+  NODE_SIZE: number;
+  MEMORY_SIZE: number;
+  memory: Memory;
+  memoryHeaps: Memory[];
+  readonly commandHeap: CommandHeapObject[];
+  memoryMatrix: number[][];
+  tags: Tag[];
+  typeTag: string[];
+  readonly flips: number[];
+  TAG_SLOT: number;
+  SIZE_SLOT: number;
+  FIRST_CHILD_SLOT: number;
+  LAST_CHILD_SLOT: number;
+  MARKED: number;
+  UNMARKED: number ;
+  ROOTS: number[ ];
+}
