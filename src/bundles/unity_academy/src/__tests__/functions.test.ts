@@ -98,10 +98,7 @@ describe(funcs.add_impulse_force, () => {
 
   testWithInstance(
     'works',
-    {
-      addImpulseForceInternal: vi.fn(),
-      getStudentGameObject: () => ({ isDestroyed: false } as any)
-    },
+    { addImpulseForceInternal: vi.fn() },
     ({ addImpulseForceInternal }) => {
       expect(funcs.add_impulse_force(
         testIdentifier,
@@ -567,6 +564,34 @@ describe(funcs.get_main_camera_following_target, () => {
       'get_main_camera_following_target: Unity module is not initialized, please call init_unity_academy_3d / init_unity_academy_2d first before calling this function'
     );
   });
+});
+
+describe(funcs.get_mass, () => {
+  testWithInstance('throws when instance has not been initialized', undefined, () => {
+    expect(() => funcs.get_mass(testIdentifier)).toThrow(
+      'get_mass: Unity module is not initialized, please call init_unity_academy_3d / init_unity_academy_2d first before calling this function'
+    );
+  });
+
+  testWithInstance(
+    'throws when identifier isn\'t valid',
+    {},
+    () => {
+      expect(() => funcs.get_mass(0 as any)).toThrow(
+        'get_mass: Expected GameObjectIdentifier, got 0.'
+      );
+    }
+  );
+
+  testWithInstance(
+    'works',
+    { getRigidbodyNumericalProp: vi.fn().mockReturnValue(10) },
+    ({ getRigidbodyNumericalProp }) => {
+      expect(funcs.get_mass(testIdentifier)).toEqual(10);
+
+      expect(getRigidbodyNumericalProp).toHaveBeenCalledExactlyOnceWith('mass', testIdentifier);
+    }
+  );
 });
 
 describe(funcs.instantiate, () => {

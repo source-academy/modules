@@ -8,9 +8,9 @@ import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 
 export class Vector3 {
   constructor(
-    public readonly x: number,
-    public readonly y: number,
-    public readonly z: number
+    public x: number,
+    public y: number,
+    public z: number
   ) { }
 
   toString() {
@@ -24,6 +24,9 @@ export class Vector3 {
   }
 }
 
+/**
+ * Type guard for validating that the provided parameter is indeed a {@link Vector3}
+ */
 export function checkVector3Parameter(parameter: unknown, func_name: string, param_name?: string): asserts parameter is Vector3 {
   if (typeof parameter === 'object' && parameter !== null
     && 'x' in parameter && typeof parameter.x === 'number'

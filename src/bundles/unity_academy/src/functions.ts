@@ -6,7 +6,7 @@
 
 import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
-import { getInstance, initializeModule, type AudioClipIdentifier, type GameObjectIdentifier } from './UnityAcademy';
+import { getInstance, initializeModule, type AudioClipIdentifier, type CollisionHandler, type GameObjectIdentifier } from './UnityAcademy';
 import {
   addVectors,
   checkVector3Parameter,
@@ -793,8 +793,6 @@ export function remove_collider_components(gameObjectIdentifier: GameObjectIdent
   checkGameObjectIdentifierParameter(gameObjectIdentifier, remove_collider_components.name);
   instance.removeColliderComponentsInternal(gameObjectIdentifier);
 }
-
-type CollisionHandler = (self: GameObjectIdentifier, other: GameObjectIdentifier) => void;
 
 /**
  * Set the lifecycle event function that will be called when the collider on this GameObject just starting colliding with another collider.

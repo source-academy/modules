@@ -19,12 +19,14 @@ type Transform = {
   scale: Vector3;
 };
 
-type StudentGameObject = {
-  startMethod: Function | null;
-  updateMethod: Function | null;
-  onCollisionEnterMethod: Function | null;
-  onCollisionStayMethod: Function | null;
-  onCollisionExitMethod: Function | null;
+export type CollisionHandler = (self: GameObjectIdentifier, other: GameObjectIdentifier) => void;
+
+interface StudentGameObject {
+  startMethod: ((id: GameObjectIdentifier) => void) | null;
+  updateMethod: ((id: GameObjectIdentifier) => void) | null;
+  onCollisionEnterMethod: CollisionHandler | null;
+  onCollisionStayMethod: CollisionHandler | null;
+  onCollisionExitMethod: CollisionHandler | null;
   transform: Transform;
   rigidbody: RigidbodyData | null;
   audioSource: AudioSourceData | null;
@@ -245,7 +247,7 @@ export class UnityAcademyJsInteropContext {
     xhr.open('GET', jsonUrl, false);
     xhr.send();
     if (xhr.status !== 200) {
-      throw new Error(`Unable to get prefab list. Error code = ${xhr.status}`);
+      throw new GeneralRuntimeError(`Unable to get prefab list. Error code = ${xhr.status}`);
     }
     this.prefabInfo = JSON.parse(xhr.responseText);
   }
@@ -388,7 +390,7 @@ export class UnityAcademyJsInteropContext {
       }
     }
     if (!prefabExists) {
-      throw new Error(`Unknown prefab name: '${prefabName}'. Please refer to this prefab list at [ ${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles/prefab_info.html ] for all available prefab names.`);
+      throw new GeneralRuntimeError(`Unknown prefab name: '${prefabName}'. Please refer to this prefab list at [ ${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles/prefab_info.html ] for all available prefab names.`);
     }
     const gameObjectIdentifier = `${prefabName}_${this.gameObjectIdentifierSerialCounter}`;
     this.gameObjectIdentifierSerialCounter++;
@@ -457,17 +459,17 @@ export class UnityAcademyJsInteropContext {
   getStudentGameObject(gameObjectIdentifier: GameObjectIdentifier): StudentGameObject {
     const retVal = this.studentGameObjectStorage[gameObjectIdentifier.gameObjectIdentifier];
     if (retVal === undefined) {
-      throw new Error(`Could not find GameObject with identifier ${gameObjectIdentifier}`);
+      throw new GeneralRuntimeError(`Could not find GameObject with identifier ${gameObjectIdentifier}`);
     }
     return retVal;
   }
 
-  setStartInternal(gameObjectIdentifier: GameObjectIdentifier, startFunction: Function): void {
+  setStartInternal(gameObjectIdentifier: GameObjectIdentifier, startFunction: (id: GameObjectIdentifier) => void): void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.startMethod = startFunction;
   }
 
-  setUpdateInternal(gameObjectIdentifier: GameObjectIdentifier, updateFunction: Function): void {
+  setUpdateInternal(gameObjectIdentifier: GameObjectIdentifier, updateFunction: (id: GameObjectIdentifier) => void): void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.updateMethod = updateFunction;
   }
@@ -575,7 +577,7 @@ export class UnityAcademyJsInteropContext {
     console.log(`Applying rigidbody to GameObject ${gameObjectIdentifier.gameObjectIdentifier}`);
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     if (gameObject.rigidbody !== null) {
-      throw new Error(`Trying to duplicately apply rigidbody on GameObject ${gameObjectIdentifier.gameObjectIdentifier}`);
+      throw new GeneralRuntimeError(`Trying to duplicately apply rigidbody on GameObject ${gameObjectIdentifier.gameObjectIdentifier}`);
     }
     gameObject.rigidbody = {
       velocity: zeroVector(),
@@ -589,7 +591,7 @@ export class UnityAcademyJsInteropContext {
   }
 
   private getRigidbody(gameObject: StudentGameObject): RigidbodyData {
-    if (gameObject.rigidbody === null) throw new Error('You must call apply_rigidbody on the game object before using this physics function!');
+    if (gameObject.rigidbody === null) throw new GeneralRuntimeError('You must call apply_rigidbody on the game object before using this physics function!');
     return gameObject.rigidbody;
   }
 
@@ -633,17 +635,17 @@ export class UnityAcademyJsInteropContext {
     this.dispatchStudentAction(`removeColliderComponents|${gameObjectIdentifier.gameObjectIdentifier}`);
   }
 
-  setOnCollisionEnterInternal(gameObjectIdentifier: GameObjectIdentifier, eventFunction: Function) {
+  setOnCollisionEnterInternal(gameObjectIdentifier: GameObjectIdentifier, eventFunction: CollisionHandler) {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.onCollisionEnterMethod = eventFunction;
   }
 
-  setOnCollisionStayInternal(gameObjectIdentifier: GameObjectIdentifier, eventFunction: Function) {
+  setOnCollisionStayInternal(gameObjectIdentifier: GameObjectIdentifier, eventFunction: CollisionHandler) {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.onCollisionStayMethod = eventFunction;
   }
 
-  setOnCollisionExitInternal(gameObjectIdentifier: GameObjectIdentifier, eventFunction: Function) {
+  setOnCollisionExitInternal(gameObjectIdentifier: GameObjectIdentifier, eventFunction: CollisionHandler) {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.onCollisionExitMethod = eventFunction;
   }
@@ -699,7 +701,7 @@ export class UnityAcademyJsInteropContext {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     const retVal = gameObject.audioSource;
     if (retVal === null) {
-      throw new Error('The given GameObject is not a valid audio source.');
+      throw new GeneralRuntimeError('The given GameObject is not a valid audio source.');
     }
     return retVal;
   }
@@ -743,7 +745,7 @@ export class UnityAcademyJsInteropContext {
   }
 }
 
-export function initializeModule(dimensionMode: string) {
+export function initializeModule(dimensionMode: '2d' | '3d') {
   let instance = getInstance();
   if (instance !== undefined) {
     if (!instance.isUnityInstanceReady()) {
