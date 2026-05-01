@@ -75,7 +75,7 @@ export function generateMemory(): void {
   commandHeap.push(obj);
 }
 
-export function resetFromSpace(fromSpace, heap): number[] {
+export function resetFromSpace(fromSpace: number, heap: number[]): number[] {
   const newHeap: number[] = [];
   if (fromSpace > 0) {
     for (let i = 0; i < MEMORY_SIZE / 2; i += 1) {
@@ -105,46 +105,35 @@ export function initialize_memory(memorySize: number): void {
 }
 
 export function newCommand(
-  type,
-  toSpace,
-  fromSpace,
-  left,
-  right,
-  sizeLeft,
-  sizeRight,
-  heap,
-  description,
-  firstDesc,
-  lastDesc
+  type: string,
+  toSpace: number,
+  fromSpace: number,
+  left: number,
+  right: number,
+  sizeLeft: number,
+  sizeRight: number,
+  heap: number[],
+  description: string,
+  firstDesc: string,
+  lastDesc: string
 ): void {
-  const newType = type;
-  const newToSpace = toSpace;
-  const newFromSpace = fromSpace;
-  const newLeft = left;
-  const newRight = right;
-  const newSizeLeft = sizeLeft;
-  const newSizeRight = sizeRight;
-  const newDesc = description;
-  const newFirstDesc = firstDesc;
-  const newLastDesc = lastDesc;
-
   memory = [];
   for (let j = 0; j < heap.length; j += 1) {
     memory.push(heap[j]);
   }
 
   const obj: CommandHeapObject = {
-    type: newType,
-    to: newToSpace,
-    from: newFromSpace,
+    type,
+    to: toSpace,
+    from: fromSpace,
     heap: memory,
-    left: newLeft,
-    right: newRight,
-    sizeLeft: newSizeLeft,
-    sizeRight: newSizeRight,
-    desc: newDesc,
-    leftDesc: newFirstDesc,
-    rightDesc: newLastDesc,
+    left,
+    right,
+    sizeLeft,
+    sizeRight,
+    desc: description,
+    leftDesc: firstDesc,
+    rightDesc: lastDesc,
     scan: -1,
     free: -1
   };
@@ -152,7 +141,7 @@ export function newCommand(
   commandHeap.push(obj);
 }
 
-export function newCopy(left, right, heap): void {
+export function newCopy(left: number, right: number, heap: number[]): void {
   const { length } = commandHeap;
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
@@ -174,7 +163,7 @@ export function newCopy(left, right, heap): void {
   );
 }
 
-export function endFlip(left, heap): void {
+export function endFlip(left: number, heap: number[]): void {
   const { length } = commandHeap;
   const fromSpace = commandHeap[length - 1].from;
   const toSpace = commandHeap[length - 1].to;
@@ -196,7 +185,7 @@ export function endFlip(left, heap): void {
   updateFlip();
 }
 
-export function updateRoots(array): void {
+export function updateRoots(array: number[]): void {
   for (let i = 0; i < array.length; i += 1) {
     ROOTS.push(array[i]);
   }
@@ -206,7 +195,7 @@ export function resetRoots(): void {
   ROOTS = [];
 }
 
-export function startFlip(toSpace, fromSpace, heap): void {
+export function startFlip(toSpace: number, fromSpace: number, heap: number[]): void {
   const desc = 'Memory is exhausted. Start stop and copy garbage collector.';
   newCommand(
     'Start of Cheneys',
@@ -224,7 +213,7 @@ export function startFlip(toSpace, fromSpace, heap): void {
   updateFlip();
 }
 
-export function newPush(left, right, heap): void {
+export function newPush(left: number, right: number, heap: number[]): void {
   const { length } = commandHeap;
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
@@ -244,7 +233,7 @@ export function newPush(left, right, heap): void {
   );
 }
 
-export function newPop(res, left, right, heap): void {
+export function newPop(res: any, left: number, right: number, heap: number[]): void {
   const { length } = commandHeap;
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
@@ -265,7 +254,7 @@ export function newPop(res, left, right, heap): void {
   );
 }
 
-export function doneShowRoot(heap): void {
+export function doneShowRoot(heap: number[]): void {
   const toSpace = 0;
   const fromSpace = 0;
   const desc = 'All root nodes are copied';
@@ -284,7 +273,7 @@ export function doneShowRoot(heap): void {
   );
 }
 
-export function showRoots(left, heap): void {
+export function showRoots(left: number, heap: number[]): void {
   const { length } = commandHeap;
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
@@ -305,7 +294,7 @@ export function showRoots(left, heap): void {
   );
 }
 
-export function newAssign(res, left, heap): void {
+export function newAssign(res: any, left: number, heap: number[]): void {
   const { length } = commandHeap;
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
@@ -326,7 +315,7 @@ export function newAssign(res, left, heap): void {
   );
 }
 
-export function newNew(left, heap): void {
+export function newNew(left: number, heap: number[]): void {
   const { length } = commandHeap;
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
@@ -347,7 +336,7 @@ export function newNew(left, heap): void {
   );
 }
 
-export function scanFlip(left, right, scan, free, heap): void {
+export function scanFlip(left: number, right: number, scan: number, free: number, heap: number[]): void {
   const { length } = commandHeap;
   const toSpace = commandHeap[length - 1].to;
   const fromSpace = commandHeap[length - 1].from;
