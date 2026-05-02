@@ -51,6 +51,16 @@ void main(void) {
   gl_FragColor.a = 1.0;
 }
 `;
+
+interface RuneOfParams {
+  vertices?: Float32Array;
+  colors?: Float32Array | null;
+  transformMatrix?: mat4;
+  subRunes?: Rune[];
+  texture?: HTMLImageElement | null;
+  hollusionDistance?: number;
+}
+
 /**
  * The basic data-representation of a Rune. When the Rune is drawn, every 3 consecutive vertex will form a triangle.
  */
@@ -121,15 +131,8 @@ export class Rune {
     return runeList;
   };
 
-  public static of = (params: {
-    vertices?: Float32Array;
-    colors?: Float32Array | null;
-    transformMatrix?: mat4;
-    subRunes?: Rune[];
-    texture?: HTMLImageElement | null;
-    hollusionDistance?: number;
-  } = {}) => {
-    const paramGetter = (name: string, defaultValue: () => any) => params[name] ?? defaultValue();
+  public static of = (params: RuneOfParams = {}) => {
+    const paramGetter = (name: keyof RuneOfParams, defaultValue: () => any) => params[name] ?? defaultValue();
 
     return new Rune(
       paramGetter('vertices', () => new Float32Array()),
@@ -227,7 +230,7 @@ export function drawRunesToFrameBuffer(
   const loadTexture = (image: HTMLImageElement): WebGLTexture | null => {
     const texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    function isPowerOf2(value) {
+    function isPowerOf2(value: number) {
       return (value & (value - 1)) === 0;
     }
     // Because images have to be downloaded over the internet
