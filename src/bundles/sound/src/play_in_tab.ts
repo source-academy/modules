@@ -1,5 +1,7 @@
+import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import context from 'js-slang/context';
-import { FS, get_duration, get_wave, is_sound } from './functions';
+import { stringify } from 'js-slang/dist/utils/stringify';
+import { FS, get_duration, get_wave, is_sound, validateDuration } from './functions';
 import { RIFFWAVE } from './riffwave';
 import type { AudioPlayed, Sound } from './types';
 
@@ -12,34 +14,37 @@ context.moduleContexts.sound.state = { audioPlayed };
  *
  * @param sound the Sound to play
  * @returns the given Sound
- * @example play_in_tab(sine_sound(440, 5));
+ * @example
+ * ```
+ * play_in_tab(sine_sound(440, 5));
+ * ```
  */
 
 export function play_in_tab(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
+    throw new InvalidParameterTypeError('Sound', sound, play_in_tab.name);
   }
 
   const duration = get_duration(sound);
-  if (duration < 0) {
-    throw new Error(`${play_in_tab.name}: duration of sound is negative`);
-  } else if (duration === 0) {
-    return sound;
-  }
+  validateDuration(play_in_tab.name, duration);
+  if (duration === 0) return sound;
 
   // Create mono buffer
   const channel: number[] = [];
   const len = Math.ceil(FS * duration);
 
-  let temp: number;
   let prev_value = 0;
 
   const wave = get_wave(sound);
   for (let i = 0; i < len; i += 1) {
-    temp = wave(i / FS);
+    const temp = wave(i / FS);
+
+    if (typeof temp !== 'number') {
+      throw new GeneralRuntimeError(`${play_in_tab.name}: Provided Sound returned a non-numeric value ${stringify(temp)}.`);
+    }
+
     // clip amplitude
-    // channel[i] = temp > 1 ? 1 : temp < -1 ? -1 : temp;
     if (temp > 1) {
       channel[i] = 1;
     } else if (temp < -1) {
@@ -61,13 +66,14 @@ export function play_in_tab(sound: Sound): Sound {
     channel[i] = Math.floor(channel[i] * 32767.999);
   }
 
+  // @ts-expect-error RIFFWAVE type definition missing
   const riffwave = new RIFFWAVE([]);
   riffwave.header.sampleRate = FS;
   riffwave.header.numChannels = 1;
   riffwave.header.bitsPerSample = 16;
   riffwave.Make(channel);
 
-  const soundToPlay = {
+  const soundToPlay: AudioPlayed = {
     toReplString: () => '<AudioPlayed>',
     dataUri: riffwave.dataURI
   };

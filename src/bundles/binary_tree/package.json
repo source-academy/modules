@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "js-slang": "^1.0.85"
+    "@sourceacademy/modules-lib": "workspace:^",
+    "js-slang": "^1.0.92"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
@@ -19,8 +20,9 @@
     "build": "buildtools build bundle .",
     "lint": "buildtools lint .",
     "test": "buildtools test --project .",
-    "postinstall": "buildtools compile",
-    "serve": "yarn buildtools serve"
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
   },
   "scripts-info": {
     "build": "Compiles the given bundle to the output directory",

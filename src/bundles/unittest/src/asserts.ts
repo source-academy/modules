@@ -1,6 +1,8 @@
+import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import { isEqualWith } from 'es-toolkit';
 import * as list from 'js-slang/dist/stdlib/list';
 import { stringify } from 'js-slang/dist/utils/stringify';
+import { UnittestAssertionError, UnittestBundleInternalError } from './types';
 
 /**
  * Asserts that a predicate returns true.
@@ -8,16 +10,22 @@ import { stringify } from 'js-slang/dist/utils/stringify';
  * @returns
  */
 export function assert(pred: () => boolean) {
+  if (!isFunctionOfLength(pred, 0)) {
+    throw new UnittestBundleInternalError(`${assert.name} expects a nullary function that returns a boolean!`);
+  }
+
   if (!pred()) {
-    throw new Error('Assert failed!');
+    throw new UnittestAssertionError('Assert failed!');
   }
 }
 
-function equalityComparer(expected: any, received: any): boolean | undefined {
+function equalityComparer(expected: unknown, received: unknown): boolean | undefined {
   if (typeof expected === 'number') {
+    if (typeof received !== 'number') return false;
+
     // if either is a float, use approximate checking
     if (!Number.isInteger(expected) || !Number.isInteger(received)) {
-      return Math.abs(expected - received) <= 0.001;
+      return Math.abs(expected - received) <= 0.0001;
     }
 
     return expected === received;
@@ -39,6 +47,7 @@ function equalityComparer(expected: any, received: any): boolean | undefined {
         return true;
       }
 
+      // TODO: Need to account for circular lists
       if (!isEqualWith(list.head(list0), list.head(list1), equalityComparer)) {
         return false;
       }
@@ -56,7 +65,19 @@ function equalityComparer(expected: any, received: any): boolean | undefined {
     return true;
   }
 
-  // TODO: A comparison for streams/arrays?
+  if (Array.isArray(expected)) {
+    if (!Array.isArray(received) || received.length !== expected.length) return false;
+
+    for (let i = 0; i < expected.length; i++) {
+      const expectedItem = expected[i];
+      const receivedItem = received[i];
+
+      if (!isEqualWith(expectedItem, receivedItem, equalityComparer)) return false;
+    }
+    return true;
+  }
+
+  // TODO: A comparison for streams?
   return undefined;
 }
 
@@ -69,7 +90,7 @@ function equalityComparer(expected: any, received: any): boolean | undefined {
  */
 export function assert_equals(expected: any, received: any) {
   if (!isEqualWith(expected, received, equalityComparer)) {
-    throw new Error(`Expected \`${expected}\`, got \`${received}\`!`);
+    throw new UnittestAssertionError(`Expected \`${expected}\`, got \`${received}\`!`);
   }
 }
 
@@ -81,7 +102,7 @@ export function assert_equals(expected: any, received: any) {
  */
 export function assert_not_equals(expected: any, received: any) {
   if (!isEqualWith(expected, received, equalityComparer)) {
-    throw new Error(`Expected \`${expected}\` to not equal \`${received}\`!`);
+    throw new UnittestAssertionError(`Expected \`${expected}\` to not equal \`${received}\`!`);
   }
 }
 
@@ -92,7 +113,7 @@ export function assert_not_equals(expected: any, received: any) {
  */
 export function assert_contains(xs: any, toContain: any) {
   const fail = () => {
-    throw new Error(`Expected \`${stringify(xs)}\` to contain \`${toContain}\`.`);
+    throw new UnittestAssertionError(`Expected \`${stringify(xs)}\` to contain \`${toContain}\`.`);
   };
 
   function member(xs: list.List | list.Pair<any, any>, item: any): boolean {
@@ -109,14 +130,15 @@ export function assert_contains(xs: any, toContain: any) {
         isEqualWith(list.tail(xs), item, equalityComparer)
       ) return true;
 
-      if (list.is_pair(list.head(xs)) && member(list.head(xs), item)) {
-        return true;
-      }
+      const head_element = list.head(xs);
+      if (list.is_pair(head_element) && member(head_element, item)) return true;
 
-      return list.is_pair(list.tail(xs)) && member(list.tail(xs), item);
+      const tail_element = list.tail(xs);
+
+      return list.is_pair(tail_element) && member(tail_element, item);
     }
 
-    throw new Error(`First argument to ${assert_contains.name} must be a list or a pair, got \`${stringify(xs)}\`.`);
+    throw new UnittestAssertionError(`First argument to ${assert_contains.name} must be a list or a pair, got \`${stringify(xs)}\`.`);
   }
   if (!member(xs, toContain)) fail();
 }
@@ -140,15 +162,15 @@ export function assert_length(xs: any, len: number) {
  */
 export function assert_greater(item: any, expected: number) {
   if (typeof expected !== 'number') {
-    throw new Error(`${assert_greater.name}: Expected value should be a number!`);
+    throw new UnittestAssertionError(`${assert_greater.name}: Expected value should be a number!`);
   }
 
   if (typeof item !== 'number') {
-    throw new Error(`Expected ${item} to be a number!`);
+    throw new UnittestAssertionError(`Expected ${item} to be a number!`);
   }
 
   if (item <= expected) {
-    throw new Error(`Expected ${item} to be greater than ${expected}`);
+    throw new UnittestAssertionError(`Expected ${item} to be greater than ${expected}`);
   }
 }
 
@@ -159,14 +181,14 @@ export function assert_greater(item: any, expected: number) {
  */
 export function assert_greater_equals(item: any, expected: number) {
   if (typeof expected !== 'number') {
-    throw new Error(`${assert_greater_equals.name}: Expected value should be a number!`);
+    throw new UnittestAssertionError(`${assert_greater_equals.name}: Expected value should be a number!`);
   }
 
   if (typeof item !== 'number') {
-    throw new Error(`Expected ${item} to be a number!`);
+    throw new UnittestAssertionError(`Expected ${item} to be a number!`);
   }
 
   if (item < expected) {
-    throw new Error(`Expected ${item} to be greater than or equal to ${expected}`);
+    throw new UnittestAssertionError(`Expected ${item} to be greater than or equal to ${expected}`);
   }
 }

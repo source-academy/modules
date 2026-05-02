@@ -9,6 +9,8 @@
  * @author Xenos Fiorenzo Anong
  */
 
+import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { assertNumberWithinRange, assertTupleOfLength } from '@sourceacademy/modules-lib/utilities';
 import { AudioClip } from './audio';
 import {
   DEFAULT_DEBUG_STATE,
@@ -89,7 +91,7 @@ export const config = {
  * ```
  * @category GameObject
  */
-export function create_rectangle(width: number, height: number): ShapeGameObject {
+export function create_rectangle(width: number, height: number): ShapeGameObject<any> {
   const rectangle = {
     width,
     height
@@ -107,7 +109,7 @@ export function create_rectangle(width: number, height: number): ShapeGameObject
  * ```
  * @category GameObject
  */
-export function create_circle(radius: number): ShapeGameObject {
+export function create_circle(radius: number): ShapeGameObject<any> {
   const circle = {
     radius
   } as CircleProps;
@@ -124,7 +126,7 @@ export function create_circle(radius: number): ShapeGameObject {
  * ```
  * @category GameObject
  */
-export function create_triangle(width: number, height: number): ShapeGameObject {
+export function create_triangle(width: number, height: number): ShapeGameObject<any> {
   const triangle = {
     x1: 0,
     y1: 0,
@@ -171,12 +173,14 @@ export function create_text(text: string): TextGameObject {
  * @category GameObject
  */
 export function create_sprite(image_url: string): SpriteGameObject {
-  if (image_url === '') {
-    throw new Error('image_url cannot be empty');
-  }
   if (typeof image_url !== 'string') {
-    throw new Error('image_url must be a string');
+    throw new InvalidParameterTypeError('string', image_url, create_sprite.name);
   }
+
+  if (image_url === '') {
+    throw new GeneralRuntimeError(`${create_sprite.name}: image_url cannot be empty`);
+  }
+
   const sprite: Sprite = {
     imageUrl: image_url
   } as Sprite;
@@ -186,6 +190,17 @@ export function create_sprite(image_url: string): SpriteGameObject {
 // =============================================================================
 // Manipulation of GameObjects
 // =============================================================================
+
+function throwIfNotGameObject<T extends GameObject>(
+  obj: unknown,
+  guard: (v: unknown) => v is T,
+  func_name: string,
+  param_name?: string
+): asserts obj is T {
+  if (!guard(obj)) {
+    throw new InvalidParameterTypeError('GameObject', obj, func_name, param_name);
+  }
+}
 
 /**
  * Updates the position transform of the GameObject.
@@ -200,14 +215,13 @@ export function create_sprite(image_url: string): SpriteGameObject {
  * @category GameObject
  */
 export function update_position(gameObject: GameObject, [x, y]: PositionXY): GameObject {
-  if (gameObject instanceof GameObject) {
-    gameObject.setTransform({
-      ...gameObject.getTransform(),
-      position: [x, y]
-    });
-    return gameObject;
-  }
-  throw new TypeError('Cannot update position of a non-GameObject');
+  throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, update_position.name);
+
+  gameObject.setTransform({
+    ...gameObject.getTransform(),
+    position: [x, y]
+  });
+  return gameObject;
 }
 
 /**
@@ -223,14 +237,13 @@ export function update_position(gameObject: GameObject, [x, y]: PositionXY): Gam
  * @category GameObject
  */
 export function update_scale(gameObject: GameObject, [x, y]: ScaleXY): GameObject {
-  if (gameObject instanceof GameObject) {
-    gameObject.setTransform({
-      ...gameObject.getTransform(),
-      scale: [x, y]
-    });
-    return gameObject;
-  }
-  throw new TypeError('Cannot update scale of a non-GameObject');
+  throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, update_scale.name);
+
+  gameObject.setTransform({
+    ...gameObject.getTransform(),
+    scale: [x, y]
+  });
+  return gameObject;
 }
 
 /**
@@ -246,14 +259,12 @@ export function update_scale(gameObject: GameObject, [x, y]: ScaleXY): GameObjec
  * @category GameObject
  */
 export function update_rotation(gameObject: GameObject, radians: number): GameObject {
-  if (gameObject instanceof GameObject) {
-    gameObject.setTransform({
-      ...gameObject.getTransform(),
-      rotation: radians
-    });
-    return gameObject;
-  }
-  throw new TypeError('Cannot update rotation of a non-GameObject');
+  throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, update_rotation.name);
+  gameObject.setTransform({
+    ...gameObject.getTransform(),
+    rotation: radians
+  });
+  return gameObject;
 }
 
 /**
@@ -270,17 +281,14 @@ export function update_rotation(gameObject: GameObject, radians: number): GameOb
  * @category GameObject
  */
 export function update_color(gameObject: GameObject, color: ColorRGBA): GameObject {
-  if (color.length !== 4) {
-    throw new Error('color must be a 4-element array');
-  }
-  if (gameObject instanceof RenderableGameObject) {
-    gameObject.setRenderState({
-      ...gameObject.getRenderState(),
-      color
-    });
-    return gameObject;
-  }
-  throw new TypeError('Cannot update color of a non-GameObject');
+  assertTupleOfLength(color, 4, update_color.name, 'color');
+  throwIfNotGameObject(gameObject, obj => obj instanceof RenderableGameObject, update_color.name, 'gameObject');
+
+  gameObject.setRenderState({
+    ...gameObject.getRenderState(),
+    color
+  });
+  return gameObject;
 }
 
 /**
@@ -296,17 +304,14 @@ export function update_color(gameObject: GameObject, color: ColorRGBA): GameObje
  * @category GameObject
  */
 export function update_flip(gameObject: GameObject, flip: FlipXY): GameObject {
-  if (flip.length !== 2) {
-    throw new Error('flip must be a 2-element array');
-  }
-  if (gameObject instanceof RenderableGameObject) {
-    gameObject.setRenderState({
-      ...gameObject.getRenderState(),
-      flip
-    });
-    return gameObject;
-  }
-  throw new TypeError('Cannot update flip of a non-GameObject');
+  assertTupleOfLength(flip, 2, update_flip.name, 'flip');
+  throwIfNotGameObject(gameObject, obj => obj instanceof RenderableGameObject, update_flip.name, 'gameObject');
+
+  gameObject.setRenderState({
+    ...gameObject.getRenderState(),
+    flip
+  });
+  return gameObject;
 }
 
 /**
@@ -323,13 +328,13 @@ export function update_flip(gameObject: GameObject, flip: FlipXY): GameObject {
  * @category GameObject
  */
 export function update_text(textGameObject: TextGameObject, text: string): GameObject {
-  if (textGameObject instanceof TextGameObject) {
-    textGameObject.setText({
-      text
-    } as DisplayText);
-    return textGameObject;
+  if (typeof text !== 'string') {
+    throw new InvalidParameterTypeError('string', text, update_text.name, 'text');
   }
-  throw new TypeError('Cannot update text onto a non-TextGameObject');
+
+  throwIfNotGameObject(textGameObject, obj => obj instanceof TextGameObject, update_text.name, 'textGameObject');
+  textGameObject.setText({ text });
+  return textGameObject;
 }
 
 /**
@@ -343,11 +348,9 @@ export function update_text(textGameObject: TextGameObject, text: string): GameO
  * @category GameObject
  */
 export function update_to_top(gameObject: GameObject): GameObject {
-  if (gameObject instanceof RenderableGameObject) {
-    gameObject.setBringToTopFlag();
-    return gameObject;
-  }
-  throw new TypeError('Cannot update to top a non-GameObject');
+  throwIfNotGameObject(gameObject, obj => obj instanceof RenderableGameObject, update_to_top.name);
+  gameObject.setBringToTopFlag();
+  return gameObject;
 }
 
 // =============================================================================
@@ -370,10 +373,8 @@ export function update_to_top(gameObject: GameObject): GameObject {
  * @category GameObject
  */
 export function query_id(gameObject: GameObject): number {
-  if (gameObject instanceof GameObject) {
-    return gameObject.id;
-  }
-  throw new TypeError('Cannot query id of non-GameObject');
+  throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, query_id.name);
+  return gameObject.id;
 }
 
 /**
@@ -389,10 +390,8 @@ export function query_id(gameObject: GameObject): number {
  * @category GameObject
  */
 export function query_position(gameObject: GameObject): PositionXY {
-  if (gameObject instanceof GameObject) {
-    return [...gameObject.getTransform().position];
-  }
-  throw new TypeError('Cannot query position of non-GameObject');
+  throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, query_position.name);
+  return [...gameObject.getTransform().position];
 }
 
 /**
@@ -408,10 +407,9 @@ export function query_position(gameObject: GameObject): PositionXY {
  * @category GameObject
  */
 export function query_rotation(gameObject: GameObject): number {
-  if (gameObject instanceof GameObject) {
-    return gameObject.getTransform().rotation;
-  }
-  throw new TypeError('Cannot query rotation of non-GameObject');
+  throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, query_rotation.name);
+
+  return gameObject.getTransform().rotation;
 }
 
 /**
@@ -427,10 +425,8 @@ export function query_rotation(gameObject: GameObject): number {
  * @category GameObject
  */
 export function query_scale(gameObject: GameObject): ScaleXY {
-  if (gameObject instanceof GameObject) {
-    return [...gameObject.getTransform().scale];
-  }
-  throw new TypeError('Cannot query scale of non-GameObject');
+  throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, query_scale.name);
+  return [...gameObject.getTransform().scale];
 }
 
 /**
@@ -446,10 +442,8 @@ export function query_scale(gameObject: GameObject): ScaleXY {
  * @category GameObject
  */
 export function query_color(gameObject: RenderableGameObject): ColorRGBA {
-  if (gameObject instanceof RenderableGameObject) {
-    return [...gameObject.getColor()];
-  }
-  throw new TypeError('Cannot query color of non-GameObject');
+  throwIfNotGameObject(gameObject, obj => obj instanceof RenderableGameObject, query_color.name);
+  return [...gameObject.getColor()];
 }
 
 /**
@@ -465,10 +459,8 @@ export function query_color(gameObject: RenderableGameObject): ColorRGBA {
  * @category GameObject
  */
 export function query_flip(gameObject: RenderableGameObject): FlipXY {
-  if (gameObject instanceof RenderableGameObject) {
-    return [...gameObject.getFlipState()];
-  }
-  throw new TypeError('Cannot query flip of non-GameObject');
+  throwIfNotGameObject(gameObject, obj => obj instanceof RenderableGameObject, query_flip.name);
+  return [...gameObject.getFlipState()];
 }
 
 /**
@@ -485,10 +477,8 @@ export function query_flip(gameObject: RenderableGameObject): FlipXY {
  * @category GameObject
  */
 export function query_text(textGameObject: TextGameObject): string {
-  if (textGameObject instanceof TextGameObject) {
-    return textGameObject.getText().text;
-  }
-  throw new TypeError('Cannot query text of non-TextGameObject');
+  throwIfNotGameObject(textGameObject, obj => obj instanceof TextGameObject, query_text.name);
+  return textGameObject.getText().text;
 }
 
 /**
@@ -511,26 +501,6 @@ export function query_pointer_position(): PositionXY {
 // =============================================================================
 
 /**
- * Private function to set the allowed range for a value.
- *
- * @param num the numeric value
- * @param min the minimum value allowed for that number
- * @param max the maximum value allowed for that number
- * @returns a number within the interval
- * @hidden
- */
-const withinRange: (num: number, min: number, max: number) => number
-  = (num: number, min: number, max: number) => {
-    if (num > max) {
-      return max;
-    }
-    if (num < min) {
-      return min;
-    }
-    return num;
-  };
-
-/**
  * Sets the frames per second of the canvas, which should be between the MIN_FPS and MAX_FPS.
  * It ranges between 1 and 120, with the default target as 30.
  * This function should not be called in the update function.
@@ -543,7 +513,8 @@ const withinRange: (num: number, min: number, max: number) => number
  * ```
  */
 export function set_fps(fps: number) {
-  config.fps = withinRange(fps, MIN_FPS, MAX_FPS);
+  assertNumberWithinRange(fps, set_fps.name, MIN_FPS, MAX_FPS);
+  config.fps = fps;
 }
 
 /**
@@ -558,11 +529,13 @@ export function set_fps(fps: number) {
  * ```
  */
 export function set_dimensions(dimensions: DimensionsXY) {
-  if (dimensions.length !== 2) {
-    throw new Error('dimensions must be a 2-element array');
-  }
-  config.width = withinRange(dimensions[0], MIN_WIDTH, MAX_WIDTH);
-  config.height = withinRange(dimensions[1], MIN_HEIGHT, MAX_HEIGHT);
+  assertTupleOfLength(dimensions, 2, set_dimensions.name, 'dimensions');
+
+  assertNumberWithinRange(dimensions[0], set_dimensions.name, MIN_WIDTH, MAX_WIDTH);
+  config.width = dimensions[0];
+
+  assertNumberWithinRange(dimensions[1], set_dimensions.name, MIN_HEIGHT, MAX_HEIGHT);
+  config.height = dimensions[1];
 }
 
 /**
@@ -579,7 +552,8 @@ export function set_dimensions(dimensions: DimensionsXY) {
  * ```
  */
 export function set_scale(scale: number) {
-  config.scale = withinRange(scale, MIN_SCALE, MAX_SCALE);
+  assertNumberWithinRange(scale, set_scale.name, MIN_SCALE, MAX_SCALE);
+  config.scale = scale;
 }
 
 /**
@@ -695,10 +669,8 @@ export function input_right_mouse_down() {
  * @category Logic
  */
 export function pointer_over_gameobject(gameObject: GameObject) {
-  if (gameObject instanceof GameObject) {
-    return gameState.pointerProps.pointerOverGameObjectsId.has(gameObject.id);
-  }
-  throw new TypeError('Cannot check pointer over non-GameObject');
+  throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, pointer_over_gameobject.name);
+  return gameState.pointerProps.pointerOverGameObjectsId.has(gameObject.id);
 }
 
 /**
@@ -720,10 +692,10 @@ export function pointer_over_gameobject(gameObject: GameObject) {
  * @category Logic
  */
 export function gameobjects_overlap(gameObject1: InteractableGameObject, gameObject2: InteractableGameObject) {
-  if (gameObject1 instanceof InteractableGameObject && gameObject2 instanceof InteractableGameObject) {
-    return gameObject1.isOverlapping(gameObject2);
-  }
-  throw new TypeError('Cannot check overlap of non-GameObject');
+  throwIfNotGameObject(gameObject1, obj => obj instanceof InteractableGameObject, gameobjects_overlap.name, 'gameObject1');
+  throwIfNotGameObject(gameObject2, obj => obj instanceof InteractableGameObject, gameobjects_overlap.name, 'gameObject2');
+
+  return gameObject1.isOverlapping(gameObject2);
 }
 
 /**
@@ -862,12 +834,11 @@ export function build_game(): BuildGame {
  */
 export function create_audio(audio_url: string, volume_level: number) {
   if (typeof audio_url !== 'string') {
-    throw new Error('audio_url must be a string');
+    throw new InvalidParameterTypeError('string', audio_url, create_audio.name);
   }
-  if (typeof volume_level !== 'number') {
-    throw new Error('volume_level must be a number');
-  }
-  return AudioClip.of(audio_url, withinRange(volume_level, MIN_VOLUME, MAX_VOLUME));
+
+  assertNumberWithinRange(volume_level, create_audio.name, MIN_VOLUME, MAX_VOLUME);
+  return AudioClip.of(audio_url, volume_level);
 }
 
 /**
@@ -887,7 +858,7 @@ export function loop_audio(audio_clip: AudioClip) {
     audio_clip.setShouldAudioClipLoop(true);
     return audio_clip;
   }
-  throw new TypeError('Cannot loop a non-AudioClip');
+  throw new InvalidParameterTypeError('AudioClip', audio_clip, loop_audio.name);
 }
 
 /**
@@ -906,7 +877,7 @@ export function play_audio(audio_clip: AudioClip) {
     audio_clip.setShouldAudioClipPlay(true);
     return audio_clip;
   }
-  throw new TypeError('Cannot play a non-AudioClip');
+  throw new InvalidParameterTypeError('AudioClip', audio_clip, play_audio.name);
 }
 
 /**
@@ -925,5 +896,5 @@ export function stop_audio(audio_clip: AudioClip) {
     audio_clip.setShouldAudioClipPlay(false);
     return audio_clip;
   }
-  throw new TypeError('Cannot stop a non-AudioClip');
+  throw new InvalidParameterTypeError('AudioClip', audio_clip, stop_audio.name);
 }

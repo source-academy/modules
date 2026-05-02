@@ -1,5 +1,7 @@
 // Vitepress config
 import pathlib from 'path';
+import { transformerTwoslash } from '@shikijs/vitepress-twoslash';
+import { createFileSystemTypesCache } from '@shikijs/vitepress-twoslash/cache-fs';
 import { directoryTreePlugin, dirtreeTransformer, grammar as dirtreetm } from '@sourceacademy/markdown-plugin-directory-tree';
 import { defineConfig, type UserConfig } from 'vitepress';
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons';
@@ -20,7 +22,12 @@ const vitepressOptions: UserConfig = {
       md.use(groupIconMdPlugin);
       md.use(directoryTreePlugin);
     },
-    codeTransformers: [dirtreeTransformer()],
+    codeTransformers: [
+      transformerTwoslash({
+        typesCache: createFileSystemTypesCache()
+      }),
+      dirtreeTransformer()
+    ],
     languages: [dirtreetm]
   },
   outDir: pathlib.join(import.meta.dirname, '..', '..', 'build', 'devdocs'),
@@ -51,7 +58,7 @@ const vitepressOptions: UserConfig = {
             link: '/modules/3-tabs/1-overview'
           },
           {
-            text: 'Testing',
+            text: 'Dev and Testing',
             link: '/modules/4-testing'
           },
           {
@@ -64,12 +71,18 @@ const vitepressOptions: UserConfig = {
         text: 'Libraries',
         items: [
           {
-            text: 'Common Libraries',
-            link: '/lib'
-          }, {
+            text: 'Common Library',
+            link: '/lib/modules-lib'
+          },
+          {
             text: 'Developer Docs',
             link: '/lib/dev'
-          }]
+          },
+          {
+            text: 'Lint Plugin',
+            link: '/lib/lintplugin/1-overview'
+          }
+        ]
       },
       {
         text: 'Dev Tools',

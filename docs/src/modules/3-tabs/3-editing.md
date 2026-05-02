@@ -71,7 +71,7 @@ If you do so, remember to run your installation command (same as the one above) 
 
 ## React/UI Components
 
-Tabs are written using the React (JSX) syntax. In React, each UI element is referred to as a "component". Documentation on how to create UIs and use React can be found [here](https://react.dev). Where possible,
+Tabs are written using the React (JSX) syntax. In React, each UI element is referred to as a "component". Documentation on how to use React can be found [here](https://react.dev). Where possible,
 you should aim to write components using the functional syntax.
 
 ::: details Functional vs Class Components
@@ -104,13 +104,29 @@ There are also several React components defined under `@sourceacademy/modules-li
 
 You can see the documentation for these components [here](/lib/modules-lib/)
 
+### Styles from `@blueprintjs`
+
+Besides providing components, Blueprint also provides CSS Styles that can be attached to your own components:
+
+```jsx
+const component = <div className="bp6-dark">
+  <h1 className="bp6-text-large">Hello World!</h1>
+</div>;
+```
+You can use these styles directly instead of having to come up with your own.
+
+Often, these styles will be prefixed with `bp` and the version number (i.e `bp6`). Take care to ensure that this prefix matches the version of Blueprint that
+is in use.
+
 ## Export Interface
 
-As mentioned in the [overview](./1-overview), all tabs should export a single default export from their entry point using the `defineTab` helper from `@sourceacademy/modules-lib/tabs`:
+As mentioned in the [overview](./1-overview), all tabs should export a single default export from their entry point using the `defineTab` helper from `@sourceacademy/modules-lib/tabs/utils`:
 
-```tsx
+```tsx twoslash
+// @jsx: react-jsx
+// ---cut---
 // tabName/src/index.tsx OR tabName/index.tsx
-import { defineTab } from '@sourceacademy/modules-lib/tabs';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 
 function Component() {
   return <p>This is a react component!</p>;
@@ -120,7 +136,7 @@ export default defineTab({
   toSpawn: () => true,
   body: () => <Component />,
   label: 'some-tab',
-  iconName: 'some icon'
+  iconName: 'saved'
 });
 ```
 
@@ -147,7 +163,7 @@ Only the default export is used by the Frontend for displaying your tab. It is n
 ::: code-group
 
 ```tsx [index.tsx]
-import { defineTab } from '@sourceacademy/modules-lib/tabs';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 
 export function Component() {
   return <p>This is a react component!</p>;
@@ -169,7 +185,6 @@ test('Matches snapshot', () => {
   expect(<Component />).toMatchSnapshot();
 });
 ```
-
 :::
 
 ## The `ModuleTab` Type

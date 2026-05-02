@@ -89,7 +89,7 @@ export class Entity {
    * @param localPoint - The point for which to calculate the tangential velocity.
    * @returns The tangential velocity vector of the point.
    */
-  tangentialVelocityOfPoint(localPoint): THREE.Vector3 {
+  tangentialVelocityOfPoint(localPoint: THREE.Vector3): THREE.Vector3 {
     // Calculate the distance vector from the point to the rotational axis
     const distanceVector
       = this.distanceVectorOfPointToRotationalAxis(localPoint);

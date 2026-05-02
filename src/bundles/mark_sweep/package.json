@@ -1,6 +1,6 @@
 {
   "name": "@sourceacademy/bundle-mark_sweep",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
@@ -16,8 +16,9 @@
     "build": "buildtools build bundle .",
     "lint": "buildtools lint .",
     "test": "buildtools test --project .",
-    "postinstall": "buildtools compile",
-    "serve": "yarn buildtools serve"
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
   },
   "scripts-info": {
     "build": "Compiles the given bundle to the output directory",
@@ -25,5 +26,8 @@
     "serve": "Starts the modules server",
     "test": "Runs unit tests defined for the bundle",
     "tsc": "Runs the Typescript compiler and produces the library version of the bundle"
+  },
+  "dependencies": {
+    "es-toolkit": "^1.44.0"
   }
 }

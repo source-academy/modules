@@ -55,6 +55,11 @@ curve => {
 This exposes implementation details to the cadet and "breaks" the `RenderFunction` abstraction. Thus, there is a need for such objects to be able to override the default `toString`
 implementation.
 
+> [!TIP] Functions Returned by Bundle Functions
+>
+> Javascript's default stringification for functions almost always leaks implementation details. You should take care to implement
+> the `ReplResult` interface for functions that are returned by your bundle's functions where necessary.
+
 ## The `ReplResult` interface
 
 To allow objects to provide their own `toString` implementations, objects can implement the `ReplResult` interface:
@@ -250,14 +255,22 @@ interface TextOptions {
 export function change_text_options(options: TextOptions): void;
 ```
 
-Alternatively, you could do something like this:
+If you do want to use the latter style, you could do something like this:
 
 ```ts
-interface TextOptions {
+// Of course, don't forget to implement ReplResult:
+interface TextOptions extends ReplResult {
   color: string;
   size: number;
 }
-export function create_text_options(color: string, size: number): TextOptions;
+
+export function create_text_options(color: string, size: number): TextOptions {
+  return {
+    color,
+    size,
+    toReplString: () => '<TextOptions>'
+  };
+}
 export function change_text_options(options: TextOptions): void;
 
 // Used like this:

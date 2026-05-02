@@ -40,6 +40,7 @@
 export {
   set_evaluator,
   repl_display,
+  rich_repl_display,
   set_background_image,
   set_font_size,
   set_program_text,

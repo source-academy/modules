@@ -1,11 +1,8 @@
+import { GeneralRuntimeError, InternalRuntimeError } from '@sourceacademy/modules-lib/errors';
 import type { ReplResult } from '@sourceacademy/modules-lib/types';
 import { mat4, vec3 } from 'gl-matrix';
 import { stringify } from 'js-slang/dist/utils/stringify';
-
 import type { CurveSpace, DrawMode, ScaleMode } from './types';
-
-/** @hidden */
-export const drawnCurves: CurveDrawn[] = [];
 
 // Vertex shader program
 const vsS: string = `
@@ -53,7 +50,7 @@ function loadShader(
 ): WebGLShader {
   const shader = gl.createShader(type);
   if (!shader) {
-    throw new Error('WebGLShader not available.');
+    throw new InternalRuntimeError('WebGLShader not available.');
   }
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
@@ -77,7 +74,7 @@ function initShaderProgram(
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
   const shaderProgram = gl.createProgram();
   if (!shaderProgram) {
-    throw new Error('Unable to initialize the shader program.');
+    throw new InternalRuntimeError('Unable to initialize the shader program.');
   }
   gl.attachShader(shaderProgram, vertexShader);
   gl.attachShader(shaderProgram, fragmentShader);
@@ -121,7 +118,7 @@ export class Point implements ReplResult {
     public readonly y: number,
     public readonly z: number,
     public readonly color: Color
-  ) {}
+  ) { }
 
   public toReplString = () => `(${this.x}, ${this.y}, ${this.z}, Color: ${this.color})`;
 }
@@ -159,7 +156,7 @@ export class CurveDrawn implements ReplResult {
   public init = (canvas: HTMLCanvasElement) => {
     this.renderingContext = canvas.getContext('webgl');
     if (!this.renderingContext) {
-      throw new Error('Rendering context cannot be null.');
+      throw new InternalRuntimeError('Rendering context cannot be null.');
     }
     const cubeBuffer = this.renderingContext.createBuffer();
     this.renderingContext.bindBuffer(
@@ -338,7 +335,7 @@ export function generateCurve(
     const point = func(i / numPoints);
 
     if (!(point instanceof Point)) {
-      throw new Error(`Expected curve to return a point, got '${stringify(point)}' at t=${i / numPoints}`);
+      throw new GeneralRuntimeError(`Expected curve to return a point, got '${stringify(point)}' at t=${i / numPoints}`);
     }
 
     const x = point.x * 2 - 1;

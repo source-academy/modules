@@ -1,12 +1,14 @@
 /**
  * This file contains Arcade2D's representation of audio clips and sound.
  */
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
+import type { ReplResult } from '@sourceacademy/modules-lib/types';
 
 /**
  * Encapsulates the representation of AudioClips.
  * AudioClips are unique - there are no AudioClips with the same URL.
  */
-export class AudioClip {
+export class AudioClip implements ReplResult {
   private static audioClipCount: number = 0;
   // Stores AudioClip index with the URL as a unique key.
   private static audioClipsIndexMap: Map<string, number> = new Map<string, number>();
@@ -33,7 +35,7 @@ export class AudioClip {
    */
   public static of(url: string, volumeLevel: number): AudioClip {
     if (url === '') {
-      throw new Error('AudioClip URL cannot be empty');
+      throw new GeneralRuntimeError('AudioClip URL cannot be empty');
     }
     if (AudioClip.audioClipsIndexMap.has(url)) {
       return AudioClip.audioClipsArray[AudioClip.audioClipsIndexMap.get(url) as number];
@@ -83,6 +85,5 @@ export class AudioClip {
 
   public toReplString = () => '<AudioClip>';
 
-  /** @override */
   public toString = () => this.toReplString();
 }

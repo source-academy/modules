@@ -1,10 +1,10 @@
-import type { HollusionRune } from '@sourceacademy/bundle-rune/functions';
+import type { DrawnHollusionRune } from '@sourceacademy/bundle-rune/functions';
 import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebGLCanvas';
 import { useAnimation } from '@sourceacademy/modules-lib/tabs/useAnimation';
 import React from 'react';
 
-type Props = {
-  rune: HollusionRune;
+interface Props {
+  rune: DrawnHollusionRune;
 };
 
 /**

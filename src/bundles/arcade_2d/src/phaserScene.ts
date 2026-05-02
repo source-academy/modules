@@ -111,7 +111,7 @@ export class PhaserScene extends Phaser.Scene {
       .setScale(config.scale < 1 ? 1 / config.scale : 1);
   }
 
-  update(time, delta) {
+  override update(time: number, delta: number) {
     // Set the time and delta
     gameState.gameTime += delta;
     gameState.loopCount++;

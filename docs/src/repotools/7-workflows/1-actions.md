@@ -5,10 +5,11 @@ title: Custom Actions
 # Custom Github Actions
 
 Github Actions does provide us the ability to write our own custom actions that can be integrated with the rest of the pipeline. This repository
-makes use of two:
+makes use of three:
 
 - Initializer Action
 - Information Action
+- Load Artifacts Action
 
 Creating custom actions is detailed [here](https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax). The convention for each action is have its metadata file (`action.yml`) in the same directory as its source code (if necessary).
 

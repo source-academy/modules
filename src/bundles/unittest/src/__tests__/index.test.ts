@@ -4,16 +4,16 @@ import { beforeEach, describe, expect, it, test, vi } from 'vitest';
 import * as asserts from '../asserts';
 import * as testing from '../functions';
 import * as mocks from '../mocks';
-import { UnitestBundleInternalError } from '../types';
+import { UnittestBundleInternalError } from '../types';
 
 vi.spyOn(performance, 'now').mockReturnValue(0);
 
 describe('Test \'it\' and \'describe\'', () => {
   beforeEach(() => {
-    testing.suiteResults.splice(0);
+    testing.topLevelSuiteResults.splice(0);
   });
 
-  test('it and describe correctly set and resets the value of current test and suite', () => {
+  test('it() and describe() correctly set and resets the value of current test and suite', () => {
     expect(testing.currentTest).toBeNull();
     expect(testing.currentSuite).toBeNull();
     testing.describe('suite', () => {
@@ -28,33 +28,33 @@ describe('Test \'it\' and \'describe\'', () => {
   });
 
   test('it() throws an error when called without describe', () => {
-    expect(() => testing.it('desc', () => {})).toThrowError('it must be called from within a test suite!');
+    expect(() => testing.it('desc', () => { })).toThrow('it must be called from within a test suite!');
   });
 
   test('it() throws an error even if it is called after describe', () => {
-    testing.describe('a test', () => {});
-    expect(() => testing.it('desc', () => {})).toThrowError('it must be called from within a test suite!');
+    testing.describe('a test', () => { });
+    expect(() => testing.it('desc', () => { })).toThrow('it must be called from within a test suite!');
   });
 
   test('it() works fine from within a describe block', () => {
     expect(() => {
       testing.describe('desc', () => {
-        testing.it('desc', () => {});
+        testing.it('desc', () => { });
       });
     }).not.toThrow();
   });
 
   test('it() correctly assigns results to the correct suite', () => {
     testing.describe('block1', () => {
-      testing.it('test1', () => {});
+      testing.it('test1', () => { });
     });
 
     testing.describe('block2', () => {
-      testing.it('test2', () => {});
+      testing.it('test2', () => { });
     });
 
-    expect(testing.suiteResults.length).toEqual(2);
-    const [result1, result2] = testing.suiteResults;
+    expect(testing.topLevelSuiteResults.length).toEqual(2);
+    const [result1, result2] = testing.topLevelSuiteResults;
     expect(result1).toMatchObject({
       name: 'block1',
       results: [{ name: 'test1', passed: true }],
@@ -75,17 +75,17 @@ describe('Test \'it\' and \'describe\'', () => {
   test('it() correctly assigns results to child suites', () => {
     testing.describe('block1', () => {
       testing.describe('block3', () => {
-        testing.it('test3', () => {});
+        testing.it('test3', () => { });
       });
-      testing.it('test1', () => {});
+      testing.it('test1', () => { });
     });
 
     testing.describe('block2', () => {
-      testing.it('test2', () => {});
+      testing.it('test2', () => { });
     });
 
-    expect(testing.suiteResults.length).toEqual(2);
-    const [result1, result2] = testing.suiteResults;
+    expect(testing.topLevelSuiteResults.length).toEqual(2);
+    const [result1, result2] = testing.topLevelSuiteResults;
     // Verify Result 1 first
     expect(result1.results.length).toEqual(2);
     const [subResult1, subResult2] = result1.results;
@@ -118,18 +118,41 @@ describe('Test \'it\' and \'describe\'', () => {
   test('it() throws when called within another it block', () => {
     const f = () => testing.describe('suite', () => {
       testing.it('test0', () => {
-        testing.it('test1', () => {});
+        testing.it('test1', () => { });
       });
     });
 
-    expect(f).toThrowError('it cannot be called from within another test!');
+    expect(f).toThrow('it cannot be called from within another test!');
+  });
+
+  test('it() and describe() throw when provided a non-nullary function', () => {
+    expect(() => testing.it('test name', 0 as any)).toThrow(
+      'it: A test must be a nullary function!'
+    );
+
+    expect(() => testing.describe('test name', 0 as any)).toThrow(
+      'describe: A test suite must be a nullary function!'
+    );
+  });
+
+  test('internal errors are not handled', () => {
+    expect(() => testing.describe('suite', () => {
+      testing.test('test', () => { throw new UnittestBundleInternalError(''); });
+    })).toThrow(UnittestBundleInternalError);
   });
 });
 
 describe('Test assertion functions', () => {
-  test('assert', () => {
-    expect(() => asserts.assert(() => true)).not.toThrow();
-    expect(() => asserts.assert(() => false)).toThrow('Assert failed');
+  describe(asserts.assert, () => {
+    it('works', () => {
+      expect(() => asserts.assert(() => true)).not.toThrow();
+      expect(() => asserts.assert(() => false)).toThrow('Assert failed');
+    });
+
+    it('will throw an error if not provided a nullary function', () => {
+      expect(() => asserts.assert(0 as any)).toThrow(`${asserts.assert.name} expects a nullary function that returns a boolean!`);
+      expect(() => asserts.assert(((x: any) => x === true) as any)).toThrow(`${asserts.assert.name} expects a nullary function that returns a boolean!`);
+    });
   });
 
   describe(asserts.assert_equals, () => {
@@ -168,8 +191,8 @@ describe('Test assertion functions', () => {
       });
 
       test('deep equality', () => {
-        const list0 = list(1, pair(2, 3), 4);
-        const list1 = list(1, pair(2, 3), 4);
+        const list0 = list<any>(1, pair(2, 3), 4);
+        const list1 = list<any>(1, pair(2, 3), 4);
 
         expect(() => asserts.assert_equals(list0, list1)).not.toThrow();
       });
@@ -303,11 +326,11 @@ describe('Mocking functions', () => {
     expect(testFunc).toHaveBeenCalledOnce();
   });
 
-  test('mocked functions retain the stringify of the original function', () => {
+  test('mocked functions have nice string representation', () => {
     const fn = () => 2;
     const mocked = mocks.mock_function(fn);
 
-    expect(stringify(fn)).toEqual(stringify(mocked));
+    expect(stringify(mocked)).toEqual('<MockedFunction>');
   });
 
   test('no calls', () => {
@@ -373,21 +396,27 @@ describe('Mocking functions', () => {
     expect(mocks.get_ret_vals(fn)).toEqual(null);
   });
 
+  describe(mocks.mock_function, () => {
+    it('throws when passed not a function', () => {
+      expect(() => mocks.mock_function(0 as any)).toThrow('mock_function: Expected function, got 0.');
+    });
+  });
+
   describe(mocks.get_arg_list, () => {
     it('throws when function isn\'t a mocked function', () => {
-      expect(() => mocks.get_arg_list((() => 0) as any)).toThrowError('get_arg_list expects a mocked function as argument');
+      expect(() => mocks.get_arg_list((() => 0) as any)).toThrow('get_arg_list: Expected mocked function, got () => 0.');
     });
   });
 
   describe(mocks.get_ret_vals, () => {
     it('throws when function isn\'t a mocked function', () => {
-      expect(() => mocks.get_ret_vals((() => 0) as any)).toThrowError('get_ret_vals expects a mocked function as argument');
+      expect(() => mocks.get_ret_vals((() => 0) as any)).toThrowError('get_ret_vals: Expected mocked function, got () => 0.');
     });
   });
 
   describe(mocks.clear_mock, () => {
     it('throws when function isn\'t a mocked function', () => {
-      expect(() => mocks.clear_mock((() => 0) as any)).toThrowError('clear_mock expects a mocked function as argument');
+      expect(() => mocks.clear_mock((() => 0) as any)).toThrowError('clear_mock: Expected mocked function, got () => 0.');
     });
 
     it('works', () => {
@@ -399,16 +428,4 @@ describe('Mocking functions', () => {
       expect(mocks.get_num_calls(fn)).toEqual(0);
     });
   });
-
-  describe(mocks.mock_function, () => {
-    it('throws when passed not a function', () => {
-      expect(() => mocks.mock_function(0 as any)).toThrowError('mock_function expects a function as argument');
-    });
-  });
-});
-
-test('internal errors are not handled', () => {
-  expect(() => {
-    throw new UnitestBundleInternalError();
-  }).toThrow();
 });

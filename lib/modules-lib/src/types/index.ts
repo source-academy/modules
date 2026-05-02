@@ -1,4 +1,4 @@
-import type { IconName } from '@blueprintjs/icons';
+import type { IconName } from '@blueprintjs/core';
 import type { Context } from 'js-slang';
 import type React from 'react';
 
@@ -35,17 +35,22 @@ export abstract class glAnimation {
 
   /**
    * Because of some quirks in the way tabs and bundles are built, an `instanceof` check might fail at runtime.
-   * You should use this function instead of an `instanceof` check to check for `glAnimations`.
+   * So we need to rewrite the instanceof check
    */
-  public static isAnimation(obj: unknown): obj is glAnimation {
-    if (typeof obj !== 'object' || obj === null) return false;
+  static [Symbol.hasInstance](constructor: unknown): boolean {
+    if (typeof constructor !== 'object' || constructor === null) return false;
+    return '_anim_symbol' in constructor && constructor._anim_symbol === glAnimationSymbol;
+  }
 
-    return '_anim_symbol' in obj && obj._anim_symbol === glAnimationSymbol;
+  public static isAnimation(obj: unknown): obj is glAnimation {
+    return obj instanceof glAnimation;
   }
 }
+
 export interface AnimFrame {
   draw: (canvas: HTMLCanvasElement) => void;
 }
+
 export type DeepPartial<T> = T extends object ? {
   [P in keyof T]?: DeepPartial<T[P]>;
 } : T;
@@ -53,24 +58,20 @@ export type DeepPartial<T> = T extends object ? {
 /**
  * DebuggerContext type used by frontend to assist typing information
  */
-export type DebuggerContext = {
+export interface DebuggerContext {
   result: any;
   lastDebuggerResult: any;
   code: string;
   context: Context;
   workspaceLocation?: any;
-};
+}
 
 export type ModuleContexts = Context['moduleContexts'];
 
-/**
- * Interface to represent objects that require a string representation in the
- * REPL
- */
-export interface ReplResult {
-  toReplString: () => string;
-}
+export type { ReplResult } from 'js-slang/dist/types';
 
+// We don't use the context property to avoid confusion with the context
+// property on React class components
 export type ModuleTab = (props: { debuggerCtx: DebuggerContext }) => React.ReactNode;
 
 export interface ModuleSideContent {
@@ -93,5 +94,5 @@ export interface ModuleSideContent {
    * This function will be called to render the module tab in the side contents
    * on Source Academy frontend.
    */
-  body: (context: DebuggerContext) => React.ReactElement;
+  body: (context: DebuggerContext) => React.ReactNode;
 };

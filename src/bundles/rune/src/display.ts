@@ -1,6 +1,7 @@
+import { assertFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
-import { AnaglyphRune, HollusionRune } from './functions';
-import { AnimatedRune, NormalRune, Rune, type DrawnRune, type RuneAnimation } from './rune';
+import { DrawnAnaglyphRune, DrawnHollusionRune } from './functions';
+import { AnimatedRune, DrawnNormalRune, Rune, type DrawnRune, type RuneAnimation } from './rune';
 import { throwIfNotRune } from './runes_ops';
 import { functionDeclaration } from './type_map';
 
@@ -17,21 +18,21 @@ class RuneDisplay {
   @functionDeclaration('rune: Rune', 'Rune')
   static show(rune: Rune): Rune {
     throwIfNotRune(RuneDisplay.show.name, rune);
-    drawnRunes.push(new NormalRune(rune));
+    drawnRunes.push(new DrawnNormalRune(rune));
     return rune;
   }
 
   @functionDeclaration('rune: Rune', 'Rune')
   static anaglyph(rune: Rune): Rune {
     throwIfNotRune(RuneDisplay.anaglyph.name, rune);
-    drawnRunes.push(new AnaglyphRune(rune));
+    drawnRunes.push(new DrawnAnaglyphRune(rune));
     return rune;
   }
 
   @functionDeclaration('rune: Rune, magnitude: number', 'Rune')
   static hollusion_magnitude(rune: Rune, magnitude: number): Rune {
     throwIfNotRune(RuneDisplay.hollusion_magnitude.name, rune);
-    drawnRunes.push(new HollusionRune(rune, magnitude));
+    drawnRunes.push(new DrawnHollusionRune(rune, magnitude));
     return rune;
   }
 
@@ -43,10 +44,12 @@ class RuneDisplay {
 
   @functionDeclaration('duration: number, fps: number, func: RuneAnimation', 'AnimatedRune')
   static animate_rune(duration: number, fps: number, func: RuneAnimation) {
-    const anim = new AnimatedRune(duration, fps, (n) => {
+    assertFunctionOfLength(func, 1, RuneDisplay.animate_rune.name, 'RuneAnimation');
+
+    const anim = new AnimatedRune(duration, fps, n => {
       const rune = func(n);
       throwIfNotRune(RuneDisplay.animate_rune.name, rune);
-      return new NormalRune(rune);
+      return new DrawnNormalRune(rune);
     });
     drawnRunes.push(anim);
     return anim;
@@ -54,10 +57,12 @@ class RuneDisplay {
 
   @functionDeclaration('duration: number, fps: number, func: RuneAnimation', 'AnimatedRune')
   static animate_anaglyph(duration: number, fps: number, func: RuneAnimation) {
-    const anim = new AnimatedRune(duration, fps, (n) => {
+    assertFunctionOfLength(func, 1, RuneDisplay.animate_anaglyph.name, 'RuneAnimation');
+
+    const anim = new AnimatedRune(duration, fps, n => {
       const rune = func(n);
       throwIfNotRune(RuneDisplay.animate_anaglyph.name, rune);
-      return new AnaglyphRune(rune);
+      return new DrawnAnaglyphRune(rune);
     });
     drawnRunes.push(anim);
     return anim;

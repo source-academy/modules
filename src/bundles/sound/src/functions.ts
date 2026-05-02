@@ -1,4 +1,7 @@
 import { midi_note_to_frequency } from '@sourceacademy/bundle-midi';
+import type { MIDINote } from '@sourceacademy/bundle-midi/types';
+import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { assertFunctionOfLength, assertNumberWithinRange, isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import {
   accumulate,
   head,
@@ -6,10 +9,13 @@ import {
   is_pair,
   length,
   list,
+  map,
   pair,
   tail,
-  type List
+  type List,
+  type Pair
 } from 'js-slang/dist/stdlib/list';
+import { stringify } from 'js-slang/dist/utils/stringify';
 import type {
   Sound,
   SoundProducer,
@@ -88,9 +94,9 @@ function linear_decay(decay_period: number): (t: number) => number {
  */
 function getAudioStream(func_name: string) {
   if (globalVars.stream === null) {
-    throw new Error(`${func_name}: Call init_record(); to obtain permission to use microphone`);
+    throw new GeneralRuntimeError(`${func_name}: Call init_record(); to obtain permission to use microphone`);
   } else if (globalVars.stream === false) {
-    throw new Error(`${func_name}: Permission has been denied.\n
+    throw new GeneralRuntimeError(`${func_name}: Permission has been denied.\n
         Re-start browser and call init_record();\n
         to obtain permission to use microphone.`);
   }
@@ -187,12 +193,10 @@ export function init_record(): string {
  * @param buffer - pause before recording, in seconds
  */
 export function record(buffer: number): () => SoundPromise {
-  if (typeof buffer !== 'number' || buffer < 0) {
-    throw new Error(`${record.name}: Expected a positive number for buffer, got ${buffer}`);
-  }
+  assertNumberWithinRange(buffer, record.name, 0, undefined, false);
 
   if (globalVars.isPlaying) {
-    throw new Error(`${record.name}: Cannot record while another sound is playing!`);
+    throw new GeneralRuntimeError(`${record.name}: Cannot record while another sound is playing!`);
   }
 
   const stream = getAudioStream(record.name);
@@ -210,7 +214,7 @@ export function record(buffer: number): () => SoundPromise {
     play_recording_signal();
     const promise = () => {
       if (globalVars.recordedSound === null) {
-        throw new Error('recording still being processed');
+        throw new GeneralRuntimeError('recording still being processed');
       } else {
         return globalVars.recordedSound;
       }
@@ -218,7 +222,6 @@ export function record(buffer: number): () => SoundPromise {
 
     // TODO: Remove when ReplResult is properly implemented
     promise.toReplString = () => '<SoundPromise>';
-    promise.toString = () => '<SoundPromise>';
     return promise;
   };
 }
@@ -245,7 +248,7 @@ export function record(buffer: number): () => SoundPromise {
  */
 export function record_for(duration: number, buffer: number): SoundPromise {
   if (globalVars.isPlaying) {
-    throw new Error(`${record_for.name}: Cannot record while another sound is playing!`);
+    throw new GeneralRuntimeError(`${record_for.name}: Cannot record while another sound is playing!`);
   }
 
   const stream = getAudioStream(record_for.name);
@@ -268,15 +271,13 @@ export function record_for(duration: number, buffer: number): SoundPromise {
 
   const promise = () => {
     if (globalVars.recordedSound === null) {
-      throw new Error('recording still being processed');
+      throw new GeneralRuntimeError('recording still being processed');
     } else {
       return globalVars.recordedSound;
     }
   };
 
   promise.toReplString = () => '<SoundPromise>';
-  // TODO: Remove when ReplResult is properly implemented
-  promise.toString = () => '<SoundPromise>';
   return promise;
 }
 
@@ -284,23 +285,15 @@ export function record_for(duration: number, buffer: number): SoundPromise {
  * Throws an exception if duration is not a number or if
  * number is negative
  */
-function validateDuration(func_name: string, duration: unknown): asserts duration is number {
-  if (typeof duration !== 'number') {
-    throw new Error(`${func_name} expects a number for duration, got ${duration}`);
-  }
-
-  if (duration < 0) {
-    throw new Error(`${func_name}: Sound duration must be greater than or equal to 0`);
-  }
+export function validateDuration(func_name: string, duration: unknown): asserts duration is number {
+  assertNumberWithinRange(duration, func_name, 0, undefined, false, 'duration');
 }
 
 /**
  * Throws an exception if wave is not a function
  */
 function validateWave(func_name: string, wave: unknown): asserts wave is Wave {
-  if (typeof wave !== 'function') {
-    throw new Error(`${func_name} expects a wave, got ${wave}`);
-  }
+  assertFunctionOfLength(wave, 1, func_name, 'Wave');
 }
 
 /**
@@ -312,13 +305,16 @@ function validateWave(func_name: string, wave: unknown): asserts wave is Wave {
  * @param wave wave function of the Sound
  * @param duration duration of the Sound
  * @returns with wave as wave function and duration as duration
- * @example const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);
+ * @example
+ * ```
+ * const s = make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5);
+ * ```
  */
 export function make_sound(wave: Wave, duration: number): Sound {
   validateDuration(make_sound.name, duration);
   validateWave(make_sound.name, wave);
 
-  return pair((t: number) => (t >= duration ? 0 : wave(t)), duration);
+  return pair(t => (t >= duration ? 0 : wave(t)), duration);
 }
 
 /**
@@ -326,7 +322,10 @@ export function make_sound(wave: Wave, duration: number): Sound {
  *
  * @param sound given Sound
  * @returns the wave function of the Sound
- * @example get_wave(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns t => Math_sin(2 * Math_PI * 440 * t)
+ * @example
+ * ```
+ * get_wave(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns t => Math_sin(2 * Math_PI * 440 * t)
+ * ```
  */
 export function get_wave(sound: Sound): Wave {
   return head(sound);
@@ -337,7 +336,10 @@ export function get_wave(sound: Sound): Wave {
  *
  * @param sound given Sound
  * @returns the duration of the Sound
- * @example get_duration(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns 5
+ * @example
+ * ```
+ * get_duration(make_sound(t => Math_sin(2 * Math_PI * 440 * t), 5)); // Returns 5
+ * ```
  */
 export function get_duration(sound: Sound): number {
   return tail(sound);
@@ -348,13 +350,16 @@ export function get_duration(sound: Sound): number {
  *
  * @param x input to be checked
  * @returns true if x is a Sound, false otherwise
- * @example is_sound(make_sound(t => 0, 2)); // Returns true
+ * @example
+ * ```
+ * is_sound(make_sound(t => 0, 2)); // Returns true
+ * ```
  */
 export function is_sound(x: unknown): x is Sound {
   return (
     is_pair(x)
-    && typeof get_wave(x) === 'function'
-    && typeof get_duration(x) === 'number'
+    && isFunctionOfLength(head(x), 1)
+    && typeof tail(x) === 'number'
   );
 }
 
@@ -364,7 +369,10 @@ export function is_sound(x: unknown): x is Sound {
  *
  * @param wave the wave function to play, starting at 0
  * @returns the resulting Sound
- * @example play_wave(t => math_sin(t * 3000), 5);
+ * @example
+ * ```
+ * play_wave(t => math_sin(t * 3000), 5);
+ * ```
  */
 export function play_wave(wave: Wave, duration: number): Sound {
   validateDuration(play_wave.name, duration);
@@ -379,22 +387,23 @@ export function play_wave(wave: Wave, duration: number): Sound {
  *
  * @param sound the Sound to play
  * @returns the given Sound
- * @example play(sine_sound(440, 5));
+ * @example
+ * ```
+ * play(sine_sound(440, 5));
+ * ```
  */
 export function play(sound: Sound): Sound {
   // Type-check sound
   if (!is_sound(sound)) {
-    throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
+    throw new InvalidParameterTypeError('sound', sound, play.name);
   } else if (globalVars.isPlaying) {
-    throw new Error(`${play.name}: Previous sound still playing!`);
+    throw new GeneralRuntimeError(`${play.name}: Previous sound still playing!`);
   }
 
   const duration = get_duration(sound);
-  if (duration < 0) {
-    throw new Error(`${play.name}: duration of sound is negative`);
-  } else if (duration === 0) {
-    return sound;
-  }
+  validateDuration(play.name, duration);
+
+  if (duration === 0) return sound;
 
   const audioplayer = getAudioContext();
 
@@ -407,12 +416,16 @@ export function play(sound: Sound): Sound {
 
   const channel = theBuffer.getChannelData(0);
 
-  let temp: number;
   let prev_value = 0;
 
   const wave = get_wave(sound);
-  for (let i = 0; i < channel.length; i += 1) {
-    temp = wave(i / FS);
+  for (let i = 0; i < channel.length; i++) {
+    const temp = wave(i / FS);
+
+    if (typeof temp !== 'number') {
+      throw new GeneralRuntimeError(`${play.name}: Provided Sound returned a non-numeric value ${stringify(temp)}.`);
+    }
+
     // clip amplitude
     if (temp > 1) {
       channel[i] = 1;
@@ -460,7 +473,11 @@ export function stop(): void {
  *
  * @param duration the duration of the noise sound
  * @returns resulting noise Sound
- * @example noise_sound(5);
+ * @example
+ * ```
+ * noise_sound(5);
+ * ```
+ *
  * @category Primitive
  */
 export function noise_sound(duration: number): Sound {
@@ -469,11 +486,15 @@ export function noise_sound(duration: number): Sound {
 }
 
 /**
- * Makes a silence Sound with given duration
+ * Makes a silent Sound with given duration
  *
  * @param duration the duration of the silence Sound
  * @returns resulting silence Sound
- * @example silence_sound(5);
+ * @example
+ * ```
+ * silence_sound(5);
+ * ```
+ *
  * @category Primitive
  */
 export function silence_sound(duration: number): Sound {
@@ -487,7 +508,11 @@ export function silence_sound(duration: number): Sound {
  * @param freq the frequency of the sine wave Sound
  * @param duration the duration of the sine wave Sound
  * @returns resulting sine wave Sound
- * @example sine_sound(440, 5);
+ * @example
+ * ```
+ * sine_sound(440, 5);
+ * ```
+ *
  * @category Primitive
  */
 export function sine_sound(freq: number, duration: number): Sound {
@@ -501,7 +526,11 @@ export function sine_sound(freq: number, duration: number): Sound {
  * @param f the frequency of the square wave Sound
  * @param duration the duration of the square wave Sound
  * @returns resulting square wave Sound
- * @example square_sound(440, 5);
+ * @example
+ * ```
+ * square_sound(440, 5);
+ * ```
+ *
  * @category Primitive
  */
 export function square_sound(f: number, duration: number): Sound {
@@ -525,7 +554,11 @@ export function square_sound(f: number, duration: number): Sound {
  * @param freq the frequency of the triangle wave Sound
  * @param duration the duration of the triangle wave Sound
  * @returns resulting triangle wave Sound
- * @example triangle_sound(440, 5);
+ * @example
+ * ```
+ * triangle_sound(440, 5);
+ * ```
+ *
  * @category Primitive
  */
 export function triangle_sound(freq: number, duration: number): Sound {
@@ -551,7 +584,11 @@ export function triangle_sound(freq: number, duration: number): Sound {
  * @param freq the frequency of the sawtooth wave Sound
  * @param duration the duration of the sawtooth wave Sound
  * @returns resulting sawtooth wave Sound
- * @example sawtooth_sound(440, 5);
+ * @example
+ * ```
+ * sawtooth_sound(440, 5);
+ * ```
+ *
  * @category Primitive
  */
 export function sawtooth_sound(freq: number, duration: number): Sound {
@@ -579,9 +616,13 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
  *
  * @param list_of_sounds given list of Sounds
  * @returns the combined Sound
- * @example consecutively(list(sine_sound(200, 2), sine_sound(400, 3)));
+ * @example
+ * ```
+ * const sound = consecutively(list(sine_sound(200, 2), sine_sound(400, 3)));
+ * play(sound);
+ * ```
  */
-export function consecutively(list_of_sounds: List): Sound {
+export function consecutively(list_of_sounds: List<Sound>): Sound {
   function consec_two(ss1: Sound, ss2: Sound) {
     const wave1 = get_wave(ss1);
     const wave2 = get_wave(ss2);
@@ -602,9 +643,13 @@ export function consecutively(list_of_sounds: List): Sound {
  *
  * @param list_of_sounds given list of Sounds
  * @returns the combined Sound
- * @example simultaneously(list(sine_sound(200, 2), sine_sound(400, 3)))
+ * @example
+ * ```
+ * const new_sound = simultaneously(list(sine_sound(200, 2), sine_sound(400, 3)));
+ * play(new_sound);
+ * ```
  */
-export function simultaneously(list_of_sounds: List): Sound {
+export function simultaneously(list_of_sounds: List<Sound>): Sound {
   function simul_two(ss1: Sound, ss2: Sound) {
     const wave1 = get_wave(ss1);
     const wave2 = get_wave(ss2);
@@ -637,6 +682,23 @@ export function simultaneously(list_of_sounds: List): Sound {
 }
 
 /**
+ * Utility function for wrapping Sound transformers. Adds the toReplString representation
+ * and adds check for verifying that the given input is a Sound.
+ */
+function wrapSoundTransformer(transformer: SoundTransformer): SoundTransformer {
+  function wrapped(sound: Sound) {
+    if (!is_sound(sound)) {
+      throw new InvalidParameterTypeError('Sound', sound, 'SoundTransformer');
+    }
+
+    return transformer(sound);
+  }
+
+  wrapped.toReplString = () => '<SoundTransformer>';
+  return wrapped;
+}
+
+/**
  * Returns an envelope: a function from Sound to Sound.
  * When the adsr envelope is applied to a Sound, it returns
  * a new Sound with its amplitude modified according to parameters
@@ -648,8 +710,11 @@ export function simultaneously(list_of_sounds: List): Sound {
  * @param decay_ratio proportion of Sound decay phase
  * @param sustain_level sustain level between 0 and 1
  * @param release_ratio proportion of Sound in release phase
- * @returns Envelope a function from Sound to Sound
- * @example adsr(0.2, 0.3, 0.3, 0.1)(sound);
+ * @function
+ * @example
+ * ```
+ * adsr(0.2, 0.3, 0.3, 0.1)(sound);
+ * ```
  */
 export function adsr(
   attack_ratio: number,
@@ -657,12 +722,19 @@ export function adsr(
   sustain_level: number,
   release_ratio: number
 ): SoundTransformer {
-  return sound => {
+  assertNumberWithinRange(attack_ratio, adsr.name, undefined, undefined, false, 'attack_ratio');
+  assertNumberWithinRange(decay_ratio, adsr.name, undefined, undefined, false, 'decay_ratio');
+  assertNumberWithinRange(sustain_level, adsr.name, 0, undefined, false, 'sustain_level');
+  assertNumberWithinRange(release_ratio, adsr.name, undefined, undefined, false, 'release_ratio');
+
+  return wrapSoundTransformer(sound => {
     const wave = get_wave(sound);
     const duration = get_duration(sound);
+
     const attack_time = duration * attack_ratio;
     const decay_time = duration * decay_ratio;
     const release_time = duration * release_ratio;
+
     return make_sound((x) => {
       if (x < attack_time) {
         return wave(x) * (x / attack_time);
@@ -683,7 +755,7 @@ export function adsr(
         * linear_decay(release_time)(x - (duration - release_time))
       );
     }, duration);
-  };
+  });
 }
 
 /**
@@ -699,27 +771,37 @@ export function adsr(
  * @param base_frequency frequency of the first harmonic
  * @param duration duration of the produced Sound, in seconds
  * @param envelopes – list of envelopes, which are functions from Sound to Sound
- * @returns Sound resulting Sound
- * @example stacking_adsr(sine_sound, 300, 5, list(adsr(0.1, 0.3, 0.2, 0.5), adsr(0.2, 0.5, 0.6, 0.1), adsr(0.3, 0.1, 0.7, 0.3)));
+ * @returns resulting Sound
+ * @example
+ * ```
+ * const sound = stacking_adsr(
+ *   sine_sound,
+ *   300,
+ *   5,
+ *   list(
+ *     adsr(0.1, 0.3, 0.2, 0.5),
+ *     adsr(0.2, 0.5, 0.6, 0.1),
+ *     adsr(0.3, 0.1, 0.7, 0.3)
+ *   )
+ * );
+ * play(sound);
+ * ```
  */
 export function stacking_adsr(
   waveform: SoundProducer,
   base_frequency: number,
   duration: number,
-  envelopes: List
+  envelopes: List<SoundTransformer>
 ): Sound {
-  function zip(lst: List, n: number) {
+  function zip(lst: List<SoundTransformer>, n: number): List<Pair<number, SoundTransformer>> {
     if (is_null(lst)) {
       return lst;
     }
     return pair(pair(n, head(lst)), zip(tail(lst), n + 1));
   }
 
-  return simultaneously(accumulate(
-    (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
-    null,
-    zip(envelopes, 1)
-  ));
+  const new_list = map(x => tail(x)(waveform(base_frequency * head(x), duration)), zip(envelopes, 1));
+  return simultaneously(new_list);
 }
 
 /**
@@ -733,21 +815,27 @@ export function stacking_adsr(
  * @param freq the frequency of the sine wave to be modulated
  * @param duration the duration of the output Sound
  * @param amount the amount of modulation to apply to the carrier sine wave
- * @returns function which takes in a Sound and returns a Sound
- * @example phase_mod(440, 5, 1)(sine_sound(220, 5));
+ * @example
+ * ```
+ * phase_mod(440, 5, 1)(sine_sound(220, 5));
+ * ```
  */
 export function phase_mod(
   freq: number,
   duration: number,
   amount: number
 ): SoundTransformer {
-  return modulator => {
+  assertNumberWithinRange(freq, phase_mod.name, 0, undefined, false);
+  validateDuration(phase_mod.name, duration);
+  assertNumberWithinRange(amount, phase_mod.name, undefined, undefined, false);
+
+  return wrapSoundTransformer(modulator => {
     const wave = get_wave(modulator);
     return make_sound(
       t => Math.sin(2 * Math.PI * t * freq + amount * wave(t)),
       duration
     );
-  };
+  });
 }
 
 // Instruments
@@ -758,10 +846,16 @@ export function phase_mod(
  * @param note MIDI note
  * @param duration duration in seconds
  * @returns Sound resulting bell Sound with given pitch and duration
- * @example bell(40, 1);
+ * @example
+ * ```
+ * bell(40, 1);
+ * ```
+ *
  * @category Instrument
  */
-export function bell(note: number, duration: number): Sound {
+export function bell(note: MIDINote, duration: number): Sound {
+  validateDuration(bell.name, duration);
+
   return stacking_adsr(
     square_sound,
     midi_note_to_frequency(note),
@@ -781,10 +875,15 @@ export function bell(note: number, duration: number): Sound {
  * @param note MIDI note
  * @param duration duration in seconds
  * @returns Sound resulting cello Sound with given pitch and duration
- * @example cello(36, 5);
+ * @example
+ * ```
+ * cello(36, 5);
+ * ```
  * @category Instrument
  */
-export function cello(note: number, duration: number): Sound {
+export function cello(note: MIDINote, duration: number): Sound {
+  validateDuration(cello.name, duration);
+
   return stacking_adsr(
     square_sound,
     midi_note_to_frequency(note),
@@ -799,11 +898,16 @@ export function cello(note: number, duration: number): Sound {
  * @param note MIDI note
  * @param duration duration in seconds
  * @returns Sound resulting piano Sound with given pitch and duration
- * @example piano(48, 5);
+ * @example
+ * ```
+ * piano(48, 5);
+ * ```
  * @category Instrument
  *
  */
-export function piano(note: number, duration: number): Sound {
+export function piano(note: MIDINote, duration: number): Sound {
+  validateDuration(piano.name, duration);
+
   return stacking_adsr(
     triangle_sound,
     midi_note_to_frequency(note),
@@ -818,10 +922,15 @@ export function piano(note: number, duration: number): Sound {
  * @param note MIDI note
  * @param duration duration in seconds
  * @returns Sound resulting trombone Sound with given pitch and duration
- * @example trombone(60, 2);
+ * @example
+ * ```
+ * trombone(60, 2);
+ * ```
  * @category Instrument
  */
-export function trombone(note: number, duration: number): Sound {
+export function trombone(note: MIDINote, duration: number): Sound {
+  validateDuration(trombone.name, duration);
+
   return stacking_adsr(
     square_sound,
     midi_note_to_frequency(note),
@@ -836,10 +945,15 @@ export function trombone(note: number, duration: number): Sound {
  * @param note MIDI note
  * @param duration duration in seconds
  * @returns Sound resulting violin Sound with given pitch and duration
- * @example violin(53, 4);
+ * @example
+ * ```
+ * violin(53, 4);
+ * ```
  * @category Instrument
  */
-export function violin(note: number, duration: number): Sound {
+export function violin(note: MIDINote, duration: number): Sound {
+  validateDuration(violin.name, duration);
+
   return stacking_adsr(
     sawtooth_sound,
     midi_note_to_frequency(note),

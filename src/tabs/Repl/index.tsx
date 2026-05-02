@@ -5,130 +5,163 @@
  */
 
 import { Button } from '@blueprintjs/core';
-import { FloppyDisk, Play } from '@blueprintjs/icons';
-
 import { FONT_MESSAGE, MINIMUM_EDITOR_HEIGHT } from '@sourceacademy/bundle-repl/config';
 import type { ProgrammableRepl } from '@sourceacademy/bundle-repl/programmable_repl';
-import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
+import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
+import { throttle } from 'es-toolkit';
 import React from 'react';
 import AceEditor from 'react-ace';
 
 import 'ace-builds/src-noconflict/ext-language_tools';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/theme-twilight';
+import type { IAceEditor } from 'react-ace/lib/types';
 
-type Props = {
-  programmableReplInstance: ProgrammableRepl;
-};
+interface Props {
+  context: DebuggerContext;
+}
 
-type State = {
+interface State {
   editorHeight: number;
+  editorText: string;
   isDraggingDragBar: boolean;
-};
+}
+
+type Context = DebuggerContext['context'];
 
 const BOX_PADDING_VALUE = 4;
 
+const updateSavedCode = throttle((code: string) => {
+  localStorage.setItem('programmable_repl_saved_editor_code', code);
+}, 100);
+
 class ProgrammableReplGUI extends React.Component<Props, State> {
-  public replInstance: ProgrammableRepl;
-  private editorAreaRect;
-  private editorInstance;
+  public readonly replInstance: ProgrammableRepl;
+  private readonly evalContext: Context;
+
+  private editorAreaRect?: DOMRect;
+  private editorInstance?: IAceEditor;
+
   constructor(data: Props) {
     super(data);
-    this.replInstance = data.programmableReplInstance;
-    this.replInstance.setTabReactComponentInstance(this);
+
+    this.evalContext = data.context.context;
+    this.replInstance = getModuleState<ProgrammableRepl>(data.context, 'repl')!;
+    this.replInstance.tabRerenderer = () => this.setState({});
+    this.replInstance.updateUserCode = this.onCodeChanged;
+
+    let initialText: string;
+    if (this.replInstance.defaultCode) {
+      initialText = this.replInstance.defaultCode;
+      localStorage.setItem('programmable_repl_saved_editor_code', initialText);
+    } else {
+      initialText = localStorage.getItem('programmable_repl_saved_editor_code') ?? '';
+    }
+
     this.state = {
       editorHeight: this.replInstance.editorHeight,
-      isDraggingDragBar: false
+      isDraggingDragBar: false,
+      editorText: initialText
     };
   }
-  private dragBarOnMouseDown = (e) => {
+
+  private dragBarOnMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     this.setState({ isDraggingDragBar: true });
   };
-  private onMouseMove = (e) => {
-    if (this.state.isDraggingDragBar) {
+
+  private onMouseMove = (e: MouseEvent) => {
+    if (this.state.isDraggingDragBar && this.editorAreaRect) {
       const height = Math.max(e.clientY - this.editorAreaRect.top - BOX_PADDING_VALUE * 2, MINIMUM_EDITOR_HEIGHT);
       this.replInstance.editorHeight = height;
       this.setState({ editorHeight: height });
-      this.editorInstance.resize();
+      this.editorInstance?.resize();
     }
   };
-  private onMouseUp = (_e) => {
+
+  private onMouseUp = () => {
     this.setState({ isDraggingDragBar: false });
   };
-  componentDidMount() {
+
+  override componentDidMount() {
     document.addEventListener('mousemove', this.onMouseMove);
     document.addEventListener('mouseup', this.onMouseUp);
   }
-  componentWillUnmount() {
+
+  override componentWillUnmount() {
     document.removeEventListener('mousemove', this.onMouseMove);
     document.removeEventListener('mouseup', this.onMouseUp);
   }
-  public render() {
-    const { editorHeight } = this.state;
-    const outputDivs: React.ReactElement[] = [];
-    const outputStringCount = this.replInstance.outputStrings.length;
-    for (let i = 0; i < outputStringCount; i++) {
-      const str = this.replInstance.outputStrings[i];
+
+  onCodeChanged = (newCode: string) => {
+    this.setState({ editorText: newCode });
+    updateSavedCode(newCode);
+  };
+
+  public override render() {
+    const { editorHeight, editorText } = this.state;
+    const outputDivs = this.replInstance.outputStrings.map((str): React.JSX.Element => {
       if (str.outputMethod === 'richtext') {
         if (str.color === '') {
-          outputDivs.push(<div style={FONT_MESSAGE} dangerouslySetInnerHTML={{ __html: str.content }} />);
+          return <div style={FONT_MESSAGE} dangerouslySetInnerHTML={{ __html: str.content }} />;
         } else {
-          outputDivs.push(<div style={{
+          return (<div style={{
             ...FONT_MESSAGE,
-            ...{ color: str.color }
+            color: str.color
           }} dangerouslySetInnerHTML={{ __html: str.content }} />);
         }
-      } else if (str.color === '') {
-        outputDivs.push(<div style={FONT_MESSAGE}>{str.content}</div>);
-      } else {
-        outputDivs.push(<div style={{
-          ...FONT_MESSAGE,
-          ...{ color: str.color }
-        }}>{str.content}
-        </div>);
       }
-    }
+
+      if (str.color === '') return <div style={FONT_MESSAGE}>{str.content}</div>;
+
+      return <div style={{
+        ...FONT_MESSAGE,
+        ...{ color: str.color }
+      }}>
+        {str.content}
+      </div>;
+    });
+
     return (
       <div>
         <Button
           className="programmable-repl-button"
-          icon={<Play />}
-          active={true}
-          onClick={() => this.replInstance.runCode()}// Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
+          icon='play'
+          active
+          onClick={() => this.replInstance.runCode(editorText, this.evalContext)}
           text="Run"
         />
-        <Button
-          className="programmable-repl-button"
-          icon={<FloppyDisk />}
-          active={true}
-          onClick={() => this.replInstance.saveEditorContent()}// Note: Here if I directly use "this.replInstance.RunCode" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
-          text="Save"
-        />
-        <div ref={(e) => {
-          this.editorAreaRect = e?.getBoundingClientRect();
-        }} style={{
-          padding: `${BOX_PADDING_VALUE}px`,
-          border: '2px solid #6f8194'
-        }}>
+        <div
+          ref={e => {
+            this.editorAreaRect = e?.getBoundingClientRect();
+          }}
+          style={{
+            padding: `${BOX_PADDING_VALUE}px`,
+            border: '2px solid #6f8194'
+          }}
+        >
           <AceEditor
-            ref={(e) => {
-              this.editorInstance = e?.editor;
-              this.replInstance.setEditorInstance(e?.editor);
+            ref={e => {
+              if (e) {
+                this.editorInstance = e.editor;
+                this.editorInstance.setOptions({ fontSize: `${this.replInstance.customizedEditorProps.fontSize}pt` });
+              }
             }}
             style={{
               width: '100%',
               height: `${editorHeight}px`,
-              ...this.replInstance.customizedEditorProps.backgroundImageUrl !== 'no-background-image' && {
+              ...this.replInstance.customizedEditorProps.backgroundImageUrl !== null && {
                 backgroundImage: `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`,
                 backgroundColor: `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`,
                 backgroundSize: '100%',
                 backgroundRepeat: 'no-repeat'
               }
             }}
-            mode="javascript" theme="twilight"
-            onChange={(newValue) => this.replInstance.updateUserCode(newValue)}
-            value={this.replInstance.userCodeInEditor.toString()}
+            mode="javascript"
+            theme="twilight"
+            onChange={this.onCodeChanged}
+            value={editorText}
           />
         </div>
         <div onMouseDown={this.dragBarOnMouseDown} style={{
@@ -147,11 +180,8 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
 }
 
 export default defineTab({
-  toSpawn() {
-    return true;
-  },
   body(context) {
-    return <ProgrammableReplGUI programmableReplInstance={context.context.moduleContexts.repl.state} />;
+    return <ProgrammableReplGUI context={context} />;
   },
   label: 'Programmable Repl Tab',
   iconName: 'code'

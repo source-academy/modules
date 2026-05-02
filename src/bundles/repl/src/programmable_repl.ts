@@ -4,75 +4,185 @@
  * @author Wang Zihan
  */
 
-import { runFilesInContext, type IOptions } from 'js-slang';
-import context from 'js-slang/context';
-import { COLOR_ERROR_MESSAGE, COLOR_RUN_CODE_RESULT, DEFAULT_EDITOR_HEIGHT } from './config';
+import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { createContext, parseError, runInContext, type Context, type IOptions, type Result } from 'js-slang';
+import { head, is_pair, tail } from 'js-slang/dist/stdlib/list';
+import assert from 'js-slang/dist/utils/assert';
+import { stringify } from 'js-slang/dist/utils/stringify';
+import { COLOR_ERROR_MESSAGE, COLOR_REPL_DISPLAY_DEFAULT, COLOR_RUN_CODE_RESULT, DEFAULT_EDITOR_HEIGHT } from './config';
 import { evaluatorSymbol } from './functions';
 
+export type RichDisplayContent = string | [RichDisplayContent, string];
+
+type OutputStringMethods = 'plaintext' | 'richtext';
+
+interface OutputStringEntry {
+  content: string;
+  outputMethod: OutputStringMethods;
+  color: string;
+}
+
+interface CustomEditorProps {
+  backgroundImageUrl: string | null;
+  backgroundColorAlpha: number;
+  fontSize: number;
+}
+
+/**
+ * Returns the forbidden word present in the string "str" if it contains at least one unsafe word.
+ * Returns "safe" if the string is considered to be safe to output directly into innerHTML.
+ */
+function xssStringCheck(str: string): string {
+  const tmp = str.toLowerCase();
+  const forbiddenWords = ['\\', '<', '>', 'script', 'javascript', 'eval', 'document', 'window', 'console', 'location'];
+  for (const word of forbiddenWords) {
+    if (tmp.indexOf(word) !== -1) {
+      return word;
+    }
+  }
+  return 'safe';
+}
+
+const pairStyleToCssStyle: { [pairStyle: string]: string } = {
+  bold: 'font-weight:bold;',
+  italic: 'font-style:italic;',
+  small: 'font-size: 14px;',
+  medium: 'font-size: 20px;',
+  large: 'font-size: 25px;',
+  gigantic: 'font-size: 50px;',
+  underline: 'text-decoration: underline;'
+};
+
+/**
+ * Checks if the given string is a valid hex color identifier
+ */
+function checkColorStringValidity(htmlColor: string) {
+  return /#[0-9a-f]{6}/.test(htmlColor.toLowerCase());
+}
+
+export function processRichDisplayContent(pair_rich_text: RichDisplayContent, func_name: string): string {
+  if (typeof pair_rich_text === 'string') {
+    // There MUST be a safe check on users' strings, because users may insert something that can be interpreted as executable JavaScript code when outputing rich text.
+    const safeCheckResult = xssStringCheck(pair_rich_text);
+    if (safeCheckResult !== 'safe') {
+      throw new GeneralRuntimeError(`${func_name}: For safety, the character/word ${safeCheckResult} is not allowed in rich text output. Please remove it or use plain text output mode and try again.`);
+    }
+    return `">${pair_rich_text}</span>`;
+  }
+
+  if (!is_pair(pair_rich_text)) {
+    throw new InvalidParameterTypeError('pair or string', pair_rich_text, func_name);
+  }
+
+  const config_str = tail(pair_rich_text);
+  if (typeof config_str !== 'string') {
+    throw new GeneralRuntimeError(`${func_name}: The tail in style pair should always be a string, but got ${config_str}.`);
+  }
+  let style = '';
+  if (config_str.substring(0, 3) === 'clr') {
+    let prefix: string;
+    switch (config_str[3]) {
+      case 't': {
+        prefix = 'color';
+        break;
+      }
+      case 'b': {
+        prefix = 'background-color';
+        break;
+      }
+      default:
+        throw new GeneralRuntimeError(`${func_name}: Unknown colour type "${config_str.substring(0, 4)}".`);
+    }
+
+    const colorHex = config_str.substring(4);
+
+    if (!checkColorStringValidity(colorHex)) {
+      throw new GeneralRuntimeError(`${func_name}: Invalid html colour string "${colorHex}". It should start with # and followed by 6 characters representing a hex number.`);
+    }
+
+    style = `${prefix}:${colorHex};`;
+  } else {
+    style = pairStyleToCssStyle[config_str];
+    if (style === undefined) {
+      throw new GeneralRuntimeError(`${func_name}: Found undefined style "${config_str}" while processing rich text.`);
+    }
+  }
+  return style + processRichDisplayContent(head(pair_rich_text), func_name);
+}
+
 export class ProgrammableRepl {
-  public evalFunction: (code: string) => any;
-  public userCodeInEditor: string;
-  public outputStrings: any[];
-  private _editorInstance;
-  private _tabReactComponent: any;
+  public evalFunction: ((code: string) => any) | null;
+  public outputStrings: OutputStringEntry[];
+  public tabRerenderer?: () => void;
+
+  /**
+   * Function to call when user code is updated **after** the editor
+   * has been rendered
+   */
+  public updateUserCode?: (newCode: string) => void;
+
+  /**
+   * Code that gets displayed when the editor is first rendered. If this is not set, the editor
+   * will try and load from `localStorage`.
+   */
+  public defaultCode?: string;
+
   // I store editorHeight value separately in here although it is already stored in the module's Tab React component state because I need to keep the editor height
   // when the Tab component is re-mounted due to the user drags the area between the module's Tab and Source Academy's original REPL to resize the module's Tab height.
   public editorHeight: number;
 
-  public customizedEditorProps = {
-    backgroundImageUrl: 'no-background-image',
+  public customizedEditorProps: CustomEditorProps = {
+    backgroundImageUrl: null,
     backgroundColorAlpha: 1,
     fontSize: 17
   };
 
   constructor() {
-    this.evalFunction = () => this.easterEggFunction();
-    this.userCodeInEditor = this.getSavedEditorContent();
+    this.evalFunction = null;
     this.outputStrings = [];
-    this._editorInstance = null;// To be set when calling "SetEditorInstance" in the ProgrammableRepl Tab React Component render function.
     this.editorHeight = DEFAULT_EDITOR_HEIGHT;
-    developmentLog(this);
   }
 
   InvokeREPL_Internal(evalFunc: (code: string) => any) {
     this.evalFunction = evalFunc;
   }
 
-  runCode() {
+  async runCode(code: string, context: Context) {
     this.outputStrings = [];
     let retVal: any;
-    try {
-      if (evaluatorSymbol in this.evalFunction) {
-        retVal = this.runInJsSlang(this.userCodeInEditor);
-      } else {
-        retVal = this.evalFunction(this.userCodeInEditor);
+
+    if (this.evalFunction === null) {
+      retVal = this.easterEggFunction();
+    } else if (evaluatorSymbol in this.evalFunction) {
+      const evalResult = await this.runInJsSlang(code, context);
+
+      if (evalResult.status !== 'finished') {
+        this.reRenderTab();
+        return;
       }
-    } catch (exception: any) {
-      developmentLog(exception);
-      // If the exception has a start line of -1 and an undefined error property, then this exception is most likely to be "incorrect number of arguments" caused by incorrect number of parameters in the evaluator entry function provided by students with set_evaluator.
-      if (exception.location.start.line === -1 && exception.error === undefined) {
-        this.pushOutputString('Error: Unable to use your evaluator to run the code. Does your evaluator entry function contain and only contain exactly one parameter?', COLOR_ERROR_MESSAGE);
-      } else {
+
+      retVal = evalResult.value;
+    } else {
+      try {
+        retVal = this.evalFunction(code);
+      } catch (exception: any) {
+        console.error(exception);
         this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${exception.error?.message}`, COLOR_ERROR_MESSAGE);
+        this.reRenderTab();
+        return;
       }
-      this.reRenderTab();
-      return;
     }
-    if (typeof retVal === 'string') {
-      retVal = `"${retVal}"`;
-    }
+
     // Here must use plain text output mode because retVal contains strings from the users.
-    this.pushOutputString(retVal, COLOR_RUN_CODE_RESULT);
+    this.pushOutputString(typeof retVal === 'string' ? retVal : stringify(retVal), COLOR_RUN_CODE_RESULT);
     this.reRenderTab();
-    developmentLog('RunCode finished');
   }
 
-  updateUserCode(code: string) {
-    this.userCodeInEditor = code;
-  }
-
-  // Rich text output method allow output strings to have html tags and css styles.
-  pushOutputString(content: string, textColor: string, outputMethod: string = 'plaintext') {
+  /**
+   * Method for outputting to the REPL instance's own REPL output area.
+   * Rich text output method allow output strings to have html tags and css styles.
+   */
+  pushOutputString(content: string, textColor: string, outputMethod: OutputStringMethods = 'plaintext') {
     const tmp = {
       content: content === undefined ? 'undefined' : content === null ? 'null' : content,
       color: textColor,
@@ -81,164 +191,61 @@ export class ProgrammableRepl {
     this.outputStrings.push(tmp);
   }
 
-  setEditorInstance(instance: any) {
-    if (instance === undefined) return; // It seems that when calling this function in gui->render->ref, the React internal calls this function for multiple times (at least two times) , and in at least one call the parameter 'instance' is set to 'undefined'. If I don't add this if statement, the program will throw a runtime error when rendering tab.
-    this._editorInstance = instance;
-    this._editorInstance.on('guttermousedown', (e) => {
-      const breakpointLine = e.getDocumentPosition().row;
-      developmentLog(breakpointLine);
-    });
-
-    this._editorInstance.setOptions({ fontSize: `${this.customizedEditorProps.fontSize.toString()}pt` });
-  }
-
-  richDisplayInternal(pair_rich_text) {
-    developmentLog(pair_rich_text);
-    const head = (pair) => pair[0];
-    const tail = (pair) => pair[1];
-    const is_pair = (obj) => obj instanceof Array && obj.length === 2;
-    if (!is_pair(pair_rich_text)) return 'not_rich_text_pair';
-    function checkColorStringValidity(htmlColor: string) {
-      if (htmlColor.length !== 7) return false;
-      if (htmlColor[0] !== '#') return false;
-      for (let i = 1; i < 7; i++) {
-        const char = htmlColor[i];
-        developmentLog(`   ${char}`);
-        if (!((char >= '0' && char <= '9') || (char >= 'A' && char <= 'F') || (char >= 'a' && char <= 'f'))) {
-          return false;
-        }
-      }
-      return true;
-    }
-    function recursiveHelper(thisInstance, param): string {
-      if (typeof param === 'string') {
-        // There MUST be a safe check on users' strings, because users may insert something that can be interpreted as executable JavaScript code when outputing rich text.
-        const safeCheckResult = thisInstance.userStringSafeCheck(param);
-        if (safeCheckResult !== 'safe') {
-          throw new Error(`For safety matters, the character/word ${safeCheckResult} is not allowed in rich text output. Please remove it or use plain text output mode and try again.`);
-        }
-        developmentLog(head(param));
-        return `">${param}</span>`;
-      }
-      if (!is_pair(param)) {
-        throw new Error(`Unexpected data type ${typeof param} when processing rich text. It should be a pair.`);
-      } else {
-        const pairStyleToCssStyle: { [pairStyle: string]: string } = {
-          bold: 'font-weight:bold;',
-          italic: 'font-style:italic;',
-          small: 'font-size: 14px;',
-          medium: 'font-size: 20px;',
-          large: 'font-size: 25px;',
-          gigantic: 'font-size: 50px;',
-          underline: 'text-decoration: underline;'
-        };
-        if (typeof tail(param) !== 'string') {
-          throw new Error(`The tail in style pair should always be a string, but got ${typeof tail(param)}.`);
-        }
-        let style = '';
-        if (tail(param)
-          .substring(0, 3) === 'clr') {
-          let prefix = '';
-          if (tail(param)[3] === 't') prefix = 'color:';
-          else if (tail(param)[3] === 'b') prefix = 'background-color:';
-          else throw new Error('Error when decoding rich text color data');
-          const colorHex = tail(param)
-            .substring(4);
-          if (!checkColorStringValidity(colorHex)) {
-            throw new Error(`Invalid html color string ${colorHex}. It should start with # and followed by 6 characters representing a hex number.`);
-          }
-          style = `${prefix + colorHex};`;
-        } else {
-          style = pairStyleToCssStyle[tail(param)];
-          if (style === undefined) {
-            throw new Error(`Found undefined style ${tail(param)} during processing rich text.`);
-          }
-        }
-        return style + recursiveHelper(thisInstance, head(param));
-      }
-    }
-    this.pushOutputString(`<span style="${recursiveHelper(this, pair_rich_text)}`, '', 'richtext');
-    return undefined;// Add this line to pass lint check "consistent-return"
-  }
-
-  // Returns the forbidden word present in the string "str" if it contains at least one unsafe word. Returns "safe" if the string is considered to be safe to output directly into innerHTML.
-  userStringSafeCheck(str) {
-    developmentLog(`Safe check on ${str}`);
-    const tmp = str.toLowerCase();
-    const forbiddenWords = ['\\', '<', '>', 'script', 'javascript', 'eval', 'document', 'window', 'console', 'location'];
-    for (const word of forbiddenWords) {
-      if (tmp.indexOf(word) !== -1) {
-        return word;
-      }
-    }
-    return 'safe';
-  }
-
   /*
     Directly invoking Source Academy's builtin js-slang runner.
     Needs hard-coded support from js-slang part for the "sourceRunner" function and "backupContext" property in the content object for this to work.
   */
-  runInJsSlang(code: string): string {
-    developmentLog('js-slang context:');
-    // console.log(context);
+  async runInJsSlang(code: string, context: Context): Promise<Result> {
     const options: Partial<IOptions> = {
       originalMaxExecTime: 1000,
       stepLimit: 1000,
       throwInfiniteLoops: true,
       useSubst: false
     };
-    context.prelude = 'const display=(x)=>repl_display(x);';
-    context.errors = []; // Here if I don't manually clear the "errors" array in context, the remaining errors from the last evaluation will stop the function "preprocessFileImports" in preprocessor.ts of js-slang thus stop the whole evaluation.
-    const sourceFile: Record<string, string> = {
-      '/ReplModuleUserCode.js': code
-    };
 
-    runFilesInContext(sourceFile, '/ReplModuleUserCode.js', context, options)
-      .then((evalResult) => {
-        if (evalResult.status === 'suspended-cse-eval') {
-          throw new Error('This should not happen');
-        }
-        if (evalResult.status !== 'error') {
-          this.pushOutputString('js-slang program finished with value:', COLOR_RUN_CODE_RESULT);
-          // Here must use plain text output mode because evalResult.value contains strings from the users.
-          this.pushOutputString(evalResult.value === undefined ? 'undefined' : evalResult.value.toString(), COLOR_RUN_CODE_RESULT);
-        } else {
-          const errors = context.errors;
-          console.log(errors);
-          const errorCount = errors.length;
-          for (let i = 0; i < errorCount; i++) {
-            const error = errors[i];
-            if (error.explain()
-              .indexOf('Name repl_display not declared.') !== -1) {
-              this.pushOutputString('[Error] It seems that you haven\'t imported the function "repl_display" correctly when calling "set_evaluator" in Source Academy\'s main editor.', COLOR_ERROR_MESSAGE);
-            } else this.pushOutputString(`Line ${error.location.start.line}: ${error.type} Error: ${error.explain()}  (${error.elaborate()})`, COLOR_ERROR_MESSAGE);
+    const evalContext = createContext(
+      context.chapter,
+      context.variant,
+      context.languageOptions,
+      context.externalSymbols,
+      context.externalContext,
+      {
+        rawDisplay: value => {
+          if (is_pair(value)) {
+            try {
+              // Try to decode the value as rich display content
+              const result = processRichDisplayContent(value as any, 'display');
+              const output = `<span style="${result}`;
+              this.pushOutputString(output, '', 'richtext');
+              return value;
+            } catch {
+            }
           }
+
+          // If that fails just use regular stringify
+          const output = typeof value === 'string' ? value : stringify(value);
+          this.pushOutputString(output, COLOR_REPL_DISPLAY_DEFAULT, 'plaintext');
+          return value;
         }
-        this.reRenderTab();
+      }
+    );
+
+    const evalResult = await runInContext(code, evalContext, options);
+    assert(evalResult.status !== 'suspended-cse-eval', 'Code should not have been evaluated with cse-machine');
+
+    if (evalResult.status === 'error') {
+      evalContext.errors.forEach(error => {
+        console.error(error);
+
+        const explainer = parseError([error]);
+        this.pushOutputString(explainer, COLOR_ERROR_MESSAGE);
       });
-
-    return 'Async run in js-slang';
-  }
-
-  setTabReactComponentInstance(tab: any) {
-    this._tabReactComponent = tab;
+    }
+    return evalResult;
   }
 
   private reRenderTab() {
-    this._tabReactComponent.setState({});// Forces the tab React Component to re-render using setState
-  }
-
-  saveEditorContent() {
-    localStorage.setItem('programmable_repl_saved_editor_code', this.userCodeInEditor.toString());
-    this.pushOutputString('Saved', 'lightgreen');
-    this.pushOutputString('<span style=\'font-style:italic;\'>The saved code is stored locally in your browser. You may lose the saved code if you clear browser data or use another device.</span>', 'gray', 'richtext');
-    this.reRenderTab();
-  }
-
-  private getSavedEditorContent() {
-    const savedContent = localStorage.getItem('programmable_repl_saved_editor_code');
-    if (savedContent === null) return '';
-    return savedContent;
+    this.tabRerenderer?.();
   }
 
   easterEggFunction() {
@@ -250,10 +257,4 @@ export class ProgrammableRepl {
     );
     return 'Easter Egg!';
   }
-}
-
-// Comment all the codes inside this function before merging the code to github as production version.
-// Because console.log() can expose the sandboxed VM location to students thus may cause security concerns.
-function developmentLog(_content) {
-  // console.log(`[Programmable Repl Log] ${_content}`);
 }

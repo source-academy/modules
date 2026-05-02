@@ -7,7 +7,7 @@
     "@jscad/regl-renderer": "^2.6.1",
     "@jscad/stl-serializer": "2.1.11",
     "@sourceacademy/modules-lib": "workspace:^",
-    "js-slang": "^1.0.85",
+    "js-slang": "^1.0.92",
     "save-file": "^2.3.1"
   },
   "exports": {
@@ -24,8 +24,9 @@
     "build": "buildtools build bundle .",
     "lint": "buildtools lint .",
     "test": "buildtools test --project .",
-    "postinstall": "buildtools compile",
-    "serve": "yarn buildtools serve"
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
   },
   "scripts-info": {
     "build": "Compiles the given bundle to the output directory",

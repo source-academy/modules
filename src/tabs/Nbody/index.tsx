@@ -1,15 +1,15 @@
-import { Button, ButtonGroup, NumericInput } from '@blueprintjs/core';
-import { Pause, Play, Route } from '@blueprintjs/icons';
-import type { NBodyModuleState } from '@sourceacademy/bundle-nbody/types';
-import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
-import type { ModuleTab } from '@sourceacademy/modules-lib/types/index';
-import type { Simulation } from 'nbody';
-import React from 'react';
-
 /**
  * Visualize n-body simulations.
  * @author Yeluri Ketan
  */
+
+import { Button, ButtonGroup, NumericInput } from '@blueprintjs/core';
+import type { NBodyModuleState } from '@sourceacademy/bundle-nbody/types';
+import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
+import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
+import type { ModuleTab } from '@sourceacademy/modules-lib/types/index';
+import type { Simulation } from 'nbody';
+import React from 'react';
 
 /**
  * React component props for the control buttons.
@@ -32,7 +32,7 @@ type SimControlState = {
  * Component for UI buttons within tab e.g play/pause.
  */
 class SimulationControl extends React.Component<SimControlProps, SimControlState> {
-  constructor(props) {
+  constructor(props: SimControlProps) {
     super(props);
     this.state = {
       isPlaying: false,
@@ -68,24 +68,21 @@ class SimulationControl extends React.Component<SimControlProps, SimControlState
     this.setState({
       showUniverse: this.state.showUniverse.map((v, j) => i === j ? !v : v)
     });
-
   }
 
-  public render() {
+  public override render() {
     return (
       <>
         <ButtonGroup style={{ width: '100%', margin: '4px auto' }}>
-          <Button
-            className="nbody-pause-toggle-button"
-            icon={this.state.isPlaying ? <Pause /> : <Play />}
+          <PlayButton
+            isPlaying={this.state.isPlaying}
             active={false}
             onClick={() => this.toggleSimPause()}
-            text={this.state.isPlaying ? 'Pause' : 'Play'}
             style={{ margin: '4px' }}
           />
           <Button
             className="nbody-trails-toggle-button"
-            icon={<Route />}
+            icon='route'
             active={this.state.showTrails}
             onClick={() => this.toggleShowTrails()}
             style={{ margin: '4px' }}

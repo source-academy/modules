@@ -1,3 +1,5 @@
+import { InternalRuntimeError, RuntimeSourceError } from 'js-slang/dist/errors/base';
+
 /**
  * Represents a function that when called, should either execute successfully
  * or throw an assertion error
@@ -58,5 +60,17 @@ export interface UnittestModuleState {
  * These errors represent errors that shouldn't be handled as if they were thrown
  * by the assertion functions
  */
-export class UnitestBundleInternalError extends Error {
-};
+export class UnittestBundleInternalError extends InternalRuntimeError { }
+
+/**
+ * Error thrown by the bundle's `assert` functions
+ */
+export class UnittestAssertionError extends RuntimeSourceError {
+  constructor(
+    private readonly assertion: string
+  ) { super(undefined); }
+
+  public override explain(): string {
+    return this.assertion;
+  }
+}

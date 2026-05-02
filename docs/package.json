@@ -13,14 +13,17 @@
     "spellcheck": "cspell --config ./cspell.config.js src"
   },
   "dependencies": {
+    "@shikijs/vitepress-twoslash": "^2.1.0",
+    "@sourceacademy/bundle-sound": "workspace:^",
     "@sourceacademy/lint-plugin": "workspace:^",
     "@sourceacademy/markdown-plugin-directory-tree": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
+    "js-slang": "^1.0.92",
     "mermaid": "^11.10.0",
-    "vitepress": "^1.6.3",
-    "vitepress-plugin-group-icons": "^1.6.5",
+    "vitepress": "^1.6.4",
+    "vitepress-plugin-group-icons": "^1.7.5",
     "vitepress-plugin-mermaid": "^2.0.17",
-    "vitepress-sidebar": "^1.31.1"
+    "vitepress-sidebar": "^1.33.1"
   },
   "devDependencies": {
     "cspell": "^9.2.1",

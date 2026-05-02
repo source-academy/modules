@@ -1,6 +1,6 @@
 {
   "name": "@sourceacademy/bundle-arcade_2d",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "dependencies": {
     "phaser": "^3.54.0"
@@ -20,8 +20,9 @@
     "lint": "buildtools lint .",
     "tsc": "buildtools tsc .",
     "test": "buildtools test --project .",
-    "postinstall": "buildtools compile",
-    "serve": "yarn buildtools serve"
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
   },
   "scripts-info": {
     "build": "Compiles the given bundle to the output directory",

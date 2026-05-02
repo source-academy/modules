@@ -25,7 +25,7 @@ export default class CanvasHolder extends React.Component<
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     console.debug(`>>> MOUNT #${this.props.componentNumber}`);
 
     const { current: canvas } = this.canvasReference;
@@ -47,7 +47,7 @@ export default class CanvasHolder extends React.Component<
     this.statefulRenderer.start(true);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     console.debug(`>>> UNMOUNT #${this.props.componentNumber}`);
 
     this.statefulRenderer?.stop(true);
@@ -57,7 +57,7 @@ export default class CanvasHolder extends React.Component<
   // via JSX to instruct React to render a DOM node. Also attaches the
   // canvasReference via the ref attribute, for imperatively modifying the
   // canvas
-  render() {
+  override render() {
     return <>
       <div
         style={{
@@ -134,7 +134,7 @@ export default class CanvasHolder extends React.Component<
       <div
         // Explicit dark theme as mobile view switches to dark text with light
         // spinner
-        className="bp3-dark"
+        className="bp6-dark"
         style={{
           display: this.state.isContextLost ? 'block' : 'none',
 
