@@ -151,7 +151,7 @@ describe('Test assertion functions', () => {
 
     it('will throw an error if not provided a nullary function', () => {
       expect(() => asserts.assert(0 as any)).toThrow(`${asserts.assert.name} expects a nullary function that returns a boolean!`);
-      expect(() => asserts.assert((x => x === true) as any)).toThrow(`${asserts.assert.name} expects a nullary function that returns a boolean!`);
+      expect(() => asserts.assert(((x: any) => x === true) as any)).toThrow(`${asserts.assert.name} expects a nullary function that returns a boolean!`);
     });
   });
 

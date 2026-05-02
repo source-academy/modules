@@ -64,14 +64,14 @@ function A2dUiButtons(props: UiProps) {
  * The main React Component of the Tab.
  */
 class GameTab extends React.Component<Props, GameState> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       game: undefined
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // Only mount the component when the Arcade2D tab is active
     if (document.querySelector('[id="bp4-tab-panel_side-content-tabs_Arcade2D Tab"]')?.ariaHidden === 'true') {
       return;
@@ -84,7 +84,7 @@ class GameTab extends React.Component<Props, GameState> {
     });
   }
 
-  shouldComponentUpdate() {
+  override shouldComponentUpdate() {
     // Component itself is a wrapper & should not update - Phaser handles the game updates
     return false;
   }
@@ -100,14 +100,14 @@ class GameTab extends React.Component<Props, GameState> {
     }
   }
 
-  componentWillUnmount(): void {
+  override componentWillUnmount(): void {
     this.state.game?.sound.stopAll();
 
     // Prevents multiple update loops being run at the same time
     this.state.game?.destroy(false, false);
   }
 
-  public render() {
+  public override render() {
     return (
       <div
         id="a2d-tab"
