@@ -103,7 +103,7 @@ describe(ProgrammableRepl, () => {
 describe(funcs.default_js_slang, () => {
   it('default_js_slang throws when called', () => {
     expect(() => funcs.default_js_slang(''))
-      .toThrow('Invaild Call: Function "default_js_slang" can not be directly called by user\'s code in editor. You should use it as the parameter of the function "set_evaluator"');
+      .toThrow('default_js_slang: Cannot be called directly. You should use it as the parameter of the function "set_evaluator"');
   });
 });
 

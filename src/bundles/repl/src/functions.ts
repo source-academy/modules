@@ -169,7 +169,7 @@ export function default_js_slang(_program: string): any {
     This function carries the evaluator symbol to allow it to be distinguished from other
     evaluator functions.
   */
-  throw new GeneralRuntimeError('default_js_slang: Cannot be directly. You should use it as the parameter of the function "set_evaluator"');
+  throw new GeneralRuntimeError('default_js_slang: Cannot be called directly. You should use it as the parameter of the function "set_evaluator"');
 }
 
 default_js_slang[evaluatorSymbol] = true;
