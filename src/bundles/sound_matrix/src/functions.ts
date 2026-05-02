@@ -212,7 +212,7 @@ function initialise_matrix($container: HTMLElement): void {
 ToneMatrix.initialise_matrix = initialise_matrix;
 
 // bind the click events to the matrix
-function bind_events_to_rect(c) {
+function bind_events_to_rect(c: HTMLCanvasElement) {
   c.addEventListener(
     'click',
     (event) => {
@@ -367,7 +367,7 @@ ToneMatrix.clear_matrix = clear_matrix;
 
 const set_time_out_renamed = window.setTimeout;
 
-export function set_timeout(f, t) {
+export function set_timeout(f: () => void, t: number) {
   if (typeof f === 'function' && typeof t === 'number') {
     const timeoutObj = set_time_out_renamed(f, t);
     timeout_objects.push(timeoutObj);

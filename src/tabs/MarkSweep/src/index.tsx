@@ -19,8 +19,6 @@ const MarkSweep: ModuleTab = ({ debuggerCtx }) => {
 
   const [value, setValue] = React.useState(0);
 
-  const commandItem = value < commandHeap.length ? commandHeap[value] : null;
-
   const handlePlus = () => {
     if (value < commandHeap.length - 1) {
       setValue(value + 1);
@@ -35,7 +33,7 @@ const MarkSweep: ModuleTab = ({ debuggerCtx }) => {
 
   const isTag = (tag: Tag) => tags.includes(tag);
 
-  if (commandItem !== null) {
+  if (value < commandHeap.length) {
     const {
       type: command,
       desc: description,
@@ -45,7 +43,7 @@ const MarkSweep: ModuleTab = ({ debuggerCtx }) => {
       leftDesc,
       queue,
       rightDesc
-    } = commandItem;
+    } = commandHeap[value];
 
     const getMemoryColor = (indexValue: number) => {
       const value = heap ? heap[indexValue] : 0;

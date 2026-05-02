@@ -92,6 +92,8 @@ If the condition is false, an `AssertionError` (which is a subclass of `Internal
 >
 > The `assert` function exported by `js-slang` is different from the one exported from NodeJS. Take care to use the one
 > exported from `js-slang`.
+>
+> `vitest` also exports an `assert` function that you should not be using in production code.
 
 Just like `GeneralRuntimeError`, `InternalRuntimeError` can be extended should you wish to create a specific class to represent
 a specific type of internal error.

@@ -2,7 +2,7 @@
  * @module mark_sweep
  */
 
-import { clone, range } from 'es-toolkit';
+import { chunk, clone, range } from 'es-toolkit';
 import context from 'js-slang/context';
 import { COMMAND, type CommandHeapObject, type MarkSweepGlobalState, type Memory } from './types';
 
@@ -13,15 +13,11 @@ function getInitialState(): MarkSweepGlobalState {
     NODE_SIZE: 0,
     MEMORY_SIZE: -99,
     memory: [],
-    // let memory: Memory;
     memoryHeaps: [],
     commandHeap: [],
     memoryMatrix: [],
-    // let memoryMatrix: number[][];
     tags: [],
     typeTag: [],
-    // let tags: Tag[];
-    // let typeTag: string[];
     flips: [],
     TAG_SLOT: 0,
     SIZE_SLOT: 1,
@@ -40,12 +36,10 @@ function getInitialState(): MarkSweepGlobalState {
 export const globalState = getInitialState();
 
 export function generateMemory(): void {
-  globalState.memoryMatrix = range(globalState.rowCount).map(rowIndex => {
-    const startIndex = rowIndex * globalState.columnCount;
-    const endIndex = Math.min(startIndex + globalState.columnCount, globalState.MEMORY_SIZE);
-
-    return range(startIndex, endIndex);
-  });
+  globalState.memoryMatrix = chunk(
+    range(globalState.MEMORY_SIZE),
+    globalState.columnCount
+  );
 
   newCommand(
     COMMAND.INIT,

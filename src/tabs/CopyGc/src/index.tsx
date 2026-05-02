@@ -257,6 +257,7 @@ const CopyGC: ModuleTab = ({ debuggerCtx }) => {
       </div>
     );
   }
+
   return (
     <div>
       <p>
@@ -277,7 +278,7 @@ export default defineTab({
     const state = getModuleState(ctx, 'copy_gc');
     return state !== null;
   },
-  body: (debuggerContext) => <CopyGC debuggerCtx={debuggerContext} />,
+  body: debuggerContext => <CopyGC debuggerCtx={debuggerContext} />,
   label: 'Copying Garbage Collector',
   iconName: 'duplicate'
 });
