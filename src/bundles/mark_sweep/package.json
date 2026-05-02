@@ -28,6 +28,6 @@
     "tsc": "Runs the Typescript compiler and produces the library version of the bundle"
   },
   "dependencies": {
-    "es-toolkit": "^1.46.1"
+    "es-toolkit": "^1.44.0"
   }
 }

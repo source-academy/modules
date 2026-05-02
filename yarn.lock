@@ -4014,7 +4014,7 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    es-toolkit: "npm:^1.46.1"
+    es-toolkit: "npm:^1.44.0"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4063,7 +4063,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-mark_sweep@workspace:src/bundles/mark_sweep"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
-    es-toolkit: "npm:^1.46.1"
+    es-toolkit: "npm:^1.44.0"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4154,6 +4154,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-repeat@workspace:src/bundles/repeat"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4255,6 +4256,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-unittest@workspace:src/bundles/unittest"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     es-toolkit: "npm:^1.44.0"
     js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
@@ -9455,18 +9457,6 @@ __metadata:
     prettier-plugin-sort-re-exports@0.0.1:
       unplugged: true
   checksum: 10c0/b80ff52ddc85ba26914cda57c9d4e46379ccc38c60dc097ef0d065cc0b20f95a16cf8d537969eea600b51c6687b5900a6cce67489db16d5ccc14d47597a29c34
-  languageName: node
-  linkType: hard
-
-"es-toolkit@npm:^1.46.1":
-  version: 1.46.1
-  resolution: "es-toolkit@npm:1.46.1"
-  dependenciesMeta:
-    "@trivago/prettier-plugin-sort-imports@4.3.0":
-      unplugged: true
-    prettier-plugin-sort-re-exports@0.0.1:
-      unplugged: true
-  checksum: 10c0/6a4c3dd0ddc2138fa13d983d93ebaf8061759c52c2cf7c3101315139fc1fca826d253daa67fe85ad880c03cc4c092bd53a83a7cbf58b4721c251479122ba5303
   languageName: node
   linkType: hard
 

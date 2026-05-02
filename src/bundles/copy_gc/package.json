@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
-    "es-toolkit": "^1.46.1"
+    "es-toolkit": "^1.44.0"
   },
   "type": "module",
   "exports": {
