@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import * as funcs from '../functions';
-import type { Sound } from '../types';
+import type { Sound, Wave } from '../types';
 
 function evaluateSound(sound: Sound) {
   const leftWave = funcs.get_left_wave(sound);
@@ -18,23 +18,26 @@ function evaluateSound(sound: Sound) {
 }
 
 describe(funcs.is_sound, () => {
+  const left: Wave = _t => 0;
+  const right: Wave = _t => 0;
+
   it('returns true for a stereo sound', () => {
-    const x: Sound = [[_t => 0, _t => 1], 1];
+    const x: Sound = [[left, right], 1];
     expect(funcs.is_sound(x)).toEqual(true);
   });
 
   it('returns false when duration is not a number', () => {
-    const x = [[_t => 0, _t => 1], '1'];
+    const x = [[left, right], '1'];
     expect(funcs.is_sound(x)).toEqual(false);
   });
 
   it('returns false when left wave is not a wave', () => {
-    const x = [[0, _t => 1], 1];
+    const x = [[0, right], 1];
     expect(funcs.is_sound(x)).toEqual(false);
   });
 
   it('returns false when right wave is not a wave', () => {
-    const x = [[_t => 0, 0], 1];
+    const x = [[left, 0], 1];
     expect(funcs.is_sound(x)).toEqual(false);
   });
 
@@ -156,7 +159,7 @@ describe(funcs.consecutively, () => {
 describe(funcs.make_sound, () => {
   it('Should error gracefully when duration is negative', () => {
     expect(() => funcs.make_sound(() => 0, -1))
-      .toThrow('make_sound: Sound duration must be greater than or equal to 0');
+      .toThrow('make_sound: Expected integer greater than 0, got -1.');
   });
 
   it('Should not error when duration is zero', () => {
@@ -165,7 +168,7 @@ describe(funcs.make_sound, () => {
 
   it('Should error gracefully when wave is not a function', () => {
     expect(() => funcs.make_sound(true as any, 1))
-      .toThrow('make_sound: wave must be a Wave, got true');
+      .toThrow('make_sound: Expected Wave, got true.');
   });
 });
 
@@ -189,17 +192,17 @@ describe(funcs.play, () => {
 describe(funcs.play_wave, () => {
   it('Should error gracefully when duration is negative', () => {
     expect(() => funcs.play_wave(() => 0, -1))
-      .toThrow('play_wave: Sound duration must be greater than or equal to 0');
+      .toThrow('play_wave: Expected integer greater than 0, got -1.');
   });
 
   it('Should error gracefully when duration is not a number', () => {
     expect(() => funcs.play_wave(() => 0, true as any))
-      .toThrow('play_wave expects a number for duration, got true');
+      .toThrow('play_wave: Expected integer greater than 0, got true.');
   });
 
   it('Should error gracefully when wave is not a function', () => {
     expect(() => funcs.play_wave(true as any, 0))
-      .toThrow('play_wave: wave must be a Wave, got true');
+      .toThrow('play_wave: Expected Wave, got true.');
   });
 });
 
