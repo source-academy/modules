@@ -3999,6 +3999,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-communication@workspace:src/bundles/communication"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     "@types/uniqid": "npm:^5.3.4"
     mqtt: "npm:^4.3.7"
     os: "npm:^0.1.2"
@@ -4012,6 +4013,8 @@ __metadata:
   resolution: "@sourceacademy/bundle-copy_gc@workspace:src/bundles/copy_gc"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
+    es-toolkit: "npm:^1.46.1"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4055,11 +4058,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/bundle-mark_sweep@workspace:src/bundles/mark_sweep":
+"@sourceacademy/bundle-mark_sweep@workspace:^, @sourceacademy/bundle-mark_sweep@workspace:src/bundles/mark_sweep":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-mark_sweep@workspace:src/bundles/mark_sweep"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    es-toolkit: "npm:^1.46.1"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4080,6 +4084,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-nbody@workspace:src/bundles/nbody"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     "@types/plotly.js": "npm:^2.35.4"
     "@types/three": "npm:^0.183.0"
     nbody: "npm:^0.2.0"
@@ -4263,6 +4268,7 @@ __metadata:
     "@blueprintjs/core": "npm:^6.0.0"
     "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"
     react: "npm:^19.0.0"
@@ -4645,6 +4651,7 @@ __metadata:
   resolution: "@sourceacademy/tab-MarkSweep@workspace:src/tabs/MarkSweep"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
+    "@sourceacademy/bundle-mark_sweep": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
@@ -9448,6 +9455,18 @@ __metadata:
     prettier-plugin-sort-re-exports@0.0.1:
       unplugged: true
   checksum: 10c0/b80ff52ddc85ba26914cda57c9d4e46379ccc38c60dc097ef0d065cc0b20f95a16cf8d537969eea600b51c6687b5900a6cce67489db16d5ccc14d47597a29c34
+  languageName: node
+  linkType: hard
+
+"es-toolkit@npm:^1.46.1":
+  version: 1.46.1
+  resolution: "es-toolkit@npm:1.46.1"
+  dependenciesMeta:
+    "@trivago/prettier-plugin-sort-imports@4.3.0":
+      unplugged: true
+    prettier-plugin-sort-re-exports@0.0.1:
+      unplugged: true
+  checksum: 10c0/6a4c3dd0ddc2138fa13d983d93ebaf8061759c52c2cf7c3101315139fc1fca826d253daa67fe85ad880c03cc4c092bd53a83a7cbf58b4721c251479122ba5303
   languageName: node
   linkType: hard
 

@@ -6,7 +6,7 @@ describe('Test throwRuntimeError', () => {
   const tester = new RuleTester({
     languageOptions: {
       parserOptions: {
-        project: pathlib.join(import.meta.dirname, 'tsconfig.json'),
+        project: pathlib.join(import.meta.dirname, 'test-tsconfig.jsonc'),
         tsconfigRootDir: import.meta.dirname
       }
     }

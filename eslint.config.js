@@ -346,7 +346,7 @@ export default defineConfig(
       '@typescript-eslint/no-import-type-side-effects': 'error',
       '@typescript-eslint/no-redundant-type-constituents': 'off', // Was 'error'
       // This rule doesn't seem to fail locally but fails on the CI
-      // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
       '@typescript-eslint/only-throw-error':'error'
     },
@@ -426,6 +426,14 @@ export default defineConfig(
     },
   },
   {
+    name: 'Rules for bundles',
+    files: ['src/bundles/**/*.ts*'],
+    ignores: ['src/bundles/**/__tests__/*.ts*'],
+    rules: {
+      '@sourceacademy/throw-runtime-error': 'error'
+    }
+  },
+  {
     name: 'Rules specifically for bundle entrypoints',
     files: ['src/bundles/*/src/index.ts'],
 
@@ -444,8 +452,8 @@ export default defineConfig(
   },
   {
     name: 'Rules for tabs',
-    files: ['src/tabs/**/*.tsx'],
-    ignores: ['src/tabs/**/__tests__/*.tsx'],
+    files: ['src/tabs/**/*.ts*'],
+    ignores: ['src/tabs/**/__tests__/*.ts*'],
     rules: {
       '@sourceacademy/instanceof-check': 'error'
     }
