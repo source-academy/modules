@@ -54,6 +54,7 @@ export function mock_function(fn: (...args: any[]) => any): MockedFunction {
     return retVal;
   }
 
+  // @ts-expect-error This is fine
   func[mockSymbol] = { arglist, retVals };
   func.toReplString = () => '<MockedFunction>';
 

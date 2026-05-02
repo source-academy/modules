@@ -1,6 +1,6 @@
 {
   "name": "@sourceacademy/bundle-game",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "dependencies": {
     "js-slang": "^1.0.92",

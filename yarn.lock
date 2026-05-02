@@ -4204,6 +4204,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-rune_in_words@workspace:src/bundles/rune_in_words"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft

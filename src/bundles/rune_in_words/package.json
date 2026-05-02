@@ -1,10 +1,13 @@
 {
   "name": "@sourceacademy/bundle-rune_in_words",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
     "typescript": "^6.0.2"
+  },
+  "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^"
   },
   "type": "module",
   "exports": {
