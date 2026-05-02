@@ -68,7 +68,7 @@ export default class DebugDrawCanvas extends React.Component<
     this.b2World = this.world.getB2World();
   }
 
-  public componentDidMount() {
+  public override componentDidMount() {
     this.drawFrame();
   }
 
@@ -188,7 +188,7 @@ export default class DebugDrawCanvas extends React.Component<
     this.setState({ updateStep: newValue }, () => {});
   };
 
-  public render() {
+  public override render() {
     const buttons = (
       <div
         style={{

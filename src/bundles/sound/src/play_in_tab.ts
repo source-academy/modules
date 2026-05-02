@@ -66,6 +66,7 @@ export function play_in_tab(sound: Sound): Sound {
     channel[i] = Math.floor(channel[i] * 32767.999);
   }
 
+  // @ts-expect-error RIFFWAVE type definition missing
   const riffwave = new RIFFWAVE([]);
   riffwave.header.sampleRate = FS;
   riffwave.header.numChannels = 1;

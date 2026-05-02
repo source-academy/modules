@@ -136,7 +136,7 @@ describe(funcs.repeat_pattern, () => {
 
   it('throws if initial is not a rune', () => {
     expect(() => funcs.repeat_pattern(5, x => x, 0 as any))
-      .toThrowError('repeat_pattern: Expected Rune for initial, got 0.');
+      .toThrow('repeat_pattern: Expected Rune for initial, got 0.');
   });
 });
 
@@ -153,10 +153,12 @@ describe(funcs.overlay_frac, () => {
 });
 
 describe('Colouring functions', () => {
-  const names = Object.getOwnPropertyNames(funcs.RuneColours);
-  const colourers = names.reduce<[string, (r: Rune) => Rune][]>((res, name) => {
+  type FunctionName = keyof (typeof funcs.RuneColours);
+
+  const names = Object.getOwnPropertyNames(funcs.RuneColours) as FunctionName[];
+  const colourers = names.reduce<[FunctionName, (r: Rune) => Rune][]>((res, name) => {
     if (typeof funcs.RuneColours[name] !== 'function') return res;
-    return [...res, [name, funcs.RuneColours[name]]];
+    return [...res, [name, funcs.RuneColours[name]] as [FunctionName, (r: Rune) => Rune]];
   }, []);
 
   describe.each(colourers)('%s', (_, f) => {

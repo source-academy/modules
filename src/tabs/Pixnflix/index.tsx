@@ -81,14 +81,14 @@ class PixNFlix extends React.Component<Props, State> {
     this.pixNFlix = debuggerContext.result.value;
   }
 
-  public componentDidMount() {
+  public override componentDidMount() {
     if (this.isPixNFlix()) {
       this.setupVideoService();
       window.addEventListener('beforeunload', this.pixNFlix.deinit);
     }
   }
 
-  public componentWillUnmount() {
+  public override componentWillUnmount() {
     if (this.isPixNFlix()) {
       this.closeVideo();
       window.removeEventListener('beforeunload', this.pixNFlix.deinit);
@@ -268,7 +268,7 @@ class PixNFlix extends React.Component<Props, State> {
     );
   }
 
-  public render() {
+  public override render() {
     const { mode, width, height, FPS, volume, hasAudio } = this.state;
     const displayOptions = mode === VideoMode.Still || mode === VideoMode.Video;
     const videoIsActive = mode === VideoMode.Video;

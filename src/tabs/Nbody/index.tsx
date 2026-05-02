@@ -32,7 +32,7 @@ type SimControlState = {
  * Component for UI buttons within tab e.g play/pause.
  */
 class SimulationControl extends React.Component<SimControlProps, SimControlState> {
-  constructor(props) {
+  constructor(props: SimControlProps) {
     super(props);
     this.state = {
       isPlaying: false,
@@ -70,7 +70,7 @@ class SimulationControl extends React.Component<SimControlProps, SimControlState
     });
   }
 
-  public render() {
+  public override render() {
     return (
       <>
         <ButtonGroup style={{ width: '100%', margin: '4px auto' }}>
