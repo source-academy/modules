@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { Timer } from '../Timer'; // Adjust the import path as per your project structure
 
 describe(Timer, () => {
-  let timer;
-  let mockTimestamp;
+  let timer: Timer;
+  let mockTimestamp: number;
 
   beforeEach(() => {
     timer = new Timer();

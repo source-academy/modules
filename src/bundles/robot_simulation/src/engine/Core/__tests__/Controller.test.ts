@@ -13,10 +13,15 @@ const createTimingInfo = () => {
   return { stepCount: 1, timestep: 2 } as PhysicsTimingInfo;
 };
 
-describe('ControllerMap methods', () => {
+// Helper type to extract properties that are assignable to functions
+type FunctionKeys<T extends object> = keyof {
+  [K in keyof T as T[K] extends (...args: any[]) => any ? K : never]: T[K]
+};
+
+describe(ControllerMap, () => {
   // Define test cases in an array of arrays. Each inner array represents parameters for a single test case.
   const methodsTestData: Array<
-    [string, Mock, { async: boolean, args?: any[] }]
+    [FunctionKeys<ControllerMap<Record<string, Controller>>>, Mock, { async: boolean, args?: any[] }]
   > = [
     ['start', vi.fn(), { async: true }],
     ['update', vi.fn(), { async: false, args: [createTimingInfo()] }],
@@ -38,11 +43,13 @@ describe('ControllerMap methods', () => {
         { [methodName]: mockMethod, notMethodName: notCalledMethod }
       );
 
+      const method: any = controllerMap[methodName].bind(controllerMap);
+
       // If the method is async, await it. Otherwise, call it directly.
       if (async) {
-        await controllerMap[methodName](...args);
+        await method(...args);
       } else {
-        controllerMap[methodName](...args);
+        method(...args);
       }
 
       // Assert that each controller's method was called once
@@ -55,14 +62,16 @@ describe('ControllerMap methods', () => {
   );
 
   test.each(methodsTestData)(
-    'no calls if missing callbacks object',
+    '%s: no calls if missing callbacks object',
     async (methodName, mockMethod, { async, args = [] }) => {
       mockMethod.mockClear();
       const controllerMap = new ControllerMap({});
+      const method: any = controllerMap[methodName].bind(controllerMap);
+
       if (async) {
-        await controllerMap[methodName](...args);
+        await method(...args);
       } else {
-        controllerMap[methodName](...args);
+        method(...args);
       }
       expect(mockMethod).toHaveBeenCalledTimes(0);
     }
@@ -96,7 +105,7 @@ describe('ControllerMap methods', () => {
 
 describe(ControllerGroup, () => {
   // Define test data for each method
-  const methodsTestData: Array<[string, { async: boolean, args: any[] }]> = [
+  const methodsTestData: Array<[FunctionKeys<ControllerGroup>, { async: boolean, args: any[] }]> = [
     ['start', { async: true, args: [] }],
     ['update', { async: false, args: [{ stepCount: 1, timestep: 20 }] }], // Assuming createTimingInfo() returns something similar
     ['fixedUpdate', { async: false, args: [{ stepCount: 2, timestep: 15 }] }],
@@ -116,11 +125,13 @@ describe(ControllerGroup, () => {
       const controllerGroup = new ControllerGroup();
       controllerGroup.addController(controller);
 
+      const method: any = controllerGroup[methodName].bind(controllerGroup);
+
       // Execute the method
       if (async) {
-        await controllerGroup[methodName](...args);
+        await method(...args);
       } else {
-        controllerGroup[methodName](...args);
+        method(...args);
       }
 
       // Assertions
@@ -149,10 +160,12 @@ describe(ControllerGroup, () => {
       const controllerGroup = new ControllerGroup();
       controllerGroup.addController(controller);
 
+      const method: any = controllerGroup[methodName].bind(controllerGroup);
+
       if (async) {
-        await controllerGroup[methodName](...args);
+        await method(...args);
       } else {
-        controllerGroup[methodName](...args);
+        method(...args);
       }
 
       expect(notCalledMethod).not.toHaveBeenCalled();
