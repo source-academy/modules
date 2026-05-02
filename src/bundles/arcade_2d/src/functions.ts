@@ -91,7 +91,7 @@ export const config = {
  * ```
  * @category GameObject
  */
-export function create_rectangle(width: number, height: number): ShapeGameObject {
+export function create_rectangle(width: number, height: number): ShapeGameObject<any> {
   const rectangle = {
     width,
     height
@@ -109,7 +109,7 @@ export function create_rectangle(width: number, height: number): ShapeGameObject
  * ```
  * @category GameObject
  */
-export function create_circle(radius: number): ShapeGameObject {
+export function create_circle(radius: number): ShapeGameObject<any> {
   const circle = {
     radius
   } as CircleProps;
@@ -126,7 +126,7 @@ export function create_circle(radius: number): ShapeGameObject {
  * ```
  * @category GameObject
  */
-export function create_triangle(width: number, height: number): ShapeGameObject {
+export function create_triangle(width: number, height: number): ShapeGameObject<any> {
   const triangle = {
     x1: 0,
     y1: 0,
