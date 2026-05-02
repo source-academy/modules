@@ -1,6 +1,7 @@
 import { isBuiltinSymbolLikeRecurser } from '@typescript-eslint/type-utils';
 import { ESLintUtils, type TSESTree } from '@typescript-eslint/utils';
-import { getParserServices } from '@typescript-eslint/utils/eslint-utils';
+import { findVariable } from '@typescript-eslint/utils/ast-utils';
+import { getParserServices, nullThrows } from '@typescript-eslint/utils/eslint-utils';
 
 const ruleCreator = ESLintUtils.RuleCreator.withoutDocs;
 
@@ -18,14 +19,51 @@ export default ruleCreator({
       throwInternal: 'Throw InternalRuntimeError'
     },
     schema: [{
-      type: 'array',
-      items: { type: 'string' }
+      type: 'object',
+      properties: {
+        ignoredNames: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        allowRethrow: {
+          type: 'boolean'
+        }
+      }
     }],
-    defaultOptions: [[] as string[]]
+    defaultOptions: [{
+      ignoredNames: [] as string[],
+      allowRethrow: true
+    }]
   },
-  create: (context, [ignoredNames]) => {
+  create: (context, [{ ignoredNames, allowRethrow }]) => {
     const services = getParserServices(context);
     const checker = services.program.getTypeChecker();
+
+    function isRethrownError(node: TSESTree.Node): boolean {
+      if (node.type !== 'Identifier') return false;
+
+      const scope = context.sourceCode.getScope(node);
+
+      const smVariable = nullThrows(
+        findVariable(scope, node),
+        `Variable ${node.name} should exist in scope manager`,
+      );
+
+      const variableDefinitions = smVariable.defs.filter(
+        def => def.isVariableDefinition,
+      );
+      if (variableDefinitions.length !== 1) {
+        return false;
+      }
+      const def = smVariable.defs[0];
+
+      // try { /* ... */ } catch (x) { throw x; }
+      if (def.node.type === 'CatchClause') {
+        return true;
+      }
+
+      return false;
+    }
 
     function isIgnored(expr: TSESTree.Expression): boolean {
       switch (expr.type) {
@@ -47,6 +85,8 @@ export default ruleCreator({
     return {
       ThrowStatement(node) {
         if (isIgnored(node.argument)) return;
+
+        if (allowRethrow && isRethrownError(node.argument)) return;
 
         const tsNode =
           services.esTreeNodeToTSNodeMap.get(node.argument);

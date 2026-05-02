@@ -43,12 +43,28 @@ describe('Test throwRuntimeError', () => {
         {
           name: 'Throwing an ignored identifier is okay',
           code: 'throw new AssertError();',
-          options: [['AssertError']]
+          options: [{
+            ignoredNames: ['AssertError'],
+            allowRethrow: true
+          }]
         },
         {
           name: 'Throwing an ignored member expression is okay',
           code: 'throw new errors.AssertError();',
-          options: [['AssertError']]
+          options: [{
+            ignoredNames: ['AssertError'],
+            allowRethrow: true
+          }]
+        },
+        {
+          name: 'Allow rethrown errors',
+          code: `
+            try {
+              foo();
+            } catch (err) {
+              throw err; 
+            }
+          `
         }
       ],
       invalid: [
