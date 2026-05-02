@@ -84,12 +84,12 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
     this.setState({ isDraggingDragBar: false });
   };
 
-  componentDidMount() {
+  override componentDidMount() {
     document.addEventListener('mousemove', this.onMouseMove);
     document.addEventListener('mouseup', this.onMouseUp);
   }
 
-  componentWillUnmount() {
+  override componentWillUnmount() {
     document.removeEventListener('mousemove', this.onMouseMove);
     document.removeEventListener('mouseup', this.onMouseUp);
   }
@@ -99,7 +99,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
     updateSavedCode(newCode);
   };
 
-  public render() {
+  public override render() {
     const { editorHeight, editorText } = this.state;
     const outputDivs = this.replInstance.outputStrings.map((str): React.JSX.Element => {
       if (str.outputMethod === 'richtext') {

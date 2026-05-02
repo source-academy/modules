@@ -23,7 +23,7 @@ describe(funcs.make_sound, () => {
   });
 
   it('Should error if the provided function does not take exactly one parameter', () => {
-    expect(() => funcs.make_sound(((_t, _u) => 0) as any, 1))
+    expect(() => funcs.make_sound(((_t: number, _u: number) => 0) as any, 1))
       .toThrow('make_sound: Expected Wave, got (_t, _u) => 0.');
   });
 });
@@ -103,7 +103,7 @@ describe('Concurrent playback functions', () => {
 
 describe(play_in_tab, () => {
   it('Should error gracefully when duration is negative', () => {
-    const sound = [_t => 0, -1];
+    const sound = [(_t: number) => 0, -1];
     expect(() => play_in_tab(sound as any))
       .toThrow('play_in_tab: Expected number greater than 0 for duration, got -1.');
   });

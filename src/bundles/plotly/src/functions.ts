@@ -6,7 +6,7 @@
 import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
 import { get_duration, get_wave, is_sound } from '@sourceacademy/bundle-sound/functions';
 import type { Sound } from '@sourceacademy/bundle-sound/types';
-import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
+import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import context from 'js-slang/context';
 import { accumulate, head, is_pair, tail, type List } from 'js-slang/dist/stdlib/list';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
@@ -132,7 +132,7 @@ export function add_fields_to_data(convertedData: Data, data: ListOfPairs) {
 
     const value = tail(entry);
 
-    result[field] = value;
+    (result as any)[field] = value;
     return result;
   }, convertedData, data as List);
 }
@@ -264,10 +264,10 @@ export const draw_points_3d = createPlotFunction(
 export function draw_sound_2d(sound: Sound) {
   const FS: number = 44100; // Output sample rate
   if (!is_sound(sound)) {
-    throw new Error(`draw_sound_2d is expecting sound, but encountered ${sound}`);
+    throw new InvalidParameterTypeError('sound', sound, draw_sound_2d.name);
     // If a sound is already displayed, terminate execution.
   } else if (get_duration(sound) < 0) {
-    throw new Error('draw_sound_2d: duration of sound is negative');
+    throw new GeneralRuntimeError(`${draw_sound_2d.name}: duration of sound is negative`);
   } else {
     // Instantiate audio context if it has not been instantiated.
     // Create mono buffer
