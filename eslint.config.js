@@ -215,6 +215,7 @@ export default defineConfig(
       'no-unreachable': 'off',
       'no-unused-expressions': 'off',
       'no-unused-vars': 'off',
+      'no-useless-catch': 'off',
       'padded-blocks': 'off',
       'react/jsx-no-undef': 'off',
 
@@ -348,7 +349,7 @@ export default defineConfig(
       // This rule doesn't seem to fail locally but fails on the CI
       '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
-      '@typescript-eslint/only-throw-error':'error'
+      '@typescript-eslint/only-throw-error': 'error'
     },
     settings: {
       'import/resolver': {
