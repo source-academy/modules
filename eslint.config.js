@@ -508,7 +508,6 @@ export default defineConfig(
       '**/__tests__/**/*.ts*',
       '**/__mocks__/**/*.ts*',
       '**/vitest.*.ts',
-      './lib/validator/tests/**/*.ts*'
     ],
     rules: {
       'no-empty-pattern': 'off', // vitest requires certain things to be destructured using an object pattern
@@ -550,7 +549,6 @@ export default defineConfig(
     files: [
       'lib/buildtools/**/*.ts',
       'lib/repotools/**/*.ts',
-      'lib/validator/**/*.ts',
       'lib/vitest-reporter/**/*.ts',
       '.github/actions/**/*.ts',
       '**/vitest.config.{js,ts}'
@@ -562,27 +560,6 @@ export default defineConfig(
         cts: 'never',
         json: 'always'
       }],
-    }
-  },
-  {
-    name: 'Rules for Validator',
-    files: ['./lib/validator/**/*.ts'],
-    ignores: ['**/*.md/**/*.ts'],
-    rules: {
-      'import/extensions': ['error', {
-        pathGroupOverrides: [{
-          pattern: '#{bundle,tab}/*',
-          action: 'ignore'
-        }],
-        json: 'always'
-      }]
-    },
-    settings: {
-      'import/resolver': {
-        typescript: {
-          project: './lib/validator/tsconfig.json'
-        }
-      }
     }
   },
   {
