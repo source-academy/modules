@@ -1,11 +1,11 @@
 import { isBuiltinSymbolLikeRecurser } from '@typescript-eslint/type-utils';
-import { ESLintUtils, type TSESTree } from '@typescript-eslint/utils';
+import type { TSESTree } from '@typescript-eslint/utils';
 import { findVariable } from '@typescript-eslint/utils/ast-utils';
 import { getParserServices, nullThrows } from '@typescript-eslint/utils/eslint-utils';
+import creator from '../creator';
 
-const ruleCreator = ESLintUtils.RuleCreator.withoutDocs;
-
-export default ruleCreator({
+export default creator({
+  name: 'throw-runtime-error',
   meta: {
     type: 'problem',
     fixable: 'code',

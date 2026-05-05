@@ -1,10 +1,9 @@
-import { ESLintUtils } from '@typescript-eslint/utils';
 import { getParserServices } from '@typescript-eslint/utils/eslint-utils';
+import creator from '../creator';
 import { getModuleSpecifierFromDeclaration, getRhsIdentifier } from './utils';
 
-const ruleCreator = ESLintUtils.RuleCreator.withoutDocs;
-
-export default ruleCreator({
+export default creator({
+  name: 'instanceof-check',
   meta: {
     type: 'problem',
     docs: {
