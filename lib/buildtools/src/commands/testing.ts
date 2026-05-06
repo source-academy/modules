@@ -18,8 +18,7 @@ const coverageOption = new Option('--coverage', 'Run coverage testing');
 const uiOption = new Option('--ui', 'Use the Vitest UI mode')
   .default(false);
 
-const allowOnlyOption = new Option('--no-allow-only', 'Disallow the use of .only in tests')
-  .default(!process.env.CI);
+const allowOnlyOption = new Option('--no-allow-only', 'Disallow the use of .only in tests');
 
 export const silentOption = new Option('--silent [option]', 'Silent mode')
   .choices(['passed-only', 'false', 'true'] as const)
@@ -75,6 +74,10 @@ export const getTestCommand = () => new Command('test')
 
     if (options.ui) {
       options.watch = true;
+    }
+
+    if (options.allowOnly === undefined) {
+      options.allowOnly = !!process.env.CI;
     }
 
     await runVitest(mode, fullyResolvedPatterns, [configResult.config], options);
