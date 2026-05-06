@@ -15,18 +15,18 @@ describe(funcs.repeat, () => {
 
   test('throws an error when the function doesn\'t take 1 parameter', () => {
     expect(() => funcs.repeat((x: number, y: number) => x + y, 2))
-      .toThrowError('repeat: Expected function with 1 parameter, got (x, y) => x + y.');
+      .toThrow('repeat: Expected function with 1 parameter, got (x, y) => x + y.');
 
     expect(() => funcs.repeat(() => 2, 2))
-      .toThrowError('repeat: Expected function with 1 parameter, got () => 2.');
+      .toThrow('repeat: Expected function with 1 parameter, got () => 2.');
   });
 
   test('throws an error when provided incorrect values', () => {
     expect(() => funcs.repeat((x: number) => x, -1))
-      .toThrowError('repeat: Expected integer greater than 0, got -1.');
+      .toThrow('repeat: Expected integer greater than 0, got -1.');
 
     expect(() => funcs.repeat((x: number) => x, 1.5))
-      .toThrowError('repeat: Expected integer greater than 0, got 1.5.');
+      .toThrow('repeat: Expected integer greater than 0, got 1.5.');
   });
 });
 

@@ -1,4 +1,4 @@
-import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+import { assertNumberWithinRange, isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import { isEqualWith } from 'es-toolkit';
 import * as list from 'js-slang/dist/stdlib/list';
 import { stringify } from 'js-slang/dist/utils/stringify';
@@ -88,7 +88,7 @@ function equalityComparer(expected: unknown, received: unknown): boolean | undef
  * @param received The given value.
  * @returns
  */
-export function assert_equals(expected: any, received: any) {
+export function assert_equals(expected: any, received: any): void {
   if (!isEqualWith(expected, received, equalityComparer)) {
     throw new UnittestAssertionError(`Expected \`${expected}\`, got \`${received}\`!`);
   }
@@ -100,7 +100,7 @@ export function assert_equals(expected: any, received: any) {
  * @param received The given value.
  * @returns
  */
-export function assert_not_equals(expected: any, received: any) {
+export function assert_not_equals(expected: any, received: any): void {
   if (!isEqualWith(expected, received, equalityComparer)) {
     throw new UnittestAssertionError(`Expected \`${expected}\` to not equal \`${received}\`!`);
   }
@@ -111,7 +111,7 @@ export function assert_not_equals(expected: any, received: any) {
  * @param xs The list or pair to assert.
  * @param toContain The element that `xs` is expected to contain.
  */
-export function assert_contains(xs: any, toContain: any) {
+export function assert_contains(xs: any, toContain: any): void {
   const fail = () => {
     throw new UnittestAssertionError(`Expected \`${stringify(xs)}\` to contain \`${toContain}\`.`);
   };
@@ -140,19 +140,25 @@ export function assert_contains(xs: any, toContain: any) {
 
     throw new UnittestAssertionError(`First argument to ${assert_contains.name} must be a list or a pair, got \`${stringify(xs)}\`.`);
   }
+
   if (!member(xs, toContain)) fail();
 }
 
 /**
- * Asserts that the given list has length `len`.
- * @param xs The list to assert.
- * @param len The expected length of the list.
+ * Asserts that the given item `xs` is either a list or array with length `len`.
+ * @param xs The list or array to assert.
+ * @param len The expected length of the list or array.
  */
-export function assert_length(xs: any, len: number) {
-  if (!list.is_list(xs)) throw new Error(`First argument to ${assert_length.name} must be a list.`);
-  if (!Number.isInteger(len)) throw new Error(`Second argument to ${assert_length.name} must be an integer.`);
+export function assert_length(xs: any, len: number): void {
+  assertNumberWithinRange(len, { func_name: assert_length.name, param_name: 'len', integer: true });
 
-  assert_equals(list.length(xs), len);
+  if (list.is_list(xs)) {
+    assert_equals(list.length(xs), len);
+  } else if (Array.isArray(xs)) {
+    assert_equals(xs.length, len);
+  } else {
+    throw new UnittestAssertionError(`First argument to ${assert_length.name} must be a list or array.`);
+  }
 }
 
 /**
@@ -160,7 +166,7 @@ export function assert_length(xs: any, len: number) {
  * @param item The number to check
  * @param expected The value to check against
  */
-export function assert_greater(item: any, expected: number) {
+export function assert_greater(item: any, expected: number): void {
   if (typeof expected !== 'number') {
     throw new UnittestAssertionError(`${assert_greater.name}: Expected value should be a number!`);
   }
@@ -179,7 +185,7 @@ export function assert_greater(item: any, expected: number) {
  * @param item The number to check
  * @param expected The value to check against
  */
-export function assert_greater_equals(item: any, expected: number) {
+export function assert_greater_equals(item: any, expected: number): void {
   if (typeof expected !== 'number') {
     throw new UnittestAssertionError(`${assert_greater_equals.name}: Expected value should be a number!`);
   }
