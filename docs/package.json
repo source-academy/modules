@@ -15,6 +15,7 @@
   "dependencies": {
     "@shikijs/vitepress-twoslash": "^2.1.0",
     "@sourceacademy/bundle-sound": "workspace:^",
+    "@sourceacademy/bundle-rune": "workspace:^",
     "@sourceacademy/lint-plugin": "workspace:^",
     "@sourceacademy/markdown-plugin-directory-tree": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
