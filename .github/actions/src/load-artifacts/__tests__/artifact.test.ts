@@ -186,7 +186,7 @@ testCase(
     expect(exec.exec).toHaveBeenCalledTimes(2);
     const [[execCmd0, execCall0], [execCmd1, execCall1]] = vi.mocked(exec.exec).mock.calls;
 
-    expect(execCmd0).toEqual('yarn workspaces focus');
+    expect(execCmd0).toEqual('yarn');
     expect(execCall0).not.toContain('@sourceacademy/tab-Tab0');
     expect(execCall0).toContain('@sourceacademy/tab-Tab1');
     expect(execCall0).not.toContain('@sourceacademy/bundle-bundle0');

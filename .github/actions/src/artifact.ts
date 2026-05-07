@@ -14,7 +14,6 @@ import { filterAsync } from 'es-toolkit';
  */
 export async function loadOrBuildAsset(bundles: ResolvedBundle[], tabs: ResolvedTab[], manifest?: boolean) {
   const artifact = new DefaultArtifactClient();
-  console.log('loading these tabs', tabs);
 
   const tabsPromise = filterAsync(tabs, async ({ name: tabName }) => {
     try {
@@ -75,13 +74,28 @@ export async function loadOrBuildAsset(bundles: ResolvedBundle[], tabs: Resolved
   ];
 
   // focus all at once
-  await exec('yarn workspaces focus', workspaces, { silent: false });
+  await exec(
+    'yarn',
+    [
+      'workspaces',
+      'focus',
+      ...workspaces
+    ],
+    { silent: false }
+  );
 
   // Then build everything
   const workspaceBuildArgs = workspaces.flatMap(each => ['--include', each]);
   await exec(
-    'yarn workspaces foreach -pA',
-    [...workspaceBuildArgs, 'run', 'build'],
+    'yarn',
+    [
+      'workspaces',
+      'foreach',
+      '-pA',
+      ...workspaceBuildArgs,
+      'run',
+      'build'
+    ],
     { silent: false }
   );
 }

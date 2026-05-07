@@ -257,7 +257,7 @@ export default defineConfig(
         tags: ['hidden']
       }],
 
-      'import/extensions': ['error', { json: 'always' }],
+      'import/extensions': ['error', { css: 'always', json: 'always' }],
       'import/first': 'warn',
       'import/newline-after-import': 'warn',
       // This rule is very time intensive.
