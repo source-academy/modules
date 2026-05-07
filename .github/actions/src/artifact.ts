@@ -68,34 +68,21 @@ export async function loadOrBuildAsset(bundles: ResolvedBundle[], tabs: Resolved
 
   const [bundlesToBuild, tabsToBuild] = await Promise.all([bundlesPromise, tabsPromise, manifestPromise]);
 
+  if (bundlesToBuild.length === 0 && tabsToBuild.length === 0) return;
+
   const workspaces = [
     ...bundlesToBuild.map(({ name }) => `@sourceacademy/bundle-${name}`),
     ...tabsToBuild.map(({ name }) => `@sourceacademy/tab-${name}`),
   ];
 
   // focus all at once
-  await exec(
-    'yarn',
-    [
-      'workspaces',
-      'focus',
-      ...workspaces
-    ],
-    { silent: false }
-  );
+  await exec('yarn workspaces focus', workspaces, { silent: false });
 
   // Then build everything
   const workspaceBuildArgs = workspaces.flatMap(each => ['--include', each]);
   await exec(
-    'yarn',
-    [
-      'workspaces',
-      'foreach',
-      '-pA',
-      ...workspaceBuildArgs,
-      'run',
-      'build'
-    ],
+    'yarn workspaces foreach -pA',
+    [...workspaceBuildArgs, 'run', 'build' ],
     { silent: false }
   );
 }

@@ -186,13 +186,13 @@ testCase(
     expect(exec.exec).toHaveBeenCalledTimes(2);
     const [[execCmd0, execCall0], [execCmd1, execCall1]] = vi.mocked(exec.exec).mock.calls;
 
-    expect(execCmd0).toEqual('yarn');
+    expect(execCmd0).toEqual('yarn workspaces focus');
     expect(execCall0).not.toContain('@sourceacademy/tab-Tab0');
     expect(execCall0).toContain('@sourceacademy/tab-Tab1');
     expect(execCall0).not.toContain('@sourceacademy/bundle-bundle0');
     expect(execCall0).toContain('@sourceacademy/bundle-bundle1');
 
-    expect(execCmd1).toEqual('yarn');
+    expect(execCmd1).toEqual('yarn workspaces foreach -pA');
     expect(execCall1).not.toContain('@sourceacademy/tab-Tab0');
     expect(execCall1).toContain('@sourceacademy/tab-Tab1');
     expect(execCall1).not.toContain('@sourceacademy/bundle-bundle0');
@@ -256,5 +256,42 @@ testCase(
     expect(mockedResolveAllTabs).toHaveBeenCalledOnce();
     expect(mockedGetArtifact).toHaveBeenCalledOnce();
     expect(exec.exec).toHaveBeenCalledOnce();
+  }
+);
+
+testCase(
+  'no bundles or tabs to build means exec is never executed',
+  { loadBundles: true, loadTabs: true },
+  async () => {
+    mockedResolveAllTabs.mockResolvedValueOnce({
+      severity: 'success',
+      tabs: {
+        Tab0: {
+          type: 'tab',
+          directory: 'tab0',
+          name: 'Tab0',
+          entryPoint: 'tab0/index.tsx',
+        },
+      }
+    });
+
+    mockedResolveAllBundles.mockResolvedValueOnce({
+      severity: 'success',
+      bundles: {
+        bundle0: {
+          type: 'bundle',
+          directory: 'bundle0',
+          name: 'bundle0',
+          manifest: {}
+        },
+      }
+    });
+
+    await expect(main()).resolves.not.toThrow();
+
+    expect(mockedResolveAllTabs).toHaveBeenCalled();
+    expect(mockedResolveAllBundles).toHaveBeenCalledOnce();
+
+    expect(exec.exec).not.toHaveBeenCalled();
   }
 );
