@@ -59,7 +59,7 @@ The returned value can then be interacted with:
 
 ```tsx twoslash
 // @jsx: react-jsx
-declare function MyComponent(): JSX.Element;
+declare function MyComponent(): React.ReactElement;
 // ---cut---
 import { test } from 'vitest';
 import { render } from 'vitest-browser-react';
