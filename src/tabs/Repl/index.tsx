@@ -101,7 +101,7 @@ class ProgrammableReplGUI extends React.Component<Props, State> {
 
   public override render() {
     const { editorHeight, editorText } = this.state;
-    const outputDivs = this.replInstance.outputStrings.map((str): React.JSX.Element => {
+    const outputDivs = this.replInstance.outputStrings.map((str): React.ReactElement => {
       if (str.outputMethod === 'richtext') {
         if (str.color === '') {
           return <div style={FONT_MESSAGE} dangerouslySetInnerHTML={{ __html: str.content }} />;

@@ -94,7 +94,7 @@ might fail because the element hasn't displayed yet:
 
 ```tsx twoslash
 // @jsx: react-jsx
-declare function Animation(): JSX.Element;
+declare function Animation(): React.ReactElement;
 // ---cut---
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
@@ -111,7 +111,7 @@ Instead, `vitest` provides a special set of matchers that can be used to "retry"
 
 ```tsx twoslash
 // @jsx: react-jsx
-declare function Animation(): JSX.Element;
+declare function Animation(): React.ReactElement;
 // ---cut---
 import { expect, test } from 'vitest';
 import { render } from 'vitest-browser-react';
@@ -149,7 +149,7 @@ Then you can use calls `vi.advanceTimersToNextFrame()` to simulate `requestAnima
 
 ```tsx twoslash
 // @jsx: react-jsx
-declare function Animation(): JSX.Element;
+declare function Animation(): React.ReactElement;
 // ---cut---
 import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { cleanup, render } from 'vitest-browser-react';
