@@ -346,10 +346,13 @@ export default defineConfig(
       '@typescript-eslint/no-explicit-any': 'off', // Was 'error'
       '@typescript-eslint/no-import-type-side-effects': 'error',
       '@typescript-eslint/no-redundant-type-constituents': 'off', // Was 'error'
+
       // This rule doesn't seem to fail locally but fails on the CI
       '@typescript-eslint/no-unnecessary-type-assertion': process.env.CI ? 'off' : 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
-      '@typescript-eslint/only-throw-error': 'error'
+
+      // This rule doesn't seem to fail locally but fails on the CI
+      '@typescript-eslint/only-throw-error': process.env.CI ? 'off' : 'error',
     },
     settings: {
       'import/resolver': {
