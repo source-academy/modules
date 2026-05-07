@@ -192,7 +192,7 @@ testCase(
     expect(execCall0).not.toContain('@sourceacademy/bundle-bundle0');
     expect(execCall0).toContain('@sourceacademy/bundle-bundle1');
 
-    expect(execCmd1).toEqual('yarn workspaces foreach -pA');
+    expect(execCmd1).toEqual('yarn');
     expect(execCall1).not.toContain('@sourceacademy/tab-Tab0');
     expect(execCall1).toContain('@sourceacademy/tab-Tab1');
     expect(execCall1).not.toContain('@sourceacademy/bundle-bundle0');
