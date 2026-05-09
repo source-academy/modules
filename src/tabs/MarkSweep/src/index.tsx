@@ -1,5 +1,4 @@
 import { Icon, Slider } from '@blueprintjs/core';
-import { initialize_memory } from '@sourceacademy/bundle-mark_sweep';
 import { COMMAND, type MarkSweepGlobalState, type Tag } from '@sourceacademy/bundle-mark_sweep/types';
 import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 import type { ModuleTab } from '@sourceacademy/modules-lib/types/index';
@@ -284,7 +283,7 @@ const MarkSweep: ModuleTab = ({ debuggerCtx }) => {
         </a>
         .
       </p>
-      <p> Call the function <code>{initialize_memory.name}()</code> in your code to start. </p>
+      <p> Call the function <code>initialize_memory()</code> in your code to start. </p>
     </div>
   );
 };

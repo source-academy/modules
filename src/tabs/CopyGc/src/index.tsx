@@ -1,5 +1,4 @@
 import { Icon, Slider } from '@blueprintjs/core';
-import { initialize_memory } from '@sourceacademy/bundle-copy_gc';
 import { COMMAND, type CopyGCGlobalState, type Tag } from '@sourceacademy/bundle-copy_gc/types';
 import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 import type { ModuleTab } from '@sourceacademy/modules-lib/types';
@@ -269,7 +268,7 @@ const CopyGC: ModuleTab = ({ debuggerCtx }) => {
         </a>
         .
       </p>
-      <p> Calls the function <code>{initialize_memory.name}()</code> at the end of your code to start. </p>
+      <p> Calls the function <code>initialize_memory()</code> at the end of your code to start. </p>
     </div>
   );
 };
