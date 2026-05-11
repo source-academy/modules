@@ -1034,7 +1034,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/icons@npm:^6.0.0, @blueprintjs/icons@npm:^6.6.0":
+"@blueprintjs/icons@npm:^6.0.0":
+  version: 6.9.1
+  resolution: "@blueprintjs/icons@npm:6.9.1"
+  dependencies:
+    change-case: "npm:^4.1.2"
+    classnames: "npm:^2.3.1"
+    tslib: "npm:~2.6.2"
+  peerDependencies:
+    "@types/react": 18
+    react: 18
+    react-dom: 18
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/5958a5168065adddf46590a8d5862f45a26715ee983af14cd9f82277e45131b75d9949f7c5c0876bc3836ddf9ed43fdc8d97530f6c9579498485ea9d8fde9030
+  languageName: node
+  linkType: hard
+
+"@blueprintjs/icons@npm:^6.6.0":
   version: 6.9.0
   resolution: "@blueprintjs/icons@npm:6.9.0"
   dependencies:
