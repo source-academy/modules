@@ -3,8 +3,9 @@
  * @author Yeluri Ketan
  */
 
-import { Button, ButtonGroup, NumericInput } from '@blueprintjs/core';
+import { Button, ButtonGroup, Checkbox, NumericInput, Tooltip } from '@blueprintjs/core';
 import type { NBodyModuleState } from '@sourceacademy/bundle-nbody/types';
+import MultiItemDisplay from '@sourceacademy/modules-lib/tabs/MultiItemDisplay';
 import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
 import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 import type { ModuleTab } from '@sourceacademy/modules-lib/types/index';
@@ -19,100 +20,75 @@ type SimControlProps = {
 };
 
 /**
- * React component state for the control buttons.
+ * Compoennt for displaying the button controls that affect the parameters of
+ * the simulations
  */
-type SimControlState = {
-  isPlaying: boolean;
-  speed: number;
-  showTrails: boolean;
-  showUniverse: boolean[];
-};
+function SimulationControls({ sim }: SimControlProps) {
+  const [isPlaying, setIsPlaying] = React.useState(false);
+  const [speed, setSpeed] = React.useState(1);
+  const [showTrails, setShowTrails] = React.useState(sim.getShowTrails());
+  const [showUniverse, setShowUniverse] = React.useState(sim.universes.map(() => true));
 
-/**
- * Component for UI buttons within tab e.g play/pause.
- */
-class SimulationControl extends React.Component<SimControlProps, SimControlState> {
-  constructor(props: SimControlProps) {
-    super(props);
-    this.state = {
-      isPlaying: false,
-      speed: 1,
-      showTrails: props.sim.getShowTrails(),
-      showUniverse: props.sim.universes.map(() => true),
-    };
-  }
-
-  toggleSimPause(): void {
-    const currentState = this.state.isPlaying;
-    this.setState({ isPlaying: !currentState });
-    if (currentState) {
-      this.props.sim.pause();
-    } else {
-      this.props.sim.resume();
-    }
-  }
-
-  toggleShowTrails(): void {
-    const currentState = this.state.showTrails;
-    this.setState({ showTrails: !currentState });
-    this.props.sim.setShowTrails(!currentState);
-  }
-
-  setSpeed(speed: number): void {
-    this.setState({ speed });
-    this.props.sim.setSpeed(speed);
-  }
-
-  toggleShowUniverse(label: string, i: number): void {
-    this.props.sim.setShowUniverse(label, !this.state.showUniverse[i]);
-    this.setState({
-      showUniverse: this.state.showUniverse.map((v, j) => i === j ? !v : v)
-    });
-  }
-
-  public override render() {
-    return (
-      <>
-        <ButtonGroup style={{ width: '100%', margin: '4px auto' }}>
-          <PlayButton
-            isPlaying={this.state.isPlaying}
-            active={false}
-            onClick={() => this.toggleSimPause()}
-            style={{ margin: '4px' }}
-          />
-          <Button
-            className="nbody-trails-toggle-button"
-            icon='route'
-            active={this.state.showTrails}
-            onClick={() => this.toggleShowTrails()}
-            style={{ margin: '4px' }}
-            text={(this.state.showTrails ? 'Hide' : 'Show') + ' Trails'}
-          />
-        </ButtonGroup>
-        <NumericInput defaultValue={this.state.speed} onValueChange={(value) => this.setSpeed(value)} style={{
-          margin: '4px auto'
-        }} />
-        <ButtonGroup style={{
-          margin: '4px auto'
-        }}>
-          {
-            this.props.sim.universes.map((universe, i) => {
-              return (
-                <Button
-                  key={i}
-                  className={`"nbody-show-universe-${i}-button"`}
-                  active={this.state.showUniverse[i]}
-                  onClick={() => this.toggleShowUniverse(universe.label, i)}
-                  text={(this.state.showUniverse[i] ? 'Hide' : 'Show') + ' ' + universe.label}
-                  style={{ margin: '4px' }}
-                />
-              );
-            })
+  return <>
+    <ButtonGroup style={{ width: '100%', margin: '4px auto' }}>
+      <PlayButton
+        isPlaying={isPlaying}
+        active={false}
+        onClick={() => {
+          setIsPlaying(!isPlaying);
+          if (isPlaying) {
+            sim.pause();
+          } else {
+            sim.resume();
           }
-        </ButtonGroup>
-      </>
-    );
-  }
+        }}
+        style={{ margin: '4px' }}
+      />
+      <Button
+        className="nbody-trails-toggle-button"
+        icon='route'
+        active={showTrails}
+        onClick={() => {
+          setShowTrails(!showTrails);
+          sim.setShowTrails(!showTrails);
+        }}
+        style={{ margin: '4px' }}
+        text={(showTrails ? 'Hide' : 'Show') + ' Trails'}
+      />
+    </ButtonGroup>
+    <Tooltip content="Sim Speed">
+      <NumericInput
+        value={speed}
+        onValueChange={value => {
+          if (value < 0) value = 0;
+
+          setSpeed(value);
+          sim.setSpeed(value);
+        }}
+        style={{
+          margin: '4px auto'
+        }}
+      /></Tooltip>
+    <ButtonGroup style={{
+      margin: '4px auto'
+    }}>
+      {sim.universes.map((universe, i) => (
+        <Checkbox
+          key={i}
+          className={`"nbody-show-universe-${i}-button"`}
+          checked={showUniverse[i]}
+          onClick={() => {
+            // TODO: Figure out why this doesn't update when the sim isn't playing
+            sim.setShowUniverse(universe.label, !showUniverse[i]);
+            setShowUniverse(showUniverse.map((v, j) => i === j ? !v : v));
+          }}
+          style={{ margin: '4px' }}
+        >
+          Show {universe.label}
+        </Checkbox>
+      ))}
+    </ButtonGroup>
+  </>;
 }
 
 /**
@@ -121,39 +97,34 @@ class SimulationControl extends React.Component<SimControlProps, SimControlState
 const Nbody: ModuleTab = ({ debuggerCtx: context }) => {
   const { simulations, recordInfo } = getModuleState<NBodyModuleState>(context, 'nbody')!;
 
-  return <div>
-    {simulations.length === 0
-      ? <div>No simulations found</div>
-      : <SimulationControl sim={simulations[0]} />
-    }
-    {
-      simulations.map((sim, i) => {
-        const divId = `nbody-${i}`;
-        return (
-          <div style={{
-            height: '80vh',
-            marginBottom: '5vh',
-          }} key={divId}>
-            <div
-              id={divId}
-              style={{
-                height: '500px',
-                width: '500px',
-              }}
-              ref={() => {
-                if (recordInfo.isRecording) {
-                  sim.start(divId, 500, 500, 1, true, recordInfo.recordFor, recordInfo.recordSpeed);
-                } else {
-                  sim.start(divId, 500, 500, 1, true);
-                }
-              }}
-            />
-          </div>
-        );
-      })
-    }
-
-  </div>;
+  return <MultiItemDisplay
+    elements={simulations.map((sim, i) => {
+      const divId = `nbody-${i}`;
+      return <div>
+        <SimulationControls sim={sim} />
+        <div style={{
+          height: '80vh',
+          marginBottom: '5vh',
+        }} key={divId}
+        >
+          <div
+            id={divId}
+            style={{
+              height: '500px',
+              width: '500px',
+            }}
+            ref={() => {
+              if (recordInfo.isRecording) {
+                sim.start(divId, 500, 500, 1, true, recordInfo.recordFor, recordInfo.recordSpeed);
+              } else {
+                sim.start(divId, 500, 500, 1, true);
+              }
+            }}
+          />
+        </div>
+      </div>;
+    })}
+  />;
 };
 
 export default defineTab({
