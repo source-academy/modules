@@ -1,5 +1,36 @@
 import { useEffect, useRef, useState } from 'react';
 
+export interface AnimationHookContext {
+
+  /**
+   * Stop the animation
+   */
+  stop: () => void;
+
+  /**
+   * Start the animation
+   */
+  start: () => void;
+
+  /**
+   * Resets the animation to the beginning, but doesn't
+   * start it or stop it
+   */
+  reset: () => void;
+
+  /**
+   * Boolean value indicating if the animation is currently playing
+   */
+  readonly isPlaying: boolean;
+
+  /**
+   * Current timestamp of the animation
+   */
+  readonly timestamp: number;
+
+  readonly canvas: HTMLCanvasElement;
+}
+
 export interface AnimationOptions {
   /**
    * The minimum duration of time between each frame in milliseconds. Because of how
@@ -25,7 +56,7 @@ export interface AnimationOptions {
   /**
    * Callback that's called to draw each frame
    */
-  callback: (timestamp: number, canvas: HTMLCanvasElement) => void;
+  callback: (ctx: AnimationHookContext) => void;
 
   /**
    * Whether the animation should start playing automatically
@@ -134,7 +165,7 @@ export function useAnimation({
    * Keeps track of the time when the last frame was drawn
    */
   const lastFrameTimestamp = useRef<number | null>(null);
-  const [isPlaying, setIsPlaying] = useState(autoStart ?? false);
+  const isPlayingRef = useRef<boolean>(false);
   const [errored, setErrored] = useState<Error | null>(null);
 
   /**
@@ -145,11 +176,18 @@ export function useAnimation({
     rerender();
   }
 
+  function setIsPlaying(newVal: boolean) {
+    isPlayingRef.current = newVal;
+    rerender();
+  }
+
   /**
    * Submit a request to call `animCallback` using `requestAnimationFrame`
    */
   function requestFrame() {
-    requestIdRef.current = requestAnimationFrame(animCallback);
+    if (requestIdRef.current === null) {
+      requestIdRef.current = requestAnimationFrame(animCallback);
+    }
   }
 
   /**
@@ -159,6 +197,8 @@ export function useAnimation({
    * - Sets the lastFrameTimestamp to null
    */
   function stop() {
+    if (!isPlayingRef.current) return;
+
     setIsPlaying(false);
     if (requestIdRef.current !== null) {
       cancelAnimationFrame(requestIdRef.current);
@@ -180,6 +220,10 @@ export function useAnimation({
     lastFrameTimestamp.current = null;
     if (requestIdRef.current !== null) {
       cancelAnimationFrame(requestIdRef.current);
+      requestIdRef.current = null;
+    }
+
+    if (isPlayingRef.current) {
       requestFrame();
     }
   }
@@ -188,6 +232,8 @@ export function useAnimation({
    * Sets `isPlaying` to true and requests an animation frame.
    */
   function start() {
+    if (isPlayingRef.current) return;
+
     setIsPlaying(true);
     if (canvasRef.current) requestFrame();
   }
@@ -199,7 +245,14 @@ export function useAnimation({
   function callbackWrapper(time: number) {
     if (canvasRef.current) {
       try {
-        callback(time, canvasRef.current);
+        callback({
+          timestamp: time,
+          isPlaying: isPlayingRef.current,
+          canvas: canvasRef.current,
+          stop,
+          start,
+          reset
+        });
       } catch (error) {
         setErrored(error as Error);
         stop();
@@ -208,6 +261,8 @@ export function useAnimation({
   }
 
   function animCallback(timeInMs: number) {
+    requestIdRef.current = null;
+
     if (lastFrameTimestamp.current === null) {
       // This is the first time the animation is being drawn
       lastFrameTimestamp.current = timeInMs;
@@ -269,7 +324,7 @@ export function useAnimation({
       callbackWrapper(newTime);
     },
     drawFrame: timestamp => callbackWrapper(timestamp ?? elapsedRef.current),
-    isPlaying,
+    isPlaying: isPlayingRef.current,
     timestamp: elapsedRef.current,
     setCanvas: canvas => {
       // No need to do anything with the canvas if the current canvas
@@ -282,7 +337,7 @@ export function useAnimation({
       // Draw the current frame of the animation so that the canvas isn't blank
       // after setting the canvas
       callbackWrapper(elapsedRef.current);
-      if (isPlaying) {
+      if (isPlayingRef.current) {
         requestFrame();
       }
     },
