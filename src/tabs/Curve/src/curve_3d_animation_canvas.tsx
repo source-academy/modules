@@ -28,7 +28,7 @@ export default function Curve3DAnimationCanvas({ animation }: Props) {
   const animationDuration = Math.round(animation.duration * 1000);
   const { changeTimestamp, drawFrame, start, stop, reset, timestamp, errored, isPlaying, setCanvas } = useAnimation({
     frameDuration, animationDuration, autoLoop: isAutoLooping,
-    callback(timestamp, canvas) {
+    callback({ timestamp, canvas }) {
       const frame = animation.getFrame(timestamp / 1000);
       frame.draw(canvas);
     },

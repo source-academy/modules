@@ -16,7 +16,7 @@ export default function HollusionCanvas({ rune }: Props) {
   const renderFuncRef = React.useRef<(time: number) => void>(undefined);
 
   const { setCanvas } = useAnimation({
-    callback(timestamp, canvas) {
+    callback({ timestamp, canvas }) {
       if (renderFuncRef.current === undefined) {
         renderFuncRef.current = rune.draw(canvas);
       }
