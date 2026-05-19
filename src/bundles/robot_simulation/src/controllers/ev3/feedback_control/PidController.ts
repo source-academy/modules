@@ -21,7 +21,7 @@ type PIDControllerOptions<T> = {
   derivativeGain: number;
 };
 
-class PIDController<T> {
+export class PIDController<T> {
   zero: NullaryFunction<T>;
   add: BinaryFunction<T>;
   subtract: BinaryFunction<T>;

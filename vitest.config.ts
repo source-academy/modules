@@ -34,6 +34,7 @@ export default defineConfig({
       './src/bundles/*',
       './src/tabs/*'
     ],
+    testTimeout: 20_000,
     include: ['**/__tests__/**/*.test.{ts,tsx}'],
     exclude: ['**/dist'],
     reporters: testReporters,

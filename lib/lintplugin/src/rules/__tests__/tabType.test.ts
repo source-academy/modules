@@ -1,4 +1,4 @@
-import { RuleTester } from 'eslint';
+import { RuleTester } from '@typescript-eslint/rule-tester';
 import tabType from '../tabType';
 
 describe('Test collateTypeImports', () => {
@@ -26,19 +26,29 @@ describe('Test collateTypeImports', () => {
       }],
       invalid: [{
         code: '',
-        errors: 1
+        errors: [{ messageId: 'noExport' }]
       }, {
         code: `
           import { stuff } from 'somwhere';
           export default 0;
         `,
-        errors: 1
+        errors: [{
+          messageId: 'useHelper',
+          data: {
+            source: '@sourceacademy/modules-lib/tabs/utils'
+          }
+        }]
       }, {
         code: `
           import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
           export default 0;
         `,
-        errors: 1
+        errors: [{
+          messageId: 'useHelper',
+          data: {
+            source: '@sourceacademy/modules-lib/tabs/utils'
+          }
+        }]
       }]
     }
   );

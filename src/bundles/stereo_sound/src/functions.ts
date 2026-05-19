@@ -1,4 +1,6 @@
 import { midi_note_to_frequency } from '@sourceacademy/bundle-midi';
+import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { assertNumberWithinRange, isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 import {
   accumulate,
@@ -7,9 +9,11 @@ import {
   is_pair,
   length,
   list,
+  map,
   pair,
   tail,
-  type List
+  type List,
+  type Pair
 } from 'js-slang/dist/stdlib/list';
 import { RIFFWAVE } from './riffwave';
 import type {
@@ -67,9 +71,9 @@ let recorded_sound: Sound | undefined;
 // to record a sound
 function check_permission() {
   if (permission === undefined) {
-    throw new Error('Call init_record(); to obtain permission to use microphone');
+    throw new GeneralRuntimeError('Call init_record(); to obtain permission to use microphone');
   } else if (permission === false) {
-    throw new Error(`Permission has been denied.\n
+    throw new GeneralRuntimeError(`Permission has been denied.\n
         Re-start browser and call init_record();\n
         to obtain permission to use microphone.`);
   } // (permission === true): do nothing
@@ -173,7 +177,7 @@ export function record(buffer: number): () => () => Sound {
     play_recording_signal();
     return () => {
       if (recorded_sound === undefined) {
-        throw new Error('recording still being processed');
+        throw new GeneralRuntimeError('recording still being processed');
       } else {
         return recorded_sound;
       }
@@ -209,28 +213,20 @@ export function record_for(duration: number, buffer: number): () => Sound {
   }, recording_signal_duration_ms + buffer * 1000);
   return () => {
     if (recorded_sound === undefined) {
-      throw new Error('recording still being processed');
+      throw new GeneralRuntimeError('recording still being processed');
     } else {
       return recorded_sound;
     }
   };
 }
 
-function validateDuration(func_name: string, duration: unknown): asserts duration is number {
-  if (typeof duration !== 'number') {
-    throw new Error(`${func_name} expects a number for duration, got ${duration}`);
-  }
-
-  if (duration < 0) {
-    throw new Error(`${func_name}: Sound duration must be greater than or equal to 0`);
-  }
+function validateDuration(func_name: string, duration: unknown, param_name?: string): asserts duration is number {
+  assertNumberWithinRange(duration, func_name, 0, undefined, true, param_name);
 }
 
 function validateWave(func_name: string, wave: unknown, lr?: 'left' | 'right'): asserts wave is Wave {
-  const direction = lr !== undefined ? `${lr}_` : '';
-
   if (typeof wave !== 'function') {
-    throw new Error(`${func_name}: ${direction}wave must be a Wave, got ${wave}`);
+    throw new InvalidParameterTypeError('Wave', wave, func_name, lr === undefined ? undefined : `${lr} wave`);
   }
 }
 
@@ -339,12 +335,45 @@ export function get_duration(sound: Sound): number {
  * @example is_sound(make_sound(t => 0, 2)); // Returns true
  */
 export function is_sound(x: unknown): x is Sound {
-  return (
-    is_pair(x)
-    && typeof get_left_wave(x) === 'function'
-    && typeof get_right_wave(x) === 'function'
-    && typeof get_duration(x) === 'number'
-  );
+  if (!is_pair(x)) return false;
+
+  const waves = head(x);
+  if (!is_pair(waves)) return false;
+
+  const left_wave = head(waves);
+  if (!isFunctionOfLength(left_wave, 1)) return false;
+
+  const right_wave = tail(waves);
+  if (!isFunctionOfLength(right_wave, 1)) return false;
+
+  const duration = tail(x);
+  return typeof duration === 'number';
+}
+
+function throwIfNotSound(obj: unknown, func_name: string, param_name?: string): asserts obj is Sound {
+  if (!is_pair(obj)) {
+    throw new InvalidParameterTypeError('sound', obj, func_name, param_name);
+  }
+
+  const waves = head(obj);
+  if (!is_pair(waves)) {
+    throw new GeneralRuntimeError(`${func_name}: head of sound should be a pair of waves.`);
+  }
+
+  const left_wave = head(waves);
+  if (!isFunctionOfLength(left_wave, 1)) {
+    throw new GeneralRuntimeError(`${func_name}: left wave is not a valid wave.`);
+  }
+
+  const right_wave = tail(waves);
+  if (!isFunctionOfLength(right_wave, 1)) {
+    throw new GeneralRuntimeError(`${func_name}: right wave is not a valid wave.`);
+  }
+
+  const duration = tail(obj);
+  if (typeof duration !== 'number') {
+    throw new GeneralRuntimeError(`${func_name}: Duration of sound is not a number!`);
+  }
 }
 
 /**
@@ -393,17 +422,16 @@ export function play_waves(
  * @example play_in_tab(sine_sound(440, 5));
  */
 export function play_in_tab(sound: Sound): Sound {
-  // Type-check sound
-  if (!is_sound(sound)) {
-    throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
+  throwIfNotSound(sound, play_in_tab.name);
+
+  if (isPlaying) {
     // If a sound is already playing, terminate execution.
-  } else if (isPlaying) {
-    throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
+    throw new GeneralRuntimeError(`${play_in_tab.name}: audio system still playing previous sound`);
   }
 
   const duration = get_duration(sound);
   if (duration < 0) {
-    throw new Error(`${play_in_tab.name}: duration of sound is negative`);
+    throw new GeneralRuntimeError(`${play_in_tab.name}: duration of sound is negative`);
   } else if (duration === 0) {
     return sound;
   }
@@ -469,6 +497,7 @@ export function play_in_tab(sound: Sound): Sound {
     channel[i] = Math.floor(channel[i] * 32767.999);
   }
 
+  // @ts-expect-error RIFFWAVE type definition missing
   const riffwave = new RIFFWAVE([]);
   riffwave.header.sampleRate = FS;
   riffwave.header.numChannels = 2;
@@ -494,16 +523,16 @@ export function play_in_tab(sound: Sound): Sound {
  */
 export function play(sound: Sound): Sound {
   // Type-check sound
-  if (!is_sound(sound)) {
-    throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
+  throwIfNotSound(sound, play.name);
+
+  if (isPlaying) {
     // If a sound is already playing, terminate execution.
-  } else if (isPlaying) {
-    throw new Error(`${play.name}: audio system still playing previous sound`);
+    throw new GeneralRuntimeError(`${play.name}: audio system still playing previous sound`);
   }
 
   const duration = get_duration(sound);
   if (duration < 0) {
-    throw new Error(`${play.name}: duration of sound is negative`);
+    throw new GeneralRuntimeError(`${play.name}: duration of sound is negative`);
   } else if (duration === 0) {
     return sound;
   }
@@ -570,6 +599,7 @@ export function play(sound: Sound): Sound {
     channel[i] = Math.floor(channel[i] * 32767.999);
   }
 
+  // @ts-expect-error RIFFWAVE type definition missing
   const riffwave = new RIFFWAVE([]);
   riffwave.header.sampleRate = FS;
   riffwave.header.numChannels = 2;
@@ -789,7 +819,7 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
  * @returns the combined Sound
  * @example consecutively(list(sine_sound(200, 2), sine_sound(400, 3)));
  */
-export function consecutively(list_of_sounds: List): Sound {
+export function consecutively(list_of_sounds: List<Sound>): Sound {
   function stereo_cons_two(sound1: Sound, sound2: Sound) {
     const Lwave1 = get_left_wave(sound1);
     const Rwave1 = get_right_wave(sound1);
@@ -815,7 +845,7 @@ export function consecutively(list_of_sounds: List): Sound {
  * @returns the combined Sound
  * @example simultaneously(list(sine_sound(200, 2), sine_sound(400, 3)))
  */
-export function simultaneously(list_of_sounds: List): Sound {
+export function simultaneously(list_of_sounds: List<Sound>): Sound {
   function stereo_simul_two(sound1: Sound, sound2: Sound) {
     const Lwave1 = get_left_wave(sound1);
     const Rwave1 = get_right_wave(sound1);
@@ -916,20 +946,17 @@ export function stacking_adsr(
   waveform: SoundProducer,
   base_frequency: number,
   duration: number,
-  envelopes: List
+  envelopes: List<SoundTransformer>
 ): Sound {
-  function zip(lst: List, n: number) {
+  function zip(lst: List<SoundTransformer>, n: number): List<Pair<number, SoundTransformer>> {
     if (is_null(lst)) {
       return lst;
     }
     return pair(pair(n, head(lst)), zip(tail(lst), n + 1));
   }
 
-  return simultaneously(accumulate(
-    (x: any, y: any) => pair(tail(x)(waveform(base_frequency * head(x), duration)), y),
-    null,
-    zip(envelopes, 1)
-  ));
+  const new_list = map(x => tail(x)(waveform(base_frequency * head(x), duration)), zip(envelopes, 1));
+  return simultaneously(new_list);
 }
 
 /**

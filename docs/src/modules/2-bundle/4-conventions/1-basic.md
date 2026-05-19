@@ -102,36 +102,45 @@ In Typescript, there are two kinds of type guards.  Cadet facing type guards sho
 
 Anywhere you use a boolean check followed by a type assertion:
 
-```ts
+```ts twoslash
+class Sound {}
+// ---cut---
 // Simple boolean type guard
 export function is_sound(obj: unknown): boolean {
   return obj instanceof Sound;
 }
 
-function play(obj: Sound) {
+function play(obj: unknown) {
   // Simple boolean check
   if (!is_sound(obj)) return false;
 
-  // followed by type assertion, since obj is still of type unknown
-  const sound = obj as Sound;
+  // Typescript can't infer that the type of obj has changed
+  const sound = obj;
+  //            ^?
+
+
   // ...implementatation details
 }
 ```
 
 you should replace with a type guard:
 
-```ts
+```ts twoslash
+class Sound {}
+// ---cut---
 // Typescript boolean Type Guard
 export function is_sound(obj: unknown): obj is Sound {
   return obj instanceof Sound;
 }
 
-function play(obj: Sound) {
+function play(obj: unknown) {
   // Check using a type guard
   if (!is_sound(obj)) return false;
 
-  // Type assertion is no longer required. Typescript knows that obj
-  // is a Sound here
+  // Typescript knows that obj is a Sound here
+  const sound = obj;
+  //            ^?
+
 
   // ...implementatation details
 }

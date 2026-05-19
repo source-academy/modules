@@ -1,5 +1,4 @@
 import { Button, ButtonGroup, Divider, NumericInput } from '@blueprintjs/core';
-import { Camera, HorizontalDistribution, Stopwatch, VerticalDistribution, Video } from '@blueprintjs/icons';
 import {
   DEFAULT_FPS,
   DEFAULT_HEIGHT,
@@ -82,14 +81,14 @@ class PixNFlix extends React.Component<Props, State> {
     this.pixNFlix = debuggerContext.result.value;
   }
 
-  public componentDidMount() {
+  public override componentDidMount() {
     if (this.isPixNFlix()) {
       this.setupVideoService();
       window.addEventListener('beforeunload', this.pixNFlix.deinit);
     }
   }
 
-  public componentWillUnmount() {
+  public override componentWillUnmount() {
     if (this.isPixNFlix()) {
       this.closeVideo();
       window.removeEventListener('beforeunload', this.pixNFlix.deinit);
@@ -269,7 +268,7 @@ class PixNFlix extends React.Component<Props, State> {
     );
   }
 
-  public render() {
+  public override render() {
     const { mode, width, height, FPS, volume, hasAudio } = this.state;
     const displayOptions = mode === VideoMode.Still || mode === VideoMode.Video;
     const videoIsActive = mode === VideoMode.Video;
@@ -288,14 +287,14 @@ class PixNFlix extends React.Component<Props, State> {
             <ButtonGroup>
               <Button
                 className="sa-live-video-button"
-                icon={<Video />}
+                icon='video'
                 active={videoIsActive}
                 onClick={this.onClickVideo}
                 text="Play Video"
               />
               <Button
                 className="sa-still-image-button"
-                icon={<Camera />}
+                icon='camera'
                 active={!videoIsActive}
                 onClick={this.onClickStill}
                 text="Pause Video"
@@ -311,7 +310,7 @@ class PixNFlix extends React.Component<Props, State> {
               {/* <Tooltip2 content='Change width'> */}
               <NumericInput
                 disabled
-                leftIcon={<HorizontalDistribution />}
+                leftIcon='horizontal-distribution'
                 style={{ width: 70 }}
                 value={width}
                 onValueChange={this.handleWidthChange}
@@ -327,7 +326,7 @@ class PixNFlix extends React.Component<Props, State> {
               {/* <Tooltip2 content='Change height'> */}
               <NumericInput
                 disabled
-                leftIcon={<VerticalDistribution />}
+                leftIcon='vertical-distribution'
                 style={{ width: 70 }}
                 value={height}
                 onValueChange={this.handleHeightChange}
@@ -342,7 +341,7 @@ class PixNFlix extends React.Component<Props, State> {
             <div className="sa-video-header-numeric-input">
               {/* <Tooltip2 content='Change FPS'> */}
               <NumericInput
-                leftIcon={<Stopwatch />}
+                leftIcon='stopwatch'
                 style={{ width: 60 }}
                 value={FPS}
                 onValueChange={this.handleFPSChange}

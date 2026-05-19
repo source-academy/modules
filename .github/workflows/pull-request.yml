@@ -157,6 +157,12 @@ jobs:
           yarn build
           yarn tsc
 
+      - name: Upload Tab Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: ${{ matrix.bundleInfo.name }}-bundle
+          path: ./build/bundles/${{ matrix.bundleInfo.name }}.js
+
       - name: Build Bundle Docs
         run: |
           cd ${{ matrix.bundleInfo.directory }}
@@ -195,6 +201,8 @@ jobs:
 
       - name: Load/Build all tabs
         uses: ./.github/actions/src/load-artifacts
+        with:
+          load-tabs: true
 
       - name: Initialize Devserver
         uses: ./.github/actions/src/init
@@ -274,12 +282,11 @@ jobs:
       - name: Build Manifest
         run: yarn buildtools manifest
 
-      # Not sure if we need to upload this as an artifact
-      # - name: Upload Manifest
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: manifest
-      #     path: ./build/modules.json
+      - name: Upload Manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: manifest
+          path: ./build/modules.json
 
   test:
     name: Verify all tests pass and build success

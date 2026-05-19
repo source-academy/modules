@@ -42,12 +42,14 @@ describe(funcs.init_record, () => {
   test('sets stream correctly when permission is accepted', async () => {
     expect(funcs.init_record()).toEqual('obtaining recording permission');
     await expect.poll(() => funcs.globalVars.stream).toBe(mockStream);
+    expect(mockedGetUserMedia).toHaveBeenCalledOnce();
   });
 
   test('sets stream to false when permission is rejected', async () => {
     mockedGetUserMedia.mockRejectedValueOnce('');
     expect(funcs.init_record()).toEqual('obtaining recording permission');
     await expect.poll(() => funcs.globalVars.stream).toEqual(false);
+    expect(mockedGetUserMedia).toHaveBeenCalledOnce();
   });
 });
 
@@ -63,12 +65,12 @@ describe('Recording functions', () => {
 
   describe(funcs.record, () => {
     test('throws error if called without init_record', () => {
-      expect(() => funcs.record(0)).toThrowError('record: Call init_record(); to obtain permission to use microphone');
+      expect(() => funcs.record(0)).toThrow('record: Call init_record(); to obtain permission to use microphone');
     });
 
     test('throws error if called concurrently with another sound', () => {
-      funcs.play_wave(() => 0, 10);
-      expect(() => funcs.record(1)).toThrowError('record: Cannot record while another sound is playing!');
+      funcs.play_wave(_t => 0, 10);
+      expect(() => funcs.record(1)).toThrow('record: Cannot record while another sound is playing!');
     });
 
     test(`${funcs.record.name} works`, async () => {
@@ -89,7 +91,7 @@ describe('Recording functions', () => {
       mockAudioContext.close(); // End the recording signal playing
 
       // Resolving the promise before processing is done throws an error
-      expect(soundPromise).toThrowError('recording still being processed');
+      expect(soundPromise).toThrow('recording still being processed');
       expect(stringify(soundPromise)).toEqual('<SoundPromise>');
       const mockRecordedSound = funcs.silence_sound(0);
 
@@ -101,12 +103,12 @@ describe('Recording functions', () => {
 
   describe(funcs.record_for, () => {
     test('throws error if called without init_record', () => {
-      expect(() => funcs.record_for(0, 0)).toThrowError('record_for: Call init_record(); to obtain permission to use microphone');
+      expect(() => funcs.record_for(0, 0)).toThrow('record_for: Call init_record(); to obtain permission to use microphone');
     });
 
     test('throws error if called concurrently with another sound', () => {
-      funcs.play_wave(() => 0, 10);
-      expect(() => funcs.record_for(1, 1)).toThrowError('record_for: Cannot record while another sound is playing!');
+      funcs.play_wave(_t => 0, 10);
+      expect(() => funcs.record_for(1, 1)).toThrow('record_for: Cannot record while another sound is playing!');
     });
 
     test(`${funcs.record_for.name} works`, async () => {

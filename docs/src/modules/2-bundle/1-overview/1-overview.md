@@ -188,3 +188,20 @@ In general, there should not be a need for you to modify this file.  A full expl
 >
 > The alternative would be to have two different `tsconfig.json` files: one for type checking and one for compilation, but that would just
 > add to the clutter of files throughout the repository.
+
+## Bundle Evaluation
+
+`js-slang` guarantees that each bundle is only evaluated once per code evaluation, no matter how many import statements there are in a Source program. In other words, a program like the one below still causes the `sound` bundle to be
+imported only once:
+
+```ts twoslash
+// @paths: { "sound": ["./sound.ts"] }
+// @filename: sound.ts
+export { silence_sound, play } from '@sourceacademy/bundle-sound/functions';
+// @filename: index.ts
+// ---cut---
+import { silence_sound } from 'sound';
+import { play } from 'sound';
+
+play(silence_sound(0));
+```

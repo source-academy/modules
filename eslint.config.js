@@ -153,6 +153,7 @@ export default defineConfig(
       '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
       '@stylistic/function-call-spacing': ['warn', 'never'],
       '@stylistic/function-paren-newline': ['warn', 'multiline-arguments'],
+      '@stylistic/implicit-arrow-linebreak': ['error', 'beside'],
       '@stylistic/keyword-spacing': 'warn',
       '@stylistic/member-delimiter-style': [
         'warn',
@@ -184,7 +185,8 @@ export default defineConfig(
         anonymous: 'always',
         asyncArrow: 'always',
         named: 'never'
-      }]
+      }],
+      '@stylistic/template-curly-spacing': 'warn'
     }
   },
   {
@@ -203,16 +205,19 @@ export default defineConfig(
       // The Markdown parser automatically trims trailing
       // newlines from code blocks.
       '@stylistic/eol-last': 'off',
+      '@stylistic/no-multiple-empty-lines': 'off',
 
       // In code snippets and examples, these rules are often
       // counterproductive to clarity and brevity.
       'no-dupe-keys': 'off',
       'no-redeclare': 'off',
       'no-undef': 'off',
+      'no-unreachable': 'off',
       'no-unused-expressions': 'off',
-      'react/jsx-no-undef': 'off',
       'no-unused-vars': 'off',
+      'no-useless-catch': 'off',
       'padded-blocks': 'off',
+      'react/jsx-no-undef': 'off',
 
       // Adding a "use strict" directive at the top of every
       // code block is tedious and distracting. The config
@@ -252,7 +257,7 @@ export default defineConfig(
         tags: ['hidden']
       }],
 
-      'import/extensions': ['error', { json: 'always' }],
+      'import/extensions': ['error', { css: 'always', json: 'always' }],
       'import/first': 'warn',
       'import/newline-after-import': 'warn',
       // This rule is very time intensive.
@@ -278,10 +283,16 @@ export default defineConfig(
       'no-restricted-imports': [
         'error',
         {
-          paths: [{
-            name: 'commander',
-            message: 'Import from @commander-js/extra-typings instead'
-          }]
+          paths: [
+            {
+              name: 'commander',
+              message: 'Import from @commander-js/extra-typings instead'
+            },
+            {
+              name: 'lodash',
+              message: 'Use es-toolkit instead'
+            }
+          ]
         }
       ],
       'prefer-const': ['warn', { destructuring: 'all' }],
@@ -308,7 +319,8 @@ export default defineConfig(
         // Prevent the parser from going any higher in the directory tree
         // to find a tsconfig
         tsconfigRootDir: import.meta.dirname,
-        project: true
+        projectService: true,
+        // project: true
       }
     },
     plugins: {
@@ -334,12 +346,13 @@ export default defineConfig(
       '@typescript-eslint/no-explicit-any': 'off', // Was 'error'
       '@typescript-eslint/no-import-type-side-effects': 'error',
       '@typescript-eslint/no-redundant-type-constituents': 'off', // Was 'error'
+
       // This rule doesn't seem to fail locally but fails on the CI
-      // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
+      '@typescript-eslint/no-unnecessary-type-assertion': process.env.CI ? 'off' : 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
 
-      // TODO: Turn this back on
-      '@typescript-eslint/only-throw-error': 'off'
+      // This rule doesn't seem to fail locally but fails on the CI
+      '@typescript-eslint/only-throw-error': process.env.CI ? 'off' : 'error',
     },
     settings: {
       'import/resolver': {
@@ -402,6 +415,11 @@ export default defineConfig(
 
       'import/extensions': 'off',
 
+      'no-restricted-imports': ['error', {
+        name: 'assert',
+        message: 'Please use the assert from js-slang instead'
+      }],
+
       '@typescript-eslint/no-empty-object-type': ['error', {
         allowInterfaces: 'with-single-extends',
         allowWithName: '(?:Props)|(?:State)$'
@@ -410,6 +428,15 @@ export default defineConfig(
       '@typescript-eslint/no-unsafe-function-type': 'off',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
     },
+  },
+  {
+    name: 'Rules for bundles',
+    files: ['src/bundles/**/*.ts*'],
+    ignores: ['src/bundles/**/__tests__/*.ts*'],
+    rules: {
+      // Rule doesn't work properly on CI
+      '@sourceacademy/throw-runtime-error': process.env.CI ? 'off' : 'error'
+    }
   },
   {
     name: 'Rules specifically for bundle entrypoints',
@@ -429,6 +456,14 @@ export default defineConfig(
     }
   },
   {
+    name: 'Rules for tabs',
+    files: ['src/tabs/**/*.ts*'],
+    ignores: ['src/tabs/**/__tests__/*.ts*'],
+    rules: {
+      '@sourceacademy/instanceof-check': 'error'
+    }
+  },
+  {
     name: 'Rules specifically for tab entrypoints',
     files: [
       'src/tabs/*/index.tsx',
@@ -441,9 +476,9 @@ export default defineConfig(
   {
     name: 'Rules for modules libraries',
     files: ['lib/**/*.{ts,cts}'],
+    ignores: ['**/*.md/**/*.ts'],
     rules: {
       'func-style': 'off',
-      'import/extensions': ['error', 'never', { json: 'always' }],
       'no-constant-condition': 'off', // Was 'error',
       'no-fallthrough': 'off',
 
@@ -476,7 +511,7 @@ export default defineConfig(
     files: [
       '**/__tests__/**/*.ts*',
       '**/__mocks__/**/*.ts*',
-      '**/vitest.*.ts'
+      '**/vitest.*.ts',
     ],
     rules: {
       'no-empty-pattern': 'off', // vitest requires certain things to be destructured using an object pattern
@@ -522,21 +557,13 @@ export default defineConfig(
       '.github/actions/**/*.ts',
       '**/vitest.config.{js,ts}'
     ],
+    ignores: ['**/*.md/**/*.ts'],
     rules: {
       'import/extensions': ['error', 'ignorePackages', {
         ts: 'never',
         cts: 'never',
         json: 'always'
       }],
-    }
-  },
-  {
-    name: 'Rules for Vitest files',
-    files: ['**/vitest.{config,setup}.ts', './devserver/vite.config.ts'],
-    languageOptions: {
-      parserOptions: {
-        project: './tsconfig.json'
-      }
     }
   },
   {

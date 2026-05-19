@@ -1,7 +1,8 @@
+import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 
 import {
-  UnitestBundleInternalError,
+  UnittestBundleInternalError,
   type Suite,
   type SuiteResult,
   type Test,
@@ -20,7 +21,7 @@ function getNewSuite(name?: string): Suite {
  * If describe was called multiple times from the root level, we need somewhere
  * to collect those Suite Results since none of them will have a parent suite
  */
-export const suiteResults: SuiteResult[] = [];
+export const topLevelSuiteResults: SuiteResult[] = [];
 
 export let currentSuite: Suite | null = null;
 export let currentTest: string | null = null;
@@ -32,16 +33,21 @@ function handleErr(err: any) {
   if (err.message) {
     return (err as Error).message;
   }
+  // eslint-disable-next-line @sourceacademy/throw-runtime-error
   throw err;
 }
 
 function runTest(name: string, funcName: string, func: Test) {
+  if (!isFunctionOfLength(func, 0)) {
+    throw new UnittestBundleInternalError(`${funcName}: A test must be a nullary function!`);
+  }
+
   if (currentSuite === null) {
-    throw new UnitestBundleInternalError(`${funcName} must be called from within a test suite!`);
+    throw new UnittestBundleInternalError(`${funcName} must be called from within a test suite!`);
   }
 
   if (currentTest !== null) {
-    throw new UnitestBundleInternalError(`${funcName} cannot be called from within another test!`);
+    throw new UnittestBundleInternalError(`${funcName} cannot be called from within another test!`);
   }
 
   try {
@@ -52,7 +58,7 @@ function runTest(name: string, funcName: string, func: Test) {
       passed: true,
     });
   } catch (err) {
-    if (err instanceof UnitestBundleInternalError) {
+    if (err instanceof UnittestBundleInternalError) {
       throw err;
     }
 
@@ -104,13 +110,21 @@ function determinePassCount(results: (TestResult | SuiteResult)[]): number {
  * @param func Function containing tests.
  */
 export function describe(msg: string, func: TestSuite): void {
-  const oldSuite = currentSuite;
+  if (!isFunctionOfLength(func, 0)) {
+    throw new UnittestBundleInternalError(`${describe.name}: A test suite must be a nullary function!`);
+  }
+
+  const parentSuite = currentSuite;
   const newSuite = getNewSuite(msg);
 
   currentSuite = newSuite;
   newSuite.startTime = performance.now();
-  func();
-  currentSuite = oldSuite;
+
+  try {
+    func();
+  } finally {
+    currentSuite = parentSuite;
+  }
 
   const passCount = determinePassCount(newSuite.results);
   const suiteResult: SuiteResult = {
@@ -121,13 +135,13 @@ export function describe(msg: string, func: TestSuite): void {
     runtime: performance.now() - newSuite.startTime
   };
 
-  if (oldSuite !== null) {
-    oldSuite.results.push(suiteResult);
+  if (parentSuite !== null) {
+    parentSuite.results.push(suiteResult);
   } else {
-    suiteResults.push(suiteResult);
+    topLevelSuiteResults.push(suiteResult);
   }
 }
 
 context.moduleContexts.unittest.state = {
-  suiteResults
+  suiteResults: topLevelSuiteResults
 };

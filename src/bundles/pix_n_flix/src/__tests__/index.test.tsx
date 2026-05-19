@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, test as baseTest, vi } from 'vitest';
 import { cleanup, render, type RenderResult } from 'vitest-browser-react';
 import * as funcs from '../functions';
-import type { Pixel, VideoElement } from '../types';
+import type { BundlePacket, Pixel, VideoElement } from '../types';
 
 interface Fixtures {
   canvas: HTMLCanvasElement;
   image: HTMLImageElement;
   video: VideoElement;
-  reinit: () => ReturnType<ReturnType<typeof funcs.start>['init']>;
+  reinit: () => BundlePacket;
   errLogger: () => void;
 }
 
@@ -26,6 +26,7 @@ const test = baseTest.extend<{
     cleanup();
   },
   fixtures: async ({ screen }, fixture) => {
+    funcs.start();
     const { init, deinit } = funcs.start();
     const errLogger = vi.fn();
     const canvas = screen
@@ -70,11 +71,19 @@ describe('pixel manipulation functions', () => {
     it('works', () => {
       expect(funcs.alpha_of([0, 0, 0, 255])).toEqual(255);
     });
+
+    it('throws error when argument is not a pixel', () => {
+      expect(() => funcs.alpha_of(0 as any)).toThrow('alpha_of: Expected pixel, got 0.');
+    });
   });
 
   describe(funcs.red_of, () => {
     it('works', () => {
       expect(funcs.red_of([255, 0, 0, 0])).toEqual(255);
+    });
+
+    it('throws error when argument is not a pixel', () => {
+      expect(() => funcs.red_of(0 as any)).toThrow('red_of: Expected pixel, got 0.');
     });
   });
 
@@ -82,11 +91,19 @@ describe('pixel manipulation functions', () => {
     it('works', () => {
       expect(funcs.green_of([0, 255, 0, 0])).toEqual(255);
     });
+
+    it('throws error when argument is not a pixel', () => {
+      expect(() => funcs.green_of(0 as any)).toThrow('green_of: Expected pixel, got 0.');
+    });
   });
 
   describe(funcs.blue_of, () => {
     it('works', () => {
       expect(funcs.blue_of([0, 0, 255, 0])).toEqual(255);
+    });
+
+    it('throws error when argument is not a pixel', () => {
+      expect(() => funcs.blue_of(0 as any)).toThrow('blue_of: Expected pixel, got 0.');
     });
   });
 
@@ -97,6 +114,10 @@ describe('pixel manipulation functions', () => {
       for (let i = 0; i < 4; i++) {
         expect(pixel[i]).toEqual(i + 1);
       }
+    });
+
+    it('throws error when first argument is not a pixel', () => {
+      expect(() => funcs.set_rgba(0 as any, 1, 2, 3, 4)).toThrow('set_rgba: Expected pixel for pixel, got 0.');
     });
   });
 });
@@ -138,7 +159,7 @@ describe(funcs.writeToBuffer, () => {
 
   test('with invalid data', ({ fixtures: { errLogger } }) => {
     const img = funcs.new_image();
-    funcs.set_rgba(img[0][0], 999, 999, 999, 999);
+    img[0][0] = [999, 999, 999, 999];
 
     const imageData = new ImageData(width, height);
     const buffer = imageData.data;
@@ -150,6 +171,19 @@ describe(funcs.writeToBuffer, () => {
     for (let i = 0; i < 4; i++) {
       expect(buffer[i]).toEqual(0);
     }
+  });
+});
+
+describe(funcs.install_filter, () => {
+  it('throws an error when passed an invalid filter', () => {
+    expect(() => funcs.install_filter(0 as any)).toThrow('install_filter: Expected filter, got 0.');
+  });
+});
+
+describe(funcs.compose_filter, () => {
+  it('throws an error when passed invalid filters', () => {
+    expect(() => funcs.compose_filter(0 as any, (_s, _d) => {})).toThrow('compose_filter: Expected filter for filter1, got 0.');
+    expect(() => funcs.compose_filter((_s, _d) => {}, 0 as any)).toThrow('compose_filter: Expected filter for filter2, got 0.');
   });
 });
 
@@ -195,6 +229,13 @@ describe('video functions', () => {
       expect(() => funcs.set_fps(999)).not.toThrow();
       const { FPS } = reinit();
       expect(FPS).toEqual(60);
+    });
+  });
+
+  describe(funcs.set_loop_count, () => {
+    it('throws an error when given not an integer', () => {
+      expect(() => funcs.set_loop_count('a' as any)).toThrow('set_loop_count: Expected integer, got "a".');
+      expect(() => funcs.set_loop_count(0.5)).toThrow('set_loop_count: Expected integer, got 0.5.');
     });
   });
 });

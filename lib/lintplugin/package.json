@@ -1,6 +1,6 @@
 {
   "name": "@sourceacademy/lint-plugin",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "readme": "./README.md",
   "type": "module",
   "exports": {
@@ -28,18 +28,20 @@
   "devDependencies": {
     "@eslint/markdown": "^7.5.1",
     "@sourceacademy/modules-buildtools": "workspace:^",
+    "@sourceacademy/modules-lib": "workspace:^",
     "@sourceacademy/modules-repotools": "workspace:^",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "@typescript-eslint/rule-tester": "^8.58.0",
-    "@typescript-eslint/utils": "^8.58.0",
+    "@typescript-eslint/rule-tester": "^8.58.2",
+    "@typescript-eslint/utils": "^8.58.2",
     "@vitest/eslint-plugin": "^1.6.14",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsdoc": "^62.0.0",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^7.0.1",
     "globals": "^17.0.0",
+    "js-slang": "^1.0.92",
     "typescript": "^6.0.2",
-    "typescript-eslint": "^8.58.0"
+    "typescript-eslint": "^8.58.2"
   },
   "scripts": {
     "build": "node ./build.js",

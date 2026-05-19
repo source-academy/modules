@@ -1,10 +1,11 @@
 {
   "name": "@sourceacademy/bundle-sound",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "dependencies": {
     "@sourceacademy/bundle-midi": "workspace:^",
-    "js-slang": "^1.0.85"
+    "@sourceacademy/modules-lib": "workspace:^",
+    "js-slang": "^1.0.92"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
@@ -23,8 +24,9 @@
     "lint": "buildtools lint .",
     "tsc": "buildtools tsc .",
     "test": "buildtools test --project .",
-    "postinstall": "buildtools compile",
-    "serve": "yarn buildtools serve"
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
   },
   "scripts-info": {
     "build": "Compiles the given bundle to the output directory",

@@ -1,4 +1,5 @@
-import { head, is_list, is_pair, list, tail } from 'js-slang/dist/stdlib/list';
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { head, is_null, is_pair, tail } from 'js-slang/dist/stdlib/list';
 import type { BinaryTree, EmptyBinaryTree, NonEmptyBinaryTree } from './types';
 
 /**
@@ -26,7 +27,15 @@ export function make_empty_tree(): BinaryTree {
  * @returns A binary tree
  */
 export function make_tree(value: any, left: BinaryTree, right: BinaryTree): BinaryTree {
-  return list(value, left, right);
+  if (!is_tree(left)) {
+    throw new InvalidParameterTypeError('binary tree', left, make_tree.name, 'left');
+  }
+
+  if (!is_tree(right)) {
+    throw new InvalidParameterTypeError('binary tree', right, make_tree.name, 'right');
+  }
+
+  return [value, [left, [right, null]]];
 }
 
 /**
@@ -39,19 +48,18 @@ export function make_tree(value: any, left: BinaryTree, right: BinaryTree): Bina
  * ```
  * @param value Value to be tested
  */
-export function is_tree(value: any): value is BinaryTree {
-  // TODO: value parameter should be of type unknown
-  if (!is_list(value)) return false;
-
+export function is_tree(value: unknown): value is BinaryTree {
   if (is_empty_tree(value)) return true;
 
+  if (!is_pair(value)) return false;
+
   const left = tail(value);
-  if (!is_list(left) || !is_tree(head(left))) return false;
+  if (!is_pair(left) || !is_tree(head(left))) return false;
 
   const right = tail(left);
   if (!is_pair(right) || !is_tree(head(right))) return false;
 
-  return tail(right) === null;
+  return is_null(tail(right));
 }
 
 /**
@@ -65,17 +73,17 @@ export function is_tree(value: any): value is BinaryTree {
  * @param value Value to be tested
  * @returns bool
  */
-export function is_empty_tree(value: BinaryTree): value is EmptyBinaryTree {
+export function is_empty_tree(value: unknown): value is EmptyBinaryTree {
   return value === null;
 }
 
 function throwIfNotNonEmptyTree(value: unknown, func_name: string): asserts value is NonEmptyBinaryTree {
   if (!is_tree(value)) {
-    throw new Error(`${func_name} expects binary tree, received: ${value}`);
+    throw new InvalidParameterTypeError('binary tree', value, func_name);
   }
 
   if (is_empty_tree(value)) {
-    throw new Error(`${func_name} received an empty binary tree!`);
+    throw new InvalidParameterTypeError('non-empty binary tree', value, func_name);
   }
 }
 
@@ -91,7 +99,7 @@ function throwIfNotNonEmptyTree(value: unknown, func_name: string): asserts valu
  */
 export function entry(t: BinaryTree): any {
   throwIfNotNonEmptyTree(t, entry.name);
-  return t[0];
+  return head(t);
 }
 
 /**
@@ -106,7 +114,7 @@ export function entry(t: BinaryTree): any {
  */
 export function left_branch(t: BinaryTree): BinaryTree {
   throwIfNotNonEmptyTree(t, left_branch.name);
-  return head(tail(t));
+  return head(tail(t)!);
 }
 
 /**
@@ -121,5 +129,5 @@ export function left_branch(t: BinaryTree): BinaryTree {
  */
 export function right_branch(t: BinaryTree): BinaryTree {
   throwIfNotNonEmptyTree(t, right_branch.name);
-  return head(tail(tail(t)));
+  return head(tail(tail(t)!)!);
 }

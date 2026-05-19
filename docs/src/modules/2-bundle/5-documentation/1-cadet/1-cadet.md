@@ -12,6 +12,9 @@ By reading comments and type annotations, `typedoc` is able to generate both hum
 >
 > This does mean that if the documentation is built without running `tsc`, there is a possibility that type errors will cause `typedoc` to crash.
 
+Your documentation should be comprehensive and detailed such that someone with no experience with your bundle will be able to learn and use the its
+functionalities from scratch.
+
 ## Writing Documentation
 
 `typedoc` reads both Typescript type annotations, as well as [TSDOC](https://tsdoc.org) style comments. It will build documentation for all functions and constants exported by the particular bundle's entry point.
@@ -226,8 +229,28 @@ When the documentation is renderered, a code block is produced:
 ![](./docExample.png)
 
 Note that your code examples should be surrounded in a Markdown code block (using the triple backticks ```` ``` ````). This will
-help Typedoc figure out what content belongs to your code block. The language specifier is not required here as it is assumed that
-your code examples are written in Typescript.
+help Typedoc figure out what content belongs to your code block. The code block should begin the line after the `@example` tag
+
+```ts
+/**
+ * @example
+ * ```
+ * const x = 10 + 10;
+ * ```
+ */
+```
+
+rather than on the same line:
+
+```ts
+/**
+ * @example ```
+ * const x = 10 + 10;
+ * ```
+ */
+```
+
+The language specifier is not required here as it is assumed that your code examples are written in Typescript.
 
 ::: details Why you should use a code block
 
