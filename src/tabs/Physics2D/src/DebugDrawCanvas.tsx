@@ -6,18 +6,18 @@ import type { PhysicsWorld } from '@sourceacademy/bundle-physics_2d/PhysicsWorld
 import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
 import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebGLCanvas';
 import { useAnimation } from '@sourceacademy/modules-lib/tabs/useAnimation';
-import React from 'react';
+import { useRef, useState } from 'react';
 
 interface DebugDrawCanvasProps {
   world: PhysicsWorld;
 }
 
 export default function DebugDrawCanvas({ world }: DebugDrawCanvasProps) {
-  const debugDraw = React.useRef<DebugDraw | null>(null);
+  const debugDraw = useRef<DebugDraw | null>(null);
 
-  const [camX, setCamX] = React.useState(0);
-  const [zoomLevel, setZoomLevel] = React.useState(1);
-  const [updateStep, setUpdateStep] = React.useState(1 / 60);
+  const [camX, setCamX] = useState(0);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [updateStep, setUpdateStep] = useState(1 / 60);
 
   const { start, stop, isPlaying, setCanvas, drawFrame } = useAnimation({
     autoStart: false,
