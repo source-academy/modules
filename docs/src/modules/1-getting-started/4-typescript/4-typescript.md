@@ -267,9 +267,8 @@ function foo(x) {
 }
 ```
 
-Since the `any` type basically disables type checking entirely, you run the risk of writing unsafe code that might error at runtime.
-
-Currently, this is allowed so long as the `noImplicitAny` Typescript option is set to `true`. This may change in the future, so wherever possible you should avoid using the `any` type implicitly.
+Since the `any` type basically disables type checking entirely, you run the risk of writing unsafe code that might error at runtime. This is thus considered an error.
+If you do really want the `any` type, then you should explicitly annotate the type.
 
 ## Mismatched Typescript Versions
 
