@@ -516,10 +516,11 @@ function throwIfNotPixel(obj: unknown, func_name: string, param_name?: string): 
 // =============================================================================
 
 /**
- * Starts processing the image or video using the installed filter.
+ *
+ * @hidden
  */
-export function start() {
-  const startPacket: PixNFlixState = {
+export function internal_start(): PixNFlixState {
+  return {
     init,
     deinit,
     startVideo,
@@ -528,14 +529,17 @@ export function start() {
     updateVolume,
     updateDimensions,
   };
+}
+
+/**
+ * Starts processing the image or video using the installed filter.
+ */
+export function start(): void {
+  const startPacket = internal_start();
 
   if (!context.moduleContexts.pix_n_flix.state) {
     context.moduleContexts.pix_n_flix.state = startPacket;
   }
-
-  return {
-    toReplString: () => '[Pix N Flix]',
-  };
 }
 
 /**
