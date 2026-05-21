@@ -1,8 +1,3 @@
-import type { ReplResult } from '@sourceacademy/modules-lib/types';
-
-export type VideoElement = HTMLVideoElement & { srcObject?: MediaStream };
-export type ImageElement = HTMLImageElement;
-export type CanvasElement = HTMLCanvasElement;
 export type ErrorLogger = (
   error: string[] | string,
   isSlangError?: boolean
@@ -26,12 +21,11 @@ export type BundlePacket = {
 };
 export type Queue = () => void;
 
-export interface StartPacket extends ReplResult {
-  toReplString: () => string;
+export interface PixNFlixState {
   init: (
-    image: ImageElement,
-    video: VideoElement,
-    canvas: CanvasElement,
+    image: HTMLImageElement,
+    video: HTMLVideoElement,
+    canvas: HTMLCanvasElement,
     errorLogger: ErrorLogger,
     tabsPackage: TabsPacket
   ) => BundlePacket;
@@ -41,10 +35,6 @@ export interface StartPacket extends ReplResult {
   updateFPS: (fps: number) => void;
   updateVolume: (volume: number) => void;
   updateDimensions: (width: number, height: number) => void;
-}
-
-export interface PixNFlixModuleState {
-  pixnflix: StartPacket | null;
 }
 
 export type Pixel = [r: number, g: number, b: number, a: number];

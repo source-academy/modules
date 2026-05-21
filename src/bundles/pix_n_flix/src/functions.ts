@@ -1,4 +1,4 @@
-import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { InternalRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 import {
@@ -17,16 +17,13 @@ import {
 import {
   InputFeed,
   type BundlePacket,
-  type CanvasElement,
   type ErrorLogger,
   type Filter,
-  type ImageElement,
+  type PixNFlixState,
   type Pixel,
   type Pixels,
   type Queue,
-  type StartPacket,
   type TabsPacket,
-  type VideoElement
 } from './types';
 
 // Global Variables
@@ -36,15 +33,14 @@ let FPS: number = DEFAULT_FPS;
 let VOLUME: number = DEFAULT_VOLUME;
 let LOOP_COUNT: number = DEFAULT_LOOP;
 
-let imageElement: ImageElement;
-let videoElement: VideoElement;
-let canvasElement: CanvasElement;
+let imageElement: HTMLImageElement;
+let videoElement: HTMLVideoElement;
+let canvasElement: HTMLCanvasElement;
 let canvasRenderingContext: CanvasRenderingContext2D;
 let errorLogger: ErrorLogger;
 let tabsPackage: TabsPacket;
 
 const pixels: Pixels = [];
-const temporaryPixels: Pixels = [];
 let filter: Filter = copy_image;
 
 let toRunLateQueue: boolean = false;
@@ -92,10 +88,8 @@ export function new_image(): Pixels {
 function setupData(): void {
   for (let i = 0; i < HEIGHT; i += 1) {
     pixels[i] = [];
-    temporaryPixels[i] = [];
     for (let j = 0; j < WIDTH; j += 1) {
       pixels[i][j] = [0, 0, 0, 255];
-      temporaryPixels[i][j] = [0, 0, 0, 255];
     }
   }
 }
@@ -169,7 +163,7 @@ function readFromBuffer(pixelData: Uint8ClampedArray, src: Pixels) {
 }
 
 /** @hidden */
-function drawImage(source: ImageElement | VideoElement): void {
+function drawImage(source: HTMLImageElement | HTMLVideoElement): void {
   if (keepAspectRatio) {
     canvasRenderingContext.rect(0, 0, WIDTH, HEIGHT);
     canvasRenderingContext.fill();
@@ -189,10 +183,11 @@ function drawImage(source: ImageElement | VideoElement): void {
   const pixelObj = canvasRenderingContext.getImageData(0, 0, WIDTH, HEIGHT);
   readFromBuffer(pixelObj.data, pixels);
 
+  const output = new_image();
   // Runtime checks to guard against crashes
   try {
-    filter(pixels, temporaryPixels);
-    writeToBuffer(pixelObj.data, temporaryPixels);
+    filter(pixels, output);
+    writeToBuffer(pixelObj.data, output);
   } catch (e: any) {
     console.error(JSON.stringify(e));
     const errMsg = `There is an error with filter function, filter will be reset to default. ${e.name}: ${e.message}`;
@@ -207,7 +202,7 @@ function drawImage(source: ImageElement | VideoElement): void {
     }
 
     filter = copy_image;
-    filter(pixels, temporaryPixels);
+    filter(pixels, output);
   }
 
   canvasRenderingContext.putImageData(pixelObj, 0, 0);
@@ -419,7 +414,7 @@ function updateVolume(v: number): void {
 }
 
 // queue is run when init is called
-let queue: Queue = () => {};
+let queue: Queue = () => { };
 
 /**
  * Adds function to the queue
@@ -435,7 +430,7 @@ function enqueue(funcToAdd: Queue): void {
 }
 
 // lateQueue is run after media has properly loaded
-let lateQueue: Queue = () => {};
+let lateQueue: Queue = () => { };
 
 /**
  * Adds function to the lateQueue
@@ -458,9 +453,9 @@ function lateEnqueue(funcToAdd: Queue): void {
  * @hidden
  */
 function init(
-  image: ImageElement,
-  video: VideoElement,
-  canvas: CanvasElement,
+  image: HTMLImageElement,
+  video: HTMLVideoElement,
+  canvas: HTMLCanvasElement,
   _errorLogger: ErrorLogger,
   _tabsPackage: TabsPacket
 ): BundlePacket {
@@ -470,7 +465,7 @@ function init(
   errorLogger = _errorLogger;
   tabsPackage = _tabsPackage;
   const context = canvasElement.getContext('2d');
-  if (!context) throw new Error('Canvas context should not be null.');
+  if (!context) throw new InternalRuntimeError('Canvas context should not be null.');
   canvasRenderingContext = context;
   setupData();
   if (inputFeed === InputFeed.Camera) {
@@ -495,13 +490,13 @@ function init(
  */
 function deinit(): void {
   stopVideo();
-  queue = () => {};
+  queue = () => { };
   const stream = videoElement.srcObject;
   if (!stream) {
     return;
   }
-  stream.getTracks()
-    .forEach((track) => {
+  (stream as MediaStream).getTracks()
+    .forEach(track => {
       track.stop();
     });
 }
@@ -524,7 +519,7 @@ function throwIfNotPixel(obj: unknown, func_name: string, param_name?: string): 
  * Starts processing the image or video using the installed filter.
  */
 export function start() {
-  const startPacket: StartPacket = {
+  const startPacket: PixNFlixState = {
     init,
     deinit,
     startVideo,
@@ -532,16 +527,15 @@ export function start() {
     updateFPS,
     updateVolume,
     updateDimensions,
-    toReplString: () => '[Pix N Flix]',
   };
 
   if (!context.moduleContexts.pix_n_flix.state) {
-    context.moduleContexts.pix_n_flix.state = {
-      pixnflix: startPacket
-    };
+    context.moduleContexts.pix_n_flix.state = startPacket;
   }
 
-  return startPacket;
+  return {
+    toReplString: () => '[Pix N Flix]',
+  };
 }
 
 /**
