@@ -253,7 +253,8 @@ test('Matches snapshot', () => {
 
 The `ModuleTab` type exported from the common library can be used to type your components:
 
-```tsx {4}
+```tsx twoslash {4}
+// @jsx: react-jsx
 import type { ModuleTab } from '@sourceacademy/modules-lib/types';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 
