@@ -1,6 +1,5 @@
 import { InternalRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
-import context from 'js-slang/context';
 import {
   DEFAULT_FPS,
   DEFAULT_HEIGHT,
@@ -529,17 +528,6 @@ export function internal_start(): PixNFlixState {
     updateVolume,
     updateDimensions,
   };
-}
-
-/**
- * Starts processing the image or video using the installed filter.
- */
-export function start(): void {
-  const startPacket = internal_start();
-
-  if (!context.moduleContexts.pix_n_flix.state) {
-    context.moduleContexts.pix_n_flix.state = startPacket;
-  }
 }
 
 /**
