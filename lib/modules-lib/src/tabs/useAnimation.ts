@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
 export interface AnimationHookContext {
-
   /**
    * Stop the animation
    */
@@ -142,7 +141,7 @@ export function useAnimation({
   autoStart,
   callback,
   frameDuration,
-  startTimestamp
+  startTimestamp = 0
 }: AnimationOptions): AnimationHookResult {
   /*
    * Because we always pass the same instance of animCallback to requestAnimationFrame,
@@ -159,7 +158,7 @@ export function useAnimation({
    * that we can cancel it if need be
    */
   const requestIdRef = useRef<number | null>(null);
-  const elapsedRef = useRef(startTimestamp ?? 0);
+  const elapsedRef = useRef(startTimestamp);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   /**
    * Keeps track of the time when the last frame was drawn
@@ -182,7 +181,8 @@ export function useAnimation({
   }
 
   /**
-   * Submit a request to call `animCallback` using `requestAnimationFrame`
+   * Submit a request to call `animCallback` using `requestAnimationFrame`. Checks
+   * that there isn't already a callback scheduled.
    */
   function requestFrame() {
     if (requestIdRef.current === null) {

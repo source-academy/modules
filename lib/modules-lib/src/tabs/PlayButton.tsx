@@ -28,6 +28,11 @@ export type PlayButtonProps = Omit<ButtonComponentProps, 'text' | 'icon'> & {
    * Props to be passed to the Tooltip component
    */
   tooltipProps?: Omit<TooltipProps, 'content'>;
+
+  /**
+   * Props to be passed to the Icon component
+   */
+  iconProps?: Omit<IconProps, 'icon'>;
 };
 
 /**
@@ -42,6 +47,7 @@ export default function PlayButton({
   pausedIcon = 'play',
   isPlaying,
   tooltipProps,
+  iconProps,
   ...props
 }: PlayButtonProps) {
   return <Tooltip
@@ -49,7 +55,10 @@ export default function PlayButton({
     {...tooltipProps}
   >
     <ButtonComponent {...props} >
-      <Icon icon={isPlaying ? playingIcon : pausedIcon} />
+      <Icon
+        icon={isPlaying ? playingIcon : pausedIcon}
+        {...iconProps}
+      />
     </ButtonComponent>
   </Tooltip>;
 }
