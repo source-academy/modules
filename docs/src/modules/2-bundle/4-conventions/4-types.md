@@ -5,7 +5,7 @@ outline: [2, 3]
 
 # Developer Runtime Type Checking in Source
 
-Though bundles are written in Typescript, Source (except for the Typed Variant) does not support anything beyond rudimentary type checking. This means that it can determine that an expression
+Though bundles are written in Typescript, Source itself (except for the Typed Variant) does not support anything beyond rudimentary type checking. This means that it can determine that an expression
 like `1 - "string"` is badly typed, but it can't type check more complex programs like the one below, especially when bundle functions are involved:
 
 ```ts
@@ -66,6 +66,11 @@ export function show(rune: unknown) {
 
 Errors related to type checking the values passed in as parameters should make use of the provided error types to ensure that error messages remain consistent
 across bundles. The following sections discuss how to use the validation functions and errors provided by `modules-lib`.
+
+> [!WARNING] instanceof not working
+>
+> If the type you are checking against is a class that's intended to be passed between tabs and bundles, you might find that
+> `instanceof` checks always return `false`. Refer to [this issue](../../5-advanced/misc#instanceof-will-not-work-at-runtime) for more details.
 
 ## `InvalidParameterTypeError`
 
@@ -217,14 +222,14 @@ You can use this function instead of doing the boolean check:
 import { InvalidNumberParameterError } from '@sourceacademy/modules-lib/errors';
 import { assertNumberWithinRange, isNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
 
-function foo(val: unknown) {
+function foo(val: unknown): asserts val is number {
   if (!isNumberWithinRange(val, 0, 1)) {
     throw new InvalidNumberParameterError(val, { max: 1, min: 0 }, foo.name);
   }
 }
 
 // can be written as
-function foo(val: unknown) {
+function foo(val: unknown): asserts val is number {
   assertNumberWithinRange(val, { max: 1, min: 0, func_name: foo.name });
 }
 ```

@@ -86,7 +86,7 @@ export default defineTab({ });
 > [!WARNING] Build-Time Types
 >
 > If you're relying on imported packages, you will need to ensure that those types are available when the documentation is being built. Otherwise,
-> Twoslash will thrown an error and Vitepress will terminate the building process early.
+> Twoslash will throw an error and Vitepress will terminate the building process early.
 >
 > If you're importing bundles, then they should be added to `dependencies`. If you need `@types` packages, they should be added to `devDependencies`.
 
