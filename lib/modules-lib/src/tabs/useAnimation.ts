@@ -102,8 +102,7 @@ export interface AnimationHookResult {
   readonly timestamp: number;
 
   /**
-   * Pass this ref to the canvas element that will be used to draw
-   * the frames
+   * Use this to set the canvas element that will be passed into the callback
    */
   setCanvas: (canvas: HTMLCanvasElement) => void;
 
