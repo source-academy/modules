@@ -60,7 +60,7 @@ const MarkSweep: ModuleTab = ({ debuggerCtx }) => {
       } else if (!value) {
         color = ThemeColor.GREY;
       } else if (isTag(value)) {
-      // is a tag
+        // is a tag
         color = ThemeColor.PINK;
       } else {
         color = ThemeColor.BLUE;
@@ -146,7 +146,7 @@ const MarkSweep: ModuleTab = ({ debuggerCtx }) => {
             <Slider
               disabled={commandHeap.length <= 1}
               min={0}
-              max={commandHeap.length > 0 ? commandHeap.length - 1 : 0}
+              max={Math.max(commandHeap.length - 1, 0)}
               onChange={setValue}
               value={value <= commandHeap.length ? value : 0}
               labelValues={flips}

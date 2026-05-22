@@ -10,12 +10,12 @@ import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
 import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 import type { ModuleTab } from '@sourceacademy/modules-lib/types/index';
 import type { Simulation } from 'nbody';
-import React from 'react';
+import { useState } from 'react';
 
 /**
  * React component props for the control buttons.
  */
-type SimControlProps = {
+interface SimControlProps {
   sim: Simulation;
 };
 
@@ -24,10 +24,10 @@ type SimControlProps = {
  * the simulations
  */
 function SimulationControls({ sim }: SimControlProps) {
-  const [isPlaying, setIsPlaying] = React.useState(false);
-  const [speed, setSpeed] = React.useState(1);
-  const [showTrails, setShowTrails] = React.useState(sim.getShowTrails());
-  const [showUniverse, setShowUniverse] = React.useState(sim.universes.map(() => true));
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1);
+  const [showTrails, setShowTrails] = useState(sim.getShowTrails());
+  const [showUniverse, setShowUniverse] = useState(sim.universes.map(() => true));
 
   return <>
     <ButtonGroup style={{ width: '100%', margin: '4px auto' }}>
@@ -68,7 +68,8 @@ function SimulationControls({ sim }: SimControlProps) {
         style={{
           margin: '4px auto'
         }}
-      /></Tooltip>
+      />
+    </Tooltip>
     <ButtonGroup style={{
       margin: '4px auto'
     }}>

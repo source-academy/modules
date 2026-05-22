@@ -18,7 +18,7 @@ import {
 } from '@sourceacademy/bundle-pix_n_flix/types';
 import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 import type { DebuggerContext } from '@sourceacademy/modules-lib/types/index';
-import React, { type ChangeEvent, type DragEvent } from 'react';
+import { Component, type ChangeEvent, type DragEvent } from 'react';
 
 type Props = {
   debuggerContext: DebuggerContext;
@@ -40,7 +40,7 @@ interface State {
   mode: VideoMode;
 };
 
-class PixNFlix extends React.Component<Props, State> {
+class PixNFlix extends Component<Props, State> {
   private $video: HTMLVideoElement | null = null;
 
   private $image: HTMLImageElement | null = null;
@@ -375,9 +375,7 @@ export default defineTab({
     const state = getModuleState(ctx, 'pix_n_flix');
     return state !== null;
   },
-  body: (debuggerContext: any) => (
-    <PixNFlix debuggerContext={debuggerContext} />
-  ),
+  body: debuggerContext => <PixNFlix debuggerContext={debuggerContext} />,
   label: 'PixNFlix Live Feed',
   iconName: 'mobile-video'
 });
