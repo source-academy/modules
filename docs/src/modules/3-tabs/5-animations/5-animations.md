@@ -114,7 +114,7 @@ export default function HollusionCanvas({ rune }: Props) {
 }
 ```
 
-The hook provides functionality like starting, stopping and setting the animation to an aribtrary timestamp:
+The hook provides functionality like starting, stopping and setting the animation to an arbitrary timestamp:
 
 ```ts twoslash
 // @noErrors: 2554
