@@ -35,7 +35,7 @@ export function play_in_tab(sound: Pair<Wave, number>): void {
 
 Functionally, `Sound` behaves like a primitive type: as far as a cadet using the `sound` bundle is concerned, the bundle allows them to make and manipulate `Sound`s.
 
-## Cadet Facing Type Guards
+## Type Guards for Abstractions
 
 Where possible, you should provide type guard functions that allow the cadet to type check their own code. For example, instead of expecting the cadet to check that
 the given value is a `Sound` by manually checking for a pair containing a function and a number, you should provide an `is_sound` function that abstracts that work

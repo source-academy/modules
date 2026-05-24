@@ -90,9 +90,12 @@ Note that not every export from `js-slang` is currently supported. Below is the 
 - `js-slang/dist/stdlib`
 - `js-slang/dist/types`
 - `js-slang/dist/utils/assert`
+- `js-slang/dist/utils/rttc`
 - `js-slang/dist/utils/stringify`
 - `js-slang/dist/parser/parser`
 - `js-slang/dist/cse-machine/interpreter`
+
+Relying on other parts of `js-slang` will cause your bundle to error at runtime.
 
 ## 4. Cadet Facing Type Guard Conventions
 
@@ -156,3 +159,6 @@ only be able to narrow the return type of your type guard to `boolean`. In such 
 > Type guards have a specific syntax for their return types (e.g. `value is null`) that isn't Source compliant.
 > These types get replaced with `boolean` when the documentation is generated, so you don't have to worry
 > about type guard types appearing in your documentation.
+
+You can have any number of type guards in your bundle, but you should have type guards specifically for the types that your bundle introduces. Refer
+to [this](./2-abstractions#type-guards-for-abstractions) for more information.
