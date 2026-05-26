@@ -1,5 +1,6 @@
-import { InternalRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+// @ts-nochec k
+import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { assertFunctionOfLength, assertNumberWithinRange, isNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
 import {
   DEFAULT_FPS,
   DEFAULT_HEIGHT,
@@ -13,45 +14,30 @@ import {
   MIN_HEIGHT,
   MIN_WIDTH
 } from './constants';
-import {
-  InputFeed,
-  type BundlePacket,
-  type ErrorLogger,
-  type Filter,
-  type PixNFlixState,
-  type Pixel,
-  type Pixels,
-  type Queue,
-  type TabsPacket,
+import type {
+  Dimensions,
+  ErrorLogger,
+  Filter,
+  PixNFlixGlobalState,
+  Pixel,
+  Pixels,
+  TabsPacket,
 } from './types';
 
-// Global Variables
-let WIDTH: number = DEFAULT_WIDTH;
-let HEIGHT: number = DEFAULT_HEIGHT;
-let FPS: number = DEFAULT_FPS;
-let VOLUME: number = DEFAULT_VOLUME;
-let LOOP_COUNT: number = DEFAULT_LOOP;
+const state: PixNFlixGlobalState = {
+  filter: copy_image,
+  expectedDimensions: [DEFAULT_WIDTH, DEFAULT_HEIGHT],
 
-let imageElement: HTMLImageElement;
-let videoElement: HTMLVideoElement;
-let canvasElement: HTMLCanvasElement;
-let canvasRenderingContext: CanvasRenderingContext2D;
+  inputMode: { type: 'camera', stream: null, fps: DEFAULT_FPS },
+  changeInputMode(mode) {
+    this.inputMode = mode;
+  }
+};
+
 let errorLogger: ErrorLogger;
 let tabsPackage: TabsPacket;
 
-const pixels: Pixels = [];
-let filter: Filter = copy_image;
-
-let toRunLateQueue: boolean = false;
-let videoIsPlaying: boolean = false;
-
-let requestId: number;
-let prevTime: number | null = null;
-let totalElapsedTime: number = 0;
-let playCount: number = 0;
-
-let inputFeed: InputFeed = InputFeed.Camera;
-let url: string = '';
+const playCount: number = 0;
 
 // Images dont aspect ratio correctly
 let keepAspectRatio: boolean = true;
@@ -65,32 +51,21 @@ let displayHeight: number = HEIGHT;
 // =============================================================================
 
 /**
- * Creates a black image.
+ * Creates a black image with the given height and width
  *
+ * @param height Height of image (in number of pixels)
+ * @param width Width of image (in number of pixels)
  * @hidden
  */
-export function new_image(): Pixels {
+export function new_image(height: number, width: number): Pixels {
   const img: Pixels = [];
-  for (let i = 0; i < HEIGHT; i += 1) {
+  for (let i = 0; i < height; i += 1) {
     img[i] = [];
-    for (let j = 0; j < WIDTH; j += 1) {
+    for (let j = 0; j < width; j += 1) {
       img[i][j] = [0, 0, 0, 255];
     }
   }
   return img;
-}
-
-/**
- * Setup the pixel arrays
- * @hidden
- */
-function setupData(): void {
-  for (let i = 0; i < HEIGHT; i += 1) {
-    pixels[i] = [];
-    for (let j = 0; j < WIDTH; j += 1) {
-      pixels[i][j] = [0, 0, 0, 255];
-    }
-  }
 }
 
 /**
@@ -104,9 +79,10 @@ export function isPixelValid(pixel: Pixel): boolean {
   let ok = true;
   for (let i = 0; i < 4; i += 1) {
     const value = pixel[i];
-    if (typeof value === 'number' && value >= 0 && value <= 255) {
+    if (isNumberWithinRange(value, 0, 255)) {
       continue;
     }
+
     ok = false;
     pixel[i] = 0;
   }
@@ -119,19 +95,21 @@ export function isPixelValid(pixel: Pixel): boolean {
  * Exported for testing.
  * @hidden
  */
-export function writeToBuffer(buffer: Uint8ClampedArray, data: Pixels) {
-  let ok: boolean = true;
+export function writeToBuffer(buffer: Uint8ClampedArray, data: Pixels, [width, height]: Dimensions) {
+  let ok = true;
 
-  for (let i = 0; i < HEIGHT; i += 1) {
-    for (let j = 0; j < WIDTH; j += 1) {
-      const p = i * WIDTH * 4 + j * 4;
-      if (!isPixelValid(data[i][j])) {
+  for (let i = 0; i < Math.min(height, data.length); i++) {
+    const row = data[i];
+
+    for (let j = 0; j < Math.min(width, row.length); j++) {
+      const p = i * width * 4 + j * 4;
+      if (!isPixelValid(row[j])) {
         ok = false;
       }
-      buffer[p] = data[i][j][0];
-      buffer[p + 1] = data[i][j][1];
-      buffer[p + 2] = data[i][j][2];
-      buffer[p + 3] = data[i][j][3];
+      buffer[p] = row[j][0];
+      buffer[p + 1] = row[j][1];
+      buffer[p + 2] = row[j][2];
+      buffer[p + 3] = row[j][3];
     }
   }
 
@@ -141,131 +119,6 @@ export function writeToBuffer(buffer: Uint8ClampedArray, data: Pixels) {
     console.warn(warningMessage);
     errorLogger(warningMessage, false);
   }
-}
-
-/**
- * Retrieve pixel data from the buffer and convert it to the 2D array format.
- * @hidden
- */
-function readFromBuffer(pixelData: Uint8ClampedArray, src: Pixels) {
-  for (let i = 0; i < HEIGHT; i += 1) {
-    for (let j = 0; j < WIDTH; j += 1) {
-      const p = i * WIDTH * 4 + j * 4;
-      src[i][j] = [
-        pixelData[p],
-        pixelData[p + 1],
-        pixelData[p + 2],
-        pixelData[p + 3]
-      ];
-    }
-  }
-}
-
-/** @hidden */
-function drawImage(source: HTMLImageElement | HTMLVideoElement): void {
-  if (keepAspectRatio) {
-    canvasRenderingContext.rect(0, 0, WIDTH, HEIGHT);
-    canvasRenderingContext.fill();
-    canvasRenderingContext.drawImage(
-      source,
-      0,
-      0,
-      intrinsicWidth,
-      intrinsicHeight,
-      (WIDTH - displayWidth) / 2,
-      (HEIGHT - displayHeight) / 2,
-      displayWidth,
-      displayHeight
-    );
-  } else canvasRenderingContext.drawImage(source, 0, 0, WIDTH, HEIGHT);
-
-  const pixelObj = canvasRenderingContext.getImageData(0, 0, WIDTH, HEIGHT);
-  readFromBuffer(pixelObj.data, pixels);
-
-  const output = new_image();
-  // Runtime checks to guard against crashes
-  try {
-    filter(pixels, output);
-    writeToBuffer(pixelObj.data, output);
-  } catch (e: any) {
-    console.error(JSON.stringify(e));
-    const errMsg = `There is an error with filter function, filter will be reset to default. ${e.name}: ${e.message}`;
-    console.error(errMsg);
-
-    if (!e.name) {
-      errorLogger('There is an error with filter function (error shown below). Filter will be reset back to the default. If you are facing an infinite loop error, you can consider increasing the timeout period (clock icon) at the top / reducing the frame dimensions.');
-
-      errorLogger([e], true);
-    } else {
-      errorLogger(errMsg, false);
-    }
-
-    filter = copy_image;
-    filter(pixels, output);
-  }
-
-  canvasRenderingContext.putImageData(pixelObj, 0, 0);
-}
-
-/** @hidden */
-function draw(timestamp: number): void {
-  requestId = window.requestAnimationFrame(draw);
-
-  if (prevTime === null) prevTime = timestamp;
-
-  const elapsed = timestamp - prevTime;
-  if (elapsed > 1000 / FPS && videoIsPlaying) {
-    drawImage(videoElement);
-    prevTime = timestamp;
-    totalElapsedTime += elapsed;
-    if (toRunLateQueue) {
-      lateQueue();
-      toRunLateQueue = false;
-    }
-  }
-}
-
-/** @hidden */
-function playVideoElement() {
-  if (!videoIsPlaying) {
-    videoElement
-      .play()
-      .then(() => {
-        videoIsPlaying = true;
-      })
-      .catch((err) => {
-        console.warn(err);
-      });
-  }
-}
-
-/** @hidden */
-function pauseVideoElement() {
-  if (videoIsPlaying) {
-    videoElement.pause();
-    videoIsPlaying = false;
-  }
-}
-
-/** @hidden */
-export function startVideo(): void {
-  if (videoIsPlaying) return;
-  if (inputFeed === InputFeed.Camera) videoIsPlaying = true;
-  else playVideoElement();
-  requestId = window.requestAnimationFrame(draw);
-}
-
-/**
- * Stops the loop that is drawing on image.
- *
- * @hidden
- */
-export function stopVideo(): void {
-  if (!videoIsPlaying) return;
-  if (inputFeed === InputFeed.Camera) videoIsPlaying = false;
-  else pauseVideoElement();
-  window.cancelAnimationFrame(requestId);
-  prevTime = null;
 }
 
 /** @hidden */
@@ -278,7 +131,7 @@ function setAspectRatioDimensions(w: number, h: number): void {
 }
 
 /** @hidden */
-function loadMedia(): void {
+export function getMediaStream() {
   if (!navigator.mediaDevices?.getUserMedia) {
     const errMsg = 'The browser you are using does not support getUserMedia';
     console.error(errMsg);
@@ -288,7 +141,7 @@ function loadMedia(): void {
   // If video is already part of bundle state
   if (videoElement.srcObject) return;
 
-  navigator.mediaDevices?.getUserMedia({ video: true })
+  navigator.mediaDevices.getUserMedia({ video: true })
     .then((stream) => {
       videoElement.srcObject = stream;
       videoElement.onloadedmetadata = () => setAspectRatioDimensions(
@@ -306,200 +159,6 @@ function loadMedia(): void {
   startVideo();
 }
 
-/** @hidden */
-function loadAlternative(): void {
-  try {
-    if (inputFeed === InputFeed.VideoURL) {
-      videoElement.src = url;
-      startVideo();
-    } else if (inputFeed === InputFeed.ImageURL) {
-      imageElement.src = url;
-    }
-  } catch (e: any) {
-    console.error(JSON.stringify(e));
-    const errMsg = `There is an error loading the URL. ${e.name}: ${e.message}`;
-    console.error(errMsg);
-    loadMedia();
-    return;
-  }
-  toRunLateQueue = true;
-
-  /** Setting Up videoElement */
-  videoElement.crossOrigin = 'anonymous';
-  videoElement.onended = () => {
-    playCount++;
-    if (playCount >= LOOP_COUNT) {
-      playCount = 0;
-
-      tabsPackage.onClickStill();
-    } else {
-      stopVideo();
-      startVideo();
-    }
-  };
-  videoElement.onloadedmetadata = () => {
-    setAspectRatioDimensions(videoElement.videoWidth, videoElement.videoHeight);
-  };
-
-  /** Setting Up imageElement */
-  imageElement.crossOrigin = 'anonymous';
-  imageElement.onload = () => {
-    setAspectRatioDimensions(
-      imageElement.naturalWidth,
-      imageElement.naturalHeight
-    );
-    drawImage(imageElement);
-  };
-}
-
-/**
- * Update the FPS
- *
- * @hidden
- */
-function updateFPS(fps: number): void {
-  if (fps < MIN_FPS || fps > MAX_FPS) return;
-  FPS = fps;
-}
-
-/**
- * Update the image dimensions.
- *
- * @hidden
- */
-function updateDimensions(w: number, h: number): void {
-  // ignore if no change or bad inputs
-  if (
-    (w === WIDTH && h === HEIGHT)
-    || w > MAX_WIDTH
-    || w < MIN_WIDTH
-    || h > MAX_HEIGHT
-    || h < MIN_HEIGHT
-  ) {
-    return;
-  }
-
-  const status = videoIsPlaying;
-  stopVideo();
-
-  WIDTH = w;
-  HEIGHT = h;
-
-  imageElement.width = w;
-  imageElement.height = h;
-  videoElement.width = w;
-  videoElement.height = h;
-  canvasElement.width = w;
-  canvasElement.height = h;
-
-  setupData();
-
-  if (!status) {
-    setTimeout(() => stopVideo(), 50);
-    return;
-  }
-
-  startVideo();
-}
-
-/**
- * Updates the volume of the local video
- *
- * @hidden
- */
-function updateVolume(v: number): void {
-  VOLUME = Math.max(0.0, Math.min(1.0, v));
-  videoElement.volume = VOLUME;
-}
-
-// queue is run when init is called
-let queue: Queue = () => { };
-
-/**
- * Adds function to the queue
- *
- * @hidden
- */
-function enqueue(funcToAdd: Queue): void {
-  const funcToRunFirst: Queue = queue;
-  queue = () => {
-    funcToRunFirst();
-    funcToAdd();
-  };
-}
-
-// lateQueue is run after media has properly loaded
-let lateQueue: Queue = () => { };
-
-/**
- * Adds function to the lateQueue
- *
- * @hidden
- */
-function lateEnqueue(funcToAdd: Queue): void {
-  const funcToRunFirst: Queue = lateQueue;
-  lateQueue = () => {
-    funcToRunFirst();
-    funcToAdd();
-  };
-}
-
-/**
- * Used to initialise the video library.
- *
- * @returns a BundlePackage object containing Video's properties
- *     and other miscellaneous information relevant to tabs.
- * @hidden
- */
-function init(
-  image: HTMLImageElement,
-  video: HTMLVideoElement,
-  canvas: HTMLCanvasElement,
-  _errorLogger: ErrorLogger,
-  _tabsPackage: TabsPacket
-): BundlePacket {
-  imageElement = image;
-  videoElement = video;
-  canvasElement = canvas;
-  errorLogger = _errorLogger;
-  tabsPackage = _tabsPackage;
-  const context = canvasElement.getContext('2d');
-  if (!context) throw new InternalRuntimeError('Canvas context should not be null.');
-  canvasRenderingContext = context;
-  setupData();
-  if (inputFeed === InputFeed.Camera) {
-    loadMedia();
-  } else {
-    loadAlternative();
-  }
-  queue();
-  return {
-    HEIGHT,
-    WIDTH,
-    FPS,
-    VOLUME,
-    inputFeed
-  };
-}
-
-/**
- * Destructor that does necessary cleanup.
- *
- * @hidden
- */
-function deinit(): void {
-  stopVideo();
-  queue = () => { };
-  const stream = videoElement.srcObject;
-  if (!stream) {
-    return;
-  }
-  (stream as MediaStream).getTracks()
-    .forEach(track => {
-      track.stop();
-    });
-}
-
 function throwIfNotPixel(obj: unknown, func_name: string, param_name?: string): asserts obj is Pixel {
   if (
     !Array.isArray(obj) ||
@@ -513,22 +172,6 @@ function throwIfNotPixel(obj: unknown, func_name: string, param_name?: string): 
 // =============================================================================
 // Module's Exposed Functions
 // =============================================================================
-
-/**
- *
- * @hidden
- */
-export function internal_start(): PixNFlixState {
-  return {
-    init,
-    deinit,
-    startVideo,
-    stopVideo,
-    updateFPS,
-    updateVolume,
-    updateDimensions,
-  };
-}
 
 /**
  * Returns the red component of the given pixel.
@@ -611,7 +254,7 @@ export function set_rgba(
  * @returns The height of the displayed images (in pixels)
  */
 export function image_height(): number {
-  return HEIGHT;
+  return state.expectedDimensions[1];
 }
 
 /**
@@ -621,7 +264,7 @@ export function image_height(): number {
  * @returns The width of the displayed images (in pixels)
  */
 export function image_width(): number {
-  return WIDTH;
+  return state.expectedDimensions[0];
 }
 
 /**
@@ -632,9 +275,11 @@ export function image_width(): number {
  * @param dest Destination image
  */
 export function copy_image(src: Pixels, dest: Pixels) {
-  for (let i = 0; i < HEIGHT; i += 1) {
-    for (let j = 0; j < WIDTH; j += 1) {
-      dest[i][j] = src[i][j];
+  for (let i = 0; i < src.length; i += 1) {
+    const srcRow = src[i];
+
+    for (let j = 0; j < src.length; j += 1) {
+      dest[i][j] = srcRow[j];
     }
   }
 }
@@ -648,11 +293,11 @@ export function copy_image(src: Pixels, dest: Pixels) {
  * two-dimensional arrays of Pixels:
  * the source image and the destination image.
  *
- * @param _filter The filter to be installed
+ * @param filter The filter to be installed
  */
-export function install_filter(_filter: Filter): void {
-  assertFunctionOfLength(_filter, 2, install_filter.name, 'filter');
-  filter = _filter;
+export function install_filter(filter: Filter): void {
+  assertFunctionOfLength(filter, 2, install_filter.name, 'filter');
+  state.filter = filter;
 }
 
 /**
@@ -719,7 +364,12 @@ export function set_dimensions(width: number, height: number): void {
  */
 export function set_fps(fps: number): void {
   assertNumberWithinRange(fps, set_fps.name, MIN_FPS, MAX_FPS);
-  enqueue(() => updateFPS(fps));
+  if (state.inputMode.type === 'image' || state.inputMode.type === 'local') {
+    // TODO: Throw error?
+    return;
+  }
+
+  state.inputMode.fps = fps;
 }
 
 /**
@@ -729,14 +379,16 @@ export function set_fps(fps: number): void {
  * @param volume Volume of video (Default value of 50)
  */
 export function set_volume(volume: number): void {
+  if (state.inputMode.type !== 'video') {
+    throw new GeneralRuntimeError(`${set_volume.name}: Must be used with video mode!`);
+  }
+
   assertNumberWithinRange(volume, set_volume.name);
 
   if (volume > 100) volume = 100;
   else if (volume < 0) volume = 0;
 
-  volume /= 100;
-
-  enqueue(() => updateVolume(volume));
+  state.inputMode.volume = volume / 100;
 }
 
 /**
@@ -744,7 +396,7 @@ export function set_volume(volume: number): void {
  * instead of using the default live camera feed.
  */
 export function use_local_file(): void {
-  inputFeed = InputFeed.Local;
+  state.changeInputMode({ type: 'local' });
 }
 
 /**
@@ -753,13 +405,15 @@ export function use_local_file(): void {
  *
  * @param URL URL of the image
  */
-export function use_image_url(URL: string): void {
+export function use_image_from_url(URL: string): void {
   if (typeof URL !== 'string') {
-    throw new InvalidParameterTypeError('string', URL, use_image_url.name);
+    throw new InvalidParameterTypeError('string', URL, use_image_from_url.name);
   }
 
-  inputFeed = InputFeed.ImageURL;
-  url = URL;
+  state.changeInputMode({
+    type: 'image',
+    url: URL
+  });
 }
 
 /**
@@ -768,13 +422,18 @@ export function use_image_url(URL: string): void {
  *
  * @param URL URL of the video
  */
-export function use_video_url(URL: string): void {
+export function use_video_from_ul(URL: string): void {
   if (typeof URL !== 'string') {
-    throw new InvalidParameterTypeError('string', URL, use_video_url.name);
+    throw new InvalidParameterTypeError('string', URL, use_video_from_ul.name);
   }
 
-  inputFeed = InputFeed.VideoURL;
-  url = URL;
+  state.changeInputMode({
+    type: 'video',
+    url: URL,
+    fps: DEFAULT_FPS,
+    loopCount: DEFAULT_LOOP,
+    volume: DEFAULT_VOLUME
+  });
 }
 
 /**
@@ -808,5 +467,9 @@ export function keep_aspect_ratio(_keepAspectRatio: boolean): void {
 export function set_loop_count(n: number): void {
   assertNumberWithinRange(n, set_loop_count.name);
 
-  LOOP_COUNT = n;
+  if (state.inputMode.type !== 'video') {
+    throw new GeneralRuntimeError(`${set_loop_count.name} can only be used with video mode.`);
+  }
+
+  state.inputMode.loopCount = n;
 }

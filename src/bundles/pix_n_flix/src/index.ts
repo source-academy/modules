@@ -39,8 +39,8 @@ export {
   set_fps,
   set_volume,
   use_local_file,
-  use_image_url,
-  use_video_url,
+  use_image_from_url as use_image_url,
+  use_video_from_ul as use_video_url,
   get_video_time,
   keep_aspect_ratio,
   set_loop_count

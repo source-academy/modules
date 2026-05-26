@@ -1,10 +1,41 @@
+
 export type ErrorLogger = (
   error: string[] | string,
   isSlangError?: boolean
 ) => void;
+
+export interface CameraInputMode {
+  type: 'camera';
+  stream: MediaStream | false | null;
+  fps: number;
+}
+
+export interface VideoInputMode {
+  type: 'video';
+  url: string;
+  volume: number;
+  fps: number;
+  loopCount: number;
+}
+
+export interface ImageInputMode {
+  type: 'image';
+  url: string;
+}
+
+/**
+ * Mode waiting for the user to upload either an image or a video
+ */
+export interface LocalInputMode {
+  type: 'local';
+}
+
+export type InputMode = CameraInputMode | ImageInputMode | LocalInputMode | VideoInputMode;
+
 export type TabsPacket = {
   onClickStill: () => void;
 };
+
 export enum InputFeed {
   Camera,
   ImageURL,
@@ -19,6 +50,7 @@ export type BundlePacket = {
   VOLUME: number;
   inputFeed: InputFeed;
 };
+
 export type Queue = () => void;
 
 export interface PixNFlixState {
@@ -45,3 +77,15 @@ export type Pixels = Pixel[][];
  * transforms it, and then writes the output to `dest`.
  */
 export type Filter = (src: Pixels, dest: Pixels) => void;
+
+export type Dimensions = [width: number, height: number];
+
+export interface PixNFlixGlobalState {
+  expectedDimensions: Dimensions;
+
+  errorLogger?: ErrorLogger;
+  filter: Filter;
+
+  inputMode: InputMode;
+  changeInputMode: (newMode: InputMode) => void;
+}
