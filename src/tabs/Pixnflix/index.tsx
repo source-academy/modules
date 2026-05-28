@@ -13,13 +13,12 @@ import {
 } from '@sourceacademy/bundle-pix_n_flix/constants';
 import {
   InputFeed,
-  type BundlePacket,
   type ErrorLogger,
-  type TabsPacket
+  type PixNFlixState,
 } from '@sourceacademy/bundle-pix_n_flix/types';
-import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 import type { DebuggerContext } from '@sourceacademy/modules-lib/types/index';
-import React, { type ChangeEvent, type DragEvent } from 'react';
+import { Component, type ChangeEvent, type DragEvent } from 'react';
 
 type Props = {
   debuggerContext: DebuggerContext;
@@ -32,7 +31,7 @@ enum VideoMode {
   Image,
 }
 
-type State = {
+interface State {
   width: number;
   height: number;
   FPS: number;
@@ -41,31 +40,14 @@ type State = {
   mode: VideoMode;
 };
 
-type Video = {
-  toReplString: () => string;
-  init: (
-    image: HTMLImageElement | null,
-    video: HTMLVideoElement | null,
-    canvas: HTMLCanvasElement | null,
-    errorLogger: ErrorLogger,
-    tabsPackage: TabsPacket
-  ) => BundlePacket;
-  deinit: () => void;
-  startVideo: () => void;
-  stopVideo: () => void;
-  updateFPS: (fps: number) => void;
-  updateDimensions: (width: number, height: number) => void;
-  updateVolume: (v: number) => void;
-};
-
-class PixNFlix extends React.Component<Props, State> {
+class PixNFlix extends Component<Props, State> {
   private $video: HTMLVideoElement | null = null;
 
   private $image: HTMLImageElement | null = null;
 
   private $canvas: HTMLCanvasElement | null = null;
 
-  private pixNFlix: Video;
+  private pixNFlix: PixNFlixState;
 
   constructor(props: Props) {
     super(props);
@@ -78,27 +60,21 @@ class PixNFlix extends React.Component<Props, State> {
       mode: VideoMode.Video
     };
     const { debuggerContext } = this.props;
-    this.pixNFlix = debuggerContext.result.value;
+    this.pixNFlix = getModuleState<PixNFlixState>(debuggerContext, 'pix_n_flix')!;
   }
 
-  public componentDidMount() {
-    if (this.isPixNFlix()) {
-      this.setupVideoService();
-      window.addEventListener('beforeunload', this.pixNFlix.deinit);
-    }
+  public override componentDidMount() {
+    this.setupVideoService();
+    window.addEventListener('beforeunload', this.pixNFlix.deinit);
   }
 
-  public componentWillUnmount() {
-    if (this.isPixNFlix()) {
-      this.closeVideo();
-      window.removeEventListener('beforeunload', this.pixNFlix.deinit);
-    }
+  public override componentWillUnmount() {
+    this.closeVideo();
+    window.removeEventListener('beforeunload', this.pixNFlix.deinit);
   }
 
   public setupVideoService = () => {
-    if (this.$video && this.$canvas && this.isPixNFlix()) {
-      const { debuggerContext } = this.props;
-      this.pixNFlix = debuggerContext.result.value;
+    if (this.$video && this.$canvas && this.$image) {
       // get the properties of the video in an object
       const { HEIGHT, WIDTH, FPS, VOLUME, inputFeed } = this.pixNFlix.init(
         this.$image,
@@ -127,21 +103,15 @@ class PixNFlix extends React.Component<Props, State> {
   };
 
   public closeVideo = () => {
-    if (this.isPixNFlix()) {
-      this.pixNFlix.deinit();
-    }
+    this.pixNFlix.deinit();
   };
 
   public handleStartVideo = () => {
-    if (this.isPixNFlix()) {
-      this.pixNFlix.startVideo();
-    }
+    this.pixNFlix.startVideo();
   };
 
   public handleStopVideo = () => {
-    if (this.isPixNFlix()) {
-      this.pixNFlix.stopVideo();
-    }
+    this.pixNFlix.stopVideo();
   };
 
   public onClickStill = () => {
@@ -185,9 +155,7 @@ class PixNFlix extends React.Component<Props, State> {
       this.setState({
         FPS: fps
       });
-      if (this.isPixNFlix()) {
-        this.pixNFlix.updateFPS(fps);
-      }
+      this.pixNFlix.updateFPS(fps);
     }
   };
 
@@ -202,9 +170,7 @@ class PixNFlix extends React.Component<Props, State> {
         width: w,
         height: h
       });
-      if (this.isPixNFlix()) {
-        this.pixNFlix.updateDimensions(w, h);
-      }
+      this.pixNFlix.updateDimensions(w, h);
     }
   };
 
@@ -254,21 +220,9 @@ class PixNFlix extends React.Component<Props, State> {
     this.pixNFlix.updateVolume(volume);
   };
 
-  public printError: ErrorLogger = () => {};
+  public printError: ErrorLogger = () => { };
 
-  /**
-   * Checks if pixNFlix is initialised as the last line (ie. REPL output is '[Pix N Flix]')
-   * @returns Boolean if pixNFlix is intialised
-   */
-  private isPixNFlix() {
-    return (
-      this.pixNFlix
-      && this.pixNFlix.toReplString
-      && this.pixNFlix.toReplString() === '[Pix N Flix]'
-    );
-  }
-
-  public render() {
+  public override render() {
     const { mode, width, height, FPS, volume, hasAudio } = this.state;
     const displayOptions = mode === VideoMode.Still || mode === VideoMode.Video;
     const videoIsActive = mode === VideoMode.Video;
@@ -417,10 +371,11 @@ class PixNFlix extends React.Component<Props, State> {
 }
 
 export default defineTab({
-  toSpawn: () => true,
-  body: (debuggerContext: any) => (
-    <PixNFlix debuggerContext={debuggerContext} />
-  ),
+  toSpawn: ctx => {
+    const state = getModuleState(ctx, 'pix_n_flix');
+    return state !== null;
+  },
+  body: debuggerContext => <PixNFlix debuggerContext={debuggerContext} />,
   label: 'PixNFlix Live Feed',
   iconName: 'mobile-video'
 });

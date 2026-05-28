@@ -1,6 +1,6 @@
 {
   "name": "@sourceacademy/bundle-arcade_2d",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "dependencies": {
     "phaser": "^3.54.0"

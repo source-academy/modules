@@ -25,5 +25,5 @@ describe(getModuleState, () => {
     };
 
     expect(getModuleState(context as any, 'module')).toBeNull();
-  })
+  });
 });

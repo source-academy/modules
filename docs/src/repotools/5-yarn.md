@@ -59,6 +59,13 @@ as Vitest throughout the repository.
 The `@types` packages provide Typescript types for packages that don't come with them bundled. Typescript types should not ever be required at runtime,
 so they should be specified as a `devDependency`.
 
+### 7. `.node-version` file is respected
+
+The `.node-version` file contains the version of NodeJS that the repository is to use (the "repository" version). The constraints enforced are:
+
+1. The version of `@types/node` must be compatible with the repository version
+2. The version of Node specified under `devEngines.runtime` must be compatible with the repository version
+
 ## Parallel Execution of Scripts
 
 Using the various options of the `yarn workspaces foreach` command, you can execute multiple tasks in parallel, which is how many of the commands in the root repository have been set up.

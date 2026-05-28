@@ -4090,7 +4090,7 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4100,6 +4100,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-communication@workspace:src/bundles/communication"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     "@types/uniqid": "npm:^5.3.4"
     mqtt: "npm:^4.3.7"
     os: "npm:^0.1.2"
@@ -4113,6 +4114,8 @@ __metadata:
   resolution: "@sourceacademy/bundle-copy_gc@workspace:src/bundles/copy_gc"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
+    es-toolkit: "npm:^1.44.0"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4126,7 +4129,7 @@ __metadata:
     "@jscad/stl-serializer": "npm:2.1.11"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     save-file: "npm:^2.3.1"
     typescript: "npm:^6.0.2"
   languageName: unknown
@@ -4140,7 +4143,7 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     es-toolkit: "npm:^1.44.0"
     gl-matrix: "npm:^3.3.0"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4150,17 +4153,18 @@ __metadata:
   resolution: "@sourceacademy/bundle-game@workspace:src/bundles/game"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     phaser: "npm:^3.54.0"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/bundle-mark_sweep@workspace:src/bundles/mark_sweep":
+"@sourceacademy/bundle-mark_sweep@workspace:^, @sourceacademy/bundle-mark_sweep@workspace:src/bundles/mark_sweep":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-mark_sweep@workspace:src/bundles/mark_sweep"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    es-toolkit: "npm:^1.44.0"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4171,8 +4175,8 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    js-slang: "npm:^1.0.85"
-    typescript: "npm:^5.8.2"
+    js-slang: "npm:^1.0.92"
+    typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
 
@@ -4182,7 +4186,7 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4192,6 +4196,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-nbody@workspace:src/bundles/nbody"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     "@types/plotly.js": "npm:^2.35.4"
     "@types/three": "npm:^0.183.0"
     nbody: "npm:^0.2.0"
@@ -4231,12 +4236,12 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
-    "@vitest/browser-playwright": "npm:4.1.4"
+    "@vitest/browser-playwright": "npm:4.1.5"
     playwright: "npm:^1.55.1"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
     typescript: "npm:^6.0.2"
-    vitest: "npm:4.1.4"
+    vitest: "npm:4.1.5"
     vitest-browser-react: "npm:^2.1.0"
   languageName: unknown
   linkType: soft
@@ -4250,7 +4255,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/plotly.js": "npm:^3.0.0"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     plotly.js-dist: "npm:^3.0.0"
     typescript: "npm:^6.0.2"
   languageName: unknown
@@ -4261,6 +4266,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-repeat@workspace:src/bundles/repeat"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4271,7 +4277,7 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4285,7 +4291,7 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/three": "npm:^0.183.0"
     es-toolkit: "npm:^1.44.0"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     three: "npm:^0.183.0"
     typescript: "npm:^6.0.2"
   languageName: unknown
@@ -4300,7 +4306,7 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     es-toolkit: "npm:^1.44.0"
     gl-matrix: "npm:^3.3.0"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4310,6 +4316,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-rune_in_words@workspace:src/bundles/rune_in_words"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4330,7 +4337,7 @@ __metadata:
     "@sourceacademy/bundle-midi": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4340,7 +4347,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-sound_matrix@workspace:src/bundles/sound_matrix"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4352,7 +4359,7 @@ __metadata:
     "@sourceacademy/bundle-midi": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4362,8 +4369,9 @@ __metadata:
   resolution: "@sourceacademy/bundle-unittest@workspace:src/bundles/unittest"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     es-toolkit: "npm:^1.44.0"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4375,6 +4383,7 @@ __metadata:
     "@blueprintjs/core": "npm:^6.0.0"
     "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"
     react: "npm:^19.0.0"
@@ -4400,6 +4409,7 @@ __metadata:
   dependencies:
     "@eslint/markdown": "npm:^7.5.1"
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     "@sourceacademy/modules-repotools": "workspace:^"
     "@stylistic/eslint-plugin": "npm:^5.10.0"
     "@typescript-eslint/rule-tester": "npm:^8.58.2"
@@ -4411,6 +4421,7 @@ __metadata:
     eslint-plugin-react: "npm:^7.37.4"
     eslint-plugin-react-hooks: "npm:^7.0.1"
     globals: "npm:^17.0.0"
+    js-slang: "npm:^1.0.92"
     typescript: "npm:^6.0.2"
     typescript-eslint: "npm:^8.58.2"
   peerDependencies:
@@ -4456,8 +4467,8 @@ __metadata:
     "@types/http-server": "npm:^0.12.4"
     "@types/node": "npm:^24.0.0"
     "@vitejs/plugin-react": "npm:^6.0.1"
-    "@vitest/browser-playwright": "npm:4.1.4"
-    "@vitest/coverage-v8": "npm:4.1.4"
+    "@vitest/browser-playwright": "npm:4.1.5"
+    "@vitest/coverage-v8": "npm:4.1.5"
     acorn: "npm:^8.8.1"
     acorn-typescript: "npm:^1.4.13"
     astring: "npm:^1.8.6"
@@ -4471,7 +4482,7 @@ __metadata:
     typedoc: "npm:^0.28.18"
     typescript: "npm:^6.0.2"
     vite: "npm:^8.0.5"
-    vitest: "npm:4.1.4"
+    vitest: "npm:4.1.5"
   bin:
     buildtools: ./dist/index.js
   languageName: unknown
@@ -4488,13 +4499,13 @@ __metadata:
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"
     "@vitejs/plugin-react": "npm:^6.0.1"
-    "@vitest/browser-playwright": "npm:4.1.4"
+    "@vitest/browser-playwright": "npm:4.1.5"
     ace-builds: "npm:^1.25.1"
     classnames: "npm:^2.3.1"
     commander: "npm:^14.0.0"
     es-toolkit: "npm:^1.44.0"
     eslint: "npm:^9.35.0"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     playwright: "npm:^1.55.1"
     re-resizable: "npm:^6.9.11"
     react: "npm:^19.0.0"
@@ -4504,7 +4515,7 @@ __metadata:
     typescript: "npm:^6.0.2"
     vite: "npm:^8.0.5"
     vite-plugin-node-polyfills: "npm:^0.26.0"
-    vitest: "npm:4.1.4"
+    vitest: "npm:4.1.5"
     vitest-browser-react: "npm:^2.1.0"
   bin:
     devserver: ./bin.js
@@ -4516,12 +4527,14 @@ __metadata:
   resolution: "@sourceacademy/modules-docserver@workspace:docs"
   dependencies:
     "@shikijs/vitepress-twoslash": "npm:^2.1.0"
+    "@sourceacademy/bundle-rune": "workspace:^"
     "@sourceacademy/bundle-sound": "workspace:^"
     "@sourceacademy/lint-plugin": "workspace:^"
     "@sourceacademy/markdown-plugin-directory-tree": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
+    "@types/node": "npm:^24.0.0"
     cspell: "npm:^9.2.1"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     mermaid: "npm:^11.10.0"
     typescript: "npm:^6.0.2"
     vitepress: "npm:^1.6.4"
@@ -4543,7 +4556,7 @@ __metadata:
     es-toolkit: "npm:^1.44.0"
     snyk-nodejs-lockfile-parser: "npm:^2.4.2"
     typescript: "npm:^6.0.2"
-    vitest: "npm:4.1.4"
+    vitest: "npm:4.1.5"
   languageName: unknown
   linkType: soft
 
@@ -4556,10 +4569,10 @@ __metadata:
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"
     "@vitejs/plugin-react": "npm:^6.0.1"
-    "@vitest/browser-playwright": "npm:4.1.4"
+    "@vitest/browser-playwright": "npm:4.1.5"
     es-toolkit: "npm:^1.44.0"
     eslint: "npm:^9.35.0"
-    js-slang: "npm:^1.0.85"
+    js-slang: "npm:^1.0.92"
     playwright: "npm:^1.55.1"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
@@ -4568,7 +4581,7 @@ __metadata:
     typedoc-plugin-markdown: "npm:^4.7.0"
     typedoc-plugin-rename-defaults: "npm:^0.7.3"
     typescript: "npm:^6.0.2"
-    vitest: "npm:4.1.4"
+    vitest: "npm:4.1.5"
     vitest-browser-react: "npm:^2.1.0"
   languageName: unknown
   linkType: soft
@@ -4580,15 +4593,15 @@ __metadata:
     "@commander-js/extra-typings": "npm:^14.0.0"
     "@types/node": "npm:^24.0.0"
     "@vitejs/plugin-react": "npm:^6.0.1"
-    "@vitest/browser-playwright": "npm:4.1.4"
-    "@vitest/coverage-v8": "npm:4.1.4"
+    "@vitest/browser-playwright": "npm:4.1.5"
+    "@vitest/coverage-v8": "npm:4.1.5"
     chalk: "npm:^5.0.1"
     commander: "npm:^14.0.0"
     es-toolkit: "npm:^1.44.0"
     esbuild: "npm:^0.28.0"
     jsonschema: "npm:^1.5.0"
     typescript: "npm:^6.0.2"
-    vitest: "npm:4.1.4"
+    vitest: "npm:4.1.5"
     vitest-browser-react: "npm:^2.1.0"
   peerDependencies:
     "@vitejs/plugin-react": "*"
@@ -4604,15 +4617,16 @@ __metadata:
     "@eslint/markdown": "npm:^7.5.1"
     "@sourceacademy/lint-plugin": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     "@sourceacademy/modules-repotools": "workspace:^"
     "@sourceacademy/vitest-reporter": "workspace:^"
     "@stylistic/eslint-plugin": "npm:^5.10.0"
     "@types/node": "npm:^24.0.0"
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"
-    "@vitest/coverage-v8": "npm:4.1.4"
+    "@vitest/coverage-v8": "npm:4.1.5"
     "@vitest/eslint-plugin": "npm:^1.6.14"
-    "@vitest/ui": "npm:4.1.4"
+    "@vitest/ui": "npm:4.1.5"
     "@yarnpkg/types": "npm:^4.0.1"
     esbuild: "npm:^0.28.0"
     eslint: "npm:^9.35.0"
@@ -4630,13 +4644,13 @@ __metadata:
     react-dom: "npm:^19.0.0"
     typescript: "npm:^6.0.2"
     typescript-eslint: "npm:^8.58.2"
-    vitest: "npm:4.1.4"
+    vitest: "npm:4.1.5"
     vitest-browser-react: "npm:^2.1.0"
   peerDependencies:
     "@blueprintjs/core": ^6.0.0
     "@blueprintjs/icons": ^6.0.0
     es-toolkit: ^1.44.0
-    js-slang: ^1.0.85
+    js-slang: ^1.0.92
     react: ^19.0.0
     react-dom: ^19.0.0
   languageName: unknown
@@ -4700,13 +4714,13 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"
-    "@vitest/browser-playwright": "npm:4.1.4"
-    "@vitest/coverage-v8": "npm:4.1.4"
+    "@vitest/browser-playwright": "npm:4.1.5"
+    "@vitest/coverage-v8": "npm:4.1.5"
     playwright: "npm:^1.55.1"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
     typescript: "npm:^6.0.2"
-    vitest: "npm:4.1.4"
+    vitest: "npm:4.1.5"
     vitest-browser-react: "npm:^2.1.0"
   languageName: unknown
   linkType: soft
@@ -4718,6 +4732,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
+    "@types/react-dom": "npm:^19.0.0"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
     typescript: "npm:^6.0.2"
@@ -4729,9 +4744,11 @@ __metadata:
   resolution: "@sourceacademy/tab-MarkSweep@workspace:src/tabs/MarkSweep"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
+    "@sourceacademy/bundle-mark_sweep": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
+    "@types/react-dom": "npm:^19.0.0"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
     typescript: "npm:^6.0.2"
@@ -4747,13 +4764,13 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/lodash": "npm:^4.14.198"
-    "@types/react": "npm:^18.3.1"
+    "@types/react": "npm:^19.0.0"
     "@vitest/browser-playwright": "npm:^4.0.4"
     lodash: "npm:^4.17.23"
     playwright: "npm:^1.54.1"
-    react: "npm:^18.3.1"
-    typescript: "npm:^5.8.2"
-    vitest-browser-react: "npm:^2.0.4"
+    react: "npm:^19.0.0"
+    typescript: "npm:^6.0.2"
+    vitest-browser-react: "npm:^2.1.0"
   languageName: unknown
   linkType: soft
 
@@ -4767,6 +4784,7 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/plotly.js": "npm:^2.35.4"
     "@types/react": "npm:^19.0.0"
+    "@types/react-dom": "npm:^19.0.0"
     "@types/three": "npm:^0.183.0"
     nbody: "npm:^0.2.0"
     plotly.js-dist: "npm:^2.17.1"
@@ -4802,6 +4820,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
+    "@types/react-dom": "npm:^19.0.0"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
     typescript: "npm:^6.0.2"
@@ -4817,6 +4836,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
+    "@types/react-dom": "npm:^19.0.0"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
     typescript: "npm:^6.0.2"
@@ -4831,6 +4851,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
+    "@types/react-dom": "npm:^19.0.0"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
     typescript: "npm:^6.0.2"
@@ -4844,6 +4865,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
+    "@types/react-dom": "npm:^19.0.0"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
     typescript: "npm:^6.0.2"
@@ -4859,6 +4881,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
+    "@types/react-dom": "npm:^19.0.0"
     ace-builds: "npm:^1.25.1"
     es-toolkit: "npm:^1.44.0"
     react: "npm:^19.0.0"
@@ -4878,6 +4901,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
+    "@types/react-dom": "npm:^19.0.0"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
     typescript: "npm:^6.0.2"
@@ -4892,13 +4916,14 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
-    "@vitest/browser-playwright": "npm:4.1.4"
+    "@types/react-dom": "npm:^19.0.0"
+    "@vitest/browser-playwright": "npm:4.1.5"
     es-toolkit: "npm:^1.44.0"
     playwright: "npm:^1.55.1"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
     typescript: "npm:^6.0.2"
-    vitest: "npm:4.1.4"
+    vitest: "npm:4.1.5"
     vitest-browser-react: "npm:^2.1.0"
   languageName: unknown
   linkType: soft
@@ -4911,6 +4936,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
+    "@types/react-dom": "npm:^19.0.0"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
     typescript: "npm:^6.0.2"
@@ -4956,6 +4982,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
+    "@types/react-dom": "npm:^19.0.0"
     es-toolkit: "npm:^1.44.0"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
@@ -4985,11 +5012,11 @@ __metadata:
   dependencies:
     "@types/istanbul-lib-report": "npm:^3.0.3"
     "@types/node": "npm:^24.0.0"
-    "@vitest/coverage-v8": "npm:4.1.4"
+    "@vitest/coverage-v8": "npm:4.1.5"
     esbuild: "npm:^0.28.0"
     istanbul-lib-report: "npm:^3.0.1"
     typescript: "npm:^6.0.2"
-    vitest: "npm:4.1.4"
+    vitest: "npm:4.1.5"
   languageName: unknown
   linkType: soft
 
@@ -5446,7 +5473,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/estree@npm:*, @types/estree@npm:1.0.8, @types/estree@npm:^1.0.0, @types/estree@npm:^1.0.6, @types/estree@npm:^1.0.8":
+"@types/estree@npm:*, @types/estree@npm:^1.0.0, @types/estree@npm:^1.0.6, @types/estree@npm:^1.0.8":
+  version: 1.0.9
+  resolution: "@types/estree@npm:1.0.9"
+  checksum: 10c0/3ad3286ca2988cd550dafb8f2ad599c8474868e954fa601a36655bdfefd8039f7c714b8c1c7f2ae219ffbd58bd4660e66fa7479a0120fc02d4777057d4865387
+  languageName: node
+  linkType: hard
+
+"@types/estree@npm:1.0.8":
   version: 1.0.8
   resolution: "@types/estree@npm:1.0.8"
   checksum: 10c0/39d34d1afaa338ab9763f37ad6066e3f349444f9052b9676a7cc0252ef9485a41c6d81c9c4e0d26e9077993354edf25efc853f3224dd4b447175ef62bdcc86a5
@@ -5637,29 +5671,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/prop-types@npm:*":
-  version: 15.7.14
-  resolution: "@types/prop-types@npm:15.7.14"
-  checksum: 10c0/1ec775160bfab90b67a782d735952158c7e702ca4502968aa82565bd8e452c2de8601c8dfe349733073c31179116cf7340710160d3836aa8a1ef76d1532893b1
-  languageName: node
-  linkType: hard
-
 "@types/react-dom@npm:^19.0.0":
   version: 19.2.3
   resolution: "@types/react-dom@npm:19.2.3"
   peerDependencies:
     "@types/react": ^19.2.0
   checksum: 10c0/b486ebe0f4e2fb35e2e108df1d8fc0927ca5d6002d5771e8a739de11239fe62d0e207c50886185253c99eb9dedfeeb956ea7429e5ba17f6693c7acb4c02f8cd1
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:^18.3.1":
-  version: 18.3.28
-  resolution: "@types/react@npm:18.3.28"
-  dependencies:
-    "@types/prop-types": "npm:*"
-    csstype: "npm:^3.2.2"
-  checksum: 10c0/683e19cd12b5c691215529af2e32b5ffbaccae3bf0ba93bfafa0e460e8dfee18423afed568be2b8eadf4b837c3749dd296a4f64e2d79f68fa66962c05f5af661
   languageName: node
   linkType: hard
 
@@ -5848,13 +5865,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/scope-manager@npm:8.58.2, @typescript-eslint/scope-manager@npm:^8.58.0":
+"@typescript-eslint/scope-manager@npm:8.58.2":
   version: 8.58.2
   resolution: "@typescript-eslint/scope-manager@npm:8.58.2"
   dependencies:
     "@typescript-eslint/types": "npm:8.58.2"
     "@typescript-eslint/visitor-keys": "npm:8.58.2"
   checksum: 10c0/9bf17c32d99db840500dfa4f0504635f6422fa435e0d2f3c58c36a88434d7af7ffe7ba9a6b13bd105dfa0f36a74307955ef2837ec5f1855e34c3af1843c11d36
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/scope-manager@npm:^8.58.0":
+  version: 8.58.0
+  resolution: "@typescript-eslint/scope-manager@npm:8.58.0"
+  dependencies:
+    "@typescript-eslint/types": "npm:8.58.0"
+    "@typescript-eslint/visitor-keys": "npm:8.58.0"
+  checksum: 10c0/bd5c16780f22d62359af0f69909f38a15fa3c55e609124a7cd5c2a04322fe41e586d81066f3ad1dcc3c1eff24dbcb48b78d099626d611fbd680c20c005d48f1d
   languageName: node
   linkType: hard
 
@@ -5880,6 +5907,13 @@ __metadata:
     eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
     typescript: ">=4.8.4 <6.1.0"
   checksum: 10c0/1e7248694c15b5e78aeb573aef755513910f6a7ec1842223ec0c8429b6abd7342996de215aefab78520e64d2e8600c9829bdf56132476cb86703fd54f2492467
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/types@npm:8.58.0":
+  version: 8.58.0
+  resolution: "@typescript-eslint/types@npm:8.58.0"
+  checksum: 10c0/f2fe1321758a04591c20d77caba956ae76b77cff0b976a0224b37077d80b1ebd826874d15ec79c3a3b7d57ee5679e5d10756db1b082bde3d51addbd3a8431d38
   languageName: node
   linkType: hard
 
@@ -5928,6 +5962,16 @@ __metadata:
     eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
     typescript: ">=4.8.4 <6.1.0"
   checksum: 10c0/d83e6c7c1b01236d255cabe2a5dc5384eedebc9f9af6aa19cc2ab7d8b280f86912f2b1a87659b2754919afd2606820b4e53862ac91970794e2980bc97487537c
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/visitor-keys@npm:8.58.0":
+  version: 8.58.0
+  resolution: "@typescript-eslint/visitor-keys@npm:8.58.0"
+  dependencies:
+    "@typescript-eslint/types": "npm:8.58.0"
+    eslint-visitor-keys: "npm:^5.0.0"
+  checksum: 10c0/75f3c9c097a308cc6450822a0f81d44c8b79b524e99dd2c41ded347b12f148ab3bd459ce9cc6bd00f8f0725c5831baab6d2561596ead3394ab76dddbeb32cce1
   languageName: node
   linkType: hard
 
@@ -6133,20 +6177,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/browser-playwright@npm:4.1.4":
-  version: 4.1.4
-  resolution: "@vitest/browser-playwright@npm:4.1.4"
+"@vitest/browser-playwright@npm:4.1.5":
+  version: 4.1.5
+  resolution: "@vitest/browser-playwright@npm:4.1.5"
   dependencies:
-    "@vitest/browser": "npm:4.1.4"
-    "@vitest/mocker": "npm:4.1.4"
+    "@vitest/browser": "npm:4.1.5"
+    "@vitest/mocker": "npm:4.1.5"
     tinyrainbow: "npm:^3.1.0"
   peerDependencies:
     playwright: "*"
-    vitest: 4.1.4
+    vitest: 4.1.5
   peerDependenciesMeta:
     playwright:
       optional: false
-  checksum: 10c0/3f2d29631de796d041d43334552b13c2adf3e5ab04b9a60ba28e666b3b4a6628cc57e7a8b4949f4ed4a536a796908079297d9d33b4e90f5b13e2abb45f419c22
+  checksum: 10c0/47b0ecc13757e638f7765cb4b3172e817a25249b00bc4e9462f4228b6336c0b2f7bb692ae636373f55c8e9b35d18eaecb03abd5f15b0c42a8351da9a62f23d9f
   languageName: node
   linkType: hard
 
@@ -6185,30 +6229,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/browser@npm:4.1.4":
-  version: 4.1.4
-  resolution: "@vitest/browser@npm:4.1.4"
+"@vitest/browser@npm:4.1.5":
+  version: 4.1.5
+  resolution: "@vitest/browser@npm:4.1.5"
   dependencies:
     "@blazediff/core": "npm:1.9.1"
-    "@vitest/mocker": "npm:4.1.4"
-    "@vitest/utils": "npm:4.1.4"
+    "@vitest/mocker": "npm:4.1.5"
+    "@vitest/utils": "npm:4.1.5"
     magic-string: "npm:^0.30.21"
     pngjs: "npm:^7.0.0"
     sirv: "npm:^3.0.2"
     tinyrainbow: "npm:^3.1.0"
     ws: "npm:^8.19.0"
   peerDependencies:
-    vitest: 4.1.4
-  checksum: 10c0/c219c685d5befc2372d7cc80ef4ff78c9e57cb4a1bb74ec25d76596c9ad130d2bf67bc05d7ed1a6a8e0da763cd1c523eb81c95cd623c20f163509d0b36dae1c7
+    vitest: 4.1.5
+  checksum: 10c0/ea95d100853dd7a1ea9f1b036edfe441688bf5873742341ebf169ab2e32041ab6e21e5f2df918c3c4b9f110265457cdce0c0afa83407617e460a83979ae48e44
   languageName: node
   linkType: hard
 
-"@vitest/coverage-v8@npm:4.1.4":
-  version: 4.1.4
-  resolution: "@vitest/coverage-v8@npm:4.1.4"
+"@vitest/coverage-v8@npm:4.1.5":
+  version: 4.1.5
+  resolution: "@vitest/coverage-v8@npm:4.1.5"
   dependencies:
     "@bcoe/v8-coverage": "npm:^1.0.2"
-    "@vitest/utils": "npm:4.1.4"
+    "@vitest/utils": "npm:4.1.5"
     ast-v8-to-istanbul: "npm:^1.0.0"
     istanbul-lib-coverage: "npm:^3.2.2"
     istanbul-lib-report: "npm:^3.0.1"
@@ -6218,12 +6262,12 @@ __metadata:
     std-env: "npm:^4.0.0-rc.1"
     tinyrainbow: "npm:^3.1.0"
   peerDependencies:
-    "@vitest/browser": 4.1.4
-    vitest: 4.1.4
+    "@vitest/browser": 4.1.5
+    vitest: 4.1.5
   peerDependenciesMeta:
     "@vitest/browser":
       optional: true
-  checksum: 10c0/e128a70b15eeee55ad201b9f2a9d88f3a2ccd630c1518ec8ab1d80a6e7b557d23d426244ce09748c8553a53725137d92696bd1be3bd9349863dd375749988a4a
+  checksum: 10c0/71bf669cc1714611855caef5e89b4f3e405e410bdb34e4b2f6fbc9dc5e50dd9e09e73068c1750f6bfa03f0cd9209a2b6e03665c3bdbd34e0adff1ca65c482b7b
   languageName: node
   linkType: hard
 
@@ -6249,17 +6293,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/expect@npm:4.1.4":
-  version: 4.1.4
-  resolution: "@vitest/expect@npm:4.1.4"
+"@vitest/expect@npm:4.1.5":
+  version: 4.1.5
+  resolution: "@vitest/expect@npm:4.1.5"
   dependencies:
     "@standard-schema/spec": "npm:^1.1.0"
     "@types/chai": "npm:^5.2.2"
-    "@vitest/spy": "npm:4.1.4"
-    "@vitest/utils": "npm:4.1.4"
+    "@vitest/spy": "npm:4.1.5"
+    "@vitest/utils": "npm:4.1.5"
     chai: "npm:^6.2.2"
     tinyrainbow: "npm:^3.1.0"
-  checksum: 10c0/99b53a931366ddc985f26528495ec991fa2ce64018b00a56f989c322553045c5adf17e091eb7a12d786246712f84d36fc88e9d26c852538ff4dd5a6f9cf98715
+  checksum: 10c0/5184682304db471aa20024c1154210ad3d6d590afb61646201ce1a15297259f9a35f92f8fad4435bc8a82135e307ddd27c8495f72417d72d9aa139eb281d9e06
   languageName: node
   linkType: hard
 
@@ -6282,11 +6326,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/mocker@npm:4.1.4":
-  version: 4.1.4
-  resolution: "@vitest/mocker@npm:4.1.4"
+"@vitest/mocker@npm:4.1.5":
+  version: 4.1.5
+  resolution: "@vitest/mocker@npm:4.1.5"
   dependencies:
-    "@vitest/spy": "npm:4.1.4"
+    "@vitest/spy": "npm:4.1.5"
     estree-walker: "npm:^3.0.3"
     magic-string: "npm:^0.30.21"
   peerDependencies:
@@ -6297,7 +6341,7 @@ __metadata:
       optional: true
     vite:
       optional: true
-  checksum: 10c0/da61ee63743da4bc45df0488c994e284e7059a4005149195744705945d19aeb267c801b1f7d85e71b40f547ff2d5a195175c5d51e8455179c794ce67a019de87
+  checksum: 10c0/bcfe97700476130933c7ea33fa670c8d2768a81de5325ce407f901e55c2f66cabbb88a7b6cffb46ddf33dff7d8fc209d769fb298f568e310fbeead9b36f6fdb9
   languageName: node
   linkType: hard
 
@@ -6310,34 +6354,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/pretty-format@npm:4.1.4":
-  version: 4.1.4
-  resolution: "@vitest/pretty-format@npm:4.1.4"
+"@vitest/pretty-format@npm:4.1.5":
+  version: 4.1.5
+  resolution: "@vitest/pretty-format@npm:4.1.5"
   dependencies:
     tinyrainbow: "npm:^3.1.0"
-  checksum: 10c0/14a25c5acd02b1d18f9fab01d884658edb9137008d01025273617fb000e36391e4fda1513e94a257f5e611fb09041a0c042d145a90d359c9e810c0044b12763e
+  checksum: 10c0/42b5e9b75e87c0a884d36bee364e2d07ee45e96f413377737a74993e077d90c3a12aa36743855aee5e4e28b78fae20e3e6de5eef8d5344b9aba2bc1e1d5537a1
   languageName: node
   linkType: hard
 
-"@vitest/runner@npm:4.1.4":
-  version: 4.1.4
-  resolution: "@vitest/runner@npm:4.1.4"
+"@vitest/runner@npm:4.1.5":
+  version: 4.1.5
+  resolution: "@vitest/runner@npm:4.1.5"
   dependencies:
-    "@vitest/utils": "npm:4.1.4"
+    "@vitest/utils": "npm:4.1.5"
     pathe: "npm:^2.0.3"
-  checksum: 10c0/a942ecf2e50e4c380f0d269f87272353dc40fe354357e1ecd0c6568fd37202bb86e33db676f4ad6cc5f1ab30937bba0b278d987729b21a0f22e9827f7f577da2
+  checksum: 10c0/6a03b313a121155f6dd9e32eeb103c0e12440f586bc4ba1f0d77444e44c6df4652a44443718552037463115635b8378e11f35902d90ce1326f77743219fca056
   languageName: node
   linkType: hard
 
-"@vitest/snapshot@npm:4.1.4":
-  version: 4.1.4
-  resolution: "@vitest/snapshot@npm:4.1.4"
+"@vitest/snapshot@npm:4.1.5":
+  version: 4.1.5
+  resolution: "@vitest/snapshot@npm:4.1.5"
   dependencies:
-    "@vitest/pretty-format": "npm:4.1.4"
-    "@vitest/utils": "npm:4.1.4"
+    "@vitest/pretty-format": "npm:4.1.5"
+    "@vitest/utils": "npm:4.1.5"
     magic-string: "npm:^0.30.21"
     pathe: "npm:^2.0.3"
-  checksum: 10c0/9221df7c097665a204c811184ac2f3b89638ecd115344e703e9c4361dabd2ba80be4710ed20d127817d34227a74f21b90725deaecd4632954b492ad258d4913f
+  checksum: 10c0/e11bf50d06702331290750a40eaef86078c108df3cd9a52bb1be7b84250048790163f36827525be6a383a4bb1994fc35e6d0c24239a41688b0bb68a1d15d172f
   languageName: node
   linkType: hard
 
@@ -6348,18 +6392,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/spy@npm:4.1.4":
-  version: 4.1.4
-  resolution: "@vitest/spy@npm:4.1.4"
-  checksum: 10c0/1036591947668845e45515d5b66b2095071609c243d2c987d650c71d0a27418e5de75a8b1ad44b7f45c5d97e71176640f0f49da94b32fb3d11e87cdd009bed26
+"@vitest/spy@npm:4.1.5":
+  version: 4.1.5
+  resolution: "@vitest/spy@npm:4.1.5"
+  checksum: 10c0/fda6b1ee0a2fec1a152d8041aba7a79744c3876863b244d1ed406d02b36e8ccc997edb2e3963d1027d728d3dc5a33813e11bef53a0a14fc7de4de5e721d0f591
   languageName: node
   linkType: hard
 
-"@vitest/ui@npm:4.1.4":
-  version: 4.1.4
-  resolution: "@vitest/ui@npm:4.1.4"
+"@vitest/ui@npm:4.1.5":
+  version: 4.1.5
+  resolution: "@vitest/ui@npm:4.1.5"
   dependencies:
-    "@vitest/utils": "npm:4.1.4"
+    "@vitest/utils": "npm:4.1.5"
     fflate: "npm:^0.8.2"
     flatted: "npm:^3.4.2"
     pathe: "npm:^2.0.3"
@@ -6367,8 +6411,8 @@ __metadata:
     tinyglobby: "npm:^0.2.15"
     tinyrainbow: "npm:^3.1.0"
   peerDependencies:
-    vitest: 4.1.4
-  checksum: 10c0/2bd711f9f20b479e0b118508b1a1ea3b3dfe1ebd55905aed7a9324a1a59c07b3e7f82b58c94ffc7dbcb91bc66355883d932b1325bba7a96824c25d0e8b5c8ac7
+    vitest: 4.1.5
+  checksum: 10c0/2109480d08516abe3350994ebfcb9adc8a2eb4bb1839c48a336d6ff3378eb49a520ad6490f177e60034ed4fcf579206d9ab14995e951cbf6d4c7c792c46fe202
   languageName: node
   linkType: hard
 
@@ -6382,14 +6426,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vitest/utils@npm:4.1.4":
-  version: 4.1.4
-  resolution: "@vitest/utils@npm:4.1.4"
+"@vitest/utils@npm:4.1.5":
+  version: 4.1.5
+  resolution: "@vitest/utils@npm:4.1.5"
   dependencies:
-    "@vitest/pretty-format": "npm:4.1.4"
+    "@vitest/pretty-format": "npm:4.1.5"
     convert-source-map: "npm:^2.0.0"
     tinyrainbow: "npm:^3.1.0"
-  checksum: 10c0/7f81db08e5a8db1e83a37a8d64db011ae3a08b5bcc9aa220a6da428385acb75b11c77b169ab7a9f753529cc25ec11406cff6099b92711fda6291f844fb840a4e
+  checksum: 10c0/72409717e68018e5fe42fa173cc4eff6def8c35bd52013f86ddb414cd28d73fcc425ac62968e01a52371b3fd5a7a775536283d2f1d64432753f628712a6a4908
   languageName: node
   linkType: hard
 
@@ -12209,9 +12253,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-slang@portal:/C:/source/source_academy/js-slang::locator=%40sourceacademy%2Fmodules%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "js-slang@portal:/C:/source/source_academy/js-slang::locator=%40sourceacademy%2Fmodules%40workspace%3A."
+"js-slang@npm:^1.0.92":
+  version: 1.0.92
+  resolution: "js-slang@npm:1.0.92"
   dependencies:
     "@babel/parser": "npm:^7.19.4"
     "@commander-js/extra-typings": "npm:^14.0.0"
@@ -12227,8 +12271,9 @@ __metadata:
     source-map: "npm:0.7.6"
   bin:
     js-slang: dist/repl/index.js
+  checksum: 10c0/faea8ab62fa1faecf68725becfb1184a13d8163bbc18d21a14c24f709fdd657ed5b7bbc9280765ca520d554261e96b1b1591abb16406ea8aa7ddff51501ad84c
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "js-tokens@npm:^10.0.0":
   version: 10.0.0
@@ -12874,7 +12919,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loose-envify@npm:^1.0.0, loose-envify@npm:^1.1.0, loose-envify@npm:^1.4.0":
+"loose-envify@npm:^1.0.0, loose-envify@npm:^1.4.0":
   version: 1.4.0
   resolution: "loose-envify@npm:1.4.0"
   dependencies:
@@ -15493,15 +15538,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^18.3.1":
-  version: 18.3.1
-  resolution: "react@npm:18.3.1"
-  dependencies:
-    loose-envify: "npm:^1.1.0"
-  checksum: 10c0/283e8c5efcf37802c9d1ce767f302dd569dd97a70d9bb8c7be79a789b9902451e0d16334b05d73299b20f048cbc3c7d288bbbde10b701fa194e2089c237dbea3
-  languageName: node
-  linkType: hard
-
 "react@npm:^19.0.0":
   version: 19.2.5
   resolution: "react@npm:19.2.5"
@@ -17716,16 +17752,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.8.2":
-  version: 5.8.3
-  resolution: "typescript@npm:5.8.3"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10c0/5f8bb01196e542e64d44db3d16ee0e4063ce4f3e3966df6005f2588e86d91c03e1fb131c2581baf0fb65ee79669eea6e161cd448178986587e9f6844446dbb48
-  languageName: node
-  linkType: hard
-
 "typescript@npm:^6.0.2":
   version: 6.0.2
   resolution: "typescript@npm:6.0.2"
@@ -17763,16 +17789,6 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/9041fb3886e7d6a560f985227b8c941d17a750f2edccb5f9b3a15a2480574654d9be803ad4a14aabcc2f2553c4d272a25fd698a7c42692f03f66b009fb46883c
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@npm%3A^5.8.2#optional!builtin<compat/typescript>":
-  version: 5.8.3
-  resolution: "typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10c0/39117e346ff8ebd87ae1510b3a77d5d92dae5a89bde588c747d25da5c146603a99c8ee588c7ef80faaf123d89ed46f6dbd918d534d641083177d5fac38b8a1cb
   languageName: node
   linkType: hard
 
@@ -18486,24 +18502,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest-browser-react@npm:^2.0.4":
-  version: 2.0.5
-  resolution: "vitest-browser-react@npm:2.0.5"
-  peerDependencies:
-    "@types/react": ^18.0.0 || ^19.0.0
-    "@types/react-dom": ^18.0.0 || ^19.0.0
-    react: ^18.0.0 || ^19.0.0
-    react-dom: ^18.0.0 || ^19.0.0
-    vitest: ^4.0.0
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-    "@types/react-dom":
-      optional: true
-  checksum: 10c0/ae972fa20895c73622c2e724a2e2a716cc2a2e5148da19a60d1185323aeb5f5bd0653cfe3048d081bb086ee0efa68c0c360d28cdf42ddd8df6a5f2d17ffd0c9e
-  languageName: node
-  linkType: hard
-
 "vitest-browser-react@npm:^2.1.0":
   version: 2.1.0
   resolution: "vitest-browser-react@npm:2.1.0"
@@ -18522,17 +18520,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest@npm:4.1.4":
-  version: 4.1.4
-  resolution: "vitest@npm:4.1.4"
+"vitest@npm:4.1.5":
+  version: 4.1.5
+  resolution: "vitest@npm:4.1.5"
   dependencies:
-    "@vitest/expect": "npm:4.1.4"
-    "@vitest/mocker": "npm:4.1.4"
-    "@vitest/pretty-format": "npm:4.1.4"
-    "@vitest/runner": "npm:4.1.4"
-    "@vitest/snapshot": "npm:4.1.4"
-    "@vitest/spy": "npm:4.1.4"
-    "@vitest/utils": "npm:4.1.4"
+    "@vitest/expect": "npm:4.1.5"
+    "@vitest/mocker": "npm:4.1.5"
+    "@vitest/pretty-format": "npm:4.1.5"
+    "@vitest/runner": "npm:4.1.5"
+    "@vitest/snapshot": "npm:4.1.5"
+    "@vitest/spy": "npm:4.1.5"
+    "@vitest/utils": "npm:4.1.5"
     es-module-lexer: "npm:^2.0.0"
     expect-type: "npm:^1.3.0"
     magic-string: "npm:^0.30.21"
@@ -18550,12 +18548,12 @@ __metadata:
     "@edge-runtime/vm": "*"
     "@opentelemetry/api": ^1.9.0
     "@types/node": ^20.0.0 || ^22.0.0 || >=24.0.0
-    "@vitest/browser-playwright": 4.1.4
-    "@vitest/browser-preview": 4.1.4
-    "@vitest/browser-webdriverio": 4.1.4
-    "@vitest/coverage-istanbul": 4.1.4
-    "@vitest/coverage-v8": 4.1.4
-    "@vitest/ui": 4.1.4
+    "@vitest/browser-playwright": 4.1.5
+    "@vitest/browser-preview": 4.1.5
+    "@vitest/browser-webdriverio": 4.1.5
+    "@vitest/coverage-istanbul": 4.1.5
+    "@vitest/coverage-v8": 4.1.5
+    "@vitest/ui": 4.1.5
     happy-dom: "*"
     jsdom: "*"
     vite: ^6.0.0 || ^7.0.0 || ^8.0.0
@@ -18586,7 +18584,7 @@ __metadata:
       optional: false
   bin:
     vitest: vitest.mjs
-  checksum: 10c0/a85288778cf6a6f0222aaac547fc84f917565ba78d1e32df4693226ec93aa8675f549b246b70913e9f1d80a87830b39843f9bd96b39d270e599ff4f71def6260
+  checksum: 10c0/196eaf5e95b45a3f6d3001a2408d7dc6f146c29c873ed4e42e1ad4c9327122934fb3793a12b6ce3b7c25d355e738b20123acc0894ce30358c3370b15f4bd0865
   languageName: node
   linkType: hard
 

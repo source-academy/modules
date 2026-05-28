@@ -12,4 +12,12 @@ export {
   InvalidParameterTypeError,
 } from 'js-slang/dist/errors/rttcErrors';
 
-export * from 'js-slang/dist/errors/base';
+export {
+  ErrorSeverity,
+  ErrorType,
+  type SourceError,
+  SourceErrorWithNode,
+  RuntimeSourceError,
+  GeneralRuntimeError,
+  InternalRuntimeError,
+} from 'js-slang/dist/errors/base';

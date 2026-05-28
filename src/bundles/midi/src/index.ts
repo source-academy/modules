@@ -140,7 +140,7 @@ export function letter_name_to_frequency(note: NoteWithOctave): number {
 }
 
 /**
- * Takes the given {@link Note|Note} and adds the octave number to it.
+ * Takes the given {@link Note} and adds the octave number to it.
  * @example
  * ```
  * add_octave_to_note('C', 4); // Returns "C4"

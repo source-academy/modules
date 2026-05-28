@@ -65,8 +65,6 @@ to compiled mode by following the steps below:
 If need be, you can use the the textbox to customize which server to load modules from. You may have to rerun your code
 after switching this setting for the server to load the asset you've selected.
 
-You will also need to start the modules server using `yarn buildtools serve`. The caveats from [that section](../1-desktop#the-modules-server) still apply.
-
 > [!IMPORTANT] Working with Bundles in Compiled Mode
 >
 > The limitations for hot-reload mode also apply to compiled mode, but you must recompile and rebuild your bundle

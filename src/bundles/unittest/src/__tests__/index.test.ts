@@ -151,7 +151,7 @@ describe('Test assertion functions', () => {
 
     it('will throw an error if not provided a nullary function', () => {
       expect(() => asserts.assert(0 as any)).toThrow(`${asserts.assert.name} expects a nullary function that returns a boolean!`);
-      expect(() => asserts.assert((x => x === true) as any)).toThrow(`${asserts.assert.name} expects a nullary function that returns a boolean!`);
+      expect(() => asserts.assert(((x: any) => x === true) as any)).toThrow(`${asserts.assert.name} expects a nullary function that returns a boolean!`);
     });
   });
 
@@ -297,11 +297,11 @@ describe('Test assertion functions', () => {
 
   describe(asserts.assert_length, () => {
     it('throws when the received value isn\'t a list', () => {
-      expect(() => asserts.assert_length('string' as any, 0)).toThrow('First argument to assert_length must be a list.');
+      expect(() => asserts.assert_length('string' as any, 0)).toThrow('First argument to assert_length must be a list or array.');
     });
 
     it('throws when the expected value isn\'t a number', () => {
-      expect(() => asserts.assert_length(list(), 'string' as any)).toThrow('Second argument to assert_length must be an integer.');
+      expect(() => asserts.assert_length(list(), 'string' as any)).toThrow('assert_length: Expected integer for len, got "string".');
     });
 
     it('works for empty lists', () => {

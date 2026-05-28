@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, test as baseTest, vi } from 'vitest';
 import { cleanup, render, type RenderResult } from 'vitest-browser-react';
 import * as funcs from '../functions';
-import type { BundlePacket, Pixel, VideoElement } from '../types';
+import type { BundlePacket, Pixel } from '../types';
 
 interface Fixtures {
   canvas: HTMLCanvasElement;
   image: HTMLImageElement;
-  video: VideoElement;
+  video: HTMLVideoElement;
   reinit: () => BundlePacket;
   errLogger: () => void;
 }
@@ -15,7 +15,7 @@ const test = baseTest.extend<{
   screen: RenderResult;
   fixtures: Fixtures;
 }>({
-  screen: async ({}, fixture) => {
+  screen: async ({ }, fixture) => {
     await fixture(
       await render(<div>
         <canvas title="canvas" />
@@ -26,8 +26,8 @@ const test = baseTest.extend<{
     cleanup();
   },
   fixtures: async ({ screen }, fixture) => {
-    funcs.start();
-    const { init, deinit } = funcs.start();
+    // funcs.start();
+    const { init, deinit } = funcs.internal_start();
     const errLogger = vi.fn();
     const canvas = screen
       .getByTitle('canvas')
@@ -39,9 +39,9 @@ const test = baseTest.extend<{
 
     const video = screen
       .getByTitle('vid')
-      .element() as VideoElement;
+      .element() as HTMLVideoElement;
 
-    const reinit = () => init(image, video, canvas, errLogger, { onClickStill: () => {} });
+    const reinit = () => init(image, video, canvas, errLogger, { onClickStill: () => { } });
     reinit();
     await fixture({
       image,
@@ -159,7 +159,7 @@ describe(funcs.writeToBuffer, () => {
 
   test('with invalid data', ({ fixtures: { errLogger } }) => {
     const img = funcs.new_image();
-    funcs.set_rgba(img[0][0], 999, 999, 999, 999);
+    img[0][0] = [999, 999, 999, 999];
 
     const imageData = new ImageData(width, height);
     const buffer = imageData.data;
@@ -182,8 +182,8 @@ describe(funcs.install_filter, () => {
 
 describe(funcs.compose_filter, () => {
   it('throws an error when passed invalid filters', () => {
-    expect(() => funcs.compose_filter(0 as any, (_s, _d) => {})).toThrow('compose_filter: Expected filter for filter1, got 0.');
-    expect(() => funcs.compose_filter((_s, _d) => {}, 0 as any)).toThrow('compose_filter: Expected filter for filter2, got 0.');
+    expect(() => funcs.compose_filter(0 as any, (_s, _d) => { })).toThrow('compose_filter: Expected filter for filter1, got 0.');
+    expect(() => funcs.compose_filter((_s, _d) => { }, 0 as any)).toThrow('compose_filter: Expected filter for filter2, got 0.');
   });
 });
 

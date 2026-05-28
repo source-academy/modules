@@ -6,7 +6,6 @@ import { SourceDocumentation, getNames, runInContext, type Context } from 'js-sl
 import createContext from 'js-slang/dist/createContext';
 import { Chapter, Variant } from 'js-slang/dist/langs';
 import { ModuleInternalError } from 'js-slang/dist/modules/errors';
-import { setModulesStaticURL } from 'js-slang/dist/modules/loader';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import React from 'react';
 import mockModuleContext from '../mockModuleContext';
@@ -17,8 +16,8 @@ import { ControlBarClearButton } from './controlBar/ControlBarClearButton';
 import { ControlBarRefreshButton } from './controlBar/ControlBarRefreshButton';
 import { ControlBarRunButton } from './controlBar/ControlBarRunButton';
 import testTabContent from './sideContent/TestTab';
-import loadDynamicTabs from './sideContent/importers';
-import { getBundleDocsUsingVite, getBundleUsingVite, getModulesManifest } from './sideContent/importers/importers';
+import { getBundleLoader, loadDynamicTabs } from './sideContent/importers';
+import { getBundleDocsUsingVite, getModulesManifest } from './sideContent/importers/importers';
 import type { SideContentTab } from './sideContent/types';
 
 const refreshSuccessToast: ToastProps = {
@@ -56,15 +55,6 @@ const updateEditorLocalStorageValue = throttle((newValue: string) => {
 
 const Playground: React.FC = () => {
   const consoleLogs = React.useRef<string[]>([]);
-  const [moduleBackend, setModuleBackend] = React.useState<string | null>(null);
-
-  React.useEffect(() => {
-    const savedBackend = localStorage.getItem('backend');
-    if (savedBackend != undefined) {
-      setModuleBackend(savedBackend);
-      setModulesStaticURL(savedBackend);
-    }
-  }, []);
 
   const [useCompiled, setUseCompiled] = React.useState(!!localStorage.getItem('useCompiled'));
   const [dynamicTabs, setDynamicTabs] = React.useState<SideContentTab[]>([]);
@@ -76,8 +66,8 @@ const Playground: React.FC = () => {
 
   const toaster = React.useRef<OverlayToaster>(null);
 
-  const manifestImporter = useCompiled ? undefined : getModulesManifest;
-  const docsImporter = useCompiled ? undefined : getBundleDocsUsingVite;
+  const manifestImporter = getModulesManifest;
+  const docsImporter = getBundleDocsUsingVite;
 
   const showToast = (props: ToastProps) => {
     if (toaster.current) {
@@ -145,11 +135,11 @@ const Playground: React.FC = () => {
 
     const result = await runInContext(editorValue, codeContext, {
       importOptions: {
-        loadTabs: useCompiled,
-        sourceBundleImporter: useCompiled ? undefined : getBundleUsingVite,
+        loadTabs: false,
+        sourceBundleImporter: getBundleLoader(useCompiled),
         docsImporter,
         resolverOptions: {
-          manifestImporter,
+          manifestImporter
         }
       }
     });
@@ -208,12 +198,6 @@ const Playground: React.FC = () => {
           interactionKind='click'
           placement="right"
           content={<SettingsPopup
-            backend={moduleBackend ?? ''}
-            onBackendChange={value => {
-              setModuleBackend(value);
-              setModulesStaticURL(value);
-              localStorage.setItem('backend', value);
-            }}
             useCompiled={useCompiled}
             onUseCompiledChange={value => {
               setUseCompiled(value);

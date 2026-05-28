@@ -28,12 +28,12 @@ describe('Ensure that invalid curves and animations error gracefully', () => {
   });
 
   test('Curve that takes multiple parameters should throw error', () => {
-    expect(() => drawers.draw_connected(200)(((t, u) => funcs.make_point(t, u)) as any))
+    expect(() => drawers.draw_connected(200)(((t: number, u: number) => funcs.make_point(t, u)) as any))
       .toThrowErrorMatchingInlineSnapshot(`[Error: RenderFunction: Expected Curve, got (t, u) => __vite_ssr_import_4__.make_point(t, u).]`);
   });
 
   test('CurveAnimation that doesn\'t return a curve should throw error', () => {
-    const anim = new AnimatedCurve(1, 30, (_t => 0) as any, drawers.draw_connected(200), false);
+    const anim = new AnimatedCurve(1, 30, ((_t: number) => 0) as any, drawers.draw_connected(200), false);
     expect(() => anim.getFrame(0)).toThrow('CurveAnimation did not return a Curve at timestamp 0');
   });
 
@@ -49,10 +49,13 @@ describe('Ensure that invalid curves and animations error gracefully', () => {
 });
 
 describe('Render function creators', () => {
-  const names = Object.getOwnPropertyNames(drawers.RenderFunctionCreators);
-  const renderFuncCreators = names.reduce<[string, RenderFunctionCreator][]>((res, name) => {
-    if (typeof drawers.RenderFunctionCreators[name] !== 'function') return res;
-    return [...res, [name, drawers.RenderFunctionCreators[name]]];
+  type FunctionNames = keyof (typeof drawers.RenderFunctionCreators);
+
+  const names = Object.getOwnPropertyNames(drawers.RenderFunctionCreators) as FunctionNames[];
+  const renderFuncCreators = names.reduce<[FunctionNames, RenderFunctionCreator][]>((res, name) => {
+    const value = drawers.RenderFunctionCreators[name];
+    if (typeof value !== 'function') return res;
+    return [...res, [name, value] as [FunctionNames, RenderFunctionCreator]];
   }, []);
 
   describe.each(renderFuncCreators)('%s', (name, func) => {

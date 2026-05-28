@@ -12,6 +12,9 @@ By reading comments and type annotations, `typedoc` is able to generate both hum
 >
 > This does mean that if the documentation is built without running `tsc`, there is a possibility that type errors will cause `typedoc` to crash.
 
+Your documentation should be comprehensive and detailed such that someone with no experience with your bundle will be able to learn and use the its
+functionalities from scratch.
+
 ## Writing Documentation
 
 `typedoc` reads both Typescript type annotations, as well as [TSDOC](https://tsdoc.org) style comments. It will build documentation for all functions and constants exported by the particular bundle's entry point.

@@ -629,6 +629,8 @@ to set up your mocks before all your tests.
 Example:
 
 ```ts twoslash [vitest.setup.ts]
+/// <reference types="node" />
+// ---cut---
 import fs from 'fs/promises';
 import { vi } from 'vitest';
 

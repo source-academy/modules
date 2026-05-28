@@ -1,3 +1,6 @@
+---
+outline: [2, 3]
+---
 # Handling Abstractions
 
 Source supports several primitive objects like numbers and strings. Slightly more complex primitives do also exist like lists and arrays. Your bundle may wish to introduce its own set of primitives, such as
@@ -32,6 +35,32 @@ export function play_in_tab(sound: Pair<Wave, number>): void {
 
 Functionally, `Sound` behaves like a primitive type: as far as a cadet using the `sound` bundle is concerned, the bundle allows them to make and manipulate `Sound`s.
 
+## Type Guards for Abstractions
+
+Where possible, you should provide type guard functions that allow the cadet to type check their own code. For example, instead of expecting the cadet to check that
+the given value is a `Sound` by manually checking for a pair containing a function and a number, you should provide an `is_sound` function that abstracts that work
+away for them:
+
+```js
+// NOT IDEAL
+if (is_pair(x)) {
+  if (!is_function(head(x))) return;
+  if (!is_number(tail(x))) return;
+
+  // Cadet now knows that x is a sound!
+}
+
+// IDEAL
+import { is_sound } from 'sound';
+
+if (is_sound(x)) {
+  // Cadet now knows that x is a sound!
+}
+```
+
+This is particularly important with more complex abstractions that make use of classes and objects, since Source does not allow for operators like `typeof`, `in` and
+`instanceof`.
+
 ## Breaking Abstractions with `display` and `stringify`
 
 `js-slang` provides a built-in function for converting any value into a string: `stringify()`. `display()` behaves like the typical `console.log` and prints the string representation
@@ -55,7 +84,12 @@ curve => {
 This exposes implementation details to the cadet and "breaks" the `RenderFunction` abstraction. Thus, there is a need for such objects to be able to override the default `toString`
 implementation.
 
-## The `ReplResult` interface
+> [!TIP] Functions Returned by Bundle Functions
+>
+> Javascript's default stringification for functions almost always leaks implementation details. You should take care to implement
+> the `ReplResult` interface for functions that are returned by your bundle's functions where necessary.
+
+### The `ReplResult` interface
 
 To allow objects to provide their own `toString` implementations, objects can implement the `ReplResult` interface:
 
@@ -101,7 +135,7 @@ but if your circumstances can't support it you can refer to the second method wh
 >
 > Using the interface as exported will be helpful for type checking, but it is not necessary.
 
-### Implementing `ReplResult` directly
+#### Implementing `ReplResult` directly
 
 The simplest way to implement the interface is to do it in Typescript. For example, the `curve` bundle has a `Point` class, which is an abstraction of a point in 3D space with a color value:
 
@@ -211,7 +245,7 @@ provide compile time validation that the property has been set correctly.
 > Theoretically, there should be very few cases where you won't be able to write a type that can't also implement the `ReplResult`
 > interface, so there should be no need for this, but this section is here as a "just in case".
 
-## Simple Abstractions
+### Simple Abstractions
 
 There may be cases where you intend for your abstraction to be "decomposable" by cadets. The `Sound` type is just a wrapper around a `js-slang` pair:
 
@@ -247,9 +281,12 @@ interface TextOptions {
   size: number;
 }
 export function change_text_options(options: TextOptions): void;
+
+// Especially not this!
+export function change_text_options(options: { color: string, size: number }): void;
 ```
 
-If you do want to use the latter style, you could do something like this:
+You can of course abstract the object literal:
 
 ```ts
 // Of course, don't forget to implement ReplResult:

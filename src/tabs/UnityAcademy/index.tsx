@@ -18,10 +18,11 @@ class Unity3DTab extends React.Component<Props> {
     super(props);
     this.userAgreementCheckboxChecked = false;
   }
-  render() {
+
+  override render() {
     let highFPSWarning;
-    const currentTargetFrameRate = getInstance()
-      .getTargetFrameRate();
+    const instance = getInstance()!;
+    const currentTargetFrameRate = instance.getTargetFrameRate();
     if (currentTargetFrameRate > 30 && currentTargetFrameRate <= 60) {
       highFPSWarning = <div style={{ color: 'yellow' }}>[Warning] You are using a target FPS higher than default value (30). Higher FPS will lead to more cost in your device&apos;s resources such as GPU, increace device temperature and battery usage and may even lead to browser not responding, crash the browser or even crash your operation system if your device really can not endure the high resource cost.</div>;
     } else if (currentTargetFrameRate > 60 && currentTargetFrameRate <= 120) {
@@ -29,7 +30,8 @@ class Unity3DTab extends React.Component<Props> {
     } else {
       highFPSWarning = <div/>;
     }
-    const dimensionMode = getInstance().dimensionMode;
+
+    const dimensionMode = instance.dimensionMode;
     return (
       <div>
         <p>Click the button below to open the Unity Academy Window filling the page.</p>
@@ -70,9 +72,8 @@ class Unity3DTab extends React.Component<Props> {
             value={currentTargetFrameRate}
             max={120}
             min={15}
-            onValueChange={(x) => {
-              getInstance()
-                .setTargetFrameRate(x);
+            onValueChange={x => {
+              instance.setTargetFrameRate(x);
               this.setState({});
             }}
             stepSize={1}
@@ -80,8 +81,7 @@ class Unity3DTab extends React.Component<Props> {
           <Button
             active={true}
             onClick={() => {
-              getInstance()
-                .setTargetFrameRate(30);
+              instance.setTargetFrameRate(30);
               this.setState({});
             }}
             text="30"
@@ -90,8 +90,7 @@ class Unity3DTab extends React.Component<Props> {
             active={true}
             onClick={() => {
               if (confirm('Set the target frame rate higher than the default recommended value (30) ?')) {
-                getInstance()
-                  .setTargetFrameRate(60);
+                instance.setTargetFrameRate(60);
                 this.setState({});
               }
             }}
@@ -101,8 +100,7 @@ class Unity3DTab extends React.Component<Props> {
             active={true}
             onClick={() => {
               if (confirm('Set the target frame rate higher than the default recommended value (30) ?')) {
-                getInstance()
-                  .setTargetFrameRate(90);
+                instance.setTargetFrameRate(90);
                 this.setState({});
               }
             }}
@@ -112,8 +110,7 @@ class Unity3DTab extends React.Component<Props> {
             active={true}
             onClick={() => {
               if (confirm('Set the target frame rate higher than the default recommended value (30) ?')) {
-                getInstance()
-                  .setTargetFrameRate(120);
+                instance.setTargetFrameRate(120);
                 this.setState({});
               }
             }}
@@ -128,18 +125,15 @@ class Unity3DTab extends React.Component<Props> {
         <br/>
         <div>Please note that before using Unity Academy and this module, you must agree to our <a href={`${UNITY_ACADEMY_BACKEND_URL}user_agreement.html`} rel="noopener noreferrer" target="_blank" >User Agreement</a></div>
         <br/>
-        {getInstance()
-          .getUserAgreementStatus() === 'new_user_agreement' && <div><b>The User Agreement has updated.</b><br/></div>}
+        {instance.getUserAgreementStatus() === 'new_user_agreement' && <div><b>The User Agreement has updated.</b><br/></div>}
         <Checkbox label="I agree to the User Agreement" inputRef={(e) => {
           if (e !== null) {
-            e.checked = getInstance()
-              .getUserAgreementStatus() === 'agreed';
+            e.checked = instance.getUserAgreementStatus() === 'agreed';
             this.userAgreementCheckboxChecked = e.checked;
           }
         }} onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           this.userAgreementCheckboxChecked = event.target.checked;
-          getInstance()
-            .setUserAgreementStatus(this.userAgreementCheckboxChecked);
+          instance.setUserAgreementStatus(this.userAgreementCheckboxChecked);
         }} />
       </div>
     );
@@ -163,12 +157,9 @@ export default defineTab({
   toSpawn() {
     return getInstance() !== undefined;
   },
-
   body() {
     return <Unity3DTab />;
   },
-
   label: 'Unity Academy',
-
   iconName: 'cube'
 });

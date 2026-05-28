@@ -32,7 +32,7 @@ export default function AnimationCanvas(props: AnimCanvasProps) {
     frameDuration,
     animationDuration,
     autoLoop: isAutoLooping,
-    callback: (timestamp, canvas) => {
+    callback: ({ timestamp, canvas }) => {
       const frame = props.animation.getFrame(timestamp / 1000);
       frame.draw(canvas);
     }

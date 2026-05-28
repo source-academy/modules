@@ -1,3 +1,4 @@
+import { GeneralRuntimeError, InternalRuntimeError } from '@sourceacademy/modules-lib/errors';
 import { Accidental, type MIDINote, type Note, type NoteName, type NoteWithOctave } from './types';
 
 export function parseNoteWithOctave(note: NoteWithOctave): [NoteName, Accidental, number];
@@ -32,7 +33,7 @@ export function parseNoteWithOctave(note: unknown): [NoteName, Accidental, numbe
 export function noteToValues(note: NoteWithOctave, func_name: string): [NoteName, Accidental, number] {
   const res = parseNoteWithOctave(note);
   if (res === null) {
-    throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
+    throw new GeneralRuntimeError(`${func_name}: Invalid Note with Octave: ${note}`);
   }
   return res;
 }
@@ -68,6 +69,6 @@ export function midiNoteToNoteName(
     case 11:
       return 'B';
     default:
-      throw new Error(`${func_name}: Invalid MIDI note value ${midiNote}`);
+      throw new InternalRuntimeError(`${func_name}: Invalid MIDI note value ${midiNote}`);
   }
 }

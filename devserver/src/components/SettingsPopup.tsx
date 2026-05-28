@@ -1,16 +1,11 @@
-import { Card, EditableText, Switch, Tooltip } from '@blueprintjs/core';
-import { useState } from 'react';
+import { Card, Switch, Tooltip } from '@blueprintjs/core';
 
 type SettingsPopupProps = {
-  backend: string;
   useCompiled: boolean;
   onUseCompiledChange?: (newValue: boolean) => void;
-  onBackendChange?: (newValue: string) => void;
 };
 
 export default function SettingsPopup(props: SettingsPopupProps) {
-  const [backendText, setBackendText] = useState(props.backend);
-
   return <Card>
     <div style={{
       display: 'flex',
@@ -18,22 +13,6 @@ export default function SettingsPopup(props: SettingsPopupProps) {
       justifyContent: 'center',
     }}>
       <h3>Development Server Settings</h3>
-      <div style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-      }}>
-        <p>Modules Backend:  </p>
-        <EditableText value={backendText}
-          alwaysRenderInput
-          onChange={setBackendText}
-          onConfirm={v => {
-            if (props.onBackendChange) props.onBackendChange(v);
-          }}
-          onCancel={() => setBackendText(props.backend)}
-        />
-      </div>
-      <br/>
       <Tooltip content="Load compiled assets instead of the raw Typescript">
         <Switch
           checked={props.useCompiled}

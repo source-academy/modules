@@ -1,4 +1,4 @@
-import { Icon, Tooltip, type IconProps } from '@blueprintjs/core';
+import { Icon, Tooltip, type IconProps, type TooltipProps } from '@blueprintjs/core';
 import ButtonComponent, { type ButtonComponentProps } from './ButtonComponent';
 
 export type PlayButtonProps = Omit<ButtonComponentProps, 'text' | 'icon'> & {
@@ -23,6 +23,16 @@ export type PlayButtonProps = Omit<ButtonComponentProps, 'text' | 'icon'> & {
    * Icon for the button when `isPlaying` is false. Defaults to `play`.
    */
   pausedIcon?: IconProps['icon'];
+
+  /**
+   * Props to be passed to the Tooltip component
+   */
+  tooltipProps?: Omit<TooltipProps, 'content'>;
+
+  /**
+   * Props to be passed to the Icon component
+   */
+  iconProps?: Omit<IconProps, 'icon'>;
 };
 
 /**
@@ -36,14 +46,19 @@ export default function PlayButton({
   pausedText = 'Play',
   pausedIcon = 'play',
   isPlaying,
+  tooltipProps,
+  iconProps,
   ...props
 }: PlayButtonProps) {
   return <Tooltip
     content={isPlaying ? playingText : pausedText}
-    placement="top"
+    {...tooltipProps}
   >
     <ButtonComponent {...props} >
-      <Icon icon={isPlaying ? playingIcon : pausedIcon} />
+      <Icon
+        icon={isPlaying ? playingIcon : pausedIcon}
+        {...iconProps}
+      />
     </ButtonComponent>
   </Tooltip>;
 }

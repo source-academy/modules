@@ -33,6 +33,7 @@ function handleErr(err: any) {
   if (err.message) {
     return (err as Error).message;
   }
+  // eslint-disable-next-line @sourceacademy/throw-runtime-error
   throw err;
 }
 

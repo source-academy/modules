@@ -17,7 +17,7 @@
     "classnames": "^2.3.1",
     "commander": "^14.0.0",
     "es-toolkit": "^1.44.0",
-    "js-slang": "^1.0.85",
+    "js-slang": "^1.0.92",
     "re-resizable": "^6.9.11",
     "react": "^19.0.0",
     "react-ace": "^14.0.0",
@@ -29,12 +29,12 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@vitest/browser-playwright": "4.1.4",
+    "@vitest/browser-playwright": "4.1.5",
     "eslint": "^9.35.0",
     "playwright": "^1.55.1",
     "sass": "^1.85.0",
     "typescript": "^6.0.2",
-    "vitest": "4.1.4",
+    "vitest": "4.1.5",
     "vitest-browser-react": "^2.1.0"
   },
   "scripts": {

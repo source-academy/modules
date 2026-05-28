@@ -1,3 +1,4 @@
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import { interrupt } from '@sourceacademy/modules-lib/specialErrors';
 import context from 'js-slang/context';
 import { sceneConfig } from './config';
@@ -33,7 +34,7 @@ import { createScene } from './engine/Render/helpers/Scene';
 export function getWorldFromContext(): World {
   const world = context.moduleContexts.robot_simulation.state?.world;
   if (world === undefined) {
-    throw new Error('World not initialized');
+    throw new GeneralRuntimeError('World not initialized');
   }
   return world as World;
 }
@@ -47,7 +48,7 @@ export function getWorldFromContext(): World {
 export function getEv3FromContext(): DefaultEv3 {
   const ev3 = context.moduleContexts.robot_simulation.state?.ev3;
   if (ev3 === undefined) {
-    throw new Error('ev3 not initialized');
+    throw new GeneralRuntimeError('ev3 not initialized');
   }
   return ev3 as DefaultEv3;
 }
@@ -264,7 +265,7 @@ export function createCuboid(
   bodyType: string
 ) {
   if (isRigidBodyType(bodyType) === false) {
-    throw new Error('Invalid body type');
+    throw new GeneralRuntimeError('Invalid body type');
   }
 
   const config: CuboidConfig = {

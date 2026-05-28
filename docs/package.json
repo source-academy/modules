@@ -14,11 +14,12 @@
   },
   "dependencies": {
     "@shikijs/vitepress-twoslash": "^2.1.0",
+    "@sourceacademy/bundle-rune": "workspace:^",
     "@sourceacademy/bundle-sound": "workspace:^",
     "@sourceacademy/lint-plugin": "workspace:^",
     "@sourceacademy/markdown-plugin-directory-tree": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
-    "js-slang": "^1.0.85",
+    "js-slang": "^1.0.92",
     "mermaid": "^11.10.0",
     "vitepress": "^1.6.4",
     "vitepress-plugin-group-icons": "^1.7.5",
@@ -26,6 +27,7 @@
     "vitepress-sidebar": "^1.33.1"
   },
   "devDependencies": {
+    "@types/node": "^24.0.0",
     "cspell": "^9.2.1",
     "typescript": "^6.0.2"
   }

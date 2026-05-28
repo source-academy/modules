@@ -100,7 +100,7 @@ export type Sprite = {
  */
 export type BuildGame = {
   toReplString: () => string;
-  gameConfig;
+  gameConfig: Record<string, any>;
 };
 
 /**

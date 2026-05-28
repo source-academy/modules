@@ -112,67 +112,6 @@ export default defineTab({
 });
 ```
 
-> [!TIP] Using getModuleState
->
-> Often, to access your module state using plain Javascript, you would probably have to use a long chain of
-> property accesses or object destructurings:
->
-> ```ts
-> const { context: { moduleContexts: { sound: { state: { audioPlayed } } } } } = context;
-> // or
-> const audioPlayed = context.context.moduleContexts.sound.state.audioPlayed;
-> ```
->
-> The risk here is that each one of these property accesses could return `null` or `undefined`, resulting
-> in a `TypeError` at runtime. What you would need to do is "null-coalesce" - propagate the `null` or `undefined`
-> all the way to the end:
->
-> ```ts
-> const toSpawn = (context: DebuggerContext): boolean => {
->   // Can't use destructuring with null coalescing
->   const audioPlayed = context.context.moduleContexts?.sound?.state?.audioPlayed;
->   return audioPlayed && audioPlayed.length > 0;
-> };
-> ```
->
-> To remedy all of this, you can simply call `getModuleState` instead, which
-> abstracts the all of the accessing and destructuring for you:
->
-> ```ts twoslash
-> import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
-> import type { SoundModuleState } from '@sourceacademy/bundle-sound/types';
-> // ---cut---
-> import { getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
->
-> const toSpawn = (context: DebuggerContext): boolean => {
->   // Can't use destructuring with null coalescing
->   const state = getModuleState<SoundModuleState>(context, 'sound');
->   return !!state && state.audioPlayed.length > 0;
-> };
-> ```
->
-> Then in your `body` function, you can use a non-null assertion. 
-> 
-> ```tsx twoslash
-> // @jsx: react-jsx
-> import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
-> import type { AudioPlayed, SoundModuleState } from '@sourceacademy/bundle-sound/types';
-> declare function SoundTab(props: { elements: AudioPlayed[] }): React.ReactElement;
-> // ---cut---
-> import { getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
->
-> const body = (context: DebuggerContext): React.ReactElement => {
->   const { audioPlayed } = getModuleState<SoundModuleState>(context, 'sound')!;
->   return <SoundTab elements={audioPlayed} />;
-> };
-> ```
->
-> As long as your `toSpawn` code is correct, accessing your module context should not throw a `TypeError`
-> because of attempting to access a property on `undefined` or other similar errors.
->
-> You will need to explicitly pass in the type of your state object, since `getModuleState` won't be able
-> to infer it by itself.
-
 Here are explanations for each member of the tab interface:
 
 ### `toSpawn`

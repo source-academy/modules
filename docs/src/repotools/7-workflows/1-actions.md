@@ -5,10 +5,11 @@ title: Custom Actions
 # Custom Github Actions
 
 Github Actions does provide us the ability to write our own custom actions that can be integrated with the rest of the pipeline. This repository
-makes use of two:
+makes use of three:
 
 - Initializer Action
 - Information Action
+- Load Artifacts Action
 
 Creating custom actions is detailed [here](https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax). The convention for each action is have its metadata file (`action.yml`) in the same directory as its source code (if necessary).
 
@@ -47,14 +48,19 @@ The initializer action combines the initialization steps that are necessary for 
 
 ## Load Artifacts Action (`load-artifacts/action.yml`)
 
-When the CI executes, it will build any tab that has changes relative to the master branch. If the devserver also has
-changes, then its tests will run. Since the devserver requires the compiled version of all tabs, we must build all
-tabs before running the devserver's tests.
+When the CI executes, it will build any asset that has changes relative to the master branch. Some of the later workflow steps
+rely on the built versions of assets. For examples, the devserver requires the built version of all tabs. If the devserver has
+changes, then its tests will need to run. So, we must build all tabs before running the devserver's tests.
 
 Since some tabs might already have been built, there is no reason for us to go through the lengthy process of
 installing those tabs' dependencies and rebuilding them. Instead, if we save the built tabs as workflow artifacts,
 we can restore those tabs before running the devserver's tasks. All that remains then is to build the tabs that
 haven't already been built.
 
-This action does this exact job: figuring out which tabs have already been built successfully and thus can be downloaded
-and which tabs need to be built from scratch.
+This action does this exact job: figuring out which assets have already been built successfully and thus can be downloaded
+and which need to be built from scratch.
+
+The action has three configuration options:
+1. `load-bundles`: Tries to load all bundles and builds the ones that haven't already been built.
+2. `load-tabs`: Tries to load all tabs and builds the ones that haven't already been built.
+3. `load-manifest`: Builds the modules manifest if it hasn't already been built.

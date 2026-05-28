@@ -1,3 +1,4 @@
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 
@@ -377,7 +378,7 @@ class CurveAnimators {
     func: CurveAnimation
   ): AnimatedCurve {
     if (drawer.is3D) {
-      throw new Error(`${animate_curve.name} cannot be used with 3D draw function!`);
+      throw new GeneralRuntimeError(`${animate_curve.name} cannot be used with 3D draw function!`);
     }
 
     assertFunctionOfLength(func, 1, CurveAnimators.animate_curve.name, 'CurveAnimation');
@@ -395,7 +396,7 @@ class CurveAnimators {
     func: CurveAnimation
   ): AnimatedCurve {
     if (!drawer.is3D) {
-      throw new Error(`${animate_3D_curve.name} cannot be used with 2D draw function!`);
+      throw new GeneralRuntimeError(`${animate_3D_curve.name} cannot be used with 2D draw function!`);
     }
 
     assertFunctionOfLength(func, 1, CurveAnimators.animate_3D_curve.name, 'CurveAnimation');

@@ -58,7 +58,7 @@ const vitepressOptions: UserConfig = {
             link: '/modules/3-tabs/1-overview'
           },
           {
-            text: 'Testing',
+            text: 'Dev and Testing',
             link: '/modules/4-testing'
           },
           {

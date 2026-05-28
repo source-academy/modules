@@ -74,4 +74,12 @@ export {
   assertNumberWithinRange,
   isFunctionOfLength,
   assertFunctionOfLength,
+  isTupleOfLength,
+  assertTupleOfLength
 } from 'js-slang/dist/utils/rttc';
+
+// TODO: Re-add when js-slang properly exports them
+// export {
+//   callIfFuncAndRightArgs,
+//   wrap as wrapFunction
+// } from 'js-slang/dist/utils/operators';

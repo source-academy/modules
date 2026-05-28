@@ -1,4 +1,4 @@
-import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import context from 'js-slang/context';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import { FS, get_duration, get_wave, is_sound, validateDuration } from './functions';
@@ -41,7 +41,7 @@ export function play_in_tab(sound: Sound): Sound {
     const temp = wave(i / FS);
 
     if (typeof temp !== 'number') {
-      throw new Error(`${play_in_tab.name}: Provided Sound returned a non-numeric value ${stringify(temp)}.`);
+      throw new GeneralRuntimeError(`${play_in_tab.name}: Provided Sound returned a non-numeric value ${stringify(temp)}.`);
     }
 
     // clip amplitude
@@ -66,6 +66,7 @@ export function play_in_tab(sound: Sound): Sound {
     channel[i] = Math.floor(channel[i] * 32767.999);
   }
 
+  // @ts-expect-error RIFFWAVE type definition missing
   const riffwave = new RIFFWAVE([]);
   riffwave.header.sampleRate = FS;
   riffwave.header.numChannels = 1;
