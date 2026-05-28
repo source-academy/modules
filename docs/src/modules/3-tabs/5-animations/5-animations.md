@@ -288,6 +288,6 @@ export function AnimatedComponent() {
     };
   }, []);
 
-  return errored ? <p> An error occurred! </p> : <p>Animation</p>;
+  return errored ? <p> An error occurred: {errored} </p> : <p>Animation</p>;
 }
 ```
