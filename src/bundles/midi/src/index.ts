@@ -155,7 +155,7 @@ export function add_octave_to_note(note: Note, octave: number): NoteWithOctave {
  * Gets the octave number from a given {@link NoteWithOctave|note name with octave}.
  */
 export function get_octave(note: NoteWithOctave): number {
-  const [,, octave] = noteToValues(note, get_octave.name);
+  const [, , octave] = noteToValues(note, get_octave.name);
   return octave;
 }
 
@@ -188,8 +188,8 @@ export function get_accidental(note: NoteWithOctave): Accidental {
  * key_signature_to_keys(FLAT, 3); // Returns "Eb", since the key of Eb has 3 flats
  * ```
  */
-export function key_signature_to_keys(accidental: Accidental.FLAT | Accidental.SHARP, numAccidentals: number): Note {
-  assertNumberWithinRange(numAccidentals, key_signature_to_keys.name, 0, 6, true, 'numAccidentals');
+export function key_signature_to_key(accidental: Accidental.FLAT | Accidental.SHARP, numAccidentals: number): Note {
+  assertNumberWithinRange(numAccidentals, key_signature_to_key.name, 0, 6, true, 'numAccidentals');
 
   switch (accidental) {
     case Accidental.SHARP: {
@@ -201,7 +201,7 @@ export function key_signature_to_keys(accidental: Accidental.FLAT | Accidental.S
       return keys[numAccidentals];
     }
     default:
-      throw new InvalidParameterTypeError('sharp or flat', accidental, key_signature_to_keys.name, 'accidental');
+      throw new InvalidParameterTypeError('sharp or flat', accidental, key_signature_to_key.name, 'accidental');
   }
 }
 
