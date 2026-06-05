@@ -94,13 +94,13 @@ describe(funcs.key_signature_to_key, () => {
   });
 
   test('Invalid number of accidentals should throw an error', () => {
-    expect(() => funcs.key_signature_to_key(Accidental.SHARP, -1)).toThrowError('key_signature_to_keys: Expected integer between 0 and 6 for numAccidentals, got -1.');
-    expect(() => funcs.key_signature_to_key(Accidental.SHARP, 7)).toThrowError('key_signature_to_keys: Expected integer between 0 and 6 for numAccidentals, got 7.');
-    expect(() => funcs.key_signature_to_key(Accidental.SHARP, 2.5)).toThrowError('key_signature_to_keys: Expected integer between 0 and 6 for numAccidentals, got 2.5.');
+    expect(() => funcs.key_signature_to_key(Accidental.SHARP, -1)).toThrowError('key_signature_to_key: Expected integer between 0 and 6 for numAccidentals, got -1.');
+    expect(() => funcs.key_signature_to_key(Accidental.SHARP, 7)).toThrowError('key_signature_to_key: Expected integer between 0 and 6 for numAccidentals, got 7.');
+    expect(() => funcs.key_signature_to_key(Accidental.SHARP, 2.5)).toThrowError('key_signature_to_key: Expected integer between 0 and 6 for numAccidentals, got 2.5.');
   });
 
   test('Invalid accidental should throw an error', () => {
-    expect(() => funcs.key_signature_to_key('invalid' as any, 2)).toThrowError('key_signature_to_keys: Expected sharp or flat for accidental, got "invalid".');
+    expect(() => funcs.key_signature_to_key('invalid' as any, 2)).toThrowError('key_signature_to_key: Expected sharp or flat for accidental, got "invalid".');
   });
 });
 
