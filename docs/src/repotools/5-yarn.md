@@ -63,8 +63,7 @@ so they should be specified as a `devDependency`.
 
 The `.node-version` file contains the version of NodeJS that the repository is to use (the "repository" version). The constraints enforced are:
 
-1. The version of `@types/node` must be compatible with the repository version
-2. The version of Node specified under `devEngines.runtime` must be compatible with the repository version
+1. The version of Node specified under `devEngines.runtime` must be compatible with the repository version
 
 ## Parallel Execution of Scripts
 

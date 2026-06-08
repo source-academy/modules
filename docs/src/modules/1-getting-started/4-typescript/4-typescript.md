@@ -280,7 +280,7 @@ over the button next to the language selector at the bottom right of the VSCode 
 
 ![](./vscode_ts.png)
 
-This should show a small window where VSCode will show you what version of Typescript its running:
+This should show a small window where VSCode will show you what version of Typescript it's running:
 
 ![](./ts_version.png)
 
