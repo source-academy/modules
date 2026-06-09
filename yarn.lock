@@ -3994,6 +3994,7 @@ __metadata:
   dependencies:
     "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-testplugin": "workspace:^"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4329,6 +4330,18 @@ __metadata:
   peerDependencies:
     "@vitejs/plugin-react": "*"
     vitest-browser-react: "*"
+  languageName: unknown
+  linkType: soft
+
+"@sourceacademy/modules-testplugin@workspace:^, @sourceacademy/modules-testplugin@workspace:lib/testplugin":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/modules-testplugin@workspace:lib/testplugin"
+  dependencies:
+    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
+    "@sourceacademy/modules-buildtools": "workspace:^"
+    eslint: "npm:^9.35.0"
+    typescript: "npm:^6.0.2"
+    vitest: "npm:4.1.4"
   languageName: unknown
   linkType: soft
 

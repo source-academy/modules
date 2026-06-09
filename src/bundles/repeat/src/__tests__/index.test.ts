@@ -1,20 +1,61 @@
-// TODO: re-enable test once infrastructure is set up
-// import { expect, test } from 'vitest';
+import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
+import {
+  TestDataHandler,
+  callClosure,
+  closureFromFunction,
+  numberValue,
+  runAsyncGenerator
+} from '@sourceacademy/modules-testplugin';
+import { describe, expect, it } from 'vitest';
+import { repeat, thrice, twice } from '../functions';
 
-// import { repeat, thrice, twice } from '../functions';
+async function makePlusOne(handler: TestDataHandler) {
+  return closureFromFunction(
+    handler,
+    {
+      args: [DataType.NUMBER] as const,
+      returnType: DataType.NUMBER
+    },
+    x => Number(x) + 1
+  );
+}
 
-// // Test functions
-// test('repeat works correctly and repeats function n times', () => {
-//   expect(repeat((x: number) => x + 1, 5)(1))
-//     .toBe(6);
-// });
+async function callNumberClosure(
+  handler: TestDataHandler,
+  closure: TypedValue<DataType.CLOSURE>,
+  value: number
+) {
+  const result = await callClosure(
+    handler,
+    closure,
+    [numberValue(value)],
+    DataType.NUMBER
+  );
+  return result.value;
+}
 
-// test('twice works correctly and repeats function twice', () => {
-//   expect(twice((x: number) => x + 1)(1))
-//     .toBe(3);
-// });
+describe(repeat, () => {
+  it('applies a closure n times', async () => {
+    const handler = new TestDataHandler();
+    const plusOne = await makePlusOne(handler);
+    const repeated = await runAsyncGenerator(repeat(handler, plusOne, numberValue(5)));
 
-// test('thrice works correctly and repeats function thrice', () => {
-//   expect(thrice((x: number) => x + 1)(1))
-//     .toBe(4);
-// });
+    await expect(callNumberClosure(handler, repeated, 1)).resolves.toEqual(6);
+  });
+
+  it('applies a closure twice', async () => {
+    const handler = new TestDataHandler();
+    const plusOne = await makePlusOne(handler);
+    const repeated = await runAsyncGenerator(twice(handler, plusOne));
+
+    await expect(callNumberClosure(handler, repeated, 1)).resolves.toEqual(3);
+  });
+
+  it('applies a closure thrice', async () => {
+    const handler = new TestDataHandler();
+    const plusOne = await makePlusOne(handler);
+    const repeated = await runAsyncGenerator(thrice(handler, plusOne));
+
+    await expect(callNumberClosure(handler, repeated, 1)).resolves.toEqual(4);
+  });
+});
