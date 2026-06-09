@@ -458,9 +458,9 @@ function promotePluginMethods(
  */
 function groupNamesFor(reflection: td.DeclarationReflection | td.DocumentReflection) {
   const explicitGroups = reflection.comment?.blockTags
-    .filter(tag => tag.tag === '@group')
-    .map(tag => td.Comment.combineDisplayParts(tag.content).trim())
-    .filter(Boolean);
+    ?.filter(tag => tag.tag === '@group')
+    ?.map(tag => td.Comment.combineDisplayParts(tag.content).trim())
+    ?.filter(Boolean);
 
   return explicitGroups?.length
     ? explicitGroups
