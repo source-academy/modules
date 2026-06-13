@@ -1,6 +1,6 @@
 import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import { glAnimation, type AnimFrame, type ReplResult } from '@sourceacademy/modules-lib/types';
-import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+import { callWithoutMetadata, isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import type { Curve, CurveDrawn } from './curves_webgl';
 
 export type CurveModuleState = {
@@ -56,7 +56,7 @@ export class AnimatedCurve extends glAnimation implements ReplResult {
   }
 
   public getFrame(timestamp: number): AnimFrame {
-    const curve = this.func(timestamp);
+    const curve = callWithoutMetadata(this.func, timestamp);
 
     if (!isFunctionOfLength(curve, 1)) {
       throw new GeneralRuntimeError(`CurveAnimation did not return a Curve at timestamp ${timestamp}`);

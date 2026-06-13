@@ -1,4 +1,5 @@
 import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import { FS, get_duration, get_wave, is_sound, validateDuration } from './functions';
@@ -38,7 +39,7 @@ export function play_in_tab(sound: Sound): Sound {
 
   const wave = get_wave(sound);
   for (let i = 0; i < len; i += 1) {
-    const temp = wave(i / FS);
+    const temp = callWithoutMetadata(wave, i / FS);
 
     if (typeof temp !== 'number') {
       throw new GeneralRuntimeError(`${play_in_tab.name}: Provided Sound returned a non-numeric value ${stringify(temp)}.`);

@@ -1,5 +1,5 @@
 import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+import { assertFunctionOfLength, assertNumberWithinRange, callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
 import { clamp } from 'es-toolkit';
 import { Point, type Curve } from './curves_webgl';
 import { functionDeclaration } from './type_interface';
@@ -84,8 +84,8 @@ class CurveFunctions {
     throwIfNotCurve(curve1, CurveFunctions.connect_ends.name, 'curve1');
     throwIfNotCurve(curve2, CurveFunctions.connect_ends.name, 'curve2');
 
-    const startPointOfCurve2 = curve2(0);
-    const endPointOfCurve1 = curve1(1);
+    const startPointOfCurve2 = callWithoutMetadata(curve2, 0);
+    const endPointOfCurve1 = callWithoutMetadata(curve1, 1);
     return connect_rigidly(
       curve1,
       translate(
@@ -101,7 +101,7 @@ class CurveFunctions {
     throwIfNotCurve(curve1, CurveFunctions.connect_rigidly.name, 'curve1');
     throwIfNotCurve(curve2, CurveFunctions.connect_rigidly.name, 'curve2');
 
-    return t => (t < 0.5 ? curve1(2 * t) : curve2(2 * t - 1));
+    return t => (t < 0.5 ? callWithoutMetadata(curve1, 2 * t) : callWithoutMetadata(curve2, 2 * t - 1));
   }
 
   @functionDeclaration('x0: number, y0: number, z0: number', '(c: Curve) => Curve')
@@ -111,7 +111,7 @@ class CurveFunctions {
     assertNumberWithinRange(z0, { func_name: CurveFunctions.translate.name, param_name: 'z0', integer: false });
 
     return defineCurveTransformer(curve => t => {
-      const ct = curve(t);
+      const ct = callWithoutMetadata(curve, t);
       return new Point(
         x0 + ct.x,
         y0 + ct.y,
@@ -126,7 +126,7 @@ class CurveFunctions {
 
   @functionDeclaration('curve: Curve', 'Curve')
   static put_in_standard_position: CurveTransformer = defineCurveTransformer(curve => {
-    const start_point = curve(0);
+    const start_point = callWithoutMetadata(curve, 0);
     const curve_started_at_origin = translate(
       -x_of(start_point),
       -y_of(start_point),
@@ -158,7 +158,7 @@ class CurveFunctions {
     const sthz = Math.sin(c);
 
     return defineCurveTransformer(curve => t => {
-      const ct = curve(t);
+      const ct = callWithoutMetadata(curve, t);
       const coord = [ct.x, ct.y, ct.z];
       const mat = [
         [
@@ -194,7 +194,7 @@ class CurveFunctions {
     const sth = Math.sin(a);
 
     return defineCurveTransformer(curve => t => {
-      const ct = curve(t);
+      const ct = callWithoutMetadata(curve, t);
       return new Point(
         cth * ct.x - sth * ct.y,
         sth * ct.x + cth * ct.y,
@@ -211,7 +211,7 @@ class CurveFunctions {
     assertNumberWithinRange(z, { func_name: CurveFunctions.scale.name, param_name: 'z', integer: false });
 
     return defineCurveTransformer(curve => t => {
-      const ct = curve(t);
+      const ct = callWithoutMetadata(curve, t);
 
       return new Point(
         x * ct.x,

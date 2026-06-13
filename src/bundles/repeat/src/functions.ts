@@ -3,7 +3,7 @@
  * @module repeat
  */
 
-import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+import { assertFunctionOfLength, assertNumberWithinRange, callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
 
 /**
  * Represents a function that takes in 1 parameter and returns a
@@ -16,7 +16,7 @@ type UnaryFunction<T> = (x: T) => T;
  * @hidden
  */
 export function repeat_internal<T>(f: UnaryFunction<T>, n: number): UnaryFunction<T> {
-  return n === 0 ? x => x : x => f(repeat_internal(f, n - 1)(x));
+  return n === 0 ? x => x : x => callWithoutMetadata(f, repeat_internal(f, n - 1)(x));
 }
 
 /**

@@ -78,8 +78,8 @@ export {
   assertTupleOfLength
 } from 'js-slang/dist/utils/rttc';
 
-// TODO: Re-add when js-slang properly exports them
-// export {
-//   callIfFuncAndRightArgs,
-//   wrap as wrapFunction
-// } from 'js-slang/dist/utils/operators';
+export {
+  callIfFuncAndRightArgs,
+  callWithoutMetadata,
+  wrap as wrapFunction
+} from 'js-slang/dist/utils/operators';

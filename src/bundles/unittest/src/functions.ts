@@ -1,4 +1,4 @@
-import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+import { callWithoutMetadata, isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 
 import {
@@ -52,7 +52,7 @@ function runTest(name: string, funcName: string, func: Test) {
 
   try {
     currentTest = name;
-    func();
+    callWithoutMetadata(func);
     currentSuite.results.push({
       name,
       passed: true,
@@ -121,7 +121,7 @@ export function describe(msg: string, func: TestSuite): void {
   newSuite.startTime = performance.now();
 
   try {
-    func();
+    callWithoutMetadata(func);
   } finally {
     currentSuite = parentSuite;
   }

@@ -1,6 +1,6 @@
 import { midi_note_to_frequency } from '@sourceacademy/bundle-midi';
 import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { assertNumberWithinRange, isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+import { assertNumberWithinRange, callWithoutMetadata, isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 import {
   accumulate,
@@ -553,7 +553,7 @@ export function play(sound: Sound): Sound {
   const left_wave = get_left_wave(sound);
   const right_wave = get_right_wave(sound);
   for (let i = 0; i < len; i += 1) {
-    Ltemp = left_wave(i / FS);
+    Ltemp = callWithoutMetadata(left_wave, i / FS);
     // clip amplitude
     if (Ltemp > 1) {
       channel[2 * i] = 1;
@@ -573,7 +573,7 @@ export function play(sound: Sound): Sound {
 
     Lprev_value = channel[2 * i];
 
-    Rtemp = right_wave(i / FS);
+    Rtemp = callWithoutMetadata(right_wave, i / FS);
     // clip amplitude
     if (Rtemp > 1) {
       channel[2 * i + 1] = 1;
@@ -639,7 +639,7 @@ export function stop(): void {
 export function squash(sound: Sound): Sound {
   const left = get_left_wave(sound);
   const right = get_right_wave(sound);
-  return make_sound((t) => 0.5 * (left(t) + right(t)), get_duration(sound));
+  return make_sound((t) => 0.5 * (callWithoutMetadata(left, t) + callWithoutMetadata(right, t)), get_duration(sound));
 }
 
 /**
@@ -652,6 +652,9 @@ export function squash(sound: Sound): Sound {
  */
 export function pan(amount: number): SoundTransformer {
   return (sound) => {
+    const left_wave = get_left_wave(sound);
+    const right_wave = get_right_wave(sound);
+
     if (amount > 1) {
       amount = 1;
     }
@@ -659,9 +662,10 @@ export function pan(amount: number): SoundTransformer {
       amount = -1;
     }
     sound = squash(sound);
+
     return make_stereo_sound(
-      (t) => ((1 - amount) / 2) * get_left_wave(sound)(t),
-      (t) => ((1 + amount) / 2) * get_right_wave(sound)(t),
+      (t) => ((1 - amount) / 2) * callWithoutMetadata(left_wave, t),
+      (t) => ((1 + amount) / 2) * callWithoutMetadata(right_wave, t),
       get_duration(sound)
     );
   };
@@ -677,8 +681,12 @@ export function pan(amount: number): SoundTransformer {
  * @returns a Sound Transformer that pans a Sound
  */
 export function pan_mod(modulator: Sound): SoundTransformer {
+  const mod_left_wave = get_left_wave(modulator);
+  const mod_right_wave = get_right_wave(modulator);
+
   const amount = (t: number) => {
-    let output = get_left_wave(modulator)(t) + get_right_wave(modulator)(t);
+
+    let output = callWithoutMetadata(mod_left_wave, t) + callWithoutMetadata(mod_right_wave, t);
     if (output > 1) {
       output = 1;
     }
@@ -687,11 +695,15 @@ export function pan_mod(modulator: Sound): SoundTransformer {
     }
     return output;
   };
+
   return (sound) => {
+    const left_wave = get_left_wave(sound);
+    const right_wave = get_right_wave(sound);
+
     sound = squash(sound);
     return make_stereo_sound(
-      (t) => ((1 - amount(t)) / 2) * get_left_wave(sound)(t),
-      (t) => ((1 + amount(t)) / 2) * get_right_wave(sound)(t),
+      t => ((1 - amount(t)) / 2) * callWithoutMetadata(left_wave, t),
+      t => ((1 + amount(t)) / 2) * callWithoutMetadata(right_wave, t),
       get_duration(sound)
     );
   };
@@ -827,8 +839,8 @@ export function consecutively(list_of_sounds: List<Sound>): Sound {
     const Rwave2 = get_right_wave(sound2);
     const dur1 = get_duration(sound1);
     const dur2 = get_duration(sound2);
-    const new_left: Wave = t => (t < dur1 ? Lwave1(t) : Lwave2(t - dur1));
-    const new_right: Wave = t => (t < dur1 ? Rwave1(t) : Rwave2(t - dur1));
+    const new_left: Wave = t => (t < dur1 ? callWithoutMetadata(Lwave1, t) : callWithoutMetadata(Lwave2, t - dur1));
+    const new_right: Wave = t => (t < dur1 ? callWithoutMetadata(Rwave1, t) : callWithoutMetadata(Rwave2, t - dur1));
     return make_stereo_sound(new_left, new_right, dur1 + dur2);
   }
   return accumulate<Sound, Sound>(stereo_cons_two, silence_sound(0), list_of_sounds);
@@ -853,8 +865,8 @@ export function simultaneously(list_of_sounds: List<Sound>): Sound {
     const Rwave2 = get_right_wave(sound2);
     const dur1 = get_duration(sound1);
     const dur2 = get_duration(sound2);
-    const new_left: Wave = t => Lwave1(t) + Lwave2(t);
-    const new_right: Wave = t => Rwave1(t) + Rwave2(t);
+    const new_left: Wave = t => callWithoutMetadata(Lwave1, t) + callWithoutMetadata(Lwave2, t);
+    const new_right: Wave = t => callWithoutMetadata(Rwave1, t) + callWithoutMetadata(Rwave2, t);
     const new_dur = dur1 < dur2 ? dur2 : dur1;
     return make_stereo_sound(new_left, new_right, new_dur);
   }
@@ -903,20 +915,20 @@ export function adsr(
     function adsrHelper(wave: Wave) {
       return (x: number) => {
         if (x < attack_time) {
-          return wave(x) * (x / attack_time);
+          return callWithoutMetadata(wave, x) * (x / attack_time);
         }
         if (x < attack_time + decay_time) {
           return (
             ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time)
               + sustain_level)
-            * wave(x)
+            * callWithoutMetadata(wave, x)
           );
         }
         if (x < duration - release_time) {
-          return wave(x) * sustain_level;
+          return callWithoutMetadata(wave, x) * sustain_level;
         }
         return (
-          wave(x)
+          callWithoutMetadata(wave, x)
           * sustain_level
           * linear_decay(release_time)(x - (duration - release_time))
         );
@@ -955,7 +967,7 @@ export function stacking_adsr(
     return pair(pair(n, head(lst)), zip(tail(lst), n + 1));
   }
 
-  const new_list = map(x => tail(x)(waveform(base_frequency * head(x), duration)), zip(envelopes, 1));
+  const new_list = map(x => tail(x)(callWithoutMetadata(waveform, base_frequency * head(x), duration)), zip(envelopes, 1));
   return simultaneously(new_list);
 }
 
@@ -983,8 +995,8 @@ export function phase_mod(
     const right_wave = get_left_wave(modulator);
 
     return make_stereo_sound(
-      (t) => Math.sin(2 * Math.PI * t * freq + amount * left_wave(t)),
-      (t) => Math.sin(2 * Math.PI * t * freq + amount * right_wave(t)),
+      t => Math.sin(2 * Math.PI * t * freq + amount * callWithoutMetadata(left_wave, t)),
+      t => Math.sin(2 * Math.PI * t * freq + amount * callWithoutMetadata(right_wave, t)),
       duration
     );
   };

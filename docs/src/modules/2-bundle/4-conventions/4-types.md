@@ -523,3 +523,54 @@ function foo(callback: Curve) {
   assertFunctionOfLength(callback, 1, foo.name, 'Curve', 'callback');
 }
 ```
+
+### 4. Calling user provided functions should be done with `js-slang` utils
+
+If you need to call a function provided to you from the user, you should use either the `callIfFuncAndRightArgs` or `callWithoutMetadata` provided by `js-slang` (and re-exported
+by `modules-lib`):
+
+```ts twoslash
+import { assertFunctionOfLength, callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
+
+export function run_callback(f: () => void) {
+  assertFunctionOfLength(f, 1, run_callback.name);
+  callWithoutMetadata(f);
+}
+```
+
+You can also provide arguments:
+
+```ts twoslash
+import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
+import { callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
+
+export function makeNewCurve(c: Curve, numPoints: number): Curve {
+  for (let i = 0; i < numPoints; i++) {
+    const point = callWithoutMetadata(c, i / numPoints);
+    // Do things with point...
+  }
+
+  return t => {
+    return callWithoutMetadata(c, t);
+  };
+}
+```
+
+Calling a user function directly may not behave as intended, especially when the `js-slang` transpiler is being used.
+
+Functions that are provided from the standard library or from other module functions can still be called normally.
+
+`callIfFuncAndRightArgs` is used when you want to provide extra metadata about where the function was defined:
+
+```ts twoslash
+import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
+import { callIfFuncAndRightArgs } from '@sourceacademy/modules-lib/utilities';
+
+export function evaluateCurve(c: Curve, numPoints: number) {
+  for (let i = 0; i < numPoints; i++) {
+    // Line Number, Column Number, File name, NativeStorage (usually undefined), ...args
+    const point = callIfFuncAndRightArgs(c, 4, 1, 'curve', undefined, i / numPoints);
+    // Do things with point...
+  }
+}
+```

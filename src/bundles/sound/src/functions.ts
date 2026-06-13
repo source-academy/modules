@@ -1,7 +1,7 @@
 import { midi_note_to_frequency } from '@sourceacademy/bundle-midi';
 import type { MIDINote } from '@sourceacademy/bundle-midi/types';
 import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { assertFunctionOfLength, assertNumberWithinRange, isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+import { assertFunctionOfLength, assertNumberWithinRange, callWithoutMetadata, isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import {
   accumulate,
   head,
@@ -420,7 +420,7 @@ export function play(sound: Sound): Sound {
 
   const wave = get_wave(sound);
   for (let i = 0; i < channel.length; i++) {
-    const temp = wave(i / FS);
+    const temp = callWithoutMetadata(wave, i / FS);
 
     if (typeof temp !== 'number') {
       throw new GeneralRuntimeError(`${play.name}: Provided Sound returned a non-numeric value ${stringify(temp)}.`);
@@ -628,7 +628,7 @@ export function consecutively(list_of_sounds: List<Sound>): Sound {
     const wave2 = get_wave(ss2);
     const dur1 = get_duration(ss1);
     const dur2 = get_duration(ss2);
-    const new_wave: Wave = t => (t < dur1 ? wave1(t) : wave2(t - dur1));
+    const new_wave: Wave = t => (t < dur1 ? callWithoutMetadata(wave1, t) : callWithoutMetadata(wave2, t - dur1));
     return make_sound(new_wave, dur1 + dur2);
   }
   return accumulate(consec_two, silence_sound(0), list_of_sounds);
@@ -659,11 +659,11 @@ export function simultaneously(list_of_sounds: List<Sound>): Sound {
     const new_wave: Wave = t => {
       let sum = 0;
       if (t <= dur1) {
-        sum += wave1(t);
+        sum += callWithoutMetadata(wave1, t);
       }
 
       if (t <= dur2) {
-        sum += wave2(t);
+        sum += callWithoutMetadata(wave2, t);
       }
 
       return sum;
@@ -737,20 +737,20 @@ export function adsr(
 
     return make_sound((x) => {
       if (x < attack_time) {
-        return wave(x) * (x / attack_time);
+        return callWithoutMetadata(wave, x) * (x / attack_time);
       }
       if (x < attack_time + decay_time) {
         return (
           ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time)
             + sustain_level)
-          * wave(x)
+          * callWithoutMetadata(wave, x)
         );
       }
       if (x < duration - release_time) {
-        return wave(x) * sustain_level;
+        return callWithoutMetadata(wave, x) * sustain_level;
       }
       return (
-        wave(x)
+        callWithoutMetadata(wave, x)
         * sustain_level
         * linear_decay(release_time)(x - (duration - release_time))
       );
@@ -800,7 +800,7 @@ export function stacking_adsr(
     return pair(pair(n, head(lst)), zip(tail(lst), n + 1));
   }
 
-  const new_list = map(x => tail(x)(waveform(base_frequency * head(x), duration)), zip(envelopes, 1));
+  const new_list = map(x => tail(x)(callWithoutMetadata(waveform, base_frequency * head(x), duration)), zip(envelopes, 1));
   return simultaneously(new_list);
 }
 
@@ -832,7 +832,7 @@ export function phase_mod(
   return wrapSoundTransformer(modulator => {
     const wave = get_wave(modulator);
     return make_sound(
-      t => Math.sin(2 * Math.PI * t * freq + amount * wave(t)),
+      t => Math.sin(2 * Math.PI * t * freq + amount * callWithoutMetadata(wave, t)),
       duration
     );
   });

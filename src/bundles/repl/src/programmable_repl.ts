@@ -5,6 +5,7 @@
  */
 
 import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
 import { createContext, parseError, runInContext, type Context, type IOptions, type Result } from 'js-slang';
 import { head, is_pair, tail } from 'js-slang/dist/stdlib/list';
 import assert from 'js-slang/dist/utils/assert';
@@ -164,7 +165,7 @@ export class ProgrammableRepl {
       retVal = evalResult.value;
     } else {
       try {
-        retVal = this.evalFunction(code);
+        retVal = callWithoutMetadata(this.evalFunction.bind(this), code);
       } catch (exception: any) {
         console.error(exception);
         this.pushOutputString(`Line ${exception.location.start.line.toString()}: ${exception.error?.message}`, COLOR_ERROR_MESSAGE);
