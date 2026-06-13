@@ -3,7 +3,7 @@ import pathlib from 'path';
 import type { BuildResult, ResolvedBundle, ResultType } from '@sourceacademy/modules-repotools/types';
 import { mapAsync } from '@sourceacademy/modules-repotools/utils';
 import * as td from 'typedoc';
-import { normalizeConductorDocs } from './conductor.js';
+import { normalizeConductorDocs } from './conductor/index.js';
 import { buildJson } from './json.js';
 import { initTypedocForHtml, initTypedocForJson } from './typedoc.js';
 

@@ -2,7 +2,7 @@ import pathlib from 'path';
 import type { ResolvedBundle } from '@sourceacademy/modules-repotools/types';
 import * as td from 'typedoc';
 import { describe, expect, it, vi } from 'vitest';
-import { normalizeConductorDocs, normalizeConductorType } from '../conductor.js';
+import { normalizeConductorDocs, normalizeConductorType } from '../conductor/index.js';
 import { initTypedocForJson } from '../typedoc.js';
 
 vi.setConfig({
