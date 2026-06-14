@@ -64,6 +64,13 @@ function getInvalidExamples(parts: td.CommentTag[]): string[] {
 }
 
 const typeToName = (type: td.SomeType) => type.stringify(td.TypeContext.none);
+const ignoredKinds = new Set<td.ReflectionKind>([
+  td.ReflectionKind.Class,
+  td.ReflectionKind.Interface,
+  td.ReflectionKind.Namespace,
+  td.ReflectionKind.TypeAlias
+]);
+
 export const parsers: {
   [K in td.ReflectionKind]?: (obj: td.DeclarationReflection) => ParserResult
 } = {
@@ -156,8 +163,7 @@ export async function buildJson(bundle: ResolvedBundle, outDir: string, reflecti
   const [jsonData, warnings, errors] = reflection.children!.reduce<
     [Record<string, unknown>, string[], string[]]
   >(([res, warnings, errors], element) => {
-    if (element.kind === td.ReflectionKind.TypeAlias) {
-      // Ignore Type Aliases for JSON documentation
+    if (ignoredKinds.has(element.kind)) {
       return [res, warnings, errors];
     }
 
