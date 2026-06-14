@@ -5,4 +5,4 @@
  * @author Vee Hua Zhi
  */
 
-export * from '@veehz/torch';
+export * from '@sourceacademy/torch';

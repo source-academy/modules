@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@veehz/torch": "^0.1.2"
+    "@sourceacademy/torch": "^0.1.0"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
