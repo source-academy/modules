@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "devDependencies": {
+    "@sourceacademy/conductor": "https://github.com/source-academy/conductor",
     "@sourceacademy/modules-buildtools": "workspace:^",
+    "@sourceacademy/modules-testplugin": "workspace:^",
     "typescript": "^6.0.2"
   },
   "type": "module",

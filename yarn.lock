@@ -3992,7 +3992,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-repeat@workspace:src/bundles/repeat"
   dependencies:
+    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-testplugin": "workspace:^"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4122,6 +4124,13 @@ __metadata:
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
+
+"@sourceacademy/conductor@https://github.com/source-academy/conductor":
+  version: 0.5.0
+  resolution: "@sourceacademy/conductor@https://github.com/source-academy/conductor.git#commit=8bda154466fd1e8c97ac0fff01f42bc7d3b196df"
+  checksum: 10c0/acf42d7cb4d036f2b9a2fe2a0a2da3a5670c0fef2cf705a3a367768854413bcbbdb1e6d9ecfd810f9024f60c52ae0973332c0be14ce2fde1cb6598b0cf202a5b
+  languageName: node
+  linkType: hard
 
 "@sourceacademy/lint-plugin@workspace:^, @sourceacademy/lint-plugin@workspace:lib/lintplugin":
   version: 0.0.0-use.local
@@ -4321,6 +4330,18 @@ __metadata:
   peerDependencies:
     "@vitejs/plugin-react": "*"
     vitest-browser-react: "*"
+  languageName: unknown
+  linkType: soft
+
+"@sourceacademy/modules-testplugin@workspace:^, @sourceacademy/modules-testplugin@workspace:lib/testplugin":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/modules-testplugin@workspace:lib/testplugin"
+  dependencies:
+    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
+    "@sourceacademy/modules-buildtools": "workspace:^"
+    eslint: "npm:^9.35.0"
+    typescript: "npm:^6.0.2"
+    vitest: "npm:4.1.4"
   languageName: unknown
   linkType: soft
 
