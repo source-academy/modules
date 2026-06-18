@@ -105,7 +105,7 @@ The parameters of the constructor for `InvalidParameterTypeError` are as follows
 Numbers in Javascript and Typescript are stored as floats, but most often we want to deal only with integers. Also, we may want to check that a
 number is greater than a given minimum, less than a given maximum, or both.
 
-`modules-lib` provides a two functions and a dedicated error type for this purpose:
+`modules-lib` provides two functions and a dedicated error type for this purpose:
 
 ### `isNumberWithinRange`
 
@@ -387,6 +387,26 @@ export function bar2(obj: Bar2Params) {
 }
 ```
 
+> [!INFO] isTupleOfLength
+>
+> In the case of the `foo` function above, there is also a type guard exported by `js-slang` and re-exported by `modules-lib` that can be used to
+> assert that the given value is indeed a tuple (or simply an array) of a given length:
+>
+> ```ts twoslash
+> import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+> // ---cut---
+> import { isTupleOfLength } from '@sourceacademy/modules-lib/utilities';
+>
+> export function foo(arr: [string, string]) {
+>   if (isTupleOfLength(arr, 2)) {
+>     throw new InvalidParameterTypeError('Tuple of length 2', arr, foo.name, 'arr');
+>   }
+>   return arr[0];
+> }
+> ```
+>
+> Of course, there is also an assertion version `assertTupleOfLength` available.
+
 ### 3. If a callback is passed as a parameter, its number of parameters should be validated
 
 By default, Javascript doesn't really mind if you call a function with fewer arguments than it was defined with:
@@ -556,9 +576,8 @@ export function makeNewCurve(c: Curve, numPoints: number): Curve {
 }
 ```
 
-Calling a user function directly may not behave as intended, especially when the `js-slang` transpiler is being used.
-
-Functions that are provided from the standard library or from other module functions can still be called normally.
+Calling a user function directly may not behave as intended, especially when the `js-slang` transpiler is being used. However,
+functions that are provided from the standard library or from other module functions can still be called normally.
 
 `callIfFuncAndRightArgs` is used when you want to provide extra metadata about where the function was defined:
 
