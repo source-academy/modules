@@ -16,7 +16,10 @@ type UnaryFunction<T> = (x: T) => T;
  * @hidden
  */
 export function repeat_internal<T>(f: UnaryFunction<T>, n: number): UnaryFunction<T> {
-  return n === 0 ? x => x : x => callWithoutMetadata(f, repeat_internal(f, n - 1)(x));
+  // Wrap the callWithoutMetadata call in another function
+  // so that the internal implementation is hidden
+  const func: UnaryFunction<T> = x => callWithoutMetadata(f, x);
+  return n === 0 ? x => x : x => func(repeat_internal(func, n - 1)(x));
 }
 
 /**

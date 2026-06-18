@@ -36,7 +36,7 @@ export default defineConfig({
     ],
     testTimeout: 20_000,
     include: ['**/__tests__/**/*.test.{ts,tsx}'],
-    exclude: ['**/dist'],
+    exclude: ['**/dist', '**/node_modules'],
     reporters: testReporters,
     clearMocks: true,
     coverage: {

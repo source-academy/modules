@@ -624,11 +624,11 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
  */
 export function consecutively(list_of_sounds: List<Sound>): Sound {
   function consec_two(ss1: Sound, ss2: Sound) {
-    const wave1 = get_wave(ss1);
-    const wave2 = get_wave(ss2);
+    const wave1: Wave = x => callWithoutMetadata(get_wave(ss1), x);
+    const wave2: Wave = x => callWithoutMetadata(get_wave(ss2), x);
     const dur1 = get_duration(ss1);
     const dur2 = get_duration(ss2);
-    const new_wave: Wave = t => (t < dur1 ? callWithoutMetadata(wave1, t) : callWithoutMetadata(wave2, t - dur1));
+    const new_wave: Wave = t => (t < dur1 ? wave1(t) : wave2(t - dur1));
     return make_sound(new_wave, dur1 + dur2);
   }
   return accumulate(consec_two, silence_sound(0), list_of_sounds);
@@ -651,19 +651,19 @@ export function consecutively(list_of_sounds: List<Sound>): Sound {
  */
 export function simultaneously(list_of_sounds: List<Sound>): Sound {
   function simul_two(ss1: Sound, ss2: Sound) {
-    const wave1 = get_wave(ss1);
-    const wave2 = get_wave(ss2);
+    const wave1: Wave = x => callWithoutMetadata(get_wave(ss1), x);
+    const wave2: Wave = x => callWithoutMetadata(get_wave(ss2), x);
     const dur1 = get_duration(ss1);
     const dur2 = get_duration(ss2);
 
     const new_wave: Wave = t => {
       let sum = 0;
       if (t <= dur1) {
-        sum += callWithoutMetadata(wave1, t);
+        sum += wave1(t);
       }
 
       if (t <= dur2) {
-        sum += callWithoutMetadata(wave2, t);
+        sum += wave2(t);
       }
 
       return sum;
@@ -676,7 +676,7 @@ export function simultaneously(list_of_sounds: List<Sound>): Sound {
 
   const mushed_sounds = accumulate(simul_two, silence_sound(0), list_of_sounds);
   const len = length(list_of_sounds);
-  const normalised_wave: Wave = t => head(mushed_sounds)(t) / len;
+  const normalised_wave: Wave = t => callWithoutMetadata(head(mushed_sounds), t) / len;
   const highest_duration = tail(mushed_sounds);
   return make_sound(normalised_wave, highest_duration);
 }
@@ -728,7 +728,7 @@ export function adsr(
   assertNumberWithinRange(release_ratio, adsr.name, undefined, undefined, false, 'release_ratio');
 
   return wrapSoundTransformer(sound => {
-    const wave = get_wave(sound);
+    const wave: Wave = x => callWithoutMetadata(get_wave(sound), x);
     const duration = get_duration(sound);
 
     const attack_time = duration * attack_ratio;
@@ -737,20 +737,20 @@ export function adsr(
 
     return make_sound((x) => {
       if (x < attack_time) {
-        return callWithoutMetadata(wave, x) * (x / attack_time);
+        return wave(x) * (x / attack_time);
       }
       if (x < attack_time + decay_time) {
         return (
           ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time)
             + sustain_level)
-          * callWithoutMetadata(wave, x)
+          * wave(x)
         );
       }
       if (x < duration - release_time) {
-        return callWithoutMetadata(wave, x) * sustain_level;
+        return wave(x) * sustain_level;
       }
       return (
-        callWithoutMetadata(wave, x)
+        wave(x)
         * sustain_level
         * linear_decay(release_time)(x - (duration - release_time))
       );
@@ -830,9 +830,9 @@ export function phase_mod(
   assertNumberWithinRange(amount, phase_mod.name, undefined, undefined, false);
 
   return wrapSoundTransformer(modulator => {
-    const wave = get_wave(modulator);
+    const wave: Wave = x => callWithoutMetadata(get_wave(modulator), x);
     return make_sound(
-      t => Math.sin(2 * Math.PI * t * freq + amount * callWithoutMetadata(wave, t)),
+      t => Math.sin(2 * Math.PI * t * freq + amount * wave(t)),
       duration
     );
   });

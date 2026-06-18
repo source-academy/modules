@@ -574,3 +574,44 @@ export function evaluateCurve(c: Curve, numPoints: number) {
   }
 }
 ```
+
+> [!WARNING] Handling Stringification
+>
+> You will probably want to hide the fact that you are calling the user provided function via a proxy. Consider an example from the `repeat` bundle:
+>
+> ```ts
+> // Handles the internal implementation for the `repeat` function
+> export function repeat_internal<T>(f: UnaryFunction<T>, n: number): UnaryFunction<T> {
+>   return n === 0 ? x => x : x => callWithoutMetadata(f, repeat_internal(f, n - 1)(x));
+> }
+> ```
+>
+> When the code below is run, the cadet can see that `f` is being called via `callWithoutMetadata`:
+>
+> ```js
+> import { repeat } from 'repeat';
+> const f = funcs.repeat(x => x, 1);
+> stringify(f); // prints "(x) => callWithoutMetadata(f, repeat_internal(f, n - 1)(x))"
+> ```
+>
+> You can of course override `toReplString`, but this could be tedious if you intend for the internals to be visible. Instead,
+> wrap the cadet's function in another (local) function:
+>
+> ```ts
+> export function repeat_internal<T>(f: UnaryFunction<T>, n: number): UnaryFunction<T> {
+>   // Wrap the callWithoutMetadata call in another function
+>   // so that the internal implementation is hidden
+>   const func: UnaryFunction<T> = x => callWithoutMetadata(f, x);
+>   return n === 0 ? x => x : x => func(repeat_internal(func, n - 1)(x));
+> }
+> ```
+>
+> Then the stringified version won't show `callWithoutMetadata`:
+>
+> ```js
+> import { repeat } from 'repeat';
+> const f = funcs.repeat(x => x, 1);
+> stringify(f); // prints "(x) => func(repeat_internal(func, n - 1)(x))"
+> ```
+>
+> This of course might not always be possible, in which case you should use other methods as appropriate.

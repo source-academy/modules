@@ -451,7 +451,7 @@ export function play_in_tab(sound: Sound): Sound {
   const left_wave = get_left_wave(sound);
   const right_wave = get_right_wave(sound);
   for (let i = 0; i < len; i += 1) {
-    Ltemp = left_wave(i / FS);
+    Ltemp = callWithoutMetadata(left_wave, i / FS);
     // clip amplitude
     if (Ltemp > 1) {
       channel[2 * i] = 1;
@@ -471,7 +471,7 @@ export function play_in_tab(sound: Sound): Sound {
 
     Lprev_value = channel[2 * i];
 
-    Rtemp = right_wave(i / FS);
+    Rtemp = callWithoutMetadata(right_wave, i / FS);
     // clip amplitude
     if (Rtemp > 1) {
       channel[2 * i + 1] = 1;
@@ -637,9 +637,9 @@ export function stop(): void {
  * @returns a new sound with the left and right channels averaged
  */
 export function squash(sound: Sound): Sound {
-  const left = get_left_wave(sound);
-  const right = get_right_wave(sound);
-  return make_sound((t) => 0.5 * (callWithoutMetadata(left, t) + callWithoutMetadata(right, t)), get_duration(sound));
+  const left: Wave = x => callWithoutMetadata(get_left_wave(sound), x);
+  const right: Wave = x => callWithoutMetadata(get_right_wave(sound), x);
+  return make_sound((t) => 0.5 * (left(t) + right(t)), get_duration(sound));
 }
 
 /**
@@ -681,12 +681,11 @@ export function pan(amount: number): SoundTransformer {
  * @returns a Sound Transformer that pans a Sound
  */
 export function pan_mod(modulator: Sound): SoundTransformer {
-  const mod_left_wave = get_left_wave(modulator);
-  const mod_right_wave = get_right_wave(modulator);
+  const mod_left_wave: Wave = x => callWithoutMetadata(get_left_wave(modulator), x);
+  const mod_right_wave: Wave = x => callWithoutMetadata(get_right_wave(modulator), x);
 
   const amount = (t: number) => {
-
-    let output = callWithoutMetadata(mod_left_wave, t) + callWithoutMetadata(mod_right_wave, t);
+    let output = mod_left_wave(t) + mod_right_wave(t);
     if (output > 1) {
       output = 1;
     }
@@ -833,14 +832,17 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
  */
 export function consecutively(list_of_sounds: List<Sound>): Sound {
   function stereo_cons_two(sound1: Sound, sound2: Sound) {
-    const Lwave1 = get_left_wave(sound1);
-    const Rwave1 = get_right_wave(sound1);
-    const Lwave2 = get_left_wave(sound2);
-    const Rwave2 = get_right_wave(sound2);
+    const Lwave1: Wave = x => callWithoutMetadata(get_left_wave(sound1), x);
+    const Rwave1: Wave = x => callWithoutMetadata(get_right_wave(sound1), x);
+
+    const Lwave2: Wave = x => callWithoutMetadata(get_left_wave(sound2), x);
+    const Rwave2: Wave = x => callWithoutMetadata(get_right_wave(sound2), x);
+
     const dur1 = get_duration(sound1);
     const dur2 = get_duration(sound2);
-    const new_left: Wave = t => (t < dur1 ? callWithoutMetadata(Lwave1, t) : callWithoutMetadata(Lwave2, t - dur1));
-    const new_right: Wave = t => (t < dur1 ? callWithoutMetadata(Rwave1, t) : callWithoutMetadata(Rwave2, t - dur1));
+
+    const new_left: Wave = t => (t < dur1 ? Lwave1(t) : Lwave2(t - dur1));
+    const new_right: Wave = t => (t < dur1 ? Rwave1(t) : Rwave2(t - dur1));
     return make_stereo_sound(new_left, new_right, dur1 + dur2);
   }
   return accumulate<Sound, Sound>(stereo_cons_two, silence_sound(0), list_of_sounds);
@@ -859,14 +861,18 @@ export function consecutively(list_of_sounds: List<Sound>): Sound {
  */
 export function simultaneously(list_of_sounds: List<Sound>): Sound {
   function stereo_simul_two(sound1: Sound, sound2: Sound) {
-    const Lwave1 = get_left_wave(sound1);
-    const Rwave1 = get_right_wave(sound1);
-    const Lwave2 = get_left_wave(sound2);
-    const Rwave2 = get_right_wave(sound2);
+    const Lwave1: Wave = x => callWithoutMetadata(get_left_wave(sound1), x);
+    const Rwave1: Wave = x => callWithoutMetadata(get_right_wave(sound1), x);
+
+    const Lwave2: Wave = x => callWithoutMetadata(get_left_wave(sound2), x);
+    const Rwave2: Wave = x => callWithoutMetadata(get_right_wave(sound2), x);
+
     const dur1 = get_duration(sound1);
     const dur2 = get_duration(sound2);
-    const new_left: Wave = t => callWithoutMetadata(Lwave1, t) + callWithoutMetadata(Lwave2, t);
-    const new_right: Wave = t => callWithoutMetadata(Rwave1, t) + callWithoutMetadata(Rwave2, t);
+
+    const new_left: Wave = t => (t < dur1 ? Lwave1(t) : Lwave2(t - dur1));
+    const new_right: Wave = t => (t < dur1 ? Rwave1(t) : Rwave2(t - dur1));
+
     const new_dur = dur1 < dur2 ? dur2 : dur1;
     return make_stereo_sound(new_left, new_right, new_dur);
   }
