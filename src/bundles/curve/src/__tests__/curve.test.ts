@@ -1,10 +1,12 @@
+// Need to disable because stringify produces tab characters?
+/* eslint-disable @stylistic/no-tabs */
 import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import { describe, expect, it, test } from 'vitest';
 import type { Color, Curve } from '../curves_webgl';
 import * as drawers from '../drawers';
 import * as funcs from '../functions';
-import { AnimatedCurve, type RenderFunctionCreator } from '../types';
+import { AnimatedCurve, type CurveTransformer, type RenderFunctionCreator } from '../types';
 
 /**
  * Evaluates the curve at 200 points, then
@@ -252,27 +254,234 @@ describe(funcs.scale, () => {
   });
 });
 
-describe(funcs.put_in_standard_position, () => {
-  it('actually works', () => {
-    const curve: Curve = t => funcs.make_point(-2000 + t, 2000 + t);
-    const newCurve = funcs.put_in_standard_position(curve);
-    const points = evaluatePoints(newCurve);
+describe('Curve transformers', () => {
+  function testTransformer(f: CurveTransformer, name?: string) {
+    test('toReplString representation', () => {
+      expect(stringify(f)).toEqual('<CurveTransformer>');
+    });
 
-    const [x0, y0] = points[0];
-    expect(x0).toBeCloseTo(0);
-    expect(y0).toBeCloseTo(0);
+    if (name !== undefined) {
+      test('name', () => {
+        expect(f.name).toEqual(name);
+      });
+    }
 
-    const [xn, yn] = points[points.length - 1];
-    expect(xn).toBeCloseTo(1, 1);
-    expect(yn).toBeCloseTo(0, 1);
+    it('throws when given not a curve', () => {
+      name ??= 'CurveTransformer';
+
+      expect(() => f(0 as any)).toThrow(`${name}: Expected Curve, got 0.`);
+
+      const invalid: any = (x: number, y: number) => x + y;
+      expect(() => f(invalid)).toThrow(`${name}: Expected Curve, got (x, y) => x + y.`);
+    });
+  }
+
+  function sanitizeStringify(value: Curve) {
+    const result = stringify(value);
+    return result.replaceAll(/__vite_ssr_import_\d+__\./g, '');
+  };
+
+  describe(funcs.invert, () => {
+    testTransformer(funcs.invert, 'invert');
+
+    it('actually works', () => {
+      const curve = funcs.unit_line_at(0.5);
+      const newCurve = funcs.invert(curve);
+
+      expect(sanitizeStringify(newCurve)).toEqual('(t) => curve(1 - t)');
+    });
   });
 
-  test('toReplString representation', () => {
-    const transformer = funcs.put_in_standard_position;
-    expect(stringify(transformer)).toEqual('<CurveTransformer>');
+  describe(funcs.put_in_standard_position, () => {
+    testTransformer(funcs.put_in_standard_position, 'put_in_standard_position');
+
+    it('actually works', () => {
+      const curve: Curve = t => funcs.make_point(-2000 + t, 2000 + t);
+      const newCurve = funcs.put_in_standard_position(curve);
+      const points = evaluatePoints(newCurve);
+
+      const [x0, y0] = points[0];
+      expect(x0).toBeCloseTo(0);
+      expect(y0).toBeCloseTo(0);
+
+      const [xn, yn] = points[points.length - 1];
+      expect(xn).toBeCloseTo(1, 1);
+      expect(yn).toBeCloseTo(0, 1);
+
+      expect(sanitizeStringify(newCurve)).toMatchInlineSnapshot(`
+        "(t) => {
+        			const pt = curve(t);
+        			return make_3D_color_point(x * x_of(pt), y * y_of(pt), z * z_of(pt), r_of(pt), g_of(pt), b_of(pt));
+        		}"
+      `);
+    });
   });
 
-  test('name', () => {
-    expect(funcs.put_in_standard_position.name).toEqual('put_in_standard_position');
+  describe(funcs.rotate_around_origin_3D, () => {
+    const curve: Curve = t => funcs.make_3D_point(t, t, t);
+    const transformer = funcs.rotate_around_origin_3D(0, 0, Math.PI);
+
+    testTransformer(transformer);
+
+    it('actually works', () => {
+      const newCurve = transformer(curve);
+      const points = evaluatePoints(newCurve);
+
+      const [x0, y0, z0] = points[0];
+
+      expect(x0).toBeCloseTo(0);
+      expect(y0).toBeCloseTo(0);
+      expect(z0).toBeCloseTo(0);
+
+      const [x1, y1, z1] = points[199];
+
+      expect(x1).toBeCloseTo(-1, 1);
+      expect(y1).toBeCloseTo(-1, 1);
+      expect(z1).toBeCloseTo(1, 1);
+
+      expect(sanitizeStringify(newCurve)).toMatchInlineSnapshot(`
+        "(t) => {
+        			const pt = curve(t);
+        			const coord = [
+        				pt.x,
+        				pt.y,
+        				pt.z
+        			];
+        			let xf = 0;
+        			let yf = 0;
+        			let zf = 0;
+        			for (let i = 0; i < 3; i += 1) {
+        				xf += mat[0][i] * coord[i];
+        				yf += mat[1][i] * coord[i];
+        				zf += mat[2][i] * coord[i];
+        			};
+        			return make_3D_color_point(xf, yf, zf, r_of(pt), g_of(pt), z_of(pt));
+        		}"
+      `);
+    });
+  });
+
+  describe(funcs.rotate_around_origin, () => {
+    const curve: Curve = t => funcs.make_point(t, t);
+    const transformer = funcs.rotate_around_origin(Math.PI);
+
+    testTransformer(transformer);
+
+    it('actually works', () => {
+      const newCurve = transformer(curve);
+
+      const points = evaluatePoints(newCurve);
+
+      const [x0, y0, z0] = points[0];
+
+      expect(x0).toBeCloseTo(0);
+      expect(y0).toBeCloseTo(0);
+      expect(z0).toEqual(0);
+
+      const [x1, y1, z1] = points[199];
+
+      expect(x1).toBeCloseTo(-1, 1);
+      expect(y1).toBeCloseTo(-1, 1);
+      expect(z1).toEqual(0);
+
+      expect(sanitizeStringify(newCurve)).toMatchInlineSnapshot(`
+        "(t) => {
+        			const pt = curve(t);
+        			const pt_x = x_of(pt);
+        			const pt_y = y_of(pt);
+        			return make_3D_color_point(cth * pt_x - sth * pt_y, sth * pt_x + cth * pt_y, z_of(pt), r_of(pt), g_of(pt), b_of(pt));
+        		}"
+      `);
+    });
+  });
+
+  describe(funcs.scale, () => {
+    const curve: Curve = t => funcs.make_3D_point(t, t, t);
+    const transformer = funcs.scale(1, 2, 3);
+
+    testTransformer(transformer);
+
+    it('actually works', () => {
+      const newCurve = transformer(curve);
+
+      const oldPoints = evaluatePoints(curve);
+      const newPoints = evaluatePoints(newCurve);
+
+      for (let i = 0; i < 200; i += 10) {
+        const [x_old, y_old, z_old] = oldPoints[i];
+        const [x_new, y_new, z_new] = newPoints[i];
+
+        expect(x_new).toEqual(x_old);
+        expect(y_new).toEqual(y_old * 2);
+        expect(z_new).toEqual(z_old * 3);
+      }
+
+      expect(sanitizeStringify(newCurve)).toMatchInlineSnapshot(`
+        "(t) => {
+        			const pt = curve(t);
+        			return make_3D_color_point(x * x_of(pt), y * y_of(pt), z * z_of(pt), r_of(pt), g_of(pt), b_of(pt));
+        		}"
+      `);
+    });
+  });
+
+  describe(funcs.scale_proportional, () => {
+    const curve: Curve = t => funcs.make_3D_point(t, t, t);
+    const transformer = funcs.scale_proportional(2);
+
+    testTransformer(transformer);
+
+    it('actually works', () => {
+      const newCurve = transformer(curve);
+
+      const oldPoints = evaluatePoints(curve);
+      const newPoints = evaluatePoints(newCurve);
+
+      for (let i = 0; i < 200; i += 10) {
+        const [x_old, y_old, z_old] = oldPoints[i];
+        const [x_new, y_new, z_new] = newPoints[i];
+
+        expect(x_new).toEqual(x_old * 2);
+        expect(y_new).toEqual(y_old * 2);
+        expect(z_new).toEqual(z_old * 2);
+      }
+
+      expect(sanitizeStringify(newCurve)).toMatchInlineSnapshot(`
+        "(t) => {
+        			const pt = curve(t);
+        			return make_3D_color_point(x * x_of(pt), y * y_of(pt), z * z_of(pt), r_of(pt), g_of(pt), b_of(pt));
+        		}"
+      `);
+    });
+  });
+
+  describe(funcs.translate, () => {
+    const curve: Curve = t => funcs.make_3D_point(t, t, t);
+    const transformer = funcs.translate(1, 1, 1);
+
+    testTransformer(transformer);
+
+    it('actually works', () => {
+      const newCurve = transformer(curve);
+
+      const oldPoints = evaluatePoints(curve);
+      const newPoints = evaluatePoints(newCurve);
+
+      for (let i = 0; i < 200; i += 10) {
+        const [x_old, y_old, z_old] = oldPoints[i];
+        const [x_new, y_new, z_new] = newPoints[i];
+
+        expect(x_old + 1).toBeCloseTo(x_new);
+        expect(y_old + 1).toBeCloseTo(y_new);
+        expect(z_old + 1).toBeCloseTo(z_new);
+      }
+
+      expect(sanitizeStringify(newCurve)).toMatchInlineSnapshot(`
+        "(t) => {
+        			const pt = curve(t);
+        			return make_3D_color_point(x0 + x_of(pt), y0 + y_of(pt), z0 + z_of(pt), r_of(pt), g_of(pt), b_of(pt));
+        		}"
+      `);
+    });
   });
 });

@@ -17,8 +17,8 @@ function throwIfNotCurve(obj: unknown, func_name: string, param_name?: string): 
 
 function defineCurveTransformer(f: (arg: Curve) => Curve, name?: string): CurveTransformer {
   const transformer: CurveTransformer = curve => {
-    throwIfNotCurve(curve, 'CurveTransformer');
-    return f(curve);
+    throwIfNotCurve(curve, name ?? 'CurveTransformer');
+    return f(t => callWithoutMetadata(curve, t));
   };
 
   transformer.toReplString = () => '<CurveTransformer>';
@@ -101,7 +101,10 @@ class CurveFunctions {
     throwIfNotCurve(curve1, CurveFunctions.connect_rigidly.name, 'curve1');
     throwIfNotCurve(curve2, CurveFunctions.connect_rigidly.name, 'curve2');
 
-    return t => (t < 0.5 ? callWithoutMetadata(curve1, 2 * t) : callWithoutMetadata(curve2, 2 * t - 1));
+    const c1: Curve = t => callWithoutMetadata(curve1, t);
+    const c2: Curve = t => callWithoutMetadata(curve2, t);
+
+    return t => (t < 0.5 ? c1(2 * t) : c2(2 * t - 1));
   }
 
   @functionDeclaration('x0: number, y0: number, z0: number', '(c: Curve) => Curve')
@@ -111,22 +114,24 @@ class CurveFunctions {
     assertNumberWithinRange(z0, { func_name: CurveFunctions.translate.name, param_name: 'z0', integer: false });
 
     return defineCurveTransformer(curve => t => {
-      const ct = callWithoutMetadata(curve, t);
-      return new Point(
-        x0 + ct.x,
-        y0 + ct.y,
-        z0 + ct.z,
-        [ct.color[0], ct.color[1], ct.color[2], 1]
+      const pt = curve(t);
+      return make_3D_color_point(
+        x0 + x_of(pt),
+        y0 + y_of(pt),
+        z0 + z_of(pt),
+        r_of(pt),
+        g_of(pt),
+        b_of(pt),
       );
     });
   }
 
   @functionDeclaration('curve: Curve', 'Curve')
-  static invert: CurveTransformer = defineCurveTransformer(original => t => original(1 - t), 'invert');
+  static invert: CurveTransformer = defineCurveTransformer(curve => t => curve(1 - t), 'invert');
 
   @functionDeclaration('curve: Curve', 'Curve')
   static put_in_standard_position: CurveTransformer = defineCurveTransformer(curve => {
-    const start_point = callWithoutMetadata(curve, 0);
+    const start_point = curve(0);
     const curve_started_at_origin = translate(
       -x_of(start_point),
       -y_of(start_point),
@@ -156,23 +161,24 @@ class CurveFunctions {
     assertNumberWithinRange(c, { func_name: CurveFunctions.rotate_around_origin_3D.name, integer: false, param_name: 'c' });
     const cthz = Math.cos(c);
     const sthz = Math.sin(c);
+    const mat = [
+      [
+        cthz * cthy,
+        cthz * sthy * sthx - sthz * cthx,
+        cthz * sthy * cthx + sthz * sthx
+      ],
+      [
+        sthz * cthy,
+        sthz * sthy * sthx + cthz * cthx,
+        sthz * sthy * cthx - cthz * sthx
+      ],
+      [-sthy, cthy * sthx, cthy * cthx]
+    ];
 
     return defineCurveTransformer(curve => t => {
-      const ct = callWithoutMetadata(curve, t);
-      const coord = [ct.x, ct.y, ct.z];
-      const mat = [
-        [
-          cthz * cthy,
-          cthz * sthy * sthx - sthz * cthx,
-          cthz * sthy * cthx + sthz * sthx
-        ],
-        [
-          sthz * cthy,
-          sthz * sthy * sthx + cthz * cthx,
-          sthz * sthy * cthx - cthz * sthx
-        ],
-        [-sthy, cthy * sthx, cthy * cthx]
-      ];
+      const pt = curve(t);
+      const coord = [pt.x, pt.y, pt.z];
+
       let xf = 0;
       let yf = 0;
       let zf = 0;
@@ -181,7 +187,14 @@ class CurveFunctions {
         yf += mat[1][i] * coord[i];
         zf += mat[2][i] * coord[i];
       }
-      return new Point(xf, yf, zf, [ct.color[0], ct.color[1], ct.color[2], 1]);
+      return make_3D_color_point(
+        xf,
+        yf,
+        zf,
+        r_of(pt),
+        g_of(pt),
+        z_of(pt)
+      );
     });
   }
 
@@ -194,12 +207,17 @@ class CurveFunctions {
     const sth = Math.sin(a);
 
     return defineCurveTransformer(curve => t => {
-      const ct = callWithoutMetadata(curve, t);
-      return new Point(
-        cth * ct.x - sth * ct.y,
-        sth * ct.x + cth * ct.y,
-        ct.z,
-        [ct.color[0], ct.color[1], ct.color[2], 1]
+      const pt = curve(t);
+      const pt_x = x_of(pt);
+      const pt_y = y_of(pt);
+
+      return make_3D_color_point(
+        cth * pt_x - sth * pt_y,
+        sth * pt_x + cth * pt_y,
+        z_of(pt),
+        r_of(pt),
+        g_of(pt),
+        b_of(pt)
       );
     });
   }
@@ -211,13 +229,15 @@ class CurveFunctions {
     assertNumberWithinRange(z, { func_name: CurveFunctions.scale.name, param_name: 'z', integer: false });
 
     return defineCurveTransformer(curve => t => {
-      const ct = callWithoutMetadata(curve, t);
+      const pt = curve(t);
 
-      return new Point(
-        x * ct.x,
-        y * ct.y,
-        z * ct.z,
-        [ct.color[0], ct.color[1], ct.color[2], 1]
+      return make_3D_color_point(
+        x * x_of(pt),
+        y * y_of(pt),
+        z * z_of(pt),
+        r_of(pt),
+        g_of(pt),
+        b_of(pt)
       );
     });
   }

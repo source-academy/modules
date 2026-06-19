@@ -55,6 +55,7 @@ export {
   put_in_standard_position,
   r_of,
   rotate_around_origin,
+  rotate_around_origin_3D,
   scale_proportional,
   unit_circle,
   unit_line,
