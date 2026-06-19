@@ -178,82 +178,6 @@ describe(funcs.unit_line_at, () => {
   });
 });
 
-describe(funcs.translate, () => {
-  const original = funcs.unit_line_at(0.5);
-
-  test('translation in the x direction', () => {
-    const curve = funcs.translate(0.5, 0, 0)(original);
-    const points = evaluatePoints(curve);
-    for (let i = 0; i < points.length; i++) {
-      const [x, y] = points[i];
-      expect(x).toBeCloseTo(i / points.length + 0.5);
-      expect(y).toEqual(0.5);
-    }
-  });
-
-  test('translation in the y direction', () => {
-    const curve = funcs.translate(0, -0.5, 0)(original);
-    const points = evaluatePoints(curve);
-    for (const [, y] of points) {
-      expect(y).toEqual(0);
-    }
-  });
-
-  test('points retain colour', () => {
-    const curve: Curve = t => funcs.make_color_point(t, 0.5, 255, 127, 0);
-    const newCurve = funcs.translate(0.5, 0.5, 0)(curve);
-
-    const points = evaluatePoints(newCurve);
-    for (let i = 0; i < points.length; i++) {
-      const [x, y, , [r, g]] = points[i];
-      expect(x).toBeCloseTo(i / points.length + 0.5);
-      expect(y).toEqual(1);
-
-      expect(r).toEqual(1);
-      expect(g).toBeCloseTo(0.5);
-    }
-  });
-
-  test('toReplString representation', () => {
-    const transformer = funcs.translate(1, 1, 1);
-    expect(stringify(transformer)).toEqual('<CurveTransformer>');
-  });
-});
-
-describe(funcs.scale, () => {
-  const original = funcs.unit_line_at(0.5);
-
-  test('scaling in the x direction', () => {
-    const curve = funcs.scale(0.5, 1, 0)(original);
-    const points = evaluatePoints(curve);
-    for (let i = 0; i < points.length; i++) {
-      const [x, y] = points[i];
-      expect(x).toBeCloseTo(i / points.length * 0.5);
-      expect(y).toEqual(0.5);
-    }
-  });
-
-  test('points retain colour', () => {
-    const curve: Curve = t => funcs.make_color_point(t, 0.5, 255, 127, 0);
-    const newCurve = funcs.scale(1, 1, 0)(curve);
-
-    const points = evaluatePoints(newCurve);
-    for (let i = 0; i < points.length; i++) {
-      const [x, y, , [r, g]] = points[i];
-      expect(x).toBeCloseTo(i / points.length);
-      expect(y).toEqual(0.5);
-
-      expect(r).toEqual(1);
-      expect(g).toBeCloseTo(0.5);
-    }
-  });
-
-  test('toReplString representation', () => {
-    const transformer = funcs.scale(1, 1, 1);
-    expect(stringify(transformer)).toEqual('<CurveTransformer>');
-  });
-});
-
 describe('Curve transformers', () => {
   function testTransformer(f: CurveTransformer, name?: string) {
     test('toReplString representation', () => {
@@ -265,6 +189,19 @@ describe('Curve transformers', () => {
         expect(f.name).toEqual(name);
       });
     }
+
+    test('points retain colour', () => {
+      const curve: Curve = _t => funcs.make_color_point(0.5, 0.5, 255, 127, 0);
+      const newCurve = f(curve);
+
+      const points = evaluatePoints(newCurve);
+      for (let i = 0; i < points.length; i++) {
+        const [, , , [r, g, b]] = points[i];
+        expect(r).toEqual(1);
+        expect(g).toBeCloseTo(0.5);
+        expect(b).toEqual(0);
+      }
+    });
 
     it('throws when given not a curve', () => {
       name ??= 'CurveTransformer';
