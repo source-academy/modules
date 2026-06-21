@@ -517,13 +517,14 @@ export function silence_sound(duration: number): Sound {
  */
 export function sine_sound(freq: number, duration: number): Sound {
   validateDuration(sine_sound.name, duration);
+  assertNumberWithinRange(freq, sine_sound.name, 0, undefined, false, 'freq');
   return make_sound((t) => Math.sin(2 * Math.PI * t * freq), duration);
 }
 
 /**
  * Makes a square wave Sound with given frequency and duration
  *
- * @param f the frequency of the square wave Sound
+ * @param freq the frequency of the square wave Sound
  * @param duration the duration of the square wave Sound
  * @returns resulting square wave Sound
  * @example
@@ -533,12 +534,14 @@ export function sine_sound(freq: number, duration: number): Sound {
  *
  * @category Primitive
  */
-export function square_sound(f: number, duration: number): Sound {
+export function square_sound(freq: number, duration: number): Sound {
   validateDuration(square_sound.name, duration);
+  assertNumberWithinRange(freq, square_sound.name, 0, undefined, false, 'freq');
+
   function fourier_expansion_square(t: number) {
     let answer = 0;
     for (let i = 1; i <= fourier_expansion_level; i += 1) {
-      answer += Math.sin(2 * Math.PI * (2 * i - 1) * f * t) / (2 * i - 1);
+      answer += Math.sin(2 * Math.PI * (2 * i - 1) * freq * t) / (2 * i - 1);
     }
     return answer;
   }
@@ -563,6 +566,8 @@ export function square_sound(f: number, duration: number): Sound {
  */
 export function triangle_sound(freq: number, duration: number): Sound {
   validateDuration(triangle_sound.name, duration);
+  assertNumberWithinRange(freq, triangle_sound.name, 0, undefined, false, 'freq');
+
   function fourier_expansion_triangle(t: number) {
     let answer = 0;
     for (let i = 0; i < fourier_expansion_level; i += 1) {
@@ -593,6 +598,8 @@ export function triangle_sound(freq: number, duration: number): Sound {
  */
 export function sawtooth_sound(freq: number, duration: number): Sound {
   validateDuration(sawtooth_sound.name, duration);
+  assertNumberWithinRange(freq, sawtooth_sound.name, 0, undefined, false, 'freq');
+
   function fourier_expansion_sawtooth(t: number) {
     let answer = 0;
     for (let i = 1; i <= fourier_expansion_level; i += 1) {
@@ -624,8 +631,8 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
  */
 export function consecutively(list_of_sounds: List<Sound>): Sound {
   function consec_two(ss1: Sound, ss2: Sound) {
-    const wave1: Wave = x => callWithoutMetadata(get_wave(ss1), x);
-    const wave2: Wave = x => callWithoutMetadata(get_wave(ss2), x);
+    const wave1 = get_wave(ss1);
+    const wave2 = get_wave(ss2);
     const dur1 = get_duration(ss1);
     const dur2 = get_duration(ss2);
     const new_wave: Wave = t => (t < dur1 ? wave1(t) : wave2(t - dur1));
@@ -651,8 +658,8 @@ export function consecutively(list_of_sounds: List<Sound>): Sound {
  */
 export function simultaneously(list_of_sounds: List<Sound>): Sound {
   function simul_two(ss1: Sound, ss2: Sound) {
-    const wave1: Wave = x => callWithoutMetadata(get_wave(ss1), x);
-    const wave2: Wave = x => callWithoutMetadata(get_wave(ss2), x);
+    const wave1 = get_wave(ss1);
+    const wave2 = get_wave(ss2);
     const dur1 = get_duration(ss1);
     const dur2 = get_duration(ss2);
 
@@ -676,7 +683,9 @@ export function simultaneously(list_of_sounds: List<Sound>): Sound {
 
   const mushed_sounds = accumulate(simul_two, silence_sound(0), list_of_sounds);
   const len = length(list_of_sounds);
-  const normalised_wave: Wave = t => callWithoutMetadata(head(mushed_sounds), t) / len;
+  // All waves defined here are controlled by our code, so its ok to call
+  // it directly
+  const normalised_wave: Wave = t => head(mushed_sounds)(t) / len;
   const highest_duration = tail(mushed_sounds);
   return make_sound(normalised_wave, highest_duration);
 }
@@ -685,13 +694,14 @@ export function simultaneously(list_of_sounds: List<Sound>): Sound {
  * Utility function for wrapping Sound transformers. Adds the toReplString representation
  * and adds check for verifying that the given input is a Sound.
  */
-function wrapSoundTransformer(transformer: SoundTransformer): SoundTransformer {
+function wrapSoundTransformer(transformer: (w: Wave, d: number) => Sound): SoundTransformer {
   function wrapped(sound: Sound) {
     if (!is_sound(sound)) {
       throw new InvalidParameterTypeError('Sound', sound, 'SoundTransformer');
     }
 
-    return transformer(sound);
+    const [old_wave, old_duration] = sound;
+    return transformer(t => callWithoutMetadata(old_wave, t), old_duration);
   }
 
   wrapped.toReplString = () => '<SoundTransformer>';
@@ -727,32 +737,32 @@ export function adsr(
   assertNumberWithinRange(sustain_level, adsr.name, 0, undefined, false, 'sustain_level');
   assertNumberWithinRange(release_ratio, adsr.name, undefined, undefined, false, 'release_ratio');
 
-  return wrapSoundTransformer(sound => {
-    const wave: Wave = x => callWithoutMetadata(get_wave(sound), x);
-    const duration = get_duration(sound);
-
+  return wrapSoundTransformer((wave, duration) => {
     const attack_time = duration * attack_ratio;
     const decay_time = duration * decay_ratio;
     const release_time = duration * release_ratio;
 
-    return make_sound((x) => {
-      if (x < attack_time) {
-        return wave(x) * (x / attack_time);
+    const decayWave = linear_decay(decay_time);
+    const releaseWave = linear_decay(release_time);
+
+    return make_sound(t => {
+      if (t < attack_time) {
+        return wave(t) * (t / attack_time);
       }
-      if (x < attack_time + decay_time) {
+      if (t < attack_time + decay_time) {
         return (
-          ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time)
+          ((1 - sustain_level) * decayWave(t - attack_time)
             + sustain_level)
-          * wave(x)
+          * wave(t)
         );
       }
-      if (x < duration - release_time) {
-        return wave(x) * sustain_level;
+      if (t < duration - release_time) {
+        return wave(t) * sustain_level;
       }
       return (
-        wave(x)
+        wave(t)
         * sustain_level
-        * linear_decay(release_time)(x - (duration - release_time))
+        * releaseWave(t - (duration - release_time))
       );
     }, duration);
   });
@@ -829,8 +839,7 @@ export function phase_mod(
   validateDuration(phase_mod.name, duration);
   assertNumberWithinRange(amount, phase_mod.name, undefined, undefined, false);
 
-  return wrapSoundTransformer(modulator => {
-    const wave: Wave = x => callWithoutMetadata(get_wave(modulator), x);
+  return wrapSoundTransformer((wave, duration) => {
     return make_sound(
       t => Math.sin(2 * Math.PI * t * freq + amount * wave(t)),
       duration
