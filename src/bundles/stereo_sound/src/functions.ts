@@ -861,19 +861,42 @@ export function consecutively(list_of_sounds: List<Sound>): Sound {
  */
 export function simultaneously(list_of_sounds: List<Sound>): Sound {
   function stereo_simul_two(sound1: Sound, sound2: Sound) {
-    const Lwave1: Wave = x => callWithoutMetadata(get_left_wave(sound1), x);
-    const Rwave1: Wave = x => callWithoutMetadata(get_right_wave(sound1), x);
+    const Lwave1 = get_left_wave(sound1);
+    const Rwave1 = get_right_wave(sound1);
 
-    const Lwave2: Wave = x => callWithoutMetadata(get_left_wave(sound2), x);
-    const Rwave2: Wave = x => callWithoutMetadata(get_right_wave(sound2), x);
+    const Lwave2 = get_left_wave(sound2);
+    const Rwave2 = get_right_wave(sound2);
 
     const dur1 = get_duration(sound1);
     const dur2 = get_duration(sound2);
 
-    const new_left: Wave = t => (t < dur1 ? Lwave1(t) : Lwave2(t - dur1));
-    const new_right: Wave = t => (t < dur1 ? Rwave1(t) : Rwave2(t - dur1));
+    const new_left: Wave = t => {
+      let sum = 0;
+      if (t <= dur1) {
+        sum += Lwave1(t);
+      }
 
-    const new_dur = dur1 < dur2 ? dur2 : dur1;
+      if (t <= dur2) {
+        sum += Lwave2(t);
+      }
+
+      return sum;
+    };
+
+    const new_right: Wave = t => {
+      let sum = 0;
+      if (t <= dur1) {
+        sum += Rwave1(t);
+      }
+
+      if (t <= dur2) {
+        sum += Rwave2(t);
+      }
+
+      return sum;
+    };
+
+    const new_dur = Math.max(dur1, dur2);
     return make_stereo_sound(new_left, new_right, new_dur);
   }
 
