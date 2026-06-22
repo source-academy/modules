@@ -677,7 +677,7 @@ export function simultaneously(list_of_sounds: List<Sound>): Sound {
     };
 
     // new_dur is higher of the two dur
-    const new_dur = dur1 < dur2 ? dur2 : dur1;
+    const new_dur = Math.max(dur1, dur2);
     return make_sound(new_wave, new_dur);
   }
 
