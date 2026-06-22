@@ -1,8 +1,7 @@
 // Need to disable because stringify produces tab characters?
 /* eslint-disable @stylistic/no-tabs */
-import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { stringify } from 'js-slang/dist/utils/stringify';
-import { describe, expect, it, test } from 'vitest';
+import { describe, expect, it, test, vi } from 'vitest';
 import type { Color, Curve } from '../curves_webgl';
 import * as drawers from '../drawers';
 import * as funcs from '../functions';
@@ -23,6 +22,20 @@ function evaluatePoints(curve: Curve) {
   return points;
 }
 
+function sanitizeStringify(value: Curve) {
+  const result = stringify(value);
+  return result.replaceAll(/__vite_ssr_import_\d+__\./g, '');
+};
+
+const getSanitizedError = vi.defineHelper((f: () => any) => {
+  try {
+    f();
+  } catch (error: any) {
+    return (error.message as string).replaceAll(/__vite_ssr_import_\d+__\./g, '');
+  }
+  expect.fail(`${f} did not throw!`);
+});
+
 describe('Ensure that invalid curves and animations error gracefully', () => {
   test('Curve that returns non-point should throw error', () => {
     expect(() => drawers.draw_connected(200)(_x => 1 as any))
@@ -30,8 +43,8 @@ describe('Ensure that invalid curves and animations error gracefully', () => {
   });
 
   test('Curve that takes multiple parameters should throw error', () => {
-    expect(() => drawers.draw_connected(200)(((t: number, u: number) => funcs.make_point(t, u)) as any))
-      .toThrowErrorMatchingInlineSnapshot(`[Error: RenderFunction: Expected Curve, got (t, u) => __vite_ssr_import_4__.make_point(t, u).]`);
+    const error = getSanitizedError(() => drawers.draw_connected(200)(((t: number, u: number) => funcs.make_point(t, u)) as any));
+    expect(error).toEqual('RenderFunction: Expected Curve, got (t, u) => make_point(t, u).');
   });
 
   test('CurveAnimation that doesn\'t return a curve should throw error', () => {
@@ -85,19 +98,19 @@ describe('Render function creators', () => {
 
     it('throws when numPoints is less than 0', () => {
       expect(() => func(-1)).toThrow(
-        `${name}: Expected integer between 0 and 65535, got -1.`
+        `${name}: Expected integer ∈ [0, 65535], got -1.`
       );
     });
 
     it('throws when numPoints is greater than 65535', () => {
       expect(() => func(70000)).toThrow(
-        `${name}: Expected integer between 0 and 65535, got 70000.`
+        `${name}: Expected integer ∈ [0, 65535], got 70000.`
       );
     });
 
     it('throws when numPoints is not an integer', () => {
       expect(() => func(3.14)).toThrow(
-        `${name}: Expected integer between 0 and 65535, got 3.14.`
+        `${name}: Expected integer ∈ [0, 65535], got 3.14.`
       );
     });
 
@@ -132,8 +145,8 @@ describe('Coloured Points', () => {
     });
 
     it('throws when argument is not a point', () => {
-      expect(() => funcs.r_of(0 as any)).toThrow(InvalidParameterTypeError);
-      // expect(() => funcs.r_of(0 as any)).toThrowError('r_of: Expected Point, got 0');
+      const error = getSanitizedError(() => funcs.r_of(0 as any));
+      expect(error).toEqual('r_of: Expected Point, got 0.');
     });
   });
 
@@ -144,8 +157,8 @@ describe('Coloured Points', () => {
     });
 
     it('throws when argument is not a point', () => {
-      expect(() => funcs.g_of(0 as any)).toThrow(InvalidParameterTypeError);
-      // expect(() => funcs.g_of(0 as any)).toThrowError('g_of: Expected Point, got 0');
+      const error = getSanitizedError(() => funcs.g_of(0 as any));
+      expect(error).toEqual('g_of: Expected Point, got 0.');
     });
   });
 
@@ -156,8 +169,8 @@ describe('Coloured Points', () => {
     });
 
     it('throws when argument is not a point', () => {
-      expect(() => funcs.b_of(0 as any)).toThrow(InvalidParameterTypeError);
-      // expect(() => funcs.b_of(0 as any)).toThrowError('b_of: Expected Point, got 0');
+      const error = getSanitizedError(() => funcs.b_of(0 as any));
+      expect(error).toEqual('b_of: Expected Point, got 0.');
     });
   });
 });
@@ -179,18 +192,16 @@ describe(funcs.unit_line_at, () => {
 });
 
 describe('Curve transformers', () => {
-  function testTransformer(f: CurveTransformer, name?: string) {
+  function testTransformer(f: CurveTransformer, name?: string, checkColour = true) {
     test('toReplString representation', () => {
       expect(stringify(f)).toEqual('<CurveTransformer>');
     });
 
-    if (name !== undefined) {
-      test('name', () => {
-        expect(f.name).toEqual(name);
-      });
-    }
+    test.skipIf(name === undefined)('name', () => {
+      expect(f.name).toEqual(name);
+    });
 
-    test('points retain colour', () => {
+    test.skipIf(!checkColour)('points retain colour', () => {
       const curve: Curve = _t => funcs.make_color_point(0.5, 0.5, 255, 127, 0);
       const newCurve = f(curve);
 
@@ -212,11 +223,6 @@ describe('Curve transformers', () => {
       expect(() => f(invalid)).toThrow(`${name}: Expected Curve, got (x, y) => x + y.`);
     });
   }
-
-  function sanitizeStringify(value: Curve) {
-    const result = stringify(value);
-    return result.replaceAll(/__vite_ssr_import_\d+__\./g, '');
-  };
 
   describe(funcs.invert, () => {
     testTransformer(funcs.invert, 'invert');
@@ -419,6 +425,42 @@ describe('Curve transformers', () => {
         			return make_3D_color_point(x0 + x_of(pt), y0 + y_of(pt), z0 + z_of(pt), r_of(pt), g_of(pt), b_of(pt));
         		}"
       `);
+    });
+  });
+
+  describe(funcs.rainbow, () => {
+    const transformer = funcs.rainbow(2, 0);
+
+    testTransformer(transformer, 'rainbow', false);
+
+    it('actually works', () => {
+      const curve: Curve = _t => funcs.make_3D_color_point(0, 0, 0, 255, 255, 255);
+      const newCurve = transformer(curve);
+
+      const c0 = newCurve(0).color;
+      const c25 = newCurve(0.25).color;
+      const c5 = newCurve(0.5).color;
+
+      expect(c0).not.toEqual(c25);
+      expect(c25).not.toEqual(c5);
+    });
+
+    it('supports a phase offset', () => {
+      const curve: Curve = _t => funcs.make_3D_color_point(0, 0, 0, 255, 255, 255);
+      const newCurve = funcs.rainbow(1, 0.5)(curve);
+
+      const c0 = newCurve(0).color;
+      const c5 = newCurve(0.5).color;
+
+      expect(c0).not.toEqual(c5);
+    });
+
+    it('throws when repeats is not a number', () => {
+      expect(() => funcs.rainbow('a' as any, 0)).toThrow('rainbow: Expected integer ≥ 1 for repeats, got "a".');
+    });
+
+    it('throws when phase is not a number', () => {
+      expect(() => funcs.rainbow(1, 'a' as any)).toThrow('rainbow: Expected number for phase, got "a".');
     });
   });
 });

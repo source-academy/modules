@@ -53,6 +53,7 @@ export {
   make_color_point,
   make_point,
   put_in_standard_position,
+  rainbow,
   r_of,
   rotate_around_origin,
   rotate_around_origin_3D,

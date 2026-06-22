@@ -1,5 +1,5 @@
 import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { assertFunctionOfLength, assertNumberWithinRange, callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
+import { assertFunctionOfLength, assertNumberWithinRange, callWithoutMetadata, hueToRgb } from '@sourceacademy/modules-lib/utilities';
 import { clamp } from 'es-toolkit';
 import { Point, type Curve } from './curves_webgl';
 import { functionDeclaration } from './type_interface';
@@ -124,6 +124,26 @@ class CurveFunctions {
         b_of(pt),
       );
     });
+  }
+
+  @functionDeclaration('repeats: number, phase: number', '(c: Curve) => Curve')
+  static rainbow(repeats: number, phase: number): CurveTransformer {
+    assertNumberWithinRange(repeats, CurveFunctions.rainbow.name, 1, undefined, true, 'repeats');
+    assertNumberWithinRange(phase, CurveFunctions.rainbow.name, undefined, undefined, false, 'phase');
+
+    return defineCurveTransformer(curve => t => {
+      const pt = curve(t);
+      const [r, g, b] = hueToRgb((t * repeats + phase) % 1);
+
+      return make_3D_color_point(
+        x_of(pt),
+        y_of(pt),
+        z_of(pt),
+        r,
+        g,
+        b
+      );
+    }, 'rainbow');
   }
 
   @functionDeclaration('curve: Curve', 'Curve')
@@ -473,6 +493,17 @@ export const invert = CurveFunctions.invert;
  * @returns Curve transformation
  */
 export const translate = CurveFunctions.translate;
+
+/**
+ * Returns a Curve transformation that recolours a curve with a repeating
+ * rainbow. The `repeats` parameter controls how many full hue cycles occur
+ * as `t` goes from 0 to 1. The `phase` shifts the starting hue.
+ *
+ * @param repeats number of rainbow cycles across the curve parameter interval
+ * @param phase hue offset, where 0 starts at red
+ * @returns Curve transformation
+ */
+export const rainbow = CurveFunctions.rainbow;
 
 /**
  * This function takes 3 angles, a, b and c in radians as parameter
