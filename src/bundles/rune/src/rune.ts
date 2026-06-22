@@ -74,7 +74,8 @@ export class Rune {
     public vertices: Float32Array,
 
     /**
-     * A list of vertex colors, each vertex has a color (r,g,b,a).
+     * A list of vertex colors, each vertex has a color (r,g,b,a). Values
+     * are normalized to [0, 1]
      */
     public colors: Float32Array | null,
 

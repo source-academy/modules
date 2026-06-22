@@ -157,7 +157,7 @@ describe('Colouring functions', () => {
 
   const names = Object.getOwnPropertyNames(funcs.RuneColours) as FunctionName[];
   const colourers = names.reduce<[FunctionName, (r: Rune) => Rune][]>((res, name) => {
-    if (typeof funcs.RuneColours[name] !== 'function') return res;
+    if (typeof funcs.RuneColours[name] !== 'function' || name === 'colour_with_hue') return res;
     return [...res, [name, funcs.RuneColours[name]] as [FunctionName, (r: Rune) => Rune]];
   }, []);
 

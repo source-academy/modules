@@ -1,5 +1,5 @@
 import { repeat_internal } from '@sourceacademy/bundle-repeat/functions';
-import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+import { assertFunctionOfLength, assertNumberWithinRange, hueToRgb } from '@sourceacademy/modules-lib/utilities';
 import { clamp, sample } from 'es-toolkit';
 import { mat4, vec3 } from 'gl-matrix';
 import {
@@ -418,6 +418,18 @@ export class RuneColours {
       subRunes: [rune]
     });
   }
+
+  @functionDeclaration('rune: Rune', 'Rune')
+  static colour_with_hue(rune: Rune, hue: number): Rune {
+    throwIfNotRune(RuneColours.colour_with_hue.name, rune);
+    assertNumberWithinRange(hue, RuneColours.colour_with_hue.name, 0, undefined, false, 'hue');
+    const [r, g, b] = hueToRgb(hue);
+
+    return Rune.of({
+      subRunes: [rune],
+      colors: new Float32Array([r / 255, g / 255, b / 255, 1])
+    });
+  }
 }
 
 /** @hidden */
@@ -740,6 +752,18 @@ export const circle = RuneFunctions.circle;
  * @category Color
  */
 export const color = RuneFunctions.color;
+
+/**
+ * Colors a given rune using a hue value in the range [0, 1], where 0 and 1 are
+ * red. If the hue value is outside this range it gets mapped to [0, 1]
+ * @param {Rune} rune - The rune to color
+ * @param hue - Hue value to use
+ * @returns {Rune} The colored Rune
+ * @function
+ *
+ * @category Color
+ */
+export const colour_with_hue = RuneColours.colour_with_hue;
 
 /**
  * Rune with black triangle,
