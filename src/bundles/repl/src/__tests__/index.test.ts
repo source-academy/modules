@@ -129,10 +129,10 @@ describe(funcs.set_background_image, () => {
 
   it('throws when the alpha is out of range', () => {
     expect(() => funcs.set_background_image('https://example.com/image.png', -0.1))
-      .toThrow('set_background_image: Expected number between 0 and 1 for background_color_alpha, got -0.1.');
+      .toThrow('set_background_image: Expected number ∈ [0, 1] for background_color_alpha, got -0.1.');
 
     expect(() => funcs.set_background_image('https://example.com/image.png', 1.5))
-      .toThrow('set_background_image: Expected number between 0 and 1 for background_color_alpha, got 1.5.');
+      .toThrow('set_background_image: Expected number ∈ [0, 1] for background_color_alpha, got 1.5.');
   });
 
   it('throws when the image url isn\'t a string', () => {
@@ -149,12 +149,12 @@ describe(funcs.set_font_size, () => {
 
   it('throws when the font size is invalid', () => {
     expect(() => funcs.set_font_size(-1))
-      .toThrow('set_font_size: Expected integer greater than 0, got -1.');
+      .toThrow('set_font_size: Expected integer ≥ 0, got -1.');
 
     expect(() => funcs.set_font_size(0.5))
-      .toThrow('set_font_size: Expected integer greater than 0, got 0.5.');
+      .toThrow('set_font_size: Expected integer ≥ 0, got 0.5.');
 
     expect(() => funcs.set_font_size('invalid' as any))
-      .toThrow('set_font_size: Expected integer greater than 0, got "invalid".');
+      .toThrow('set_font_size: Expected integer ≥ 0, got "invalid".');
   });
 });

@@ -10,7 +10,7 @@ vi.stubGlobal('AudioContext', function () { return mockAudioContext; });
 describe(funcs.make_sound, () => {
   it('Should error gracefully when duration is negative', () => {
     expect(() => funcs.make_sound(_t => 0, -1))
-      .toThrow('make_sound: Expected number greater than 0 for duration, got -1.');
+      .toThrow('make_sound: Expected number ≥ 0 for duration, got -1.');
   });
 
   it('Should not error when duration is zero', () => {
@@ -41,7 +41,7 @@ describe('Concurrent playback functions', () => {
     it('Should error gracefully when duration is negative', () => {
       const sound: Sound = [_t => 0, -1];
       expect(() => funcs.play(sound))
-        .toThrow('play: Expected number greater than 0 for duration, got -1.');
+        .toThrow('play: Expected number ≥ 0 for duration, got -1.');
     });
 
     it('Should not error when duration is zero', () => {
@@ -68,12 +68,12 @@ describe('Concurrent playback functions', () => {
   describe(funcs.play_wave, () => {
     it('Should error gracefully when duration is negative', () => {
       expect(() => funcs.play_wave(_t => 0, -1))
-        .toThrow('play_wave: Expected number greater than 0 for duration, got -1.');
+        .toThrow('play_wave: Expected number ≥ 0 for duration, got -1.');
     });
 
     it('Should error gracefully when duration is not a number', () => {
       expect(() => funcs.play_wave(_t => 0, true as any))
-        .toThrow('play_wave: Expected number greater than 0 for duration, got true.');
+        .toThrow('play_wave: Expected number ≥ 0 for duration, got true.');
     });
 
     it('Should error gracefully when wave is not a function', () => {
@@ -105,7 +105,7 @@ describe(play_in_tab, () => {
   it('Should error gracefully when duration is negative', () => {
     const sound = [(_t: number) => 0, -1];
     expect(() => play_in_tab(sound as any))
-      .toThrow('play_in_tab: Expected number greater than 0 for duration, got -1.');
+      .toThrow('play_in_tab: Expected number ≥ 0 for duration, got -1.');
   });
 
   it('Should not error when duration is zero', () => {
@@ -255,7 +255,7 @@ describe('Sound producers', () => {
       const func = funcs[name];
 
       it('throws error when given negative frequency', () => {
-        expect(() => func(-1, 10)).toThrow(`${name}: Expected number greater than 0 for freq, got -1.`);
+        expect(() => func(-1, 10)).toThrow(`${name}: Expected number ≥ 0 for freq, got -1.`);
       });
 
       it('works with non-integer frequency', () => {
@@ -263,7 +263,7 @@ describe('Sound producers', () => {
       });
 
       it('throws error when given negative duration', () => {
-        expect(() => func(440, -1)).toThrow(`${name}: Expected number greater than 0 for duration, got -1.`);
+        expect(() => func(440, -1)).toThrow(`${name}: Expected number ≥ 0 for duration, got -1.`);
       });
 
       it('works', () => {
@@ -286,7 +286,7 @@ describe('Sound producers', () => {
       const func = funcs[name];
 
       it('throws error when given negative duration', () => {
-        expect(() => func(-1)).toThrow(`${name}: Expected number greater than 0 for duration, got -1.`);
+        expect(() => func(-1)).toThrow(`${name}: Expected number ≥ 0 for duration, got -1.`);
       });
 
       it('works', () => {

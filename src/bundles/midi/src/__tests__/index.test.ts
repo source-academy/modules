@@ -56,7 +56,7 @@ describe(noteToValues, () => {
   });
 
   test('Invalid note should throw an error', () => {
-    expect(() => noteToValues('Fb9' as any, 'noteToValues')).toThrowError('noteToValues: Invalid Note with Octave: Fb9');
+    expect(() => noteToValues('Fb9' as any, 'noteToValues')).toThrow('noteToValues: Invalid Note with Octave: Fb9');
   });
 });
 
@@ -67,8 +67,8 @@ describe(funcs.add_octave_to_note, () => {
   });
 
   test('Invalid octave should throw an error', () => {
-    expect(() => funcs.add_octave_to_note('C', -1)).toThrowError('add_octave_to_note: Expected integer greater than 0 for octave, got -1.');
-    expect(() => funcs.add_octave_to_note('C', 2.5)).toThrowError('add_octave_to_note: Expected integer greater than 0 for octave, got 2.5.');
+    expect(() => funcs.add_octave_to_note('C', -1)).toThrow('add_octave_to_note: Expected integer ≥ 0 for octave, got -1.');
+    expect(() => funcs.add_octave_to_note('C', 2.5)).toThrow('add_octave_to_note: Expected integer ≥ 0 for octave, got 2.5.');
   });
 });
 
@@ -82,7 +82,7 @@ describe(funcs.get_octave, () => {
   });
 
   test('Invalid note should throw an error', () => {
-    expect(() => funcs.get_octave('Fb9' as any)).toThrowError('get_octave: Invalid Note with Octave: Fb9');
+    expect(() => funcs.get_octave('Fb9' as any)).toThrow('get_octave: Invalid Note with Octave: Fb9');
   });
 });
 
@@ -94,13 +94,13 @@ describe(funcs.key_signature_to_key, () => {
   });
 
   test('Invalid number of accidentals should throw an error', () => {
-    expect(() => funcs.key_signature_to_key(Accidental.SHARP, -1)).toThrowError('key_signature_to_key: Expected integer between 0 and 6 for numAccidentals, got -1.');
-    expect(() => funcs.key_signature_to_key(Accidental.SHARP, 7)).toThrowError('key_signature_to_key: Expected integer between 0 and 6 for numAccidentals, got 7.');
-    expect(() => funcs.key_signature_to_key(Accidental.SHARP, 2.5)).toThrowError('key_signature_to_key: Expected integer between 0 and 6 for numAccidentals, got 2.5.');
+    expect(() => funcs.key_signature_to_key(Accidental.SHARP, -1)).toThrow('key_signature_to_key: Expected integer ∈ [0, 6] for numAccidentals, got -1.');
+    expect(() => funcs.key_signature_to_key(Accidental.SHARP, 7)).toThrow('key_signature_to_key: Expected integer ∈ [0, 6] for numAccidentals, got 7.');
+    expect(() => funcs.key_signature_to_key(Accidental.SHARP, 2.5)).toThrow('key_signature_to_key: Expected integer ∈ [0, 6] for numAccidentals, got 2.5.');
   });
 
   test('Invalid accidental should throw an error', () => {
-    expect(() => funcs.key_signature_to_key('invalid' as any, 2)).toThrowError('key_signature_to_key: Expected sharp or flat for accidental, got "invalid".');
+    expect(() => funcs.key_signature_to_key('invalid' as any, 2)).toThrow('key_signature_to_key: Expected sharp or flat for accidental, got "invalid".');
   });
 });
 

@@ -59,9 +59,9 @@ describe(funcs.color, () => {
   });
 
   it('throws when any color parameter is invalid', () => {
-    expect(() => funcs.color(funcs.heart, 100, 0, 0)).toThrow('color: Expected number between 0 and 1 for r, got 100.');
-    expect(() => funcs.color(funcs.heart, 0, -1, 0)).toThrow('color: Expected number between 0 and 1 for g, got -1.');
-    expect(() => funcs.color(funcs.heart, 0, 0, 'hi' as any)).toThrow('color: Expected number between 0 and 1 for b, got "hi".');
+    expect(() => funcs.color(funcs.heart, 100, 0, 0)).toThrow('color: Expected number ∈ [0, 1] for r, got 100.');
+    expect(() => funcs.color(funcs.heart, 0, -1, 0)).toThrow('color: Expected number ∈ [0, 1] for g, got -1.');
+    expect(() => funcs.color(funcs.heart, 0, 0, 'hi' as any)).toThrow('color: Expected number ∈ [0, 1] for b, got "hi".');
   });
 });
 
@@ -72,8 +72,8 @@ describe(funcs.beside_frac, () => {
   });
 
   it('throws when frac is out of range', () => {
-    expect(() => funcs.beside_frac(-1, funcs.heart, funcs.heart)).toThrow('beside_frac: Expected number between 0 and 1 for frac, got -1.');
-    expect(() => funcs.beside_frac(10, funcs.heart, funcs.heart)).toThrow('beside_frac: Expected number between 0 and 1 for frac, got 10.');
+    expect(() => funcs.beside_frac(-1, funcs.heart, funcs.heart)).toThrow('beside_frac: Expected number ∈ [0, 1] for frac, got -1.');
+    expect(() => funcs.beside_frac(10, funcs.heart, funcs.heart)).toThrow('beside_frac: Expected number ∈ [0, 1] for frac, got 10.');
   });
 });
 
@@ -93,8 +93,8 @@ describe(funcs.stack_frac, () => {
   });
 
   it('throws when frac is out of range', () => {
-    expect(() => funcs.stack_frac(-1, funcs.heart, funcs.heart)).toThrow('stack_frac: Expected number between 0 and 1 for frac, got -1.');
-    expect(() => funcs.stack_frac(10, funcs.heart, funcs.heart)).toThrow('stack_frac: Expected number between 0 and 1 for frac, got 10.');
+    expect(() => funcs.stack_frac(-1, funcs.heart, funcs.heart)).toThrow('stack_frac: Expected number ∈ [0, 1] for frac, got -1.');
+    expect(() => funcs.stack_frac(10, funcs.heart, funcs.heart)).toThrow('stack_frac: Expected number ∈ [0, 1] for frac, got 10.');
   });
 });
 
@@ -147,8 +147,8 @@ describe(funcs.overlay_frac, () => {
   });
 
   it('throws when frac is out of range', () => {
-    expect(() => funcs.overlay_frac(-1, funcs.heart, funcs.heart)).toThrow('overlay_frac: Expected number between 0 and 1 for frac, got -1.');
-    expect(() => funcs.overlay_frac(10, funcs.heart, funcs.heart)).toThrow('overlay_frac: Expected number between 0 and 1 for frac, got 10.');
+    expect(() => funcs.overlay_frac(-1, funcs.heart, funcs.heart)).toThrow('overlay_frac: Expected number ∈ [0, 1] for frac, got -1.');
+    expect(() => funcs.overlay_frac(10, funcs.heart, funcs.heart)).toThrow('overlay_frac: Expected number ∈ [0, 1] for frac, got 10.');
   });
 });
 
