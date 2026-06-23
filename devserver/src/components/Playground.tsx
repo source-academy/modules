@@ -6,7 +6,9 @@ import { SourceDocumentation, getNames, runInContext, type Context } from 'js-sl
 import createContext from 'js-slang/dist/createContext';
 import { Chapter, Variant } from 'js-slang/dist/langs';
 import { ModuleInternalError } from 'js-slang/dist/modules/errors';
+import { DeclarationKind, type NameDeclaration } from 'js-slang/dist/name-extractor';
 import { stringify } from 'js-slang/dist/utils/stringify';
+import * as monaco from 'monaco-editor';
 import React from 'react';
 import mockModuleContext from '../mockModuleContext';
 import type { InterpreterOutput } from '../types';
@@ -53,6 +55,40 @@ const updateEditorLocalStorageValue = throttle((newValue: string) => {
   localStorage.setItem('editorValue', newValue);
 }, 100);
 
+function nameDeclarationToCompletionItem(decl: NameDeclaration, line: number, col: number): monaco.languages.CompletionItem {
+  function metaToCompletetionKind(meta: DeclarationKind): monaco.languages.CompletionItemKind {
+    switch (meta) {
+      case DeclarationKind.KIND_CONST:
+        return monaco.languages.CompletionItemKind.Constant;
+      case DeclarationKind.KIND_FUNCTION:
+        return monaco.languages.CompletionItemKind.Function;
+      case DeclarationKind.KIND_IMPORT:
+        return monaco.languages.CompletionItemKind.Module;
+      case DeclarationKind.KIND_LET:
+        return monaco.languages.CompletionItemKind.Keyword;
+      case DeclarationKind.KIND_PARAM:
+        return monaco.languages.CompletionItemKind.Variable;
+      case DeclarationKind.KIND_KEYWORD:
+        return monaco.languages.CompletionItemKind.Keyword;
+    }
+  }
+
+  return {
+    kind: metaToCompletetionKind(decl.meta),
+    label: decl.name,
+    insertText: decl.name,
+    // @ts-expect-error Hidden property
+    documentation: decl.docHTML,
+    range: {
+      startColumn: col,
+      endColumn: col + decl.name.length,
+      startLineNumber: line,
+      endLineNumber: line
+    },
+    sortText: decl.score !== undefined ? `${decl.score}` : '0'
+  };
+}
+
 const Playground: React.FC = () => {
   const consoleLogs = React.useRef<string[]>([]);
 
@@ -78,36 +114,37 @@ const Playground: React.FC = () => {
     }
   };
 
-  const getAutoComplete = async (row: number, col: number, callback: any) => {
+  const getAutoComplete = async (row: number, col: number): Promise<monaco.languages.CompletionList> => {
     const [editorNames, displaySuggestions] = await getNames(editorValue, row, col, codeContext, { manifestImporter, docsImporter });
+
     if (!displaySuggestions) {
-      callback();
-      return;
+      return { suggestions: [] };
     }
 
-    const editorSuggestions = editorNames.map((editorName: any) => ({
-      ...editorName,
-      caption: editorName.name,
-      value: editorName.name,
-      score: editorName.score ? editorName.score + 1000 : 1000,
-      name: undefined
-    }));
+    const editorSuggestions = editorNames.map(each => nameDeclarationToCompletionItem(each, row, col));
 
-    const builtins: Record<string, any> = SourceDocumentation.builtins[Chapter.SOURCE_4];
+    const builtins = SourceDocumentation.builtins[Chapter.SOURCE_4];
+
     const builtinSuggestions = Object.entries(builtins)
-      .map(([builtin, thing]) => ({
-        ...thing,
-        caption: builtin,
-        value: builtin,
-        score: 100,
-        name: builtin,
-        docHTML: thing.description
+      .map(([builtin, value]): monaco.languages.CompletionItem => ({
+        kind: monaco.languages.CompletionItemKind.Constant,
+        label: builtin,
+        insertText: builtin,
+        documentation: value.description,
+        range: {
+          startColumn: col,
+          endColumn: col + builtin.length,
+          startLineNumber: row,
+          endLineNumber: row
+        }
       }));
 
-    callback(null, [
-      ...builtinSuggestions,
-      ...editorSuggestions
-    ]);
+    return {
+      suggestions: [
+        ...builtinSuggestions,
+        ...editorSuggestions,
+      ]
+    };
   };
 
   const loadTabs = async () => {

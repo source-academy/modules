@@ -1,4 +1,5 @@
 import { FocusStyleManager } from '@blueprintjs/core';
+import type * as monaco from 'monaco-editor';
 import { Resizable, type Enable, type ResizeCallback } from 're-resizable';
 import React from 'react';
 
@@ -11,7 +12,7 @@ import { useDimensions } from './utils/Hooks';
 type DispatchProps = {
   handleEditorEval: () => void;
   handleEditorValueChange: (newValue: string) => void;
-  handlePromptAutocomplete: (row: number, col: number, callback: any) => void;
+  handlePromptAutocomplete: (row: number, col: number) => Promise<monaco.languages.CompletionList>;
 };
 
 type StateProps = {
@@ -112,10 +113,10 @@ const Workspace: React.FC<WorkspaceProps> = (props) => {
           >
             <Editor
               handleEditorValueChange={props.handleEditorValueChange}
-              handleEditorEval={props.handleEditorEval}
-              handleDeclarationNavigate={() => {}}
+              // handleEditorEval={props.handleEditorEval}
+              // handleDeclarationNavigate={() => {}}
               handlePromptAutocomplete={props.handlePromptAutocomplete}
-              handleSendReplInputToOutput={() => {}}
+              // handleSendReplInputToOutput={() => {}}
               editorValue={props.editorValue}
             />
           </Resizable>

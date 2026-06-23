@@ -11,6 +11,7 @@
   "dependencies": {
     "@blueprintjs/core": "^6.0.0",
     "@commander-js/extra-typings": "^14.0.0",
+    "@monaco-editor/react": "^4.7.0",
     "@sourceacademy/modules-lib": "workspace:^",
     "@vitejs/plugin-react": "^6.0.1",
     "ace-builds": "^1.25.1",
@@ -18,6 +19,7 @@
     "commander": "^14.0.0",
     "es-toolkit": "^1.44.0",
     "js-slang": "^1.0.92",
+    "monaco-editor": "^0.55.1",
     "re-resizable": "^6.9.11",
     "react": "^19.0.0",
     "react-ace": "^14.0.0",
