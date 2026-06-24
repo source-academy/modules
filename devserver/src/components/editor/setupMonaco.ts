@@ -27,7 +27,7 @@ type MonacoEnvironmentGlobal = typeof globalThis & {
 };
 
 (self as MonacoEnvironmentGlobal).MonacoEnvironment = {
-  getWorker: function (workerId, label) {
+  getWorker: function (_x, label) {
     if (label === 'json') {
       return new Worker(
         new URL('monaco-editor/esm/vs/language/json/json.worker.js', import.meta.url),

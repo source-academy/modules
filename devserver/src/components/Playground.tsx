@@ -1,12 +1,11 @@
 import { Button, Classes, Intent, OverlayToaster, Popover, Tooltip, type ToastProps } from '@blueprintjs/core';
 import classNames from 'classnames';
 import { throttle } from 'es-toolkit';
-import { SourceDocumentation, getNames, runInContext, type Context } from 'js-slang';
+import { SourceDocumentation, runInContext, type Context } from 'js-slang';
 // Importing this straight from js-slang doesn't work for whatever reason
 import createContext from 'js-slang/dist/createContext';
 import { Chapter, Variant } from 'js-slang/dist/langs';
 import { ModuleInternalError } from 'js-slang/dist/modules/errors';
-import { DeclarationKind, type NameDeclaration } from 'js-slang/dist/name-extractor';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import * as monaco from 'monaco-editor';
 import React from 'react';
@@ -56,42 +55,21 @@ const updateEditorLocalStorageValue = throttle((newValue: string) => {
   localStorage.setItem('editorValue', newValue);
 }, 100);
 
-function nameDeclarationToCompletionItem(decl: NameDeclaration, line: number, col: number): monaco.languages.CompletionItem {
-  function metaToCompletetionKind(meta: DeclarationKind): monaco.languages.CompletionItemKind {
-    switch (meta) {
-      case DeclarationKind.KIND_CONST:
-        return monaco.languages.CompletionItemKind.Constant;
-      case DeclarationKind.KIND_FUNCTION:
-        return monaco.languages.CompletionItemKind.Function;
-      case DeclarationKind.KIND_IMPORT:
-        return monaco.languages.CompletionItemKind.Module;
-      case DeclarationKind.KIND_LET:
-        return monaco.languages.CompletionItemKind.Keyword;
-      case DeclarationKind.KIND_PARAM:
-        return monaco.languages.CompletionItemKind.Variable;
-      case DeclarationKind.KIND_KEYWORD:
-        return monaco.languages.CompletionItemKind.Keyword;
-    }
-  }
-
-  return {
-    kind: metaToCompletetionKind(decl.meta),
-    label: decl.name,
-    insertText: decl.name,
+const builtinSuggestions = Object.entries(SourceDocumentation.builtins[Chapter.SOURCE_4])
+  .map(([builtin, value]): monaco.languages.CompletionItem => ({
+    kind: value.meta === 'func'
+      ? monaco.languages.CompletionItemKind.Function
+      : monaco.languages.CompletionItemKind.Constant,
+    label: builtin,
+    insertText: builtin,
     documentation: {
-      // @ts-expect-error Hidden property
-      value: decl.docHTML,
+      value: value.description,
       supportHtml: true
     },
-    range: {
-      startColumn: col,
-      endColumn: col + decl.name.length,
-      startLineNumber: line,
-      endLineNumber: line
-    },
-    sortText: decl.score !== undefined ? `${decl.score}` : '0'
-  };
-}
+    detail: value.title,
+    // @ts-expect-error Idk but not providing a range makes it work
+    range: undefined
+  }));
 
 const Playground: React.FC = () => {
   const consoleLogs = React.useRef<string[]>([]);
@@ -118,42 +96,15 @@ const Playground: React.FC = () => {
     }
   };
 
-  // const getAutoComplete = async (row: number, col: number): Promise<monaco.languages.CompletionList> => {
-  //   const [editorNames, displaySuggestions] = await getNames(editorValue, row, col, codeContext, { manifestImporter, docsImporter });
-
-  //   if (!displaySuggestions) {
-  //     return { suggestions: [] };
-  //   }
-
-  //   const editorSuggestions = editorNames.map(each => nameDeclarationToCompletionItem(each, row, col));
-
-  //   const builtins = SourceDocumentation.builtins[Chapter.SOURCE_4];
-
-  //   const builtinSuggestions = Object.entries(builtins)
-  //     .map(([builtin, value]): monaco.languages.CompletionItem => ({
-  //       kind: monaco.languages.CompletionItemKind.Constant,
-  //       label: builtin,
-  //       insertText: builtin,
-  //       documentation: value.description,
-  //       detail: 'builtin',
-  //       range: {
-  //         startColumn: col,
-  //         endColumn: col + builtin.length,
-  //         startLineNumber: row,
-  //         endLineNumber: row
-  //       }
-  //     }));
-
-  //   return {
-  //     suggestions: [
-  //       ...builtinSuggestions,
-  //       ...editorSuggestions,
-  //     ]
-  //   };
-  // };
   const handleAutocomplete = async (row: number, col: number): Promise<monaco.languages.CompletionList> => {
-    const suggestions = await getAutocompletes(editorValue, codeContext, row, col);
-    return { suggestions };
+    const suggestions: any = await getAutocompletes(row, col, editorValue, codeContext);
+
+    return {
+      suggestions: [
+        ...builtinSuggestions,
+        ...suggestions,
+      ]
+    };
   };
 
   const loadTabs = async () => {

@@ -1,7 +1,6 @@
 import { Card } from '@blueprintjs/core';
 import MonacoReactEditor from '@monaco-editor/react';
 import * as monaco from 'monaco-editor';
-import modulesManifest from '../../../../build/modules.json' with { type: 'json ' };
 import { SOURCE_MONACO_THEME } from './setupMonaco';
 
 interface EditorProps {
@@ -13,13 +12,17 @@ interface EditorProps {
   ) => Promise<monaco.languages.CompletionList>;
 }
 
-const moduleSuggestions = Object.keys(modulesManifest).map((each): Partial<monaco.languages.CompletionItem> => ({
-  kind: monaco.languages.CompletionItemKind.Module,
-  label: each,
-  insertText: `import { } from '${each}';`,
-  documentation: `${each} module`,
-  detail: `${each} module`,
-}));
+// List of command IDs to retain within the
+// context menu
+const commandsIdsToKeep = [
+  'editor.action.goToReferences',
+  'editor.action.clipboardCopyAction',
+  'editor.action.clipboardCutAction',
+  'editor.action.clipboardPasteAction',
+  'editor.action.rename',
+  'editor.action.revealDefinition',
+  'vs.actions.separator'
+];
 
 export default function Editor(props: EditorProps) {
   return (
@@ -48,8 +51,10 @@ export default function Editor(props: EditorProps) {
               renderLineHighlight: 'none',
               scrollBeyondLastLine: false,
               suggest: {
-                showKeywords: false
-              }
+                showKeywords: false,
+                showModules: false
+              },
+              wordBasedSuggestions: 'off',
             }}
             theme={SOURCE_MONACO_THEME}
             beforeMount={(m: typeof monaco) => {
@@ -62,16 +67,26 @@ export default function Editor(props: EditorProps) {
               });
 
               m.languages.registerCompletionItemProvider('javascript', {
-                async provideCompletionItems(model, position) {
-                  const results = await props.handlePromptAutocomplete(position.lineNumber, position.column);
-                  return {
-                    suggestions: [
-                      ...results.suggestions,
-                    ],
-                    incomplete: results.incomplete
-                  };
+                async provideCompletionItems(_model, position) {
+                  const items = await props.handlePromptAutocomplete(position.lineNumber, position.column);
+                  console.log(items);
+                  return items;
                 },
               });
+            }}
+            onMount={editor => {
+              // Remove unnecessary context menu options
+              // Solution taken from here: https://github.com/microsoft/monaco-editor/issues/1280
+              const contextmenu: any = editor.getContribution('editor.contrib.contextmenu');
+              const originalMethod = contextmenu._getMenuActions;
+              contextmenu._getMenuActions = (...args: any[]) => {
+                const items = originalMethod.apply(contextmenu, args);
+                console.log(items);
+                return items.filter(({ id }: any) => commandsIdsToKeep.includes(id));
+              };
+
+              // Remove the command palette keyboard shortcut
+              editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyP, () => { });
             }}
           />
         </div>

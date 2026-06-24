@@ -36,8 +36,8 @@ export default defineProject(({ mode }) => {
           replacement: pathlib.resolve(import.meta.dirname, 'src', 'mockModuleContext.ts')
         },
         {
-        // This alias configuration allows us to edit the modules library and bundles and have those changes
-        // be reflected in real time when in hot-reload mode
+          // This alias configuration allows us to edit the modules library and bundles and have those changes
+          // be reflected in real time when in hot-reload mode
           find: /^@sourceacademy\/modules-lib\/(.+)/,
           replacement: pathlib.resolve(import.meta.dirname, '../lib/modules-lib/src/$1')
         },
@@ -48,6 +48,10 @@ export default defineProject(({ mode }) => {
         {
           find: /^@sourceacademy\/bundle-(\w+?)\/(.+)$/,
           replacement: pathlib.resolve(import.meta.dirname, '../src/bundles/$1/src/$2')
+        },
+        {
+          find: /^@build\/(.+)$/,
+          replacement: pathlib.resolve(import.meta.dirname, '../build/$1')
         }
       ],
     },
