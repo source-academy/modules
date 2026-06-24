@@ -1,7 +1,5 @@
 import { loader } from '@monaco-editor/react';
 import * as monaco from 'monaco-editor';
-import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
 
 export const SOURCE_MONACO_THEME = 'source';
 
@@ -29,12 +27,24 @@ type MonacoEnvironmentGlobal = typeof globalThis & {
 };
 
 (self as MonacoEnvironmentGlobal).MonacoEnvironment = {
-  getWorker: (_, label: string) => {
-    if (label === 'typescript' || label === 'javascript') {
-      return new tsWorker();
+  getWorker: function (workerId, label) {
+    if (label === 'json') {
+      return new Worker(
+        new URL('monaco-editor/esm/vs/language/json/json.worker.js', import.meta.url),
+        { type: 'module' }
+      );
     }
-    return new editorWorker();
-  },
+    if (label === 'typescript' || label === 'javascript') {
+      return new Worker(
+        new URL('monaco-editor/esm/vs/language/typescript/ts.worker.js', import.meta.url),
+        { type: 'module' }
+      );
+    }
+    return new Worker(
+      new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url),
+      { type: 'module' }
+    );
+  }
 };
 
 const sourceTheme: monaco.editor.IStandaloneThemeData = {

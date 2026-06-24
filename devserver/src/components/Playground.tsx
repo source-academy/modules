@@ -17,6 +17,7 @@ import Workspace, { type WorkspaceProps } from './Workspace';
 import { ControlBarClearButton } from './controlBar/ControlBarClearButton';
 import { ControlBarRefreshButton } from './controlBar/ControlBarRefreshButton';
 import { ControlBarRunButton } from './controlBar/ControlBarRunButton';
+import { getAutocompletes } from './editor/autocomplete';
 import testTabContent from './sideContent/TestTab';
 import { getBundleLoader, loadDynamicTabs } from './sideContent/importers';
 import { getBundleDocsUsingVite, getModulesManifest } from './sideContent/importers/importers';
@@ -77,8 +78,11 @@ function nameDeclarationToCompletionItem(decl: NameDeclaration, line: number, co
     kind: metaToCompletetionKind(decl.meta),
     label: decl.name,
     insertText: decl.name,
-    // @ts-expect-error Hidden property
-    documentation: decl.docHTML,
+    documentation: {
+      // @ts-expect-error Hidden property
+      value: decl.docHTML,
+      supportHtml: true
+    },
     range: {
       startColumn: col,
       endColumn: col + decl.name.length,
@@ -114,37 +118,42 @@ const Playground: React.FC = () => {
     }
   };
 
-  const getAutoComplete = async (row: number, col: number): Promise<monaco.languages.CompletionList> => {
-    const [editorNames, displaySuggestions] = await getNames(editorValue, row, col, codeContext, { manifestImporter, docsImporter });
+  // const getAutoComplete = async (row: number, col: number): Promise<monaco.languages.CompletionList> => {
+  //   const [editorNames, displaySuggestions] = await getNames(editorValue, row, col, codeContext, { manifestImporter, docsImporter });
 
-    if (!displaySuggestions) {
-      return { suggestions: [] };
-    }
+  //   if (!displaySuggestions) {
+  //     return { suggestions: [] };
+  //   }
 
-    const editorSuggestions = editorNames.map(each => nameDeclarationToCompletionItem(each, row, col));
+  //   const editorSuggestions = editorNames.map(each => nameDeclarationToCompletionItem(each, row, col));
 
-    const builtins = SourceDocumentation.builtins[Chapter.SOURCE_4];
+  //   const builtins = SourceDocumentation.builtins[Chapter.SOURCE_4];
 
-    const builtinSuggestions = Object.entries(builtins)
-      .map(([builtin, value]): monaco.languages.CompletionItem => ({
-        kind: monaco.languages.CompletionItemKind.Constant,
-        label: builtin,
-        insertText: builtin,
-        documentation: value.description,
-        range: {
-          startColumn: col,
-          endColumn: col + builtin.length,
-          startLineNumber: row,
-          endLineNumber: row
-        }
-      }));
+  //   const builtinSuggestions = Object.entries(builtins)
+  //     .map(([builtin, value]): monaco.languages.CompletionItem => ({
+  //       kind: monaco.languages.CompletionItemKind.Constant,
+  //       label: builtin,
+  //       insertText: builtin,
+  //       documentation: value.description,
+  //       detail: 'builtin',
+  //       range: {
+  //         startColumn: col,
+  //         endColumn: col + builtin.length,
+  //         startLineNumber: row,
+  //         endLineNumber: row
+  //       }
+  //     }));
 
-    return {
-      suggestions: [
-        ...builtinSuggestions,
-        ...editorSuggestions,
-      ]
-    };
+  //   return {
+  //     suggestions: [
+  //       ...builtinSuggestions,
+  //       ...editorSuggestions,
+  //     ]
+  //   };
+  // };
+  const handleAutocomplete = async (row: number, col: number): Promise<monaco.languages.CompletionList> => {
+    const suggestions = await getAutocompletes(editorValue, codeContext, row, col);
+    return { suggestions };
   };
 
   const loadTabs = async () => {
@@ -263,7 +272,7 @@ const Playground: React.FC = () => {
     replProps: {
       output: replOutput
     },
-    handlePromptAutocomplete: getAutoComplete,
+    handlePromptAutocomplete: handleAutocomplete,
     handleEditorEval: evalCode,
     handleEditorValueChange(newValue) {
       setEditorValue(newValue);
