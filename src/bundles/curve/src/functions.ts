@@ -128,7 +128,7 @@ class CurveFunctions {
 
   @functionDeclaration('repeats: number, phase: number', '(c: Curve) => Curve')
   static rainbow(repeats: number, phase: number): CurveTransformer {
-    assertNumberWithinRange(repeats, CurveFunctions.rainbow.name, 1, undefined, true, 'repeats');
+    assertNumberWithinRange(repeats, CurveFunctions.rainbow.name, 0, undefined, false, 'repeats');
     assertNumberWithinRange(phase, CurveFunctions.rainbow.name, undefined, undefined, false, 'phase');
 
     return defineCurveTransformer(curve => t => {

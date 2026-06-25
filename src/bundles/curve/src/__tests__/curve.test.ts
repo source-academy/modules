@@ -456,7 +456,7 @@ describe('Curve transformers', () => {
     });
 
     it('throws when repeats is not a number', () => {
-      expect(() => funcs.rainbow('a' as any, 0)).toThrow('rainbow: Expected integer ≥ 1 for repeats, got "a".');
+      expect(() => funcs.rainbow('a' as any, 0)).toThrow('rainbow: Expected number ≥ 0 for repeats, got "a".');
     });
 
     it('throws when phase is not a number', () => {
