@@ -35,11 +35,22 @@ export async function buildSingleBundleDocs(bundle: ResolvedBundle, outDir: stri
     };
   }
 
+  const outpath = pathlib.join(outDir, 'jsons', `${bundle.name}.json`);
+  if (app.logger.hasWarnings()) {
+    return {
+      type: 'docs',
+      severity: 'warn',
+      warnings: ['Refer to the command line for Typedoc\'s warning messages'],
+      input: bundle,
+      path: outpath
+    };
+  }
+
   return {
     type: 'docs',
     severity: 'success',
     input: bundle,
-    path: pathlib.join(outDir, 'jsons', `${bundle.name}.json`)
+    path: outpath
   };
 }
 

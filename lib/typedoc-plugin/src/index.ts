@@ -80,7 +80,7 @@ function validateModuleEntry(decl: td.DeclarationReflection, logger: td.Logger) 
 }
 
 /**
- * Default entry point for Typedoc plugins
+ * Default entry point for the plugin
  */
 export default function load(app: td.Application) {
   app.options.addDeclaration({
@@ -98,7 +98,7 @@ export default function load(app: td.Application) {
 
   // Make sure that type guards get replaced with the appropriate intrinsic types
   app.converter.on(td.Converter.EVENT_CREATE_SIGNATURE, (_ctx, signature) => {
-    if (signature.type instanceof td.PredicateType) {
+    if (signature.type?.type === 'predicate') {
       if (signature.type.asserts) {
         signature.type = new td.IntrinsicType('void');
       } else {
