@@ -45,11 +45,6 @@ function validateModuleEntry(decl: td.DeclarationReflection, logger: td.Logger) 
       return;
     }
 
-    if (!decl.type) {
-      logger.error(`Function ${decl.name} has no return type!`);
-      return;
-    }
-
     if (decl.signatures.length > 1) {
       logger.validationWarning(`Function ${decl.name} has more than 1 signature; only using the first one`);
       return;
@@ -121,8 +116,14 @@ export default function load(app: td.Application) {
   app.converter.on(td.Converter.EVENT_CREATE_DECLARATION, (_ctx, decl) => {
     if (decl.kind !== td.ReflectionKind.Variable) return;
     const tags = decl.comment?.getTags('@defaultValue');
-    // If there was a defaultValue tag used, then keep the value in the output
-    if (tags?.length) return;
+    if (tags?.length) {
+      // If there was a defaultValue tag used, then keep the value in the output
+      // but remove the tags so the weird defaultValue block
+      // doesn't get rendered
+
+      decl.comment?.removeTags('@defaultValue');
+      return;
+    }
 
     decl.defaultValue = undefined;
   });
