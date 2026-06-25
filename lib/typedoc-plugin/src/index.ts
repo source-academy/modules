@@ -45,6 +45,11 @@ function validateModuleEntry(decl: td.DeclarationReflection, logger: td.Logger) 
       return;
     }
 
+    if (!decl.type) {
+      logger.error(`Function ${decl.name} has no return type!`);
+      return;
+    }
+
     if (decl.signatures.length > 1) {
       logger.validationWarning(`Function ${decl.name} has more than 1 signature; only using the first one`);
       return;
@@ -59,6 +64,11 @@ function validateModuleEntry(decl: td.DeclarationReflection, logger: td.Logger) 
       });
     }
   } else if (decl.kind === td.ReflectionKind.Variable) {
+    if (!decl.type) {
+      logger.error(`Variable ${decl.name} has no type!`);
+      return;
+    }
+
     if (decl.signatures?.length) {
       logger.validationWarning(`${decl.name} is typed as a Variable, but function signatures were detected. Did you forget a @function tag?`);
     }
@@ -70,7 +80,7 @@ function validateModuleEntry(decl: td.DeclarationReflection, logger: td.Logger) 
       });
     }
 
-    if (decl.type instanceof td.ReflectionType) {
+    if (decl.type.type === 'reflection') {
       const { declaration: { signatures } } = decl.type;
       if (signatures?.length) {
         logger.validationWarning(`${decl.name} is typed as a Variable, but function signatures were detected. Did you forget a @function tag?`);

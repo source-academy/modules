@@ -63,6 +63,7 @@ export function convertToTypedocPath(p: string) {
 export async function initTypedocForJson(bundle: ResolvedBundle, outDir: string, logLevel: td.LogLevel) {
   const bundleDirPosix = convertToTypedocPath(bundle.directory);
   const outDirPosix = convertToTypedocPath(outDir);
+  const tsconfigPath = pathlib.posix.join(bundleDirPosix, 'tsconfig.json');
 
   const app = await td.Application.bootstrapWithPlugins({
     ...typedocPackageOptions,
@@ -71,7 +72,7 @@ export async function initTypedocForJson(bundle: ResolvedBundle, outDir: string,
     entryPoints: [
       pathlib.posix.join(bundleDirPosix, 'src', 'index.ts')
     ],
-    tsconfig: pathlib.posix.join(bundleDirPosix, 'tsconfig.json'),
+    tsconfig: tsconfigPath,
     plugin: [typedocPlugin],
     outputs: [
       {
