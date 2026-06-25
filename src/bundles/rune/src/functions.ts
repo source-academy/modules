@@ -170,7 +170,7 @@ export class RuneFunctions {
   static stack(rune1: Rune, rune2: Rune): Rune {
     throwIfNotRune(RuneFunctions.stack.name, rune1, 'rune1');
     throwIfNotRune(RuneFunctions.stack.name, rune2, 'rune2');
-    return RuneFunctions.stack_frac(1 / 2, rune1, rune2);
+    return RuneFunctions.stack_frac(0.5, rune1, rune2);
   }
 
   @functionDeclaration('n: number, rune: Rune', 'Rune')

@@ -406,6 +406,7 @@ export const x_of = CurveFunctions.x_of;
  *
  * @param pt given point
  * @returns y-coordinate of the Point
+ * @function
  * @example
  * ```
  * const point = make_color_point(1, 2, 3, 50, 100, 150);
@@ -433,6 +434,7 @@ export const z_of = CurveFunctions.z_of;
  *
  * @param pt given point
  * @returns Red component of the Point as a value between [0,255]
+ * @function
  * @example
  * ```
  * const point = make_color_point(1, 2, 3, 50, 100, 150);
@@ -491,6 +493,7 @@ export const invert = CurveFunctions.invert;
  * @param y0 y-value
  * @param z0 z-value
  * @returns Curve transformation
+ * @function
  */
 export const translate = CurveFunctions.translate;
 
@@ -502,6 +505,7 @@ export const translate = CurveFunctions.translate;
  * @param repeats number of rainbow cycles across the curve parameter interval
  * @param phase hue offset, where 0 starts at red
  * @returns Curve transformation
+ * @function
  */
 export const rainbow = CurveFunctions.rainbow;
 
