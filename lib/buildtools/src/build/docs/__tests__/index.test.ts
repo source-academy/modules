@@ -6,10 +6,7 @@ import * as td from 'typedoc';
 import { describe, expect, test, vi } from 'vitest';
 import { expectError, expectSuccess } from '../../../__tests__/fixtures.js';
 import { buildHtml, buildSingleBundleDocs } from '../index.js';
-import * as json from '../json.js';
 import * as init from '../typedoc.js';
-
-vi.spyOn(json, 'buildJson');
 
 const mockBundle: ResolvedBundle = {
   type: 'bundle',
@@ -21,11 +18,12 @@ const mockBundle: ResolvedBundle = {
 describe(buildSingleBundleDocs, () => {
   const mockedJsonInit = vi.spyOn(init, 'initTypedocForJson');
   test('Project conversion failure', async () => {
-    const mockGenerateJson = vi.fn(() => Promise.resolve());
+    const mockGenerateOutputs = vi.fn(() => Promise.resolve());
 
     mockedJsonInit.mockResolvedValueOnce({
       convert: () => Promise.resolve(undefined),
-      generateJson: mockGenerateJson
+      validate: () => Promise.resolve(undefined),
+      generateOutputs: mockGenerateOutputs
     } as any);
 
     const result = await buildSingleBundleDocs(mockBundle, outDir, td.LogLevel.None);
@@ -34,18 +32,18 @@ describe(buildSingleBundleDocs, () => {
     expect(result.errors[0]).toEqual('Failed to generate reflection for test0, check that the bundle has no type errors!');
 
     expect(fs.mkdir).not.toHaveBeenCalled();
-    expect(json.buildJson).not.toHaveBeenCalled();
-    expect(mockGenerateJson).not.toHaveBeenCalled();
+    expect(mockGenerateOutputs).not.toHaveBeenCalled();
   });
 
   test('Project conversion success', async () => {
-    const mockGenerateJson = vi.fn((() => Promise.resolve()) as td.Application['generateJson']);
+    const mockGenerateOutputs = vi.fn(() => Promise.resolve());
     const project = new td.DeclarationReflection('test0', td.ReflectionKind.Module);
     project.children = [];
 
     mockedJsonInit.mockResolvedValueOnce({
       convert: () => Promise.resolve(project),
-      generateJson: mockGenerateJson ,
+      validate: () => Promise.resolve(undefined),
+      generateOutputs: mockGenerateOutputs,
       logger: {
         hasErrors: () => false
       }
@@ -53,13 +51,8 @@ describe(buildSingleBundleDocs, () => {
 
     const result = await buildSingleBundleDocs(mockBundle, outDir, td.LogLevel.None);
     expectSuccess(result.severity);
-    expect(mockGenerateJson).toHaveBeenCalledOnce();
-    const [[projectArg, calledPath]] = mockGenerateJson.mock.calls;
-
-    expect(calledPath).toMatchPath(pathlib.join(bundlesDir, 'test0', 'dist', 'docs.json'));
-    expect(projectArg).toMatchObject(project);
-    expect(fs.mkdir).toHaveBeenCalledExactlyOnceWith(pathlib.join(outDir,'jsons'), { recursive: true });
-    expect(json.buildJson).toHaveBeenCalledTimes(1);
+    expect(mockGenerateOutputs).toHaveBeenCalledOnce();
+    expect(fs.mkdir).toHaveBeenCalledExactlyOnceWith(pathlib.join(outDir, 'jsons'), { recursive: true });
   });
 });
 

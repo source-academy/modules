@@ -2,8 +2,7 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import type { BuildResult, ResolvedBundle, ResultType } from '@sourceacademy/modules-repotools/types';
 import { mapAsync } from '@sourceacademy/modules-repotools/utils';
-import * as td from 'typedoc';
-import { buildJson } from './json.js';
+import type * as td from 'typedoc';
 import { initTypedocForHtml, initTypedocForJson } from './typedoc.js';
 
 /**
@@ -11,7 +10,7 @@ import { initTypedocForHtml, initTypedocForJson } from './typedoc.js';
  * Then it builds the JSON documentation for that bundle
  */
 export async function buildSingleBundleDocs(bundle: ResolvedBundle, outDir: string, logLevel: td.LogLevel): Promise<BuildResult> {
-  const app = await initTypedocForJson(bundle, logLevel);
+  const app = await initTypedocForJson(bundle, outDir, logLevel);
 
   const project = await app.convert();
   if (!project) {
@@ -23,9 +22,9 @@ export async function buildSingleBundleDocs(bundle: ResolvedBundle, outDir: stri
     };
   }
 
-  // TypeDoc expects POSIX paths
-  const directoryAsPosix = bundle.directory.replace(/\\/g, '/');
-  await app.generateJson(project, `${directoryAsPosix}/dist/docs.json`);
+  app.validate(project);
+  await fs.mkdir(`${outDir}/jsons`, { recursive: true });
+  await app.generateOutputs(project);
 
   if (app.logger.hasErrors()) {
     return {
@@ -36,8 +35,12 @@ export async function buildSingleBundleDocs(bundle: ResolvedBundle, outDir: stri
     };
   }
 
-  await fs.mkdir(pathlib.join(outDir, 'jsons'), { recursive: true });
-  return buildJson(bundle, outDir, project);
+  return {
+    type: 'docs',
+    severity: 'success',
+    input: bundle,
+    path: pathlib.join(outDir, 'jsons', `${bundle.name}.json`)
+  };
 }
 
 type BuildHtmlResult = ResultType;

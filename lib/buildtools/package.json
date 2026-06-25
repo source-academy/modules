@@ -17,11 +17,10 @@
   "type": "module",
   "dependencies": {
     "@sourceacademy/modules-repotools": "workspace:^",
+    "@sourceacademy/modules-typedoc-plugin": "workspace:^",
     "@vitejs/plugin-react": "^6.0.1",
     "@vitest/browser-playwright": "4.1.5",
     "@vitest/coverage-v8": "4.1.5",
-    "acorn": "^8.8.1",
-    "acorn-typescript": "^1.4.13",
     "astring": "^1.8.6",
     "chalk": "^5.0.1",
     "commander": "^14.0.0",
@@ -35,7 +34,7 @@
     "vitest": "4.1.5"
   },
   "scripts": {
-    "build": "node ./build.js --dev",
+    "build": "node ./build.js",
     "lint": "eslint src",
     "postinstall": "node ./build.js",
     "tsc": "tsc --project ./tsconfig.json",

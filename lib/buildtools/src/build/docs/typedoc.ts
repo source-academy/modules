@@ -1,10 +1,12 @@
 import pathlib from 'path';
 import type { ResolvedBundle } from '@sourceacademy/modules-repotools/types';
+import typedocPlugin from '@sourceacademy/modules-typedoc-plugin';
+import chalk from 'chalk';
 import * as td from 'typedoc';
 
 // #region commonOpts
 const typedocPackageOptions: td.Configuration.TypeDocOptions = {
-  categorizeByGroup: true,
+  categorizeByGroup: false,
   disableSources: true,
   excludeInternal: true,
   skipErrorChecking: true,
@@ -12,6 +14,40 @@ const typedocPackageOptions: td.Configuration.TypeDocOptions = {
   visibilityFilters: {},
 };
 // #endregion commonOpts
+
+/**
+ * Custom Typedoc logger that prepends the name of the module
+ * before each log message to make it clearer
+ */
+class CustomLogger extends td.ConsoleLogger {
+  constructor(
+    public readonly moduleName: string
+  ) {
+    super();
+  }
+
+  static logLevelColourer = {
+    [td.LogLevel.Error]: chalk.redBright,
+    [td.LogLevel.Warn]: chalk.yellowBright,
+    [td.LogLevel.Info]: chalk.cyanBright,
+    [td.LogLevel.Verbose]: chalk.grey
+  };
+
+  static messagePrefixes = {
+    [td.LogLevel.Error]: 'error',
+    [td.LogLevel.Warn]: 'warning',
+    [td.LogLevel.Info]: 'info',
+    [td.LogLevel.Verbose]: 'debug',
+  };
+
+  override addContext(message: string, level: Exclude<td.LogLevel, td.LogLevel.None>, ..._args: any[]): string {
+    const colourer = CustomLogger.logLevelColourer[level];
+    const prefix = CustomLogger.messagePrefixes[level];
+
+    const fullPrefix = colourer(`[${prefix} ${chalk.magentaBright(`(${this.moduleName})`)}]`);
+    return `${fullPrefix} ${message}`;
+  }
+}
 
 /**
  * Typedoc wants the format of each path to be that of the OS its running on, but with
@@ -24,29 +60,32 @@ export function convertToTypedocPath(p: string) {
 /**
  * Initialize Typedoc to build the JSON documentation for each bundle
  */
-export async function initTypedocForJson(bundle: ResolvedBundle, logLevel: td.LogLevel) {
-  const directoryAsPosix = convertToTypedocPath(bundle.directory);
+export async function initTypedocForJson(bundle: ResolvedBundle, outDir: string, logLevel: td.LogLevel) {
+  const bundleDirPosix = convertToTypedocPath(bundle.directory);
+  const outDirPosix = convertToTypedocPath(outDir);
 
   const app = await td.Application.bootstrapWithPlugins({
     ...typedocPackageOptions,
     name: bundle.name,
     logLevel,
     entryPoints: [
-      pathlib.posix.join(directoryAsPosix, 'src', 'index.ts')
+      pathlib.posix.join(bundleDirPosix, 'src', 'index.ts')
     ],
-    tsconfig: pathlib.posix.join(directoryAsPosix, 'tsconfig.json'),
+    tsconfig: pathlib.posix.join(bundleDirPosix, 'tsconfig.json'),
+    plugin: [typedocPlugin],
+    outputs: [
+      {
+        name: 'json',
+        path: `${bundleDirPosix}/dist/docs.json`
+      },
+      {
+        name: 'source-json',
+        path: `${outDirPosix}/jsons/${bundle.name}.json`
+      }
+    ]
   });
 
-  app.converter.on(td.Converter.EVENT_CREATE_SIGNATURE, (_ctx, signature) => {
-    // Make sure that type guards get replaced with the appropriate intrinsic types
-    if (signature.type instanceof td.PredicateType) {
-      if (signature.type.asserts) {
-        signature.type = new td.IntrinsicType('void');
-      } else {
-        signature.type = new td.IntrinsicType('boolean');
-      }
-    }
-  });
+  app.logger = new CustomLogger(bundle.name);
 
   return app;
 }
@@ -67,5 +106,8 @@ export function initTypedocForHtml(bundles: Record<string, ResolvedBundle>, logL
     }),
     entryPointStrategy: 'merge',
     readme: pathlib.join(import.meta.dirname, 'docsreadme.md'),
+    navigation: {
+      includeCategories: true
+    }
   });
 }
