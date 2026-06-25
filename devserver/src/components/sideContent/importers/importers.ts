@@ -95,7 +95,7 @@ export async function getCompiledBundle(bundlePath: string) {
 
 export async function getBundleDocsUsingVite(bundlePath: string) {
   try {
-    const manifest = await import(/* @vite-ignore */ `../../../../../build/jsons/${bundlePath}.json`, { with: { type: 'json' } });
+    const manifest = await import(`../../../../../build/jsons/${bundlePath}.json`);
     return manifest;
   } catch (error) {
     console.error(error);
