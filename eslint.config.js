@@ -129,6 +129,9 @@ export default defineConfig(
         exampleCodeRegex: /^[\s*]*```(?:[jt]s\s)?([\s\S]*)```\s*/
       })
     },
+    ignores: [
+      './lib/typedoc-plugin/src/__tests__/sample.ts'
+    ],
     processor: 'jsdocExamples/examples',
     files: [
       '**/*.{js,cjs,mjs}',
