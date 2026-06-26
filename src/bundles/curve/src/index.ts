@@ -35,12 +35,6 @@
  * @author Ng Yong Xiang
  */
 
-import { draw_connected_full_view } from './drawers';
-import { scale, translate, x_of } from './functions';
-
-// import and re-export to make links in the module summary work
-export { draw_connected_full_view, scale, translate, x_of };
-
 export {
   arc,
   b_of,
@@ -57,10 +51,13 @@ export {
   r_of,
   rotate_around_origin,
   rotate_around_origin_3D,
+  scale,
   scale_proportional,
+  translate,
   unit_circle,
   unit_line,
   unit_line_at,
+  x_of,
   y_of,
   z_of
 } from './functions';
@@ -75,6 +72,7 @@ export {
   draw_3D_points_full_view,
   draw_3D_points_full_view_proportional,
   draw_connected,
+  draw_connected_full_view,
   draw_connected_full_view_proportional,
   draw_points,
   draw_points_full_view,

@@ -250,11 +250,17 @@ export default defineConfig(
       'jsdoc/check-tag-names': ['error', {
         // NOTE: Not all Typedoc supported tags are present here. Feel free to add any other
         // Typedoc supported tags to this list
-        definedTags: ['category', 'categoryDescription', 'hidden', 'title'],
+        definedTags: [
+          'category',
+          'categoryDescription',
+          'defaultValue',
+          'hidden',
+          'title'
+        ],
         inlineTags: ['link', 'see'],
       }],
       'jsdoc/empty-tags': ['error', {
-        tags: ['hidden']
+        tags: ['defaultValue', 'hidden']
       }],
 
       'import/extensions': ['error', { css: 'always', json: 'always' }],

@@ -1,6 +1,5 @@
 import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import { glAnimation, type AnimFrame, type ReplResult } from '@sourceacademy/modules-lib/types';
-import { callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
 import { mat4 } from 'gl-matrix';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
 import { classDeclaration } from './type_map';
@@ -417,9 +416,9 @@ export class AnimatedRune extends glAnimation implements ReplResult {
   }
 
   public getFrame(num: number): AnimFrame {
-    const rune = callWithoutMetadata(this.func, num);
+    const rune = this.func(num);
     return {
-      draw: rune.draw
+      draw: rune.draw.bind(rune)
     };
   }
 

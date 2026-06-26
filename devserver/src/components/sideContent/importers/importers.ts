@@ -95,9 +95,8 @@ export async function getCompiledBundle(bundlePath: string) {
 
 export async function getBundleDocsUsingVite(bundlePath: string) {
   try {
-    const docs = await import(`@build/jsons/${bundlePath}.json`);
-    // const docs = await importer();
-    return docs;
+    const manifest = await import(`../../../../../build/jsons/${bundlePath}.json`);
+    return manifest;
   } catch (error) {
     console.error(error);
     throw new Error(`Failed to load documentation for ${bundlePath}`);

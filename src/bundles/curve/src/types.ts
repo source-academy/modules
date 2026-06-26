@@ -37,9 +37,16 @@ export interface RenderFunction extends ReplResult {
 export interface RenderFunctionCreator {
   (numPoints: number): RenderFunction;
 
+  /** @hidden */
   scaleMode: ScaleMode;
+
+  /** @hidden */
   drawMode: DrawMode;
+
+  /** @hidden */
   space: CurveSpace;
+
+  /** @hidden */
   isFullView: boolean;
 }
 
