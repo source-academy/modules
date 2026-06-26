@@ -15,6 +15,8 @@ const mockBundle: ResolvedBundle = {
   manifest: {}
 };
 
+const posixOutDir = init.convertToTypedocPath(outDir);
+
 describe(buildSingleBundleDocs, () => {
   const mockedJsonInit = vi.spyOn(init, 'initTypedocForJson');
   test('Project conversion failure', async () => {
@@ -44,15 +46,13 @@ describe(buildSingleBundleDocs, () => {
       convert: () => Promise.resolve(project),
       validate: () => Promise.resolve(undefined),
       generateOutputs: mockGenerateOutputs,
-      logger: {
-        hasErrors: () => false
-      }
+      logger: new td.Logger()
     } as any);
 
     const result = await buildSingleBundleDocs(mockBundle, outDir, td.LogLevel.None);
     expectSuccess(result.severity);
     expect(mockGenerateOutputs).toHaveBeenCalledOnce();
-    expect(fs.mkdir).toHaveBeenCalledExactlyOnceWith(pathlib.join(outDir, 'jsons'), { recursive: true });
+    expect(fs.mkdir).toHaveBeenCalledExactlyOnceWith(pathlib.posix.join(posixOutDir, 'jsons'), { recursive: true });
   });
 });
 
@@ -83,9 +83,7 @@ describe(buildHtml, () => {
     mockedHtmlInit.mockResolvedValueOnce({
       convert: () => Promise.resolve(project),
       generateDocs,
-      logger: {
-        hasErrors: () => false
-      }
+      logger: new td.Logger()
     } as any);
 
     const result = await buildHtml(bundles, outDir, td.LogLevel.None);

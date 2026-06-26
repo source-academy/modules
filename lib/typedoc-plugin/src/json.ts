@@ -18,7 +18,7 @@ export interface FunctionDocEntry {
 }
 
 export interface UnknownDocEntry {
-  kind: unknown;
+  kind: 'unknown';
 }
 
 export type DocEntry = VariableDocEntry | FunctionDocEntry | UnknownDocEntry;

@@ -1,6 +1,8 @@
-/* eslint-disable vitest/no-commented-out-tests */
+
+import pathlib from 'path';
 import * as td from 'typedoc';
-import { describe, expect, it, test as baseTest, vi } from 'vitest';
+import { assert, describe, expect, it, test, vi } from 'vitest';
+import plugin from '..';
 import { parsers } from '../json';
 
 describe('Test parsers', () => {
@@ -37,37 +39,7 @@ describe('Test parsers', () => {
       expect(result.description).toEqual('<p>No description available</p>');
     });
 
-    // it('Should return an error if there are no signatures avaiable', () => {
-    //   const decl = new td.DeclarationReflection('testFunction', td.ReflectionKind.Function);
-    //   testFunctionEntry(decl);
-
-    //   expect(result.error).toEqual('Function testFunction has 0 signatures!');
-    // });
-
-    // it('Should return an error when the signature has no return type', () => {
-    //   const decl = new td.DeclarationReflection('testFunction', td.ReflectionKind.Function);
-    //   const signature = new td.SignatureReflection('testFunction', td.ReflectionKind.CallSignature, decl);
-    //   decl.signatures = [signature];
-
-    //   const result = functionParser(decl);
-    //   expectParseError(result);
-    //   expect(result.error).toEqual('Signature for testFunction did not have a valid return type');
-    // });
-
-    // it('Should return a warning when parsing a function with multiple signatures', () => {
-    //   const decl = new td.DeclarationReflection('testFunction', td.ReflectionKind.Function);
-    //   const signature = new td.SignatureReflection('testFunction', td.ReflectionKind.CallSignature, decl);
-    //   signature.type = new td.IntrinsicType('void');
-
-    //   decl.signatures = [signature, signature];
-
-    //   const result = functionParser(decl);
-    //   expectParseSuccess(result);
-    //   expect(result.warnings.length).toEqual(1);
-    //   expect(result.warnings[0]).toEqual('Function testFunction has more than 1 signature; only using the first one');
-    // });
-
-    baseTest('Parameters and return types', () => {
+    test('Parameters and return types', () => {
       const decl = new td.DeclarationReflection('testFunction', td.ReflectionKind.Function);
       const signature = new td.SignatureReflection('testFunction', td.ReflectionKind.CallSignature, decl);
 
@@ -131,12 +103,107 @@ describe('Test parsers', () => {
       const result = testVariableEntry(decl);
       expect(result.description).toEqual('<p>No description available</p>');
     });
+  });
+});
 
-    // it('Should return an error if the variable has no type', () => {
-    //   const decl = new td.DeclarationReflection('testVar', td.ReflectionKind.Variable);
-    //   const result = variableParser(decl);
-    //   expectParseError(result);
-    //   expect(result.error).toEqual('Variable testVar does not have a valid type');
-    // });
+function convertToTypedocPath(p: string) {
+  return p.split(pathlib.sep).join(pathlib.posix.sep);
+}
+
+describe('Project conversion and validation', async () => {
+  const dirname = convertToTypedocPath(import.meta.dirname);
+
+  const logger = new td.Logger();
+  vi.spyOn(logger, 'log');
+
+  const app = await td.Application.bootstrapWithPlugins({
+    plugin: [plugin],
+    entryPoints: [
+      pathlib.posix.join(dirname, 'sample.ts')
+    ],
+    outputs: [{
+      name: 'source-json',
+      path: 'jsons/sample.json'
+    }],
+    logLevel: td.LogLevel.Warn
+  });
+
+  app.logger = logger;
+  let project: td.ProjectReflection;
+
+  test('Conversion', async () => {
+    project = (await app.convert())!;
+    expect(project).toBeTruthy();
+  });
+
+  test('Validation', () => {
+    app.validate(project);
+
+    const log = vi.mocked(logger.log);
+    const warningCalls = log.mock.calls.filter(([, level]) => level >= td.LogLevel.Warn);
+
+    expect(warningCalls).toHaveLength(5);
+
+    for (const [, level] of warningCalls) {
+      expect(level).toEqual(td.LogLevel.Warn);
+    }
+
+    const messages = warningCalls.map(([each]) => each);
+
+    // Ensure that the 5 warnings that are supposed to be there are there
+    expect(messages).toContain('CustomType is a Interface, which is not supported.');
+    expect(messages).toContain('funcTagMissing is typed as a Variable, but function signatures were detected. Did you forget a @function tag?');
+    expect(messages).toContain('indirectFuncTagMissing is typed as a Variable, but function signatures were detected. Did you forget a @function tag?');
+    expect(messages).toContain('invalidCodeExample has an example tag that did not validate:\n \r\n/ 10\r\n');
+    expect(messages).toContain('Function multiSignatures has more than 1 signature; only using the first one');
+  });
+
+  describe('Project output', () => {
+    test('Regular boolean type guard return types are changed', () => {
+      const child = project.getChildByName('typeGuard');
+      assert(child !== undefined, 'Could not find typeGuard declaration!');
+      assert(child instanceof td.DeclarationReflection, 'typeGuard was not a DeclarationReflection!');
+
+      expect(child.kind).toEqual(td.ReflectionKind.Function);
+      assert(child.signatures?.length === 1, 'No signatures for typeGuard were found');
+      const [signature] = child.signatures;
+
+      assert(signature.type instanceof td.IntrinsicType);
+      expect(signature.type.name).toEqual('boolean');
+    });
+
+    test('Funky boolean type guard return types are changed', () => {
+      const child = project.getChildByName('indirectTypeGuard');
+      assert(child !== undefined, 'Could not find indirectTypeGuard declaration!');
+      assert(child instanceof td.DeclarationReflection, 'indirectTypeGuard was not a DeclarationReflection!');
+
+      expect(child.kind).toEqual(td.ReflectionKind.Function);
+      assert(child.signatures?.length === 1, 'No signatures for indirectTypeGuard were found');
+      const [signature] = child.signatures;
+
+      assert(signature.type instanceof td.IntrinsicType);
+      expect(signature.type.name).toEqual('boolean');
+    });
+
+    test('defaultValue is not preserved without tag', () => {
+      const child = project.getChildByName('const0');
+      assert(child !== undefined, 'Could not find const0 declaration!');
+      assert(child instanceof td.DeclarationReflection, 'const0 was not a DeclarationReflection!');
+
+      assert(child.comment !== undefined, 'const0 should have a docstring');
+      expect(child.comment.getTag('@defaultValue')).toBeUndefined();
+      expect(child.defaultValue).toBeUndefined();
+    });
+
+    test('defaultValue is preserved with tag', () => {
+      const child = project.getChildByName('const1');
+      assert(child !== undefined, 'Could not find const1 declaration!');
+      assert(child instanceof td.DeclarationReflection, 'const1 was not a DeclarationReflection!');
+
+      assert(child.comment !== undefined, 'const1 should have a docstring');
+      // Tag should get removed after processing
+      expect(child.comment.getTag('@defaultValue')).toBeUndefined();
+      expect(child.defaultValue).toEqual('525600');
+    });
   });
 });
