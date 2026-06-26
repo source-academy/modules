@@ -47,6 +47,25 @@ describe(topoSortPackages, () => {
     ]);
   });
 
+  test('Ignores external Source Academy dependencies', () => {
+    const result = topoSortPackages({
+      '@sourceacademy/0': {
+        type: null,
+        hasChanges: false,
+        directory: '/',
+        package: {
+          name: '@sourceacademy/0',
+          devDependencies: {},
+          dependencies: {
+            '@sourceacademy/external': '^1.0.0'
+          }
+        }
+      }
+    });
+
+    expect(result).toEqual(['@sourceacademy/0']);
+  });
+
   test('With a cycle', () => {
     const func = () => topoSortPackages({
       '@sourceacademy/0': {

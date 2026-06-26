@@ -27,16 +27,9 @@ export function topoSortPackages(packages: Record<string, RawPackageRecord>) {
       keys.push(...Object.keys(devDependencies));
     }
 
-    for (const name of keys) {
-      if (name.startsWith('@sourceacademy')) {
-        if (!(name in indegrees)) {
-          indegrees[name] = 1;
-        } else {
-          indegrees[name]++;
-        }
-
-        neighbours[packageName].push(name);
-      }
+    for (const name of keys.filter(k => k in packages)) {
+      indegrees[name] = (indegrees[name] ?? 0) + 1;
+      neighbours[packageName].push(name);
     }
   }
 

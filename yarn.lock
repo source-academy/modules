@@ -4208,6 +4208,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@sourceacademy/bundle-torch@workspace:src/bundles/torch":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/bundle-torch@workspace:src/bundles/torch"
+  dependencies:
+    "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/torch": "npm:^0.1.0"
+    typescript: "npm:^6.0.2"
+  languageName: unknown
+  linkType: soft
+
 "@sourceacademy/bundle-unittest@workspace:^, @sourceacademy/bundle-unittest@workspace:src/bundles/unittest":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-unittest@workspace:src/bundles/unittest"
@@ -4816,6 +4826,13 @@ __metadata:
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
+
+"@sourceacademy/torch@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@sourceacademy/torch@npm:0.1.0"
+  checksum: 10c0/bc6408d374a23080d3581ac06edbfd02f94215a9d2c27c38913a7b2ef99d5eadcec5f8b496dba4fac44341a216bded3412622f5b66152253373d969cdbbf7431
+  languageName: node
+  linkType: hard
 
 "@sourceacademy/vitest-reporter@workspace:^, @sourceacademy/vitest-reporter@workspace:lib/vitest-reporter":
   version: 0.0.0-use.local

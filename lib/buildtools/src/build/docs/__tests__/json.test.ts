@@ -115,6 +115,34 @@ describe(buildJson, () => {
       retType: 'number'
     });
   });
+
+  test('Classes, interfaces, and namespaces are ignored for JSON building', async ({ testBundle, project }) => {
+    project.addChild(new td.DeclarationReflection(
+      'TestClass',
+      td.ReflectionKind.Class
+    ));
+    project.addChild(new td.DeclarationReflection(
+      'TestInterface',
+      td.ReflectionKind.Interface
+    ));
+    project.addChild(new td.DeclarationReflection(
+      'TestNamespace',
+      td.ReflectionKind.Namespace
+    ));
+
+    const result = await buildJson(testBundle, outDir, project);
+    expectSuccess(result.severity);
+
+    expect(fs.writeFile).toHaveBeenCalledOnce();
+    const { calls: [[path, data]] } = mockedWriteFile.mock;
+
+    expect(path).toEqual(pathlib.join(outDir, 'jsons', 'test0.json'));
+
+    const parsed = JSON.parse(data as string);
+    expect(parsed).not.toHaveProperty('TestClass');
+    expect(parsed).not.toHaveProperty('TestInterface');
+    expect(parsed).not.toHaveProperty('TestNamespace');
+  });
 });
 
 describe('Test parsers', () => {
