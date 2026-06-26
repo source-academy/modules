@@ -1,0 +1,46 @@
+name: Deploy to modules-conductor
+
+on:
+  push:
+    branches:
+      - conductor-migration
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Use Node.js 💻
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: yarn
+
+      - name: Install Dependencies 📦
+        run: yarn install --immutable
+
+      - name: Build Modules 🔧
+        run: yarn workspaces foreach -ptW --from "./src/{bundles,tabs}/*" run build
+
+      - name: Build Manifest
+        run: yarn buildtools manifest
+
+      - name: Build All Docs
+        run: yarn build:docs
+
+      - name: include java json
+        run: cp -r src/java build
+
+      - name: Deploy 🚀
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          deploy_key: ${{ secrets.CONDUCTOR_DEPLOY_KEY }}
+          external_repository: source-academy/modules-conductor
+          publish_dir: ./build
