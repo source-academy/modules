@@ -1,0 +1,32 @@
+{
+  "name": "@sourceacademy/modules-typedoc-plugin",
+  "version": "1.0.0",
+  "description": "Typedoc Plugin for generating bundle documentation",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "acorn": "^8.8.1",
+    "acorn-typescript": "^1.4.13"
+  },
+  "devDependencies": {
+    "@sourceacademy/modules-repotools": "workspace:^",
+    "@types/node": "^24.0.0",
+    "typedoc": "^0.28.18",
+    "typescript": "^6.0.2",
+    "vitest": "4.1.5"
+  },
+  "peerDependencies": {
+    "typedoc": "^0.28.18"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "node ./build.js",
+    "test": "vitest --config vitest.config.ts",
+    "postinstall": "yarn build"
+  }
+}

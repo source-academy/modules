@@ -128,7 +128,7 @@ class CurveFunctions {
 
   @functionDeclaration('repeats: number, phase: number', '(c: Curve) => Curve')
   static rainbow(repeats: number, phase: number): CurveTransformer {
-    assertNumberWithinRange(repeats, CurveFunctions.rainbow.name, 1, undefined, true, 'repeats');
+    assertNumberWithinRange(repeats, CurveFunctions.rainbow.name, 0, undefined, false, 'repeats');
     assertNumberWithinRange(phase, CurveFunctions.rainbow.name, undefined, undefined, false, 'phase');
 
     return defineCurveTransformer(curve => t => {
@@ -406,6 +406,7 @@ export const x_of = CurveFunctions.x_of;
  *
  * @param pt given point
  * @returns y-coordinate of the Point
+ * @function
  * @example
  * ```
  * const point = make_color_point(1, 2, 3, 50, 100, 150);
@@ -433,6 +434,7 @@ export const z_of = CurveFunctions.z_of;
  *
  * @param pt given point
  * @returns Red component of the Point as a value between [0,255]
+ * @function
  * @example
  * ```
  * const point = make_color_point(1, 2, 3, 50, 100, 150);
@@ -491,6 +493,7 @@ export const invert = CurveFunctions.invert;
  * @param y0 y-value
  * @param z0 z-value
  * @returns Curve transformation
+ * @function
  */
 export const translate = CurveFunctions.translate;
 
@@ -502,6 +505,7 @@ export const translate = CurveFunctions.translate;
  * @param repeats number of rainbow cycles across the curve parameter interval
  * @param phase hue offset, where 0 starts at red
  * @returns Curve transformation
+ * @function
  */
 export const rainbow = CurveFunctions.rainbow;
 

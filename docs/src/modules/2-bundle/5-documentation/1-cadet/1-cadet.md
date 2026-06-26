@@ -1,5 +1,6 @@
 ---
 title: Cadet Documentation
+outline: [2]
 ---
 # Bundle Documentation for Cadets
 
@@ -34,12 +35,36 @@ so as not to confuse Typedoc and ensure that the Typescript compiler is able to 
 If you do need to the type of an export to be documented differently from its type in Typescript source code, you can use a [type map](../../7-type_map).
 :::
 
-Let us look at more examples from the `curve` module.
+Let us look at some examples.
+
+### Entry Point
+
+At the entry point for each bundle, there should be a block comment that provides general information about the bundle.
+
+This example is taken from the `repeat` bundle:
+
+```ts
+// repeat/src/index.ts
+/**
+ * Test bundle for Source Academy modules repository
+ * @author Loh Xian Ze, Bryan
+ * @author Tang Xin Kye, Marcus
+ * @module repeat
+ */
+
+export { repeat, twice, thrice } from './functions';
+```
+
+It is important that you provide an `@module` tag in this description. Otherwise, the build tools may not be able to detect your bundle's
+documentation properly.
+
+> [!TIP]
+> An ESLint Rule has been configured specifically for this purpose, so a lint error should appear if you forget to do so.
 
 ### Functions
 
 ```ts
-// functions.ts
+// curve/src/functions.ts
 /**
  * Makes a Point with given x and y coordinates.
  *
@@ -72,71 +97,72 @@ export function foo(p1: string, p2: string) {
 }
 ```
 
-### Use of `@function`
-
-Following v0.28, Typedoc only documents function-like types as functions if they are explicitly typed as functions (see the issue [here](https://github.com/TypeStrong/typedoc/issues/2881)).
-This means that if you have code that looks like this:
-
-```ts
-// curve/functions.ts
-function createDrawFunction(
-  scaleMode: ScaleMode,
-  drawMode: DrawMode,
-  space: CurveSpace,
-  isFullView: boolean
-): (numPoints: number) => RenderFunction {
-  return (numPoints: number) => {
-    // implementation details
-  };
-}
-
-export const draw_connected = createDrawFunction('none', 'lines', '2D', false);
-```
-
-and `RenderFunction` has the following type:
-
-```ts
-// curve/types.ts
-/**
- * A function that specifies additional rendering information when taking in
- * a CurveFunction and returns a ShapeDrawn based on its specifications.
- */
-export type RenderFunction = {
-  (func: Curve): CurveDrawn;
-  is3D: boolean;
-};
-```
-
-Typedoc won't consider `draw_connected` to be a function. Instead it will consider it to be a variable:
-![](./drawConst.png)
-
-This is because `drawConnected` is of type `RenderFunction` and `RenderFunction` is only _function-like_.
-
-To remedy this, you can either change the type to be an actual function type, or include the `@function` tag in your documentation:
-
-```ts {6}
-/**
- * Returns a function that turns a given Curve into a Drawing, by sampling the
- * Curve at `num` sample points and connecting each pair with a line.
- * The parts between (0,0) and (1,1) of the resulting Drawing are shown in the window.
- *
- * @function
- * @param num determines the number of points, lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points
- * @return function of type Curve → Drawing
- * @example
- * ```
- * draw_connected(100)(t => make_point(t, t));
- * ```
- */
-export const draw_connected = createDrawFunction('none', 'lines', '2D', false);
-```
-
-The export will now be correctly recognized as a function:
-![](./drawFunc.png)
-
-The buildtools are configured to emit a warning if a variable is detected to have function signatures but cannot automatically rectify
-this problem.
+> [!WARNING] Using @function
+>
+> Following v0.28, Typedoc only documents function-like types as functions if they are explicitly typed as functions (see the issue [here](https://github.com/TypeStrong/typedoc/issues/2881)).
+> This means that if you have code that looks like this:
+>
+> ```ts
+> // curve/functions.ts
+> function createDrawFunction(
+>   scaleMode: ScaleMode,
+>   drawMode: DrawMode,
+>   space: CurveSpace,
+>   isFullView: boolean
+> ): (numPoints: number) => RenderFunction {
+>   return (numPoints: number) => {
+>     // implementation details
+>   };
+> }
+> 
+> export const draw_connected = createDrawFunction('none', 'lines', '2D', false);
+> ```
+>
+> and `RenderFunction` has the following type:
+> 
+> ```ts
+> // curve/types.ts
+> /**
+>  * A function that specifies additional rendering information when taking in
+>  * a CurveFunction and returns a ShapeDrawn based on its specifications.
+>  */
+> export type RenderFunction = {
+>   (func: Curve): CurveDrawn;
+>   is3D: boolean;
+> };
+> ```
+>
+> Typedoc won't consider `draw_connected` to be a function. Instead it will consider it to be a variable:
+>
+> ![](./drawConst.png)
+> 
+> This is because `drawConnected` is of type `RenderFunction` and `RenderFunction` is only _function-like_.
+> To remedy this, you can either change the type to be an actual function type, or include the `@function` tag in your documentation:
+>
+> ```ts {6}
+> /**
+>  * Returns a function that turns a given Curve into a Drawing, by sampling the
+>  * Curve at `num` sample points and connecting each pair with a line.
+>  * The parts between (0,0) and (1,1) of the resulting Drawing are shown in the window.
+>  *
+>  * @function
+>  * @param num determines the number of points, lower than 65535, to be sampled.
+>  * Including 0 and 1, there are `num + 1` evenly spaced sample points
+>  * @return function of type Curve → Drawing
+>  * @example
+>  * ```
+>  * draw_connected(100)(t => make_point(t, t));
+>  * ```
+>  */
+> export const draw_connected = createDrawFunction('none', 'lines', '2D', false);
+> ```
+>  
+>  The export will now be correctly recognized as a function:
+>
+>  ![](./drawFunc.png)
+>  
+>  The buildtools are configured to emit a warning if a variable is detected to have function signatures but cannot automatically rectify
+>  this problem.
 
 ### Variables/Constants
 
@@ -152,31 +178,7 @@ const PI: number = 3.14159;
 Also similar to function return types and parameters, because the types of variables is determined by the Typescript compiler, it is unnecessary
 to use the `@type` tag here.
 
-### Entry Point
-
-At the entry point for each bundle, there should be a block comment that provides general information about the bundle.
-
-This example is taken from the `repeat` bundle:
-
-```ts
-// repeat/src/index.ts
-/**
- * Test bundle for Source Academy modules repository
- * @author Loh Xian Ze, Bryan
- * @author Tang Xin Kye, Marcus
- * @module repeat
- */
-
-export { repeat, twice, thrice } from './functions';
-```
-
-It is important that you provide an `@module` tag in this description. Otherwise, the build tools may not be able to detect your bundle's
-documentation properly.
-
-> [!TIP]
-> An ESLint Rule has been configured specifically for this purpose, so a lint error should appear if you forget to do so.
-
-### Use of `@hidden`
+### `@hidden`
 
 If there are exports you want hidden from the output of the documentation, you must use the `@hidden` tag.
 
@@ -200,7 +202,7 @@ This causes `type_map` to be removed from the documentation, even if it is expor
 > Bundle `type_map`s are supposed to be internal implementation details hidden from users. If you forget to apply a `@hidden` tag to
 > your bundle's type map export, the build tools will show a warning.
 
-### Use of `@example`
+### `@example`
 
 `@example` blocks allow the developer to provide code snippets that serve as examples for for how the function/variable is intended to be
 used. Consider an example from the `midi` bundle below:
@@ -282,6 +284,57 @@ Using a code block makes it clear exactly what is intended to be part of your ex
 
 During documentation generation, the code in your code block will be parsed by a Typescript parser to ensure that you have written
 valid Typescript code. It will print a warning message if your example code doesn't produce syntactically valid Typescript.
+
+### `@defaultValue`
+
+By default, Typedoc renders the expression that you used to initialize a variable with:
+
+![](./defaultValue1.png)
+
+This might cause implementation details to be exposed (such as in the example above). Often, only the _type_ of the value matters, not its exact value. Thus, this behaviour is automatically disabled and variables are only rendered with their type:
+
+![](./defaultValue2.png)
+
+If you wish to retain the default behaviour, you can include the `@defaultValue` tag. Note that this tag should be left empty:
+
+```ts {8}
+/**
+ * This function is a Curve transformation: a function from a Curve to a Curve.
+ * The points of the result Curve are the same points as the points of the
+ * original Curve, but in reverse: The result Curve applied to 0 is the original
+ * Curve applied to 1 and vice versa.
+ *
+ * @param original original Curve
+ * @defaultValue
+ * @returns result Curve
+ */
+export const invert = CurveFunctions.invert;
+```
+
+
+### `@category`
+
+If you have a large number of exports, it would be easier for cadets to navigate your bundle's documentation if you sorted your exports into different categories.
+
+This is done with the `@category` tag.
+
+```ts {4}
+/**
+ * Returns a boolean value indicating whether the given value is a {@link NoteWithOctave|note name with octave}.
+ * @function
+ * @category Main
+ */
+export function is_note_with_octave(value: unknown): value is NoteWithOctave {
+  const res = parseNoteWithOctave(value);
+  return res !== null;
+}
+```
+
+Then when the HTML documentation is rendered, it will be located within a separate folder:
+![](./categories.png)
+
+Notice the "Other" category. This is the default category that your exports will get sorted into if it has no
+category specified.
 
 ### Other Tags
 
