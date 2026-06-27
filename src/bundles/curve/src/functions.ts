@@ -1,5 +1,5 @@
 import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { assertFunctionOfLength, assertNumberWithinRange, callWithoutMetadata, hueToRgb } from '@sourceacademy/modules-lib/utilities';
+import { assertFunctionOfLength, assertNumberWithinRange, callWithoutMetadata, hueToRgb, wrapFunction } from '@sourceacademy/modules-lib/utilities';
 import { clamp } from 'es-toolkit';
 import { Point, type Curve } from './curves_webgl';
 import { functionDeclaration } from './type_interface';
@@ -266,6 +266,17 @@ class CurveFunctions {
   static scale_proportional(s: number): CurveTransformer {
     return scale(s, s, s);
   }
+
+  // TODO: Do type maps support rest arguments?
+  static compose = wrapFunction((...transformers: CurveTransformer[]): CurveTransformer => {
+    transformers.forEach((transformer, index) => {
+      assertFunctionOfLength(transformer, 1, CurveFunctions.compose.name, 'CurveTransformer', `arg ${index}`);
+    });
+
+    return defineCurveTransformer(curve => {
+      return transformers.reduce((acc, transformer) => transformer(acc), curve);
+    });
+  }, 'compose', 1);
 
   @functionDeclaration('p: Point', 'number')
   static x_of(pt: Point): number {
@@ -558,6 +569,16 @@ export const scale = CurveFunctions.scale;
  * @function
  */
 export const scale_proportional = CurveFunctions.scale_proportional;
+
+/**
+ * This function takes zero or more Curve transformers and returns a new
+ * Curve transformer that applies them sequentially from left to right.
+ *
+ * @param transformers the transformers to compose
+ * @returns A CurveTransformer
+ * @function
+ */
+export const compose = CurveFunctions.compose;
 
 /**
  * This function is a Curve transformation: It takes a Curve as argument and

@@ -224,6 +224,42 @@ describe('Curve transformers', () => {
     });
   }
 
+  describe(funcs.compose, () => {
+    const composed = funcs.compose(funcs.invert);
+    testTransformer(composed);
+
+    it('composes two transformers in left-to-right order', () => {
+      const curve: Curve = t => funcs.make_color_point(t, 0, 255, 0, 0);
+      const translated = funcs.translate(1, 0, 0);
+      const inverted = funcs.invert;
+      const composedTwo = funcs.compose(translated, inverted);
+
+      const pointA = composedTwo(curve)(0);
+      const pointB = inverted(translated(curve))(0);
+
+      expect(pointA.x).toEqual(pointB.x);
+      expect(pointA.y).toEqual(pointB.y);
+      expect(pointA.z).toEqual(pointB.z);
+      expect(pointA.color).toEqual(pointB.color);
+    });
+
+    it('throws when passed a non-transformer argument', () => {
+      expect(() => funcs.compose(0 as any)).toThrow('compose: Expected CurveTransformer for arg 0, got 0.');
+    });
+
+    it('returns identity transformer when called with no arguments', () => {
+      const curve: Curve = t => funcs.make_color_point(t, t, 255, 0, 0);
+      const newCurve = funcs.compose()(curve);
+
+      const oldPoints = evaluatePoints(curve);
+      const newPoints = evaluatePoints(newCurve);
+
+      for (let i = 0; i < oldPoints.length; i++) {
+        expect(oldPoints[i]).toEqual(newPoints[i]);
+      }
+    });
+  });
+
   describe(funcs.invert, () => {
     testTransformer(funcs.invert, 'invert');
 

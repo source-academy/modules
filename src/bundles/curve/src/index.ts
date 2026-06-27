@@ -38,6 +38,7 @@
 export {
   arc,
   b_of,
+  compose,
   connect_ends,
   connect_rigidly,
   g_of,
