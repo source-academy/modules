@@ -1,5 +1,6 @@
 // Need to disable because stringify produces tab characters?
 /* eslint-disable @stylistic/no-tabs */
+import { callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import { describe, expect, it, test, vi } from 'vitest';
 import type { Color, Curve } from '../curves_webgl';
@@ -228,14 +229,15 @@ describe('Curve transformers', () => {
     const composed = funcs.compose(funcs.invert);
     testTransformer(composed);
 
-    it('composes two transformers in left-to-right order', () => {
+    it('composes three transformers in left-to-right order', () => {
       const curve: Curve = t => funcs.make_color_point(t, 0, 255, 0, 0);
       const translated = funcs.translate(1, 0, 0);
       const inverted = funcs.invert;
-      const composedTwo = funcs.compose(translated, inverted);
+      const translatedBack = funcs.translate(-1, 0, 0);
+      const composedThree = callWithoutMetadata(funcs.compose, translated, inverted, translatedBack);
 
-      const pointA = composedTwo(curve)(0);
-      const pointB = inverted(translated(curve))(0);
+      const pointA = composedThree(curve)(0);
+      const pointB = translatedBack(inverted(translated(curve)))(0);
 
       expect(pointA.x).toEqual(pointB.x);
       expect(pointA.y).toEqual(pointB.y);
