@@ -4,7 +4,6 @@
  * @title Utilities
  */
 
-import { wrap } from 'js-slang/dist/utils/operators';
 import { GeneralRuntimeError, InvalidParameterTypeError } from './errors';
 import type { DebuggerContext } from './types';
 
@@ -104,29 +103,6 @@ export {
 export {
   callIfFuncAndRightArgs,
   callWithoutMetadata,
+  wrap as wrapFunction,
+  wrapUnsafe as wrapFunctionUnsafe
 } from 'js-slang/dist/utils/operators';
-
-/**
- * Augments the given function with metadata needed by js-slang to enable functionality
- * like rest arguments
- *
- * - `hasVarArgs`
- *   - If `hasVarArgs` is `false` or `undefined`, then `f` is assumed not to have variadic args.
- *   - If `hasVarArgs` is `true`, `minArgsNeeded` is inferred from `f.length`.
- *   - If `hasVarArgs` is a number, it is used for `minArgsNeeded`.
- *
- * - If `stringified` is `undefined`, the function won't try to define `toReplString`.
- * - `funcName`
- *   - If `funcName` is `undefined`, the function won't try to define the `name` property.
- *   - If `funcName` is provided, the `name` property will get overriden.
- */
-export function wrapFunction<T extends (...args: any[]) => any>(
-  f: T,
-  funcName?: string,
-  hasVarArgs?: boolean | number,
-  stringified?: string,
-  source?: string
-): T {
-  // Redefining wrap here lets us use a signature that is more useful for bundle functions
-  return wrap(f, hasVarArgs, stringified, source, funcName);
-}

@@ -276,7 +276,7 @@ class CurveFunctions {
     return defineCurveTransformer(curve => {
       return transformers.reduce((acc, transformer) => transformer(acc), curve);
     });
-  }, 'compose', 1);
+  }, true, 'compose');
 
   @functionDeclaration('p: Point', 'number')
   static x_of(pt: Point): number {

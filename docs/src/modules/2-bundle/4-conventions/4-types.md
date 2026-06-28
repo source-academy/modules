@@ -1,9 +1,9 @@
 ---
-title: Developer Type Checking
+title: Type Safety
 outline: [2, 3]
 ---
 
-# Developer Runtime Type Checking in Source
+# Runtime Type Safety in Source
 
 Though bundles are written in Typescript, Source itself (except for the Typed Variant) does not support anything beyond rudimentary type checking. This means that it can determine that an expression
 like `1 - "string"` is badly typed, but it can't type check more complex programs like the one below, especially when bundle functions are involved:
@@ -251,49 +251,68 @@ Here are the parameters of the constructor:
 
 As part of ensuring type safety, there are several function related conventions bundle code should abide by:
 
-### 1. Cadet facing functions should not have default, optional or rest parameters
+### 1. Cadet facing functions with default, optional or rest parameters must use `wrapFunction`
 
-The functions make use of default, optional and rest parameters. This is not supported for Module functions in Source, but is fine if your function
-isn't being exposed to cadets.
+The `wrapFunction` utility is exported from `js-slang/dist/utils/operators` and re-exported from `@sourceacademy/modules-lib/utilities`. You pass it the function
+you are wrapping along with the name of the function and the number of optional arguments it has:
 
-```ts
-// Don't expose this to cadets!
-function configure_options(option_1: boolean, option_2: boolean = false) {
-  // ...implementation
-}
+```ts twoslash
+import { wrapFunction } from '@sourceacademy/modules-lib/utilities';
 
-// or this
-function concat_strings(...args: string[]) {
-  return args.join(',');
-}
+// Example with rest arguments:
+// Notice that wrapFunction is called with true
+export const sum = wrapFunction(
+  (...x: number[]) => x.reduce((res, each) => each + res, 0),
+  true,
+  'sum'
+);
 
-// or this
-function configure_other_option(other_option?: boolean) {
-  // ...implementation
-}
+// Example with rest argument, but also other parameters
+// Notice that wrapFunction is still called with true since the function
+// has a rest parameter
+export const configure_options = wrapFunction(
+  (op1?: boolean, op2?: boolean, ...args: boolean[]) => {
+    // ...implementation
+  },
+  true,
+  'configure_options'
+);
 
-// But default and rest parameters are okay for internal use
-export function exposed_function() {
-  configure_options(true);
-  concat_strings('str1', 'str2');
-}
+configure_options(true);        // is ok
+configure_options(true, false); // is ok
+
+// Example with default arguments
+// Notice that it is called with 1, since that's the number of optional arguments
+// the function has
+export const configure_options_2 = wrapFunction(
+  (op0: boolean, op2: boolean = false) => op0 || op2,
+  1,
+  'configure_options_2',
+);
 ```
 
-::: details Integration with `js-slang`
-Neither default nor rest parameters are currently supported due to an [issue](https://github.com/source-academy/js-slang/issues/1238) on the `js-slang` side.
-:::
+If you don't specify the `optArgCount` parameter, then it is assumed that the function doesn't have any optional arguments or rest parameters.
 
-Instead, if you require such functionality, they should be defined as separate functions:
+`wrapFunction` is implemented with special Typescript types that should highlight if you have specified the number of optional arguments correctly:
 
-```ts
-// Equivalent implementation of configure_options from the above example
+```ts twoslash
+// @errors: 2769
+import { wrapFunction } from '@sourceacademy/modules-lib/utilities';
 
-export function configure_options_1_and_2(option_1: boolean, option_2: boolean) {}
+export const func_0 = wrapFunction(
+  (x1: number, x2: number = 0) => x1 + x2,
+  2, // Wrong number of optional parameters
+  'func_0'
+);
 
-export function configure_option_1_only(option_1: boolean) {
-  configure_options_1_and_2(option_1, false);
-}
+export const func_1 = wrapFunction(
+  (x1: number, ...args: number[]) => x1 + args.length,
+  2, // Should be true, since there is a rest parameter
+  'func_1'
+);
 ```
+
+There is a less strict version called `wrapFunctionUnsafe` that can be used if the typing is too strict for your use case.
 
 ### 2. Cadet facing functions should not use destructuring for parameters
 
