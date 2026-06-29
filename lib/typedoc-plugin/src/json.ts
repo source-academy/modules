@@ -1,30 +1,10 @@
 // Code for building JSON documentation specifically
+import type { ModuleDocsEntry } from 'js-slang/dist/modules/modulesTypes';
 import * as td from 'typedoc';
 import drawdown from './drawdown';
 
-export interface VariableDocEntry {
-  kind: 'variable';
-  name: string;
-  type: string;
-  description: string;
-};
-
-export interface FunctionDocEntry {
-  kind: 'function';
-  name: string;
-  retType: string;
-  description: string;
-  params: [string, string][];
-}
-
-export interface UnknownDocEntry {
-  kind: 'unknown';
-}
-
-export type DocEntry = VariableDocEntry | FunctionDocEntry | UnknownDocEntry;
-
 export interface ParserSuccess {
-  obj: DocEntry;
+  obj: ModuleDocsEntry;
   warnings: string[];
 }
 
@@ -45,7 +25,31 @@ export const parsers = {
       description = '<p>No description available</p>';
     }
 
-    const params = signature.parameters?.map(({ type, name }) => [name, typeToName(type!)] as [string, string]);
+    const params = signature.parameters?.map(({ type, name, defaultValue, flags }): ParamSpecifier => {
+      const typeName = typeToName(type!);
+      if (flags.isRest) {
+        return {
+          paramType: 'rest',
+          type: typeName,
+          name
+        };
+      }
+
+      if (flags.isOptional) {
+        return {
+          paramType: 'optional',
+          type: typeName,
+          name
+        };
+      }
+
+      return {
+        paramType: 'regular',
+        type: typeName,
+        name,
+        defaultValue
+      };
+    });
 
     return {
       kind: 'function',
