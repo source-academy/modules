@@ -1,5 +1,5 @@
 // Code for building JSON documentation specifically
-import type { ModuleDocsEntry } from 'js-slang/dist/modules/modulesTypes';
+import type { ModuleDocsEntry, ParamSpecifier } from 'js-slang/dist/modules/moduleTypes';
 import * as td from 'typedoc';
 import drawdown from './drawdown';
 
@@ -13,6 +13,7 @@ export interface ParserError {
 }
 
 const typeToName = (type: td.SomeType) => type.stringify(td.TypeContext.none);
+
 export const parsers = {
   [td.ReflectionKind.Function](obj) {
     const [signature] = obj.signatures!;
@@ -76,14 +77,14 @@ export const parsers = {
     };
   }
 } satisfies {
-  [K in td.ReflectionKind]?: (obj: td.DeclarationReflection) => DocEntry
+  [K in td.ReflectionKind]?: (obj: td.DeclarationReflection) => ModuleDocsEntry
 };
 
 /**
  * Converts a Typedoc reflection into the format as expected by the frontend and write it to disk as a JSON file
  */
-export function buildJson(reflection: td.ProjectReflection): Record<string, DocEntry> {
-  const jsonData = reflection.children!.reduce<Record<string, DocEntry>>((res, element) => {
+export function buildJson(reflection: td.ProjectReflection): Record<string, ModuleDocsEntry> {
+  const jsonData = reflection.children!.reduce<Record<string, ModuleDocsEntry>>((res, element) => {
     if (element.kind === td.ReflectionKind.TypeAlias) {
       // Ignore Type Aliases for JSON documentation
       return res;
