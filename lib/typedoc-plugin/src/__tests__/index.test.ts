@@ -48,6 +48,7 @@ describe('Test parsers', () => {
 
       const param1 = new td.ParameterReflection('param1', td.ReflectionKind.Parameter, signature);
       param1.type = new td.UnionType([new td.IntrinsicType('boolean'), new td.IntrinsicType('number')]);
+      param1.defaultValue = 'true';
 
       signature.type = new td.IntrinsicType('void');
       signature.parameters = [param0, param1];
@@ -60,16 +61,18 @@ describe('Test parsers', () => {
           "kind": "function",
           "name": "testFunction",
           "params": [
-            [
-              "param0",
-              "string[]",
-              false,
-            ],
-            [
-              "param1",
-              "boolean | number",
-              false,
-            ],
+            {
+              "defaultValue": undefined,
+              "name": "param0",
+              "paramType": "regular",
+              "type": "string[]",
+            },
+            {
+              "defaultValue": "true",
+              "name": "param1",
+              "paramType": "regular",
+              "type": "boolean | number",
+            },
           ],
           "retType": "void",
         }
@@ -95,11 +98,41 @@ describe('Test parsers', () => {
           "kind": "function",
           "name": "testFunction",
           "params": [
-            [
-              "param0",
-              "string[]",
-              true,
-            ],
+            {
+              "name": "param0",
+              "paramType": "rest",
+              "type": "string[]",
+            },
+          ],
+          "retType": "void",
+        }
+      `);
+    });
+
+    test('Optional parameters', () => {
+      const decl = new td.DeclarationReflection('testFunction', td.ReflectionKind.Function);
+      const signature = new td.SignatureReflection('testFunction', td.ReflectionKind.CallSignature, decl);
+      signature.type = new td.IntrinsicType('void');
+
+      const param0 = new td.ParameterReflection('param0', td.ReflectionKind.Parameter, signature);
+      param0.type = new td.ArrayType(new td.IntrinsicType('string'));
+      param0.setFlag(td.ReflectionFlag.Optional, true);
+
+      signature.parameters = [param0];
+      decl.signatures = [signature];
+
+      const result = testFunctionEntry(decl);
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "description": "<p>No description available</p>",
+          "kind": "function",
+          "name": "testFunction",
+          "params": [
+            {
+              "name": "param0",
+              "paramType": "optional",
+              "type": "string[]",
+            },
           ],
           "retType": "void",
         }
