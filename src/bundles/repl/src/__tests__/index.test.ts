@@ -39,7 +39,7 @@ describe(ProgrammableRepl, () => {
   });
 
   it('calls the evaluator when another evaluator is provided', async () => {
-    const evaller = vi.fn(() => 0);
+    const evaller = vi.fn(_x => 0);
     repl.InvokeREPL_Internal(evaller);
     await repl.runCode('display();', {} as any);
 
