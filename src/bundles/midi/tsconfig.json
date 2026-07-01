@@ -9,8 +9,12 @@
   },
   "typedocOptions": {
     "name": "midi",
-    "externalSymbolLinkMappings": { 
-      "@sourceacademy/bundle-midi": { "NoteWithOctave": "#" }
+    "externalSymbolLinkMappings": {
+      "@sourceacademy/bundle-midi": {
+        "MIDINote": "#",
+        "NoteWithOctave": "#",
+        "Note": "#"
+      }
     }
   }
 }
