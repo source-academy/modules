@@ -1,4 +1,4 @@
-import { InternalRuntimeError, RuntimeSourceError } from 'js-slang/dist/errors/base';
+import { InternalRuntimeError, RuntimeSourceError } from '@sourceacademy/modules-lib/errors';
 
 /**
  * Represents a function that when called, should either execute successfully
