@@ -33,7 +33,7 @@
   "dependencies": {
     "@blueprintjs/core": "^6.0.0",
     "es-toolkit": "^1.44.0",
-    "js-slang": "^1.0.93",
+    "js-slang": "^1.0.94",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

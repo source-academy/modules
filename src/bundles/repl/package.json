@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
-    "js-slang": "^1.0.93"
+    "js-slang": "^1.0.94"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",

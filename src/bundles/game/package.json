@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "private": true,
   "dependencies": {
-    "js-slang": "^1.0.93",
+    "js-slang": "^1.0.94",
     "phaser": "^3.54.0"
   },
   "devDependencies": {

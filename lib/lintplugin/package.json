@@ -39,7 +39,7 @@
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^7.0.1",
     "globals": "^17.0.0",
-    "js-slang": "^1.0.93",
+    "js-slang": "^1.0.94",
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.58.2"
   },
