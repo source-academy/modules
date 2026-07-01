@@ -111,6 +111,7 @@ export function initTypedocForHtml(bundles: Record<string, ResolvedBundle>, logL
       return pathlib.posix.join(directoryAsPosix, 'dist', 'docs.json');
     }),
     entryPointStrategy: 'merge',
+    favicon: pathlib.join(import.meta.dirname, 'favicon.ico'),
     readme: pathlib.join(import.meta.dirname, 'docsreadme.md'),
     navigation: {
       includeCategories: true

@@ -143,12 +143,12 @@ function createPlotFunction(
   config: Data,
   layout: Partial<Layout>,
   is_colored: boolean = false
-): (numPoints: number) => CurvePlotFunction {
-  return (numPoints: number) => {
+): (num: number) => CurvePlotFunction {
+  return (num: number) => {
     const func = (curveFunction: Curve) => {
       const plotDrawn = generatePlot(
         type,
-        numPoints,
+        num,
         config,
         layout,
         is_colored,
