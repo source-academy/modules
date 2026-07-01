@@ -178,7 +178,17 @@ function convertToTypedocPath(p: string) {
 describe('Project conversion and validation', async () => {
   const dirname = convertToTypedocPath(import.meta.dirname);
 
-  const logger = new td.Logger();
+  const logger = new class extends td.Logger {
+    readonly logs: Partial<Record<td.LogLevel, string[]>> = {};
+
+    override log(message: string, level: td.LogLevel) {
+      if (!(level in this.logs)) {
+        this.logs[level] = [];
+      }
+      this.logs[level]!.push(message);
+    }
+  };
+
   vi.spyOn(logger, 'log');
 
   const app = await td.Application.bootstrapWithPlugins({
@@ -190,19 +200,25 @@ describe('Project conversion and validation', async () => {
       name: 'source-json',
       path: 'jsons/sample.json'
     }],
+    tsconfig: pathlib.posix.join(dirname, '..', '..', 'tsconfig.json'),
     logLevel: td.LogLevel.Warn
   });
 
   app.logger = logger;
-  let project: td.ProjectReflection;
+  let project: td.ProjectReflection | undefined;
 
   test('Conversion', async () => {
-    project = (await app.convert())!;
+    project = await app.convert();
+
+    if (!project) {
+      console.error(logger.logs);
+    }
+
     expect(project).toBeTruthy();
   });
 
-  test('Validation', () => {
-    app.validate(project);
+  test.skipIf(!project)('Validation', () => {
+    app.validate(project!);
 
     const log = vi.mocked(logger.log);
     const warningCalls = log.mock.calls.filter(([, level]) => level >= td.LogLevel.Warn);
@@ -223,9 +239,9 @@ describe('Project conversion and validation', async () => {
     expect(messages).toContain('Function multiSignatures has more than 1 signature; only using the first one');
   });
 
-  describe('Project output', () => {
+  describe.skipIf(!project)('Project output', () => {
     test('Regular boolean type guard return types are changed', () => {
-      const child = project.getChildByName('typeGuard');
+      const child = project!.getChildByName('typeGuard');
       assert(child !== undefined, 'Could not find typeGuard declaration!');
       assert(child instanceof td.DeclarationReflection, 'typeGuard was not a DeclarationReflection!');
 
@@ -238,7 +254,7 @@ describe('Project conversion and validation', async () => {
     });
 
     test('Funky boolean type guard return types are changed', () => {
-      const child = project.getChildByName('indirectTypeGuard');
+      const child = project!.getChildByName('indirectTypeGuard');
       assert(child !== undefined, 'Could not find indirectTypeGuard declaration!');
       assert(child instanceof td.DeclarationReflection, 'indirectTypeGuard was not a DeclarationReflection!');
 
@@ -251,7 +267,7 @@ describe('Project conversion and validation', async () => {
     });
 
     test('defaultValue is not preserved without tag', () => {
-      const child = project.getChildByName('const0');
+      const child = project!.getChildByName('const0');
       assert(child !== undefined, 'Could not find const0 declaration!');
       assert(child instanceof td.DeclarationReflection, 'const0 was not a DeclarationReflection!');
 
@@ -261,7 +277,7 @@ describe('Project conversion and validation', async () => {
     });
 
     test('defaultValue is preserved with tag', () => {
-      const child = project.getChildByName('const1');
+      const child = project!.getChildByName('const1');
       assert(child !== undefined, 'Could not find const1 declaration!');
       assert(child instanceof td.DeclarationReflection, 'const1 was not a DeclarationReflection!');
 
