@@ -12,13 +12,13 @@
  * is always `C(0)`, and the ending point is always `C(1)`.
  *
  * A *curve transformation* is a function that takes a curve as argument and
- * returns a curve. Examples of curve transformations are {@link scale|scale} and {@link translate|translate}.
+ * returns a curve. Examples of curve transformations are {@link !scale} and {@link !translate}.
  *
  * A *render function* is function that takes a number argument and returns
  * a function that takes a curve as argument and visualises it in the output screen is
  * shown in the Source Academy in the tab with the "Curves Canvas" icon (image).
  * The following [example](https://share.sourceacademy.org/unitcircle) uses
- * the render function {@link draw_connected_full_view|draw_connected_full_view} to display a curve called
+ * the render function {@link !draw_connected_full_view} to display a curve called
  * `unit_circle`.
  * ```
  * import { make_point, draw_connected_full_view } from "curve";

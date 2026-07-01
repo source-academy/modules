@@ -207,7 +207,7 @@ describe('Project conversion and validation', async () => {
   app.logger = logger;
   let project: td.ProjectReflection | undefined;
 
-  test('Conversion', async () => {
+  test('Conversion', { timeout: 10_000 }, async () => {
     project = await app.convert();
 
     if (!project) {

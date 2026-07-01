@@ -4,6 +4,7 @@ import typedocPlugin from '@sourceacademy/modules-typedoc-plugin';
 import chalk from 'chalk';
 import * as td from 'typedoc';
 
+// TODO: Remove the notExported option once we decide how to handle types being exported from bundles
 // #region commonOpts
 const typedocPackageOptions: td.Configuration.TypeDocOptions = {
   categorizeByGroup: false,
@@ -11,6 +12,10 @@ const typedocPackageOptions: td.Configuration.TypeDocOptions = {
   excludeInternal: true,
   skipErrorChecking: true,
   sort: ['documents-last'],
+  useTsLinkResolution: true,
+  validation: {
+    notExported: false,
+  },
   visibilityFilters: {},
 };
 // #endregion commonOpts

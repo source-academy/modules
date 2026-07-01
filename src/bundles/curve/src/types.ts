@@ -27,6 +27,10 @@ export type CurveAnimation = (t: number) => Curve;
  */
 export interface RenderFunction extends ReplResult {
   (func: Curve): CurveDrawn;
+
+  /**
+   * @hidden
+   */
   is3D: boolean;
 };
 
