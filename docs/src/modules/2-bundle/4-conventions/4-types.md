@@ -247,7 +247,7 @@ Here are the parameters of the constructor:
 3. Name of the function that the validation was performed for.
 4. `param_name` _Optional_: Name of the parameter that the validation was performed for.
 
-## Type Safety Conventions for functions
+## Type Safety for functions
 
 As part of ensuring type safety, there are several function related conventions bundle code should abide by:
 
@@ -550,6 +550,8 @@ function isFunctionOfLength(f: unknown, l: number): f is Function {
 >
 > }
 > ```
+>
+> It also cannot check for rest or optional parameters.
 
 There is an assertion version of the function available: [`assertFunctionOfLength`](../../../lib/modules-lib/Utilities#assertfunctionoflength):
 
@@ -595,8 +597,8 @@ export function makeNewCurve(c: Curve, numPoints: number): Curve {
 }
 ```
 
-Calling a user function directly may not behave as intended, especially when the `js-slang` transpiler is being used. However,
-functions that are provided from the standard library or from other module functions can still be called normally.
+Calling a _user_ function directly may not behave as intended, especially when the `js-slang` transpiler is being used. However,
+functions that are provided from the _standard library_ or from other module functions can still be called normally.
 
 `callIfFuncAndRightArgs` is used when you want to provide extra metadata about where the function was defined:
 
