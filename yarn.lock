@@ -4432,6 +4432,7 @@ __metadata:
   resolution: "@sourceacademy/modules-docserver@workspace:docs"
   dependencies:
     "@shikijs/vitepress-twoslash": "npm:^2.1.0"
+    "@sourceacademy/bundle-curve": "workspace:^"
     "@sourceacademy/bundle-rune": "workspace:^"
     "@sourceacademy/bundle-sound": "workspace:^"
     "@sourceacademy/lint-plugin": "workspace:^"
