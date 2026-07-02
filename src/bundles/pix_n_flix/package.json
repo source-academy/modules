@@ -4,11 +4,11 @@
   "private": true,
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@types/react": "^19.0.0",
+    "@types/react": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "playwright": "^1.55.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "typescript": "^6.0.2",
     "vitest": "catalog:",
     "vitest-browser-react": "^2.1.0"
