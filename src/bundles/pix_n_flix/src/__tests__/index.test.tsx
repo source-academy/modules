@@ -26,7 +26,6 @@ const test = baseTest.extend<{
     cleanup();
   },
   fixtures: async ({ screen }, fixture) => {
-    // funcs.start();
     const { init, deinit } = funcs.internal_start();
     const errLogger = vi.fn();
     const canvas = screen
