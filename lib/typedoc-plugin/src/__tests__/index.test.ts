@@ -1,4 +1,3 @@
-
 import pathlib from 'path';
 import * as td from 'typedoc';
 import { assert, describe, expect, it, test, vi } from 'vitest';
