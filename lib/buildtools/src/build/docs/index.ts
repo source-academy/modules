@@ -5,7 +5,7 @@ import { mapAsync } from '@sourceacademy/modules-repotools/utils';
 import * as td from 'typedoc';
 import { normalizeConductorDocs } from './conductor/index.js';
 import { buildJson } from './json.js';
-import { initTypedocForHtml, initTypedocForJson } from './typedoc.js';
+import { initTypedocForHtml, initTypedocForJson, stripTypeDocSources } from './typedoc.js';
 
 /**
  * First builds an intermediate JSON file in the dist directory of the bundle\
@@ -25,6 +25,7 @@ export async function buildSingleBundleDocs(bundle: ResolvedBundle, outDir: stri
   }
 
   normalizeConductorDocs(project);
+  stripTypeDocSources(project);
 
   // TypeDoc expects POSIX paths
   const directoryAsPosix = bundle.directory.replace(/\\/g, '/');
@@ -78,6 +79,7 @@ export async function buildHtml(bundles: Record<string, ResolvedBundle>, outDir:
   }
 
   normalizeConductorDocs(project);
+  stripTypeDocSources(project);
 
   const htmlPath = pathlib.join(outDir, 'documentation');
   await app.generateDocs(project, htmlPath);

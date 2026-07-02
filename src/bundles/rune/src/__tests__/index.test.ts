@@ -1,8 +1,62 @@
+import { DataType } from '@sourceacademy/conductor/types';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import { describe, expect, it, test, vi } from 'vitest';
+import RuneModulePlugin from '..';
 import * as display from '../display';
 import * as funcs from '../functions';
 import type { Rune } from '../rune';
+
+describe(RuneModulePlugin, () => {
+  test('exported methods stay bound when called by a Conductor closure', async () => {
+    const sentMessages: unknown[] = [];
+    const channel = {
+      send: vi.fn(message => sentMessages.push(message)),
+      subscribe: vi.fn(),
+      unsubscribe: vi.fn(),
+      close: vi.fn(),
+      name: 'rune-test-channel'
+    };
+    const evaluator = {
+      hasDataInterface: true,
+      closure_make: vi.fn(async (sig, func, dependsOn) => ({
+        type: DataType.CLOSURE,
+        value: { sig, dependsOn, func }
+      })),
+      opaque_make: vi.fn(async value => ({
+        type: DataType.OPAQUE,
+        value
+      })),
+      opaque_get: vi.fn(async value => value.value)
+    };
+    const plugin = new RuneModulePlugin({} as any, [channel] as any, evaluator as any, {
+      tabs: [],
+      loadTab: vi.fn()
+    });
+
+    await plugin.initialise();
+
+    const showExport = plugin.exports.find(each => each.symbol === 'show')!;
+    const closureObject = showExport.value.value as unknown as {
+      func: (rune: Awaited<ReturnType<typeof evaluator.opaque_make>>) => AsyncGenerator<void, unknown, unknown>;
+    };
+    const runeValue = await evaluator.opaque_make(funcs.blank);
+    const result = await closureObject.func.call(closureObject, runeValue).next();
+
+    expect(result.done).toBe(true);
+    expect(sentMessages).toHaveLength(1);
+    expect(sentMessages[0]).toMatchObject({
+      type: 'render',
+      mode: 'normal',
+      rune: {
+        vertices: [],
+        colors: null,
+        textureUrl: null,
+        subRunes: []
+      }
+    });
+    expect('draw' in (sentMessages[0] as any).rune).toBe(false);
+  });
+});
 
 describe(display.anaglyph, () => {
   it('throws when argument is not rune', () => {

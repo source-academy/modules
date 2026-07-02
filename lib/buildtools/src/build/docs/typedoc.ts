@@ -5,7 +5,7 @@ import * as td from 'typedoc';
 // #region commonOpts
 const typedocPackageOptions: td.Configuration.TypeDocOptions = {
   categorizeByGroup: true,
-  disableSources: true,
+  disableSources: false,
   excludeInternal: true,
   skipErrorChecking: true,
   sort: ['documents-last'],
@@ -19,6 +19,16 @@ const typedocPackageOptions: td.Configuration.TypeDocOptions = {
  */
 export function convertToTypedocPath(p: string) {
   return p.split(pathlib.sep).join(pathlib.posix.sep);
+}
+
+/**
+ * Removes source locations after Conductor decorator parsing has used them.
+ */
+export function stripTypeDocSources(reflection: td.Reflection) {
+  (reflection as { sources?: td.SourceReference[] }).sources = undefined;
+  reflection.traverse(child => {
+    stripTypeDocSources(child);
+  });
 }
 
 /**
