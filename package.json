@@ -71,7 +71,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitest/coverage-v8": "catalog:",
-    "@vitest/eslint-plugin": "^1.6.20",
+    "@vitest/eslint-plugin": "catalog:",
     "@vitest/ui": "catalog:",
     "@yarnpkg/types": "^4.0.1",
     "esbuild": "^0.28.0",
