@@ -74,7 +74,7 @@
     "@vitest/eslint-plugin": "catalog:",
     "@vitest/ui": "catalog:",
     "@yarnpkg/types": "^4.0.1",
-    "esbuild": "^0.28.0",
+    "esbuild": "^0.28.1",
     "eslint": "^9.35.0",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
