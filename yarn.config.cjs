@@ -41,8 +41,8 @@ module.exports = defineConfig({
     // Make sure that if the dependency is defined in the root workspace
     // that all child workspaces use the same version of that dependency.
     // Catalog-resolved deps already share a single version by definition, so
-    // skip them (Yarn normalizes `catalog:` to `*`, and `update()` does not
-    // accept either form as a valid replacement for a `catalog:` source).
+    // skip them (Yarn normalizes `catalog:` to `*` due to a bug, see:
+    // https://github.com/yarnpkg/berry/issues/6925)
     for (const workspaceDep of Yarn.dependencies({ workspace: rootWorkspace })) {
       if (workspaceDep.range === 'catalog:' || workspaceDep.range === '*') continue;
 
