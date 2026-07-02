@@ -183,7 +183,7 @@ export function foo(p1: string, p2: string) {
 > ```
 >
 > and `RenderFunction` has the following type:
-> 
+>
 > ```ts
 > // curve/types.ts
 > /**
@@ -199,7 +199,7 @@ export function foo(p1: string, p2: string) {
 > Typedoc won't consider `draw_connected` to be a function. Instead it will consider it to be a variable:
 >
 > ![](./drawConst.png)
-> 
+>
 > This is because `drawConnected` is of type `RenderFunction` and `RenderFunction` is only _function-like_.
 > To remedy this, you can either change the type to be an actual function type, or include the `@function` tag in your documentation:
 >
@@ -220,13 +220,13 @@ export function foo(p1: string, p2: string) {
 >  */
 > export const draw_connected = createDrawFunction('none', 'lines', '2D', false);
 > ```
->  
->  The export will now be correctly recognized as a function:
 >
->  ![](./drawFunc.png)
->  
->  The buildtools are configured to emit a warning if a variable is detected to have function signatures but cannot automatically rectify
->  this problem.
+> The export will now be correctly recognized as a function:
+>
+> ![](./drawFunc.png)
+>
+> The buildtools are configured to emit a warning if a variable is detected to have function signatures but cannot automatically rectify
+> this problem.
 
 ### Variables/Constants
 
@@ -375,7 +375,6 @@ Using a code block makes it clear exactly what is intended to be part of your ex
 During documentation generation, the code in your code block will be parsed by a Typescript parser to ensure that you have written
 valid Typescript code. It will print a warning message if your example code doesn't produce syntactically valid Typescript.
 
-
 ### `@internal` and `@hidden`
 
 Both tags are used to exclude exports from the output of the documentation. `@internal` is used to mark
@@ -516,7 +515,7 @@ at the moment.
 >
 > To fix this, you can mark those entries as intentionally unresolved as described [here](https://typedoc.org/documents/Options.Comments.html#externalsymbollinkmappings) by
 > adding the option to the `tsconfig.json` (which is actually the solution suggested in the console):
-> 
+>
 > ```jsonc {11-19}
 > // tsconfig for sound bundle
 > {

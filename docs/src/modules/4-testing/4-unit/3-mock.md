@@ -66,6 +66,7 @@ export function bar2() {
   return 2;
 }
 ```
+
 :::
 
 Though `vi.mock` accepts a string path, you should always use the import expression syntax where possible,
@@ -185,6 +186,7 @@ expect(Foo).toHaveBeenCalledOnce();
 ```ts [index.ts]
 export class Foo {}
 ```
+
 :::
 
 ## Mocking "Global" Properties
@@ -271,6 +273,7 @@ There are a variety of things in Typescript that behave like functions you can c
 you will find yourself needing to mock the return value of these functions only once for a specific test:
 
 ::: code-group
+
 ```ts twoslash [src/__tests__/foo.test.ts]
 // @filename: src/bar.ts
 export function bar() {
@@ -327,6 +330,7 @@ export function bar() {
   return 1;
 }
 ```
+
 :::
 
 Now consider, what happens if in `foo`, `doSomeOtherThings` returns `false`? `bar` never gets called, so its mock implementation
@@ -573,6 +577,7 @@ children:
 Then we can write our mock as part of a function in the `utils.ts` file:
 
 ::: code-group
+
 ```ts twoslash [__tests__/utils.ts]
 // @filename: functions.ts
 export declare function foo(x: number): number;
@@ -614,6 +619,7 @@ export function foo(x: number) {
   return x;
 }
 ```
+
 :::
 
 Because of the way that `vi.mock` is handled by Vitest, this method **cannot** be used for mocks that rely on that.
@@ -703,6 +709,7 @@ test('another test', () => {
   expect(bar(10)).toEqual(2);
 });
 ```
+
 ```ts [functions.ts]
 export function foo(x: number) {
   // ... does other things
@@ -721,6 +728,7 @@ export function bar(x: number) {
   return foo(x) + 1;
 }
 ```
+
 :::
 
 Notice that the call to `vi.mock` `functions.ts` happens twice and is identical. By creating a `__mocks__` folder that shadows
@@ -743,6 +751,7 @@ children:
 ```
 
 Inside `__mocks__/functions.ts`, we write our mock implementation:
+
 ```ts [__mocks__/functions.ts]
 export function foo() {
   return 1;
@@ -784,6 +793,7 @@ test('another test', () => {
   expect(bar(10)).toEqual(2);
 });
 ```
+
 :::
 
 Vitest will automatically load the implementation provided by the `__mocks__` folder.

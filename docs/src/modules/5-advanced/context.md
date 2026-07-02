@@ -49,6 +49,7 @@ export default defineTab({
   iconName: 'music'
 });
 ```
+
 > [!IMPORTANT]
 > Module Contexts are reset on each evaluation and are not capable of storing information that persists across evaluations
 
@@ -194,7 +195,6 @@ export default function gameFuncs() {
 }
 ```
 
-
 ## Working with Module Contexts from within Bundles
 
 Bundles will generally have two kinds of functions: those that interact with the module context and those that don't.
@@ -238,6 +238,7 @@ bundle to get evaluated.
 To prevent this from happening, you should define the two types of functions in separate files:
 
 ::: code-group
+
 ```ts [curve/drawers.ts]
 import context from 'js-slang/context';
 
@@ -261,6 +262,7 @@ export function x_of(p: Point) {
   return p.x;
 }
 ```
+
 :::
 
 Then, when importing, you should only import the specific file you need:
@@ -277,6 +279,7 @@ import { x_of } from '@sourceacademy/bundle-curve/functions';
 > to be imported via the `index.ts` path in Typescript.
 >
 > If you import via this path, you end up including both types of bundle functions:
+>
 > ```ts
 > import { x_of } from '@sourceacademy/bundle-curve'; // will also import the drawers.ts file!
 > import { x_of } from '@sourceacademy/bundle-curve/functions'; // only imports functions.ts

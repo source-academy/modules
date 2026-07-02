@@ -61,6 +61,7 @@ This action does this exact job: figuring out which assets have already been bui
 and which need to be built from scratch.
 
 The action has three configuration options:
+
 1. `load-bundles`: Tries to load all bundles and builds the ones that haven't already been built.
 2. `load-tabs`: Tries to load all tabs and builds the ones that haven't already been built.
 3. `load-manifest`: Builds the modules manifest if it hasn't already been built.

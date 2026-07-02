@@ -96,6 +96,7 @@ Unfortunately, Twoslash isn't directly compatible with Vitepress's [code groups]
 you'll have to write the boilerplate for each file separately. For example, consider the code group below:
 
 ::: code-group
+
 ```ts [functions.ts]
 export function foo(): number {
   return 0;
@@ -109,6 +110,7 @@ export function bar() {
   return foo() + 1;
 }
 ```
+
 :::
 
 The raw markdown for this code group looks like this:
@@ -153,7 +155,6 @@ export function bar() {
 The `// ---cut---` directive hides all the code above it, thus only displaying the code that is actually supposed
 to be inside `index.ts`. The final markdown looks like this:
 
-
 ````md
 ::: code-group
 ```ts twoslash [functions.ts]
@@ -181,6 +182,7 @@ export function bar() {
 which then results in:
 
 ::: code-group
+
 ```ts twoslash [functions.ts]
 export function foo(): number {
   return 0;
@@ -200,4 +202,5 @@ export function bar() {
   return foo() + 1;
 }
 ```
+
 :::

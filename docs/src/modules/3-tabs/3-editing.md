@@ -113,6 +113,7 @@ const component = <div className="bp6-dark">
   <h1 className="bp6-text-large">Hello World!</h1>
 </div>;
 ```
+
 You can use these styles directly instead of having to come up with your own.
 
 Often, these styles will be prefixed with `bp` and the version number (i.e `bp6`). Take care to ensure that this prefix matches the version of Blueprint that
@@ -185,6 +186,7 @@ test('Matches snapshot', () => {
   expect(<Component />).toMatchSnapshot();
 });
 ```
+
 :::
 
 > [!TIP] Using getModuleState
@@ -227,8 +229,8 @@ test('Matches snapshot', () => {
 > };
 > ```
 >
-> Then in your `body` function, you can use a non-null assertion. 
-> 
+> Then in your `body` function, you can use a non-null assertion.
+>
 > ```tsx twoslash
 > // @jsx: react-jsx
 > import type { DebuggerContext } from '@sourceacademy/modules-lib/types';

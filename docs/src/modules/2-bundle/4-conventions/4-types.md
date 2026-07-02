@@ -62,6 +62,7 @@ export function show(rune: unknown) {
   return rune;
 }
 ```
+
 :::
 
 Errors related to type checking the values passed in as parameters should make use of the provided error types to ensure that error messages remain consistent
@@ -95,6 +96,7 @@ export function play(value: unknown): asserts value is Sound {
 ```
 
 The parameters of the constructor for `InvalidParameterTypeError` are as follows:
+
 1. String representation of the expected type
 2. Actual value passed in by the user
 3. _Optional_: The name of the function that the error was thrown from (see [here](./3-errors) for more information)
@@ -240,10 +242,11 @@ This is a subclass of the `InvalidParameterTypeError` that is thrown when a para
 or doesn't fall within the expected range.
 
 Here are the parameters of the constructor:
+
 1. The actual value that was validated
 2. Either a `string` or an `InvalidNumberParameterErrorOptions` object.
-  - If a string is provided, then that is taken as the name of the expected type
-  - Otherwise, the options object controls what error message is shown to the user (i.e whether an integer or a number was expected, or if it was outside of the desired range)
+   - If a string is provided, then that is taken as the name of the expected type
+   - Otherwise, the options object controls what error message is shown to the user (i.e whether an integer or a number was expected, or if it was outside of the desired range)
 3. Name of the function that the validation was performed for.
 4. `param_name` _Optional_: Name of the parameter that the validation was performed for.
 
@@ -485,10 +488,10 @@ draw_connected(200)((a, b) => make_point(a, 0)); // error: The provided curve is
 >
 > The `InvalidCallbackError` is a subclass of the `InvalidParameterTypeError`, specifically to be used for the error to be thrown
 > for invalid callbacks. The parameters for its constructor are as follows:
-> 
+>
 > 1. Number of Parameters/String representation of expected function:
->   - If a number is given, it is assumed that a function with that number of parameters is expected
->   - If a string is given, that will be used as a name for the function type.
+>    - If a number is given, it is assumed that a function with that number of parameters is expected
+>    - If a string is given, that will be used as a name for the function type.
 > 2. The actual value passed in by the user
 > 3. _Optional_: The name of the function that the error was thrown from (see [here](./3-errors) for more information)
 > 4. _Optional_: The name of the parameter that is being validated
@@ -504,10 +507,10 @@ function isFunctionOfLength(f: unknown, l: number): f is Function {
 ```
 
 > [!WARNING] Limitations of isFunctionOfLength
-> 
+>
 > Of course, `isFunctionOfLength` can only guarantee that the object passed to it is indeed a function and that it takes
 > the specified number of parameters. It won't actually guarantee at runtime that the provided parameters are of the defined types. For example:
-> 
+>
 > ```ts twoslash
 > // @noErrors: 2345
 > import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
@@ -531,10 +534,10 @@ function isFunctionOfLength(f: unknown, l: number): f is Function {
 > // type (x: number, y: number) => number
 > call_callback(callback);
 > ```
-> 
+>
 > In fact, if you give it something of type `unknown`, the best it can do is narrow it down to a function that takes parameters of type `unknown`
 > and returns a value with type `unknown`:
-> 
+>
 > ```ts twoslash
 > import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 > import { InvalidCallbackError } from '@sourceacademy/modules-lib/errors';

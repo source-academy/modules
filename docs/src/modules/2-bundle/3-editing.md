@@ -103,6 +103,7 @@ When editing a bundle, you may accidentally add a new export or remove an existi
 This can happen if especially you are using a wildcard export:
 
 ::: code-group
+
 ```ts [index.ts]
 // Will end up exporting new_foo!
 export * from './functions';
@@ -116,6 +117,7 @@ export function foo() {}
  */
 export function new_foo() {}
 ```
+
 :::
 
 > [!WARNING] Type Related Exports
