@@ -1,32 +1,49 @@
 {
-  "init": {
+  "generateMemory": {
     "kind": "function",
-    "name": "init",
+    "name": "generateMemory",
     "description": "<p>No description available</p>",
     "params": [],
-    "retType": "{ toReplString: () => string; get_memory_size: () => number; get_memory_heap: () => MemoryHeaps; get_tags: () => number[]; get_types: () => string[]; get_column_size: () => number; get_row_size: () => number; get_memory_matrix: () => MemoryHeaps; get_flips: () => number[]; get_slots: () => number[]; get_command: () => CommandHeapObject[]; get_unmarked: () => number; get_marked: () => number; get_roots: () => number[] }"
+    "retType": "void"
+  },
+  "updateRoots": {
+    "kind": "function",
+    "name": "updateRoots",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "array"
+      }
+    ],
+    "retType": "void"
   },
   "initialize_memory": {
     "kind": "function",
     "name": "initialize_memory",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "memorySize",
-        "number"
-      ],
-      [
-        "nodeSize",
-        "any"
-      ],
-      [
-        "marked",
-        "any"
-      ],
-      [
-        "unmarked",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "memorySize"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "nodeSize"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "marked"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "unmarked"
+      }
     ],
     "retType": "void"
   },
@@ -35,22 +52,17 @@
     "name": "initialize_tag",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "allTag",
-        "number[]"
-      ],
-      [
-        "types",
-        "string[]"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "allTag"
+      },
+      {
+        "paramType": "regular",
+        "type": "string[]",
+        "name": "types"
+      }
     ],
-    "retType": "void"
-  },
-  "generateMemory": {
-    "kind": "function",
-    "name": "generateMemory",
-    "description": "<p>No description available</p>",
-    "params": [],
     "retType": "void"
   },
   "allHeap": {
@@ -58,34 +70,11 @@
     "name": "allHeap",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "newHeap",
-        "number[][]"
-      ]
-    ],
-    "retType": "void"
-  },
-  "updateSlotSegment": {
-    "kind": "function",
-    "name": "updateSlotSegment",
-    "description": "<p>No description available</p>",
-    "params": [
-      [
-        "tag",
-        "number"
-      ],
-      [
-        "size",
-        "number"
-      ],
-      [
-        "first",
-        "number"
-      ],
-      [
-        "last",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number[][]",
+        "name": "newHeap"
+      }
     ],
     "retType": "void"
   },
@@ -94,158 +83,57 @@
     "name": "newCommand",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "type",
-        "any"
-      ],
-      [
-        "left",
-        "any"
-      ],
-      [
-        "right",
-        "any"
-      ],
-      [
-        "sizeLeft",
-        "any"
-      ],
-      [
-        "sizeRight",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ],
-      [
-        "description",
-        "any"
-      ],
-      [
-        "firstDesc",
-        "any"
-      ],
-      [
-        "lastDesc",
-        "any"
-      ],
-      [
-        "queue",
-        "never[]"
-      ]
-    ],
-    "retType": "void"
-  },
-  "newMark": {
-    "kind": "function",
-    "name": "newMark",
-    "description": "<p>No description available</p>",
-    "params": [
-      [
-        "left",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ],
-      [
-        "queue",
-        "any"
-      ]
-    ],
-    "retType": "void"
-  },
-  "newPush": {
-    "kind": "function",
-    "name": "newPush",
-    "description": "<p>No description available</p>",
-    "params": [
-      [
-        "left",
-        "any"
-      ],
-      [
-        "right",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
-    ],
-    "retType": "void"
-  },
-  "newPop": {
-    "kind": "function",
-    "name": "newPop",
-    "description": "<p>No description available</p>",
-    "params": [
-      [
-        "res",
-        "any"
-      ],
-      [
-        "left",
-        "any"
-      ],
-      [
-        "right",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
-    ],
-    "retType": "void"
-  },
-  "newAssign": {
-    "kind": "function",
-    "name": "newAssign",
-    "description": "<p>No description available</p>",
-    "params": [
-      [
-        "res",
-        "any"
-      ],
-      [
-        "left",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
-    ],
-    "retType": "void"
-  },
-  "newNew": {
-    "kind": "function",
-    "name": "newNew",
-    "description": "<p>No description available</p>",
-    "params": [
-      [
-        "left",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
-    ],
-    "retType": "void"
-  },
-  "newGC": {
-    "kind": "function",
-    "name": "newGC",
-    "description": "<p>No description available</p>",
-    "params": [
-      [
-        "heap",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "COMMAND",
+        "name": "type"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "right"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "sizeLeft"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "sizeRight"
+      },
+      {
+        "paramType": "regular",
+        "type": "Memory",
+        "name": "heap"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "description"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "firstDesc"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "lastDesc"
+      },
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "queue",
+        "defaultValue": "[]"
+      }
     ],
     "retType": "void"
   },
@@ -254,66 +142,39 @@
     "name": "newSweep",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "left",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "Memory",
+        "name": "heap"
+      }
     ],
     "retType": "void"
   },
-  "updateRoots": {
+  "newMark": {
     "kind": "function",
-    "name": "updateRoots",
+    "name": "newMark",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "array",
-        "any"
-      ]
-    ],
-    "retType": "void"
-  },
-  "newUpdateSweep": {
-    "kind": "function",
-    "name": "newUpdateSweep",
-    "description": "<p>No description available</p>",
-    "params": [
-      [
-        "right",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
-    ],
-    "retType": "void"
-  },
-  "showRoots": {
-    "kind": "function",
-    "name": "showRoots",
-    "description": "<p>No description available</p>",
-    "params": [
-      [
-        "heap",
-        "any"
-      ]
-    ],
-    "retType": "void"
-  },
-  "endGC": {
-    "kind": "function",
-    "name": "endGC",
-    "description": "<p>No description available</p>",
-    "params": [
-      [
-        "heap",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "Memory",
+        "name": "heap"
+      },
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "queue"
+      }
     ],
     "retType": "void"
   },
@@ -322,10 +183,11 @@
     "name": "addRoots",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "arr",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "arr"
+      }
     ],
     "retType": "void"
   },
@@ -334,10 +196,188 @@
     "name": "showRoot",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "heap",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Memory",
+        "name": "heap"
+      }
+    ],
+    "retType": "void"
+  },
+  "showRoots": {
+    "kind": "function",
+    "name": "showRoots",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "Memory",
+        "name": "heap"
+      }
+    ],
+    "retType": "void"
+  },
+  "newUpdateSweep": {
+    "kind": "function",
+    "name": "newUpdateSweep",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "right"
+      },
+      {
+        "paramType": "regular",
+        "type": "Memory",
+        "name": "heap"
+      }
+    ],
+    "retType": "void"
+  },
+  "newPush": {
+    "kind": "function",
+    "name": "newPush",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "right"
+      },
+      {
+        "paramType": "regular",
+        "type": "Memory",
+        "name": "heap"
+      }
+    ],
+    "retType": "void"
+  },
+  "newPop": {
+    "kind": "function",
+    "name": "newPop",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "res"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "right"
+      },
+      {
+        "paramType": "regular",
+        "type": "Memory",
+        "name": "heap"
+      }
+    ],
+    "retType": "void"
+  },
+  "newAssign": {
+    "kind": "function",
+    "name": "newAssign",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "res"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "Memory",
+        "name": "heap"
+      }
+    ],
+    "retType": "void"
+  },
+  "newNew": {
+    "kind": "function",
+    "name": "newNew",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "Memory",
+        "name": "heap"
+      }
+    ],
+    "retType": "void"
+  },
+  "newGC": {
+    "kind": "function",
+    "name": "newGC",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "Memory",
+        "name": "heap"
+      }
+    ],
+    "retType": "void"
+  },
+  "endGC": {
+    "kind": "function",
+    "name": "endGC",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "Memory",
+        "name": "heap"
+      }
+    ],
+    "retType": "void"
+  },
+  "updateSlotSegment": {
+    "kind": "function",
+    "name": "updateSlotSegment",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "tag"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "size"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "first"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "last"
+      }
     ],
     "retType": "void"
   }

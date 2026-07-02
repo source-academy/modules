@@ -87,34 +87,42 @@ export default require => {
     trombone: () => trombone,
     violin: () => violin
   });
+  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
+  var import_base = __require("js-slang/dist/errors/base");
+  var import_rttc = __require("js-slang/dist/utils/rttc");
+  var import_operators = __require("js-slang/dist/utils/operators");
   var Accidental;
   (function (Accidental2) {
     Accidental2["SHARP"] = "#";
     Accidental2["FLAT"] = "b";
     Accidental2["NATURAL"] = "\u266E";
   })(Accidental || (Accidental = {}));
-  function noteToValues(note, func_name = noteToValues.name) {
+  function parseNoteWithOctave(note) {
+    if (typeof note !== "string") return null;
     const match = (/^([A-Ga-g])([#♮b]?)(\d*)$/).exec(note);
-    if (match === null) throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
+    if (match === null) return null;
     const [, noteName, accidental, octaveStr] = match;
     switch (accidental) {
       case Accidental.SHARP:
         {
-          if (noteName === "B" || noteName === "E") {
-            throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
-          }
+          if (noteName === "B" || noteName === "E") return null;
           break;
         }
       case Accidental.FLAT:
         {
-          if (noteName === "F" || noteName === "C") {
-            throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
-          }
+          if (noteName === "F" || noteName === "C") return null;
           break;
         }
     }
     const octave = octaveStr === "" ? 4 : parseInt(octaveStr);
     return [noteName.toUpperCase(), accidental !== "" ? accidental : Accidental.NATURAL, octave];
+  }
+  function noteToValues(note, func_name) {
+    const res = parseNoteWithOctave(note);
+    if (res === null) {
+      throw new import_base.GeneralRuntimeError(`${func_name}: Invalid Note with Octave: ${note}`);
+    }
+    return res;
   }
   var import_list = __require("js-slang/dist/stdlib/list");
   function letter_name_to_midi_note(note) {
@@ -161,6 +169,7 @@ export default require => {
     return res + 12 * octave;
   }
   function midi_note_to_frequency(note) {
+    (0, import_rttc.assertNumberWithinRange)(note, midi_note_to_frequency.name);
     return 440 * Math.pow(2, (note - 69) / 12);
   }
   function letter_name_to_frequency(note) {
@@ -170,6 +179,7 @@ export default require => {
   var FLAT = Accidental.FLAT;
   var NATURAL = Accidental.NATURAL;
   var import_list2 = __require("js-slang/dist/stdlib/list");
+  var import_stringify = __require("js-slang/dist/utils/stringify");
   var FS = 44100;
   var fourier_expansion_level = 5;
   var recording_signal_ms = 100;
@@ -196,9 +206,9 @@ export default require => {
   }
   function getAudioStream(func_name) {
     if (globalVars.stream === null) {
-      throw new Error(`${func_name}: Call init_record(); to obtain permission to use microphone`);
+      throw new import_base.GeneralRuntimeError(`${func_name}: Call init_record(); to obtain permission to use microphone`);
     } else if (globalVars.stream === false) {
-      throw new Error(`${func_name}: Permission has been denied.
+      throw new import_base.GeneralRuntimeError(`${func_name}: Permission has been denied.
 
         Re-start browser and call init_record();
 
@@ -249,11 +259,9 @@ export default require => {
     return "obtaining recording permission";
   }
   function record(buffer) {
-    if (typeof buffer !== "number" || buffer < 0) {
-      throw new Error(`${record.name}: Expected a positive number for buffer, got ${buffer}`);
-    }
+    (0, import_rttc.assertNumberWithinRange)(buffer, record.name, 0, void 0, false);
     if (globalVars.isPlaying) {
-      throw new Error(`${record.name}: Cannot record while another sound is playing!`);
+      throw new import_base.GeneralRuntimeError(`${record.name}: Cannot record while another sound is playing!`);
     }
     const stream = getAudioStream(record.name);
     const mediaRecorder = new MediaRecorder(stream);
@@ -268,19 +276,18 @@ export default require => {
       play_recording_signal();
       const promise = () => {
         if (globalVars.recordedSound === null) {
-          throw new Error("recording still being processed");
+          throw new import_base.GeneralRuntimeError("recording still being processed");
         } else {
           return globalVars.recordedSound;
         }
       };
       promise.toReplString = () => "<SoundPromise>";
-      promise.toString = () => "<SoundPromise>";
       return promise;
     };
   }
   function record_for(duration, buffer) {
     if (globalVars.isPlaying) {
-      throw new Error(`${record_for.name}: Cannot record while another sound is playing!`);
+      throw new import_base.GeneralRuntimeError(`${record_for.name}: Cannot record while another sound is playing!`);
     }
     const stream = getAudioStream(record_for.name);
     const mediaRecorder = new MediaRecorder(stream);
@@ -296,27 +303,19 @@ export default require => {
     }, pre_recording_signal_pause_ms);
     const promise = () => {
       if (globalVars.recordedSound === null) {
-        throw new Error("recording still being processed");
+        throw new import_base.GeneralRuntimeError("recording still being processed");
       } else {
         return globalVars.recordedSound;
       }
     };
     promise.toReplString = () => "<SoundPromise>";
-    promise.toString = () => "<SoundPromise>";
     return promise;
   }
   function validateDuration(func_name, duration) {
-    if (typeof duration !== "number") {
-      throw new Error(`${func_name} expects a number for duration, got ${duration}`);
-    }
-    if (duration < 0) {
-      throw new Error(`${func_name}: Sound duration must be greater than or equal to 0`);
-    }
+    (0, import_rttc.assertNumberWithinRange)(duration, func_name, 0, void 0, false, "duration");
   }
   function validateWave(func_name, wave) {
-    if (typeof wave !== "function") {
-      throw new Error(`${func_name} expects a wave, got ${wave}`);
-    }
+    (0, import_rttc.assertFunctionOfLength)(wave, 1, func_name, "Wave");
   }
   function make_sound(wave, duration) {
     validateDuration(make_sound.name, duration);
@@ -330,7 +329,7 @@ export default require => {
     return (0, import_list2.tail)(sound);
   }
   function is_sound(x) {
-    return (0, import_list2.is_pair)(x) && typeof get_wave(x) === "function" && typeof get_duration(x) === "number";
+    return (0, import_list2.is_pair)(x) && (0, import_rttc.isFunctionOfLength)((0, import_list2.head)(x), 1) && typeof (0, import_list2.tail)(x) === "number";
   }
   function play_wave(wave, duration) {
     validateDuration(play_wave.name, duration);
@@ -339,24 +338,23 @@ export default require => {
   }
   function play(sound) {
     if (!is_sound(sound)) {
-      throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
+      throw new import_rttcErrors.InvalidParameterTypeError("sound", sound, play.name);
     } else if (globalVars.isPlaying) {
-      throw new Error(`${play.name}: Previous sound still playing!`);
+      throw new import_base.GeneralRuntimeError(`${play.name}: Previous sound still playing!`);
     }
     const duration = get_duration(sound);
-    if (duration < 0) {
-      throw new Error(`${play.name}: duration of sound is negative`);
-    } else if (duration === 0) {
-      return sound;
-    }
+    validateDuration(play.name, duration);
+    if (duration === 0) return sound;
     const audioplayer = getAudioContext();
     const theBuffer = audioplayer.createBuffer(1, Math.ceil(FS * duration), FS);
     const channel = theBuffer.getChannelData(0);
-    let temp;
     let prev_value = 0;
     const wave = get_wave(sound);
-    for (let i = 0; i < channel.length; i += 1) {
-      temp = wave(i / FS);
+    for (let i = 0; i < channel.length; i++) {
+      const temp = (0, import_operators.callWithoutMetadata)(wave, i / FS);
+      if (typeof temp !== "number") {
+        throw new import_base.GeneralRuntimeError(`${play.name}: Provided Sound returned a non-numeric value ${(0, import_stringify.stringify)(temp)}.`);
+      }
       if (temp > 1) {
         channel[i] = 1;
       } else if (temp < -1) {
@@ -396,14 +394,16 @@ export default require => {
   }
   function sine_sound(freq, duration) {
     validateDuration(sine_sound.name, duration);
+    (0, import_rttc.assertNumberWithinRange)(freq, sine_sound.name, 0, void 0, false, "freq");
     return make_sound(t => Math.sin(2 * Math.PI * t * freq), duration);
   }
-  function square_sound(f, duration) {
+  function square_sound(freq, duration) {
     validateDuration(square_sound.name, duration);
+    (0, import_rttc.assertNumberWithinRange)(freq, square_sound.name, 0, void 0, false, "freq");
     function fourier_expansion_square(t) {
       let answer = 0;
       for (let i = 1; i <= fourier_expansion_level; i += 1) {
-        answer += Math.sin(2 * Math.PI * (2 * i - 1) * f * t) / (2 * i - 1);
+        answer += Math.sin(2 * Math.PI * (2 * i - 1) * freq * t) / (2 * i - 1);
       }
       return answer;
     }
@@ -411,6 +411,7 @@ export default require => {
   }
   function triangle_sound(freq, duration) {
     validateDuration(triangle_sound.name, duration);
+    (0, import_rttc.assertNumberWithinRange)(freq, triangle_sound.name, 0, void 0, false, "freq");
     function fourier_expansion_triangle(t) {
       let answer = 0;
       for (let i = 0; i < fourier_expansion_level; i += 1) {
@@ -422,6 +423,7 @@ export default require => {
   }
   function sawtooth_sound(freq, duration) {
     validateDuration(sawtooth_sound.name, duration);
+    (0, import_rttc.assertNumberWithinRange)(freq, sawtooth_sound.name, 0, void 0, false, "freq");
     function fourier_expansion_sawtooth(t) {
       let answer = 0;
       for (let i = 1; i <= fourier_expansion_level; i += 1) {
@@ -458,7 +460,7 @@ export default require => {
         }
         return sum;
       };
-      const new_dur = dur1 < dur2 ? dur2 : dur1;
+      const new_dur = Math.max(dur1, dur2);
       return make_sound(new_wave, new_dur);
     }
     const mushed_sounds = (0, import_list2.accumulate)(simul_two, silence_sound(0), list_of_sounds);
@@ -467,26 +469,41 @@ export default require => {
     const highest_duration = (0, import_list2.tail)(mushed_sounds);
     return make_sound(normalised_wave, highest_duration);
   }
+  function wrapSoundTransformer(transformer) {
+    function wrapped(sound) {
+      if (!is_sound(sound)) {
+        throw new import_rttcErrors.InvalidParameterTypeError("Sound", sound, "SoundTransformer");
+      }
+      const [old_wave, old_duration] = sound;
+      return transformer(t => (0, import_operators.callWithoutMetadata)(old_wave, t), old_duration);
+    }
+    wrapped.toReplString = () => "<SoundTransformer>";
+    return wrapped;
+  }
   function adsr(attack_ratio, decay_ratio, sustain_level, release_ratio) {
-    return sound => {
-      const wave = get_wave(sound);
-      const duration = get_duration(sound);
+    (0, import_rttc.assertNumberWithinRange)(attack_ratio, adsr.name, void 0, void 0, false, "attack_ratio");
+    (0, import_rttc.assertNumberWithinRange)(decay_ratio, adsr.name, void 0, void 0, false, "decay_ratio");
+    (0, import_rttc.assertNumberWithinRange)(sustain_level, adsr.name, 0, void 0, false, "sustain_level");
+    (0, import_rttc.assertNumberWithinRange)(release_ratio, adsr.name, void 0, void 0, false, "release_ratio");
+    return wrapSoundTransformer((wave, duration) => {
       const attack_time = duration * attack_ratio;
       const decay_time = duration * decay_ratio;
       const release_time = duration * release_ratio;
-      return make_sound(x => {
-        if (x < attack_time) {
-          return wave(x) * (x / attack_time);
+      const decayWave = linear_decay(decay_time);
+      const releaseWave = linear_decay(release_time);
+      return make_sound(t => {
+        if (t < attack_time) {
+          return wave(t) * (t / attack_time);
         }
-        if (x < attack_time + decay_time) {
-          return ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time) + sustain_level) * wave(x);
+        if (t < attack_time + decay_time) {
+          return ((1 - sustain_level) * decayWave(t - attack_time) + sustain_level) * wave(t);
         }
-        if (x < duration - release_time) {
-          return wave(x) * sustain_level;
+        if (t < duration - release_time) {
+          return wave(t) * sustain_level;
         }
-        return wave(x) * sustain_level * linear_decay(release_time)(x - (duration - release_time));
+        return wave(t) * sustain_level * releaseWave(t - (duration - release_time));
       }, duration);
-    };
+    });
   }
   function stacking_adsr(waveform, base_frequency, duration, envelopes) {
     function zip(lst, n) {
@@ -495,30 +512,39 @@ export default require => {
       }
       return (0, import_list2.pair)((0, import_list2.pair)(n, (0, import_list2.head)(lst)), zip((0, import_list2.tail)(lst), n + 1));
     }
-    return simultaneously((0, import_list2.accumulate)((x, y) => (0, import_list2.pair)((0, import_list2.tail)(x)(waveform(base_frequency * (0, import_list2.head)(x), duration)), y), null, zip(envelopes, 1)));
+    const new_list = (0, import_list2.map)(x => (0, import_list2.tail)(x)((0, import_operators.callWithoutMetadata)(waveform, base_frequency * (0, import_list2.head)(x), duration)), zip(envelopes, 1));
+    return simultaneously(new_list);
   }
   function phase_mod(freq, duration, amount) {
-    return modulator => {
-      const wave = get_wave(modulator);
-      return make_sound(t => Math.sin(2 * Math.PI * t * freq + amount * wave(t)), duration);
-    };
+    (0, import_rttc.assertNumberWithinRange)(freq, phase_mod.name, 0, void 0, false);
+    validateDuration(phase_mod.name, duration);
+    (0, import_rttc.assertNumberWithinRange)(amount, phase_mod.name, void 0, void 0, false);
+    return wrapSoundTransformer((wave, duration2) => {
+      return make_sound(t => Math.sin(2 * Math.PI * t * freq + amount * wave(t)), duration2);
+    });
   }
   function bell(note, duration) {
+    validateDuration(bell.name, duration);
     return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0, 0.6, 0, 0.05), adsr(0, 0.6618, 0, 0.05), adsr(0, 0.7618, 0, 0.05), adsr(0, 0.9071, 0, 0.05)));
   }
   function cello(note, duration) {
+    validateDuration(cello.name, duration);
     return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0.05, 0, 1, 0.1), adsr(0.05, 0, 1, 0.15), adsr(0, 0, 0.2, 0.15)));
   }
   function piano(note, duration) {
+    validateDuration(piano.name, duration);
     return stacking_adsr(triangle_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0, 0.515, 0, 0.05), adsr(0, 0.32, 0, 0.05), adsr(0, 0.2, 0, 0.05)));
   }
   function trombone(note, duration) {
+    validateDuration(trombone.name, duration);
     return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0.2, 0, 1, 0.1), adsr(0.3236, 0.6, 0, 0.1)));
   }
   function violin(note, duration) {
+    validateDuration(violin.name, duration);
     return stacking_adsr(sawtooth_sound, midi_note_to_frequency(note), duration, (0, import_list2.list)(adsr(0.35, 0, 1, 0.15), adsr(0.35, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15), adsr(0.45, 0, 1, 0.15)));
   }
   var import_context = __toESM(__require("js-slang/context"), 1);
+  var import_stringify2 = __require("js-slang/dist/utils/stringify");
   var FastBase64 = {
     chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
     encLookup: String,
@@ -608,21 +634,20 @@ export default require => {
   };
   function play_in_tab(sound) {
     if (!is_sound(sound)) {
-      throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
+      throw new import_rttcErrors.InvalidParameterTypeError("Sound", sound, play_in_tab.name);
     }
     const duration = get_duration(sound);
-    if (duration < 0) {
-      throw new Error(`${play_in_tab.name}: duration of sound is negative`);
-    } else if (duration === 0) {
-      return sound;
-    }
+    validateDuration(play_in_tab.name, duration);
+    if (duration === 0) return sound;
     const channel = [];
     const len = Math.ceil(FS * duration);
-    let temp;
     let prev_value = 0;
     const wave = get_wave(sound);
     for (let i = 0; i < len; i += 1) {
-      temp = wave(i / FS);
+      const temp = (0, import_operators.callWithoutMetadata)(wave, i / FS);
+      if (typeof temp !== "number") {
+        throw new import_base.GeneralRuntimeError(`${play_in_tab.name}: Provided Sound returned a non-numeric value ${(0, import_stringify2.stringify)(temp)}.`);
+      }
       if (temp > 1) {
         channel[i] = 1;
       } else if (temp < -1) {

@@ -49,151 +49,44 @@ export default require => {
     COMMAND2["SCAN"] = "Scan";
     COMMAND2["INIT"] = "Initialize Memory";
   })(COMMAND || (COMMAND = {}));
+  function getModuleState(debuggerContext, name) {
+    const {context: {moduleContexts}} = debuggerContext;
+    return (name in moduleContexts) ? moduleContexts[name].state : null;
+  }
   function defineTab(tab) {
     return tab;
   }
   var import_react = __toESM(__require("react"), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
-  var CopyGC = class extends import_react.default.Component {
-    constructor(props) {
-      super(props);
-      this.initialize_state = () => {
-        const {debuggerContext} = this.props;
-        const functions = debuggerContext.result.value;
-        const memorySize = functions.get_memory_size();
-        const column = functions.get_column_size();
-        const tags = functions.get_tags();
-        const commandHeap = functions.get_command();
-        let heap = [];
-        let toSpace = -1;
-        let command = "";
-        let firstChild = -1;
-        let lastChild = -1;
-        let description = "";
-        let leftDesc = "";
-        let rightDesc = "";
-        if (commandHeap[0]) {
-          const currentHeap = commandHeap[0];
-          heap = currentHeap.heap;
-          toSpace = currentHeap.to;
-          command = currentHeap.type;
-          firstChild = currentHeap.left;
-          lastChild = currentHeap.right;
-          description = currentHeap.desc;
-          leftDesc = currentHeap.leftDesc;
-          rightDesc = currentHeap.rightDesc;
-        }
-        const toMemoryMatrix = functions.get_to_memory_matrix();
-        const fromMemoryMatrix = functions.get_from_memory_matrix();
-        const flips = functions.get_flips();
-        this.setState(() => {
-          const running = true;
-          return {
-            memorySize,
-            toSpace,
-            column,
-            tags,
-            heap,
-            toMemoryMatrix,
-            fromMemoryMatrix,
-            flips,
-            commandHeap,
-            command,
-            firstChild,
-            lastChild,
-            description,
-            leftDesc,
-            rightDesc,
-            running
-          };
-        });
-      };
-      this.sliderShift = newValue => {
-        this.setState(() => {
-          const {commandHeap} = this.state;
-          return {
-            value: newValue,
-            heap: commandHeap[newValue].heap,
-            toSpace: commandHeap[newValue].to,
-            command: commandHeap[newValue].type,
-            firstChild: commandHeap[newValue].left,
-            lastChild: commandHeap[newValue].right,
-            description: commandHeap[newValue].desc,
-            leftDesc: commandHeap[newValue].leftDesc,
-            rightDesc: commandHeap[newValue].rightDesc
-          };
-        });
-      };
-      this.handlePlus = () => {
-        let {value} = this.state;
-        const lengthOfFunction = this.getlengthFunction();
-        if (value < lengthOfFunction - 1) {
-          value += 1;
-          this.setState(() => {
-            const {commandHeap} = this.state;
-            return {
-              value,
-              heap: commandHeap[value].heap,
-              toSpace: commandHeap[value].to,
-              command: commandHeap[value].type,
-              firstChild: commandHeap[value].left,
-              lastChild: commandHeap[value].right,
-              description: commandHeap[value].desc,
-              leftDesc: commandHeap[value].leftDesc,
-              rightDesc: commandHeap[value].rightDesc
-            };
-          });
+  var CopyGC = ({debuggerCtx}) => {
+    const {commandHeap, COLUMN: column, flips, fromMemoryMatrix, MEMORY_SIZE: memorySize, toMemoryMatrix, TO_SPACE: toSpace, tags} = getModuleState(debuggerCtx, "copy_gc");
+    const [value, setValue] = import_react.default.useState(0);
+    if (value < commandHeap.length) {
+      const {type: command, desc: description, left: firstChild, heap, right: lastChild, leftDesc, rightDesc, sizeLeft, sizeRight} = commandHeap[value];
+      const handlePlus = () => {
+        if (value < commandHeap.length - 1) {
+          setValue(value + 1);
         }
       };
-      this.handleMinus = () => {
-        let {value} = this.state;
+      const handleMinus = () => {
         if (value > 0) {
-          value -= 1;
-          this.setState(() => {
-            const {commandHeap} = this.state;
-            return {
-              value,
-              heap: commandHeap[value].heap,
-              toSpace: commandHeap[value].to,
-              command: commandHeap[value].type,
-              firstChild: commandHeap[value].left,
-              lastChild: commandHeap[value].right,
-              description: commandHeap[value].desc,
-              leftDesc: commandHeap[value].leftDesc,
-              rightDesc: commandHeap[value].rightDesc
-            };
-          });
+          setValue(value - 1);
         }
       };
-      this.getlengthFunction = () => {
-        const {debuggerContext} = this.props;
-        const commandHeap = debuggerContext.result.value ? debuggerContext.result.value.get_command() : [];
-        return commandHeap.length;
-      };
-      this.isTag = tag => {
-        const {tags} = this.state;
-        return tags ? tags.includes(tag) : false;
-      };
-      this.getMemoryColor = indexValue => {
-        const {heap} = this.state;
-        const value = heap ? heap[indexValue] : 0;
+      const isTag = tag => tags.includes(tag);
+      const getMemoryColor = indexValue => {
+        const value2 = heap ? heap[indexValue] : 0;
         let color = "";
-        if (!value) {
+        if (!value2) {
           color = "#707070";
-        } else if (this.isTag(value)) {
+        } else if (isTag(value2)) {
           color = "salmon";
         } else {
           color = "lightblue";
         }
         return color;
       };
-      this.getBackgroundColor = indexValue => {
-        const {firstChild} = this.state;
-        const {lastChild} = this.state;
-        const {commandHeap, value} = this.state;
-        const size1 = commandHeap[value].sizeLeft;
-        const size2 = commandHeap[value].sizeRight;
-        const {command} = this.state;
+      const getBackgroundColor = indexValue => {
         let color = "";
         if (command === COMMAND.FLIP) {
           if (indexValue === firstChild) {
@@ -202,189 +95,32 @@ export default require => {
           if (indexValue === lastChild) {
             color = "#f0d60e";
           }
-        } else if (indexValue >= firstChild && indexValue < firstChild + size1) {
+        } else if (indexValue >= firstChild && indexValue < firstChild + sizeLeft) {
           color = "#42a870";
-        } else if (indexValue >= lastChild && indexValue < lastChild + size2) {
+        } else if (indexValue >= lastChild && indexValue < lastChild + sizeRight) {
           color = "#f0d60e";
         }
         return color;
       };
-      this.renderLabel = val => {
-        const {flips} = this.state;
-        return flips.includes(val) ? "^" : `${val}`;
-      };
-      this.state = {
-        value: 0,
-        memorySize: 0,
-        toSpace: 0,
-        column: 0,
-        tags: [],
-        heap: [],
-        commandHeap: [],
-        flips: [0],
-        toMemoryMatrix: [],
-        fromMemoryMatrix: [],
-        firstChild: -1,
-        lastChild: -1,
-        command: "",
-        description: "",
-        rightDesc: "",
-        leftDesc: "",
-        running: false
-      };
-    }
-    componentDidMount() {
-      const {debuggerContext} = this.props;
-      if (debuggerContext && debuggerContext.result && debuggerContext.result.value) {
-        this.initialize_state();
-      }
-    }
-    render() {
-      const {state} = this;
-      if (state.running) {
-        const {toMemoryMatrix, fromMemoryMatrix} = this.state;
-        const lengthOfFunction = this.getlengthFunction();
-        return (0, import_jsx_runtime.jsxs)("div", {
-          children: [(0, import_jsx_runtime.jsxs)("div", {
-            children: [(0, import_jsx_runtime.jsxs)("p", {
-              children: ["This is a visualiser for stop and copy garbage collector. Check the guide", " ", (0, import_jsx_runtime.jsx)("a", {
-                href: "https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide",
-                children: "here"
-              }), "."]
-            }), (0, import_jsx_runtime.jsx)("h3", {
-              children: state.command
-            }), (0, import_jsx_runtime.jsxs)("p", {
-              children: [" ", state.description, " "]
-            }), (0, import_jsx_runtime.jsxs)("div", {
-              style: {
-                display: "flex",
-                flexDirection: "row",
-                marginTop: 10
-              },
-              children: [state.leftDesc ? (0, import_jsx_runtime.jsxs)("div", {
-                style: {
-                  flex: 1
-                },
-                children: [(0, import_jsx_runtime.jsx)("canvas", {
-                  width: 10,
-                  height: 10,
-                  style: {
-                    backgroundColor: "#42a870"
-                  }
-                }), (0, import_jsx_runtime.jsxs)("span", {
-                  children: [" ", state.leftDesc, " "]
-                })]
-              }) : false, state.rightDesc ? (0, import_jsx_runtime.jsxs)("div", {
-                style: {
-                  flex: 1
-                },
-                children: [(0, import_jsx_runtime.jsx)("canvas", {
-                  width: 10,
-                  height: 10,
-                  style: {
-                    backgroundColor: "#f0d60e"
-                  }
-                }), (0, import_jsx_runtime.jsxs)("span", {
-                  children: [" ", state.rightDesc, " "]
-                })]
-              }) : false]
-            }), (0, import_jsx_runtime.jsx)("br", {}), (0, import_jsx_runtime.jsxs)("p", {
-              children: ["Current step:", "   ", (0, import_jsx_runtime.jsx)(import_core.Icon, {
-                icon: "remove",
-                onClick: this.handleMinus
-              }), "   ", state.value, "   ", (0, import_jsx_runtime.jsx)(import_core.Icon, {
-                icon: "add",
-                onClick: this.handlePlus
-              })]
-            }), (0, import_jsx_runtime.jsx)("div", {
-              style: {
-                padding: 5
-              },
-              children: (0, import_jsx_runtime.jsx)(import_core.Slider, {
-                disabled: lengthOfFunction <= 1,
-                min: 0,
-                max: lengthOfFunction > 0 ? lengthOfFunction - 1 : 0,
-                onChange: this.sliderShift,
-                value: state.value <= lengthOfFunction ? state.value : 0,
-                labelValues: state.flips,
-                labelRenderer: this.renderLabel
-              })
-            })]
-          }), (0, import_jsx_runtime.jsxs)("div", {
-            children: [(0, import_jsx_runtime.jsxs)("div", {
-              children: [(0, import_jsx_runtime.jsx)("h3", {
-                children: state.toSpace === 0 ? "To Space" : "From Space"
-              }), (0, import_jsx_runtime.jsx)("div", {
-                children: toMemoryMatrix && toMemoryMatrix.length > 0 && toMemoryMatrix.map((item, row) => (0, import_jsx_runtime.jsxs)("div", {
-                  style: {
-                    display: "flex",
-                    flexDirection: "row"
-                  },
-                  children: [(0, import_jsx_runtime.jsxs)("span", {
-                    style: {
-                      width: 30
-                    },
-                    children: [" ", row * state.column, " "]
-                  }), item && item.length > 0 && item.map(content => {
-                    const color = this.getMemoryColor(content);
-                    const bgColor = this.getBackgroundColor(content);
-                    return (0, import_jsx_runtime.jsx)("div", {
-                      style: {
-                        width: 14,
-                        backgroundColor: bgColor
-                      },
-                      children: (0, import_jsx_runtime.jsx)("canvas", {
-                        width: 10,
-                        height: 10,
-                        style: {
-                          backgroundColor: color
-                        }
-                      })
-                    });
-                  })]
-                }))
-              })]
-            }), (0, import_jsx_runtime.jsxs)("div", {
-              children: [(0, import_jsx_runtime.jsx)("h3", {
-                children: state.toSpace > 0 ? "To Space" : "From Space"
-              }), (0, import_jsx_runtime.jsx)("div", {
-                children: fromMemoryMatrix && fromMemoryMatrix.length > 0 && fromMemoryMatrix.map((item, row) => (0, import_jsx_runtime.jsxs)("div", {
-                  style: {
-                    display: "flex",
-                    flexDirection: "row"
-                  },
-                  children: [(0, import_jsx_runtime.jsx)("span", {
-                    style: {
-                      width: 30
-                    },
-                    children: row * state.column + state.memorySize / 2
-                  }), item && item.length > 0 ? item.map(content => {
-                    const color = this.getMemoryColor(content);
-                    const bgColor = this.getBackgroundColor(content);
-                    return (0, import_jsx_runtime.jsx)("div", {
-                      style: {
-                        width: 14,
-                        backgroundColor: bgColor
-                      },
-                      children: (0, import_jsx_runtime.jsx)("canvas", {
-                        width: 10,
-                        height: 10,
-                        style: {
-                          backgroundColor: color
-                        }
-                      })
-                    });
-                  }) : false]
-                }))
-              })]
-            })]
+      const renderLabel = val => flips.includes(val) ? "^" : `${val}`;
+      return (0, import_jsx_runtime.jsxs)("div", {
+        children: [(0, import_jsx_runtime.jsxs)("div", {
+          children: [(0, import_jsx_runtime.jsxs)("p", {
+            children: ["This is a visualiser for stop and copy garbage collector. Check the guide", " ", (0, import_jsx_runtime.jsx)("a", {
+              href: "https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide",
+              children: "here"
+            }), "."]
+          }), (0, import_jsx_runtime.jsx)("h3", {
+            children: command
+          }), (0, import_jsx_runtime.jsxs)("p", {
+            children: [" ", description, " "]
           }), (0, import_jsx_runtime.jsxs)("div", {
             style: {
               display: "flex",
               flexDirection: "row",
               marginTop: 10
             },
-            children: [(0, import_jsx_runtime.jsxs)("div", {
+            children: [leftDesc && (0, import_jsx_runtime.jsxs)("div", {
               style: {
                 flex: 1
               },
@@ -392,12 +128,12 @@ export default require => {
                 width: 10,
                 height: 10,
                 style: {
-                  backgroundColor: "lightblue"
+                  backgroundColor: "#42a870"
                 }
               }), (0, import_jsx_runtime.jsx)("span", {
-                children: " defined"
+                children: leftDesc
               })]
-            }), (0, import_jsx_runtime.jsxs)("div", {
+            }), rightDesc && (0, import_jsx_runtime.jsxs)("div", {
               style: {
                 flex: 1
               },
@@ -405,44 +141,171 @@ export default require => {
                 width: 10,
                 height: 10,
                 style: {
-                  backgroundColor: "salmon"
+                  backgroundColor: "#f0d60e"
                 }
               }), (0, import_jsx_runtime.jsx)("span", {
-                children: " tag"
-              })]
-            }), (0, import_jsx_runtime.jsxs)("div", {
-              style: {
-                flex: 1
-              },
-              children: [(0, import_jsx_runtime.jsx)("canvas", {
-                width: 10,
-                height: 10,
-                style: {
-                  backgroundColor: "#707070"
-                }
-              }), (0, import_jsx_runtime.jsx)("span", {
-                children: " empty or undefined"
+                children: rightDesc
               })]
             })]
+          }), (0, import_jsx_runtime.jsx)("br", {}), (0, import_jsx_runtime.jsxs)("p", {
+            children: ["Current step:", "   ", (0, import_jsx_runtime.jsx)(import_core.Icon, {
+              icon: "remove",
+              onClick: handleMinus
+            }), "   ", value, "   ", (0, import_jsx_runtime.jsx)(import_core.Icon, {
+              icon: "add",
+              onClick: handlePlus
+            })]
+          }), (0, import_jsx_runtime.jsx)("div", {
+            style: {
+              padding: 5
+            },
+            children: (0, import_jsx_runtime.jsx)(import_core.Slider, {
+              disabled: commandHeap.length <= 1,
+              min: 0,
+              max: commandHeap.length > 0 ? commandHeap.length - 1 : 0,
+              onChange: setValue,
+              value: value <= commandHeap.length ? value : 0,
+              labelValues: flips,
+              labelRenderer: renderLabel
+            })
           })]
-        });
-      }
-      return (0, import_jsx_runtime.jsxs)("div", {
-        children: [(0, import_jsx_runtime.jsxs)("p", {
-          children: ["This is a visualiser for stop and copy garbage collector. Check the guide", " ", (0, import_jsx_runtime.jsx)("a", {
-            href: "https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide",
-            children: "here"
-          }), "."]
-        }), (0, import_jsx_runtime.jsx)("p", {
-          children: " Calls the function init() at the end of your code to start. "
+        }), (0, import_jsx_runtime.jsxs)("div", {
+          children: [(0, import_jsx_runtime.jsxs)("div", {
+            children: [(0, import_jsx_runtime.jsxs)("h3", {
+              children: [toSpace === 0 ? "To" : "From", " Space"]
+            }), (0, import_jsx_runtime.jsx)("div", {
+              children: toMemoryMatrix.length > 0 && toMemoryMatrix.map((item, row) => (0, import_jsx_runtime.jsxs)("div", {
+                style: {
+                  display: "flex",
+                  flexDirection: "row"
+                },
+                children: [(0, import_jsx_runtime.jsxs)("span", {
+                  style: {
+                    width: 30
+                  },
+                  children: [" ", row * column, " "]
+                }), item.length > 0 && item.map(content => {
+                  const color = getMemoryColor(content);
+                  const bgColor = getBackgroundColor(content);
+                  return (0, import_jsx_runtime.jsx)("div", {
+                    style: {
+                      width: 14,
+                      backgroundColor: bgColor
+                    },
+                    children: (0, import_jsx_runtime.jsx)("canvas", {
+                      width: 10,
+                      height: 10,
+                      style: {
+                        backgroundColor: color
+                      }
+                    })
+                  });
+                })]
+              }))
+            })]
+          }), (0, import_jsx_runtime.jsxs)("div", {
+            children: [(0, import_jsx_runtime.jsx)("h3", {
+              children: toSpace > 0 ? "To Space" : "From Space"
+            }), (0, import_jsx_runtime.jsx)("div", {
+              children: fromMemoryMatrix.length > 0 && fromMemoryMatrix.map((item, row) => (0, import_jsx_runtime.jsxs)("div", {
+                style: {
+                  display: "flex",
+                  flexDirection: "row"
+                },
+                children: [(0, import_jsx_runtime.jsx)("span", {
+                  style: {
+                    width: 30
+                  },
+                  children: row * column + memorySize / 2
+                }), item.length > 0 && item.map(content => {
+                  const color = getMemoryColor(content);
+                  const bgColor = getBackgroundColor(content);
+                  return (0, import_jsx_runtime.jsx)("div", {
+                    style: {
+                      width: 14,
+                      backgroundColor: bgColor
+                    },
+                    children: (0, import_jsx_runtime.jsx)("canvas", {
+                      width: 10,
+                      height: 10,
+                      style: {
+                        backgroundColor: color
+                      }
+                    })
+                  });
+                })]
+              }))
+            })]
+          })]
+        }), (0, import_jsx_runtime.jsxs)("div", {
+          style: {
+            display: "flex",
+            flexDirection: "row",
+            marginTop: 10
+          },
+          children: [(0, import_jsx_runtime.jsxs)("div", {
+            style: {
+              flex: 1
+            },
+            children: [(0, import_jsx_runtime.jsx)("canvas", {
+              width: 10,
+              height: 10,
+              style: {
+                backgroundColor: "lightblue"
+              }
+            }), (0, import_jsx_runtime.jsx)("span", {
+              children: " defined"
+            })]
+          }), (0, import_jsx_runtime.jsxs)("div", {
+            style: {
+              flex: 1
+            },
+            children: [(0, import_jsx_runtime.jsx)("canvas", {
+              width: 10,
+              height: 10,
+              style: {
+                backgroundColor: "salmon"
+              }
+            }), (0, import_jsx_runtime.jsx)("span", {
+              children: " tag"
+            })]
+          }), (0, import_jsx_runtime.jsxs)("div", {
+            style: {
+              flex: 1
+            },
+            children: [(0, import_jsx_runtime.jsx)("canvas", {
+              width: 10,
+              height: 10,
+              style: {
+                backgroundColor: "#707070"
+              }
+            }), (0, import_jsx_runtime.jsx)("span", {
+              children: " empty or undefined"
+            })]
+          })]
         })]
       });
     }
+    return (0, import_jsx_runtime.jsxs)("div", {
+      children: [(0, import_jsx_runtime.jsxs)("p", {
+        children: ["This is a visualiser for stop and copy garbage collector. Check the guide", " ", (0, import_jsx_runtime.jsx)("a", {
+          href: "https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide",
+          children: "here"
+        }), "."]
+      }), (0, import_jsx_runtime.jsxs)("p", {
+        children: [" Calls the function ", (0, import_jsx_runtime.jsx)("code", {
+          children: "initialize_memory()"
+        }), " at the end of your code to start. "]
+      })]
+    });
   };
   var index_default = defineTab({
-    toSpawn: () => true,
+    toSpawn: ctx => {
+      const state = getModuleState(ctx, "copy_gc");
+      return state !== null;
+    },
     body: debuggerContext => (0, import_jsx_runtime.jsx)(CopyGC, {
-      debuggerContext
+      debuggerCtx: debuggerContext
     }),
     label: "Copying Garbage Collector",
     iconName: "duplicate"

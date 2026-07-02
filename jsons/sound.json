@@ -4,22 +4,26 @@
     "name": "adsr",
     "description": "<p>Returns an envelope: a function from Sound to Sound.\nWhen the adsr envelope is applied to a Sound, it returns\na new Sound with its amplitude modified according to parameters\nThe relative amplitude increases from 0 to 1 linearly over the\nattack proportion, then decreases from 1 to sustain level over the\ndecay proportion, and remains at that level until the release\nproportion when it decays back to 0.</p>",
     "params": [
-      [
-        "attack_ratio",
-        "number"
-      ],
-      [
-        "decay_ratio",
-        "number"
-      ],
-      [
-        "sustain_level",
-        "number"
-      ],
-      [
-        "release_ratio",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "attack_ratio"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "decay_ratio"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "sustain_level"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "release_ratio"
+      }
     ],
     "retType": "SoundTransformer"
   },
@@ -28,14 +32,16 @@
     "name": "bell",
     "description": "<p>returns a Sound reminiscent of a bell, playing\na given note for a given duration</p>",
     "params": [
-      [
-        "note",
-        "number"
-      ],
-      [
-        "duration",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "note"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      }
     ],
     "retType": "Sound"
   },
@@ -44,14 +50,16 @@
     "name": "cello",
     "description": "<p>returns a Sound reminiscent of a cello, playing\na given note for a given duration</p>",
     "params": [
-      [
-        "note",
-        "number"
-      ],
-      [
-        "duration",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "note"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      }
     ],
     "retType": "Sound"
   },
@@ -60,10 +68,11 @@
     "name": "consecutively",
     "description": "<p>Makes a new Sound by combining the sounds in a given list\nwhere the second Sound is appended to the end of the first Sound,\nthe third Sound is appended to the end of the second Sound, and\nso on. The effect is that the Sounds in the list are joined end-to-end</p>",
     "params": [
-      [
-        "list_of_sounds",
-        "List"
-      ]
+      {
+        "paramType": "regular",
+        "type": "List<Sound>",
+        "name": "list_of_sounds"
+      }
     ],
     "retType": "Sound"
   },
@@ -72,10 +81,11 @@
     "name": "get_duration",
     "description": "<p>Accesses the duration of a given Sound.</p>",
     "params": [
-      [
-        "sound",
-        "Sound"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Sound",
+        "name": "sound"
+      }
     ],
     "retType": "number"
   },
@@ -84,10 +94,11 @@
     "name": "get_wave",
     "description": "<p>Accesses the wave function of a given Sound.</p>",
     "params": [
-      [
-        "sound",
-        "Sound"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Sound",
+        "name": "sound"
+      }
     ],
     "retType": "Wave"
   },
@@ -103,10 +114,11 @@
     "name": "is_sound",
     "description": "<p>Checks if the argument is a Sound</p>",
     "params": [
-      [
-        "x",
-        "unknown"
-      ]
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "x"
+      }
     ],
     "retType": "boolean"
   },
@@ -115,14 +127,16 @@
     "name": "make_sound",
     "description": "<p>Makes a Sound with given wave function and duration.\nThe wave function is a function: number -&gt; number\nthat takes in a non-negative input time and returns an amplitude\nbetween -1 and 1.</p>",
     "params": [
-      [
-        "wave",
-        "Wave"
-      ],
-      [
-        "duration",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Wave",
+        "name": "wave"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      }
     ],
     "retType": "Sound"
   },
@@ -131,10 +145,11 @@
     "name": "noise_sound",
     "description": "<p>Makes a noise Sound with given duration</p>",
     "params": [
-      [
-        "duration",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      }
     ],
     "retType": "Sound"
   },
@@ -143,18 +158,21 @@
     "name": "phase_mod",
     "description": "<p>Returns a Sound transformer which uses its argument\nto modulate the phase of a (carrier) sine wave\nof given frequency and duration with a given Sound.\nModulating with a low frequency Sound results in a vibrato effect.\nModulating with a Sound with frequencies comparable to\nthe sine wave frequency results in more complex wave forms.</p>",
     "params": [
-      [
-        "freq",
-        "number"
-      ],
-      [
-        "duration",
-        "number"
-      ],
-      [
-        "amount",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "freq"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "amount"
+      }
     ],
     "retType": "SoundTransformer"
   },
@@ -163,14 +181,16 @@
     "name": "piano",
     "description": "<p>returns a Sound reminiscent of a piano, playing\na given note for a given duration</p>",
     "params": [
-      [
-        "note",
-        "number"
-      ],
-      [
-        "duration",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "note"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      }
     ],
     "retType": "Sound"
   },
@@ -179,10 +199,11 @@
     "name": "play",
     "description": "<p>Plays the given Sound using the computer’s sound device\non top of any Sounds that are currently playing.</p>",
     "params": [
-      [
-        "sound",
-        "Sound"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Sound",
+        "name": "sound"
+      }
     ],
     "retType": "Sound"
   },
@@ -191,14 +212,16 @@
     "name": "play_wave",
     "description": "<p>Plays the given Wave using the computer’s sound device, for the duration\ngiven in seconds.</p>",
     "params": [
-      [
-        "wave",
-        "Wave"
-      ],
-      [
-        "duration",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Wave",
+        "name": "wave"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      }
     ],
     "retType": "Sound"
   },
@@ -207,10 +230,11 @@
     "name": "record",
     "description": "<p>Records a sound until the returned stop function is called.\nTakes a buffer duration (in seconds) as argument, and\nreturns a nullary stop. A call to the stop function returns a Sound promise.</p><p>How the function behaves in detail:</p><ol start=\"1\"><li><code>record</code> is called.</li><li>The function waits for the given buffer duration.</li><li>The recording signal is played.</li><li>Recording begins when the recording signal finishes.</li><li>Recording stops when the returned stop function is called.</li></ol>",
     "params": [
-      [
-        "buffer",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "buffer"
+      }
     ],
     "retType": "() => SoundPromise"
   },
@@ -219,14 +243,16 @@
     "name": "record_for",
     "description": "<p>Records a sound of a given duration. Returns a Sound promise.</p><p>How the function behaves in detail:</p><ol start=\"1\"><li><code>record_for</code> is called.</li><li>The function waits for the given buffer duration.</li><li>The recording signal is played.</li><li>Recording begins when the recording signal finishes.</li><li>The recording signal plays to signal the end after the given duration.</li></ol>",
     "params": [
-      [
-        "duration",
-        "number"
-      ],
-      [
-        "buffer",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "buffer"
+      }
     ],
     "retType": "SoundPromise"
   },
@@ -235,26 +261,29 @@
     "name": "sawtooth_sound",
     "description": "<p>Makes a sawtooth wave Sound with given frequency and duration</p>",
     "params": [
-      [
-        "freq",
-        "number"
-      ],
-      [
-        "duration",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "freq"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      }
     ],
     "retType": "Sound"
   },
   "silence_sound": {
     "kind": "function",
     "name": "silence_sound",
-    "description": "<p>Makes a silence Sound with given duration</p>",
+    "description": "<p>Makes a silent Sound with given duration</p>",
     "params": [
-      [
-        "duration",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      }
     ],
     "retType": "Sound"
   },
@@ -263,10 +292,11 @@
     "name": "simultaneously",
     "description": "<p>Makes a new Sound by combining the Sounds in a given list.\nIn the result sound, the component sounds overlap such that\nthey start at the beginning of the result sound. To achieve\nthis, the amplitudes of the component sounds are added together\nand then divided by the length of the list.</p>",
     "params": [
-      [
-        "list_of_sounds",
-        "List"
-      ]
+      {
+        "paramType": "regular",
+        "type": "List<Sound>",
+        "name": "list_of_sounds"
+      }
     ],
     "retType": "Sound"
   },
@@ -275,14 +305,16 @@
     "name": "sine_sound",
     "description": "<p>Makes a sine wave Sound with given frequency and duration</p>",
     "params": [
-      [
-        "freq",
-        "number"
-      ],
-      [
-        "duration",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "freq"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      }
     ],
     "retType": "Sound"
   },
@@ -291,14 +323,16 @@
     "name": "square_sound",
     "description": "<p>Makes a square wave Sound with given frequency and duration</p>",
     "params": [
-      [
-        "f",
-        "number"
-      ],
-      [
-        "duration",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "freq"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      }
     ],
     "retType": "Sound"
   },
@@ -307,22 +341,26 @@
     "name": "stacking_adsr",
     "description": "<p>Returns a Sound that results from applying a list of envelopes\nto a given wave form. The wave form is a Sound generator that\ntakes a frequency and a duration as arguments and produces a\nSound with the given frequency and duration. Each envelope is\napplied to a harmonic: the first harmonic has the given frequency,\nthe second has twice the frequency, the third three times the\nfrequency etc. The harmonics are then layered simultaneously to\nproduce the resulting Sound.</p>",
     "params": [
-      [
-        "waveform",
-        "SoundProducer"
-      ],
-      [
-        "base_frequency",
-        "number"
-      ],
-      [
-        "duration",
-        "number"
-      ],
-      [
-        "envelopes",
-        "List"
-      ]
+      {
+        "paramType": "regular",
+        "type": "SoundProducer",
+        "name": "waveform"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "base_frequency"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      },
+      {
+        "paramType": "regular",
+        "type": "List<SoundTransformer>",
+        "name": "envelopes"
+      }
     ],
     "retType": "Sound"
   },
@@ -338,14 +376,16 @@
     "name": "triangle_sound",
     "description": "<p>Makes a triangle wave Sound with given frequency and duration</p>",
     "params": [
-      [
-        "freq",
-        "number"
-      ],
-      [
-        "duration",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "freq"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      }
     ],
     "retType": "Sound"
   },
@@ -354,14 +394,16 @@
     "name": "trombone",
     "description": "<p>returns a Sound reminiscent of a trombone, playing\na given note for a given duration</p>",
     "params": [
-      [
-        "note",
-        "number"
-      ],
-      [
-        "duration",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "note"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      }
     ],
     "retType": "Sound"
   },
@@ -370,14 +412,16 @@
     "name": "violin",
     "description": "<p>returns a Sound reminiscent of a violin, playing\na given note for a given duration</p>",
     "params": [
-      [
-        "note",
-        "number"
-      ],
-      [
-        "duration",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "note"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      }
     ],
     "retType": "Sound"
   },
@@ -386,34 +430,37 @@
     "name": "letter_name_to_midi_note",
     "description": "<p>Converts a letter name to its corresponding MIDI note.\nThe letter name is represented in standard pitch notation.\nExamples are \"A5\", \"Db3\", \"C#7\".\nRefer to <a href=\"https://i.imgur.com/qGQgmYr.png\">this</a> mapping from\nletter name to midi notes.</p>",
     "params": [
-      [
-        "note",
-        "NoteWithOctave"
-      ]
+      {
+        "paramType": "regular",
+        "type": "NoteWithOctave",
+        "name": "note"
+      }
     ],
     "retType": "number"
   },
   "letter_name_to_frequency": {
     "kind": "function",
     "name": "letter_name_to_frequency",
-    "description": "<p>Converts a letter name to its corresponding frequency.</p>",
+    "description": "<p>Converts a name to its corresponding frequency.</p>",
     "params": [
-      [
-        "note",
-        "NoteWithOctave"
-      ]
+      {
+        "paramType": "regular",
+        "type": "NoteWithOctave",
+        "name": "note"
+      }
     ],
     "retType": "number"
   },
   "midi_note_to_frequency": {
     "kind": "function",
     "name": "midi_note_to_frequency",
-    "description": "<p>Converts a MIDI note to its corresponding frequency.</p>",
+    "description": "<p>Converts a note to its corresponding frequency.</p>",
     "params": [
-      [
-        "note",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "note"
+      }
     ],
     "retType": "number"
   },
@@ -422,10 +469,11 @@
     "name": "play_in_tab",
     "description": "<p>Adds the given Sound to a list of sounds to be played one-at-a-time\nin a Source Academy tab.</p>",
     "params": [
-      [
-        "sound",
-        "Sound"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Sound",
+        "name": "sound"
+      }
     ],
     "retType": "Sound"
   }

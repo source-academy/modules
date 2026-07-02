@@ -3,6 +3,12 @@ export default require => {
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+  }) : x)(function (x) {
+    if (typeof require !== "undefined") return require.apply(this, arguments);
+    throw Error('Dynamic require of "' + x + '" is not supported');
+  });
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
       get: all[name],
@@ -70,12 +76,12 @@ export default require => {
     white: () => white,
     yellow: () => yellow
   });
-  function throwIfNotRune(name, ...runes) {
-    runes.forEach(rune => {
-      if (!(typeof rune === "string")) {
-        throw Error(`${name} expects a rune (string) as argument.`);
-      }
-    });
+  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
+  var import_base = __require("js-slang/dist/errors/base");
+  function throwIfNotRune(name, rune) {
+    if (typeof rune !== "string") {
+      throw new import_rttcErrors.InvalidParameterTypeError("Rune", rune, name);
+    }
   }
   var getSquare = () => "square";
   var getBlank = () => "blank";
@@ -124,7 +130,8 @@ export default require => {
     return `stack_frac(${frac}, ${rune1}, ${rune2})`;
   }
   function stack(rune1, rune2) {
-    throwIfNotRune(stack.name, rune1, rune2);
+    throwIfNotRune(stack.name, rune1);
+    throwIfNotRune(stack.name, rune2);
     return `stack(${rune1}, ${rune2})`;
   }
   function stackn(n, rune) {
@@ -144,11 +151,13 @@ export default require => {
     return `quarter_upside_down(${rune})`;
   }
   function beside_frac(frac, rune1, rune2) {
-    throwIfNotRune(beside_frac.name, rune1, rune2);
+    throwIfNotRune(beside_frac.name, rune1);
+    throwIfNotRune(beside_frac.name, rune2);
     return `beside_frac(${frac}, ${rune1}, ${rune2})`;
   }
   function beside(rune1, rune2) {
-    throwIfNotRune(beside.name, rune1, rune2);
+    throwIfNotRune(beside.name, rune1);
+    throwIfNotRune(beside.name, rune2);
     return `stack(${rune1}, ${rune2})`;
   }
   function flip_vert(rune) {

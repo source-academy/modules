@@ -79671,6 +79671,7 @@ export default require => {
   init_define_process();
   init_define_process();
   var import_context = __toESM(__require("js-slang/context"), 1);
+  var import_base = __require("js-slang/dist/errors/base");
   var import_list = __require("js-slang/dist/stdlib/list");
   var import_phaser = __toESM(require_phaser(), 1);
   init_define_process();
@@ -79750,20 +79751,19 @@ export default require => {
     };
   }
   function throw_error(message) {
-    throw new Error(`${arguments.callee.caller.name}: ${message}`);
+    throw new import_base.GeneralRuntimeError(`${arguments.callee.caller.name}: ${message}`);
   }
   function prepend_remote_url(asset_key) {
     return remotePath(asset_key);
   }
   function create_config(lst) {
     const config = {};
-    (0, import_list.accumulate)((xs, _) => {
+    (0, import_list.for_each)(xs => {
       if (!(0, import_list.is_pair)(xs)) {
         throw_error("config element is not a pair!");
       }
       config[(0, import_list.head)(xs)] = (0, import_list.tail)(xs);
-      return null;
-    }, null, lst);
+    }, lst);
     return config;
   }
   function create_text_config(font_family = "Courier", font_size = "16px", color = "#fff", stroke = "#fff", stroke_thickness = 0, align = "left") {

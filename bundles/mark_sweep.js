@@ -1,8 +1,16 @@
 export default require => {
+  var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+  }) : x)(function (x) {
+    if (typeof require !== "undefined") return require.apply(this, arguments);
+    throw Error('Dynamic require of "' + x + '" is not supported');
+  });
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
       get: all[name],
@@ -18,6 +26,10 @@ export default require => {
     }
     return to;
   };
+  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+    value: mod,
+    enumerable: true
+  }) : target, mod));
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
@@ -27,7 +39,7 @@ export default require => {
     allHeap: () => allHeap,
     endGC: () => endGC,
     generateMemory: () => generateMemory,
-    init: () => init,
+    globalState: () => globalState,
     initialize_memory: () => initialize_memory,
     initialize_tag: () => initialize_tag,
     newAssign: () => newAssign,
@@ -44,131 +56,187 @@ export default require => {
     updateRoots: () => updateRoots,
     updateSlotSegment: () => updateSlotSegment
   });
-  var ROW = 10;
-  var COLUMN = 32;
-  var NODE_SIZE = 0;
-  var MEMORY_SIZE = -99;
-  var memory;
-  var memoryHeaps = [];
-  var commandHeap = [];
-  var memoryMatrix;
-  var tags;
-  var typeTag;
-  var flips = [];
-  var TAG_SLOT = 0;
-  var SIZE_SLOT = 1;
-  var FIRST_CHILD_SLOT = 2;
-  var LAST_CHILD_SLOT = 3;
-  var MARKED = 1;
-  var UNMARKED = 0;
-  var ROOTS = [];
-  function generateMemory() {
-    memoryMatrix = [];
-    for (let i = 0; i < ROW; i += 1) {
-      memory = [];
-      for (let j = 0; j < COLUMN && i * COLUMN + j < MEMORY_SIZE; j += 1) {
-        memory.push(i * COLUMN + j);
-      }
-      memoryMatrix.push(memory);
+  function chunk(arr, size) {
+    if (!Number.isInteger(size) || size <= 0) {
+      throw new Error("Size must be an integer greater than zero.");
     }
-    const obj = {
-      type: "Initialize Memory",
-      heap: [],
-      left: -1,
-      right: -1,
-      sizeLeft: 0,
-      sizeRight: 0,
-      desc: "Memory initially empty.",
-      leftDesc: "",
-      rightDesc: "",
-      queue: []
+    const chunkLength = Math.ceil(arr.length / size);
+    const result = Array(chunkLength);
+    for (let index = 0; index < chunkLength; index++) {
+      const start = index * size;
+      const end = start + size;
+      result[index] = arr.slice(start, end);
+    }
+    return result;
+  }
+  function range(start, end, step = 1) {
+    if (end == null) {
+      end = start;
+      start = 0;
+    }
+    if (!Number.isInteger(step) || step === 0) {
+      throw new Error(`The step value must be a non-zero integer.`);
+    }
+    const length = Math.max(Math.ceil((end - start) / step), 0);
+    const result = new Array(length);
+    for (let i = 0; i < length; i++) {
+      result[i] = start + i * step;
+    }
+    return result;
+  }
+  function isPrimitive(value) {
+    return value == null || typeof value !== "object" && typeof value !== "function";
+  }
+  function isTypedArray(x) {
+    return ArrayBuffer.isView(x) && !(x instanceof DataView);
+  }
+  function clone(obj) {
+    if (isPrimitive(obj)) {
+      return obj;
+    }
+    if (Array.isArray(obj) || isTypedArray(obj) || obj instanceof ArrayBuffer || typeof SharedArrayBuffer !== "undefined" && obj instanceof SharedArrayBuffer) {
+      return obj.slice(0);
+    }
+    const prototype = Object.getPrototypeOf(obj);
+    if (prototype == null) {
+      return Object.assign(Object.create(prototype), obj);
+    }
+    const Constructor = prototype.constructor;
+    if (obj instanceof Date || obj instanceof Map || obj instanceof Set) {
+      return new Constructor(obj);
+    }
+    if (obj instanceof RegExp) {
+      const newRegExp = new Constructor(obj);
+      newRegExp.lastIndex = obj.lastIndex;
+      return newRegExp;
+    }
+    if (obj instanceof DataView) {
+      return new Constructor(obj.buffer.slice(0));
+    }
+    if (obj instanceof Error) {
+      let newError;
+      if (obj instanceof AggregateError) {
+        newError = new Constructor(obj.errors, obj.message, {
+          cause: obj.cause
+        });
+      } else {
+        newError = new Constructor(obj.message, {
+          cause: obj.cause
+        });
+      }
+      newError.stack = obj.stack;
+      Object.assign(newError, obj);
+      return newError;
+    }
+    if (typeof File !== "undefined" && obj instanceof File) {
+      const newFile = new Constructor([obj], obj.name, {
+        type: obj.type,
+        lastModified: obj.lastModified
+      });
+      return newFile;
+    }
+    if (typeof obj === "object") {
+      const newObject = Object.create(prototype);
+      return Object.assign(newObject, obj);
+    }
+    return obj;
+  }
+  var import_context = __toESM(__require("js-slang/context"), 1);
+  function getInitialState() {
+    return {
+      rowCount: 10,
+      columnCount: 32,
+      NODE_SIZE: 0,
+      MEMORY_SIZE: -99,
+      memory: [],
+      memoryHeaps: [],
+      commandHeap: [],
+      memoryMatrix: [],
+      tags: [],
+      typeTag: [],
+      flips: [],
+      TAG_SLOT: 0,
+      SIZE_SLOT: 1,
+      FIRST_CHILD_SLOT: 2,
+      LAST_CHILD_SLOT: 3,
+      MARKED: 1,
+      UNMARKED: 0,
+      ROOTS: []
     };
-    commandHeap.push(obj);
+  }
+  var globalState = getInitialState();
+  function generateMemory() {
+    globalState.memoryMatrix = chunk(range(globalState.MEMORY_SIZE), globalState.columnCount);
+    newCommand("Initialize Memory", -1, -1, 0, 0, [], "Memory initially empty.", "", "", []);
   }
   function updateRoots(array) {
-    for (let i = 0; i < array.length; i += 1) {
-      ROOTS.push(array[i]);
-    }
+    globalState.ROOTS.push(...array);
   }
   function initialize_memory(memorySize, nodeSize, marked, unmarked) {
-    MEMORY_SIZE = memorySize;
-    NODE_SIZE = nodeSize;
-    const excess = MEMORY_SIZE % NODE_SIZE;
-    MEMORY_SIZE -= excess;
-    ROW = MEMORY_SIZE / COLUMN;
-    MARKED = marked;
-    UNMARKED = unmarked;
+    import_context.default.moduleContexts.mark_sweep.state = globalState;
+    globalState.MEMORY_SIZE = memorySize;
+    globalState.NODE_SIZE = nodeSize;
+    const excess = globalState.MEMORY_SIZE % globalState.NODE_SIZE;
+    globalState.MEMORY_SIZE -= excess;
+    globalState.rowCount = Math.ceil(globalState.MEMORY_SIZE / globalState.columnCount);
+    globalState.MARKED = marked;
+    globalState.UNMARKED = unmarked;
     generateMemory();
   }
   function initialize_tag(allTag, types) {
-    tags = allTag;
-    typeTag = types;
+    globalState.tags = allTag;
+    globalState.typeTag = types;
   }
   function allHeap(newHeap) {
-    memoryHeaps = newHeap;
+    globalState.memoryHeaps = newHeap;
   }
   function updateFlip() {
-    flips.push(commandHeap.length - 1);
+    globalState.flips.push(globalState.commandHeap.length - 1);
   }
   function newCommand(type, left, right, sizeLeft, sizeRight, heap, description, firstDesc, lastDesc, queue = []) {
-    const newType = type;
-    const newLeft = left;
-    const newRight = right;
-    const newSizeLeft = sizeLeft;
-    const newSizeRight = sizeRight;
-    const newDesc = description;
-    const newFirstDesc = firstDesc;
-    const newLastDesc = lastDesc;
-    memory = [];
-    for (let j = 0; j < heap.length; j += 1) {
-      memory.push(heap[j]);
-    }
-    const newQueue = [];
-    for (let j = 0; j < queue.length; j += 1) {
-      newQueue.push(queue[j]);
-    }
+    globalState.memory = [];
+    globalState.memory.push(...heap);
+    const newQueue = clone(queue);
     const obj = {
-      type: newType,
-      heap: memory,
-      left: newLeft,
-      right: newRight,
-      sizeLeft: newSizeLeft,
-      sizeRight: newSizeRight,
-      desc: newDesc,
-      leftDesc: newFirstDesc,
-      rightDesc: newLastDesc,
+      type,
+      heap: globalState.memory,
+      left,
+      right,
+      sizeLeft,
+      sizeRight,
+      desc: description,
+      leftDesc: firstDesc,
+      rightDesc: lastDesc,
       queue: newQueue
     };
-    commandHeap.push(obj);
+    globalState.commandHeap.push(obj);
   }
   function newSweep(left, heap) {
-    const newSizeLeft = NODE_SIZE;
+    const newSizeLeft = globalState.NODE_SIZE;
     const desc = `Freeing node ${left}`;
     newCommand("Sweep", left, -1, newSizeLeft, 0, heap, desc, "freed node", "");
   }
   function newMark(left, heap, queue) {
-    const newSizeLeft = NODE_SIZE;
+    const newSizeLeft = globalState.NODE_SIZE;
     const desc = `Marking node ${left} to be live memory`;
     newCommand("Mark", left, -1, newSizeLeft, 0, heap, desc, "marked node", "", queue);
   }
   function addRoots(arr) {
-    for (let i = 0; i < arr.length; i += 1) {
-      ROOTS.push(arr[i]);
-    }
+    globalState.ROOTS.push(...arr);
   }
   function showRoot(heap) {
     const desc = "All root nodes are marked";
     newCommand("Marked Roots", -1, -1, 0, 0, heap, desc, "", "");
   }
   function showRoots(heap) {
-    for (let i = 0; i < ROOTS.length; i += 1) {
+    for (let i = 0; i < globalState.ROOTS.length; i += 1) {
       showRoot(heap);
     }
-    ROOTS = [];
+    globalState.ROOTS = [];
   }
   function newUpdateSweep(right, heap) {
     const desc = `Set node ${right} to freelist`;
-    newCommand("Sweep Reset", -1, right, 0, NODE_SIZE, heap, desc, "free node", "");
+    newCommand("Sweep Reset", -1, right, 0, globalState.NODE_SIZE, heap, desc, "free node", "");
   }
   function newPush(left, right, heap) {
     const desc = `Push OS update memory ${left} and ${right}.`;
@@ -185,7 +253,7 @@ export default require => {
     newCommand("Assign", left, -1, 1, 1, heap, desc, "assigned memory", "");
   }
   function newNew(left, heap) {
-    const newSizeLeft = NODE_SIZE;
+    const newSizeLeft = globalState.NODE_SIZE;
     const desc = `New node starts in [${left}].`;
     newCommand("New", left, -1, newSizeLeft, 0, heap, desc, "new memory allocated", "");
   }
@@ -201,74 +269,17 @@ export default require => {
   }
   function updateSlotSegment(tag, size, first, last) {
     if (tag >= 0) {
-      TAG_SLOT = tag;
+      globalState.TAG_SLOT = tag;
     }
     if (size >= 0) {
-      SIZE_SLOT = size;
+      globalState.SIZE_SLOT = size;
     }
     if (first >= 0) {
-      FIRST_CHILD_SLOT = first;
+      globalState.FIRST_CHILD_SLOT = first;
     }
     if (last >= 0) {
-      LAST_CHILD_SLOT = last;
+      globalState.LAST_CHILD_SLOT = last;
     }
-  }
-  function get_memory_size() {
-    return MEMORY_SIZE;
-  }
-  function get_tags() {
-    return tags;
-  }
-  function get_command() {
-    return commandHeap;
-  }
-  function get_flips() {
-    return flips;
-  }
-  function get_types() {
-    return typeTag;
-  }
-  function get_memory_heap() {
-    return memoryHeaps;
-  }
-  function get_memory_matrix() {
-    return memoryMatrix;
-  }
-  function get_roots() {
-    return ROOTS;
-  }
-  function get_slots() {
-    return [TAG_SLOT, SIZE_SLOT, FIRST_CHILD_SLOT, LAST_CHILD_SLOT];
-  }
-  function get_column_size() {
-    return COLUMN;
-  }
-  function get_row_size() {
-    return ROW;
-  }
-  function get_unmarked() {
-    return UNMARKED;
-  }
-  function get_marked() {
-    return MARKED;
-  }
-  function init() {
-    return {
-      toReplString: () => "<GC REDACTED>",
-      get_memory_size,
-      get_memory_heap,
-      get_tags,
-      get_types,
-      get_column_size,
-      get_row_size,
-      get_memory_matrix,
-      get_flips,
-      get_slots,
-      get_command,
-      get_unmarked,
-      get_marked,
-      get_roots
-    };
   }
   return __toCommonJS(index_exports);
 };

@@ -1,7 +1,9 @@
 export default require => {
   var __create = Object.create;
   var __defProp = Object.defineProperty;
+  var __defProps = Object.defineProperties;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getOwnPropSymbols = Object.getOwnPropertySymbols;
   var __getProtoOf = Object.getPrototypeOf;
@@ -20,6 +22,7 @@ export default require => {
     }
     return a;
   };
+  var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
   }) : x)(function (x) {
@@ -3754,7 +3757,6 @@ export default require => {
   });
   init_define_process();
   var import_core = __require("@blueprintjs/core");
-  var import_icons = __require("@blueprintjs/icons");
   init_define_process();
   var FONT_MESSAGE = {
     fontFamily: "Inconsolata, Consolas, monospace",
@@ -3763,8 +3765,103 @@ export default require => {
   };
   var MINIMUM_EDITOR_HEIGHT = 40;
   init_define_process();
+  function getModuleState(debuggerContext, name) {
+    const {context: {moduleContexts}} = debuggerContext;
+    return (name in moduleContexts) ? moduleContexts[name].state : null;
+  }
   function defineTab(tab) {
     return tab;
+  }
+  init_define_process();
+  init_define_process();
+  function debounce(func, debounceMs, {signal, edges} = {}) {
+    let pendingThis = void 0;
+    let pendingArgs = null;
+    const leading = edges != null && edges.includes("leading");
+    const trailing = edges == null || edges.includes("trailing");
+    const invoke = () => {
+      if (pendingArgs !== null) {
+        func.apply(pendingThis, pendingArgs);
+        pendingThis = void 0;
+        pendingArgs = null;
+      }
+    };
+    const onTimerEnd = () => {
+      if (trailing) {
+        invoke();
+      }
+      cancel();
+    };
+    let timeoutId = null;
+    const schedule = () => {
+      if (timeoutId != null) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        timeoutId = null;
+        onTimerEnd();
+      }, debounceMs);
+    };
+    const cancelTimer = () => {
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+    };
+    const cancel = () => {
+      cancelTimer();
+      pendingThis = void 0;
+      pendingArgs = null;
+    };
+    const flush = () => {
+      invoke();
+    };
+    const debounced = function (...args) {
+      if (signal == null ? void 0 : signal.aborted) {
+        return;
+      }
+      pendingThis = this;
+      pendingArgs = args;
+      const isFirstCall = timeoutId == null;
+      schedule();
+      if (leading && isFirstCall) {
+        invoke();
+      }
+    };
+    debounced.schedule = schedule;
+    debounced.cancel = cancel;
+    debounced.flush = flush;
+    signal == null ? void 0 : signal.addEventListener("abort", cancel, {
+      once: true
+    });
+    return debounced;
+  }
+  init_define_process();
+  function throttle(func, throttleMs, {signal, edges = ["leading", "trailing"]} = {}) {
+    let pendingAt = null;
+    const debounced = debounce(function (...args) {
+      pendingAt = Date.now();
+      func.apply(this, args);
+    }, throttleMs, {
+      signal,
+      edges
+    });
+    const throttled = function (...args) {
+      if (pendingAt == null) {
+        pendingAt = Date.now();
+      }
+      if (Date.now() - pendingAt >= throttleMs) {
+        pendingAt = Date.now();
+        func.apply(this, args);
+        debounced.cancel();
+        debounced.schedule();
+        return;
+      }
+      debounced.apply(this, args);
+    };
+    throttled.cancel = debounced.cancel;
+    throttled.flush = debounced.flush;
+    return throttled;
   }
   var import_react = __toESM(__require("react"), 1);
   var import_react_ace = __toESM(__require("react-ace"), 1);
@@ -3773,8 +3870,12 @@ export default require => {
   var import_theme_twilight = __toESM(require_theme_twilight(), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
   var BOX_PADDING_VALUE = 4;
+  var updateSavedCode = throttle(code => {
+    localStorage.setItem("programmable_repl_saved_editor_code", code);
+  }, 100);
   var ProgrammableReplGUI = class extends import_react.default.Component {
     constructor(data) {
+      var _a;
       super(data);
       this.dragBarOnMouseDown = e => {
         e.preventDefault();
@@ -3783,25 +3884,42 @@ export default require => {
         });
       };
       this.onMouseMove = e => {
-        if (this.state.isDraggingDragBar) {
+        var _a;
+        if (this.state.isDraggingDragBar && this.editorAreaRect) {
           const height = Math.max(e.clientY - this.editorAreaRect.top - BOX_PADDING_VALUE * 2, MINIMUM_EDITOR_HEIGHT);
           this.replInstance.editorHeight = height;
           this.setState({
             editorHeight: height
           });
-          this.editorInstance.resize();
+          (_a = this.editorInstance) == null ? void 0 : _a.resize();
         }
       };
-      this.onMouseUp = _e => {
+      this.onMouseUp = () => {
         this.setState({
           isDraggingDragBar: false
         });
       };
-      this.replInstance = data.programmableReplInstance;
-      this.replInstance.setTabReactComponentInstance(this);
+      this.onCodeChanged = newCode => {
+        this.setState({
+          editorText: newCode
+        });
+        updateSavedCode(newCode);
+      };
+      this.evalContext = data.context.context;
+      this.replInstance = getModuleState(data.context, "repl");
+      this.replInstance.tabRerenderer = () => this.setState({});
+      this.replInstance.updateUserCode = this.onCodeChanged;
+      let initialText;
+      if (this.replInstance.defaultCode) {
+        initialText = this.replInstance.defaultCode;
+        localStorage.setItem("programmable_repl_saved_editor_code", initialText);
+      } else {
+        initialText = (_a = localStorage.getItem("programmable_repl_saved_editor_code")) != null ? _a : "";
+      }
       this.state = {
         editorHeight: this.replInstance.editorHeight,
-        isDraggingDragBar: false
+        isDraggingDragBar: false,
+        editorText: initialText
       };
     }
     componentDidMount() {
@@ -3813,56 +3931,45 @@ export default require => {
       document.removeEventListener("mouseup", this.onMouseUp);
     }
     render() {
-      const {editorHeight} = this.state;
-      const outputDivs = [];
-      const outputStringCount = this.replInstance.outputStrings.length;
-      for (let i = 0; i < outputStringCount; i++) {
-        const str = this.replInstance.outputStrings[i];
+      const {editorHeight, editorText} = this.state;
+      const outputDivs = this.replInstance.outputStrings.map(str => {
         if (str.outputMethod === "richtext") {
           if (str.color === "") {
-            outputDivs.push((0, import_jsx_runtime.jsx)("div", {
+            return (0, import_jsx_runtime.jsx)("div", {
               style: FONT_MESSAGE,
               dangerouslySetInnerHTML: {
                 __html: str.content
               }
-            }));
+            });
           } else {
-            outputDivs.push((0, import_jsx_runtime.jsx)("div", {
-              style: __spreadValues(__spreadValues({}, FONT_MESSAGE), {
+            return (0, import_jsx_runtime.jsx)("div", {
+              style: __spreadProps(__spreadValues({}, FONT_MESSAGE), {
                 color: str.color
               }),
               dangerouslySetInnerHTML: {
                 __html: str.content
               }
-            }));
+            });
           }
-        } else if (str.color === "") {
-          outputDivs.push((0, import_jsx_runtime.jsx)("div", {
-            style: FONT_MESSAGE,
-            children: str.content
-          }));
-        } else {
-          outputDivs.push((0, import_jsx_runtime.jsx)("div", {
-            style: __spreadValues(__spreadValues({}, FONT_MESSAGE), {
-              color: str.color
-            }),
-            children: str.content
-          }));
         }
-      }
+        if (str.color === "") return (0, import_jsx_runtime.jsx)("div", {
+          style: FONT_MESSAGE,
+          children: str.content
+        });
+        return (0, import_jsx_runtime.jsx)("div", {
+          style: __spreadValues(__spreadValues({}, FONT_MESSAGE), {
+            color: str.color
+          }),
+          children: str.content
+        });
+      });
       return (0, import_jsx_runtime.jsxs)("div", {
         children: [(0, import_jsx_runtime.jsx)(import_core.Button, {
           className: "programmable-repl-button",
-          icon: (0, import_jsx_runtime.jsx)(import_icons.Play, {}),
+          icon: "play",
           active: true,
-          onClick: () => this.replInstance.runCode(),
+          onClick: () => this.replInstance.runCode(editorText, this.evalContext),
           text: "Run"
-        }), (0, import_jsx_runtime.jsx)(import_core.Button, {
-          className: "programmable-repl-button",
-          icon: (0, import_jsx_runtime.jsx)(import_icons.FloppyDisk, {}),
-          active: true,
-          onClick: () => this.replInstance.saveEditorContent(),
-          text: "Save"
         }), (0, import_jsx_runtime.jsx)("div", {
           ref: e => {
             this.editorAreaRect = e == null ? void 0 : e.getBoundingClientRect();
@@ -3873,13 +3980,17 @@ export default require => {
           },
           children: (0, import_jsx_runtime.jsx)(import_react_ace.default, {
             ref: e => {
-              this.editorInstance = e == null ? void 0 : e.editor;
-              this.replInstance.setEditorInstance(e == null ? void 0 : e.editor);
+              if (e) {
+                this.editorInstance = e.editor;
+                this.editorInstance.setOptions({
+                  fontSize: `${this.replInstance.customizedEditorProps.fontSize}pt`
+                });
+              }
             },
             style: __spreadValues({
               width: "100%",
               height: `${editorHeight}px`
-            }, this.replInstance.customizedEditorProps.backgroundImageUrl !== "no-background-image" && ({
+            }, this.replInstance.customizedEditorProps.backgroundImageUrl !== null && ({
               backgroundImage: `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`,
               backgroundColor: `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`,
               backgroundSize: "100%",
@@ -3887,8 +3998,8 @@ export default require => {
             })),
             mode: "javascript",
             theme: "twilight",
-            onChange: newValue => this.replInstance.updateUserCode(newValue),
-            value: this.replInstance.userCodeInEditor.toString()
+            onChange: this.onCodeChanged,
+            value: editorText
           })
         }), (0, import_jsx_runtime.jsx)("div", {
           onMouseDown: this.dragBarOnMouseDown,
@@ -3910,12 +4021,9 @@ export default require => {
     }
   };
   var index_default = defineTab({
-    toSpawn() {
-      return true;
-    },
     body(context) {
       return (0, import_jsx_runtime.jsx)(ProgrammableReplGUI, {
-        programmableReplInstance: context.context.moduleContexts.repl.state
+        context
       });
     },
     label: "Programmable Repl Tab",

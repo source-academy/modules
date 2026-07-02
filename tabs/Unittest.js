@@ -164,9 +164,9 @@ export default require => {
       return !!moduleState && moduleState.suiteResults.length > 0;
     },
     body: context => {
-      const moduleContext = getModuleState(context, "unittest");
+      const moduleState = getModuleState(context, "unittest");
       return (0, import_jsx_runtime.jsx)(TestSuitesTab, {
-        results: moduleContext.suiteResults
+        results: moduleState.suiteResults
       });
     },
     label: "Test suites",

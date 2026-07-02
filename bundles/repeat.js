@@ -3,6 +3,12 @@ export default require => {
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+  }) : x)(function (x) {
+    if (typeof require !== "undefined") return require.apply(this, arguments);
+    throw Error('Dynamic require of "' + x + '" is not supported');
+  });
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
       get: all[name],
@@ -27,14 +33,26 @@ export default require => {
     thrice: () => thrice,
     twice: () => twice
   });
+  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
+  var import_base = __require("js-slang/dist/errors/base");
+  var import_rttc = __require("js-slang/dist/utils/rttc");
+  var import_operators = __require("js-slang/dist/utils/operators");
+  function repeat_internal(f, n) {
+    const func = x => (0, import_operators.callWithoutMetadata)(f, x);
+    return n === 0 ? x => x : x => func(repeat_internal(func, n - 1)(x));
+  }
   function repeat(func, n) {
-    return n === 0 ? x => x : x => func(repeat(func, n - 1)(x));
+    (0, import_rttc.assertFunctionOfLength)(func, 1, repeat.name);
+    (0, import_rttc.assertNumberWithinRange)(n, repeat.name, 0);
+    return repeat_internal(func, n);
   }
   function twice(func) {
-    return repeat(func, 2);
+    (0, import_rttc.assertFunctionOfLength)(func, 1, twice.name);
+    return repeat_internal(func, 2);
   }
   function thrice(func) {
-    return repeat(func, 3);
+    (0, import_rttc.assertFunctionOfLength)(func, 1, thrice.name);
+    return repeat_internal(func, 3);
   }
   return __toCommonJS(index_exports);
 };

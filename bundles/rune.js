@@ -52,6 +52,7 @@ export default require => {
     brown: () => brown,
     circle: () => circle,
     color: () => color,
+    colour_with_hue: () => colour_with_hue,
     corner: () => corner,
     flip_horiz: () => flip_horiz,
     flip_vert: () => flip_vert,
@@ -92,6 +93,51 @@ export default require => {
     white: () => white,
     yellow: () => yellow
   });
+  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
+  var import_base = __require("js-slang/dist/errors/base");
+  var import_rttc = __require("js-slang/dist/utils/rttc");
+  var import_operators = __require("js-slang/dist/utils/operators");
+  function hexToColor(hex, func_name) {
+    func_name = func_name !== null && func_name !== void 0 ? func_name : hexToColor.name;
+    if (typeof hex !== "string") {
+      throw new import_rttcErrors.InvalidParameterTypeError("string", hex, func_name);
+    }
+    const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
+    const groups = regex.exec(hex);
+    if (!groups) {
+      throw new import_base.GeneralRuntimeError(`${func_name}: Invalid color hex string: ${hex}`);
+    }
+    ;
+    return [parseInt(groups[1], 16) / 255, parseInt(groups[2], 16) / 255, parseInt(groups[3], 16) / 255];
+  }
+  function hueToRgb(hue) {
+    const h = (hue % 1 + 1) % 1;
+    const i = Math.floor(h * 6);
+    const f = h * 6 - i;
+    const q = 1 - f;
+    switch (i) {
+      case 0:
+        return [255, Math.floor(f * 255), 0];
+      case 1:
+        return [Math.floor(q * 255), 255, 0];
+      case 2:
+        return [0, 255, Math.floor(f * 255)];
+      case 3:
+        return [0, Math.floor(q * 255), 255];
+      case 4:
+        return [Math.floor(f * 255), 0, 255];
+      default:
+        return [255, 0, Math.floor(q * 255)];
+    }
+  }
+  function repeat_internal(f, n) {
+    const func = x => (0, import_operators.callWithoutMetadata)(f, x);
+    return n === 0 ? x => x : x => func(repeat_internal(func, n - 1)(x));
+  }
+  function sample(arr) {
+    const randomIndex = Math.floor(Math.random() * arr.length);
+    return arr[randomIndex];
+  }
   function clamp(value, bound1, bound2) {
     if (bound2 == null) {
       return Math.min(value, bound1);
@@ -101,12 +147,14 @@ export default require => {
   var EPSILON = 1e-6;
   var ARRAY_TYPE = typeof Float32Array !== "undefined" ? Float32Array : Array;
   var RANDOM = Math.random;
-  function round(a) {
-    if (a >= 0) return Math.round(a);
-    return a % 0.5 === 0 ? Math.floor(a) : Math.round(a);
-  }
   var degree = Math.PI / 180;
-  var radian = 180 / Math.PI;
+  if (!Math.hypot) Math.hypot = function () {
+    var y = 0, i = arguments.length;
+    while (i--) {
+      y += arguments[i] * arguments[i];
+    }
+    return Math.sqrt(y);
+  };
   var mat4_exports = {};
   __export(mat4_exports, {
     add: () => add,
@@ -114,7 +162,6 @@ export default require => {
     clone: () => clone,
     copy: () => copy,
     create: () => create,
-    decompose: () => decompose,
     determinant: () => determinant,
     equals: () => equals,
     exactEquals: () => exactEquals,
@@ -363,6 +410,29 @@ export default require => {
     var a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
     var a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
     var a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+    out[0] = a11 * (a22 * a33 - a23 * a32) - a21 * (a12 * a33 - a13 * a32) + a31 * (a12 * a23 - a13 * a22);
+    out[1] = -(a01 * (a22 * a33 - a23 * a32) - a21 * (a02 * a33 - a03 * a32) + a31 * (a02 * a23 - a03 * a22));
+    out[2] = a01 * (a12 * a33 - a13 * a32) - a11 * (a02 * a33 - a03 * a32) + a31 * (a02 * a13 - a03 * a12);
+    out[3] = -(a01 * (a12 * a23 - a13 * a22) - a11 * (a02 * a23 - a03 * a22) + a21 * (a02 * a13 - a03 * a12));
+    out[4] = -(a10 * (a22 * a33 - a23 * a32) - a20 * (a12 * a33 - a13 * a32) + a30 * (a12 * a23 - a13 * a22));
+    out[5] = a00 * (a22 * a33 - a23 * a32) - a20 * (a02 * a33 - a03 * a32) + a30 * (a02 * a23 - a03 * a22);
+    out[6] = -(a00 * (a12 * a33 - a13 * a32) - a10 * (a02 * a33 - a03 * a32) + a30 * (a02 * a13 - a03 * a12));
+    out[7] = a00 * (a12 * a23 - a13 * a22) - a10 * (a02 * a23 - a03 * a22) + a20 * (a02 * a13 - a03 * a12);
+    out[8] = a10 * (a21 * a33 - a23 * a31) - a20 * (a11 * a33 - a13 * a31) + a30 * (a11 * a23 - a13 * a21);
+    out[9] = -(a00 * (a21 * a33 - a23 * a31) - a20 * (a01 * a33 - a03 * a31) + a30 * (a01 * a23 - a03 * a21));
+    out[10] = a00 * (a11 * a33 - a13 * a31) - a10 * (a01 * a33 - a03 * a31) + a30 * (a01 * a13 - a03 * a11);
+    out[11] = -(a00 * (a11 * a23 - a13 * a21) - a10 * (a01 * a23 - a03 * a21) + a20 * (a01 * a13 - a03 * a11));
+    out[12] = -(a10 * (a21 * a32 - a22 * a31) - a20 * (a11 * a32 - a12 * a31) + a30 * (a11 * a22 - a12 * a21));
+    out[13] = a00 * (a21 * a32 - a22 * a31) - a20 * (a01 * a32 - a02 * a31) + a30 * (a01 * a22 - a02 * a21);
+    out[14] = -(a00 * (a11 * a32 - a12 * a31) - a10 * (a01 * a32 - a02 * a31) + a30 * (a01 * a12 - a02 * a11));
+    out[15] = a00 * (a11 * a22 - a12 * a21) - a10 * (a01 * a22 - a02 * a21) + a20 * (a01 * a12 - a02 * a11);
+    return out;
+  }
+  function determinant(a) {
+    var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
+    var a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
+    var a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
+    var a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
     var b00 = a00 * a11 - a01 * a10;
     var b01 = a00 * a12 - a02 * a10;
     var b02 = a00 * a13 - a03 * a10;
@@ -375,40 +445,7 @@ export default require => {
     var b09 = a21 * a32 - a22 * a31;
     var b10 = a21 * a33 - a23 * a31;
     var b11 = a22 * a33 - a23 * a32;
-    out[0] = a11 * b11 - a12 * b10 + a13 * b09;
-    out[1] = a02 * b10 - a01 * b11 - a03 * b09;
-    out[2] = a31 * b05 - a32 * b04 + a33 * b03;
-    out[3] = a22 * b04 - a21 * b05 - a23 * b03;
-    out[4] = a12 * b08 - a10 * b11 - a13 * b07;
-    out[5] = a00 * b11 - a02 * b08 + a03 * b07;
-    out[6] = a32 * b02 - a30 * b05 - a33 * b01;
-    out[7] = a20 * b05 - a22 * b02 + a23 * b01;
-    out[8] = a10 * b10 - a11 * b08 + a13 * b06;
-    out[9] = a01 * b08 - a00 * b10 - a03 * b06;
-    out[10] = a30 * b04 - a31 * b02 + a33 * b00;
-    out[11] = a21 * b02 - a20 * b04 - a23 * b00;
-    out[12] = a11 * b07 - a10 * b09 - a12 * b06;
-    out[13] = a00 * b09 - a01 * b07 + a02 * b06;
-    out[14] = a31 * b01 - a30 * b03 - a32 * b00;
-    out[15] = a20 * b03 - a21 * b01 + a22 * b00;
-    return out;
-  }
-  function determinant(a) {
-    var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
-    var a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
-    var a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
-    var a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
-    var b0 = a00 * a11 - a01 * a10;
-    var b1 = a00 * a12 - a02 * a10;
-    var b2 = a01 * a12 - a02 * a11;
-    var b3 = a20 * a31 - a21 * a30;
-    var b4 = a20 * a32 - a22 * a30;
-    var b5 = a21 * a32 - a22 * a31;
-    var b6 = a00 * b5 - a01 * b4 + a02 * b3;
-    var b7 = a10 * b5 - a11 * b4 + a12 * b3;
-    var b8 = a20 * b2 - a21 * b1 + a22 * b0;
-    var b9 = a30 * b2 - a31 * b1 + a32 * b0;
-    return a13 * b6 - a03 * b7 + a33 * b8 - a23 * b9;
+    return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
   }
   function multiply(out, a, b) {
     var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
@@ -510,7 +547,7 @@ export default require => {
   }
   function rotate(out, a, rad, axis) {
     var x = axis[0], y = axis[1], z = axis[2];
-    var len2 = Math.sqrt(x * x + y * y + z * z);
+    var len2 = Math.hypot(x, y, z);
     var s, c, t;
     var a00, a01, a02, a03;
     var a10, a11, a12, a13;
@@ -702,7 +739,7 @@ export default require => {
   }
   function fromRotation(out, rad, axis) {
     var x = axis[0], y = axis[1], z = axis[2];
-    var len2 = Math.sqrt(x * x + y * y + z * z);
+    var len2 = Math.hypot(x, y, z);
     var s, c, t;
     if (len2 < EPSILON) {
       return null;
@@ -859,9 +896,9 @@ export default require => {
     var m31 = mat[8];
     var m32 = mat[9];
     var m33 = mat[10];
-    out[0] = Math.sqrt(m11 * m11 + m12 * m12 + m13 * m13);
-    out[1] = Math.sqrt(m21 * m21 + m22 * m22 + m23 * m23);
-    out[2] = Math.sqrt(m31 * m31 + m32 * m32 + m33 * m33);
+    out[0] = Math.hypot(m11, m12, m13);
+    out[1] = Math.hypot(m21, m22, m23);
+    out[2] = Math.hypot(m31, m32, m33);
     return out;
   }
   function getRotation(out, mat) {
@@ -907,63 +944,6 @@ export default require => {
       out[2] = 0.25 * S;
     }
     return out;
-  }
-  function decompose(out_r, out_t, out_s, mat) {
-    out_t[0] = mat[12];
-    out_t[1] = mat[13];
-    out_t[2] = mat[14];
-    var m11 = mat[0];
-    var m12 = mat[1];
-    var m13 = mat[2];
-    var m21 = mat[4];
-    var m22 = mat[5];
-    var m23 = mat[6];
-    var m31 = mat[8];
-    var m32 = mat[9];
-    var m33 = mat[10];
-    out_s[0] = Math.sqrt(m11 * m11 + m12 * m12 + m13 * m13);
-    out_s[1] = Math.sqrt(m21 * m21 + m22 * m22 + m23 * m23);
-    out_s[2] = Math.sqrt(m31 * m31 + m32 * m32 + m33 * m33);
-    var is1 = 1 / out_s[0];
-    var is2 = 1 / out_s[1];
-    var is3 = 1 / out_s[2];
-    var sm11 = m11 * is1;
-    var sm12 = m12 * is2;
-    var sm13 = m13 * is3;
-    var sm21 = m21 * is1;
-    var sm22 = m22 * is2;
-    var sm23 = m23 * is3;
-    var sm31 = m31 * is1;
-    var sm32 = m32 * is2;
-    var sm33 = m33 * is3;
-    var trace = sm11 + sm22 + sm33;
-    var S = 0;
-    if (trace > 0) {
-      S = Math.sqrt(trace + 1) * 2;
-      out_r[3] = 0.25 * S;
-      out_r[0] = (sm23 - sm32) / S;
-      out_r[1] = (sm31 - sm13) / S;
-      out_r[2] = (sm12 - sm21) / S;
-    } else if (sm11 > sm22 && sm11 > sm33) {
-      S = Math.sqrt(1 + sm11 - sm22 - sm33) * 2;
-      out_r[3] = (sm23 - sm32) / S;
-      out_r[0] = 0.25 * S;
-      out_r[1] = (sm12 + sm21) / S;
-      out_r[2] = (sm31 + sm13) / S;
-    } else if (sm22 > sm33) {
-      S = Math.sqrt(1 + sm22 - sm11 - sm33) * 2;
-      out_r[3] = (sm31 - sm13) / S;
-      out_r[0] = (sm12 + sm21) / S;
-      out_r[1] = 0.25 * S;
-      out_r[2] = (sm23 + sm32) / S;
-    } else {
-      S = Math.sqrt(1 + sm33 - sm11 - sm22) * 2;
-      out_r[3] = (sm12 - sm21) / S;
-      out_r[0] = (sm31 + sm13) / S;
-      out_r[1] = (sm23 + sm32) / S;
-      out_r[2] = 0.25 * S;
-    }
-    return out_r;
   }
   function fromRotationTranslationScale(out, q, v, s) {
     var x = q[0], y = q[1], z = q[2], w = q[3];
@@ -1102,7 +1082,7 @@ export default require => {
     return out;
   }
   function perspectiveNO(out, fovy, aspect, near, far) {
-    var f = 1 / Math.tan(fovy / 2);
+    var f = 1 / Math.tan(fovy / 2), nf;
     out[0] = f / aspect;
     out[1] = 0;
     out[2] = 0;
@@ -1118,7 +1098,7 @@ export default require => {
     out[13] = 0;
     out[15] = 0;
     if (far != null && far !== Infinity) {
-      var nf = 1 / (near - far);
+      nf = 1 / (near - far);
       out[10] = (far + near) * nf;
       out[14] = 2 * far * near * nf;
     } else {
@@ -1129,7 +1109,7 @@ export default require => {
   }
   var perspective = perspectiveNO;
   function perspectiveZO(out, fovy, aspect, near, far) {
-    var f = 1 / Math.tan(fovy / 2);
+    var f = 1 / Math.tan(fovy / 2), nf;
     out[0] = f / aspect;
     out[1] = 0;
     out[2] = 0;
@@ -1145,7 +1125,7 @@ export default require => {
     out[13] = 0;
     out[15] = 0;
     if (far != null && far !== Infinity) {
-      var nf = 1 / (near - far);
+      nf = 1 / (near - far);
       out[10] = far * nf;
       out[14] = far * near * nf;
     } else {
@@ -1241,14 +1221,14 @@ export default require => {
     z0 = eyex - centerx;
     z1 = eyey - centery;
     z2 = eyez - centerz;
-    len2 = 1 / Math.sqrt(z0 * z0 + z1 * z1 + z2 * z2);
+    len2 = 1 / Math.hypot(z0, z1, z2);
     z0 *= len2;
     z1 *= len2;
     z2 *= len2;
     x0 = upy * z2 - upz * z1;
     x1 = upz * z0 - upx * z2;
     x2 = upx * z1 - upy * z0;
-    len2 = Math.sqrt(x0 * x0 + x1 * x1 + x2 * x2);
+    len2 = Math.hypot(x0, x1, x2);
     if (!len2) {
       x0 = 0;
       x1 = 0;
@@ -1262,7 +1242,7 @@ export default require => {
     y0 = z1 * x2 - z2 * x1;
     y1 = z2 * x0 - z0 * x2;
     y2 = z0 * x1 - z1 * x0;
-    len2 = Math.sqrt(y0 * y0 + y1 * y1 + y2 * y2);
+    len2 = Math.hypot(y0, y1, y2);
     if (!len2) {
       y0 = 0;
       y1 = 0;
@@ -1331,7 +1311,7 @@ export default require => {
     return "mat4(" + a[0] + ", " + a[1] + ", " + a[2] + ", " + a[3] + ", " + a[4] + ", " + a[5] + ", " + a[6] + ", " + a[7] + ", " + a[8] + ", " + a[9] + ", " + a[10] + ", " + a[11] + ", " + a[12] + ", " + a[13] + ", " + a[14] + ", " + a[15] + ")";
   }
   function frob(a) {
-    return Math.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2] + a[3] * a[3] + a[4] * a[4] + a[5] * a[5] + a[6] * a[6] + a[7] * a[7] + a[8] * a[8] + a[9] * a[9] + a[10] * a[10] + a[11] * a[11] + a[12] * a[12] + a[13] * a[13] + a[14] * a[14] + a[15] * a[15]);
+    return Math.hypot(a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7], a[8], a[9], a[10], a[11], a[12], a[13], a[14], a[15]);
   }
   function add(out, a, b) {
     out[0] = a[0] + b[0];
@@ -1460,11 +1440,10 @@ export default require => {
     rotateX: () => rotateX2,
     rotateY: () => rotateY2,
     rotateZ: () => rotateZ2,
-    round: () => round2,
+    round: () => round,
     scale: () => scale2,
     scaleAndAdd: () => scaleAndAdd,
     set: () => set2,
-    slerp: () => slerp,
     sqrDist: () => sqrDist,
     sqrLen: () => sqrLen,
     squaredDistance: () => squaredDistance,
@@ -1497,7 +1476,7 @@ export default require => {
     var x = a[0];
     var y = a[1];
     var z = a[2];
-    return Math.sqrt(x * x + y * y + z * z);
+    return Math.hypot(x, y, z);
   }
   function fromValues2(x, y, z) {
     var out = new ARRAY_TYPE(3);
@@ -1566,10 +1545,10 @@ export default require => {
     out[2] = Math.max(a[2], b[2]);
     return out;
   }
-  function round2(out, a) {
-    out[0] = round(a[0]);
-    out[1] = round(a[1]);
-    out[2] = round(a[2]);
+  function round(out, a) {
+    out[0] = Math.round(a[0]);
+    out[1] = Math.round(a[1]);
+    out[2] = Math.round(a[2]);
     return out;
   }
   function scale2(out, a, b) {
@@ -1588,7 +1567,7 @@ export default require => {
     var x = b[0] - a[0];
     var y = b[1] - a[1];
     var z = b[2] - a[2];
-    return Math.sqrt(x * x + y * y + z * z);
+    return Math.hypot(x, y, z);
   }
   function squaredDistance(a, b) {
     var x = b[0] - a[0];
@@ -1647,16 +1626,6 @@ export default require => {
     out[2] = az + t * (b[2] - az);
     return out;
   }
-  function slerp(out, a, b, t) {
-    var angle2 = Math.acos(Math.min(Math.max(dot(a, b), -1), 1));
-    var sinTotal = Math.sin(angle2);
-    var ratioA = Math.sin((1 - t) * angle2) / sinTotal;
-    var ratioB = Math.sin(t * angle2) / sinTotal;
-    out[0] = ratioA * a[0] + ratioB * b[0];
-    out[1] = ratioA * a[1] + ratioB * b[1];
-    out[2] = ratioA * a[2] + ratioB * b[2];
-    return out;
-  }
   function hermite(out, a, b, c, d, t) {
     var factorTimes2 = t * t;
     var factor1 = factorTimes2 * (2 * t - 3) + 1;
@@ -1682,7 +1651,7 @@ export default require => {
     return out;
   }
   function random(out, scale4) {
-    scale4 = scale4 === void 0 ? 1 : scale4;
+    scale4 = scale4 || 1;
     var r = RANDOM() * 2 * Math.PI;
     var z = RANDOM() * 2 - 1;
     var zScale = Math.sqrt(1 - z * z) * scale4;
@@ -1709,16 +1678,19 @@ export default require => {
   }
   function transformQuat(out, a, q) {
     var qx = q[0], qy = q[1], qz = q[2], qw = q[3];
-    var vx = a[0], vy = a[1], vz = a[2];
-    var tx = qy * vz - qz * vy;
-    var ty = qz * vx - qx * vz;
-    var tz = qx * vy - qy * vx;
-    tx = tx + tx;
-    ty = ty + ty;
-    tz = tz + tz;
-    out[0] = vx + qw * tx + qy * tz - qz * ty;
-    out[1] = vy + qw * ty + qz * tx - qx * tz;
-    out[2] = vz + qw * tz + qx * ty - qy * tx;
+    var x = a[0], y = a[1], z = a[2];
+    var uvx = qy * z - qz * y, uvy = qz * x - qx * z, uvz = qx * y - qy * x;
+    var uuvx = qy * uvz - qz * uvy, uuvy = qz * uvx - qx * uvz, uuvz = qx * uvy - qy * uvx;
+    var w2 = qw * 2;
+    uvx *= w2;
+    uvy *= w2;
+    uvz *= w2;
+    uuvx *= 2;
+    uuvy *= 2;
+    uuvz *= 2;
+    out[0] = x + uvx + uuvx;
+    out[1] = y + uvy + uuvy;
+    out[2] = z + uvz + uuvz;
     return out;
   }
   function rotateX2(out, a, b, rad) {
@@ -1761,7 +1733,7 @@ export default require => {
     return out;
   }
   function angle(a, b) {
-    var ax = a[0], ay = a[1], az = a[2], bx = b[0], by = b[1], bz = b[2], mag = Math.sqrt((ax * ax + ay * ay + az * az) * (bx * bx + by * by + bz * bz)), cosine = mag && dot(a, b) / mag;
+    var ax = a[0], ay = a[1], az = a[2], bx = b[0], by = b[1], bz = b[2], mag1 = Math.sqrt(ax * ax + ay * ay + az * az), mag2 = Math.sqrt(bx * bx + by * by + bz * bz), mag = mag1 * mag2, cosine = mag && dot(a, b) / mag;
     return Math.acos(Math.min(Math.max(cosine, -1), 1));
   }
   function zero(out) {
@@ -1816,7 +1788,7 @@ export default require => {
     };
   })();
   var glAnimationSymbol = Symbol.for("glAnimation");
-  var glAnimation = class {
+  var glAnimation = class _glAnimation {
     constructor(duration, fps) {
       this.duration = duration;
       this.fps = fps;
@@ -1824,22 +1796,25 @@ export default require => {
     get _anim_symbol() {
       return glAnimationSymbol;
     }
+    static [Symbol.hasInstance](constructor) {
+      if (typeof constructor !== "object" || constructor === null) return false;
+      return ("_anim_symbol" in constructor) && constructor._anim_symbol === glAnimationSymbol;
+    }
     static isAnimation(obj) {
-      if (typeof obj !== "object" || obj === null) return false;
-      return ("_anim_symbol" in obj) && obj._anim_symbol === glAnimationSymbol;
+      return obj instanceof _glAnimation;
     }
   };
   function loadShader(gl, type, source) {
     const shader = gl.createShader(type);
     if (!shader) {
-      throw new Error("WebGLShader not available.");
+      throw new import_base.GeneralRuntimeError("WebGLShader not available.");
     }
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
     const compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
     if (!compiled) {
       const compilationLog = gl.getShaderInfoLog(shader);
-      throw Error(`Shader compilation failed: ${compilationLog}`);
+      throw new import_base.GeneralRuntimeError(`Shader compilation failed: ${compilationLog}`);
     }
     return shader;
   }
@@ -1848,7 +1823,7 @@ export default require => {
     const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
     const shaderProgram = gl.createProgram();
     if (!shaderProgram) {
-      throw new Error("Unable to initialize the shader program.");
+      throw new import_base.GeneralRuntimeError("Unable to initialize the shader program.");
     }
     gl.attachShader(shaderProgram, vertexShader);
     gl.attachShader(shaderProgram, fragmentShader);
@@ -1858,7 +1833,7 @@ export default require => {
   function getWebGlFromCanvas(canvas) {
     const gl = canvas.getContext("webgl");
     if (!gl) {
-      throw Error("Unable to initialize WebGL.");
+      throw new import_base.GeneralRuntimeError("Unable to initialize WebGL.");
     }
     gl.clearColor(1, 1, 1, 1);
     gl.enable(gl.DEPTH_TEST);
@@ -1869,18 +1844,18 @@ export default require => {
   function initFramebufferObject(gl) {
     const framebuffer = gl.createFramebuffer();
     if (!framebuffer) {
-      throw Error("Failed to create frame buffer object");
+      throw new import_base.GeneralRuntimeError("Failed to create frame buffer object");
     }
     const texture = gl.createTexture();
     if (!texture) {
-      throw Error("Failed to create texture object");
+      throw new import_base.GeneralRuntimeError("Failed to create texture object");
     }
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.drawingBufferWidth, gl.drawingBufferHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     const depthBuffer = gl.createRenderbuffer();
     if (!depthBuffer) {
-      throw Error("Failed to create renderbuffer object");
+      throw new import_base.GeneralRuntimeError("Failed to create renderbuffer object");
     }
     gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
     gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, gl.drawingBufferWidth, gl.drawingBufferHeight);
@@ -1889,7 +1864,7 @@ export default require => {
     gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
     const e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
     if (gl.FRAMEBUFFER_COMPLETE !== e) {
-      throw Error(`Frame buffer object is incomplete:${e.toString()}`);
+      throw new import_base.GeneralRuntimeError(`Frame buffer object is incomplete:${e.toString()}`);
     }
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.bindTexture(gl.TEXTURE_2D, null);
@@ -2054,7 +2029,10 @@ void main(void) {
     }
   };
   Rune.of = (params = {}) => {
-    const paramGetter = (name, defaultValue) => params[name] === void 0 ? defaultValue() : params[name];
+    const paramGetter = (name, defaultValue) => {
+      var _a;
+      return (_a = params[name]) != null ? _a : defaultValue();
+    };
     return new Rune(paramGetter("vertices", () => new Float32Array()), paramGetter("colors", () => null), paramGetter("transformMatrix", mat4_exports.create), paramGetter("subRunes", () => []), paramGetter("texture", () => null), paramGetter("hollusionDistance", () => 0.1));
   };
   Rune = __decorateClass([classDeclaration("Rune")], Rune);
@@ -2063,7 +2041,7 @@ void main(void) {
     const shaderProgram = initShaderProgram(gl, normalVertexShader, normalFragmentShader);
     gl.useProgram(shaderProgram);
     if (gl === null) {
-      throw Error("Rendering Context not initialized for drawRune.");
+      throw new import_base.GeneralRuntimeError("Rendering Context not initialized for drawRune.");
     }
     const vertexPositionPointer = gl.getAttribLocation(shaderProgram, "aVertexPosition");
     const vertexColorPointer = gl.getUniformLocation(shaderProgram, "uVertexColor");
@@ -2180,7 +2158,7 @@ void main(void) {
     gl_FragColor.a = 1.0;
   }
   `;
-  var NormalRune = class extends DrawnRune {
+  var DrawnNormalRune = class extends DrawnRune {
     constructor(rune) {
       super(rune, false);
       this.draw = canvas => {
@@ -2199,22 +2177,14 @@ void main(void) {
     getFrame(num) {
       const rune = this.func(num);
       return {
-        draw: rune.draw
+        draw: rune.draw.bind(rune)
       };
     }
   };
-  function hexToColor(hex, func_name) {
-    const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
-    const groups = regex.exec(hex);
-    if (groups == void 0) {
-      func_name = func_name !== null && func_name !== void 0 ? func_name : hexToColor.name;
-      throw new Error(`${func_name}: Invalid color hex string: ${hex}`);
+  function throwIfNotRune(func_name, rune, param_name) {
+    if (!(rune instanceof Rune)) {
+      throw new import_rttcErrors.InvalidParameterTypeError("Rune", rune, func_name, param_name);
     }
-    ;
-    return [parseInt(groups[1], 16) / 255, parseInt(groups[2], 16) / 255, parseInt(groups[3], 16) / 255];
-  }
-  function throwIfNotRune(name, rune) {
-    if (!(rune instanceof Rune)) throw new Error(`${name} expects a rune as argument.`);
   }
   function getSquare() {
     const vertexList = [];
@@ -2415,13 +2385,7 @@ void main(void) {
     });
   }
   function throwIfNotFraction(val, param_name, func_name) {
-    if (typeof val !== "number") throw new Error(`${func_name}: ${param_name} must be a number!`);
-    if (val < 0) {
-      throw new Error(`${func_name}: ${param_name} cannot be less than 0!`);
-    }
-    if (val > 1) {
-      throw new Error(`${func_name}: ${param_name} cannot be greater than 1!`);
-    }
+    (0, import_rttc.assertNumberWithinRange)(val, func_name, 0, 1, false, param_name);
   }
   var _RuneFunctions = class _RuneFunctions {
     static from_url(imageUrl) {
@@ -2433,6 +2397,16 @@ void main(void) {
     }
     static scale_independent(ratio_x, ratio_y, rune) {
       throwIfNotRune(_RuneFunctions.scale_independent.name, rune);
+      (0, import_rttc.assertNumberWithinRange)(ratio_x, {
+        func_name: _RuneFunctions.scale_independent.name,
+        param_name: "ratio_x",
+        integer: false
+      });
+      (0, import_rttc.assertNumberWithinRange)(ratio_y, {
+        func_name: _RuneFunctions.scale_independent.name,
+        param_name: "ratio_y",
+        integer: false
+      });
       const scaleVec = vec3_exports.fromValues(ratio_x, ratio_y, 1);
       const scaleMat = mat4_exports.create();
       mat4_exports.scale(scaleMat, scaleMat, scaleVec);
@@ -2471,8 +2445,8 @@ void main(void) {
       });
     }
     static stack_frac(frac, rune1, rune2) {
-      throwIfNotRune(_RuneFunctions.stack_frac.name, rune1);
-      throwIfNotRune(_RuneFunctions.stack_frac.name, rune2);
+      throwIfNotRune(_RuneFunctions.stack_frac.name, rune1, "rune1");
+      throwIfNotRune(_RuneFunctions.stack_frac.name, rune2, "rune2");
       throwIfNotFraction(frac, "frac", _RuneFunctions.stack_frac.name);
       const upper = _RuneFunctions.translate(0, -(1 - frac), _RuneFunctions.scale_independent(1, frac, rune1));
       const lower = _RuneFunctions.translate(0, frac, _RuneFunctions.scale_independent(1, 1 - frac, rune2));
@@ -2481,15 +2455,15 @@ void main(void) {
       });
     }
     static stack(rune1, rune2) {
-      throwIfNotRune(_RuneFunctions.stack.name, rune1);
-      throwIfNotRune(_RuneFunctions.stack.name, rune2);
-      return _RuneFunctions.stack_frac(1 / 2, rune1, rune2);
+      throwIfNotRune(_RuneFunctions.stack.name, rune1, "rune1");
+      throwIfNotRune(_RuneFunctions.stack.name, rune2, "rune2");
+      return _RuneFunctions.stack_frac(0.5, rune1, rune2);
     }
     static stackn(n, rune) {
       throwIfNotRune(_RuneFunctions.stackn.name, rune);
-      if (!Number.isInteger(n)) {
-        throw new Error(`${_RuneFunctions.stackn.name} expects an integer!`);
-      }
+      (0, import_rttc.assertNumberWithinRange)(n, {
+        func_name: _RuneFunctions.stackn.name
+      });
       if (n <= 1) {
         return rune;
       }
@@ -2508,8 +2482,8 @@ void main(void) {
       return _RuneFunctions.rotate(Math.PI, rune);
     }
     static beside_frac(frac, rune1, rune2) {
-      throwIfNotRune(_RuneFunctions.beside_frac.name, rune1);
-      throwIfNotRune(_RuneFunctions.beside_frac.name, rune2);
+      throwIfNotRune(_RuneFunctions.beside_frac.name, rune1, "rune1");
+      throwIfNotRune(_RuneFunctions.beside_frac.name, rune2, "rune2");
       throwIfNotFraction(frac, "frac", _RuneFunctions.beside_frac.name);
       const left = _RuneFunctions.translate(-(1 - frac), 0, _RuneFunctions.scale_independent(frac, 1, rune1));
       const right = _RuneFunctions.translate(frac, 0, _RuneFunctions.scale_independent(1 - frac, 1, rune2));
@@ -2518,8 +2492,8 @@ void main(void) {
       });
     }
     static beside(rune1, rune2) {
-      throwIfNotRune(_RuneFunctions.beside.name, rune1);
-      throwIfNotRune(_RuneFunctions.beside.name, rune2);
+      throwIfNotRune(_RuneFunctions.beside.name, rune1, "rune1");
+      throwIfNotRune(_RuneFunctions.beside.name, rune2, "rune2");
       return _RuneFunctions.beside_frac(0.5, rune1, rune2);
     }
     static flip_vert(rune) {
@@ -2535,14 +2509,14 @@ void main(void) {
       return _RuneFunctions.stack(_RuneFunctions.beside(_RuneFunctions.quarter_turn_right(rune), _RuneFunctions.rotate(Math.PI, rune)), _RuneFunctions.beside(rune, _RuneFunctions.rotate(Math.PI / 2, rune)));
     }
     static repeat_pattern(n, pattern, initial) {
-      if (n <= 0) {
-        return initial;
-      }
-      return pattern(_RuneFunctions.repeat_pattern(n - 1, pattern, initial));
+      throwIfNotRune(_RuneFunctions.repeat_pattern.name, initial, "initial");
+      (0, import_rttc.assertFunctionOfLength)(pattern, 1, _RuneFunctions.repeat_pattern.name);
+      const repeated = repeat_internal(pattern, n);
+      return repeated(initial);
     }
     static overlay_frac(frac, rune1, rune2) {
-      throwIfNotRune(_RuneFunctions.overlay_frac.name, rune1);
-      throwIfNotRune(_RuneFunctions.overlay_frac.name, rune2);
+      throwIfNotRune(_RuneFunctions.overlay_frac.name, rune1, "rune1");
+      throwIfNotRune(_RuneFunctions.overlay_frac.name, rune2, "rune2");
       throwIfNotFraction(frac, "frac", _RuneFunctions.overlay_frac.name);
       const minFrac = 1e-6;
       const maxFrac = 1 - minFrac;
@@ -2565,8 +2539,8 @@ void main(void) {
       });
     }
     static overlay(rune1, rune2) {
-      throwIfNotRune(_RuneFunctions.overlay.name, rune1);
-      throwIfNotRune(_RuneFunctions.overlay.name, rune2);
+      throwIfNotRune(_RuneFunctions.overlay.name, rune1, "rune1");
+      throwIfNotRune(_RuneFunctions.overlay.name, rune2, "rune2");
       return _RuneFunctions.overlay_frac(0.5, rune1, rune2);
     }
     static color(rune, r, g, b) {
@@ -2671,12 +2645,20 @@ void main(void) {
     }
     static random_color(rune) {
       throwIfNotRune(_RuneColours.random_color.name, rune);
-      const colourNames = Object.keys(_RuneColours.colours);
-      const colourName = colourNames[Math.floor(Math.random() * colourNames.length)];
-      const randomColor = hexToColor2(_RuneColours.colours[colourName]);
+      const colorVal = sample(Object.values(_RuneColours.colours));
+      const randomColor = hexToColor2(colorVal);
       return Rune.of({
         colors: new Float32Array(randomColor),
         subRunes: [rune]
+      });
+    }
+    static colour_with_hue(rune, hue) {
+      throwIfNotRune(_RuneColours.colour_with_hue.name, rune);
+      (0, import_rttc.assertNumberWithinRange)(hue, _RuneColours.colour_with_hue.name, 0, void 0, false, "hue");
+      const [r, g, b] = hueToRgb(hue);
+      return Rune.of({
+        subRunes: [rune],
+        colors: new Float32Array([r / 255, g / 255, b / 255, 1])
       });
     }
   };
@@ -2703,8 +2685,9 @@ void main(void) {
   __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "white", 1);
   __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "yellow", 1);
   __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "random_color", 1);
+  __decorateClass([functionDeclaration("rune: Rune", "Rune")], _RuneColours, "colour_with_hue", 1);
   var RuneColours = _RuneColours;
-  var _AnaglyphRune = class _AnaglyphRune extends DrawnRune {
+  var _DrawnAnaglyphRune = class _DrawnAnaglyphRune extends DrawnRune {
     constructor(rune) {
       super(rune, false);
       this.draw = canvas => {
@@ -2720,7 +2703,7 @@ void main(void) {
         drawRunesToFrameBuffer(gl, runes, leftCameraMatrix, new Float32Array([1, 0, 0, 1]), leftBuffer.framebuffer, true);
         drawRunesToFrameBuffer(gl, runes, rightCameraMatrix, new Float32Array([0, 1, 1, 1]), rightBuffer.framebuffer, true);
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        const shaderProgram = initShaderProgram(gl, _AnaglyphRune.anaglyphVertexShader, _AnaglyphRune.anaglyphFragmentShader);
+        const shaderProgram = initShaderProgram(gl, _DrawnAnaglyphRune.anaglyphVertexShader, _DrawnAnaglyphRune.anaglyphFragmentShader);
         gl.useProgram(shaderProgram);
         const reduPt = gl.getUniformLocation(shaderProgram, "u_sampler_red");
         const cyanuPt = gl.getUniformLocation(shaderProgram, "u_sampler_cyan");
@@ -2740,7 +2723,7 @@ void main(void) {
       };
     }
   };
-  _AnaglyphRune.anaglyphVertexShader = `
+  _DrawnAnaglyphRune.anaglyphVertexShader = `
     precision mediump float;
     attribute vec4 a_position;
     varying highp vec2 v_texturePosition;
@@ -2751,7 +2734,7 @@ void main(void) {
         v_texturePosition.y = (a_position.y + 1.0) / 2.0;
     }
     `;
-  _AnaglyphRune.anaglyphFragmentShader = `
+  _DrawnAnaglyphRune.anaglyphFragmentShader = `
     precision mediump float;
     uniform sampler2D u_sampler_red;
     uniform sampler2D u_sampler_cyan;
@@ -2762,8 +2745,8 @@ void main(void) {
         gl_FragColor.a = 1.0;
     }
     `;
-  var AnaglyphRune = _AnaglyphRune;
-  var _HollusionRune = class _HollusionRune extends DrawnRune {
+  var DrawnAnaglyphRune = _DrawnAnaglyphRune;
+  var _DrawnHollusionRune = class _DrawnHollusionRune extends DrawnRune {
     constructor(rune, magnitude) {
       super(rune, true);
       this.draw = canvas => {
@@ -2788,7 +2771,7 @@ void main(void) {
         for (let i = 0; i < frameCount; i += 1) {
           frameBuffer.push(renderFrame(i));
         }
-        const copyShaderProgram = initShaderProgram(gl, _HollusionRune.copyVertexShader, _HollusionRune.copyFragmentShader);
+        const copyShaderProgram = initShaderProgram(gl, _DrawnHollusionRune.copyVertexShader, _DrawnHollusionRune.copyFragmentShader);
         gl.useProgram(copyShaderProgram);
         const texturePt = gl.getUniformLocation(copyShaderProgram, "uTexture");
         const vertexPositionPointer = gl.getAttribLocation(copyShaderProgram, "a_position");
@@ -2816,7 +2799,7 @@ void main(void) {
       this.rune.hollusionDistance = magnitude;
     }
   };
-  _HollusionRune.copyVertexShader = `
+  _DrawnHollusionRune.copyVertexShader = `
     precision mediump float;
     attribute vec4 a_position;
     varying highp vec2 v_texturePosition;
@@ -2827,7 +2810,7 @@ void main(void) {
         v_texturePosition.y = (a_position.y + 1.0) / 2.0;
     }
     `;
-  _HollusionRune.copyFragmentShader = `
+  _DrawnHollusionRune.copyFragmentShader = `
     precision mediump float;
     uniform sampler2D uTexture;
     varying highp vec2 v_texturePosition;
@@ -2835,7 +2818,7 @@ void main(void) {
         gl_FragColor = texture2D(uTexture, v_texturePosition);
     }
     `;
-  var HollusionRune = _HollusionRune;
+  var DrawnHollusionRune = _DrawnHollusionRune;
   var beside = RuneFunctions.beside;
   var beside_frac = RuneFunctions.beside_frac;
   var black = RuneColours.black;
@@ -2844,6 +2827,7 @@ void main(void) {
   var brown = RuneColours.brown;
   var circle = RuneFunctions.circle;
   var color = RuneFunctions.color;
+  var colour_with_hue = RuneColours.colour_with_hue;
   var corner = RuneFunctions.corner;
   var flip_horiz = RuneFunctions.flip_horiz;
   var flip_vert = RuneFunctions.flip_vert;
@@ -2887,17 +2871,17 @@ void main(void) {
   var _RuneDisplay = class _RuneDisplay {
     static show(rune) {
       throwIfNotRune(_RuneDisplay.show.name, rune);
-      drawnRunes.push(new NormalRune(rune));
+      drawnRunes.push(new DrawnNormalRune(rune));
       return rune;
     }
     static anaglyph(rune) {
       throwIfNotRune(_RuneDisplay.anaglyph.name, rune);
-      drawnRunes.push(new AnaglyphRune(rune));
+      drawnRunes.push(new DrawnAnaglyphRune(rune));
       return rune;
     }
     static hollusion_magnitude(rune, magnitude) {
       throwIfNotRune(_RuneDisplay.hollusion_magnitude.name, rune);
-      drawnRunes.push(new HollusionRune(rune, magnitude));
+      drawnRunes.push(new DrawnHollusionRune(rune, magnitude));
       return rune;
     }
     static hollusion(rune) {
@@ -2905,19 +2889,21 @@ void main(void) {
       return _RuneDisplay.hollusion_magnitude(rune, 0.1);
     }
     static animate_rune(duration, fps, func) {
+      (0, import_rttc.assertFunctionOfLength)(func, 1, _RuneDisplay.animate_rune.name, "RuneAnimation");
       const anim = new AnimatedRune(duration, fps, n => {
-        const rune = func(n);
-        throwIfNotRune(_RuneDisplay.animate_rune.name, rune);
-        return new NormalRune(rune);
+        const rune = (0, import_operators.callWithoutMetadata)(func, n);
+        throwIfNotRune("RuneAnimation", rune);
+        return new DrawnNormalRune(rune);
       });
       drawnRunes.push(anim);
       return anim;
     }
     static animate_anaglyph(duration, fps, func) {
+      (0, import_rttc.assertFunctionOfLength)(func, 1, _RuneDisplay.animate_anaglyph.name, "RuneAnimation");
       const anim = new AnimatedRune(duration, fps, n => {
-        const rune = func(n);
-        throwIfNotRune(_RuneDisplay.animate_anaglyph.name, rune);
-        return new AnaglyphRune(rune);
+        const rune = (0, import_operators.callWithoutMetadata)(func, n);
+        throwIfNotRune("RuneAnimation", rune);
+        return new DrawnAnaglyphRune(rune);
       });
       drawnRunes.push(anim);
       return anim;

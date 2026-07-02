@@ -1,9 +1,7 @@
 export default require => {
-  var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
-  var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
@@ -26,10 +24,6 @@ export default require => {
     }
     return to;
   };
-  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
-    value: mod,
-    enumerable: true
-  }) : target, mod));
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
@@ -38,7 +32,6 @@ export default require => {
     default: () => index_default
   });
   var import_core = __require("@blueprintjs/core");
-  var import_icons = __require("@blueprintjs/icons");
   var DEFAULT_WIDTH = 400;
   var DEFAULT_HEIGHT = 300;
   var DEFAULT_FPS = 10;
@@ -56,21 +49,23 @@ export default require => {
     InputFeed2[InputFeed2["VideoURL"] = 2] = "VideoURL";
     InputFeed2[InputFeed2["Local"] = 3] = "Local";
   })(InputFeed || (InputFeed = {}));
+  function getModuleState(debuggerContext, name) {
+    const {context: {moduleContexts}} = debuggerContext;
+    return (name in moduleContexts) ? moduleContexts[name].state : null;
+  }
   function defineTab(tab) {
     return tab;
   }
-  var import_react = __toESM(__require("react"), 1);
+  var import_react = __require("react");
   var import_jsx_runtime = __require("react/jsx-runtime");
-  var PixNFlix = class extends import_react.default.Component {
+  var PixNFlix = class extends import_react.Component {
     constructor(props) {
       super(props);
       this.$video = null;
       this.$image = null;
       this.$canvas = null;
       this.setupVideoService = () => {
-        if (this.$video && this.$canvas && this.isPixNFlix()) {
-          const {debuggerContext} = this.props;
-          this.pixNFlix = debuggerContext.result.value;
+        if (this.$video && this.$canvas && this.$image) {
           const {HEIGHT, WIDTH, FPS, VOLUME, inputFeed} = this.pixNFlix.init(this.$image, this.$video, this.$canvas, this.printError, {
             onClickStill: this.onClickStill
           });
@@ -91,19 +86,13 @@ export default require => {
         }
       };
       this.closeVideo = () => {
-        if (this.isPixNFlix()) {
-          this.pixNFlix.deinit();
-        }
+        this.pixNFlix.deinit();
       };
       this.handleStartVideo = () => {
-        if (this.isPixNFlix()) {
-          this.pixNFlix.startVideo();
-        }
+        this.pixNFlix.startVideo();
       };
       this.handleStopVideo = () => {
-        if (this.isPixNFlix()) {
-          this.pixNFlix.stopVideo();
-        }
+        this.pixNFlix.stopVideo();
       };
       this.onClickStill = () => {
         const {mode} = this.state;
@@ -136,9 +125,7 @@ export default require => {
           this.setState({
             FPS: fps
           });
-          if (this.isPixNFlix()) {
-            this.pixNFlix.updateFPS(fps);
-          }
+          this.pixNFlix.updateFPS(fps);
         }
       };
       this.handleUpdateDimensions = (w, h) => {
@@ -147,9 +134,7 @@ export default require => {
             width: w,
             height: h
           });
-          if (this.isPixNFlix()) {
-            this.pixNFlix.updateDimensions(w, h);
-          }
+          this.pixNFlix.updateDimensions(w, h);
         }
       };
       this.loadFileToVideo = file => {
@@ -203,22 +188,15 @@ export default require => {
         mode: 0
       };
       const {debuggerContext} = this.props;
-      this.pixNFlix = debuggerContext.result.value;
+      this.pixNFlix = getModuleState(debuggerContext, "pix_n_flix");
     }
     componentDidMount() {
-      if (this.isPixNFlix()) {
-        this.setupVideoService();
-        window.addEventListener("beforeunload", this.pixNFlix.deinit);
-      }
+      this.setupVideoService();
+      window.addEventListener("beforeunload", this.pixNFlix.deinit);
     }
     componentWillUnmount() {
-      if (this.isPixNFlix()) {
-        this.closeVideo();
-        window.removeEventListener("beforeunload", this.pixNFlix.deinit);
-      }
-    }
-    isPixNFlix() {
-      return this.pixNFlix && this.pixNFlix.toReplString && this.pixNFlix.toReplString() === "[Pix N Flix]";
+      this.closeVideo();
+      window.removeEventListener("beforeunload", this.pixNFlix.deinit);
     }
     render() {
       const {mode, width, height, FPS, volume, hasAudio} = this.state;
@@ -239,13 +217,13 @@ export default require => {
             children: (0, import_jsx_runtime.jsxs)(import_core.ButtonGroup, {
               children: [(0, import_jsx_runtime.jsx)(import_core.Button, {
                 className: "sa-live-video-button",
-                icon: (0, import_jsx_runtime.jsx)(import_icons.Video, {}),
+                icon: "video",
                 active: videoIsActive,
                 onClick: this.onClickVideo,
                 text: "Play Video"
               }), (0, import_jsx_runtime.jsx)(import_core.Button, {
                 className: "sa-still-image-button",
-                icon: (0, import_jsx_runtime.jsx)(import_icons.Camera, {}),
+                icon: "camera",
                 active: !videoIsActive,
                 onClick: this.onClickStill,
                 text: "Pause Video"
@@ -260,7 +238,7 @@ export default require => {
               className: "sa-video-header-numeric-input",
               children: (0, import_jsx_runtime.jsx)(import_core.NumericInput, {
                 disabled: true,
-                leftIcon: (0, import_jsx_runtime.jsx)(import_icons.HorizontalDistribution, {}),
+                leftIcon: "horizontal-distribution",
                 style: {
                   width: 70
                 },
@@ -276,7 +254,7 @@ export default require => {
               className: "sa-video-header-numeric-input",
               children: (0, import_jsx_runtime.jsx)(import_core.NumericInput, {
                 disabled: true,
-                leftIcon: (0, import_jsx_runtime.jsx)(import_icons.VerticalDistribution, {}),
+                leftIcon: "vertical-distribution",
                 style: {
                   width: 70
                 },
@@ -291,7 +269,7 @@ export default require => {
             }), (0, import_jsx_runtime.jsx)("div", {
               className: "sa-video-header-numeric-input",
               children: (0, import_jsx_runtime.jsx)(import_core.NumericInput, {
-                leftIcon: (0, import_jsx_runtime.jsx)(import_icons.Stopwatch, {}),
+                leftIcon: "stopwatch",
                 style: {
                   width: 60
                 },
@@ -372,7 +350,10 @@ export default require => {
     }
   };
   var index_default = defineTab({
-    toSpawn: () => true,
+    toSpawn: ctx => {
+      const state = getModuleState(ctx, "pix_n_flix");
+      return state !== null;
+    },
     body: debuggerContext => (0, import_jsx_runtime.jsx)(PixNFlix, {
       debuggerContext
     }),

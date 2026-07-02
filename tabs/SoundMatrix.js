@@ -118,8 +118,8 @@ export default require => {
   var import_react = __toESM(__require("react"), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
   var SoundMatrix = class extends import_react.default.Component {
-    constructor(props) {
-      super(props);
+    constructor() {
+      super(...arguments);
       this.$container = null;
       this.handleClear = () => {
         window.ToneMatrix.clear_matrix();
@@ -127,7 +127,6 @@ export default require => {
       this.handleRandomise = () => {
         window.ToneMatrix.randomise_matrix();
       };
-      this.state = {};
     }
     componentDidMount() {
       if (window.ToneMatrix) {
@@ -168,9 +167,7 @@ export default require => {
   };
   var index_default = defineTab({
     toSpawn: context => context.result.value === "test",
-    body: context => (0, import_jsx_runtime.jsx)(SoundMatrix, {
-      context
-    }),
+    body: () => (0, import_jsx_runtime.jsx)(SoundMatrix, {}),
     label: "Sound Matrix",
     iconName: "music"
   });

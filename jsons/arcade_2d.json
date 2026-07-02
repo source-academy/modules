@@ -4,54 +4,60 @@
     "name": "create_circle",
     "description": "<p>Creates a CircleGameObject that takes in circle shape properties.</p>",
     "params": [
-      [
-        "radius",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "radius"
+      }
     ],
-    "retType": "ShapeGameObject"
+    "retType": "ShapeGameObject<any>"
   },
   "create_rectangle": {
     "kind": "function",
     "name": "create_rectangle",
     "description": "<p>Creates a RectangleGameObject that takes in rectangle shape properties.</p>",
     "params": [
-      [
-        "width",
-        "number"
-      ],
-      [
-        "height",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "width"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "height"
+      }
     ],
-    "retType": "ShapeGameObject"
+    "retType": "ShapeGameObject<any>"
   },
   "create_triangle": {
     "kind": "function",
     "name": "create_triangle",
     "description": "<p>Creates a TriangleGameObject that takes in an downright isosceles triangle shape properties.</p>",
     "params": [
-      [
-        "width",
-        "number"
-      ],
-      [
-        "height",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "width"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "height"
+      }
     ],
-    "retType": "ShapeGameObject"
+    "retType": "ShapeGameObject<any>"
   },
   "create_sprite": {
     "kind": "function",
     "name": "create_sprite",
     "description": "<p>Creates a GameObject that contains a Sprite image reference.\nSource Academy assets can be used by specifying path without the prepend.\nSource Academy assets can be found at https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/ with Ctrl+f '.png'.\nPhaser assets can be found at https://labs.phaser.io/assets/.\nIf Phaser assets are unavailable, go to https://github.com/photonstorm/phaser3-examples/tree/master/public/assets\nto get the asset path and append it to <code>https://labs.phaser.io/assets/</code>.\nAssets from other websites can also be used if they support Cross-Origin Resource Sharing (CORS), but the full path must be specified.</p>",
     "params": [
-      [
-        "image_url",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "image_url"
+      }
     ],
     "retType": "SpriteGameObject"
   },
@@ -60,10 +66,11 @@
     "name": "create_text",
     "description": "<p>Creates a GameObject that contains a text reference.</p>",
     "params": [
-      [
-        "text",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "text"
+      }
     ],
     "retType": "TextGameObject"
   },
@@ -72,10 +79,11 @@
     "name": "query_color",
     "description": "<p>Queries the [r, g, b, a] color property of the GameObject.</p>",
     "params": [
-      [
-        "gameObject",
-        "RenderableGameObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "RenderableGameObject",
+        "name": "gameObject"
+      }
     ],
     "retType": "ColorRGBA"
   },
@@ -84,10 +92,11 @@
     "name": "query_flip",
     "description": "<p>Queries the [x, y] flip property of the GameObject.</p>",
     "params": [
-      [
-        "gameObject",
-        "RenderableGameObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "RenderableGameObject",
+        "name": "gameObject"
+      }
     ],
     "retType": "FlipXY"
   },
@@ -96,10 +105,11 @@
     "name": "query_id",
     "description": "<p>Queries the id of the GameObject.\nThe id of a GameObject is in the order of creation, starting from 0.</p>",
     "params": [
-      [
-        "gameObject",
-        "GameObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "GameObject",
+        "name": "gameObject"
+      }
     ],
     "retType": "number"
   },
@@ -115,10 +125,11 @@
     "name": "query_position",
     "description": "<p>Queries the [x, y] position transform of the GameObject.</p>",
     "params": [
-      [
-        "gameObject",
-        "GameObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "GameObject",
+        "name": "gameObject"
+      }
     ],
     "retType": "PositionXY"
   },
@@ -127,10 +138,11 @@
     "name": "query_rotation",
     "description": "<p>Queries the z-rotation transform of the GameObject.</p>",
     "params": [
-      [
-        "gameObject",
-        "GameObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "GameObject",
+        "name": "gameObject"
+      }
     ],
     "retType": "number"
   },
@@ -139,10 +151,11 @@
     "name": "query_scale",
     "description": "<p>Queries the [x, y] scale transform of the GameObject.</p>",
     "params": [
-      [
-        "gameObject",
-        "GameObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "GameObject",
+        "name": "gameObject"
+      }
     ],
     "retType": "ScaleXY"
   },
@@ -151,10 +164,11 @@
     "name": "query_text",
     "description": "<p>Queries the text of a Text GameObject.</p>",
     "params": [
-      [
-        "textGameObject",
-        "TextGameObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "TextGameObject",
+        "name": "textGameObject"
+      }
     ],
     "retType": "string"
   },
@@ -163,14 +177,16 @@
     "name": "update_color",
     "description": "<p>Updates the color of the GameObject.\nNote that the value is modulo 256, so passing values greater than 255 is allowed.</p>",
     "params": [
-      [
-        "gameObject",
-        "GameObject"
-      ],
-      [
-        "color",
-        "ColorRGBA"
-      ]
+      {
+        "paramType": "regular",
+        "type": "GameObject",
+        "name": "gameObject"
+      },
+      {
+        "paramType": "regular",
+        "type": "ColorRGBA",
+        "name": "color"
+      }
     ],
     "retType": "GameObject"
   },
@@ -179,14 +195,16 @@
     "name": "update_flip",
     "description": "<p>Updates the flip state of the GameObject.</p>",
     "params": [
-      [
-        "gameObject",
-        "GameObject"
-      ],
-      [
-        "flip",
-        "FlipXY"
-      ]
+      {
+        "paramType": "regular",
+        "type": "GameObject",
+        "name": "gameObject"
+      },
+      {
+        "paramType": "regular",
+        "type": "FlipXY",
+        "name": "flip"
+      }
     ],
     "retType": "GameObject"
   },
@@ -195,14 +213,16 @@
     "name": "update_position",
     "description": "<p>Updates the position transform of the GameObject.</p>",
     "params": [
-      [
-        "gameObject",
-        "GameObject"
-      ],
-      [
-        "coordinates",
-        "PositionXY"
-      ]
+      {
+        "paramType": "regular",
+        "type": "GameObject",
+        "name": "gameObject"
+      },
+      {
+        "paramType": "regular",
+        "type": "PositionXY",
+        "name": "coordinates"
+      }
     ],
     "retType": "GameObject"
   },
@@ -211,14 +231,16 @@
     "name": "update_rotation",
     "description": "<p>Updates the rotation transform of the GameObject.</p>",
     "params": [
-      [
-        "gameObject",
-        "GameObject"
-      ],
-      [
-        "radians",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "GameObject",
+        "name": "gameObject"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "radians"
+      }
     ],
     "retType": "GameObject"
   },
@@ -227,14 +249,16 @@
     "name": "update_scale",
     "description": "<p>Updates the scale transform of the GameObject.</p>",
     "params": [
-      [
-        "gameObject",
-        "GameObject"
-      ],
-      [
-        "scale",
-        "ScaleXY"
-      ]
+      {
+        "paramType": "regular",
+        "type": "GameObject",
+        "name": "gameObject"
+      },
+      {
+        "paramType": "regular",
+        "type": "ScaleXY",
+        "name": "scale"
+      }
     ],
     "retType": "GameObject"
   },
@@ -243,14 +267,16 @@
     "name": "update_text",
     "description": "<p>Updates the text of the TextGameObject.</p>",
     "params": [
-      [
-        "textGameObject",
-        "TextGameObject"
-      ],
-      [
-        "text",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "TextGameObject",
+        "name": "textGameObject"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "text"
+      }
     ],
     "retType": "GameObject"
   },
@@ -259,10 +285,11 @@
     "name": "update_to_top",
     "description": "<p>Renders this GameObject in front of all other GameObjects.</p>",
     "params": [
-      [
-        "gameObject",
-        "GameObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "GameObject",
+        "name": "gameObject"
+      }
     ],
     "retType": "GameObject"
   },
@@ -271,10 +298,11 @@
     "name": "set_fps",
     "description": "<p>Sets the frames per second of the canvas, which should be between the MIN_FPS and MAX_FPS.\nIt ranges between 1 and 120, with the default target as 30.\nThis function should not be called in the update function.</p>",
     "params": [
-      [
-        "fps",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "fps"
+      }
     ],
     "retType": "void"
   },
@@ -283,10 +311,11 @@
     "name": "set_dimensions",
     "description": "<p>Sets the dimensions of the canvas, which should be between the\nmin and max widths and height.</p>",
     "params": [
-      [
-        "dimensions",
-        "DimensionsXY"
-      ]
+      {
+        "paramType": "regular",
+        "type": "DimensionsXY",
+        "name": "dimensions"
+      }
     ],
     "retType": "void"
   },
@@ -295,10 +324,11 @@
     "name": "set_scale",
     "description": "<p>Sets the scale (zoom) of the pixels in the canvas.\nIf scale is doubled, then the number of units across would be halved.\nThis has a side effect of making the game pixelated if scale &gt; 1.\nThe default scale is 1.</p>",
     "params": [
-      [
-        "scale",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "scale"
+      }
     ],
     "retType": "void"
   },
@@ -328,10 +358,11 @@
     "name": "debug_log",
     "description": "<p>Logs any information passed into it within the <code>update_loop</code>.\nDisplays the information in the top-left corner of the canvas only if debug mode is enabled.\nCalling <code>display</code> within the <code>update_loop</code> function will not work as intended, so use <code>debug_log</code> instead.</p>",
     "params": [
-      [
-        "info",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "info"
+      }
     ],
     "retType": "void"
   },
@@ -340,10 +371,11 @@
     "name": "input_key_down",
     "description": "<p>Detects if a key input is pressed down.\nThis function must be called in your update function to detect inputs.\nTo get specific keys, go to https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key#result.</p>",
     "params": [
-      [
-        "key_name",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "key_name"
+      }
     ],
     "retType": "boolean"
   },
@@ -366,10 +398,11 @@
     "name": "pointer_over_gameobject",
     "description": "<p>Detects if the (mouse) pointer is over the gameobject.\nThis function should be called in your update function.</p>",
     "params": [
-      [
-        "gameObject",
-        "GameObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "GameObject",
+        "name": "gameObject"
+      }
     ],
     "retType": "boolean"
   },
@@ -378,14 +411,16 @@
     "name": "gameobjects_overlap",
     "description": "<p>Checks if two gameobjects overlap with each other, using a rectangular bounding box.\nThis bounding box is rectangular, for all GameObjects.\nThis function should be called in your update function.</p>",
     "params": [
-      [
-        "gameObject1",
-        "InteractableGameObject"
-      ],
-      [
-        "gameObject2",
-        "InteractableGameObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "InteractableGameObject",
+        "name": "gameObject1"
+      },
+      {
+        "paramType": "regular",
+        "type": "InteractableGameObject",
+        "name": "gameObject2"
+      }
     ],
     "retType": "boolean"
   },
@@ -394,10 +429,11 @@
     "name": "update_loop",
     "description": "<p>This sets the update loop in the canvas.\nThe update loop is run once per frame, so it depends on the fps set for the number of times this loop is run.\nThere should only be one update_loop called.\nAll game logic should be handled within your update_function.\nYou cannot create GameObjects inside the update_loop.\ngame_state is an array that can be modified to store anything.</p>",
     "params": [
-      [
-        "update_function",
-        "UpdateFunction"
-      ]
+      {
+        "paramType": "regular",
+        "type": "UpdateFunction",
+        "name": "update_function"
+      }
     ],
     "retType": "void"
   },
@@ -413,14 +449,16 @@
     "name": "create_audio",
     "description": "<p>Create an audio clip that can be referenced.\nSource Academy assets can be found at https://source-academy-assets.s3-ap-southeast-1.amazonaws.com/ with Ctrl+f '.mp3'.\nPhaser audio assets can be found at https://labs.phaser.io/assets/audio.\nPhaser sound effects assets can be found at https://labs.phaser.io/assets/audio/SoundEffects/.\nIf Phaser assets are unavailable, go to https://github.com/photonstorm/phaser3-examples/tree/master/public/assets\nto get the asset path and append it to <code>https://labs.phaser.io/assets/</code>.\nThis function should not be called in your update function.</p>",
     "params": [
-      [
-        "audio_url",
-        "string"
-      ],
-      [
-        "volume_level",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "audio_url"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "volume_level"
+      }
     ],
     "retType": "AudioClip"
   },
@@ -429,10 +467,11 @@
     "name": "loop_audio",
     "description": "<p>Loops the audio clip provided, which will play the audio clip indefinitely.\nSetting whether an audio clip should loop be done outside the update function.</p>",
     "params": [
-      [
-        "audio_clip",
-        "AudioClip"
-      ]
+      {
+        "paramType": "regular",
+        "type": "AudioClip",
+        "name": "audio_clip"
+      }
     ],
     "retType": "AudioClip"
   },
@@ -441,10 +480,11 @@
     "name": "stop_audio",
     "description": "<p>Stops the audio clip immediately.</p>",
     "params": [
-      [
-        "audio_clip",
-        "AudioClip"
-      ]
+      {
+        "paramType": "regular",
+        "type": "AudioClip",
+        "name": "audio_clip"
+      }
     ],
     "retType": "AudioClip"
   },
@@ -453,10 +493,11 @@
     "name": "play_audio",
     "description": "<p>Plays the audio clip, and stops when the audio clip is over.</p>",
     "params": [
-      [
-        "audio_clip",
-        "AudioClip"
-      ]
+      {
+        "paramType": "regular",
+        "type": "AudioClip",
+        "name": "audio_clip"
+      }
     ],
     "retType": "AudioClip"
   }

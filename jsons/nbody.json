@@ -4,30 +4,36 @@
     "name": "createCelestialBody",
     "description": "<p>Create a new celestial body.</p>",
     "params": [
-      [
-        "label",
-        "string"
-      ],
-      [
-        "mass",
-        "number"
-      ],
-      [
-        "radius",
-        "number"
-      ],
-      [
-        "position",
-        "Vector3"
-      ],
-      [
-        "velocity",
-        "Vector3"
-      ],
-      [
-        "acceleration",
-        "Vector3"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "label"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "mass"
+      },
+      {
+        "paramType": "optional",
+        "type": "number",
+        "name": "radius"
+      },
+      {
+        "paramType": "optional",
+        "type": "Vector3",
+        "name": "position"
+      },
+      {
+        "paramType": "optional",
+        "type": "Vector3",
+        "name": "velocity"
+      },
+      {
+        "paramType": "optional",
+        "type": "Vector3",
+        "name": "acceleration"
+      }
     ],
     "retType": "CelestialBody"
   },
@@ -36,10 +42,11 @@
     "name": "createCentripetalForce",
     "description": "<p>Create a centripetal force that pulls bodies towards a center.</p>",
     "params": [
-      [
-        "center",
-        "Vector3"
-      ]
+      {
+        "paramType": "optional",
+        "type": "Vector3",
+        "name": "center"
+      }
     ],
     "retType": "CentripetalForce"
   },
@@ -48,10 +55,11 @@
     "name": "createCombinedForce",
     "description": "<p>Create a combined force that is an additive combination of all the given forces.</p>",
     "params": [
-      [
-        "forces",
-        "Force[]"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Force[]",
+        "name": "forces"
+      }
     ],
     "retType": "CombinedForce"
   },
@@ -60,10 +68,11 @@
     "name": "createForce",
     "description": "<p>Create a force that applies to all bodies using the provided higher order/lambda/arrow/anonymous function.</p>",
     "params": [
-      [
-        "fn",
-        "(bodies: CelestialBody[]) => Vector3[]"
-      ]
+      {
+        "paramType": "regular",
+        "type": "(bodies: CelestialBody[]) => Vector3[]",
+        "name": "fn"
+      }
     ],
     "retType": "Force"
   },
@@ -72,10 +81,11 @@
     "name": "createGravity",
     "description": "<p>Create a force that applies to all bodies.</p>",
     "params": [
-      [
-        "G",
-        "number"
-      ]
+      {
+        "paramType": "optional",
+        "type": "number",
+        "name": "G"
+      }
     ],
     "retType": "Gravity"
   },
@@ -84,10 +94,11 @@
     "name": "clone",
     "description": "<p>Deep clone an object.</p>",
     "params": [
-      [
-        "obj",
-        "Vector3 | CelestialBody | State | Universe"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector3 | CelestialBody | State | Universe",
+        "name": "obj"
+      }
     ],
     "retType": "Vector3 | CelestialBody | State | Universe"
   },
@@ -96,10 +107,11 @@
     "name": "createExplicitEulerSim",
     "description": "<p>Create an explicit euler integrator to be used as the simulation function.</p>",
     "params": [
-      [
-        "force",
-        "Force"
-      ]
+      {
+        "paramType": "optional",
+        "type": "Force",
+        "name": "force"
+      }
     ],
     "retType": "ExplicitEulerSim"
   },
@@ -108,10 +120,11 @@
     "name": "createLambdaSim",
     "description": "<p>Create a simulate function (usually a numerical integrator) that is used to simulate the nbody system using the provided higher order/lambda/arrow/anonymous function.</p>",
     "params": [
-      [
-        "fn",
-        "(deltaT: number, prevState: State, currState: State) => State"
-      ]
+      {
+        "paramType": "regular",
+        "type": "(deltaT: number, prevState: State, currState: State) => State",
+        "name": "fn"
+      }
     ],
     "retType": "LambdaSim"
   },
@@ -120,14 +133,16 @@
     "name": "createRungeKutta4Sim",
     "description": "<p>Create a numerical integrator that uses the Runge-Kutta 4 method to simulate the nbody system.</p>",
     "params": [
-      [
-        "force",
-        "Force"
-      ],
-      [
-        "weights",
-        "number[]"
-      ]
+      {
+        "paramType": "optional",
+        "type": "Force",
+        "name": "force"
+      },
+      {
+        "paramType": "optional",
+        "type": "number[]",
+        "name": "weights"
+      }
     ],
     "retType": "RungeKutta4Sim"
   },
@@ -136,10 +151,11 @@
     "name": "createSemiImplicitEulerSim",
     "description": "<p>Create a numerical integrator that uses the semi-implicit Euler method to simulate the nbody system.</p>",
     "params": [
-      [
-        "force",
-        "Force"
-      ]
+      {
+        "paramType": "optional",
+        "type": "Force",
+        "name": "force"
+      }
     ],
     "retType": "SemiImplicitEulerSim"
   },
@@ -148,10 +164,11 @@
     "name": "createVelocityVerletSim",
     "description": "<p>Create a numerical integrator that uses the velocity Verlet method to simulate the nbody system.</p>",
     "params": [
-      [
-        "force",
-        "Force"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Force",
+        "name": "force"
+      }
     ],
     "retType": "VelocityVerletSim"
   },
@@ -160,30 +177,36 @@
     "name": "createSimulation",
     "description": "<p>Create a new simulation.</p>",
     "params": [
-      [
-        "universes",
-        "Universe[]"
-      ],
-      [
-        "visType",
-        "VisType"
-      ],
-      [
-        "record",
-        "boolean"
-      ],
-      [
-        "looped",
-        "boolean"
-      ],
-      [
-        "showTrails",
-        "boolean"
-      ],
-      [
-        "maxTrailLength",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Universe[]",
+        "name": "universes"
+      },
+      {
+        "paramType": "regular",
+        "type": "VisType",
+        "name": "visType"
+      },
+      {
+        "paramType": "optional",
+        "type": "boolean",
+        "name": "record"
+      },
+      {
+        "paramType": "optional",
+        "type": "boolean",
+        "name": "looped"
+      },
+      {
+        "paramType": "optional",
+        "type": "boolean",
+        "name": "showTrails"
+      },
+      {
+        "paramType": "optional",
+        "type": "number",
+        "name": "maxTrailLength"
+      }
     ],
     "retType": "Simulation"
   },
@@ -192,10 +215,11 @@
     "name": "playSim",
     "description": "<p>Play a simulation.</p>",
     "params": [
-      [
-        "sim",
-        "Simulation"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Simulation",
+        "name": "sim"
+      }
     ],
     "retType": "void"
   },
@@ -204,18 +228,21 @@
     "name": "recordSim",
     "description": "<p>Record and play a simulation.</p>",
     "params": [
-      [
-        "sim",
-        "Simulation"
-      ],
-      [
-        "recordFor",
-        "number"
-      ],
-      [
-        "recordSpeed",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Simulation",
+        "name": "sim"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "recordFor"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "recordSpeed"
+      }
     ],
     "retType": "void"
   },
@@ -224,10 +251,11 @@
     "name": "createState",
     "description": "<p>Create a new state snapshot of the universe.</p>",
     "params": [
-      [
-        "bodies",
-        "CelestialBody[]"
-      ]
+      {
+        "paramType": "regular",
+        "type": "CelestialBody[]",
+        "name": "bodies"
+      }
     ],
     "retType": "State"
   },
@@ -236,10 +264,11 @@
     "name": "getBodies",
     "description": "<p>Get the bodies in a state.</p>",
     "params": [
-      [
-        "state",
-        "State"
-      ]
+      {
+        "paramType": "regular",
+        "type": "State",
+        "name": "state"
+      }
     ],
     "retType": "CelestialBody[]"
   },
@@ -248,10 +277,11 @@
     "name": "createBodyCenterTransformation",
     "description": "<p>Create a frame of reference transformation that moves the origin to the center of ith both.</p>",
     "params": [
-      [
-        "i",
-        "number"
-      ]
+      {
+        "paramType": "optional",
+        "type": "number",
+        "name": "i"
+      }
     ],
     "retType": "BodyCenterTransformation"
   },
@@ -267,10 +297,11 @@
     "name": "createLambdaTransformation",
     "description": "<p>Create a frame of reference transformation using a higher order/lambda/arrow/anonymous function.</p>",
     "params": [
-      [
-        "fn",
-        "(state: State) => State"
-      ]
+      {
+        "paramType": "regular",
+        "type": "(state: State) => State",
+        "name": "fn"
+      }
     ],
     "retType": "LambdaTransformation"
   },
@@ -279,14 +310,16 @@
     "name": "createPinTransformation",
     "description": "<p>Create a frame of reference transformation that pins the ith body to a specific axis.</p>",
     "params": [
-      [
-        "axis",
-        "Vector3"
-      ],
-      [
-        "i",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector3",
+        "name": "axis"
+      },
+      {
+        "paramType": "optional",
+        "type": "number",
+        "name": "i"
+      }
     ],
     "retType": "PinTransformation"
   },
@@ -295,14 +328,16 @@
     "name": "createRotateTransformation",
     "description": "<p>Create a frame of reference transformation that rotates the system around an axis by an angle.</p>",
     "params": [
-      [
-        "axis",
-        "Vector3"
-      ],
-      [
-        "angle",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector3",
+        "name": "axis"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "angle"
+      }
     ],
     "retType": "RotateTransformation"
   },
@@ -311,14 +346,16 @@
     "name": "createTimedRotateTransformation",
     "description": "<p>Create a frame of reference transformation that rotates the system by 360 deg around an axis over a period of time.</p>",
     "params": [
-      [
-        "axis",
-        "Vector3"
-      ],
-      [
-        "revolutionTime",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector3",
+        "name": "axis"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "revolutionTime"
+      }
     ],
     "retType": "TimedRotateTransformation"
   },
@@ -327,30 +364,36 @@
     "name": "createUniverse",
     "description": "<p>Create a new universe.</p>",
     "params": [
-      [
-        "label",
-        "string"
-      ],
-      [
-        "color",
-        "string | string[]"
-      ],
-      [
-        "prevState",
-        "State | undefined"
-      ],
-      [
-        "currState",
-        "State"
-      ],
-      [
-        "simFunc",
-        "SimulateFunction"
-      ],
-      [
-        "transformations",
-        "Transformation[]"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "label"
+      },
+      {
+        "paramType": "regular",
+        "type": "string | string[]",
+        "name": "color"
+      },
+      {
+        "paramType": "regular",
+        "type": "State | undefined",
+        "name": "prevState"
+      },
+      {
+        "paramType": "regular",
+        "type": "State",
+        "name": "currState"
+      },
+      {
+        "paramType": "regular",
+        "type": "SimulateFunction",
+        "name": "simFunc"
+      },
+      {
+        "paramType": "regular",
+        "type": "Transformation[]",
+        "name": "transformations"
+      }
     ],
     "retType": "Universe"
   },
@@ -359,14 +402,16 @@
     "name": "addVectors",
     "description": "<p>Add two vectors.</p>",
     "params": [
-      [
-        "v1",
-        "Vector3"
-      ],
-      [
-        "v2",
-        "Vector3"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector3",
+        "name": "v1"
+      },
+      {
+        "paramType": "regular",
+        "type": "Vector3",
+        "name": "v2"
+      }
     ],
     "retType": "Vector3"
   },
@@ -375,18 +420,21 @@
     "name": "createVector",
     "description": "<p>Create a new 3D vector.</p>",
     "params": [
-      [
-        "x",
-        "number"
-      ],
-      [
-        "y",
-        "number"
-      ],
-      [
-        "z",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "x"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "y"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "z"
+      }
     ],
     "retType": "Vector3"
   },
@@ -395,10 +443,11 @@
     "name": "getX",
     "description": "<p>Get the x component of a vector.</p>",
     "params": [
-      [
-        "v",
-        "Vector3"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector3",
+        "name": "v"
+      }
     ],
     "retType": "number"
   },
@@ -407,10 +456,11 @@
     "name": "getY",
     "description": "<p>Get the y component of a vector.</p>",
     "params": [
-      [
-        "v",
-        "Vector3"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector3",
+        "name": "v"
+      }
     ],
     "retType": "number"
   },
@@ -419,10 +469,11 @@
     "name": "getZ",
     "description": "<p>Get the z component of a vector.</p>",
     "params": [
-      [
-        "v",
-        "Vector3"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector3",
+        "name": "v"
+      }
     ],
     "retType": "number"
   },
@@ -431,14 +482,16 @@
     "name": "multiplyScalar",
     "description": "<p>Multiply a vector by a scalar.</p>",
     "params": [
-      [
-        "v",
-        "Vector3"
-      ],
-      [
-        "s",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector3",
+        "name": "v"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "s"
+      }
     ],
     "retType": "Vector3"
   },
@@ -447,14 +500,16 @@
     "name": "setX",
     "description": "<p>Set the x component of a vector.</p>",
     "params": [
-      [
-        "v",
-        "Vector3"
-      ],
-      [
-        "x",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector3",
+        "name": "v"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "x"
+      }
     ],
     "retType": "void"
   },
@@ -463,14 +518,16 @@
     "name": "setY",
     "description": "<p>Set the y component of a vector.</p>",
     "params": [
-      [
-        "v",
-        "Vector3"
-      ],
-      [
-        "y",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector3",
+        "name": "v"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "y"
+      }
     ],
     "retType": "void"
   },
@@ -479,14 +536,16 @@
     "name": "setZ",
     "description": "<p>Set the z component of a vector.</p>",
     "params": [
-      [
-        "v",
-        "Vector3"
-      ],
-      [
-        "z",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector3",
+        "name": "v"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "z"
+      }
     ],
     "retType": "void"
   },
@@ -495,14 +554,16 @@
     "name": "subVectors",
     "description": "<p>Subtract two vectors.</p>",
     "params": [
-      [
-        "v1",
-        "Vector3"
-      ],
-      [
-        "v2",
-        "Vector3"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector3",
+        "name": "v1"
+      },
+      {
+        "paramType": "regular",
+        "type": "Vector3",
+        "name": "v2"
+      }
     ],
     "retType": "Vector3"
   }

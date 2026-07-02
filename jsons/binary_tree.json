@@ -4,10 +4,11 @@
     "name": "entry",
     "description": "<p>Returns the entry of a given binary tree.</p>",
     "params": [
-      [
-        "t",
-        "BinaryTree"
-      ]
+      {
+        "paramType": "regular",
+        "type": "BinaryTree",
+        "name": "t"
+      }
     ],
     "retType": "any"
   },
@@ -16,10 +17,11 @@
     "name": "is_empty_tree",
     "description": "<p>Returns a boolean value, indicating whether the given\nvalue is an empty binary tree.</p>",
     "params": [
-      [
-        "value",
-        "BinaryTree"
-      ]
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "value"
+      }
     ],
     "retType": "boolean"
   },
@@ -28,10 +30,11 @@
     "name": "is_tree",
     "description": "<p>Returns a boolean value, indicating whether the given\nvalue is a binary tree.</p>",
     "params": [
-      [
-        "value",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "value"
+      }
     ],
     "retType": "boolean"
   },
@@ -40,10 +43,11 @@
     "name": "left_branch",
     "description": "<p>Returns the left branch of a given binary tree.</p>",
     "params": [
-      [
-        "t",
-        "BinaryTree"
-      ]
+      {
+        "paramType": "regular",
+        "type": "BinaryTree",
+        "name": "t"
+      }
     ],
     "retType": "BinaryTree"
   },
@@ -59,18 +63,21 @@
     "name": "make_tree",
     "description": "<p>Returns a binary tree node composed of the specified left subtree, value and right subtree.</p>",
     "params": [
-      [
-        "value",
-        "any"
-      ],
-      [
-        "left",
-        "BinaryTree"
-      ],
-      [
-        "right",
-        "BinaryTree"
-      ]
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "value"
+      },
+      {
+        "paramType": "regular",
+        "type": "BinaryTree",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "BinaryTree",
+        "name": "right"
+      }
     ],
     "retType": "BinaryTree"
   },
@@ -79,10 +86,11 @@
     "name": "right_branch",
     "description": "<p>Returns the right branch of a given binary tree.</p>",
     "params": [
-      [
-        "t",
-        "BinaryTree"
-      ]
+      {
+        "paramType": "regular",
+        "type": "BinaryTree",
+        "name": "t"
+      }
     ],
     "retType": "BinaryTree"
   }

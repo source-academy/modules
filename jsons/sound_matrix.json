@@ -24,14 +24,16 @@
     "name": "set_timeout",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "f",
-        "any"
-      ],
-      [
-        "t",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "() => void",
+        "name": "f"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "t"
+      }
     ],
     "retType": "void"
   },

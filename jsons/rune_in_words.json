@@ -4,10 +4,11 @@
     "name": "anaglyph",
     "description": "<p>Renders the specified Rune in a tab as an anaglyph. Use 3D glasses to view the\nanaglyph.</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -16,14 +17,16 @@
     "name": "beside",
     "description": "<p>Makes a new Rune from two given Runes by\nplacing the first on the left of the second,\nboth occupying equal portions of the width\nof the result</p>",
     "params": [
-      [
-        "rune1",
-        "string"
-      ],
-      [
-        "rune2",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune1"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune2"
+      }
     ],
     "retType": "string"
   },
@@ -32,18 +35,21 @@
     "name": "beside_frac",
     "description": "<p>Makes a new Rune from two given Runes by\nplacing the first on the left of the second\nsuch that the first one occupies frac\nportion of the width of the result and\nthe second the rest</p>",
     "params": [
-      [
-        "frac",
-        "number"
-      ],
-      [
-        "rune1",
-        "string"
-      ],
-      [
-        "rune2",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "frac"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune1"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune2"
+      }
     ],
     "retType": "string"
   },
@@ -52,10 +58,11 @@
     "name": "black",
     "description": "<p>Colors the given rune black (#000000).</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -63,17 +70,18 @@
     "kind": "variable",
     "name": "blank",
     "description": "<p>Rune with the shape of a blank square</p>",
-    "type": "string"
+    "type": "Rune"
   },
   "blue": {
     "kind": "function",
     "name": "blue",
     "description": "<p>Colors the given rune blue (#2196F3).</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -82,10 +90,11 @@
     "name": "brown",
     "description": "<p>Colors the given rune brown.</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -93,29 +102,33 @@
     "kind": "variable",
     "name": "circle",
     "description": "<p>Rune with the shape of a circle</p>",
-    "type": "string"
+    "type": "Rune"
   },
   "color": {
     "kind": "function",
     "name": "color",
     "description": "<p>Adds color to rune by specifying\nthe red, green, blue (RGB) value, ranging from 0.0 to 1.0.\nRGB is additive: if all values are 1, the color is white,\nand if all values are 0, the color is black.</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ],
-      [
-        "r",
-        "number"
-      ],
-      [
-        "g",
-        "number"
-      ],
-      [
-        "b",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "r"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "g"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "b"
+      }
     ],
     "retType": "string"
   },
@@ -123,17 +136,18 @@
     "kind": "variable",
     "name": "corner",
     "description": "<p>Rune with black triangle,\nfilling upper right corner</p>",
-    "type": "string"
+    "type": "Rune"
   },
   "flip_horiz": {
     "kind": "function",
     "name": "flip_horiz",
     "description": "<p>Makes a new Rune from a given Rune by\nflipping it around a vertical axis,\ncreating a mirror image</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -142,10 +156,11 @@
     "name": "flip_vert",
     "description": "<p>Makes a new Rune from a given Rune by\nflipping it around a horizontal axis,\nturning it upside down</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -154,10 +169,11 @@
     "name": "from_url",
     "description": "<p>Create a rune using the image provided in the url</p>",
     "params": [
-      [
-        "imageUrl",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "imageUrl"
+      }
     ],
     "retType": "string"
   },
@@ -166,10 +182,11 @@
     "name": "green",
     "description": "<p>Colors the given rune green (#4CAF50).</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -177,17 +194,18 @@
     "kind": "variable",
     "name": "heart",
     "description": "<p>Rune with the shape of a heart</p>",
-    "type": "string"
+    "type": "Rune"
   },
   "hollusion": {
     "kind": "function",
     "name": "hollusion",
     "description": "<p>Renders the specified Rune in a tab as a hollusion, with a default magnitude\nof 0.1.</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -196,10 +214,11 @@
     "name": "indigo",
     "description": "<p>Colors the given rune indigo (#3F51B5).</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -208,10 +227,11 @@
     "name": "make_cross",
     "description": "<p>Makes a new Rune from a given Rune by\narranging into a square for copies of the\ngiven Rune in different orientations</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -219,17 +239,18 @@
     "kind": "variable",
     "name": "nova",
     "description": "<p>Rune with the shape of two overlapping\ntriangles, residing in the upper half\nof the shape</p>",
-    "type": "string"
+    "type": "Rune"
   },
   "orange": {
     "kind": "function",
     "name": "orange",
     "description": "<p>Colors the given rune orange (#FF9800).</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -238,14 +259,16 @@
     "name": "overlay",
     "description": "<p>The depth range of the z-axis of a rune is [0,-1], this function maps the depth range of rune1 and rune2 to [0,-0.5] and [-0.5,-1] respectively.</p>",
     "params": [
-      [
-        "rune1",
-        "string"
-      ],
-      [
-        "rune2",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune1"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune2"
+      }
     ],
     "retType": "string"
   },
@@ -254,18 +277,21 @@
     "name": "overlay_frac",
     "description": "<p>The depth range of the z-axis of a rune is [0,-1], this function gives a [0, -frac] of the depth range to rune1 and the rest to rune2.</p>",
     "params": [
-      [
-        "frac",
-        "number"
-      ],
-      [
-        "rune1",
-        "string"
-      ],
-      [
-        "rune2",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "frac"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune1"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune2"
+      }
     ],
     "retType": "string"
   },
@@ -273,17 +299,18 @@
     "kind": "variable",
     "name": "pentagram",
     "description": "<p>Rune with the shape of a pentagram</p>",
-    "type": "string"
+    "type": "Rune"
   },
   "pink": {
     "kind": "function",
     "name": "pink",
     "description": "<p>Colors the given rune pink (#E91E63s).</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -292,10 +319,11 @@
     "name": "purple",
     "description": "<p>Colors the given rune purple (#AA00FF).</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -304,10 +332,11 @@
     "name": "quarter_turn_left",
     "description": "<p>Makes a new Rune from a given Rune\nby turning it a quarter-turn in\nanti-clockwise direction.</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -316,10 +345,11 @@
     "name": "quarter_turn_right",
     "description": "<p>Makes a new Rune from a given Rune\nby turning it a quarter-turn around the centre in\nclockwise direction.</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -328,10 +358,11 @@
     "name": "random_color",
     "description": "<p>Gives random color to the given rune.\nThe color is chosen randomly from the following nine\ncolors: red, pink, purple, indigo, blue, green, yellow, orange, brown</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -339,17 +370,18 @@
     "kind": "variable",
     "name": "rcross",
     "description": "<p>Rune with the shape of a\nsmall square inside a large square,\neach diagonally split into a\nblack and white half</p>",
-    "type": "string"
+    "type": "Rune"
   },
   "red": {
     "kind": "function",
     "name": "red",
     "description": "<p>Colors the given rune red (#F44336).</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -358,18 +390,21 @@
     "name": "repeat_pattern",
     "description": "<p>Applies a given function n times to an initial value</p>",
     "params": [
-      [
-        "n",
-        "number"
-      ],
-      [
-        "pattern",
-        "(a: string) => string"
-      ],
-      [
-        "initial",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "n"
+      },
+      {
+        "paramType": "regular",
+        "type": "(a: string) => string",
+        "name": "pattern"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "initial"
+      }
     ],
     "retType": "string"
   },
@@ -377,21 +412,23 @@
     "kind": "variable",
     "name": "ribbon",
     "description": "<p>Rune with the shape of a ribbon\nwinding outwards in an anticlockwise spiral</p>",
-    "type": "string"
+    "type": "Rune"
   },
   "rotate": {
     "kind": "function",
     "name": "rotate",
     "description": "<p>Rotates a given Rune by a given angle,\ngiven in radians, in anti-clockwise direction.\nNote that parts of the Rune\nmay be cropped as a result.</p>",
     "params": [
-      [
-        "rad",
-        "number"
-      ],
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "rad"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -399,21 +436,23 @@
     "kind": "variable",
     "name": "sail",
     "description": "<p>Rune with the shape of a sail</p>",
-    "type": "string"
+    "type": "Rune"
   },
   "scale": {
     "kind": "function",
     "name": "scale",
     "description": "<p>Scales a given Rune by a given factor in both x and y direction</p>",
     "params": [
-      [
-        "ratio",
-        "number"
-      ],
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "ratio"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -422,18 +461,21 @@
     "name": "scale_independent",
     "description": "<p>Scales a given Rune by separate factors in x and y direction</p>",
     "params": [
-      [
-        "ratio_x",
-        "number"
-      ],
-      [
-        "ratio_y",
-        "number"
-      ],
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "ratio_x"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "ratio_y"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -442,10 +484,11 @@
     "name": "show",
     "description": "<p>Renders the specified Rune in a tab as a basic drawing.</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -453,21 +496,23 @@
     "kind": "variable",
     "name": "square",
     "description": "<p>Rune with the shape of a full square</p>",
-    "type": "string"
+    "type": "Rune"
   },
   "stack": {
     "kind": "function",
     "name": "stack",
     "description": "<p>Makes a new Rune from two given Runes by\nplacing the first on top of the second, each\noccupying equal parts of the height of the\nresult</p>",
     "params": [
-      [
-        "rune1",
-        "string"
-      ],
-      [
-        "rune2",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune1"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune2"
+      }
     ],
     "retType": "string"
   },
@@ -476,14 +521,16 @@
     "name": "stackn",
     "description": "<p>Makes a new Rune from a given Rune\nby vertically stacking n copies of it</p>",
     "params": [
-      [
-        "n",
-        "number"
-      ],
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "n"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -492,18 +539,21 @@
     "name": "stack_frac",
     "description": "<p>Makes a new Rune from two given Runes by\nplacing the first on top of the second\nsuch that the first one occupies frac\nportion of the height of the result and\nthe second the rest</p>",
     "params": [
-      [
-        "frac",
-        "number"
-      ],
-      [
-        "rune1",
-        "string"
-      ],
-      [
-        "rune2",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "frac"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune1"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune2"
+      }
     ],
     "retType": "string"
   },
@@ -512,18 +562,21 @@
     "name": "translate",
     "description": "<p>Translates a given Rune by given values in x and y direction</p>",
     "params": [
-      [
-        "x",
-        "number"
-      ],
-      [
-        "y",
-        "number"
-      ],
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "x"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "y"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -531,17 +584,18 @@
     "kind": "variable",
     "name": "triangle",
     "description": "<p>Rune with the shape of a triangle</p>",
-    "type": "string"
+    "type": "Rune"
   },
   "turn_upside_down": {
     "kind": "function",
     "name": "turn_upside_down",
     "description": "<p>Makes a new Rune from a given Rune\nby turning it upside-down</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -550,10 +604,11 @@
     "name": "white",
     "description": "<p>Colors the given rune white (#FFFFFF).</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   },
@@ -562,10 +617,11 @@
     "name": "yellow",
     "description": "<p>Colors the given rune yellow (#FFEB3B).</p>",
     "params": [
-      [
-        "rune",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "rune"
+      }
     ],
     "retType": "string"
   }

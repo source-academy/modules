@@ -4,14 +4,16 @@
     "name": "draw_line",
     "description": "<p>Draw a line from v_start to v_end</p>",
     "params": [
-      [
-        "v_start",
-        "number[]"
-      ],
-      [
-        "v_end",
-        "number[]"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "v_start"
+      },
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "v_end"
+      }
     ],
     "retType": "void"
   },
@@ -20,10 +22,11 @@
     "name": "display_painter",
     "description": "<p>Returns a function that turns a given Frame into a Drawing, given the\npainter</p>",
     "params": [
-      [
-        "painter",
-        "(frame: Frame) => void"
-      ]
+      {
+        "paramType": "regular",
+        "type": "(frame: Frame) => void",
+        "name": "painter"
+      }
     ],
     "retType": "(frame: Frame) => void"
   }

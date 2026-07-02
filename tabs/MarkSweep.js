@@ -38,162 +38,72 @@ export default require => {
     default: () => index_default
   });
   var import_core = __require("@blueprintjs/core");
+  var COMMAND;
+  (function (COMMAND2) {
+    COMMAND2["FLIP"] = "Flip";
+    COMMAND2["PUSH"] = "Push";
+    COMMAND2["POP"] = "Pop";
+    COMMAND2["COPY"] = "Copy";
+    COMMAND2["ASSIGN"] = "Assign";
+    COMMAND2["NEW"] = "New";
+    COMMAND2["START"] = "Mark and Sweep Start";
+    COMMAND2["END"] = "End of Garbage Collector";
+    COMMAND2["RESET"] = "Sweep Reset";
+    COMMAND2["SHOW_MARKED"] = "Marked Roots";
+    COMMAND2["MARK"] = "Mark";
+    COMMAND2["SWEEP"] = "Sweep";
+    COMMAND2["INIT"] = "Initialize Memory";
+  })(COMMAND || (COMMAND = {}));
+  function getModuleState(debuggerContext, name) {
+    const {context: {moduleContexts}} = debuggerContext;
+    return (name in moduleContexts) ? moduleContexts[name].state : null;
+  }
   function defineTab(tab) {
     return tab;
   }
   var import_react = __toESM(__require("react"), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
-  var MARK_SLOT = 1;
-  var MarkSweep = class extends import_react.default.Component {
-    constructor(props) {
-      super(props);
-      this.initialize_state = () => {
-        const {debuggerContext} = this.props;
-        const functions = debuggerContext.result.value;
-        const column = functions.get_column_size();
-        const tags = functions.get_tags();
-        const commandHeap = functions.get_command();
-        const unmarked = functions.get_unmarked();
-        const marked = functions.get_marked();
-        let heap = [];
-        let command = "";
-        let firstChild = -1;
-        let lastChild = -1;
-        let description = "";
-        let leftDesc = "";
-        let rightDesc = "";
-        let queue = [];
-        if (commandHeap[0]) {
-          const currentHeap = commandHeap[0];
-          heap = currentHeap.heap;
-          command = currentHeap.type;
-          firstChild = currentHeap.left;
-          lastChild = currentHeap.right;
-          description = currentHeap.desc;
-          leftDesc = currentHeap.leftDesc;
-          rightDesc = currentHeap.rightDesc;
-          queue = currentHeap.queue;
-        }
-        const memoryMatrix = functions.get_memory_matrix();
-        const flips = functions.get_flips();
-        this.setState(() => ({
-          column,
-          tags,
-          heap,
-          memoryMatrix,
-          flips,
-          commandHeap,
-          command,
-          firstChild,
-          lastChild,
-          description,
-          leftDesc,
-          rightDesc,
-          unmarked,
-          marked,
-          queue,
-          running: true
-        }));
-      };
-      this.handlePlus = () => {
-        let {value} = this.state;
-        const lengthOfFunction = this.getlengthFunction();
-        if (value < lengthOfFunction - 1) {
-          value += 1;
-          this.setState(() => {
-            const {commandHeap} = this.state;
-            return {
-              value,
-              heap: commandHeap[value].heap,
-              command: commandHeap[value].type,
-              firstChild: commandHeap[value].left,
-              lastChild: commandHeap[value].right,
-              description: commandHeap[value].desc,
-              leftDesc: commandHeap[value].leftDesc,
-              rightDesc: commandHeap[value].rightDesc,
-              queue: commandHeap[value].queue
-            };
-          });
-        }
-      };
-      this.handleMinus = () => {
-        let {value} = this.state;
-        if (value > 0) {
-          value -= 1;
-          this.setState(() => {
-            const {commandHeap} = this.state;
-            return {
-              value,
-              heap: commandHeap[value].heap,
-              command: commandHeap[value].type,
-              firstChild: commandHeap[value].left,
-              lastChild: commandHeap[value].right,
-              description: commandHeap[value].desc,
-              leftDesc: commandHeap[value].leftDesc,
-              rightDesc: commandHeap[value].rightDesc,
-              queue: commandHeap[value].queue
-            };
-          });
-        }
-      };
-      this.sliderShift = newValue => {
-        this.setState(() => {
-          const {commandHeap} = this.state;
-          return {
-            value: newValue,
-            heap: commandHeap[newValue].heap,
-            command: commandHeap[newValue].type,
-            firstChild: commandHeap[newValue].left,
-            lastChild: commandHeap[newValue].right,
-            description: commandHeap[newValue].desc,
-            leftDesc: commandHeap[newValue].leftDesc,
-            rightDesc: commandHeap[newValue].rightDesc,
-            queue: commandHeap[newValue].queue
-          };
-        });
-      };
-      this.getlengthFunction = () => {
-        const {debuggerContext} = this.props;
-        const commandHeap = debuggerContext && debuggerContext.result.value ? debuggerContext.result.value.get_command() : [];
-        return commandHeap.length;
-      };
-      this.isTag = tag => {
-        const {tags} = this.state;
-        return tags ? tags.includes(tag) : false;
-      };
-      this.getMemoryColor = indexValue => {
-        const {heap, marked, unmarked, command} = this.state;
-        const {debuggerContext} = this.props;
-        const roots = debuggerContext.result.value ? debuggerContext.result.value.get_roots() : [];
-        const value = heap ? heap[indexValue] : 0;
+  var MarkSweep = ({debuggerCtx}) => {
+    const {commandHeap, columnCount: columnSize, flips, memoryMatrix, MARKED: marked, ROOTS: roots, tags, UNMARKED: unmarked} = getModuleState(debuggerCtx, "mark_sweep");
+    const [value, setValue] = import_react.default.useState(0);
+    const handlePlus = () => {
+      if (value < commandHeap.length - 1) {
+        setValue(value + 1);
+      }
+    };
+    const handleMinus = () => {
+      if (value > 0) {
+        setValue(value - 1);
+      }
+    };
+    const isTag = tag => tags.includes(tag);
+    if (value < commandHeap.length) {
+      const {type: command, desc: description, left: firstChild, heap, right: lastChild, leftDesc, queue, rightDesc} = commandHeap[value];
+      const getMemoryColor = indexValue => {
+        const value2 = heap ? heap[indexValue] : 0;
         let color = "";
-        if (command === "Showing Roots" && roots.includes(indexValue)) {
+        if (command === COMMAND.SHOW_MARKED && roots.includes(indexValue)) {
           color = "magenta";
-        } else if (this.isTag(heap[indexValue - MARK_SLOT])) {
-          if (value === marked) {
+        } else if (isTag(heap[indexValue - MARK_SLOT])) {
+          if (value2 === marked) {
             color = "red";
-          } else if (value === unmarked) {
+          } else if (value2 === unmarked) {
             color = "black";
           }
-        } else if (!value) {
+        } else if (!value2) {
           color = "#707070";
-        } else if (this.isTag(value)) {
+        } else if (isTag(value2)) {
           color = "salmon";
         } else {
           color = "lightblue";
         }
         return color;
       };
-      this.getBackgroundColor = indexValue => {
-        const {firstChild} = this.state;
-        const {lastChild} = this.state;
-        const {commandHeap, value, command} = this.state;
-        const {debuggerContext} = this.props;
-        const roots = debuggerContext.result.value ? debuggerContext.result.value.get_roots() : [];
+      const getBackgroundColor = indexValue => {
         const size1 = commandHeap[value].sizeLeft;
         const size2 = commandHeap[value].sizeRight;
         let color = "";
-        if (command === "Showing Roots" && roots.includes(indexValue)) {
+        if (command === COMMAND.SHOW_MARKED && roots.includes(indexValue)) {
           color = "#42a870";
         } else if (indexValue >= firstChild && indexValue < firstChild + size1) {
           color = "#42a870";
@@ -202,258 +112,228 @@ export default require => {
         }
         return color;
       };
-      this.renderLabel = val => {
-        const {flips} = this.state;
-        return flips.includes(val) ? "^" : `${val}`;
-      };
-      this.state = {
-        value: 0,
-        column: 0,
-        tags: [],
-        heap: [],
-        commandHeap: [],
-        flips: [0],
-        memoryMatrix: [],
-        firstChild: -1,
-        lastChild: -1,
-        command: "",
-        description: "",
-        rightDesc: "",
-        leftDesc: "",
-        unmarked: 0,
-        marked: 1,
-        queue: [],
-        running: false
-      };
-    }
-    componentDidMount() {
-      const {debuggerContext} = this.props;
-      if (debuggerContext && debuggerContext.result && debuggerContext.result.value) {
-        this.initialize_state();
-      }
-    }
-    render() {
-      const {state} = this;
-      if (state.running) {
-        const {memoryMatrix} = this.state;
-        const lengthOfFunction = this.getlengthFunction();
-        return (0, import_jsx_runtime.jsxs)("div", {
-          children: [(0, import_jsx_runtime.jsxs)("div", {
-            children: [(0, import_jsx_runtime.jsxs)("p", {
-              children: ["This is a visualiser for mark and sweep garbage collector. Check the guide", " ", (0, import_jsx_runtime.jsx)("a", {
-                href: "https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide",
-                children: "here"
-              }), "."]
-            }), (0, import_jsx_runtime.jsx)("h3", {
-              children: state.command
-            }), (0, import_jsx_runtime.jsxs)("p", {
-              children: [" ", state.description, " "]
-            }), (0, import_jsx_runtime.jsxs)("div", {
+      return (0, import_jsx_runtime.jsxs)("div", {
+        children: [(0, import_jsx_runtime.jsxs)("div", {
+          children: [(0, import_jsx_runtime.jsxs)("p", {
+            children: ["This is a visualiser for mark and sweep garbage collector. Check the guide", " ", (0, import_jsx_runtime.jsx)("a", {
+              href: "https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide",
+              children: "here"
+            }), "."]
+          }), (0, import_jsx_runtime.jsx)("h3", {
+            children: command
+          }), (0, import_jsx_runtime.jsx)("p", {
+            children: description
+          }), (0, import_jsx_runtime.jsxs)("div", {
+            style: {
+              display: "flex",
+              flexDirection: "row",
+              marginTop: 10
+            },
+            children: [leftDesc && (0, import_jsx_runtime.jsxs)("div", {
               style: {
-                display: "flex",
-                flexDirection: "row",
-                marginTop: 10
+                flex: 1
               },
-              children: [state.leftDesc && (0, import_jsx_runtime.jsxs)("div", {
+              children: [(0, import_jsx_runtime.jsx)("canvas", {
+                width: 10,
+                height: 10,
                 style: {
-                  flex: 1
-                },
-                children: [(0, import_jsx_runtime.jsx)("canvas", {
-                  width: 10,
-                  height: 10,
-                  style: {
-                    backgroundColor: "#42a870"
-                  }
-                }), (0, import_jsx_runtime.jsxs)("span", {
-                  children: [" ", state.leftDesc, " "]
-                })]
-              }), state.rightDesc ? (0, import_jsx_runtime.jsxs)("div", {
-                style: {
-                  flex: 1
-                },
-                children: [(0, import_jsx_runtime.jsx)("canvas", {
-                  width: 10,
-                  height: 10,
-                  style: {
-                    backgroundColor: "#f0d60e"
-                  }
-                }), (0, import_jsx_runtime.jsxs)("span", {
-                  children: [" ", state.rightDesc, " "]
-                })]
-              }) : false]
-            }), (0, import_jsx_runtime.jsx)("br", {}), (0, import_jsx_runtime.jsxs)("p", {
-              children: ["Current step:", "   ", (0, import_jsx_runtime.jsx)(import_core.Icon, {
-                icon: "remove",
-                onClick: this.handleMinus
-              }), "   ", state.value, "   ", (0, import_jsx_runtime.jsx)(import_core.Icon, {
-                icon: "add",
-                onClick: this.handlePlus
+                  backgroundColor: "#42a870"
+                }
+              }), (0, import_jsx_runtime.jsxs)("span", {
+                children: [" ", leftDesc, " "]
               })]
-            }), (0, import_jsx_runtime.jsx)("div", {
+            }), rightDesc ? (0, import_jsx_runtime.jsxs)("div", {
               style: {
-                padding: 5
+                flex: 1
               },
-              children: (0, import_jsx_runtime.jsx)(import_core.Slider, {
-                disabled: lengthOfFunction <= 1,
-                min: 0,
-                max: lengthOfFunction > 0 ? lengthOfFunction - 1 : 0,
-                onChange: this.sliderShift,
-                value: state.value <= lengthOfFunction ? state.value : 0,
-                labelValues: state.flips,
-                labelRenderer: this.renderLabel
+              children: [(0, import_jsx_runtime.jsx)("canvas", {
+                width: 10,
+                height: 10,
+                style: {
+                  backgroundColor: "#f0d60e"
+                }
+              }), (0, import_jsx_runtime.jsxs)("span", {
+                children: [" ", rightDesc, " "]
+              })]
+            }) : false]
+          }), (0, import_jsx_runtime.jsx)("br", {}), (0, import_jsx_runtime.jsxs)("p", {
+            children: ["Current step:", "   ", (0, import_jsx_runtime.jsx)(import_core.Icon, {
+              icon: "remove",
+              onClick: handleMinus
+            }), "   ", value, "   ", (0, import_jsx_runtime.jsx)(import_core.Icon, {
+              icon: "add",
+              onClick: handlePlus
+            })]
+          }), (0, import_jsx_runtime.jsx)("div", {
+            style: {
+              padding: 5
+            },
+            children: (0, import_jsx_runtime.jsx)(import_core.Slider, {
+              disabled: commandHeap.length <= 1,
+              min: 0,
+              max: Math.max(commandHeap.length - 1, 0),
+              onChange: setValue,
+              value: value <= commandHeap.length ? value : 0,
+              labelValues: flips,
+              labelRenderer: val => flips.includes(val) ? "^" : `${val}`
+            })
+          })]
+        }), (0, import_jsx_runtime.jsxs)("div", {
+          children: [(0, import_jsx_runtime.jsxs)("div", {
+            children: [(0, import_jsx_runtime.jsx)("div", {
+              children: memoryMatrix.length > 0 && memoryMatrix.map((item, rowIndex) => (0, import_jsx_runtime.jsxs)("div", {
+                style: {
+                  display: "flex",
+                  flexDirection: "row"
+                },
+                children: [(0, import_jsx_runtime.jsx)("span", {
+                  style: {
+                    width: 30
+                  },
+                  children: rowIndex * columnSize
+                }), item.length > 0 && item.map(content => {
+                  const color = getMemoryColor(content);
+                  const bgColor = getBackgroundColor(content);
+                  return (0, import_jsx_runtime.jsx)("div", {
+                    style: {
+                      width: 14,
+                      backgroundColor: bgColor
+                    },
+                    children: (0, import_jsx_runtime.jsx)("canvas", {
+                      width: 10,
+                      height: 10,
+                      style: {
+                        backgroundColor: color
+                      }
+                    })
+                  });
+                })]
+              }))
+            }), (0, import_jsx_runtime.jsx)("div", {
+              children: queue.length && (0, import_jsx_runtime.jsxs)("div", {
+                children: [(0, import_jsx_runtime.jsx)("br", {}), (0, import_jsx_runtime.jsx)("span", {
+                  children: " Queue: ["
+                }), queue.map(child => (0, import_jsx_runtime.jsxs)("span", {
+                  style: {
+                    fontSize: 10
+                  },
+                  children: [" ", child, ", "]
+                })), (0, import_jsx_runtime.jsx)("span", {
+                  children: " ] "
+                })]
               })
             })]
           }), (0, import_jsx_runtime.jsxs)("div", {
+            style: {
+              display: "flex",
+              flexDirection: "row",
+              marginTop: 10
+            },
             children: [(0, import_jsx_runtime.jsxs)("div", {
-              children: [(0, import_jsx_runtime.jsx)("div", {
-                children: memoryMatrix && memoryMatrix.length > 0 && memoryMatrix.map((item, row) => (0, import_jsx_runtime.jsxs)("div", {
-                  style: {
-                    display: "flex",
-                    flexDirection: "row"
-                  },
-                  children: [(0, import_jsx_runtime.jsxs)("span", {
-                    style: {
-                      width: 30
-                    },
-                    children: [" ", row * state.column, " "]
-                  }), item && item.length > 0 && item.map(content => {
-                    const color = this.getMemoryColor(content);
-                    const bgColor = this.getBackgroundColor(content);
-                    return (0, import_jsx_runtime.jsx)("div", {
-                      style: {
-                        width: 14,
-                        backgroundColor: bgColor
-                      },
-                      children: (0, import_jsx_runtime.jsx)("canvas", {
-                        width: 10,
-                        height: 10,
-                        style: {
-                          backgroundColor: color
-                        }
-                      })
-                    });
-                  })]
-                }))
-              }), (0, import_jsx_runtime.jsx)("div", {
-                children: state.queue && state.queue.length && (0, import_jsx_runtime.jsxs)("div", {
-                  children: [(0, import_jsx_runtime.jsx)("br", {}), (0, import_jsx_runtime.jsx)("span", {
-                    children: " Queue: ["
-                  }), state.queue.map(child => (0, import_jsx_runtime.jsxs)("span", {
-                    style: {
-                      fontSize: 10
-                    },
-                    children: [" ", child, ", "]
-                  })), (0, import_jsx_runtime.jsx)("span", {
-                    children: " ] "
-                  })]
-                })
+              style: {
+                flex: 1
+              },
+              children: [(0, import_jsx_runtime.jsx)("canvas", {
+                width: 10,
+                height: 10,
+                style: {
+                  backgroundColor: "lightblue"
+                }
+              }), (0, import_jsx_runtime.jsx)("span", {
+                children: " defined"
               })]
             }), (0, import_jsx_runtime.jsxs)("div", {
               style: {
-                display: "flex",
-                flexDirection: "row",
-                marginTop: 10
+                flex: 1
               },
-              children: [(0, import_jsx_runtime.jsxs)("div", {
+              children: [(0, import_jsx_runtime.jsx)("canvas", {
+                width: 10,
+                height: 10,
                 style: {
-                  flex: 1
-                },
-                children: [(0, import_jsx_runtime.jsx)("canvas", {
-                  width: 10,
-                  height: 10,
-                  style: {
-                    backgroundColor: "lightblue"
-                  }
-                }), (0, import_jsx_runtime.jsx)("span", {
-                  children: " defined"
-                })]
-              }), (0, import_jsx_runtime.jsxs)("div", {
-                style: {
-                  flex: 1
-                },
-                children: [(0, import_jsx_runtime.jsx)("canvas", {
-                  width: 10,
-                  height: 10,
-                  style: {
-                    backgroundColor: "salmon"
-                  }
-                }), (0, import_jsx_runtime.jsx)("span", {
-                  children: " tag"
-                })]
-              }), (0, import_jsx_runtime.jsxs)("div", {
-                style: {
-                  flex: 1
-                },
-                children: [(0, import_jsx_runtime.jsx)("canvas", {
-                  width: 10,
-                  height: 10,
-                  style: {
-                    backgroundColor: "#707070"
-                  }
-                }), (0, import_jsx_runtime.jsx)("span", {
-                  children: " empty or undefined"
-                })]
+                  backgroundColor: "salmon"
+                }
+              }), (0, import_jsx_runtime.jsx)("span", {
+                children: " tag"
               })]
             }), (0, import_jsx_runtime.jsxs)("div", {
               style: {
-                display: "flex",
-                flexDirection: "row",
-                marginTop: 10
+                flex: 1
               },
-              children: [(0, import_jsx_runtime.jsx)("div", {
+              children: [(0, import_jsx_runtime.jsx)("canvas", {
+                width: 10,
+                height: 10,
                 style: {
-                  flex: 1
-                },
-                children: (0, import_jsx_runtime.jsx)("span", {
-                  children: " MARK_SLOT: "
-                })
-              }), (0, import_jsx_runtime.jsxs)("div", {
+                  backgroundColor: "#707070"
+                }
+              }), (0, import_jsx_runtime.jsx)("span", {
+                children: " empty or undefined"
+              })]
+            })]
+          }), (0, import_jsx_runtime.jsxs)("div", {
+            style: {
+              display: "flex",
+              flexDirection: "row",
+              marginTop: 10
+            },
+            children: [(0, import_jsx_runtime.jsx)("div", {
+              style: {
+                flex: 1
+              },
+              children: (0, import_jsx_runtime.jsx)("span", {
+                children: " MARK_SLOT: "
+              })
+            }), (0, import_jsx_runtime.jsxs)("div", {
+              style: {
+                flex: 1
+              },
+              children: [(0, import_jsx_runtime.jsx)("canvas", {
+                width: 10,
+                height: 10,
                 style: {
-                  flex: 1
-                },
-                children: [(0, import_jsx_runtime.jsx)("canvas", {
-                  width: 10,
-                  height: 10,
-                  style: {
-                    backgroundColor: "red"
-                  }
-                }), (0, import_jsx_runtime.jsx)("span", {
-                  children: " marked"
-                })]
-              }), (0, import_jsx_runtime.jsxs)("div", {
+                  backgroundColor: "red"
+                }
+              }), (0, import_jsx_runtime.jsx)("span", {
+                children: " marked"
+              })]
+            }), (0, import_jsx_runtime.jsxs)("div", {
+              style: {
+                flex: 1
+              },
+              children: [(0, import_jsx_runtime.jsx)("canvas", {
+                width: 10,
+                height: 10,
                 style: {
-                  flex: 1
-                },
-                children: [(0, import_jsx_runtime.jsx)("canvas", {
-                  width: 10,
-                  height: 10,
-                  style: {
-                    backgroundColor: "black"
-                  }
-                }), (0, import_jsx_runtime.jsx)("span", {
-                  children: " unmarked"
-                })]
+                  backgroundColor: "black"
+                }
+              }), (0, import_jsx_runtime.jsx)("span", {
+                children: " unmarked"
               })]
             })]
           })]
-        });
-      }
-      return (0, import_jsx_runtime.jsxs)("div", {
-        children: [(0, import_jsx_runtime.jsxs)("p", {
-          children: ["This is a visualiser for mark and sweep garbage collector. Check the guide", " ", (0, import_jsx_runtime.jsx)("a", {
-            href: "https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide",
-            children: "here"
-          }), "."]
-        }), (0, import_jsx_runtime.jsx)("p", {
-          children: " Calls the function init() at the end of your code to start. "
         })]
       });
     }
+    return (0, import_jsx_runtime.jsxs)("div", {
+      children: [(0, import_jsx_runtime.jsxs)("p", {
+        children: ["This is a visualiser for mark and sweep garbage collector. Check the guide", " ", (0, import_jsx_runtime.jsx)("a", {
+          href: "https://github.com/source-academy/modules/wiki/%5Bcopy_gc-&-mark_sweep%5D-User-Guide",
+          children: "here"
+        }), "."]
+      }), (0, import_jsx_runtime.jsxs)("p", {
+        children: [" Call the function ", (0, import_jsx_runtime.jsx)("code", {
+          children: "initialize_memory()"
+        }), " in your code to start. "]
+      })]
+    });
   };
+  var MARK_SLOT = 1;
   var index_default = defineTab({
-    toSpawn: () => true,
+    toSpawn: context => {
+      const state = getModuleState(context, "mark_sweep");
+      return state !== null;
+    },
     body: debuggerContext => (0, import_jsx_runtime.jsx)(MarkSweep, {
-      debuggerContext
+      debuggerCtx: debuggerContext
     }),
     label: "Mark Sweep Garbage Collector",
     iconName: "heat-grid"

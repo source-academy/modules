@@ -23,10 +23,16 @@ export default require => {
     return a;
   };
   var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
+  var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+  }) : x)(function (x) {
+    if (typeof require !== "undefined") return require.apply(this, arguments);
+    throw Error('Dynamic require of "' + x + '" is not supported');
+  });
   var __esm = (fn, res) => function __init() {
     return (fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res);
   };
-  var __commonJS = (cb, mod) => function __require() {
+  var __commonJS = (cb, mod) => function __require2() {
     return (mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = {
       exports: {}
     }).exports, mod), mod.exports);
@@ -58552,13 +58558,13 @@ export default require => {
                   var gl = this.gl;
                   var minFilter = gl.NEAREST;
                   var magFilter = gl.NEAREST;
-                  var wrap = gl.CLAMP_TO_EDGE;
+                  var wrap2 = gl.CLAMP_TO_EDGE;
                   var texture = null;
                   width = source ? source.width : width;
                   height = source ? source.height : height;
                   var pow = IsSizePowerOfTwo(width, height);
                   if (pow && !forceClamp) {
-                    wrap = gl.REPEAT;
+                    wrap2 = gl.REPEAT;
                   }
                   if (scaleMode === CONST.ScaleModes.LINEAR && this.config.antialias) {
                     var isCompressed = source && source.compressed;
@@ -58567,9 +58573,9 @@ export default require => {
                     magFilter = gl.LINEAR;
                   }
                   if (!source && typeof width === "number" && typeof height === "number") {
-                    texture = this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, null, width, height);
+                    texture = this.createTexture2D(0, minFilter, magFilter, wrap2, wrap2, gl.RGBA, null, width, height);
                   } else {
-                    texture = this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, source);
+                    texture = this.createTexture2D(0, minFilter, magFilter, wrap2, wrap2, gl.RGBA, source);
                   }
                   return texture;
                 },
@@ -58994,12 +59000,12 @@ export default require => {
                   var gl = this.gl;
                   var minFilter = gl.NEAREST;
                   var magFilter = gl.NEAREST;
-                  var wrap = gl.CLAMP_TO_EDGE;
+                  var wrap2 = gl.CLAMP_TO_EDGE;
                   var pow = IsSizePowerOfTwo(width, height);
                   if (pow) {
-                    wrap = gl.REPEAT;
+                    wrap2 = gl.REPEAT;
                   }
-                  return this.createTexture2D(0, minFilter, magFilter, wrap, wrap, gl.RGBA, data, width, height);
+                  return this.createTexture2D(0, minFilter, magFilter, wrap2, wrap2, gl.RGBA, data, width, height);
                 },
                 setTextureFilter: function (texture, filter) {
                   var gl = this.gl;
@@ -79645,6 +79651,12 @@ export default require => {
   init_define_process();
   init_define_process();
   init_define_process();
+  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
+  var import_base = __require("js-slang/dist/errors/base");
+  init_define_process();
+  var import_rttc = __require("js-slang/dist/utils/rttc");
+  var import_operators = __require("js-slang/dist/utils/operators");
+  init_define_process();
   var _AudioClip = class _AudioClip {
     constructor(url, volumeLevel) {
       this.url = url;
@@ -79660,7 +79672,7 @@ export default require => {
     }
     static of(url, volumeLevel) {
       if (url === "") {
-        throw new Error("AudioClip URL cannot be empty");
+        throw new import_base.GeneralRuntimeError("AudioClip URL cannot be empty");
       }
       if (_AudioClip.audioClipsIndexMap.has(url)) {
         return _AudioClip.audioClipsArray[_AudioClip.audioClipsIndexMap.get(url)];
@@ -79741,6 +79753,7 @@ export default require => {
       this.transformProps = transformProps;
       this.isTransformUpdated = false;
       this.toReplString = () => "<GameObject>";
+      this.toString = () => this.toReplString();
       this.id = _GameObject.gameObjectCount++;
     }
     setTransform(transformProps) {
@@ -79832,7 +79845,6 @@ export default require => {
     constructor() {
       super(...arguments);
       this.toReplString = () => "<ShapeGameObject>";
-      this.toString = () => this.toReplString();
     }
   };
   var RectangleGameObject = class extends ShapeGameObject {
@@ -79867,7 +79879,6 @@ export default require => {
       super(transformProps, renderProps, interactableProps);
       this.sprite = sprite;
       this.toReplString = () => "<SpriteGameObject>";
-      this.toString = () => this.toReplString();
     }
     getSprite() {
       return this.sprite;
@@ -79878,7 +79889,6 @@ export default require => {
       super(transformProps, renderProps, interactableProps);
       this.displayText = displayText;
       this.toReplString = () => "<TextGameObject>";
-      this.toString = () => this.toReplString();
     }
     setText(text) {
       this.setRenderState(this.getRenderState());
@@ -80158,150 +80168,119 @@ export default require => {
     return new TextGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, displayText);
   }
   function create_sprite(image_url) {
-    if (image_url === "") {
-      throw new Error("image_url cannot be empty");
-    }
     if (typeof image_url !== "string") {
-      throw new Error("image_url must be a string");
+      throw new import_rttcErrors.InvalidParameterTypeError("string", image_url, create_sprite.name);
+    }
+    if (image_url === "") {
+      throw new import_base.GeneralRuntimeError(`${create_sprite.name}: image_url cannot be empty`);
     }
     const sprite = {
       imageUrl: image_url
     };
     return new SpriteGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, sprite);
   }
-  function update_position(gameObject, [x, y]) {
-    if (gameObject instanceof GameObject) {
-      gameObject.setTransform(__spreadProps(__spreadValues({}, gameObject.getTransform()), {
-        position: [x, y]
-      }));
-      return gameObject;
+  function throwIfNotGameObject(obj, guard, func_name, param_name) {
+    if (!guard(obj)) {
+      throw new import_rttcErrors.InvalidParameterTypeError("GameObject", obj, func_name, param_name);
     }
-    throw new TypeError("Cannot update position of a non-GameObject");
+  }
+  function update_position(gameObject, [x, y]) {
+    throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, update_position.name);
+    gameObject.setTransform(__spreadProps(__spreadValues({}, gameObject.getTransform()), {
+      position: [x, y]
+    }));
+    return gameObject;
   }
   function update_scale(gameObject, [x, y]) {
-    if (gameObject instanceof GameObject) {
-      gameObject.setTransform(__spreadProps(__spreadValues({}, gameObject.getTransform()), {
-        scale: [x, y]
-      }));
-      return gameObject;
-    }
-    throw new TypeError("Cannot update scale of a non-GameObject");
+    throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, update_scale.name);
+    gameObject.setTransform(__spreadProps(__spreadValues({}, gameObject.getTransform()), {
+      scale: [x, y]
+    }));
+    return gameObject;
   }
   function update_rotation(gameObject, radians) {
-    if (gameObject instanceof GameObject) {
-      gameObject.setTransform(__spreadProps(__spreadValues({}, gameObject.getTransform()), {
-        rotation: radians
-      }));
-      return gameObject;
-    }
-    throw new TypeError("Cannot update rotation of a non-GameObject");
+    throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, update_rotation.name);
+    gameObject.setTransform(__spreadProps(__spreadValues({}, gameObject.getTransform()), {
+      rotation: radians
+    }));
+    return gameObject;
   }
   function update_color(gameObject, color) {
-    if (color.length !== 4) {
-      throw new Error("color must be a 4-element array");
-    }
-    if (gameObject instanceof RenderableGameObject) {
-      gameObject.setRenderState(__spreadProps(__spreadValues({}, gameObject.getRenderState()), {
-        color
-      }));
-      return gameObject;
-    }
-    throw new TypeError("Cannot update color of a non-GameObject");
+    (0, import_rttc.assertTupleOfLength)(color, 4, update_color.name, "color");
+    throwIfNotGameObject(gameObject, obj => obj instanceof RenderableGameObject, update_color.name, "gameObject");
+    gameObject.setRenderState(__spreadProps(__spreadValues({}, gameObject.getRenderState()), {
+      color
+    }));
+    return gameObject;
   }
   function update_flip(gameObject, flip) {
-    if (flip.length !== 2) {
-      throw new Error("flip must be a 2-element array");
-    }
-    if (gameObject instanceof RenderableGameObject) {
-      gameObject.setRenderState(__spreadProps(__spreadValues({}, gameObject.getRenderState()), {
-        flip
-      }));
-      return gameObject;
-    }
-    throw new TypeError("Cannot update flip of a non-GameObject");
+    (0, import_rttc.assertTupleOfLength)(flip, 2, update_flip.name, "flip");
+    throwIfNotGameObject(gameObject, obj => obj instanceof RenderableGameObject, update_flip.name, "gameObject");
+    gameObject.setRenderState(__spreadProps(__spreadValues({}, gameObject.getRenderState()), {
+      flip
+    }));
+    return gameObject;
   }
   function update_text(textGameObject, text) {
-    if (textGameObject instanceof TextGameObject) {
-      textGameObject.setText({
-        text
-      });
-      return textGameObject;
+    if (typeof text !== "string") {
+      throw new import_rttcErrors.InvalidParameterTypeError("string", text, update_text.name, "text");
     }
-    throw new TypeError("Cannot update text onto a non-TextGameObject");
+    throwIfNotGameObject(textGameObject, obj => obj instanceof TextGameObject, update_text.name, "textGameObject");
+    textGameObject.setText({
+      text
+    });
+    return textGameObject;
   }
   function update_to_top(gameObject) {
-    if (gameObject instanceof RenderableGameObject) {
-      gameObject.setBringToTopFlag();
-      return gameObject;
-    }
-    throw new TypeError("Cannot update to top a non-GameObject");
+    throwIfNotGameObject(gameObject, obj => obj instanceof RenderableGameObject, update_to_top.name);
+    gameObject.setBringToTopFlag();
+    return gameObject;
   }
   function query_id(gameObject) {
-    if (gameObject instanceof GameObject) {
-      return gameObject.id;
-    }
-    throw new TypeError("Cannot query id of non-GameObject");
+    throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, query_id.name);
+    return gameObject.id;
   }
   function query_position(gameObject) {
-    if (gameObject instanceof GameObject) {
-      return [...gameObject.getTransform().position];
-    }
-    throw new TypeError("Cannot query position of non-GameObject");
+    throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, query_position.name);
+    return [...gameObject.getTransform().position];
   }
   function query_rotation(gameObject) {
-    if (gameObject instanceof GameObject) {
-      return gameObject.getTransform().rotation;
-    }
-    throw new TypeError("Cannot query rotation of non-GameObject");
+    throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, query_rotation.name);
+    return gameObject.getTransform().rotation;
   }
   function query_scale(gameObject) {
-    if (gameObject instanceof GameObject) {
-      return [...gameObject.getTransform().scale];
-    }
-    throw new TypeError("Cannot query scale of non-GameObject");
+    throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, query_scale.name);
+    return [...gameObject.getTransform().scale];
   }
   function query_color(gameObject) {
-    if (gameObject instanceof RenderableGameObject) {
-      return [...gameObject.getColor()];
-    }
-    throw new TypeError("Cannot query color of non-GameObject");
+    throwIfNotGameObject(gameObject, obj => obj instanceof RenderableGameObject, query_color.name);
+    return [...gameObject.getColor()];
   }
   function query_flip(gameObject) {
-    if (gameObject instanceof RenderableGameObject) {
-      return [...gameObject.getFlipState()];
-    }
-    throw new TypeError("Cannot query flip of non-GameObject");
+    throwIfNotGameObject(gameObject, obj => obj instanceof RenderableGameObject, query_flip.name);
+    return [...gameObject.getFlipState()];
   }
   function query_text(textGameObject) {
-    if (textGameObject instanceof TextGameObject) {
-      return textGameObject.getText().text;
-    }
-    throw new TypeError("Cannot query text of non-TextGameObject");
+    throwIfNotGameObject(textGameObject, obj => obj instanceof TextGameObject, query_text.name);
+    return textGameObject.getText().text;
   }
   function query_pointer_position() {
     return gameState.pointerProps.pointerPosition;
   }
-  var withinRange = (num, min, max) => {
-    if (num > max) {
-      return max;
-    }
-    if (num < min) {
-      return min;
-    }
-    return num;
-  };
   function set_fps(fps) {
-    config.fps = withinRange(fps, MIN_FPS, MAX_FPS);
+    (0, import_rttc.assertNumberWithinRange)(fps, set_fps.name, MIN_FPS, MAX_FPS);
+    config.fps = fps;
   }
   function set_dimensions(dimensions) {
-    if (dimensions.length !== 2) {
-      throw new Error("dimensions must be a 2-element array");
-    }
-    config.width = withinRange(dimensions[0], MIN_WIDTH, MAX_WIDTH);
-    config.height = withinRange(dimensions[1], MIN_HEIGHT, MAX_HEIGHT);
+    (0, import_rttc.assertTupleOfLength)(dimensions, 2, set_dimensions.name, "dimensions");
+    (0, import_rttc.assertNumberWithinRange)(dimensions[0], set_dimensions.name, MIN_WIDTH, MAX_WIDTH);
+    config.width = dimensions[0];
+    (0, import_rttc.assertNumberWithinRange)(dimensions[1], set_dimensions.name, MIN_HEIGHT, MAX_HEIGHT);
+    config.height = dimensions[1];
   }
   function set_scale(scale) {
-    config.scale = withinRange(scale, MIN_SCALE, MAX_SCALE);
+    (0, import_rttc.assertNumberWithinRange)(scale, set_scale.name, MIN_SCALE, MAX_SCALE);
+    config.scale = scale;
   }
   function enable_debug() {
     config.isDebugEnabled = true;
@@ -80321,16 +80300,13 @@ export default require => {
     return gameState.pointerProps.isPointerSecondaryDown;
   }
   function pointer_over_gameobject(gameObject) {
-    if (gameObject instanceof GameObject) {
-      return gameState.pointerProps.pointerOverGameObjectsId.has(gameObject.id);
-    }
-    throw new TypeError("Cannot check pointer over non-GameObject");
+    throwIfNotGameObject(gameObject, obj => obj instanceof GameObject, pointer_over_gameobject.name);
+    return gameState.pointerProps.pointerOverGameObjectsId.has(gameObject.id);
   }
   function gameobjects_overlap(gameObject1, gameObject2) {
-    if (gameObject1 instanceof InteractableGameObject && gameObject2 instanceof InteractableGameObject) {
-      return gameObject1.isOverlapping(gameObject2);
-    }
-    throw new TypeError("Cannot check overlap of non-GameObject");
+    throwIfNotGameObject(gameObject1, obj => obj instanceof InteractableGameObject, gameobjects_overlap.name, "gameObject1");
+    throwIfNotGameObject(gameObject2, obj => obj instanceof InteractableGameObject, gameobjects_overlap.name, "gameObject2");
+    return gameObject1.isOverlapping(gameObject2);
   }
   function get_game_time() {
     return gameState.gameTime;
@@ -80373,33 +80349,31 @@ export default require => {
   }
   function create_audio(audio_url, volume_level) {
     if (typeof audio_url !== "string") {
-      throw new Error("audio_url must be a string");
+      throw new import_rttcErrors.InvalidParameterTypeError("string", audio_url, create_audio.name);
     }
-    if (typeof volume_level !== "number") {
-      throw new Error("volume_level must be a number");
-    }
-    return AudioClip.of(audio_url, withinRange(volume_level, MIN_VOLUME, MAX_VOLUME));
+    (0, import_rttc.assertNumberWithinRange)(volume_level, create_audio.name, MIN_VOLUME, MAX_VOLUME);
+    return AudioClip.of(audio_url, volume_level);
   }
   function loop_audio(audio_clip) {
     if (audio_clip instanceof AudioClip) {
       audio_clip.setShouldAudioClipLoop(true);
       return audio_clip;
     }
-    throw new TypeError("Cannot loop a non-AudioClip");
+    throw new import_rttcErrors.InvalidParameterTypeError("AudioClip", audio_clip, loop_audio.name);
   }
   function play_audio(audio_clip) {
     if (audio_clip instanceof AudioClip) {
       audio_clip.setShouldAudioClipPlay(true);
       return audio_clip;
     }
-    throw new TypeError("Cannot play a non-AudioClip");
+    throw new import_rttcErrors.InvalidParameterTypeError("AudioClip", audio_clip, play_audio.name);
   }
   function stop_audio(audio_clip) {
     if (audio_clip instanceof AudioClip) {
       audio_clip.setShouldAudioClipPlay(false);
       return audio_clip;
     }
-    throw new TypeError("Cannot stop a non-AudioClip");
+    throw new import_rttcErrors.InvalidParameterTypeError("AudioClip", audio_clip, stop_audio.name);
   }
   return __toCommonJS(index_exports);
 };

@@ -6666,10 +6666,10 @@ ${nonManifold.join("\n")}`);
             listofpolys = [points];
           }
         }
-        listofpolys.forEach((list2, i) => {
-          if (!Array.isArray(list2)) throw new Error("list of points " + i + " must be an array");
-          if (list2.length < 3) throw new Error("list of points " + i + " must contain three or more points");
-          list2.forEach((point, j) => {
+        listofpolys.forEach((list, i) => {
+          if (!Array.isArray(list)) throw new Error("list of points " + i + " must be an array");
+          if (list.length < 3) throw new Error("list of points " + i + " must contain three or more points");
+          list.forEach((point, j) => {
             if (!Array.isArray(point)) throw new Error("list of points " + i + ", point " + j + " must be an array");
             if (point.length < 2) throw new Error("list of points " + i + ", point " + j + " must contain by X and Y values");
           });
@@ -6677,10 +6677,10 @@ ${nonManifold.join("\n")}`);
         let listofpaths = paths;
         if (paths.length === 0) {
           let count = 0;
-          listofpaths = listofpolys.map(list2 => list2.map(point => count++));
+          listofpaths = listofpolys.map(list => list.map(point => count++));
         }
         const allpoints = [];
-        listofpolys.forEach(list2 => list2.forEach(point => allpoints.push(point)));
+        listofpolys.forEach(list => list.forEach(point => allpoints.push(point)));
         let sides = [];
         listofpaths.forEach(path => {
           const setofpoints = path.map(index => allpoints[index]);
@@ -7298,13 +7298,13 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/operations/extrusions/earcut/linkedListSort.js"(exports, module) {
       "use strict";
       init_define_process();
-      var sortLinked = (list2, fn) => {
+      var sortLinked = (list, fn) => {
         let i, p, q, e, numMerges;
         let inSize = 1;
         do {
-          p = list2;
-          list2 = null;
-          let tail2 = null;
+          p = list;
+          list = null;
+          let tail = null;
           numMerges = 0;
           while (p) {
             numMerges++;
@@ -7326,16 +7326,16 @@ ${nonManifold.join("\n")}`);
                 q = q.nextZ;
                 qSize--;
               }
-              if (tail2) tail2.nextZ = e; else list2 = e;
-              e.prevZ = tail2;
-              tail2 = e;
+              if (tail) tail.nextZ = e; else list = e;
+              e.prevZ = tail;
+              tail = e;
             }
             p = q;
           }
-          tail2.nextZ = null;
+          tail.nextZ = null;
           inSize *= 2;
         } while (numMerges > 1);
-        return list2;
+        return list;
       };
       module.exports = sortLinked;
     }
@@ -7536,9 +7536,9 @@ ${nonManifold.join("\n")}`);
         for (let i = 0, len = holeIndices.length; i < len; i++) {
           const start = holeIndices[i] * dim;
           const end = i < len - 1 ? holeIndices[i + 1] * dim : data.length;
-          const list2 = linkedPolygon(data, start, end, dim, false);
-          if (list2 === list2.next) list2.steiner = true;
-          queue.push(getLeftmost(list2));
+          const list = linkedPolygon(data, start, end, dim, false);
+          if (list === list.next) list.steiner = true;
+          queue.push(getLeftmost(list));
         }
         queue.sort((a, b) => a.x - b.x);
         for (let i = 0; i < queue.length; i++) {
@@ -7813,10 +7813,10 @@ ${nonManifold.join("\n")}`);
           holes: holes2.map(h => outlines[h])
         }));
       };
-      var minIndex = (list2, score) => {
+      var minIndex = (list, score) => {
         let bestIndex;
         let best;
-        list2.forEach((item, index) => {
+        list.forEach((item, index) => {
           const value = score(item);
           if (best === void 0 || value < best) {
             bestIndex = index;
@@ -12191,7 +12191,7 @@ ${nonManifold.join("\n")}`);
                 opposite.v2 = null;
                 opposite.next = null;
                 opposite.prev = null;
-                const mergeEdges = (list2, e1, e2) => {
+                const mergeEdges = (list, e1, e2) => {
                   const newedge = {
                     v1: e2.v1,
                     v2: e1.v2,
@@ -12200,12 +12200,12 @@ ${nonManifold.join("\n")}`);
                   };
                   e2.prev.next = newedge;
                   e1.next.prev = newedge;
-                  deleteEdge(list2, e1);
+                  deleteEdge(list, e1);
                   e1.v1 = null;
                   e1.v2 = null;
                   e1.next = null;
                   e1.prev = null;
-                  deleteEdge(list2, e2);
+                  deleteEdge(list, e2);
                   e2.v1 = null;
                   e2.v2 = null;
                   e2.next = null;
@@ -18879,10 +18879,10 @@ ${nonManifold.join("\n")}`);
             listofpolys = [points];
           }
         }
-        listofpolys.forEach((list2, i) => {
-          if (!Array.isArray(list2)) throw new Error("list of points " + i + " must be an array");
-          if (list2.length < 3) throw new Error("list of points " + i + " must contain three or more points");
-          list2.forEach((point, j) => {
+        listofpolys.forEach((list, i) => {
+          if (!Array.isArray(list)) throw new Error("list of points " + i + " must be an array");
+          if (list.length < 3) throw new Error("list of points " + i + " must contain three or more points");
+          list.forEach((point, j) => {
             if (!Array.isArray(point)) throw new Error("list of points " + i + ", point " + j + " must be an array");
             if (point.length < 2) throw new Error("list of points " + i + ", point " + j + " must contain by X and Y values");
           });
@@ -18890,10 +18890,10 @@ ${nonManifold.join("\n")}`);
         let listofpaths = paths;
         if (paths.length === 0) {
           let count = 0;
-          listofpaths = listofpolys.map(list2 => list2.map(point => count++));
+          listofpaths = listofpolys.map(list => list.map(point => count++));
         }
         const allpoints = [];
-        listofpolys.forEach(list2 => list2.forEach(point => allpoints.push(point)));
+        listofpolys.forEach(list => list.forEach(point => allpoints.push(point)));
         let sides = [];
         listofpaths.forEach(path => {
           const setofpoints = path.map(index => allpoints[index]);
@@ -19559,13 +19559,13 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/earcut/linkedListSort.js"(exports, module) {
       "use strict";
       init_define_process();
-      var sortLinked = (list2, fn) => {
+      var sortLinked = (list, fn) => {
         let i, p, q, e, numMerges;
         let inSize = 1;
         do {
-          p = list2;
-          list2 = null;
-          let tail2 = null;
+          p = list;
+          list = null;
+          let tail = null;
           numMerges = 0;
           while (p) {
             numMerges++;
@@ -19587,16 +19587,16 @@ ${nonManifold.join("\n")}`);
                 q = q.nextZ;
                 qSize--;
               }
-              if (tail2) tail2.nextZ = e; else list2 = e;
-              e.prevZ = tail2;
-              tail2 = e;
+              if (tail) tail.nextZ = e; else list = e;
+              e.prevZ = tail;
+              tail = e;
             }
             p = q;
           }
-          tail2.nextZ = null;
+          tail.nextZ = null;
           inSize *= 2;
         } while (numMerges > 1);
-        return list2;
+        return list;
       };
       module.exports = sortLinked;
     }
@@ -19797,9 +19797,9 @@ ${nonManifold.join("\n")}`);
         for (let i = 0, len = holeIndices.length; i < len; i++) {
           const start = holeIndices[i] * dim;
           const end = i < len - 1 ? holeIndices[i + 1] * dim : data.length;
-          const list2 = linkedPolygon(data, start, end, dim, false);
-          if (list2 === list2.next) list2.steiner = true;
-          queue.push(getLeftmost(list2));
+          const list = linkedPolygon(data, start, end, dim, false);
+          if (list === list.next) list.steiner = true;
+          queue.push(getLeftmost(list));
         }
         queue.sort((a, b) => a.x - b.x);
         for (let i = 0; i < queue.length; i++) {
@@ -20074,10 +20074,10 @@ ${nonManifold.join("\n")}`);
           holes: holes2.map(h => outlines[h])
         }));
       };
-      var minIndex = (list2, score) => {
+      var minIndex = (list, score) => {
         let bestIndex;
         let best;
-        list2.forEach((item, index) => {
+        list.forEach((item, index) => {
           const value = score(item);
           if (best === void 0 || value < best) {
             bestIndex = index;
@@ -24531,7 +24531,7 @@ ${nonManifold.join("\n")}`);
                 opposite.v2 = null;
                 opposite.next = null;
                 opposite.prev = null;
-                const mergeEdges = (list2, e1, e2) => {
+                const mergeEdges = (list, e1, e2) => {
                   const newedge = {
                     v1: e2.v1,
                     v2: e1.v2,
@@ -24540,12 +24540,12 @@ ${nonManifold.join("\n")}`);
                   };
                   e2.prev.next = newedge;
                   e1.next.prev = newedge;
-                  deleteEdge(list2, e1);
+                  deleteEdge(list, e1);
                   e1.v1 = null;
                   e1.v2 = null;
                   e1.next = null;
                   e1.prev = null;
-                  deleteEdge(list2, e2);
+                  deleteEdge(list, e2);
                   e2.v1 = null;
                   e2.v2 = null;
                   e2.next = null;
@@ -25262,13 +25262,13 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/array-utils/src/head.js"(exports, module) {
       "use strict";
       init_define_process();
-      var head2 = array => {
+      var head = array => {
         if (!Array.isArray(array) || array.length === 0) {
           return void 0;
         }
         return array[0];
       };
-      module.exports = head2;
+      module.exports = head;
     }
   });
   var require_insertSorted3 = __commonJS({
@@ -26144,15 +26144,23 @@ endfacet`;
   var import_mat4 = __toESM(require_mat4(), 1);
   var import_transforms = __toESM(require_transforms(), 1);
   init_define_process();
+  init_define_process();
+  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
+  var import_base = __require("js-slang/dist/errors/base");
+  var import_rttc = __require("js-slang/dist/utils/rttc");
+  var import_operators = __require("js-slang/dist/utils/operators");
   function degreesToRadians(degrees) {
     return degrees / 360 * (2 * Math.PI);
   }
   function hexToColor(hex, func_name) {
+    func_name = func_name !== null && func_name !== void 0 ? func_name : hexToColor.name;
+    if (typeof hex !== "string") {
+      throw new import_rttcErrors.InvalidParameterTypeError("string", hex, func_name);
+    }
     const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
     const groups = regex.exec(hex);
-    if (groups == void 0) {
-      func_name = func_name !== null && func_name !== void 0 ? func_name : hexToColor.name;
-      throw new Error(`${func_name}: Invalid color hex string: ${hex}`);
+    if (!groups) {
+      throw new import_base.GeneralRuntimeError(`${func_name}: Invalid color hex string: ${hex}`);
     }
     ;
     return [parseInt(groups[1], 16) / 255, parseInt(groups[2], 16) / 255, parseInt(groups[3], 16) / 255];
@@ -26280,18 +26288,6 @@ endfacet`;
   var import_stl_serializer = __toESM(require_stl_serializer(), 1);
   var import_list = __require("js-slang/dist/stdlib/list");
   var import_save_file = __toESM(require_browser(), 1);
-  function listToArray(l) {
-    const operables = [];
-    while (l !== null) {
-      const operable = (0, import_list.head)(l);
-      operables.push(operable);
-      l = (0, import_list.tail)(l);
-    }
-    return operables;
-  }
-  function arrayToList(array) {
-    return (0, import_list.list)(...array);
-  }
   var black = "#000000";
   var navy = "#0000AA";
   var green = "#00AA00";
@@ -26403,22 +26399,31 @@ endfacet`;
     return centerPrimitive(shape);
   }
   function union(first, second) {
-    if (!is_shape(first) || !is_shape(second)) {
-      throw new Error("Failed to union, only Shapes can be operated on");
+    if (!is_shape(first)) {
+      throw new import_rttcErrors.InvalidParameterTypeError("Shape", first, union.name, "first");
+    }
+    if (!is_shape(second)) {
+      throw new import_rttcErrors.InvalidParameterTypeError("Shape", second, union.name, "second");
     }
     const solid = (0, import_booleans.union)(first.solid, second.solid);
     return new Shape(solid);
   }
   function subtract(target, subtractedShape) {
-    if (!is_shape(target) || !is_shape(subtractedShape)) {
-      throw new Error("Failed to subtract, only Shapes can be operated on");
+    if (!is_shape(target)) {
+      throw new import_rttcErrors.InvalidParameterTypeError("Shape", target, subtract.name, "target");
+    }
+    if (!is_shape(subtractedShape)) {
+      throw new import_rttcErrors.InvalidParameterTypeError("Shape", subtractedShape, subtract.name, "subtractedShape");
     }
     const solid = (0, import_booleans.subtract)(target.solid, subtractedShape.solid);
     return new Shape(solid);
   }
   function intersect(first, second) {
-    if (!is_shape(first) || !is_shape(second)) {
-      throw new Error("Failed to intersect, only Shapes can be operated on");
+    if (!is_shape(first)) {
+      throw new import_rttcErrors.InvalidParameterTypeError("Shape", first, intersect.name, "first");
+    }
+    if (!is_shape(second)) {
+      throw new import_rttcErrors.InvalidParameterTypeError("Shape", second, intersect.name, "second");
     }
     const solid = (0, import_booleans.intersect)(first.solid, second.solid);
     return new Shape(solid);
@@ -26430,22 +26435,22 @@ endfacet`;
     return operable.rotate([xAngle, yAngle, zAngle]);
   }
   function scale(operable, xFactor, yFactor, zFactor) {
-    if (xFactor <= 0 || yFactor <= 0 || zFactor <= 0) {
-      throw new Error("Scaling factor must be greater than 0");
-    }
+    (0, import_rttc.assertNumberWithinRange)(xFactor, scale.name, 0, void 0, false, "xFactor");
+    (0, import_rttc.assertNumberWithinRange)(yFactor, scale.name, 0, void 0, false, "yFactor");
+    (0, import_rttc.assertNumberWithinRange)(zFactor, scale.name, 0, void 0, false, "zFactor");
     return operable.scale([xFactor, yFactor, zFactor]);
   }
   function group(operables) {
     if (!(0, import_list.is_list)(operables)) {
-      throw new Error("Only lists of Operables can be grouped");
+      throw new import_rttcErrors.InvalidParameterTypeError("list of Operables", operables, group.name);
     }
-    return new Group(listToArray(operables));
+    return new Group((0, import_list.list_to_vector)(operables));
   }
   function ungroup(g) {
     if (!is_group(g)) {
-      throw new Error("Only Groups can be ungrouped");
+      throw new import_rttcErrors.InvalidParameterTypeError("Group", g, ungroup.name);
     }
-    return arrayToList(g.ungroup());
+    return (0, import_list.vector_to_list)(g.ungroup());
   }
   function is_shape(parameter) {
     return parameter instanceof Shape;
@@ -26457,26 +26462,53 @@ endfacet`;
     const bounds = (0, import_measurements.measureBoundingBox)(shape.solid);
     return (axis, minMax) => {
       let j;
-      if (axis === "x") j = 0; else if (axis === "y") j = 1; else if (axis === "z") j = 2; else {
-        throw new Error(`Bounding box getter function expected "x", "y", or "z" as first parameter, but got ${axis}`);
+      switch (axis) {
+        case "x":
+          {
+            j = 0;
+            break;
+          }
+        case "y":
+          {
+            j = 1;
+            break;
+          }
+        case "z":
+          {
+            j = 2;
+            break;
+          }
+        default:
+          throw new import_rttcErrors.InvalidParameterTypeError('"x", "y" or "z"', axis, "BoundingBox");
       }
       let i;
-      if (minMax === "min") i = 0; else if (minMax === "max") i = 1; else {
-        throw new Error(`Bounding box getter function expected "min" or "max" as second parameter, but got ${minMax}`);
+      switch (minMax) {
+        case "min":
+          {
+            i = 0;
+            break;
+          }
+        case "max":
+          {
+            i = 1;
+            break;
+          }
+        default:
+          throw new import_rttcErrors.InvalidParameterTypeError('"min" or "max"', minMax, "BoundingBox");
       }
       return bounds[i][j];
     };
   }
   function rgb(redValue, greenValue, blueValue) {
-    if (redValue < 0 || redValue > 255 || greenValue < 0 || greenValue > 255 || blueValue < 0 || blueValue > 255) {
-      throw new Error("RGB values must be between 0 and 255 (inclusive)");
-    }
+    (0, import_rttc.assertNumberWithinRange)(redValue, rgb.name, 0, 255, true, "redValue");
+    (0, import_rttc.assertNumberWithinRange)(blueValue, rgb.name, 0, 255, true, "blueValue");
+    (0, import_rttc.assertNumberWithinRange)(greenValue, rgb.name, 0, 255, true, "greenValue");
     return `#${redValue.toString(16)}${greenValue.toString(16)}${blueValue.toString(16)}`;
   }
   function download_shape_stl(shape) {
     return __async(this, null, function* () {
       if (!is_shape(shape)) {
-        throw new Error("Failed to export, only Shapes can be converted to STL");
+        throw new import_rttcErrors.InvalidParameterTypeError("Shape", shape, download_shape_stl.name);
       }
       yield (0, import_save_file.default)(new Blob((0, import_stl_serializer.serialize)({
         binary: true
@@ -26485,28 +26517,28 @@ endfacet`;
   }
   function render(operable) {
     if (!(operable instanceof Shape || operable instanceof Group)) {
-      throw new Error("Only Operables can be rendered");
+      throw new import_rttcErrors.InvalidParameterTypeError("Operable", operable, render.name);
     }
     operable.store();
     return Core.getRenderGroupManager().nextRenderGroup();
   }
   function render_grid(operable) {
     if (!(operable instanceof Shape || operable instanceof Group)) {
-      throw new Error("Only Operables can be rendered");
+      throw new import_rttcErrors.InvalidParameterTypeError("Operable", operable, render.name);
     }
     operable.store();
     return Core.getRenderGroupManager().nextRenderGroup(true);
   }
   function render_axes(operable) {
     if (!(operable instanceof Shape || operable instanceof Group)) {
-      throw new Error("Only Operables can be rendered");
+      throw new import_rttcErrors.InvalidParameterTypeError("Operable", operable, render.name);
     }
     operable.store();
     return Core.getRenderGroupManager().nextRenderGroup(void 0, true);
   }
   function render_grid_axes(operable) {
     if (!(operable instanceof Shape || operable instanceof Group)) {
-      throw new Error("Only Operables can be rendered");
+      throw new import_rttcErrors.InvalidParameterTypeError("Operable", operable, render.name);
     }
     operable.store();
     return Core.getRenderGroupManager().nextRenderGroup(true, true);

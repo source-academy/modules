@@ -33,9 +33,15 @@ export default require => {
     FLAT: () => FLAT,
     NATURAL: () => NATURAL,
     SHARP: () => SHARP,
+    add_octave_to_note: () => add_octave_to_note,
     aeolian_scale: () => aeolian_scale,
     dorian_scale: () => dorian_scale,
+    get_accidental: () => get_accidental,
+    get_note_name: () => get_note_name,
+    get_octave: () => get_octave,
     ionian_scale: () => ionian_scale,
+    is_note_with_octave: () => is_note_with_octave,
+    key_signature_to_key: () => key_signature_to_key,
     letter_name_to_frequency: () => letter_name_to_frequency,
     letter_name_to_midi_note: () => letter_name_to_midi_note,
     locrian_scale: () => locrian_scale,
@@ -47,57 +53,65 @@ export default require => {
     mixolydian_scale: () => mixolydian_scale,
     phrygian_scale: () => phrygian_scale
   });
-  function noteToValues(note, func_name = noteToValues.name) {
+  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
+  var import_base = __require("js-slang/dist/errors/base");
+  var import_rttc = __require("js-slang/dist/utils/rttc");
+  var import_operators = __require("js-slang/dist/utils/operators");
+  function parseNoteWithOctave(note) {
+    if (typeof note !== "string") return null;
     const match = (/^([A-Ga-g])([#♮b]?)(\d*)$/).exec(note);
-    if (match === null) throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
+    if (match === null) return null;
     const [, noteName, accidental, octaveStr] = match;
     switch (accidental) {
       case "#":
         {
-          if (noteName === "B" || noteName === "E") {
-            throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
-          }
+          if (noteName === "B" || noteName === "E") return null;
           break;
         }
       case "b":
         {
-          if (noteName === "F" || noteName === "C") {
-            throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
-          }
+          if (noteName === "F" || noteName === "C") return null;
           break;
         }
     }
     const octave = octaveStr === "" ? 4 : parseInt(octaveStr);
     return [noteName.toUpperCase(), accidental !== "" ? accidental : "\u266E", octave];
   }
+  function noteToValues(note, func_name) {
+    const res = parseNoteWithOctave(note);
+    if (res === null) {
+      throw new import_base.GeneralRuntimeError(`${func_name}: Invalid Note with Octave: ${note}`);
+    }
+    return res;
+  }
   function midiNoteToNoteName(midiNote, accidental, func_name) {
     switch (midiNote % 12) {
       case 0:
         return "C";
       case 1:
-        return accidental === "sharp" ? `C${"#"}` : `D${"b"}`;
+        return accidental === "#" ? `C${"#"}` : `D${"b"}`;
       case 2:
         return "D";
       case 3:
-        return accidental === "sharp" ? `D${"#"}` : `E${"b"}`;
+        return accidental === "#" ? `D${"#"}` : `E${"b"}`;
       case 4:
         return "E";
       case 5:
         return "F";
       case 6:
-        return accidental === "sharp" ? `F${"#"}` : `G${"b"}`;
+        return accidental === "#" ? `F${"#"}` : `G${"b"}`;
       case 7:
         return "G";
       case 8:
-        return accidental === "sharp" ? `G${"#"}` : `A${"b"}`;
+        return accidental === "#" ? `G${"#"}` : `A${"b"}`;
       case 9:
         return "A";
       case 10:
-        return accidental === "sharp" ? `A${"#"}` : `B${"b"}`;
+        return accidental === "#" ? `A${"#"}` : `B${"b"}`;
       case 11:
         return "B";
       default:
-        throw new Error(`${func_name}: Invalid MIDI note value ${midiNote}`);
+        throw new import_base.InternalRuntimeError(`${func_name}: Invalid MIDI note value ${midiNote}`);
     }
   }
   var import_list = __require("js-slang/dist/stdlib/list");
@@ -134,6 +148,10 @@ export default require => {
   var aeolian_scale = minor_scale;
   function locrian_scale(key) {
     return make_from_major_scale(key, 7);
+  }
+  function is_note_with_octave(value) {
+    const res = parseNoteWithOctave(value);
+    return res !== null;
   }
   function letter_name_to_midi_note(note) {
     const [noteName, accidental, octave] = noteToValues(note, letter_name_to_midi_note.name);
@@ -184,10 +202,44 @@ export default require => {
     return `${note}${octave}`;
   }
   function midi_note_to_frequency(note) {
+    (0, import_rttc.assertNumberWithinRange)(note, midi_note_to_frequency.name);
     return 440 * __pow(2, (note - 69) / 12);
   }
   function letter_name_to_frequency(note) {
     return midi_note_to_frequency(letter_name_to_midi_note(note));
+  }
+  function add_octave_to_note(note, octave) {
+    (0, import_rttc.assertNumberWithinRange)(octave, add_octave_to_note.name, 0, void 0, true, "octave");
+    return `${note}${octave}`;
+  }
+  function get_octave(note) {
+    const [, , octave] = noteToValues(note, get_octave.name);
+    return octave;
+  }
+  function get_note_name(note) {
+    const [noteName] = noteToValues(note, get_note_name.name);
+    return noteName;
+  }
+  function get_accidental(note) {
+    const [, accidental] = noteToValues(note, get_accidental.name);
+    return accidental;
+  }
+  function key_signature_to_key(accidental, numAccidentals) {
+    (0, import_rttc.assertNumberWithinRange)(numAccidentals, key_signature_to_key.name, 0, 6, true, "numAccidentals");
+    switch (accidental) {
+      case "#":
+        {
+          const keys = ["C", "G", "D", "A", "E", "B", "F#"];
+          return keys[numAccidentals];
+        }
+      case "b":
+        {
+          const keys = ["C", "F", "Bb", "Eb", "Ab", "Db", "Gb"];
+          return keys[numAccidentals];
+        }
+      default:
+        throw new import_rttcErrors.InvalidParameterTypeError("sharp or flat", accidental, key_signature_to_key.name, "accidental");
+    }
   }
   var SHARP = "#";
   var FLAT = "b";

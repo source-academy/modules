@@ -1,8 +1,16 @@
 export default require => {
+  var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+  }) : x)(function (x) {
+    if (typeof require !== "undefined") return require.apply(this, arguments);
+    throw Error('Dynamic require of "' + x + '" is not supported');
+  });
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
       get: all[name],
@@ -18,6 +26,10 @@ export default require => {
     }
     return to;
   };
+  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+    value: mod,
+    enumerable: true
+  }) : target, mod));
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
@@ -46,6 +58,10 @@ export default require => {
     use_local_file: () => use_local_file,
     use_video_url: () => use_video_url
   });
+  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
+  var import_base = __require("js-slang/dist/errors/base");
+  var import_rttc = __require("js-slang/dist/utils/rttc");
+  var import_operators = __require("js-slang/dist/utils/operators");
   var DEFAULT_WIDTH = 400;
   var DEFAULT_HEIGHT = 300;
   var DEFAULT_FPS = 10;
@@ -69,7 +85,6 @@ export default require => {
   var errorLogger;
   var tabsPackage;
   var pixels = [];
-  var temporaryPixels = [];
   var filter = copy_image;
   var toRunLateQueue = false;
   var videoIsPlaying = false;
@@ -97,17 +112,16 @@ export default require => {
   function setupData() {
     for (let i = 0; i < HEIGHT; i += 1) {
       pixels[i] = [];
-      temporaryPixels[i] = [];
       for (let j = 0; j < WIDTH; j += 1) {
         pixels[i][j] = [0, 0, 0, 255];
-        temporaryPixels[i][j] = [0, 0, 0, 255];
       }
     }
   }
   function isPixelValid(pixel) {
     let ok = true;
     for (let i = 0; i < 4; i += 1) {
-      if (pixel[i] >= 0 && pixel[i] <= 255) {
+      const value = pixel[i];
+      if (typeof value === "number" && value >= 0 && value <= 255) {
         continue;
       }
       ok = false;
@@ -151,9 +165,10 @@ export default require => {
     } else canvasRenderingContext.drawImage(source, 0, 0, WIDTH, HEIGHT);
     const pixelObj = canvasRenderingContext.getImageData(0, 0, WIDTH, HEIGHT);
     readFromBuffer(pixelObj.data, pixels);
+    const output = new_image();
     try {
-      filter(pixels, temporaryPixels);
-      writeToBuffer(pixelObj.data, temporaryPixels);
+      (0, import_operators.callWithoutMetadata)(filter, pixels, output);
+      writeToBuffer(pixelObj.data, output);
     } catch (e) {
       console.error(JSON.stringify(e));
       const errMsg = `There is an error with filter function, filter will be reset to default. ${e.name}: ${e.message}`;
@@ -165,7 +180,7 @@ export default require => {
         errorLogger(errMsg, false);
       }
       filter = copy_image;
-      filter(pixels, temporaryPixels);
+      filter(pixels, output);
     }
     canvasRenderingContext.putImageData(pixelObj, 0, 0);
   }
@@ -217,13 +232,14 @@ export default require => {
     displayHeight = scale * h;
   }
   function loadMedia() {
-    if (!navigator.mediaDevices.getUserMedia) {
+    var _a, _b;
+    if (!((_a = navigator.mediaDevices) == null ? void 0 : _a.getUserMedia)) {
       const errMsg = "The browser you are using does not support getUserMedia";
       console.error(errMsg);
       errorLogger(errMsg, false);
     }
     if (videoElement.srcObject) return;
-    navigator.mediaDevices.getUserMedia({
+    (_b = navigator.mediaDevices) == null ? void 0 : _b.getUserMedia({
       video: true
     }).then(stream => {
       videoElement.srcObject = stream;
@@ -323,9 +339,9 @@ export default require => {
     canvasElement = canvas;
     errorLogger = _errorLogger;
     tabsPackage = _tabsPackage;
-    const context = canvasElement.getContext("2d");
-    if (!context) throw new Error("Canvas context should not be null.");
-    canvasRenderingContext = context;
+    const context2 = canvasElement.getContext("2d");
+    if (!context2) throw new import_base.InternalRuntimeError("Canvas context should not be null.");
+    canvasRenderingContext = context2;
     setupData();
     if (inputFeed === 0) {
       loadMedia();
@@ -352,9 +368,13 @@ export default require => {
       track.stop();
     });
   }
-  function start() {
+  function throwIfNotPixel(obj, func_name, param_name) {
+    if (!Array.isArray(obj) || obj.length !== 4 || obj.some(each => typeof each !== "number")) {
+      throw new import_rttcErrors.InvalidParameterTypeError("pixel", obj, func_name, param_name);
+    }
+  }
+  function internal_start() {
     return {
-      toReplString: () => "[Pix N Flix]",
       init,
       deinit,
       startVideo,
@@ -365,18 +385,27 @@ export default require => {
     };
   }
   function red_of(pixel) {
+    throwIfNotPixel(pixel, red_of.name);
     return pixel[0];
   }
   function green_of(pixel) {
+    throwIfNotPixel(pixel, green_of.name);
     return pixel[1];
   }
   function blue_of(pixel) {
+    throwIfNotPixel(pixel, blue_of.name);
     return pixel[2];
   }
   function alpha_of(pixel) {
+    throwIfNotPixel(pixel, alpha_of.name);
     return pixel[3];
   }
   function set_rgba(pixel, r, g, b, a) {
+    throwIfNotPixel(pixel, set_rgba.name, "pixel");
+    (0, import_rttc.assertNumberWithinRange)(r, set_rgba.name, 0, 255, true, "r");
+    (0, import_rttc.assertNumberWithinRange)(g, set_rgba.name, 0, 255, true, "g");
+    (0, import_rttc.assertNumberWithinRange)(b, set_rgba.name, 0, 255, true, "b");
+    (0, import_rttc.assertNumberWithinRange)(a, set_rgba.name, 0, 255, true, "a");
     pixel[0] = r;
     pixel[1] = g;
     pixel[2] = b;
@@ -396,12 +425,15 @@ export default require => {
     }
   }
   function install_filter(_filter) {
+    (0, import_rttc.assertFunctionOfLength)(_filter, 2, install_filter.name, "filter");
     filter = _filter;
   }
   function reset_filter() {
     install_filter(copy_image);
   }
   function compose_filter(filter1, filter2) {
+    (0, import_rttc.assertFunctionOfLength)(filter1, 2, compose_filter.name, "filter", "filter1");
+    (0, import_rttc.assertFunctionOfLength)(filter2, 2, compose_filter.name, "filter", "filter2");
     return (src, dest) => {
       const temp = new_image();
       filter1(src, temp);
@@ -409,38 +441,62 @@ export default require => {
     };
   }
   function pause_at(pause_time) {
+    (0, import_rttc.assertNumberWithinRange)(pause_time, pause_at.name, 0);
     lateEnqueue(() => {
-      setTimeout(tabsPackage.onClickStill, pause_time >= 0 ? pause_time : -pause_time);
+      setTimeout(tabsPackage.onClickStill, pause_time);
     });
   }
   function set_dimensions(width, height) {
+    (0, import_rttc.assertNumberWithinRange)(width, set_dimensions.name, MIN_WIDTH, MAX_WIDTH, true, "width");
+    (0, import_rttc.assertNumberWithinRange)(height, set_dimensions.name, MIN_HEIGHT, MAX_HEIGHT, true, "height");
     enqueue(() => updateDimensions(width, height));
   }
   function set_fps(fps) {
+    (0, import_rttc.assertNumberWithinRange)(fps, set_fps.name, MIN_FPS, MAX_FPS);
     enqueue(() => updateFPS(fps));
   }
   function set_volume(volume) {
-    enqueue(() => updateVolume(Math.max(0, Math.min(100, volume) / 100)));
+    (0, import_rttc.assertNumberWithinRange)(volume, set_volume.name);
+    if (volume > 100) volume = 100; else if (volume < 0) volume = 0;
+    volume /= 100;
+    enqueue(() => updateVolume(volume));
   }
   function use_local_file() {
     inputFeed = 3;
   }
-  function use_image_url(URL) {
+  function use_image_url(URL2) {
+    if (typeof URL2 !== "string") {
+      throw new import_rttcErrors.InvalidParameterTypeError("string", URL2, use_image_url.name);
+    }
     inputFeed = 1;
-    url = URL;
+    url = URL2;
   }
-  function use_video_url(URL) {
+  function use_video_url(URL2) {
+    if (typeof URL2 !== "string") {
+      throw new import_rttcErrors.InvalidParameterTypeError("string", URL2, use_video_url.name);
+    }
     inputFeed = 2;
-    url = URL;
+    url = URL2;
   }
   function get_video_time() {
     return totalElapsedTime;
   }
   function keep_aspect_ratio(_keepAspectRatio) {
+    if (typeof _keepAspectRatio !== "boolean") {
+      throw new import_rttcErrors.InvalidParameterTypeError("boolean", URL, keep_aspect_ratio.name);
+    }
     keepAspectRatio = _keepAspectRatio;
   }
   function set_loop_count(n) {
+    (0, import_rttc.assertNumberWithinRange)(n, set_loop_count.name);
     LOOP_COUNT = n;
+  }
+  var import_context = __toESM(__require("js-slang/context"), 1);
+  function start() {
+    const startPacket = internal_start();
+    if (!import_context.default.moduleContexts.pix_n_flix.state) {
+      import_context.default.moduleContexts.pix_n_flix.state = startPacket;
+    }
   }
   return __toCommonJS(index_exports);
 };

@@ -4,10 +4,11 @@
     "name": "sample_function",
     "description": "<p>Increment a number by a value of 1.</p>",
     "params": [
-      [
-        "x",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "x"
+      }
     ],
     "retType": "number"
   },
@@ -16,10 +17,11 @@
     "name": "assert",
     "description": "<p>Asserts that a predicate returns true.</p>",
     "params": [
-      [
-        "pred",
-        "() => boolean"
-      ]
+      {
+        "paramType": "regular",
+        "type": "() => boolean",
+        "name": "pred"
+      }
     ],
     "retType": "void"
   },
@@ -28,14 +30,16 @@
     "name": "assert_equals",
     "description": "<p>Asserts the equality (===) of two parameters.</p>",
     "params": [
-      [
-        "expected",
-        "any"
-      ],
-      [
-        "received",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "expected"
+      },
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "received"
+      }
     ],
     "retType": "void"
   },
@@ -44,14 +48,16 @@
     "name": "assert_not_equals",
     "description": "<p>Asserts that two parameters are not equal (!==).</p>",
     "params": [
-      [
-        "expected",
-        "any"
-      ],
-      [
-        "received",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "expected"
+      },
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "received"
+      }
     ],
     "retType": "void"
   },
@@ -60,14 +66,16 @@
     "name": "assert_contains",
     "description": "<p>Asserts that <code>xs</code> contains <code>toContain</code>.</p>",
     "params": [
-      [
-        "xs",
-        "any"
-      ],
-      [
-        "toContain",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "xs"
+      },
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "toContain"
+      }
     ],
     "retType": "void"
   },
@@ -76,14 +84,16 @@
     "name": "assert_greater",
     "description": "<p>Asserts that the given item is greater than <code>expected</code></p>",
     "params": [
-      [
-        "item",
-        "any"
-      ],
-      [
-        "expected",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "item"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "expected"
+      }
     ],
     "retType": "void"
   },
@@ -92,30 +102,34 @@
     "name": "assert_greater_equals",
     "description": "<p>Asserts that the given item is greater than or equal to <code>expected</code></p>",
     "params": [
-      [
-        "item",
-        "any"
-      ],
-      [
-        "expected",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "item"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "expected"
+      }
     ],
     "retType": "void"
   },
   "assert_length": {
     "kind": "function",
     "name": "assert_length",
-    "description": "<p>Asserts that the given list has length <code>len</code>.</p>",
+    "description": "<p>Asserts that the given item <code>xs</code> is either a list or array with length <code>len</code>.</p>",
     "params": [
-      [
-        "xs",
-        "any"
-      ],
-      [
-        "len",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "xs"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "len"
+      }
     ],
     "retType": "void"
   },
@@ -124,14 +138,16 @@
     "name": "it",
     "description": "<p>Defines a single test.</p>",
     "params": [
-      [
-        "name",
-        "string"
-      ],
-      [
-        "func",
-        "Test"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "name"
+      },
+      {
+        "paramType": "regular",
+        "type": "Test",
+        "name": "func"
+      }
     ],
     "retType": "void"
   },
@@ -140,14 +156,16 @@
     "name": "test",
     "description": "<p>Defines a single test.</p>",
     "params": [
-      [
-        "msg",
-        "string"
-      ],
-      [
-        "func",
-        "Test"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "msg"
+      },
+      {
+        "paramType": "regular",
+        "type": "Test",
+        "name": "func"
+      }
     ],
     "retType": "void"
   },
@@ -156,14 +174,16 @@
     "name": "describe",
     "description": "<p>Describes a test suite.</p>",
     "params": [
-      [
-        "msg",
-        "string"
-      ],
-      [
-        "func",
-        "TestSuite"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "msg"
+      },
+      {
+        "paramType": "regular",
+        "type": "TestSuite",
+        "name": "func"
+      }
     ],
     "retType": "void"
   },
@@ -172,22 +192,24 @@
     "name": "get_arg_list",
     "description": "<p>Given a mocked function, returns all the arguments the function has been called with as a list of lists.</p>",
     "params": [
-      [
-        "fn",
-        "MockedFunction"
-      ]
+      {
+        "paramType": "regular",
+        "type": "MockedFunction",
+        "name": "fn"
+      }
     ],
-    "retType": "List"
+    "retType": "List<any>"
   },
   "get_num_calls": {
     "kind": "function",
     "name": "get_num_calls",
     "description": "<p>Given a mocked function, returns the number of times the function has been called.</p>",
     "params": [
-      [
-        "fn",
-        "MockedFunction"
-      ]
+      {
+        "paramType": "regular",
+        "type": "MockedFunction",
+        "name": "fn"
+      }
     ],
     "retType": "number"
   },
@@ -196,22 +218,24 @@
     "name": "get_ret_vals",
     "description": "<p>Given a mocked function, returns all the values the function has returned with.</p>",
     "params": [
-      [
-        "fn",
-        "MockedFunction"
-      ]
+      {
+        "paramType": "regular",
+        "type": "MockedFunction",
+        "name": "fn"
+      }
     ],
-    "retType": "List"
+    "retType": "List<any>"
   },
   "mock_function": {
     "kind": "function",
     "name": "mock_function",
     "description": "<p>Mocks a given function, allowing you to track the number of times it's been called and what\nvalues it returned with. You should call the return value from this function rather than the\noriginal value you passed in if you want the mocked function to be properly tracked.</p>",
     "params": [
-      [
-        "fn",
-        "(args: any[]) => any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "(args: any[]) => any",
+        "name": "fn"
+      }
     ],
     "retType": "MockedFunction"
   }

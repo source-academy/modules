@@ -1,20 +1,14 @@
 {
-  "start": {
-    "kind": "function",
-    "name": "start",
-    "description": "<p>Starts processing the image or video using the installed filter.</p>",
-    "params": [],
-    "retType": "StartPacket"
-  },
   "red_of": {
     "kind": "function",
     "name": "red_of",
     "description": "<p>Returns the red component of the given pixel.</p>",
     "params": [
-      [
-        "pixel",
-        "Pixel"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Pixel",
+        "name": "pixel"
+      }
     ],
     "retType": "number"
   },
@@ -23,10 +17,11 @@
     "name": "blue_of",
     "description": "<p>Returns the blue component of the given pixel.</p>",
     "params": [
-      [
-        "pixel",
-        "Pixel"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Pixel",
+        "name": "pixel"
+      }
     ],
     "retType": "number"
   },
@@ -35,10 +30,11 @@
     "name": "green_of",
     "description": "<p>Returns the green component of the given pixel.</p>",
     "params": [
-      [
-        "pixel",
-        "Pixel"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Pixel",
+        "name": "pixel"
+      }
     ],
     "retType": "number"
   },
@@ -47,10 +43,11 @@
     "name": "alpha_of",
     "description": "<p>Returns the alpha component of the given pixel.</p>",
     "params": [
-      [
-        "pixel",
-        "Pixel"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Pixel",
+        "name": "pixel"
+      }
     ],
     "retType": "number"
   },
@@ -59,26 +56,31 @@
     "name": "set_rgba",
     "description": "<p>Assigns the given red, green, blue and alpha component values to\nthe given pixel.</p>",
     "params": [
-      [
-        "pixel",
-        "Pixel"
-      ],
-      [
-        "r",
-        "number"
-      ],
-      [
-        "g",
-        "number"
-      ],
-      [
-        "b",
-        "number"
-      ],
-      [
-        "a",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Pixel",
+        "name": "pixel"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "r"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "g"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "b"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "a"
+      }
     ],
     "retType": "void"
   },
@@ -101,14 +103,16 @@
     "name": "copy_image",
     "description": "<p>The default filter that just copies the source image to the\ndestination image.</p>",
     "params": [
-      [
-        "src",
-        "Pixels"
-      ],
-      [
-        "dest",
-        "Pixels"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Pixels",
+        "name": "src"
+      },
+      {
+        "paramType": "regular",
+        "type": "Pixels",
+        "name": "dest"
+      }
     ],
     "retType": "void"
   },
@@ -117,10 +121,11 @@
     "name": "install_filter",
     "description": "<p>Installs the given filter to be used to transform each source image from\nthe live camera or from a local/remote file to a destination image that\nis then displayed on screen.</p><p>A filter is a function that is applied to two\ntwo-dimensional arrays of Pixels:\nthe source image and the destination image.</p>",
     "params": [
-      [
-        "_filter",
-        "Filter"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Filter",
+        "name": "_filter"
+      }
     ],
     "retType": "void"
   },
@@ -136,14 +141,16 @@
     "name": "compose_filter",
     "description": "<p>Returns a new filter that is equivalent to applying\nfilter1 and then filter2.</p>",
     "params": [
-      [
-        "filter1",
-        "Filter"
-      ],
-      [
-        "filter2",
-        "Filter"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Filter",
+        "name": "filter1"
+      },
+      {
+        "paramType": "regular",
+        "type": "Filter",
+        "name": "filter2"
+      }
     ],
     "retType": "Filter"
   },
@@ -152,10 +159,11 @@
     "name": "pause_at",
     "description": "<p>Pauses the video at a set time after the video starts.</p>",
     "params": [
-      [
-        "pause_time",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "pause_time"
+      }
     ],
     "retType": "void"
   },
@@ -164,14 +172,16 @@
     "name": "set_dimensions",
     "description": "<p>Sets the dimensions of the displayed images.\nNote: Only accepts width and height values within the range of 1 to 500.</p>",
     "params": [
-      [
-        "width",
-        "number"
-      ],
-      [
-        "height",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "width"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "height"
+      }
     ],
     "retType": "void"
   },
@@ -180,10 +190,11 @@
     "name": "set_fps",
     "description": "<p>Sets the framerate (i.e. frames per second (FPS)) of the video.\nNote: Only accepts FPS values within the range of 2 to 30.</p>",
     "params": [
-      [
-        "fps",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "fps"
+      }
     ],
     "retType": "void"
   },
@@ -192,10 +203,11 @@
     "name": "set_volume",
     "description": "<p>Sets the audio volume of the local video file played.\nNote: Only accepts volume value within the range of 0 to 100.</p>",
     "params": [
-      [
-        "volume",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "volume"
+      }
     ],
     "retType": "void"
   },
@@ -211,10 +223,11 @@
     "name": "use_image_url",
     "description": "<p>Sets pix_n_flix to use the image from the given URL as the image feed\ninstead of using the default live camera feed.</p>",
     "params": [
-      [
-        "URL",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "URL"
+      }
     ],
     "retType": "void"
   },
@@ -223,10 +236,11 @@
     "name": "use_video_url",
     "description": "<p>Sets pix_n_flix to use the video from the given URL as the video feed\ninstead of using the default live camera feed.</p>",
     "params": [
-      [
-        "URL",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "URL"
+      }
     ],
     "retType": "void"
   },
@@ -242,10 +256,11 @@
     "name": "keep_aspect_ratio",
     "description": "<p>Sets pix_n_flix to preserve the aspect ratio of the video or image</p>",
     "params": [
-      [
-        "_keepAspectRatio",
-        "boolean"
-      ]
+      {
+        "paramType": "regular",
+        "type": "boolean",
+        "name": "_keepAspectRatio"
+      }
     ],
     "retType": "void"
   },
@@ -254,11 +269,19 @@
     "name": "set_loop_count",
     "description": "<p>Sets the number of times the video is played.\nIf the number of times the video repeats is negative, the video will loop forever.</p>",
     "params": [
-      [
-        "n",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "n"
+      }
     ],
+    "retType": "void"
+  },
+  "start": {
+    "kind": "function",
+    "name": "start",
+    "description": "<p>Starts processing the image or video using the installed filter.</p>",
+    "params": [],
     "retType": "void"
   }
 }

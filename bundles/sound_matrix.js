@@ -3,6 +3,12 @@ export default require => {
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+  }) : x)(function (x) {
+    if (typeof require !== "undefined") return require.apply(this, arguments);
+    throw Error('Dynamic require of "' + x + '" is not supported');
+  });
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
       get: all[name],
@@ -29,19 +35,8 @@ export default require => {
     get_matrix: () => get_matrix,
     set_timeout: () => set_timeout
   });
-  function pair(x, xs) {
-    return [x, xs];
-  }
-  function list(...args) {
-    let the_list = null;
-    for (let i = args.length - 1; i >= 0; i--) {
-      the_list = pair(args[i], the_list);
-    }
-    return the_list;
-  }
-  function vector_to_list(vector) {
-    return list(...vector);
-  }
+  var import_base = __require("js-slang/dist/errors/base");
+  var import_list = __require("js-slang/dist/stdlib/list");
   var ToneMatrix = {
     initialise_matrix,
     clear_matrix,
@@ -150,14 +145,14 @@ export default require => {
   ToneMatrix.bindMatrixButtons = bindMatrixButtons;
   function get_matrix() {
     if (!matrix) {
-      throw new Error("Please activate the tone matrix first by clicking on the tab!");
+      throw new import_base.GeneralRuntimeError("Please activate the tone matrix first by clicking on the tab!");
     }
     const matrix_list = matrix.slice(0);
     const result = [];
     for (let i = 0; i <= 15; i++) {
-      result[i] = vector_to_list(matrix_list[15 - i]);
+      result[i] = (0, import_list.vector_to_list)(matrix_list[15 - i]);
     }
-    return vector_to_list(result);
+    return (0, import_list.vector_to_list)(result);
   }
   function clear_matrix() {
     matrix = new Array(16);
@@ -177,7 +172,7 @@ export default require => {
       const timeoutObj = set_time_out_renamed(f, t);
       timeout_objects.push(timeoutObj);
     } else {
-      throw new Error("set_timeout(f, t) expects a function and a number respectively.");
+      throw new import_base.GeneralRuntimeError("set_timeout(f, t) expects a function and a number respectively.");
     }
   }
   function clear_all_timeout() {

@@ -12072,16 +12072,52 @@ export default require => {
     return tab;
   }
   init_define_process();
-  var import_core2 = __require("@blueprintjs/core");
-  var import_icons = __require("@blueprintjs/icons");
-  var import_core3 = __toESM(require_dist(), 1);
+  var import_core4 = __require("@blueprintjs/core");
+  var import_core5 = __toESM(require_dist(), 1);
   var import_debug_draw = __toESM(require_dist2(), 1);
   init_define_process();
+  var import_jsx_runtime2 = __require("react/jsx-runtime");
+  var import_core2 = __require("@blueprintjs/core");
+  init_define_process();
   var import_jsx_runtime = __require("react/jsx-runtime");
+  var import_core = __require("@blueprintjs/core");
+  var defaultOptions = {
+    className: "",
+    fullWidth: false,
+    iconOnRight: false,
+    intent: import_core.Intent.NONE,
+    minimal: true
+  };
+  function ButtonComponent(props) {
+    const buttonProps = Object.assign(Object.assign({}, defaultOptions), props);
+    return props.disabled ? (0, import_jsx_runtime.jsx)(import_core.AnchorButton, Object.assign({}, buttonProps)) : (0, import_jsx_runtime.jsx)(import_core.Button, Object.assign({}, buttonProps));
+  }
+  var __rest = function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+      if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+    }
+    return t;
+  };
+  function PlayButton(_a) {
+    var {playingText = "Pause", playingIcon = "pause", pausedText = "Play", pausedIcon = "play", isPlaying, tooltipProps, iconProps} = _a, props = __rest(_a, ["playingText", "playingIcon", "pausedText", "pausedIcon", "isPlaying", "tooltipProps", "iconProps"]);
+    return (0, import_jsx_runtime2.jsx)(import_core2.Tooltip, Object.assign({
+      content: isPlaying ? playingText : pausedText
+    }, tooltipProps, {
+      children: (0, import_jsx_runtime2.jsx)(ButtonComponent, Object.assign({}, props, {
+        children: (0, import_jsx_runtime2.jsx)(import_core2.Icon, Object.assign({
+          icon: isPlaying ? playingIcon : pausedIcon
+        }, iconProps))
+      }))
+    }));
+  }
+  init_define_process();
+  var import_jsx_runtime3 = __require("react/jsx-runtime");
   var import_react = __require("react");
   init_define_process();
-  var import_core = __require("@blueprintjs/core");
-  var SA_TAB_ICON_SIZE = import_core.IconSize.LARGE;
+  var import_core3 = __require("@blueprintjs/core");
+  var SA_TAB_ICON_SIZE = import_core3.IconSize.LARGE;
   var CANVAS_MAX_WIDTH = "max(70vh, 30vw)";
   var defaultStyle = {
     width: "100%",
@@ -12090,7 +12126,7 @@ export default require => {
   };
   var WebGLCanvas = (0, import_react.forwardRef)((props, ref) => {
     const style = props.style !== void 0 ? Object.assign(Object.assign({}, defaultStyle), props.style) : defaultStyle;
-    return (0, import_jsx_runtime.jsx)("canvas", Object.assign({}, props, {
+    return (0, import_jsx_runtime3.jsx)("canvas", Object.assign({}, props, {
       style,
       ref,
       height: 512,
@@ -12099,212 +12135,283 @@ export default require => {
   });
   WebGLCanvas.displayName = "WebGLCanvas";
   var WebGLCanvas_default = WebGLCanvas;
-  var import_react2 = __toESM(__require("react"), 1);
-  var import_jsx_runtime2 = __require("react/jsx-runtime");
-  var DebugDrawCanvas = class extends import_react2.default.Component {
-    constructor(props) {
-      super(props);
-      this.drawFrame = () => {
-        if (this.canvas) {
-          if (!this.debugDraw) {
-            const ctx = this.canvas.getContext("2d");
-            if (ctx) {
-              this.debugDraw = new import_debug_draw.DebugDraw(ctx);
+  init_define_process();
+  var import_react2 = __require("react");
+  function useRerender() {
+    const [, setRenderer] = (0, import_react2.useState)(true);
+    return () => setRenderer(prev => !prev);
+  }
+  function useAnimation({animationDuration, autoLoop, autoStart, callback, frameDuration, startTimestamp = 0}) {
+    const rerender = useRerender();
+    const requestIdRef = (0, import_react2.useRef)(null);
+    const elapsedRef = (0, import_react2.useRef)(startTimestamp);
+    const canvasRef = (0, import_react2.useRef)(null);
+    const lastFrameTimestamp = (0, import_react2.useRef)(null);
+    const isPlayingRef = (0, import_react2.useRef)(false);
+    const [errored, setErrored] = (0, import_react2.useState)(null);
+    function setElapsed(newVal) {
+      elapsedRef.current = newVal;
+      rerender();
+    }
+    function setIsPlaying(newVal) {
+      isPlayingRef.current = newVal;
+      rerender();
+    }
+    function requestFrame() {
+      if (requestIdRef.current === null) {
+        requestIdRef.current = requestAnimationFrame(animCallback);
+      }
+    }
+    function stop() {
+      if (!isPlayingRef.current) return;
+      setIsPlaying(false);
+      if (requestIdRef.current !== null) {
+        cancelAnimationFrame(requestIdRef.current);
+        requestIdRef.current = null;
+      }
+      lastFrameTimestamp.current = null;
+    }
+    function reset() {
+      setElapsed(0);
+      callbackWrapper(0);
+      lastFrameTimestamp.current = null;
+      if (requestIdRef.current !== null) {
+        cancelAnimationFrame(requestIdRef.current);
+        requestIdRef.current = null;
+      }
+      if (isPlayingRef.current) {
+        requestFrame();
+      }
+    }
+    function start() {
+      if (isPlayingRef.current) return;
+      setIsPlaying(true);
+      if (canvasRef.current) requestFrame();
+    }
+    function callbackWrapper(time) {
+      if (canvasRef.current) {
+        try {
+          callback({
+            timestamp: time,
+            isPlaying: isPlayingRef.current,
+            canvas: canvasRef.current,
+            stop,
+            start,
+            reset
+          });
+        } catch (error) {
+          setErrored(error);
+          stop();
+        }
+      }
+    }
+    function animCallback(timeInMs) {
+      requestIdRef.current = null;
+      if (lastFrameTimestamp.current === null) {
+        lastFrameTimestamp.current = timeInMs;
+        requestFrame();
+      } else {
+        const diff = timeInMs - lastFrameTimestamp.current;
+        const newElapsed = elapsedRef.current + diff;
+        if (animationDuration === void 0 || newElapsed < animationDuration) {
+          requestFrame();
+          if (frameDuration === void 0 || diff >= frameDuration) {
+            setElapsed(newElapsed);
+            callbackWrapper(newElapsed);
+            lastFrameTimestamp.current = timeInMs;
+          }
+          ;
+        } else {
+          setElapsed(animationDuration);
+          callbackWrapper(animationDuration);
+          finishCallbackRef.current();
+          return;
+        }
+      }
+    }
+    const finishCallbackRef = (0, import_react2.useRef)(null);
+    (0, import_react2.useEffect)(() => {
+      finishCallbackRef.current = () => {
+        if (autoLoop) {
+          reset();
+        } else {
+          stop();
+        }
+      };
+    }, [autoLoop]);
+    (0, import_react2.useEffect)(() => {
+      if (autoStart) start();
+      return stop;
+    }, []);
+    return {
+      start,
+      stop,
+      reset,
+      changeTimestamp: newTime => {
+        if (newTime < 0 || animationDuration !== void 0 && newTime > animationDuration) {
+          throw new Error(`Invalid timestamp: ${newTime}`);
+        }
+        setElapsed(newTime);
+        callbackWrapper(newTime);
+      },
+      drawFrame: timestamp => callbackWrapper(timestamp !== null && timestamp !== void 0 ? timestamp : elapsedRef.current),
+      isPlaying: isPlayingRef.current,
+      timestamp: elapsedRef.current,
+      setCanvas: canvas => {
+        if (canvasRef.current !== null && Object.is(canvasRef.current, canvas)) {
+          return;
+        }
+        canvasRef.current = canvas;
+        callbackWrapper(elapsedRef.current);
+        if (isPlayingRef.current) {
+          requestFrame();
+        }
+      },
+      errored
+    };
+  }
+  var import_react3 = __require("react");
+  var import_jsx_runtime4 = __require("react/jsx-runtime");
+  function DebugDrawCanvas({world}) {
+    const debugDraw = (0, import_react3.useRef)(null);
+    const [camX, setCamX] = (0, import_react3.useState)(0);
+    const [zoomLevel, setZoomLevel] = (0, import_react3.useState)(1);
+    const [updateStep, setUpdateStep] = (0, import_react3.useState)(1 / 60);
+    const {start, stop, isPlaying, setCanvas, drawFrame} = useAnimation({
+      autoStart: false,
+      callback({canvas, isPlaying: isPlaying2}) {
+        if (!debugDraw.current) {
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return;
+          debugDraw.current = new import_debug_draw.DebugDraw(ctx);
+        }
+        debugDraw.current.Prepare(camX, 0, zoomLevel, true);
+        (0, import_core5.DrawShapes)(debugDraw.current, world.getB2World());
+        debugDraw.current.Finish();
+        if (isPlaying2) world.update(updateStep);
+      }
+    });
+    const buttons = (0, import_jsx_runtime4.jsxs)("div", {
+      style: {
+        marginLeft: "20px",
+        marginRight: "20px",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between"
+      },
+      children: [(0, import_jsx_runtime4.jsx)("div", {
+        style: {
+          marginRight: "20px"
+        },
+        children: (0, import_jsx_runtime4.jsx)(PlayButton, {
+          isPlaying,
+          onClick: () => {
+            if (isPlaying) {
+              stop();
+            } else {
+              start();
             }
           }
-          if (this.debugDraw && this.world) {
-            this.debugDraw.Prepare(this.state.camX, 0, this.state.zoomLevel, true);
-            (0, import_core3.DrawShapes)(this.debugDraw, this.b2World);
-            this.debugDraw.Finish();
-          }
-        }
-      };
-      this.reqFrame = () => requestAnimationFrame(this.animationCallback);
-      this.startAnimation = () => this.setState({
-        isPlaying: true
-      }, this.reqFrame);
-      this.stopAnimation = () => this.setState({
-        isPlaying: false
-      }, () => {
-        this.callbackTimestamp = null;
-      });
-      this.animationCallback = timeInMs => {
-        if (!this.canvas || !this.state.isPlaying) return;
-        if (!this.callbackTimestamp) {
-          this.callbackTimestamp = timeInMs;
-          this.drawFrame();
-          this.reqFrame();
-          return;
-        }
-        const currentFrame = timeInMs - this.callbackTimestamp;
-        if (currentFrame < this.frameDuration) {
-          this.reqFrame();
-          return;
-        }
-        this.callbackTimestamp = timeInMs;
-        this.setState(prev => ({
-          animTimestamp: prev.animTimestamp + currentFrame
-        }), () => {
-          this.drawFrame();
-          this.reqFrame();
-        });
-        this.world.update(this.state.updateStep);
-      };
-      this.onPlayButtonClick = () => {
-        if (this.state.isPlaying) {
-          this.stopAnimation();
-        } else {
-          this.startAnimation();
-        }
-      };
-      this.onZoomSliderChangeHandler = newValue => {
-        this.setState({
-          zoomLevel: newValue
-        }, () => {});
-      };
-      this.onCameraSliderChangeHandler = newValue => {
-        this.setState({
-          camX: newValue
-        }, () => {});
-      };
-      this.onUpdateStepSliderChangeHandler = newValue => {
-        this.setState({
-          updateStep: newValue
-        }, () => {});
-      };
-      this.state = {
-        animTimestamp: 0,
-        isPlaying: false,
-        zoomLevel: 1,
-        camX: 0,
-        updateStep: 1 / 60
-      };
-      this.canvas = null;
-      this.frameDuration = 10;
-      this.callbackTimestamp = null;
-      this.debugDraw = null;
-      this.world = props.world;
-      this.b2World = this.world.getB2World();
-    }
-    componentDidMount() {
-      this.drawFrame();
-    }
-    render() {
-      const buttons = (0, import_jsx_runtime2.jsxs)("div", {
+        })
+      }), (0, import_jsx_runtime4.jsxs)("div", {
         style: {
           marginLeft: "20px",
           marginRight: "20px",
           display: "flex",
-          flexDirection: "row",
+          flexDirection: "column",
           justifyContent: "space-between"
         },
-        children: [(0, import_jsx_runtime2.jsx)("div", {
+        children: [(0, import_jsx_runtime4.jsxs)("div", {
+          children: [(0, import_jsx_runtime4.jsxs)("p", {
+            children: ["Zoom level: ", zoomLevel.toFixed(2)]
+          }), (0, import_jsx_runtime4.jsx)(import_core4.Slider, {
+            value: zoomLevel,
+            stepSize: 0.01,
+            labelValues: [],
+            labelRenderer: false,
+            min: 0.01,
+            max: 8,
+            onChange: value => {
+              setZoomLevel(value);
+              if (!isPlaying) drawFrame();
+            }
+          })]
+        }), (0, import_jsx_runtime4.jsxs)("div", {
           style: {
-            marginRight: "20px"
+            marginTop: "10px"
           },
-          children: (0, import_jsx_runtime2.jsx)(import_core2.Tooltip, {
-            content: this.state.isPlaying ? "Pause" : "Play",
-            children: (0, import_jsx_runtime2.jsx)(import_core2.Button, {
-              onClick: this.onPlayButtonClick,
-              children: (0, import_jsx_runtime2.jsx)(import_core2.Icon, {
-                icon: this.state.isPlaying ? (0, import_jsx_runtime2.jsx)(import_icons.Pause, {}) : (0, import_jsx_runtime2.jsx)(import_icons.Play, {})
-              })
-            })
-          })
-        }), (0, import_jsx_runtime2.jsxs)("div", {
+          children: [(0, import_jsx_runtime4.jsxs)("p", {
+            children: ["Camera X: ", camX.toFixed(2)]
+          }), (0, import_jsx_runtime4.jsx)(import_core4.Slider, {
+            value: camX,
+            stepSize: 10,
+            labelValues: [],
+            labelRenderer: false,
+            min: -500,
+            max: 500,
+            onChange: value => {
+              setCamX(value);
+              if (!isPlaying) drawFrame();
+            }
+          })]
+        }), (0, import_jsx_runtime4.jsxs)("div", {
           style: {
-            marginLeft: "20px",
-            marginRight: "20px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between"
+            marginTop: "10px"
           },
-          children: [(0, import_jsx_runtime2.jsxs)("div", {
-            children: [(0, import_jsx_runtime2.jsxs)("p", {
-              children: ["Zoom level: ", this.state.zoomLevel.toFixed(2)]
-            }), (0, import_jsx_runtime2.jsx)(import_core2.Slider, {
-              value: this.state.zoomLevel,
-              stepSize: 0.01,
-              labelValues: [],
-              labelRenderer: false,
-              min: 0.01,
-              max: 8,
-              onChange: this.onZoomSliderChangeHandler
-            })]
-          }), (0, import_jsx_runtime2.jsxs)("div", {
-            style: {
-              marginTop: "10px"
-            },
-            children: [(0, import_jsx_runtime2.jsxs)("p", {
-              children: ["Camera X: ", this.state.camX.toFixed(2)]
-            }), (0, import_jsx_runtime2.jsx)(import_core2.Slider, {
-              value: this.state.camX,
-              stepSize: 10,
-              labelValues: [],
-              labelRenderer: false,
-              min: -500,
-              max: 500,
-              onChange: this.onCameraSliderChangeHandler
-            })]
-          }), (0, import_jsx_runtime2.jsxs)("div", {
-            style: {
-              marginTop: "10px"
-            },
-            children: [(0, import_jsx_runtime2.jsxs)("p", {
-              children: ["Update step: ", this.state.updateStep.toFixed(4)]
-            }), (0, import_jsx_runtime2.jsx)(import_core2.Slider, {
-              value: this.state.updateStep,
-              stepSize: 1e-3,
-              labelValues: [],
-              labelRenderer: false,
-              min: 1e-3,
-              max: 0.1,
-              onChange: this.onUpdateStepSliderChangeHandler
-            })]
+          children: [(0, import_jsx_runtime4.jsxs)("p", {
+            children: ["Update step: ", updateStep.toFixed(4)]
+          }), (0, import_jsx_runtime4.jsx)(import_core4.Slider, {
+            value: updateStep,
+            stepSize: 1e-3,
+            labelValues: [],
+            labelRenderer: false,
+            min: 1e-3,
+            max: 0.1,
+            onChange: setUpdateStep
           })]
         })]
-      });
-      return (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, {
-        children: [(0, import_jsx_runtime2.jsx)("div", {
+      })]
+    });
+    return (0, import_jsx_runtime4.jsxs)(import_jsx_runtime4.Fragment, {
+      children: [(0, import_jsx_runtime4.jsx)("div", {
+        style: {
+          display: "flex",
+          alignContent: "center",
+          justifyContent: "center"
+        },
+        children: (0, import_jsx_runtime4.jsx)(WebGLCanvas_default, {
           style: {
-            display: "flex",
-            alignContent: "center",
-            justifyContent: "center"
+            flexGrow: 1
           },
-          children: (0, import_jsx_runtime2.jsx)(WebGLCanvas_default, {
-            style: {
-              flexGrow: 1
-            },
-            ref: r => {
-              this.canvas = r;
-            }
-          })
-        }), (0, import_jsx_runtime2.jsx)("div", {
-          style: {
-            display: "flex",
-            marginTop: "10px",
-            padding: "10px",
-            flexDirection: "row",
-            justifyContent: "stretch",
-            alignContent: "center"
-          },
-          children: buttons
-        }), (0, import_jsx_runtime2.jsx)("div", {
-          style: {
-            whiteSpace: "pre-wrap"
-          },
-          children: this.world.getWorldStatus()
-        })]
-      });
-    }
-  };
-  var import_jsx_runtime3 = __require("react/jsx-runtime");
+          ref: r => {
+            if (r) setCanvas(r);
+          }
+        })
+      }), (0, import_jsx_runtime4.jsx)("div", {
+        style: {
+          display: "flex",
+          marginTop: "10px",
+          padding: "10px",
+          flexDirection: "row",
+          justifyContent: "stretch",
+          alignContent: "center"
+        },
+        children: buttons
+      }), (0, import_jsx_runtime4.jsx)("div", {
+        style: {
+          whiteSpace: "pre-wrap"
+        },
+        children: world.getWorldStatus()
+      })]
+    });
+  }
+  var import_jsx_runtime5 = __require("react/jsx-runtime");
   var index_default = defineTab({
     toSpawn: () => true,
     body(context) {
       const {context: {moduleContexts: {physics_2d: {state: {world}}}}} = context;
-      return (0, import_jsx_runtime3.jsx)("div", {
-        children: (0, import_jsx_runtime3.jsx)(DebugDrawCanvas, {
+      return (0, import_jsx_runtime5.jsx)("div", {
+        children: (0, import_jsx_runtime5.jsx)(DebugDrawCanvas, {
           world
         })
       });

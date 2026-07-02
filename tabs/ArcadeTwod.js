@@ -79594,28 +79594,67 @@ export default require => {
     default: () => index_default
   });
   init_define_process();
+  var import_core3 = __require("@blueprintjs/core");
+  init_define_process();
+  var import_jsx_runtime2 = __require("react/jsx-runtime");
+  var import_core2 = __require("@blueprintjs/core");
+  init_define_process();
+  var import_jsx_runtime = __require("react/jsx-runtime");
   var import_core = __require("@blueprintjs/core");
-  var import_icons = __require("@blueprintjs/icons");
+  var defaultOptions = {
+    className: "",
+    fullWidth: false,
+    iconOnRight: false,
+    intent: import_core.Intent.NONE,
+    minimal: true
+  };
+  function ButtonComponent(props) {
+    const buttonProps = Object.assign(Object.assign({}, defaultOptions), props);
+    return props.disabled ? (0, import_jsx_runtime.jsx)(import_core.AnchorButton, Object.assign({}, buttonProps)) : (0, import_jsx_runtime.jsx)(import_core.Button, Object.assign({}, buttonProps));
+  }
+  var __rest = function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+      if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+    }
+    return t;
+  };
+  function PlayButton(_a) {
+    var {playingText = "Pause", playingIcon = "pause", pausedText = "Play", pausedIcon = "play", isPlaying, tooltipProps, iconProps} = _a, props = __rest(_a, ["playingText", "playingIcon", "pausedText", "pausedIcon", "isPlaying", "tooltipProps", "iconProps"]);
+    return (0, import_jsx_runtime2.jsx)(import_core2.Tooltip, Object.assign({
+      content: isPlaying ? playingText : pausedText
+    }, tooltipProps, {
+      children: (0, import_jsx_runtime2.jsx)(ButtonComponent, Object.assign({}, props, {
+        children: (0, import_jsx_runtime2.jsx)(import_core2.Icon, Object.assign({
+          icon: isPlaying ? playingIcon : pausedIcon
+        }, iconProps))
+      }))
+    }));
+  }
   init_define_process();
   function defineTab(tab) {
     return tab;
   }
   var import_phaser = __toESM(require_phaser(), 1);
   var import_react = __toESM(__require("react"), 1);
-  var import_jsx_runtime = __require("react/jsx-runtime");
+  var import_jsx_runtime3 = __require("react/jsx-runtime");
   function A2dUiButtons(props) {
     const [isPaused, setIsPaused] = import_react.default.useState(false);
     const toggleGamePause = () => {
       props.onClick(!isPaused);
       setIsPaused(!isPaused);
     };
-    return (0, import_jsx_runtime.jsx)(import_core.ButtonGroup, {
-      children: (0, import_jsx_runtime.jsx)(import_core.Button, {
+    return (0, import_jsx_runtime3.jsx)(import_core3.ButtonGroup, {
+      children: (0, import_jsx_runtime3.jsx)(PlayButton, {
         className: "a2d-play-toggle-button",
-        icon: isPaused ? (0, import_jsx_runtime.jsx)(import_icons.Play, {}) : (0, import_jsx_runtime.jsx)(import_icons.Pause, {}),
+        isPlaying: !isPaused,
+        playingIcon: "play",
+        pausedIcon: "pause",
+        playingText: "Pause Game",
+        pausedText: "Resume Game",
         active: false,
-        onClick: toggleGamePause,
-        text: isPaused ? "Resume Game" : "Pause Game"
+        onClick: toggleGamePause
       })
     });
   }
@@ -79655,7 +79694,7 @@ export default require => {
       (_b = this.state.game) == null ? void 0 : _b.destroy(false, false);
     }
     render() {
-      return (0, import_jsx_runtime.jsxs)("div", {
+      return (0, import_jsx_runtime3.jsxs)("div", {
         id: "a2d-tab",
         style: {
           display: "flex",
@@ -79663,9 +79702,9 @@ export default require => {
           justifyContent: "center",
           flexDirection: "column"
         },
-        children: [(0, import_jsx_runtime.jsx)("div", {
+        children: [(0, import_jsx_runtime3.jsx)("div", {
           id: "phaser-game"
-        }), (0, import_jsx_runtime.jsx)(A2dUiButtons, {
+        }), (0, import_jsx_runtime3.jsx)(A2dUiButtons, {
           onClick: p => this.toggleGamePause(p)
         })]
       });
@@ -79680,11 +79719,11 @@ export default require => {
       }
       return false;
     },
-    body: context => (0, import_jsx_runtime.jsx)(GameTab, {
+    body: context => (0, import_jsx_runtime3.jsx)(GameTab, {
       debuggerCtx: context
     }),
     label: "Arcade2D Tab",
-    iconName: import_icons.IconNames.SHAPES
+    iconName: "shapes"
   });
   return __toCommonJS(index_exports);
 };

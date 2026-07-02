@@ -32,14 +32,11 @@ export default require => {
     CurveTab: () => CurveTab,
     default: () => index_default
   });
-  var import_icons6 = __require("@blueprintjs/icons");
   var import_jsx_runtime6 = __require("react/jsx-runtime");
   var import_core6 = __require("@blueprintjs/core");
-  var import_icons3 = __require("@blueprintjs/icons");
   var import_react3 = __require("react");
   var import_jsx_runtime = __require("react/jsx-runtime");
   var import_core = __require("@blueprintjs/core");
-  var import_icons = __require("@blueprintjs/icons");
   function AnimationError({error}) {
     return (0, import_jsx_runtime.jsxs)("div", {
       style: {
@@ -54,7 +51,7 @@ export default require => {
           alignItems: "center"
         },
         children: [(0, import_jsx_runtime.jsx)(import_core.Icon, {
-          icon: (0, import_jsx_runtime.jsx)(import_icons.WarningSign, {}),
+          icon: "warning-sign",
           size: 90
         }), (0, import_jsx_runtime.jsxs)("div", {
           style: {
@@ -116,17 +113,25 @@ export default require => {
   }
   var import_jsx_runtime4 = __require("react/jsx-runtime");
   var import_core4 = __require("@blueprintjs/core");
-  var import_icons2 = __require("@blueprintjs/icons");
-  function PlayButton(props) {
-    return (0, import_jsx_runtime4.jsx)(import_core4.Tooltip, {
-      content: props.isPlaying ? "Pause" : "Play",
-      placement: "top",
+  var __rest2 = function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+      if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+    }
+    return t;
+  };
+  function PlayButton(_a) {
+    var {playingText = "Pause", playingIcon = "pause", pausedText = "Play", pausedIcon = "play", isPlaying, tooltipProps, iconProps} = _a, props = __rest2(_a, ["playingText", "playingIcon", "pausedText", "pausedIcon", "isPlaying", "tooltipProps", "iconProps"]);
+    return (0, import_jsx_runtime4.jsx)(import_core4.Tooltip, Object.assign({
+      content: isPlaying ? playingText : pausedText
+    }, tooltipProps, {
       children: (0, import_jsx_runtime4.jsx)(ButtonComponent, Object.assign({}, props, {
-        children: (0, import_jsx_runtime4.jsx)(import_core4.Icon, {
-          icon: props.isPlaying ? (0, import_jsx_runtime4.jsx)(import_icons2.Pause, {}) : (0, import_jsx_runtime4.jsx)(import_icons2.Play, {})
-        })
+        children: (0, import_jsx_runtime4.jsx)(import_core4.Icon, Object.assign({
+          icon: isPlaying ? playingIcon : pausedIcon
+        }, iconProps))
       }))
-    });
+    }));
   }
   var import_jsx_runtime5 = __require("react/jsx-runtime");
   var import_react = __require("react");
@@ -156,22 +161,29 @@ export default require => {
     const [, setRenderer] = (0, import_react2.useState)(true);
     return () => setRenderer(prev => !prev);
   }
-  function useAnimation({animationDuration, autoLoop, autoStart, callback, frameDuration, startTimestamp}) {
+  function useAnimation({animationDuration, autoLoop, autoStart, callback, frameDuration, startTimestamp = 0}) {
     const rerender = useRerender();
     const requestIdRef = (0, import_react2.useRef)(null);
-    const elapsedRef = (0, import_react2.useRef)(startTimestamp !== null && startTimestamp !== void 0 ? startTimestamp : 0);
+    const elapsedRef = (0, import_react2.useRef)(startTimestamp);
     const canvasRef = (0, import_react2.useRef)(null);
     const lastFrameTimestamp = (0, import_react2.useRef)(null);
-    const [isPlaying, setIsPlaying] = (0, import_react2.useState)(autoStart !== null && autoStart !== void 0 ? autoStart : false);
+    const isPlayingRef = (0, import_react2.useRef)(false);
     const [errored, setErrored] = (0, import_react2.useState)(null);
     function setElapsed(newVal) {
       elapsedRef.current = newVal;
       rerender();
     }
+    function setIsPlaying(newVal) {
+      isPlayingRef.current = newVal;
+      rerender();
+    }
     function requestFrame() {
-      requestIdRef.current = requestAnimationFrame(animCallback);
+      if (requestIdRef.current === null) {
+        requestIdRef.current = requestAnimationFrame(animCallback);
+      }
     }
     function stop() {
+      if (!isPlayingRef.current) return;
       setIsPlaying(false);
       if (requestIdRef.current !== null) {
         cancelAnimationFrame(requestIdRef.current);
@@ -185,17 +197,28 @@ export default require => {
       lastFrameTimestamp.current = null;
       if (requestIdRef.current !== null) {
         cancelAnimationFrame(requestIdRef.current);
+        requestIdRef.current = null;
+      }
+      if (isPlayingRef.current) {
         requestFrame();
       }
     }
     function start() {
+      if (isPlayingRef.current) return;
       setIsPlaying(true);
       if (canvasRef.current) requestFrame();
     }
     function callbackWrapper(time) {
       if (canvasRef.current) {
         try {
-          callback(time, canvasRef.current);
+          callback({
+            timestamp: time,
+            isPlaying: isPlayingRef.current,
+            canvas: canvasRef.current,
+            stop,
+            start,
+            reset
+          });
         } catch (error) {
           setErrored(error);
           stop();
@@ -203,6 +226,7 @@ export default require => {
       }
     }
     function animCallback(timeInMs) {
+      requestIdRef.current = null;
       if (lastFrameTimestamp.current === null) {
         lastFrameTimestamp.current = timeInMs;
         requestFrame();
@@ -251,7 +275,7 @@ export default require => {
         callbackWrapper(newTime);
       },
       drawFrame: timestamp => callbackWrapper(timestamp !== null && timestamp !== void 0 ? timestamp : elapsedRef.current),
-      isPlaying,
+      isPlaying: isPlayingRef.current,
       timestamp: elapsedRef.current,
       setCanvas: canvas => {
         if (canvasRef.current !== null && Object.is(canvasRef.current, canvas)) {
@@ -259,7 +283,7 @@ export default require => {
         }
         canvasRef.current = canvas;
         callbackWrapper(elapsedRef.current);
-        if (isPlaying) {
+        if (isPlayingRef.current) {
           requestFrame();
         }
       },
@@ -274,7 +298,7 @@ export default require => {
       frameDuration,
       animationDuration,
       autoLoop: isAutoLooping,
-      callback: (timestamp2, canvas) => {
+      callback: ({timestamp: timestamp2, canvas}) => {
         const frame = props.animation.getFrame(timestamp2 / 1e3);
         frame.draw(canvas);
       }
@@ -305,7 +329,7 @@ export default require => {
           disabled: Boolean(errored),
           onClick: reset,
           children: (0, import_jsx_runtime6.jsx)(import_core6.Icon, {
-            icon: (0, import_jsx_runtime6.jsx)(import_icons3.Reset, {})
+            icon: "reset"
           })
         })
       }), (0, import_jsx_runtime6.jsx)(import_core6.Slider, {
@@ -366,7 +390,6 @@ export default require => {
   }
   var import_jsx_runtime7 = __require("react/jsx-runtime");
   var import_core7 = __require("@blueprintjs/core");
-  var import_icons4 = __require("@blueprintjs/icons");
   function clamp(value, bound1, bound2) {
     if (bound2 == null) {
       return Math.min(value, bound1);
@@ -377,10 +400,9 @@ export default require => {
   function MultiItemDisplay(props) {
     const [currentStep, setCurrentStep] = (0, import_react4.useState)(0);
     function changeStep(newIndex) {
+      var _a;
       setCurrentStep(newIndex);
-      if (props.onStepChange) {
-        props.onStepChange(newIndex, currentStep);
-      }
+      (_a = props.onStepChange) === null || _a === void 0 ? void 0 : _a.call(props, newIndex, currentStep);
     }
     const [stepEditorValue, setStepEditorValue] = (0, import_react4.useState)("1");
     const [stepEditorFocused, setStepEditorFocused] = (0, import_react4.useState)(false);
@@ -410,7 +432,7 @@ export default require => {
           tabIndex: 0,
           large: true,
           outlined: true,
-          icon: (0, import_jsx_runtime7.jsx)(import_icons4.ArrowLeft, {}),
+          icon: "arrow-left",
           onClick: () => {
             changeStep(currentStep - 1);
             setStepEditorValue(currentStep.toString());
@@ -418,7 +440,7 @@ export default require => {
           disabled: currentStep === 0,
           children: "Previous"
         }), (0, import_jsx_runtime7.jsx)("h3", {
-          className: "bp3-text-large",
+          className: "bp6-text-large",
           children: (0, import_jsx_runtime7.jsxs)("div", {
             style: {
               display: "flex",
@@ -473,7 +495,7 @@ export default require => {
           },
           large: true,
           outlined: true,
-          icon: (0, import_jsx_runtime7.jsx)(import_icons4.ArrowRight, {}),
+          icon: "arrow-right",
           tabIndex: 0,
           onClick: () => {
             changeStep(currentStep + 1);
@@ -503,7 +525,7 @@ export default require => {
     return tab;
   }
   var glAnimationSymbol = Symbol.for("glAnimation");
-  var glAnimation = class {
+  var glAnimation = class _glAnimation {
     constructor(duration, fps) {
       this.duration = duration;
       this.fps = fps;
@@ -511,16 +533,19 @@ export default require => {
     get _anim_symbol() {
       return glAnimationSymbol;
     }
+    static [Symbol.hasInstance](constructor) {
+      if (typeof constructor !== "object" || constructor === null) return false;
+      return ("_anim_symbol" in constructor) && constructor._anim_symbol === glAnimationSymbol;
+    }
     static isAnimation(obj) {
-      if (typeof obj !== "object" || obj === null) return false;
-      return ("_anim_symbol" in obj) && obj._anim_symbol === glAnimationSymbol;
+      return obj instanceof _glAnimation;
     }
   };
   var import_core9 = __require("@blueprintjs/core");
   var import_jsx_runtime8 = __require("react/jsx-runtime");
   var import_core8 = __require("@blueprintjs/core");
   var import_react5 = __require("react");
-  var __rest2 = function (s, e) {
+  var __rest3 = function (s, e) {
     var t = {};
     for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
     if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
@@ -529,7 +554,7 @@ export default require => {
     return t;
   };
   function NumberSelector(_a) {
-    var {value, maxValue, minValue, onValueChanged, onCancel, onEdit, onConfirm, customInputAttributes} = _a, props = __rest2(_a, ["value", "maxValue", "minValue", "onValueChanged", "onCancel", "onEdit", "onConfirm", "customInputAttributes"]);
+    var {value, maxValue, minValue, onValueChanged, onCancel, onEdit, onConfirm, customInputAttributes} = _a, props = __rest3(_a, ["value", "maxValue", "minValue", "onValueChanged", "onCancel", "onEdit", "onConfirm", "customInputAttributes"]);
     const [text, setText] = (0, import_react5.useState)(null);
     const maxTextLength = maxValue === 0 ? 1 : Math.floor(Math.log10(maxValue)) + 2;
     return (0, import_jsx_runtime8.jsx)(import_core8.EditableText, Object.assign({}, props, {
@@ -573,6 +598,10 @@ export default require => {
       }
     }));
   }
+  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
+  var import_base = __require("js-slang/dist/errors/base");
+  var import_rttc = __require("js-slang/dist/utils/rttc");
+  var import_operators = __require("js-slang/dist/utils/operators");
   function degreesToRadians(degrees) {
     return degrees / 360 * (2 * Math.PI);
   }
@@ -583,7 +612,7 @@ export default require => {
     const {isPlaying: isRotating, start, stop, changeTimestamp: setDisplayAngle, timestamp: displayAngle, setCanvas, errored} = useAnimation({
       animationDuration: 7200,
       autoLoop: true,
-      callback(angle) {
+      callback({timestamp: angle}) {
         const angleInRadians = degreesToRadians(angle / 20);
         curve.redraw(angleInRadians);
       }
@@ -660,7 +689,6 @@ export default require => {
     });
   }
   var import_core10 = __require("@blueprintjs/core");
-  var import_icons5 = __require("@blueprintjs/icons");
   var import_react7 = __require("react");
   var import_jsx_runtime10 = __require("react/jsx-runtime");
   function Curve3DAnimationCanvas({animation}) {
@@ -673,7 +701,7 @@ export default require => {
       frameDuration,
       animationDuration,
       autoLoop: isAutoLooping,
-      callback(timestamp2, canvas) {
+      callback({timestamp: timestamp2, canvas}) {
         const frame = animation.getFrame(timestamp2 / 1e3);
         frame.draw(canvas);
       }
@@ -714,7 +742,7 @@ export default require => {
               disabled: Boolean(errored),
               onClick: reset,
               children: (0, import_jsx_runtime10.jsx)(import_core10.Icon, {
-                icon: (0, import_jsx_runtime10.jsx)(import_icons5.Reset, {})
+                icon: "reset"
               })
             })
           }), (0, import_jsx_runtime10.jsxs)("div", {
@@ -823,7 +851,7 @@ export default require => {
       });
     },
     label: "Curves Tab",
-    iconName: import_icons6.IconNames.MEDIA
+    iconName: "media"
   });
   return __toCommonJS(index_exports);
 };

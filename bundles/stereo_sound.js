@@ -73,34 +73,42 @@ export default require => {
     trombone: () => trombone,
     violin: () => violin
   });
+  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
+  var import_base = __require("js-slang/dist/errors/base");
+  var import_rttc = __require("js-slang/dist/utils/rttc");
+  var import_operators = __require("js-slang/dist/utils/operators");
   var Accidental;
   (function (Accidental2) {
     Accidental2["SHARP"] = "#";
     Accidental2["FLAT"] = "b";
     Accidental2["NATURAL"] = "\u266E";
   })(Accidental || (Accidental = {}));
-  function noteToValues(note, func_name = noteToValues.name) {
+  function parseNoteWithOctave(note) {
+    if (typeof note !== "string") return null;
     const match = (/^([A-Ga-g])([#♮b]?)(\d*)$/).exec(note);
-    if (match === null) throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
+    if (match === null) return null;
     const [, noteName, accidental, octaveStr] = match;
     switch (accidental) {
       case Accidental.SHARP:
         {
-          if (noteName === "B" || noteName === "E") {
-            throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
-          }
+          if (noteName === "B" || noteName === "E") return null;
           break;
         }
       case Accidental.FLAT:
         {
-          if (noteName === "F" || noteName === "C") {
-            throw new Error(`${func_name}: Invalid Note with Octave: ${note}`);
-          }
+          if (noteName === "F" || noteName === "C") return null;
           break;
         }
     }
     const octave = octaveStr === "" ? 4 : parseInt(octaveStr);
     return [noteName.toUpperCase(), accidental !== "" ? accidental : Accidental.NATURAL, octave];
+  }
+  function noteToValues(note, func_name) {
+    const res = parseNoteWithOctave(note);
+    if (res === null) {
+      throw new import_base.GeneralRuntimeError(`${func_name}: Invalid Note with Octave: ${note}`);
+    }
+    return res;
   }
   var import_list = __require("js-slang/dist/stdlib/list");
   function letter_name_to_midi_note(note) {
@@ -147,6 +155,7 @@ export default require => {
     return res + 12 * octave;
   }
   function midi_note_to_frequency(note) {
+    (0, import_rttc.assertNumberWithinRange)(note, midi_note_to_frequency.name);
     return 440 * Math.pow(2, (note - 69) / 12);
   }
   function letter_name_to_frequency(note) {
@@ -263,9 +272,9 @@ export default require => {
   var recorded_sound;
   function check_permission() {
     if (permission === void 0) {
-      throw new Error("Call init_record(); to obtain permission to use microphone");
+      throw new import_base.GeneralRuntimeError("Call init_record(); to obtain permission to use microphone");
     } else if (permission === false) {
-      throw new Error(`Permission has been denied.
+      throw new import_base.GeneralRuntimeError(`Permission has been denied.
 
         Re-start browser and call init_record();
 
@@ -330,7 +339,7 @@ export default require => {
       play_recording_signal();
       return () => {
         if (recorded_sound === void 0) {
-          throw new Error("recording still being processed");
+          throw new import_base.GeneralRuntimeError("recording still being processed");
         } else {
           return recorded_sound;
         }
@@ -352,24 +361,18 @@ export default require => {
     }, recording_signal_duration_ms + buffer * 1e3);
     return () => {
       if (recorded_sound === void 0) {
-        throw new Error("recording still being processed");
+        throw new import_base.GeneralRuntimeError("recording still being processed");
       } else {
         return recorded_sound;
       }
     };
   }
-  function validateDuration(func_name, duration) {
-    if (typeof duration !== "number") {
-      throw new Error(`${func_name} expects a number for duration, got ${duration}`);
-    }
-    if (duration < 0) {
-      throw new Error(`${func_name}: Sound duration must be greater than or equal to 0`);
-    }
+  function validateDuration(func_name, duration, param_name) {
+    (0, import_rttc.assertNumberWithinRange)(duration, func_name, 0, void 0, true, param_name);
   }
   function validateWave(func_name, wave, lr) {
-    const direction = lr !== void 0 ? `${lr}_` : "";
     if (typeof wave !== "function") {
-      throw new Error(`${func_name}: ${direction}wave must be a Wave, got ${wave}`);
+      throw new import_rttcErrors.InvalidParameterTypeError("Wave", wave, func_name, lr === void 0 ? void 0 : `${lr} wave`);
     }
   }
   function make_stereo_sound(left_wave, right_wave, duration) {
@@ -393,7 +396,36 @@ export default require => {
     return (0, import_list2.tail)(sound);
   }
   function is_sound(x) {
-    return (0, import_list2.is_pair)(x) && typeof get_left_wave(x) === "function" && typeof get_right_wave(x) === "function" && typeof get_duration(x) === "number";
+    if (!(0, import_list2.is_pair)(x)) return false;
+    const waves = (0, import_list2.head)(x);
+    if (!(0, import_list2.is_pair)(waves)) return false;
+    const left_wave = (0, import_list2.head)(waves);
+    if (!(0, import_rttc.isFunctionOfLength)(left_wave, 1)) return false;
+    const right_wave = (0, import_list2.tail)(waves);
+    if (!(0, import_rttc.isFunctionOfLength)(right_wave, 1)) return false;
+    const duration = (0, import_list2.tail)(x);
+    return typeof duration === "number";
+  }
+  function throwIfNotSound(obj, func_name, param_name) {
+    if (!(0, import_list2.is_pair)(obj)) {
+      throw new import_rttcErrors.InvalidParameterTypeError("sound", obj, func_name, param_name);
+    }
+    const waves = (0, import_list2.head)(obj);
+    if (!(0, import_list2.is_pair)(waves)) {
+      throw new import_base.GeneralRuntimeError(`${func_name}: head of sound should be a pair of waves.`);
+    }
+    const left_wave = (0, import_list2.head)(waves);
+    if (!(0, import_rttc.isFunctionOfLength)(left_wave, 1)) {
+      throw new import_base.GeneralRuntimeError(`${func_name}: left wave is not a valid wave.`);
+    }
+    const right_wave = (0, import_list2.tail)(waves);
+    if (!(0, import_rttc.isFunctionOfLength)(right_wave, 1)) {
+      throw new import_base.GeneralRuntimeError(`${func_name}: right wave is not a valid wave.`);
+    }
+    const duration = (0, import_list2.tail)(obj);
+    if (typeof duration !== "number") {
+      throw new import_base.GeneralRuntimeError(`${func_name}: Duration of sound is not a number!`);
+    }
   }
   function play_wave(wave, duration) {
     validateDuration(play_wave.name, duration);
@@ -407,14 +439,13 @@ export default require => {
     return play(make_stereo_sound(left_wave, right_wave, duration));
   }
   function play_in_tab(sound) {
-    if (!is_sound(sound)) {
-      throw new Error(`${play_in_tab.name} is expecting sound, but encountered ${sound}`);
-    } else if (isPlaying) {
-      throw new Error(`${play_in_tab.name}: audio system still playing previous sound`);
+    throwIfNotSound(sound, play_in_tab.name);
+    if (isPlaying) {
+      throw new import_base.GeneralRuntimeError(`${play_in_tab.name}: audio system still playing previous sound`);
     }
     const duration = get_duration(sound);
     if (duration < 0) {
-      throw new Error(`${play_in_tab.name}: duration of sound is negative`);
+      throw new import_base.GeneralRuntimeError(`${play_in_tab.name}: duration of sound is negative`);
     } else if (duration === 0) {
       return sound;
     }
@@ -430,7 +461,7 @@ export default require => {
     const left_wave = get_left_wave(sound);
     const right_wave = get_right_wave(sound);
     for (let i = 0; i < len; i += 1) {
-      Ltemp = left_wave(i / FS);
+      Ltemp = (0, import_operators.callWithoutMetadata)(left_wave, i / FS);
       if (Ltemp > 1) {
         channel[2 * i] = 1;
       } else if (Ltemp < -1) {
@@ -442,7 +473,7 @@ export default require => {
         channel[2 * i] = Lprev_value * 0.999;
       }
       Lprev_value = channel[2 * i];
-      Rtemp = right_wave(i / FS);
+      Rtemp = (0, import_operators.callWithoutMetadata)(right_wave, i / FS);
       if (Rtemp > 1) {
         channel[2 * i + 1] = 1;
       } else if (Rtemp < -1) {
@@ -471,14 +502,13 @@ export default require => {
     return sound;
   }
   function play(sound) {
-    if (!is_sound(sound)) {
-      throw new Error(`${play.name} is expecting sound, but encountered ${sound}`);
-    } else if (isPlaying) {
-      throw new Error(`${play.name}: audio system still playing previous sound`);
+    throwIfNotSound(sound, play.name);
+    if (isPlaying) {
+      throw new import_base.GeneralRuntimeError(`${play.name}: audio system still playing previous sound`);
     }
     const duration = get_duration(sound);
     if (duration < 0) {
-      throw new Error(`${play.name}: duration of sound is negative`);
+      throw new import_base.GeneralRuntimeError(`${play.name}: duration of sound is negative`);
     } else if (duration === 0) {
       return sound;
     }
@@ -494,7 +524,7 @@ export default require => {
     const left_wave = get_left_wave(sound);
     const right_wave = get_right_wave(sound);
     for (let i = 0; i < len; i += 1) {
-      Ltemp = left_wave(i / FS);
+      Ltemp = (0, import_operators.callWithoutMetadata)(left_wave, i / FS);
       if (Ltemp > 1) {
         channel[2 * i] = 1;
       } else if (Ltemp < -1) {
@@ -506,7 +536,7 @@ export default require => {
         channel[2 * i] = Lprev_value * 0.999;
       }
       Lprev_value = channel[2 * i];
-      Rtemp = right_wave(i / FS);
+      Rtemp = (0, import_operators.callWithoutMetadata)(right_wave, i / FS);
       if (Rtemp > 1) {
         channel[2 * i + 1] = 1;
       } else if (Rtemp < -1) {
@@ -543,12 +573,14 @@ export default require => {
     isPlaying = false;
   }
   function squash(sound) {
-    const left = get_left_wave(sound);
-    const right = get_right_wave(sound);
+    const left = x => (0, import_operators.callWithoutMetadata)(get_left_wave(sound), x);
+    const right = x => (0, import_operators.callWithoutMetadata)(get_right_wave(sound), x);
     return make_sound(t => 0.5 * (left(t) + right(t)), get_duration(sound));
   }
   function pan(amount) {
     return sound => {
+      const left_wave = get_left_wave(sound);
+      const right_wave = get_right_wave(sound);
       if (amount > 1) {
         amount = 1;
       }
@@ -556,12 +588,14 @@ export default require => {
         amount = -1;
       }
       sound = squash(sound);
-      return make_stereo_sound(t => (1 - amount) / 2 * get_left_wave(sound)(t), t => (1 + amount) / 2 * get_right_wave(sound)(t), get_duration(sound));
+      return make_stereo_sound(t => (1 - amount) / 2 * (0, import_operators.callWithoutMetadata)(left_wave, t), t => (1 + amount) / 2 * (0, import_operators.callWithoutMetadata)(right_wave, t), get_duration(sound));
     };
   }
   function pan_mod(modulator) {
+    const mod_left_wave = x => (0, import_operators.callWithoutMetadata)(get_left_wave(modulator), x);
+    const mod_right_wave = x => (0, import_operators.callWithoutMetadata)(get_right_wave(modulator), x);
     const amount = t => {
-      let output = get_left_wave(modulator)(t) + get_right_wave(modulator)(t);
+      let output = mod_left_wave(t) + mod_right_wave(t);
       if (output > 1) {
         output = 1;
       }
@@ -571,8 +605,10 @@ export default require => {
       return output;
     };
     return sound => {
+      const left_wave = get_left_wave(sound);
+      const right_wave = get_right_wave(sound);
       sound = squash(sound);
-      return make_stereo_sound(t => (1 - amount(t)) / 2 * get_left_wave(sound)(t), t => (1 + amount(t)) / 2 * get_right_wave(sound)(t), get_duration(sound));
+      return make_stereo_sound(t => (1 - amount(t)) / 2 * (0, import_operators.callWithoutMetadata)(left_wave, t), t => (1 + amount(t)) / 2 * (0, import_operators.callWithoutMetadata)(right_wave, t), get_duration(sound));
     };
   }
   function noise_sound(duration) {
@@ -622,10 +658,10 @@ export default require => {
   }
   function consecutively(list_of_sounds) {
     function stereo_cons_two(sound1, sound2) {
-      const Lwave1 = get_left_wave(sound1);
-      const Rwave1 = get_right_wave(sound1);
-      const Lwave2 = get_left_wave(sound2);
-      const Rwave2 = get_right_wave(sound2);
+      const Lwave1 = x => (0, import_operators.callWithoutMetadata)(get_left_wave(sound1), x);
+      const Rwave1 = x => (0, import_operators.callWithoutMetadata)(get_right_wave(sound1), x);
+      const Lwave2 = x => (0, import_operators.callWithoutMetadata)(get_left_wave(sound2), x);
+      const Rwave2 = x => (0, import_operators.callWithoutMetadata)(get_right_wave(sound2), x);
       const dur1 = get_duration(sound1);
       const dur2 = get_duration(sound2);
       const new_left = t => t < dur1 ? Lwave1(t) : Lwave2(t - dur1);
@@ -642,9 +678,27 @@ export default require => {
       const Rwave2 = get_right_wave(sound2);
       const dur1 = get_duration(sound1);
       const dur2 = get_duration(sound2);
-      const new_left = t => Lwave1(t) + Lwave2(t);
-      const new_right = t => Rwave1(t) + Rwave2(t);
-      const new_dur = dur1 < dur2 ? dur2 : dur1;
+      const new_left = t => {
+        let sum = 0;
+        if (t <= dur1) {
+          sum += Lwave1(t);
+        }
+        if (t <= dur2) {
+          sum += Lwave2(t);
+        }
+        return sum;
+      };
+      const new_right = t => {
+        let sum = 0;
+        if (t <= dur1) {
+          sum += Rwave1(t);
+        }
+        if (t <= dur2) {
+          sum += Rwave2(t);
+        }
+        return sum;
+      };
+      const new_dur = Math.max(dur1, dur2);
       return make_stereo_sound(new_left, new_right, new_dur);
     }
     const unnormed = (0, import_list2.accumulate)(stereo_simul_two, silence_sound(0), list_of_sounds);
@@ -665,15 +719,15 @@ export default require => {
       function adsrHelper(wave) {
         return x => {
           if (x < attack_time) {
-            return wave(x) * (x / attack_time);
+            return (0, import_operators.callWithoutMetadata)(wave, x) * (x / attack_time);
           }
           if (x < attack_time + decay_time) {
-            return ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time) + sustain_level) * wave(x);
+            return ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time) + sustain_level) * (0, import_operators.callWithoutMetadata)(wave, x);
           }
           if (x < duration - release_time) {
-            return wave(x) * sustain_level;
+            return (0, import_operators.callWithoutMetadata)(wave, x) * sustain_level;
           }
-          return wave(x) * sustain_level * linear_decay(release_time)(x - (duration - release_time));
+          return (0, import_operators.callWithoutMetadata)(wave, x) * sustain_level * linear_decay(release_time)(x - (duration - release_time));
         };
       }
       return make_stereo_sound(adsrHelper(Lwave), adsrHelper(Rwave), duration);
@@ -686,13 +740,14 @@ export default require => {
       }
       return (0, import_list2.pair)((0, import_list2.pair)(n, (0, import_list2.head)(lst)), zip((0, import_list2.tail)(lst), n + 1));
     }
-    return simultaneously((0, import_list2.accumulate)((x, y) => (0, import_list2.pair)((0, import_list2.tail)(x)(waveform(base_frequency * (0, import_list2.head)(x), duration)), y), null, zip(envelopes, 1)));
+    const new_list = (0, import_list2.map)(x => (0, import_list2.tail)(x)((0, import_operators.callWithoutMetadata)(waveform, base_frequency * (0, import_list2.head)(x), duration)), zip(envelopes, 1));
+    return simultaneously(new_list);
   }
   function phase_mod(freq, duration, amount) {
     return modulator => {
       const left_wave = get_left_wave(modulator);
       const right_wave = get_left_wave(modulator);
-      return make_stereo_sound(t => Math.sin(2 * Math.PI * t * freq + amount * left_wave(t)), t => Math.sin(2 * Math.PI * t * freq + amount * right_wave(t)), duration);
+      return make_stereo_sound(t => Math.sin(2 * Math.PI * t * freq + amount * (0, import_operators.callWithoutMetadata)(left_wave, t)), t => Math.sin(2 * Math.PI * t * freq + amount * (0, import_operators.callWithoutMetadata)(right_wave, t)), duration);
     };
   }
   function bell(note, duration) {

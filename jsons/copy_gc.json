@@ -4,14 +4,16 @@
     "name": "initialize_tag",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "allTag",
-        "number[]"
-      ],
-      [
-        "types",
-        "string[]"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "allTag"
+      },
+      {
+        "paramType": "regular",
+        "type": "string[]",
+        "name": "types"
+      }
     ],
     "retType": "void"
   },
@@ -20,10 +22,11 @@
     "name": "allHeap",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "newHeap",
-        "number[][]"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number[][]",
+        "name": "newHeap"
+      }
     ],
     "retType": "void"
   },
@@ -34,19 +37,21 @@
     "params": [],
     "retType": "void"
   },
-  "resetFromSpace": {
+  "resetSpace": {
     "kind": "function",
-    "name": "resetFromSpace",
+    "name": "resetSpace",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "fromSpace",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "\"to\" | \"from\"",
+        "name": "space"
+      },
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "heap"
+      }
     ],
     "retType": "number[]"
   },
@@ -55,10 +60,11 @@
     "name": "initialize_memory",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "memorySize",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "memorySize"
+      }
     ],
     "retType": "void"
   },
@@ -67,50 +73,61 @@
     "name": "newCommand",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "type",
-        "any"
-      ],
-      [
-        "toSpace",
-        "any"
-      ],
-      [
-        "fromSpace",
-        "any"
-      ],
-      [
-        "left",
-        "any"
-      ],
-      [
-        "right",
-        "any"
-      ],
-      [
-        "sizeLeft",
-        "any"
-      ],
-      [
-        "sizeRight",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ],
-      [
-        "description",
-        "any"
-      ],
-      [
-        "firstDesc",
-        "any"
-      ],
-      [
-        "lastDesc",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "type"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "toSpace"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "fromSpace"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "right"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "sizeLeft"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "sizeRight"
+      },
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "heap"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "description"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "firstDesc"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "lastDesc"
+      }
     ],
     "retType": "void"
   },
@@ -119,18 +136,21 @@
     "name": "newCopy",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "left",
-        "any"
-      ],
-      [
-        "right",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "right"
+      },
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "heap"
+      }
     ],
     "retType": "void"
   },
@@ -139,14 +159,16 @@
     "name": "endFlip",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "left",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "heap"
+      }
     ],
     "retType": "void"
   },
@@ -155,10 +177,11 @@
     "name": "updateRoots",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "array",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "array"
+      }
     ],
     "retType": "void"
   },
@@ -174,18 +197,21 @@
     "name": "startFlip",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "toSpace",
-        "any"
-      ],
-      [
-        "fromSpace",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "toSpace"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "fromSpace"
+      },
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "heap"
+      }
     ],
     "retType": "void"
   },
@@ -194,18 +220,21 @@
     "name": "newPush",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "left",
-        "any"
-      ],
-      [
-        "right",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "right"
+      },
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "heap"
+      }
     ],
     "retType": "void"
   },
@@ -214,22 +243,26 @@
     "name": "newPop",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "res",
-        "any"
-      ],
-      [
-        "left",
-        "any"
-      ],
-      [
-        "right",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "res"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "right"
+      },
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "heap"
+      }
     ],
     "retType": "void"
   },
@@ -238,10 +271,11 @@
     "name": "doneShowRoot",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "heap",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "heap"
+      }
     ],
     "retType": "void"
   },
@@ -250,14 +284,16 @@
     "name": "showRoots",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "left",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "heap"
+      }
     ],
     "retType": "void"
   },
@@ -266,18 +302,21 @@
     "name": "newAssign",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "res",
-        "any"
-      ],
-      [
-        "left",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "res"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "heap"
+      }
     ],
     "retType": "void"
   },
@@ -286,14 +325,16 @@
     "name": "newNew",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "left",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "heap"
+      }
     ],
     "retType": "void"
   },
@@ -302,26 +343,31 @@
     "name": "scanFlip",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "left",
-        "any"
-      ],
-      [
-        "right",
-        "any"
-      ],
-      [
-        "scan",
-        "any"
-      ],
-      [
-        "free",
-        "any"
-      ],
-      [
-        "heap",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "left"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "right"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "scan"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "free"
+      },
+      {
+        "paramType": "regular",
+        "type": "number[]",
+        "name": "heap"
+      }
     ],
     "retType": "void"
   },
@@ -330,30 +376,27 @@
     "name": "updateSlotSegment",
     "description": "<p>No description available</p>",
     "params": [
-      [
-        "tag",
-        "number"
-      ],
-      [
-        "size",
-        "number"
-      ],
-      [
-        "first",
-        "number"
-      ],
-      [
-        "last",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "tag"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "size"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "first"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "last"
+      }
     ],
     "retType": "void"
-  },
-  "init": {
-    "kind": "function",
-    "name": "init",
-    "description": "<p>No description available</p>",
-    "params": [],
-    "retType": "{ toReplString: () => string; get_memory_size: () => number; get_from_space: () => number; get_to_space: () => number; get_memory_heap: () => MemoryHeaps; get_tags: () => number[]; get_types: () => string[]; get_column_size: () => number; get_row_size: () => number; get_from_memory_matrix: () => MemoryHeaps; get_to_memory_matrix: () => MemoryHeaps; get_flips: () => number[]; get_slots: () => number[]; get_command: () => CommandHeapObject[]; get_roots: () => number[] }"
   }
 }

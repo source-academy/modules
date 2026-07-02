@@ -4,10 +4,11 @@
     "name": "wcompile",
     "description": "<p>Compile a (hopefully valid) WebAssembly Text module to binary.</p>",
     "params": [
-      [
-        "program",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "program"
+      }
     ],
     "retType": "number[]"
   },
@@ -16,10 +17,11 @@
     "name": "wrun",
     "description": "<p>Run a compiled WebAssembly Binary Buffer.</p>",
     "params": [
-      [
-        "buffer",
-        "Uint8Array<ArrayBufferLike> | number[]"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Uint8Array<ArrayBufferLike> | number[]",
+        "name": "buffer"
+      }
     ],
     "retType": "AlternatingLinkedList<string, ExportValue>"
   }

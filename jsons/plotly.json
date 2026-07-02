@@ -4,10 +4,11 @@
     "name": "new_plot",
     "description": "<p>Adds a new plotly plot to the context which will be rendered in the Plotly Tabs</p>",
     "params": [
-      [
-        "data",
-        "ListOfPairs"
-      ]
+      {
+        "paramType": "regular",
+        "type": "ListOfPairs",
+        "name": "data"
+      }
     ],
     "retType": "void"
   },
@@ -16,10 +17,11 @@
     "name": "new_plot_json",
     "description": "<p>Adds a new plotly plot to the context which will be rendered in the Plotly Tabs</p>",
     "params": [
-      [
-        "data",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "data"
+      }
     ],
     "retType": "void"
   },
@@ -28,10 +30,11 @@
     "name": "draw_connected_2d",
     "description": "<p>Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at <code>num</code> sample points and connecting each pair with a line.</p>",
     "params": [
-      [
-        "numPoints",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "num"
+      }
     ],
     "retType": "CurvePlotFunction"
   },
@@ -40,34 +43,37 @@
     "name": "draw_connected_3d",
     "description": "<p>Returns a function that turns a given 3D Curve into a Drawing, by sampling the\n3D Curve at <code>num</code> sample points and connecting each pair with a line.</p>",
     "params": [
-      [
-        "numPoints",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "num"
+      }
     ],
     "retType": "CurvePlotFunction"
   },
   "draw_points_2d": {
     "kind": "function",
     "name": "draw_points_2d",
-    "description": "<p>Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at num sample points. The Drawing consists of isolated points, and does not connect them.\nWhen a program evaluates to a Drawing, the Source system displays it graphically, in a window,</p><p>*</p>",
+    "description": "<p>Returns a function that turns a given Curve into a Drawing, by sampling the\nCurve at num sample points. The Drawing consists of isolated points, and does not connect them.\nWhen a program evaluates to a Drawing, the Source system displays it graphically, in a window,</p>",
     "params": [
-      [
-        "numPoints",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "num"
+      }
     ],
     "retType": "CurvePlotFunction"
   },
   "draw_points_3d": {
     "kind": "function",
     "name": "draw_points_3d",
-    "description": "<p>Returns a function that turns a given 3D Curve into a Drawing, by sampling the\n3D Curve at num sample points. The Drawing consists of isolated points, and does not connect them.\nWhen a program evaluates to a Drawing, the Source system displays it graphically, in a window,</p><p>*</p>",
+    "description": "<p>Returns a function that turns a given 3D Curve into a Drawing, by sampling the\n3D Curve at num sample points. The Drawing consists of isolated points, and does not connect them.\nWhen a program evaluates to a Drawing, the Source system displays it graphically, in a window,</p>",
     "params": [
-      [
-        "numPoints",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "num"
+      }
     ],
     "retType": "CurvePlotFunction"
   },
@@ -76,10 +82,11 @@
     "name": "draw_sound_2d",
     "description": "<p>Visualizes the sound on a 2d line graph</p>",
     "params": [
-      [
-        "sound",
-        "Sound"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Sound",
+        "name": "sound"
+      }
     ],
     "retType": "void"
   }

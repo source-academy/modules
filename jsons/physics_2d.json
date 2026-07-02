@@ -4,10 +4,11 @@
     "name": "set_gravity",
     "description": "<p>Creates a new physics world and sets the gravity of the world.</p>",
     "params": [
-      [
-        "v",
-        "Vector2"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "v"
+      }
     ],
     "retType": "void"
   },
@@ -16,14 +17,16 @@
     "name": "make_ground",
     "description": "<p>Makes the ground body of the world.</p>",
     "params": [
-      [
-        "height",
-        "number"
-      ],
-      [
-        "friction",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "height"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "friction"
+      }
     ],
     "retType": "void"
   },
@@ -32,18 +35,21 @@
     "name": "add_wall",
     "description": "<p>Makes a wall (static box object with no velocity).</p>",
     "params": [
-      [
-        "pos",
-        "Vector2"
-      ],
-      [
-        "rot",
-        "number"
-      ],
-      [
-        "size",
-        "Vector2"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "pos"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "rot"
+      },
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "size"
+      }
     ],
     "retType": "PhysicsObject"
   },
@@ -52,14 +58,16 @@
     "name": "make_vector",
     "description": "<p>Makes a 2d vector with the given x and y components.</p>",
     "params": [
-      [
-        "x",
-        "number"
-      ],
-      [
-        "y",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "x"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "y"
+      }
     ],
     "retType": "Vector2"
   },
@@ -68,22 +76,26 @@
     "name": "make_force",
     "description": "<p>Makes a force with direction vector, magnitude, force duration and start time.</p>",
     "params": [
-      [
-        "dir",
-        "Vector2"
-      ],
-      [
-        "mag",
-        "number"
-      ],
-      [
-        "dur",
-        "number"
-      ],
-      [
-        "start",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "dir"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "mag"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "dur"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "start"
+      }
     ],
     "retType": "Force"
   },
@@ -92,26 +104,31 @@
     "name": "add_box_object",
     "description": "<p>Makes a box object with given initial position, rotation, velocity, size and add it to the world.</p>",
     "params": [
-      [
-        "pos",
-        "Vector2"
-      ],
-      [
-        "rot",
-        "number"
-      ],
-      [
-        "velc",
-        "Vector2"
-      ],
-      [
-        "size",
-        "Vector2"
-      ],
-      [
-        "isStatic",
-        "boolean"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "pos"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "rot"
+      },
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "velc"
+      },
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "size"
+      },
+      {
+        "paramType": "regular",
+        "type": "boolean",
+        "name": "isStatic"
+      }
     ],
     "retType": "PhysicsObject"
   },
@@ -120,26 +137,31 @@
     "name": "add_circle_object",
     "description": "<p>Makes a circle object with given initial position, rotation, velocity, radius and add it to the world.</p>",
     "params": [
-      [
-        "pos",
-        "Vector2"
-      ],
-      [
-        "rot",
-        "number"
-      ],
-      [
-        "velc",
-        "Vector2"
-      ],
-      [
-        "radius",
-        "number"
-      ],
-      [
-        "isStatic",
-        "boolean"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "pos"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "rot"
+      },
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "velc"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "radius"
+      },
+      {
+        "paramType": "regular",
+        "type": "boolean",
+        "name": "isStatic"
+      }
     ],
     "retType": "PhysicsObject"
   },
@@ -148,30 +170,36 @@
     "name": "add_triangle_object",
     "description": "<p>Makes a triangle object with given initial position, rotation, velocity, base, height and add it to the world.</p>",
     "params": [
-      [
-        "pos",
-        "Vector2"
-      ],
-      [
-        "rot",
-        "number"
-      ],
-      [
-        "velc",
-        "Vector2"
-      ],
-      [
-        "base",
-        "number"
-      ],
-      [
-        "height",
-        "number"
-      ],
-      [
-        "isStatic",
-        "boolean"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "pos"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "rot"
+      },
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "velc"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "base"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "height"
+      },
+      {
+        "paramType": "regular",
+        "type": "boolean",
+        "name": "isStatic"
+      }
     ],
     "retType": "PhysicsObject"
   },
@@ -180,14 +208,16 @@
     "name": "set_density",
     "description": "<p>Set density of the object.</p>",
     "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ],
-      [
-        "density",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "density"
+      }
     ],
     "retType": "void"
   },
@@ -196,14 +226,16 @@
     "name": "set_friction",
     "description": "<p>Sets the friction value of the object.</p>",
     "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ],
-      [
-        "friction",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "friction"
+      }
     ],
     "retType": "void"
   },
@@ -212,14 +244,16 @@
     "name": "scale_size",
     "description": "<p>Resizes the object with given scale factor.</p>",
     "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ],
-      [
-        "scale",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "scale"
+      }
     ],
     "retType": "void"
   },
@@ -228,10 +262,11 @@
     "name": "get_position",
     "description": "<p>Gets position of the object at current world time.</p>",
     "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj"
+      }
     ],
     "retType": "Vector2"
   },
@@ -240,14 +275,16 @@
     "name": "set_position",
     "description": "<p>Sets the position of the object.</p>",
     "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ],
-      [
-        "pos",
-        "Vector2"
-      ]
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj"
+      },
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "pos"
+      }
     ],
     "retType": "void"
   },
@@ -256,10 +293,11 @@
     "name": "get_rotation",
     "description": "<p>Gets rotation of the object at current world time.</p>",
     "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj"
+      }
     ],
     "retType": "number"
   },
@@ -268,14 +306,16 @@
     "name": "set_rotation",
     "description": "<p>Sets the rotation of the object.</p>",
     "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ],
-      [
-        "rot",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "rot"
+      }
     ],
     "retType": "void"
   },
@@ -284,10 +324,11 @@
     "name": "get_velocity",
     "description": "<p>Gets velocity of the object at current world time.</p>",
     "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj"
+      }
     ],
     "retType": "Vector2"
   },
@@ -296,14 +337,16 @@
     "name": "set_velocity",
     "description": "<p>Sets current velocity of the object.</p>",
     "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ],
-      [
-        "velc",
-        "Vector2"
-      ]
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj"
+      },
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "velc"
+      }
     ],
     "retType": "void"
   },
@@ -312,10 +355,11 @@
     "name": "get_angular_velocity",
     "description": "<p>Gets angular velocity of the object at current world time.</p>",
     "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj"
+      }
     ],
     "retType": "Vector2"
   },
@@ -324,14 +368,16 @@
     "name": "set_angular_velocity",
     "description": "<p>Sets current angular velocity of the object.</p>",
     "params": [
-      [
-        "obj",
-        "PhysicsObject"
-      ],
-      [
-        "velc",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "velc"
+      }
     ],
     "retType": "void"
   },
@@ -340,18 +386,21 @@
     "name": "apply_force",
     "description": "<p>Apllies force to given object at given world point.</p>",
     "params": [
-      [
-        "force",
-        "Force"
-      ],
-      [
-        "pos",
-        "Vector2"
-      ],
-      [
-        "obj",
-        "PhysicsObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Force",
+        "name": "force"
+      },
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "pos"
+      },
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj"
+      }
     ],
     "retType": "void"
   },
@@ -360,14 +409,16 @@
     "name": "apply_force_to_center",
     "description": "<p>Applies a force to given object at its center.</p>",
     "params": [
-      [
-        "force",
-        "Force"
-      ],
-      [
-        "obj",
-        "PhysicsObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Force",
+        "name": "force"
+      },
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj"
+      }
     ],
     "retType": "void"
   },
@@ -376,14 +427,16 @@
     "name": "is_touching",
     "description": "<p>Checks if two objects are touching at current world time.</p>",
     "params": [
-      [
-        "obj1",
-        "PhysicsObject"
-      ],
-      [
-        "obj2",
-        "PhysicsObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj1"
+      },
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj2"
+      }
     ],
     "retType": "boolean"
   },
@@ -392,14 +445,16 @@
     "name": "impact_start_time",
     "description": "<p>Gets the impact start time of two currently touching objects.\nReturns -1 if they are not touching.</p>",
     "params": [
-      [
-        "obj1",
-        "PhysicsObject"
-      ],
-      [
-        "obj2",
-        "PhysicsObject"
-      ]
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj1"
+      },
+      {
+        "paramType": "regular",
+        "type": "PhysicsObject",
+        "name": "obj2"
+      }
     ],
     "retType": "number"
   },
@@ -408,10 +463,11 @@
     "name": "update_world",
     "description": "<p>Updates the world once with the given time step.</p>",
     "params": [
-      [
-        "dt",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "dt"
+      }
     ],
     "retType": "void"
   },
@@ -420,10 +476,11 @@
     "name": "simulate_world",
     "description": "<p>Simulates the world for given duration.</p>",
     "params": [
-      [
-        "total_time",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "total_time"
+      }
     ],
     "retType": "void"
   },
@@ -432,10 +489,11 @@
     "name": "vector_to_array",
     "description": "<p>Converts a 2d vector into an array.</p>",
     "params": [
-      [
-        "vec",
-        "Vector2"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "vec"
+      }
     ],
     "retType": "number[]"
   },
@@ -444,10 +502,11 @@
     "name": "array_to_vector",
     "description": "<p>Converts an array of 2 numbers into a 2d vector.</p>",
     "params": [
-      [
-        "arr",
-        "[number, number]"
-      ]
+      {
+        "paramType": "regular",
+        "type": "[number, number]",
+        "name": "arr"
+      }
     ],
     "retType": "Vector2"
   },
@@ -456,14 +515,16 @@
     "name": "add_vector",
     "description": "<p>Adds two vectors together and returns the resultant vector.</p>",
     "params": [
-      [
-        "vec1",
-        "Vector2"
-      ],
-      [
-        "vec2",
-        "Vector2"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "vec1"
+      },
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "vec2"
+      }
     ],
     "retType": "Vector2"
   },
@@ -472,14 +533,16 @@
     "name": "subtract_vector",
     "description": "<p>Subtract the second vector from the first and returns the resultant vector.</p>",
     "params": [
-      [
-        "vec1",
-        "Vector2"
-      ],
-      [
-        "vec2",
-        "Vector2"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "vec1"
+      },
+      {
+        "paramType": "regular",
+        "type": "Vector2",
+        "name": "vec2"
+      }
     ],
     "retType": "Vector2"
   }

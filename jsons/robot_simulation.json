@@ -32,18 +32,21 @@
     "name": "ev3_runToRelativePosition",
     "description": "<p>Causes the motor to rotate until the position reaches ev3_motorGetPosition() + position with the given speed.\nNote: this works by sending instructions to the motors.\nThis will return almost immediately, without waiting for the motor to reach the given absolute position.\nIf you wish to wait, use ev3_pause.</p>",
     "params": [
-      [
-        "motor",
-        "MotorFunctionReturnType"
-      ],
-      [
-        "position",
-        "number"
-      ],
-      [
-        "speed",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "MotorFunctionReturnType",
+        "name": "motor"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "position"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "speed"
+      }
     ],
     "retType": "void"
   },
@@ -52,10 +55,11 @@
     "name": "ev3_colorSensorRed",
     "description": "<p>Gets the amount of red seen by the colour sensor.</p>",
     "params": [
-      [
-        "colorSensor",
-        "ColorSensor"
-      ]
+      {
+        "paramType": "regular",
+        "type": "ColorSensor",
+        "name": "colorSensor"
+      }
     ],
     "retType": "number"
   },
@@ -64,10 +68,11 @@
     "name": "ev3_colorSensorGreen",
     "description": "<p>Gets the amount of green seen by the colour sensor.</p>",
     "params": [
-      [
-        "colorSensor",
-        "ColorSensor"
-      ]
+      {
+        "paramType": "regular",
+        "type": "ColorSensor",
+        "name": "colorSensor"
+      }
     ],
     "retType": "number"
   },
@@ -76,10 +81,11 @@
     "name": "ev3_pause",
     "description": "<p>Pauses for a period of time.</p>",
     "params": [
-      [
-        "duration",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      }
     ],
     "retType": "void"
   },
@@ -95,10 +101,11 @@
     "name": "ev3_colorSensorBlue",
     "description": "<p>Gets the amount of blue seen by the colour sensor.</p>",
     "params": [
-      [
-        "colorSensor",
-        "ColorSensor"
-      ]
+      {
+        "paramType": "regular",
+        "type": "ColorSensor",
+        "name": "colorSensor"
+      }
     ],
     "retType": "number"
   },
@@ -114,10 +121,11 @@
     "name": "ev3_ultrasonicSensorDistance",
     "description": "<p>Gets the distance read by the ultrasonic sensor in centimeters.</p>",
     "params": [
-      [
-        "ultraSonicSensor",
-        "UltrasonicSensor"
-      ]
+      {
+        "paramType": "regular",
+        "type": "UltrasonicSensor",
+        "name": "ultraSonicSensor"
+      }
     ],
     "retType": "number"
   },
@@ -126,14 +134,16 @@
     "name": "createCustomPhysics",
     "description": "<p>Create a physics engine with the provided gravity and timestep. A physics engine\nwith default gravity and timestep can be created using createPhysics.</p><p>The returned Physics object is designed to be passed into createWorld.</p><p><strong>This is a configuration function and should be called within init_simulation.</strong></p>",
     "params": [
-      [
-        "gravity",
-        "number"
-      ],
-      [
-        "timestep",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "gravity"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "timestep"
+      }
     ],
     "retType": "Physics"
   },
@@ -156,10 +166,11 @@
     "name": "init_simulation",
     "description": "<p>Initialize the simulation world. This function is to be called before the robot code.\nThis function is used to describe the simulation environment and the controllers.</p><p>The callback function takes in no parameters and returns a world created by createWorld.\nThe world should be configured with the physics, renderer, timer and console.\nThe controllers should be added to the world using addControllerToWorld.\nThe world should be saved to the context using saveToContext.</p>",
     "params": [
-      [
-        "worldFactory",
-        "() => World"
-      ]
+      {
+        "paramType": "regular",
+        "type": "() => World",
+        "name": "worldFactory"
+      }
     ],
     "retType": "void"
   },
@@ -168,50 +179,61 @@
     "name": "createCuboid",
     "description": "<p>Creates a cuboid. joel-todo: The dynamic version wont work</p><p>This function is used to create the floor and wall controllers.</p><p>The returned Cuboid object is designed to be added to the world using addControllerToWorld.</p><p><strong>This is a Controller function and should be called within init_simulation.</strong></p>",
     "params": [
-      [
-        "physics",
-        "Physics"
-      ],
-      [
-        "renderer",
-        "Renderer"
-      ],
-      [
-        "position_x",
-        "number"
-      ],
-      [
-        "position_y",
-        "number"
-      ],
-      [
-        "position_z",
-        "number"
-      ],
-      [
-        "width",
-        "number"
-      ],
-      [
-        "length",
-        "number"
-      ],
-      [
-        "height",
-        "number"
-      ],
-      [
-        "mass",
-        "number"
-      ],
-      [
-        "color",
-        "string | number"
-      ],
-      [
-        "bodyType",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Physics",
+        "name": "physics"
+      },
+      {
+        "paramType": "regular",
+        "type": "Renderer",
+        "name": "renderer"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "position_x"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "position_y"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "position_z"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "width"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "length"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "height"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "mass"
+      },
+      {
+        "paramType": "regular",
+        "type": "string | number",
+        "name": "color"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "bodyType"
+      }
     ],
     "retType": "Cuboid"
   },
@@ -227,22 +249,26 @@
     "name": "createWorld",
     "description": "<p>Creates a custom world with the provided physics, renderer, timer and console .</p><p>A world is responsible for managing the physics, rendering, timing and console of the simulation.\nIt also manages the controllers that are added to the world, ensuring that the appropriate functions\nare called at the correct time.</p><p>The returned World object is designed to be returned by the init_simulation callback.</p><p>You can add controllers to the world using addControllerToWorld.</p><p><strong>This is a configuration function and should be called within init_simulation.</strong></p>",
     "params": [
-      [
-        "physics",
-        "Physics"
-      ],
-      [
-        "renderer",
-        "Renderer"
-      ],
-      [
-        "timer",
-        "Timer"
-      ],
-      [
-        "robotConsole",
-        "RobotConsole"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Physics",
+        "name": "physics"
+      },
+      {
+        "paramType": "regular",
+        "type": "Renderer",
+        "name": "renderer"
+      },
+      {
+        "paramType": "regular",
+        "type": "Timer",
+        "name": "timer"
+      },
+      {
+        "paramType": "regular",
+        "type": "RobotConsole",
+        "name": "robotConsole"
+      }
     ],
     "retType": "World"
   },
@@ -251,34 +277,41 @@
     "name": "createWall",
     "description": "<p>Creates a wall. This function is a wrapper around createCuboid.</p><p>The returned Cuboid object is designed to be added to the world using addControllerToWorld.</p><p><strong>This is a Controller function and should be called within init_simulation.</strong></p>",
     "params": [
-      [
-        "physics",
-        "Physics"
-      ],
-      [
-        "renderer",
-        "Renderer"
-      ],
-      [
-        "x",
-        "number"
-      ],
-      [
-        "y",
-        "number"
-      ],
-      [
-        "width",
-        "number"
-      ],
-      [
-        "length",
-        "number"
-      ],
-      [
-        "height",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Physics",
+        "name": "physics"
+      },
+      {
+        "paramType": "regular",
+        "type": "Renderer",
+        "name": "renderer"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "x"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "y"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "width"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "length"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "height"
+      }
     ],
     "retType": "Cuboid"
   },
@@ -287,14 +320,16 @@
     "name": "createEv3",
     "description": "<p>Create an EV3.</p><p>The resulting EV3 should be saved to the context using saveToContext.</p><p>The returned EV3 object is designed to be added to the world using addControllerToWorld.</p><p><strong>This is a Controller function and should be called within init_simulation.</strong></p>",
     "params": [
-      [
-        "physics",
-        "Physics"
-      ],
-      [
-        "renderer",
-        "Renderer"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Physics",
+        "name": "physics"
+      },
+      {
+        "paramType": "regular",
+        "type": "Renderer",
+        "name": "renderer"
+      }
     ],
     "retType": "DefaultEv3"
   },
@@ -303,34 +338,41 @@
     "name": "createPaper",
     "description": "<p>Creates a paper on the floor.</p><p>The returned Paper object is designed to be added to the world using addControllerToWorld.</p><p> <strong>This is a Controller function and should be called within init_simulation.</strong></p>",
     "params": [
-      [
-        "render",
-        "Renderer"
-      ],
-      [
-        "url",
-        "string"
-      ],
-      [
-        "width",
-        "number"
-      ],
-      [
-        "height",
-        "number"
-      ],
-      [
-        "x",
-        "number"
-      ],
-      [
-        "y",
-        "number"
-      ],
-      [
-        "rotation",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Renderer",
+        "name": "render"
+      },
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "url"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "width"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "height"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "x"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "y"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "rotation"
+      }
     ],
     "retType": "Paper"
   },
@@ -339,14 +381,16 @@
     "name": "createFloor",
     "description": "<p>Create a floor. This function is a wrapper around createCuboid.</p><p>The returned Cuboid object is designed to be added to the world using addControllerToWorld.</p><p><strong>This is a Controller function and should be called within init_simulation.</strong></p>",
     "params": [
-      [
-        "physics",
-        "Physics"
-      ],
-      [
-        "renderer",
-        "Renderer"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Physics",
+        "name": "physics"
+      },
+      {
+        "paramType": "regular",
+        "type": "Renderer",
+        "name": "renderer"
+      }
     ],
     "retType": "Cuboid"
   },
@@ -362,14 +406,16 @@
     "name": "addControllerToWorld",
     "description": "<p>Add a controller to the world.</p><p>The controller is a unit of computation modelled after Unity's MonoBehaviour. It is used to\nencapsulate the logic of the simulation. Controllers can be used to create robots, sensors,\nactuators, and other objects in the simulation.</p><p>The controller should be added to the world using this function in order for the simulation to\naccess the controller's logic.</p><p><em>*This is a Utility function and should be called within init_simulation.</em></p>",
     "params": [
-      [
-        "controller",
-        "Controller"
-      ],
-      [
-        "world",
-        "World"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Controller",
+        "name": "controller"
+      },
+      {
+        "paramType": "regular",
+        "type": "World",
+        "name": "world"
+      }
     ],
     "retType": "void"
   },
@@ -385,14 +431,16 @@
     "name": "saveToContext",
     "description": "<p>Save a value to the context.</p><p>There are 2 important values to be saved. The world and the ev3.\nThe world needs to be saved in order for the simulation to access the physics, renderer, timer and console.\nThe ev3 needs to be saved in order for the \"ev3_\" functions to access the EV3</p>",
     "params": [
-      [
-        "key",
-        "string"
-      ],
-      [
-        "value",
-        "any"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "key"
+      },
+      {
+        "paramType": "regular",
+        "type": "any",
+        "name": "value"
+      }
     ],
     "retType": "void"
   }

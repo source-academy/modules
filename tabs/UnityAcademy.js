@@ -38,10 +38,11 @@ export default require => {
     default: () => index_default
   });
   var import_core2 = __require("@blueprintjs/core");
-  var import_icons2 = __require("@blueprintjs/icons");
   var import_jsx_runtime = __require("react/jsx-runtime");
   var import_core = __require("@blueprintjs/core");
   var import_icons = __require("@blueprintjs/icons");
+  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
+  var import_base = __require("js-slang/dist/errors/base");
   var import_react = __toESM(__require("react"), 1);
   var import_client = __require("react-dom/client");
   var UNITY_ACADEMY_BACKEND_URL = "https://unity-academy.s3.ap-southeast-1.amazonaws.com/";
@@ -93,7 +94,7 @@ export default require => {
           icon: (0, import_jsx_runtime.jsx)(import_icons.Cross, {}),
           active: true,
           onClick: () => {
-            moduleInstance.setShowUnityComponent(0);
+            moduleInstance === null || moduleInstance === void 0 ? void 0 : moduleInstance.setShowUnityComponent(0);
           },
           text: "Hide Unity Academy Window",
           style: {
@@ -106,7 +107,7 @@ export default require => {
           icon: (0, import_jsx_runtime.jsx)(import_icons.Disable, {}),
           active: true,
           onClick: () => {
-            moduleInstance.terminate();
+            moduleInstance === null || moduleInstance === void 0 ? void 0 : moduleInstance.terminate();
           },
           text: "Terminate Unity Academy Instance",
           style: {
@@ -119,7 +120,8 @@ export default require => {
       });
     }
     componentDidMount() {
-      getInstance().firstTimeLoadUnityApplication();
+      var _a;
+      (_a = getInstance()) === null || _a === void 0 ? void 0 : _a.firstTimeLoadUnityApplication();
     }
   };
   var UNITY_CONFIG = {
@@ -144,7 +146,8 @@ export default require => {
     }
     render() {
       let highFPSWarning;
-      const currentTargetFrameRate = getInstance().getTargetFrameRate();
+      const instance = getInstance();
+      const currentTargetFrameRate = instance.getTargetFrameRate();
       if (currentTargetFrameRate > 30 && currentTargetFrameRate <= 60) {
         highFPSWarning = (0, import_jsx_runtime2.jsx)("div", {
           style: {
@@ -162,7 +165,7 @@ export default require => {
       } else {
         highFPSWarning = (0, import_jsx_runtime2.jsx)("div", {});
       }
-      const dimensionMode = getInstance().dimensionMode;
+      const dimensionMode = instance.dimensionMode;
       return (0, import_jsx_runtime2.jsxs)("div", {
         children: [(0, import_jsx_runtime2.jsx)("p", {
           children: "Click the button below to open the Unity Academy Window filling the page."
@@ -183,7 +186,7 @@ export default require => {
             }), " variant of Source language in order to use this module."]
           }), " If any strange error happens when using this module, please check whether you are using the 'Native' variant of Source language or not."]
         }), (0, import_jsx_runtime2.jsx)("br", {}), (0, import_jsx_runtime2.jsx)(import_core2.Button, {
-          icon: (0, import_jsx_runtime2.jsx)(import_icons2.SendTo, {}),
+          icon: "send-to",
           active: true,
           onClick: () => {
             this.openUnityWindow(100);
@@ -194,7 +197,7 @@ export default require => {
         }), (0, import_jsx_runtime2.jsx)("p", {
           children: "50% resolution will display Unity Academy in a smaller area with lower quality and less detailed graphics but requires less device (especially GPU) performance than the default resolution."
         }), (0, import_jsx_runtime2.jsx)(import_core2.Button, {
-          icon: (0, import_jsx_runtime2.jsx)(import_icons2.SendTo, {}),
+          icon: "send-to",
           active: true,
           onClick: () => {
             this.openUnityWindow(50);
@@ -210,19 +213,19 @@ export default require => {
             style: {
               width: 100
             },
-            leftIcon: (0, import_jsx_runtime2.jsx)(import_icons2.Refresh, {}),
+            leftIcon: "refresh",
             value: currentTargetFrameRate,
             max: 120,
             min: 15,
             onValueChange: x => {
-              getInstance().setTargetFrameRate(x);
+              instance.setTargetFrameRate(x);
               this.setState({});
             },
             stepSize: 1
           }), (0, import_jsx_runtime2.jsx)(import_core2.Button, {
             active: true,
             onClick: () => {
-              getInstance().setTargetFrameRate(30);
+              instance.setTargetFrameRate(30);
               this.setState({});
             },
             text: "30"
@@ -230,7 +233,7 @@ export default require => {
             active: true,
             onClick: () => {
               if (confirm("Set the target frame rate higher than the default recommended value (30) ?")) {
-                getInstance().setTargetFrameRate(60);
+                instance.setTargetFrameRate(60);
                 this.setState({});
               }
             },
@@ -239,7 +242,7 @@ export default require => {
             active: true,
             onClick: () => {
               if (confirm("Set the target frame rate higher than the default recommended value (30) ?")) {
-                getInstance().setTargetFrameRate(90);
+                instance.setTargetFrameRate(90);
                 this.setState({});
               }
             },
@@ -248,7 +251,7 @@ export default require => {
             active: true,
             onClick: () => {
               if (confirm("Set the target frame rate higher than the default recommended value (30) ?")) {
-                getInstance().setTargetFrameRate(120);
+                instance.setTargetFrameRate(120);
                 this.setState({});
               }
             },
@@ -277,7 +280,7 @@ export default require => {
             target: "_blank",
             children: "User Agreement"
           })]
-        }), (0, import_jsx_runtime2.jsx)("br", {}), getInstance().getUserAgreementStatus() === "new_user_agreement" && (0, import_jsx_runtime2.jsxs)("div", {
+        }), (0, import_jsx_runtime2.jsx)("br", {}), instance.getUserAgreementStatus() === "new_user_agreement" && (0, import_jsx_runtime2.jsxs)("div", {
           children: [(0, import_jsx_runtime2.jsx)("b", {
             children: "The User Agreement has updated."
           }), (0, import_jsx_runtime2.jsx)("br", {})]
@@ -285,13 +288,13 @@ export default require => {
           label: "I agree to the User Agreement",
           inputRef: e => {
             if (e !== null) {
-              e.checked = getInstance().getUserAgreementStatus() === "agreed";
+              e.checked = instance.getUserAgreementStatus() === "agreed";
               this.userAgreementCheckboxChecked = e.checked;
             }
           },
           onChange: event => {
             this.userAgreementCheckboxChecked = event.target.checked;
-            getInstance().setUserAgreementStatus(this.userAgreementCheckboxChecked);
+            instance.setUserAgreementStatus(this.userAgreementCheckboxChecked);
           }
         })]
       });
@@ -317,7 +320,7 @@ export default require => {
       return (0, import_jsx_runtime2.jsx)(Unity3DTab, {});
     },
     label: "Unity Academy",
-    iconName: import_icons2.IconNames.CUBE
+    iconName: "cube"
   });
   return __toCommonJS(index_exports);
 };

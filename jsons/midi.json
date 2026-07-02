@@ -1,55 +1,148 @@
 {
+  "is_note_with_octave": {
+    "kind": "function",
+    "name": "is_note_with_octave",
+    "description": "<p>Returns a boolean value indicating whether the given value is a name with octave.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "value"
+      }
+    ],
+    "retType": "boolean"
+  },
   "letter_name_to_midi_note": {
     "kind": "function",
     "name": "letter_name_to_midi_note",
     "description": "<p>Converts a letter name to its corresponding MIDI note.\nThe letter name is represented in standard pitch notation.\nExamples are \"A5\", \"Db3\", \"C#7\".\nRefer to <a href=\"https://i.imgur.com/qGQgmYr.png\">this</a> mapping from\nletter name to midi notes.</p>",
     "params": [
-      [
-        "note",
-        "NoteWithOctave"
-      ]
+      {
+        "paramType": "regular",
+        "type": "NoteWithOctave",
+        "name": "note"
+      }
     ],
     "retType": "number"
   },
   "midi_note_to_letter_name": {
     "kind": "function",
     "name": "midi_note_to_letter_name",
-    "description": "<p>Convert a MIDI note into its letter representation</p>",
+    "description": "<p>Convert a note into its representation</p>",
     "params": [
-      [
-        "midiNote",
-        "number"
-      ],
-      [
-        "accidental",
-        "\"flat\" | \"sharp\""
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "midiNote"
+      },
+      {
+        "paramType": "regular",
+        "type": "SHARP | FLAT",
+        "name": "accidental"
+      }
     ],
     "retType": "NoteWithOctave"
   },
   "midi_note_to_frequency": {
     "kind": "function",
     "name": "midi_note_to_frequency",
-    "description": "<p>Converts a MIDI note to its corresponding frequency.</p>",
+    "description": "<p>Converts a note to its corresponding frequency.</p>",
     "params": [
-      [
-        "note",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "note"
+      }
     ],
     "retType": "number"
   },
   "letter_name_to_frequency": {
     "kind": "function",
     "name": "letter_name_to_frequency",
-    "description": "<p>Converts a letter name to its corresponding frequency.</p>",
+    "description": "<p>Converts a name to its corresponding frequency.</p>",
     "params": [
-      [
-        "note",
-        "NoteWithOctave"
-      ]
+      {
+        "paramType": "regular",
+        "type": "NoteWithOctave",
+        "name": "note"
+      }
     ],
     "retType": "number"
+  },
+  "add_octave_to_note": {
+    "kind": "function",
+    "name": "add_octave_to_note",
+    "description": "<p>Takes the given Note and adds the octave number to it.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "Note",
+        "name": "note"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "octave"
+      }
+    ],
+    "retType": "NoteWithOctave"
+  },
+  "get_octave": {
+    "kind": "function",
+    "name": "get_octave",
+    "description": "<p>Gets the octave number from a given name with octave.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "NoteWithOctave",
+        "name": "note"
+      }
+    ],
+    "retType": "number"
+  },
+  "get_note_name": {
+    "kind": "function",
+    "name": "get_note_name",
+    "description": "<p>Gets the letter name from a given name with octave (without the accidental).</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "NoteWithOctave",
+        "name": "note"
+      }
+    ],
+    "retType": "Note"
+  },
+  "get_accidental": {
+    "kind": "function",
+    "name": "get_accidental",
+    "description": "<p>Gets the accidental from a given name with octave.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "NoteWithOctave",
+        "name": "note"
+      }
+    ],
+    "retType": "Accidental"
+  },
+  "key_signature_to_key": {
+    "kind": "function",
+    "name": "key_signature_to_key",
+    "description": "<p>Converts the key signature to the corresponding key</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "SHARP | FLAT",
+        "name": "accidental"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "numAccidentals"
+      }
+    ],
+    "retType": "Note"
   },
   "SHARP": {
     "kind": "variable",
@@ -69,112 +162,121 @@
     "description": "<p>String representing the natural symbol '♮'</p>",
     "type": "NATURAL"
   },
+  "ionian_scale": {
+    "kind": "function",
+    "name": "ionian_scale",
+    "description": "<p>Generate a list of MIDI notes representing the major scale\nfor the given key (including the octave)</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "key"
+      }
+    ],
+    "retType": "Scale"
+  },
   "major_scale": {
     "kind": "function",
     "name": "major_scale",
     "description": "<p>Generate a list of MIDI notes representing the major scale\nfor the given key (including the octave)</p>",
     "params": [
-      [
-        "key",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "key"
+      }
     ],
-    "retType": "List"
+    "retType": "Scale"
   },
   "dorian_scale": {
     "kind": "function",
     "name": "dorian_scale",
     "description": "<p>Generate a list of MIDI notes representing the dorian scale\nfor the given key (including the octave)</p>",
     "params": [
-      [
-        "key",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "key"
+      }
     ],
-    "retType": "List"
+    "retType": "Scale"
   },
   "phrygian_scale": {
     "kind": "function",
     "name": "phrygian_scale",
     "description": "<p>Generate a list of MIDI notes representing the phrygian scale\nfor the given key (including the octave)</p>",
     "params": [
-      [
-        "key",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "key"
+      }
     ],
-    "retType": "List"
+    "retType": "Scale"
   },
   "lydian_scale": {
     "kind": "function",
     "name": "lydian_scale",
     "description": "<p>Generate a list of MIDI notes representing the lydian scale\nfor the given key (including the octave)</p>",
     "params": [
-      [
-        "key",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "key"
+      }
     ],
-    "retType": "List"
+    "retType": "Scale"
   },
   "mixolydian_scale": {
     "kind": "function",
     "name": "mixolydian_scale",
     "description": "<p>Generate a list of MIDI notes representing the mixolydian scale\nfor the given key (including the octave)</p>",
     "params": [
-      [
-        "key",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "key"
+      }
     ],
-    "retType": "List"
-  },
-  "minor_scale": {
-    "kind": "function",
-    "name": "minor_scale",
-    "description": "<p>Generate a list of MIDI notes representing the minor scale\nfor the given key (including the octave)</p>",
-    "params": [
-      [
-        "key",
-        "number"
-      ]
-    ],
-    "retType": "List"
-  },
-  "locrian_scale": {
-    "kind": "function",
-    "name": "locrian_scale",
-    "description": "<p>Generate a list of MIDI notes representing the locrian scale\nfor the given key (including the octave)</p>",
-    "params": [
-      [
-        "key",
-        "number"
-      ]
-    ],
-    "retType": "List"
-  },
-  "ionian_scale": {
-    "kind": "function",
-    "name": "ionian_scale",
-    "description": "<p>Generate a list of MIDI notes representing the major scale\nfor the given key (including the octave)</p>",
-    "params": [
-      [
-        "key",
-        "number"
-      ]
-    ],
-    "retType": "List"
+    "retType": "Scale"
   },
   "aeolian_scale": {
     "kind": "function",
     "name": "aeolian_scale",
     "description": "<p>Generate a list of MIDI notes representing the minor scale\nfor the given key (including the octave)</p>",
     "params": [
-      [
-        "key",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "key"
+      }
     ],
-    "retType": "List"
+    "retType": "Scale"
+  },
+  "minor_scale": {
+    "kind": "function",
+    "name": "minor_scale",
+    "description": "<p>Generate a list of MIDI notes representing the minor scale\nfor the given key (including the octave)</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "key"
+      }
+    ],
+    "retType": "Scale"
+  },
+  "locrian_scale": {
+    "kind": "function",
+    "name": "locrian_scale",
+    "description": "<p>Generate a list of MIDI notes representing the locrian scale\nfor the given key (including the octave)</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "key"
+      }
+    ],
+    "retType": "Scale"
   }
 }

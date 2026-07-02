@@ -3,7 +3,7 @@
     "tabs": [
       "ArcadeTwod"
     ],
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "binary_tree": {
     "tabs": [],
@@ -17,7 +17,7 @@
     "tabs": [
       "CopyGc"
     ],
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
   "csg": {
     "tabs": [
@@ -29,19 +29,19 @@
     "tabs": [
       "Curve"
     ],
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "game": {
     "tabs": [
       "Game"
     ],
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "mark_sweep": {
     "tabs": [
       "MarkSweep"
     ],
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
   "midi": {
     "tabs": [],
@@ -81,13 +81,13 @@
     "tabs": [
       "Repeat"
     ],
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "repl": {
     "tabs": [
       "Repl"
     ],
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
   "robot_simulation": {
     "tabs": [
@@ -103,7 +103,7 @@
   },
   "rune_in_words": {
     "tabs": [],
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "scrabble": {
     "tabs": [],
@@ -113,7 +113,7 @@
     "tabs": [
       "Sound"
     ],
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "sound_matrix": {
     "tabs": [
@@ -131,7 +131,7 @@
     "tabs": [
       "Unittest"
     ],
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "unity_academy": {
     "tabs": [

@@ -278,6 +278,8 @@ export default require => {
     ultrasonicSensor: ultrasonicSensorConfig,
     mesh: meshConfig
   };
+  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
+  var import_base = __require("js-slang/dist/errors/base");
   var import_context = __toESM(__require("js-slang/context"), 1);
   var CallbackHandler = class {
     constructor() {
@@ -440,13 +442,12 @@ export default require => {
       return result;
     }
     if (valueToClone instanceof Error) {
-      const result = structuredClone(valueToClone);
+      const result = new valueToClone.constructor();
       stack.set(valueToClone, result);
       result.message = valueToClone.message;
       result.name = valueToClone.name;
       result.stack = valueToClone.stack;
       result.cause = valueToClone.cause;
-      result.constructor = valueToClone.constructor;
       copyProperties(result, valueToClone, objectToClone, stack, cloneValue);
       return result;
     }
@@ -754,10 +755,13 @@ export default require => {
     }
     return merge(__spreadValues({}, defaultConfig), userConfig);
   };
-  var ProgramError = class extends Error {
-    constructor(message) {
-      super(message);
-      this.name = "ProgramError";
+  var ProgramError = class extends import_base.RuntimeSourceError {
+    constructor(explanation) {
+      super(void 0);
+      this.explanation = explanation;
+    }
+    explain() {
+      return this.explanation;
     }
   };
   function merge2(target, source) {
@@ -785,14 +789,14 @@ export default require => {
     return isPlainObject(value) || Array.isArray(value);
   }
   var import_interpreter = __require("js-slang/dist/cse-machine/interpreter");
+  var import_langs = __require("js-slang/dist/langs");
   var import_parser = __require("js-slang/dist/parser/parser");
-  var import_types = __require("js-slang/dist/types");
   var DEFAULT_SOURCE_OPTIONS = {
     scheduler: "async",
     steps: 1e3,
     stepLimit: -1,
     executionMethod: "auto",
-    variant: import_types.Variant.DEFAULT,
+    variant: import_langs.Variant.DEFAULT,
     originalMaxExecTime: 1e3,
     useSubst: false,
     isPrelude: false,
@@ -853,7 +857,7 @@ export default require => {
     fixedUpdate() {
       try {
         if (!this.iterator) {
-          throw Error("Program not started");
+          throw new import_base.GeneralRuntimeError("Program not started");
         }
         if (this.isPaused) {
           return;
@@ -27846,19 +27850,19 @@ void main() {
     }
     createRigidBody(rigidBodyDesc) {
       if (this.internals.initialized === false) {
-        throw Error("Physics engine hasn't been initialized yet");
+        throw new import_base.GeneralRuntimeError("Physics engine hasn't been initialized yet");
       }
       return this.internals.world.createRigidBody(rigidBodyDesc);
     }
     createCollider(colliderDesc, rigidBody) {
       if (this.internals.initialized === false) {
-        throw Error("Physics engine hasn't been initialized yet");
+        throw new import_base.GeneralRuntimeError("Physics engine hasn't been initialized yet");
       }
       return this.internals.world.createCollider(colliderDesc, rigidBody);
     }
     castRay(globalPosition, globalDirection, maxDistance, excludeCollider) {
       if (this.internals.initialized === false) {
-        throw Error("Physics engine hasn't been initialized yet");
+        throw new import_base.GeneralRuntimeError("Physics engine hasn't been initialized yet");
       }
       const ray = new this.RAPIER.Ray(globalPosition, globalDirection);
       const result = this.internals.world.castRayAndGetNormal(ray, maxDistance, true, void 0, void 0, excludeCollider);
@@ -27873,7 +27877,7 @@ void main() {
     }
     step(timing) {
       if (this.internals.initialized === false) {
-        throw Error("Physics engine hasn't been initialized yet");
+        throw new import_base.GeneralRuntimeError("Physics engine hasn't been initialized yet");
       }
       const maxFrameTime = 0.05;
       const frameDuration = timing.frameDuration / 1e3;
@@ -31764,8 +31768,7 @@ void main() {
         }
       default:
         {
-          const _2 = cameraOptions;
-          throw new Error("Unknown camera type");
+          throw new import_base.InternalRuntimeError(`Unknown camera type: ${cameraOptions.type}`);
         }
     }
   }
@@ -31935,7 +31938,7 @@ void main() {
     var _a;
     const world = (_a = import_context2.default.moduleContexts.robot_simulation.state) == null ? void 0 : _a.world;
     if (world === void 0) {
-      throw new Error("World not initialized");
+      throw new import_base.GeneralRuntimeError("World not initialized");
     }
     return world;
   }
@@ -31943,7 +31946,7 @@ void main() {
     var _a;
     const ev3 = (_a = import_context2.default.moduleContexts.robot_simulation.state) == null ? void 0 : _a.ev3;
     if (ev3 === void 0) {
-      throw new Error("ev3 not initialized");
+      throw new import_base.GeneralRuntimeError("ev3 not initialized");
     }
     return ev3;
   }
@@ -31994,7 +31997,7 @@ void main() {
   }
   function createCuboid(physics, renderer, position_x, position_y, position_z, width, length, height, mass, color, bodyType) {
     if (isRigidBodyType(bodyType) === false) {
-      throw new Error("Invalid body type");
+      throw new import_base.GeneralRuntimeError("Invalid body type");
     }
     const config = {
       position: {

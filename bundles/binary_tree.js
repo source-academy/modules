@@ -37,36 +37,44 @@ export default require => {
     make_tree: () => make_tree,
     right_branch: () => right_branch
   });
+  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
+  var import_base = __require("js-slang/dist/errors/base");
   var import_list = __require("js-slang/dist/stdlib/list");
   function make_empty_tree() {
     return null;
   }
   function make_tree(value, left, right) {
-    return (0, import_list.list)(value, left, right);
+    if (!is_tree(left)) {
+      throw new import_rttcErrors.InvalidParameterTypeError("binary tree", left, make_tree.name, "left");
+    }
+    if (!is_tree(right)) {
+      throw new import_rttcErrors.InvalidParameterTypeError("binary tree", right, make_tree.name, "right");
+    }
+    return [value, [left, [right, null]]];
   }
   function is_tree(value) {
-    if (!(0, import_list.is_list)(value)) return false;
     if (is_empty_tree(value)) return true;
+    if (!(0, import_list.is_pair)(value)) return false;
     const left = (0, import_list.tail)(value);
-    if (!(0, import_list.is_list)(left) || !is_tree((0, import_list.head)(left))) return false;
+    if (!(0, import_list.is_pair)(left) || !is_tree((0, import_list.head)(left))) return false;
     const right = (0, import_list.tail)(left);
     if (!(0, import_list.is_pair)(right) || !is_tree((0, import_list.head)(right))) return false;
-    return (0, import_list.tail)(right) === null;
+    return (0, import_list.is_null)((0, import_list.tail)(right));
   }
   function is_empty_tree(value) {
     return value === null;
   }
   function throwIfNotNonEmptyTree(value, func_name) {
     if (!is_tree(value)) {
-      throw new Error(`${func_name} expects binary tree, received: ${value}`);
+      throw new import_rttcErrors.InvalidParameterTypeError("binary tree", value, func_name);
     }
     if (is_empty_tree(value)) {
-      throw new Error(`${func_name} received an empty binary tree!`);
+      throw new import_rttcErrors.InvalidParameterTypeError("non-empty binary tree", value, func_name);
     }
   }
   function entry(t) {
     throwIfNotNonEmptyTree(t, entry.name);
-    return t[0];
+    return (0, import_list.head)(t);
   }
   function left_branch(t) {
     throwIfNotNonEmptyTree(t, left_branch.name);

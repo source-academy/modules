@@ -107,10 +107,11 @@
     "name": "cube",
     "description": "<p>Returns a cube Shape in the specified color.</p><ul><li>Side length: 1</li><li>Center: (0.5, 0.5, 0.5)</li></ul>",
     "params": [
-      [
-        "hex",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "hex"
+      }
     ],
     "retType": "Shape"
   },
@@ -119,10 +120,11 @@
     "name": "rounded_cube",
     "description": "<p>Returns a rounded cube Shape in the specified color.</p><ul><li>Side length: 1</li><li>Center: (0.5, 0.5, 0.5)</li></ul>",
     "params": [
-      [
-        "hex",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "hex"
+      }
     ],
     "retType": "Shape"
   },
@@ -131,10 +133,11 @@
     "name": "cylinder",
     "description": "<p>Returns an upright cylinder Shape in the specified color.</p><ul><li>Height: 1</li><li>Radius: 0.5</li><li>Center: (0.5, 0.5, 0.5)</li></ul>",
     "params": [
-      [
-        "hex",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "hex"
+      }
     ],
     "retType": "Shape"
   },
@@ -143,10 +146,11 @@
     "name": "rounded_cylinder",
     "description": "<p>Returns a rounded, upright cylinder Shape in the specified color.</p><ul><li>Height: 1</li><li>Radius: 0.5</li><li>Center: (0.5, 0.5, 0.5)</li></ul>",
     "params": [
-      [
-        "hex",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "hex"
+      }
     ],
     "retType": "Shape"
   },
@@ -155,10 +159,11 @@
     "name": "sphere",
     "description": "<p>Returns a sphere Shape in the specified color.</p><ul><li>Radius: 0.5</li><li>Center: (0.5, 0.5, 0.5)</li></ul>",
     "params": [
-      [
-        "hex",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "hex"
+      }
     ],
     "retType": "Shape"
   },
@@ -167,10 +172,11 @@
     "name": "geodesic_sphere",
     "description": "<p>Returns a geodesic sphere Shape in the specified color.</p><ul><li>Radius: 0.5</li><li>Center: Floating at (0.5, 0.5, 0.5)</li></ul>",
     "params": [
-      [
-        "hex",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "hex"
+      }
     ],
     "retType": "Shape"
   },
@@ -179,10 +185,11 @@
     "name": "pyramid",
     "description": "<p>Returns a square pyramid Shape in the specified color.</p><ul><li>Height: 1</li><li>Base length: 1</li><li>Center: (0.5, 0.5, 0.5)</li></ul>",
     "params": [
-      [
-        "hex",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "hex"
+      }
     ],
     "retType": "Shape"
   },
@@ -191,10 +198,11 @@
     "name": "cone",
     "description": "<p>Returns a cone Shape in the specified color.</p><ul><li>Height: 1</li><li>Radius: 0.5</li><li>Center: (0.5, 0.5, 0.5)</li></ul>",
     "params": [
-      [
-        "hex",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "hex"
+      }
     ],
     "retType": "Shape"
   },
@@ -203,10 +211,11 @@
     "name": "prism",
     "description": "<p>Returns an upright triangular prism Shape in the specified color.</p><ul><li>Height: 1</li><li>Side length: 1</li><li>Center: (0.5, 0.5, 0.5)</li></ul>",
     "params": [
-      [
-        "hex",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "hex"
+      }
     ],
     "retType": "Shape"
   },
@@ -215,10 +224,11 @@
     "name": "star",
     "description": "<p>Returns an upright extruded star Shape in the specified color.</p><ul><li>Height: 1</li><li>Center: (0.5, 0.5, 0.5)</li></ul>",
     "params": [
-      [
-        "hex",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "hex"
+      }
     ],
     "retType": "Shape"
   },
@@ -227,10 +237,11 @@
     "name": "torus",
     "description": "<p>Returns a torus (donut) Shape in the specified color.</p><ul><li>Inner radius: 0.15 (ring is 0.3 thick)</li><li>Total radius: 0.5 (from the centre of the hole to \"outside\")</li><li>Center: Floating at (0.5, 0.5, 0.5)</li></ul>",
     "params": [
-      [
-        "hex",
-        "string"
-      ]
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "hex"
+      }
     ],
     "retType": "Shape"
   },
@@ -239,14 +250,16 @@
     "name": "union",
     "description": "<p>Returns the union of the two specified Shapes.</p>",
     "params": [
-      [
-        "first",
-        "Shape"
-      ],
-      [
-        "second",
-        "Shape"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Shape",
+        "name": "first"
+      },
+      {
+        "paramType": "regular",
+        "type": "Shape",
+        "name": "second"
+      }
     ],
     "retType": "Shape"
   },
@@ -255,14 +268,16 @@
     "name": "subtract",
     "description": "<p>Subtracts the second Shape from the first Shape, returning the resultant\nShape.</p>",
     "params": [
-      [
-        "target",
-        "Shape"
-      ],
-      [
-        "subtractedShape",
-        "Shape"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Shape",
+        "name": "target"
+      },
+      {
+        "paramType": "regular",
+        "type": "Shape",
+        "name": "subtractedShape"
+      }
     ],
     "retType": "Shape"
   },
@@ -271,14 +286,16 @@
     "name": "intersect",
     "description": "<p>Returns the intersection of the two specified Shapes.</p>",
     "params": [
-      [
-        "first",
-        "Shape"
-      ],
-      [
-        "second",
-        "Shape"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Shape",
+        "name": "first"
+      },
+      {
+        "paramType": "regular",
+        "type": "Shape",
+        "name": "second"
+      }
     ],
     "retType": "Shape"
   },
@@ -287,22 +304,26 @@
     "name": "translate",
     "description": "<p>Translates (moves) the specified Operable in the x, y, and z directions using\nthe specified offsets.</p>",
     "params": [
-      [
-        "operable",
-        "Operable"
-      ],
-      [
-        "xOffset",
-        "number"
-      ],
-      [
-        "yOffset",
-        "number"
-      ],
-      [
-        "zOffset",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Operable",
+        "name": "operable"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "xOffset"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "yOffset"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "zOffset"
+      }
     ],
     "retType": "Operable"
   },
@@ -311,22 +332,26 @@
     "name": "rotate",
     "description": "<p>Sequentially rotates the specified Operable about the x, y, and z axes using\nthe specified angles, in radians (i.e. 2π represents 360°).</p><p>The order of rotation is: x, y, then z axis. The order of rotation can affect\nthe result, so you may wish to make multiple separate calls to rotate() if\nyou require a specific order of rotation.</p>",
     "params": [
-      [
-        "operable",
-        "Operable"
-      ],
-      [
-        "xAngle",
-        "number"
-      ],
-      [
-        "yAngle",
-        "number"
-      ],
-      [
-        "zAngle",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Operable",
+        "name": "operable"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "xAngle"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "yAngle"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "zAngle"
+      }
     ],
     "retType": "Operable"
   },
@@ -335,22 +360,26 @@
     "name": "scale",
     "description": "<p>Scales the specified Operable in the x, y, and z directions using the\nspecified factors. Scaling is done about the origin (0, 0, 0).</p><p>For example, a factor of 0.5 results in a smaller Shape, while a factor of 2\nresults in a larger Shape. A factor of 1 results in the original Shape.\nFactors must be greater than 0.</p>",
     "params": [
-      [
-        "operable",
-        "Operable"
-      ],
-      [
-        "xFactor",
-        "number"
-      ],
-      [
-        "yFactor",
-        "number"
-      ],
-      [
-        "zFactor",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Operable",
+        "name": "operable"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "xFactor"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "yFactor"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "zFactor"
+      }
     ],
     "retType": "Operable"
   },
@@ -359,10 +388,11 @@
     "name": "group",
     "description": "<p>Groups the specified list of Operables together. Groups can contain a mix of\nShapes and other nested Groups.</p><p>Groups cannot be operated on, but can be transformed together. I.e. a call\nlike <code>intersect(group_a, group_b)</code> is not allowed, but a call like\n<code>scale(group, 5, 5, 5)</code> is.</p>",
     "params": [
-      [
-        "operables",
-        "List"
-      ]
+      {
+        "paramType": "regular",
+        "type": "List<Operable>",
+        "name": "operables"
+      }
     ],
     "retType": "Group"
   },
@@ -371,10 +401,11 @@
     "name": "ungroup",
     "description": "<p>Ungroups the specified Group, returning the list of Shapes and/or nested\nGroups contained within.</p>",
     "params": [
-      [
-        "g",
-        "Group"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Group",
+        "name": "g"
+      }
     ],
     "retType": "List"
   },
@@ -383,10 +414,11 @@
     "name": "is_shape",
     "description": "<p>Checks if the given parameter is a Shape.</p>",
     "params": [
-      [
-        "parameter",
-        "unknown"
-      ]
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "parameter"
+      }
     ],
     "retType": "boolean"
   },
@@ -395,10 +427,11 @@
     "name": "is_group",
     "description": "<p>Checks if the given parameter is a Group.</p>",
     "params": [
-      [
-        "parameter",
-        "unknown"
-      ]
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "parameter"
+      }
     ],
     "retType": "boolean"
   },
@@ -407,10 +440,11 @@
     "name": "bounding_box",
     "description": "<p>Returns a function of type (string, string) → number, for getting the\nspecified Shape's bounding box coordinates.</p><p>Its first parameter must be \"x\", \"y\", or \"z\", indicating the coordinate axis.</p><p>Its second parameter must be \"min\" or \"max\", indicating the minimum or\nmaximum bounding box coordinate respectively.</p><p>For example, if a sphere of radius 0.5 is centred at (0.5, 0.5, 0.5), its\nminimum bounding coordinates will be (0, 0, 0), and its maximum bounding\ncoordinates will be (1, 1, 1).\n<pre><code>// Sample usage\nconst getter_function = bounding_box(sphere(silver));\ndisplay(getter_function(\"y\", \"max\")); // Displays 1, the maximum y coordinate</code></pre></p>",
     "params": [
-      [
-        "shape",
-        "Shape"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Shape",
+        "name": "shape"
+      }
     ],
     "retType": "(axis: string, minMax: string) => number"
   },
@@ -419,18 +453,21 @@
     "name": "rgb",
     "description": "<p>Returns a hex color code representing the specified RGB values.</p>",
     "params": [
-      [
-        "redValue",
-        "number"
-      ],
-      [
-        "greenValue",
-        "number"
-      ],
-      [
-        "blueValue",
-        "number"
-      ]
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "redValue"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "greenValue"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "blueValue"
+      }
     ],
     "retType": "string"
   },
@@ -439,10 +476,11 @@
     "name": "download_shape_stl",
     "description": "<p>Exports the specified Shape as an STL file, downloaded to your device.</p><p>The file can be used for purposes such as 3D printing.</p>",
     "params": [
-      [
-        "shape",
-        "Shape"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Shape",
+        "name": "shape"
+      }
     ],
     "retType": "Promise<void>"
   },
@@ -451,10 +489,11 @@
     "name": "render",
     "description": "<p>Renders the specified Operable.</p>",
     "params": [
-      [
-        "operable",
-        "Operable"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Operable",
+        "name": "operable"
+      }
     ],
     "retType": "RenderGroup"
   },
@@ -463,10 +502,11 @@
     "name": "render_grid",
     "description": "<p>Renders the specified Operable, along with a grid.</p>",
     "params": [
-      [
-        "operable",
-        "Operable"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Operable",
+        "name": "operable"
+      }
     ],
     "retType": "RenderGroup"
   },
@@ -475,10 +515,11 @@
     "name": "render_axes",
     "description": "<p>Renders the specified Operable, along with z, y, and z axes.</p>",
     "params": [
-      [
-        "operable",
-        "Operable"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Operable",
+        "name": "operable"
+      }
     ],
     "retType": "RenderGroup"
   },
@@ -487,10 +528,11 @@
     "name": "render_grid_axes",
     "description": "<p>Renders the specified Operable, along with both a grid and axes.</p>",
     "params": [
-      [
-        "operable",
-        "Operable"
-      ]
+      {
+        "paramType": "regular",
+        "type": "Operable",
+        "name": "operable"
+      }
     ],
     "retType": "RenderGroup"
   }
