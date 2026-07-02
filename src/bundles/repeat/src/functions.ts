@@ -3,6 +3,25 @@
  * @module repeat
  */
 
+import { assertFunctionOfLength, assertNumberWithinRange, callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
+
+/**
+ * Represents a function that takes in 1 parameter and returns a
+ * value of the same type
+ */
+type UnaryFunction<T> = (x: T) => T;
+
+/**
+ * Internal implementation of the repeat function that doesn't perform type checking
+ * @hidden
+ */
+export function repeat_internal<T>(f: UnaryFunction<T>, n: number): UnaryFunction<T> {
+  // Wrap the callWithoutMetadata call in another function
+  // so that the internal implementation is hidden
+  const func: UnaryFunction<T> = x => callWithoutMetadata(f, x);
+  return n === 0 ? x => x : x => func(repeat_internal(func, n - 1)(x));
+}
+
 /**
  * Returns a new function which when applied to an argument, has the same effect
  * as applying the specified function to the same argument n times.
@@ -16,7 +35,10 @@
  * @returns the new function that has the same effect as func repeated n times
  */
 export function repeat(func: Function, n: number): Function {
-  return n === 0 ? (x: any) => x : (x: any) => func(repeat(func, n - 1)(x));
+  assertFunctionOfLength(func, 1, repeat.name);
+  assertNumberWithinRange(n, repeat.name, 0);
+
+  return repeat_internal(func, n);
 }
 
 /**
@@ -31,7 +53,8 @@ export function repeat(func: Function, n: number): Function {
  * @returns the new function that has the same effect as `(x => func(func(x)))`
  */
 export function twice(func: Function): Function {
-  return repeat(func, 2);
+  assertFunctionOfLength(func, 1, twice.name);
+  return repeat_internal(func, 2);
 }
 
 /**
@@ -46,5 +69,6 @@ export function twice(func: Function): Function {
  * @returns the new function that has the same effect as `(x => func(func(func(x))))`
  */
 export function thrice(func: Function): Function {
-  return repeat(func, 3);
+  assertFunctionOfLength(func, 1, thrice.name);
+  return repeat_internal(func, 3);
 }

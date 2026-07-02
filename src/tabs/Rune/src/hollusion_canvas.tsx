@@ -1,10 +1,10 @@
-import type { HollusionRune } from '@sourceacademy/bundle-rune/functions';
+import type { DrawnHollusionRune } from '@sourceacademy/bundle-rune/functions';
 import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebGLCanvas';
 import { useAnimation } from '@sourceacademy/modules-lib/tabs/useAnimation';
 import React from 'react';
 
-type Props = {
-  rune: HollusionRune;
+interface Props {
+  rune: DrawnHollusionRune;
 };
 
 /**
@@ -16,7 +16,7 @@ export default function HollusionCanvas({ rune }: Props) {
   const renderFuncRef = React.useRef<(time: number) => void>(undefined);
 
   const { setCanvas } = useAnimation({
-    callback(timestamp, canvas) {
+    callback({ timestamp, canvas }) {
       if (renderFuncRef.current === undefined) {
         renderFuncRef.current = rune.draw(canvas);
       }

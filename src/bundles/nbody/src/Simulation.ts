@@ -1,5 +1,7 @@
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import context from 'js-slang/context';
 import { RecordingVisualizer3D, RecordingVisualizer, Simulation, type Universe, type VisType } from 'nbody';
+import type { Visualizer } from 'nbody/dist/types/src/Visualizer';
 import type { RecordInfo } from './types';
 
 /**
@@ -43,8 +45,8 @@ context.moduleContexts.nbody.state = {
   recordInfo
 };
 
-function isRecordingBased(sim: Simulation): boolean {
-  return sim.visualizer instanceof RecordingVisualizer || sim.visualizer instanceof RecordingVisualizer3D;
+function isRecordingBased(visualizer: Visualizer) {
+  return visualizer instanceof RecordingVisualizer || visualizer instanceof RecordingVisualizer3D;
 }
 
 /**
@@ -56,8 +58,8 @@ export function playSim(sim: Simulation): void {
   while (simulations.length > 0) {
     simulations.pop()!.stop();
   }
-  if (isRecordingBased(sim)) {
-    throw new Error('playSim expects non-recording simulations');
+  if (isRecordingBased(sim.visualizer)) {
+    throw new InvalidParameterTypeError('non-recording simulation', sim, playSim.name);
   }
   recordInfo.isRecording = false;
   simulations.push(sim);
@@ -74,8 +76,8 @@ export function recordSim(sim: Simulation, recordFor: number, recordSpeed: numbe
   while (simulations.length > 0) {
     simulations.pop()!.stop();
   }
-  if (!isRecordingBased(sim)) {
-    throw new Error('recordSim expects recording simulations');
+  if (!isRecordingBased(sim.visualizer)) {
+    throw new InvalidParameterTypeError('recording simulation', sim, recordSim.name);
   }
   recordInfo.isRecording = true;
   recordInfo.recordFor = recordFor;

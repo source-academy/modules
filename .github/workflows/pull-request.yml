@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Initialize Github Actions
         uses: ./.github/actions/src/init
@@ -65,7 +65,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Initialize ${{ matrix.lib.name }}
         uses: ./.github/actions/src/init
@@ -99,7 +99,7 @@ jobs:
     name: ${{ matrix.tabInfo.tabName }} Tab
     steps:
       - name: Check out source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Initialize ${{ matrix.tabInfo.tabName }}
         uses: ./.github/actions/src/init
@@ -143,7 +143,7 @@ jobs:
     name: ${{ matrix.bundleInfo.bundleName }} Bundle
     steps:
       - name: Check out source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Initialize ${{ matrix.bundleInfo.name }}
         uses: ./.github/actions/src/init
@@ -156,6 +156,12 @@ jobs:
           cd ${{ matrix.bundleInfo.directory }}
           yarn build
           yarn tsc
+
+      - name: Upload Tab Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: ${{ matrix.bundleInfo.name }}-bundle
+          path: ./build/bundles/${{ matrix.bundleInfo.name }}.js
 
       - name: Build Bundle Docs
         run: |
@@ -185,7 +191,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Enable Corepack
         run: corepack enable
@@ -195,6 +201,8 @@ jobs:
 
       - name: Load/Build all tabs
         uses: ./.github/actions/src/load-artifacts
+        with:
+          load-tabs: true
 
       - name: Initialize Devserver
         uses: ./.github/actions/src/init
@@ -235,7 +243,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Initialize Docserver
         uses: ./.github/actions/src/init
@@ -258,7 +266,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Initialize Repo
         uses: ./.github/actions/src/init
@@ -274,12 +282,11 @@ jobs:
       - name: Build Manifest
         run: yarn buildtools manifest
 
-      # Not sure if we need to upload this as an artifact
-      # - name: Upload Manifest
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: manifest
-      #     path: ./build/modules.json
+      - name: Upload Manifest
+        uses: actions/upload-artifact@v6
+        with:
+          name: manifest
+          path: ./build/modules.json
 
   test:
     name: Verify all tests pass and build success

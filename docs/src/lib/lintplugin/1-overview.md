@@ -11,7 +11,7 @@ The plugin also provides several configurations that can be used and extended fr
 refer to the [configs](./3-config.md) section.
 
 Each of the custom rules made available by this plugin has documentation that follows the typical ESLint rule format. You can find
-their documentation [here](./2-rules.md).
+their documentation [here](./2-rules/2-rules).
 
 ## Building
 

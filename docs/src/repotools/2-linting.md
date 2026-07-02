@@ -25,7 +25,7 @@ When changing a rule's configuration, leave a comment explaining what the origin
 
 Where possible, also provide an explanation for why that rule has been configured as such:
 
-<<< ../../../eslint.config.js#typescript {23}
+<<< ../../../eslint.config.js#typescript {24}
 
 ## Linting Markdown Code Examples
 

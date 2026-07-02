@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^",
     "mqtt": "^4.3.7",
     "os": "^0.1.2",
     "uniqid": "^5.4.0"
@@ -22,8 +23,9 @@
     "test": "buildtools test --project .",
     "tsc": "buildtools tsc .",
     "lint": "buildtools lint .",
-    "postinstall": "buildtools compile",
-    "serve": "yarn buildtools serve"
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
   },
   "scripts-info": {
     "build": "Compiles the given bundle to the output directory",

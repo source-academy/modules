@@ -13,7 +13,7 @@ export class RobotConsole {
     this.logs = [];
   }
 
-  log(message: string, level) {
+  log(message: string, level: LogLevel) {
     this.logs.push({
       message,
       level,

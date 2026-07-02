@@ -4,17 +4,21 @@
   "private": true,
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@types/react": "^19.0.0",
-    "@vitest/browser-playwright": "4.1.4",
+    "@types/react": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
     "playwright": "^1.55.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "typescript": "^6.0.2",
-    "vitest": "4.1.4",
+    "vitest": "catalog:",
     "vitest-browser-react": "^2.1.0"
+  },
+  "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^"
   },
   "type": "module",
   "exports": {
+    "./start": null,
     ".": "./dist/index.js",
     "./*": "./dist/*.js"
   },
@@ -23,8 +27,9 @@
     "build": "buildtools build bundle .",
     "lint": "buildtools lint .",
     "test": "buildtools test --project .",
-    "postinstall": "buildtools compile",
-    "serve": "yarn buildtools serve"
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
   },
   "scripts-info": {
     "build": "Compiles the given bundle to the output directory",

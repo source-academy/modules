@@ -46,6 +46,10 @@ export interface ModalProps {
   handleClose: MouseEventHandler;
   children: ReactElement;
 }
+
+/**
+ * @category Components
+ */
 const Modal = ({ open, height, width, children, handleClose }: ModalProps) => (
   <>
     {open && (
