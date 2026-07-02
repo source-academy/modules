@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
-    "js-slang": "^1.0.92"
+    "js-slang": "catalog:"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",

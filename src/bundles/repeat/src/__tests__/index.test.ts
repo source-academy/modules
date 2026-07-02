@@ -1,3 +1,4 @@
+import { stringify } from 'js-slang/dist/utils/stringify';
 import { describe, expect, test, vi } from 'vitest';
 import * as funcs from '../functions';
 
@@ -23,10 +24,15 @@ describe(funcs.repeat, () => {
 
   test('throws an error when provided incorrect values', () => {
     expect(() => funcs.repeat((x: number) => x, -1))
-      .toThrow('repeat: Expected integer greater than 0, got -1.');
+      .toThrow('repeat: Expected integer ≥ 0, got -1.');
 
     expect(() => funcs.repeat((x: number) => x, 1.5))
-      .toThrow('repeat: Expected integer greater than 0, got 1.5.');
+      .toThrow('repeat: Expected integer ≥ 0, got 1.5.');
+  });
+
+  test('repeated function has implementation hidden', () => {
+    const f = funcs.repeat((x: number) => x, 1);
+    expect(stringify(f)).toEqual('(x) => func(repeat_internal(func, n - 1)(x))');
   });
 });
 

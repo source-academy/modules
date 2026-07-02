@@ -3,7 +3,7 @@
  * @module repeat
  */
 
-import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+import { assertFunctionOfLength, assertNumberWithinRange, callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
 
 /**
  * Represents a function that takes in 1 parameter and returns a
@@ -16,7 +16,10 @@ type UnaryFunction<T> = (x: T) => T;
  * @hidden
  */
 export function repeat_internal<T>(f: UnaryFunction<T>, n: number): UnaryFunction<T> {
-  return n === 0 ? x => x : x => f(repeat_internal(f, n - 1)(x));
+  // Wrap the callWithoutMetadata call in another function
+  // so that the internal implementation is hidden
+  const func: UnaryFunction<T> = x => callWithoutMetadata(f, x);
+  return n === 0 ? x => x : x => func(repeat_internal(func, n - 1)(x));
 }
 
 /**

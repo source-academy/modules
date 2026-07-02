@@ -159,7 +159,7 @@ describe(funcs.consecutively, () => {
 describe(funcs.make_sound, () => {
   it('Should error gracefully when duration is negative', () => {
     expect(() => funcs.make_sound(() => 0, -1))
-      .toThrow('make_sound: Expected integer greater than 0, got -1.');
+      .toThrow('make_sound: Expected integer ≥ 0, got -1.');
   });
 
   it('Should not error when duration is zero', () => {
@@ -192,12 +192,12 @@ describe(funcs.play, () => {
 describe(funcs.play_wave, () => {
   it('Should error gracefully when duration is negative', () => {
     expect(() => funcs.play_wave(() => 0, -1))
-      .toThrow('play_wave: Expected integer greater than 0, got -1.');
+      .toThrow('play_wave: Expected integer ≥ 0, got -1.');
   });
 
   it('Should error gracefully when duration is not a number', () => {
     expect(() => funcs.play_wave(() => 0, true as any))
-      .toThrow('play_wave: Expected integer greater than 0, got true.');
+      .toThrow('play_wave: Expected integer ≥ 0, got true.');
   });
 
   it('Should error gracefully when wave is not a function', () => {

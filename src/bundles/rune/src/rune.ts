@@ -73,7 +73,8 @@ export class Rune {
     public vertices: Float32Array,
 
     /**
-     * A list of vertex colors, each vertex has a color (r,g,b,a).
+     * A list of vertex colors, each vertex has a color (r,g,b,a). Values
+     * are normalized to [0, 1]
      */
     public colors: Float32Array | null,
 
@@ -417,7 +418,7 @@ export class AnimatedRune extends glAnimation implements ReplResult {
   public getFrame(num: number): AnimFrame {
     const rune = this.func(num);
     return {
-      draw: rune.draw
+      draw: rune.draw.bind(rune)
     };
   }
 

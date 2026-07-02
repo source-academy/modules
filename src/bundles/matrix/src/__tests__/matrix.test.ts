@@ -7,31 +7,31 @@ import type { CellCallback } from '../types';
 describe(funcs.create_matrix, () => {
   it('throws an error when num_rows is not a number', () => {
     expect(() => funcs.create_matrix('s' as any, 1, ''))
-      .toThrowError('create_matrix: Expected an integer value for rows, got: s');
+      .toThrow('create_matrix: Expected an integer value for rows, got: s');
   });
 
   it('throws an error when num_cols is not a number', () => {
     expect(() => funcs.create_matrix(1, 's' as any, ''))
-      .toThrowError('create_matrix: Expected an integer value for columns, got: s');
+      .toThrow('create_matrix: Expected an integer value for columns, got: s');
   });
 
   it('throws an error when num_cols or num_rows is less than 1', () => {
     expect(() => funcs.create_matrix(0, 1, ''))
-      .toThrowError('create_matrix: Cannot create a matrix with fewer than 1 row or column!');
+      .toThrow('create_matrix: Cannot create a matrix with fewer than 1 row or column!');
 
     expect(() => funcs.create_matrix(1, 0, ''))
-      .toThrowError('create_matrix: Cannot create a matrix with fewer than 1 row or column!');
+      .toThrow('create_matrix: Cannot create a matrix with fewer than 1 row or column!');
   });
 
   it('throws an error when name is not a string or undefined', () => {
     expect(() => funcs.create_matrix(1, 1, 0 as any))
-      .toThrowError('create_matrix: Expected string or undefined for name, got 0.');
+      .toThrow('create_matrix: Expected string or undefined for name, got 0.');
   });
 });
 
 describe(funcs.copy_matrix, () => {
   it('throws an error when the parameter is not a matrix', () => {
-    expect(() => funcs.copy_matrix(0 as any)).toThrowError('copy_matrix: Expected Matrix, got 0.');
+    expect(() => funcs.copy_matrix(0 as any)).toThrow('copy_matrix: Expected Matrix, got 0.');
   });
 
   it('works', () => {
@@ -57,7 +57,7 @@ describe(funcs.get_cell_labels, () => {
   funcs.set_cell_labels(matrix, [['1', '2'], ['3', '4']]);
 
   it('throws an error when the first parameter is not a matrix', () => {
-    expect(() => funcs.get_cell_labels(0 as any)).toThrowError('get_cell_labels: Expected Matrix, got 0.');
+    expect(() => funcs.get_cell_labels(0 as any)).toThrow('get_cell_labels: Expected Matrix, got 0.');
   });
 
   it('copies the labels', () => {
@@ -72,7 +72,7 @@ describe(funcs.get_cell_values, () => {
   funcs.set_cell_values(matrix, [[true, false], [false, true]]);
 
   it('throws an error when the first parameter is not a matrix', () => {
-    expect(() => funcs.get_cell_values(0 as any)).toThrowError('get_cell_values: Expected Matrix, got 0.');
+    expect(() => funcs.get_cell_values(0 as any)).toThrow('get_cell_values: Expected Matrix, got 0.');
   });
 
   it('copies the values', () => {
@@ -86,7 +86,7 @@ describe(funcs.install_buttons, () => {
   const matrix = funcs.create_matrix(2, 2, undefined);
 
   it('throws an error when the first parameter is not a matrix', () => {
-    expect(() => funcs.install_buttons(0 as any, null)).toThrowError('install_buttons: Expected Matrix, got 0.');
+    expect(() => funcs.install_buttons(0 as any, null)).toThrow('install_buttons: Expected Matrix, got 0.');
   });
 
   it('works when buttons is an empty list', () => {
@@ -116,19 +116,19 @@ describe(funcs.install_buttons, () => {
   });
 
   it('throws an error when buttons is not a list of pairs', () => {
-    expect(() => funcs.install_buttons(matrix, pair('not a pair', null)))
-      .toThrowError('Expected a list containing only of pairs of strings and nullary functions');
+    expect(() => funcs.install_buttons(matrix, pair('not a pair', null) as any))
+      .toThrow('Expected a list containing only of pairs of strings and nullary functions');
   });
 
   describe('throws an error when buttons is not a list of pairs of strings and nullary functions', () => {
-    test.each([
+    test.for([
       list('not a pair'),
       list(pair('0', 0)),
-      list(pair('0', _x => {})),
+      list(pair('0', (_x: any) => {})),
       list(pair(0, () => {})),
-    ])('%o', buttons => {
-      expect(() => funcs.install_buttons(matrix, buttons))
-        .toThrowError('Expected a list containing only of pairs of strings and nullary functions');
+    ])('%o', ([buttons]) => {
+      expect(() => funcs.install_buttons(matrix, buttons as any))
+        .toThrow('Expected a list containing only of pairs of strings and nullary functions');
     });
   });
 });
@@ -138,7 +138,7 @@ describe(funcs.on_cell_click, () => {
 
   it('throws an error when the first parameter is not a matrix', () => {
     expect(() => funcs.on_cell_click(0 as any, () => {}))
-      .toThrowError('on_cell_click: Expected Matrix, got 0.');
+      .toThrow('on_cell_click: Expected Matrix, got 0.');
   });
 
   it('throws an error when callback is not a function', () => {
@@ -175,12 +175,12 @@ describe(funcs.on_col_click, () => {
 
   it('throws an error when the first parameter is not a matrix', () => {
     expect(() => funcs.on_col_click(0 as any, () => {}))
-      .toThrowError('on_col_click: Expected Matrix, got 0.');
+      .toThrow('on_col_click: Expected Matrix, got 0.');
   });
 
   it('throws an error when callback is not a function', () => {
     expect(() => funcs.on_col_click(matrix, 0 as any))
-      .toThrowError('on_col_click: Expected function with 2 parameters for callback, got 0.');
+      .toThrow('on_col_click: Expected function with 2 parameters for callback, got 0.');
   });
 
   it('throws an error when callback is not a function with 2 parameters', () => {
@@ -207,12 +207,12 @@ describe(funcs.on_row_click, () => {
 
   it('throws an error when the first parameter is not a matrix', () => {
     expect(() => funcs.on_row_click(0 as any, () => {}))
-      .toThrowError('on_row_click: Expected Matrix, got 0.');
+      .toThrow('on_row_click: Expected Matrix, got 0.');
   });
 
   it('throws an error when callback is not a function', () => {
     expect(() => funcs.on_row_click(matrix, 0 as any))
-      .toThrowError('on_row_click: Expected function with 2 parameters for callback, got 0.');
+      .toThrow('on_row_click: Expected function with 2 parameters for callback, got 0.');
   });
 
   it('throws an error when callback is not a function with 2 parameters', () => {
@@ -290,7 +290,7 @@ describe(funcs.set_cell_labels, () => {
 
   it('throws an error when the first parameter is not a matrix', () => {
     expect(() => funcs.set_cell_labels(0 as any, [[]]))
-      .toThrowError('set_cell_labels: Expected Matrix, got 0.');
+      .toThrow('set_cell_labels: Expected Matrix, got 0.');
   });
 
   it('throws an error when the second parameter is not a 2D array of strings', () => {

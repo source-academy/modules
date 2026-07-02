@@ -1,9 +1,9 @@
 ---
-title: Developer Type Checking
+title: Type Safety
 outline: [2, 3]
 ---
 
-# Developer Runtime Type Checking in Source
+# Runtime Type Safety in Source
 
 Though bundles are written in Typescript, Source itself (except for the Typed Variant) does not support anything beyond rudimentary type checking. This means that it can determine that an expression
 like `1 - "string"` is badly typed, but it can't type check more complex programs like the one below, especially when bundle functions are involved:
@@ -62,6 +62,7 @@ export function show(rune: unknown) {
   return rune;
 }
 ```
+
 :::
 
 Errors related to type checking the values passed in as parameters should make use of the provided error types to ensure that error messages remain consistent
@@ -95,6 +96,7 @@ export function play(value: unknown): asserts value is Sound {
 ```
 
 The parameters of the constructor for `InvalidParameterTypeError` are as follows:
+
 1. String representation of the expected type
 2. Actual value passed in by the user
 3. _Optional_: The name of the function that the error was thrown from (see [here](./3-errors) for more information)
@@ -105,7 +107,7 @@ The parameters of the constructor for `InvalidParameterTypeError` are as follows
 Numbers in Javascript and Typescript are stored as floats, but most often we want to deal only with integers. Also, we may want to check that a
 number is greater than a given minimum, less than a given maximum, or both.
 
-`modules-lib` provides a two functions and a dedicated error type for this purpose:
+`modules-lib` provides two functions and a dedicated error type for this purpose:
 
 ### `isNumberWithinRange`
 
@@ -240,60 +242,80 @@ This is a subclass of the `InvalidParameterTypeError` that is thrown when a para
 or doesn't fall within the expected range.
 
 Here are the parameters of the constructor:
+
 1. The actual value that was validated
 2. Either a `string` or an `InvalidNumberParameterErrorOptions` object.
-  - If a string is provided, then that is taken as the name of the expected type
-  - Otherwise, the options object controls what error message is shown to the user (i.e whether an integer or a number was expected, or if it was outside of the desired range)
+   - If a string is provided, then that is taken as the name of the expected type
+   - Otherwise, the options object controls what error message is shown to the user (i.e whether an integer or a number was expected, or if it was outside of the desired range)
 3. Name of the function that the validation was performed for.
 4. `param_name` _Optional_: Name of the parameter that the validation was performed for.
 
-## Type Safety Conventions for functions
+## Type Safety for functions
 
 As part of ensuring type safety, there are several function related conventions bundle code should abide by:
 
-### 1. Cadet facing functions should not have default, optional or rest parameters
+### 1. Cadet facing functions with default, optional or rest parameters must use `wrapFunction`
 
-The functions make use of default, optional and rest parameters. This is not supported for Module functions in Source, but is fine if your function
-isn't being exposed to cadets.
+The `wrapFunction` utility is exported from `js-slang/dist/utils/operators` and re-exported from `@sourceacademy/modules-lib/utilities`. You pass it the function
+you are wrapping along with the name of the function and the number of optional arguments it has:
 
-```ts
-// Don't expose this to cadets!
-function configure_options(option_1: boolean, option_2: boolean = false) {
-  // ...implementation
-}
+```ts twoslash
+import { wrapFunction } from '@sourceacademy/modules-lib/utilities';
 
-// or this
-function concat_strings(...args: string[]) {
-  return args.join(',');
-}
+// Example with rest arguments:
+// Notice that wrapFunction is called with true
+export const sum = wrapFunction(
+  (...x: number[]) => x.reduce((res, each) => each + res, 0),
+  true,
+  'sum'
+);
 
-// or this
-function configure_other_option(other_option?: boolean) {
-  // ...implementation
-}
+// Example with rest argument, but also other parameters
+// Notice that wrapFunction is still called with true since the function
+// has a rest parameter
+export const configure_options = wrapFunction(
+  (op1?: boolean, op2?: boolean, ...args: boolean[]) => {
+    // ...implementation
+  },
+  true,
+  'configure_options'
+);
 
-// But default and rest parameters are okay for internal use
-export function exposed_function() {
-  configure_options(true);
-  concat_strings('str1', 'str2');
-}
+configure_options(true);        // is ok
+configure_options(true, false); // is ok
+
+// Example with default arguments
+// Notice that it is called with 1, since that's the number of optional arguments
+// the function has
+export const configure_options_2 = wrapFunction(
+  (op0: boolean, op2: boolean = false) => op0 || op2,
+  1,
+  'configure_options_2',
+);
 ```
 
-::: details Integration with `js-slang`
-Neither default nor rest parameters are currently supported due to an [issue](https://github.com/source-academy/js-slang/issues/1238) on the `js-slang` side.
-:::
+If you don't specify the `optArgCount` parameter, then it is assumed that the function doesn't have any optional arguments or rest parameters.
 
-Instead, if you require such functionality, they should be defined as separate functions:
+`wrapFunction` is implemented with special Typescript types that should highlight if you have specified the number of optional arguments correctly:
 
-```ts
-// Equivalent implementation of configure_options from the above example
+```ts twoslash
+// @errors: 2769
+import { wrapFunction } from '@sourceacademy/modules-lib/utilities';
 
-export function configure_options_1_and_2(option_1: boolean, option_2: boolean) {}
+export const func_0 = wrapFunction(
+  (x1: number, x2: number = 0) => x1 + x2,
+  2, // Wrong number of optional parameters
+  'func_0'
+);
 
-export function configure_option_1_only(option_1: boolean) {
-  configure_options_1_and_2(option_1, false);
-}
+export const func_1 = wrapFunction(
+  (x1: number, ...args: number[]) => x1 + args.length,
+  2, // Should be true, since there is a rest parameter
+  'func_1'
+);
 ```
+
+There is a less strict version called `wrapFunctionUnsafe` that can be used if the typing is too strict for your use case.
 
 ### 2. Cadet facing functions should not use destructuring for parameters
 
@@ -387,6 +409,26 @@ export function bar2(obj: Bar2Params) {
 }
 ```
 
+> [!INFO] isTupleOfLength
+>
+> In the case of the `foo` function above, there is also a type guard exported by `js-slang` and re-exported by `modules-lib` that can be used to
+> assert that the given value is indeed a tuple (or simply an array) of a given length:
+>
+> ```ts twoslash
+> import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+> // ---cut---
+> import { isTupleOfLength } from '@sourceacademy/modules-lib/utilities';
+>
+> export function foo(arr: [string, string]) {
+>   if (isTupleOfLength(arr, 2)) {
+>     throw new InvalidParameterTypeError('Tuple of length 2', arr, foo.name, 'arr');
+>   }
+>   return arr[0];
+> }
+> ```
+>
+> Of course, there is also an assertion version `assertTupleOfLength` available.
+
 ### 3. If a callback is passed as a parameter, its number of parameters should be validated
 
 By default, Javascript doesn't really mind if you call a function with fewer arguments than it was defined with:
@@ -446,10 +488,10 @@ draw_connected(200)((a, b) => make_point(a, 0)); // error: The provided curve is
 >
 > The `InvalidCallbackError` is a subclass of the `InvalidParameterTypeError`, specifically to be used for the error to be thrown
 > for invalid callbacks. The parameters for its constructor are as follows:
-> 
+>
 > 1. Number of Parameters/String representation of expected function:
->   - If a number is given, it is assumed that a function with that number of parameters is expected
->   - If a string is given, that will be used as a name for the function type.
+>    - If a number is given, it is assumed that a function with that number of parameters is expected
+>    - If a string is given, that will be used as a name for the function type.
 > 2. The actual value passed in by the user
 > 3. _Optional_: The name of the function that the error was thrown from (see [here](./3-errors) for more information)
 > 4. _Optional_: The name of the parameter that is being validated
@@ -465,10 +507,10 @@ function isFunctionOfLength(f: unknown, l: number): f is Function {
 ```
 
 > [!WARNING] Limitations of isFunctionOfLength
-> 
+>
 > Of course, `isFunctionOfLength` can only guarantee that the object passed to it is indeed a function and that it takes
 > the specified number of parameters. It won't actually guarantee at runtime that the provided parameters are of the defined types. For example:
-> 
+>
 > ```ts twoslash
 > // @noErrors: 2345
 > import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
@@ -492,10 +534,10 @@ function isFunctionOfLength(f: unknown, l: number): f is Function {
 > // type (x: number, y: number) => number
 > call_callback(callback);
 > ```
-> 
+>
 > In fact, if you give it something of type `unknown`, the best it can do is narrow it down to a function that takes parameters of type `unknown`
 > and returns a value with type `unknown`:
-> 
+>
 > ```ts twoslash
 > import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 > import { InvalidCallbackError } from '@sourceacademy/modules-lib/errors';
@@ -511,6 +553,8 @@ function isFunctionOfLength(f: unknown, l: number): f is Function {
 >
 > }
 > ```
+>
+> It also cannot check for rest or optional parameters.
 
 There is an assertion version of the function available: [`assertFunctionOfLength`](../../../lib/modules-lib/Utilities#assertfunctionoflength):
 
@@ -523,3 +567,94 @@ function foo(callback: Curve) {
   assertFunctionOfLength(callback, 1, foo.name, 'Curve', 'callback');
 }
 ```
+
+### 4. Calling user provided functions should be done with `js-slang` utils
+
+If you need to call a function provided to you from the user, you should use either the `callIfFuncAndRightArgs` or `callWithoutMetadata` provided by `js-slang` (and re-exported
+by `modules-lib`):
+
+```ts twoslash
+import { assertFunctionOfLength, callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
+
+export function run_callback(f: () => void) {
+  assertFunctionOfLength(f, 1, run_callback.name);
+  callWithoutMetadata(f);
+}
+```
+
+You can also provide arguments:
+
+```ts twoslash
+import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
+import { callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
+
+export function makeNewCurve(c: Curve, numPoints: number): Curve {
+  for (let i = 0; i < numPoints; i++) {
+    const point = callWithoutMetadata(c, i / numPoints);
+    // Do things with point...
+  }
+
+  return t => {
+    return callWithoutMetadata(c, t);
+  };
+}
+```
+
+Calling a _user_ function directly may not behave as intended, especially when the `js-slang` transpiler is being used. However,
+functions that are provided from the _standard library_ or from other module functions can still be called normally.
+
+`callIfFuncAndRightArgs` is used when you want to provide extra metadata about where the function was defined:
+
+```ts twoslash
+import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
+import { callIfFuncAndRightArgs } from '@sourceacademy/modules-lib/utilities';
+
+export function evaluateCurve(c: Curve, numPoints: number) {
+  for (let i = 0; i < numPoints; i++) {
+    // Line Number, Column Number, File name, NativeStorage (usually undefined), ...args
+    const point = callIfFuncAndRightArgs(c, 4, 1, 'curve', undefined, i / numPoints);
+    // Do things with point...
+  }
+}
+```
+
+> [!WARNING] Handling Stringification
+>
+> You will probably want to hide the fact that you are calling the user provided function via a proxy. Consider an example from the `repeat` bundle:
+>
+> ```ts
+> // Handles the internal implementation for the `repeat` function
+> export function repeat_internal<T>(f: UnaryFunction<T>, n: number): UnaryFunction<T> {
+>   return n === 0 ? x => x : x => callWithoutMetadata(f, repeat_internal(f, n - 1)(x));
+> }
+> ```
+>
+> When the code below is run, the cadet can see that `f` is being called via `callWithoutMetadata`:
+>
+> ```js
+> import { repeat } from 'repeat';
+> const f = funcs.repeat(x => x, 1);
+> stringify(f); // prints "(x) => callWithoutMetadata(f, repeat_internal(f, n - 1)(x))"
+> ```
+>
+> You can of course override `toReplString`, but this could be tedious if you intend for the internals to be visible. Instead,
+> wrap the cadet's function in another (local) function:
+>
+> ```ts
+> export function repeat_internal<T>(f: UnaryFunction<T>, n: number): UnaryFunction<T> {
+>   // Wrap the callWithoutMetadata call in another function
+>   // so that the internal implementation is hidden
+>   const func: UnaryFunction<T> = x => callWithoutMetadata(f, x);
+>   return n === 0 ? x => x : x => func(repeat_internal(func, n - 1)(x));
+> }
+> ```
+>
+> Then the stringified version won't show `callWithoutMetadata`:
+>
+> ```js
+> import { repeat } from 'repeat';
+> const f = funcs.repeat(x => x, 1);
+> stringify(f); // prints "(x) => func(repeat_internal(func, n - 1)(x))"
+> ```
+>
+> This of course might not always be possible, in which case you should use other methods as appropriate.

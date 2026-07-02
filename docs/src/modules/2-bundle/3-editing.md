@@ -96,6 +96,35 @@ Remove dependencies will also cause the lockfile to be modified, so remember to 
 To ensure that bundles conform to the different Source language specifications, there are a few rules that bundles need to abide by.
 Refer to [this list](./4-conventions/index) for more information.
 
+## Exports
+
+When editing a bundle, you may accidentally add a new export or remove an existing export. Take care to ensure that changes to the _API surface_ of the bundle are intentional.
+
+This can happen if especially you are using a wildcard export:
+
+::: code-group
+
+```ts [index.ts]
+// Will end up exporting new_foo!
+export * from './functions';
+```
+
+```ts [functions.ts]
+export function foo() {}
+
+/**
+ * For internal use only!
+ */
+export function new_foo() {}
+```
+
+:::
+
+> [!WARNING] Type Related Exports
+>
+> The only things you should be exporting from the entry point of your bundle are functions and constants. You
+> should not be exporting any type related values like classes, enums, type aliases or interfaces.
+
 ## Module Contexts
 
 Module contexts are a way for bundles to send information between bundles and tabs. Refer to [this](../5-advanced/context) section for

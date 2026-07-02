@@ -7,13 +7,12 @@
     "@box2d/debug-draw": "^0.10.0",
     "@sourceacademy/bundle-physics_2d": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
+    "@types/react": "catalog:",
     "typescript": "^6.0.2"
   },
   "scripts": {

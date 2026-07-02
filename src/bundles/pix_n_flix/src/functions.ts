@@ -1,5 +1,5 @@
 import { InternalRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+import { assertFunctionOfLength, assertNumberWithinRange, callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
 import {
   DEFAULT_FPS,
   DEFAULT_HEIGHT,
@@ -185,7 +185,7 @@ function drawImage(source: HTMLImageElement | HTMLVideoElement): void {
   const output = new_image();
   // Runtime checks to guard against crashes
   try {
-    filter(pixels, output);
+    callWithoutMetadata(filter, pixels, output);
     writeToBuffer(pixelObj.data, output);
   } catch (e: any) {
     console.error(JSON.stringify(e));

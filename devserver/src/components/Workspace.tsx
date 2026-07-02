@@ -113,9 +113,9 @@ const Workspace: React.FC<WorkspaceProps> = (props) => {
             <Editor
               handleEditorValueChange={props.handleEditorValueChange}
               handleEditorEval={props.handleEditorEval}
-              handleDeclarationNavigate={() => {}}
+              handleDeclarationNavigate={() => { }}
               handlePromptAutocomplete={props.handlePromptAutocomplete}
-              handleSendReplInputToOutput={() => {}}
+              handleSendReplInputToOutput={() => { }}
               editorValue={props.editorValue}
             />
           </Resizable>

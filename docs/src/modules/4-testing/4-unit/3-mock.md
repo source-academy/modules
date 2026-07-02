@@ -185,6 +185,7 @@ expect(Foo).toHaveBeenCalledOnce();
 ```ts [index.ts]
 export class Foo {}
 ```
+
 :::
 
 ## Mocking "Global" Properties
@@ -327,6 +328,7 @@ export function bar() {
   return 1;
 }
 ```
+
 :::
 
 Now consider, what happens if in `foo`, `doSomeOtherThings` returns `false`? `bar` never gets called, so its mock implementation
@@ -614,6 +616,7 @@ export function foo(x: number) {
   return x;
 }
 ```
+
 :::
 
 Because of the way that `vi.mock` is handled by Vitest, this method **cannot** be used for mocks that rely on that.
@@ -703,6 +706,7 @@ test('another test', () => {
   expect(bar(10)).toEqual(2);
 });
 ```
+
 ```ts [functions.ts]
 export function foo(x: number) {
   // ... does other things
@@ -721,6 +725,7 @@ export function bar(x: number) {
   return foo(x) + 1;
 }
 ```
+
 :::
 
 Notice that the call to `vi.mock` `functions.ts` happens twice and is identical. By creating a `__mocks__` folder that shadows
@@ -743,6 +748,7 @@ children:
 ```
 
 Inside `__mocks__/functions.ts`, we write our mock implementation:
+
 ```ts [__mocks__/functions.ts]
 export function foo() {
   return 1;
@@ -784,6 +790,7 @@ test('another test', () => {
   expect(bar(10)).toEqual(2);
 });
 ```
+
 :::
 
 Vitest will automatically load the implementation provided by the `__mocks__` folder.

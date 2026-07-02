@@ -226,7 +226,7 @@ export function get_num_rows(matrix: Matrix) {
  * ));
  * ```
  */
-export function install_buttons(matrix: Matrix, list: List): void {
+export function install_buttons(matrix: Matrix, list: List<Pair<string, () => void>>): void {
   throwIfNotMatrix(matrix, install_buttons.name);
 
   // Guard against circular lists

@@ -135,6 +135,7 @@ const Playground: React.FC = () => {
 
     const result = await runInContext(editorValue, codeContext, {
       importOptions: {
+        allowUndefinedImports: true,
         loadTabs: false,
         sourceBundleImporter: getBundleLoader(useCompiled),
         docsImporter,

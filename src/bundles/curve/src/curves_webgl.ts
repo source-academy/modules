@@ -1,6 +1,7 @@
 import { GeneralRuntimeError, InternalRuntimeError } from '@sourceacademy/modules-lib/errors';
 import type { ReplResult } from '@sourceacademy/modules-lib/types';
 import { mat4, vec3 } from 'gl-matrix';
+import { callWithoutMetadata } from 'js-slang/dist/utils/operators';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import type { CurveSpace, DrawMode, ScaleMode } from './types';
 
@@ -105,7 +106,9 @@ type BufferInfo = {
 };
 
 /** A function that takes in number from 0 to 1 and returns a Point. */
-export type Curve = ((u: number) => Point) & {
+export interface Curve {
+  (u: number): Point;
+  /** @hidden */
   shouldNotAppend?: boolean;
 };
 
@@ -332,7 +335,7 @@ export function generateCurve(
   let max_z = -Infinity;
 
   for (let i = 0; i <= numPoints; i += 1) {
-    const point = func(i / numPoints);
+    const point = callWithoutMetadata(func, i / numPoints);
 
     if (!(point instanceof Point)) {
       throw new GeneralRuntimeError(`Expected curve to return a point, got '${stringify(point)}' at t=${i / numPoints}`);

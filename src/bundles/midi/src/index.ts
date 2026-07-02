@@ -13,6 +13,8 @@ import { midiNoteToNoteName, noteToValues, parseNoteWithOctave } from './utils';
 
 /**
  * Returns a boolean value indicating whether the given value is a {@link NoteWithOctave|note name with octave}.
+ * @function
+ * @category Main
  */
 export function is_note_with_octave(value: unknown): value is NoteWithOctave {
   const res = parseNoteWithOctave(value);
@@ -28,6 +30,7 @@ export function is_note_with_octave(value: unknown): value is NoteWithOctave {
  *
  * @param note given letter name
  * @returns the corresponding midi note
+ * @category Main
  * @example
  * ```
  * letter_name_to_midi_note('C4'); // Returns 60
@@ -91,6 +94,7 @@ export function letter_name_to_midi_note(note: NoteWithOctave): MIDINote {
  * @param midiNote Note to convert
  * @param accidental Whether to return the letter as with a sharp or with a flat
  * @function
+ * @category Main
  * @example
  * ```
  * midi_note_to_letter_name(61, SHARP); // Returns "C#4"
@@ -114,6 +118,7 @@ export function midi_note_to_letter_name(midiNote: MIDINote, accidental: Acciden
  * @param note given MIDI note
  * @returns the frequency of the MIDI note
  * @function
+ * @category Main
  * @example
  * ```
  * midi_note_to_frequency(69); // Returns 440
@@ -130,6 +135,7 @@ export function midi_note_to_frequency(note: MIDINote): number {
  *
  * @param note given letter name
  * @returns the corresponding frequency (in Hz)
+ * @category Main
  * @example
  * ```
  * letter_name_to_frequency('A4'); // Returns 440
@@ -141,6 +147,8 @@ export function letter_name_to_frequency(note: NoteWithOctave): number {
 
 /**
  * Takes the given {@link Note} and adds the octave number to it.
+ * @function
+ * @category Main
  * @example
  * ```
  * add_octave_to_note('C', 4); // Returns "C4"
@@ -153,14 +161,18 @@ export function add_octave_to_note(note: Note, octave: number): NoteWithOctave {
 
 /**
  * Gets the octave number from a given {@link NoteWithOctave|note name with octave}.
+ * @function
+ * @category Main
  */
 export function get_octave(note: NoteWithOctave): number {
-  const [,, octave] = noteToValues(note, get_octave.name);
+  const [, , octave] = noteToValues(note, get_octave.name);
   return octave;
 }
 
 /**
  * Gets the letter name from a given {@link NoteWithOctave|note name with octave} (without the accidental).
+ * @function
+ * @category Main
  * @example
  * ```
  * get_note_name('C#4'); // Returns "C"
@@ -174,6 +186,8 @@ export function get_note_name(note: NoteWithOctave): Note {
 
 /**
  * Gets the accidental from a given {@link NoteWithOctave|note name with octave}.
+ * @function
+ * @category Main
  */
 export function get_accidental(note: NoteWithOctave): Accidental {
   const [, accidental] = noteToValues(note, get_accidental.name);
@@ -182,14 +196,16 @@ export function get_accidental(note: NoteWithOctave): Accidental {
 
 /**
  * Converts the key signature to the corresponding key
+ * @function
+ * @category Main
  * @example
  * ```
  * key_signature_to_keys(SHARP, 2); // Returns "D", since the key of D has 2 sharps
  * key_signature_to_keys(FLAT, 3); // Returns "Eb", since the key of Eb has 3 flats
  * ```
  */
-export function key_signature_to_keys(accidental: Accidental.FLAT | Accidental.SHARP, numAccidentals: number): Note {
-  assertNumberWithinRange(numAccidentals, key_signature_to_keys.name, 0, 6, true, 'numAccidentals');
+export function key_signature_to_key(accidental: Accidental.FLAT | Accidental.SHARP, numAccidentals: number): Note {
+  assertNumberWithinRange(numAccidentals, key_signature_to_key.name, 0, 6, true, 'numAccidentals');
 
   switch (accidental) {
     case Accidental.SHARP: {
@@ -201,11 +217,21 @@ export function key_signature_to_keys(accidental: Accidental.FLAT | Accidental.S
       return keys[numAccidentals];
     }
     default:
-      throw new InvalidParameterTypeError('sharp or flat', accidental, key_signature_to_keys.name, 'accidental');
+      throw new InvalidParameterTypeError('sharp or flat', accidental, key_signature_to_key.name, 'accidental');
   }
 }
 
-export * from './scales';
+export {
+  ionian_scale,
+  major_scale,
+  dorian_scale,
+  phrygian_scale,
+  lydian_scale,
+  mixolydian_scale,
+  aeolian_scale,
+  minor_scale,
+  locrian_scale
+} from './scales';
 
 /**
  * String representing the sharp symbol '#'

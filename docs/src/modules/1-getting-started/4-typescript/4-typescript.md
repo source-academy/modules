@@ -62,8 +62,7 @@ import createContext from 'js-slang/dist/createContext';
 createContext.default();
 ```
 
-The text following the directive should contain a short explanation on why there is an expected error. 
-The `@ts-expect-error` directive should be used as sparingly as possible.
+The text following the directive should contain a short explanation on why there is an expected error. The `@ts-expect-error` directive should be used as sparingly as possible.
 
 #### `as any`
 
@@ -280,7 +279,7 @@ over the button next to the language selector at the bottom right of the VSCode 
 
 ![](./vscode_ts.png)
 
-This should show a small window where VSCode will show you what version of Typescript its running:
+This should show a small window where VSCode will show you what version of Typescript it's running:
 
 ![](./ts_version.png)
 
@@ -298,7 +297,6 @@ If the errors are still not showing up, you can use the VSCode command palette t
 
 Using the [`extends`](https://www.typescriptlang.org/tsconfig/#extends) property, `tsconfig.json` files can inherit options from another `tsconfig.json` file. The repository is set up with `tsconfig`s at
 different levels to share options across both bundles and tabs.
-
 
 Sometimes, your bundle might depend on packages that have published their types differently. For example, the `communication` bundle requires `mqtt`:
 

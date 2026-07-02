@@ -170,8 +170,8 @@ export class RenderFunctionCreators {
  * The parts between (0,0) and (1,1) of the resulting Drawing are shown in the window.
  *
  * @function
- * @param num determines the number of points, lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @param numPoints determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `numPoints + 1` evenly spaced sample points
  * @returns function of type Curve → Drawing
  * @example
  * ```
@@ -187,8 +187,8 @@ export const draw_connected = RenderFunctionCreators.draw_connected;
  * and height, with some padding.
  *
  * @function
- * @param num determines the number of points, lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @param numPoints determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `numPoints + 1` evenly spaced sample points
  * @returns function of type Curve → Drawing
  * @example
  * ```
@@ -199,13 +199,13 @@ export const draw_connected_full_view = RenderFunctionCreators.draw_connected_fu
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
- * Curve at `num` sample points and connecting each pair with a line. The Drawing
+ * Curve at `numPoints` sample points and connecting each pair with a line. The Drawing
  * is translated and scaled proportionally to show the full curve and maximize
  * its size, with some padding.
  *
  * @function
- * @param num determines the number of points, lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @param numPoints determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `numPoints + 1` evenly spaced sample points
  * @returns function of type Curve → Drawing
  * @example
  * ```
@@ -216,13 +216,13 @@ export const draw_connected_full_view_proportional = RenderFunctionCreators.draw
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
- * Curve at `num` sample points. The Drawing consists of isolated
+ * Curve at `numPoints` sample points. The Drawing consists of isolated
  * points, and does not connect them. The parts between (0,0) and (1,1) of the
  * resulting Drawing are shown in the window.
  *
  * @function
- * @param num determines the number of points, lower than 65535, to be sampled.
- * Including 0 and 1,there are `num + 1` evenly spaced sample points
+ * @param numPoints determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1,there are `numPoints + 1` evenly spaced sample points
  * @returns function of type Curve → Drawing
  * @example
  * ```
@@ -233,14 +233,14 @@ export const draw_points = RenderFunctionCreators.draw_points;
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
- * Curve at `num` sample points. The Drawing consists of isolated
+ * Curve at `numPoints` sample points. The Drawing consists of isolated
  * points, and does not connect them. The Drawing is translated and
  * stretched/shrunk to show the full curve and maximize its width and height,
  * with some padding.
  *
  * @function
- * @param num determines the number of points, lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @param numPoints determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `numPoints + 1` evenly spaced sample points
  * @returns function of type Curve → Drawing
  * @example
  * ```
@@ -251,14 +251,14 @@ export const draw_points_full_view = RenderFunctionCreators.draw_points_full_vie
 
 /**
  * Returns a function that turns a given Curve into a Drawing, by sampling the
- * Curve at `num` sample points. The Drawing consists of isolated
+ * Curve at `numPoints` sample points. The Drawing consists of isolated
  * points, and does not connect them. The Drawing is translated and scaled
  * proportionally with its size maximized to fit entirely inside the window,
  * with some padding.
  *
  * @function
- * @param num determines the number of points, lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @param numPoints determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `numPoints + 1` evenly spaced sample points
  * @returns function of type Curve → Drawing
  * @example
  * ```
@@ -269,13 +269,13 @@ export const draw_points_full_view_proportional = RenderFunctionCreators.draw_po
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
- * the 3D Curve at `num` sample points and connecting each pair with
+ * the 3D Curve at `numPoints` sample points and connecting each pair with
  * a line. The parts between (0,0,0) and (1,1,1) of the resulting Drawing are
  * shown within the unit cube.
  *
  * @function
- * @param num determines the number of points, lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @param numPoints determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `numPoints + 1` evenly spaced sample points
  * @returns function of type Curve → Drawing
  * @example
  * ```
@@ -286,13 +286,13 @@ export const draw_3D_connected = RenderFunctionCreators.draw_3D_connected;
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
- * the 3D Curve at `num` sample points and connecting each pair with
+ * the 3D Curve at `numPoints` sample points and connecting each pair with
  * a line. The Drawing is translated and stretched/shrunk to show the full
  * curve and maximize its width and height within the cube.
  *
  * @function
- * @param num determines the number of points, lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @param numPoints determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `numPoints + 1` evenly spaced sample points
  * @returns function of type Curve → Drawing
  * @example
  * ```
@@ -303,13 +303,13 @@ export const draw_3D_connected_full_view = RenderFunctionCreators.draw_3D_connec
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
- * the 3D Curve at `num` sample points and connecting each pair with
+ * the 3D Curve at `numPoints` sample points and connecting each pair with
  * a line. The Drawing is translated and scaled proportionally with its size
  * maximized to fit entirely inside the cube.
  *
  * @function
- * @param num determines the number of points, lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @param numPoints determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `numPoints + 1` evenly spaced sample points
  * @returns function of type Curve → Drawing
  * @example
  * ```
@@ -320,13 +320,13 @@ export const draw_3D_connected_full_view_proportional = RenderFunctionCreators.d
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
- * the 3D Curve at `num` sample points. The Drawing consists of
+ * the 3D Curve at `numPoints` sample points. The Drawing consists of
  * isolated points, and does not connect them. The parts between (0,0,0)
  * and (1,1,1) of the resulting Drawing are shown within the unit cube.
  *
  * @function
- * @param num determines the number of points, lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @param numPoints determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `numPoints + 1` evenly spaced sample points
  * @returns function of type Curve → Drawing
  * @example
  * ```
@@ -337,13 +337,13 @@ export const draw_3D_points = RenderFunctionCreators.draw_3D_points;
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
- * the 3D Curve at `num` sample points. The Drawing consists of
+ * the 3D Curve at `numPoints` sample points. The Drawing consists of
  * isolated points, and does not connect them. The Drawing is translated and
  * stretched/shrunk to maximize its size to fit entirely inside the cube.
  *
  * @function
- * @param num determines the number of points, lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @param numPoints determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `numPoints + 1` evenly spaced sample points
  * @returns function of type Curve → Drawing
  * @example
  * ```
@@ -354,13 +354,13 @@ export const draw_3D_points_full_view = RenderFunctionCreators.draw_3D_points_fu
 
 /**
  * Returns a function that turns a given 3D Curve into a Drawing, by sampling
- * the 3D Curve at `num` sample points. The Drawing consists of
+ * the 3D Curve at `numPoints` sample points. The Drawing consists of
  * isolated points, and does not connect them. The Drawing is translated and
  * scaled proportionally with its size maximized to fit entirely inside the cube.
  *
  * @function
- * @param num determines the number of points, lower than 65535, to be sampled.
- * Including 0 and 1, there are `num + 1` evenly spaced sample points
+ * @param numPoints determines the number of points, lower than 65535, to be sampled.
+ * Including 0 and 1, there are `numPoints + 1` evenly spaced sample points
  * @returns function of type Curve → Drawing
  * @example
  * ```

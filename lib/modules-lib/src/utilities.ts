@@ -52,6 +52,28 @@ export function hexToColor(hex: string, func_name?: string): [r: number, g: numb
 }
 
 /**
+ * Converts a hue value in [0,1) into an RGB triple in [0,255].
+ *
+ * @param hue hue around the colour wheel, where 0 and 1 both map to red
+ * @returns [r, g, b] values between 0 and 255
+ */
+export function hueToRgb(hue: number): [r: number, g: number, b: number] {
+  const h = (hue % 1 + 1) % 1;
+  const i = Math.floor(h * 6);
+  const f = h * 6 - i;
+  const q = 1 - f;
+
+  switch (i) {
+    case 0: return [255, Math.floor(f * 255), 0];
+    case 1: return [Math.floor(q * 255), 255, 0];
+    case 2: return [0, 255, Math.floor(f * 255)];
+    case 3: return [0, Math.floor(q * 255), 255];
+    case 4: return [Math.floor(f * 255), 0, 255];
+    default: return [255, 0, Math.floor(q * 255)];
+  }
+}
+
+/**
  * Returns a partial {@link DebuggerContext} object that contains a context which contains the mocked
  * module state for the given module.
  * Function intended for testing use only.
@@ -78,8 +100,9 @@ export {
   assertTupleOfLength
 } from 'js-slang/dist/utils/rttc';
 
-// TODO: Re-add when js-slang properly exports them
-// export {
-//   callIfFuncAndRightArgs,
-//   wrap as wrapFunction
-// } from 'js-slang/dist/utils/operators';
+export {
+  callIfFuncAndRightArgs,
+  callWithoutMetadata,
+  wrap as wrapFunction,
+  wrapUnsafe as wrapFunctionUnsafe
+} from 'js-slang/dist/utils/operators';

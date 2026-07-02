@@ -1,4 +1,4 @@
-import { assertFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+import { assertFunctionOfLength, callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 import { DrawnAnaglyphRune, DrawnHollusionRune } from './functions';
 import { AnimatedRune, DrawnNormalRune, Rune, type DrawnRune, type RuneAnimation } from './rune';
@@ -47,8 +47,8 @@ class RuneDisplay {
     assertFunctionOfLength(func, 1, RuneDisplay.animate_rune.name, 'RuneAnimation');
 
     const anim = new AnimatedRune(duration, fps, n => {
-      const rune = func(n);
-      throwIfNotRune(RuneDisplay.animate_rune.name, rune);
+      const rune = callWithoutMetadata(func, n);
+      throwIfNotRune('RuneAnimation', rune);
       return new DrawnNormalRune(rune);
     });
     drawnRunes.push(anim);
@@ -60,8 +60,8 @@ class RuneDisplay {
     assertFunctionOfLength(func, 1, RuneDisplay.animate_anaglyph.name, 'RuneAnimation');
 
     const anim = new AnimatedRune(duration, fps, n => {
-      const rune = func(n);
-      throwIfNotRune(RuneDisplay.animate_anaglyph.name, rune);
+      const rune = callWithoutMetadata(func, n);
+      throwIfNotRune('RuneAnimation', rune);
       return new DrawnAnaglyphRune(rune);
     });
     drawnRunes.push(anim);
