@@ -228,13 +228,13 @@ describe('Project conversion and validation', async () => {
       expect(level).toEqual(td.LogLevel.Warn);
     }
 
-    const messages = warningCalls.map(([each]) => each);
+    const messages = warningCalls.map(([each]) => each.replaceAll('\r\n', '\n'));
 
     // Ensure that the 5 warnings that are supposed to be there are there
     expect(messages).toContain('CustomType is a Interface, which is not supported.');
     expect(messages).toContain('funcTagMissing is typed as a Variable, but function signatures were detected. Did you forget a @function tag?');
     expect(messages).toContain('indirectFuncTagMissing is typed as a Variable, but function signatures were detected. Did you forget a @function tag?');
-    expect(messages).toContain('invalidCodeExample has an example tag that did not validate:\n \r\n/ 10\r\n');
+    expect(messages).toContain('invalidCodeExample has an example tag that did not validate:\n \n/ 10\n');
     expect(messages).toContain('Function multiSignatures has more than 1 signature; only using the first one');
     expect(messages).toContain('Detected type_map in output. Did you forget to add a @hidden tag?');
   });
