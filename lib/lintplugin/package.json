@@ -16,7 +16,7 @@
   "peerDependencies": {
     "@eslint/markdown": "^7.0.0",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "@vitest/eslint-plugin": "^1.6.14",
+    "@vitest/eslint-plugin": "^1.6.20",
     "eslint": ">=9",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsdoc": "^62.0.0",
@@ -33,7 +33,7 @@
     "@stylistic/eslint-plugin": "^5.10.0",
     "@typescript-eslint/rule-tester": "^8.58.2",
     "@typescript-eslint/utils": "^8.58.2",
-    "@vitest/eslint-plugin": "^1.6.14",
+    "@vitest/eslint-plugin": "^1.6.20",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsdoc": "^62.0.0",
     "eslint-plugin-react": "^7.37.4",
