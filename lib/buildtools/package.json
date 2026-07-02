@@ -19,8 +19,8 @@
     "@sourceacademy/modules-repotools": "workspace:^",
     "@sourceacademy/modules-typedoc-plugin": "workspace:^",
     "@vitejs/plugin-react": "^6.0.3",
-    "@vitest/browser-playwright": "4.1.9",
-    "@vitest/coverage-v8": "4.1.9",
+    "@vitest/browser-playwright": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
     "astring": "^1.8.6",
     "chalk": "^5.0.1",
     "commander": "^14.0.0",
@@ -31,7 +31,7 @@
     "jsdom": "^29.0.0",
     "typedoc": "^0.28.18",
     "vite": "^8.1.0",
-    "vitest": "4.1.9"
+    "vitest": "catalog:"
   },
   "scripts": {
     "build": "node ./build.js",
