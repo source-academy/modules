@@ -1,5 +1,5 @@
 import type { Matrix } from '@sourceacademy/bundle-matrix/types';
-import range from 'lodash/range';
+import { range } from 'es-toolkit';
 import IndexLabel from './IndexLabel';
 import MatrixButton from './MatrixButton';
 import { getDefaultCellCallback, getDefaultColCallback, getDefaultRowCallback } from './callbacks';

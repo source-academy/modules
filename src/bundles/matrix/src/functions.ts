@@ -1,5 +1,5 @@
 import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { assertFunctionOfLength, assertNumberWithinRange, isFunctionOfLength, isNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+import { assertFunctionOfLength, assertNumberWithinRange, isFunctionOfLength, isNumberWithinRange, wrapFunction } from '@sourceacademy/modules-lib/utilities';
 import { head, is_pair, pair, tail, type List, type Pair } from 'js-slang/dist/stdlib/list';
 import { Matrix, type CellCallback } from './types';
 
@@ -38,9 +38,11 @@ export const MAX_COLS: number = 256;
  * Creates a 2D matrix with the given number of rows and columns
  * @param rows Number of rows between 1 and {@link MAX_ROWS}
  * @param cols Number of columns between 1 and {@link MAX_COLS}
+ * @param name Optional name for the matrix
  * @returns Matrix
+ * @function
  */
-export function create_matrix(rows: number, cols: number, name: string | undefined): Matrix {
+export const create_matrix = wrapFunction((rows: number, cols: number, name?: string): Matrix => {
   assertNumberWithinRange(rows, create_matrix.name, 1, MAX_ROWS, true, 'rows');
   assertNumberWithinRange(cols, create_matrix.name, 1, MAX_COLS, true, 'cols');
 
@@ -69,7 +71,7 @@ export function create_matrix(rows: number, cols: number, name: string | undefin
     cols,
     [],
   );
-}
+}, 1);
 
 /**
  * Creates a copy of an existing matrix. The copy will not have the existing's registered buttons
