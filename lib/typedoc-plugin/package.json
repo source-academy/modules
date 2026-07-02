@@ -11,13 +11,13 @@
   "devDependencies": {
     "@sourceacademy/modules-repotools": "workspace:^",
     "@types/node": "^24.0.0",
-    "js-slang": "^1.0.94",
+    "js-slang": "catalog:",
     "typedoc": "^0.28.18",
     "typescript": "^6.0.2",
     "vitest": "catalog:"
   },
   "peerDependencies": {
-    "js-slang": "^1.0.93",
+    "js-slang": "*",
     "typedoc": "^0.28.18"
   },
   "exports": {

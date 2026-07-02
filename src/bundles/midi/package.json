@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
-    "js-slang": "^1.0.94"
+    "js-slang": "catalog:"
   },
   "type": "module",
   "scripts": {

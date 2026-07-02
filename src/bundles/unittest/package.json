@@ -5,7 +5,7 @@
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
     "es-toolkit": "^1.44.0",
-    "js-slang": "^1.0.94"
+    "js-slang": "catalog:"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
