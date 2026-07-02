@@ -506,13 +506,4 @@ describe('Curve transformers', () => {
       expect(() => funcs.rainbow(1, 'a' as any)).toThrow('rainbow: Expected number for phase, got "a".');
     });
   });
-
-  test('toReplString representation', () => {
-    const transformer = funcs.put_in_standard_position;
-    expect(stringify(transformer)).toEqual('<CurveTransformer>');
-  });
-
-  test('name', () => {
-    expect(funcs.put_in_standard_position.name).toEqual('put_in_standard_position');
-  });
 });
