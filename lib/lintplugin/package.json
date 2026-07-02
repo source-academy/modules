@@ -16,7 +16,7 @@
   "peerDependencies": {
     "@eslint/markdown": "^7.0.0",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "@vitest/eslint-plugin": "catalog:",
+    "@vitest/eslint-plugin": "*",
     "eslint": ">=9",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsdoc": "^62.0.0",

@@ -217,13 +217,13 @@ describe('Project conversion and validation', async () => {
     expect(project).toBeTruthy();
   });
 
-  test.skipIf(!project)('Validation', () => {
+  test('Validation', () => {
     app.validate(project!);
 
     const log = vi.mocked(logger.log);
     const warningCalls = log.mock.calls.filter(([, level]) => level >= td.LogLevel.Warn);
 
-    expect(warningCalls).toHaveLength(5);
+    expect(warningCalls).toHaveLength(6);
 
     for (const [, level] of warningCalls) {
       expect(level).toEqual(td.LogLevel.Warn);
@@ -237,9 +237,10 @@ describe('Project conversion and validation', async () => {
     expect(messages).toContain('indirectFuncTagMissing is typed as a Variable, but function signatures were detected. Did you forget a @function tag?');
     expect(messages).toContain('invalidCodeExample has an example tag that did not validate:\n \r\n/ 10\r\n');
     expect(messages).toContain('Function multiSignatures has more than 1 signature; only using the first one');
+    expect(messages).toContain('Detected type_map in output. Did you forget to add a @hidden tag?');
   });
 
-  describe.skipIf(!project)('Project output', () => {
+  describe('Project output', () => {
     test('Regular boolean type guard return types are changed', () => {
       const child = project!.getChildByName('typeGuard');
       assert(child !== undefined, 'Could not find typeGuard declaration!');
