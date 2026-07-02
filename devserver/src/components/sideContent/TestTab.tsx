@@ -21,7 +21,7 @@ const testTabContent: SideContentTab = {
   id: 'test',
   label: 'Welcome to the tab development server!',
   iconName: IconNames.LabTest,
-  body: <TestTab/ >
+  body: <TestTab />
 };
 
 export default testTabContent;
