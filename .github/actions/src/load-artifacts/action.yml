@@ -4,15 +4,15 @@ description: This action is mainly intended for loading all of the compiled asse
 inputs:
   load-tabs:
     required: false
-    default: false
+    default: 'false'
 
   load-bundles:
     required: false
-    default: false
+    default: 'false'
 
   load-manifest:
     required: false
-    default: false
+    default: 'false'
 
 runs:
   using: node24
