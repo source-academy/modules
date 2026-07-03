@@ -13,7 +13,7 @@
     "spellcheck": "cspell --config ./cspell.config.js src"
   },
   "dependencies": {
-    "@shikijs/vitepress-twoslash": "^2.1.0",
+    "@shikijs/vitepress-twoslash": "^4.0.0",
     "@sourceacademy/bundle-curve": "workspace:^",
     "@sourceacademy/bundle-rune": "workspace:^",
     "@sourceacademy/bundle-sound": "workspace:^",
