@@ -227,8 +227,8 @@ test('Matches snapshot', () => {
 > };
 > ```
 >
-> Then in your `body` function, you can use a non-null assertion. 
-> 
+> Then in your `body` function, you can use a non-null assertion.
+>
 > ```tsx twoslash
 > // @jsx: react-jsx
 > import type { DebuggerContext } from '@sourceacademy/modules-lib/types';

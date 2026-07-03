@@ -241,6 +241,7 @@ export default defineConfig(
     ignores: ['**/*.md/**/*.{js,ts,tsx}'],
     plugins: {
       import: importPlugin,
+      jsdoc: jsdocPlugin,
       '@sourceacademy': saLintPlugin
     },
     rules: {

@@ -229,7 +229,7 @@ export function createWorld(
  * @param length The length of the cuboid in meters
  * @param height The height of the cuboid in meters
  * @param mass The mass of the cuboid in kg
- * @param color The color of the cuboid. Can be a hex code or a string. {@see https://threejs.org/docs/#api/en/math/Color}
+ * @param color The color of the cuboid. Can be a hex code or a string. See {@link https://threejs.org/docs/#api/en/math/Color}
  * @param bodyType "rigid" or "dynamic". Determines if the cuboid is fixed or can move.
  * @returns Cuboid
  *

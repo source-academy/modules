@@ -26,9 +26,9 @@ class Unity3DTab extends React.Component<Props> {
     if (currentTargetFrameRate > 30 && currentTargetFrameRate <= 60) {
       highFPSWarning = <div style={{ color: 'yellow' }}>[Warning] You are using a target FPS higher than default value (30). Higher FPS will lead to more cost in your device&apos;s resources such as GPU, increace device temperature and battery usage and may even lead to browser not responding, crash the browser or even crash your operation system if your device really can not endure the high resource cost.</div>;
     } else if (currentTargetFrameRate > 60 && currentTargetFrameRate <= 120) {
-      highFPSWarning = <div style={{ color: 'red' }}>[!!WARNING!!] You are using a target FPS that is extremely high. This FPS may lead to large cost in your device&apos;s resources such as GPU, significantly increace device temperature and battery usage and have a large chance of making browser not responding, crash the browser or even crash your operation system if your device&apos;s performance is not enough.<br/><br/> ***ARE YOU REALLY CONFIDENT ABOUT THE PERFORMANCE OF YOUR OWN DEVICE?***</div>;
+      highFPSWarning = <div style={{ color: 'red' }}>[!!WARNING!!] You are using a target FPS that is extremely high. This FPS may lead to large cost in your device&apos;s resources such as GPU, significantly increace device temperature and battery usage and have a large chance of making browser not responding, crash the browser or even crash your operation system if your device&apos;s performance is not enough.<br /><br /> ***ARE YOU REALLY CONFIDENT ABOUT THE PERFORMANCE OF YOUR OWN DEVICE?***</div>;
     } else {
-      highFPSWarning = <div/>;
+      highFPSWarning = <div />;
     }
 
     const dimensionMode = instance.dimensionMode;
@@ -36,12 +36,12 @@ class Unity3DTab extends React.Component<Props> {
       <div>
         <p>Click the button below to open the Unity Academy Window filling the page.</p>
         <p><b>Current Mode: {dimensionMode === '3d' ? '3D' : '2D'}</b></p>
-        <br/>
+        <br />
         <p><b>Remember always terminate the Unity Academy application when you completely finish programming with this module</b> to clean up the engine and free up memory.</p>
         <p>Otherwise it may lead to a potential waste to your device&apos;s resources (such as RAM) and battery.</p>
-        <br/>
+        <br />
         <p><b>Note that you need to use a <u>&apos;Native&apos;</u> variant of Source language in order to use this module.</b> If any strange error happens when using this module, please check whether you are using the &apos;Native&apos; variant of Source language or not.</p>
-        <br/>
+        <br />
         <Button
           icon='send-to'
           active={true}
@@ -50,8 +50,8 @@ class Unity3DTab extends React.Component<Props> {
           }}
           text="Open Unity Academy Embedded Frontend"
         />
-        <br/>
-        <br/>
+        <br />
+        <br />
         <p>If the frame rate is low when you are using Unity Academy with the default resolution, try using Unity Academy with 50% resolution here:</p>
         <p>50% resolution will display Unity Academy in a smaller area with lower quality and less detailed graphics but requires less device (especially GPU) performance than the default resolution.</p>
         <Button
@@ -62,8 +62,8 @@ class Unity3DTab extends React.Component<Props> {
           }}
           text="Open with 50% resolution"
         />
-        <br/>
-        <br/>
+        <br />
+        <br />
         <p>Target (Maximum) Frame Rate (Frames Per Second): </p>
         <div style={{ display: 'inline-flex' }}>
           <NumericInput
@@ -119,13 +119,13 @@ class Unity3DTab extends React.Component<Props> {
         </div>
         <p>The actual frame rate depends on your device&apos;s performance.</p>
         {highFPSWarning}
-        <br/>
+        <br />
         <div>Code Examples: <a href={`${UNITY_ACADEMY_BACKEND_URL}code_examples.html`} rel="noopener noreferrer" target="_blank" >Click Here</a></div>
         <div>3D Prefab Information: <a href={`${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles/prefab_info.html`} rel="noopener noreferrer" target="_blank" >Click Here</a>{dimensionMode === '2d' && ' (You need 3D mode to use prefabs.)'}</div>
-        <br/>
+        <br />
         <div>Please note that before using Unity Academy and this module, you must agree to our <a href={`${UNITY_ACADEMY_BACKEND_URL}user_agreement.html`} rel="noopener noreferrer" target="_blank" >User Agreement</a></div>
-        <br/>
-        {instance.getUserAgreementStatus() === 'new_user_agreement' && <div><b>The User Agreement has updated.</b><br/></div>}
+        <br />
+        {instance.getUserAgreementStatus() === 'new_user_agreement' && <div><b>The User Agreement has updated.</b><br /></div>}
         <Checkbox label="I agree to the User Agreement" inputRef={(e) => {
           if (e !== null) {
             e.checked = instance.getUserAgreementStatus() === 'agreed';

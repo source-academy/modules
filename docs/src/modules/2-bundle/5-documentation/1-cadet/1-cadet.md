@@ -16,6 +16,70 @@ By reading comments and type annotations, `typedoc` is able to generate both hum
 Your documentation should be comprehensive and detailed such that someone with no experience with your bundle will be able to learn and use the its
 functionalities from scratch.
 
+## Rendered Output
+
+There are two kinds of documentation that gets rendered:
+
+### HTML Documentation
+
+The human readable documentation resides in the `build/documentation` folder. You can view its output [here](https://source-academy.github.io/modules/documentation). This is what the output for `make_point` looks like:
+
+![image](./htmlDocs.png)
+
+The description block supports formatting using Markdown. The markdown is translated into HTML during building.
+
+> [!TIP] Previews via IntelliSense
+>
+> If you are using VSCode, IntelliSense does pretty good job of showing you how your documentation will look like when rendered as HTML.
+> Of course, the theme and layouts are different, but the rendering from markdown to HTML (including the different tags) should be the same.
+>
+> There will be some differences, since Typedoc and VSCode aren't identical in terms of the documentation features they support.
+
+### JSON Documentation
+
+To provide the frontend with documentation that can be directly displayed to the user, each module has its own json file in the `jsons` folder containing the formatted descriptions of exported variables.
+Using the example code above, here is what the JSON documentation looks like for the `make_point` function from the `curve` bundle:
+
+```jsonc
+{
+  "make_point": {
+    "kind": "function",
+    "name": "make_point",
+    "description": "<p>Makes a Point with given x and y coordinates.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "x"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "y"
+      }
+    ],
+    "retType": "Point"
+  },
+  // ...other functions and constants
+}
+```
+
+This is then displayed by the frontend:
+
+![image](./sourceDocs.png)
+
+When building the json documentation for a bundle, the following steps are taken:
+
+1. From `typedoc`'s output, extract the [project](https://typedoc.org/api/classes/ProjectReflection.html) corresponding to the bundle.
+1. For each exported variable, run it through a converter to convert the `typedoc` project into a single string:
+    - For constants, their names and types are extracted
+    - For functions, their name, the names and types of each parameter, and return types are extracted.\
+    The descriptions of both functions are constants are also included, but first they are passed through a Markdown to HTML converter called [drawdown](https://github.com/adamvleggett/drawdown), included in this project as `drawdown.ts`
+1. The code then converts it to the HTML format expected by the frontend
+1. All the processed strings then get written to a json file in the `jsons` folder.
+
+If no documentation could be found, or there was an error parsing the documented code, the system will still output JSONs, just with warnings.
+
 ## Writing Documentation
 
 `typedoc` reads both Typescript type annotations, as well as [TSDOC](https://tsdoc.org) style comments. It will build documentation for all functions and constants exported by the particular bundle's entry point.
@@ -119,7 +183,7 @@ export function foo(p1: string, p2: string) {
 > ```
 >
 > and `RenderFunction` has the following type:
-> 
+>
 > ```ts
 > // curve/types.ts
 > /**
@@ -135,7 +199,7 @@ export function foo(p1: string, p2: string) {
 > Typedoc won't consider `draw_connected` to be a function. Instead it will consider it to be a variable:
 >
 > ![](./drawConst.png)
-> 
+>
 > This is because `drawConnected` is of type `RenderFunction` and `RenderFunction` is only _function-like_.
 > To remedy this, you can either change the type to be an actual function type, or include the `@function` tag in your documentation:
 >
@@ -156,13 +220,13 @@ export function foo(p1: string, p2: string) {
 >  */
 > export const draw_connected = createDrawFunction('none', 'lines', '2D', false);
 > ```
->  
->  The export will now be correctly recognized as a function:
 >
->  ![](./drawFunc.png)
->  
->  The buildtools are configured to emit a warning if a variable is detected to have function signatures but cannot automatically rectify
->  this problem.
+> The export will now be correctly recognized as a function:
+>
+> ![](./drawFunc.png)
+>
+> The buildtools are configured to emit a warning if a variable is detected to have function signatures but cannot automatically rectify
+> this problem.
 
 ### Variables/Constants
 
@@ -178,29 +242,55 @@ const PI: number = 3.14159;
 Also similar to function return types and parameters, because the types of variables is determined by the Typescript compiler, it is unnecessary
 to use the `@type` tag here.
 
-### `@hidden`
+### `@category`
 
-If there are exports you want hidden from the output of the documentation, you must use the `@hidden` tag.
+If you have a large number of exports, it would be easier for cadets to navigate your bundle's documentation if you sorted your exports into different categories.
 
-The example below is taken from the `rune` bundle:
+This is done with the `@category` tag.
 
-```ts
-// rune/src/type_map.ts
-import createTypeMap from '@sourceacademy/modules-lib/type_map';
-
-const typeMapCreator = createTypeMap();
-
-export const { functionDeclaration, variableDeclaration, classDeclaration } = typeMapCreator;
-
-/** @hidden */
-export const type_map = typeMapCreator.type_map;
+```ts {4}
+/**
+ * Returns a boolean value indicating whether the given value is a {@link NoteWithOctave|note name with octave}.
+ * @function
+ * @category Main
+ */
+export function is_note_with_octave(value: unknown): value is NoteWithOctave {
+  const res = parseNoteWithOctave(value);
+  return res !== null;
+}
 ```
 
-This causes `type_map` to be removed from the documentation, even if it is exported from `rune/src/index.ts`.
+Then when the HTML documentation is rendered, it will be located within a separate folder:
+![](./categories.png)
 
-> [!WARNING]
-> Bundle `type_map`s are supposed to be internal implementation details hidden from users. If you forget to apply a `@hidden` tag to
-> your bundle's type map export, the build tools will show a warning.
+Notice the "Other" category. This is the default category that your exports will get sorted into if it has no
+category specified.
+
+### `@defaultValue`
+
+By default, Typedoc renders the expression that you used to initialize a variable with:
+
+![](./defaultValue1.png)
+
+This might cause implementation details to be exposed (such as in the example above). Often, only the _type_ of the value matters, not its exact value. Thus, this behaviour is automatically disabled and variables are only rendered with their type:
+
+![](./defaultValue2.png)
+
+If you wish to retain the default behaviour, you can include the `@defaultValue` tag. Note that this tag should be left empty:
+
+```ts {8}
+/**
+ * This function is a Curve transformation: a function from a Curve to a Curve.
+ * The points of the result Curve are the same points as the points of the
+ * original Curve, but in reverse: The result Curve applied to 0 is the original
+ * Curve applied to 1 and vice versa.
+ *
+ * @param original original Curve
+ * @defaultValue
+ * @returns result Curve
+ */
+export const invert = CurveFunctions.invert;
+```
 
 ### `@example`
 
@@ -285,56 +375,107 @@ Using a code block makes it clear exactly what is intended to be part of your ex
 During documentation generation, the code in your code block will be parsed by a Typescript parser to ensure that you have written
 valid Typescript code. It will print a warning message if your example code doesn't produce syntactically valid Typescript.
 
-### `@defaultValue`
+### `@internal` and `@hidden`
 
-By default, Typedoc renders the expression that you used to initialize a variable with:
+Both tags are used to exclude exports from the output of the documentation. `@internal` is used to mark
+things that should be hidden from cadets, but still need to be visible to developers (for example, you might
+want to hide something from cadet code but export it for other bundles to use).
 
-![](./defaultValue1.png)
+`@hidden` is used to hide something entirely (for example, a variable that is intended only to be visible from within
+your bundle).
 
-This might cause implementation details to be exposed (such as in the example above). Often, only the _type_ of the value matters, not its exact value. Thus, this behaviour is automatically disabled and variables are only rendered with their type:
+The example below is taken from the `rune` bundle:
 
-![](./defaultValue2.png)
+```ts
+// rune/src/type_map.ts
+import createTypeMap from '@sourceacademy/modules-lib/type_map';
 
-If you wish to retain the default behaviour, you can include the `@defaultValue` tag. Note that this tag should be left empty:
+const typeMapCreator = createTypeMap();
 
-```ts {8}
+export const { functionDeclaration, variableDeclaration, classDeclaration } = typeMapCreator;
+
+/** @internal */
+export const type_map = typeMapCreator.type_map;
+```
+
+This causes `type_map` to be removed from the documentation, even if it is exported from `rune/src/index.ts`.
+
+> [!WARNING]
+> Bundle `type_map`s are supposed to be internal implementation details hidden from users. If you forget to hide
+> your bundle's type map export, the build tools will show a warning.
+>
+
+### `@link`
+
+`@link` tags are used inline to create navigable hyperlinks. Here is an example from the `robot_simulation` bundle:
+
+```ts
 /**
- * This function is a Curve transformation: a function from a Curve to a Curve.
- * The points of the result Curve are the same points as the points of the
- * original Curve, but in reverse: The result Curve applied to 0 is the original
- * Curve applied to 1 and vice versa.
+ * Creates a cuboid. joel-todo: The dynamic version wont work
  *
- * @param original original Curve
- * @defaultValue
- * @returns result Curve
+ * This function is used to create the {@link createFloor | floor} and {@link createWall | wall} controllers.
+ *
+ * The returned Cuboid object is designed to be added to the world using {@link addControllerToWorld}.
+ *
+ * **This is a Controller function and should be called within {@link init_simulation}.**
+ *
+ * @param physics The physics engine passed to the world
+ * @param renderer  The renderer engine of the world. See {@link createRenderer}
+ * @param position_x The x position of the cuboid
+ * @param position_y The y position of the cuboid
+ * @param position_z The z position of the cuboid
+ * @param width The width of the cuboid in meters
+ * @param length The length of the cuboid in meters
+ * @param height The height of the cuboid in meters
+ * @param mass The mass of the cuboid in kg
+ * @param color The color of the cuboid. Can be a hex code or a string. See {@link https://threejs.org/docs/#api/en/math/Color}
+ * @param bodyType "rigid" or "dynamic". Determines if the cuboid is fixed or can move.
+ * @returns Cuboid
+ *
+ * @example
+ * ```
+ * init_simulation(() => {
+ *   const physics = createPhysics();
+ *   const renderer = createRenderer();
+ *   const timer = createTimer();
+ *   const robot_console = createRobotConsole();
+ *   const world = createWorld(physics, renderer, timer, robot_console);
+ *
+ *   const cuboid = createCuboid();
+ *   addControllerToWorld(cuboid, world);
+ *
+ *   return world;
+ * });
+ * ```
+ *
+ * @category Controller
  */
-export const invert = CurveFunctions.invert;
 ```
 
+This is the rendered output:
 
-### `@category`
+![](./createCuboid.png)
 
-If you have a large number of exports, it would be easier for cadets to navigate your bundle's documentation if you sorted your exports into different categories.
+As seen above, you can link directly to declarations (functions, variables, types etc...) or to external websites. You can also provide alternate
+text for links. Typedoc's rendering behaviour is describe in detail [here](https://typedoc.org/documents/Tags.__link_.html).
 
-This is done with the `@category` tag.
-
-```ts {4}
-/**
- * Returns a boolean value indicating whether the given value is a {@link NoteWithOctave|note name with octave}.
- * @function
- * @category Main
- */
-export function is_note_with_octave(value: unknown): value is NoteWithOctave {
-  const res = parseNoteWithOctave(value);
-  return res !== null;
-}
-```
-
-Then when the HTML documentation is rendered, it will be located within a separate folder:
-![](./categories.png)
-
-Notice the "Other" category. This is the default category that your exports will get sorted into if it has no
-category specified.
+> [!TIP] Typedoc Resolution Errors
+>
+> Typedoc sometimes complains that it can't find the thing you're linking to:
+>
+> ```txt
+> [warning (curve)] Failed to resolve link to "scale" in comment for curve
+> ```
+>
+> Typedoc lets you customize how these symbols get resolved using the system described in the link above, but sometimes you just need to add
+> a single exclamation mark to tell Typedoc to look within your current module to find that export:
+>
+> ```ts
+> /**
+>  * A *curve transformation* is a function that takes a curve as argument and
+>  * returns a curve. Examples of curve transformations are {@link !scale} and {@link !translate}.
+>  */
+> ```
 
 ### Other Tags
 
@@ -348,57 +489,6 @@ to the best of your ability to help make your documentation as comprehensive as 
 > If you want to use a Typedoc supported tag that hasn't been configured for use, you can simply modify the `jsdoc/check-tag-names`
 > rule to include your tag.
 
-## HTML Documentation
-
-The human readable documentation resides in the `build/documentation` folder. You can view its output [here](https://source-academy.github.io/modules/documentation). This is what the output for `make_point` looks like:
-
-![image](./htmlDocs.png)
-
-The description block supports formatting using Markdown. The markdown is translated into HTML during building.
-
-## JSON Documentation
-
-To provide the frontend with documentation that can be directly displayed to the user, each module has its own json file in the `jsons` folder containing the formatted descriptions of exported variables.
-Using the example code above, here is what the JSON documentation looks like for the actual `curve` bundle:
-
-```jsonc
-{
-  "make_point": {
-    "kind": "function",
-    "name": "make_point",
-    "description": "<p>Makes a Point with given x and y coordinates.</p>",
-    "params": [
-      [
-        "x",
-        "number"
-      ],
-      [
-        "y",
-        "number"
-      ]
-    ],
-    "retType": "Point"
-  },
-  // ...other functions and constants
-}
-```
-
-This is then displayed by the frontend:
-
-![image](./sourceDocs.png)
-
-When building the json documentation for a bundle, the following steps are taken:
-
-1. From `typedoc`'s output, extract the [project](https://typedoc.org/api/classes/ProjectReflection.html) corresponding to the bundle.
-1. For each exported variable, run it through a converter to convert the `typedoc` project into a single string:
-    - For constants, their names and types are extracted
-    - For functions, their name, the names and types of each parameter, and return types are extracted.\
-    The descriptions of both functions are constants are also included, but first they are passed through a Markdown to HTML converter called [drawdown](https://github.com/adamvleggett/drawdown), included in this project as `drawdown.ts`
-1. The code then converts it to the HTML format expected by the frontend
-1. All the processed strings then get written to a json file in the `jsons` folder.
-
-If no documentation could be found, or there was an error parsing the documented code, the system will still output JSONs, just with warnings.
-
 ## Code Samples
 
 You can include "sample" files that are written in Javascript. These files can be used as part of documentation but are not intended to be included during compilation or
@@ -407,7 +497,44 @@ used by Source users. Refer to the `csg` bundle for an example of this. Usually,
 These files aren't automatically included by Typedoc, but Typedoc does have [a mechanism](https://typedoc.org/documents/External_Documents.html) for including external code. Alternatively, a simple solution
 would be to provide a link to the Github folder in which your sample files are contained.
 
-## Other Typedoc Options
+## Custom Typedoc Configuration
 
 `typedoc` options can be specified in the `"typedocOptions"` section of your `tsconfig.json`. Unfortunately, we cannot support dynamic configurations (like those loaded using a Javascript file)
 at the moment.
+
+> [!TIP] Fixing the Unexported Warning
+>
+> One use you might have for customizing your Typedoc configuration is fixing warnings produced by Typedoc:
+>
+> Since type aliases and custom classes shouldn't be exported, Typedoc will emit warnings telling you that those types aren't being included in the documentation:
+>
+> ```txt
+> [warning (sound)] The comment for letter_name_to_frequency links to "NoteWithOctave|note name" which was resolved but is not included in the documentation. To fix this warning export it or add { "@sourceacademy/bundle-midi": { "NoteWithOctave": "#" }} to the externalSymbolLinkMappings option
+> [warning (sound)] The comment for midi_note_to_frequency links to "MIDINote|MIDI note" which was resolved but is not included in the documentation. To fix this warning export it or add { "@sourceacademy/bundle-midi": { "MIDINote": "#" }} to the externalSymbolLinkMappings option
+> ```
+>
+> To fix this, you can mark those entries as intentionally unresolved as described [here](https://typedoc.org/documents/Options.Comments.html#externalsymbollinkmappings) by
+> adding the option to the `tsconfig.json` (which is actually the solution suggested in the console):
+>
+> ```jsonc {11-19}
+> // tsconfig for sound bundle
+> {
+>   "extends": "../tsconfig.json",
+>   "include": [
+>     "./src"
+>   ],
+>   "compilerOptions": {
+>     "outDir": "./dist",
+>     "rootDir": "./src"
+>   },
+>   "typedocOptions": {
+>     "name": "sound",
+>     "externalSymbolLinkMappings": {
+>       "@sourceacademy/bundle-midi": {
+>         "MIDINote": "#",
+>         "NoteWithOctave": "#"
+>       }
+>     }
+>   }
+> }
+> ```

@@ -58,3 +58,5 @@ export const indirectFuncTagMissing = hiddenFunction;
 export interface CustomType {
   prop: string;
 }
+
+export const type_map = {};

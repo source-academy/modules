@@ -8,6 +8,13 @@
     "rootDir": "./src"
   },
   "typedocOptions": {
-    "name": "midi"
+    "name": "midi",
+    "externalSymbolLinkMappings": {
+      "@sourceacademy/bundle-midi": {
+        "MIDINote": "#",
+        "NoteWithOctave": "#",
+        "Note": "#"
+      }
+    }
   }
 }

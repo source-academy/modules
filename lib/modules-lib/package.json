@@ -5,10 +5,10 @@
   "type": "module",
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-react": "^6.0.1",
-    "@vitest/browser-playwright": "4.1.5",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "^6.0.3",
+    "@vitest/browser-playwright": "catalog:",
     "eslint": "^9.35.0",
     "playwright": "^1.55.1",
     "typedoc": "^0.28.9",
@@ -16,7 +16,7 @@
     "typedoc-plugin-markdown": "^4.7.0",
     "typedoc-plugin-rename-defaults": "^0.7.3",
     "typescript": "^6.0.2",
-    "vitest": "4.1.5",
+    "vitest": "catalog:",
     "vitest-browser-react": "^2.1.0"
   },
   "exports": {
@@ -33,9 +33,9 @@
   "dependencies": {
     "@blueprintjs/core": "^6.0.0",
     "es-toolkit": "^1.44.0",
-    "js-slang": "^1.0.93",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "js-slang": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "scripts-info": {
     "docs": "Build the documentation for documentation server using Typedoc"

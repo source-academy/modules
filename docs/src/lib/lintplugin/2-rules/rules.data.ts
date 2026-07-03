@@ -10,7 +10,7 @@ export default {
     return Object.entries(lintPlugin.rules).reduce<RuleInfo[]>((res, [name, rule]) => {
       return [
         ...res,
-        { name, desc:  rule.meta?.docs?.description ?? '' }
+        { name, desc: rule.meta?.docs?.description ?? '' }
       ];
     }, []);
   }

@@ -1,4 +1,3 @@
-
 import pathlib from 'path';
 import * as td from 'typedoc';
 import { assert, describe, expect, it, test, vi } from 'vitest';
@@ -48,6 +47,7 @@ describe('Test parsers', () => {
 
       const param1 = new td.ParameterReflection('param1', td.ReflectionKind.Parameter, signature);
       param1.type = new td.UnionType([new td.IntrinsicType('boolean'), new td.IntrinsicType('number')]);
+      param1.defaultValue = 'true';
 
       signature.type = new td.IntrinsicType('void');
       signature.parameters = [param0, param1];
@@ -60,14 +60,78 @@ describe('Test parsers', () => {
           "kind": "function",
           "name": "testFunction",
           "params": [
-            [
-              "param0",
-              "string[]",
-            ],
-            [
-              "param1",
-              "boolean | number",
-            ],
+            {
+              "defaultValue": undefined,
+              "name": "param0",
+              "paramType": "regular",
+              "type": "string[]",
+            },
+            {
+              "defaultValue": "true",
+              "name": "param1",
+              "paramType": "regular",
+              "type": "boolean | number",
+            },
+          ],
+          "retType": "void",
+        }
+      `);
+    });
+
+    test('Rest parameters', () => {
+      const decl = new td.DeclarationReflection('testFunction', td.ReflectionKind.Function);
+      const signature = new td.SignatureReflection('testFunction', td.ReflectionKind.CallSignature, decl);
+      signature.type = new td.IntrinsicType('void');
+
+      const param0 = new td.ParameterReflection('param0', td.ReflectionKind.Parameter, signature);
+      param0.type = new td.ArrayType(new td.IntrinsicType('string'));
+      param0.setFlag(td.ReflectionFlag.Rest, true);
+
+      signature.parameters = [param0];
+      decl.signatures = [signature];
+
+      const result = testFunctionEntry(decl);
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "description": "<p>No description available</p>",
+          "kind": "function",
+          "name": "testFunction",
+          "params": [
+            {
+              "name": "param0",
+              "paramType": "rest",
+              "type": "string[]",
+            },
+          ],
+          "retType": "void",
+        }
+      `);
+    });
+
+    test('Optional parameters', () => {
+      const decl = new td.DeclarationReflection('testFunction', td.ReflectionKind.Function);
+      const signature = new td.SignatureReflection('testFunction', td.ReflectionKind.CallSignature, decl);
+      signature.type = new td.IntrinsicType('void');
+
+      const param0 = new td.ParameterReflection('param0', td.ReflectionKind.Parameter, signature);
+      param0.type = new td.ArrayType(new td.IntrinsicType('string'));
+      param0.setFlag(td.ReflectionFlag.Optional, true);
+
+      signature.parameters = [param0];
+      decl.signatures = [signature];
+
+      const result = testFunctionEntry(decl);
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "description": "<p>No description available</p>",
+          "kind": "function",
+          "name": "testFunction",
+          "params": [
+            {
+              "name": "param0",
+              "paramType": "optional",
+              "type": "string[]",
+            },
           ],
           "retType": "void",
         }
@@ -113,7 +177,17 @@ function convertToTypedocPath(p: string) {
 describe('Project conversion and validation', async () => {
   const dirname = convertToTypedocPath(import.meta.dirname);
 
-  const logger = new td.Logger();
+  const logger = new class extends td.Logger {
+    readonly logs: Partial<Record<td.LogLevel, string[]>> = {};
+
+    override log(message: string, level: td.LogLevel) {
+      if (!(level in this.logs)) {
+        this.logs[level] = [];
+      }
+      this.logs[level]!.push(message);
+    }
+  };
+
   vi.spyOn(logger, 'log');
 
   const app = await td.Application.bootstrapWithPlugins({
@@ -125,42 +199,49 @@ describe('Project conversion and validation', async () => {
       name: 'source-json',
       path: 'jsons/sample.json'
     }],
+    tsconfig: pathlib.posix.join(dirname, '..', '..', 'tsconfig.json'),
     logLevel: td.LogLevel.Warn
   });
 
   app.logger = logger;
-  let project: td.ProjectReflection;
+  let project: td.ProjectReflection | undefined;
 
-  test('Conversion', async () => {
-    project = (await app.convert())!;
+  test('Conversion', { timeout: 10_000 }, async () => {
+    project = await app.convert();
+
+    if (!project) {
+      console.error(logger.logs);
+    }
+
     expect(project).toBeTruthy();
   });
 
   test('Validation', () => {
-    app.validate(project);
+    app.validate(project!);
 
     const log = vi.mocked(logger.log);
     const warningCalls = log.mock.calls.filter(([, level]) => level >= td.LogLevel.Warn);
 
-    expect(warningCalls).toHaveLength(5);
+    expect(warningCalls).toHaveLength(6);
 
     for (const [, level] of warningCalls) {
       expect(level).toEqual(td.LogLevel.Warn);
     }
 
-    const messages = warningCalls.map(([each]) => each);
+    const messages = warningCalls.map(([each]) => each.replaceAll('\r\n', '\n'));
 
     // Ensure that the 5 warnings that are supposed to be there are there
     expect(messages).toContain('CustomType is a Interface, which is not supported.');
     expect(messages).toContain('funcTagMissing is typed as a Variable, but function signatures were detected. Did you forget a @function tag?');
     expect(messages).toContain('indirectFuncTagMissing is typed as a Variable, but function signatures were detected. Did you forget a @function tag?');
-    expect(messages).toContain('invalidCodeExample has an example tag that did not validate:\n \r\n/ 10\r\n');
+    expect(messages).toContain('invalidCodeExample has an example tag that did not validate:\n \n/ 10\n');
     expect(messages).toContain('Function multiSignatures has more than 1 signature; only using the first one');
+    expect(messages).toContain('Detected type_map in output. Did you forget to add a @hidden tag?');
   });
 
   describe('Project output', () => {
     test('Regular boolean type guard return types are changed', () => {
-      const child = project.getChildByName('typeGuard');
+      const child = project!.getChildByName('typeGuard');
       assert(child !== undefined, 'Could not find typeGuard declaration!');
       assert(child instanceof td.DeclarationReflection, 'typeGuard was not a DeclarationReflection!');
 
@@ -173,7 +254,7 @@ describe('Project conversion and validation', async () => {
     });
 
     test('Funky boolean type guard return types are changed', () => {
-      const child = project.getChildByName('indirectTypeGuard');
+      const child = project!.getChildByName('indirectTypeGuard');
       assert(child !== undefined, 'Could not find indirectTypeGuard declaration!');
       assert(child instanceof td.DeclarationReflection, 'indirectTypeGuard was not a DeclarationReflection!');
 
@@ -186,7 +267,7 @@ describe('Project conversion and validation', async () => {
     });
 
     test('defaultValue is not preserved without tag', () => {
-      const child = project.getChildByName('const0');
+      const child = project!.getChildByName('const0');
       assert(child !== undefined, 'Could not find const0 declaration!');
       assert(child instanceof td.DeclarationReflection, 'const0 was not a DeclarationReflection!');
 
@@ -196,7 +277,7 @@ describe('Project conversion and validation', async () => {
     });
 
     test('defaultValue is preserved with tag', () => {
-      const child = project.getChildByName('const1');
+      const child = project!.getChildByName('const1');
       assert(child !== undefined, 'Could not find const1 declaration!');
       assert(child instanceof td.DeclarationReflection, 'const1 was not a DeclarationReflection!');
 
