@@ -18,7 +18,7 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^6.0.0"
   },
   "scripts": {
     "build": "buildtools build bundle .",
