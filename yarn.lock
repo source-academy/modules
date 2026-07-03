@@ -2315,7 +2315,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/core@npm:^1.0.1, @eslint/core@npm:^1.1.0":
+"@eslint/core@npm:^1.0.1":
   version: 1.1.0
   resolution: "@eslint/core@npm:1.1.0"
   dependencies:
@@ -2393,17 +2393,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/plugin-kit@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "@eslint/plugin-kit@npm:0.6.0"
-  dependencies:
-    "@eslint/core": "npm:^1.1.0"
-    levn: "npm:^0.4.1"
-  checksum: 10c0/1d726338a9f4537fe2848796c44d801093ea3a99166dbc45bc6f7742fa2ad74ce0c2f114092ce4460710a9dfe5ea6e3500446f81842388bf81328c97c3a43d9d
-  languageName: node
-  linkType: hard
-
-"@eslint/plugin-kit@npm:^0.7.1":
+"@eslint/plugin-kit@npm:^0.7.0, @eslint/plugin-kit@npm:^0.7.1":
   version: 0.7.2
   resolution: "@eslint/plugin-kit@npm:0.7.2"
   dependencies:
@@ -9837,20 +9827,19 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-yml@npm:^3.3.1":
-  version: 3.3.1
-  resolution: "eslint-plugin-yml@npm:3.3.1"
+  version: 3.5.0
+  resolution: "eslint-plugin-yml@npm:3.5.0"
   dependencies:
     "@eslint/core": "npm:^1.0.1"
-    "@eslint/plugin-kit": "npm:^0.6.0"
+    "@eslint/plugin-kit": "npm:^0.7.0"
     "@ota-meshi/ast-token-store": "npm:^0.3.0"
-    debug: "npm:^4.3.2"
     diff-sequences: "npm:^29.0.0"
     escape-string-regexp: "npm:5.0.0"
     natural-compare: "npm:^1.4.0"
     yaml-eslint-parser: "npm:^2.0.0"
   peerDependencies:
     eslint: ">=9.38.0"
-  checksum: 10c0/b82e0b852db7b98f46c3aea54068a2038e209388ffa331dc45194e841273ce4154959bfec17ede43614c43eda525d1731f15678801f117b1897a10227768f6c2
+  checksum: 10c0/b9345ce6ebe7295dccf55ecabaf33461a814b3f3eee7b7c6566fc713df2dae88d720a09df25d6bb0037a14f30fc0e143a0b4aeb05c445dc3340159aa405ff94d
   languageName: node
   linkType: hard
 
