@@ -478,7 +478,7 @@ export default require => {
       exports.useTransition = function () {
         return ReactSharedInternals.H.useTransition();
       };
-      exports.version = "19.2.5";
+      exports.version = "19.2.7";
     }
   });
   var require_react_development = __commonJS({
@@ -1255,7 +1255,7 @@ export default require => {
         exports.useTransition = function () {
           return resolveDispatcher().useTransition();
         };
-        exports.version = "19.2.5";
+        exports.version = "19.2.7";
         "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
       })();
     }
@@ -16088,7 +16088,7 @@ export default require => {
       exports.useFormStatus = function () {
         return ReactSharedInternals.H.useHostTransitionStatus();
       };
-      exports.version = "19.2.5";
+      exports.version = "19.2.7";
     }
   });
   var require_react_dom_development = __commonJS({
@@ -16254,7 +16254,7 @@ export default require => {
         exports.useFormStatus = function () {
           return resolveDispatcher().useHostTransitionStatus();
         };
-        exports.version = "19.2.5";
+        exports.version = "19.2.7";
         "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
       })();
     }
@@ -26152,7 +26152,7 @@ export default require => {
         }
       };
       var isomorphicReactPackageVersion$jscomp$inline_1840 = React4.version;
-      if ("19.2.5" !== isomorphicReactPackageVersion$jscomp$inline_1840) throw Error(formatProdErrorMessage(527, isomorphicReactPackageVersion$jscomp$inline_1840, "19.2.5"));
+      if ("19.2.7" !== isomorphicReactPackageVersion$jscomp$inline_1840) throw Error(formatProdErrorMessage(527, isomorphicReactPackageVersion$jscomp$inline_1840, "19.2.7"));
       ReactDOMSharedInternals.findDOMNode = function (componentOrElement) {
         var fiber = componentOrElement._reactInternals;
         if (void 0 === fiber) {
@@ -26167,10 +26167,10 @@ export default require => {
       };
       var internals$jscomp$inline_2347 = {
         bundleType: 0,
-        version: "19.2.5",
+        version: "19.2.7",
         rendererPackageName: "react-dom",
         currentDispatcherRef: ReactSharedInternals,
-        reconcilerVersion: "19.2.5"
+        reconcilerVersion: "19.2.7"
       };
       if ("undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__) {
         hook$jscomp$inline_2348 = __REACT_DEVTOOLS_GLOBAL_HOOK__;
@@ -26208,7 +26208,7 @@ export default require => {
         listenToAllSupportedEvents(container);
         return new ReactDOMHydrationRoot(initialChildren);
       };
-      exports.version = "19.2.5";
+      exports.version = "19.2.7";
     }
   });
   var require_react_dom_client_development = __commonJS({
@@ -40403,7 +40403,7 @@ export default require => {
         };
         (function () {
           var isomorphicReactPackageVersion = React4.version;
-          if ("19.2.5" !== isomorphicReactPackageVersion) throw Error('Incompatible React versions: The "react" and "react-dom" packages must have the exact same version. Instead got:\n  - react:      ' + (isomorphicReactPackageVersion + "\n  - react-dom:  19.2.5\nLearn more: https://react.dev/warnings/version-mismatch"));
+          if ("19.2.7" !== isomorphicReactPackageVersion) throw Error('Incompatible React versions: The "react" and "react-dom" packages must have the exact same version. Instead got:\n  - react:      ' + (isomorphicReactPackageVersion + "\n  - react-dom:  19.2.7\nLearn more: https://react.dev/warnings/version-mismatch"));
         })();
         "function" === typeof Map && null != Map.prototype && "function" === typeof Map.prototype.forEach && "function" === typeof Set && null != Set.prototype && "function" === typeof Set.prototype.clear && "function" === typeof Set.prototype.forEach || console.error("React depends on Map and Set built-in types. Make sure that you load a polyfill in older browsers. https://react.dev/link/react-polyfills");
         ReactDOMSharedInternals.findDOMNode = function (componentOrElement) {
@@ -40421,10 +40421,10 @@ export default require => {
         if (!(function () {
           var internals = {
             bundleType: 1,
-            version: "19.2.5",
+            version: "19.2.7",
             rendererPackageName: "react-dom",
             currentDispatcherRef: ReactSharedInternals,
-            reconcilerVersion: "19.2.5"
+            reconcilerVersion: "19.2.7"
           };
           internals.overrideHookState = overrideHookState;
           internals.overrideHookStateDeletePath = overrideHookStateDeletePath;
@@ -40478,7 +40478,7 @@ export default require => {
           listenToAllSupportedEvents(container);
           return new ReactDOMHydrationRoot(initialChildren);
         };
-        exports.version = "19.2.5";
+        exports.version = "19.2.7";
         "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
       })();
     }
