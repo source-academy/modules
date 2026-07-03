@@ -188,7 +188,7 @@ export default require => {
       function cloneAndReplaceKey(oldElement, newKey) {
         return ReactElement(oldElement.type, newKey, oldElement.props);
       }
-      function isValidElement(object) {
+      function isValidElement2(object) {
         return "object" === typeof object && null !== object && object.$$typeof === REACT_ELEMENT_TYPE;
       }
       function escape(key) {
@@ -246,7 +246,7 @@ export default require => {
         }
         if (invokeCallback) return (callback = callback(children), invokeCallback = "" === nameSoFar ? "." + getElementKey(children, 0) : nameSoFar, isArrayImpl(callback) ? (escapedPrefix = "", null != invokeCallback && (escapedPrefix = invokeCallback.replace(userProvidedKeyEscapeRegex, "$&/") + "/"), mapIntoArray(callback, array, escapedPrefix, "", function (c) {
           return c;
-        })) : null != callback && (isValidElement(callback) && (callback = cloneAndReplaceKey(callback, escapedPrefix + (null == callback.key || children && children.key === callback.key ? "" : ("" + callback.key).replace(userProvidedKeyEscapeRegex, "$&/") + "/") + invokeCallback)), array.push(callback)), 1);
+        })) : null != callback && (isValidElement2(callback) && (callback = cloneAndReplaceKey(callback, escapedPrefix + (null == callback.key || children && children.key === callback.key ? "" : ("" + callback.key).replace(userProvidedKeyEscapeRegex, "$&/") + "/") + invokeCallback)), array.push(callback)), 1);
         invokeCallback = 0;
         var nextNamePrefix = "" === nameSoFar ? "." : nameSoFar + ":";
         if (isArrayImpl(children)) for (var i = 0; i < children.length; i++) (nameSoFar = children[i], type = nextNamePrefix + getElementKey(nameSoFar, i), invokeCallback += mapIntoArray(nameSoFar, array, escapedPrefix, type, callback)); else if ((i = getIteratorFn(children), "function" === typeof i)) for ((children = i.call(children), i = 0); !(nameSoFar = children.next()).done; ) (nameSoFar = nameSoFar.value, type = nextNamePrefix + getElementKey(nameSoFar, i++), invokeCallback += mapIntoArray(nameSoFar, array, escapedPrefix, type, callback)); else if ("object" === type) {
@@ -313,7 +313,7 @@ export default require => {
           }) || [];
         },
         only: function (children) {
-          if (!isValidElement(children)) throw Error("React.Children.only expected to receive a single React element child.");
+          if (!isValidElement2(children)) throw Error("React.Children.only expected to receive a single React element child.");
           return children;
         }
       };
@@ -389,7 +389,7 @@ export default require => {
           render
         };
       };
-      exports.isValidElement = isValidElement;
+      exports.isValidElement = isValidElement2;
       exports.lazy = function (ctor) {
         return {
           $$typeof: REACT_LAZY_TYPE,
@@ -666,9 +666,9 @@ export default require => {
           return newKey;
         }
         function validateChildKeys(node) {
-          isValidElement(node) ? node._store && (node._store.validated = 1) : "object" === typeof node && null !== node && node.$$typeof === REACT_LAZY_TYPE && ("fulfilled" === node._payload.status ? isValidElement(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
+          isValidElement2(node) ? node._store && (node._store.validated = 1) : "object" === typeof node && null !== node && node.$$typeof === REACT_LAZY_TYPE && ("fulfilled" === node._payload.status ? isValidElement2(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
         }
-        function isValidElement(object) {
+        function isValidElement2(object) {
           return "object" === typeof object && null !== object && object.$$typeof === REACT_ELEMENT_TYPE;
         }
         function escape(key) {
@@ -729,7 +729,7 @@ export default require => {
             var childKey = "" === nameSoFar ? "." + getElementKey(invokeCallback, 0) : nameSoFar;
             isArrayImpl(callback) ? (escapedPrefix = "", null != childKey && (escapedPrefix = childKey.replace(userProvidedKeyEscapeRegex, "$&/") + "/"), mapIntoArray(callback, array, escapedPrefix, "", function (c) {
               return c;
-            })) : null != callback && (isValidElement(callback) && (null != callback.key && (invokeCallback && invokeCallback.key === callback.key || checkKeyStringCoercion(callback.key)), escapedPrefix = cloneAndReplaceKey(callback, escapedPrefix + (null == callback.key || invokeCallback && invokeCallback.key === callback.key ? "" : ("" + callback.key).replace(userProvidedKeyEscapeRegex, "$&/") + "/") + childKey), "" !== nameSoFar && null != invokeCallback && isValidElement(invokeCallback) && null == invokeCallback.key && invokeCallback._store && !invokeCallback._store.validated && (escapedPrefix._store.validated = 2), callback = escapedPrefix), array.push(callback));
+            })) : null != callback && (isValidElement2(callback) && (null != callback.key && (invokeCallback && invokeCallback.key === callback.key || checkKeyStringCoercion(callback.key)), escapedPrefix = cloneAndReplaceKey(callback, escapedPrefix + (null == callback.key || invokeCallback && invokeCallback.key === callback.key ? "" : ("" + callback.key).replace(userProvidedKeyEscapeRegex, "$&/") + "/") + childKey), "" !== nameSoFar && null != invokeCallback && isValidElement2(invokeCallback) && null == invokeCallback.key && invokeCallback._store && !invokeCallback._store.validated && (escapedPrefix._store.validated = 2), callback = escapedPrefix), array.push(callback));
             return 1;
           }
           invokeCallback = 0;
@@ -957,7 +957,7 @@ export default require => {
             }) || [];
           },
           only: function (children) {
-            if (!isValidElement(children)) throw Error("React.Children.only expected to receive a single React element child.");
+            if (!isValidElement2(children)) throw Error("React.Children.only expected to receive a single React element child.");
             return children;
           }
         };
@@ -1128,7 +1128,7 @@ export default require => {
           });
           return elementType;
         };
-        exports.isValidElement = isValidElement;
+        exports.isValidElement = isValidElement2;
         exports.lazy = function (ctor) {
           ctor = {
             _status: -1,
@@ -1472,9 +1472,9 @@ export default require => {
           return ReactElement(type, children, maybeKey, getOwner(), debugStack, debugTask);
         }
         function validateChildKeys(node) {
-          isValidElement(node) ? node._store && (node._store.validated = 1) : "object" === typeof node && null !== node && node.$$typeof === REACT_LAZY_TYPE && ("fulfilled" === node._payload.status ? isValidElement(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
+          isValidElement2(node) ? node._store && (node._store.validated = 1) : "object" === typeof node && null !== node && node.$$typeof === REACT_LAZY_TYPE && ("fulfilled" === node._payload.status ? isValidElement2(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
         }
-        function isValidElement(object) {
+        function isValidElement2(object) {
           return "object" === typeof object && null !== object && object.$$typeof === REACT_ELEMENT_TYPE;
         }
         var React4 = require_react(), REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = Symbol.for("react.memo"), REACT_LAZY_TYPE = Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = Symbol.for("react.activity"), REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"), ReactSharedInternals = React4.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, hasOwnProperty = Object.prototype.hasOwnProperty, isArrayImpl = Array.isArray, createTask = console.createTask ? console.createTask : function () {
@@ -41403,6 +41403,7 @@ export default require => {
     getArrowKeyDirection: () => getArrowKeyDirection,
     getDeepUnequalKeyValues: () => getDeepUnequalKeyValues,
     getFocusableElements: () => getFocusableElements,
+    getReactMajorVersion: () => getReactMajorVersion,
     getRef: () => getRef,
     isArrowKey: () => isArrowKey,
     isDarkTheme: () => isDarkTheme,
@@ -41624,6 +41625,7 @@ export default require => {
     return typeof value === "function";
   }
   init_define_process();
+  var import_react = __toESM(require_react());
   init_define_process();
   var ns = "[Blueprint]";
   var CLAMP_MIN_MAX = ns + ` clamp: max cannot be less than min`;
@@ -41661,6 +41663,7 @@ export default require => {
   var POPOVER_WARN_PLACEMENT_AND_POSITION_MUTEX = ns + ` <Popover> supports either placement or position prop, not both.`;
   var POPOVER_WARN_UNCONTROLLED_ONINTERACTION = ns + ` <Popover> onInteraction is ignored when uncontrolled.`;
   var POPOVER_WARN_TARGET_PROPS_WITH_RENDER_TARGET = ns + ` <Popover> targetProps value is ignored when renderTarget API is used.`;
+  var POPOVER_WARN_REACT19 = ns + ` <Popover> positions content incorrectly under React 19 (especially in StrictMode); migrate to <PopoverNext>.`;
   var RADIOGROUP_WARN_CHILDREN_OPTIONS_MUTEX = ns + ` <RadioGroup> children and options prop are mutually exclusive, with options taking priority.`;
   var SLIDER_ZERO_STEP = ns + ` <Slider> stepSize must be greater than zero.`;
   var SLIDER_ZERO_LABEL_STEP = ns + ` <Slider> labelStepSize must be greater than zero.`;
@@ -41682,6 +41685,9 @@ export default require => {
   var OVERLAY_CHILD_REQUIRES_KEY = ns + ` <Overlay2> requires each child element to have a unique key prop when childRefs is used`;
   function isNodeEnv(env) {
     return typeof NODE_ENV !== "undefined" && NODE_ENV === env;
+  }
+  function getReactMajorVersion() {
+    return parseInt(import_react.version, 10);
   }
   function arrayLengthCompare(a = [], b = []) {
     return a.length - b.length;
@@ -41721,7 +41727,7 @@ export default require => {
     return typeof val === "string" && val.trim().length === 0;
   }
   init_define_process();
-  var import_react = __toESM(require_react());
+  var import_react2 = __toESM(require_react());
   function isReactNodeEmpty(node, skipArray = false) {
     return node == null || node === "" || node === false || !skipArray && Array.isArray(node) && (node.length === 0 || node.every(n => isReactNodeEmpty(n, true)));
   }
@@ -41732,10 +41738,10 @@ export default require => {
     if (child == null || typeof child === "boolean" || isEmptyString(child)) {
       return void 0;
     } else if (typeof child === "string" || typeof child === "number" || isReactFragment(child) || isReactNodeArray(child)) {
-      return (0, import_react.createElement)(tagName, props, child);
+      return (0, import_react2.createElement)(tagName, props, child);
     } else if (isReactElement(child)) {
       if (Object.keys(props).length > 0) {
-        return (0, import_react.cloneElement)(child, props);
+        return (0, import_react2.cloneElement)(child, props);
       } else {
         return child;
       }
@@ -41824,9 +41830,9 @@ export default require => {
   }
   init_define_process();
   init_define_process();
-  var import_react2 = __toESM(require_react());
+  var import_react3 = __toESM(require_react());
   function useValidateProps(validator, dependencies = []) {
-    (0, import_react2.useEffect)(() => {
+    (0, import_react3.useEffect)(() => {
       if (!isNodeEnv("production")) {
         validator();
       }
@@ -41835,9 +41841,9 @@ export default require => {
   init_define_process();
   var import_jsx_runtime6 = __toESM(require_jsx_runtime());
   var import_classnames5 = __toESM(require_classnames());
-  var import_react9 = __toESM(require_react());
+  var import_react10 = __toESM(require_react());
   init_define_process();
-  var import_react3 = __toESM(require_react());
+  var import_react4 = __toESM(require_react());
   var DEFAULT_OPTIONS = {
     defaultTabIndex: void 0,
     disabledTabIndex: -1
@@ -41845,16 +41851,16 @@ export default require => {
   function useInteractiveAttributes(interactive, props, ref, options = DEFAULT_OPTIONS) {
     const {defaultTabIndex, disabledTabIndex} = options;
     const {active, onClick, onFocus, onKeyDown, onKeyUp, onBlur, tabIndex = defaultTabIndex} = props;
-    const [currentKeyPressed, setCurrentKeyPressed] = (0, import_react3.useState)();
-    const [isActive, setIsActive] = (0, import_react3.useState)(false);
-    const elementRef = (0, import_react3.useRef)(null);
-    const handleBlur = (0, import_react3.useCallback)(e => {
+    const [currentKeyPressed, setCurrentKeyPressed] = (0, import_react4.useState)();
+    const [isActive, setIsActive] = (0, import_react4.useState)(false);
+    const elementRef = (0, import_react4.useRef)(null);
+    const handleBlur = (0, import_react4.useCallback)(e => {
       if (isActive) {
         setIsActive(false);
       }
       onBlur == null ? void 0 : onBlur(e);
     }, [isActive, onBlur]);
-    const handleKeyDown = (0, import_react3.useCallback)(e => {
+    const handleKeyDown = (0, import_react4.useCallback)(e => {
       if (utils_exports.isKeyboardClick(e)) {
         e.preventDefault();
         if (e.key !== currentKeyPressed) {
@@ -41864,7 +41870,7 @@ export default require => {
       setCurrentKeyPressed(e.key);
       onKeyDown == null ? void 0 : onKeyDown(e);
     }, [currentKeyPressed, onKeyDown]);
-    const handleKeyUp = (0, import_react3.useCallback)(e => {
+    const handleKeyUp = (0, import_react4.useCallback)(e => {
       var _a;
       if (utils_exports.isKeyboardClick(e)) {
         setIsActive(false);
@@ -41887,7 +41893,7 @@ export default require => {
   init_define_process();
   var import_jsx_runtime4 = __toESM(require_jsx_runtime());
   var import_classnames2 = __toESM(require_classnames());
-  var import_react5 = __toESM(require_react());
+  var import_react6 = __toESM(require_react());
   init_define_process();
   init_define_process();
   init_define_process();
@@ -43415,7 +43421,7 @@ export default require => {
   init_define_process();
   var import_jsx_runtime = __toESM(require_jsx_runtime());
   var import_classnames = __toESM(require_classnames());
-  var import_react4 = __toESM(require_react());
+  var import_react5 = __toESM(require_react());
   init_define_process();
   var NS2 = "bp6";
   var ICON2 = `${NS2}-icon`;
@@ -43428,7 +43434,7 @@ export default require => {
     uniqueCountForNamespace2.set(namespace, curCount + 1);
     return `${namespace}-${curCount}`;
   }
-  var SVGIconContainer = (0, import_react4.forwardRef)((props, ref) => {
+  var SVGIconContainer = (0, import_react5.forwardRef)((props, ref) => {
     const _a = props, {children, className, color, htmlTitle, iconName, size = IconSize.STANDARD, svgProps, tagName = "span", title} = _a, htmlProps = __objRest(_a, ["children", "className", "color", "htmlTitle", "iconName", "size", "svgProps", "tagName", "title"]);
     const isLarge = size >= IconSize.LARGE;
     const pixelGridSize = isLarge ? IconSize.LARGE : IconSize.STANDARD;
@@ -43454,7 +43460,7 @@ export default require => {
         }), children]
       }));
     } else {
-      return (0, import_react4.createElement)(tagName, __spreadProps(__spreadValues({
+      return (0, import_react5.createElement)(tagName, __spreadProps(__spreadValues({
         "aria-hidden": title ? void 0 : true
       }, htmlProps), {
         className: (0, import_classnames.default)(ICON2, `${ICON2}-${iconName}`, className),
@@ -43514,12 +43520,12 @@ export default require => {
     }));
   });
   Disable.displayName = `Blueprint6.Icon.Disable`;
-  var Icon = (0, import_react5.forwardRef)((props, ref) => {
+  var Icon = (0, import_react6.forwardRef)((props, ref) => {
     var _b;
     const _a = props, {autoLoad = true, className, color, icon, intent, tagName = "span", svgProps, title, htmlTitle} = _a, htmlProps = __objRest(_a, ["autoLoad", "className", "color", "icon", "intent", "tagName", "svgProps", "title", "htmlTitle"]);
     const size = (_b = props.size) != null ? _b : IconSize.STANDARD;
-    const [iconPaths, setIconPaths] = (0, import_react5.useState)(() => typeof icon === "string" ? Icons.getPaths(icon, size) : void 0);
-    (0, import_react5.useEffect)(() => {
+    const [iconPaths, setIconPaths] = (0, import_react6.useState)(() => typeof icon === "string" ? Icons.getPaths(icon, size) : void 0);
+    (0, import_react6.useEffect)(() => {
       let shouldCancelIconLoading = false;
       if (typeof icon === "string") {
         const loadedIconPaths = Icons.getPaths(icon, size);
@@ -43544,11 +43550,16 @@ export default require => {
     if (icon == null || typeof icon === "boolean") {
       return null;
     } else if (typeof icon !== "string") {
+      if ((0, import_react6.isValidElement)(icon)) {
+        return (0, import_react6.cloneElement)(icon, {
+          className: (0, import_classnames2.default)(icon.props.className, className, classes_exports.intentClass(intent))
+        });
+      }
       return icon;
     }
     if (iconPaths == null) {
       const sizeClass2 = size === IconSize.STANDARD ? classes_exports.ICON_STANDARD : size === IconSize.LARGE ? classes_exports.ICON_LARGE : void 0;
-      return (0, import_react5.createElement)(tagName || "span", __spreadProps(__spreadValues({
+      return (0, import_react6.createElement)(tagName || "span", __spreadProps(__spreadValues({
         "aria-hidden": title ? void 0 : true
       }, removeNonHTMLProps(htmlProps)), {
         className: (0, import_classnames2.default)(classes_exports.ICON, sizeClass2, classes_exports.iconClass(icon), classes_exports.intentClass(intent), className),
@@ -43579,7 +43590,7 @@ export default require => {
   init_define_process();
   var import_jsx_runtime5 = __toESM(require_jsx_runtime());
   var import_classnames3 = __toESM(require_classnames());
-  var import_react6 = __toESM(require_react());
+  var import_react7 = __toESM(require_react());
   var SpinnerSize;
   (function (SpinnerSize2) {
     SpinnerSize2[SpinnerSize2["SMALL"] = 20] = "SMALL";
@@ -43607,14 +43618,14 @@ export default require => {
     const classes = (0, import_classnames3.default)(classes_exports.SPINNER, classes_exports.intentClass(intent), {
       [classes_exports.SPINNER_NO_SPIN]: value != null
     }, className);
-    return (0, import_react6.createElement)(tagName, __spreadValues({
+    return (0, import_react7.createElement)(tagName, __spreadValues({
       "aria-label": "loading",
       "aria-valuemax": 100,
       "aria-valuemin": 0,
       "aria-valuenow": value === void 0 ? void 0 : value * 100,
       className: classes,
       role: "progressbar"
-    }, htmlProps), (0, import_react6.createElement)(tagName, {
+    }, htmlProps), (0, import_react7.createElement)(tagName, {
       className: classes_exports.SPINNER_ANIMATION
     }, (0, import_jsx_runtime5.jsxs)("svg", {
       width: sizePx,
@@ -43653,16 +43664,16 @@ export default require => {
   };
   init_define_process();
   var import_classnames4 = __toESM(require_classnames());
-  var import_react8 = __toESM(require_react());
+  var import_react9 = __toESM(require_react());
   init_define_process();
-  var import_react7 = __toESM(require_react());
-  var useIsomorphicLayoutEffect = hasDOMEnvironment() ? import_react7.useLayoutEffect : import_react7.useEffect;
-  var Text = (0, import_react8.forwardRef)((_a, forwardedRef) => {
+  var import_react8 = __toESM(require_react());
+  var useIsomorphicLayoutEffect = hasDOMEnvironment() ? import_react8.useLayoutEffect : import_react8.useEffect;
+  var Text = (0, import_react9.forwardRef)((_a, forwardedRef) => {
     var _b = _a, {children, tagName = "div", title, className, ellipsize = false} = _b, htmlProps = __objRest(_b, ["children", "tagName", "title", "className", "ellipsize"]);
-    const contentMeasuringRef = (0, import_react8.useRef)();
-    const textRef = (0, import_react8.useMemo)(() => mergeRefs(contentMeasuringRef, forwardedRef), [forwardedRef]);
-    const [textContent, setTextContent] = (0, import_react8.useState)("");
-    const [isContentOverflowing, setIsContentOverflowing] = (0, import_react8.useState)();
+    const contentMeasuringRef = (0, import_react9.useRef)();
+    const textRef = (0, import_react9.useMemo)(() => mergeRefs(contentMeasuringRef, forwardedRef), [forwardedRef]);
+    const [textContent, setTextContent] = (0, import_react9.useState)("");
+    const [isContentOverflowing, setIsContentOverflowing] = (0, import_react9.useState)();
     useIsomorphicLayoutEffect(() => {
       var _a2;
       if (((_a2 = contentMeasuringRef.current) == null ? void 0 : _a2.textContent) != null) {
@@ -43670,7 +43681,7 @@ export default require => {
         setTextContent(contentMeasuringRef.current.textContent);
       }
     }, [contentMeasuringRef, children, ellipsize]);
-    return (0, import_react8.createElement)(tagName, __spreadProps(__spreadValues({}, htmlProps), {
+    return (0, import_react9.createElement)(tagName, __spreadProps(__spreadValues({}, htmlProps), {
       className: (0, import_classnames4.default)({
         [classes_exports.TEXT_OVERFLOW_ELLIPSIS]: ellipsize
       }, className),
@@ -43679,7 +43690,7 @@ export default require => {
     }), children);
   });
   Text.displayName = `${DISPLAYNAME_PREFIX}.Text`;
-  var Button = (0, import_react9.forwardRef)((props, ref) => {
+  var Button = (0, import_react10.forwardRef)((props, ref) => {
     const commonAttributes = useSharedButtonAttributes(props, ref);
     return (0, import_jsx_runtime6.jsx)("button", __spreadProps(__spreadValues(__spreadValues({
       type: "button"
@@ -43688,7 +43699,7 @@ export default require => {
     }));
   });
   Button.displayName = `${DISPLAYNAME_PREFIX}.Button`;
-  var AnchorButton = (0, import_react9.forwardRef)((props, ref) => {
+  var AnchorButton = (0, import_react10.forwardRef)((props, ref) => {
     const {href} = props;
     const commonProps = useSharedButtonAttributes(props, ref, {
       defaultTabIndex: 0,
@@ -43745,9 +43756,9 @@ export default require => {
   }
   init_define_process();
   var import_jsx_runtime7 = __toESM(require_jsx_runtime());
-  var import_react10 = __toESM(require_react());
+  var import_react11 = __toESM(require_react());
   var import_client = __toESM(require_client());
-  var import_react11 = __toESM(require_react(), 1);
+  var import_react12 = __toESM(require_react(), 1);
   var import_client2 = __toESM(require_client(), 1);
   init_define_process();
   var Vector3 = class {
@@ -43818,7 +43829,7 @@ export default require => {
       this.gameObjectIdentifier = gameObjectIdentifier;
     }
   };
-  var UnityComponent = class extends import_react11.default.Component {
+  var UnityComponent = class extends import_react12.default.Component {
     render() {
       const moduleInstance = getInstance();
       return (0, import_jsx_runtime8.jsxs)("div", {
