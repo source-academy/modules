@@ -11,7 +11,7 @@
     "./formatter": "./dist/formatter.js"
   },
   "dependencies": {
-    "eslint": "^9.35.0"
+    "eslint": "^10.0.0"
   },
   "peerDependencies": {
     "@eslint/markdown": "^7.0.0",

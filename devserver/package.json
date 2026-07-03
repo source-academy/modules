@@ -30,7 +30,7 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitest/browser-playwright": "catalog:",
-    "eslint": "^9.35.0",
+    "eslint": "^10.0.0",
     "playwright": "^1.55.1",
     "sass": "^1.85.0",
     "typescript": "^6.0.2",

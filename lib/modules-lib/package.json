@@ -9,7 +9,7 @@
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "^6.0.3",
     "@vitest/browser-playwright": "catalog:",
-    "eslint": "^9.35.0",
+    "eslint": "^10.0.0",
     "playwright": "^1.55.1",
     "typedoc": "^0.28.9",
     "typedoc-plugin-frontmatter": "^1.3.0",
