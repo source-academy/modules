@@ -307,25 +307,27 @@ export default require => {
       });
     }
   };
-  function isLength(value) {
-    return Number.isSafeInteger(value) && value >= 0;
+  function isPlainObject(object) {
+    var _a;
+    if (typeof object !== "object") return false;
+    if (object == null) return false;
+    if (Object.getPrototypeOf(object) === null) return true;
+    if (Object.prototype.toString.call(object) !== "[object Object]") {
+      const tag = object[Symbol.toStringTag];
+      if (tag == null) return false;
+      if (!((_a = Object.getOwnPropertyDescriptor(object, Symbol.toStringTag)) == null ? void 0 : _a.writable)) return false;
+      return object.toString() === `[object ${tag}]`;
+    }
+    let proto = object;
+    while (Object.getPrototypeOf(proto) !== null) proto = Object.getPrototypeOf(proto);
+    return Object.getPrototypeOf(object) === proto;
   }
-  function isArrayLike(value) {
-    return value != null && typeof value !== "function" && isLength(value.length);
-  }
-  function isUnsafeProperty(key) {
-    return key === "__proto__";
-  }
-  function isPrimitive(value) {
-    return value == null || typeof value !== "object" && typeof value !== "function";
-  }
+  function noop() {}
   function getSymbols(object) {
     return Object.getOwnPropertySymbols(object).filter(symbol => Object.prototype.propertyIsEnumerable.call(object, symbol));
   }
   function getTag(value) {
-    if (value == null) {
-      return value === void 0 ? "[object Undefined]" : "[object Null]";
-    }
+    if (value == null) return value === void 0 ? "[object Undefined]" : "[object Null]";
     return Object.prototype.toString.call(value);
   }
   var regexpTag = "[object RegExp]";
@@ -350,6 +352,30 @@ export default require => {
   var int32ArrayTag = "[object Int32Array]";
   var float32ArrayTag = "[object Float32Array]";
   var float64ArrayTag = "[object Float64Array]";
+  var globalThis_ = typeof globalThis === "object" && globalThis || typeof window === "object" && window || typeof self === "object" && self || typeof globalThis === "object" && globalThis || (function () {
+    return this;
+  })();
+  function isBuffer(x2) {
+    return typeof globalThis_.Buffer !== "undefined" && globalThis_.Buffer.isBuffer(x2);
+  }
+  function isPlainObject2(value) {
+    if (!value || typeof value !== "object") return false;
+    const proto = Object.getPrototypeOf(value);
+    if (!(proto === null || proto === Object.prototype || Object.getPrototypeOf(proto) === null)) return false;
+    return Object.prototype.toString.call(value) === "[object Object]";
+  }
+  function isLength(value) {
+    return Number.isSafeInteger(value) && value >= 0;
+  }
+  function isArrayLike(value) {
+    return value != null && typeof value !== "function" && isLength(value.length);
+  }
+  function isUnsafeProperty(key) {
+    return key === "__proto__";
+  }
+  function isPrimitive(value) {
+    return value == null || typeof value !== "object" && typeof value !== "function";
+  }
   function isTypedArray(x2) {
     return ArrayBuffer.isView(x2) && !(x2 instanceof DataView);
   }
@@ -358,32 +384,18 @@ export default require => {
   }
   function cloneDeepWithImpl(valueToClone, keyToClone, objectToClone, stack = new Map(), cloneValue = void 0) {
     const cloned = cloneValue == null ? void 0 : cloneValue(valueToClone, keyToClone, objectToClone, stack);
-    if (cloned !== void 0) {
-      return cloned;
-    }
-    if (isPrimitive(valueToClone)) {
-      return valueToClone;
-    }
-    if (stack.has(valueToClone)) {
-      return stack.get(valueToClone);
-    }
+    if (cloned !== void 0) return cloned;
+    if (isPrimitive(valueToClone)) return valueToClone;
+    if (stack.has(valueToClone)) return stack.get(valueToClone);
     if (Array.isArray(valueToClone)) {
       const result = new Array(valueToClone.length);
       stack.set(valueToClone, result);
-      for (let i2 = 0; i2 < valueToClone.length; i2++) {
-        result[i2] = cloneDeepWithImpl(valueToClone[i2], i2, objectToClone, stack, cloneValue);
-      }
-      if (Object.hasOwn(valueToClone, "index")) {
-        result.index = valueToClone.index;
-      }
-      if (Object.hasOwn(valueToClone, "input")) {
-        result.input = valueToClone.input;
-      }
+      for (let i2 = 0; i2 < valueToClone.length; i2++) result[i2] = cloneDeepWithImpl(valueToClone[i2], i2, objectToClone, stack, cloneValue);
+      if (Object.hasOwn(valueToClone, "index")) result.index = valueToClone.index;
+      if (Object.hasOwn(valueToClone, "input")) result.input = valueToClone.input;
       return result;
     }
-    if (valueToClone instanceof Date) {
-      return new Date(valueToClone.getTime());
-    }
+    if (valueToClone instanceof Date) return new Date(valueToClone.getTime());
     if (valueToClone instanceof RegExp) {
       const result = new RegExp(valueToClone.source, valueToClone.flags);
       result.lastIndex = valueToClone.lastIndex;
@@ -392,33 +404,23 @@ export default require => {
     if (valueToClone instanceof Map) {
       const result = new Map();
       stack.set(valueToClone, result);
-      for (const [key, value] of valueToClone) {
-        result.set(key, cloneDeepWithImpl(value, key, objectToClone, stack, cloneValue));
-      }
+      for (const [key, value] of valueToClone) result.set(key, cloneDeepWithImpl(value, key, objectToClone, stack, cloneValue));
       return result;
     }
     if (valueToClone instanceof Set) {
       const result = new Set();
       stack.set(valueToClone, result);
-      for (const value of valueToClone) {
-        result.add(cloneDeepWithImpl(value, void 0, objectToClone, stack, cloneValue));
-      }
+      for (const value of valueToClone) result.add(cloneDeepWithImpl(value, void 0, objectToClone, stack, cloneValue));
       return result;
     }
-    if (typeof Buffer !== "undefined" && Buffer.isBuffer(valueToClone)) {
-      return valueToClone.subarray();
-    }
+    if (isBuffer(valueToClone)) return valueToClone.subarray();
     if (isTypedArray(valueToClone)) {
       const result = new (Object.getPrototypeOf(valueToClone).constructor)(valueToClone.length);
       stack.set(valueToClone, result);
-      for (let i2 = 0; i2 < valueToClone.length; i2++) {
-        result[i2] = cloneDeepWithImpl(valueToClone[i2], i2, objectToClone, stack, cloneValue);
-      }
+      for (let i2 = 0; i2 < valueToClone.length; i2++) result[i2] = cloneDeepWithImpl(valueToClone[i2], i2, objectToClone, stack, cloneValue);
       return result;
     }
-    if (valueToClone instanceof ArrayBuffer || typeof SharedArrayBuffer !== "undefined" && valueToClone instanceof SharedArrayBuffer) {
-      return valueToClone.slice(0);
-    }
+    if (valueToClone instanceof ArrayBuffer || typeof SharedArrayBuffer !== "undefined" && valueToClone instanceof SharedArrayBuffer) return valueToClone.slice(0);
     if (valueToClone instanceof DataView) {
       const result = new DataView(valueToClone.buffer.slice(0), valueToClone.byteOffset, valueToClone.byteLength);
       stack.set(valueToClone, result);
@@ -442,12 +444,13 @@ export default require => {
       return result;
     }
     if (valueToClone instanceof Error) {
-      const result = new valueToClone.constructor();
+      const result = structuredClone(valueToClone);
       stack.set(valueToClone, result);
       result.message = valueToClone.message;
       result.name = valueToClone.name;
       result.stack = valueToClone.stack;
       result.cause = valueToClone.cause;
+      result.constructor = valueToClone.constructor;
       copyProperties(result, valueToClone, objectToClone, stack, cloneValue);
       return result;
     }
@@ -482,9 +485,7 @@ export default require => {
     for (let i2 = 0; i2 < keys.length; i2++) {
       const key = keys[i2];
       const descriptor = Object.getOwnPropertyDescriptor(target, key);
-      if (descriptor == null || descriptor.writable) {
-        target[key] = cloneDeepWithImpl(source[key], key, objectToClone, stack, cloneValue);
-      }
+      if (descriptor == null || descriptor.writable) target[key] = cloneDeepWithImpl(source[key], key, objectToClone, stack, cloneValue);
     }
   }
   function isCloneableObject(object) {
@@ -511,25 +512,17 @@ export default require => {
       case uint8ClampedArrayTag:
       case uint16ArrayTag:
       case uint32ArrayTag:
-        {
-          return true;
-        }
+        return true;
       default:
-        {
-          return false;
-        }
+        return false;
     }
   }
   function cloneDeepWith2(obj, customizer) {
     return cloneDeepWith(obj, (value, key, object, stack) => {
       const cloned = customizer == null ? void 0 : customizer(value, key, object, stack);
-      if (cloned !== void 0) {
-        return cloned;
-      }
-      if (typeof obj !== "object") {
-        return void 0;
-      }
-      if (getTag(obj) === objectTag && typeof obj.constructor !== "function") {
+      if (cloned !== void 0) return cloned;
+      if (typeof obj !== "object") return;
+      if (getTag(obj) === "[object Object]" && typeof obj.constructor !== "function") {
         const result = {};
         stack.set(obj, result);
         copyProperties(result, obj, object, stack);
@@ -553,9 +546,7 @@ export default require => {
             return result;
           }
         default:
-          {
-            return void 0;
-          }
+          return;
       }
     });
   }
@@ -571,98 +562,38 @@ export default require => {
   function isArrayLikeObject(value) {
     return isObjectLike(value) && isArrayLike(value);
   }
-  function isPlainObject(value) {
-    if (!value || typeof value !== "object") {
-      return false;
-    }
-    const proto = Object.getPrototypeOf(value);
-    const hasObjectPrototype = proto === null || proto === Object.prototype || Object.getPrototypeOf(proto) === null;
-    if (!hasObjectPrototype) {
-      return false;
-    }
-    return Object.prototype.toString.call(value) === "[object Object]";
-  }
-  function noop() {}
   function isTypedArray2(x2) {
     return isTypedArray(x2);
   }
-  function isPlainObject2(object) {
-    var _a;
-    if (typeof object !== "object") {
-      return false;
-    }
-    if (object == null) {
-      return false;
-    }
-    if (Object.getPrototypeOf(object) === null) {
-      return true;
-    }
-    if (Object.prototype.toString.call(object) !== "[object Object]") {
-      const tag = object[Symbol.toStringTag];
-      if (tag == null) {
-        return false;
-      }
-      const isTagReadonly = !((_a = Object.getOwnPropertyDescriptor(object, Symbol.toStringTag)) == null ? void 0 : _a.writable);
-      if (isTagReadonly) {
-        return false;
-      }
-      return object.toString() === `[object ${tag}]`;
-    }
-    let proto = object;
-    while (Object.getPrototypeOf(proto) !== null) {
-      proto = Object.getPrototypeOf(proto);
-    }
-    return Object.getPrototypeOf(object) === proto;
-  }
   function clone(obj) {
-    if (isPrimitive(obj)) {
-      return obj;
-    }
-    if (Array.isArray(obj) || isTypedArray(obj) || obj instanceof ArrayBuffer || typeof SharedArrayBuffer !== "undefined" && obj instanceof SharedArrayBuffer) {
-      return obj.slice(0);
-    }
+    if (isPrimitive(obj)) return obj;
+    if (Array.isArray(obj) || isTypedArray(obj) || obj instanceof ArrayBuffer || typeof SharedArrayBuffer !== "undefined" && obj instanceof SharedArrayBuffer) return obj.slice(0);
     const prototype = Object.getPrototypeOf(obj);
-    if (prototype == null) {
-      return Object.assign(Object.create(prototype), obj);
-    }
+    if (prototype == null) return Object.assign(Object.create(prototype), obj);
     const Constructor = prototype.constructor;
-    if (obj instanceof Date || obj instanceof Map || obj instanceof Set) {
-      return new Constructor(obj);
-    }
+    if (obj instanceof Date || obj instanceof Map || obj instanceof Set) return new Constructor(obj);
     if (obj instanceof RegExp) {
       const newRegExp = new Constructor(obj);
       newRegExp.lastIndex = obj.lastIndex;
       return newRegExp;
     }
-    if (obj instanceof DataView) {
-      return new Constructor(obj.buffer.slice(0));
-    }
+    if (obj instanceof DataView) return new Constructor(obj.buffer.slice(0));
     if (obj instanceof Error) {
       let newError;
-      if (obj instanceof AggregateError) {
-        newError = new Constructor(obj.errors, obj.message, {
-          cause: obj.cause
-        });
-      } else {
-        newError = new Constructor(obj.message, {
-          cause: obj.cause
-        });
-      }
+      if (obj instanceof AggregateError) newError = new Constructor(obj.errors, obj.message, {
+        cause: obj.cause
+      }); else newError = new Constructor(obj.message, {
+        cause: obj.cause
+      });
       newError.stack = obj.stack;
       Object.assign(newError, obj);
       return newError;
     }
-    if (typeof File !== "undefined" && obj instanceof File) {
-      const newFile = new Constructor([obj], obj.name, {
-        type: obj.type,
-        lastModified: obj.lastModified
-      });
-      return newFile;
-    }
-    if (typeof obj === "object") {
-      const newObject = Object.create(prototype);
-      return Object.assign(newObject, obj);
-    }
+    if (typeof File !== "undefined" && obj instanceof File) return new Constructor([obj], obj.name, {
+      type: obj.type,
+      lastModified: obj.lastModified
+    });
+    if (typeof obj === "object") return Object.assign(Object.create(prototype), obj);
     return obj;
   }
   function mergeWith(object, ...otherArgs) {
@@ -677,72 +608,38 @@ export default require => {
   }
   function mergeWithDeep(target, source, merge3, stack) {
     var _a;
-    if (isPrimitive(target)) {
-      target = Object(target);
-    }
-    if (source == null || typeof source !== "object") {
-      return target;
-    }
-    if (stack.has(source)) {
-      return clone(stack.get(source));
-    }
+    if (isPrimitive(target)) target = Object(target);
+    if (source == null || typeof source !== "object") return target;
+    if (stack.has(source)) return clone(stack.get(source));
     stack.set(source, target);
     if (Array.isArray(source)) {
       source = source.slice();
-      for (let i2 = 0; i2 < source.length; i2++) {
-        source[i2] = (_a = source[i2]) != null ? _a : void 0;
-      }
+      for (let i2 = 0; i2 < source.length; i2++) source[i2] = (_a = source[i2]) != null ? _a : void 0;
     }
     const sourceKeys = [...Object.keys(source), ...getSymbols(source)];
     for (let i2 = 0; i2 < sourceKeys.length; i2++) {
       const key = sourceKeys[i2];
-      if (isUnsafeProperty(key)) {
-        continue;
-      }
+      if (isUnsafeProperty(key)) continue;
       let sourceValue = source[key];
       let targetValue = target[key];
-      if (isArguments(sourceValue)) {
-        sourceValue = __spreadValues({}, sourceValue);
-      }
-      if (isArguments(targetValue)) {
-        targetValue = __spreadValues({}, targetValue);
-      }
-      if (typeof Buffer !== "undefined" && Buffer.isBuffer(sourceValue)) {
-        sourceValue = cloneDeep(sourceValue);
-      }
-      if (Array.isArray(sourceValue)) {
-        if (Array.isArray(targetValue)) {
-          const cloned = [];
-          const targetKeys = Reflect.ownKeys(targetValue);
-          for (let i3 = 0; i3 < targetKeys.length; i3++) {
-            const targetKey = targetKeys[i3];
-            cloned[targetKey] = targetValue[targetKey];
-          }
-          targetValue = cloned;
-        } else if (isArrayLikeObject(targetValue)) {
-          const cloned = [];
-          for (let i3 = 0; i3 < targetValue.length; i3++) {
-            cloned[i3] = targetValue[i3];
-          }
-          targetValue = cloned;
-        } else {
-          targetValue = [];
+      if (isArguments(sourceValue)) sourceValue = __spreadValues({}, sourceValue);
+      if (isArguments(targetValue)) targetValue = __spreadValues({}, targetValue);
+      if (isBuffer(sourceValue)) sourceValue = cloneDeep(sourceValue);
+      if (Array.isArray(sourceValue)) if (Array.isArray(targetValue)) {
+        const cloned = [];
+        const targetKeys = Reflect.ownKeys(targetValue);
+        for (let i3 = 0; i3 < targetKeys.length; i3++) {
+          const targetKey = targetKeys[i3];
+          cloned[targetKey] = targetValue[targetKey];
         }
-      }
+        targetValue = cloned;
+      } else if (isArrayLikeObject(targetValue)) {
+        const cloned = [];
+        for (let i3 = 0; i3 < targetValue.length; i3++) cloned[i3] = targetValue[i3];
+        targetValue = cloned;
+      } else targetValue = [];
       const merged = merge3(targetValue, sourceValue, key, target, source, stack);
-      if (merged !== void 0) {
-        target[key] = merged;
-      } else if (Array.isArray(sourceValue)) {
-        target[key] = mergeWithDeep(targetValue, sourceValue, merge3, stack);
-      } else if (isObjectLike(targetValue) && isObjectLike(sourceValue) && (isPlainObject2(targetValue) || isPlainObject2(sourceValue) || isTypedArray2(targetValue) || isTypedArray2(sourceValue))) {
-        target[key] = mergeWithDeep(targetValue, sourceValue, merge3, stack);
-      } else if (targetValue == null && isPlainObject2(sourceValue)) {
-        target[key] = mergeWithDeep({}, sourceValue, merge3, stack);
-      } else if (targetValue == null && isTypedArray2(sourceValue)) {
-        target[key] = cloneDeep(sourceValue);
-      } else if (targetValue === void 0 || sourceValue !== void 0) {
-        target[key] = sourceValue;
-      }
+      if (merged !== void 0) target[key] = merged; else if (Array.isArray(sourceValue)) target[key] = mergeWithDeep(targetValue, sourceValue, merge3, stack); else if (isObjectLike(targetValue) && isObjectLike(sourceValue) && (isPlainObject(targetValue) || isPlainObject(sourceValue) || isTypedArray2(targetValue) || isTypedArray2(sourceValue))) target[key] = mergeWithDeep(targetValue, sourceValue, merge3, stack); else if (targetValue == null && isPlainObject(sourceValue)) target[key] = mergeWithDeep({}, sourceValue, merge3, stack); else if (targetValue == null && isTypedArray2(sourceValue)) target[key] = cloneDeep(sourceValue); else if (targetValue === void 0 || sourceValue !== void 0) target[key] = sourceValue;
     }
     return target;
   }
@@ -768,25 +665,15 @@ export default require => {
     const sourceKeys = Object.keys(source);
     for (let i2 = 0; i2 < sourceKeys.length; i2++) {
       const key = sourceKeys[i2];
-      if (isUnsafeProperty(key)) {
-        continue;
-      }
+      if (isUnsafeProperty(key)) continue;
       const sourceValue = source[key];
       const targetValue = target[key];
-      if (isMergeableValue(sourceValue) && isMergeableValue(targetValue)) {
-        target[key] = merge2(targetValue, sourceValue);
-      } else if (Array.isArray(sourceValue)) {
-        target[key] = merge2([], sourceValue);
-      } else if (isPlainObject(sourceValue)) {
-        target[key] = merge2({}, sourceValue);
-      } else if (targetValue === void 0 || sourceValue !== void 0) {
-        target[key] = sourceValue;
-      }
+      if (isMergeableValue(sourceValue) && isMergeableValue(targetValue)) target[key] = merge2(targetValue, sourceValue); else if (Array.isArray(sourceValue)) target[key] = merge2([], sourceValue); else if (isPlainObject2(sourceValue)) target[key] = merge2({}, sourceValue); else if (targetValue === void 0 || sourceValue !== void 0) target[key] = sourceValue;
     }
     return target;
   }
   function isMergeableValue(value) {
-    return isPlainObject(value) || Array.isArray(value);
+    return isPlainObject2(value) || Array.isArray(value);
   }
   var import_interpreter = __require("js-slang/dist/cse-machine/interpreter");
   var import_langs = __require("js-slang/dist/langs");

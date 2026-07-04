@@ -107,9 +107,7 @@ export default require => {
     }
   }
   function clamp(value, bound1, bound2) {
-    if (bound2 == null) {
-      return Math.min(value, bound1);
-    }
+    if (bound2 == null) return Math.min(value, bound1);
     return Math.min(Math.max(value, bound1), bound2);
   }
   var EPSILON = 1e-6;

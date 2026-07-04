@@ -59,9 +59,7 @@ export default require => {
   var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
   var import_base = __require("js-slang/dist/errors/base");
   function chunk(arr, size) {
-    if (!Number.isInteger(size) || size <= 0) {
-      throw new Error("Size must be an integer greater than zero.");
-    }
+    if (!Number.isInteger(size) || size <= 0) throw new Error("Size must be an integer greater than zero.");
     const chunkLength = Math.ceil(arr.length / size);
     const result = Array(chunkLength);
     for (let index = 0; index < chunkLength; index++) {
@@ -79,14 +77,10 @@ export default require => {
       end = start;
       start = 0;
     }
-    if (!Number.isInteger(step) || step === 0) {
-      throw new Error(`The step value must be a non-zero integer.`);
-    }
+    if (!Number.isInteger(step) || step === 0) throw new Error(`The step value must be a non-zero integer.`);
     const length = Math.max(Math.ceil((end - start) / step), 0);
     const result = new Array(length);
-    for (let i = 0; i < length; i++) {
-      result[i] = start + i * step;
-    }
+    for (let i = 0; i < length; i++) result[i] = start + i * step;
     return result;
   }
   function isPrimitive(value) {
@@ -96,54 +90,34 @@ export default require => {
     return ArrayBuffer.isView(x) && !(x instanceof DataView);
   }
   function clone(obj) {
-    if (isPrimitive(obj)) {
-      return obj;
-    }
-    if (Array.isArray(obj) || isTypedArray(obj) || obj instanceof ArrayBuffer || typeof SharedArrayBuffer !== "undefined" && obj instanceof SharedArrayBuffer) {
-      return obj.slice(0);
-    }
+    if (isPrimitive(obj)) return obj;
+    if (Array.isArray(obj) || isTypedArray(obj) || obj instanceof ArrayBuffer || typeof SharedArrayBuffer !== "undefined" && obj instanceof SharedArrayBuffer) return obj.slice(0);
     const prototype = Object.getPrototypeOf(obj);
-    if (prototype == null) {
-      return Object.assign(Object.create(prototype), obj);
-    }
+    if (prototype == null) return Object.assign(Object.create(prototype), obj);
     const Constructor = prototype.constructor;
-    if (obj instanceof Date || obj instanceof Map || obj instanceof Set) {
-      return new Constructor(obj);
-    }
+    if (obj instanceof Date || obj instanceof Map || obj instanceof Set) return new Constructor(obj);
     if (obj instanceof RegExp) {
       const newRegExp = new Constructor(obj);
       newRegExp.lastIndex = obj.lastIndex;
       return newRegExp;
     }
-    if (obj instanceof DataView) {
-      return new Constructor(obj.buffer.slice(0));
-    }
+    if (obj instanceof DataView) return new Constructor(obj.buffer.slice(0));
     if (obj instanceof Error) {
       let newError;
-      if (obj instanceof AggregateError) {
-        newError = new Constructor(obj.errors, obj.message, {
-          cause: obj.cause
-        });
-      } else {
-        newError = new Constructor(obj.message, {
-          cause: obj.cause
-        });
-      }
+      if (obj instanceof AggregateError) newError = new Constructor(obj.errors, obj.message, {
+        cause: obj.cause
+      }); else newError = new Constructor(obj.message, {
+        cause: obj.cause
+      });
       newError.stack = obj.stack;
       Object.assign(newError, obj);
       return newError;
     }
-    if (typeof File !== "undefined" && obj instanceof File) {
-      const newFile = new Constructor([obj], obj.name, {
-        type: obj.type,
-        lastModified: obj.lastModified
-      });
-      return newFile;
-    }
-    if (typeof obj === "object") {
-      const newObject = Object.create(prototype);
-      return Object.assign(newObject, obj);
-    }
+    if (typeof File !== "undefined" && obj instanceof File) return new Constructor([obj], obj.name, {
+      type: obj.type,
+      lastModified: obj.lastModified
+    });
+    if (typeof obj === "object") return Object.assign(Object.create(prototype), obj);
     return obj;
   }
   var import_context = __toESM(__require("js-slang/context"), 1);

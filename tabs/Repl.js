@@ -3796,16 +3796,12 @@ export default require => {
       }
     };
     const onTimerEnd = () => {
-      if (trailing) {
-        invoke();
-      }
+      if (trailing) invoke();
       cancel();
     };
     let timeoutId = null;
     const schedule = () => {
-      if (timeoutId != null) {
-        clearTimeout(timeoutId);
-      }
+      if (timeoutId != null) clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
         timeoutId = null;
         onTimerEnd();
@@ -3826,16 +3822,12 @@ export default require => {
       invoke();
     };
     const debounced = function (...args) {
-      if (signal == null ? void 0 : signal.aborted) {
-        return;
-      }
+      if (signal == null ? void 0 : signal.aborted) return;
       pendingThis = this;
       pendingArgs = args;
       const isFirstCall = timeoutId == null;
       schedule();
-      if (leading && isFirstCall) {
-        invoke();
-      }
+      if (leading && isFirstCall) invoke();
     };
     debounced.schedule = schedule;
     debounced.cancel = cancel;
@@ -3856,9 +3848,7 @@ export default require => {
       edges
     });
     const throttled = function (...args) {
-      if (pendingAt == null) {
-        pendingAt = Date.now();
-      }
+      if (pendingAt == null) pendingAt = Date.now();
       if (Date.now() - pendingAt >= throttleMs) {
         pendingAt = Date.now();
         func.apply(this, args);

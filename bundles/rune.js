@@ -135,13 +135,10 @@ export default require => {
     return n === 0 ? x => x : x => func(repeat_internal(func, n - 1)(x));
   }
   function sample(arr) {
-    const randomIndex = Math.floor(Math.random() * arr.length);
-    return arr[randomIndex];
+    return arr[Math.floor(Math.random() * arr.length)];
   }
   function clamp(value, bound1, bound2) {
-    if (bound2 == null) {
-      return Math.min(value, bound1);
-    }
+    if (bound2 == null) return Math.min(value, bound1);
     return Math.min(Math.max(value, bound1), bound2);
   }
   var EPSILON = 1e-6;

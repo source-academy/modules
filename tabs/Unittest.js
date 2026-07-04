@@ -43,11 +43,7 @@ export default require => {
     const falsy = [];
     for (let i = 0; i < arr.length; i++) {
       const item = arr[i];
-      if (isInTruthy(item, i, arr)) {
-        truthy.push(item);
-      } else {
-        falsy.push(item);
-      }
+      if (isInTruthy(item, i, arr)) truthy.push(item); else falsy.push(item);
     }
     return [truthy, falsy];
   }
