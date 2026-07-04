@@ -43523,7 +43523,7 @@ export default require => {
   DisableIcon.displayName = `Blueprint6.Icon.DisableIcon`;
   var Disable = DisableIcon;
   var Icon = (0, import_react6.forwardRef)((props, ref) => {
-    var _b;
+    var _b, _c, _d;
     const _a = props, {autoLoad = true, className, color, icon, intent, tagName = "span", svgProps, title, htmlTitle} = _a, htmlProps = __objRest(_a, ["autoLoad", "className", "color", "icon", "intent", "tagName", "svgProps", "title", "htmlTitle"]);
     const size = (_b = props.size) != null ? _b : IconSize.STANDARD;
     const [iconPaths, setIconPaths] = (0, import_react6.useState)(() => typeof icon === "string" ? Icons.getPaths(icon, size) : void 0);
@@ -43554,7 +43554,9 @@ export default require => {
     } else if (typeof icon !== "string") {
       if ((0, import_react6.isValidElement)(icon)) {
         return (0, import_react6.cloneElement)(icon, {
-          className: (0, import_classnames2.default)(icon.props.className, className, classes_exports.intentClass(intent))
+          className: (0, import_classnames2.default)(icon.props.className, className, classes_exports.intentClass(intent)),
+          color: (_c = icon.props.color) != null ? _c : color,
+          size: (_d = icon.props.size) != null ? _d : props.size
         });
       }
       return icon;
