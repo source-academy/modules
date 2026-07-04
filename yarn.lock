@@ -2371,12 +2371,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/markdown@npm:^8.0.0":
-  version: 8.0.2
-  resolution: "@eslint/markdown@npm:8.0.2"
+"@eslint/markdown@npm:^8.0.3":
+  version: 8.0.3
+  resolution: "@eslint/markdown@npm:8.0.3"
   dependencies:
     "@eslint/core": "npm:^1.2.1"
-    "@eslint/plugin-kit": "npm:^0.7.1"
+    "@eslint/plugin-kit": "npm:^0.7.2"
     github-slugger: "npm:^2.0.0"
     mdast-util-from-markdown: "npm:^2.0.2"
     mdast-util-frontmatter: "npm:^2.0.1"
@@ -2386,7 +2386,7 @@ __metadata:
     micromark-extension-gfm: "npm:^3.0.0"
     micromark-extension-math: "npm:^3.1.0"
     micromark-util-normalize-identifier: "npm:^2.0.1"
-  checksum: 10c0/3893ede905f6bcd954173b4c432c402c94a9eacbe539e99e4b365d3fa9275e7c175531781cbd637654acdf6f1f84faf74894674fee51d8354af7a0cf353e3fa4
+  checksum: 10c0/00f65a81786c5d286bf029a5eeb69a04bdd4993e363cd1a77b86100532440e47d46ae7757995515862513af3368a263f739fe5af170a5092af6bd8ef25cc980d
   languageName: node
   linkType: hard
 
@@ -2407,7 +2407,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/plugin-kit@npm:^0.7.0, @eslint/plugin-kit@npm:^0.7.1":
+"@eslint/plugin-kit@npm:^0.7.0, @eslint/plugin-kit@npm:^0.7.2":
   version: 0.7.2
   resolution: "@eslint/plugin-kit@npm:0.7.2"
   dependencies:
@@ -4224,7 +4224,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/lint-plugin@workspace:lib/lintplugin"
   dependencies:
-    "@eslint/markdown": "npm:^8.0.0"
+    "@eslint/markdown": "npm:^8.0.3"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@sourceacademy/modules-repotools": "workspace:^"
@@ -4242,7 +4242,7 @@ __metadata:
     typescript: "catalog:"
     typescript-eslint: "npm:^8.58.2"
   peerDependencies:
-    "@eslint/markdown": ^7.0.0 || ^8.0.0
+    "@eslint/markdown": ^7.0.0 || ^8.0.3
     "@stylistic/eslint-plugin": ^5.10.0
     "@vitest/eslint-plugin": "*"
     eslint: ">=9"
@@ -4448,7 +4448,7 @@ __metadata:
   resolution: "@sourceacademy/modules@workspace:."
   dependencies:
     "@eslint/js": "npm:^9.35.0"
-    "@eslint/markdown": "npm:^8.0.0"
+    "@eslint/markdown": "npm:^8.0.3"
     "@sourceacademy/lint-plugin": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
