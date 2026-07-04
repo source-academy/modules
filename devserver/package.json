@@ -15,7 +15,7 @@
     "@vitejs/plugin-react": "^6.0.3",
     "ace-builds": "^1.25.1",
     "classnames": "^2.3.1",
-    "commander": "^14.0.0",
+    "commander": "^15.0.0",
     "es-toolkit": "^1.44.0",
     "js-slang": "catalog:",
     "re-resizable": "^6.9.11",
