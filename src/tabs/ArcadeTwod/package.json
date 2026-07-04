@@ -5,7 +5,7 @@
   "dependencies": {
     "@blueprintjs/core": "^6.0.0",
     "@sourceacademy/modules-lib": "workspace:^",
-    "phaser": "^3.54.0",
+    "phaser": "^4.0.0",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

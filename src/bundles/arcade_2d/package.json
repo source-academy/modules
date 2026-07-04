@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "private": true,
   "dependencies": {
-    "phaser": "^3.54.0"
+    "phaser": "^4.0.0"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
