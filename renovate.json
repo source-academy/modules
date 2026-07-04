@@ -3,5 +3,20 @@
   "extends": [
     "config:recommended",
     ":label(dependencies)"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "*"
+      ],
+      // Match the release gate in `.yarnrc.yml`
+      "minimumReleaseAge": "3 days"
+    },
+    {
+      "matchPackageNames": [
+        "/^@blueprintjs.*/"
+      ],
+      "groupName": "blueprintjs"
+    }
   ]
 }
