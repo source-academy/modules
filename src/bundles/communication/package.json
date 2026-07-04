@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
-    "mqtt": "^4.3.7",
+    "mqtt": "^5.0.0",
     "os": "^0.1.2",
     "uniqid": "^5.4.0"
   },
