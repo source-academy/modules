@@ -1,19 +1,23 @@
 import fs from 'fs';
 import pathlib from 'path';
 import * as td from 'typedoc';
+import { collectTypes, fixDeclaration } from './collector.ts';
 
 function convertToTypedocPath(p: string) {
   return p.split(pathlib.sep).join(pathlib.posix.sep);
 }
 
 async function main() {
-  const directory = convertToTypedocPath(pathlib.join(import.meta.dirname, '..', '..', '..', 'src', 'bundles', 'curve'));
+  const directory = convertToTypedocPath(pathlib.join(import.meta.dirname, '..', '..', '..', 'src', 'bundles', 'sound'));
+  const tsconfigPath = pathlib.posix.join(directory, 'tsconfig.json');
+
   const app = await td.Application.bootstrap({
     entryPoints: [pathlib.posix.join(directory, 'src', 'index.ts')],
-    tsconfig: pathlib.posix.join(directory, 'tsconfig.json'),
+    tsconfig: tsconfigPath,
   });
 
   const project = await app.convert();
+  // console.log(project!.getChildByName('IContext'));
 
   const writeStream = fs.createWriteStream(pathlib.join(import.meta.dirname, 'test.d.ts'), 'utf-8');
 
@@ -95,7 +99,7 @@ async function main() {
         tag: '@param',
         content: comment.summary,
         name
-      });
+      } as any);
     });
 
     if (signature.comment) {
@@ -233,19 +237,23 @@ async function main() {
 
   function writeClassOrInterfaceBody(decls: td.DeclarationReflection[], indent: string) {
     decls.forEach(child => {
+      if (child.flags.isPrivate || child.implementationOf || child.flags.isInherited) return;
+
       if (child.name === 'constructor') {
         // Don't write useless constructors
         const notUseless = child.signatures?.some(sig => sig.parameters!.length > 0);
         if (!notUseless) return;
       }
 
-      if (child.implementationOf || child.flags.isInherited) return;
-
       writeDeclaration(child, indent, false);
     });
   }
 
   function writeTypeAlias(declaration: td.DeclarationReflection, indent: string, shouldExport: boolean) {
+    if (declaration.comment) {
+      writeComment(declaration.comment, indent);
+    }
+
     writeStream.write(indent);
 
     if (shouldExport) {
@@ -259,7 +267,7 @@ async function main() {
       writeStream.write(`<${params}>`);
     }
 
-    writeStream.write(` = ${declaration.type!.stringify(td.TypeContext.none)};`);
+    writeStream.write(` = ${declaration.type!.stringify(td.TypeContext.none)};\n`);
   }
 
   function writeEnum(declaration: td.DeclarationReflection, indent: string, shouldExport: boolean) {
@@ -290,7 +298,21 @@ async function main() {
     writeStream.write(`\n${indent}}`);
   }
 
+  function writeImport(names: [string, string][], source: string) {
+    const specifiers = names.map(([imported, local]) => {
+      if (imported === local) {
+        return imported;
+      }
+
+      return `${imported} as ${local}`;
+    });
+
+    writeStream.write(`import type { ${specifiers.join(', ')} } from '${source}';\n`);
+  }
+
   function writeDeclaration(declaration: td.DeclarationReflection, indent: string, shouldExport: boolean) {
+    if (declaration.flags.isExternal) return;
+
     switch (declaration.kind) {
       case td.ReflectionKind.Accessor: {
         if (declaration.getSignature) {
@@ -334,11 +356,78 @@ async function main() {
     }
   }
 
-  writeStream.write('declare module \'curve\' {\n');
+  const collectedTypes = await collectTypes(project!, tsconfigPath);
+
+  const importsByPackage = collectedTypes.entries().reduce<Record<string, string[]>>((res, [name, type]) => {
+    if (type.type !== 'reference' || !type.symbolId) return res;
+
+    // console.log(type.symbolId);
+    const { packageName } = type.symbolId;
+
+    if (!(packageName in res)) {
+      res[packageName] = [];
+    }
+
+    res[packageName].push(name);
+    return res;
+  }, {});
+
+  if (project!.comment) {
+    writeComment(project!.comment, '');
+  }
+
+  // Write the import declarations for anything that needed to be imported
+  // into the current file
+  Object.entries(importsByPackage).forEach(([pkgName, names]) => {
+    if (pkgName !== project!.packageName) {
+      writeImport(names.map(each => [each, each]), pkgName);
+    }
+  });
+
+  writeStream.write(`declare module '${project!.name}' {\n`);
+
+  for (const typeInfo of collectedTypes.values()) {
+    // The only reflection types we should have are the ones that originate
+    // from the same package, so we declare them within the module
+    if (typeInfo.type === 'reflection') {
+      writeDeclaration(typeInfo.declaration, '  ', false);
+    }
+  }
+
+  const externals = project!.children!.reduce<Record<string, td.DeclarationReflection[]>>((res, child) => {
+    if (!child.flags.isExternal) return res;
+    if (!child.sources?.length) return res;
+
+    const [{ fullFileName }] = child.sources;
+
+    if (!(fullFileName in res)) {
+      res[fullFileName] = [];
+    }
+
+    res[fullFileName].push(child);
+    return res;
+  }, {});
 
   for (const declaration of project!.children!) {
-    writeDeclaration(declaration, '  ', true);
-    writeStream.write('\n');
+    if (!declaration.flags.isExternal) {
+      fixDeclaration(declaration);
+      writeDeclaration(declaration, '  ', true);
+      writeStream.write('\n');
+    }
+  }
+
+  // Handle any export aliases like export { something } from 'wherever';
+  // We don't necessarily want to decompose that type into its components
+  for (const [filePath, imports] of Object.entries(externals)) {
+    const importStr = imports.map(decl => {
+      if (decl.name === decl.escapedName) {
+        return decl.name;
+      }
+
+      return `${decl.escapedName} as ${decl.name}`;
+    });
+
+    writeStream.write(`  export type { ${importStr.join(', ')} } from '${filePath}';\n`);
   }
 
   writeStream.write('}');
