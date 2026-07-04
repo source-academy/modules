@@ -4,7 +4,7 @@
   "private": true,
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "typescript": "^6.0.2"
+    "typescript": "catalog:"
   },
   "type": "module",
   "exports": {

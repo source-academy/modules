@@ -12,7 +12,7 @@
     "@types/node": "^24.0.0",
     "@vitest/coverage-v8": "catalog:",
     "esbuild": "^0.28.1",
-    "typescript": "^6.0.2"
+    "typescript": "catalog:"
   },
   "exports": {
     "./coverage-reporter": {

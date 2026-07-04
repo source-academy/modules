@@ -16,7 +16,7 @@
     "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "playwright": "^1.55.1",
-    "typescript": "^6.0.2",
+    "typescript": "catalog:",
     "vitest": "catalog:",
     "vitest-browser-react": "^2.1.0"
   },

@@ -17,7 +17,7 @@
     "@types/plotly.js": "^2.35.4",
     "@types/react": "catalog:",
     "@types/three": "^0.185.0",
-    "typescript": "^6.0.2"
+    "typescript": "catalog:"
   },
   "scripts": {
     "build": "buildtools build tab .",

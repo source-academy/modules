@@ -3907,7 +3907,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     phaser: "npm:^3.54.0"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -3918,7 +3918,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     js-slang: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -3931,7 +3931,7 @@ __metadata:
     "@types/uniqid": "npm:^5.3.4"
     mqtt: "npm:^4.3.7"
     os: "npm:^0.1.2"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
     uniqid: "npm:^5.4.0"
   languageName: unknown
   linkType: soft
@@ -3943,7 +3943,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     es-toolkit: "npm:^1.44.0"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -3958,7 +3958,7 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     js-slang: "catalog:"
     save-file: "npm:^2.3.1"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -3971,7 +3971,7 @@ __metadata:
     es-toolkit: "npm:^1.44.0"
     gl-matrix: "npm:^3.3.0"
     js-slang: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -3982,7 +3982,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     js-slang: "catalog:"
     phaser: "npm:^3.54.0"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -3992,7 +3992,7 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     es-toolkit: "npm:^1.44.0"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4003,7 +4003,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     js-slang: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4018,7 +4018,7 @@ __metadata:
     nbody: "npm:^0.2.0"
     plotly.js-dist: "npm:^2.17.1"
     three: "npm:^0.185.0"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4030,7 +4030,7 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/plotly.js": "npm:^3.0.0"
     plotly.js-dist: "npm:^3.0.0"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4041,7 +4041,7 @@ __metadata:
     "@box2d/core": "npm:^0.10.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4056,7 +4056,7 @@ __metadata:
     playwright: "npm:^1.55.1"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
     vitest: "catalog:"
     vitest-browser-react: "npm:^2.1.0"
   languageName: unknown
@@ -4073,7 +4073,7 @@ __metadata:
     "@types/plotly.js": "npm:^3.0.0"
     js-slang: "catalog:"
     plotly.js-dist: "npm:^3.0.0"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4084,7 +4084,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     js-slang: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4095,7 +4095,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     js-slang: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4110,7 +4110,7 @@ __metadata:
     es-toolkit: "npm:^1.44.0"
     js-slang: "catalog:"
     three: "npm:^0.185.0"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4124,7 +4124,7 @@ __metadata:
     es-toolkit: "npm:^1.44.0"
     gl-matrix: "npm:^3.3.0"
     js-slang: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4134,7 +4134,7 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4143,7 +4143,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-scrabble@workspace:src/bundles/scrabble"
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4155,7 +4155,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     js-slang: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4165,7 +4165,7 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     js-slang: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4177,7 +4177,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     js-slang: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4189,7 +4189,7 @@ __metadata:
     "@sourceacademy/modules-lib": "workspace:^"
     es-toolkit: "npm:^1.44.0"
     js-slang: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4205,7 +4205,7 @@ __metadata:
     "@types/react-dom": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4216,7 +4216,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     source-academy-utils: "npm:^1.0.0"
     source-academy-wabt: "npm:^1.0.4"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4239,7 +4239,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:^7.0.1"
     globals: "npm:^17.0.0"
     js-slang: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
     typescript-eslint: "npm:^8.58.2"
   peerDependencies:
     "@eslint/markdown": ^7.0.0 || ^8.0.0
@@ -4265,7 +4265,7 @@ __metadata:
     "@types/markdown-it": "npm:^14.1.2"
     es-toolkit: "npm:^1.44.0"
     shiki: "npm:^2.1.0"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
     yaml: "npm:^2.8.0"
   peerDependencies:
     markdown-it: "*"
@@ -4295,7 +4295,7 @@ __metadata:
     http-server: "npm:^14.1.1"
     jsdom: "npm:^29.0.0"
     typedoc: "npm:^0.28.18"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
     vite: "npm:^8.1.0"
     vitest: "catalog:"
   bin:
@@ -4327,7 +4327,7 @@ __metadata:
     react-ace: "npm:^14.0.0"
     react-dom: "catalog:"
     sass: "npm:^1.85.0"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
     vite: "npm:^8.1.0"
     vite-plugin-node-polyfills: "npm:^0.28.0"
     vitest: "catalog:"
@@ -4352,7 +4352,7 @@ __metadata:
     cspell: "npm:^10.0.0"
     js-slang: "catalog:"
     mermaid: "npm:^11.10.0"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
     vitepress: "npm:^1.6.4"
     vitepress-plugin-group-icons: "npm:^1.7.5"
     vitepress-plugin-mermaid: "npm:^2.0.17"
@@ -4371,7 +4371,7 @@ __metadata:
     "@types/node": "npm:^24.0.0"
     es-toolkit: "npm:^1.44.0"
     snyk-nodejs-lockfile-parser: "npm:^2.4.2"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
     vitest: "catalog:"
   languageName: unknown
   linkType: soft
@@ -4396,7 +4396,7 @@ __metadata:
     typedoc-plugin-frontmatter: "npm:^1.3.0"
     typedoc-plugin-markdown: "npm:^4.7.0"
     typedoc-plugin-rename-defaults: "npm:^0.7.3"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
     vitest: "catalog:"
     vitest-browser-react: "npm:^2.1.0"
   languageName: unknown
@@ -4416,7 +4416,7 @@ __metadata:
     es-toolkit: "npm:^1.44.0"
     esbuild: "npm:^0.28.1"
     jsonschema: "npm:^1.5.0"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
     vitest: "catalog:"
     vitest-browser-react: "npm:^2.1.0"
   peerDependencies:
@@ -4435,7 +4435,7 @@ __metadata:
     acorn-typescript: "npm:^1.4.13"
     js-slang: "catalog:"
     typedoc: "npm:^0.28.18"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
     vitest: "catalog:"
   peerDependencies:
     js-slang: "*"
@@ -4476,7 +4476,7 @@ __metadata:
     jsonc-eslint-parser: "npm:^3.1.0"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
     typescript-eslint: "npm:^8.58.2"
     vitest: "catalog:"
     vitest-browser-react: "npm:^2.1.0"
@@ -4502,7 +4502,7 @@ __metadata:
     phaser: "npm:^3.54.0"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4518,7 +4518,7 @@ __metadata:
     "@types/react-dom": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4534,7 +4534,7 @@ __metadata:
     "@types/react-dom": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4553,7 +4553,7 @@ __metadata:
     playwright: "npm:^1.55.1"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
     vitest: "catalog:"
     vitest-browser-react: "npm:^2.1.0"
   languageName: unknown
@@ -4568,7 +4568,7 @@ __metadata:
     "@types/react": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4583,7 +4583,7 @@ __metadata:
     "@types/react": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4603,7 +4603,7 @@ __metadata:
     react: "catalog:"
     react-dom: "catalog:"
     three: "npm:^0.185.0"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4618,7 +4618,7 @@ __metadata:
     "@types/react-dom": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4634,7 +4634,7 @@ __metadata:
     "@types/react": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4649,7 +4649,7 @@ __metadata:
     "@types/react": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4663,7 +4663,7 @@ __metadata:
     "@types/react": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4676,7 +4676,7 @@ __metadata:
     "@types/react": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4694,7 +4694,7 @@ __metadata:
     react: "catalog:"
     react-ace: "npm:^14.0.0"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4710,7 +4710,7 @@ __metadata:
     "@types/react": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4727,7 +4727,7 @@ __metadata:
     playwright: "npm:^1.55.1"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
     vitest: "catalog:"
     vitest-browser-react: "npm:^2.1.0"
   languageName: unknown
@@ -4743,7 +4743,7 @@ __metadata:
     "@types/react": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4759,7 +4759,7 @@ __metadata:
     classnames: "npm:^2.3.1"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4774,7 +4774,7 @@ __metadata:
     "@types/react-dom": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4789,7 +4789,7 @@ __metadata:
     es-toolkit: "npm:^1.44.0"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4805,7 +4805,7 @@ __metadata:
     "@types/react-dom": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -4818,7 +4818,7 @@ __metadata:
     "@vitest/coverage-v8": "catalog:"
     esbuild: "npm:^0.28.1"
     istanbul-lib-report: "npm:^3.0.1"
-    typescript: "npm:^6.0.2"
+    typescript: "catalog:"
     vitest: "catalog:"
   languageName: unknown
   linkType: soft
@@ -17417,7 +17417,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^6.0.2":
+"typescript@npm:^6.0.3":
   version: 6.0.3
   resolution: "typescript@npm:6.0.3"
   bin:
@@ -17457,7 +17457,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^6.0.2#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^6.0.3#optional!builtin<compat/typescript>":
   version: 6.0.3
   resolution: "typescript@patch:typescript@npm%3A6.0.3#optional!builtin<compat/typescript>::version=6.0.3&hash=5786d5"
   bin:
