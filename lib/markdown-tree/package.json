@@ -9,7 +9,7 @@
     "@sourceacademy/modules-repotools": "workspace:^",
     "@types/markdown-it": "^14.1.2",
     "shiki": "^2.1.0",
-    "typescript": "^6.0.2"
+    "typescript": "catalog:"
   },
   "exports": {
     ".": {

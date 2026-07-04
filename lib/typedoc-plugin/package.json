@@ -13,7 +13,7 @@
     "@types/node": "^24.0.0",
     "js-slang": "catalog:",
     "typedoc": "^0.28.18",
-    "typescript": "^6.0.2",
+    "typescript": "catalog:",
     "vitest": "catalog:"
   },
   "peerDependencies": {
