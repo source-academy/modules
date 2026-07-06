@@ -3885,7 +3885,7 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     es-toolkit: "npm:^1.44.0"
-    gl-matrix: "npm:^3.4.4"
+    gl-matrix: "npm:^3.3.0"
     js-slang: "npm:^1.0.85"
     typescript: "npm:^6.0.2"
   languageName: unknown
@@ -4126,13 +4126,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/common-tabs@file:../../../../plugins/src/common/tabs::locator=%40sourceacademy%2Ftab-Rune%40workspace%3Asrc%2Ftabs%2FRune":
+"@sourceacademy/common-tabs@npm:^0.0.1":
   version: 0.0.1
-  resolution: "@sourceacademy/common-tabs@file:../../../../plugins/src/common/tabs#../../../../plugins/src/common/tabs::hash=3ef274&locator=%40sourceacademy%2Ftab-Rune%40workspace%3Asrc%2Ftabs%2FRune"
+  resolution: "@sourceacademy/common-tabs@npm:0.0.1"
   peerDependencies:
     "@blueprintjs/icons": ^6.0.0
     react: ^18 || ^19
-  checksum: 10c0/e021671baeea48c69712824e8d696c84da87ceea024c67c73eed1d7dbd5b7a36926108e2625ab64706c1de3dee14433c3283449a62263cc2d0d90ec65c62470b
+  checksum: 10c0/ca9d9b626b9fcf1eeed40703438cc3c5af8bcdc04475cd5071794a5a5effbe7ae064ad72da315491f6065b9cdb895cb86ea00176f20b5ff318cda831dd33f780
   languageName: node
   linkType: hard
 
@@ -4637,7 +4637,7 @@ __metadata:
   dependencies:
     "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/bundle-rune": "workspace:^"
-    "@sourceacademy/common-tabs": "file:../../../../plugins/src/common/tabs"
+    "@sourceacademy/common-tabs": "npm:^0.0.1"
     "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
@@ -10411,7 +10411,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gl-matrix@npm:^3.4.4":
+"gl-matrix@npm:^3.3.0, gl-matrix@npm:^3.4.4":
   version: 3.4.4
   resolution: "gl-matrix@npm:3.4.4"
   checksum: 10c0/9aa022ffac0d158212ad0cd29939864ad919ac31cd5dc5a5d35e9d66bb62679ddf152ff7b2173ded20131045e40572b87f31b26a920be2a7583a1516b13b5b4b
