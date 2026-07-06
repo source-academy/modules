@@ -13,14 +13,14 @@ type Props = {
 export default function HollusionCanvas({ rune }: Props) {
   // We memoize the render function so that we don't have
   // to reinitialize the shaders every time
-  const renderFuncRef = React.useRef<(time: number) => void>(undefined);
+  const renderFuncRef = React.useRef<Promise<(time: number) => unknown>>(undefined);
 
   const { setCanvas } = useAnimation({
     callback(timestamp, canvas) {
       if (renderFuncRef.current === undefined) {
         renderFuncRef.current = rune.draw(canvas);
       }
-      renderFuncRef.current(timestamp);
+      renderFuncRef.current.then(renderFunc => renderFunc(timestamp));
     },
     autoStart: true
   });
