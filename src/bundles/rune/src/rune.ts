@@ -223,7 +223,9 @@ export async function drawRunesToFrameBuffer(
    * Initialize a texture and load an image.
    * When the image finished loading copy it into the texture.
    */
-  const loadTexture = async (imageSource: HTMLImageElement | string): Promise<WebGLTexture | null> => {
+  const loadTexture = async (rune: Rune): Promise<WebGLTexture | null> => {
+    if (rune.texture === null) return null;
+    const imageSource = rune.texture;
     const image = await (async (): Promise<HTMLImageElement> => {
       if (typeof imageSource === 'string') {
         const image = Object.assign(new Image(), {
@@ -231,7 +233,10 @@ export async function drawRunesToFrameBuffer(
           src: imageSource
         });
         return new Promise((resolve, reject) => {
-          image.onload = () => resolve(image);
+          image.onload = () => {
+            rune.texture = image;
+            resolve(image);
+          };
           image.onabort = reject;
           image.onerror = reject;
         });
@@ -311,7 +316,7 @@ export async function drawRunesToFrameBuffer(
       );
       gl.uniform1i(textureSwitchPointer, 0);
     } else {
-      const texture = await loadTexture(rune.texture);
+      const texture = await loadTexture(rune);
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.uniform1i(texturePointer, 0);
