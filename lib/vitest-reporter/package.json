@@ -11,8 +11,8 @@
     "@types/istanbul-lib-report": "^3.0.3",
     "@types/node": "^24.0.0",
     "@vitest/coverage-v8": "catalog:",
-    "esbuild": "^0.28.0",
-    "typescript": "^6.0.2"
+    "esbuild": "^0.28.1",
+    "typescript": "catalog:"
   },
   "exports": {
     "./coverage-reporter": {

@@ -23,7 +23,7 @@
     "react-ace": "^14.0.0",
     "react-dom": "catalog:",
     "vite": "^8.1.0",
-    "vite-plugin-node-polyfills": "^0.26.0"
+    "vite-plugin-node-polyfills": "^0.28.0"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
@@ -33,7 +33,7 @@
     "eslint": "^9.35.0",
     "playwright": "^1.55.1",
     "sass": "^1.85.0",
-    "typescript": "^6.0.2",
+    "typescript": "catalog:",
     "vitest": "catalog:",
     "vitest-browser-react": "^2.1.0"
   },

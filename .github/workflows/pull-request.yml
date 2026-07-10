@@ -113,7 +113,7 @@ jobs:
           yarn build
 
       - name: Upload Tab Artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.tabInfo.tabName }}-tab
           path: ./build/tabs/${{ matrix.tabInfo.tabName }}.js
@@ -158,7 +158,7 @@ jobs:
           yarn tsc
 
       - name: Upload Tab Artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.bundleInfo.name }}-bundle
           path: ./build/bundles/${{ matrix.bundleInfo.name }}.js
@@ -283,11 +283,7 @@ jobs:
         run: yarn buildtools manifest
 
       - name: Upload Manifest
-<<<<<<< HEAD
-        uses: actions/upload-artifact@v4
-=======
-        uses: actions/upload-artifact@v6
->>>>>>> master
+        uses: actions/upload-artifact@v7
         with:
           name: manifest
           path: ./build/modules.json
