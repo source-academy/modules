@@ -51,6 +51,7 @@ export async function make_tree(
  * @param value Value to be tested. May be of any Conductor DataType.
  */
 export async function is_tree(evaluator: IDataHandler, value: TypedValue<DataType>): Promise<boolean> {
+  if (!value) return false;
   if (value.type === DataType.EMPTY_LIST) return true;
   if (value.type !== DataType.PAIR) return false;
 
@@ -82,7 +83,7 @@ export async function is_tree(evaluator: IDataHandler, value: TypedValue<DataTyp
  * @returns bool
  */
 export function is_empty_tree(value: TypedValue<DataType>): value is TypedValue<DataType.EMPTY_LIST> {
-  return value.type === DataType.EMPTY_LIST;
+  return value?.type === DataType.EMPTY_LIST;
 }
 
 async function assertNonEmptyTree(
@@ -90,8 +91,8 @@ async function assertNonEmptyTree(
   value: TypedValue<DataType>,
   funcName: string
 ): Promise<NonEmptyBinaryTree> {
-  if (!await is_tree(evaluator, value)) {
-    throw new EvaluatorTypeError(`${funcName} expects binary tree`, 'binary tree', DataType[value.type]);
+  if (!value || !await is_tree(evaluator, value)) {
+    throw new EvaluatorTypeError(`${funcName} expects binary tree`, 'binary tree', value ? DataType[value.type] : 'undefined');
   }
 
   if (value.type !== DataType.PAIR) {
