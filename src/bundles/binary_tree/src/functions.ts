@@ -1,4 +1,6 @@
-import { head, is_list, is_pair, list, tail } from 'js-slang/dist/stdlib/list';
+import { EvaluatorRuntimeError, EvaluatorTypeError } from '@sourceacademy/conductor/common';
+import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
+import { mEmptyList } from '@sourceacademy/conductor/util';
 import type { BinaryTree, EmptyBinaryTree, NonEmptyBinaryTree } from './types';
 
 /**
@@ -9,8 +11,8 @@ import type { BinaryTree, EmptyBinaryTree, NonEmptyBinaryTree } from './types';
  * ```
  * @returns An empty binary tree
  */
-export function make_empty_tree(): BinaryTree {
-  return null;
+export function make_empty_tree(): EmptyBinaryTree {
+  return mEmptyList();
 }
 
 /**
@@ -20,13 +22,21 @@ export function make_empty_tree(): BinaryTree {
  * const tree = make_tree(1, make_empty_tree(), make_empty_tree());
  * display(tree); // Shows "[1, [null, [null, null]]]" in the REPL
  * ```
+ * @param evaluator The Conductor data handler for the running evaluator
  * @param value Value to be stored in the node
  * @param left Left subtree of the node
  * @param right Right subtree of the node
  * @returns A binary tree
  */
-export function make_tree(value: any, left: BinaryTree, right: BinaryTree): BinaryTree {
-  return list(value, left, right);
+export async function make_tree(
+  evaluator: IDataHandler,
+  value: TypedValue<DataType.OPAQUE>,
+  left: BinaryTree,
+  right: BinaryTree
+): Promise<NonEmptyBinaryTree> {
+  const rightPair = await evaluator.pair_make(right, mEmptyList());
+  const leftPair = await evaluator.pair_make(left, rightPair);
+  return evaluator.pair_make(value, leftPair);
 }
 
 /**
@@ -37,21 +47,27 @@ export function make_tree(value: any, left: BinaryTree, right: BinaryTree): Bina
  * const tree = make_tree(1, make_empty_tree(), make_empty_tree());
  * display(is_tree(tree)); // Shows "true" in the REPL
  * ```
- * @param value Value to be tested
+ * @param evaluator The Conductor data handler for the running evaluator
+ * @param value Value to be tested. May be of any Conductor DataType.
  */
-export function is_tree(value: any): value is BinaryTree {
-  // TODO: value parameter should be of type unknown
-  if (!is_list(value)) return false;
+export async function is_tree(evaluator: IDataHandler, value: TypedValue<DataType>): Promise<boolean> {
+  if (value.type === DataType.EMPTY_LIST) return true;
+  if (value.type !== DataType.PAIR) return false;
 
-  if (is_empty_tree(value)) return true;
+  const rest = await evaluator.pair_tail(value);
+  if (rest.type !== DataType.PAIR) return false;
 
-  const left = tail(value);
-  if (!is_list(left) || !is_tree(head(left))) return false;
+  const left = await evaluator.pair_head(rest);
+  if (!await is_tree(evaluator, left)) return false;
 
-  const right = tail(left);
-  if (!is_pair(right) || !is_tree(head(right))) return false;
+  const rightRest = await evaluator.pair_tail(rest);
+  if (rightRest.type !== DataType.PAIR) return false;
 
-  return tail(right) === null;
+  const right = await evaluator.pair_head(rightRest);
+  if (!await is_tree(evaluator, right)) return false;
+
+  const tail = await evaluator.pair_tail(rightRest);
+  return tail.type === DataType.EMPTY_LIST;
 }
 
 /**
@@ -62,21 +78,27 @@ export function is_tree(value: any): value is BinaryTree {
  * const tree = make_tree(1, make_empty_tree(), make_empty_tree());
  * display(is_empty_tree(tree)); // Shows "false" in the REPL
  * ```
- * @param value Value to be tested
+ * @param value Value to be tested. May be of any Conductor DataType.
  * @returns bool
  */
-export function is_empty_tree(value: BinaryTree): value is EmptyBinaryTree {
-  return value === null;
+export function is_empty_tree(value: TypedValue<DataType>): value is TypedValue<DataType.EMPTY_LIST> {
+  return value.type === DataType.EMPTY_LIST;
 }
 
-function throwIfNotNonEmptyTree(value: unknown, func_name: string): asserts value is NonEmptyBinaryTree {
-  if (!is_tree(value)) {
-    throw new Error(`${func_name} expects binary tree, received: ${value}`);
+async function assertNonEmptyTree(
+  evaluator: IDataHandler,
+  value: TypedValue<DataType>,
+  funcName: string
+): Promise<NonEmptyBinaryTree> {
+  if (!await is_tree(evaluator, value)) {
+    throw new EvaluatorTypeError(`${funcName} expects binary tree`, 'binary tree', DataType[value.type]);
   }
 
-  if (is_empty_tree(value)) {
-    throw new Error(`${func_name} received an empty binary tree!`);
+  if (value.type !== DataType.PAIR) {
+    throw new EvaluatorRuntimeError(`${funcName} received an empty binary tree!`);
   }
+
+  return value;
 }
 
 /**
@@ -86,12 +108,13 @@ function throwIfNotNonEmptyTree(value: unknown, func_name: string): asserts valu
  * const tree = make_tree(1, make_empty_tree(), make_empty_tree());
  * display(entry(tree)); // Shows "1" in the REPL
  * ```
+ * @param evaluator The Conductor data handler for the running evaluator
  * @param t BinaryTree to be accessed
  * @returns Value
  */
-export function entry(t: BinaryTree): any {
-  throwIfNotNonEmptyTree(t, entry.name);
-  return t[0];
+export async function entry(evaluator: IDataHandler, t: TypedValue<DataType>): Promise<TypedValue<DataType.OPAQUE>> {
+  const tree = await assertNonEmptyTree(evaluator, t, entry.name);
+  return (await evaluator.pair_head(tree)) as TypedValue<DataType.OPAQUE>;
 }
 
 /**
@@ -101,12 +124,14 @@ export function entry(t: BinaryTree): any {
  * const tree = make_tree(1, make_tree(2, make_empty_tree(), make_empty_tree()), make_empty_tree());
  * display(entry(left_branch(tree))); // Shows "2" in the REPL
  * ```
+ * @param evaluator The Conductor data handler for the running evaluator
  * @param t BinaryTree to be accessed
  * @returns BinaryTree
  */
-export function left_branch(t: BinaryTree): BinaryTree {
-  throwIfNotNonEmptyTree(t, left_branch.name);
-  return head(tail(t));
+export async function left_branch(evaluator: IDataHandler, t: TypedValue<DataType>): Promise<BinaryTree> {
+  const tree = await assertNonEmptyTree(evaluator, t, left_branch.name);
+  const rest = await evaluator.pair_tail(tree);
+  return (await evaluator.pair_head(rest as TypedValue<DataType.PAIR>)) as BinaryTree;
 }
 
 /**
@@ -116,10 +141,13 @@ export function left_branch(t: BinaryTree): BinaryTree {
  * const tree = make_tree(1, make_empty_tree(), make_tree(2, make_empty_tree(), make_empty_tree()));
  * display(entry(right_branch(tree))); // Shows "2" in the REPL
  * ```
+ * @param evaluator The Conductor data handler for the running evaluator
  * @param t BinaryTree to be accessed
  * @returns BinaryTree
  */
-export function right_branch(t: BinaryTree): BinaryTree {
-  throwIfNotNonEmptyTree(t, right_branch.name);
-  return head(tail(tail(t)));
+export async function right_branch(evaluator: IDataHandler, t: TypedValue<DataType>): Promise<BinaryTree> {
+  const tree = await assertNonEmptyTree(evaluator, t, right_branch.name);
+  const rest = await evaluator.pair_tail(tree);
+  const rightRest = await evaluator.pair_tail(rest as TypedValue<DataType.PAIR>);
+  return (await evaluator.pair_head(rightRest as TypedValue<DataType.PAIR>)) as BinaryTree;
 }
