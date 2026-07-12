@@ -4143,6 +4143,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sourceacademy/conductor@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "@sourceacademy/conductor@npm:0.6.0"
+  checksum: 10c0/51c38382854718c10594534e59746309dbd9c6ee919bdec87fc4f9d4c74bb6ac3fd3ad7a7b0a56911bda4ac12241c4231a09e48aa0f56080cdd8286abf78c0ba
+  languageName: node
+  linkType: hard
+
 "@sourceacademy/lint-plugin@workspace:^, @sourceacademy/lint-plugin@workspace:lib/lintplugin":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/lint-plugin@workspace:lib/lintplugin"
@@ -4300,6 +4307,7 @@ __metadata:
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
     "@blueprintjs/icons": "npm:^6.0.0"
+    "@sourceacademy/conductor": "npm:^0.6.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/react": "npm:^19.0.0"
     "@types/react-dom": "npm:^19.0.0"

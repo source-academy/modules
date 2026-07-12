@@ -8,11 +8,12 @@
  * @author Hou Ruomu
  */
 
-import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
-import { BaseModulePlugin } from '@sourceacademy/conductor/module';
+import type { IChannel, IConduit, PluginClass } from '@sourceacademy/conductor/conduit';
+import { BaseModulePlugin, type IModulePlugin } from '@sourceacademy/conductor/module';
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 
+import { attachModuleMethod } from '@sourceacademy/modules-lib/conductor/methods';
 import * as funcs from './functions';
 import {
   RUNE_CHANNEL_ID,
@@ -30,20 +31,6 @@ type RuneTabLoader = {
   tabs: string[];
   loadTab: (tab: string) => void;
 };
-
-const RUNE_CONSTANTS = [
-  'blank',
-  'circle',
-  'corner',
-  'heart',
-  'nova',
-  'pentagram',
-  'rcross',
-  'ribbon',
-  'sail',
-  'square',
-  'triangle'
-] as const;
 
 export default class RuneModulePlugin extends BaseModulePlugin {
   id = 'rune';
@@ -210,26 +197,14 @@ export default class RuneModulePlugin extends BaseModulePlugin {
     });
   }
 
-  private __bindExportedMethods() {
-    for (const name of this.exportedNames) {
-      const method = this[name];
-      if (typeof method !== 'function') continue;
-
-      const signature = (method as SignaturedModuleMethod).signature;
-      const boundMethod = method.bind(this) as typeof method & SignaturedModuleMethod;
-      boundMethod.signature = signature;
-      Object.defineProperty(this, name, {
-        configurable: true,
-        value: boundMethod
-      });
-    }
-  }
-
   async initialise() {
-    this.__bindExportedMethods();
     await super.initialise();
-    for (const name of RUNE_CONSTANTS) {
-      this[name] = funcs[name];
+    for (const name in funcs.RuneFunctions) {
+      const value = funcs.RuneFunctions[name as keyof typeof funcs.RuneFunctions];
+      if (!(value instanceof Rune)) {
+        continue;
+      }
+      this[name] = funcs.RuneFunctions[name];
       this.exports.push({
         symbol: name,
         value: await this.__makeRune(this[name])
@@ -936,62 +911,41 @@ export default class RuneModulePlugin extends BaseModulePlugin {
   }
 }
 
-type SignaturedModuleMethod = {
-  signature?: {
-    args: readonly DataType[];
-    returnType: DataType;
-  };
-};
-
-function attachModuleMethod(
-  methodName: string,
-  args: readonly DataType[],
-  returnType: DataType
-) {
-  const method = RuneModulePlugin.prototype[methodName] as SignaturedModuleMethod | undefined;
-  if (method === undefined) {
-    throw new Error(`Rune module method "${methodName}" does not exist.`);
-  }
-  method.signature = { args, returnType };
-}
-
-attachModuleMethod('anaglyph', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('animate_anaglyph', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE], DataType.OPAQUE);
-attachModuleMethod('animate_rune', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE], DataType.OPAQUE);
-attachModuleMethod('beside', [DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('beside_frac', [DataType.NUMBER, DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('black', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('blue', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('brown', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('color', [DataType.OPAQUE, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
-attachModuleMethod('flip_horiz', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('flip_vert', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('from_url', [DataType.CONST_STRING], DataType.OPAQUE);
-attachModuleMethod('green', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('hollusion', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('hollusion_magnitude', [DataType.OPAQUE, DataType.NUMBER], DataType.OPAQUE);
-attachModuleMethod('indigo', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('make_cross', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('orange', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('overlay', [DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('overlay_frac', [DataType.NUMBER, DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('pink', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('purple', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('quarter_turn_left', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('quarter_turn_right', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('random_color', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('red', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('repeat_pattern', [DataType.NUMBER, DataType.CLOSURE, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('rotate', [DataType.NUMBER, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('scale', [DataType.NUMBER, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('scale_independent', [DataType.NUMBER, DataType.NUMBER, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('show', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('stack', [DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('stack_frac', [DataType.NUMBER, DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('stackn', [DataType.NUMBER, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('translate', [DataType.NUMBER, DataType.NUMBER, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('turn_upside_down', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('white', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod('yellow', [DataType.OPAQUE], DataType.OPAQUE);
-
-export { type_map };
+attachModuleMethod(RuneModulePlugin, 'anaglyph', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'animate_anaglyph', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'animate_rune', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'beside', [DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'beside_frac', [DataType.NUMBER, DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'black', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'blue', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'brown', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'color', [DataType.OPAQUE, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'flip_horiz', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'flip_vert', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'from_url', [DataType.CONST_STRING], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'green', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'hollusion', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'hollusion_magnitude', [DataType.OPAQUE, DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'indigo', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'make_cross', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'orange', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'overlay', [DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'overlay_frac', [DataType.NUMBER, DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'pink', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'purple', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'quarter_turn_left', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'quarter_turn_right', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'random_color', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'red', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'repeat_pattern', [DataType.NUMBER, DataType.CLOSURE, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'rotate', [DataType.NUMBER, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'scale', [DataType.NUMBER, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'scale_independent', [DataType.NUMBER, DataType.NUMBER, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'show', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'stack', [DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'stack_frac', [DataType.NUMBER, DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'stackn', [DataType.NUMBER, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'translate', [DataType.NUMBER, DataType.NUMBER, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'turn_upside_down', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'white', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'yellow', [DataType.OPAQUE], DataType.OPAQUE);

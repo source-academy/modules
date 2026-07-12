@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "devDependencies": {
+    "@sourceacademy/conductor": "^0.6.0",
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
