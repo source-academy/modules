@@ -4050,7 +4050,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-scrabble@workspace:src/bundles/scrabble"
   dependencies:
+    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-testplugin": "workspace:^"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
