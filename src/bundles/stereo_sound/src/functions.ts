@@ -1,4 +1,4 @@
-import { midi_note_to_frequency } from '@sourceacademy/bundle-midi';
+import { midi_note_to_frequency } from '@sourceacademy/bundle-midi/functions';
 import context from 'js-slang/context';
 import {
   accumulate,

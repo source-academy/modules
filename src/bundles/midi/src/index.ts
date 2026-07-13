@@ -5,125 +5,146 @@
  * @module MIDI
  * @author leeyi45
  */
+import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
+import { BaseModulePlugin, moduleMethod } from '@sourceacademy/conductor/module';
+import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
+import { DataType, type IFunctionSignature, type TypedValue } from '@sourceacademy/conductor/types';
 
-import { Accidental, type MIDINote, type NoteWithOctave } from './types';
-import { midiNoteToNoteName, noteToValues } from './utils';
+import { assertAccidental, scaleToConductorList } from './conductorAdapters';
+import {
+  FLAT,
+  NATURAL,
+  SHARP,
+  aeolian_scale as aeolian_scale_func,
+  dorian_scale as dorian_scale_func,
+  ionian_scale as ionian_scale_func,
+  letter_name_to_frequency as letter_name_to_frequency_func,
+  letter_name_to_midi_note as letter_name_to_midi_note_func,
+  locrian_scale as locrian_scale_func,
+  lydian_scale as lydian_scale_func,
+  major_scale as major_scale_func,
+  midi_note_to_frequency as midi_note_to_frequency_func,
+  midi_note_to_letter_name as midi_note_to_letter_name_func,
+  minor_scale as minor_scale_func,
+  mixolydian_scale as mixolydian_scale_func,
+  phrygian_scale as phrygian_scale_func
+} from './functions';
+import type { MIDINote, NoteWithOctave } from './types';
 
-/**
- * Converts a letter name to its corresponding MIDI note.
- * The letter name is represented in standard pitch notation.
- * Examples are "A5", "Db3", "C#7".
- * Refer to [this](https://i.imgur.com/qGQgmYr.png) mapping from
- * letter name to midi notes.
- *
- * @param note given letter name
- * @returns the corresponding midi note
- * @example
- * ```
- * letter_name_to_midi_note('C4'); // Returns 60
- * ```
- * @function
- */
-export function letter_name_to_midi_note(note: NoteWithOctave): MIDINote {
-  const [noteName, accidental, octave] = noteToValues(note, letter_name_to_midi_note.name);
-
-  let res = 12; // C0 is midi note 12
-  switch (noteName) {
-    case 'C':
-      break;
-    case 'D':
-      res += 2;
-      break;
-
-    case 'E':
-      res += 4;
-      break;
-
-    case 'F':
-      res += 5;
-      break;
-
-    case 'G':
-      res += 7;
-      break;
-
-    case 'A':
-      res += 9;
-      break;
-
-    case 'B':
-      res += 11;
-      break;
-
-    default:
-      break;
+export default class MidiModulePlugin extends BaseModulePlugin {
+  id = 'midi';
+  exportedNames = [
+    'letter_name_to_midi_note',
+    'midi_note_to_letter_name',
+    'midi_note_to_frequency',
+    'letter_name_to_frequency',
+    'major_scale',
+    'ionian_scale',
+    'dorian_scale',
+    'phrygian_scale',
+    'lydian_scale',
+    'mixolydian_scale',
+    'minor_scale',
+    'aeolian_scale',
+    'locrian_scale'
+  ] as const;
+  static channelAttach = [];
+  constructor(conduit: IConduit, channels: IChannel<any>[], evaluator: IInterfacableEvaluator) {
+    super(conduit, channels, evaluator);
+    this.__bindExportedMethods();
+    // BaseModulePlugin.initialise() only registers exportedNames whose value is a function, so
+    // these plain string constants are pushed onto `exports` directly instead.
+    this.exports.push(
+      { symbol: 'SHARP', value: { type: DataType.CONST_STRING, value: SHARP } },
+      { symbol: 'FLAT', value: { type: DataType.CONST_STRING, value: FLAT } },
+      { symbol: 'NATURAL', value: { type: DataType.CONST_STRING, value: NATURAL } }
+    );
   }
 
-  switch (accidental) {
-    case Accidental.FLAT: {
-      res -= 1;
-      break;
+  // See binary_tree's index.ts / source-academy/conductor#41 for why this is needed: evaluators
+  // call the registered closure as a bare function, so `this` inside the method body is
+  // undefined unless bound to the instance first.
+  private __bindExportedMethods() {
+    for (const name of this.exportedNames) {
+      const method = this[name];
+      if (typeof method !== 'function') continue;
+
+      const signature = (method as { signature?: IFunctionSignature<any, any> }).signature;
+      const boundMethod = method.bind(this) as typeof method & { signature?: IFunctionSignature<any, any> };
+      boundMethod.signature = signature;
+      Object.defineProperty(this, name, {
+        configurable: true,
+        value: boundMethod
+      });
     }
-    case Accidental.SHARP: {
-      res += 1;
-      break;
-    }
-    case Accidental.NATURAL:
-      break;
   }
 
-  return res + 12 * octave;
+  @moduleMethod([DataType.CONST_STRING], DataType.NUMBER)
+  async* letter_name_to_midi_note(note: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, unknown> {
+    return { type: DataType.NUMBER, value: letter_name_to_midi_note_func(note.value as NoteWithOctave) };
+  }
+
+  @moduleMethod([DataType.NUMBER, DataType.CONST_STRING], DataType.CONST_STRING)
+  async* midi_note_to_letter_name(
+    note: TypedValue<DataType.NUMBER>,
+    accidental: TypedValue<DataType.CONST_STRING>
+  ): AsyncGenerator<void, TypedValue<DataType.CONST_STRING>, unknown> {
+    assertAccidental(accidental.value, midi_note_to_letter_name_func.name);
+    return { type: DataType.CONST_STRING, value: midi_note_to_letter_name_func(note.value as MIDINote, accidental.value) };
+  }
+
+  @moduleMethod([DataType.NUMBER], DataType.NUMBER)
+  async* midi_note_to_frequency(note: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, unknown> {
+    return { type: DataType.NUMBER, value: midi_note_to_frequency_func(note.value as MIDINote) };
+  }
+
+  @moduleMethod([DataType.CONST_STRING], DataType.NUMBER)
+  async* letter_name_to_frequency(note: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, unknown> {
+    return { type: DataType.NUMBER, value: letter_name_to_frequency_func(note.value as NoteWithOctave) };
+  }
+
+  @moduleMethod([DataType.NUMBER], DataType.LIST)
+  async* major_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
+    return await scaleToConductorList(this.evaluator, major_scale_func(key.value as MIDINote));
+  }
+
+  @moduleMethod([DataType.NUMBER], DataType.LIST)
+  async* ionian_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
+    return await scaleToConductorList(this.evaluator, ionian_scale_func(key.value as MIDINote));
+  }
+
+  @moduleMethod([DataType.NUMBER], DataType.LIST)
+  async* dorian_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
+    return await scaleToConductorList(this.evaluator, dorian_scale_func(key.value as MIDINote));
+  }
+
+  @moduleMethod([DataType.NUMBER], DataType.LIST)
+  async* phrygian_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
+    return await scaleToConductorList(this.evaluator, phrygian_scale_func(key.value as MIDINote));
+  }
+
+  @moduleMethod([DataType.NUMBER], DataType.LIST)
+  async* lydian_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
+    return await scaleToConductorList(this.evaluator, lydian_scale_func(key.value as MIDINote));
+  }
+
+  @moduleMethod([DataType.NUMBER], DataType.LIST)
+  async* mixolydian_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
+    return await scaleToConductorList(this.evaluator, mixolydian_scale_func(key.value as MIDINote));
+  }
+
+  @moduleMethod([DataType.NUMBER], DataType.LIST)
+  async* minor_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
+    return await scaleToConductorList(this.evaluator, minor_scale_func(key.value as MIDINote));
+  }
+
+  @moduleMethod([DataType.NUMBER], DataType.LIST)
+  async* aeolian_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
+    return await scaleToConductorList(this.evaluator, aeolian_scale_func(key.value as MIDINote));
+  }
+
+  @moduleMethod([DataType.NUMBER], DataType.LIST)
+  async* locrian_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
+    return await scaleToConductorList(this.evaluator, locrian_scale_func(key.value as MIDINote));
+  }
 }
-
-/**
- * Convert a MIDI note into its letter representation
- * @param midiNote Note to convert
- * @param accidental Whether to return the letter as with a sharp or with a flat
- * @function
- */
-export function midi_note_to_letter_name(midiNote: MIDINote, accidental: 'flat' | 'sharp'): NoteWithOctave {
-  const octave = Math.floor(midiNote / 12) - 1;
-  const note = midiNoteToNoteName(midiNote, accidental, midi_note_to_letter_name.name);
-  return `${note}${octave}`;
-}
-
-/**
- * Converts a MIDI note to its corresponding frequency.
- *
- * @param note given MIDI note
- * @returns the frequency of the MIDI note
- * @function
- * @example midi_note_to_frequency(69); // Returns 440
- */
-export function midi_note_to_frequency(note: MIDINote): number {
-  // A4 = 440Hz = midi note 69
-  return 440 * 2 ** ((note - 69) / 12);
-}
-
-/**
- * Converts a letter name to its corresponding frequency.
- *
- * @param note given letter name
- * @returns the corresponding frequency
- * @example letter_name_to_frequency("A4"); // Returns 440
- */
-export function letter_name_to_frequency(note: NoteWithOctave): number {
-  return midi_note_to_frequency(letter_name_to_midi_note(note));
-}
-
-export * from './scales';
-
-/**
- * String representing the sharp symbol '#'
- */
-export const SHARP = Accidental.SHARP;
-
-/**
- * String representing the flat symbol 'b'
- */
-export const FLAT = Accidental.FLAT;
-
-/**
- * String representing the natural symbol '♮'
- */
-export const NATURAL = Accidental.NATURAL;

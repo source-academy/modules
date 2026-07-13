@@ -56,6 +56,6 @@ export {
   letter_name_to_midi_note,
   letter_name_to_frequency,
   midi_note_to_frequency
-} from '@sourceacademy/bundle-midi';
+} from '@sourceacademy/bundle-midi/functions';
 
 export { play_in_tab } from './play_in_tab';
