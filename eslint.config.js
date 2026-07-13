@@ -245,7 +245,7 @@ export default defineConfig(
       'jsdoc/check-tag-names': ['error', {
         // NOTE: Not all Typedoc supported tags are present here. Feel free to add any other
         // Typedoc supported tags to this list
-        definedTags: ['category', 'categoryDescription', 'hidden', 'title'],
+        definedTags: ['category', 'categoryDescription', 'hidden', 'title', 'publicType', 'publicReturnType'],
         inlineTags: ['link', 'see'],
       }],
       'jsdoc/empty-tags': ['error', {
@@ -326,7 +326,6 @@ export default defineConfig(
       ],
 
       'jsdoc/no-types': 'warn',
-      'jsdoc/check-tag-names': ['error', { definedTags: ['publicType', 'publicReturnType'] }],
 
       '@stylistic/type-annotation-spacing': ['warn', { overrides: { colon: { before: false, after: true } } }],
 
