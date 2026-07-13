@@ -89,7 +89,7 @@ export default class MidiModulePlugin extends BaseModulePlugin {
     note: TypedValue<DataType.NUMBER>,
     accidental: TypedValue<DataType.CONST_STRING>
   ): AsyncGenerator<void, TypedValue<DataType.CONST_STRING>, unknown> {
-    assertAccidental(accidental.value, midi_note_to_letter_name_func.name);
+    assertAccidental(accidental.value, 'midi_note_to_letter_name');
     return { type: DataType.CONST_STRING, value: midi_note_to_letter_name_func(note.value as MIDINote, accidental.value) };
   }
 

@@ -26,7 +26,7 @@ import { midiNoteToNoteName, noteToValues } from './utils';
  * @function
  */
 export function letter_name_to_midi_note(note: NoteWithOctave): MIDINote {
-  const [noteName, accidental, octave] = noteToValues(note, letter_name_to_midi_note.name);
+  const [noteName, accidental, octave] = noteToValues(note, 'letter_name_to_midi_note');
 
   let res = 12; // C0 is midi note 12
   switch (noteName) {
@@ -84,7 +84,7 @@ export function letter_name_to_midi_note(note: NoteWithOctave): MIDINote {
  */
 export function midi_note_to_letter_name(midiNote: MIDINote, accidental: 'flat' | 'sharp'): NoteWithOctave {
   const octave = Math.floor(midiNote / 12) - 1;
-  const note = midiNoteToNoteName(midiNote, accidental, midi_note_to_letter_name.name);
+  const note = midiNoteToNoteName(midiNote, accidental, 'midi_note_to_letter_name');
   return `${note}${octave}`;
 }
 
