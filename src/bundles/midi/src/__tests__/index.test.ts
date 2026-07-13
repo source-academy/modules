@@ -2,7 +2,7 @@ import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 import { TestDataHandler } from '@sourceacademy/modules-testplugin';
 import { list, type List } from 'js-slang/dist/stdlib/list';
 import { describe, expect, it } from 'vitest';
-import { assertAccidental, scaleToConductorList } from '../conductorAdapters';
+import { scaleToConductorList } from '../conductorAdapters';
 
 describe(scaleToConductorList, () => {
   it('converts an empty js-slang list to a Conductor empty list', async () => {
@@ -17,17 +17,6 @@ describe(scaleToConductorList, () => {
     const conductorList = await scaleToConductorList(handler, jsList);
     const values = await handler.list_to_vec(conductorList as TypedValue<DataType.LIST>);
     expect(values.map(v => v.value)).toEqual([12, 14, 16]);
-  });
-});
-
-describe(assertAccidental, () => {
-  it('accepts "flat" and "sharp"', () => {
-    expect(() => assertAccidental('flat', 'test')).not.toThrow();
-    expect(() => assertAccidental('sharp', 'test')).not.toThrow();
-  });
-
-  it('rejects anything else', () => {
-    expect(() => assertAccidental('natural', 'my_func')).toThrowError("my_func expects 'flat' or 'sharp'");
   });
 });
 

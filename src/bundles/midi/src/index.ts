@@ -10,14 +10,20 @@ import { BaseModulePlugin, moduleMethod } from '@sourceacademy/conductor/module'
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type IFunctionSignature, type TypedValue } from '@sourceacademy/conductor/types';
 
-import { assertAccidental, scaleToConductorList } from './conductorAdapters';
+import { scaleToConductorList } from './conductorAdapters';
 import {
   FLAT,
   NATURAL,
   SHARP,
+  add_octave_to_note as add_octave_to_note_func,
   aeolian_scale as aeolian_scale_func,
   dorian_scale as dorian_scale_func,
+  get_accidental as get_accidental_func,
+  get_note_name as get_note_name_func,
+  get_octave as get_octave_func,
   ionian_scale as ionian_scale_func,
+  is_note_with_octave as is_note_with_octave_func,
+  key_signature_to_key as key_signature_to_key_func,
   letter_name_to_frequency as letter_name_to_frequency_func,
   letter_name_to_midi_note as letter_name_to_midi_note_func,
   locrian_scale as locrian_scale_func,
@@ -29,7 +35,7 @@ import {
   mixolydian_scale as mixolydian_scale_func,
   phrygian_scale as phrygian_scale_func
 } from './functions';
-import type { MIDINote, NoteWithOctave } from './types';
+import type { Accidental, MIDINote, Note, NoteWithOctave } from './types';
 
 export default class MidiModulePlugin extends BaseModulePlugin {
   id = 'midi';
@@ -38,6 +44,12 @@ export default class MidiModulePlugin extends BaseModulePlugin {
     'midi_note_to_letter_name',
     'midi_note_to_frequency',
     'letter_name_to_frequency',
+    'is_note_with_octave',
+    'add_octave_to_note',
+    'get_octave',
+    'get_note_name',
+    'get_accidental',
+    'key_signature_to_key',
     'major_scale',
     'ionian_scale',
     'dorian_scale',
@@ -89,8 +101,10 @@ export default class MidiModulePlugin extends BaseModulePlugin {
     note: TypedValue<DataType.NUMBER>,
     accidental: TypedValue<DataType.CONST_STRING>
   ): AsyncGenerator<void, TypedValue<DataType.CONST_STRING>, unknown> {
-    assertAccidental(accidental.value, 'midi_note_to_letter_name');
-    return { type: DataType.CONST_STRING, value: midi_note_to_letter_name_func(note.value as MIDINote, accidental.value) };
+    return {
+      type: DataType.CONST_STRING,
+      value: midi_note_to_letter_name_func(note.value as MIDINote, accidental.value as Accidental.FLAT | Accidental.SHARP)
+    };
   }
 
   @moduleMethod([DataType.NUMBER], DataType.NUMBER)
@@ -101,6 +115,47 @@ export default class MidiModulePlugin extends BaseModulePlugin {
   @moduleMethod([DataType.CONST_STRING], DataType.NUMBER)
   async* letter_name_to_frequency(note: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, unknown> {
     return { type: DataType.NUMBER, value: letter_name_to_frequency_func(note.value as NoteWithOctave) };
+  }
+
+  // No declared arg type: is_note_with_octave is a predicate that must accept a value of any
+  // Conductor DataType (not just strings) and answer false rather than throw.
+  @moduleMethod([], DataType.BOOLEAN)
+  async* is_note_with_octave(value?: TypedValue<DataType>): AsyncGenerator<void, TypedValue<DataType.BOOLEAN>, unknown> {
+    return { type: DataType.BOOLEAN, value: is_note_with_octave_func(value?.value) };
+  }
+
+  @moduleMethod([DataType.CONST_STRING, DataType.NUMBER], DataType.CONST_STRING)
+  async* add_octave_to_note(
+    note: TypedValue<DataType.CONST_STRING>,
+    octave: TypedValue<DataType.NUMBER>
+  ): AsyncGenerator<void, TypedValue<DataType.CONST_STRING>, unknown> {
+    return { type: DataType.CONST_STRING, value: add_octave_to_note_func(note.value as Note, octave.value) };
+  }
+
+  @moduleMethod([DataType.CONST_STRING], DataType.NUMBER)
+  async* get_octave(note: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, unknown> {
+    return { type: DataType.NUMBER, value: get_octave_func(note.value as NoteWithOctave) };
+  }
+
+  @moduleMethod([DataType.CONST_STRING], DataType.CONST_STRING)
+  async* get_note_name(note: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.CONST_STRING>, unknown> {
+    return { type: DataType.CONST_STRING, value: get_note_name_func(note.value as NoteWithOctave) };
+  }
+
+  @moduleMethod([DataType.CONST_STRING], DataType.CONST_STRING)
+  async* get_accidental(note: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.CONST_STRING>, unknown> {
+    return { type: DataType.CONST_STRING, value: get_accidental_func(note.value as NoteWithOctave) };
+  }
+
+  @moduleMethod([DataType.CONST_STRING, DataType.NUMBER], DataType.CONST_STRING)
+  async* key_signature_to_key(
+    accidental: TypedValue<DataType.CONST_STRING>,
+    numAccidentals: TypedValue<DataType.NUMBER>
+  ): AsyncGenerator<void, TypedValue<DataType.CONST_STRING>, unknown> {
+    return {
+      type: DataType.CONST_STRING,
+      value: key_signature_to_key_func(accidental.value as Accidental.FLAT | Accidental.SHARP, numAccidentals.value)
+    };
   }
 
   @moduleMethod([DataType.NUMBER], DataType.LIST)

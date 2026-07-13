@@ -3,12 +3,12 @@
   "private": true,
   "version": "1.0.0",
   "devDependencies": {
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor",
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-testplugin": "workspace:^",
     "typescript": "^6.0.2"
   },
   "dependencies": {
+    "@sourceacademy/conductor": "https://github.com/source-academy/conductor",
     "js-slang": "^1.0.85"
   },
   "type": "module",
