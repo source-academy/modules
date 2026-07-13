@@ -224,23 +224,23 @@ export async function drawRunesToFrameBuffer(
   const loadTexture = async (rune: Rune): Promise<WebGLTexture | null> => {
     if (rune.texture === null) return null;
     const imageSource = rune.texture;
-    const image = await (async (): Promise<HTMLImageElement> => {
-      if (typeof imageSource === 'string') {
+    let image: HTMLImageElement;
+    if (typeof imageSource !== 'string') {
+      image = imageSource;
+    } else {
+      image = await new Promise<HTMLImageElement>((resolve, reject) => {
         const image = Object.assign(new Image(), {
           crossOrigin: 'anonymous',
           src: imageSource
         });
-        return new Promise((resolve, reject) => {
-          image.onload = () => {
-            rune.texture = image;
-            resolve(image);
-          };
-          image.onabort = reject;
-          image.onerror = reject;
-        });
-      }
-      return imageSource;
-    })();
+        image.onload = () => {
+          rune.texture = image;
+          resolve(image);
+        };
+        image.onabort = reject;
+        image.onerror = reject;
+      });
+    }
 
     const texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
