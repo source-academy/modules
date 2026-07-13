@@ -64,6 +64,22 @@ describe(funcs.is_tree, () => {
   });
 });
 
+describe(funcs.make_tree, () => {
+  it('throws when left is not a tree', async () => {
+    const handler = new TestDataHandler();
+    await expect(
+      funcs.make_tree(handler, await opaqueNumber(handler, 0), numberValue(0) as unknown as TypedValue<DataType.LIST>, funcs.make_empty_tree())
+    ).rejects.toThrowError('make_tree expects binary tree for left');
+  });
+
+  it('throws when right is not a tree', async () => {
+    const handler = new TestDataHandler();
+    await expect(
+      funcs.make_tree(handler, await opaqueNumber(handler, 0), funcs.make_empty_tree(), numberValue(0) as unknown as TypedValue<DataType.LIST>)
+    ).rejects.toThrowError('make_tree expects binary tree for right');
+  });
+});
+
 describe(funcs.entry, () => {
   it('throws when argument is not a tree', async () => {
     const handler = new TestDataHandler();

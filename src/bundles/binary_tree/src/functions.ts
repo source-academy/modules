@@ -34,6 +34,14 @@ export async function make_tree(
   left: BinaryTree,
   right: BinaryTree
 ): Promise<NonEmptyBinaryTree> {
+  if (!await is_tree(evaluator, left)) {
+    throw new EvaluatorTypeError(`${make_tree.name} expects binary tree for left`, 'binary tree', DataType[left.type]);
+  }
+
+  if (!await is_tree(evaluator, right)) {
+    throw new EvaluatorTypeError(`${make_tree.name} expects binary tree for right`, 'binary tree', DataType[right.type]);
+  }
+
   const rightPair = await evaluator.pair_make(right, mEmptyList());
   const leftPair = await evaluator.pair_make(left, rightPair);
   return evaluator.pair_make(value, leftPair);
