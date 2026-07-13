@@ -30,11 +30,17 @@ export default class ScrabbleModulePlugin extends BaseModulePlugin {
   // before the module is usable.
   override async initialise() {
     await super.initialise();
+    const [words, letters, wordsTiny, lettersTiny] = await Promise.all([
+      this.evaluator.opaque_make(scrabble_words, true),
+      this.evaluator.opaque_make(scrabble_letters, true),
+      this.evaluator.opaque_make(scrabble_words_tiny, true),
+      this.evaluator.opaque_make(scrabble_letters_tiny, true)
+    ]);
     this.exports.push(
-      { symbol: 'scrabble_words', value: await this.evaluator.opaque_make(scrabble_words, true) },
-      { symbol: 'scrabble_letters', value: await this.evaluator.opaque_make(scrabble_letters, true) },
-      { symbol: 'scrabble_words_tiny', value: await this.evaluator.opaque_make(scrabble_words_tiny, true) },
-      { symbol: 'scrabble_letters_tiny', value: await this.evaluator.opaque_make(scrabble_letters_tiny, true) }
+      { symbol: 'scrabble_words', value: words },
+      { symbol: 'scrabble_letters', value: letters },
+      { symbol: 'scrabble_words_tiny', value: wordsTiny },
+      { symbol: 'scrabble_letters_tiny', value: lettersTiny }
     );
   }
 }
