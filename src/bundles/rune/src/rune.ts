@@ -1,7 +1,6 @@
 import { glAnimation, type AnimFrame, type ReplResult } from '@sourceacademy/modules-lib/types';
 import { mat4 } from 'gl-matrix';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
-import { classDeclaration } from './type_map';
 
 const normalVertexShader = `
 attribute vec4 aVertexPosition;
@@ -53,7 +52,6 @@ void main(void) {
 /**
  * The basic data-representation of a Rune. When the Rune is drawn, every 3 consecutive vertex will form a triangle.
  */
-@classDeclaration('Rune')
 export class Rune {
   constructor(
     /**

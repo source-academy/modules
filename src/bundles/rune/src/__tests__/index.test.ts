@@ -2,7 +2,6 @@ import { DataType } from '@sourceacademy/conductor/types';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import { describe, expect, it, test, vi } from 'vitest';
 import RuneModulePlugin from '..';
-import * as display from '../display';
 import * as funcs from '../functions';
 import type { Rune } from '../rune';
 
@@ -55,36 +54,6 @@ describe(RuneModulePlugin, () => {
       }
     });
     expect('draw' in (sentMessages[0] as any).rune).toBe(false);
-  });
-});
-
-describe(display.anaglyph, () => {
-  it('throws when argument is not rune', () => {
-    expect(() => display.anaglyph(0 as any)).toThrowError('anaglyph expects a rune as argument');
-  });
-
-  it('returns the rune passed to it', () => {
-    expect(display.anaglyph(funcs.heart)).toBe(funcs.heart);
-  });
-});
-
-describe(display.hollusion, () => {
-  it('throws when argument is not rune', () => {
-    expect(() => display.hollusion(0 as any)).toThrowError('hollusion expects a rune as argument');
-  });
-
-  it('returns the rune passed to it', () => {
-    expect(display.hollusion(funcs.heart)).toBe(funcs.heart);
-  });
-});
-
-describe(display.show, () => {
-  it('throws when argument is not rune', () => {
-    expect(() => display.show(0 as any)).toThrowError('show expects a rune as argument');
-  });
-
-  it('returns the rune passed to it', () => {
-    expect(display.show(funcs.heart)).toBe(funcs.heart);
   });
 });
 

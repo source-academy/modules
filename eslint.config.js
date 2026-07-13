@@ -326,6 +326,7 @@ export default defineConfig(
       ],
 
       'jsdoc/no-types': 'warn',
+      'jsdoc/check-tag-names': ['error', { definedTags: ['publicType', 'publicReturnType'] }],
 
       '@stylistic/type-annotation-spacing': ['warn', { overrides: { colon: { before: false, after: true } } }],
 

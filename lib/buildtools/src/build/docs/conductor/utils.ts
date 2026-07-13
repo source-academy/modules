@@ -1,10 +1,5 @@
 import * as td from 'typedoc';
 import { CONDUCTOR_PACKAGE, DATA_TYPE_NAMES, SERVICE_PARAMETER_TYPES, TYPED_VALUE_NAMES } from './constants.js';
-import {
-  getFunctionDeclarationMetadata,
-  getVariableDeclarationMetadata,
-  type FunctionDeclarationParameter
-} from './declarations.js';
 import { normalizeConductorType } from './normalisation.js';
 
 /**
@@ -29,7 +24,7 @@ export function isDataTypeReference(type: td.SomeType | undefined): type is td.R
 
   const qualifiedName = type.qualifiedName ?? type.name;
   return DATA_TYPE_NAMES.has(type.name)
-        && (qualifiedName === type.name || qualifiedName === `DataType.${type.name}`);
+    && (qualifiedName === type.name || qualifiedName === `DataType.${type.name}`);
 }
 
 /**
@@ -90,12 +85,9 @@ export function isServiceParameter(parameter: td.ParameterReflection) {
 export function isConductorPluginClass(reflection: td.DeclarationReflection) {
   if (reflection.kind !== td.ReflectionKind.Class) return false;
 
-  const exportedNames = getExportedNames(reflection);
-  if (exportedNames.size === 0) return false;
-
-  return reflection.children?.some(child => {
-    return isExportedConductorMethod(child, exportedNames)
-            || getVariableDeclarationMetadata(child) !== undefined;
+  return reflection.extendedTypes?.some(type => {
+    if (!isReferenceType(type)) return false;
+    return isConductorReference(type, new Set(['BaseModulePlugin', 'IModulePlugin', 'IPlugin', 'Plugin']));
   }) ?? false;
 }
 
@@ -176,7 +168,7 @@ export function isExportedConductorMethod(
 
   return child.signatures?.some(signature => {
     return hasConductorTransportType(signature.type)
-            || signature.parameters?.some(parameter => hasConductorTransportType(parameter.type));
+      || signature.parameters?.some(parameter => hasConductorTransportType(parameter.type));
   }) ?? false;
 }
 
@@ -198,19 +190,16 @@ export function cloneParameter(
   parent: td.SignatureReflection,
   project: td.ProjectReflection,
   commentSource: td.ParameterReflection | undefined,
-  declarationParameter: FunctionDeclarationParameter | undefined
 ) {
   const clone = new td.ParameterReflection(
-    declarationParameter?.name ?? parameter.name,
+    parameter.name,
     td.ReflectionKind.Parameter,
     parent
   );
   cloneFlags(parameter, clone);
   clone.comment = commentSource?.comment ?? parameter.comment;
   clone.defaultValue = parameter.defaultValue;
-  clone.type = declarationParameter
-    ? declaredType(declarationParameter.type)
-    : parameter.type ? normalizeConductorType(parameter.type, project) : undefined;
+  clone.type = parameter.type ? normalizeConductorType(parameter.type, project) : undefined;
   project.registerReflection(clone, undefined, undefined);
   return clone;
 }
@@ -233,7 +222,7 @@ export function copyPluginSignature(
   implementationSignature: td.SignatureReflection | undefined
 ) {
   const targetSignature = target.signatures?.[0]
-        ?? new td.SignatureReflection(target.name, td.ReflectionKind.CallSignature, target);
+    ?? new td.SignatureReflection(target.name, td.ReflectionKind.CallSignature, target);
 
   if (!target.signatures?.includes(targetSignature)) {
     target.signatures = [targetSignature];
@@ -241,23 +230,19 @@ export function copyPluginSignature(
   }
 
   cloneFlags(pluginSignature, targetSignature);
-  const declarationMetadata = getFunctionDeclarationMetadata(method);
   targetSignature.comment = getSignatureComment(implementationSignature, pluginSignature);
-  targetSignature.type = declarationMetadata
-    ? declaredType(declarationMetadata.returnType)
-    : pluginSignature.type
-      ? normalizeConductorType(pluginSignature.type, project)
-      : undefined;
+  targetSignature.type = pluginSignature.type
+    ? normalizeConductorType(pluginSignature.type, project)
+    : undefined;
 
-  targetSignature.parameters = pluginSignature.parameters?.map((parameter, index) => {
+  targetSignature.parameters = pluginSignature.parameters?.map(parameter => {
     const implementationParameter = implementationSignature?.parameters
       ?.find(each => each.name === parameter.name);
     return cloneParameter(
       parameter,
       targetSignature,
       project,
-      implementationParameter,
-      declarationMetadata?.parameters[index]
+      implementationParameter
     );
   });
 }
@@ -275,7 +260,7 @@ export function declaredType(typeName: string) {
 export function findPublicFunction(container: td.ContainerReflection, name: string) {
   return container.children?.find(child => {
     return child.name === name
-            && child.kind === td.ReflectionKind.Function;
+      && child.kind === td.ReflectionKind.Function;
   });
 }
 
@@ -299,7 +284,7 @@ export function createPublicFunction(
 export function findPublicVariable(container: td.ContainerReflection, name: string) {
   return container.children?.find(child => {
     return child.name === name
-            && child.kind === td.ReflectionKind.Variable;
+      && child.kind === td.ReflectionKind.Variable;
   });
 }
 
@@ -325,16 +310,16 @@ export function copyPluginVariable(
   property: td.DeclarationReflection,
   project: td.ProjectReflection
 ) {
-  const declarationType = getVariableDeclarationMetadata(property);
-
   cloneFlags(property, target);
   target.comment = target.comment ?? property.comment;
   target.defaultValue = property.defaultValue;
-  target.type = declarationType
-    ? declaredType(declarationType)
-    : property.type
-      ? normalizeConductorType(property.type, project)
-      : undefined;
+  target.type = property.type
+    ? normalizeConductorType(property.type, project)
+    : undefined;
+}
+
+export function isExportedVariable(reflection: td.DeclarationReflection) {
+  return reflection.comment?.blockTags?.some(tag => tag.tag === '@publicType');
 }
 
 /**
@@ -348,11 +333,10 @@ export function promotePluginMethods(
   const exportedNames = getExportedNames(plugin);
 
   plugin.children
-    ?.filter(child => child.kind === td.ReflectionKind.Property && getVariableDeclarationMetadata(child))
+    ?.filter(child => child.kind === td.ReflectionKind.Property && isExportedVariable(child))
     .forEach(property => {
       const publicVariable = findPublicVariable(container, property.name)
-                ?? createPublicVariable(container, property.name, project);
-
+        ?? createPublicVariable(container, property.name, project);
       copyPluginVariable(publicVariable, property, project);
     });
 
@@ -363,7 +347,7 @@ export function promotePluginMethods(
       if (!pluginSignature) return;
 
       const publicFunction = findPublicFunction(container, method.name)
-                ?? createPublicFunction(container, method.name, project);
+        ?? createPublicFunction(container, method.name, project);
       const implementationSignature = publicFunction.signatures?.[0];
 
       copyPluginSignature(publicFunction, method, pluginSignature, project, implementationSignature);

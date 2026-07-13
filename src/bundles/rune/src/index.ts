@@ -8,8 +8,8 @@
  * @author Hou Ruomu
  */
 
-import type { IChannel, IConduit, PluginClass } from '@sourceacademy/conductor/conduit';
-import { BaseModulePlugin, type IModulePlugin } from '@sourceacademy/conductor/module';
+import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
+import { BaseModulePlugin } from '@sourceacademy/conductor/module';
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 
@@ -25,7 +25,6 @@ import {
 } from './protocol';
 import { Rune } from './rune';
 import { throwIfNotRune } from './runes_ops';
-import { functionDeclaration, type_map, variableDeclaration } from './type_map';
 
 type RuneTabLoader = {
   tabs: string[];
@@ -85,16 +84,16 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * Rune with the shape of a blank square
    *
    * @category Primitive
+   * @publicType Rune
    */
-  @variableDeclaration('Rune')
   blank!: Rune;
 
   /**
    * Rune with the shape of a circle
    *
    * @category Primitive
+   * @publicType Rune
    */
-  @variableDeclaration('Rune')
   circle!: Rune;
 
   /**
@@ -102,16 +101,16 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * filling upper right corner
    *
    * @category Primitive
+   * @publicType Rune
    */
-  @variableDeclaration('Rune')
   corner!: Rune;
 
   /**
    * Rune with the shape of a heart
    *
    * @category Primitive
+   * @publicType Rune
    */
-  @variableDeclaration('Rune')
   heart!: Rune;
 
   /**
@@ -120,16 +119,16 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * of the shape
    *
    * @category Primitive
+   * @publicType Rune
    */
-  @variableDeclaration('Rune')
   nova!: Rune;
 
   /**
    * Rune with the shape of a pentagram
    *
    * @category Primitive
+   * @publicType Rune
    */
-  @variableDeclaration('Rune')
   pentagram!: Rune;
 
   /**
@@ -139,8 +138,8 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * black and white half
    *
    * @category Primitive
+   * @publicType Rune
    */
-  @variableDeclaration('Rune')
   rcross!: Rune;
 
   /**
@@ -148,32 +147,32 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * winding outwards in an anticlockwise spiral
    *
    * @category Primitive
+   * @publicType Rune
    */
-  @variableDeclaration('Rune')
   ribbon!: Rune;
 
   /**
    * Rune with the shape of a sail
    *
    * @category Primitive
+   * @publicType Rune
    */
-  @variableDeclaration('Rune')
   sail!: Rune;
 
   /**
    * Rune with the shape of a full square
    *
    * @category Primitive
+   * @publicType Rune
    */
-  @variableDeclaration('Rune')
   square!: Rune;
 
   /**
    * Rune with the shape of a triangle
    *
    * @category Primitive
+   * @publicType Rune
    */
-  @variableDeclaration('Rune')
   triangle!: Rune;
 
   constructor(
@@ -286,21 +285,51 @@ export default class RuneModulePlugin extends BaseModulePlugin {
     return frames;
   }
 
-  @functionDeclaration('rune: Rune', 'Rune')
+  /**
+   * Renders the specified Rune in a tab as a basic drawing.
+   * @function
+   * @param rune - The Rune to render
+   * @returns The specified Rune
+   *
+   * @category Main
+   * @publicType rune: Rune
+   * @publicReturnType Rune
+   */
   async* show(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     const value = await this.__getRune(rune, 'show');
     await this.__sendRuneRender(value, { type: 'render', mode: 'normal' });
     return rune;
   }
 
-  @functionDeclaration('rune: Rune', 'Rune')
+  /**
+   * Renders the specified Rune in a tab as an anaglyph. Use 3D glasses to view the
+   * anaglyph.
+   * @function
+   * @param rune - The Rune to render
+   * @returns The specified Rune
+   *
+   * @category Main
+   * @publicType rune: Rune
+   * @publicReturnType Rune
+   */
   async* anaglyph(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     const value = await this.__getRune(rune, 'anaglyph');
     await this.__sendRuneRender(value, { type: 'render', mode: 'anaglyph' });
     return rune;
   }
 
-  @functionDeclaration('rune: Rune, magnitude: number', 'Rune')
+  /**
+   * Renders the specified Rune in a tab as a hollusion, using the specified
+   * magnitude.
+   * @function
+   * @param rune - The Rune to render
+   * @param magnitude - The hollusion's magnitude
+   * @returns The specified Rune
+   *
+   * @category Main
+   * @publicType rune: Rune
+   * @publicReturnType Rune
+   */
   async* hollusion_magnitude(
     rune: TypedValue<DataType.OPAQUE>,
     magnitude: TypedValue<DataType.NUMBER>
@@ -314,7 +343,17 @@ export default class RuneModulePlugin extends BaseModulePlugin {
     return rune;
   }
 
-  @functionDeclaration('rune: Rune', 'Rune')
+  /**
+   * Renders the specified Rune in a tab as a hollusion, with a default magnitude
+   * of 0.1.
+   * @function
+   * @param rune - The Rune to render
+   * @returns The specified Rune
+   *
+   * @category Main
+   * @publicType rune: Rune
+   * @publicReturnType Rune
+   */
   async* hollusion(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     const value = await this.__getRune(rune, 'hollusion');
     await this.__sendRuneRender(value, {
@@ -325,7 +364,18 @@ export default class RuneModulePlugin extends BaseModulePlugin {
     return rune;
   }
 
-  @functionDeclaration('duration: number, fps: number, func: RuneAnimation', 'AnimatedRune')
+  /**
+   * Create an animation of runes
+   * @function
+   * @param duration Duration of the entire animation in seconds
+   * @param fps Duration of each frame in frames per seconds
+   * @param func Takes in the timestamp and returns a Rune to draw
+   * @returns A rune animation
+   *
+   * @category Main
+   * @publicType func: RuneAnimation
+   * @publicReturnType AnimatedRune
+   */
   async* animate_rune(
     duration: TypedValue<DataType.NUMBER>,
     fps: TypedValue<DataType.NUMBER>,
@@ -343,7 +393,18 @@ export default class RuneModulePlugin extends BaseModulePlugin {
     return await this.evaluator.opaque_make({ message, toReplString: () => '<AnimatedRune>' }, true);
   }
 
-  @functionDeclaration('duration: number, fps: number, func: RuneAnimation', 'AnimatedRune')
+  /**
+   * Create an animation of anaglyph runes
+   * @function
+   * @param duration Duration of the entire animation in seconds
+   * @param fps Duration of each frame in frames per seconds
+   * @param func Takes in the timestamp and returns a Rune to draw
+   * @returns A rune animation
+   *
+   * @category Main
+   * @publicType func: RuneAnimation
+   * @publicReturnType AnimatedRune
+   */
   async* animate_anaglyph(
     duration: TypedValue<DataType.NUMBER>,
     fps: TypedValue<DataType.NUMBER>,
@@ -369,8 +430,8 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicReturnType Rune
    */
-  @functionDeclaration('imageUrl: string', 'Rune')
   async* from_url(imageUrl: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__makeRune(funcs.from_url(imageUrl.value));
   }
@@ -384,8 +445,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('ratioX: number, ratioY: number, rune: Rune', 'Rune')
   async* scale_independent(
     ratioX: TypedValue<DataType.NUMBER>,
     ratioY: TypedValue<DataType.NUMBER>,
@@ -402,8 +464,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('ratio: number, rune: Rune', 'Rune')
   async* scale(
     ratio: TypedValue<DataType.NUMBER>,
     rune: TypedValue<DataType.OPAQUE>
@@ -420,8 +483,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('x: number, y: number, rune: Rune', 'Rune')
   async* translate(
     x: TypedValue<DataType.NUMBER>,
     y: TypedValue<DataType.NUMBER>,
@@ -441,8 +505,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rad: number, rune: Rune', 'Rune')
   async* rotate(
     rad: TypedValue<DataType.NUMBER>,
     rune: TypedValue<DataType.OPAQUE>
@@ -463,8 +528,10 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune1: Rune
+   * @publicType rune2: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('frac: number, rune1: Rune, rune2: Rune', 'Rune')
   async* stack_frac(
     frac: TypedValue<DataType.NUMBER>,
     rune1: TypedValue<DataType.OPAQUE>,
@@ -488,8 +555,10 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune1: Rune
+   * @publicType rune2: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   async* stack(
     rune1: TypedValue<DataType.OPAQUE>,
     rune2: TypedValue<DataType.OPAQUE>
@@ -509,8 +578,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('n: number, rune: Rune', 'Rune')
   async* stackn(
     n: TypedValue<DataType.NUMBER>,
     rune: TypedValue<DataType.OPAQUE>
@@ -527,8 +597,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* quarter_turn_right(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.quarter_turn_right.name, funcs.quarter_turn_right);
   }
@@ -542,8 +613,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* quarter_turn_left(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.quarter_turn_left.name, funcs.quarter_turn_left);
   }
@@ -556,8 +628,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* turn_upside_down(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.turn_upside_down.name, funcs.turn_upside_down);
   }
@@ -575,8 +648,10 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune1: Rune
+   * @publicType rune2: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('frac: number, rune1: Rune, rune2: Rune', 'Rune')
   async* beside_frac(
     frac: TypedValue<DataType.NUMBER>,
     rune1: TypedValue<DataType.OPAQUE>,
@@ -600,8 +675,10 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune1: Rune
+   * @publicType rune2: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   async* beside(
     rune1: TypedValue<DataType.OPAQUE>,
     rune2: TypedValue<DataType.OPAQUE>
@@ -621,8 +698,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* flip_vert(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.flip_vert.name, funcs.flip_vert);
   }
@@ -636,8 +714,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* flip_horiz(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.flip_horiz.name, funcs.flip_horiz);
   }
@@ -651,8 +730,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* make_cross(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.make_cross.name, funcs.make_cross);
   }
@@ -667,8 +747,10 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType pattern: (Rune) => Rune
+   * @publicType initial: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('n: number, pattern: (Rune) => Rune, initial: Rune', 'Rune')
   async* repeat_pattern(
     n: TypedValue<DataType.NUMBER>,
     pattern: TypedValue<DataType.CLOSURE>,
@@ -694,8 +776,10 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune1: Rune
+   * @publicType rune2: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('frac: number, rune1: Rune, rune2: Rune', 'Rune')
   async* overlay_frac(
     frac: TypedValue<DataType.NUMBER>,
     rune1: TypedValue<DataType.OPAQUE>,
@@ -716,8 +800,10 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Main
+   * @publicType rune1: Rune
+   * @publicType rune2: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune1: Rune, rune2: Rune', 'Rune')
   async* overlay(
     rune1: TypedValue<DataType.OPAQUE>,
     rune2: TypedValue<DataType.OPAQUE>
@@ -741,8 +827,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Color
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune, r: number, g: number, b: number', 'Rune')
   async* color(
     rune: TypedValue<DataType.OPAQUE>,
     r: TypedValue<DataType.NUMBER>,
@@ -759,8 +846,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Color
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* black(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.black.name, funcs.black);
   }
@@ -772,8 +860,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Color
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* blue(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.blue.name, funcs.blue);
   }
@@ -785,8 +874,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Color
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* brown(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.brown.name, funcs.brown);
   }
@@ -798,8 +888,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Color
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* green(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.green.name, funcs.green);
   }
@@ -811,8 +902,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Color
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* indigo(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.indigo.name, funcs.indigo);
   }
@@ -824,8 +916,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Color
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* red(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.red.name, funcs.red);
   }
@@ -837,8 +930,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Color
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* pink(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.pink.name, funcs.pink);
   }
@@ -850,8 +944,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Color
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* orange(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.orange.name, funcs.orange);
   }
@@ -863,8 +958,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Color
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* purple(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.purple.name, funcs.purple);
   }
@@ -876,8 +972,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Color
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* white(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.white.name, funcs.white);
   }
@@ -889,8 +986,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Color
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* yellow(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.yellow.name, funcs.yellow);
   }
@@ -904,24 +1002,25 @@ export default class RuneModulePlugin extends BaseModulePlugin {
    * @function
    *
    * @category Color
+   * @publicType rune: Rune
+   * @publicReturnType Rune
    */
-  @functionDeclaration('rune: Rune', 'Rune')
   async* random_color(rune: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.__callUnaryRune(rune, funcs.random_color.name, funcs.random_color);
   }
 }
 
-attachModuleMethod(RuneModulePlugin, 'anaglyph', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod(RuneModulePlugin, 'animate_anaglyph', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE], DataType.OPAQUE);
-attachModuleMethod(RuneModulePlugin, 'animate_rune', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE], DataType.OPAQUE);
-attachModuleMethod(RuneModulePlugin, 'beside', [DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod(RuneModulePlugin, 'beside_frac', [DataType.NUMBER, DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod(RuneModulePlugin, 'black', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod(RuneModulePlugin, 'blue', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod(RuneModulePlugin, 'brown', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod(RuneModulePlugin, 'color', [DataType.OPAQUE, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
-attachModuleMethod(RuneModulePlugin, 'flip_horiz', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod(RuneModulePlugin, 'flip_vert', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod<RuneModulePlugin, 'anaglyph'>(RuneModulePlugin, 'anaglyph', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod<RuneModulePlugin, 'animate_anaglyph'>(RuneModulePlugin, 'animate_anaglyph', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE], DataType.OPAQUE);
+attachModuleMethod<RuneModulePlugin, 'animate_rune'>(RuneModulePlugin, 'animate_rune', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE], DataType.OPAQUE);
+attachModuleMethod<RuneModulePlugin, 'beside'>(RuneModulePlugin, 'beside', [DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod<RuneModulePlugin, 'beside_frac'>(RuneModulePlugin, 'beside_frac', [DataType.NUMBER, DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod<RuneModulePlugin, 'black'>(RuneModulePlugin, 'black', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod<RuneModulePlugin, 'blue'>(RuneModulePlugin, 'blue', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod<RuneModulePlugin, 'brown'>(RuneModulePlugin, 'brown', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod<RuneModulePlugin, 'color'>(RuneModulePlugin, 'color', [DataType.OPAQUE, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod<RuneModulePlugin, 'flip_horiz'>(RuneModulePlugin, 'flip_horiz', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod<RuneModulePlugin, 'flip_vert'>(RuneModulePlugin, 'flip_vert', [DataType.OPAQUE], DataType.OPAQUE);
 attachModuleMethod(RuneModulePlugin, 'from_url', [DataType.CONST_STRING], DataType.OPAQUE);
 attachModuleMethod(RuneModulePlugin, 'green', [DataType.OPAQUE], DataType.OPAQUE);
 attachModuleMethod(RuneModulePlugin, 'hollusion', [DataType.OPAQUE], DataType.OPAQUE);

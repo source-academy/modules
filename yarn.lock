@@ -4028,7 +4028,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-rune@workspace:src/bundles/rune"
   dependencies:
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
+    "@sourceacademy/conductor": "npm:^0.6.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     es-toolkit: "npm:^1.44.0"

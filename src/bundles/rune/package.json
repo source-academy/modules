@@ -8,7 +8,7 @@
     "gl-matrix": "^3.4.4"
   },
   "devDependencies": {
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor",
+    "@sourceacademy/conductor": "^0.6.0",
     "@sourceacademy/modules-buildtools": "workspace:^",
     "js-slang": "^1.0.85",
     "typescript": "^6.0.2"
