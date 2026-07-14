@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^6.0.0",
-    "@commander-js/extra-typings": "^14.0.0",
+    "@commander-js/extra-typings": "^15.0.0",
     "@sourceacademy/modules-lib": "workspace:^",
     "@vitejs/plugin-react": "^6.0.3",
     "ace-builds": "^1.25.1",
