@@ -1145,6 +1145,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@commander-js/extra-typings@npm:^15.0.0":
+  version: 15.0.0
+  resolution: "@commander-js/extra-typings@npm:15.0.0"
+  peerDependencies:
+    commander: ~15.0.0
+  checksum: 10c0/4282857c0acb2da1b893fe8c39a939bdfae2d7cbb43a22c1fe8ef5bef4cf615ddb34d96239f7603294ef5014728799c8212f4451fa9d2e469cce087eb89f0218
+  languageName: node
+  linkType: hard
+
 "@cspell/cspell-bundled-dicts@npm:10.0.1":
   version: 10.0.1
   resolution: "@cspell/cspell-bundled-dicts@npm:10.0.1"
@@ -4277,7 +4286,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/modules-buildtools@workspace:lib/buildtools"
   dependencies:
-    "@commander-js/extra-typings": "npm:^14.0.0"
+    "@commander-js/extra-typings": "npm:^15.0.0"
     "@sourceacademy/modules-repotools": "workspace:^"
     "@sourceacademy/modules-typedoc-plugin": "workspace:^"
     "@types/estree": "npm:^1.0.0"
@@ -4308,7 +4317,7 @@ __metadata:
   resolution: "@sourceacademy/modules-devserver@workspace:devserver"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
-    "@commander-js/extra-typings": "npm:^14.0.0"
+    "@commander-js/extra-typings": "npm:^15.0.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "catalog:"
@@ -4406,7 +4415,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/modules-repotools@workspace:lib/repotools"
   dependencies:
-    "@commander-js/extra-typings": "npm:^14.0.0"
+    "@commander-js/extra-typings": "npm:^15.0.0"
     "@types/node": "npm:^24.0.0"
     "@vitejs/plugin-react": "npm:^6.0.3"
     "@vitest/browser-playwright": "catalog:"
