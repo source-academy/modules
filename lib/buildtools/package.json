@@ -23,7 +23,7 @@
     "@vitest/coverage-v8": "catalog:",
     "astring": "^1.8.6",
     "chalk": "^5.0.1",
-    "commander": "^14.0.0",
+    "commander": "^15.0.0",
     "es-toolkit": "^1.44.0",
     "esbuild": "^0.28.1",
     "eslint": "^9.35.0",
