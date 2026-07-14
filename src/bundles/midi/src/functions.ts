@@ -148,7 +148,7 @@ export function letter_name_to_frequency(note: NoteWithOctave): number {
  * ```
  */
 export function add_octave_to_note(note: Note, octave: number): NoteWithOctave {
-  assertNumberWithinRange(octave, 'add_octave_to_note', 0, undefined, true, 'octave');
+  assertNumberWithinRange(octave, 'add_octave_to_note', { min: 0, paramName: 'octave' });
   return `${note}${octave}`;
 }
 
@@ -194,7 +194,7 @@ export function get_accidental(note: NoteWithOctave): Accidental {
  * ```
  */
 export function key_signature_to_key(accidental: Accidental.FLAT | Accidental.SHARP, numAccidentals: number): Note {
-  assertNumberWithinRange(numAccidentals, 'key_signature_to_key', 0, 6, true, 'numAccidentals');
+  assertNumberWithinRange(numAccidentals, 'key_signature_to_key', { min: 0, max: 6, paramName: 'numAccidentals' });
 
   switch (accidental) {
     case Accidental.SHARP: {
