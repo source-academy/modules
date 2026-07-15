@@ -3992,7 +3992,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-repeat@workspace:src/bundles/repeat"
   dependencies:
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
+    "@sourceacademy/conductor": "npm:^0.7.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-testplugin": "workspace:^"
     typescript: "npm:^6.0.2"
@@ -4125,10 +4125,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/conductor@https://github.com/source-academy/conductor":
-  version: 0.5.0
-  resolution: "@sourceacademy/conductor@https://github.com/source-academy/conductor.git#commit=8bda154466fd1e8c97ac0fff01f42bc7d3b196df"
-  checksum: 10c0/acf42d7cb4d036f2b9a2fe2a0a2da3a5670c0fef2cf705a3a367768854413bcbbdb1e6d9ecfd810f9024f60c52ae0973332c0be14ce2fde1cb6598b0cf202a5b
+"@sourceacademy/conductor@npm:^0.7.0":
+  version: 0.7.0
+  resolution: "@sourceacademy/conductor@npm:0.7.0"
+  checksum: 10c0/30088c7c6682e76c5421ba80c0890d680650c964c02edb5083ec730ed2a722221702fae1dfd32e9d7e9c520216179de4bbabbbb8971025a98798620da2d6d74c
   languageName: node
   linkType: hard
 
@@ -4337,7 +4337,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/modules-testplugin@workspace:lib/testplugin"
   dependencies:
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
+    "@sourceacademy/conductor": "npm:^0.7.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     eslint: "npm:^9.35.0"
     typescript: "npm:^6.0.2"
