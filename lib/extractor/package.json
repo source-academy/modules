@@ -1,0 +1,10 @@
+{
+  "name": "@sourceacademy/modules-extractor",
+  "type": "module",
+  "dependencies": {
+    "typescript": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0"
+  }
+}
