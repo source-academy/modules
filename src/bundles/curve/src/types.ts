@@ -1,5 +1,6 @@
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import { glAnimation, type AnimFrame, type ReplResult } from '@sourceacademy/modules-lib/types';
-import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
+import { callWithoutMetadata, isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
 import type { Curve, CurveDrawn } from './curves_webgl';
 
 export type CurveModuleState = {
@@ -7,7 +8,9 @@ export type CurveModuleState = {
 };
 
 /** A function that takes in CurveFunction and returns a tranformed CurveFunction. */
-export type CurveTransformer = (c: Curve) => Curve;
+export interface CurveTransformer extends ReplResult {
+  (c: Curve): Curve;
+}
 
 export type DrawMode = 'lines' | 'points';
 export type ScaleMode = 'fit' | 'none' | 'stretch';
@@ -24,6 +27,10 @@ export type CurveAnimation = (t: number) => Curve;
  */
 export interface RenderFunction extends ReplResult {
   (func: Curve): CurveDrawn;
+
+  /**
+   * @hidden
+   */
   is3D: boolean;
 };
 
@@ -34,9 +41,16 @@ export interface RenderFunction extends ReplResult {
 export interface RenderFunctionCreator {
   (numPoints: number): RenderFunction;
 
+  /** @hidden */
   scaleMode: ScaleMode;
+
+  /** @hidden */
   drawMode: DrawMode;
+
+  /** @hidden */
   space: CurveSpace;
+
+  /** @hidden */
   isFullView: boolean;
 }
 
@@ -53,10 +67,10 @@ export class AnimatedCurve extends glAnimation implements ReplResult {
   }
 
   public getFrame(timestamp: number): AnimFrame {
-    const curve = this.func(timestamp);
+    const curve = callWithoutMetadata(this.func, timestamp);
 
     if (!isFunctionOfLength(curve, 1)) {
-      throw new Error(`CurveAnimation did not return a Curve at timestamp ${timestamp}`);
+      throw new GeneralRuntimeError(`CurveAnimation did not return a Curve at timestamp ${timestamp}`);
     }
 
     curve.shouldNotAppend = true;

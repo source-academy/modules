@@ -1,3 +1,4 @@
+import { InternalRuntimeError } from '@sourceacademy/modules-lib/errors';
 import * as THREE from 'three';
 
 type OrthographicCameraOptions = {
@@ -40,9 +41,8 @@ export function getCamera(cameraOptions: CameraOptions): THREE.Camera {
       return camera;
     }
     default: {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const _: never = cameraOptions;
-      throw new Error('Unknown camera type');
+      // @ts-expect-error Ignore the never
+      throw new InternalRuntimeError(`Unknown camera type: ${cameraOptions.type}`);
     }
   }
 }

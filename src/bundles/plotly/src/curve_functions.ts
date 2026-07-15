@@ -1,5 +1,6 @@
 import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
 import { b_of, g_of, r_of, x_of, y_of, z_of } from '@sourceacademy/bundle-curve/functions';
+import { callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
 import { CurvePlot } from './plotly';
 
@@ -16,7 +17,7 @@ export function generatePlot(
   const z_s: number[] = [];
   const color_s: string[] = [];
   for (let i = 0; i <= numPoints; i += 1) {
-    const point = func(i / numPoints);
+    const point = callWithoutMetadata(func, i / numPoints);
     x_s.push(x_of(point));
     y_s.push(y_of(point));
     z_s.push(z_of(point));

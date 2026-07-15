@@ -1,10 +1,7 @@
 /* [Imports] */
 import { primitives } from '@jscad/modeling';
 import { colorize as colorSolid } from '@jscad/modeling/src/colors';
-import {
-  measureBoundingBox,
-  type BoundingBox
-} from '@jscad/modeling/src/measurements';
+import { measureBoundingBox } from '@jscad/modeling/src/measurements';
 import {
   intersect as _intersect,
   subtract as _subtract,
@@ -12,17 +9,11 @@ import {
 } from '@jscad/modeling/src/operations/booleans';
 import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { serialize } from '@jscad/stl-serializer';
-import { degreesToRadians, hexToColor } from '@sourceacademy/modules-lib/utilities';
-import {
-  head,
-  is_list,
-  list,
-  tail,
-  type List
-} from 'js-slang/dist/stdlib/list';
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { assertNumberWithinRange, degreesToRadians, hexToColor } from '@sourceacademy/modules-lib/utilities';
+import { is_list, list_to_vector, vector_to_list, type List } from 'js-slang/dist/stdlib/list';
 import save from 'save-file';
 import { Core } from './core';
-import type { Solid } from './jscad/types';
 import {
   Group,
   Shape,
@@ -44,20 +35,6 @@ import {
   When a user passes in a List, we convert it to arrays here so that the rest of
   the underlying code is free to operate with arrays.
 */
-export function listToArray(l: List): Operable[] {
-  const operables: Operable[] = [];
-  while (l !== null) {
-    const operable: Operable = head(l);
-    operables.push(operable);
-    l = tail(l);
-  }
-  return operables;
-}
-
-export function arrayToList(array: Operable[]): List {
-  return list(...array);
-}
-
 /* [Exports] */
 
 // [Variables - Colors]
@@ -196,8 +173,8 @@ export function empty_shape(): Shape {
  * @category Primitives
  */
 export function cube(hex: string): Shape {
-  const solid: Solid = primitives.cube({ size: 1 });
-  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const solid = primitives.cube({ size: 1 });
+  const shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -212,8 +189,8 @@ export function cube(hex: string): Shape {
  * @category Primitives
  */
 export function rounded_cube(hex: string): Shape {
-  const solid: Solid = primitives.roundedCuboid({ size: [1, 1, 1] });
-  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const solid = primitives.roundedCuboid({ size: [1, 1, 1] });
+  const shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -229,11 +206,11 @@ export function rounded_cube(hex: string): Shape {
  * @category Primitives
  */
 export function cylinder(hex: string): Shape {
-  const solid: Solid = primitives.cylinder({
+  const solid = primitives.cylinder({
     height: 1,
     radius: 0.5
   });
-  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -249,11 +226,11 @@ export function cylinder(hex: string): Shape {
  * @category Primitives
  */
 export function rounded_cylinder(hex: string): Shape {
-  const solid: Solid = primitives.roundedCylinder({
+  const solid = primitives.roundedCylinder({
     height: 1,
     radius: 0.5
   });
-  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -268,8 +245,8 @@ export function rounded_cylinder(hex: string): Shape {
  * @category Primitives
  */
 export function sphere(hex: string): Shape {
-  const solid: Solid = primitives.sphere({ radius: 0.5 });
-  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const solid = primitives.sphere({ radius: 0.5 });
+  const shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -284,8 +261,8 @@ export function sphere(hex: string): Shape {
  * @category Primitives
  */
 export function geodesic_sphere(hex: string): Shape {
-  const solid: Solid = primitives.geodesicSphere({ radius: 0.5 });
-  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const solid = primitives.geodesicSphere({ radius: 0.5 });
+  const shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -301,9 +278,9 @@ export function geodesic_sphere(hex: string): Shape {
  * @category Primitives
  */
 export function pyramid(hex: string): Shape {
-  const pythagorasSide: number = Math.sqrt(2); // sqrt(1^2 + 1^2)
+  const pythagorasSide = Math.sqrt(2); // sqrt(1^2 + 1^2)
   const radius = pythagorasSide / 2;
-  const solid: Solid = primitives.cylinderElliptic({
+  const solid = primitives.cylinderElliptic({
     height: 1,
     // Base starting radius
     startRadius: [radius, radius],
@@ -311,7 +288,7 @@ export function pyramid(hex: string): Shape {
     endRadius: [0, 0],
     segments: 4
   });
-  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  let shape = new Shape(colorSolid(hexToColor(hex), solid));
   shape = rotate(shape, 0, 0, degreesToRadians(45)) as Shape;
   return centerPrimitive(shape);
 }
@@ -328,12 +305,12 @@ export function pyramid(hex: string): Shape {
  * @category Primitives
  */
 export function cone(hex: string): Shape {
-  const solid: Solid = primitives.cylinderElliptic({
+  const solid = primitives.cylinderElliptic({
     height: 1,
     startRadius: [0.5, 0.5],
     endRadius: [0, 0]
   });
-  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -349,8 +326,8 @@ export function cone(hex: string): Shape {
  * @category Primitives
  */
 export function prism(hex: string): Shape {
-  const solid: Solid = extrudeLinear({ height: 1 }, primitives.triangle());
-  let shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const solid = extrudeLinear({ height: 1 }, primitives.triangle());
+  let shape = new Shape(colorSolid(hexToColor(hex), solid));
   shape = rotate(shape, 0, 0, degreesToRadians(-90)) as Shape;
   return centerPrimitive(shape);
 }
@@ -366,11 +343,11 @@ export function prism(hex: string): Shape {
  * @category Primitives
  */
 export function star(hex: string): Shape {
-  const solid: Solid = extrudeLinear(
+  const solid = extrudeLinear(
     { height: 1 },
     primitives.star({ outerRadius: 0.5 })
   );
-  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -386,11 +363,11 @@ export function star(hex: string): Shape {
  * @category Primitives
  */
 export function torus(hex: string): Shape {
-  const solid: Solid = primitives.torus({
+  const solid = primitives.torus({
     innerRadius: 0.15,
     outerRadius: 0.35
   });
-  const shape: Shape = new Shape(colorSolid(hexToColor(hex), solid));
+  const shape = new Shape(colorSolid(hexToColor(hex), solid));
   return centerPrimitive(shape);
 }
 
@@ -406,11 +383,15 @@ export function torus(hex: string): Shape {
  * @category Operations
  */
 export function union(first: Shape, second: Shape): Shape {
-  if (!is_shape(first) || !is_shape(second)) {
-    throw new Error('Failed to union, only Shapes can be operated on');
+  if (!is_shape(first)) {
+    throw new InvalidParameterTypeError('Shape', first, union.name, 'first');
   }
 
-  const solid: Solid = _union(first.solid, second.solid);
+  if (!is_shape(second)) {
+    throw new InvalidParameterTypeError('Shape', second, union.name, 'second');
+  }
+
+  const solid = _union(first.solid, second.solid);
   return new Shape(solid);
 }
 
@@ -425,11 +406,15 @@ export function union(first: Shape, second: Shape): Shape {
  * @category Operations
  */
 export function subtract(target: Shape, subtractedShape: Shape): Shape {
-  if (!is_shape(target) || !is_shape(subtractedShape)) {
-    throw new Error('Failed to subtract, only Shapes can be operated on');
+  if (!is_shape(target)) {
+    throw new InvalidParameterTypeError('Shape', target, subtract.name, 'target');
   }
 
-  const solid: Solid = _subtract(target.solid, subtractedShape.solid);
+  if (!is_shape(subtractedShape)) {
+    throw new InvalidParameterTypeError('Shape', subtractedShape, subtract.name, 'subtractedShape');
+  }
+
+  const solid = _subtract(target.solid, subtractedShape.solid);
   return new Shape(solid);
 }
 
@@ -443,11 +428,15 @@ export function subtract(target: Shape, subtractedShape: Shape): Shape {
  * @category Operations
  */
 export function intersect(first: Shape, second: Shape): Shape {
-  if (!is_shape(first) || !is_shape(second)) {
-    throw new Error('Failed to intersect, only Shapes can be operated on');
+  if (!is_shape(first)) {
+    throw new InvalidParameterTypeError('Shape', first, intersect.name, 'first');
   }
 
-  const solid: Solid = _intersect(first.solid, second.solid);
+  if (!is_shape(second)) {
+    throw new InvalidParameterTypeError('Shape', second, intersect.name, 'second');
+  }
+
+  const solid = _intersect(first.solid, second.solid);
   return new Shape(solid);
 }
 
@@ -521,10 +510,9 @@ export function scale(
   yFactor: number,
   zFactor: number
 ): Operable {
-  if (xFactor <= 0 || yFactor <= 0 || zFactor <= 0) {
-    // JSCAD library does not allow factors <= 0
-    throw new Error('Scaling factor must be greater than 0');
-  }
+  assertNumberWithinRange(xFactor, scale.name, 0, undefined, false, 'xFactor');
+  assertNumberWithinRange(yFactor, scale.name, 0, undefined, false, 'yFactor');
+  assertNumberWithinRange(zFactor, scale.name, 0, undefined, false, 'zFactor');
 
   return operable.scale([xFactor, yFactor, zFactor]);
 }
@@ -544,12 +532,12 @@ export function scale(
  *
  * @category Utilities
  */
-export function group(operables: List): Group {
+export function group(operables: List<Operable>): Group {
   if (!is_list(operables)) {
-    throw new Error('Only lists of Operables can be grouped');
+    throw new InvalidParameterTypeError('list of Operables', operables, group.name);
   }
 
-  return new Group(listToArray(operables));
+  return new Group(list_to_vector(operables));
 }
 
 /**
@@ -563,10 +551,10 @@ export function group(operables: List): Group {
  */
 export function ungroup(g: Group): List {
   if (!is_group(g)) {
-    throw new Error('Only Groups can be ungrouped');
+    throw new InvalidParameterTypeError('Group', g, ungroup.name);
   }
 
-  return arrayToList(g.ungroup());
+  return vector_to_list(g.ungroup());
 }
 
 /**
@@ -577,7 +565,7 @@ export function ungroup(g: Group): List {
  *
  * @category Utilities
  */
-export function is_shape(parameter: unknown): boolean {
+export function is_shape(parameter: unknown) {
   return parameter instanceof Shape;
 }
 
@@ -589,7 +577,7 @@ export function is_shape(parameter: unknown): boolean {
  *
  * @category Utilities
  */
-export function is_group(parameter: unknown): boolean {
+export function is_group(parameter: unknown) {
   return parameter instanceof Group;
 }
 
@@ -618,22 +606,39 @@ export function is_group(parameter: unknown): boolean {
  * @category Utilities
  */
 export function bounding_box(shape: Shape): (axis: string, minMax: string) => number {
-  const bounds: BoundingBox = measureBoundingBox(shape.solid);
+  const bounds = measureBoundingBox(shape.solid);
 
   return (axis: string, minMax: string): number => {
     let j: number;
-    if (axis === 'x') j = 0;
-    else if (axis === 'y') j = 1;
-    else if (axis === 'z') j = 2;
-    else {
-      throw new Error(`Bounding box getter function expected "x", "y", or "z" as first parameter, but got ${axis}`);
+    switch (axis) {
+      case 'x': {
+        j = 0;
+        break;
+      }
+      case 'y': {
+        j = 1;
+        break;
+      }
+      case 'z': {
+        j = 2;
+        break;
+      }
+      default:
+        throw new InvalidParameterTypeError('"x", "y" or "z"', axis, 'BoundingBox');
     }
 
     let i: number;
-    if (minMax === 'min') i = 0;
-    else if (minMax === 'max') i = 1;
-    else {
-      throw new Error(`Bounding box getter function expected "min" or "max" as second parameter, but got ${minMax}`);
+    switch (minMax) {
+      case 'min': {
+        i = 0;
+        break;
+      }
+      case 'max': {
+        i = 1;
+        break;
+      }
+      default:
+        throw new InvalidParameterTypeError('"min" or "max"', minMax, 'BoundingBox');
     }
 
     return bounds[i][j];
@@ -655,16 +660,9 @@ export function rgb(
   greenValue: number,
   blueValue: number
 ): string {
-  if (
-    redValue < 0
-    || redValue > 255
-    || greenValue < 0
-    || greenValue > 255
-    || blueValue < 0
-    || blueValue > 255
-  ) {
-    throw new Error('RGB values must be between 0 and 255 (inclusive)');
-  }
+  assertNumberWithinRange(redValue, rgb.name, 0, 255, true, 'redValue');
+  assertNumberWithinRange(blueValue, rgb.name, 0, 255, true, 'blueValue');
+  assertNumberWithinRange(greenValue, rgb.name, 0, 255, true, 'greenValue');
 
   return `#${redValue.toString(16)}${greenValue.toString(16)}${blueValue.toString(16)}`;
 }
@@ -680,7 +678,7 @@ export function rgb(
  */
 export async function download_shape_stl(shape: Shape): Promise<void> {
   if (!is_shape(shape)) {
-    throw new Error('Failed to export, only Shapes can be converted to STL');
+    throw new InvalidParameterTypeError('Shape', shape, download_shape_stl.name);
   }
 
   await save(
@@ -700,7 +698,7 @@ export async function download_shape_stl(shape: Shape): Promise<void> {
  */
 export function render(operable: Operable): RenderGroup {
   if (!(operable instanceof Shape || operable instanceof Group)) {
-    throw new Error('Only Operables can be rendered');
+    throw new InvalidParameterTypeError('Operable', operable, render.name);
   }
 
   operable.store();
@@ -720,7 +718,7 @@ export function render(operable: Operable): RenderGroup {
  */
 export function render_grid(operable: Operable): RenderGroup {
   if (!(operable instanceof Shape || operable instanceof Group)) {
-    throw new Error('Only Operables can be rendered');
+    throw new InvalidParameterTypeError('Operable', operable, render.name);
   }
 
   operable.store();
@@ -738,7 +736,7 @@ export function render_grid(operable: Operable): RenderGroup {
  */
 export function render_axes(operable: Operable): RenderGroup {
   if (!(operable instanceof Shape || operable instanceof Group)) {
-    throw new Error('Only Operables can be rendered');
+    throw new InvalidParameterTypeError('Operable', operable, render.name);
   }
 
   operable.store();
@@ -756,7 +754,7 @@ export function render_axes(operable: Operable): RenderGroup {
  */
 export function render_grid_axes(operable: Operable): RenderGroup {
   if (!(operable instanceof Shape || operable instanceof Group)) {
-    throw new Error('Only Operables can be rendered');
+    throw new InvalidParameterTypeError('Operable', operable, render.name);
   }
 
   operable.store();

@@ -1,4 +1,5 @@
-import { pair, vector_to_list, type List } from 'js-slang/dist/stdlib/list';
+import { InvalidCallbackError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { vector_to_list, type List } from 'js-slang/dist/stdlib/list';
 
 /**
  * Symbol for identifying the mock properties. Should not be exposed to cadets.
@@ -13,9 +14,9 @@ interface MockedFunction {
   };
 }
 
-function throwIfNotMockedFunction(obj: (...args: any[]) => any, func_name: string): asserts obj is MockedFunction {
-  if (!(mockSymbol in obj)) {
-    throw new Error(`${func_name} expects a mocked function as argument`);
+function throwIfNotMockedFunction(obj: unknown, func_name: string, param_name?: string): asserts obj is MockedFunction {
+  if (typeof obj !== 'function' || !(mockSymbol in obj)) {
+    throw new InvalidCallbackError('mocked function', obj, func_name, param_name);
   }
 }
 
@@ -25,19 +26,26 @@ function throwIfNotMockedFunction(obj: (...args: any[]) => any, func_name: strin
  * original value you passed in if you want the mocked function to be properly tracked.
  * @param fn Function to mock
  * @returns A mocked version of the given function.
+ * @example
+ * ```
+ * const fn = mock_function(x => x + 1);
+ * fn(1);
+ * head(get_arg_list(fn)) === 1; // is true
+ * head(get_ret_vals(fn)) === 2; // is true
+ * ```
  */
 export function mock_function(fn: (...args: any[]) => any): MockedFunction {
   if (typeof fn !== 'function') {
-    throw new Error(`${mock_function.name} expects a function as argument`);
+    throw new InvalidParameterTypeError('function', fn, mock_function.name);
   }
 
-  const arglist: any[] = [];
+  const arglist: List[] = [];
   const retVals: any[] = [];
 
   // TODO: Check if some kind of function copying is required
   // js-slang has its own set of utils for doing this
   function func(...args: any[]) {
-    arglist.push(args);
+    arglist.push(vector_to_list(args));
     const retVal = fn.apply(fn, args);
     if (retVal !== undefined) {
       retVals.push(retVal);
@@ -46,8 +54,9 @@ export function mock_function(fn: (...args: any[]) => any): MockedFunction {
     return retVal;
   }
 
+  // @ts-expect-error This is fine
   func[mockSymbol] = { arglist, retVals };
-  func.toString = () => fn.toString();
+  func.toReplString = () => '<MockedFunction>';
 
   return func;
 }
@@ -70,11 +79,7 @@ export function get_num_calls(fn: MockedFunction) {
 export function get_arg_list(fn: MockedFunction) {
   throwIfNotMockedFunction(fn, get_arg_list.name);
   const { arglist } = fn[mockSymbol];
-
-  return arglist.reduceRight<List>((res, args) => {
-    const argsAsList = vector_to_list(args);
-    return pair(argsAsList, res);
-  }, null);
+  return vector_to_list(arglist);
 }
 
 /**
