@@ -260,7 +260,7 @@ export const draw_points_3d = createPlotFunction(
  * Visualizes the sound on a 2d line graph
  * @param sound the sound which is to be visualized on plotly
  */
-export function draw_sound_2d(sound: Sound) {
+export async function draw_sound_2d(sound: Sound) {
   const FS: number = 44100; // Output sample rate
   if (!is_sound(sound)) {
     throw new Error(`draw_sound_2d is expecting sound, but encountered ${sound}`);
@@ -277,7 +277,12 @@ export function draw_sound_2d(sound: Sound) {
     const wave = get_wave(sound);
     for (let i = 0; i < len; i += 1) {
       time_stamps[i] = i / FS;
-      channel[i] = wave(i / FS);
+      const generator = wave(i / FS);
+      let next = await generator.next();
+      while (!next.done) {
+        next = await generator.next();
+      }
+      channel[i] = next.value;
     }
 
     const x_s: number[] = [];

@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@sourceacademy/bundle-midi": "workspace:^",
-    "js-slang": "^1.0.85"
+    "@sourceacademy/conductor": "^0.7.0"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
@@ -13,8 +13,6 @@
   },
   "type": "module",
   "exports": {
-    "./dist/play_in_tab": null,
-    "./play_in_tab": null,
     ".": "./dist/index.js",
     "./*": "./dist/*.js"
   },

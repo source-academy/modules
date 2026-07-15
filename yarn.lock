@@ -4062,9 +4062,9 @@ __metadata:
   resolution: "@sourceacademy/bundle-sound@workspace:src/bundles/sound"
   dependencies:
     "@sourceacademy/bundle-midi": "workspace:^"
+    "@sourceacademy/conductor": "npm:^0.7.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    js-slang: "npm:^1.0.85"
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
@@ -4126,6 +4126,16 @@ __metadata:
     typescript: "npm:^6.0.2"
   languageName: unknown
   linkType: soft
+
+"@sourceacademy/common-tabs@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "@sourceacademy/common-tabs@npm:0.0.1"
+  peerDependencies:
+    "@blueprintjs/icons": ^6.0.0
+    react: ^18 || ^19
+  checksum: 10c0/ca9d9b626b9fcf1eeed40703438cc3c5af8bcdc04475cd5071794a5a5effbe7ae064ad72da315491f6065b9cdb895cb86ea00176f20b5ff318cda831dd33f780
+  languageName: node
+  linkType: hard
 
 "@sourceacademy/conductor@https://github.com/source-academy/conductor":
   version: 0.7.0
@@ -4652,9 +4662,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/tab-Sound@workspace:src/tabs/Sound"
   dependencies:
+    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/bundle-sound": "workspace:^"
+    "@sourceacademy/common-tabs": "npm:^0.0.1"
+    "@sourceacademy/conductor": "npm:^0.7.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "npm:^19.0.0"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
