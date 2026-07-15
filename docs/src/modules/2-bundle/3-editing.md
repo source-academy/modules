@@ -18,7 +18,7 @@ yarn workspaces focus @sourceacademy/bundle-[desired bundle]
 > yarn workspaces focus @sourceacademy/bundle-[desired bundle] @sourceacademy/modules
 > ```
 
-## Adding Dependencies
+## Managing Dependencies
 
 Your bundle may need other Javascript packages. To add a dependency to your bundle, run the command below:
 
@@ -26,17 +26,18 @@ Your bundle may need other Javascript packages. To add a dependency to your bund
 yarn add [dependency]
 ```
 
-If the dependency does not need to be present during runtime, then use:
+If the dependency is only needed for development and not at runtime, then use:
 
 ```sh
 yarn add --dev [dependency]
 ```
 
-This adds the dependency to `devDependencies` instead.
+This adds the dependency to `devDependencies` instead. Often, these will be compilation tools (like `@sourceacademy/modules-buildtools`) or
+third-party Typescript types (like `@types/node`).
 
 > [!WARNING]
 > You should only run this command in the directory of your bundle. Otherwise, the dependency will end up being added to the
-> root repository.
+> incorrect repository.
 
 > [!NOTE]
 > There are certain dependencies that are common to all bundles (like `react`). When adding such a dependency, remember to add the exact version
@@ -77,10 +78,52 @@ If you do so, remember to run your installation command (same as the one above) 
 >
 > Refer to the [issue](https://github.com/source-academy/modules/issues/211) tracking this functionality.
 
+### Removing Dependencies
+
+While editing, if you find you no longer need a certain package, you should remove it using the `yarn remove` command:
+
+```sh
+yarn remove [dependency]
+```
+
+This helps to keep the number of packages we need to depend on and install to a minimum, reducing install and build times as well as mitigating the risks of depending on third-party
+packages.
+
+Remove dependencies will also cause the lockfile to be modified, so remember to commit and push that change.
+
 ## Bundle Conventions
 
 To ensure that bundles conform to the different Source language specifications, there are a few rules that bundles need to abide by.
 Refer to [this list](./4-conventions/index) for more information.
+
+## Exports
+
+When editing a bundle, you may accidentally add a new export or remove an existing export. Take care to ensure that changes to the _API surface_ of the bundle are intentional.
+
+This can happen if especially you are using a wildcard export:
+
+::: code-group
+
+```ts [index.ts]
+// Will end up exporting new_foo!
+export * from './functions';
+```
+
+```ts [functions.ts]
+export function foo() {}
+
+/**
+ * For internal use only!
+ */
+export function new_foo() {}
+```
+
+:::
+
+> [!WARNING] Type Related Exports
+>
+> The only things you should be exporting from the entry point of your bundle are functions and constants. You
+> should not be exporting any type related values like classes, enums, type aliases or interfaces.
 
 ## Module Contexts
 
@@ -91,6 +134,8 @@ instructions on how to use them.
 
 There are common functions such as `hexToColor` available in the Common Modules Library (available as the `@sourceacademy/modules-lib` package). You can make use of these functions
 instead of implementing your own versions of them.
+
+The library's reference is [here](../../lib/modules-lib/)
 
 ## Adding Unit Tests
 

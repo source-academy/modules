@@ -1,6 +1,7 @@
 # Files to ignore #
 ###################
 *~
+.eslintcache
 node_modules/
 devserver/node_modules
 build/*

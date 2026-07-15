@@ -5,6 +5,7 @@
  */
 
 import { b2CircleShape, b2PolygonShape } from '@box2d/core';
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import context from 'js-slang/context';
 
 import { PhysicsObject } from './PhysicsObject';
@@ -13,9 +14,28 @@ import { Vector2, type Force } from './types';
 
 // Global Variables
 
-let world: PhysicsWorld | null = null;
-const NO_WORLD = new Error('Please call set_gravity first!');
-const MULTIPLE_WORLDS = new Error('You may only call set_gravity once!');
+/**
+ * exported for testing
+ * @hidden
+ */
+export let world: PhysicsWorld | null = null;
+
+/**
+ * exported for testing
+ * @hidden
+ */
+export function resetWorld() {
+  world = null;
+}
+
+const NO_WORLD = 'Please call set_gravity first!';
+const MULTIPLE_WORLDS = 'You may only call set_gravity once!';
+
+function throwIfNoWorld(world: PhysicsWorld | null, func_name: string): asserts world is PhysicsWorld {
+  if (!world) {
+    throw new GeneralRuntimeError(`${func_name}: ${NO_WORLD}`);
+  }
+}
 
 // Module's Exposed Functions
 
@@ -64,14 +84,14 @@ export function make_force(
  * @param v gravity vector
  * @example
  * ```
- * set_gravity(0, -9.8); // gravity vector for real world
+ * set_gravity(make_vector(0, -9.8)); // gravity vector for real world
  * ```
  *
  * @category Main
  */
 export function set_gravity(v: Vector2) {
   if (world) {
-    throw MULTIPLE_WORLDS;
+    throw new GeneralRuntimeError(`${set_gravity.name}: ${MULTIPLE_WORLDS}`);
   }
 
   world = new PhysicsWorld();
@@ -90,10 +110,7 @@ export function set_gravity(v: Vector2) {
  * @category Main
  */
 export function make_ground(height: number, friction: number) {
-  if (!world) {
-    throw NO_WORLD;
-  }
-
+  throwIfNoWorld(world, make_ground.name);
   world.makeGround(height, friction);
 }
 
@@ -108,9 +125,7 @@ export function make_ground(height: number, friction: number) {
  * @category Main
  */
 export function add_wall(pos: Vector2, rot: number, size: Vector2) {
-  if (!world) {
-    throw NO_WORLD;
-  }
+  throwIfNoWorld(world, add_wall.name);
 
   return world.addObject(new PhysicsObject(
     pos,
@@ -140,10 +155,9 @@ export function add_box_object(
   size: Vector2,
   isStatic: boolean
 ): PhysicsObject {
-  if (!world) {
-    throw NO_WORLD;
-  }
-  const newObj: PhysicsObject = new PhysicsObject(
+  throwIfNoWorld(world, add_box_object.name);
+
+  const newObj = new PhysicsObject(
     pos,
     rot,
     new b2PolygonShape()
@@ -173,10 +187,9 @@ export function add_circle_object(
   radius: number,
   isStatic: boolean
 ): PhysicsObject {
-  if (!world) {
-    throw NO_WORLD;
-  }
-  const newObj: PhysicsObject = new PhysicsObject(
+  throwIfNoWorld(world, add_circle_object.name);
+
+  const newObj = new PhysicsObject(
     pos,
     rot,
     new b2CircleShape()
@@ -208,10 +221,9 @@ export function add_triangle_object(
   height: number,
   isStatic: boolean
 ): PhysicsObject {
-  if (!world) {
-    throw NO_WORLD;
-  }
-  const newObj: PhysicsObject = new PhysicsObject(
+  throwIfNoWorld(world, add_triangle_object.name);
+
+  const newObj = new PhysicsObject(
     pos,
     rot,
     new b2PolygonShape()
@@ -235,10 +247,7 @@ export function add_triangle_object(
  * @category Main
  */
 export function update_world(dt: number) {
-  if (!world) {
-    throw NO_WORLD;
-  }
-
+  throwIfNoWorld(world, update_world.name);
   world.update(dt);
 }
 
@@ -250,10 +259,7 @@ export function update_world(dt: number) {
  * @category Main
  */
 export function simulate_world(total_time: number) {
-  if (!world) {
-    throw NO_WORLD;
-  }
-
+  throwIfNoWorld(world, simulate_world.name);
   world.simulate(total_time);
 }
 
@@ -374,9 +380,7 @@ export function set_density(obj: PhysicsObject, density: number) {
  * @category Body
  */
 export function scale_size(obj: PhysicsObject, scale: number) {
-  if (!world) {
-    throw NO_WORLD;
-  }
+  throwIfNoWorld(world, scale_size.name);
   obj.scale_size(scale);
 }
 
@@ -416,10 +420,7 @@ export function is_touching(obj1: PhysicsObject, obj2: PhysicsObject) {
  * @category Dynamics
  */
 export function impact_start_time(obj1: PhysicsObject, obj2: PhysicsObject) {
-  if (!world) {
-    throw NO_WORLD;
-  }
-
+  throwIfNoWorld(world, impact_start_time.name);
   return world.findImpact(obj1, obj2);
 }
 
