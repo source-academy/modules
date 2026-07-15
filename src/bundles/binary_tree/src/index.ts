@@ -24,7 +24,7 @@ import {
 
 export default class BinaryTreeModulePlugin extends BaseModulePlugin {
   id = 'binary_tree';
-  exportedNames = [
+  override exportedNames = [
     'entry',
     'is_empty_tree',
     'is_tree',
@@ -33,7 +33,7 @@ export default class BinaryTreeModulePlugin extends BaseModulePlugin {
     'make_tree',
     'right_branch'
   ] as const;
-  static channelAttach = [];
+  static override channelAttach = [];
 
   @moduleMethod([], DataType.EMPTY_LIST)
   async* make_empty_tree(): AsyncGenerator<void, TypedValue<DataType.EMPTY_LIST>, unknown> {
