@@ -115,8 +115,8 @@ export default defineTab({
     return !!moduleState && moduleState.suiteResults.length > 0;
   },
   body: context => {
-    const moduleContext = getModuleState<UnittestModuleState>(context, 'unittest')!;
-    return <TestSuitesTab results={moduleContext.suiteResults} />;
+    const moduleState = getModuleState<UnittestModuleState>(context, 'unittest')!;
+    return <TestSuitesTab results={moduleState.suiteResults} />;
   },
   label: 'Test suites',
   iconName: 'lab-test',

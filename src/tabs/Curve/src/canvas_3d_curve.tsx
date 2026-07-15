@@ -32,7 +32,7 @@ export default function Canvas3DCurve({ curve }: Props) {
   } = useAnimation({
     animationDuration: 7200,
     autoLoop: true,
-    callback(angle) {
+    callback({ timestamp: angle }) {
       const angleInRadians = degreesToRadians(angle / 20);
       curve.redraw(angleInRadians);
     }

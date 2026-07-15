@@ -1,22 +1,63 @@
-/* [Imports] */
-import { Icon, Tooltip } from '@blueprintjs/core';
-import { Pause, Play } from '@blueprintjs/icons';
+import { Icon, Tooltip, type IconProps, type TooltipProps } from '@blueprintjs/core';
 import ButtonComponent, { type ButtonComponentProps } from './ButtonComponent';
 
-/* [Exports] */
-export type PlayButtonProps = ButtonComponentProps & {
+export type PlayButtonProps = Omit<ButtonComponentProps, 'text' | 'icon'> & {
   isPlaying: boolean;
+
+  /**
+   * Tooltip string for the button when `isPlaying` is true. Defaults to `Pause`.
+   */
+  playingText?: string;
+
+  /**
+   * Tooltip string for the button when `isPlaying` is false. Defaults to `Play`.
+   */
+  pausedText?: string;
+
+  /**
+   * Icon for the button when `isPlaying` is true. Defaults to `pause`.
+   */
+  playingIcon?: IconProps['icon'];
+
+  /**
+   * Icon for the button when `isPlaying` is false. Defaults to `play`.
+   */
+  pausedIcon?: IconProps['icon'];
+
+  /**
+   * Props to be passed to the Tooltip component
+   */
+  tooltipProps?: Omit<TooltipProps, 'content'>;
+
+  /**
+   * Props to be passed to the Icon component
+   */
+  iconProps?: Omit<IconProps, 'icon'>;
 };
 
-/* [Main] */
-export default function PlayButton(props: PlayButtonProps) {
+/**
+ * A {@link ButtonComponent|Button} that toggles between two states: playing and not playing.
+ *
+ * @category Components
+ */
+export default function PlayButton({
+  playingText = 'Pause',
+  playingIcon = 'pause',
+  pausedText = 'Play',
+  pausedIcon = 'play',
+  isPlaying,
+  tooltipProps,
+  iconProps,
+  ...props
+}: PlayButtonProps) {
   return <Tooltip
-    content={props.isPlaying ? 'Pause' : 'Play'}
-    placement="top"
+    content={isPlaying ? playingText : pausedText}
+    {...tooltipProps}
   >
     <ButtonComponent {...props} >
       <Icon
-        icon={props.isPlaying ? <Pause /> : <Play />}
+        icon={isPlaying ? playingIcon : pausedIcon}
+        {...iconProps}
       />
     </ButtonComponent>
   </Tooltip>;

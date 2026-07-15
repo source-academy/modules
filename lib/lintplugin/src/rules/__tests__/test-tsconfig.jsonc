@@ -1,0 +1,14 @@
+// This tsconfig is necessary for testing typed rules
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "lib": [
+      "es6"
+    ],
+    "module": "esnext",
+    "moduleResolution": "bundler"
+  },
+  "files": [
+    "file.ts"
+  ]
+}

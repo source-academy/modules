@@ -3,13 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "devDependencies": {
+    "@sourceacademy/conductor": "^0.7.0",
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-testplugin": "workspace:^",
-    "js-slang": "^1.0.85",
-    "typescript": "^6.0.2"
-  },
-  "dependencies": {
-    "@sourceacademy/conductor": "^0.7.0"
+    "js-slang": "catalog:",
+    "typescript": "catalog:"
   },
   "type": "module",
   "scripts": {
@@ -18,8 +16,9 @@
     "prepare": "yarn tsc",
     "tsc": "buildtools tsc .",
     "test": "buildtools test --project .",
-    "postinstall": "buildtools compile",
-    "serve": "yarn buildtools serve"
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
   },
   "exports": {
     ".": "./dist/index.js",

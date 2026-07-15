@@ -1,4 +1,5 @@
 import pathlib from 'path';
+import { outDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import type { ResolvedBundle } from '@sourceacademy/modules-repotools/types';
 import * as td from 'typedoc';
 import { describe, expect, it, vi } from 'vitest';
@@ -186,7 +187,7 @@ describe(normalizeConductorDocs, () => {
       manifest: {},
       directory: pathlib.resolve(import.meta.dirname, '../../../../../../src/bundles/repeat')
     };
-    const app = await initTypedocForJson(repeatBundle, td.LogLevel.None);
+    const app = await initTypedocForJson(repeatBundle, outDir, td.LogLevel.None);
     const project = await app.convert();
     expect(project).toBeDefined();
 

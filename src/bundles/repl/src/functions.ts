@@ -4,11 +4,16 @@
  * @author Wang Zihan
  */
 
+import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
+import type { Value } from 'js-slang/dist/types';
+import { stringify } from 'js-slang/dist/utils/stringify';
 import { COLOR_REPL_DISPLAY_DEFAULT } from './config';
-import { ProgrammableRepl } from './programmable_repl';
+import { ProgrammableRepl, processRichDisplayContent, type RichDisplayContent } from './programmable_repl';
 
-const INSTANCE = new ProgrammableRepl();
+/* Exported for testing */
+export const INSTANCE = new ProgrammableRepl();
 context.moduleContexts.repl.state = INSTANCE;
 
 /**
@@ -25,9 +30,8 @@ context.moduleContexts.repl.state = INSTANCE;
  * @category Main
  */
 export function set_evaluator(evalFunc: (code: string) => any) {
-  if (typeof evalFunc !== 'function') {
-    throw new Error(`${set_evaluator.name} expects a function as parameter`);
-  }
+  assertFunctionOfLength(evalFunc, 1, set_evaluator.name);
+
   INSTANCE.evalFunction = evalFunc;
   return {
     toReplString: () => '<Programmable Repl Initialized>'
@@ -36,24 +40,31 @@ export function set_evaluator(evalFunc: (code: string) => any) {
 
 /**
  * Display message in Programmable Repl Tab
- * If you give a pair as the parameter, it will use the given pair to generate rich text and use rich text display mode to display the string in Programmable Repl Tab with undefined return value (see module description for more information).
- * If you give other things as the parameter, it will simply display the toString value of the parameter in Programmable Repl Tab and returns the displayed string itself.
+ * If given a pair as the parameter, it will use the given pair to generate rich text and use rich text display mode to display
+ * the string in Programmable Repl Tab
  *
  * **Rich Text Display**
- *  - First you need to `import { repl_display } from "repl";`
+ *  - First you need to `import { rich_repl_display } from "repl";`
  *  - Format: pair(pair("string",style),style)...
  *  - Examples:
  *
  * ```js
  * // A large italic underlined "Hello World"
- * repl_display(pair(pair(pair(pair("Hello World", "underline"), "italic"), "bold"), "gigantic"));
+ * rich_repl_display(pair(pair(pair(pair("Hello World", "underline"), "italic"), "bold"), "gigantic"));
  *
  * // A large italic underlined "Hello World" in blue
- * repl_display(pair(pair(pair(pair(pair("Hello World", "underline"),"italic"), "bold"), "gigantic"), "clrt#0000ff"));
+ * rich_repl_display(pair(pair(pair(pair(pair("Hello World", "underline"),"italic"), "bold"), "gigantic"), "clrt#0000ff"));
  *
  * // A large italic underlined "Hello World" with orange foreground and purple background
- * repl_display(pair(pair(pair(pair(pair(pair("Hello World", "underline"), "italic"), "bold"), "gigantic"), "clrb#A000A0"),"clrt#ff9700"));
+ * rich_repl_display(pair(pair(pair(pair(pair(pair("Hello World", "underline"), "italic"), "bold"), "gigantic"), "clrb#A000A0"),"clrt#ff9700"));
  * ```
+ * To display rich text from within REPL code, you should use the `raw_display` function instead:
+ *
+ * ```js
+ * raw_display(pair("Hello World", "gigantic"));
+ * ```
+ *
+ * If the content you provided isn't valid as rich text, then it will be treated as a regular object and displayed as regular text.
  *
  *  - Coloring:
  *    - `clrt` stands for text color, `clrb` stands for background color. The color string are in hexadecimal begin with "#" and followed by 6 hexadecimal digits.
@@ -72,12 +83,25 @@ export function set_evaluator(evalFunc: (code: string) => any) {
  * @param content the content you want to display
  * @category Main
  */
-export function repl_display(content: any): any {
-  if (INSTANCE.richDisplayInternal(content) === 'not_rich_text_pair') {
-    INSTANCE.pushOutputString(content.toString(), COLOR_REPL_DISPLAY_DEFAULT, 'plaintext');// students may set the value of the parameter "str" to types other than a string (for example "repl_display(1)" ). So here I need to first convert the parameter "str" into a string before preceding.
-    return content;
-  }
-  return undefined;
+export function rich_repl_display(content: RichDisplayContent): RichDisplayContent {
+  const result = processRichDisplayContent(content, rich_repl_display.name);
+  const output = `<span style="${result}`;
+  INSTANCE.pushOutputString(output, '', 'richtext');
+  return content;
+}
+
+/**
+ * Functions as the regular `display` function does, writing the given output to the REPL in tab. This function won't try to
+ * decode rich text pairs. For that, use {@link rich_repl_display}.
+ *
+ * To display content from directly within REPL code, you can use `display` directly.
+ *
+ * @category Main
+ */
+export function repl_display(content: Value): Value {
+  const stringified = typeof content === 'string' ? content : stringify(content);
+  INSTANCE.pushOutputString(stringified, COLOR_REPL_DISPLAY_DEFAULT, 'plaintext');
+  return content;
 }
 
 /**
@@ -88,6 +112,12 @@ export function repl_display(content: any): any {
  * @category Main
  */
 export function set_background_image(img_url: string, background_color_alpha: number): void {
+  assertNumberWithinRange(background_color_alpha, set_background_image.name, 0, 1, false, 'background_color_alpha');
+
+  if (typeof img_url !== 'string') {
+    throw new InvalidParameterTypeError('string', img_url, set_background_image.name, 'img_url');
+  }
+
   INSTANCE.customizedEditorProps.backgroundImageUrl = img_url;
   INSTANCE.customizedEditorProps.backgroundColorAlpha = background_color_alpha;
 }
@@ -98,7 +128,8 @@ export function set_background_image(img_url: string, background_color_alpha: nu
  * @category Main
  */
 export function set_font_size(font_size_px: number) {
-  INSTANCE.customizedEditorProps.fontSize = parseInt(font_size_px.toString());// The TypeScript type checker will throw an error as "parseInt" in TypeScript only accepts one string as parameter.
+  assertNumberWithinRange(font_size_px, set_font_size.name, 0);
+  INSTANCE.customizedEditorProps.fontSize = font_size_px;
 }
 
 /**
@@ -106,7 +137,15 @@ export function set_font_size(font_size_px: number) {
  * @category Main
  */
 export function set_program_text(text: string) {
-  INSTANCE.updateUserCode(text);
+  if (typeof text !== 'string') {
+    throw new InvalidParameterTypeError('string', text, set_program_text.name);
+  }
+
+  if (INSTANCE.updateUserCode) {
+    INSTANCE.updateUserCode(text);
+  } else {
+    INSTANCE.defaultCode = text;
+  }
 }
 
 /**
@@ -130,7 +169,7 @@ export function default_js_slang(_program: string): any {
     This function carries the evaluator symbol to allow it to be distinguished from other
     evaluator functions.
   */
-  throw new Error('Invaild Call: Function "default_js_slang" can not be directly called by user\'s code in editor. You should use it as the parameter of the function "set_evaluator"');
+  throw new GeneralRuntimeError('default_js_slang: Cannot be called directly. You should use it as the parameter of the function "set_evaluator"');
 }
 
 default_js_slang[evaluatorSymbol] = true;

@@ -4,7 +4,7 @@ import { renderHook } from 'vitest-browser-react';
 import { useAnimation, type AnimationOptions } from '../useAnimation';
 
 interface Fixtures {
-  callback: (timestamp: number, canvas: HTMLCanvasElement) => void;
+  callback: AnimationOptions['callback'];
   canvas: HTMLCanvasElement;
 }
 
@@ -50,7 +50,7 @@ async function getAnimationHook(
 test('First frame is automatically drawn', async ({ callback, canvas }) => {
   await getAnimationHook({ callback }, canvas);
   expect(callback).toHaveBeenCalledTimes(1);
-  expect(callback).toHaveBeenCalledWith(0, expect.anything());
+  expect(callback).toHaveBeenCalledWith(expect.anything());
 });
 
 test('Animation should automatically restart if autoLoop is true', async ({ callback, canvas }) => {
@@ -69,16 +69,25 @@ test('Animation should automatically restart if autoLoop is true', async ({ call
 
   expect(callback).toHaveBeenCalledTimes(5);
   const [[frame0], [frame1], [frame2], [frame3], [frame4]] = vi.mocked(callback).mock.calls;
-  // Once at the start
-  expect(frame0).toEqual(0);
+  // Once for the initial frame
+  expect(frame0).toHaveProperty('timestamp', 0);
+  expect(frame0).toHaveProperty('isPlaying', false);
+
   // Once for 999 timestamp
-  expect(frame1).toEqual(999);
+  expect(frame1).toHaveProperty('timestamp', 999);
+  expect(frame1).toHaveProperty('isPlaying', true);
+
   // Once for when the animation completes
-  expect(frame2).toEqual(1000);
+  expect(frame2).toHaveProperty('timestamp', 1000);
+  expect(frame2).toHaveProperty('isPlaying', true);
+
   // Once for the 0 after reset
-  expect(frame3).toEqual(0);
+  expect(frame3).toHaveProperty('timestamp', 0);
+  expect(frame3).toHaveProperty('isPlaying', true);
+
   // Once for the frame after
-  expect(frame4).toBeGreaterThan(0);
+  expect(frame4.timestamp).toBeGreaterThan(0);
+  expect(frame4).toHaveProperty('isPlaying', true);
 });
 
 test('Animation should stop if autoLoop is false', async ({ callback, canvas }) => {
@@ -90,19 +99,26 @@ test('Animation should stop if autoLoop is false', async ({ callback, canvas }) 
 
   await act(() => {
     hook.current.start();
-    hook.current.changeTimestamp(999);
   });
 
   expect(hook.current.isPlaying).toEqual(true);
-  await advanceFrames(3);
+
+  await act(() => {
+    hook.current.changeTimestamp(999);
+  });
+
+  await advanceFrames(20);
 
   expect(callback).toHaveBeenCalledTimes(3);
   const [[frame0], [frame1], [frame2]] = vi.mocked(callback).mock.calls;
-  expect(frame0).toEqual(0);
-  expect(frame1).toEqual(999);
-  expect(frame2).toEqual(1000);
+  expect(frame0).toHaveProperty('timestamp', 0);
+  expect(frame0).toHaveProperty('isPlaying', false);
 
-  expect(hook.current.isPlaying).toEqual(false);
+  expect(frame1).toHaveProperty('timestamp', 999);
+  expect(frame1).toHaveProperty('isPlaying', true);
+
+  expect(frame2).toHaveProperty('timestamp', 1000);
+  expect(frame2).toHaveProperty('isPlaying', true);
 });
 
 test('Animation should auto start if autoStart is true', async ({ callback, canvas }) => {
