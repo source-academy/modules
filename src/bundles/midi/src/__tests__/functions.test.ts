@@ -36,6 +36,15 @@ describe(funcs.midi_note_to_letter_name, () => {
       [69, 'A4'],
     ] as [number, NoteWithOctave][])('%i should equal %s', (note, noteName) => expect(funcs.midi_note_to_letter_name(note, Accidental.FLAT)).toEqual(noteName));
   });
+
+  test('Invalid accidental should throw an error, not silently fall back to flat', () => {
+    expect(() => funcs.midi_note_to_letter_name(13, Accidental.NATURAL)).toThrow(
+      'midi_note_to_letter_name: Expected sharp or flat for accidental, got "♮".',
+    );
+    expect(() => funcs.midi_note_to_letter_name(13, 'banana' as any)).toThrow(
+      'midi_note_to_letter_name: Expected sharp or flat for accidental, got "banana".',
+    );
+  });
 });
 
 describe(noteToValues, () => {
@@ -68,6 +77,15 @@ describe(funcs.add_octave_to_note, () => {
   test('Invalid octave should throw an error', () => {
     expect(() => funcs.add_octave_to_note('C', -1)).toThrow('add_octave_to_note: Expected integer ≥ 0 for octave, got -1.');
     expect(() => funcs.add_octave_to_note('C', 2.5)).toThrow('add_octave_to_note: Expected integer ≥ 0 for octave, got 2.5.');
+  });
+
+  test('Invalid note should throw an error, not silently interpolate', () => {
+    expect(() => funcs.add_octave_to_note('garbage', 4)).toThrow(
+      'add_octave_to_note: Expected a note without an octave for note, got "garbage".',
+    );
+    expect(() => funcs.add_octave_to_note('C4', 4)).toThrow(
+      'add_octave_to_note: Expected a note without an octave for note, got "C4".',
+    );
   });
 });
 

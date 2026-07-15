@@ -1,4 +1,4 @@
-import { pair, type List } from 'js-slang/dist/stdlib/list';
+import type { List } from 'js-slang/dist/stdlib/list';
 import type { MIDINote } from './types';
 
 const major_intervals = [2, 2, 1, 2, 2, 2, 1];
@@ -13,13 +13,13 @@ export type Scale = List;
  * intervals around, so we can reuse this function.
  */
 function make_from_major_scale(root: MIDINote, mode: number): Scale {
-  let output: List = pair(root + 12, null);
+  let output: List = [root + 12, null];
   let note = root + 12;
 
   for (let i = major_intervals.length - 1; i >= 0; i--) {
     const interval = major_intervals[(mode - 1 + i) % major_intervals.length];
     note -= interval;
-    output = pair(note, output);
+    output = [note, output];
   }
 
   return output;

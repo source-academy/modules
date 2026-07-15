@@ -34,7 +34,7 @@ export function is_note_with_octave(value: unknown): value is NoteWithOctave {
  * ```
  * @function
  */
-export function letter_name_to_midi_note(note: NoteWithOctave): MIDINote {
+export function letter_name_to_midi_note(note: string): MIDINote {
   const [noteName, accidental, octave] = noteToValues(note, 'letter_name_to_midi_note');
 
   let res = 12; // C0 is midi note 12
@@ -102,7 +102,7 @@ export function letter_name_to_midi_note(note: NoteWithOctave): MIDINote {
  * midi_note_to_letter_name(60, SHARP); // Returns "C4"
  * ```
  */
-export function midi_note_to_letter_name(midiNote: MIDINote, accidental: Accidental.FLAT | Accidental.SHARP): NoteWithOctave {
+export function midi_note_to_letter_name(midiNote: MIDINote, accidental: string): NoteWithOctave {
   const octave = Math.floor(midiNote / 12) - 1;
   const note = midiNoteToNoteName(midiNote, accidental, 'midi_note_to_letter_name');
   return `${note}${octave}`;
@@ -135,7 +135,7 @@ export function midi_note_to_frequency(note: MIDINote): number {
  * letter_name_to_frequency('A4'); // Returns 440
  * ```
  */
-export function letter_name_to_frequency(note: NoteWithOctave): number {
+export function letter_name_to_frequency(note: string): number {
   return midi_note_to_frequency(letter_name_to_midi_note(note));
 }
 
@@ -147,8 +147,13 @@ export function letter_name_to_frequency(note: NoteWithOctave): number {
  * add_octave_to_note('C', 4); // Returns "C4"
  * ```
  */
-export function add_octave_to_note(note: Note, octave: number): NoteWithOctave {
+export function add_octave_to_note(note: string, octave: number): NoteWithOctave {
   assertNumberWithinRange(octave, 'add_octave_to_note', { min: 0, paramName: 'octave' });
+  // Reject anything that isn't a bare note (an unrecognised note, or one that already has an
+  // octave) rather than silently interpolating it into the result string.
+  if (!/^[A-Ga-g][#♮b]?$/.test(note)) {
+    throw new EvaluatorParameterTypeError('add_octave_to_note', 'note', 'a note without an octave', note);
+  }
   return `${note}${octave}`;
 }
 
@@ -156,7 +161,7 @@ export function add_octave_to_note(note: Note, octave: number): NoteWithOctave {
  * Gets the octave number from a given {@link NoteWithOctave|note name with octave}.
  * @function
  */
-export function get_octave(note: NoteWithOctave): number {
+export function get_octave(note: string): number {
   const [, , octave] = noteToValues(note, 'get_octave');
   return octave;
 }
@@ -170,7 +175,7 @@ export function get_octave(note: NoteWithOctave): number {
  * get_note_name('Eb3'); // Returns "E"
  * ```
  */
-export function get_note_name(note: NoteWithOctave): Note {
+export function get_note_name(note: string): Note {
   const [noteName] = noteToValues(note, 'get_note_name');
   return noteName;
 }
@@ -179,7 +184,7 @@ export function get_note_name(note: NoteWithOctave): Note {
  * Gets the accidental from a given {@link NoteWithOctave|note name with octave}.
  * @function
  */
-export function get_accidental(note: NoteWithOctave): Accidental {
+export function get_accidental(note: string): Accidental {
   const [, accidental] = noteToValues(note, 'get_accidental');
   return accidental;
 }
@@ -193,7 +198,7 @@ export function get_accidental(note: NoteWithOctave): Accidental {
  * key_signature_to_key(FLAT, 3); // Returns "Eb", since the key of Eb has 3 flats
  * ```
  */
-export function key_signature_to_key(accidental: Accidental.FLAT | Accidental.SHARP, numAccidentals: number): Note {
+export function key_signature_to_key(accidental: string, numAccidentals: number): Note {
   assertNumberWithinRange(numAccidentals, 'key_signature_to_key', { min: 0, max: 6, paramName: 'numAccidentals' });
 
   switch (accidental) {

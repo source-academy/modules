@@ -1,4 +1,4 @@
-import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
+import { EvaluatorParameterTypeError, EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import { Accidental, type MIDINote, type Note, type NoteName, type NoteWithOctave } from './types';
 
 export function parseNoteWithOctave(note: NoteWithOctave): [NoteName, Accidental, number];
@@ -30,7 +30,7 @@ export function parseNoteWithOctave(note: unknown): [NoteName, Accidental, numbe
   ] as [NoteName, Accidental, number];
 }
 
-export function noteToValues(note: NoteWithOctave, func_name: string): [NoteName, Accidental, number] {
+export function noteToValues(note: string, func_name: string): [NoteName, Accidental, number] {
   const res = parseNoteWithOctave(note);
   if (res === null) {
     throw new EvaluatorRuntimeError(`${func_name}: Invalid Note with Octave: ${note}`);
@@ -38,11 +38,10 @@ export function noteToValues(note: NoteWithOctave, func_name: string): [NoteName
   return res;
 }
 
-export function midiNoteToNoteName(
-  midiNote: MIDINote,
-  accidental: Accidental.FLAT | Accidental.SHARP,
-  func_name: string
-): Note {
+export function midiNoteToNoteName(midiNote: MIDINote, accidental: string, func_name: string): Note {
+  if (accidental !== Accidental.SHARP && accidental !== Accidental.FLAT) {
+    throw new EvaluatorParameterTypeError(func_name, 'accidental', 'sharp or flat', accidental);
+  }
   switch (midiNote % 12) {
     case 0:
       return 'C';

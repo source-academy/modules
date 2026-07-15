@@ -8,7 +8,7 @@
 import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
 import { BaseModulePlugin, moduleMethod } from '@sourceacademy/conductor/module';
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
-import { DataType, type IFunctionSignature, type TypedValue } from '@sourceacademy/conductor/types';
+import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 
 import { scaleToConductorList } from './conductorAdapters';
 import {
@@ -35,7 +35,7 @@ import {
   mixolydian_scale as mixolydian_scale_func,
   phrygian_scale as phrygian_scale_func
 } from './functions';
-import type { Accidental, MIDINote, Note, NoteWithOctave } from './types';
+import type { MIDINote } from './types';
 
 export default class MidiModulePlugin extends BaseModulePlugin {
   id = 'midi';
@@ -63,7 +63,6 @@ export default class MidiModulePlugin extends BaseModulePlugin {
   static channelAttach = [];
   constructor(conduit: IConduit, channels: IChannel<any>[], evaluator: IInterfacableEvaluator) {
     super(conduit, channels, evaluator);
-    this.__bindExportedMethods();
     // BaseModulePlugin.initialise() only registers exportedNames whose value is a function, so
     // these plain string constants are pushed onto `exports` directly instead.
     this.exports.push(
@@ -73,27 +72,9 @@ export default class MidiModulePlugin extends BaseModulePlugin {
     );
   }
 
-  // See binary_tree's index.ts / source-academy/conductor#41 for why this is needed: evaluators
-  // call the registered closure as a bare function, so `this` inside the method body is
-  // undefined unless bound to the instance first.
-  private __bindExportedMethods() {
-    for (const name of this.exportedNames) {
-      const method = this[name];
-      if (typeof method !== 'function') continue;
-
-      const signature = (method as { signature?: IFunctionSignature<any, any> }).signature;
-      const boundMethod = method.bind(this) as typeof method & { signature?: IFunctionSignature<any, any> };
-      boundMethod.signature = signature;
-      Object.defineProperty(this, name, {
-        configurable: true,
-        value: boundMethod
-      });
-    }
-  }
-
   @moduleMethod([DataType.CONST_STRING], DataType.NUMBER)
   async* letter_name_to_midi_note(note: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, unknown> {
-    return { type: DataType.NUMBER, value: letter_name_to_midi_note_func(note.value as NoteWithOctave) };
+    return { type: DataType.NUMBER, value: letter_name_to_midi_note_func(note.value) };
   }
 
   @moduleMethod([DataType.NUMBER, DataType.CONST_STRING], DataType.CONST_STRING)
@@ -103,7 +84,7 @@ export default class MidiModulePlugin extends BaseModulePlugin {
   ): AsyncGenerator<void, TypedValue<DataType.CONST_STRING>, unknown> {
     return {
       type: DataType.CONST_STRING,
-      value: midi_note_to_letter_name_func(note.value as MIDINote, accidental.value as Accidental.FLAT | Accidental.SHARP)
+      value: midi_note_to_letter_name_func(note.value as MIDINote, accidental.value)
     };
   }
 
@@ -114,7 +95,7 @@ export default class MidiModulePlugin extends BaseModulePlugin {
 
   @moduleMethod([DataType.CONST_STRING], DataType.NUMBER)
   async* letter_name_to_frequency(note: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, unknown> {
-    return { type: DataType.NUMBER, value: letter_name_to_frequency_func(note.value as NoteWithOctave) };
+    return { type: DataType.NUMBER, value: letter_name_to_frequency_func(note.value) };
   }
 
   // No declared arg type: is_note_with_octave is a predicate that must accept a value of any
@@ -129,22 +110,22 @@ export default class MidiModulePlugin extends BaseModulePlugin {
     note: TypedValue<DataType.CONST_STRING>,
     octave: TypedValue<DataType.NUMBER>
   ): AsyncGenerator<void, TypedValue<DataType.CONST_STRING>, unknown> {
-    return { type: DataType.CONST_STRING, value: add_octave_to_note_func(note.value as Note, octave.value) };
+    return { type: DataType.CONST_STRING, value: add_octave_to_note_func(note.value, octave.value) };
   }
 
   @moduleMethod([DataType.CONST_STRING], DataType.NUMBER)
   async* get_octave(note: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, unknown> {
-    return { type: DataType.NUMBER, value: get_octave_func(note.value as NoteWithOctave) };
+    return { type: DataType.NUMBER, value: get_octave_func(note.value) };
   }
 
   @moduleMethod([DataType.CONST_STRING], DataType.CONST_STRING)
   async* get_note_name(note: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.CONST_STRING>, unknown> {
-    return { type: DataType.CONST_STRING, value: get_note_name_func(note.value as NoteWithOctave) };
+    return { type: DataType.CONST_STRING, value: get_note_name_func(note.value) };
   }
 
   @moduleMethod([DataType.CONST_STRING], DataType.CONST_STRING)
   async* get_accidental(note: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.CONST_STRING>, unknown> {
-    return { type: DataType.CONST_STRING, value: get_accidental_func(note.value as NoteWithOctave) };
+    return { type: DataType.CONST_STRING, value: get_accidental_func(note.value) };
   }
 
   @moduleMethod([DataType.CONST_STRING, DataType.NUMBER], DataType.CONST_STRING)
@@ -154,7 +135,7 @@ export default class MidiModulePlugin extends BaseModulePlugin {
   ): AsyncGenerator<void, TypedValue<DataType.CONST_STRING>, unknown> {
     return {
       type: DataType.CONST_STRING,
-      value: key_signature_to_key_func(accidental.value as Accidental.FLAT | Accidental.SHARP, numAccidentals.value)
+      value: key_signature_to_key_func(accidental.value, numAccidentals.value)
     };
   }
 
