@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Initialize Github Actions
         uses: ./.github/actions/src/init
@@ -65,7 +65,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Initialize ${{ matrix.lib.name }}
         uses: ./.github/actions/src/init
@@ -99,7 +99,7 @@ jobs:
     name: ${{ matrix.tabInfo.tabName }} Tab
     steps:
       - name: Check out source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Initialize ${{ matrix.tabInfo.tabName }}
         uses: ./.github/actions/src/init
@@ -143,7 +143,7 @@ jobs:
     name: ${{ matrix.bundleInfo.bundleName }} Bundle
     steps:
       - name: Check out source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Initialize ${{ matrix.bundleInfo.name }}
         uses: ./.github/actions/src/init
@@ -191,7 +191,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Enable Corepack
         run: corepack enable
@@ -243,7 +243,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Initialize Docserver
         uses: ./.github/actions/src/init
@@ -266,7 +266,7 @@ jobs:
 
     steps:
       - name: Check out source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Initialize Repo
         uses: ./.github/actions/src/init
@@ -283,7 +283,11 @@ jobs:
         run: yarn buildtools manifest
 
       - name: Upload Manifest
+<<<<<<< HEAD
         uses: actions/upload-artifact@v4
+=======
+        uses: actions/upload-artifact@v6
+>>>>>>> origin/master
         with:
           name: manifest
           path: ./build/modules.json

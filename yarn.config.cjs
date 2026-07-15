@@ -39,8 +39,13 @@ module.exports = defineConfig({
     rootWorkspace.set('devEngines.runtime.version', `^${nodeVersion}`);
 
     // Make sure that if the dependency is defined in the root workspace
-    // that all child workspaces use the same version of that dependency
+    // that all child workspaces use the same version of that dependency.
+    // Catalog-resolved deps already share a single version by definition, so
+    // skip them (Yarn normalizes `catalog:` to `*` due to a bug, see:
+    // https://github.com/yarnpkg/berry/issues/6925)
     for (const workspaceDep of Yarn.dependencies({ workspace: rootWorkspace })) {
+      if (workspaceDep.range === 'catalog:' || workspaceDep.range === '*') continue;
+
       for (const otherDep of Yarn.dependencies({ ident: workspaceDep.ident })) {
         if (otherDep.type === 'peerDependencies') continue;
 

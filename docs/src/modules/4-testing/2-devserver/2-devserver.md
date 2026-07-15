@@ -40,6 +40,7 @@ and automatically reload the displayed tab without requiring a refresh of the pa
 > [!IMPORTANT] Working with Bundles in Hot-Reload Mode
 >
 > Tabs depend on bundles in 1 of 2 ways:
+>
 > - Javascript dependency (i.e if you import from `@sourceacademy/bundle-curve`)
 > - Source dependency (i.e. if the bundle was imported and evaluated through `js-slang`)
 >

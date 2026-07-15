@@ -129,9 +129,7 @@ export default defineConfig(
         exampleCodeRegex: /^[\s*]*```(?:[jt]s\s)?([\s\S]*)```\s*/
       })
     },
-    ignores: [
-      './lib/typedoc-plugin/src/__tests__/sample.ts'
-    ],
+    ignores: ['./lib/typedoc-plugin/src/__tests__/sample.ts'],
     processor: 'jsdocExamples/examples',
     files: [
       '**/*.{js,cjs,mjs}',
@@ -243,6 +241,7 @@ export default defineConfig(
     ignores: ['**/*.md/**/*.{js,ts,tsx}'],
     plugins: {
       import: importPlugin,
+      jsdoc: jsdocPlugin,
       '@sourceacademy': saLintPlugin
     },
     rules: {

@@ -4,6 +4,7 @@ description: This action is mainly intended for loading all of the compiled asse
 inputs:
   load-tabs:
     required: false
+<<<<<<< HEAD
     default: false
 
   load-bundles:
@@ -13,6 +14,17 @@ inputs:
   load-manifest:
     required: false
     default: false
+=======
+    default: 'false'
+
+  load-bundles:
+    required: false
+    default: 'false'
+
+  load-manifest:
+    required: false
+    default: 'false'
+>>>>>>> origin/master
 
 runs:
   using: node24

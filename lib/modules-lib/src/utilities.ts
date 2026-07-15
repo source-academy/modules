@@ -103,5 +103,6 @@ export {
 export {
   callIfFuncAndRightArgs,
   callWithoutMetadata,
-  wrap as wrapFunction
+  wrap as wrapFunction,
+  wrapUnsafe as wrapFunctionUnsafe
 } from 'js-slang/dist/utils/operators';

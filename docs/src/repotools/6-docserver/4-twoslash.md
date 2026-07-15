@@ -153,7 +153,6 @@ export function bar() {
 The `// ---cut---` directive hides all the code above it, thus only displaying the code that is actually supposed
 to be inside `index.ts`. The final markdown looks like this:
 
-
 ````md
 ::: code-group
 ```ts twoslash [functions.ts]

@@ -2,7 +2,7 @@
   "name": "@sourceacademy/modules-extractor",
   "type": "module",
   "dependencies": {
-    "typescript": "catalog:"
+    "typescript": "^6.0.2"
   },
   "devDependencies": {
     "@types/node": "^24.0.0"

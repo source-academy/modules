@@ -35,8 +35,14 @@ export function getInvalidExamples(comment: td.Comment): string[] {
  * 1. If it is a function, has exactly 1 signature
  * 2. If it is a variable, it or its type doesn't have function signatures
  * 3. If there are code examples, that the code in the example is valid Typescript
+ * 4. If it has the name type_map, print the warning.
  */
 export function validateModuleEntry(decl: td.DeclarationReflection, logger: td.Logger) {
+  if (decl.name === 'type_map') {
+    logger.validationWarning('Detected type_map in output. Did you forget to add a @hidden tag?');
+    return;
+  }
+
   switch (decl.kind) {
     case td.ReflectionKind.Function: {
       if (decl.signatures === undefined) {
