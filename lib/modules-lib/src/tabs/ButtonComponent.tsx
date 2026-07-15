@@ -16,6 +16,7 @@ export type ButtonComponentProps = AnchorButtonProps & ButtonProps;
 /**
  * Button Component that retains interactability even when disabled. Refer to
  * {@link https://blueprintjs.com/docs/#core/components/buttons.anchorbutton|this} for more information
+ * @category Components
  */
 export default function ButtonComponent(props: ButtonComponentProps) {
   const buttonProps = {

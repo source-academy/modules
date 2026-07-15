@@ -10,8 +10,8 @@
 */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { list_to_vector, vector_to_list } from './list';
-import type { List } from './types';
+import { GeneralRuntimeError } from 'js-slang/dist/errors/base';
+import { list_to_vector, vector_to_list, type List } from 'js-slang/dist/stdlib/list';
 
 export const ToneMatrix = {
   initialise_matrix,
@@ -212,7 +212,7 @@ function initialise_matrix($container: HTMLElement): void {
 ToneMatrix.initialise_matrix = initialise_matrix;
 
 // bind the click events to the matrix
-function bind_events_to_rect(c) {
+function bind_events_to_rect(c: HTMLCanvasElement) {
   c.addEventListener(
     'click',
     (event) => {
@@ -337,7 +337,7 @@ ToneMatrix.bindMatrixButtons = bindMatrixButtons;
 // return the current state of the matrix, represented by a list of lists of bits
 export function get_matrix(): List {
   if (!matrix) {
-    throw new Error('Please activate the tone matrix first by clicking on the tab!');
+    throw new GeneralRuntimeError('Please activate the tone matrix first by clicking on the tab!');
   }
   const matrix_list = matrix.slice(0);
   const result: List[] = [];
@@ -367,12 +367,12 @@ ToneMatrix.clear_matrix = clear_matrix;
 
 const set_time_out_renamed = window.setTimeout;
 
-export function set_timeout(f, t) {
+export function set_timeout(f: () => void, t: number) {
   if (typeof f === 'function' && typeof t === 'number') {
     const timeoutObj = set_time_out_renamed(f, t);
     timeout_objects.push(timeoutObj);
   } else {
-    throw new Error('set_timeout(f, t) expects a function and a number respectively.');
+    throw new GeneralRuntimeError('set_timeout(f, t) expects a function and a number respectively.');
   }
 }
 

@@ -4,6 +4,7 @@
  * @title Utilities
  */
 
+import { GeneralRuntimeError, InvalidParameterTypeError } from './errors';
 import type { DebuggerContext } from './types';
 
 /**
@@ -30,12 +31,17 @@ export function radiansToDegrees(radians: number): number {
  * @returns Tuple of three numbers representing the R, G and B components
  */
 export function hexToColor(hex: string, func_name?: string): [r: number, g: number, b: number] {
+  func_name = func_name ?? hexToColor.name;
+
+  if (typeof hex !== 'string') {
+    throw new InvalidParameterTypeError('string', hex, func_name);
+  }
+
   const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
   const groups = regex.exec(hex);
 
-  if (groups == undefined) {
-    func_name = func_name ?? hexToColor.name;
-    throw new Error(`${func_name}: Invalid color hex string: ${hex}`);
+  if (!groups) {
+    throw new GeneralRuntimeError(`${func_name}: Invalid color hex string: ${hex}`);
   };
 
   return [
@@ -43,6 +49,28 @@ export function hexToColor(hex: string, func_name?: string): [r: number, g: numb
     parseInt(groups[2], 16) / 0xff,
     parseInt(groups[3], 16) / 0xff
   ];
+}
+
+/**
+ * Converts a hue value in [0,1) into an RGB triple in [0,255].
+ *
+ * @param hue hue around the colour wheel, where 0 and 1 both map to red
+ * @returns [r, g, b] values between 0 and 255
+ */
+export function hueToRgb(hue: number): [r: number, g: number, b: number] {
+  const h = (hue % 1 + 1) % 1;
+  const i = Math.floor(h * 6);
+  const f = h * 6 - i;
+  const q = 1 - f;
+
+  switch (i) {
+    case 0: return [255, Math.floor(f * 255), 0];
+    case 1: return [Math.floor(q * 255), 255, 0];
+    case 2: return [0, 255, Math.floor(f * 255)];
+    case 3: return [0, Math.floor(q * 255), 255];
+    case 4: return [Math.floor(f * 255), 0, 255];
+    default: return [255, 0, Math.floor(q * 255)];
+  }
 }
 
 /**
@@ -63,21 +91,18 @@ export function mockDebuggerContext<T>(moduleState: T, name: string) {
   } as unknown as DebuggerContext;
 }
 
-type TupleOfLengthHelper<T extends number, U, V extends U[] = []> =
-  V['length'] extends T ? V : TupleOfLengthHelper<T, U, [...V, U]>;
+export {
+  isNumberWithinRange,
+  assertNumberWithinRange,
+  isFunctionOfLength,
+  assertFunctionOfLength,
+  isTupleOfLength,
+  assertTupleOfLength
+} from 'js-slang/dist/utils/rttc';
 
-/**
- * Utility type that represents a tuple of a specific length
- */
-export type TupleOfLength<T extends number, U = unknown> = TupleOfLengthHelper<T, U>;
-
-/**
- * Type guard for checking that a function has the specified number of parameters. Of course at runtime parameter types
- * are not checked, so this is only useful when combined with TypeScript types.
- */
-export function isFunctionOfLength<T extends (...args: any[]) => any>(f: (...args: any) => any, l: Parameters<T>['length']): f is T;
-export function isFunctionOfLength<T extends number>(f: unknown, l: T): f is (...args: TupleOfLength<T>) => unknown;
-export function isFunctionOfLength(f: unknown, l: number) {
-  // TODO: Need a variation for rest parameters
-  return typeof f === 'function' && f.length === l;
-}
+export {
+  callIfFuncAndRightArgs,
+  callWithoutMetadata,
+  wrap as wrapFunction,
+  wrapUnsafe as wrapFunctionUnsafe
+} from 'js-slang/dist/utils/operators';

@@ -12,6 +12,8 @@ export type WebGLCanvasProps = DetailedHTMLProps<CanvasHTMLAttributes<HTMLCanvas
 /**
  * Canvas component used by the curve and rune modules. Standardizes the
  * appearances of canvases for both modules.
+ *
+ * @category Components
  */
 const WebGLCanvas = forwardRef<HTMLCanvasElement, WebGLCanvasProps>(
   (props, ref) => {
