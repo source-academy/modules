@@ -1,19 +1,20 @@
-import type { List } from 'js-slang/dist/stdlib/list';
 import type { MIDINote } from './types';
 
 const major_intervals = [2, 2, 1, 2, 2, 2, 1];
 
 /**
- * A musical scale is simply a list of {@link MIDINote| MIDI notes}.
+ * A musical scale is simply a list of {@link MIDINote| MIDI notes}, represented as nested
+ * two-element tuples terminated by `null` (the same shape as js-slang's list representation,
+ * without depending on js-slang itself just for this type).
  */
-export type Scale = List;
+export type Scale = [MIDINote, Scale] | null;
 
 /**
  * There are 7 modes of the major scale that are just made by shuffling the major scale's
  * intervals around, so we can reuse this function.
  */
 function make_from_major_scale(root: MIDINote, mode: number): Scale {
-  let output: List = [root + 12, null];
+  let output: Scale = [root + 12, null];
   let note = root + 12;
 
   for (let i = major_intervals.length - 1; i >= 0; i--) {

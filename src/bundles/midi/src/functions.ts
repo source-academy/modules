@@ -148,13 +148,15 @@ export function letter_name_to_frequency(note: string): number {
  * ```
  */
 export function add_octave_to_note(note: string, octave: number): NoteWithOctave {
-  assertNumberWithinRange(octave, 'add_octave_to_note', { min: 0, paramName: 'octave' });
+  assertNumberWithinRange(octave, 'add_octave_to_note', 0, undefined, true, 'octave');
   // Reject anything that isn't a bare note (an unrecognised note, or one that already has an
   // octave) rather than silently interpolating it into the result string.
   if (!/^[A-Ga-g][#♮b]?$/.test(note)) {
     throw new EvaluatorParameterTypeError('add_octave_to_note', 'note', 'a note without an octave', note);
   }
-  return `${note}${octave}`;
+  // Safe: the regex above just confirmed `note` is a bare Note, so appending an octave produces a
+  // valid NoteWithOctave.
+  return `${note}${octave}` as NoteWithOctave;
 }
 
 /**
@@ -199,7 +201,7 @@ export function get_accidental(note: string): Accidental {
  * ```
  */
 export function key_signature_to_key(accidental: string, numAccidentals: number): Note {
-  assertNumberWithinRange(numAccidentals, 'key_signature_to_key', { min: 0, max: 6, paramName: 'numAccidentals' });
+  assertNumberWithinRange(numAccidentals, 'key_signature_to_key', 0, 6, true, 'numAccidentals');
 
   switch (accidental) {
     case Accidental.SHARP: {

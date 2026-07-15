@@ -5,11 +5,11 @@
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-testplugin": "workspace:^",
+    "js-slang": "^1.0.85",
     "typescript": "^6.0.2"
   },
   "dependencies": {
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor",
-    "js-slang": "^1.0.85"
+    "@sourceacademy/conductor": "^0.7.0"
   },
   "type": "module",
   "scripts": {
