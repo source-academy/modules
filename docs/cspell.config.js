@@ -24,6 +24,7 @@ export default defineConfig({
     'dirtree',
     'frontmatter',
     'Henz',
+    'hollusion',
     'repotools',
     'sourceacademy'
   ],

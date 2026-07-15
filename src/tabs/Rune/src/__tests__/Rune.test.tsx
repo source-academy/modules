@@ -1,5 +1,5 @@
 import { animate_anaglyph, animate_rune, blank } from '@sourceacademy/bundle-rune';
-import { HollusionRune, type RuneModuleState } from '@sourceacademy/bundle-rune/functions';
+import { DrawnHollusionRune, type RuneModuleState } from '@sourceacademy/bundle-rune/functions';
 import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
 import { mockDebuggerContext } from '@sourceacademy/modules-lib/utilities';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
@@ -8,14 +8,18 @@ import RuneSideContent, { RuneTab } from '..';
 import HollusionCanvas from '../hollusion_canvas';
 
 test('Ensure that rune animations error gracefully', () => {
-  const badAnimation = animate_rune(1, 60, _t => 1 as any);
+  const badAnimation = animate_rune(1, 60, _t => {
+    throw new Error();
+  });
   const mockContext = mockDebuggerContext<RuneModuleState>({ drawnRunes: [badAnimation] }, 'rune');
   expect(<RuneTab debuggerCtx={mockContext} />)
     .toMatchSnapshot();
 });
 
 test('Ensure that anaglyph animations error gracefully', () => {
-  const badAnimation = animate_anaglyph(1, 60, _t => 1 as any);
+  const badAnimation = animate_anaglyph(1, 60, _t => {
+    throw new Error();
+  });
   const mockContext = mockDebuggerContext<RuneModuleState>({ drawnRunes: [badAnimation] }, 'rune');
   expect(<RuneTab debuggerCtx={mockContext} />)
     .toMatchSnapshot();
@@ -33,7 +37,7 @@ describe(HollusionCanvas, () => {
   });
 
   test('Render function is memoized', async () => {
-    const rune = new HollusionRune(blank, 0.1);
+    const rune = new DrawnHollusionRune(blank, 0.1);
     const mockedDraw = vi.spyOn(rune, 'draw');
 
     await render(<HollusionCanvas rune={rune} />);

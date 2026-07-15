@@ -1,7 +1,7 @@
 // Adapted from: https://gitlab.com/nfriend/tree-online/-/tree/master?ref_type=heads
 
 import { flattenDeep, last } from 'es-toolkit';
-import type { FileStructure } from './types';
+import type { FileStructure } from './types.js';
 
 /**
  * Represents an object that contains the
@@ -171,5 +171,4 @@ const getName = (
  * is the last child of its parent
  * @param structure The file or folder to test
  */
-const isLastChild = (structure: FileStructure): boolean =>
-  Boolean(structure.parent && last(structure.parent.children) === structure);
+const isLastChild = (structure: FileStructure) => !!structure.parent && last(structure.parent.children) === structure;

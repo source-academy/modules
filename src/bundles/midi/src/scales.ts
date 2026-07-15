@@ -6,14 +6,14 @@ const major_intervals = [2, 2, 1, 2, 2, 2, 1];
 /**
  * A musical scale is simply a list of {@link MIDINote| MIDI notes}.
  */
-export type Scale = List;
+export type Scale = List<MIDINote>;
 
 /**
  * There are 7 modes of the major scale that are just made by shuffling the major scale's
  * intervals around, so we can reuse this function.
  */
 function make_from_major_scale(root: MIDINote, mode: number): Scale {
-  let output: List = pair(root + 12, null);
+  let output: List<MIDINote> = pair(root + 12, null);
   let note = root + 12;
 
   for (let i = major_intervals.length - 1; i >= 0; i--) {
@@ -28,6 +28,8 @@ function make_from_major_scale(root: MIDINote, mode: number): Scale {
 /**
  * Generate a list of MIDI notes representing the major scale
  * for the given key (including the octave)
+ * @function
+ * @category Scale
  */
 export function major_scale(key: MIDINote) {
   return make_from_major_scale(key, 1);
@@ -36,12 +38,15 @@ export function major_scale(key: MIDINote) {
 /**
  * Alias for the {@link major_scale|major_scale} function
  * @function
+ * @category Scale
  */
 export const ionian_scale = major_scale;
 
 /**
  * Generate a list of MIDI notes representing the dorian scale
  * for the given key (including the octave)
+ * @function
+ * @category Scale
  */
 export function dorian_scale(key: MIDINote) {
   return make_from_major_scale(key, 2);
@@ -50,6 +55,8 @@ export function dorian_scale(key: MIDINote) {
 /**
  * Generate a list of MIDI notes representing the phrygian scale
  * for the given key (including the octave)
+ * @function
+ * @category Scale
  */
 export function phrygian_scale(key: MIDINote) {
   return make_from_major_scale(key, 3);
@@ -58,6 +65,8 @@ export function phrygian_scale(key: MIDINote) {
 /**
  * Generate a list of MIDI notes representing the lydian scale
  * for the given key (including the octave)
+ * @function
+ * @category Scale
  */
 export function lydian_scale(key: MIDINote) {
   return make_from_major_scale(key, 4);
@@ -66,6 +75,8 @@ export function lydian_scale(key: MIDINote) {
 /**
  * Generate a list of MIDI notes representing the mixolydian scale
  * for the given key (including the octave)
+ * @function
+ * @category Scale
  */
 export function mixolydian_scale(key: MIDINote) {
   return make_from_major_scale(key, 5);
@@ -74,6 +85,8 @@ export function mixolydian_scale(key: MIDINote) {
 /**
  * Generate a list of MIDI notes representing the minor scale
  * for the given key (including the octave)
+ * @function
+ * @category Scale
  */
 export function minor_scale(key: MIDINote) {
   return make_from_major_scale(key, 6);
@@ -82,12 +95,15 @@ export function minor_scale(key: MIDINote) {
 /**
  * Alias for the {@link minor_scale|minor_scale} function
  * @function
+ * @category Scale
  */
 export const aeolian_scale = minor_scale;
 
 /**
  * Generate a list of MIDI notes representing the locrian scale
  * for the given key (including the octave)
+ * @function
+ * @category Scale
  */
 export function locrian_scale(key: MIDINote) {
   return make_from_major_scale(key, 7);

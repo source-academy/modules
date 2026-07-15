@@ -37,6 +37,7 @@ describe('Test regular test command', () => {
       [mockConfig.config],
       {
         allowOnly: expect.any(Boolean),
+        ui: false,
         silent: 'passed-only'
       }
     );
@@ -63,6 +64,7 @@ describe('Test regular test command', () => {
       [mockConfig.config],
       {
         allowOnly: expect.any(Boolean),
+        ui: false,
         silent: 'passed-only'
       }
     );
@@ -103,6 +105,7 @@ describe('Test regular test command', () => {
       [mockConfig.config],
       {
         allowOnly: false,
+        ui: false,
         silent: 'passed-only'
       }
     );
@@ -127,7 +130,8 @@ describe('Test regular test command', () => {
         [],
         [mockConfig.config],
         {
-          allowOnly: false,
+          allowOnly: true,
+          ui: false,
           silent: 'passed-only'
         }
       );

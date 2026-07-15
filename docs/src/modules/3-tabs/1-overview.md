@@ -40,9 +40,9 @@ children:
     children:
       - name: __tests__
         children:
-          - name: test.tsx
+          - name: index.test.tsx
             comment: You can use a tsx file
-          - name: test2.ts
+          - name: index.test.ts
             comment: Or a regular ts file
       - index.tsx
       - component.tsx
@@ -64,19 +64,24 @@ The entry point for a tab is either `index.tsx` or `src/index.tsx`. No other ent
 
 The Frontend expects each tab's entry point to provide a default export of an object conforming to the following interface:
 
-```ts
+```ts twoslash
+import type { ModuleSideContent as _Content, DebuggerContext } from '@sourceacademy/modules-lib/types';
+type IconName = _Content['iconName'];
+// ---cut---
 interface ModuleSideContent {
   toSpawn: ((context: DebuggerContext) => boolean) | undefined;
   body: (context: DebuggerContext) => React.ReactElement;
   label: string;
-  iconName: string;
+  // @blueprintjs/core icon names
+  iconName: IconName;
 }
 ```
 
 To ensure that your tab conforms to this interface, use the `defineTab` helper:
 
-```ts
-import { defineTab } from '@sourceacademy/modules-lib/tabs';
+```ts twoslash
+// @noErrors: 2345
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 
 export default defineTab({
   // ...details
@@ -85,28 +90,25 @@ export default defineTab({
 
 Here is an example of a tab object:
 
-```tsx
-// Curve/src/index.tsx
-import type { CurveModuleState } from '@sourceacademy/bundle-curve/types';
-import { MultiItemDisplay, defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs';
+```tsx twoslash [Sound/src/index.tsx]
+// @jsx: react-jsx
+import type { AudioPlayed } from '@sourceacademy/bundle-sound/types';
+declare function SoundTab(props: { elements: AudioPlayed[] }): React.ReactElement;
+// ---cut---
+import type { SoundModuleState } from '@sourceacademy/bundle-sound/types';
+import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 
 export default defineTab({
-  toSpawn(context: DebuggerContext) {
-    const { context: { moduleContexts: { curve: { state: { drawnCurves } } } } } = context;
-    return drawCurves.length > 0;
+  toSpawn(context) {
+    const state = getModuleState<SoundModuleState>(context, 'sound');
+    return !!state && state.audioPlayed.length > 0;
   },
-  body(context: DebuggerContext) {
-    // Alternatively you can use the getModuleState helper
-    // but you will need to provide typing for the returned state object
-    const { drawnCurves } = getModuleState<CurveModuleState>(context, 'curve');
-
-    /*
-    * Implementation hidden...
-    */
-    return <MultiItemDisplay elements={canvases} />;
+  body(context) {
+    const { audioPlayed } = getModuleState<SoundModuleState>(context, 'sound')!;
+    return <SoundTab elements={audioPlayed} />;
   },
-  label: 'Curves Tab',
-  iconName: 'media',
+  label: 'Sound Tab',
+  iconName: 'music'
 });
 ```
 
@@ -121,8 +123,8 @@ Otherwise, the tab will be spawned depending on the return value of the function
 ```ts
 // Will spawn the Curve tab if there are any drawn curves
 const toSpawn = (context: DebuggerContext) => {
-  const { context: { moduleContexts: { curve: { state: { drawnCurves } } } } } = context;
-  return drawCurves.length > 0;
+  const state = getModuleState<CurveModuleState>(context, 'curve');
+  return !!state && state.drawCurves.length > 0;
 };
 ```
 
@@ -131,7 +133,7 @@ const toSpawn = (context: DebuggerContext) => {
 If `toSpawn` returns true, this function will be called to generate the content to be displayed. You can use JSX syntax for this.
 
 ```tsx
-const body = (context) => <div>This is the repeat tab</div>;
+const body = (context: DebuggerContext) => <div>This is the repeat tab</div>;
 ```
 
 Similarly, the debugger context is available here, which allows you to access module contexts or the result of the program that was just evaluated.
@@ -142,4 +144,14 @@ A string containing the text for the tooltip to display when the user hovers ove
 
 ### `iconName`
 
-The name of the BlueprintJS icon to use for the tab icon. You can refer to the list of icon names [here](https://blueprintjs.com/docs/#icons)
+The name of the BlueprintJS icon to use for the tab icon. You can refer to the list of icon names [here](https://blueprintjs.com/docs/#icons).
+
+Note that `IconName`s are defined in `@blueprintjs/core`, but it is not necessary to import that type.
+
+## Tab Evaluation
+
+A tab is only evaluated once per Source evaluation. Only one instance of a given tab can be spawned at the same time. Your tab and bundle should be designed with this in mind.
+
+For example, the `sound` bundle stores in its state an array of `AudioPlayed` objects, which allows the single tab to handle multiple calls to `play_in_tab`, which is the function in the bundle that causes the tab to spawn.
+
+Other bundles like `repl` have a single instance. The bundle never spawns a second instance of its programmable REPL, so the single REPL tab that spawns handles everything.

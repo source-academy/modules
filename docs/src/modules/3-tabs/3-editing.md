@@ -71,7 +71,7 @@ If you do so, remember to run your installation command (same as the one above) 
 
 ## React/UI Components
 
-Tabs are written using the React (JSX) syntax. In React, each UI element is referred to as a "component". Documentation on how to create UIs and use React can be found [here](https://react.dev). Where possible,
+Tabs are written using the React (JSX) syntax. In React, each UI element is referred to as a "component". Documentation on how to use React can be found [here](https://react.dev). Where possible,
 you should aim to write components using the functional syntax.
 
 ::: details Functional vs Class Components
@@ -104,13 +104,30 @@ There are also several React components defined under `@sourceacademy/modules-li
 
 You can see the documentation for these components [here](/lib/modules-lib/)
 
+### Styles from `@blueprintjs`
+
+Besides providing components, Blueprint also provides CSS Styles that can be attached to your own components:
+
+```jsx
+const component = <div className="bp6-dark">
+  <h1 className="bp6-text-large">Hello World!</h1>
+</div>;
+```
+
+You can use these styles directly instead of having to come up with your own.
+
+Often, these styles will be prefixed with `bp` and the version number (i.e `bp6`). Take care to ensure that this prefix matches the version of Blueprint that
+is in use.
+
 ## Export Interface
 
-As mentioned in the [overview](./1-overview), all tabs should export a single default export from their entry point using the `defineTab` helper from `@sourceacademy/modules-lib/tabs`:
+As mentioned in the [overview](./1-overview), all tabs should export a single default export from their entry point using the `defineTab` helper from `@sourceacademy/modules-lib/tabs/utils`:
 
-```tsx
+```tsx twoslash
+// @jsx: react-jsx
+// ---cut---
 // tabName/src/index.tsx OR tabName/index.tsx
-import { defineTab } from '@sourceacademy/modules-lib/tabs';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 
 function Component() {
   return <p>This is a react component!</p>;
@@ -120,7 +137,7 @@ export default defineTab({
   toSpawn: () => true,
   body: () => <Component />,
   label: 'some-tab',
-  iconName: 'some icon'
+  iconName: 'saved'
 });
 ```
 
@@ -147,7 +164,7 @@ Only the default export is used by the Frontend for displaying your tab. It is n
 ::: code-group
 
 ```tsx [index.tsx]
-import { defineTab } from '@sourceacademy/modules-lib/tabs';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 
 export function Component() {
   return <p>This is a react component!</p>;
@@ -172,11 +189,74 @@ test('Matches snapshot', () => {
 
 :::
 
+> [!TIP] Using getModuleState
+>
+> Often, to access your module state using plain Javascript, you would probably have to use a long chain of
+> property accesses or object destructuring:
+>
+> ```ts
+> const { context: { moduleContexts: { sound: { state: { audioPlayed } } } } } = context;
+> // or
+> const audioPlayed = context.context.moduleContexts.sound.state.audioPlayed;
+> ```
+>
+> The risk here is that each one of these property accesses could return `null` or `undefined`, resulting
+> in a `TypeError` at runtime (This might be because the bundle hasn't been loaded/initialized yet or a tab has been
+> incorrectly loaded). What you would need to do is "null-coalesce" - propagate the `null` or `undefined`
+> all the way to the end:
+>
+> ```ts
+> const toSpawn = (context: DebuggerContext): boolean => {
+>   // Can't use destructuring with null coalescing
+>   const audioPlayed = context.context.moduleContexts?.sound?.state?.audioPlayed;
+>   return audioPlayed && audioPlayed.length > 0;
+> };
+> ```
+>
+> To remedy all of this, you can simply call `getModuleState` instead, which
+> abstracts the all of the accessing and destructuring for you:
+>
+> ```ts twoslash
+> import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
+> import type { SoundModuleState } from '@sourceacademy/bundle-sound/types';
+> // ---cut---
+> import { getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
+>
+> const toSpawn = (context: DebuggerContext): boolean => {
+>   // Can't use destructuring with null coalescing
+>   const state = getModuleState<SoundModuleState>(context, 'sound');
+>   return !!state && state.audioPlayed.length > 0;
+> };
+> ```
+>
+> Then in your `body` function, you can use a non-null assertion.
+>
+> ```tsx twoslash
+> // @jsx: react-jsx
+> import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
+> import type { AudioPlayed, SoundModuleState } from '@sourceacademy/bundle-sound/types';
+> declare function SoundTab(props: { elements: AudioPlayed[] }): React.ReactElement;
+> // ---cut---
+> import { getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
+>
+> const body = (context: DebuggerContext): React.ReactElement => {
+>   const { audioPlayed } = getModuleState<SoundModuleState>(context, 'sound')!;
+>   return <SoundTab elements={audioPlayed} />;
+> };
+> ```
+>
+> As long as your `toSpawn` code is correct, accessing your module context should not throw a `TypeError`
+> because of attempting to access a property on `undefined` or other similar errors.
+>
+> You will need to explicitly pass in the type of your state object, since `getModuleState` won't be able
+> to infer it by itself.
+
 ## The `ModuleTab` Type
 
 The `ModuleTab` type exported from the common library can be used to type your components:
 
-```tsx {4}
+```tsx twoslash {4}
+// @jsx: react-jsx
 import type { ModuleTab } from '@sourceacademy/modules-lib/types';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 

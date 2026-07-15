@@ -14,6 +14,7 @@ export {
   brown,
   circle,
   color,
+  colour_with_hue,
   corner,
   flip_horiz,
   flip_vert,
