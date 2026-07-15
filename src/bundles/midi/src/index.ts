@@ -39,7 +39,7 @@ import type { MIDINote } from './types';
 
 export default class MidiModulePlugin extends BaseModulePlugin {
   id = 'midi';
-  exportedNames = [
+  override exportedNames = [
     'letter_name_to_midi_note',
     'midi_note_to_letter_name',
     'midi_note_to_frequency',
@@ -60,7 +60,7 @@ export default class MidiModulePlugin extends BaseModulePlugin {
     'aeolian_scale',
     'locrian_scale'
   ] as const;
-  static channelAttach = [];
+  static override channelAttach = [];
   constructor(conduit: IConduit, channels: IChannel<any>[], evaluator: IInterfacableEvaluator) {
     super(conduit, channels, evaluator);
     // BaseModulePlugin.initialise() only registers exportedNames whose value is a function, so
