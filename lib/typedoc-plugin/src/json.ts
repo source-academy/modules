@@ -3,30 +3,6 @@ import type { ModuleDocsEntry, ParamSpecifier } from 'js-slang/dist/modules/modu
 import * as td from 'typedoc';
 import drawdown from './drawdown';
 
-<<<<<<< HEAD
-export interface VariableDocEntry {
-  kind: 'variable';
-  name: string;
-  type: string;
-  description: string;
-};
-
-export interface FunctionDocEntry {
-  kind: 'function';
-  name: string;
-  retType: string;
-  description: string;
-  params: [string, string][];
-}
-
-export interface UnknownDocEntry {
-  kind: 'unknown';
-}
-
-export type DocEntry = VariableDocEntry | FunctionDocEntry | UnknownDocEntry;
-
-=======
->>>>>>> cee7ad2f2df2efb382777b4fa086e107646a325a
 export interface ParserSuccess {
   obj: ModuleDocsEntry;
   warnings: string[];
