@@ -9,10 +9,8 @@
  * @author Loh Xian Ze, Bryan
  */
 import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
-import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
 import { BaseModulePlugin, moduleMethod } from '@sourceacademy/conductor/module';
-import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
-import { DataType, type IFunctionSignature, type TypedValue } from '@sourceacademy/conductor/types';
+import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 
 import {
   entry as entry_func,
@@ -36,30 +34,6 @@ export default class BinaryTreeModulePlugin extends BaseModulePlugin {
     'right_branch'
   ] as const;
   static channelAttach = [];
-  constructor(conduit: IConduit, channels: IChannel<any>[], evaluator: IInterfacableEvaluator) {
-    super(conduit, channels, evaluator);
-    this.__bindExportedMethods();
-  }
-
-  // BaseModulePlugin.initialise() registers each exported method as a detached `this[name]`
-  // reference without binding it, so any evaluator that calls the resulting closure as a bare
-  // function (which is how every evaluator calls closures) gets `this === undefined` inside the
-  // method body. Same workaround as repeat/rune until the upstream fix in conductor lands
-  // (source-academy/conductor#41).
-  private __bindExportedMethods() {
-    for (const name of this.exportedNames) {
-      const method = this[name];
-      if (typeof method !== 'function') continue;
-
-      const signature = (method as { signature?: IFunctionSignature<any, any> }).signature;
-      const boundMethod = method.bind(this) as typeof method & { signature?: IFunctionSignature<any, any> };
-      boundMethod.signature = signature;
-      Object.defineProperty(this, name, {
-        configurable: true,
-        value: boundMethod
-      });
-    }
-  }
 
   @moduleMethod([], DataType.EMPTY_LIST)
   async* make_empty_tree(): AsyncGenerator<void, TypedValue<DataType.EMPTY_LIST>, unknown> {
