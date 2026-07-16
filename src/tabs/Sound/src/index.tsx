@@ -3,12 +3,26 @@ import type { ITabService, Tab } from '@sourceacademy/common-tabs';
 import { checkIsPluginClass, makeRpc, type IChannel, type IConduit, type IPlugin } from '@sourceacademy/conductor/conduit';
 import { createElement, useSyncExternalStore } from 'react';
 
-type Status = 'idle' | 'playing' | 'recording';
+type Status = 'idle' | 'constructing' | 'playing' | 'recording';
 
 export const SOUND_TAB_ID = 'sound';
 
+const STATUS_COLORS: Record<Status, string> = {
+  idle: '#8A9BA8',
+  constructing: '#B08D00',
+  playing: '#238551',
+  recording: '#C23030'
+};
+
+const STATUS_TEXT: Record<Status, string> = {
+  idle: 'Idle',
+  constructing: 'Constructing…',
+  playing: 'Playing…',
+  recording: 'Recording…'
+};
+
 function SoundStatusView({ status, micGranted }: { status: Status, micGranted: boolean | null }) {
-  const statusText = status === 'idle' ? 'Idle' : status === 'playing' ? 'Playing…' : 'Recording…';
+  const statusText = STATUS_TEXT[status];
 
   return (
     <div>
@@ -20,13 +34,24 @@ function SoundStatusView({ status, micGranted }: { status: Status, micGranted: b
       <p id="sound-status">
         Status:
         {' '}
-        {statusText}
+        <span
+          style={{
+            fontWeight: 700,
+            color: STATUS_COLORS[status],
+            textTransform: 'uppercase',
+            letterSpacing: '0.02em'
+          }}
+        >
+          {statusText}
+        </span>
       </p>
       {micGranted !== null && (
         <p id="sound-mic-permission">
           Microphone access:
           {' '}
-          {micGranted ? 'granted' : 'denied'}
+          <span style={{ fontWeight: 700, color: micGranted ? '#238551' : '#C23030' }}>
+            {micGranted ? 'granted' : 'denied'}
+          </span>
         </p>
       )}
     </div>
@@ -48,7 +73,10 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
   private readonly __listeners = new Set<() => void>();
 
   private __audioContext: AudioContext | undefined;
-  private __currentSource: AudioBufferSourceNode | undefined;
+  // sound's play() queues repeated/looped calls to play one after another rather than overlapping,
+  // so in practice at most one of these is active at a time - but tracked as a set (rather than a
+  // single field) regardless, so stop()/status stay correct even if that ever changes.
+  private readonly __activeSources = new Set<AudioBufferSourceNode>();
   private __mediaStream: MediaStream | undefined;
   private __mediaRecorder: MediaRecorder | undefined;
   private __recordedChunks: Blob[] = [];
@@ -82,6 +110,10 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
     } satisfies Tab;
 
     this.__tabService.registerTab(tab);
+    // registerTab alone leaves a tab invisible until something calls showTab - the tab is loaded
+    // lazily (see SoundModulePlugin.__ensureTabLoaded), specifically so the student can see it the
+    // moment the sound module actually starts using the host (play/record), so show it immediately.
+    this.__tabService.showTab(SOUND_TAB_ID);
   }
 
   subscribe(listener: () => void): () => void {
@@ -90,7 +122,10 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
   }
 
   destroy(): void {
-    this.__currentSource?.stop();
+    for (const source of this.__activeSources) {
+      source.stop();
+    }
+    this.__activeSources.clear();
     this.__mediaRecorder?.stop();
     this.__mediaStream?.getTracks().forEach(track => track.stop());
     void this.__audioContext?.close();
@@ -112,6 +147,10 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
     return this.__micGranted;
   }
 
+  async notifyConstructing(): Promise<void> {
+    this.__setStatus('constructing');
+  }
+
   async playSamples(left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>, sampleRate: number): Promise<void> {
     const audioContext = this.__ensureAudioContext();
     const buffer = audioContext.createBuffer(2, left.length, sampleRate);
@@ -121,7 +160,7 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
     const source = audioContext.createBufferSource();
     source.buffer = buffer;
     source.connect(audioContext.destination);
-    this.__currentSource = source;
+    this.__activeSources.add(source);
     this.__setStatus('playing');
 
     await new Promise<void>(resolve => {
@@ -129,15 +168,20 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
       source.start();
     });
 
-    if (this.__currentSource === source) {
-      this.__currentSource = undefined;
+    // Harmless no-op if $stopPlayback()/destroy() already removed this source (e.g. a stale
+    // completion arriving after a stop() that started a fresh batch of sources) - only the last
+    // one actually still active flips status back to idle.
+    this.__activeSources.delete(source);
+    if (this.__activeSources.size === 0) {
       this.__setStatus('idle');
     }
   }
 
   $stopPlayback(): void {
-    this.__currentSource?.stop();
-    this.__currentSource = undefined;
+    for (const source of this.__activeSources) {
+      source.stop();
+    }
+    this.__activeSources.clear();
     this.__setStatus('idle');
   }
 

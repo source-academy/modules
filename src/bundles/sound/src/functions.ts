@@ -46,23 +46,45 @@ interface BundleGlobalVars {
    * 3. `false`: `init_record` has been called and disallowed permission
    */
   micPermissionGranted: boolean | null;
-  /** Track if a sound is currently playing */
-  isPlaying: boolean;
+  /**
+   * Number of play()s currently sampling and/or actually playing through the host - repeated or
+   * looped play() calls stack (play concurrently) rather than erroring, so this is a count rather
+   * than a single flag. record()/record_for() still refuse to start while this is nonzero, to avoid
+   * the mic picking up whatever's playing through the speakers.
+   */
+  activePlayCount: number;
 }
 
 export const globalVars: BundleGlobalVars = {
   micPermissionGranted: null,
-  isPlaying: false
+  activePlayCount: 0
 };
 
-/** Bumped by every play()/stop() so a stale playSamples() completion can recognise itself as such. */
-let playToken = 0;
+/**
+ * Bumped only by stop(), so a play() already in flight (playing, or still queued behind another)
+ * when stop() is called recognises itself as stale: a queued sound skips its turn entirely instead
+ * of starting late, and a sound already playing skips decrementing activePlayCount a second time -
+ * stop() already reset the count to 0 immediately, and by then a new, unrelated play() may have
+ * started and be relying on that count itself.
+ */
+let playGeneration = 0;
+
+/**
+ * Chains each play()'s actual playback (not the sampling that precedes it - that still happens
+ * eagerly/concurrently) onto whatever's already queued, so repeated/looped play() calls play one
+ * after another - like consecutively, but built up call-by-call rather than pre-combined into one
+ * Sound - instead of all starting immediately and overlapping.
+ */
+let playbackQueue: Promise<void> = Promise.resolve();
 
 let soundIO: SoundTabRpc | undefined;
 
 /** Wires up the host bridge. Called once by {@link SoundModulePlugin}'s constructor. */
 export function setSoundIO(bridge: SoundTabRpc): void {
   soundIO = bridge;
+  // A fresh bridge means a fresh tab/host on the other end - any playback queued against the old
+  // one (e.g. a never-resolving mocked/abandoned call) must not block sounds queued from now on.
+  playbackQueue = Promise.resolve();
 }
 
 function io(): SoundTabRpc {
@@ -106,6 +128,46 @@ function validateDuration(func_name: string, duration: unknown): asserts duratio
 function validateWave(func_name: string, wave: unknown, lr?: 'left' | 'right'): asserts wave is Wave {
   if (typeof wave !== 'function') {
     throw new EvaluatorParameterTypeError(func_name, lr === undefined ? 'wave' : `${lr} wave`, 'a wave', wave);
+  }
+}
+
+/**
+ * Validates adsr()'s ratio/level parameters. attack_ratio/decay_ratio/release_ratio must each be a
+ * finite number in [0, 1], their sum must not exceed 1 (they carve up the Sound's duration into
+ * disjoint phases - overlapping attack/decay with release produces a discontinuous jump rather than
+ * a smooth envelope), and sustain_level must be a finite number in [0, 1].
+ */
+function validateAdsrParams(
+  func_name: string,
+  attack_ratio: unknown,
+  decay_ratio: unknown,
+  sustain_level: unknown,
+  release_ratio: unknown
+): void {
+  const ratios: [string, unknown][] = [
+    ['attack_ratio', attack_ratio],
+    ['decay_ratio', decay_ratio],
+    ['release_ratio', release_ratio]
+  ];
+  for (const [name, ratio] of ratios) {
+    if (typeof ratio !== 'number' || !Number.isFinite(ratio)) {
+      throw new EvaluatorParameterTypeError(func_name, name, 'number', ratio);
+    }
+    if (ratio < 0 || ratio > 1) {
+      throw new EvaluatorRuntimeError(`${func_name}: ${name} must be between 0 and 1, got ${ratio}`);
+    }
+  }
+  if (typeof sustain_level !== 'number' || !Number.isFinite(sustain_level)) {
+    throw new EvaluatorParameterTypeError(func_name, 'sustain_level', 'number', sustain_level);
+  }
+  if (sustain_level < 0 || sustain_level > 1) {
+    throw new EvaluatorRuntimeError(`${func_name}: sustain_level must be between 0 and 1, got ${sustain_level}`);
+  }
+  const total = (attack_ratio as number) + (decay_ratio as number) + (release_ratio as number);
+  if (total > 1) {
+    throw new EvaluatorRuntimeError(
+      `${func_name}: attack_ratio + decay_ratio + release_ratio must not exceed 1, got ${total}`
+    );
   }
 }
 
@@ -242,16 +304,18 @@ function play_recording_signal(): Promise<Sound> {
 }
 
 /**
- * Initialize recording by obtaining permission to use the default device microphone.
- * @returns string "obtaining recording permission"
+ * Initialize recording by obtaining permission to use the default device microphone. Waits for
+ * the user to actually respond to the (host-shown) permission prompt before returning, so a script
+ * can safely call record()/record_for() right on the next line without racing the asynchronous
+ * permission grant - calling init_record() and then immediately record() used to intermittently
+ * fail with "Call init_record()..." even though permission had genuinely just been granted,
+ * because record() ran before the prompt had actually been answered.
+ * @returns string describing the outcome: "permission granted" or "permission denied"
  */
-export function init_record(): string {
-  void io()
-    .requestMicPermission()
-    .then(granted => {
-      globalVars.micPermissionGranted = granted;
-    });
-  return 'obtaining recording permission';
+export async function init_record(): Promise<string> {
+  const granted = await io().requestMicPermission();
+  globalVars.micPermissionGranted = granted;
+  return granted ? 'permission granted' : 'permission denied';
 }
 
 function assertMicPermission(func_name: string): void {
@@ -268,24 +332,25 @@ function assertMicPermission(func_name: string): void {
 /**
  * Records a sound until the returned stop function is called. Takes a buffer duration (in
  * seconds) as argument, and returns a nullary stop function. Calling the stop function returns a
- * Sound promise (a nullary function that throws until the recording has finished processing,
- * then returns the recorded Sound). The recorded Sound uses however many channels the input
- * device actually has - a mono microphone (by far the most common case) produces a Sound whose
- * left and right channels are the same wave.
+ * Sound promise (a nullary function that waits for the recording to finish processing before
+ * returning the recorded Sound - so evaluation genuinely pauses there rather than needing to be
+ * called again later). The recorded Sound uses however many channels the input device actually
+ * has - a mono microphone (by far the most common case) produces a Sound whose left and right
+ * channels are the same wave.
  *
  * @example
  * ```ts
  * init_record();
  * const stop = record(0.5); // record after 0.5 seconds.
  * const promise = stop();   // stop recording and get sound promise
- * const sound = promise();  // retrieve the recorded sound
+ * const sound = promise();  // waits for processing to finish, then retrieves the recorded Sound
  * play(sound);              // and do whatever with it
  * ```
  * @param buffer pause before recording, in seconds
  */
-export function record(buffer: number): () => () => Sound {
+export function record(buffer: number): () => () => Promise<Sound> {
   validateDuration('record', buffer);
-  if (globalVars.isPlaying) {
+  if (globalVars.activePlayCount > 0) {
     throw new EvaluatorRuntimeError('record: Cannot record while another sound is playing!');
   }
   assertMicPermission('record');
@@ -303,21 +368,11 @@ export function record(buffer: number): () => () => Sound {
   });
 
   return () => {
-    let recordedSound: Sound | null = null;
-    void started
+    const recordingDone: Promise<Sound> = started
       .then(() => io().stopRecording())
-      .then(({ left, right, sampleRate }) => {
-        recordedSound = samplesToSound(left, right, sampleRate);
-      });
+      .then(({ left, right, sampleRate }) => samplesToSound(left, right, sampleRate));
     void play_recording_signal();
-
-    const promise = () => {
-      if (recordedSound === null) {
-        throw new EvaluatorRuntimeError('recording still being processed');
-      }
-      return recordedSound;
-    };
-    return promise;
+    return () => recordingDone;
   };
 }
 
@@ -336,51 +391,45 @@ export function record(buffer: number): () => () => Sound {
  * ```ts
  * init_record();
  * const promise = record_for(2, 0.5); // begin recording after 0.5s for 2s
- * const sound = promise();            // retrieve the recorded sound
+ * const sound = promise();            // waits for it to finish, then retrieves the recorded Sound
  * play(sound);                        // and do whatever with it
  * ```
  * @param duration duration in seconds
  * @param buffer pause before recording, in seconds
  */
-export function record_for(duration: number, buffer: number): () => Sound {
+export function record_for(duration: number, buffer: number): () => Promise<Sound> {
   validateDuration('record_for', duration);
   validateDuration('record_for', buffer);
-  if (globalVars.isPlaying) {
+  if (globalVars.activePlayCount > 0) {
     throw new EvaluatorRuntimeError('record_for: Cannot record while another sound is playing!');
   }
   assertMicPermission('record_for');
 
-  let recordedSound: Sound | null = null;
-
   // order of events for record_for:
   // pre-recording-signal pause | recording signal |
   // pre-recording pause | recording | recording signal
-  setTimeout(() => {
-    void play_recording_signal().then(() => {
-      setTimeout(() => {
-        void io()
-          .startRecording()
-          .then(() => {
-            setTimeout(() => {
-              void io()
-                .stopRecording()
-                .then(({ left, right, sampleRate }) => {
-                  recordedSound = samplesToSound(left, right, sampleRate);
-                });
-              void play_recording_signal();
-            }, duration * 1000);
-          });
-      }, recording_signal_ms + buffer * 1000);
-    });
-  }, pre_recording_signal_pause_ms);
+  const recordingDone: Promise<Sound> = new Promise(resolve => {
+    setTimeout(() => {
+      void play_recording_signal().then(() => {
+        setTimeout(() => {
+          void io()
+            .startRecording()
+            .then(() => {
+              setTimeout(() => {
+                void io()
+                  .stopRecording()
+                  .then(({ left, right, sampleRate }) => {
+                    resolve(samplesToSound(left, right, sampleRate));
+                  });
+                void play_recording_signal();
+              }, duration * 1000);
+            });
+        }, recording_signal_ms + buffer * 1000);
+      });
+    }, pre_recording_signal_pause_ms);
+  });
 
-  const promise = () => {
-    if (recordedSound === null) {
-      throw new EvaluatorRuntimeError('recording still being processed');
-    }
-    return recordedSound;
-  };
-  return promise;
+  return () => recordingDone;
 }
 
 /**
@@ -407,17 +456,16 @@ export async function* play_waves(left_wave: Wave, right_wave: Wave, duration: n
 }
 
 /**
- * Plays the given Sound using the computer's sound device on top of any Sounds that are
- * currently playing. Returns (without waiting for playback to finish) once the sound has
- * started, matching the original module's fire-and-forget behaviour.
+ * Plays the given Sound using the computer's sound device, queued after any Sounds that are
+ * currently playing or already queued - like consecutively, but built up call-by-call rather than
+ * pre-combined into one Sound, so repeated/looped play() calls play one after another instead of
+ * overlapping. Returns (without waiting for playback to finish) once the sound has been queued,
+ * matching the original module's fire-and-forget behaviour.
  * @example play(sine_sound(440, 5));
  */
 export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined> {
   if (!is_sound(sound)) {
     throw new EvaluatorParameterTypeError('play', 'sound', 'a Sound', sound);
-  }
-  if (globalVars.isPlaying) {
-    throw new EvaluatorRuntimeError('play: Previous sound still playing!');
   }
 
   const { duration } = sound;
@@ -428,31 +476,45 @@ export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined
     return sound;
   }
 
+  // Sampling the whole duration into a buffer happens before playback can start at all, and takes
+  // time proportional to duration - tell the tab now so it can show that as distinct from idle,
+  // rather than looking stalled during what can be a noticeable wait for longer sounds. Awaited
+  // (not fire-and-forget) so this can't race the tab's own (possibly still in-progress) loading.
+  // Sampling itself happens eagerly (concurrently with whatever's already queued/playing) - only
+  // the actual playback start is queued, so a later sound in the queue is already sampled and
+  // ready the moment its turn arrives.
+  await io().notifyConstructing();
   const leftSamples = yield* sampleWave(sound.leftWave, duration);
   // Mono sounds have leftWave === rightWave: sample once instead of twice.
   const rightSamples = sound.rightWave === sound.leftWave ? leftSamples : yield* sampleWave(sound.rightWave, duration);
-  globalVars.isPlaying = true;
-  const token = ++playToken;
-  // Fire-and-forget: playback runs in the background, matching the original's non-blocking
-  // semantics. (Since playSamples() resolves only once the host reports real playback completion,
-  // a genuinely blocking `play` is one `await` away should that ever be wanted instead.) Guarded by
-  // `token` so a late completion from a sound that's since been stop()'d/superseded by a newer
-  // play() can't clobber the newer sound's isPlaying state.
-  void io()
-    .playSamples(leftSamples, rightSamples, FS)
-    .finally(() => {
-      if (token === playToken) {
-        globalVars.isPlaying = false;
+  globalVars.activePlayCount += 1;
+  const generation = playGeneration;
+  // Fire-and-forget from the caller's perspective (matching the original's non-blocking
+  // semantics), but the actual playSamples() call is chained onto playbackQueue so it only starts
+  // once whatever's ahead of it has finished. If stop() happens before this sound's turn arrives,
+  // `generation` will have moved on and it's skipped entirely rather than starting late.
+  const myTurn: Promise<void> = playbackQueue.then(async () => {
+    if (generation !== playGeneration) {
+      return;
+    }
+    try {
+      await io().playSamples(leftSamples, rightSamples, FS);
+    } finally {
+      if (generation === playGeneration) {
+        globalVars.activePlayCount = Math.max(0, globalVars.activePlayCount - 1);
       }
-    });
+    }
+  });
+  // A rejected/skipped turn must not break the chain for whatever's queued after it.
+  playbackQueue = myTurn.catch(() => {});
   return sound;
 }
 
-/** Stops all currently playing sounds. */
+/** Stops all currently playing sounds, and cancels any that were queued behind them. */
 export function stop(): void {
   io().$stopPlayback();
-  globalVars.isPlaying = false;
-  playToken += 1;
+  globalVars.activePlayCount = 0;
+  playGeneration += 1;
 }
 
 // ---------------------------------------------
@@ -685,7 +747,15 @@ function adsrWave(
  * @param release_ratio proportion of Sound in release phase
  * @example adsr(0.2, 0.3, 0.3, 0.1)(sound);
  */
-export function adsr(
+/**
+ * The actual envelope-shaping logic behind adsr(), without the student-facing parameter
+ * validation. Used both by the public adsr() (validated) and directly by this file's own
+ * instrument definitions (piano/violin/cello/trombone/bell), whose envelope values were tuned once
+ * and shipped as part of the original (pre-Conductor) sound module - trombone's second harmonic in
+ * particular has summed to just over 1 (1.0236) for as long as that instrument has existed, and
+ * changing it now would silently alter its timbre from what students have always heard.
+ */
+function adsrTransformer(
   attack_ratio: number,
   decay_ratio: number,
   sustain_level: number,
@@ -702,6 +772,16 @@ export function adsr(
       : adsrWave(sound.rightWave, duration, attack_time, decay_time, sustain_level, release_time);
     return make_stereo_sound(leftWave, rightWave, duration);
   };
+}
+
+export function adsr(
+  attack_ratio: number,
+  decay_ratio: number,
+  sustain_level: number,
+  release_ratio: number
+): SoundTransformer {
+  validateAdsrParams('adsr', attack_ratio, decay_ratio, sustain_level, release_ratio);
+  return adsrTransformer(attack_ratio, decay_ratio, sustain_level, release_ratio);
 }
 
 /**
@@ -836,45 +916,50 @@ export function pan_mod(modulator: Sound): SoundTransformer {
 /** Returns a Sound reminiscent of a bell, playing a given note for a given duration. */
 export function bell(note: number, duration: number): Sound {
   return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, [
-    adsr(0, 0.6, 0, 0.05),
-    adsr(0, 0.6618, 0, 0.05),
-    adsr(0, 0.7618, 0, 0.05),
-    adsr(0, 0.9071, 0, 0.05)
+    adsrTransformer(0, 0.6, 0, 0.05),
+    adsrTransformer(0, 0.6618, 0, 0.05),
+    adsrTransformer(0, 0.7618, 0, 0.05),
+    adsrTransformer(0, 0.9071, 0, 0.05)
   ]);
 }
 
 /** Returns a Sound reminiscent of a cello, playing a given note for a given duration. */
 export function cello(note: number, duration: number): Sound {
   return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, [
-    adsr(0.05, 0, 1, 0.1),
-    adsr(0.05, 0, 1, 0.15),
-    adsr(0, 0, 0.2, 0.15)
+    adsrTransformer(0.05, 0, 1, 0.1),
+    adsrTransformer(0.05, 0, 1, 0.15),
+    adsrTransformer(0, 0, 0.2, 0.15)
   ]);
 }
 
 /** Returns a Sound reminiscent of a piano, playing a given note for a given duration. */
 export function piano(note: number, duration: number): Sound {
   return stacking_adsr(triangle_sound, midi_note_to_frequency(note), duration, [
-    adsr(0, 0.515, 0, 0.05),
-    adsr(0, 0.32, 0, 0.05),
-    adsr(0, 0.2, 0, 0.05)
+    adsrTransformer(0, 0.515, 0, 0.05),
+    adsrTransformer(0, 0.32, 0, 0.05),
+    adsrTransformer(0, 0.2, 0, 0.05)
   ]);
 }
 
-/** Returns a Sound reminiscent of a trombone, playing a given note for a given duration. */
+/**
+ * Returns a Sound reminiscent of a trombone, playing a given note for a given duration. The second
+ * harmonic's envelope ratios sum to just over 1 (1.0236) - a longstanding quirk present in this
+ * instrument since before the Conductor migration, preserved here via adsrTransformer (rather than
+ * the validated adsr()) so trombone's timbre doesn't silently change.
+ */
 export function trombone(note: number, duration: number): Sound {
   return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, [
-    adsr(0.2, 0, 1, 0.1),
-    adsr(0.3236, 0.6, 0, 0.1)
+    adsrTransformer(0.2, 0, 1, 0.1),
+    adsrTransformer(0.3236, 0.6, 0, 0.1)
   ]);
 }
 
 /** Returns a Sound reminiscent of a violin, playing a given note for a given duration. */
 export function violin(note: number, duration: number): Sound {
   return stacking_adsr(sawtooth_sound, midi_note_to_frequency(note), duration, [
-    adsr(0.35, 0, 1, 0.15),
-    adsr(0.35, 0, 1, 0.15),
-    adsr(0.45, 0, 1, 0.15),
-    adsr(0.45, 0, 1, 0.15)
+    adsrTransformer(0.35, 0, 1, 0.15),
+    adsrTransformer(0.35, 0, 1, 0.15),
+    adsrTransformer(0.45, 0, 1, 0.15),
+    adsrTransformer(0.45, 0, 1, 0.15)
   ]);
 }

@@ -183,10 +183,14 @@ async function transformerToConductor(
   );
 }
 
-/** Wraps a nullary `() => Sound` "sound promise" (throws until ready) as a Conductor closure. */
-async function soundPromiseToConductor(evaluator: IDataHandler, promise: () => Sound): Promise<TypedValue<DataType.CLOSURE>> {
+/**
+ * Wraps a nullary `() => Promise<Sound>` "sound promise" as a Conductor closure - calling it from
+ * Source genuinely waits for the recording to finish processing before returning, rather than
+ * needing to be called again later.
+ */
+async function soundPromiseToConductor(evaluator: IDataHandler, promise: () => Promise<Sound>): Promise<TypedValue<DataType.CLOSURE>> {
   return evaluator.closure_make({ returnType: DataType.PAIR, args: [] }, async function* () {
-    return soundToConductor(evaluator, promise());
+    return soundToConductor(evaluator, await promise());
   });
 }
 
@@ -332,7 +336,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
   @moduleMethod([], DataType.CONST_STRING)
   async* init_record(): AsyncGenerator<void, TypedValue<DataType.CONST_STRING>, undefined> {
     this.__ensureTabLoaded();
-    return { type: DataType.CONST_STRING, value: init_record_func() };
+    return { type: DataType.CONST_STRING, value: await init_record_func() };
   }
 
   @moduleMethod([DataType.NUMBER], DataType.CLOSURE)

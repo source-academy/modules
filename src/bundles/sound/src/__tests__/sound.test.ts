@@ -8,7 +8,7 @@ let io: MockSoundTabRpc;
 beforeEach(() => {
   io = mockSoundTabRpc();
   funcs.setSoundIO(io);
-  funcs.globalVars.isPlaying = false;
+  funcs.globalVars.activePlayCount = 0;
 });
 
 /**
@@ -92,9 +92,9 @@ describe(funcs.make_stereo_sound, () => {
   });
 });
 
-describe('Concurrent playback functions', () => {
+describe('Sequential playback queue functions', () => {
   afterEach(() => {
-    funcs.globalVars.isPlaying = false;
+    funcs.globalVars.activePlayCount = 0;
   });
 
   describe(funcs.play, () => {
@@ -115,13 +115,40 @@ describe('Concurrent playback functions', () => {
       await expect(drain(funcs.play(0 as any))).rejects.toThrow('play: Expected a Sound for sound, got 0.');
     });
 
-    test('Concurrently playing two sounds should error', async () => {
-      // Never resolves during the test, simulating playback still in progress - matches real
-      // AudioContext playback, which genuinely takes as long as the sound's duration.
-      io.playSamples.mockReturnValue(new Promise(() => {}));
+    test('repeated/looped play() calls queue instead of erroring, but only one plays at a time', async () => {
+      let resolveFirst: () => void;
+      io.playSamples.mockReturnValueOnce(new Promise<void>(resolve => { resolveFirst = resolve; }));
+      io.playSamples.mockResolvedValueOnce(undefined);
+
       const sound = funcs.silence_sound(10);
-      await drain(funcs.play(sound));
-      await expect(drain(funcs.play(sound))).rejects.toThrow('play: Previous sound still playing!');
+      await expect(drain(funcs.play(sound))).resolves.toBe(sound);
+      await expect(drain(funcs.play(sound))).resolves.toBe(sound);
+
+      // Both play() calls returned (sampling/queueing happens eagerly), but the second sound's
+      // actual playback hasn't started - it's queued behind the first, not overlapping it.
+      expect(io.playSamples).toHaveBeenCalledTimes(1);
+      expect(funcs.globalVars.activePlayCount).toBe(2);
+
+      resolveFirst!();
+      await new Promise(resolve => setTimeout(resolve, 0));
+      expect(io.playSamples).toHaveBeenCalledTimes(2);
+    });
+
+    test('activePlayCount drops by one as each queued play() actually finishes, in order', async () => {
+      let resolveFirst: () => void;
+      io.playSamples.mockReturnValueOnce(new Promise<void>(resolve => { resolveFirst = resolve; }));
+      io.playSamples.mockReturnValueOnce(new Promise(() => {})); // second never finishes on its own
+
+      await drain(funcs.play(funcs.silence_sound(10)));
+      await drain(funcs.play(funcs.silence_sound(10)));
+      expect(funcs.globalVars.activePlayCount).toBe(2);
+      expect(io.playSamples).toHaveBeenCalledTimes(1); // second hasn't started yet
+
+      resolveFirst!();
+      await new Promise(resolve => setTimeout(resolve, 0));
+      // First finished (count drops to 1); second has now started (but never finishes).
+      expect(io.playSamples).toHaveBeenCalledTimes(2);
+      expect(funcs.globalVars.activePlayCount).toBe(1);
     });
 
     test('a mono Sound is only sampled once (left and right samples are the same array)', async () => {
@@ -131,24 +158,47 @@ describe('Concurrent playback functions', () => {
       expect(left).toBe(right);
     });
 
-    test('a stale playSamples completion cannot clear a newer play()\'s isPlaying state', async () => {
+    test('stop() cancels anything still queued behind the currently-playing sound', async () => {
+      let resolveFirst: () => void;
+      io.playSamples.mockReturnValueOnce(new Promise<void>(resolve => { resolveFirst = resolve; }));
+      // Matches the real tab: stopping the currently-playing source fires its onended, which is
+      // what actually resolves playSamples() - stop() doesn't just abandon it unresolved.
+      io.$stopPlayback.mockImplementationOnce(() => resolveFirst());
+
+      await drain(funcs.play(funcs.silence_sound(10)));
+      await drain(funcs.play(funcs.silence_sound(10))); // queued behind the first
+
+      funcs.stop();
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      // The queued sound's turn arrives once the first settles, but it's skipped entirely rather
+      // than calling playSamples for it, since stop() already moved past its generation.
+      expect(io.playSamples).toHaveBeenCalledTimes(1);
+      expect(funcs.globalVars.activePlayCount).toBe(0);
+    });
+
+    test('a stale playSamples completion after stop() cannot decrement a newer play()\'s count', async () => {
       let resolveA: () => void;
       io.playSamples.mockReturnValueOnce(new Promise<void>(resolve => {
         resolveA = resolve;
       }));
       await drain(funcs.play(funcs.silence_sound(10)));
-      expect(funcs.globalVars.isPlaying).toBe(true);
+      expect(funcs.globalVars.activePlayCount).toBe(1);
 
       funcs.stop();
-      expect(funcs.globalVars.isPlaying).toBe(false);
+      expect(funcs.globalVars.activePlayCount).toBe(0);
 
       io.playSamples.mockReturnValueOnce(new Promise(() => {})); // B's playback still in progress
       await drain(funcs.play(funcs.silence_sound(10)));
-      expect(funcs.globalVars.isPlaying).toBe(true);
+      expect(funcs.globalVars.activePlayCount).toBe(1);
+      // B is queued behind A (whose mocked playSamples hasn't resolved yet), not playing yet.
+      expect(io.playSamples).toHaveBeenCalledTimes(1);
 
-      resolveA!(); // A's late completion arrives after B has already started
+      resolveA!(); // A's late completion arrives, unblocking B's queued turn
       await new Promise(resolve => setTimeout(resolve, 0));
-      expect(funcs.globalVars.isPlaying).toBe(true);
+      // A's completion is stale (post-stop()) and doesn't touch the count; B has now started.
+      expect(io.playSamples).toHaveBeenCalledTimes(2);
+      expect(funcs.globalVars.activePlayCount).toBe(1);
     });
 
     test('a genuinely stereo Sound samples each channel separately', async () => {
@@ -178,11 +228,14 @@ describe('Concurrent playback functions', () => {
         .rejects.toThrow('play_wave: Expected a wave for wave, got true.');
     });
 
-    test('Concurrently playing two sounds should error', async () => {
-      io.playSamples.mockReturnValue(new Promise(() => {}));
+    test('repeated play_wave() calls queue instead of erroring', async () => {
+      io.playSamples.mockReturnValueOnce(new Promise(() => {}));
+      io.playSamples.mockResolvedValueOnce(undefined);
       const wave = constantWave(0);
-      await drain(funcs.play_wave(wave, 10));
-      await expect(drain(funcs.play_wave(wave, 10))).rejects.toThrow('play: Previous sound still playing!');
+      await expect(drain(funcs.play_wave(wave, 10))).resolves.not.toBeUndefined();
+      await expect(drain(funcs.play_wave(wave, 10))).resolves.not.toBeUndefined();
+      expect(io.playSamples).toHaveBeenCalledTimes(1);
+      expect(funcs.globalVars.activePlayCount).toBe(2);
     });
   });
 
@@ -200,10 +253,10 @@ describe('Concurrent playback functions', () => {
       expect(funcs.stop).not.toThrowError();
     });
 
-    it('sets isPlaying to false and tells the host to stop playback', () => {
-      funcs.globalVars.isPlaying = true;
+    it('resets activePlayCount to 0 and tells the host to stop playback', () => {
+      funcs.globalVars.activePlayCount = 3;
       funcs.stop();
-      expect(funcs.globalVars.isPlaying).toEqual(false);
+      expect(funcs.globalVars.activePlayCount).toEqual(0);
       expect(io.$stopPlayback).toHaveBeenCalledOnce();
     });
   });
@@ -371,6 +424,39 @@ describe(funcs.adsr, () => {
     const shaped = funcs.adsr(0.2, 0.3, 0.5, 0.1)(sound);
     expect(funcs.get_left_wave(shaped)).toBe(funcs.get_right_wave(shaped));
   });
+
+  it('accepts ratios that sum to exactly 1', () => {
+    expect(() => funcs.adsr(0.2, 0.3, 0.5, 0.5)).not.toThrow();
+  });
+
+  it('rejects ratios that sum to more than 1', () => {
+    expect(() => funcs.adsr(0.5, 0.5, 0.5, 0.5)).toThrow(
+      'adsr: attack_ratio + decay_ratio + release_ratio must not exceed 1, got 1.5',
+    );
+  });
+
+  it('rejects an out-of-range ratio even if the sum is <= 1', () => {
+    expect(() => funcs.adsr(-0.1, 0.3, 0.5, 0.1)).toThrow(
+      'adsr: attack_ratio must be between 0 and 1, got -0.1',
+    );
+    expect(() => funcs.adsr(0.2, 1.5, 0.5, 0.1)).toThrow(
+      'adsr: decay_ratio must be between 0 and 1, got 1.5',
+    );
+  });
+
+  it('rejects an out-of-range sustain_level', () => {
+    expect(() => funcs.adsr(0.2, 0.3, 1.5, 0.1)).toThrow(
+      'adsr: sustain_level must be between 0 and 1, got 1.5',
+    );
+    expect(() => funcs.adsr(0.2, 0.3, -0.5, 0.1)).toThrow(
+      'adsr: sustain_level must be between 0 and 1, got -0.5',
+    );
+  });
+
+  it('rejects a non-finite ratio', () => {
+    expect(() => funcs.adsr(NaN, 0.3, 0.5, 0.1)).toThrow();
+    expect(() => funcs.adsr(0.2, Infinity, 0.5, 0.1)).toThrow();
+  });
 });
 
 describe(funcs.phase_mod, () => {
@@ -392,4 +478,27 @@ describe(funcs.phase_mod, () => {
     expect(right).toBeCloseTo(Math.sin(0.5));
     expect(left).not.toBeCloseTo(right, 1);
   });
+});
+
+describe('Instruments', () => {
+  // Regression test: each instrument's envelopes used to be built via the now-validated adsr(),
+  // so trombone's second harmonic (ratios summing to 1.0236, a longstanding quirk present since
+  // before the Conductor migration - see git history) would throw as soon as trombone() was
+  // called. They must use the unvalidated adsrTransformer() internally instead, preserving each
+  // instrument's existing tuning exactly.
+  const instruments = [
+    ['bell', funcs.bell],
+    ['cello', funcs.cello],
+    ['piano', funcs.piano],
+    ['trombone', funcs.trombone],
+    ['violin', funcs.violin],
+  ] as const;
+
+  for (const [name, instrument] of instruments) {
+    it(`${name} constructs a valid Sound without throwing`, () => {
+      const sound = instrument(60, 1);
+      expect(funcs.is_sound(sound)).toBe(true);
+      expect(funcs.get_duration(sound)).toBeCloseTo(1);
+    });
+  }
 });

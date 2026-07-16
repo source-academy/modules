@@ -26,6 +26,16 @@ export interface SoundTabRpc {
   requestMicPermission(): Promise<boolean>;
   /** Plays two PCM buffers through the tab's (2-channel) AudioContext; resolves once playback completes. */
   playSamples(left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>, sampleRate: number): Promise<void>;
+  /**
+   * Notifies the tab that `play()` has started sampling a Wave into a PCM buffer - a duration-
+   * proportional step that happens entirely before `playSamples` is called, so the tab has no other
+   * way to know playback is imminent rather than stalled. A normal (acknowledged) call rather than
+   * fire-and-forget: the tab may still be loading (registerTab/showTab haven't necessarily happened
+   * yet) when play() starts, and there's no other signal for "the host has finished loading the
+   * tab" - awaiting the reply is what guarantees the status is actually visible before sampling
+   * begins, rather than racing a message against the tab's own construction.
+   */
+  notifyConstructing(): Promise<void>;
   /** Stops any sound currently playing. */
   $stopPlayback(): void;
   /** Starts recording from the previously-granted microphone; resolves once recording has actually started. */

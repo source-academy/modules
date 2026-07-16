@@ -41,19 +41,29 @@ class MockTabService implements ITabService {
   hideTab(_id: string) {}
 }
 
-function createMockAudioContext() {
-  const bufferSource = {
+function makeMockBufferSource() {
+  const source = {
     buffer: null as AudioBuffer | null,
     onended: undefined as (() => void) | undefined,
     connect: vi.fn(),
-    start: vi.fn(function (this: typeof bufferSource) {
+    start: vi.fn(function (this: typeof source) {
       queueMicrotask(() => this.onended?.());
     }),
     stop: vi.fn()
   };
+  return source;
+}
+
+function createMockAudioContext() {
+  // A fresh source per createBufferSource() call, since repeated/looped play() calls stack -
+  // multiple can be genuinely concurrent - but `bufferSource` still tracks the most recently
+  // created one, for existing single-source tests that only ever create one before asserting on it.
+  let bufferSource = makeMockBufferSource();
 
   return {
-    bufferSource,
+    get bufferSource() {
+      return bufferSource;
+    },
     destination: {},
     createBuffer: vi.fn((_channels: number, length: number, sampleRate: number) => ({
       length,
@@ -61,7 +71,10 @@ function createMockAudioContext() {
       copyToChannel: vi.fn(),
       getChannelData: vi.fn(() => new Float32Array(length))
     })),
-    createBufferSource: vi.fn(() => bufferSource),
+    createBufferSource: vi.fn(() => {
+      bufferSource = makeMockBufferSource();
+      return bufferSource;
+    }),
     decodeAudioData: vi.fn().mockResolvedValue({
       numberOfChannels: 1,
       getChannelData: () => new Float32Array([0, 1, -1, 0]),
@@ -144,6 +157,21 @@ describe(SoundTabPlugin, () => {
       expect(mockAudioContext.createBuffer).toHaveBeenCalledWith(2, left.length, 8000);
       expect(mockAudioContext.bufferSource.start).toHaveBeenCalledOnce();
     });
+
+    test('repeated/looped calls stack: each gets its own independent source', async () => {
+      const samples = new Float32Array([0]);
+      const first = plugin.playSamples(samples, samples, 8000);
+      const firstSource = mockAudioContext.bufferSource;
+      const second = plugin.playSamples(samples, samples, 8000);
+      const secondSource = mockAudioContext.bufferSource;
+
+      expect(firstSource).not.toBe(secondSource);
+      expect(mockAudioContext.createBufferSource).toHaveBeenCalledTimes(2);
+      expect(firstSource.start).toHaveBeenCalledOnce();
+      expect(secondSource.start).toHaveBeenCalledOnce();
+
+      await Promise.all([first, second]);
+    });
   });
 
   describe('$stopPlayback', () => {
@@ -153,6 +181,26 @@ describe(SoundTabPlugin, () => {
       plugin.$stopPlayback();
       expect(mockAudioContext.bufferSource.stop).toHaveBeenCalledOnce();
       await playing;
+    });
+
+    test('stops every currently active (stacked) source, not just the most recent', async () => {
+      const samples = new Float32Array([0]);
+      const first = plugin.playSamples(samples, samples, 8000);
+      const firstSource = mockAudioContext.bufferSource;
+      const second = plugin.playSamples(samples, samples, 8000);
+      const secondSource = mockAudioContext.bufferSource;
+
+      plugin.$stopPlayback();
+
+      expect(firstSource.stop).toHaveBeenCalledOnce();
+      expect(secondSource.stop).toHaveBeenCalledOnce();
+      await Promise.all([first, second]);
+    });
+  });
+
+  describe('notifyConstructing', () => {
+    test('resolves without throwing', async () => {
+      await expect(plugin.notifyConstructing()).resolves.toBeUndefined();
     });
   });
 
