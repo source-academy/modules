@@ -2,7 +2,9 @@
  * The sounds library provides functions for constructing and playing sounds.
  *
  * A wave is a function that takes in a number `t` and returns a number representing the
- * amplitude at time `t`.
+ * amplitude at time `t`. (Internally, `Wave` is `(t: number) => AsyncGenerator<void, number,
+ * undefined>` - see the `Wave` type in types.ts for why - but that's invisible from Source: a
+ * plain `t => ...` function is all a wave ever needs to be.)
  *
  * A Sound is always stereo internally - pair(pair(left_wave, right_wave), duration), where
  * duration is the length of the sound in seconds. "Mono" isn't a separate concept: it's just the
