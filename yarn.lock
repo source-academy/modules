@@ -4009,7 +4009,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-midi@workspace:src/bundles/midi"
   dependencies:
-    "@sourceacademy/conductor": "npm:^0.7.0"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-testplugin": "workspace:^"
     js-slang: "catalog:"
@@ -4164,7 +4164,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-sound@workspace:src/bundles/sound"
   dependencies:
     "@sourceacademy/bundle-midi": "workspace:^"
-    "@sourceacademy/conductor": "npm:^0.7.0"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     typescript: "catalog:"
   languageName: unknown
@@ -4775,7 +4775,7 @@ __metadata:
     "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/bundle-sound": "workspace:^"
     "@sourceacademy/common-tabs": "npm:^0.0.1"
-    "@sourceacademy/conductor": "npm:^0.7.0"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/react": "catalog:"
     react: "catalog:"

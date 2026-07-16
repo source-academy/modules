@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "devDependencies": {
-    "@sourceacademy/conductor": "^0.7.0",
+    "@sourceacademy/conductor": "catalog:",
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-testplugin": "workspace:^",
     "js-slang": "catalog:",
