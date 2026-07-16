@@ -10,6 +10,12 @@
     "emitDecoratorMetadata": false
   },
   "typedocOptions": {
-    "name": "sound"
+    "name": "sound",
+    "externalSymbolLinkMappings": {
+      "@sourceacademy/bundle-midi": {
+        "MIDINote": "#",
+        "NoteWithOctave": "#"
+      }
+    }
   }
 }

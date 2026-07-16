@@ -16,7 +16,7 @@ vi.mock(import('three'), async importOriginal => {
       this.z = z;
     }
 
-    copy(vector) {
+    copy(vector: Vector3) {
       this.x = vector.x;
       this.y = vector.y;
       this.z = vector.z;
@@ -37,7 +37,7 @@ vi.mock(import('three'), async importOriginal => {
       this.w = w;
     }
 
-    copy(quaternion) {
+    copy(quaternion: Quaternion) {
       this.x = quaternion.x;
       this.y = quaternion.y;
       this.z = quaternion.z;

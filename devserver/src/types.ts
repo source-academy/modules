@@ -1,4 +1,4 @@
-import type { SourceError } from 'js-slang/dist/types';
+import type { SourceError } from 'js-slang/dist/errors/base';
 
 /**
  * An output while the program is still being run in the interpreter. As a

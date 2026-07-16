@@ -1,8 +1,7 @@
-import { ESLintUtils } from '@typescript-eslint/utils';
+import creator from './creator';
 
-const ruleCreator = ESLintUtils.RuleCreator.withoutDocs;
-
-export default ruleCreator({
+export default creator({
+  name: 'no-barrel-imports',
   meta: {
     type: 'suggestion',
     fixable: 'code',

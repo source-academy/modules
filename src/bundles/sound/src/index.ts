@@ -185,7 +185,7 @@ async function soundPromiseToConductor(evaluator: IDataHandler, promise: () => S
 
 export default class SoundModulePlugin extends BaseModulePlugin {
   id = 'sound';
-  exportedNames = [
+  override exportedNames = [
     'adsr',
     'bell',
     'cello',
@@ -226,7 +226,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     'trombone',
     'violin'
   ] as const;
-  static channelAttach = [SOUND_CHANNEL_ID];
+  static override channelAttach = [SOUND_CHANNEL_ID];
 
   private readonly __tabLoader: SoundTabLoader | undefined;
   private __tabLoaded = false;

@@ -1,3 +1,4 @@
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import { interrupt } from '@sourceacademy/modules-lib/specialErrors';
 import context from 'js-slang/context';
 import { sceneConfig } from './config';
@@ -33,7 +34,7 @@ import { createScene } from './engine/Render/helpers/Scene';
 export function getWorldFromContext(): World {
   const world = context.moduleContexts.robot_simulation.state?.world;
   if (world === undefined) {
-    throw new Error('World not initialized');
+    throw new GeneralRuntimeError('World not initialized');
   }
   return world as World;
 }
@@ -47,7 +48,7 @@ export function getWorldFromContext(): World {
 export function getEv3FromContext(): DefaultEv3 {
   const ev3 = context.moduleContexts.robot_simulation.state?.ev3;
   if (ev3 === undefined) {
-    throw new Error('ev3 not initialized');
+    throw new GeneralRuntimeError('ev3 not initialized');
   }
   return ev3 as DefaultEv3;
 }
@@ -228,7 +229,7 @@ export function createWorld(
  * @param length The length of the cuboid in meters
  * @param height The height of the cuboid in meters
  * @param mass The mass of the cuboid in kg
- * @param color The color of the cuboid. Can be a hex code or a string. {@see https://threejs.org/docs/#api/en/math/Color}
+ * @param color The color of the cuboid. Can be a hex code or a string. See {@link https://threejs.org/docs/#api/en/math/Color}
  * @param bodyType "rigid" or "dynamic". Determines if the cuboid is fixed or can move.
  * @returns Cuboid
  *
@@ -264,7 +265,7 @@ export function createCuboid(
   bodyType: string
 ) {
   if (isRigidBodyType(bodyType) === false) {
-    throw new Error('Invalid body type');
+    throw new GeneralRuntimeError('Invalid body type');
   }
 
   const config: CuboidConfig = {

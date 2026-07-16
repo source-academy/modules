@@ -89,6 +89,7 @@ export const jsConfig = defineConfig(
     },
     plugins: {
       import: importPlugin,
+      // @ts-expect-error TSESLint types are incompatible with regular ESLint types
       '@sourceacademy': saLintPlugin
     },
     rules: {

@@ -1,8 +1,9 @@
-import type { Rule } from 'eslint';
+import creator from './creator';
 
 type RuleOptions = Record<string, string | string[]>;
 
-const defaultImportName = {
+export default creator({
+  name: 'default-import-name',
   meta: {
     type: 'suggestion',
     hasSuggestions: true,
@@ -93,6 +94,4 @@ const defaultImportName = {
       }
     }
   })
-} satisfies Rule.RuleModule;
-
-export default defaultImportName;
+});

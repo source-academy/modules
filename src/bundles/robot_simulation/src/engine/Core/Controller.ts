@@ -62,7 +62,7 @@ export class ControllerGroup implements Controller {
     this.controllers.push(...controllers);
   }
 
-  async start?(): Promise<void> {
+  async start(): Promise<void> {
     await Promise.all(this.controllers.map(async (controller) => {
       await controller.start?.();
     }),);
