@@ -1,3 +1,4 @@
+import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 import { TestDataHandler } from '@sourceacademy/modules-testplugin';
 import { expect, test } from 'vitest';
 import {
@@ -37,7 +38,7 @@ test('scrabble_words_tiny matches snapshot', () => {
 
 // Test plugin
 
-test('initialise exposes all four word lists as opaque values', async () => {
+test('initialise exposes all four word lists as real arrays', async () => {
   const handler = new TestDataHandler();
   const plugin = new ScrabbleModulePlugin({} as any, [], handler);
   await plugin.initialise();
@@ -49,11 +50,23 @@ test('initialise exposes all four word lists as opaque values', async () => {
     'scrabble_letters_tiny'
   ]);
 
-  const [words, letters, wordsTiny, lettersTiny] = await Promise.all(
-    plugin.exports.map((e) => handler.opaque_get(e.value as any))
+  const [words, letters, wordsTiny, lettersTiny] = plugin.exports.map(
+    (e) => e.value as TypedValue<DataType.ARRAY>
   );
-  expect(words).toBe(scrabble_words);
-  expect(letters).toBe(scrabble_letters);
-  expect(wordsTiny).toBe(scrabble_words_tiny);
-  expect(lettersTiny).toBe(scrabble_letters_tiny);
+
+  expect(await handler.array_length(words)).toBe(scrabble_words.length);
+  expect(await handler.array_get(words, 12)).toEqual({
+    type: DataType.CONST_STRING,
+    value: 'aardwolves'
+  });
+
+  expect(await handler.array_length(letters)).toBe(scrabble_letters.length);
+  const word100000 = (await handler.array_get(letters, 100000)) as TypedValue<DataType.ARRAY>;
+  expect(await handler.array_get(word100000, 0)).toEqual({
+    type: DataType.CONST_STRING,
+    value: 'n'
+  });
+
+  expect(await handler.array_length(wordsTiny)).toBe(scrabble_words_tiny.length);
+  expect(await handler.array_length(lettersTiny)).toBe(scrabble_letters_tiny.length);
 });
