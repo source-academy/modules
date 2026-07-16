@@ -1,5 +1,7 @@
 // @ts-check
 
+const fs = require('fs/promises');
+const pathlib = require('path');
 const { defineConfig } = require('@yarnpkg/types');
 const { name } = require('./package.json');
 
@@ -23,15 +25,27 @@ module.exports = defineConfig({
       }
     }
 
+    // Load the Node version that the repository is supposed to use
+    const nodeVersionFile = pathlib.join(__dirname, '.node-version');
+    const nodeVersion = (await fs.readFile(nodeVersionFile, 'utf-8')).trim();
+
     const [rootWorkspace] = Yarn.workspaces({ ident: name });
 
     // There should not be any resolutions value for js-slang,
     // which might be present if you linked js-slang to a local copy
     rootWorkspace.set('resolutions.js-slang', undefined);
 
+    // Runtime version should match the one specified
+    rootWorkspace.set('devEngines.runtime.version', `^${nodeVersion}`);
+
     // Make sure that if the dependency is defined in the root workspace
-    // that all child workspaces use the same version of that dependency
+    // that all child workspaces use the same version of that dependency.
+    // Catalog-resolved deps already share a single version by definition, so
+    // skip them (Yarn normalizes `catalog:` to `*` due to a bug, see:
+    // https://github.com/yarnpkg/berry/issues/6925)
     for (const workspaceDep of Yarn.dependencies({ workspace: rootWorkspace })) {
+      if (workspaceDep.range === 'catalog:' || workspaceDep.range === '*') continue;
+
       for (const otherDep of Yarn.dependencies({ ident: workspaceDep.ident })) {
         if (otherDep.type === 'peerDependencies') continue;
 

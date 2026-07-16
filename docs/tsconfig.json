@@ -4,7 +4,16 @@
     "moduleResolution": "nodenext",
     "noEmit": true,
     "resolveJsonModule": true,
-    "verbatimModuleSyntax": true
+    "skipLibCheck": true, // necessary because some libraries don't support typescript 6 yet
+    "verbatimModuleSyntax": true,
+    "types": ["node"]
   },
-  "include": ["./.vitepress/**/*.ts", "src"]
+  "include": [
+    ".vitepress/config.ts",
+    ".vitepress/theme/*.ts",
+    "src"
+  ],
+  "vueCompilerOptions": {
+    "vitePressExtensions": [".md"]
+  }
 }

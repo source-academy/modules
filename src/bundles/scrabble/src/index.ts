@@ -1,7 +1,10 @@
 /**
- * Scrabble words for Source Academy
- * @author Martin Henz
+ * The `scrabble` Source Module provides the allowable
+ * words in Scrabble in a list and in an array, according to
+ * https://github.com/benjamincrom/scrabble/blob/master/scrabble/dictionary.json
+ *
  * @module scrabble
+ * @author Martin Henz
  */
 import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
 import { BaseModulePlugin } from '@sourceacademy/conductor/module';
@@ -16,8 +19,8 @@ import {
 
 export default class ScrabbleModulePlugin extends BaseModulePlugin {
   id = 'scrabble';
-  exportedNames = [] as const;
-  static channelAttach = [];
+  override exportedNames = [] as const;
+  static override channelAttach = [];
   constructor(conduit: IConduit, channels: IChannel<any>[], evaluator: IInterfacableEvaluator) {
     super(conduit, channels, evaluator);
   }

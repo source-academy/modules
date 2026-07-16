@@ -1,5 +1,5 @@
-import type { Rule } from 'eslint';
 import type { SourceLocation } from 'estree';
+import creator from './creator';
 
 const RE = /^\s*#(region|endregion)(?:$|\s+(.*)$)/;
 
@@ -9,12 +9,20 @@ interface CommentInfo {
   loc: SourceLocation;
 }
 
-const regionComment = {
+export default creator({
+  name: 'region-comment',
   meta: {
     type: 'problem',
     docs: {
       description: 'Ensures that every region comment has a corresponding endregion comment'
-    }
+    },
+    messages: {
+      missingEnd: 'Missing #endregion for #region',
+      missingStart: 'Missing #region for #endregion',
+      missingStartName: 'Missing name for #region comment',
+      missingEndName: 'Missing name for #endregion comment',
+    },
+    schema: []
   },
   create: context => ({
     Program() {
@@ -30,7 +38,7 @@ const regionComment = {
           return [
             ...res,
             {
-              loc: comment.loc!,
+              loc: comment.loc,
               regionName: name?.trim(),
               type: marker === 'region' ? 'start' : 'end',
             }
@@ -41,7 +49,7 @@ const regionComment = {
       if (missingRegionNames.length > 0) {
         for (const comment of missingRegionNames) {
           context.report({
-            message: `Expected region name for #${comment.type === 'start' ? '' : 'end'}region comment`,
+            messageId: comment.type === 'start' ? 'missingStartName' : 'missingEndName',
             loc: comment.loc
           });
         }
@@ -73,7 +81,7 @@ const regionComment = {
 
         if (comment.type === 'end') {
           context.report({
-            message: '#endregion comment missing #region',
+            messageId: 'missingStart',
             loc: comment.loc
           });
           continue;
@@ -82,7 +90,7 @@ const regionComment = {
         const endIndex = searchForClosing(comment);
         if (endIndex === null) {
           context.report({
-            message: 'Missing #endregion for #region',
+            messageId: 'missingEnd',
             loc: comment.loc
           });
         } else {
@@ -91,6 +99,4 @@ const regionComment = {
       }
     }
   })
-} satisfies Rule.RuleModule;
-
-export default regionComment;
+});

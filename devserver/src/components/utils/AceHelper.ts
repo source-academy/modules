@@ -1,6 +1,6 @@
 import * as ace from 'ace-builds/src-noconflict/ace';
 import { HighlightRulesSelector, ModeSelector } from 'js-slang/dist/editors/ace/modes/source';
-import { Chapter, Variant } from 'js-slang/dist/types';
+import { Chapter, Variant } from 'js-slang/dist/langs';
 
 export const modeString = `source${Chapter.SOURCE_4}${Variant.DEFAULT}`;
 

@@ -1,16 +1,16 @@
 {
   "name": "@sourceacademy/bundle-curve",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "dependencies": {
     "@sourceacademy/modules-lib": "workspace:^",
     "es-toolkit": "^1.44.0",
     "gl-matrix": "^3.3.0",
-    "js-slang": "^1.0.85"
+    "js-slang": "catalog:"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "typescript": "^6.0.2"
+    "typescript": "catalog:"
   },
   "type": "module",
   "exports": {
@@ -25,8 +25,9 @@
     "prepare": "yarn tsc",
     "test": "buildtools test --project .",
     "tsc": "buildtools tsc .",
-    "postinstall": "buildtools compile",
-    "serve": "yarn buildtools serve"
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
   },
   "scripts-info": {
     "build": "Compiles the given bundle to the output directory",
