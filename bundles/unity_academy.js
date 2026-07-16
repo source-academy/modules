@@ -188,7 +188,7 @@ export default require => {
       function cloneAndReplaceKey(oldElement, newKey) {
         return ReactElement(oldElement.type, newKey, oldElement.props);
       }
-      function isValidElement2(object) {
+      function isValidElement3(object) {
         return "object" === typeof object && null !== object && object.$$typeof === REACT_ELEMENT_TYPE;
       }
       function escape(key) {
@@ -246,7 +246,7 @@ export default require => {
         }
         if (invokeCallback) return (callback = callback(children), invokeCallback = "" === nameSoFar ? "." + getElementKey(children, 0) : nameSoFar, isArrayImpl(callback) ? (escapedPrefix = "", null != invokeCallback && (escapedPrefix = invokeCallback.replace(userProvidedKeyEscapeRegex, "$&/") + "/"), mapIntoArray(callback, array, escapedPrefix, "", function (c) {
           return c;
-        })) : null != callback && (isValidElement2(callback) && (callback = cloneAndReplaceKey(callback, escapedPrefix + (null == callback.key || children && children.key === callback.key ? "" : ("" + callback.key).replace(userProvidedKeyEscapeRegex, "$&/") + "/") + invokeCallback)), array.push(callback)), 1);
+        })) : null != callback && (isValidElement3(callback) && (callback = cloneAndReplaceKey(callback, escapedPrefix + (null == callback.key || children && children.key === callback.key ? "" : ("" + callback.key).replace(userProvidedKeyEscapeRegex, "$&/") + "/") + invokeCallback)), array.push(callback)), 1);
         invokeCallback = 0;
         var nextNamePrefix = "" === nameSoFar ? "." : nameSoFar + ":";
         if (isArrayImpl(children)) for (var i = 0; i < children.length; i++) (nameSoFar = children[i], type = nextNamePrefix + getElementKey(nameSoFar, i), invokeCallback += mapIntoArray(nameSoFar, array, escapedPrefix, type, callback)); else if ((i = getIteratorFn(children), "function" === typeof i)) for ((children = i.call(children), i = 0); !(nameSoFar = children.next()).done; ) (nameSoFar = nameSoFar.value, type = nextNamePrefix + getElementKey(nameSoFar, i++), invokeCallback += mapIntoArray(nameSoFar, array, escapedPrefix, type, callback)); else if ("object" === type) {
@@ -313,7 +313,7 @@ export default require => {
           }) || [];
         },
         only: function (children) {
-          if (!isValidElement2(children)) throw Error("React.Children.only expected to receive a single React element child.");
+          if (!isValidElement3(children)) throw Error("React.Children.only expected to receive a single React element child.");
           return children;
         }
       };
@@ -389,7 +389,7 @@ export default require => {
           render
         };
       };
-      exports.isValidElement = isValidElement2;
+      exports.isValidElement = isValidElement3;
       exports.lazy = function (ctor) {
         return {
           $$typeof: REACT_LAZY_TYPE,
@@ -666,9 +666,9 @@ export default require => {
           return newKey;
         }
         function validateChildKeys(node) {
-          isValidElement2(node) ? node._store && (node._store.validated = 1) : "object" === typeof node && null !== node && node.$$typeof === REACT_LAZY_TYPE && ("fulfilled" === node._payload.status ? isValidElement2(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
+          isValidElement3(node) ? node._store && (node._store.validated = 1) : "object" === typeof node && null !== node && node.$$typeof === REACT_LAZY_TYPE && ("fulfilled" === node._payload.status ? isValidElement3(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
         }
-        function isValidElement2(object) {
+        function isValidElement3(object) {
           return "object" === typeof object && null !== object && object.$$typeof === REACT_ELEMENT_TYPE;
         }
         function escape(key) {
@@ -729,7 +729,7 @@ export default require => {
             var childKey = "" === nameSoFar ? "." + getElementKey(invokeCallback, 0) : nameSoFar;
             isArrayImpl(callback) ? (escapedPrefix = "", null != childKey && (escapedPrefix = childKey.replace(userProvidedKeyEscapeRegex, "$&/") + "/"), mapIntoArray(callback, array, escapedPrefix, "", function (c) {
               return c;
-            })) : null != callback && (isValidElement2(callback) && (null != callback.key && (invokeCallback && invokeCallback.key === callback.key || checkKeyStringCoercion(callback.key)), escapedPrefix = cloneAndReplaceKey(callback, escapedPrefix + (null == callback.key || invokeCallback && invokeCallback.key === callback.key ? "" : ("" + callback.key).replace(userProvidedKeyEscapeRegex, "$&/") + "/") + childKey), "" !== nameSoFar && null != invokeCallback && isValidElement2(invokeCallback) && null == invokeCallback.key && invokeCallback._store && !invokeCallback._store.validated && (escapedPrefix._store.validated = 2), callback = escapedPrefix), array.push(callback));
+            })) : null != callback && (isValidElement3(callback) && (null != callback.key && (invokeCallback && invokeCallback.key === callback.key || checkKeyStringCoercion(callback.key)), escapedPrefix = cloneAndReplaceKey(callback, escapedPrefix + (null == callback.key || invokeCallback && invokeCallback.key === callback.key ? "" : ("" + callback.key).replace(userProvidedKeyEscapeRegex, "$&/") + "/") + childKey), "" !== nameSoFar && null != invokeCallback && isValidElement3(invokeCallback) && null == invokeCallback.key && invokeCallback._store && !invokeCallback._store.validated && (escapedPrefix._store.validated = 2), callback = escapedPrefix), array.push(callback));
             return 1;
           }
           invokeCallback = 0;
@@ -957,7 +957,7 @@ export default require => {
             }) || [];
           },
           only: function (children) {
-            if (!isValidElement2(children)) throw Error("React.Children.only expected to receive a single React element child.");
+            if (!isValidElement3(children)) throw Error("React.Children.only expected to receive a single React element child.");
             return children;
           }
         };
@@ -1128,7 +1128,7 @@ export default require => {
           });
           return elementType;
         };
-        exports.isValidElement = isValidElement2;
+        exports.isValidElement = isValidElement3;
         exports.lazy = function (ctor) {
           ctor = {
             _status: -1,
@@ -1472,9 +1472,9 @@ export default require => {
           return ReactElement(type, children, maybeKey, getOwner(), debugStack, debugTask);
         }
         function validateChildKeys(node) {
-          isValidElement2(node) ? node._store && (node._store.validated = 1) : "object" === typeof node && null !== node && node.$$typeof === REACT_LAZY_TYPE && ("fulfilled" === node._payload.status ? isValidElement2(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
+          isValidElement3(node) ? node._store && (node._store.validated = 1) : "object" === typeof node && null !== node && node.$$typeof === REACT_LAZY_TYPE && ("fulfilled" === node._payload.status ? isValidElement3(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
         }
-        function isValidElement2(object) {
+        function isValidElement3(object) {
           return "object" === typeof object && null !== object && object.$$typeof === REACT_ELEMENT_TYPE;
         }
         var React4 = require_react(), REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = Symbol.for("react.memo"), REACT_LAZY_TYPE = Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = Symbol.for("react.activity"), REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"), ReactSharedInternals = React4.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, hasOwnProperty = Object.prototype.hasOwnProperty, isArrayImpl = Array.isArray, createTask = console.createTask ? console.createTask : function () {
@@ -41406,6 +41406,7 @@ export default require => {
     getReactMajorVersion: () => getReactMajorVersion,
     getRef: () => getRef,
     isArrowKey: () => isArrowKey,
+    isBlueprintIconElement: () => isBlueprintIconElement,
     isDarkTheme: () => isDarkTheme,
     isElementOfType: () => isElementOfType,
     isEmptyString: () => isEmptyString,
@@ -41728,6 +41729,23 @@ export default require => {
   }
   init_define_process();
   var import_react2 = __toESM(require_react());
+  init_define_process();
+  var DISPLAYNAME_PREFIX = "Blueprint6";
+  var INVALID_PROPS = ["active", "alignText", "asyncControl", "containerRef", "current", "elementRef", "ellipsizeText", "endIcon", "fill", "icon", "iconSize", "inputClassName", "inputRef", "intent", "inline", "large", "loading", "leftElement", "leftIcon", "minimal", "onRemove", "outlined", "panel", "panelClassName", "popoverProps", "rightElement", "rightIcon", "round", "selectedValue", "size", "small", "tagName", "text", "textClassName", "variant"];
+  function removeNonHTMLProps(props, invalidProps = INVALID_PROPS, shouldMerge = false) {
+    if (shouldMerge) {
+      invalidProps = invalidProps.concat(INVALID_PROPS);
+    }
+    return invalidProps.reduce((prev, curr) => {
+      if (curr.indexOf("-") !== -1) {
+        return prev;
+      }
+      if (prev.hasOwnProperty(curr)) {
+        delete prev[curr];
+      }
+      return prev;
+    }, __spreadValues({}, props));
+  }
   function isReactNodeEmpty(node, skipArray = false) {
     return node == null || node === "" || node === false || !skipArray && Array.isArray(node) && (node.length === 0 || node.every(n => isReactNodeEmpty(n, true)));
   }
@@ -41760,6 +41778,18 @@ export default require => {
   }
   function isElementOfType(element, ComponentType) {
     return element != null && element.type != null && element.type.displayName != null && element.type.displayName === ComponentType.displayName;
+  }
+  var BLUEPRINT_ICON_DISPLAYNAME_PREFIX = `${DISPLAYNAME_PREFIX}.Icon.`;
+  function isBlueprintIconElement(value) {
+    if (!(0, import_react2.isValidElement)(value)) {
+      return false;
+    }
+    const {type} = value;
+    if (typeof type === "string") {
+      return false;
+    }
+    const {displayName} = type;
+    return typeof displayName === "string" && displayName.startsWith(BLUEPRINT_ICON_DISPLAYNAME_PREFIX);
   }
   init_define_process();
   function isKeyboardClick(event) {
@@ -41810,23 +41840,6 @@ export default require => {
       return ref;
     }
     return ref.current;
-  }
-  init_define_process();
-  var DISPLAYNAME_PREFIX = "Blueprint6";
-  var INVALID_PROPS = ["active", "alignText", "asyncControl", "containerRef", "current", "elementRef", "ellipsizeText", "endIcon", "fill", "icon", "iconSize", "inputClassName", "inputRef", "intent", "inline", "large", "loading", "leftElement", "leftIcon", "minimal", "onRemove", "outlined", "panel", "panelClassName", "popoverProps", "rightElement", "rightIcon", "round", "selectedValue", "size", "small", "tagName", "text", "textClassName", "variant"];
-  function removeNonHTMLProps(props, invalidProps = INVALID_PROPS, shouldMerge = false) {
-    if (shouldMerge) {
-      invalidProps = invalidProps.concat(INVALID_PROPS);
-    }
-    return invalidProps.reduce((prev, curr) => {
-      if (curr.indexOf("-") !== -1) {
-        return prev;
-      }
-      if (prev.hasOwnProperty(curr)) {
-        delete prev[curr];
-      }
-      return prev;
-    }, __spreadValues({}, props));
   }
   init_define_process();
   init_define_process();
@@ -43553,10 +43566,23 @@ export default require => {
       return null;
     } else if (typeof icon !== "string") {
       if ((0, import_react6.isValidElement)(icon)) {
+        const mergedClassName = (0, import_classnames2.default)(icon.props.className, className, classes_exports.intentClass(intent));
+        if (isBlueprintIconElement(icon)) {
+          const iconElementProps = {
+            className: mergedClassName
+          };
+          const resolvedSize = (_c = icon.props.size) != null ? _c : props.size;
+          if (resolvedSize != null) {
+            iconElementProps.size = resolvedSize;
+          }
+          const resolvedColor = (_d = icon.props.color) != null ? _d : color;
+          if (resolvedColor != null) {
+            iconElementProps.color = resolvedColor;
+          }
+          return (0, import_react6.cloneElement)(icon, iconElementProps);
+        }
         return (0, import_react6.cloneElement)(icon, {
-          className: (0, import_classnames2.default)(icon.props.className, className, classes_exports.intentClass(intent)),
-          color: (_c = icon.props.color) != null ? _c : color,
-          size: (_d = icon.props.size) != null ? _d : props.size
+          className: mergedClassName
         });
       }
       return icon;
