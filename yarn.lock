@@ -4184,7 +4184,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-midi@workspace:src/bundles/midi"
   dependencies:
-    "@sourceacademy/conductor": "npm:^0.7.0"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-testplugin": "workspace:^"
     js-slang: "catalog:"
