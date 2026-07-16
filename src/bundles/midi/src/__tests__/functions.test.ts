@@ -87,6 +87,26 @@ describe(funcs.add_octave_to_note, () => {
       'add_octave_to_note: Expected a note without an octave for note, got "C4".',
     );
   });
+
+  test('Rejects accidentals that do not exist for that note name', () => {
+    expect(() => funcs.add_octave_to_note('B#', 4)).toThrow(
+      'add_octave_to_note: Expected a note without an octave for note, got "B#".',
+    );
+    expect(() => funcs.add_octave_to_note('E#', 4)).toThrow(
+      'add_octave_to_note: Expected a note without an octave for note, got "E#".',
+    );
+    expect(() => funcs.add_octave_to_note('Cb', 4)).toThrow(
+      'add_octave_to_note: Expected a note without an octave for note, got "Cb".',
+    );
+    expect(() => funcs.add_octave_to_note('Fb', 4)).toThrow(
+      'add_octave_to_note: Expected a note without an octave for note, got "Fb".',
+    );
+  });
+
+  test('Normalizes lowercase note names', () => {
+    expect(funcs.add_octave_to_note('c', 4)).toEqual('C4');
+    expect(funcs.add_octave_to_note('f#', 0)).toEqual('F#0');
+  });
 });
 
 describe(funcs.get_octave, () => {

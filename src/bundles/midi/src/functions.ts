@@ -149,14 +149,19 @@ export function letter_name_to_frequency(note: string): number {
  */
 export function add_octave_to_note(note: string, octave: number): NoteWithOctave {
   assertNumberWithinRange(octave, 'add_octave_to_note', 0, undefined, true, 'octave');
-  // Reject anything that isn't a bare note (an unrecognised note, or one that already has an
-  // octave) rather than silently interpolating it into the result string.
-  if (!/^[A-Ga-g][#♮b]?$/.test(note)) {
+  // A bare note only - no octave digits of its own (parseNoteWithOctave alone would happily
+  // accept "C4" here too, taking the digits as an octave we'd then silently ignore).
+  const match = /^([A-Ga-g])([#♮b]?)$/.exec(note);
+  // Reuses parseNoteWithOctave as the single canonical validator, so this rejects exactly the
+  // same spellings noteToValues/parseNoteWithOctave would (e.g. B#, E#, Cb, Fb - accidentals that
+  // don't exist for those note names) instead of a separate, more permissive regex.
+  if (match === null || parseNoteWithOctave(note) === null) {
     throw new EvaluatorParameterTypeError('add_octave_to_note', 'note', 'a note without an octave', note);
   }
-  // Safe: the regex above just confirmed `note` is a bare Note, so appending an octave produces a
-  // valid NoteWithOctave.
-  return `${note}${octave}` as NoteWithOctave;
+  const [, noteName, accidental] = match;
+  // Normalizes the note name's case; preserves the accidental exactly as given (including
+  // whether the natural symbol was written at all - both are valid, equivalent spellings).
+  return `${noteName.toUpperCase()}${accidental}${octave}` as NoteWithOctave;
 }
 
 /**
