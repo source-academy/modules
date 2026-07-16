@@ -98,6 +98,10 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
   }
 
   async requestMicPermission(): Promise<boolean> {
+    // A denied re-request would otherwise leave the previous stream's tracks running and
+    // reusable by startRecording() even though __micGranted just became false.
+    this.__mediaStream?.getTracks().forEach(track => track.stop());
+    this.__mediaStream = undefined;
     try {
       this.__mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
       this.__micGranted = true;
@@ -150,7 +154,14 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
         this.__recordedChunks.push(event.data);
       }
     };
-    mediaRecorder.start();
+
+    // Resolves only once the recorder itself confirms it has actually started, matching the
+    // SoundTabRpc contract - MediaRecorder.start() returning doesn't guarantee that yet.
+    await new Promise<void>((resolve, reject) => {
+      mediaRecorder.onstart = () => resolve();
+      mediaRecorder.onerror = event => reject(event.error ?? new Error('MediaRecorder failed to start.'));
+      mediaRecorder.start();
+    });
     this.__setStatus('recording');
   }
 

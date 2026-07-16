@@ -28,6 +28,7 @@
  * @author Koh Shang Hui
  * @author Samyukta Sounderraman
  */
+import { EvaluatorParameterTypeError, EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import { makeRpc, type IChannel, type IConduit } from '@sourceacademy/conductor/conduit';
 import { BaseModulePlugin, moduleMethod } from '@sourceacademy/conductor/module';
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
@@ -94,11 +95,14 @@ type SoundTabLoader = {
  */
 function closureToWave(evaluator: IDataHandler, closure: TypedValue<DataType.CLOSURE>) {
   return async function* (t: number): AsyncGenerator<void, number, undefined> {
-    // closure_call_unchecked's return type is generic over any DataType (the closure's actual
-    // return type isn't statically known from a bare TypedValue<DataType.CLOSURE>); a Wave is
-    // only ever constructed from a closure the caller already expects to be number-returning.
+    // closure_call_unchecked's return type is generic over any DataType (Conductor's DataType.CLOSURE
+    // argument type doesn't itself encode the closure's return type), so a student-supplied wave
+    // isn't guaranteed to actually return a number - check at runtime rather than just asserting it.
     const result = yield* evaluator.closure_call_unchecked(closure, [{ type: DataType.NUMBER, value: t }]);
-    return result.value as number;
+    if (result.type !== DataType.NUMBER) {
+      throw new EvaluatorRuntimeError(`Expected a wave to return a number, got ${DataType[result.type]}`);
+    }
+    return result.value;
   };
 }
 
@@ -138,11 +142,12 @@ async function conductorToSound(evaluator: IDataHandler, value: TypedValue<DataT
   if (leftTv.type !== DataType.CLOSURE || rightTv.type !== DataType.CLOSURE) {
     throw invalid();
   }
-  return {
-    leftWave: closureToWave(evaluator, leftTv),
-    rightWave: closureToWave(evaluator, rightTv),
-    duration: durationTv.value
-  };
+  const leftWave = closureToWave(evaluator, leftTv);
+  // leftTv/rightTv are fresh TypedValue wrappers either way, but .value is just a numeric closure
+  // id - if it's the same id, this is a mono Sound and should stay that way (same Wave reference)
+  // rather than getting two distinct-but-identical wrappers around it.
+  const rightWave = leftTv.value === rightTv.value ? leftWave : closureToWave(evaluator, rightTv);
+  return { leftWave, rightWave, duration: durationTv.value };
 }
 
 /** Walks a Conductor LIST (pair chain) of Sounds into a plain array of the internal representation. */
@@ -492,7 +497,11 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     const envelopeClosures: TypedValue<DataType.CLOSURE>[] = [];
     let current: TypedValue<DataType> = envelopes;
     while (current.type === DataType.PAIR) {
-      envelopeClosures.push((await evaluator.pair_head(current)) as TypedValue<DataType.CLOSURE>);
+      const envelope = await evaluator.pair_head(current);
+      if (envelope.type !== DataType.CLOSURE) {
+        throw new EvaluatorParameterTypeError('stacking_adsr', 'envelopes', 'a list of functions', envelope.value);
+      }
+      envelopeClosures.push(envelope);
       current = await evaluator.pair_tail(current);
     }
 

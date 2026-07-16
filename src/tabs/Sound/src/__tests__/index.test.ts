@@ -72,14 +72,19 @@ function createMockAudioContext() {
 }
 
 function createMockMediaRecorder() {
-  return {
+  const recorder = {
     ondataavailable: undefined as ((event: { data: Blob }) => void) | undefined,
+    onstart: undefined as (() => void) | undefined,
+    onerror: undefined as ((event: { error?: unknown }) => void) | undefined,
     onstop: undefined as (() => void) | undefined,
-    start: vi.fn(),
+    start: vi.fn(function (this: typeof recorder) {
+      queueMicrotask(() => this.onstart?.());
+    }),
     stop: vi.fn(function (this: { onstop?: () => void }) {
       queueMicrotask(() => this.onstop?.());
     })
   };
+  return recorder;
 }
 
 describe(SoundTabPlugin, () => {
@@ -160,6 +165,22 @@ describe(SoundTabPlugin, () => {
       await plugin.requestMicPermission();
       await plugin.startRecording();
       expect(mockMediaRecorder.start).toHaveBeenCalledOnce();
+    });
+
+    test('does not resolve until the recorder actually confirms it has started', async () => {
+      await plugin.requestMicPermission();
+
+      let resolved = false;
+      const started = plugin.startRecording().then(() => {
+        resolved = true;
+      });
+
+      // start() was called, but the mock's onstart hasn't fired yet (only queued as a microtask).
+      expect(mockMediaRecorder.start).toHaveBeenCalledOnce();
+      expect(resolved).toBe(false);
+
+      await started;
+      expect(resolved).toBe(true);
     });
   });
 

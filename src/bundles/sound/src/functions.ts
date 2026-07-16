@@ -55,6 +55,9 @@ export const globalVars: BundleGlobalVars = {
   isPlaying: false
 };
 
+/** Bumped by every play()/stop() so a stale playSamples() completion can recognise itself as such. */
+let playToken = 0;
+
 let soundIO: SoundTabRpc | undefined;
 
 /** Wires up the host bridge. Called once by {@link SoundModulePlugin}'s constructor. */
@@ -95,8 +98,8 @@ function validateDuration(func_name: string, duration: unknown): asserts duratio
   if (typeof duration !== 'number') {
     throw new EvaluatorParameterTypeError(func_name, 'duration', 'number', duration);
   }
-  if (duration < 0) {
-    throw new EvaluatorRuntimeError(`${func_name}: Sound duration must be greater than or equal to 0`);
+  if (!Number.isFinite(duration) || duration < 0) {
+    throw new EvaluatorRuntimeError(`${func_name}: Sound duration must be a finite number greater than or equal to 0`);
   }
 }
 
@@ -429,13 +432,18 @@ export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined
   // Mono sounds have leftWave === rightWave: sample once instead of twice.
   const rightSamples = sound.rightWave === sound.leftWave ? leftSamples : yield* sampleWave(sound.rightWave, duration);
   globalVars.isPlaying = true;
+  const token = ++playToken;
   // Fire-and-forget: playback runs in the background, matching the original's non-blocking
   // semantics. (Since playSamples() resolves only once the host reports real playback completion,
-  // a genuinely blocking `play` is one `await` away should that ever be wanted instead.)
+  // a genuinely blocking `play` is one `await` away should that ever be wanted instead.) Guarded by
+  // `token` so a late completion from a sound that's since been stop()'d/superseded by a newer
+  // play() can't clobber the newer sound's isPlaying state.
   void io()
     .playSamples(leftSamples, rightSamples, FS)
     .finally(() => {
-      globalVars.isPlaying = false;
+      if (token === playToken) {
+        globalVars.isPlaying = false;
+      }
     });
   return sound;
 }
@@ -444,6 +452,7 @@ export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined
 export function stop(): void {
   io().$stopPlayback();
   globalVars.isPlaying = false;
+  playToken += 1;
 }
 
 // ---------------------------------------------
@@ -588,11 +597,13 @@ export function consecutively(sounds: Sound[]): Sound {
     return silence_sound(0);
   }
   const total_duration = sounds.reduce((acc, s) => acc + s.duration, 0);
-  return make_stereo_sound(
-    consecutiveWave(sounds, s => s.leftWave),
-    consecutiveWave(sounds, s => s.rightWave),
-    total_duration
-  );
+  const leftWave = consecutiveWave(sounds, s => s.leftWave);
+  // Keeps a chain of entirely-mono Sounds mono (same reference for both channels) instead of
+  // building two behaviourally-identical-but-distinct waves, so play/etc. still only sample once.
+  const rightWave = sounds.every(s => s.leftWave === s.rightWave)
+    ? leftWave
+    : consecutiveWave(sounds, s => s.rightWave);
+  return make_stereo_sound(leftWave, rightWave, total_duration);
 }
 
 /**
@@ -625,11 +636,11 @@ export function simultaneously(sounds: Sound[]): Sound {
     return silence_sound(0);
   }
   const max_duration = Math.max(...sounds.map(s => s.duration));
-  return make_stereo_sound(
-    simultaneousWave(sounds, s => s.leftWave),
-    simultaneousWave(sounds, s => s.rightWave),
-    max_duration
-  );
+  const leftWave = simultaneousWave(sounds, s => s.leftWave);
+  const rightWave = sounds.every(s => s.leftWave === s.rightWave)
+    ? leftWave
+    : simultaneousWave(sounds, s => s.rightWave);
+  return make_stereo_sound(leftWave, rightWave, max_duration);
 }
 
 /** Shapes `wave` according to the given ADSR envelope timings. */
@@ -685,11 +696,11 @@ export function adsr(
     const attack_time = duration * attack_ratio;
     const decay_time = duration * decay_ratio;
     const release_time = duration * release_ratio;
-    return make_stereo_sound(
-      adsrWave(sound.leftWave, duration, attack_time, decay_time, sustain_level, release_time),
-      adsrWave(sound.rightWave, duration, attack_time, decay_time, sustain_level, release_time),
-      duration
-    );
+    const leftWave = adsrWave(sound.leftWave, duration, attack_time, decay_time, sustain_level, release_time);
+    const rightWave = sound.leftWave === sound.rightWave
+      ? leftWave
+      : adsrWave(sound.rightWave, duration, attack_time, decay_time, sustain_level, release_time);
+    return make_stereo_sound(leftWave, rightWave, duration);
   };
 }
 
@@ -734,11 +745,13 @@ function phaseModWave(modulatorWave: Wave, freq: number, amount: number): Wave {
  * @example phase_mod(440, 5, 1)(sine_sound(220, 5));
  */
 export function phase_mod(freq: number, duration: number, amount: number): SoundTransformer {
-  return modulator => make_stereo_sound(
-    phaseModWave(modulator.leftWave, freq, amount),
-    phaseModWave(modulator.rightWave, freq, amount),
-    duration
-  );
+  return modulator => {
+    const leftWave = phaseModWave(modulator.leftWave, freq, amount);
+    const rightWave = modulator.leftWave === modulator.rightWave
+      ? leftWave
+      : phaseModWave(modulator.rightWave, freq, amount);
+    return make_stereo_sound(leftWave, rightWave, duration);
+  };
 }
 
 // ---------------------------------------------

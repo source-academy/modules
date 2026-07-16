@@ -44,7 +44,14 @@ async function evaluateSound(sound: Sound): Promise<number[]> {
 describe(funcs.make_sound, () => {
   it('Should error gracefully when duration is negative', () => {
     expect(() => funcs.make_sound(constantWave(0), -1))
-      .toThrow('make_sound: Sound duration must be greater than or equal to 0');
+      .toThrow('make_sound: Sound duration must be a finite number greater than or equal to 0');
+  });
+
+  it('Should error gracefully when duration is NaN or Infinity', () => {
+    expect(() => funcs.make_sound(constantWave(0), NaN))
+      .toThrow('make_sound: Sound duration must be a finite number greater than or equal to 0');
+    expect(() => funcs.make_sound(constantWave(0), Infinity))
+      .toThrow('make_sound: Sound duration must be a finite number greater than or equal to 0');
   });
 
   it('Should not error when duration is zero', () => {
@@ -124,6 +131,26 @@ describe('Concurrent playback functions', () => {
       expect(left).toBe(right);
     });
 
+    test('a stale playSamples completion cannot clear a newer play()\'s isPlaying state', async () => {
+      let resolveA: () => void;
+      io.playSamples.mockReturnValueOnce(new Promise<void>(resolve => {
+        resolveA = resolve;
+      }));
+      await drain(funcs.play(funcs.silence_sound(10)));
+      expect(funcs.globalVars.isPlaying).toBe(true);
+
+      funcs.stop();
+      expect(funcs.globalVars.isPlaying).toBe(false);
+
+      io.playSamples.mockReturnValueOnce(new Promise(() => {})); // B's playback still in progress
+      await drain(funcs.play(funcs.silence_sound(10)));
+      expect(funcs.globalVars.isPlaying).toBe(true);
+
+      resolveA!(); // A's late completion arrives after B has already started
+      await new Promise(resolve => setTimeout(resolve, 0));
+      expect(funcs.globalVars.isPlaying).toBe(true);
+    });
+
     test('a genuinely stereo Sound samples each channel separately', async () => {
       const sound = funcs.make_stereo_sound(constantWave(1), constantWave(-1), 0.01);
       await drain(funcs.play(sound));
@@ -138,7 +165,7 @@ describe('Concurrent playback functions', () => {
   describe(funcs.play_wave, () => {
     it('Should error gracefully when duration is negative', async () => {
       await expect(drain(funcs.play_wave(constantWave(0), -1)))
-        .rejects.toThrow('play_wave: Sound duration must be greater than or equal to 0');
+        .rejects.toThrow('play_wave: Sound duration must be a finite number greater than or equal to 0');
     });
 
     it('Should error gracefully when duration is not a number', async () => {
@@ -337,5 +364,32 @@ describe(funcs.adsr, () => {
     const lastSample = await sampleAt(funcs.get_left_wave(shaped), 1);
     expect(lastSample).not.toBeNaN();
     expect(lastSample).toEqual(0);
+  });
+
+  it('preserves a mono Sound as mono', () => {
+    const sound = funcs.make_sound(constantWave(1), 1);
+    const shaped = funcs.adsr(0.2, 0.3, 0.5, 0.1)(sound);
+    expect(funcs.get_left_wave(shaped)).toBe(funcs.get_right_wave(shaped));
+  });
+});
+
+describe(funcs.phase_mod, () => {
+  it('preserves a mono modulator as mono', () => {
+    const modulator = funcs.make_sound(constantWave(0.5), 1);
+    const modulated = funcs.phase_mod(440, 1, 1)(modulator);
+    expect(funcs.get_left_wave(modulated)).toBe(funcs.get_right_wave(modulated));
+  });
+
+  it('modulates each channel using that channel\'s own wave for a genuinely stereo modulator', async () => {
+    const modulator = funcs.make_stereo_sound(constantWave(0), constantWave(0.5), 1);
+    const modulated = funcs.phase_mod(0, 1, 1)(modulator);
+    // sin(0 + amount * modulatorSample): left modulator is 0 -> sin(0) = 0; right modulator is
+    // 0.5 -> sin(0.5) - if the right channel's wave leaked in as the left's modulator too (or
+    // vice versa), these would be equal.
+    const left = await sampleAt(funcs.get_left_wave(modulated), 0);
+    const right = await sampleAt(funcs.get_right_wave(modulated), 0);
+    expect(left).toBeCloseTo(0);
+    expect(right).toBeCloseTo(Math.sin(0.5));
+    expect(left).not.toBeCloseTo(right, 1);
   });
 });
