@@ -84,7 +84,7 @@ async function drainGenerator<T>(generator: AsyncGenerator<void, T, undefined>):
 // linear decay from 1 to 0 over decay_period
 function linear_decay(decay_period: number): (t: number) => number {
   return t => {
-    if (t > decay_period || t < 0) {
+    if (decay_period <= 0 || t > decay_period || t < 0) {
       return 0;
     }
     return 1 - t / decay_period;
@@ -558,10 +558,22 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
 // Composition Operators
 // ---------------------------------------------
 
-/** Joins `wave1` (for `duration1` seconds) then `wave2`, both starting at t=0 of their own clock. */
-function joinWaves(wave1: Wave, duration1: number, wave2: Wave): Wave {
+/**
+ * Builds a Wave that picks whichever sound is "active" at time `t` and delegates directly into
+ * it - a flat scan rather than a chain of nested joins, so sampling stays a single `yield*` hop
+ * deep no matter how many sounds are chained (nesting `sounds.length` joins would mean up to
+ * `sounds.length` nested generator delegations per sample, at 44100 samples/sec).
+ */
+function consecutiveWave(sounds: Sound[], channel: (s: Sound) => Wave): Wave {
   return async function* (t: number) {
-    return t < duration1 ? yield* wave1(t) : yield* wave2(t - duration1);
+    let remaining = t;
+    for (const sound of sounds) {
+      if (remaining < sound.duration) {
+        return yield* channel(sound)(remaining);
+      }
+      remaining -= sound.duration;
+    }
+    return 0;
   };
 }
 
@@ -572,31 +584,32 @@ function joinWaves(wave1: Wave, duration1: number, wave2: Wave): Wave {
  * @example consecutively([sine_sound(200, 2), sine_sound(400, 3)]);
  */
 export function consecutively(sounds: Sound[]): Sound {
-  return sounds.reduce((acc: Sound, s: Sound) => make_stereo_sound(
-    joinWaves(acc.leftWave, acc.duration, s.leftWave),
-    joinWaves(acc.rightWave, acc.duration, s.rightWave),
-    acc.duration + s.duration
-  ), silence_sound(0));
+  if (sounds.length === 0) {
+    return silence_sound(0);
+  }
+  const total_duration = sounds.reduce((acc, s) => acc + s.duration, 0);
+  return make_stereo_sound(
+    consecutiveWave(sounds, s => s.leftWave),
+    consecutiveWave(sounds, s => s.rightWave),
+    total_duration
+  );
 }
 
-/** Sums `wave1` (while `t <= duration1`) and `wave2` (while `t <= duration2`). */
-function sumWaves(wave1: Wave, duration1: number, wave2: Wave, duration2: number): Wave {
+/**
+ * Builds a Wave that sums every sound's (still-active) sample at time `t` and divides by the
+ * count - a flat scan rather than a chain of nested sums, for the same reason as
+ * `consecutiveWave` above.
+ */
+function simultaneousWave(sounds: Sound[], channel: (s: Sound) => Wave): Wave {
+  const count = sounds.length;
   return async function* (t: number) {
     let sum = 0;
-    if (t <= duration1) {
-      sum += yield* wave1(t);
+    for (const sound of sounds) {
+      if (t <= sound.duration) {
+        sum += yield* channel(sound)(t);
+      }
     }
-    if (t <= duration2) {
-      sum += yield* wave2(t);
-    }
-    return sum;
-  };
-}
-
-/** Divides every sample of `wave` by `count`. */
-function normalisedWave(wave: Wave, count: number): Wave {
-  return async function* (t: number) {
-    return (yield* wave(t)) / count;
+    return sum / count;
   };
 }
 
@@ -608,20 +621,14 @@ function normalisedWave(wave: Wave, count: number): Wave {
  * @example simultaneously([sine_sound(200, 2), sine_sound(400, 3)]);
  */
 export function simultaneously(sounds: Sound[]): Sound {
-  const mushed_sound = sounds.reduce((acc: Sound, s: Sound) => {
-    const new_dur = Math.max(acc.duration, s.duration);
-    return make_stereo_sound(
-      sumWaves(acc.leftWave, acc.duration, s.leftWave, s.duration),
-      sumWaves(acc.rightWave, acc.duration, s.rightWave, s.duration),
-      new_dur
-    );
-  }, silence_sound(0));
-
-  const len = sounds.length;
+  if (sounds.length === 0) {
+    return silence_sound(0);
+  }
+  const max_duration = Math.max(...sounds.map(s => s.duration));
   return make_stereo_sound(
-    normalisedWave(mushed_sound.leftWave, len),
-    normalisedWave(mushed_sound.rightWave, len),
-    mushed_sound.duration
+    simultaneousWave(sounds, s => s.leftWave),
+    simultaneousWave(sounds, s => s.rightWave),
+    max_duration
   );
 }
 

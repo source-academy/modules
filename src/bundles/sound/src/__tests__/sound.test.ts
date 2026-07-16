@@ -220,6 +220,17 @@ describe(funcs.simultaneously, () => {
     expect(await sampleAt(funcs.get_left_wave(newSound), 0)).toBeCloseTo(2); // (1+3)/2
     expect(await sampleAt(funcs.get_right_wave(newSound), 0)).toBeCloseTo(3); // (2+4)/2
   });
+
+  it('sums more than two overlapping sounds correctly', async () => {
+    const sounds = [1, 2, 3, 4].map(v => funcs.make_sound(constantWave(v), 1));
+    const newSound = funcs.simultaneously(sounds);
+    expect(await sampleAt(funcs.get_left_wave(newSound), 0)).toBeCloseTo((1 + 2 + 3 + 4) / 4);
+  });
+
+  it('returns a silent Sound for an empty list', () => {
+    const newSound = funcs.simultaneously([]);
+    expect(funcs.get_duration(newSound)).toEqual(0);
+  });
 });
 
 describe(funcs.consecutively, () => {
@@ -246,6 +257,25 @@ describe(funcs.consecutively, () => {
     expect(await sampleAt(funcs.get_left_wave(newSound), 1)).toEqual(3);
     expect(await sampleAt(funcs.get_right_wave(newSound), 0)).toEqual(2);
     expect(await sampleAt(funcs.get_right_wave(newSound), 1)).toEqual(4);
+  });
+
+  it('correctly picks the active sound out of a chain of more than two', async () => {
+    const sounds = [
+      funcs.make_sound(constantWave(1), 1),
+      funcs.make_sound(constantWave(2), 1),
+      funcs.make_sound(constantWave(3), 1),
+      funcs.make_sound(constantWave(4), 1)
+    ];
+    const newSound = funcs.consecutively(sounds);
+    expect(funcs.get_duration(newSound)).toEqual(4);
+    for (let i = 0; i < 4; i += 1) {
+      expect(await sampleAt(funcs.get_left_wave(newSound), i)).toEqual(i + 1);
+    }
+  });
+
+  it('returns a silent Sound for an empty list', () => {
+    const newSound = funcs.consecutively([]);
+    expect(funcs.get_duration(newSound)).toEqual(0);
   });
 });
 
@@ -295,5 +325,17 @@ describe(funcs.pan_mod, () => {
     const panned = funcs.pan_mod(modulator)(sound);
     expect(await sampleAt(funcs.get_left_wave(panned), 0)).toBeCloseTo(0);
     expect(await sampleAt(funcs.get_right_wave(panned), 0)).toBeCloseTo(1);
+  });
+});
+
+describe(funcs.adsr, () => {
+  it('does not produce NaN at the very end of the sound when release_ratio is 0', async () => {
+    // x === duration - release_time reaches linear_decay(release_time)(0); with release_time
+    // === 0 this used to compute 1 - 0/0 = NaN.
+    const sound = funcs.make_sound(constantWave(1), 1);
+    const shaped = funcs.adsr(0.2, 0.3, 0.5, 0)(sound);
+    const lastSample = await sampleAt(funcs.get_left_wave(shaped), 1);
+    expect(lastSample).not.toBeNaN();
+    expect(lastSample).toEqual(0);
   });
 });
