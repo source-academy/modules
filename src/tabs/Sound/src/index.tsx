@@ -108,10 +108,11 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
     return this.__micGranted;
   }
 
-  async playSamples(samples: Float32Array<ArrayBuffer>, sampleRate: number): Promise<void> {
+  async playSamples(left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>, sampleRate: number): Promise<void> {
     const audioContext = this.__ensureAudioContext();
-    const buffer = audioContext.createBuffer(1, samples.length, sampleRate);
-    buffer.copyToChannel(samples, 0);
+    const buffer = audioContext.createBuffer(2, left.length, sampleRate);
+    buffer.copyToChannel(left, 0);
+    buffer.copyToChannel(right, 1);
 
     const source = audioContext.createBufferSource();
     source.buffer = buffer;
@@ -168,10 +169,11 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
 
     const audioContext = this.__ensureAudioContext();
     const audioBuffer = await audioContext.decodeAudioData(await blob.arrayBuffer());
-    return {
-      samples: audioBuffer.getChannelData(0),
-      sampleRate: audioBuffer.sampleRate
-    };
+    const left = audioBuffer.getChannelData(0);
+    // A mono microphone (the common case) only has one channel: left and right are the same
+    // Float32Array, by reference.
+    const right = audioBuffer.numberOfChannels > 1 ? audioBuffer.getChannelData(1) : left;
+    return { left, right, sampleRate: audioBuffer.sampleRate };
   }
 
   private __ensureAudioContext(): AudioContext {

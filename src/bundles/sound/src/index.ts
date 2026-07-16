@@ -4,18 +4,25 @@
  * A wave is a function that takes in a number `t` and returns a number representing the
  * amplitude at time `t`.
  *
- * A Sound is a pair(wave, duration) where duration is the length of the sound in seconds.
- * The constructor make_sound and accessors get_wave and get_duration are provided.
+ * A Sound is always stereo internally - pair(pair(left_wave, right_wave), duration), where
+ * duration is the length of the sound in seconds. "Mono" isn't a separate concept: it's just the
+ * common case where left_wave and right_wave are the same wave, produced by the constructor
+ * make_sound. make_stereo_sound builds a genuinely stereo Sound from two different waves.
+ * Accessors get_wave (an alias of get_left_wave), get_left_wave, get_right_wave, and get_duration
+ * are provided.
  *
- * Sound Discipline: for all sounds, the wave function applied to a time `t` beyond its duration
- * returns 0, that is: `(get_wave(sound))(get_duration(sound) + x) === 0` for any x >= 0.
+ * Sound Discipline: for all sounds, each channel's wave function applied to a time `t` beyond its
+ * duration returns 0, that is: `(get_left_wave(sound))(get_duration(sound) + x) === 0` (and the
+ * same for get_right_wave) for any x >= 0.
  *
  * Two functions which combine Sounds, `consecutively` and `simultaneously` are given.
  * Additionally, we provide sound transformation functions `adsr` and `phase_mod` which take in a
- * Sound and return a Sound.
+ * Sound and return a Sound, and stereo-specific transformations `pan`, `pan_mod`, and `squash`.
  *
  * Finally, the provided `play` function takes in a Sound and plays it using your computer's
- * sound system.
+ * sound system; `record`/`record_for` record a Sound using however many channels your
+ * microphone actually has (a mono mic produces a Sound whose left and right channels are the
+ * same wave).
  *
  * @module sound
  * @author Koh Shang Hui
@@ -32,30 +39,43 @@ import {
   cello as cello_func,
   consecutively as consecutively_func,
   get_duration as get_duration_func,
+  get_left_wave as get_left_wave_func,
+  get_right_wave as get_right_wave_func,
   get_wave as get_wave_func,
   init_record as init_record_func,
   is_sound as is_sound_func,
   make_sound as make_sound_func,
+  make_stereo_sound as make_stereo_sound_func,
   noise_sound as noise_sound_func,
+  noise_wave as noise_wave_func,
+  pan as pan_func,
+  pan_mod as pan_mod_func,
   phase_mod as phase_mod_func,
   piano as piano_func,
   play as play_func,
   play_wave as play_wave_func,
+  play_waves as play_waves_func,
   record as record_func,
   record_for as record_for_func,
   sawtooth_sound as sawtooth_sound_func,
+  sawtooth_wave as sawtooth_wave_func,
   setSoundIO,
   silence_sound as silence_sound_func,
+  silence_wave as silence_wave_func,
   simultaneously as simultaneously_func,
   sine_sound as sine_sound_func,
+  sine_wave as sine_wave_func,
   square_sound as square_sound_func,
+  square_wave as square_wave_func,
+  squash as squash_func,
   stop as stop_func,
   triangle_sound as triangle_sound_func,
+  triangle_wave as triangle_wave_func,
   trombone as trombone_func,
   violin as violin_func
 } from './functions';
 import { SOUND_CHANNEL_ID, type SoundTabRpc } from './protocol';
-import type { Sound, SoundTransformer } from './types';
+import type { Sound, SoundTransformer, Wave } from './types';
 
 type SoundTabLoader = {
   tabs: string[];
@@ -82,29 +102,45 @@ function closureToWave(evaluator: IDataHandler, closure: TypedValue<DataType.CLO
   };
 }
 
-/** Wraps the internal (pure, evaluator-free) Sound representation as a Conductor PAIR. */
-async function soundToConductor(evaluator: IDataHandler, sound: Sound): Promise<TypedValue<DataType.PAIR>> {
-  const waveClosure = await evaluator.closure_make(
+/** Wraps an internal (pure, evaluator-free) Wave as a Conductor closure. */
+function waveToConductorClosure(evaluator: IDataHandler, wave: Wave): Promise<TypedValue<DataType.CLOSURE>> {
+  return evaluator.closure_make(
     { returnType: DataType.NUMBER, args: [DataType.NUMBER] },
     async function* (t: TypedValue<DataType.NUMBER>) {
-      return { type: DataType.NUMBER as const, value: yield* sound.wave(t.value) };
+      return { type: DataType.NUMBER as const, value: yield* wave(t.value) };
     }
   );
-  return evaluator.pair_make(waveClosure, { type: DataType.NUMBER, value: sound.duration });
+}
+
+/** Wraps the internal (pure, evaluator-free) Sound representation as a Conductor PAIR. */
+async function soundToConductor(evaluator: IDataHandler, sound: Sound): Promise<TypedValue<DataType.PAIR>> {
+  const leftClosure = await waveToConductorClosure(evaluator, sound.leftWave);
+  const rightClosure = sound.rightWave === sound.leftWave
+    ? leftClosure
+    : await waveToConductorClosure(evaluator, sound.rightWave);
+  const wavesPair = await evaluator.pair_make(leftClosure, rightClosure);
+  return evaluator.pair_make(wavesPair, { type: DataType.NUMBER, value: sound.duration });
 }
 
 /** Unwraps a Conductor PAIR (or throws) into the internal Sound representation. */
 async function conductorToSound(evaluator: IDataHandler, value: TypedValue<DataType>): Promise<Sound> {
+  const invalid = () => new Error('Expected a Sound (a pair of (pair of left/right waves) and duration)');
   if (!value || value.type !== DataType.PAIR) {
-    throw new Error('Expected a Sound (a pair of wave and duration)');
+    throw invalid();
   }
-  const waveTv = await evaluator.pair_head(value);
+  const wavesTv = await evaluator.pair_head(value);
   const durationTv = await evaluator.pair_tail(value);
-  if (waveTv.type !== DataType.CLOSURE || durationTv.type !== DataType.NUMBER) {
-    throw new Error('Expected a Sound (a pair of wave and duration)');
+  if (wavesTv.type !== DataType.PAIR || durationTv.type !== DataType.NUMBER) {
+    throw invalid();
+  }
+  const leftTv = await evaluator.pair_head(wavesTv);
+  const rightTv = await evaluator.pair_tail(wavesTv);
+  if (leftTv.type !== DataType.CLOSURE || rightTv.type !== DataType.CLOSURE) {
+    throw invalid();
   }
   return {
-    wave: closureToWave(evaluator, waveTv),
+    leftWave: closureToWave(evaluator, leftTv),
+    rightWave: closureToWave(evaluator, rightTv),
     duration: durationTv.value
   };
 }
@@ -122,10 +158,10 @@ async function conductorListToSounds(evaluator: IDataHandler, value: TypedValue<
 
 /**
  * Wraps an internal SoundTransformer (Sound -> Sound) as a Conductor closure (PAIR -> PAIR).
- * `transformer` itself never touches user closures directly (adsr/phase_mod are pure math over
- * `sound.wave`), so no yield*-threading is needed at this specific boundary - the transformer's
- * body runs synchronously up to the point where it constructs a new generator-based Wave, which
- * is only actually driven (and potentially yields) once that Wave gets sampled later.
+ * `transformer` itself never touches user closures directly (adsr/phase_mod/pan/pan_mod are pure
+ * math over the Sound's waves), so no yield*-threading is needed at this specific boundary - the
+ * transformer's body runs synchronously up to the point where it constructs new generator-based
+ * Waves, which are only actually driven (and potentially yield) once those Waves get sampled later.
  */
 async function transformerToConductor(
   evaluator: IDataHandler,
@@ -155,25 +191,38 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     'cello',
     'consecutively',
     'get_duration',
+    'get_left_wave',
+    'get_right_wave',
     'get_wave',
     'init_record',
     'is_sound',
     'make_sound',
+    'make_stereo_sound',
     'noise_sound',
+    'noise_wave',
+    'pan',
+    'pan_mod',
     'phase_mod',
     'piano',
     'play',
     'play_wave',
+    'play_waves',
     'record',
     'record_for',
     'sawtooth_sound',
+    'sawtooth_wave',
     'silence_sound',
+    'silence_wave',
     'simultaneously',
     'sine_sound',
+    'sine_wave',
     'square_sound',
+    'square_wave',
+    'squash',
     'stacking_adsr',
     'stop',
     'triangle_sound',
+    'triangle_wave',
     'trombone',
     'violin'
   ] as const;
@@ -222,16 +271,34 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, make_sound_func(closureToWave(this.evaluator, wave), duration.value));
   }
 
+  @moduleMethod([DataType.CLOSURE, DataType.CLOSURE, DataType.NUMBER], DataType.PAIR)
+  async* make_stereo_sound(
+    left_wave: TypedValue<DataType.CLOSURE>,
+    right_wave: TypedValue<DataType.CLOSURE>,
+    duration: TypedValue<DataType.NUMBER>
+  ): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
+    return soundToConductor(
+      this.evaluator,
+      make_stereo_sound_func(closureToWave(this.evaluator, left_wave), closureToWave(this.evaluator, right_wave), duration.value)
+    );
+  }
+
   @moduleMethod([DataType.PAIR], DataType.CLOSURE)
   async* get_wave(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const internal = await conductorToSound(this.evaluator, sound);
-    const wave = get_wave_func(internal);
-    return this.evaluator.closure_make(
-      { returnType: DataType.NUMBER, args: [DataType.NUMBER] },
-      async function* (t: TypedValue<DataType.NUMBER>) {
-        return { type: DataType.NUMBER as const, value: yield* wave(t.value) };
-      }
-    );
+    return waveToConductorClosure(this.evaluator, get_wave_func(internal));
+  }
+
+  @moduleMethod([DataType.PAIR], DataType.CLOSURE)
+  async* get_left_wave(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
+    const internal = await conductorToSound(this.evaluator, sound);
+    return waveToConductorClosure(this.evaluator, get_left_wave_func(internal));
+  }
+
+  @moduleMethod([DataType.PAIR], DataType.CLOSURE)
+  async* get_right_wave(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
+    const internal = await conductorToSound(this.evaluator, sound);
+    return waveToConductorClosure(this.evaluator, get_right_wave_func(internal));
   }
 
   @moduleMethod([DataType.PAIR], DataType.NUMBER)
@@ -292,6 +359,17 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, result);
   }
 
+  @moduleMethod([DataType.CLOSURE, DataType.CLOSURE, DataType.NUMBER], DataType.PAIR)
+  async* play_waves(
+    left_wave: TypedValue<DataType.CLOSURE>,
+    right_wave: TypedValue<DataType.CLOSURE>,
+    duration: TypedValue<DataType.NUMBER>
+  ): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
+    this.__ensureTabLoaded();
+    const result = yield* play_waves_func(closureToWave(this.evaluator, left_wave), closureToWave(this.evaluator, right_wave), duration.value);
+    return soundToConductor(this.evaluator, result);
+  }
+
   @moduleMethod([DataType.PAIR], DataType.PAIR)
   async* play(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
     this.__ensureTabLoaded();
@@ -307,14 +385,29 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return { type: DataType.VOID, value: undefined };
   }
 
+  @moduleMethod([], DataType.CLOSURE)
+  async* noise_wave(): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
+    return waveToConductorClosure(this.evaluator, noise_wave_func());
+  }
+
   @moduleMethod([DataType.NUMBER], DataType.PAIR)
   async* noise_sound(duration: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
     return soundToConductor(this.evaluator, noise_sound_func(duration.value));
   }
 
+  @moduleMethod([], DataType.CLOSURE)
+  async* silence_wave(): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
+    return waveToConductorClosure(this.evaluator, silence_wave_func());
+  }
+
   @moduleMethod([DataType.NUMBER], DataType.PAIR)
   async* silence_sound(duration: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
     return soundToConductor(this.evaluator, silence_sound_func(duration.value));
+  }
+
+  @moduleMethod([DataType.NUMBER], DataType.CLOSURE)
+  async* sine_wave(freq: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
+    return waveToConductorClosure(this.evaluator, sine_wave_func(freq.value));
   }
 
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
@@ -325,6 +418,11 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, sine_sound_func(freq.value, duration.value));
   }
 
+  @moduleMethod([DataType.NUMBER], DataType.CLOSURE)
+  async* square_wave(freq: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
+    return waveToConductorClosure(this.evaluator, square_wave_func(freq.value));
+  }
+
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* square_sound(
     freq: TypedValue<DataType.NUMBER>,
@@ -333,12 +431,22 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, square_sound_func(freq.value, duration.value));
   }
 
+  @moduleMethod([DataType.NUMBER], DataType.CLOSURE)
+  async* triangle_wave(freq: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
+    return waveToConductorClosure(this.evaluator, triangle_wave_func(freq.value));
+  }
+
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* triangle_sound(
     freq: TypedValue<DataType.NUMBER>,
     duration: TypedValue<DataType.NUMBER>
   ): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
     return soundToConductor(this.evaluator, triangle_sound_func(freq.value, duration.value));
+  }
+
+  @moduleMethod([DataType.NUMBER], DataType.CLOSURE)
+  async* sawtooth_wave(freq: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
+    return waveToConductorClosure(this.evaluator, sawtooth_wave_func(freq.value));
   }
 
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
@@ -411,6 +519,23 @@ export default class SoundModulePlugin extends BaseModulePlugin {
   ): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const transformer = phase_mod_func(freq.value, duration.value, amount.value);
     return transformerToConductor(this.evaluator, transformer);
+  }
+
+  @moduleMethod([DataType.PAIR], DataType.PAIR)
+  async* squash(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
+    const internal = await conductorToSound(this.evaluator, sound);
+    return soundToConductor(this.evaluator, squash_func(internal));
+  }
+
+  @moduleMethod([DataType.NUMBER], DataType.CLOSURE)
+  async* pan(amount: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
+    return transformerToConductor(this.evaluator, pan_func(amount.value));
+  }
+
+  @moduleMethod([DataType.PAIR], DataType.CLOSURE)
+  async* pan_mod(modulator: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
+    const internal = await conductorToSound(this.evaluator, modulator);
+    return transformerToConductor(this.evaluator, pan_mod_func(internal));
   }
 
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)

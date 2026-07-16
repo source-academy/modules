@@ -2,8 +2,13 @@ export const SOUND_CHANNEL_ID = 'sourceacademy-sound-channel';
 export const SOUND_WEB_ID = 'sound-web';
 export const SOUND_TAB_NAME = 'Sound';
 
+/**
+ * A recorded PCM buffer, always reported as two channels - `left`/`right` are the same Float32Array
+ * (by reference) when the input device only has one channel (the common case: a mono microphone).
+ */
 export interface RecordedSamples {
-  samples: Float32Array<ArrayBuffer>;
+  left: Float32Array<ArrayBuffer>;
+  right: Float32Array<ArrayBuffer>;
   sampleRate: number;
 }
 
@@ -19,12 +24,12 @@ export interface RecordedSamples {
 export interface SoundTabRpc {
   /** Prompts for microphone access via getUserMedia; resolves once the user has responded. */
   requestMicPermission(): Promise<boolean>;
-  /** Plays a PCM buffer through the tab's AudioContext; resolves once playback completes. */
-  playSamples(samples: Float32Array<ArrayBuffer>, sampleRate: number): Promise<void>;
+  /** Plays two PCM buffers through the tab's (2-channel) AudioContext; resolves once playback completes. */
+  playSamples(left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>, sampleRate: number): Promise<void>;
   /** Stops any sound currently playing. */
   $stopPlayback(): void;
   /** Starts recording from the previously-granted microphone; resolves once recording has actually started. */
   startRecording(): Promise<void>;
-  /** Stops the current recording and resolves with the decoded PCM buffer. */
+  /** Stops the current recording and resolves with the decoded PCM buffer(s). */
   stopRecording(): Promise<RecordedSamples>;
 }

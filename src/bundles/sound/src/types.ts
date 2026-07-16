@@ -14,13 +14,16 @@
 export type Wave = (t: number) => AsyncGenerator<void, number, undefined>;
 
 /**
- * A Sound is `[wave, duration]`, where duration is the length of the sound in seconds. This is
- * the pure, evaluator-free internal representation used throughout functions.ts; the
+ * A Sound is always stereo internally: `[[left_wave, right_wave], duration]`, where duration is
+ * the length of the sound in seconds. "Mono" isn't a separate type - it's just the common case
+ * where `leftWave` and `rightWave` are the same Wave (same reference), produced by `make_sound`.
+ * This is the pure, evaluator-free internal representation used throughout functions.ts; the
  * Conductor-facing plugin in index.ts converts to/from the equivalent Conductor PAIR
- * (`[TypedValue<CLOSURE>, TypedValue<NUMBER>]`) at the boundary.
+ * (`[[TypedValue<CLOSURE>, TypedValue<CLOSURE>], TypedValue<NUMBER>]`) at the boundary.
  */
 export interface Sound {
-  wave: Wave;
+  leftWave: Wave;
+  rightWave: Wave;
   duration: number;
 }
 

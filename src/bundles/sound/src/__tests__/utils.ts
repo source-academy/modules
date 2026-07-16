@@ -3,7 +3,7 @@ import type { RecordedSamples, SoundTabRpc } from '../protocol';
 
 export interface MockSoundTabRpc extends SoundTabRpc {
   requestMicPermission: Mock<() => Promise<boolean>>;
-  playSamples: Mock<(samples: Float32Array<ArrayBuffer>, sampleRate: number) => Promise<void>>;
+  playSamples: Mock<(left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>, sampleRate: number) => Promise<void>>;
   $stopPlayback: Mock<() => void>;
   startRecording: Mock<() => Promise<void>>;
   stopRecording: Mock<() => Promise<RecordedSamples>>;
@@ -14,11 +14,12 @@ export interface MockSoundTabRpc extends SoundTabRpc {
  * MediaRecorder access - functions.ts never touches those APIs directly, only this bridge.
  */
 export function mockSoundTabRpc(): MockSoundTabRpc {
+  const emptySamples = new Float32Array(0);
   return {
     requestMicPermission: vi.fn().mockResolvedValue(true),
     playSamples: vi.fn().mockResolvedValue(undefined),
     $stopPlayback: vi.fn(),
     startRecording: vi.fn().mockResolvedValue(undefined),
-    stopRecording: vi.fn().mockResolvedValue({ samples: new Float32Array(0), sampleRate: 44100 })
+    stopRecording: vi.fn().mockResolvedValue({ left: emptySamples, right: emptySamples, sampleRate: 44100 })
   };
 }

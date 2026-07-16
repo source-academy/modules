@@ -36,7 +36,7 @@ async function sampleAt(wave: Wave, t: number): Promise<number> {
 async function evaluateSound(sound: Sound): Promise<number[]> {
   const points: number[] = [];
   for (let i = 0; i < sound.duration; i += 1) {
-    points.push(await sampleAt(sound.wave, i));
+    points.push(await sampleAt(sound.leftWave, i));
   }
   return points;
 }
@@ -55,6 +55,34 @@ describe(funcs.make_sound, () => {
     expect(() => funcs.make_sound(true as any, 1))
       .toThrow('make_sound: Expected a wave for wave, got true.');
   });
+
+  it('produces a Sound whose left and right channels are the same wave', () => {
+    const sound = funcs.make_sound(constantWave(0), 1);
+    expect(funcs.get_left_wave(sound)).toBe(funcs.get_right_wave(sound));
+    expect(funcs.get_wave(sound)).toBe(funcs.get_left_wave(sound));
+  });
+});
+
+describe(funcs.make_stereo_sound, () => {
+  it('Should error gracefully when either wave is not a function', () => {
+    expect(() => funcs.make_stereo_sound(true as any, constantWave(0), 1))
+      .toThrow('make_stereo_sound: Expected a wave for left wave, got true.');
+    expect(() => funcs.make_stereo_sound(constantWave(0), true as any, 1))
+      .toThrow('make_stereo_sound: Expected a wave for right wave, got true.');
+  });
+
+  it('produces a Sound with genuinely different left/right channels', async () => {
+    const sound = funcs.make_stereo_sound(constantWave(1), constantWave(-1), 1);
+    expect(funcs.get_left_wave(sound)).not.toBe(funcs.get_right_wave(sound));
+    await expect(sampleAt(funcs.get_left_wave(sound), 0)).resolves.toEqual(1);
+    await expect(sampleAt(funcs.get_right_wave(sound), 0)).resolves.toEqual(-1);
+  });
+
+  it('same wave passed for both channels preserves the left===right invariant', () => {
+    const wave = constantWave(0);
+    const sound = funcs.make_stereo_sound(wave, wave, 1);
+    expect(funcs.get_left_wave(sound)).toBe(funcs.get_right_wave(sound));
+  });
 });
 
 describe('Concurrent playback functions', () => {
@@ -66,7 +94,8 @@ describe('Concurrent playback functions', () => {
     it('Should error gracefully when duration is negative', async () => {
       // Bypasses make_sound's own validation to construct an otherwise-well-formed Sound with a
       // negative duration directly, exercising play's own (redundant, defence-in-depth) check.
-      const sound: Sound = { wave: constantWave(0), duration: -1 };
+      const wave = constantWave(0);
+      const sound: Sound = { leftWave: wave, rightWave: wave, duration: -1 };
       await expect(drain(funcs.play(sound))).rejects.toThrow('play: duration of sound is negative');
     });
 
@@ -86,6 +115,23 @@ describe('Concurrent playback functions', () => {
       const sound = funcs.silence_sound(10);
       await drain(funcs.play(sound));
       await expect(drain(funcs.play(sound))).rejects.toThrow('play: Previous sound still playing!');
+    });
+
+    test('a mono Sound is only sampled once (left and right samples are the same array)', async () => {
+      await drain(funcs.play(funcs.sine_sound(440, 0.01)));
+      expect(io.playSamples).toHaveBeenCalledOnce();
+      const [left, right] = io.playSamples.mock.calls[0];
+      expect(left).toBe(right);
+    });
+
+    test('a genuinely stereo Sound samples each channel separately', async () => {
+      const sound = funcs.make_stereo_sound(constantWave(1), constantWave(-1), 0.01);
+      await drain(funcs.play(sound));
+      expect(io.playSamples).toHaveBeenCalledOnce();
+      const [left, right] = io.playSamples.mock.calls[0];
+      expect(left).not.toBe(right);
+      expect(left[0]).toEqual(1);
+      expect(right[0]).toEqual(-1);
     });
   });
 
@@ -110,6 +156,15 @@ describe('Concurrent playback functions', () => {
       const wave = constantWave(0);
       await drain(funcs.play_wave(wave, 10));
       await expect(drain(funcs.play_wave(wave, 10))).rejects.toThrow('play: Previous sound still playing!');
+    });
+  });
+
+  describe(funcs.play_waves, () => {
+    it('plays given distinct left/right waves', async () => {
+      await drain(funcs.play_waves(constantWave(1), constantWave(-1), 0.01));
+      const [left, right] = io.playSamples.mock.calls.at(-1)!;
+      expect(left[0]).toEqual(1);
+      expect(right[0]).toEqual(-1);
     });
   });
 
@@ -156,6 +211,15 @@ describe(funcs.simultaneously, () => {
       expect(points[i]).toEqual(0.5);
     }
   });
+
+  it('combines left and right channels independently', async () => {
+    const sound0 = funcs.make_stereo_sound(constantWave(1), constantWave(2), 5);
+    const sound1 = funcs.make_stereo_sound(constantWave(3), constantWave(4), 5);
+
+    const newSound = funcs.simultaneously([sound0, sound1]);
+    expect(await sampleAt(funcs.get_left_wave(newSound), 0)).toBeCloseTo(2); // (1+3)/2
+    expect(await sampleAt(funcs.get_right_wave(newSound), 0)).toBeCloseTo(3); // (2+4)/2
+  });
 });
 
 describe(funcs.consecutively, () => {
@@ -171,5 +235,65 @@ describe(funcs.consecutively, () => {
       expect(points[i]).toEqual(1);
     }
     expect(points[2]).toEqual(2);
+  });
+
+  it('joins left and right channels independently', async () => {
+    const sound0 = funcs.make_stereo_sound(constantWave(1), constantWave(2), 1);
+    const sound1 = funcs.make_stereo_sound(constantWave(3), constantWave(4), 1);
+
+    const newSound = funcs.consecutively([sound0, sound1]);
+    expect(await sampleAt(funcs.get_left_wave(newSound), 0)).toEqual(1);
+    expect(await sampleAt(funcs.get_left_wave(newSound), 1)).toEqual(3);
+    expect(await sampleAt(funcs.get_right_wave(newSound), 0)).toEqual(2);
+    expect(await sampleAt(funcs.get_right_wave(newSound), 1)).toEqual(4);
+  });
+});
+
+describe(funcs.squash, () => {
+  it('averages the left and right channels, producing a mono Sound', async () => {
+    const sound = funcs.make_stereo_sound(constantWave(1), constantWave(-1), 1);
+    const squashed = funcs.squash(sound);
+    expect(funcs.get_left_wave(squashed)).toBe(funcs.get_right_wave(squashed));
+    expect(await sampleAt(funcs.get_left_wave(squashed), 0)).toEqual(0);
+  });
+
+  it('skips the averaging math for an already-mono Sound', async () => {
+    const sound = funcs.make_sound(constantWave(1), 1);
+    const squashed = funcs.squash(sound);
+    expect(funcs.get_left_wave(squashed)).toBe(funcs.get_right_wave(squashed));
+    expect(await sampleAt(funcs.get_left_wave(squashed), 0)).toEqual(1);
+  });
+});
+
+describe(funcs.pan, () => {
+  it('hard left pan (-1) silences the right channel', async () => {
+    const sound = funcs.make_sound(constantWave(1), 1);
+    const panned = funcs.pan(-1)(sound);
+    expect(await sampleAt(funcs.get_left_wave(panned), 0)).toBeCloseTo(1);
+    expect(await sampleAt(funcs.get_right_wave(panned), 0)).toBeCloseTo(0);
+  });
+
+  it('hard right pan (1) silences the left channel', async () => {
+    const sound = funcs.make_sound(constantWave(1), 1);
+    const panned = funcs.pan(1)(sound);
+    expect(await sampleAt(funcs.get_left_wave(panned), 0)).toBeCloseTo(0);
+    expect(await sampleAt(funcs.get_right_wave(panned), 0)).toBeCloseTo(1);
+  });
+
+  it('balanced pan (0) evenly splits both channels', async () => {
+    const sound = funcs.make_sound(constantWave(1), 1);
+    const panned = funcs.pan(0)(sound);
+    expect(await sampleAt(funcs.get_left_wave(panned), 0)).toBeCloseTo(0.5);
+    expect(await sampleAt(funcs.get_right_wave(panned), 0)).toBeCloseTo(0.5);
+  });
+});
+
+describe(funcs.pan_mod, () => {
+  it('modulates the pan amount using the modulator Sound', async () => {
+    const modulator = funcs.make_sound(constantWave(1), 1); // amount = 1+1 clamped to 1: hard right
+    const sound = funcs.make_sound(constantWave(1), 1);
+    const panned = funcs.pan_mod(modulator)(sound);
+    expect(await sampleAt(funcs.get_left_wave(panned), 0)).toBeCloseTo(0);
+    expect(await sampleAt(funcs.get_right_wave(panned), 0)).toBeCloseTo(1);
   });
 });

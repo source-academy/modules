@@ -63,6 +63,7 @@ function createMockAudioContext() {
     })),
     createBufferSource: vi.fn(() => bufferSource),
     decodeAudioData: vi.fn().mockResolvedValue({
+      numberOfChannels: 1,
       getChannelData: () => new Float32Array([0, 1, -1, 0]),
       sampleRate: 8000
     }),
@@ -130,18 +131,20 @@ describe(SoundTabPlugin, () => {
   });
 
   describe('playSamples', () => {
-    test('plays a buffer through the AudioContext and resolves once playback ends', async () => {
-      const samples = new Float32Array([0, 0.5, -0.5, 0]);
-      await plugin.playSamples(samples, 8000);
+    test('plays a 2-channel buffer through the AudioContext and resolves once playback ends', async () => {
+      const left = new Float32Array([0, 0.5, -0.5, 0]);
+      const right = new Float32Array([0, -0.5, 0.5, 0]);
+      await plugin.playSamples(left, right, 8000);
 
-      expect(mockAudioContext.createBuffer).toHaveBeenCalledWith(1, samples.length, 8000);
+      expect(mockAudioContext.createBuffer).toHaveBeenCalledWith(2, left.length, 8000);
       expect(mockAudioContext.bufferSource.start).toHaveBeenCalledOnce();
     });
   });
 
   describe('$stopPlayback', () => {
     test('stops the currently playing source', async () => {
-      const playing = plugin.playSamples(new Float32Array([0]), 8000);
+      const samples = new Float32Array([0]);
+      const playing = plugin.playSamples(samples, samples, 8000);
       plugin.$stopPlayback();
       expect(mockAudioContext.bufferSource.stop).toHaveBeenCalledOnce();
       await playing;
@@ -165,15 +168,33 @@ describe(SoundTabPlugin, () => {
       await expect(plugin.stopRecording()).rejects.toThrow('No recording in progress.');
     });
 
-    test('stops recording and decodes the result', async () => {
+    test('stops recording and decodes the result, duplicating a mono channel into left and right', async () => {
       await plugin.requestMicPermission();
       await plugin.startRecording();
 
       const result = await plugin.stopRecording();
 
       expect(mockMediaRecorder.stop).toHaveBeenCalledOnce();
-      expect(result.samples).toBeInstanceOf(Float32Array);
+      expect(result.left).toBeInstanceOf(Float32Array);
+      expect(result.right).toBe(result.left);
       expect(result.sampleRate).toEqual(8000);
+    });
+
+    test('reports separate left/right channels for a genuinely stereo input device', async () => {
+      const leftData = new Float32Array([0, 1, -1, 0]);
+      const rightData = new Float32Array([0, -1, 1, 0]);
+      mockAudioContext.decodeAudioData.mockResolvedValueOnce({
+        numberOfChannels: 2,
+        getChannelData: (channel: number) => (channel === 0 ? leftData : rightData),
+        sampleRate: 8000
+      });
+
+      await plugin.requestMicPermission();
+      await plugin.startRecording();
+      const result = await plugin.stopRecording();
+
+      expect(result.left).toBe(leftData);
+      expect(result.right).toBe(rightData);
     });
   });
 });
