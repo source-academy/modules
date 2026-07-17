@@ -113,7 +113,11 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
   }
 
   destroy(): void {
-    this.__tabService.unregisterTab(SOUND_MATRIX_TAB_ID);
+    // Called on every Run's teardown (the conductor is terminated as soon as the program finishes
+    // evaluating) - unregistering here would yank the tab away almost immediately after it
+    // appears, since there's nothing slow enough in this module to keep the Run alive for long.
+    // The tab is left registered (its grid state persists) and gets replaced naturally when the
+    // next Run's SoundMatrixTabPlugin re-registers under the same id - same fix as sound's tab.
   }
 
   async getMatrix(): Promise<boolean[][]> {

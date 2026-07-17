@@ -63,9 +63,12 @@ describe(SoundMatrixTabPlugin, () => {
     expect(tabService.tabs.has(SOUND_MATRIX_TAB_ID)).toBe(true);
   });
 
-  test('destroy unregisters the tab', () => {
+  test('destroy leaves the tab registered', () => {
+    // Regression test: destroy() is called on every Run's teardown, which happens almost
+    // immediately for this module (nothing here is slow like sound's audio playback) -
+    // unregistering here previously made the tab flash and vanish right after it appeared.
     plugin.destroy();
-    expect(tabService.tabs.has(SOUND_MATRIX_TAB_ID)).toBe(false);
+    expect(tabService.tabs.has(SOUND_MATRIX_TAB_ID)).toBe(true);
   });
 
   test('getMatrix starts as an all-false 16x16 grid', async () => {

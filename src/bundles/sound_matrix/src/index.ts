@@ -17,6 +17,11 @@ import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 import { drainGenerator, matrixToConductorList } from './functions';
 import { SOUND_MATRIX_CHANNEL_ID, type SoundMatrixTabRpc } from './protocol';
 
+type SoundMatrixTabLoader = {
+  tabs: string[];
+  loadTab: (tab: string) => void;
+};
+
 export default class SoundMatrixModulePlugin extends BaseModulePlugin {
   id = 'sound_matrix';
   override exportedNames = ['get_matrix', 'clear_matrix', 'set_timeout', 'clear_all_timeout'] as const;
@@ -24,8 +29,15 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
 
   private readonly __io: SoundMatrixTabRpc;
   private readonly __timeoutIds = new Set<ReturnType<typeof setTimeout>>();
+  private readonly __tabLoader: SoundMatrixTabLoader | undefined;
+  private __tabLoaded = false;
 
-  constructor(conduit: IConduit, [channel]: IChannel<any>[], evaluator: IInterfacableEvaluator) {
+  constructor(
+    conduit: IConduit,
+    [channel]: IChannel<any>[],
+    evaluator: IInterfacableEvaluator,
+    tabLoader?: SoundMatrixTabLoader
+  ) {
     super(conduit, [channel], evaluator);
     if (!channel) {
       // An internal invariant check (Conductor's own registration guarantees this channel is
@@ -35,10 +47,27 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
       // eslint-disable-next-line @sourceacademy/throw-runtime-error
       throw new Error('Sound matrix channel is required but was not provided.');
     }
+    this.__tabLoader = tabLoader;
     // The tab is the web plugin holding the actual grid state and canvas: it does the actual DOM
     // work (only available on the browser main thread, not inside this runner's Worker) and
     // replies over the same channel via Conductor's RPC helper.
     this.__io = makeRpc<Record<string, never>, SoundMatrixTabRpc>(channel, {});
+  }
+
+  /**
+   * Loads the host-side tab, lazily - only the first time a host-bridged function (get_matrix/
+   * clear_matrix) is actually called, matching `sound`'s pattern. Without this, nothing ever tells
+   * the host to construct the SoundMatrix tab plugin, and __io's RPC calls hang forever waiting
+   * for a reply from a tab that was never loaded.
+   */
+  private __ensureTabLoaded(): void {
+    if (this.__tabLoaded || this.__tabLoader === undefined) return;
+
+    const tabName = this.__tabLoader.tabs[0];
+    if (tabName === undefined) return;
+
+    this.__tabLoader.loadTab(tabName);
+    this.__tabLoaded = true;
   }
 
   // moduleMethod requires an async generator (it drives closure-taking methods via yield* for
@@ -46,6 +75,7 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
   @moduleMethod([], DataType.LIST)
   // eslint-disable-next-line require-yield
   async* get_matrix(): AsyncGenerator<void, TypedValue<DataType.LIST>, undefined> {
+    this.__ensureTabLoaded();
     const matrix = await this.__io.getMatrix();
     return matrixToConductorList(this.evaluator, matrix);
   }
@@ -53,6 +83,7 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
   @moduleMethod([], DataType.VOID)
   // eslint-disable-next-line require-yield
   async* clear_matrix(): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
+    this.__ensureTabLoaded();
     await this.__io.clearMatrix();
     return { type: DataType.VOID, value: undefined };
   }
