@@ -7,7 +7,6 @@
  * @module rune
  * @author Hou Ruomu
  */
-
 import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
 import { BaseModulePlugin } from '@sourceacademy/conductor/module';
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
@@ -44,6 +43,7 @@ export default class RuneModulePlugin extends BaseModulePlugin {
     'blue',
     'brown',
     'color',
+    'colour_with_hue',
     'flip_horiz',
     'flip_vert',
     'from_url',
@@ -840,6 +840,25 @@ export default class RuneModulePlugin extends BaseModulePlugin {
   }
 
   /**
+   * Colors a given rune using a hue value in the range [0, 1], where 0 and 1 are
+   * red. If the hue value is outside this range it gets mapped to [0, 1]
+   * @param rune - The rune to color
+   * @param hue - Hue value to use
+   * @returns The colored Rune
+   * @function
+   *
+   * @category Color
+   * @publicType rune: Rune
+   * @publicReturnType Rune
+   */
+  async* colour_with_hue(
+    rune: TypedValue<DataType.OPAQUE>,
+    hue: TypedValue<DataType.NUMBER>
+  ): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
+    return await this.__makeRune(funcs.colour_with_hue(await this.__getRune(rune, funcs.colour_with_hue.name), hue.value));
+  }
+
+  /**
    * Colors the given rune black (#000000).
    * @param rune - The rune to color
    * @returns The colored Rune
@@ -1019,6 +1038,7 @@ attachModuleMethod<RuneModulePlugin, 'black'>(RuneModulePlugin, 'black', [DataTy
 attachModuleMethod<RuneModulePlugin, 'blue'>(RuneModulePlugin, 'blue', [DataType.OPAQUE], DataType.OPAQUE);
 attachModuleMethod<RuneModulePlugin, 'brown'>(RuneModulePlugin, 'brown', [DataType.OPAQUE], DataType.OPAQUE);
 attachModuleMethod<RuneModulePlugin, 'color'>(RuneModulePlugin, 'color', [DataType.OPAQUE, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod<RuneModulePlugin, 'colour_with_hue'>(RuneModulePlugin, 'colour_with_hue', [DataType.OPAQUE, DataType.NUMBER], DataType.OPAQUE);
 attachModuleMethod<RuneModulePlugin, 'flip_horiz'>(RuneModulePlugin, 'flip_horiz', [DataType.OPAQUE], DataType.OPAQUE);
 attachModuleMethod<RuneModulePlugin, 'flip_vert'>(RuneModulePlugin, 'flip_vert', [DataType.OPAQUE], DataType.OPAQUE);
 attachModuleMethod(RuneModulePlugin, 'from_url', [DataType.CONST_STRING], DataType.OPAQUE);

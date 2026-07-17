@@ -1,4 +1,4 @@
-import { HollusionRune, blank } from '@sourceacademy/bundle-rune/functions';
+import { DrawnHollusionRune, blank } from '@sourceacademy/bundle-rune/functions';
 import {
   serializeRune,
   type RuneChannelMessage
@@ -48,7 +48,7 @@ describe(HollusionCanvas, () => {
   });
 
   test('Render function is memoized', async () => {
-    const rune = new HollusionRune(blank, 0.1);
+    const rune = new DrawnHollusionRune(blank, 0.1);
     const mockedDraw = vi.spyOn(rune, 'draw');
 
     await render(<HollusionCanvas rune={rune} />);

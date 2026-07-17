@@ -2,9 +2,9 @@ import { runInContext } from 'js-slang';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { commands, userEvent } from 'vitest/browser';
 import { render, type RenderResult } from 'vitest-browser-react';
+import '../../styles/index.scss';
 import Playground from '../Playground';
 import * as importers from '../sideContent/importers/importers';
-import '../../styles/index.scss';
 
 declare module 'vitest/browser' {
   interface BrowserCommands {

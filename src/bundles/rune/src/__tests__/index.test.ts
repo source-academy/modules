@@ -59,7 +59,7 @@ describe(RuneModulePlugin, () => {
 
 describe('Hollusion Rune tests', () => {
   it('has isHollusion as true', () => {
-    const hollusion = new funcs.HollusionRune(funcs.blank, 0);
+    const hollusion = new funcs.DrawnHollusionRune(funcs.blank, 0);
     expect(hollusion.isHollusion).toEqual(true);
   });
 });
@@ -78,25 +78,25 @@ describe(funcs.color, () => {
   });
 
   it('throws when argument is not rune', () => {
-    expect(() => funcs.color(0 as any, 0, 0, 0)).toThrowError('color expects a rune as argument');
+    expect(() => funcs.color(0 as any, 0, 0, 0)).toThrow('color: Expected Rune, got 0.');
   });
 
   it('throws when any color parameter is invalid', () => {
-    expect(() => funcs.color(funcs.heart, 100, 0, 0)).toThrowError('r cannot be greater than 1!');
-    expect(() => funcs.color(funcs.heart, 0, -1, 0)).toThrowError('g cannot be less than 0!');
-    expect(() => funcs.color(funcs.heart, 0, 0, 'hi' as any)).toThrowError('b must be a number!');
+    expect(() => funcs.color(funcs.heart, 100, 0, 0)).toThrow('color: Expected number ∈ [0, 1] for r, got 100.');
+    expect(() => funcs.color(funcs.heart, 0, -1, 0)).toThrow('color: Expected number ∈ [0, 1] for g, got -1.');
+    expect(() => funcs.color(funcs.heart, 0, 0, 'hi' as any)).toThrow('color: Expected number ∈ [0, 1] for b, got "hi".');
   });
 });
 
 describe(funcs.beside_frac, () => {
   it('throws when argument is not rune', () => {
-    expect(() => funcs.beside_frac(0, 0 as any, funcs.heart)).toThrowError('beside_frac expects a rune as argument');
-    expect(() => funcs.beside_frac(0, funcs.heart, 0 as any)).toThrowError('beside_frac expects a rune as argument');
+    expect(() => funcs.beside_frac(0, 0 as any, funcs.heart)).toThrow('beside_frac: Expected Rune for rune1, got 0.');
+    expect(() => funcs.beside_frac(0, funcs.heart, 0 as any)).toThrow('beside_frac: Expected Rune for rune2, got 0.');
   });
 
   it('throws when frac is out of range', () => {
-    expect(() => funcs.beside_frac(-1, funcs.heart, funcs.heart)).toThrowError('beside_frac: frac cannot be less than 0!');
-    expect(() => funcs.beside_frac(10, funcs.heart, funcs.heart)).toThrowError('beside_frac: frac cannot be greater than 1!');
+    expect(() => funcs.beside_frac(-1, funcs.heart, funcs.heart)).toThrow('beside_frac: Expected number ∈ [0, 1] for frac, got -1.');
+    expect(() => funcs.beside_frac(10, funcs.heart, funcs.heart)).toThrow('beside_frac: Expected number ∈ [0, 1] for frac, got 10.');
   });
 });
 
@@ -111,13 +111,13 @@ describe(funcs.beside, () => {
 
 describe(funcs.stack_frac, () => {
   it('throws when argument is not rune', () => {
-    expect(() => funcs.stack_frac(0, 0 as any, funcs.heart)).toThrowError('stack_frac expects a rune as argument');
-    expect(() => funcs.stack_frac(0, funcs.heart, 0 as any)).toThrowError('stack_frac expects a rune as argument');
+    expect(() => funcs.stack_frac(0, 0 as any, funcs.heart)).toThrow('stack_frac: Expected Rune for rune1, got 0.');
+    expect(() => funcs.stack_frac(0, funcs.heart, 0 as any)).toThrow('stack_frac: Expected Rune for rune2, got 0.');
   });
 
   it('throws when frac is out of range', () => {
-    expect(() => funcs.stack_frac(-1, funcs.heart, funcs.heart)).toThrowError('stack_frac: frac cannot be less than 0!');
-    expect(() => funcs.stack_frac(10, funcs.heart, funcs.heart)).toThrowError('stack_frac: frac cannot be greater than 1!');
+    expect(() => funcs.stack_frac(-1, funcs.heart, funcs.heart)).toThrow('stack_frac: Expected number ∈ [0, 1] for frac, got -1.');
+    expect(() => funcs.stack_frac(10, funcs.heart, funcs.heart)).toThrow('stack_frac: Expected number ∈ [0, 1] for frac, got 10.');
   });
 });
 
@@ -125,11 +125,11 @@ describe(funcs.stackn, () => {
   vi.spyOn(funcs.RuneFunctions, 'stack_frac');
 
   it('throws when argument is not rune', () => {
-    expect(() => funcs.stackn(0, 0 as any)).toThrowError('stackn expects a rune as argument');
+    expect(() => funcs.stackn(0, 0 as any)).toThrow('stackn: Expected Rune, got 0.');
   });
 
   it('throws when n is not an integer', () => {
-    expect(() => funcs.stackn(0.1, funcs.heart)).toThrowError('stackn expects an integer');
+    expect(() => funcs.stackn(0.1, funcs.heart)).toThrow('stackn: Expected integer, got 0.1.');
   });
 
   it('simply returns when n <= 1', () => {
@@ -146,34 +146,47 @@ describe(funcs.stackn, () => {
 
 describe(funcs.repeat_pattern, () => {
   it('simply returns if n <= 0', () => {
-    const mockPattern = vi.fn();
+    const mockPattern = vi.fn(x => x);
     expect(funcs.repeat_pattern(0, mockPattern, funcs.blank)).toBe(funcs.blank);
     expect(mockPattern).not.toHaveBeenCalled();
+  });
+
+  it('works', () => {
+    const mockPattern = vi.fn(x => x);
+    expect(funcs.repeat_pattern(5, mockPattern, funcs.blank)).toBe(funcs.blank);
+    expect(mockPattern).toHaveBeenCalledTimes(5);
+  });
+
+  it('throws if initial is not a rune', () => {
+    expect(() => funcs.repeat_pattern(5, x => x, 0 as any))
+      .toThrow('repeat_pattern: Expected Rune for initial, got 0.');
   });
 });
 
 describe(funcs.overlay_frac, () => {
   it('throws when argument is not rune', () => {
-    expect(() => funcs.overlay_frac(0, 0 as any, funcs.heart)).toThrowError('overlay_frac expects a rune as argument');
-    expect(() => funcs.overlay_frac(0, funcs.heart, 0 as any)).toThrowError('overlay_frac expects a rune as argument');
+    expect(() => funcs.overlay_frac(0, 0 as any, funcs.heart)).toThrow('overlay_frac: Expected Rune for rune1, got 0.');
+    expect(() => funcs.overlay_frac(0, funcs.heart, 0 as any)).toThrow('overlay_frac: Expected Rune for rune2, got 0.');
   });
 
   it('throws when frac is out of range', () => {
-    expect(() => funcs.overlay_frac(-1, funcs.heart, funcs.heart)).toThrowError('overlay_frac: frac cannot be less than 0!');
-    expect(() => funcs.overlay_frac(10, funcs.heart, funcs.heart)).toThrowError('overlay_frac: frac cannot be greater than 1!');
+    expect(() => funcs.overlay_frac(-1, funcs.heart, funcs.heart)).toThrow('overlay_frac: Expected number ∈ [0, 1] for frac, got -1.');
+    expect(() => funcs.overlay_frac(10, funcs.heart, funcs.heart)).toThrow('overlay_frac: Expected number ∈ [0, 1] for frac, got 10.');
   });
 });
 
 describe('Colouring functions', () => {
-  const names = Object.getOwnPropertyNames(funcs.RuneColours);
-  const colourers = names.reduce<[string, (r: Rune) => Rune][]>((res, name) => {
-    if (typeof funcs.RuneColours[name] !== 'function') return res;
-    return [...res, [name, funcs.RuneColours[name]]];
+  type FunctionName = keyof (typeof funcs.RuneColours);
+
+  const names = Object.getOwnPropertyNames(funcs.RuneColours) as FunctionName[];
+  const colourers = names.reduce<[FunctionName, (r: Rune) => Rune][]>((res, name) => {
+    if (typeof funcs.RuneColours[name] !== 'function' || name === 'colour_with_hue') return res;
+    return [...res, [name, funcs.RuneColours[name]] as [FunctionName, (r: Rune) => Rune]];
   }, []);
 
   describe.each(colourers)('%s', (_, f) => {
     it('throws when argument is not rune', () => {
-      expect(() => f(0 as any)).toThrowError(`${f.name} expects a rune as argument`);
+      expect(() => f(0 as any)).toThrow(`${f.name}: Expected Rune, got 0.`);
     });
 
     it('does not modify the original rune', () => {

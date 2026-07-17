@@ -6,20 +6,20 @@
     "@blueprintjs/icons": "^6.0.0",
     "@sourceacademy/bundle-rune": "workspace:^",
     "@sourceacademy/common-tabs": "^0.0.1",
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor",
+    "@sourceacademy/conductor": "catalog:",
     "@sourceacademy/modules-lib": "workspace:^",
     "es-toolkit": "^1.44.0",
     "gl-matrix": "^3.4.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@types/react": "^19.0.0",
-    "@vitest/browser-playwright": "4.1.4",
+    "@types/react": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
     "playwright": "^1.55.1",
-    "typescript": "^6.0.2",
-    "vitest": "4.1.4",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
     "vitest-browser-react": "^2.1.0"
   },
   "scripts": {

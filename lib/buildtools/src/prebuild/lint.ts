@@ -10,6 +10,7 @@ export interface LintOptions {
   concurrency: Exclude<ESLint.Options['concurrency'], undefined>;
   fix: boolean;
   stats: boolean;
+  cache?: boolean;
 }
 
 export interface LintResult {
@@ -43,19 +44,21 @@ async function timePromise<T>(f: () => Promise<T>) {
 const defaultLintOptions: LintOptions = {
   fix: false,
   stats: false,
-  concurrency: 'auto'
+  concurrency: 'auto',
+  cache: !process.env.CI
 };
 
 // #region runEslint
 export async function runEslint(
   input: InputAsset,
-  { fix, stats, concurrency }: LintOptions = defaultLintOptions
+  { fix, stats, concurrency, cache }: LintOptions = defaultLintOptions
 ): Promise<LintResult> {
   const linter = new ESLint({
     fix,
     stats,
     concurrency,
     cwd: gitRoot,
+    cache
   });
 
   try {

@@ -3,15 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/bundle-repeat": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
     "es-toolkit": "^1.44.0",
     "gl-matrix": "^3.4.4"
   },
   "devDependencies": {
-    "@sourceacademy/conductor": "^0.6.0",
+    "@sourceacademy/conductor": "catalog:",
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "js-slang": "^1.0.85",
-    "typescript": "^6.0.2"
+    "js-slang": "catalog:",
+    "typescript": "catalog:"
   },
   "type": "module",
   "exports": {
@@ -23,8 +24,9 @@
     "build": "buildtools build bundle .",
     "lint": "buildtools lint .",
     "test": "buildtools test --project .",
-    "postinstall": "buildtools compile",
-    "serve": "yarn buildtools serve"
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
   },
   "scripts-info": {
     "build": "Compiles the given bundle to the output directory",

@@ -1,3 +1,4 @@
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import { glAnimation, type AnimFrame, type ReplResult } from '@sourceacademy/modules-lib/types';
 import { mat4 } from 'gl-matrix';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
@@ -49,18 +50,29 @@ void main(void) {
   gl_FragColor.a = 1.0;
 }
 `;
+
+interface RuneOfParams {
+  vertices?: Float32Array;
+  colors?: Float32Array | null;
+  transformMatrix?: mat4;
+  subRunes?: Rune[];
+  texture?: HTMLImageElement | null;
+  hollusionDistance?: number;
+}
+
 /**
  * The basic data-representation of a Rune. When the Rune is drawn, every 3 consecutive vertex will form a triangle.
  */
 export class Rune {
   constructor(
     /**
-     * A list of vertex coordinates, each vertex has 4 coordiante (x,y,z,t).
+     * A list of vertex coordinates, each vertex has 4 coordiants (x,y,z,t).
      */
     public vertices: Float32Array,
 
     /**
-     * A list of vertex colors, each vertex has a color (r,g,b,a).
+     * A list of vertex colors, each vertex has a color (r,g,b,a). Values
+     * are normalized to [0, 1]
      */
     public colors: Float32Array | null,
 
@@ -118,15 +130,8 @@ export class Rune {
     return runeList;
   };
 
-  public static of = (params: {
-    vertices?: Float32Array;
-    colors?: Float32Array | null;
-    transformMatrix?: mat4;
-    subRunes?: Rune[];
-    texture?: HTMLImageElement | string | null;
-    hollusionDistance?: number;
-  } = {}) => {
-    const paramGetter = (name: string, defaultValue: () => any) => (params[name] === undefined ? defaultValue() : params[name]);
+  public static of = (params: RuneOfParams = {}) => {
+    const paramGetter = (name: keyof RuneOfParams, defaultValue: () => any) => params[name] ?? defaultValue();
 
     return new Rune(
       paramGetter('vertices', () => new Float32Array()),
@@ -165,7 +170,7 @@ export async function drawRunesToFrameBuffer(
   );
   gl.useProgram(shaderProgram);
   if (gl === null) {
-    throw Error('Rendering Context not initialized for drawRune.');
+    throw new GeneralRuntimeError('Rendering Context not initialized for drawRune.');
   }
 
   // create pointers to the data-entries of the shader program
@@ -244,7 +249,7 @@ export async function drawRunesToFrameBuffer(
 
     const texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    function isPowerOf2(value) {
+    function isPowerOf2(value: number) {
       return (value & (value - 1)) === 0;
     }
     // Because images have to be downloaded over the internet
@@ -392,7 +397,7 @@ export abstract class DrawnRune implements ReplResult {
   public abstract draw: (canvas: HTMLCanvasElement) => Promise<unknown>;
 }
 
-export class NormalRune extends DrawnRune {
+export class DrawnNormalRune extends DrawnRune {
   constructor(rune: Rune) {
     super(rune, false);
   }
@@ -430,7 +435,7 @@ export class AnimatedRune extends glAnimation implements ReplResult {
   public getFrame(num: number): AnimFrame {
     const rune = this.func(num);
     return {
-      draw: rune.draw
+      draw: rune.draw.bind(rune)
     };
   }
 
