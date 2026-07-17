@@ -13,6 +13,7 @@ import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 
 import { attachModuleMethod } from '@sourceacademy/modules-lib/conductor/methods';
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import * as funcs from './functions';
 import {
   RUNE_CHANNEL_ID,
@@ -32,8 +33,8 @@ type RuneTabLoader = {
 
 export default class RuneModulePlugin extends BaseModulePlugin {
   id = 'rune';
-  static channelAttach = [RUNE_CHANNEL_ID];
-  exportedNames = [
+  static override channelAttach = [RUNE_CHANNEL_ID];
+  override exportedNames = [
     'anaglyph',
     'animate_anaglyph',
     'animate_rune',
@@ -184,7 +185,7 @@ export default class RuneModulePlugin extends BaseModulePlugin {
     super(conduit, [runeChannel], evaluator);
 
     if (!runeChannel) {
-      throw new Error('Rune channel is required but was not provided.');
+      throw new GeneralRuntimeError('Rune channel is required but was not provided.');
     }
 
     this.__runeChannel = runeChannel as IChannel<RuneChannelMessage>;
@@ -196,17 +197,17 @@ export default class RuneModulePlugin extends BaseModulePlugin {
     });
   }
 
-  async initialise() {
+  override async initialise() {
     await super.initialise();
     for (const name in funcs.RuneFunctions) {
       const value = funcs.RuneFunctions[name as keyof typeof funcs.RuneFunctions];
       if (!(value instanceof Rune)) {
         continue;
       }
-      this[name] = funcs.RuneFunctions[name];
+      (this as unknown as Record<string, Rune>)[name] = value;
       this.exports.push({
         symbol: name,
-        value: await this.__makeRune(this[name])
+        value: await this.__makeRune(value)
       });
     }
   }

@@ -1,4 +1,4 @@
-import { AnaglyphRune, HollusionRune } from '@sourceacademy/bundle-rune/functions';
+import { DrawnAnaglyphRune, DrawnHollusionRune, isHollusionRune } from '@sourceacademy/bundle-rune/functions';
 import {
   RUNE_CHANNEL_ID,
   RUNE_WEB_ID,
@@ -6,7 +6,7 @@ import {
   type RuneDisplayMessage,
   type SerializedRune
 } from '@sourceacademy/bundle-rune/protocol';
-import { NormalRune, Rune } from '@sourceacademy/bundle-rune/rune';
+import { DrawnNormalRune, Rune } from '@sourceacademy/bundle-rune/rune';
 import type { ITabService, Tab } from '@sourceacademy/common-tabs';
 import {
   checkIsPluginClass,
@@ -49,7 +49,7 @@ class SerializedRuneAnimation extends glAnimation {
   getFrame(timestamp: number): AnimFrame {
     if (this.message.frames.length === 0) {
       return {
-        draw: new NormalRune(Rune.of()).draw
+        draw: new DrawnNormalRune(Rune.of()).draw
       };
     }
 
@@ -59,8 +59,8 @@ class SerializedRuneAnimation extends glAnimation {
     );
     const rune = deserializeRune(this.message.frames[frame]);
     const drawnRune = this.message.mode === 'anaglyph'
-      ? new AnaglyphRune(rune)
-      : new NormalRune(rune);
+      ? new DrawnAnaglyphRune(rune)
+      : new DrawnNormalRune(rune);
 
     return {
       draw: drawnRune.draw
@@ -71,12 +71,12 @@ class SerializedRuneAnimation extends glAnimation {
 function RenderedRune({ message }: { message: Extract<RuneDisplayMessage, { type: 'render' }> }) {
   const rune = useMemo(() => deserializeRune(message.rune), [message]);
   const drawnRune = useMemo(() => {
-    if (message.mode === 'anaglyph') return new AnaglyphRune(rune);
-    if (message.mode === 'hollusion') return new HollusionRune(rune, message.magnitude ?? 0.1);
-    return new NormalRune(rune);
+    if (message.mode === 'anaglyph') return new DrawnAnaglyphRune(rune);
+    if (message.mode === 'hollusion') return new DrawnHollusionRune(rune, message.magnitude ?? 0.1);
+    return new DrawnNormalRune(rune);
   }, [message, rune]);
 
-  if (drawnRune instanceof HollusionRune) {
+  if (isHollusionRune(drawnRune)) {
     return <HollusionCanvas rune={drawnRune} />;
   }
 
