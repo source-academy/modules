@@ -29,14 +29,29 @@ function xyToRowColumn(x: number, y: number): [row: number, column: number] {
   return [row, column];
 }
 
-// Module-level (not a class field) so the composed pattern survives across every Run: a fresh
-// SoundMatrixTabPlugin instance is constructed per Run (the conductor/Worker are recreated each
-// time), but the whole point of this module is "compose a pattern visually, then run code -
-// possibly several times - to read/play it". The original (pre-Conductor) implementation never
-// tore anything down between runs at all, so its single `matrix` variable just naturally persisted
-// the same way; tying the grid to a per-instance field here would silently reset it on every Run,
-// which is exactly backwards from the original behaviour.
-let sharedMatrix: boolean[][] = Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(false));
+// Needs to survive every Run (a fresh SoundMatrixTabPlugin instance is constructed per Run) the way
+// the original pre-Conductor implementation's single `matrix` variable naturally did. A plain
+// module-level `let` does NOT actually achieve this here: the host loads this tab bundle via a
+// require-wrapper (`export default require => {...}`, see importExternalWebPlugin.ts's
+// resolvePluginClass), and that factory function is *called* fresh on every `hostLoadPlugin`
+// (i.e. every Run) - so anything declared inside its body, "module-level" or not, is reinitialised
+// each time. `globalThis` is the one thing that's actually the same object across those repeated
+// calls (same window, no iframe/worker), so the grid is stashed there instead of in a local binding.
+const GLOBAL_MATRIX_KEY = Symbol.for('sourceacademy.sound_matrix.sharedMatrix');
+type GlobalWithMatrix = typeof globalThis & { [GLOBAL_MATRIX_KEY]?: boolean[][] };
+const globalScope = globalThis as GlobalWithMatrix;
+
+function createEmptyMatrix(): boolean[][] {
+  return Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(false));
+}
+
+function getSharedMatrix(): boolean[][] {
+  return globalScope[GLOBAL_MATRIX_KEY] ??= createEmptyMatrix();
+}
+
+function setSharedMatrix(matrix: boolean[][]): void {
+  globalScope[GLOBAL_MATRIX_KEY] = matrix;
+}
 
 function SoundMatrixView({
   canvasRef,
@@ -95,7 +110,7 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
 
     const subscribe = (listener: () => void) => this.subscribe(listener);
     const SoundMatrixPluginTab = () => {
-      useSyncExternalStore(subscribe, () => sharedMatrix);
+      useSyncExternalStore(subscribe, getSharedMatrix);
       return createElement(SoundMatrixView, {
         canvasRef: this.__attachCanvas,
         onClear: () => this.__clearMatrix(),
@@ -129,7 +144,7 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
   }
 
   async getMatrix(): Promise<boolean[][]> {
-    return sharedMatrix.map(row => [...row]);
+    return getSharedMatrix().map(row => [...row]);
   }
 
   async clearMatrix(): Promise<void> {
@@ -137,13 +152,15 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
   }
 
   private __clearMatrix(): void {
-    sharedMatrix = Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(false));
+    setSharedMatrix(createEmptyMatrix());
     this.__redraw();
     this.__emit();
   }
 
   private __randomiseMatrix(): void {
-    sharedMatrix = Array.from({ length: GRID_SIZE }, () => Array.from({ length: GRID_SIZE }, () => Math.random() > 0.9));
+    setSharedMatrix(
+      Array.from({ length: GRID_SIZE }, () => Array.from({ length: GRID_SIZE }, () => Math.random() > 0.9))
+    );
     this.__redraw();
     this.__emit();
   }
@@ -158,9 +175,10 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
   }
 
   private __redraw(): void {
+    const matrix = getSharedMatrix();
     for (let i = 0; i < GRID_SIZE; i += 1) {
       for (let j = 0; j < GRID_SIZE; j += 1) {
-        this.__setColor(i, j, sharedMatrix[i][j] ? COLOR_ON : COLOR_OFF);
+        this.__setColor(i, j, matrix[i][j] ? COLOR_ON : COLOR_OFF);
       }
     }
   }
@@ -174,8 +192,9 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
     if (row < 0 || row >= GRID_SIZE || column < 0 || column >= GRID_SIZE) {
       return;
     }
-    sharedMatrix[row][column] = !sharedMatrix[row][column];
-    this.__setColor(row, column, sharedMatrix[row][column] ? COLOR_ON : COLOR_OFF);
+    const matrix = getSharedMatrix();
+    matrix[row][column] = !matrix[row][column];
+    this.__setColor(row, column, matrix[row][column] ? COLOR_ON : COLOR_OFF);
     this.__emit();
   };
 

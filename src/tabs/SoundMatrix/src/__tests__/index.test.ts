@@ -56,10 +56,10 @@ describe(SoundMatrixTabPlugin, () => {
   });
 
   beforeEach(async () => {
-    // The grid is intentionally module-level, not per-instance (see index.tsx), so it persists
-    // across every Run the way the original implementation's single `matrix` variable did -
-    // which also means it persists across test cases sharing this same module instance. Reset
-    // explicitly for test isolation; this doesn't affect the real (desired) cross-Run persistence.
+    // The grid is intentionally stashed on globalThis, not per-instance (see index.tsx), so it
+    // persists across every Run the way the original implementation's single `matrix` variable did -
+    // which also means it persists across test cases in this same process. Reset explicitly for
+    // test isolation; this doesn't affect the real (desired) cross-Run persistence.
     await plugin.clearMatrix();
   });
 
@@ -128,9 +128,10 @@ describe(SoundMatrixTabPlugin, () => {
 
   test('the composed pattern survives across separate plugin instances (simulating multiple Runs)', async () => {
     // Regression test: a fresh SoundMatrixTabPlugin instance is constructed on every Run (the
-    // conductor/Worker are recreated each time), but the whole point of this module is composing a
-    // pattern once and reading/playing it across possibly several Runs - the grid must not reset
-    // just because a new instance was constructed, the way sound's per-Run state correctly does.
+    // conductor/Worker are recreated each time, and the host re-invokes the tab bundle's
+    // require-wrapper factory fresh on every Run too - see index.tsx's comment on globalScope), but
+    // the whole point of this module is composing a pattern once and reading/playing it across
+    // possibly several Runs - the grid must not reset just because a new instance was constructed.
     const canvas = container.querySelector('canvas')!;
     const rect = canvas.getBoundingClientRect();
     canvas.dispatchEvent(new MouseEvent('click', { clientX: rect.left + 25, clientY: rect.top + 25, bubbles: true }));
