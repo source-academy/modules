@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "js-slang": "catalog:"
+    "@sourceacademy/conductor": "npm:^0.7.1"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",

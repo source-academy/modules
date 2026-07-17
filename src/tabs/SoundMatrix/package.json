@@ -6,7 +6,7 @@
     "@blueprintjs/core": "^6.0.0",
     "@sourceacademy/bundle-sound_matrix": "workspace:^",
     "@sourceacademy/common-tabs": "^0.0.1",
-    "@sourceacademy/conductor": "catalog:",
+    "@sourceacademy/conductor": "npm:^0.7.1",
     "react": "catalog:",
     "react-dom": "catalog:"
   },

@@ -4168,12 +4168,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/bundle-sound_matrix@workspace:src/bundles/sound_matrix":
+"@sourceacademy/bundle-sound_matrix@workspace:^, @sourceacademy/bundle-sound_matrix@workspace:src/bundles/sound_matrix":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-sound_matrix@workspace:src/bundles/sound_matrix"
   dependencies:
+    "@sourceacademy/conductor": "npm:^0.7.1"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    js-slang: "catalog:"
     typescript: "catalog:"
   languageName: unknown
   linkType: soft
@@ -4228,6 +4228,23 @@ __metadata:
     typescript: "catalog:"
   languageName: unknown
   linkType: soft
+
+"@sourceacademy/common-tabs@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "@sourceacademy/common-tabs@npm:0.0.1"
+  peerDependencies:
+    "@blueprintjs/icons": ^6.0.0
+    react: ^18 || ^19
+  checksum: 10c0/ca9d9b626b9fcf1eeed40703438cc3c5af8bcdc04475cd5071794a5a5effbe7ae064ad72da315491f6065b9cdb895cb86ea00176f20b5ff318cda831dd33f780
+  languageName: node
+  linkType: hard
+
+"@sourceacademy/conductor@npm:^0.7.1":
+  version: 0.7.1
+  resolution: "@sourceacademy/conductor@npm:0.7.1"
+  checksum: 10c0/293cdd2552eeb6cebd795806d841ef4118eb9aeedbfb1e3000c38032b55466269da31b524e37d58d52a068b96522766642ccc7838a4fbc23c9b244fd04cb44da
+  languageName: node
+  linkType: hard
 
 "@sourceacademy/lint-plugin@workspace:^, @sourceacademy/lint-plugin@workspace:lib/lintplugin":
   version: 0.0.0-use.local
@@ -4761,11 +4778,12 @@ __metadata:
   resolution: "@sourceacademy/tab-SoundMatrix@workspace:src/tabs/SoundMatrix"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
+    "@sourceacademy/bundle-sound_matrix": "workspace:^"
+    "@sourceacademy/common-tabs": "npm:^0.0.1"
+    "@sourceacademy/conductor": "npm:^0.7.1"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "catalog:"
     "@types/react-dom": "catalog:"
-    classnames: "npm:^2.3.1"
     react: "catalog:"
     react-dom: "catalog:"
     typescript: "catalog:"
