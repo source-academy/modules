@@ -1,9 +1,8 @@
 import { Button, Classes } from '@blueprintjs/core';
-import type { ITabService, Tab } from '@sourceacademy/common-tabs';
-import { checkIsPluginClass, type IChannel, type IConduit, type IPlugin, makeRpc } from '@sourceacademy/conductor/conduit';
-import { createElement, useSyncExternalStore } from 'react';
-
 import { SOUND_MATRIX_CHANNEL_ID, SOUND_MATRIX_WEB_ID, type SoundMatrixTabRpc } from '@sourceacademy/bundle-sound_matrix/protocol';
+import type { ITabService, Tab } from '@sourceacademy/common-tabs';
+import { checkIsPluginClass, makeRpc, type IChannel, type IConduit, type IPlugin } from '@sourceacademy/conductor/conduit';
+import { createElement, useSyncExternalStore } from 'react';
 
 export const SOUND_MATRIX_TAB_ID = 'sound_matrix';
 
@@ -39,14 +38,22 @@ function SoundMatrixView({
   onClear: () => void;
   onRandomise: () => void;
 }) {
-  return createElement('div', { className: 'sa-tone-matrix' },
-    createElement('div', { className: 'row' },
-      createElement('div', { className: `controls col-xs-12 ${Classes.DARK} ${Classes.BUTTON_GROUP}` },
+  return createElement(
+    'div',
+    { className: 'sa-tone-matrix' },
+    createElement(
+      'div',
+      { className: 'row' },
+      createElement(
+        'div',
+        { className: `controls col-xs-12 ${Classes.DARK} ${Classes.BUTTON_GROUP}` },
         createElement(Button, { id: 'clear-matrix', onClick: onClear }, 'Clear'),
         createElement(Button, { id: 'randomise-matrix', onClick: onRandomise }, 'Randomise')
       )
     ),
-    createElement('div', { className: 'row' },
+    createElement(
+      'div',
+      { className: 'row' },
       createElement('div', { className: 'col-xs-12', ref: canvasRef })
     )
   );
@@ -79,15 +86,14 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
     makeRpc<SoundMatrixTabRpc, Record<string, never>>(channel, this);
 
     const subscribe = (listener: () => void) => this.subscribe(listener);
-    const self = this;
-    function SoundMatrixPluginTab() {
-      useSyncExternalStore(subscribe, () => self.__matrix);
+    const SoundMatrixPluginTab = () => {
+      useSyncExternalStore(subscribe, () => this.__matrix);
       return createElement(SoundMatrixView, {
-        canvasRef: self.__attachCanvas,
-        onClear: () => self.__clearMatrix(),
-        onRandomise: () => self.__randomiseMatrix()
+        canvasRef: this.__attachCanvas,
+        onClear: () => this.__clearMatrix(),
+        onRandomise: () => this.__randomiseMatrix()
       });
-    }
+    };
 
     const tab = {
       id: SOUND_MATRIX_TAB_ID,
@@ -125,9 +131,7 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
   }
 
   private __randomiseMatrix(): void {
-    this.__matrix = Array.from({ length: GRID_SIZE }, () =>
-      Array.from({ length: GRID_SIZE }, () => Math.random() > 0.9)
-    );
+    this.__matrix = Array.from({ length: GRID_SIZE }, () => Array.from({ length: GRID_SIZE }, () => Math.random() > 0.9));
     this.__redraw();
     this.__emit();
   }

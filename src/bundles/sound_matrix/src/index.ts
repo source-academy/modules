@@ -28,6 +28,11 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
   constructor(conduit: IConduit, [channel]: IChannel<any>[], evaluator: IInterfacableEvaluator) {
     super(conduit, [channel], evaluator);
     if (!channel) {
+      // An internal invariant check (Conductor's own registration guarantees this channel is
+      // always provided), not a student-facing runtime error - the throw-runtime-error rule
+      // doesn't yet recognise Conductor's own error types (RuntimeSourceError is a js-slang type),
+      // so there's no error class available here that would actually satisfy it.
+      // eslint-disable-next-line @sourceacademy/throw-runtime-error
       throw new Error('Sound matrix channel is required but was not provided.');
     }
     // The tab is the web plugin holding the actual grid state and canvas: it does the actual DOM
@@ -36,13 +41,17 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
     this.__io = makeRpc<Record<string, never>, SoundMatrixTabRpc>(channel, {});
   }
 
+  // moduleMethod requires an async generator (it drives closure-taking methods via yield* for
+  // CSE-machine stepping), but this one never touches a user closure, so it has nothing to yield.
   @moduleMethod([], DataType.LIST)
+  // eslint-disable-next-line require-yield
   async* get_matrix(): AsyncGenerator<void, TypedValue<DataType.LIST>, undefined> {
     const matrix = await this.__io.getMatrix();
     return matrixToConductorList(this.evaluator, matrix);
   }
 
   @moduleMethod([], DataType.VOID)
+  // eslint-disable-next-line require-yield
   async* clear_matrix(): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     await this.__io.clearMatrix();
     return { type: DataType.VOID, value: undefined };
@@ -57,6 +66,7 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
    * matching how the original (pre-Conductor) implementation also just ran the callback directly.
    */
   @moduleMethod([DataType.CLOSURE, DataType.NUMBER], DataType.VOID)
+  // eslint-disable-next-line require-yield -- scheduling the timer never yields; f's own body runs later, fully drained, not stepped
   async* set_timeout(
     f: TypedValue<DataType.CLOSURE>,
     t: TypedValue<DataType.NUMBER>
@@ -71,6 +81,7 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
   }
 
   @moduleMethod([], DataType.VOID)
+  // eslint-disable-next-line require-yield
   async* clear_all_timeout(): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     for (const timeoutId of this.__timeoutIds) {
       clearTimeout(timeoutId);
