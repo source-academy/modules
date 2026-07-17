@@ -1030,18 +1030,18 @@ export default class RuneModulePlugin extends BaseModulePlugin {
   }
 }
 
-attachModuleMethod<RuneModulePlugin, 'anaglyph'>(RuneModulePlugin, 'anaglyph', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod<RuneModulePlugin, 'animate_anaglyph'>(RuneModulePlugin, 'animate_anaglyph', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE], DataType.OPAQUE);
-attachModuleMethod<RuneModulePlugin, 'animate_rune'>(RuneModulePlugin, 'animate_rune', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE], DataType.OPAQUE);
-attachModuleMethod<RuneModulePlugin, 'beside'>(RuneModulePlugin, 'beside', [DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod<RuneModulePlugin, 'beside_frac'>(RuneModulePlugin, 'beside_frac', [DataType.NUMBER, DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod<RuneModulePlugin, 'black'>(RuneModulePlugin, 'black', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod<RuneModulePlugin, 'blue'>(RuneModulePlugin, 'blue', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod<RuneModulePlugin, 'brown'>(RuneModulePlugin, 'brown', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod<RuneModulePlugin, 'color'>(RuneModulePlugin, 'color', [DataType.OPAQUE, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
-attachModuleMethod<RuneModulePlugin, 'colour_with_hue'>(RuneModulePlugin, 'colour_with_hue', [DataType.OPAQUE, DataType.NUMBER], DataType.OPAQUE);
-attachModuleMethod<RuneModulePlugin, 'flip_horiz'>(RuneModulePlugin, 'flip_horiz', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod<RuneModulePlugin, 'flip_vert'>(RuneModulePlugin, 'flip_vert', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'anaglyph', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'animate_anaglyph', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'animate_rune', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'beside', [DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'beside_frac', [DataType.NUMBER, DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'black', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'blue', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'brown', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'color', [DataType.OPAQUE, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'colour_with_hue', [DataType.OPAQUE, DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'flip_horiz', [DataType.OPAQUE], DataType.OPAQUE);
+attachModuleMethod(RuneModulePlugin, 'flip_vert', [DataType.OPAQUE], DataType.OPAQUE);
 attachModuleMethod(RuneModulePlugin, 'from_url', [DataType.CONST_STRING], DataType.OPAQUE);
 attachModuleMethod(RuneModulePlugin, 'green', [DataType.OPAQUE], DataType.OPAQUE);
 attachModuleMethod(RuneModulePlugin, 'hollusion', [DataType.OPAQUE], DataType.OPAQUE);
