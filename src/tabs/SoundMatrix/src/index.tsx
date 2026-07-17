@@ -29,6 +29,15 @@ function xyToRowColumn(x: number, y: number): [row: number, column: number] {
   return [row, column];
 }
 
+// Module-level (not a class field) so the composed pattern survives across every Run: a fresh
+// SoundMatrixTabPlugin instance is constructed per Run (the conductor/Worker are recreated each
+// time), but the whole point of this module is "compose a pattern visually, then run code -
+// possibly several times - to read/play it". The original (pre-Conductor) implementation never
+// tore anything down between runs at all, so its single `matrix` variable just naturally persisted
+// the same way; tying the grid to a per-instance field here would silently reset it on every Run,
+// which is exactly backwards from the original behaviour.
+let sharedMatrix: boolean[][] = Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(false));
+
 function SoundMatrixView({
   canvasRef,
   onClear,
@@ -75,7 +84,6 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
   private readonly __listeners = new Set<() => void>();
 
   private __canvas: HTMLCanvasElement | undefined;
-  private __matrix: boolean[][] = Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(false));
 
   constructor(_conduit: IConduit, [channel]: IChannel<any>[], tabService: ITabService) {
     if (!channel) {
@@ -87,7 +95,7 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
 
     const subscribe = (listener: () => void) => this.subscribe(listener);
     const SoundMatrixPluginTab = () => {
-      useSyncExternalStore(subscribe, () => this.__matrix);
+      useSyncExternalStore(subscribe, () => sharedMatrix);
       return createElement(SoundMatrixView, {
         canvasRef: this.__attachCanvas,
         onClear: () => this.__clearMatrix(),
@@ -121,7 +129,7 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
   }
 
   async getMatrix(): Promise<boolean[][]> {
-    return this.__matrix.map(row => [...row]);
+    return sharedMatrix.map(row => [...row]);
   }
 
   async clearMatrix(): Promise<void> {
@@ -129,13 +137,13 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
   }
 
   private __clearMatrix(): void {
-    this.__matrix = Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(false));
+    sharedMatrix = Array.from({ length: GRID_SIZE }, () => new Array(GRID_SIZE).fill(false));
     this.__redraw();
     this.__emit();
   }
 
   private __randomiseMatrix(): void {
-    this.__matrix = Array.from({ length: GRID_SIZE }, () => Array.from({ length: GRID_SIZE }, () => Math.random() > 0.9));
+    sharedMatrix = Array.from({ length: GRID_SIZE }, () => Array.from({ length: GRID_SIZE }, () => Math.random() > 0.9));
     this.__redraw();
     this.__emit();
   }
@@ -152,7 +160,7 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
   private __redraw(): void {
     for (let i = 0; i < GRID_SIZE; i += 1) {
       for (let j = 0; j < GRID_SIZE; j += 1) {
-        this.__setColor(i, j, this.__matrix[i][j] ? COLOR_ON : COLOR_OFF);
+        this.__setColor(i, j, sharedMatrix[i][j] ? COLOR_ON : COLOR_OFF);
       }
     }
   }
@@ -166,8 +174,8 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
     if (row < 0 || row >= GRID_SIZE || column < 0 || column >= GRID_SIZE) {
       return;
     }
-    this.__matrix[row][column] = !this.__matrix[row][column];
-    this.__setColor(row, column, this.__matrix[row][column] ? COLOR_ON : COLOR_OFF);
+    sharedMatrix[row][column] = !sharedMatrix[row][column];
+    this.__setColor(row, column, sharedMatrix[row][column] ? COLOR_ON : COLOR_OFF);
     this.__emit();
   };
 
