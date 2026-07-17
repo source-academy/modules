@@ -49,15 +49,18 @@ function makeMockBufferSource() {
     start: vi.fn(function (this: typeof source) {
       queueMicrotask(() => this.onended?.());
     }),
-    stop: vi.fn()
+    // Matches the real AudioBufferSourceNode: stop() fires 'ended' too, not just letting playback
+    // run to completion on its own.
+    stop: vi.fn(function (this: typeof source) {
+      queueMicrotask(() => this.onended?.());
+    })
   };
   return source;
 }
 
 function createMockAudioContext() {
-  // A fresh source per createBufferSource() call, since repeated/looped play() calls stack -
-  // multiple can be genuinely concurrent - but `bufferSource` still tracks the most recently
-  // created one, for existing single-source tests that only ever create one before asserting on it.
+  // A fresh source per createBufferSource() call - `bufferSource` tracks the most recently created
+  // one, for tests that only ever have one source in play at a time to assert on.
   let bufferSource = makeMockBufferSource();
 
   return {
@@ -132,9 +135,55 @@ describe(SoundTabPlugin, () => {
     expect(tabService.tabs.has(SOUND_TAB_ID)).toBe(true);
   });
 
-  test('destroy unregisters the tab', () => {
+  test('destroy leaves the tab registered', () => {
+    // Called on every Run's teardown, well before fire-and-forget playback dispatched via play()
+    // has necessarily finished - unregistering here would yank the tab away mid-playback and leave
+    // the student on a blank tab strip once it drained. The next Run's SoundTabPlugin replaces it
+    // naturally by registering under the same id.
     plugin.destroy();
-    expect(tabService.tabs.has(SOUND_TAB_ID)).toBe(false);
+    expect(tabService.tabs.has(SOUND_TAB_ID)).toBe(true);
+  });
+
+  test('destroy closes the AudioContext immediately when nothing is playing', async () => {
+    // AudioContext is only created lazily, on first use - exercise playSamples() first so one
+    // actually exists to be closed.
+    const samples = new Float32Array([0]);
+    await plugin.playSamples(samples, samples, 8000);
+
+    plugin.destroy();
+    expect(mockAudioContext.close).toHaveBeenCalledOnce();
+  });
+
+  test('destroy defers closing the AudioContext until in-flight playback finishes', async () => {
+    const samples = new Float32Array([0]);
+    const playing = plugin.playSamples(samples, samples, 8000);
+    plugin.destroy();
+    expect(mockAudioContext.close).not.toHaveBeenCalled();
+
+    await playing;
+    expect(mockAudioContext.close).toHaveBeenCalledOnce();
+  });
+
+  test('destroy does not close the AudioContext while a later sound is still queued behind the one that just finished', async () => {
+    // Regression test: __activeSources hits 0 momentarily between the first sound ending and the
+    // second (still queued) one starting, since the queue drains asynchronously. Closing the
+    // AudioContext at that instant - rather than waiting for the whole queue to drain - used to
+    // silently kill every sound still waiting its turn behind the one that just finished.
+    const samples = new Float32Array([0]);
+    const first = plugin.playSamples(samples, samples, 8000);
+    const second = plugin.playSamples(samples, samples, 8000); // queued behind the first
+
+    plugin.destroy();
+    expect(mockAudioContext.close).not.toHaveBeenCalled();
+
+    await first;
+    // The first sound finished, but the second is still queued - must not close yet.
+    expect(mockAudioContext.close).not.toHaveBeenCalled();
+
+    await second;
+    // Now the whole queue has actually drained.
+    expect(mockAudioContext.close).toHaveBeenCalledOnce();
+    expect(mockAudioContext.createBufferSource).toHaveBeenCalledTimes(2);
   });
 
   describe('requestMicPermission', () => {
@@ -158,19 +207,59 @@ describe(SoundTabPlugin, () => {
       expect(mockAudioContext.bufferSource.start).toHaveBeenCalledOnce();
     });
 
-    test('repeated/looped calls stack: each gets its own independent source', async () => {
+    test('repeated/looped calls queue: the second does not start until the first finishes', async () => {
       const samples = new Float32Array([0]);
       const first = plugin.playSamples(samples, samples, 8000);
-      const firstSource = mockAudioContext.bufferSource;
       const second = plugin.playSamples(samples, samples, 8000);
-      const secondSource = mockAudioContext.bufferSource;
 
-      expect(firstSource).not.toBe(secondSource);
-      expect(mockAudioContext.createBufferSource).toHaveBeenCalledTimes(2);
+      // playSamples() now goes through the host's own queue (even for the first call): one
+      // microtask tick is enough for the first call's turn to start (source created + start()
+      // called), but not enough for its mocked start()'s own queued onended to have fired yet -
+      // unlike a full setTimeout(0) flush, which would race straight past this intermediate state.
+      await Promise.resolve();
+      const firstSource = mockAudioContext.bufferSource;
+
+      // The second call is queued behind the first, not started concurrently - only one source
+      // has been created so far.
+      expect(mockAudioContext.createBufferSource).toHaveBeenCalledTimes(1);
       expect(firstSource.start).toHaveBeenCalledOnce();
+
+      await first;
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      // Now that the first has finished, the second's turn has arrived: its own source was
+      // created and started.
+      const secondSource = mockAudioContext.bufferSource;
+      expect(secondSource).not.toBe(firstSource);
+      expect(mockAudioContext.createBufferSource).toHaveBeenCalledTimes(2);
       expect(secondSource.start).toHaveBeenCalledOnce();
 
-      await Promise.all([first, second]);
+      await second;
+    });
+
+    test('an earlier sound finishing does not clobber a later sound\'s still-in-flight constructing status', async () => {
+      // Regression test: notifyConstructing() (sampling can take a while for an expensive Sound,
+      // entirely in the Worker) and playSamples() are independent RPC calls. Sampling for a second
+      // sound can still be in progress when a first, already-dispatched sound finishes playing -
+      // that completion must not reset status to 'idle' out from under the second sound's
+      // still-active 'constructing' status.
+      const samples = new Float32Array([0]);
+      const first = plugin.playSamples(samples, samples, 8000);
+      await Promise.resolve(); // let the first sound actually start playing
+      expect(plugin.getStatus()).toBe('playing');
+
+      await plugin.notifyConstructing(); // a second, unrelated sound starts sampling
+      expect(plugin.getStatus()).toBe('playing'); // first sound is still audibly playing
+
+      await first;
+      await new Promise(resolve => setTimeout(resolve, 0));
+      // The first sound finished, but the second is still being sampled (its playSamples() call
+      // hasn't arrived yet) - status must reflect that, not revert to idle.
+      expect(plugin.getStatus()).toBe('constructing');
+
+      void plugin.playSamples(samples, samples, 8000); // the second sound's sampling finishes
+      await Promise.resolve();
+      expect(plugin.getStatus()).toBe('playing');
     });
   });
 
@@ -178,23 +267,31 @@ describe(SoundTabPlugin, () => {
     test('stops the currently playing source', async () => {
       const samples = new Float32Array([0]);
       const playing = plugin.playSamples(samples, samples, 8000);
+      // One tick: enough for playback to actually start, not enough for it to have finished on
+      // its own (see the queueing test above for why a full setTimeout(0) flush would be too much).
+      await Promise.resolve();
+
       plugin.$stopPlayback();
       expect(mockAudioContext.bufferSource.stop).toHaveBeenCalledOnce();
       await playing;
     });
 
-    test('stops every currently active (stacked) source, not just the most recent', async () => {
+    test('cancels anything still queued (not yet started) instead of letting it play after stop', async () => {
       const samples = new Float32Array([0]);
       const first = plugin.playSamples(samples, samples, 8000);
+      const second = plugin.playSamples(samples, samples, 8000); // queued behind the first
+      await Promise.resolve();
       const firstSource = mockAudioContext.bufferSource;
-      const second = plugin.playSamples(samples, samples, 8000);
-      const secondSource = mockAudioContext.bufferSource;
 
       plugin.$stopPlayback();
-
       expect(firstSource.stop).toHaveBeenCalledOnce();
-      expect(secondSource.stop).toHaveBeenCalledOnce();
+
       await Promise.all([first, second]);
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      // The queued second call never got its own source created/started - it recognised itself
+      // as stale (stop() moved past its generation) once its turn arrived.
+      expect(mockAudioContext.createBufferSource).toHaveBeenCalledTimes(1);
     });
   });
 

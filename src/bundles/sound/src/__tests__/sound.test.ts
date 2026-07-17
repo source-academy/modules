@@ -115,40 +115,39 @@ describe('Sequential playback queue functions', () => {
       await expect(drain(funcs.play(0 as any))).rejects.toThrow('play: Expected a Sound for sound, got 0.');
     });
 
-    test('repeated/looped play() calls queue instead of erroring, but only one plays at a time', async () => {
-      let resolveFirst: () => void;
-      io.playSamples.mockReturnValueOnce(new Promise<void>(resolve => { resolveFirst = resolve; }));
-      io.playSamples.mockResolvedValueOnce(undefined);
+    test('repeated/looped play() calls each dispatch playSamples() immediately, independently of each other', async () => {
+      io.playSamples.mockReturnValue(new Promise(() => {})); // never resolves on its own
 
       const sound = funcs.silence_sound(10);
       await expect(drain(funcs.play(sound))).resolves.toBe(sound);
       await expect(drain(funcs.play(sound))).resolves.toBe(sound);
 
-      // Both play() calls returned (sampling/queueing happens eagerly), but the second sound's
-      // actual playback hasn't started - it's queued behind the first, not overlapping it.
-      expect(io.playSamples).toHaveBeenCalledTimes(1);
-      expect(funcs.globalVars.activePlayCount).toBe(2);
-
-      resolveFirst!();
-      await new Promise(resolve => setTimeout(resolve, 0));
+      // Sequencing so playback doesn't overlap is the host's job now (see
+      // SoundTabPlugin.playSamples) - this Run's Worker can be torn down as soon as the program
+      // finishes, well before a call that waited its turn here would ever get to fire, so play()
+      // dispatches every call's RPC as soon as it's sampled instead of queueing locally.
       expect(io.playSamples).toHaveBeenCalledTimes(2);
+      expect(funcs.globalVars.activePlayCount).toBe(2);
     });
 
-    test('activePlayCount drops by one as each queued play() actually finishes, in order', async () => {
+    test('activePlayCount drops by one as each dispatched play() actually finishes, independently', async () => {
       let resolveFirst: () => void;
+      let resolveSecond: () => void;
       io.playSamples.mockReturnValueOnce(new Promise<void>(resolve => { resolveFirst = resolve; }));
-      io.playSamples.mockReturnValueOnce(new Promise(() => {})); // second never finishes on its own
+      io.playSamples.mockReturnValueOnce(new Promise<void>(resolve => { resolveSecond = resolve; }));
 
       await drain(funcs.play(funcs.silence_sound(10)));
       await drain(funcs.play(funcs.silence_sound(10)));
+      expect(io.playSamples).toHaveBeenCalledTimes(2); // both dispatched already
       expect(funcs.globalVars.activePlayCount).toBe(2);
-      expect(io.playSamples).toHaveBeenCalledTimes(1); // second hasn't started yet
+
+      resolveSecond!(); // the second one finishes first - order no longer matters
+      await new Promise(resolve => setTimeout(resolve, 0));
+      expect(funcs.globalVars.activePlayCount).toBe(1);
 
       resolveFirst!();
       await new Promise(resolve => setTimeout(resolve, 0));
-      // First finished (count drops to 1); second has now started (but never finishes).
-      expect(io.playSamples).toHaveBeenCalledTimes(2);
-      expect(funcs.globalVars.activePlayCount).toBe(1);
+      expect(funcs.globalVars.activePlayCount).toBe(0);
     });
 
     test('a mono Sound is only sampled once (left and right samples are the same array)', async () => {
@@ -156,25 +155,6 @@ describe('Sequential playback queue functions', () => {
       expect(io.playSamples).toHaveBeenCalledOnce();
       const [left, right] = io.playSamples.mock.calls[0];
       expect(left).toBe(right);
-    });
-
-    test('stop() cancels anything still queued behind the currently-playing sound', async () => {
-      let resolveFirst: () => void;
-      io.playSamples.mockReturnValueOnce(new Promise<void>(resolve => { resolveFirst = resolve; }));
-      // Matches the real tab: stopping the currently-playing source fires its onended, which is
-      // what actually resolves playSamples() - stop() doesn't just abandon it unresolved.
-      io.$stopPlayback.mockImplementationOnce(() => resolveFirst());
-
-      await drain(funcs.play(funcs.silence_sound(10)));
-      await drain(funcs.play(funcs.silence_sound(10))); // queued behind the first
-
-      funcs.stop();
-      await new Promise(resolve => setTimeout(resolve, 0));
-
-      // The queued sound's turn arrives once the first settles, but it's skipped entirely rather
-      // than calling playSamples for it, since stop() already moved past its generation.
-      expect(io.playSamples).toHaveBeenCalledTimes(1);
-      expect(funcs.globalVars.activePlayCount).toBe(0);
     });
 
     test('a stale playSamples completion after stop() cannot decrement a newer play()\'s count', async () => {
@@ -190,14 +170,13 @@ describe('Sequential playback queue functions', () => {
 
       io.playSamples.mockReturnValueOnce(new Promise(() => {})); // B's playback still in progress
       await drain(funcs.play(funcs.silence_sound(10)));
-      expect(funcs.globalVars.activePlayCount).toBe(1);
-      // B is queued behind A (whose mocked playSamples hasn't resolved yet), not playing yet.
-      expect(io.playSamples).toHaveBeenCalledTimes(1);
+      expect(funcs.globalVars.activePlayCount).toBe(1); // B's own count, unrelated to A
+      expect(io.playSamples).toHaveBeenCalledTimes(2); // A and B each dispatched independently
 
-      resolveA!(); // A's late completion arrives, unblocking B's queued turn
+      resolveA!(); // A's late completion arrives, well after stop()
       await new Promise(resolve => setTimeout(resolve, 0));
-      // A's completion is stale (post-stop()) and doesn't touch the count; B has now started.
-      expect(io.playSamples).toHaveBeenCalledTimes(2);
+      // A's completion is stale (post-stop()) and doesn't touch the count, which still reflects
+      // only B (whose own playSamples() call never resolves in this test).
       expect(funcs.globalVars.activePlayCount).toBe(1);
     });
 
@@ -228,13 +207,12 @@ describe('Sequential playback queue functions', () => {
         .rejects.toThrow('play_wave: Expected a wave for wave, got true.');
     });
 
-    test('repeated play_wave() calls queue instead of erroring', async () => {
-      io.playSamples.mockReturnValueOnce(new Promise(() => {}));
-      io.playSamples.mockResolvedValueOnce(undefined);
+    test('repeated play_wave() calls each dispatch immediately, independently of each other', async () => {
+      io.playSamples.mockReturnValue(new Promise(() => {})); // never resolves on its own
       const wave = constantWave(0);
       await expect(drain(funcs.play_wave(wave, 10))).resolves.not.toBeUndefined();
       await expect(drain(funcs.play_wave(wave, 10))).resolves.not.toBeUndefined();
-      expect(io.playSamples).toHaveBeenCalledTimes(1);
+      expect(io.playSamples).toHaveBeenCalledTimes(2);
       expect(funcs.globalVars.activePlayCount).toBe(2);
     });
   });

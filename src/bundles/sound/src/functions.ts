@@ -61,30 +61,18 @@ export const globalVars: BundleGlobalVars = {
 };
 
 /**
- * Bumped only by stop(), so a play() already in flight (playing, or still queued behind another)
- * when stop() is called recognises itself as stale: a queued sound skips its turn entirely instead
- * of starting late, and a sound already playing skips decrementing activePlayCount a second time -
- * stop() already reset the count to 0 immediately, and by then a new, unrelated play() may have
- * started and be relying on that count itself.
+ * Bumped only by stop(), so a play() already in flight when stop() is called recognises its own
+ * completion as stale and skips decrementing activePlayCount a second time - stop() already reset
+ * the count to 0 immediately, and by then a new, unrelated play() may have started and be relying
+ * on that count itself.
  */
 let playGeneration = 0;
-
-/**
- * Chains each play()'s actual playback (not the sampling that precedes it - that still happens
- * eagerly/concurrently) onto whatever's already queued, so repeated/looped play() calls play one
- * after another - like consecutively, but built up call-by-call rather than pre-combined into one
- * Sound - instead of all starting immediately and overlapping.
- */
-let playbackQueue: Promise<void> = Promise.resolve();
 
 let soundIO: SoundTabRpc | undefined;
 
 /** Wires up the host bridge. Called once by {@link SoundModulePlugin}'s constructor. */
 export function setSoundIO(bridge: SoundTabRpc): void {
   soundIO = bridge;
-  // A fresh bridge means a fresh tab/host on the other end - any playback queued against the old
-  // one (e.g. a never-resolving mocked/abandoned call) must not block sounds queued from now on.
-  playbackQueue = Promise.resolve();
 }
 
 function io(): SoundTabRpc {
@@ -461,6 +449,14 @@ export async function* play_waves(left_wave: Wave, right_wave: Wave, duration: n
  * pre-combined into one Sound, so repeated/looped play() calls play one after another instead of
  * overlapping. Returns (without waiting for playback to finish) once the sound has been queued,
  * matching the original module's fire-and-forget behaviour.
+ *
+ * The actual queueing (so playback doesn't overlap) happens on the host side (see
+ * `SoundTabPlugin.playSamples`), not here - this Run's evaluator Worker is terminated as soon as
+ * the program finishes, which can happen well before a sound that's still queued behind another
+ * gets its turn. Deferring the RPC call itself until then would silently drop it. Instead, every
+ * play() dispatches its playSamples() call immediately once sampling finishes, so the message is
+ * always sent before the Worker can be torn down; only the host, which outlives the Worker, needs
+ * to actually sequence playback.
  * @example play(sine_sound(440, 5));
  */
 export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined> {
@@ -480,9 +476,6 @@ export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined
   // time proportional to duration - tell the tab now so it can show that as distinct from idle,
   // rather than looking stalled during what can be a noticeable wait for longer sounds. Awaited
   // (not fire-and-forget) so this can't race the tab's own (possibly still in-progress) loading.
-  // Sampling itself happens eagerly (concurrently with whatever's already queued/playing) - only
-  // the actual playback start is queued, so a later sound in the queue is already sampled and
-  // ready the moment its turn arrives.
   await io().notifyConstructing();
   const leftSamples = yield* sampleWave(sound.leftWave, duration);
   // Mono sounds have leftWave === rightWave: sample once instead of twice.
@@ -490,23 +483,18 @@ export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined
   globalVars.activePlayCount += 1;
   const generation = playGeneration;
   // Fire-and-forget from the caller's perspective (matching the original's non-blocking
-  // semantics), but the actual playSamples() call is chained onto playbackQueue so it only starts
-  // once whatever's ahead of it has finished. If stop() happens before this sound's turn arrives,
-  // `generation` will have moved on and it's skipped entirely rather than starting late.
-  const myTurn: Promise<void> = playbackQueue.then(async () => {
-    if (generation !== playGeneration) {
-      return;
-    }
+  // semantics) - the script continues without waiting for this to settle.
+  void (async () => {
     try {
       await io().playSamples(leftSamples, rightSamples, FS);
     } finally {
+      // If stop() happened in the meantime, `generation` is stale: stop() already reset the count
+      // to 0, and by now a new, unrelated play() may have started and be relying on it itself.
       if (generation === playGeneration) {
         globalVars.activePlayCount = Math.max(0, globalVars.activePlayCount - 1);
       }
     }
-  });
-  // A rejected/skipped turn must not break the chain for whatever's queued after it.
-  playbackQueue = myTurn.catch(() => {});
+  })();
   return sound;
 }
 
