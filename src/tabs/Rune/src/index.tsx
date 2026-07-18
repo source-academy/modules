@@ -170,7 +170,6 @@ export default class RuneTabPlugin implements IPlugin {
 
   destroy(): void {
     this.__runeChannel.unsubscribe(this.__handleMessage);
-    this.__tabService.unregisterTab(RUNE_TAB_ID);
   }
 
   private __emit(): void {
