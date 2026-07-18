@@ -1,5 +1,5 @@
 import { Icon, Slider, Tooltip } from '@blueprintjs/core';
-import type { AnimatedCurve } from '@sourceacademy/bundle-curve/types';
+import { Reset } from '@blueprintjs/icons';
 import AnimationError from '@sourceacademy/modules-lib/tabs/AnimationError';
 import AutoLoopSwitch from '@sourceacademy/modules-lib/tabs/AutoLoopSwitch';
 import ButtonComponent from '@sourceacademy/modules-lib/tabs/ButtonComponent';
@@ -7,10 +7,18 @@ import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
 import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebGLCanvas';
 import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from '@sourceacademy/modules-lib/tabs/css_constants';
 import { useAnimation } from '@sourceacademy/modules-lib/tabs/useAnimation';
+import type { AnimFrame } from '@sourceacademy/modules-lib/types';
 import { useState } from 'react';
 
+type CurveAnimationLike = {
+  duration: number;
+  fps: number;
+  angle: number;
+  getFrame(timestamp: number): AnimFrame;
+};
+
 type Props = {
-  animation: AnimatedCurve;
+  animation: CurveAnimationLike;
 };
 
 /**

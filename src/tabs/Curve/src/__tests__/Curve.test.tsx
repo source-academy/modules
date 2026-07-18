@@ -1,57 +1,77 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { animate_3D_curve, animate_curve, draw_3D_connected, draw_connected } from '@sourceacademy/bundle-curve';
-import type { CurveModuleState } from '@sourceacademy/bundle-curve/types';
-import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
-import { mockDebuggerContext } from '@sourceacademy/modules-lib/utilities';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
-import CurveSideContent, { CurveTab } from '..';
+import {
+  CURVE_TAB_ID,
+  type CurveChannelMessage
+} from '@sourceacademy/bundle-curve/protocol';
+import type { ITabService } from '@sourceacademy/common-tabs';
+import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
+import { describe, expect, test, vi } from 'vitest';
+import CurveTabPlugin from '..';
 
-test('Curve animations error gracefully', () => {
-  const badAnimation = animate_curve(1, 60, draw_connected(200), t => 1 as any);
-  const mockContext = mockDebuggerContext<CurveModuleState>({ drawnCurves: [badAnimation] }, 'curve');
-  expect(<CurveTab debuggerCtx={mockContext} />)
-    .toMatchSnapshot();
-});
+class MockChannel<T> implements IChannel<T> {
+  readonly name = 'mock-curve-channel';
+  readonly sent: T[] = [];
+  private readonly subscribers = new Set<(message: T) => void>();
 
-test('Curve 3D animations error gracefully', () => {
-  const badAnimation = animate_3D_curve(1, 60, draw_3D_connected(200), t => 1 as any);
-  const mockContext = mockDebuggerContext<CurveModuleState>({ drawnCurves: [badAnimation] }, 'curve');
-  expect(<CurveTab debuggerCtx={mockContext} />)
-    .toMatchSnapshot();
-});
+  send(message: T) {
+    this.sent.push(message);
+  }
 
-describe('Test Curve Side Content', () => {
-  const propertyAccessor = vi.fn((target: any, prop: string) => {
-    return target[prop];
+  subscribe(subscriber: (message: T) => void) {
+    this.subscribers.add(subscriber);
+  }
+
+  unsubscribe(subscriber: (message: T) => void) {
+    this.subscribers.delete(subscriber);
+  }
+
+  close() {
+    this.subscribers.clear();
+  }
+
+  emit(message: T) {
+    this.subscribers.forEach(subscriber => subscriber(message));
+  }
+}
+
+function makeTabService(): ITabService {
+  return {
+    registerTab: vi.fn(),
+    unregisterTab: vi.fn(),
+    showTab: vi.fn(),
+    hideTab: vi.fn()
+  };
+}
+
+describe(CurveTabPlugin, () => {
+  test('registers the curve tab and requests replay', () => {
+    const channel = new MockChannel<CurveChannelMessage>();
+    const tabService = makeTabService();
+
+    new CurveTabPlugin({} as IConduit, [channel], tabService);
+
+    expect(tabService.registerTab).toHaveBeenCalledOnce();
+    expect(channel.sent).toContainEqual({ type: 'request' });
   });
 
-  const contextObject: DebuggerContext = {
-    context: {
-      moduleContexts: new Proxy({
-        curve: {
-          state: {
-            drawnCurves: [],
-          },
-          tabs: null
-        }
-      }, {
-        get: propertyAccessor
-      })
-    }
-  } as any;
+  test('stores render messages and shows the tab', () => {
+    const channel = new MockChannel<CurveChannelMessage>();
+    const tabService = makeTabService();
+    const plugin = new CurveTabPlugin({} as IConduit, [channel], tabService);
+    const message = {
+      type: 'render',
+      curve: {
+        drawMode: 'lines',
+        numPoints: 1,
+        space: '2D',
+        drawCubeArray: [],
+        curvePosArray: [-1, -1, 1, 1],
+        curveColorArray: [0, 0, 0, 1, 0, 0, 0, 1]
+      }
+    } satisfies CurveChannelMessage;
 
-  beforeEach(() => {
-    propertyAccessor.mockClear();
-  });
+    channel.emit(message);
 
-  test('toSpawn asks for curve module state', () => {
-    CurveSideContent.toSpawn(contextObject);
-    expect(propertyAccessor).toHaveBeenCalledExactlyOnceWith(expect.any(Object), 'curve', expect.any(Object));
-  });
-
-  test('body asks for curve module state', async () => {
-    await render(<CurveSideContent.body {...contextObject} />);
-    expect(propertyAccessor).toHaveBeenCalledExactlyOnceWith(expect.any(Object), 'curve', expect.any(Object));
+    expect(plugin.getMessages()).toEqual([message]);
+    expect(tabService.showTab).toHaveBeenCalledExactlyOnceWith(CURVE_TAB_ID);
   });
 });

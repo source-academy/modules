@@ -419,7 +419,7 @@ export class TestDataHandler implements IInterfacableEvaluator {
       case DataType.CONST_STRING:
         return stringValue(String(value)) as TypedValue<T>;
       case DataType.EMPTY_LIST:
-        return emptyListValue() as TypedValue<T>;
+        return emptyListValue() as TypedValue<T>;)
       default:
         throw new Error(`Cannot automatically convert JS value to ${typeName(type)}.`);
     }

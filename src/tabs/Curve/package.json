@@ -5,6 +5,8 @@
   "dependencies": {
     "@blueprintjs/core": "^6.0.0",
     "@sourceacademy/bundle-curve": "workspace:^",
+    "@sourceacademy/common-tabs": "^0.0.1",
+    "@sourceacademy/conductor": "https://github.com/source-academy/conductor",
     "@sourceacademy/modules-lib": "workspace:^",
     "react": "catalog:",
     "react-dom": "catalog:"

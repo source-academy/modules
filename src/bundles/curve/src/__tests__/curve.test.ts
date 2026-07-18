@@ -1,32 +1,29 @@
 // Need to disable because stringify produces tab characters?
 /* eslint-disable @stylistic/no-tabs */
-import { callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
 import { stringify } from 'js-slang/dist/utils/stringify';
-import { describe, expect, it, test, vi } from 'vitest';
-import type { Color, Curve } from '../curves_webgl';
+import { describe, expect, it, test as baseTest, vi } from 'vitest';
+import { Point, type Color, type Curve } from '../curves_webgl';
 import * as drawers from '../drawers';
 import * as funcs from '../functions';
-import { AnimatedCurve, type CurveTransformer, type RenderFunctionCreator } from '../types';
-
+import type { CurveTransformer, RenderFunctionCreator } from '../types';
+import { DataType, type IDataHandler, type IFunctionSignature, type TypedValue } from '@sourceacademy/conductor/types';
+import { TestDataHandler, callClosure, runAsyncGenerator } from '@sourceacademy/modules-testplugin';
 /**
  * Evaluates the curve at 200 points, then
  * returns those points as an array of tuples of numbers
  */
-function evaluatePoints(curve: Curve) {
+async function* evaluatePoints(evaluator: IDataHandler, curve: Curve) {
   const points: [number, number, number, Color][] = [];
   for (let i = 0; i < 200; i++) {
     const t = i / 200;
-    const { x, y, z, color } = curve(t);
+    const pointId = yield* evaluator.closure_call(curve, [{ value: t, type: DataType.NUMBER }], DataType.OPAQUE);
+    const point = await evaluator.opaque_get(pointId as TypedValue<DataType.OPAQUE>);
+    const { x, y, z, color } = point;
     points.push([x, y, z, color]);
   }
 
   return points;
 }
-
-function sanitizeStringify(value: Curve) {
-  const result = stringify(value);
-  return result.replaceAll(/__vite_ssr_import_\d+__\./g, '');
-};
 
 const getSanitizedError = vi.defineHelper((f: () => any) => {
   try {
@@ -37,30 +34,94 @@ const getSanitizedError = vi.defineHelper((f: () => any) => {
   expect.fail(`${f} did not throw!`);
 });
 
+const test = baseTest.extend('handler', () => new TestDataHandler());
+const invalidCurveMessage =
+  'The provided curve is not a valid Curve function. ' +
+  'A Curve function must take exactly one parameter (a number t between 0 and 1) ' +
+  'and return a Point or 3D Point depending on whether it is a 2D or 3D curve.';
+
 describe('Ensure that invalid curves and animations error gracefully', () => {
-  test('Curve that returns non-point should throw error', () => {
-    expect(() => drawers.draw_connected(200)(_x => 1 as any))
-      .toThrow('Expected curve to return a point, got \'1\' at t=0');
+  test('Curve that returns non-point should throw error', async ({ handler }) => {
+    const fakeCurve = await handler.closure_make(
+      { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
+      async function* (_t) {
+        return await handler.opaque_make(Math.random());
+      }
+    );
+    await expect(runAsyncGenerator(drawers.draw_connected(handler, 200)(fakeCurve)))
+      .rejects.toThrow('Expected curve to return a point');
   });
 
-  test('Curve that takes multiple parameters should throw error', () => {
-    const error = getSanitizedError(() => drawers.draw_connected(200)(((t: number, u: number) => funcs.make_point(t, u)) as any));
-    expect(error).toEqual('RenderFunction: Expected Curve, got (t, u) => make_point(t, u).');
+  test('Curve that takes multiple parameters should throw error', async ({ handler }) => {
+    const fakeCurve = await handler.closure_make(
+      {
+        args: [DataType.NUMBER, DataType.NUMBER] as const,
+        returnType: DataType.OPAQUE
+      },
+      async function* (_t, _u) {
+        return await handler.opaque_make(funcs.make_point(0, 0));
+      }
+    );
+
+    await expect(runAsyncGenerator(drawers.draw_connected(handler, 200)(fakeCurve as Curve)))
+      .rejects.toThrow(invalidCurveMessage);
   });
 
-  test('CurveAnimation that doesn\'t return a curve should throw error', () => {
-    const anim = new AnimatedCurve(1, 30, ((_t: number) => 0) as any, drawers.draw_connected(200), false);
-    expect(() => anim.getFrame(0)).toThrow('CurveAnimation did not return a Curve at timestamp 0');
+  test('CurveAnimation that doesn\'t return a curve should throw error', async ({ handler }) => {
+    const anim = await handler.closure_make(
+      { args: [DataType.NUMBER] as const, returnType: DataType.CLOSURE },
+      async function* (t0) {
+        return await handler.closure_make(
+          { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
+          async function* (_t1) {
+            return await handler.opaque_make(Math.random());
+          }
+        );
+      }
+    );
+    await expect(runAsyncGenerator(
+      drawers.animate_curve(handler, 1, 60, drawers.draw_connected(handler, 200), anim)
+    )).rejects.toThrow('Expected curve to return a point');
   });
 
-  test('Using 3D render functions with animate_curve should throw errors', () => {
-    expect(() => drawers.animate_curve(1, 60, drawers.draw_3D_connected(200), (t0) => (t1) => funcs.make_point(t0, t1)))
-      .toThrow('animate_curve cannot be used with 3D draw function!');
+  test('Using 3D render functions with animate_curve should throw errors', async ({ handler }) => {
+    const anim = await handler.closure_make(
+      { args: [DataType.NUMBER] as const, returnType: DataType.CLOSURE },
+      async function* (t0: TypedValue<DataType.NUMBER>) {
+        return await handler.closure_make(
+          { args: [DataType.NUMBER] as const, returnType: DataType.CLOSURE },
+          async function* (t1: TypedValue<DataType.NUMBER>) {
+            return await handler.opaque_make(
+              { type: DataType.OPAQUE, value: funcs.make_3D_point(t0.value, t1.value, 0) }
+            );
+          }
+        );
+      });
+
+    await expect(runAsyncGenerator(
+      drawers.animate_curve(handler, 1, 60, drawers.draw_3D_connected(handler, 200), anim)
+    ))
+      .rejects.toThrow('animate_curve cannot be used with 3D draw function!');
   });
 
-  test('Using 2D render functions with animate_3D_curve should throw errors', () => {
-    expect(() => drawers.animate_3D_curve(1, 60, drawers.draw_connected(200), (t0) => (t1) => funcs.make_point(t0, t1)))
-      .toThrow('animate_3D_curve cannot be used with 2D draw function!');
+  test('Using 2D render functions with animate_3D_curve should throw errors', async ({ handler }) => {
+    const anim = await handler.closure_make(
+      { args: [DataType.NUMBER] as const, returnType: DataType.CLOSURE },
+      async function* (t0: TypedValue<DataType.NUMBER>) {
+        return await handler.closure_make(
+          { args: [DataType.NUMBER] as const, returnType: DataType.CLOSURE },
+          async function* (t1: TypedValue<DataType.NUMBER>) {
+            return await handler.opaque_make(
+              { type: DataType.OPAQUE, value: funcs.make_3D_point(t0.value, t1.value, 0) }
+            );
+          }
+        );
+      });
+
+    await expect(runAsyncGenerator(
+      drawers.animate_3D_curve(handler, 1, 60, drawers.draw_connected(handler, 200), anim)
+    ))
+      .rejects.toThrow('animate_3D_curve cannot be used with 2D draw function!');
   });
 });
 
@@ -97,31 +158,31 @@ describe('Render function creators', () => {
       }
     });
 
-    it('throws when numPoints is less than 0', () => {
-      expect(() => func(-1)).toThrow(
-        `${name}: Expected integer ∈ [0, 65535], got -1.`
+    test('throws when numPoints is less than 0', ({ handler }) => {
+      expect(() => func(handler, -1)).toThrow(
+        `${name}: The number of points must be a positive integer less than or equal to 65535. Got: -1`
       );
     });
 
-    it('throws when numPoints is greater than 65535', () => {
-      expect(() => func(70000)).toThrow(
-        `${name}: Expected integer ∈ [0, 65535], got 70000.`
+    test('throws when numPoints is greater than 65535', ({ handler }) => {
+      expect(() => func(handler, 70000)).toThrow(
+        `${name}: The number of points must be a positive integer less than or equal to 65535. Got: 70000`
       );
     });
 
-    it('throws when numPoints is not an integer', () => {
-      expect(() => func(3.14)).toThrow(
-        `${name}: Expected integer ∈ [0, 65535], got 3.14.`
+    test('throws when numPoints is not an integer', ({ handler }) => {
+      expect(() => func(handler, 3.14)).toThrow(
+        `${name}: The number of points must be a positive integer less than or equal to 65535. Got: 3.14`
       );
     });
 
-    test('returned render function throws when called with an invalid curve', () => {
-      const creator = func(200);
-      expect(() => creator(0 as any)).toThrow('RenderFunction: Expected Curve, got 0.');
+    test('returned render function throws when called with an invalid curve', async ({ handler }) => {
+      const creator = func(handler, 200);
+      await expect(runAsyncGenerator(creator(0 as any))).rejects.toThrow(invalidCurveMessage);
     });
 
-    test('returned render functions have nice string representations', () => {
-      const renderFunc = func(250);
+    test('returned render functions have nice string representations', ({ handler }) => {
+      const renderFunc = func(handler, 250);
       if (renderFunc.is3D) {
         expect(stringify(renderFunc)).toEqual('<3DRenderFunction(250)>');
       } else {
@@ -176,68 +237,114 @@ describe('Coloured Points', () => {
   });
 });
 
-describe(funcs.unit_line_at, () => {
-  const curve = funcs.unit_line_at(0.5);
+describe(funcs.unit_line_at, async () => {
+  const handler = new TestDataHandler();
+  const curve = await runAsyncGenerator(funcs.unit_line_at(handler, { type: DataType.NUMBER, value: 0.5 }));
 
-  it('actually works', () => {
-    const points = evaluatePoints(curve);
+  it('actually works', async () => {
+    const points = await runAsyncGenerator(evaluatePoints(handler, curve));
     for (const [, y] of points) {
       expect(y).toEqual(0.5);
     }
   });
 
-  it('throws an error when argument is not a number', () => {
-    expect(() => funcs.unit_line_at('a' as any))
-      .toThrowError('unit_line_at: Expected number, got "a".');
-  });
 });
 
 describe('Curve transformers', () => {
-  function testTransformer(f: CurveTransformer, name?: string, checkColour = true) {
-    test('toReplString representation', () => {
-      expect(stringify(f)).toEqual('<CurveTransformer>');
+  type TransformerFactory = (handler: TestDataHandler) => Promise<CurveTransformer>;
+  type TransformerFunction = (
+    evaluator: IDataHandler,
+    curve: Curve
+  ) => AsyncGenerator<void, Curve, undefined>;
+
+  const transformerSignature = {
+    args: [DataType.CLOSURE] as const,
+    returnType: DataType.CLOSURE
+  } satisfies IFunctionSignature<[DataType.CLOSURE], DataType.CLOSURE>;
+
+  function makeCurve(handler: TestDataHandler, func: (t: number) => Point) {
+    return handler.closure_make(
+      { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
+      async function* (t) {
+        return await handler.opaque_make(func(t.value));
+      }
+    );
+  }
+
+  function makeTransformer(handler: TestDataHandler, func: TransformerFunction) {
+    return handler.closure_make(
+      transformerSignature,
+      (curve: Curve) => func(handler, curve)
+    );
+  }
+
+  async function applyTransformer(
+    handler: TestDataHandler,
+    transformer: CurveTransformer,
+    curve: Curve
+  ): Promise<Curve> {
+    return await callClosure(
+      handler,
+      transformer as TypedValue<DataType.CLOSURE, DataType.CLOSURE>,
+      [curve],
+      DataType.CLOSURE
+    );
+  }
+
+  async function pointAt(handler: TestDataHandler, curve: Curve, t: number): Promise<Point> {
+    const point = await callClosure(
+      handler,
+      curve as TypedValue<DataType.CLOSURE, DataType.OPAQUE>,
+      [{ type: DataType.NUMBER, value: t }],
+      DataType.OPAQUE
+    );
+    return await handler.opaque_get(point) as Point;
+  }
+
+  function testTransformer(createTransformer: TransformerFactory, checkColour = true) {
+    test('is a unary closure', async ({ handler }) => {
+      const transformer = await createTransformer(handler);
+      expect(await handler.closure_arity(transformer)).toEqual(1);
     });
 
-    test.skipIf(name === undefined)('name', () => {
-      expect(f.name).toEqual(name);
-    });
+    test.skipIf(!checkColour)('points retain colour', async ({ handler }) => {
+      const transformer = await createTransformer(handler);
+      const curve = await makeCurve(
+        handler,
+        () => funcs.make_color_point(0.5, 0.5, 255, 127, 0)
+      );
+      const newCurve = await applyTransformer(handler, transformer, curve);
+      const points = await runAsyncGenerator(evaluatePoints(handler, newCurve));
 
-    test.skipIf(!checkColour)('points retain colour', () => {
-      const curve: Curve = _t => funcs.make_color_point(0.5, 0.5, 255, 127, 0);
-      const newCurve = f(curve);
-
-      const points = evaluatePoints(newCurve);
-      for (let i = 0; i < points.length; i++) {
-        const [, , , [r, g, b]] = points[i];
+      for (const [, , , [r, g, b]] of points) {
         expect(r).toEqual(1);
         expect(g).toBeCloseTo(0.5);
         expect(b).toEqual(0);
       }
     });
-
-    it('throws when given not a curve', () => {
-      name ??= 'CurveTransformer';
-
-      expect(() => f(0 as any)).toThrow(`${name}: Expected Curve, got 0.`);
-
-      const invalid: any = (x: number, y: number) => x + y;
-      expect(() => f(invalid)).toThrow(`${name}: Expected Curve, got (x, y) => x + y.`);
-    });
   }
 
   describe(funcs.compose, () => {
-    const composed = funcs.compose(funcs.invert);
-    testTransformer(composed);
+    testTransformer(async handler => {
+      const inverted = await makeTransformer(handler, funcs.invert);
+      return await runAsyncGenerator(funcs.compose(handler, [inverted]));
+    });
 
-    it('composes three transformers in left-to-right order', () => {
-      const curve: Curve = t => funcs.make_color_point(t, 0, 255, 0, 0);
-      const translated = funcs.translate(1, 0, 0);
-      const inverted = funcs.invert;
-      const translatedBack = funcs.translate(-1, 0, 0);
-      const composedThree = callWithoutMetadata(funcs.compose, translated, inverted, translatedBack);
+    test('composes three transformers in left-to-right order', async ({ handler }) => {
+      const curve = await makeCurve(handler, t => funcs.make_color_point(t, 0, 255, 0, 0));
+      const translated = await runAsyncGenerator(funcs.translate(handler, 1, 0, 0));
+      const inverted = await makeTransformer(handler, funcs.invert);
+      const translatedBack = await runAsyncGenerator(funcs.translate(handler, -1, 0, 0));
+      const composedThree = await runAsyncGenerator(
+        funcs.compose(handler, [translated, inverted, translatedBack])
+      );
 
-      const pointA = composedThree(curve)(0);
-      const pointB = translatedBack(inverted(translated(curve)))(0);
+      const composedCurve = await applyTransformer(handler, composedThree, curve);
+      const pointA = await pointAt(handler, composedCurve, 0);
+      const translatedCurve = await applyTransformer(handler, translated, curve);
+      const invertedCurve = await applyTransformer(handler, inverted, translatedCurve);
+      const translatedBackCurve = await applyTransformer(handler, translatedBack, invertedCurve);
+      const pointB = await pointAt(handler, translatedBackCurve, 0);
 
       expect(pointA.x).toEqual(pointB.x);
       expect(pointA.y).toEqual(pointB.y);
@@ -245,41 +352,39 @@ describe('Curve transformers', () => {
       expect(pointA.color).toEqual(pointB.color);
     });
 
-    it('throws when passed a non-transformer argument', () => {
-      expect(() => funcs.compose(0 as any)).toThrow('compose: Expected CurveTransformer for arg 0, got 0.');
-    });
+    test('returns identity transformer when called with no arguments', async ({ handler }) => {
+      const curve = await makeCurve(handler, t => funcs.make_color_point(t, t, 255, 0, 0));
+      const identity = await runAsyncGenerator(funcs.compose(handler, []));
+      const newCurve = await applyTransformer(handler, identity, curve);
 
-    it('returns identity transformer when called with no arguments', () => {
-      const curve: Curve = t => funcs.make_color_point(t, t, 255, 0, 0);
-      const newCurve = funcs.compose()(curve);
+      const oldPoints = await runAsyncGenerator(evaluatePoints(handler, curve));
+      const newPoints = await runAsyncGenerator(evaluatePoints(handler, newCurve));
 
-      const oldPoints = evaluatePoints(curve);
-      const newPoints = evaluatePoints(newCurve);
-
-      for (let i = 0; i < oldPoints.length; i++) {
-        expect(oldPoints[i]).toEqual(newPoints[i]);
-      }
+      expect(newPoints).toEqual(oldPoints);
     });
   });
 
   describe(funcs.invert, () => {
-    testTransformer(funcs.invert, 'invert');
+    testTransformer(handler => makeTransformer(handler, funcs.invert));
 
-    it('actually works', () => {
-      const curve = funcs.unit_line_at(0.5);
-      const newCurve = funcs.invert(curve);
+    test('actually works', async ({ handler }) => {
+      const curve = await runAsyncGenerator(
+        funcs.unit_line_at(handler, { type: DataType.NUMBER, value: 0.5 })
+      );
+      const newCurve = await runAsyncGenerator(funcs.invert(handler, curve));
 
-      expect(sanitizeStringify(newCurve)).toEqual('(t) => curve(1 - t)');
+      expect(await pointAt(handler, newCurve, 0)).toMatchObject({ x: 1, y: 0.5 });
+      expect(await pointAt(handler, newCurve, 1)).toMatchObject({ x: 0, y: 0.5 });
     });
   });
 
   describe(funcs.put_in_standard_position, () => {
-    testTransformer(funcs.put_in_standard_position, 'put_in_standard_position');
+    testTransformer(handler => makeTransformer(handler, funcs.put_in_standard_position));
 
-    it('actually works', () => {
-      const curve: Curve = t => funcs.make_point(-2000 + t, 2000 + t);
-      const newCurve = funcs.put_in_standard_position(curve);
-      const points = evaluatePoints(newCurve);
+    test('actually works', async ({ handler }) => {
+      const curve = await makeCurve(handler, t => funcs.make_point(-2000 + t, 2000 + t));
+      const newCurve = await runAsyncGenerator(funcs.put_in_standard_position(handler, curve));
+      const points = await runAsyncGenerator(evaluatePoints(handler, newCurve));
 
       const [x0, y0] = points[0];
       expect(x0).toBeCloseTo(0);
@@ -288,25 +393,21 @@ describe('Curve transformers', () => {
       const [xn, yn] = points[points.length - 1];
       expect(xn).toBeCloseTo(1, 1);
       expect(yn).toBeCloseTo(0, 1);
-
-      expect(sanitizeStringify(newCurve)).toMatchInlineSnapshot(`
-        "(t) => {
-        			const pt = curve(t);
-        			return make_3D_color_point(x * x_of(pt), y * y_of(pt), z * z_of(pt), r_of(pt), g_of(pt), b_of(pt));
-        		}"
-      `);
     });
   });
 
   describe(funcs.rotate_around_origin_3D, () => {
-    const curve: Curve = t => funcs.make_3D_point(t, t, t);
-    const transformer = funcs.rotate_around_origin_3D(0, 0, Math.PI);
+    testTransformer(handler => runAsyncGenerator(
+      funcs.rotate_around_origin_3D(handler, 0, 0, Math.PI)
+    ));
 
-    testTransformer(transformer);
-
-    it('actually works', () => {
-      const newCurve = transformer(curve);
-      const points = evaluatePoints(newCurve);
+    test('actually works', async ({ handler }) => {
+      const curve = await makeCurve(handler, t => funcs.make_3D_point(t, t, t));
+      const transformer = await runAsyncGenerator(
+        funcs.rotate_around_origin_3D(handler, 0, 0, Math.PI)
+      );
+      const newCurve = await applyTransformer(handler, transformer, curve);
+      const points = await runAsyncGenerator(evaluatePoints(handler, newCurve));
 
       const [x0, y0, z0] = points[0];
 
@@ -319,39 +420,17 @@ describe('Curve transformers', () => {
       expect(x1).toBeCloseTo(-1, 1);
       expect(y1).toBeCloseTo(-1, 1);
       expect(z1).toBeCloseTo(1, 1);
-
-      expect(sanitizeStringify(newCurve)).toMatchInlineSnapshot(`
-        "(t) => {
-        			const pt = curve(t);
-        			const coord = [
-        				pt.x,
-        				pt.y,
-        				pt.z
-        			];
-        			let xf = 0;
-        			let yf = 0;
-        			let zf = 0;
-        			for (let i = 0; i < 3; i += 1) {
-        				xf += mat[0][i] * coord[i];
-        				yf += mat[1][i] * coord[i];
-        				zf += mat[2][i] * coord[i];
-        			};
-        			return make_3D_color_point(xf, yf, zf, r_of(pt), g_of(pt), z_of(pt));
-        		}"
-      `);
     });
   });
 
   describe(funcs.rotate_around_origin, () => {
-    const curve: Curve = t => funcs.make_point(t, t);
-    const transformer = funcs.rotate_around_origin(Math.PI);
+    testTransformer(handler => runAsyncGenerator(funcs.rotate_around_origin(handler, Math.PI)));
 
-    testTransformer(transformer);
-
-    it('actually works', () => {
-      const newCurve = transformer(curve);
-
-      const points = evaluatePoints(newCurve);
+    test('actually works', async ({ handler }) => {
+      const curve = await makeCurve(handler, t => funcs.make_point(t, t));
+      const transformer = await runAsyncGenerator(funcs.rotate_around_origin(handler, Math.PI));
+      const newCurve = await applyTransformer(handler, transformer, curve);
+      const points = await runAsyncGenerator(evaluatePoints(handler, newCurve));
 
       const [x0, y0, z0] = points[0];
 
@@ -364,29 +443,18 @@ describe('Curve transformers', () => {
       expect(x1).toBeCloseTo(-1, 1);
       expect(y1).toBeCloseTo(-1, 1);
       expect(z1).toEqual(0);
-
-      expect(sanitizeStringify(newCurve)).toMatchInlineSnapshot(`
-        "(t) => {
-        			const pt = curve(t);
-        			const pt_x = x_of(pt);
-        			const pt_y = y_of(pt);
-        			return make_3D_color_point(cth * pt_x - sth * pt_y, sth * pt_x + cth * pt_y, z_of(pt), r_of(pt), g_of(pt), b_of(pt));
-        		}"
-      `);
     });
   });
 
   describe(funcs.scale, () => {
-    const curve: Curve = t => funcs.make_3D_point(t, t, t);
-    const transformer = funcs.scale(1, 2, 3);
+    testTransformer(handler => runAsyncGenerator(funcs.scale(handler, 1, 2, 3)));
 
-    testTransformer(transformer);
-
-    it('actually works', () => {
-      const newCurve = transformer(curve);
-
-      const oldPoints = evaluatePoints(curve);
-      const newPoints = evaluatePoints(newCurve);
+    test('actually works', async ({ handler }) => {
+      const curve = await makeCurve(handler, t => funcs.make_3D_point(t, t, t));
+      const transformer = await runAsyncGenerator(funcs.scale(handler, 1, 2, 3));
+      const newCurve = await applyTransformer(handler, transformer, curve);
+      const oldPoints = await runAsyncGenerator(evaluatePoints(handler, curve));
+      const newPoints = await runAsyncGenerator(evaluatePoints(handler, newCurve));
 
       for (let i = 0; i < 200; i += 10) {
         const [x_old, y_old, z_old] = oldPoints[i];
@@ -396,27 +464,18 @@ describe('Curve transformers', () => {
         expect(y_new).toEqual(y_old * 2);
         expect(z_new).toEqual(z_old * 3);
       }
-
-      expect(sanitizeStringify(newCurve)).toMatchInlineSnapshot(`
-        "(t) => {
-        			const pt = curve(t);
-        			return make_3D_color_point(x * x_of(pt), y * y_of(pt), z * z_of(pt), r_of(pt), g_of(pt), b_of(pt));
-        		}"
-      `);
     });
   });
 
   describe(funcs.scale_proportional, () => {
-    const curve: Curve = t => funcs.make_3D_point(t, t, t);
-    const transformer = funcs.scale_proportional(2);
+    testTransformer(handler => runAsyncGenerator(funcs.scale_proportional(handler, 2)));
 
-    testTransformer(transformer);
-
-    it('actually works', () => {
-      const newCurve = transformer(curve);
-
-      const oldPoints = evaluatePoints(curve);
-      const newPoints = evaluatePoints(newCurve);
+    test('actually works', async ({ handler }) => {
+      const curve = await makeCurve(handler, t => funcs.make_3D_point(t, t, t));
+      const transformer = await runAsyncGenerator(funcs.scale_proportional(handler, 2));
+      const newCurve = await applyTransformer(handler, transformer, curve);
+      const oldPoints = await runAsyncGenerator(evaluatePoints(handler, curve));
+      const newPoints = await runAsyncGenerator(evaluatePoints(handler, newCurve));
 
       for (let i = 0; i < 200; i += 10) {
         const [x_old, y_old, z_old] = oldPoints[i];
@@ -426,27 +485,18 @@ describe('Curve transformers', () => {
         expect(y_new).toEqual(y_old * 2);
         expect(z_new).toEqual(z_old * 2);
       }
-
-      expect(sanitizeStringify(newCurve)).toMatchInlineSnapshot(`
-        "(t) => {
-        			const pt = curve(t);
-        			return make_3D_color_point(x * x_of(pt), y * y_of(pt), z * z_of(pt), r_of(pt), g_of(pt), b_of(pt));
-        		}"
-      `);
     });
   });
 
   describe(funcs.translate, () => {
-    const curve: Curve = t => funcs.make_3D_point(t, t, t);
-    const transformer = funcs.translate(1, 1, 1);
+    testTransformer(handler => runAsyncGenerator(funcs.translate(handler, 1, 1, 1)));
 
-    testTransformer(transformer);
-
-    it('actually works', () => {
-      const newCurve = transformer(curve);
-
-      const oldPoints = evaluatePoints(curve);
-      const newPoints = evaluatePoints(newCurve);
+    test('actually works', async ({ handler }) => {
+      const curve = await makeCurve(handler, t => funcs.make_3D_point(t, t, t));
+      const transformer = await runAsyncGenerator(funcs.translate(handler, 1, 1, 1));
+      const newCurve = await applyTransformer(handler, transformer, curve);
+      const oldPoints = await runAsyncGenerator(evaluatePoints(handler, curve));
+      const newPoints = await runAsyncGenerator(evaluatePoints(handler, newCurve));
 
       for (let i = 0; i < 200; i += 10) {
         const [x_old, y_old, z_old] = oldPoints[i];
@@ -456,49 +506,48 @@ describe('Curve transformers', () => {
         expect(y_old + 1).toBeCloseTo(y_new);
         expect(z_old + 1).toBeCloseTo(z_new);
       }
-
-      expect(sanitizeStringify(newCurve)).toMatchInlineSnapshot(`
-        "(t) => {
-        			const pt = curve(t);
-        			return make_3D_color_point(x0 + x_of(pt), y0 + y_of(pt), z0 + z_of(pt), r_of(pt), g_of(pt), b_of(pt));
-        		}"
-      `);
     });
   });
 
   describe(funcs.rainbow, () => {
-    const transformer = funcs.rainbow(2, 0);
+    testTransformer(handler => runAsyncGenerator(funcs.rainbow(handler, 2, 0)), false);
 
-    testTransformer(transformer, 'rainbow', false);
-
-    it('actually works', () => {
-      const curve: Curve = _t => funcs.make_3D_color_point(0, 0, 0, 255, 255, 255);
-      const newCurve = transformer(curve);
-
-      const c0 = newCurve(0).color;
-      const c25 = newCurve(0.25).color;
-      const c5 = newCurve(0.5).color;
+    test('actually works', async ({ handler }) => {
+      const transformer = await runAsyncGenerator(funcs.rainbow(handler, 2, 0));
+      const curve = await makeCurve(
+        handler,
+        () => funcs.make_3D_color_point(0, 0, 0, 255, 255, 255)
+      );
+      const newCurve = await applyTransformer(handler, transformer, curve);
+      const c0 = (await pointAt(handler, newCurve, 0)).color;
+      const c25 = (await pointAt(handler, newCurve, 0.25)).color;
+      const c5 = (await pointAt(handler, newCurve, 0.5)).color;
 
       expect(c0).not.toEqual(c25);
       expect(c25).not.toEqual(c5);
     });
 
-    it('supports a phase offset', () => {
-      const curve: Curve = _t => funcs.make_3D_color_point(0, 0, 0, 255, 255, 255);
-      const newCurve = funcs.rainbow(1, 0.5)(curve);
-
-      const c0 = newCurve(0).color;
-      const c5 = newCurve(0.5).color;
+    test('supports a phase offset', async ({ handler }) => {
+      const transformer = await runAsyncGenerator(funcs.rainbow(handler, 1, 0.5));
+      const curve = await makeCurve(
+        handler,
+        () => funcs.make_3D_color_point(0, 0, 0, 255, 255, 255)
+      );
+      const newCurve = await applyTransformer(handler, transformer, curve);
+      const c0 = (await pointAt(handler, newCurve, 0)).color;
+      const c5 = (await pointAt(handler, newCurve, 0.5)).color;
 
       expect(c0).not.toEqual(c5);
     });
 
-    it('throws when repeats is not a number', () => {
-      expect(() => funcs.rainbow('a' as any, 0)).toThrow('rainbow: Expected number ≥ 0 for repeats, got "a".');
+    test('throws when repeats is not a number', async ({ handler }) => {
+      await expect(runAsyncGenerator(funcs.rainbow(handler, 'a' as any, 0)))
+        .rejects.toThrow('rainbow: Expected number ≥ 0 for repeats, got "a".');
     });
 
-    it('throws when phase is not a number', () => {
-      expect(() => funcs.rainbow(1, 'a' as any)).toThrow('rainbow: Expected number for phase, got "a".');
+    test('throws when phase is not a number', async ({ handler }) => {
+      await expect(runAsyncGenerator(funcs.rainbow(handler, 1, 'a' as any)))
+        .rejects.toThrow('rainbow: Expected number for phase, got "a".');
     });
   });
 });

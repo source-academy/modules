@@ -1,5 +1,4 @@
-import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
-import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/modules-lib/utilities';
+import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 import context from 'js-slang/context';
 
 import { generateCurve, type Curve, type CurveDrawn } from './curves_webgl';
@@ -13,6 +12,7 @@ import {
   type RenderFunctionCreator,
   type ScaleMode
 } from './types';
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 
 const drawnCurves: (AnimatedCurve | CurveDrawn)[] = [];
 context.moduleContexts.curve.state = {
@@ -26,13 +26,30 @@ function getRenderFunctionCreator(
   isFullView: boolean,
   name: string
 ): RenderFunctionCreator {
-  function renderFuncCreator(numPoints: number) {
-    assertNumberWithinRange(numPoints, name, 0, 65535);
+  function renderFuncCreator(
+    evaluator: IDataHandler,
+    numPoints: number
+  ) {
+    if (numPoints <= 0 || numPoints > 65535 || !Number.isInteger(numPoints)) {
+      throw new GeneralRuntimeError(
+        `${name}: The number of points must be a positive integer less than or equal to 65535. ` +
+        `Got: ${numPoints}`
+      );
+    }
 
-    function renderFunc(curve: Curve) {
-      assertFunctionOfLength(curve, 1, 'RenderFunction', 'Curve');
+    async function* renderFunc(curve: Curve) {
+      try {
+        await evaluator.closure_arity_assert(curve, 1);
+      } catch {
+        throw new GeneralRuntimeError(
+          'The provided curve is not a valid Curve function. ' +
+          'A Curve function must take exactly one parameter (a number t between 0 and 1) ' +
+          'and return a Point or 3D Point depending on whether it is a 2D or 3D curve.'
+        );
+      }
 
-      const curveDrawn = generateCurve(
+      const curveDrawn = yield* generateCurve(
+        evaluator,
         scaleMode,
         drawMode,
         numPoints,
@@ -40,11 +57,6 @@ function getRenderFunctionCreator(
         space,
         isFullView
       );
-
-      if (!curve.shouldNotAppend) {
-        drawnCurves.push(curveDrawn);
-      }
-
       return curveDrawn;
     }
 
@@ -371,37 +383,49 @@ export const draw_3D_points_full_view_proportional = RenderFunctionCreators.draw
 
 class CurveAnimators {
   @functionDeclaration('duration: number, fps: number, drawer: (func: Curve) => Curve, func: (func: Curve) => Curve', 'AnimatedCurve')
-  static animate_curve(
+  static async* animate_curve(
+    evaluator: IDataHandler,
     duration: number,
     fps: number,
     drawer: RenderFunction,
     func: CurveAnimation
-  ): AnimatedCurve {
+  ): AsyncGenerator<void, AnimatedCurve, undefined> {
     if (drawer.is3D) {
       throw new GeneralRuntimeError(`${animate_curve.name} cannot be used with 3D draw function!`);
     }
 
-    assertFunctionOfLength(func, 1, CurveAnimators.animate_curve.name, 'CurveAnimation');
+    const frameCount = Math.floor(fps * duration);
+    const frames: CurveDrawn[] = [];
+    for (let i = 0; i < fps * duration; i++) {
+      const t = i / frameCount;
+      frames.push(yield* drawer((yield* evaluator.closure_call(func, [{ type: DataType.NUMBER, value: t }], DataType.CLOSURE)) as TypedValue<DataType.CLOSURE>));
+    }
 
-    const anim = new AnimatedCurve(duration, fps, func, drawer, false);
+    const anim = new AnimatedCurve(duration, fps, frames, false);
     drawnCurves.push(anim);
     return anim;
   }
 
   @functionDeclaration('duration: number, fps: number, drawer: (func: Curve) => Curve, func: (func: Curve) => Curve', 'AnimatedCurve')
-  static animate_3D_curve(
+  static async* animate_3D_curve(
+    evaluator: IDataHandler,
     duration: number,
     fps: number,
     drawer: RenderFunction,
     func: CurveAnimation
-  ): AnimatedCurve {
+  ): AsyncGenerator<void, AnimatedCurve, undefined> {
     if (!drawer.is3D) {
       throw new GeneralRuntimeError(`${animate_3D_curve.name} cannot be used with 2D draw function!`);
     }
 
-    assertFunctionOfLength(func, 1, CurveAnimators.animate_3D_curve.name, 'CurveAnimation');
+    const frameCount = Math.floor(fps * duration);
+    const frames: CurveDrawn[] = [];
+    for (let i = 0; i < fps * duration; i++) {
+      const t = i / frameCount;
+      frames.push(yield* drawer((yield* evaluator.closure_call(func, [{ type: DataType.NUMBER, value: t }], DataType.CLOSURE)) as TypedValue<DataType.CLOSURE>));
+    }
 
-    const anim = new AnimatedCurve(duration, fps, func, drawer, true);
+    const anim = new AnimatedCurve(duration, fps, frames, true);
     drawnCurves.push(anim);
     return anim;
   }

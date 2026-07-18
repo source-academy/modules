@@ -1,6 +1,6 @@
-import { animate_3D_curve, draw_3D_connected, make_3D_point } from '@sourceacademy/bundle-curve';
-import type { Curve, CurveDrawn } from '@sourceacademy/bundle-curve/curves_webgl';
-import type { AnimatedCurve } from '@sourceacademy/bundle-curve/types';
+import { generateCurve, type CurveDrawn } from '@sourceacademy/bundle-curve/curves_webgl';
+import { make_3D_point } from '@sourceacademy/bundle-curve/functions';
+import { glAnimation, type AnimFrame } from '@sourceacademy/modules-lib/types';
 import { degreesToRadians } from '@sourceacademy/modules-lib/utilities';
 import { afterEach, beforeEach, describe, expect, test as baseTest, vi, type MockedFunction } from 'vitest';
 import { userEvent } from 'vitest/browser';
@@ -20,7 +20,14 @@ describe('Test 3D Curve Canvas', () => {
 
   const test = baseTest.extend<Fixtures>({
     curve: ({ }, fixture) => {
-      return fixture(draw_3D_connected(400)(t => make_3D_point(t, 0.5 * Math.sin(2 * t * Math.PI), t)));
+      return fixture(generateCurve(
+        'none',
+        'lines',
+        400,
+        t => make_3D_point(t, 0.5 * Math.sin(2 * t * Math.PI), t),
+        '3D',
+        false
+      ));
     },
     mockedRedraw: ({ curve }, fixture) => {
       const mockedRedraw = vi.fn(curve.redraw.bind(curve));
@@ -95,8 +102,45 @@ describe('Test 3D Curve Canvas', () => {
 });
 
 describe('Test 3D Animated Curve Canvas', () => {
+  class TestCurveAnimation extends glAnimation {
+    public angle = 0;
+
+    constructor(
+      private readonly mockAngleRedraw: MockedFunction<(angle: number) => void>,
+      private readonly mockGetFrame: MockedFunction<(timestamp: number) => void>
+    ) {
+      super(1, 10);
+    }
+
+    getFrame(timestamp: number): AnimFrame {
+      this.mockGetFrame(timestamp);
+      const curve = generateCurve(
+        'none',
+        'lines',
+        400,
+        t => make_3D_point(t, 0.5 * Math.sin((2 * t + timestamp) * Math.PI), t),
+        '3D',
+        false
+      );
+      const oldRedraw = curve.redraw.bind(curve);
+      const angle = this.angle;
+      const mockAngleRedraw = this.mockAngleRedraw;
+
+      return {
+        draw(canvas) {
+          curve.init(canvas);
+          curve.redraw = redrawAngle => {
+            mockAngleRedraw(redrawAngle);
+            return oldRedraw(redrawAngle);
+          };
+          curve.redraw(angle);
+        }
+      };
+    }
+  }
+
   interface Fixtures {
-    curve: AnimatedCurve;
+    curve: TestCurveAnimation;
     mockAngleRedraw: MockedFunction<(angle: number) => void>;
     mockGetFrame: MockedFunction<(timestamp: number) => void>;
   };
@@ -114,33 +158,7 @@ describe('Test 3D Animated Curve Canvas', () => {
     mockAngleRedraw: ({ }, fixture) => fixture(vi.fn((_angle: number) => { })),
     mockGetFrame: ({ }, fixture) => fixture(vi.fn((_timestamp: number) => { })),
     curve: ({ mockAngleRedraw, mockGetFrame }, fixture) => {
-      const drawer = draw_3D_connected(400);
-      /**
-       * A mocked implementation of draw_3D_connected that allows us to spy
-       * on what angle the curves were drawn with
-       */
-      function mockDrawer(curve: Curve) {
-        const drawnCurve = drawer(curve);
-        const oldRedraw = drawnCurve.redraw.bind(drawnCurve);
-        drawnCurve.redraw = angle => {
-          mockAngleRedraw(angle);
-          return oldRedraw(angle);
-        };
-        return drawnCurve;
-      };
-      mockDrawer.is3D = true;
-      mockDrawer.toReplString = () => '';
-
-      const animation = animate_3D_curve(1, 10, mockDrawer, c => t => make_3D_point(t, 0.5 * Math.sin((2 * t + c) * Math.PI), t));
-
-      // Now we also mock the implementation of getFrame to allow us to see what frames were drawn
-      const oldGetFrame = animation.getFrame.bind(animation);
-      animation.getFrame = timestamp => {
-        mockGetFrame(timestamp);
-        return oldGetFrame(timestamp);
-      };
-
-      return fixture(animation);
+      return fixture(new TestCurveAnimation(mockAngleRedraw, mockGetFrame));
     },
   });
 

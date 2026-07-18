@@ -1,9 +1,10 @@
-import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { assertFunctionOfLength, assertNumberWithinRange, callWithoutMetadata, hueToRgb, wrapFunction } from '@sourceacademy/modules-lib/utilities';
+import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 import { clamp } from 'es-toolkit';
 import { Point, type Curve } from './curves_webgl';
 import { functionDeclaration } from './type_interface';
 import type { CurveTransformer } from './types';
+import { assertNumberWithinRange, hueToRgb, wrapFunction } from '@sourceacademy/modules-lib/utilities';
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 
 function throwIfNotPoint(obj: unknown, func_name: string): asserts obj is Point {
   if (!(obj instanceof Point)) {
@@ -11,23 +12,20 @@ function throwIfNotPoint(obj: unknown, func_name: string): asserts obj is Point 
   }
 }
 
-function throwIfNotCurve(obj: unknown, func_name: string, param_name?: string): asserts obj is Curve {
-  assertFunctionOfLength(obj, 1, func_name, 'Curve', param_name);
-}
-
-function defineCurveTransformer(f: (arg: Curve) => Curve, name?: string): CurveTransformer {
-  const transformer: CurveTransformer = curve => {
-    throwIfNotCurve(curve, name ?? 'CurveTransformer');
-    return f(t => callWithoutMetadata(curve, t));
-  };
-
-  transformer.toReplString = () => '<CurveTransformer>';
-
-  if (name !== undefined) {
-    Object.defineProperty(transformer, 'name', { value: name });
-  }
-
-  return transformer;
+async function defineCurveTransformer(evaluator: IDataHandler, f: (arg: Point, t: number) => AsyncGenerator<void, Point, unknown>, name?: string): Promise<CurveTransformer> {
+  return await evaluator.closure_make(
+    { args: [DataType.CLOSURE] as const, returnType: DataType.CLOSURE },
+    async function* (curve) {
+      return await evaluator.closure_make(
+        { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
+        async function* (t) {
+          const pointId = yield* evaluator.closure_call(curve, [t], DataType.OPAQUE);
+          const point = await evaluator.opaque_get(pointId as TypedValue<DataType.OPAQUE>);
+          return await evaluator.opaque_make(yield* f(point, t.value));
+        }
+      );
+    }
+  );
 }
 
 class CurveFunctions {
@@ -80,59 +78,66 @@ class CurveFunctions {
   }
 
   @functionDeclaration('curve1: Curve, curve2: Curve', 'Curve')
-  static connect_ends(curve1: Curve, curve2: Curve): Curve {
-    throwIfNotCurve(curve1, CurveFunctions.connect_ends.name, 'curve1');
-    throwIfNotCurve(curve2, CurveFunctions.connect_ends.name, 'curve2');
+  static async* connect_ends(evaluator: IDataHandler, curve1: Curve, curve2: Curve): AsyncGenerator<void, Curve, undefined> {
+    const startPointOfCurve2Id = (yield* evaluator.closure_call(curve2, [{ type: DataType.NUMBER, value: 0 }], DataType.OPAQUE)) as TypedValue<DataType.OPAQUE>;
+    const endPointOfCurve1Id = (yield* evaluator.closure_call(curve1, [{ type: DataType.NUMBER, value: 1 }], DataType.OPAQUE)) as TypedValue<DataType.OPAQUE>;
 
-    const startPointOfCurve2 = callWithoutMetadata(curve2, 0);
-    const endPointOfCurve1 = callWithoutMetadata(curve1, 1);
-    return connect_rigidly(
+    const startPointOfCurve2 = await evaluator.opaque_get(startPointOfCurve2Id);
+    const endPointOfCurve1 = await evaluator.opaque_get(endPointOfCurve1Id);
+
+    return yield* connect_rigidly(
+      evaluator,
       curve1,
-      translate(
+      (yield* evaluator.closure_call(yield* translate(
+        evaluator,
         x_of(endPointOfCurve1) - x_of(startPointOfCurve2),
         y_of(endPointOfCurve1) - y_of(startPointOfCurve2),
         z_of(endPointOfCurve1) - z_of(startPointOfCurve2)
-      )(curve2)
+      ), [curve2], DataType.CLOSURE)) as TypedValue<DataType.CLOSURE>
     );
   }
 
   @functionDeclaration('curve1: Curve, curve2: Curve', 'Curve')
-  static connect_rigidly(curve1: Curve, curve2: Curve): Curve {
-    throwIfNotCurve(curve1, CurveFunctions.connect_rigidly.name, 'curve1');
-    throwIfNotCurve(curve2, CurveFunctions.connect_rigidly.name, 'curve2');
-
-    const c1: Curve = t => callWithoutMetadata(curve1, t);
-    const c2: Curve = t => callWithoutMetadata(curve2, t);
-
-    return t => (t < 0.5 ? c1(2 * t) : c2(2 * t - 1));
+  static async* connect_rigidly(evaluator: IDataHandler, curve1: Curve, curve2: Curve): AsyncGenerator<void, Curve, undefined> {
+    return await evaluator.closure_make(
+      { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
+      async function* (t) {
+        return t.value < 1 / 2
+          ? yield* evaluator.closure_call(curve1, [{ type: DataType.NUMBER, value: 2 * t.value }], DataType.OPAQUE)
+          : yield* evaluator.closure_call(curve2, [{ type: DataType.NUMBER, value: 2 * t.value - 1 }], DataType.OPAQUE);
+      }
+    );
   }
 
   @functionDeclaration('x0: number, y0: number, z0: number', '(c: Curve) => Curve')
-  static translate(x0: number, y0: number, z0: number): CurveTransformer {
-    assertNumberWithinRange(x0, { func_name: CurveFunctions.translate.name, param_name: 'x0', integer: false });
-    assertNumberWithinRange(y0, { func_name: CurveFunctions.translate.name, param_name: 'y0', integer: false });
-    assertNumberWithinRange(z0, { func_name: CurveFunctions.translate.name, param_name: 'z0', integer: false });
-
-    return defineCurveTransformer(curve => t => {
-      const pt = curve(t);
-      return make_3D_color_point(
-        x0 + x_of(pt),
-        y0 + y_of(pt),
-        z0 + z_of(pt),
-        r_of(pt),
-        g_of(pt),
-        b_of(pt),
-      );
-    });
+  static async* translate(evaluator: IDataHandler, x0: number, y0: number, z0: number): AsyncGenerator<void, CurveTransformer, undefined> {
+    return await evaluator.closure_make(
+      { args: [DataType.CLOSURE] as const, returnType: DataType.CLOSURE },
+      async function* (curve) {
+        return await evaluator.closure_make(
+          { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
+          async function* (t) {
+            const ctId = yield* evaluator.closure_call(curve, [t], DataType.OPAQUE);
+            const ct = await evaluator.opaque_get(ctId as TypedValue<DataType.OPAQUE>);
+            throwIfNotPoint(ct, translate.name);
+            return await evaluator.opaque_make(new Point(
+              x0 + ct.x,
+              y0 + ct.y,
+              z0 + ct.z,
+              [ct.color[0], ct.color[1], ct.color[2], 1]
+            ));
+          }
+        );
+      }
+    );
   }
 
   @functionDeclaration('repeats: number, phase: number', '(c: Curve) => Curve')
-  static rainbow(repeats: number, phase: number): CurveTransformer {
+  static async* rainbow(evaluator: IDataHandler, repeats: number, phase: number): AsyncGenerator<void, CurveTransformer, undefined> {
     assertNumberWithinRange(repeats, CurveFunctions.rainbow.name, 0, undefined, false, 'repeats');
     assertNumberWithinRange(phase, CurveFunctions.rainbow.name, undefined, undefined, false, 'phase');
 
-    return defineCurveTransformer(curve => t => {
-      const pt = curve(t);
+    return defineCurveTransformer(evaluator, async function* (pt, t) {
       const [r, g, b] = hueToRgb((t * repeats + phase) % 1);
 
       return make_3D_color_point(
@@ -143,34 +148,45 @@ class CurveFunctions {
         g,
         b
       );
-    }, 'rainbow');
+    });
   }
 
   @functionDeclaration('curve: Curve', 'Curve')
-  static invert: CurveTransformer = defineCurveTransformer(curve => t => curve(1 - t), 'invert');
+  static async* invert(evaluator: IDataHandler, original: Curve): AsyncGenerator<void, Curve, undefined> {
+    return await evaluator.closure_make(
+      { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
+      async function* (t) {
+        return yield* evaluator.closure_call(original, [{ type: DataType.NUMBER, value: 1 - t.value }], DataType.OPAQUE);
+      }
+    );
+  }
 
   @functionDeclaration('curve: Curve', 'Curve')
-  static put_in_standard_position: CurveTransformer = defineCurveTransformer(curve => {
-    const start_point = curve(0);
-    const curve_started_at_origin = translate(
+  static async* put_in_standard_position(evaluator: IDataHandler, curve: Curve): AsyncGenerator<void, Curve, undefined> {
+    const start_point_id = yield* evaluator.closure_call(curve, [{ type: DataType.NUMBER, value: 0 }], DataType.OPAQUE);
+    const start_point = await evaluator.opaque_get(start_point_id as TypedValue<DataType.OPAQUE>);
+    const curve_started_at_origin = (yield* evaluator.closure_call(yield* translate(
+      evaluator,
       -x_of(start_point),
       -y_of(start_point),
       0
-    )(curve);
-    const new_end_point = curve_started_at_origin(1);
+    ), [curve], DataType.CLOSURE)) as TypedValue<DataType.CLOSURE>;
+    const new_end_point_id = yield* evaluator.closure_call(curve_started_at_origin, [{ type: DataType.NUMBER, value: 1 }], DataType.OPAQUE);
+    const new_end_point = await evaluator.opaque_get(new_end_point_id as TypedValue<DataType.OPAQUE>);
     const theta = Math.atan2(y_of(new_end_point), x_of(new_end_point));
-    const curve_ended_at_x_axis = rotate_around_origin_3D(
+    const curve_ended_at_x_axis = (yield* evaluator.closure_call(yield* rotate_around_origin_3D(
+      evaluator,
       0,
       0,
       -theta
-    )(curve_started_at_origin);
-    const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1));
-    return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
-  }, 'put_in_standard_position');
+    ), [curve_started_at_origin], DataType.CLOSURE)) as TypedValue<DataType.CLOSURE>;
+    const end_point_id = (yield* evaluator.closure_call(curve_ended_at_x_axis, [{ type: DataType.NUMBER, value: 1 }], DataType.OPAQUE)) as TypedValue<DataType.OPAQUE>;
+    const end_point_on_x_axis = x_of(await evaluator.opaque_get(end_point_id));
+    return (yield* evaluator.closure_call(yield* scale_proportional(evaluator, 1 / end_point_on_x_axis), [curve_ended_at_x_axis], DataType.CLOSURE)) as TypedValue<DataType.CLOSURE>;
+  };
 
   @functionDeclaration('a: number, b: number, c: number', '(c: Curve) => Curve')
-  static rotate_around_origin_3D(a: number, b: number, c: number): CurveTransformer {
-    assertNumberWithinRange(a, { func_name: CurveFunctions.rotate_around_origin_3D.name, integer: false, param_name: 'a' });
+  static async* rotate_around_origin_3D(evaluator: IDataHandler, a: number, b: number, c: number): AsyncGenerator<void, CurveTransformer, undefined> {
     const cthx = Math.cos(a);
     const sthx = Math.sin(a);
 
@@ -195,10 +211,10 @@ class CurveFunctions {
       [-sthy, cthy * sthx, cthy * cthx]
     ];
 
-    return defineCurveTransformer(curve => t => {
-      const pt = curve(t);
-      const coord = [pt.x, pt.y, pt.z];
 
+    return defineCurveTransformer(evaluator, async function* (ct) {
+      throwIfNotPoint(ct, rotate_around_origin_3D.name);
+      const coord = [ct.x, ct.y, ct.z];
       let xf = 0;
       let yf = 0;
       let zf = 0;
@@ -207,76 +223,66 @@ class CurveFunctions {
         yf += mat[1][i] * coord[i];
         zf += mat[2][i] * coord[i];
       }
-      return make_3D_color_point(
-        xf,
-        yf,
-        zf,
-        r_of(pt),
-        g_of(pt),
-        z_of(pt)
-      );
-    });
+      const newPoint = new Point(xf, yf, zf, [ct.color[0], ct.color[1], ct.color[2], 1]);
+      return newPoint;
+    }
+    );
   }
 
   @functionDeclaration('a: number', '(c: Curve) => Curve')
-  static rotate_around_origin(a: number): CurveTransformer {
-    assertNumberWithinRange(a, { func_name: CurveFunctions.rotate_around_origin.name, integer: false });
-
+  static async* rotate_around_origin(evaluator: IDataHandler, a: number): AsyncGenerator<void, CurveTransformer, undefined> {
     // 1 args
     const cth = Math.cos(a);
     const sth = Math.sin(a);
 
-    return defineCurveTransformer(curve => t => {
-      const pt = curve(t);
-      const pt_x = x_of(pt);
-      const pt_y = y_of(pt);
-
-      return make_3D_color_point(
-        cth * pt_x - sth * pt_y,
-        sth * pt_x + cth * pt_y,
-        z_of(pt),
-        r_of(pt),
-        g_of(pt),
-        b_of(pt)
-      );
-    });
+    return defineCurveTransformer(
+      evaluator,
+      async function* (ct) {
+        throwIfNotPoint(ct, rotate_around_origin.name);
+        return new Point(
+          cth * ct.x - sth * ct.y,
+          sth * ct.x + cth * ct.y,
+          ct.z,
+          [ct.color[0], ct.color[1], ct.color[2], 1]
+        );
+      }
+    );
   }
 
   @functionDeclaration('x: number, y: number, z: number', '(c: Curve) => Curve')
-  static scale(x: number, y: number, z: number): CurveTransformer {
-    assertNumberWithinRange(x, { func_name: CurveFunctions.scale.name, param_name: 'x', integer: false });
-    assertNumberWithinRange(y, { func_name: CurveFunctions.scale.name, param_name: 'y', integer: false });
-    assertNumberWithinRange(z, { func_name: CurveFunctions.scale.name, param_name: 'z', integer: false });
-
-    return defineCurveTransformer(curve => t => {
-      const pt = curve(t);
-
-      return make_3D_color_point(
-        x * x_of(pt),
-        y * y_of(pt),
-        z * z_of(pt),
-        r_of(pt),
-        g_of(pt),
-        b_of(pt)
+  static async* scale(evaluator: IDataHandler, x: number, y: number, z: number): AsyncGenerator<void, CurveTransformer, undefined> {
+    return defineCurveTransformer(evaluator, async function* (ct) {
+      throwIfNotPoint(ct, scale.name);
+      return new Point(
+        x * ct.x,
+        y * ct.y,
+        z * ct.z,
+        [ct.color[0], ct.color[1], ct.color[2], 1]
       );
     });
   }
 
   @functionDeclaration('s: number', '(c: Curve) => Curve')
-  static scale_proportional(s: number): CurveTransformer {
-    return scale(s, s, s);
+  static async* scale_proportional(evaluator: IDataHandler, s: number): AsyncGenerator<void, CurveTransformer, undefined> {
+    return yield* scale(evaluator, s, s, s);
   }
 
-  // TODO: Do type maps support rest arguments?
-  static compose = wrapFunction((...transformers: CurveTransformer[]): CurveTransformer => {
-    transformers.forEach((transformer, index) => {
-      assertFunctionOfLength(transformer, 1, CurveFunctions.compose.name, 'CurveTransformer', `arg ${index}`);
-    });
-
-    return defineCurveTransformer(curve => {
-      return transformers.reduce((acc, transformer) => transformer(acc), curve);
-    });
-  }, true, 'compose');
+  static async* compose(evaluator: IDataHandler, transformers: CurveTransformer[]): AsyncGenerator<void, CurveTransformer, undefined> {
+    return await evaluator.closure_make(
+      { args: [DataType.CLOSURE] as const, returnType: DataType.CLOSURE },
+      async function* (curve) {
+        let transformedCurve = curve;
+        for (const transformer of transformers) {
+          transformedCurve = yield* evaluator.closure_call(
+            transformer as TypedValue<DataType.CLOSURE, DataType.CLOSURE>,
+            [transformedCurve],
+            DataType.CLOSURE
+          );
+        }
+        return transformedCurve;
+      }
+    );
+  }
 
   @functionDeclaration('p: Point', 'number')
   static x_of(pt: Point): number {
@@ -315,19 +321,37 @@ class CurveFunctions {
   }
 
   @functionDeclaration('t: number', 'Point')
-  static unit_circle: Curve = t => make_point(Math.cos(2 * Math.PI * t), Math.sin(2 * Math.PI * t));
+  static unit_circle = async function* (evaluator: IDataHandler, t: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
+    return await evaluator.opaque_make(
+      make_point(Math.cos(2 * Math.PI * t.value), Math.sin(2 * Math.PI * t.value))
+    );
+  };
 
   @functionDeclaration('t: number', 'Point')
-  static unit_line: Curve = t => make_point(t, 0);
+  static unit_line = async function* (evaluator: IDataHandler, t: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
+    return await evaluator.opaque_make(
+      make_point(t.value, 0)
+    );
+  };
 
   @functionDeclaration('t: number', 'Curve')
-  static unit_line_at(y: number): Curve {
-    assertNumberWithinRange(y, { func_name: CurveFunctions.unit_line_at.name, integer: false });
-    return t => make_point(t, y);
+  static async* unit_line_at(evaluator: IDataHandler, y: TypedValue<DataType.NUMBER>): AsyncGenerator<void, Curve, undefined> {
+    return await evaluator.closure_make(
+      { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
+      async function* (t) {
+        return await evaluator.opaque_make(
+          make_point(t.value, y.value)
+        );
+      }
+    );
   }
 
   @functionDeclaration('t: number', 'Point')
-  static arc: Curve = t => make_point(Math.sin(Math.PI * t), Math.cos(Math.PI * t));
+  static arc = async function* (evaluator: IDataHandler, t: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
+    return await evaluator.opaque_make(
+      make_point(Math.sin(Math.PI * t.value), Math.cos(Math.PI * t.value))
+    );
+  };
 }
 
 /**
