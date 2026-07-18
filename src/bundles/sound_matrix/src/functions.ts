@@ -10,15 +10,21 @@
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 import { mEmptyList } from '@sourceacademy/conductor/util';
 
-/** Converts a row-major boolean grid into a Source list of lists (row 0 first, each a list of booleans). */
+/**
+ * Converts a row-major boolean grid into a Source list of lists. The tab draws `matrix[0]` at the
+ * top of the canvas and `matrix[matrix.length - 1]` at the bottom (see the SoundMatrix tab's
+ * `rowToY`), but `get_matrix()` is documented (Quest Q5B) to return row 0 as the *bottom-most* row
+ * - matching the original `soundToneMatrix.js`'s `result[i] = matrix_list[15 - i]` flip. Walk the
+ * array bottom-up so the returned list's head is the bottom row.
+ */
 export async function matrixToConductorList(evaluator: IDataHandler, matrix: boolean[][]): Promise<TypedValue<DataType.LIST>> {
-  return rowsToConductorList(evaluator, matrix, 0);
+  return rowsToConductorList(evaluator, matrix, matrix.length - 1);
 }
 
 async function rowsToConductorList(evaluator: IDataHandler, matrix: boolean[][], index: number): Promise<TypedValue<DataType.LIST>> {
-  if (index >= matrix.length) return mEmptyList();
+  if (index < 0) return mEmptyList();
   const rowList = await rowToConductorList(evaluator, matrix[index], 0);
-  return evaluator.pair_make(rowList, await rowsToConductorList(evaluator, matrix, index + 1));
+  return evaluator.pair_make(rowList, await rowsToConductorList(evaluator, matrix, index - 1));
 }
 
 async function rowToConductorList(evaluator: IDataHandler, row: boolean[], index: number): Promise<TypedValue<DataType.LIST>> {

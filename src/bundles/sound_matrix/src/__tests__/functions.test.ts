@@ -60,15 +60,22 @@ describe(matrixToConductorList, () => {
     expect(await toPlain(evaluator, result)).toEqual([[true, false, true]]);
   });
 
-  test('converts a full 16x16-shaped matrix, preserving row order and per-row order', async () => {
+  test('returns row 0 as the bottom-most drawn row (Quest Q5B: rows count up from the bottom)', async () => {
     const evaluator = makeHandler();
+    // matrix[0] is drawn at the top of the canvas (see the tab's rowToY), matrix[2] at the bottom -
+    // get_matrix()'s row 0 must be the bottom row, i.e. matrix[2], per the original
+    // soundToneMatrix.js's `result[i] = matrix_list[15 - i]` flip.
     const matrix = [
-      [true, false],
+      [true, false], // top row (drawn row 0) -> should end up last in the returned list
       [false, false],
-      [true, true]
+      [true, true] // bottom row (drawn row 2) -> should end up first in the returned list
     ];
     const result = await matrixToConductorList(evaluator, matrix);
-    expect(await toPlain(evaluator, result)).toEqual(matrix);
+    expect(await toPlain(evaluator, result)).toEqual([
+      [true, true],
+      [false, false],
+      [true, false]
+    ]);
   });
 
   test('a row of all false values round-trips correctly (not confused with an empty row)', async () => {
