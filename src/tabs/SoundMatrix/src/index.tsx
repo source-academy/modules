@@ -169,7 +169,8 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
     if (row < 0 || row >= GRID_SIZE || column < 0 || column >= GRID_SIZE || !this.__canvas) {
       return;
     }
-    const ctx = this.__canvas.getContext('2d') as CanvasRenderingContext2D;
+    const ctx = this.__canvas.getContext('2d');
+    if (!ctx) return;
     ctx.fillStyle = color;
     ctx.fillRect(columnToX(column), rowToY(row), SQUARE_SIDE_LENGTH, SQUARE_SIDE_LENGTH);
   }
@@ -192,8 +193,13 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
     if (row < 0 || row >= GRID_SIZE || column < 0 || column >= GRID_SIZE) {
       return;
     }
-    const matrix = getSharedMatrix();
+    // useSyncExternalStore's snapshot is getSharedMatrix itself - mutating the array it returns
+    // in place would leave globalScope[GLOBAL_MATRIX_KEY] pointing at the same reference, so
+    // React's Object.is comparison would see no change and skip re-rendering. Clone first, same
+    // as getMatrix() already does.
+    const matrix = getSharedMatrix().map(r => [...r]);
     matrix[row][column] = !matrix[row][column];
+    setSharedMatrix(matrix);
     this.__setColor(row, column, matrix[row][column] ? COLOR_ON : COLOR_OFF);
     this.__emit();
   };

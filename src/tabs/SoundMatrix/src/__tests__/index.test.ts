@@ -97,6 +97,23 @@ describe(SoundMatrixTabPlugin, () => {
     expect(matrix[1][0]).toBe(false);
   });
 
+  test('clicking a square replaces the shared matrix reference, not just its contents', () => {
+    // Regression test: useSyncExternalStore's snapshot function is getSharedMatrix itself, so
+    // React detects a change via Object.is on successive snapshots - mutating the stored array in
+    // place (same reference) would make React think nothing changed and skip re-rendering, even
+    // though __setColor's direct canvas draw would still look correct. The click handler must
+    // install a *new* array via setSharedMatrix, not mutate the existing one.
+    const key = Symbol.for('sourceacademy.sound_matrix.sharedMatrix');
+    const before = (globalThis as unknown as Record<symbol, unknown>)[key];
+
+    const canvas = container.querySelector('canvas')!;
+    const rect = canvas.getBoundingClientRect();
+    canvas.dispatchEvent(new MouseEvent('click', { clientX: rect.left + 25, clientY: rect.top + 25, bubbles: true }));
+
+    const after = (globalThis as unknown as Record<symbol, unknown>)[key];
+    expect(after).not.toBe(before);
+  });
+
   test('clicking the same square twice toggles it back off', async () => {
     const canvas = container.querySelector('canvas')!;
     const rect = canvas.getBoundingClientRect();

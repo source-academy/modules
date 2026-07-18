@@ -114,10 +114,23 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
   @moduleMethod([], DataType.VOID)
   // eslint-disable-next-line require-yield
   async* clear_all_timeout(): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
+    this.__clearAllTimeouts();
+    return { type: DataType.VOID, value: undefined };
+  }
+
+  private __clearAllTimeouts(): void {
     for (const timeoutId of this.__timeoutIds) {
       clearTimeout(timeoutId);
     }
     this.__timeoutIds.clear();
-    return { type: DataType.VOID, value: undefined };
+  }
+
+  /**
+   * IPlugin's optional cleanup hook - without this, a timeout scheduled but not yet fired when a
+   * Run stops (or restarts) would still fire later and call closure_call_unchecked on this
+   * plugin's evaluator, which by then belongs to a torn-down Run.
+   */
+  destroy(): void {
+    this.__clearAllTimeouts();
   }
 }
