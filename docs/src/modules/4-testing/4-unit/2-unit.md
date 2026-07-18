@@ -68,7 +68,7 @@ detect any tests within that file, it will throw an error.  This also includes a
 
 Simply write your tests within a file within a `__tests__` folder:
 
-```ts [curve/src/__tests__/index.test.ts]
+```ts twoslash [curve/src/__tests__/index.test.ts]
 import { describe, expect, test } from 'vitest'; // You will need to import these functions, unlike in Jest
 
 describe('This is a describe block', () => {
@@ -93,7 +93,9 @@ describe('This is a describe block', () => {
 
 Tests for tabs can also use the `.tsx` extension along with JSX syntax:
 
-```tsx [Curve/__tests__/index.test.tsx]
+```tsx twoslash [Curve/__tests__/index.test.tsx]
+// @noErrors: 2307 2552
+// @jsx: react-jsx
 import { expect, test } from 'vitest';
 import curveTab from '..';
 
@@ -108,7 +110,9 @@ For comprehensive instructions on how to write tests you can refer to the [Vites
 
 Vitest supports passing functions directly to `describe` blocks. You should use this syntax instead of using a string title where possible:
 
-```ts
+```ts twoslash
+import { describe } from 'vitest';
+// ---cut---
 function foo() {}
 
 // Don't do this
@@ -122,7 +126,9 @@ This is so that if you ever rename the function, the title of the describe block
 
 Of course, if you're not specifically testing a function, you can still use the normal string description:
 
-```ts
+```ts twoslash
+import { describe } from 'vitest';
+// ---cut---
 describe('A bunch of tests that need to execute', () => {});
 ```
 
@@ -134,7 +140,9 @@ describe('A bunch of tests that need to execute', () => {});
 While writing tests, you might find that you might want to focus on a single test or single group of tests. For this, `vitest` provides on its `test`, `it` and `describe` functions
 a `.skip` and a `.only` property:
 
-```ts
+```ts twoslash
+import { describe, test } from 'vitest';
+// ---cut---
 describe('Test1 and Test3 will run!', () => {
   test('Test1', () => {});
   test.skip('Test2', () => {});
@@ -146,7 +154,10 @@ You don't have to comment out your tests; simply use `.skip` to indicate that a 
 
 If for some reason you want to skip your tests based on some condition, `vitest` provides the `skipIf` property:
 
-```ts
+```ts twoslash
+import { describe, test } from 'vitest';
+const condition = false;
+// ---cut---
 describe('Test1 and Test3 will run!', () => {
   test('Test1', () => {});
   test.skipIf(condition)('Test2', () => {});
@@ -156,7 +167,9 @@ describe('Test1 and Test3 will run!', () => {
 
 `.only` is kind of the reverse of `.skip`. Tests that you use `.only` with will be the **only** tests that run in that file:
 
-```ts
+```ts twoslash
+import { describe, test } from 'vitest';
+// ---cut---
 describe('Only Test 2 will run!', () => {
   test('Test1', () => {});
   test.only('Test2', () => {});
@@ -166,7 +179,9 @@ describe('Only Test 2 will run!', () => {
 
 If `.only` is used multiple times in a file, then all tests with `.only` get executed:
 
-```ts
+```ts twoslash
+import { test } from 'vitest';
+// ---cut--
 test.only('test1', () => {}); // will execute
 test('test2', () => {});      // won't execute
 test.only('test3', () => {}); // will execute
@@ -184,7 +199,9 @@ The main runner that runs unit tests on the CI/CD pipeline does not allow for `.
 
 Pushing with skipped tests however, is allowed. Do leave a comment explaining why the test is skipped:
 
-```ts
+```ts twoslash
+import { test } from 'vitest';
+// ---cut--
 // Test is skipped because there is an outstanding bug
 test.skip('Test path resolution', () => {});
 ```
@@ -193,7 +210,9 @@ test.skip('Test path resolution', () => {});
 
 If you want to indicate that tests should be written for certain functionality in the future, you can use `.todo`:
 
-```ts
+```ts twoslash
+import { test } from 'vitest';
+// ---cut---
 // Needs to be implemented when the outstanding bug is fixed
 test.todo('Test path resolution');
 ```

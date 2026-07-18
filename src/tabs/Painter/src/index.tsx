@@ -9,7 +9,7 @@ interface PainterModuleState {
 }
 
 export const Painter: ModuleTab = ({ debuggerCtx: context }) => {
-  const [selectedPainter, setSelectedPainter] = useState<LinePlot | null>( null);
+  const [selectedPainter, setSelectedPainter] = useState<LinePlot | null>(null);
   const { drawnPainters } = getModuleState<PainterModuleState>(context, 'painter')!;
 
   return (

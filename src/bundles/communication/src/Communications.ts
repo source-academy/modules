@@ -1,3 +1,4 @@
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import context from 'js-slang/context';
 import { GlobalStateController } from './GlobalStateController';
 import { MultiUserController } from './MultiUserController';
@@ -30,9 +31,11 @@ export function initCommunications(
   user: string,
   password: string,
 ) {
-  if (getModuleState() instanceof CommunicationModuleState) {
+  const { state: oldState } = context.moduleContexts.communication;
+  if (oldState instanceof CommunicationModuleState) {
     return;
   }
+
   const newModuleState = new CommunicationModuleState(
     address,
     port,
@@ -42,8 +45,13 @@ export function initCommunications(
   context.moduleContexts.communication.state = newModuleState;
 }
 
-function getModuleState() {
-  return context.moduleContexts.communication.state;
+function getModuleState(func_name: string) {
+  const { state } = context.moduleContexts.communication;
+  if (state instanceof CommunicationModuleState) {
+    return state;
+  }
+
+  throw new GeneralRuntimeError(`${func_name}: Communication module not initialized.`);
 }
 
 // Loop
@@ -79,19 +87,15 @@ export function initGlobalState(
   topicHeader: string,
   callback: (state: any) => void,
 ) {
-  const moduleState = getModuleState();
-  if (moduleState instanceof CommunicationModuleState) {
-    if (moduleState.globalState instanceof GlobalStateController) {
-      return;
-    }
-    moduleState.globalState = new GlobalStateController(
-      topicHeader,
-      moduleState.multiUser,
-      callback,
-    );
+  const moduleState = getModuleState(initGlobalState.name);
+  if (moduleState.globalState !== null) {
     return;
   }
-  throw new Error('Error: Communication module not initialized.');
+  moduleState.globalState = new GlobalStateController(
+    topicHeader,
+    moduleState.multiUser,
+    callback,
+  );
 }
 
 /**
@@ -100,11 +104,8 @@ export function initGlobalState(
  * @returns Current global state.
  */
 export function getGlobalState() {
-  const moduleState = getModuleState();
-  if (moduleState instanceof CommunicationModuleState) {
-    return moduleState.globalState?.globalState;
-  }
-  throw new Error('Error: Communication module not initialized.');
+  const moduleState = getModuleState(getGlobalState.name);
+  return moduleState.globalState?.globalState;
 }
 
 /**
@@ -115,12 +116,8 @@ export function getGlobalState() {
  * @param updatedState Replacement value at specified path.
  */
 export function updateGlobalState(path: string, updatedState: any) {
-  const moduleState = getModuleState();
-  if (moduleState instanceof CommunicationModuleState) {
-    moduleState.globalState?.updateGlobalState(path, updatedState);
-    return;
-  }
-  throw new Error('Error: Communication module not initialized.');
+  const moduleState = getModuleState(updateGlobalState.name);
+  moduleState.globalState?.updateGlobalState(path, updatedState);
 }
 
 // Rpc
@@ -132,16 +129,12 @@ export function updateGlobalState(path: string, updatedState: any) {
  * @param userId Identifier for this user, set undefined to generate a random ID.
  */
 export function initRpc(topicHeader: string, userId?: string) {
-  const moduleState = getModuleState();
-  if (moduleState instanceof CommunicationModuleState) {
-    moduleState.rpc = new RpcController(
-      topicHeader,
-      moduleState.multiUser,
-      userId,
-    );
-    return;
-  }
-  throw new Error('Error: Communication module not initialized.');
+  const moduleState = getModuleState(initRpc.name);
+  moduleState.rpc = new RpcController(
+    topicHeader,
+    moduleState.multiUser,
+    userId,
+  );
 }
 
 /**
@@ -150,15 +143,12 @@ export function initRpc(topicHeader: string, userId?: string) {
  * @returns String for user ID.
  */
 export function getUserId(): string {
-  const moduleState = getModuleState();
-  if (moduleState instanceof CommunicationModuleState) {
-    const userId = moduleState.rpc?.getUserId();
-    if (userId) {
-      return userId;
-    }
-    throw new Error('Error: UserID not found.');
+  const moduleState = getModuleState(getUserId.name);
+  const userId = moduleState.rpc?.getUserId();
+  if (userId) {
+    return userId;
   }
-  throw new Error('Error: Communication module not initialized.');
+  throw new GeneralRuntimeError(`${getUserId.name}: UserID not found.`);
 }
 
 /**
@@ -169,12 +159,8 @@ export function getUserId(): string {
  * @param func Function to call when request received.
  */
 export function expose(name: string, func: (...args: any[]) => any) {
-  const moduleState = getModuleState();
-  if (moduleState instanceof CommunicationModuleState) {
-    moduleState.rpc?.expose(name, func);
-    return;
-  }
-  throw new Error('Error: Communication module not initialized.');
+  const moduleState = getModuleState(expose.name);
+  moduleState.rpc?.expose(name, func);
 }
 
 /**
@@ -191,10 +177,6 @@ export function callFunction(
   args: any[],
   callback: (args: any[]) => void,
 ) {
-  const moduleState = getModuleState();
-  if (moduleState instanceof CommunicationModuleState) {
-    moduleState.rpc?.callFunction(receiver, name, args, callback);
-    return;
-  }
-  throw new Error('Error: Communication module not initialized.');
+  const moduleState = getModuleState(callFunction.name);
+  moduleState.rpc?.callFunction(receiver, name, args, callback);
 }

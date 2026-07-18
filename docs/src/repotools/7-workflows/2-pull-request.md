@@ -34,7 +34,7 @@ For libraries in particular, the job is run with both the `ubuntu-latest` and `w
 
 The `devserver` jobs only executes if there were changes within the dev server. Since it relies on bundles and tabs being compiled, it does rely on both the `bundles` and the `tabs` jobs to have completed.
 
-Because the there might not have been any bundles or tabs with changes, those matrix jobs might not be considered 'completed', so if we just used the `needs` field,
+Because there might not have been any bundles or tabs with changes, those matrix jobs might not be considered 'completed', so if we just used the `needs` field,
 the `devserver` job would not execute if there were no bundle or tab jobs.
 
 This is why we have to configure the `if` field to use the complex expression it does: if there were bundle and tab jobs that executed, then

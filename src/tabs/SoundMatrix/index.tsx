@@ -10,37 +10,18 @@ import React from 'react';
  */
 
 /**
- * React Component props for the Tab.
- */
-type Props = {
-  children?: never;
-  className?: never;
-  context?: any;
-};
-
-/**
- * React Component state for the Tab.
- */
-type State = {};
-
-/**
  * The main React Component of the Tab.
  */
-class SoundMatrix extends React.Component<Props, State> {
+class SoundMatrix extends React.Component {
   private $container: HTMLElement | null = null;
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  public componentDidMount() {
+  public override componentDidMount() {
     if ((window as any).ToneMatrix) {
       (window as any).ToneMatrix.initialise_matrix(this.$container!);
     }
   }
 
-  public shouldComponentUpdate() {
+  public override shouldComponentUpdate() {
     return false;
   }
 
@@ -52,7 +33,7 @@ class SoundMatrix extends React.Component<Props, State> {
     (window as any).ToneMatrix.randomise_matrix();
   };
 
-  public render() {
+  public override render() {
     return (
       <div className="sa-tone-matrix">
         <div className="row">
@@ -87,7 +68,7 @@ class SoundMatrix extends React.Component<Props, State> {
 
 export default defineTab({
   toSpawn: (context) => context.result.value === 'test',
-  body: (context) => <SoundMatrix context={context} />,
+  body: () => <SoundMatrix />,
   label: 'Sound Matrix',
   iconName: 'music'
 });

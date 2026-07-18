@@ -12,7 +12,11 @@ export default defineProject({
   optimizeDeps: {
     include: [
       'js-slang',
-      'js-slang/dist/utils/stringify',
+      'js-slang/dist/errors/base',
+      'js-slang/dist/errors/rttcErrors',
+      'js-slang/dist/utils/operators',
+      'js-slang/dist/utils/rttc',
+      'js-slang/dist/utils/stringify'
     ]
   },
   test: {

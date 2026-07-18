@@ -1,14 +1,19 @@
-# Compiling a Bundle
+# Building/Compiling Bundles
 
-This page contains information on compiling bundles, both for consumption by `js-slang` as well as other bundles.
+This page contains information on building and compiling bundles.
+
+Building refers to transforming the bundle into a version that can be used by cadets through `js-slang` (via imports).
+
+Compiling refers to transforming the bundle Typescript source code into Javascript code that can be imported by other
+bundles through Javascript by installing the bundle as a dependency.
 
 > [!WARNING]
 > The build tools automatically ignore files under a `__tests__` directory. Such files are considered
 > test files and will not be included in the compiled output.
 
-## For `js-slang`
+## Building for `js-slang`
 
-In its raw ESM format, the bundle is unsuitable for use with `js-slang`. It is thus necessary to compile your written Typescript into the format needed by `js-slang`.
+In its raw ESM format, the bundle is unsuitable for use with `js-slang`. It is thus necessary to transform your written Typescript into the format needed by `js-slang`.
 
 Run the following command from within your bundle directory.
 
@@ -27,7 +32,7 @@ and your bundle will not be compiled.
 
 The output for your bundle will be placed at `build/bundles/[your_bundle_name].js`.
 
-## For Other Bundles
+## Compiling for Other Bundles
 
 A Source Bundle may use another Source Bundle as a dependency. As an example, the `plotly` bundle relies on the `curve` bundle:
 
@@ -78,6 +83,6 @@ As per NPM [docs](https://docs.npmjs.com/cli/v8/using-npm/scripts#life-cycle-scr
 manually build your bundle.
 :::
 
-### 3. Run `tsc`
+### 3. Run `compile`
 
-If necessary, run `yarn tsc` to produce Javascript and Typescript declaration files.
+If necessary, run `yarn compile` to produce Javascript and Typescript declaration files.

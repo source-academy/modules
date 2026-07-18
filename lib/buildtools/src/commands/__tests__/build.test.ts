@@ -4,7 +4,6 @@ import type { Command } from '@commander-js/extra-typings';
 import { bundlesDir, tabsDir } from '@sourceacademy/modules-repotools/getGitRoot';
 import type { BuildResult, Severity } from '@sourceacademy/modules-repotools/types';
 import { beforeEach, describe, expect, test, vi, type MockInstance } from 'vitest';
-import * as json from '../../build/docs/json.js';
 import * as modules from '../../build/modules/index.js';
 import * as tscRunner from '../../build/modules/tsc.js';
 import * as lintRunner from '../../prebuild/lint.js';
@@ -291,6 +290,5 @@ testBuildCommand.skip = function (...args: Parameters<typeof testBuildCommand>) 
 const bundlePath = pathlib.join(bundlesDir, 'test0');
 const tabPath = pathlib.join(tabsDir, 'tab0');
 
-testBuildCommand('Docs', commands.getBuildDocsCommand, json, 'buildJson', false, ['jsons'], bundlePath);
-testBuildCommand.skip('Bundles', commands.getBuildBundleCommand, modules, 'buildBundle', true, ['bundles'], bundlePath);
-testBuildCommand.skip('Tabs', commands.getBuildTabCommand, modules, 'buildTab', true, ['tabs'], tabPath);
+testBuildCommand('Bundles', commands.getBuildBundleCommand, modules, 'buildBundle', true, ['bundles'], bundlePath);
+testBuildCommand('Tabs', commands.getBuildTabCommand, modules, 'buildTab', true, ['tabs'], tabPath);

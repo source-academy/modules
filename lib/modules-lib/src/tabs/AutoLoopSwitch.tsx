@@ -1,11 +1,13 @@
-/* [Imports] */
 import { Switch, type SwitchProps } from '@blueprintjs/core';
 
 export type AutoLoopSwitchProps = Omit<SwitchProps, 'checked' | 'style'> & {
   isAutoLooping: boolean;
 };
 
-/* [Main] */
+/**
+ * A {@link Switch|Switch} component designed to be used as a toggle for auto playing
+ * @category Components
+ */
 export default function AutoLoopSwitch({ isAutoLooping, ...props }: AutoLoopSwitchProps) {
   return <Switch
     style={{

@@ -14,7 +14,7 @@ export default defineTab({
 
     return (
       <div>
-        <DebugDrawCanvas world={world}/>
+        <DebugDrawCanvas world={world} />
       </div>
     );
   },

@@ -1,7 +1,7 @@
 import pathlib from 'path';
 import type MarkdownIt from 'markdown-it';
-import { parseContent } from './structure';
-import type { DirectoryTreePluginOptions } from './types';
+import { parseContent } from './structure.js';
+import type { DirectoryTreePluginOptions } from './types.js';
 
 /**
  * Markdown-It plugin for turning YAML into nicely formatted directory trees, complete with
@@ -34,4 +34,4 @@ export function directoryTreePlugin(md: MarkdownIt, options: DirectoryTreePlugin
   };
 }
 
-export { dirtreeTransformer, grammar } from './transformer';
+export { dirtreeTransformer, grammar } from './transformer.js';

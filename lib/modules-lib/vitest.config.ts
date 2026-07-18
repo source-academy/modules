@@ -12,8 +12,9 @@ export default mergeConfig(
       include: [
         '@blueprintjs/core',
         '@blueprintjs/icons',
-        'es-toolkit',
         'vitest-browser-react',
+        'js-slang/dist/errors/runtimeSourceError',
+        'js-slang/dist/utils/stringify'
       ]
     },
     plugins: [react()],

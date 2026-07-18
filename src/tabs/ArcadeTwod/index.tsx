@@ -1,5 +1,5 @@
-import { Button, ButtonGroup } from '@blueprintjs/core';
-import { IconNames, Pause, Play } from '@blueprintjs/icons';
+import { ButtonGroup } from '@blueprintjs/core';
+import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
 import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
 import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
 import Phaser from 'phaser';
@@ -47,12 +47,15 @@ function A2dUiButtons(props: UiProps) {
   };
 
   return <ButtonGroup>
-    <Button
+    <PlayButton
       className="a2d-play-toggle-button"
-      icon={isPaused ? <Play /> : <Pause />}
+      isPlaying={!isPaused}
+      playingIcon='play'
+      pausedIcon='pause'
+      playingText='Pause Game'
+      pausedText='Resume Game'
       active={false}
       onClick={toggleGamePause}
-      text={isPaused ? 'Resume Game' : 'Pause Game'}
     />
   </ButtonGroup>;
 }
@@ -61,14 +64,14 @@ function A2dUiButtons(props: UiProps) {
  * The main React Component of the Tab.
  */
 class GameTab extends React.Component<Props, GameState> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       game: undefined
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // Only mount the component when the Arcade2D tab is active
     if (document.querySelector('[id="bp4-tab-panel_side-content-tabs_Arcade2D Tab"]')?.ariaHidden === 'true') {
       return;
@@ -81,7 +84,7 @@ class GameTab extends React.Component<Props, GameState> {
     });
   }
 
-  shouldComponentUpdate() {
+  override shouldComponentUpdate() {
     // Component itself is a wrapper & should not update - Phaser handles the game updates
     return false;
   }
@@ -97,14 +100,14 @@ class GameTab extends React.Component<Props, GameState> {
     }
   }
 
-  componentWillUnmount(): void {
+  override componentWillUnmount(): void {
     this.state.game?.sound.stopAll();
 
     // Prevents multiple update loops being run at the same time
     this.state.game?.destroy(false, false);
   }
 
-  public render() {
+  public override render() {
     return (
       <div
         id="a2d-tab"
@@ -132,5 +135,5 @@ export default defineTab({
   },
   body: context => <GameTab debuggerCtx={context} />,
   label: 'Arcade2D Tab',
-  iconName: IconNames.SHAPES
+  iconName: 'shapes'
 });

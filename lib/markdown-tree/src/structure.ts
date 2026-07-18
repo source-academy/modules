@@ -1,8 +1,14 @@
 import fs from 'fs';
 import pathlib from 'path';
 import { parseDocument } from 'yaml';
-import { generateTree } from './tree';
-import { isRootYamlObject, type DirectoryTreePluginOptions, type FileStructure, type RootYamlObject, type YamlObject } from './types';
+import { generateTree } from './tree.js';
+import {
+  isRootYamlObject,
+  type DirectoryTreePluginOptions,
+  type FileStructure,
+  type RootYamlObject,
+  type YamlObject
+} from './types.js';
 
 /**
  * Convert the given the YAML string into the ASCII directory tree representation

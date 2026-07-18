@@ -1,5 +1,4 @@
 import { Icon, Slider, Tooltip } from '@blueprintjs/core';
-import { Reset } from '@blueprintjs/icons';
 import { useMemo, useState } from 'react';
 import type { glAnimation } from '../types';
 import AnimationError from './AnimationError';
@@ -10,14 +9,15 @@ import WebGLCanvas from './WebGLCanvas';
 import { BP_TAB_BUTTON_MARGIN, BP_TEXT_MARGIN, CANVAS_MAX_WIDTH } from './css_constants';
 import { useAnimation } from './useAnimation';
 
-export type AnimCanvasProps = {
+export interface AnimCanvasProps {
   animation: glAnimation;
 };
 
 /**
  * React Component for displaying {@link glAnimation|glAnimations}.
- *
  * Uses {@link WebGLCanvas} internally.
+ *
+ * @category Components
  */
 export default function AnimationCanvas(props: AnimCanvasProps) {
   const [isAutoLooping, setIsAutoLooping] = useState(true);
@@ -32,7 +32,7 @@ export default function AnimationCanvas(props: AnimCanvasProps) {
     frameDuration,
     animationDuration,
     autoLoop: isAutoLooping,
-    callback: (timestamp, canvas) => {
+    callback: ({ timestamp, canvas }) => {
       const frame = props.animation.getFrame(timestamp / 1000);
       frame.draw(canvas);
     }
@@ -71,7 +71,7 @@ export default function AnimationCanvas(props: AnimCanvasProps) {
           disabled={Boolean(errored)}
           onClick={reset}
         >
-          <Icon icon={<Reset />} />
+          <Icon icon='reset' />
         </ButtonComponent>
       </Tooltip>
       <Slider

@@ -15,7 +15,7 @@ export enum COMMAND {
   INIT = 'Initialize Memory',
 }
 
-export type CommandHeapObject = {
+export interface CommandHeapObject {
   type: string;
   to: number;
   from: number;
@@ -30,3 +30,24 @@ export type CommandHeapObject = {
   rightDesc: string;
   free: number;
 };
+
+export interface CopyGCGlobalState {
+  ROW: number;
+  readonly COLUMN: number;
+  MEMORY_SIZE: number;
+  TO_SPACE: number;
+  FROM_SPACE: number;
+  memory: Memory;
+  memoryHeaps: Memory[];
+  readonly commandHeap: CommandHeapObject[];
+  toMemoryMatrix: number[][];
+  fromMemoryMatrix: number[][];
+  tags: Tag[];
+  typeTag: string[];
+  readonly flips: number[];
+  TAG_SLOT: number;
+  SIZE_SLOT: number;
+  FIRST_CHILD_SLOT: number;
+  LAST_CHILD_SLOT: number;
+  ROOTS: number[];
+}

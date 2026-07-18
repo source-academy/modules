@@ -1,4 +1,4 @@
-import { RuleTester } from 'eslint';
+import { RuleTester } from '@typescript-eslint/rule-tester';
 import defaultImportName from '../defaultImportName';
 
 describe('Test defaultImportName', () => {

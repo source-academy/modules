@@ -4,10 +4,11 @@
   "version": "1.0.0",
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "typescript": "^6.0.2"
+    "typescript": "catalog:"
   },
   "dependencies": {
-    "js-slang": "^1.0.85"
+    "@sourceacademy/modules-lib": "workspace:^",
+    "js-slang": "catalog:"
   },
   "type": "module",
   "scripts": {
@@ -16,8 +17,9 @@
     "prepare": "yarn tsc",
     "tsc": "buildtools tsc .",
     "test": "buildtools test --project .",
-    "postinstall": "buildtools compile",
-    "serve": "yarn buildtools serve"
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
   },
   "exports": {
     ".": "./dist/index.js",

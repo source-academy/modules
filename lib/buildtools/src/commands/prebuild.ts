@@ -39,6 +39,7 @@ export const getLintCommand = () => new Command('lint')
   .argument('[directory]', 'Directory to run ESLint in', process.cwd())
   .option('--fix', 'Output linting fixes', false)
   .option('--stats', 'Output linting stats', false)
+  .option('--cache', 'Use ESLint cache', !process.env.CI)
   .option('--ci', process.env.CI)
   .addOption(concurrencyOption)
   .action(async (directory, { ci, ...opts }) => {

@@ -1,5 +1,5 @@
 import rapier from '@dimforge/rapier3d-compat';
-
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import type * as THREE from 'three';
 
 import { TypedEventTarget } from './Core/Events';
@@ -75,7 +75,7 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
 
   createRigidBody(rigidBodyDesc: rapier.RigidBodyDesc): rapier.RigidBody {
     if (this.internals.initialized === false) {
-      throw Error("Physics engine hasn't been initialized yet");
+      throw new GeneralRuntimeError("Physics engine hasn't been initialized yet");
     }
 
     return this.internals.world.createRigidBody(rigidBodyDesc);
@@ -86,7 +86,7 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
     rigidBody: rapier.RigidBody,
   ): rapier.Collider {
     if (this.internals.initialized === false) {
-      throw Error("Physics engine hasn't been initialized yet");
+      throw new GeneralRuntimeError("Physics engine hasn't been initialized yet");
     }
     return this.internals.world.createCollider(colliderDesc, rigidBody);
   }
@@ -101,7 +101,7 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
     normal: SimpleVector;
   } | null {
     if (this.internals.initialized === false) {
-      throw Error("Physics engine hasn't been initialized yet");
+      throw new GeneralRuntimeError("Physics engine hasn't been initialized yet");
     }
 
     const ray = new this.RAPIER.Ray(globalPosition, globalDirection);
@@ -130,7 +130,7 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
 
   step(timing: FrameTimingInfo): PhysicsTimingInfo {
     if (this.internals.initialized === false) {
-      throw Error("Physics engine hasn't been initialized yet");
+      throw new GeneralRuntimeError("Physics engine hasn't been initialized yet");
     }
 
     const maxFrameTime = 0.05;

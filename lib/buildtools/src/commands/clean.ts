@@ -41,6 +41,12 @@ async function handleEnoent<T>(promise: Promise<T>): Promise<HandleEnoentResult<
 
 type CleanResult = ResultType<object>;
 
+const bundleRemovalPaths = [
+  'coverage',
+  'dist',
+  'node_modules'
+];
+
 async function cleanBundles(bundlesDir: string, outDir: string): Promise<CleanResult> {
   const bundleResult = await resolveAllBundles(bundlesDir);
 
@@ -49,18 +55,18 @@ async function cleanBundles(bundlesDir: string, outDir: string): Promise<CleanRe
   }
 
   const results = await mapAsync(Object.values(bundleResult.bundles), async (bundle): Promise<string | undefined> => {
-    const tsPath = pathlib.join(bundle.directory, 'dist');
+    const pathsToRemove = bundleRemovalPaths.map(p => pathlib.join(bundle.directory, p));
+    pathsToRemove.push(pathlib.join(outDir, 'bundles', `${bundle.name}.js`));
 
-    const rmResult = await handleEnoent(fs.rm(tsPath, { recursive: true, force: true }));
-    if (!rmResult.ok) {
-      return `Error occurred while cleaning ${bundle.name}: ${rmResult.error}`;
-    }
+    const removalResults = await mapAsync(pathsToRemove, async p => {
+      const rmResult = await handleEnoent(fs.rm(p, { recursive: true, force: true }));
+      return rmResult;
+    });
 
-    const buildPath = pathlib.join(outDir, 'bundles', `${bundle.name}.js`);
-    const rmbuildResult = await handleEnoent(fs.rm(buildPath));
-
-    if (!rmbuildResult.ok) {
-      return `Error occurred while cleaning ${bundle.name}: ${rmbuildResult.error}`;
+    for (const removalResult of removalResults) {
+      if (!removalResult.ok) {
+        return `Error occurred while cleaning ${bundle.name}: ${removalResult.error}`;
+      }
     }
 
     return undefined;

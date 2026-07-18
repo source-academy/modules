@@ -1,12 +1,14 @@
 // =============================================================================
 // Utility Functions
+
+import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
+import type { Rune } from './rune';
+
 // =============================================================================
-export function throwIfNotRune(name: string, ...runes: any) {
-  runes.forEach((rune) => {
-    if (!(typeof rune === 'string')) {
-      throw Error(`${name} expects a rune (string) as argument.`);
-    }
-  });
+export function throwIfNotRune(name: string, rune: unknown): asserts rune is Rune {
+  if (typeof rune !== 'string') {
+    throw new InvalidParameterTypeError('Rune', rune, name);
+  }
 }
 
 // =============================================================================
@@ -55,7 +57,7 @@ export const colorPalette = [
   '#795548'
 ];
 
-export function addColorFromHex(rune, hex) {
+export function addColorFromHex(rune: Rune, hex: string) {
   throwIfNotRune('addColorFromHex', rune);
   return `color(${rune}, ${hex})`;
 }

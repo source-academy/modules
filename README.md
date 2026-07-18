@@ -48,3 +48,7 @@ If you are a developer looking to do things like create a new bundle or work wit
 2. `cd` into the `docs` directory and run `yarn dev`.
 
 You should now have a local copy of the modules' developer documentation running on your machine.
+
+## Conductor migration
+
+For migration to the Conductor framework, we have a branch `conductor-migration` with a [draft PR](https://github.com/source-academy/modules/pull/680) associated with it (to keep the branch up-to-date with ongoing changes). The `conductor-migration` branch is autodeployed to GitHub Pages using the `modules-conductor` repo.

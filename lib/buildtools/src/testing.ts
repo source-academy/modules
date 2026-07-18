@@ -8,6 +8,7 @@ interface RunVitestBoolOptions {
   update?: boolean;
   allowOnly?: boolean;
   silent?: boolean | 'passed-only';
+  ui?: boolean;
 }
 
 /**
@@ -23,7 +24,8 @@ export async function runVitest(mode: VitestRunMode, filters: string[], projects
       },
       allowOnly: !!options.allowOnly,
       watch: !!options.watch,
-      silent: options.silent
+      silent: options.silent,
+      ui: options.ui
     };
 
     const finalConfig: InlineConfig = mergeConfig(

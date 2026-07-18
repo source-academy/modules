@@ -1,5 +1,4 @@
 import { Icon, Slider, Tooltip } from '@blueprintjs/core';
-import { Reset } from '@blueprintjs/icons';
 import type { AnimatedCurve } from '@sourceacademy/bundle-curve/types';
 import AnimationError from '@sourceacademy/modules-lib/tabs/AnimationError';
 import AutoLoopSwitch from '@sourceacademy/modules-lib/tabs/AutoLoopSwitch';
@@ -29,7 +28,7 @@ export default function Curve3DAnimationCanvas({ animation }: Props) {
   const animationDuration = Math.round(animation.duration * 1000);
   const { changeTimestamp, drawFrame, start, stop, reset, timestamp, errored, isPlaying, setCanvas } = useAnimation({
     frameDuration, animationDuration, autoLoop: isAutoLooping,
-    callback(timestamp, canvas) {
+    callback({ timestamp, canvas }) {
       const frame = animation.getFrame(timestamp / 1000);
       frame.draw(canvas);
     },
@@ -79,7 +78,7 @@ export default function Curve3DAnimationCanvas({ animation }: Props) {
             disabled={Boolean(errored)}
             onClick={reset}
           >
-            <Icon icon={<Reset />} />
+            <Icon icon='reset' />
           </ButtonComponent>
         </Tooltip>
         <div

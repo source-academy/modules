@@ -1,4 +1,4 @@
-import { RuleTester } from 'eslint';
+import { RuleTester } from '@typescript-eslint/rule-tester';
 import regionComment from '../regionComment';
 
 describe('Test regionComment', () => {
@@ -27,26 +27,32 @@ describe('Test regionComment', () => {
           // #region
           // #endregion
         `,
-        errors: 2
+        errors: [
+          { messageId: 'missingStartName' },
+          { messageId: 'missingEndName' }
+        ]
       }, {
         code: '// #region 1',
-        errors: 1
+        errors: [{ messageId: 'missingEnd' }]
       }, {
         code: '// #endregion 1',
-        errors: 1
+        errors: [{ messageId: 'missingStart' }]
       }, {
         code: `
           // #endregion 1
           // #region 1
         `,
-        errors: 2
+        errors: [
+          { messageId: 'missingStart' },
+          { messageId: 'missingEnd' }
+        ]
       }, {
         code: `
           // #region 1
           // #region 2
           // #endregion 1
         `,
-        errors: 1
+        errors: [{ messageId: 'missingEnd' }]
       }]
     }
   );

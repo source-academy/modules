@@ -7,6 +7,7 @@
 
 import { Button } from '@blueprintjs/core';
 import { Cross, Disable } from '@blueprintjs/icons';
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Vector3, normalizeVector, pointDistance, zeroVector } from './UnityAcademyMaths';
@@ -18,12 +19,14 @@ type Transform = {
   scale: Vector3;
 };
 
-type StudentGameObject = {
-  startMethod: Function | null;
-  updateMethod: Function | null;
-  onCollisionEnterMethod: Function | null;
-  onCollisionStayMethod: Function | null;
-  onCollisionExitMethod: Function | null;
+export type CollisionHandler = (self: GameObjectIdentifier, other: GameObjectIdentifier) => void;
+
+interface StudentGameObject {
+  startMethod: ((id: GameObjectIdentifier) => void) | null;
+  updateMethod: ((id: GameObjectIdentifier) => void) | null;
+  onCollisionEnterMethod: CollisionHandler | null;
+  onCollisionStayMethod: CollisionHandler | null;
+  onCollisionExitMethod: CollisionHandler | null;
   transform: Transform;
   rigidbody: RigidbodyData | null;
   audioSource: AudioSourceData | null;
@@ -55,24 +58,25 @@ type AudioSourceData = {
 
 declare const createUnityInstance: Function; // This function comes from {BUILD_NAME}.loader.js in Unity Academy Application (For Example: ua-frontend-prod.loader.js)
 
-export function getInstance(): UnityAcademyJsInteropContext {
+export function getInstance(): UnityAcademyJsInteropContext | undefined {
   return (window as any).unityAcademyContext as UnityAcademyJsInteropContext;
 }
 
 type AudioClipInternalName = string;
 
-export class AudioClipIdentifier { // A wrapper class to store identifier string and prevent users from using arbitrary string for idenfitier
-  audioClipInternalName: AudioClipInternalName;
-  constructor(audioClipInternalName: string) {
-    this.audioClipInternalName = audioClipInternalName;
-  }
+/**
+ * A wrapper class to store identifier string and prevent users from using arbitrary string for idenfitier
+ */
+export class AudioClipIdentifier {
+  constructor(
+    readonly audioClipInternalName: string
+  ) {}
 }
 
 export class GameObjectIdentifier { // A wrapper class to store identifier string and prevent users from using arbitrary string for idenfitier
-  gameObjectIdentifier: string;
-  constructor(gameObjectIdentifier: string) {
-    this.gameObjectIdentifier = gameObjectIdentifier;
-  }
+  constructor(
+    readonly gameObjectIdentifier: string
+  ) {}
 }
 
 // Information of the special React component for this module:
@@ -85,7 +89,7 @@ export class GameObjectIdentifier { // A wrapper class to store identifier strin
 // Also, the display space in the Tab area is relatively small for holding a game window.
 // Another reason of using separated React component is to let Unity Academy be able to fill the whole page to give students higher resolution graphics and more fancy visual effects.
 class UnityComponent extends React.Component<any> {
-  render() {
+  override render() {
     const moduleInstance = getInstance();
     return (
     // <div style={{ width: '90%', height: '90%', position: 'absolute', left: '5%', top: '0%', visibility: `${ this.moduleInstance.showUnityComponent ? 'visible' : 'hidden'}` }}>
@@ -123,7 +127,7 @@ class UnityComponent extends React.Component<any> {
           icon={<Cross />}
           active={true}
           onClick={() => {
-            moduleInstance.setShowUnityComponent(0);
+            moduleInstance?.setShowUnityComponent(0);
           }}// Note: Here if I directly use "this.moduleInstance......" instead using this lambda function, the "this" reference will become undefined and lead to a runtime error when user clicks the "Run" button
           text="Hide Unity Academy Window"
           style={{
@@ -137,7 +141,7 @@ class UnityComponent extends React.Component<any> {
           icon={<Disable />}
           active={true}
           onClick={() => {
-            moduleInstance.terminate();
+            moduleInstance?.terminate();
           }}
           text="Terminate Unity Academy Instance"
           style={{
@@ -151,9 +155,8 @@ class UnityComponent extends React.Component<any> {
     );
   }
 
-  componentDidMount() {
-    getInstance()
-      .firstTimeLoadUnityApplication();
+  override componentDidMount() {
+    getInstance()?.firstTimeLoadUnityApplication();
   }
 }
 
@@ -168,7 +171,7 @@ const UNITY_CONFIG = {
   productVersion: 'See \'About\' in the embedded frontend.'
 };
 
-class UnityAcademyJsInteropContext {
+export class UnityAcademyJsInteropContext {
   // private unityConfig : any;
   public unityInstance: any;
   private unityContainerElement: HTMLElement | null;
@@ -178,11 +181,18 @@ class UnityAcademyJsInteropContext {
   private studentActionQueue: any; // [get / clear by interop]
   private deltaTime = 0; // [set by interop]
   private input: InputData; // [set by interop] 0 = key idle, 1 = on key down, 2 = holding key, 3 = on key up
-  public gameObjectIdentifierWrapperClass: any; // [get by interop] For interop to create the class instance with the correct type when calling users' Start and Update functions. Only the object with this class type can pass checkGameObjectIdentifierParameter in functions.ts
+
+  /**
+   * [get by interop]
+   * For interop to create the class instance with the correct type when calling users' Start and Update functions.
+   * Only the object with this class type can pass checkGameObjectIdentifierParameter in functions.ts
+   */
+  public gameObjectIdentifierWrapperClass: new (...args: any[]) => GameObjectIdentifier;
+
   private targetFrameRate: number;
   private unityInstanceState; // [set by interop]
   private guiData: any[]; // [get / clear by interop]
-  public dimensionMode;
+  public dimensionMode?: '2d' | '3d';
   private isShowingUnityAcademy: boolean; // [get by interop]
   private latestUserAgreementVersion: string;
   private audioClipStorage: AudioClipInternalName[];
@@ -237,7 +247,7 @@ class UnityAcademyJsInteropContext {
     xhr.open('GET', jsonUrl, false);
     xhr.send();
     if (xhr.status !== 200) {
-      throw new Error(`Unable to get prefab list. Error code = ${xhr.status}`);
+      throw new GeneralRuntimeError(`Unable to get prefab list. Error code = ${xhr.status}`);
     }
     this.prefabInfo = JSON.parse(xhr.responseText);
   }
@@ -380,7 +390,7 @@ class UnityAcademyJsInteropContext {
       }
     }
     if (!prefabExists) {
-      throw new Error(`Unknown prefab name: '${prefabName}'. Please refer to this prefab list at [ ${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles/prefab_info.html ] for all available prefab names.`);
+      throw new GeneralRuntimeError(`Unknown prefab name: '${prefabName}'. Please refer to this prefab list at [ ${UNITY_ACADEMY_BACKEND_URL}webgl_assetbundles/prefab_info.html ] for all available prefab names.`);
     }
     const gameObjectIdentifier = `${prefabName}_${this.gameObjectIdentifierSerialCounter}`;
     this.gameObjectIdentifierSerialCounter++;
@@ -449,17 +459,17 @@ class UnityAcademyJsInteropContext {
   getStudentGameObject(gameObjectIdentifier: GameObjectIdentifier): StudentGameObject {
     const retVal = this.studentGameObjectStorage[gameObjectIdentifier.gameObjectIdentifier];
     if (retVal === undefined) {
-      throw new Error(`Could not find GameObject with identifier ${gameObjectIdentifier}`);
+      throw new GeneralRuntimeError(`Could not find GameObject with identifier ${gameObjectIdentifier}`);
     }
     return retVal;
   }
 
-  setStartInternal(gameObjectIdentifier: GameObjectIdentifier, startFunction: Function): void {
+  setStartInternal(gameObjectIdentifier: GameObjectIdentifier, startFunction: (id: GameObjectIdentifier) => void): void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.startMethod = startFunction;
   }
 
-  setUpdateInternal(gameObjectIdentifier: GameObjectIdentifier, updateFunction: Function): void {
+  setUpdateInternal(gameObjectIdentifier: GameObjectIdentifier, updateFunction: (id: GameObjectIdentifier) => void): void {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.updateMethod = updateFunction;
   }
@@ -567,7 +577,7 @@ class UnityAcademyJsInteropContext {
     console.log(`Applying rigidbody to GameObject ${gameObjectIdentifier.gameObjectIdentifier}`);
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     if (gameObject.rigidbody !== null) {
-      throw new Error(`Trying to duplicately apply rigidbody on GameObject ${gameObjectIdentifier.gameObjectIdentifier}`);
+      throw new GeneralRuntimeError(`Trying to duplicately apply rigidbody on GameObject ${gameObjectIdentifier.gameObjectIdentifier}`);
     }
     gameObject.rigidbody = {
       velocity: zeroVector(),
@@ -581,7 +591,7 @@ class UnityAcademyJsInteropContext {
   }
 
   private getRigidbody(gameObject: StudentGameObject): RigidbodyData {
-    if (gameObject.rigidbody === null) throw new Error('You must call apply_rigidbody on the game object before using this physics function!');
+    if (gameObject.rigidbody === null) throw new GeneralRuntimeError('You must call apply_rigidbody on the game object before using this physics function!');
     return gameObject.rigidbody;
   }
 
@@ -625,17 +635,17 @@ class UnityAcademyJsInteropContext {
     this.dispatchStudentAction(`removeColliderComponents|${gameObjectIdentifier.gameObjectIdentifier}`);
   }
 
-  setOnCollisionEnterInternal(gameObjectIdentifier: GameObjectIdentifier, eventFunction: Function) {
+  setOnCollisionEnterInternal(gameObjectIdentifier: GameObjectIdentifier, eventFunction: CollisionHandler) {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.onCollisionEnterMethod = eventFunction;
   }
 
-  setOnCollisionStayInternal(gameObjectIdentifier: GameObjectIdentifier, eventFunction: Function) {
+  setOnCollisionStayInternal(gameObjectIdentifier: GameObjectIdentifier, eventFunction: CollisionHandler) {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.onCollisionStayMethod = eventFunction;
   }
 
-  setOnCollisionExitInternal(gameObjectIdentifier: GameObjectIdentifier, eventFunction: Function) {
+  setOnCollisionExitInternal(gameObjectIdentifier: GameObjectIdentifier, eventFunction: CollisionHandler) {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     gameObject.onCollisionExitMethod = eventFunction;
   }
@@ -691,7 +701,7 @@ class UnityAcademyJsInteropContext {
     const gameObject = this.getStudentGameObject(gameObjectIdentifier);
     const retVal = gameObject.audioSource;
     if (retVal === null) {
-      throw new Error('The given GameObject is not a valid audio source.');
+      throw new GeneralRuntimeError('The given GameObject is not a valid audio source.');
     }
     return retVal;
   }
@@ -735,11 +745,13 @@ class UnityAcademyJsInteropContext {
   }
 }
 
-export function initializeModule(dimensionMode: string) {
+export function initializeModule(dimensionMode: '2d' | '3d') {
   let instance = getInstance();
   if (instance !== undefined) {
     if (!instance.isUnityInstanceReady()) {
-      throw new Error('Unity Academy Embedded Frontend is not ready to accept a new Source program now, please try again later. If you just successfully ran your code before but haven\'t open Unity Academy Embedded Frontend before running your code again, please try open the frontend first. If this error persists or you can not open Unity Academy Embedded Frontend, please try to refresh your browser\'s page.');
+      throw new GeneralRuntimeError(
+        'Unity Academy Embedded Frontend is not ready to accept a new Source program now, please try again later. If you just successfully ran your code before but haven\'t open Unity Academy Embedded Frontend before running your code again, please try open the frontend first. If this error persists or you can not open Unity Academy Embedded Frontend, please try to refresh your browser\'s page.'
+      );
     }
     if (instance.unityInstance === null) {
       instance.reloadUnityAcademyInstanceAfterTermination();

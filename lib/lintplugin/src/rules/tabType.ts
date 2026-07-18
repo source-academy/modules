@@ -1,7 +1,8 @@
-import type { Rule } from 'eslint';
-import type es from 'estree';
+import type { TSESTree } from '@typescript-eslint/utils';
+import creator from './creator';
 
-const tabType = {
+export default creator({
+  name: 'tab-type',
   meta: {
     type: 'problem',
     docs: {
@@ -28,7 +29,7 @@ const tabType = {
   },
   create: context => ({
     Program(program) {
-      const exportNode = program.body.find((stmt): stmt is es.ExportDefaultDeclaration => stmt.type === 'ExportDefaultDeclaration');
+      const exportNode = program.body.find(stmt => stmt.type === 'ExportDefaultDeclaration');
       if (!exportNode) {
         context.report({
           messageId: 'noExport',
@@ -50,7 +51,7 @@ const tabType = {
         return;
       }
 
-      const importDeclarations = program.body.filter((stmt): stmt is es.ImportDeclaration => {
+      const importDeclarations = program.body.filter((stmt): stmt is TSESTree.ImportDeclaration => {
         return stmt.type === 'ImportDeclaration' && stmt.source.value === expectedImportSource;
       });
 
@@ -83,6 +84,4 @@ const tabType = {
       }
     }
   })
-} satisfies Rule.RuleModule;
-
-export default tabType;
+});

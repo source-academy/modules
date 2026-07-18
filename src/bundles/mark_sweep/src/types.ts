@@ -18,8 +18,8 @@ export enum COMMAND {
   INIT = 'Initialize Memory',
 }
 
-export type CommandHeapObject = {
-  type: string;
+export interface CommandHeapObject {
+  type: COMMAND;
   heap: number[];
   left: number;
   right: number;
@@ -29,4 +29,25 @@ export type CommandHeapObject = {
   leftDesc: string;
   rightDesc: string;
   queue: number[];
-};
+}
+
+export interface MarkSweepGlobalState {
+  rowCount: number;
+  readonly columnCount: number;
+  NODE_SIZE: number;
+  MEMORY_SIZE: number;
+  memory: Memory;
+  memoryHeaps: Memory[];
+  readonly commandHeap: CommandHeapObject[];
+  memoryMatrix: number[][];
+  tags: Tag[];
+  typeTag: string[];
+  readonly flips: number[];
+  TAG_SLOT: number;
+  SIZE_SLOT: number;
+  FIRST_CHILD_SLOT: number;
+  LAST_CHILD_SLOT: number;
+  MARKED: number;
+  UNMARKED: number;
+  ROOTS: number[];
+}

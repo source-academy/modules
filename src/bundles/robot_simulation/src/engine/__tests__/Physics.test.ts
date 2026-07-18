@@ -1,6 +1,6 @@
 // physics.test.js
 import rapier from '@dimforge/rapier3d-compat';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { assert, describe, expect, test as baseTest, vi } from 'vitest';
 import { Physics } from '../Physics';
 
 // Mock rapier
@@ -24,18 +24,15 @@ vi.mock(import('@dimforge/rapier3d-compat'), () => {
 });
 
 describe(Physics, () => {
-  let physics;
-  const config = { gravity: { x: 0, y: -9.81, z: 0 }, timestep: 1 / 60 };
+  const test = baseTest
+    .extend('config', { gravity: { x: 0, y: -9.81, z: 0 }, timestep: 1 / 60 })
+    .extend('physics', ({ config }) => new Physics(config));
 
-  beforeEach(() => {
-    physics = new Physics(config);
-  });
-
-  test('constructor initializes configuration', () => {
+  test('constructor initializes configuration', ({ physics, config }) => {
     expect(physics.configuration).toEqual(config);
   });
 
-  test('start initializes the physics world', async () => {
+  test('start initializes the physics world', async ({ physics }) => {
     await physics.start();
     expect(rapier.init).toHaveBeenCalled();
     expect(physics.internals).toHaveProperty('initialized', true);
@@ -43,34 +40,39 @@ describe(Physics, () => {
     expect(physics.internals).toHaveProperty('accumulator', physics.configuration.timestep);
   });
 
-  test('createRigidBody throws if not initialized', () => {
-    expect(() => physics.createRigidBody({})).toThrow("Physics engine hasn't been initialized yet");
+  test('createRigidBody throws if not initialized', ({ physics }) => {
+    expect(() => physics.createRigidBody({} as any)).toThrow("Physics engine hasn't been initialized yet");
   });
 
-  test('createRigidBody creates a rigid body when initialized', async () => {
+  test('createRigidBody creates a rigid body when initialized', async ({ physics }) => {
     await physics.start(); // Initialize
     const rigidBodyDesc = {}; // Mocked rigid body descriptor
-    physics.createRigidBody(rigidBodyDesc);
+    physics.createRigidBody(rigidBodyDesc as any);
+
+    assert(physics.internals.initialized);
     expect(physics.internals.world.createRigidBody).toHaveBeenCalledWith(rigidBodyDesc);
   });
 
-  test('createCollider creates a collider when initialized', async () => {
+  test('createCollider creates a collider when initialized', async ({ physics }) => {
     await physics.start(); // Initialize
-    const colliderDesc = {}; // Mocked collider descriptor
-    const rigidBody = {}; // Mocked rigid body
+    const colliderDesc: any = {}; // Mocked collider descriptor
+    const rigidBody: any = {}; // Mocked rigid body
     physics.createCollider(colliderDesc, rigidBody);
+
+    assert(physics.internals.initialized);
     expect(physics.internals.world.createCollider).toHaveBeenCalledWith(colliderDesc, rigidBody);
   });
 
-  test('castRay returns correct result when initialized', async () => {
+  test('castRay returns correct result when initialized', async ({ physics }) => {
     await physics.start(); // Initialize
-    const globalPosition = {}; // Mocked global position
-    const globalDirection = {}; // Mocked global direction
+    const globalPosition: any = {}; // Mocked global position
+    const globalDirection: any = {}; // Mocked global direction
     const maxDistance = 100;
 
     // Mock the return value of castRayAndGetNormal
-    const expectedResult = { toi: 10, normal: { x: 0, y: 1, z: 0 } };
-    physics.internals.world.castRayAndGetNormal.mockReturnValue(expectedResult);
+    const expectedResult: any = { toi: 10, normal: { x: 0, y: 1, z: 0 } };
+    assert(physics.internals.initialized);
+    vi.mocked(physics.internals.world.castRayAndGetNormal).mockReturnValue(expectedResult);
 
     const result = physics.castRay(globalPosition, globalDirection, maxDistance);
     expect(result).toEqual({
@@ -80,42 +82,44 @@ describe(Physics, () => {
     expect(physics.internals.world.castRayAndGetNormal).toHaveBeenCalledWith(expect.anything(), maxDistance, true, undefined, undefined, undefined);
   });
 
-  test('castRay returns null result castRayAndGetNormal returns null', async () => {
+  test('castRay returns null result castRayAndGetNormal returns null', async ({ physics }) => {
     await physics.start(); // Initialize
-    const globalPosition = {}; // Mocked global position
-    const globalDirection = {}; // Mocked global direction
+    const globalPosition: any = {}; // Mocked global position
+    const globalDirection: any = {}; // Mocked global direction
     const maxDistance = 100;
 
     // Mock the return value of castRayAndGetNormal
     const expectedResult = null;
-    physics.internals.world.castRayAndGetNormal.mockReturnValue(expectedResult);
+    assert(physics.internals.initialized);
+    vi.mocked(physics.internals.world.castRayAndGetNormal).mockReturnValue(expectedResult);
 
     const result = physics.castRay(globalPosition, globalDirection, maxDistance);
     expect(result).toEqual(null);
   });
 
-  test('step advances physics world by correct timestep', async () => {
+  test('step advances physics world by correct timestep', async ({ physics }) => {
     await physics.start(); // Initialize
-    const frameTimingInfo = { frameDuration: 1000 / 60 }; // 60 FPS
+    const frameTimingInfo: any = { frameDuration: 1000 / 60 }; // 60 FPS
     physics.step(frameTimingInfo);
+    assert(physics.internals.initialized);
     expect(physics.internals.world.step).toHaveBeenCalledTimes(2);
   });
 
-  test('castRay throws if not initialized', () => {
+  test('castRay throws if not initialized', ({ physics }) => {
     expect(() => {
-      physics.castRay({}, {}, 100);
+      physics.castRay({} as any, {} as any, 100);
     }).toThrow("Physics engine hasn't been initialized yet");
   });
 
-  test('createCollider throws if not initialized', () => {
+  test('createCollider throws if not initialized', ({ physics }) => {
     expect(() => {
-      physics.createCollider({}, {}, 100);
+      physics.createCollider({} as any, {} as any);
     }).toThrow("Physics engine hasn't been initialized yet");
   });
 
-  test('step throws if not initialized', () => {
+  test('step throws if not initialized', ({ physics }) => {
     expect(() => {
-      physics.step({ frameDuration: 1000 / 60 });
+      physics.step({ frameDuration: 1000 / 60 } as any);
     }).toThrow("Physics engine hasn't been initialized yet");
   });
 });

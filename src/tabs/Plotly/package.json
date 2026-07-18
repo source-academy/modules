@@ -5,13 +5,13 @@
   "dependencies": {
     "@sourceacademy/bundle-plotly": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@types/react": "^19.0.0",
-    "typescript": "^6.0.2"
+    "@types/react": "catalog:",
+    "typescript": "catalog:"
   },
   "scripts": {
     "build": "buildtools build tab .",

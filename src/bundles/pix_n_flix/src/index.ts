@@ -23,7 +23,6 @@
  */
 
 export {
-  start,
   red_of,
   blue_of,
   green_of,
@@ -46,3 +45,5 @@ export {
   keep_aspect_ratio,
   set_loop_count
 } from './functions';
+
+export { start } from './start';

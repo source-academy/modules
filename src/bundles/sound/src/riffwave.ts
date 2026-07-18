@@ -19,6 +19,8 @@
 
 /* v8 ignore start */
 /* eslint-disable */
+// @ts-nocheck
+
 var FastBase64 = {
   chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
   encLookup: String,

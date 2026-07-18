@@ -1,10 +1,10 @@
 import * as THREE from 'three';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it as baseIt, vi } from 'vitest';
 import { Physics, Renderer } from '../../../../engine';
 import { loadGLTF } from '../../../../engine/Render/helpers/GLTF';
 import { ev3Config } from '../../ev3/default/config';
 import { ChassisWrapper } from '../Chassis';
-import { Motor } from '../Motor';
+import { Motor, type MotorConfig } from '../Motor';
 
 vi.mock(import('../../../../engine/Render/helpers/GLTF'), () => ({
   loadGLTF: vi.fn().mockResolvedValue({
@@ -42,18 +42,10 @@ vi.mock(import('../Chassis'), () => ({
 } as any));
 
 describe(Motor, () => {
-  let motor;
-  let mockChassisWrapper;
-  let mockPhysics;
-  let mockRenderer;
-  let mockConfig;
-
-  beforeEach(() => {
-    mockPhysics = {
-      applyImpulse: vi.fn(),
-    } as unknown as Physics;
-    mockRenderer = { add: vi.fn() } as unknown as Renderer;
-    mockConfig = {
+  const it = baseIt
+    .extend('mockPhysics', { applyImpulse: vi.fn() } as unknown as Physics)
+    .extend('mockRenderer', { add: vi.fn() } as unknown as Renderer)
+    .extend('mockConfig', {
       displacement: { x: 1, y: 0, z: 0 },
       pid: {
         proportionalGain: 1,
@@ -64,18 +56,15 @@ describe(Motor, () => {
         url: 'path/to/mesh',
         dimension: { height: 1, width: 1, depth: 1 },
       },
-    };
-    const config = ev3Config.motors[0];
-    mockChassisWrapper = new ChassisWrapper(mockPhysics, mockRenderer, config);
-    motor = new Motor(
-      mockChassisWrapper,
-      mockPhysics,
-      mockRenderer,
-      mockConfig
+    } as unknown as MotorConfig)
+    // @ts-expect-error Ignore ev3config errors
+    .extend('mockChassisWrapper', ({ mockPhysics, mockRenderer }) => new ChassisWrapper(mockPhysics, mockRenderer, ev3Config.motors[0]))
+    .extend(
+      'motor',
+      ({ mockChassisWrapper, mockConfig, mockPhysics, mockRenderer }) => new Motor(mockChassisWrapper, mockPhysics, mockRenderer, mockConfig )
     );
-  });
 
-  it('should initialize correctly and load the mesh', async () => {
+  it('should initialize correctly and load the mesh', async ({ motor, mockConfig, mockRenderer }) => {
     await motor.start();
     expect(loadGLTF).toHaveBeenCalledWith(
       mockConfig.mesh.url,
@@ -84,29 +73,29 @@ describe(Motor, () => {
     expect(mockRenderer.add).toHaveBeenCalled();
   });
 
-  it('sets motor velocity and schedules stop with distance', () => {
+  it('sets motor velocity and schedules stop with distance', ({ motor }) => {
     motor.setSpeedDistance(10, 100);
     expect(motor.motorVelocity).toBe(10);
   });
 
-  it('updates the motor velocity and applies impulse', () => {
-    motor.fixedUpdate({ deltaTime: 1 });
+  it('updates the motor velocity and applies impulse', ({ motor, mockChassisWrapper }) => {
+    motor.fixedUpdate({ deltaTime: 1 } as any);
     expect(mockChassisWrapper.getEntity().applyImpulse).toHaveBeenCalled();
   });
 
-  it('updates mesh', async () => {
+  it('updates mesh', async ({ motor }) => {
     await motor.start();
-    motor.update({ frameDuration: 1 });
+    motor.update({ frameDuration: 1 } as any);
 
-    expect(motor.mesh.scene.position.copy).toBeCalled();
-    expect(motor.mesh.scene.quaternion.copy).toBeCalled();
+    expect(motor.mesh!.scene.position.copy).toBeCalled();
+    expect(motor.mesh!.scene.quaternion.copy).toBeCalled();
   });
 
-  it('rotates the mesh if on the left side', async () => {
+  it('rotates the mesh if on the left side', async ({ motor }) => {
     motor.wheelSide = 'left';
     await motor.start();
-    motor.update({ frameDuration: 1 });
+    motor.update({ frameDuration: 1 } as any);
 
-    expect(motor.mesh.scene.rotateZ).toBeCalled();
+    expect(motor.mesh!.scene.rotateZ).toHaveBeenCalledOnce();
   });
 });

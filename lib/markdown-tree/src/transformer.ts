@@ -1,24 +1,24 @@
+import githubDark from '@shikijs/themes/github-dark';
+import githubLight from '@shikijs/themes/github-light';
 import type { LanguageInput, ShikiTransformer, ThemedToken } from 'shiki';
-import githubDark from 'tm-themes/themes/github-dark.json' with { type: 'json' };
-import githubLight from 'tm-themes/themes/github-light.json' with { type: 'json' };
-import { LINE_STRINGS } from './tree';
+import { LINE_STRINGS } from './tree.js';
 
 // Vitepress uses the github themes by default, so we use the colours from
 // those themes here
 const githubLightColours = [
-  githubLight.colors['terminal.ansiBlue'],
-  githubLight.colors['terminal.ansiMagenta'],
-  githubLight.colors['terminal.ansiCyan'],
-  githubLight.colors['terminal.ansiRed'],
-  githubLight.colors['terminal.ansiGreen']
+  githubLight.colors!['terminal.ansiBlue'],
+  githubLight.colors!['terminal.ansiMagenta'],
+  githubLight.colors!['terminal.ansiCyan'],
+  githubLight.colors!['terminal.ansiRed'],
+  githubLight.colors!['terminal.ansiGreen']
 ];
 
 const githubDarkColours = [
-  githubDark.colors['terminal.ansiBlue'],
-  githubDark.colors['terminal.ansiMagenta'],
-  githubDark.colors['terminal.ansiCyan'],
-  githubDark.colors['terminal.ansiRed'],
-  githubDark.colors['terminal.ansiGreen']
+  githubDark.colors!['terminal.ansiBlue'],
+  githubDark.colors!['terminal.ansiMagenta'],
+  githubDark.colors!['terminal.ansiCyan'],
+  githubDark.colors!['terminal.ansiRed'],
+  githubDark.colors!['terminal.ansiGreen']
 ];
 
 // Assemble the Regex expression using the line strings

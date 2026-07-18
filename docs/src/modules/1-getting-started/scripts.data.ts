@@ -18,7 +18,7 @@ export default {
       };
 
       if (scriptName.includes(':')) {
-        return [[...globals, script ], roots];
+        return [[...globals, script], roots];
       } else {
         return [globals, [...roots, script]];
       }

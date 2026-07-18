@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it as baseIt } from 'vitest';
 import { NumberPidController, VectorPidController } from '../PidController';
 
 const resetPid = (pidController: NumberPidController) => {
@@ -13,23 +13,19 @@ const resetVectorPid = (pidController: VectorPidController) => {
 };
 
 describe(NumberPidController, () => {
-  let pidController;
+  const it = baseIt.extend('pidController', new NumberPidController({
+    proportionalGain: 0.1,
+    integralGain: 0.01,
+    derivativeGain: 0.05,
+  }));
 
-  beforeEach(() => {
-    pidController = new NumberPidController({
-      proportionalGain: 0.1,
-      integralGain: 0.01,
-      derivativeGain: 0.05,
-    });
-  });
-
-  it('should initialize correctly', () => {
+  it('should initialize correctly', ({ pidController }) => {
     expect(pidController.proportionalGain).toEqual(0.1);
     expect(pidController.integralGain).toEqual(0.01);
     expect(pidController.derivativeGain).toEqual(0.05);
   });
 
-  it('should calculate correct PID output', () => {
+  it('should calculate correct PID output', ({ pidController }) => {
     const setpoint = 10;
     let output;
 
@@ -51,21 +47,16 @@ describe(NumberPidController, () => {
 });
 
 describe(VectorPidController, () => {
-  let pidController;
-
-  beforeEach(() => {
-    pidController = new VectorPidController({
-      proportionalGain: 0.1,
-      integralGain: 0.01,
-      derivativeGain: 0.05,
-    });
-  });
-
-  it('should initialize correctly', () => {
+  const it = baseIt.extend('pidController', new VectorPidController({
+    proportionalGain: 0.1,
+    integralGain: 0.01,
+    derivativeGain: 0.05,
+  }));
+  it('should initialize correctly', ({ pidController }) => {
     expect(pidController.proportionalGain).toEqual(0.1);
   });
 
-  it('should calculate correct PID output for vector inputs', () => {
+  it('should calculate correct PID output for vector inputs', ({ pidController }) => {
     const setpoint = new THREE.Vector3(10, 10, 10);
     let output;
 

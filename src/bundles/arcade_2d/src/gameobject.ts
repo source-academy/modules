@@ -44,6 +44,8 @@ export abstract class GameObject implements Transformable, ReplResult {
   }
 
   public toReplString = () => '<GameObject>';
+
+  public toString = () => this.toReplString();
 }
 
 /**
@@ -152,24 +154,21 @@ export abstract class InteractableGameObject extends RenderableGameObject implem
 /**
  * Encapsulates the data-representation of a ShapeGameObject.
  */
-export abstract class ShapeGameObject extends InteractableGameObject {
+export abstract class ShapeGameObject<T> extends InteractableGameObject {
   /**
    * Gets the shape properties of the ShapeGameObject.
    * @returns The shape properties.
    */
-  public abstract getShape();
+  public abstract getShape(): T;
 
-  /** @override */
-  public toReplString = () => '<ShapeGameObject>';
+  public override toReplString = () => '<ShapeGameObject>';
 
-  /** @override */
-  public toString = () => this.toReplString();
 }
 
 /**
  * Encapsulates the data-representation of a RectangleGameObject.
  */
-export class RectangleGameObject extends ShapeGameObject {
+export class RectangleGameObject extends ShapeGameObject<types.RectangleProps> {
   constructor(
     transformProps: types.TransformProps,
     renderProps: types.RenderProps,
@@ -178,8 +177,8 @@ export class RectangleGameObject extends ShapeGameObject {
   ) {
     super(transformProps, renderProps, interactableProps);
   }
-  /** @override */
-  getShape(): types.RectangleProps {
+
+  override getShape(): types.RectangleProps {
     return this.rectangle;
   }
 }
@@ -187,7 +186,7 @@ export class RectangleGameObject extends ShapeGameObject {
 /**
  * Encapsulates the data-representation of a CircleGameObject.
  */
-export class CircleGameObject extends ShapeGameObject {
+export class CircleGameObject extends ShapeGameObject<types.CircleProps> {
   constructor(
     transformProps: types.TransformProps,
     renderProps: types.RenderProps,
@@ -196,8 +195,8 @@ export class CircleGameObject extends ShapeGameObject {
   ) {
     super(transformProps, renderProps, interactableProps);
   }
-  /** @override */
-  getShape(): types.CircleProps {
+
+  override getShape(): types.CircleProps {
     return this.circle;
   }
 }
@@ -205,7 +204,7 @@ export class CircleGameObject extends ShapeGameObject {
 /**
  * Encapsulates the data-representation of a TriangleGameObject.
  */
-export class TriangleGameObject extends ShapeGameObject {
+export class TriangleGameObject extends ShapeGameObject<types.TriangleProps> {
   constructor(
     transformProps: types.TransformProps,
     renderProps: types.RenderProps,
@@ -240,11 +239,7 @@ export class SpriteGameObject extends InteractableGameObject {
     return this.sprite;
   }
 
-  /** @override */
-  public toReplString = () => '<SpriteGameObject>';
-
-  /** @override */
-  public toString = () => this.toReplString();
+  public override toReplString = () => '<SpriteGameObject>';
 }
 
 /**
@@ -275,11 +270,7 @@ export class TextGameObject extends InteractableGameObject {
     return this.displayText;
   }
 
-  /** @override */
-  public toReplString = () => '<TextGameObject>';
-
-  /** @override */
-  public toString = () => this.toReplString();
+  public override toReplString = () => '<TextGameObject>';
 }
 
 // =============================================================================
@@ -293,7 +284,7 @@ interface Transformable {
   /**
    * @param transformProps The transform properties of the GameObject.
    */
-  setTransform(transformProps: types.TransformProps);
+  setTransform(transformProps: types.TransformProps): void;
 
   /**
    * @returns The render properties of the GameObject.
@@ -309,7 +300,7 @@ interface Transformable {
   /**
    * Should be called when the GameObject's transform has been updated in the canvas.
    */
-  setTransformUpdated();
+  setTransformUpdated(): void;
 }
 
 /**
@@ -319,7 +310,7 @@ interface Renderable {
   /**
    * @param renderProps The render properties of the GameObject.
    */
-  setRenderState(renderProps: types.RenderProps);
+  setRenderState(renderProps: types.RenderProps): void;
 
   /**
    * @returns The render properties of the GameObject.
@@ -335,7 +326,7 @@ interface Renderable {
   /**
    * Should be called when the GameObject's rendered image has been updated in the canvas.
    */
-  setRenderUpdated();
+  setRenderUpdated(): void;
 }
 
 /**
@@ -345,7 +336,7 @@ interface Interactable {
   /**
    * @param interactableProps The hitbox state of the GameObject in detecting overlaps.
    */
-  setHitboxState(interactableProps: types.InteractableProps);
+  setHitboxState(interactableProps: types.InteractableProps): void;
 
   /**
    * @returns The hitbox state of the GameObject in detecting overlaps.
@@ -361,5 +352,5 @@ interface Interactable {
   /**
    * Should be called when the GameObject's hitbox has been updated in the canvas.
    */
-  setHitboxUpdated();
+  setHitboxUpdated(): void;
 }

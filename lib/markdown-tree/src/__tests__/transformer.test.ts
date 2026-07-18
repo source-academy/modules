@@ -66,7 +66,7 @@ function tokenJoiner(tokens: ThemedToken[][]): {
       if (token.content === '    ') continue; // skip spaces
       if (token.htmlStyle === undefined) continue;
 
-      lineColours.push(token.htmlStyle['--shiki-light']);
+      lineColours.push((token.htmlStyle as Record<string, string>)['--shiki-light']);
     }
     colours.push(lineColours);
 

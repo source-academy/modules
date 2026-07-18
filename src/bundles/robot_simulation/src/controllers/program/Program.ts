@@ -1,3 +1,4 @@
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import type { DeepPartial } from '@sourceacademy/modules-lib/types';
 import type { IOptions } from 'js-slang';
 import context from 'js-slang/context';
@@ -57,7 +58,7 @@ export class Program implements Controller {
   fixedUpdate() {
     try {
       if (!this.iterator) {
-        throw Error('Program not started');
+        throw new GeneralRuntimeError('Program not started');
       }
 
       if (this.isPaused) {

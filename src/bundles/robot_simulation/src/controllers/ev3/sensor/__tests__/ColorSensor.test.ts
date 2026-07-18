@@ -1,6 +1,8 @@
 import * as THREE from 'three';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ColorSensor } from '../ColorSensor';
+import { describe, expect, it as baseIt, vi } from 'vitest';
+import type { Renderer } from '../../../../engine';
+import type { ChassisWrapper } from '../../components/Chassis';
+import { ColorSensor, type ColorSensorConfig } from '../ColorSensor';
 
 vi.mock(import('../../../../engine'), () => ({
   Renderer: vi.fn(class {
@@ -17,24 +19,19 @@ vi.mock(import('../../../../engine/Render/helpers/Camera'), () => ({
 }));
 
 describe(ColorSensor, () => {
-  let sensor;
-  let mockChassisWrapper;
-  let mockRenderer;
-  let mockConfig;
-
-  beforeEach(() => {
-    mockChassisWrapper = {
+  const it = baseIt
+    .extend('mockChassisWrapper', {
       getEntity: vi.fn(() => ({
         worldTranslation: vi.fn().mockReturnValue(new THREE.Vector3()),
       })),
-    };
-    mockRenderer = {
+    } as unknown as ChassisWrapper)
+    .extend('mockRenderer', {
       add: vi.fn(),
       scene: vi.fn(),
       render: vi.fn(),
       getElement: vi.fn(() => document.createElement('canvas')),
-    };
-    mockConfig = {
+    } as unknown as Renderer)
+    .extend('mockConfig', {
       tickRateInSeconds: 0.1,
       displacement: {
         x: 0.04,
@@ -53,10 +50,13 @@ describe(ColorSensor, () => {
         far: 1,
       },
       debug: true,
-    };
+    } as ColorSensorConfig)
+    .extend(
+      'sensor',
+      ({ mockChassisWrapper, mockRenderer, mockConfig }) => new ColorSensor(mockChassisWrapper, mockRenderer, mockConfig)
+    );
 
-    sensor = new ColorSensor(mockChassisWrapper, mockRenderer, mockConfig);
-
+  it.beforeEach(() => {
     const mockCtx = {
       getImageData: vi.fn(() => ({
         data: new Uint8ClampedArray([255, 255, 255, 255]),
@@ -75,19 +75,19 @@ describe(ColorSensor, () => {
       });
   });
 
-  it('should initialize correctly', () => {
+  it('should initialize correctly', ({ sensor, mockRenderer }) => {
     expect(sensor).toBeDefined();
     expect(mockRenderer.add).toHaveBeenCalled();
   });
 
-  it('should update color only after accumulating sufficient time', () => {
+  it('should update color only after accumulating sufficient time', ({ sensor, mockRenderer }) => {
     const timingInfo = { timestep: 50 };
-    sensor.fixedUpdate(timingInfo);
+    sensor.fixedUpdate(timingInfo as any);
     expect(mockRenderer.render).not.toHaveBeenCalled();
-    sensor.fixedUpdate(timingInfo);
+    sensor.fixedUpdate(timingInfo as any);
   });
 
-  it('should give correct response for sense', () => {
+  it('should give correct response for sense', ({ sensor }) => {
     const colorSensed = { r: 10, g: 20, b: 30 };
     sensor.colorSensed = colorSensed;
     const result = sensor.sense();

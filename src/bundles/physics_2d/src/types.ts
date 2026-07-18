@@ -2,6 +2,7 @@ import { b2Vec2 } from '@box2d/core';
 import type { ReplResult } from '@sourceacademy/modules-lib/types';
 
 export const ACCURACY = 2;
+
 export class Vector2 extends b2Vec2 implements ReplResult {
   public toReplString = () => `Vector2D: [${this.x}, ${this.y}]`;
 }

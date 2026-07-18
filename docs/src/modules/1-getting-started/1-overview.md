@@ -31,6 +31,8 @@ children:
 
 - name: src
   children:
+  - name: archive
+    comment: Archived bundles and tabs
   - name: bundles
     comment: Directories containing bundles
   - name: tabs
@@ -106,4 +108,3 @@ The project was suggested by Professor Martin Henz who first proposed to include
 > The Source Academy frontend will fetch the module from the backend, which of course will cache it. Our modules can still be written in JavaScript and loaded in the frontend in whatever way works (e.g. `eval`).
 >
 > In the future, we can allow for a more flexible scheme where users can import Source programs using the same syntax.
-
