@@ -4784,9 +4784,13 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/react": "catalog:"
     "@types/react-dom": "catalog:"
+    "@vitest/browser-playwright": "catalog:"
+    "@vitest/coverage-v8": "catalog:"
+    playwright: "npm:^1.55.1"
     react: "catalog:"
     react-dom: "catalog:"
     typescript: "catalog:"
+    vitest: "catalog:"
   languageName: unknown
   linkType: soft
 

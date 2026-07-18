@@ -44,7 +44,17 @@ export function validateModuleEntry(decl: td.DeclarationReflection, logger: td.L
   }
 
   switch (decl.kind) {
-    case td.ReflectionKind.Function: {
+    case td.ReflectionKind.Class: {
+      // Validate each public method the same way a top-level function would be validated,
+      // instead of flagging the class itself as an unsupported export kind - matches buildJson's
+      // flattening of a class's methods into individual doc entries (see json.ts).
+      (decl.children ?? [])
+        .filter(child => child.kind === td.ReflectionKind.Method && !child.inheritedFrom)
+        .forEach(method => validateModuleEntry(method, logger));
+      return;
+    }
+    case td.ReflectionKind.Function:
+    case td.ReflectionKind.Method: {
       if (decl.signatures === undefined) {
         logger.error(`Function ${decl.name} has 0 signatures!`);
         return;
