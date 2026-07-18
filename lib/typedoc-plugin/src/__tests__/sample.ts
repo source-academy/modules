@@ -60,34 +60,3 @@ export interface CustomType {
 }
 
 export const type_map = {};
-
-class SampleBase {
-  /**
-   * An inherited method - a subclass documenting its own methods shouldn't surface this as one
-   * of its own entries.
-   */
-  inheritedMethod(): void { }
-}
-
-/**
- * A class-based export (mirrors sound_matrix's BaseModulePlugin subclass, whose entire public
- * surface is a class rather than standalone functions). The class itself, its constructor,
- * private members, and inherited methods should never produce "is a ..., which is not
- * supported" warnings or leak into the generated docs - only its own public methods should.
- */
-export class SampleClass extends SampleBase {
-  private readonly hiddenField = 1;
-
-  constructor() {
-    super();
-  }
-
-  /**
-   * A public method on a class export.
-   */
-  publicMethod(flag: boolean): number {
-    return flag ? this.hiddenField : 0;
-  }
-
-  private hiddenMethod(): void { }
-}

@@ -73,7 +73,6 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
   // moduleMethod requires an async generator (it drives closure-taking methods via yield* for
   // CSE-machine stepping), but this one never touches a user closure, so it has nothing to yield.
   @moduleMethod([], DataType.LIST)
-  // eslint-disable-next-line require-yield
   async* get_matrix(): AsyncGenerator<void, TypedValue<DataType.LIST>, undefined> {
     this.__ensureTabLoaded();
     const matrix = await this.__io.getMatrix();
@@ -81,7 +80,6 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
   }
 
   @moduleMethod([], DataType.VOID)
-  // eslint-disable-next-line require-yield
   async* clear_matrix(): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     this.__ensureTabLoaded();
     await this.__io.clearMatrix();
@@ -97,7 +95,6 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
    * matching how the original (pre-Conductor) implementation also just ran the callback directly.
    */
   @moduleMethod([DataType.CLOSURE, DataType.NUMBER], DataType.VOID)
-  // eslint-disable-next-line require-yield -- scheduling the timer never yields; f's own body runs later, fully drained, not stepped
   async* set_timeout(
     f: TypedValue<DataType.CLOSURE>,
     t: TypedValue<DataType.NUMBER>
@@ -112,7 +109,6 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
   }
 
   @moduleMethod([], DataType.VOID)
-  // eslint-disable-next-line require-yield
   async* clear_all_timeout(): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     this.__clearAllTimeouts();
     return { type: DataType.VOID, value: undefined };

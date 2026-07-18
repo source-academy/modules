@@ -3,6 +3,7 @@ import pathlib from 'path';
 import type { BuildResult, ResolvedBundle, ResultType } from '@sourceacademy/modules-repotools/types';
 import { mapAsync } from '@sourceacademy/modules-repotools/utils';
 import type * as td from 'typedoc';
+import { normalizeConductorDocs } from './conductor/index.js';
 import { initTypedocForHtml, initTypedocForJson } from './typedoc.js';
 
 /**
@@ -21,6 +22,8 @@ export async function buildSingleBundleDocs(bundle: ResolvedBundle, outDir: stri
       input: bundle
     };
   }
+
+  normalizeConductorDocs(project);
 
   app.validate(project);
   await fs.mkdir(`${outDir}/jsons`, { recursive: true });
@@ -87,6 +90,8 @@ export async function buildHtml(bundles: Record<string, ResolvedBundle>, outDir:
       errors: ['Failed to generate reflections, check that there are no type errors across all bundles!']
     };
   }
+
+  normalizeConductorDocs(project);
 
   const htmlPath = pathlib.join(outDir, 'documentation');
   await app.generateDocs(project, htmlPath);

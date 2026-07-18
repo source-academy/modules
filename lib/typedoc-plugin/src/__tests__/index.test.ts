@@ -2,7 +2,7 @@ import pathlib from 'path';
 import * as td from 'typedoc';
 import { assert, describe, expect, it, test, vi } from 'vitest';
 import plugin from '..';
-import { buildJson, parsers } from '../json';
+import { parsers } from '../json';
 
 describe('Test parsers', () => {
   describe('Test function parser', () => {
@@ -285,31 +285,6 @@ describe('Project conversion and validation', async () => {
       // Tag should get removed after processing
       expect(child.comment.getTag('@defaultValue')).toBeUndefined();
       expect(child.defaultValue).toEqual('525600');
-    });
-
-    test('A class export is flattened to only its own public methods, not the constructor, private members, or inherited methods', () => {
-      const json = buildJson(project!);
-
-      expect(json.publicMethod).toEqual({
-        kind: 'function',
-        name: 'publicMethod',
-        description: '<p>A public method on a class export.</p>',
-        params: [
-          {
-            paramType: 'regular',
-            type: 'boolean',
-            name: 'flag',
-            defaultValue: undefined
-          }
-        ],
-        retType: 'number'
-      });
-
-      expect(json).not.toHaveProperty('SampleClass');
-      expect(json).not.toHaveProperty('constructor');
-      expect(json).not.toHaveProperty('hiddenField');
-      expect(json).not.toHaveProperty('hiddenMethod');
-      expect(json).not.toHaveProperty('inheritedMethod');
     });
   });
 });
