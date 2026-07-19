@@ -14,8 +14,8 @@ import { repeat as repeat_func, thrice as thrice_func, twice as twice_func } fro
 
 export default class RepeatModulePlugin extends BaseModulePlugin {
   id = 'repeat';
-  exportedNames = ['repeat', 'twice', 'thrice'] as const;
-  static channelAttach = [];
+  override exportedNames = ['repeat', 'twice', 'thrice'] as const;
+  static override channelAttach = [];
   constructor(conduit: IConduit, channels: IChannel<any>[], evaluator: IInterfacableEvaluator) {
     super(conduit, channels, evaluator);
   }

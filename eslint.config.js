@@ -257,6 +257,8 @@ export default defineConfig(
           'categoryDescription',
           'defaultValue',
           'hidden',
+          'publicReturnType',
+          'publicType',
           'title'
         ],
         inlineTags: ['link', 'see'],

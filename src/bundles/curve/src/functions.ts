@@ -1,7 +1,6 @@
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 import { clamp } from 'es-toolkit';
 import { Point, type Curve } from './curves_webgl';
-import { functionDeclaration } from './type_interface';
 import type { CurveTransformer } from './types';
 import { assertNumberWithinRange, hueToRgb, wrapFunction } from '@sourceacademy/modules-lib/utilities';
 import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
@@ -29,7 +28,6 @@ async function defineCurveTransformer(evaluator: IDataHandler, f: (arg: Point, t
 }
 
 class CurveFunctions {
-  @functionDeclaration('x: number, y: number', 'Point')
   static make_point(x: number, y: number): Point {
     assertNumberWithinRange(x, { func_name: CurveFunctions.make_point.name, param_name: 'x', integer: false });
     assertNumberWithinRange(y, { func_name: CurveFunctions.make_point.name, param_name: 'y', integer: false });
@@ -37,7 +35,6 @@ class CurveFunctions {
     return new Point(x, y, 0, [0, 0, 0, 1]);
   }
 
-  @functionDeclaration('x: number, y: number, z: number', 'Point')
   static make_3D_point(x: number, y: number, z: number): Point {
     assertNumberWithinRange(x, { func_name: CurveFunctions.make_3D_point.name, param_name: 'x', integer: false });
     assertNumberWithinRange(y, { func_name: CurveFunctions.make_3D_point.name, param_name: 'y', integer: false });
@@ -46,7 +43,6 @@ class CurveFunctions {
     return new Point(x, y, z, [0, 0, 0, 1]);
   }
 
-  @functionDeclaration('x: number, y: number, r: number, g: number, b: number', 'Point')
   static make_color_point(
     x: number,
     y: number,
@@ -61,7 +57,6 @@ class CurveFunctions {
     return new Point(x, y, 0, [r / 255, g / 255, b / 255, 1]);
   }
 
-  @functionDeclaration('x: number, y: number, z: number, r: number, g: number, b: number', 'Point')
   static make_3D_color_point(
     x: number,
     y: number,
@@ -77,7 +72,6 @@ class CurveFunctions {
     return new Point(x, y, z, [r / 255, g / 255, b / 255, 1]);
   }
 
-  @functionDeclaration('curve1: Curve, curve2: Curve', 'Curve')
   static async* connect_ends(evaluator: IDataHandler, curve1: Curve, curve2: Curve): AsyncGenerator<void, Curve, undefined> {
     const startPointOfCurve2Id = (yield* evaluator.closure_call(curve2, [{ type: DataType.NUMBER, value: 0 }], DataType.OPAQUE)) as TypedValue<DataType.OPAQUE>;
     const endPointOfCurve1Id = (yield* evaluator.closure_call(curve1, [{ type: DataType.NUMBER, value: 1 }], DataType.OPAQUE)) as TypedValue<DataType.OPAQUE>;
@@ -97,7 +91,6 @@ class CurveFunctions {
     );
   }
 
-  @functionDeclaration('curve1: Curve, curve2: Curve', 'Curve')
   static async* connect_rigidly(evaluator: IDataHandler, curve1: Curve, curve2: Curve): AsyncGenerator<void, Curve, undefined> {
     return await evaluator.closure_make(
       { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
@@ -109,7 +102,6 @@ class CurveFunctions {
     );
   }
 
-  @functionDeclaration('x0: number, y0: number, z0: number', '(c: Curve) => Curve')
   static async* translate(evaluator: IDataHandler, x0: number, y0: number, z0: number): AsyncGenerator<void, CurveTransformer, undefined> {
     return await evaluator.closure_make(
       { args: [DataType.CLOSURE] as const, returnType: DataType.CLOSURE },
@@ -132,7 +124,6 @@ class CurveFunctions {
     );
   }
 
-  @functionDeclaration('repeats: number, phase: number', '(c: Curve) => Curve')
   static async* rainbow(evaluator: IDataHandler, repeats: number, phase: number): AsyncGenerator<void, CurveTransformer, undefined> {
     assertNumberWithinRange(repeats, CurveFunctions.rainbow.name, 0, undefined, false, 'repeats');
     assertNumberWithinRange(phase, CurveFunctions.rainbow.name, undefined, undefined, false, 'phase');
@@ -151,7 +142,6 @@ class CurveFunctions {
     });
   }
 
-  @functionDeclaration('curve: Curve', 'Curve')
   static async* invert(evaluator: IDataHandler, original: Curve): AsyncGenerator<void, Curve, undefined> {
     return await evaluator.closure_make(
       { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
@@ -161,7 +151,6 @@ class CurveFunctions {
     );
   }
 
-  @functionDeclaration('curve: Curve', 'Curve')
   static async* put_in_standard_position(evaluator: IDataHandler, curve: Curve): AsyncGenerator<void, Curve, undefined> {
     const start_point_id = yield* evaluator.closure_call(curve, [{ type: DataType.NUMBER, value: 0 }], DataType.OPAQUE);
     const start_point = await evaluator.opaque_get(start_point_id as TypedValue<DataType.OPAQUE>);
@@ -185,7 +174,6 @@ class CurveFunctions {
     return (yield* evaluator.closure_call(yield* scale_proportional(evaluator, 1 / end_point_on_x_axis), [curve_ended_at_x_axis], DataType.CLOSURE)) as TypedValue<DataType.CLOSURE>;
   };
 
-  @functionDeclaration('a: number, b: number, c: number', '(c: Curve) => Curve')
   static async* rotate_around_origin_3D(evaluator: IDataHandler, a: number, b: number, c: number): AsyncGenerator<void, CurveTransformer, undefined> {
     const cthx = Math.cos(a);
     const sthx = Math.sin(a);
@@ -229,7 +217,6 @@ class CurveFunctions {
     );
   }
 
-  @functionDeclaration('a: number', '(c: Curve) => Curve')
   static async* rotate_around_origin(evaluator: IDataHandler, a: number): AsyncGenerator<void, CurveTransformer, undefined> {
     // 1 args
     const cth = Math.cos(a);
@@ -249,7 +236,6 @@ class CurveFunctions {
     );
   }
 
-  @functionDeclaration('x: number, y: number, z: number', '(c: Curve) => Curve')
   static async* scale(evaluator: IDataHandler, x: number, y: number, z: number): AsyncGenerator<void, CurveTransformer, undefined> {
     return defineCurveTransformer(evaluator, async function* (ct) {
       throwIfNotPoint(ct, scale.name);
@@ -262,7 +248,6 @@ class CurveFunctions {
     });
   }
 
-  @functionDeclaration('s: number', '(c: Curve) => Curve')
   static async* scale_proportional(evaluator: IDataHandler, s: number): AsyncGenerator<void, CurveTransformer, undefined> {
     return yield* scale(evaluator, s, s, s);
   }
@@ -284,57 +269,48 @@ class CurveFunctions {
     );
   }
 
-  @functionDeclaration('p: Point', 'number')
   static x_of(pt: Point): number {
     throwIfNotPoint(pt, x_of.name);
     return pt.x;
   }
 
-  @functionDeclaration('p: Point', 'number')
   static y_of(pt: Point): number {
     throwIfNotPoint(pt, y_of.name);
     return pt.y;
   }
 
-  @functionDeclaration('p: Point', 'number')
   static z_of(pt: Point): number {
     throwIfNotPoint(pt, z_of.name);
     return pt.z;
   }
 
-  @functionDeclaration('p: Point', 'number')
   static r_of(pt: Point): number {
     throwIfNotPoint(pt, r_of.name);
     return Math.floor(pt.color[0] * 255);
   }
 
-  @functionDeclaration('p: Point', 'number')
   static g_of(pt: Point): number {
     throwIfNotPoint(pt, g_of.name);
     return Math.floor(pt.color[1] * 255);
   }
 
-  @functionDeclaration('p: Point', 'number')
   static b_of(pt: Point): number {
     throwIfNotPoint(pt, b_of.name);
     return Math.floor(pt.color[2] * 255);
   }
 
-  @functionDeclaration('t: number', 'Point')
   static unit_circle = async function* (evaluator: IDataHandler, t: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await evaluator.opaque_make(
       make_point(Math.cos(2 * Math.PI * t.value), Math.sin(2 * Math.PI * t.value))
     );
   };
 
-  @functionDeclaration('t: number', 'Point')
   static unit_line = async function* (evaluator: IDataHandler, t: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await evaluator.opaque_make(
       make_point(t.value, 0)
     );
   };
 
-  @functionDeclaration('t: number', 'Curve')
   static async* unit_line_at(evaluator: IDataHandler, y: TypedValue<DataType.NUMBER>): AsyncGenerator<void, Curve, undefined> {
     return await evaluator.closure_make(
       { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
@@ -346,7 +322,6 @@ class CurveFunctions {
     );
   }
 
-  @functionDeclaration('t: number', 'Point')
   static arc = async function* (evaluator: IDataHandler, t: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await evaluator.opaque_make(
       make_point(Math.sin(Math.PI * t.value), Math.cos(Math.PI * t.value))
@@ -354,336 +329,28 @@ class CurveFunctions {
   };
 }
 
-/**
- * Makes a Point with given x and y coordinates.
- *
- * @param x x-coordinate of new point
- * @param y y-coordinate of new point
- * @returns with x and y as coordinates
- * @function
- * @example
- * ```
- * const point = make_point(0.5, 0.5);
- * ```
- */
 export const make_point = CurveFunctions.make_point;
-
-/**
- * Makes a 3D Point with given x, y and z coordinates.
- *
- * @param x x-coordinate of new point
- * @param y y-coordinate of new point
- * @param z z-coordinate of new point
- * @function
- * @returns with x, y and z as coordinates
- * @example
- * ```
- * const point = make_3D_point(0.5, 0.5, 0.5);
- * ```
- */
 export const make_3D_point = CurveFunctions.make_3D_point;
-
-/**
- * Makes a color Point with given x and y coordinates, and RGB values ranging
- * from 0 to 255. Any input lower than 0 for RGB will be rounded up to 0, and
- * any input higher than 255 will be rounded down to 255.
- *
- * @param x x-coordinate of new point
- * @param y y-coordinate of new point
- * @param r red component of new point
- * @param g green component of new point
- * @param b blue component of new point
- * @function
- * @returns with x and y as coordinates, and r, g and b as RGB values
- * @example
- * ```
- * const redPoint = make_color_point(0.5, 0.5, 255, 0, 0);
- * ```
- */
 export const make_color_point = CurveFunctions.make_color_point;
-
-/**
- * Makes a 3D color Point with given x, y and z coordinates, and RGB values
- * ranging from 0 to 255. Any input lower than 0 for RGB will be rounded up to
- * 0, and any input higher than 255 will be rounded down to 255.
- *
- * @param x x-coordinate of new point
- * @param y y-coordinate of new point
- * @param z z-coordinate of new point
- * @param r red component of new point
- * @param g green component of new point
- * @param b blue component of new point
- * @function
- * @returns with x, y and z as coordinates, and r, g and b as RGB values
- * @example
- * ```
- * const redPoint = make_color_point(0.5, 0.5, 0.5, 255, 0, 0);
- * ```
- */
 export const make_3D_color_point = CurveFunctions.make_3D_color_point;
-
-/**
- * Retrieves the x-coordinate of a given Point.
- *
- * @param pt given point
- * @returns x-coordinate of the Point
- * @function
- * @example
- * ```
- * const point = make_color_point(1, 2, 3, 50, 100, 150);
- * x_of(point); // Returns 1
- * ```
- */
 export const x_of = CurveFunctions.x_of;
-
-/**
- * Retrieves the y-coordinate of a given Point.
- *
- * @param pt given point
- * @returns y-coordinate of the Point
- * @function
- * @example
- * ```
- * const point = make_color_point(1, 2, 3, 50, 100, 150);
- * y_of(point); // Returns 2
- * ```
- */
 export const y_of = CurveFunctions.y_of;
-
-/**
- * Retrieves the z-coordinate of a given Point.
- *
- * @param pt given point
- * @returns z-coordinate of the Point
- * @function
- * @example
- * ```
- * const point = make_color_point(1, 2, 3, 50, 100, 150);
- * z_of(point); // Returns 3
- * ```
- */
 export const z_of = CurveFunctions.z_of;
-
-/**
- * Retrieves the red component of a given Point.
- *
- * @param pt given point
- * @returns Red component of the Point as a value between [0,255]
- * @function
- * @example
- * ```
- * const point = make_color_point(1, 2, 3, 50, 100, 150);
- * r_of(point); // Returns 50
- * ```
- */
 export const r_of = CurveFunctions.r_of;
-
-/**
- * Retrieves the green component of a given Point.
- *
- * @param pt given point
- * @returns Green component of the Point as a value between [0,255]
- * @function
- * @example
- * ```
- * const point = make_color_point(1, 2, 3, 50, 100, 150);
- * g_of(point); // Returns 100
- * ```
- */
 export const g_of = CurveFunctions.g_of;
-
-/**
- * Retrieves the blue component of a given Point.
- *
- * @param pt given point
- * @returns Blue component of the Point as a value between [0,255]
- * @function
- * @example
- * ```
- * const point = make_color_point(1, 2, 3, 50, 100, 150);
- * b_of(point); // Returns 150
- * ```
- */
 export const b_of = CurveFunctions.b_of;
-
-/**
- * This function is a Curve transformation: a function from a Curve to a Curve.
- * The points of the result Curve are the same points as the points of the
- * original Curve, but in reverse: The result Curve applied to 0 is the original
- * Curve applied to 1 and vice versa.
- *
- * @param original original Curve
- * @returns result Curve
- */
 export const invert = CurveFunctions.invert;
-
-/**
- * This function returns a Curve transformation: It takes an x-value x0, a
- * y-value y0 and a z-value z0, as arguments and
- * returns a Curve transformation that takes a Curve as argument and returns a
- * new Curve, by translating the original by x0 in x-direction, y0 in
- * y-direction and z0 in z-direction.
- *
- * @param x0 x-value
- * @param y0 y-value
- * @param z0 z-value
- * @returns Curve transformation
- * @function
- */
 export const translate = CurveFunctions.translate;
-
-/**
- * Returns a Curve transformation that recolours a curve with a repeating
- * rainbow. The `repeats` parameter controls how many full hue cycles occur
- * as `t` goes from 0 to 1. The `phase` shifts the starting hue.
- *
- * @param repeats number of rainbow cycles across the curve parameter interval
- * @param phase hue offset, where 0 starts at red
- * @returns Curve transformation
- * @function
- */
 export const rainbow = CurveFunctions.rainbow;
-
-/**
- * This function takes 3 angles, a, b and c in radians as parameter
- * and returns a Curve transformation: a function that takes a 3D Curve as argument
- * and returns a new 3D Curve, which is the original Curve rotated
- * extrinsically with Euler angles (a, b, c) about x, y,
- * and z axes.
- * @param a given angle
- * @param b given angle
- * @param c given angle
- * @returns function that takes a Curve and returns a Curve
- * @function
- */
 export const rotate_around_origin_3D = CurveFunctions.rotate_around_origin_3D;
-
-/**
- * This function an angle a in radians as parameter
- * and returns a Curve transformation: a function that takes a Curve as argument
- * and returns a new Curve, which is the original Curve rotated
- * extrinsically with Euler angle a about the z axis.
- *
- * @param a given angle
- * @returns function that takes a Curve and returns a Curve
- * @function
- */
 export const rotate_around_origin = CurveFunctions.rotate_around_origin;
-
-/**
- * This function takes scaling factors `a`, `b` and
- * `c`, as arguments and returns a
- * Curve transformation that scales a given Curve by `a` in
- * x-direction, `b` in y-direction and `c` in z-direction.
- *
- * @param x scaling factor in x-direction
- * @param y scaling factor in y-direction
- * @param z scaling factor in z-direction
- * @returns function that takes a Curve and returns a Curve
- * @function
- */
 export const scale = CurveFunctions.scale;
-
-/**
- * This function takes a scaling factor s argument and returns a Curve
- * transformation that scales a given Curve by s in x, y and z direction.
- *
- * @param s scaling factor
- * @returns function that takes a Curve and returns a Curve
- * @function
- */
 export const scale_proportional = CurveFunctions.scale_proportional;
-
-/**
- * This function takes zero or more Curve transformers and returns a new
- * Curve transformer that applies them sequentially from left to right.
- *
- * @param transformers the transformers to compose
- * @returns A CurveTransformer
- * @function
- */
 export const compose = CurveFunctions.compose;
-
-/**
- * This function is a Curve transformation: It takes a Curve as argument and
- * returns a new Curve, as follows. A Curve is in standard position if it
- * starts at (0,0) ends at (1,0). This function puts the given Curve in
- * standard position by rigidly translating it so its start Point is at the
- * origin (0,0), then rotating it about the origin to put its endpoint on the
- * x axis, then scaling it to put the endpoint at (1,0). Behavior is unspecified
- * on closed Curves where start-point equal end-point.
- *
- * @param curve given Curve
- * @returns result Curve
- */
 export const put_in_standard_position = CurveFunctions.put_in_standard_position;
-
-/**
- * This function is a binary Curve operator: It takes two Curves as arguments
- * and returns a new Curve. The two Curves are combined by using the full first
- * Curve for the first portion of the result and by using the full second Curve
- * for the second portion of the result. The second Curve is not changed, and
- * therefore there might be a big jump in the middle of the result Curve.
- *
- * @param curve1 first Curve
- * @param curve2 second Curve
- * @returns result Curve
- * @function
- */
 export const connect_rigidly = CurveFunctions.connect_rigidly;
-
-/**
- * This function is a binary Curve operator: It takes two Curves as arguments
- * and returns a new Curve. The two Curves are combined by using the full first
- * Curve for the first portion of the result and by using the full second Curve
- * for the second portion of the result. The second Curve is translated such
- * that its point at fraction 0 is the same as the Point of the first Curve at
- * fraction 1.
- *
- * @param curve1 first Curve
- * @param curve2 second Curve
- * @returns result Curve
- * @function
- */
 export const connect_ends = CurveFunctions.connect_ends;
-
-/**
- * This function is a curve: a function from a fraction t to a point. The points
- * lie on the unit circle. They start at Point (1,0) when t is 0. When t is
- * 0.25, they reach Point (0,1), when t is 0.5, they reach Point (-1, 0), etc.
- *
- * @param t fraction between 0 and 1
- * @returns Point on the circle at t
- */
 export const unit_circle = CurveFunctions.unit_circle;
-
-/**
- * This function is a curve: a function from a fraction t to a point. The
- * x-coordinate at fraction t is t, and the y-coordinate is 0.
- *
- * @param t fraction between 0 and 1
- * @returns Point on the line at t
- */
 export const unit_line = CurveFunctions.unit_line;
-
-/**
- * This function is a Curve generator: it takes a number and returns a
- * horizontal curve. The number is a y-coordinate, and the Curve generates only
- * points with the given y-coordinate.
- *
- * @param y fraction between 0 and 1
- * @returns horizontal Curve
- * @function
- */
 export const unit_line_at = CurveFunctions.unit_line_at;
-
-/**
- * This function is a curve: a function from a fraction t to a point. The points
- * lie on the right half of the unit circle. They start at Point (0,1) when t is
- * 0. When t is 0.5, they reach Point (1,0), when t is 1, they reach Point
- * (0, -1).
- *
- * @param t fraction between 0 and 1
- * @returns Point in the arc at t
- */
 export const arc = CurveFunctions.arc;

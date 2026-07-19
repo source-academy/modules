@@ -7,6 +7,11 @@ import * as td from 'typedoc';
 // TODO: Remove the notExported option once we decide how to handle types being exported from bundles
 // #region commonOpts
 const typedocPackageOptions: td.Configuration.TypeDocOptions = {
+  blockTags: [
+    ...td.OptionDefaults.blockTags,
+    '@publicReturnType',
+    '@publicType'
+  ],
   categorizeByGroup: false,
   disableSources: true,
   excludeInternal: true,
