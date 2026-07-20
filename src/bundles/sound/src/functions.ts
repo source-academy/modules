@@ -29,7 +29,7 @@
 import { midi_note_to_frequency } from '@sourceacademy/bundle-midi/functions';
 import { EvaluatorParameterTypeError, EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import type { SoundTabRpc } from './protocol';
-import type { Sound, SoundProducer, SoundTransformer, Wave } from './types';
+import type { Sound, SoundProducer, SoundTransformer, SyncWave, Wave } from './types';
 
 export const FS: number = 44100; // Output sample rate
 const fourier_expansion_level: number = 5;
@@ -163,8 +163,24 @@ function validateAdsrParams(
 // Core Sound representation
 // ---------------------------------------------
 
+/**
+ * Builds a Wave out of a plain synchronous function - the fast path for waves that never need to
+ * cross into user code (see `Wave.sync`'s doc in types.ts). The generator wrapper is still
+ * provided so `wave(t)` keeps working exactly as before anywhere `sync` isn't checked.
+ */
+function syncWave(fn: SyncWave): Wave {
+  const wave = (async function* (t: number) {
+    return fn(t);
+  }) as Wave;
+  return Object.assign(wave, { sync: fn });
+}
+
 /** Wraps `wave` so that it (and anything sampling it) reads 0 once `t` reaches `duration`. */
 function clipToDuration(wave: Wave, duration: number): Wave {
+  if (wave.sync) {
+    const sync = wave.sync;
+    return syncWave(t => (t >= duration ? 0 : sync(t)));
+  }
   return async function* (t: number) {
     if (t >= duration) {
       return 0;
@@ -248,8 +264,12 @@ async function* sampleWave(wave: Wave, duration: number): AsyncGenerator<void, F
   const length = Math.ceil(FS * duration);
   const channel = new Float32Array(length);
   let prev_value = 0;
+  const sync = wave.sync;
   for (let i = 0; i < length; i += 1) {
-    let temp = yield* wave(i / FS);
+    // The fast path: no generator allocation, no Promise, no microtask per sample - see
+    // `Wave.sync`'s doc in types.ts. Falls back to the yield*-driven path (which threads a
+    // student-supplied wave's steps up to the CSE machine) the moment `sync` is unset.
+    let temp = sync ? sync(i / FS) : yield* wave(i / FS);
     if (temp > 1) {
       temp = 1;
     } else if (temp < -1) {
@@ -266,7 +286,7 @@ async function* sampleWave(wave: Wave, duration: number): AsyncGenerator<void, F
 
 /** Builds a Wave that linearly interpolates between recorded PCM samples. */
 function interpolatedWave(samples: Float32Array<ArrayBuffer>, sampleRate: number): Wave {
-  return async function* (t: number) {
+  return syncWave(t => {
     const index = t * sampleRate;
     const lowerIndex = Math.floor(index);
     const upperIndex = lowerIndex + 1;
@@ -274,7 +294,7 @@ function interpolatedWave(samples: Float32Array<ArrayBuffer>, sampleRate: number
     const upper = samples[upperIndex] ?? 0;
     const lower = samples[lowerIndex] ?? 0;
     return lower * (1 - ratio) + upper * ratio;
-  };
+  });
 }
 
 /** Wraps recorded PCM sample(s) into a Sound. */
@@ -514,9 +534,7 @@ export function stop(): void {
 
 /** A wave that is a random value every `1/FS` seconds. */
 export function noise_wave(): Wave {
-  return async function* (_t: number) {
-    return Math.random() * 2 - 1;
-  };
+  return syncWave(() => Math.random() * 2 - 1);
 }
 
 /** Makes noise: a random wave sampled every `1/FS` seconds. */
@@ -527,9 +545,7 @@ export function noise_sound(duration: number): Sound {
 
 /** A wave that is always 0. */
 export function silence_wave(): Wave {
-  return async function* (_t: number) {
-    return 0;
-  };
+  return syncWave(() => 0);
 }
 
 /** Makes a silence Sound with given duration. */
@@ -540,9 +556,7 @@ export function silence_sound(duration: number): Sound {
 
 /** A sine wave of the given frequency. */
 export function sine_wave(freq: number): Wave {
-  return async function* (t: number) {
-    return Math.sin(2 * Math.PI * t * freq);
-  };
+  return syncWave(t => Math.sin(2 * Math.PI * t * freq));
 }
 
 /** Makes a sine wave Sound with given frequency and duration. */
@@ -560,9 +574,7 @@ export function square_wave(freq: number): Wave {
     }
     return answer;
   }
-  return async function* (t: number) {
-    return (4 / Math.PI) * fourier_expansion_square(t);
-  };
+  return syncWave(t => (4 / Math.PI) * fourier_expansion_square(t));
 }
 
 /** Makes a square wave Sound with given frequency and duration. */
@@ -582,9 +594,7 @@ export function triangle_wave(freq: number): Wave {
     }
     return answer;
   }
-  return async function* (t: number) {
-    return (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t);
-  };
+  return syncWave(t => (8 / Math.PI / Math.PI) * fourier_expansion_triangle(t));
 }
 
 /** Makes a triangle wave Sound with given frequency and duration. */
@@ -602,9 +612,7 @@ export function sawtooth_wave(freq: number): Wave {
     }
     return answer;
   }
-  return async function* (t: number) {
-    return 1 / 2 - (1 / Math.PI) * fourier_expansion_sawtooth(t);
-  };
+  return syncWave(t => 1 / 2 - (1 / Math.PI) * fourier_expansion_sawtooth(t));
 }
 
 /** Makes a sawtooth wave Sound with given frequency and duration. */
@@ -624,13 +632,27 @@ export function sawtooth_sound(freq: number, duration: number): Sound {
  * `sounds.length` nested generator delegations per sample, at 44100 samples/sec).
  */
 function consecutiveWave(sounds: Sound[], channel: (s: Sound) => Wave): Wave {
+  const waves = sounds.map(channel);
+  if (waves.every(w => w.sync)) {
+    const syncs = waves.map(w => w.sync as SyncWave);
+    return syncWave(t => {
+      let remaining = t;
+      for (let i = 0; i < sounds.length; i += 1) {
+        if (remaining < sounds[i].duration) {
+          return syncs[i](remaining);
+        }
+        remaining -= sounds[i].duration;
+      }
+      return 0;
+    });
+  }
   return async function* (t: number) {
     let remaining = t;
-    for (const sound of sounds) {
-      if (remaining < sound.duration) {
-        return yield* channel(sound)(remaining);
+    for (let i = 0; i < sounds.length; i += 1) {
+      if (remaining < sounds[i].duration) {
+        return yield* waves[i](remaining);
       }
-      remaining -= sound.duration;
+      remaining -= sounds[i].duration;
     }
     return 0;
   };
@@ -663,11 +685,24 @@ export function consecutively(sounds: Sound[]): Sound {
  */
 function simultaneousWave(sounds: Sound[], channel: (s: Sound) => Wave): Wave {
   const count = sounds.length;
+  const waves = sounds.map(channel);
+  if (waves.every(w => w.sync)) {
+    const syncs = waves.map(w => w.sync as SyncWave);
+    return syncWave(t => {
+      let sum = 0;
+      for (let i = 0; i < sounds.length; i += 1) {
+        if (t <= sounds[i].duration) {
+          sum += syncs[i](t);
+        }
+      }
+      return sum / count;
+    });
+  }
   return async function* (t: number) {
     let sum = 0;
-    for (const sound of sounds) {
-      if (t <= sound.duration) {
-        sum += yield* channel(sound)(t);
+    for (let i = 0; i < sounds.length; i += 1) {
+      if (t <= sounds[i].duration) {
+        sum += yield* waves[i](t);
       }
     }
     return sum / count;
@@ -702,24 +737,26 @@ function adsrWave(
   sustain_level: number,
   release_time: number
 ): Wave {
-  return async function* (x: number) {
+  // The envelope multiplier at `x`, independent of `wave` - shared by both the fast and
+  // yield*-driven paths below so the branching logic exists exactly once.
+  function envelopeAt(x: number): number {
     if (x < attack_time) {
-      return (yield* wave(x)) * (x / attack_time);
+      return x / attack_time;
     }
     if (x < attack_time + decay_time) {
-      return (
-        ((1 - sustain_level) * linear_decay(decay_time)(x - attack_time) + sustain_level)
-        * (yield* wave(x))
-      );
+      return (1 - sustain_level) * linear_decay(decay_time)(x - attack_time) + sustain_level;
     }
     if (x < duration - release_time) {
-      return (yield* wave(x)) * sustain_level;
+      return sustain_level;
     }
-    return (
-      (yield* wave(x))
-      * sustain_level
-      * linear_decay(release_time)(x - (duration - release_time))
-    );
+    return sustain_level * linear_decay(release_time)(x - (duration - release_time));
+  }
+  if (wave.sync) {
+    const sync = wave.sync;
+    return syncWave(x => envelopeAt(x) * sync(x));
+  }
+  return async function* (x: number) {
+    return envelopeAt(x) * (yield* wave(x));
   };
 }
 
@@ -796,6 +833,10 @@ export function stacking_adsr(
 
 /** Modulates the phase of a carrier sine wave of `freq` using `modulatorWave` as the modulator. */
 function phaseModWave(modulatorWave: Wave, freq: number, amount: number): Wave {
+  if (modulatorWave.sync) {
+    const sync = modulatorWave.sync;
+    return syncWave(t => Math.sin(2 * Math.PI * t * freq + amount * sync(t)));
+  }
   return async function* (t: number) {
     return Math.sin(2 * Math.PI * t * freq + amount * (yield* modulatorWave(t)));
   };
@@ -828,6 +869,10 @@ export function phase_mod(freq: number, duration: number, amount: number): Sound
 
 /** Multiplies every sample of `wave` by `gain`. */
 function gainWave(wave: Wave, gain: number): Wave {
+  if (wave.sync) {
+    const sync = wave.sync;
+    return syncWave(t => gain * sync(t));
+  }
   return async function* (t: number) {
     return gain * (yield* wave(t));
   };
@@ -841,9 +886,18 @@ function gainWave(wave: Wave, gain: number): Wave {
  */
 export function squash(sound: Sound): Sound {
   const { leftWave, rightWave, duration } = sound;
-  const averaged: Wave = leftWave === rightWave ? leftWave : async function* (t: number) {
-    return 0.5 * ((yield* leftWave(t)) + (yield* rightWave(t)));
-  };
+  let averaged: Wave;
+  if (leftWave === rightWave) {
+    averaged = leftWave;
+  } else if (leftWave.sync && rightWave.sync) {
+    const leftSync = leftWave.sync;
+    const rightSync = rightWave.sync;
+    averaged = syncWave(t => 0.5 * (leftSync(t) + rightSync(t)));
+  } else {
+    averaged = async function* (t: number) {
+      return 0.5 * ((yield* leftWave(t)) + (yield* rightWave(t)));
+    };
+  }
   return make_sound(averaged, duration);
 }
 
@@ -868,8 +922,14 @@ export function pan(amount: number): SoundTransformer {
 
 /** Modulates the pan amount at time `t` using `modulator`'s two channels, clamped to [-1, 1]. */
 function panModAmountWave(modulator: Sound): Wave {
+  const { leftWave, rightWave } = modulator;
+  if (leftWave.sync && rightWave.sync) {
+    const leftSync = leftWave.sync;
+    const rightSync = rightWave.sync;
+    return syncWave(t => Math.max(-1, Math.min(1, leftSync(t) + rightSync(t))));
+  }
   return async function* (t: number) {
-    const output = (yield* modulator.leftWave(t)) + (yield* modulator.rightWave(t));
+    const output = (yield* leftWave(t)) + (yield* rightWave(t));
     return Math.max(-1, Math.min(1, output));
   };
 }
@@ -885,6 +945,15 @@ export function pan_mod(modulator: Sound): SoundTransformer {
   const amountWave = panModAmountWave(modulator);
   return sound => {
     const { leftWave: wave, duration } = squash(sound);
+    if (amountWave.sync && wave.sync) {
+      const amountSync = amountWave.sync;
+      const sync = wave.sync;
+      return make_stereo_sound(
+        syncWave(t => ((1 - amountSync(t)) / 2) * sync(t)),
+        syncWave(t => ((1 + amountSync(t)) / 2) * sync(t)),
+        duration
+      );
+    }
     return make_stereo_sound(
       async function* (t: number) {
         return ((1 - (yield* amountWave(t))) / 2) * (yield* wave(t));
