@@ -31768,7 +31768,7 @@ void main() {
     }
     getEntity() {
       if (this.chassis === null) {
-        throw new Error("Chassis not initialized");
+        throw new import_base.GeneralRuntimeError("Chassis not initialized");
       }
       return this.chassis;
     }
