@@ -189,64 +189,6 @@ describe(normalizeConductorDocs, () => {
     expect(signature.type?.stringify(td.TypeContext.none)).toEqual('Function');
   });
 
-  it('uses @functionDeclaration decorator types for promoted Conductor methods', () => {
-    const project = createProject();
-    const fixturePath = pathlib.resolve(import.meta.dirname, 'fixtures/conductorDeclarations.ts');
-
-    const plugin = register(
-      project,
-      new td.DeclarationReflection('default', td.ReflectionKind.Class, project)
-    );
-    project.addChild(plugin);
-    plugin.extendedTypes = [
-      conductorReference(project, 'BaseModulePlugin')
-    ];
-    addExportedNames(project, plugin, ['make_widget']);
-
-    const method = register(
-      project,
-      new td.DeclarationReflection('make_widget', td.ReflectionKind.Method, plugin)
-    );
-    plugin.addChild(method);
-    method.sources = [new td.SourceReference(fixturePath, 22, 10)];
-
-    const property = register(
-      project,
-      new td.DeclarationReflection('sample_widget', td.ReflectionKind.Property, plugin)
-    );
-    plugin.addChild(property);
-    property.sources = [new td.SourceReference(fixturePath, 19, 3)];
-    property.type = typedValue(project, 'OPAQUE');
-
-    const methodSignature = register(
-      project,
-      new td.SignatureReflection('make_widget', td.ReflectionKind.CallSignature, method)
-    );
-    method.signatures = [methodSignature];
-    methodSignature.parameters = [
-      createParameter(project, methodSignature, 'count', typedValue(project, 'NUMBER')),
-      createParameter(project, methodSignature, 'mapper', typedValue(project, 'CLOSURE'))
-    ];
-    methodSignature.type = asyncGenerator(project, typedValue(project, 'OPAQUE'));
-
-    normalizeConductorDocs(project);
-
-    const publicFunction = project.children?.find(child => child.name === 'make_widget');
-    const [signature] = publicFunction?.signatures ?? [];
-    const publicVariable = project.children?.find(child => child.name === 'sample_widget');
-
-    expect(signature.parameters?.map(parameter => [
-      parameter.name,
-      parameter.type?.stringify(td.TypeContext.none)
-    ])).toEqual([
-      ['count', 'number'],
-      ['mapper', '(widget: Widget) => Widget']
-    ]);
-    expect(signature.type?.stringify(td.TypeContext.none)).toEqual('Widget');
-    expect(publicVariable?.kind).toEqual(td.ReflectionKind.Variable);
-    expect(publicVariable?.type?.stringify(td.TypeContext.none)).toEqual('Widget');
-  });
-
   it('normalizes the migrated repeat bundle docs', async () => {
     const repeatBundle: ResolvedBundle = {
       type: 'bundle',
@@ -282,7 +224,7 @@ describe(normalizeConductorDocs, () => {
       .toEqual(['func', 'n']);
   });
 
-  it('uses declaration decorators in the migrated rune bundle docs', async () => {
+  it('uses @publicType/@publicReturnType tags in the migrated rune bundle docs', async () => {
     const runeBundle: ResolvedBundle = {
       type: 'bundle',
       name: 'rune',
