@@ -1,5 +1,8 @@
 name: Deploy to modules-conductor
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
