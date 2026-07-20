@@ -58,4 +58,23 @@ describe(repeat, () => {
 
     await expect(callNumberClosure(handler, repeated, 1)).resolves.toEqual(4);
   });
+
+  it('returns the identity closure when n = 0', async () => {
+    const handler = new TestDataHandler();
+    const plusOne = await makePlusOne(handler);
+    const repeated = await runAsyncGenerator(repeat(handler, plusOne, numberValue(0)));
+
+    await expect(callNumberClosure(handler, repeated, 5)).resolves.toEqual(5);
+  });
+
+  it('throws an error when provided a negative or non-integer n', async () => {
+    const handler = new TestDataHandler();
+    const plusOne = await makePlusOne(handler);
+
+    await expect(runAsyncGenerator(repeat(handler, plusOne, numberValue(-1))))
+      .rejects.toThrow('repeat: Expected integer ≥ 0, got -1.');
+
+    await expect(runAsyncGenerator(repeat(handler, plusOne, numberValue(1.5))))
+      .rejects.toThrow('repeat: Expected integer ≥ 0, got 1.5.');
+  });
 });

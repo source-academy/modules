@@ -1,29 +1,40 @@
-import { animate_anaglyph, animate_rune, blank } from '@sourceacademy/bundle-rune';
-import { DrawnHollusionRune, type RuneModuleState } from '@sourceacademy/bundle-rune/functions';
-import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
-import { mockDebuggerContext } from '@sourceacademy/modules-lib/utilities';
+import { DrawnHollusionRune, blank } from '@sourceacademy/bundle-rune/functions';
+import {
+  serializeRune,
+  type RuneChannelMessage
+} from '@sourceacademy/bundle-rune/protocol';
+import type { ITabService } from '@sourceacademy/common-tabs';
+import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { cleanup, render } from 'vitest-browser-react';
-import RuneSideContent, { RuneTab } from '..';
+import RuneTabPlugin, { RUNE_TAB_ID } from '..';
 import HollusionCanvas from '../hollusion_canvas';
 
-test('Ensure that rune animations error gracefully', () => {
-  const badAnimation = animate_rune(1, 60, _t => {
-    throw new Error();
-  });
-  const mockContext = mockDebuggerContext<RuneModuleState>({ drawnRunes: [badAnimation] }, 'rune');
-  expect(<RuneTab debuggerCtx={mockContext} />)
-    .toMatchSnapshot();
-});
+class MockChannel<T> implements IChannel<T> {
+  readonly name = 'mock-rune-channel';
+  readonly sent: T[] = [];
+  private readonly subscribers = new Set<(message: T) => void>();
 
-test('Ensure that anaglyph animations error gracefully', () => {
-  const badAnimation = animate_anaglyph(1, 60, _t => {
-    throw new Error();
-  });
-  const mockContext = mockDebuggerContext<RuneModuleState>({ drawnRunes: [badAnimation] }, 'rune');
-  expect(<RuneTab debuggerCtx={mockContext} />)
-    .toMatchSnapshot();
-});
+  send(message: T) {
+    this.sent.push(message);
+  }
+
+  subscribe(subscriber: (message: T) => void) {
+    this.subscribers.add(subscriber);
+  }
+
+  unsubscribe(subscriber: (message: T) => void) {
+    this.subscribers.delete(subscriber);
+  }
+
+  close() {
+    this.subscribers.clear();
+  }
+
+  emit(message: T) {
+    this.subscribers.forEach(subscriber => subscriber(message));
+  }
+}
 
 describe(HollusionCanvas, () => {
   beforeEach(() => {
@@ -50,38 +61,40 @@ describe(HollusionCanvas, () => {
   });
 });
 
-describe('Test Rune Side Content', () => {
-  const propertyAccessor = vi.fn((target: any, prop: string) => {
-    return target[prop];
+describe(RuneTabPlugin, () => {
+  test('registers the rune tab and requests replay', () => {
+    const channel = new MockChannel<RuneChannelMessage>();
+    const tabService = {
+      registerTab: vi.fn(),
+      unregisterTab: vi.fn(),
+      showTab: vi.fn(),
+      hideTab: vi.fn()
+    } satisfies ITabService;
+
+    new RuneTabPlugin({} as IConduit, [channel], tabService);
+
+    expect(tabService.registerTab).toHaveBeenCalledOnce();
+    expect(channel.sent).toContainEqual({ type: 'request' });
   });
 
-  const contextObject: DebuggerContext = {
-    context: {
-      moduleContexts: new Proxy({
-        rune: {
-          state: {
-            drawnRunes: []
-          },
-          tabs: null
-        }
-      }, {
-        get: propertyAccessor
-      })
-    }
-  } as any;
+  test('stores render messages and shows the tab', () => {
+    const channel = new MockChannel<RuneChannelMessage>();
+    const tabService = {
+      registerTab: vi.fn(),
+      unregisterTab: vi.fn(),
+      showTab: vi.fn(),
+      hideTab: vi.fn()
+    } satisfies ITabService;
+    const plugin = new RuneTabPlugin({} as IConduit, [channel], tabService);
+    const message = {
+      type: 'render',
+      mode: 'normal',
+      rune: serializeRune(blank)
+    } satisfies RuneChannelMessage;
 
-  beforeEach(() => {
-    propertyAccessor.mockClear();
-  });
+    channel.emit(message);
 
-  test('toSpawn asks for rune module state', () => {
-    RuneSideContent.toSpawn(contextObject);
-    expect(propertyAccessor).toHaveBeenCalledExactlyOnceWith(expect.any(Object), 'rune', expect.any(Object));
-  });
-
-  test('body asks for rune module state', async () => {
-    await render(<RuneSideContent.body {...contextObject} />);
-    expect(propertyAccessor).toHaveBeenCalledExactlyOnceWith(expect.any(Object), 'rune', expect.any(Object));
-    cleanup();
+    expect(plugin.getMessages()).toEqual([message]);
+    expect(tabService.showTab).toHaveBeenCalledExactlyOnceWith(RUNE_TAB_ID);
   });
 });

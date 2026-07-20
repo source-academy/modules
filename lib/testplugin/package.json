@@ -11,7 +11,7 @@
     }
   },
   "dependencies": {
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
+    "@sourceacademy/conductor": "catalog:"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",

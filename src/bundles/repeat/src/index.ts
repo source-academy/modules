@@ -6,11 +6,18 @@
  */
 
 import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
-import { BaseModulePlugin, moduleMethod } from '@sourceacademy/conductor/module';
+import { BaseModulePlugin, moduleMethod, type IModuleExport } from '@sourceacademy/conductor/module';
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 
 import { repeat as repeat_func, thrice as thrice_func, twice as twice_func } from './functions';
+
+type SignaturedModuleMethod = {
+  signature?: {
+    args: readonly DataType[];
+    returnType: DataType;
+  };
+};
 
 export default class RepeatModulePlugin extends BaseModulePlugin {
   id = 'repeat';
@@ -18,6 +25,22 @@ export default class RepeatModulePlugin extends BaseModulePlugin {
   static override channelAttach = [];
   constructor(conduit: IConduit, channels: IChannel<any>[], evaluator: IInterfacableEvaluator) {
     super(conduit, channels, evaluator);
+    this.__bindExportedMethods();
+  }
+
+  private __bindExportedMethods() {
+    for (const name of this.exportedNames) {
+      const method = this[name];
+      if (typeof method !== 'function') continue;
+
+      const signature = (method as SignaturedModuleMethod).signature;
+      const boundMethod = method.bind(this) as typeof method & SignaturedModuleMethod;
+      boundMethod.signature = signature;
+      Object.defineProperty(this, name, {
+        configurable: true,
+        value: boundMethod
+      });
+    }
   }
   /**
    * Returns a new function which when applied to an argument, has the same effect

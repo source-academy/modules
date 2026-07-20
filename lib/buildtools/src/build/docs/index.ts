@@ -2,9 +2,15 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import type { BuildResult, ResolvedBundle, ResultType } from '@sourceacademy/modules-repotools/types';
 import { mapAsync } from '@sourceacademy/modules-repotools/utils';
+<<<<<<< HEAD
 import { normalizeConductorDocs } from './conductor/index.js';
 import type * as td from 'typedoc';
-import { initTypedocForHtml, initTypedocForJson } from './typedoc.js';
+import { initTypedocForHtml, initTypedocForJson, stripTypeDocSources } from './typedoc.js';
+=======
+import type * as td from 'typedoc';
+import { normalizeConductorDocs } from './conductor/index.js';
+import { initTypedocForHtml, initTypedocForJson, stripTypeDocSources } from './typedoc.js';
+>>>>>>> 7bdaa4efa38bba26268b1fb1e938b36c7ab1feb1
 
 /**
  * First builds an intermediate JSON file in the dist directory of the bundle\
@@ -24,6 +30,8 @@ export async function buildSingleBundleDocs(bundle: ResolvedBundle, outDir: stri
   }
 
   normalizeConductorDocs(project);
+  stripTypeDocSources(project);
+
   app.validate(project);
   await fs.mkdir(`${outDir}/jsons`, { recursive: true });
   await app.generateOutputs(project);
@@ -91,6 +99,7 @@ export async function buildHtml(bundles: Record<string, ResolvedBundle>, outDir:
   }
 
   normalizeConductorDocs(project);
+  stripTypeDocSources(project);
 
   const htmlPath = pathlib.join(outDir, 'documentation');
   await app.generateDocs(project, htmlPath);

@@ -22,7 +22,7 @@ export const logLevelOption = new Option('--logLevel <level>', 'Log level that T
     if (!Number.isNaN(numVal)) {
       const result = objectValues(LogLevel).some(value => value === numVal);
       if (result) {
-        return numVal as unknown as LogLevel;
+        return numVal;
       }
     }
 

@@ -2,12 +2,10 @@
   "name": "@sourceacademy/bundle-binary_tree",
   "version": "1.0.0",
   "private": true,
-  "dependencies": {
-    "@sourceacademy/modules-lib": "workspace:^",
-    "js-slang": "catalog:"
-  },
   "devDependencies": {
+    "@sourceacademy/conductor": "^0.7.0",
     "@sourceacademy/modules-buildtools": "workspace:^",
+    "@sourceacademy/modules-testplugin": "workspace:^",
     "typescript": "catalog:"
   },
   "type": "module",

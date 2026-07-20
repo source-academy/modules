@@ -6,9 +6,10 @@
     "@sourceacademy/bundle-repeat": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
     "es-toolkit": "^1.44.0",
-    "gl-matrix": "^3.3.0"
+    "gl-matrix": "^3.4.4"
   },
   "devDependencies": {
+    "@sourceacademy/conductor": "catalog:",
     "@sourceacademy/modules-buildtools": "workspace:^",
     "js-slang": "catalog:",
     "typescript": "catalog:"
