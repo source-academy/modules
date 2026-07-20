@@ -17,6 +17,9 @@ const typedocPackageOptions: td.Configuration.TypeDocOptions = {
     notExported: false,
   },
   visibilityFilters: {},
+  // @publicType/@publicReturnType are read and stripped by normalizeSignature() in
+  // conductor/normalisation.ts; register them so Typedoc doesn't warn about unknown block tags.
+  blockTags: [...td.OptionDefaults.blockTags, '@publicType', '@publicReturnType'],
 };
 // #endregion commonOpts
 
