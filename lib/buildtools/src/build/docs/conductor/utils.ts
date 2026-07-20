@@ -1,4 +1,6 @@
+import fs from 'fs';
 import * as td from 'typedoc';
+import ts from 'typescript';
 import { CONDUCTOR_PACKAGE, DATA_TYPE_NAMES, SERVICE_PARAMETER_TYPES, TYPED_VALUE_NAMES } from './constants.js';
 import { normalizeConductorType } from './normalisation.js';
 
@@ -11,9 +13,12 @@ export function isReferenceType(type: td.SomeType | undefined): type is td.Refer
 
 /**
  * Checks whether a reference points at one of the Conductor symbols this normalizer understands.
+ * Matches on the canonical exported name (falling back to the local name) so that aliased
+ * imports (e.g. `import { BaseModulePlugin as X }`) are still recognized.
  */
 export function isConductorReference(type: td.ReferenceType, names: Set<string>) {
-  return names.has(type.name) && (!type.package || type.package === CONDUCTOR_PACKAGE);
+  const qualifiedName = type.qualifiedName ?? type.name;
+  return names.has(qualifiedName) && (!type.package || type.package === CONDUCTOR_PACKAGE);
 }
 
 /**
@@ -24,7 +29,7 @@ export function isDataTypeReference(type: td.SomeType | undefined): type is td.R
 
   const qualifiedName = type.qualifiedName ?? type.name;
   return DATA_TYPE_NAMES.has(type.name)
-        && (qualifiedName === type.name || qualifiedName === `DataType.${type.name}`);
+    && (qualifiedName === type.name || qualifiedName === `DataType.${type.name}`);
 }
 
 /**
@@ -85,10 +90,10 @@ export function isServiceParameter(parameter: td.ParameterReflection) {
 export function isConductorPluginClass(reflection: td.DeclarationReflection) {
   if (reflection.kind !== td.ReflectionKind.Class) return false;
 
-  const exportedNames = getExportedNames(reflection);
-  if (exportedNames.size === 0) return false;
-
-  return reflection.children?.some(child => isExportedConductorMethod(child, exportedNames)) ?? false;
+  return reflection.extendedTypes?.some(type => {
+    if (!isReferenceType(type)) return false;
+    return isConductorReference(type, new Set(['BaseModulePlugin', 'IModulePlugin', 'IPlugin', 'Plugin']));
+  }) ?? false;
 }
 
 /**
@@ -168,7 +173,7 @@ export function isExportedConductorMethod(
 
   return child.signatures?.some(signature => {
     return hasConductorTransportType(signature.type)
-            || signature.parameters?.some(parameter => hasConductorTransportType(parameter.type));
+      || signature.parameters?.some(parameter => hasConductorTransportType(parameter.type));
   }) ?? false;
 }
 
@@ -189,13 +194,20 @@ export function cloneParameter(
   parameter: td.ParameterReflection,
   parent: td.SignatureReflection,
   project: td.ProjectReflection,
-  commentSource: td.ParameterReflection | undefined
+  commentSource: td.ParameterReflection | undefined,
+  declaredTypeText: string | undefined = undefined
 ) {
-  const clone = new td.ParameterReflection(parameter.name, td.ReflectionKind.Parameter, parent);
+  const clone = new td.ParameterReflection(
+    parameter.name,
+    td.ReflectionKind.Parameter,
+    parent
+  );
   cloneFlags(parameter, clone);
   clone.comment = commentSource?.comment ?? parameter.comment;
   clone.defaultValue = parameter.defaultValue;
-  clone.type = parameter.type ? normalizeConductorType(parameter.type, project) : undefined;
+  clone.type = declaredTypeText !== undefined
+    ? declaredType(declaredTypeText)
+    : parameter.type ? normalizeConductorType(parameter.type, project) : undefined;
   project.registerReflection(clone, undefined, undefined);
   return clone;
 }
@@ -212,29 +224,184 @@ export function cloneFlags(source: td.Reflection, target: td.Reflection) {
  */
 export function copyPluginSignature(
   target: td.DeclarationReflection,
+  method: td.DeclarationReflection,
   pluginSignature: td.SignatureReflection,
   project: td.ProjectReflection,
   implementationSignature: td.SignatureReflection | undefined
 ) {
   const targetSignature = target.signatures?.[0]
-        ?? new td.SignatureReflection(target.name, td.ReflectionKind.CallSignature, target);
+    ?? new td.SignatureReflection(target.name, td.ReflectionKind.CallSignature, target);
 
   if (!target.signatures?.includes(targetSignature)) {
     target.signatures = [targetSignature];
     project.registerReflection(targetSignature, undefined, undefined);
   }
 
+  const declaredFunctionType = getDeclaredFunctionType(method);
+
   cloneFlags(pluginSignature, targetSignature);
   targetSignature.comment = getSignatureComment(implementationSignature, pluginSignature);
-  targetSignature.type = pluginSignature.type
-    ? normalizeConductorType(pluginSignature.type, project)
-    : undefined;
+  targetSignature.type = declaredFunctionType
+    ? declaredType(declaredFunctionType.returnType)
+    : pluginSignature.type
+      ? normalizeConductorType(pluginSignature.type, project)
+      : undefined;
 
   targetSignature.parameters = pluginSignature.parameters?.map(parameter => {
     const implementationParameter = implementationSignature?.parameters
       ?.find(each => each.name === parameter.name);
-    return cloneParameter(parameter, targetSignature, project, implementationParameter);
+    return cloneParameter(
+      parameter,
+      targetSignature,
+      project,
+      implementationParameter,
+      declaredFunctionType?.paramTypes.get(parameter.name)
+    );
   });
+}
+
+/**
+ * Creates a public type label from a bundle declaration decorator.
+ */
+export function declaredType(typeName: string) {
+  return new td.UnknownType(typeName);
+}
+
+const parsedSourceFileCache = new Map<string, ts.SourceFile | undefined>();
+
+/**
+ * Parses a source file with the Typescript compiler so `@functionDeclaration`/`@variableDeclaration`
+ * decorator calls can be located and read. Results are cached since the same file backs many reflections.
+ */
+function getParsedSourceFile(fileName: string): ts.SourceFile | undefined {
+  if (!parsedSourceFileCache.has(fileName)) {
+    let sourceFile: ts.SourceFile | undefined;
+    try {
+      const text = fs.readFileSync(fileName, 'utf-8');
+      sourceFile = ts.createSourceFile(fileName, text, ts.ScriptTarget.Latest, true);
+    } catch {
+      sourceFile = undefined;
+    }
+    parsedSourceFileCache.set(fileName, sourceFile);
+  }
+
+  return parsedSourceFileCache.get(fileName);
+}
+
+/**
+ * Finds the `decoratorName(...)` call decorating the class member named `memberName`.
+ */
+function findDecoratorCall(
+  sourceFile: ts.SourceFile,
+  memberName: string,
+  decoratorName: string
+): ts.CallExpression | undefined {
+  let found: ts.CallExpression | undefined;
+
+  function visit(node: ts.Node) {
+    if (found) return;
+
+    if (
+      (ts.isPropertyDeclaration(node) || ts.isMethodDeclaration(node))
+      && ts.isIdentifier(node.name)
+      && node.name.text === memberName
+    ) {
+      ts.getDecorators(node)?.forEach(decorator => {
+        if (found) return;
+        const { expression } = decorator;
+        if (
+          ts.isCallExpression(expression)
+          && ts.isIdentifier(expression.expression)
+          && expression.expression.text === decoratorName
+        ) {
+          found = expression;
+        }
+      });
+      return;
+    }
+
+    ts.forEachChild(node, visit);
+  }
+
+  visit(sourceFile);
+  return found;
+}
+
+/**
+ * Reads a string literal argument from a decorator call.
+ */
+function stringLiteralArg(call: ts.CallExpression, index: number): string | undefined {
+  const arg = call.arguments[index];
+  return arg && ts.isStringLiteral(arg) ? arg.text : undefined;
+}
+
+/**
+ * Parses a `@functionDeclaration` parameter-list string (e.g. `'count: number, mapper: (widget: Widget) => Widget'`)
+ * into a map of parameter name to its declared type text.
+ */
+function parseParamTypesText(paramTypesText: string): Map<string, string> {
+  const wrapperSource = ts.createSourceFile(
+    'declaredParams.ts',
+    `type DeclaredParams = (${paramTypesText}) => void;`,
+    ts.ScriptTarget.Latest,
+    true
+  );
+
+  const paramTypes = new Map<string, string>();
+  const [statement] = wrapperSource.statements;
+  if (ts.isTypeAliasDeclaration(statement) && ts.isFunctionTypeNode(statement.type)) {
+    statement.type.parameters.forEach(parameter => {
+      if (ts.isIdentifier(parameter.name) && parameter.type) {
+        paramTypes.set(parameter.name.text, parameter.type.getText(wrapperSource));
+      }
+    });
+  }
+
+  return paramTypes;
+}
+
+/**
+ * Looks up the declared type text from a `@variableDeclaration('Type')` decorator on the given reflection,
+ * by reading and parsing the reflection's source file.
+ */
+export function getDeclaredVariableType(reflection: td.DeclarationReflection): string | undefined {
+  const fileName = reflection.sources?.[0]?.fileName;
+  if (!fileName) return undefined;
+
+  const sourceFile = getParsedSourceFile(fileName);
+  if (!sourceFile) return undefined;
+
+  const call = findDecoratorCall(sourceFile, reflection.name, 'variableDeclaration');
+  return call ? stringLiteralArg(call, 0) : undefined;
+}
+
+export interface DeclaredFunctionType {
+  paramTypes: Map<string, string>;
+  returnType: string;
+}
+
+/**
+ * Looks up the declared parameter/return type text from a `@functionDeclaration('params', 'returnType')`
+ * decorator on the given reflection, by reading and parsing the reflection's source file.
+ */
+export function getDeclaredFunctionType(reflection: td.DeclarationReflection): DeclaredFunctionType | undefined {
+  const fileName = reflection.sources?.[0]?.fileName;
+  if (!fileName) return undefined;
+
+  const sourceFile = getParsedSourceFile(fileName);
+  if (!sourceFile) return undefined;
+
+  const call = findDecoratorCall(sourceFile, reflection.name, 'functionDeclaration');
+  if (!call) return undefined;
+
+  const paramTypesText = stringLiteralArg(call, 0);
+  const returnTypeText = stringLiteralArg(call, 1);
+  if (paramTypesText === undefined || returnTypeText === undefined) return undefined;
+
+  return {
+    paramTypes: parseParamTypesText(paramTypesText),
+    returnType: returnTypeText
+  };
 }
 
 /**
@@ -243,7 +410,7 @@ export function copyPluginSignature(
 export function findPublicFunction(container: td.ContainerReflection, name: string) {
   return container.children?.find(child => {
     return child.name === name
-            && child.kind === td.ReflectionKind.Function;
+      && child.kind === td.ReflectionKind.Function;
   });
 }
 
@@ -262,6 +429,53 @@ export function createPublicFunction(
 }
 
 /**
+ * Finds an existing top-level export variable reflection for a module export.
+ */
+export function findPublicVariable(container: td.ContainerReflection, name: string) {
+  return container.children?.find(child => {
+    return child.name === name
+      && child.kind === td.ReflectionKind.Variable;
+  });
+}
+
+/**
+ * Creates a new top-level export variable reflection for a decorated plugin constant.
+ */
+export function createPublicVariable(
+  container: td.ContainerReflection,
+  name: string,
+  project: td.ProjectReflection
+) {
+  const reflection = new td.DeclarationReflection(name, td.ReflectionKind.Variable, container);
+  container.addChild(reflection);
+  project.registerReflection(reflection, undefined, undefined);
+  return reflection;
+}
+
+/**
+ * Copies a decorated plugin property onto a public variable reflection.
+ */
+export function copyPluginVariable(
+  target: td.DeclarationReflection,
+  property: td.DeclarationReflection,
+  project: td.ProjectReflection
+) {
+  cloneFlags(property, target);
+  target.comment = target.comment ?? property.comment;
+  target.defaultValue = property.defaultValue;
+
+  const declaredVariableType = getDeclaredVariableType(property);
+  target.type = declaredVariableType !== undefined
+    ? declaredType(declaredVariableType)
+    : property.type ? normalizeConductorType(property.type, project) : undefined;
+}
+
+export function isExportedVariable(reflection: td.DeclarationReflection) {
+  if (reflection.comment?.blockTags?.some(tag => tag.tag === '@publicType')) return true;
+  return getDeclaredVariableType(reflection) !== undefined;
+}
+
+/**
  * Converts exported plugin methods into top-level functions and merges their public docs.
  */
 export function promotePluginMethods(
@@ -272,16 +486,24 @@ export function promotePluginMethods(
   const exportedNames = getExportedNames(plugin);
 
   plugin.children
+    ?.filter(child => child.kind === td.ReflectionKind.Property && isExportedVariable(child))
+    .forEach(property => {
+      const publicVariable = findPublicVariable(container, property.name)
+        ?? createPublicVariable(container, property.name, project);
+      copyPluginVariable(publicVariable, property, project);
+    });
+
+  plugin.children
     ?.filter(child => child.kind === td.ReflectionKind.Method && exportedNames.has(child.name))
     .forEach(method => {
       const pluginSignature = method.signatures?.[0];
       if (!pluginSignature) return;
 
       const publicFunction = findPublicFunction(container, method.name)
-                ?? createPublicFunction(container, method.name, project);
+        ?? createPublicFunction(container, method.name, project);
       const implementationSignature = publicFunction.signatures?.[0];
 
-      copyPluginSignature(publicFunction, pluginSignature, project, implementationSignature);
+      copyPluginSignature(publicFunction, method, pluginSignature, project, implementationSignature);
     });
 }
 

@@ -11,7 +11,7 @@
     }
   },
   "dependencies": {
-    "@sourceacademy/conductor": "^0.7.0"
+    "@sourceacademy/conductor": "catalog:"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",

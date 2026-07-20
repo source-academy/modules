@@ -4090,7 +4090,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-repeat@workspace:src/bundles/repeat"
   dependencies:
-    "@sourceacademy/conductor": "npm:^0.7.0"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@sourceacademy/modules-testplugin": "workspace:^"
@@ -4130,10 +4130,11 @@ __metadata:
   resolution: "@sourceacademy/bundle-rune@workspace:src/bundles/rune"
   dependencies:
     "@sourceacademy/bundle-repeat": "workspace:^"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     es-toolkit: "npm:^1.44.0"
-    gl-matrix: "npm:^3.3.0"
+    gl-matrix: "npm:^3.4.4"
     js-slang: "catalog:"
     typescript: "catalog:"
   languageName: unknown
@@ -4230,6 +4231,16 @@ __metadata:
     typescript: "catalog:"
   languageName: unknown
   linkType: soft
+
+"@sourceacademy/common-tabs@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "@sourceacademy/common-tabs@npm:0.0.1"
+  peerDependencies:
+    "@blueprintjs/icons": ^6.0.0
+    react: ^18 || ^19
+  checksum: 10c0/ca9d9b626b9fcf1eeed40703438cc3c5af8bcdc04475cd5071794a5a5effbe7ae064ad72da315491f6065b9cdb895cb86ea00176f20b5ff318cda831dd33f780
+  languageName: node
+  linkType: hard
 
 "@sourceacademy/conductor@npm:^0.7.0":
   version: 0.7.1
@@ -4399,6 +4410,7 @@ __metadata:
   resolution: "@sourceacademy/modules-lib@workspace:lib/modules-lib"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/react": "catalog:"
     "@types/react-dom": "catalog:"
@@ -4447,7 +4459,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/modules-testplugin@workspace:lib/testplugin"
   dependencies:
-    "@sourceacademy/conductor": "npm:^0.7.0"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     eslint: "npm:^9.35.0"
     typescript: "npm:^6.0.2"
@@ -4748,12 +4760,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/tab-Rune@workspace:src/tabs/Rune"
   dependencies:
+    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/bundle-rune": "workspace:^"
+    "@sourceacademy/common-tabs": "npm:^0.0.1"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "catalog:"
     "@vitest/browser-playwright": "catalog:"
     es-toolkit: "npm:^1.44.0"
+    gl-matrix: "npm:^3.4.4"
     playwright: "npm:^1.55.1"
     react: "catalog:"
     react-dom: "catalog:"
@@ -10733,7 +10749,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gl-matrix@npm:^3.3.0":
+"gl-matrix@npm:^3.3.0, gl-matrix@npm:^3.4.4":
   version: 3.4.4
   resolution: "gl-matrix@npm:3.4.4"
   checksum: 10c0/9aa022ffac0d158212ad0cd29939864ad919ac31cd5dc5a5d35e9d66bb62679ddf152ff7b2173ded20131045e40572b87f31b26a920be2a7583a1516b13b5b4b
