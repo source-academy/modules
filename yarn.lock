@@ -3924,9 +3924,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-binary_tree@workspace:src/bundles/binary_tree"
   dependencies:
+    "@sourceacademy/conductor": "npm:^0.7.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    "@sourceacademy/modules-lib": "workspace:^"
-    js-slang: "catalog:"
+    "@sourceacademy/modules-testplugin": "workspace:^"
     typescript: "catalog:"
   languageName: unknown
   linkType: soft
@@ -4090,7 +4090,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-repeat@workspace:src/bundles/repeat"
   dependencies:
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
+    "@sourceacademy/conductor": "npm:^0.7.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@sourceacademy/modules-testplugin": "workspace:^"
@@ -4231,10 +4231,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/conductor@https://github.com/source-academy/conductor":
-  version: 0.7.0
-  resolution: "@sourceacademy/conductor@https://github.com/source-academy/conductor.git#commit=136711181a8bd5834b253414835d904a80a527e3"
-  checksum: 10c0/46dac46ec1eaebdff0adfc330c00056e353845986c83319a33629f7e6888f35b2a35b77019313c82f995858f599a99d1bae563e0cbb3959134564d34f8a27c59
+"@sourceacademy/conductor@npm:^0.7.0":
+  version: 0.7.1
+  resolution: "@sourceacademy/conductor@npm:0.7.1"
+  checksum: 10c0/293cdd2552eeb6cebd795806d841ef4118eb9aeedbfb1e3000c38032b55466269da31b524e37d58d52a068b96522766642ccc7838a4fbc23c9b244fd04cb44da
   languageName: node
   linkType: hard
 
@@ -4447,7 +4447,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/modules-testplugin@workspace:lib/testplugin"
   dependencies:
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
+    "@sourceacademy/conductor": "npm:^0.7.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     eslint: "npm:^9.35.0"
     typescript: "npm:^6.0.2"
