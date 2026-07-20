@@ -95,8 +95,8 @@ type SoundTabLoader = {
  * stepping/breakpoints inside a student's own wave function propagate up to whatever's driving
  * the top-level generator.
  */
-function closureToWave(evaluator: IDataHandler, closure: TypedValue<DataType.CLOSURE>) {
-  return async function* (t: number): AsyncGenerator<void, number, undefined> {
+function closureToWave(evaluator: IDataHandler, closure: TypedValue<DataType.CLOSURE>): Wave {
+  const wave = (async function* (t: number): AsyncGenerator<void, number, undefined> {
     // closure_call_unchecked's return type is generic over any DataType (Conductor's DataType.CLOSURE
     // argument type doesn't itself encode the closure's return type), so a student-supplied wave
     // isn't guaranteed to actually return a number - check at runtime rather than just asserting it.
@@ -105,7 +105,44 @@ function closureToWave(evaluator: IDataHandler, closure: TypedValue<DataType.CLO
       throw new EvaluatorRuntimeError(`Expected a wave to return a number, got ${DataType[result.type]}`);
     }
     return result.value;
-  };
+  }) as Wave;
+
+  // The fast path: an evaluator whose closures can prove they never need a real host round-trip
+  // (currently py2js only, via py-slang's GenericDataHandler.closure_call_sync) exposes this
+  // method, letting a student-authored wave function be sampled without a microtask per sample -
+  // the same escape hatch this module's own built-in waves already use (see types.ts's Wave.sync
+  // doc), just one layer further out. An engine with no such capability (CSE, today) simply never
+  // has the method, and every wave made from its closures stays on the async path above.
+  const syncCall = (
+    evaluator as IDataHandler & {
+      closure_call_sync?: (
+        c: TypedValue<DataType.CLOSURE>,
+        args: TypedValue<DataType>[],
+      ) => TypedValue<DataType> | undefined;
+    }
+  ).closure_call_sync?.bind(evaluator);
+  if (syncCall) {
+    Object.assign(wave, {
+      sync: (t: number): number => {
+        const result = syncCall(closure, [{ type: DataType.NUMBER, value: t }]);
+        if (result === undefined) {
+          // The engine supports closure_call_sync in general but this specific closure declined it
+          // - not expected for a plain student-authored wave function today, but there's no way to
+          // fall back to the async path from inside a plain sync function, so fail loudly rather
+          // than silently misbehave.
+          throw new EvaluatorRuntimeError(
+            'Internal error: closure_call_sync unexpectedly had no synchronous form for this wave'
+          );
+        }
+        if (result.type !== DataType.NUMBER) {
+          throw new EvaluatorRuntimeError(`Expected a wave to return a number, got ${DataType[result.type]}`);
+        }
+        return result.value;
+      },
+    });
+  }
+
+  return wave;
 }
 
 /** Wraps an internal (pure, evaluator-free) Wave as a Conductor closure. */
