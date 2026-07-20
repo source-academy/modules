@@ -147,12 +147,25 @@ function closureToWave(evaluator: IDataHandler, closure: TypedValue<DataType.CLO
 
 /** Wraps an internal (pure, evaluator-free) Wave as a Conductor closure. */
 function waveToConductorClosure(evaluator: IDataHandler, wave: Wave): Promise<TypedValue<DataType.CLOSURE>> {
-  return evaluator.closure_make(
-    { returnType: DataType.NUMBER, args: [DataType.NUMBER] },
-    async function* (t: TypedValue<DataType.NUMBER>) {
-      return { type: DataType.NUMBER as const, value: yield* wave(t.value) };
-    }
-  );
+  async function* conductorWave(t: TypedValue<DataType.NUMBER>) {
+    return { type: DataType.NUMBER as const, value: yield* wave(t.value) };
+  }
+  // Mirrors closureToWave's fast path in the other direction: a Sound built entirely from
+  // sync-capable waves (built-ins, or a py2js closure that got one via closure_call_sync) stays
+  // sync-capable once it crosses back into Python (e.g. as make_sound's/consecutively's return
+  // value) and back into a module again (e.g. play() on that same Sound) - without this, every
+  // Sound handed back to a student loses its fast path the instant it's constructed, regardless
+  // of how it was built.
+  if (wave.sync) {
+    const sync = wave.sync;
+    Object.assign(conductorWave, {
+      sync: (t: TypedValue<DataType.NUMBER>): TypedValue<DataType.NUMBER> => ({
+        type: DataType.NUMBER as const,
+        value: sync(t.value)
+      })
+    });
+  }
+  return evaluator.closure_make({ returnType: DataType.NUMBER, args: [DataType.NUMBER] }, conductorWave);
 }
 
 /** Wraps the internal (pure, evaluator-free) Sound representation as a Conductor PAIR. */
