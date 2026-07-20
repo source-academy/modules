@@ -141,7 +141,7 @@ describe(normalizeConductorDocs, () => {
     );
     project.addChild(plugin);
     plugin.extendedTypes = [
-      conductorReference(project, 'RenamedModulePluginBase')
+      conductorReference(project, 'RenamedModulePluginBase', 'BaseModulePlugin')
     ];
 
     addExportedNames(project, plugin, ['repeat']);
@@ -198,6 +198,9 @@ describe(normalizeConductorDocs, () => {
       new td.DeclarationReflection('default', td.ReflectionKind.Class, project)
     );
     project.addChild(plugin);
+    plugin.extendedTypes = [
+      conductorReference(project, 'BaseModulePlugin')
+    ];
     addExportedNames(project, plugin, ['make_widget']);
 
     const method = register(
@@ -286,7 +289,7 @@ describe(normalizeConductorDocs, () => {
       manifest: {},
       directory: pathlib.resolve(import.meta.dirname, '../../../../../../src/bundles/rune')
     };
-    const app = await initTypedocForJson(runeBundle, td.LogLevel.None);
+    const app = await initTypedocForJson(runeBundle, outDir, td.LogLevel.None);
     const project = await app.convert();
     expect(project).toBeDefined();
 

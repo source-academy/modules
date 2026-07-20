@@ -446,7 +446,10 @@ export default defineConfig(
     ignores: ['src/bundles/**/__tests__/*.ts*'],
     rules: {
       // Rule doesn't work properly on CI
-      '@sourceacademy/throw-runtime-error': process.env.CI ? 'off' : 'error'
+      '@sourceacademy/throw-runtime-error': process.env.CI ? 'off' : ['error', {
+        // Conductor's own protocol-level errors, unrelated to js-slang's RuntimeSourceError
+        ignoredNames: ['EvaluatorTypeError', 'EvaluatorRuntimeError']
+      }]
     }
   },
   {
