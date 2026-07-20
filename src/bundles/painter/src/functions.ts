@@ -52,7 +52,7 @@ export function display_painter(painter: (frame: Frame) => void) {
     drawnPainters.push(new LinePlot(draw_new_painter, {
       ...data,
       mode: 'lines'
-    } as Data, {
+    }, {
       xaxis: { visible: true },
       yaxis: {
         visible: true,
