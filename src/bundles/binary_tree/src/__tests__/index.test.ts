@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import * as funcs from '../functions';
 
 async function opaqueNumber(handler: TestDataHandler, value: number) {
-  return handler.opaque_make(value) as Promise<TypedValue<DataType.OPAQUE>>;
+  return handler.opaque_make(value);
 }
 
 async function rawTree(
