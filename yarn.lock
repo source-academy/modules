@@ -4022,7 +4022,7 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    "@types/plotly.js": "npm:^2.35.4"
+    "@types/plotly.js": "npm:^3.0.0"
     "@types/three": "npm:^0.185.0"
     nbody: "npm:^0.2.0"
     plotly.js-dist: "npm:^2.17.1"
@@ -4604,7 +4604,7 @@ __metadata:
     "@sourceacademy/bundle-nbody": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    "@types/plotly.js": "npm:^2.35.4"
+    "@types/plotly.js": "npm:^3.0.0"
     "@types/react": "catalog:"
     "@types/three": "npm:^0.185.0"
     nbody: "npm:^0.2.0"
@@ -5475,13 +5475,6 @@ __metadata:
   dependencies:
     undici-types: "npm:~7.18.0"
   checksum: 10c0/a5bc08f49b9581dcdca90e02cd77197a3c799840807664942e5cd5161a553d4d2ae8064f7e3294410d748d7d098b5c1848be7fa50c06f29c4193ab16be4e59eb
-  languageName: node
-  linkType: hard
-
-"@types/plotly.js@npm:^2.35.4":
-  version: 2.35.14
-  resolution: "@types/plotly.js@npm:2.35.14"
-  checksum: 10c0/219fe2b49dfc47ba63dec63c2f6144de092da48065e2885c5d9276f992a760f49fb6733677f0f9b0255a2122cc3544a71671ae8f786dea04e34fc0668779864b
   languageName: node
   linkType: hard
 
