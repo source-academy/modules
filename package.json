@@ -94,7 +94,7 @@
     "vitest-browser-react": "^2.1.0"
   },
   "resolutions": {
-    "vite": "^8.1.0"
+    "vitest/vite": "^8.1.0"
   },
   "peerDependencies": {
     "@blueprintjs/core": "^6.0.0",
