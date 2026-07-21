@@ -1,4 +1,4 @@
-import { midi_note_to_frequency } from '@sourceacademy/bundle-midi';
+import { midi_note_to_frequency } from '@sourceacademy/bundle-midi/functions';
 import type { MIDINote } from '@sourceacademy/bundle-midi/types';
 import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 import { assertFunctionOfLength, assertNumberWithinRange, callWithoutMetadata, isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
