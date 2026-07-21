@@ -4154,7 +4154,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-scrabble@workspace:src/bundles/scrabble"
   dependencies:
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-testplugin": "workspace:^"
     typescript: "catalog:"
