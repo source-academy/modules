@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@types/plotly.js": "^2.35.4",
+    "@types/plotly.js": "^3.0.0",
     "@types/react": "catalog:",
     "@types/three": "^0.185.0",
     "typescript": "catalog:"
