@@ -101,6 +101,9 @@
     "react": "*",
     "react-dom": "*"
   },
+  "resolutions": {
+    "vite": "^8.1.0"
+  },
   "devEngines": {
     "packageManager": {
       "name": "yarn",
