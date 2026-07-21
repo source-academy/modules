@@ -273,7 +273,7 @@ export class TestDataHandler implements IInterfacableEvaluator {
   ): AsyncGenerator<void, TypedValue<NoInfer<T>>, undefined> {
     const result = yield* this.closure_call_unchecked(c, args);
     assertTypedValue(result, returnType, 'Closure return value');
-    return result as TypedValue<NoInfer<T>>;
+    return result;
   }
 
   async *closure_call_unchecked<T extends DataType>(
@@ -325,7 +325,7 @@ export class TestDataHandler implements IInterfacableEvaluator {
       result = await this.pair_make(elements[i], result);
     }
 
-    return result as TypedValue<DataType.LIST>;
+    return result;
   }
 
   async is_list(xs: TypedValue<DataType.LIST>): Promise<boolean> {

@@ -35,7 +35,6 @@ import {
   mixolydian_scale as mixolydian_scale_func,
   phrygian_scale as phrygian_scale_func
 } from './functions';
-import type { MIDINote } from './types';
 
 export default class MidiModulePlugin extends BaseModulePlugin {
   id = 'midi';
@@ -84,13 +83,13 @@ export default class MidiModulePlugin extends BaseModulePlugin {
   ): AsyncGenerator<void, TypedValue<DataType.CONST_STRING>, unknown> {
     return {
       type: DataType.CONST_STRING,
-      value: midi_note_to_letter_name_func(note.value as MIDINote, accidental.value)
+      value: midi_note_to_letter_name_func(note.value, accidental.value)
     };
   }
 
   @moduleMethod([DataType.NUMBER], DataType.NUMBER)
   async* midi_note_to_frequency(note: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, unknown> {
-    return { type: DataType.NUMBER, value: midi_note_to_frequency_func(note.value as MIDINote) };
+    return { type: DataType.NUMBER, value: midi_note_to_frequency_func(note.value) };
   }
 
   @moduleMethod([DataType.CONST_STRING], DataType.NUMBER)
@@ -141,46 +140,46 @@ export default class MidiModulePlugin extends BaseModulePlugin {
 
   @moduleMethod([DataType.NUMBER], DataType.LIST)
   async* major_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
-    return await scaleToConductorList(this.evaluator, major_scale_func(key.value as MIDINote));
+    return await scaleToConductorList(this.evaluator, major_scale_func(key.value));
   }
 
   @moduleMethod([DataType.NUMBER], DataType.LIST)
   async* ionian_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
-    return await scaleToConductorList(this.evaluator, ionian_scale_func(key.value as MIDINote));
+    return await scaleToConductorList(this.evaluator, ionian_scale_func(key.value));
   }
 
   @moduleMethod([DataType.NUMBER], DataType.LIST)
   async* dorian_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
-    return await scaleToConductorList(this.evaluator, dorian_scale_func(key.value as MIDINote));
+    return await scaleToConductorList(this.evaluator, dorian_scale_func(key.value));
   }
 
   @moduleMethod([DataType.NUMBER], DataType.LIST)
   async* phrygian_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
-    return await scaleToConductorList(this.evaluator, phrygian_scale_func(key.value as MIDINote));
+    return await scaleToConductorList(this.evaluator, phrygian_scale_func(key.value));
   }
 
   @moduleMethod([DataType.NUMBER], DataType.LIST)
   async* lydian_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
-    return await scaleToConductorList(this.evaluator, lydian_scale_func(key.value as MIDINote));
+    return await scaleToConductorList(this.evaluator, lydian_scale_func(key.value));
   }
 
   @moduleMethod([DataType.NUMBER], DataType.LIST)
   async* mixolydian_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
-    return await scaleToConductorList(this.evaluator, mixolydian_scale_func(key.value as MIDINote));
+    return await scaleToConductorList(this.evaluator, mixolydian_scale_func(key.value));
   }
 
   @moduleMethod([DataType.NUMBER], DataType.LIST)
   async* minor_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
-    return await scaleToConductorList(this.evaluator, minor_scale_func(key.value as MIDINote));
+    return await scaleToConductorList(this.evaluator, minor_scale_func(key.value));
   }
 
   @moduleMethod([DataType.NUMBER], DataType.LIST)
   async* aeolian_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
-    return await scaleToConductorList(this.evaluator, aeolian_scale_func(key.value as MIDINote));
+    return await scaleToConductorList(this.evaluator, aeolian_scale_func(key.value));
   }
 
   @moduleMethod([DataType.NUMBER], DataType.LIST)
   async* locrian_scale(key: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
-    return await scaleToConductorList(this.evaluator, locrian_scale_func(key.value as MIDINote));
+    return await scaleToConductorList(this.evaluator, locrian_scale_func(key.value));
   }
 }

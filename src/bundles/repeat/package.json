@@ -6,7 +6,7 @@
     "@sourceacademy/modules-lib": "workspace:^"
   },
   "devDependencies": {
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor",
+    "@sourceacademy/conductor": "catalog:",
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@sourceacademy/modules-testplugin": "workspace:^",
     "js-slang": "catalog:",
