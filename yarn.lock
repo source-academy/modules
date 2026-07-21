@@ -3924,9 +3924,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-binary_tree@workspace:src/bundles/binary_tree"
   dependencies:
+    "@sourceacademy/conductor": "npm:^0.7.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    "@sourceacademy/modules-lib": "workspace:^"
-    js-slang: "catalog:"
+    "@sourceacademy/modules-testplugin": "workspace:^"
     typescript: "catalog:"
   languageName: unknown
   linkType: soft
@@ -4001,6 +4001,16 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     es-toolkit: "npm:^1.44.0"
+    typescript: "catalog:"
+  languageName: unknown
+  linkType: soft
+
+"@sourceacademy/bundle-matrix@workspace:^, @sourceacademy/bundle-matrix@workspace:src/bundles/matrix":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/bundle-matrix@workspace:src/bundles/matrix"
+  dependencies:
+    "@sourceacademy/conductor": "npm:^0.7.1"
+    "@sourceacademy/modules-buildtools": "workspace:^"
     typescript: "catalog:"
   languageName: unknown
   linkType: soft
@@ -4090,7 +4100,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-repeat@workspace:src/bundles/repeat"
   dependencies:
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@sourceacademy/modules-testplugin": "workspace:^"
@@ -4130,10 +4140,11 @@ __metadata:
   resolution: "@sourceacademy/bundle-rune@workspace:src/bundles/rune"
   dependencies:
     "@sourceacademy/bundle-repeat": "workspace:^"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     es-toolkit: "npm:^1.44.0"
-    gl-matrix: "npm:^3.3.0"
+    gl-matrix: "npm:^3.4.4"
     js-slang: "catalog:"
     typescript: "catalog:"
   languageName: unknown
@@ -4153,7 +4164,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-scrabble@workspace:src/bundles/scrabble"
   dependencies:
+    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-testplugin": "workspace:^"
     typescript: "catalog:"
   languageName: unknown
   linkType: soft
@@ -4166,16 +4179,6 @@ __metadata:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     js-slang: "catalog:"
-    typescript: "catalog:"
-  languageName: unknown
-  linkType: soft
-
-"@sourceacademy/bundle-sound_matrix@workspace:^, @sourceacademy/bundle-sound_matrix@workspace:src/bundles/sound_matrix":
-  version: 0.0.0-use.local
-  resolution: "@sourceacademy/bundle-sound_matrix@workspace:src/bundles/sound_matrix"
-  dependencies:
-    "@sourceacademy/conductor": "npm:^0.7.1"
-    "@sourceacademy/modules-buildtools": "workspace:^"
     typescript: "catalog:"
   languageName: unknown
   linkType: soft
@@ -4248,7 +4251,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sourceacademy/conductor@npm:^0.7.1":
+"@sourceacademy/conductor@npm:^0.7.0, @sourceacademy/conductor@npm:^0.7.1":
   version: 0.7.1
   resolution: "@sourceacademy/conductor@npm:0.7.1"
   checksum: 10c0/293cdd2552eeb6cebd795806d841ef4118eb9aeedbfb1e3000c38032b55466269da31b524e37d58d52a068b96522766642ccc7838a4fbc23c9b244fd04cb44da
@@ -4282,7 +4285,7 @@ __metadata:
     "@vitest/eslint-plugin": "*"
     eslint: ">=9"
     eslint-plugin-import: ^2.32.0
-    eslint-plugin-jsdoc: ^62.0.0
+    eslint-plugin-jsdoc: ^62.0.0 || ^63.0.0
     eslint-plugin-react: ^7.37.4
     eslint-plugin-react-hooks: ^7.0.0
     globals: ^17.0.0
@@ -4416,6 +4419,7 @@ __metadata:
   resolution: "@sourceacademy/modules-lib@workspace:lib/modules-lib"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/react": "catalog:"
     "@types/react-dom": "catalog:"
@@ -4464,7 +4468,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/modules-testplugin@workspace:lib/testplugin"
   dependencies:
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     eslint: "npm:^9.35.0"
     typescript: "npm:^6.0.2"
@@ -4634,6 +4638,27 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@sourceacademy/tab-Matrix@workspace:src/tabs/Matrix":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/tab-Matrix@workspace:src/tabs/Matrix"
+  dependencies:
+    "@blueprintjs/core": "npm:^6.0.0"
+    "@sourceacademy/bundle-matrix": "workspace:^"
+    "@sourceacademy/common-tabs": "npm:^0.0.1"
+    "@sourceacademy/conductor": "npm:^0.7.1"
+    "@sourceacademy/modules-buildtools": "workspace:^"
+    "@types/react": "catalog:"
+    "@types/react-dom": "catalog:"
+    "@vitest/browser-playwright": "catalog:"
+    "@vitest/coverage-v8": "catalog:"
+    playwright: "npm:^1.55.1"
+    react: "catalog:"
+    react-dom: "catalog:"
+    typescript: "catalog:"
+    vitest: "catalog:"
+  languageName: unknown
+  linkType: soft
+
 "@sourceacademy/tab-Nbody@workspace:src/tabs/Nbody":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/tab-Nbody@workspace:src/tabs/Nbody"
@@ -4765,12 +4790,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/tab-Rune@workspace:src/tabs/Rune"
   dependencies:
+    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/bundle-rune": "workspace:^"
+    "@sourceacademy/common-tabs": "npm:^0.0.1"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "catalog:"
     "@vitest/browser-playwright": "catalog:"
     es-toolkit: "npm:^1.44.0"
+    gl-matrix: "npm:^3.4.4"
     playwright: "npm:^1.55.1"
     react: "catalog:"
     react-dom: "catalog:"
@@ -4791,27 +4820,6 @@ __metadata:
     react: "catalog:"
     react-dom: "catalog:"
     typescript: "catalog:"
-  languageName: unknown
-  linkType: soft
-
-"@sourceacademy/tab-SoundMatrix@workspace:src/tabs/SoundMatrix":
-  version: 0.0.0-use.local
-  resolution: "@sourceacademy/tab-SoundMatrix@workspace:src/tabs/SoundMatrix"
-  dependencies:
-    "@blueprintjs/core": "npm:^6.0.0"
-    "@sourceacademy/bundle-sound_matrix": "workspace:^"
-    "@sourceacademy/common-tabs": "npm:^0.0.1"
-    "@sourceacademy/conductor": "npm:^0.7.1"
-    "@sourceacademy/modules-buildtools": "workspace:^"
-    "@types/react": "catalog:"
-    "@types/react-dom": "catalog:"
-    "@vitest/browser-playwright": "catalog:"
-    "@vitest/coverage-v8": "catalog:"
-    playwright: "npm:^1.55.1"
-    react: "catalog:"
-    react-dom: "catalog:"
-    typescript: "catalog:"
-    vitest: "catalog:"
   languageName: unknown
   linkType: soft
 
@@ -10755,7 +10763,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gl-matrix@npm:^3.3.0":
+"gl-matrix@npm:^3.3.0, gl-matrix@npm:^3.4.4":
   version: 3.4.4
   resolution: "gl-matrix@npm:3.4.4"
   checksum: 10c0/9aa022ffac0d158212ad0cd29939864ad919ac31cd5dc5a5d35e9d66bb62679ddf152ff7b2173ded20131045e40572b87f31b26a920be2a7583a1516b13b5b4b

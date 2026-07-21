@@ -10,6 +10,6 @@
     "emitDecoratorMetadata": false
   },
   "typedocOptions": {
-    "name": "sound_matrix"
+    "name": "matrix"
   }
 }

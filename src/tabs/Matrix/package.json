@@ -1,10 +1,10 @@
 {
-  "name": "@sourceacademy/tab-SoundMatrix",
+  "name": "@sourceacademy/tab-Matrix",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^6.0.0",
-    "@sourceacademy/bundle-sound_matrix": "workspace:^",
+    "@sourceacademy/bundle-matrix": "workspace:^",
     "@sourceacademy/common-tabs": "^0.0.1",
     "@sourceacademy/conductor": "npm:^0.7.1",
     "react": "catalog:",

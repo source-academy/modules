@@ -2,10 +2,10 @@ import type { ITabService, Tab } from '@sourceacademy/common-tabs';
 import type { IChannel } from '@sourceacademy/conductor/conduit';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
-import SoundMatrixTabPlugin, { SOUND_MATRIX_TAB_ID } from '..';
+import MatrixTabPlugin, { MATRIX_TAB_ID } from '..';
 
 class MockChannel<T> implements IChannel<T> {
-  readonly name = 'mock-sound-matrix-channel';
+  readonly name = 'mock-matrix-channel';
   private readonly subscribers = new Set<(message: T) => void>();
 
   send() {}
@@ -38,16 +38,16 @@ class MockTabService implements ITabService {
   hideTab(_id: string) {}
 }
 
-describe(SoundMatrixTabPlugin, () => {
+describe(MatrixTabPlugin, () => {
   let channel: MockChannel<any>;
   let tabService: MockTabService;
-  let plugin: SoundMatrixTabPlugin;
+  let plugin: MatrixTabPlugin;
   let container: HTMLDivElement;
 
   beforeEach(() => {
     channel = new MockChannel();
     tabService = new MockTabService();
-    plugin = new SoundMatrixTabPlugin({} as any, [channel], tabService);
+    plugin = new MatrixTabPlugin({} as any, [channel], tabService);
     container = document.createElement('div');
     document.body.appendChild(container);
     // Attaches the canvas the same way React's ref callback would, without pulling in a renderer
@@ -68,7 +68,7 @@ describe(SoundMatrixTabPlugin, () => {
   });
 
   test('registers a tab on construction', () => {
-    expect(tabService.tabs.has(SOUND_MATRIX_TAB_ID)).toBe(true);
+    expect(tabService.tabs.has(MATRIX_TAB_ID)).toBe(true);
   });
 
   test('destroy leaves the tab registered', () => {
@@ -76,7 +76,7 @@ describe(SoundMatrixTabPlugin, () => {
     // immediately for this module (nothing here is slow like sound's audio playback) -
     // unregistering here previously made the tab flash and vanish right after it appeared.
     plugin.destroy();
-    expect(tabService.tabs.has(SOUND_MATRIX_TAB_ID)).toBe(true);
+    expect(tabService.tabs.has(MATRIX_TAB_ID)).toBe(true);
   });
 
   test('getMatrix starts as an all-false 16x16 grid', async () => {
@@ -103,7 +103,7 @@ describe(SoundMatrixTabPlugin, () => {
     // place (same reference) would make React think nothing changed and skip re-rendering, even
     // though __setColor's direct canvas draw would still look correct. The click handler must
     // install a *new* array via setSharedMatrix, not mutate the existing one.
-    const key = Symbol.for('sourceacademy.sound_matrix.sharedMatrix');
+    const key = Symbol.for('sourceacademy.matrix.sharedMatrix');
     const before = (globalThis as unknown as Record<symbol, unknown>)[key];
 
     const canvas = container.querySelector('canvas')!;
@@ -144,7 +144,7 @@ describe(SoundMatrixTabPlugin, () => {
   });
 
   test('the composed pattern survives across separate plugin instances (simulating multiple Runs)', async () => {
-    // Regression test: a fresh SoundMatrixTabPlugin instance is constructed on every Run (the
+    // Regression test: a fresh MatrixTabPlugin instance is constructed on every Run (the
     // conductor/Worker are recreated each time, and the host re-invokes the tab bundle's
     // require-wrapper factory fresh on every Run too - see index.tsx's comment on globalScope), but
     // the whole point of this module is composing a pattern once and reading/playing it across
@@ -155,7 +155,7 @@ describe(SoundMatrixTabPlugin, () => {
     expect((await plugin.getMatrix())[0][0]).toBe(true);
 
     const secondChannel = new MockChannel();
-    const secondPlugin = new SoundMatrixTabPlugin({} as any, [secondChannel], tabService);
+    const secondPlugin = new MatrixTabPlugin({} as any, [secondChannel], tabService);
     expect((await secondPlugin.getMatrix())[0][0]).toBe(true);
   });
 });

@@ -1,10 +1,10 @@
 /**
  * Support for CS1101S Mission 15, Sound mission - Tone Matrix. Ported to Conductor from the
  * original (js-slang-era) implementation - canvas rendering and click handling now live entirely
- * host-side (see the SoundMatrix tab), since the runner Worker has no DOM access; this file only
+ * host-side (see the Matrix tab), since the runner Worker has no DOM access; this file only
  * holds the evaluator-free helpers used to bridge Conductor's data model.
  *
- * @module sound_matrix
+ * @module matrix
  * @author Samyukta Sounderraman
  */
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
@@ -12,7 +12,7 @@ import { mEmptyList } from '@sourceacademy/conductor/util';
 
 /**
  * Converts a row-major boolean grid into a Source list of lists. The tab draws `matrix[0]` at the
- * top of the canvas and `matrix[matrix.length - 1]` at the bottom (see the SoundMatrix tab's
+ * top of the canvas and `matrix[matrix.length - 1]` at the bottom (see the Matrix tab's
  * `rowToY`), but `get_matrix()` is documented (Quest Q5B) to return row 0 as the *bottom-most* row
  * - matching the original `soundToneMatrix.js`'s `result[i] = matrix_list[15 - i]` flip. Walk the
  * array bottom-up so the returned list's head is the bottom row.

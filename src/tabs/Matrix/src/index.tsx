@@ -1,10 +1,10 @@
 import { Button, Classes } from '@blueprintjs/core';
-import { SOUND_MATRIX_CHANNEL_ID, SOUND_MATRIX_WEB_ID, type SoundMatrixTabRpc } from '@sourceacademy/bundle-sound_matrix/protocol';
+import { MATRIX_CHANNEL_ID, MATRIX_WEB_ID, type MatrixTabRpc } from '@sourceacademy/bundle-matrix/protocol';
 import type { ITabService, Tab } from '@sourceacademy/common-tabs';
 import { checkIsPluginClass, makeRpc, type IChannel, type IConduit, type IPlugin } from '@sourceacademy/conductor/conduit';
 import { createElement, useSyncExternalStore } from 'react';
 
-export const SOUND_MATRIX_TAB_ID = 'sound_matrix';
+export const MATRIX_TAB_ID = 'matrix';
 
 const GRID_SIZE = 16;
 const SQUARE_SIDE_LENGTH = 18;
@@ -29,7 +29,7 @@ function xyToRowColumn(x: number, y: number): [row: number, column: number] {
   return [row, column];
 }
 
-// Needs to survive every Run (a fresh SoundMatrixTabPlugin instance is constructed per Run) the way
+// Needs to survive every Run (a fresh MatrixTabPlugin instance is constructed per Run) the way
 // the original pre-Conductor implementation's single `matrix` variable naturally did. A plain
 // module-level `let` does NOT actually achieve this here: the host loads this tab bundle via a
 // require-wrapper (`export default require => {...}`, see importExternalWebPlugin.ts's
@@ -37,7 +37,7 @@ function xyToRowColumn(x: number, y: number): [row: number, column: number] {
 // (i.e. every Run) - so anything declared inside its body, "module-level" or not, is reinitialised
 // each time. `globalThis` is the one thing that's actually the same object across those repeated
 // calls (same window, no iframe/worker), so the grid is stashed there instead of in a local binding.
-const GLOBAL_MATRIX_KEY = Symbol.for('sourceacademy.sound_matrix.sharedMatrix');
+const GLOBAL_MATRIX_KEY = Symbol.for('sourceacademy.matrix.sharedMatrix');
 type GlobalWithMatrix = typeof globalThis & { [GLOBAL_MATRIX_KEY]?: boolean[][] };
 const globalScope = globalThis as GlobalWithMatrix;
 
@@ -53,7 +53,7 @@ function setSharedMatrix(matrix: boolean[][]): void {
   globalScope[GLOBAL_MATRIX_KEY] = matrix;
 }
 
-function SoundMatrixView({
+function MatrixView({
   canvasRef,
   onClear,
   onRandomise
@@ -84,16 +84,16 @@ function SoundMatrixView({
 }
 
 /**
- * Host-side (browser main thread) counterpart of `SoundMatrixModulePlugin` (in the sound_matrix
+ * Host-side (browser main thread) counterpart of `MatrixModulePlugin` (in the matrix
  * bundle) - canvas rendering and click handling only work here, not inside Conductor's runner
  * Worker. Clicking a square is purely visual (toggle + redraw): it never goes through the channel
  * at all, matching the original (pre-Conductor) implementation exactly - only `get_matrix()`/
  * `clear_matrix()`, called from student code, round-trip to the Worker.
  */
 // eslint-disable-next-line @sourceacademy/tab-type
-export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc {
-  readonly id = SOUND_MATRIX_WEB_ID;
-  static readonly channelAttach = [SOUND_MATRIX_CHANNEL_ID];
+export default class MatrixTabPlugin implements IPlugin, MatrixTabRpc {
+  readonly id = MATRIX_WEB_ID;
+  static readonly channelAttach = [MATRIX_CHANNEL_ID];
 
   private readonly __tabService: ITabService;
   private readonly __listeners = new Set<() => void>();
@@ -102,16 +102,16 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
 
   constructor(_conduit: IConduit, [channel]: IChannel<any>[], tabService: ITabService) {
     if (!channel) {
-      throw new Error('Sound matrix channel is required but was not provided.');
+      throw new Error('Matrix channel is required but was not provided.');
     }
 
     this.__tabService = tabService;
-    makeRpc<SoundMatrixTabRpc, Record<string, never>>(channel, this);
+    makeRpc<MatrixTabRpc, Record<string, never>>(channel, this);
 
     const subscribe = (listener: () => void) => this.subscribe(listener);
-    const SoundMatrixPluginTab = () => {
+    const MatrixPluginTab = () => {
       useSyncExternalStore(subscribe, getSharedMatrix);
-      return createElement(SoundMatrixView, {
+      return createElement(MatrixView, {
         canvasRef: this.__attachCanvas,
         onClear: () => this.__clearMatrix(),
         onRandomise: () => this.__randomiseMatrix()
@@ -119,15 +119,15 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
     };
 
     const tab = {
-      id: SOUND_MATRIX_TAB_ID,
+      id: MATRIX_TAB_ID,
       iconName: 'music',
-      body: createElement(SoundMatrixPluginTab),
-      label: 'Sound Matrix',
+      body: createElement(MatrixPluginTab),
+      label: 'Tone Matrix',
       disabled: false
     } satisfies Tab;
 
     this.__tabService.registerTab(tab);
-    this.__tabService.showTab(SOUND_MATRIX_TAB_ID);
+    this.__tabService.showTab(MATRIX_TAB_ID);
   }
 
   subscribe(listener: () => void): () => void {
@@ -140,7 +140,7 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
     // evaluating) - unregistering here would yank the tab away almost immediately after it
     // appears, since there's nothing slow enough in this module to keep the Run alive for long.
     // The tab is left registered (its grid state persists) and gets replaced naturally when the
-    // next Run's SoundMatrixTabPlugin re-registers under the same id - same fix as sound's tab.
+    // next Run's MatrixTabPlugin re-registers under the same id - same fix as sound's tab.
   }
 
   async getMatrix(): Promise<boolean[][]> {
@@ -220,4 +220,4 @@ export default class SoundMatrixTabPlugin implements IPlugin, SoundMatrixTabRpc 
     this.__listeners.forEach(listener => listener());
   }
 }
-checkIsPluginClass(SoundMatrixTabPlugin);
+checkIsPluginClass(MatrixTabPlugin);

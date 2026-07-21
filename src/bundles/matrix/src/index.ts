@@ -3,10 +3,10 @@
  * compose a pattern, then plays back themselves by reading `get_matrix()` and sequencing through
  * columns with `set_timeout()`, calling `sound` module functions for whichever cells are lit.
  * Clicking a square is purely visual (toggle + redraw) and never touches this module at all - see
- * the SoundMatrix tab, which owns the grid state and canvas rendering (DOM access only works on
+ * the Matrix tab, which owns the grid state and canvas rendering (DOM access only works on
  * the browser main thread, not inside Conductor's runner Worker).
  *
- * @module sound_matrix
+ * @module matrix
  * @author Samyukta Sounderraman
  */
 import { makeRpc, type IChannel, type IConduit } from '@sourceacademy/conductor/conduit';
@@ -15,28 +15,28 @@ import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 
 import { drainGenerator, matrixToConductorList } from './functions';
-import { SOUND_MATRIX_CHANNEL_ID, type SoundMatrixTabRpc } from './protocol';
+import { MATRIX_CHANNEL_ID, type MatrixTabRpc } from './protocol';
 
-type SoundMatrixTabLoader = {
+type MatrixTabLoader = {
   tabs: string[];
   loadTab: (tab: string) => void;
 };
 
-export default class SoundMatrixModulePlugin extends BaseModulePlugin {
-  id = 'sound_matrix';
+export default class MatrixModulePlugin extends BaseModulePlugin {
+  id = 'matrix';
   override exportedNames = ['get_matrix', 'clear_matrix', 'set_timeout', 'clear_all_timeout'] as const;
-  static override channelAttach = [SOUND_MATRIX_CHANNEL_ID];
+  static override channelAttach = [MATRIX_CHANNEL_ID];
 
-  private readonly __io: SoundMatrixTabRpc;
+  private readonly __io: MatrixTabRpc;
   private readonly __timeoutIds = new Set<ReturnType<typeof setTimeout>>();
-  private readonly __tabLoader: SoundMatrixTabLoader | undefined;
+  private readonly __tabLoader: MatrixTabLoader | undefined;
   private __tabLoaded = false;
 
   constructor(
     conduit: IConduit,
     [channel]: IChannel<any>[],
     evaluator: IInterfacableEvaluator,
-    tabLoader?: SoundMatrixTabLoader
+    tabLoader?: MatrixTabLoader
   ) {
     super(conduit, [channel], evaluator);
     if (!channel) {
@@ -45,19 +45,19 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
       // doesn't yet recognise Conductor's own error types (RuntimeSourceError is a js-slang type),
       // so there's no error class available here that would actually satisfy it.
       // eslint-disable-next-line @sourceacademy/throw-runtime-error
-      throw new Error('Sound matrix channel is required but was not provided.');
+      throw new Error('Matrix channel is required but was not provided.');
     }
     this.__tabLoader = tabLoader;
     // The tab is the web plugin holding the actual grid state and canvas: it does the actual DOM
     // work (only available on the browser main thread, not inside this runner's Worker) and
     // replies over the same channel via Conductor's RPC helper.
-    this.__io = makeRpc<Record<string, never>, SoundMatrixTabRpc>(channel, {});
+    this.__io = makeRpc<Record<string, never>, MatrixTabRpc>(channel, {});
   }
 
   /**
    * Loads the host-side tab, lazily - only the first time a host-bridged function (get_matrix/
    * clear_matrix) is actually called, matching `sound`'s pattern. Without this, nothing ever tells
-   * the host to construct the SoundMatrix tab plugin, and __io's RPC calls hang forever waiting
+   * the host to construct the Matrix tab plugin, and __io's RPC calls hang forever waiting
    * for a reply from a tab that was never loaded.
    */
   private __ensureTabLoaded(): void {
@@ -70,6 +70,15 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
     this.__tabLoaded = true;
   }
 
+  /**
+   * Returns the current values of the tone matrix as a list of lists of boolean values, such
+   * that `list_ref(list_ref(get_matrix(), my_row), my_column)` evaluates to `true` if the matrix
+   * currently is ticked in row `my_row` and column `my_column`, and `false` otherwise. Rows are
+   * counted starting with 0 from the bottom of the matrix, and columns starting with 0 from the
+   * left.
+   * @returns a list of 16 lists of 16 booleans
+   * @function
+   */
   // moduleMethod requires an async generator (it drives closure-taking methods via yield* for
   // CSE-machine stepping), but this one never touches a user closure, so it has nothing to yield.
   @moduleMethod([], DataType.LIST)
@@ -79,6 +88,10 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
     return matrixToConductorList(this.evaluator, matrix);
   }
 
+  /**
+   * Resets the tone matrix, clearing every ticked square.
+   * @function
+   */
   @moduleMethod([], DataType.VOID)
   async* clear_matrix(): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     this.__ensureTabLoaded();
@@ -108,6 +121,10 @@ export default class SoundMatrixModulePlugin extends BaseModulePlugin {
     return { type: DataType.VOID, value: undefined };
   }
 
+  /**
+   * Cancels all previously scheduled but not started `set_timeout` jobs.
+   * @function
+   */
   @moduleMethod([], DataType.VOID)
   async* clear_all_timeout(): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     this.__clearAllTimeouts();
