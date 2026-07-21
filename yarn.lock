@@ -1014,11 +1014,11 @@ __metadata:
   linkType: hard
 
 "@blueprintjs/core@npm:^6.0.0":
-  version: 6.17.0
-  resolution: "@blueprintjs/core@npm:6.17.0"
+  version: 6.17.2
+  resolution: "@blueprintjs/core@npm:6.17.2"
   dependencies:
     "@blueprintjs/colors": "npm:^5.1.16"
-    "@blueprintjs/icons": "npm:^6.12.0"
+    "@blueprintjs/icons": "npm:^6.13.0"
     "@floating-ui/react": "npm:^0.27.13"
     "@popperjs/core": "npm:^2.11.8"
     classnames: "npm:^2.3.1"
@@ -1036,13 +1036,13 @@ __metadata:
   bin:
     upgrade-blueprint-2.0.0-rename: scripts/upgrade-blueprint-2.0.0-rename.sh
     upgrade-blueprint-3.0.0-rename: scripts/upgrade-blueprint-3.0.0-rename.sh
-  checksum: 10c0/d6adab7c8186f47a7103354a72d4b20e827c86784c7c67928724e237068da3e0af77a190fdb1de68204d8f31947b3f71a9450438fdf8bfaa66f7c8bd626554cb
+  checksum: 10c0/0377e1ecdd3eeea5c1082e59e29869b8de4b76136859a63070584f443cc416836f6a431c6a6bcf10cc3c907172a366e1bded5e522367fc9b3e29021be0fbe461
   languageName: node
   linkType: hard
 
-"@blueprintjs/icons@npm:^6.0.0, @blueprintjs/icons@npm:^6.12.0":
-  version: 6.12.0
-  resolution: "@blueprintjs/icons@npm:6.12.0"
+"@blueprintjs/icons@npm:^6.0.0, @blueprintjs/icons@npm:^6.13.0":
+  version: 6.13.0
+  resolution: "@blueprintjs/icons@npm:6.13.0"
   dependencies:
     change-case: "npm:^4.1.2"
     classnames: "npm:^2.3.1"
@@ -1054,7 +1054,7 @@ __metadata:
   peerDependenciesMeta:
     "@types/react":
       optional: true
-  checksum: 10c0/84f5bb4c3ed82ea7c72f76c05b756843b4240370a3107f6d7cf17083ebb8823783797b9a896836b3f7e6434539da7c972aa89c2d652daec023a6e209c9029506
+  checksum: 10c0/7a2f6a05f7f24c06e9e86f2d099ebbdadec4462fc36fd50cd9bc0a334949055b6d800c9b294fea8f44e2c3ca43a8c1e1d264d39c74844fb1df4f53665f48c2ed
   languageName: node
   linkType: hard
 
@@ -1928,16 +1928,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@es-joy/jsdoccomment@npm:~0.87.0":
-  version: 0.87.0
-  resolution: "@es-joy/jsdoccomment@npm:0.87.0"
+"@es-joy/jsdoccomment@npm:~0.88.0":
+  version: 0.88.0
+  resolution: "@es-joy/jsdoccomment@npm:0.88.0"
   dependencies:
     "@types/estree": "npm:^1.0.9"
     "@typescript-eslint/types": "npm:^8.59.4"
     comment-parser: "npm:1.4.7"
     esquery: "npm:^1.7.0"
     jsdoc-type-pratt-parser: "npm:~7.2.0"
-  checksum: 10c0/9e64b79c8135fa5ad1391ddea7a25d5884f572eb5af168a5c81d0bddac4439b4de89197e9b07adfa566f6285a1fa2fc2ee3c8e3d774656ed422efad43f6b33d4
+  checksum: 10c0/145c7ce6c797495dd7e2562b725175f216cd463080fe262ffd10daebec9e3803bb5009c5053a8110d56d27abb2fdf75483aa18db04ee1fe3b9d96a79c50fd57f
   languageName: node
   linkType: hard
 
@@ -3924,9 +3924,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-binary_tree@workspace:src/bundles/binary_tree"
   dependencies:
+    "@sourceacademy/conductor": "npm:^0.7.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    "@sourceacademy/modules-lib": "workspace:^"
-    js-slang: "catalog:"
+    "@sourceacademy/modules-testplugin": "workspace:^"
     typescript: "catalog:"
   languageName: unknown
   linkType: soft
@@ -4090,7 +4090,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-repeat@workspace:src/bundles/repeat"
   dependencies:
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@sourceacademy/modules-testplugin": "workspace:^"
@@ -4130,10 +4130,11 @@ __metadata:
   resolution: "@sourceacademy/bundle-rune@workspace:src/bundles/rune"
   dependencies:
     "@sourceacademy/bundle-repeat": "workspace:^"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     es-toolkit: "npm:^1.44.0"
-    gl-matrix: "npm:^3.3.0"
+    gl-matrix: "npm:^3.4.4"
     js-slang: "catalog:"
     typescript: "catalog:"
   languageName: unknown
@@ -4233,10 +4234,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/conductor@https://github.com/source-academy/conductor":
-  version: 0.7.0
-  resolution: "@sourceacademy/conductor@https://github.com/source-academy/conductor.git#commit=136711181a8bd5834b253414835d904a80a527e3"
-  checksum: 10c0/46dac46ec1eaebdff0adfc330c00056e353845986c83319a33629f7e6888f35b2a35b77019313c82f995858f599a99d1bae563e0cbb3959134564d34f8a27c59
+"@sourceacademy/common-tabs@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "@sourceacademy/common-tabs@npm:0.0.1"
+  peerDependencies:
+    "@blueprintjs/icons": ^6.0.0
+    react: ^18 || ^19
+  checksum: 10c0/ca9d9b626b9fcf1eeed40703438cc3c5af8bcdc04475cd5071794a5a5effbe7ae064ad72da315491f6065b9cdb895cb86ea00176f20b5ff318cda831dd33f780
+  languageName: node
+  linkType: hard
+
+"@sourceacademy/conductor@npm:^0.7.0":
+  version: 0.7.1
+  resolution: "@sourceacademy/conductor@npm:0.7.1"
+  checksum: 10c0/293cdd2552eeb6cebd795806d841ef4118eb9aeedbfb1e3000c38032b55466269da31b524e37d58d52a068b96522766642ccc7838a4fbc23c9b244fd04cb44da
   languageName: node
   linkType: hard
 
@@ -4401,6 +4412,7 @@ __metadata:
   resolution: "@sourceacademy/modules-lib@workspace:lib/modules-lib"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/react": "catalog:"
     "@types/react-dom": "catalog:"
@@ -4449,7 +4461,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/modules-testplugin@workspace:lib/testplugin"
   dependencies:
-    "@sourceacademy/conductor": "https://github.com/source-academy/conductor"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     eslint: "npm:^9.35.0"
     typescript: "npm:^6.0.2"
@@ -4750,12 +4762,16 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/tab-Rune@workspace:src/tabs/Rune"
   dependencies:
+    "@blueprintjs/icons": "npm:^6.0.0"
     "@sourceacademy/bundle-rune": "workspace:^"
+    "@sourceacademy/common-tabs": "npm:^0.0.1"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "catalog:"
     "@vitest/browser-playwright": "catalog:"
     es-toolkit: "npm:^1.44.0"
+    gl-matrix: "npm:^3.4.4"
     playwright: "npm:^1.55.1"
     react: "catalog:"
     react-dom: "catalog:"
@@ -5475,29 +5491,29 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 26.0.1
-  resolution: "@types/node@npm:26.0.1"
+  version: 26.1.1
+  resolution: "@types/node@npm:26.1.1"
   dependencies:
     undici-types: "npm:~8.3.0"
-  checksum: 10c0/31d204333c70124da6bcac7d1f27d8980149fe3f95a8419bfcd19c3e5823705c0e370d71ac34399352e1263b2d5fc41c87af964ec81e5a05a32224d65d8d224e
+  checksum: 10c0/25ac5093195736dd074d5027adbba85617bc951d5a41506ebd3b9073048acb7233613f3822d5f9b9447f9c0841c91f6387c46283916767e3ef79f23917452c46
   languageName: node
   linkType: hard
 
 "@types/node@npm:^22.0.0":
-  version: 22.20.0
-  resolution: "@types/node@npm:22.20.0"
+  version: 22.20.1
+  resolution: "@types/node@npm:22.20.1"
   dependencies:
     undici-types: "npm:~6.21.0"
-  checksum: 10c0/55d78223205bd5f81f043d71b7a5c8d8854b9ef44ef81291680943adb27fa5ba1f092658c87183d5bc8cf6baf6a57b81dad966eb3afa452cc301a615b6d9b20e
+  checksum: 10c0/f2ba54d3d1fb92e1c57c78d32c3a17655b1e87363b707136f55c422b4838d4054901ce5d27f75bb0e5ecb7ebfee3804e0987822d22b473473008091857a09353
   languageName: node
   linkType: hard
 
 "@types/node@npm:^24.0.0":
-  version: 24.13.2
-  resolution: "@types/node@npm:24.13.2"
+  version: 24.13.3
+  resolution: "@types/node@npm:24.13.3"
   dependencies:
     undici-types: "npm:~7.18.0"
-  checksum: 10c0/d7d48a88a4feb0a6aac3cbfaf9ef3b12752b4b09447f88dd0b4c77c03b281e3d4330fe6982a99aedcd63fc16c7540a0c248b91eb2abb0b3edd884d7fe684e9ea
+  checksum: 10c0/a5bc08f49b9581dcdca90e02cd77197a3c799840807664942e5cd5161a553d4d2ae8064f7e3294410d748d7d098b5c1848be7fa50c06f29c4193ab16be4e59eb
   languageName: node
   linkType: hard
 
@@ -6096,8 +6112,8 @@ __metadata:
   linkType: hard
 
 "@vitest/eslint-plugin@npm:^1.6.20":
-  version: 1.6.20
-  resolution: "@vitest/eslint-plugin@npm:1.6.20"
+  version: 1.6.23
+  resolution: "@vitest/eslint-plugin@npm:1.6.23"
   dependencies:
     "@typescript-eslint/scope-manager": "npm:^8.58.0"
     "@typescript-eslint/utils": "npm:^8.58.0"
@@ -6113,7 +6129,7 @@ __metadata:
       optional: true
     vitest:
       optional: true
-  checksum: 10c0/9c1b3697fec30304aea3c28efe0077b74f6b9423d0bed51c63e11ef7287a13cf3d3a4ce0a6ba853a91781da80820bd9b43cbf02766b6abe4ae054c93046ee36e
+  checksum: 10c0/a8d67626598d46499491935fbbd39392115a1b79aaae3ea4f427bcd96741f260b70f0270a44c4f6195acc9416eb17ac9c40ce4038045fd344553549e30c87860
   languageName: node
   linkType: hard
 
@@ -9828,10 +9844,10 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-jsdoc@npm:^63.0.0":
-  version: 63.0.10
-  resolution: "eslint-plugin-jsdoc@npm:63.0.10"
+  version: 63.0.13
+  resolution: "eslint-plugin-jsdoc@npm:63.0.13"
   dependencies:
-    "@es-joy/jsdoccomment": "npm:~0.87.0"
+    "@es-joy/jsdoccomment": "npm:~0.88.0"
     "@es-joy/resolve.exports": "npm:1.2.0"
     are-docs-informative: "npm:^0.0.2"
     comment-parser: "npm:1.4.7"
@@ -9842,12 +9858,12 @@ __metadata:
     html-entities: "npm:^2.6.0"
     object-deep-merge: "npm:^2.0.1"
     parse-imports-exports: "npm:^0.2.4"
-    semver: "npm:^7.8.2"
+    semver: "npm:^7.8.5"
     spdx-expression-parse: "npm:^4.0.0"
     to-valid-identifier: "npm:^1.0.0"
   peerDependencies:
     eslint: ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
-  checksum: 10c0/0a42c66e964398e3fa08743cc3c5aee18f175dc65b048a813c218d270c4cd1a67732839b098e7208422e62fb6d4a2524bd86940216e57924b6a525c0211c6746
+  checksum: 10c0/5abeb767d9d26bde94eb93858b84b9f510bf79d3f5eec631552c0490c1fbab45f456be455ea9de4f3127cdc0ac14889294092080af83ae283ec0f1a6f4ae13c7
   languageName: node
   linkType: hard
 
@@ -10735,7 +10751,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gl-matrix@npm:^3.3.0":
+"gl-matrix@npm:^3.3.0, gl-matrix@npm:^3.4.4":
   version: 3.4.4
   resolution: "gl-matrix@npm:3.4.4"
   checksum: 10c0/9aa022ffac0d158212ad0cd29939864ad919ac31cd5dc5a5d35e9d66bb62679ddf152ff7b2173ded20131045e40572b87f31b26a920be2a7583a1516b13b5b4b
@@ -16101,7 +16117,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.8.1, semver@npm:^7.8.2":
+"semver@npm:^7.8.1, semver@npm:^7.8.5":
   version: 7.8.5
   resolution: "semver@npm:7.8.5"
   bin:

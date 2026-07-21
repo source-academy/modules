@@ -92,10 +92,10 @@ export const config = {
  * @category GameObject
  */
 export function create_rectangle(width: number, height: number): ShapeGameObject<any> {
-  const rectangle = {
+  const rectangle: RectangleProps = {
     width,
     height
-  } as RectangleProps;
+  };
   return new RectangleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, rectangle);
 }
 
@@ -110,9 +110,9 @@ export function create_rectangle(width: number, height: number): ShapeGameObject
  * @category GameObject
  */
 export function create_circle(radius: number): ShapeGameObject<any> {
-  const circle = {
+  const circle: CircleProps = {
     radius
-  } as CircleProps;
+  };
   return new CircleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, circle);
 }
 
@@ -127,14 +127,14 @@ export function create_circle(radius: number): ShapeGameObject<any> {
  * @category GameObject
  */
 export function create_triangle(width: number, height: number): ShapeGameObject<any> {
-  const triangle = {
+  const triangle: TriangleProps = {
     x1: 0,
     y1: 0,
     x2: width,
     y2: 0,
     x3: width / 2,
     y3: height
-  } as TriangleProps;
+  };
   return new TriangleGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, triangle);
 }
 
@@ -149,9 +149,9 @@ export function create_triangle(width: number, height: number): ShapeGameObject<
  * @category GameObject
  */
 export function create_text(text: string): TextGameObject {
-  const displayText = {
+  const displayText: DisplayText = {
     text
-  } as DisplayText;
+  };
   return new TextGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, displayText);
 }
 
@@ -183,7 +183,7 @@ export function create_sprite(image_url: string): SpriteGameObject {
 
   const sprite: Sprite = {
     imageUrl: image_url
-  } as Sprite;
+  };
   return new SpriteGameObject(DEFAULT_TRANSFORM_PROPS, DEFAULT_RENDER_PROPS, DEFAULT_INTERACTABLE_PROPS, sprite);
 }
 
