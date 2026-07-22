@@ -8,3 +8,4 @@ List of pages:
 - [Handling Abstractions](./2-abstractions)
 - [Error Handling](./3-errors)
 - [Type Checking](./4-types)
+- [Conductor Module Interface Conventions](./5-conductor-interop)
