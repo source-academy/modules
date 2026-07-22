@@ -25,6 +25,7 @@ export default defineConfig({
     'frontmatter',
     'Henz',
     'hollusion',
+    'ints',
     'repotools',
     'sourceacademy'
   ],
