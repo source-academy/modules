@@ -61,22 +61,34 @@ export async function make_tree(
 export async function is_tree(evaluator: IDataHandler, value: TypedValue<DataType>): Promise<boolean> {
   if (!value) return false;
   if (value.type === DataType.EMPTY_LIST) return true;
-  if (value.type !== DataType.PAIR) return false;
+  // A tree node is a pair - per conductor's "a pair is just an array of length 2" model, that may
+  // arrive tagged DataType.PAIR (built directly by make_tree) or DataType.ARRAY (round-tripped
+  // back in through a Python list, since py-slang's pythonToModule builds every list as an ARRAY
+  // now, not a PAIR chain). pair_head/pair_tail already read either shape the same way.
+  if (!isPairLike(value)) return false;
 
-  const rest = await evaluator.pair_tail(value);
-  if (rest.type !== DataType.PAIR) return false;
+  const rest = await evaluator.pair_tail(value as TypedValue<DataType.PAIR>);
+  if (!isPairLike(rest)) return false;
 
-  const left = await evaluator.pair_head(rest);
+  const left = await evaluator.pair_head(rest as TypedValue<DataType.PAIR>);
   if (!await is_tree(evaluator, left)) return false;
 
-  const rightRest = await evaluator.pair_tail(rest);
-  if (rightRest.type !== DataType.PAIR) return false;
+  const rightRest = await evaluator.pair_tail(rest as TypedValue<DataType.PAIR>);
+  if (!isPairLike(rightRest)) return false;
 
-  const right = await evaluator.pair_head(rightRest);
+  const right = await evaluator.pair_head(rightRest as TypedValue<DataType.PAIR>);
   if (!await is_tree(evaluator, right)) return false;
 
-  const tail = await evaluator.pair_tail(rightRest);
+  const tail = await evaluator.pair_tail(rightRest as TypedValue<DataType.PAIR>);
   return tail.type === DataType.EMPTY_LIST;
+}
+
+/** A pair is just an array of length 2 (no distinct "pair" representation) - a tree node may be
+ * tagged either DataType.PAIR (built directly by make_tree's own pair_make calls) or
+ * DataType.ARRAY (round-tripped back in through Python, since pythonToModule builds every list as
+ * an ARRAY now). Both are equally valid; pair_head/pair_tail read either the same way. */
+function isPairLike(value: TypedValue<DataType>): boolean {
+  return value.type === DataType.PAIR || value.type === DataType.ARRAY;
 }
 
 /**
@@ -103,11 +115,14 @@ async function assertNonEmptyTree(
     throw new EvaluatorTypeError(`${funcName} expects binary tree`, 'binary tree', value ? DataType[value.type] : 'undefined');
   }
 
-  if (value.type !== DataType.PAIR) {
+  if (!isPairLike(value)) {
     throw new EvaluatorRuntimeError(`${funcName} received an empty binary tree!`);
   }
 
-  return value;
+  // NonEmptyBinaryTree is declared DataType.PAIR, but the runtime value may genuinely be
+  // DataType.ARRAY (round-tripped back in through Python) - pair_head/pair_tail read either the
+  // same way (see isPairLike's doc comment), so this is a safe, documented cast, not a lie.
+  return value as NonEmptyBinaryTree;
 }
 
 /**
