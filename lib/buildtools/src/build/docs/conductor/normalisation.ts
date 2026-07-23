@@ -6,7 +6,24 @@ import { dataTypeToNativeType, getDataTypeName, isConductorPluginClass, isConduc
  * Rewrites one call signature from Conductor-facing types to public module-facing types.
  */
 function normalizeSignature(signature: td.SignatureReflection, project: td.ProjectReflection) {
-  if (signature.type) {
+
+  const devDefinedTypeDeclaration: DevDefinedTypeDeclaration = { arguments: {}, return: undefined };
+  if (signature.comment?.blockTags) {
+    signature.comment.blockTags.forEach(tag => {
+      if (tag.tag == '@publicType' && tag.content) {
+        const [argName, argType] = tag.content[0].text.split(/:\s(.+)/).map(s => s.trim());
+        devDefinedTypeDeclaration.arguments[argName] = argType;
+      }
+      if (tag.tag == '@publicReturnType' && tag.content) {
+        devDefinedTypeDeclaration.return = tag.content[0].text;
+      }
+    });
+    signature.comment.blockTags = signature.comment.blockTags.filter(tag => tag.tag !== '@publicType' && tag.tag !== '@publicReturnType');
+  }
+
+  if (devDefinedTypeDeclaration.return) {
+    signature.type = new td.UnknownType(devDefinedTypeDeclaration.return);
+  } else if (signature.type) {
     project.removeTypeReflections(signature.type);
     signature.type = normalizeConductorType(signature.type, project);
   }
@@ -14,12 +31,15 @@ function normalizeSignature(signature: td.SignatureReflection, project: td.Proje
   signature.parameters = signature.parameters
     ?.filter(parameter => !isServiceParameter(parameter))
     .map(parameter => {
-      if (parameter.type) {
-        project.removeTypeReflections(parameter.type);
+      project.removeTypeReflections(parameter.type);
+      if (devDefinedTypeDeclaration.arguments[parameter.name]) {
+        parameter.type = new td.UnknownType(devDefinedTypeDeclaration.arguments[parameter.name]);
+      } else if (parameter.type) {
         parameter.type = normalizeConductorType(parameter.type, project);
       }
       return parameter;
     });
+
 }
 
 /**
@@ -122,15 +142,29 @@ export function normalizeConductorType(type: td.SomeType, project: td.ProjectRef
   return type;
 }
 
+type DevDefinedTypeDeclaration = {
+  arguments: {
+    [name: string]: string;
+  };
+  return: string | undefined;
+};
+
 /**
  * Applies signature/type normalization to a declaration and its accessors.
  */
 function normalizeDeclaration(declaration: td.DeclarationReflection, project: td.ProjectReflection) {
   if (declaration.type) {
+    const publicData = declaration.comment?.getTag('@publicType')?.content?.[0]?.text;
+    if (declaration.comment) {
+      declaration.comment.blockTags = declaration.comment.blockTags.filter(tag => tag.tag !== '@publicType' && tag.tag !== '@publicReturnType');
+    }
     project.removeTypeReflections(declaration.type);
-    declaration.type = normalizeConductorType(declaration.type, project);
+    if (publicData) {
+      declaration.type = td.ReferenceType.createBrokenReference(publicData, project, undefined);
+    } else {
+      declaration.type = normalizeConductorType(declaration.type, project);
+    }
   }
-
   declaration.signatures?.forEach(signature => normalizeSignature(signature, project));
   declaration.indexSignatures?.forEach(signature => normalizeSignature(signature, project));
 

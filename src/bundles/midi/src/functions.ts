@@ -156,6 +156,10 @@ export function add_octave_to_note(note: string, octave: number): NoteWithOctave
   // same spellings noteToValues/parseNoteWithOctave would (e.g. B#, E#, Cb, Fb - accidentals that
   // don't exist for those note names) instead of a separate, more permissive regex.
   if (match === null || parseNoteWithOctave(note) === null) {
+    // EvaluatorParameterTypeError (Conductor's own error type) is the correct, student-facing
+    // error here - the throw-runtime-error rule doesn't yet recognise it (only js-slang's
+    // RuntimeSourceError), so there's no error class available that would actually satisfy it.
+    // eslint-disable-next-line @sourceacademy/throw-runtime-error
     throw new EvaluatorParameterTypeError('add_octave_to_note', 'note', 'a note without an octave', note);
   }
   const [, noteName, accidental] = match;
@@ -218,6 +222,9 @@ export function key_signature_to_key(accidental: string, numAccidentals: number)
       return keys[numAccidentals];
     }
     default:
+      // EvaluatorParameterTypeError is the correct, student-facing error here - the
+      // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
+      // eslint-disable-next-line @sourceacademy/throw-runtime-error
       throw new EvaluatorParameterTypeError('key_signature_to_key', 'accidental', 'sharp or flat', accidental);
   }
 }

@@ -1,3 +1,4 @@
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import * as THREE from 'three';
 
 import {
@@ -52,7 +53,7 @@ export class ChassisWrapper implements Controller {
 
   getEntity(): Entity {
     if (this.chassis === null) {
-      throw new Error('Chassis not initialized');
+      throw new GeneralRuntimeError('Chassis not initialized');
     }
     return this.chassis;
   }

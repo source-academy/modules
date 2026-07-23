@@ -1,4 +1,4 @@
-import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
+import { DataType } from '@sourceacademy/conductor/types';
 import { TestDataHandler } from '@sourceacademy/modules-testplugin';
 import { describe, expect, it } from 'vitest';
 import { scaleToConductorList } from '../conductorAdapters';
@@ -15,7 +15,7 @@ describe(scaleToConductorList, () => {
     const handler = new TestDataHandler();
     const scale: Scale = [12, [14, [16, null]]];
     const conductorList = await scaleToConductorList(handler, scale);
-    const values = await handler.list_to_vec(conductorList as TypedValue<DataType.LIST>);
+    const values = await handler.list_to_vec(conductorList);
     expect(values.map(v => v.value)).toEqual([12, 14, 16]);
   });
 });

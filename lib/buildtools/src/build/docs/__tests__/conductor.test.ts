@@ -59,6 +59,23 @@ function createParameter(
   return parameter;
 }
 
+function addExportedNames(
+  project: td.ProjectReflection,
+  plugin: td.DeclarationReflection,
+  names: string[]
+) {
+  const exportedNames = register(
+    project,
+    new td.DeclarationReflection('exportedNames', td.ReflectionKind.Property, plugin)
+  );
+  plugin.addChild(exportedNames);
+  exportedNames.type = new td.TypeOperatorType(
+    new td.TupleType(names.map(name => new td.LiteralType(name))),
+    'readonly'
+  );
+  return exportedNames;
+}
+
 describe(normalizeConductorType, () => {
   it('maps TypedValue numbers to native numbers', () => {
     const project = createProject();
@@ -124,18 +141,10 @@ describe(normalizeConductorDocs, () => {
     );
     project.addChild(plugin);
     plugin.extendedTypes = [
-      conductorReference(project, 'RenamedModulePluginBase')
+      conductorReference(project, 'RenamedModulePluginBase', 'BaseModulePlugin')
     ];
 
-    const exportedNames = register(
-      project,
-      new td.DeclarationReflection('exportedNames', td.ReflectionKind.Property, plugin)
-    );
-    plugin.addChild(exportedNames);
-    exportedNames.type = new td.TypeOperatorType(
-      new td.TupleType([new td.LiteralType('repeat')]),
-      'readonly'
-    );
+    addExportedNames(project, plugin, ['repeat']);
 
     const method = register(
       project,
@@ -213,5 +222,33 @@ describe(normalizeConductorDocs, () => {
     expect(signatureText).not.toContain('ITypedValue');
     expect(publicFunctions.find(func => func.name === 'repeat')?.signatures?.[0].parameters?.map(parameter => parameter.name))
       .toEqual(['func', 'n']);
+  });
+
+  it('uses @publicType/@publicReturnType tags in the migrated rune bundle docs', async () => {
+    const runeBundle: ResolvedBundle = {
+      type: 'bundle',
+      name: 'rune',
+      manifest: {},
+      directory: pathlib.resolve(import.meta.dirname, '../../../../../../src/bundles/rune')
+    };
+    const app = await initTypedocForJson(runeBundle, outDir, td.LogLevel.None);
+    const project = await app.convert();
+    expect(project).toBeDefined();
+
+    normalizeConductorDocs(project!);
+
+    const show = project!.children?.find(child => child.name === 'show');
+    const [signature] = show?.signatures ?? [];
+    const blank = project!.children?.find(child => child.name === 'blank');
+
+    expect(signature.parameters?.map(parameter => [
+      parameter.name,
+      parameter.type?.stringify(td.TypeContext.none)
+    ])).toEqual([
+      ['rune', 'Rune']
+    ]);
+    expect(signature.type?.stringify(td.TypeContext.none)).toEqual('Rune');
+    expect(blank?.kind).toEqual(td.ReflectionKind.Variable);
+    expect(blank?.type?.stringify(td.TypeContext.none)).toEqual('Rune');
   });
 });

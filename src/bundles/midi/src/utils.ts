@@ -40,6 +40,9 @@ export function noteToValues(note: string, func_name: string): [NoteName, Accide
 
 export function midiNoteToNoteName(midiNote: MIDINote, accidental: string, func_name: string): Note {
   if (accidental !== Accidental.SHARP && accidental !== Accidental.FLAT) {
+    // EvaluatorParameterTypeError is the correct, student-facing error here - the
+    // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
+    // eslint-disable-next-line @sourceacademy/throw-runtime-error
     throw new EvaluatorParameterTypeError(func_name, 'accidental', 'sharp or flat', accidental);
   }
   switch (midiNote % 12) {
