@@ -93,7 +93,10 @@ type SoundTabLoader = {
  * Wraps a Conductor closure (a user-supplied Wave, called as `wave(t)`) as an internal
  * (generator-based) Wave. `yield*`s through the closure call rather than draining it, so
  * stepping/breakpoints inside a student's own wave function propagate up to whatever's driving
- * the top-level generator.
+ * the top-level generator. This is also the module boundary where an untyped closure's return
+ * value is validated to actually be a number, once, before it enters the rest of this file's
+ * fully-typed pipeline - functions.ts's own `Wave` consumers (`play`, combinators, ...) trust that
+ * contract and don't re-check it.
  */
 function closureToWave(evaluator: IDataHandler, closure: TypedValue<DataType.CLOSURE>): Wave {
   const wave = (async function* (t: number): AsyncGenerator<void, number, undefined> {

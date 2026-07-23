@@ -28,6 +28,7 @@
  */
 import { midi_note_to_frequency } from '@sourceacademy/bundle-midi/functions';
 import { EvaluatorParameterTypeError, EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
+import { delay } from 'es-toolkit/promise';
 import type { SoundTabRpc } from './protocol';
 import type { Sound, SoundProducer, SoundTransformer, SyncWave, Wave } from './types';
 
@@ -359,21 +360,16 @@ function assertMicPermission(func_name: string): void {
 export function record(buffer: number): () => () => Promise<Sound> {
   validateDuration('record', buffer);
   if (globalVars.activePlayCount > 0) {
-    throw new EvaluatorRuntimeError('record: Cannot record while another sound is playing!');
+    throw new EvaluatorRuntimeError(`${record.name}: Cannot record while another sound is playing!`);
   }
   assertMicPermission('record');
 
-  const started = new Promise<void>(resolve => {
-    setTimeout(() => {
-      void play_recording_signal().then(() => {
-        setTimeout(() => {
-          void io()
-            .startRecording()
-            .then(() => resolve());
-        }, recording_signal_ms);
-      });
-    }, pre_recording_signal_pause_ms + buffer * 1000);
-  });
+  const started = (async () => {
+    await delay(pre_recording_signal_pause_ms + buffer * 1000);
+    await play_recording_signal();
+    await delay(recording_signal_ms);
+    await io().startRecording();
+  })();
 
   return () => {
     const recordingDone: Promise<Sound> = started
@@ -409,33 +405,23 @@ export function record_for(duration: number, buffer: number): () => Promise<Soun
   validateDuration('record_for', duration);
   validateDuration('record_for', buffer);
   if (globalVars.activePlayCount > 0) {
-    throw new EvaluatorRuntimeError('record_for: Cannot record while another sound is playing!');
+    throw new EvaluatorRuntimeError(`${record_for.name}: Cannot record while another sound is playing!`);
   }
   assertMicPermission('record_for');
 
   // order of events for record_for:
   // pre-recording-signal pause | recording signal |
   // pre-recording pause | recording | recording signal
-  const recordingDone: Promise<Sound> = new Promise(resolve => {
-    setTimeout(() => {
-      void play_recording_signal().then(() => {
-        setTimeout(() => {
-          void io()
-            .startRecording()
-            .then(() => {
-              setTimeout(() => {
-                void io()
-                  .stopRecording()
-                  .then(({ left, right, sampleRate }) => {
-                    resolve(samplesToSound(left, right, sampleRate));
-                  });
-                void play_recording_signal();
-              }, duration * 1000);
-            });
-        }, recording_signal_ms + buffer * 1000);
-      });
-    }, pre_recording_signal_pause_ms);
-  });
+  const recordingDone: Promise<Sound> = (async () => {
+    await delay(pre_recording_signal_pause_ms);
+    await play_recording_signal();
+    await delay(recording_signal_ms + buffer * 1000);
+    await io().startRecording();
+    await delay(duration * 1000);
+    const { left, right, sampleRate } = await io().stopRecording();
+    void play_recording_signal();
+    return samplesToSound(left, right, sampleRate);
+  })();
 
   return () => recordingDone;
 }
@@ -481,12 +467,12 @@ export async function* play_waves(left_wave: Wave, right_wave: Wave, duration: n
  */
 export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined> {
   if (!is_sound(sound)) {
-    throw new EvaluatorParameterTypeError('play', 'sound', 'a Sound', sound);
+    throw new EvaluatorParameterTypeError(play.name, 'sound', 'a Sound', sound);
   }
 
   const { duration } = sound;
   if (duration < 0) {
-    throw new EvaluatorRuntimeError('play: duration of sound is negative');
+    throw new EvaluatorRuntimeError(`${play.name}: duration of sound is negative`);
   }
   if (duration === 0) {
     return sound;
