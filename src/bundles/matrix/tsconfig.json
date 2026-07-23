@@ -5,9 +5,11 @@
   ],
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "experimentalDecorators": false,
+    "emitDecoratorMetadata": false
   },
   "typedocOptions": {
-    "name": "sound_matrix"
+    "name": "matrix"
   }
 }
