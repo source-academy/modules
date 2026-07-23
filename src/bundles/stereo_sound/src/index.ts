@@ -60,4 +60,4 @@ export {
   letter_name_to_midi_note,
   midi_note_to_frequency,
   letter_name_to_frequency,
-} from '@sourceacademy/bundle-midi';
+} from '@sourceacademy/bundle-midi/functions';
