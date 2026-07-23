@@ -26,6 +26,7 @@ export default defineConfig({
     'Henz',
     'hollusion',
     'ints',
+    'PVML',
     'repotools',
     'sourceacademy'
   ],
