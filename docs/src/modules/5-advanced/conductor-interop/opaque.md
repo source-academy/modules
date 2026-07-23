@@ -23,4 +23,5 @@ Two more exist in practice and are worth naming even though they weren't part of
 - **strings** (`DataType.CONST_STRING`) — real and load-bearing (e.g. `midi`'s note names, accidentals).
 - **`DataType.OPAQUE`** — for a value that isn't decomposable into the above at all (a JS object a bundle wants to hand back to the cadet as an inert handle — `rune`'s graphics objects, `binary_tree`'s stored payload, etc.), or where the module simply doesn't want the evaluator trying to interpret it.
 
-Complex numbers are explicitly **not** supported crossing a module boundary.
+> [!NOTE] Complex numbers
+> Complex numbers are explicitly **not** supported crossing a module boundary. This is really an aside specific to Python — of the languages Conductor currently supports, only Python has complex numbers as a primitive at all.
