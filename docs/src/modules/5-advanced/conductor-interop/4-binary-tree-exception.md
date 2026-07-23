@@ -4,7 +4,7 @@ title: The binary_tree Exception
 
 # The `binary_tree` exception
 
-`binary_tree` is a deliberate, narrow exception to the ["pairs and arrays are the same thing"](./pairs-and-arrays) rule, and worth calling out explicitly so nobody "fixes" it into consistency with everything else by accident:
+`binary_tree` is a deliberate, narrow exception to the ["pairs and arrays are the same thing"](./2-pairs-and-arrays) rule, and worth calling out explicitly so nobody "fixes" it into consistency with everything else by accident:
 
 - It's small enough to be considered a toy/test module — if it ever needs meaningfully different behavior, it's easier to just rewrite than to carefully migrate.
 - Its `is_tree`/`is_empty_tree`/`assertNonEmptyTree` internals read a tree node's own `DataType` tag directly (`value.type !== DataType.PAIR`) rather than going through a generic helper — this is exactly the kind of hardcoded check the "pairs and arrays are interchangeable" rule says to avoid, and it needed a real code change once py-slang stopped ever producing a `PAIR` chain for a round-tripped tree value (see [source-academy/modules#813](https://github.com/source-academy/modules/pull/813)).

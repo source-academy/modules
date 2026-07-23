@@ -8,7 +8,7 @@ This section records *why* the Conductor module interface (the `IDataHandler`/`T
 
 These decisions came out of a design discussion between Martin Henz and the py-slang team while fixing [py-slang#307](https://github.com/source-academy/py-slang/pull/307). The short version, if you only read one line: **keep it simple on the module side**. A module should never have to think about integers vs floats, or pairs vs arrays, as distinct concepts - the evaluator (py-slang, js-slang, ...) is responsible for presenting a clean, minimal interface, and a module just consumes it.
 
-- [Numbers are always floats](./numbers)
-- [Pairs and arrays are the same thing](./pairs-and-arrays)
-- [`DataType.OPAQUE`: where recursion stops](./opaque)
-- [The `binary_tree` exception](./binary-tree-exception)
+- [Numbers are always floats](./1-numbers)
+- [Pairs and arrays are the same thing](./2-pairs-and-arrays)
+- [`DataType.OPAQUE`: where recursion stops](./3-opaque)
+- [The `binary_tree` exception](./4-binary-tree-exception)

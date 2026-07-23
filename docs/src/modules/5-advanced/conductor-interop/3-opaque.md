@@ -6,7 +6,7 @@ title: 'DataType.OPAQUE: Where Recursion Stops'
 
 `DataType.OPAQUE` is the one place an evaluator's conversion code should **not** try to interpret a value further. Once something is wrapped opaque, it's handed back out exactly as given — no recursive conversion, no float-narrowing, nothing. This is what makes it safe for a bundle to store an arbitrary cadet-supplied value (a number, a string, another data structure, or a genuinely non-representable JS object) without needing to know or care what it is.
 
-Note that this doesn't create an exception to the ["numbers are always floats"](./numbers) rule — a number is converted to a float *before* it's wrapped opaque (or before it's read back out of one), not after. `OPAQUE` is a boundary for *structural* recursion, not an escape hatch from the numeric contract.
+Note that this doesn't create an exception to the ["numbers are always floats"](./1-numbers) rule — a number is converted to a float *before* it's wrapped opaque (or before it's read back out of one), not after. `OPAQUE` is a boundary for *structural* recursion, not an escape hatch from the numeric contract.
 
 ## Summary: the module-facing primitives
 
@@ -14,7 +14,7 @@ Per Martin, the module interface should be thought of as offering only:
 
 - **numbers** (always floats)
 - **functions** (untyped — no declared parameter/return types beyond "it's a function")
-- **arrays** (untyped, recursive — includes what SICPy/CS1101S chapter 2 calls "pairs", see [Pairs and arrays are the same thing](./pairs-and-arrays))
+- **arrays** (untyped, recursive — includes what SICPy/CS1101S chapter 2 calls "pairs", see [Pairs and arrays are the same thing](./2-pairs-and-arrays))
 - **null** (Python's `None`)
 - **true/false** (booleans)
 
