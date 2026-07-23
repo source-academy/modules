@@ -19,7 +19,6 @@ export default defineConfig({
   }],
   language: 'en-US,en-GB',
   words: [
-    'Aarav',
     'buildtools',
     'devserver',
     'dirtree',
@@ -27,7 +26,6 @@ export default defineConfig({
     'Henz',
     'hollusion',
     'ints',
-    'Malani',
     'repotools',
     'sourceacademy'
   ],

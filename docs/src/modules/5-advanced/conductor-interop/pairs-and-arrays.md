@@ -16,7 +16,7 @@ On the PR that settled this ([py-slang#307](https://github.com/source-academy/py
 
 > "We still have DataType.PAIR in the code base. I suggest we remove the datatype entirely from py-slang. [...] I don't see value in DataType.PAIR in py-slang. It just leads to confusion. Implementers will ask: what is the difference between a PAIR and an ARRAY with two elements?"
 
-Aarav Malani has taken ownership of a follow-up PR to actually remove `DataType.PAIR` from py-slang's own code, rather than merely bridging both representations the way [py-slang#307](https://github.com/source-academy/py-slang/pull/307) currently does. Once that lands, py-slang will never construct or expect a `DataType.PAIR` value itself — a bundle that still calls `pair_make`/`pair_head`/`pair_tail` internally should keep working (module implementers remain free to define their own `head`/`tail`-style functions), but should not expect py-slang's *own* engines to ever hand it something tagged `DataType.PAIR`.
+A follow-up PR has been claimed to actually remove `DataType.PAIR` from py-slang's own code, rather than merely bridging both representations the way [py-slang#307](https://github.com/source-academy/py-slang/pull/307) currently does. Once that lands, py-slang will never construct or expect a `DataType.PAIR` value itself — a bundle that still calls `pair_make`/`pair_head`/`pair_tail` internally should keep working (module implementers remain free to define their own `head`/`tail`-style functions), but should not expect py-slang's *own* engines to ever hand it something tagged `DataType.PAIR`.
 :::
 
 Until that follow-up lands, everywhere in py-slang's own conversion code, a pair *is* treated as a 2-element array, interchangeably:

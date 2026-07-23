@@ -27,5 +27,5 @@ The reasoning is practical, not aesthetic:
 If you're writing a bundle and want a value to visibly stay an integer across a module round-trip, that's not something to build — the interface deliberately doesn't offer it.
 
 ::: details Follow-up: full removal of DataType.PAIR
-While reviewing the PR that settled this, Martin also flagged that `DataType.PAIR` shouldn't exist in py-slang at all going forward (see [Pairs and arrays are the same thing](./pairs-and-arrays)) - Aarav Malani has taken ownership of a follow-up PR to remove it entirely, rather than just treat it as interchangeable with `DataType.ARRAY`.
+While reviewing the PR that settled this, Martin also flagged that `DataType.PAIR` shouldn't exist in py-slang at all going forward (see [Pairs and arrays are the same thing](./pairs-and-arrays)) - a follow-up PR has been claimed to remove it entirely, rather than just treat it as interchangeable with `DataType.ARRAY`.
 :::
