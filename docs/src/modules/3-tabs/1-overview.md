@@ -90,25 +90,25 @@ export default defineTab({
 
 Here is an example of a tab object:
 
-```tsx twoslash [Sound/src/index.tsx]
+```tsx twoslash [Curve/src/index.tsx]
 // @jsx: react-jsx
-import type { AudioPlayed } from '@sourceacademy/bundle-sound/types';
-declare function SoundTab(props: { elements: AudioPlayed[] }): React.ReactElement;
+import type { CurveModuleState as _CurveModuleState } from '@sourceacademy/bundle-curve/types';
+declare function CurveRenderer(props: { elements: _CurveModuleState['drawnCurves'] }): React.ReactElement;
 // ---cut---
-import type { SoundModuleState } from '@sourceacademy/bundle-sound/types';
+import type { CurveModuleState } from '@sourceacademy/bundle-curve/types';
 import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 
 export default defineTab({
   toSpawn(context) {
-    const state = getModuleState<SoundModuleState>(context, 'sound');
-    return !!state && state.audioPlayed.length > 0;
+    const state = getModuleState<CurveModuleState>(context, 'curve');
+    return !!state && state.drawnCurves.length > 0;
   },
   body(context) {
-    const { audioPlayed } = getModuleState<SoundModuleState>(context, 'sound')!;
-    return <SoundTab elements={audioPlayed} />;
+    const { drawnCurves } = getModuleState<CurveModuleState>(context, 'curve')!;
+    return <CurveRenderer elements={drawnCurves} />;
   },
-  label: 'Sound Tab',
-  iconName: 'music'
+  label: 'Curve Tab',
+  iconName: 'graph'
 });
 ```
 
@@ -152,6 +152,6 @@ Note that `IconName`s are defined in `@blueprintjs/core`, but it is not necessar
 
 A tab is only evaluated once per Source evaluation. Only one instance of a given tab can be spawned at the same time. Your tab and bundle should be designed with this in mind.
 
-For example, the `sound` bundle stores in its state an array of `AudioPlayed` objects, which allows the single tab to handle multiple calls to `play_in_tab`, which is the function in the bundle that causes the tab to spawn.
+For example, the `curve` bundle stores in its state an array of drawn curves, which allows the single tab to handle multiple draw calls across a program's evaluation, accumulating them all into one tab instance instead of spawning a new one per call.
 
 Other bundles like `repl` have a single instance. The bundle never spawns a second instance of its programmable REPL, so the single REPL tab that spawns handles everything.
