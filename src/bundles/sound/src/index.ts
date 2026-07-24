@@ -89,6 +89,20 @@ type SoundTabLoader = {
 // its `waveform`/`envelopes` arguments are user-supplied Conductor closures here, not the plain
 // internal SoundProducer/SoundTransformer functions.ts's pure version expects.
 
+// closureToWave/waveToConductorClosure each independently build a brand-new wrapper object per
+// call, by construction (that's what lets them stay stateless, evaluator-scoped functions). But
+// get_wave/get_left_wave/get_right_wave each independently decode-then-re-encode the *same*
+// underlying Sound, and the module's own Sound Discipline documents "mono is just the common case
+// where left_wave and right_wave are the same wave" as an invariant a cadet program can rely on
+// (e.g. `get_wave(s) == get_left_wave(s)`) - without caching, two separate calls decoding the same
+// closure id would produce two distinct Wave objects, and re-encoding those would produce two
+// distinct Conductor closures, silently breaking that invariant across accessor calls. These two
+// caches (keyed per evaluator, so they can't leak or collide across different runs/evaluators)
+// make both directions idempotent: decoding the same closure id twice returns the same Wave
+// object, and encoding the same Wave object twice returns the same Conductor closure.
+const waveDecodeCache = new WeakMap<IDataHandler, Map<number, Wave>>();
+const closureEncodeCache = new WeakMap<IDataHandler, WeakMap<Wave, Promise<TypedValue<DataType.CLOSURE>>>>();
+
 /**
  * Wraps a Conductor closure (a user-supplied Wave, called as `wave(t)`) as an internal
  * (generator-based) Wave. `yield*`s through the closure call rather than draining it, so
@@ -99,6 +113,14 @@ type SoundTabLoader = {
  * contract and don't re-check it.
  */
 function closureToWave(evaluator: IDataHandler, closure: TypedValue<DataType.CLOSURE>): Wave {
+  let decoded = waveDecodeCache.get(evaluator);
+  if (!decoded) {
+    decoded = new Map();
+    waveDecodeCache.set(evaluator, decoded);
+  }
+  const cachedWave = decoded.get(closure.value);
+  if (cachedWave) return cachedWave;
+
   const wave = (async function* (t: number): AsyncGenerator<void, number, undefined> {
     // closure_call_unchecked's return type is generic over any DataType (Conductor's DataType.CLOSURE
     // argument type doesn't itself encode the closure's return type), so a student-supplied wave
@@ -111,11 +133,23 @@ function closureToWave(evaluator: IDataHandler, closure: TypedValue<DataType.CLO
   }) as Wave;
 
   // The fast path: an evaluator whose closures can prove they never need a real host round-trip
-  // (currently py2js only, via py-slang's GenericDataHandler.closure_call_sync) exposes this
-  // method, letting a student-authored wave function be sampled without a microtask per sample -
-  // the same escape hatch this module's own built-in waves already use (see types.ts's Wave.sync
-  // doc), just one layer further out. An engine with no such capability (CSE, today) simply never
-  // has the method, and every wave made from its closures stays on the async path above.
+  // exposes closure_call_sync, letting a student-authored wave function be sampled without a
+  // microtask per sample - the same escape hatch this module's own built-in waves already use
+  // (see types.ts's Wave.sync doc), just one layer further out.
+  //
+  // closure_call_sync is a method on GenericDataHandler, the *shared* IDataHandler implementation
+  // across all of py-slang's engines - it's always present, regardless of which engine is actually
+  // running, so its mere presence does NOT mean this specific closure supports the fast path (only
+  // an engine/closure combination that actually attached a `.sync` twin does; today that's some,
+  // not all, py2js closures - CSE and PVML closures never have one). Whether *this* closure has one
+  // is a static property of how it was compiled, not something that depends on which `t` it's
+  // eventually sampled at - so it's safe to determine once, right now, with a single probe call,
+  // rather than discovering it only when a real sample throws. The probe is genuinely free unless
+  // the closure really does have a `.sync` twin: closure_call_sync's own contract only returns
+  // `undefined` for an unsupported *argument* type before the underlying function ever runs (a wave
+  // closure's argument is always DataType.NUMBER, always supported) - the only way real student
+  // code executes here is if a `.sync` twin actually exists, in which case this probe call reuses
+  // that exact result as this Wave's very first real sample too, rather than throwing it away.
   const syncCall = (
     evaluator as IDataHandler & {
       closure_call_sync?: (
@@ -124,18 +158,21 @@ function closureToWave(evaluator: IDataHandler, closure: TypedValue<DataType.CLO
       ) => TypedValue<DataType> | undefined;
     }
   ).closure_call_sync?.bind(evaluator);
-  if (syncCall) {
+  const probe = syncCall?.(closure, [{ type: DataType.NUMBER, value: 0 }]);
+  if (probe !== undefined) {
+    if (probe.type !== DataType.NUMBER) {
+      throw new EvaluatorRuntimeError(`Expected a wave to return a number, got ${DataType[probe.type]}`);
+    }
+    const probedSample: [t: number, value: number] = [0, probe.value];
     Object.assign(wave, {
       sync: (t: number): number => {
-        const result = syncCall(closure, [{ type: DataType.NUMBER, value: t }]);
+        if (t === probedSample[0]) return probedSample[1];
+        const result = syncCall!(closure, [{ type: DataType.NUMBER, value: t }]);
+        // Already proven above that this closure has a working `.sync` twin - a later decline
+        // would mean the closure's result type is inconsistent between calls, which is an actual
+        // student-code bug (e.g. a wave that sometimes returns a string), not an engine gap.
         if (result === undefined) {
-          // The engine supports closure_call_sync in general but this specific closure declined it
-          // - not expected for a plain student-authored wave function today, but there's no way to
-          // fall back to the async path from inside a plain sync function, so fail loudly rather
-          // than silently misbehave.
-          throw new EvaluatorRuntimeError(
-            'Internal error: closure_call_sync unexpectedly had no synchronous form for this wave'
-          );
+          throw new EvaluatorRuntimeError('Expected a wave to consistently return a number');
         }
         if (result.type !== DataType.NUMBER) {
           throw new EvaluatorRuntimeError(`Expected a wave to return a number, got ${DataType[result.type]}`);
@@ -145,11 +182,20 @@ function closureToWave(evaluator: IDataHandler, closure: TypedValue<DataType.CLO
     });
   }
 
+  decoded.set(closure.value, wave);
   return wave;
 }
 
 /** Wraps an internal (pure, evaluator-free) Wave as a Conductor closure. */
 function waveToConductorClosure(evaluator: IDataHandler, wave: Wave): Promise<TypedValue<DataType.CLOSURE>> {
+  let encoded = closureEncodeCache.get(evaluator);
+  if (!encoded) {
+    encoded = new WeakMap();
+    closureEncodeCache.set(evaluator, encoded);
+  }
+  const cachedClosure = encoded.get(wave);
+  if (cachedClosure) return cachedClosure;
+
   async function* conductorWave(t: TypedValue<DataType.NUMBER>) {
     return { type: DataType.NUMBER as const, value: yield* wave(t.value) };
   }
@@ -168,7 +214,9 @@ function waveToConductorClosure(evaluator: IDataHandler, wave: Wave): Promise<Ty
       })
     });
   }
-  return evaluator.closure_make({ returnType: DataType.NUMBER, args: [DataType.NUMBER] }, conductorWave);
+  const closurePromise = evaluator.closure_make({ returnType: DataType.NUMBER, args: [DataType.NUMBER] }, conductorWave);
+  encoded.set(wave, closurePromise);
+  return closurePromise;
 }
 
 /** Wraps the internal (pure, evaluator-free) Sound representation as a Conductor PAIR. */
