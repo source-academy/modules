@@ -90,16 +90,17 @@ type SoundTabLoader = {
 // internal SoundProducer/SoundTransformer functions.ts's pure version expects.
 
 // closureToWave/waveToConductorClosure each independently build a brand-new wrapper object per
-// call, by construction (that's what lets them stay stateless, evaluator-scoped functions). But
-// get_wave/get_left_wave/get_right_wave each independently decode-then-re-encode the *same*
-// underlying Sound, and the module's own Sound Discipline documents "mono is just the common case
-// where left_wave and right_wave are the same wave" as an invariant a cadet program can rely on
-// (e.g. `get_wave(s) == get_left_wave(s)`) - without caching, two separate calls decoding the same
-// closure id would produce two distinct Wave objects, and re-encoding those would produce two
-// distinct Conductor closures, silently breaking that invariant across accessor calls. These two
-// caches (keyed per evaluator, so they can't leak or collide across different runs/evaluators)
-// make both directions idempotent: decoding the same closure id twice returns the same Wave
-// object, and encoding the same Wave object twice returns the same Conductor closure.
+// call, by construction (that's what lets them stay stateless, evaluator-scoped functions). Without
+// caching, get_wave/get_left_wave/get_right_wave decoding the *same* underlying Sound would each
+// build their own distinct Wave object and re-encode it into its own distinct Conductor closure -
+// wasteful (a fresh closure_make per accessor call) even though nothing downstream needs it to
+// happen. This does NOT make cadet-observable identity (e.g. `get_wave(s) == get_left_wave(s)`) a
+// reliable guarantee - per Martin, the module-evaluator bridge isn't obligated to be
+// identity-preserving, and each engine's own moduleToPython builds its own fresh Python-side wrapper
+// per conversion regardless of what's cached here. These caches (keyed per evaluator, so they can't
+// leak or collide across different runs/evaluators) just make both directions idempotent *at the
+// Conductor level*: decoding the same closure id twice returns the same Wave object, and encoding
+// the same Wave object twice returns the same Conductor closure, avoiding redundant work.
 const waveDecodeCache = new WeakMap<IDataHandler, Map<number, Wave>>();
 const closureEncodeCache = new WeakMap<IDataHandler, WeakMap<Wave, Promise<TypedValue<DataType.CLOSURE>>>>();
 
