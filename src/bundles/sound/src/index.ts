@@ -8,10 +8,10 @@
  *
  * A Sound is always stereo internally - pair(pair(left_wave, right_wave), duration), where
  * duration is the length of the sound in seconds. "Mono" isn't a separate concept: it's just the
- * common case where left_wave and right_wave are the same wave, produced by the constructor
- * make_sound. make_stereo_sound builds a genuinely stereo Sound from two different waves.
- * Accessors get_wave (an alias of get_left_wave), get_left_wave, get_right_wave, and get_duration
- * are provided.
+ * common case, produced by the constructor make_sound, where left_wave and right_wave have the
+ * same behavior - left_wave(t) == right_wave(t) for all t. make_stereo_sound builds a genuinely
+ * stereo Sound from two waves that don't have this property. Accessors get_wave (an alias of
+ * get_left_wave), get_left_wave, get_right_wave, and get_duration are provided.
  *
  * Sound Discipline: for all sounds, each channel's wave function applied to a time `t` beyond its
  * duration returns 0, that is: `(get_left_wave(sound))(get_duration(sound) + x) === 0` (and the
@@ -23,8 +23,8 @@
  *
  * Finally, the provided `play` function takes in a Sound and plays it using your computer's
  * sound system; `record`/`record_for` record a Sound using however many channels your
- * microphone actually has (a mono mic produces a Sound whose left and right channels are the
- * same wave).
+ * microphone actually has (a mono mic produces a Sound whose left and right wave functions have
+ * the same behavior, per the paragraph above).
  *
  * @module sound
  * @author Koh Shang Hui

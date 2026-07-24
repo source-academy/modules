@@ -29,11 +29,12 @@ export type Wave = {
 
 /**
  * A Sound is always stereo internally: `[[left_wave, right_wave], duration]`, where duration is
- * the length of the sound in seconds. "Mono" isn't a separate type - it's just the common case
- * where `leftWave` and `rightWave` are the same Wave (same reference), produced by `make_sound`.
- * This is the pure, evaluator-free internal representation used throughout functions.ts; the
- * Conductor-facing plugin in index.ts converts to/from the equivalent Conductor PAIR
- * (`[[TypedValue<CLOSURE>, TypedValue<CLOSURE>], TypedValue<NUMBER>]`) at the boundary.
+ * the length of the sound in seconds. "Mono" isn't a separate type - it's just the common case,
+ * produced by `make_sound`, where `leftWave` and `rightWave` have the same behavior:
+ * `leftWave(t) == rightWave(t)` for all `t`. This is the pure, evaluator-free internal
+ * representation used throughout functions.ts; the Conductor-facing plugin in index.ts converts
+ * to/from the equivalent Conductor PAIR (`[[TypedValue<CLOSURE>, TypedValue<CLOSURE>],
+ * TypedValue<NUMBER>]`) at the boundary.
  */
 export interface Sound {
   leftWave: Wave;

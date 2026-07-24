@@ -8,12 +8,16 @@
  * instruments - is plain math with no evaluator/browser dependency at all.
  *
  * A Sound is always stereo internally (`{leftWave, rightWave, duration}`); "mono" is just the
- * common case where `leftWave === rightWave` (the same Wave, by reference), produced by
- * `make_sound`. Every combinator below only ever has to deal with this one shape, so combining a
- * "mono" Sound with a genuinely stereo one is a non-issue - there's nothing to convert. Where
- * `leftWave === rightWave`, functions here avoid redundantly recomputing the same wave twice (see
- * `play`, `samplesToSound`) - both for performance and so a user-supplied wave's steps aren't
- * doubled up for no reason.
+ * common case, produced by `make_sound`, where `leftWave` and `rightWave` have the same behavior -
+ * `leftWave(t) == rightWave(t)` for all `t`. Every combinator below only ever has to deal with this
+ * one shape, so combining a "mono" Sound with a genuinely stereo one is a non-issue - there's
+ * nothing to convert. `make_sound` itself happens to implement this by giving both channels the
+ * same Wave object (`leftWave === rightWave`, a real JS reference), and functions here take
+ * advantage of that specific implementation choice where it holds to avoid redundantly recomputing
+ * the same wave twice (see `play`, `samplesToSound`) - both for performance and so a user-supplied
+ * wave's steps aren't doubled up for no reason. That's an implementation detail this file relies
+ * on, not something the Sound Discipline promises a cadet program - two Waves with identical
+ * behavior aren't required to be the same reference.
  *
  * Functions that sample a Wave (anything that might end up calling a user-supplied wave function
  * via a Conductor closure) are generators that `yield*` through nested wave calls, rather than
@@ -227,8 +231,8 @@ export function get_left_wave(sound: Sound): Wave {
 
 /**
  * Accesses the wave function of a given Sound. Meaningful for any Sound built via `make_sound`
- * (where the left and right channels are the same wave, by construction) - for a Sound built via
- * `make_stereo_sound` with genuinely different channels, this returns the left channel; use
+ * (where the left and right wave functions have the same behavior) - for a Sound built via
+ * `make_stereo_sound` with channels that don't, this returns the left channel; use
  * `get_left_wave`/`get_right_wave` to be explicit about which channel you mean.
  */
 export function get_wave(sound: Sound): Wave {
@@ -345,7 +349,7 @@ function assertMicPermission(func_name: string): void {
  * returning the recorded Sound - so evaluation genuinely pauses there rather than needing to be
  * called again later). The recorded Sound uses however many channels the input device actually
  * has - a mono microphone (by far the most common case) produces a Sound whose left and right
- * channels are the same wave.
+ * wave functions have the same behavior.
  *
  * @example
  * ```ts
