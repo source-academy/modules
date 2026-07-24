@@ -181,19 +181,56 @@ async function soundToConductor(evaluator: IDataHandler, sound: Sound): Promise<
   return evaluator.pair_make(wavesPair, { type: DataType.NUMBER, value: sound.duration });
 }
 
-/** Unwraps a Conductor PAIR (or throws) into the internal Sound representation. */
+/**
+ * A pair is just an array of length 2 (no distinct "pair" representation, per
+ * source-academy/py-slang#307) - a value built here via `pair_make` (e.g. `soundToConductor`'s own
+ * output) is tagged `DataType.PAIR`, but the exact same value round-tripped back in through Python
+ * (assigned to a variable and passed to another module call) arrives tagged `DataType.ARRAY`
+ * instead, since `pythonToModule` now always builds a flat ARRAY for a Python list/pair of any
+ * length. Both are equally valid; `pair_head`/`pair_tail` already read either shape identically
+ * (py-slang's own `GenericDataHandler` bridge).
+ */
+function isPairLike(value: TypedValue<DataType>): boolean {
+  return value.type === DataType.PAIR || value.type === DataType.ARRAY;
+}
+
+/**
+ * Reads a Conductor LIST's elements regardless of whether it's tagged as a genuine PAIR/EMPTY_LIST
+ * chain or a flat DataType.ARRAY (see `isPairLike`'s doc comment - the same round-tripping applies
+ * to a real Python list of any length, e.g. `consecutively`'s/`simultaneously`'s own list argument,
+ * not just a 2-element pair).
+ */
+async function readListElements(evaluator: IDataHandler, value: TypedValue<DataType>): Promise<TypedValue<DataType>[]> {
+  if (value.type === DataType.ARRAY) {
+    const length = await evaluator.array_length(value);
+    const elements: TypedValue<DataType>[] = [];
+    for (let i = 0; i < length; i += 1) {
+      elements.push(await evaluator.array_get(value, i));
+    }
+    return elements;
+  }
+  const elements: TypedValue<DataType>[] = [];
+  let current: TypedValue<DataType> = value;
+  while (current.type === DataType.PAIR) {
+    elements.push(await evaluator.pair_head(current));
+    current = await evaluator.pair_tail(current);
+  }
+  return elements;
+}
+
+/** Unwraps a Conductor PAIR/ARRAY (or throws) into the internal Sound representation. */
 async function conductorToSound(evaluator: IDataHandler, value: TypedValue<DataType>): Promise<Sound> {
   const invalid = () => new Error('Expected a Sound (a pair of (pair of left/right waves) and duration)');
-  if (!value || value.type !== DataType.PAIR) {
+  if (!value || !isPairLike(value)) {
     throw invalid();
   }
-  const wavesTv = await evaluator.pair_head(value);
-  const durationTv = await evaluator.pair_tail(value);
-  if (wavesTv.type !== DataType.PAIR || durationTv.type !== DataType.NUMBER) {
+  const wavesTv = await evaluator.pair_head(value as TypedValue<DataType.PAIR>);
+  const durationTv = await evaluator.pair_tail(value as TypedValue<DataType.PAIR>);
+  if (!isPairLike(wavesTv) || durationTv.type !== DataType.NUMBER) {
     throw invalid();
   }
-  const leftTv = await evaluator.pair_head(wavesTv);
-  const rightTv = await evaluator.pair_tail(wavesTv);
+  const leftTv = await evaluator.pair_head(wavesTv as TypedValue<DataType.PAIR>);
+  const rightTv = await evaluator.pair_tail(wavesTv as TypedValue<DataType.PAIR>);
   if (leftTv.type !== DataType.CLOSURE || rightTv.type !== DataType.CLOSURE) {
     throw invalid();
   }
@@ -205,13 +242,12 @@ async function conductorToSound(evaluator: IDataHandler, value: TypedValue<DataT
   return { leftWave, rightWave, duration: durationTv.value };
 }
 
-/** Walks a Conductor LIST (pair chain) of Sounds into a plain array of the internal representation. */
+/** Walks a Conductor LIST of Sounds (either shape - see `readListElements`) into a plain array. */
 async function conductorListToSounds(evaluator: IDataHandler, value: TypedValue<DataType>): Promise<Sound[]> {
+  const elements = await readListElements(evaluator, value);
   const sounds: Sound[] = [];
-  let current = value;
-  while (current.type === DataType.PAIR) {
-    sounds.push(await conductorToSound(evaluator, await evaluator.pair_head(current)));
-    current = await evaluator.pair_tail(current);
+  for (const element of elements) {
+    sounds.push(await conductorToSound(evaluator, element));
   }
   return sounds;
 }
@@ -372,10 +408,10 @@ export default class SoundModulePlugin extends BaseModulePlugin {
   }
 
   // No declared arg type: is_sound is a predicate that must accept a value of any Conductor
-  // DataType (not just PAIR) and answer false rather than throw.
+  // DataType (not just PAIR/ARRAY) and answer false rather than throw.
   @moduleMethod([], DataType.BOOLEAN)
   async* is_sound(value?: TypedValue<DataType>): AsyncGenerator<void, TypedValue<DataType.BOOLEAN>, undefined> {
-    if (!value || value.type !== DataType.PAIR) {
+    if (!value || !isPairLike(value)) {
       return { type: DataType.BOOLEAN, value: false };
     }
     try {
@@ -553,15 +589,13 @@ export default class SoundModulePlugin extends BaseModulePlugin {
   ): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
     const evaluator = this.evaluator;
 
+    const envelopeElements = await readListElements(evaluator, envelopes);
     const envelopeClosures: TypedValue<DataType.CLOSURE>[] = [];
-    let current: TypedValue<DataType> = envelopes;
-    while (current.type === DataType.PAIR) {
-      const envelope = await evaluator.pair_head(current);
+    for (const envelope of envelopeElements) {
       if (envelope.type !== DataType.CLOSURE) {
         throw new EvaluatorParameterTypeError('stacking_adsr', 'envelopes', 'a list of functions', envelope.value);
       }
       envelopeClosures.push(envelope);
-      current = await evaluator.pair_tail(current);
     }
 
     const harmonics: Sound[] = [];
