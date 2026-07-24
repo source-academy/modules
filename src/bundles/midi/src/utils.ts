@@ -1,4 +1,4 @@
-import { GeneralRuntimeError, InternalRuntimeError } from '@sourceacademy/modules-lib/errors';
+import { EvaluatorParameterTypeError, EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import { Accidental, type MIDINote, type Note, type NoteName, type NoteWithOctave } from './types';
 
 export function parseNoteWithOctave(note: NoteWithOctave): [NoteName, Accidental, number];
@@ -30,19 +30,21 @@ export function parseNoteWithOctave(note: unknown): [NoteName, Accidental, numbe
   ] as [NoteName, Accidental, number];
 }
 
-export function noteToValues(note: NoteWithOctave, func_name: string): [NoteName, Accidental, number] {
+export function noteToValues(note: string, func_name: string): [NoteName, Accidental, number] {
   const res = parseNoteWithOctave(note);
   if (res === null) {
-    throw new GeneralRuntimeError(`${func_name}: Invalid Note with Octave: ${note}`);
+    throw new EvaluatorRuntimeError(`${func_name}: Invalid Note with Octave: ${note}`);
   }
   return res;
 }
 
-export function midiNoteToNoteName(
-  midiNote: MIDINote,
-  accidental: Accidental.FLAT | Accidental.SHARP,
-  func_name: string
-): Note {
+export function midiNoteToNoteName(midiNote: MIDINote, accidental: string, func_name: string): Note {
+  if (accidental !== Accidental.SHARP && accidental !== Accidental.FLAT) {
+    // EvaluatorParameterTypeError is the correct, student-facing error here - the
+    // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
+    // eslint-disable-next-line @sourceacademy/throw-runtime-error
+    throw new EvaluatorParameterTypeError(func_name, 'accidental', 'sharp or flat', accidental);
+  }
   switch (midiNote % 12) {
     case 0:
       return 'C';
@@ -69,6 +71,6 @@ export function midiNoteToNoteName(
     case 11:
       return 'B';
     default:
-      throw new InternalRuntimeError(`${func_name}: Invalid MIDI note value ${midiNote}`);
+      throw new EvaluatorRuntimeError(`${func_name}: Invalid MIDI note value ${midiNote}`);
   }
 }

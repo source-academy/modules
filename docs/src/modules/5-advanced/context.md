@@ -7,7 +7,7 @@ Some times, a bundle needs to be able to maintain some state information, or sen
 
 Every time `js-slang` evaluates Source code, it creates an evaluation context. Bundles can access this context by using this import:
 
-```ts twoslash [sound/functions.ts]
+```ts twoslash [curve/functions.ts]
 // @paths: { "js-slang/context": ["./context.d.ts"] }
 // @filename: context.d.ts
 import type { Context } from 'js-slang';
@@ -15,13 +15,13 @@ declare const ctx: Context;
 export default ctx;
 
 // @filename: curve.ts
-import type { AudioPlayed } from '@sourceacademy/bundle-sound/types';
+import type { CurveModuleState } from '@sourceacademy/bundle-curve/types';
 // ---cut---
 import context from 'js-slang/context';
 
-const audioPlayed: AudioPlayed[] = [];
-context.moduleContexts.sound.state = {
-  audioPlayed
+const drawnCurves: CurveModuleState['drawnCurves'] = [];
+context.moduleContexts.curve.state = {
+  drawnCurves
 };
 ```
 
@@ -31,22 +31,22 @@ The `state` object can be of any type - it is up to the developer to decide what
 
 This `state` object can then be accessed by the module's tab, for example:
 
-```tsx twoslash [Sound/index.tsx]
+```tsx twoslash [Curve/index.tsx]
 // @jsx: react-jsx
 import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
-declare function SoundTab(props: { context: DebuggerContext }): React.ReactElement;
+declare function CurveRenderer(props: { context: DebuggerContext }): React.ReactElement;
 // ---cut---
 import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
-import type { SoundModuleState } from '@sourceacademy/bundle-sound/types';
+import type { CurveModuleState } from '@sourceacademy/bundle-curve/types';
 
 export default defineTab({
   toSpawn: context => {
-    const state = getModuleState<SoundModuleState>(context, 'sound');
-    return !!state && state.audioPlayed.length > 0;
+    const state = getModuleState<CurveModuleState>(context, 'curve');
+    return !!state && state.drawnCurves.length > 0;
   },
-  body: (context) => <SoundTab context={context} />,
-  label: 'Sounds',
-  iconName: 'music'
+  body: (context) => <CurveRenderer context={context} />,
+  label: 'Curves',
+  iconName: 'graph'
 });
 ```
 

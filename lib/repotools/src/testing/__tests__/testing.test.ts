@@ -32,7 +32,7 @@ describe(testUtils.isTestDirectory, () => {
     mockedFsGlob.mockImplementationOnce(retValue ? async function* () {
       yield Promise.resolve('');
       return undefined;
-      // eslint-disable-next-line require-yield, @typescript-eslint/require-await
+      // eslint-disable-next-line @typescript-eslint/require-await
     } : async function* () {
       return undefined;
     });

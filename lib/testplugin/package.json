@@ -1,0 +1,29 @@
+{
+  "name": "@sourceacademy/modules-testplugin",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "In-memory Conductor IDataHandler implementation for testing Source Academy modules",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@sourceacademy/conductor": "catalog:"
+  },
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "eslint": "^9.35.0",
+    "typescript": "^6.0.2",
+    "vitest": "4.1.4"
+  },
+  "scripts": {
+    "build": "tsc --project ./tsconfig.prod.json",
+    "lint": "eslint src",
+    "postinstall": "yarn build",
+    "tsc": "tsc --project ./tsconfig.json",
+    "test": "buildtools test --project ."
+  }
+}

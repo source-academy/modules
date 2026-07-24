@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "devDependencies": {
+    "@sourceacademy/conductor": "catalog:",
     "@sourceacademy/modules-buildtools": "workspace:^",
+    "@sourceacademy/modules-testplugin": "workspace:^",
     "typescript": "catalog:"
   },
   "type": "module",

@@ -8,7 +8,7 @@ import * as td from 'typedoc';
 // #region commonOpts
 const typedocPackageOptions: td.Configuration.TypeDocOptions = {
   categorizeByGroup: false,
-  disableSources: true,
+  disableSources: false,
   excludeInternal: true,
   skipErrorChecking: true,
   sort: ['documents-last'],
@@ -17,6 +17,9 @@ const typedocPackageOptions: td.Configuration.TypeDocOptions = {
     notExported: false,
   },
   visibilityFilters: {},
+  // @publicType/@publicReturnType are read and stripped by normalizeSignature() in
+  // conductor/normalisation.ts; register them so Typedoc doesn't warn about unknown block tags.
+  blockTags: [...td.OptionDefaults.blockTags, '@publicType', '@publicReturnType'],
 };
 // #endregion commonOpts
 
@@ -60,6 +63,16 @@ class CustomLogger extends td.ConsoleLogger {
  */
 export function convertToTypedocPath(p: string) {
   return p.split(pathlib.sep).join(pathlib.posix.sep);
+}
+
+/**
+ * Removes source locations after Conductor decorator parsing has used them.
+ */
+export function stripTypeDocSources(reflection: td.Reflection) {
+  (reflection as { sources?: td.SourceReference[] }).sources = undefined;
+  reflection.traverse(child => {
+    stripTypeDocSources(child);
+  });
 }
 
 /**

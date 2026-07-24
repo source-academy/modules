@@ -84,7 +84,7 @@ export const parsers = {
  * Converts a Typedoc reflection into the format as expected by the frontend and write it to disk as a JSON file
  */
 export function buildJson(reflection: td.ProjectReflection): Record<string, ModuleDocsEntry> {
-  const jsonData = reflection.children!.reduce<Record<string, ModuleDocsEntry>>((res, element) => {
+  const jsonData = (reflection.children ?? []).reduce<Record<string, ModuleDocsEntry>>((res, element) => {
     if (element.kind === td.ReflectionKind.TypeAlias) {
       // Ignore Type Aliases for JSON documentation
       return res;

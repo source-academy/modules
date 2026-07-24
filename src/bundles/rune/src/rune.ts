@@ -2,7 +2,6 @@ import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import { glAnimation, type AnimFrame, type ReplResult } from '@sourceacademy/modules-lib/types';
 import { mat4 } from 'gl-matrix';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
-import { classDeclaration } from './type_map';
 
 const normalVertexShader = `
 attribute vec4 aVertexPosition;
@@ -64,7 +63,6 @@ interface RuneOfParams {
 /**
  * The basic data-representation of a Rune. When the Rune is drawn, every 3 consecutive vertex will form a triangle.
  */
-@classDeclaration('Rune')
 export class Rune {
   constructor(
     /**
@@ -87,7 +85,7 @@ export class Rune {
      * A (potentially empty) list of Runes
      */
     public subRunes: Rune[],
-    public texture: HTMLImageElement | null,
+    public texture: HTMLImageElement | string | null,
     public hollusionDistance: number
   ) { }
 
@@ -154,7 +152,7 @@ export class Rune {
  * @param gl a prepared WebGLRenderingContext with shader program linked
  * @param runes a list of rune (Rune[]) to be drawn sequentially
  */
-export function drawRunesToFrameBuffer(
+export async function drawRunesToFrameBuffer(
   gl: WebGLRenderingContext,
   runes: Rune[],
   cameraMatrix: mat4,
@@ -216,8 +214,8 @@ export function drawRunesToFrameBuffer(
   // load projection and camera
   const orthoCam = mat4.create();
   mat4.ortho(orthoCam, -1, 1, -1, 1, -0.5, 1.5);
-  gl.uniformMatrix4fv(projectionMatrixPointer, false, orthoCam);
-  gl.uniformMatrix4fv(cameraMatrixPointer, false, cameraMatrix);
+  gl.uniformMatrix4fv(projectionMatrixPointer, false, orthoCam as Float32List);
+  gl.uniformMatrix4fv(cameraMatrixPointer, false, cameraMatrix as Float32List);
 
   // load colorfilter
   gl.uniform4fv(vertexColorFilterPt, colorFilter);
@@ -228,7 +226,27 @@ export function drawRunesToFrameBuffer(
    * Initialize a texture and load an image.
    * When the image finished loading copy it into the texture.
    */
-  const loadTexture = (image: HTMLImageElement): WebGLTexture | null => {
+  const loadTexture = async (rune: Rune): Promise<WebGLTexture | null> => {
+    if (rune.texture === null) return null;
+    const imageSource = rune.texture;
+    let image: HTMLImageElement;
+    if (typeof imageSource !== 'string') {
+      image = imageSource;
+    } else {
+      image = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const image = Object.assign(new Image(), {
+          crossOrigin: 'anonymous',
+          src: imageSource
+        });
+        image.onload = () => {
+          rune.texture = image;
+          resolve(image);
+        };
+        image.onabort = reject;
+        image.onerror = reject;
+      });
+    }
+
     const texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
     function isPowerOf2(value: number) {
@@ -258,7 +276,6 @@ export function drawRunesToFrameBuffer(
       srcType,
       pixel
     );
-
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(
       gl.TEXTURE_2D,
@@ -286,7 +303,7 @@ export function drawRunesToFrameBuffer(
     return texture;
   };
 
-  runes.forEach((rune: Rune) => {
+  for (const rune of runes) {
     // load position buffer
     const positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
@@ -302,7 +319,7 @@ export function drawRunesToFrameBuffer(
       );
       gl.uniform1i(textureSwitchPointer, 0);
     } else {
-      const texture = loadTexture(rune.texture);
+      const texture = await loadTexture(rune);
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.uniform1i(texturePointer, 0);
@@ -310,12 +327,12 @@ export function drawRunesToFrameBuffer(
     }
 
     // load transformation matrix
-    gl.uniformMatrix4fv(modelViewMatrixPointer, false, rune.transformMatrix);
+    gl.uniformMatrix4fv(modelViewMatrixPointer, false, rune.transformMatrix as Float32List);
 
     // draw
     const vertexCount = rune.vertices.length / 4;
     gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
-  });
+  }
 }
 
 /**
@@ -377,7 +394,7 @@ export abstract class DrawnRune implements ReplResult {
 
   public toReplString = () => '<Rune>';
 
-  public abstract draw: (canvas: HTMLCanvasElement) => void;
+  public abstract draw: (canvas: HTMLCanvasElement) => Promise<unknown>;
 }
 
 export class DrawnNormalRune extends DrawnRune {
@@ -385,14 +402,14 @@ export class DrawnNormalRune extends DrawnRune {
     super(rune, false);
   }
 
-  public draw = (canvas: HTMLCanvasElement) => {
+  public draw = async (canvas: HTMLCanvasElement) => {
     const gl = getWebGlFromCanvas(canvas);
 
     // prepare camera projection array
     const cameraMatrix = mat4.create();
 
     // color filter set to [1,1,1,1] for transparent filter
-    drawRunesToFrameBuffer(
+    await drawRunesToFrameBuffer(
       gl,
       this.rune.flatten(),
       cameraMatrix,

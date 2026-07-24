@@ -7,7 +7,6 @@ import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
 import { get_duration, get_wave, is_sound } from '@sourceacademy/bundle-sound/functions';
 import type { Sound } from '@sourceacademy/bundle-sound/types';
 import { GeneralRuntimeError, InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
 import context from 'js-slang/context';
 import { accumulate, head, is_pair, tail, type List } from 'js-slang/dist/stdlib/list';
 import Plotly, { type Data, type Layout } from 'plotly.js-dist';
@@ -262,7 +261,7 @@ export const draw_points_3d = createPlotFunction(
  * Visualizes the sound on a 2d line graph
  * @param sound the sound which is to be visualized on plotly
  */
-export function draw_sound_2d(sound: Sound) {
+export async function draw_sound_2d(sound: Sound) {
   const FS: number = 44100; // Output sample rate
   if (!is_sound(sound)) {
     throw new InvalidParameterTypeError('sound', sound, draw_sound_2d.name);
@@ -279,7 +278,12 @@ export function draw_sound_2d(sound: Sound) {
     const wave = get_wave(sound);
     for (let i = 0; i < len; i += 1) {
       time_stamps[i] = i / FS;
-      channel[i] = callWithoutMetadata(wave, i / FS);
+      const generator = wave(i / FS);
+      let next = await generator.next();
+      while (!next.done) {
+        next = await generator.next();
+      }
+      channel[i] = next.value;
     }
 
     const x_s: number[] = [];

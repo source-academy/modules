@@ -93,6 +93,9 @@
     "vitest": "catalog:",
     "vitest-browser-react": "^2.1.0"
   },
+  "resolutions": {
+    "vitest/vite": "^8.1.0"
+  },
   "peerDependencies": {
     "@blueprintjs/core": "^6.0.0",
     "@blueprintjs/icons": "^6.0.0",

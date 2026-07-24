@@ -1,49 +1,80 @@
-import { stringify } from 'js-slang/dist/utils/stringify';
-import { describe, expect, test, vi } from 'vitest';
-import * as funcs from '../functions';
+import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
+import {
+  TestDataHandler,
+  callClosure,
+  closureFromFunction,
+  numberValue,
+  runAsyncGenerator
+} from '@sourceacademy/modules-testplugin';
+import { describe, expect, it } from 'vitest';
+import { repeat, thrice, twice } from '../functions';
 
-vi.spyOn(funcs, 'repeat');
+async function makePlusOne(handler: TestDataHandler) {
+  return closureFromFunction(
+    handler,
+    {
+      args: [DataType.NUMBER] as const,
+      returnType: DataType.NUMBER
+    },
+    x => Number(x) + 1
+  );
+}
 
-describe(funcs.repeat, () => {
-  test('repeat works correctly and repeats unary function n times', () => {
-    expect(funcs.repeat((x: number) => x + 1, 5)(1))
-      .toEqual(6);
+async function callNumberClosure(
+  handler: TestDataHandler,
+  closure: TypedValue<DataType.CLOSURE>,
+  value: number
+) {
+  const result = await callClosure(
+    handler,
+    closure,
+    [numberValue(value)],
+    DataType.NUMBER
+  );
+  return result.value;
+}
+
+describe(repeat, () => {
+  it('applies a closure n times', async () => {
+    const handler = new TestDataHandler();
+    const plusOne = await makePlusOne(handler);
+    const repeated = await runAsyncGenerator(repeat(handler, plusOne, numberValue(5)));
+
+    await expect(callNumberClosure(handler, repeated, 1)).resolves.toEqual(6);
   });
 
-  test('returns the identity function when n = 0', () => {
-    expect(funcs.repeat((x: number) => x + 1, 0)(0)).toEqual(0);
+  it('applies a closure twice', async () => {
+    const handler = new TestDataHandler();
+    const plusOne = await makePlusOne(handler);
+    const repeated = await runAsyncGenerator(twice(handler, plusOne));
+
+    await expect(callNumberClosure(handler, repeated, 1)).resolves.toEqual(3);
   });
 
-  test('throws an error when the function doesn\'t take 1 parameter', () => {
-    expect(() => funcs.repeat((x: number, y: number) => x + y, 2))
-      .toThrow('repeat: Expected function with 1 parameter, got (x, y) => x + y.');
+  it('applies a closure thrice', async () => {
+    const handler = new TestDataHandler();
+    const plusOne = await makePlusOne(handler);
+    const repeated = await runAsyncGenerator(thrice(handler, plusOne));
 
-    expect(() => funcs.repeat(() => 2, 2))
-      .toThrow('repeat: Expected function with 1 parameter, got () => 2.');
+    await expect(callNumberClosure(handler, repeated, 1)).resolves.toEqual(4);
   });
 
-  test('throws an error when provided incorrect values', () => {
-    expect(() => funcs.repeat((x: number) => x, -1))
-      .toThrow('repeat: Expected integer ≥ 0, got -1.');
+  it('returns the identity closure when n = 0', async () => {
+    const handler = new TestDataHandler();
+    const plusOne = await makePlusOne(handler);
+    const repeated = await runAsyncGenerator(repeat(handler, plusOne, numberValue(0)));
 
-    expect(() => funcs.repeat((x: number) => x, 1.5))
-      .toThrow('repeat: Expected integer ≥ 0, got 1.5.');
+    await expect(callNumberClosure(handler, repeated, 5)).resolves.toEqual(5);
   });
 
-  test('repeated function has implementation hidden', () => {
-    const f = funcs.repeat((x: number) => x, 1);
-    expect(stringify(f)).toEqual('(x) => func(repeat_internal(func, n - 1)(x))');
+  it('throws an error when provided a negative or non-integer n', async () => {
+    const handler = new TestDataHandler();
+    const plusOne = await makePlusOne(handler);
+
+    await expect(runAsyncGenerator(repeat(handler, plusOne, numberValue(-1))))
+      .rejects.toThrow('repeat: Expected integer ≥ 0, got -1.');
+
+    await expect(runAsyncGenerator(repeat(handler, plusOne, numberValue(1.5))))
+      .rejects.toThrow('repeat: Expected integer ≥ 0, got 1.5.');
   });
-});
-
-test('twice works correctly and repeats function twice', () => {
-  expect(funcs.twice((x: number) => x + 1)(1))
-    .toEqual(3);
-  expect(funcs.repeat).not.toHaveBeenCalled();
-});
-
-test('thrice works correctly and repeats function thrice', () => {
-  expect(funcs.thrice((x: number) => x + 1)(1))
-    .toEqual(4);
-  expect(funcs.repeat).not.toHaveBeenCalled();
 });
