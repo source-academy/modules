@@ -15,11 +15,11 @@ declare const ctx: Context;
 export default ctx;
 
 // @filename: curve.ts
-import type { CurveDrawn } from '@sourceacademy/bundle-curve/types';
+import type { CurveModuleState } from '@sourceacademy/bundle-curve/types';
 // ---cut---
 import context from 'js-slang/context';
 
-const drawnCurves: CurveDrawn[] = [];
+const drawnCurves: CurveModuleState['drawnCurves'] = [];
 context.moduleContexts.curve.state = {
   drawnCurves
 };
