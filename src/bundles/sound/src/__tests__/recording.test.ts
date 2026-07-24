@@ -101,7 +101,7 @@ describe('Recording functions', () => {
       await funcs.init_record();
       vi.useFakeTimers();
 
-      let resolveStopRecording: (samples: { left: Float32Array<ArrayBuffer>; right: Float32Array<ArrayBuffer>; sampleRate: number }) => void;
+      let resolveStopRecording: (samples: { left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>, sampleRate: number }) => void;
       io.stopRecording.mockReturnValueOnce(new Promise(resolve => { resolveStopRecording = resolve; }));
 
       const stop = funcs.record(1);

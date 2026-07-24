@@ -269,19 +269,19 @@ async function readListElements(evaluator: IDataHandler, value: TypedValue<DataT
 
 /** Unwraps a Conductor PAIR/ARRAY (or throws) into the internal Sound representation. */
 async function conductorToSound(evaluator: IDataHandler, value: TypedValue<DataType>): Promise<Sound> {
-  const invalid = () => new Error('Expected a Sound (a pair of (pair of left/right waves) and duration)');
+  const invalidMessage = 'Expected a Sound (a pair of (pair of left/right waves) and duration)';
   if (!value || !isPairLike(value)) {
-    throw invalid();
+    throw new EvaluatorRuntimeError(invalidMessage);
   }
   const wavesTv = await evaluator.pair_head(value as TypedValue<DataType.PAIR>);
   const durationTv = await evaluator.pair_tail(value as TypedValue<DataType.PAIR>);
   if (!isPairLike(wavesTv) || durationTv.type !== DataType.NUMBER) {
-    throw invalid();
+    throw new EvaluatorRuntimeError(invalidMessage);
   }
   const leftTv = await evaluator.pair_head(wavesTv as TypedValue<DataType.PAIR>);
   const rightTv = await evaluator.pair_tail(wavesTv as TypedValue<DataType.PAIR>);
   if (leftTv.type !== DataType.CLOSURE || rightTv.type !== DataType.CLOSURE) {
-    throw invalid();
+    throw new EvaluatorRuntimeError(invalidMessage);
   }
   const leftWave = closureToWave(evaluator, leftTv);
   // leftTv/rightTv are fresh TypedValue wrappers either way, but .value is just a numeric closure
@@ -388,6 +388,10 @@ export default class SoundModulePlugin extends BaseModulePlugin {
   ) {
     super(conduit, [soundChannel], evaluator);
     if (!soundChannel) {
+      // An internal wiring precondition (Conductor's host failed to provide the channel this
+      // plugin declared via channelAttach) - never reachable from student code, so a plain Error
+      // rather than a student-facing RuntimeSourceError is correct here.
+      // eslint-disable-next-line @sourceacademy/throw-runtime-error
       throw new Error('Sound channel is required but was not provided.');
     }
     this.__tabLoader = tabLoader;
@@ -642,6 +646,9 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     const envelopeClosures: TypedValue<DataType.CLOSURE>[] = [];
     for (const envelope of envelopeElements) {
       if (envelope.type !== DataType.CLOSURE) {
+        // EvaluatorParameterTypeError is the correct, student-facing error here - the
+        // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
+        // eslint-disable-next-line @sourceacademy/throw-runtime-error
         throw new EvaluatorParameterTypeError('stacking_adsr', 'envelopes', 'a list of functions', envelope.value);
       }
       envelopeClosures.push(envelope);
