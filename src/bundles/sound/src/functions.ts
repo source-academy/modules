@@ -111,6 +111,9 @@ function linear_decay(decay_period: number): (t: number) => number {
 
 function validateDuration(func_name: string, duration: unknown): asserts duration is number {
   if (typeof duration !== 'number') {
+    // EvaluatorParameterTypeError is the correct, student-facing error here - the
+    // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
+    // eslint-disable-next-line @sourceacademy/throw-runtime-error
     throw new EvaluatorParameterTypeError(func_name, 'duration', 'number', duration);
   }
   if (!Number.isFinite(duration) || duration < 0) {
@@ -120,6 +123,9 @@ function validateDuration(func_name: string, duration: unknown): asserts duratio
 
 function validateWave(func_name: string, wave: unknown, lr?: 'left' | 'right'): asserts wave is Wave {
   if (typeof wave !== 'function') {
+    // EvaluatorParameterTypeError is the correct, student-facing error here - the
+    // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
+    // eslint-disable-next-line @sourceacademy/throw-runtime-error
     throw new EvaluatorParameterTypeError(func_name, lr === undefined ? 'wave' : `${lr} wave`, 'a wave', wave);
   }
 }
@@ -144,6 +150,9 @@ function validateAdsrParams(
   ];
   for (const [name, ratio] of ratios) {
     if (typeof ratio !== 'number' || !Number.isFinite(ratio)) {
+      // EvaluatorParameterTypeError is the correct, student-facing error here - the
+      // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
+      // eslint-disable-next-line @sourceacademy/throw-runtime-error
       throw new EvaluatorParameterTypeError(func_name, name, 'number', ratio);
     }
     if (ratio < 0 || ratio > 1) {
@@ -151,6 +160,9 @@ function validateAdsrParams(
     }
   }
   if (typeof sustain_level !== 'number' || !Number.isFinite(sustain_level)) {
+    // EvaluatorParameterTypeError is the correct, student-facing error here - the
+    // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
+    // eslint-disable-next-line @sourceacademy/throw-runtime-error
     throw new EvaluatorParameterTypeError(func_name, 'sustain_level', 'number', sustain_level);
   }
   if (sustain_level < 0 || sustain_level > 1) {
@@ -471,6 +483,9 @@ export async function* play_waves(left_wave: Wave, right_wave: Wave, duration: n
  */
 export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined> {
   if (!is_sound(sound)) {
+    // EvaluatorParameterTypeError is the correct, student-facing error here - the
+    // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
+    // eslint-disable-next-line @sourceacademy/throw-runtime-error
     throw new EvaluatorParameterTypeError(play.name, 'sound', 'a Sound', sound);
   }
 
