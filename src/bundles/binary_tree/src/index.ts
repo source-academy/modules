@@ -49,16 +49,16 @@ export default class BinaryTreeModulePlugin extends BaseModulePlugin {
     return await make_tree_func(this.evaluator, value, left, right);
   }
 
-  // No declared arg type: is_tree is a predicate that must accept a value of any
-  // Conductor DataType (not just lists/pairs) and answer false rather than throw.
-  @moduleMethod([], DataType.BOOLEAN)
+  // DataType.ANY, not a fixed type: is_tree is a predicate that must accept a value of
+  // any Conductor DataType (not just lists/pairs) and answer false rather than throw.
+  @moduleMethod([DataType.ANY], DataType.BOOLEAN)
   async* is_tree(value?: TypedValue<DataType>): AsyncGenerator<void, TypedValue<DataType.BOOLEAN>, unknown> {
     if (!value) throw new EvaluatorRuntimeError('is_tree expects 1 argument, received 0');
     return { type: DataType.BOOLEAN, value: await is_tree_func(this.evaluator, value) };
   }
 
   // Same reasoning as is_tree: must accept a value of any Conductor DataType.
-  @moduleMethod([], DataType.BOOLEAN)
+  @moduleMethod([DataType.ANY], DataType.BOOLEAN)
   async* is_empty_tree(value?: TypedValue<DataType>): AsyncGenerator<void, TypedValue<DataType.BOOLEAN>, unknown> {
     if (!value) throw new EvaluatorRuntimeError('is_empty_tree expects 1 argument, received 0');
     return { type: DataType.BOOLEAN, value: is_empty_tree_func(value) };

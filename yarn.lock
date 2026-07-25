@@ -3963,7 +3963,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-binary_tree@workspace:src/bundles/binary_tree"
   dependencies:
-    "@sourceacademy/conductor": "npm:^0.7.0"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-testplugin": "workspace:^"
     typescript: "catalog:"
@@ -4272,10 +4272,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sourceacademy/conductor@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "@sourceacademy/conductor@npm:0.7.0"
-  checksum: 10c0/30088c7c6682e76c5421ba80c0890d680650c964c02edb5083ec730ed2a722221702fae1dfd32e9d7e9c520216179de4bbabbbb8971025a98798620da2d6d74c
+"@sourceacademy/conductor@npm:^0.7.2":
+  version: 0.7.2
+  resolution: "@sourceacademy/conductor@npm:0.7.2"
+  checksum: 10c0/84cff73c8c67a5884c9a06774f514b2dc4275e14ee282c7eee4fd32618857f63cdc2a736c4e5d2b6501b7b39d6c9e2f7192af1dbbc8ec1542721c08252c1f022
   languageName: node
   linkType: hard
 

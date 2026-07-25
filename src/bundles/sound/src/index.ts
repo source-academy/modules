@@ -460,9 +460,9 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return { type: DataType.NUMBER, value: get_duration_func(internal) };
   }
 
-  // No declared arg type: is_sound is a predicate that must accept a value of any Conductor
-  // DataType (not just PAIR/ARRAY) and answer false rather than throw.
-  @moduleMethod([], DataType.BOOLEAN)
+  // DataType.ANY, not a fixed type: is_sound is a predicate that must accept a value of any
+  // Conductor DataType (not just PAIR/ARRAY) and answer false rather than throw.
+  @moduleMethod([DataType.ANY], DataType.BOOLEAN)
   async* is_sound(value?: TypedValue<DataType>): AsyncGenerator<void, TypedValue<DataType.BOOLEAN>, undefined> {
     if (!value || !isPairLike(value)) {
       return { type: DataType.BOOLEAN, value: false };
