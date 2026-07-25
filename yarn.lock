@@ -4272,10 +4272,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sourceacademy/conductor@npm:^0.7.2":
-  version: 0.7.2
-  resolution: "@sourceacademy/conductor@npm:0.7.2"
-  checksum: 10c0/84cff73c8c67a5884c9a06774f514b2dc4275e14ee282c7eee4fd32618857f63cdc2a736c4e5d2b6501b7b39d6c9e2f7192af1dbbc8ec1542721c08252c1f022
+"@sourceacademy/conductor@npm:^0.8.0":
+  version: 0.8.0
+  resolution: "@sourceacademy/conductor@npm:0.8.0"
+  checksum: 10c0/8b970b1f5fffbcb5242f5c358fb25af8d916cb5af9ca7fa9e0128928fde1783ed65465241858a82002bd8b5f21f5f5b80d3ea57bbd05faed604e6dd1c36600e9
   languageName: node
   linkType: hard
 
