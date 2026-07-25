@@ -1,47 +1,15 @@
-export type ErrorLogger = (
-  error: string[] | string,
-  isSlangError?: boolean
-) => void;
-export type TabsPacket = {
-  onClickStill: () => void;
-};
-export enum InputFeed {
-  Camera,
-  ImageURL,
-  VideoURL,
-  Local,
-}
-
-export type BundlePacket = {
-  HEIGHT: number;
-  WIDTH: number;
-  FPS: number;
-  VOLUME: number;
-  inputFeed: InputFeed;
-};
-export type Queue = () => void;
-
-export interface PixNFlixState {
-  init: (
-    image: HTMLImageElement,
-    video: HTMLVideoElement,
-    canvas: HTMLCanvasElement,
-    errorLogger: ErrorLogger,
-    tabsPackage: TabsPacket
-  ) => BundlePacket;
-  deinit: () => void;
-  startVideo: () => void;
-  stopVideo: () => void;
-  updateFPS: (fps: number) => void;
-  updateVolume: (volume: number) => void;
-  updateDimensions: (width: number, height: number) => void;
-}
-
-export type Pixel = [r: number, g: number, b: number, a: number];
-export type Pixels = Pixel[][];
-
 /**
- * A `void` returning function that takes the pixel data in `src`,
- * transforms it, and then writes the output to `dest`.
+ * The module's own record for a single opaque image handle - registered as an OPAQUE's stored
+ * value via `evaluator.opaque_make(meta)` (so the general/async path, e.g. `get_pixel_value`'s
+ * fallback body, can `await evaluator.opaque_get(handle)` to get this same object back), and
+ * mirrored into `PixNFlixModulePlugin`'s own synchronously-readable buffer map, keyed by the
+ * handle's identifier - `evaluator.opaque_get` is `async` (see `GenericDataHandler`), so it can't
+ * be used from `get_pixel_value`/`set_pixel_value`'s `.sync` twin, which is exactly the fast path
+ * this module exists to provide.
  */
-export type Filter = (src: Pixels, dest: Pixels) => void;
+export interface ImageBuffer {
+  /** RGBA, `width * height * 4` bytes - the same layout `ImageData.data` uses. */
+  view: Uint8ClampedArray;
+  width: number;
+  height: number;
+}

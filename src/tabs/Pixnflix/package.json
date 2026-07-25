@@ -5,7 +5,8 @@
   "dependencies": {
     "@blueprintjs/core": "^6.0.0",
     "@sourceacademy/bundle-pix_n_flix": "workspace:^",
-    "@sourceacademy/modules-lib": "workspace:^",
+    "@sourceacademy/common-tabs": "^0.0.1",
+    "@sourceacademy/conductor": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
   },
