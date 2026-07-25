@@ -1,13 +1,12 @@
 // Need to disable because stringify produces tab characters?
-/* eslint-disable @stylistic/no-tabs */
-import { stringify } from 'js-slang/dist/utils/stringify';
+
+import { DataType, type IDataHandler, type IFunctionSignature, type TypedValue } from '@sourceacademy/conductor/types';
+import { TestDataHandler, callClosure, runAsyncGenerator } from '@sourceacademy/modules-testplugin';
 import { describe, expect, it, test as baseTest, vi } from 'vitest';
 import { Point, type Color, type Curve } from '../curves_webgl';
 import * as drawers from '../drawers';
 import * as funcs from '../functions';
 import type { CurveTransformer, RenderFunctionCreator } from '../types';
-import { DataType, type IDataHandler, type IFunctionSignature, type TypedValue } from '@sourceacademy/conductor/types';
-import { TestDataHandler, callClosure, runAsyncGenerator } from '@sourceacademy/modules-testplugin';
 /**
  * Evaluates the curve at 200 points, then
  * returns those points as an array of tuples of numbers
@@ -70,7 +69,7 @@ describe('Ensure that invalid curves and animations error gracefully', () => {
   test('CurveAnimation that doesn\'t return a curve should throw error', async ({ handler }) => {
     const anim = await handler.closure_make(
       { args: [DataType.NUMBER] as const, returnType: DataType.CLOSURE },
-      async function* (t0) {
+      async function* (_t0) {
         return await handler.closure_make(
           { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
           async function* (_t1) {
@@ -96,7 +95,8 @@ describe('Ensure that invalid curves and animations error gracefully', () => {
             );
           }
         );
-      });
+      }
+    );
 
     await expect(runAsyncGenerator(
       drawers.animate_curve(handler, 1, 60, drawers.draw_3D_connected(handler, 200), anim)
@@ -116,7 +116,8 @@ describe('Ensure that invalid curves and animations error gracefully', () => {
             );
           }
         );
-      });
+      }
+    );
 
     await expect(runAsyncGenerator(
       drawers.animate_3D_curve(handler, 1, 60, drawers.draw_connected(handler, 200), anim)
@@ -184,9 +185,9 @@ describe('Render function creators', () => {
     test('returned render functions have nice string representations', ({ handler }) => {
       const renderFunc = func(handler, 250);
       if (renderFunc.is3D) {
-        expect(stringify(renderFunc)).toEqual('<3DRenderFunction(250)>');
+        expect(renderFunc.toReplString()).toEqual('<3DRenderFunction(250)>');
       } else {
-        expect(stringify(renderFunc)).toEqual('<RenderFunction(250)>');
+        expect(renderFunc.toReplString()).toEqual('<RenderFunction(250)>');
       }
     });
   });

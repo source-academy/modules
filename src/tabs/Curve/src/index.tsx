@@ -150,7 +150,6 @@ export default class CurveTabPlugin implements IPlugin {
 
     this.__tabService.registerTab(tab);
     this.__curveChannel.subscribe(this.__handleMessage);
-    this.__curveChannel.send({ type: 'request' });
   }
 
   getMessages(): readonly CurveDisplayMessage[] {
@@ -164,7 +163,6 @@ export default class CurveTabPlugin implements IPlugin {
 
   destroy(): void {
     this.__curveChannel.unsubscribe(this.__handleMessage);
-    this.__tabService.unregisterTab(CURVE_TAB_ID);
   }
 
   private __emit(): void {
@@ -172,4 +170,3 @@ export default class CurveTabPlugin implements IPlugin {
   }
 }
 checkIsPluginClass(CurveTabPlugin);
-export { CURVE_TAB_ID };

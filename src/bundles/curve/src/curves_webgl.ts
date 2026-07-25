@@ -1,7 +1,7 @@
-import { InternalRuntimeError } from '@sourceacademy/modules-lib/errors';
+import { ConductorInternalError } from '@sourceacademy/conductor/common';
+import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 import type { ReplResult } from '@sourceacademy/modules-lib/types';
 import { mat4, vec3 } from 'gl-matrix';
-import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 
 import type { SerializedCurveDrawn } from './protocol';
 import type { CurveSpace, DrawMode, ScaleMode } from './types';
@@ -52,7 +52,7 @@ function loadShader(
 ): WebGLShader {
   const shader = gl.createShader(type);
   if (!shader) {
-    throw new InternalRuntimeError('WebGLShader not available.');
+    throw new ConductorInternalError('WebGLShader not available.');
   }
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
@@ -76,7 +76,7 @@ function initShaderProgram(
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
   const shaderProgram = gl.createProgram();
   if (!shaderProgram) {
-    throw new InternalRuntimeError('Unable to initialize the shader program.');
+    throw new ConductorInternalError('Unable to initialize the shader program.');
   }
   gl.attachShader(shaderProgram, vertexShader);
   gl.attachShader(shaderProgram, fragmentShader);
@@ -156,7 +156,7 @@ export class CurveDrawn implements ReplResult {
   public init = (canvas: HTMLCanvasElement) => {
     this.renderingContext = canvas.getContext('webgl');
     if (!this.renderingContext) {
-      throw new InternalRuntimeError('Rendering context cannot be null.');
+      throw new ConductorInternalError('Rendering context cannot be null.');
     }
     const cubeBuffer = this.renderingContext.createBuffer();
     this.renderingContext.bindBuffer(
@@ -260,12 +260,12 @@ export class CurveDrawn implements ReplResult {
     gl.uniformMatrix4fv(
       this.programs!.uniformLocations.projectionMatrix,
       false,
-      projMat
+      new Float32Array(projMat)
     );
     gl.uniformMatrix4fv(
       this.programs!.uniformLocations.modelViewMatrix,
       false,
-      transMat
+      new Float32Array(transMat)
     );
     gl.enableVertexAttribArray(this.programs!.attribLocations.vertexPosition);
     gl.enableVertexAttribArray(this.programs!.attribLocations.vertexColor);

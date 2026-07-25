@@ -1,27 +1,29 @@
 import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
-import { b_of, g_of, r_of, x_of, y_of, z_of } from '@sourceacademy/bundle-curve/functions';
-import { callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
-import Plotly, { type Data, type Layout } from 'plotly.js-dist';
+import type { Data, Layout } from 'plotly.js-dist';
 import { CurvePlot } from './plotly';
+import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 
-export function generatePlot(
+export async function* generatePlot(
+  evaluator: IDataHandler,
   type: string,
   numPoints: number,
   config: Data,
   layout: Partial<Layout>,
   is_colored: boolean,
   func: Curve
-): CurvePlot {
+): AsyncGenerator<void, CurvePlot, undefined> {
   const x_s: number[] = [];
   const y_s: number[] = [];
   const z_s: number[] = [];
   const color_s: string[] = [];
   for (let i = 0; i <= numPoints; i += 1) {
-    const point = callWithoutMetadata(func, i / numPoints);
-    x_s.push(x_of(point));
-    y_s.push(y_of(point));
-    z_s.push(z_of(point));
-    color_s.push(`rgb(${r_of(point)},${g_of(point)},${b_of(point)})`);
+    const pointId = yield* evaluator.closure_call(func, [{ type: DataType.NUMBER, value: i / numPoints }], DataType.OPAQUE);
+    const point = await evaluator.opaque_get(pointId as TypedValue<DataType.OPAQUE>);
+    // TODO: throw if not point
+    x_s.push(point.x);
+    y_s.push(point.y);
+    z_s.push(point.z);
+    color_s.push(`rgb(${point.r},${point.g},${point.b})`);
   }
 
   const plotlyData: Data = {
@@ -37,7 +39,6 @@ export function generatePlot(
     }
   };
   return new CurvePlot(
-    draw_new_curve,
     {
       ...plotlyData,
       ...config,
@@ -45,8 +46,4 @@ export function generatePlot(
     } as Data,
     layout
   );
-}
-
-function draw_new_curve(divId: string, data: Data, layout: Partial<Layout>) {
-  Plotly.react(divId, [data], layout);
 }

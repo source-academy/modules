@@ -1,5 +1,5 @@
+import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
-import context from 'js-slang/context';
 
 import { generateCurve, type Curve, type CurveDrawn } from './curves_webgl';
 import {
@@ -11,12 +11,6 @@ import {
   type RenderFunctionCreator,
   type ScaleMode
 } from './types';
-import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
-
-const drawnCurves: (AnimatedCurve | CurveDrawn)[] = [];
-context.moduleContexts.curve.state = {
-  drawnCurves
-};
 
 function getRenderFunctionCreator(
   scaleMode: ScaleMode,
@@ -30,7 +24,7 @@ function getRenderFunctionCreator(
     numPoints: number
   ) {
     if (numPoints <= 0 || numPoints > 65535 || !Number.isInteger(numPoints)) {
-      throw new GeneralRuntimeError(
+      throw new EvaluatorRuntimeError(
         `${name}: The number of points must be a positive integer less than or equal to 65535. ` +
         `Got: ${numPoints}`
       );
@@ -40,7 +34,7 @@ function getRenderFunctionCreator(
       try {
         await evaluator.closure_arity_assert(curve, 1);
       } catch {
-        throw new GeneralRuntimeError(
+        throw new EvaluatorRuntimeError(
           'The provided curve is not a valid Curve function. ' +
           'A Curve function must take exactly one parameter (a number t between 0 and 1) ' +
           'and return a Point or 3D Point depending on whether it is a 2D or 3D curve.'
@@ -196,7 +190,7 @@ class CurveAnimators {
     func: CurveAnimation
   ): AsyncGenerator<void, AnimatedCurve, undefined> {
     if (drawer.is3D) {
-      throw new GeneralRuntimeError(`${animate_curve.name} cannot be used with 3D draw function!`);
+      throw new EvaluatorRuntimeError(`${animate_curve.name} cannot be used with 3D draw function!`);
     }
 
     const frameCount = Math.floor(fps * duration);
@@ -207,7 +201,6 @@ class CurveAnimators {
     }
 
     const anim = new AnimatedCurve(duration, fps, frames, false);
-    drawnCurves.push(anim);
     return anim;
   }
 
@@ -219,7 +212,7 @@ class CurveAnimators {
     func: CurveAnimation
   ): AsyncGenerator<void, AnimatedCurve, undefined> {
     if (!drawer.is3D) {
-      throw new GeneralRuntimeError(`${animate_3D_curve.name} cannot be used with 2D draw function!`);
+      throw new EvaluatorRuntimeError(`${animate_3D_curve.name} cannot be used with 2D draw function!`);
     }
 
     const frameCount = Math.floor(fps * duration);
@@ -230,7 +223,6 @@ class CurveAnimators {
     }
 
     const anim = new AnimatedCurve(duration, fps, frames, true);
-    drawnCurves.push(anim);
     return anim;
   }
 }

@@ -1,8 +1,7 @@
 import type { DataType, IDataHandler, TypedValue } from '@sourceacademy/conductor/types';
 import { glAnimation, type AnimFrame, type ReplResult } from '@sourceacademy/modules-lib/types';
-import { isFunctionOfLength } from '@sourceacademy/modules-lib/utilities';
-import { CurveDrawn, type Curve, type Point } from './curves_webgl';
-import type { CurveAnimationMessage, SerializedCurveDrawn } from './protocol';
+import { CurveDrawn, type Curve } from './curves_webgl';
+import type { CurveAnimationMessage } from './protocol';
 
 export type CurveModuleState = {
   drawnCurves: (AnimatedCurve | CurveDrawn)[];

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 /**
  * Module for drawing *curves*, i.e. collections of *points*, on a canvas in a tools tab
  *
@@ -44,7 +45,7 @@ import { CURVE_CHANNEL_ID, type CurveChannelMessage, type CurveDisplayMessage } 
 
 type TabLoader = {
   tabs: string[];
-  loadTab: (tab: string) => void;
+  loadTab: (tab: string) => Promise<void>;
 };
 
 export default class CurveModulePlugin extends BaseModulePlugin {
@@ -118,22 +119,21 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * Loads the host-side tab
    * @returns Whether the tab was already loaded
    */
-  private __loadCurveTab(): boolean {
+  private async __loadCurveTab(): Promise<boolean> {
     if (this.__tabLoaded || this.__tabLoader === undefined) return true;
 
     const tabName = this.__tabLoader.tabs[0];
     if (tabName === undefined) return true;
 
-    this.__tabLoader.loadTab(tabName);
+    await this.__tabLoader.loadTab(tabName);
     this.__tabLoaded = true;
     return false;
   }
 
   private async __display(message: CurveDisplayMessage): Promise<void> {
     this.__displayed.push(message);
-    if (this.__loadCurveTab()) {
-      this.__curveChannel.send(message);
-    }
+    await this.__loadCurveTab();
+    this.__curveChannel.send(message);
   }
 
   /**
@@ -895,3 +895,47 @@ export default class CurveModulePlugin extends BaseModulePlugin {
   }
 
 }
+
+// TEMPORARY
+function attachModuleMethod(methodName: string, args: DataType[], returnType: DataType): void {
+  (CurveModulePlugin.prototype[methodName as keyof CurveModulePlugin] as { signature?: { args: DataType[], returnType: DataType } }).signature = { args, returnType };
+}
+
+attachModuleMethod('make_point', [DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod('make_3D_point', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod('make_color_point', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod('make_3D_color_point', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod('connect_ends', [DataType.CLOSURE, DataType.CLOSURE], DataType.CLOSURE);
+attachModuleMethod('connect_rigidly', [DataType.CLOSURE, DataType.CLOSURE], DataType.CLOSURE);
+attachModuleMethod('translate', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('rainbow', [DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('invert', [DataType.CLOSURE], DataType.CLOSURE);
+attachModuleMethod('put_in_standard_position', [DataType.CLOSURE], DataType.CLOSURE);
+attachModuleMethod('rotate_around_origin_3D', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('rotate_around_origin', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('scale', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('scale_proportional', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('x_of', [DataType.OPAQUE], DataType.NUMBER);
+attachModuleMethod('y_of', [DataType.OPAQUE], DataType.NUMBER);
+attachModuleMethod('z_of', [DataType.OPAQUE], DataType.NUMBER);
+attachModuleMethod('r_of', [DataType.OPAQUE], DataType.NUMBER);
+attachModuleMethod('g_of', [DataType.OPAQUE], DataType.NUMBER);
+attachModuleMethod('b_of', [DataType.OPAQUE], DataType.NUMBER);
+attachModuleMethod('unit_circle', [DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod('unit_line', [DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod('unit_line_at', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('arc', [DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod('draw_connected', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('draw_connected_full_view', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('draw_connected_full_view_proportional', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('draw_points', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('draw_points_full_view', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('draw_points_full_view_proportional', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('draw_3D_connected', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('draw_3D_connected_full_view', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('draw_3D_connected_full_view_proportional', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('draw_3D_points', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('draw_3D_points_full_view', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('draw_3D_points_full_view_proportional', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod('animate_curve', [DataType.NUMBER, DataType.NUMBER, DataType.OPAQUE, DataType.CLOSURE], DataType.OPAQUE);
+attachModuleMethod('animate_3D_curve', [DataType.NUMBER, DataType.NUMBER, DataType.OPAQUE, DataType.CLOSURE], DataType.OPAQUE);

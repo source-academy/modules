@@ -1,17 +1,18 @@
+import { EvaluatorParameterTypeError, assertNumberWithinRange } from '@sourceacademy/conductor/common';
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
+import { hueToRgb } from '@sourceacademy/modules-lib/utilities';
 import { clamp } from 'es-toolkit';
 import { Point, type Curve } from './curves_webgl';
 import type { CurveTransformer } from './types';
-import { assertNumberWithinRange, hueToRgb, wrapFunction } from '@sourceacademy/modules-lib/utilities';
-import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
 
-function throwIfNotPoint(obj: unknown, func_name: string): asserts obj is Point {
+function throwIfNotPoint(obj: unknown, func_name: string, param_name: string = 'point'): asserts obj is Point {
   if (!(obj instanceof Point)) {
-    throw new InvalidParameterTypeError('Point', obj, func_name);
+    // TODO: Use a more specific expected type
+    throw new EvaluatorParameterTypeError(func_name, param_name, 'Point', typeof obj);
   }
 }
 
-async function defineCurveTransformer(evaluator: IDataHandler, f: (arg: Point, t: number) => AsyncGenerator<void, Point, unknown>, name?: string): Promise<CurveTransformer> {
+async function defineCurveTransformer(evaluator: IDataHandler, f: (arg: Point, t: number) => AsyncGenerator<void, Point, unknown>): Promise<CurveTransformer> {
   return await evaluator.closure_make(
     { args: [DataType.CLOSURE] as const, returnType: DataType.CLOSURE },
     async function* (curve) {
@@ -29,17 +30,10 @@ async function defineCurveTransformer(evaluator: IDataHandler, f: (arg: Point, t
 
 class CurveFunctions {
   static make_point(x: number, y: number): Point {
-    assertNumberWithinRange(x, { func_name: CurveFunctions.make_point.name, param_name: 'x', integer: false });
-    assertNumberWithinRange(y, { func_name: CurveFunctions.make_point.name, param_name: 'y', integer: false });
-
     return new Point(x, y, 0, [0, 0, 0, 1]);
   }
 
   static make_3D_point(x: number, y: number, z: number): Point {
-    assertNumberWithinRange(x, { func_name: CurveFunctions.make_3D_point.name, param_name: 'x', integer: false });
-    assertNumberWithinRange(y, { func_name: CurveFunctions.make_3D_point.name, param_name: 'y', integer: false });
-    assertNumberWithinRange(z, { func_name: CurveFunctions.make_3D_point.name, param_name: 'z', integer: false });
-
     return new Point(x, y, z, [0, 0, 0, 1]);
   }
 
@@ -178,11 +172,9 @@ class CurveFunctions {
     const cthx = Math.cos(a);
     const sthx = Math.sin(a);
 
-    assertNumberWithinRange(b, { func_name: CurveFunctions.rotate_around_origin_3D.name, integer: false, param_name: 'b' });
     const cthy = Math.cos(b);
     const sthy = Math.sin(b);
 
-    assertNumberWithinRange(c, { func_name: CurveFunctions.rotate_around_origin_3D.name, integer: false, param_name: 'c' });
     const cthz = Math.cos(c);
     const sthz = Math.sin(c);
     const mat = [
@@ -199,7 +191,6 @@ class CurveFunctions {
       [-sthy, cthy * sthx, cthy * cthx]
     ];
 
-
     return defineCurveTransformer(evaluator, async function* (ct) {
       throwIfNotPoint(ct, rotate_around_origin_3D.name);
       const coord = [ct.x, ct.y, ct.z];
@@ -213,8 +204,7 @@ class CurveFunctions {
       }
       const newPoint = new Point(xf, yf, zf, [ct.color[0], ct.color[1], ct.color[2], 1]);
       return newPoint;
-    }
-    );
+    });
   }
 
   static async* rotate_around_origin(evaluator: IDataHandler, a: number): AsyncGenerator<void, CurveTransformer, undefined> {

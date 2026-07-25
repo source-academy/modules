@@ -1,17 +1,14 @@
-import { DrawnPlot } from '@sourceacademy/bundle-plotly/plotly';
+import { IconNames } from '@blueprintjs/icons';
+import { PLOTLY_CHANNEL_ID, PLOTLY_TAB_ID, PLOTLY_WEB_ID, type PlotlyChannelMessage, type PlotlyRenderMessage } from '@sourceacademy/bundle-plotly/protocol';
+import type { ITabService, Tab } from '@sourceacademy/common-tabs';
+import { checkIsPluginClass, type IChannel, type IConduit, type IPlugin } from '@sourceacademy/conductor/conduit';
 import Modal from '@sourceacademy/modules-lib/tabs/ModalDiv';
-import { defineTab, getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
-import type { ModuleTab } from '@sourceacademy/modules-lib/types/index';
-import { useState } from 'react';
+import MultiItemDisplay from '@sourceacademy/modules-lib/tabs/MultiItemDisplay';
+import { createElement, useState, useSyncExternalStore } from 'react';
+import Plot from 'react-plotly.js';
 
-interface PlotlyModuleState {
-  drawnPlots: DrawnPlot[];
-}
-
-export const Plotly: ModuleTab = ({ debuggerCtx: context }) => {
-  const [selectedPlot, setSelectedPlot] = useState<DrawnPlot | null>(null);
-  const { drawnPlots } = getModuleState<PlotlyModuleState>(context, 'plotly')!;
-
+export const PlotlyTab = ({ messages }: { messages: readonly PlotlyRenderMessage[] }) => {
+  const [selectedPlot, setSelectedPlot] = useState<PlotlyRenderMessage | null>(null);
   return <div>
     <Modal
       open={selectedPlot !== null}
@@ -19,24 +16,18 @@ export const Plotly: ModuleTab = ({ debuggerCtx: context }) => {
       width='80vw'
       handleClose={() => setSelectedPlot(null)}
     >
-      <div
-        id="modalDiv"
-        ref={() => {
-          if (selectedPlot) {
-            selectedPlot.draw('modalDiv');
-          }
-        }}
-        style={{ height: '80vh' }}
-      />
+      <>{selectedPlot && <Plot data={[selectedPlot.data]} layout={selectedPlot.layout} />}</>
+
     </Modal>
-    {
-      drawnPlots.map((drawnPlot, id) => {
-        const divId = `plotDiv${id}`;
+    <MultiItemDisplay
+      elements={messages.map((drawnPlot, id) => {
+        const key = `plot-${id}`;
         return (
           <div style={{
             height: '80vh',
-            marginBottom: '5vh'
-          }} key={divId}>
+            marginBottom: '5vh',
+            width: '100%',
+          }} key={key}>
             <div onClick={() => setSelectedPlot(drawnPlot)}
               style={{
                 cursor: 'pointer',
@@ -47,27 +38,78 @@ export const Plotly: ModuleTab = ({ debuggerCtx: context }) => {
                 display: 'inline-block'
               }}
             >Popout plot</div>
-            <div
-              id={divId}
-              style={{ height: '80vh' }}
-              ref={() => {
-                drawnPlot.draw(divId);
-              }}
-            />
+            <>{drawnPlot && <Plot data={[drawnPlot.data]} layout={drawnPlot.layout} />}</>
           </div>
         );
-      })
-    }
+      })}
+    />
 
   </div>;
 };
 
-export default defineTab({
-  toSpawn(context) {
-    const state = getModuleState<PlotlyModuleState>(context, 'plotly');
-    return !!state && state.drawnPlots.length > 0;
-  },
-  body: debuggerContext => <Plotly debuggerCtx={debuggerContext} />,
-  label: 'Plotly',
-  iconName: 'scatter-plot'
-});
+// eslint-disable-next-line @sourceacademy/tab-type
+export default class PlotlyTabPlugin implements IPlugin {
+  readonly id = PLOTLY_WEB_ID;
+  static readonly channelAttach = [PLOTLY_CHANNEL_ID];
+
+  private readonly __plotlyChannel: IChannel<PlotlyChannelMessage>;
+  private readonly __tabService: ITabService;
+  private readonly __listeners = new Set<() => void>();
+  private __messages: readonly PlotlyRenderMessage[] = [];
+
+  private readonly __handleMessage = (message: PlotlyChannelMessage) => {
+    if (message.type === 'request') return;
+    this.__messages = [...this.__messages, message];
+    this.__emit();
+    this.__tabService.showTab(PLOTLY_TAB_ID);
+  };
+
+  constructor(
+    _conduit: IConduit,
+    [plotlyChannel]: IChannel<any>[],
+    tabService: ITabService
+  ) {
+    if (!plotlyChannel) {
+      throw new Error('Plotly channel is required but was not provided.');
+    }
+
+    this.__plotlyChannel = plotlyChannel as IChannel<PlotlyChannelMessage>;
+    this.__tabService = tabService;
+
+    const subscribe = (listener: () => void) => this.subscribe(listener);
+    const getMessages = () => this.getMessages();
+    function PlotlyPluginTab() {
+      const messages = useSyncExternalStore(subscribe, getMessages);
+      return createElement(PlotlyTab, { messages });
+    }
+
+    const tab = {
+      id: PLOTLY_TAB_ID,
+      iconName: IconNames.SCATTER_PLOT,
+      body: createElement(PlotlyPluginTab),
+      label: 'Plotly Tab',
+      disabled: false
+    } satisfies Tab;
+    this.__tabService.registerTab(tab);
+    this.__plotlyChannel.subscribe(this.__handleMessage);
+  }
+
+  getMessages(): readonly PlotlyRenderMessage[] {
+    return this.__messages;
+  }
+
+  subscribe(listener: () => void): () => void {
+    this.__listeners.add(listener);
+    return () => this.__listeners.delete(listener);
+  }
+
+  destroy(): void {
+    this.__plotlyChannel.unsubscribe(this.__handleMessage);
+  }
+
+  private __emit(): void {
+    this.__listeners.forEach(listener => listener());
+  }
+}
+checkIsPluginClass(PlotlyTabPlugin);
+export { PLOTLY_TAB_ID };

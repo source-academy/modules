@@ -1,5 +1,4 @@
 import { Icon, Slider, Tooltip } from '@blueprintjs/core';
-import { Reset } from '@blueprintjs/icons';
 import AnimationError from '@sourceacademy/modules-lib/tabs/AnimationError';
 import AutoLoopSwitch from '@sourceacademy/modules-lib/tabs/AutoLoopSwitch';
 import ButtonComponent from '@sourceacademy/modules-lib/tabs/ButtonComponent';
