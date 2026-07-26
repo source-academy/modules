@@ -58,11 +58,17 @@ interface BundleGlobalVars {
    * the mic picking up whatever's playing through the speakers.
    */
   activePlayCount: number;
+  /**
+   * True from the moment record()/record_for() accepts a request until that request either fails
+   * before starting or stopRecording() has settled.
+   */
+  recordingInProgress: boolean;
 }
 
 export const globalVars: BundleGlobalVars = {
   micPermissionGranted: null,
-  activePlayCount: 0
+  activePlayCount: 0,
+  recordingInProgress: false
 };
 
 /**
@@ -354,6 +360,21 @@ function assertMicPermission(func_name: string): void {
   }
 }
 
+function reserveRecording(func_name: string): void {
+  if (globalVars.activePlayCount > 0) {
+    throw new EvaluatorRuntimeError(`${func_name}: Cannot record while another sound is playing!`);
+  }
+  if (globalVars.recordingInProgress) {
+    throw new EvaluatorRuntimeError(`${func_name}: Cannot record while another recording is in progress!`);
+  }
+  assertMicPermission(func_name);
+  globalVars.recordingInProgress = true;
+}
+
+function releaseRecording(): void {
+  globalVars.recordingInProgress = false;
+}
+
 /**
  * Records a sound until the returned stop function is called. Takes a buffer duration (in
  * seconds) as argument, and returns a nullary stop function. Calling the stop function returns a
@@ -375,10 +396,7 @@ function assertMicPermission(func_name: string): void {
  */
 export function record(buffer: number): () => () => Promise<Sound> {
   validateDuration('record', buffer);
-  if (globalVars.activePlayCount > 0) {
-    throw new EvaluatorRuntimeError(`${record.name}: Cannot record while another sound is playing!`);
-  }
-  assertMicPermission('record');
+  reserveRecording(record.name);
 
   const started = (async () => {
     await delay(pre_recording_signal_pause_ms + buffer * 1000);
@@ -386,13 +404,22 @@ export function record(buffer: number): () => () => Promise<Sound> {
     await delay(recording_signal_ms);
     await io().startRecording();
   })();
+  let recordingDone: Promise<Sound> | undefined;
+  void started.catch(() => {
+    if (!recordingDone) {
+      releaseRecording();
+    }
+  });
 
   return () => {
-    const recordingDone: Promise<Sound> = started
-      .then(() => io().stopRecording())
-      .then(({ left, right, sampleRate }) => samplesToSound(left, right, sampleRate));
-    void play_recording_signal();
-    return () => recordingDone;
+    if (!recordingDone) {
+      recordingDone = started
+        .then(() => io().stopRecording())
+        .then(({ left, right, sampleRate }) => samplesToSound(left, right, sampleRate))
+        .finally(releaseRecording);
+      void play_recording_signal();
+    }
+    return () => recordingDone!;
   };
 }
 
@@ -420,23 +447,24 @@ export function record(buffer: number): () => () => Promise<Sound> {
 export function record_for(duration: number, buffer: number): () => Promise<Sound> {
   validateDuration('record_for', duration);
   validateDuration('record_for', buffer);
-  if (globalVars.activePlayCount > 0) {
-    throw new EvaluatorRuntimeError(`${record_for.name}: Cannot record while another sound is playing!`);
-  }
-  assertMicPermission('record_for');
+  reserveRecording(record_for.name);
 
   // order of events for record_for:
   // pre-recording-signal pause | recording signal |
   // pre-recording pause | recording | recording signal
   const recordingDone: Promise<Sound> = (async () => {
-    await delay(pre_recording_signal_pause_ms);
-    await play_recording_signal();
-    await delay(recording_signal_ms + buffer * 1000);
-    await io().startRecording();
-    await delay(duration * 1000);
-    const { left, right, sampleRate } = await io().stopRecording();
-    void play_recording_signal();
-    return samplesToSound(left, right, sampleRate);
+    try {
+      await delay(pre_recording_signal_pause_ms);
+      await play_recording_signal();
+      await delay(recording_signal_ms + buffer * 1000);
+      await io().startRecording();
+      await delay(duration * 1000);
+      const { left, right, sampleRate } = await io().stopRecording();
+      void play_recording_signal();
+      return samplesToSound(left, right, sampleRate);
+    } finally {
+      releaseRecording();
+    }
   })();
 
   return () => recordingDone;
