@@ -16,6 +16,14 @@ Only **py-slang's py2js engine** implements `closure_call_sync` today (PVML and 
 
 **Don't assume `closure_call_sync` exists, and don't assume it doesn't.** A module has to check for it explicitly every time, not cache the result by evaluator type - a currently-async-only engine (CSE, PVML) could gain the method later, and a specific closure on a supporting engine can still decline (return `undefined`) if it's outside the sync path's coverage.
 
+## Attach `.sync` liberally, not selectively
+
+Once a closure your bundle hands back to cadet code is provably synchronous - built purely from your own bundle's math, no real host round-trip involved - attach a `.sync` twin to it. Do this for every such closure, not just the ones you expect to be sampled in a hot loop by your own bundle's functions.
+
+The reason: once a closure is in the cadet's hands, your bundle has no say over where it goes next. It can be passed straight into a *different* module's own synchronous sampling loop, closed over by a cadet-authored combinator, or otherwise re-entered from code your bundle never sees. `sound`'s own `closureToWave` (see `modules`#833's fix) has to defend against exactly this: a cadet-authored closure whose compiled synchronous body itself calls a different module's closure can throw partway through a sync probe instead of failing cleanly, if that inner call turns out to need a real round-trip. The safest way to keep that kind of composition working (and fast) is to make sure any closure that *can* go fully synchronous, does - not to guess at which caller will end up needing it.
+
+Reserve the `AsyncGenerator`-only path for closures that genuinely need a real host round-trip - actual I/O, a real async browser API, anything that might have to suspend. Those can't have a meaningful `.sync` twin, and that's correct, permanent behavior for them, not a gap to close.
+
 ## Why this matters enough to have an escape hatch
 
 Numbers from py-slang's `experiments/py2js` benchmarks (not load-bearing for correctness, just the reasoning that motivated this design - see py-slang's own experiment README for methodology and full results if these ever need re-validating):
