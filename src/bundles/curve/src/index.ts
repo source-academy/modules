@@ -35,6 +35,7 @@
  * @author Lee Zheng Han
  * @author Ng Yong Xiang
  */
+import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
 import { BaseModulePlugin } from '@sourceacademy/conductor/module';
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
@@ -101,11 +102,10 @@ export default class CurveModulePlugin extends BaseModulePlugin {
     evaluator: IInterfacableEvaluator,
     tabLoader: TabLoader
   ) {
-    super(conduit, [curveChannel], evaluator);
-
     if (!curveChannel) {
-      throw new Error('Curve channel is required but was not provided.');
+      throw new EvaluatorRuntimeError('Curve channel is required but was not provided.');
     }
+    super(conduit, [curveChannel], evaluator);
 
     this.__curveChannel = curveChannel as IChannel<CurveChannelMessage>;
     this.__tabLoader = tabLoader;
@@ -241,6 +241,9 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * @param curve2 second Curve
    * @returns result Curve
    * @function
+   * @publicType curve1: Curve
+   * @publicType curve2: Curve
+   * @publicReturnType Curve
    */
   async* connect_ends(curve1: TypedValue<DataType.CLOSURE>, curve2: TypedValue<DataType.CLOSURE>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return yield* functions.connect_ends(this.evaluator, curve1, curve2);
@@ -257,6 +260,9 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * @param curve2 second Curve
    * @returns result Curve
    * @function
+   * @publicType curve1: Curve
+   * @publicType curve2: Curve
+   * @publicReturnType Curve
    */
   async* connect_rigidly(curve1: TypedValue<DataType.CLOSURE>, curve2: TypedValue<DataType.CLOSURE>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return yield* functions.connect_rigidly(this.evaluator, curve1, curve2);
@@ -273,6 +279,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * @param z0 z-value
    * @returns Curve transformation
    * @function
+   * @publicReturnType CurveTransformer
    */
   async* translate(x0: TypedValue<DataType.NUMBER>, y0: TypedValue<DataType.NUMBER>, z0: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return yield* functions.translate(this.evaluator, x0.value, y0.value, z0.value);
@@ -287,6 +294,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * @param phase hue offset, where 0 starts at red
    * @returns Curve transformation
    * @function
+   * @publicReturnType CurveTransformer
    */
   async* rainbow(repeats: TypedValue<DataType.NUMBER>, phase: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return yield* functions.rainbow(this.evaluator, repeats.value, phase.value);
@@ -300,6 +308,8 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    *
    * @param curve original Curve
    * @returns result Curve
+   * @publicType curve: Curve
+   * @publicReturnType Curve
    */
   async* invert(curve: TypedValue<DataType.CLOSURE>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return yield* functions.invert(this.evaluator, curve);
@@ -316,6 +326,8 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    *
    * @param curve given Curve
    * @returns result Curve
+   * @publicType curve: Curve
+   * @publicReturnType Curve
    */
   async* put_in_standard_position(curve: TypedValue<DataType.CLOSURE>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return yield* functions.put_in_standard_position(this.evaluator, curve);
@@ -332,6 +344,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * @param c given angle
    * @returns function that takes a Curve and returns a Curve
    * @function
+   * @publicReturnType CurveTransformer
    */
   async * rotate_around_origin_3D(a: TypedValue<DataType.NUMBER>, b: TypedValue<DataType.NUMBER>, c: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return yield* functions.rotate_around_origin_3D(this.evaluator, a.value, b.value, c.value);
@@ -346,6 +359,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * @param a given angle
    * @returns function that takes a Curve and returns a Curve
    * @function
+   * @publicReturnType CurveTransformer
    */
   async * rotate_around_origin(a: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return yield* functions.rotate_around_origin(this.evaluator, a.value);
@@ -360,6 +374,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * @param z scaling factor in z-direction
    * @returns function that takes a Curve and returns a Curve
    * @function
+   * @publicReturnType CurveTransformer
    */
   async * scale(x: TypedValue<DataType.NUMBER>, y: TypedValue<DataType.NUMBER>, z: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return yield* functions.scale(this.evaluator, x.value, y.value, z.value);
@@ -372,6 +387,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * @param s scaling factor
    * @returns function that takes a Curve and returns a Curve
    * @function
+   * @publicReturnType CurveTransformer
    */
   async * scale_proportional(s: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return yield* functions.scale_proportional(this.evaluator, s.value);
@@ -517,6 +533,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * @param y fraction between 0 and 1
    * @returns horizontal Curve
    * @function
+   * @publicReturnType Curve
    */
   async * unit_line_at(y: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return yield* functions.unit_line_at(this.evaluator, y);
@@ -547,6 +564,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * ```
    * draw_connected(100)(t => make_point(t, t));
    * ```
+   * @publicReturnType RenderFunction
    */
   async* draw_connected(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_connected(this.evaluator, numPoints.value);
@@ -573,6 +591,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * ```
    * draw_connected_full_view(100)(t => make_point(t, t));
    * ```
+   * @publicReturnType RenderFunction
    */
   async* draw_connected_full_view(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_connected_full_view(this.evaluator, numPoints.value);
@@ -599,6 +618,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * ```
    * draw_connected_full_view_proportional(100)(t => make_point(t, t));
    * ```
+   * @publicReturnType RenderFunction
    */
   async* draw_connected_full_view_proportional(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_connected_full_view_proportional(this.evaluator, numPoints.value);
@@ -625,6 +645,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * ```
    * draw_points(100)(t => make_point(t, t));
    * ```
+   * @publicReturnType RenderFunction
    */
   async* draw_points(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_points(this.evaluator, numPoints.value);
@@ -651,6 +672,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * ```
    * draw_points_full_view(100)(t => make_point(t, t));
    * ```
+   * @publicReturnType RenderFunction
    */
   async* draw_points_full_view(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_points_full_view(this.evaluator, numPoints.value);
@@ -677,6 +699,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * ```
    * draw_points_full_view_proportional(100)(t => make_point(t, t));
    * ```
+   * @publicReturnType RenderFunction
    */
   async* draw_points_full_view_proportional(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_points_full_view_proportional(this.evaluator, numPoints.value);
@@ -703,6 +726,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * ```
    * draw_3D_connected(100)(t => make_3D_point(t, t, t));
    * ```
+   * @publicReturnType RenderFunction
    */
   async* draw_3D_connected(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_3D_connected(this.evaluator, numPoints.value);
@@ -729,6 +753,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * ```
    * draw_3D_connected_full_view(100)(t => make_3D_point(t, t, t));
    * ```
+   * @publicReturnType RenderFunction
    */
   async* draw_3D_connected_full_view(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_3D_connected_full_view(this.evaluator, numPoints.value);
@@ -755,6 +780,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * ```
    * draw_3D_connected_full_view_proportional(100)(t => make_3D_point(t, t, t));
    * ```
+   * @publicReturnType RenderFunction
    */
   async* draw_3D_connected_full_view_proportional(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_3D_connected_full_view_proportional(this.evaluator, numPoints.value);
@@ -781,6 +807,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * ```
    * draw_3D_points(100)(t => make_3D_point(t, t, t));
    * ```
+   * @publicReturnType RenderFunction
    */
   async* draw_3D_points(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_3D_points(this.evaluator, numPoints.value);
@@ -807,6 +834,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * ```
    * draw_3D_points_full_view(100)(t => make_3D_point(t, t, t));
    * ```
+   * @publicReturnType RenderFunction
    */
   async* draw_3D_points_full_view(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_3D_points_full_view(this.evaluator, numPoints.value);
@@ -833,6 +861,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * ```
    * draw_3D_points_full_view_proportional(100)(t => make_3D_point(t, t, t));
    * ```
+   * @publicReturnType RenderFunction
    */
   async* draw_3D_points_full_view_proportional(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_3D_points_full_view_proportional(this.evaluator, numPoints.value);
@@ -858,6 +887,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * @returns Curve animation
    * @function
    * @publicType drawer: RenderFunction
+   * @publicType func: CurveAnimation
    * @publicReturnType AnimatedCurve
    */
   async* animate_curve(
@@ -881,6 +911,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    * @returns 3D Curve animation
    * @function
    * @publicType drawer: RenderFunction
+   * @publicType func: CurveAnimation
    * @publicReturnType AnimatedCurve
    */
   async* animate_3D_curve(

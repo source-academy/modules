@@ -4,12 +4,14 @@
  * @module plotly
  */
 
+import { conductorToSound } from '@sourceacademy/bundle-sound';
+import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
 import { BaseModulePlugin } from '@sourceacademy/conductor/module';
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 import { attachModuleMethod } from '@sourceacademy/modules-lib/conductor/methods';
-import { draw_connected_2d as draw_connected_2d_func, draw_connected_3d as draw_connected_3d_func, draw_new_plot, draw_points_2d as draw_points_2d_func, draw_points_3d as draw_points_3d_func } from './functions';
+import { draw_connected_2d as draw_connected_2d_func, draw_connected_3d as draw_connected_3d_func, draw_new_plot, draw_points_2d as draw_points_2d_func, draw_points_3d as draw_points_3d_func, draw_sound_2d } from './functions';
 import { PLOTLY_CHANNEL_ID, PLOTLY_RUNNER_ID, type PlotlyRenderMessage } from './protocol';
 
 type TabLoader = {
@@ -27,7 +29,7 @@ export default class PlotlyModulePlugin extends BaseModulePlugin {
     'draw_connected_3d',
     'draw_points_2d',
     'draw_points_3d',
-    // "draw_sound_2d"
+    'draw_sound_2d'
   ] as const;
   private __plotlyChannel: IChannel<PlotlyRenderMessage>;
   private __tabLoader: TabLoader;
@@ -43,7 +45,7 @@ export default class PlotlyModulePlugin extends BaseModulePlugin {
     super(conduit, [plotlyChannel], evaluator);
 
     if (!plotlyChannel) {
-      throw new Error('Plotly channel is required but was not provided.');
+      throw new EvaluatorRuntimeError('Plotly channel is required but was not provided.');
     }
 
     this.__plotlyChannel = plotlyChannel as IChannel<PlotlyRenderMessage>;
@@ -59,7 +61,6 @@ export default class PlotlyModulePlugin extends BaseModulePlugin {
     this.draw_points_2d_cache = await draw_points_2d_func(this.evaluator, this.__display.bind(this));
     this.draw_points_3d_cache = await draw_points_3d_func(this.evaluator, this.__display.bind(this));
     await super.initialise();
-    console.log(this.exportedNames, this.exports);
   }
   /**
    * Loads the host-side tab
@@ -199,9 +200,16 @@ export default class PlotlyModulePlugin extends BaseModulePlugin {
     return yield* this.draw_points_3d_cache(num.value);
   }
 
-  /* BLOCKED BY SOUND MIGRATION
-  draw_sound_2d = draw_sound_2d(this.evaluator);
-  */
+  /**
+   * Visualizes the sound on a 2d line graph
+   * @param sound the sound which is to be visualized on plotly
+   * @publicType sound: Sound
+   */
+  async* draw_sound_2d(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.VOID>, unknown> {
+    const soundValue = await conductorToSound(this.evaluator, sound);
+    await draw_sound_2d(soundValue, this.__display.bind(this));
+    return { type: DataType.VOID, value: undefined };
+  }
 
 }
 
@@ -210,3 +218,4 @@ attachModuleMethod(PlotlyModulePlugin, 'draw_connected_2d', [DataType.NUMBER], D
 attachModuleMethod(PlotlyModulePlugin, 'draw_connected_3d', [DataType.NUMBER], DataType.CLOSURE);
 attachModuleMethod(PlotlyModulePlugin, 'draw_points_2d', [DataType.NUMBER], DataType.CLOSURE);
 attachModuleMethod(PlotlyModulePlugin, 'draw_points_3d', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(PlotlyModulePlugin, 'draw_sound_2d', [DataType.PAIR], DataType.VOID);

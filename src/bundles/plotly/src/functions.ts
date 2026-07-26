@@ -1,13 +1,11 @@
-import { get_duration, get_wave } from '@sourceacademy/bundle-sound';
+import { get_duration, get_wave, is_sound } from '@sourceacademy/bundle-sound/functions';
+import type { Sound } from '@sourceacademy/bundle-sound/types';
 import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 import type { Data, Layout } from 'plotly.js-dist';
 import { generatePlot } from './curve_functions';
-import { CurvePlot, type ListOfPairs } from './plotly';
+import { CurvePlot } from './plotly';
 import type { PlotlyRenderMessage } from './protocol';
-
-export function new_plot(data: ListOfPairs): void {
-}
 
 /**
  * Adds a new plotly plot to the context which will be rendered in the Plotly Tabs
@@ -50,8 +48,8 @@ export function new_plot_json(data: any): void {
 }
 
 /**
+ * @param evaluator The evaluator which will be used
  * @param data The data which plotly will use
- * @param divId The id of the div element on which the plot will be displayed
  */
 export async function* draw_new_plot(evaluator: IDataHandler, data: TypedValue<DataType.LIST>): AsyncGenerator<void, Data, unknown> {
   const plotlyData: Data = {};
@@ -60,7 +58,6 @@ export async function* draw_new_plot(evaluator: IDataHandler, data: TypedValue<D
 }
 
 async function serialisePlotlyData(evaluator: IDataHandler, data: TypedValue<DataType>, map: WeakMap<TypedValue<DataType>, unknown> = new WeakMap()): Promise<unknown> {
-  console.log(`Serialising data of type ${data.type} with value ${data.value}`);
   switch (data.type) {
     case DataType.NUMBER:
     case DataType.CONST_STRING:
@@ -72,7 +69,6 @@ async function serialisePlotlyData(evaluator: IDataHandler, data: TypedValue<Dat
         return map.get(data);
       }
       const array: unknown[] = Array.from({ length: await evaluator.array_length(data) }, () => undefined);
-      console.log(JSON.stringify(array));
       map.set(data, array);
       await Promise.all(array.map(async (_, i) => {
         const element = await evaluator.array_get(data, i);
@@ -121,12 +117,9 @@ export async function add_fields_to_data(handler: IDataHandler, convertedData: D
     }
 
     const value = entry.type === DataType.ARRAY ? await handler.array_get(entry, 1) : await handler.pair_tail(entry);
-    // TODO: Restrict to only allow certain types of values (e.g. number, string, array, etc.)
     (convertedData as any)[field.value] = await serialisePlotlyData(handler, value);
-    console.log(`Added field ${field.value} with value ${convertedData[field.value as keyof typeof convertedData]} to plotly data`);
     currentData = currentData.type === DataType.ARRAY ? await handler.array_get(currentData, 1) : await handler.pair_tail(currentData);
   };
-  console.log(currentData, convertedData);
   if (currentData.type !== DataType.EMPTY_LIST) {
     throw new EvaluatorRuntimeError(`${add_fields_to_data.name}: Expected list of pairs, got ${currentData}`);
   }
@@ -217,17 +210,13 @@ export const draw_points_3d: PlotFunctionGenerator = (evaluator: IDataHandler, d
   {}
 );
 
-/**
- * Visualizes the sound on a 2d line graph
- * @param sound the sound which is to be visualized on plotly
- */
-export async function draw_sound_2d(sound: Sound) {
+export async function draw_sound_2d(sound: Sound, display: (data: Omit<PlotlyRenderMessage, 'type'>) => Promise<void>): Promise<void> {
   const FS: number = 44100; // Output sample rate
   if (!is_sound(sound)) {
-    throw new InvalidParameterTypeError('sound', sound, draw_sound_2d.name);
+    throw new EvaluatorRuntimeError(`${draw_sound_2d.name}: argument is not a sound`);
     // If a sound is already displayed, terminate execution.
   } else if (get_duration(sound) < 0) {
-    throw new GeneralRuntimeError(`${draw_sound_2d.name}: duration of sound is negative`);
+    throw new EvaluatorRuntimeError(`${draw_sound_2d.name}: duration of sound is negative`);
   } else {
     // Instantiate audio context if it has not been instantiated.
     // Create mono buffer
@@ -256,15 +245,13 @@ export async function draw_sound_2d(sound: Sound) {
 
     const plotlyData: Data = {
       x: x_s,
-      y: y_s
+      y: y_s,
+      type: 'scattergl',
+      mode: 'lines',
+      line: { width: 0.5 }
     };
     const plot = new CurvePlot(
-      {
-        ...plotlyData,
-        type: 'scattergl',
-        mode: 'lines',
-        line: { width: 0.5 }
-      } as Data,
+      plotlyData,
       {
         xaxis: {
           type: 'linear',
@@ -283,6 +270,6 @@ export async function draw_sound_2d(sound: Sound) {
         barmode: 'stack'
       }
     );
-    display(plot.toSerialized());
+    await display(plot.toSerialized());
   }
 }

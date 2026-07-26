@@ -26,7 +26,7 @@ export class CurvePlot implements ReplResult {
     layout: this.layout
   });
 
-  static fromSerialized = (serialized: { data: Data; layout: Partial<Layout> }) => {
+  static fromSerialized = (serialized: { data: Data, layout: Partial<Layout> }) => {
     return new CurvePlot(serialized.data, serialized.layout);
   };
 }

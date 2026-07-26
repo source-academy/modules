@@ -1,7 +1,7 @@
 import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
+import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 import type { Data, Layout } from 'plotly.js-dist';
 import { CurvePlot } from './plotly';
-import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 
 export async function* generatePlot(
   evaluator: IDataHandler,

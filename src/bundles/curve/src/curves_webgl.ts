@@ -1,4 +1,4 @@
-import { ConductorInternalError } from '@sourceacademy/conductor/common';
+import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 import type { ReplResult } from '@sourceacademy/modules-lib/types';
 import { mat4, vec3 } from 'gl-matrix';
@@ -52,7 +52,7 @@ function loadShader(
 ): WebGLShader {
   const shader = gl.createShader(type);
   if (!shader) {
-    throw new ConductorInternalError('WebGLShader not available.');
+    throw new EvaluatorRuntimeError('WebGLShader not available.');
   }
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
@@ -76,7 +76,7 @@ function initShaderProgram(
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
   const shaderProgram = gl.createProgram();
   if (!shaderProgram) {
-    throw new ConductorInternalError('Unable to initialize the shader program.');
+    throw new EvaluatorRuntimeError('Unable to initialize the shader program.');
   }
   gl.attachShader(shaderProgram, vertexShader);
   gl.attachShader(shaderProgram, fragmentShader);
@@ -156,7 +156,7 @@ export class CurveDrawn implements ReplResult {
   public init = (canvas: HTMLCanvasElement) => {
     this.renderingContext = canvas.getContext('webgl');
     if (!this.renderingContext) {
-      throw new ConductorInternalError('Rendering context cannot be null.');
+      throw new EvaluatorRuntimeError('Rendering context cannot be null.');
     }
     const cubeBuffer = this.renderingContext.createBuffer();
     this.renderingContext.bindBuffer(
@@ -351,7 +351,7 @@ export async function* generateCurve(
       (yield* evaluator.closure_call(func, [{ type: DataType.NUMBER, value: i / numPoints }], DataType.OPAQUE)) as TypedValue<DataType.OPAQUE>
     );
     if (!(point instanceof Point)) {
-      throw new Error(`Expected curve to return a point, got '${JSON.stringify(point)}' at t=${i / numPoints}`);
+      throw new EvaluatorRuntimeError(`Expected curve to return a point, got '${JSON.stringify(point)}' at t=${i / numPoints}`);
     }
 
     const x = point.x * 2 - 1;
