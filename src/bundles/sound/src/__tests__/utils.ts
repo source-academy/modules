@@ -1,71 +1,27 @@
 import { vi, type Mock } from 'vitest';
+import type { RecordedSamples, SoundTabRpc } from '../protocol';
 
-interface MockMediaRecorder {
-  stop: () => void;
-  start: Mock<() => void>;
-  onstop?: () => void;
-  ondataavailable?: () => void;
+export interface MockSoundTabRpc extends SoundTabRpc {
+  requestMicPermission: Mock<() => Promise<boolean>>;
+  playSamples: Mock<(left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>, sampleRate: number) => Promise<void>>;
+  notifyConstructing: Mock<() => Promise<void>>;
+  $stopPlayback: Mock<() => void>;
+  startRecording: Mock<() => Promise<void>>;
+  stopRecording: Mock<() => Promise<RecordedSamples>>;
 }
 
-interface MockAudioBufferSource {
-  buffer: MockAudioBuffer | null;
-  node: AudioNode | null;
-  isPlaying: boolean;
-  connect: (node: AudioNode) => void;
-  disconnect: (node: AudioNode) => void;
-  start: () => void;
-  stop: () => void;
-  onended?: () => void;
+/**
+ * A mock of the host (tab) side of the sound channel, standing in for real AudioContext/
+ * MediaRecorder access - functions.ts never touches those APIs directly, only this bridge.
+ */
+export function mockSoundTabRpc(): MockSoundTabRpc {
+  const emptySamples = new Float32Array(0);
+  return {
+    requestMicPermission: vi.fn().mockResolvedValue(true),
+    playSamples: vi.fn().mockResolvedValue(undefined),
+    notifyConstructing: vi.fn().mockResolvedValue(undefined),
+    $stopPlayback: vi.fn(),
+    startRecording: vi.fn().mockResolvedValue(undefined),
+    stopRecording: vi.fn().mockResolvedValue({ left: emptySamples, right: emptySamples, sampleRate: 44100 })
+  };
 }
-
-interface MockAudioBuffer {
-  getChannelData: (channel: number) => Float32Array<ArrayBuffer>;
-}
-
-interface MockAudioContext {
-  bufferSource: MockAudioBufferSource;
-  createBufferSource: () => MockAudioBufferSource;
-  createBuffer: (channels: number, length: number, sampleRate: number) => MockAudioBuffer;
-  decodeAudioData: (buffer: ArrayBuffer) => Promise<MockAudioBuffer>;
-  close: () => void;
-}
-
-export const mockBufferSource: MockAudioBufferSource = {
-  isPlaying: false,
-  buffer: null,
-  node: null,
-  connect(node) {
-    this.node = node;
-  },
-  disconnect: () => {},
-  start() {
-    this.isPlaying = true;
-  },
-  stop() {
-    this.isPlaying = false;
-    this.onended?.();
-  }
-};
-vi.spyOn(mockBufferSource, 'start');
-
-export const mockAudioContext: MockAudioContext = {
-  bufferSource: mockBufferSource,
-  createBufferSource: () => mockBufferSource,
-  createBuffer: (channels, length) => ({
-    getChannelData: () => new Float32Array<ArrayBuffer>(new ArrayBuffer(4 * length)),
-  }),
-  close() {
-    return this.bufferSource.stop();
-  },
-  decodeAudioData() {
-    return Promise.resolve(this.bufferSource.buffer!);
-  },
-};
-
-export const mockMediaRecorder: MockMediaRecorder = {
-  start: vi.fn(),
-  stop() {
-    this.onstop?.();
-  }
-};
-vi.spyOn(mockMediaRecorder, 'stop');

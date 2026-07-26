@@ -159,9 +159,9 @@ export default class MidiModulePlugin extends BaseModulePlugin {
    *
    * @category Notes
    */
-  // No declared arg type: is_note_with_octave is a predicate that must accept a value of any
-  // Conductor DataType (not just strings) and answer false rather than throw.
-  @moduleMethod([], DataType.BOOLEAN)
+  // DataType.ANY, not a fixed type: is_note_with_octave is a predicate that must accept a
+  // value of any Conductor DataType (not just strings) and answer false rather than throw.
+  @moduleMethod([DataType.ANY], DataType.BOOLEAN)
   async* is_note_with_octave(value?: TypedValue<DataType>): AsyncGenerator<void, TypedValue<DataType.BOOLEAN>, unknown> {
     return { type: DataType.BOOLEAN, value: is_note_with_octave_func(value?.value) };
   }
