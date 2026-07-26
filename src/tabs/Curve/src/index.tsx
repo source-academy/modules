@@ -150,6 +150,7 @@ export default class CurveTabPlugin implements IPlugin {
 
     this.__tabService.registerTab(tab);
     this.__curveChannel.subscribe(this.__handleMessage);
+    this.__curveChannel.send({ type: 'request' });
   }
 
   getMessages(): readonly CurveDisplayMessage[] {

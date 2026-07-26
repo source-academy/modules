@@ -12,7 +12,7 @@ import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 import { attachModuleMethod } from '@sourceacademy/modules-lib/conductor/methods';
 import { draw_connected_2d as draw_connected_2d_func, draw_connected_3d as draw_connected_3d_func, draw_new_plot, draw_points_2d as draw_points_2d_func, draw_points_3d as draw_points_3d_func, draw_sound_2d } from './functions';
-import { PLOTLY_CHANNEL_ID, PLOTLY_RUNNER_ID, type PlotlyRenderMessage } from './protocol';
+import { PLOTLY_CHANNEL_ID, PLOTLY_RUNNER_ID, type PlotlyChannelMessage, type PlotlyRenderMessage } from './protocol';
 
 type TabLoader = {
   tabs: string[];
@@ -31,7 +31,7 @@ export default class PlotlyModulePlugin extends BaseModulePlugin {
     'draw_points_3d',
     'draw_sound_2d'
   ] as const;
-  private __plotlyChannel: IChannel<PlotlyRenderMessage>;
+  private __plotlyChannel: IChannel<PlotlyChannelMessage>;
   private __tabLoader: TabLoader;
   private __displayed: PlotlyRenderMessage[] = [];
   private __tabLoaded = false;
@@ -48,10 +48,13 @@ export default class PlotlyModulePlugin extends BaseModulePlugin {
       throw new EvaluatorRuntimeError('Plotly channel is required but was not provided.');
     }
 
-    this.__plotlyChannel = plotlyChannel as IChannel<PlotlyRenderMessage>;
+    this.__plotlyChannel = plotlyChannel as IChannel<PlotlyChannelMessage>;
     this.__tabLoader = tabLoader;
-    this.__plotlyChannel.subscribe(_ => {
-      this.__displayed.forEach(displayedMessage => this.__plotlyChannel.send(displayedMessage));
+    this.__plotlyChannel.subscribe(message => {
+      if (message.type === 'request') {
+        this.__displayed.forEach(displayedMessage => this.__plotlyChannel.send(displayedMessage));
+        this.__displayed = [];
+      }
     });
   }
 
@@ -78,9 +81,12 @@ export default class PlotlyModulePlugin extends BaseModulePlugin {
   }
 
   private async __display(message: Omit<PlotlyRenderMessage, 'type'>): Promise<void> {
-    this.__displayed.push({ type: 'render', ...message });
-    await this.__loadPlotlyTab();
-    this.__plotlyChannel.send({ type: 'render', ...message });
+    const renderMessage = { type: 'render', ...message } satisfies PlotlyRenderMessage;
+    if (await this.__loadPlotlyTab()) {
+      this.__plotlyChannel.send(renderMessage);
+    } else {
+      this.__displayed.push(renderMessage);
+    }
   }
 
   /**

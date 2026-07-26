@@ -1,4 +1,4 @@
-import { EvaluatorParameterTypeError, assertNumberWithinRange } from '@sourceacademy/conductor/common';
+import { EvaluatorParameterTypeError, EvaluatorRuntimeError, assertNumberWithinRange } from '@sourceacademy/conductor/common';
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 import { hueToRgb } from '@sourceacademy/modules-lib/utilities';
 import { clamp } from 'es-toolkit';
@@ -166,6 +166,9 @@ class CurveFunctions {
     ), [curve_started_at_origin], DataType.CLOSURE)) as TypedValue<DataType.CLOSURE>;
     const end_point_id = (yield* evaluator.closure_call(curve_ended_at_x_axis, [{ type: DataType.NUMBER, value: 1 }], DataType.OPAQUE)) as TypedValue<DataType.OPAQUE>;
     const end_point_on_x_axis = x_of(await evaluator.opaque_get(end_point_id));
+    if (end_point_on_x_axis === 0 || !Number.isFinite(end_point_on_x_axis)) {
+      throw new EvaluatorRuntimeError(`${CurveFunctions.put_in_standard_position.name}: Cannot normalize a curve with a zero or non-finite endpoint distance.`);
+    }
     return (yield* evaluator.closure_call(yield* scale_proportional(evaluator, 1 / end_point_on_x_axis), [curve_ended_at_x_axis], DataType.CLOSURE)) as TypedValue<DataType.CLOSURE>;
   };
 

@@ -26,8 +26,8 @@ class TestModulePlugin implements IModulePlugin {
   }
 
   async *listIdentity(
-    value: TypedValue<DataType.LIST>
-  ): AsyncGenerator<void, TypedValue<DataType.LIST>, undefined> {
+    value: TypedValue<DataType.PAIR | DataType.EMPTY_LIST>
+  ): AsyncGenerator<void, TypedValue<DataType.PAIR | DataType.EMPTY_LIST>, undefined> {
     await Promise.resolve();
     return value;
   }

@@ -22,7 +22,11 @@ export async function* draw_new_plot(evaluator: IDataHandler, data: TypedValue<D
   return plotlyData;
 }
 
-async function serialisePlotlyData(evaluator: IDataHandler, data: TypedValue<DataType>, map: WeakMap<TypedValue<DataType>, unknown> = new WeakMap()): Promise<unknown> {
+async function serialisePlotlyData(
+  evaluator: IDataHandler,
+  data: TypedValue<DataType>,
+  map: Map<TypedValue<DataType.ARRAY | DataType.PAIR>['value'], unknown> = new Map()
+): Promise<unknown> {
   switch (data.type) {
     case DataType.NUMBER:
     case DataType.INTEGER:
@@ -31,11 +35,11 @@ async function serialisePlotlyData(evaluator: IDataHandler, data: TypedValue<Dat
     case DataType.EMPTY_LIST:
       return data.value;
     case DataType.ARRAY: {
-      if (map.has(data)) {
-        return map.get(data);
+      if (map.has(data.value)) {
+        return map.get(data.value);
       }
       const array: unknown[] = Array.from({ length: await evaluator.array_length(data) }, () => undefined);
-      map.set(data, array);
+      map.set(data.value, array);
       await Promise.all(array.map(async (_, i) => {
         const element = await evaluator.array_get(data, i);
         array[i] = await serialisePlotlyData(evaluator, element, map);
@@ -43,11 +47,11 @@ async function serialisePlotlyData(evaluator: IDataHandler, data: TypedValue<Dat
       return array;
     }
     case DataType.PAIR: {
-      if (map.has(data)) {
-        return map.get(data);
+      if (map.has(data.value)) {
+        return map.get(data.value);
       }
       const pair: [unknown, unknown] = [undefined, undefined];
-      map.set(data, pair);
+      map.set(data.value, pair);
       const head = await evaluator.pair_head(data);
       const tail = await evaluator.pair_tail(data);
       pair[0] = await serialisePlotlyData(evaluator, head, map);
@@ -73,21 +77,21 @@ export async function add_fields_to_data(handler: IDataHandler, convertedData: D
   while (currentData.type === DataType.PAIR || currentData.type === DataType.ARRAY) {
     const entry = currentData.type === DataType.ARRAY ? await handler.array_get(currentData, 0) : await handler.pair_head(currentData);
     if (entry.type !== DataType.PAIR && !(entry.type === DataType.ARRAY && await handler.array_length(entry) === 2)) {
-      throw new EvaluatorRuntimeError(`${add_fields_to_data.name}: Expected list of pairs, got ${entry}`);
+      throw new EvaluatorRuntimeError(`${add_fields_to_data.name}: Expected list of pairs, got type ${entry.type} with value ${String(entry.value)}`);
     }
 
     const field = entry.type === DataType.ARRAY ? await handler.array_get(entry, 0) : await handler.pair_head(entry);
 
     if (field.type !== DataType.CONST_STRING) {
-      throw new EvaluatorRuntimeError(`${add_fields_to_data.name}: Expected head of pair to be string, got ${field}`);
+      throw new EvaluatorRuntimeError(`${add_fields_to_data.name}: Expected head of pair to be string, got type ${field.type} with value ${String(field.value)}`);
     }
 
     const value = entry.type === DataType.ARRAY ? await handler.array_get(entry, 1) : await handler.pair_tail(entry);
     (convertedData as any)[field.value] = await serialisePlotlyData(handler, value);
     currentData = currentData.type === DataType.ARRAY ? await handler.array_get(currentData, 1) : await handler.pair_tail(currentData);
-  };
+  }
   if (currentData.type !== DataType.EMPTY_LIST) {
-    throw new EvaluatorRuntimeError(`${add_fields_to_data.name}: Expected list of pairs, got ${currentData}`);
+    throw new EvaluatorRuntimeError(`${add_fields_to_data.name}: Expected list of pairs, got type ${currentData.type} with value ${String(currentData.value)}`);
   }
 
 }

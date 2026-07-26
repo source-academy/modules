@@ -31,7 +31,8 @@ export async function* generatePlot(
   const z_s: number[] = [];
   const color_s: string[] = [];
   for (let i = 0; i <= numPoints; i += 1) {
-    const pointId = yield* evaluator.closure_call(func, [{ type: DataType.NUMBER, value: i / numPoints }], DataType.OPAQUE);
+    const t = numPoints === 0 ? 0 : i / numPoints;
+    const pointId = yield* evaluator.closure_call(func, [{ type: DataType.NUMBER, value: t }], DataType.OPAQUE);
     const point = await evaluator.opaque_get(pointId as TypedValue<DataType.OPAQUE>);
     if (!isPoint(point)) {
       throw new EvaluatorRuntimeError(`${generatePlot.name}: Curve must return a Point`);
@@ -39,7 +40,9 @@ export async function* generatePlot(
     x_s.push(point.x);
     y_s.push(point.y);
     z_s.push(point.z);
-    color_s.push(`rgb(${Math.floor(point.color[0] * 255)},${Math.floor(point.color[1] * 255)},${Math.floor(point.color[2] * 255)})`);
+    if (is_colored) {
+      color_s.push(`rgb(${Math.floor(point.color[0] * 255)},${Math.floor(point.color[1] * 255)},${Math.floor(point.color[2] * 255)})`);
+    }
   }
 
   const plotlyData: Data = {
@@ -48,11 +51,9 @@ export async function* generatePlot(
     z: z_s,
     marker: {
       size: 2,
-      color: color_s
+      ...is_colored ? { color: color_s } : {}
     },
-    line: {
-      color: color_s
-    }
+    ...is_colored ? { line: { color: color_s } } : {}
   };
   return new CurvePlot(
     {

@@ -1,4 +1,4 @@
-import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
+import { EvaluatorRuntimeError, assertNumberWithinRange } from '@sourceacademy/conductor/common';
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 
 import { generateCurve, type Curve, type CurveDrawn } from './curves_webgl';
@@ -181,6 +181,15 @@ export const draw_3D_points_full_view = RenderFunctionCreators.draw_3D_points_fu
 
 export const draw_3D_points_full_view_proportional = RenderFunctionCreators.draw_3D_points_full_view_proportional;
 
+function getFrameCount(duration: number, fps: number, functionName: string): number {
+  assertNumberWithinRange(duration, functionName, Number.MIN_VALUE, Number.MAX_VALUE, false, 'duration');
+  assertNumberWithinRange(fps, functionName, Number.MIN_VALUE, Number.MAX_VALUE, false, 'fps');
+
+  const frameCount = Math.floor(fps * duration);
+  assertNumberWithinRange(frameCount, functionName, 1, Number.MAX_SAFE_INTEGER, true, 'frameCount');
+  return frameCount;
+}
+
 class CurveAnimators {
   static async* animate_curve(
     evaluator: IDataHandler,
@@ -193,9 +202,9 @@ class CurveAnimators {
       throw new EvaluatorRuntimeError(`${animate_curve.name} cannot be used with 3D draw function!`);
     }
 
-    const frameCount = Math.floor(fps * duration);
+    const frameCount = getFrameCount(duration, fps, CurveAnimators.animate_curve.name);
     const frames: CurveDrawn[] = [];
-    for (let i = 0; i < fps * duration; i++) {
+    for (let i = 0; i < frameCount; i++) {
       const t = i / frameCount;
       frames.push(yield* drawer((yield* evaluator.closure_call(func, [{ type: DataType.NUMBER, value: t }], DataType.CLOSURE)) as TypedValue<DataType.CLOSURE>));
     }
@@ -215,9 +224,9 @@ class CurveAnimators {
       throw new EvaluatorRuntimeError(`${animate_3D_curve.name} cannot be used with 2D draw function!`);
     }
 
-    const frameCount = Math.floor(fps * duration);
+    const frameCount = getFrameCount(duration, fps, CurveAnimators.animate_3D_curve.name);
     const frames: CurveDrawn[] = [];
-    for (let i = 0; i < fps * duration; i++) {
+    for (let i = 0; i < frameCount; i++) {
       const t = i / frameCount;
       frames.push(yield* drawer((yield* evaluator.closure_call(func, [{ type: DataType.NUMBER, value: t }], DataType.CLOSURE)) as TypedValue<DataType.CLOSURE>));
     }

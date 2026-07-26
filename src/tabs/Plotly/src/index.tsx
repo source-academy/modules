@@ -92,6 +92,7 @@ export default class PlotlyTabPlugin implements IPlugin {
     } satisfies Tab;
     this.__tabService.registerTab(tab);
     this.__plotlyChannel.subscribe(this.__handleMessage);
+    this.__plotlyChannel.send({ type: 'request' });
   }
 
   getMessages(): readonly PlotlyRenderMessage[] {

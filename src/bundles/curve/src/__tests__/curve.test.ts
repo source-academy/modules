@@ -88,11 +88,9 @@ describe('Ensure that invalid curves and animations error gracefully', () => {
       { args: [DataType.NUMBER] as const, returnType: DataType.CLOSURE },
       async function* (t0: TypedValue<DataType.NUMBER>) {
         return await handler.closure_make(
-          { args: [DataType.NUMBER] as const, returnType: DataType.CLOSURE },
+          { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
           async function* (t1: TypedValue<DataType.NUMBER>) {
-            return await handler.opaque_make(
-              { type: DataType.OPAQUE, value: funcs.make_3D_point(t0.value, t1.value, 0) }
-            );
+            return await handler.opaque_make(funcs.make_3D_point(t0.value, t1.value, 0));
           }
         );
       }
@@ -109,11 +107,9 @@ describe('Ensure that invalid curves and animations error gracefully', () => {
       { args: [DataType.NUMBER] as const, returnType: DataType.CLOSURE },
       async function* (t0: TypedValue<DataType.NUMBER>) {
         return await handler.closure_make(
-          { args: [DataType.NUMBER] as const, returnType: DataType.CLOSURE },
+          { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
           async function* (t1: TypedValue<DataType.NUMBER>) {
-            return await handler.opaque_make(
-              { type: DataType.OPAQUE, value: funcs.make_3D_point(t0.value, t1.value, 0) }
-            );
+            return await handler.opaque_make(funcs.make_3D_point(t0.value, t1.value, 0));
           }
         );
       }
@@ -123,6 +119,35 @@ describe('Ensure that invalid curves and animations error gracefully', () => {
       drawers.animate_3D_curve(handler, 1, 60, drawers.draw_connected(handler, 200), anim)
     ))
       .rejects.toThrow('animate_3D_curve cannot be used with 2D draw function!');
+  });
+
+  test('Animations require positive duration and fps values', async ({ handler }) => {
+    const unusedAnimation = await handler.closure_make(
+      { args: [DataType.NUMBER] as const, returnType: DataType.CLOSURE },
+      async function* () {
+        throw new Error('Animation should not be evaluated');
+      }
+    );
+
+    await expect(runAsyncGenerator(
+      drawers.animate_curve(handler, 0, 60, drawers.draw_connected(handler, 2), unusedAnimation)
+    )).rejects.toThrow('duration');
+    await expect(runAsyncGenerator(
+      drawers.animate_3D_curve(handler, 1, 0, drawers.draw_3D_connected(handler, 2), unusedAnimation)
+    )).rejects.toThrow('fps');
+  });
+
+  test('Animations require at least one frame', async ({ handler }) => {
+    const unusedAnimation = await handler.closure_make(
+      { args: [DataType.NUMBER] as const, returnType: DataType.CLOSURE },
+      async function* () {
+        throw new Error('Animation should not be evaluated');
+      }
+    );
+
+    await expect(runAsyncGenerator(
+      drawers.animate_curve(handler, 0.1, 1, drawers.draw_connected(handler, 2), unusedAnimation)
+    )).rejects.toThrow('frameCount');
   });
 });
 
@@ -312,7 +337,7 @@ describe('Curve transformers', () => {
       const transformer = await createTransformer(handler);
       const curve = await makeCurve(
         handler,
-        () => funcs.make_color_point(0.5, 0.5, 255, 127, 0)
+        t => funcs.make_color_point(t, 0.5, 255, 127, 0)
       );
       const newCurve = await applyTransformer(handler, transformer, curve);
       const points = await runAsyncGenerator(evaluatePoints(handler, newCurve));
@@ -394,6 +419,13 @@ describe('Curve transformers', () => {
       const [xn, yn] = points[points.length - 1];
       expect(xn).toBeCloseTo(1, 1);
       expect(yn).toBeCloseTo(0, 1);
+    });
+
+    test('rejects curves whose endpoints coincide', async ({ handler }) => {
+      const curve = await makeCurve(handler, () => funcs.make_point(1, 1));
+
+      await expect(runAsyncGenerator(funcs.put_in_standard_position(handler, curve)))
+        .rejects.toThrow('Cannot normalize a curve with a zero or non-finite endpoint distance.');
     });
   });
 

@@ -7,10 +7,9 @@
  * {@link make_color_point}. Selectors allow access to the coordinates and color
  * components, for example {@link x_of}.
  *
- * A *curve* is a
- * '* unary function which takes a number argument within the unit interval `[0',1]`
- * '* and returns a point. If `C` is a curve', then the starting point of the curve
- * '* is always `C(0)`', and the ending point is always `C(1)`.
+ * A *curve* is a unary function which takes a number argument within the unit interval `[0, 1]`
+ * and returns a point. If `C` is a curve, then the starting point of the curve
+ * is always `C(0)`, and the ending point is always `C(1)`.
  *
  * A *curve transformation* is a function that takes a curve as argument and
  * returns a curve. Examples of curve transformations are {@link !scale} and {@link !translate}.
@@ -22,9 +21,9 @@
  * the render function {@link !draw_connected_full_view} to display a curve called
  * `unit_circle`.
  * ```
- * '* import { make_point', draw_connected_full_view } from "curve";
+ * import { make_point, draw_connected_full_view } from "curve";
  * function unit_circle(t) {
- * '*   return make_point(math_sin(2 * math_PI * t)',
+ *   return make_point(math_sin(2 * math_PI * t),
  *                     math_cos(2 * math_PI * t));
  * }
  * draw_connected_full_view(100)(unit_circle);
@@ -40,6 +39,7 @@ import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
 import { BaseModulePlugin } from '@sourceacademy/conductor/module';
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
+import { attachModuleMethod } from '@sourceacademy/modules-lib/conductor/methods';
 import * as drawers from './drawers';
 import * as functions from './functions';
 import { CURVE_CHANNEL_ID, type CurveChannelMessage, type CurveDisplayMessage } from './protocol';
@@ -115,6 +115,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
     this.__curveChannel.subscribe(message => {
       if (message.type === 'request') {
         this.__displayed.forEach(displayedMessage => this.__curveChannel.send(displayedMessage));
+        this.__displayed = [];
       }
     });
   }
@@ -134,9 +135,11 @@ export default class CurveModulePlugin extends BaseModulePlugin {
   }
 
   private async __display(message: CurveDisplayMessage): Promise<void> {
-    this.__displayed.push(message);
-    await this.__loadCurveTab();
-    this.__curveChannel.send(message);
+    if (await this.__loadCurveTab()) {
+      this.__curveChannel.send(message);
+    } else {
+      this.__displayed.push(message);
+    }
   }
 
   private async __makeRenderClosure(renderFunction: RenderFunction): Promise<TypedValue<DataType.CLOSURE>> {
@@ -844,46 +847,41 @@ export default class CurveModulePlugin extends BaseModulePlugin {
 
 }
 
-// TEMPORARY
-function attachModuleMethod(methodName: string, args: DataType[], returnType: DataType): void {
-  (CurveModulePlugin.prototype[methodName as keyof CurveModulePlugin] as { signature?: { args: DataType[], returnType: DataType } }).signature = { args, returnType };
-}
-
-attachModuleMethod('make_point', [DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
-attachModuleMethod('make_3D_point', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
-attachModuleMethod('make_color_point', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
-attachModuleMethod('make_3D_color_point', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
-attachModuleMethod('connect_ends', [DataType.CLOSURE, DataType.CLOSURE], DataType.CLOSURE);
-attachModuleMethod('connect_rigidly', [DataType.CLOSURE, DataType.CLOSURE], DataType.CLOSURE);
-attachModuleMethod('translate', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('rainbow', [DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('invert', [DataType.CLOSURE], DataType.CLOSURE);
-attachModuleMethod('put_in_standard_position', [DataType.CLOSURE], DataType.CLOSURE);
-attachModuleMethod('rotate_around_origin_3D', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('rotate_around_origin', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('scale', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('scale_proportional', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('x_of', [DataType.OPAQUE], DataType.NUMBER);
-attachModuleMethod('y_of', [DataType.OPAQUE], DataType.NUMBER);
-attachModuleMethod('z_of', [DataType.OPAQUE], DataType.NUMBER);
-attachModuleMethod('r_of', [DataType.OPAQUE], DataType.NUMBER);
-attachModuleMethod('g_of', [DataType.OPAQUE], DataType.NUMBER);
-attachModuleMethod('b_of', [DataType.OPAQUE], DataType.NUMBER);
-attachModuleMethod('unit_circle', [DataType.NUMBER], DataType.OPAQUE);
-attachModuleMethod('unit_line', [DataType.NUMBER], DataType.OPAQUE);
-attachModuleMethod('unit_line_at', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('arc', [DataType.NUMBER], DataType.OPAQUE);
-attachModuleMethod('draw_connected', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('draw_connected_full_view', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('draw_connected_full_view_proportional', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('draw_points', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('draw_points_full_view', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('draw_points_full_view_proportional', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('draw_3D_connected', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('draw_3D_connected_full_view', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('draw_3D_connected_full_view_proportional', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('draw_3D_points', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('draw_3D_points_full_view', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('draw_3D_points_full_view_proportional', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('animate_curve', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE, DataType.CLOSURE], DataType.OPAQUE);
-attachModuleMethod('animate_3D_curve', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE, DataType.CLOSURE], DataType.OPAQUE);
+attachModuleMethod(CurveModulePlugin, 'make_point', [DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod(CurveModulePlugin, 'make_3D_point', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod(CurveModulePlugin, 'make_color_point', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod(CurveModulePlugin, 'make_3D_color_point', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod(CurveModulePlugin, 'connect_ends', [DataType.CLOSURE, DataType.CLOSURE], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'connect_rigidly', [DataType.CLOSURE, DataType.CLOSURE], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'translate', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'rainbow', [DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'invert', [DataType.CLOSURE], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'put_in_standard_position', [DataType.CLOSURE], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'rotate_around_origin_3D', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'rotate_around_origin', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'scale', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'scale_proportional', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'x_of', [DataType.OPAQUE], DataType.NUMBER);
+attachModuleMethod(CurveModulePlugin, 'y_of', [DataType.OPAQUE], DataType.NUMBER);
+attachModuleMethod(CurveModulePlugin, 'z_of', [DataType.OPAQUE], DataType.NUMBER);
+attachModuleMethod(CurveModulePlugin, 'r_of', [DataType.OPAQUE], DataType.NUMBER);
+attachModuleMethod(CurveModulePlugin, 'g_of', [DataType.OPAQUE], DataType.NUMBER);
+attachModuleMethod(CurveModulePlugin, 'b_of', [DataType.OPAQUE], DataType.NUMBER);
+attachModuleMethod(CurveModulePlugin, 'unit_circle', [DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod(CurveModulePlugin, 'unit_line', [DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod(CurveModulePlugin, 'unit_line_at', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'arc', [DataType.NUMBER], DataType.OPAQUE);
+attachModuleMethod(CurveModulePlugin, 'draw_connected', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'draw_connected_full_view', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'draw_connected_full_view_proportional', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'draw_points', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'draw_points_full_view', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'draw_points_full_view_proportional', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'draw_3D_connected', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'draw_3D_connected_full_view', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'draw_3D_connected_full_view_proportional', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'draw_3D_points', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'draw_3D_points_full_view', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'draw_3D_points_full_view_proportional', [DataType.NUMBER], DataType.CLOSURE);
+attachModuleMethod(CurveModulePlugin, 'animate_curve', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE, DataType.CLOSURE], DataType.OPAQUE);
+attachModuleMethod(CurveModulePlugin, 'animate_3D_curve', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE, DataType.CLOSURE], DataType.OPAQUE);

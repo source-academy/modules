@@ -21,13 +21,16 @@ async function run<T>(generator: AsyncGenerator<void, T, undefined>): Promise<T>
 describe(CurveModulePlugin, () => {
   test('draw functions send cloneable curve data over the channel', async () => {
     const sentMessages: unknown[] = [];
+    let channelSubscriber!: (message: { type: 'request' }) => void;
     let finishLoading!: () => void;
     const loadTab = vi.fn(() => new Promise<void>(resolve => {
       finishLoading = resolve;
     }));
     const channel = {
       send: vi.fn(message => sentMessages.push(message)),
-      subscribe: vi.fn(),
+      subscribe: vi.fn(subscriber => {
+        channelSubscriber = subscriber;
+      }),
       unsubscribe: vi.fn(),
       close: vi.fn(),
       name: 'curve-test-channel'
@@ -84,6 +87,10 @@ describe(CurveModulePlugin, () => {
     finishLoading();
     await renderPromise;
 
+    expect(sentMessages).toHaveLength(0);
+    channelSubscriber({ type: 'request' });
+    expect(sentMessages).toHaveLength(1);
+    channelSubscriber({ type: 'request' });
     expect(sentMessages).toHaveLength(1);
     expect(sentMessages[0]).toMatchObject({
       type: 'render',
@@ -116,7 +123,7 @@ describe(CurveModulePlugin, () => {
       { type: DataType.NUMBER, value: 1 },
       { type: DataType.NUMBER, value: 1 },
       renderFunction as unknown as TypedValue<DataType.CLOSURE>,
-      animation
+      animation as unknown as TypedValue<DataType.CLOSURE>
     ));
 
     expect(sentMessages).toHaveLength(2);
