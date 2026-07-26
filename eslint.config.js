@@ -448,7 +448,7 @@ export default defineConfig(
       // Rule doesn't work properly on CI
       '@sourceacademy/throw-runtime-error': process.env.CI ? 'off' : ['error', {
         // Conductor's own protocol-level errors, unrelated to js-slang's RuntimeSourceError
-        ignoredNames: ['EvaluatorTypeError', 'EvaluatorRuntimeError']
+        ignoredNames: ['EvaluatorTypeError', 'EvaluatorRuntimeError', 'EvaluatorParameterTypeError']
       }]
     }
   },

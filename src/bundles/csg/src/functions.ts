@@ -10,9 +10,9 @@ import {
 import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { serialize } from '@jscad/stl-serializer';
 import {
-  assertNumberWithinRange,
   EvaluatorParameterTypeError,
-  EvaluatorRuntimeError
+  EvaluatorRuntimeError,
+  assertNumberWithinRange
 } from '@sourceacademy/conductor/common';
 import {
   Group,
