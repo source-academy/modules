@@ -4048,7 +4048,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-matrix@workspace:src/bundles/matrix"
   dependencies:
-    "@sourceacademy/conductor": "npm:^0.7.1"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     typescript: "catalog:"
   languageName: unknown
@@ -4269,13 +4269,6 @@ __metadata:
     "@blueprintjs/icons": ^6.0.0
     react: ^18 || ^19
   checksum: 10c0/ca9d9b626b9fcf1eeed40703438cc3c5af8bcdc04475cd5071794a5a5effbe7ae064ad72da315491f6065b9cdb895cb86ea00176f20b5ff318cda831dd33f780
-  languageName: node
-  linkType: hard
-
-"@sourceacademy/conductor@npm:^0.7.1":
-  version: 0.7.2
-  resolution: "@sourceacademy/conductor@npm:0.7.2"
-  checksum: 10c0/84cff73c8c67a5884c9a06774f514b2dc4275e14ee282c7eee4fd32618857f63cdc2a736c4e5d2b6501b7b39d6c9e2f7192af1dbbc8ec1542721c08252c1f022
   languageName: node
   linkType: hard
 
@@ -4673,7 +4666,7 @@ __metadata:
     "@blueprintjs/core": "npm:^6.0.0"
     "@sourceacademy/bundle-matrix": "workspace:^"
     "@sourceacademy/common-tabs": "npm:^0.0.1"
-    "@sourceacademy/conductor": "npm:^0.7.1"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/react": "catalog:"
     "@types/react-dom": "catalog:"

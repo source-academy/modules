@@ -34,18 +34,3 @@ async function rowToConductorList(evaluator: IDataHandler, row: boolean[], index
     await rowToConductorList(evaluator, row, index + 1)
   );
 }
-
-/**
- * Fully resolves a generator, discarding intermediate yields. Used for `set_timeout`'s callback,
- * which fires later via the Worker's own native timer - by the time it runs, there's no
- * CSE-machine-driven stepping loop to `yield*` into (unlike a module function called directly from
- * student code), so the closure call is drained to completion instead, matching how the original
- * (pre-Conductor) implementation also ran a `setTimeout` callback as a single, unstepped call.
- */
-export async function drainGenerator<T>(generator: AsyncGenerator<void, T, undefined>): Promise<T> {
-  let next = await generator.next();
-  while (!next.done) {
-    next = await generator.next();
-  }
-  return next.value;
-}

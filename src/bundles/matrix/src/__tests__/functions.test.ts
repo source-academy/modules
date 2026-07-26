@@ -1,7 +1,7 @@
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 import { describe, expect, test } from 'vitest';
 
-import { drainGenerator, matrixToConductorList } from '../functions';
+import { matrixToConductorList } from '../functions';
 
 /** Minimal IDataHandler mock - only pair_make/pair_head/pair_tail are exercised by these tests. */
 class TestDataHandler {
@@ -82,22 +82,5 @@ describe(matrixToConductorList, () => {
     const evaluator = makeHandler();
     const result = await matrixToConductorList(evaluator, [[false, false, false]]);
     expect(await toPlain(evaluator, result)).toEqual([[false, false, false]]);
-  });
-});
-
-describe(drainGenerator, () => {
-  async function* generatorReturning<T>(value: T, yields = 0): AsyncGenerator<void, T, undefined> {
-    for (let i = 0; i < yields; i += 1) {
-      yield;
-    }
-    return value;
-  }
-
-  test('resolves to the generator\'s final return value', async () => {
-    await expect(drainGenerator(generatorReturning(42))).resolves.toBe(42);
-  });
-
-  test('drains through any number of intermediate yields before resolving', async () => {
-    await expect(drainGenerator(generatorReturning('done', 5))).resolves.toBe('done');
   });
 });
