@@ -421,7 +421,16 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     if (this.__tabLoaded || this.__tabLoader === undefined) return;
 
     const tabName = this.__tabLoader.tabs.find(tab => tab === SOUND_TAB_NAME);
-    if (tabName === undefined) return;
+    if (tabName === undefined) {
+      // Same class of internal wiring precondition as the constructor's channel check above -
+      // never reachable from student code, so a plain Error rather than a student-facing
+      // RuntimeSourceError is correct here. Failing loudly, rather than silently returning and
+      // leaving __tabLoaded false, is the whole point of looking the tab up by name instead of
+      // by position: a caller like play()/init_record() should never proceed as if the tab were
+      // loaded when it wasn't.
+      // eslint-disable-next-line @sourceacademy/throw-runtime-error
+      throw new Error('Sound tab is required but was not provided.');
+    }
 
     this.__tabLoader.loadTab(tabName);
     this.__tabLoaded = true;
