@@ -195,9 +195,9 @@ test('Matches snapshot', () => {
 > property accesses or object destructuring:
 >
 > ```ts
-> const { context: { moduleContexts: { sound: { state: { audioPlayed } } } } } = context;
+> const { context: { moduleContexts: { curve: { state: { drawnCurves } } } } } = context;
 > // or
-> const audioPlayed = context.context.moduleContexts.sound.state.audioPlayed;
+> const drawnCurves = context.context.moduleContexts.curve.state.drawnCurves;
 > ```
 >
 > The risk here is that each one of these property accesses could return `null` or `undefined`, resulting
@@ -208,8 +208,8 @@ test('Matches snapshot', () => {
 > ```ts
 > const toSpawn = (context: DebuggerContext): boolean => {
 >   // Can't use destructuring with null coalescing
->   const audioPlayed = context.context.moduleContexts?.sound?.state?.audioPlayed;
->   return audioPlayed && audioPlayed.length > 0;
+>   const drawnCurves = context.context.moduleContexts?.curve?.state?.drawnCurves;
+>   return drawnCurves && drawnCurves.length > 0;
 > };
 > ```
 >
@@ -218,14 +218,14 @@ test('Matches snapshot', () => {
 >
 > ```ts twoslash
 > import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
-> import type { SoundModuleState } from '@sourceacademy/bundle-sound/types';
+> import type { CurveModuleState } from '@sourceacademy/bundle-curve/types';
 > // ---cut---
 > import { getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 >
 > const toSpawn = (context: DebuggerContext): boolean => {
 >   // Can't use destructuring with null coalescing
->   const state = getModuleState<SoundModuleState>(context, 'sound');
->   return !!state && state.audioPlayed.length > 0;
+>   const state = getModuleState<CurveModuleState>(context, 'curve');
+>   return !!state && state.drawnCurves.length > 0;
 > };
 > ```
 >
@@ -234,14 +234,15 @@ test('Matches snapshot', () => {
 > ```tsx twoslash
 > // @jsx: react-jsx
 > import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
-> import type { AudioPlayed, SoundModuleState } from '@sourceacademy/bundle-sound/types';
-> declare function SoundTab(props: { elements: AudioPlayed[] }): React.ReactElement;
+> import type { CurveModuleState as _CurveModuleState } from '@sourceacademy/bundle-curve/types';
+> declare function CurveRenderer(props: { elements: _CurveModuleState['drawnCurves'] }): React.ReactElement;
 > // ---cut---
+> import type { CurveModuleState } from '@sourceacademy/bundle-curve/types';
 > import { getModuleState } from '@sourceacademy/modules-lib/tabs/utils';
 >
 > const body = (context: DebuggerContext): React.ReactElement => {
->   const { audioPlayed } = getModuleState<SoundModuleState>(context, 'sound')!;
->   return <SoundTab elements={audioPlayed} />;
+>   const { drawnCurves } = getModuleState<CurveModuleState>(context, 'curve')!;
+>   return <CurveRenderer elements={drawnCurves} />;
 > };
 > ```
 >

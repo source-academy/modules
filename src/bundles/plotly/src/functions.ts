@@ -1,8 +1,9 @@
+import { get_duration, get_wave } from '@sourceacademy/bundle-sound';
 import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 import type { Data, Layout } from 'plotly.js-dist';
 import { generatePlot } from './curve_functions';
-import type { ListOfPairs } from './plotly';
+import { CurvePlot, type ListOfPairs } from './plotly';
 import type { PlotlyRenderMessage } from './protocol';
 
 export function new_plot(data: ListOfPairs): void {
@@ -216,67 +217,72 @@ export const draw_points_3d: PlotFunctionGenerator = (evaluator: IDataHandler, d
   {}
 );
 
-// /**
-//  * Visualizes the sound on a 2d line graph
-//  * @param sound the sound which is to be visualized on plotly
-//  */
-// export function draw_sound_2d(sound: Sound, display: (data: Omit<PlotlyRenderMessage, 'type'>) => Promise<void>): void {
-//   const FS: number = 44100; // Output sample rate
-//   if (!is_sound(sound)) {
-//     throw new InvalidParameterTypeError('sound', sound, draw_sound_2d.name);
-//     // If a sound is already displayed, terminate execution.
-//   } else if (get_duration(sound) < 0) {
-//     throw new EvaluatorRuntimeError(`${draw_sound_2d.name}: duration of sound is negative`);
-//   } else {
-//     // Instantiate audio context if it has not been instantiated.
-//     // Create mono buffer
-//     const channel: number[] = [];
-//     const time_stamps: number[] = [];
-//     const len = Math.ceil(FS * get_duration(sound));
+/**
+ * Visualizes the sound on a 2d line graph
+ * @param sound the sound which is to be visualized on plotly
+ */
+export async function draw_sound_2d(sound: Sound) {
+  const FS: number = 44100; // Output sample rate
+  if (!is_sound(sound)) {
+    throw new InvalidParameterTypeError('sound', sound, draw_sound_2d.name);
+    // If a sound is already displayed, terminate execution.
+  } else if (get_duration(sound) < 0) {
+    throw new GeneralRuntimeError(`${draw_sound_2d.name}: duration of sound is negative`);
+  } else {
+    // Instantiate audio context if it has not been instantiated.
+    // Create mono buffer
+    const channel: number[] = [];
+    const time_stamps: number[] = [];
+    const len = Math.ceil(FS * get_duration(sound));
 
-//     const wave = get_wave(sound);
-//     for (let i = 0; i < len; i += 1) {
-//       time_stamps[i] = i / FS;
-//       channel[i] = callWithoutMetadata(wave, i / FS);
-//     }
+    const wave = get_wave(sound);
+    for (let i = 0; i < len; i += 1) {
+      time_stamps[i] = i / FS;
+      const generator = wave(i / FS);
+      let next = await generator.next();
+      while (!next.done) {
+        next = await generator.next();
+      }
+      channel[i] = next.value;
+    }
 
-//     const x_s: number[] = [];
-//     const y_s: number[] = [];
+    const x_s: number[] = [];
+    const y_s: number[] = [];
 
-//     for (let i = 0; i < channel.length; i += 1) {
-//       x_s.push(time_stamps[i]);
-//       y_s.push(channel[i]);
-//     }
+    for (let i = 0; i < channel.length; i += 1) {
+      x_s.push(time_stamps[i]);
+      y_s.push(channel[i]);
+    }
 
-//     const plotlyData: Data = {
-//       x: x_s,
-//       y: y_s
-//     };
-//     const plot = new CurvePlot(
-//       {
-//         ...plotlyData,
-//         type: 'scattergl',
-//         mode: 'lines',
-//         line: { width: 0.5 }
-//       } as Data,
-//       {
-//         xaxis: {
-//           type: 'linear',
-//           title: {
-//             text: 'Time'
-//           },
-//           anchor: 'y',
-//           position: 0,
-//           rangeslider: { visible: true }
-//         },
-//         yaxis: {
-//           type: 'linear',
-//           visible: false
-//         },
-//         bargap: 0.2,
-//         barmode: 'stack'
-//       }
-//     );
-//     display(plot.toSerialized());
-//   }
-// }
+    const plotlyData: Data = {
+      x: x_s,
+      y: y_s
+    };
+    const plot = new CurvePlot(
+      {
+        ...plotlyData,
+        type: 'scattergl',
+        mode: 'lines',
+        line: { width: 0.5 }
+      } as Data,
+      {
+        xaxis: {
+          type: 'linear',
+          title: {
+            text: 'Time'
+          },
+          anchor: 'y',
+          position: 0,
+          rangeslider: { visible: true }
+        },
+        yaxis: {
+          type: 'linear',
+          visible: false
+        },
+        bargap: 0.2,
+        barmode: 'stack'
+      }
+    );
+    display(plot.toSerialized());
+  }
+}
