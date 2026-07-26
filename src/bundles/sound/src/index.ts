@@ -145,12 +145,18 @@ function closureToWave(evaluator: IDataHandler, closure: TypedValue<DataType.CLO
   // not all, py2js closures - CSE and PVML closures never have one). Whether *this* closure has one
   // is a static property of how it was compiled, not something that depends on which `t` it's
   // eventually sampled at - so it's safe to determine once, right now, with a single probe call,
-  // rather than discovering it only when a real sample throws. The probe is genuinely free unless
-  // the closure really does have a `.sync` twin: closure_call_sync's own contract only returns
-  // `undefined` for an unsupported *argument* type before the underlying function ever runs (a wave
-  // closure's argument is always DataType.NUMBER, always supported) - the only way real student
-  // code executes here is if a `.sync` twin actually exists, in which case this probe call reuses
-  // that exact result as this Wave's very first real sample too, rather than throwing it away.
+  // rather than discovering it only when a real sample throws.
+  //
+  // The probe is NOT always free, though: closure_call_sync only returns `undefined` cleanly for an
+  // unsupported *argument* type before the underlying function ever runs (a wave closure's argument
+  // is always DataType.NUMBER, always supported, so that clean case never applies here). But a
+  // closure can also have a real `.sync` twin that itself calls back into a *different* closure that
+  // needs a genuine host round-trip - e.g. a student-authored wave transformer, closed over one of
+  // this module's own returned wave closures, composed and handed to a different module entirely.
+  // That inner call has no way to suspend from inside an already-synchronous body, so it throws
+  // instead of returning `undefined`. Treat a throw here exactly like an `undefined` result: this
+  // closure just doesn't get the fast path, and every future sample of it falls back to the
+  // always-correct async path below instead.
   const syncCall = (
     evaluator as IDataHandler & {
       closure_call_sync?: (
@@ -159,7 +165,12 @@ function closureToWave(evaluator: IDataHandler, closure: TypedValue<DataType.CLO
       ) => TypedValue<DataType> | undefined;
     }
   ).closure_call_sync?.bind(evaluator);
-  const probe = syncCall?.(closure, [{ type: DataType.NUMBER, value: 0 }]);
+  let probe: TypedValue<DataType> | undefined;
+  try {
+    probe = syncCall?.(closure, [{ type: DataType.NUMBER, value: 0 }]);
+  } catch {
+    probe = undefined;
+  }
   if (probe !== undefined) {
     if (probe.type !== DataType.NUMBER) {
       throw new EvaluatorRuntimeError(`Expected a wave to return a number, got ${DataType[probe.type]}`);
