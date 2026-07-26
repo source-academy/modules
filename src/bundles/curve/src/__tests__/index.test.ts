@@ -21,6 +21,10 @@ async function run<T>(generator: AsyncGenerator<void, T, undefined>): Promise<T>
 describe(CurveModulePlugin, () => {
   test('draw functions send cloneable curve data over the channel', async () => {
     const sentMessages: unknown[] = [];
+    let finishLoading!: () => void;
+    const loadTab = vi.fn(() => new Promise<void>(resolve => {
+      finishLoading = resolve;
+    }));
     const channel = {
       send: vi.fn(message => sentMessages.push(message)),
       subscribe: vi.fn(),
@@ -48,8 +52,8 @@ describe(CurveModulePlugin, () => {
       opaque_get: vi.fn(async value => value.value)
     };
     const plugin = new CurveModulePlugin({} as any, [channel] as any, evaluator as any, {
-      tabs: [],
-      loadTab: vi.fn()
+      tabs: ['curve'],
+      loadTab
     });
 
     const renderFunction = await run(plugin.draw_connected({
@@ -67,7 +71,18 @@ describe(CurveModulePlugin, () => {
     );
 
     const renderClosure = renderFunction.value;
-    await run(renderClosure.func.call(renderClosure, curve));
+    let renderSettled = false;
+    const renderPromise = run(renderClosure.func.call(renderClosure, curve)).then(result => {
+      renderSettled = true;
+      return result;
+    });
+
+    await vi.waitFor(() => expect(loadTab).toHaveBeenCalledOnce());
+    expect(renderSettled).toBe(false);
+    expect(sentMessages).toHaveLength(0);
+
+    finishLoading();
+    await renderPromise;
 
     expect(sentMessages).toHaveLength(1);
     expect(sentMessages[0]).toMatchObject({
@@ -87,5 +102,29 @@ describe(CurveModulePlugin, () => {
     });
     expect('init' in (sentMessages[0] as any).curve).toBe(false);
     expect('redraw' in (sentMessages[0] as any).curve).toBe(false);
+
+    const animation = await evaluator.closure_make(
+      {
+        args: [DataType.NUMBER] as const,
+        returnType: DataType.CLOSURE
+      },
+      async function* () {
+        return curve;
+      }
+    );
+    await run(plugin.animate_curve(
+      { type: DataType.NUMBER, value: 1 },
+      { type: DataType.NUMBER, value: 1 },
+      renderFunction as unknown as TypedValue<DataType.CLOSURE>,
+      animation
+    ));
+
+    expect(sentMessages).toHaveLength(2);
+    expect(sentMessages[1]).toMatchObject({
+      type: 'animation',
+      duration: 1,
+      fps: 1,
+      is3D: false
+    });
   });
 });

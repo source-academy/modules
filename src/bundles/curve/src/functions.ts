@@ -5,11 +5,11 @@ import { clamp } from 'es-toolkit';
 import { Point, type Curve } from './curves_webgl';
 import type { CurveTransformer } from './types';
 
-function throwIfNotPoint(obj: unknown, func_name: string, param_name: string = 'point'): asserts obj is Point {
+function throwIfNotPoint(obj: unknown, func_name: string, param_name?: string): asserts obj is Point {
   if (!(obj instanceof Point)) {
     // TODO: Use a more specific expected type
     // eslint-disable-next-line @sourceacademy/throw-runtime-error
-    throw new EvaluatorParameterTypeError(func_name, param_name, 'Point', typeof obj);
+    throw new EvaluatorParameterTypeError(func_name, param_name, 'Point', obj);
   }
 }
 

@@ -43,6 +43,7 @@ import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 import * as drawers from './drawers';
 import * as functions from './functions';
 import { CURVE_CHANNEL_ID, type CurveChannelMessage, type CurveDisplayMessage } from './protocol';
+import type { RenderFunction } from './types';
 
 type TabLoader = {
   tabs: string[];
@@ -67,6 +68,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
     'rainbow',
     'r_of',
     'rotate_around_origin',
+    'rotate_around_origin_3D',
     'scale',
     'scale_proportional',
     'translate',
@@ -95,6 +97,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
   private __tabLoader: TabLoader;
   private __displayed: CurveDisplayMessage[] = [];
   private __tabLoaded = false;
+  private __renderFunctions = new Map<TypedValue<DataType.CLOSURE>['value'], RenderFunction>();
 
   constructor(
     conduit: IConduit,
@@ -134,6 +137,28 @@ export default class CurveModulePlugin extends BaseModulePlugin {
     this.__displayed.push(message);
     await this.__loadCurveTab();
     this.__curveChannel.send(message);
+  }
+
+  private async __makeRenderClosure(renderFunction: RenderFunction): Promise<TypedValue<DataType.CLOSURE>> {
+    const pluginThis = this;
+    const closure = await this.evaluator.closure_make(
+      { args: [DataType.CLOSURE], returnType: DataType.OPAQUE },
+      async function* (curve: TypedValue<DataType.CLOSURE>) {
+        const curveDrawn = yield* renderFunction(curve);
+        await pluginThis.__display({ type: 'render', curve: curveDrawn.toSerializable() });
+        return await pluginThis.evaluator.opaque_make(curveDrawn);
+      }
+    );
+    this.__renderFunctions.set(closure.value, renderFunction);
+    return closure;
+  }
+
+  private __getRenderFunction(drawer: TypedValue<DataType.CLOSURE>): RenderFunction {
+    const renderFunction = this.__renderFunctions.get(drawer.value);
+    if (renderFunction === undefined) {
+      throw new EvaluatorRuntimeError('Expected a render function created by the curve module.');
+    }
+    return renderFunction;
   }
 
   /**
@@ -568,16 +593,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    */
   async* draw_connected(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_connected(this.evaluator, numPoints.value);
-
-    const pluginThis = this;
-    return await this.evaluator.closure_make(
-      { args: [DataType.CLOSURE], returnType: DataType.OPAQUE },
-      async function* (curve: TypedValue<DataType.CLOSURE>) {
-        const curveDrawn = yield* renderFunction(curve);
-        pluginThis.__display({ type: 'render', curve: curveDrawn.toSerializable() });
-        return await pluginThis.evaluator.opaque_make(curveDrawn);
-      }
-    );
+    return await this.__makeRenderClosure(renderFunction);
   }
 
   /**
@@ -595,16 +611,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    */
   async* draw_connected_full_view(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_connected_full_view(this.evaluator, numPoints.value);
-
-    const pluginThis = this;
-    return await this.evaluator.closure_make(
-      { args: [DataType.CLOSURE], returnType: DataType.OPAQUE },
-      async function* (curve: TypedValue<DataType.CLOSURE>) {
-        const curveDrawn = yield* renderFunction(curve);
-        pluginThis.__display({ type: 'render', curve: curveDrawn.toSerializable() });
-        return await pluginThis.evaluator.opaque_make(curveDrawn);
-      }
-    );
+    return await this.__makeRenderClosure(renderFunction);
   }
 
   /**
@@ -622,16 +629,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    */
   async* draw_connected_full_view_proportional(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_connected_full_view_proportional(this.evaluator, numPoints.value);
-
-    const pluginThis = this;
-    return await this.evaluator.closure_make(
-      { args: [DataType.CLOSURE], returnType: DataType.OPAQUE },
-      async function* (curve: TypedValue<DataType.CLOSURE>) {
-        const curveDrawn = yield* renderFunction(curve);
-        pluginThis.__display({ type: 'render', curve: curveDrawn.toSerializable() });
-        return await pluginThis.evaluator.opaque_make(curveDrawn);
-      }
-    );
+    return await this.__makeRenderClosure(renderFunction);
   }
 
   /**
@@ -649,16 +647,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    */
   async* draw_points(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_points(this.evaluator, numPoints.value);
-
-    const pluginThis = this;
-    return await this.evaluator.closure_make(
-      { args: [DataType.CLOSURE], returnType: DataType.OPAQUE },
-      async function* (curve: TypedValue<DataType.CLOSURE>) {
-        const curveDrawn = yield* renderFunction(curve);
-        pluginThis.__display({ type: 'render', curve: curveDrawn.toSerializable() });
-        return await pluginThis.evaluator.opaque_make(curveDrawn);
-      }
-    );
+    return await this.__makeRenderClosure(renderFunction);
   }
 
   /**
@@ -676,16 +665,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    */
   async* draw_points_full_view(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_points_full_view(this.evaluator, numPoints.value);
-
-    const pluginThis = this;
-    return await this.evaluator.closure_make(
-      { args: [DataType.CLOSURE], returnType: DataType.OPAQUE },
-      async function* (curve: TypedValue<DataType.CLOSURE>) {
-        const curveDrawn = yield* renderFunction(curve);
-        pluginThis.__display({ type: 'render', curve: curveDrawn.toSerializable() });
-        return await pluginThis.evaluator.opaque_make(curveDrawn);
-      }
-    );
+    return await this.__makeRenderClosure(renderFunction);
   }
 
   /**
@@ -703,16 +683,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    */
   async* draw_points_full_view_proportional(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_points_full_view_proportional(this.evaluator, numPoints.value);
-
-    const pluginThis = this;
-    return await this.evaluator.closure_make(
-      { args: [DataType.CLOSURE], returnType: DataType.OPAQUE },
-      async function* (curve: TypedValue<DataType.CLOSURE>) {
-        const curveDrawn = yield* renderFunction(curve);
-        pluginThis.__display({ type: 'render', curve: curveDrawn.toSerializable() });
-        return await pluginThis.evaluator.opaque_make(curveDrawn);
-      }
-    );
+    return await this.__makeRenderClosure(renderFunction);
   }
 
   /**
@@ -730,16 +701,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    */
   async* draw_3D_connected(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_3D_connected(this.evaluator, numPoints.value);
-
-    const pluginThis = this;
-    return await this.evaluator.closure_make(
-      { args: [DataType.CLOSURE], returnType: DataType.OPAQUE },
-      async function* (curve: TypedValue<DataType.CLOSURE>) {
-        const curveDrawn = yield* renderFunction(curve);
-        pluginThis.__display({ type: 'render', curve: curveDrawn.toSerializable() });
-        return await pluginThis.evaluator.opaque_make(curveDrawn);
-      }
-    );
+    return await this.__makeRenderClosure(renderFunction);
   }
 
   /**
@@ -757,16 +719,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    */
   async* draw_3D_connected_full_view(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_3D_connected_full_view(this.evaluator, numPoints.value);
-
-    const pluginThis = this;
-    return await this.evaluator.closure_make(
-      { args: [DataType.CLOSURE], returnType: DataType.OPAQUE },
-      async function* (curve: TypedValue<DataType.CLOSURE>) {
-        const curveDrawn = yield* renderFunction(curve);
-        pluginThis.__display({ type: 'render', curve: curveDrawn.toSerializable() });
-        return await pluginThis.evaluator.opaque_make(curveDrawn);
-      }
-    );
+    return await this.__makeRenderClosure(renderFunction);
   }
 
   /**
@@ -784,16 +737,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    */
   async* draw_3D_connected_full_view_proportional(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_3D_connected_full_view_proportional(this.evaluator, numPoints.value);
-
-    const pluginThis = this;
-    return await this.evaluator.closure_make(
-      { args: [DataType.CLOSURE], returnType: DataType.OPAQUE },
-      async function* (curve: TypedValue<DataType.CLOSURE>) {
-        const curveDrawn = yield* renderFunction(curve);
-        pluginThis.__display({ type: 'render', curve: curveDrawn.toSerializable() });
-        return await pluginThis.evaluator.opaque_make(curveDrawn);
-      }
-    );
+    return await this.__makeRenderClosure(renderFunction);
   }
 
   /**
@@ -811,16 +755,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    */
   async* draw_3D_points(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_3D_points(this.evaluator, numPoints.value);
-
-    const pluginThis = this;
-    return await this.evaluator.closure_make(
-      { args: [DataType.CLOSURE], returnType: DataType.OPAQUE },
-      async function* (curve: TypedValue<DataType.CLOSURE>) {
-        const curveDrawn = yield* renderFunction(curve);
-        pluginThis.__display({ type: 'render', curve: curveDrawn.toSerializable() });
-        return await pluginThis.evaluator.opaque_make(curveDrawn);
-      }
-    );
+    return await this.__makeRenderClosure(renderFunction);
   }
 
   /**
@@ -838,16 +773,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    */
   async* draw_3D_points_full_view(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_3D_points_full_view(this.evaluator, numPoints.value);
-
-    const pluginThis = this;
-    return await this.evaluator.closure_make(
-      { args: [DataType.CLOSURE], returnType: DataType.OPAQUE },
-      async function* (curve: TypedValue<DataType.CLOSURE>) {
-        const curveDrawn = yield* renderFunction(curve);
-        pluginThis.__display({ type: 'render', curve: curveDrawn.toSerializable() });
-        return await pluginThis.evaluator.opaque_make(curveDrawn);
-      }
-    );
+    return await this.__makeRenderClosure(renderFunction);
   }
 
   /**
@@ -865,16 +791,7 @@ export default class CurveModulePlugin extends BaseModulePlugin {
    */
   async* draw_3D_points_full_view_proportional(numPoints: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const renderFunction = drawers.draw_3D_points_full_view_proportional(this.evaluator, numPoints.value);
-
-    const pluginThis = this;
-    return await this.evaluator.closure_make(
-      { args: [DataType.CLOSURE], returnType: DataType.OPAQUE },
-      async function* (curve: TypedValue<DataType.CLOSURE>) {
-        const curveDrawn = yield* renderFunction(curve);
-        pluginThis.__display({ type: 'render', curve: curveDrawn.toSerializable() });
-        return await pluginThis.evaluator.opaque_make(curveDrawn);
-      }
-    );
+    return await this.__makeRenderClosure(renderFunction);
   }
 
   /**
@@ -893,11 +810,11 @@ export default class CurveModulePlugin extends BaseModulePlugin {
   async* animate_curve(
     duration: TypedValue<DataType.NUMBER>,
     fps: TypedValue<DataType.NUMBER>,
-    drawer: TypedValue<DataType.OPAQUE>,
+    drawer: TypedValue<DataType.CLOSURE>,
     func: TypedValue<DataType.CLOSURE>
   ): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
-    const curve = yield* drawers.animate_curve(this.evaluator, duration.value, fps.value, await this.evaluator.opaque_get(drawer), func);
-    this.__display(curve.toSerializable());
+    const curve = yield* drawers.animate_curve(this.evaluator, duration.value, fps.value, this.__getRenderFunction(drawer), func);
+    await this.__display(curve.toSerializable());
     return await this.evaluator.opaque_make(curve);
   }
 
@@ -917,11 +834,11 @@ export default class CurveModulePlugin extends BaseModulePlugin {
   async* animate_3D_curve(
     duration: TypedValue<DataType.NUMBER>,
     fps: TypedValue<DataType.NUMBER>,
-    drawer: TypedValue<DataType.OPAQUE>,
+    drawer: TypedValue<DataType.CLOSURE>,
     func: TypedValue<DataType.CLOSURE>
   ): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
-    const curve = yield* drawers.animate_3D_curve(this.evaluator, duration.value, fps.value, await this.evaluator.opaque_get(drawer), func);
-    this.__display(curve.toSerializable());
+    const curve = yield* drawers.animate_3D_curve(this.evaluator, duration.value, fps.value, this.__getRenderFunction(drawer), func);
+    await this.__display(curve.toSerializable());
     return await this.evaluator.opaque_make(curve);
   }
 
@@ -968,5 +885,5 @@ attachModuleMethod('draw_3D_connected_full_view_proportional', [DataType.NUMBER]
 attachModuleMethod('draw_3D_points', [DataType.NUMBER], DataType.CLOSURE);
 attachModuleMethod('draw_3D_points_full_view', [DataType.NUMBER], DataType.CLOSURE);
 attachModuleMethod('draw_3D_points_full_view_proportional', [DataType.NUMBER], DataType.CLOSURE);
-attachModuleMethod('animate_curve', [DataType.NUMBER, DataType.NUMBER, DataType.OPAQUE, DataType.CLOSURE], DataType.OPAQUE);
-attachModuleMethod('animate_3D_curve', [DataType.NUMBER, DataType.NUMBER, DataType.OPAQUE, DataType.CLOSURE], DataType.OPAQUE);
+attachModuleMethod('animate_curve', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE, DataType.CLOSURE], DataType.OPAQUE);
+attachModuleMethod('animate_3D_curve', [DataType.NUMBER, DataType.NUMBER, DataType.CLOSURE, DataType.CLOSURE], DataType.OPAQUE);

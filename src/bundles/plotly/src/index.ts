@@ -117,9 +117,44 @@ export default class PlotlyModulePlugin extends BaseModulePlugin {
     return { type: DataType.VOID, value: undefined };
   }
 
-  /* BLOCKED BY LACK OF MAP SUPPORT
-   async* new_plot_json(data: TypedValue<DataType.STRING>): AsyncGenerator<void, void, unknown>
-   */
+  // TODO: Restore this as active JSDoc when new_plot_json has map support.
+  // /**
+  //  * Adds a new plotly plot to the context which will be rendered in the Plotly Tabs
+  //  * @example
+  //  * ```
+  //  * const z1 = [
+  //  *   [8.83,8.89,8.81,8.87,8.9,8.87],
+  //  *   [8.89,8.94,8.85,8.94,8.96,8.92],
+  //  *   [8.84,8.9,8.82,8.92,8.93,8.91],
+  //  *   [8.79,8.85,8.79,8.9,8.94,8.92],
+  //  *   [8.79,8.88,8.81,8.9,8.95,8.92],
+  //  *   [8.8,8.82,8.78,8.91,8.94,8.92],
+  //  *   [8.75,8.78,8.77,8.91,8.95,8.92],
+  //  *   [8.8,8.8,8.77,8.91,8.95,8.94],
+  //  *   [8.74,8.81,8.76,8.93,8.98,8.99],
+  //  *   [8.89,8.99,8.92,9.1,9.13,9.11],
+  //  *   [8.97,8.97,8.91,9.09,9.11,9.11],
+  //  *   [9.04,9.08,9.05,9.25,9.28,9.27],
+  //  *   [9,9.01,9,9.2,9.23,9.2],
+  //  *   [8.99,8.99,8.98,9.18,9.2,9.19],
+  //  *   [8.93,8.97,8.97,9.18,9.2,9.18]
+  //  * ];
+  //  *
+  //  * let z2 = [];
+  //  * for (let i = 0; i < array_length(z1); i = i + 1) {
+  //  *   let z2_row = [];
+  //  *   for (let j = 0; j < array_length(z1[i]); j = j + 1) {
+  //  *     z2_row.push(z1[i][j]+1);
+  //  *   }
+  //  *   z2.push(z2_row);
+  //  * }
+  //  * const data = [{ z: z1, type: 'surface' }, { z: z2 , type: 'surface' }];
+  //  * new_plot_json(data); // creates a surface plot in Plotly Tab
+  //  * ```
+  //  * @param data The data as an array of json objects having some or all of the given fields
+  //  */
+  // BLOCKED BY LACK OF MAP SUPPORT
+  // async* new_plot_json(data: TypedValue<DataType.STRING>): AsyncGenerator<void, void, unknown>
 
   private draw_connected_2d_cache!: (numPoints: number) => AsyncGenerator<void, TypedValue<DataType.CLOSURE>, unknown>;
   private draw_connected_3d_cache!: (numPoints: number) => AsyncGenerator<void, TypedValue<DataType.CLOSURE>, unknown>;
