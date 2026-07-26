@@ -4044,6 +4044,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@sourceacademy/bundle-matrix@workspace:^, @sourceacademy/bundle-matrix@workspace:src/bundles/matrix":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/bundle-matrix@workspace:src/bundles/matrix"
+  dependencies:
+    "@sourceacademy/conductor": "catalog:"
+    "@sourceacademy/modules-buildtools": "workspace:^"
+    typescript: "catalog:"
+  languageName: unknown
+  linkType: soft
+
 "@sourceacademy/bundle-midi@workspace:^, @sourceacademy/bundle-midi@workspace:src/bundles/midi":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-midi@workspace:src/bundles/midi"
@@ -4209,16 +4219,6 @@ __metadata:
     "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     es-toolkit: "npm:^1.44.0"
-    typescript: "catalog:"
-  languageName: unknown
-  linkType: soft
-
-"@sourceacademy/bundle-sound_matrix@workspace:src/bundles/sound_matrix":
-  version: 0.0.0-use.local
-  resolution: "@sourceacademy/bundle-sound_matrix@workspace:src/bundles/sound_matrix"
-  dependencies:
-    "@sourceacademy/modules-buildtools": "workspace:^"
-    js-slang: "catalog:"
     typescript: "catalog:"
   languageName: unknown
   linkType: soft
@@ -4659,6 +4659,27 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@sourceacademy/tab-Matrix@workspace:src/tabs/Matrix":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/tab-Matrix@workspace:src/tabs/Matrix"
+  dependencies:
+    "@blueprintjs/core": "npm:^6.0.0"
+    "@sourceacademy/bundle-matrix": "workspace:^"
+    "@sourceacademy/common-tabs": "npm:^0.0.1"
+    "@sourceacademy/conductor": "catalog:"
+    "@sourceacademy/modules-buildtools": "workspace:^"
+    "@types/react": "catalog:"
+    "@types/react-dom": "catalog:"
+    "@vitest/browser-playwright": "catalog:"
+    "@vitest/coverage-v8": "catalog:"
+    playwright: "npm:^1.55.1"
+    react: "catalog:"
+    react-dom: "catalog:"
+    typescript: "catalog:"
+    vitest: "catalog:"
+  languageName: unknown
+  linkType: soft
+
 "@sourceacademy/tab-Nbody@workspace:src/tabs/Nbody":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/tab-Nbody@workspace:src/tabs/Nbody"
@@ -4819,22 +4840,6 @@ __metadata:
     "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/react": "catalog:"
-    react: "catalog:"
-    react-dom: "catalog:"
-    typescript: "catalog:"
-  languageName: unknown
-  linkType: soft
-
-"@sourceacademy/tab-SoundMatrix@workspace:src/tabs/SoundMatrix":
-  version: 0.0.0-use.local
-  resolution: "@sourceacademy/tab-SoundMatrix@workspace:src/tabs/SoundMatrix"
-  dependencies:
-    "@blueprintjs/core": "npm:^6.0.0"
-    "@sourceacademy/modules-buildtools": "workspace:^"
-    "@sourceacademy/modules-lib": "workspace:^"
-    "@types/react": "catalog:"
-    "@types/react-dom": "catalog:"
-    classnames: "npm:^2.3.1"
     react: "catalog:"
     react-dom: "catalog:"
     typescript: "catalog:"
