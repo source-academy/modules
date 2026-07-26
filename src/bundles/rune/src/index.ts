@@ -7,13 +7,13 @@
  * @module rune
  * @author Hou Ruomu
  */
+import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
 import { BaseModulePlugin } from '@sourceacademy/conductor/module';
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 
 import { attachModuleMethod } from '@sourceacademy/modules-lib/conductor/methods';
-import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import * as funcs from './functions';
 import {
   RUNE_CHANNEL_ID,
@@ -185,7 +185,7 @@ export default class RuneModulePlugin extends BaseModulePlugin {
     super(conduit, [runeChannel], evaluator);
 
     if (!runeChannel) {
-      throw new GeneralRuntimeError('Rune channel is required but was not provided.');
+      throw new EvaluatorRuntimeError('Rune channel is required but was not provided.');
     }
 
     this.__runeChannel = runeChannel as IChannel<RuneChannelMessage>;
