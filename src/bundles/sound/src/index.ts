@@ -77,7 +77,7 @@ import {
   trombone as trombone_func,
   violin as violin_func
 } from './functions';
-import { SOUND_CHANNEL_ID, type SoundTabRpc } from './protocol';
+import { SOUND_CHANNEL_ID, SOUND_TAB_NAME, type SoundTabRpc } from './protocol';
 import type { Sound, SoundTransformer, Wave } from './types';
 
 type SoundTabLoader = {
@@ -386,7 +386,6 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     evaluator: IInterfacableEvaluator,
     tabLoader?: SoundTabLoader
   ) {
-    super(conduit, [soundChannel], evaluator);
     if (!soundChannel) {
       // An internal wiring precondition (Conductor's host failed to provide the channel this
       // plugin declared via channelAttach) - never reachable from student code, so a plain Error
@@ -394,6 +393,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
       // eslint-disable-next-line @sourceacademy/throw-runtime-error
       throw new Error('Sound channel is required but was not provided.');
     }
+    super(conduit, [soundChannel], evaluator);
     this.__tabLoader = tabLoader;
     // The tab is the web plugin for playback/recording: it does the actual AudioContext/
     // MediaRecorder work (only available on the browser main thread, not inside this runner's
@@ -409,7 +409,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
   private __ensureTabLoaded(): void {
     if (this.__tabLoaded || this.__tabLoader === undefined) return;
 
-    const tabName = this.__tabLoader.tabs[0];
+    const tabName = this.__tabLoader.tabs.find(tab => tab === SOUND_TAB_NAME);
     if (tabName === undefined) return;
 
     this.__tabLoader.loadTab(tabName);
