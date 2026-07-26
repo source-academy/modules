@@ -28,6 +28,9 @@ describe('serializeSolid/deserializeSolid', () => {
     expect(restored.polygons).toHaveLength(original.polygons.length);
     expect(restored.transforms).toStrictEqual([...original.transforms]);
     expect(measureBoundingBox(restored)).toStrictEqual(measureBoundingBox(original));
+    // Bounding box and polygon count alone couldn't catch a swapped vertex or
+    // winding-order bug; comparing the full serialized structure can.
+    expect(serializeSolid(restored)).toStrictEqual(serializeSolid(original));
   });
 
   test('preserves the geometry-level colour set by the primitives', () => {

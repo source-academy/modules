@@ -703,9 +703,9 @@ export function rgb(
  * click - so the module plugin sends these buffers to the tab, which performs
  * the actual save. See `download_shape_stl` in index.ts.
  */
-export function serializeShapeStl(shape: Shape): ArrayBuffer[] {
+export function serializeShapeStl(shape: Shape, funcName: string): ArrayBuffer[] {
   if (!is_shape(shape)) {
-    throw new EvaluatorParameterTypeError('download_shape_stl', undefined, 'Shape', shape);
+    throw new EvaluatorParameterTypeError(funcName, undefined, 'Shape', shape);
   }
 
   return serialize({ binary: true }, shape.solid);

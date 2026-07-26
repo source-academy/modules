@@ -63,7 +63,9 @@ export default class CsgTabPlugin implements IPlugin {
       // Triggering a download needs an anchor element to click, which only
       // exists here on the browser's main thread - the runner serializes the
       // STL and hands us the buffers.
-      void this.__download(message);
+      this.__download(message).catch((error: unknown) => {
+        console.error('CSG download failed', error);
+      });
       return;
     }
 

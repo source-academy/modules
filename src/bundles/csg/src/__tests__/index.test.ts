@@ -45,6 +45,12 @@ function opaqueValue(evaluator: TestDataHandler, value: TypedValue<DataType.OPAQ
 }
 
 describe(CsgModulePlugin, () => {
+  test('constructor throws before touching the base plugin if the channel is missing', () => {
+    const evaluator = new TestDataHandler();
+    expect(() => new CsgModulePlugin({} as any, [undefined] as any, evaluator))
+      .toThrow('CSG channel is required but was not provided.');
+  });
+
   test('exports every function plus the sixteen colour constants', async () => {
     const { plugin } = makePlugin();
     await plugin.initialise();
@@ -53,6 +59,15 @@ describe(CsgModulePlugin, () => {
     expect(symbols).toHaveLength(plugin.exportedNames.length + 16);
     expect(plugin.exports.find(exported => exported.symbol === 'silver')!.value)
       .toStrictEqual({ type: DataType.CONST_STRING, value: SILVER });
+  });
+
+  test('initialise() is idempotent', async () => {
+    const { plugin } = makePlugin();
+    await plugin.initialise();
+    await plugin.initialise();
+
+    const symbols = plugin.exports.map(exported => exported.symbol);
+    expect(symbols).toHaveLength(plugin.exportedNames.length + 16);
   });
 
   test('every exported name carries an attached signature', () => {
@@ -217,5 +232,18 @@ describe(CsgModulePlugin, () => {
     expect(message.data.every(chunk => chunk instanceof ArrayBuffer)).toBe(true);
     // 80-byte header plus the 4-byte triangle count, at minimum
     expect(message.data.reduce((total, chunk) => total + chunk.byteLength, 0)).toBeGreaterThan(84);
+  });
+
+  test('a download is never replayed to a later request (e.g. the tab being recreated)', async () => {
+    const { plugin, sent, requestBacklog } = makePlugin();
+    const cube = await runAsyncGenerator(plugin.cube(stringValue(SILVER)));
+    await runAsyncGenerator(plugin.download_shape_stl(cube));
+    requestBacklog();
+    expect(sent.filter(message => message.type === 'download')).toHaveLength(1);
+
+    // The tab is recreated (or simply asks again) - the completed download
+    // must not be re-sent, unlike a render, which is fine to redraw.
+    requestBacklog();
+    expect(sent.filter(message => message.type === 'download')).toHaveLength(1);
   });
 });

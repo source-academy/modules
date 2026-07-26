@@ -65,6 +65,7 @@ import { attachModuleMethod } from '@sourceacademy/modules-lib/conductor/methods
 import * as funcs from './functions';
 import {
   CSG_CHANNEL_ID,
+  CSG_TAB_NAME,
   serializeSolid,
   type CsgChannelMessage,
   type CsgDisplayMessage
@@ -123,7 +124,9 @@ export default class CsgModulePlugin extends BaseModulePlugin {
 
   private readonly __csgChannel: IChannel<CsgChannelMessage>;
   private readonly __tabLoader: CsgTabLoader | undefined;
-  private readonly __displayed: CsgDisplayMessage[] = [];
+  // Reassigned (not just mutated) once a request has flushed it, to drop any
+  // one-shot download entries - see __display.
+  private __displayed: CsgDisplayMessage[] = [];
   /* NOTE
     Previously this lived on a `CsgModuleState` shared with the tab through
     `context.moduleContexts.csg.state`. The tab now only ever sees serialized
@@ -132,6 +135,7 @@ export default class CsgModulePlugin extends BaseModulePlugin {
   private readonly __renderGroupManager = new RenderGroupManager();
   private __tabLoaded = false;
   private __tabRequested = false;
+  private __initialised = false;
 
   /**
    * A hex color code for black (#000000).
@@ -267,27 +271,39 @@ export default class CsgModulePlugin extends BaseModulePlugin {
     evaluator: IInterfacableEvaluator,
     tabLoader?: CsgTabLoader
   ) {
-    super(conduit, [csgChannel], evaluator);
-
+    // Checked before super() so a missing channel always surfaces as this
+    // error, rather than whatever BaseModulePlugin's constructor does with an
+    // [undefined] channels array.
     if (!csgChannel) {
       throw new EvaluatorRuntimeError('CSG channel is required but was not provided.');
     }
+
+    super(conduit, [csgChannel], evaluator);
 
     this.__csgChannel = csgChannel as IChannel<CsgChannelMessage>;
     this.__tabLoader = tabLoader;
     // The tab asks for a replay once it has loaded, since a program that
     // rendered before the tab existed would otherwise draw into nothing. A
-    // fresh tab always starts with an empty canvas list, so replaying the whole
-    // backlog is right on a re-request too (e.g. the tab being recreated).
+    // fresh tab always starts with an empty canvas list, so replaying the
+    // render backlog is right on a re-request too (e.g. the tab being
+    // recreated) - but a download is a one-shot side effect, not persistent
+    // scene state, so it must never be replayed; see __display.
     this.__csgChannel.subscribe(message => {
       if (message.type === 'request') {
         this.__tabRequested = true;
         this.__displayed.forEach(displayedMessage => this.__csgChannel.send(displayedMessage));
+        this.__displayed = this.__displayed.filter(displayedMessage => displayedMessage.type === 'render');
       }
     });
   }
 
   override async initialise() {
+    // A second call would otherwise push every method's and every colour
+    // constant's export onto `exports` again - super.initialise() isn't
+    // idempotent either, so the guard has to cover it too.
+    if (this.__initialised) return;
+    this.__initialised = true;
+
     await super.initialise();
 
     for (const [name, value] of Object.entries(CSG_COLORS)) {
@@ -303,7 +319,7 @@ export default class CsgModulePlugin extends BaseModulePlugin {
   private __loadCsgTab(): void {
     if (this.__tabLoaded || this.__tabLoader === undefined) return;
 
-    const tabName = this.__tabLoader.tabs[0];
+    const tabName = this.__tabLoader.tabs.find(tab => tab === CSG_TAB_NAME);
     if (tabName === undefined) return;
 
     this.__tabLoader.loadTab(tabName);
@@ -311,7 +327,20 @@ export default class CsgModulePlugin extends BaseModulePlugin {
   }
 
   private __display(message: CsgDisplayMessage): void {
-    this.__displayed.push(message);
+    /* NOTE
+      Only render messages belong in the replayable backlog. A download is a
+      one-shot side effect (it triggers a real file save) rather than
+      persistent scene state, so once the tab has already been requested at
+      least once, a download is sent live and never buffered - replaying it to
+      a later request (e.g. the tab being recreated) would silently re-save
+      the file and retain its STL ArrayBuffers in memory indefinitely. Before
+      the first request, it's still buffered (nothing has anywhere to go yet),
+      but the constructor's request handler strips it out of __displayed right
+      after that first flush, so later requests never see it again either.
+    */
+    if (message.type === 'render' || !this.__tabRequested) {
+      this.__displayed.push(message);
+    }
     this.__loadCsgTab();
 
     /* NOTE
@@ -887,11 +916,12 @@ export default class CsgModulePlugin extends BaseModulePlugin {
    * @publicType shape: Shape
    */
   async* download_shape_stl(shape: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
-    const value = await this.__getShape(shape, 'download_shape_stl');
+    const funcName = 'download_shape_stl';
+    const value = await this.__getShape(shape, funcName);
     this.__display({
       type: 'download',
       filename: STL_FILENAME,
-      data: funcs.serializeShapeStl(value)
+      data: funcs.serializeShapeStl(value, funcName)
     });
     return { type: DataType.VOID, value: undefined };
   }
