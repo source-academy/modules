@@ -4000,12 +4000,12 @@ __metadata:
   resolution: "@sourceacademy/bundle-csg@workspace:src/bundles/csg"
   dependencies:
     "@jscad/modeling": "patch:@jscad/modeling@npm%3A2.9.6#~/.yarn/patches/@jscad-modeling-npm-2.9.6-71e6aa3a91.patch"
-    "@jscad/regl-renderer": "npm:^2.6.1"
     "@jscad/stl-serializer": "npm:2.1.11"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
+    "@sourceacademy/modules-testplugin": "workspace:^"
     js-slang: "catalog:"
-    save-file: "npm:^2.3.1"
     typescript: "catalog:"
   languageName: unknown
   linkType: soft
@@ -4599,13 +4599,19 @@ __metadata:
   resolution: "@sourceacademy/tab-Csg@workspace:src/tabs/Csg"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
+    "@blueprintjs/icons": "npm:^6.0.0"
+    "@jscad/modeling": "patch:@jscad/modeling@npm%3A2.9.6#~/.yarn/patches/@jscad-modeling-npm-2.9.6-71e6aa3a91.patch"
+    "@jscad/regl-renderer": "npm:^2.6.1"
     "@sourceacademy/bundle-csg": "workspace:^"
+    "@sourceacademy/common-tabs": "npm:^0.0.1"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "catalog:"
     "@types/react-dom": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
+    save-file: "npm:^2.3.1"
     typescript: "catalog:"
   languageName: unknown
   linkType: soft

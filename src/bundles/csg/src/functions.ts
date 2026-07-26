@@ -9,32 +9,59 @@ import {
 } from '@jscad/modeling/src/operations/booleans';
 import { extrudeLinear } from '@jscad/modeling/src/operations/extrusions';
 import { serialize } from '@jscad/stl-serializer';
-import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { assertNumberWithinRange, degreesToRadians, hexToColor } from '@sourceacademy/modules-lib/utilities';
-import { is_list, list_to_vector, vector_to_list, type List } from 'js-slang/dist/stdlib/list';
-import save from 'save-file';
-import { Core } from './core';
+import {
+  assertNumberWithinRange,
+  EvaluatorParameterTypeError,
+  EvaluatorRuntimeError
+} from '@sourceacademy/conductor/common';
 import {
   Group,
   Shape,
   centerPrimitive,
-  type Operable,
-  type RenderGroup
+  type Operable
 } from './utilities';
 
 /* [Main] */
 /* NOTE
-  These functions involving calls (not merely types) to js-slang make this file
-  only usable in bundles. DO NOT import this file in tabs or the build will
-  fail. Something about the node modules that building them involves causes
-  esbuild to attempt but fail to include Node-specific APIs (eg fs, os, https)
-  in the output that's meant for a browser environment (you can't use those in
-  the browser since they are Node-only). This is why we keep these functions
-  here instead of in utilities.ts.
+  This is the pure geometry layer: everything here operates on plain Shapes and
+  Groups. Marshalling to and from Source values (opaque handles, lists,
+  closures) lives in index.ts, and rendering lives in the Csg tab.
 
-  When a user passes in a List, we convert it to arrays here so that the rest of
-  the underlying code is free to operate with arrays.
+  Errors are thrown as `@sourceacademy/conductor/common`'s
+  EvaluatorParameterTypeError/EvaluatorRuntimeError, not the legacy
+  InvalidParameterTypeError/GeneralRuntimeError from
+  `@sourceacademy/modules-lib/errors`, and hexToColor is a local copy rather
+  than `@sourceacademy/modules-lib/utilities`'s. The legacy versions are a
+  straight re-export of (or, for hexToColor, throw) js-slang classes, and
+  js-slang's own bundled build gets marked `external` by buildtools (js-slang
+  runs the legacy interpreter, not a Conductor module) - so under Conductor,
+  that import resolves to undefined at runtime and throwing it crashes with
+  "Cannot read properties of undefined" instead of the intended error.
+  assertNumberWithinRange has the same problem for the same reason, and
+  merely importing anything else from `modules-lib/utilities` pulls all of
+  this in regardless, since hexToColor there throws these same classes
+  internally. Conductor's own equivalents have no such dependency.
 */
+function degreesToRadians(degrees: number): number {
+  return (degrees / 360) * (2 * Math.PI);
+}
+
+function hexToColor(hex: string, funcName: string = hexToColor.name): [r: number, g: number, b: number] {
+  if (typeof hex !== 'string') {
+    throw new EvaluatorParameterTypeError(funcName, undefined, 'string', hex);
+  }
+
+  const match = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu.exec(hex);
+  if (!match) {
+    throw new EvaluatorRuntimeError(`${funcName}: Invalid color hex string: ${hex}`);
+  }
+
+  return [
+    parseInt(match[1], 16) / 0xff,
+    parseInt(match[2], 16) / 0xff,
+    parseInt(match[3], 16) / 0xff
+  ];
+}
 /* [Exports] */
 
 // [Variables - Colors]
@@ -384,11 +411,11 @@ export function torus(hex: string): Shape {
  */
 export function union(first: Shape, second: Shape): Shape {
   if (!is_shape(first)) {
-    throw new InvalidParameterTypeError('Shape', first, union.name, 'first');
+    throw new EvaluatorParameterTypeError(union.name, 'first', 'Shape', first);
   }
 
   if (!is_shape(second)) {
-    throw new InvalidParameterTypeError('Shape', second, union.name, 'second');
+    throw new EvaluatorParameterTypeError(union.name, 'second', 'Shape', second);
   }
 
   const solid = _union(first.solid, second.solid);
@@ -407,11 +434,11 @@ export function union(first: Shape, second: Shape): Shape {
  */
 export function subtract(target: Shape, subtractedShape: Shape): Shape {
   if (!is_shape(target)) {
-    throw new InvalidParameterTypeError('Shape', target, subtract.name, 'target');
+    throw new EvaluatorParameterTypeError(subtract.name, 'target', 'Shape', target);
   }
 
   if (!is_shape(subtractedShape)) {
-    throw new InvalidParameterTypeError('Shape', subtractedShape, subtract.name, 'subtractedShape');
+    throw new EvaluatorParameterTypeError(subtract.name, 'subtractedShape', 'Shape', subtractedShape);
   }
 
   const solid = _subtract(target.solid, subtractedShape.solid);
@@ -429,11 +456,11 @@ export function subtract(target: Shape, subtractedShape: Shape): Shape {
  */
 export function intersect(first: Shape, second: Shape): Shape {
   if (!is_shape(first)) {
-    throw new InvalidParameterTypeError('Shape', first, intersect.name, 'first');
+    throw new EvaluatorParameterTypeError(intersect.name, 'first', 'Shape', first);
   }
 
   if (!is_shape(second)) {
-    throw new InvalidParameterTypeError('Shape', second, intersect.name, 'second');
+    throw new EvaluatorParameterTypeError(intersect.name, 'second', 'Shape', second);
   }
 
   const solid = _intersect(first.solid, second.solid);
@@ -532,12 +559,14 @@ export function scale(
  *
  * @category Utilities
  */
-export function group(operables: List<Operable>): Group {
-  if (!is_list(operables)) {
-    throw new InvalidParameterTypeError('list of Operables', operables, group.name);
-  }
+export function group(operables: Operable[]): Group {
+  operables.forEach(operable => {
+    if (!(is_shape(operable) || is_group(operable))) {
+      throw new EvaluatorParameterTypeError(group.name, undefined, 'list of Operables', operable);
+    }
+  });
 
-  return new Group(list_to_vector(operables));
+  return new Group(operables);
 }
 
 /**
@@ -549,12 +578,12 @@ export function group(operables: List<Operable>): Group {
  *
  * @category Utilities
  */
-export function ungroup(g: Group): List {
+export function ungroup(g: Group): Operable[] {
   if (!is_group(g)) {
-    throw new InvalidParameterTypeError('Group', g, ungroup.name);
+    throw new EvaluatorParameterTypeError(ungroup.name, undefined, 'Group', g);
   }
 
-  return vector_to_list(g.ungroup());
+  return g.ungroup();
 }
 
 /**
@@ -624,7 +653,7 @@ export function bounding_box(shape: Shape): (axis: string, minMax: string) => nu
         break;
       }
       default:
-        throw new InvalidParameterTypeError('"x", "y" or "z"', axis, 'BoundingBox');
+        throw new EvaluatorParameterTypeError('BoundingBox', undefined, '"x", "y" or "z"', axis);
     }
 
     let i: number;
@@ -638,7 +667,7 @@ export function bounding_box(shape: Shape): (axis: string, minMax: string) => nu
         break;
       }
       default:
-        throw new InvalidParameterTypeError('"min" or "max"', minMax, 'BoundingBox');
+        throw new EvaluatorParameterTypeError('BoundingBox', undefined, '"min" or "max"', minMax);
     }
 
     return bounds[i][j];
@@ -668,97 +697,16 @@ export function rgb(
 }
 
 /**
- * Exports the specified Shape as an STL file, downloaded to your device.
+ * Serializes the specified Shape as a binary STL file's contents.
  *
- * The file can be used for purposes such as 3D printing.
- *
- * @param shape Shape to export
- *
- * @category Utilities
+ * The runner cannot trigger a download itself - that needs an anchor element to
+ * click - so the module plugin sends these buffers to the tab, which performs
+ * the actual save. See `download_shape_stl` in index.ts.
  */
-export async function download_shape_stl(shape: Shape): Promise<void> {
+export function serializeShapeStl(shape: Shape): ArrayBuffer[] {
   if (!is_shape(shape)) {
-    throw new InvalidParameterTypeError('Shape', shape, download_shape_stl.name);
+    throw new EvaluatorParameterTypeError('download_shape_stl', undefined, 'Shape', shape);
   }
 
-  await save(
-    new Blob(serialize({ binary: true }, shape.solid)),
-    'Source Academy CSG Shape.stl'
-  );
-}
-
-// [Functions - Rendering]
-
-/**
- * Renders the specified Operable.
- *
- * @param operable Shape or Group to render
- *
- * @category Rendering
- */
-export function render(operable: Operable): RenderGroup {
-  if (!(operable instanceof Shape || operable instanceof Group)) {
-    throw new InvalidParameterTypeError('Operable', operable, render.name);
-  }
-
-  operable.store();
-
-  // Trigger a new render group for use with subsequent renders.
-  // Render group is returned for REPL text only; do not document
-  return Core.getRenderGroupManager()
-    .nextRenderGroup();
-}
-
-/**
- * Renders the specified Operable, along with a grid.
- *
- * @param operable Shape or Group to render
- *
- * @category Rendering
- */
-export function render_grid(operable: Operable): RenderGroup {
-  if (!(operable instanceof Shape || operable instanceof Group)) {
-    throw new InvalidParameterTypeError('Operable', operable, render.name);
-  }
-
-  operable.store();
-
-  return Core.getRenderGroupManager()
-    .nextRenderGroup(true);
-}
-
-/**
- * Renders the specified Operable, along with z, y, and z axes.
- *
- * @param operable Shape or Group to render
- *
- * @category Rendering
- */
-export function render_axes(operable: Operable): RenderGroup {
-  if (!(operable instanceof Shape || operable instanceof Group)) {
-    throw new InvalidParameterTypeError('Operable', operable, render.name);
-  }
-
-  operable.store();
-
-  return Core.getRenderGroupManager()
-    .nextRenderGroup(undefined, true);
-}
-
-/**
- * Renders the specified Operable, along with both a grid and axes.
- *
- * @param operable Shape or Group to render
- *
- * @category Rendering
- */
-export function render_grid_axes(operable: Operable): RenderGroup {
-  if (!(operable instanceof Shape || operable instanceof Group)) {
-    throw new InvalidParameterTypeError('Operable', operable, render.name);
-  }
-
-  operable.store();
-
-  return Core.getRenderGroupManager()
-    .nextRenderGroup(true, true);
+  return serialize({ binary: true }, shape.solid);
 }

@@ -8,14 +8,12 @@ import {
   translate as _translate
 } from '@jscad/modeling/src/operations/transforms';
 import type { ReplResult } from '@sourceacademy/modules-lib/types';
-import { hexToColor } from '@sourceacademy/modules-lib/utilities';
-import { Core } from './core';
-import type { AlphaColor, Color, Solid } from './jscad/types';
+import type { Solid } from './jscad/types';
 
 /* [Exports] */
 export interface Operable {
   applyTransforms: (newTransforms: Mat4) => Operable;
-  store: (newTransforms?: Mat4) => void;
+  store: (manager: RenderGroupManager, newTransforms?: Mat4) => void;
 
   translate: (offsets: [number, number, number]) => Operable;
   rotate: (angles: [number, number, number]) => Operable;
@@ -42,11 +40,11 @@ export class Group implements Operable, ReplResult {
     return new Group(this.children, appliedTransforms);
   }
 
-  store(newTransforms: Mat4 = mat4.create()): void {
+  store(manager: RenderGroupManager, newTransforms: Mat4 = mat4.create()): void {
     const appliedGroup: Group = this.applyTransforms(newTransforms) as Group;
 
     this.children.forEach((child: Operable) => {
-      child.store(appliedGroup.transforms);
+      child.store(manager, appliedGroup.transforms);
     });
   }
 
@@ -106,9 +104,8 @@ export class Shape implements Operable, ReplResult {
     return new Shape(_transform(newTransforms, this.solid));
   }
 
-  store(newTransforms: Mat4 = mat4.create()): void {
-    Core.getRenderGroupManager()
-      .storeShape(this.applyTransforms(newTransforms) as Shape);
+  store(manager: RenderGroupManager, newTransforms: Mat4 = mat4.create()): void {
+    manager.storeShape(this.applyTransforms(newTransforms) as Shape);
   }
 
   translate(offsets: [number, number, number]): Shape {
@@ -142,6 +139,13 @@ export class RenderGroup implements ReplResult {
   }
 }
 
+/* NOTE
+  This used to be reached through the `Core` static singleton, which the bundle
+  and the tab each initialised against the same shared `CsgModuleState` object.
+  Under Conductor the two run in different realms with no shared heap, so the
+  manager is now plain instance state owned by the module plugin, and shapes
+  reach it by being handed it explicitly.
+*/
 export class RenderGroupManager {
   private canvasTracker: number = 1;
   private renderGroups: RenderGroup[] = [];
@@ -187,21 +191,6 @@ export class RenderGroupManager {
   }
 }
 
-export class CsgModuleState {
-  private componentCounter: number = 0;
-
-  public readonly renderGroupManager: RenderGroupManager;
-
-  public constructor() {
-    this.renderGroupManager = new RenderGroupManager();
-  }
-
-  // Returns the new component number
-  public nextComponent(): number {
-    return ++this.componentCounter;
-  }
-}
-
 export function centerPrimitive(shape: Shape) {
   // Move centre of Shape to 0.5, 0.5, 0.5
   const solid: Solid = _center(
@@ -211,15 +200,4 @@ export function centerPrimitive(shape: Shape) {
     shape.solid
   );
   return new Shape(solid);
-}
-
-export function colorToAlphaColor(
-  color: Color,
-  opacity: number = 1
-): AlphaColor {
-  return [...color, opacity];
-}
-
-export function hexToAlphaColor(hex: string): AlphaColor {
-  return colorToAlphaColor(hexToColor(hex));
 }
