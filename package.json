@@ -89,12 +89,13 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "typescript": "catalog:",
-    "typescript-eslint": "^8.58.2",
+    "typescript-eslint": "^8.65.0",
     "vitest": "catalog:",
     "vitest-browser-react": "^2.1.0"
   },
   "resolutions": {
-    "vitest/vite": "^8.1.0"
+    "vitest/vite": "^8.1.0",
+    "@typescript-eslint/utils": "^8.65.0"
   },
   "peerDependencies": {
     "@blueprintjs/core": "^6.0.0",

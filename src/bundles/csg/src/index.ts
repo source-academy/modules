@@ -988,14 +988,7 @@ attachModuleMethod(CsgModulePlugin, 'cylinder', [DataType.CONST_STRING], DataTyp
 attachModuleMethod(CsgModulePlugin, 'download_shape_stl', [DataType.OPAQUE], DataType.VOID);
 attachModuleMethod(CsgModulePlugin, 'empty_shape', [], DataType.OPAQUE);
 attachModuleMethod(CsgModulePlugin, 'geodesic_sphere', [DataType.CONST_STRING], DataType.OPAQUE);
-/* NOTE
-  attachModuleMethod infers the declared DataTypes from each method's TypedValue
-  parameters, and `TypedValue<DataType.LIST>` expands to
-  `TypedValue<PAIR> | TypedValue<EMPTY_LIST>` - so what it infers for group and
-  ungroup is that expansion rather than the DataType.LIST alias the evaluator
-  wants. These two casts restate the alias; the emitted signature is unchanged.
-*/
-attachModuleMethod(CsgModulePlugin, 'group', [DataType.LIST] as unknown as [DataType.PAIR], DataType.OPAQUE);
+attachModuleMethod(CsgModulePlugin, 'group', [DataType.LIST], DataType.OPAQUE);
 attachModuleMethod(CsgModulePlugin, 'intersect', [DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
 attachModuleMethod(CsgModulePlugin, 'is_group', [DataType.ANY], DataType.BOOLEAN);
 attachModuleMethod(CsgModulePlugin, 'is_shape', [DataType.ANY], DataType.BOOLEAN);
@@ -1015,7 +1008,7 @@ attachModuleMethod(CsgModulePlugin, 'star', [DataType.CONST_STRING], DataType.OP
 attachModuleMethod(CsgModulePlugin, 'subtract', [DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
 attachModuleMethod(CsgModulePlugin, 'torus', [DataType.CONST_STRING], DataType.OPAQUE);
 attachModuleMethod(CsgModulePlugin, 'translate', [DataType.OPAQUE, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE);
-attachModuleMethod(CsgModulePlugin, 'ungroup', [DataType.OPAQUE], DataType.LIST as unknown as DataType.PAIR);
+attachModuleMethod(CsgModulePlugin, 'ungroup', [DataType.OPAQUE], DataType.LIST);
 attachModuleMethod(CsgModulePlugin, 'union', [DataType.OPAQUE, DataType.OPAQUE], DataType.OPAQUE);
 
 /* NOTE
