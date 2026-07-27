@@ -51,15 +51,37 @@ type PixNFlixTabLoader = {
   loadTab: (tab: string) => void;
 };
 
-/** Drains a Conductor closure call to completion - the "module's-eye view" of calling a student
- * closure (mirrors the manual `gen.next()` loop any module must use outside of another
-  `async*` moduleMethod body, where `yield*` isn't available). */
+/**
+ * Calls a student filter closure, preferring the synchronous fast path over the mandatory
+ * async-generator drain - mirrors sound's closureToWave probe. A filter closure crossing from
+ * Python into this module (install_filter's/compose_filter's argument) already carries a `.sync`
+ * twin of its own (py2js's moduleInterop.ts, pyClosureFunc.sync) with no engine-side fix needed -
+ * that twin exists independently of get_pixel_value/set_pixel_value's own .sync twins, and without
+ * attempting it here first, the filter always runs via its regular async-generator body, whose
+ * *internal* get_pixel_value/set_pixel_value calls then also go through the async spine
+ * regardless of those functions' own sync capability (dual-mode compilation gives every user
+ * function two bodies over the same closure environment - which one runs is decided by how the
+ * *filter itself* was invoked, not by each call it happens to make). closure_call_sync is not part
+ * of conductor's own IDataHandler contract (implemented by py-slang's shared, engine-agnostic
+ * GenericDataHandler) - present regardless of which engine is running, but only actually usable
+ * when the specific closure carries a `.sync` twin (CSE/PVML closures never do).
+ */
 async function callFilterClosure(
   evaluator: IDataHandler,
   filter: TypedValue<DataType.CLOSURE>,
   src: TypedValue<DataType.OPAQUE>,
   dest: TypedValue<DataType.OPAQUE>
 ): Promise<void> {
+  const syncCall = (
+    evaluator as IDataHandler & {
+      closure_call_sync?: (
+        c: TypedValue<DataType.CLOSURE>,
+        args: TypedValue<DataType>[]
+      ) => TypedValue<DataType> | undefined;
+    }
+  ).closure_call_sync?.bind(evaluator);
+  if (syncCall?.(filter, [src, dest]) !== undefined) return;
+
   const gen = evaluator.closure_call_unchecked(filter, [src, dest]);
   let step = await gen.next();
   while (!step.done) step = await gen.next();
@@ -242,12 +264,30 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
 
   @moduleMethod([DataType.CLOSURE], DataType.VOID)
   async* install_filter(filter: TypedValue<DataType.CLOSURE>): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
+    // install_filter is the realistic "first call" for most programs - unlike sound's play()/
+    // record(), it doesn't otherwise touch the tab, so without this the tab would never load and
+    // the video feed would never appear even though install_filter itself succeeds silently.
+    this.__ensureTabLoaded();
     this.__filter = filter;
+    // TEMPORARY DEMO WORKAROUND, not a final design decision: the frontend tears down a Run's
+    // Worker (and the tab riding on the same conduit) as soon as the evaluator reaches a terminal
+    // status - see evalCode.ts's `yield take(actions.beginInterruptExecution.type)` / the
+    // `conduit.terminate()` in its `finally` block. For a script that's just `install_filter(f)`
+    // with nothing else, that terminal status arrives almost instantly, destroying the tab (and
+    // therefore the whole per-frame pipeline) before a single frame gets processed. Sound avoids
+    // this because play()/record() are themselves long-lived calls that only resolve once real
+    // playback/recording finishes - install_filter has no equivalent natural duration, so this
+    // never resolves at all, keeping the Run (and the video feed) alive until the student clicks
+    // Stop or starts another Run (a hard Worker.terminate(), unaffected by whether this generator
+    // ever cooperatively finishes). The real fix belongs in a decision with Martin about whether
+    // Conductor should support a module keeping a Run alive deliberately, not this hack.
+    await new Promise<void>(() => {});
     return { type: DataType.VOID, value: undefined };
   }
 
   @moduleMethod([], DataType.VOID)
   async* reset_filter(): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
+    this.__ensureTabLoaded();
     this.__filter = undefined;
     return { type: DataType.VOID, value: undefined };
   }
@@ -399,6 +439,36 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
         if (!buffer) return undefined;
         assertPixelCoordinates(buffer, x.value, y.value, p.value, 'set_pixel_value');
         writeChannel(buffer, x.value, y.value, p.value, v.value);
+        return { type: DataType.VOID, value: undefined };
+      }
+    });
+    // image_width/image_height/copy_image are just as trivially sync-safe as get/set_pixel_value
+    // (a plain field read or buffer copy, never any real async work) - once a filter runs via its
+    // own .sync twin (see callFilterClosure), any *other* module function it calls needs one too,
+    // or the call throws outright: a call already running on the synchronous trampoline
+    // (rt.callSync/__py.call) has no way to "escalate" mid-call to the async spine if the callee
+    // turns out to need it - see moduleInterop.ts's "needs a frontend round-trip" error, which is
+    // exactly what image_width()/image_height() hit before these were added.
+    Object.assign(PixNFlixModulePlugin.prototype.image_width, {
+      sync(this: PixNFlixModulePlugin): TypedValue<DataType.NUMBER> {
+        return { type: DataType.NUMBER, value: this.__width };
+      }
+    });
+    Object.assign(PixNFlixModulePlugin.prototype.image_height, {
+      sync(this: PixNFlixModulePlugin): TypedValue<DataType.NUMBER> {
+        return { type: DataType.NUMBER, value: this.__height };
+      }
+    });
+    Object.assign(PixNFlixModulePlugin.prototype.copy_image, {
+      sync(
+        this: PixNFlixModulePlugin,
+        src: TypedValue<DataType.OPAQUE>,
+        dest: TypedValue<DataType.OPAQUE>
+      ): TypedValue<DataType.VOID> | undefined {
+        const srcBuffer = this.__buffers.get(src.value);
+        const destBuffer = this.__buffers.get(dest.value);
+        if (!srcBuffer || !destBuffer) return undefined;
+        copyImageBuffer(srcBuffer, destBuffer);
         return { type: DataType.VOID, value: undefined };
       }
     });

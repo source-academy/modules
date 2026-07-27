@@ -62,6 +62,13 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
   private __image: HTMLImageElement | null = null;
   private __canvas: HTMLCanvasElement | null = null;
   private __canvasContext: CanvasRenderingContext2D | null = null;
+  // Capture happens on this offscreen canvas, never the visible one - drawing the raw frame
+  // directly onto __canvas and later overwriting it with putImageData(filtered result) produces a
+  // double-image flicker (raw frame flashes every tick, however briefly, until the - currently
+  // slow, pending the .sync fast path landing upstream - round trip finishes and overwrites it).
+  // The visible canvas is only ever touched once, with the actual filtered result.
+  private readonly __captureCanvas: HTMLCanvasElement = document.createElement('canvas');
+  private readonly __captureContext: CanvasRenderingContext2D = this.__captureCanvas.getContext('2d')!;
 
   private __state: ViewState = {
     width: DEFAULT_WIDTH,
@@ -79,6 +86,13 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
   private __displayHeight = DEFAULT_HEIGHT;
   private __loopCount = -1;
   private __loopsPlayed = 0;
+  // Laptop/front-camera feeds are conventionally mirrored at the driver/OS level (the "selfie"
+  // convention) - that's independent of anything a student's filter does, since no filter here
+  // touches pixel *position*, only color. Un-mirror the live camera capture so the unfiltered
+  // default matches true left/right orientation, and a flip only ever comes from a filter that
+  // deliberately does one (e.g. a student's own mirror-style filter). Not applied to a loaded
+  // video/image URL or local file, which have no such camera-mirroring convention to correct for.
+  private __usingCamera = true;
 
   private __requestId: number | undefined;
   private __prevTimestamp: number | null = null;
@@ -221,12 +235,26 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
   };
 
   private async __captureAndSendFrame(): Promise<void> {
-    const ctx = this.__canvasContext;
-    const canvas = this.__canvas;
     const source = this.__state.mode === Mode.Image ? this.__image : this.__video;
-    if (!ctx || !canvas || !source) return;
+    if (!source) return;
 
     const { width, height } = this.__state;
+    // Capture onto the offscreen canvas only - the visible one (__canvasContext) is never drawn
+    // to here, so the student's actual filter output is the only thing ever displayed, not a
+    // flickering mix of the raw frame and the (possibly much later) filtered result.
+    const ctx = this.__captureContext;
+    if (this.__captureCanvas.width !== width) this.__captureCanvas.width = width;
+    if (this.__captureCanvas.height !== height) this.__captureCanvas.height = height;
+
+    ctx.save();
+    if (this.__usingCamera) {
+      // Un-mirror the live camera driver's own "selfie" convention - see __usingCamera's doc
+      // comment. Flipping the canvas transform before drawing (rather than the source element)
+      // keeps this local to the capture step, with no effect on what's actually displayed to the
+      // student (only the filtered result ever reaches the visible canvas).
+      ctx.translate(width, 0);
+      ctx.scale(-1, 1);
+    }
     if (this.__keepAspectRatio) {
       ctx.rect(0, 0, width, height);
       ctx.fill();
@@ -234,6 +262,7 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
     } else {
       ctx.drawImage(source, 0, 0, width, height);
     }
+    ctx.restore();
 
     const captured = ctx.getImageData(0, 0, width, height);
     const capturedBuffer = captured.data.buffer;
@@ -294,12 +323,14 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
 
   async useLocalFile(): Promise<void> {
     this.__releaseCamera();
+    this.__usingCamera = false;
     this.__videoIsPlaying = false;
     this.__setState({ mode: Mode.Accepting });
   }
 
   async useImageUrl(url: string): Promise<void> {
     this.__releaseCamera();
+    this.__usingCamera = false;
     if (!this.__image) return;
     this.__image.crossOrigin = 'anonymous';
     this.__image.onload = () => {
@@ -312,6 +343,7 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
 
   async useVideoUrl(url: string): Promise<void> {
     this.__releaseCamera();
+    this.__usingCamera = false;
     if (!this.__video) return;
     this.__video.crossOrigin = 'anonymous';
     this.__video.onended = this.__handleVideoEnded;
