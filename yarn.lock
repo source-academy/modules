@@ -4514,6 +4514,7 @@ __metadata:
   resolution: "@sourceacademy/modules-buildtools@workspace:lib/buildtools"
   dependencies:
     "@commander-js/extra-typings": "npm:^15.0.0"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-repotools": "workspace:^"
     "@sourceacademy/modules-typedoc-plugin": "workspace:^"
     "@types/estree": "npm:^1.0.0"
