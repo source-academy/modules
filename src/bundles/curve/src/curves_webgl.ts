@@ -1,8 +1,9 @@
-import { GeneralRuntimeError, InternalRuntimeError } from '@sourceacademy/modules-lib/errors';
+import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
+import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 import type { ReplResult } from '@sourceacademy/modules-lib/types';
 import { mat4, vec3 } from 'gl-matrix';
-import { callWithoutMetadata } from 'js-slang/dist/utils/operators';
-import { stringify } from 'js-slang/dist/utils/stringify';
+
+import type { SerializedCurveDrawn } from './protocol';
 import type { CurveSpace, DrawMode, ScaleMode } from './types';
 
 // Vertex shader program
@@ -51,7 +52,7 @@ function loadShader(
 ): WebGLShader {
   const shader = gl.createShader(type);
   if (!shader) {
-    throw new InternalRuntimeError('WebGLShader not available.');
+    throw new EvaluatorRuntimeError('WebGLShader not available.');
   }
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
@@ -75,7 +76,7 @@ function initShaderProgram(
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
   const shaderProgram = gl.createProgram();
   if (!shaderProgram) {
-    throw new InternalRuntimeError('Unable to initialize the shader program.');
+    throw new EvaluatorRuntimeError('Unable to initialize the shader program.');
   }
   gl.attachShader(shaderProgram, vertexShader);
   gl.attachShader(shaderProgram, fragmentShader);
@@ -106,11 +107,7 @@ type BufferInfo = {
 };
 
 /** A function that takes in number from 0 to 1 and returns a Point. */
-export interface Curve {
-  (u: number): Point;
-  /** @hidden */
-  shouldNotAppend?: boolean;
-};
+export type Curve = TypedValue<DataType.CLOSURE>;
 
 export type Color = [r: number, g: number, b: number, t: number];
 
@@ -138,12 +135,12 @@ export class CurveDrawn implements ReplResult {
   private buffersInfo: BufferInfo | null;
 
   constructor(
-    private readonly drawMode: DrawMode,
+    public readonly drawMode: DrawMode,
     public readonly numPoints: number,
-    private readonly space: CurveSpace,
-    private readonly drawCubeArray: number[],
-    private readonly curvePosArray: number[],
-    private readonly curveColorArray: number[]
+    public readonly space: CurveSpace,
+    public readonly drawCubeArray: number[],
+    public readonly curvePosArray: number[],
+    public readonly curveColorArray: number[]
   ) {
     this.renderingContext = null;
     this.programs = null;
@@ -159,7 +156,7 @@ export class CurveDrawn implements ReplResult {
   public init = (canvas: HTMLCanvasElement) => {
     this.renderingContext = canvas.getContext('webgl');
     if (!this.renderingContext) {
-      throw new InternalRuntimeError('Rendering context cannot be null.');
+      throw new EvaluatorRuntimeError('Rendering context cannot be null.');
     }
     const cubeBuffer = this.renderingContext.createBuffer();
     this.renderingContext.bindBuffer(
@@ -263,12 +260,12 @@ export class CurveDrawn implements ReplResult {
     gl.uniformMatrix4fv(
       this.programs!.uniformLocations.projectionMatrix,
       false,
-      projMat
+      new Float32Array(projMat)
     );
     gl.uniformMatrix4fv(
       this.programs!.uniformLocations.modelViewMatrix,
       false,
-      transMat
+      new Float32Array(transMat)
     );
     gl.enableVertexAttribArray(this.programs!.attribLocations.vertexPosition);
     gl.enableVertexAttribArray(this.programs!.attribLocations.vertexColor);
@@ -312,9 +309,24 @@ export class CurveDrawn implements ReplResult {
       gl.drawArrays(gl.POINTS, 0, this.numPoints + 1);
     }
   };
+
+  public toSerializable = () => ({
+    drawMode: this.drawMode,
+    numPoints: this.numPoints,
+    space: this.space,
+    drawCubeArray: this.drawCubeArray,
+    curvePosArray: this.curvePosArray,
+    curveColorArray: this.curveColorArray
+  });
+
+  public static fromSerializable = (serialized: SerializedCurveDrawn): CurveDrawn => {
+    const { drawMode, numPoints, space, drawCubeArray, curvePosArray, curveColorArray } = serialized;
+    return new CurveDrawn(drawMode, numPoints, space, drawCubeArray, curvePosArray, curveColorArray);
+  };
 }
 
-export function generateCurve(
+export async function* generateCurve(
+  evaluator: IDataHandler,
   scaleMode: ScaleMode,
   drawMode: DrawMode,
   numPoints: number,
@@ -335,10 +347,11 @@ export function generateCurve(
   let max_z = -Infinity;
 
   for (let i = 0; i <= numPoints; i += 1) {
-    const point = callWithoutMetadata(func, i / numPoints);
-
+    const point = await evaluator.opaque_get(
+      (yield* evaluator.closure_call(func, [{ type: DataType.NUMBER, value: i / numPoints }], DataType.OPAQUE)) as TypedValue<DataType.OPAQUE>
+    );
     if (!(point instanceof Point)) {
-      throw new GeneralRuntimeError(`Expected curve to return a point, got '${stringify(point)}' at t=${i / numPoints}`);
+      throw new EvaluatorRuntimeError(`Expected curve to return a point, got '${JSON.stringify(point)}' at t=${i / numPoints}`);
     }
 
     const x = point.x * 2 - 1;
