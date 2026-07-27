@@ -21,6 +21,11 @@ describe(utils.extractPackageName, () => {
       .toEqual('typescript');
   });
 
+  it('works with an empty resolution range', () => {
+    expect(utils.extractPackageName('@shikijs/twoslash@'))
+      .toEqual('@shikijs/twoslash');
+  });
+
   it('throws an error on an invalid package name', () => {
     expect(() => utils.extractPackageName('something weird'))
       .toThrowError('Invalid package name: something weird');
