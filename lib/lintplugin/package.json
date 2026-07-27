@@ -31,8 +31,8 @@
     "@sourceacademy/modules-lib": "workspace:^",
     "@sourceacademy/modules-repotools": "workspace:^",
     "@stylistic/eslint-plugin": "^5.10.0",
-    "@typescript-eslint/rule-tester": "^8.58.2",
-    "@typescript-eslint/utils": "^8.58.2",
+    "@typescript-eslint/rule-tester": "^8.65.0",
+    "@typescript-eslint/utils": "^8.65.0",
     "@vitest/eslint-plugin": "catalog:",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsdoc": "^63.0.0",
@@ -41,7 +41,7 @@
     "globals": "^17.0.0",
     "js-slang": "catalog:",
     "typescript": "catalog:",
-    "typescript-eslint": "^8.58.2"
+    "typescript-eslint": "^8.65.0"
   },
   "scripts": {
     "build": "node ./build.js",
