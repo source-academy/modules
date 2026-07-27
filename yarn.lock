@@ -4193,6 +4193,7 @@ __metadata:
     "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
+    "@sourceacademy/modules-testplugin": "workspace:^"
     es-toolkit: "npm:^1.44.0"
     gl-matrix: "npm:^3.3.0"
     typescript: "catalog:"
