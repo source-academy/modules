@@ -1,7 +1,5 @@
 /* [Imports] */
 import { Spinner, SpinnerSize } from '@blueprintjs/core';
-import { Core } from '@sourceacademy/bundle-csg/core';
-import StatefulRenderer from '@sourceacademy/bundle-csg/stateful_renderer';
 import {
   BP_CARD_BORDER_RADIUS,
   BP_TAB_BUTTON_MARGIN,
@@ -11,9 +9,10 @@ import {
 } from '@sourceacademy/modules-lib/tabs/css_constants';
 import { useEffect, useRef, useState } from 'react';
 import HoverControlHint from './hover_control_hint';
+import StatefulRenderer from './stateful_renderer';
 import type { CanvasHolderProps } from './types';
 
-export default function CanvasHolder({ componentNumber }: CanvasHolderProps) {
+export default function CanvasHolder({ componentNumber, scene }: CanvasHolderProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rendererRef = useRef<StatefulRenderer | null>(null);
 
@@ -25,14 +24,9 @@ export default function CanvasHolder({ componentNumber }: CanvasHolderProps) {
     const { current: canvas } = canvasRef;
     if (canvas === null) return;
 
-    const renderGroups = Core
-      .getRenderGroupManager()
-      .getGroupsToRender();
-    const lastRenderGroup = renderGroups.at(-1)!;
-
     rendererRef.current = new StatefulRenderer(
       canvas,
-      lastRenderGroup,
+      scene,
       componentNumber,
       () => setIsContextLost(true),
       () => setIsContextLost(false),
@@ -43,7 +37,7 @@ export default function CanvasHolder({ componentNumber }: CanvasHolderProps) {
       console.debug(`>>> UNMOUNT #${componentNumber}`);
       rendererRef.current?.stop(true);
     };
-  }, [componentNumber]);
+  }, [componentNumber, scene]);
 
   return <>
     <div

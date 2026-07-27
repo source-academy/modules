@@ -8,6 +8,14 @@ declare module '@jscad/stl-serializer' {
     statusCallback?: (progress: number) => void
   }
 
+  // Binary serialization returns a "blobable array" of ArrayBuffers (the STL
+  // header, the triangle count, then the triangle data); text serialization
+  // returns the STL source in chunks.
+  export function serialize(
+    options: SerializeOptions & { binary: true },
+    ...objects: any[]
+  ): ArrayBuffer[];
+
   export function serialize(
     options: SerializeOptions,
     ...objects: any[]
