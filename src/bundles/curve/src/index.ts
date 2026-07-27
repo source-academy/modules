@@ -4,8 +4,8 @@
  *
  * A *point* is defined by its coordinates (x, y and z), and the color assigned to
  * it (r, g, and b). A few constructors for points is given, for example
- * {@link make_color_point}. Selectors allow access to the coordinates and color
- * components, for example {@link x_of}.
+ * {@link !make_color_point}. Selectors allow access to the coordinates and color
+ * components, for example {@link !x_of}.
  *
  * A *curve* is a unary function which takes a number argument within the unit interval `[0, 1]`
  * and returns a point. If `C` is a curve, then the starting point of the curve
