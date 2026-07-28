@@ -107,7 +107,8 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
     'use_video_url',
     'get_video_time',
     'keep_aspect_ratio',
-    'set_loop_count'
+    'set_loop_count',
+    'stop'
   ] as const;
   static override channelAttach = [PIX_N_FLIX_CONTROL_CHANNEL_ID, PIX_N_FLIX_FRAME_CHANNEL_ID];
 
@@ -130,6 +131,10 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
 
   private __width = DEFAULT_WIDTH;
   private __height = DEFAULT_HEIGHT;
+
+  // Whether this module has told the evaluator it has ongoing work (the video feed), deferring
+  // RunnerStatus.STOPPED - see __beginStreaming's doc comment.
+  private __streaming = false;
 
   constructor(
     conduit: IConduit,
@@ -160,6 +165,32 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
     if (tabName === undefined) return;
     this.__tabLoader.loadTab(tabName);
     this.__tabLoaded = true;
+  }
+
+  /**
+   * Tells the evaluator this module has ongoing work - a continuous per-frame video pipeline that
+   * keeps running well after install_filter's own call returns, the same shape of problem
+   * set_timeout's scheduled callbacks already have (source-academy/conductor#59, per Martin's
+   * comment there). Deferring RunnerStatus.STOPPED this way means install_filter can return
+   * immediately - unlike an earlier version of this fix, code after install_filter() in the same
+   * program keeps running normally, and the Run only reaches its terminal status once the video
+   * feed itself actually stops (stop(), or a hard Stop/new-Run Worker.terminate(), which is
+   * unaffected by pending work either way). beginPendingWork/endPendingWork aren't part of
+   * conductor's formal IDataHandler contract - they're BasicEvaluator's own public methods,
+   * reachable because a module's `evaluator` is always the same IInterfacableEvaluator instance
+   * the evaluator itself extends, just narrowed to IDataHandler's type here.
+   */
+  private __beginStreaming(): void {
+    if (this.__streaming) return;
+    this.__streaming = true;
+    (this.evaluator as IDataHandler & { beginPendingWork?: () => void }).beginPendingWork?.();
+  }
+
+  /** Matches a prior __beginStreaming() call - see its doc comment. */
+  private __endStreaming(): void {
+    if (!this.__streaming) return;
+    this.__streaming = false;
+    (this.evaluator as IDataHandler & { endPendingWork?: () => void }).endPendingWork?.();
   }
 
   private __registerBuffer(buffer: ImageBuffer): Promise<TypedValue<DataType.OPAQUE>> {
@@ -269,19 +300,7 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
     // the video feed would never appear even though install_filter itself succeeds silently.
     this.__ensureTabLoaded();
     this.__filter = filter;
-    // TEMPORARY DEMO WORKAROUND, not a final design decision: the frontend tears down a Run's
-    // Worker (and the tab riding on the same conduit) as soon as the evaluator reaches a terminal
-    // status - see evalCode.ts's `yield take(actions.beginInterruptExecution.type)` / the
-    // `conduit.terminate()` in its `finally` block. For a script that's just `install_filter(f)`
-    // with nothing else, that terminal status arrives almost instantly, destroying the tab (and
-    // therefore the whole per-frame pipeline) before a single frame gets processed. Sound avoids
-    // this because play()/record() are themselves long-lived calls that only resolve once real
-    // playback/recording finishes - install_filter has no equivalent natural duration, so this
-    // never resolves at all, keeping the Run (and the video feed) alive until the student clicks
-    // Stop or starts another Run (a hard Worker.terminate(), unaffected by whether this generator
-    // ever cooperatively finishes). The real fix belongs in a decision with Martin about whether
-    // Conductor should support a module keeping a Run alive deliberately, not this hack.
-    await new Promise<void>(() => {});
+    this.__beginStreaming();
     return { type: DataType.VOID, value: undefined };
   }
 
@@ -401,6 +420,19 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
   async* set_loop_count(n: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     this.__ensureTabLoaded();
     this.__tabRpc.$setLoopCount(n.value === Infinity ? -1 : n.value);
+    return { type: DataType.VOID, value: undefined };
+  }
+
+  /**
+   * Stops the video feed, matching sound's stop(): lets the Run reach its terminal status
+   * naturally instead of running forever - see __beginStreaming's doc comment. Not required
+   * before the program otherwise ends (a hard Stop click or starting another Run terminates the
+   * Worker outright, regardless of pending work), but without ever calling this, a program that
+   * calls install_filter and nothing else runs until the student explicitly stops it.
+   */
+  @moduleMethod([], DataType.VOID)
+  async* stop(): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
+    this.__endStreaming();
     return { type: DataType.VOID, value: undefined };
   }
 
