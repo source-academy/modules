@@ -93,6 +93,9 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
   // deliberately does one (e.g. a student's own mirror-style filter). Not applied to a loaded
   // video/image URL or local file, which have no such camera-mirroring convention to correct for.
   private __usingCamera = true;
+  // Set by useLocalFile/useImageUrl/useVideoUrl when __attachElements hasn't run yet (this.__image/
+  // __video are still null) - replayed once it does. See __attachElements's doc comment.
+  private __pendingInputSource: (() => void) | undefined;
 
   private __requestId: number | undefined;
   private __prevTimestamp: number | null = null;
@@ -173,7 +176,18 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
     this.__image = image;
     this.__canvas = canvas;
     this.__canvasContext = canvas?.getContext('2d') ?? null;
-    this.__requestCamera();
+    if (this.__pendingInputSource) {
+      // useImageUrl/useVideoUrl/useLocalFile's RPC call can arrive (and, seeing no __image/
+      // __video yet, no-op) before React has actually mounted this component and fired the
+      // useEffect that calls __attachElements - the control channel's RPC listener goes live
+      // synchronously in the constructor, well before that. Replay whichever one actually ran
+      // last instead of defaulting to the camera in that case.
+      const pending = this.__pendingInputSource;
+      this.__pendingInputSource = undefined;
+      pending();
+    } else {
+      this.__requestCamera();
+    }
     this.__startCapture();
   }
 
@@ -329,22 +343,29 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
   }
 
   async useImageUrl(url: string): Promise<void> {
-    this.__releaseCamera();
     this.__usingCamera = false;
-    if (!this.__image) return;
+    if (!this.__image) {
+      this.__pendingInputSource = () => void this.useImageUrl(url);
+      return;
+    }
+    this.__releaseCamera();
     this.__image.crossOrigin = 'anonymous';
     this.__image.onload = () => {
       this.__setAspectRatioDimensions(this.__image!.naturalWidth, this.__image!.naturalHeight);
       this.__videoIsPlaying = true;
     };
+    this.__image.onerror = () => console.warn('pix_n_flix: failed to load image URL:', url);
     this.__image.src = url;
     this.__setState({ mode: Mode.Image });
   }
 
   async useVideoUrl(url: string): Promise<void> {
-    this.__releaseCamera();
     this.__usingCamera = false;
-    if (!this.__video) return;
+    if (!this.__video) {
+      this.__pendingInputSource = () => void this.useVideoUrl(url);
+      return;
+    }
+    this.__releaseCamera();
     this.__video.crossOrigin = 'anonymous';
     this.__video.onended = this.__handleVideoEnded;
     this.__video.onloadedmetadata = () => this.__setAspectRatioDimensions(this.__video!.videoWidth, this.__video!.videoHeight);
