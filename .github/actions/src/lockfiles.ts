@@ -6,12 +6,17 @@ import { memoize } from 'es-toolkit';
 import { extractPkgsFromYarnLockV2 } from 'snyk-nodejs-lockfile-parser';
 import { gitRoot } from './gitRoot.js';
 
-const packageNameRE = /(^@?.+?)@.+$/;
+const packageNameRE = /(^@?.+?)@.*$/;
 
 /**
  * Lockfile specifications come in the form of package_name@resolution, but
  * we only want the package name. This function extracts that package name,
- * accounting for the fact that package names might start with '@'
+ * accounting for the fact that package names might start with '@'.
+ *
+ * The resolution part is allowed to be empty - some packages (e.g.
+ * `@shikijs/twoslash`, as depended on by `@shikijs/vitepress-twoslash`)
+ * ship a dependency range of `"npm:"` with nothing after the protocol,
+ * which yarn.lock parsers can surface as a bare `pkg-name@` specifier.
  */
 export function extractPackageName(raw: string) {
   const match = packageNameRE.exec(raw);
