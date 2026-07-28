@@ -31,5 +31,10 @@
     "@types/node": "^24.0.0",
     "cspell": "^10.0.0",
     "typescript": "catalog:"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/source-academy/modules.git",
+    "directory": "docs"
   }
 }

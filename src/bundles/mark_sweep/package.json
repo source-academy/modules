@@ -29,5 +29,10 @@
   },
   "dependencies": {
     "es-toolkit": "^1.44.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/source-academy/modules.git",
+    "directory": "src/bundles/mark_sweep"
   }
 }

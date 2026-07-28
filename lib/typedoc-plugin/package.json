@@ -30,5 +30,10 @@
     "build": "node ./build.js",
     "test": "vitest --config vitest.config.ts",
     "postinstall": "yarn build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/source-academy/modules.git",
+    "directory": "lib/typedoc-plugin"
   }
 }

@@ -21,5 +21,10 @@
     "postinstall": "yarn build",
     "test": "vitest run",
     "tsc": "tsc --project ./tsconfig.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/source-academy/modules.git",
+    "directory": ".github/actions"
   }
 }

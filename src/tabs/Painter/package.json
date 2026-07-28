@@ -28,5 +28,10 @@
     "serve": "Starts the modules server",
     "test": "Runs unit tests defined for the tab",
     "tsc": "Runs the Typescript compiler"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/source-academy/modules.git",
+    "directory": "src/tabs/Painter"
   }
 }

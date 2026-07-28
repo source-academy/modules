@@ -43,5 +43,10 @@
     "postinstall": "playwright install --with-deps",
     "test": "buildtools test --project .",
     "tsc": "tsc --project ./tsconfig.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/source-academy/modules.git",
+    "directory": "devserver"
   }
 }

@@ -3,13 +3,24 @@
 const fs = require('fs/promises');
 const pathlib = require('path');
 const { defineConfig } = require('@yarnpkg/types');
-const { name } = require('./package.json');
+const { name, repository: { url: rootUrl } } = require('./package.json');
 
 module.exports = defineConfig({
   async constraints({ Yarn }) {
     // Make sure all workspaces have type: "module"
     for (const workspace of Yarn.workspaces()) {
       workspace.set('type', 'module');
+
+      // Don't set repository for root workspace
+      if (workspace.cwd !== '.') {
+        const normedPath = workspace.cwd.split(pathlib.sep).join(pathlib.posix.sep);
+
+        workspace.set('repository', {
+          type: 'git',
+          url: rootUrl,
+          directory: normedPath
+        });
+      }
 
       // All the vitest dependencies should have the same version as vitest
       const vitestDep = Yarn.dependency({ workspace, ident: 'vitest' });

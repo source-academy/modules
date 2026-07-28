@@ -30,5 +30,10 @@
     "serve": "Starts the modules server",
     "test": "Runs unit tests defined for the bundle",
     "tsc": "Runs the Typescript compiler and produces the library version of the bundle"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/source-academy/modules.git",
+    "directory": "src/bundles/copy_gc"
   }
 }

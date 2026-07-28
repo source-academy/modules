@@ -30,5 +30,10 @@
     "build": "node ./build.js",
     "postinstall": "yarn build",
     "test": "buildtools test --project ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/source-academy/modules.git",
+    "directory": "lib/markdown-tree"
   }
 }
