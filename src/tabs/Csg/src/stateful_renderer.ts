@@ -3,7 +3,8 @@ import InputTracker from './input_tracker';
 import {
   cloneCameraState,
   makeWrappedRenderer,
-  makeWrappedRendererData
+  makeWrappedRendererData,
+  type RenderedScene
 } from './jscad/renderer';
 import type {
   Entity,
@@ -12,7 +13,6 @@ import type {
   WrappedRendererData
 } from './jscad/types';
 import ListenerTracker from './listener_tracker';
-import type { RenderGroup } from './utilities';
 
 /* [Exports] */
 export default class StatefulRenderer {
@@ -29,7 +29,7 @@ export default class StatefulRenderer {
 
   constructor(
     private canvas: HTMLCanvasElement,
-    renderGroup: RenderGroup,
+    scene: RenderedScene,
     private componentNumber: number,
 
     private loseCallback: Function,
@@ -40,7 +40,7 @@ export default class StatefulRenderer {
     this.webGlListenerTracker = new ListenerTracker(canvas);
 
     this.wrappedRendererData = makeWrappedRendererData(
-      renderGroup,
+      scene,
       this.cameraState
     );
 

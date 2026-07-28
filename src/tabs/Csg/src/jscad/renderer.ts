@@ -8,6 +8,7 @@ import {
   prepareRender
 } from '@jscad/regl-renderer';
 import { ACE_GUTTER_BACKGROUND_COLOR, ACE_GUTTER_TEXT_COLOR, BP_TEXT_COLOR } from '@sourceacademy/modules-lib/tabs/css_constants';
+import { hexToAlphaColor } from '../colors';
 import {
   DEFAULT_COLOR,
   GRID_PADDING,
@@ -18,7 +19,6 @@ import {
   X_FACTOR,
   Y_FACTOR
 } from '../constants';
-import { hexToAlphaColor, type RenderGroup, type Shape } from '../utilities';
 import type {
   AlphaColor,
   AxisEntityType,
@@ -97,10 +97,10 @@ class AxisEntity implements AxisEntityType {
 }
 
 function makeExtraEntities(
-  renderGroup: RenderGroup,
+  scene: RenderedScene,
   solids: Solid[]
 ): Entity[] {
-  const { hasGrid, hasAxis } = renderGroup;
+  const { hasGrid, hasAxis } = scene;
   // Run calculations for grid and/or axis only if needed
   if (!(hasAxis || hasGrid)) return [];
 
@@ -124,13 +124,24 @@ function makeExtraEntities(
 }
 
 /* [Exports] */
+/**
+ * A scene to draw on one canvas. Under Conductor this is what a single
+ * `render*()` call arrives as over the channel, in place of the `RenderGroup`
+ * the tab used to read straight out of the bundle's shared module state.
+ */
+export type RenderedScene = {
+  solids: Solid[];
+  hasGrid: boolean;
+  hasAxis: boolean;
+};
+
 export function makeWrappedRendererData(
-  renderGroup: RenderGroup,
+  scene: RenderedScene,
   cameraState: PerspectiveCameraState
 ): WrappedRendererData {
-  const solids: Solid[] = renderGroup.shapes.map((shape: Shape): Solid => shape.solid);
+  const { solids } = scene;
   const geometryEntities: GeometryEntity[] = solidsToGeometryEntities(solids);
-  const extraEntities: Entity[] = makeExtraEntities(renderGroup, solids);
+  const extraEntities: Entity[] = makeExtraEntities(scene, solids);
   const allEntities: Entity[] = [...geometryEntities, ...extraEntities];
 
   return {

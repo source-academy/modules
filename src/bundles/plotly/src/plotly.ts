@@ -1,4 +1,4 @@
-import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
+import type { DataType, TypedValue } from '@sourceacademy/conductor/types';
 import type { ReplResult } from '@sourceacademy/modules-lib/types';
 import type { Data, Layout } from 'plotly.js-dist';
 
@@ -7,33 +7,32 @@ import type { Data, Layout } from 'plotly.js-dist';
  */
 export class DrawnPlot implements ReplResult {
   constructor(
-    private readonly drawFn: any,
-    private readonly data: ListOfPairs
-  ) {}
+    private readonly data: Data
+  ) { }
 
   public toReplString = () => '<Plot>';
-
-  public draw = (divId: string) => {
-    this.drawFn(this.data, divId);
-  };
 }
 
 export class CurvePlot implements ReplResult {
   constructor(
-    private readonly plotlyDrawFn: any,
     private readonly data: Data,
     private readonly layout: Partial<Layout>
-  ) {}
+  ) { }
 
   public toReplString = () => '<CurvePlot>';
 
-  public draw = (divId: string) => {
-    this.plotlyDrawFn(divId, this.data, this.layout);
+  public toSerialized = () => ({
+    data: this.data,
+    layout: this.layout
+  });
+
+  static fromSerialized = (serialized: { data: Data, layout: Partial<Layout> }) => {
+    return new CurvePlot(serialized.data, serialized.layout);
   };
 }
 
 export type ListOfPairs = (ListOfPairs | any)[] | null;
 export type Data2d = number[];
 
-export type DataTransformer = (c: Data2d[]) => Data2d[];
-export type CurvePlotFunction = (func: Curve) => CurvePlot;
+export type DataTransformer = TypedValue<DataType.CLOSURE>;
+export type CurvePlotFunction = TypedValue<DataType.CLOSURE>;

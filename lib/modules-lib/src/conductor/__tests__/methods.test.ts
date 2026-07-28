@@ -24,11 +24,19 @@ class TestModulePlugin implements IModulePlugin {
     await Promise.resolve();
     return { type: DataType.VOID, value: undefined };
   }
+
+  async *listIdentity(
+    value: TypedValue<DataType.PAIR | DataType.EMPTY_LIST>
+  ): AsyncGenerator<void, TypedValue<DataType.PAIR | DataType.EMPTY_LIST>, undefined> {
+    await Promise.resolve();
+    return value;
+  }
 }
 
 test('accepts the data types of a module method', () => {
   const attachNumberToString = attachModuleMethod<TestModulePlugin, 'numberToString'>;
   const attachNothing = attachModuleMethod<TestModulePlugin, 'nothing'>;
+  const attachListIdentity = attachModuleMethod<TestModulePlugin, 'listIdentity'>;
 
   expectTypeOf(TestModulePlugin.prototype.numberToString)
     .toEqualTypeOf<ExternCallable<[DataType.NUMBER], DataType.CONST_STRING>>();
@@ -43,6 +51,12 @@ test('accepts the data types of a module method', () => {
     'nothing',
     [],
     DataType.VOID
+  );
+  expectTypeOf(attachListIdentity).toBeCallableWith(
+    TestModulePlugin,
+    'listIdentity',
+    [DataType.LIST],
+    DataType.LIST
   );
 });
 
