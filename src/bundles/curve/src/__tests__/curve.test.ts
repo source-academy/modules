@@ -1,6 +1,6 @@
 // Need to disable because stringify produces tab characters?
 
-import { DataType, type IDataHandler, type IFunctionSignature, type TypedValue } from '@sourceacademy/conductor/types';
+import { DataType, type ExternCallable, type IDataHandler, type IFunctionSignature, type TypedValue } from '@sourceacademy/conductor/types';
 import { TestDataHandler, callClosure, runAsyncGenerator } from '@sourceacademy/modules-testplugin';
 import { describe, expect, it, test as baseTest, vi } from 'vitest';
 import { Point, type Color, type Curve } from '../curves_webgl';
@@ -297,6 +297,24 @@ describe('Curve transformers', () => {
     );
   }
 
+  /**
+   * Simulates a cadet-authored (student) curve crossing into the module - e.g. py2js's
+   * pyClosureFunc registers a Python function with an all-VOID placeholder signature, since its
+   * real arg/return types can't be known ahead of time (see py-slang's moduleInterop.ts).
+   * Deliberately NOT makeCurve's module-style signature: regression coverage for
+   * source-academy/modules#860, where connect_ends/translate/invert (and defineCurveTransformer)
+   * used the strict closure_call, which always rejected a curve shaped this way regardless of
+   * what it actually returned.
+   */
+  function makeCadetCurve(handler: TestDataHandler, func: (t: number) => Point): Promise<Curve> {
+    return handler.closure_make(
+      { args: [DataType.VOID] as const, returnType: DataType.VOID },
+      (async function* (t: TypedValue<DataType.VOID>) {
+        return await handler.opaque_make(func((t as unknown as TypedValue<DataType.NUMBER>).value));
+      }) as unknown as ExternCallable<readonly [DataType.VOID], DataType.VOID>
+    ) as unknown as Promise<Curve>;
+  }
+
   function makeTransformer(handler: TestDataHandler, func: TransformerFunction) {
     return handler.closure_make(
       transformerSignature,
@@ -402,6 +420,14 @@ describe('Curve transformers', () => {
       expect(await pointAt(handler, newCurve, 0)).toMatchObject({ x: 1, y: 0.5 });
       expect(await pointAt(handler, newCurve, 1)).toMatchObject({ x: 0, y: 0.5 });
     });
+
+    test('accepts a cadet-authored curve (source-academy/modules#860)', async ({ handler }) => {
+      const curve = await makeCadetCurve(handler, t => funcs.make_point(t, 0.5));
+      const newCurve = await runAsyncGenerator(funcs.invert(handler, curve));
+
+      expect(await pointAt(handler, newCurve, 0)).toMatchObject({ x: 1, y: 0.5 });
+      expect(await pointAt(handler, newCurve, 1)).toMatchObject({ x: 0, y: 0.5 });
+    });
   });
 
   describe(funcs.put_in_standard_position, () => {
@@ -426,6 +452,16 @@ describe('Curve transformers', () => {
 
       await expect(runAsyncGenerator(funcs.put_in_standard_position(handler, curve)))
         .rejects.toThrow('Cannot normalize a curve with a zero or non-finite endpoint distance.');
+    });
+
+    test('accepts a cadet-authored curve (source-academy/modules#860)', async ({ handler }) => {
+      const curve = await makeCadetCurve(handler, t => funcs.make_point(-2000 + t, 2000 + t));
+      const newCurve = await runAsyncGenerator(funcs.put_in_standard_position(handler, curve));
+      const points = await runAsyncGenerator(evaluatePoints(handler, newCurve));
+
+      const [x0, y0] = points[0];
+      expect(x0).toBeCloseTo(0);
+      expect(y0).toBeCloseTo(0);
     });
   });
 
@@ -540,6 +576,14 @@ describe('Curve transformers', () => {
         expect(z_old + 1).toBeCloseTo(z_new);
       }
     });
+
+    test('accepts a cadet-authored curve (source-academy/modules#860)', async ({ handler }) => {
+      const curve = await makeCadetCurve(handler, t => funcs.make_point(t, t));
+      const transformer = await runAsyncGenerator(funcs.translate(handler, 1, 1, 0));
+      const newCurve = await applyTransformer(handler, transformer, curve);
+
+      expect(await pointAt(handler, newCurve, 0.5)).toMatchObject({ x: 1.5, y: 1.5 });
+    });
   });
 
   describe(funcs.rainbow, () => {
@@ -581,6 +625,65 @@ describe('Curve transformers', () => {
     test('throws when phase is not a number', async ({ handler }) => {
       await expect(runAsyncGenerator(funcs.rainbow(handler, 1, 'a' as any)))
         .rejects.toThrow('rainbow: Expected number for phase, got "a".');
+    });
+  });
+
+  describe(funcs.connect_rigidly, () => {
+    test('actually works', async ({ handler }) => {
+      const curve1 = await makeCurve(handler, t => funcs.make_point(t, 0));
+      const curve2 = await makeCurve(handler, t => funcs.make_point(1, t));
+      const connected = await runAsyncGenerator(funcs.connect_rigidly(handler, curve1, curve2));
+
+      expect(await pointAt(handler, connected, 0)).toMatchObject({ x: 0, y: 0 });
+      expect(await pointAt(handler, connected, 0.25)).toMatchObject({ x: 0.5, y: 0 });
+      expect(await pointAt(handler, connected, 0.5)).toMatchObject({ x: 1, y: 0 });
+      expect(await pointAt(handler, connected, 0.75)).toMatchObject({ x: 1, y: 0.5 });
+    });
+
+    test('accepts cadet-authored curves (source-academy/modules#860)', async ({ handler }) => {
+      const curve1 = await makeCadetCurve(handler, t => funcs.make_point(t, 0));
+      const curve2 = await makeCadetCurve(handler, t => funcs.make_point(1, t));
+      const connected = await runAsyncGenerator(funcs.connect_rigidly(handler, curve1, curve2));
+
+      expect(await pointAt(handler, connected, 0.25)).toMatchObject({ x: 0.5, y: 0 });
+      expect(await pointAt(handler, connected, 0.75)).toMatchObject({ x: 1, y: 0.5 });
+    });
+  });
+
+  describe(funcs.connect_ends, () => {
+    test('actually works', async ({ handler }) => {
+      const curve1 = await makeCurve(handler, t => funcs.make_point(t, 0));
+      const curve2 = await makeCurve(handler, t => funcs.make_point(1 + t, 1));
+      const connected = await runAsyncGenerator(funcs.connect_ends(handler, curve1, curve2));
+
+      // curve2 gets translated so its start point (1, 1) lands on curve1's end point (1, 0).
+      expect(await pointAt(handler, connected, 0)).toMatchObject({ x: 0, y: 0 });
+      expect(await pointAt(handler, connected, 0.5)).toMatchObject({ x: 1, y: 0 });
+      expect(await pointAt(handler, connected, 1)).toMatchObject({ x: 2, y: 0 });
+    });
+
+    // Regression test for source-academy/modules#860: connecting curves that come from the
+    // curve module (built with makeCurve's module-style signature) already worked, but a
+    // cadet-defined curve (e.g. a plain Python function passed as a curve) is registered with
+    // an all-VOID placeholder signature (see makeCadetCurve), which the strict closure_call
+    // connect_ends/connect_rigidly/translate used to call curve1/curve2 always rejected.
+    test('accepts cadet-authored curves', async ({ handler }) => {
+      const curve1 = await makeCadetCurve(handler, t => funcs.make_point(t, 0));
+      const curve2 = await makeCadetCurve(handler, t => funcs.make_point(1 + t, 1));
+      const connected = await runAsyncGenerator(funcs.connect_ends(handler, curve1, curve2));
+
+      expect(await pointAt(handler, connected, 0)).toMatchObject({ x: 0, y: 0 });
+      expect(await pointAt(handler, connected, 0.5)).toMatchObject({ x: 1, y: 0 });
+      expect(await pointAt(handler, connected, 1)).toMatchObject({ x: 2, y: 0 });
+    });
+
+    test('accepts a mix of a module curve and a cadet-authored curve', async ({ handler }) => {
+      const curve1 = await makeCurve(handler, t => funcs.make_point(t, 0));
+      const curve2 = await makeCadetCurve(handler, t => funcs.make_point(1 + t, 1));
+      const connected = await runAsyncGenerator(funcs.connect_ends(handler, curve1, curve2));
+
+      expect(await pointAt(handler, connected, 0)).toMatchObject({ x: 0, y: 0 });
+      expect(await pointAt(handler, connected, 1)).toMatchObject({ x: 2, y: 0 });
     });
   });
 });

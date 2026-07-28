@@ -272,6 +272,18 @@ export class TestDataHandler implements IInterfacableEvaluator {
     args: AnyTypedValue[],
     returnType: T
   ): AsyncGenerator<void, TypedValue<NoInfer<T>>, undefined> {
+    // Matches the real evaluator (e.g. py-slang's GenericDataHandler.closure_call): checked
+    // against the closure's *declared* signature before ever invoking it, not just the value it
+    // actually returns - a closure whose real arg/return types are unknowable ahead of time (a
+    // cadet-authored closure crossing a language boundary, registered with a placeholder
+    // signature) fails this exactly the same way in production, regardless of what it actually
+    // returns. Without this, a test using this handler could pass while the same call fails for
+    // real (see source-academy/modules#860).
+    const entry = this.getClosureEntry(c);
+    if (entry.returnType !== returnType) {
+      throw new Error(`Expected return type ${returnType}, got ${entry.returnType}`);
+    }
+
     const result = yield* this.closure_call_unchecked(c, args);
     assertTypedValue(result, returnType, 'Closure return value');
     return result;

@@ -25,13 +25,19 @@ async function callNumberClosure(
   closure: TypedValue<DataType.CLOSURE>,
   value: number
 ) {
+  // repeat's returned closure is registered with a placeholder VOID/VOID signature (it's generic
+  // over any UnaryFunction<T>, so it genuinely can't declare a real one) - the same pattern a
+  // cadet-authored closure crossing a language boundary uses (source-academy/modules#860).
+  // closure_call_unchecked skips the declared-signature check, matching how repeat's own
+  // composition() already calls func internally, and how a real caller of repeat's result
+  // (the language runtime handing it back to cadet code, not another module's closure_call)
+  // actually invokes it.
   const result = await callClosure(
     handler,
     closure,
-    [numberValue(value)],
-    DataType.NUMBER
+    [numberValue(value)]
   );
-  return result.value;
+  return (result as TypedValue<DataType.NUMBER>).value;
 }
 
 describe(repeat, () => {

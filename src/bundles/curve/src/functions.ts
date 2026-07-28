@@ -20,7 +20,13 @@ async function defineCurveTransformer(evaluator: IDataHandler, f: (arg: Point, t
       return await evaluator.closure_make(
         { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
         async function* (t) {
-          const pointId = yield* evaluator.closure_call(curve, [t], DataType.OPAQUE);
+          // curve may be a cadet-authored closure (e.g. a curve transformer applied to a
+          // Python-defined curve): such closures are registered with a placeholder signature
+          // (their real arg/return types are unknowable ahead of time), so the strict
+          // closure_call would always reject them here even though the actual call is fine -
+          // see connect_ends/translate/invert for the same reasoning, mirroring how the sound
+          // module already calls cadet-authored wave functions.
+          const pointId = yield* evaluator.closure_call_unchecked(curve, [t]);
           const point = await evaluator.opaque_get(pointId as TypedValue<DataType.OPAQUE>);
           return await evaluator.opaque_make(yield* f(point, t.value));
         }
@@ -68,8 +74,13 @@ class CurveFunctions {
   }
 
   static async* connect_ends(evaluator: IDataHandler, curve1: Curve, curve2: Curve): AsyncGenerator<void, Curve, undefined> {
-    const startPointOfCurve2Id = (yield* evaluator.closure_call(curve2, [{ type: DataType.NUMBER, value: 0 }], DataType.OPAQUE)) as TypedValue<DataType.OPAQUE>;
-    const endPointOfCurve1Id = (yield* evaluator.closure_call(curve1, [{ type: DataType.NUMBER, value: 1 }], DataType.OPAQUE)) as TypedValue<DataType.OPAQUE>;
+    // curve1/curve2 may be cadet-authored (e.g. a plain Python function passed as a curve), which
+    // is registered with a placeholder signature since its real arg/return types can't be known
+    // ahead of time - closure_call's strict signature check would reject any such closure here
+    // regardless of what it actually returns. closure_call_unchecked skips that check, the same
+    // way the sound module already calls cadet-authored wave functions.
+    const startPointOfCurve2Id = (yield* evaluator.closure_call_unchecked(curve2, [{ type: DataType.NUMBER, value: 0 }])) as TypedValue<DataType.OPAQUE>;
+    const endPointOfCurve1Id = (yield* evaluator.closure_call_unchecked(curve1, [{ type: DataType.NUMBER, value: 1 }])) as TypedValue<DataType.OPAQUE>;
 
     const startPointOfCurve2 = await evaluator.opaque_get(startPointOfCurve2Id);
     const endPointOfCurve1 = await evaluator.opaque_get(endPointOfCurve1Id);
@@ -90,9 +101,11 @@ class CurveFunctions {
     return await evaluator.closure_make(
       { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
       async function* (t) {
+        // See connect_ends: curve1/curve2 may be cadet-authored, so closure_call_unchecked skips
+        // the signature check a placeholder-signatured closure would otherwise always fail.
         return t.value < 1 / 2
-          ? yield* evaluator.closure_call(curve1, [{ type: DataType.NUMBER, value: 2 * t.value }], DataType.OPAQUE)
-          : yield* evaluator.closure_call(curve2, [{ type: DataType.NUMBER, value: 2 * t.value - 1 }], DataType.OPAQUE);
+          ? (yield* evaluator.closure_call_unchecked(curve1, [{ type: DataType.NUMBER, value: 2 * t.value }])) as TypedValue<DataType.OPAQUE>
+          : (yield* evaluator.closure_call_unchecked(curve2, [{ type: DataType.NUMBER, value: 2 * t.value - 1 }])) as TypedValue<DataType.OPAQUE>;
       }
     );
   }
@@ -104,7 +117,9 @@ class CurveFunctions {
         return await evaluator.closure_make(
           { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
           async function* (t) {
-            const ctId = yield* evaluator.closure_call(curve, [t], DataType.OPAQUE);
+            // See connect_ends: curve may be cadet-authored, so closure_call_unchecked skips the
+            // signature check a placeholder-signatured closure would otherwise always fail.
+            const ctId = yield* evaluator.closure_call_unchecked(curve, [t]);
             const ct = await evaluator.opaque_get(ctId as TypedValue<DataType.OPAQUE>);
             throwIfNotPoint(ct, translate.name);
             return await evaluator.opaque_make(new Point(
@@ -141,13 +156,19 @@ class CurveFunctions {
     return await evaluator.closure_make(
       { args: [DataType.NUMBER] as const, returnType: DataType.OPAQUE },
       async function* (t) {
-        return yield* evaluator.closure_call(original, [{ type: DataType.NUMBER, value: 1 - t.value }], DataType.OPAQUE);
+        // See connect_ends: original may be cadet-authored, so closure_call_unchecked skips the
+        // signature check a placeholder-signatured closure would otherwise always fail.
+        return (yield* evaluator.closure_call_unchecked(original, [{ type: DataType.NUMBER, value: 1 - t.value }])) as TypedValue<DataType.OPAQUE>;
       }
     );
   }
 
   static async* put_in_standard_position(evaluator: IDataHandler, curve: Curve): AsyncGenerator<void, Curve, undefined> {
-    const start_point_id = yield* evaluator.closure_call(curve, [{ type: DataType.NUMBER, value: 0 }], DataType.OPAQUE);
+    // See connect_ends: curve may be cadet-authored, so closure_call_unchecked skips the
+    // signature check a placeholder-signatured closure would otherwise always fail. The curves
+    // derived below (curve_started_at_origin, curve_ended_at_x_axis) are module-created by
+    // translate/rotate_around_origin_3D with a real signature, so those calls stay checked.
+    const start_point_id = yield* evaluator.closure_call_unchecked(curve, [{ type: DataType.NUMBER, value: 0 }]);
     const start_point = await evaluator.opaque_get(start_point_id as TypedValue<DataType.OPAQUE>);
     const curve_started_at_origin = (yield* evaluator.closure_call(yield* translate(
       evaluator,
