@@ -4,10 +4,16 @@
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^6.0.0",
+    "@blueprintjs/icons": "^6.0.0",
+    "@jscad/modeling": "patch:@jscad/modeling@npm%3A2.9.6#~/.yarn/patches/@jscad-modeling-npm-2.9.6-71e6aa3a91.patch",
+    "@jscad/regl-renderer": "^2.6.1",
     "@sourceacademy/bundle-csg": "workspace:^",
+    "@sourceacademy/common-tabs": "^0.0.1",
+    "@sourceacademy/conductor": "catalog:",
     "@sourceacademy/modules-lib": "workspace:^",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "save-file": "^2.3.1"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",

@@ -62,6 +62,26 @@ describe(funcs.is_tree, () => {
     );
     await expect(funcs.is_tree(handler, tree)).resolves.toEqual(true);
   });
+
+  it('returns true for a tree round-tripped back in as DataType.ARRAY, not just DataType.PAIR', async () => {
+    // Per py-slang: pythonToModule now builds every Python list as a flat DataType.ARRAY, never a
+    // DataType.PAIR chain - so a tree round-tripped out to Python (via moduleToPython) and passed
+    // back into e.g. entry()/left_branch() arrives tagged ARRAY, not PAIR. is_tree (and
+    // assertNonEmptyTree) must accept either shape - this is the regression test for that.
+    const handler = new TestDataHandler();
+    const rightPair = await handler.array_make(DataType.ANY, 2, emptyListValue());
+    await handler.array_set(rightPair, 0, emptyListValue());
+    await handler.array_set(rightPair, 1, emptyListValue());
+    const leftPair = await handler.array_make(DataType.ANY, 2, emptyListValue());
+    await handler.array_set(leftPair, 0, emptyListValue());
+    await handler.array_set(leftPair, 1, rightPair);
+    const tree = await handler.array_make(DataType.ANY, 2, emptyListValue());
+    await handler.array_set(tree, 0, await opaqueNumber(handler, 0));
+    await handler.array_set(tree, 1, leftPair);
+
+    await expect(funcs.is_tree(handler, tree)).resolves.toEqual(true);
+    await expect(handler.opaque_get(await funcs.entry(handler, tree))).resolves.toEqual(0);
+  });
 });
 
 describe(funcs.make_tree, () => {

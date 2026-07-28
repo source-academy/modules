@@ -10,13 +10,24 @@ type ModuleMethodName<T> = {
   [K in keyof T]: T[K] extends ExternCallable<infer _A, infer _R> ? K : never;
 }[keyof T];
 
+type NormalizeListDataType<T extends DataType> =
+  [T] extends [DataType.PAIR | DataType.EMPTY_LIST]
+  ? [DataType.PAIR | DataType.EMPTY_LIST] extends [T]
+    ? DataType.LIST
+    : T
+  : T;
+
+type NormalizeListDataTypes<T extends readonly DataType[]> = {
+  [K in keyof T]: T[K] extends DataType ? NormalizeListDataType<T[K]> : T[K];
+};
+
 /**
  * `MethodArgs` is a utility type that extracts the argument types of a module method (K) from a module plugin (T).
  * It maps the argument types from `TypedValue<DataType>` to their underlying `DataType`.
  */
 type MethodArgs<T, K extends ModuleMethodName<T>> =
   T[K] extends ExternCallable<infer A, any>
-  ? A
+  ? NormalizeListDataTypes<A>
   : never;
 
 /**
@@ -25,7 +36,7 @@ type MethodArgs<T, K extends ModuleMethodName<T>> =
 type MethodReturn<T, K extends ModuleMethodName<T>> =
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   T[K] extends ExternCallable<infer _A, infer R>
-  ? R
+  ? NormalizeListDataType<R>
   : never;
 
 /**
