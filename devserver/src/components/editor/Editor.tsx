@@ -1,4 +1,6 @@
 import MonacoEditor from '@monaco-editor/react';
+import type * as monaco from 'monaco-editor';
+import { forwardRef } from 'react';
 import { SOURCE_MONACO_THEME } from './setupMonaco';
 
 interface EditorProps {
@@ -7,7 +9,7 @@ interface EditorProps {
   handleEditorValueChange?: (newValue: string) => void;
 }
 
-export default function Editor(props: EditorProps) {
+const Editor = forwardRef<monaco.editor.IStandaloneCodeEditor, EditorProps>((props, ref) => {
   return <MonacoEditor
     defaultValue={props.defaultValue}
     path='file:///main.js'
@@ -23,6 +25,14 @@ export default function Editor(props: EditorProps) {
         useShadows: false
       }
     }}
+    onMount={editor => {
+      if (typeof ref === 'function') ref(editor);
+      else if (ref) ref.current = editor;
+    }}
     onChange={newValue => props.handleEditorValueChange?.(newValue ?? '')}
-  />
-}
+  />;
+});
+
+Editor.displayName = 'Editor';
+
+export default Editor;

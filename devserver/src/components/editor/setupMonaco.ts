@@ -1,5 +1,5 @@
-import * as monaco from 'monaco-editor';
 import { loader } from '@monaco-editor/react';
+import * as monaco from 'monaco-editor';
 
 export const SOURCE_MONACO_THEME = 'source';
 
@@ -29,7 +29,7 @@ type MonacoEnvironmentGlobal = typeof globalThis & {
 (self as MonacoEnvironmentGlobal).MonacoEnvironment = {
   getWorker(_, label) {
     if (label === 'json') {
-      return new Worker(new URL('monaco-editor/esm/vs/language/json/json.worker', import.meta.url), { type: "module" });
+      return new Worker(new URL('monaco-editor/esm/vs/language/json/json.worker', import.meta.url), { type: 'module' });
     }
     if (label === 'typescript' || label === 'javascript') {
       return new Worker(new URL('monaco-editor/esm/vs/language/typescript/ts.worker', import.meta.url), { type: 'module' });

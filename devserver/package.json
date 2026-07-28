@@ -10,6 +10,8 @@
     "@blueprintjs/core": "^6.0.0",
     "@commander-js/extra-typings": "^15.0.0",
     "@monaco-editor/react": "^4.7.0",
+    "@sourceacademy/conductor": "Catalog:",
+    "@sourceacademy/language-directory": "https://github.com/source-academy/language-directory.git#0.0.18",
     "@sourceacademy/modules-lib": "workspace:^",
     "@vitejs/plugin-react": "^6.0.3",
     "classnames": "^2.3.1",

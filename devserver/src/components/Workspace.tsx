@@ -1,6 +1,7 @@
 import { FocusStyleManager } from '@blueprintjs/core';
+import type * as monaco from 'monaco-editor';
 import { Resizable, type Enable, type ResizeCallback } from 're-resizable';
-import React from 'react';
+import React, { type RefObject } from 'react';
 
 import ControlBar, { type ControlBarProps } from './controlBar/ControlBar';
 import Editor from './editor/Editor';
@@ -11,7 +12,6 @@ import { useDimensions } from './utils/Hooks';
 type DispatchProps = {
   handleEditorEval: () => void;
   handleEditorValueChange: (newValue: string) => void;
-  handlePromptAutocomplete: (row: number, col: number, callback: any) => void;
 };
 
 type StateProps = {
@@ -24,6 +24,8 @@ type StateProps = {
   editorValue: string;
 
   sideContentProps: SideContentProps;
+
+  editorRef: RefObject<monaco.editor.IStandaloneCodeEditor | null>;
 };
 
 const rightResizeOnly: Enable = { right: true };
@@ -113,10 +115,8 @@ const Workspace: React.FC<WorkspaceProps> = (props) => {
             <Editor
               language='typescript'
               handleEditorValueChange={props.handleEditorValueChange}
-              // handleDeclarationNavigate={() => { }}
-              // handlePromptAutocomplete={props.handlePromptAutocomplete}
-              // handleSendReplInputToOutput={() => { }}
               defaultValue={props.editorValue}
+              ref={props.editorRef}
             />
           </Resizable>
           <div className="right-parent">
