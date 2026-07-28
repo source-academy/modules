@@ -71,4 +71,9 @@ export interface PixNFlixTabRpc {
   $pauseAt(pauseTimeMs: number): void;
   /** Reads the elapsed playback time (ms) - accumulated by the tab's own draw loop. */
   getVideoTime(): Promise<number>;
+  /**
+   * Stops the capture loop and releases the camera - the actual "stop the feed" action, called
+   * from the module's stop() alongside endPendingWork().
+   */
+  $stopStreaming(): void;
 }

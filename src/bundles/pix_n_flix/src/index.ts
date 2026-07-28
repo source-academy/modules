@@ -216,10 +216,18 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
   private async __handleCapturedFrame(message: CapturedFrameMessage): Promise<void> {
     const srcBuffer: ImageBuffer = { view: new Uint8ClampedArray(message.buffer), width: message.width, height: message.height };
     const destBuffer = makeImageBuffer(message.width, message.height);
-    const srcHandle = await this.__registerBuffer(srcBuffer);
-    const destHandle = await this.__registerBuffer(destBuffer);
+    // Registered inside the try, not before it: opaque_make is a real (if practically
+    // never-failing) async call, and the tab only sends its *next* captured frame once this
+    // one's filtered-frame reply arrives (see PixNFlixTabPlugin.__tick's own pending-frame gate)
+    // - any unhandled rejection here, with no reply ever sent, would wedge the capture loop
+    // permanently, silently, since this whole handler runs fire-and-forget off the frame channel
+    // subscription below.
+    let srcHandle: TypedValue<DataType.OPAQUE> | undefined;
+    let destHandle: TypedValue<DataType.OPAQUE> | undefined;
 
     try {
+      srcHandle = await this.__registerBuffer(srcBuffer);
+      destHandle = await this.__registerBuffer(destBuffer);
       if (this.__filter === undefined) {
         copyImageBuffer(srcBuffer, destBuffer);
       } else {
@@ -230,18 +238,21 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
       // to student code (this runs once per frame, off the draw loop, not in response to a
       // direct Source-level call) - matches the pre-migration drawImage's behaviour of falling
       // back to the default filter and continuing to render, rather than killing the video feed
-      // over one bad frame.
+      // over one bad frame. copyImageBuffer works directly on the plain JS buffers, not through
+      // the (possibly never-registered) opaque handles, so this fallback is safe even when
+      // registration itself is what failed.
       console.error('pix_n_flix filter error, resetting to the default filter:', e);
       this.__filter = undefined;
       copyImageBuffer(srcBuffer, destBuffer);
     } finally {
-      this.__unregisterBuffer(srcHandle);
-      this.__unregisterBuffer(destHandle);
+      if (srcHandle) this.__unregisterBuffer(srcHandle);
+      if (destHandle) this.__unregisterBuffer(destHandle);
     }
 
     // destBuffer is always freshly allocated by makeImageBuffer via `new Uint8ClampedArray(n)`,
     // so its `.buffer` is always a plain ArrayBuffer - `.buffer`'s declared type (ArrayBufferLike)
     // is only wider because a Uint8ClampedArray could in general wrap a SharedArrayBuffer instead.
+    // Always reached (outside the try/catch above), so the tab's pending frame always resolves.
     const outBuffer = destBuffer.view.buffer as ArrayBuffer;
     this.__frameChannel.send({ kind: 'filtered-frame', buffer: outBuffer }, [outBuffer]);
   }
@@ -424,14 +435,17 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
   }
 
   /**
-   * Stops the video feed, matching sound's stop(): lets the Run reach its terminal status
-   * naturally instead of running forever - see __beginStreaming's doc comment. Not required
+   * Actually stops the video feed, matching sound's stop(): tells the tab to stop its capture
+   * loop and release the camera (`$stopStreaming`), and lets the Run reach its terminal status
+   * naturally instead of running forever (`__endStreaming` - see its doc comment). Not required
    * before the program otherwise ends (a hard Stop click or starting another Run terminates the
-   * Worker outright, regardless of pending work), but without ever calling this, a program that
-   * calls install_filter and nothing else runs until the student explicitly stops it.
+   * Worker outright, tearing the tab down with it regardless of pending work), but without ever
+   * calling this, a program that calls install_filter and nothing else keeps the feed running
+   * until the student explicitly stops it.
    */
   @moduleMethod([], DataType.VOID)
   async* stop(): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
+    this.__tabRpc.$stopStreaming();
     this.__endStreaming();
     return { type: DataType.VOID, value: undefined };
   }

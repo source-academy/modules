@@ -216,6 +216,11 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
   private __releaseCamera(): void {
     const stream = this.__video?.srcObject as MediaStream | undefined;
     stream?.getTracks().forEach(track => track.stop());
+    // Without this, __requestCamera's own srcObject-truthy check (line above) would see this
+    // now-dead stream as "already have a camera" and never re-acquire on a later detach/reattach
+    // cycle (e.g. React StrictMode's double-invoked mount effect, or a tab hide/show cycle),
+    // leaving a permanently frozen, all-tracks-stopped video element.
+    if (this.__video) this.__video.srcObject = null;
   }
 
   private __setAspectRatioDimensions(w: number, h: number): void {
@@ -236,6 +241,11 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
     window.cancelAnimationFrame(this.__requestId);
     this.__requestId = undefined;
     this.__prevTimestamp = null;
+    // A frame already in flight when capture stops may never get a reply (e.g. the module's
+    // Worker is gone by the time it would have replied) - without clearing this, __tick's own
+    // gate (`|| this.__pendingFrame`) would block every future frame forever once __startCapture
+    // runs again, since nothing would ever resolve this specific promise.
+    this.__pendingFrame = undefined;
   }
 
   private __tick = (timestamp: number): void => {
@@ -270,6 +280,11 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
       ctx.scale(-1, 1);
     }
     if (this.__keepAspectRatio) {
+      // beginPath() is required here: rect() appends to the *current* path rather than replacing
+      // it, and neither save()/restore() nor drawImage() reset it - without this, the path grows
+      // by one stacked (identical) rectangle every captured frame, and fill() re-rasterizes all
+      // of them every time, a real and growing cost over a long-running video session.
+      ctx.beginPath();
       ctx.rect(0, 0, width, height);
       ctx.fill();
       ctx.drawImage(source, 0, 0, this.__intrinsicWidth, this.__intrinsicHeight, (width - this.__displayWidth) / 2, (height - this.__displayHeight) / 2, this.__displayWidth, this.__displayHeight);
@@ -389,6 +404,11 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
 
   async getVideoTime(): Promise<number> {
     return this.__totalElapsedMs;
+  }
+
+  $stopStreaming(): void {
+    this.__stopCapture();
+    this.__releaseCamera();
   }
 
   // Exposed for the view component's play/pause buttons - not part of PixNFlixTabRpc, since
