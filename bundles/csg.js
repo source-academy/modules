@@ -12681,7 +12681,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/utils/flatten.js"(exports, module) {
       "use strict";
       init_define_process();
-      var flatten = arr => arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
+      var flatten = arr => arr.flat(Infinity);
       module.exports = flatten;
     }
   });
@@ -12855,9 +12855,11 @@ ${nonManifold.join("\n")}`);
       var spatialResolution = 1e5;
       var EPS = 1e-5;
       var NEPS = 1e-13;
+      var TAU = Math.PI * 2;
       module.exports = {
         EPS,
         NEPS,
+        TAU,
         spatialResolution
       };
     }
@@ -14296,7 +14298,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var fromAngleRadians = require_fromAngleRadians2();
-      var fromAngleDegrees = (out, degrees) => fromAngleRadians(out, Math.PI * degrees / 180);
+      var fromAngleDegrees = (out, degrees) => fromAngleRadians(out, degrees * 0.017453292519943295);
       module.exports = fromAngleDegrees;
     }
   });
@@ -14416,9 +14418,10 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/normal.js"(exports, module) {
       "use strict";
       init_define_process();
+      var {TAU} = require_constants2();
       var create = require_create17();
       var rotate2 = require_rotate5();
-      var normal = (out, vector) => rotate2(out, vector, create(), Math.PI / 2);
+      var normal = (out, vector) => rotate2(out, vector, create(), TAU / 4);
       module.exports = normal;
     }
   });
@@ -14852,11 +14855,16 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var mat42 = require_mat42();
+      var reverse = require_reverse6();
       var transform = (matrix, geometry) => {
         const transforms = mat42.multiply(mat42.create(), matrix, geometry.transforms);
-        return Object.assign({}, geometry, {
+        const transformed = Object.assign({}, geometry, {
           transforms
         });
+        if (matrix[0] * matrix[5] - matrix[4] * matrix[1] < 0) {
+          return reverse(transformed);
+        }
+        return transformed;
       };
       module.exports = transform;
     }
@@ -14929,6 +14937,785 @@ ${nonManifold.join("\n")}`);
         };
       };
       module.exports = create;
+    }
+  });
+  var require_point_line_distance2 = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/point-line-distance.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var cross = require_cross3();
+      var subtract2 = require_subtract5();
+      var squaredLength = require_squaredLength3();
+      var distanceSquared = (p, a, b) => {
+        const ab = [];
+        const ap = [];
+        const cr = [];
+        subtract2(ab, b, a);
+        subtract2(ap, p, a);
+        const area = squaredLength(cross(cr, ap, ab));
+        const s = squaredLength(ab);
+        if (s === 0) {
+          throw Error("a and b are the same point");
+        }
+        return area / s;
+      };
+      var pointLineDistance = (point, a, b) => Math.sqrt(distanceSquared(point, a, b));
+      module.exports = pointLineDistance;
+    }
+  });
+  var require_get_plane_normal2 = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/get-plane-normal.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var cross = require_cross3();
+      var normalize = require_normalize3();
+      var subtract2 = require_subtract5();
+      var planeNormal = (out, point1, point2, point3) => {
+        const tmp = [0, 0, 0];
+        subtract2(out, point1, point2);
+        subtract2(tmp, point2, point3);
+        cross(out, out, tmp);
+        return normalize(out, out);
+      };
+      module.exports = planeNormal;
+    }
+  });
+  var require_VertexList2 = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/VertexList.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var VertexList = class {
+        constructor() {
+          this.head = null;
+          this.tail = null;
+        }
+        clear() {
+          this.head = this.tail = null;
+        }
+        insertBefore(target, node) {
+          node.prev = target.prev;
+          node.next = target;
+          if (!node.prev) {
+            this.head = node;
+          } else {
+            node.prev.next = node;
+          }
+          target.prev = node;
+        }
+        insertAfter(target, node) {
+          node.prev = target;
+          node.next = target.next;
+          if (!node.next) {
+            this.tail = node;
+          } else {
+            node.next.prev = node;
+          }
+          target.next = node;
+        }
+        add(node) {
+          if (!this.head) {
+            this.head = node;
+          } else {
+            this.tail.next = node;
+          }
+          node.prev = this.tail;
+          node.next = null;
+          this.tail = node;
+        }
+        addAll(node) {
+          if (!this.head) {
+            this.head = node;
+          } else {
+            this.tail.next = node;
+          }
+          node.prev = this.tail;
+          while (node.next) {
+            node = node.next;
+          }
+          this.tail = node;
+        }
+        remove(node) {
+          if (!node.prev) {
+            this.head = node.next;
+          } else {
+            node.prev.next = node.next;
+          }
+          if (!node.next) {
+            this.tail = node.prev;
+          } else {
+            node.next.prev = node.prev;
+          }
+        }
+        removeChain(a, b) {
+          if (!a.prev) {
+            this.head = b.next;
+          } else {
+            a.prev.next = b.next;
+          }
+          if (!b.next) {
+            this.tail = a.prev;
+          } else {
+            b.next.prev = a.prev;
+          }
+        }
+        first() {
+          return this.head;
+        }
+        isEmpty() {
+          return !this.head;
+        }
+      };
+      module.exports = VertexList;
+    }
+  });
+  var require_Vertex2 = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/Vertex.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var Vertex = class {
+        constructor(point, index) {
+          this.point = point;
+          this.index = index;
+          this.next = null;
+          this.prev = null;
+          this.face = null;
+        }
+      };
+      module.exports = Vertex;
+    }
+  });
+  var require_HalfEdge2 = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/HalfEdge.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var distance = require_distance3();
+      var squaredDistance = require_squaredDistance3();
+      var HalfEdge = class {
+        constructor(vertex, face) {
+          this.vertex = vertex;
+          this.face = face;
+          this.next = null;
+          this.prev = null;
+          this.opposite = null;
+        }
+        head() {
+          return this.vertex;
+        }
+        tail() {
+          return this.prev ? this.prev.vertex : null;
+        }
+        length() {
+          if (this.tail()) {
+            return distance(this.tail().point, this.head().point);
+          }
+          return -1;
+        }
+        lengthSquared() {
+          if (this.tail()) {
+            return squaredDistance(this.tail().point, this.head().point);
+          }
+          return -1;
+        }
+        setOpposite(edge) {
+          this.opposite = edge;
+          edge.opposite = this;
+        }
+      };
+      module.exports = HalfEdge;
+    }
+  });
+  var require_Face2 = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/Face.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var add = require_add5();
+      var copy = require_copy8();
+      var cross = require_cross3();
+      var dot = require_dot4();
+      var length = require_length3();
+      var normalize = require_normalize3();
+      var scale2 = require_scale5();
+      var subtract2 = require_subtract5();
+      var HalfEdge = require_HalfEdge2();
+      var VISIBLE = 0;
+      var NON_CONVEX = 1;
+      var DELETED = 2;
+      var Face = class _Face {
+        constructor() {
+          this.normal = [];
+          this.centroid = [];
+          this.offset = 0;
+          this.outside = null;
+          this.mark = VISIBLE;
+          this.edge = null;
+          this.nVertices = 0;
+        }
+        getEdge(i) {
+          if (typeof i !== "number") {
+            throw Error("requires a number");
+          }
+          let it = this.edge;
+          while (i > 0) {
+            it = it.next;
+            i -= 1;
+          }
+          while (i < 0) {
+            it = it.prev;
+            i += 1;
+          }
+          return it;
+        }
+        computeNormal() {
+          const e0 = this.edge;
+          const e1 = e0.next;
+          let e2 = e1.next;
+          const v2 = subtract2([], e1.head().point, e0.head().point);
+          const t = [];
+          const v1 = [];
+          this.nVertices = 2;
+          this.normal = [0, 0, 0];
+          while (e2 !== e0) {
+            copy(v1, v2);
+            subtract2(v2, e2.head().point, e0.head().point);
+            add(this.normal, this.normal, cross(t, v1, v2));
+            e2 = e2.next;
+            this.nVertices += 1;
+          }
+          this.area = length(this.normal);
+          this.normal = scale2(this.normal, this.normal, 1 / this.area);
+        }
+        computeNormalMinArea(minArea) {
+          this.computeNormal();
+          if (this.area < minArea) {
+            let maxEdge;
+            let maxSquaredLength = 0;
+            let edge = this.edge;
+            do {
+              const lengthSquared = edge.lengthSquared();
+              if (lengthSquared > maxSquaredLength) {
+                maxEdge = edge;
+                maxSquaredLength = lengthSquared;
+              }
+              edge = edge.next;
+            } while (edge !== this.edge);
+            const p1 = maxEdge.tail().point;
+            const p2 = maxEdge.head().point;
+            const maxVector = subtract2([], p2, p1);
+            const maxLength = Math.sqrt(maxSquaredLength);
+            scale2(maxVector, maxVector, 1 / maxLength);
+            const maxProjection = dot(this.normal, maxVector);
+            scale2(maxVector, maxVector, -maxProjection);
+            add(this.normal, this.normal, maxVector);
+            normalize(this.normal, this.normal);
+          }
+        }
+        computeCentroid() {
+          this.centroid = [0, 0, 0];
+          let edge = this.edge;
+          do {
+            add(this.centroid, this.centroid, edge.head().point);
+            edge = edge.next;
+          } while (edge !== this.edge);
+          scale2(this.centroid, this.centroid, 1 / this.nVertices);
+        }
+        computeNormalAndCentroid(minArea) {
+          if (typeof minArea !== "undefined") {
+            this.computeNormalMinArea(minArea);
+          } else {
+            this.computeNormal();
+          }
+          this.computeCentroid();
+          this.offset = dot(this.normal, this.centroid);
+        }
+        distanceToPlane(point) {
+          return dot(this.normal, point) - this.offset;
+        }
+        connectHalfEdges(prev, next) {
+          let discardedFace;
+          if (prev.opposite.face === next.opposite.face) {
+            const oppositeFace = next.opposite.face;
+            let oppositeEdge;
+            if (prev === this.edge) {
+              this.edge = next;
+            }
+            if (oppositeFace.nVertices === 3) {
+              oppositeEdge = next.opposite.prev.opposite;
+              oppositeFace.mark = DELETED;
+              discardedFace = oppositeFace;
+            } else {
+              oppositeEdge = next.opposite.next;
+              if (oppositeFace.edge === oppositeEdge.prev) {
+                oppositeFace.edge = oppositeEdge;
+              }
+              oppositeEdge.prev = oppositeEdge.prev.prev;
+              oppositeEdge.prev.next = oppositeEdge;
+            }
+            next.prev = prev.prev;
+            next.prev.next = next;
+            next.setOpposite(oppositeEdge);
+            oppositeFace.computeNormalAndCentroid();
+          } else {
+            prev.next = next;
+            next.prev = prev;
+          }
+          return discardedFace;
+        }
+        mergeAdjacentFaces(adjacentEdge, discardedFaces) {
+          const oppositeEdge = adjacentEdge.opposite;
+          const oppositeFace = oppositeEdge.face;
+          discardedFaces.push(oppositeFace);
+          oppositeFace.mark = DELETED;
+          let adjacentEdgePrev = adjacentEdge.prev;
+          let adjacentEdgeNext = adjacentEdge.next;
+          let oppositeEdgePrev = oppositeEdge.prev;
+          let oppositeEdgeNext = oppositeEdge.next;
+          while (adjacentEdgePrev.opposite.face === oppositeFace) {
+            adjacentEdgePrev = adjacentEdgePrev.prev;
+            oppositeEdgeNext = oppositeEdgeNext.next;
+          }
+          while (adjacentEdgeNext.opposite.face === oppositeFace) {
+            adjacentEdgeNext = adjacentEdgeNext.next;
+            oppositeEdgePrev = oppositeEdgePrev.prev;
+          }
+          let edge;
+          for (edge = oppositeEdgeNext; edge !== oppositeEdgePrev.next; edge = edge.next) {
+            edge.face = this;
+          }
+          this.edge = adjacentEdgeNext;
+          let discardedFace;
+          discardedFace = this.connectHalfEdges(oppositeEdgePrev, adjacentEdgeNext);
+          if (discardedFace) {
+            discardedFaces.push(discardedFace);
+          }
+          discardedFace = this.connectHalfEdges(adjacentEdgePrev, oppositeEdgeNext);
+          if (discardedFace) {
+            discardedFaces.push(discardedFace);
+          }
+          this.computeNormalAndCentroid();
+          return discardedFaces;
+        }
+        collectIndices() {
+          const indices = [];
+          let edge = this.edge;
+          do {
+            indices.push(edge.head().index);
+            edge = edge.next;
+          } while (edge !== this.edge);
+          return indices;
+        }
+        static createTriangle(v0, v1, v2, minArea = 0) {
+          const face = new _Face();
+          const e0 = new HalfEdge(v0, face);
+          const e1 = new HalfEdge(v1, face);
+          const e2 = new HalfEdge(v2, face);
+          e0.next = e2.prev = e1;
+          e1.next = e0.prev = e2;
+          e2.next = e1.prev = e0;
+          face.edge = e0;
+          face.computeNormalAndCentroid(minArea);
+          return face;
+        }
+      };
+      module.exports = {
+        VISIBLE,
+        NON_CONVEX,
+        DELETED,
+        Face
+      };
+    }
+  });
+  var require_QuickHull2 = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/QuickHull.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var dot = require_dot4();
+      var pointLineDistance = require_point_line_distance2();
+      var getPlaneNormal = require_get_plane_normal2();
+      var VertexList = require_VertexList2();
+      var Vertex = require_Vertex2();
+      var {Face, VISIBLE, NON_CONVEX, DELETED} = require_Face2();
+      var MERGE_NON_CONVEX_WRT_LARGER_FACE = 1;
+      var MERGE_NON_CONVEX = 2;
+      var QuickHull = class {
+        constructor(points) {
+          if (!Array.isArray(points)) {
+            throw TypeError("input is not a valid array");
+          }
+          if (points.length < 4) {
+            throw Error("cannot build a simplex out of <4 points");
+          }
+          this.tolerance = -1;
+          this.nFaces = 0;
+          this.nPoints = points.length;
+          this.faces = [];
+          this.newFaces = [];
+          this.claimed = new VertexList();
+          this.unclaimed = new VertexList();
+          this.vertices = [];
+          for (let i = 0; i < points.length; i += 1) {
+            this.vertices.push(new Vertex(points[i], i));
+          }
+          this.discardedFaces = [];
+          this.vertexPointIndices = [];
+        }
+        addVertexToFace(vertex, face) {
+          vertex.face = face;
+          if (!face.outside) {
+            this.claimed.add(vertex);
+          } else {
+            this.claimed.insertBefore(face.outside, vertex);
+          }
+          face.outside = vertex;
+        }
+        removeVertexFromFace(vertex, face) {
+          if (vertex === face.outside) {
+            if (vertex.next && vertex.next.face === face) {
+              face.outside = vertex.next;
+            } else {
+              face.outside = null;
+            }
+          }
+          this.claimed.remove(vertex);
+        }
+        removeAllVerticesFromFace(face) {
+          if (face.outside) {
+            let end = face.outside;
+            while (end.next && end.next.face === face) {
+              end = end.next;
+            }
+            this.claimed.removeChain(face.outside, end);
+            end.next = null;
+            return face.outside;
+          }
+        }
+        deleteFaceVertices(face, absorbingFace) {
+          const faceVertices = this.removeAllVerticesFromFace(face);
+          if (faceVertices) {
+            if (!absorbingFace) {
+              this.unclaimed.addAll(faceVertices);
+            } else {
+              let nextVertex;
+              for (let vertex = faceVertices; vertex; vertex = nextVertex) {
+                nextVertex = vertex.next;
+                const distance = absorbingFace.distanceToPlane(vertex.point);
+                if (distance > this.tolerance) {
+                  this.addVertexToFace(vertex, absorbingFace);
+                } else {
+                  this.unclaimed.add(vertex);
+                }
+              }
+            }
+          }
+        }
+        resolveUnclaimedPoints(newFaces) {
+          let vertexNext = this.unclaimed.first();
+          for (let vertex = vertexNext; vertex; vertex = vertexNext) {
+            vertexNext = vertex.next;
+            let maxDistance = this.tolerance;
+            let maxFace;
+            for (let i = 0; i < newFaces.length; i += 1) {
+              const face = newFaces[i];
+              if (face.mark === VISIBLE) {
+                const dist = face.distanceToPlane(vertex.point);
+                if (dist > maxDistance) {
+                  maxDistance = dist;
+                  maxFace = face;
+                }
+                if (maxDistance > 1e3 * this.tolerance) {
+                  break;
+                }
+              }
+            }
+            if (maxFace) {
+              this.addVertexToFace(vertex, maxFace);
+            }
+          }
+        }
+        computeExtremes() {
+          const min = [];
+          const max = [];
+          const minVertices = [];
+          const maxVertices = [];
+          let i, j;
+          for (i = 0; i < 3; i += 1) {
+            minVertices[i] = maxVertices[i] = this.vertices[0];
+          }
+          for (i = 0; i < 3; i += 1) {
+            min[i] = max[i] = this.vertices[0].point[i];
+          }
+          for (i = 1; i < this.vertices.length; i += 1) {
+            const vertex = this.vertices[i];
+            const point = vertex.point;
+            for (j = 0; j < 3; j += 1) {
+              if (point[j] < min[j]) {
+                min[j] = point[j];
+                minVertices[j] = vertex;
+              }
+            }
+            for (j = 0; j < 3; j += 1) {
+              if (point[j] > max[j]) {
+                max[j] = point[j];
+                maxVertices[j] = vertex;
+              }
+            }
+          }
+          this.tolerance = 3 * Number.EPSILON * (Math.max(Math.abs(min[0]), Math.abs(max[0])) + Math.max(Math.abs(min[1]), Math.abs(max[1])) + Math.max(Math.abs(min[2]), Math.abs(max[2])));
+          return [minVertices, maxVertices];
+        }
+        createInitialSimplex() {
+          const vertices = this.vertices;
+          const [min, max] = this.computeExtremes();
+          let v2, v3;
+          let i, j;
+          let maxDistance = 0;
+          let indexMax = 0;
+          for (i = 0; i < 3; i += 1) {
+            const distance = max[i].point[i] - min[i].point[i];
+            if (distance > maxDistance) {
+              maxDistance = distance;
+              indexMax = i;
+            }
+          }
+          const v0 = min[indexMax];
+          const v1 = max[indexMax];
+          maxDistance = 0;
+          for (i = 0; i < this.vertices.length; i += 1) {
+            const vertex = this.vertices[i];
+            if (vertex !== v0 && vertex !== v1) {
+              const distance = pointLineDistance(vertex.point, v0.point, v1.point);
+              if (distance > maxDistance) {
+                maxDistance = distance;
+                v2 = vertex;
+              }
+            }
+          }
+          const normal = getPlaneNormal([], v0.point, v1.point, v2.point);
+          const distPO = dot(v0.point, normal);
+          maxDistance = -1;
+          for (i = 0; i < this.vertices.length; i += 1) {
+            const vertex = this.vertices[i];
+            if (vertex !== v0 && vertex !== v1 && vertex !== v2) {
+              const distance = Math.abs(dot(normal, vertex.point) - distPO);
+              if (distance > maxDistance) {
+                maxDistance = distance;
+                v3 = vertex;
+              }
+            }
+          }
+          const faces = [];
+          if (dot(v3.point, normal) - distPO < 0) {
+            faces.push(Face.createTriangle(v0, v1, v2), Face.createTriangle(v3, v1, v0), Face.createTriangle(v3, v2, v1), Face.createTriangle(v3, v0, v2));
+            for (i = 0; i < 3; i += 1) {
+              const j2 = (i + 1) % 3;
+              faces[i + 1].getEdge(2).setOpposite(faces[0].getEdge(j2));
+              faces[i + 1].getEdge(1).setOpposite(faces[j2 + 1].getEdge(0));
+            }
+          } else {
+            faces.push(Face.createTriangle(v0, v2, v1), Face.createTriangle(v3, v0, v1), Face.createTriangle(v3, v1, v2), Face.createTriangle(v3, v2, v0));
+            for (i = 0; i < 3; i += 1) {
+              const j2 = (i + 1) % 3;
+              faces[i + 1].getEdge(2).setOpposite(faces[0].getEdge((3 - i) % 3));
+              faces[i + 1].getEdge(0).setOpposite(faces[j2 + 1].getEdge(1));
+            }
+          }
+          for (i = 0; i < 4; i += 1) {
+            this.faces.push(faces[i]);
+          }
+          for (i = 0; i < vertices.length; i += 1) {
+            const vertex = vertices[i];
+            if (vertex !== v0 && vertex !== v1 && vertex !== v2 && vertex !== v3) {
+              maxDistance = this.tolerance;
+              let maxFace;
+              for (j = 0; j < 4; j += 1) {
+                const distance = faces[j].distanceToPlane(vertex.point);
+                if (distance > maxDistance) {
+                  maxDistance = distance;
+                  maxFace = faces[j];
+                }
+              }
+              if (maxFace) {
+                this.addVertexToFace(vertex, maxFace);
+              }
+            }
+          }
+        }
+        reindexFaceAndVertices() {
+          const activeFaces = [];
+          for (let i = 0; i < this.faces.length; i += 1) {
+            const face = this.faces[i];
+            if (face.mark === VISIBLE) {
+              activeFaces.push(face);
+            }
+          }
+          this.faces = activeFaces;
+        }
+        collectFaces(skipTriangulation) {
+          const faceIndices = [];
+          for (let i = 0; i < this.faces.length; i += 1) {
+            if (this.faces[i].mark !== VISIBLE) {
+              throw Error("attempt to include a destroyed face in the hull");
+            }
+            const indices = this.faces[i].collectIndices();
+            if (skipTriangulation) {
+              faceIndices.push(indices);
+            } else {
+              for (let j = 0; j < indices.length - 2; j += 1) {
+                faceIndices.push([indices[0], indices[j + 1], indices[j + 2]]);
+              }
+            }
+          }
+          return faceIndices;
+        }
+        nextVertexToAdd() {
+          if (!this.claimed.isEmpty()) {
+            let eyeVertex, vertex;
+            let maxDistance = 0;
+            const eyeFace = this.claimed.first().face;
+            for (vertex = eyeFace.outside; vertex && vertex.face === eyeFace; vertex = vertex.next) {
+              const distance = eyeFace.distanceToPlane(vertex.point);
+              if (distance > maxDistance) {
+                maxDistance = distance;
+                eyeVertex = vertex;
+              }
+            }
+            return eyeVertex;
+          }
+        }
+        computeHorizon(eyePoint, crossEdge, face, horizon) {
+          this.deleteFaceVertices(face);
+          face.mark = DELETED;
+          let edge;
+          if (!crossEdge) {
+            edge = crossEdge = face.getEdge(0);
+          } else {
+            edge = crossEdge.next;
+          }
+          do {
+            const oppositeEdge = edge.opposite;
+            const oppositeFace = oppositeEdge.face;
+            if (oppositeFace.mark === VISIBLE) {
+              if (oppositeFace.distanceToPlane(eyePoint) > this.tolerance) {
+                this.computeHorizon(eyePoint, oppositeEdge, oppositeFace, horizon);
+              } else {
+                horizon.push(edge);
+              }
+            }
+            edge = edge.next;
+          } while (edge !== crossEdge);
+        }
+        addAdjoiningFace(eyeVertex, horizonEdge) {
+          const face = Face.createTriangle(eyeVertex, horizonEdge.tail(), horizonEdge.head());
+          this.faces.push(face);
+          face.getEdge(-1).setOpposite(horizonEdge.opposite);
+          return face.getEdge(0);
+        }
+        addNewFaces(eyeVertex, horizon) {
+          this.newFaces = [];
+          let firstSideEdge, previousSideEdge;
+          for (let i = 0; i < horizon.length; i += 1) {
+            const horizonEdge = horizon[i];
+            const sideEdge = this.addAdjoiningFace(eyeVertex, horizonEdge);
+            if (!firstSideEdge) {
+              firstSideEdge = sideEdge;
+            } else {
+              sideEdge.next.setOpposite(previousSideEdge);
+            }
+            this.newFaces.push(sideEdge.face);
+            previousSideEdge = sideEdge;
+          }
+          firstSideEdge.next.setOpposite(previousSideEdge);
+        }
+        oppositeFaceDistance(edge) {
+          return edge.face.distanceToPlane(edge.opposite.face.centroid);
+        }
+        doAdjacentMerge(face, mergeType) {
+          let edge = face.edge;
+          let convex = true;
+          let it = 0;
+          do {
+            if (it >= face.nVertices) {
+              throw Error("merge recursion limit exceeded");
+            }
+            const oppositeFace = edge.opposite.face;
+            let merge = false;
+            if (mergeType === MERGE_NON_CONVEX) {
+              if (this.oppositeFaceDistance(edge) > -this.tolerance || this.oppositeFaceDistance(edge.opposite) > -this.tolerance) {
+                merge = true;
+              }
+            } else {
+              if (face.area > oppositeFace.area) {
+                if (this.oppositeFaceDistance(edge) > -this.tolerance) {
+                  merge = true;
+                } else if (this.oppositeFaceDistance(edge.opposite) > -this.tolerance) {
+                  convex = false;
+                }
+              } else {
+                if (this.oppositeFaceDistance(edge.opposite) > -this.tolerance) {
+                  merge = true;
+                } else if (this.oppositeFaceDistance(edge) > -this.tolerance) {
+                  convex = false;
+                }
+              }
+            }
+            if (merge) {
+              const discardedFaces = face.mergeAdjacentFaces(edge, []);
+              for (let i = 0; i < discardedFaces.length; i += 1) {
+                this.deleteFaceVertices(discardedFaces[i], face);
+              }
+              return true;
+            }
+            edge = edge.next;
+            it += 1;
+          } while (edge !== face.edge);
+          if (!convex) {
+            face.mark = NON_CONVEX;
+          }
+          return false;
+        }
+        addVertexToHull(eyeVertex) {
+          const horizon = [];
+          this.unclaimed.clear();
+          this.removeVertexFromFace(eyeVertex, eyeVertex.face);
+          this.computeHorizon(eyeVertex.point, null, eyeVertex.face, horizon);
+          this.addNewFaces(eyeVertex, horizon);
+          for (let i = 0; i < this.newFaces.length; i += 1) {
+            const face = this.newFaces[i];
+            if (face.mark === VISIBLE) {
+              while (this.doAdjacentMerge(face, MERGE_NON_CONVEX_WRT_LARGER_FACE)) {}
+            }
+          }
+          for (let i = 0; i < this.newFaces.length; i += 1) {
+            const face = this.newFaces[i];
+            if (face.mark === NON_CONVEX) {
+              face.mark = VISIBLE;
+              while (this.doAdjacentMerge(face, MERGE_NON_CONVEX)) {}
+            }
+          }
+          this.resolveUnclaimedPoints(this.newFaces);
+        }
+        build() {
+          let eyeVertex;
+          this.createInitialSimplex();
+          while (eyeVertex = this.nextVertexToAdd()) {
+            this.addVertexToHull(eyeVertex);
+          }
+          this.reindexFaceAndVertices();
+        }
+      };
+      module.exports = QuickHull;
+    }
+  });
+  var require_quickhull2 = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var QuickHull = require_QuickHull2();
+      var runner = (points, options = {}) => {
+        const instance = new QuickHull(points);
+        instance.build();
+        return instance.collectFaces(options.skipTriangulation);
+      };
+      module.exports = runner;
     }
   });
   var require_create19 = __commonJS({
@@ -15087,6 +15874,77 @@ ${nonManifold.join("\n")}`);
       module.exports = fromValues;
     }
   });
+  var require_fromNoisyPoints = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/plane/fromNoisyPoints.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec3 = require_vec32();
+      var fromNormalAndPoint = require_fromNormalAndPoint2();
+      var fromNoisyPoints = (out, ...vertices) => {
+        out[0] = 0;
+        out[1] = 0;
+        out[2] = 0;
+        out[3] = 0;
+        const n = vertices.length;
+        vertices.forEach(v => {
+          vec3.add(out, out, v);
+        });
+        vec3.scale(out, out, 1 / n);
+        let xx = 0;
+        let xy = 0;
+        let xz = 0;
+        let yy = 0;
+        let yz = 0;
+        let zz = 0;
+        const vn = vec3.create();
+        vertices.forEach(v => {
+          vec3.subtract(vn, v, out);
+          xx += vn[0] * vn[0];
+          xy += vn[0] * vn[1];
+          xz += vn[0] * vn[2];
+          yy += vn[1] * vn[1];
+          yz += vn[1] * vn[2];
+          zz += vn[2] * vn[2];
+        });
+        xx /= n;
+        xy /= n;
+        xz /= n;
+        yy /= n;
+        yz /= n;
+        zz /= n;
+        vn[0] = 0;
+        vn[1] = 0;
+        vn[2] = 0;
+        const wdv = vec3.create();
+        let det = yy * zz - yz * yz;
+        wdv[0] = det;
+        wdv[1] = xz * yz - xy * zz;
+        wdv[2] = xy * yz - xz * yy;
+        let weight = det * det;
+        vec3.add(vn, vn, vec3.scale(wdv, wdv, weight));
+        det = xx * zz - xz * xz;
+        wdv[0] = xz * yz - xy * zz;
+        wdv[1] = det;
+        wdv[2] = xy * xz - yz * xx;
+        weight = det * det;
+        if (vec3.dot(vn, wdv) < 0) {
+          weight = -weight;
+        }
+        vec3.add(vn, vn, vec3.scale(wdv, wdv, weight));
+        det = xx * yy - xy * xy;
+        wdv[0] = xy * yz - xz * yy;
+        wdv[1] = xy * xz - yz * xx;
+        wdv[2] = det;
+        weight = det * det;
+        if (vec3.dot(vn, wdv) < 0) {
+          weight = -weight;
+        }
+        vec3.add(vn, vn, vec3.scale(wdv, wdv, weight));
+        return fromNormalAndPoint(out, vn, out);
+      };
+      module.exports = fromNoisyPoints;
+    }
+  });
   var require_fromPoints11 = __commonJS({
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/plane/fromPoints.js"(exports, module) {
       "use strict";
@@ -15227,6 +16085,7 @@ ${nonManifold.join("\n")}`);
         flip: require_flip3(),
         fromNormalAndPoint: require_fromNormalAndPoint2(),
         fromValues: require_fromValues9(),
+        fromNoisyPoints: require_fromNoisyPoints(),
         fromPoints: require_fromPoints11(),
         fromPointsRandom: require_fromPointsRandom2(),
         projectionOfPoint: require_projectionOfPoint2(),
@@ -15456,11 +16315,10 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingSphere.js"(exports, module) {
       "use strict";
       init_define_process();
-      var vec3 = require_vec32();
       var vec4 = require_vec42();
       var cache = new WeakMap();
       var measureBoundingSphere = polygon => {
-        let boundingSphere = cache.get(polygon);
+        const boundingSphere = cache.get(polygon);
         if (boundingSphere) return boundingSphere;
         const vertices = polygon.vertices;
         const out = vec4.create();
@@ -15629,6 +16487,29 @@ ${nonManifold.join("\n")}`);
       };
     }
   });
+  var require_fromPointsConvex = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/fromPointsConvex.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var quickhull = require_quickhull2();
+      var create = require_create18();
+      var poly3 = require_poly32();
+      var fromPointsConvex = uniquePoints => {
+        if (!Array.isArray(uniquePoints)) {
+          throw new Error("the given points must be an array");
+        }
+        const faces = quickhull(uniquePoints, {
+          skipTriangulation: true
+        });
+        const polygons = faces.map(face => {
+          const vertices = face.map(index => uniquePoints[index]);
+          return poly3.create(vertices);
+        });
+        return create(polygons);
+      };
+      module.exports = fromPointsConvex;
+    }
+  });
   var require_fromPoints12 = __commonJS({
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/fromPoints.js"(exports, module) {
       "use strict";
@@ -15736,6 +16617,51 @@ ${nonManifold.join("\n")}`);
         return false;
       };
       module.exports = isA;
+    }
+  });
+  var require_isConvex3 = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/geom3/isConvex.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var {EPS} = require_constants2();
+      var vec3 = require_vec32();
+      var geom32 = require_isA8();
+      var toPolygons = require_toPolygons3();
+      var poly3 = require_poly32();
+      var isConvex = geometry => {
+        if (!geom32(geometry)) {
+          throw new Error("isConvex requires a geom3 geometry");
+        }
+        const polygons = toPolygons(geometry);
+        if (polygons.length === 0) {
+          return true;
+        }
+        const vertices = [];
+        const found = new Set();
+        for (let i = 0; i < polygons.length; i++) {
+          const verts = polygons[i].vertices;
+          for (let j = 0; j < verts.length; j++) {
+            const v = verts[j];
+            const key = `${v[0]},${v[1]},${v[2]}`;
+            if (!found.has(key)) {
+              found.add(key);
+              vertices.push(v);
+            }
+          }
+        }
+        for (let i = 0; i < polygons.length; i++) {
+          const plane = poly3.plane(polygons[i]);
+          for (let j = 0; j < vertices.length; j++) {
+            const v = vertices[j];
+            const distance = vec3.dot(plane, v) - plane[3];
+            if (distance > EPS) {
+              return false;
+            }
+          }
+        }
+        return true;
+      };
+      module.exports = isConvex;
     }
   });
   var require_toPoints7 = __commonJS({
@@ -15887,10 +16813,12 @@ ${nonManifold.join("\n")}`);
       module.exports = {
         clone: require_clone16(),
         create: require_create18(),
+        fromPointsConvex: require_fromPointsConvex(),
         fromPoints: require_fromPoints12(),
         fromCompactBinary: require_fromCompactBinary5(),
         invert: require_invert6(),
         isA: require_isA8(),
+        isConvex: require_isConvex3(),
         toPoints: require_toPoints7(),
         toPolygons: require_toPolygons3(),
         toString: require_toString18(),
@@ -16008,6 +16936,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/appendArc.js"(exports, module) {
       "use strict";
       init_define_process();
+      var {TAU} = require_constants2();
       var vec2 = require_vec22();
       var fromPoints = require_fromPoints13();
       var toPoints = require_toPoints8();
@@ -16074,13 +17003,13 @@ ${nonManifold.join("\n")}`);
           const theta1 = vec2.angleRadians(vector1);
           const theta2 = vec2.angleRadians(vector2);
           let deltatheta = theta2 - theta1;
-          deltatheta = deltatheta % (2 * Math.PI);
+          deltatheta = deltatheta % TAU;
           if (!sweepFlag && deltatheta > 0) {
-            deltatheta -= 2 * Math.PI;
+            deltatheta -= TAU;
           } else if (sweepFlag && deltatheta < 0) {
-            deltatheta += 2 * Math.PI;
+            deltatheta += TAU;
           }
-          let numsteps = Math.ceil(Math.abs(deltatheta) / (2 * Math.PI) * segments) + 1;
+          let numsteps = Math.floor(segments * (Math.abs(deltatheta) / TAU));
           if (numsteps < 1) numsteps = 1;
           for (let step = 1; step < numsteps; step++) {
             const theta = theta1 + step / numsteps * deltatheta;
@@ -16139,6 +17068,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/geometries/path2/appendBezier.js"(exports, module) {
       "use strict";
       init_define_process();
+      var {TAU} = require_constants2();
       var vec2 = require_vec22();
       var vec3 = require_vec22();
       var appendPoints = require_appendPoints2();
@@ -16216,7 +17146,7 @@ ${nonManifold.join("\n")}`);
           newpointsT.push(t);
         }
         let subdivideBase = 1;
-        const maxangle = Math.PI * 2 / segments;
+        const maxangle = TAU / segments;
         const maxsinangle = Math.sin(maxangle);
         while (subdivideBase < newpoints.length - 1) {
           const dir1 = vec2.subtract(v0, newpoints[subdivideBase], newpoints[subdivideBase - 1]);
@@ -17050,6 +17980,90 @@ ${nonManifold.join("\n")}`);
       module.exports = tangentAt;
     }
   });
+  var require_lengths = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/curves/bezier/lengths.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var valueAt = require_valueAt2();
+      var lengths = (segments, bezier) => {
+        let sum = 0;
+        const lengths2 = [0];
+        let previous = valueAt(0, bezier);
+        for (let index = 1; index <= segments; index++) {
+          const current = valueAt(index / segments, bezier);
+          sum += distanceBetween(current, previous);
+          lengths2.push(sum);
+          previous = current;
+        }
+        return lengths2;
+      };
+      var distanceBetween = (a, b) => {
+        if (Number.isFinite(a) && Number.isFinite(b)) {
+          return Math.abs(a - b);
+        } else if (Array.isArray(a) && Array.isArray(b)) {
+          if (a.length !== b.length) {
+            throw new Error("The operands must have the same number of dimensions.");
+          }
+          let sum = 0;
+          for (let i = 0; i < a.length; i++) {
+            sum += (b[i] - a[i]) * (b[i] - a[i]);
+          }
+          return Math.sqrt(sum);
+        } else {
+          throw new Error("The operands must be of the same type, either number or array.");
+        }
+      };
+      module.exports = lengths;
+    }
+  });
+  var require_length5 = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/curves/bezier/length.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var lengths = require_lengths();
+      var length = (segments, bezier) => lengths(segments, bezier)[segments];
+      module.exports = length;
+    }
+  });
+  var require_arcLengthToT = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/curves/bezier/arcLengthToT.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var lengths = require_lengths();
+      var arcLengthToT = (options, bezier) => {
+        const defaults = {
+          distance: 0,
+          segments: 100
+        };
+        const {distance, segments} = Object.assign({}, defaults, options);
+        const arcLengths = lengths(segments, bezier);
+        let startIndex = 0;
+        let endIndex = segments;
+        while (startIndex <= endIndex) {
+          const middleIndex = Math.floor(startIndex + (endIndex - startIndex) / 2);
+          const diff = arcLengths[middleIndex] - distance;
+          if (diff < 0) {
+            startIndex = middleIndex + 1;
+          } else if (diff > 0) {
+            endIndex = middleIndex - 1;
+          } else {
+            endIndex = middleIndex;
+            break;
+          }
+        }
+        const targetIndex = endIndex;
+        if (arcLengths[targetIndex] === distance) {
+          return targetIndex / segments;
+        }
+        const lengthBefore = arcLengths[targetIndex];
+        const lengthAfter = arcLengths[targetIndex + 1];
+        const segmentLength = lengthAfter - lengthBefore;
+        const segmentFraction = (distance - lengthBefore) / segmentLength;
+        return (targetIndex + segmentFraction) / segments;
+      };
+      module.exports = arcLengthToT;
+    }
+  });
   var require_bezier2 = __commonJS({
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/curves/bezier/index.js"(exports, module) {
       "use strict";
@@ -17057,7 +18071,10 @@ ${nonManifold.join("\n")}`);
       module.exports = {
         create: require_create22(),
         valueAt: require_valueAt2(),
-        tangentAt: require_tangentAt2()
+        tangentAt: require_tangentAt2(),
+        lengths: require_lengths(),
+        length: require_length5(),
+        arcLengthToT: require_arcLengthToT()
       };
     }
   });
@@ -17247,16 +18264,13 @@ ${nonManifold.join("\n")}`);
       var direction = require_direction3();
       var origin = require_origin3();
       var closestPoint = (line, point) => {
-        const a = origin(line);
-        const b = direction(line);
-        const m1 = (b[1] - a[1]) / (b[0] - a[0]);
-        const t1 = a[1] - m1 * a[0];
-        const m2 = -1 / m1;
-        const t2 = point[1] - m2 * point[0];
-        const x = (t2 - t1) / (m1 - m2);
-        const y = m1 * x + t1;
-        const closest = vec2.fromValues(x, y);
-        return closest;
+        const orig = origin(line);
+        const dir = direction(line);
+        const v = vec2.subtract(vec2.create(), point, orig);
+        const dist = vec2.dot(v, dir);
+        vec2.scale(v, dir, dist);
+        vec2.add(v, v, orig);
+        return v;
       };
       module.exports = closestPoint;
     }
@@ -18309,7 +19323,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/arc.js"(exports, module) {
       "use strict";
       init_define_process();
-      var {EPS} = require_constants2();
+      var {EPS, TAU} = require_constants2();
       var vec2 = require_vec22();
       var path2 = require_path22();
       var {isGT, isGTE, isNumberArray} = require_commonChecks2();
@@ -18318,7 +19332,7 @@ ${nonManifold.join("\n")}`);
           center: [0, 0],
           radius: 1,
           startAngle: 0,
-          endAngle: Math.PI * 2,
+          endAngle: TAU,
           makeTangent: false,
           segments: 32
         };
@@ -18328,14 +19342,14 @@ ${nonManifold.join("\n")}`);
         if (!isGTE(startAngle, 0)) throw new Error("startAngle must be positive");
         if (!isGTE(endAngle, 0)) throw new Error("endAngle must be positive");
         if (!isGTE(segments, 4)) throw new Error("segments must be four or more");
-        startAngle = startAngle % (Math.PI * 2);
-        endAngle = endAngle % (Math.PI * 2);
-        let rotation = Math.PI * 2;
+        startAngle = startAngle % TAU;
+        endAngle = endAngle % TAU;
+        let rotation = TAU;
         if (startAngle < endAngle) {
           rotation = endAngle - startAngle;
         }
         if (startAngle > endAngle) {
-          rotation = endAngle + (Math.PI * 2 - startAngle);
+          rotation = endAngle + (TAU - startAngle);
         }
         const minangle = Math.acos((radius * radius + radius * radius - EPS * EPS) / (2 * radius * radius));
         const centerv = vec2.clone(center);
@@ -18347,7 +19361,7 @@ ${nonManifold.join("\n")}`);
           vec2.add(point, point, centerv);
           pointArray.push(point);
         } else {
-          const numsteps = Math.max(1, Math.floor(segments * (rotation / (Math.PI * 2)))) + 1;
+          const numsteps = Math.floor(segments * (Math.abs(rotation) / TAU));
           let edgestepsize = numsteps * 0.5 / rotation;
           if (edgestepsize > 0.25) edgestepsize = 0.25;
           const totalsteps = makeTangent ? numsteps + 2 : numsteps;
@@ -18376,7 +19390,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/ellipse.js"(exports, module) {
       "use strict";
       init_define_process();
-      var {EPS} = require_constants2();
+      var {EPS, TAU} = require_constants2();
       var vec2 = require_vec22();
       var geom2 = require_geom22();
       var {sin, cos} = require_trigonometry2();
@@ -18386,40 +19400,41 @@ ${nonManifold.join("\n")}`);
           center: [0, 0],
           radius: [1, 1],
           startAngle: 0,
-          endAngle: Math.PI * 2,
+          endAngle: TAU,
           segments: 32
         };
         let {center, radius, startAngle, endAngle, segments} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 2)) throw new Error("center must be an array of X and Y values");
         if (!isNumberArray(radius, 2)) throw new Error("radius must be an array of X and Y values");
-        if (!radius.every(n => n > 0)) throw new Error("radius values must be greater than zero");
+        if (!radius.every(n => n >= 0)) throw new Error("radius values must be positive");
         if (!isGTE(startAngle, 0)) throw new Error("startAngle must be positive");
         if (!isGTE(endAngle, 0)) throw new Error("endAngle must be positive");
         if (!isGTE(segments, 3)) throw new Error("segments must be three or more");
-        startAngle = startAngle % (Math.PI * 2);
-        endAngle = endAngle % (Math.PI * 2);
-        let rotation = Math.PI * 2;
+        if (radius[0] === 0 || radius[1] === 0) return geom2.create();
+        startAngle = startAngle % TAU;
+        endAngle = endAngle % TAU;
+        let rotation = TAU;
         if (startAngle < endAngle) {
           rotation = endAngle - startAngle;
         }
         if (startAngle > endAngle) {
-          rotation = endAngle + (Math.PI * 2 - startAngle);
+          rotation = endAngle + (TAU - startAngle);
         }
         const minradius = Math.min(radius[0], radius[1]);
         const minangle = Math.acos((minradius * minradius + minradius * minradius - EPS * EPS) / (2 * minradius * minradius));
         if (rotation < minangle) throw new Error("startAngle and endAngle do not define a significant rotation");
-        segments = Math.floor(segments * (rotation / (Math.PI * 2)));
+        segments = Math.floor(segments * (rotation / TAU));
         const centerv = vec2.clone(center);
         const step = rotation / segments;
         const points = [];
-        segments = rotation < Math.PI * 2 ? segments + 1 : segments;
+        segments = rotation < TAU ? segments + 1 : segments;
         for (let i = 0; i < segments; i++) {
           const angle = step * i + startAngle;
           const point = vec2.fromValues(radius[0] * cos(angle), radius[1] * sin(angle));
           vec2.add(point, centerv, point);
           points.push(point);
         }
-        if (rotation < Math.PI * 2) points.push(centerv);
+        if (rotation < TAU) points.push(centerv);
         return geom2.fromPoints(points);
       };
       module.exports = ellipse;
@@ -18429,18 +19444,19 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/circle.js"(exports, module) {
       "use strict";
       init_define_process();
+      var {TAU} = require_constants2();
       var ellipse = require_ellipse2();
-      var {isGT} = require_commonChecks2();
+      var {isGTE} = require_commonChecks2();
       var circle = options => {
         const defaults = {
           center: [0, 0],
           radius: 1,
           startAngle: 0,
-          endAngle: Math.PI * 2,
+          endAngle: TAU,
           segments: 32
         };
         let {center, radius, startAngle, endAngle, segments} = Object.assign({}, defaults, options);
-        if (!isGT(radius, 0)) throw new Error("radius must be greater than zero");
+        if (!isGTE(radius, 0)) throw new Error("radius must be positive");
         radius = [radius, radius];
         return ellipse({
           center,
@@ -18468,7 +19484,8 @@ ${nonManifold.join("\n")}`);
         const {center, size} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 3)) throw new Error("center must be an array of X, Y and Z values");
         if (!isNumberArray(size, 3)) throw new Error("size must be an array of width, depth and height values");
-        if (!size.every(n => n > 0)) throw new Error("size values must be greater than zero");
+        if (!size.every(n => n >= 0)) throw new Error("size values must be positive");
+        if (size[0] === 0 || size[1] === 0 || size[2] === 0) return geom32.create();
         const result = geom32.create([[[0, 4, 6, 2], [-1, 0, 0]], [[1, 3, 7, 5], [1, 0, 0]], [[0, 1, 5, 4], [0, -1, 0]], [[2, 6, 7, 3], [0, 1, 0]], [[0, 2, 3, 1], [0, 0, -1]], [[4, 5, 7, 6], [0, 0, 1]]].map(info => {
           const points = info[0].map(i => {
             const pos = [center[0] + size[0] / 2 * (2 * !!(i & 1) - 1), center[1] + size[1] / 2 * (2 * !!(i & 2) - 1), center[2] + size[2] / 2 * (2 * !!(i & 4) - 1)];
@@ -18486,14 +19503,14 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var cuboid = require_cuboid2();
-      var {isGT} = require_commonChecks2();
+      var {isGTE} = require_commonChecks2();
       var cube2 = options => {
         const defaults = {
           center: [0, 0, 0],
           size: 2
         };
         let {center, size} = Object.assign({}, defaults, options);
-        if (!isGT(size, 0)) throw new Error("size must be greater than zero");
+        if (!isGTE(size, 0)) throw new Error("size must be positive");
         size = [size, size, size];
         return cuboid({
           center,
@@ -18507,7 +19524,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/cylinderElliptic.js"(exports, module) {
       "use strict";
       init_define_process();
-      var {EPS} = require_constants2();
+      var {EPS, TAU} = require_constants2();
       var vec3 = require_vec32();
       var geom32 = require_geom32();
       var poly3 = require_poly32();
@@ -18520,7 +19537,7 @@ ${nonManifold.join("\n")}`);
           startRadius: [1, 1],
           startAngle: 0,
           endRadius: [1, 1],
-          endAngle: Math.PI * 2,
+          endAngle: TAU,
           segments: 32
         };
         let {center, height, startRadius, startAngle, endRadius, endAngle, segments} = Object.assign({}, defaults, options);
@@ -18534,19 +19551,19 @@ ${nonManifold.join("\n")}`);
         if (!isGTE(startAngle, 0)) throw new Error("startAngle must be positive");
         if (!isGTE(endAngle, 0)) throw new Error("endAngle must be positive");
         if (!isGTE(segments, 4)) throw new Error("segments must be four or more");
-        startAngle = startAngle % (Math.PI * 2);
-        endAngle = endAngle % (Math.PI * 2);
-        let rotation = Math.PI * 2;
+        startAngle = startAngle % TAU;
+        endAngle = endAngle % TAU;
+        let rotation = TAU;
         if (startAngle < endAngle) {
           rotation = endAngle - startAngle;
         }
         if (startAngle > endAngle) {
-          rotation = endAngle + (Math.PI * 2 - startAngle);
+          rotation = endAngle + (TAU - startAngle);
         }
         const minradius = Math.min(startRadius[0], startRadius[1], endRadius[0], endRadius[1]);
         const minangle = Math.acos((minradius * minradius + minradius * minradius - EPS * EPS) / (2 * minradius * minradius));
         if (rotation < minangle) throw new Error("startAngle and endAngle do not define a significant rotation");
-        const slices = Math.floor(segments * (rotation / (Math.PI * 2)));
+        const slices = Math.floor(segments * (rotation / TAU));
         const start = vec3.fromValues(0, 0, -(height / 2));
         const end = vec3.fromValues(0, 0, height / 2);
         const ray = vec3.subtract(vec3.create(), end, start);
@@ -18572,7 +19589,7 @@ ${nonManifold.join("\n")}`);
         for (let i = 0; i < slices; i++) {
           const t0 = i / slices;
           let t1 = (i + 1) / slices;
-          if (rotation === 2 * Math.PI && i === slices - 1) t1 = 0;
+          if (rotation === TAU && i === slices - 1) t1 = 0;
           if (endRadius[0] === startRadius[0] && endRadius[1] === startRadius[1]) {
             polygons.push(fromPoints(start, point(0, t1, endRadius), point(0, t0, endRadius)));
             polygons.push(fromPoints(point(0, t1, endRadius), point(1, t1, endRadius), point(1, t0, endRadius), point(0, t0, endRadius)));
@@ -18592,7 +19609,7 @@ ${nonManifold.join("\n")}`);
             }
           }
         }
-        if (rotation < Math.PI * 2) {
+        if (rotation < TAU) {
           polygons.push(fromPoints(start, point(0, 0, startRadius), end));
           polygons.push(fromPoints(point(0, 0, startRadius), point(1, 0, endRadius), end));
           polygons.push(fromPoints(start, end, point(0, 1, startRadius)));
@@ -18608,8 +19625,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/cylinder.js"(exports, module) {
       "use strict";
       init_define_process();
+      var geom32 = require_geom32();
       var cylinderElliptic = require_cylinderElliptic2();
-      var {isGT} = require_commonChecks2();
+      var {isGTE} = require_commonChecks2();
       var cylinder2 = options => {
         const defaults = {
           center: [0, 0, 0],
@@ -18618,7 +19636,8 @@ ${nonManifold.join("\n")}`);
           segments: 32
         };
         const {center, height, radius, segments} = Object.assign({}, defaults, options);
-        if (!isGT(radius, 0)) throw new Error("radius must be greater than zero");
+        if (!isGTE(radius, 0)) throw new Error("radius must be positive");
+        if (height === 0 || radius === 0) return geom32.create();
         const newoptions = {
           center,
           height,
@@ -18635,6 +19654,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/ellipsoid.js"(exports, module) {
       "use strict";
       init_define_process();
+      var {TAU} = require_constants2();
       var vec3 = require_vec32();
       var geom32 = require_geom32();
       var poly3 = require_poly32();
@@ -18650,8 +19670,9 @@ ${nonManifold.join("\n")}`);
         const {center, radius, segments, axes} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 3)) throw new Error("center must be an array of X, Y and Z values");
         if (!isNumberArray(radius, 3)) throw new Error("radius must be an array of X, Y and Z values");
-        if (!radius.every(n => n > 0)) throw new Error("radius values must be greater than zero");
+        if (!radius.every(n => n >= 0)) throw new Error("radius values must be positive");
         if (!isGTE(segments, 4)) throw new Error("segments must be four or more");
+        if (radius[0] === 0 || radius[1] === 0 || radius[2] === 0) return geom32.create();
         const xvector = vec3.scale(vec3.create(), vec3.normalize(vec3.create(), axes[0]), radius[0]);
         const yvector = vec3.scale(vec3.create(), vec3.normalize(vec3.create(), axes[1]), radius[1]);
         const zvector = vec3.scale(vec3.create(), vec3.normalize(vec3.create(), axes[2]), radius[2]);
@@ -18661,12 +19682,12 @@ ${nonManifold.join("\n")}`);
         const p1 = vec3.create();
         const p2 = vec3.create();
         for (let slice1 = 0; slice1 <= segments; slice1++) {
-          const angle = 2 * Math.PI * slice1 / segments;
+          const angle = TAU * slice1 / segments;
           const cylinderpoint = vec3.add(vec3.create(), vec3.scale(p1, xvector, cos(angle)), vec3.scale(p2, yvector, sin(angle)));
           if (slice1 > 0) {
             let prevcospitch, prevsinpitch;
             for (let slice2 = 0; slice2 <= qsegments; slice2++) {
-              const pitch = 0.5 * Math.PI * slice2 / qsegments;
+              const pitch = TAU / 4 * slice2 / qsegments;
               const cospitch = cos(pitch);
               const sinpitch = sin(pitch);
               if (slice2 > 0) {
@@ -18768,15 +19789,16 @@ ${nonManifold.join("\n")}`);
       var vec3 = require_vec32();
       var geom32 = require_geom32();
       var polyhedron = require_polyhedron2();
-      var {isGT, isGTE} = require_commonChecks2();
+      var {isGTE} = require_commonChecks2();
       var geodesicSphere = options => {
         const defaults = {
           radius: 1,
           frequency: 6
         };
         let {radius, frequency} = Object.assign({}, defaults, options);
-        if (!isGT(radius, 0)) throw new Error("radius must be greater than zero");
+        if (!isGTE(radius, 0)) throw new Error("radius must be positive");
         if (!isGTE(frequency, 6)) throw new Error("frequency must be six or more");
+        if (radius === 0) return geom32.create();
         frequency = Math.floor(frequency / 6);
         const ci = [[0.850651, 0, -0.525731], [0.850651, -0, 0.525731], [-0.850651, -0, 0.525731], [-0.850651, 0, -0.525731], [0, -0.525731, 0.850651], [0, 0.525731, 0.850651], [0, 0.525731, -0.850651], [0, -0.525731, -0.850651], [-0.525731, -0.850651, -0], [0.525731, -0.850651, -0], [0.525731, 0.850651, 0], [-0.525731, 0.850651, 0]];
         const ti = [[0, 9, 1], [1, 10, 0], [6, 7, 0], [10, 6, 0], [7, 9, 0], [5, 1, 4], [4, 1, 9], [5, 10, 1], [2, 8, 3], [3, 11, 2], [2, 5, 4], [4, 8, 2], [2, 11, 5], [3, 7, 6], [6, 11, 3], [8, 7, 3], [9, 8, 4], [11, 10, 5], [10, 11, 6], [8, 9, 7]];
@@ -18878,9 +19900,10 @@ ${nonManifold.join("\n")}`);
       var polygon = options => {
         const defaults = {
           points: [],
-          paths: []
+          paths: [],
+          orientation: "counterclockwise"
         };
-        const {points, paths} = Object.assign({}, defaults, options);
+        const {points, paths, orientation} = Object.assign({}, defaults, options);
         if (!(Array.isArray(points) && Array.isArray(paths))) throw new Error("points and paths must be arrays");
         let listofpolys = points;
         if (Array.isArray(points[0])) {
@@ -18906,10 +19929,14 @@ ${nonManifold.join("\n")}`);
         let sides = [];
         listofpaths.forEach(path => {
           const setofpoints = path.map(index => allpoints[index]);
-          const geometry = geom2.fromPoints(setofpoints);
-          sides = sides.concat(geom2.toSides(geometry));
+          const geometry2 = geom2.fromPoints(setofpoints);
+          sides = sides.concat(geom2.toSides(geometry2));
         });
-        return geom2.create(sides);
+        let geometry = geom2.create(sides);
+        if (orientation === "clockwise") {
+          geometry = geom2.reverse(geometry);
+        }
+        return geometry;
       };
       module.exports = polygon;
     }
@@ -18929,7 +19956,8 @@ ${nonManifold.join("\n")}`);
         const {center, size} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 2)) throw new Error("center must be an array of X and Y values");
         if (!isNumberArray(size, 2)) throw new Error("size must be an array of X and Y values");
-        if (!size.every(n => n > 0)) throw new Error("size values must be greater than zero");
+        if (!size.every(n => n >= 0)) throw new Error("size values must be positive");
+        if (size[0] === 0 || size[1] === 0) return geom2.create();
         const point = [size[0] / 2, size[1] / 2];
         const pswap = [point[0], -point[1]];
         const points = [vec2.subtract(vec2.create(), center, point), vec2.add(vec2.create(), center, pswap), vec2.add(vec2.create(), center, point), vec2.subtract(vec2.create(), center, pswap)];
@@ -18942,15 +19970,16 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/roundedCuboid.js"(exports, module) {
       "use strict";
       init_define_process();
-      var {EPS} = require_constants2();
+      var {EPS, TAU} = require_constants2();
       var vec2 = require_vec22();
       var vec3 = require_vec32();
       var geom32 = require_geom32();
       var poly3 = require_poly32();
       var {sin, cos} = require_trigonometry2();
-      var {isGT, isGTE, isNumberArray} = require_commonChecks2();
+      var {isGTE, isNumberArray} = require_commonChecks2();
+      var cuboid = require_cuboid2();
       var createCorners = (center, size, radius, segments, slice, positive) => {
-        const pitch = Math.PI / 2 * slice / segments;
+        const pitch = TAU / 4 * slice / segments;
         const cospitch = cos(pitch);
         const sinpitch = sin(pitch);
         const layersegments = segments - slice;
@@ -18967,16 +19996,16 @@ ${nonManifold.join("\n")}`);
         const corner2Points = [];
         const corner3Points = [];
         for (let i = 0; i <= layersegments; i++) {
-          const radians = layersegments > 0 ? Math.PI / 2 * i / layersegments : 0;
+          const radians = layersegments > 0 ? TAU / 4 * i / layersegments : 0;
           const point2d = vec2.fromAngleRadians(vec2.create(), radians);
           vec2.scale(point2d, point2d, layerradius);
           const point3d = vec3.fromVec2(vec3.create(), point2d);
           corner0Points.push(vec3.add(vec3.create(), corner0, point3d));
-          vec3.rotateZ(point3d, point3d, [0, 0, 0], Math.PI / 2);
+          vec3.rotateZ(point3d, point3d, [0, 0, 0], TAU / 4);
           corner1Points.push(vec3.add(vec3.create(), corner1, point3d));
-          vec3.rotateZ(point3d, point3d, [0, 0, 0], Math.PI / 2);
+          vec3.rotateZ(point3d, point3d, [0, 0, 0], TAU / 4);
           corner2Points.push(vec3.add(vec3.create(), corner2, point3d));
-          vec3.rotateZ(point3d, point3d, [0, 0, 0], Math.PI / 2);
+          vec3.rotateZ(point3d, point3d, [0, 0, 0], TAU / 4);
           corner3Points.push(vec3.add(vec3.create(), corner3, point3d));
         }
         if (!positive) {
@@ -19046,11 +20075,16 @@ ${nonManifold.join("\n")}`);
         let {center, size, roundRadius, segments} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 3)) throw new Error("center must be an array of X, Y and Z values");
         if (!isNumberArray(size, 3)) throw new Error("size must be an array of X, Y and Z values");
-        if (!size.every(n => n > 0)) throw new Error("size values must be greater than zero");
-        if (!isGT(roundRadius, 0)) throw new Error("roundRadius must be greater than zero");
+        if (!size.every(n => n >= 0)) throw new Error("size values must be positive");
+        if (!isGTE(roundRadius, 0)) throw new Error("roundRadius must be positive");
         if (!isGTE(segments, 4)) throw new Error("segments must be four or more");
+        if (size[0] === 0 || size[1] === 0 || size[2] === 0) return geom32.create();
+        if (roundRadius === 0) return cuboid({
+          center,
+          size
+        });
         size = size.map(v => v / 2);
-        if (roundRadius > size[0] - EPS || roundRadius > size[1] - EPS || roundRadius > size[2] - EPS) throw new Error("roundRadius must be smaller then the radius of all dimensions");
+        if (roundRadius > size[0] - EPS || roundRadius > size[1] - EPS || roundRadius > size[2] - EPS) throw new Error("roundRadius must be smaller than the radius of all dimensions");
         segments = Math.floor(segments / 4);
         let prevCornersPos = null;
         let prevCornersNeg = null;
@@ -19085,12 +20119,13 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/roundedCylinder.js"(exports, module) {
       "use strict";
       init_define_process();
-      var {EPS} = require_constants2();
+      var {EPS, TAU} = require_constants2();
       var vec3 = require_vec32();
       var geom32 = require_geom32();
       var poly3 = require_poly32();
       var {sin, cos} = require_trigonometry2();
-      var {isGT, isGTE, isNumberArray} = require_commonChecks2();
+      var {isGTE, isNumberArray} = require_commonChecks2();
+      var cylinder2 = require_cylinder2();
       var roundedCylinder = options => {
         const defaults = {
           center: [0, 0, 0],
@@ -19101,11 +20136,17 @@ ${nonManifold.join("\n")}`);
         };
         const {center, height, radius, roundRadius, segments} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 3)) throw new Error("center must be an array of X, Y and Z values");
-        if (!isGT(height, 0)) throw new Error("height must be greater then zero");
-        if (!isGT(radius, 0)) throw new Error("radius must be greater then zero");
-        if (!isGT(roundRadius, 0)) throw new Error("roundRadius must be greater then zero");
-        if (roundRadius > radius - EPS) throw new Error("roundRadius must be smaller then the radius");
+        if (!isGTE(height, 0)) throw new Error("height must be positive");
+        if (!isGTE(radius, 0)) throw new Error("radius must be positive");
+        if (!isGTE(roundRadius, 0)) throw new Error("roundRadius must be positive");
+        if (roundRadius > radius) throw new Error("roundRadius must be smaller than the radius");
         if (!isGTE(segments, 4)) throw new Error("segments must be four or more");
+        if (height === 0 || radius === 0) return geom32.create();
+        if (roundRadius === 0) return cylinder2({
+          center,
+          height,
+          radius
+        });
         const start = [0, 0, -(height / 2)];
         const end = [0, 0, height / 2];
         const direction = vec3.subtract(vec3.create(), end, start);
@@ -19132,7 +20173,7 @@ ${nonManifold.join("\n")}`);
         const v2 = vec3.create();
         let prevcylinderpoint;
         for (let slice1 = 0; slice1 <= segments; slice1++) {
-          const angle = 2 * Math.PI * slice1 / segments;
+          const angle = TAU * slice1 / segments;
           const cylinderpoint = vec3.add(vec3.create(), vec3.scale(v1, xvector, cos(angle)), vec3.scale(v2, yvector, sin(angle)));
           if (slice1 > 0) {
             let points = [];
@@ -19143,7 +20184,7 @@ ${nonManifold.join("\n")}`);
             polygons.push(fromPoints(points));
             let prevcospitch, prevsinpitch;
             for (let slice2 = 0; slice2 <= qsegments; slice2++) {
-              const pitch = 0.5 * Math.PI * slice2 / qsegments;
+              const pitch = TAU / 4 * slice2 / qsegments;
               const cospitch = cos(pitch);
               const sinpitch = sin(pitch);
               if (slice2 > 0) {
@@ -19194,10 +20235,11 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/roundedRectangle.js"(exports, module) {
       "use strict";
       init_define_process();
-      var {EPS} = require_constants2();
+      var {EPS, TAU} = require_constants2();
       var vec2 = require_vec22();
       var geom2 = require_geom22();
-      var {isGT, isGTE, isNumberArray} = require_commonChecks2();
+      var {isGTE, isNumberArray} = require_commonChecks2();
+      var rectangle = require_rectangle2();
       var roundedRectangle = options => {
         const defaults = {
           center: [0, 0],
@@ -19208,11 +20250,16 @@ ${nonManifold.join("\n")}`);
         let {center, size, roundRadius, segments} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 2)) throw new Error("center must be an array of X and Y values");
         if (!isNumberArray(size, 2)) throw new Error("size must be an array of X and Y values");
-        if (!size.every(n => n > 0)) throw new Error("size values must be greater than zero");
-        if (!isGT(roundRadius, 0)) throw new Error("roundRadius must be greater than zero");
+        if (!size.every(n => n >= 0)) throw new Error("size values must be positive");
+        if (!isGTE(roundRadius, 0)) throw new Error("roundRadius must be positive");
         if (!isGTE(segments, 4)) throw new Error("segments must be four or more");
+        if (size[0] === 0 || size[1] === 0) return geom2.create();
+        if (roundRadius === 0) return rectangle({
+          center,
+          size
+        });
         size = size.map(v => v / 2);
-        if (roundRadius > size[0] - EPS || roundRadius > size[1] - EPS) throw new Error("roundRadius must be smaller then the radius of all dimensions");
+        if (roundRadius > size[0] - EPS || roundRadius > size[1] - EPS) throw new Error("roundRadius must be smaller than the radius of all dimensions");
         const cornersegments = Math.floor(segments / 4);
         const corner0 = vec2.add(vec2.create(), center, [size[0] - roundRadius, size[1] - roundRadius]);
         const corner1 = vec2.add(vec2.create(), center, [roundRadius - size[0], size[1] - roundRadius]);
@@ -19223,15 +20270,15 @@ ${nonManifold.join("\n")}`);
         const corner2Points = [];
         const corner3Points = [];
         for (let i = 0; i <= cornersegments; i++) {
-          const radians = Math.PI / 2 * i / cornersegments;
+          const radians = TAU / 4 * i / cornersegments;
           const point = vec2.fromAngleRadians(vec2.create(), radians);
           vec2.scale(point, point, roundRadius);
           corner0Points.push(vec2.add(vec2.create(), corner0, point));
-          vec2.rotate(point, point, vec2.create(), Math.PI / 2);
+          vec2.rotate(point, point, vec2.create(), TAU / 4);
           corner1Points.push(vec2.add(vec2.create(), corner1, point));
-          vec2.rotate(point, point, vec2.create(), Math.PI / 2);
+          vec2.rotate(point, point, vec2.create(), TAU / 4);
           corner2Points.push(vec2.add(vec2.create(), corner2, point));
-          vec2.rotate(point, point, vec2.create(), Math.PI / 2);
+          vec2.rotate(point, point, vec2.create(), TAU / 4);
           corner3Points.push(vec2.add(vec2.create(), corner3, point));
         }
         return geom2.fromPoints(corner0Points.concat(corner1Points, corner2Points, corner3Points));
@@ -19244,7 +20291,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var ellipsoid = require_ellipsoid2();
-      var {isGT} = require_commonChecks2();
+      var {isGTE} = require_commonChecks2();
       var sphere2 = options => {
         const defaults = {
           center: [0, 0, 0],
@@ -19253,7 +20300,7 @@ ${nonManifold.join("\n")}`);
           axes: [[1, 0, 0], [0, -1, 0], [0, 0, 1]]
         };
         let {center, radius, segments, axes} = Object.assign({}, defaults, options);
-        if (!isGT(radius, 0)) throw new Error("radius must be greater than zero");
+        if (!isGTE(radius, 0)) throw new Error("radius must be positive");
         radius = [radius, radius, radius];
         return ellipsoid({
           center,
@@ -19270,14 +20317,14 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var rectangle = require_rectangle2();
-      var {isGT} = require_commonChecks2();
+      var {isGTE} = require_commonChecks2();
       var square = options => {
         const defaults = {
           center: [0, 0],
           size: 2
         };
         let {center, size} = Object.assign({}, defaults, options);
-        if (!isGT(size, 0)) throw new Error("size must be greater than zero");
+        if (!isGTE(size, 0)) throw new Error("size must be positive");
         size = [size, size];
         return rectangle({
           center,
@@ -19291,6 +20338,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/star.js"(exports, module) {
       "use strict";
       init_define_process();
+      var {TAU} = require_constants2();
       var vec2 = require_vec22();
       var geom2 = require_geom22();
       var {isGT, isGTE, isNumberArray} = require_commonChecks2();
@@ -19301,7 +20349,7 @@ ${nonManifold.join("\n")}`);
         return 0;
       };
       var getPoints = (vertices, radius, startAngle, center) => {
-        const a = Math.PI * 2 / vertices;
+        const a = TAU / vertices;
         const points = [];
         for (let i = 0; i < vertices; i++) {
           const point = vec2.fromAngleRadians(vec2.create(), a * i + startAngle);
@@ -19328,7 +20376,7 @@ ${nonManifold.join("\n")}`);
         if (!isGTE(startAngle, 0)) throw new Error("startAngle must be greater than zero");
         vertices = Math.floor(vertices);
         density = Math.floor(density);
-        startAngle = startAngle % (Math.PI * 2);
+        startAngle = startAngle % TAU;
         if (innerRadius === 0) {
           if (!isGTE(density, 2)) throw new Error("density must be two or more");
           innerRadius = outerRadius * getRadiusRatio(vertices, density);
@@ -20296,9 +21344,10 @@ ${nonManifold.join("\n")}`);
           return edges;
         }
         const divisor = vec3.fromValues(multiple, multiple, multiple);
+        const increment = vec3.create();
         const newEdges = [];
         edges.forEach(edge => {
-          const increment = vec3.subtract(vec3.create(), edge[1], edge[0]);
+          vec3.subtract(increment, edge[1], edge[0]);
           vec3.divide(increment, increment, divisor);
           let prev = edge[0];
           for (let i = 1; i <= multiple; ++i) {
@@ -20376,7 +21425,10 @@ ${nonManifold.join("\n")}`);
             const edges = slice.toEdges(currentSlice);
             if (edges.length === 0) throw new Error("the callback function must return slices with one or more edges");
             if (prevSlice) {
-              polygons = polygons.concat(extrudeWalls(prevSlice, currentSlice));
+              const walls = extrudeWalls(prevSlice, currentSlice);
+              for (let i = 0; i < walls.length; i++) {
+                polygons.push(walls[i]);
+              }
             }
             if (s === 0) startSlice = currentSlice;
             if (s === numberOfSlices - 1) endSlice = currentSlice;
@@ -20385,15 +21437,22 @@ ${nonManifold.join("\n")}`);
         }
         if (capEnd) {
           const endPolygons = slice.toPolygons(endSlice);
-          polygons = polygons.concat(endPolygons);
+          for (let i = 0; i < endPolygons.length; i++) {
+            polygons.push(endPolygons[i]);
+          }
         }
         if (capStart) {
           const startPolygons = slice.toPolygons(startSlice).map(poly3.invert);
-          polygons = polygons.concat(startPolygons);
+          for (let i = 0; i < startPolygons.length; i++) {
+            polygons.push(startPolygons[i]);
+          }
         }
         if (!capStart && !capEnd) {
           if (close && !slice.equals(endSlice, startSlice)) {
-            polygons = polygons.concat(extrudeWalls(endSlice, startSlice));
+            const walls = extrudeWalls(endSlice, startSlice);
+            for (let i = 0; i < walls.length; i++) {
+              polygons.push(walls[i]);
+            }
           }
         }
         return geom32.create(polygons);
@@ -20405,6 +21464,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/extrudeRotate.js"(exports, module) {
       "use strict";
       init_define_process();
+      var {TAU} = require_constants2();
       var mat42 = require_mat42();
       var {mirrorX} = require_mirror2();
       var geom2 = require_geom22();
@@ -20414,24 +21474,24 @@ ${nonManifold.join("\n")}`);
         const defaults = {
           segments: 12,
           startAngle: 0,
-          angle: Math.PI * 2,
+          angle: TAU,
           overflow: "cap"
         };
         let {segments, startAngle, angle, overflow} = Object.assign({}, defaults, options);
         if (segments < 3) throw new Error("segments must be greater then 3");
-        startAngle = Math.abs(startAngle) > Math.PI * 2 ? startAngle % (Math.PI * 2) : startAngle;
-        angle = Math.abs(angle) > Math.PI * 2 ? angle % (Math.PI * 2) : angle;
+        startAngle = Math.abs(startAngle) > TAU ? startAngle % TAU : startAngle;
+        angle = Math.abs(angle) > TAU ? angle % TAU : angle;
         let endAngle = startAngle + angle;
-        endAngle = Math.abs(endAngle) > Math.PI * 2 ? endAngle % (Math.PI * 2) : endAngle;
+        endAngle = Math.abs(endAngle) > TAU ? endAngle % TAU : endAngle;
         if (endAngle < startAngle) {
           const x = startAngle;
           startAngle = endAngle;
           endAngle = x;
         }
         let totalRotation = endAngle - startAngle;
-        if (totalRotation <= 0) totalRotation = Math.PI * 2;
-        if (Math.abs(totalRotation) < Math.PI * 2) {
-          const anglePerSegment = Math.PI * 2 / segments;
+        if (totalRotation <= 0) totalRotation = TAU;
+        if (Math.abs(totalRotation) < TAU) {
+          const anglePerSegment = TAU / segments;
           segments = Math.floor(Math.abs(totalRotation) / anglePerSegment);
           if (Math.abs(totalRotation) > segments * anglePerSegment) segments++;
         }
@@ -20449,7 +21509,7 @@ ${nonManifold.join("\n")}`);
               point1 = [Math.min(point1[0], 0), point1[1]];
               return [point0, point1];
             });
-            geometry = geom2.reverse(geom2.create(shapeSides));
+            geometry = geom2.create(shapeSides);
             geometry = mirrorX(geometry);
           } else if (pointsWithPositiveX.length >= pointsWithNegativeX.length) {
             shapeSides = shapeSides.map(side => {
@@ -20463,16 +21523,19 @@ ${nonManifold.join("\n")}`);
           }
         }
         const rotationPerSlice = totalRotation / segments;
-        const isCapped = Math.abs(totalRotation) < Math.PI * 2;
+        const isCapped = Math.abs(totalRotation) < TAU;
         const baseSlice = slice.fromSides(geom2.toSides(geometry));
         slice.reverse(baseSlice, baseSlice);
         const matrix = mat42.create();
+        const xRotationMatrix = mat42.fromXRotation(mat42.create(), TAU / 4);
+        const zRotationMatrix = mat42.create();
         const createSlice = (progress, index, base) => {
           let Zrotation = rotationPerSlice * index + startAngle;
-          if (totalRotation === Math.PI * 2 && index === segments) {
+          if (totalRotation === TAU && index === segments) {
             Zrotation = startAngle;
           }
-          mat42.multiply(matrix, mat42.fromZRotation(matrix, Zrotation), mat42.fromXRotation(mat42.create(), Math.PI / 2));
+          mat42.fromZRotation(zRotationMatrix, Zrotation);
+          mat42.multiply(matrix, zRotationMatrix, xRotationMatrix);
           return slice.transform(matrix, base);
         };
         options = {
@@ -20564,6 +21627,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/primitives/torus.js"(exports, module) {
       "use strict";
       init_define_process();
+      var {TAU} = require_constants2();
       var extrudeRotate = require_extrudeRotate2();
       var {rotate: rotate2} = require_rotate6();
       var {translate: translate2} = require_translate4();
@@ -20577,7 +21641,7 @@ ${nonManifold.join("\n")}`);
           outerSegments: 32,
           innerRotation: 0,
           startAngle: 0,
-          outerRotation: Math.PI * 2
+          outerRotation: TAU
         };
         const {innerRadius, innerSegments, outerRadius, outerSegments, innerRotation, startAngle, outerRotation} = Object.assign({}, defaults, options);
         if (!isGT(innerRadius, 0)) throw new Error("innerRadius must be greater than zero");
@@ -20586,7 +21650,7 @@ ${nonManifold.join("\n")}`);
         if (!isGTE(outerSegments, 3)) throw new Error("outerSegments must be three or more");
         if (!isGTE(startAngle, 0)) throw new Error("startAngle must be positive");
         if (!isGT(outerRotation, 0)) throw new Error("outerRotation must be greater than zero");
-        if (innerRadius >= outerRadius) throw new Error("inner circle is two large to rotate about the outer circle");
+        if (innerRadius >= outerRadius) throw new Error("inner circle is too large to rotate about the outer circle");
         let innerCircle = circle({
           radius: innerRadius,
           segments: innerSegments
@@ -21085,9 +22149,10 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/utils/radiusToSegments.js"(exports, module) {
       "use strict";
       init_define_process();
+      var {TAU} = require_constants2();
       var radiusToSegments = (radius, minimumLength, minimumAngle) => {
-        const ss = minimumLength > 0 ? radius * 2 * Math.PI / minimumLength : 0;
-        const as = minimumAngle > 0 ? Math.PI * 2 / minimumAngle : 0;
+        const ss = minimumLength > 0 ? radius * TAU / minimumLength : 0;
+        const as = minimumAngle > 0 ? TAU / minimumAngle : 0;
         return Math.ceil(Math.max(ss, as, 4));
       };
       module.exports = radiusToSegments;
@@ -21197,90 +22262,6 @@ ${nonManifold.join("\n")}`);
         this.plane = plane;
         this.planeorigin = vec3.scale(vec3.create(), plane, plane[3]);
       };
-      OrthoNormalBasis.GetCartesian = function (xaxisid, yaxisid) {
-        const axisid = xaxisid + "/" + yaxisid;
-        let planenormal, rightvector;
-        if (axisid === "X/Y") {
-          planenormal = [0, 0, 1];
-          rightvector = [1, 0, 0];
-        } else if (axisid === "Y/-X") {
-          planenormal = [0, 0, 1];
-          rightvector = [0, 1, 0];
-        } else if (axisid === "-X/-Y") {
-          planenormal = [0, 0, 1];
-          rightvector = [-1, 0, 0];
-        } else if (axisid === "-Y/X") {
-          planenormal = [0, 0, 1];
-          rightvector = [0, -1, 0];
-        } else if (axisid === "-X/Y") {
-          planenormal = [0, 0, -1];
-          rightvector = [-1, 0, 0];
-        } else if (axisid === "-Y/-X") {
-          planenormal = [0, 0, -1];
-          rightvector = [0, -1, 0];
-        } else if (axisid === "X/-Y") {
-          planenormal = [0, 0, -1];
-          rightvector = [1, 0, 0];
-        } else if (axisid === "Y/X") {
-          planenormal = [0, 0, -1];
-          rightvector = [0, 1, 0];
-        } else if (axisid === "X/Z") {
-          planenormal = [0, -1, 0];
-          rightvector = [1, 0, 0];
-        } else if (axisid === "Z/-X") {
-          planenormal = [0, -1, 0];
-          rightvector = [0, 0, 1];
-        } else if (axisid === "-X/-Z") {
-          planenormal = [0, -1, 0];
-          rightvector = [-1, 0, 0];
-        } else if (axisid === "-Z/X") {
-          planenormal = [0, -1, 0];
-          rightvector = [0, 0, -1];
-        } else if (axisid === "-X/Z") {
-          planenormal = [0, 1, 0];
-          rightvector = [-1, 0, 0];
-        } else if (axisid === "-Z/-X") {
-          planenormal = [0, 1, 0];
-          rightvector = [0, 0, -1];
-        } else if (axisid === "X/-Z") {
-          planenormal = [0, 1, 0];
-          rightvector = [1, 0, 0];
-        } else if (axisid === "Z/X") {
-          planenormal = [0, 1, 0];
-          rightvector = [0, 0, 1];
-        } else if (axisid === "Y/Z") {
-          planenormal = [1, 0, 0];
-          rightvector = [0, 1, 0];
-        } else if (axisid === "Z/-Y") {
-          planenormal = [1, 0, 0];
-          rightvector = [0, 0, 1];
-        } else if (axisid === "-Y/-Z") {
-          planenormal = [1, 0, 0];
-          rightvector = [0, -1, 0];
-        } else if (axisid === "-Z/Y") {
-          planenormal = [1, 0, 0];
-          rightvector = [0, 0, -1];
-        } else if (axisid === "-Y/Z") {
-          planenormal = [-1, 0, 0];
-          rightvector = [0, -1, 0];
-        } else if (axisid === "-Z/-Y") {
-          planenormal = [-1, 0, 0];
-          rightvector = [0, 0, -1];
-        } else if (axisid === "Y/-Z") {
-          planenormal = [-1, 0, 0];
-          rightvector = [0, 1, 0];
-        } else if (axisid === "Z/Y") {
-          planenormal = [-1, 0, 0];
-          rightvector = [0, 0, 1];
-        } else {
-          throw new Error("OrthoNormalBasis.GetCartesian: invalid combination of axis identifiers. Should pass two string arguments from [X,Y,Z,-X,-Y,-Z], being two different axes.");
-        }
-        return new OrthoNormalBasis(new Plane(new Vector3D(planenormal), 0), new Vector3D(rightvector));
-      };
-      OrthoNormalBasis.Z0Plane = function () {
-        const plane = new Plane(new Vector3D([0, 0, 1]), 0);
-        return new OrthoNormalBasis(plane, new Vector3D([1, 0, 0]));
-      };
       OrthoNormalBasis.prototype = {
         getProjectionMatrix: function () {
           return mat42.fromValues(this.u[0], this.v[0], this.plane[0], 0, this.u[1], this.v[1], this.plane[1], 0, this.u[2], this.v[2], this.plane[2], 0, 0, 0, -this.plane[3], 1);
@@ -21298,28 +22279,6 @@ ${nonManifold.join("\n")}`);
           const v3 = vec3.add(v1, v1, this.planeorigin);
           const v4 = vec3.add(v2, v2, v3);
           return v4;
-        },
-        line3Dto2D: function (line3d) {
-          const a = line3d.point;
-          const b = line3d.direction.plus(a);
-          const a2d = this.to2D(a);
-          const b2d = this.to2D(b);
-          return Line2D.fromPoints(a2d, b2d);
-        },
-        line2Dto3D: function (line2d) {
-          const a = line2d.origin();
-          const b = line2d.direction().plus(a);
-          const a3d = this.to3D(a);
-          const b3d = this.to3D(b);
-          return Line3D.fromPoints(a3d, b3d);
-        },
-        transform: function (matrix4x4) {
-          const newplane = this.plane.transform(matrix4x4);
-          const rightpointTransformed = this.u.transform(matrix4x4);
-          const originTransformed = new Vector3D(0, 0, 0).transform(matrix4x4);
-          const newrighthandvector = rightpointTransformed.minus(originTransformed);
-          const newbasis = new OrthoNormalBasis(newplane, newrighthandvector);
-          return newbasis;
         }
       };
       module.exports = OrthoNormalBasis;
@@ -21414,6 +22373,7 @@ ${nonManifold.join("\n")}`);
           const newoutpolygonrow = [];
           const ycoordinate = ycoordinates[yindex];
           const polygonindexeswithcorner = ycoordinatetopolygonindexes.get(ycoordinate);
+          let removeCount = 0;
           for (let activepolygonindex = 0; activepolygonindex < activepolygons.length; ++activepolygonindex) {
             const activepolygon = activepolygons[activepolygonindex];
             const polygonindex = activepolygon.polygonindex;
@@ -21434,8 +22394,8 @@ ${nonManifold.join("\n")}`);
                 newrightvertexindex = nextrightvertexindex;
               }
               if (newleftvertexindex !== activepolygon.leftvertexindex && newleftvertexindex === newrightvertexindex) {
-                activepolygons.splice(activepolygonindex, 1);
-                --activepolygonindex;
+                activepolygon._remove = true;
+                removeCount++;
               } else {
                 activepolygon.leftvertexindex = newleftvertexindex;
                 activepolygon.rightvertexindex = newrightvertexindex;
@@ -21449,6 +22409,9 @@ ${nonManifold.join("\n")}`);
                 activepolygon.bottomright = vertices2d[nextrightvertexindex2];
               }
             }
+          }
+          if (removeCount > 0) {
+            activepolygons = activepolygons.filter(p => !p._remove);
           }
           let nextycoordinate;
           if (yindex >= ycoordinates.length - 1) {
@@ -21613,38 +22576,76 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var geom32 = require_geom32();
       var poly3 = require_poly32();
-      var aboutEqualNormals = require_aboutEqualNormals2();
+      var {NEPS} = require_constants2();
       var reTesselateCoplanarPolygons = require_reTesselateCoplanarPolygons2();
-      var coplanar = (plane1, plane2) => {
-        if (Math.abs(plane1[3] - plane2[3]) < 15e-8) {
-          return aboutEqualNormals(plane1, plane2);
-        }
-        return false;
-      };
       var retessellate = geometry => {
         if (geometry.isRetesselated) {
           return geometry;
         }
-        const polygons = geom32.toPolygons(geometry);
-        const polygonsPerPlane = [];
-        polygons.forEach(polygon => {
-          const mapping = polygonsPerPlane.find(element => coplanar(element[0], poly3.plane(polygon)));
-          if (mapping) {
-            const polygons2 = mapping[1];
-            polygons2.push(polygon);
+        const polygons = geom32.toPolygons(geometry).map((polygon, index) => ({
+          vertices: polygon.vertices,
+          plane: poly3.plane(polygon),
+          index
+        }));
+        const classified = classifyPolygons(polygons);
+        const destPolygons = [];
+        classified.forEach(group2 => {
+          if (Array.isArray(group2)) {
+            const coplanarPolygons = reTesselateCoplanarPolygons(group2);
+            for (let i = 0; i < coplanarPolygons.length; i++) {
+              destPolygons.push(coplanarPolygons[i]);
+            }
           } else {
-            polygonsPerPlane.push([poly3.plane(polygon), [polygon]]);
+            destPolygons.push(group2);
           }
         });
-        let destpolygons = [];
-        polygonsPerPlane.forEach(mapping => {
-          const sourcepolygons = mapping[1];
-          const retesselayedpolygons = reTesselateCoplanarPolygons(sourcepolygons);
-          destpolygons = destpolygons.concat(retesselayedpolygons);
-        });
-        const result = geom32.create(destpolygons);
+        const result = geom32.create(destPolygons);
         result.isRetesselated = true;
         return result;
+      };
+      var classifyPolygons = polygons => {
+        let clusters = [polygons];
+        const nonCoplanar = [];
+        for (let component = 3; component >= 0; component--) {
+          const maybeCoplanar = [];
+          const tolerance = component === 3 ? 15e-9 : NEPS;
+          clusters.forEach(cluster => {
+            cluster.sort(byPlaneComponent(component, tolerance));
+            let startIndex = 0;
+            for (let i = 1; i < cluster.length; i++) {
+              if (cluster[i].plane[component] - cluster[startIndex].plane[component] > tolerance) {
+                if (i - startIndex === 1) {
+                  nonCoplanar.push(cluster[startIndex]);
+                } else {
+                  maybeCoplanar.push(cluster.slice(startIndex, i));
+                }
+                startIndex = i;
+              }
+            }
+            if (cluster.length - startIndex === 1) {
+              nonCoplanar.push(cluster[startIndex]);
+            } else {
+              maybeCoplanar.push(cluster.slice(startIndex));
+            }
+          });
+          clusters = maybeCoplanar;
+        }
+        const result = [];
+        clusters.forEach(cluster => {
+          if (cluster[0]) result[cluster[0].index] = cluster;
+        });
+        nonCoplanar.forEach(polygon => {
+          result[polygon.index] = polygon;
+        });
+        return result;
+      };
+      var byPlaneComponent = (component, tolerance) => (a, b) => {
+        if (a.plane[component] - b.plane[component] > tolerance) {
+          return 1;
+        } else if (b.plane[component] - a.plane[component] > tolerance) {
+          return -1;
+        }
+        return 0;
       };
       module.exports = retessellate;
     }
@@ -21833,6 +22834,19 @@ ${nonManifold.join("\n")}`);
       var vec3 = require_vec32();
       var poly3 = require_poly32();
       var splitLineSegmentByPlane = require_splitLineSegmentByPlane2();
+      var EPS_SQUARED = EPS * EPS;
+      var removeConsecutiveDuplicates = vertices => {
+        const result = [];
+        let prevvertex = vertices[vertices.length - 1];
+        for (let i = 0; i < vertices.length; i++) {
+          const vertex = vertices[i];
+          if (vec3.squaredDistance(vertex, prevvertex) >= EPS_SQUARED) {
+            result.push(vertex);
+          }
+          prevvertex = vertex;
+        }
+        return result;
+      };
       var splitPolygonByPlane = (splane, polygon) => {
         const result = {
           type: null,
@@ -21894,34 +22908,17 @@ ${nonManifold.join("\n")}`);
               }
               isback = nextisback;
             }
-            const EPS_SQUARED = EPS * EPS;
-            if (backvertices.length >= 3) {
-              let prevvertex = backvertices[backvertices.length - 1];
-              for (let vertexindex = 0; vertexindex < backvertices.length; vertexindex++) {
-                const vertex = backvertices[vertexindex];
-                if (vec3.squaredDistance(vertex, prevvertex) < EPS_SQUARED) {
-                  backvertices.splice(vertexindex, 1);
-                  vertexindex--;
-                }
-                prevvertex = vertex;
+            if (frontvertices.length >= 3) {
+              const frontFiltered = removeConsecutiveDuplicates(frontvertices);
+              if (frontFiltered.length >= 3) {
+                result.front = poly3.fromPointsAndPlane(frontFiltered, pplane);
               }
             }
-            if (frontvertices.length >= 3) {
-              let prevvertex = frontvertices[frontvertices.length - 1];
-              for (let vertexindex = 0; vertexindex < frontvertices.length; vertexindex++) {
-                const vertex = frontvertices[vertexindex];
-                if (vec3.squaredDistance(vertex, prevvertex) < EPS_SQUARED) {
-                  frontvertices.splice(vertexindex, 1);
-                  vertexindex--;
-                }
-                prevvertex = vertex;
-              }
-            }
-            if (frontvertices.length >= 3) {
-              result.front = poly3.fromPointsAndPlane(frontvertices, pplane);
-            }
             if (backvertices.length >= 3) {
-              result.back = poly3.fromPointsAndPlane(backvertices, pplane);
+              const backFiltered = removeConsecutiveDuplicates(backvertices);
+              if (backFiltered.length >= 3) {
+                result.back = poly3.fromPointsAndPlane(backFiltered, pplane);
+              }
             }
           }
         }
@@ -21958,10 +22955,6 @@ ${nonManifold.join("\n")}`);
           if (!this.removed) {
             this.removed = true;
             this.polygon = null;
-            const parentschildren = this.parent.children;
-            const i = parentschildren.indexOf(this);
-            if (i < 0) throw new Error("Assertion failed");
-            parentschildren.splice(i, 1);
             this.parent.recursivelyInvalidatePolygon();
           }
         }
@@ -21980,6 +22973,13 @@ ${nonManifold.join("\n")}`);
           return this.polygon;
         }
         getPolygons(result) {
+          if (this.isRootNode() && this.children.length > 0) {
+            const compacted = [];
+            for (let i2 = 0; i2 < this.children.length; i2++) {
+              if (!this.children[i2].removed) compacted.push(this.children[i2]);
+            }
+            this.children = compacted;
+          }
           let children = [this];
           const queue = [children];
           let i, j, l, node;
@@ -22273,6 +23273,189 @@ ${nonManifold.join("\n")}`);
       module.exports = intersect2;
     }
   });
+  var require_hullPoints3 = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/hullPoints3.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var poly3 = require_poly32();
+      var quickhull = require_quickhull2();
+      var hullPoints3 = uniquePoints => {
+        const faces = quickhull(uniquePoints, {
+          skipTriangulation: true
+        });
+        const polygons = faces.map(face => {
+          const vertices = face.map(index => uniquePoints[index]);
+          return poly3.create(vertices);
+        });
+        return polygons;
+      };
+      module.exports = hullPoints3;
+    }
+  });
+  var require_unionGeom3Sub2 = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var geom32 = require_geom32();
+      var mayOverlap = require_mayOverlap2();
+      var {Tree} = require_trees2();
+      var unionSub = (geometry1, geometry2) => {
+        if (!mayOverlap(geometry1, geometry2)) {
+          return unionForNonIntersecting(geometry1, geometry2);
+        }
+        const a = new Tree(geom32.toPolygons(geometry1));
+        const b = new Tree(geom32.toPolygons(geometry2));
+        a.clipTo(b, false);
+        b.clipTo(a);
+        b.invert();
+        b.clipTo(a);
+        b.invert();
+        const newpolygons = a.allPolygons().concat(b.allPolygons());
+        const result = geom32.create(newpolygons);
+        return result;
+      };
+      var unionForNonIntersecting = (geometry1, geometry2) => {
+        let newpolygons = geom32.toPolygons(geometry1);
+        newpolygons = newpolygons.concat(geom32.toPolygons(geometry2));
+        return geom32.create(newpolygons);
+      };
+      module.exports = unionSub;
+    }
+  });
+  var require_unionGeom32 = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var flatten = require_flatten2();
+      var retessellate = require_retessellate2();
+      var unionSub = require_unionGeom3Sub2();
+      var union2 = (...geometries) => {
+        geometries = flatten(geometries);
+        let i;
+        for (i = 1; i < geometries.length; i += 2) {
+          geometries.push(unionSub(geometries[i - 1], geometries[i]));
+        }
+        let newgeometry = geometries[i - 1];
+        newgeometry = retessellate(newgeometry);
+        return newgeometry;
+      };
+      module.exports = union2;
+    }
+  });
+  var require_minkowskiSum = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/minkowski/minkowskiSum.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var flatten = require_flatten2();
+      var geom32 = require_geom32();
+      var poly3 = require_poly32();
+      var hullPoints3 = require_hullPoints3();
+      var unionGeom3 = require_unionGeom32();
+      var minkowskiSum = (...geometries) => {
+        geometries = flatten(geometries);
+        if (geometries.length !== 2) {
+          throw new Error("minkowskiSum requires exactly two geometries");
+        }
+        const [geomA, geomB] = geometries;
+        if (!geom32.isA(geomA) || !geom32.isA(geomB)) {
+          throw new Error("minkowskiSum requires geom3 geometries");
+        }
+        const aConvex = geom32.isConvex(geomA);
+        const bConvex = geom32.isConvex(geomB);
+        if (aConvex && bConvex) {
+          return minkowskiSumConvex(geomA, geomB);
+        }
+        if (!aConvex && bConvex) {
+          return minkowskiSumNonConvexConvex(geomA, geomB);
+        }
+        if (aConvex && !bConvex) {
+          return minkowskiSumNonConvexConvex(geomB, geomA);
+        }
+        throw new Error("minkowskiSum of two non-convex geometries is not yet supported");
+      };
+      var minkowskiSumNonConvexConvex = (geomA, geomB) => {
+        const tetrahedra = decomposeIntoTetrahedra(geomA);
+        if (tetrahedra.length === 0) {
+          return geom32.create();
+        }
+        const parts = tetrahedra.map(tet => minkowskiSumConvex(tet, geomB));
+        if (parts.length === 1) {
+          return parts[0];
+        }
+        return unionGeom3(parts);
+      };
+      var decomposeIntoTetrahedra = geometry => {
+        const polygons = geom32.toPolygons(geometry);
+        if (polygons.length === 0) {
+          return [];
+        }
+        const tetrahedra = [];
+        for (let i = 0; i < polygons.length; i++) {
+          const polygon = polygons[i];
+          const vertices = polygon.vertices;
+          let cx = 0, cy = 0, cz = 0;
+          for (let k = 0; k < vertices.length; k++) {
+            cx += vertices[k][0];
+            cy += vertices[k][1];
+            cz += vertices[k][2];
+          }
+          cx /= vertices.length;
+          cy /= vertices.length;
+          cz /= vertices.length;
+          const plane = poly3.plane(polygon);
+          const nx = plane[0], ny = plane[1], nz = plane[2];
+          const offset = 0.1;
+          const apex = [cx - nx * offset, cy - ny * offset, cz - nz * offset];
+          for (let j = 1; j < vertices.length - 1; j++) {
+            const v0 = vertices[0];
+            const v1 = vertices[j];
+            const v2 = vertices[j + 1];
+            const tetPolygons = createTetrahedronPolygons(apex, v0, v1, v2);
+            tetrahedra.push(geom32.create(tetPolygons));
+          }
+        }
+        return tetrahedra;
+      };
+      var createTetrahedronPolygons = (p0, p1, p2, p3) => {
+        return [poly3.create([p0, p2, p1]), poly3.create([p0, p1, p3]), poly3.create([p1, p2, p3]), poly3.create([p2, p0, p3])];
+      };
+      var minkowskiSumConvex = (geomA, geomB) => {
+        const pointsA = extractUniqueVertices(geomA);
+        const pointsB = extractUniqueVertices(geomB);
+        if (pointsA.length === 0 || pointsB.length === 0) {
+          return geom32.create();
+        }
+        const summedPoints = [];
+        for (let i = 0; i < pointsA.length; i++) {
+          const a = pointsA[i];
+          for (let j = 0; j < pointsB.length; j++) {
+            const b = pointsB[j];
+            summedPoints.push([a[0] + b[0], a[1] + b[1], a[2] + b[2]]);
+          }
+        }
+        const hullPolygons = hullPoints3(summedPoints);
+        return geom32.create(hullPolygons);
+      };
+      var extractUniqueVertices = geometry => {
+        const found = new Set();
+        const unique = [];
+        const polygons = geom32.toPolygons(geometry);
+        for (let i = 0; i < polygons.length; i++) {
+          const vertices = polygons[i].vertices;
+          for (let j = 0; j < vertices.length; j++) {
+            const v = vertices[j];
+            const key = `${v[0]},${v[1]},${v[2]}`;
+            if (!found.has(key)) {
+              found.add(key);
+              unique.push(v);
+            }
+          }
+        }
+        return unique;
+      };
+      module.exports = minkowskiSum;
+    }
+  });
   var require_scissionGeom32 = __commonJS({
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/scissionGeom3.js"(exports, module) {
       "use strict";
@@ -22461,56 +23644,6 @@ ${nonManifold.join("\n")}`);
       module.exports = subtract2;
     }
   });
-  var require_unionGeom3Sub2 = __commonJS({
-    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3Sub.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var geom32 = require_geom32();
-      var mayOverlap = require_mayOverlap2();
-      var {Tree} = require_trees2();
-      var unionSub = (geometry1, geometry2) => {
-        if (!mayOverlap(geometry1, geometry2)) {
-          return unionForNonIntersecting(geometry1, geometry2);
-        }
-        const a = new Tree(geom32.toPolygons(geometry1));
-        const b = new Tree(geom32.toPolygons(geometry2));
-        a.clipTo(b, false);
-        b.clipTo(a);
-        b.invert();
-        b.clipTo(a);
-        b.invert();
-        const newpolygons = a.allPolygons().concat(b.allPolygons());
-        const result = geom32.create(newpolygons);
-        return result;
-      };
-      var unionForNonIntersecting = (geometry1, geometry2) => {
-        let newpolygons = geom32.toPolygons(geometry1);
-        newpolygons = newpolygons.concat(geom32.toPolygons(geometry2));
-        return geom32.create(newpolygons);
-      };
-      module.exports = unionSub;
-    }
-  });
-  var require_unionGeom32 = __commonJS({
-    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/unionGeom3.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten2();
-      var retessellate = require_retessellate2();
-      var unionSub = require_unionGeom3Sub2();
-      var union2 = (...geometries) => {
-        geometries = flatten(geometries);
-        let i;
-        for (i = 1; i < geometries.length; i += 2) {
-          geometries.push(unionSub(geometries[i - 1], geometries[i]));
-        }
-        let newgeometry = geometries[i - 1];
-        newgeometry = retessellate(newgeometry);
-        return newgeometry;
-      };
-      module.exports = union2;
-    }
-  });
   var require_unionGeom22 = __commonJS({
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/booleans/unionGeom2.js"(exports, module) {
       "use strict";
@@ -22564,6 +23697,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       module.exports = {
         intersect: require_intersect4(),
+        minkowski: require_minkowskiSum(),
         scission: require_scission2(),
         subtract: require_subtract8(),
         union: require_union2()
@@ -22574,7 +23708,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/expansions/offsetFromPoints.js"(exports, module) {
       "use strict";
       init_define_process();
-      var {EPS} = require_constants2();
+      var {EPS, TAU} = require_constants2();
       var intersect2 = require_intersect3();
       var line2 = require_line22();
       var vec2 = require_vec22();
@@ -22682,7 +23816,7 @@ ${nonManifold.join("\n")}`);
               if (rotation2 > 0) rotation2 = rotation2 - Math.PI;
             }
             if (rotation2 !== 0) {
-              cornersegments = Math.floor(segments * (Math.abs(rotation2) / (2 * Math.PI)));
+              cornersegments = Math.floor(segments * (Math.abs(rotation2) / TAU));
               const step = rotation2 / cornersegments;
               const start = vec2.angle(vec2.subtract(v0, corner.s0[1], corner.c));
               const cornerpoints = [];
@@ -22774,7 +23908,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/expansions/expandShell.js"(exports, module) {
       "use strict";
       init_define_process();
-      var {EPS} = require_constants2();
+      var {EPS, TAU} = require_constants2();
       var mat42 = require_mat42();
       var vec3 = require_vec32();
       var fnNumberSort = require_fnNumberSort2();
@@ -22848,17 +23982,17 @@ ${nonManifold.join("\n")}`);
           const ybase = vec3.cross(vec3.create(), xbase, zbase);
           let angles = [];
           for (let i = 0; i < segments; i++) {
-            addUniqueAngle(angles, i * Math.PI * 2 / segments);
+            addUniqueAngle(angles, i * TAU / segments);
           }
           for (let i = 0, iMax = planes.length; i < iMax; i++) {
             const planenormal = planes[i];
             const si = vec3.dot(ybase, planenormal);
             const co = vec3.dot(xbase, planenormal);
             let angle = Math.atan2(si, co);
-            if (angle < 0) angle += Math.PI * 2;
+            if (angle < 0) angle += TAU;
             addUniqueAngle(angles, angle);
             angle = Math.atan2(-si, -co);
-            if (angle < 0) angle += Math.PI * 2;
+            if (angle < 0) angle += TAU;
             addUniqueAngle(angles, angle);
           }
           angles = angles.sort(fnNumberSort);
@@ -23364,6 +24498,59 @@ ${nonManifold.join("\n")}`);
       module.exports = extrudeRectangular;
     }
   });
+  var require_extrudeHelical = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/extrudeHelical.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var {TAU} = require_constants2();
+      var mat42 = require_mat42();
+      var geom2 = require_geom22();
+      var extrudeFromSlices = require_extrudeFromSlices2();
+      var slice = require_slice2();
+      var extrudeHelical = (options, geometry) => {
+        const defaults = {
+          angle: TAU,
+          startAngle: 0,
+          pitch: 10,
+          height: 0,
+          endOffset: 0,
+          segmentsPerRotation: 32
+        };
+        let {angle, startAngle, pitch, height, endOffset, segmentsPerRotation} = Object.assign({}, defaults, options);
+        if (height != 0) {
+          pitch = height / (angle / TAU);
+        }
+        const minNumberOfSegments = 3;
+        if (segmentsPerRotation < minNumberOfSegments) {
+          throw new Error("The number of segments per rotation needs to be at least 3.");
+        }
+        const shapeSides = geom2.toSides(geometry);
+        if (shapeSides.length === 0) throw new Error("The given geometry cannot be empty");
+        const pointsWithPositiveX = shapeSides.filter(s => s[0][0] >= 0);
+        let baseSlice = slice.fromSides(shapeSides);
+        if (pointsWithPositiveX.length === 0) {
+          baseSlice = slice.reverse(baseSlice);
+        }
+        const calculatedSegments = Math.round(segmentsPerRotation / TAU * Math.abs(angle));
+        const segments = calculatedSegments >= 2 ? calculatedSegments : 2;
+        const step1 = mat42.create();
+        const step2 = mat42.create();
+        const sliceCallback = (progress, index, base) => {
+          const zRotation = startAngle + angle / segments * index;
+          const xOffset = endOffset / segments * index;
+          const zOffset = (zRotation - startAngle) / TAU * pitch;
+          mat42.multiply(step1, mat42.fromTranslation(mat42.create(), [xOffset, 0, zOffset * Math.sign(angle)]), mat42.fromXRotation(mat42.create(), -TAU / 4 * Math.sign(angle)));
+          mat42.multiply(step2, mat42.fromZRotation(mat42.create(), zRotation), step1);
+          return slice.transform(step2, base);
+        };
+        return extrudeFromSlices({
+          numberOfSlices: segments + 1,
+          callback: sliceCallback
+        }, baseSlice);
+      };
+      module.exports = extrudeHelical;
+    }
+  });
   var require_project2 = __commonJS({
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/extrusions/project.js"(exports, module) {
       "use strict";
@@ -23433,6 +24620,7 @@ ${nonManifold.join("\n")}`);
         extrudeLinear: require_extrudeLinear2(),
         extrudeRectangular: require_extrudeRectangular2(),
         extrudeRotate: require_extrudeRotate2(),
+        extrudeHelical: require_extrudeHelical(),
         project: require_project2(),
         slice: require_slice2()
       };
@@ -23460,7 +24648,7 @@ ${nonManifold.join("\n")}`);
             distSq
           });
         });
-        points.sort((pt1, pt2) => pt1.angle < pt2.angle ? -1 : pt1.angle > pt2.angle ? 1 : pt1.distSq < pt2.distSq ? -1 : pt1.distSq > pt2.distSq ? 1 : 0);
+        points.sort((pt1, pt2) => pt1.angle !== pt2.angle ? pt1.angle - pt2.angle : pt1.distSq - pt2.distSq);
         const stack = [];
         points.forEach(point => {
           let cnt = stack.length;
@@ -23551,806 +24739,19 @@ ${nonManifold.join("\n")}`);
       module.exports = hullGeom2;
     }
   });
-  var require_point_line_distance2 = __commonJS({
-    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/point-line-distance.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var cross = require_cross3();
-      var subtract2 = require_subtract5();
-      var squaredLength = require_squaredLength3();
-      var distanceSquared = (p, a, b) => {
-        const ab = [];
-        const ap = [];
-        const cr = [];
-        subtract2(ab, b, a);
-        subtract2(ap, p, a);
-        const area = squaredLength(cross(cr, ap, ab));
-        const s = squaredLength(ab);
-        if (s === 0) {
-          throw Error("a and b are the same point");
-        }
-        return area / s;
-      };
-      var pointLineDistance = (point, a, b) => Math.sqrt(distanceSquared(point, a, b));
-      module.exports = pointLineDistance;
-    }
-  });
-  var require_get_plane_normal2 = __commonJS({
-    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/get-plane-normal.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var cross = require_cross3();
-      var normalize = require_normalize3();
-      var subtract2 = require_subtract5();
-      var planeNormal = (out, point1, point2, point3) => {
-        const tmp = [0, 0, 0];
-        subtract2(out, point1, point2);
-        subtract2(tmp, point2, point3);
-        cross(out, out, tmp);
-        return normalize(out, out);
-      };
-      module.exports = planeNormal;
-    }
-  });
-  var require_VertexList2 = __commonJS({
-    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/VertexList.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var VertexList = class {
-        constructor() {
-          this.head = null;
-          this.tail = null;
-        }
-        clear() {
-          this.head = this.tail = null;
-        }
-        insertBefore(target, node) {
-          node.prev = target.prev;
-          node.next = target;
-          if (!node.prev) {
-            this.head = node;
-          } else {
-            node.prev.next = node;
-          }
-          target.prev = node;
-        }
-        insertAfter(target, node) {
-          node.prev = target;
-          node.next = target.next;
-          if (!node.next) {
-            this.tail = node;
-          } else {
-            node.next.prev = node;
-          }
-          target.next = node;
-        }
-        add(node) {
-          if (!this.head) {
-            this.head = node;
-          } else {
-            this.tail.next = node;
-          }
-          node.prev = this.tail;
-          node.next = null;
-          this.tail = node;
-        }
-        addAll(node) {
-          if (!this.head) {
-            this.head = node;
-          } else {
-            this.tail.next = node;
-          }
-          node.prev = this.tail;
-          while (node.next) {
-            node = node.next;
-          }
-          this.tail = node;
-        }
-        remove(node) {
-          if (!node.prev) {
-            this.head = node.next;
-          } else {
-            node.prev.next = node.next;
-          }
-          if (!node.next) {
-            this.tail = node.prev;
-          } else {
-            node.next.prev = node.prev;
-          }
-        }
-        removeChain(a, b) {
-          if (!a.prev) {
-            this.head = b.next;
-          } else {
-            a.prev.next = b.next;
-          }
-          if (!b.next) {
-            this.tail = a.prev;
-          } else {
-            b.next.prev = a.prev;
-          }
-        }
-        first() {
-          return this.head;
-        }
-        isEmpty() {
-          return !this.head;
-        }
-      };
-      module.exports = VertexList;
-    }
-  });
-  var require_Vertex2 = __commonJS({
-    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/Vertex.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var Vertex = class {
-        constructor(point, index) {
-          this.point = point;
-          this.index = index;
-          this.next = null;
-          this.prev = null;
-          this.face = null;
-        }
-      };
-      module.exports = Vertex;
-    }
-  });
-  var require_HalfEdge2 = __commonJS({
-    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/HalfEdge.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var distance = require_distance3();
-      var squaredDistance = require_squaredDistance3();
-      var HalfEdge = class {
-        constructor(vertex, face) {
-          this.vertex = vertex;
-          this.face = face;
-          this.next = null;
-          this.prev = null;
-          this.opposite = null;
-        }
-        head() {
-          return this.vertex;
-        }
-        tail() {
-          return this.prev ? this.prev.vertex : null;
-        }
-        length() {
-          if (this.tail()) {
-            return distance(this.tail().point, this.head().point);
-          }
-          return -1;
-        }
-        lengthSquared() {
-          if (this.tail()) {
-            return squaredDistance(this.tail().point, this.head().point);
-          }
-          return -1;
-        }
-        setOpposite(edge) {
-          this.opposite = edge;
-          edge.opposite = this;
-        }
-      };
-      module.exports = HalfEdge;
-    }
-  });
-  var require_Face2 = __commonJS({
-    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/Face.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var add = require_add5();
-      var copy = require_copy8();
-      var cross = require_cross3();
-      var dot = require_dot4();
-      var length = require_length3();
-      var normalize = require_normalize3();
-      var scale2 = require_scale5();
-      var subtract2 = require_subtract5();
-      var HalfEdge = require_HalfEdge2();
-      var VISIBLE = 0;
-      var NON_CONVEX = 1;
-      var DELETED = 2;
-      var Face = class _Face {
-        constructor() {
-          this.normal = [];
-          this.centroid = [];
-          this.offset = 0;
-          this.outside = null;
-          this.mark = VISIBLE;
-          this.edge = null;
-          this.nVertices = 0;
-        }
-        getEdge(i) {
-          if (typeof i !== "number") {
-            throw Error("requires a number");
-          }
-          let it = this.edge;
-          while (i > 0) {
-            it = it.next;
-            i -= 1;
-          }
-          while (i < 0) {
-            it = it.prev;
-            i += 1;
-          }
-          return it;
-        }
-        computeNormal() {
-          const e0 = this.edge;
-          const e1 = e0.next;
-          let e2 = e1.next;
-          const v2 = subtract2([], e1.head().point, e0.head().point);
-          const t = [];
-          const v1 = [];
-          this.nVertices = 2;
-          this.normal = [0, 0, 0];
-          while (e2 !== e0) {
-            copy(v1, v2);
-            subtract2(v2, e2.head().point, e0.head().point);
-            add(this.normal, this.normal, cross(t, v1, v2));
-            e2 = e2.next;
-            this.nVertices += 1;
-          }
-          this.area = length(this.normal);
-          this.normal = scale2(this.normal, this.normal, 1 / this.area);
-        }
-        computeNormalMinArea(minArea) {
-          this.computeNormal();
-          if (this.area < minArea) {
-            let maxEdge;
-            let maxSquaredLength = 0;
-            let edge = this.edge;
-            do {
-              const lengthSquared = edge.lengthSquared();
-              if (lengthSquared > maxSquaredLength) {
-                maxEdge = edge;
-                maxSquaredLength = lengthSquared;
-              }
-              edge = edge.next;
-            } while (edge !== this.edge);
-            const p1 = maxEdge.tail().point;
-            const p2 = maxEdge.head().point;
-            const maxVector = subtract2([], p2, p1);
-            const maxLength = Math.sqrt(maxSquaredLength);
-            scale2(maxVector, maxVector, 1 / maxLength);
-            const maxProjection = dot(this.normal, maxVector);
-            scale2(maxVector, maxVector, -maxProjection);
-            add(this.normal, this.normal, maxVector);
-            normalize(this.normal, this.normal);
-          }
-        }
-        computeCentroid() {
-          this.centroid = [0, 0, 0];
-          let edge = this.edge;
-          do {
-            add(this.centroid, this.centroid, edge.head().point);
-            edge = edge.next;
-          } while (edge !== this.edge);
-          scale2(this.centroid, this.centroid, 1 / this.nVertices);
-        }
-        computeNormalAndCentroid(minArea) {
-          if (typeof minArea !== "undefined") {
-            this.computeNormalMinArea(minArea);
-          } else {
-            this.computeNormal();
-          }
-          this.computeCentroid();
-          this.offset = dot(this.normal, this.centroid);
-        }
-        distanceToPlane(point) {
-          return dot(this.normal, point) - this.offset;
-        }
-        connectHalfEdges(prev, next) {
-          let discardedFace;
-          if (prev.opposite.face === next.opposite.face) {
-            const oppositeFace = next.opposite.face;
-            let oppositeEdge;
-            if (prev === this.edge) {
-              this.edge = next;
-            }
-            if (oppositeFace.nVertices === 3) {
-              oppositeEdge = next.opposite.prev.opposite;
-              oppositeFace.mark = DELETED;
-              discardedFace = oppositeFace;
-            } else {
-              oppositeEdge = next.opposite.next;
-              if (oppositeFace.edge === oppositeEdge.prev) {
-                oppositeFace.edge = oppositeEdge;
-              }
-              oppositeEdge.prev = oppositeEdge.prev.prev;
-              oppositeEdge.prev.next = oppositeEdge;
-            }
-            next.prev = prev.prev;
-            next.prev.next = next;
-            next.setOpposite(oppositeEdge);
-            oppositeFace.computeNormalAndCentroid();
-          } else {
-            prev.next = next;
-            next.prev = prev;
-          }
-          return discardedFace;
-        }
-        mergeAdjacentFaces(adjacentEdge, discardedFaces) {
-          const oppositeEdge = adjacentEdge.opposite;
-          const oppositeFace = oppositeEdge.face;
-          discardedFaces.push(oppositeFace);
-          oppositeFace.mark = DELETED;
-          let adjacentEdgePrev = adjacentEdge.prev;
-          let adjacentEdgeNext = adjacentEdge.next;
-          let oppositeEdgePrev = oppositeEdge.prev;
-          let oppositeEdgeNext = oppositeEdge.next;
-          while (adjacentEdgePrev.opposite.face === oppositeFace) {
-            adjacentEdgePrev = adjacentEdgePrev.prev;
-            oppositeEdgeNext = oppositeEdgeNext.next;
-          }
-          while (adjacentEdgeNext.opposite.face === oppositeFace) {
-            adjacentEdgeNext = adjacentEdgeNext.next;
-            oppositeEdgePrev = oppositeEdgePrev.prev;
-          }
-          let edge;
-          for (edge = oppositeEdgeNext; edge !== oppositeEdgePrev.next; edge = edge.next) {
-            edge.face = this;
-          }
-          this.edge = adjacentEdgeNext;
-          let discardedFace;
-          discardedFace = this.connectHalfEdges(oppositeEdgePrev, adjacentEdgeNext);
-          if (discardedFace) {
-            discardedFaces.push(discardedFace);
-          }
-          discardedFace = this.connectHalfEdges(adjacentEdgePrev, oppositeEdgeNext);
-          if (discardedFace) {
-            discardedFaces.push(discardedFace);
-          }
-          this.computeNormalAndCentroid();
-          return discardedFaces;
-        }
-        collectIndices() {
-          const indices = [];
-          let edge = this.edge;
-          do {
-            indices.push(edge.head().index);
-            edge = edge.next;
-          } while (edge !== this.edge);
-          return indices;
-        }
-        static createTriangle(v0, v1, v2, minArea = 0) {
-          const face = new _Face();
-          const e0 = new HalfEdge(v0, face);
-          const e1 = new HalfEdge(v1, face);
-          const e2 = new HalfEdge(v2, face);
-          e0.next = e2.prev = e1;
-          e1.next = e0.prev = e2;
-          e2.next = e1.prev = e0;
-          face.edge = e0;
-          face.computeNormalAndCentroid(minArea);
-          return face;
-        }
-      };
-      module.exports = {
-        VISIBLE,
-        NON_CONVEX,
-        DELETED,
-        Face
-      };
-    }
-  });
-  var require_QuickHull2 = __commonJS({
-    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/QuickHull.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var dot = require_dot4();
-      var pointLineDistance = require_point_line_distance2();
-      var getPlaneNormal = require_get_plane_normal2();
-      var VertexList = require_VertexList2();
-      var Vertex = require_Vertex2();
-      var {Face, VISIBLE, NON_CONVEX, DELETED} = require_Face2();
-      var MERGE_NON_CONVEX_WRT_LARGER_FACE = 1;
-      var MERGE_NON_CONVEX = 2;
-      var QuickHull = class {
-        constructor(points) {
-          if (!Array.isArray(points)) {
-            throw TypeError("input is not a valid array");
-          }
-          if (points.length < 4) {
-            throw Error("cannot build a simplex out of <4 points");
-          }
-          this.tolerance = -1;
-          this.nFaces = 0;
-          this.nPoints = points.length;
-          this.faces = [];
-          this.newFaces = [];
-          this.claimed = new VertexList();
-          this.unclaimed = new VertexList();
-          this.vertices = [];
-          for (let i = 0; i < points.length; i += 1) {
-            this.vertices.push(new Vertex(points[i], i));
-          }
-          this.discardedFaces = [];
-          this.vertexPointIndices = [];
-        }
-        addVertexToFace(vertex, face) {
-          vertex.face = face;
-          if (!face.outside) {
-            this.claimed.add(vertex);
-          } else {
-            this.claimed.insertBefore(face.outside, vertex);
-          }
-          face.outside = vertex;
-        }
-        removeVertexFromFace(vertex, face) {
-          if (vertex === face.outside) {
-            if (vertex.next && vertex.next.face === face) {
-              face.outside = vertex.next;
-            } else {
-              face.outside = null;
-            }
-          }
-          this.claimed.remove(vertex);
-        }
-        removeAllVerticesFromFace(face) {
-          if (face.outside) {
-            let end = face.outside;
-            while (end.next && end.next.face === face) {
-              end = end.next;
-            }
-            this.claimed.removeChain(face.outside, end);
-            end.next = null;
-            return face.outside;
-          }
-        }
-        deleteFaceVertices(face, absorbingFace) {
-          const faceVertices = this.removeAllVerticesFromFace(face);
-          if (faceVertices) {
-            if (!absorbingFace) {
-              this.unclaimed.addAll(faceVertices);
-            } else {
-              let nextVertex;
-              for (let vertex = faceVertices; vertex; vertex = nextVertex) {
-                nextVertex = vertex.next;
-                const distance = absorbingFace.distanceToPlane(vertex.point);
-                if (distance > this.tolerance) {
-                  this.addVertexToFace(vertex, absorbingFace);
-                } else {
-                  this.unclaimed.add(vertex);
-                }
-              }
-            }
-          }
-        }
-        resolveUnclaimedPoints(newFaces) {
-          let vertexNext = this.unclaimed.first();
-          for (let vertex = vertexNext; vertex; vertex = vertexNext) {
-            vertexNext = vertex.next;
-            let maxDistance = this.tolerance;
-            let maxFace;
-            for (let i = 0; i < newFaces.length; i += 1) {
-              const face = newFaces[i];
-              if (face.mark === VISIBLE) {
-                const dist = face.distanceToPlane(vertex.point);
-                if (dist > maxDistance) {
-                  maxDistance = dist;
-                  maxFace = face;
-                }
-                if (maxDistance > 1e3 * this.tolerance) {
-                  break;
-                }
-              }
-            }
-            if (maxFace) {
-              this.addVertexToFace(vertex, maxFace);
-            }
-          }
-        }
-        computeExtremes() {
-          const min = [];
-          const max = [];
-          const minVertices = [];
-          const maxVertices = [];
-          let i, j;
-          for (i = 0; i < 3; i += 1) {
-            minVertices[i] = maxVertices[i] = this.vertices[0];
-          }
-          for (i = 0; i < 3; i += 1) {
-            min[i] = max[i] = this.vertices[0].point[i];
-          }
-          for (i = 1; i < this.vertices.length; i += 1) {
-            const vertex = this.vertices[i];
-            const point = vertex.point;
-            for (j = 0; j < 3; j += 1) {
-              if (point[j] < min[j]) {
-                min[j] = point[j];
-                minVertices[j] = vertex;
-              }
-            }
-            for (j = 0; j < 3; j += 1) {
-              if (point[j] > max[j]) {
-                max[j] = point[j];
-                maxVertices[j] = vertex;
-              }
-            }
-          }
-          this.tolerance = 3 * Number.EPSILON * (Math.max(Math.abs(min[0]), Math.abs(max[0])) + Math.max(Math.abs(min[1]), Math.abs(max[1])) + Math.max(Math.abs(min[2]), Math.abs(max[2])));
-          return [minVertices, maxVertices];
-        }
-        createInitialSimplex() {
-          const vertices = this.vertices;
-          const [min, max] = this.computeExtremes();
-          let v2, v3;
-          let i, j;
-          let maxDistance = 0;
-          let indexMax = 0;
-          for (i = 0; i < 3; i += 1) {
-            const distance = max[i].point[i] - min[i].point[i];
-            if (distance > maxDistance) {
-              maxDistance = distance;
-              indexMax = i;
-            }
-          }
-          const v0 = min[indexMax];
-          const v1 = max[indexMax];
-          maxDistance = 0;
-          for (i = 0; i < this.vertices.length; i += 1) {
-            const vertex = this.vertices[i];
-            if (vertex !== v0 && vertex !== v1) {
-              const distance = pointLineDistance(vertex.point, v0.point, v1.point);
-              if (distance > maxDistance) {
-                maxDistance = distance;
-                v2 = vertex;
-              }
-            }
-          }
-          const normal = getPlaneNormal([], v0.point, v1.point, v2.point);
-          const distPO = dot(v0.point, normal);
-          maxDistance = -1;
-          for (i = 0; i < this.vertices.length; i += 1) {
-            const vertex = this.vertices[i];
-            if (vertex !== v0 && vertex !== v1 && vertex !== v2) {
-              const distance = Math.abs(dot(normal, vertex.point) - distPO);
-              if (distance > maxDistance) {
-                maxDistance = distance;
-                v3 = vertex;
-              }
-            }
-          }
-          const faces = [];
-          if (dot(v3.point, normal) - distPO < 0) {
-            faces.push(Face.createTriangle(v0, v1, v2), Face.createTriangle(v3, v1, v0), Face.createTriangle(v3, v2, v1), Face.createTriangle(v3, v0, v2));
-            for (i = 0; i < 3; i += 1) {
-              const j2 = (i + 1) % 3;
-              faces[i + 1].getEdge(2).setOpposite(faces[0].getEdge(j2));
-              faces[i + 1].getEdge(1).setOpposite(faces[j2 + 1].getEdge(0));
-            }
-          } else {
-            faces.push(Face.createTriangle(v0, v2, v1), Face.createTriangle(v3, v0, v1), Face.createTriangle(v3, v1, v2), Face.createTriangle(v3, v2, v0));
-            for (i = 0; i < 3; i += 1) {
-              const j2 = (i + 1) % 3;
-              faces[i + 1].getEdge(2).setOpposite(faces[0].getEdge((3 - i) % 3));
-              faces[i + 1].getEdge(0).setOpposite(faces[j2 + 1].getEdge(1));
-            }
-          }
-          for (i = 0; i < 4; i += 1) {
-            this.faces.push(faces[i]);
-          }
-          for (i = 0; i < vertices.length; i += 1) {
-            const vertex = vertices[i];
-            if (vertex !== v0 && vertex !== v1 && vertex !== v2 && vertex !== v3) {
-              maxDistance = this.tolerance;
-              let maxFace;
-              for (j = 0; j < 4; j += 1) {
-                const distance = faces[j].distanceToPlane(vertex.point);
-                if (distance > maxDistance) {
-                  maxDistance = distance;
-                  maxFace = faces[j];
-                }
-              }
-              if (maxFace) {
-                this.addVertexToFace(vertex, maxFace);
-              }
-            }
-          }
-        }
-        reindexFaceAndVertices() {
-          const activeFaces = [];
-          for (let i = 0; i < this.faces.length; i += 1) {
-            const face = this.faces[i];
-            if (face.mark === VISIBLE) {
-              activeFaces.push(face);
-            }
-          }
-          this.faces = activeFaces;
-        }
-        collectFaces(skipTriangulation) {
-          const faceIndices = [];
-          for (let i = 0; i < this.faces.length; i += 1) {
-            if (this.faces[i].mark !== VISIBLE) {
-              throw Error("attempt to include a destroyed face in the hull");
-            }
-            const indices = this.faces[i].collectIndices();
-            if (skipTriangulation) {
-              faceIndices.push(indices);
-            } else {
-              for (let j = 0; j < indices.length - 2; j += 1) {
-                faceIndices.push([indices[0], indices[j + 1], indices[j + 2]]);
-              }
-            }
-          }
-          return faceIndices;
-        }
-        nextVertexToAdd() {
-          if (!this.claimed.isEmpty()) {
-            let eyeVertex, vertex;
-            let maxDistance = 0;
-            const eyeFace = this.claimed.first().face;
-            for (vertex = eyeFace.outside; vertex && vertex.face === eyeFace; vertex = vertex.next) {
-              const distance = eyeFace.distanceToPlane(vertex.point);
-              if (distance > maxDistance) {
-                maxDistance = distance;
-                eyeVertex = vertex;
-              }
-            }
-            return eyeVertex;
-          }
-        }
-        computeHorizon(eyePoint, crossEdge, face, horizon) {
-          this.deleteFaceVertices(face);
-          face.mark = DELETED;
-          let edge;
-          if (!crossEdge) {
-            edge = crossEdge = face.getEdge(0);
-          } else {
-            edge = crossEdge.next;
-          }
-          do {
-            const oppositeEdge = edge.opposite;
-            const oppositeFace = oppositeEdge.face;
-            if (oppositeFace.mark === VISIBLE) {
-              if (oppositeFace.distanceToPlane(eyePoint) > this.tolerance) {
-                this.computeHorizon(eyePoint, oppositeEdge, oppositeFace, horizon);
-              } else {
-                horizon.push(edge);
-              }
-            }
-            edge = edge.next;
-          } while (edge !== crossEdge);
-        }
-        addAdjoiningFace(eyeVertex, horizonEdge) {
-          const face = Face.createTriangle(eyeVertex, horizonEdge.tail(), horizonEdge.head());
-          this.faces.push(face);
-          face.getEdge(-1).setOpposite(horizonEdge.opposite);
-          return face.getEdge(0);
-        }
-        addNewFaces(eyeVertex, horizon) {
-          this.newFaces = [];
-          let firstSideEdge, previousSideEdge;
-          for (let i = 0; i < horizon.length; i += 1) {
-            const horizonEdge = horizon[i];
-            const sideEdge = this.addAdjoiningFace(eyeVertex, horizonEdge);
-            if (!firstSideEdge) {
-              firstSideEdge = sideEdge;
-            } else {
-              sideEdge.next.setOpposite(previousSideEdge);
-            }
-            this.newFaces.push(sideEdge.face);
-            previousSideEdge = sideEdge;
-          }
-          firstSideEdge.next.setOpposite(previousSideEdge);
-        }
-        oppositeFaceDistance(edge) {
-          return edge.face.distanceToPlane(edge.opposite.face.centroid);
-        }
-        doAdjacentMerge(face, mergeType) {
-          let edge = face.edge;
-          let convex = true;
-          let it = 0;
-          do {
-            if (it >= face.nVertices) {
-              throw Error("merge recursion limit exceeded");
-            }
-            const oppositeFace = edge.opposite.face;
-            let merge = false;
-            if (mergeType === MERGE_NON_CONVEX) {
-              if (this.oppositeFaceDistance(edge) > -this.tolerance || this.oppositeFaceDistance(edge.opposite) > -this.tolerance) {
-                merge = true;
-              }
-            } else {
-              if (face.area > oppositeFace.area) {
-                if (this.oppositeFaceDistance(edge) > -this.tolerance) {
-                  merge = true;
-                } else if (this.oppositeFaceDistance(edge.opposite) > -this.tolerance) {
-                  convex = false;
-                }
-              } else {
-                if (this.oppositeFaceDistance(edge.opposite) > -this.tolerance) {
-                  merge = true;
-                } else if (this.oppositeFaceDistance(edge) > -this.tolerance) {
-                  convex = false;
-                }
-              }
-            }
-            if (merge) {
-              const discardedFaces = face.mergeAdjacentFaces(edge, []);
-              for (let i = 0; i < discardedFaces.length; i += 1) {
-                this.deleteFaceVertices(discardedFaces[i], face);
-              }
-              return true;
-            }
-            edge = edge.next;
-            it += 1;
-          } while (edge !== face.edge);
-          if (!convex) {
-            face.mark = NON_CONVEX;
-          }
-          return false;
-        }
-        addVertexToHull(eyeVertex) {
-          const horizon = [];
-          this.unclaimed.clear();
-          this.removeVertexFromFace(eyeVertex, eyeVertex.face);
-          this.computeHorizon(eyeVertex.point, null, eyeVertex.face, horizon);
-          this.addNewFaces(eyeVertex, horizon);
-          for (let i = 0; i < this.newFaces.length; i += 1) {
-            const face = this.newFaces[i];
-            if (face.mark === VISIBLE) {
-              while (this.doAdjacentMerge(face, MERGE_NON_CONVEX_WRT_LARGER_FACE)) {}
-            }
-          }
-          for (let i = 0; i < this.newFaces.length; i += 1) {
-            const face = this.newFaces[i];
-            if (face.mark === NON_CONVEX) {
-              face.mark = VISIBLE;
-              while (this.doAdjacentMerge(face, MERGE_NON_CONVEX)) {}
-            }
-          }
-          this.resolveUnclaimedPoints(this.newFaces);
-        }
-        build() {
-          let eyeVertex;
-          this.createInitialSimplex();
-          while (eyeVertex = this.nextVertexToAdd()) {
-            this.addVertexToHull(eyeVertex);
-          }
-          this.reindexFaceAndVertices();
-        }
-      };
-      module.exports = QuickHull;
-    }
-  });
-  var require_quickhull2 = __commonJS({
-    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/quickhull/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var QuickHull = require_QuickHull2();
-      var runner = (points, options = {}) => {
-        const instance = new QuickHull(points);
-        instance.build();
-        return instance.collectFaces(options.skipTriangulation);
-      };
-      module.exports = runner;
-    }
-  });
   var require_hullGeom32 = __commonJS({
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/hulls/hullGeom3.js"(exports, module) {
       "use strict";
       init_define_process();
       var flatten = require_flatten2();
       var geom32 = require_geom32();
-      var poly3 = require_poly32();
-      var quickhull = require_quickhull2();
       var toUniquePoints = require_toUniquePoints2();
+      var hullPoints3 = require_hullPoints3();
       var hullGeom3 = (...geometries) => {
         geometries = flatten(geometries);
-        if (geometries.length === 1) return geometries[0];
         const unique = toUniquePoints(geometries);
-        const faces = quickhull(unique, {
-          skipTriangulation: true
-        });
-        const polygons = faces.map(face => {
-          const vertices = face.map(index => unique[index]);
-          return poly3.create(vertices);
-        });
-        return geom32.create(polygons);
+        if (unique.length === 0) return geom32.create();
+        return geom32.create(hullPoints3(unique));
       };
       module.exports = hullGeom3;
     }
@@ -24407,7 +24808,18 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       module.exports = {
         hull: require_hull2(),
-        hullChain: require_hullChain2()
+        hullChain: require_hullChain2(),
+        hullPoints2: require_hullPoints22(),
+        hullPoints3: require_hullPoints3()
+      };
+    }
+  });
+  var require_minkowski = __commonJS({
+    "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/operations/minkowski/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = {
+        minkowskiSum: require_minkowskiSum()
       };
     }
   });
@@ -24991,7 +25403,8 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       module.exports = {
         generalize: require_generalize2(),
-        snap: require_snap6()
+        snap: require_snap6(),
+        retessellate: require_retessellate2()
       };
     }
   });
@@ -25246,6 +25659,7 @@ ${nonManifold.join("\n")}`);
         expansions: require_expansions2(),
         extrusions: require_extrusions2(),
         hulls: require_hulls2(),
+        minkowski: require_minkowski(),
         modifiers: require_modifiers2(),
         transforms: require_transforms2()
       };
