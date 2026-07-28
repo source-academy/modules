@@ -153,7 +153,16 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
     this.__tabRpc = makeRpc<Record<string, never>, PixNFlixTabRpc>(controlChannel, {});
     this.__frameChannel = frameChannel as IChannel<FrameChannelMessage>;
     this.__frameChannel.subscribe(message => {
-      if (message.kind === 'captured-frame') void this.__handleCapturedFrame(message);
+      if (message.kind === 'captured-frame') {
+        // __handleCapturedFrame already catches and recovers from every failure it can attribute
+        // to the installed filter (see its own try/catch), but this guards the residual case of
+        // something failing outside that (e.g. the final frameChannel.send itself) - without a
+        // reply ever going out, the tab's pending-frame gate would stall the capture loop forever
+        // on nothing more than a console warning otherwise.
+        this.__handleCapturedFrame(message).catch(e => {
+          console.error('pix_n_flix: frame handling failed:', e);
+        });
+      }
     });
   }
 

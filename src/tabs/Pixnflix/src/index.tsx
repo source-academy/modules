@@ -102,8 +102,11 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
   private __totalElapsedMs = 0;
   private __videoIsPlaying = false;
   // Only one captured-frame round trip is ever in flight at a time - the draw loop won't capture
-  // the next frame until the previous one's filtered response has come back (see __tick).
-  private __pendingFrame: { resolve: (buffer: ArrayBuffer) => void } | undefined;
+  // the next frame until the previous one's filtered response has come back (see __tick). Carries
+  // both resolve and reject so __stopCapture can settle (not just abandon) a frame that's still in
+  // flight when capture stops - otherwise __captureAndSendFrame's awaiting async call would hang
+  // forever, permanently pinning its closed-over capture buffer in memory.
+  private __pendingFrame: { resolve: (buffer: ArrayBuffer) => void, reject: (reason: unknown) => void } | undefined;
 
   private __destroyed = false;
 
@@ -242,9 +245,11 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
     this.__requestId = undefined;
     this.__prevTimestamp = null;
     // A frame already in flight when capture stops may never get a reply (e.g. the module's
-    // Worker is gone by the time it would have replied) - without clearing this, __tick's own
-    // gate (`|| this.__pendingFrame`) would block every future frame forever once __startCapture
-    // runs again, since nothing would ever resolve this specific promise.
+    // Worker is gone by the time it would have replied) - reject it explicitly (rather than just
+    // clearing the field) so __captureAndSendFrame's awaiting call settles instead of hanging on
+    // an abandoned promise forever; __tick's own gate (`|| this.__pendingFrame`) is cleared either
+    // way, so __startCapture can schedule frames again immediately.
+    this.__pendingFrame?.reject(new Error('pix_n_flix: capture stopped'));
     this.__pendingFrame = undefined;
   }
 
@@ -255,7 +260,9 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
     if (elapsed < 1000 / this.__state.fps || !this.__videoIsPlaying || this.__pendingFrame) return;
     this.__prevTimestamp = timestamp;
     this.__totalElapsedMs += elapsed;
-    void this.__captureAndSendFrame();
+    // Rejects only via __stopCapture's explicit abandonment of an in-flight frame - an expected,
+    // benign outcome (not a real error), so it's swallowed here rather than logged.
+    this.__captureAndSendFrame().catch(() => {});
   };
 
   private async __captureAndSendFrame(): Promise<void> {
@@ -295,8 +302,8 @@ export default class PixNFlixTabPlugin implements IPlugin, PixNFlixTabRpc {
 
     const captured = ctx.getImageData(0, 0, width, height);
     const capturedBuffer = captured.data.buffer;
-    const resultBuffer = await new Promise<ArrayBuffer>(resolve => {
-      this.__pendingFrame = { resolve };
+    const resultBuffer = await new Promise<ArrayBuffer>((resolve, reject) => {
+      this.__pendingFrame = { resolve, reject };
       this.__frameChannel.send({ kind: 'captured-frame', buffer: capturedBuffer, width, height }, [capturedBuffer]);
     });
 
