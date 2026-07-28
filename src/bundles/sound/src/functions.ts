@@ -78,6 +78,7 @@ export const globalVars: BundleGlobalVars = {
  * on that count itself.
  */
 let playGeneration = 0;
+let recordingGeneration = 0;
 
 let soundIO: SoundTabRpc | undefined;
 
@@ -360,7 +361,7 @@ function assertMicPermission(func_name: string): void {
   }
 }
 
-function reserveRecording(func_name: string): void {
+function reserveRecording(func_name: string): number {
   if (globalVars.activePlayCount > 0) {
     throw new EvaluatorRuntimeError(`${func_name}: Cannot record while another sound is playing!`);
   }
@@ -369,10 +370,14 @@ function reserveRecording(func_name: string): void {
   }
   assertMicPermission(func_name);
   globalVars.recordingInProgress = true;
+  recordingGeneration += 1;
+  return recordingGeneration;
 }
 
-function releaseRecording(): void {
-  globalVars.recordingInProgress = false;
+function releaseRecording(generation: number): void {
+  if (recordingGeneration === generation) {
+    globalVars.recordingInProgress = false;
+  }
 }
 
 /**
@@ -396,7 +401,7 @@ function releaseRecording(): void {
  */
 export function record(buffer: number): () => () => Promise<Sound> {
   validateDuration('record', buffer);
-  reserveRecording(record.name);
+  const generation = reserveRecording(record.name);
 
   const started = (async () => {
     await delay(pre_recording_signal_pause_ms + buffer * 1000);
@@ -407,7 +412,7 @@ export function record(buffer: number): () => () => Promise<Sound> {
   let recordingDone: Promise<Sound> | undefined;
   void started.catch(() => {
     if (!recordingDone) {
-      releaseRecording();
+      releaseRecording(generation);
     }
   });
 
@@ -416,7 +421,7 @@ export function record(buffer: number): () => () => Promise<Sound> {
       recordingDone = started
         .then(() => io().stopRecording())
         .then(({ left, right, sampleRate }) => samplesToSound(left, right, sampleRate))
-        .finally(releaseRecording);
+        .finally(() => releaseRecording(generation));
       void play_recording_signal();
     }
     return () => recordingDone!;
@@ -447,7 +452,7 @@ export function record(buffer: number): () => () => Promise<Sound> {
 export function record_for(duration: number, buffer: number): () => Promise<Sound> {
   validateDuration('record_for', duration);
   validateDuration('record_for', buffer);
-  reserveRecording(record_for.name);
+  const generation = reserveRecording(record_for.name);
 
   // order of events for record_for:
   // pre-recording-signal pause | recording signal |
@@ -463,7 +468,7 @@ export function record_for(duration: number, buffer: number): () => Promise<Soun
       void play_recording_signal();
       return samplesToSound(left, right, sampleRate);
     } finally {
-      releaseRecording();
+      releaseRecording(generation);
     }
   })();
 

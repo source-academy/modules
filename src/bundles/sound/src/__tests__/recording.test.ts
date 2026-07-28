@@ -193,6 +193,35 @@ describe('Recording functions', () => {
       expect(funcs.globalVars.recordingInProgress).toBe(false);
     });
 
+    test('a stale stop after a failed start cannot release a newer recording', async () => {
+      vi.useRealTimers();
+      await funcs.init_record();
+      vi.useFakeTimers();
+
+      io.startRecording.mockRejectedValueOnce(new Error('start failed'));
+
+      const staleStop = funcs.record(0);
+      await vi.advanceTimersByTimeAsync(300);
+
+      expect(funcs.globalVars.recordingInProgress).toBe(false);
+
+      const samples = new Float32Array([0]);
+      io.stopRecording.mockResolvedValue({ left: samples, right: samples, sampleRate: 8000 });
+      const currentStop = funcs.record(0);
+
+      const staleSoundPromise = staleStop();
+      await expect(staleSoundPromise()).rejects.toThrow('start failed');
+
+      expect(funcs.globalVars.recordingInProgress).toBe(true);
+
+      await vi.advanceTimersByTimeAsync(300);
+      const currentSoundPromise = currentStop();
+      await vi.advanceTimersByTimeAsync(0);
+
+      await expect(currentSoundPromise()).resolves.toBeDefined();
+      expect(funcs.globalVars.recordingInProgress).toBe(false);
+    });
+
     test('a genuinely stereo input device produces a Sound with different left/right channels', async () => {
       vi.useRealTimers();
       await funcs.init_record();
