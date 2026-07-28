@@ -2791,11 +2791,7 @@ export default require => {
               regex: '"(?=.)',
               next: "qqstring"
             }, {
-              token: "constant.numeric",
-              regex: /0(?:[xX][0-9a-fA-F]+|[oO][0-7]+|[bB][01]+)\b/
-            }, {
-              token: "constant.numeric",
-              regex: /(?:\d\d*(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+\b)?/
+              include: "numeric_constants"
             }, {
               token: ["entity.name.function", "text", "keyword.operator", "text", "storage.type", "text", "storage.type", "text", "paren.lparen"],
               regex: "(" + identifierRe + ")(\\s*)(=)(\\s*)" + anonymousFunctionRe + "(\\s*)(\\()",
@@ -2973,11 +2969,7 @@ export default require => {
               token: "constant.language",
               regex: "null|Infinity|NaN|undefined"
             }, {
-              token: "constant.numeric",
-              regex: /0(?:[xX][0-9a-fA-F]+|[oO][0-7]+|[bB][01]+)\b/
-            }, {
-              token: "constant.numeric",
-              regex: /(?:\d\d*(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+\b)?/
+              include: "numeric_constants"
             }, {
               token: "punctuation.operator",
               regex: ",",
@@ -3037,6 +3029,13 @@ export default require => {
               next: "no_regex"
             }, {
               defaultToken: "string"
+            }],
+            "numeric_constants": [{
+              token: "constant.numeric",
+              regex: /0(?:[xX][0-9a-fA-F_]+|[oO][0-7_]+|[bB][01_]+)\b/
+            }, {
+              token: "constant.numeric",
+              regex: /(?:\d[\d_]*(?:\.[\d_]*)?|\.\d[\d_]*)(?:[eE][+-]?\d+\b)?/
             }]
           };
           if (!options || !options.noES6) {
