@@ -80,7 +80,7 @@ export default require => {
     }
   });
   var require_plotly = __commonJS({
-    "node_modules/plotly.js-dist/plotly.js"(exports, module) {
+    "../../../node_modules/plotly.js-dist/plotly.js"(exports, module) {
       "use strict";
       init_define_process();
       (function (root, factory) {
