@@ -4449,10 +4449,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sourceacademy/conductor@npm:^0.8.0":
-  version: 0.8.0
-  resolution: "@sourceacademy/conductor@npm:0.8.0"
-  checksum: 10c0/8b970b1f5fffbcb5242f5c358fb25af8d916cb5af9ca7fa9e0128928fde1783ed65465241858a82002bd8b5f21f5f5b80d3ea57bbd05faed604e6dd1c36600e9
+"@sourceacademy/conductor@npm:^0.8.2":
+  version: 0.8.2
+  resolution: "@sourceacademy/conductor@npm:0.8.2"
+  checksum: 10c0/a37dbed6c9ff1f92cb1b7938366c4647cc7c89aaa54b9b843ceaa2088933e251b84b2acae61753bad599c11f0becf95013a771bd7c999735ed8896c3195c9f53
   languageName: node
   linkType: hard
 
