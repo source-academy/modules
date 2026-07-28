@@ -6,7 +6,7 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/react": "catalog:",
     "@vitest/browser-playwright": "catalog:",
-    "playwright": "^1.55.1",
+    "playwright": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "typescript": "catalog:",

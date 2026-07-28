@@ -17,7 +17,7 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/react": "catalog:",
     "@vitest/browser-playwright": "catalog:",
-    "playwright": "^1.55.1",
+    "playwright": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:",
     "vitest-browser-react": "^2.1.0"

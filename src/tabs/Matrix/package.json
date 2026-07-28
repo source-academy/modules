@@ -16,7 +16,7 @@
     "@types/react-dom": "catalog:",
     "@vitest/browser-playwright": "catalog:",
     "@vitest/coverage-v8": "catalog:",
-    "playwright": "^1.55.1",
+    "playwright": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   },

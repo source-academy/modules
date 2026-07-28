@@ -36,8 +36,8 @@ export default defineProject(({ mode }) => {
           replacement: pathlib.resolve(import.meta.dirname, 'src', 'mockModuleContext.ts')
         },
         {
-        // This alias configuration allows us to edit the modules library and bundles and have those changes
-        // be reflected in real time when in hot-reload mode
+          // This alias configuration allows us to edit the modules library and bundles and have those changes
+          // be reflected in real time when in hot-reload mode
           find: /^@sourceacademy\/modules-lib\/(.+)/,
           replacement: pathlib.resolve(import.meta.dirname, '../lib/modules-lib/src/$1')
         },
@@ -60,23 +60,15 @@ export default defineProject(({ mode }) => {
         '../build/tabs/*.js',
         '@blueprintjs/core',
         '@blueprintjs/icons',
-        'ace-builds',
-        'ace-builds/src-noconflict/ace',
-        'ace-builds/src-noconflict/ext-language_tools',
-        'ace-builds/src-noconflict/ext-searchbox',
         'classnames',
         'es-toolkit',
         'gl-matrix',
         'js-slang',
         'js-slang/dist/createContext',
-        'js-slang/dist/editors/ace/modes/source',
-        'js-slang/dist/editors/ace/theme/source',
         'js-slang/dist/modules/loader',
         'js-slang/dist/types',
         'js-slang/dist/utils/stringify',
         'react/jsx-dev-runtime',
-        'react-ace',
-        'react-ace/lib/ace',
         're-resizable',
         'vite-plugin-node-polyfills/shims/buffer',
         'vite-plugin-node-polyfills/shims/global',

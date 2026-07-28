@@ -111,12 +111,12 @@ const Workspace: React.FC<WorkspaceProps> = (props) => {
             as={undefined as any} // re-resizable bug - wrong typedef
           >
             <Editor
+              language='typescript'
               handleEditorValueChange={props.handleEditorValueChange}
-              handleEditorEval={props.handleEditorEval}
-              handleDeclarationNavigate={() => { }}
-              handlePromptAutocomplete={props.handlePromptAutocomplete}
-              handleSendReplInputToOutput={() => { }}
-              editorValue={props.editorValue}
+              // handleDeclarationNavigate={() => { }}
+              // handlePromptAutocomplete={props.handlePromptAutocomplete}
+              // handleSendReplInputToOutput={() => { }}
+              defaultValue={props.editorValue}
             />
           </Resizable>
           <div className="right-parent">
