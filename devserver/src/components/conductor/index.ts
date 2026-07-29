@@ -3,17 +3,16 @@ import { BrowserHostPlugin } from './BrowserHostPlugin';
 import { DeferredConductorTabService } from './DeferredTabService';
 import { importAndRegisterWebPlugin } from './importExternalWebPlugin';
 
-interface PreparedConductor {
+export interface PreparedConductor {
   path: string;
   evaluatorUrl: string;
   hostPlugin: BrowserHostPlugin;
   conduit: IConduit;
   tabService: DeferredConductorTabService;
   moduleLoaderPlugin: ModuleLoaderWebPlugin;
-  setFiles: (files: Record<string, string>) => void;
 };
 
-function createConductor(
+export function createConductor(
   evaluatorPath: string,
   onRequestFile: (fileName: string) => Promise<string | undefined>,
   onRequestLoadPlugin: (pluginName: string) => Promise<void>,
@@ -74,15 +73,14 @@ async function fetchEvaluatorObjectUrl(path: string): Promise<string> {
   return URL.createObjectURL(evaluatorBlob);
 }
 
-async function createPreparedConductor(path: string): Promise<PreparedConductor> {
+export async function createPreparedConductor(path: string, fileGetter: (path: string) => Promise<string | undefined>): Promise<PreparedConductor> {
   const evaluatorUrl = await fetchEvaluatorObjectUrl(path);
 
-  let currentFiles: Record<string, string> = {};
   let hostPluginRef: BrowserHostPlugin | undefined = undefined;
   const tabService = new DeferredConductorTabService();
   const { hostPlugin, conduit, moduleLoaderPlugin } = createConductor(
     evaluatorUrl,
-    async (fileName: string) => currentFiles[fileName],
+    fileGetter,
     (pluginName: string) => loadWebPlugin(hostPluginRef, pluginName, tabService, moduleLoaderPlugin),
   );
   hostPluginRef = hostPlugin;
@@ -94,8 +92,5 @@ async function createPreparedConductor(path: string): Promise<PreparedConductor>
     conduit,
     tabService,
     moduleLoaderPlugin,
-    setFiles: (files: Record<string, string>) => {
-      currentFiles = files;
-    },
   };
 }
