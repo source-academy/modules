@@ -4,14 +4,12 @@ import jsslangDist, * as jsSlang from 'js-slang';
 import * as baseErrors from 'js-slang/dist/errors/base';
 import React from 'react';
 import JSXRuntime from 'react/jsx-runtime';
-import ace from 'react-ace/lib/ace';
 import ReactDOM from 'react-dom';
 
 export const requireProvider = (x: string) => {
   const exports = {
     'react': React,
     'react/jsx-runtime': JSXRuntime,
-    'react-ace': ace,
     'react-dom': ReactDOM,
     '@blueprintjs/core': bpcore,
     '@blueprintjs/icons': bpicons,

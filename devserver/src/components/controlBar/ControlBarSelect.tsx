@@ -1,6 +1,6 @@
 import { Button, Menu, MenuItem } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { type ItemListRenderer, type ItemRenderer, Select } from '@blueprintjs/select';
+import { Select, type ItemListRenderer, type ItemRenderer } from '@blueprintjs/select';
 
 interface ControlBarSelectItem {
   name: string;

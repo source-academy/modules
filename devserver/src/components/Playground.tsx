@@ -14,6 +14,7 @@ import { languageMap } from './conductor/evaluators';
 import { ControlBarClearButton } from './controlBar/ControlBarClearButton';
 import { ControlBarRunButton } from './controlBar/ControlBarRunButton';
 import ControlBarSelect from './controlBar/ControlBarSelect';
+import sideContentManager from './sideContent/SideContentManager';
 import testTabContent from './sideContent/TestTab';
 
 const errorToast: ToastProps = {
@@ -61,8 +62,8 @@ function getEvalIdFromLocalStorage(currentLang: ILanguageDefinition | null | und
 async function prepareConductor(
   evaluator: IEvaluatorDefinition,
   editor: monaco.editor.IStandaloneCodeEditor | null,
-  consoleOutputRef: React.RefObject<InterpreterOutput[]>,
-  finishCallback: (error?: any) => void
+  consoleOutputRef: React.RefObject<string[]>,
+  finishCallback: (output: InterpreterOutput) => void
 ) {
   const conductor = await createPreparedConductor(
     evaluator.path,
@@ -70,29 +71,23 @@ async function prepareConductor(
   );
 
   conductor.hostPlugin.receiveOutput = msg => {
-    consoleOutputRef.current.push({
-      type: 'running',
-      consoleLogs: [msg]
-    });
+    consoleOutputRef.current.push(msg);
   };
 
   conductor.hostPlugin.receiveError = error => {
-    consoleOutputRef.current.push({
+    finishCallback({
       type: 'errors',
       errors: [error as any],
-      consoleLogs: []
+      consoleLogs: consoleOutputRef.current,
     });
-    finishCallback(error);
   };
 
   conductor.hostPlugin.receiveResult = result => {
-    consoleOutputRef.current.push({
+    finishCallback({
       type: 'result',
-      value: result,
-      consoleLogs: []
+      consoleLogs: consoleOutputRef.current,
+      value: result
     });
-
-    finishCallback();
   };
 
   return conductor;
@@ -142,6 +137,7 @@ export default function Playground() {
   const languageDef = languageId === null ? null : getLanguageDefinition(languageMap, languageId);
 
   const [evaluatorId, rawSetEvaluatorId] = React.useState<string | null>(getEvalIdFromLocalStorage(languageDef));
+  const [replOutput, setReplOutput] = React.useState<InterpreterOutput | null>(null);
   const [conductor, setConductor] = React.useState<
     | PreparedConductor
     | 'loading'
@@ -158,10 +154,10 @@ export default function Playground() {
       evaluator,
       editorRef.current,
       consoleOutputRef,
-      error => {
-        setIsRunningCode(false);
+      output => {
+        setReplOutput(output);
 
-        if (error) showToast(errorToast);
+        if (output.type === 'errors') showToast(errorToast);
         else showToast(evalSuccessToast);
       }
     )
@@ -172,9 +168,7 @@ export default function Playground() {
       });
   }, [evaluatorId]);
 
-  const [isRunningCode, setIsRunningCode] = React.useState(false);
-
-  const consoleOutputRef = React.useRef<InterpreterOutput[]>([]);
+  const consoleOutputRef = React.useRef<string[]>([]);
 
   function setEvaluatorId(newId: string | null) {
     if (newId === null) {
@@ -194,10 +188,14 @@ export default function Playground() {
   }
 
   function evalCode() {
-    if (typeof conductor === 'string') return;
+    if (typeof conductor === 'string' || replOutput?.type === 'running') return;
 
-    setIsRunningCode(true);
     consoleOutputRef.current = [];
+
+    setReplOutput({
+      type: 'running',
+      consoleLogs: consoleOutputRef.current
+    });
 
     // File path here doesn't really matter since the fileGetter
     // just returns the current editor value no matter what
@@ -209,15 +207,18 @@ export default function Playground() {
     editorRef.current?.getModel()?.setValue('');
   }
 
+  const [selectedTabId, setSelectedTabId] = React.useState('test');
+  const dynamicTabs = React.useSyncExternalStore(sideContentManager.subscribe, () => sideContentManager.getTabs());
+
   const workspaceProps: WorkspaceProps = {
     controlBarProps: {
       editorButtons: [
         <ControlBarRunButton
           key="eval"
           handleEditorEval={evalCode}
-          disabled={typeof conductor === 'string' || isRunningCode}
+          disabled={typeof conductor === 'string' || replOutput?.type === 'running'}
           tooltip={
-            isRunningCode
+            replOutput?.type === 'running'
               ? 'Currently evaluating...'
               : languageId === null
                 ? 'Select a language first'
@@ -250,16 +251,16 @@ export default function Playground() {
       ]
     },
     replProps: {
-      output: null
+      output: replOutput
     },
     handleEditorEval: evalCode,
     handleEditorValueChange(newValue) {
       updateEditorLocalStorageValue(newValue);
     },
     sideContentProps: {
-      dynamicTabs: [testTabContent],
-      selectedTabId: '',
-      onChange: () => { },
+      dynamicTabs: [testTabContent, ...dynamicTabs],
+      selectedTabId,
+      onChange: setSelectedTabId,
       alerts: []
     },
     editorProps: {

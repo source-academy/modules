@@ -4667,7 +4667,6 @@ __metadata:
     commander: "npm:^15.0.0"
     es-toolkit: "npm:^1.44.0"
     eslint: "catalog:"
-    js-slang: "catalog:"
     monaco-editor: "npm:^0.56.0"
     playwright: "catalog:"
     re-resizable: "npm:^6.9.11"
