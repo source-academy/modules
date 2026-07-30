@@ -9,9 +9,6 @@ import { Rune } from './rune';
 // =============================================================================
 export function throwIfNotRune(func_name: string, rune: unknown, param_name?: string): asserts rune is Rune {
   if (!(rune instanceof Rune)) {
-    // EvaluatorParameterTypeError is the correct, student-facing error here - the
-    // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
-    // eslint-disable-next-line @sourceacademy/throw-runtime-error
     throw new EvaluatorParameterTypeError(func_name, param_name, 'Rune', rune);
   }
 }
@@ -332,9 +329,6 @@ export function getRibbon() {
 
 export function hexToColor(hex: string): number[] {
   if (typeof hex !== 'string') {
-    // EvaluatorParameterTypeError is the correct, student-facing error here - the
-    // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
-    // eslint-disable-next-line @sourceacademy/throw-runtime-error
     throw new EvaluatorParameterTypeError(hexToColor.name, undefined, 'string', hex);
   }
 
