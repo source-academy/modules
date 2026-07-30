@@ -1,6 +1,7 @@
 import { Conduit, type IConduit } from '@sourceacademy/conductor/conduit';
 import { BrowserHostPlugin } from './BrowserHostPlugin';
 import { DeferredConductorTabService } from './DeferredTabService';
+import { ModuleLoaderWebPlugin } from './ModuleLoaderPlugin';
 import { importAndRegisterWebPlugin } from './importExternalWebPlugin';
 
 export interface PreparedConductor {

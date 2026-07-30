@@ -12,8 +12,8 @@ interface EditorProps {
 const Editor = forwardRef<monaco.editor.IStandaloneCodeEditor, EditorProps>((props, ref) => {
   return <MonacoEditor
     defaultValue={props.defaultValue}
-    path='file:///main.js'
-    language='javascript'
+    path='file:///main.txt'
+    language={props.language}
     theme={SOURCE_MONACO_THEME}
     options={{
       fontFamily: "'Inconsolata', 'Consolas', monospace",

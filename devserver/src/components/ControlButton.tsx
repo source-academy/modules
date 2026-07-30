@@ -1,7 +1,7 @@
-import { AnchorButton, Button, Icon, Intent, type IconProps } from '@blueprintjs/core';
-import React from 'react';
+import { AnchorButton, Button, Icon, Intent, Tooltip, type IconProps } from '@blueprintjs/core';
+import type { FC } from 'react';
 
-type ButtonOptions = {
+interface ButtonOptions {
   className: string;
   fullWidth: boolean;
   iconColor?: string;
@@ -11,12 +11,13 @@ type ButtonOptions = {
   type?: 'button' | 'reset' | 'submit';
 };
 
-type ControlButtonProps = {
+interface ControlButtonProps {
   label?: string;
   icon?: IconProps['icon'];
   onClick?: () => void;
   options?: Partial<ButtonOptions>;
   isDisabled?: boolean;
+  tooltip?: string;
 };
 
 const defaultOptions = {
@@ -27,12 +28,13 @@ const defaultOptions = {
   minimal: true
 };
 
-const ControlButton: React.FC<ControlButtonProps> = ({
+const ControlButton: FC<ControlButtonProps> = ({
   label = '',
   icon,
   onClick,
   options = {},
-  isDisabled = false
+  isDisabled = false,
+  tooltip
 }) => {
   const buttonOptions: ButtonOptions = {
     ...defaultOptions,
@@ -44,21 +46,24 @@ const ControlButton: React.FC<ControlButtonProps> = ({
   // https://blueprintjs.com/docs/#core/components/button
   const ButtonComponent = isDisabled ? AnchorButton : Button;
 
-  return (
-    <ButtonComponent
-      disabled={isDisabled}
-      fill={buttonOptions.fullWidth}
-      intent={buttonOptions.intent}
-      minimal={buttonOptions.minimal}
-      className={buttonOptions.className}
-      type={buttonOptions.type}
-      onClick={onClick}
-      icon={!buttonOptions.iconOnRight && iconElement}
-      rightIcon={buttonOptions.iconOnRight && iconElement}
-    >
-      {label}
-    </ButtonComponent>
-  );
+  const button = <ButtonComponent
+    disabled={isDisabled}
+    fill={buttonOptions.fullWidth}
+    intent={buttonOptions.intent}
+    minimal={buttonOptions.minimal}
+    className={buttonOptions.className}
+    type={buttonOptions.type}
+    onClick={onClick}
+    icon={!buttonOptions.iconOnRight && iconElement}
+    rightIcon={buttonOptions.iconOnRight && iconElement}
+  >
+    {label}
+  </ButtonComponent>;
+
+  return tooltip ? (
+    <Tooltip content={tooltip} position='top'>
+      {button}
+    </Tooltip>) : button;
 };
 
 export default ControlButton;

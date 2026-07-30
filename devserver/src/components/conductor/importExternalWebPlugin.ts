@@ -47,7 +47,7 @@ export async function importAndRegisterWebPlugin(
   url: string,
   tabService: ITabService,
 ): Promise<void> {
-  const moduleNamespace: PluginExports = await import(/* webpackIgnore: true */ url);
+  const moduleNamespace: PluginExports = await import(/* @vite-ignore */ url);
   const pluginClass = resolvePluginClass(moduleNamespace);
   if (typeof pluginClass !== 'function') {
     throw new Error(`Conductor web plugin at "${url}" did not export a plugin class`);

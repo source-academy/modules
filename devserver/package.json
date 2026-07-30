@@ -8,8 +8,10 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^6.0.0",
+    "@blueprintjs/select": "^6.3.3",
     "@commander-js/extra-typings": "^15.0.0",
     "@monaco-editor/react": "^4.7.0",
+    "@sourceacademy/common-module-loader": "^0.0.1",
     "@sourceacademy/conductor": "catalog:",
     "@sourceacademy/language-directory": "https://github.com/source-academy/language-directory.git#0.0.18",
     "@sourceacademy/modules-lib": "workspace:^",

@@ -1013,7 +1013,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/core@npm:^6.0.0":
+"@blueprintjs/core@npm:^6.0.0, @blueprintjs/core@npm:^6.17.2":
   version: 6.17.2
   resolution: "@blueprintjs/core@npm:6.17.2"
   dependencies:
@@ -1073,6 +1073,26 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10c0/7a2f6a05f7f24c06e9e86f2d099ebbdadec4462fc36fd50cd9bc0a334949055b6d800c9b294fea8f44e2c3ca43a8c1e1d264d39c74844fb1df4f53665f48c2ed
+  languageName: node
+  linkType: hard
+
+"@blueprintjs/select@npm:^6.3.3":
+  version: 6.3.3
+  resolution: "@blueprintjs/select@npm:6.3.3"
+  dependencies:
+    "@blueprintjs/colors": "npm:^5.1.16"
+    "@blueprintjs/core": "npm:^6.17.2"
+    "@blueprintjs/icons": "npm:^6.13.0"
+    classnames: "npm:^2.3.1"
+    tslib: "npm:~2.6.2"
+  peerDependencies:
+    "@types/react": 18 || 19
+    react: 18 || 19
+    react-dom: 18 || 19
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/e272c963887e2daa8f69e8161f42ab5ec8dfcd81015a02905ee3f51fbcfe2c1fc71232eada2189f290c8572e6ca1f97fd7cc63f993f002252c6f0bf49c16fa47
   languageName: node
   linkType: hard
 
@@ -4511,6 +4531,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@sourceacademy/common-module-loader@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "@sourceacademy/common-module-loader@npm:0.0.1"
+  checksum: 10c0/588c2c42cd021ff7ad096ab2f7b396c26ecb2c433e356ad34087fefee9c3074f45de1b4228e132ea945405c3f8dc31195c4a4bd9461d696a94d53d6a0f3e7820
+  languageName: node
+  linkType: hard
+
 "@sourceacademy/common-tabs@npm:^0.0.1":
   version: 0.0.1
   resolution: "@sourceacademy/common-tabs@npm:0.0.1"
@@ -4624,8 +4651,11 @@ __metadata:
   resolution: "@sourceacademy/modules-devserver@workspace:devserver"
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
+    "@blueprintjs/select": "npm:^6.3.3"
     "@commander-js/extra-typings": "npm:^15.0.0"
     "@monaco-editor/react": "npm:^4.7.0"
+    "@sourceacademy/common-module-loader": "npm:^0.0.1"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/language-directory": "https://github.com/source-academy/language-directory.git#0.0.18"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"

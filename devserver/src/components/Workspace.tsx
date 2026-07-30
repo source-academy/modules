@@ -21,11 +21,13 @@ type StateProps = {
   replProps: ReplProps;
   sideContentHeight?: number;
   sideContentIsResizeable?: boolean;
-  editorValue: string;
-
   sideContentProps: SideContentProps;
 
-  editorRef: RefObject<monaco.editor.IStandaloneCodeEditor | null>;
+  editorProps: {
+    defaultValue: string;
+    language: string;
+    ref?: RefObject<monaco.editor.IStandaloneCodeEditor | null>;
+  };
 };
 
 const rightResizeOnly: Enable = { right: true };
@@ -113,10 +115,10 @@ const Workspace: React.FC<WorkspaceProps> = (props) => {
             as={undefined as any} // re-resizable bug - wrong typedef
           >
             <Editor
-              language='typescript'
+              defaultValue={props.editorProps.defaultValue}
               handleEditorValueChange={props.handleEditorValueChange}
-              defaultValue={props.editorValue}
-              ref={props.editorRef}
+              language={props.editorProps.language}
+              ref={props.editorProps.ref}
             />
           </Resizable>
           <div className="right-parent">
