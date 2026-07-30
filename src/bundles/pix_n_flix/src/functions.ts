@@ -11,7 +11,7 @@ export function makeImageBuffer(width: number, height: number): ImageBuffer {
   return { view, width, height };
 }
 
-function assertInRange(value: number, min: number, max: number, funcName: string, paramName: string): void {
+export function assertInRange(value: number, min: number, max: number, funcName: string, paramName: string): void {
   if (!Number.isInteger(value) || value < min || value > max) {
     // EvaluatorNumberRangeError is the correct, student-facing error here - the
     // throw-runtime-error rule doesn't yet recognise Conductor's own error types.

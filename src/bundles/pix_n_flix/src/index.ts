@@ -20,7 +20,7 @@
  * @author Loh Xian Ze, Bryan
  * @author Tang Xin Kye, Marcus
  */
-import { EvaluatorParameterTypeError, EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
+import { ConductorError, EvaluatorParameterTypeError, EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import { makeRpc, type IChannel, type IConduit } from '@sourceacademy/conductor/conduit';
 import { BaseModulePlugin, moduleMethod } from '@sourceacademy/conductor/module';
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
@@ -36,7 +36,7 @@ import {
   MIN_HEIGHT,
   MIN_WIDTH
 } from './constants';
-import { assertPixelCoordinates, copyImageBuffer, makeImageBuffer, readChannel, writeChannel } from './functions';
+import { assertInRange, assertPixelCoordinates, copyImageBuffer, makeImageBuffer, readChannel, writeChannel } from './functions';
 import {
   PIX_N_FLIX_CONTROL_CHANNEL_ID,
   PIX_N_FLIX_FRAME_CHANNEL_ID,
@@ -202,6 +202,28 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
     (this.evaluator as IDataHandler & { endPendingWork?: () => void }).endPendingWork?.();
   }
 
+  /**
+   * Reports an error to the student through Conductor's own error channel - the same path a
+   * thrown EvaluatorRuntimeError from a normal moduleMethod call already goes through - rather
+   * than console.error alone. A filter error happens asynchronously, off the frame-channel
+   * subscription (not inside any single exported call the evaluator could attribute to student
+   * code and surface by simply throwing), so it needs this explicit push instead. Like
+   * beginPendingWork/endPendingWork, `conductor` isn't part of IDataHandler's contract - it's
+   * BasicEvaluator's own public property - reached the same type-cast way.
+   */
+  private __reportFilterError(e: unknown): void {
+    const detail = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
+    (
+      this.evaluator as IDataHandler & {
+        conductor?: { sendError?: (error: ConductorError) => void };
+      }
+    ).conductor?.sendError?.(
+      new EvaluatorRuntimeError(
+        `Your installed filter threw an error and has been reset to the default (copy) filter: ${detail}`
+      )
+    );
+  }
+
   private __registerBuffer(buffer: ImageBuffer): Promise<TypedValue<DataType.OPAQUE>> {
     return this.evaluator.opaque_make(buffer).then(typed => {
       this.__buffers.set(typed.value, buffer);
@@ -251,6 +273,7 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
       // the (possibly never-registered) opaque handles, so this fallback is safe even when
       // registration itself is what failed.
       console.error('pix_n_flix filter error, resetting to the default filter:', e);
+      this.__reportFilterError(e);
       this.__filter = undefined;
       copyImageBuffer(srcBuffer, destBuffer);
     } finally {
@@ -375,9 +398,8 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
     height: TypedValue<DataType.NUMBER>
   ): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     this.__ensureTabLoaded();
-    if (width.value < MIN_WIDTH || width.value > MAX_WIDTH || height.value < MIN_HEIGHT || height.value > MAX_HEIGHT) {
-      return { type: DataType.VOID, value: undefined };
-    }
+    assertInRange(width.value, MIN_WIDTH, MAX_WIDTH, 'set_dimensions', 'width');
+    assertInRange(height.value, MIN_HEIGHT, MAX_HEIGHT, 'set_dimensions', 'height');
     this.__width = width.value;
     this.__height = height.value;
     await this.__tabRpc.updateDimensions(width.value, height.value);
@@ -387,9 +409,8 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
   @moduleMethod([DataType.NUMBER], DataType.VOID)
   async* set_fps(fps: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     this.__ensureTabLoaded();
-    if (fps.value >= MIN_FPS && fps.value <= MAX_FPS) {
-      this.__tabRpc.$updateFPS(fps.value);
-    }
+    assertInRange(fps.value, MIN_FPS, MAX_FPS, 'set_fps', 'fps');
+    this.__tabRpc.$updateFPS(fps.value);
     return { type: DataType.VOID, value: undefined };
   }
 
@@ -439,6 +460,9 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
   @moduleMethod([DataType.NUMBER], DataType.VOID)
   async* set_loop_count(n: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     this.__ensureTabLoaded();
+    if (n.value !== Infinity && !Number.isInteger(n.value)) {
+      throw new EvaluatorParameterTypeError('set_loop_count', 'n', 'an integer, or Infinity to loop forever', n.value);
+    }
     this.__tabRpc.$setLoopCount(n.value === Infinity ? -1 : n.value);
     return { type: DataType.VOID, value: undefined };
   }

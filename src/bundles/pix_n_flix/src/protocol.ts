@@ -9,7 +9,6 @@ export const PIX_N_FLIX_CONTROL_CHANNEL_ID = 'sourceacademy-pix-n-flix-control-c
  */
 export const PIX_N_FLIX_FRAME_CHANNEL_ID = 'sourceacademy-pix-n-flix-frame-channel';
 export const PIX_N_FLIX_WEB_ID = 'pix-n-flix-web';
-export const PIX_N_FLIX_TAB_NAME = 'Pixnflix';
 
 /** Tab → module: a freshly captured frame, ready to be filtered. */
 export interface CapturedFrameMessage {
