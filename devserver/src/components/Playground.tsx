@@ -1,29 +1,20 @@
-import { Button, Classes, Intent, OverlayToaster, Popover, Tooltip, type ToastProps } from '@blueprintjs/core';
+import { Classes, Intent, OverlayToaster, type ToastProps } from '@blueprintjs/core';
+import languageDir from '@sourceacademy/language-directory/dist/directory.json' with { type: 'json' };
+import type { IEvaluatorDefinition, ILanguageDefinition } from '@sourceacademy/language-directory/dist/types';
+import { getEvaluatorDefinition, getLanguageDefinition } from '@sourceacademy/language-directory/dist/util';
 import classNames from 'classnames';
 import { throttle } from 'es-toolkit';
-import { SourceDocumentation, getNames, runInContext, type Context } from 'js-slang';
-// Importing this straight from js-slang doesn't work for whatever reason
-import createContext from 'js-slang/dist/createContext';
-import { Chapter, Variant } from 'js-slang/dist/langs';
-import { ModuleInternalError } from 'js-slang/dist/modules/errors';
-import { stringify } from 'js-slang/dist/utils/stringify';
+import type * as monaco from 'monaco-editor';
 import React from 'react';
-import mockModuleContext from '../mockModuleContext';
 import type { InterpreterOutput } from '../types';
-import SettingsPopup from './SettingsPopup';
-import Workspace, { type WorkspaceProps } from './Workspace';
+import type { WorkspaceProps } from './Workspace';
+import Workspace from './Workspace';
+import { createPreparedConductor, type PreparedConductor } from './conductor';
+import { languageMap } from './conductor/evaluators';
 import { ControlBarClearButton } from './controlBar/ControlBarClearButton';
-import { ControlBarRefreshButton } from './controlBar/ControlBarRefreshButton';
 import { ControlBarRunButton } from './controlBar/ControlBarRunButton';
+import ControlBarSelect from './controlBar/ControlBarSelect';
 import testTabContent from './sideContent/TestTab';
-import { getBundleLoader, loadDynamicTabs } from './sideContent/importers';
-import { getBundleDocsUsingVite, getModulesManifest } from './sideContent/importers/importers';
-import type { SideContentTab } from './sideContent/types';
-
-const refreshSuccessToast: ToastProps = {
-  intent: Intent.SUCCESS,
-  message: 'Refresh Successful!'
-};
 
 const errorToast: ToastProps = {
   intent: Intent.DANGER,
@@ -35,39 +26,90 @@ const evalSuccessToast: ToastProps = {
   message: 'Code evaluated successfully!'
 };
 
-const createContextHelper = (onConsoleLog: (arg: string) => void) => {
-  const tempContext = createContext(Chapter.SOURCE_4, Variant.DEFAULT, {}, [], undefined, {
-    rawDisplay(value: any, str: string | undefined) {
-      const valueStr = typeof value === 'string' ? value : stringify(value);
-      if (str !== undefined) {
-        onConsoleLog(`${valueStr} ${str}`);
-      } else {
-        onConsoleLog(valueStr);
-      }
-    },
-  } as any);
-  return tempContext;
-};
-
 const updateEditorLocalStorageValue = throttle((newValue: string) => {
   localStorage.setItem('editorValue', newValue);
 }, 100);
 
-const Playground: React.FC = () => {
-  const consoleLogs = React.useRef<string[]>([]);
+/**
+ * Retrieves the previously selected language from `localStorage`. If the given
+ * language doesn't exist in the current language map, return `null`.
+ */
+function getLangIdFromLocalStorage() {
+  const storedId = localStorage.getItem('langId');
 
-  const [useCompiled, setUseCompiled] = React.useState(!!localStorage.getItem('useCompiled'));
-  const [dynamicTabs, setDynamicTabs] = React.useState<SideContentTab[]>([]);
-  const [selectedTabId, setSelectedTab] = React.useState(testTabContent.id);
-  const [codeContext, setCodeContext] = React.useState<Context>(createContextHelper(str => consoleLogs.current.push(str)));
-  const [editorValue, setEditorValue] = React.useState(localStorage.getItem('editorValue') ?? '');
-  const [replOutput, setReplOutput] = React.useState<InterpreterOutput | null>(null);
-  const [alerts, setAlerts] = React.useState<string[]>([]);
+  if (storedId == null) return null;
+  if (!getLanguageDefinition(languageMap, storedId)) return null;
 
+  return storedId;
+}
+
+/**
+ * Retrieves the previously selected evaluator from `localStorage`. If there is
+ * no current language, or if the current language doesn't support the evaluator,
+ * return `null`.
+ */
+function getEvalIdFromLocalStorage(currentLang: ILanguageDefinition | null | undefined) {
+  if (!currentLang) return null;
+
+  const storedId = localStorage.getItem('evaluatorId');
+  if (storedId == null) return null;
+
+  if (!getEvaluatorDefinition(currentLang, storedId)) return null;
+  return storedId;
+}
+
+async function prepareConductor(
+  evaluator: IEvaluatorDefinition,
+  editor: monaco.editor.IStandaloneCodeEditor | null,
+  consoleOutputRef: React.RefObject<InterpreterOutput[]>,
+  finishCallback: (error?: any) => void
+) {
+  const conductor = await createPreparedConductor(
+    evaluator.path,
+    () => Promise.resolve(editor?.getModel()?.getValue())
+  );
+
+  conductor.hostPlugin.receiveOutput = msg => {
+    consoleOutputRef.current.push({
+      type: 'running',
+      consoleLogs: [msg]
+    });
+  };
+
+  conductor.hostPlugin.receiveError = error => {
+    consoleOutputRef.current.push({
+      type: 'errors',
+      errors: [error as any],
+      consoleLogs: []
+    });
+    finishCallback(error);
+  };
+
+  conductor.hostPlugin.receiveResult = result => {
+    consoleOutputRef.current.push({
+      type: 'result',
+      value: result,
+      consoleLogs: []
+    });
+
+    finishCallback();
+  };
+
+  return conductor;
+}
+
+function translateLanguageName(oldName: string) {
+  oldName = oldName.toLowerCase();
+
+  if (oldName.startsWith('python')) return 'python';
+  if (oldName.startsWith('source')) return 'javascript';
+  if (oldName.startsWith('scheme')) return 'scheme';
+
+  return '';
+}
+
+export default function Playground() {
   const toaster = React.useRef<OverlayToaster>(null);
-
-  const manifestImporter = getModulesManifest;
-  const docsImporter = getBundleDocsUsingVite;
 
   const showToast = (props: ToastProps) => {
     if (toaster.current) {
@@ -78,170 +120,153 @@ const Playground: React.FC = () => {
     }
   };
 
-  const getAutoComplete = async (row: number, col: number, callback: any) => {
-    const [editorNames, displaySuggestions] = await getNames(editorValue, row, col, codeContext, { manifestImporter, docsImporter });
-    if (!displaySuggestions) {
-      callback();
+  const editorRef = React.useRef<monaco.editor.IStandaloneCodeEditor>(null);
+  const [languageId, rawSetLanguageId] = React.useState<string | null>(getLangIdFromLocalStorage());
+
+  function setLanguageId(newId: string) {
+    if (newId === languageId) return;
+    rawSetLanguageId(newId);
+    localStorage.setItem('langId', newId);
+
+    const newLangDef = getLanguageDefinition(languageMap, newId)!;
+
+    if (evaluatorId !== null) {
+      const currentEvaluator = getEvaluatorDefinition(newLangDef, evaluatorId);
+      if (!currentEvaluator) {
+        // We changed to a language that doesn't contain the current evaluator
+        setEvaluatorId(null);
+      }
+    }
+  }
+
+  const languageDef = languageId === null ? null : getLanguageDefinition(languageMap, languageId);
+
+  const [evaluatorId, rawSetEvaluatorId] = React.useState<string | null>(getEvalIdFromLocalStorage(languageDef));
+  const [conductor, setConductor] = React.useState<
+    | PreparedConductor
+    | 'loading'
+    | 'error'
+    | 'not-loaded'
+  >('not-loaded');
+
+  React.useEffect(() => {
+    if (languageDef == null || evaluatorId == null) return;
+
+    const evaluator = getEvaluatorDefinition(languageDef, evaluatorId)!;
+
+    prepareConductor(
+      evaluator,
+      editorRef.current,
+      consoleOutputRef,
+      error => {
+        setIsRunningCode(false);
+
+        if (error) showToast(errorToast);
+        else showToast(evalSuccessToast);
+      }
+    )
+      .then(setConductor)
+      .catch(err => {
+        console.error(err);
+        setConductor('error');
+      });
+  }, [evaluatorId]);
+
+  const [isRunningCode, setIsRunningCode] = React.useState(false);
+
+  const consoleOutputRef = React.useRef<InterpreterOutput[]>([]);
+
+  function setEvaluatorId(newId: string | null) {
+    if (newId === null) {
+      // Clearing evaluator setting should
+      rawSetEvaluatorId(null);
+      localStorage.removeItem('evaluatorId');
+
+      // clear conductor
+      setConductor('not-loaded');
       return;
     }
 
-    const editorSuggestions = editorNames.map((editorName: any) => ({
-      ...editorName,
-      caption: editorName.name,
-      value: editorName.name,
-      score: editorName.score ? editorName.score + 1000 : 1000,
-      name: undefined
-    }));
+    if (newId === evaluatorId || languageDef == null) return;
+    rawSetEvaluatorId(newId);
+    localStorage.setItem('evaluatorId', newId);
+    setConductor('loading');
+  }
 
-    const builtins: Record<string, any> = SourceDocumentation.builtins[Chapter.SOURCE_4];
-    const builtinSuggestions = Object.entries(builtins)
-      .map(([builtin, thing]) => ({
-        ...thing,
-        caption: builtin,
-        value: builtin,
-        score: 100,
-        name: builtin,
-        docHTML: thing.description
-      }));
+  function evalCode() {
+    if (typeof conductor === 'string') return;
 
-    callback(null, [
-      ...builtinSuggestions,
-      ...editorSuggestions
-    ]);
-  };
+    setIsRunningCode(true);
+    consoleOutputRef.current = [];
 
-  const loadTabs = async () => {
-    try {
-      const tabs = await loadDynamicTabs(codeContext, useCompiled);
-      setDynamicTabs(tabs);
+    // File path here doesn't really matter since the fileGetter
+    // just returns the current editor value no matter what
+    conductor.hostPlugin.startEvaluator('/main.txt');
+  }
 
-      const newIds = tabs.map(({ id }) => id);
-      // If the currently selected tab no longer exists,
-      // switch to the default test tab
-      if (!newIds.includes(selectedTabId)) {
-        setSelectedTab(testTabContent.id);
-      }
-      setAlerts(newIds);
-    } catch (error) {
-      showToast(errorToast);
-      console.log(error);
-    }
-  };
-
-  const evalCode = async () => {
-    codeContext.errors = [];
-    codeContext.moduleContexts = mockModuleContext.moduleContexts = {};
-    consoleLogs.current = [];
-
-    const result = await runInContext(editorValue, codeContext, {
-      importOptions: {
-        allowUndefinedImports: true,
-        loadTabs: false,
-        sourceBundleImporter: getBundleLoader(useCompiled),
-        docsImporter,
-        resolverOptions: {
-          manifestImporter
-        }
-      }
-    });
-
-    if (codeContext.errors.length > 0) {
-      showToast(errorToast);
-    } else {
-      loadTabs()
-        .then(() => showToast(evalSuccessToast));
-    }
-
-    if (result.status === 'finished') {
-      setReplOutput({
-        type: 'result',
-        // code: editorValue,
-        consoleLogs: consoleLogs.current,
-        value: stringify(result.value)
-      });
-    } else if (result.status === 'error') {
-      codeContext.errors.forEach(error => {
-        if (error instanceof ModuleInternalError) {
-          console.error(error.error);
-        }
-      });
-
-      setReplOutput({
-        type: 'errors',
-        errors: codeContext.errors,
-        consoleLogs: consoleLogs.current
-      });
-    }
-  };
-
-  const resetEditor = () => {
-    setCodeContext(createContextHelper(str => consoleLogs.current.push(str)));
-    consoleLogs.current = [];
-
-    setEditorValue('');
-    localStorage.setItem('editorValue', '');
-    setDynamicTabs([]);
-    setSelectedTab(testTabContent.id);
-    setReplOutput(null);
-  };
-
-  const onRefresh = () => {
-    loadTabs()
-      .then(() => showToast(refreshSuccessToast))
-      .catch(() => showToast(errorToast));
-  };
+  function resetEditor() {
+    localStorage.removeItem('editorValue');
+    editorRef.current?.getModel()?.setValue('');
+  }
 
   const workspaceProps: WorkspaceProps = {
     controlBarProps: {
       editorButtons: [
-        <Popover
-          key='settings'
-          interactionKind='click'
-          placement="right"
-          content={<SettingsPopup
-            useCompiled={useCompiled}
-            onUseCompiledChange={value => {
-              setUseCompiled(value);
-              localStorage.setItem('useCompiled', value ? 'true' : '');
-            }}
-          />}
-          renderTarget={({ isOpen: _isOpen, ...targetProps }) => (
-            <Tooltip content="Settings">
-              <Button
-                {...targetProps}
-                icon='settings' />
-            </Tooltip>
-          )}
+        <ControlBarRunButton
+          key="eval"
+          handleEditorEval={evalCode}
+          disabled={typeof conductor === 'string' || isRunningCode}
+          tooltip={
+            isRunningCode
+              ? 'Currently evaluating...'
+              : languageId === null
+                ? 'Select a language first'
+                : evaluatorId === null || conductor === 'not-loaded'
+                  ? 'Select an evaluator first'
+                  : conductor === 'loading'
+                    ? 'Loading conductor...'
+                    : conductor === 'error'
+                      ? 'Failed to load conductor'
+                      : undefined
+          }
         />,
-        <ControlBarRunButton handleEditorEval={evalCode} key="eval" />,
-        <ControlBarClearButton onClick={resetEditor}
+        <ControlBarClearButton
+          onClick={resetEditor}
           key="clear"
         />,
-        <ControlBarRefreshButton
-          onClick={onRefresh}
-          key="refresh"
+        <ControlBarSelect
+          key="langSelect"
+          items={Object.values(languageDir)}
+          selected={languageId}
+          onChange={({ id }) => setLanguageId(id)}
+        />,
+        <ControlBarSelect
+          key="evalSelect"
+          disabled={languageDef == null}
+          items={languageDef?.evaluators ?? []}
+          selected={evaluatorId}
+          onChange={({ id }) => setEvaluatorId(id)}
         />
       ]
     },
     replProps: {
-      output: replOutput
+      output: null
     },
-    handlePromptAutocomplete: getAutoComplete,
     handleEditorEval: evalCode,
     handleEditorValueChange(newValue) {
-      setEditorValue(newValue);
       updateEditorLocalStorageValue(newValue);
     },
-    editorValue,
     sideContentProps: {
-      dynamicTabs: [testTabContent, ...dynamicTabs],
-      selectedTabId,
-      onChange: React.useCallback((newId: string) => {
-        setSelectedTab(newId);
-        setAlerts(alerts.filter((id) => id !== newId));
-      }, [alerts]),
-      alerts
-    }
+      dynamicTabs: [testTabContent],
+      selectedTabId: '',
+      onChange: () => { },
+      alerts: []
+    },
+    editorProps: {
+      defaultValue: localStorage.getItem('editorValue') ?? '',
+      language: languageDef ? translateLanguageName(languageDef.name) : '',
+      ref: editorRef
+    },
   };
 
   return (
@@ -250,6 +275,4 @@ const Playground: React.FC = () => {
       <Workspace {...workspaceProps} />
     </div>
   );
-};
-
-export default Playground;
+}

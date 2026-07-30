@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './styles/index.scss';
-import Playground from './components/Playground2';
+import Playground from './components/Playground';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 

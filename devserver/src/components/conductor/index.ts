@@ -19,7 +19,6 @@ export function createConductor(
   onRequestLoadPlugin: (pluginName: string) => Promise<void>,
 ): {
   hostPlugin: BrowserHostPlugin;
-  // csePlugin: CseMachineHostPlugin;
   conduit: IConduit;
   moduleLoaderPlugin: ModuleLoaderWebPlugin;
 } {
