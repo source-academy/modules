@@ -1,97 +1,97 @@
 {
-  "entry": {
-    "kind": "function",
-    "name": "entry",
-    "description": "<p>Returns the entry of a given binary tree.</p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "BinaryTree",
-        "name": "t"
-      }
-    ],
-    "retType": "any"
-  },
-  "is_empty_tree": {
-    "kind": "function",
-    "name": "is_empty_tree",
-    "description": "<p>Returns a boolean value, indicating whether the given\nvalue is an empty binary tree.</p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "unknown",
-        "name": "value"
-      }
-    ],
-    "retType": "boolean"
-  },
-  "is_tree": {
-    "kind": "function",
-    "name": "is_tree",
-    "description": "<p>Returns a boolean value, indicating whether the given\nvalue is a binary tree.</p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "unknown",
-        "name": "value"
-      }
-    ],
-    "retType": "boolean"
-  },
-  "left_branch": {
-    "kind": "function",
-    "name": "left_branch",
-    "description": "<p>Returns the left branch of a given binary tree.</p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "BinaryTree",
-        "name": "t"
-      }
-    ],
-    "retType": "BinaryTree"
-  },
   "make_empty_tree": {
     "kind": "function",
     "name": "make_empty_tree",
-    "description": "<p>Returns an empty binary tree, represented by the empty list null</p>",
+    "description": "<p>No description available</p>",
     "params": [],
-    "retType": "BinaryTree"
+    "retType": "null"
   },
   "make_tree": {
     "kind": "function",
     "name": "make_tree",
-    "description": "<p>Returns a binary tree node composed of the specified left subtree, value and right subtree.</p>",
+    "description": "<p>No description available</p>",
     "params": [
       {
         "paramType": "regular",
-        "type": "any",
+        "type": "unknown",
         "name": "value"
       },
       {
         "paramType": "regular",
-        "type": "BinaryTree",
+        "type": "Pair | null",
         "name": "left"
       },
       {
         "paramType": "regular",
-        "type": "BinaryTree",
+        "type": "Pair | null",
         "name": "right"
       }
     ],
-    "retType": "BinaryTree"
+    "retType": "Pair"
+  },
+  "is_tree": {
+    "kind": "function",
+    "name": "is_tree",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "optional",
+        "type": "unknown",
+        "name": "value"
+      }
+    ],
+    "retType": "boolean"
+  },
+  "is_empty_tree": {
+    "kind": "function",
+    "name": "is_empty_tree",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "optional",
+        "type": "unknown",
+        "name": "value"
+      }
+    ],
+    "retType": "boolean"
+  },
+  "entry": {
+    "kind": "function",
+    "name": "entry",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "Pair | null",
+        "name": "t"
+      }
+    ],
+    "retType": "unknown"
+  },
+  "left_branch": {
+    "kind": "function",
+    "name": "left_branch",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "Pair | null",
+        "name": "t"
+      }
+    ],
+    "retType": "Pair | null"
   },
   "right_branch": {
     "kind": "function",
     "name": "right_branch",
-    "description": "<p>Returns the right branch of a given binary tree.</p>",
+    "description": "<p>No description available</p>",
     "params": [
       {
         "paramType": "regular",
-        "type": "BinaryTree",
+        "type": "Pair | null",
         "name": "t"
       }
     ],
-    "retType": "BinaryTree"
+    "retType": "Pair | null"
   }
 }

@@ -19,7 +19,7 @@
     "params": [
       {
         "paramType": "regular",
-        "type": "() => boolean",
+        "type": "Object",
         "name": "pred"
       }
     ],
@@ -233,7 +233,7 @@
     "params": [
       {
         "paramType": "regular",
-        "type": "(args: any[]) => any",
+        "type": "Object",
         "name": "fn"
       }
     ],

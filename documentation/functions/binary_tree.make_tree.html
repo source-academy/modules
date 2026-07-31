@@ -14,30 +14,15 @@
 <section class="tsd-panel">
 <ul class="tsd-signatures">
 <li class="">
-<div class="tsd-signature tsd-anchor-link" id="make_tree"><span class="tsd-kind-call-signature">make_tree</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">value</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">left</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">BinaryTree</span><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">right</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">BinaryTree</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">BinaryTree</span><a href="#make_tree" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-signature tsd-anchor-link" id="make_tree"><span class="tsd-kind-call-signature">make_tree</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">value</span><span class="tsd-signature-symbol">:</span> unknown<span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">left</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Pair</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">,</span> <span class="tsd-kind-parameter">right</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Pair</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Pair</span><a href="#make_tree" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
 <div class="tsd-description">
-<div class="tsd-comment tsd-typography"><p>Returns a binary tree node composed of the specified left subtree, value and right subtree.</p>
-</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
-<li><span><span class="tsd-kind-parameter">value</span>: <span class="tsd-signature-type">any</span></span>
-<div class="tsd-comment tsd-typography"><p>Value to be stored in the node</p>
-</div></li>
-<li><span><span class="tsd-kind-parameter">left</span>: <span class="tsd-signature-type">BinaryTree</span></span>
-<div class="tsd-comment tsd-typography"><p>Left subtree of the node</p>
-</div></li>
-<li><span><span class="tsd-kind-parameter">right</span>: <span class="tsd-signature-type">BinaryTree</span></span>
-<div class="tsd-comment tsd-typography"><p>Right subtree of the node</p>
-</div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">BinaryTree</span></h4><p>A binary tree</p>
-
-<div class="tsd-comment tsd-typography">
-<div class="tsd-tag-example">
-<h4 class="tsd-anchor-link" id="example">Example<a href="#example" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><pre><code><span class="hl-7">const</span><span class="hl-1"> </span><span class="hl-8">tree</span><span class="hl-1"> = </span><span class="hl-4">make_tree</span><span class="hl-1">(</span><span class="hl-5">1</span><span class="hl-1">, </span><span class="hl-4">make_empty_tree</span><span class="hl-1">(), </span><span class="hl-4">make_empty_tree</span><span class="hl-1">());</span><br/><span class="hl-4">display</span><span class="hl-1">(</span><span class="hl-2">tree</span><span class="hl-1">); </span><span class="hl-6">// Shows &quot;[1, [null, [null, null]]]&quot; in the REPL</span>
-</code><button>Copy</button></pre>
-
-</div></div></div></li></ul></section></div>
+<li><span><span class="tsd-kind-parameter">value</span>: unknown</span></li>
+<li><span><span class="tsd-kind-parameter">left</span>: <span class="tsd-signature-type">Pair</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">null</span></span></li>
+<li><span><span class="tsd-kind-parameter">right</span>: <span class="tsd-signature-type">Pair</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">null</span></span></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Pair</span></h4></div></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

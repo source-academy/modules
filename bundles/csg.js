@@ -9,41 +9,37 @@ export default require => {
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __propIsEnum = Object.prototype.propertyIsEnumerable;
+  var __reflectGet = Reflect.get;
+  var __knownSymbol = (name, symbol) => (symbol = Symbol[name]) ? symbol : Symbol.for("Symbol." + name);
   var __defNormalProp = (obj, key, value) => (key in obj) ? __defProp(obj, key, {
     enumerable: true,
     configurable: true,
     writable: true,
     value
   }) : obj[key] = value;
-  var __spreadValues = (a, b) => {
-    for (var prop in b || (b = {})) if (__hasOwnProp.call(b, prop)) __defNormalProp(a, prop, b[prop]);
+  var __spreadValues = (a3, b) => {
+    for (var prop in b || (b = {})) if (__hasOwnProp.call(b, prop)) __defNormalProp(a3, prop, b[prop]);
     if (__getOwnPropSymbols) for (var prop of __getOwnPropSymbols(b)) {
-      if (__propIsEnum.call(b, prop)) __defNormalProp(a, prop, b[prop]);
+      if (__propIsEnum.call(b, prop)) __defNormalProp(a3, prop, b[prop]);
     }
-    return a;
+    return a3;
   };
-  var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
-  var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
-  }) : x)(function (x) {
-    if (typeof require !== "undefined") return require.apply(this, arguments);
-    throw Error('Dynamic require of "' + x + '" is not supported');
-  });
+  var __spreadProps = (a3, b) => __defProps(a3, __getOwnPropDescs(b));
   var __esm = (fn, res, err) => function __init() {
     if (err) throw err[0];
     try {
       return (fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res);
-    } catch (e) {
-      throw (err = [e], e);
+    } catch (e5) {
+      throw (err = [e5], e5);
     }
   };
-  var __commonJS = (cb, mod) => function __require2() {
+  var __commonJS = (cb, mod) => function __require() {
     try {
       return (mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = {
         exports: {}
       }).exports, mod), mod.exports);
-    } catch (e) {
-      throw (mod = 0, e);
+    } catch (e5) {
+      throw (mod = 0, e5);
     }
   };
   var __export = (target, all) => {
@@ -68,31 +64,62 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
+  var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  var __superGet = (cls, obj, key) => __reflectGet(__getProtoOf(cls), key, obj);
   var __async = (__this, __arguments, generator) => {
     return new Promise((resolve, reject) => {
       var fulfilled = value => {
         try {
           step(generator.next(value));
-        } catch (e) {
-          reject(e);
+        } catch (e5) {
+          reject(e5);
         }
       };
       var rejected = value => {
         try {
           step(generator.throw(value));
-        } catch (e) {
-          reject(e);
+        } catch (e5) {
+          reject(e5);
         }
       };
       var step = x => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
       step((generator = generator.apply(__this, __arguments)).next());
     });
   };
+  var __await = function (promise, isYieldStar) {
+    this[0] = promise;
+    this[1] = isYieldStar;
+  };
+  var __asyncGenerator = (__this, __arguments, generator) => {
+    var resume = (k, v, yes, no) => {
+      try {
+        var x = generator[k](v), isAwait = (v = x.value) instanceof __await, done = x.done;
+        Promise.resolve(isAwait ? v[0] : v).then(y => isAwait ? resume(k === "return" ? k : "next", v[1] ? {
+          done: y.done,
+          value: y.value
+        } : y, yes, no) : yes({
+          value: y,
+          done
+        })).catch(e5 => resume("throw", e5, yes, no));
+      } catch (e5) {
+        no(e5);
+      }
+    }, method = (k, call, wait, clear) => it[k] = x => (call = new Promise((yes, no, run) => (run = () => resume(k, x, yes, no), q ? q.then(run) : run())), clear = () => q === wait && (q = 0), q = wait = call.then(clear, clear), call), q, it = {};
+    return (generator = generator.apply(__this, __arguments), it[__knownSymbol("asyncIterator")] = () => it, method("next"), method("throw"), method("return"), it);
+  };
   var init_define_process = __esm({
     "<define:process>"() {}
   });
+  var require_flatten = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/utils/flatten.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var flatten = arr => arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
+      module.exports = flatten;
+    }
+  });
   var require_clone = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/clone.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/clone.js"(exports, module) {
       "use strict";
       init_define_process();
       var clone = geometry => Object.assign({}, geometry);
@@ -103,23 +130,23 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/mat4/add.js"(exports, module) {
       "use strict";
       init_define_process();
-      var add = (out, a, b) => {
-        out[0] = a[0] + b[0];
-        out[1] = a[1] + b[1];
-        out[2] = a[2] + b[2];
-        out[3] = a[3] + b[3];
-        out[4] = a[4] + b[4];
-        out[5] = a[5] + b[5];
-        out[6] = a[6] + b[6];
-        out[7] = a[7] + b[7];
-        out[8] = a[8] + b[8];
-        out[9] = a[9] + b[9];
-        out[10] = a[10] + b[10];
-        out[11] = a[11] + b[11];
-        out[12] = a[12] + b[12];
-        out[13] = a[13] + b[13];
-        out[14] = a[14] + b[14];
-        out[15] = a[15] + b[15];
+      var add = (out, a3, b) => {
+        out[0] = a3[0] + b[0];
+        out[1] = a3[1] + b[1];
+        out[2] = a3[2] + b[2];
+        out[3] = a3[3] + b[3];
+        out[4] = a3[4] + b[4];
+        out[5] = a3[5] + b[5];
+        out[6] = a3[6] + b[6];
+        out[7] = a3[7] + b[7];
+        out[8] = a3[8] + b[8];
+        out[9] = a3[9] + b[9];
+        out[10] = a3[10] + b[10];
+        out[11] = a3[11] + b[11];
+        out[12] = a3[12] + b[12];
+        out[13] = a3[13] + b[13];
+        out[14] = a3[14] + b[14];
+        out[15] = a3[15] + b[15];
         return out;
       };
       module.exports = add;
@@ -250,7 +277,7 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/mat4/equals.js"(exports, module) {
       "use strict";
       init_define_process();
-      var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3] && a[4] === b[4] && a[5] === b[5] && a[6] === b[6] && a[7] === b[7] && a[8] === b[8] && a[9] === b[9] && a[10] === b[10] && a[11] === b[11] && a[12] === b[12] && a[13] === b[13] && a[14] === b[14] && a[15] === b[15];
+      var equals = (a3, b) => a3[0] === b[0] && a3[1] === b[1] && a3[2] === b[2] && a3[3] === b[3] && a3[4] === b[4] && a3[5] === b[5] && a3[6] === b[6] && a3[7] === b[7] && a3[8] === b[8] && a3[9] === b[9] && a3[10] === b[10] && a3[11] === b[11] && a3[12] === b[12] && a3[13] === b[13] && a3[14] === b[14] && a3[15] === b[15];
       module.exports = equals;
     }
   });
@@ -273,7 +300,7 @@ export default require => {
       "use strict";
       init_define_process();
       var {NEPS} = require_constants();
-      var rezero = n => Math.abs(n) < NEPS ? 0 : n;
+      var rezero = n3 => Math.abs(n3) < NEPS ? 0 : n3;
       var sin = radians => rezero(Math.sin(radians));
       var cos = radians => rezero(Math.cos(radians));
       module.exports = {
@@ -325,20 +352,20 @@ export default require => {
         x *= len;
         y *= len;
         z *= len;
-        const s = sin(rad);
-        const c = cos(rad);
-        const t = 1 - c;
-        out[0] = x * x * t + c;
-        out[1] = y * x * t + z * s;
-        out[2] = z * x * t - y * s;
+        const s5 = sin(rad);
+        const c2 = cos(rad);
+        const t4 = 1 - c2;
+        out[0] = x * x * t4 + c2;
+        out[1] = y * x * t4 + z * s5;
+        out[2] = z * x * t4 - y * s5;
         out[3] = 0;
-        out[4] = x * y * t - z * s;
-        out[5] = y * y * t + c;
-        out[6] = z * y * t + x * s;
+        out[4] = x * y * t4 - z * s5;
+        out[5] = y * y * t4 + c2;
+        out[6] = z * y * t4 + x * s5;
         out[7] = 0;
-        out[8] = x * z * t + y * s;
-        out[9] = y * z * t - x * s;
-        out[10] = z * z * t + c;
+        out[8] = x * z * t4 + y * s5;
+        out[9] = y * z * t4 - x * s5;
+        out[10] = z * z * t4 + c2;
         out[11] = 0;
         out[12] = 0;
         out[13] = 0;
@@ -479,10 +506,10 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/vec3/add.js"(exports, module) {
       "use strict";
       init_define_process();
-      var add = (out, a, b) => {
-        out[0] = a[0] + b[0];
-        out[1] = a[1] + b[1];
-        out[2] = a[2] + b[2];
+      var add = (out, a3, b) => {
+        out[0] = a3[0] + b[0];
+        out[1] = a3[1] + b[1];
+        out[2] = a3[2] + b[2];
         return out;
       };
       module.exports = add;
@@ -492,7 +519,7 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/vec3/dot.js"(exports, module) {
       "use strict";
       init_define_process();
-      var dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+      var dot = (a3, b) => a3[0] * b[0] + a3[1] * b[1] + a3[2] * b[2];
       module.exports = dot;
     }
   });
@@ -501,17 +528,17 @@ export default require => {
       "use strict";
       init_define_process();
       var dot = require_dot();
-      var angle = (a, b) => {
-        const ax = a[0];
-        const ay = a[1];
-        const az = a[2];
+      var angle = (a3, b) => {
+        const ax = a3[0];
+        const ay = a3[1];
+        const az = a3[2];
         const bx = b[0];
         const by = b[1];
         const bz = b[2];
         const mag1 = Math.sqrt(ax * ax + ay * ay + az * az);
         const mag2 = Math.sqrt(bx * bx + by * by + bz * bz);
         const mag = mag1 * mag2;
-        const cosine = mag && dot(a, b) / mag;
+        const cosine = mag && dot(a3, b) / mag;
         return Math.acos(Math.min(Math.max(cosine, -1), 1));
       };
       module.exports = angle;
@@ -557,10 +584,10 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/vec3/cross.js"(exports, module) {
       "use strict";
       init_define_process();
-      var cross = (out, a, b) => {
-        const ax = a[0];
-        const ay = a[1];
-        const az = a[2];
+      var cross = (out, a3, b) => {
+        const ax = a3[0];
+        const ay = a3[1];
+        const az = a3[2];
         const bx = b[0];
         const by = b[1];
         const bz = b[2];
@@ -576,10 +603,10 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/vec3/distance.js"(exports, module) {
       "use strict";
       init_define_process();
-      var distance = (a, b) => {
-        const x = b[0] - a[0];
-        const y = b[1] - a[1];
-        const z = b[2] - a[2];
+      var distance = (a3, b) => {
+        const x = b[0] - a3[0];
+        const y = b[1] - a3[1];
+        const z = b[2] - a3[2];
         return Math.sqrt(x * x + y * y + z * z);
       };
       module.exports = distance;
@@ -589,10 +616,10 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/vec3/divide.js"(exports, module) {
       "use strict";
       init_define_process();
-      var divide = (out, a, b) => {
-        out[0] = a[0] / b[0];
-        out[1] = a[1] / b[1];
-        out[2] = a[2] / b[2];
+      var divide = (out, a3, b) => {
+        out[0] = a3[0] / b[0];
+        out[1] = a3[1] / b[1];
+        out[2] = a3[2] / b[2];
         return out;
       };
       module.exports = divide;
@@ -602,7 +629,7 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/vec3/equals.js"(exports, module) {
       "use strict";
       init_define_process();
-      var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
+      var equals = (a3, b) => a3[0] === b[0] && a3[1] === b[1] && a3[2] === b[2];
       module.exports = equals;
     }
   });
@@ -664,10 +691,10 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/vec3/lerp.js"(exports, module) {
       "use strict";
       init_define_process();
-      var lerp = (out, a, b, t) => {
-        out[0] = a[0] + t * (b[0] - a[0]);
-        out[1] = a[1] + t * (b[1] - a[1]);
-        out[2] = a[2] + t * (b[2] - a[2]);
+      var lerp = (out, a3, b, t4) => {
+        out[0] = a3[0] + t4 * (b[0] - a3[0]);
+        out[1] = a3[1] + t4 * (b[1] - a3[1]);
+        out[2] = a3[2] + t4 * (b[2] - a3[2]);
         return out;
       };
       module.exports = lerp;
@@ -677,10 +704,10 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/vec3/max.js"(exports, module) {
       "use strict";
       init_define_process();
-      var max = (out, a, b) => {
-        out[0] = Math.max(a[0], b[0]);
-        out[1] = Math.max(a[1], b[1]);
-        out[2] = Math.max(a[2], b[2]);
+      var max = (out, a3, b) => {
+        out[0] = Math.max(a3[0], b[0]);
+        out[1] = Math.max(a3[1], b[1]);
+        out[2] = Math.max(a3[2], b[2]);
         return out;
       };
       module.exports = max;
@@ -690,10 +717,10 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/vec3/min.js"(exports, module) {
       "use strict";
       init_define_process();
-      var min = (out, a, b) => {
-        out[0] = Math.min(a[0], b[0]);
-        out[1] = Math.min(a[1], b[1]);
-        out[2] = Math.min(a[2], b[2]);
+      var min = (out, a3, b) => {
+        out[0] = Math.min(a3[0], b[0]);
+        out[1] = Math.min(a3[1], b[1]);
+        out[2] = Math.min(a3[2], b[2]);
         return out;
       };
       module.exports = min;
@@ -703,10 +730,10 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/vec3/multiply.js"(exports, module) {
       "use strict";
       init_define_process();
-      var multiply = (out, a, b) => {
-        out[0] = a[0] * b[0];
-        out[1] = a[1] * b[1];
-        out[2] = a[2] * b[2];
+      var multiply = (out, a3, b) => {
+        out[0] = a3[0] * b[0];
+        out[1] = a3[1] * b[1];
+        out[2] = a3[2] * b[2];
         return out;
       };
       module.exports = multiply;
@@ -767,17 +794,17 @@ export default require => {
       "use strict";
       init_define_process();
       var rotateX = (out, vector, origin, radians) => {
-        const p = [];
-        const r = [];
-        p[0] = vector[0] - origin[0];
-        p[1] = vector[1] - origin[1];
-        p[2] = vector[2] - origin[2];
-        r[0] = p[0];
-        r[1] = p[1] * Math.cos(radians) - p[2] * Math.sin(radians);
-        r[2] = p[1] * Math.sin(radians) + p[2] * Math.cos(radians);
-        out[0] = r[0] + origin[0];
-        out[1] = r[1] + origin[1];
-        out[2] = r[2] + origin[2];
+        const p2 = [];
+        const r2 = [];
+        p2[0] = vector[0] - origin[0];
+        p2[1] = vector[1] - origin[1];
+        p2[2] = vector[2] - origin[2];
+        r2[0] = p2[0];
+        r2[1] = p2[1] * Math.cos(radians) - p2[2] * Math.sin(radians);
+        r2[2] = p2[1] * Math.sin(radians) + p2[2] * Math.cos(radians);
+        out[0] = r2[0] + origin[0];
+        out[1] = r2[1] + origin[1];
+        out[2] = r2[2] + origin[2];
         return out;
       };
       module.exports = rotateX;
@@ -788,17 +815,17 @@ export default require => {
       "use strict";
       init_define_process();
       var rotateY = (out, vector, origin, radians) => {
-        const p = [];
-        const r = [];
-        p[0] = vector[0] - origin[0];
-        p[1] = vector[1] - origin[1];
-        p[2] = vector[2] - origin[2];
-        r[0] = p[2] * Math.sin(radians) + p[0] * Math.cos(radians);
-        r[1] = p[1];
-        r[2] = p[2] * Math.cos(radians) - p[0] * Math.sin(radians);
-        out[0] = r[0] + origin[0];
-        out[1] = r[1] + origin[1];
-        out[2] = r[2] + origin[2];
+        const p2 = [];
+        const r2 = [];
+        p2[0] = vector[0] - origin[0];
+        p2[1] = vector[1] - origin[1];
+        p2[2] = vector[2] - origin[2];
+        r2[0] = p2[2] * Math.sin(radians) + p2[0] * Math.cos(radians);
+        r2[1] = p2[1];
+        r2[2] = p2[2] * Math.cos(radians) - p2[0] * Math.sin(radians);
+        out[0] = r2[0] + origin[0];
+        out[1] = r2[1] + origin[1];
+        out[2] = r2[2] + origin[2];
         return out;
       };
       module.exports = rotateY;
@@ -809,14 +836,14 @@ export default require => {
       "use strict";
       init_define_process();
       var rotateZ = (out, vector, origin, radians) => {
-        const p = [];
-        const r = [];
-        p[0] = vector[0] - origin[0];
-        p[1] = vector[1] - origin[1];
-        r[0] = p[0] * Math.cos(radians) - p[1] * Math.sin(radians);
-        r[1] = p[0] * Math.sin(radians) + p[1] * Math.cos(radians);
-        out[0] = r[0] + origin[0];
-        out[1] = r[1] + origin[1];
+        const p2 = [];
+        const r2 = [];
+        p2[0] = vector[0] - origin[0];
+        p2[1] = vector[1] - origin[1];
+        r2[0] = p2[0] * Math.cos(radians) - p2[1] * Math.sin(radians);
+        r2[1] = p2[0] * Math.sin(radians) + p2[1] * Math.cos(radians);
+        out[0] = r2[0] + origin[0];
+        out[1] = r2[1] + origin[1];
         out[2] = vector[2];
         return out;
       };
@@ -853,10 +880,10 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/vec3/squaredDistance.js"(exports, module) {
       "use strict";
       init_define_process();
-      var squaredDistance = (a, b) => {
-        const x = b[0] - a[0];
-        const y = b[1] - a[1];
-        const z = b[2] - a[2];
+      var squaredDistance = (a3, b) => {
+        const x = b[0] - a3[0];
+        const y = b[1] - a3[1];
+        const z = b[2] - a3[2];
         return x * x + y * y + z * z;
       };
       module.exports = squaredDistance;
@@ -879,10 +906,10 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/vec3/subtract.js"(exports, module) {
       "use strict";
       init_define_process();
-      var subtract2 = (out, a, b) => {
-        out[0] = a[0] - b[0];
-        out[1] = a[1] - b[1];
-        out[2] = a[2] - b[2];
+      var subtract2 = (out, a3, b) => {
+        out[0] = a3[0] - b[0];
+        out[1] = a3[1] - b[1];
+        out[2] = a3[2] - b[2];
         return out;
       };
       module.exports = subtract2;
@@ -994,19 +1021,19 @@ export default require => {
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var fromXRotation = (out, radians) => {
-        const s = sin(radians);
-        const c = cos(radians);
+        const s5 = sin(radians);
+        const c2 = cos(radians);
         out[0] = 1;
         out[1] = 0;
         out[2] = 0;
         out[3] = 0;
         out[4] = 0;
-        out[5] = c;
-        out[6] = s;
+        out[5] = c2;
+        out[6] = s5;
         out[7] = 0;
         out[8] = 0;
-        out[9] = -s;
-        out[10] = c;
+        out[9] = -s5;
+        out[10] = c2;
         out[11] = 0;
         out[12] = 0;
         out[13] = 0;
@@ -1023,19 +1050,19 @@ export default require => {
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var fromYRotation = (out, radians) => {
-        const s = sin(radians);
-        const c = cos(radians);
-        out[0] = c;
+        const s5 = sin(radians);
+        const c2 = cos(radians);
+        out[0] = c2;
         out[1] = 0;
-        out[2] = -s;
+        out[2] = -s5;
         out[3] = 0;
         out[4] = 0;
         out[5] = 1;
         out[6] = 0;
         out[7] = 0;
-        out[8] = s;
+        out[8] = s5;
         out[9] = 0;
-        out[10] = c;
+        out[10] = c2;
         out[11] = 0;
         out[12] = 0;
         out[13] = 0;
@@ -1052,14 +1079,14 @@ export default require => {
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var fromZRotation = (out, radians) => {
-        const s = sin(radians);
-        const c = cos(radians);
-        out[0] = c;
-        out[1] = s;
+        const s5 = sin(radians);
+        const c2 = cos(radians);
+        out[0] = c2;
+        out[1] = s5;
         out[2] = 0;
         out[3] = 0;
-        out[4] = -s;
-        out[5] = c;
+        out[4] = -s5;
+        out[5] = c2;
         out[6] = 0;
         out[7] = 0;
         out[8] = 0;
@@ -1100,8 +1127,8 @@ export default require => {
         const x = matrix[4] * matrix[9] - matrix[8] * matrix[5];
         const y = matrix[8] * matrix[1] - matrix[0] * matrix[9];
         const z = matrix[0] * matrix[5] - matrix[4] * matrix[1];
-        const d = x * matrix[2] + y * matrix[6] + z * matrix[10];
-        return d < 0;
+        const d2 = x * matrix[2] + y * matrix[6] + z * matrix[10];
+        return d2 < 0;
       };
       module.exports = isMirroring;
     }
@@ -1137,23 +1164,23 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/mat4/multiply.js"(exports, module) {
       "use strict";
       init_define_process();
-      var multiply = (out, a, b) => {
-        const a00 = a[0];
-        const a01 = a[1];
-        const a02 = a[2];
-        const a03 = a[3];
-        const a10 = a[4];
-        const a11 = a[5];
-        const a12 = a[6];
-        const a13 = a[7];
-        const a20 = a[8];
-        const a21 = a[9];
-        const a22 = a[10];
-        const a23 = a[11];
-        const a30 = a[12];
-        const a31 = a[13];
-        const a32 = a[14];
-        const a33 = a[15];
+      var multiply = (out, a3, b) => {
+        const a00 = a3[0];
+        const a01 = a3[1];
+        const a02 = a3[2];
+        const a03 = a3[3];
+        const a10 = a3[4];
+        const a11 = a3[5];
+        const a12 = a3[6];
+        const a13 = a3[7];
+        const a20 = a3[8];
+        const a21 = a3[9];
+        const a22 = a3[10];
+        const a23 = a3[11];
+        const a30 = a3[12];
+        const a31 = a3[13];
+        const a32 = a3[14];
+        const a33 = a3[15];
         let b0 = b[0];
         let b1 = b[1];
         let b2 = b[2];
@@ -1208,9 +1235,9 @@ export default require => {
         x *= len;
         y *= len;
         z *= len;
-        const s = sin(radians);
-        const c = cos(radians);
-        const t = 1 - c;
+        const s5 = sin(radians);
+        const c2 = cos(radians);
+        const t4 = 1 - c2;
         const a00 = matrix[0];
         const a01 = matrix[1];
         const a02 = matrix[2];
@@ -1223,15 +1250,15 @@ export default require => {
         const a21 = matrix[9];
         const a22 = matrix[10];
         const a23 = matrix[11];
-        const b00 = x * x * t + c;
-        const b01 = y * x * t + z * s;
-        const b02 = z * x * t - y * s;
-        const b10 = x * y * t - z * s;
-        const b11 = y * y * t + c;
-        const b12 = z * y * t + x * s;
-        const b20 = x * z * t + y * s;
-        const b21 = y * z * t - x * s;
-        const b22 = z * z * t + c;
+        const b00 = x * x * t4 + c2;
+        const b01 = y * x * t4 + z * s5;
+        const b02 = z * x * t4 - y * s5;
+        const b10 = x * y * t4 - z * s5;
+        const b11 = y * y * t4 + c2;
+        const b12 = z * y * t4 + x * s5;
+        const b20 = x * z * t4 + y * s5;
+        const b21 = y * z * t4 - x * s5;
+        const b22 = z * z * t4 + c2;
         out[0] = a00 * b00 + a10 * b01 + a20 * b02;
         out[1] = a01 * b00 + a11 * b01 + a21 * b02;
         out[2] = a02 * b00 + a12 * b01 + a22 * b02;
@@ -1261,8 +1288,8 @@ export default require => {
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var rotateX = (out, matrix, radians) => {
-        const s = sin(radians);
-        const c = cos(radians);
+        const s5 = sin(radians);
+        const c2 = cos(radians);
         const a10 = matrix[4];
         const a11 = matrix[5];
         const a12 = matrix[6];
@@ -1281,14 +1308,14 @@ export default require => {
           out[14] = matrix[14];
           out[15] = matrix[15];
         }
-        out[4] = a10 * c + a20 * s;
-        out[5] = a11 * c + a21 * s;
-        out[6] = a12 * c + a22 * s;
-        out[7] = a13 * c + a23 * s;
-        out[8] = a20 * c - a10 * s;
-        out[9] = a21 * c - a11 * s;
-        out[10] = a22 * c - a12 * s;
-        out[11] = a23 * c - a13 * s;
+        out[4] = a10 * c2 + a20 * s5;
+        out[5] = a11 * c2 + a21 * s5;
+        out[6] = a12 * c2 + a22 * s5;
+        out[7] = a13 * c2 + a23 * s5;
+        out[8] = a20 * c2 - a10 * s5;
+        out[9] = a21 * c2 - a11 * s5;
+        out[10] = a22 * c2 - a12 * s5;
+        out[11] = a23 * c2 - a13 * s5;
         return out;
       };
       module.exports = rotateX;
@@ -1300,8 +1327,8 @@ export default require => {
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var rotateY = (out, matrix, radians) => {
-        const s = sin(radians);
-        const c = cos(radians);
+        const s5 = sin(radians);
+        const c2 = cos(radians);
         const a00 = matrix[0];
         const a01 = matrix[1];
         const a02 = matrix[2];
@@ -1320,14 +1347,14 @@ export default require => {
           out[14] = matrix[14];
           out[15] = matrix[15];
         }
-        out[0] = a00 * c - a20 * s;
-        out[1] = a01 * c - a21 * s;
-        out[2] = a02 * c - a22 * s;
-        out[3] = a03 * c - a23 * s;
-        out[8] = a00 * s + a20 * c;
-        out[9] = a01 * s + a21 * c;
-        out[10] = a02 * s + a22 * c;
-        out[11] = a03 * s + a23 * c;
+        out[0] = a00 * c2 - a20 * s5;
+        out[1] = a01 * c2 - a21 * s5;
+        out[2] = a02 * c2 - a22 * s5;
+        out[3] = a03 * c2 - a23 * s5;
+        out[8] = a00 * s5 + a20 * c2;
+        out[9] = a01 * s5 + a21 * c2;
+        out[10] = a02 * s5 + a22 * c2;
+        out[11] = a03 * s5 + a23 * c2;
         return out;
       };
       module.exports = rotateY;
@@ -1339,8 +1366,8 @@ export default require => {
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var rotateZ = (out, matrix, radians) => {
-        const s = sin(radians);
-        const c = cos(radians);
+        const s5 = sin(radians);
+        const c2 = cos(radians);
         const a00 = matrix[0];
         const a01 = matrix[1];
         const a02 = matrix[2];
@@ -1359,14 +1386,14 @@ export default require => {
           out[14] = matrix[14];
           out[15] = matrix[15];
         }
-        out[0] = a00 * c + a10 * s;
-        out[1] = a01 * c + a11 * s;
-        out[2] = a02 * c + a12 * s;
-        out[3] = a03 * c + a13 * s;
-        out[4] = a10 * c - a00 * s;
-        out[5] = a11 * c - a01 * s;
-        out[6] = a12 * c - a02 * s;
-        out[7] = a13 * c - a03 * s;
+        out[0] = a00 * c2 + a10 * s5;
+        out[1] = a01 * c2 + a11 * s5;
+        out[2] = a02 * c2 + a12 * s5;
+        out[3] = a03 * c2 + a13 * s5;
+        out[4] = a10 * c2 - a00 * s5;
+        out[5] = a11 * c2 - a01 * s5;
+        out[6] = a12 * c2 - a02 * s5;
+        out[7] = a13 * c2 - a03 * s5;
         return out;
       };
       module.exports = rotateZ;
@@ -1405,23 +1432,23 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/mat4/subtract.js"(exports, module) {
       "use strict";
       init_define_process();
-      var subtract2 = (out, a, b) => {
-        out[0] = a[0] - b[0];
-        out[1] = a[1] - b[1];
-        out[2] = a[2] - b[2];
-        out[3] = a[3] - b[3];
-        out[4] = a[4] - b[4];
-        out[5] = a[5] - b[5];
-        out[6] = a[6] - b[6];
-        out[7] = a[7] - b[7];
-        out[8] = a[8] - b[8];
-        out[9] = a[9] - b[9];
-        out[10] = a[10] - b[10];
-        out[11] = a[11] - b[11];
-        out[12] = a[12] - b[12];
-        out[13] = a[13] - b[13];
-        out[14] = a[14] - b[14];
-        out[15] = a[15] - b[15];
+      var subtract2 = (out, a3, b) => {
+        out[0] = a3[0] - b[0];
+        out[1] = a3[1] - b[1];
+        out[2] = a3[2] - b[2];
+        out[3] = a3[3] - b[3];
+        out[4] = a3[4] - b[4];
+        out[5] = a3[5] - b[5];
+        out[6] = a3[6] - b[6];
+        out[7] = a3[7] - b[7];
+        out[8] = a3[8] - b[8];
+        out[9] = a3[9] - b[9];
+        out[10] = a3[10] - b[10];
+        out[11] = a3[11] - b[11];
+        out[12] = a3[12] - b[12];
+        out[13] = a3[13] - b[13];
+        out[14] = a3[14] - b[14];
+        out[15] = a3[15] - b[15];
         return out;
       };
       module.exports = subtract2;
@@ -1431,7 +1458,7 @@ export default require => {
     "../../../node_modules/@jscad/modeling/src/maths/mat4/toString.js"(exports, module) {
       "use strict";
       init_define_process();
-      var toString = mat => mat.map(n => n.toFixed(7)).toString();
+      var toString = mat => mat.map(n3 => n3.toFixed(7)).toString();
       module.exports = toString;
     }
   });
@@ -1533,1029 +1560,20 @@ export default require => {
     }
   });
   var require_create3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/create.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/create.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_mat4();
-      var create = polygons => {
-        if (polygons === void 0) {
-          polygons = [];
+      var create = sides => {
+        if (sides === void 0) {
+          sides = [];
         }
         return {
-          polygons,
+          sides,
           transforms: mat42.create()
         };
       };
       module.exports = create;
-    }
-  });
-  var require_create4 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/create.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = vertices => {
-        if (vertices === void 0 || vertices.length < 3) {
-          vertices = [];
-        }
-        return {
-          vertices
-        };
-      };
-      module.exports = create;
-    }
-  });
-  var require_clone4 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/clone.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = require_create4();
-      var vec3 = require_vec3();
-      var clone = (...params) => {
-        let out;
-        let poly3;
-        if (params.length === 1) {
-          out = create();
-          poly3 = params[0];
-        } else {
-          out = params[0];
-          poly3 = params[1];
-        }
-        out.vertices = poly3.vertices.map(vec => vec3.clone(vec));
-        return out;
-      };
-      module.exports = clone;
-    }
-  });
-  var require_fromPoints = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/fromPoints.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec3 = require_vec3();
-      var create = require_create4();
-      var fromPoints = points => {
-        const vertices = points.map(point => vec3.clone(point));
-        return create(vertices);
-      };
-      module.exports = fromPoints;
-    }
-  });
-  var require_fromPointsAndPlane = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/fromPointsAndPlane.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = require_create4();
-      var fromPointsAndPlane = (vertices, plane, color = void 0) => {
-        const poly = create(vertices);
-        poly.plane = plane;
-        return color ? __spreadProps(__spreadValues({}, poly), {
-          color
-        }) : poly;
-      };
-      module.exports = fromPointsAndPlane;
-    }
-  });
-  var require_create5 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/create.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = () => [0, 0, 0, 0];
-      module.exports = create;
-    }
-  });
-  var require_clone5 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/clone.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = require_create5();
-      var clone = vector => {
-        const out = create();
-        out[0] = vector[0];
-        out[1] = vector[1];
-        out[2] = vector[2];
-        out[3] = vector[3];
-        return out;
-      };
-      module.exports = clone;
-    }
-  });
-  var require_copy3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/copy.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var copy = (out, vector) => {
-        out[0] = vector[0];
-        out[1] = vector[1];
-        out[2] = vector[2];
-        out[3] = vector[3];
-        return out;
-      };
-      module.exports = copy;
-    }
-  });
-  var require_equals3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/equals.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
-      module.exports = equals;
-    }
-  });
-  var require_flip = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/flip.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flip = (out, plane) => {
-        out[0] = -plane[0];
-        out[1] = -plane[1];
-        out[2] = -plane[2];
-        out[3] = -plane[3];
-        return out;
-      };
-      module.exports = flip;
-    }
-  });
-  var require_fromNormalAndPoint = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/fromNormalAndPoint.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec3 = require_vec3();
-      var fromNormalAndPoint = (out, normal, point) => {
-        const u = vec3.normalize(vec3.create(), normal);
-        const w = vec3.dot(point, u);
-        out[0] = u[0];
-        out[1] = u[1];
-        out[2] = u[2];
-        out[3] = w;
-        return out;
-      };
-      module.exports = fromNormalAndPoint;
-    }
-  });
-  var require_fromValues3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/fromValues.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = require_create5();
-      var fromValues = (x, y, z, w) => {
-        const out = create();
-        out[0] = x;
-        out[1] = y;
-        out[2] = z;
-        out[3] = w;
-        return out;
-      };
-      module.exports = fromValues;
-    }
-  });
-  var require_fromPoints2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/fromPoints.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec3 = require_vec3();
-      var fromPoints = (out, ...vertices) => {
-        const len = vertices.length;
-        const ba = vec3.create();
-        const ca = vec3.create();
-        const vertexNormal = index => {
-          const a = vertices[index];
-          const b = vertices[(index + 1) % len];
-          const c = vertices[(index + 2) % len];
-          vec3.subtract(ba, b, a);
-          vec3.subtract(ca, c, a);
-          vec3.cross(ba, ba, ca);
-          vec3.normalize(ba, ba);
-          return ba;
-        };
-        out[0] = 0;
-        out[1] = 0;
-        out[2] = 0;
-        if (len === 3) {
-          vec3.copy(out, vertexNormal(0));
-        } else {
-          vertices.forEach((v, i) => {
-            vec3.add(out, out, vertexNormal(i));
-          });
-          vec3.normalize(out, out);
-        }
-        out[3] = vec3.dot(out, vertices[0]);
-        return out;
-      };
-      module.exports = fromPoints;
-    }
-  });
-  var require_fromPointsRandom = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/fromPointsRandom.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var {EPS} = require_constants();
-      var vec3 = require_vec3();
-      var fromPointsRandom = (out, a, b, c) => {
-        let ba = vec3.subtract(vec3.create(), b, a);
-        let ca = vec3.subtract(vec3.create(), c, a);
-        if (vec3.length(ba) < EPS) {
-          ba = vec3.orthogonal(ba, ca);
-        }
-        if (vec3.length(ca) < EPS) {
-          ca = vec3.orthogonal(ca, ba);
-        }
-        let normal = vec3.cross(vec3.create(), ba, ca);
-        if (vec3.length(normal) < EPS) {
-          ca = vec3.orthogonal(ca, ba);
-          normal = vec3.cross(normal, ba, ca);
-        }
-        normal = vec3.normalize(normal, normal);
-        const w = vec3.dot(normal, a);
-        out[0] = normal[0];
-        out[1] = normal[1];
-        out[2] = normal[2];
-        out[3] = w;
-        return out;
-      };
-      module.exports = fromPointsRandom;
-    }
-  });
-  var require_projectionOfPoint = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/projectionOfPoint.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec3 = require_vec3();
-      var projectionOfPoint = (plane, point) => {
-        const a = point[0] * plane[0] + point[1] * plane[1] + point[2] * plane[2] - plane[3];
-        const x = point[0] - a * plane[0];
-        const y = point[1] - a * plane[1];
-        const z = point[2] - a * plane[2];
-        return vec3.fromValues(x, y, z);
-      };
-      module.exports = projectionOfPoint;
-    }
-  });
-  var require_signedDistanceToPoint = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/signedDistanceToPoint.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec3 = require_vec3();
-      var signedDistanceToPoint = (plane, point) => vec3.dot(plane, point) - plane[3];
-      module.exports = signedDistanceToPoint;
-    }
-  });
-  var require_toString3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/toString.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var toString = vec => `(${vec[0].toFixed(9)}, ${vec[1].toFixed(9)}, ${vec[2].toFixed(9)}, ${vec[3].toFixed(9)})`;
-      module.exports = toString;
-    }
-  });
-  var require_transform2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/transform.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var mat42 = require_mat4();
-      var vec3 = require_vec3();
-      var fromPoints = require_fromPoints2();
-      var flip = require_flip();
-      var transform = (out, plane, matrix) => {
-        const ismirror = mat42.isMirroring(matrix);
-        const r = vec3.orthogonal(vec3.create(), plane);
-        const u = vec3.cross(r, plane, r);
-        const v = vec3.cross(vec3.create(), plane, u);
-        let point1 = vec3.fromScalar(vec3.create(), plane[3]);
-        vec3.multiply(point1, point1, plane);
-        let point2 = vec3.add(vec3.create(), point1, u);
-        let point3 = vec3.add(vec3.create(), point1, v);
-        point1 = vec3.transform(point1, point1, matrix);
-        point2 = vec3.transform(point2, point2, matrix);
-        point3 = vec3.transform(point3, point3, matrix);
-        fromPoints(out, point1, point2, point3);
-        if (ismirror) {
-          flip(out, out);
-        }
-        return out;
-      };
-      module.exports = transform;
-    }
-  });
-  var require_plane = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = {
-        clone: require_clone5(),
-        copy: require_copy3(),
-        create: require_create5(),
-        equals: require_equals3(),
-        flip: require_flip(),
-        fromNormalAndPoint: require_fromNormalAndPoint(),
-        fromValues: require_fromValues3(),
-        fromPoints: require_fromPoints2(),
-        fromPointsRandom: require_fromPointsRandom(),
-        projectionOfPoint: require_projectionOfPoint(),
-        signedDistanceToPoint: require_signedDistanceToPoint(),
-        toString: require_toString3(),
-        transform: require_transform2()
-      };
-    }
-  });
-  var require_invert2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/invert.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var plane = require_plane();
-      var create = require_create4();
-      var invert = polygon => {
-        const vertices = polygon.vertices.slice().reverse();
-        const inverted = create(vertices);
-        if (polygon.plane) {
-          inverted.plane = plane.flip(plane.create(), polygon.plane);
-        }
-        if (polygon.color) {
-          inverted.color = polygon.color;
-        }
-        return inverted;
-      };
-      module.exports = invert;
-    }
-  });
-  var require_isA = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/isA.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var isA = object => {
-        if (object && typeof object === "object") {
-          if (("vertices" in object)) {
-            if (Array.isArray(object.vertices)) {
-              return true;
-            }
-          }
-        }
-        return false;
-      };
-      module.exports = isA;
-    }
-  });
-  var require_isConvex = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/isConvex.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var plane = require_plane();
-      var vec3 = require_vec3();
-      var isConvex = polygon => areVerticesConvex(polygon.vertices);
-      var areVerticesConvex = vertices => {
-        const numvertices = vertices.length;
-        if (numvertices > 2) {
-          const normal = plane.fromPoints(plane.create(), ...vertices);
-          let prevprevpos = vertices[numvertices - 2];
-          let prevpos = vertices[numvertices - 1];
-          for (let i = 0; i < numvertices; i++) {
-            const pos = vertices[i];
-            if (!isConvexPoint(prevprevpos, prevpos, pos, normal)) {
-              return false;
-            }
-            prevprevpos = prevpos;
-            prevpos = pos;
-          }
-        }
-        return true;
-      };
-      var isConvexPoint = (prevpoint, point, nextpoint, normal) => {
-        const crossproduct = vec3.cross(vec3.create(), vec3.subtract(vec3.create(), point, prevpoint), vec3.subtract(vec3.create(), nextpoint, point));
-        const crossdotnormal = vec3.dot(crossproduct, normal);
-        return crossdotnormal >= 0;
-      };
-      module.exports = isConvex;
-    }
-  });
-  var require_plane2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/plane.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var mplane = require_plane();
-      var plane = polygon => {
-        if (!polygon.plane) {
-          polygon.plane = mplane.fromPoints(mplane.create(), ...polygon.vertices);
-        }
-        return polygon.plane;
-      };
-      module.exports = plane;
-    }
-  });
-  var require_measureArea = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureArea.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var plane = require_plane2();
-      var measureArea = polygon => {
-        const n = polygon.vertices.length;
-        if (n < 3) {
-          return 0;
-        }
-        const vertices = polygon.vertices;
-        const normal = plane(polygon);
-        const ax = Math.abs(normal[0]);
-        const ay = Math.abs(normal[1]);
-        const az = Math.abs(normal[2]);
-        if (ax + ay + az === 0) {
-          return 0;
-        }
-        let coord = 3;
-        if (ax > ay && ax > az) {
-          coord = 1;
-        } else if (ay > az) {
-          coord = 2;
-        }
-        let area = 0;
-        let h = 0;
-        let i = 1;
-        let j = 2;
-        switch (coord) {
-          case 1:
-            for (i = 1; i < n; i++) {
-              h = i - 1;
-              j = (i + 1) % n;
-              area += vertices[i][1] * (vertices[j][2] - vertices[h][2]);
-            }
-            area += vertices[0][1] * (vertices[1][2] - vertices[n - 1][2]);
-            area /= 2 * normal[0];
-            break;
-          case 2:
-            for (i = 1; i < n; i++) {
-              h = i - 1;
-              j = (i + 1) % n;
-              area += vertices[i][2] * (vertices[j][0] - vertices[h][0]);
-            }
-            area += vertices[0][2] * (vertices[1][0] - vertices[n - 1][0]);
-            area /= 2 * normal[1];
-            break;
-          case 3:
-          default:
-            for (i = 1; i < n; i++) {
-              h = i - 1;
-              j = (i + 1) % n;
-              area += vertices[i][0] * (vertices[j][1] - vertices[h][1]);
-            }
-            area += vertices[0][0] * (vertices[1][1] - vertices[n - 1][1]);
-            area /= 2 * normal[2];
-            break;
-        }
-        return area;
-      };
-      module.exports = measureArea;
-    }
-  });
-  var require_measureBoundingBox = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingBox.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec3 = require_vec3();
-      var measureBoundingBox2 = polygon => {
-        const vertices = polygon.vertices;
-        const numvertices = vertices.length;
-        const min = numvertices === 0 ? vec3.create() : vec3.clone(vertices[0]);
-        const max = vec3.clone(min);
-        for (let i = 1; i < numvertices; i++) {
-          vec3.min(min, min, vertices[i]);
-          vec3.max(max, max, vertices[i]);
-        }
-        return [min, max];
-      };
-      module.exports = measureBoundingBox2;
-    }
-  });
-  var require_dot2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/dot.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
-      module.exports = dot;
-    }
-  });
-  var require_fromScalar2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/fromScalar.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var fromScalar = (out, scalar) => {
-        out[0] = scalar;
-        out[1] = scalar;
-        out[2] = scalar;
-        out[3] = scalar;
-        return out;
-      };
-      module.exports = fromScalar;
-    }
-  });
-  var require_transform3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/transform.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var transform = (out, vector, matrix) => {
-        const [x, y, z, w] = vector;
-        out[0] = matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12] * w;
-        out[1] = matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13] * w;
-        out[2] = matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14] * w;
-        out[3] = matrix[3] * x + matrix[7] * y + matrix[11] * z + matrix[15] * w;
-        return out;
-      };
-      module.exports = transform;
-    }
-  });
-  var require_vec4 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = {
-        clone: require_clone5(),
-        copy: require_copy3(),
-        create: require_create5(),
-        dot: require_dot2(),
-        equals: require_equals3(),
-        fromScalar: require_fromScalar2(),
-        fromValues: require_fromValues3(),
-        toString: require_toString3(),
-        transform: require_transform3()
-      };
-    }
-  });
-  var require_measureBoundingSphere = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingSphere.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec3 = require_vec3();
-      var vec4 = require_vec4();
-      var cache = new WeakMap();
-      var measureBoundingSphere = polygon => {
-        let boundingSphere = cache.get(polygon);
-        if (boundingSphere) return boundingSphere;
-        const vertices = polygon.vertices;
-        const out = vec4.create();
-        if (vertices.length === 0) {
-          out[0] = 0;
-          out[1] = 0;
-          out[2] = 0;
-          out[3] = 0;
-          return out;
-        }
-        let minx = vertices[0];
-        let miny = minx;
-        let minz = minx;
-        let maxx = minx;
-        let maxy = minx;
-        let maxz = minx;
-        vertices.forEach(v => {
-          if (minx[0] > v[0]) minx = v;
-          if (miny[1] > v[1]) miny = v;
-          if (minz[2] > v[2]) minz = v;
-          if (maxx[0] < v[0]) maxx = v;
-          if (maxy[1] < v[1]) maxy = v;
-          if (maxz[2] < v[2]) maxz = v;
-        });
-        out[0] = (minx[0] + maxx[0]) * 0.5;
-        out[1] = (miny[1] + maxy[1]) * 0.5;
-        out[2] = (minz[2] + maxz[2]) * 0.5;
-        const x = out[0] - maxx[0];
-        const y = out[1] - maxy[1];
-        const z = out[2] - maxz[2];
-        out[3] = Math.sqrt(x * x + y * y + z * z);
-        cache.set(polygon, out);
-        return out;
-      };
-      module.exports = measureBoundingSphere;
-    }
-  });
-  var require_measureSignedVolume = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureSignedVolume.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec3 = require_vec3();
-      var measureSignedVolume = polygon => {
-        let signedVolume = 0;
-        const vertices = polygon.vertices;
-        const cross = vec3.create();
-        for (let i = 0; i < vertices.length - 2; i++) {
-          vec3.cross(cross, vertices[i + 1], vertices[i + 2]);
-          signedVolume += vec3.dot(vertices[0], cross);
-        }
-        signedVolume /= 6;
-        return signedVolume;
-      };
-      module.exports = measureSignedVolume;
-    }
-  });
-  var require_toPoints = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/toPoints.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var toPoints = polygon => polygon.vertices;
-      module.exports = toPoints;
-    }
-  });
-  var require_toString4 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/toString.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec3 = require_vec3();
-      var toString = polygon => {
-        let result = "poly3: vertices: [";
-        polygon.vertices.forEach(vertex => {
-          result += `${vec3.toString(vertex)}, `;
-        });
-        result += "]";
-        return result;
-      };
-      module.exports = toString;
-    }
-  });
-  var require_transform4 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/transform.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var mat42 = require_mat4();
-      var vec3 = require_vec3();
-      var create = require_create4();
-      var transform = (matrix, polygon) => {
-        const vertices = polygon.vertices.map(vertex => vec3.transform(vec3.create(), vertex, matrix));
-        if (mat42.isMirroring(matrix)) {
-          vertices.reverse();
-        }
-        const transformedVertices = create(vertices);
-        return polygon.color ? __spreadValues({
-          color: polygon.color
-        }, transformedVertices) : transformedVertices;
-      };
-      module.exports = transform;
-    }
-  });
-  var require_validate = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/validate.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var signedDistanceToPoint = require_signedDistanceToPoint();
-      var {NEPS} = require_constants();
-      var vec3 = require_vec3();
-      var isA = require_isA();
-      var isConvex = require_isConvex();
-      var measureArea = require_measureArea();
-      var plane = require_plane2();
-      var validate = object => {
-        if (!isA(object)) {
-          throw new Error("invalid poly3 structure");
-        }
-        if (object.vertices.length < 3) {
-          throw new Error(`poly3 not enough vertices ${object.vertices.length}`);
-        }
-        if (measureArea(object) <= 0) {
-          throw new Error("poly3 area must be greater than zero");
-        }
-        for (let i = 0; i < object.vertices.length; i++) {
-          if (vec3.equals(object.vertices[i], object.vertices[(i + 1) % object.vertices.length])) {
-            throw new Error(`poly3 duplicate vertex ${object.vertices[i]}`);
-          }
-        }
-        if (!isConvex(object)) {
-          throw new Error("poly3 must be convex");
-        }
-        object.vertices.forEach(vertex => {
-          if (!vertex.every(Number.isFinite)) {
-            throw new Error(`poly3 invalid vertex ${vertex}`);
-          }
-        });
-        if (object.vertices.length > 3) {
-          const normal = plane(object);
-          object.vertices.forEach(vertex => {
-            const dist = Math.abs(signedDistanceToPoint(normal, vertex));
-            if (dist > NEPS) {
-              throw new Error(`poly3 must be coplanar: vertex ${vertex} distance ${dist}`);
-            }
-          });
-        }
-      };
-      module.exports = validate;
-    }
-  });
-  var require_poly3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = {
-        clone: require_clone4(),
-        create: require_create4(),
-        fromPoints: require_fromPoints(),
-        fromPointsAndPlane: require_fromPointsAndPlane(),
-        invert: require_invert2(),
-        isA: require_isA(),
-        isConvex: require_isConvex(),
-        measureArea: require_measureArea(),
-        measureBoundingBox: require_measureBoundingBox(),
-        measureBoundingSphere: require_measureBoundingSphere(),
-        measureSignedVolume: require_measureSignedVolume(),
-        plane: require_plane2(),
-        toPoints: require_toPoints(),
-        toString: require_toString4(),
-        transform: require_transform4(),
-        validate: require_validate()
-      };
-    }
-  });
-  var require_fromPoints3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/fromPoints.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var poly3 = require_poly3();
-      var create = require_create3();
-      var fromPoints = listofpoints => {
-        if (!Array.isArray(listofpoints)) {
-          throw new Error("the given points must be an array");
-        }
-        const polygons = listofpoints.map((points, index) => {
-          const polygon = poly3.create(points);
-          return polygon;
-        });
-        const result = create(polygons);
-        return result;
-      };
-      module.exports = fromPoints;
-    }
-  });
-  var require_fromCompactBinary = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/fromCompactBinary.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec3 = require_vec3();
-      var mat42 = require_mat4();
-      var poly3 = require_poly3();
-      var create = require_create3();
-      var fromCompactBinary = data => {
-        if (data[0] !== 1) throw new Error("invalid compact binary data");
-        const created = create();
-        created.transforms = mat42.clone(data.slice(1, 17));
-        const numberOfVertices = data[21];
-        let ci = 22;
-        let vi = data.length - numberOfVertices * 3;
-        while (vi < data.length) {
-          const verticesPerPolygon = data[ci];
-          ci++;
-          const vertices = [];
-          for (let i = 0; i < verticesPerPolygon; i++) {
-            vertices.push(vec3.fromValues(data[vi], data[vi + 1], data[vi + 2]));
-            vi += 3;
-          }
-          created.polygons.push(poly3.create(vertices));
-        }
-        if (data[17] >= 0) {
-          created.color = [data[17], data[18], data[19], data[20]];
-        }
-        return created;
-      };
-      module.exports = fromCompactBinary;
-    }
-  });
-  var require_applyTransforms = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/applyTransforms.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var mat42 = require_mat4();
-      var poly3 = require_poly3();
-      var applyTransforms = geometry => {
-        if (mat42.isIdentity(geometry.transforms)) return geometry;
-        geometry.polygons = geometry.polygons.map(polygon => poly3.transform(geometry.transforms, polygon));
-        geometry.transforms = mat42.create();
-        return geometry;
-      };
-      module.exports = applyTransforms;
-    }
-  });
-  var require_toPolygons = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var poly3 = require_poly3();
-      var applyTransforms = require_applyTransforms();
-      var colorPoly3 = (color, object) => {
-        if (!object.color) {
-          object.color = color;
-        }
-        return object;
-      };
-      var toPolygons = (geometry, colorizePolygons = false) => {
-        const newPolygons = applyTransforms(geometry).polygons;
-        return colorizePolygons && geometry.color ? newPolygons.map(polygon => colorPoly3(geometry.color, polygon)) : newPolygons;
-      };
-      module.exports = toPolygons;
-    }
-  });
-  var require_invert3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/invert.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var poly3 = require_poly3();
-      var create = require_create3();
-      var toPolygons = require_toPolygons();
-      var invert = geometry => {
-        const polygons = toPolygons(geometry);
-        const newpolygons = polygons.map(polygon => poly3.invert(polygon));
-        return create(newpolygons);
-      };
-      module.exports = invert;
-    }
-  });
-  var require_isA2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/isA.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var isA = object => {
-        if (object && typeof object === "object") {
-          if (("polygons" in object) && ("transforms" in object)) {
-            if (Array.isArray(object.polygons) && ("length" in object.transforms)) {
-              return true;
-            }
-          }
-        }
-        return false;
-      };
-      module.exports = isA;
-    }
-  });
-  var require_toPoints2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toPoints.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var poly3 = require_poly3();
-      var toPolygons = require_toPolygons();
-      var toPoints = geometry => {
-        const polygons = toPolygons(geometry);
-        const listofpoints = polygons.map(polygon => poly3.toPoints(polygon));
-        return listofpoints;
-      };
-      module.exports = toPoints;
-    }
-  });
-  var require_toString5 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toString.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var poly3 = require_poly3();
-      var toPolygons = require_toPolygons();
-      var toString = geometry => {
-        const polygons = toPolygons(geometry);
-        let result = "geom3 (" + polygons.length + " polygons):\n";
-        polygons.forEach(polygon => {
-          result += "  " + poly3.toString(polygon) + "\n";
-        });
-        return result;
-      };
-      module.exports = toString;
-    }
-  });
-  var require_toCompactBinary = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toCompactBinary.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var poly3 = require_poly3();
-      var toCompactBinary = geometry => {
-        const polygons = geometry.polygons;
-        const transforms = geometry.transforms;
-        const numberOfPolygons = polygons.length;
-        const numberOfVertices = polygons.reduce((count, polygon) => count + polygon.vertices.length, 0);
-        let color = [-1, -1, -1, -1];
-        if (geometry.color) color = geometry.color;
-        const compacted = new Float32Array(1 + 16 + 4 + 1 + numberOfPolygons + numberOfVertices * 3);
-        compacted[0] = 1;
-        compacted[1] = transforms[0];
-        compacted[2] = transforms[1];
-        compacted[3] = transforms[2];
-        compacted[4] = transforms[3];
-        compacted[5] = transforms[4];
-        compacted[6] = transforms[5];
-        compacted[7] = transforms[6];
-        compacted[8] = transforms[7];
-        compacted[9] = transforms[8];
-        compacted[10] = transforms[9];
-        compacted[11] = transforms[10];
-        compacted[12] = transforms[11];
-        compacted[13] = transforms[12];
-        compacted[14] = transforms[13];
-        compacted[15] = transforms[14];
-        compacted[16] = transforms[15];
-        compacted[17] = color[0];
-        compacted[18] = color[1];
-        compacted[19] = color[2];
-        compacted[20] = color[3];
-        compacted[21] = numberOfVertices;
-        let ci = 22;
-        let vi = ci + numberOfPolygons;
-        polygons.forEach(polygon => {
-          const points = poly3.toPoints(polygon);
-          compacted[ci] = points.length;
-          ci++;
-          for (let i = 0; i < points.length; i++) {
-            const point = points[i];
-            compacted[vi + 0] = point[0];
-            compacted[vi + 1] = point[1];
-            compacted[vi + 2] = point[2];
-            vi += 3;
-          }
-        });
-        return compacted;
-      };
-      module.exports = toCompactBinary;
-    }
-  });
-  var require_transform5 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/transform.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var mat42 = require_mat4();
-      var transform = (matrix, geometry) => {
-        const transforms = mat42.multiply(mat42.create(), matrix, geometry.transforms);
-        return Object.assign({}, geometry, {
-          transforms
-        });
-      };
-      module.exports = transform;
-    }
-  });
-  var require_validate2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/validate.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var poly3 = require_poly3();
-      var isA = require_isA2();
-      var validate = object => {
-        if (!isA(object)) {
-          throw new Error("invalid geom3 structure");
-        }
-        object.polygons.forEach(poly3.validate);
-        validateManifold(object);
-        if (!object.transforms.every(Number.isFinite)) {
-          throw new Error(`geom3 invalid transforms ${object.transforms}`);
-        }
-      };
-      var validateManifold = object => {
-        const edgeCount = new Map();
-        object.polygons.forEach(({vertices}) => {
-          vertices.forEach((v, i) => {
-            const v1 = `${v}`;
-            const v2 = `${vertices[(i + 1) % vertices.length]}`;
-            const edge = `${v1}/${v2}`;
-            const count = edgeCount.has(edge) ? edgeCount.get(edge) : 0;
-            edgeCount.set(edge, count + 1);
-          });
-        });
-        const nonManifold = [];
-        edgeCount.forEach((count, edge) => {
-          const complementEdge = edge.split("/").reverse().join("/");
-          const complementCount = edgeCount.get(complementEdge);
-          if (count !== complementCount) {
-            nonManifold.push(edge.replace("/", " -> "));
-          }
-        });
-        if (nonManifold.length > 0) {
-          throw new Error(`non-manifold edges ${nonManifold.length}
-${nonManifold.join("\n")}`);
-        }
-      };
-      module.exports = validate;
-    }
-  });
-  var require_geom3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = {
-        clone: require_clone(),
-        create: require_create3(),
-        fromPoints: require_fromPoints3(),
-        fromCompactBinary: require_fromCompactBinary(),
-        invert: require_invert3(),
-        isA: require_isA2(),
-        toPoints: require_toPoints2(),
-        toPolygons: require_toPolygons(),
-        toString: require_toString5(),
-        toCompactBinary: require_toCompactBinary(),
-        transform: require_transform5(),
-        validate: require_validate2()
-      };
-    }
-  });
-  var require_flatten = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/utils/flatten.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = arr => arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
-      module.exports = flatten;
-    }
-  });
-  var require_padArrayToLength = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/utils/padArrayToLength.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var padArrayToLength = (anArray, padding, targetLength) => {
-        anArray = anArray.slice();
-        while (anArray.length < targetLength) {
-          anArray.push(padding);
-        }
-        return anArray;
-      };
-      module.exports = padArrayToLength;
     }
   });
   var require_abs2 = __commonJS({
@@ -2574,9 +1592,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/maths/vec2/add.js"(exports, module) {
       "use strict";
       init_define_process();
-      var add = (out, a, b) => {
-        out[0] = a[0] + b[0];
-        out[1] = a[1] + b[1];
+      var add = (out, a3, b) => {
+        out[0] = a3[0] + b[0];
+        out[1] = a3[1] + b[1];
         return out;
       };
       module.exports = add;
@@ -2606,7 +1624,7 @@ ${nonManifold.join("\n")}`);
       module.exports = angleDegrees;
     }
   });
-  var require_create6 = __commonJS({
+  var require_create4 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/vec2/create.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -2614,11 +1632,11 @@ ${nonManifold.join("\n")}`);
       module.exports = create;
     }
   });
-  var require_clone6 = __commonJS({
+  var require_clone4 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/vec2/clone.js"(exports, module) {
       "use strict";
       init_define_process();
-      var create = require_create6();
+      var create = require_create4();
       var clone = vector => {
         const out = create();
         out[0] = vector[0];
@@ -2628,7 +1646,7 @@ ${nonManifold.join("\n")}`);
       module.exports = clone;
     }
   });
-  var require_copy4 = __commonJS({
+  var require_copy3 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/vec2/copy.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -2644,10 +1662,10 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/maths/vec2/cross.js"(exports, module) {
       "use strict";
       init_define_process();
-      var cross = (out, a, b) => {
+      var cross = (out, a3, b) => {
         out[0] = 0;
         out[1] = 0;
-        out[2] = a[0] * b[1] - a[1] * b[0];
+        out[2] = a3[0] * b[1] - a3[1] * b[0];
         return out;
       };
       module.exports = cross;
@@ -2657,9 +1675,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/maths/vec2/distance.js"(exports, module) {
       "use strict";
       init_define_process();
-      var distance = (a, b) => {
-        const x = b[0] - a[0];
-        const y = b[1] - a[1];
+      var distance = (a3, b) => {
+        const x = b[0] - a3[0];
+        const y = b[1] - a3[1];
         return Math.sqrt(x * x + y * y);
       };
       module.exports = distance;
@@ -2669,27 +1687,27 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/maths/vec2/divide.js"(exports, module) {
       "use strict";
       init_define_process();
-      var divide = (out, a, b) => {
-        out[0] = a[0] / b[0];
-        out[1] = a[1] / b[1];
+      var divide = (out, a3, b) => {
+        out[0] = a3[0] / b[0];
+        out[1] = a3[1] / b[1];
         return out;
       };
       module.exports = divide;
     }
   });
-  var require_dot3 = __commonJS({
+  var require_dot2 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/vec2/dot.js"(exports, module) {
       "use strict";
       init_define_process();
-      var dot = (a, b) => a[0] * b[0] + a[1] * b[1];
+      var dot = (a3, b) => a3[0] * b[0] + a3[1] * b[1];
       module.exports = dot;
     }
   });
-  var require_equals4 = __commonJS({
+  var require_equals3 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/vec2/equals.js"(exports, module) {
       "use strict";
       init_define_process();
-      var equals = (a, b) => a[0] === b[0] && a[1] === b[1];
+      var equals = (a3, b) => a3[0] === b[0] && a3[1] === b[1];
       module.exports = equals;
     }
   });
@@ -2715,7 +1733,7 @@ ${nonManifold.join("\n")}`);
       module.exports = fromAngleDegrees;
     }
   });
-  var require_fromScalar3 = __commonJS({
+  var require_fromScalar2 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/vec2/fromScalar.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -2727,11 +1745,11 @@ ${nonManifold.join("\n")}`);
       module.exports = fromScalar;
     }
   });
-  var require_fromValues4 = __commonJS({
+  var require_fromValues3 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/vec2/fromValues.js"(exports, module) {
       "use strict";
       init_define_process();
-      var create = require_create6();
+      var create = require_create4();
       var fromValues = (x, y) => {
         const out = create();
         out[0] = x;
@@ -2753,11 +1771,11 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/maths/vec2/lerp.js"(exports, module) {
       "use strict";
       init_define_process();
-      var lerp = (out, a, b, t) => {
-        const ax = a[0];
-        const ay = a[1];
-        out[0] = ax + t * (b[0] - ax);
-        out[1] = ay + t * (b[1] - ay);
+      var lerp = (out, a3, b, t4) => {
+        const ax = a3[0];
+        const ay = a3[1];
+        out[0] = ax + t4 * (b[0] - ax);
+        out[1] = ay + t4 * (b[1] - ay);
         return out;
       };
       module.exports = lerp;
@@ -2767,9 +1785,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/maths/vec2/max.js"(exports, module) {
       "use strict";
       init_define_process();
-      var max = (out, a, b) => {
-        out[0] = Math.max(a[0], b[0]);
-        out[1] = Math.max(a[1], b[1]);
+      var max = (out, a3, b) => {
+        out[0] = Math.max(a3[0], b[0]);
+        out[1] = Math.max(a3[1], b[1]);
         return out;
       };
       module.exports = max;
@@ -2779,9 +1797,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/maths/vec2/min.js"(exports, module) {
       "use strict";
       init_define_process();
-      var min = (out, a, b) => {
-        out[0] = Math.min(a[0], b[0]);
-        out[1] = Math.min(a[1], b[1]);
+      var min = (out, a3, b) => {
+        out[0] = Math.min(a3[0], b[0]);
+        out[1] = Math.min(a3[1], b[1]);
         return out;
       };
       module.exports = min;
@@ -2791,9 +1809,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/maths/vec2/multiply.js"(exports, module) {
       "use strict";
       init_define_process();
-      var multiply = (out, a, b) => {
-        out[0] = a[0] * b[0];
-        out[1] = a[1] * b[1];
+      var multiply = (out, a3, b) => {
+        out[0] = a3[0] * b[0];
+        out[1] = a3[1] * b[1];
         return out;
       };
       module.exports = multiply;
@@ -2818,10 +1836,10 @@ ${nonManifold.join("\n")}`);
       var rotate2 = (out, vector, origin, radians) => {
         const x = vector[0] - origin[0];
         const y = vector[1] - origin[1];
-        const c = Math.cos(radians);
-        const s = Math.sin(radians);
-        out[0] = x * c - y * s + origin[0];
-        out[1] = x * s + y * c + origin[1];
+        const c2 = Math.cos(radians);
+        const s5 = Math.sin(radians);
+        out[0] = x * c2 - y * s5 + origin[0];
+        out[1] = x * s5 + y * c2 + origin[1];
         return out;
       };
       module.exports = rotate2;
@@ -2831,7 +1849,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/maths/vec2/normal.js"(exports, module) {
       "use strict";
       init_define_process();
-      var create = require_create6();
+      var create = require_create4();
       var rotate2 = require_rotate2();
       var normal = (out, vector) => rotate2(out, vector, create(), Math.PI / 2);
       module.exports = normal;
@@ -2883,9 +1901,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/maths/vec2/squaredDistance.js"(exports, module) {
       "use strict";
       init_define_process();
-      var squaredDistance = (a, b) => {
-        const x = b[0] - a[0];
-        const y = b[1] - a[1];
+      var squaredDistance = (a3, b) => {
+        const x = b[0] - a3[0];
+        const y = b[1] - a3[1];
         return x * x + y * y;
       };
       module.exports = squaredDistance;
@@ -2907,15 +1925,15 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/maths/vec2/subtract.js"(exports, module) {
       "use strict";
       init_define_process();
-      var subtract2 = (out, a, b) => {
-        out[0] = a[0] - b[0];
-        out[1] = a[1] - b[1];
+      var subtract2 = (out, a3, b) => {
+        out[0] = a3[0] - b[0];
+        out[1] = a3[1] - b[1];
         return out;
       };
       module.exports = subtract2;
     }
   });
-  var require_toString6 = __commonJS({
+  var require_toString3 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/vec2/toString.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -2923,7 +1941,7 @@ ${nonManifold.join("\n")}`);
       module.exports = toString;
     }
   });
-  var require_transform6 = __commonJS({
+  var require_transform2 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/vec2/transform.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -2947,18 +1965,18 @@ ${nonManifold.join("\n")}`);
         angle: require_angle2(),
         angleDegrees: require_angleDegrees(),
         angleRadians: require_angleRadians(),
-        clone: require_clone6(),
-        copy: require_copy4(),
-        create: require_create6(),
+        clone: require_clone4(),
+        copy: require_copy3(),
+        create: require_create4(),
         cross: require_cross2(),
         distance: require_distance2(),
         divide: require_divide2(),
-        dot: require_dot3(),
-        equals: require_equals4(),
+        dot: require_dot2(),
+        equals: require_equals3(),
         fromAngleDegrees: require_fromAngleDegrees(),
         fromAngleRadians: require_fromAngleRadians(),
-        fromScalar: require_fromScalar3(),
-        fromValues: require_fromValues4(),
+        fromScalar: require_fromScalar2(),
+        fromValues: require_fromValues3(),
         length: require_length2(),
         lerp: require_lerp2(),
         max: require_max2(),
@@ -2973,42 +1991,17 @@ ${nonManifold.join("\n")}`);
         squaredDistance: require_squaredDistance2(),
         squaredLength: require_squaredLength2(),
         subtract: require_subtract3(),
-        toString: require_toString6(),
-        transform: require_transform6()
+        toString: require_toString3(),
+        transform: require_transform2()
       };
     }
   });
-  var require_clone7 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom2/clone.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var clone = geometry => Object.assign({}, geometry);
-      module.exports = clone;
-    }
-  });
-  var require_create7 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom2/create.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var mat42 = require_mat4();
-      var create = sides => {
-        if (sides === void 0) {
-          sides = [];
-        }
-        return {
-          sides,
-          transforms: mat42.create()
-        };
-      };
-      module.exports = create;
-    }
-  });
-  var require_fromPoints4 = __commonJS({
+  var require_fromPoints = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/fromPoints.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec2 = require_vec2();
-      var create = require_create7();
+      var create = require_create3();
       var fromPoints = points => {
         if (!Array.isArray(points)) {
           throw new Error("the given points must be an array");
@@ -3030,13 +2023,13 @@ ${nonManifold.join("\n")}`);
       module.exports = fromPoints;
     }
   });
-  var require_fromCompactBinary2 = __commonJS({
+  var require_fromCompactBinary = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/fromCompactBinary.js"(exports, module) {
       "use strict";
       init_define_process();
       var mat42 = require_mat4();
       var vec2 = require_vec2();
-      var create = require_create7();
+      var create = require_create3();
       var fromCompactBinary = data => {
         if (data[0] !== 0) throw new Error("invalid compact binary data");
         const created = create();
@@ -3054,7 +2047,7 @@ ${nonManifold.join("\n")}`);
       module.exports = fromCompactBinary;
     }
   });
-  var require_isA3 = __commonJS({
+  var require_isA = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/isA.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -3071,7 +2064,7 @@ ${nonManifold.join("\n")}`);
       module.exports = isA;
     }
   });
-  var require_applyTransforms2 = __commonJS({
+  var require_applyTransforms = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/applyTransforms.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -3094,7 +2087,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/toSides.js"(exports, module) {
       "use strict";
       init_define_process();
-      var applyTransforms = require_applyTransforms2();
+      var applyTransforms = require_applyTransforms();
       var toSides = geometry => applyTransforms(geometry).sides;
       module.exports = toSides;
     }
@@ -3103,7 +2096,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/reverse.js"(exports, module) {
       "use strict";
       init_define_process();
-      var create = require_create7();
+      var create = require_create3();
       var toSides = require_toSides();
       var reverse = geometry => {
         const oldsides = toSides(geometry);
@@ -3208,7 +2201,7 @@ ${nonManifold.join("\n")}`);
       module.exports = toOutlines;
     }
   });
-  var require_toPoints3 = __commonJS({
+  var require_toPoints = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/toPoints.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -3224,7 +2217,7 @@ ${nonManifold.join("\n")}`);
       module.exports = toPoints;
     }
   });
-  var require_toString7 = __commonJS({
+  var require_toString4 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/toString.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -3242,7 +2235,7 @@ ${nonManifold.join("\n")}`);
       module.exports = toString;
     }
   });
-  var require_toCompactBinary2 = __commonJS({
+  var require_toCompactBinary = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/toCompactBinary.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -3287,7 +2280,7 @@ ${nonManifold.join("\n")}`);
       module.exports = toCompactBinary;
     }
   });
-  var require_transform7 = __commonJS({
+  var require_transform3 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/transform.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -3301,12 +2294,12 @@ ${nonManifold.join("\n")}`);
       module.exports = transform;
     }
   });
-  var require_validate3 = __commonJS({
+  var require_validate = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/validate.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec2 = require_vec2();
-      var isA = require_isA3();
+      var isA = require_isA();
       var toOutlines = require_toOutlines();
       var validate = object => {
         if (!isA(object)) {
@@ -3330,15 +2323,1027 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       module.exports = {
-        clone: require_clone7(),
-        create: require_create7(),
-        fromPoints: require_fromPoints4(),
-        fromCompactBinary: require_fromCompactBinary2(),
-        isA: require_isA3(),
+        clone: require_clone(),
+        create: require_create3(),
+        fromPoints: require_fromPoints(),
+        fromCompactBinary: require_fromCompactBinary(),
+        isA: require_isA(),
         reverse: require_reverse(),
         toOutlines: require_toOutlines(),
-        toPoints: require_toPoints3(),
+        toPoints: require_toPoints(),
         toSides: require_toSides(),
+        toString: require_toString4(),
+        toCompactBinary: require_toCompactBinary(),
+        transform: require_transform3(),
+        validate: require_validate()
+      };
+    }
+  });
+  var require_clone5 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/clone.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var clone = geometry => Object.assign({}, geometry);
+      module.exports = clone;
+    }
+  });
+  var require_create5 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/create.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var mat42 = require_mat4();
+      var create = polygons => {
+        if (polygons === void 0) {
+          polygons = [];
+        }
+        return {
+          polygons,
+          transforms: mat42.create()
+        };
+      };
+      module.exports = create;
+    }
+  });
+  var require_create6 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/create.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = vertices => {
+        if (vertices === void 0 || vertices.length < 3) {
+          vertices = [];
+        }
+        return {
+          vertices
+        };
+      };
+      module.exports = create;
+    }
+  });
+  var require_clone6 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/clone.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = require_create6();
+      var vec3 = require_vec3();
+      var clone = (...params) => {
+        let out;
+        let poly3;
+        if (params.length === 1) {
+          out = create();
+          poly3 = params[0];
+        } else {
+          out = params[0];
+          poly3 = params[1];
+        }
+        out.vertices = poly3.vertices.map(vec => vec3.clone(vec));
+        return out;
+      };
+      module.exports = clone;
+    }
+  });
+  var require_fromPoints2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/fromPoints.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec3 = require_vec3();
+      var create = require_create6();
+      var fromPoints = points => {
+        const vertices = points.map(point => vec3.clone(point));
+        return create(vertices);
+      };
+      module.exports = fromPoints;
+    }
+  });
+  var require_fromPointsAndPlane = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/fromPointsAndPlane.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = require_create6();
+      var fromPointsAndPlane = (vertices, plane, color = void 0) => {
+        const poly = create(vertices);
+        poly.plane = plane;
+        return color ? __spreadProps(__spreadValues({}, poly), {
+          color
+        }) : poly;
+      };
+      module.exports = fromPointsAndPlane;
+    }
+  });
+  var require_create7 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/create.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = () => [0, 0, 0, 0];
+      module.exports = create;
+    }
+  });
+  var require_clone7 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/clone.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = require_create7();
+      var clone = vector => {
+        const out = create();
+        out[0] = vector[0];
+        out[1] = vector[1];
+        out[2] = vector[2];
+        out[3] = vector[3];
+        return out;
+      };
+      module.exports = clone;
+    }
+  });
+  var require_copy4 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/copy.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var copy = (out, vector) => {
+        out[0] = vector[0];
+        out[1] = vector[1];
+        out[2] = vector[2];
+        out[3] = vector[3];
+        return out;
+      };
+      module.exports = copy;
+    }
+  });
+  var require_equals4 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/equals.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var equals = (a3, b) => a3[0] === b[0] && a3[1] === b[1] && a3[2] === b[2] && a3[3] === b[3];
+      module.exports = equals;
+    }
+  });
+  var require_flip = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/flip.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var flip = (out, plane) => {
+        out[0] = -plane[0];
+        out[1] = -plane[1];
+        out[2] = -plane[2];
+        out[3] = -plane[3];
+        return out;
+      };
+      module.exports = flip;
+    }
+  });
+  var require_fromNormalAndPoint = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/fromNormalAndPoint.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec3 = require_vec3();
+      var fromNormalAndPoint = (out, normal, point) => {
+        const u3 = vec3.normalize(vec3.create(), normal);
+        const w = vec3.dot(point, u3);
+        out[0] = u3[0];
+        out[1] = u3[1];
+        out[2] = u3[2];
+        out[3] = w;
+        return out;
+      };
+      module.exports = fromNormalAndPoint;
+    }
+  });
+  var require_fromValues4 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/fromValues.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = require_create7();
+      var fromValues = (x, y, z, w) => {
+        const out = create();
+        out[0] = x;
+        out[1] = y;
+        out[2] = z;
+        out[3] = w;
+        return out;
+      };
+      module.exports = fromValues;
+    }
+  });
+  var require_fromPoints3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/fromPoints.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec3 = require_vec3();
+      var fromPoints = (out, ...vertices) => {
+        const len = vertices.length;
+        const ba = vec3.create();
+        const ca = vec3.create();
+        const vertexNormal = index => {
+          const a3 = vertices[index];
+          const b = vertices[(index + 1) % len];
+          const c2 = vertices[(index + 2) % len];
+          vec3.subtract(ba, b, a3);
+          vec3.subtract(ca, c2, a3);
+          vec3.cross(ba, ba, ca);
+          vec3.normalize(ba, ba);
+          return ba;
+        };
+        out[0] = 0;
+        out[1] = 0;
+        out[2] = 0;
+        if (len === 3) {
+          vec3.copy(out, vertexNormal(0));
+        } else {
+          vertices.forEach((v, i) => {
+            vec3.add(out, out, vertexNormal(i));
+          });
+          vec3.normalize(out, out);
+        }
+        out[3] = vec3.dot(out, vertices[0]);
+        return out;
+      };
+      module.exports = fromPoints;
+    }
+  });
+  var require_fromPointsRandom = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/fromPointsRandom.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var {EPS} = require_constants();
+      var vec3 = require_vec3();
+      var fromPointsRandom = (out, a3, b, c2) => {
+        let ba = vec3.subtract(vec3.create(), b, a3);
+        let ca = vec3.subtract(vec3.create(), c2, a3);
+        if (vec3.length(ba) < EPS) {
+          ba = vec3.orthogonal(ba, ca);
+        }
+        if (vec3.length(ca) < EPS) {
+          ca = vec3.orthogonal(ca, ba);
+        }
+        let normal = vec3.cross(vec3.create(), ba, ca);
+        if (vec3.length(normal) < EPS) {
+          ca = vec3.orthogonal(ca, ba);
+          normal = vec3.cross(normal, ba, ca);
+        }
+        normal = vec3.normalize(normal, normal);
+        const w = vec3.dot(normal, a3);
+        out[0] = normal[0];
+        out[1] = normal[1];
+        out[2] = normal[2];
+        out[3] = w;
+        return out;
+      };
+      module.exports = fromPointsRandom;
+    }
+  });
+  var require_projectionOfPoint = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/projectionOfPoint.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec3 = require_vec3();
+      var projectionOfPoint = (plane, point) => {
+        const a3 = point[0] * plane[0] + point[1] * plane[1] + point[2] * plane[2] - plane[3];
+        const x = point[0] - a3 * plane[0];
+        const y = point[1] - a3 * plane[1];
+        const z = point[2] - a3 * plane[2];
+        return vec3.fromValues(x, y, z);
+      };
+      module.exports = projectionOfPoint;
+    }
+  });
+  var require_signedDistanceToPoint = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/signedDistanceToPoint.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec3 = require_vec3();
+      var signedDistanceToPoint = (plane, point) => vec3.dot(plane, point) - plane[3];
+      module.exports = signedDistanceToPoint;
+    }
+  });
+  var require_toString5 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/toString.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var toString = vec => `(${vec[0].toFixed(9)}, ${vec[1].toFixed(9)}, ${vec[2].toFixed(9)}, ${vec[3].toFixed(9)})`;
+      module.exports = toString;
+    }
+  });
+  var require_transform4 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/transform.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var mat42 = require_mat4();
+      var vec3 = require_vec3();
+      var fromPoints = require_fromPoints3();
+      var flip = require_flip();
+      var transform = (out, plane, matrix) => {
+        const ismirror = mat42.isMirroring(matrix);
+        const r2 = vec3.orthogonal(vec3.create(), plane);
+        const u3 = vec3.cross(r2, plane, r2);
+        const v = vec3.cross(vec3.create(), plane, u3);
+        let point1 = vec3.fromScalar(vec3.create(), plane[3]);
+        vec3.multiply(point1, point1, plane);
+        let point2 = vec3.add(vec3.create(), point1, u3);
+        let point3 = vec3.add(vec3.create(), point1, v);
+        point1 = vec3.transform(point1, point1, matrix);
+        point2 = vec3.transform(point2, point2, matrix);
+        point3 = vec3.transform(point3, point3, matrix);
+        fromPoints(out, point1, point2, point3);
+        if (ismirror) {
+          flip(out, out);
+        }
+        return out;
+      };
+      module.exports = transform;
+    }
+  });
+  var require_plane = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = {
+        clone: require_clone7(),
+        copy: require_copy4(),
+        create: require_create7(),
+        equals: require_equals4(),
+        flip: require_flip(),
+        fromNormalAndPoint: require_fromNormalAndPoint(),
+        fromValues: require_fromValues4(),
+        fromPoints: require_fromPoints3(),
+        fromPointsRandom: require_fromPointsRandom(),
+        projectionOfPoint: require_projectionOfPoint(),
+        signedDistanceToPoint: require_signedDistanceToPoint(),
+        toString: require_toString5(),
+        transform: require_transform4()
+      };
+    }
+  });
+  var require_invert2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/invert.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var plane = require_plane();
+      var create = require_create6();
+      var invert = polygon => {
+        const vertices = polygon.vertices.slice().reverse();
+        const inverted = create(vertices);
+        if (polygon.plane) {
+          inverted.plane = plane.flip(plane.create(), polygon.plane);
+        }
+        if (polygon.color) {
+          inverted.color = polygon.color;
+        }
+        return inverted;
+      };
+      module.exports = invert;
+    }
+  });
+  var require_isA2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/isA.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var isA = object => {
+        if (object && typeof object === "object") {
+          if (("vertices" in object)) {
+            if (Array.isArray(object.vertices)) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+      module.exports = isA;
+    }
+  });
+  var require_isConvex = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/isConvex.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var plane = require_plane();
+      var vec3 = require_vec3();
+      var isConvex = polygon => areVerticesConvex(polygon.vertices);
+      var areVerticesConvex = vertices => {
+        const numvertices = vertices.length;
+        if (numvertices > 2) {
+          const normal = plane.fromPoints(plane.create(), ...vertices);
+          let prevprevpos = vertices[numvertices - 2];
+          let prevpos = vertices[numvertices - 1];
+          for (let i = 0; i < numvertices; i++) {
+            const pos = vertices[i];
+            if (!isConvexPoint(prevprevpos, prevpos, pos, normal)) {
+              return false;
+            }
+            prevprevpos = prevpos;
+            prevpos = pos;
+          }
+        }
+        return true;
+      };
+      var isConvexPoint = (prevpoint, point, nextpoint, normal) => {
+        const crossproduct = vec3.cross(vec3.create(), vec3.subtract(vec3.create(), point, prevpoint), vec3.subtract(vec3.create(), nextpoint, point));
+        const crossdotnormal = vec3.dot(crossproduct, normal);
+        return crossdotnormal >= 0;
+      };
+      module.exports = isConvex;
+    }
+  });
+  var require_plane2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/plane.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var mplane = require_plane();
+      var plane = polygon => {
+        if (!polygon.plane) {
+          polygon.plane = mplane.fromPoints(mplane.create(), ...polygon.vertices);
+        }
+        return polygon.plane;
+      };
+      module.exports = plane;
+    }
+  });
+  var require_measureArea = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureArea.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var plane = require_plane2();
+      var measureArea = polygon => {
+        const n3 = polygon.vertices.length;
+        if (n3 < 3) {
+          return 0;
+        }
+        const vertices = polygon.vertices;
+        const normal = plane(polygon);
+        const ax = Math.abs(normal[0]);
+        const ay = Math.abs(normal[1]);
+        const az = Math.abs(normal[2]);
+        if (ax + ay + az === 0) {
+          return 0;
+        }
+        let coord = 3;
+        if (ax > ay && ax > az) {
+          coord = 1;
+        } else if (ay > az) {
+          coord = 2;
+        }
+        let area = 0;
+        let h = 0;
+        let i = 1;
+        let j = 2;
+        switch (coord) {
+          case 1:
+            for (i = 1; i < n3; i++) {
+              h = i - 1;
+              j = (i + 1) % n3;
+              area += vertices[i][1] * (vertices[j][2] - vertices[h][2]);
+            }
+            area += vertices[0][1] * (vertices[1][2] - vertices[n3 - 1][2]);
+            area /= 2 * normal[0];
+            break;
+          case 2:
+            for (i = 1; i < n3; i++) {
+              h = i - 1;
+              j = (i + 1) % n3;
+              area += vertices[i][2] * (vertices[j][0] - vertices[h][0]);
+            }
+            area += vertices[0][2] * (vertices[1][0] - vertices[n3 - 1][0]);
+            area /= 2 * normal[1];
+            break;
+          case 3:
+          default:
+            for (i = 1; i < n3; i++) {
+              h = i - 1;
+              j = (i + 1) % n3;
+              area += vertices[i][0] * (vertices[j][1] - vertices[h][1]);
+            }
+            area += vertices[0][0] * (vertices[1][1] - vertices[n3 - 1][1]);
+            area /= 2 * normal[2];
+            break;
+        }
+        return area;
+      };
+      module.exports = measureArea;
+    }
+  });
+  var require_measureBoundingBox = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingBox.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec3 = require_vec3();
+      var measureBoundingBox2 = polygon => {
+        const vertices = polygon.vertices;
+        const numvertices = vertices.length;
+        const min = numvertices === 0 ? vec3.create() : vec3.clone(vertices[0]);
+        const max = vec3.clone(min);
+        for (let i = 1; i < numvertices; i++) {
+          vec3.min(min, min, vertices[i]);
+          vec3.max(max, max, vertices[i]);
+        }
+        return [min, max];
+      };
+      module.exports = measureBoundingBox2;
+    }
+  });
+  var require_dot3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/dot.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var dot = (a3, b) => a3[0] * b[0] + a3[1] * b[1] + a3[2] * b[2] + a3[3] * b[3];
+      module.exports = dot;
+    }
+  });
+  var require_fromScalar3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/fromScalar.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var fromScalar = (out, scalar) => {
+        out[0] = scalar;
+        out[1] = scalar;
+        out[2] = scalar;
+        out[3] = scalar;
+        return out;
+      };
+      module.exports = fromScalar;
+    }
+  });
+  var require_transform5 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/transform.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var transform = (out, vector, matrix) => {
+        const [x, y, z, w] = vector;
+        out[0] = matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12] * w;
+        out[1] = matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13] * w;
+        out[2] = matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14] * w;
+        out[3] = matrix[3] * x + matrix[7] * y + matrix[11] * z + matrix[15] * w;
+        return out;
+      };
+      module.exports = transform;
+    }
+  });
+  var require_vec4 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = {
+        clone: require_clone7(),
+        copy: require_copy4(),
+        create: require_create7(),
+        dot: require_dot3(),
+        equals: require_equals4(),
+        fromScalar: require_fromScalar3(),
+        fromValues: require_fromValues4(),
+        toString: require_toString5(),
+        transform: require_transform5()
+      };
+    }
+  });
+  var require_measureBoundingSphere = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingSphere.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec3 = require_vec3();
+      var vec4 = require_vec4();
+      var cache = new WeakMap();
+      var measureBoundingSphere = polygon => {
+        let boundingSphere = cache.get(polygon);
+        if (boundingSphere) return boundingSphere;
+        const vertices = polygon.vertices;
+        const out = vec4.create();
+        if (vertices.length === 0) {
+          out[0] = 0;
+          out[1] = 0;
+          out[2] = 0;
+          out[3] = 0;
+          return out;
+        }
+        let minx = vertices[0];
+        let miny = minx;
+        let minz = minx;
+        let maxx = minx;
+        let maxy = minx;
+        let maxz = minx;
+        vertices.forEach(v => {
+          if (minx[0] > v[0]) minx = v;
+          if (miny[1] > v[1]) miny = v;
+          if (minz[2] > v[2]) minz = v;
+          if (maxx[0] < v[0]) maxx = v;
+          if (maxy[1] < v[1]) maxy = v;
+          if (maxz[2] < v[2]) maxz = v;
+        });
+        out[0] = (minx[0] + maxx[0]) * 0.5;
+        out[1] = (miny[1] + maxy[1]) * 0.5;
+        out[2] = (minz[2] + maxz[2]) * 0.5;
+        const x = out[0] - maxx[0];
+        const y = out[1] - maxy[1];
+        const z = out[2] - maxz[2];
+        out[3] = Math.sqrt(x * x + y * y + z * z);
+        cache.set(polygon, out);
+        return out;
+      };
+      module.exports = measureBoundingSphere;
+    }
+  });
+  var require_measureSignedVolume = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureSignedVolume.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec3 = require_vec3();
+      var measureSignedVolume = polygon => {
+        let signedVolume = 0;
+        const vertices = polygon.vertices;
+        const cross = vec3.create();
+        for (let i = 0; i < vertices.length - 2; i++) {
+          vec3.cross(cross, vertices[i + 1], vertices[i + 2]);
+          signedVolume += vec3.dot(vertices[0], cross);
+        }
+        signedVolume /= 6;
+        return signedVolume;
+      };
+      module.exports = measureSignedVolume;
+    }
+  });
+  var require_toPoints2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/toPoints.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var toPoints = polygon => polygon.vertices;
+      module.exports = toPoints;
+    }
+  });
+  var require_toString6 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/toString.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec3 = require_vec3();
+      var toString = polygon => {
+        let result = "poly3: vertices: [";
+        polygon.vertices.forEach(vertex => {
+          result += `${vec3.toString(vertex)}, `;
+        });
+        result += "]";
+        return result;
+      };
+      module.exports = toString;
+    }
+  });
+  var require_transform6 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/transform.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var mat42 = require_mat4();
+      var vec3 = require_vec3();
+      var create = require_create6();
+      var transform = (matrix, polygon) => {
+        const vertices = polygon.vertices.map(vertex => vec3.transform(vec3.create(), vertex, matrix));
+        if (mat42.isMirroring(matrix)) {
+          vertices.reverse();
+        }
+        const transformedVertices = create(vertices);
+        return polygon.color ? __spreadValues({
+          color: polygon.color
+        }, transformedVertices) : transformedVertices;
+      };
+      module.exports = transform;
+    }
+  });
+  var require_validate2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/validate.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var signedDistanceToPoint = require_signedDistanceToPoint();
+      var {NEPS} = require_constants();
+      var vec3 = require_vec3();
+      var isA = require_isA2();
+      var isConvex = require_isConvex();
+      var measureArea = require_measureArea();
+      var plane = require_plane2();
+      var validate = object => {
+        if (!isA(object)) {
+          throw new Error("invalid poly3 structure");
+        }
+        if (object.vertices.length < 3) {
+          throw new Error(`poly3 not enough vertices ${object.vertices.length}`);
+        }
+        if (measureArea(object) <= 0) {
+          throw new Error("poly3 area must be greater than zero");
+        }
+        for (let i = 0; i < object.vertices.length; i++) {
+          if (vec3.equals(object.vertices[i], object.vertices[(i + 1) % object.vertices.length])) {
+            throw new Error(`poly3 duplicate vertex ${object.vertices[i]}`);
+          }
+        }
+        if (!isConvex(object)) {
+          throw new Error("poly3 must be convex");
+        }
+        object.vertices.forEach(vertex => {
+          if (!vertex.every(Number.isFinite)) {
+            throw new Error(`poly3 invalid vertex ${vertex}`);
+          }
+        });
+        if (object.vertices.length > 3) {
+          const normal = plane(object);
+          object.vertices.forEach(vertex => {
+            const dist = Math.abs(signedDistanceToPoint(normal, vertex));
+            if (dist > NEPS) {
+              throw new Error(`poly3 must be coplanar: vertex ${vertex} distance ${dist}`);
+            }
+          });
+        }
+      };
+      module.exports = validate;
+    }
+  });
+  var require_poly3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = {
+        clone: require_clone6(),
+        create: require_create6(),
+        fromPoints: require_fromPoints2(),
+        fromPointsAndPlane: require_fromPointsAndPlane(),
+        invert: require_invert2(),
+        isA: require_isA2(),
+        isConvex: require_isConvex(),
+        measureArea: require_measureArea(),
+        measureBoundingBox: require_measureBoundingBox(),
+        measureBoundingSphere: require_measureBoundingSphere(),
+        measureSignedVolume: require_measureSignedVolume(),
+        plane: require_plane2(),
+        toPoints: require_toPoints2(),
+        toString: require_toString6(),
+        transform: require_transform6(),
+        validate: require_validate2()
+      };
+    }
+  });
+  var require_fromPoints4 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/fromPoints.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var poly3 = require_poly3();
+      var create = require_create5();
+      var fromPoints = listofpoints => {
+        if (!Array.isArray(listofpoints)) {
+          throw new Error("the given points must be an array");
+        }
+        const polygons = listofpoints.map((points, index) => {
+          const polygon = poly3.create(points);
+          return polygon;
+        });
+        const result = create(polygons);
+        return result;
+      };
+      module.exports = fromPoints;
+    }
+  });
+  var require_fromCompactBinary2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/fromCompactBinary.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec3 = require_vec3();
+      var mat42 = require_mat4();
+      var poly3 = require_poly3();
+      var create = require_create5();
+      var fromCompactBinary = data => {
+        if (data[0] !== 1) throw new Error("invalid compact binary data");
+        const created = create();
+        created.transforms = mat42.clone(data.slice(1, 17));
+        const numberOfVertices = data[21];
+        let ci = 22;
+        let vi = data.length - numberOfVertices * 3;
+        while (vi < data.length) {
+          const verticesPerPolygon = data[ci];
+          ci++;
+          const vertices = [];
+          for (let i = 0; i < verticesPerPolygon; i++) {
+            vertices.push(vec3.fromValues(data[vi], data[vi + 1], data[vi + 2]));
+            vi += 3;
+          }
+          created.polygons.push(poly3.create(vertices));
+        }
+        if (data[17] >= 0) {
+          created.color = [data[17], data[18], data[19], data[20]];
+        }
+        return created;
+      };
+      module.exports = fromCompactBinary;
+    }
+  });
+  var require_applyTransforms2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/applyTransforms.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var mat42 = require_mat4();
+      var poly3 = require_poly3();
+      var applyTransforms = geometry => {
+        if (mat42.isIdentity(geometry.transforms)) return geometry;
+        geometry.polygons = geometry.polygons.map(polygon => poly3.transform(geometry.transforms, polygon));
+        geometry.transforms = mat42.create();
+        return geometry;
+      };
+      module.exports = applyTransforms;
+    }
+  });
+  var require_toPolygons = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var poly3 = require_poly3();
+      var applyTransforms = require_applyTransforms2();
+      var colorPoly3 = (color, object) => {
+        if (!object.color) {
+          object.color = color;
+        }
+        return object;
+      };
+      var toPolygons = (geometry, colorizePolygons = false) => {
+        const newPolygons = applyTransforms(geometry).polygons;
+        return colorizePolygons && geometry.color ? newPolygons.map(polygon => colorPoly3(geometry.color, polygon)) : newPolygons;
+      };
+      module.exports = toPolygons;
+    }
+  });
+  var require_invert3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/invert.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var poly3 = require_poly3();
+      var create = require_create5();
+      var toPolygons = require_toPolygons();
+      var invert = geometry => {
+        const polygons = toPolygons(geometry);
+        const newpolygons = polygons.map(polygon => poly3.invert(polygon));
+        return create(newpolygons);
+      };
+      module.exports = invert;
+    }
+  });
+  var require_isA3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/isA.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var isA = object => {
+        if (object && typeof object === "object") {
+          if (("polygons" in object) && ("transforms" in object)) {
+            if (Array.isArray(object.polygons) && ("length" in object.transforms)) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+      module.exports = isA;
+    }
+  });
+  var require_toPoints3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toPoints.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var poly3 = require_poly3();
+      var toPolygons = require_toPolygons();
+      var toPoints = geometry => {
+        const polygons = toPolygons(geometry);
+        const listofpoints = polygons.map(polygon => poly3.toPoints(polygon));
+        return listofpoints;
+      };
+      module.exports = toPoints;
+    }
+  });
+  var require_toString7 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toString.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var poly3 = require_poly3();
+      var toPolygons = require_toPolygons();
+      var toString = geometry => {
+        const polygons = toPolygons(geometry);
+        let result = "geom3 (" + polygons.length + " polygons):\n";
+        polygons.forEach(polygon => {
+          result += "  " + poly3.toString(polygon) + "\n";
+        });
+        return result;
+      };
+      module.exports = toString;
+    }
+  });
+  var require_toCompactBinary2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toCompactBinary.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var poly3 = require_poly3();
+      var toCompactBinary = geometry => {
+        const polygons = geometry.polygons;
+        const transforms = geometry.transforms;
+        const numberOfPolygons = polygons.length;
+        const numberOfVertices = polygons.reduce((count, polygon) => count + polygon.vertices.length, 0);
+        let color = [-1, -1, -1, -1];
+        if (geometry.color) color = geometry.color;
+        const compacted = new Float32Array(1 + 16 + 4 + 1 + numberOfPolygons + numberOfVertices * 3);
+        compacted[0] = 1;
+        compacted[1] = transforms[0];
+        compacted[2] = transforms[1];
+        compacted[3] = transforms[2];
+        compacted[4] = transforms[3];
+        compacted[5] = transforms[4];
+        compacted[6] = transforms[5];
+        compacted[7] = transforms[6];
+        compacted[8] = transforms[7];
+        compacted[9] = transforms[8];
+        compacted[10] = transforms[9];
+        compacted[11] = transforms[10];
+        compacted[12] = transforms[11];
+        compacted[13] = transforms[12];
+        compacted[14] = transforms[13];
+        compacted[15] = transforms[14];
+        compacted[16] = transforms[15];
+        compacted[17] = color[0];
+        compacted[18] = color[1];
+        compacted[19] = color[2];
+        compacted[20] = color[3];
+        compacted[21] = numberOfVertices;
+        let ci = 22;
+        let vi = ci + numberOfPolygons;
+        polygons.forEach(polygon => {
+          const points = poly3.toPoints(polygon);
+          compacted[ci] = points.length;
+          ci++;
+          for (let i = 0; i < points.length; i++) {
+            const point = points[i];
+            compacted[vi + 0] = point[0];
+            compacted[vi + 1] = point[1];
+            compacted[vi + 2] = point[2];
+            vi += 3;
+          }
+        });
+        return compacted;
+      };
+      module.exports = toCompactBinary;
+    }
+  });
+  var require_transform7 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/transform.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var mat42 = require_mat4();
+      var transform = (matrix, geometry) => {
+        const transforms = mat42.multiply(mat42.create(), matrix, geometry.transforms);
+        return Object.assign({}, geometry, {
+          transforms
+        });
+      };
+      module.exports = transform;
+    }
+  });
+  var require_validate3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/validate.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var poly3 = require_poly3();
+      var isA = require_isA3();
+      var validate = object => {
+        if (!isA(object)) {
+          throw new Error("invalid geom3 structure");
+        }
+        object.polygons.forEach(poly3.validate);
+        validateManifold(object);
+        if (!object.transforms.every(Number.isFinite)) {
+          throw new Error(`geom3 invalid transforms ${object.transforms}`);
+        }
+      };
+      var validateManifold = object => {
+        const edgeCount = new Map();
+        object.polygons.forEach(({vertices}) => {
+          vertices.forEach((v, i) => {
+            const v1 = `${v}`;
+            const v2 = `${vertices[(i + 1) % vertices.length]}`;
+            const edge = `${v1}/${v2}`;
+            const count = edgeCount.has(edge) ? edgeCount.get(edge) : 0;
+            edgeCount.set(edge, count + 1);
+          });
+        });
+        const nonManifold = [];
+        edgeCount.forEach((count, edge) => {
+          const complementEdge = edge.split("/").reverse().join("/");
+          const complementCount = edgeCount.get(complementEdge);
+          if (count !== complementCount) {
+            nonManifold.push(edge.replace("/", " -> "));
+          }
+        });
+        if (nonManifold.length > 0) {
+          throw new Error(`non-manifold edges ${nonManifold.length}
+${nonManifold.join("\n")}`);
+        }
+      };
+      module.exports = validate;
+    }
+  });
+  var require_geom3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = {
+        clone: require_clone5(),
+        create: require_create5(),
+        fromPoints: require_fromPoints4(),
+        fromCompactBinary: require_fromCompactBinary2(),
+        invert: require_invert3(),
+        isA: require_isA3(),
+        toPoints: require_toPoints3(),
+        toPolygons: require_toPolygons(),
         toString: require_toString7(),
         toCompactBinary: require_toCompactBinary2(),
         transform: require_transform7(),
@@ -3637,17 +3642,17 @@ ${nonManifold.join("\n")}`);
         const v0 = vec2.create();
         const v1 = vec2.create();
         const v3 = vec3.create();
-        const getPointForT = t => {
+        const getPointForT = t4 => {
           let tk = 1;
-          let oneMinusTNMinusK = Math.pow(1 - t, bezierOrder);
-          const invOneMinusT = t !== 1 ? 1 / (1 - t) : 1;
+          let oneMinusTNMinusK = Math.pow(1 - t4, bezierOrder);
+          const invOneMinusT = t4 !== 1 ? 1 / (1 - t4) : 1;
           const point = vec2.create();
           for (let k = 0; k <= bezierOrder; ++k) {
             if (k === bezierOrder) oneMinusTNMinusK = 1;
             const bernsteinCoefficient = binomials[k] * tk * oneMinusTNMinusK;
             const derivativePoint = vec2.scale(v0, controlPoints[k], bernsteinCoefficient);
             vec2.add(point, point, derivativePoint);
-            tk *= t;
+            tk *= t4;
             oneMinusTNMinusK *= invOneMinusT;
           }
           return point;
@@ -3656,10 +3661,10 @@ ${nonManifold.join("\n")}`);
         const newpointsT = [];
         const numsteps = bezierOrder + 1;
         for (let i = 0; i < numsteps; ++i) {
-          const t = i / (numsteps - 1);
-          const point = getPointForT(t);
+          const t4 = i / (numsteps - 1);
+          const point = getPointForT(t4);
           newpoints.push(point);
-          newpointsT.push(t);
+          newpointsT.push(t4);
         }
         let subdivideBase = 1;
         const maxangle = Math.PI * 2 / segments;
@@ -3699,14 +3704,14 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var vec2 = require_vec2();
       var toPoints = require_toPoints4();
-      var equals = (a, b) => {
-        if (a.isClosed !== b.isClosed) {
+      var equals = (a3, b) => {
+        if (a3.isClosed !== b.isClosed) {
           return false;
         }
-        if (a.points.length !== b.points.length) {
+        if (a3.points.length !== b.points.length) {
           return false;
         }
-        const apoints = toPoints(a);
+        const apoints = toPoints(a3);
         const bpoints = toPoints(b);
         const length = apoints.length;
         let offset = 0;
@@ -3721,7 +3726,7 @@ ${nonManifold.join("\n")}`);
           if (unequal === false) {
             return true;
           }
-          if (!a.isClosed) {
+          if (!a3.isClosed) {
             return false;
           }
         } while (++offset < length);
@@ -3910,461 +3915,6 @@ ${nonManifold.join("\n")}`);
         toCompactBinary: require_toCompactBinary3(),
         transform: require_transform8(),
         validate: require_validate4()
-      };
-    }
-  });
-  var require_measureBoundingBox2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/measurements/measureBoundingBox.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var vec2 = require_vec2();
-      var vec3 = require_vec3();
-      var geom2 = require_geom2();
-      var geom32 = require_geom3();
-      var path2 = require_path2();
-      var poly3 = require_poly3();
-      var cache = new WeakMap();
-      var measureBoundingBoxOfPath2 = geometry => {
-        let boundingBox = cache.get(geometry);
-        if (boundingBox) return boundingBox;
-        const points = path2.toPoints(geometry);
-        let minpoint;
-        if (points.length === 0) {
-          minpoint = vec2.create();
-        } else {
-          minpoint = vec2.clone(points[0]);
-        }
-        let maxpoint = vec2.clone(minpoint);
-        points.forEach(point => {
-          vec2.min(minpoint, minpoint, point);
-          vec2.max(maxpoint, maxpoint, point);
-        });
-        minpoint = [minpoint[0], minpoint[1], 0];
-        maxpoint = [maxpoint[0], maxpoint[1], 0];
-        boundingBox = [minpoint, maxpoint];
-        cache.set(geometry, boundingBox);
-        return boundingBox;
-      };
-      var measureBoundingBoxOfGeom2 = geometry => {
-        let boundingBox = cache.get(geometry);
-        if (boundingBox) return boundingBox;
-        const points = geom2.toPoints(geometry);
-        let minpoint;
-        if (points.length === 0) {
-          minpoint = vec2.create();
-        } else {
-          minpoint = vec2.clone(points[0]);
-        }
-        let maxpoint = vec2.clone(minpoint);
-        points.forEach(point => {
-          vec2.min(minpoint, minpoint, point);
-          vec2.max(maxpoint, maxpoint, point);
-        });
-        minpoint = [minpoint[0], minpoint[1], 0];
-        maxpoint = [maxpoint[0], maxpoint[1], 0];
-        boundingBox = [minpoint, maxpoint];
-        cache.set(geometry, boundingBox);
-        return boundingBox;
-      };
-      var measureBoundingBoxOfGeom3 = geometry => {
-        let boundingBox = cache.get(geometry);
-        if (boundingBox) return boundingBox;
-        const polygons = geom32.toPolygons(geometry);
-        let minpoint = vec3.create();
-        if (polygons.length > 0) {
-          const points = poly3.toPoints(polygons[0]);
-          vec3.copy(minpoint, points[0]);
-        }
-        let maxpoint = vec3.clone(minpoint);
-        polygons.forEach(polygon => {
-          poly3.toPoints(polygon).forEach(point => {
-            vec3.min(minpoint, minpoint, point);
-            vec3.max(maxpoint, maxpoint, point);
-          });
-        });
-        minpoint = [minpoint[0], minpoint[1], minpoint[2]];
-        maxpoint = [maxpoint[0], maxpoint[1], maxpoint[2]];
-        boundingBox = [minpoint, maxpoint];
-        cache.set(geometry, boundingBox);
-        return boundingBox;
-      };
-      var measureBoundingBox2 = (...geometries) => {
-        geometries = flatten(geometries);
-        if (geometries.length === 0) throw new Error("wrong number of arguments");
-        const results = geometries.map(geometry => {
-          if (path2.isA(geometry)) return measureBoundingBoxOfPath2(geometry);
-          if (geom2.isA(geometry)) return measureBoundingBoxOfGeom2(geometry);
-          if (geom32.isA(geometry)) return measureBoundingBoxOfGeom3(geometry);
-          return [[0, 0, 0], [0, 0, 0]];
-        });
-        return results.length === 1 ? results[0] : results;
-      };
-      module.exports = measureBoundingBox2;
-    }
-  });
-  var require_measureAggregateBoundingBox = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/measurements/measureAggregateBoundingBox.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var vec3min = require_min();
-      var vec3max = require_max();
-      var measureBoundingBox2 = require_measureBoundingBox2();
-      var measureAggregateBoundingBox = (...geometries) => {
-        geometries = flatten(geometries);
-        if (geometries.length === 0) throw new Error("measureAggregateBoundingBox: no geometries supplied");
-        const bounds = measureBoundingBox2(geometries);
-        if (geometries.length === 1) {
-          return bounds;
-        }
-        const result = [[Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE], [-Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE]];
-        return bounds.reduce((result2, item) => {
-          result2 = [vec3min(result2[0], result2[0], item[0]), vec3max(result2[1], result2[1], item[1])];
-          return result2;
-        }, result);
-      };
-      module.exports = measureAggregateBoundingBox;
-    }
-  });
-  var require_translate2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/translate.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var mat42 = require_mat4();
-      var geom2 = require_geom2();
-      var geom32 = require_geom3();
-      var path2 = require_path2();
-      var translate2 = (offset, ...objects) => {
-        if (!Array.isArray(offset)) throw new Error("offset must be an array");
-        objects = flatten(objects);
-        if (objects.length === 0) throw new Error("wrong number of arguments");
-        offset = offset.slice();
-        while (offset.length < 3) offset.push(0);
-        const matrix = mat42.fromTranslation(mat42.create(), offset);
-        const results = objects.map(object => {
-          if (path2.isA(object)) return path2.transform(matrix, object);
-          if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom32.isA(object)) return geom32.transform(matrix, object);
-          return object;
-        });
-        return results.length === 1 ? results[0] : results;
-      };
-      var translateX = (offset, ...objects) => translate2([offset, 0, 0], objects);
-      var translateY = (offset, ...objects) => translate2([0, offset, 0], objects);
-      var translateZ = (offset, ...objects) => translate2([0, 0, offset], objects);
-      module.exports = {
-        translate: translate2,
-        translateX,
-        translateY,
-        translateZ
-      };
-    }
-  });
-  var require_align = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/align.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var padArrayToLength = require_padArrayToLength();
-      var measureAggregateBoundingBox = require_measureAggregateBoundingBox();
-      var {translate: translate2} = require_translate2();
-      var validateOptions = options => {
-        if (!Array.isArray(options.modes) || options.modes.length > 3) throw new Error("align(): modes must be an array of length <= 3");
-        options.modes = padArrayToLength(options.modes, "none", 3);
-        if (options.modes.filter(mode => ["center", "max", "min", "none"].includes(mode)).length !== 3) throw new Error('align(): all modes must be one of "center", "max" or "min"');
-        if (!Array.isArray(options.relativeTo) || options.relativeTo.length > 3) throw new Error("align(): relativeTo must be an array of length <= 3");
-        options.relativeTo = padArrayToLength(options.relativeTo, 0, 3);
-        if (options.relativeTo.filter(alignVal => Number.isFinite(alignVal) || alignVal == null).length !== 3) throw new Error("align(): all relativeTo values must be a number, or null.");
-        if (typeof options.grouped !== "boolean") throw new Error("align(): grouped must be a boolean value.");
-        return options;
-      };
-      var populateRelativeToFromBounds = (relativeTo, modes, bounds) => {
-        for (let i = 0; i < 3; i++) {
-          if (relativeTo[i] == null) {
-            if (modes[i] === "center") {
-              relativeTo[i] = (bounds[0][i] + bounds[1][i]) / 2;
-            } else if (modes[i] === "max") {
-              relativeTo[i] = bounds[1][i];
-            } else if (modes[i] === "min") {
-              relativeTo[i] = bounds[0][i];
-            }
-          }
-        }
-        return relativeTo;
-      };
-      var alignGeometries = (geometry, modes, relativeTo) => {
-        const bounds = measureAggregateBoundingBox(geometry);
-        const translation = [0, 0, 0];
-        for (let i = 0; i < 3; i++) {
-          if (modes[i] === "center") {
-            translation[i] = relativeTo[i] - (bounds[0][i] + bounds[1][i]) / 2;
-          } else if (modes[i] === "max") {
-            translation[i] = relativeTo[i] - bounds[1][i];
-          } else if (modes[i] === "min") {
-            translation[i] = relativeTo[i] - bounds[0][i];
-          }
-        }
-        return translate2(translation, geometry);
-      };
-      var align = (options, ...geometries) => {
-        const defaults = {
-          modes: ["center", "center", "min"],
-          relativeTo: [0, 0, 0],
-          grouped: false
-        };
-        options = Object.assign({}, defaults, options);
-        options = validateOptions(options);
-        let {modes, relativeTo, grouped} = options;
-        geometries = flatten(geometries);
-        if (geometries.length === 0) throw new Error("align(): No geometries were provided to act upon");
-        if (relativeTo.filter(val => val == null).length) {
-          const bounds = measureAggregateBoundingBox(geometries);
-          relativeTo = populateRelativeToFromBounds(relativeTo, modes, bounds);
-        }
-        if (grouped) {
-          geometries = alignGeometries(geometries, modes, relativeTo);
-        } else {
-          geometries = geometries.map(geometry => alignGeometries(geometry, modes, relativeTo));
-        }
-        return geometries.length === 1 ? geometries[0] : geometries;
-      };
-      module.exports = align;
-    }
-  });
-  var require_center = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/center.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var geom2 = require_geom2();
-      var geom32 = require_geom3();
-      var path2 = require_path2();
-      var measureBoundingBox2 = require_measureBoundingBox2();
-      var {translate: translate2} = require_translate2();
-      var centerGeometry = (options, object) => {
-        const defaults = {
-          axes: [true, true, true],
-          relativeTo: [0, 0, 0]
-        };
-        const {axes, relativeTo} = Object.assign({}, defaults, options);
-        const bounds = measureBoundingBox2(object);
-        const offset = [0, 0, 0];
-        if (axes[0]) offset[0] = relativeTo[0] - (bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2);
-        if (axes[1]) offset[1] = relativeTo[1] - (bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2);
-        if (axes[2]) offset[2] = relativeTo[2] - (bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2);
-        return translate2(offset, object);
-      };
-      var center = (options, ...objects) => {
-        const defaults = {
-          axes: [true, true, true],
-          relativeTo: [0, 0, 0]
-        };
-        const {axes, relativeTo} = Object.assign({}, defaults, options);
-        objects = flatten(objects);
-        if (objects.length === 0) throw new Error("wrong number of arguments");
-        if (relativeTo.length !== 3) throw new Error("relativeTo must be an array of length 3");
-        options = {
-          axes,
-          relativeTo
-        };
-        const results = objects.map(object => {
-          if (path2.isA(object)) return centerGeometry(options, object);
-          if (geom2.isA(object)) return centerGeometry(options, object);
-          if (geom32.isA(object)) return centerGeometry(options, object);
-          return object;
-        });
-        return results.length === 1 ? results[0] : results;
-      };
-      var centerX = (...objects) => center({
-        axes: [true, false, false]
-      }, objects);
-      var centerY = (...objects) => center({
-        axes: [false, true, false]
-      }, objects);
-      var centerZ = (...objects) => center({
-        axes: [false, false, true]
-      }, objects);
-      module.exports = {
-        center,
-        centerX,
-        centerY,
-        centerZ
-      };
-    }
-  });
-  var require_mirror = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/mirror.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var mat42 = require_mat4();
-      var plane = require_plane();
-      var geom2 = require_geom2();
-      var geom32 = require_geom3();
-      var path2 = require_path2();
-      var mirror = (options, ...objects) => {
-        const defaults = {
-          origin: [0, 0, 0],
-          normal: [0, 0, 1]
-        };
-        const {origin, normal} = Object.assign({}, defaults, options);
-        objects = flatten(objects);
-        if (objects.length === 0) throw new Error("wrong number of arguments");
-        const planeOfMirror = plane.fromNormalAndPoint(plane.create(), normal, origin);
-        if (Number.isNaN(planeOfMirror[0])) {
-          throw new Error("the given origin and normal do not define a proper plane");
-        }
-        const matrix = mat42.mirrorByPlane(mat42.create(), planeOfMirror);
-        const results = objects.map(object => {
-          if (path2.isA(object)) return path2.transform(matrix, object);
-          if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom32.isA(object)) return geom32.transform(matrix, object);
-          return object;
-        });
-        return results.length === 1 ? results[0] : results;
-      };
-      var mirrorX = (...objects) => mirror({
-        normal: [1, 0, 0]
-      }, objects);
-      var mirrorY = (...objects) => mirror({
-        normal: [0, 1, 0]
-      }, objects);
-      var mirrorZ = (...objects) => mirror({
-        normal: [0, 0, 1]
-      }, objects);
-      module.exports = {
-        mirror,
-        mirrorX,
-        mirrorY,
-        mirrorZ
-      };
-    }
-  });
-  var require_rotate3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/rotate.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var mat42 = require_mat4();
-      var geom2 = require_geom2();
-      var geom32 = require_geom3();
-      var path2 = require_path2();
-      var rotate2 = (angles, ...objects) => {
-        if (!Array.isArray(angles)) throw new Error("angles must be an array");
-        objects = flatten(objects);
-        if (objects.length === 0) throw new Error("wrong number of arguments");
-        angles = angles.slice();
-        while (angles.length < 3) angles.push(0);
-        const yaw = angles[2];
-        const pitch = angles[1];
-        const roll = angles[0];
-        const matrix = mat42.fromTaitBryanRotation(mat42.create(), yaw, pitch, roll);
-        const results = objects.map(object => {
-          if (path2.isA(object)) return path2.transform(matrix, object);
-          if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom32.isA(object)) return geom32.transform(matrix, object);
-          return object;
-        });
-        return results.length === 1 ? results[0] : results;
-      };
-      var rotateX = (angle, ...objects) => rotate2([angle, 0, 0], objects);
-      var rotateY = (angle, ...objects) => rotate2([0, angle, 0], objects);
-      var rotateZ = (angle, ...objects) => rotate2([0, 0, angle], objects);
-      module.exports = {
-        rotate: rotate2,
-        rotateX,
-        rotateY,
-        rotateZ
-      };
-    }
-  });
-  var require_scale4 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/scale.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var mat42 = require_mat4();
-      var geom2 = require_geom2();
-      var geom32 = require_geom3();
-      var path2 = require_path2();
-      var scale2 = (factors, ...objects) => {
-        if (!Array.isArray(factors)) throw new Error("factors must be an array");
-        objects = flatten(objects);
-        if (objects.length === 0) throw new Error("wrong number of arguments");
-        factors = factors.slice();
-        while (factors.length < 3) factors.push(1);
-        if (factors[0] <= 0 || factors[1] <= 0 || factors[2] <= 0) throw new Error("factors must be positive");
-        const matrix = mat42.fromScaling(mat42.create(), factors);
-        const results = objects.map(object => {
-          if (path2.isA(object)) return path2.transform(matrix, object);
-          if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom32.isA(object)) return geom32.transform(matrix, object);
-          return object;
-        });
-        return results.length === 1 ? results[0] : results;
-      };
-      var scaleX = (factor, ...objects) => scale2([factor, 1, 1], objects);
-      var scaleY = (factor, ...objects) => scale2([1, factor, 1], objects);
-      var scaleZ = (factor, ...objects) => scale2([1, 1, factor], objects);
-      module.exports = {
-        scale: scale2,
-        scaleX,
-        scaleY,
-        scaleZ
-      };
-    }
-  });
-  var require_transform9 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/transform.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var geom2 = require_geom2();
-      var geom32 = require_geom3();
-      var path2 = require_path2();
-      var transform = (matrix, ...objects) => {
-        objects = flatten(objects);
-        if (objects.length === 0) throw new Error("wrong number of arguments");
-        const results = objects.map(object => {
-          if (path2.isA(object)) return path2.transform(matrix, object);
-          if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom32.isA(object)) return geom32.transform(matrix, object);
-          return object;
-        });
-        return results.length === 1 ? results[0] : results;
-      };
-      module.exports = transform;
-    }
-  });
-  var require_transforms = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = {
-        align: require_align(),
-        center: require_center().center,
-        centerX: require_center().centerX,
-        centerY: require_center().centerY,
-        centerZ: require_center().centerZ,
-        mirror: require_mirror().mirror,
-        mirrorX: require_mirror().mirrorX,
-        mirrorY: require_mirror().mirrorY,
-        mirrorZ: require_mirror().mirrorZ,
-        rotate: require_rotate3().rotate,
-        rotateX: require_rotate3().rotateX,
-        rotateY: require_rotate3().rotateY,
-        rotateZ: require_rotate3().rotateZ,
-        scale: require_scale4().scale,
-        scaleX: require_scale4().scaleX,
-        scaleY: require_scale4().scaleY,
-        scaleZ: require_scale4().scaleZ,
-        transform: require_transform9(),
-        translate: require_translate2().translate,
-        translateX: require_translate2().translateX,
-        translateY: require_translate2().translateY,
-        translateZ: require_translate2().translateZ
       };
     }
   });
@@ -4577,7 +4127,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var cssColors = require_cssColors();
-      var colorNameToRgb = s => cssColors[s.toLowerCase()];
+      var colorNameToRgb = s5 => cssColors[s5.toLowerCase()];
       module.exports = colorNameToRgb;
     }
   });
@@ -4588,14 +4138,14 @@ ${nonManifold.join("\n")}`);
       var hexToRgb = notation => {
         notation = notation.replace("#", "");
         if (notation.length < 6) throw new Error("the given notation must contain 3 or more hex values");
-        const r = parseInt(notation.substring(0, 2), 16) / 255;
+        const r2 = parseInt(notation.substring(0, 2), 16) / 255;
         const g = parseInt(notation.substring(2, 4), 16) / 255;
         const b = parseInt(notation.substring(4, 6), 16) / 255;
         if (notation.length >= 8) {
-          const a = parseInt(notation.substring(6, 8), 16) / 255;
-          return [r, g, b, a];
+          const a3 = parseInt(notation.substring(6, 8), 16) / 255;
+          return [r2, g, b, a3];
         }
-        return [r, g, b];
+        return [r2, g, b];
       };
       module.exports = hexToRgb;
     }
@@ -4604,13 +4154,13 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/colors/hueToColorComponent.js"(exports, module) {
       "use strict";
       init_define_process();
-      var hueToColorComponent = (p, q, t) => {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1 / 6) return p + (q - p) * 6 * t;
-        if (t < 1 / 2) return q;
-        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-        return p;
+      var hueToColorComponent = (p2, q, t4) => {
+        if (t4 < 0) t4 += 1;
+        if (t4 > 1) t4 -= 1;
+        if (t4 < 1 / 6) return p2 + (q - p2) * 6 * t4;
+        if (t4 < 1 / 2) return q;
+        if (t4 < 2 / 3) return p2 + (q - p2) * (2 / 3 - t4) * 6;
+        return p2;
       };
       module.exports = hueToColorComponent;
     }
@@ -4625,23 +4175,23 @@ ${nonManifold.join("\n")}`);
         values = flatten(values);
         if (values.length < 3) throw new Error("values must contain H, S and L values");
         const h = values[0];
-        const s = values[1];
-        const l = values[2];
-        let r = l;
-        let g = l;
-        let b = l;
-        if (s !== 0) {
-          const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-          const p = 2 * l - q;
-          r = hueToColorComponent(p, q, h + 1 / 3);
-          g = hueToColorComponent(p, q, h);
-          b = hueToColorComponent(p, q, h - 1 / 3);
+        const s5 = values[1];
+        const l2 = values[2];
+        let r2 = l2;
+        let g = l2;
+        let b = l2;
+        if (s5 !== 0) {
+          const q = l2 < 0.5 ? l2 * (1 + s5) : l2 + s5 - l2 * s5;
+          const p2 = 2 * l2 - q;
+          r2 = hueToColorComponent(p2, q, h + 1 / 3);
+          g = hueToColorComponent(p2, q, h);
+          b = hueToColorComponent(p2, q, h - 1 / 3);
         }
         if (values.length > 3) {
-          const a = values[3];
-          return [r, g, b, a];
+          const a3 = values[3];
+          return [r2, g, b, a3];
         }
-        return [r, g, b];
+        return [r2, g, b];
       };
       module.exports = hslToRgb;
     }
@@ -4655,53 +4205,53 @@ ${nonManifold.join("\n")}`);
         values = flatten(values);
         if (values.length < 3) throw new Error("values must contain H, S and V values");
         const h = values[0];
-        const s = values[1];
+        const s5 = values[1];
         const v = values[2];
-        let r = 0;
+        let r2 = 0;
         let g = 0;
         let b = 0;
         const i = Math.floor(h * 6);
-        const f = h * 6 - i;
-        const p = v * (1 - s);
-        const q = v * (1 - f * s);
-        const t = v * (1 - (1 - f) * s);
+        const f2 = h * 6 - i;
+        const p2 = v * (1 - s5);
+        const q = v * (1 - f2 * s5);
+        const t4 = v * (1 - (1 - f2) * s5);
         switch (i % 6) {
           case 0:
-            r = v;
-            g = t;
-            b = p;
+            r2 = v;
+            g = t4;
+            b = p2;
             break;
           case 1:
-            r = q;
+            r2 = q;
             g = v;
-            b = p;
+            b = p2;
             break;
           case 2:
-            r = p;
+            r2 = p2;
             g = v;
-            b = t;
+            b = t4;
             break;
           case 3:
-            r = p;
+            r2 = p2;
             g = q;
             b = v;
             break;
           case 4:
-            r = t;
-            g = p;
+            r2 = t4;
+            g = p2;
             b = v;
             break;
           case 5:
-            r = v;
-            g = p;
+            r2 = v;
+            g = p2;
             b = q;
             break;
         }
         if (values.length > 3) {
-          const a = values[3];
-          return [r, g, b, a];
+          const a3 = values[3];
+          return [r2, g, b, a3];
         }
-        return [r, g, b];
+        return [r2, g, b];
       };
       module.exports = hsvToRgb;
     }
@@ -4714,14 +4264,14 @@ ${nonManifold.join("\n")}`);
       var rgbToHex = (...values) => {
         values = flatten(values);
         if (values.length < 3) throw new Error("values must contain R, G and B values");
-        const r = values[0] * 255;
+        const r2 = values[0] * 255;
         const g = values[1] * 255;
         const b = values[2] * 255;
-        let s = `#${Number(16777216 + r * 65536 + g * 256 + b).toString(16).substring(1, 7)}`;
+        let s5 = `#${Number(16777216 + r2 * 65536 + g * 256 + b).toString(16).substring(1, 7)}`;
         if (values.length > 3) {
-          s = s + Number(values[3] * 255).toString(16);
+          s5 = s5 + Number(values[3] * 255).toString(16);
         }
-        return s;
+        return s5;
       };
       module.exports = rgbToHex;
     }
@@ -4734,37 +4284,37 @@ ${nonManifold.join("\n")}`);
       var rgbToHsl = (...values) => {
         values = flatten(values);
         if (values.length < 3) throw new Error("values must contain R, G and B values");
-        const r = values[0];
+        const r2 = values[0];
         const g = values[1];
         const b = values[2];
-        const max = Math.max(r, g, b);
-        const min = Math.min(r, g, b);
+        const max = Math.max(r2, g, b);
+        const min = Math.min(r2, g, b);
         let h;
-        let s;
-        const l = (max + min) / 2;
+        let s5;
+        const l2 = (max + min) / 2;
         if (max === min) {
-          h = s = 0;
+          h = s5 = 0;
         } else {
-          const d = max - min;
-          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          const d2 = max - min;
+          s5 = l2 > 0.5 ? d2 / (2 - max - min) : d2 / (max + min);
           switch (max) {
-            case r:
-              h = (g - b) / d + (g < b ? 6 : 0);
+            case r2:
+              h = (g - b) / d2 + (g < b ? 6 : 0);
               break;
             case g:
-              h = (b - r) / d + 2;
+              h = (b - r2) / d2 + 2;
               break;
             case b:
-              h = (r - g) / d + 4;
+              h = (r2 - g) / d2 + 4;
               break;
           }
           h /= 6;
         }
         if (values.length > 3) {
-          const a = values[3];
-          return [h, s, l, a];
+          const a3 = values[3];
+          return [h, s5, l2, a3];
         }
-        return [h, s, l];
+        return [h, s5, l2];
       };
       module.exports = rgbToHsl;
     }
@@ -4777,36 +4327,36 @@ ${nonManifold.join("\n")}`);
       var rgbToHsv = (...values) => {
         values = flatten(values);
         if (values.length < 3) throw new Error("values must contain R, G and B values");
-        const r = values[0];
+        const r2 = values[0];
         const g = values[1];
         const b = values[2];
-        const max = Math.max(r, g, b);
-        const min = Math.min(r, g, b);
+        const max = Math.max(r2, g, b);
+        const min = Math.min(r2, g, b);
         let h;
         const v = max;
-        const d = max - min;
-        const s = max === 0 ? 0 : d / max;
+        const d2 = max - min;
+        const s5 = max === 0 ? 0 : d2 / max;
         if (max === min) {
           h = 0;
         } else {
           switch (max) {
-            case r:
-              h = (g - b) / d + (g < b ? 6 : 0);
+            case r2:
+              h = (g - b) / d2 + (g < b ? 6 : 0);
               break;
             case g:
-              h = (b - r) / d + 2;
+              h = (b - r2) / d2 + 2;
               break;
             case b:
-              h = (r - g) / d + 4;
+              h = (r2 - g) / d2 + 4;
               break;
           }
           h /= 6;
         }
         if (values.length > 3) {
-          const a = values[3];
-          return [h, s, v, a];
+          const a3 = values[3];
+          return [h, s5, v, a3];
         }
-        return [h, s, v];
+        return [h, s5, v];
       };
       module.exports = rgbToHsv;
     }
@@ -4867,10 +4417,10 @@ ${nonManifold.join("\n")}`);
         });
         return firstPointType;
       };
-      var getPermutations = function (c) {
+      var getPermutations = function (c2) {
         const permutations = [];
-        for (let i = 0; i <= c; i++) {
-          permutations.push(factorial(c) / (factorial(i) * factorial(c - i)));
+        for (let i = 0; i <= c2; i++) {
+          permutations.push(factorial(c2) / (factorial(i) * factorial(c2 - i)));
         }
         return permutations;
       };
@@ -4888,12 +4438,12 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/curves/bezier/valueAt.js"(exports, module) {
       "use strict";
       init_define_process();
-      var valueAt = (t, bezier) => {
-        if (t < 0 || t > 1) {
+      var valueAt = (t4, bezier) => {
+        if (t4 < 0 || t4 > 1) {
           throw new Error("Bezier valueAt() input must be between 0 and 1");
         }
         if (bezier.pointType === "float_single") {
-          return bezierFunction(bezier, bezier.points, t);
+          return bezierFunction(bezier, bezier.points, t4);
         } else {
           const result = [];
           for (let i = 0; i < bezier.dimensions; i++) {
@@ -4901,16 +4451,16 @@ ${nonManifold.join("\n")}`);
             for (let j = 0; j < bezier.points.length; j++) {
               singleDimensionPoints.push(bezier.points[j][i]);
             }
-            result.push(bezierFunction(bezier, singleDimensionPoints, t));
+            result.push(bezierFunction(bezier, singleDimensionPoints, t4));
           }
           return result;
         }
       };
-      var bezierFunction = function (bezier, p, t) {
-        const n = p.length - 1;
+      var bezierFunction = function (bezier, p2, t4) {
+        const n3 = p2.length - 1;
         let result = 0;
-        for (let i = 0; i <= n; i++) {
-          result += bezier.permutations[i] * Math.pow(1 - t, n - i) * Math.pow(t, i) * p[i];
+        for (let i = 0; i <= n3; i++) {
+          result += bezier.permutations[i] * Math.pow(1 - t4, n3 - i) * Math.pow(t4, i) * p2[i];
         }
         return result;
       };
@@ -4921,12 +4471,12 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/curves/bezier/tangentAt.js"(exports, module) {
       "use strict";
       init_define_process();
-      var tangentAt = (t, bezier) => {
-        if (t < 0 || t > 1) {
+      var tangentAt = (t4, bezier) => {
+        if (t4 < 0 || t4 > 1) {
           throw new Error("Bezier tangentAt() input must be between 0 and 1");
         }
         if (bezier.pointType === "float_single") {
-          return bezierTangent(bezier, bezier.points, t);
+          return bezierTangent(bezier, bezier.points, t4);
         } else {
           const result = [];
           for (let i = 0; i < bezier.dimensions; i++) {
@@ -4934,17 +4484,17 @@ ${nonManifold.join("\n")}`);
             for (let j = 0; j < bezier.points.length; j++) {
               singleDimensionPoints.push(bezier.points[j][i]);
             }
-            result.push(bezierTangent(bezier, singleDimensionPoints, t));
+            result.push(bezierTangent(bezier, singleDimensionPoints, t4));
           }
           return result;
         }
       };
-      var bezierTangent = function (bezier, p, t) {
-        const n = p.length - 1;
+      var bezierTangent = function (bezier, p2, t4) {
+        const n3 = p2.length - 1;
         let result = 0;
-        for (let i = 0; i < n; i++) {
-          const q = n * (p[i + 1] - p[i]);
-          result += bezier.tangentPermutations[i] * Math.pow(1 - t, n - 1 - i) * Math.pow(t, i) * q;
+        for (let i = 0; i < n3; i++) {
+          const q = n3 * (p2[i + 1] - p2[i]);
+          result += bezier.tangentPermutations[i] * Math.pow(1 - t4, n3 - 1 - i) * Math.pow(t4, i) * q;
         }
         return result;
       };
@@ -5148,13 +4698,13 @@ ${nonManifold.join("\n")}`);
       var direction = require_direction();
       var origin = require_origin();
       var closestPoint = (line, point) => {
-        const a = origin(line);
+        const a3 = origin(line);
         const b = direction(line);
-        const m1 = (b[1] - a[1]) / (b[0] - a[0]);
-        const t1 = a[1] - m1 * a[0];
+        const m1 = (b[1] - a3[1]) / (b[0] - a3[0]);
+        const t1 = a3[1] - m1 * a3[0];
         const m2 = -1 / m1;
-        const t2 = point[1] - m2 * point[0];
-        const x = (t2 - t1) / (m1 - m2);
+        const t22 = point[1] - m2 * point[0];
+        const x = (t22 - t1) / (m1 - m2);
         const y = m1 * x + t1;
         const closest = vec2.fromValues(x, y);
         return closest;
@@ -5219,11 +4769,11 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var create = require_create11();
-      var fromValues = (x, y, d) => {
+      var fromValues = (x, y, d2) => {
         const out = create();
         out[0] = x;
         out[1] = y;
-        out[2] = d;
+        out[2] = d2;
         return out;
       };
       module.exports = fromValues;
@@ -5234,7 +4784,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var {NEPS} = require_constants();
-      var aboutEqualNormals = (a, b) => Math.abs(a[0] - b[0]) <= NEPS && Math.abs(a[1] - b[1]) <= NEPS && Math.abs(a[2] - b[2]) <= NEPS;
+      var aboutEqualNormals = (a3, b) => Math.abs(a3[0] - b[0]) <= NEPS && Math.abs(a3[1] - b[1]) <= NEPS && Math.abs(a3[2] - b[2]) <= NEPS;
       module.exports = aboutEqualNormals;
     }
   });
@@ -5249,17 +4799,17 @@ ${nonManifold.join("\n")}`);
           f1 = -f1;
           f2 = -f2;
         }
-        let t;
+        let t4;
         if (f1 <= 0) {
-          t = 0;
+          t4 = 0;
         } else if (f1 >= f2) {
-          t = 1;
+          t4 = 1;
         } else if (f2 < 1e-10) {
-          t = 0.5;
+          t4 = 0.5;
         } else {
-          t = f1 / f2;
+          t4 = f1 / f2;
         }
-        const result = point1[0] + t * (point2[0] - point1[0]);
+        const result = point1[0] + t4 * (point2[0] - point1[0]);
         return result;
       };
       module.exports = interpolateBetween2DPointsForY;
@@ -5293,11 +4843,11 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/maths/utils/solve2Linear.js"(exports, module) {
       "use strict";
       init_define_process();
-      var solve2Linear = (a, b, c, d, u, v) => {
-        const det = a * d - b * c;
+      var solve2Linear = (a3, b, c2, d2, u3, v) => {
+        const det = a3 * d2 - b * c2;
         const invdet = 1 / det;
-        let x = u * d - b * v;
-        let y = -u * c + a * v;
+        let x = u3 * d2 - b * v;
+        let y = -u3 * c2 + a3 * v;
         x *= invdet;
         y *= invdet;
         return [x, y];
@@ -5356,7 +4906,7 @@ ${nonManifold.join("\n")}`);
       module.exports = toString;
     }
   });
-  var require_transform10 = __commonJS({
+  var require_transform9 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/line2/transform.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -5408,7 +4958,7 @@ ${nonManifold.join("\n")}`);
         origin: require_origin(),
         reverse: require_reverse3(),
         toString: require_toString9(),
-        transform: require_transform10(),
+        transform: require_transform9(),
         xAtY: require_xAtY()
       };
     }
@@ -5445,10 +4995,10 @@ ${nonManifold.join("\n")}`);
       var closestPoint = (line, point) => {
         const lpoint = line[0];
         const ldirection = line[1];
-        const a = vec3.dot(vec3.subtract(vec3.create(), point, lpoint), ldirection);
+        const a3 = vec3.dot(vec3.subtract(vec3.create(), point, lpoint), ldirection);
         const b = vec3.dot(ldirection, ldirection);
-        const t = a / b;
-        const closestpoint = vec3.scale(vec3.create(), ldirection, t);
+        const t4 = a3 / b;
+        const closestpoint = vec3.scale(vec3.create(), ldirection, t4);
         vec3.add(closestpoint, closestpoint, lpoint);
         return closestpoint;
       };
@@ -5537,16 +5087,16 @@ ${nonManifold.join("\n")}`);
         const absy = Math.abs(direction[1]);
         const absz = Math.abs(direction[2]);
         let origin;
-        let r;
+        let r2;
         if (absx >= absy && absx >= absz) {
-          r = solve2Linear(plane1[1], plane1[2], plane2[1], plane2[2], plane1[3], plane2[3]);
-          origin = vec3.fromValues(0, r[0], r[1]);
+          r2 = solve2Linear(plane1[1], plane1[2], plane2[1], plane2[2], plane1[3], plane2[3]);
+          origin = vec3.fromValues(0, r2[0], r2[1]);
         } else if (absy >= absx && absy >= absz) {
-          r = solve2Linear(plane1[0], plane1[2], plane2[0], plane2[2], plane1[3], plane2[3]);
-          origin = vec3.fromValues(r[0], 0, r[1]);
+          r2 = solve2Linear(plane1[0], plane1[2], plane2[0], plane2[2], plane1[3], plane2[3]);
+          origin = vec3.fromValues(r2[0], 0, r2[1]);
         } else {
-          r = solve2Linear(plane1[0], plane1[1], plane2[0], plane2[1], plane1[3], plane2[3]);
-          origin = vec3.fromValues(r[0], r[1], 0);
+          r2 = solve2Linear(plane1[0], plane1[1], plane2[0], plane2[1], plane1[3], plane2[3]);
+          origin = vec3.fromValues(r2[0], r2[1], 0);
         }
         return fromPointAndDirection(out, origin, direction);
       };
@@ -5617,7 +5167,7 @@ ${nonManifold.join("\n")}`);
       module.exports = toString;
     }
   });
-  var require_transform11 = __commonJS({
+  var require_transform10 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/line3/transform.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -5654,7 +5204,7 @@ ${nonManifold.join("\n")}`);
         origin: require_origin2(),
         reverse: require_reverse4(),
         toString: require_toString10(),
-        transform: require_transform11()
+        transform: require_transform10()
       };
     }
   });
@@ -5734,6 +5284,120 @@ ${nonManifold.join("\n")}`);
         return areas.reduce((result2, area) => result2 + area, result);
       };
       module.exports = measureAggregateArea;
+    }
+  });
+  var require_measureBoundingBox2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/measurements/measureBoundingBox.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var flatten = require_flatten();
+      var vec2 = require_vec2();
+      var vec3 = require_vec3();
+      var geom2 = require_geom2();
+      var geom32 = require_geom3();
+      var path2 = require_path2();
+      var poly3 = require_poly3();
+      var cache = new WeakMap();
+      var measureBoundingBoxOfPath2 = geometry => {
+        let boundingBox = cache.get(geometry);
+        if (boundingBox) return boundingBox;
+        const points = path2.toPoints(geometry);
+        let minpoint;
+        if (points.length === 0) {
+          minpoint = vec2.create();
+        } else {
+          minpoint = vec2.clone(points[0]);
+        }
+        let maxpoint = vec2.clone(minpoint);
+        points.forEach(point => {
+          vec2.min(minpoint, minpoint, point);
+          vec2.max(maxpoint, maxpoint, point);
+        });
+        minpoint = [minpoint[0], minpoint[1], 0];
+        maxpoint = [maxpoint[0], maxpoint[1], 0];
+        boundingBox = [minpoint, maxpoint];
+        cache.set(geometry, boundingBox);
+        return boundingBox;
+      };
+      var measureBoundingBoxOfGeom2 = geometry => {
+        let boundingBox = cache.get(geometry);
+        if (boundingBox) return boundingBox;
+        const points = geom2.toPoints(geometry);
+        let minpoint;
+        if (points.length === 0) {
+          minpoint = vec2.create();
+        } else {
+          minpoint = vec2.clone(points[0]);
+        }
+        let maxpoint = vec2.clone(minpoint);
+        points.forEach(point => {
+          vec2.min(minpoint, minpoint, point);
+          vec2.max(maxpoint, maxpoint, point);
+        });
+        minpoint = [minpoint[0], minpoint[1], 0];
+        maxpoint = [maxpoint[0], maxpoint[1], 0];
+        boundingBox = [minpoint, maxpoint];
+        cache.set(geometry, boundingBox);
+        return boundingBox;
+      };
+      var measureBoundingBoxOfGeom3 = geometry => {
+        let boundingBox = cache.get(geometry);
+        if (boundingBox) return boundingBox;
+        const polygons = geom32.toPolygons(geometry);
+        let minpoint = vec3.create();
+        if (polygons.length > 0) {
+          const points = poly3.toPoints(polygons[0]);
+          vec3.copy(minpoint, points[0]);
+        }
+        let maxpoint = vec3.clone(minpoint);
+        polygons.forEach(polygon => {
+          poly3.toPoints(polygon).forEach(point => {
+            vec3.min(minpoint, minpoint, point);
+            vec3.max(maxpoint, maxpoint, point);
+          });
+        });
+        minpoint = [minpoint[0], minpoint[1], minpoint[2]];
+        maxpoint = [maxpoint[0], maxpoint[1], maxpoint[2]];
+        boundingBox = [minpoint, maxpoint];
+        cache.set(geometry, boundingBox);
+        return boundingBox;
+      };
+      var measureBoundingBox2 = (...geometries) => {
+        geometries = flatten(geometries);
+        if (geometries.length === 0) throw new Error("wrong number of arguments");
+        const results = geometries.map(geometry => {
+          if (path2.isA(geometry)) return measureBoundingBoxOfPath2(geometry);
+          if (geom2.isA(geometry)) return measureBoundingBoxOfGeom2(geometry);
+          if (geom32.isA(geometry)) return measureBoundingBoxOfGeom3(geometry);
+          return [[0, 0, 0], [0, 0, 0]];
+        });
+        return results.length === 1 ? results[0] : results;
+      };
+      module.exports = measureBoundingBox2;
+    }
+  });
+  var require_measureAggregateBoundingBox = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/measurements/measureAggregateBoundingBox.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var flatten = require_flatten();
+      var vec3min = require_min();
+      var vec3max = require_max();
+      var measureBoundingBox2 = require_measureBoundingBox2();
+      var measureAggregateBoundingBox = (...geometries) => {
+        geometries = flatten(geometries);
+        if (geometries.length === 0) throw new Error("measureAggregateBoundingBox: no geometries supplied");
+        const bounds = measureBoundingBox2(geometries);
+        if (geometries.length === 1) {
+          return bounds;
+        }
+        const result = [[Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE], [-Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE]];
+        return bounds.reduce((result2, item) => {
+          result2 = [vec3min(result2[0], result2[0], item[0]), vec3max(result2[1], result2[1], item[1])];
+          return result2;
+        }, result);
+      };
+      module.exports = measureAggregateBoundingBox;
     }
   });
   var require_calculateEpsilonFromBounds = __commonJS({
@@ -5961,15 +5625,15 @@ ${nonManifold.join("\n")}`);
           for (let i = 0; i < sides.length; i++) {
             const p1 = sides[i][0];
             const p2 = sides[i][1];
-            const a = p1[0] * p2[1] - p1[1] * p2[0];
-            area += a;
-            x += (p1[0] + p2[0]) * a;
-            y += (p1[1] + p2[1]) * a;
+            const a3 = p1[0] * p2[1] - p1[1] * p2[0];
+            area += a3;
+            x += (p1[0] + p2[0]) * a3;
+            y += (p1[1] + p2[1]) * a3;
           }
           area /= 2;
-          const f = 1 / (area * 6);
-          x *= f;
-          y *= f;
+          const f2 = 1 / (area * 6);
+          x *= f2;
+          y *= f2;
         }
         centerOfMass = vec3.fromValues(x, y, 0);
         cacheOfCenterOfMass.set(geometry, centerOfMass);
@@ -6079,7 +5743,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var isNumberArray = (array, dimension) => {
         if (Array.isArray(array) && array.length >= dimension) {
-          return array.every(n => Number.isFinite(n));
+          return array.every(n3 => Number.isFinite(n3));
         }
         return false;
       };
@@ -6179,7 +5843,7 @@ ${nonManifold.join("\n")}`);
         let {center, radius, startAngle, endAngle, segments} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 2)) throw new Error("center must be an array of X and Y values");
         if (!isNumberArray(radius, 2)) throw new Error("radius must be an array of X and Y values");
-        if (!radius.every(n => n > 0)) throw new Error("radius values must be greater than zero");
+        if (!radius.every(n3 => n3 > 0)) throw new Error("radius values must be greater than zero");
         if (!isGTE(startAngle, 0)) throw new Error("startAngle must be positive");
         if (!isGTE(endAngle, 0)) throw new Error("endAngle must be positive");
         if (!isGTE(segments, 3)) throw new Error("segments must be three or more");
@@ -6255,7 +5919,7 @@ ${nonManifold.join("\n")}`);
         const {center, size} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 3)) throw new Error("center must be an array of X, Y and Z values");
         if (!isNumberArray(size, 3)) throw new Error("size must be an array of width, depth and height values");
-        if (!size.every(n => n > 0)) throw new Error("size values must be greater than zero");
+        if (!size.every(n3 => n3 > 0)) throw new Error("size values must be greater than zero");
         const result = geom32.create([[[0, 4, 6, 2], [-1, 0, 0]], [[1, 3, 7, 5], [1, 0, 0]], [[0, 1, 5, 4], [0, -1, 0]], [[2, 6, 7, 3], [0, 1, 0]], [[0, 2, 3, 1], [0, 0, -1]], [[4, 5, 7, 6], [0, 0, 1]]].map(info => {
           const points = info[0].map(i => {
             const pos = [center[0] + size[0] / 2 * (2 * !!(i & 1) - 1), center[1] + size[1] / 2 * (2 * !!(i & 2) - 1), center[2] + size[2] / 2 * (2 * !!(i & 4) - 1)];
@@ -6314,10 +5978,10 @@ ${nonManifold.join("\n")}`);
         if (!isNumberArray(center, 3)) throw new Error("center must be an array of X, Y and Z values");
         if (!isGT(height, 0)) throw new Error("height must be greater then zero");
         if (!isNumberArray(startRadius, 2)) throw new Error("startRadius must be an array of X and Y values");
-        if (!startRadius.every(n => n >= 0)) throw new Error("startRadius values must be positive");
+        if (!startRadius.every(n3 => n3 >= 0)) throw new Error("startRadius values must be positive");
         if (!isNumberArray(endRadius, 2)) throw new Error("endRadius must be an array of X and Y values");
-        if (!endRadius.every(n => n >= 0)) throw new Error("endRadius values must be positive");
-        if (endRadius.every(n => n === 0) && startRadius.every(n => n === 0)) throw new Error("at least one radius must be positive");
+        if (!endRadius.every(n3 => n3 >= 0)) throw new Error("endRadius values must be positive");
+        if (endRadius.every(n3 => n3 === 0) && startRadius.every(n3 => n3 === 0)) throw new Error("at least one radius must be positive");
         if (!isGTE(startAngle, 0)) throw new Error("startAngle must be positive");
         if (!isGTE(endAngle, 0)) throw new Error("endAngle must be positive");
         if (!isGTE(segments, 4)) throw new Error("segments must be four or more");
@@ -6437,7 +6101,7 @@ ${nonManifold.join("\n")}`);
         const {center, radius, segments, axes} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 3)) throw new Error("center must be an array of X, Y and Z values");
         if (!isNumberArray(radius, 3)) throw new Error("radius must be an array of X, Y and Z values");
-        if (!radius.every(n => n > 0)) throw new Error("radius values must be greater than zero");
+        if (!radius.every(n3 => n3 > 0)) throw new Error("radius values must be greater than zero");
         if (!isGTE(segments, 4)) throw new Error("segments must be four or more");
         const xvector = vec3.scale(vec3.create(), vec3.normalize(vec3.create(), axes[0]), radius[0]);
         const yvector = vec3.scale(vec3.create(), vec3.normalize(vec3.create(), axes[1]), radius[1]);
@@ -6567,63 +6231,63 @@ ${nonManifold.join("\n")}`);
         frequency = Math.floor(frequency / 6);
         const ci = [[0.850651, 0, -0.525731], [0.850651, -0, 0.525731], [-0.850651, -0, 0.525731], [-0.850651, 0, -0.525731], [0, -0.525731, 0.850651], [0, 0.525731, 0.850651], [0, 0.525731, -0.850651], [0, -0.525731, -0.850651], [-0.525731, -0.850651, -0], [0.525731, -0.850651, -0], [0.525731, 0.850651, 0], [-0.525731, 0.850651, 0]];
         const ti = [[0, 9, 1], [1, 10, 0], [6, 7, 0], [10, 6, 0], [7, 9, 0], [5, 1, 4], [4, 1, 9], [5, 10, 1], [2, 8, 3], [3, 11, 2], [2, 5, 4], [4, 8, 2], [2, 11, 5], [3, 7, 6], [6, 11, 3], [8, 7, 3], [9, 8, 4], [11, 10, 5], [10, 11, 6], [8, 9, 7]];
-        const geodesicSubDivide = (p, frequency2, offset2) => {
-          const p1 = p[0];
-          const p2 = p[1];
-          const p3 = p[2];
-          let n = offset2;
-          const c = [];
-          const f = [];
+        const geodesicSubDivide = (p2, frequency2, offset2) => {
+          const p1 = p2[0];
+          const p22 = p2[1];
+          const p3 = p2[2];
+          let n3 = offset2;
+          const c2 = [];
+          const f2 = [];
           for (let i = 0; i < frequency2; i++) {
             for (let j = 0; j < frequency2 - i; j++) {
               const t0 = i / frequency2;
               const t1 = (i + 1) / frequency2;
               const s0 = j / (frequency2 - i);
               const s1 = (j + 1) / (frequency2 - i);
-              const s2 = frequency2 - i - 1 ? j / (frequency2 - i - 1) : 1;
+              const s22 = frequency2 - i - 1 ? j / (frequency2 - i - 1) : 1;
               const q = [];
-              q[0] = mix3(mix3(p1, p2, s0), p3, t0);
-              q[1] = mix3(mix3(p1, p2, s1), p3, t0);
-              q[2] = mix3(mix3(p1, p2, s2), p3, t1);
+              q[0] = mix3(mix3(p1, p22, s0), p3, t0);
+              q[1] = mix3(mix3(p1, p22, s1), p3, t0);
+              q[2] = mix3(mix3(p1, p22, s22), p3, t1);
               for (let k = 0; k < 3; k++) {
-                const r = vec3.length(q[k]);
-                for (let l = 0; l < 3; l++) {
-                  q[k][l] /= r;
+                const r2 = vec3.length(q[k]);
+                for (let l2 = 0; l2 < 3; l2++) {
+                  q[k][l2] /= r2;
                 }
               }
-              c.push(q[0], q[1], q[2]);
-              f.push([n, n + 1, n + 2]);
-              n += 3;
+              c2.push(q[0], q[1], q[2]);
+              f2.push([n3, n3 + 1, n3 + 2]);
+              n3 += 3;
               if (j < frequency2 - i - 1) {
-                const s3 = frequency2 - i - 1 ? (j + 1) / (frequency2 - i - 1) : 1;
-                q[0] = mix3(mix3(p1, p2, s1), p3, t0);
-                q[1] = mix3(mix3(p1, p2, s3), p3, t1);
-                q[2] = mix3(mix3(p1, p2, s2), p3, t1);
+                const s32 = frequency2 - i - 1 ? (j + 1) / (frequency2 - i - 1) : 1;
+                q[0] = mix3(mix3(p1, p22, s1), p3, t0);
+                q[1] = mix3(mix3(p1, p22, s32), p3, t1);
+                q[2] = mix3(mix3(p1, p22, s22), p3, t1);
                 for (let k = 0; k < 3; k++) {
-                  const r = vec3.length(q[k]);
-                  for (let l = 0; l < 3; l++) {
-                    q[k][l] /= r;
+                  const r2 = vec3.length(q[k]);
+                  for (let l2 = 0; l2 < 3; l2++) {
+                    q[k][l2] /= r2;
                   }
                 }
-                c.push(q[0], q[1], q[2]);
-                f.push([n, n + 1, n + 2]);
-                n += 3;
+                c2.push(q[0], q[1], q[2]);
+                f2.push([n3, n3 + 1, n3 + 2]);
+                n3 += 3;
               }
             }
           }
           return {
-            points: c,
-            triangles: f,
-            offset: n
+            points: c2,
+            triangles: f2,
+            offset: n3
           };
         };
-        const mix3 = (a, b, f) => {
-          const _f = 1 - f;
-          const c = [];
+        const mix3 = (a3, b, f2) => {
+          const _f = 1 - f2;
+          const c2 = [];
           for (let i = 0; i < 3; i++) {
-            c[i] = a[i] * _f + b[i] * f;
+            c2[i] = a3[i] * _f + b[i] * f2;
           }
-          return c;
+          return c2;
         };
         let points = [];
         let faces = [];
@@ -6716,7 +6380,7 @@ ${nonManifold.join("\n")}`);
         const {center, size} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 2)) throw new Error("center must be an array of X and Y values");
         if (!isNumberArray(size, 2)) throw new Error("size must be an array of X and Y values");
-        if (!size.every(n => n > 0)) throw new Error("size values must be greater than zero");
+        if (!size.every(n3 => n3 > 0)) throw new Error("size values must be greater than zero");
         const point = [size[0] / 2, size[1] / 2];
         const pswap = [point[0], -point[1]];
         const points = [vec2.subtract(vec2.create(), center, point), vec2.add(vec2.create(), center, pswap), vec2.add(vec2.create(), center, point), vec2.subtract(vec2.create(), center, pswap)];
@@ -6833,7 +6497,7 @@ ${nonManifold.join("\n")}`);
         let {center, size, roundRadius, segments} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 3)) throw new Error("center must be an array of X, Y and Z values");
         if (!isNumberArray(size, 3)) throw new Error("size must be an array of X, Y and Z values");
-        if (!size.every(n => n > 0)) throw new Error("size values must be greater than zero");
+        if (!size.every(n3 => n3 > 0)) throw new Error("size values must be greater than zero");
         if (!isGT(roundRadius, 0)) throw new Error("roundRadius must be greater than zero");
         if (!isGTE(segments, 4)) throw new Error("segments must be four or more");
         size = size.map(v => v / 2);
@@ -6995,7 +6659,7 @@ ${nonManifold.join("\n")}`);
         let {center, size, roundRadius, segments} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 2)) throw new Error("center must be an array of X and Y values");
         if (!isNumberArray(size, 2)) throw new Error("size must be an array of X and Y values");
-        if (!size.every(n => n > 0)) throw new Error("size values must be greater than zero");
+        if (!size.every(n3 => n3 > 0)) throw new Error("size values must be greater than zero");
         if (!isGT(roundRadius, 0)) throw new Error("roundRadius must be greater than zero");
         if (!isGTE(segments, 4)) throw new Error("segments must be four or more");
         size = size.map(v => v / 2);
@@ -7088,10 +6752,10 @@ ${nonManifold.join("\n")}`);
         return 0;
       };
       var getPoints = (vertices, radius, startAngle, center) => {
-        const a = Math.PI * 2 / vertices;
+        const a3 = Math.PI * 2 / vertices;
         const points = [];
         for (let i = 0; i < vertices; i++) {
-          const point = vec2.fromAngleRadians(vec2.create(), a * i + startAngle);
+          const point = vec2.fromAngleRadians(vec2.create(), a3 * i + startAngle);
           vec2.scale(point, point, radius);
           vec2.add(point, center, point);
           points.push(point);
@@ -7133,6 +6797,54 @@ ${nonManifold.join("\n")}`);
       module.exports = star2;
     }
   });
+  var require_mirror = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/mirror.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var flatten = require_flatten();
+      var mat42 = require_mat4();
+      var plane = require_plane();
+      var geom2 = require_geom2();
+      var geom32 = require_geom3();
+      var path2 = require_path2();
+      var mirror = (options, ...objects) => {
+        const defaults = {
+          origin: [0, 0, 0],
+          normal: [0, 0, 1]
+        };
+        const {origin, normal} = Object.assign({}, defaults, options);
+        objects = flatten(objects);
+        if (objects.length === 0) throw new Error("wrong number of arguments");
+        const planeOfMirror = plane.fromNormalAndPoint(plane.create(), normal, origin);
+        if (Number.isNaN(planeOfMirror[0])) {
+          throw new Error("the given origin and normal do not define a proper plane");
+        }
+        const matrix = mat42.mirrorByPlane(mat42.create(), planeOfMirror);
+        const results = objects.map(object => {
+          if (path2.isA(object)) return path2.transform(matrix, object);
+          if (geom2.isA(object)) return geom2.transform(matrix, object);
+          if (geom32.isA(object)) return geom32.transform(matrix, object);
+          return object;
+        });
+        return results.length === 1 ? results[0] : results;
+      };
+      var mirrorX = (...objects) => mirror({
+        normal: [1, 0, 0]
+      }, objects);
+      var mirrorY = (...objects) => mirror({
+        normal: [0, 1, 0]
+      }, objects);
+      var mirrorZ = (...objects) => mirror({
+        normal: [0, 0, 1]
+      }, objects);
+      module.exports = {
+        mirror,
+        mirrorX,
+        mirrorY,
+        mirrorZ
+      };
+    }
+  });
   var require_calculatePlane = __commonJS({
     "../../../node_modules/@jscad/modeling/src/operations/extrusions/slice/calculatePlane.js"(exports, module) {
       "use strict";
@@ -7148,10 +6860,10 @@ ${nonManifold.join("\n")}`);
         let distance = 0;
         edges.forEach(edge => {
           if (!vec3.equals(edge[0], edge[1])) {
-            const d = vec3.squaredDistance(midpoint, edge[0]);
-            if (d > distance) {
+            const d2 = vec3.squaredDistance(midpoint, edge[0]);
+            if (d2 > distance) {
               farthestEdge = edge;
-              distance = d;
+              distance = d2;
             }
           }
         });
@@ -7203,16 +6915,16 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var vec3 = require_vec3();
-      var equals = (a, b) => {
-        const aedges = a.edges;
+      var equals = (a3, b) => {
+        const aedges = a3.edges;
         const bedges = b.edges;
         if (aedges.length !== bedges.length) {
           return false;
         }
         const isEqual = aedges.reduce((acc, aedge, i) => {
           const bedge = bedges[i];
-          const d = vec3.squaredDistance(aedge[0], bedge[0]);
-          return acc && d < Number.EPSILON;
+          const d2 = vec3.squaredDistance(aedge[0], bedge[0]);
+          return acc && d2 < Number.EPSILON;
         }, true);
         return isEqual;
       };
@@ -7308,16 +7020,16 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var sortLinked = (list, fn) => {
-        let i, p, q, e, numMerges;
+        let i, p2, q, e5, numMerges;
         let inSize = 1;
         do {
-          p = list;
+          p2 = list;
           list = null;
           let tail = null;
           numMerges = 0;
-          while (p) {
+          while (p2) {
             numMerges++;
-            q = p;
+            q = p2;
             let pSize = 0;
             for (i = 0; i < inSize; i++) {
               pSize++;
@@ -7326,20 +7038,20 @@ ${nonManifold.join("\n")}`);
             }
             let qSize = inSize;
             while (pSize > 0 || qSize > 0 && q) {
-              if (pSize !== 0 && (qSize === 0 || !q || fn(p) <= fn(q))) {
-                e = p;
-                p = p.nextZ;
+              if (pSize !== 0 && (qSize === 0 || !q || fn(p2) <= fn(q))) {
+                e5 = p2;
+                p2 = p2.nextZ;
                 pSize--;
               } else {
-                e = q;
+                e5 = q;
                 q = q.nextZ;
                 qSize--;
               }
-              if (tail) tail.nextZ = e; else list = e;
-              e.prevZ = tail;
-              tail = e;
+              if (tail) tail.nextZ = e5; else list = e5;
+              e5.prevZ = tail;
+              tail = e5;
             }
-            p = q;
+            p2 = q;
           }
           tail.nextZ = null;
           inSize *= 2;
@@ -7368,23 +7080,23 @@ ${nonManifold.join("\n")}`);
         }
       };
       var insertNode = (i, x, y, last) => {
-        const p = new Node(i, x, y);
+        const p2 = new Node(i, x, y);
         if (!last) {
-          p.prev = p;
-          p.next = p;
+          p2.prev = p2;
+          p2.next = p2;
         } else {
-          p.next = last.next;
-          p.prev = last;
-          last.next.prev = p;
-          last.next = p;
+          p2.next = last.next;
+          p2.prev = last;
+          last.next.prev = p2;
+          last.next = p2;
         }
-        return p;
+        return p2;
       };
-      var removeNode = p => {
-        p.next.prev = p.prev;
-        p.prev.next = p.next;
-        if (p.prevZ) p.prevZ.nextZ = p.nextZ;
-        if (p.nextZ) p.nextZ.prevZ = p.prevZ;
+      var removeNode = p2 => {
+        p2.next.prev = p2.prev;
+        p2.prev.next = p2.next;
+        if (p2.prevZ) p2.prevZ.nextZ = p2.nextZ;
+        if (p2.nextZ) p2.nextZ.prevZ = p2.prevZ;
       };
       module.exports = {
         Node,
@@ -7399,7 +7111,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var pointInTriangle = (ax, ay, bx, by, cx, cy, px, py) => (cx - px) * (ay - py) - (ax - px) * (cy - py) >= 0 && (ax - px) * (by - py) - (bx - px) * (ay - py) >= 0 && (bx - px) * (cy - py) - (cx - px) * (by - py) >= 0;
-      var area = (p, q, r) => (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+      var area = (p2, q, r2) => (q.y - p2.y) * (r2.x - q.x) - (q.x - p2.x) * (r2.y - q.y);
       module.exports = {
         area,
         pointInTriangle
@@ -7432,89 +7144,89 @@ ${nonManifold.join("\n")}`);
       var filterPoints = (start, end) => {
         if (!start) return start;
         if (!end) end = start;
-        let p = start;
+        let p2 = start;
         let again;
         do {
           again = false;
-          if (!p.steiner && (equals(p, p.next) || area(p.prev, p, p.next) === 0)) {
-            removeNode(p);
-            p = end = p.prev;
-            if (p === p.next) break;
+          if (!p2.steiner && (equals(p2, p2.next) || area(p2.prev, p2, p2.next) === 0)) {
+            removeNode(p2);
+            p2 = end = p2.prev;
+            if (p2 === p2.next) break;
             again = true;
           } else {
-            p = p.next;
+            p2 = p2.next;
           }
-        } while (again || p !== end);
+        } while (again || p2 !== end);
         return end;
       };
       var cureLocalIntersections = (start, triangles, dim) => {
-        let p = start;
+        let p2 = start;
         do {
-          const a = p.prev;
-          const b = p.next.next;
-          if (!equals(a, b) && intersects(a, p, p.next, b) && locallyInside(a, b) && locallyInside(b, a)) {
-            triangles.push(a.i / dim);
-            triangles.push(p.i / dim);
+          const a3 = p2.prev;
+          const b = p2.next.next;
+          if (!equals(a3, b) && intersects(a3, p2, p2.next, b) && locallyInside(a3, b) && locallyInside(b, a3)) {
+            triangles.push(a3.i / dim);
+            triangles.push(p2.i / dim);
             triangles.push(b.i / dim);
-            removeNode(p);
-            removeNode(p.next);
-            p = start = b;
+            removeNode(p2);
+            removeNode(p2.next);
+            p2 = start = b;
           }
-          p = p.next;
-        } while (p !== start);
-        return filterPoints(p);
+          p2 = p2.next;
+        } while (p2 !== start);
+        return filterPoints(p2);
       };
-      var intersectsPolygon = (a, b) => {
-        let p = a;
+      var intersectsPolygon = (a3, b) => {
+        let p2 = a3;
         do {
-          if (p.i !== a.i && p.next.i !== a.i && p.i !== b.i && p.next.i !== b.i && intersects(p, p.next, a, b)) return true;
-          p = p.next;
-        } while (p !== a);
+          if (p2.i !== a3.i && p2.next.i !== a3.i && p2.i !== b.i && p2.next.i !== b.i && intersects(p2, p2.next, a3, b)) return true;
+          p2 = p2.next;
+        } while (p2 !== a3);
         return false;
       };
-      var locallyInside = (a, b) => area(a.prev, a, a.next) < 0 ? area(a, b, a.next) >= 0 && area(a, a.prev, b) >= 0 : area(a, b, a.prev) < 0 || area(a, a.next, b) < 0;
-      var middleInside = (a, b) => {
-        let p = a;
+      var locallyInside = (a3, b) => area(a3.prev, a3, a3.next) < 0 ? area(a3, b, a3.next) >= 0 && area(a3, a3.prev, b) >= 0 : area(a3, b, a3.prev) < 0 || area(a3, a3.next, b) < 0;
+      var middleInside = (a3, b) => {
+        let p2 = a3;
         let inside = false;
-        const px = (a.x + b.x) / 2;
-        const py = (a.y + b.y) / 2;
+        const px = (a3.x + b.x) / 2;
+        const py = (a3.y + b.y) / 2;
         do {
-          if (p.y > py !== p.next.y > py && p.next.y !== p.y && px < (p.next.x - p.x) * (py - p.y) / (p.next.y - p.y) + p.x) {
+          if (p2.y > py !== p2.next.y > py && p2.next.y !== p2.y && px < (p2.next.x - p2.x) * (py - p2.y) / (p2.next.y - p2.y) + p2.x) {
             inside = !inside;
           }
-          p = p.next;
-        } while (p !== a);
+          p2 = p2.next;
+        } while (p2 !== a3);
         return inside;
       };
-      var splitPolygon = (a, b) => {
-        const a2 = new Node(a.i, a.x, a.y);
+      var splitPolygon = (a3, b) => {
+        const a22 = new Node(a3.i, a3.x, a3.y);
         const b2 = new Node(b.i, b.x, b.y);
-        const an = a.next;
+        const an = a3.next;
         const bp = b.prev;
-        a.next = b;
-        b.prev = a;
-        a2.next = an;
-        an.prev = a2;
-        b2.next = a2;
-        a2.prev = b2;
+        a3.next = b;
+        b.prev = a3;
+        a22.next = an;
+        an.prev = a22;
+        b2.next = a22;
+        a22.prev = b2;
         bp.next = b2;
         b2.prev = bp;
         return b2;
       };
-      var isValidDiagonal = (a, b) => a.next.i !== b.i && a.prev.i !== b.i && !intersectsPolygon(a, b) && (locallyInside(a, b) && locallyInside(b, a) && middleInside(a, b) && (area(a.prev, a, b.prev) || area(a, b.prev, b)) || equals(a, b) && area(a.prev, a, a.next) > 0 && area(b.prev, b, b.next) > 0);
+      var isValidDiagonal = (a3, b) => a3.next.i !== b.i && a3.prev.i !== b.i && !intersectsPolygon(a3, b) && (locallyInside(a3, b) && locallyInside(b, a3) && middleInside(a3, b) && (area(a3.prev, a3, b.prev) || area(a3, b.prev, b)) || equals(a3, b) && area(a3.prev, a3, a3.next) > 0 && area(b.prev, b, b.next) > 0);
       var intersects = (p1, q1, p2, q2) => {
         const o1 = Math.sign(area(p1, q1, p2));
-        const o2 = Math.sign(area(p1, q1, q2));
-        const o3 = Math.sign(area(p2, q2, p1));
+        const o22 = Math.sign(area(p1, q1, q2));
+        const o32 = Math.sign(area(p2, q2, p1));
         const o4 = Math.sign(area(p2, q2, q1));
-        if (o1 !== o2 && o3 !== o4) return true;
+        if (o1 !== o22 && o32 !== o4) return true;
         if (o1 === 0 && onSegment(p1, p2, q1)) return true;
-        if (o2 === 0 && onSegment(p1, q2, q1)) return true;
-        if (o3 === 0 && onSegment(p2, p1, q2)) return true;
+        if (o22 === 0 && onSegment(p1, q2, q1)) return true;
+        if (o32 === 0 && onSegment(p2, p1, q2)) return true;
         if (o4 === 0 && onSegment(p2, q1, q2)) return true;
         return false;
       };
-      var onSegment = (p, q, r) => q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) && q.y <= Math.max(p.y, r.y) && q.y >= Math.min(p.y, r.y);
+      var onSegment = (p2, q, r2) => q.x <= Math.max(p2.x, r2.x) && q.x >= Math.min(p2.x, r2.x) && q.y <= Math.max(p2.y, r2.y) && q.y >= Math.min(p2.y, r2.y);
       var signedArea = (data, start, end, dim) => {
         let sum = 0;
         for (let i = start, j = end - dim; i < end; i += dim) {
@@ -7549,7 +7261,7 @@ ${nonManifold.join("\n")}`);
           if (list === list.next) list.steiner = true;
           queue.push(getLeftmost(list));
         }
-        queue.sort((a, b) => a.x - b.x);
+        queue.sort((a3, b) => a3.x - b.x);
         for (let i = 0; i < queue.length; i++) {
           outerNode = eliminateHole(queue[i], outerNode);
           outerNode = filterPoints(outerNode, outerNode.next);
@@ -7567,52 +7279,52 @@ ${nonManifold.join("\n")}`);
         return outerNode === bridge ? filteredBridge : outerNode;
       };
       var findHoleBridge = (hole, outerNode) => {
-        let p = outerNode;
+        let p2 = outerNode;
         const hx = hole.x;
         const hy = hole.y;
         let qx = -Infinity;
-        let m;
+        let m2;
         do {
-          if (hy <= p.y && hy >= p.next.y && p.next.y !== p.y) {
-            const x = p.x + (hy - p.y) * (p.next.x - p.x) / (p.next.y - p.y);
+          if (hy <= p2.y && hy >= p2.next.y && p2.next.y !== p2.y) {
+            const x = p2.x + (hy - p2.y) * (p2.next.x - p2.x) / (p2.next.y - p2.y);
             if (x <= hx && x > qx) {
               qx = x;
               if (x === hx) {
-                if (hy === p.y) return p;
-                if (hy === p.next.y) return p.next;
+                if (hy === p2.y) return p2;
+                if (hy === p2.next.y) return p2.next;
               }
-              m = p.x < p.next.x ? p : p.next;
+              m2 = p2.x < p2.next.x ? p2 : p2.next;
             }
           }
-          p = p.next;
-        } while (p !== outerNode);
-        if (!m) return null;
-        if (hx === qx) return m;
-        const stop = m;
-        const mx = m.x;
-        const my = m.y;
+          p2 = p2.next;
+        } while (p2 !== outerNode);
+        if (!m2) return null;
+        if (hx === qx) return m2;
+        const stop = m2;
+        const mx = m2.x;
+        const my = m2.y;
         let tanMin = Infinity;
-        p = m;
+        p2 = m2;
         do {
-          if (hx >= p.x && p.x >= mx && hx !== p.x && pointInTriangle(hy < my ? hx : qx, hy, mx, my, hy < my ? qx : hx, hy, p.x, p.y)) {
-            const tan = Math.abs(hy - p.y) / (hx - p.x);
-            if (locallyInside(p, hole) && (tan < tanMin || tan === tanMin && (p.x > m.x || p.x === m.x && sectorContainsSector(m, p)))) {
-              m = p;
+          if (hx >= p2.x && p2.x >= mx && hx !== p2.x && pointInTriangle(hy < my ? hx : qx, hy, mx, my, hy < my ? qx : hx, hy, p2.x, p2.y)) {
+            const tan = Math.abs(hy - p2.y) / (hx - p2.x);
+            if (locallyInside(p2, hole) && (tan < tanMin || tan === tanMin && (p2.x > m2.x || p2.x === m2.x && sectorContainsSector(m2, p2)))) {
+              m2 = p2;
               tanMin = tan;
             }
           }
-          p = p.next;
-        } while (p !== stop);
-        return m;
+          p2 = p2.next;
+        } while (p2 !== stop);
+        return m2;
       };
-      var sectorContainsSector = (m, p) => area(m.prev, m, p.prev) < 0 && area(p.next, m, m.next) < 0;
+      var sectorContainsSector = (m2, p2) => area(m2.prev, m2, p2.prev) < 0 && area(p2.next, m2, m2.next) < 0;
       var getLeftmost = start => {
-        let p = start;
+        let p2 = start;
         let leftmost = start;
         do {
-          if (p.x < leftmost.x || p.x === leftmost.x && p.y < leftmost.y) leftmost = p;
-          p = p.next;
-        } while (p !== start);
+          if (p2.x < leftmost.x || p2.x === leftmost.x && p2.y < leftmost.y) leftmost = p2;
+          p2 = p2.next;
+        } while (p2 !== start);
         return leftmost;
       };
       module.exports = eliminateHoles;
@@ -7684,77 +7396,77 @@ ${nonManifold.join("\n")}`);
         }
       };
       var isEar = ear => {
-        const a = ear.prev;
+        const a3 = ear.prev;
         const b = ear;
-        const c = ear.next;
-        if (area(a, b, c) >= 0) return false;
-        let p = ear.next.next;
-        while (p !== ear.prev) {
-          if (pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) && area(p.prev, p, p.next) >= 0) {
+        const c2 = ear.next;
+        if (area(a3, b, c2) >= 0) return false;
+        let p2 = ear.next.next;
+        while (p2 !== ear.prev) {
+          if (pointInTriangle(a3.x, a3.y, b.x, b.y, c2.x, c2.y, p2.x, p2.y) && area(p2.prev, p2, p2.next) >= 0) {
             return false;
           }
-          p = p.next;
+          p2 = p2.next;
         }
         return true;
       };
       var isEarHashed = (ear, minX, minY, invSize) => {
-        const a = ear.prev;
+        const a3 = ear.prev;
         const b = ear;
-        const c = ear.next;
-        if (area(a, b, c) >= 0) return false;
-        const minTX = a.x < b.x ? a.x < c.x ? a.x : c.x : b.x < c.x ? b.x : c.x;
-        const minTY = a.y < b.y ? a.y < c.y ? a.y : c.y : b.y < c.y ? b.y : c.y;
-        const maxTX = a.x > b.x ? a.x > c.x ? a.x : c.x : b.x > c.x ? b.x : c.x;
-        const maxTY = a.y > b.y ? a.y > c.y ? a.y : c.y : b.y > c.y ? b.y : c.y;
+        const c2 = ear.next;
+        if (area(a3, b, c2) >= 0) return false;
+        const minTX = a3.x < b.x ? a3.x < c2.x ? a3.x : c2.x : b.x < c2.x ? b.x : c2.x;
+        const minTY = a3.y < b.y ? a3.y < c2.y ? a3.y : c2.y : b.y < c2.y ? b.y : c2.y;
+        const maxTX = a3.x > b.x ? a3.x > c2.x ? a3.x : c2.x : b.x > c2.x ? b.x : c2.x;
+        const maxTY = a3.y > b.y ? a3.y > c2.y ? a3.y : c2.y : b.y > c2.y ? b.y : c2.y;
         const minZ = zOrder(minTX, minTY, minX, minY, invSize);
         const maxZ = zOrder(maxTX, maxTY, minX, minY, invSize);
-        let p = ear.prevZ;
-        let n = ear.nextZ;
-        while (p && p.z >= minZ && n && n.z <= maxZ) {
-          if (p !== ear.prev && p !== ear.next && pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) && area(p.prev, p, p.next) >= 0) return false;
-          p = p.prevZ;
-          if (n !== ear.prev && n !== ear.next && pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, n.x, n.y) && area(n.prev, n, n.next) >= 0) return false;
-          n = n.nextZ;
+        let p2 = ear.prevZ;
+        let n3 = ear.nextZ;
+        while (p2 && p2.z >= minZ && n3 && n3.z <= maxZ) {
+          if (p2 !== ear.prev && p2 !== ear.next && pointInTriangle(a3.x, a3.y, b.x, b.y, c2.x, c2.y, p2.x, p2.y) && area(p2.prev, p2, p2.next) >= 0) return false;
+          p2 = p2.prevZ;
+          if (n3 !== ear.prev && n3 !== ear.next && pointInTriangle(a3.x, a3.y, b.x, b.y, c2.x, c2.y, n3.x, n3.y) && area(n3.prev, n3, n3.next) >= 0) return false;
+          n3 = n3.nextZ;
         }
-        while (p && p.z >= minZ) {
-          if (p !== ear.prev && p !== ear.next && pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) && area(p.prev, p, p.next) >= 0) return false;
-          p = p.prevZ;
+        while (p2 && p2.z >= minZ) {
+          if (p2 !== ear.prev && p2 !== ear.next && pointInTriangle(a3.x, a3.y, b.x, b.y, c2.x, c2.y, p2.x, p2.y) && area(p2.prev, p2, p2.next) >= 0) return false;
+          p2 = p2.prevZ;
         }
-        while (n && n.z <= maxZ) {
-          if (n !== ear.prev && n !== ear.next && pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, n.x, n.y) && area(n.prev, n, n.next) >= 0) return false;
-          n = n.nextZ;
+        while (n3 && n3.z <= maxZ) {
+          if (n3 !== ear.prev && n3 !== ear.next && pointInTriangle(a3.x, a3.y, b.x, b.y, c2.x, c2.y, n3.x, n3.y) && area(n3.prev, n3, n3.next) >= 0) return false;
+          n3 = n3.nextZ;
         }
         return true;
       };
       var splitEarcut = (start, triangles, dim, minX, minY, invSize) => {
-        let a = start;
+        let a3 = start;
         do {
-          let b = a.next.next;
-          while (b !== a.prev) {
-            if (a.i !== b.i && isValidDiagonal(a, b)) {
-              let c = splitPolygon(a, b);
-              a = filterPoints(a, a.next);
-              c = filterPoints(c, c.next);
-              earcutLinked(a, triangles, dim, minX, minY, invSize);
-              earcutLinked(c, triangles, dim, minX, minY, invSize);
+          let b = a3.next.next;
+          while (b !== a3.prev) {
+            if (a3.i !== b.i && isValidDiagonal(a3, b)) {
+              let c2 = splitPolygon(a3, b);
+              a3 = filterPoints(a3, a3.next);
+              c2 = filterPoints(c2, c2.next);
+              earcutLinked(a3, triangles, dim, minX, minY, invSize);
+              earcutLinked(c2, triangles, dim, minX, minY, invSize);
               return;
             }
             b = b.next;
           }
-          a = a.next;
-        } while (a !== start);
+          a3 = a3.next;
+        } while (a3 !== start);
       };
       var indexCurve = (start, minX, minY, invSize) => {
-        let p = start;
+        let p2 = start;
         do {
-          if (p.z === null) p.z = zOrder(p.x, p.y, minX, minY, invSize);
-          p.prevZ = p.prev;
-          p.nextZ = p.next;
-          p = p.next;
-        } while (p !== start);
-        p.prevZ.nextZ = null;
-        p.prevZ = null;
-        sortLinked(p, p2 => p2.z);
+          if (p2.z === null) p2.z = zOrder(p2.x, p2.y, minX, minY, invSize);
+          p2.prevZ = p2.prev;
+          p2.nextZ = p2.next;
+          p2 = p2.next;
+        } while (p2 !== start);
+        p2.prevZ.nextZ = null;
+        p2.prevZ = null;
+        sortLinked(p2, p3 => p3.z);
       };
       var zOrder = (x, y, minX, minY, invSize) => {
         x = 32767 * (x - minX) * invSize;
@@ -7784,17 +7496,17 @@ ${nonManifold.join("\n")}`);
         const solids = [];
         const holes = [];
         outlines.forEach((outline, i) => {
-          const a = area(outline);
-          if (a < 0) {
+          const a3 = area(outline);
+          if (a3 < 0) {
             holes.push(i);
-          } else if (a > 0) {
+          } else if (a3 > 0) {
             solids.push(i);
           }
         });
         const children = [];
         const parents = [];
-        solids.forEach((s, i) => {
-          const solid = outlines[s];
+        solids.forEach((s5, i) => {
+          const solid = outlines[s5];
           children[i] = [];
           holes.forEach((h, j) => {
             const hole = outlines[h];
@@ -7809,10 +7521,10 @@ ${nonManifold.join("\n")}`);
         });
         holes.forEach((h, j) => {
           if (parents[j] && parents[j].length > 1) {
-            const directParent = minIndex(parents[j], p => children[p].length);
-            parents[j].forEach((p, i) => {
+            const directParent = minIndex(parents[j], p2 => children[p2].length);
+            parents[j].forEach((p2, i) => {
               if (i !== directParent) {
-                children[p] = children[p].filter(c => c !== h);
+                children[p2] = children[p2].filter(c2 => c2 !== h);
               }
             });
           }
@@ -7855,7 +7567,7 @@ ${nonManifold.join("\n")}`);
           this.v = vec3.normalize(perp, perp);
           this.u = vec3.cross(vec3.create(), this.v, this.plane);
           this.basisMap = new Map();
-          const projected = slice.edges.map(e => e.map(v => this.to2D(v)));
+          const projected = slice.edges.map(e5 => e5.map(v => this.to2D(v)));
           const geometry = geom2.create(projected);
           this.roots = assignHoles(geometry);
         }
@@ -7922,7 +7634,7 @@ ${nonManifold.join("\n")}`);
       module.exports = toString;
     }
   });
-  var require_transform12 = __commonJS({
+  var require_transform11 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/operations/extrusions/slice/transform.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -7951,7 +7663,7 @@ ${nonManifold.join("\n")}`);
         toEdges: require_toEdges(),
         toPolygons: require_toPolygons2(),
         toString: require_toString11(),
-        transform: require_transform12()
+        transform: require_transform11()
       };
     }
   });
@@ -7966,7 +7678,7 @@ ${nonManifold.join("\n")}`);
         let edges = slice.edges;
         const vertexMap = new Map();
         const edgeCount = new Map();
-        edges = edges.filter(e => !vec3.equals(e[0], e[1]));
+        edges = edges.filter(e5 => !vec3.equals(e5[0], e5[1]));
         edges.forEach(edge => {
           const inKey = edge[0].toString();
           const outKey = edge[1].toString();
@@ -8013,22 +7725,22 @@ ${nonManifold.join("\n")}`);
       var vec3 = require_vec3();
       var poly3 = require_poly3();
       var slice = require_slice();
-      var gcd = (a, b) => {
-        if (a === b) {
-          return a;
+      var gcd = (a3, b) => {
+        if (a3 === b) {
+          return a3;
         }
-        if (a < b) {
-          return gcd(b, a);
+        if (a3 < b) {
+          return gcd(b, a3);
         }
         if (b === 1) {
           return 1;
         }
         if (b === 0) {
-          return a;
+          return a3;
         }
-        return gcd(b, a % b);
+        return gcd(b, a3 % b);
       };
-      var lcm = (a, b) => a * b / gcd(a, b);
+      var lcm = (a3, b) => a3 * b / gcd(a3, b);
       var repartitionEdges = (newlength, edges) => {
         const multiple = newlength / edges.length;
         if (multiple === 1) {
@@ -8108,8 +7820,8 @@ ${nonManifold.join("\n")}`);
         let endSlice = null;
         let prevSlice = null;
         let polygons = [];
-        for (let s = 0; s < numberOfSlices; s++) {
-          const currentSlice = generate(s / sMax, s, base);
+        for (let s5 = 0; s5 < numberOfSlices; s5++) {
+          const currentSlice = generate(s5 / sMax, s5, base);
           if (currentSlice) {
             if (!slice.isA(currentSlice)) throw new Error("the callback function must return slice objects");
             const edges = slice.toEdges(currentSlice);
@@ -8117,8 +7829,8 @@ ${nonManifold.join("\n")}`);
             if (prevSlice) {
               polygons = polygons.concat(extrudeWalls(prevSlice, currentSlice));
             }
-            if (s === 0) startSlice = currentSlice;
-            if (s === numberOfSlices - 1) endSlice = currentSlice;
+            if (s5 === 0) startSlice = currentSlice;
+            if (s5 === numberOfSlices - 1) endSlice = currentSlice;
             prevSlice = currentSlice;
           }
         }
@@ -8176,8 +7888,8 @@ ${nonManifold.join("\n")}`);
         }
         let shapeSides = geom2.toSides(geometry);
         if (shapeSides.length === 0) throw new Error("the given geometry cannot be empty");
-        const pointsWithNegativeX = shapeSides.filter(s => s[0][0] < 0);
-        const pointsWithPositiveX = shapeSides.filter(s => s[0][0] >= 0);
+        const pointsWithNegativeX = shapeSides.filter(s5 => s5[0][0] < 0);
+        const pointsWithPositiveX = shapeSides.filter(s5 => s5[0][0] >= 0);
         const arePointsWithNegAndPosX = pointsWithNegativeX.length > 0 && pointsWithPositiveX.length > 0;
         if (arePointsWithNegAndPosX && overflow === "cap") {
           if (pointsWithNegativeX.length > pointsWithPositiveX.length) {
@@ -8224,6 +7936,79 @@ ${nonManifold.join("\n")}`);
         return extrudeFromSlices(options, baseSlice);
       };
       module.exports = extrudeRotate;
+    }
+  });
+  var require_rotate3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/rotate.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var flatten = require_flatten();
+      var mat42 = require_mat4();
+      var geom2 = require_geom2();
+      var geom32 = require_geom3();
+      var path2 = require_path2();
+      var rotate2 = (angles, ...objects) => {
+        if (!Array.isArray(angles)) throw new Error("angles must be an array");
+        objects = flatten(objects);
+        if (objects.length === 0) throw new Error("wrong number of arguments");
+        angles = angles.slice();
+        while (angles.length < 3) angles.push(0);
+        const yaw = angles[2];
+        const pitch = angles[1];
+        const roll = angles[0];
+        const matrix = mat42.fromTaitBryanRotation(mat42.create(), yaw, pitch, roll);
+        const results = objects.map(object => {
+          if (path2.isA(object)) return path2.transform(matrix, object);
+          if (geom2.isA(object)) return geom2.transform(matrix, object);
+          if (geom32.isA(object)) return geom32.transform(matrix, object);
+          return object;
+        });
+        return results.length === 1 ? results[0] : results;
+      };
+      var rotateX = (angle, ...objects) => rotate2([angle, 0, 0], objects);
+      var rotateY = (angle, ...objects) => rotate2([0, angle, 0], objects);
+      var rotateZ = (angle, ...objects) => rotate2([0, 0, angle], objects);
+      module.exports = {
+        rotate: rotate2,
+        rotateX,
+        rotateY,
+        rotateZ
+      };
+    }
+  });
+  var require_translate2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/translate.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var flatten = require_flatten();
+      var mat42 = require_mat4();
+      var geom2 = require_geom2();
+      var geom32 = require_geom3();
+      var path2 = require_path2();
+      var translate2 = (offset, ...objects) => {
+        if (!Array.isArray(offset)) throw new Error("offset must be an array");
+        objects = flatten(objects);
+        if (objects.length === 0) throw new Error("wrong number of arguments");
+        offset = offset.slice();
+        while (offset.length < 3) offset.push(0);
+        const matrix = mat42.fromTranslation(mat42.create(), offset);
+        const results = objects.map(object => {
+          if (path2.isA(object)) return path2.transform(matrix, object);
+          if (geom2.isA(object)) return geom2.transform(matrix, object);
+          if (geom32.isA(object)) return geom32.transform(matrix, object);
+          return object;
+        });
+        return results.length === 1 ? results[0] : results;
+      };
+      var translateX = (offset, ...objects) => translate2([offset, 0, 0], objects);
+      var translateY = (offset, ...objects) => translate2([0, offset, 0], objects);
+      var translateZ = (offset, ...objects) => translate2([0, 0, offset], objects);
+      module.exports = {
+        translate: translate2,
+        translateX,
+        translateY,
+        translateZ
+      };
     }
   });
   var require_torus = __commonJS({
@@ -8279,12 +8064,12 @@ ${nonManifold.join("\n")}`);
       var vec2 = require_vec2();
       var geom2 = require_geom2();
       var {isNumberArray} = require_commonChecks();
-      var solveAngleFromSSS = (a, b, c) => Math.acos((a * a + b * b - c * c) / (2 * a * b));
-      var solveSideFromSAS = (a, C, b) => {
+      var solveAngleFromSSS = (a3, b, c2) => Math.acos((a3 * a3 + b * b - c2 * c2) / (2 * a3 * b));
+      var solveSideFromSAS = (a3, C, b) => {
         if (C > NEPS) {
-          return Math.sqrt(a * a + b * b - 2 * a * b * Math.cos(C));
+          return Math.sqrt(a3 * a3 + b * b - 2 * a3 * b * Math.cos(C));
         }
-        return Math.sqrt((a - b) * (a - b) + a * b * C * C * (1 - C * C / 12));
+        return Math.sqrt((a3 - b) * (a3 - b) + a3 * b * C * C * (1 - C * C / 12));
       };
       var solveAAA = angles => {
         const eps = Math.abs(angles[0] + angles[1] + angles[2] - Math.PI);
@@ -8292,65 +8077,65 @@ ${nonManifold.join("\n")}`);
         const A = angles[0];
         const B = angles[1];
         const C = Math.PI - A - B;
-        const c = 1;
-        const a = c / Math.sin(C) * Math.sin(A);
-        const b = c / Math.sin(C) * Math.sin(B);
-        return createTriangle(A, B, C, a, b, c);
+        const c2 = 1;
+        const a3 = c2 / Math.sin(C) * Math.sin(A);
+        const b = c2 / Math.sin(C) * Math.sin(B);
+        return createTriangle(A, B, C, a3, b, c2);
       };
       var solveAAS = values => {
         const A = values[0];
         const B = values[1];
         const C = Math.PI + NEPS - A - B;
         if (C < NEPS) throw new Error("AAS triangles require angles that sum to PI");
-        const a = values[2];
-        const b = a / Math.sin(A) * Math.sin(B);
-        const c = a / Math.sin(A) * Math.sin(C);
-        return createTriangle(A, B, C, a, b, c);
+        const a3 = values[2];
+        const b = a3 / Math.sin(A) * Math.sin(B);
+        const c2 = a3 / Math.sin(A) * Math.sin(C);
+        return createTriangle(A, B, C, a3, b, c2);
       };
       var solveASA = values => {
         const A = values[0];
         const B = values[2];
         const C = Math.PI + NEPS - A - B;
         if (C < NEPS) throw new Error("ASA triangles require angles that sum to PI");
-        const c = values[1];
-        const a = c / Math.sin(C) * Math.sin(A);
-        const b = c / Math.sin(C) * Math.sin(B);
-        return createTriangle(A, B, C, a, b, c);
+        const c2 = values[1];
+        const a3 = c2 / Math.sin(C) * Math.sin(A);
+        const b = c2 / Math.sin(C) * Math.sin(B);
+        return createTriangle(A, B, C, a3, b, c2);
       };
       var solveSAS = values => {
-        const c = values[0];
+        const c2 = values[0];
         const B = values[1];
-        const a = values[2];
-        const b = solveSideFromSAS(c, B, a);
-        const A = solveAngleFromSSS(b, c, a);
+        const a3 = values[2];
+        const b = solveSideFromSAS(c2, B, a3);
+        const A = solveAngleFromSSS(b, c2, a3);
         const C = Math.PI - A - B;
-        return createTriangle(A, B, C, a, b, c);
+        return createTriangle(A, B, C, a3, b, c2);
       };
       var solveSSA = values => {
-        const c = values[0];
-        const a = values[1];
+        const c2 = values[0];
+        const a3 = values[1];
         const C = values[2];
-        const A = Math.asin(a * Math.sin(C) / c);
+        const A = Math.asin(a3 * Math.sin(C) / c2);
         const B = Math.PI - A - C;
-        const b = c / Math.sin(C) * Math.sin(B);
-        return createTriangle(A, B, C, a, b, c);
+        const b = c2 / Math.sin(C) * Math.sin(B);
+        return createTriangle(A, B, C, a3, b, c2);
       };
       var solveSSS = lengths => {
-        const a = lengths[1];
+        const a3 = lengths[1];
         const b = lengths[2];
-        const c = lengths[0];
-        if (a + b <= c || b + c <= a || c + a <= b) {
+        const c2 = lengths[0];
+        if (a3 + b <= c2 || b + c2 <= a3 || c2 + a3 <= b) {
           throw new Error("SSS triangle is incorrect, as the longest side is longer than the sum of the other sides");
         }
-        const A = solveAngleFromSSS(b, c, a);
-        const B = solveAngleFromSSS(c, a, b);
+        const A = solveAngleFromSSS(b, c2, a3);
+        const B = solveAngleFromSSS(c2, a3, b);
         const C = Math.PI - A - B;
-        return createTriangle(A, B, C, a, b, c);
+        return createTriangle(A, B, C, a3, b, c2);
       };
-      var createTriangle = (A, B, C, a, b, c) => {
+      var createTriangle = (A, B, C, a3, b, c2) => {
         const p0 = vec2.fromValues(0, 0);
-        const p1 = vec2.fromValues(c, 0);
-        const p2 = vec2.fromValues(a, 0);
+        const p1 = vec2.fromValues(c2, 0);
+        const p2 = vec2.fromValues(a3, 0);
         vec2.add(p2, vec2.rotate(p2, p2, [0, 0], Math.PI - B), p1);
         return geom2.fromPoints([p0, p1, p2]);
       };
@@ -8364,7 +8149,7 @@ ${nonManifold.join("\n")}`);
         type = type.toUpperCase();
         if (!((type[0] === "A" || type[0] === "S") && (type[1] === "A" || type[1] === "S") && (type[2] === "A" || type[2] === "S"))) throw new Error("triangle type must contain three letters; A or S");
         if (!isNumberArray(values, 3)) throw new Error("triangle values must contain three values");
-        if (!values.every(n => n > 0)) throw new Error("triangle values must be greater than zero");
+        if (!values.every(n3 => n3 > 0)) throw new Error("triangle values must be greater than zero");
         switch (type) {
           case "AAA":
             return solveAAA(values);
@@ -8721,7 +8506,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/utils/fnNumberSort.js"(exports, module) {
       "use strict";
       init_define_process();
-      var fnNumberSort = (a, b) => a - b;
+      var fnNumberSort = (a3, b) => a3 - b;
       module.exports = fnNumberSort;
     }
   });
@@ -8809,9 +8594,9 @@ ${nonManifold.join("\n")}`);
           return vec2.fromValues(x, y);
         });
         if (vec2.equals(points2D[0], points2D[1])) return null;
-        const d = vert1Indices[1] - vert1Indices[0];
-        if (d === 1 || d === 3) {
-          if (d === 1) {
+        const d2 = vert1Indices[1] - vert1Indices[0];
+        if (d2 === 1 || d2 === 3) {
+          if (d2 === 1) {
             points2D.reverse();
           }
         } else {
@@ -8977,13 +8762,13 @@ ${nonManifold.join("\n")}`);
             }
             const frontnodes = [];
             const backnodes = [];
-            const n = polygontreenodes.length;
-            for (let i = 0; i < n; ++i) {
+            const n3 = polygontreenodes.length;
+            for (let i = 0; i < n3; ++i) {
               polygontreenodes[i].splitByPlane(node.plane, node.polygontreenodes, backnodes, frontnodes, backnodes);
             }
             if (frontnodes.length > 0) {
               if (!node.front) node.front = new _Node(node);
-              const stopCondition = n === frontnodes.length && backnodes.length === 0;
+              const stopCondition = n3 === frontnodes.length && backnodes.length === 0;
               if (stopCondition) node.front.polygontreenodes = frontnodes; else stack.push({
                 node: node.front,
                 polygontreenodes: frontnodes
@@ -8991,7 +8776,7 @@ ${nonManifold.join("\n")}`);
             }
             if (backnodes.length > 0) {
               if (!node.back) node.back = new _Node(node);
-              const stopCondition = n === backnodes.length && frontnodes.length === 0;
+              const stopCondition = n3 === backnodes.length && frontnodes.length === 0;
               if (stopCondition) node.back.polygontreenodes = backnodes; else stack.push({
                 node: node.back,
                 polygontreenodes: backnodes
@@ -9048,15 +8833,15 @@ ${nonManifold.join("\n")}`);
           const vertexIsBack = [];
           const MINEPS = -EPS;
           for (let i = 0; i < numvertices; i++) {
-            const t = vec3.dot(splane, vertices[i]) - splane[3];
-            const isback = t < MINEPS;
+            const t4 = vec3.dot(splane, vertices[i]) - splane[3];
+            const isback = t4 < MINEPS;
             vertexIsBack.push(isback);
-            if (t > EPS) hasfront = true;
-            if (t < MINEPS) hasback = true;
+            if (t4 > EPS) hasfront = true;
+            if (t4 < MINEPS) hasback = true;
           }
           if (!hasfront && !hasback) {
-            const t = vec3.dot(splane, pplane);
-            result.type = t >= 0 ? 0 : 1;
+            const t4 = vec3.dot(splane, pplane);
+            result.type = t4 >= 0 ? 0 : 1;
           } else if (!hasback) {
             result.type = 2;
           } else if (!hasfront) {
@@ -9180,10 +8965,10 @@ ${nonManifold.join("\n")}`);
         getPolygons(result) {
           let children = [this];
           const queue = [children];
-          let i, j, l, node;
+          let i, j, l2, node;
           for (i = 0; i < queue.length; ++i) {
             children = queue[i];
-            for ((j = 0, l = children.length); j < l; j++) {
+            for ((j = 0, l2 = children.length); j < l2; j++) {
               node = children[j];
               if (node.polygon) {
                 result.push(node.polygon);
@@ -9198,12 +8983,12 @@ ${nonManifold.join("\n")}`);
             const queue = [this.children];
             let i;
             let j;
-            let l;
+            let l2;
             let node;
             let nodes;
             for (i = 0; i < queue.length; i++) {
               nodes = queue[i];
-              for ((j = 0, l = nodes.length); j < l; j++) {
+              for ((j = 0, l2 = nodes.length); j < l2; j++) {
                 node = nodes[j];
                 if (node.children.length > 0) {
                   queue.push(node.children);
@@ -9222,10 +9007,10 @@ ${nonManifold.join("\n")}`);
             const bound = poly3.measureBoundingSphere(polygon);
             const sphereradius = bound[3] + EPS;
             const spherecenter = bound;
-            const d = vec3.dot(splane, spherecenter) - splane[3];
-            if (d > sphereradius) {
+            const d2 = vec3.dot(splane, spherecenter) - splane[3];
+            if (d2 > sphereradius) {
               frontnodes.push(this);
-            } else if (d < -sphereradius) {
+            } else if (d2 < -sphereradius) {
               backnodes.push(this);
             } else {
               const splitresult = splitPolygonByPlane(splane, polygon);
@@ -9264,10 +9049,10 @@ ${nonManifold.join("\n")}`);
         invertSub() {
           let children = [this];
           const queue = [children];
-          let i, j, l, node;
+          let i, j, l2, node;
           for (i = 0; i < queue.length; i++) {
             children = queue[i];
-            for ((j = 0, l = children.length); j < l; j++) {
+            for ((j = 0, l2 = children.length); j < l2; j++) {
               node = children[j];
               if (node.polygon) {
                 node.polygon = poly3.invert(node.polygon);
@@ -9287,8 +9072,8 @@ ${nonManifold.join("\n")}`);
           const queue = [children];
           for (let i = 0; i < queue.length; ++i) {
             children = queue[i];
-            const l = children.length;
-            for (let j = 0; j < l; j++) {
+            const l2 = children.length;
+            for (let j = 0; j < l2; j++) {
               const node = children[j];
               if (node.polygon) {
                 node.polygon = null;
@@ -9305,11 +9090,11 @@ ${nonManifold.join("\n")}`);
           let result = "";
           let children = [this];
           const queue = [children];
-          let i, j, l, node;
+          let i, j, l2, node;
           for (i = 0; i < queue.length; ++i) {
             children = queue[i];
             const prefix = (" ").repeat(i);
-            for ((j = 0, l = children.length); j < l; j++) {
+            for ((j = 0, l2 = children.length); j < l2; j++) {
               node = children[j];
               result += `${prefix}PolygonTreeNode (${node.isRootNode()}): ${node.children.length}`;
               if (node.polygon) {
@@ -9390,16 +9175,16 @@ ${nonManifold.join("\n")}`);
         if (!mayOverlap(geometry1, geometry2)) {
           return geom32.create();
         }
-        const a = new Tree(geom32.toPolygons(geometry1, true));
+        const a3 = new Tree(geom32.toPolygons(geometry1, true));
         const b = new Tree(geom32.toPolygons(geometry2, true));
-        a.invert();
-        b.clipTo(a);
+        a3.invert();
+        b.clipTo(a3);
         b.invert();
-        a.clipTo(b);
-        b.clipTo(a);
-        a.addPolygons(b.allPolygons());
-        a.invert();
-        const newpolygons = a.allPolygons();
+        a3.clipTo(b);
+        b.clipTo(a3);
+        a3.addPolygons(b.allPolygons());
+        a3.invert();
+        const newpolygons = a3.allPolygons();
         return geom32.create(newpolygons);
       };
       module.exports = intersectGeom3Sub;
@@ -9476,7 +9261,7 @@ ${nonManifold.join("\n")}`);
       var vec3 = require_vec3();
       var measureEpsilon = require_measureEpsilon();
       var geom32 = require_geom3();
-      var sortNb = array => array.sort((a, b) => a - b).filter((item, pos, ary) => !pos || item !== ary[pos - 1]);
+      var sortNb = array => array.sort((a3, b) => a3 - b).filter((item, pos, ary) => !pos || item !== ary[pos - 1]);
       var insertMapping = (map, point, index) => {
         const key = `${point}`;
         const mapping = map.get(key);
@@ -9521,12 +9306,12 @@ ${nonManifold.join("\n")}`);
             indexes[i] = true;
             do {
               merges = 0;
-              indexes.forEach((e, j) => {
+              indexes.forEach((e5, j) => {
                 const mapj = indexesPerPolygon[j];
                 if (mapj.e > 0) {
                   mapj.e = -1;
-                  for (let d = 0; d < mapj.d.length; d++) {
-                    indexes[mapj.d[d]] = true;
+                  for (let d2 = 0; d2 < mapj.d.length; d2++) {
+                    indexes[mapj.d[d2]] = true;
                   }
                   merges++;
                 }
@@ -9539,7 +9324,7 @@ ${nonManifold.join("\n")}`);
         for (let i = 0; i < ippl; i++) {
           if (indexesPerPolygon[i].indexes) {
             const newpolygons = [];
-            indexesPerPolygon[i].indexes.forEach((e, p) => newpolygons.push(polygons[p]));
+            indexesPerPolygon[i].indexes.forEach((e5, p2) => newpolygons.push(polygons[p2]));
             newgeometries.push(geom32.create(newpolygons));
           }
         }
@@ -9578,14 +9363,14 @@ ${nonManifold.join("\n")}`);
         if (!mayOverlap(geometry1, geometry2)) {
           return geom32.clone(geometry1);
         }
-        const a = new Tree(geom32.toPolygons(geometry1, true));
+        const a3 = new Tree(geom32.toPolygons(geometry1, true));
         const b = new Tree(geom32.toPolygons(geometry2, true));
-        a.invert();
-        a.clipTo(b);
-        b.clipTo(a, true);
-        a.addPolygons(b.allPolygons());
-        a.invert();
-        const newpolygons = a.allPolygons();
+        a3.invert();
+        a3.clipTo(b);
+        b.clipTo(a3, true);
+        a3.addPolygons(b.allPolygons());
+        a3.invert();
+        const newpolygons = a3.allPolygons();
         return geom32.create(newpolygons);
       };
       module.exports = subtractGeom3Sub;
@@ -9666,14 +9451,14 @@ ${nonManifold.join("\n")}`);
         if (!mayOverlap(geometry1, geometry2)) {
           return unionForNonIntersecting(geometry1, geometry2);
         }
-        const a = new Tree(geom32.toPolygons(geometry1, true));
+        const a3 = new Tree(geom32.toPolygons(geometry1, true));
         const b = new Tree(geom32.toPolygons(geometry2, true));
-        a.clipTo(b, false);
-        b.clipTo(a);
+        a3.clipTo(b, false);
+        b.clipTo(a3);
         b.invert();
-        b.clipTo(a);
+        b.clipTo(a3);
         b.invert();
-        const newpolygons = a.allPolygons().concat(b.allPolygons());
+        const newpolygons = a3.allPolygons().concat(b.allPolygons());
         const result = geom32.create(newpolygons);
         return result;
       };
@@ -9788,9 +9573,9 @@ ${nonManifold.join("\n")}`);
         let newPoints = [];
         const newCorners = [];
         const of = vec2.create();
-        const n = points.length;
-        for (let i = 0; i < n; i++) {
-          const j = (i + 1) % n;
+        const n3 = points.length;
+        for (let i = 0; i < n3; i++) {
+          const j = (i + 1) % n3;
           const p0 = points[i];
           const p1 = points[j];
           orientation ? vec2.subtract(of, p0, p1) : vec2.subtract(of, p1, p0);
@@ -9857,7 +9642,7 @@ ${nonManifold.join("\n")}`);
               newPoints[i] = void 0;
             }
           });
-          newPoints = newPoints.filter(p => p !== void 0);
+          newPoints = newPoints.filter(p2 => p2 !== void 0);
         }
         if (corners === "round") {
           let cornersegments = Math.floor(segments / 4);
@@ -10040,8 +9825,8 @@ ${nonManifold.join("\n")}`);
           return mat42.fromValues(this.u[0], this.v[0], this.plane[0], 0, this.u[1], this.v[1], this.plane[1], 0, this.u[2], this.v[2], this.plane[2], 0, 0, 0, -this.plane[3], 1);
         },
         getInverseProjectionMatrix: function () {
-          const p = vec3.scale(vec3.create(), this.plane, this.plane[3]);
-          return mat42.fromValues(this.u[0], this.u[1], this.u[2], 0, this.v[0], this.v[1], this.v[2], 0, this.plane[0], this.plane[1], this.plane[2], 0, p[0], p[1], p[2], 1);
+          const p2 = vec3.scale(vec3.create(), this.plane, this.plane[3]);
+          return mat42.fromValues(this.u[0], this.u[1], this.u[2], 0, this.v[0], this.v[1], this.v[2], 0, this.plane[0], this.plane[1], this.plane[2], 0, p2[0], p2[1], p2[2], 1);
         },
         to2D: function (point) {
           return vec2.fromValues(vec3.dot(point, this.u), vec3.dot(point, this.v));
@@ -10054,16 +9839,16 @@ ${nonManifold.join("\n")}`);
           return v4;
         },
         line3Dto2D: function (line3d) {
-          const a = line3d.point;
-          const b = line3d.direction.plus(a);
-          const a2d = this.to2D(a);
+          const a3 = line3d.point;
+          const b = line3d.direction.plus(a3);
+          const a2d = this.to2D(a3);
           const b2d = this.to2D(b);
           return Line2D.fromPoints(a2d, b2d);
         },
         line2Dto3D: function (line2d) {
-          const a = line2d.origin();
-          const b = line2d.direction().plus(a);
-          const a3d = this.to3D(a);
+          const a3 = line2d.origin();
+          const b = line2d.direction().plus(a3);
+          const a3d = this.to3D(a3);
           const b3d = this.to3D(b);
           return Line3D.fromPoints(a3d, b3d);
         },
@@ -11057,10 +10842,10 @@ ${nonManifold.join("\n")}`);
         }
         if (!aboutEqualNormals(projplane, [0, 0, 1])) {
           const rotation = mat42.fromVectorRotation(mat42.create(), projplane, [0, 0, 1]);
-          projpolys = projpolys.map(p => poly3.transform(rotation, p));
+          projpolys = projpolys.map(p2 => poly3.transform(rotation, p2));
         }
-        projpolys = projpolys.sort((a, b) => poly3.measureArea(b) - poly3.measureArea(a));
-        const projgeoms = projpolys.map(p => geom2.fromPoints(p.vertices));
+        projpolys = projpolys.sort((a3, b) => poly3.measureArea(b) - poly3.measureArea(a3));
+        const projgeoms = projpolys.map(p2 => geom2.fromPoints(p2.vertices));
         return unionGeom2(projgeoms);
       };
       var project = (options, ...objects) => {
@@ -11218,20 +11003,20 @@ ${nonManifold.join("\n")}`);
       var cross = require_cross();
       var subtract2 = require_subtract();
       var squaredLength = require_squaredLength();
-      var distanceSquared = (p, a, b) => {
+      var distanceSquared = (p2, a3, b) => {
         const ab = [];
         const ap = [];
         const cr = [];
-        subtract2(ab, b, a);
-        subtract2(ap, p, a);
+        subtract2(ab, b, a3);
+        subtract2(ap, p2, a3);
         const area = squaredLength(cross(cr, ap, ab));
-        const s = squaredLength(ab);
-        if (s === 0) {
+        const s5 = squaredLength(ab);
+        if (s5 === 0) {
           throw Error("a and b are the same point");
         }
-        return area / s;
+        return area / s5;
       };
-      var pointLineDistance = (point, a, b) => Math.sqrt(distanceSquared(point, a, b));
+      var pointLineDistance = (point, a3, b) => Math.sqrt(distanceSquared(point, a3, b));
       module.exports = pointLineDistance;
     }
   });
@@ -11318,16 +11103,16 @@ ${nonManifold.join("\n")}`);
             node.next.prev = node.prev;
           }
         }
-        removeChain(a, b) {
-          if (!a.prev) {
+        removeChain(a3, b) {
+          if (!a3.prev) {
             this.head = b.next;
           } else {
-            a.prev.next = b.next;
+            a3.prev.next = b.next;
           }
           if (!b.next) {
-            this.tail = a.prev;
+            this.tail = a3.prev;
           } else {
-            b.next.prev = a.prev;
+            b.next.prev = a3.prev;
           }
         }
         first() {
@@ -11440,17 +11225,17 @@ ${nonManifold.join("\n")}`);
         computeNormal() {
           const e0 = this.edge;
           const e1 = e0.next;
-          let e2 = e1.next;
+          let e22 = e1.next;
           const v2 = subtract2([], e1.head().point, e0.head().point);
-          const t = [];
+          const t4 = [];
           const v1 = [];
           this.nVertices = 2;
           this.normal = [0, 0, 0];
-          while (e2 !== e0) {
+          while (e22 !== e0) {
             copy(v1, v2);
-            subtract2(v2, e2.head().point, e0.head().point);
-            add(this.normal, this.normal, cross(t, v1, v2));
-            e2 = e2.next;
+            subtract2(v2, e22.head().point, e0.head().point);
+            add(this.normal, this.normal, cross(t4, v1, v2));
+            e22 = e22.next;
             this.nVertices += 1;
           }
           this.area = length(this.normal);
@@ -11579,10 +11364,10 @@ ${nonManifold.join("\n")}`);
           const face = new _Face();
           const e0 = new HalfEdge(v0, face);
           const e1 = new HalfEdge(v1, face);
-          const e2 = new HalfEdge(v2, face);
-          e0.next = e2.prev = e1;
-          e1.next = e0.prev = e2;
-          e2.next = e1.prev = e0;
+          const e22 = new HalfEdge(v2, face);
+          e0.next = e22.prev = e1;
+          e1.next = e0.prev = e22;
+          e22.next = e1.prev = e0;
           face.edge = e0;
           face.computeNormalAndCentroid(minArea);
           return face;
@@ -12200,25 +11985,25 @@ ${nonManifold.join("\n")}`);
                 opposite.v2 = null;
                 opposite.next = null;
                 opposite.prev = null;
-                const mergeEdges = (list, e1, e2) => {
+                const mergeEdges = (list, e1, e22) => {
                   const newedge = {
-                    v1: e2.v1,
+                    v1: e22.v1,
                     v2: e1.v2,
                     next: e1.next,
-                    prev: e2.prev
+                    prev: e22.prev
                   };
-                  e2.prev.next = newedge;
+                  e22.prev.next = newedge;
                   e1.next.prev = newedge;
                   deleteEdge(list, e1);
                   e1.v1 = null;
                   e1.v2 = null;
                   e1.next = null;
                   e1.prev = null;
-                  deleteEdge(list, e2);
-                  e2.v1 = null;
-                  e2.v2 = null;
-                  e2.next = null;
-                  e2.prev = null;
+                  deleteEdge(list, e22);
+                  e22.v1 = null;
+                  e22.v2 = null;
+                  e22.next = null;
+                  e22.prev = null;
                 };
                 if (angles[0] === 0) {
                   mergeEdges(edgeList, edge1, edge1.prev);
@@ -12458,9 +12243,9 @@ ${nonManifold.join("\n")}`);
                       const endpos = endvertex;
                       const checkpos = matchingsidestartvertex;
                       const direction = vec3.subtract(vec3.create(), checkpos, startpos);
-                      const t = vec3.dot(vec3.subtract(vec3.create(), endpos, startpos), direction) / vec3.dot(direction, direction);
-                      if (t > 0 && t < 1) {
-                        const closestpoint = vec3.scale(vec3.create(), direction, t);
+                      const t4 = vec3.dot(vec3.subtract(vec3.create(), endpos, startpos), direction) / vec3.dot(direction, direction);
+                      if (t4 > 0 && t4 < 1) {
+                        const closestpoint = vec3.scale(vec3.create(), direction, t4);
                         vec3.add(closestpoint, closestpoint, startpos);
                         const distancesquared = vec3.squaredDistance(closestpoint, endpos);
                         if (distancesquared < constants.EPS * constants.EPS) {
@@ -12655,6 +12440,240 @@ ${nonManifold.join("\n")}`);
       };
     }
   });
+  var require_padArrayToLength = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/utils/padArrayToLength.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var padArrayToLength = (anArray, padding, targetLength) => {
+        anArray = anArray.slice();
+        while (anArray.length < targetLength) {
+          anArray.push(padding);
+        }
+        return anArray;
+      };
+      module.exports = padArrayToLength;
+    }
+  });
+  var require_align = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/align.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var flatten = require_flatten();
+      var padArrayToLength = require_padArrayToLength();
+      var measureAggregateBoundingBox = require_measureAggregateBoundingBox();
+      var {translate: translate2} = require_translate2();
+      var validateOptions = options => {
+        if (!Array.isArray(options.modes) || options.modes.length > 3) throw new Error("align(): modes must be an array of length <= 3");
+        options.modes = padArrayToLength(options.modes, "none", 3);
+        if (options.modes.filter(mode => ["center", "max", "min", "none"].includes(mode)).length !== 3) throw new Error('align(): all modes must be one of "center", "max" or "min"');
+        if (!Array.isArray(options.relativeTo) || options.relativeTo.length > 3) throw new Error("align(): relativeTo must be an array of length <= 3");
+        options.relativeTo = padArrayToLength(options.relativeTo, 0, 3);
+        if (options.relativeTo.filter(alignVal => Number.isFinite(alignVal) || alignVal == null).length !== 3) throw new Error("align(): all relativeTo values must be a number, or null.");
+        if (typeof options.grouped !== "boolean") throw new Error("align(): grouped must be a boolean value.");
+        return options;
+      };
+      var populateRelativeToFromBounds = (relativeTo, modes, bounds) => {
+        for (let i = 0; i < 3; i++) {
+          if (relativeTo[i] == null) {
+            if (modes[i] === "center") {
+              relativeTo[i] = (bounds[0][i] + bounds[1][i]) / 2;
+            } else if (modes[i] === "max") {
+              relativeTo[i] = bounds[1][i];
+            } else if (modes[i] === "min") {
+              relativeTo[i] = bounds[0][i];
+            }
+          }
+        }
+        return relativeTo;
+      };
+      var alignGeometries = (geometry, modes, relativeTo) => {
+        const bounds = measureAggregateBoundingBox(geometry);
+        const translation = [0, 0, 0];
+        for (let i = 0; i < 3; i++) {
+          if (modes[i] === "center") {
+            translation[i] = relativeTo[i] - (bounds[0][i] + bounds[1][i]) / 2;
+          } else if (modes[i] === "max") {
+            translation[i] = relativeTo[i] - bounds[1][i];
+          } else if (modes[i] === "min") {
+            translation[i] = relativeTo[i] - bounds[0][i];
+          }
+        }
+        return translate2(translation, geometry);
+      };
+      var align = (options, ...geometries) => {
+        const defaults = {
+          modes: ["center", "center", "min"],
+          relativeTo: [0, 0, 0],
+          grouped: false
+        };
+        options = Object.assign({}, defaults, options);
+        options = validateOptions(options);
+        let {modes, relativeTo, grouped} = options;
+        geometries = flatten(geometries);
+        if (geometries.length === 0) throw new Error("align(): No geometries were provided to act upon");
+        if (relativeTo.filter(val => val == null).length) {
+          const bounds = measureAggregateBoundingBox(geometries);
+          relativeTo = populateRelativeToFromBounds(relativeTo, modes, bounds);
+        }
+        if (grouped) {
+          geometries = alignGeometries(geometries, modes, relativeTo);
+        } else {
+          geometries = geometries.map(geometry => alignGeometries(geometry, modes, relativeTo));
+        }
+        return geometries.length === 1 ? geometries[0] : geometries;
+      };
+      module.exports = align;
+    }
+  });
+  var require_center = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/center.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var flatten = require_flatten();
+      var geom2 = require_geom2();
+      var geom32 = require_geom3();
+      var path2 = require_path2();
+      var measureBoundingBox2 = require_measureBoundingBox2();
+      var {translate: translate2} = require_translate2();
+      var centerGeometry = (options, object) => {
+        const defaults = {
+          axes: [true, true, true],
+          relativeTo: [0, 0, 0]
+        };
+        const {axes, relativeTo} = Object.assign({}, defaults, options);
+        const bounds = measureBoundingBox2(object);
+        const offset = [0, 0, 0];
+        if (axes[0]) offset[0] = relativeTo[0] - (bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2);
+        if (axes[1]) offset[1] = relativeTo[1] - (bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2);
+        if (axes[2]) offset[2] = relativeTo[2] - (bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2);
+        return translate2(offset, object);
+      };
+      var center = (options, ...objects) => {
+        const defaults = {
+          axes: [true, true, true],
+          relativeTo: [0, 0, 0]
+        };
+        const {axes, relativeTo} = Object.assign({}, defaults, options);
+        objects = flatten(objects);
+        if (objects.length === 0) throw new Error("wrong number of arguments");
+        if (relativeTo.length !== 3) throw new Error("relativeTo must be an array of length 3");
+        options = {
+          axes,
+          relativeTo
+        };
+        const results = objects.map(object => {
+          if (path2.isA(object)) return centerGeometry(options, object);
+          if (geom2.isA(object)) return centerGeometry(options, object);
+          if (geom32.isA(object)) return centerGeometry(options, object);
+          return object;
+        });
+        return results.length === 1 ? results[0] : results;
+      };
+      var centerX = (...objects) => center({
+        axes: [true, false, false]
+      }, objects);
+      var centerY = (...objects) => center({
+        axes: [false, true, false]
+      }, objects);
+      var centerZ = (...objects) => center({
+        axes: [false, false, true]
+      }, objects);
+      module.exports = {
+        center,
+        centerX,
+        centerY,
+        centerZ
+      };
+    }
+  });
+  var require_scale4 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/scale.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var flatten = require_flatten();
+      var mat42 = require_mat4();
+      var geom2 = require_geom2();
+      var geom32 = require_geom3();
+      var path2 = require_path2();
+      var scale2 = (factors, ...objects) => {
+        if (!Array.isArray(factors)) throw new Error("factors must be an array");
+        objects = flatten(objects);
+        if (objects.length === 0) throw new Error("wrong number of arguments");
+        factors = factors.slice();
+        while (factors.length < 3) factors.push(1);
+        if (factors[0] <= 0 || factors[1] <= 0 || factors[2] <= 0) throw new Error("factors must be positive");
+        const matrix = mat42.fromScaling(mat42.create(), factors);
+        const results = objects.map(object => {
+          if (path2.isA(object)) return path2.transform(matrix, object);
+          if (geom2.isA(object)) return geom2.transform(matrix, object);
+          if (geom32.isA(object)) return geom32.transform(matrix, object);
+          return object;
+        });
+        return results.length === 1 ? results[0] : results;
+      };
+      var scaleX = (factor, ...objects) => scale2([factor, 1, 1], objects);
+      var scaleY = (factor, ...objects) => scale2([1, factor, 1], objects);
+      var scaleZ = (factor, ...objects) => scale2([1, 1, factor], objects);
+      module.exports = {
+        scale: scale2,
+        scaleX,
+        scaleY,
+        scaleZ
+      };
+    }
+  });
+  var require_transform12 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/transform.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var flatten = require_flatten();
+      var geom2 = require_geom2();
+      var geom32 = require_geom3();
+      var path2 = require_path2();
+      var transform = (matrix, ...objects) => {
+        objects = flatten(objects);
+        if (objects.length === 0) throw new Error("wrong number of arguments");
+        const results = objects.map(object => {
+          if (path2.isA(object)) return path2.transform(matrix, object);
+          if (geom2.isA(object)) return geom2.transform(matrix, object);
+          if (geom32.isA(object)) return geom32.transform(matrix, object);
+          return object;
+        });
+        return results.length === 1 ? results[0] : results;
+      };
+      module.exports = transform;
+    }
+  });
+  var require_transforms = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/operations/transforms/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = {
+        align: require_align(),
+        center: require_center().center,
+        centerX: require_center().centerX,
+        centerY: require_center().centerY,
+        centerZ: require_center().centerZ,
+        mirror: require_mirror().mirror,
+        mirrorX: require_mirror().mirrorX,
+        mirrorY: require_mirror().mirrorY,
+        mirrorZ: require_mirror().mirrorZ,
+        rotate: require_rotate3().rotate,
+        rotateX: require_rotate3().rotateX,
+        rotateY: require_rotate3().rotateY,
+        rotateZ: require_rotate3().rotateZ,
+        scale: require_scale4().scale,
+        scaleX: require_scale4().scaleX,
+        scaleY: require_scale4().scaleY,
+        scaleZ: require_scale4().scaleZ,
+        transform: require_transform12(),
+        translate: require_translate2().translate,
+        translateX: require_translate2().translateX,
+        translateY: require_translate2().translateY,
+        translateZ: require_translate2().translateZ
+      };
+    }
+  });
   var require_src = __commonJS({
     "../../../node_modules/@jscad/modeling/src/index.js"(exports, module) {
       "use strict";
@@ -12697,23 +12716,23 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/add.js"(exports, module) {
       "use strict";
       init_define_process();
-      var add = (out, a, b) => {
-        out[0] = a[0] + b[0];
-        out[1] = a[1] + b[1];
-        out[2] = a[2] + b[2];
-        out[3] = a[3] + b[3];
-        out[4] = a[4] + b[4];
-        out[5] = a[5] + b[5];
-        out[6] = a[6] + b[6];
-        out[7] = a[7] + b[7];
-        out[8] = a[8] + b[8];
-        out[9] = a[9] + b[9];
-        out[10] = a[10] + b[10];
-        out[11] = a[11] + b[11];
-        out[12] = a[12] + b[12];
-        out[13] = a[13] + b[13];
-        out[14] = a[14] + b[14];
-        out[15] = a[15] + b[15];
+      var add = (out, a3, b) => {
+        out[0] = a3[0] + b[0];
+        out[1] = a3[1] + b[1];
+        out[2] = a3[2] + b[2];
+        out[3] = a3[3] + b[3];
+        out[4] = a3[4] + b[4];
+        out[5] = a3[5] + b[5];
+        out[6] = a3[6] + b[6];
+        out[7] = a3[7] + b[7];
+        out[8] = a3[8] + b[8];
+        out[9] = a3[9] + b[9];
+        out[10] = a3[10] + b[10];
+        out[11] = a3[11] + b[11];
+        out[12] = a3[12] + b[12];
+        out[13] = a3[13] + b[13];
+        out[14] = a3[14] + b[14];
+        out[15] = a3[15] + b[15];
         return out;
       };
       module.exports = add;
@@ -12844,7 +12863,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/equals.js"(exports, module) {
       "use strict";
       init_define_process();
-      var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3] && a[4] === b[4] && a[5] === b[5] && a[6] === b[6] && a[7] === b[7] && a[8] === b[8] && a[9] === b[9] && a[10] === b[10] && a[11] === b[11] && a[12] === b[12] && a[13] === b[13] && a[14] === b[14] && a[15] === b[15];
+      var equals = (a3, b) => a3[0] === b[0] && a3[1] === b[1] && a3[2] === b[2] && a3[3] === b[3] && a3[4] === b[4] && a3[5] === b[5] && a3[6] === b[6] && a3[7] === b[7] && a3[8] === b[8] && a3[9] === b[9] && a3[10] === b[10] && a3[11] === b[11] && a3[12] === b[12] && a3[13] === b[13] && a3[14] === b[14] && a3[15] === b[15];
       module.exports = equals;
     }
   });
@@ -12869,7 +12888,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var {NEPS} = require_constants2();
-      var rezero = n => Math.abs(n) < NEPS ? 0 : n;
+      var rezero = n3 => Math.abs(n3) < NEPS ? 0 : n3;
       var sin = radians => rezero(Math.sin(radians));
       var cos = radians => rezero(Math.cos(radians));
       module.exports = {
@@ -12921,20 +12940,20 @@ ${nonManifold.join("\n")}`);
         x *= len;
         y *= len;
         z *= len;
-        const s = sin(rad);
-        const c = cos(rad);
-        const t = 1 - c;
-        out[0] = x * x * t + c;
-        out[1] = y * x * t + z * s;
-        out[2] = z * x * t - y * s;
+        const s5 = sin(rad);
+        const c2 = cos(rad);
+        const t4 = 1 - c2;
+        out[0] = x * x * t4 + c2;
+        out[1] = y * x * t4 + z * s5;
+        out[2] = z * x * t4 - y * s5;
         out[3] = 0;
-        out[4] = x * y * t - z * s;
-        out[5] = y * y * t + c;
-        out[6] = z * y * t + x * s;
+        out[4] = x * y * t4 - z * s5;
+        out[5] = y * y * t4 + c2;
+        out[6] = z * y * t4 + x * s5;
         out[7] = 0;
-        out[8] = x * z * t + y * s;
-        out[9] = y * z * t - x * s;
-        out[10] = z * z * t + c;
+        out[8] = x * z * t4 + y * s5;
+        out[9] = y * z * t4 - x * s5;
+        out[10] = z * z * t4 + c2;
         out[11] = 0;
         out[12] = 0;
         out[13] = 0;
@@ -13075,10 +13094,10 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/add.js"(exports, module) {
       "use strict";
       init_define_process();
-      var add = (out, a, b) => {
-        out[0] = a[0] + b[0];
-        out[1] = a[1] + b[1];
-        out[2] = a[2] + b[2];
+      var add = (out, a3, b) => {
+        out[0] = a3[0] + b[0];
+        out[1] = a3[1] + b[1];
+        out[2] = a3[2] + b[2];
         return out;
       };
       module.exports = add;
@@ -13088,7 +13107,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/dot.js"(exports, module) {
       "use strict";
       init_define_process();
-      var dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+      var dot = (a3, b) => a3[0] * b[0] + a3[1] * b[1] + a3[2] * b[2];
       module.exports = dot;
     }
   });
@@ -13097,17 +13116,17 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var dot = require_dot4();
-      var angle = (a, b) => {
-        const ax = a[0];
-        const ay = a[1];
-        const az = a[2];
+      var angle = (a3, b) => {
+        const ax = a3[0];
+        const ay = a3[1];
+        const az = a3[2];
         const bx = b[0];
         const by = b[1];
         const bz = b[2];
         const mag1 = Math.sqrt(ax * ax + ay * ay + az * az);
         const mag2 = Math.sqrt(bx * bx + by * by + bz * bz);
         const mag = mag1 * mag2;
-        const cosine = mag && dot(a, b) / mag;
+        const cosine = mag && dot(a3, b) / mag;
         return Math.acos(Math.min(Math.max(cosine, -1), 1));
       };
       module.exports = angle;
@@ -13153,10 +13172,10 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/cross.js"(exports, module) {
       "use strict";
       init_define_process();
-      var cross = (out, a, b) => {
-        const ax = a[0];
-        const ay = a[1];
-        const az = a[2];
+      var cross = (out, a3, b) => {
+        const ax = a3[0];
+        const ay = a3[1];
+        const az = a3[2];
         const bx = b[0];
         const by = b[1];
         const bz = b[2];
@@ -13172,10 +13191,10 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/distance.js"(exports, module) {
       "use strict";
       init_define_process();
-      var distance = (a, b) => {
-        const x = b[0] - a[0];
-        const y = b[1] - a[1];
-        const z = b[2] - a[2];
+      var distance = (a3, b) => {
+        const x = b[0] - a3[0];
+        const y = b[1] - a3[1];
+        const z = b[2] - a3[2];
         return Math.sqrt(x * x + y * y + z * z);
       };
       module.exports = distance;
@@ -13185,10 +13204,10 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/divide.js"(exports, module) {
       "use strict";
       init_define_process();
-      var divide = (out, a, b) => {
-        out[0] = a[0] / b[0];
-        out[1] = a[1] / b[1];
-        out[2] = a[2] / b[2];
+      var divide = (out, a3, b) => {
+        out[0] = a3[0] / b[0];
+        out[1] = a3[1] / b[1];
+        out[2] = a3[2] / b[2];
         return out;
       };
       module.exports = divide;
@@ -13198,7 +13217,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/equals.js"(exports, module) {
       "use strict";
       init_define_process();
-      var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
+      var equals = (a3, b) => a3[0] === b[0] && a3[1] === b[1] && a3[2] === b[2];
       module.exports = equals;
     }
   });
@@ -13260,10 +13279,10 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/lerp.js"(exports, module) {
       "use strict";
       init_define_process();
-      var lerp = (out, a, b, t) => {
-        out[0] = a[0] + t * (b[0] - a[0]);
-        out[1] = a[1] + t * (b[1] - a[1]);
-        out[2] = a[2] + t * (b[2] - a[2]);
+      var lerp = (out, a3, b, t4) => {
+        out[0] = a3[0] + t4 * (b[0] - a3[0]);
+        out[1] = a3[1] + t4 * (b[1] - a3[1]);
+        out[2] = a3[2] + t4 * (b[2] - a3[2]);
         return out;
       };
       module.exports = lerp;
@@ -13273,10 +13292,10 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/max.js"(exports, module) {
       "use strict";
       init_define_process();
-      var max = (out, a, b) => {
-        out[0] = Math.max(a[0], b[0]);
-        out[1] = Math.max(a[1], b[1]);
-        out[2] = Math.max(a[2], b[2]);
+      var max = (out, a3, b) => {
+        out[0] = Math.max(a3[0], b[0]);
+        out[1] = Math.max(a3[1], b[1]);
+        out[2] = Math.max(a3[2], b[2]);
         return out;
       };
       module.exports = max;
@@ -13286,10 +13305,10 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/min.js"(exports, module) {
       "use strict";
       init_define_process();
-      var min = (out, a, b) => {
-        out[0] = Math.min(a[0], b[0]);
-        out[1] = Math.min(a[1], b[1]);
-        out[2] = Math.min(a[2], b[2]);
+      var min = (out, a3, b) => {
+        out[0] = Math.min(a3[0], b[0]);
+        out[1] = Math.min(a3[1], b[1]);
+        out[2] = Math.min(a3[2], b[2]);
         return out;
       };
       module.exports = min;
@@ -13299,10 +13318,10 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/multiply.js"(exports, module) {
       "use strict";
       init_define_process();
-      var multiply = (out, a, b) => {
-        out[0] = a[0] * b[0];
-        out[1] = a[1] * b[1];
-        out[2] = a[2] * b[2];
+      var multiply = (out, a3, b) => {
+        out[0] = a3[0] * b[0];
+        out[1] = a3[1] * b[1];
+        out[2] = a3[2] * b[2];
         return out;
       };
       module.exports = multiply;
@@ -13363,17 +13382,17 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var rotateX = (out, vector, origin, radians) => {
-        const p = [];
-        const r = [];
-        p[0] = vector[0] - origin[0];
-        p[1] = vector[1] - origin[1];
-        p[2] = vector[2] - origin[2];
-        r[0] = p[0];
-        r[1] = p[1] * Math.cos(radians) - p[2] * Math.sin(radians);
-        r[2] = p[1] * Math.sin(radians) + p[2] * Math.cos(radians);
-        out[0] = r[0] + origin[0];
-        out[1] = r[1] + origin[1];
-        out[2] = r[2] + origin[2];
+        const p2 = [];
+        const r2 = [];
+        p2[0] = vector[0] - origin[0];
+        p2[1] = vector[1] - origin[1];
+        p2[2] = vector[2] - origin[2];
+        r2[0] = p2[0];
+        r2[1] = p2[1] * Math.cos(radians) - p2[2] * Math.sin(radians);
+        r2[2] = p2[1] * Math.sin(radians) + p2[2] * Math.cos(radians);
+        out[0] = r2[0] + origin[0];
+        out[1] = r2[1] + origin[1];
+        out[2] = r2[2] + origin[2];
         return out;
       };
       module.exports = rotateX;
@@ -13384,17 +13403,17 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var rotateY = (out, vector, origin, radians) => {
-        const p = [];
-        const r = [];
-        p[0] = vector[0] - origin[0];
-        p[1] = vector[1] - origin[1];
-        p[2] = vector[2] - origin[2];
-        r[0] = p[2] * Math.sin(radians) + p[0] * Math.cos(radians);
-        r[1] = p[1];
-        r[2] = p[2] * Math.cos(radians) - p[0] * Math.sin(radians);
-        out[0] = r[0] + origin[0];
-        out[1] = r[1] + origin[1];
-        out[2] = r[2] + origin[2];
+        const p2 = [];
+        const r2 = [];
+        p2[0] = vector[0] - origin[0];
+        p2[1] = vector[1] - origin[1];
+        p2[2] = vector[2] - origin[2];
+        r2[0] = p2[2] * Math.sin(radians) + p2[0] * Math.cos(radians);
+        r2[1] = p2[1];
+        r2[2] = p2[2] * Math.cos(radians) - p2[0] * Math.sin(radians);
+        out[0] = r2[0] + origin[0];
+        out[1] = r2[1] + origin[1];
+        out[2] = r2[2] + origin[2];
         return out;
       };
       module.exports = rotateY;
@@ -13405,14 +13424,14 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var rotateZ = (out, vector, origin, radians) => {
-        const p = [];
-        const r = [];
-        p[0] = vector[0] - origin[0];
-        p[1] = vector[1] - origin[1];
-        r[0] = p[0] * Math.cos(radians) - p[1] * Math.sin(radians);
-        r[1] = p[0] * Math.sin(radians) + p[1] * Math.cos(radians);
-        out[0] = r[0] + origin[0];
-        out[1] = r[1] + origin[1];
+        const p2 = [];
+        const r2 = [];
+        p2[0] = vector[0] - origin[0];
+        p2[1] = vector[1] - origin[1];
+        r2[0] = p2[0] * Math.cos(radians) - p2[1] * Math.sin(radians);
+        r2[1] = p2[0] * Math.sin(radians) + p2[1] * Math.cos(radians);
+        out[0] = r2[0] + origin[0];
+        out[1] = r2[1] + origin[1];
         out[2] = vector[2];
         return out;
       };
@@ -13449,10 +13468,10 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/squaredDistance.js"(exports, module) {
       "use strict";
       init_define_process();
-      var squaredDistance = (a, b) => {
-        const x = b[0] - a[0];
-        const y = b[1] - a[1];
-        const z = b[2] - a[2];
+      var squaredDistance = (a3, b) => {
+        const x = b[0] - a3[0];
+        const y = b[1] - a3[1];
+        const z = b[2] - a3[2];
         return x * x + y * y + z * z;
       };
       module.exports = squaredDistance;
@@ -13475,10 +13494,10 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec3/subtract.js"(exports, module) {
       "use strict";
       init_define_process();
-      var subtract2 = (out, a, b) => {
-        out[0] = a[0] - b[0];
-        out[1] = a[1] - b[1];
-        out[2] = a[2] - b[2];
+      var subtract2 = (out, a3, b) => {
+        out[0] = a3[0] - b[0];
+        out[1] = a3[1] - b[1];
+        out[2] = a3[2] - b[2];
         return out;
       };
       module.exports = subtract2;
@@ -13590,19 +13609,19 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var {sin, cos} = require_trigonometry2();
       var fromXRotation = (out, radians) => {
-        const s = sin(radians);
-        const c = cos(radians);
+        const s5 = sin(radians);
+        const c2 = cos(radians);
         out[0] = 1;
         out[1] = 0;
         out[2] = 0;
         out[3] = 0;
         out[4] = 0;
-        out[5] = c;
-        out[6] = s;
+        out[5] = c2;
+        out[6] = s5;
         out[7] = 0;
         out[8] = 0;
-        out[9] = -s;
-        out[10] = c;
+        out[9] = -s5;
+        out[10] = c2;
         out[11] = 0;
         out[12] = 0;
         out[13] = 0;
@@ -13619,19 +13638,19 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var {sin, cos} = require_trigonometry2();
       var fromYRotation = (out, radians) => {
-        const s = sin(radians);
-        const c = cos(radians);
-        out[0] = c;
+        const s5 = sin(radians);
+        const c2 = cos(radians);
+        out[0] = c2;
         out[1] = 0;
-        out[2] = -s;
+        out[2] = -s5;
         out[3] = 0;
         out[4] = 0;
         out[5] = 1;
         out[6] = 0;
         out[7] = 0;
-        out[8] = s;
+        out[8] = s5;
         out[9] = 0;
-        out[10] = c;
+        out[10] = c2;
         out[11] = 0;
         out[12] = 0;
         out[13] = 0;
@@ -13648,14 +13667,14 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var {sin, cos} = require_trigonometry2();
       var fromZRotation = (out, radians) => {
-        const s = sin(radians);
-        const c = cos(radians);
-        out[0] = c;
-        out[1] = s;
+        const s5 = sin(radians);
+        const c2 = cos(radians);
+        out[0] = c2;
+        out[1] = s5;
         out[2] = 0;
         out[3] = 0;
-        out[4] = -s;
-        out[5] = c;
+        out[4] = -s5;
+        out[5] = c2;
         out[6] = 0;
         out[7] = 0;
         out[8] = 0;
@@ -13696,8 +13715,8 @@ ${nonManifold.join("\n")}`);
         const x = matrix[4] * matrix[9] - matrix[8] * matrix[5];
         const y = matrix[8] * matrix[1] - matrix[0] * matrix[9];
         const z = matrix[0] * matrix[5] - matrix[4] * matrix[1];
-        const d = x * matrix[2] + y * matrix[6] + z * matrix[10];
-        return d < 0;
+        const d2 = x * matrix[2] + y * matrix[6] + z * matrix[10];
+        return d2 < 0;
       };
       module.exports = isMirroring;
     }
@@ -13733,23 +13752,23 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/multiply.js"(exports, module) {
       "use strict";
       init_define_process();
-      var multiply = (out, a, b) => {
-        const a00 = a[0];
-        const a01 = a[1];
-        const a02 = a[2];
-        const a03 = a[3];
-        const a10 = a[4];
-        const a11 = a[5];
-        const a12 = a[6];
-        const a13 = a[7];
-        const a20 = a[8];
-        const a21 = a[9];
-        const a22 = a[10];
-        const a23 = a[11];
-        const a30 = a[12];
-        const a31 = a[13];
-        const a32 = a[14];
-        const a33 = a[15];
+      var multiply = (out, a3, b) => {
+        const a00 = a3[0];
+        const a01 = a3[1];
+        const a02 = a3[2];
+        const a03 = a3[3];
+        const a10 = a3[4];
+        const a11 = a3[5];
+        const a12 = a3[6];
+        const a13 = a3[7];
+        const a20 = a3[8];
+        const a21 = a3[9];
+        const a22 = a3[10];
+        const a23 = a3[11];
+        const a30 = a3[12];
+        const a31 = a3[13];
+        const a32 = a3[14];
+        const a33 = a3[15];
         let b0 = b[0];
         let b1 = b[1];
         let b2 = b[2];
@@ -13804,9 +13823,9 @@ ${nonManifold.join("\n")}`);
         x *= len;
         y *= len;
         z *= len;
-        const s = sin(radians);
-        const c = cos(radians);
-        const t = 1 - c;
+        const s5 = sin(radians);
+        const c2 = cos(radians);
+        const t4 = 1 - c2;
         const a00 = matrix[0];
         const a01 = matrix[1];
         const a02 = matrix[2];
@@ -13819,15 +13838,15 @@ ${nonManifold.join("\n")}`);
         const a21 = matrix[9];
         const a22 = matrix[10];
         const a23 = matrix[11];
-        const b00 = x * x * t + c;
-        const b01 = y * x * t + z * s;
-        const b02 = z * x * t - y * s;
-        const b10 = x * y * t - z * s;
-        const b11 = y * y * t + c;
-        const b12 = z * y * t + x * s;
-        const b20 = x * z * t + y * s;
-        const b21 = y * z * t - x * s;
-        const b22 = z * z * t + c;
+        const b00 = x * x * t4 + c2;
+        const b01 = y * x * t4 + z * s5;
+        const b02 = z * x * t4 - y * s5;
+        const b10 = x * y * t4 - z * s5;
+        const b11 = y * y * t4 + c2;
+        const b12 = z * y * t4 + x * s5;
+        const b20 = x * z * t4 + y * s5;
+        const b21 = y * z * t4 - x * s5;
+        const b22 = z * z * t4 + c2;
         out[0] = a00 * b00 + a10 * b01 + a20 * b02;
         out[1] = a01 * b00 + a11 * b01 + a21 * b02;
         out[2] = a02 * b00 + a12 * b01 + a22 * b02;
@@ -13857,8 +13876,8 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var {sin, cos} = require_trigonometry2();
       var rotateX = (out, matrix, radians) => {
-        const s = sin(radians);
-        const c = cos(radians);
+        const s5 = sin(radians);
+        const c2 = cos(radians);
         const a10 = matrix[4];
         const a11 = matrix[5];
         const a12 = matrix[6];
@@ -13877,14 +13896,14 @@ ${nonManifold.join("\n")}`);
           out[14] = matrix[14];
           out[15] = matrix[15];
         }
-        out[4] = a10 * c + a20 * s;
-        out[5] = a11 * c + a21 * s;
-        out[6] = a12 * c + a22 * s;
-        out[7] = a13 * c + a23 * s;
-        out[8] = a20 * c - a10 * s;
-        out[9] = a21 * c - a11 * s;
-        out[10] = a22 * c - a12 * s;
-        out[11] = a23 * c - a13 * s;
+        out[4] = a10 * c2 + a20 * s5;
+        out[5] = a11 * c2 + a21 * s5;
+        out[6] = a12 * c2 + a22 * s5;
+        out[7] = a13 * c2 + a23 * s5;
+        out[8] = a20 * c2 - a10 * s5;
+        out[9] = a21 * c2 - a11 * s5;
+        out[10] = a22 * c2 - a12 * s5;
+        out[11] = a23 * c2 - a13 * s5;
         return out;
       };
       module.exports = rotateX;
@@ -13896,8 +13915,8 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var {sin, cos} = require_trigonometry2();
       var rotateY = (out, matrix, radians) => {
-        const s = sin(radians);
-        const c = cos(radians);
+        const s5 = sin(radians);
+        const c2 = cos(radians);
         const a00 = matrix[0];
         const a01 = matrix[1];
         const a02 = matrix[2];
@@ -13916,14 +13935,14 @@ ${nonManifold.join("\n")}`);
           out[14] = matrix[14];
           out[15] = matrix[15];
         }
-        out[0] = a00 * c - a20 * s;
-        out[1] = a01 * c - a21 * s;
-        out[2] = a02 * c - a22 * s;
-        out[3] = a03 * c - a23 * s;
-        out[8] = a00 * s + a20 * c;
-        out[9] = a01 * s + a21 * c;
-        out[10] = a02 * s + a22 * c;
-        out[11] = a03 * s + a23 * c;
+        out[0] = a00 * c2 - a20 * s5;
+        out[1] = a01 * c2 - a21 * s5;
+        out[2] = a02 * c2 - a22 * s5;
+        out[3] = a03 * c2 - a23 * s5;
+        out[8] = a00 * s5 + a20 * c2;
+        out[9] = a01 * s5 + a21 * c2;
+        out[10] = a02 * s5 + a22 * c2;
+        out[11] = a03 * s5 + a23 * c2;
         return out;
       };
       module.exports = rotateY;
@@ -13935,8 +13954,8 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var {sin, cos} = require_trigonometry2();
       var rotateZ = (out, matrix, radians) => {
-        const s = sin(radians);
-        const c = cos(radians);
+        const s5 = sin(radians);
+        const c2 = cos(radians);
         const a00 = matrix[0];
         const a01 = matrix[1];
         const a02 = matrix[2];
@@ -13955,14 +13974,14 @@ ${nonManifold.join("\n")}`);
           out[14] = matrix[14];
           out[15] = matrix[15];
         }
-        out[0] = a00 * c + a10 * s;
-        out[1] = a01 * c + a11 * s;
-        out[2] = a02 * c + a12 * s;
-        out[3] = a03 * c + a13 * s;
-        out[4] = a10 * c - a00 * s;
-        out[5] = a11 * c - a01 * s;
-        out[6] = a12 * c - a02 * s;
-        out[7] = a13 * c - a03 * s;
+        out[0] = a00 * c2 + a10 * s5;
+        out[1] = a01 * c2 + a11 * s5;
+        out[2] = a02 * c2 + a12 * s5;
+        out[3] = a03 * c2 + a13 * s5;
+        out[4] = a10 * c2 - a00 * s5;
+        out[5] = a11 * c2 - a01 * s5;
+        out[6] = a12 * c2 - a02 * s5;
+        out[7] = a13 * c2 - a03 * s5;
         return out;
       };
       module.exports = rotateZ;
@@ -14001,23 +14020,23 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/subtract.js"(exports, module) {
       "use strict";
       init_define_process();
-      var subtract2 = (out, a, b) => {
-        out[0] = a[0] - b[0];
-        out[1] = a[1] - b[1];
-        out[2] = a[2] - b[2];
-        out[3] = a[3] - b[3];
-        out[4] = a[4] - b[4];
-        out[5] = a[5] - b[5];
-        out[6] = a[6] - b[6];
-        out[7] = a[7] - b[7];
-        out[8] = a[8] - b[8];
-        out[9] = a[9] - b[9];
-        out[10] = a[10] - b[10];
-        out[11] = a[11] - b[11];
-        out[12] = a[12] - b[12];
-        out[13] = a[13] - b[13];
-        out[14] = a[14] - b[14];
-        out[15] = a[15] - b[15];
+      var subtract2 = (out, a3, b) => {
+        out[0] = a3[0] - b[0];
+        out[1] = a3[1] - b[1];
+        out[2] = a3[2] - b[2];
+        out[3] = a3[3] - b[3];
+        out[4] = a3[4] - b[4];
+        out[5] = a3[5] - b[5];
+        out[6] = a3[6] - b[6];
+        out[7] = a3[7] - b[7];
+        out[8] = a3[8] - b[8];
+        out[9] = a3[9] - b[9];
+        out[10] = a3[10] - b[10];
+        out[11] = a3[11] - b[11];
+        out[12] = a3[12] - b[12];
+        out[13] = a3[13] - b[13];
+        out[14] = a3[14] - b[14];
+        out[15] = a3[15] - b[15];
         return out;
       };
       module.exports = subtract2;
@@ -14027,7 +14046,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/mat4/toString.js"(exports, module) {
       "use strict";
       init_define_process();
-      var toString = mat => mat.map(n => n.toFixed(7)).toString();
+      var toString = mat => mat.map(n3 => n3.toFixed(7)).toString();
       module.exports = toString;
     }
   });
@@ -14161,9 +14180,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/add.js"(exports, module) {
       "use strict";
       init_define_process();
-      var add = (out, a, b) => {
-        out[0] = a[0] + b[0];
-        out[1] = a[1] + b[1];
+      var add = (out, a3, b) => {
+        out[0] = a3[0] + b[0];
+        out[1] = a3[1] + b[1];
         return out;
       };
       module.exports = add;
@@ -14231,10 +14250,10 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/cross.js"(exports, module) {
       "use strict";
       init_define_process();
-      var cross = (out, a, b) => {
+      var cross = (out, a3, b) => {
         out[0] = 0;
         out[1] = 0;
-        out[2] = a[0] * b[1] - a[1] * b[0];
+        out[2] = a3[0] * b[1] - a3[1] * b[0];
         return out;
       };
       module.exports = cross;
@@ -14244,9 +14263,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/distance.js"(exports, module) {
       "use strict";
       init_define_process();
-      var distance = (a, b) => {
-        const x = b[0] - a[0];
-        const y = b[1] - a[1];
+      var distance = (a3, b) => {
+        const x = b[0] - a3[0];
+        const y = b[1] - a3[1];
         return Math.sqrt(x * x + y * y);
       };
       module.exports = distance;
@@ -14256,9 +14275,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/divide.js"(exports, module) {
       "use strict";
       init_define_process();
-      var divide = (out, a, b) => {
-        out[0] = a[0] / b[0];
-        out[1] = a[1] / b[1];
+      var divide = (out, a3, b) => {
+        out[0] = a3[0] / b[0];
+        out[1] = a3[1] / b[1];
         return out;
       };
       module.exports = divide;
@@ -14268,7 +14287,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/dot.js"(exports, module) {
       "use strict";
       init_define_process();
-      var dot = (a, b) => a[0] * b[0] + a[1] * b[1];
+      var dot = (a3, b) => a3[0] * b[0] + a3[1] * b[1];
       module.exports = dot;
     }
   });
@@ -14276,7 +14295,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/equals.js"(exports, module) {
       "use strict";
       init_define_process();
-      var equals = (a, b) => a[0] === b[0] && a[1] === b[1];
+      var equals = (a3, b) => a3[0] === b[0] && a3[1] === b[1];
       module.exports = equals;
     }
   });
@@ -14340,11 +14359,11 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/lerp.js"(exports, module) {
       "use strict";
       init_define_process();
-      var lerp = (out, a, b, t) => {
-        const ax = a[0];
-        const ay = a[1];
-        out[0] = ax + t * (b[0] - ax);
-        out[1] = ay + t * (b[1] - ay);
+      var lerp = (out, a3, b, t4) => {
+        const ax = a3[0];
+        const ay = a3[1];
+        out[0] = ax + t4 * (b[0] - ax);
+        out[1] = ay + t4 * (b[1] - ay);
         return out;
       };
       module.exports = lerp;
@@ -14354,9 +14373,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/max.js"(exports, module) {
       "use strict";
       init_define_process();
-      var max = (out, a, b) => {
-        out[0] = Math.max(a[0], b[0]);
-        out[1] = Math.max(a[1], b[1]);
+      var max = (out, a3, b) => {
+        out[0] = Math.max(a3[0], b[0]);
+        out[1] = Math.max(a3[1], b[1]);
         return out;
       };
       module.exports = max;
@@ -14366,9 +14385,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/min.js"(exports, module) {
       "use strict";
       init_define_process();
-      var min = (out, a, b) => {
-        out[0] = Math.min(a[0], b[0]);
-        out[1] = Math.min(a[1], b[1]);
+      var min = (out, a3, b) => {
+        out[0] = Math.min(a3[0], b[0]);
+        out[1] = Math.min(a3[1], b[1]);
         return out;
       };
       module.exports = min;
@@ -14378,9 +14397,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/multiply.js"(exports, module) {
       "use strict";
       init_define_process();
-      var multiply = (out, a, b) => {
-        out[0] = a[0] * b[0];
-        out[1] = a[1] * b[1];
+      var multiply = (out, a3, b) => {
+        out[0] = a3[0] * b[0];
+        out[1] = a3[1] * b[1];
         return out;
       };
       module.exports = multiply;
@@ -14405,10 +14424,10 @@ ${nonManifold.join("\n")}`);
       var rotate2 = (out, vector, origin, radians) => {
         const x = vector[0] - origin[0];
         const y = vector[1] - origin[1];
-        const c = Math.cos(radians);
-        const s = Math.sin(radians);
-        out[0] = x * c - y * s + origin[0];
-        out[1] = x * s + y * c + origin[1];
+        const c2 = Math.cos(radians);
+        const s5 = Math.sin(radians);
+        out[0] = x * c2 - y * s5 + origin[0];
+        out[1] = x * s5 + y * c2 + origin[1];
         return out;
       };
       module.exports = rotate2;
@@ -14471,9 +14490,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/squaredDistance.js"(exports, module) {
       "use strict";
       init_define_process();
-      var squaredDistance = (a, b) => {
-        const x = b[0] - a[0];
-        const y = b[1] - a[1];
+      var squaredDistance = (a3, b) => {
+        const x = b[0] - a3[0];
+        const y = b[1] - a3[1];
         return x * x + y * y;
       };
       module.exports = squaredDistance;
@@ -14495,9 +14514,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec2/subtract.js"(exports, module) {
       "use strict";
       init_define_process();
-      var subtract2 = (out, a, b) => {
-        out[0] = a[0] - b[0];
-        out[1] = a[1] - b[1];
+      var subtract2 = (out, a3, b) => {
+        out[0] = a3[0] - b[0];
+        out[1] = a3[1] - b[1];
         return out;
       };
       module.exports = subtract2;
@@ -14946,20 +14965,20 @@ ${nonManifold.join("\n")}`);
       var cross = require_cross3();
       var subtract2 = require_subtract5();
       var squaredLength = require_squaredLength3();
-      var distanceSquared = (p, a, b) => {
+      var distanceSquared = (p2, a3, b) => {
         const ab = [];
         const ap = [];
         const cr = [];
-        subtract2(ab, b, a);
-        subtract2(ap, p, a);
+        subtract2(ab, b, a3);
+        subtract2(ap, p2, a3);
         const area = squaredLength(cross(cr, ap, ab));
-        const s = squaredLength(ab);
-        if (s === 0) {
+        const s5 = squaredLength(ab);
+        if (s5 === 0) {
           throw Error("a and b are the same point");
         }
-        return area / s;
+        return area / s5;
       };
-      var pointLineDistance = (point, a, b) => Math.sqrt(distanceSquared(point, a, b));
+      var pointLineDistance = (point, a3, b) => Math.sqrt(distanceSquared(point, a3, b));
       module.exports = pointLineDistance;
     }
   });
@@ -15046,16 +15065,16 @@ ${nonManifold.join("\n")}`);
             node.next.prev = node.prev;
           }
         }
-        removeChain(a, b) {
-          if (!a.prev) {
+        removeChain(a3, b) {
+          if (!a3.prev) {
             this.head = b.next;
           } else {
-            a.prev.next = b.next;
+            a3.prev.next = b.next;
           }
           if (!b.next) {
-            this.tail = a.prev;
+            this.tail = a3.prev;
           } else {
-            b.next.prev = a.prev;
+            b.next.prev = a3.prev;
           }
         }
         first() {
@@ -15168,17 +15187,17 @@ ${nonManifold.join("\n")}`);
         computeNormal() {
           const e0 = this.edge;
           const e1 = e0.next;
-          let e2 = e1.next;
+          let e22 = e1.next;
           const v2 = subtract2([], e1.head().point, e0.head().point);
-          const t = [];
+          const t4 = [];
           const v1 = [];
           this.nVertices = 2;
           this.normal = [0, 0, 0];
-          while (e2 !== e0) {
+          while (e22 !== e0) {
             copy(v1, v2);
-            subtract2(v2, e2.head().point, e0.head().point);
-            add(this.normal, this.normal, cross(t, v1, v2));
-            e2 = e2.next;
+            subtract2(v2, e22.head().point, e0.head().point);
+            add(this.normal, this.normal, cross(t4, v1, v2));
+            e22 = e22.next;
             this.nVertices += 1;
           }
           this.area = length(this.normal);
@@ -15307,10 +15326,10 @@ ${nonManifold.join("\n")}`);
           const face = new _Face();
           const e0 = new HalfEdge(v0, face);
           const e1 = new HalfEdge(v1, face);
-          const e2 = new HalfEdge(v2, face);
-          e0.next = e2.prev = e1;
-          e1.next = e0.prev = e2;
-          e2.next = e1.prev = e0;
+          const e22 = new HalfEdge(v2, face);
+          e0.next = e22.prev = e1;
+          e1.next = e0.prev = e22;
+          e22.next = e1.prev = e0;
           face.edge = e0;
           face.computeNormalAndCentroid(minArea);
           return face;
@@ -15823,7 +15842,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec4/equals.js"(exports, module) {
       "use strict";
       init_define_process();
-      var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
+      var equals = (a3, b) => a3[0] === b[0] && a3[1] === b[1] && a3[2] === b[2] && a3[3] === b[3];
       module.exports = equals;
     }
   });
@@ -15847,11 +15866,11 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var vec3 = require_vec32();
       var fromNormalAndPoint = (out, normal, point) => {
-        const u = vec3.normalize(vec3.create(), normal);
-        const w = vec3.dot(point, u);
-        out[0] = u[0];
-        out[1] = u[1];
-        out[2] = u[2];
+        const u3 = vec3.normalize(vec3.create(), normal);
+        const w = vec3.dot(point, u3);
+        out[0] = u3[0];
+        out[1] = u3[1];
+        out[2] = u3[2];
         out[3] = w;
         return out;
       };
@@ -15885,11 +15904,11 @@ ${nonManifold.join("\n")}`);
         out[1] = 0;
         out[2] = 0;
         out[3] = 0;
-        const n = vertices.length;
+        const n3 = vertices.length;
         vertices.forEach(v => {
           vec3.add(out, out, v);
         });
-        vec3.scale(out, out, 1 / n);
+        vec3.scale(out, out, 1 / n3);
         let xx = 0;
         let xy = 0;
         let xz = 0;
@@ -15906,12 +15925,12 @@ ${nonManifold.join("\n")}`);
           yz += vn[1] * vn[2];
           zz += vn[2] * vn[2];
         });
-        xx /= n;
-        xy /= n;
-        xz /= n;
-        yy /= n;
-        yz /= n;
-        zz /= n;
+        xx /= n3;
+        xy /= n3;
+        xz /= n3;
+        yy /= n3;
+        yz /= n3;
+        zz /= n3;
         vn[0] = 0;
         vn[1] = 0;
         vn[2] = 0;
@@ -15955,11 +15974,11 @@ ${nonManifold.join("\n")}`);
         const ba = vec3.create();
         const ca = vec3.create();
         const vertexNormal = index => {
-          const a = vertices[index];
+          const a3 = vertices[index];
           const b = vertices[(index + 1) % len];
-          const c = vertices[(index + 2) % len];
-          vec3.subtract(ba, b, a);
-          vec3.subtract(ca, c, a);
+          const c2 = vertices[(index + 2) % len];
+          vec3.subtract(ba, b, a3);
+          vec3.subtract(ca, c2, a3);
           vec3.cross(ba, ba, ca);
           vec3.normalize(ba, ba);
           return ba;
@@ -15987,9 +16006,9 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var {EPS} = require_constants2();
       var vec3 = require_vec32();
-      var fromPointsRandom = (out, a, b, c) => {
-        let ba = vec3.subtract(vec3.create(), b, a);
-        let ca = vec3.subtract(vec3.create(), c, a);
+      var fromPointsRandom = (out, a3, b, c2) => {
+        let ba = vec3.subtract(vec3.create(), b, a3);
+        let ca = vec3.subtract(vec3.create(), c2, a3);
         if (vec3.length(ba) < EPS) {
           ba = vec3.orthogonal(ba, ca);
         }
@@ -16002,7 +16021,7 @@ ${nonManifold.join("\n")}`);
           normal = vec3.cross(normal, ba, ca);
         }
         normal = vec3.normalize(normal, normal);
-        const w = vec3.dot(normal, a);
+        const w = vec3.dot(normal, a3);
         out[0] = normal[0];
         out[1] = normal[1];
         out[2] = normal[2];
@@ -16018,10 +16037,10 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var vec3 = require_vec32();
       var projectionOfPoint = (plane, point) => {
-        const a = point[0] * plane[0] + point[1] * plane[1] + point[2] * plane[2] - plane[3];
-        const x = point[0] - a * plane[0];
-        const y = point[1] - a * plane[1];
-        const z = point[2] - a * plane[2];
+        const a3 = point[0] * plane[0] + point[1] * plane[1] + point[2] * plane[2] - plane[3];
+        const x = point[0] - a3 * plane[0];
+        const y = point[1] - a3 * plane[1];
+        const z = point[2] - a3 * plane[2];
         return vec3.fromValues(x, y, z);
       };
       module.exports = projectionOfPoint;
@@ -16054,12 +16073,12 @@ ${nonManifold.join("\n")}`);
       var flip = require_flip3();
       var transform = (out, plane, matrix) => {
         const ismirror = mat42.isMirroring(matrix);
-        const r = vec3.orthogonal(vec3.create(), plane);
-        const u = vec3.cross(r, plane, r);
-        const v = vec3.cross(vec3.create(), plane, u);
+        const r2 = vec3.orthogonal(vec3.create(), plane);
+        const u3 = vec3.cross(r2, plane, r2);
+        const v = vec3.cross(vec3.create(), plane, u3);
         let point1 = vec3.fromScalar(vec3.create(), plane[3]);
         vec3.multiply(point1, point1, plane);
-        let point2 = vec3.add(vec3.create(), point1, u);
+        let point2 = vec3.add(vec3.create(), point1, u3);
         let point3 = vec3.add(vec3.create(), point1, v);
         point1 = vec3.transform(point1, point1, matrix);
         point2 = vec3.transform(point2, point2, matrix);
@@ -16181,8 +16200,8 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var plane = require_plane4();
       var measureArea = polygon => {
-        const n = polygon.vertices.length;
-        if (n < 3) {
+        const n3 = polygon.vertices.length;
+        if (n3 < 3) {
           return 0;
         }
         const vertices = polygon.vertices;
@@ -16205,31 +16224,31 @@ ${nonManifold.join("\n")}`);
         let j = 2;
         switch (coord) {
           case 1:
-            for (i = 1; i < n; i++) {
+            for (i = 1; i < n3; i++) {
               h = i - 1;
-              j = (i + 1) % n;
+              j = (i + 1) % n3;
               area += vertices[i][1] * (vertices[j][2] - vertices[h][2]);
             }
-            area += vertices[0][1] * (vertices[1][2] - vertices[n - 1][2]);
+            area += vertices[0][1] * (vertices[1][2] - vertices[n3 - 1][2]);
             area /= 2 * normal[0];
             break;
           case 2:
-            for (i = 1; i < n; i++) {
+            for (i = 1; i < n3; i++) {
               h = i - 1;
-              j = (i + 1) % n;
+              j = (i + 1) % n3;
               area += vertices[i][2] * (vertices[j][0] - vertices[h][0]);
             }
-            area += vertices[0][2] * (vertices[1][0] - vertices[n - 1][0]);
+            area += vertices[0][2] * (vertices[1][0] - vertices[n3 - 1][0]);
             area /= 2 * normal[1];
             break;
           case 3:
           default:
-            for (i = 1; i < n; i++) {
+            for (i = 1; i < n3; i++) {
               h = i - 1;
-              j = (i + 1) % n;
+              j = (i + 1) % n3;
               area += vertices[i][0] * (vertices[j][1] - vertices[h][1]);
             }
-            area += vertices[0][0] * (vertices[1][1] - vertices[n - 1][1]);
+            area += vertices[0][0] * (vertices[1][1] - vertices[n3 - 1][1]);
             area /= 2 * normal[2];
             break;
         }
@@ -16261,7 +16280,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/vec4/dot.js"(exports, module) {
       "use strict";
       init_define_process();
-      var dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
+      var dot = (a3, b) => a3[0] * b[0] + a3[1] * b[1] + a3[2] * b[2] + a3[3] * b[3];
       module.exports = dot;
     }
   });
@@ -17121,17 +17140,17 @@ ${nonManifold.join("\n")}`);
         const v0 = vec2.create();
         const v1 = vec2.create();
         const v3 = vec3.create();
-        const getPointForT = t => {
+        const getPointForT = t4 => {
           let tk = 1;
-          let oneMinusTNMinusK = Math.pow(1 - t, bezierOrder);
-          const invOneMinusT = t !== 1 ? 1 / (1 - t) : 1;
+          let oneMinusTNMinusK = Math.pow(1 - t4, bezierOrder);
+          const invOneMinusT = t4 !== 1 ? 1 / (1 - t4) : 1;
           const point = vec2.create();
           for (let k = 0; k <= bezierOrder; ++k) {
             if (k === bezierOrder) oneMinusTNMinusK = 1;
             const bernsteinCoefficient = binomials[k] * tk * oneMinusTNMinusK;
             const derivativePoint = vec2.scale(v0, controlPoints[k], bernsteinCoefficient);
             vec2.add(point, point, derivativePoint);
-            tk *= t;
+            tk *= t4;
             oneMinusTNMinusK *= invOneMinusT;
           }
           return point;
@@ -17140,10 +17159,10 @@ ${nonManifold.join("\n")}`);
         const newpointsT = [];
         const numsteps = bezierOrder + 1;
         for (let i = 0; i < numsteps; ++i) {
-          const t = i / (numsteps - 1);
-          const point = getPointForT(t);
+          const t4 = i / (numsteps - 1);
+          const point = getPointForT(t4);
           newpoints.push(point);
-          newpointsT.push(t);
+          newpointsT.push(t4);
         }
         let subdivideBase = 1;
         const maxangle = TAU / segments;
@@ -17183,14 +17202,14 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var vec2 = require_vec22();
       var toPoints = require_toPoints8();
-      var equals = (a, b) => {
-        if (a.isClosed !== b.isClosed) {
+      var equals = (a3, b) => {
+        if (a3.isClosed !== b.isClosed) {
           return false;
         }
-        if (a.points.length !== b.points.length) {
+        if (a3.points.length !== b.points.length) {
           return false;
         }
-        const apoints = toPoints(a);
+        const apoints = toPoints(a3);
         const bpoints = toPoints(b);
         const length = apoints.length;
         let offset = 0;
@@ -17205,7 +17224,7 @@ ${nonManifold.join("\n")}`);
           if (unequal === false) {
             return true;
           }
-          if (!a.isClosed) {
+          if (!a3.isClosed) {
             return false;
           }
         } while (++offset < length);
@@ -17606,7 +17625,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var cssColors = require_cssColors2();
-      var colorNameToRgb = s => cssColors[s.toLowerCase()];
+      var colorNameToRgb = s5 => cssColors[s5.toLowerCase()];
       module.exports = colorNameToRgb;
     }
   });
@@ -17617,14 +17636,14 @@ ${nonManifold.join("\n")}`);
       var hexToRgb = notation => {
         notation = notation.replace("#", "");
         if (notation.length < 6) throw new Error("the given notation must contain 3 or more hex values");
-        const r = parseInt(notation.substring(0, 2), 16) / 255;
+        const r2 = parseInt(notation.substring(0, 2), 16) / 255;
         const g = parseInt(notation.substring(2, 4), 16) / 255;
         const b = parseInt(notation.substring(4, 6), 16) / 255;
         if (notation.length >= 8) {
-          const a = parseInt(notation.substring(6, 8), 16) / 255;
-          return [r, g, b, a];
+          const a3 = parseInt(notation.substring(6, 8), 16) / 255;
+          return [r2, g, b, a3];
         }
-        return [r, g, b];
+        return [r2, g, b];
       };
       module.exports = hexToRgb;
     }
@@ -17633,13 +17652,13 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/colors/hueToColorComponent.js"(exports, module) {
       "use strict";
       init_define_process();
-      var hueToColorComponent = (p, q, t) => {
-        if (t < 0) t += 1;
-        if (t > 1) t -= 1;
-        if (t < 1 / 6) return p + (q - p) * 6 * t;
-        if (t < 1 / 2) return q;
-        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-        return p;
+      var hueToColorComponent = (p2, q, t4) => {
+        if (t4 < 0) t4 += 1;
+        if (t4 > 1) t4 -= 1;
+        if (t4 < 1 / 6) return p2 + (q - p2) * 6 * t4;
+        if (t4 < 1 / 2) return q;
+        if (t4 < 2 / 3) return p2 + (q - p2) * (2 / 3 - t4) * 6;
+        return p2;
       };
       module.exports = hueToColorComponent;
     }
@@ -17654,23 +17673,23 @@ ${nonManifold.join("\n")}`);
         values = flatten(values);
         if (values.length < 3) throw new Error("values must contain H, S and L values");
         const h = values[0];
-        const s = values[1];
-        const l = values[2];
-        let r = l;
-        let g = l;
-        let b = l;
-        if (s !== 0) {
-          const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-          const p = 2 * l - q;
-          r = hueToColorComponent(p, q, h + 1 / 3);
-          g = hueToColorComponent(p, q, h);
-          b = hueToColorComponent(p, q, h - 1 / 3);
+        const s5 = values[1];
+        const l2 = values[2];
+        let r2 = l2;
+        let g = l2;
+        let b = l2;
+        if (s5 !== 0) {
+          const q = l2 < 0.5 ? l2 * (1 + s5) : l2 + s5 - l2 * s5;
+          const p2 = 2 * l2 - q;
+          r2 = hueToColorComponent(p2, q, h + 1 / 3);
+          g = hueToColorComponent(p2, q, h);
+          b = hueToColorComponent(p2, q, h - 1 / 3);
         }
         if (values.length > 3) {
-          const a = values[3];
-          return [r, g, b, a];
+          const a3 = values[3];
+          return [r2, g, b, a3];
         }
-        return [r, g, b];
+        return [r2, g, b];
       };
       module.exports = hslToRgb;
     }
@@ -17684,53 +17703,53 @@ ${nonManifold.join("\n")}`);
         values = flatten(values);
         if (values.length < 3) throw new Error("values must contain H, S and V values");
         const h = values[0];
-        const s = values[1];
+        const s5 = values[1];
         const v = values[2];
-        let r = 0;
+        let r2 = 0;
         let g = 0;
         let b = 0;
         const i = Math.floor(h * 6);
-        const f = h * 6 - i;
-        const p = v * (1 - s);
-        const q = v * (1 - f * s);
-        const t = v * (1 - (1 - f) * s);
+        const f2 = h * 6 - i;
+        const p2 = v * (1 - s5);
+        const q = v * (1 - f2 * s5);
+        const t4 = v * (1 - (1 - f2) * s5);
         switch (i % 6) {
           case 0:
-            r = v;
-            g = t;
-            b = p;
+            r2 = v;
+            g = t4;
+            b = p2;
             break;
           case 1:
-            r = q;
+            r2 = q;
             g = v;
-            b = p;
+            b = p2;
             break;
           case 2:
-            r = p;
+            r2 = p2;
             g = v;
-            b = t;
+            b = t4;
             break;
           case 3:
-            r = p;
+            r2 = p2;
             g = q;
             b = v;
             break;
           case 4:
-            r = t;
-            g = p;
+            r2 = t4;
+            g = p2;
             b = v;
             break;
           case 5:
-            r = v;
-            g = p;
+            r2 = v;
+            g = p2;
             b = q;
             break;
         }
         if (values.length > 3) {
-          const a = values[3];
-          return [r, g, b, a];
+          const a3 = values[3];
+          return [r2, g, b, a3];
         }
-        return [r, g, b];
+        return [r2, g, b];
       };
       module.exports = hsvToRgb;
     }
@@ -17743,14 +17762,14 @@ ${nonManifold.join("\n")}`);
       var rgbToHex = (...values) => {
         values = flatten(values);
         if (values.length < 3) throw new Error("values must contain R, G and B values");
-        const r = values[0] * 255;
+        const r2 = values[0] * 255;
         const g = values[1] * 255;
         const b = values[2] * 255;
-        let s = `#${Number(16777216 + r * 65536 + g * 256 + b).toString(16).substring(1, 7)}`;
+        let s5 = `#${Number(16777216 + r2 * 65536 + g * 256 + b).toString(16).substring(1, 7)}`;
         if (values.length > 3) {
-          s = s + Number(values[3] * 255).toString(16);
+          s5 = s5 + Number(values[3] * 255).toString(16);
         }
-        return s;
+        return s5;
       };
       module.exports = rgbToHex;
     }
@@ -17763,37 +17782,37 @@ ${nonManifold.join("\n")}`);
       var rgbToHsl = (...values) => {
         values = flatten(values);
         if (values.length < 3) throw new Error("values must contain R, G and B values");
-        const r = values[0];
+        const r2 = values[0];
         const g = values[1];
         const b = values[2];
-        const max = Math.max(r, g, b);
-        const min = Math.min(r, g, b);
+        const max = Math.max(r2, g, b);
+        const min = Math.min(r2, g, b);
         let h;
-        let s;
-        const l = (max + min) / 2;
+        let s5;
+        const l2 = (max + min) / 2;
         if (max === min) {
-          h = s = 0;
+          h = s5 = 0;
         } else {
-          const d = max - min;
-          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          const d2 = max - min;
+          s5 = l2 > 0.5 ? d2 / (2 - max - min) : d2 / (max + min);
           switch (max) {
-            case r:
-              h = (g - b) / d + (g < b ? 6 : 0);
+            case r2:
+              h = (g - b) / d2 + (g < b ? 6 : 0);
               break;
             case g:
-              h = (b - r) / d + 2;
+              h = (b - r2) / d2 + 2;
               break;
             case b:
-              h = (r - g) / d + 4;
+              h = (r2 - g) / d2 + 4;
               break;
           }
           h /= 6;
         }
         if (values.length > 3) {
-          const a = values[3];
-          return [h, s, l, a];
+          const a3 = values[3];
+          return [h, s5, l2, a3];
         }
-        return [h, s, l];
+        return [h, s5, l2];
       };
       module.exports = rgbToHsl;
     }
@@ -17806,36 +17825,36 @@ ${nonManifold.join("\n")}`);
       var rgbToHsv = (...values) => {
         values = flatten(values);
         if (values.length < 3) throw new Error("values must contain R, G and B values");
-        const r = values[0];
+        const r2 = values[0];
         const g = values[1];
         const b = values[2];
-        const max = Math.max(r, g, b);
-        const min = Math.min(r, g, b);
+        const max = Math.max(r2, g, b);
+        const min = Math.min(r2, g, b);
         let h;
         const v = max;
-        const d = max - min;
-        const s = max === 0 ? 0 : d / max;
+        const d2 = max - min;
+        const s5 = max === 0 ? 0 : d2 / max;
         if (max === min) {
           h = 0;
         } else {
           switch (max) {
-            case r:
-              h = (g - b) / d + (g < b ? 6 : 0);
+            case r2:
+              h = (g - b) / d2 + (g < b ? 6 : 0);
               break;
             case g:
-              h = (b - r) / d + 2;
+              h = (b - r2) / d2 + 2;
               break;
             case b:
-              h = (r - g) / d + 4;
+              h = (r2 - g) / d2 + 4;
               break;
           }
           h /= 6;
         }
         if (values.length > 3) {
-          const a = values[3];
-          return [h, s, v, a];
+          const a3 = values[3];
+          return [h, s5, v, a3];
         }
-        return [h, s, v];
+        return [h, s5, v];
       };
       module.exports = rgbToHsv;
     }
@@ -17896,10 +17915,10 @@ ${nonManifold.join("\n")}`);
         });
         return firstPointType;
       };
-      var getPermutations = function (c) {
+      var getPermutations = function (c2) {
         const permutations = [];
-        for (let i = 0; i <= c; i++) {
-          permutations.push(factorial(c) / (factorial(i) * factorial(c - i)));
+        for (let i = 0; i <= c2; i++) {
+          permutations.push(factorial(c2) / (factorial(i) * factorial(c2 - i)));
         }
         return permutations;
       };
@@ -17917,12 +17936,12 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/curves/bezier/valueAt.js"(exports, module) {
       "use strict";
       init_define_process();
-      var valueAt = (t, bezier) => {
-        if (t < 0 || t > 1) {
+      var valueAt = (t4, bezier) => {
+        if (t4 < 0 || t4 > 1) {
           throw new Error("Bezier valueAt() input must be between 0 and 1");
         }
         if (bezier.pointType === "float_single") {
-          return bezierFunction(bezier, bezier.points, t);
+          return bezierFunction(bezier, bezier.points, t4);
         } else {
           const result = [];
           for (let i = 0; i < bezier.dimensions; i++) {
@@ -17930,16 +17949,16 @@ ${nonManifold.join("\n")}`);
             for (let j = 0; j < bezier.points.length; j++) {
               singleDimensionPoints.push(bezier.points[j][i]);
             }
-            result.push(bezierFunction(bezier, singleDimensionPoints, t));
+            result.push(bezierFunction(bezier, singleDimensionPoints, t4));
           }
           return result;
         }
       };
-      var bezierFunction = function (bezier, p, t) {
-        const n = p.length - 1;
+      var bezierFunction = function (bezier, p2, t4) {
+        const n3 = p2.length - 1;
         let result = 0;
-        for (let i = 0; i <= n; i++) {
-          result += bezier.permutations[i] * Math.pow(1 - t, n - i) * Math.pow(t, i) * p[i];
+        for (let i = 0; i <= n3; i++) {
+          result += bezier.permutations[i] * Math.pow(1 - t4, n3 - i) * Math.pow(t4, i) * p2[i];
         }
         return result;
       };
@@ -17950,12 +17969,12 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/curves/bezier/tangentAt.js"(exports, module) {
       "use strict";
       init_define_process();
-      var tangentAt = (t, bezier) => {
-        if (t < 0 || t > 1) {
+      var tangentAt = (t4, bezier) => {
+        if (t4 < 0 || t4 > 1) {
           throw new Error("Bezier tangentAt() input must be between 0 and 1");
         }
         if (bezier.pointType === "float_single") {
-          return bezierTangent(bezier, bezier.points, t);
+          return bezierTangent(bezier, bezier.points, t4);
         } else {
           const result = [];
           for (let i = 0; i < bezier.dimensions; i++) {
@@ -17963,17 +17982,17 @@ ${nonManifold.join("\n")}`);
             for (let j = 0; j < bezier.points.length; j++) {
               singleDimensionPoints.push(bezier.points[j][i]);
             }
-            result.push(bezierTangent(bezier, singleDimensionPoints, t));
+            result.push(bezierTangent(bezier, singleDimensionPoints, t4));
           }
           return result;
         }
       };
-      var bezierTangent = function (bezier, p, t) {
-        const n = p.length - 1;
+      var bezierTangent = function (bezier, p2, t4) {
+        const n3 = p2.length - 1;
         let result = 0;
-        for (let i = 0; i < n; i++) {
-          const q = n * (p[i + 1] - p[i]);
-          result += bezier.tangentPermutations[i] * Math.pow(1 - t, n - 1 - i) * Math.pow(t, i) * q;
+        for (let i = 0; i < n3; i++) {
+          const q = n3 * (p2[i + 1] - p2[i]);
+          result += bezier.tangentPermutations[i] * Math.pow(1 - t4, n3 - 1 - i) * Math.pow(t4, i) * q;
         }
         return result;
       };
@@ -17997,16 +18016,16 @@ ${nonManifold.join("\n")}`);
         }
         return lengths2;
       };
-      var distanceBetween = (a, b) => {
-        if (Number.isFinite(a) && Number.isFinite(b)) {
-          return Math.abs(a - b);
-        } else if (Array.isArray(a) && Array.isArray(b)) {
-          if (a.length !== b.length) {
+      var distanceBetween = (a3, b) => {
+        if (Number.isFinite(a3) && Number.isFinite(b)) {
+          return Math.abs(a3 - b);
+        } else if (Array.isArray(a3) && Array.isArray(b)) {
+          if (a3.length !== b.length) {
             throw new Error("The operands must have the same number of dimensions.");
           }
           let sum = 0;
-          for (let i = 0; i < a.length; i++) {
-            sum += (b[i] - a[i]) * (b[i] - a[i]);
+          for (let i = 0; i < a3.length; i++) {
+            sum += (b[i] - a3[i]) * (b[i] - a3[i]);
           }
           return Math.sqrt(sum);
         } else {
@@ -18332,11 +18351,11 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var create = require_create24();
-      var fromValues = (x, y, d) => {
+      var fromValues = (x, y, d2) => {
         const out = create();
         out[0] = x;
         out[1] = y;
-        out[2] = d;
+        out[2] = d2;
         return out;
       };
       module.exports = fromValues;
@@ -18347,7 +18366,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var {NEPS} = require_constants2();
-      var aboutEqualNormals = (a, b) => Math.abs(a[0] - b[0]) <= NEPS && Math.abs(a[1] - b[1]) <= NEPS && Math.abs(a[2] - b[2]) <= NEPS;
+      var aboutEqualNormals = (a3, b) => Math.abs(a3[0] - b[0]) <= NEPS && Math.abs(a3[1] - b[1]) <= NEPS && Math.abs(a3[2] - b[2]) <= NEPS;
       module.exports = aboutEqualNormals;
     }
   });
@@ -18362,17 +18381,17 @@ ${nonManifold.join("\n")}`);
           f1 = -f1;
           f2 = -f2;
         }
-        let t;
+        let t4;
         if (f1 <= 0) {
-          t = 0;
+          t4 = 0;
         } else if (f1 >= f2) {
-          t = 1;
+          t4 = 1;
         } else if (f2 < 1e-10) {
-          t = 0.5;
+          t4 = 0.5;
         } else {
-          t = f1 / f2;
+          t4 = f1 / f2;
         }
-        const result = point1[0] + t * (point2[0] - point1[0]);
+        const result = point1[0] + t4 * (point2[0] - point1[0]);
         return result;
       };
       module.exports = interpolateBetween2DPointsForY;
@@ -18406,11 +18425,11 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/maths/utils/solve2Linear.js"(exports, module) {
       "use strict";
       init_define_process();
-      var solve2Linear = (a, b, c, d, u, v) => {
-        const det = a * d - b * c;
+      var solve2Linear = (a3, b, c2, d2, u3, v) => {
+        const det = a3 * d2 - b * c2;
         const invdet = 1 / det;
-        let x = u * d - b * v;
-        let y = -u * c + a * v;
+        let x = u3 * d2 - b * v;
+        let y = -u3 * c2 + a3 * v;
         x *= invdet;
         y *= invdet;
         return [x, y];
@@ -18558,10 +18577,10 @@ ${nonManifold.join("\n")}`);
       var closestPoint = (line, point) => {
         const lpoint = line[0];
         const ldirection = line[1];
-        const a = vec3.dot(vec3.subtract(vec3.create(), point, lpoint), ldirection);
+        const a3 = vec3.dot(vec3.subtract(vec3.create(), point, lpoint), ldirection);
         const b = vec3.dot(ldirection, ldirection);
-        const t = a / b;
-        const closestpoint = vec3.scale(vec3.create(), ldirection, t);
+        const t4 = a3 / b;
+        const closestpoint = vec3.scale(vec3.create(), ldirection, t4);
         vec3.add(closestpoint, closestpoint, lpoint);
         return closestpoint;
       };
@@ -18650,16 +18669,16 @@ ${nonManifold.join("\n")}`);
         const absy = Math.abs(direction[1]);
         const absz = Math.abs(direction[2]);
         let origin;
-        let r;
+        let r2;
         if (absx >= absy && absx >= absz) {
-          r = solve2Linear(plane1[1], plane1[2], plane2[1], plane2[2], plane1[3], plane2[3]);
-          origin = vec3.fromValues(0, r[0], r[1]);
+          r2 = solve2Linear(plane1[1], plane1[2], plane2[1], plane2[2], plane1[3], plane2[3]);
+          origin = vec3.fromValues(0, r2[0], r2[1]);
         } else if (absy >= absx && absy >= absz) {
-          r = solve2Linear(plane1[0], plane1[2], plane2[0], plane2[2], plane1[3], plane2[3]);
-          origin = vec3.fromValues(r[0], 0, r[1]);
+          r2 = solve2Linear(plane1[0], plane1[2], plane2[0], plane2[2], plane1[3], plane2[3]);
+          origin = vec3.fromValues(r2[0], 0, r2[1]);
         } else {
-          r = solve2Linear(plane1[0], plane1[1], plane2[0], plane2[1], plane1[3], plane2[3]);
-          origin = vec3.fromValues(r[0], r[1], 0);
+          r2 = solve2Linear(plane1[0], plane1[1], plane2[0], plane2[1], plane1[3], plane2[3]);
+          origin = vec3.fromValues(r2[0], r2[1], 0);
         }
         return fromPointAndDirection(out, origin, direction);
       };
@@ -19188,15 +19207,15 @@ ${nonManifold.join("\n")}`);
           for (let i = 0; i < sides.length; i++) {
             const p1 = sides[i][0];
             const p2 = sides[i][1];
-            const a = p1[0] * p2[1] - p1[1] * p2[0];
-            area += a;
-            x += (p1[0] + p2[0]) * a;
-            y += (p1[1] + p2[1]) * a;
+            const a3 = p1[0] * p2[1] - p1[1] * p2[0];
+            area += a3;
+            x += (p1[0] + p2[0]) * a3;
+            y += (p1[1] + p2[1]) * a3;
           }
           area /= 2;
-          const f = 1 / (area * 6);
-          x *= f;
-          y *= f;
+          const f2 = 1 / (area * 6);
+          x *= f2;
+          y *= f2;
         }
         centerOfMass = vec3.fromValues(x, y, 0);
         cacheOfCenterOfMass.set(geometry, centerOfMass);
@@ -19306,7 +19325,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var isNumberArray = (array, dimension) => {
         if (Array.isArray(array) && array.length >= dimension) {
-          return array.every(n => Number.isFinite(n));
+          return array.every(n3 => Number.isFinite(n3));
         }
         return false;
       };
@@ -19406,7 +19425,7 @@ ${nonManifold.join("\n")}`);
         let {center, radius, startAngle, endAngle, segments} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 2)) throw new Error("center must be an array of X and Y values");
         if (!isNumberArray(radius, 2)) throw new Error("radius must be an array of X and Y values");
-        if (!radius.every(n => n >= 0)) throw new Error("radius values must be positive");
+        if (!radius.every(n3 => n3 >= 0)) throw new Error("radius values must be positive");
         if (!isGTE(startAngle, 0)) throw new Error("startAngle must be positive");
         if (!isGTE(endAngle, 0)) throw new Error("endAngle must be positive");
         if (!isGTE(segments, 3)) throw new Error("segments must be three or more");
@@ -19484,7 +19503,7 @@ ${nonManifold.join("\n")}`);
         const {center, size} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 3)) throw new Error("center must be an array of X, Y and Z values");
         if (!isNumberArray(size, 3)) throw new Error("size must be an array of width, depth and height values");
-        if (!size.every(n => n >= 0)) throw new Error("size values must be positive");
+        if (!size.every(n3 => n3 >= 0)) throw new Error("size values must be positive");
         if (size[0] === 0 || size[1] === 0 || size[2] === 0) return geom32.create();
         const result = geom32.create([[[0, 4, 6, 2], [-1, 0, 0]], [[1, 3, 7, 5], [1, 0, 0]], [[0, 1, 5, 4], [0, -1, 0]], [[2, 6, 7, 3], [0, 1, 0]], [[0, 2, 3, 1], [0, 0, -1]], [[4, 5, 7, 6], [0, 0, 1]]].map(info => {
           const points = info[0].map(i => {
@@ -19544,10 +19563,10 @@ ${nonManifold.join("\n")}`);
         if (!isNumberArray(center, 3)) throw new Error("center must be an array of X, Y and Z values");
         if (!isGT(height, 0)) throw new Error("height must be greater then zero");
         if (!isNumberArray(startRadius, 2)) throw new Error("startRadius must be an array of X and Y values");
-        if (!startRadius.every(n => n >= 0)) throw new Error("startRadius values must be positive");
+        if (!startRadius.every(n3 => n3 >= 0)) throw new Error("startRadius values must be positive");
         if (!isNumberArray(endRadius, 2)) throw new Error("endRadius must be an array of X and Y values");
-        if (!endRadius.every(n => n >= 0)) throw new Error("endRadius values must be positive");
-        if (endRadius.every(n => n === 0) && startRadius.every(n => n === 0)) throw new Error("at least one radius must be positive");
+        if (!endRadius.every(n3 => n3 >= 0)) throw new Error("endRadius values must be positive");
+        if (endRadius.every(n3 => n3 === 0) && startRadius.every(n3 => n3 === 0)) throw new Error("at least one radius must be positive");
         if (!isGTE(startAngle, 0)) throw new Error("startAngle must be positive");
         if (!isGTE(endAngle, 0)) throw new Error("endAngle must be positive");
         if (!isGTE(segments, 4)) throw new Error("segments must be four or more");
@@ -19670,7 +19689,7 @@ ${nonManifold.join("\n")}`);
         const {center, radius, segments, axes} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 3)) throw new Error("center must be an array of X, Y and Z values");
         if (!isNumberArray(radius, 3)) throw new Error("radius must be an array of X, Y and Z values");
-        if (!radius.every(n => n >= 0)) throw new Error("radius values must be positive");
+        if (!radius.every(n3 => n3 >= 0)) throw new Error("radius values must be positive");
         if (!isGTE(segments, 4)) throw new Error("segments must be four or more");
         if (radius[0] === 0 || radius[1] === 0 || radius[2] === 0) return geom32.create();
         const xvector = vec3.scale(vec3.create(), vec3.normalize(vec3.create(), axes[0]), radius[0]);
@@ -19802,63 +19821,63 @@ ${nonManifold.join("\n")}`);
         frequency = Math.floor(frequency / 6);
         const ci = [[0.850651, 0, -0.525731], [0.850651, -0, 0.525731], [-0.850651, -0, 0.525731], [-0.850651, 0, -0.525731], [0, -0.525731, 0.850651], [0, 0.525731, 0.850651], [0, 0.525731, -0.850651], [0, -0.525731, -0.850651], [-0.525731, -0.850651, -0], [0.525731, -0.850651, -0], [0.525731, 0.850651, 0], [-0.525731, 0.850651, 0]];
         const ti = [[0, 9, 1], [1, 10, 0], [6, 7, 0], [10, 6, 0], [7, 9, 0], [5, 1, 4], [4, 1, 9], [5, 10, 1], [2, 8, 3], [3, 11, 2], [2, 5, 4], [4, 8, 2], [2, 11, 5], [3, 7, 6], [6, 11, 3], [8, 7, 3], [9, 8, 4], [11, 10, 5], [10, 11, 6], [8, 9, 7]];
-        const geodesicSubDivide = (p, frequency2, offset2) => {
-          const p1 = p[0];
-          const p2 = p[1];
-          const p3 = p[2];
-          let n = offset2;
-          const c = [];
-          const f = [];
+        const geodesicSubDivide = (p2, frequency2, offset2) => {
+          const p1 = p2[0];
+          const p22 = p2[1];
+          const p3 = p2[2];
+          let n3 = offset2;
+          const c2 = [];
+          const f2 = [];
           for (let i = 0; i < frequency2; i++) {
             for (let j = 0; j < frequency2 - i; j++) {
               const t0 = i / frequency2;
               const t1 = (i + 1) / frequency2;
               const s0 = j / (frequency2 - i);
               const s1 = (j + 1) / (frequency2 - i);
-              const s2 = frequency2 - i - 1 ? j / (frequency2 - i - 1) : 1;
+              const s22 = frequency2 - i - 1 ? j / (frequency2 - i - 1) : 1;
               const q = [];
-              q[0] = mix3(mix3(p1, p2, s0), p3, t0);
-              q[1] = mix3(mix3(p1, p2, s1), p3, t0);
-              q[2] = mix3(mix3(p1, p2, s2), p3, t1);
+              q[0] = mix3(mix3(p1, p22, s0), p3, t0);
+              q[1] = mix3(mix3(p1, p22, s1), p3, t0);
+              q[2] = mix3(mix3(p1, p22, s22), p3, t1);
               for (let k = 0; k < 3; k++) {
-                const r = vec3.length(q[k]);
-                for (let l = 0; l < 3; l++) {
-                  q[k][l] /= r;
+                const r2 = vec3.length(q[k]);
+                for (let l2 = 0; l2 < 3; l2++) {
+                  q[k][l2] /= r2;
                 }
               }
-              c.push(q[0], q[1], q[2]);
-              f.push([n, n + 1, n + 2]);
-              n += 3;
+              c2.push(q[0], q[1], q[2]);
+              f2.push([n3, n3 + 1, n3 + 2]);
+              n3 += 3;
               if (j < frequency2 - i - 1) {
-                const s3 = frequency2 - i - 1 ? (j + 1) / (frequency2 - i - 1) : 1;
-                q[0] = mix3(mix3(p1, p2, s1), p3, t0);
-                q[1] = mix3(mix3(p1, p2, s3), p3, t1);
-                q[2] = mix3(mix3(p1, p2, s2), p3, t1);
+                const s32 = frequency2 - i - 1 ? (j + 1) / (frequency2 - i - 1) : 1;
+                q[0] = mix3(mix3(p1, p22, s1), p3, t0);
+                q[1] = mix3(mix3(p1, p22, s32), p3, t1);
+                q[2] = mix3(mix3(p1, p22, s22), p3, t1);
                 for (let k = 0; k < 3; k++) {
-                  const r = vec3.length(q[k]);
-                  for (let l = 0; l < 3; l++) {
-                    q[k][l] /= r;
+                  const r2 = vec3.length(q[k]);
+                  for (let l2 = 0; l2 < 3; l2++) {
+                    q[k][l2] /= r2;
                   }
                 }
-                c.push(q[0], q[1], q[2]);
-                f.push([n, n + 1, n + 2]);
-                n += 3;
+                c2.push(q[0], q[1], q[2]);
+                f2.push([n3, n3 + 1, n3 + 2]);
+                n3 += 3;
               }
             }
           }
           return {
-            points: c,
-            triangles: f,
-            offset: n
+            points: c2,
+            triangles: f2,
+            offset: n3
           };
         };
-        const mix3 = (a, b, f) => {
-          const _f = 1 - f;
-          const c = [];
+        const mix3 = (a3, b, f2) => {
+          const _f = 1 - f2;
+          const c2 = [];
           for (let i = 0; i < 3; i++) {
-            c[i] = a[i] * _f + b[i] * f;
+            c2[i] = a3[i] * _f + b[i] * f2;
           }
-          return c;
+          return c2;
         };
         let points = [];
         let faces = [];
@@ -19956,7 +19975,7 @@ ${nonManifold.join("\n")}`);
         const {center, size} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 2)) throw new Error("center must be an array of X and Y values");
         if (!isNumberArray(size, 2)) throw new Error("size must be an array of X and Y values");
-        if (!size.every(n => n >= 0)) throw new Error("size values must be positive");
+        if (!size.every(n3 => n3 >= 0)) throw new Error("size values must be positive");
         if (size[0] === 0 || size[1] === 0) return geom2.create();
         const point = [size[0] / 2, size[1] / 2];
         const pswap = [point[0], -point[1]];
@@ -20075,7 +20094,7 @@ ${nonManifold.join("\n")}`);
         let {center, size, roundRadius, segments} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 3)) throw new Error("center must be an array of X, Y and Z values");
         if (!isNumberArray(size, 3)) throw new Error("size must be an array of X, Y and Z values");
-        if (!size.every(n => n >= 0)) throw new Error("size values must be positive");
+        if (!size.every(n3 => n3 >= 0)) throw new Error("size values must be positive");
         if (!isGTE(roundRadius, 0)) throw new Error("roundRadius must be positive");
         if (!isGTE(segments, 4)) throw new Error("segments must be four or more");
         if (size[0] === 0 || size[1] === 0 || size[2] === 0) return geom32.create();
@@ -20250,7 +20269,7 @@ ${nonManifold.join("\n")}`);
         let {center, size, roundRadius, segments} = Object.assign({}, defaults, options);
         if (!isNumberArray(center, 2)) throw new Error("center must be an array of X and Y values");
         if (!isNumberArray(size, 2)) throw new Error("size must be an array of X and Y values");
-        if (!size.every(n => n >= 0)) throw new Error("size values must be positive");
+        if (!size.every(n3 => n3 >= 0)) throw new Error("size values must be positive");
         if (!isGTE(roundRadius, 0)) throw new Error("roundRadius must be positive");
         if (!isGTE(segments, 4)) throw new Error("segments must be four or more");
         if (size[0] === 0 || size[1] === 0) return geom2.create();
@@ -20349,10 +20368,10 @@ ${nonManifold.join("\n")}`);
         return 0;
       };
       var getPoints = (vertices, radius, startAngle, center) => {
-        const a = TAU / vertices;
+        const a3 = TAU / vertices;
         const points = [];
         for (let i = 0; i < vertices; i++) {
-          const point = vec2.fromAngleRadians(vec2.create(), a * i + startAngle);
+          const point = vec2.fromAngleRadians(vec2.create(), a3 * i + startAngle);
           vec2.scale(point, point, radius);
           vec2.add(point, center, point);
           points.push(point);
@@ -20457,10 +20476,10 @@ ${nonManifold.join("\n")}`);
         let distance = 0;
         edges.forEach(edge => {
           if (!vec3.equals(edge[0], edge[1])) {
-            const d = vec3.squaredDistance(midpoint, edge[0]);
-            if (d > distance) {
+            const d2 = vec3.squaredDistance(midpoint, edge[0]);
+            if (d2 > distance) {
               farthestEdge = edge;
-              distance = d;
+              distance = d2;
             }
           }
         });
@@ -20512,16 +20531,16 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var vec3 = require_vec32();
-      var equals = (a, b) => {
-        const aedges = a.edges;
+      var equals = (a3, b) => {
+        const aedges = a3.edges;
         const bedges = b.edges;
         if (aedges.length !== bedges.length) {
           return false;
         }
         const isEqual = aedges.reduce((acc, aedge, i) => {
           const bedge = bedges[i];
-          const d = vec3.squaredDistance(aedge[0], bedge[0]);
-          return acc && d < Number.EPSILON;
+          const d2 = vec3.squaredDistance(aedge[0], bedge[0]);
+          return acc && d2 < Number.EPSILON;
         }, true);
         return isEqual;
       };
@@ -20617,16 +20636,16 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var sortLinked = (list, fn) => {
-        let i, p, q, e, numMerges;
+        let i, p2, q, e5, numMerges;
         let inSize = 1;
         do {
-          p = list;
+          p2 = list;
           list = null;
           let tail = null;
           numMerges = 0;
-          while (p) {
+          while (p2) {
             numMerges++;
-            q = p;
+            q = p2;
             let pSize = 0;
             for (i = 0; i < inSize; i++) {
               pSize++;
@@ -20635,20 +20654,20 @@ ${nonManifold.join("\n")}`);
             }
             let qSize = inSize;
             while (pSize > 0 || qSize > 0 && q) {
-              if (pSize !== 0 && (qSize === 0 || !q || fn(p) <= fn(q))) {
-                e = p;
-                p = p.nextZ;
+              if (pSize !== 0 && (qSize === 0 || !q || fn(p2) <= fn(q))) {
+                e5 = p2;
+                p2 = p2.nextZ;
                 pSize--;
               } else {
-                e = q;
+                e5 = q;
                 q = q.nextZ;
                 qSize--;
               }
-              if (tail) tail.nextZ = e; else list = e;
-              e.prevZ = tail;
-              tail = e;
+              if (tail) tail.nextZ = e5; else list = e5;
+              e5.prevZ = tail;
+              tail = e5;
             }
-            p = q;
+            p2 = q;
           }
           tail.nextZ = null;
           inSize *= 2;
@@ -20677,23 +20696,23 @@ ${nonManifold.join("\n")}`);
         }
       };
       var insertNode = (i, x, y, last) => {
-        const p = new Node(i, x, y);
+        const p2 = new Node(i, x, y);
         if (!last) {
-          p.prev = p;
-          p.next = p;
+          p2.prev = p2;
+          p2.next = p2;
         } else {
-          p.next = last.next;
-          p.prev = last;
-          last.next.prev = p;
-          last.next = p;
+          p2.next = last.next;
+          p2.prev = last;
+          last.next.prev = p2;
+          last.next = p2;
         }
-        return p;
+        return p2;
       };
-      var removeNode = p => {
-        p.next.prev = p.prev;
-        p.prev.next = p.next;
-        if (p.prevZ) p.prevZ.nextZ = p.nextZ;
-        if (p.nextZ) p.nextZ.prevZ = p.prevZ;
+      var removeNode = p2 => {
+        p2.next.prev = p2.prev;
+        p2.prev.next = p2.next;
+        if (p2.prevZ) p2.prevZ.nextZ = p2.nextZ;
+        if (p2.nextZ) p2.nextZ.prevZ = p2.prevZ;
       };
       module.exports = {
         Node,
@@ -20708,7 +20727,7 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       var pointInTriangle = (ax, ay, bx, by, cx, cy, px, py) => (cx - px) * (ay - py) - (ax - px) * (cy - py) >= 0 && (ax - px) * (by - py) - (bx - px) * (ay - py) >= 0 && (bx - px) * (cy - py) - (cx - px) * (by - py) >= 0;
-      var area = (p, q, r) => (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+      var area = (p2, q, r2) => (q.y - p2.y) * (r2.x - q.x) - (q.x - p2.x) * (r2.y - q.y);
       module.exports = {
         area,
         pointInTriangle
@@ -20741,89 +20760,89 @@ ${nonManifold.join("\n")}`);
       var filterPoints = (start, end) => {
         if (!start) return start;
         if (!end) end = start;
-        let p = start;
+        let p2 = start;
         let again;
         do {
           again = false;
-          if (!p.steiner && (equals(p, p.next) || area(p.prev, p, p.next) === 0)) {
-            removeNode(p);
-            p = end = p.prev;
-            if (p === p.next) break;
+          if (!p2.steiner && (equals(p2, p2.next) || area(p2.prev, p2, p2.next) === 0)) {
+            removeNode(p2);
+            p2 = end = p2.prev;
+            if (p2 === p2.next) break;
             again = true;
           } else {
-            p = p.next;
+            p2 = p2.next;
           }
-        } while (again || p !== end);
+        } while (again || p2 !== end);
         return end;
       };
       var cureLocalIntersections = (start, triangles, dim) => {
-        let p = start;
+        let p2 = start;
         do {
-          const a = p.prev;
-          const b = p.next.next;
-          if (!equals(a, b) && intersects(a, p, p.next, b) && locallyInside(a, b) && locallyInside(b, a)) {
-            triangles.push(a.i / dim);
-            triangles.push(p.i / dim);
+          const a3 = p2.prev;
+          const b = p2.next.next;
+          if (!equals(a3, b) && intersects(a3, p2, p2.next, b) && locallyInside(a3, b) && locallyInside(b, a3)) {
+            triangles.push(a3.i / dim);
+            triangles.push(p2.i / dim);
             triangles.push(b.i / dim);
-            removeNode(p);
-            removeNode(p.next);
-            p = start = b;
+            removeNode(p2);
+            removeNode(p2.next);
+            p2 = start = b;
           }
-          p = p.next;
-        } while (p !== start);
-        return filterPoints(p);
+          p2 = p2.next;
+        } while (p2 !== start);
+        return filterPoints(p2);
       };
-      var intersectsPolygon = (a, b) => {
-        let p = a;
+      var intersectsPolygon = (a3, b) => {
+        let p2 = a3;
         do {
-          if (p.i !== a.i && p.next.i !== a.i && p.i !== b.i && p.next.i !== b.i && intersects(p, p.next, a, b)) return true;
-          p = p.next;
-        } while (p !== a);
+          if (p2.i !== a3.i && p2.next.i !== a3.i && p2.i !== b.i && p2.next.i !== b.i && intersects(p2, p2.next, a3, b)) return true;
+          p2 = p2.next;
+        } while (p2 !== a3);
         return false;
       };
-      var locallyInside = (a, b) => area(a.prev, a, a.next) < 0 ? area(a, b, a.next) >= 0 && area(a, a.prev, b) >= 0 : area(a, b, a.prev) < 0 || area(a, a.next, b) < 0;
-      var middleInside = (a, b) => {
-        let p = a;
+      var locallyInside = (a3, b) => area(a3.prev, a3, a3.next) < 0 ? area(a3, b, a3.next) >= 0 && area(a3, a3.prev, b) >= 0 : area(a3, b, a3.prev) < 0 || area(a3, a3.next, b) < 0;
+      var middleInside = (a3, b) => {
+        let p2 = a3;
         let inside = false;
-        const px = (a.x + b.x) / 2;
-        const py = (a.y + b.y) / 2;
+        const px = (a3.x + b.x) / 2;
+        const py = (a3.y + b.y) / 2;
         do {
-          if (p.y > py !== p.next.y > py && p.next.y !== p.y && px < (p.next.x - p.x) * (py - p.y) / (p.next.y - p.y) + p.x) {
+          if (p2.y > py !== p2.next.y > py && p2.next.y !== p2.y && px < (p2.next.x - p2.x) * (py - p2.y) / (p2.next.y - p2.y) + p2.x) {
             inside = !inside;
           }
-          p = p.next;
-        } while (p !== a);
+          p2 = p2.next;
+        } while (p2 !== a3);
         return inside;
       };
-      var splitPolygon = (a, b) => {
-        const a2 = new Node(a.i, a.x, a.y);
+      var splitPolygon = (a3, b) => {
+        const a22 = new Node(a3.i, a3.x, a3.y);
         const b2 = new Node(b.i, b.x, b.y);
-        const an = a.next;
+        const an = a3.next;
         const bp = b.prev;
-        a.next = b;
-        b.prev = a;
-        a2.next = an;
-        an.prev = a2;
-        b2.next = a2;
-        a2.prev = b2;
+        a3.next = b;
+        b.prev = a3;
+        a22.next = an;
+        an.prev = a22;
+        b2.next = a22;
+        a22.prev = b2;
         bp.next = b2;
         b2.prev = bp;
         return b2;
       };
-      var isValidDiagonal = (a, b) => a.next.i !== b.i && a.prev.i !== b.i && !intersectsPolygon(a, b) && (locallyInside(a, b) && locallyInside(b, a) && middleInside(a, b) && (area(a.prev, a, b.prev) || area(a, b.prev, b)) || equals(a, b) && area(a.prev, a, a.next) > 0 && area(b.prev, b, b.next) > 0);
+      var isValidDiagonal = (a3, b) => a3.next.i !== b.i && a3.prev.i !== b.i && !intersectsPolygon(a3, b) && (locallyInside(a3, b) && locallyInside(b, a3) && middleInside(a3, b) && (area(a3.prev, a3, b.prev) || area(a3, b.prev, b)) || equals(a3, b) && area(a3.prev, a3, a3.next) > 0 && area(b.prev, b, b.next) > 0);
       var intersects = (p1, q1, p2, q2) => {
         const o1 = Math.sign(area(p1, q1, p2));
-        const o2 = Math.sign(area(p1, q1, q2));
-        const o3 = Math.sign(area(p2, q2, p1));
+        const o22 = Math.sign(area(p1, q1, q2));
+        const o32 = Math.sign(area(p2, q2, p1));
         const o4 = Math.sign(area(p2, q2, q1));
-        if (o1 !== o2 && o3 !== o4) return true;
+        if (o1 !== o22 && o32 !== o4) return true;
         if (o1 === 0 && onSegment(p1, p2, q1)) return true;
-        if (o2 === 0 && onSegment(p1, q2, q1)) return true;
-        if (o3 === 0 && onSegment(p2, p1, q2)) return true;
+        if (o22 === 0 && onSegment(p1, q2, q1)) return true;
+        if (o32 === 0 && onSegment(p2, p1, q2)) return true;
         if (o4 === 0 && onSegment(p2, q1, q2)) return true;
         return false;
       };
-      var onSegment = (p, q, r) => q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) && q.y <= Math.max(p.y, r.y) && q.y >= Math.min(p.y, r.y);
+      var onSegment = (p2, q, r2) => q.x <= Math.max(p2.x, r2.x) && q.x >= Math.min(p2.x, r2.x) && q.y <= Math.max(p2.y, r2.y) && q.y >= Math.min(p2.y, r2.y);
       var signedArea = (data, start, end, dim) => {
         let sum = 0;
         for (let i = start, j = end - dim; i < end; i += dim) {
@@ -20858,7 +20877,7 @@ ${nonManifold.join("\n")}`);
           if (list === list.next) list.steiner = true;
           queue.push(getLeftmost(list));
         }
-        queue.sort((a, b) => a.x - b.x);
+        queue.sort((a3, b) => a3.x - b.x);
         for (let i = 0; i < queue.length; i++) {
           outerNode = eliminateHole(queue[i], outerNode);
           outerNode = filterPoints(outerNode, outerNode.next);
@@ -20876,52 +20895,52 @@ ${nonManifold.join("\n")}`);
         return outerNode === bridge ? filteredBridge : outerNode;
       };
       var findHoleBridge = (hole, outerNode) => {
-        let p = outerNode;
+        let p2 = outerNode;
         const hx = hole.x;
         const hy = hole.y;
         let qx = -Infinity;
-        let m;
+        let m2;
         do {
-          if (hy <= p.y && hy >= p.next.y && p.next.y !== p.y) {
-            const x = p.x + (hy - p.y) * (p.next.x - p.x) / (p.next.y - p.y);
+          if (hy <= p2.y && hy >= p2.next.y && p2.next.y !== p2.y) {
+            const x = p2.x + (hy - p2.y) * (p2.next.x - p2.x) / (p2.next.y - p2.y);
             if (x <= hx && x > qx) {
               qx = x;
               if (x === hx) {
-                if (hy === p.y) return p;
-                if (hy === p.next.y) return p.next;
+                if (hy === p2.y) return p2;
+                if (hy === p2.next.y) return p2.next;
               }
-              m = p.x < p.next.x ? p : p.next;
+              m2 = p2.x < p2.next.x ? p2 : p2.next;
             }
           }
-          p = p.next;
-        } while (p !== outerNode);
-        if (!m) return null;
-        if (hx === qx) return m;
-        const stop = m;
-        const mx = m.x;
-        const my = m.y;
+          p2 = p2.next;
+        } while (p2 !== outerNode);
+        if (!m2) return null;
+        if (hx === qx) return m2;
+        const stop = m2;
+        const mx = m2.x;
+        const my = m2.y;
         let tanMin = Infinity;
-        p = m;
+        p2 = m2;
         do {
-          if (hx >= p.x && p.x >= mx && hx !== p.x && pointInTriangle(hy < my ? hx : qx, hy, mx, my, hy < my ? qx : hx, hy, p.x, p.y)) {
-            const tan = Math.abs(hy - p.y) / (hx - p.x);
-            if (locallyInside(p, hole) && (tan < tanMin || tan === tanMin && (p.x > m.x || p.x === m.x && sectorContainsSector(m, p)))) {
-              m = p;
+          if (hx >= p2.x && p2.x >= mx && hx !== p2.x && pointInTriangle(hy < my ? hx : qx, hy, mx, my, hy < my ? qx : hx, hy, p2.x, p2.y)) {
+            const tan = Math.abs(hy - p2.y) / (hx - p2.x);
+            if (locallyInside(p2, hole) && (tan < tanMin || tan === tanMin && (p2.x > m2.x || p2.x === m2.x && sectorContainsSector(m2, p2)))) {
+              m2 = p2;
               tanMin = tan;
             }
           }
-          p = p.next;
-        } while (p !== stop);
-        return m;
+          p2 = p2.next;
+        } while (p2 !== stop);
+        return m2;
       };
-      var sectorContainsSector = (m, p) => area(m.prev, m, p.prev) < 0 && area(p.next, m, m.next) < 0;
+      var sectorContainsSector = (m2, p2) => area(m2.prev, m2, p2.prev) < 0 && area(p2.next, m2, m2.next) < 0;
       var getLeftmost = start => {
-        let p = start;
+        let p2 = start;
         let leftmost = start;
         do {
-          if (p.x < leftmost.x || p.x === leftmost.x && p.y < leftmost.y) leftmost = p;
-          p = p.next;
-        } while (p !== start);
+          if (p2.x < leftmost.x || p2.x === leftmost.x && p2.y < leftmost.y) leftmost = p2;
+          p2 = p2.next;
+        } while (p2 !== start);
         return leftmost;
       };
       module.exports = eliminateHoles;
@@ -20993,77 +21012,77 @@ ${nonManifold.join("\n")}`);
         }
       };
       var isEar = ear => {
-        const a = ear.prev;
+        const a3 = ear.prev;
         const b = ear;
-        const c = ear.next;
-        if (area(a, b, c) >= 0) return false;
-        let p = ear.next.next;
-        while (p !== ear.prev) {
-          if (pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) && area(p.prev, p, p.next) >= 0) {
+        const c2 = ear.next;
+        if (area(a3, b, c2) >= 0) return false;
+        let p2 = ear.next.next;
+        while (p2 !== ear.prev) {
+          if (pointInTriangle(a3.x, a3.y, b.x, b.y, c2.x, c2.y, p2.x, p2.y) && area(p2.prev, p2, p2.next) >= 0) {
             return false;
           }
-          p = p.next;
+          p2 = p2.next;
         }
         return true;
       };
       var isEarHashed = (ear, minX, minY, invSize) => {
-        const a = ear.prev;
+        const a3 = ear.prev;
         const b = ear;
-        const c = ear.next;
-        if (area(a, b, c) >= 0) return false;
-        const minTX = a.x < b.x ? a.x < c.x ? a.x : c.x : b.x < c.x ? b.x : c.x;
-        const minTY = a.y < b.y ? a.y < c.y ? a.y : c.y : b.y < c.y ? b.y : c.y;
-        const maxTX = a.x > b.x ? a.x > c.x ? a.x : c.x : b.x > c.x ? b.x : c.x;
-        const maxTY = a.y > b.y ? a.y > c.y ? a.y : c.y : b.y > c.y ? b.y : c.y;
+        const c2 = ear.next;
+        if (area(a3, b, c2) >= 0) return false;
+        const minTX = a3.x < b.x ? a3.x < c2.x ? a3.x : c2.x : b.x < c2.x ? b.x : c2.x;
+        const minTY = a3.y < b.y ? a3.y < c2.y ? a3.y : c2.y : b.y < c2.y ? b.y : c2.y;
+        const maxTX = a3.x > b.x ? a3.x > c2.x ? a3.x : c2.x : b.x > c2.x ? b.x : c2.x;
+        const maxTY = a3.y > b.y ? a3.y > c2.y ? a3.y : c2.y : b.y > c2.y ? b.y : c2.y;
         const minZ = zOrder(minTX, minTY, minX, minY, invSize);
         const maxZ = zOrder(maxTX, maxTY, minX, minY, invSize);
-        let p = ear.prevZ;
-        let n = ear.nextZ;
-        while (p && p.z >= minZ && n && n.z <= maxZ) {
-          if (p !== ear.prev && p !== ear.next && pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) && area(p.prev, p, p.next) >= 0) return false;
-          p = p.prevZ;
-          if (n !== ear.prev && n !== ear.next && pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, n.x, n.y) && area(n.prev, n, n.next) >= 0) return false;
-          n = n.nextZ;
+        let p2 = ear.prevZ;
+        let n3 = ear.nextZ;
+        while (p2 && p2.z >= minZ && n3 && n3.z <= maxZ) {
+          if (p2 !== ear.prev && p2 !== ear.next && pointInTriangle(a3.x, a3.y, b.x, b.y, c2.x, c2.y, p2.x, p2.y) && area(p2.prev, p2, p2.next) >= 0) return false;
+          p2 = p2.prevZ;
+          if (n3 !== ear.prev && n3 !== ear.next && pointInTriangle(a3.x, a3.y, b.x, b.y, c2.x, c2.y, n3.x, n3.y) && area(n3.prev, n3, n3.next) >= 0) return false;
+          n3 = n3.nextZ;
         }
-        while (p && p.z >= minZ) {
-          if (p !== ear.prev && p !== ear.next && pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, p.x, p.y) && area(p.prev, p, p.next) >= 0) return false;
-          p = p.prevZ;
+        while (p2 && p2.z >= minZ) {
+          if (p2 !== ear.prev && p2 !== ear.next && pointInTriangle(a3.x, a3.y, b.x, b.y, c2.x, c2.y, p2.x, p2.y) && area(p2.prev, p2, p2.next) >= 0) return false;
+          p2 = p2.prevZ;
         }
-        while (n && n.z <= maxZ) {
-          if (n !== ear.prev && n !== ear.next && pointInTriangle(a.x, a.y, b.x, b.y, c.x, c.y, n.x, n.y) && area(n.prev, n, n.next) >= 0) return false;
-          n = n.nextZ;
+        while (n3 && n3.z <= maxZ) {
+          if (n3 !== ear.prev && n3 !== ear.next && pointInTriangle(a3.x, a3.y, b.x, b.y, c2.x, c2.y, n3.x, n3.y) && area(n3.prev, n3, n3.next) >= 0) return false;
+          n3 = n3.nextZ;
         }
         return true;
       };
       var splitEarcut = (start, triangles, dim, minX, minY, invSize) => {
-        let a = start;
+        let a3 = start;
         do {
-          let b = a.next.next;
-          while (b !== a.prev) {
-            if (a.i !== b.i && isValidDiagonal(a, b)) {
-              let c = splitPolygon(a, b);
-              a = filterPoints(a, a.next);
-              c = filterPoints(c, c.next);
-              earcutLinked(a, triangles, dim, minX, minY, invSize);
-              earcutLinked(c, triangles, dim, minX, minY, invSize);
+          let b = a3.next.next;
+          while (b !== a3.prev) {
+            if (a3.i !== b.i && isValidDiagonal(a3, b)) {
+              let c2 = splitPolygon(a3, b);
+              a3 = filterPoints(a3, a3.next);
+              c2 = filterPoints(c2, c2.next);
+              earcutLinked(a3, triangles, dim, minX, minY, invSize);
+              earcutLinked(c2, triangles, dim, minX, minY, invSize);
               return;
             }
             b = b.next;
           }
-          a = a.next;
-        } while (a !== start);
+          a3 = a3.next;
+        } while (a3 !== start);
       };
       var indexCurve = (start, minX, minY, invSize) => {
-        let p = start;
+        let p2 = start;
         do {
-          if (p.z === null) p.z = zOrder(p.x, p.y, minX, minY, invSize);
-          p.prevZ = p.prev;
-          p.nextZ = p.next;
-          p = p.next;
-        } while (p !== start);
-        p.prevZ.nextZ = null;
-        p.prevZ = null;
-        sortLinked(p, p2 => p2.z);
+          if (p2.z === null) p2.z = zOrder(p2.x, p2.y, minX, minY, invSize);
+          p2.prevZ = p2.prev;
+          p2.nextZ = p2.next;
+          p2 = p2.next;
+        } while (p2 !== start);
+        p2.prevZ.nextZ = null;
+        p2.prevZ = null;
+        sortLinked(p2, p3 => p3.z);
       };
       var zOrder = (x, y, minX, minY, invSize) => {
         x = 32767 * (x - minX) * invSize;
@@ -21093,17 +21112,17 @@ ${nonManifold.join("\n")}`);
         const solids = [];
         const holes = [];
         outlines.forEach((outline, i) => {
-          const a = area(outline);
-          if (a < 0) {
+          const a3 = area(outline);
+          if (a3 < 0) {
             holes.push(i);
-          } else if (a > 0) {
+          } else if (a3 > 0) {
             solids.push(i);
           }
         });
         const children = [];
         const parents = [];
-        solids.forEach((s, i) => {
-          const solid = outlines[s];
+        solids.forEach((s5, i) => {
+          const solid = outlines[s5];
           children[i] = [];
           holes.forEach((h, j) => {
             const hole = outlines[h];
@@ -21118,10 +21137,10 @@ ${nonManifold.join("\n")}`);
         });
         holes.forEach((h, j) => {
           if (parents[j] && parents[j].length > 1) {
-            const directParent = minIndex(parents[j], p => children[p].length);
-            parents[j].forEach((p, i) => {
+            const directParent = minIndex(parents[j], p2 => children[p2].length);
+            parents[j].forEach((p2, i) => {
               if (i !== directParent) {
-                children[p] = children[p].filter(c => c !== h);
+                children[p2] = children[p2].filter(c2 => c2 !== h);
               }
             });
           }
@@ -21164,7 +21183,7 @@ ${nonManifold.join("\n")}`);
           this.v = vec3.normalize(perp, perp);
           this.u = vec3.cross(vec3.create(), this.v, this.plane);
           this.basisMap = new Map();
-          const projected = slice.edges.map(e => e.map(v => this.to2D(v)));
+          const projected = slice.edges.map(e5 => e5.map(v => this.to2D(v)));
           const geometry = geom2.create(projected);
           this.roots = assignHoles(geometry);
         }
@@ -21275,7 +21294,7 @@ ${nonManifold.join("\n")}`);
         let edges = slice.edges;
         const vertexMap = new Map();
         const edgeCount = new Map();
-        edges = edges.filter(e => !vec3.equals(e[0], e[1]));
+        edges = edges.filter(e5 => !vec3.equals(e5[0], e5[1]));
         edges.forEach(edge => {
           const inKey = edge[0].toString();
           const outKey = edge[1].toString();
@@ -21322,22 +21341,22 @@ ${nonManifold.join("\n")}`);
       var vec3 = require_vec32();
       var poly3 = require_poly32();
       var slice = require_slice2();
-      var gcd = (a, b) => {
-        if (a === b) {
-          return a;
+      var gcd = (a3, b) => {
+        if (a3 === b) {
+          return a3;
         }
-        if (a < b) {
-          return gcd(b, a);
+        if (a3 < b) {
+          return gcd(b, a3);
         }
         if (b === 1) {
           return 1;
         }
         if (b === 0) {
-          return a;
+          return a3;
         }
-        return gcd(b, a % b);
+        return gcd(b, a3 % b);
       };
-      var lcm = (a, b) => a * b / gcd(a, b);
+      var lcm = (a3, b) => a3 * b / gcd(a3, b);
       var repartitionEdges = (newlength, edges) => {
         const multiple = newlength / edges.length;
         if (multiple === 1) {
@@ -21418,8 +21437,8 @@ ${nonManifold.join("\n")}`);
         let endSlice = null;
         let prevSlice = null;
         let polygons = [];
-        for (let s = 0; s < numberOfSlices; s++) {
-          const currentSlice = generate(s / sMax, s, base);
+        for (let s5 = 0; s5 < numberOfSlices; s5++) {
+          const currentSlice = generate(s5 / sMax, s5, base);
           if (currentSlice) {
             if (!slice.isA(currentSlice)) throw new Error("the callback function must return slice objects");
             const edges = slice.toEdges(currentSlice);
@@ -21430,8 +21449,8 @@ ${nonManifold.join("\n")}`);
                 polygons.push(walls[i]);
               }
             }
-            if (s === 0) startSlice = currentSlice;
-            if (s === numberOfSlices - 1) endSlice = currentSlice;
+            if (s5 === 0) startSlice = currentSlice;
+            if (s5 === numberOfSlices - 1) endSlice = currentSlice;
             prevSlice = currentSlice;
           }
         }
@@ -21497,8 +21516,8 @@ ${nonManifold.join("\n")}`);
         }
         let shapeSides = geom2.toSides(geometry);
         if (shapeSides.length === 0) throw new Error("the given geometry cannot be empty");
-        const pointsWithNegativeX = shapeSides.filter(s => s[0][0] < 0);
-        const pointsWithPositiveX = shapeSides.filter(s => s[0][0] >= 0);
+        const pointsWithNegativeX = shapeSides.filter(s5 => s5[0][0] < 0);
+        const pointsWithPositiveX = shapeSides.filter(s5 => s5[0][0] >= 0);
         const arePointsWithNegAndPosX = pointsWithNegativeX.length > 0 && pointsWithPositiveX.length > 0;
         if (arePointsWithNegAndPosX && overflow === "cap") {
           if (pointsWithNegativeX.length > pointsWithPositiveX.length) {
@@ -21677,12 +21696,12 @@ ${nonManifold.join("\n")}`);
       var vec2 = require_vec22();
       var geom2 = require_geom22();
       var {isNumberArray} = require_commonChecks2();
-      var solveAngleFromSSS = (a, b, c) => Math.acos((a * a + b * b - c * c) / (2 * a * b));
-      var solveSideFromSAS = (a, C, b) => {
+      var solveAngleFromSSS = (a3, b, c2) => Math.acos((a3 * a3 + b * b - c2 * c2) / (2 * a3 * b));
+      var solveSideFromSAS = (a3, C, b) => {
         if (C > NEPS) {
-          return Math.sqrt(a * a + b * b - 2 * a * b * Math.cos(C));
+          return Math.sqrt(a3 * a3 + b * b - 2 * a3 * b * Math.cos(C));
         }
-        return Math.sqrt((a - b) * (a - b) + a * b * C * C * (1 - C * C / 12));
+        return Math.sqrt((a3 - b) * (a3 - b) + a3 * b * C * C * (1 - C * C / 12));
       };
       var solveAAA = angles => {
         const eps = Math.abs(angles[0] + angles[1] + angles[2] - Math.PI);
@@ -21690,65 +21709,65 @@ ${nonManifold.join("\n")}`);
         const A = angles[0];
         const B = angles[1];
         const C = Math.PI - A - B;
-        const c = 1;
-        const a = c / Math.sin(C) * Math.sin(A);
-        const b = c / Math.sin(C) * Math.sin(B);
-        return createTriangle(A, B, C, a, b, c);
+        const c2 = 1;
+        const a3 = c2 / Math.sin(C) * Math.sin(A);
+        const b = c2 / Math.sin(C) * Math.sin(B);
+        return createTriangle(A, B, C, a3, b, c2);
       };
       var solveAAS = values => {
         const A = values[0];
         const B = values[1];
         const C = Math.PI + NEPS - A - B;
         if (C < NEPS) throw new Error("AAS triangles require angles that sum to PI");
-        const a = values[2];
-        const b = a / Math.sin(A) * Math.sin(B);
-        const c = a / Math.sin(A) * Math.sin(C);
-        return createTriangle(A, B, C, a, b, c);
+        const a3 = values[2];
+        const b = a3 / Math.sin(A) * Math.sin(B);
+        const c2 = a3 / Math.sin(A) * Math.sin(C);
+        return createTriangle(A, B, C, a3, b, c2);
       };
       var solveASA = values => {
         const A = values[0];
         const B = values[2];
         const C = Math.PI + NEPS - A - B;
         if (C < NEPS) throw new Error("ASA triangles require angles that sum to PI");
-        const c = values[1];
-        const a = c / Math.sin(C) * Math.sin(A);
-        const b = c / Math.sin(C) * Math.sin(B);
-        return createTriangle(A, B, C, a, b, c);
+        const c2 = values[1];
+        const a3 = c2 / Math.sin(C) * Math.sin(A);
+        const b = c2 / Math.sin(C) * Math.sin(B);
+        return createTriangle(A, B, C, a3, b, c2);
       };
       var solveSAS = values => {
-        const c = values[0];
+        const c2 = values[0];
         const B = values[1];
-        const a = values[2];
-        const b = solveSideFromSAS(c, B, a);
-        const A = solveAngleFromSSS(b, c, a);
+        const a3 = values[2];
+        const b = solveSideFromSAS(c2, B, a3);
+        const A = solveAngleFromSSS(b, c2, a3);
         const C = Math.PI - A - B;
-        return createTriangle(A, B, C, a, b, c);
+        return createTriangle(A, B, C, a3, b, c2);
       };
       var solveSSA = values => {
-        const c = values[0];
-        const a = values[1];
+        const c2 = values[0];
+        const a3 = values[1];
         const C = values[2];
-        const A = Math.asin(a * Math.sin(C) / c);
+        const A = Math.asin(a3 * Math.sin(C) / c2);
         const B = Math.PI - A - C;
-        const b = c / Math.sin(C) * Math.sin(B);
-        return createTriangle(A, B, C, a, b, c);
+        const b = c2 / Math.sin(C) * Math.sin(B);
+        return createTriangle(A, B, C, a3, b, c2);
       };
       var solveSSS = lengths => {
-        const a = lengths[1];
+        const a3 = lengths[1];
         const b = lengths[2];
-        const c = lengths[0];
-        if (a + b <= c || b + c <= a || c + a <= b) {
+        const c2 = lengths[0];
+        if (a3 + b <= c2 || b + c2 <= a3 || c2 + a3 <= b) {
           throw new Error("SSS triangle is incorrect, as the longest side is longer than the sum of the other sides");
         }
-        const A = solveAngleFromSSS(b, c, a);
-        const B = solveAngleFromSSS(c, a, b);
+        const A = solveAngleFromSSS(b, c2, a3);
+        const B = solveAngleFromSSS(c2, a3, b);
         const C = Math.PI - A - B;
-        return createTriangle(A, B, C, a, b, c);
+        return createTriangle(A, B, C, a3, b, c2);
       };
-      var createTriangle = (A, B, C, a, b, c) => {
+      var createTriangle = (A, B, C, a3, b, c2) => {
         const p0 = vec2.fromValues(0, 0);
-        const p1 = vec2.fromValues(c, 0);
-        const p2 = vec2.fromValues(a, 0);
+        const p1 = vec2.fromValues(c2, 0);
+        const p2 = vec2.fromValues(a3, 0);
         vec2.add(p2, vec2.rotate(p2, p2, [0, 0], Math.PI - B), p1);
         return geom2.fromPoints([p0, p1, p2]);
       };
@@ -21762,7 +21781,7 @@ ${nonManifold.join("\n")}`);
         type = type.toUpperCase();
         if (!((type[0] === "A" || type[0] === "S") && (type[1] === "A" || type[1] === "S") && (type[2] === "A" || type[2] === "S"))) throw new Error("triangle type must contain three letters; A or S");
         if (!isNumberArray(values, 3)) throw new Error("triangle values must contain three values");
-        if (!values.every(n => n > 0)) throw new Error("triangle values must be greater than zero");
+        if (!values.every(n3 => n3 > 0)) throw new Error("triangle values must be greater than zero");
         switch (type) {
           case "AAA":
             return solveAAA(values);
@@ -22119,7 +22138,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/stl-serializer/node_modules/@jscad/modeling/src/utils/fnNumberSort.js"(exports, module) {
       "use strict";
       init_define_process();
-      var fnNumberSort = (a, b) => a - b;
+      var fnNumberSort = (a3, b) => a3 - b;
       module.exports = fnNumberSort;
     }
   });
@@ -22208,9 +22227,9 @@ ${nonManifold.join("\n")}`);
           return vec2.fromValues(x, y);
         });
         if (vec2.equals(points2D[0], points2D[1])) return null;
-        const d = vert1Indices[1] - vert1Indices[0];
-        if (d === 1 || d === 3) {
-          if (d === 1) {
+        const d2 = vert1Indices[1] - vert1Indices[0];
+        if (d2 === 1 || d2 === 3) {
+          if (d2 === 1) {
             points2D.reverse();
           }
         } else {
@@ -22267,8 +22286,8 @@ ${nonManifold.join("\n")}`);
           return mat42.fromValues(this.u[0], this.v[0], this.plane[0], 0, this.u[1], this.v[1], this.plane[1], 0, this.u[2], this.v[2], this.plane[2], 0, 0, 0, -this.plane[3], 1);
         },
         getInverseProjectionMatrix: function () {
-          const p = vec3.scale(vec3.create(), this.plane, this.plane[3]);
-          return mat42.fromValues(this.u[0], this.u[1], this.u[2], 0, this.v[0], this.v[1], this.v[2], 0, this.plane[0], this.plane[1], this.plane[2], 0, p[0], p[1], p[2], 1);
+          const p2 = vec3.scale(vec3.create(), this.plane, this.plane[3]);
+          return mat42.fromValues(this.u[0], this.u[1], this.u[2], 0, this.v[0], this.v[1], this.v[2], 0, this.plane[0], this.plane[1], this.plane[2], 0, p2[0], p2[1], p2[2], 1);
         },
         to2D: function (point) {
           return vec2.fromValues(vec3.dot(point, this.u), vec3.dot(point, this.v));
@@ -22411,7 +22430,7 @@ ${nonManifold.join("\n")}`);
             }
           }
           if (removeCount > 0) {
-            activepolygons = activepolygons.filter(p => !p._remove);
+            activepolygons = activepolygons.filter(p2 => !p2._remove);
           }
           let nextycoordinate;
           if (yindex >= ycoordinates.length - 1) {
@@ -22639,10 +22658,10 @@ ${nonManifold.join("\n")}`);
         });
         return result;
       };
-      var byPlaneComponent = (component, tolerance) => (a, b) => {
-        if (a.plane[component] - b.plane[component] > tolerance) {
+      var byPlaneComponent = (component, tolerance) => (a3, b) => {
+        if (a3.plane[component] - b.plane[component] > tolerance) {
           return 1;
-        } else if (b.plane[component] - a.plane[component] > tolerance) {
+        } else if (b.plane[component] - a3.plane[component] > tolerance) {
           return -1;
         }
         return 0;
@@ -22780,13 +22799,13 @@ ${nonManifold.join("\n")}`);
             }
             const frontnodes = [];
             const backnodes = [];
-            const n = polygontreenodes.length;
-            for (let i = 0; i < n; ++i) {
+            const n3 = polygontreenodes.length;
+            for (let i = 0; i < n3; ++i) {
               polygontreenodes[i].splitByPlane(node.plane, node.polygontreenodes, backnodes, frontnodes, backnodes);
             }
             if (frontnodes.length > 0) {
               if (!node.front) node.front = new _Node(node);
-              const stopCondition = n === frontnodes.length && backnodes.length === 0;
+              const stopCondition = n3 === frontnodes.length && backnodes.length === 0;
               if (stopCondition) node.front.polygontreenodes = frontnodes; else stack.push({
                 node: node.front,
                 polygontreenodes: frontnodes
@@ -22794,7 +22813,7 @@ ${nonManifold.join("\n")}`);
             }
             if (backnodes.length > 0) {
               if (!node.back) node.back = new _Node(node);
-              const stopCondition = n === backnodes.length && frontnodes.length === 0;
+              const stopCondition = n3 === backnodes.length && frontnodes.length === 0;
               if (stopCondition) node.back.polygontreenodes = backnodes; else stack.push({
                 node: node.back,
                 polygontreenodes: backnodes
@@ -22864,15 +22883,15 @@ ${nonManifold.join("\n")}`);
           const vertexIsBack = [];
           const MINEPS = -EPS;
           for (let i = 0; i < numvertices; i++) {
-            const t = vec3.dot(splane, vertices[i]) - splane[3];
-            const isback = t < MINEPS;
+            const t4 = vec3.dot(splane, vertices[i]) - splane[3];
+            const isback = t4 < MINEPS;
             vertexIsBack.push(isback);
-            if (t > EPS) hasfront = true;
-            if (t < MINEPS) hasback = true;
+            if (t4 > EPS) hasfront = true;
+            if (t4 < MINEPS) hasback = true;
           }
           if (!hasfront && !hasback) {
-            const t = vec3.dot(splane, pplane);
-            result.type = t >= 0 ? 0 : 1;
+            const t4 = vec3.dot(splane, pplane);
+            result.type = t4 >= 0 ? 0 : 1;
           } else if (!hasback) {
             result.type = 2;
           } else if (!hasfront) {
@@ -22982,10 +23001,10 @@ ${nonManifold.join("\n")}`);
           }
           let children = [this];
           const queue = [children];
-          let i, j, l, node;
+          let i, j, l2, node;
           for (i = 0; i < queue.length; ++i) {
             children = queue[i];
-            for ((j = 0, l = children.length); j < l; j++) {
+            for ((j = 0, l2 = children.length); j < l2; j++) {
               node = children[j];
               if (node.polygon) {
                 result.push(node.polygon);
@@ -23000,12 +23019,12 @@ ${nonManifold.join("\n")}`);
             const queue = [this.children];
             let i;
             let j;
-            let l;
+            let l2;
             let node;
             let nodes;
             for (i = 0; i < queue.length; i++) {
               nodes = queue[i];
-              for ((j = 0, l = nodes.length); j < l; j++) {
+              for ((j = 0, l2 = nodes.length); j < l2; j++) {
                 node = nodes[j];
                 if (node.children.length > 0) {
                   queue.push(node.children);
@@ -23024,10 +23043,10 @@ ${nonManifold.join("\n")}`);
             const bound = poly3.measureBoundingSphere(polygon);
             const sphereradius = bound[3] + EPS;
             const spherecenter = bound;
-            const d = vec3.dot(splane, spherecenter) - splane[3];
-            if (d > sphereradius) {
+            const d2 = vec3.dot(splane, spherecenter) - splane[3];
+            if (d2 > sphereradius) {
               frontnodes.push(this);
-            } else if (d < -sphereradius) {
+            } else if (d2 < -sphereradius) {
               backnodes.push(this);
             } else {
               const splitresult = splitPolygonByPlane(splane, polygon);
@@ -23066,10 +23085,10 @@ ${nonManifold.join("\n")}`);
         invertSub() {
           let children = [this];
           const queue = [children];
-          let i, j, l, node;
+          let i, j, l2, node;
           for (i = 0; i < queue.length; i++) {
             children = queue[i];
-            for ((j = 0, l = children.length); j < l; j++) {
+            for ((j = 0, l2 = children.length); j < l2; j++) {
               node = children[j];
               if (node.polygon) {
                 node.polygon = poly3.invert(node.polygon);
@@ -23089,8 +23108,8 @@ ${nonManifold.join("\n")}`);
           const queue = [children];
           for (let i = 0; i < queue.length; ++i) {
             children = queue[i];
-            const l = children.length;
-            for (let j = 0; j < l; j++) {
+            const l2 = children.length;
+            for (let j = 0; j < l2; j++) {
               const node = children[j];
               if (node.polygon) {
                 node.polygon = null;
@@ -23107,11 +23126,11 @@ ${nonManifold.join("\n")}`);
           let result = "";
           let children = [this];
           const queue = [children];
-          let i, j, l, node;
+          let i, j, l2, node;
           for (i = 0; i < queue.length; ++i) {
             children = queue[i];
             const prefix = (" ").repeat(i);
-            for ((j = 0, l = children.length); j < l; j++) {
+            for ((j = 0, l2 = children.length); j < l2; j++) {
               node = children[j];
               result += `${prefix}PolygonTreeNode (${node.isRootNode()}): ${node.children.length}`;
               if (node.polygon) {
@@ -23192,16 +23211,16 @@ ${nonManifold.join("\n")}`);
         if (!mayOverlap(geometry1, geometry2)) {
           return geom32.create();
         }
-        const a = new Tree(geom32.toPolygons(geometry1));
+        const a3 = new Tree(geom32.toPolygons(geometry1));
         const b = new Tree(geom32.toPolygons(geometry2));
-        a.invert();
-        b.clipTo(a);
+        a3.invert();
+        b.clipTo(a3);
         b.invert();
-        a.clipTo(b);
-        b.clipTo(a);
-        a.addPolygons(b.allPolygons());
-        a.invert();
-        const newpolygons = a.allPolygons();
+        a3.clipTo(b);
+        b.clipTo(a3);
+        a3.addPolygons(b.allPolygons());
+        a3.invert();
+        const newpolygons = a3.allPolygons();
         return geom32.create(newpolygons);
       };
       module.exports = intersectGeom3Sub;
@@ -23303,14 +23322,14 @@ ${nonManifold.join("\n")}`);
         if (!mayOverlap(geometry1, geometry2)) {
           return unionForNonIntersecting(geometry1, geometry2);
         }
-        const a = new Tree(geom32.toPolygons(geometry1));
+        const a3 = new Tree(geom32.toPolygons(geometry1));
         const b = new Tree(geom32.toPolygons(geometry2));
-        a.clipTo(b, false);
-        b.clipTo(a);
+        a3.clipTo(b, false);
+        b.clipTo(a3);
         b.invert();
-        b.clipTo(a);
+        b.clipTo(a3);
         b.invert();
-        const newpolygons = a.allPolygons().concat(b.allPolygons());
+        const newpolygons = a3.allPolygons().concat(b.allPolygons());
         const result = geom32.create(newpolygons);
         return result;
       };
@@ -23427,10 +23446,10 @@ ${nonManifold.join("\n")}`);
         }
         const summedPoints = [];
         for (let i = 0; i < pointsA.length; i++) {
-          const a = pointsA[i];
+          const a3 = pointsA[i];
           for (let j = 0; j < pointsB.length; j++) {
             const b = pointsB[j];
-            summedPoints.push([a[0] + b[0], a[1] + b[1], a[2] + b[2]]);
+            summedPoints.push([a3[0] + b[0], a3[1] + b[1], a3[2] + b[2]]);
           }
         }
         const hullPolygons = hullPoints3(summedPoints);
@@ -23463,7 +23482,7 @@ ${nonManifold.join("\n")}`);
       var vec3 = require_vec32();
       var measureEpsilon = require_measureEpsilon2();
       var geom32 = require_geom32();
-      var sortNb = array => array.sort((a, b) => a - b).filter((item, pos, ary) => !pos || item !== ary[pos - 1]);
+      var sortNb = array => array.sort((a3, b) => a3 - b).filter((item, pos, ary) => !pos || item !== ary[pos - 1]);
       var insertMapping = (map, point, index) => {
         const key = `${point}`;
         const mapping = map.get(key);
@@ -23508,12 +23527,12 @@ ${nonManifold.join("\n")}`);
             indexes[i] = true;
             do {
               merges = 0;
-              indexes.forEach((e, j) => {
+              indexes.forEach((e5, j) => {
                 const mapj = indexesPerPolygon[j];
                 if (mapj.e > 0) {
                   mapj.e = -1;
-                  for (let d = 0; d < mapj.d.length; d++) {
-                    indexes[mapj.d[d]] = true;
+                  for (let d2 = 0; d2 < mapj.d.length; d2++) {
+                    indexes[mapj.d[d2]] = true;
                   }
                   merges++;
                 }
@@ -23526,7 +23545,7 @@ ${nonManifold.join("\n")}`);
         for (let i = 0; i < ippl; i++) {
           if (indexesPerPolygon[i].indexes) {
             const newpolygons = [];
-            indexesPerPolygon[i].indexes.forEach((e, p) => newpolygons.push(polygons[p]));
+            indexesPerPolygon[i].indexes.forEach((e5, p2) => newpolygons.push(polygons[p2]));
             newgeometries.push(geom32.create(newpolygons));
           }
         }
@@ -23565,14 +23584,14 @@ ${nonManifold.join("\n")}`);
         if (!mayOverlap(geometry1, geometry2)) {
           return geom32.clone(geometry1);
         }
-        const a = new Tree(geom32.toPolygons(geometry1));
+        const a3 = new Tree(geom32.toPolygons(geometry1));
         const b = new Tree(geom32.toPolygons(geometry2));
-        a.invert();
-        a.clipTo(b);
-        b.clipTo(a, true);
-        a.addPolygons(b.allPolygons());
-        a.invert();
-        const newpolygons = a.allPolygons();
+        a3.invert();
+        a3.clipTo(b);
+        b.clipTo(a3, true);
+        a3.addPolygons(b.allPolygons());
+        a3.invert();
+        const newpolygons = a3.allPolygons();
         return geom32.create(newpolygons);
       };
       module.exports = subtractGeom3Sub;
@@ -23730,9 +23749,9 @@ ${nonManifold.join("\n")}`);
         let newPoints = [];
         const newCorners = [];
         const of = vec2.create();
-        const n = points.length;
-        for (let i = 0; i < n; i++) {
-          const j = (i + 1) % n;
+        const n3 = points.length;
+        for (let i = 0; i < n3; i++) {
+          const j = (i + 1) % n3;
           const p0 = points[i];
           const p1 = points[j];
           orientation ? vec2.subtract(of, p0, p1) : vec2.subtract(of, p1, p0);
@@ -23799,7 +23818,7 @@ ${nonManifold.join("\n")}`);
               newPoints[i] = void 0;
             }
           });
-          newPoints = newPoints.filter(p => p !== void 0);
+          newPoints = newPoints.filter(p2 => p2 !== void 0);
         }
         if (corners === "round") {
           let cornersegments = Math.floor(segments / 4);
@@ -24526,7 +24545,7 @@ ${nonManifold.join("\n")}`);
         }
         const shapeSides = geom2.toSides(geometry);
         if (shapeSides.length === 0) throw new Error("The given geometry cannot be empty");
-        const pointsWithPositiveX = shapeSides.filter(s => s[0][0] >= 0);
+        const pointsWithPositiveX = shapeSides.filter(s5 => s5[0][0] >= 0);
         let baseSlice = slice.fromSides(shapeSides);
         if (pointsWithPositiveX.length === 0) {
           baseSlice = slice.reverse(baseSlice);
@@ -24584,10 +24603,10 @@ ${nonManifold.join("\n")}`);
         }
         if (!aboutEqualNormals(projplane, [0, 0, 1])) {
           const rotation = mat42.fromVectorRotation(mat42.create(), projplane, [0, 0, 1]);
-          projpolys = projpolys.map(p => poly3.transform(rotation, p));
+          projpolys = projpolys.map(p2 => poly3.transform(rotation, p2));
         }
-        projpolys = projpolys.sort((a, b) => poly3.measureArea(b) - poly3.measureArea(a));
-        const projgeoms = projpolys.map(p => geom2.fromPoints(p.vertices));
+        projpolys = projpolys.sort((a3, b) => poly3.measureArea(b) - poly3.measureArea(a3));
+        const projgeoms = projpolys.map(p2 => geom2.fromPoints(p2.vertices));
         return unionGeom2(projgeoms);
       };
       var project = (options, ...objects) => {
@@ -24952,25 +24971,25 @@ ${nonManifold.join("\n")}`);
                 opposite.v2 = null;
                 opposite.next = null;
                 opposite.prev = null;
-                const mergeEdges = (list, e1, e2) => {
+                const mergeEdges = (list, e1, e22) => {
                   const newedge = {
-                    v1: e2.v1,
+                    v1: e22.v1,
                     v2: e1.v2,
                     next: e1.next,
-                    prev: e2.prev
+                    prev: e22.prev
                   };
-                  e2.prev.next = newedge;
+                  e22.prev.next = newedge;
                   e1.next.prev = newedge;
                   deleteEdge(list, e1);
                   e1.v1 = null;
                   e1.v2 = null;
                   e1.next = null;
                   e1.prev = null;
-                  deleteEdge(list, e2);
-                  e2.v1 = null;
-                  e2.v2 = null;
-                  e2.next = null;
-                  e2.prev = null;
+                  deleteEdge(list, e22);
+                  e22.v1 = null;
+                  e22.v2 = null;
+                  e22.next = null;
+                  e22.prev = null;
                 };
                 if (angles[0] === 0) {
                   mergeEdges(edgeList, edge1, edge1.prev);
@@ -25210,9 +25229,9 @@ ${nonManifold.join("\n")}`);
                       const endpos = endvertex;
                       const checkpos = matchingsidestartvertex;
                       const direction = vec3.subtract(vec3.create(), checkpos, startpos);
-                      const t = vec3.dot(vec3.subtract(vec3.create(), endpos, startpos), direction) / vec3.dot(direction, direction);
-                      if (t > 0 && t < 1) {
-                        const closestpoint = vec3.scale(vec3.create(), direction, t);
+                      const t4 = vec3.dot(vec3.subtract(vec3.create(), endpos, startpos), direction) / vec3.dot(direction, direction);
+                      if (t4 > 0 && t4 < 1) {
+                        const closestpoint = vec3.scale(vec3.create(), direction, t4);
                         vec3.add(closestpoint, closestpoint, startpos);
                         const distancesquared = vec3.squaredDistance(closestpoint, endpos);
                         if (distancesquared < constants.EPS * constants.EPS) {
@@ -25677,7 +25696,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/array-utils/src/fnNumberSort.js"(exports, module) {
       "use strict";
       init_define_process();
-      var fnNumberSort = (a, b) => a - b;
+      var fnNumberSort = (a3, b) => a3 - b;
       module.exports = fnNumberSort;
     }
   });
@@ -25939,655 +25958,190 @@ endfacet`;
       };
     }
   });
-  var require_FileSaver_min = __commonJS({
-    "../../../node_modules/file-saver/dist/FileSaver.min.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      (function (a, b) {
-        if ("function" == typeof define && define.amd) define([], b); else if ("undefined" != typeof exports) b(); else {
-          (b(), a.FileSaver = ({
-            exports: {}
-          }).exports);
-        }
-      })(exports, function () {
-        "use strict";
-        function b(a2, b2) {
-          return ("undefined" == typeof b2 ? b2 = {
-            autoBom: false
-          } : "object" != typeof b2 && (console.warn("Deprecated: Expected third argument to be a object"), b2 = {
-            autoBom: !b2
-          }), b2.autoBom && (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i).test(a2.type) ? new Blob(["\uFEFF", a2], {
-            type: a2.type
-          }) : a2);
-        }
-        function c(a2, b2, c2) {
-          var d2 = new XMLHttpRequest();
-          (d2.open("GET", a2), d2.responseType = "blob", d2.onload = function () {
-            g(d2.response, b2, c2);
-          }, d2.onerror = function () {
-            console.error("could not download file");
-          }, d2.send());
-        }
-        function d(a2) {
-          var b2 = new XMLHttpRequest();
-          b2.open("HEAD", a2, false);
-          try {
-            b2.send();
-          } catch (a3) {}
-          return 200 <= b2.status && 299 >= b2.status;
-        }
-        function e(a2) {
-          try {
-            a2.dispatchEvent(new MouseEvent("click"));
-          } catch (c2) {
-            var b2 = document.createEvent("MouseEvents");
-            (b2.initMouseEvent("click", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null), a2.dispatchEvent(b2));
-          }
-        }
-        var f = "object" == typeof window && window.window === window ? window : "object" == typeof self && self.self === self ? self : "object" == typeof globalThis && globalThis.global === globalThis ? globalThis : void 0, a = f.navigator && (/Macintosh/).test(navigator.userAgent) && (/AppleWebKit/).test(navigator.userAgent) && !(/Safari/).test(navigator.userAgent), g = f.saveAs || ("object" != typeof window || window !== f ? function () {} : ("download" in HTMLAnchorElement.prototype) && !a ? function (b2, g2, h) {
-          var i = f.URL || f.webkitURL, j = document.createElement("a");
-          (g2 = g2 || b2.name || "download", j.download = g2, j.rel = "noopener", "string" == typeof b2 ? (j.href = b2, j.origin === location.origin ? e(j) : d(j.href) ? c(b2, g2, h) : e(j, j.target = "_blank")) : (j.href = i.createObjectURL(b2), setTimeout(function () {
-            i.revokeObjectURL(j.href);
-          }, 4e4), setTimeout(function () {
-            e(j);
-          }, 0)));
-        } : ("msSaveOrOpenBlob" in navigator) ? function (f2, g2, h) {
-          if ((g2 = g2 || f2.name || "download", "string" != typeof f2)) navigator.msSaveOrOpenBlob(b(f2, h), g2); else if (d(f2)) c(f2, g2, h); else {
-            var i = document.createElement("a");
-            (i.href = f2, i.target = "_blank", setTimeout(function () {
-              e(i);
-            }));
-          }
-        } : function (b2, d2, e2, g2) {
-          if ((g2 = g2 || open("", "_blank"), g2 && (g2.document.title = g2.document.body.innerText = "downloading..."), "string" == typeof b2)) return c(b2, d2, e2);
-          var h = "application/octet-stream" === b2.type, i = (/constructor/i).test(f.HTMLElement) || f.safari, j = (/CriOS\/[\d]+/).test(navigator.userAgent);
-          if ((j || h && i || a) && "undefined" != typeof FileReader) {
-            var k = new FileReader();
-            (k.onloadend = function () {
-              var a2 = k.result;
-              (a2 = j ? a2 : a2.replace(/^data:[^;]*;/, "data:attachment/file;"), g2 ? g2.location.href = a2 : location = a2, g2 = null);
-            }, k.readAsDataURL(b2));
-          } else {
-            var l = f.URL || f.webkitURL, m = l.createObjectURL(b2);
-            (g2 ? g2.location = m : location.href = m, g2 = null, setTimeout(function () {
-              l.revokeObjectURL(m);
-            }, 4e4));
-          }
-        });
-        (f.saveAs = g.saveAs = g, "undefined" != typeof module && (module.exports = g));
-      });
-    }
-  });
-  var require_atob_browser = __commonJS({
-    "../../../node_modules/atob-lite/atob-browser.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = function _atob(str) {
-        return atob(str);
-      };
-    }
-  });
-  var require_is_base64 = __commonJS({
-    "../../../node_modules/is-base64/is-base64.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      (function (root) {
-        "use strict";
-        function isBase64(v, opts) {
-          if (v instanceof Boolean || typeof v === "boolean") {
-            return false;
-          }
-          if (!(opts instanceof Object)) {
-            opts = {};
-          }
-          if (opts.hasOwnProperty("allowBlank") && !opts.allowBlank && v === "") {
-            return false;
-          }
-          var regex = "(?:[A-Za-z0-9+\\/]{4})*(?:[A-Za-z0-9+\\/]{2}==|[A-Za-z0-9+/]{3}=)?";
-          if (opts.mime) {
-            regex = "(data:\\w+\\/[a-zA-Z\\+\\-\\.]+;base64,)?" + regex;
-          }
-          if (opts.paddingRequired === false) {
-            regex = "(?:[A-Za-z0-9+\\/]{4})*(?:[A-Za-z0-9+\\/]{2}(==)?|[A-Za-z0-9+\\/]{3}=?)?";
-          }
-          return new RegExp("^" + regex + "$", "gi").test(v);
-        }
-        if (typeof exports !== "undefined") {
-          if (typeof module !== "undefined" && module.exports) {
-            exports = module.exports = isBase64;
-          }
-          exports.isBase64 = isBase64;
-        } else if (typeof define === "function" && define.amd) {
-          define([], function () {
-            return isBase64;
-          });
-        } else {
-          root.isBase64 = isBase64;
-        }
-      })(exports);
-    }
-  });
-  var require_string_to_arraybuffer = __commonJS({
-    "../../../node_modules/string-to-arraybuffer/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var atob2 = require_atob_browser();
-      var isBase64 = require_is_base64();
-      module.exports = function stringToArrayBuffer(arg) {
-        if (typeof arg !== "string") throw Error("Argument should be a string");
-        if ((/^data\:/i).test(arg)) return decode(arg);
-        if (isBase64(arg)) arg = atob2(arg);
-        return str2ab(arg);
-      };
-      function str2ab(str) {
-        var array = new Uint8Array(str.length);
-        for (var i = 0; i < str.length; i++) {
-          array[i] = str.charCodeAt(i);
-        }
-        return array.buffer;
-      }
-      function decode(uri) {
-        uri = uri.replace(/\r?\n/g, "");
-        var firstComma = uri.indexOf(",");
-        if (-1 === firstComma || firstComma <= 4) throw new TypeError("malformed data-URI");
-        var meta = uri.substring(5, firstComma).split(";");
-        var base64 = false;
-        var charset = "US-ASCII";
-        for (var i = 0; i < meta.length; i++) {
-          if ("base64" == meta[i]) {
-            base64 = true;
-          } else if (0 == meta[i].indexOf("charset=")) {
-            charset = meta[i].substring(8);
-          }
-        }
-        var data = unescape(uri.substring(firstComma + 1));
-        if (base64) data = atob2(data);
-        var abuf = str2ab(data);
-        abuf.type = meta[0] || "text/plain";
-        abuf.charset = charset;
-        return abuf;
-      }
-    }
-  });
-  var require_dtype = __commonJS({
-    "../../../node_modules/dtype/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = function (dtype) {
-        switch (dtype) {
-          case "int8":
-            return Int8Array;
-          case "int16":
-            return Int16Array;
-          case "int32":
-            return Int32Array;
-          case "uint8":
-            return Uint8Array;
-          case "uint16":
-            return Uint16Array;
-          case "uint32":
-            return Uint32Array;
-          case "float32":
-            return Float32Array;
-          case "float64":
-            return Float64Array;
-          case "array":
-            return Array;
-          case "uint8_clamped":
-            return Uint8ClampedArray;
-        }
-      };
-    }
-  });
-  var require_flatten_vertex_data = __commonJS({
-    "../../../node_modules/flatten-vertex-data/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var dtype = require_dtype();
-      module.exports = flattenVertexData;
-      function flattenVertexData(data, output, offset) {
-        if (!data) throw new TypeError("must specify data as first parameter");
-        offset = +(offset || 0) | 0;
-        if (Array.isArray(data) && (data[0] && typeof data[0][0] === "number")) {
-          var dim = data[0].length;
-          var length = data.length * dim;
-          var i, j, k, l;
-          if (!output || typeof output === "string") {
-            output = new (dtype(output || "float32"))(length + offset);
-          }
-          var dstLength = output.length - offset;
-          if (length !== dstLength) {
-            throw new Error("source length " + length + " (" + dim + "x" + data.length + ") does not match destination length " + dstLength);
-          }
-          for ((i = 0, k = offset); i < data.length; i++) {
-            for (j = 0; j < dim; j++) {
-              output[k++] = data[i][j] === null ? NaN : data[i][j];
-            }
-          }
-        } else {
-          if (!output || typeof output === "string") {
-            var Ctor = dtype(output || "float32");
-            if (Array.isArray(data) || output === "array") {
-              output = new Ctor(data.length + offset);
-              for ((i = 0, k = offset, l = output.length); k < l; (k++, i++)) {
-                output[k] = data[i] === null ? NaN : data[i];
-              }
-            } else {
-              if (offset === 0) {
-                output = new Ctor(data);
-              } else {
-                output = new Ctor(data.length + offset);
-                output.set(data, offset);
-              }
-            }
-          } else {
-            output.set(data, offset);
-          }
-        }
-        return output;
-      }
-    }
-  });
-  var require_to_array_buffer = __commonJS({
-    "../../../node_modules/to-array-buffer/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var str2ab = require_string_to_arraybuffer();
-      var flat = require_flatten_vertex_data();
-      module.exports = function toArrayBuffer(arg) {
-        if (!arg) return null;
-        if (arg instanceof ArrayBuffer) return arg;
-        if (typeof arg === "string") {
-          return str2ab(arg);
-        }
-        if (ArrayBuffer.isView(arg)) {
-          if (arg.byteOffset) {
-            return arg.buffer.slice(arg.byteOffset, arg.byteOffset + arg.byteLength);
-          }
-          return arg.buffer;
-        }
-        if (arg.buffer || arg.data || arg._data) {
-          var result = toArrayBuffer(arg.buffer || arg.data || arg._data);
-          return result;
-        }
-        if (Array.isArray(arg)) {
-          for (var i = 0; i < arg.length; i++) {
-            if (arg[i].length != null) {
-              arg = flat(arg);
-              break;
-            }
-          }
-        }
-        var result = new Uint8Array(arg);
-        if (!result.length) return null;
-        return result.buffer;
-      };
-    }
-  });
-  var require_simple_mime = __commonJS({
-    "../../../node_modules/simple-mime/simple-mime.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var types;
-      module.exports = function setup(defaultMime) {
-        return function getMime(path) {
-          path = path.toLowerCase().trim();
-          var index = path.lastIndexOf("/");
-          if (index >= 0) {
-            path = path.substr(index + 1);
-          }
-          index = path.lastIndexOf(".");
-          if (index >= 0) {
-            path = path.substr(index + 1);
-          }
-          return types[path] || defaultMime;
-        };
-      };
-      types = {
-        "3gp": "video/3gpp",
-        a: "application/octet-stream",
-        ai: "application/postscript",
-        aif: "audio/x-aiff",
-        aiff: "audio/x-aiff",
-        asc: "application/pgp-signature",
-        asf: "video/x-ms-asf",
-        asm: "text/x-asm",
-        asx: "video/x-ms-asf",
-        atom: "application/atom+xml",
-        au: "audio/basic",
-        avi: "video/x-msvideo",
-        bat: "application/x-msdownload",
-        bin: "application/octet-stream",
-        bmp: "image/bmp",
-        bz2: "application/x-bzip2",
-        c: "text/x-csrc",
-        cab: "application/vnd.ms-cab-compressed",
-        can: "application/candor",
-        cc: "text/x-c++src",
-        chm: "application/vnd.ms-htmlhelp",
-        "class": "application/octet-stream",
-        com: "application/x-msdownload",
-        conf: "text/plain",
-        cpp: "text/x-c",
-        crt: "application/x-x509-ca-cert",
-        css: "text/css",
-        csv: "text/csv",
-        cxx: "text/x-c",
-        deb: "application/x-debian-package",
-        der: "application/x-x509-ca-cert",
-        diff: "text/x-diff",
-        djv: "image/vnd.djvu",
-        djvu: "image/vnd.djvu",
-        dll: "application/x-msdownload",
-        dmg: "application/octet-stream",
-        doc: "application/msword",
-        dot: "application/msword",
-        dtd: "application/xml-dtd",
-        dvi: "application/x-dvi",
-        ear: "application/java-archive",
-        eml: "message/rfc822",
-        eps: "application/postscript",
-        exe: "application/x-msdownload",
-        f: "text/x-fortran",
-        f77: "text/x-fortran",
-        f90: "text/x-fortran",
-        flv: "video/x-flv",
-        "for": "text/x-fortran",
-        gem: "application/octet-stream",
-        gemspec: "text/x-script.ruby",
-        gif: "image/gif",
-        gyp: "text/x-script.python",
-        gypi: "text/x-script.python",
-        gz: "application/x-gzip",
-        h: "text/x-chdr",
-        hh: "text/x-c++hdr",
-        htm: "text/html",
-        html: "text/html",
-        ico: "image/vnd.microsoft.icon",
-        ics: "text/calendar",
-        ifb: "text/calendar",
-        iso: "application/octet-stream",
-        jar: "application/java-archive",
-        java: "text/x-java-source",
-        jnlp: "application/x-java-jnlp-file",
-        jpeg: "image/jpeg",
-        jpg: "image/jpeg",
-        js: "application/javascript",
-        json: "application/json",
-        less: "text/css",
-        log: "text/plain",
-        lua: "text/x-script.lua",
-        luac: "application/x-bytecode.lua",
-        makefile: "text/x-makefile",
-        m3u: "audio/x-mpegurl",
-        m4v: "video/mp4",
-        man: "text/troff",
-        manifest: "text/cache-manifest",
-        markdown: "text/x-markdown",
-        mathml: "application/mathml+xml",
-        mbox: "application/mbox",
-        mdoc: "text/troff",
-        md: "text/x-markdown",
-        me: "text/troff",
-        mid: "audio/midi",
-        midi: "audio/midi",
-        mime: "message/rfc822",
-        mml: "application/mathml+xml",
-        mng: "video/x-mng",
-        mov: "video/quicktime",
-        mp3: "audio/mpeg",
-        mp4: "video/mp4",
-        mp4v: "video/mp4",
-        mpeg: "video/mpeg",
-        mpg: "video/mpeg",
-        ms: "text/troff",
-        msi: "application/x-msdownload",
-        odp: "application/vnd.oasis.opendocument.presentation",
-        ods: "application/vnd.oasis.opendocument.spreadsheet",
-        odt: "application/vnd.oasis.opendocument.text",
-        ogg: "application/ogg",
-        p: "text/x-pascal",
-        pas: "text/x-pascal",
-        pbm: "image/x-portable-bitmap",
-        pdf: "application/pdf",
-        pem: "application/x-x509-ca-cert",
-        pgm: "image/x-portable-graymap",
-        pgp: "application/pgp-encrypted",
-        pkg: "application/octet-stream",
-        pl: "text/x-script.perl",
-        pm: "text/x-script.perl-module",
-        png: "image/png",
-        pnm: "image/x-portable-anymap",
-        ppm: "image/x-portable-pixmap",
-        pps: "application/vnd.ms-powerpoint",
-        ppt: "application/vnd.ms-powerpoint",
-        ps: "application/postscript",
-        psd: "image/vnd.adobe.photoshop",
-        py: "text/x-script.python",
-        qt: "video/quicktime",
-        ra: "audio/x-pn-realaudio",
-        rake: "text/x-script.ruby",
-        ram: "audio/x-pn-realaudio",
-        rar: "application/x-rar-compressed",
-        rb: "text/x-script.ruby",
-        rdf: "application/rdf+xml",
-        roff: "text/troff",
-        rpm: "application/x-redhat-package-manager",
-        rss: "application/rss+xml",
-        rtf: "application/rtf",
-        ru: "text/x-script.ruby",
-        s: "text/x-asm",
-        sgm: "text/sgml",
-        sgml: "text/sgml",
-        sh: "application/x-sh",
-        sig: "application/pgp-signature",
-        snd: "audio/basic",
-        so: "application/octet-stream",
-        svg: "image/svg+xml",
-        svgz: "image/svg+xml",
-        swf: "application/x-shockwave-flash",
-        t: "text/troff",
-        tar: "application/x-tar",
-        tbz: "application/x-bzip-compressed-tar",
-        tci: "application/x-topcloud",
-        tcl: "application/x-tcl",
-        tex: "application/x-tex",
-        texi: "application/x-texinfo",
-        texinfo: "application/x-texinfo",
-        text: "text/plain",
-        tif: "image/tiff",
-        tiff: "image/tiff",
-        torrent: "application/x-bittorrent",
-        tr: "text/troff",
-        ttf: "application/x-font-ttf",
-        txt: "text/plain",
-        vcf: "text/x-vcard",
-        vcs: "text/x-vcalendar",
-        vrml: "model/vrml",
-        war: "application/java-archive",
-        wav: "audio/x-wav",
-        webapp: "application/x-web-app-manifest+json",
-        webm: "video/webm",
-        wma: "audio/x-ms-wma",
-        wmv: "video/x-ms-wmv",
-        wmx: "video/x-ms-wmx",
-        wrl: "model/vrml",
-        wsdl: "application/wsdl+xml",
-        xbm: "image/x-xbitmap",
-        xhtml: "application/xhtml+xml",
-        xls: "application/vnd.ms-excel",
-        xml: "application/xml",
-        xpm: "image/x-xpixmap",
-        xsl: "application/xml",
-        xslt: "application/xslt+xml",
-        yaml: "text/yaml",
-        yml: "text/yaml",
-        zip: "application/zip"
-      };
-    }
-  });
-  var require_is_blob = __commonJS({
-    "../../../node_modules/is-blob/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var toString = Object.prototype.toString;
-      module.exports = function (x) {
-        return x instanceof Blob || toString.call(x) === "[object Blob]";
-      };
-    }
-  });
-  var require_to_blob = __commonJS({
-    "../../../node_modules/save-file/src/to-blob.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var ab = require_to_array_buffer();
-      var getMimeType = require_simple_mime()("application/octect-stream");
-      var isBlob = require_is_blob();
-      module.exports = function toBlob(data, filename) {
-        if (!isBlob(data) && !(data instanceof File)) {
-          data = ab(data);
-          var mime = getMimeType(filename || "");
-          data = new Blob([data], {
-            type: mime
-          });
-        }
-        return data;
-      };
-    }
-  });
-  var require_browser = __commonJS({
-    "../../../node_modules/save-file/browser.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var saveAs = require_FileSaver_min().saveAs;
-      var toBlob = require_to_blob();
-      var planned = null;
-      module.exports = save2;
-      module.exports.save = save2;
-      module.exports.saveSync = saveSync;
-      function save2(data, filename) {
-        if (typeof data === "string") {
-          if (typeof filename !== "string" || filename.length > data.length) {
-            var x = filename;
-            filename = data;
-            data = x;
-          }
-        }
-        var blob = toBlob(data, filename);
-        if (planned) {
-          return planned.then(function () {
-            planned = save2(data, filename);
-            return planned;
-          });
-        } else {
-          planned = new Promise(function (ok, nok) {
-            saveAs(blob, filename);
-            window.addEventListener("focus", function resolve() {
-              planned = null;
-              window.removeEventListener("focus", resolve);
-              ok();
-            });
-          });
-          return planned;
-        }
-      }
-      function saveSync(data, filename) {
-        return saveAs(toBlob(data, filename), filename);
-      }
-    }
-  });
   var index_exports = {};
   __export(index_exports, {
-    black: () => black,
-    blue: () => blue,
-    bounding_box: () => bounding_box,
-    cone: () => cone,
-    crimson: () => crimson,
-    cube: () => cube,
-    cyan: () => cyan,
-    cylinder: () => cylinder,
-    download_shape_stl: () => download_shape_stl,
-    empty_shape: () => empty_shape,
-    geodesic_sphere: () => geodesic_sphere,
-    gray: () => gray,
-    green: () => green,
-    group: () => group,
-    intersect: () => intersect,
-    is_group: () => is_group,
-    is_shape: () => is_shape,
-    lime: () => lime,
-    navy: () => navy,
-    orange: () => orange,
-    pink: () => pink,
-    prism: () => prism,
-    purple: () => purple,
-    pyramid: () => pyramid,
-    render: () => render,
-    render_axes: () => render_axes,
-    render_grid: () => render_grid,
-    render_grid_axes: () => render_grid_axes,
-    rgb: () => rgb,
-    rose: () => rose,
-    rotate: () => rotate,
-    rounded_cube: () => rounded_cube,
-    rounded_cylinder: () => rounded_cylinder,
-    scale: () => scale,
-    silver: () => silver,
-    sphere: () => sphere,
-    star: () => star,
-    subtract: () => subtract,
-    teal: () => teal,
-    torus: () => torus,
-    translate: () => translate,
-    ungroup: () => ungroup,
-    union: () => union,
-    white: () => white,
-    yellow: () => yellow
+    default: () => CsgModulePlugin
   });
   init_define_process();
-  var import_context = __toESM(__require("js-slang/context"), 1);
   init_define_process();
-  var _Core = class _Core {
-    static initialize(csgModuleState) {
-      _Core.moduleState = csgModuleState;
-    }
-    static getRenderGroupManager() {
-      const moduleState2 = _Core.moduleState;
-      return moduleState2.renderGroupManager;
-    }
-    static nextComponent() {
-      const moduleState2 = _Core.moduleState;
-      return moduleState2.nextComponent();
+  init_define_process();
+  init_define_process();
+  var _;
+  !(function (_2) {
+    (_2.UNKNOWN = "__unknown", _2.INTERNAL = "__internal", _2.EVALUATOR = "__evaluator", _2.EVALUATOR_SYNTAX = "__evaluator_syntax", _2.EVALUATOR_TYPE = "__evaluator_type", _2.EVALUATOR_RUNTIME = "__evaluator_runtime");
+  })(_ || (_ = {}));
+  var o = class extends Error {
+    constructor(r2) {
+      super(r2);
+      __publicField(this, "name", "ConductorError");
+      __publicField(this, "errorType", _.UNKNOWN);
     }
   };
-  _Core.moduleState = null;
-  var Core = _Core;
+  init_define_process();
+  var s = class extends o {
+    constructor(r2) {
+      super(r2);
+      __publicField(this, "name", "ConductorInternalError");
+      __publicField(this, "errorType", _.INTERNAL);
+    }
+  };
+  init_define_process();
+  init_define_process();
+  var s2 = class extends o {
+    constructor(r2, o4, s5, e5) {
+      super(`${void 0 !== o4 ? `${e5 ? e5 + ":" : ""}${o4}${void 0 !== s5 ? ":" + s5 : ""}: ` : ""}${r2}`);
+      __publicField(this, "name", "EvaluatorError");
+      __publicField(this, "errorType", _.EVALUATOR);
+      __publicField(this, "rawMessage");
+      __publicField(this, "line");
+      __publicField(this, "column");
+      __publicField(this, "fileName");
+      (this.rawMessage = r2, this.line = o4, this.column = s5, this.fileName = e5);
+    }
+  };
+  function e(r2) {
+    const t4 = (function (r3) {
+      var _a;
+      if ("string" == typeof r3) return JSON.stringify(r3);
+      if ("number" == typeof r3 || "boolean" == typeof r3) return String(r3);
+      if (null === r3) return "null";
+      if (void 0 === r3) return "undefined";
+      if ("bigint" == typeof r3) return `${r3}n`;
+      if ("symbol" == typeof r3) return r3.toString();
+      if ("function" == typeof r3) return r3.name ? `function ${r3.name}` : "anonymous function";
+      try {
+        return (_a = JSON.stringify(r3)) != null ? _a : Object.prototype.toString.call(r3);
+      } catch (e5) {
+        try {
+          return String(r3);
+        } catch (e6) {
+          return Object.prototype.toString.call(r3);
+        }
+      }
+    })(r2);
+    return t4.length > 100 ? `${t4.slice(0, 100)}...` : t4;
+  }
+  var n = class extends s2 {
+    constructor(r2, t4, n3, o4, u3, a3, i) {
+      super(`${r2}: Expected ${n3}${t4 ? ` for ${t4}` : ""}, got ${e(o4)}.`, u3, a3, i);
+      __publicField(this, "name", "EvaluatorParameterTypeError");
+      __publicField(this, "errorType", _.EVALUATOR_TYPE);
+      __publicField(this, "funcName");
+      __publicField(this, "paramName");
+      __publicField(this, "expected");
+      __publicField(this, "actual");
+      (this.funcName = r2, this.paramName = t4, this.expected = n3, this.actual = o4);
+    }
+  };
+  var u = class extends n {
+    constructor(r2, t4, e5, n3, o4, u3, a3) {
+      super(e5, n3, (function (r3) {
+        if ("string" == typeof r3) return r3;
+        const {min: t5, max: e6, integer: n4 = true} = r3, o5 = n4 ? "integer" : "number";
+        return void 0 !== t5 && void 0 !== e6 ? `${o5} \u2208 [${t5}, ${e6}]` : void 0 !== t5 ? `${o5} \u2265 ${t5}` : void 0 !== e6 ? `${o5} \u2264 ${e6}` : o5;
+      })(t4), r2, o4, u3, a3);
+      __publicField(this, "name", "EvaluatorNumberRangeError");
+    }
+  };
+  init_define_process();
+  init_define_process();
+  var e2 = class extends s2 {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "name", "EvaluatorRuntimeError");
+      __publicField(this, "errorType", _.EVALUATOR_RUNTIME);
+    }
+  };
+  init_define_process();
+  init_define_process();
+  init_define_process();
+  function p(r2, o4, t4, n3 = true) {
+    return "number" == typeof r2 && !Number.isNaN(r2) && (!(n3 && !Number.isInteger(r2)) && (!(void 0 !== o4 && r2 < o4) && !(void 0 !== t4 && r2 > t4)));
+  }
+  function l(o4, t4, n3, e5, i = true, u3) {
+    if (!p(o4, n3, e5, i)) throw new u(o4, {
+      min: n3,
+      max: e5,
+      integer: i
+    }, t4, u3);
+  }
+  init_define_process();
+  init_define_process();
+  init_define_process();
+  var R;
+  !(function (R2) {
+    (R2[R2.CALL = 0] = "CALL", R2[R2.RETURN = 1] = "RETURN", R2[R2.RETURN_ERR = 2] = "RETURN_ERR");
+  })(R || (R = {}));
+  init_define_process();
+  var O;
+  !(function (O2) {
+    (O2[O2.PROTOCOL_VERSION = 0] = "PROTOCOL_VERSION", O2[O2.PROTOCOL_MIN_VERSION = 0] = "PROTOCOL_MIN_VERSION", O2[O2.SETUP_MESSAGES_BUFFER_SIZE = 10] = "SETUP_MESSAGES_BUFFER_SIZE");
+  })(O || (O = {}));
+  var o3 = class {
+    constructor(t4, o4, s5) {
+      __publicField(this, "exports", []);
+      __publicField(this, "exportedNames", []);
+      __publicField(this, "evaluator");
+      this.evaluator = s5;
+    }
+    initialise() {
+      return __async(this, null, function* () {
+        for (const o4 of this.exportedNames) {
+          const s5 = this[o4];
+          if (!s5.signature || "function" != typeof s5 || "string" != typeof o4) throw new s(`'${String(o4)}' is not an exportable method`);
+          const r2 = s5.bind(this);
+          (r2.signature = s5.signature, s5.sync && (r2.sync = s5.sync.bind(this)));
+          const i = yield this.evaluator.closure_make(s5.signature, r2);
+          this.exports.push({
+            symbol: o4,
+            value: i,
+            signature: s5.signature
+          });
+        }
+      });
+    }
+  };
+  __publicField(o3, "channelAttach");
+  init_define_process();
+  init_define_process();
+  var E;
+  !(function (E2) {
+    (E2[E2.VOID = 0] = "VOID", E2[E2.BOOLEAN = 1] = "BOOLEAN", E2[E2.NUMBER = 2] = "NUMBER", E2[E2.CONST_STRING = 3] = "CONST_STRING", E2[E2.EMPTY_LIST = 4] = "EMPTY_LIST", E2[E2.PAIR = 5] = "PAIR", E2[E2.ARRAY = 6] = "ARRAY", E2[E2.CLOSURE = 7] = "CLOSURE", E2[E2.OPAQUE = 8] = "OPAQUE", E2[E2.LIST = 9] = "LIST", E2[E2.ANY = 10] = "ANY", E2[E2.INTEGER = 11] = "INTEGER");
+  })(E || (E = {}));
+  init_define_process();
+  init_define_process();
+  var a2;
+  !(function (a3) {
+    (a3[a3.HELLO = 0] = "HELLO", a3[a3.ABORT = 1] = "ABORT", a3[a3.ENTRY = 2] = "ENTRY");
+  })(a2 || (a2 = {}));
+  init_define_process();
+  init_define_process();
+  var N;
+  !(function (N2) {
+    (N2[N2.ONLINE = 0] = "ONLINE", N2[N2.EVAL_READY = 1] = "EVAL_READY", N2[N2.RUNNING = 2] = "RUNNING", N2[N2.WAITING = 3] = "WAITING", N2[N2.BREAKPOINT = 4] = "BREAKPOINT", N2[N2.STOPPED = 5] = "STOPPED", N2[N2.ERROR = 6] = "ERROR");
+  })(N || (N = {}));
+  init_define_process();
+  function attachModuleMethod(clss, methodName, args, returnType) {
+    const method = clss.prototype[methodName];
+    if (method === void 0) {
+      throw new Error(`Rune module method "${String(methodName)}" does not exist.`);
+    }
+    method.signature = {
+      args,
+      returnType
+    };
+  }
+  init_define_process();
+  var import_modeling = __toESM(require_src(), 1);
+  var import_colors = __toESM(require_colors(), 1);
+  var import_measurements = __toESM(require_measurements(), 1);
+  var import_booleans = __toESM(require_booleans(), 1);
+  var import_extrusions = __toESM(require_extrusions(), 1);
+  var import_stl_serializer = __toESM(require_stl_serializer(), 1);
   init_define_process();
   var import_geom3 = __toESM(require_geom3(), 1);
   var import_mat4 = __toESM(require_mat4(), 1);
   var import_transforms = __toESM(require_transforms(), 1);
-  init_define_process();
-  init_define_process();
-  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
-  var import_base = __require("js-slang/dist/errors/base");
-  var import_rttc = __require("js-slang/dist/utils/rttc");
-  var import_operators = __require("js-slang/dist/utils/operators");
-  function degreesToRadians(degrees) {
-    return degrees / 360 * (2 * Math.PI);
-  }
-  function hexToColor(hex, func_name) {
-    func_name = func_name !== null && func_name !== void 0 ? func_name : hexToColor.name;
-    if (typeof hex !== "string") {
-      throw new import_rttcErrors.InvalidParameterTypeError("string", hex, func_name);
-    }
-    const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
-    const groups = regex.exec(hex);
-    if (!groups) {
-      throw new import_base.GeneralRuntimeError(`${func_name}: Invalid color hex string: ${hex}`);
-    }
-    ;
-    return [parseInt(groups[1], 16) / 255, parseInt(groups[2], 16) / 255, parseInt(groups[3], 16) / 255];
-  }
   var Group = class _Group {
     constructor(_children, transforms = import_mat4.default.create()) {
       this.transforms = transforms;
@@ -26597,10 +26151,10 @@ endfacet`;
       const appliedTransforms = import_mat4.default.multiply(import_mat4.default.create(), newTransforms, this.transforms);
       return new _Group(this.children, appliedTransforms);
     }
-    store(newTransforms = import_mat4.default.create()) {
+    store(manager, newTransforms = import_mat4.default.create()) {
       const appliedGroup = this.applyTransforms(newTransforms);
       this.children.forEach(child => {
-        child.store(appliedGroup.transforms);
+        child.store(manager, appliedGroup.transforms);
       });
     }
     translate(offsets) {
@@ -26629,8 +26183,8 @@ endfacet`;
     applyTransforms(newTransforms) {
       return new _Shape((0, import_geom3.transform)(newTransforms, this.solid));
     }
-    store(newTransforms = import_mat4.default.create()) {
-      Core.getRenderGroupManager().storeShape(this.applyTransforms(newTransforms));
+    store(manager, newTransforms = import_mat4.default.create()) {
+      manager.storeShape(this.applyTransforms(newTransforms));
     }
     translate(offsets) {
       return new _Shape((0, import_transforms.translate)(offsets, this.solid));
@@ -26687,30 +26241,25 @@ endfacet`;
       return this.renderGroups.filter(renderGroup => renderGroup.render);
     }
   };
-  var CsgModuleState = class {
-    constructor() {
-      this.componentCounter = 0;
-      this.renderGroupManager = new RenderGroupManager();
-    }
-    nextComponent() {
-      return ++this.componentCounter;
-    }
-  };
   function centerPrimitive(shape) {
     const solid = (0, import_transforms.center)({
       relativeTo: [0.5, 0.5, 0.5]
     }, shape.solid);
     return new Shape(solid);
   }
-  init_define_process();
-  var import_modeling = __toESM(require_src(), 1);
-  var import_colors = __toESM(require_colors(), 1);
-  var import_measurements = __toESM(require_measurements(), 1);
-  var import_booleans = __toESM(require_booleans(), 1);
-  var import_extrusions = __toESM(require_extrusions(), 1);
-  var import_stl_serializer = __toESM(require_stl_serializer(), 1);
-  var import_list = __require("js-slang/dist/stdlib/list");
-  var import_save_file = __toESM(require_browser(), 1);
+  function degreesToRadians(degrees) {
+    return degrees / 360 * (2 * Math.PI);
+  }
+  function hexToColor(hex, funcName = hexToColor.name) {
+    if (typeof hex !== "string") {
+      throw new n(funcName, void 0, "string", hex);
+    }
+    const match = (/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu).exec(hex);
+    if (!match) {
+      throw new e2(`${funcName}: Invalid color hex string: ${hex}`);
+    }
+    return [parseInt(match[1], 16) / 255, parseInt(match[2], 16) / 255, parseInt(match[3], 16) / 255];
+  }
   var black = "#000000";
   var navy = "#0000AA";
   var green = "#00AA00";
@@ -26823,30 +26372,30 @@ endfacet`;
   }
   function union(first, second) {
     if (!is_shape(first)) {
-      throw new import_rttcErrors.InvalidParameterTypeError("Shape", first, union.name, "first");
+      throw new n(union.name, "first", "Shape", first);
     }
     if (!is_shape(second)) {
-      throw new import_rttcErrors.InvalidParameterTypeError("Shape", second, union.name, "second");
+      throw new n(union.name, "second", "Shape", second);
     }
     const solid = (0, import_booleans.union)(first.solid, second.solid);
     return new Shape(solid);
   }
   function subtract(target, subtractedShape) {
     if (!is_shape(target)) {
-      throw new import_rttcErrors.InvalidParameterTypeError("Shape", target, subtract.name, "target");
+      throw new n(subtract.name, "target", "Shape", target);
     }
     if (!is_shape(subtractedShape)) {
-      throw new import_rttcErrors.InvalidParameterTypeError("Shape", subtractedShape, subtract.name, "subtractedShape");
+      throw new n(subtract.name, "subtractedShape", "Shape", subtractedShape);
     }
     const solid = (0, import_booleans.subtract)(target.solid, subtractedShape.solid);
     return new Shape(solid);
   }
   function intersect(first, second) {
     if (!is_shape(first)) {
-      throw new import_rttcErrors.InvalidParameterTypeError("Shape", first, intersect.name, "first");
+      throw new n(intersect.name, "first", "Shape", first);
     }
     if (!is_shape(second)) {
-      throw new import_rttcErrors.InvalidParameterTypeError("Shape", second, intersect.name, "second");
+      throw new n(intersect.name, "second", "Shape", second);
     }
     const solid = (0, import_booleans.intersect)(first.solid, second.solid);
     return new Shape(solid);
@@ -26858,22 +26407,24 @@ endfacet`;
     return operable.rotate([xAngle, yAngle, zAngle]);
   }
   function scale(operable, xFactor, yFactor, zFactor) {
-    (0, import_rttc.assertNumberWithinRange)(xFactor, scale.name, 0, void 0, false, "xFactor");
-    (0, import_rttc.assertNumberWithinRange)(yFactor, scale.name, 0, void 0, false, "yFactor");
-    (0, import_rttc.assertNumberWithinRange)(zFactor, scale.name, 0, void 0, false, "zFactor");
+    l(xFactor, scale.name, 0, void 0, false, "xFactor");
+    l(yFactor, scale.name, 0, void 0, false, "yFactor");
+    l(zFactor, scale.name, 0, void 0, false, "zFactor");
     return operable.scale([xFactor, yFactor, zFactor]);
   }
   function group(operables) {
-    if (!(0, import_list.is_list)(operables)) {
-      throw new import_rttcErrors.InvalidParameterTypeError("list of Operables", operables, group.name);
-    }
-    return new Group((0, import_list.list_to_vector)(operables));
+    operables.forEach(operable => {
+      if (!(is_shape(operable) || is_group(operable))) {
+        throw new n(group.name, void 0, "list of Operables", operable);
+      }
+    });
+    return new Group(operables);
   }
   function ungroup(g) {
     if (!is_group(g)) {
-      throw new import_rttcErrors.InvalidParameterTypeError("Group", g, ungroup.name);
+      throw new n(ungroup.name, void 0, "Group", g);
     }
-    return (0, import_list.vector_to_list)(g.ungroup());
+    return g.ungroup();
   }
   function is_shape(parameter) {
     return parameter instanceof Shape;
@@ -26902,7 +26453,7 @@ endfacet`;
             break;
           }
         default:
-          throw new import_rttcErrors.InvalidParameterTypeError('"x", "y" or "z"', axis, "BoundingBox");
+          throw new n("BoundingBox", void 0, '"x", "y" or "z"', axis);
       }
       let i;
       switch (minMax) {
@@ -26917,57 +26468,384 @@ endfacet`;
             break;
           }
         default:
-          throw new import_rttcErrors.InvalidParameterTypeError('"min" or "max"', minMax, "BoundingBox");
+          throw new n("BoundingBox", void 0, '"min" or "max"', minMax);
       }
       return bounds[i][j];
     };
   }
   function rgb(redValue, greenValue, blueValue) {
-    (0, import_rttc.assertNumberWithinRange)(redValue, rgb.name, 0, 255, true, "redValue");
-    (0, import_rttc.assertNumberWithinRange)(blueValue, rgb.name, 0, 255, true, "blueValue");
-    (0, import_rttc.assertNumberWithinRange)(greenValue, rgb.name, 0, 255, true, "greenValue");
+    l(redValue, rgb.name, 0, 255, true, "redValue");
+    l(blueValue, rgb.name, 0, 255, true, "blueValue");
+    l(greenValue, rgb.name, 0, 255, true, "greenValue");
     return `#${redValue.toString(16)}${greenValue.toString(16)}${blueValue.toString(16)}`;
   }
-  function download_shape_stl(shape) {
-    return __async(this, null, function* () {
-      if (!is_shape(shape)) {
-        throw new import_rttcErrors.InvalidParameterTypeError("Shape", shape, download_shape_stl.name);
+  function serializeShapeStl(shape, funcName) {
+    if (!is_shape(shape)) {
+      throw new n(funcName, void 0, "Shape", shape);
+    }
+    return (0, import_stl_serializer.serialize)({
+      binary: true
+    }, shape.solid);
+  }
+  init_define_process();
+  var CSG_CHANNEL_ID = "sourceacademy-csg-channel";
+  var CSG_TAB_NAME = "Csg";
+  function serializeColor(color) {
+    return color === void 0 ? void 0 : Array.from(color);
+  }
+  function serializeSolid(solid) {
+    const serialized = {
+      polygons: solid.polygons.map(polygon => {
+        const serializedPolygon = {
+          vertices: polygon.vertices.map(vertex => Array.from(vertex))
+        };
+        const color2 = serializeColor(polygon.color);
+        if (color2 !== void 0) serializedPolygon.color = color2;
+        return serializedPolygon;
+      }),
+      transforms: Array.from(solid.transforms)
+    };
+    const color = serializeColor(solid.color);
+    if (color !== void 0) serialized.color = color;
+    return serialized;
+  }
+  var STL_FILENAME = "Source Academy CSG Shape.stl";
+  var _CsgModulePlugin = class _CsgModulePlugin extends o3 {
+    constructor(conduit, [csgChannel], evaluator, tabLoader) {
+      if (!csgChannel) {
+        throw new e2("CSG channel is required but was not provided.");
       }
-      yield (0, import_save_file.default)(new Blob((0, import_stl_serializer.serialize)({
-        binary: true
-      }, shape.solid)), "Source Academy CSG Shape.stl");
-    });
-  }
-  function render(operable) {
-    if (!(operable instanceof Shape || operable instanceof Group)) {
-      throw new import_rttcErrors.InvalidParameterTypeError("Operable", operable, render.name);
+      super(conduit, [csgChannel], evaluator);
+      this.id = "csg";
+      this.exportedNames = ["bounding_box", "cone", "cube", "cylinder", "download_shape_stl", "empty_shape", "geodesic_sphere", "group", "intersect", "is_group", "is_shape", "prism", "pyramid", "render", "render_axes", "render_grid", "render_grid_axes", "rgb", "rotate", "rounded_cube", "rounded_cylinder", "scale", "sphere", "star", "subtract", "torus", "translate", "ungroup", "union"];
+      this.__displayed = [];
+      this.__renderGroupManager = new RenderGroupManager();
+      this.__tabLoaded = false;
+      this.__tabRequested = false;
+      this.__initialised = false;
+      this.__csgChannel = csgChannel;
+      this.__tabLoader = tabLoader;
+      this.__csgChannel.subscribe(message => {
+        if (message.type === "request") {
+          this.__tabRequested = true;
+          this.__displayed.forEach(displayedMessage => this.__csgChannel.send(displayedMessage));
+          this.__displayed = this.__displayed.filter(displayedMessage => displayedMessage.type === "render");
+        }
+      });
     }
-    operable.store();
-    return Core.getRenderGroupManager().nextRenderGroup();
-  }
-  function render_grid(operable) {
-    if (!(operable instanceof Shape || operable instanceof Group)) {
-      throw new import_rttcErrors.InvalidParameterTypeError("Operable", operable, render.name);
+    initialise() {
+      return __async(this, null, function* () {
+        if (this.__initialised) return;
+        this.__initialised = true;
+        yield __superGet(_CsgModulePlugin.prototype, this, "initialise").call(this);
+        for (const [name, value] of Object.entries(CSG_COLORS)) {
+          this[name] = value;
+          this.exports.push({
+            symbol: name,
+            value: {
+              type: E.CONST_STRING,
+              value
+            }
+          });
+        }
+      });
     }
-    operable.store();
-    return Core.getRenderGroupManager().nextRenderGroup(true);
-  }
-  function render_axes(operable) {
-    if (!(operable instanceof Shape || operable instanceof Group)) {
-      throw new import_rttcErrors.InvalidParameterTypeError("Operable", operable, render.name);
+    __loadCsgTab() {
+      if (this.__tabLoaded || this.__tabLoader === void 0) return;
+      const tabName = this.__tabLoader.tabs.find(tab => tab === CSG_TAB_NAME);
+      if (tabName === void 0) return;
+      this.__tabLoader.loadTab(tabName);
+      this.__tabLoaded = true;
     }
-    operable.store();
-    return Core.getRenderGroupManager().nextRenderGroup(void 0, true);
-  }
-  function render_grid_axes(operable) {
-    if (!(operable instanceof Shape || operable instanceof Group)) {
-      throw new import_rttcErrors.InvalidParameterTypeError("Operable", operable, render.name);
+    __display(message) {
+      if (message.type === "render" || !this.__tabRequested) {
+        this.__displayed.push(message);
+      }
+      this.__loadCsgTab();
+      if (this.__tabRequested) {
+        this.__csgChannel.send(message);
+      }
     }
-    operable.store();
-    return Core.getRenderGroupManager().nextRenderGroup(true, true);
-  }
-  var moduleState = new CsgModuleState();
-  import_context.default.moduleContexts.csg.state = moduleState;
-  Core.initialize(moduleState);
+    __getOperable(operable, funcName) {
+      return __async(this, null, function* () {
+        const value = yield this.evaluator.opaque_get(operable);
+        if (!(value instanceof Shape || value instanceof Group)) {
+          throw new n(funcName, void 0, "Operable", value);
+        }
+        return value;
+      });
+    }
+    __getShape(shape, funcName, paramName) {
+      return __async(this, null, function* () {
+        const value = yield this.evaluator.opaque_get(shape);
+        if (!(value instanceof Shape)) {
+          throw new n(funcName, paramName, "Shape", value);
+        }
+        return value;
+      });
+    }
+    __makeOperable(operable) {
+      return __async(this, null, function* () {
+        return yield this.evaluator.opaque_make(operable, true);
+      });
+    }
+    __render(operable, funcName, hasGrid, hasAxis) {
+      return __async(this, null, function* () {
+        const value = yield this.__getOperable(operable, funcName);
+        value.store(this.__renderGroupManager);
+        const renderGroup = this.__renderGroupManager.nextRenderGroup(hasGrid, hasAxis);
+        this.__display({
+          type: "render",
+          solids: renderGroup.shapes.map(shape => serializeSolid(shape.solid)),
+          hasGrid: renderGroup.hasGrid,
+          hasAxis: renderGroup.hasAxis
+        });
+        return yield this.evaluator.opaque_make(renderGroup, true);
+      });
+    }
+    empty_shape() {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(empty_shape()));
+      });
+    }
+    cube(hex) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(cube(hex.value)));
+      });
+    }
+    rounded_cube(hex) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(rounded_cube(hex.value)));
+      });
+    }
+    cylinder(hex) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(cylinder(hex.value)));
+      });
+    }
+    rounded_cylinder(hex) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(rounded_cylinder(hex.value)));
+      });
+    }
+    sphere(hex) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(sphere(hex.value)));
+      });
+    }
+    geodesic_sphere(hex) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(geodesic_sphere(hex.value)));
+      });
+    }
+    pyramid(hex) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(pyramid(hex.value)));
+      });
+    }
+    cone(hex) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(cone(hex.value)));
+      });
+    }
+    prism(hex) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(prism(hex.value)));
+      });
+    }
+    star(hex) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(star(hex.value)));
+      });
+    }
+    torus(hex) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(torus(hex.value)));
+      });
+    }
+    union(first, second) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(union(yield new __await(this.__getShape(first, union.name, "first")), yield new __await(this.__getShape(second, union.name, "second")))));
+      });
+    }
+    subtract(target, subtractedShape) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(subtract(yield new __await(this.__getShape(target, subtract.name, "target")), yield new __await(this.__getShape(subtractedShape, subtract.name, "subtractedShape")))));
+      });
+    }
+    intersect(first, second) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(intersect(yield new __await(this.__getShape(first, intersect.name, "first")), yield new __await(this.__getShape(second, intersect.name, "second")))));
+      });
+    }
+    translate(operable, xOffset, yOffset, zOffset) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(translate(yield new __await(this.__getOperable(operable, translate.name)), xOffset.value, yOffset.value, zOffset.value)));
+      });
+    }
+    rotate(operable, xAngle, yAngle, zAngle) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(rotate(yield new __await(this.__getOperable(operable, rotate.name)), xAngle.value, yAngle.value, zAngle.value)));
+      });
+    }
+    scale(operable, xFactor, yFactor, zFactor) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__makeOperable(scale(yield new __await(this.__getOperable(operable, scale.name)), xFactor.value, yFactor.value, zFactor.value)));
+      });
+    }
+    group(operables) {
+      return __asyncGenerator(this, null, function* () {
+        const elements = yield new __await(this.evaluator.list_to_vec(operables));
+        const unwrapped = [];
+        for (const element of elements) {
+          if (element.type !== E.OPAQUE) {
+            throw new n(group.name, void 0, "list of Operables", element);
+          }
+          unwrapped.push(yield new __await(this.__getOperable(element, group.name)));
+        }
+        return yield new __await(this.__makeOperable(group(unwrapped)));
+      });
+    }
+    ungroup(g) {
+      return __asyncGenerator(this, null, function* () {
+        const value = yield new __await(this.evaluator.opaque_get(g));
+        if (!(value instanceof Group)) {
+          throw new n(ungroup.name, void 0, "Group", value);
+        }
+        const children = yield new __await(Promise.all(ungroup(value).map(child => this.__makeOperable(child))));
+        return yield new __await(this.evaluator.list(...children));
+      });
+    }
+    is_shape(parameter) {
+      return __asyncGenerator(this, null, function* () {
+        return {
+          type: E.BOOLEAN,
+          value: is_shape(yield new __await(this.__peekOpaque(parameter)))
+        };
+      });
+    }
+    is_group(parameter) {
+      return __asyncGenerator(this, null, function* () {
+        return {
+          type: E.BOOLEAN,
+          value: is_group(yield new __await(this.__peekOpaque(parameter)))
+        };
+      });
+    }
+    __peekOpaque(parameter) {
+      return __async(this, null, function* () {
+        if (parameter === void 0 || parameter.type !== E.OPAQUE) return parameter == null ? void 0 : parameter.value;
+        return yield this.evaluator.opaque_get(parameter);
+      });
+    }
+    bounding_box(shape) {
+      return __asyncGenerator(this, null, function* () {
+        const getter = bounding_box(yield new __await(this.__getShape(shape, bounding_box.name)));
+        return yield new __await(this.evaluator.closure_make({
+          returnType: E.NUMBER,
+          args: [E.CONST_STRING, E.CONST_STRING]
+        }, function (axis, minMax) {
+          return __asyncGenerator(this, null, function* () {
+            return {
+              type: E.NUMBER,
+              value: getter(axis.value, minMax.value)
+            };
+          });
+        }));
+      });
+    }
+    rgb(redValue, greenValue, blueValue) {
+      return __asyncGenerator(this, null, function* () {
+        return {
+          type: E.CONST_STRING,
+          value: rgb(redValue.value, greenValue.value, blueValue.value)
+        };
+      });
+    }
+    download_shape_stl(shape) {
+      return __asyncGenerator(this, null, function* () {
+        const funcName = "download_shape_stl";
+        const value = yield new __await(this.__getShape(shape, funcName));
+        this.__display({
+          type: "download",
+          filename: STL_FILENAME,
+          data: serializeShapeStl(value, funcName)
+        });
+        return {
+          type: E.VOID,
+          value: void 0
+        };
+      });
+    }
+    render(operable) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__render(operable, "render", false, false));
+      });
+    }
+    render_grid(operable) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__render(operable, "render_grid", true, false));
+      });
+    }
+    render_axes(operable) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__render(operable, "render_axes", false, true));
+      });
+    }
+    render_grid_axes(operable) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.__render(operable, "render_grid_axes", true, true));
+      });
+    }
+  };
+  _CsgModulePlugin.channelAttach = [CSG_CHANNEL_ID];
+  var CsgModulePlugin = _CsgModulePlugin;
+  attachModuleMethod(CsgModulePlugin, "bounding_box", [E.OPAQUE], E.CLOSURE);
+  attachModuleMethod(CsgModulePlugin, "cone", [E.CONST_STRING], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "cube", [E.CONST_STRING], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "cylinder", [E.CONST_STRING], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "download_shape_stl", [E.OPAQUE], E.VOID);
+  attachModuleMethod(CsgModulePlugin, "empty_shape", [], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "geodesic_sphere", [E.CONST_STRING], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "group", [E.LIST], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "intersect", [E.OPAQUE, E.OPAQUE], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "is_group", [E.ANY], E.BOOLEAN);
+  attachModuleMethod(CsgModulePlugin, "is_shape", [E.ANY], E.BOOLEAN);
+  attachModuleMethod(CsgModulePlugin, "prism", [E.CONST_STRING], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "pyramid", [E.CONST_STRING], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "render", [E.OPAQUE], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "render_axes", [E.OPAQUE], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "render_grid", [E.OPAQUE], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "render_grid_axes", [E.OPAQUE], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "rgb", [E.NUMBER, E.NUMBER, E.NUMBER], E.CONST_STRING);
+  attachModuleMethod(CsgModulePlugin, "rotate", [E.OPAQUE, E.NUMBER, E.NUMBER, E.NUMBER], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "rounded_cube", [E.CONST_STRING], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "rounded_cylinder", [E.CONST_STRING], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "scale", [E.OPAQUE, E.NUMBER, E.NUMBER, E.NUMBER], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "sphere", [E.CONST_STRING], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "star", [E.CONST_STRING], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "subtract", [E.OPAQUE, E.OPAQUE], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "torus", [E.CONST_STRING], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "translate", [E.OPAQUE, E.NUMBER, E.NUMBER, E.NUMBER], E.OPAQUE);
+  attachModuleMethod(CsgModulePlugin, "ungroup", [E.OPAQUE], E.LIST);
+  attachModuleMethod(CsgModulePlugin, "union", [E.OPAQUE, E.OPAQUE], E.OPAQUE);
+  var CSG_COLORS = {
+    black,
+    navy,
+    green,
+    teal,
+    crimson,
+    purple,
+    orange,
+    silver,
+    gray,
+    blue,
+    lime,
+    cyan,
+    rose,
+    pink,
+    yellow,
+    white
+  };
   return __toCommonJS(index_exports);
 };

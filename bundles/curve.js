@@ -1,12 +1,20 @@
 export default require => {
-  var __create = Object.create;
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
-  var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __knownSymbol = (name, symbol) => (symbol = Symbol[name]) ? symbol : Symbol.for("Symbol." + name);
+  var __typeError = msg => {
+    throw TypeError(msg);
+  };
+  var __defNormalProp = (obj, key, value) => (key in obj) ? __defProp(obj, key, {
+    enumerable: true,
+    configurable: true,
+    writable: true,
+    value
+  }) : obj[key] = value;
   var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+    get: (a3, b) => (typeof require !== "undefined" ? require : a3)[b]
   }) : x)(function (x) {
     if (typeof require !== "undefined") return require.apply(this, arguments);
     throw Error('Dynamic require of "' + x + '" is not supported');
@@ -26,96 +34,235 @@ export default require => {
     }
     return to;
   };
-  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
-    value: mod,
-    enumerable: true
-  }) : target, mod));
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
-  var __decorateClass = (decorators, target, key, kind) => {
-    var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
-    for (var i = decorators.length - 1, decorator; i >= 0; i--) if (decorator = decorators[i]) result = (kind ? decorator(target, key, result) : decorator(result)) || result;
-    if (kind && result) __defProp(target, key, result);
-    return result;
+  var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  var __async = (__this, __arguments, generator) => {
+    return new Promise((resolve, reject) => {
+      var fulfilled = value => {
+        try {
+          step(generator.next(value));
+        } catch (e5) {
+          reject(e5);
+        }
+      };
+      var rejected = value => {
+        try {
+          step(generator.throw(value));
+        } catch (e5) {
+          reject(e5);
+        }
+      };
+      var step = x => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+      step((generator = generator.apply(__this, __arguments)).next());
+    });
+  };
+  var __await = function (promise, isYieldStar) {
+    this[0] = promise;
+    this[1] = isYieldStar;
+  };
+  var __asyncGenerator = (__this, __arguments, generator) => {
+    var resume = (k, v, yes, no) => {
+      try {
+        var x = generator[k](v), isAwait = (v = x.value) instanceof __await, done = x.done;
+        Promise.resolve(isAwait ? v[0] : v).then(y => isAwait ? resume(k === "return" ? k : "next", v[1] ? {
+          done: y.done,
+          value: y.value
+        } : y, yes, no) : yes({
+          value: y,
+          done
+        })).catch(e5 => resume("throw", e5, yes, no));
+      } catch (e5) {
+        no(e5);
+      }
+    }, method = (k, call, wait, clear) => it[k] = x => (call = new Promise((yes, no, run) => (run = () => resume(k, x, yes, no), q ? q.then(run) : run())), clear = () => q === wait && (q = 0), q = wait = call.then(clear, clear), call), q, it = {};
+    return (generator = generator.apply(__this, __arguments), it[__knownSymbol("asyncIterator")] = () => it, method("next"), method("throw"), method("return"), it);
+  };
+  var __yieldStar = value => {
+    var obj = value[__knownSymbol("asyncIterator")], isAwait = false, method, it = {};
+    if (obj == null) {
+      obj = value[__knownSymbol("iterator")]();
+      method = k => it[k] = x => obj[k](x);
+    } else {
+      obj = obj.call(value);
+      method = k => it[k] = v => {
+        if (isAwait) {
+          isAwait = false;
+          if (k === "throw") throw v;
+          return v;
+        }
+        isAwait = true;
+        return {
+          done: false,
+          value: new __await(new Promise(resolve => {
+            var x = obj[k](v);
+            if (!(x instanceof Object)) __typeError("Object expected");
+            resolve(x);
+          }), 1)
+        };
+      };
+    }
+    return (it[__knownSymbol("iterator")] = () => it, method("next"), ("throw" in obj) ? method("throw") : it.throw = x => {
+      throw x;
+    }, ("return" in obj) && method("return"), it);
   };
   var index_exports = {};
   __export(index_exports, {
-    animate_3D_curve: () => animate_3D_curve,
-    animate_curve: () => animate_curve,
-    arc: () => arc,
-    b_of: () => b_of,
-    compose: () => compose,
-    connect_ends: () => connect_ends,
-    connect_rigidly: () => connect_rigidly,
-    draw_3D_connected: () => draw_3D_connected,
-    draw_3D_connected_full_view: () => draw_3D_connected_full_view,
-    draw_3D_connected_full_view_proportional: () => draw_3D_connected_full_view_proportional,
-    draw_3D_points: () => draw_3D_points,
-    draw_3D_points_full_view: () => draw_3D_points_full_view,
-    draw_3D_points_full_view_proportional: () => draw_3D_points_full_view_proportional,
-    draw_connected: () => draw_connected,
-    draw_connected_full_view: () => draw_connected_full_view,
-    draw_connected_full_view_proportional: () => draw_connected_full_view_proportional,
-    draw_points: () => draw_points,
-    draw_points_full_view: () => draw_points_full_view,
-    draw_points_full_view_proportional: () => draw_points_full_view_proportional,
-    g_of: () => g_of,
-    invert: () => invert2,
-    make_3D_color_point: () => make_3D_color_point,
-    make_3D_point: () => make_3D_point,
-    make_color_point: () => make_color_point,
-    make_point: () => make_point,
-    put_in_standard_position: () => put_in_standard_position,
-    r_of: () => r_of,
-    rainbow: () => rainbow,
-    rotate_around_origin: () => rotate_around_origin,
-    rotate_around_origin_3D: () => rotate_around_origin_3D,
-    scale: () => scale3,
-    scale_proportional: () => scale_proportional,
-    translate: () => translate2,
-    type_map: () => type_map,
-    unit_circle: () => unit_circle,
-    unit_line: () => unit_line,
-    unit_line_at: () => unit_line_at,
-    x_of: () => x_of,
-    y_of: () => y_of,
-    z_of: () => z_of
+    default: () => CurveModulePlugin
   });
-  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
-  var import_base = __require("js-slang/dist/errors/base");
-  var import_rttc = __require("js-slang/dist/utils/rttc");
-  var import_operators = __require("js-slang/dist/utils/operators");
-  function hueToRgb(hue) {
-    const h = (hue % 1 + 1) % 1;
-    const i = Math.floor(h * 6);
-    const f = h * 6 - i;
-    const q = 1 - f;
-    switch (i) {
-      case 0:
-        return [255, Math.floor(f * 255), 0];
-      case 1:
-        return [Math.floor(q * 255), 255, 0];
-      case 2:
-        return [0, 255, Math.floor(f * 255)];
-      case 3:
-        return [0, Math.floor(q * 255), 255];
-      case 4:
-        return [Math.floor(f * 255), 0, 255];
-      default:
-        return [255, 0, Math.floor(q * 255)];
+  var _;
+  !(function (_2) {
+    (_2.UNKNOWN = "__unknown", _2.INTERNAL = "__internal", _2.EVALUATOR = "__evaluator", _2.EVALUATOR_SYNTAX = "__evaluator_syntax", _2.EVALUATOR_TYPE = "__evaluator_type", _2.EVALUATOR_RUNTIME = "__evaluator_runtime");
+  })(_ || (_ = {}));
+  var o = class extends Error {
+    constructor(r2) {
+      super(r2);
+      __publicField(this, "name", "ConductorError");
+      __publicField(this, "errorType", _.UNKNOWN);
     }
+  };
+  var s = class extends o {
+    constructor(r2) {
+      super(r2);
+      __publicField(this, "name", "ConductorInternalError");
+      __publicField(this, "errorType", _.INTERNAL);
+    }
+  };
+  var s2 = class extends o {
+    constructor(r2, o4, s5, e5) {
+      super(`${void 0 !== o4 ? `${e5 ? e5 + ":" : ""}${o4}${void 0 !== s5 ? ":" + s5 : ""}: ` : ""}${r2}`);
+      __publicField(this, "name", "EvaluatorError");
+      __publicField(this, "errorType", _.EVALUATOR);
+      __publicField(this, "rawMessage");
+      __publicField(this, "line");
+      __publicField(this, "column");
+      __publicField(this, "fileName");
+      (this.rawMessage = r2, this.line = o4, this.column = s5, this.fileName = e5);
+    }
+  };
+  function e(r2) {
+    const t4 = (function (r3) {
+      var _a;
+      if ("string" == typeof r3) return JSON.stringify(r3);
+      if ("number" == typeof r3 || "boolean" == typeof r3) return String(r3);
+      if (null === r3) return "null";
+      if (void 0 === r3) return "undefined";
+      if ("bigint" == typeof r3) return `${r3}n`;
+      if ("symbol" == typeof r3) return r3.toString();
+      if ("function" == typeof r3) return r3.name ? `function ${r3.name}` : "anonymous function";
+      try {
+        return (_a = JSON.stringify(r3)) != null ? _a : Object.prototype.toString.call(r3);
+      } catch (e5) {
+        try {
+          return String(r3);
+        } catch (e6) {
+          return Object.prototype.toString.call(r3);
+        }
+      }
+    })(r2);
+    return t4.length > 100 ? `${t4.slice(0, 100)}...` : t4;
   }
-  function clamp(value, bound1, bound2) {
-    if (bound2 == null) return Math.min(value, bound1);
-    return Math.min(Math.max(value, bound1), bound2);
+  var n = class extends s2 {
+    constructor(r2, t4, n3, o4, u3, a3, i) {
+      super(`${r2}: Expected ${n3}${t4 ? ` for ${t4}` : ""}, got ${e(o4)}.`, u3, a3, i);
+      __publicField(this, "name", "EvaluatorParameterTypeError");
+      __publicField(this, "errorType", _.EVALUATOR_TYPE);
+      __publicField(this, "funcName");
+      __publicField(this, "paramName");
+      __publicField(this, "expected");
+      __publicField(this, "actual");
+      (this.funcName = r2, this.paramName = t4, this.expected = n3, this.actual = o4);
+    }
+  };
+  var u = class extends n {
+    constructor(r2, t4, e5, n3, o4, u3, a3) {
+      super(e5, n3, (function (r3) {
+        if ("string" == typeof r3) return r3;
+        const {min: t5, max: e6, integer: n4 = true} = r3, o5 = n4 ? "integer" : "number";
+        return void 0 !== t5 && void 0 !== e6 ? `${o5} \u2208 [${t5}, ${e6}]` : void 0 !== t5 ? `${o5} \u2265 ${t5}` : void 0 !== e6 ? `${o5} \u2264 ${e6}` : o5;
+      })(t4), r2, o4, u3, a3);
+      __publicField(this, "name", "EvaluatorNumberRangeError");
+    }
+  };
+  var e2 = class extends s2 {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "name", "EvaluatorRuntimeError");
+      __publicField(this, "errorType", _.EVALUATOR_RUNTIME);
+    }
+  };
+  function p(r2, o4, t4, n3 = true) {
+    return "number" == typeof r2 && !Number.isNaN(r2) && (!(n3 && !Number.isInteger(r2)) && (!(void 0 !== o4 && r2 < o4) && !(void 0 !== t4 && r2 > t4)));
+  }
+  function l(o4, t4, n3, e5, i = true, u3) {
+    if (!p(o4, n3, e5, i)) throw new u(o4, {
+      min: n3,
+      max: e5,
+      integer: i
+    }, t4, u3);
+  }
+  var R;
+  !(function (R2) {
+    (R2[R2.CALL = 0] = "CALL", R2[R2.RETURN = 1] = "RETURN", R2[R2.RETURN_ERR = 2] = "RETURN_ERR");
+  })(R || (R = {}));
+  var O;
+  !(function (O2) {
+    (O2[O2.PROTOCOL_VERSION = 0] = "PROTOCOL_VERSION", O2[O2.PROTOCOL_MIN_VERSION = 0] = "PROTOCOL_MIN_VERSION", O2[O2.SETUP_MESSAGES_BUFFER_SIZE = 10] = "SETUP_MESSAGES_BUFFER_SIZE");
+  })(O || (O = {}));
+  var o3 = class {
+    constructor(t4, o4, s5) {
+      __publicField(this, "exports", []);
+      __publicField(this, "exportedNames", []);
+      __publicField(this, "evaluator");
+      this.evaluator = s5;
+    }
+    initialise() {
+      return __async(this, null, function* () {
+        for (const o4 of this.exportedNames) {
+          const s5 = this[o4];
+          if (!s5.signature || "function" != typeof s5 || "string" != typeof o4) throw new s(`'${String(o4)}' is not an exportable method`);
+          const r2 = s5.bind(this);
+          (r2.signature = s5.signature, s5.sync && (r2.sync = s5.sync.bind(this)));
+          const i = yield this.evaluator.closure_make(s5.signature, r2);
+          this.exports.push({
+            symbol: o4,
+            value: i,
+            signature: s5.signature
+          });
+        }
+      });
+    }
+  };
+  __publicField(o3, "channelAttach");
+  var E;
+  !(function (E2) {
+    (E2[E2.VOID = 0] = "VOID", E2[E2.BOOLEAN = 1] = "BOOLEAN", E2[E2.NUMBER = 2] = "NUMBER", E2[E2.CONST_STRING = 3] = "CONST_STRING", E2[E2.EMPTY_LIST = 4] = "EMPTY_LIST", E2[E2.PAIR = 5] = "PAIR", E2[E2.ARRAY = 6] = "ARRAY", E2[E2.CLOSURE = 7] = "CLOSURE", E2[E2.OPAQUE = 8] = "OPAQUE", E2[E2.LIST = 9] = "LIST", E2[E2.ANY = 10] = "ANY", E2[E2.INTEGER = 11] = "INTEGER");
+  })(E || (E = {}));
+  var a2;
+  !(function (a3) {
+    (a3[a3.HELLO = 0] = "HELLO", a3[a3.ABORT = 1] = "ABORT", a3[a3.ENTRY = 2] = "ENTRY");
+  })(a2 || (a2 = {}));
+  var N;
+  !(function (N2) {
+    (N2[N2.ONLINE = 0] = "ONLINE", N2[N2.EVAL_READY = 1] = "EVAL_READY", N2[N2.RUNNING = 2] = "RUNNING", N2[N2.WAITING = 3] = "WAITING", N2[N2.BREAKPOINT = 4] = "BREAKPOINT", N2[N2.STOPPED = 5] = "STOPPED", N2[N2.ERROR = 6] = "ERROR");
+  })(N || (N = {}));
+  function attachModuleMethod(clss, methodName, args, returnType) {
+    const method = clss.prototype[methodName];
+    if (method === void 0) {
+      throw new Error(`Rune module method "${String(methodName)}" does not exist.`);
+    }
+    method.signature = {
+      args,
+      returnType
+    };
   }
   var EPSILON = 1e-6;
   var ARRAY_TYPE = typeof Float32Array !== "undefined" ? Float32Array : Array;
   var RANDOM = Math.random;
-  function round(a) {
-    if (a >= 0) return Math.round(a);
-    return a % 0.5 === 0 ? Math.floor(a) : Math.round(a);
+  function round(a3) {
+    if (a3 >= 0) return Math.round(a3);
+    return a3 % 0.5 === 0 ? Math.floor(a3) : Math.round(a3);
   }
   var degree = Math.PI / 180;
   var radian = 180 / Math.PI;
@@ -196,43 +343,43 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function clone(a) {
+  function clone(a3) {
     var out = new ARRAY_TYPE(16);
-    out[0] = a[0];
-    out[1] = a[1];
-    out[2] = a[2];
-    out[3] = a[3];
-    out[4] = a[4];
-    out[5] = a[5];
-    out[6] = a[6];
-    out[7] = a[7];
-    out[8] = a[8];
-    out[9] = a[9];
-    out[10] = a[10];
-    out[11] = a[11];
-    out[12] = a[12];
-    out[13] = a[13];
-    out[14] = a[14];
-    out[15] = a[15];
+    out[0] = a3[0];
+    out[1] = a3[1];
+    out[2] = a3[2];
+    out[3] = a3[3];
+    out[4] = a3[4];
+    out[5] = a3[5];
+    out[6] = a3[6];
+    out[7] = a3[7];
+    out[8] = a3[8];
+    out[9] = a3[9];
+    out[10] = a3[10];
+    out[11] = a3[11];
+    out[12] = a3[12];
+    out[13] = a3[13];
+    out[14] = a3[14];
+    out[15] = a3[15];
     return out;
   }
-  function copy(out, a) {
-    out[0] = a[0];
-    out[1] = a[1];
-    out[2] = a[2];
-    out[3] = a[3];
-    out[4] = a[4];
-    out[5] = a[5];
-    out[6] = a[6];
-    out[7] = a[7];
-    out[8] = a[8];
-    out[9] = a[9];
-    out[10] = a[10];
-    out[11] = a[11];
-    out[12] = a[12];
-    out[13] = a[13];
-    out[14] = a[14];
-    out[15] = a[15];
+  function copy(out, a3) {
+    out[0] = a3[0];
+    out[1] = a3[1];
+    out[2] = a3[2];
+    out[3] = a3[3];
+    out[4] = a3[4];
+    out[5] = a3[5];
+    out[6] = a3[6];
+    out[7] = a3[7];
+    out[8] = a3[8];
+    out[9] = a3[9];
+    out[10] = a3[10];
+    out[11] = a3[11];
+    out[12] = a3[12];
+    out[13] = a3[13];
+    out[14] = a3[14];
+    out[15] = a3[15];
     return out;
   }
   function fromValues(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
@@ -293,48 +440,48 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function transpose(out, a) {
-    if (out === a) {
-      var a01 = a[1], a02 = a[2], a03 = a[3];
-      var a12 = a[6], a13 = a[7];
-      var a23 = a[11];
-      out[1] = a[4];
-      out[2] = a[8];
-      out[3] = a[12];
+  function transpose(out, a3) {
+    if (out === a3) {
+      var a01 = a3[1], a02 = a3[2], a03 = a3[3];
+      var a12 = a3[6], a13 = a3[7];
+      var a23 = a3[11];
+      out[1] = a3[4];
+      out[2] = a3[8];
+      out[3] = a3[12];
       out[4] = a01;
-      out[6] = a[9];
-      out[7] = a[13];
+      out[6] = a3[9];
+      out[7] = a3[13];
       out[8] = a02;
       out[9] = a12;
-      out[11] = a[14];
+      out[11] = a3[14];
       out[12] = a03;
       out[13] = a13;
       out[14] = a23;
     } else {
-      out[0] = a[0];
-      out[1] = a[4];
-      out[2] = a[8];
-      out[3] = a[12];
-      out[4] = a[1];
-      out[5] = a[5];
-      out[6] = a[9];
-      out[7] = a[13];
-      out[8] = a[2];
-      out[9] = a[6];
-      out[10] = a[10];
-      out[11] = a[14];
-      out[12] = a[3];
-      out[13] = a[7];
-      out[14] = a[11];
-      out[15] = a[15];
+      out[0] = a3[0];
+      out[1] = a3[4];
+      out[2] = a3[8];
+      out[3] = a3[12];
+      out[4] = a3[1];
+      out[5] = a3[5];
+      out[6] = a3[9];
+      out[7] = a3[13];
+      out[8] = a3[2];
+      out[9] = a3[6];
+      out[10] = a3[10];
+      out[11] = a3[14];
+      out[12] = a3[3];
+      out[13] = a3[7];
+      out[14] = a3[11];
+      out[15] = a3[15];
     }
     return out;
   }
-  function invert(out, a) {
-    var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
-    var a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
-    var a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
-    var a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+  function invert(out, a3) {
+    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
+    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
+    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
+    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
     var b00 = a00 * a11 - a01 * a10;
     var b01 = a00 * a12 - a02 * a10;
     var b02 = a00 * a13 - a03 * a10;
@@ -370,11 +517,11 @@ export default require => {
     out[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
     return out;
   }
-  function adjoint(out, a) {
-    var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
-    var a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
-    var a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
-    var a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+  function adjoint(out, a3) {
+    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
+    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
+    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
+    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
     var b00 = a00 * a11 - a01 * a10;
     var b01 = a00 * a12 - a02 * a10;
     var b02 = a00 * a13 - a03 * a10;
@@ -405,11 +552,11 @@ export default require => {
     out[15] = a20 * b03 - a21 * b01 + a22 * b00;
     return out;
   }
-  function determinant(a) {
-    var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
-    var a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
-    var a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
-    var a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+  function determinant(a3) {
+    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
+    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
+    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
+    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
     var b0 = a00 * a11 - a01 * a10;
     var b1 = a00 * a12 - a02 * a10;
     var b2 = a01 * a12 - a02 * a11;
@@ -422,11 +569,11 @@ export default require => {
     var b9 = a30 * b2 - a31 * b1 + a32 * b0;
     return a13 * b6 - a03 * b7 + a33 * b8 - a23 * b9;
   }
-  function multiply(out, a, b) {
-    var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
-    var a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
-    var a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
-    var a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+  function multiply(out, a3, b) {
+    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
+    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
+    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
+    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
     var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
     out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
     out[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
@@ -458,29 +605,29 @@ export default require => {
     out[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
     return out;
   }
-  function translate(out, a, v) {
+  function translate(out, a3, v) {
     var x = v[0], y = v[1], z = v[2];
     var a00, a01, a02, a03;
     var a10, a11, a12, a13;
     var a20, a21, a22, a23;
-    if (a === out) {
-      out[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
-      out[13] = a[1] * x + a[5] * y + a[9] * z + a[13];
-      out[14] = a[2] * x + a[6] * y + a[10] * z + a[14];
-      out[15] = a[3] * x + a[7] * y + a[11] * z + a[15];
+    if (a3 === out) {
+      out[12] = a3[0] * x + a3[4] * y + a3[8] * z + a3[12];
+      out[13] = a3[1] * x + a3[5] * y + a3[9] * z + a3[13];
+      out[14] = a3[2] * x + a3[6] * y + a3[10] * z + a3[14];
+      out[15] = a3[3] * x + a3[7] * y + a3[11] * z + a3[15];
     } else {
-      a00 = a[0];
-      a01 = a[1];
-      a02 = a[2];
-      a03 = a[3];
-      a10 = a[4];
-      a11 = a[5];
-      a12 = a[6];
-      a13 = a[7];
-      a20 = a[8];
-      a21 = a[9];
-      a22 = a[10];
-      a23 = a[11];
+      a00 = a3[0];
+      a01 = a3[1];
+      a02 = a3[2];
+      a03 = a3[3];
+      a10 = a3[4];
+      a11 = a3[5];
+      a12 = a3[6];
+      a13 = a3[7];
+      a20 = a3[8];
+      a21 = a3[9];
+      a22 = a3[10];
+      a23 = a3[11];
       out[0] = a00;
       out[1] = a01;
       out[2] = a02;
@@ -493,37 +640,37 @@ export default require => {
       out[9] = a21;
       out[10] = a22;
       out[11] = a23;
-      out[12] = a00 * x + a10 * y + a20 * z + a[12];
-      out[13] = a01 * x + a11 * y + a21 * z + a[13];
-      out[14] = a02 * x + a12 * y + a22 * z + a[14];
-      out[15] = a03 * x + a13 * y + a23 * z + a[15];
+      out[12] = a00 * x + a10 * y + a20 * z + a3[12];
+      out[13] = a01 * x + a11 * y + a21 * z + a3[13];
+      out[14] = a02 * x + a12 * y + a22 * z + a3[14];
+      out[15] = a03 * x + a13 * y + a23 * z + a3[15];
     }
     return out;
   }
-  function scale(out, a, v) {
+  function scale(out, a3, v) {
     var x = v[0], y = v[1], z = v[2];
-    out[0] = a[0] * x;
-    out[1] = a[1] * x;
-    out[2] = a[2] * x;
-    out[3] = a[3] * x;
-    out[4] = a[4] * y;
-    out[5] = a[5] * y;
-    out[6] = a[6] * y;
-    out[7] = a[7] * y;
-    out[8] = a[8] * z;
-    out[9] = a[9] * z;
-    out[10] = a[10] * z;
-    out[11] = a[11] * z;
-    out[12] = a[12];
-    out[13] = a[13];
-    out[14] = a[14];
-    out[15] = a[15];
+    out[0] = a3[0] * x;
+    out[1] = a3[1] * x;
+    out[2] = a3[2] * x;
+    out[3] = a3[3] * x;
+    out[4] = a3[4] * y;
+    out[5] = a3[5] * y;
+    out[6] = a3[6] * y;
+    out[7] = a3[7] * y;
+    out[8] = a3[8] * z;
+    out[9] = a3[9] * z;
+    out[10] = a3[10] * z;
+    out[11] = a3[11] * z;
+    out[12] = a3[12];
+    out[13] = a3[13];
+    out[14] = a3[14];
+    out[15] = a3[15];
     return out;
   }
-  function rotate(out, a, rad, axis) {
+  function rotate(out, a3, rad, axis) {
     var x = axis[0], y = axis[1], z = axis[2];
     var len2 = Math.sqrt(x * x + y * y + z * z);
-    var s, c, t;
+    var s5, c2, t4;
     var a00, a01, a02, a03;
     var a10, a11, a12, a13;
     var a20, a21, a22, a23;
@@ -537,30 +684,30 @@ export default require => {
     x *= len2;
     y *= len2;
     z *= len2;
-    s = Math.sin(rad);
-    c = Math.cos(rad);
-    t = 1 - c;
-    a00 = a[0];
-    a01 = a[1];
-    a02 = a[2];
-    a03 = a[3];
-    a10 = a[4];
-    a11 = a[5];
-    a12 = a[6];
-    a13 = a[7];
-    a20 = a[8];
-    a21 = a[9];
-    a22 = a[10];
-    a23 = a[11];
-    b00 = x * x * t + c;
-    b01 = y * x * t + z * s;
-    b02 = z * x * t - y * s;
-    b10 = x * y * t - z * s;
-    b11 = y * y * t + c;
-    b12 = z * y * t + x * s;
-    b20 = x * z * t + y * s;
-    b21 = y * z * t - x * s;
-    b22 = z * z * t + c;
+    s5 = Math.sin(rad);
+    c2 = Math.cos(rad);
+    t4 = 1 - c2;
+    a00 = a3[0];
+    a01 = a3[1];
+    a02 = a3[2];
+    a03 = a3[3];
+    a10 = a3[4];
+    a11 = a3[5];
+    a12 = a3[6];
+    a13 = a3[7];
+    a20 = a3[8];
+    a21 = a3[9];
+    a22 = a3[10];
+    a23 = a3[11];
+    b00 = x * x * t4 + c2;
+    b01 = y * x * t4 + z * s5;
+    b02 = z * x * t4 - y * s5;
+    b10 = x * y * t4 - z * s5;
+    b11 = y * y * t4 + c2;
+    b12 = z * y * t4 + x * s5;
+    b20 = x * z * t4 + y * s5;
+    b21 = y * z * t4 - x * s5;
+    b22 = z * z * t4 + c2;
     out[0] = a00 * b00 + a10 * b01 + a20 * b02;
     out[1] = a01 * b00 + a11 * b01 + a21 * b02;
     out[2] = a02 * b00 + a12 * b01 + a22 * b02;
@@ -573,105 +720,105 @@ export default require => {
     out[9] = a01 * b20 + a11 * b21 + a21 * b22;
     out[10] = a02 * b20 + a12 * b21 + a22 * b22;
     out[11] = a03 * b20 + a13 * b21 + a23 * b22;
-    if (a !== out) {
-      out[12] = a[12];
-      out[13] = a[13];
-      out[14] = a[14];
-      out[15] = a[15];
+    if (a3 !== out) {
+      out[12] = a3[12];
+      out[13] = a3[13];
+      out[14] = a3[14];
+      out[15] = a3[15];
     }
     return out;
   }
-  function rotateX(out, a, rad) {
-    var s = Math.sin(rad);
-    var c = Math.cos(rad);
-    var a10 = a[4];
-    var a11 = a[5];
-    var a12 = a[6];
-    var a13 = a[7];
-    var a20 = a[8];
-    var a21 = a[9];
-    var a22 = a[10];
-    var a23 = a[11];
-    if (a !== out) {
-      out[0] = a[0];
-      out[1] = a[1];
-      out[2] = a[2];
-      out[3] = a[3];
-      out[12] = a[12];
-      out[13] = a[13];
-      out[14] = a[14];
-      out[15] = a[15];
+  function rotateX(out, a3, rad) {
+    var s5 = Math.sin(rad);
+    var c2 = Math.cos(rad);
+    var a10 = a3[4];
+    var a11 = a3[5];
+    var a12 = a3[6];
+    var a13 = a3[7];
+    var a20 = a3[8];
+    var a21 = a3[9];
+    var a22 = a3[10];
+    var a23 = a3[11];
+    if (a3 !== out) {
+      out[0] = a3[0];
+      out[1] = a3[1];
+      out[2] = a3[2];
+      out[3] = a3[3];
+      out[12] = a3[12];
+      out[13] = a3[13];
+      out[14] = a3[14];
+      out[15] = a3[15];
     }
-    out[4] = a10 * c + a20 * s;
-    out[5] = a11 * c + a21 * s;
-    out[6] = a12 * c + a22 * s;
-    out[7] = a13 * c + a23 * s;
-    out[8] = a20 * c - a10 * s;
-    out[9] = a21 * c - a11 * s;
-    out[10] = a22 * c - a12 * s;
-    out[11] = a23 * c - a13 * s;
+    out[4] = a10 * c2 + a20 * s5;
+    out[5] = a11 * c2 + a21 * s5;
+    out[6] = a12 * c2 + a22 * s5;
+    out[7] = a13 * c2 + a23 * s5;
+    out[8] = a20 * c2 - a10 * s5;
+    out[9] = a21 * c2 - a11 * s5;
+    out[10] = a22 * c2 - a12 * s5;
+    out[11] = a23 * c2 - a13 * s5;
     return out;
   }
-  function rotateY(out, a, rad) {
-    var s = Math.sin(rad);
-    var c = Math.cos(rad);
-    var a00 = a[0];
-    var a01 = a[1];
-    var a02 = a[2];
-    var a03 = a[3];
-    var a20 = a[8];
-    var a21 = a[9];
-    var a22 = a[10];
-    var a23 = a[11];
-    if (a !== out) {
-      out[4] = a[4];
-      out[5] = a[5];
-      out[6] = a[6];
-      out[7] = a[7];
-      out[12] = a[12];
-      out[13] = a[13];
-      out[14] = a[14];
-      out[15] = a[15];
+  function rotateY(out, a3, rad) {
+    var s5 = Math.sin(rad);
+    var c2 = Math.cos(rad);
+    var a00 = a3[0];
+    var a01 = a3[1];
+    var a02 = a3[2];
+    var a03 = a3[3];
+    var a20 = a3[8];
+    var a21 = a3[9];
+    var a22 = a3[10];
+    var a23 = a3[11];
+    if (a3 !== out) {
+      out[4] = a3[4];
+      out[5] = a3[5];
+      out[6] = a3[6];
+      out[7] = a3[7];
+      out[12] = a3[12];
+      out[13] = a3[13];
+      out[14] = a3[14];
+      out[15] = a3[15];
     }
-    out[0] = a00 * c - a20 * s;
-    out[1] = a01 * c - a21 * s;
-    out[2] = a02 * c - a22 * s;
-    out[3] = a03 * c - a23 * s;
-    out[8] = a00 * s + a20 * c;
-    out[9] = a01 * s + a21 * c;
-    out[10] = a02 * s + a22 * c;
-    out[11] = a03 * s + a23 * c;
+    out[0] = a00 * c2 - a20 * s5;
+    out[1] = a01 * c2 - a21 * s5;
+    out[2] = a02 * c2 - a22 * s5;
+    out[3] = a03 * c2 - a23 * s5;
+    out[8] = a00 * s5 + a20 * c2;
+    out[9] = a01 * s5 + a21 * c2;
+    out[10] = a02 * s5 + a22 * c2;
+    out[11] = a03 * s5 + a23 * c2;
     return out;
   }
-  function rotateZ(out, a, rad) {
-    var s = Math.sin(rad);
-    var c = Math.cos(rad);
-    var a00 = a[0];
-    var a01 = a[1];
-    var a02 = a[2];
-    var a03 = a[3];
-    var a10 = a[4];
-    var a11 = a[5];
-    var a12 = a[6];
-    var a13 = a[7];
-    if (a !== out) {
-      out[8] = a[8];
-      out[9] = a[9];
-      out[10] = a[10];
-      out[11] = a[11];
-      out[12] = a[12];
-      out[13] = a[13];
-      out[14] = a[14];
-      out[15] = a[15];
+  function rotateZ(out, a3, rad) {
+    var s5 = Math.sin(rad);
+    var c2 = Math.cos(rad);
+    var a00 = a3[0];
+    var a01 = a3[1];
+    var a02 = a3[2];
+    var a03 = a3[3];
+    var a10 = a3[4];
+    var a11 = a3[5];
+    var a12 = a3[6];
+    var a13 = a3[7];
+    if (a3 !== out) {
+      out[8] = a3[8];
+      out[9] = a3[9];
+      out[10] = a3[10];
+      out[11] = a3[11];
+      out[12] = a3[12];
+      out[13] = a3[13];
+      out[14] = a3[14];
+      out[15] = a3[15];
     }
-    out[0] = a00 * c + a10 * s;
-    out[1] = a01 * c + a11 * s;
-    out[2] = a02 * c + a12 * s;
-    out[3] = a03 * c + a13 * s;
-    out[4] = a10 * c - a00 * s;
-    out[5] = a11 * c - a01 * s;
-    out[6] = a12 * c - a02 * s;
-    out[7] = a13 * c - a03 * s;
+    out[0] = a00 * c2 + a10 * s5;
+    out[1] = a01 * c2 + a11 * s5;
+    out[2] = a02 * c2 + a12 * s5;
+    out[3] = a03 * c2 + a13 * s5;
+    out[4] = a10 * c2 - a00 * s5;
+    out[5] = a11 * c2 - a01 * s5;
+    out[6] = a12 * c2 - a02 * s5;
+    out[7] = a13 * c2 - a03 * s5;
     return out;
   }
   function fromTranslation(out, v) {
@@ -715,7 +862,7 @@ export default require => {
   function fromRotation(out, rad, axis) {
     var x = axis[0], y = axis[1], z = axis[2];
     var len2 = Math.sqrt(x * x + y * y + z * z);
-    var s, c, t;
+    var s5, c2, t4;
     if (len2 < EPSILON) {
       return null;
     }
@@ -723,20 +870,20 @@ export default require => {
     x *= len2;
     y *= len2;
     z *= len2;
-    s = Math.sin(rad);
-    c = Math.cos(rad);
-    t = 1 - c;
-    out[0] = x * x * t + c;
-    out[1] = y * x * t + z * s;
-    out[2] = z * x * t - y * s;
+    s5 = Math.sin(rad);
+    c2 = Math.cos(rad);
+    t4 = 1 - c2;
+    out[0] = x * x * t4 + c2;
+    out[1] = y * x * t4 + z * s5;
+    out[2] = z * x * t4 - y * s5;
     out[3] = 0;
-    out[4] = x * y * t - z * s;
-    out[5] = y * y * t + c;
-    out[6] = z * y * t + x * s;
+    out[4] = x * y * t4 - z * s5;
+    out[5] = y * y * t4 + c2;
+    out[6] = z * y * t4 + x * s5;
     out[7] = 0;
-    out[8] = x * z * t + y * s;
-    out[9] = y * z * t - x * s;
-    out[10] = z * z * t + c;
+    out[8] = x * z * t4 + y * s5;
+    out[9] = y * z * t4 - x * s5;
+    out[10] = z * z * t4 + c2;
     out[11] = 0;
     out[12] = 0;
     out[13] = 0;
@@ -745,19 +892,19 @@ export default require => {
     return out;
   }
   function fromXRotation(out, rad) {
-    var s = Math.sin(rad);
-    var c = Math.cos(rad);
+    var s5 = Math.sin(rad);
+    var c2 = Math.cos(rad);
     out[0] = 1;
     out[1] = 0;
     out[2] = 0;
     out[3] = 0;
     out[4] = 0;
-    out[5] = c;
-    out[6] = s;
+    out[5] = c2;
+    out[6] = s5;
     out[7] = 0;
     out[8] = 0;
-    out[9] = -s;
-    out[10] = c;
+    out[9] = -s5;
+    out[10] = c2;
     out[11] = 0;
     out[12] = 0;
     out[13] = 0;
@@ -766,19 +913,19 @@ export default require => {
     return out;
   }
   function fromYRotation(out, rad) {
-    var s = Math.sin(rad);
-    var c = Math.cos(rad);
-    out[0] = c;
+    var s5 = Math.sin(rad);
+    var c2 = Math.cos(rad);
+    out[0] = c2;
     out[1] = 0;
-    out[2] = -s;
+    out[2] = -s5;
     out[3] = 0;
     out[4] = 0;
     out[5] = 1;
     out[6] = 0;
     out[7] = 0;
-    out[8] = s;
+    out[8] = s5;
     out[9] = 0;
-    out[10] = c;
+    out[10] = c2;
     out[11] = 0;
     out[12] = 0;
     out[13] = 0;
@@ -787,14 +934,14 @@ export default require => {
     return out;
   }
   function fromZRotation(out, rad) {
-    var s = Math.sin(rad);
-    var c = Math.cos(rad);
-    out[0] = c;
-    out[1] = s;
+    var s5 = Math.sin(rad);
+    var c2 = Math.cos(rad);
+    out[0] = c2;
+    out[1] = s5;
     out[2] = 0;
     out[3] = 0;
-    out[4] = -s;
-    out[5] = c;
+    out[4] = -s5;
+    out[5] = c2;
     out[6] = 0;
     out[7] = 0;
     out[8] = 0;
@@ -839,9 +986,9 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function fromQuat2(out, a) {
+  function fromQuat2(out, a3) {
     var translation = new ARRAY_TYPE(3);
-    var bx = -a[0], by = -a[1], bz = -a[2], bw = a[3], ax = a[4], ay = a[5], az = a[6], aw = a[7];
+    var bx = -a3[0], by = -a3[1], bz = -a3[2], bw = a3[3], ax = a3[4], ay = a3[5], az = a3[6], aw = a3[7];
     var magnitude = bx * bx + by * by + bz * bz + bw * bw;
     if (magnitude > 0) {
       translation[0] = (ax * bw + aw * bx + ay * bz - az * by) * 2 / magnitude;
@@ -852,7 +999,7 @@ export default require => {
       translation[1] = (ay * bw + aw * by + az * bx - ax * bz) * 2;
       translation[2] = (az * bw + aw * bz + ax * by - ay * bx) * 2;
     }
-    fromRotationTranslation(out, a, translation);
+    fromRotationTranslation(out, a3, translation);
     return out;
   }
   function getTranslation(out, mat) {
@@ -977,7 +1124,7 @@ export default require => {
     }
     return out_r;
   }
-  function fromRotationTranslationScale(out, q, v, s) {
+  function fromRotationTranslationScale(out, q, v, s5) {
     var x = q[0], y = q[1], z = q[2], w = q[3];
     var x2 = x + x;
     var y2 = y + y;
@@ -991,9 +1138,9 @@ export default require => {
     var wx = w * x2;
     var wy = w * y2;
     var wz = w * z2;
-    var sx = s[0];
-    var sy = s[1];
-    var sz = s[2];
+    var sx = s5[0];
+    var sy = s5[1];
+    var sz = s5[2];
     out[0] = (1 - (yy + zz)) * sx;
     out[1] = (xy + wz) * sx;
     out[2] = (xz - wy) * sx;
@@ -1012,7 +1159,7 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function fromRotationTranslationScaleOrigin(out, q, v, s, o) {
+  function fromRotationTranslationScaleOrigin(out, q, v, s5, o4) {
     var x = q[0], y = q[1], z = q[2], w = q[3];
     var x2 = x + x;
     var y2 = y + y;
@@ -1026,12 +1173,12 @@ export default require => {
     var wx = w * x2;
     var wy = w * y2;
     var wz = w * z2;
-    var sx = s[0];
-    var sy = s[1];
-    var sz = s[2];
-    var ox = o[0];
-    var oy = o[1];
-    var oz = o[2];
+    var sx = s5[0];
+    var sy = s5[1];
+    var sz = s5[2];
+    var ox = o4[0];
+    var oy = o4[1];
+    var oz = o4[2];
     var out0 = (1 - (yy + zz)) * sx;
     var out1 = (xy + wz) * sx;
     var out2 = (xz - wy) * sx;
@@ -1114,13 +1261,13 @@ export default require => {
     return out;
   }
   function perspectiveNO(out, fovy, aspect, near, far) {
-    var f = 1 / Math.tan(fovy / 2);
-    out[0] = f / aspect;
+    var f2 = 1 / Math.tan(fovy / 2);
+    out[0] = f2 / aspect;
     out[1] = 0;
     out[2] = 0;
     out[3] = 0;
     out[4] = 0;
-    out[5] = f;
+    out[5] = f2;
     out[6] = 0;
     out[7] = 0;
     out[8] = 0;
@@ -1141,13 +1288,13 @@ export default require => {
   }
   var perspective = perspectiveNO;
   function perspectiveZO(out, fovy, aspect, near, far) {
-    var f = 1 / Math.tan(fovy / 2);
-    out[0] = f / aspect;
+    var f2 = 1 / Math.tan(fovy / 2);
+    out[0] = f2 / aspect;
     out[1] = 0;
     out[2] = 0;
     out[3] = 0;
     out[4] = 0;
-    out[5] = f;
+    out[5] = f2;
     out[6] = 0;
     out[7] = 0;
     out[8] = 0;
@@ -1339,101 +1486,101 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function str(a) {
-    return "mat4(" + a[0] + ", " + a[1] + ", " + a[2] + ", " + a[3] + ", " + a[4] + ", " + a[5] + ", " + a[6] + ", " + a[7] + ", " + a[8] + ", " + a[9] + ", " + a[10] + ", " + a[11] + ", " + a[12] + ", " + a[13] + ", " + a[14] + ", " + a[15] + ")";
+  function str(a3) {
+    return "mat4(" + a3[0] + ", " + a3[1] + ", " + a3[2] + ", " + a3[3] + ", " + a3[4] + ", " + a3[5] + ", " + a3[6] + ", " + a3[7] + ", " + a3[8] + ", " + a3[9] + ", " + a3[10] + ", " + a3[11] + ", " + a3[12] + ", " + a3[13] + ", " + a3[14] + ", " + a3[15] + ")";
   }
-  function frob(a) {
-    return Math.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2] + a[3] * a[3] + a[4] * a[4] + a[5] * a[5] + a[6] * a[6] + a[7] * a[7] + a[8] * a[8] + a[9] * a[9] + a[10] * a[10] + a[11] * a[11] + a[12] * a[12] + a[13] * a[13] + a[14] * a[14] + a[15] * a[15]);
+  function frob(a3) {
+    return Math.sqrt(a3[0] * a3[0] + a3[1] * a3[1] + a3[2] * a3[2] + a3[3] * a3[3] + a3[4] * a3[4] + a3[5] * a3[5] + a3[6] * a3[6] + a3[7] * a3[7] + a3[8] * a3[8] + a3[9] * a3[9] + a3[10] * a3[10] + a3[11] * a3[11] + a3[12] * a3[12] + a3[13] * a3[13] + a3[14] * a3[14] + a3[15] * a3[15]);
   }
-  function add(out, a, b) {
-    out[0] = a[0] + b[0];
-    out[1] = a[1] + b[1];
-    out[2] = a[2] + b[2];
-    out[3] = a[3] + b[3];
-    out[4] = a[4] + b[4];
-    out[5] = a[5] + b[5];
-    out[6] = a[6] + b[6];
-    out[7] = a[7] + b[7];
-    out[8] = a[8] + b[8];
-    out[9] = a[9] + b[9];
-    out[10] = a[10] + b[10];
-    out[11] = a[11] + b[11];
-    out[12] = a[12] + b[12];
-    out[13] = a[13] + b[13];
-    out[14] = a[14] + b[14];
-    out[15] = a[15] + b[15];
+  function add(out, a3, b) {
+    out[0] = a3[0] + b[0];
+    out[1] = a3[1] + b[1];
+    out[2] = a3[2] + b[2];
+    out[3] = a3[3] + b[3];
+    out[4] = a3[4] + b[4];
+    out[5] = a3[5] + b[5];
+    out[6] = a3[6] + b[6];
+    out[7] = a3[7] + b[7];
+    out[8] = a3[8] + b[8];
+    out[9] = a3[9] + b[9];
+    out[10] = a3[10] + b[10];
+    out[11] = a3[11] + b[11];
+    out[12] = a3[12] + b[12];
+    out[13] = a3[13] + b[13];
+    out[14] = a3[14] + b[14];
+    out[15] = a3[15] + b[15];
     return out;
   }
-  function subtract(out, a, b) {
-    out[0] = a[0] - b[0];
-    out[1] = a[1] - b[1];
-    out[2] = a[2] - b[2];
-    out[3] = a[3] - b[3];
-    out[4] = a[4] - b[4];
-    out[5] = a[5] - b[5];
-    out[6] = a[6] - b[6];
-    out[7] = a[7] - b[7];
-    out[8] = a[8] - b[8];
-    out[9] = a[9] - b[9];
-    out[10] = a[10] - b[10];
-    out[11] = a[11] - b[11];
-    out[12] = a[12] - b[12];
-    out[13] = a[13] - b[13];
-    out[14] = a[14] - b[14];
-    out[15] = a[15] - b[15];
+  function subtract(out, a3, b) {
+    out[0] = a3[0] - b[0];
+    out[1] = a3[1] - b[1];
+    out[2] = a3[2] - b[2];
+    out[3] = a3[3] - b[3];
+    out[4] = a3[4] - b[4];
+    out[5] = a3[5] - b[5];
+    out[6] = a3[6] - b[6];
+    out[7] = a3[7] - b[7];
+    out[8] = a3[8] - b[8];
+    out[9] = a3[9] - b[9];
+    out[10] = a3[10] - b[10];
+    out[11] = a3[11] - b[11];
+    out[12] = a3[12] - b[12];
+    out[13] = a3[13] - b[13];
+    out[14] = a3[14] - b[14];
+    out[15] = a3[15] - b[15];
     return out;
   }
-  function multiplyScalar(out, a, b) {
-    out[0] = a[0] * b;
-    out[1] = a[1] * b;
-    out[2] = a[2] * b;
-    out[3] = a[3] * b;
-    out[4] = a[4] * b;
-    out[5] = a[5] * b;
-    out[6] = a[6] * b;
-    out[7] = a[7] * b;
-    out[8] = a[8] * b;
-    out[9] = a[9] * b;
-    out[10] = a[10] * b;
-    out[11] = a[11] * b;
-    out[12] = a[12] * b;
-    out[13] = a[13] * b;
-    out[14] = a[14] * b;
-    out[15] = a[15] * b;
+  function multiplyScalar(out, a3, b) {
+    out[0] = a3[0] * b;
+    out[1] = a3[1] * b;
+    out[2] = a3[2] * b;
+    out[3] = a3[3] * b;
+    out[4] = a3[4] * b;
+    out[5] = a3[5] * b;
+    out[6] = a3[6] * b;
+    out[7] = a3[7] * b;
+    out[8] = a3[8] * b;
+    out[9] = a3[9] * b;
+    out[10] = a3[10] * b;
+    out[11] = a3[11] * b;
+    out[12] = a3[12] * b;
+    out[13] = a3[13] * b;
+    out[14] = a3[14] * b;
+    out[15] = a3[15] * b;
     return out;
   }
-  function multiplyScalarAndAdd(out, a, b, scale4) {
-    out[0] = a[0] + b[0] * scale4;
-    out[1] = a[1] + b[1] * scale4;
-    out[2] = a[2] + b[2] * scale4;
-    out[3] = a[3] + b[3] * scale4;
-    out[4] = a[4] + b[4] * scale4;
-    out[5] = a[5] + b[5] * scale4;
-    out[6] = a[6] + b[6] * scale4;
-    out[7] = a[7] + b[7] * scale4;
-    out[8] = a[8] + b[8] * scale4;
-    out[9] = a[9] + b[9] * scale4;
-    out[10] = a[10] + b[10] * scale4;
-    out[11] = a[11] + b[11] * scale4;
-    out[12] = a[12] + b[12] * scale4;
-    out[13] = a[13] + b[13] * scale4;
-    out[14] = a[14] + b[14] * scale4;
-    out[15] = a[15] + b[15] * scale4;
+  function multiplyScalarAndAdd(out, a3, b, scale4) {
+    out[0] = a3[0] + b[0] * scale4;
+    out[1] = a3[1] + b[1] * scale4;
+    out[2] = a3[2] + b[2] * scale4;
+    out[3] = a3[3] + b[3] * scale4;
+    out[4] = a3[4] + b[4] * scale4;
+    out[5] = a3[5] + b[5] * scale4;
+    out[6] = a3[6] + b[6] * scale4;
+    out[7] = a3[7] + b[7] * scale4;
+    out[8] = a3[8] + b[8] * scale4;
+    out[9] = a3[9] + b[9] * scale4;
+    out[10] = a3[10] + b[10] * scale4;
+    out[11] = a3[11] + b[11] * scale4;
+    out[12] = a3[12] + b[12] * scale4;
+    out[13] = a3[13] + b[13] * scale4;
+    out[14] = a3[14] + b[14] * scale4;
+    out[15] = a3[15] + b[15] * scale4;
     return out;
   }
-  function exactEquals(a, b) {
-    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3] && a[4] === b[4] && a[5] === b[5] && a[6] === b[6] && a[7] === b[7] && a[8] === b[8] && a[9] === b[9] && a[10] === b[10] && a[11] === b[11] && a[12] === b[12] && a[13] === b[13] && a[14] === b[14] && a[15] === b[15];
+  function exactEquals(a3, b) {
+    return a3[0] === b[0] && a3[1] === b[1] && a3[2] === b[2] && a3[3] === b[3] && a3[4] === b[4] && a3[5] === b[5] && a3[6] === b[6] && a3[7] === b[7] && a3[8] === b[8] && a3[9] === b[9] && a3[10] === b[10] && a3[11] === b[11] && a3[12] === b[12] && a3[13] === b[13] && a3[14] === b[14] && a3[15] === b[15];
   }
-  function equals(a, b) {
-    var a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3];
-    var a4 = a[4], a5 = a[5], a6 = a[6], a7 = a[7];
-    var a8 = a[8], a9 = a[9], a10 = a[10], a11 = a[11];
-    var a12 = a[12], a13 = a[13], a14 = a[14], a15 = a[15];
+  function equals(a3, b) {
+    var a0 = a3[0], a1 = a3[1], a22 = a3[2], a32 = a3[3];
+    var a4 = a3[4], a5 = a3[5], a6 = a3[6], a7 = a3[7];
+    var a8 = a3[8], a9 = a3[9], a10 = a3[10], a11 = a3[11];
+    var a12 = a3[12], a13 = a3[13], a14 = a3[14], a15 = a3[15];
     var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
     var b4 = b[4], b5 = b[5], b6 = b[6], b7 = b[7];
     var b8 = b[8], b9 = b[9], b10 = b[10], b11 = b[11];
     var b12 = b[12], b13 = b[13], b14 = b[14], b15 = b[15];
-    return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a2 - b2) <= EPSILON * Math.max(1, Math.abs(a2), Math.abs(b2)) && Math.abs(a3 - b3) <= EPSILON * Math.max(1, Math.abs(a3), Math.abs(b3)) && Math.abs(a4 - b4) <= EPSILON * Math.max(1, Math.abs(a4), Math.abs(b4)) && Math.abs(a5 - b5) <= EPSILON * Math.max(1, Math.abs(a5), Math.abs(b5)) && Math.abs(a6 - b6) <= EPSILON * Math.max(1, Math.abs(a6), Math.abs(b6)) && Math.abs(a7 - b7) <= EPSILON * Math.max(1, Math.abs(a7), Math.abs(b7)) && Math.abs(a8 - b8) <= EPSILON * Math.max(1, Math.abs(a8), Math.abs(b8)) && Math.abs(a9 - b9) <= EPSILON * Math.max(1, Math.abs(a9), Math.abs(b9)) && Math.abs(a10 - b10) <= EPSILON * Math.max(1, Math.abs(a10), Math.abs(b10)) && Math.abs(a11 - b11) <= EPSILON * Math.max(1, Math.abs(a11), Math.abs(b11)) && Math.abs(a12 - b12) <= EPSILON * Math.max(1, Math.abs(a12), Math.abs(b12)) && Math.abs(a13 - b13) <= EPSILON * Math.max(1, Math.abs(a13), Math.abs(b13)) && Math.abs(a14 - b14) <= EPSILON * Math.max(1, Math.abs(a14), Math.abs(b14)) && Math.abs(a15 - b15) <= EPSILON * Math.max(1, Math.abs(a15), Math.abs(b15));
+    return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a22 - b2) <= EPSILON * Math.max(1, Math.abs(a22), Math.abs(b2)) && Math.abs(a32 - b3) <= EPSILON * Math.max(1, Math.abs(a32), Math.abs(b3)) && Math.abs(a4 - b4) <= EPSILON * Math.max(1, Math.abs(a4), Math.abs(b4)) && Math.abs(a5 - b5) <= EPSILON * Math.max(1, Math.abs(a5), Math.abs(b5)) && Math.abs(a6 - b6) <= EPSILON * Math.max(1, Math.abs(a6), Math.abs(b6)) && Math.abs(a7 - b7) <= EPSILON * Math.max(1, Math.abs(a7), Math.abs(b7)) && Math.abs(a8 - b8) <= EPSILON * Math.max(1, Math.abs(a8), Math.abs(b8)) && Math.abs(a9 - b9) <= EPSILON * Math.max(1, Math.abs(a9), Math.abs(b9)) && Math.abs(a10 - b10) <= EPSILON * Math.max(1, Math.abs(a10), Math.abs(b10)) && Math.abs(a11 - b11) <= EPSILON * Math.max(1, Math.abs(a11), Math.abs(b11)) && Math.abs(a12 - b12) <= EPSILON * Math.max(1, Math.abs(a12), Math.abs(b12)) && Math.abs(a13 - b13) <= EPSILON * Math.max(1, Math.abs(a13), Math.abs(b13)) && Math.abs(a14 - b14) <= EPSILON * Math.max(1, Math.abs(a14), Math.abs(b14)) && Math.abs(a15 - b15) <= EPSILON * Math.max(1, Math.abs(a15), Math.abs(b15));
   }
   var mul = multiply;
   var sub = subtract;
@@ -1498,17 +1645,17 @@ export default require => {
     }
     return out;
   }
-  function clone2(a) {
+  function clone2(a3) {
     var out = new ARRAY_TYPE(3);
-    out[0] = a[0];
-    out[1] = a[1];
-    out[2] = a[2];
+    out[0] = a3[0];
+    out[1] = a3[1];
+    out[2] = a3[2];
     return out;
   }
-  function length(a) {
-    var x = a[0];
-    var y = a[1];
-    var z = a[2];
+  function length(a3) {
+    var x = a3[0];
+    var y = a3[1];
+    var z = a3[2];
     return Math.sqrt(x * x + y * y + z * z);
   }
   function fromValues2(x, y, z) {
@@ -1518,10 +1665,10 @@ export default require => {
     out[2] = z;
     return out;
   }
-  function copy2(out, a) {
-    out[0] = a[0];
-    out[1] = a[1];
-    out[2] = a[2];
+  function copy2(out, a3) {
+    out[0] = a3[0];
+    out[1] = a3[1];
+    out[2] = a3[2];
     return out;
   }
   function set2(out, x, y, z) {
@@ -1530,198 +1677,198 @@ export default require => {
     out[2] = z;
     return out;
   }
-  function add2(out, a, b) {
-    out[0] = a[0] + b[0];
-    out[1] = a[1] + b[1];
-    out[2] = a[2] + b[2];
+  function add2(out, a3, b) {
+    out[0] = a3[0] + b[0];
+    out[1] = a3[1] + b[1];
+    out[2] = a3[2] + b[2];
     return out;
   }
-  function subtract2(out, a, b) {
-    out[0] = a[0] - b[0];
-    out[1] = a[1] - b[1];
-    out[2] = a[2] - b[2];
+  function subtract2(out, a3, b) {
+    out[0] = a3[0] - b[0];
+    out[1] = a3[1] - b[1];
+    out[2] = a3[2] - b[2];
     return out;
   }
-  function multiply2(out, a, b) {
-    out[0] = a[0] * b[0];
-    out[1] = a[1] * b[1];
-    out[2] = a[2] * b[2];
+  function multiply2(out, a3, b) {
+    out[0] = a3[0] * b[0];
+    out[1] = a3[1] * b[1];
+    out[2] = a3[2] * b[2];
     return out;
   }
-  function divide(out, a, b) {
-    out[0] = a[0] / b[0];
-    out[1] = a[1] / b[1];
-    out[2] = a[2] / b[2];
+  function divide(out, a3, b) {
+    out[0] = a3[0] / b[0];
+    out[1] = a3[1] / b[1];
+    out[2] = a3[2] / b[2];
     return out;
   }
-  function ceil(out, a) {
-    out[0] = Math.ceil(a[0]);
-    out[1] = Math.ceil(a[1]);
-    out[2] = Math.ceil(a[2]);
+  function ceil(out, a3) {
+    out[0] = Math.ceil(a3[0]);
+    out[1] = Math.ceil(a3[1]);
+    out[2] = Math.ceil(a3[2]);
     return out;
   }
-  function floor(out, a) {
-    out[0] = Math.floor(a[0]);
-    out[1] = Math.floor(a[1]);
-    out[2] = Math.floor(a[2]);
+  function floor(out, a3) {
+    out[0] = Math.floor(a3[0]);
+    out[1] = Math.floor(a3[1]);
+    out[2] = Math.floor(a3[2]);
     return out;
   }
-  function min(out, a, b) {
-    out[0] = Math.min(a[0], b[0]);
-    out[1] = Math.min(a[1], b[1]);
-    out[2] = Math.min(a[2], b[2]);
+  function min(out, a3, b) {
+    out[0] = Math.min(a3[0], b[0]);
+    out[1] = Math.min(a3[1], b[1]);
+    out[2] = Math.min(a3[2], b[2]);
     return out;
   }
-  function max(out, a, b) {
-    out[0] = Math.max(a[0], b[0]);
-    out[1] = Math.max(a[1], b[1]);
-    out[2] = Math.max(a[2], b[2]);
+  function max(out, a3, b) {
+    out[0] = Math.max(a3[0], b[0]);
+    out[1] = Math.max(a3[1], b[1]);
+    out[2] = Math.max(a3[2], b[2]);
     return out;
   }
-  function round2(out, a) {
-    out[0] = round(a[0]);
-    out[1] = round(a[1]);
-    out[2] = round(a[2]);
+  function round2(out, a3) {
+    out[0] = round(a3[0]);
+    out[1] = round(a3[1]);
+    out[2] = round(a3[2]);
     return out;
   }
-  function scale2(out, a, b) {
-    out[0] = a[0] * b;
-    out[1] = a[1] * b;
-    out[2] = a[2] * b;
+  function scale2(out, a3, b) {
+    out[0] = a3[0] * b;
+    out[1] = a3[1] * b;
+    out[2] = a3[2] * b;
     return out;
   }
-  function scaleAndAdd(out, a, b, scale4) {
-    out[0] = a[0] + b[0] * scale4;
-    out[1] = a[1] + b[1] * scale4;
-    out[2] = a[2] + b[2] * scale4;
+  function scaleAndAdd(out, a3, b, scale4) {
+    out[0] = a3[0] + b[0] * scale4;
+    out[1] = a3[1] + b[1] * scale4;
+    out[2] = a3[2] + b[2] * scale4;
     return out;
   }
-  function distance(a, b) {
-    var x = b[0] - a[0];
-    var y = b[1] - a[1];
-    var z = b[2] - a[2];
+  function distance(a3, b) {
+    var x = b[0] - a3[0];
+    var y = b[1] - a3[1];
+    var z = b[2] - a3[2];
     return Math.sqrt(x * x + y * y + z * z);
   }
-  function squaredDistance(a, b) {
-    var x = b[0] - a[0];
-    var y = b[1] - a[1];
-    var z = b[2] - a[2];
+  function squaredDistance(a3, b) {
+    var x = b[0] - a3[0];
+    var y = b[1] - a3[1];
+    var z = b[2] - a3[2];
     return x * x + y * y + z * z;
   }
-  function squaredLength(a) {
-    var x = a[0];
-    var y = a[1];
-    var z = a[2];
+  function squaredLength(a3) {
+    var x = a3[0];
+    var y = a3[1];
+    var z = a3[2];
     return x * x + y * y + z * z;
   }
-  function negate(out, a) {
-    out[0] = -a[0];
-    out[1] = -a[1];
-    out[2] = -a[2];
+  function negate(out, a3) {
+    out[0] = -a3[0];
+    out[1] = -a3[1];
+    out[2] = -a3[2];
     return out;
   }
-  function inverse(out, a) {
-    out[0] = 1 / a[0];
-    out[1] = 1 / a[1];
-    out[2] = 1 / a[2];
+  function inverse(out, a3) {
+    out[0] = 1 / a3[0];
+    out[1] = 1 / a3[1];
+    out[2] = 1 / a3[2];
     return out;
   }
-  function normalize(out, a) {
-    var x = a[0];
-    var y = a[1];
-    var z = a[2];
+  function normalize(out, a3) {
+    var x = a3[0];
+    var y = a3[1];
+    var z = a3[2];
     var len2 = x * x + y * y + z * z;
     if (len2 > 0) {
       len2 = 1 / Math.sqrt(len2);
     }
-    out[0] = a[0] * len2;
-    out[1] = a[1] * len2;
-    out[2] = a[2] * len2;
+    out[0] = a3[0] * len2;
+    out[1] = a3[1] * len2;
+    out[2] = a3[2] * len2;
     return out;
   }
-  function dot(a, b) {
-    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  function dot(a3, b) {
+    return a3[0] * b[0] + a3[1] * b[1] + a3[2] * b[2];
   }
-  function cross(out, a, b) {
-    var ax = a[0], ay = a[1], az = a[2];
+  function cross(out, a3, b) {
+    var ax = a3[0], ay = a3[1], az = a3[2];
     var bx = b[0], by = b[1], bz = b[2];
     out[0] = ay * bz - az * by;
     out[1] = az * bx - ax * bz;
     out[2] = ax * by - ay * bx;
     return out;
   }
-  function lerp(out, a, b, t) {
-    var ax = a[0];
-    var ay = a[1];
-    var az = a[2];
-    out[0] = ax + t * (b[0] - ax);
-    out[1] = ay + t * (b[1] - ay);
-    out[2] = az + t * (b[2] - az);
+  function lerp(out, a3, b, t4) {
+    var ax = a3[0];
+    var ay = a3[1];
+    var az = a3[2];
+    out[0] = ax + t4 * (b[0] - ax);
+    out[1] = ay + t4 * (b[1] - ay);
+    out[2] = az + t4 * (b[2] - az);
     return out;
   }
-  function slerp(out, a, b, t) {
-    var angle2 = Math.acos(Math.min(Math.max(dot(a, b), -1), 1));
+  function slerp(out, a3, b, t4) {
+    var angle2 = Math.acos(Math.min(Math.max(dot(a3, b), -1), 1));
     var sinTotal = Math.sin(angle2);
-    var ratioA = Math.sin((1 - t) * angle2) / sinTotal;
-    var ratioB = Math.sin(t * angle2) / sinTotal;
-    out[0] = ratioA * a[0] + ratioB * b[0];
-    out[1] = ratioA * a[1] + ratioB * b[1];
-    out[2] = ratioA * a[2] + ratioB * b[2];
+    var ratioA = Math.sin((1 - t4) * angle2) / sinTotal;
+    var ratioB = Math.sin(t4 * angle2) / sinTotal;
+    out[0] = ratioA * a3[0] + ratioB * b[0];
+    out[1] = ratioA * a3[1] + ratioB * b[1];
+    out[2] = ratioA * a3[2] + ratioB * b[2];
     return out;
   }
-  function hermite(out, a, b, c, d, t) {
-    var factorTimes2 = t * t;
-    var factor1 = factorTimes2 * (2 * t - 3) + 1;
-    var factor2 = factorTimes2 * (t - 2) + t;
-    var factor3 = factorTimes2 * (t - 1);
-    var factor4 = factorTimes2 * (3 - 2 * t);
-    out[0] = a[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
-    out[1] = a[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
-    out[2] = a[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
+  function hermite(out, a3, b, c2, d2, t4) {
+    var factorTimes2 = t4 * t4;
+    var factor1 = factorTimes2 * (2 * t4 - 3) + 1;
+    var factor2 = factorTimes2 * (t4 - 2) + t4;
+    var factor3 = factorTimes2 * (t4 - 1);
+    var factor4 = factorTimes2 * (3 - 2 * t4);
+    out[0] = a3[0] * factor1 + b[0] * factor2 + c2[0] * factor3 + d2[0] * factor4;
+    out[1] = a3[1] * factor1 + b[1] * factor2 + c2[1] * factor3 + d2[1] * factor4;
+    out[2] = a3[2] * factor1 + b[2] * factor2 + c2[2] * factor3 + d2[2] * factor4;
     return out;
   }
-  function bezier(out, a, b, c, d, t) {
-    var inverseFactor = 1 - t;
+  function bezier(out, a3, b, c2, d2, t4) {
+    var inverseFactor = 1 - t4;
     var inverseFactorTimesTwo = inverseFactor * inverseFactor;
-    var factorTimes2 = t * t;
+    var factorTimes2 = t4 * t4;
     var factor1 = inverseFactorTimesTwo * inverseFactor;
-    var factor2 = 3 * t * inverseFactorTimesTwo;
+    var factor2 = 3 * t4 * inverseFactorTimesTwo;
     var factor3 = 3 * factorTimes2 * inverseFactor;
-    var factor4 = factorTimes2 * t;
-    out[0] = a[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
-    out[1] = a[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
-    out[2] = a[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
+    var factor4 = factorTimes2 * t4;
+    out[0] = a3[0] * factor1 + b[0] * factor2 + c2[0] * factor3 + d2[0] * factor4;
+    out[1] = a3[1] * factor1 + b[1] * factor2 + c2[1] * factor3 + d2[1] * factor4;
+    out[2] = a3[2] * factor1 + b[2] * factor2 + c2[2] * factor3 + d2[2] * factor4;
     return out;
   }
   function random(out, scale4) {
     scale4 = scale4 === void 0 ? 1 : scale4;
-    var r = RANDOM() * 2 * Math.PI;
+    var r2 = RANDOM() * 2 * Math.PI;
     var z = RANDOM() * 2 - 1;
     var zScale = Math.sqrt(1 - z * z) * scale4;
-    out[0] = Math.cos(r) * zScale;
-    out[1] = Math.sin(r) * zScale;
+    out[0] = Math.cos(r2) * zScale;
+    out[1] = Math.sin(r2) * zScale;
     out[2] = z * scale4;
     return out;
   }
-  function transformMat4(out, a, m) {
-    var x = a[0], y = a[1], z = a[2];
-    var w = m[3] * x + m[7] * y + m[11] * z + m[15];
+  function transformMat4(out, a3, m2) {
+    var x = a3[0], y = a3[1], z = a3[2];
+    var w = m2[3] * x + m2[7] * y + m2[11] * z + m2[15];
     w = w || 1;
-    out[0] = (m[0] * x + m[4] * y + m[8] * z + m[12]) / w;
-    out[1] = (m[1] * x + m[5] * y + m[9] * z + m[13]) / w;
-    out[2] = (m[2] * x + m[6] * y + m[10] * z + m[14]) / w;
+    out[0] = (m2[0] * x + m2[4] * y + m2[8] * z + m2[12]) / w;
+    out[1] = (m2[1] * x + m2[5] * y + m2[9] * z + m2[13]) / w;
+    out[2] = (m2[2] * x + m2[6] * y + m2[10] * z + m2[14]) / w;
     return out;
   }
-  function transformMat3(out, a, m) {
-    var x = a[0], y = a[1], z = a[2];
-    out[0] = x * m[0] + y * m[3] + z * m[6];
-    out[1] = x * m[1] + y * m[4] + z * m[7];
-    out[2] = x * m[2] + y * m[5] + z * m[8];
+  function transformMat3(out, a3, m2) {
+    var x = a3[0], y = a3[1], z = a3[2];
+    out[0] = x * m2[0] + y * m2[3] + z * m2[6];
+    out[1] = x * m2[1] + y * m2[4] + z * m2[7];
+    out[2] = x * m2[2] + y * m2[5] + z * m2[8];
     return out;
   }
-  function transformQuat(out, a, q) {
+  function transformQuat(out, a3, q) {
     var qx = q[0], qy = q[1], qz = q[2], qw = q[3];
-    var vx = a[0], vy = a[1], vz = a[2];
+    var vx = a3[0], vy = a3[1], vz = a3[2];
     var tx = qy * vz - qz * vy;
     var ty = qz * vx - qx * vz;
     var tz = qx * vy - qy * vx;
@@ -1733,47 +1880,47 @@ export default require => {
     out[2] = vz + qw * tz + qx * ty - qy * tx;
     return out;
   }
-  function rotateX2(out, a, b, rad) {
-    var p = [], r = [];
-    p[0] = a[0] - b[0];
-    p[1] = a[1] - b[1];
-    p[2] = a[2] - b[2];
-    r[0] = p[0];
-    r[1] = p[1] * Math.cos(rad) - p[2] * Math.sin(rad);
-    r[2] = p[1] * Math.sin(rad) + p[2] * Math.cos(rad);
-    out[0] = r[0] + b[0];
-    out[1] = r[1] + b[1];
-    out[2] = r[2] + b[2];
+  function rotateX2(out, a3, b, rad) {
+    var p2 = [], r2 = [];
+    p2[0] = a3[0] - b[0];
+    p2[1] = a3[1] - b[1];
+    p2[2] = a3[2] - b[2];
+    r2[0] = p2[0];
+    r2[1] = p2[1] * Math.cos(rad) - p2[2] * Math.sin(rad);
+    r2[2] = p2[1] * Math.sin(rad) + p2[2] * Math.cos(rad);
+    out[0] = r2[0] + b[0];
+    out[1] = r2[1] + b[1];
+    out[2] = r2[2] + b[2];
     return out;
   }
-  function rotateY2(out, a, b, rad) {
-    var p = [], r = [];
-    p[0] = a[0] - b[0];
-    p[1] = a[1] - b[1];
-    p[2] = a[2] - b[2];
-    r[0] = p[2] * Math.sin(rad) + p[0] * Math.cos(rad);
-    r[1] = p[1];
-    r[2] = p[2] * Math.cos(rad) - p[0] * Math.sin(rad);
-    out[0] = r[0] + b[0];
-    out[1] = r[1] + b[1];
-    out[2] = r[2] + b[2];
+  function rotateY2(out, a3, b, rad) {
+    var p2 = [], r2 = [];
+    p2[0] = a3[0] - b[0];
+    p2[1] = a3[1] - b[1];
+    p2[2] = a3[2] - b[2];
+    r2[0] = p2[2] * Math.sin(rad) + p2[0] * Math.cos(rad);
+    r2[1] = p2[1];
+    r2[2] = p2[2] * Math.cos(rad) - p2[0] * Math.sin(rad);
+    out[0] = r2[0] + b[0];
+    out[1] = r2[1] + b[1];
+    out[2] = r2[2] + b[2];
     return out;
   }
-  function rotateZ2(out, a, b, rad) {
-    var p = [], r = [];
-    p[0] = a[0] - b[0];
-    p[1] = a[1] - b[1];
-    p[2] = a[2] - b[2];
-    r[0] = p[0] * Math.cos(rad) - p[1] * Math.sin(rad);
-    r[1] = p[0] * Math.sin(rad) + p[1] * Math.cos(rad);
-    r[2] = p[2];
-    out[0] = r[0] + b[0];
-    out[1] = r[1] + b[1];
-    out[2] = r[2] + b[2];
+  function rotateZ2(out, a3, b, rad) {
+    var p2 = [], r2 = [];
+    p2[0] = a3[0] - b[0];
+    p2[1] = a3[1] - b[1];
+    p2[2] = a3[2] - b[2];
+    r2[0] = p2[0] * Math.cos(rad) - p2[1] * Math.sin(rad);
+    r2[1] = p2[0] * Math.sin(rad) + p2[1] * Math.cos(rad);
+    r2[2] = p2[2];
+    out[0] = r2[0] + b[0];
+    out[1] = r2[1] + b[1];
+    out[2] = r2[2] + b[2];
     return out;
   }
-  function angle(a, b) {
-    var ax = a[0], ay = a[1], az = a[2], bx = b[0], by = b[1], bz = b[2], mag = Math.sqrt((ax * ax + ay * ay + az * az) * (bx * bx + by * by + bz * bz)), cosine = mag && dot(a, b) / mag;
+  function angle(a3, b) {
+    var ax = a3[0], ay = a3[1], az = a3[2], bx = b[0], by = b[1], bz = b[2], mag = Math.sqrt((ax * ax + ay * ay + az * az) * (bx * bx + by * by + bz * bz)), cosine = mag && dot(a3, b) / mag;
     return Math.acos(Math.min(Math.max(cosine, -1), 1));
   }
   function zero(out) {
@@ -1782,16 +1929,16 @@ export default require => {
     out[2] = 0;
     return out;
   }
-  function str2(a) {
-    return "vec3(" + a[0] + ", " + a[1] + ", " + a[2] + ")";
+  function str2(a3) {
+    return "vec3(" + a3[0] + ", " + a3[1] + ", " + a3[2] + ")";
   }
-  function exactEquals2(a, b) {
-    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
+  function exactEquals2(a3, b) {
+    return a3[0] === b[0] && a3[1] === b[1] && a3[2] === b[2];
   }
-  function equals2(a, b) {
-    var a0 = a[0], a1 = a[1], a2 = a[2];
+  function equals2(a3, b) {
+    var a0 = a3[0], a1 = a3[1], a22 = a3[2];
     var b0 = b[0], b1 = b[1], b2 = b[2];
-    return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a2 - b2) <= EPSILON * Math.max(1, Math.abs(a2), Math.abs(b2));
+    return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a22 - b2) <= EPSILON * Math.max(1, Math.abs(a22), Math.abs(b2));
   }
   var sub2 = subtract2;
   var mul2 = multiply2;
@@ -1802,8 +1949,8 @@ export default require => {
   var sqrLen = squaredLength;
   var forEach = (function () {
     var vec = create2();
-    return function (a, stride, offset, count, fn, arg) {
-      var i, l;
+    return function (a3, stride, offset, count, fn, arg) {
+      var i, l2;
       if (!stride) {
         stride = 3;
       }
@@ -1811,24 +1958,22 @@ export default require => {
         offset = 0;
       }
       if (count) {
-        l = Math.min(count * stride + offset, a.length);
+        l2 = Math.min(count * stride + offset, a3.length);
       } else {
-        l = a.length;
+        l2 = a3.length;
       }
-      for (i = offset; i < l; i += stride) {
-        vec[0] = a[i];
-        vec[1] = a[i + 1];
-        vec[2] = a[i + 2];
+      for (i = offset; i < l2; i += stride) {
+        vec[0] = a3[i];
+        vec[1] = a3[i + 1];
+        vec[2] = a3[i + 2];
         fn(vec, vec, arg);
-        a[i] = vec[0];
-        a[i + 1] = vec[1];
-        a[i + 2] = vec[2];
+        a3[i] = vec[0];
+        a3[i + 1] = vec[1];
+        a3[i + 2] = vec[2];
       }
-      return a;
+      return a3;
     };
   })();
-  var import_operators2 = __require("js-slang/dist/utils/operators");
-  var import_stringify = __require("js-slang/dist/utils/stringify");
   var vsS = `
 attribute vec4 aFragColor;
 attribute vec4 aVertexPosition;
@@ -1851,7 +1996,7 @@ void main() {
   function loadShader(gl, type, source) {
     const shader = gl.createShader(type);
     if (!shader) {
-      throw new import_base.InternalRuntimeError("WebGLShader not available.");
+      throw new e2("WebGLShader not available.");
     }
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
@@ -1862,7 +2007,7 @@ void main() {
     const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
     const shaderProgram = gl.createProgram();
     if (!shaderProgram) {
-      throw new import_base.InternalRuntimeError("Unable to initialize the shader program.");
+      throw new e2("Unable to initialize the shader program.");
     }
     gl.attachShader(shaderProgram, vertexShader);
     gl.attachShader(shaderProgram, fragmentShader);
@@ -1878,7 +2023,7 @@ void main() {
       this.toReplString = () => `(${this.x}, ${this.y}, ${this.z}, Color: ${this.color})`;
     }
   };
-  var CurveDrawn = class {
+  var _CurveDrawn = class _CurveDrawn {
     constructor(drawMode, numPoints, space, drawCubeArray, curvePosArray, curveColorArray) {
       this.drawMode = drawMode;
       this.numPoints = numPoints;
@@ -1890,7 +2035,7 @@ void main() {
       this.init = canvas => {
         this.renderingContext = canvas.getContext("webgl");
         if (!this.renderingContext) {
-          throw new import_base.InternalRuntimeError("Rendering context cannot be null.");
+          throw new e2("Rendering context cannot be null.");
         }
         const cubeBuffer = this.renderingContext.createBuffer();
         this.renderingContext.bindBuffer(this.renderingContext.ARRAY_BUFFER, cubeBuffer);
@@ -1945,8 +2090,8 @@ void main() {
           mat4_exports.perspective(projMat, fieldOfView, aspect, zNear, zFar);
         }
         gl.useProgram(this.programs.program);
-        gl.uniformMatrix4fv(this.programs.uniformLocations.projectionMatrix, false, projMat);
-        gl.uniformMatrix4fv(this.programs.uniformLocations.modelViewMatrix, false, transMat);
+        gl.uniformMatrix4fv(this.programs.uniformLocations.projectionMatrix, false, new Float32Array(projMat));
+        gl.uniformMatrix4fv(this.programs.uniformLocations.modelViewMatrix, false, new Float32Array(transMat));
         gl.enableVertexAttribArray(this.programs.attribLocations.vertexPosition);
         gl.enableVertexAttribArray(this.programs.attribLocations.vertexColor);
         if (this.space === "3D") {
@@ -1972,6 +2117,14 @@ void main() {
           gl.drawArrays(gl.POINTS, 0, this.numPoints + 1);
         }
       };
+      this.toSerializable = () => ({
+        drawMode: this.drawMode,
+        numPoints: this.numPoints,
+        space: this.space,
+        drawCubeArray: this.drawCubeArray,
+        curvePosArray: this.curvePosArray,
+        curveColorArray: this.curveColorArray
+      });
       this.renderingContext = null;
       this.programs = null;
       this.buffersInfo = null;
@@ -1980,492 +2133,131 @@ void main() {
       return this.space === "3D";
     }
   };
-  function generateCurve(scaleMode, drawMode, numPoints, func, space, isFullView) {
-    const curvePosArray = [];
-    const curveColorArray = [];
-    const drawCubeArray = [];
-    let min_x = Infinity;
-    let max_x = -Infinity;
-    let min_y = Infinity;
-    let max_y = -Infinity;
-    let min_z = Infinity;
-    let max_z = -Infinity;
-    for (let i = 0; i <= numPoints; i += 1) {
-      const point = (0, import_operators2.callWithoutMetadata)(func, i / numPoints);
-      if (!(point instanceof Point)) {
-        throw new import_base.GeneralRuntimeError(`Expected curve to return a point, got '${(0, import_stringify.stringify)(point)}' at t=${i / numPoints}`);
-      }
-      const x = point.x * 2 - 1;
-      const y = point.y * 2 - 1;
-      const z = point.z * 2 - 1;
-      if (space === "2D") {
-        curvePosArray.push(x, y);
-      } else {
-        curvePosArray.push(x, y, z);
-      }
-      const color_r = point.color[0];
-      const color_g = point.color[1];
-      const color_b = point.color[2];
-      const color_a = point.color[3];
-      curveColorArray.push(color_r, color_g, color_b, color_a);
-      min_x = Math.min(min_x, x);
-      max_x = Math.max(max_x, x);
-      min_y = Math.min(min_y, y);
-      max_y = Math.max(max_y, y);
-      min_z = Math.min(min_z, z);
-      max_z = Math.max(max_z, z);
-    }
-    if (isFullView) {
-      const horiz_padding = 0.05 * (max_x - min_x);
-      min_x -= horiz_padding;
-      max_x += horiz_padding;
-      const vert_padding = 0.05 * (max_y - min_y);
-      min_y -= vert_padding;
-      max_y += vert_padding;
-      const depth_padding = 0.05 * (max_z - min_z);
-      min_z -= depth_padding;
-      max_z += depth_padding;
-    }
-    if (space === "3D") {
-      drawCubeArray.push(-1, 1, 1, -1, -1, 1, -1, -1, -1, -1, 1, -1);
-      drawCubeArray.push(1, 1, -1, 1, -1, -1, -1, -1, -1, 1, -1, -1);
-      drawCubeArray.push(1, -1, 1, -1, -1, 1, 1, -1, 1, 1, 1, 1);
-      drawCubeArray.push(-1, 1, 1, -1, 1, -1, 1, 1, -1, 1, 1, 1);
-    } else {
-      min_z = 0;
-      max_z = 0;
-    }
-    if (scaleMode === "fit") {
-      const center = [(min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2];
-      let scale4 = Math.max(max_x - min_x, max_y - min_y, max_z - min_z);
-      scale4 = scale4 === 0 ? 1 : scale4;
-      if (space === "3D") {
-        for (let i = 0; i < curvePosArray.length; i += 1) {
-          if (i % 3 === 0) {
-            curvePosArray[i] -= center[0];
-            curvePosArray[i] /= scale4 / 2;
-          } else if (i % 3 === 1) {
-            curvePosArray[i] -= center[1];
-            curvePosArray[i] /= scale4 / 2;
-          } else {
-            curvePosArray[i] -= center[2];
-            curvePosArray[i] /= scale4 / 2;
-          }
-        }
-      } else {
-        for (let i = 0; i < curvePosArray.length; i += 1) {
-          if (i % 2 === 0) {
-            curvePosArray[i] -= center[0];
-            curvePosArray[i] /= scale4 / 2;
-          } else {
-            curvePosArray[i] -= center[1];
-            curvePosArray[i] /= scale4 / 2;
-          }
-        }
-      }
-    } else if (scaleMode === "stretch") {
-      const center = [(min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2];
-      const x_scale = max_x === min_x ? 1 : max_x - min_x;
-      const y_scale = max_y === min_y ? 1 : max_y - min_y;
-      const z_scale = max_z === min_z ? 1 : max_z - min_z;
-      if (space === "3D") {
-        for (let i = 0; i < curvePosArray.length; i += 1) {
-          if (i % 3 === 0) {
-            curvePosArray[i] -= center[0];
-            curvePosArray[i] /= x_scale / 2;
-          } else if (i % 3 === 1) {
-            curvePosArray[i] -= center[1];
-            curvePosArray[i] /= y_scale / 2;
-          } else {
-            curvePosArray[i] -= center[2];
-            curvePosArray[i] /= z_scale / 2;
-          }
-        }
-      } else {
-        for (let i = 0; i < curvePosArray.length; i += 1) {
-          if (i % 2 === 0) {
-            curvePosArray[i] -= center[0];
-            curvePosArray[i] /= x_scale / 2;
-          } else {
-            curvePosArray[i] -= center[1];
-            curvePosArray[i] /= y_scale / 2;
-          }
-        }
-      }
-    }
-    return new CurveDrawn(drawMode, numPoints, space, drawCubeArray, curvePosArray, curveColorArray);
-  }
-  function createTypeMap() {
-    const type_map2 = {};
-    function registerType(name, declaration) {
-      if (name === "prelude") {
-        type_map2["prelude"] = type_map2["prelude"] != void 0 ? type_map2["prelude"] + "\n" + declaration : declaration;
-      } else {
-        type_map2[name] = declaration;
-      }
-    }
-    function classDeclaration2(name) {
-      return _target => {
-        registerType("prelude", `class ${name} {}`);
-      };
-    }
-    function typeDeclaration2(type, declaration = null) {
-      return target => {
-        const typeAlias = `type ${target.name} = ${type}`;
-        let variableDeclaration2 = `const ${target.name} = ${declaration === null ? type : declaration}`;
-        switch (type) {
-          case "number":
-            variableDeclaration2 = `const ${target.name} = 0`;
-            break;
-          case "string":
-            variableDeclaration2 = `const ${target.name} = ''`;
-            break;
-          case "boolean":
-            variableDeclaration2 = `const ${target.name} = false`;
-            break;
-          case "void":
-            variableDeclaration2 = "";
-            break;
-        }
-        registerType("prelude", `${typeAlias};
-${variableDeclaration2};`);
-      };
-    }
-    function functionDeclaration2(paramTypes, returnType) {
-      return (_target, propertyKey, _descriptor) => {
-        let returnValue = "";
-        switch (returnType) {
-          case "number":
-            returnValue = "return 0";
-            break;
-          case "string":
-            returnValue = "return ''";
-            break;
-          case "boolean":
-            returnValue = "return false";
-            break;
-          case "void":
-            returnValue = "";
-            break;
-          default:
-            returnValue = `return ${returnType}`;
-            break;
-        }
-        registerType(propertyKey, `function ${propertyKey} (${paramTypes}) : ${returnType} { ${returnValue} }`);
-      };
-    }
-    function variableDeclaration(type) {
-      return (_target, propertyKey) => {
-        registerType(propertyKey, `const ${propertyKey}: ${type} = ${type}`);
-      };
-    }
-    return {
-      classDeclaration: classDeclaration2,
-      functionDeclaration: functionDeclaration2,
-      variableDeclaration,
-      typeDeclaration: typeDeclaration2,
-      type_map: type_map2
-    };
-  }
-  var typeMapCreator = createTypeMap();
-  var {classDeclaration, functionDeclaration, typeDeclaration} = typeMapCreator;
-  var Point2 = class {};
-  Point2 = __decorateClass([classDeclaration("Point")], Point2);
-  var AnimatedCurve = class {};
-  AnimatedCurve = __decorateClass([classDeclaration("AnimatedCurve")], AnimatedCurve);
-  var Curve = class {};
-  Curve = __decorateClass([typeDeclaration("(u: number) => Point")], Curve);
-  var CurveAnimation = class {};
-  CurveAnimation = __decorateClass([typeDeclaration("(t: number) => Curve")], CurveAnimation);
-  var type_map = typeMapCreator.type_map;
-  function throwIfNotPoint(obj, func_name) {
-    if (!(obj instanceof Point)) {
-      throw new import_rttcErrors.InvalidParameterTypeError("Point", obj, func_name);
-    }
-  }
-  function throwIfNotCurve(obj, func_name, param_name) {
-    (0, import_rttc.assertFunctionOfLength)(obj, 1, func_name, "Curve", param_name);
-  }
-  function defineCurveTransformer(f, name) {
-    const transformer = curve => {
-      throwIfNotCurve(curve, name != null ? name : "CurveTransformer");
-      return f(t => (0, import_operators.callWithoutMetadata)(curve, t));
-    };
-    transformer.toReplString = () => "<CurveTransformer>";
-    if (name !== void 0) {
-      Object.defineProperty(transformer, "name", {
-        value: name
-      });
-    }
-    return transformer;
-  }
-  var _CurveFunctions = class _CurveFunctions {
-    static make_point(x, y) {
-      (0, import_rttc.assertNumberWithinRange)(x, {
-        func_name: _CurveFunctions.make_point.name,
-        param_name: "x",
-        integer: false
-      });
-      (0, import_rttc.assertNumberWithinRange)(y, {
-        func_name: _CurveFunctions.make_point.name,
-        param_name: "y",
-        integer: false
-      });
-      return new Point(x, y, 0, [0, 0, 0, 1]);
-    }
-    static make_3D_point(x, y, z) {
-      (0, import_rttc.assertNumberWithinRange)(x, {
-        func_name: _CurveFunctions.make_3D_point.name,
-        param_name: "x",
-        integer: false
-      });
-      (0, import_rttc.assertNumberWithinRange)(y, {
-        func_name: _CurveFunctions.make_3D_point.name,
-        param_name: "y",
-        integer: false
-      });
-      (0, import_rttc.assertNumberWithinRange)(z, {
-        func_name: _CurveFunctions.make_3D_point.name,
-        param_name: "z",
-        integer: false
-      });
-      return new Point(x, y, z, [0, 0, 0, 1]);
-    }
-    static make_color_point(x, y, r, g, b) {
-      r = clamp(r, 0, 255);
-      g = clamp(g, 0, 255);
-      b = clamp(b, 0, 255);
-      return new Point(x, y, 0, [r / 255, g / 255, b / 255, 1]);
-    }
-    static make_3D_color_point(x, y, z, r, g, b) {
-      r = clamp(r, 0, 255);
-      g = clamp(g, 0, 255);
-      b = clamp(b, 0, 255);
-      return new Point(x, y, z, [r / 255, g / 255, b / 255, 1]);
-    }
-    static connect_ends(curve1, curve2) {
-      throwIfNotCurve(curve1, _CurveFunctions.connect_ends.name, "curve1");
-      throwIfNotCurve(curve2, _CurveFunctions.connect_ends.name, "curve2");
-      const startPointOfCurve2 = (0, import_operators.callWithoutMetadata)(curve2, 0);
-      const endPointOfCurve1 = (0, import_operators.callWithoutMetadata)(curve1, 1);
-      return connect_rigidly(curve1, translate2(x_of(endPointOfCurve1) - x_of(startPointOfCurve2), y_of(endPointOfCurve1) - y_of(startPointOfCurve2), z_of(endPointOfCurve1) - z_of(startPointOfCurve2))(curve2));
-    }
-    static connect_rigidly(curve1, curve2) {
-      throwIfNotCurve(curve1, _CurveFunctions.connect_rigidly.name, "curve1");
-      throwIfNotCurve(curve2, _CurveFunctions.connect_rigidly.name, "curve2");
-      const c1 = t => (0, import_operators.callWithoutMetadata)(curve1, t);
-      const c2 = t => (0, import_operators.callWithoutMetadata)(curve2, t);
-      return t => t < 0.5 ? c1(2 * t) : c2(2 * t - 1);
-    }
-    static translate(x0, y0, z0) {
-      (0, import_rttc.assertNumberWithinRange)(x0, {
-        func_name: _CurveFunctions.translate.name,
-        param_name: "x0",
-        integer: false
-      });
-      (0, import_rttc.assertNumberWithinRange)(y0, {
-        func_name: _CurveFunctions.translate.name,
-        param_name: "y0",
-        integer: false
-      });
-      (0, import_rttc.assertNumberWithinRange)(z0, {
-        func_name: _CurveFunctions.translate.name,
-        param_name: "z0",
-        integer: false
-      });
-      return defineCurveTransformer(curve => t => {
-        const pt = curve(t);
-        return make_3D_color_point(x0 + x_of(pt), y0 + y_of(pt), z0 + z_of(pt), r_of(pt), g_of(pt), b_of(pt));
-      });
-    }
-    static rainbow(repeats, phase) {
-      (0, import_rttc.assertNumberWithinRange)(repeats, _CurveFunctions.rainbow.name, 0, void 0, false, "repeats");
-      (0, import_rttc.assertNumberWithinRange)(phase, _CurveFunctions.rainbow.name, void 0, void 0, false, "phase");
-      return defineCurveTransformer(curve => t => {
-        const pt = curve(t);
-        const [r, g, b] = hueToRgb((t * repeats + phase) % 1);
-        return make_3D_color_point(x_of(pt), y_of(pt), z_of(pt), r, g, b);
-      }, "rainbow");
-    }
-    static rotate_around_origin_3D(a, b, c) {
-      (0, import_rttc.assertNumberWithinRange)(a, {
-        func_name: _CurveFunctions.rotate_around_origin_3D.name,
-        integer: false,
-        param_name: "a"
-      });
-      const cthx = Math.cos(a);
-      const sthx = Math.sin(a);
-      (0, import_rttc.assertNumberWithinRange)(b, {
-        func_name: _CurveFunctions.rotate_around_origin_3D.name,
-        integer: false,
-        param_name: "b"
-      });
-      const cthy = Math.cos(b);
-      const sthy = Math.sin(b);
-      (0, import_rttc.assertNumberWithinRange)(c, {
-        func_name: _CurveFunctions.rotate_around_origin_3D.name,
-        integer: false,
-        param_name: "c"
-      });
-      const cthz = Math.cos(c);
-      const sthz = Math.sin(c);
-      const mat = [[cthz * cthy, cthz * sthy * sthx - sthz * cthx, cthz * sthy * cthx + sthz * sthx], [sthz * cthy, sthz * sthy * sthx + cthz * cthx, sthz * sthy * cthx - cthz * sthx], [-sthy, cthy * sthx, cthy * cthx]];
-      return defineCurveTransformer(curve => t => {
-        const pt = curve(t);
-        const coord = [pt.x, pt.y, pt.z];
-        let xf = 0;
-        let yf = 0;
-        let zf = 0;
-        for (let i = 0; i < 3; i += 1) {
-          xf += mat[0][i] * coord[i];
-          yf += mat[1][i] * coord[i];
-          zf += mat[2][i] * coord[i];
-        }
-        return make_3D_color_point(xf, yf, zf, r_of(pt), g_of(pt), z_of(pt));
-      });
-    }
-    static rotate_around_origin(a) {
-      (0, import_rttc.assertNumberWithinRange)(a, {
-        func_name: _CurveFunctions.rotate_around_origin.name,
-        integer: false
-      });
-      const cth = Math.cos(a);
-      const sth = Math.sin(a);
-      return defineCurveTransformer(curve => t => {
-        const pt = curve(t);
-        const pt_x = x_of(pt);
-        const pt_y = y_of(pt);
-        return make_3D_color_point(cth * pt_x - sth * pt_y, sth * pt_x + cth * pt_y, z_of(pt), r_of(pt), g_of(pt), b_of(pt));
-      });
-    }
-    static scale(x, y, z) {
-      (0, import_rttc.assertNumberWithinRange)(x, {
-        func_name: _CurveFunctions.scale.name,
-        param_name: "x",
-        integer: false
-      });
-      (0, import_rttc.assertNumberWithinRange)(y, {
-        func_name: _CurveFunctions.scale.name,
-        param_name: "y",
-        integer: false
-      });
-      (0, import_rttc.assertNumberWithinRange)(z, {
-        func_name: _CurveFunctions.scale.name,
-        param_name: "z",
-        integer: false
-      });
-      return defineCurveTransformer(curve => t => {
-        const pt = curve(t);
-        return make_3D_color_point(x * x_of(pt), y * y_of(pt), z * z_of(pt), r_of(pt), g_of(pt), b_of(pt));
-      });
-    }
-    static scale_proportional(s) {
-      return scale3(s, s, s);
-    }
-    static x_of(pt) {
-      throwIfNotPoint(pt, x_of.name);
-      return pt.x;
-    }
-    static y_of(pt) {
-      throwIfNotPoint(pt, y_of.name);
-      return pt.y;
-    }
-    static z_of(pt) {
-      throwIfNotPoint(pt, z_of.name);
-      return pt.z;
-    }
-    static r_of(pt) {
-      throwIfNotPoint(pt, r_of.name);
-      return Math.floor(pt.color[0] * 255);
-    }
-    static g_of(pt) {
-      throwIfNotPoint(pt, g_of.name);
-      return Math.floor(pt.color[1] * 255);
-    }
-    static b_of(pt) {
-      throwIfNotPoint(pt, b_of.name);
-      return Math.floor(pt.color[2] * 255);
-    }
-    static unit_line_at(y) {
-      (0, import_rttc.assertNumberWithinRange)(y, {
-        func_name: _CurveFunctions.unit_line_at.name,
-        integer: false
-      });
-      return t => make_point(t, y);
-    }
+  _CurveDrawn.fromSerializable = serialized => {
+    const {drawMode, numPoints, space, drawCubeArray, curvePosArray, curveColorArray} = serialized;
+    return new _CurveDrawn(drawMode, numPoints, space, drawCubeArray, curvePosArray, curveColorArray);
   };
-  _CurveFunctions.invert = defineCurveTransformer(curve => t => curve(1 - t), "invert");
-  _CurveFunctions.put_in_standard_position = defineCurveTransformer(curve => {
-    const start_point = curve(0);
-    const curve_started_at_origin = translate2(-x_of(start_point), -y_of(start_point), 0)(curve);
-    const new_end_point = curve_started_at_origin(1);
-    const theta = Math.atan2(y_of(new_end_point), x_of(new_end_point));
-    const curve_ended_at_x_axis = rotate_around_origin_3D(0, 0, -theta)(curve_started_at_origin);
-    const end_point_on_x_axis = x_of(curve_ended_at_x_axis(1));
-    return scale_proportional(1 / end_point_on_x_axis)(curve_ended_at_x_axis);
-  }, "put_in_standard_position");
-  _CurveFunctions.compose = (0, import_operators.wrap)((...transformers) => {
-    transformers.forEach((transformer, index) => {
-      (0, import_rttc.assertFunctionOfLength)(transformer, 1, _CurveFunctions.compose.name, "CurveTransformer", `arg ${index}`);
+  var CurveDrawn = _CurveDrawn;
+  function generateCurve(evaluator, scaleMode, drawMode, numPoints, func, space, isFullView) {
+    return __asyncGenerator(this, null, function* () {
+      const curvePosArray = [];
+      const curveColorArray = [];
+      const drawCubeArray = [];
+      let min_x = Infinity;
+      let max_x = -Infinity;
+      let min_y = Infinity;
+      let max_y = -Infinity;
+      let min_z = Infinity;
+      let max_z = -Infinity;
+      for (let i = 0; i <= numPoints; i += 1) {
+        const point = yield new __await(evaluator.opaque_get(yield* __yieldStar(evaluator.closure_call(func, [{
+          type: E.NUMBER,
+          value: i / numPoints
+        }], E.OPAQUE))));
+        if (!(point instanceof Point)) {
+          throw new e2(`Expected curve to return a point, got '${JSON.stringify(point)}' at t=${i / numPoints}`);
+        }
+        const x = point.x * 2 - 1;
+        const y = point.y * 2 - 1;
+        const z = point.z * 2 - 1;
+        if (space === "2D") {
+          curvePosArray.push(x, y);
+        } else {
+          curvePosArray.push(x, y, z);
+        }
+        const color_r = point.color[0];
+        const color_g = point.color[1];
+        const color_b = point.color[2];
+        const color_a = point.color[3];
+        curveColorArray.push(color_r, color_g, color_b, color_a);
+        min_x = Math.min(min_x, x);
+        max_x = Math.max(max_x, x);
+        min_y = Math.min(min_y, y);
+        max_y = Math.max(max_y, y);
+        min_z = Math.min(min_z, z);
+        max_z = Math.max(max_z, z);
+      }
+      if (isFullView) {
+        const horiz_padding = 0.05 * (max_x - min_x);
+        min_x -= horiz_padding;
+        max_x += horiz_padding;
+        const vert_padding = 0.05 * (max_y - min_y);
+        min_y -= vert_padding;
+        max_y += vert_padding;
+        const depth_padding = 0.05 * (max_z - min_z);
+        min_z -= depth_padding;
+        max_z += depth_padding;
+      }
+      if (space === "3D") {
+        drawCubeArray.push(-1, 1, 1, -1, -1, 1, -1, -1, -1, -1, 1, -1);
+        drawCubeArray.push(1, 1, -1, 1, -1, -1, -1, -1, -1, 1, -1, -1);
+        drawCubeArray.push(1, -1, 1, -1, -1, 1, 1, -1, 1, 1, 1, 1);
+        drawCubeArray.push(-1, 1, 1, -1, 1, -1, 1, 1, -1, 1, 1, 1);
+      } else {
+        min_z = 0;
+        max_z = 0;
+      }
+      if (scaleMode === "fit") {
+        const center = [(min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2];
+        let scale4 = Math.max(max_x - min_x, max_y - min_y, max_z - min_z);
+        scale4 = scale4 === 0 ? 1 : scale4;
+        if (space === "3D") {
+          for (let i = 0; i < curvePosArray.length; i += 1) {
+            if (i % 3 === 0) {
+              curvePosArray[i] -= center[0];
+              curvePosArray[i] /= scale4 / 2;
+            } else if (i % 3 === 1) {
+              curvePosArray[i] -= center[1];
+              curvePosArray[i] /= scale4 / 2;
+            } else {
+              curvePosArray[i] -= center[2];
+              curvePosArray[i] /= scale4 / 2;
+            }
+          }
+        } else {
+          for (let i = 0; i < curvePosArray.length; i += 1) {
+            if (i % 2 === 0) {
+              curvePosArray[i] -= center[0];
+              curvePosArray[i] /= scale4 / 2;
+            } else {
+              curvePosArray[i] -= center[1];
+              curvePosArray[i] /= scale4 / 2;
+            }
+          }
+        }
+      } else if (scaleMode === "stretch") {
+        const center = [(min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2];
+        const x_scale = max_x === min_x ? 1 : max_x - min_x;
+        const y_scale = max_y === min_y ? 1 : max_y - min_y;
+        const z_scale = max_z === min_z ? 1 : max_z - min_z;
+        if (space === "3D") {
+          for (let i = 0; i < curvePosArray.length; i += 1) {
+            if (i % 3 === 0) {
+              curvePosArray[i] -= center[0];
+              curvePosArray[i] /= x_scale / 2;
+            } else if (i % 3 === 1) {
+              curvePosArray[i] -= center[1];
+              curvePosArray[i] /= y_scale / 2;
+            } else {
+              curvePosArray[i] -= center[2];
+              curvePosArray[i] /= z_scale / 2;
+            }
+          }
+        } else {
+          for (let i = 0; i < curvePosArray.length; i += 1) {
+            if (i % 2 === 0) {
+              curvePosArray[i] -= center[0];
+              curvePosArray[i] /= x_scale / 2;
+            } else {
+              curvePosArray[i] -= center[1];
+              curvePosArray[i] /= y_scale / 2;
+            }
+          }
+        }
+      }
+      return new CurveDrawn(drawMode, numPoints, space, drawCubeArray, curvePosArray, curveColorArray);
     });
-    return defineCurveTransformer(curve => {
-      return transformers.reduce((acc, transformer) => transformer(acc), curve);
-    });
-  }, true, "compose");
-  _CurveFunctions.unit_circle = t => make_point(Math.cos(2 * Math.PI * t), Math.sin(2 * Math.PI * t));
-  _CurveFunctions.unit_line = t => make_point(t, 0);
-  _CurveFunctions.arc = t => make_point(Math.sin(Math.PI * t), Math.cos(Math.PI * t));
-  __decorateClass([functionDeclaration("x: number, y: number", "Point")], _CurveFunctions, "make_point", 1);
-  __decorateClass([functionDeclaration("x: number, y: number, z: number", "Point")], _CurveFunctions, "make_3D_point", 1);
-  __decorateClass([functionDeclaration("x: number, y: number, r: number, g: number, b: number", "Point")], _CurveFunctions, "make_color_point", 1);
-  __decorateClass([functionDeclaration("x: number, y: number, z: number, r: number, g: number, b: number", "Point")], _CurveFunctions, "make_3D_color_point", 1);
-  __decorateClass([functionDeclaration("curve1: Curve, curve2: Curve", "Curve")], _CurveFunctions, "connect_ends", 1);
-  __decorateClass([functionDeclaration("curve1: Curve, curve2: Curve", "Curve")], _CurveFunctions, "connect_rigidly", 1);
-  __decorateClass([functionDeclaration("x0: number, y0: number, z0: number", "(c: Curve) => Curve")], _CurveFunctions, "translate", 1);
-  __decorateClass([functionDeclaration("repeats: number, phase: number", "(c: Curve) => Curve")], _CurveFunctions, "rainbow", 1);
-  __decorateClass([functionDeclaration("curve: Curve", "Curve")], _CurveFunctions, "invert", 2);
-  __decorateClass([functionDeclaration("curve: Curve", "Curve")], _CurveFunctions, "put_in_standard_position", 2);
-  __decorateClass([functionDeclaration("a: number, b: number, c: number", "(c: Curve) => Curve")], _CurveFunctions, "rotate_around_origin_3D", 1);
-  __decorateClass([functionDeclaration("a: number", "(c: Curve) => Curve")], _CurveFunctions, "rotate_around_origin", 1);
-  __decorateClass([functionDeclaration("x: number, y: number, z: number", "(c: Curve) => Curve")], _CurveFunctions, "scale", 1);
-  __decorateClass([functionDeclaration("s: number", "(c: Curve) => Curve")], _CurveFunctions, "scale_proportional", 1);
-  __decorateClass([functionDeclaration("p: Point", "number")], _CurveFunctions, "x_of", 1);
-  __decorateClass([functionDeclaration("p: Point", "number")], _CurveFunctions, "y_of", 1);
-  __decorateClass([functionDeclaration("p: Point", "number")], _CurveFunctions, "z_of", 1);
-  __decorateClass([functionDeclaration("p: Point", "number")], _CurveFunctions, "r_of", 1);
-  __decorateClass([functionDeclaration("p: Point", "number")], _CurveFunctions, "g_of", 1);
-  __decorateClass([functionDeclaration("p: Point", "number")], _CurveFunctions, "b_of", 1);
-  __decorateClass([functionDeclaration("t: number", "Point")], _CurveFunctions, "unit_circle", 2);
-  __decorateClass([functionDeclaration("t: number", "Point")], _CurveFunctions, "unit_line", 2);
-  __decorateClass([functionDeclaration("t: number", "Curve")], _CurveFunctions, "unit_line_at", 1);
-  __decorateClass([functionDeclaration("t: number", "Point")], _CurveFunctions, "arc", 2);
-  var CurveFunctions = _CurveFunctions;
-  var make_point = CurveFunctions.make_point;
-  var make_3D_point = CurveFunctions.make_3D_point;
-  var make_color_point = CurveFunctions.make_color_point;
-  var make_3D_color_point = CurveFunctions.make_3D_color_point;
-  var x_of = CurveFunctions.x_of;
-  var y_of = CurveFunctions.y_of;
-  var z_of = CurveFunctions.z_of;
-  var r_of = CurveFunctions.r_of;
-  var g_of = CurveFunctions.g_of;
-  var b_of = CurveFunctions.b_of;
-  var invert2 = CurveFunctions.invert;
-  var translate2 = CurveFunctions.translate;
-  var rainbow = CurveFunctions.rainbow;
-  var rotate_around_origin_3D = CurveFunctions.rotate_around_origin_3D;
-  var rotate_around_origin = CurveFunctions.rotate_around_origin;
-  var scale3 = CurveFunctions.scale;
-  var scale_proportional = CurveFunctions.scale_proportional;
-  var compose = CurveFunctions.compose;
-  var put_in_standard_position = CurveFunctions.put_in_standard_position;
-  var connect_rigidly = CurveFunctions.connect_rigidly;
-  var connect_ends = CurveFunctions.connect_ends;
-  var unit_circle = CurveFunctions.unit_circle;
-  var unit_line = CurveFunctions.unit_line;
-  var unit_line_at = CurveFunctions.unit_line_at;
-  var arc = CurveFunctions.arc;
-  var import_context = __toESM(__require("js-slang/context"), 1);
+  }
   var glAnimationSymbol = Symbol.for("glAnimation");
   var glAnimation = class _glAnimation {
     constructor(duration, fps) {
@@ -2483,22 +2275,24 @@ ${variableDeclaration2};`);
       return obj instanceof _glAnimation;
     }
   };
-  var AnimatedCurve2 = class extends glAnimation {
-    constructor(duration, fps, func, drawer, is3D) {
+  var _AnimatedCurve = class _AnimatedCurve extends glAnimation {
+    constructor(duration, fps, frames, is3D) {
       super(duration, fps);
-      this.func = func;
-      this.drawer = drawer;
+      this.frames = frames;
       this.is3D = is3D;
       this.toReplString = () => "<AnimatedCurve>";
+      this.toSerializable = () => ({
+        type: "animation",
+        duration: this.duration,
+        fps: this.fps,
+        is3D: this.is3D,
+        frames: this.frames.map(frame => frame.toSerializable())
+      });
       this.angle = 0;
     }
     getFrame(timestamp) {
-      const curve = (0, import_operators.callWithoutMetadata)(this.func, timestamp);
-      if (!(0, import_rttc.isFunctionOfLength)(curve, 1)) {
-        throw new import_base.GeneralRuntimeError(`CurveAnimation did not return a Curve at timestamp ${timestamp}`);
-      }
-      curve.shouldNotAppend = true;
-      const curveDrawn = this.drawer(curve);
+      const frameIndex = Math.floor(timestamp / this.duration * this.frames.length) % this.frames.length;
+      const curveDrawn = this.frames[frameIndex];
       return {
         draw: canvas => {
           curveDrawn.init(canvas);
@@ -2507,20 +2301,26 @@ ${variableDeclaration2};`);
       };
     }
   };
-  var drawnCurves = [];
-  import_context.default.moduleContexts.curve.state = {
-    drawnCurves
+  _AnimatedCurve.fromSerializable = serialized => {
+    const {duration, fps, is3D, frames} = serialized[0];
+    return new _AnimatedCurve(duration, fps, frames.map(frame => CurveDrawn.fromSerializable(frame)), is3D);
   };
+  var AnimatedCurve = _AnimatedCurve;
   function getRenderFunctionCreator(scaleMode, drawMode, space, isFullView, name) {
-    function renderFuncCreator(numPoints) {
-      (0, import_rttc.assertNumberWithinRange)(numPoints, name, 0, 65535);
+    function renderFuncCreator(evaluator, numPoints) {
+      if (numPoints <= 0 || numPoints > 65535 || !Number.isInteger(numPoints)) {
+        throw new e2(`${name}: The number of points must be a positive integer less than or equal to 65535. Got: ${numPoints}`);
+      }
       function renderFunc(curve) {
-        (0, import_rttc.assertFunctionOfLength)(curve, 1, "RenderFunction", "Curve");
-        const curveDrawn = generateCurve(scaleMode, drawMode, numPoints, curve, space, isFullView);
-        if (!curve.shouldNotAppend) {
-          drawnCurves.push(curveDrawn);
-        }
-        return curveDrawn;
+        return __asyncGenerator(this, null, function* () {
+          try {
+            yield new __await(evaluator.closure_arity_assert(curve, 1));
+          } catch (e5) {
+            throw new e2("The provided curve is not a valid Curve function. A Curve function must take exactly one parameter (a number t between 0 and 1) and return a Point or 3D Point depending on whether it is a 2D or 3D curve.");
+          }
+          const curveDrawn = yield* __yieldStar(generateCurve(evaluator, scaleMode, drawMode, numPoints, curve, space, isFullView));
+          return curveDrawn;
+        });
       }
       renderFunc.is3D = space === "3D";
       renderFunc.toReplString = () => `<${space === "3D" ? "3D" : ""}RenderFunction(${numPoints})>`;
@@ -2548,18 +2348,6 @@ ${variableDeclaration2};`);
   RenderFunctionCreators.draw_3D_points = getRenderFunctionCreator("none", "points", "3D", false, "draw_3D_points");
   RenderFunctionCreators.draw_3D_points_full_view = getRenderFunctionCreator("stretch", "points", "3D", true, "draw_3D_points_full_view");
   RenderFunctionCreators.draw_3D_points_full_view_proportional = getRenderFunctionCreator("fit", "points", "3D", true, "draw_3D_points_full_view_proportional");
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_connected", 2);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_connected_full_view", 2);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_connected_full_view_proportional", 2);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_points", 2);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_points_full_view", 2);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_points_full_view_proportional", 2);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_3D_connected", 2);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_3D_connected_full_view", 2);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_3D_connected_full_view_proportional", 2);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_3D_points", 2);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_3D_points_full_view", 2);
-  __decorateClass([functionDeclaration("numPoints: number", "(func: Curve) => Curve")], RenderFunctionCreators, "draw_3D_points_full_view_proportional", 2);
   var draw_connected = RenderFunctionCreators.draw_connected;
   var draw_connected_full_view = RenderFunctionCreators.draw_connected_full_view;
   var draw_connected_full_view_proportional = RenderFunctionCreators.draw_connected_full_view_proportional;
@@ -2572,30 +2360,718 @@ ${variableDeclaration2};`);
   var draw_3D_points = RenderFunctionCreators.draw_3D_points;
   var draw_3D_points_full_view = RenderFunctionCreators.draw_3D_points_full_view;
   var draw_3D_points_full_view_proportional = RenderFunctionCreators.draw_3D_points_full_view_proportional;
-  var _CurveAnimators = class _CurveAnimators {
-    static animate_curve(duration, fps, drawer, func) {
-      if (drawer.is3D) {
-        throw new import_base.GeneralRuntimeError(`${animate_curve.name} cannot be used with 3D draw function!`);
-      }
-      (0, import_rttc.assertFunctionOfLength)(func, 1, _CurveAnimators.animate_curve.name, "CurveAnimation");
-      const anim = new AnimatedCurve2(duration, fps, func, drawer, false);
-      drawnCurves.push(anim);
-      return anim;
+  function getFrameCount(duration, fps, functionName) {
+    l(duration, functionName, Number.MIN_VALUE, Number.MAX_VALUE, false, "duration");
+    l(fps, functionName, Number.MIN_VALUE, Number.MAX_VALUE, false, "fps");
+    const frameCount = Math.floor(fps * duration);
+    l(frameCount, functionName, 1, Number.MAX_SAFE_INTEGER, true, "frameCount");
+    return frameCount;
+  }
+  var CurveAnimators = class _CurveAnimators {
+    static animate_curve(evaluator, duration, fps, drawer, func) {
+      return __asyncGenerator(this, null, function* () {
+        if (drawer.is3D) {
+          throw new e2(`${animate_curve.name} cannot be used with 3D draw function!`);
+        }
+        const frameCount = getFrameCount(duration, fps, _CurveAnimators.animate_curve.name);
+        const frames = [];
+        for (let i = 0; i < frameCount; i++) {
+          const t4 = i / frameCount;
+          frames.push(yield* __yieldStar(drawer(yield* __yieldStar(evaluator.closure_call(func, [{
+            type: E.NUMBER,
+            value: t4
+          }], E.CLOSURE)))));
+        }
+        const anim = new AnimatedCurve(duration, fps, frames, false);
+        return anim;
+      });
     }
-    static animate_3D_curve(duration, fps, drawer, func) {
-      if (!drawer.is3D) {
-        throw new import_base.GeneralRuntimeError(`${animate_3D_curve.name} cannot be used with 2D draw function!`);
-      }
-      (0, import_rttc.assertFunctionOfLength)(func, 1, _CurveAnimators.animate_3D_curve.name, "CurveAnimation");
-      const anim = new AnimatedCurve2(duration, fps, func, drawer, true);
-      drawnCurves.push(anim);
-      return anim;
+    static animate_3D_curve(evaluator, duration, fps, drawer, func) {
+      return __asyncGenerator(this, null, function* () {
+        if (!drawer.is3D) {
+          throw new e2(`${animate_3D_curve.name} cannot be used with 2D draw function!`);
+        }
+        const frameCount = getFrameCount(duration, fps, _CurveAnimators.animate_3D_curve.name);
+        const frames = [];
+        for (let i = 0; i < frameCount; i++) {
+          const t4 = i / frameCount;
+          frames.push(yield* __yieldStar(drawer(yield* __yieldStar(evaluator.closure_call(func, [{
+            type: E.NUMBER,
+            value: t4
+          }], E.CLOSURE)))));
+        }
+        const anim = new AnimatedCurve(duration, fps, frames, true);
+        return anim;
+      });
     }
   };
-  __decorateClass([functionDeclaration("duration: number, fps: number, drawer: (func: Curve) => Curve, func: (func: Curve) => Curve", "AnimatedCurve")], _CurveAnimators, "animate_curve", 1);
-  __decorateClass([functionDeclaration("duration: number, fps: number, drawer: (func: Curve) => Curve, func: (func: Curve) => Curve", "AnimatedCurve")], _CurveAnimators, "animate_3D_curve", 1);
-  var CurveAnimators = _CurveAnimators;
   var animate_curve = CurveAnimators.animate_curve;
   var animate_3D_curve = CurveAnimators.animate_3D_curve;
+  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
+  var import_base = __require("js-slang/dist/errors/base");
+  var import_rttc = __require("js-slang/dist/utils/rttc");
+  var import_operators = __require("js-slang/dist/utils/operators");
+  function hueToRgb(hue) {
+    const h = (hue % 1 + 1) % 1;
+    const i = Math.floor(h * 6);
+    const f2 = h * 6 - i;
+    const q = 1 - f2;
+    switch (i) {
+      case 0:
+        return [255, Math.floor(f2 * 255), 0];
+      case 1:
+        return [Math.floor(q * 255), 255, 0];
+      case 2:
+        return [0, 255, Math.floor(f2 * 255)];
+      case 3:
+        return [0, Math.floor(q * 255), 255];
+      case 4:
+        return [Math.floor(f2 * 255), 0, 255];
+      default:
+        return [255, 0, Math.floor(q * 255)];
+    }
+  }
+  function clamp(value, bound1, bound2) {
+    if (bound2 == null) return Math.min(value, bound1);
+    return Math.min(Math.max(value, bound1), bound2);
+  }
+  function throwIfNotPoint(obj, func_name, param_name) {
+    if (!(obj instanceof Point)) {
+      throw new n(func_name, param_name, "Point", obj);
+    }
+  }
+  function defineCurveTransformer(evaluator, f2) {
+    return __async(this, null, function* () {
+      return yield evaluator.closure_make({
+        args: [E.CLOSURE],
+        returnType: E.CLOSURE
+      }, function (curve) {
+        return __asyncGenerator(this, null, function* () {
+          return yield new __await(evaluator.closure_make({
+            args: [E.NUMBER],
+            returnType: E.OPAQUE
+          }, function (t4) {
+            return __asyncGenerator(this, null, function* () {
+              const pointId = yield* __yieldStar(evaluator.closure_call(curve, [t4], E.OPAQUE));
+              const point = yield new __await(evaluator.opaque_get(pointId));
+              return yield new __await(evaluator.opaque_make(yield* __yieldStar(f2(point, t4.value))));
+            });
+          }));
+        });
+      });
+    });
+  }
+  var _CurveFunctions = class _CurveFunctions {
+    static make_point(x, y) {
+      return new Point(x, y, 0, [0, 0, 0, 1]);
+    }
+    static make_3D_point(x, y, z) {
+      return new Point(x, y, z, [0, 0, 0, 1]);
+    }
+    static make_color_point(x, y, r2, g, b) {
+      r2 = clamp(r2, 0, 255);
+      g = clamp(g, 0, 255);
+      b = clamp(b, 0, 255);
+      return new Point(x, y, 0, [r2 / 255, g / 255, b / 255, 1]);
+    }
+    static make_3D_color_point(x, y, z, r2, g, b) {
+      r2 = clamp(r2, 0, 255);
+      g = clamp(g, 0, 255);
+      b = clamp(b, 0, 255);
+      return new Point(x, y, z, [r2 / 255, g / 255, b / 255, 1]);
+    }
+    static connect_ends(evaluator, curve1, curve2) {
+      return __asyncGenerator(this, null, function* () {
+        const startPointOfCurve2Id = yield* __yieldStar(evaluator.closure_call(curve2, [{
+          type: E.NUMBER,
+          value: 0
+        }], E.OPAQUE));
+        const endPointOfCurve1Id = yield* __yieldStar(evaluator.closure_call(curve1, [{
+          type: E.NUMBER,
+          value: 1
+        }], E.OPAQUE));
+        const startPointOfCurve2 = yield new __await(evaluator.opaque_get(startPointOfCurve2Id));
+        const endPointOfCurve1 = yield new __await(evaluator.opaque_get(endPointOfCurve1Id));
+        return yield* __yieldStar(connect_rigidly(evaluator, curve1, yield* __yieldStar(evaluator.closure_call(yield* __yieldStar(translate2(evaluator, x_of(endPointOfCurve1) - x_of(startPointOfCurve2), y_of(endPointOfCurve1) - y_of(startPointOfCurve2), z_of(endPointOfCurve1) - z_of(startPointOfCurve2))), [curve2], E.CLOSURE))));
+      });
+    }
+    static connect_rigidly(evaluator, curve1, curve2) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(evaluator.closure_make({
+          args: [E.NUMBER],
+          returnType: E.OPAQUE
+        }, function (t4) {
+          return __asyncGenerator(this, null, function* () {
+            return t4.value < 1 / 2 ? yield* __yieldStar(evaluator.closure_call(curve1, [{
+              type: E.NUMBER,
+              value: 2 * t4.value
+            }], E.OPAQUE)) : yield* __yieldStar(evaluator.closure_call(curve2, [{
+              type: E.NUMBER,
+              value: 2 * t4.value - 1
+            }], E.OPAQUE));
+          });
+        }));
+      });
+    }
+    static translate(evaluator, x0, y0, z0) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(evaluator.closure_make({
+          args: [E.CLOSURE],
+          returnType: E.CLOSURE
+        }, function (curve) {
+          return __asyncGenerator(this, null, function* () {
+            return yield new __await(evaluator.closure_make({
+              args: [E.NUMBER],
+              returnType: E.OPAQUE
+            }, function (t4) {
+              return __asyncGenerator(this, null, function* () {
+                const ctId = yield* __yieldStar(evaluator.closure_call(curve, [t4], E.OPAQUE));
+                const ct = yield new __await(evaluator.opaque_get(ctId));
+                throwIfNotPoint(ct, translate2.name);
+                return yield new __await(evaluator.opaque_make(new Point(x0 + ct.x, y0 + ct.y, z0 + ct.z, [ct.color[0], ct.color[1], ct.color[2], 1])));
+              });
+            }));
+          });
+        }));
+      });
+    }
+    static rainbow(evaluator, repeats, phase) {
+      return __asyncGenerator(this, null, function* () {
+        l(repeats, _CurveFunctions.rainbow.name, 0, void 0, false, "repeats");
+        l(phase, _CurveFunctions.rainbow.name, void 0, void 0, false, "phase");
+        return defineCurveTransformer(evaluator, function (pt, t4) {
+          return __asyncGenerator(this, null, function* () {
+            const [r2, g, b] = hueToRgb((t4 * repeats + phase) % 1);
+            return make_3D_color_point(x_of(pt), y_of(pt), z_of(pt), r2, g, b);
+          });
+        });
+      });
+    }
+    static invert(evaluator, original) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(evaluator.closure_make({
+          args: [E.NUMBER],
+          returnType: E.OPAQUE
+        }, function (t4) {
+          return __asyncGenerator(this, null, function* () {
+            return yield* __yieldStar(evaluator.closure_call(original, [{
+              type: E.NUMBER,
+              value: 1 - t4.value
+            }], E.OPAQUE));
+          });
+        }));
+      });
+    }
+    static put_in_standard_position(evaluator, curve) {
+      return __asyncGenerator(this, null, function* () {
+        const start_point_id = yield* __yieldStar(evaluator.closure_call(curve, [{
+          type: E.NUMBER,
+          value: 0
+        }], E.OPAQUE));
+        const start_point = yield new __await(evaluator.opaque_get(start_point_id));
+        const curve_started_at_origin = yield* __yieldStar(evaluator.closure_call(yield* __yieldStar(translate2(evaluator, -x_of(start_point), -y_of(start_point), 0)), [curve], E.CLOSURE));
+        const new_end_point_id = yield* __yieldStar(evaluator.closure_call(curve_started_at_origin, [{
+          type: E.NUMBER,
+          value: 1
+        }], E.OPAQUE));
+        const new_end_point = yield new __await(evaluator.opaque_get(new_end_point_id));
+        const theta = Math.atan2(y_of(new_end_point), x_of(new_end_point));
+        const curve_ended_at_x_axis = yield* __yieldStar(evaluator.closure_call(yield* __yieldStar(rotate_around_origin_3D(evaluator, 0, 0, -theta)), [curve_started_at_origin], E.CLOSURE));
+        const end_point_id = yield* __yieldStar(evaluator.closure_call(curve_ended_at_x_axis, [{
+          type: E.NUMBER,
+          value: 1
+        }], E.OPAQUE));
+        const end_point_on_x_axis = x_of(yield new __await(evaluator.opaque_get(end_point_id)));
+        if (end_point_on_x_axis === 0 || !Number.isFinite(end_point_on_x_axis)) {
+          throw new e2(`${_CurveFunctions.put_in_standard_position.name}: Cannot normalize a curve with a zero or non-finite endpoint distance.`);
+        }
+        return yield* __yieldStar(evaluator.closure_call(yield* __yieldStar(scale_proportional(evaluator, 1 / end_point_on_x_axis)), [curve_ended_at_x_axis], E.CLOSURE));
+      });
+    }
+    static rotate_around_origin_3D(evaluator, a3, b, c2) {
+      return __asyncGenerator(this, null, function* () {
+        const cthx = Math.cos(a3);
+        const sthx = Math.sin(a3);
+        const cthy = Math.cos(b);
+        const sthy = Math.sin(b);
+        const cthz = Math.cos(c2);
+        const sthz = Math.sin(c2);
+        const mat = [[cthz * cthy, cthz * sthy * sthx - sthz * cthx, cthz * sthy * cthx + sthz * sthx], [sthz * cthy, sthz * sthy * sthx + cthz * cthx, sthz * sthy * cthx - cthz * sthx], [-sthy, cthy * sthx, cthy * cthx]];
+        return defineCurveTransformer(evaluator, function (ct) {
+          return __asyncGenerator(this, null, function* () {
+            throwIfNotPoint(ct, rotate_around_origin_3D.name);
+            const coord = [ct.x, ct.y, ct.z];
+            let xf = 0;
+            let yf = 0;
+            let zf = 0;
+            for (let i = 0; i < 3; i += 1) {
+              xf += mat[0][i] * coord[i];
+              yf += mat[1][i] * coord[i];
+              zf += mat[2][i] * coord[i];
+            }
+            const newPoint = new Point(xf, yf, zf, [ct.color[0], ct.color[1], ct.color[2], 1]);
+            return newPoint;
+          });
+        });
+      });
+    }
+    static rotate_around_origin(evaluator, a3) {
+      return __asyncGenerator(this, null, function* () {
+        const cth = Math.cos(a3);
+        const sth = Math.sin(a3);
+        return defineCurveTransformer(evaluator, function (ct) {
+          return __asyncGenerator(this, null, function* () {
+            throwIfNotPoint(ct, rotate_around_origin.name);
+            return new Point(cth * ct.x - sth * ct.y, sth * ct.x + cth * ct.y, ct.z, [ct.color[0], ct.color[1], ct.color[2], 1]);
+          });
+        });
+      });
+    }
+    static scale(evaluator, x, y, z) {
+      return __asyncGenerator(this, null, function* () {
+        return defineCurveTransformer(evaluator, function (ct) {
+          return __asyncGenerator(this, null, function* () {
+            throwIfNotPoint(ct, scale3.name);
+            return new Point(x * ct.x, y * ct.y, z * ct.z, [ct.color[0], ct.color[1], ct.color[2], 1]);
+          });
+        });
+      });
+    }
+    static scale_proportional(evaluator, s5) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(scale3(evaluator, s5, s5, s5));
+      });
+    }
+    static compose(evaluator, transformers) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(evaluator.closure_make({
+          args: [E.CLOSURE],
+          returnType: E.CLOSURE
+        }, function (curve) {
+          return __asyncGenerator(this, null, function* () {
+            let transformedCurve = curve;
+            for (const transformer of transformers) {
+              transformedCurve = yield* __yieldStar(evaluator.closure_call(transformer, [transformedCurve], E.CLOSURE));
+            }
+            return transformedCurve;
+          });
+        }));
+      });
+    }
+    static x_of(pt) {
+      throwIfNotPoint(pt, x_of.name);
+      return pt.x;
+    }
+    static y_of(pt) {
+      throwIfNotPoint(pt, y_of.name);
+      return pt.y;
+    }
+    static z_of(pt) {
+      throwIfNotPoint(pt, z_of.name);
+      return pt.z;
+    }
+    static r_of(pt) {
+      throwIfNotPoint(pt, r_of.name);
+      return Math.floor(pt.color[0] * 255);
+    }
+    static g_of(pt) {
+      throwIfNotPoint(pt, g_of.name);
+      return Math.floor(pt.color[1] * 255);
+    }
+    static b_of(pt) {
+      throwIfNotPoint(pt, b_of.name);
+      return Math.floor(pt.color[2] * 255);
+    }
+    static unit_line_at(evaluator, y) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(evaluator.closure_make({
+          args: [E.NUMBER],
+          returnType: E.OPAQUE
+        }, function (t4) {
+          return __asyncGenerator(this, null, function* () {
+            return yield new __await(evaluator.opaque_make(make_point(t4.value, y.value)));
+          });
+        }));
+      });
+    }
+  };
+  _CurveFunctions.unit_circle = function (evaluator, t4) {
+    return __asyncGenerator(this, null, function* () {
+      return yield new __await(evaluator.opaque_make(make_point(Math.cos(2 * Math.PI * t4.value), Math.sin(2 * Math.PI * t4.value))));
+    });
+  };
+  _CurveFunctions.unit_line = function (evaluator, t4) {
+    return __asyncGenerator(this, null, function* () {
+      return yield new __await(evaluator.opaque_make(make_point(t4.value, 0)));
+    });
+  };
+  _CurveFunctions.arc = function (evaluator, t4) {
+    return __asyncGenerator(this, null, function* () {
+      return yield new __await(evaluator.opaque_make(make_point(Math.sin(Math.PI * t4.value), Math.cos(Math.PI * t4.value))));
+    });
+  };
+  var CurveFunctions = _CurveFunctions;
+  var make_point = CurveFunctions.make_point;
+  var make_3D_point = CurveFunctions.make_3D_point;
+  var make_color_point = CurveFunctions.make_color_point;
+  var make_3D_color_point = CurveFunctions.make_3D_color_point;
+  var x_of = CurveFunctions.x_of;
+  var y_of = CurveFunctions.y_of;
+  var z_of = CurveFunctions.z_of;
+  var r_of = CurveFunctions.r_of;
+  var g_of = CurveFunctions.g_of;
+  var b_of = CurveFunctions.b_of;
+  var invert2 = CurveFunctions.invert;
+  var translate2 = CurveFunctions.translate;
+  var rainbow = CurveFunctions.rainbow;
+  var rotate_around_origin_3D = CurveFunctions.rotate_around_origin_3D;
+  var rotate_around_origin = CurveFunctions.rotate_around_origin;
+  var scale3 = CurveFunctions.scale;
+  var scale_proportional = CurveFunctions.scale_proportional;
+  var compose = CurveFunctions.compose;
+  var put_in_standard_position = CurveFunctions.put_in_standard_position;
+  var connect_rigidly = CurveFunctions.connect_rigidly;
+  var connect_ends = CurveFunctions.connect_ends;
+  var unit_circle = CurveFunctions.unit_circle;
+  var unit_line = CurveFunctions.unit_line;
+  var unit_line_at = CurveFunctions.unit_line_at;
+  var arc = CurveFunctions.arc;
+  var CURVE_CHANNEL_ID = "sourceacademy-curve-channel";
+  var CurveModulePlugin = class extends o3 {
+    constructor(conduit, [curveChannel], evaluator, tabLoader) {
+      if (!curveChannel) {
+        throw new e2("Curve channel is required but was not provided.");
+      }
+      super(conduit, [curveChannel], evaluator);
+      this.id = "curve";
+      this.exportedNames = ["arc", "b_of", "connect_ends", "connect_rigidly", "g_of", "invert", "make_3D_color_point", "make_3D_point", "make_color_point", "make_point", "put_in_standard_position", "rainbow", "r_of", "rotate_around_origin", "rotate_around_origin_3D", "scale", "scale_proportional", "translate", "unit_circle", "unit_line", "unit_line_at", "x_of", "y_of", "z_of", "animate_3D_curve", "animate_curve", "draw_3D_connected", "draw_3D_connected_full_view", "draw_3D_connected_full_view_proportional", "draw_3D_points", "draw_3D_points_full_view", "draw_3D_points_full_view_proportional", "draw_connected", "draw_connected_full_view", "draw_connected_full_view_proportional", "draw_points", "draw_points_full_view", "draw_points_full_view_proportional"];
+      this.__displayed = [];
+      this.__tabLoaded = false;
+      this.__renderFunctions = new Map();
+      this.__curveChannel = curveChannel;
+      this.__tabLoader = tabLoader;
+      this.__curveChannel.subscribe(message => {
+        if (message.type === "request") {
+          this.__displayed.forEach(displayedMessage => this.__curveChannel.send(displayedMessage));
+          this.__displayed = [];
+        }
+      });
+    }
+    __loadCurveTab() {
+      return __async(this, null, function* () {
+        if (this.__tabLoaded || this.__tabLoader === void 0) return true;
+        const tabName = this.__tabLoader.tabs[0];
+        if (tabName === void 0) return true;
+        yield this.__tabLoader.loadTab(tabName);
+        this.__tabLoaded = true;
+        return false;
+      });
+    }
+    __display(message) {
+      return __async(this, null, function* () {
+        if (yield this.__loadCurveTab()) {
+          this.__curveChannel.send(message);
+        } else {
+          this.__displayed.push(message);
+        }
+      });
+    }
+    __makeRenderClosure(renderFunction) {
+      return __async(this, null, function* () {
+        const pluginThis = this;
+        const closure = yield this.evaluator.closure_make({
+          args: [E.CLOSURE],
+          returnType: E.OPAQUE
+        }, function (curve) {
+          return __asyncGenerator(this, null, function* () {
+            const curveDrawn = yield* __yieldStar(renderFunction(curve));
+            yield new __await(pluginThis.__display({
+              type: "render",
+              curve: curveDrawn.toSerializable()
+            }));
+            return yield new __await(pluginThis.evaluator.opaque_make(curveDrawn));
+          });
+        });
+        this.__renderFunctions.set(closure.value, renderFunction);
+        return closure;
+      });
+    }
+    __getRenderFunction(drawer) {
+      const renderFunction = this.__renderFunctions.get(drawer.value);
+      if (renderFunction === void 0) {
+        throw new e2("Expected a render function created by the curve module.");
+      }
+      return renderFunction;
+    }
+    make_point(x, y) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.evaluator.opaque_make(make_point(x.value, y.value)));
+      });
+    }
+    make_3D_point(x, y, z) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.evaluator.opaque_make(make_3D_point(x.value, y.value, z.value)));
+      });
+    }
+    make_color_point(x, y, r2, g, b) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.evaluator.opaque_make(make_color_point(x.value, y.value, r2.value, g.value, b.value)));
+      });
+    }
+    make_3D_color_point(x, y, z, r2, g, b) {
+      return __asyncGenerator(this, null, function* () {
+        return yield new __await(this.evaluator.opaque_make(make_3D_color_point(x.value, y.value, z.value, r2.value, g.value, b.value)));
+      });
+    }
+    connect_ends(curve1, curve2) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(connect_ends(this.evaluator, curve1, curve2));
+      });
+    }
+    connect_rigidly(curve1, curve2) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(connect_rigidly(this.evaluator, curve1, curve2));
+      });
+    }
+    translate(x0, y0, z0) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(translate2(this.evaluator, x0.value, y0.value, z0.value));
+      });
+    }
+    rainbow(repeats, phase) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(rainbow(this.evaluator, repeats.value, phase.value));
+      });
+    }
+    invert(curve) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(invert2(this.evaluator, curve));
+      });
+    }
+    put_in_standard_position(curve) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(put_in_standard_position(this.evaluator, curve));
+      });
+    }
+    rotate_around_origin_3D(a3, b, c2) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(rotate_around_origin_3D(this.evaluator, a3.value, b.value, c2.value));
+      });
+    }
+    rotate_around_origin(a3) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(rotate_around_origin(this.evaluator, a3.value));
+      });
+    }
+    scale(x, y, z) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(scale3(this.evaluator, x.value, y.value, z.value));
+      });
+    }
+    scale_proportional(s5) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(scale_proportional(this.evaluator, s5.value));
+      });
+    }
+    x_of(pt) {
+      return __asyncGenerator(this, null, function* () {
+        const point = yield new __await(this.evaluator.opaque_get(pt));
+        return {
+          type: E.NUMBER,
+          value: x_of(point)
+        };
+      });
+    }
+    y_of(pt) {
+      return __asyncGenerator(this, null, function* () {
+        const point = yield new __await(this.evaluator.opaque_get(pt));
+        return {
+          type: E.NUMBER,
+          value: y_of(point)
+        };
+      });
+    }
+    z_of(pt) {
+      return __asyncGenerator(this, null, function* () {
+        const point = yield new __await(this.evaluator.opaque_get(pt));
+        return {
+          type: E.NUMBER,
+          value: z_of(point)
+        };
+      });
+    }
+    r_of(pt) {
+      return __asyncGenerator(this, null, function* () {
+        const point = yield new __await(this.evaluator.opaque_get(pt));
+        return {
+          type: E.NUMBER,
+          value: r_of(point)
+        };
+      });
+    }
+    g_of(pt) {
+      return __asyncGenerator(this, null, function* () {
+        const point = yield new __await(this.evaluator.opaque_get(pt));
+        return {
+          type: E.NUMBER,
+          value: g_of(point)
+        };
+      });
+    }
+    b_of(pt) {
+      return __asyncGenerator(this, null, function* () {
+        const point = yield new __await(this.evaluator.opaque_get(pt));
+        return {
+          type: E.NUMBER,
+          value: b_of(point)
+        };
+      });
+    }
+    unit_circle(t4) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(unit_circle(this.evaluator, t4));
+      });
+    }
+    unit_line(t4) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(unit_line(this.evaluator, t4));
+      });
+    }
+    unit_line_at(y) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(unit_line_at(this.evaluator, y));
+      });
+    }
+    arc(t4) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(arc(this.evaluator, t4));
+      });
+    }
+    draw_connected(numPoints) {
+      return __asyncGenerator(this, null, function* () {
+        const renderFunction = draw_connected(this.evaluator, numPoints.value);
+        return yield new __await(this.__makeRenderClosure(renderFunction));
+      });
+    }
+    draw_connected_full_view(numPoints) {
+      return __asyncGenerator(this, null, function* () {
+        const renderFunction = draw_connected_full_view(this.evaluator, numPoints.value);
+        return yield new __await(this.__makeRenderClosure(renderFunction));
+      });
+    }
+    draw_connected_full_view_proportional(numPoints) {
+      return __asyncGenerator(this, null, function* () {
+        const renderFunction = draw_connected_full_view_proportional(this.evaluator, numPoints.value);
+        return yield new __await(this.__makeRenderClosure(renderFunction));
+      });
+    }
+    draw_points(numPoints) {
+      return __asyncGenerator(this, null, function* () {
+        const renderFunction = draw_points(this.evaluator, numPoints.value);
+        return yield new __await(this.__makeRenderClosure(renderFunction));
+      });
+    }
+    draw_points_full_view(numPoints) {
+      return __asyncGenerator(this, null, function* () {
+        const renderFunction = draw_points_full_view(this.evaluator, numPoints.value);
+        return yield new __await(this.__makeRenderClosure(renderFunction));
+      });
+    }
+    draw_points_full_view_proportional(numPoints) {
+      return __asyncGenerator(this, null, function* () {
+        const renderFunction = draw_points_full_view_proportional(this.evaluator, numPoints.value);
+        return yield new __await(this.__makeRenderClosure(renderFunction));
+      });
+    }
+    draw_3D_connected(numPoints) {
+      return __asyncGenerator(this, null, function* () {
+        const renderFunction = draw_3D_connected(this.evaluator, numPoints.value);
+        return yield new __await(this.__makeRenderClosure(renderFunction));
+      });
+    }
+    draw_3D_connected_full_view(numPoints) {
+      return __asyncGenerator(this, null, function* () {
+        const renderFunction = draw_3D_connected_full_view(this.evaluator, numPoints.value);
+        return yield new __await(this.__makeRenderClosure(renderFunction));
+      });
+    }
+    draw_3D_connected_full_view_proportional(numPoints) {
+      return __asyncGenerator(this, null, function* () {
+        const renderFunction = draw_3D_connected_full_view_proportional(this.evaluator, numPoints.value);
+        return yield new __await(this.__makeRenderClosure(renderFunction));
+      });
+    }
+    draw_3D_points(numPoints) {
+      return __asyncGenerator(this, null, function* () {
+        const renderFunction = draw_3D_points(this.evaluator, numPoints.value);
+        return yield new __await(this.__makeRenderClosure(renderFunction));
+      });
+    }
+    draw_3D_points_full_view(numPoints) {
+      return __asyncGenerator(this, null, function* () {
+        const renderFunction = draw_3D_points_full_view(this.evaluator, numPoints.value);
+        return yield new __await(this.__makeRenderClosure(renderFunction));
+      });
+    }
+    draw_3D_points_full_view_proportional(numPoints) {
+      return __asyncGenerator(this, null, function* () {
+        const renderFunction = draw_3D_points_full_view_proportional(this.evaluator, numPoints.value);
+        return yield new __await(this.__makeRenderClosure(renderFunction));
+      });
+    }
+    animate_curve(duration, fps, drawer, func) {
+      return __asyncGenerator(this, null, function* () {
+        const curve = yield* __yieldStar(animate_curve(this.evaluator, duration.value, fps.value, this.__getRenderFunction(drawer), func));
+        yield new __await(this.__display(curve.toSerializable()));
+        return yield new __await(this.evaluator.opaque_make(curve));
+      });
+    }
+    animate_3D_curve(duration, fps, drawer, func) {
+      return __asyncGenerator(this, null, function* () {
+        const curve = yield* __yieldStar(animate_3D_curve(this.evaluator, duration.value, fps.value, this.__getRenderFunction(drawer), func));
+        yield new __await(this.__display(curve.toSerializable()));
+        return yield new __await(this.evaluator.opaque_make(curve));
+      });
+    }
+  };
+  CurveModulePlugin.channelAttach = [CURVE_CHANNEL_ID];
+  attachModuleMethod(CurveModulePlugin, "make_point", [E.NUMBER, E.NUMBER], E.OPAQUE);
+  attachModuleMethod(CurveModulePlugin, "make_3D_point", [E.NUMBER, E.NUMBER, E.NUMBER], E.OPAQUE);
+  attachModuleMethod(CurveModulePlugin, "make_color_point", [E.NUMBER, E.NUMBER, E.NUMBER, E.NUMBER, E.NUMBER], E.OPAQUE);
+  attachModuleMethod(CurveModulePlugin, "make_3D_color_point", [E.NUMBER, E.NUMBER, E.NUMBER, E.NUMBER, E.NUMBER, E.NUMBER], E.OPAQUE);
+  attachModuleMethod(CurveModulePlugin, "connect_ends", [E.CLOSURE, E.CLOSURE], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "connect_rigidly", [E.CLOSURE, E.CLOSURE], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "translate", [E.NUMBER, E.NUMBER, E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "rainbow", [E.NUMBER, E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "invert", [E.CLOSURE], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "put_in_standard_position", [E.CLOSURE], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "rotate_around_origin_3D", [E.NUMBER, E.NUMBER, E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "rotate_around_origin", [E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "scale", [E.NUMBER, E.NUMBER, E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "scale_proportional", [E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "x_of", [E.OPAQUE], E.NUMBER);
+  attachModuleMethod(CurveModulePlugin, "y_of", [E.OPAQUE], E.NUMBER);
+  attachModuleMethod(CurveModulePlugin, "z_of", [E.OPAQUE], E.NUMBER);
+  attachModuleMethod(CurveModulePlugin, "r_of", [E.OPAQUE], E.NUMBER);
+  attachModuleMethod(CurveModulePlugin, "g_of", [E.OPAQUE], E.NUMBER);
+  attachModuleMethod(CurveModulePlugin, "b_of", [E.OPAQUE], E.NUMBER);
+  attachModuleMethod(CurveModulePlugin, "unit_circle", [E.NUMBER], E.OPAQUE);
+  attachModuleMethod(CurveModulePlugin, "unit_line", [E.NUMBER], E.OPAQUE);
+  attachModuleMethod(CurveModulePlugin, "unit_line_at", [E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "arc", [E.NUMBER], E.OPAQUE);
+  attachModuleMethod(CurveModulePlugin, "draw_connected", [E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "draw_connected_full_view", [E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "draw_connected_full_view_proportional", [E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "draw_points", [E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "draw_points_full_view", [E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "draw_points_full_view_proportional", [E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "draw_3D_connected", [E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "draw_3D_connected_full_view", [E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "draw_3D_connected_full_view_proportional", [E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "draw_3D_points", [E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "draw_3D_points_full_view", [E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "draw_3D_points_full_view_proportional", [E.NUMBER], E.CLOSURE);
+  attachModuleMethod(CurveModulePlugin, "animate_curve", [E.NUMBER, E.NUMBER, E.CLOSURE, E.CLOSURE], E.OPAQUE);
+  attachModuleMethod(CurveModulePlugin, "animate_3D_curve", [E.NUMBER, E.NUMBER, E.CLOSURE, E.CLOSURE], E.OPAQUE);
   return __toCommonJS(index_exports);
 };

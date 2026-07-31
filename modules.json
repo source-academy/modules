@@ -43,6 +43,12 @@
     ],
     "version": "2.0.0"
   },
+  "matrix": {
+    "tabs": [
+      "Matrix"
+    ],
+    "version": "1.0.0"
+  },
   "midi": {
     "tabs": [],
     "version": "1.0.0"
@@ -114,18 +120,6 @@
       "Sound"
     ],
     "version": "1.1.0"
-  },
-  "sound_matrix": {
-    "tabs": [
-      "SoundMatrix"
-    ],
-    "version": "1.0.0"
-  },
-  "stereo_sound": {
-    "tabs": [
-      "StereoSound"
-    ],
-    "version": "1.0.0"
   },
   "unittest": {
     "tabs": [

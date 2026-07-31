@@ -6,11 +6,11 @@
     "params": [
       {
         "paramType": "regular",
-        "type": "(code: string) => any",
+        "type": "Object",
         "name": "evalFunc"
       }
     ],
-    "retType": "{ toReplString: () => string }"
+    "retType": "Object"
   },
   "repl_display": {
     "kind": "function",

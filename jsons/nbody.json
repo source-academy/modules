@@ -70,7 +70,7 @@
     "params": [
       {
         "paramType": "regular",
-        "type": "(bodies: CelestialBody[]) => Vector3[]",
+        "type": "Object",
         "name": "fn"
       }
     ],
@@ -122,7 +122,7 @@
     "params": [
       {
         "paramType": "regular",
-        "type": "(deltaT: number, prevState: State, currState: State) => State",
+        "type": "Object",
         "name": "fn"
       }
     ],
@@ -299,7 +299,7 @@
     "params": [
       {
         "paramType": "regular",
-        "type": "(state: State) => State",
+        "type": "Object",
         "name": "fn"
       }
     ],

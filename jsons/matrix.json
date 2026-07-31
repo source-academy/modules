@@ -1,0 +1,16 @@
+{
+  "get_matrix": {
+    "kind": "function",
+    "name": "get_matrix",
+    "description": "<p>Returns the current values of the tone matrix as a list of lists of boolean values, such\nthat <code>list_ref(list_ref(get_matrix(), my_row), my_column)</code> evaluates to <code>true</code> if the matrix\ncurrently is ticked in row <code>my_row</code> and column <code>my_column</code>, and <code>false</code> otherwise. Rows are\ncounted starting with 0 from the bottom of the matrix, and columns starting with 0 from the\nleft.</p>",
+    "params": [],
+    "retType": "Pair | null"
+  },
+  "clear_matrix": {
+    "kind": "function",
+    "name": "clear_matrix",
+    "description": "<p>Resets the tone matrix, clearing every ticked square.</p>",
+    "params": [],
+    "retType": "void"
+  }
+}

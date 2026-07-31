@@ -407,7 +407,7 @@
         "name": "g"
       }
     ],
-    "retType": "List"
+    "retType": "List<Operable>"
   },
   "is_shape": {
     "kind": "function",
@@ -415,7 +415,7 @@
     "description": "<p>Checks if the given parameter is a Shape.</p>",
     "params": [
       {
-        "paramType": "regular",
+        "paramType": "optional",
         "type": "unknown",
         "name": "parameter"
       }
@@ -428,7 +428,7 @@
     "description": "<p>Checks if the given parameter is a Group.</p>",
     "params": [
       {
-        "paramType": "regular",
+        "paramType": "optional",
         "type": "unknown",
         "name": "parameter"
       }
@@ -446,7 +446,7 @@
         "name": "shape"
       }
     ],
-    "retType": "(axis: string, minMax: string) => number"
+    "retType": "(string, string) => number"
   },
   "rgb": {
     "kind": "function",
@@ -482,7 +482,7 @@
         "name": "shape"
       }
     ],
-    "retType": "Promise<void>"
+    "retType": "void"
   },
   "render": {
     "kind": "function",

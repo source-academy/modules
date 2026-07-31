@@ -24,10 +24,10 @@
     "params": [
       {
         "paramType": "regular",
-        "type": "(frame: Frame) => void",
+        "type": "Object",
         "name": "painter"
       }
     ],
-    "retType": "(frame: Frame) => void"
+    "retType": "Object"
   }
 }

@@ -168,7 +168,7 @@
     "params": [
       {
         "paramType": "regular",
-        "type": "() => World",
+        "type": "Object",
         "name": "worldFactory"
       }
     ],

@@ -397,7 +397,7 @@
       },
       {
         "paramType": "regular",
-        "type": "(a: string) => string",
+        "type": "Object",
         "name": "pattern"
       },
       {

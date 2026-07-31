@@ -6,7 +6,7 @@ export default require => {
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
   var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+    get: (a3, b) => (typeof require !== "undefined" ? require : a3)[b]
   }) : x)(function (x) {
     if (typeof require !== "undefined") return require.apply(this, arguments);
     throw Error('Dynamic require of "' + x + '" is not supported');
@@ -35,9 +35,26 @@ export default require => {
   }), mod);
   var index_exports = {};
   __export(index_exports, {
+    RUNE_TAB_ID: () => RUNE_TAB_ID,
     RuneTab: () => RuneTab,
-    default: () => index_default
+    default: () => RuneTabPlugin
   });
+  var E;
+  !(function (E2) {
+    (E2[E2.VOID = 0] = "VOID", E2[E2.BOOLEAN = 1] = "BOOLEAN", E2[E2.NUMBER = 2] = "NUMBER", E2[E2.CONST_STRING = 3] = "CONST_STRING", E2[E2.EMPTY_LIST = 4] = "EMPTY_LIST", E2[E2.PAIR = 5] = "PAIR", E2[E2.ARRAY = 6] = "ARRAY", E2[E2.CLOSURE = 7] = "CLOSURE", E2[E2.OPAQUE = 8] = "OPAQUE", E2[E2.LIST = 9] = "LIST", E2[E2.ANY = 10] = "ANY", E2[E2.INTEGER = 11] = "INTEGER");
+  })(E || (E = {}));
+  var a;
+  !(function (a3) {
+    (a3[a3.HELLO = 0] = "HELLO", a3[a3.ABORT = 1] = "ABORT", a3[a3.ENTRY = 2] = "ENTRY");
+  })(a || (a = {}));
+  var O;
+  !(function (O2) {
+    (O2[O2.PROTOCOL_VERSION = 0] = "PROTOCOL_VERSION", O2[O2.PROTOCOL_MIN_VERSION = 0] = "PROTOCOL_MIN_VERSION", O2[O2.SETUP_MESSAGES_BUFFER_SIZE = 10] = "SETUP_MESSAGES_BUFFER_SIZE");
+  })(O || (O = {}));
+  var N;
+  !(function (N2) {
+    (N2[N2.ONLINE = 0] = "ONLINE", N2[N2.EVAL_READY = 1] = "EVAL_READY", N2[N2.RUNNING = 2] = "RUNNING", N2[N2.WAITING = 3] = "WAITING", N2[N2.BREAKPOINT = 4] = "BREAKPOINT", N2[N2.STOPPED = 5] = "STOPPED", N2[N2.ERROR = 6] = "ERROR");
+  })(N || (N = {}));
   var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
   var import_base = __require("js-slang/dist/errors/base");
   var import_rttc = __require("js-slang/dist/utils/rttc");
@@ -56,9 +73,9 @@ export default require => {
     return [parseInt(groups[1], 16) / 255, parseInt(groups[2], 16) / 255, parseInt(groups[3], 16) / 255];
   }
   function hueToRgb(hue) {
-    const h = (hue % 1 + 1) % 1;
-    const i = Math.floor(h * 6);
-    const f = h * 6 - i;
+    const h2 = (hue % 1 + 1) % 1;
+    const i = Math.floor(h2 * 6);
+    const f = h2 * 6 - i;
     const q = 1 - f;
     switch (i) {
       case 0:
@@ -75,9 +92,9 @@ export default require => {
         return [255, 0, Math.floor(q * 255)];
     }
   }
-  function repeat_internal(f, n) {
+  function repeat_internal(f, n3) {
     const func = x => (0, import_operators.callWithoutMetadata)(f, x);
-    return n === 0 ? x => x : x => func(repeat_internal(func, n - 1)(x));
+    return n3 === 0 ? x => x : x => func(repeat_internal(func, n3 - 1)(x));
   }
   function sample(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -89,9 +106,9 @@ export default require => {
   var EPSILON = 1e-6;
   var ARRAY_TYPE = typeof Float32Array !== "undefined" ? Float32Array : Array;
   var RANDOM = Math.random;
-  function round(a) {
-    if (a >= 0) return Math.round(a);
-    return a % 0.5 === 0 ? Math.floor(a) : Math.round(a);
+  function round(a3) {
+    if (a3 >= 0) return Math.round(a3);
+    return a3 % 0.5 === 0 ? Math.floor(a3) : Math.round(a3);
   }
   var degree = Math.PI / 180;
   var radian = 180 / Math.PI;
@@ -172,43 +189,43 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function clone(a) {
+  function clone(a3) {
     var out = new ARRAY_TYPE(16);
-    out[0] = a[0];
-    out[1] = a[1];
-    out[2] = a[2];
-    out[3] = a[3];
-    out[4] = a[4];
-    out[5] = a[5];
-    out[6] = a[6];
-    out[7] = a[7];
-    out[8] = a[8];
-    out[9] = a[9];
-    out[10] = a[10];
-    out[11] = a[11];
-    out[12] = a[12];
-    out[13] = a[13];
-    out[14] = a[14];
-    out[15] = a[15];
+    out[0] = a3[0];
+    out[1] = a3[1];
+    out[2] = a3[2];
+    out[3] = a3[3];
+    out[4] = a3[4];
+    out[5] = a3[5];
+    out[6] = a3[6];
+    out[7] = a3[7];
+    out[8] = a3[8];
+    out[9] = a3[9];
+    out[10] = a3[10];
+    out[11] = a3[11];
+    out[12] = a3[12];
+    out[13] = a3[13];
+    out[14] = a3[14];
+    out[15] = a3[15];
     return out;
   }
-  function copy(out, a) {
-    out[0] = a[0];
-    out[1] = a[1];
-    out[2] = a[2];
-    out[3] = a[3];
-    out[4] = a[4];
-    out[5] = a[5];
-    out[6] = a[6];
-    out[7] = a[7];
-    out[8] = a[8];
-    out[9] = a[9];
-    out[10] = a[10];
-    out[11] = a[11];
-    out[12] = a[12];
-    out[13] = a[13];
-    out[14] = a[14];
-    out[15] = a[15];
+  function copy(out, a3) {
+    out[0] = a3[0];
+    out[1] = a3[1];
+    out[2] = a3[2];
+    out[3] = a3[3];
+    out[4] = a3[4];
+    out[5] = a3[5];
+    out[6] = a3[6];
+    out[7] = a3[7];
+    out[8] = a3[8];
+    out[9] = a3[9];
+    out[10] = a3[10];
+    out[11] = a3[11];
+    out[12] = a3[12];
+    out[13] = a3[13];
+    out[14] = a3[14];
+    out[15] = a3[15];
     return out;
   }
   function fromValues(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
@@ -269,48 +286,48 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function transpose(out, a) {
-    if (out === a) {
-      var a01 = a[1], a02 = a[2], a03 = a[3];
-      var a12 = a[6], a13 = a[7];
-      var a23 = a[11];
-      out[1] = a[4];
-      out[2] = a[8];
-      out[3] = a[12];
+  function transpose(out, a3) {
+    if (out === a3) {
+      var a01 = a3[1], a02 = a3[2], a03 = a3[3];
+      var a12 = a3[6], a13 = a3[7];
+      var a23 = a3[11];
+      out[1] = a3[4];
+      out[2] = a3[8];
+      out[3] = a3[12];
       out[4] = a01;
-      out[6] = a[9];
-      out[7] = a[13];
+      out[6] = a3[9];
+      out[7] = a3[13];
       out[8] = a02;
       out[9] = a12;
-      out[11] = a[14];
+      out[11] = a3[14];
       out[12] = a03;
       out[13] = a13;
       out[14] = a23;
     } else {
-      out[0] = a[0];
-      out[1] = a[4];
-      out[2] = a[8];
-      out[3] = a[12];
-      out[4] = a[1];
-      out[5] = a[5];
-      out[6] = a[9];
-      out[7] = a[13];
-      out[8] = a[2];
-      out[9] = a[6];
-      out[10] = a[10];
-      out[11] = a[14];
-      out[12] = a[3];
-      out[13] = a[7];
-      out[14] = a[11];
-      out[15] = a[15];
+      out[0] = a3[0];
+      out[1] = a3[4];
+      out[2] = a3[8];
+      out[3] = a3[12];
+      out[4] = a3[1];
+      out[5] = a3[5];
+      out[6] = a3[9];
+      out[7] = a3[13];
+      out[8] = a3[2];
+      out[9] = a3[6];
+      out[10] = a3[10];
+      out[11] = a3[14];
+      out[12] = a3[3];
+      out[13] = a3[7];
+      out[14] = a3[11];
+      out[15] = a3[15];
     }
     return out;
   }
-  function invert(out, a) {
-    var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
-    var a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
-    var a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
-    var a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+  function invert(out, a3) {
+    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
+    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
+    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
+    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
     var b00 = a00 * a11 - a01 * a10;
     var b01 = a00 * a12 - a02 * a10;
     var b02 = a00 * a13 - a03 * a10;
@@ -346,11 +363,11 @@ export default require => {
     out[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
     return out;
   }
-  function adjoint(out, a) {
-    var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
-    var a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
-    var a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
-    var a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+  function adjoint(out, a3) {
+    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
+    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
+    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
+    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
     var b00 = a00 * a11 - a01 * a10;
     var b01 = a00 * a12 - a02 * a10;
     var b02 = a00 * a13 - a03 * a10;
@@ -381,11 +398,11 @@ export default require => {
     out[15] = a20 * b03 - a21 * b01 + a22 * b00;
     return out;
   }
-  function determinant(a) {
-    var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
-    var a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
-    var a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
-    var a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+  function determinant(a3) {
+    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
+    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
+    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
+    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
     var b0 = a00 * a11 - a01 * a10;
     var b1 = a00 * a12 - a02 * a10;
     var b2 = a01 * a12 - a02 * a11;
@@ -398,11 +415,11 @@ export default require => {
     var b9 = a30 * b2 - a31 * b1 + a32 * b0;
     return a13 * b6 - a03 * b7 + a33 * b8 - a23 * b9;
   }
-  function multiply(out, a, b) {
-    var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3];
-    var a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
-    var a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
-    var a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+  function multiply(out, a3, b) {
+    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
+    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
+    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
+    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
     var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
     out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
     out[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
@@ -434,29 +451,29 @@ export default require => {
     out[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
     return out;
   }
-  function translate(out, a, v) {
+  function translate(out, a3, v) {
     var x = v[0], y = v[1], z = v[2];
     var a00, a01, a02, a03;
     var a10, a11, a12, a13;
     var a20, a21, a22, a23;
-    if (a === out) {
-      out[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
-      out[13] = a[1] * x + a[5] * y + a[9] * z + a[13];
-      out[14] = a[2] * x + a[6] * y + a[10] * z + a[14];
-      out[15] = a[3] * x + a[7] * y + a[11] * z + a[15];
+    if (a3 === out) {
+      out[12] = a3[0] * x + a3[4] * y + a3[8] * z + a3[12];
+      out[13] = a3[1] * x + a3[5] * y + a3[9] * z + a3[13];
+      out[14] = a3[2] * x + a3[6] * y + a3[10] * z + a3[14];
+      out[15] = a3[3] * x + a3[7] * y + a3[11] * z + a3[15];
     } else {
-      a00 = a[0];
-      a01 = a[1];
-      a02 = a[2];
-      a03 = a[3];
-      a10 = a[4];
-      a11 = a[5];
-      a12 = a[6];
-      a13 = a[7];
-      a20 = a[8];
-      a21 = a[9];
-      a22 = a[10];
-      a23 = a[11];
+      a00 = a3[0];
+      a01 = a3[1];
+      a02 = a3[2];
+      a03 = a3[3];
+      a10 = a3[4];
+      a11 = a3[5];
+      a12 = a3[6];
+      a13 = a3[7];
+      a20 = a3[8];
+      a21 = a3[9];
+      a22 = a3[10];
+      a23 = a3[11];
       out[0] = a00;
       out[1] = a01;
       out[2] = a02;
@@ -469,37 +486,37 @@ export default require => {
       out[9] = a21;
       out[10] = a22;
       out[11] = a23;
-      out[12] = a00 * x + a10 * y + a20 * z + a[12];
-      out[13] = a01 * x + a11 * y + a21 * z + a[13];
-      out[14] = a02 * x + a12 * y + a22 * z + a[14];
-      out[15] = a03 * x + a13 * y + a23 * z + a[15];
+      out[12] = a00 * x + a10 * y + a20 * z + a3[12];
+      out[13] = a01 * x + a11 * y + a21 * z + a3[13];
+      out[14] = a02 * x + a12 * y + a22 * z + a3[14];
+      out[15] = a03 * x + a13 * y + a23 * z + a3[15];
     }
     return out;
   }
-  function scale(out, a, v) {
+  function scale(out, a3, v) {
     var x = v[0], y = v[1], z = v[2];
-    out[0] = a[0] * x;
-    out[1] = a[1] * x;
-    out[2] = a[2] * x;
-    out[3] = a[3] * x;
-    out[4] = a[4] * y;
-    out[5] = a[5] * y;
-    out[6] = a[6] * y;
-    out[7] = a[7] * y;
-    out[8] = a[8] * z;
-    out[9] = a[9] * z;
-    out[10] = a[10] * z;
-    out[11] = a[11] * z;
-    out[12] = a[12];
-    out[13] = a[13];
-    out[14] = a[14];
-    out[15] = a[15];
+    out[0] = a3[0] * x;
+    out[1] = a3[1] * x;
+    out[2] = a3[2] * x;
+    out[3] = a3[3] * x;
+    out[4] = a3[4] * y;
+    out[5] = a3[5] * y;
+    out[6] = a3[6] * y;
+    out[7] = a3[7] * y;
+    out[8] = a3[8] * z;
+    out[9] = a3[9] * z;
+    out[10] = a3[10] * z;
+    out[11] = a3[11] * z;
+    out[12] = a3[12];
+    out[13] = a3[13];
+    out[14] = a3[14];
+    out[15] = a3[15];
     return out;
   }
-  function rotate(out, a, rad, axis) {
+  function rotate(out, a3, rad, axis) {
     var x = axis[0], y = axis[1], z = axis[2];
     var len2 = Math.sqrt(x * x + y * y + z * z);
-    var s, c, t;
+    var s5, c, t3;
     var a00, a01, a02, a03;
     var a10, a11, a12, a13;
     var a20, a21, a22, a23;
@@ -513,30 +530,30 @@ export default require => {
     x *= len2;
     y *= len2;
     z *= len2;
-    s = Math.sin(rad);
+    s5 = Math.sin(rad);
     c = Math.cos(rad);
-    t = 1 - c;
-    a00 = a[0];
-    a01 = a[1];
-    a02 = a[2];
-    a03 = a[3];
-    a10 = a[4];
-    a11 = a[5];
-    a12 = a[6];
-    a13 = a[7];
-    a20 = a[8];
-    a21 = a[9];
-    a22 = a[10];
-    a23 = a[11];
-    b00 = x * x * t + c;
-    b01 = y * x * t + z * s;
-    b02 = z * x * t - y * s;
-    b10 = x * y * t - z * s;
-    b11 = y * y * t + c;
-    b12 = z * y * t + x * s;
-    b20 = x * z * t + y * s;
-    b21 = y * z * t - x * s;
-    b22 = z * z * t + c;
+    t3 = 1 - c;
+    a00 = a3[0];
+    a01 = a3[1];
+    a02 = a3[2];
+    a03 = a3[3];
+    a10 = a3[4];
+    a11 = a3[5];
+    a12 = a3[6];
+    a13 = a3[7];
+    a20 = a3[8];
+    a21 = a3[9];
+    a22 = a3[10];
+    a23 = a3[11];
+    b00 = x * x * t3 + c;
+    b01 = y * x * t3 + z * s5;
+    b02 = z * x * t3 - y * s5;
+    b10 = x * y * t3 - z * s5;
+    b11 = y * y * t3 + c;
+    b12 = z * y * t3 + x * s5;
+    b20 = x * z * t3 + y * s5;
+    b21 = y * z * t3 - x * s5;
+    b22 = z * z * t3 + c;
     out[0] = a00 * b00 + a10 * b01 + a20 * b02;
     out[1] = a01 * b00 + a11 * b01 + a21 * b02;
     out[2] = a02 * b00 + a12 * b01 + a22 * b02;
@@ -549,105 +566,105 @@ export default require => {
     out[9] = a01 * b20 + a11 * b21 + a21 * b22;
     out[10] = a02 * b20 + a12 * b21 + a22 * b22;
     out[11] = a03 * b20 + a13 * b21 + a23 * b22;
-    if (a !== out) {
-      out[12] = a[12];
-      out[13] = a[13];
-      out[14] = a[14];
-      out[15] = a[15];
+    if (a3 !== out) {
+      out[12] = a3[12];
+      out[13] = a3[13];
+      out[14] = a3[14];
+      out[15] = a3[15];
     }
     return out;
   }
-  function rotateX(out, a, rad) {
-    var s = Math.sin(rad);
+  function rotateX(out, a3, rad) {
+    var s5 = Math.sin(rad);
     var c = Math.cos(rad);
-    var a10 = a[4];
-    var a11 = a[5];
-    var a12 = a[6];
-    var a13 = a[7];
-    var a20 = a[8];
-    var a21 = a[9];
-    var a22 = a[10];
-    var a23 = a[11];
-    if (a !== out) {
-      out[0] = a[0];
-      out[1] = a[1];
-      out[2] = a[2];
-      out[3] = a[3];
-      out[12] = a[12];
-      out[13] = a[13];
-      out[14] = a[14];
-      out[15] = a[15];
+    var a10 = a3[4];
+    var a11 = a3[5];
+    var a12 = a3[6];
+    var a13 = a3[7];
+    var a20 = a3[8];
+    var a21 = a3[9];
+    var a22 = a3[10];
+    var a23 = a3[11];
+    if (a3 !== out) {
+      out[0] = a3[0];
+      out[1] = a3[1];
+      out[2] = a3[2];
+      out[3] = a3[3];
+      out[12] = a3[12];
+      out[13] = a3[13];
+      out[14] = a3[14];
+      out[15] = a3[15];
     }
-    out[4] = a10 * c + a20 * s;
-    out[5] = a11 * c + a21 * s;
-    out[6] = a12 * c + a22 * s;
-    out[7] = a13 * c + a23 * s;
-    out[8] = a20 * c - a10 * s;
-    out[9] = a21 * c - a11 * s;
-    out[10] = a22 * c - a12 * s;
-    out[11] = a23 * c - a13 * s;
+    out[4] = a10 * c + a20 * s5;
+    out[5] = a11 * c + a21 * s5;
+    out[6] = a12 * c + a22 * s5;
+    out[7] = a13 * c + a23 * s5;
+    out[8] = a20 * c - a10 * s5;
+    out[9] = a21 * c - a11 * s5;
+    out[10] = a22 * c - a12 * s5;
+    out[11] = a23 * c - a13 * s5;
     return out;
   }
-  function rotateY(out, a, rad) {
-    var s = Math.sin(rad);
+  function rotateY(out, a3, rad) {
+    var s5 = Math.sin(rad);
     var c = Math.cos(rad);
-    var a00 = a[0];
-    var a01 = a[1];
-    var a02 = a[2];
-    var a03 = a[3];
-    var a20 = a[8];
-    var a21 = a[9];
-    var a22 = a[10];
-    var a23 = a[11];
-    if (a !== out) {
-      out[4] = a[4];
-      out[5] = a[5];
-      out[6] = a[6];
-      out[7] = a[7];
-      out[12] = a[12];
-      out[13] = a[13];
-      out[14] = a[14];
-      out[15] = a[15];
+    var a00 = a3[0];
+    var a01 = a3[1];
+    var a02 = a3[2];
+    var a03 = a3[3];
+    var a20 = a3[8];
+    var a21 = a3[9];
+    var a22 = a3[10];
+    var a23 = a3[11];
+    if (a3 !== out) {
+      out[4] = a3[4];
+      out[5] = a3[5];
+      out[6] = a3[6];
+      out[7] = a3[7];
+      out[12] = a3[12];
+      out[13] = a3[13];
+      out[14] = a3[14];
+      out[15] = a3[15];
     }
-    out[0] = a00 * c - a20 * s;
-    out[1] = a01 * c - a21 * s;
-    out[2] = a02 * c - a22 * s;
-    out[3] = a03 * c - a23 * s;
-    out[8] = a00 * s + a20 * c;
-    out[9] = a01 * s + a21 * c;
-    out[10] = a02 * s + a22 * c;
-    out[11] = a03 * s + a23 * c;
+    out[0] = a00 * c - a20 * s5;
+    out[1] = a01 * c - a21 * s5;
+    out[2] = a02 * c - a22 * s5;
+    out[3] = a03 * c - a23 * s5;
+    out[8] = a00 * s5 + a20 * c;
+    out[9] = a01 * s5 + a21 * c;
+    out[10] = a02 * s5 + a22 * c;
+    out[11] = a03 * s5 + a23 * c;
     return out;
   }
-  function rotateZ(out, a, rad) {
-    var s = Math.sin(rad);
+  function rotateZ(out, a3, rad) {
+    var s5 = Math.sin(rad);
     var c = Math.cos(rad);
-    var a00 = a[0];
-    var a01 = a[1];
-    var a02 = a[2];
-    var a03 = a[3];
-    var a10 = a[4];
-    var a11 = a[5];
-    var a12 = a[6];
-    var a13 = a[7];
-    if (a !== out) {
-      out[8] = a[8];
-      out[9] = a[9];
-      out[10] = a[10];
-      out[11] = a[11];
-      out[12] = a[12];
-      out[13] = a[13];
-      out[14] = a[14];
-      out[15] = a[15];
+    var a00 = a3[0];
+    var a01 = a3[1];
+    var a02 = a3[2];
+    var a03 = a3[3];
+    var a10 = a3[4];
+    var a11 = a3[5];
+    var a12 = a3[6];
+    var a13 = a3[7];
+    if (a3 !== out) {
+      out[8] = a3[8];
+      out[9] = a3[9];
+      out[10] = a3[10];
+      out[11] = a3[11];
+      out[12] = a3[12];
+      out[13] = a3[13];
+      out[14] = a3[14];
+      out[15] = a3[15];
     }
-    out[0] = a00 * c + a10 * s;
-    out[1] = a01 * c + a11 * s;
-    out[2] = a02 * c + a12 * s;
-    out[3] = a03 * c + a13 * s;
-    out[4] = a10 * c - a00 * s;
-    out[5] = a11 * c - a01 * s;
-    out[6] = a12 * c - a02 * s;
-    out[7] = a13 * c - a03 * s;
+    out[0] = a00 * c + a10 * s5;
+    out[1] = a01 * c + a11 * s5;
+    out[2] = a02 * c + a12 * s5;
+    out[3] = a03 * c + a13 * s5;
+    out[4] = a10 * c - a00 * s5;
+    out[5] = a11 * c - a01 * s5;
+    out[6] = a12 * c - a02 * s5;
+    out[7] = a13 * c - a03 * s5;
     return out;
   }
   function fromTranslation(out, v) {
@@ -691,7 +708,7 @@ export default require => {
   function fromRotation(out, rad, axis) {
     var x = axis[0], y = axis[1], z = axis[2];
     var len2 = Math.sqrt(x * x + y * y + z * z);
-    var s, c, t;
+    var s5, c, t3;
     if (len2 < EPSILON) {
       return null;
     }
@@ -699,20 +716,20 @@ export default require => {
     x *= len2;
     y *= len2;
     z *= len2;
-    s = Math.sin(rad);
+    s5 = Math.sin(rad);
     c = Math.cos(rad);
-    t = 1 - c;
-    out[0] = x * x * t + c;
-    out[1] = y * x * t + z * s;
-    out[2] = z * x * t - y * s;
+    t3 = 1 - c;
+    out[0] = x * x * t3 + c;
+    out[1] = y * x * t3 + z * s5;
+    out[2] = z * x * t3 - y * s5;
     out[3] = 0;
-    out[4] = x * y * t - z * s;
-    out[5] = y * y * t + c;
-    out[6] = z * y * t + x * s;
+    out[4] = x * y * t3 - z * s5;
+    out[5] = y * y * t3 + c;
+    out[6] = z * y * t3 + x * s5;
     out[7] = 0;
-    out[8] = x * z * t + y * s;
-    out[9] = y * z * t - x * s;
-    out[10] = z * z * t + c;
+    out[8] = x * z * t3 + y * s5;
+    out[9] = y * z * t3 - x * s5;
+    out[10] = z * z * t3 + c;
     out[11] = 0;
     out[12] = 0;
     out[13] = 0;
@@ -721,7 +738,7 @@ export default require => {
     return out;
   }
   function fromXRotation(out, rad) {
-    var s = Math.sin(rad);
+    var s5 = Math.sin(rad);
     var c = Math.cos(rad);
     out[0] = 1;
     out[1] = 0;
@@ -729,10 +746,10 @@ export default require => {
     out[3] = 0;
     out[4] = 0;
     out[5] = c;
-    out[6] = s;
+    out[6] = s5;
     out[7] = 0;
     out[8] = 0;
-    out[9] = -s;
+    out[9] = -s5;
     out[10] = c;
     out[11] = 0;
     out[12] = 0;
@@ -742,17 +759,17 @@ export default require => {
     return out;
   }
   function fromYRotation(out, rad) {
-    var s = Math.sin(rad);
+    var s5 = Math.sin(rad);
     var c = Math.cos(rad);
     out[0] = c;
     out[1] = 0;
-    out[2] = -s;
+    out[2] = -s5;
     out[3] = 0;
     out[4] = 0;
     out[5] = 1;
     out[6] = 0;
     out[7] = 0;
-    out[8] = s;
+    out[8] = s5;
     out[9] = 0;
     out[10] = c;
     out[11] = 0;
@@ -763,13 +780,13 @@ export default require => {
     return out;
   }
   function fromZRotation(out, rad) {
-    var s = Math.sin(rad);
+    var s5 = Math.sin(rad);
     var c = Math.cos(rad);
     out[0] = c;
-    out[1] = s;
+    out[1] = s5;
     out[2] = 0;
     out[3] = 0;
-    out[4] = -s;
+    out[4] = -s5;
     out[5] = c;
     out[6] = 0;
     out[7] = 0;
@@ -815,9 +832,9 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function fromQuat2(out, a) {
+  function fromQuat2(out, a3) {
     var translation = new ARRAY_TYPE(3);
-    var bx = -a[0], by = -a[1], bz = -a[2], bw = a[3], ax = a[4], ay = a[5], az = a[6], aw = a[7];
+    var bx = -a3[0], by = -a3[1], bz = -a3[2], bw = a3[3], ax = a3[4], ay = a3[5], az = a3[6], aw = a3[7];
     var magnitude = bx * bx + by * by + bz * bz + bw * bw;
     if (magnitude > 0) {
       translation[0] = (ax * bw + aw * bx + ay * bz - az * by) * 2 / magnitude;
@@ -828,7 +845,7 @@ export default require => {
       translation[1] = (ay * bw + aw * by + az * bx - ax * bz) * 2;
       translation[2] = (az * bw + aw * bz + ax * by - ay * bx) * 2;
     }
-    fromRotationTranslation(out, a, translation);
+    fromRotationTranslation(out, a3, translation);
     return out;
   }
   function getTranslation(out, mat) {
@@ -953,7 +970,7 @@ export default require => {
     }
     return out_r;
   }
-  function fromRotationTranslationScale(out, q, v, s) {
+  function fromRotationTranslationScale(out, q, v, s5) {
     var x = q[0], y = q[1], z = q[2], w = q[3];
     var x2 = x + x;
     var y2 = y + y;
@@ -967,9 +984,9 @@ export default require => {
     var wx = w * x2;
     var wy = w * y2;
     var wz = w * z2;
-    var sx = s[0];
-    var sy = s[1];
-    var sz = s[2];
+    var sx = s5[0];
+    var sy = s5[1];
+    var sz = s5[2];
     out[0] = (1 - (yy + zz)) * sx;
     out[1] = (xy + wz) * sx;
     out[2] = (xz - wy) * sx;
@@ -988,7 +1005,7 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function fromRotationTranslationScaleOrigin(out, q, v, s, o) {
+  function fromRotationTranslationScaleOrigin(out, q, v, s5, o2) {
     var x = q[0], y = q[1], z = q[2], w = q[3];
     var x2 = x + x;
     var y2 = y + y;
@@ -1002,12 +1019,12 @@ export default require => {
     var wx = w * x2;
     var wy = w * y2;
     var wz = w * z2;
-    var sx = s[0];
-    var sy = s[1];
-    var sz = s[2];
-    var ox = o[0];
-    var oy = o[1];
-    var oz = o[2];
+    var sx = s5[0];
+    var sy = s5[1];
+    var sz = s5[2];
+    var ox = o2[0];
+    var oy = o2[1];
+    var oz = o2[2];
     var out0 = (1 - (yy + zz)) * sx;
     var out1 = (xy + wz) * sx;
     var out2 = (xz - wy) * sx;
@@ -1315,101 +1332,101 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function str(a) {
-    return "mat4(" + a[0] + ", " + a[1] + ", " + a[2] + ", " + a[3] + ", " + a[4] + ", " + a[5] + ", " + a[6] + ", " + a[7] + ", " + a[8] + ", " + a[9] + ", " + a[10] + ", " + a[11] + ", " + a[12] + ", " + a[13] + ", " + a[14] + ", " + a[15] + ")";
+  function str(a3) {
+    return "mat4(" + a3[0] + ", " + a3[1] + ", " + a3[2] + ", " + a3[3] + ", " + a3[4] + ", " + a3[5] + ", " + a3[6] + ", " + a3[7] + ", " + a3[8] + ", " + a3[9] + ", " + a3[10] + ", " + a3[11] + ", " + a3[12] + ", " + a3[13] + ", " + a3[14] + ", " + a3[15] + ")";
   }
-  function frob(a) {
-    return Math.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2] + a[3] * a[3] + a[4] * a[4] + a[5] * a[5] + a[6] * a[6] + a[7] * a[7] + a[8] * a[8] + a[9] * a[9] + a[10] * a[10] + a[11] * a[11] + a[12] * a[12] + a[13] * a[13] + a[14] * a[14] + a[15] * a[15]);
+  function frob(a3) {
+    return Math.sqrt(a3[0] * a3[0] + a3[1] * a3[1] + a3[2] * a3[2] + a3[3] * a3[3] + a3[4] * a3[4] + a3[5] * a3[5] + a3[6] * a3[6] + a3[7] * a3[7] + a3[8] * a3[8] + a3[9] * a3[9] + a3[10] * a3[10] + a3[11] * a3[11] + a3[12] * a3[12] + a3[13] * a3[13] + a3[14] * a3[14] + a3[15] * a3[15]);
   }
-  function add(out, a, b) {
-    out[0] = a[0] + b[0];
-    out[1] = a[1] + b[1];
-    out[2] = a[2] + b[2];
-    out[3] = a[3] + b[3];
-    out[4] = a[4] + b[4];
-    out[5] = a[5] + b[5];
-    out[6] = a[6] + b[6];
-    out[7] = a[7] + b[7];
-    out[8] = a[8] + b[8];
-    out[9] = a[9] + b[9];
-    out[10] = a[10] + b[10];
-    out[11] = a[11] + b[11];
-    out[12] = a[12] + b[12];
-    out[13] = a[13] + b[13];
-    out[14] = a[14] + b[14];
-    out[15] = a[15] + b[15];
+  function add(out, a3, b) {
+    out[0] = a3[0] + b[0];
+    out[1] = a3[1] + b[1];
+    out[2] = a3[2] + b[2];
+    out[3] = a3[3] + b[3];
+    out[4] = a3[4] + b[4];
+    out[5] = a3[5] + b[5];
+    out[6] = a3[6] + b[6];
+    out[7] = a3[7] + b[7];
+    out[8] = a3[8] + b[8];
+    out[9] = a3[9] + b[9];
+    out[10] = a3[10] + b[10];
+    out[11] = a3[11] + b[11];
+    out[12] = a3[12] + b[12];
+    out[13] = a3[13] + b[13];
+    out[14] = a3[14] + b[14];
+    out[15] = a3[15] + b[15];
     return out;
   }
-  function subtract(out, a, b) {
-    out[0] = a[0] - b[0];
-    out[1] = a[1] - b[1];
-    out[2] = a[2] - b[2];
-    out[3] = a[3] - b[3];
-    out[4] = a[4] - b[4];
-    out[5] = a[5] - b[5];
-    out[6] = a[6] - b[6];
-    out[7] = a[7] - b[7];
-    out[8] = a[8] - b[8];
-    out[9] = a[9] - b[9];
-    out[10] = a[10] - b[10];
-    out[11] = a[11] - b[11];
-    out[12] = a[12] - b[12];
-    out[13] = a[13] - b[13];
-    out[14] = a[14] - b[14];
-    out[15] = a[15] - b[15];
+  function subtract(out, a3, b) {
+    out[0] = a3[0] - b[0];
+    out[1] = a3[1] - b[1];
+    out[2] = a3[2] - b[2];
+    out[3] = a3[3] - b[3];
+    out[4] = a3[4] - b[4];
+    out[5] = a3[5] - b[5];
+    out[6] = a3[6] - b[6];
+    out[7] = a3[7] - b[7];
+    out[8] = a3[8] - b[8];
+    out[9] = a3[9] - b[9];
+    out[10] = a3[10] - b[10];
+    out[11] = a3[11] - b[11];
+    out[12] = a3[12] - b[12];
+    out[13] = a3[13] - b[13];
+    out[14] = a3[14] - b[14];
+    out[15] = a3[15] - b[15];
     return out;
   }
-  function multiplyScalar(out, a, b) {
-    out[0] = a[0] * b;
-    out[1] = a[1] * b;
-    out[2] = a[2] * b;
-    out[3] = a[3] * b;
-    out[4] = a[4] * b;
-    out[5] = a[5] * b;
-    out[6] = a[6] * b;
-    out[7] = a[7] * b;
-    out[8] = a[8] * b;
-    out[9] = a[9] * b;
-    out[10] = a[10] * b;
-    out[11] = a[11] * b;
-    out[12] = a[12] * b;
-    out[13] = a[13] * b;
-    out[14] = a[14] * b;
-    out[15] = a[15] * b;
+  function multiplyScalar(out, a3, b) {
+    out[0] = a3[0] * b;
+    out[1] = a3[1] * b;
+    out[2] = a3[2] * b;
+    out[3] = a3[3] * b;
+    out[4] = a3[4] * b;
+    out[5] = a3[5] * b;
+    out[6] = a3[6] * b;
+    out[7] = a3[7] * b;
+    out[8] = a3[8] * b;
+    out[9] = a3[9] * b;
+    out[10] = a3[10] * b;
+    out[11] = a3[11] * b;
+    out[12] = a3[12] * b;
+    out[13] = a3[13] * b;
+    out[14] = a3[14] * b;
+    out[15] = a3[15] * b;
     return out;
   }
-  function multiplyScalarAndAdd(out, a, b, scale4) {
-    out[0] = a[0] + b[0] * scale4;
-    out[1] = a[1] + b[1] * scale4;
-    out[2] = a[2] + b[2] * scale4;
-    out[3] = a[3] + b[3] * scale4;
-    out[4] = a[4] + b[4] * scale4;
-    out[5] = a[5] + b[5] * scale4;
-    out[6] = a[6] + b[6] * scale4;
-    out[7] = a[7] + b[7] * scale4;
-    out[8] = a[8] + b[8] * scale4;
-    out[9] = a[9] + b[9] * scale4;
-    out[10] = a[10] + b[10] * scale4;
-    out[11] = a[11] + b[11] * scale4;
-    out[12] = a[12] + b[12] * scale4;
-    out[13] = a[13] + b[13] * scale4;
-    out[14] = a[14] + b[14] * scale4;
-    out[15] = a[15] + b[15] * scale4;
+  function multiplyScalarAndAdd(out, a3, b, scale4) {
+    out[0] = a3[0] + b[0] * scale4;
+    out[1] = a3[1] + b[1] * scale4;
+    out[2] = a3[2] + b[2] * scale4;
+    out[3] = a3[3] + b[3] * scale4;
+    out[4] = a3[4] + b[4] * scale4;
+    out[5] = a3[5] + b[5] * scale4;
+    out[6] = a3[6] + b[6] * scale4;
+    out[7] = a3[7] + b[7] * scale4;
+    out[8] = a3[8] + b[8] * scale4;
+    out[9] = a3[9] + b[9] * scale4;
+    out[10] = a3[10] + b[10] * scale4;
+    out[11] = a3[11] + b[11] * scale4;
+    out[12] = a3[12] + b[12] * scale4;
+    out[13] = a3[13] + b[13] * scale4;
+    out[14] = a3[14] + b[14] * scale4;
+    out[15] = a3[15] + b[15] * scale4;
     return out;
   }
-  function exactEquals(a, b) {
-    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3] && a[4] === b[4] && a[5] === b[5] && a[6] === b[6] && a[7] === b[7] && a[8] === b[8] && a[9] === b[9] && a[10] === b[10] && a[11] === b[11] && a[12] === b[12] && a[13] === b[13] && a[14] === b[14] && a[15] === b[15];
+  function exactEquals(a3, b) {
+    return a3[0] === b[0] && a3[1] === b[1] && a3[2] === b[2] && a3[3] === b[3] && a3[4] === b[4] && a3[5] === b[5] && a3[6] === b[6] && a3[7] === b[7] && a3[8] === b[8] && a3[9] === b[9] && a3[10] === b[10] && a3[11] === b[11] && a3[12] === b[12] && a3[13] === b[13] && a3[14] === b[14] && a3[15] === b[15];
   }
-  function equals(a, b) {
-    var a0 = a[0], a1 = a[1], a2 = a[2], a3 = a[3];
-    var a4 = a[4], a5 = a[5], a6 = a[6], a7 = a[7];
-    var a8 = a[8], a9 = a[9], a10 = a[10], a11 = a[11];
-    var a12 = a[12], a13 = a[13], a14 = a[14], a15 = a[15];
+  function equals(a3, b) {
+    var a0 = a3[0], a1 = a3[1], a22 = a3[2], a32 = a3[3];
+    var a4 = a3[4], a5 = a3[5], a6 = a3[6], a7 = a3[7];
+    var a8 = a3[8], a9 = a3[9], a10 = a3[10], a11 = a3[11];
+    var a12 = a3[12], a13 = a3[13], a14 = a3[14], a15 = a3[15];
     var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
     var b4 = b[4], b5 = b[5], b6 = b[6], b7 = b[7];
     var b8 = b[8], b9 = b[9], b10 = b[10], b11 = b[11];
     var b12 = b[12], b13 = b[13], b14 = b[14], b15 = b[15];
-    return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a2 - b2) <= EPSILON * Math.max(1, Math.abs(a2), Math.abs(b2)) && Math.abs(a3 - b3) <= EPSILON * Math.max(1, Math.abs(a3), Math.abs(b3)) && Math.abs(a4 - b4) <= EPSILON * Math.max(1, Math.abs(a4), Math.abs(b4)) && Math.abs(a5 - b5) <= EPSILON * Math.max(1, Math.abs(a5), Math.abs(b5)) && Math.abs(a6 - b6) <= EPSILON * Math.max(1, Math.abs(a6), Math.abs(b6)) && Math.abs(a7 - b7) <= EPSILON * Math.max(1, Math.abs(a7), Math.abs(b7)) && Math.abs(a8 - b8) <= EPSILON * Math.max(1, Math.abs(a8), Math.abs(b8)) && Math.abs(a9 - b9) <= EPSILON * Math.max(1, Math.abs(a9), Math.abs(b9)) && Math.abs(a10 - b10) <= EPSILON * Math.max(1, Math.abs(a10), Math.abs(b10)) && Math.abs(a11 - b11) <= EPSILON * Math.max(1, Math.abs(a11), Math.abs(b11)) && Math.abs(a12 - b12) <= EPSILON * Math.max(1, Math.abs(a12), Math.abs(b12)) && Math.abs(a13 - b13) <= EPSILON * Math.max(1, Math.abs(a13), Math.abs(b13)) && Math.abs(a14 - b14) <= EPSILON * Math.max(1, Math.abs(a14), Math.abs(b14)) && Math.abs(a15 - b15) <= EPSILON * Math.max(1, Math.abs(a15), Math.abs(b15));
+    return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a22 - b2) <= EPSILON * Math.max(1, Math.abs(a22), Math.abs(b2)) && Math.abs(a32 - b3) <= EPSILON * Math.max(1, Math.abs(a32), Math.abs(b3)) && Math.abs(a4 - b4) <= EPSILON * Math.max(1, Math.abs(a4), Math.abs(b4)) && Math.abs(a5 - b5) <= EPSILON * Math.max(1, Math.abs(a5), Math.abs(b5)) && Math.abs(a6 - b6) <= EPSILON * Math.max(1, Math.abs(a6), Math.abs(b6)) && Math.abs(a7 - b7) <= EPSILON * Math.max(1, Math.abs(a7), Math.abs(b7)) && Math.abs(a8 - b8) <= EPSILON * Math.max(1, Math.abs(a8), Math.abs(b8)) && Math.abs(a9 - b9) <= EPSILON * Math.max(1, Math.abs(a9), Math.abs(b9)) && Math.abs(a10 - b10) <= EPSILON * Math.max(1, Math.abs(a10), Math.abs(b10)) && Math.abs(a11 - b11) <= EPSILON * Math.max(1, Math.abs(a11), Math.abs(b11)) && Math.abs(a12 - b12) <= EPSILON * Math.max(1, Math.abs(a12), Math.abs(b12)) && Math.abs(a13 - b13) <= EPSILON * Math.max(1, Math.abs(a13), Math.abs(b13)) && Math.abs(a14 - b14) <= EPSILON * Math.max(1, Math.abs(a14), Math.abs(b14)) && Math.abs(a15 - b15) <= EPSILON * Math.max(1, Math.abs(a15), Math.abs(b15));
   }
   var mul = multiply;
   var sub = subtract;
@@ -1474,17 +1491,17 @@ export default require => {
     }
     return out;
   }
-  function clone2(a) {
+  function clone2(a3) {
     var out = new ARRAY_TYPE(3);
-    out[0] = a[0];
-    out[1] = a[1];
-    out[2] = a[2];
+    out[0] = a3[0];
+    out[1] = a3[1];
+    out[2] = a3[2];
     return out;
   }
-  function length(a) {
-    var x = a[0];
-    var y = a[1];
-    var z = a[2];
+  function length(a3) {
+    var x = a3[0];
+    var y = a3[1];
+    var z = a3[2];
     return Math.sqrt(x * x + y * y + z * z);
   }
   function fromValues2(x, y, z) {
@@ -1494,10 +1511,10 @@ export default require => {
     out[2] = z;
     return out;
   }
-  function copy2(out, a) {
-    out[0] = a[0];
-    out[1] = a[1];
-    out[2] = a[2];
+  function copy2(out, a3) {
+    out[0] = a3[0];
+    out[1] = a3[1];
+    out[2] = a3[2];
     return out;
   }
   function set2(out, x, y, z) {
@@ -1506,181 +1523,181 @@ export default require => {
     out[2] = z;
     return out;
   }
-  function add2(out, a, b) {
-    out[0] = a[0] + b[0];
-    out[1] = a[1] + b[1];
-    out[2] = a[2] + b[2];
+  function add2(out, a3, b) {
+    out[0] = a3[0] + b[0];
+    out[1] = a3[1] + b[1];
+    out[2] = a3[2] + b[2];
     return out;
   }
-  function subtract2(out, a, b) {
-    out[0] = a[0] - b[0];
-    out[1] = a[1] - b[1];
-    out[2] = a[2] - b[2];
+  function subtract2(out, a3, b) {
+    out[0] = a3[0] - b[0];
+    out[1] = a3[1] - b[1];
+    out[2] = a3[2] - b[2];
     return out;
   }
-  function multiply2(out, a, b) {
-    out[0] = a[0] * b[0];
-    out[1] = a[1] * b[1];
-    out[2] = a[2] * b[2];
+  function multiply2(out, a3, b) {
+    out[0] = a3[0] * b[0];
+    out[1] = a3[1] * b[1];
+    out[2] = a3[2] * b[2];
     return out;
   }
-  function divide(out, a, b) {
-    out[0] = a[0] / b[0];
-    out[1] = a[1] / b[1];
-    out[2] = a[2] / b[2];
+  function divide(out, a3, b) {
+    out[0] = a3[0] / b[0];
+    out[1] = a3[1] / b[1];
+    out[2] = a3[2] / b[2];
     return out;
   }
-  function ceil(out, a) {
-    out[0] = Math.ceil(a[0]);
-    out[1] = Math.ceil(a[1]);
-    out[2] = Math.ceil(a[2]);
+  function ceil(out, a3) {
+    out[0] = Math.ceil(a3[0]);
+    out[1] = Math.ceil(a3[1]);
+    out[2] = Math.ceil(a3[2]);
     return out;
   }
-  function floor(out, a) {
-    out[0] = Math.floor(a[0]);
-    out[1] = Math.floor(a[1]);
-    out[2] = Math.floor(a[2]);
+  function floor(out, a3) {
+    out[0] = Math.floor(a3[0]);
+    out[1] = Math.floor(a3[1]);
+    out[2] = Math.floor(a3[2]);
     return out;
   }
-  function min(out, a, b) {
-    out[0] = Math.min(a[0], b[0]);
-    out[1] = Math.min(a[1], b[1]);
-    out[2] = Math.min(a[2], b[2]);
+  function min(out, a3, b) {
+    out[0] = Math.min(a3[0], b[0]);
+    out[1] = Math.min(a3[1], b[1]);
+    out[2] = Math.min(a3[2], b[2]);
     return out;
   }
-  function max(out, a, b) {
-    out[0] = Math.max(a[0], b[0]);
-    out[1] = Math.max(a[1], b[1]);
-    out[2] = Math.max(a[2], b[2]);
+  function max(out, a3, b) {
+    out[0] = Math.max(a3[0], b[0]);
+    out[1] = Math.max(a3[1], b[1]);
+    out[2] = Math.max(a3[2], b[2]);
     return out;
   }
-  function round2(out, a) {
-    out[0] = round(a[0]);
-    out[1] = round(a[1]);
-    out[2] = round(a[2]);
+  function round2(out, a3) {
+    out[0] = round(a3[0]);
+    out[1] = round(a3[1]);
+    out[2] = round(a3[2]);
     return out;
   }
-  function scale2(out, a, b) {
-    out[0] = a[0] * b;
-    out[1] = a[1] * b;
-    out[2] = a[2] * b;
+  function scale2(out, a3, b) {
+    out[0] = a3[0] * b;
+    out[1] = a3[1] * b;
+    out[2] = a3[2] * b;
     return out;
   }
-  function scaleAndAdd(out, a, b, scale4) {
-    out[0] = a[0] + b[0] * scale4;
-    out[1] = a[1] + b[1] * scale4;
-    out[2] = a[2] + b[2] * scale4;
+  function scaleAndAdd(out, a3, b, scale4) {
+    out[0] = a3[0] + b[0] * scale4;
+    out[1] = a3[1] + b[1] * scale4;
+    out[2] = a3[2] + b[2] * scale4;
     return out;
   }
-  function distance(a, b) {
-    var x = b[0] - a[0];
-    var y = b[1] - a[1];
-    var z = b[2] - a[2];
+  function distance(a3, b) {
+    var x = b[0] - a3[0];
+    var y = b[1] - a3[1];
+    var z = b[2] - a3[2];
     return Math.sqrt(x * x + y * y + z * z);
   }
-  function squaredDistance(a, b) {
-    var x = b[0] - a[0];
-    var y = b[1] - a[1];
-    var z = b[2] - a[2];
+  function squaredDistance(a3, b) {
+    var x = b[0] - a3[0];
+    var y = b[1] - a3[1];
+    var z = b[2] - a3[2];
     return x * x + y * y + z * z;
   }
-  function squaredLength(a) {
-    var x = a[0];
-    var y = a[1];
-    var z = a[2];
+  function squaredLength(a3) {
+    var x = a3[0];
+    var y = a3[1];
+    var z = a3[2];
     return x * x + y * y + z * z;
   }
-  function negate(out, a) {
-    out[0] = -a[0];
-    out[1] = -a[1];
-    out[2] = -a[2];
+  function negate(out, a3) {
+    out[0] = -a3[0];
+    out[1] = -a3[1];
+    out[2] = -a3[2];
     return out;
   }
-  function inverse(out, a) {
-    out[0] = 1 / a[0];
-    out[1] = 1 / a[1];
-    out[2] = 1 / a[2];
+  function inverse(out, a3) {
+    out[0] = 1 / a3[0];
+    out[1] = 1 / a3[1];
+    out[2] = 1 / a3[2];
     return out;
   }
-  function normalize(out, a) {
-    var x = a[0];
-    var y = a[1];
-    var z = a[2];
+  function normalize(out, a3) {
+    var x = a3[0];
+    var y = a3[1];
+    var z = a3[2];
     var len2 = x * x + y * y + z * z;
     if (len2 > 0) {
       len2 = 1 / Math.sqrt(len2);
     }
-    out[0] = a[0] * len2;
-    out[1] = a[1] * len2;
-    out[2] = a[2] * len2;
+    out[0] = a3[0] * len2;
+    out[1] = a3[1] * len2;
+    out[2] = a3[2] * len2;
     return out;
   }
-  function dot(a, b) {
-    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  function dot(a3, b) {
+    return a3[0] * b[0] + a3[1] * b[1] + a3[2] * b[2];
   }
-  function cross(out, a, b) {
-    var ax = a[0], ay = a[1], az = a[2];
+  function cross(out, a3, b) {
+    var ax = a3[0], ay = a3[1], az = a3[2];
     var bx = b[0], by = b[1], bz = b[2];
     out[0] = ay * bz - az * by;
     out[1] = az * bx - ax * bz;
     out[2] = ax * by - ay * bx;
     return out;
   }
-  function lerp(out, a, b, t) {
-    var ax = a[0];
-    var ay = a[1];
-    var az = a[2];
-    out[0] = ax + t * (b[0] - ax);
-    out[1] = ay + t * (b[1] - ay);
-    out[2] = az + t * (b[2] - az);
+  function lerp(out, a3, b, t3) {
+    var ax = a3[0];
+    var ay = a3[1];
+    var az = a3[2];
+    out[0] = ax + t3 * (b[0] - ax);
+    out[1] = ay + t3 * (b[1] - ay);
+    out[2] = az + t3 * (b[2] - az);
     return out;
   }
-  function slerp(out, a, b, t) {
-    var angle2 = Math.acos(Math.min(Math.max(dot(a, b), -1), 1));
+  function slerp(out, a3, b, t3) {
+    var angle2 = Math.acos(Math.min(Math.max(dot(a3, b), -1), 1));
     var sinTotal = Math.sin(angle2);
-    var ratioA = Math.sin((1 - t) * angle2) / sinTotal;
-    var ratioB = Math.sin(t * angle2) / sinTotal;
-    out[0] = ratioA * a[0] + ratioB * b[0];
-    out[1] = ratioA * a[1] + ratioB * b[1];
-    out[2] = ratioA * a[2] + ratioB * b[2];
+    var ratioA = Math.sin((1 - t3) * angle2) / sinTotal;
+    var ratioB = Math.sin(t3 * angle2) / sinTotal;
+    out[0] = ratioA * a3[0] + ratioB * b[0];
+    out[1] = ratioA * a3[1] + ratioB * b[1];
+    out[2] = ratioA * a3[2] + ratioB * b[2];
     return out;
   }
-  function hermite(out, a, b, c, d, t) {
-    var factorTimes2 = t * t;
-    var factor1 = factorTimes2 * (2 * t - 3) + 1;
-    var factor2 = factorTimes2 * (t - 2) + t;
-    var factor3 = factorTimes2 * (t - 1);
-    var factor4 = factorTimes2 * (3 - 2 * t);
-    out[0] = a[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
-    out[1] = a[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
-    out[2] = a[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
+  function hermite(out, a3, b, c, d, t3) {
+    var factorTimes2 = t3 * t3;
+    var factor1 = factorTimes2 * (2 * t3 - 3) + 1;
+    var factor2 = factorTimes2 * (t3 - 2) + t3;
+    var factor3 = factorTimes2 * (t3 - 1);
+    var factor4 = factorTimes2 * (3 - 2 * t3);
+    out[0] = a3[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
+    out[1] = a3[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
+    out[2] = a3[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
     return out;
   }
-  function bezier(out, a, b, c, d, t) {
-    var inverseFactor = 1 - t;
+  function bezier(out, a3, b, c, d, t3) {
+    var inverseFactor = 1 - t3;
     var inverseFactorTimesTwo = inverseFactor * inverseFactor;
-    var factorTimes2 = t * t;
+    var factorTimes2 = t3 * t3;
     var factor1 = inverseFactorTimesTwo * inverseFactor;
-    var factor2 = 3 * t * inverseFactorTimesTwo;
+    var factor2 = 3 * t3 * inverseFactorTimesTwo;
     var factor3 = 3 * factorTimes2 * inverseFactor;
-    var factor4 = factorTimes2 * t;
-    out[0] = a[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
-    out[1] = a[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
-    out[2] = a[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
+    var factor4 = factorTimes2 * t3;
+    out[0] = a3[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
+    out[1] = a3[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
+    out[2] = a3[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
     return out;
   }
   function random(out, scale4) {
     scale4 = scale4 === void 0 ? 1 : scale4;
-    var r = RANDOM() * 2 * Math.PI;
+    var r2 = RANDOM() * 2 * Math.PI;
     var z = RANDOM() * 2 - 1;
     var zScale = Math.sqrt(1 - z * z) * scale4;
-    out[0] = Math.cos(r) * zScale;
-    out[1] = Math.sin(r) * zScale;
+    out[0] = Math.cos(r2) * zScale;
+    out[1] = Math.sin(r2) * zScale;
     out[2] = z * scale4;
     return out;
   }
-  function transformMat4(out, a, m) {
-    var x = a[0], y = a[1], z = a[2];
+  function transformMat4(out, a3, m) {
+    var x = a3[0], y = a3[1], z = a3[2];
     var w = m[3] * x + m[7] * y + m[11] * z + m[15];
     w = w || 1;
     out[0] = (m[0] * x + m[4] * y + m[8] * z + m[12]) / w;
@@ -1688,16 +1705,16 @@ export default require => {
     out[2] = (m[2] * x + m[6] * y + m[10] * z + m[14]) / w;
     return out;
   }
-  function transformMat3(out, a, m) {
-    var x = a[0], y = a[1], z = a[2];
+  function transformMat3(out, a3, m) {
+    var x = a3[0], y = a3[1], z = a3[2];
     out[0] = x * m[0] + y * m[3] + z * m[6];
     out[1] = x * m[1] + y * m[4] + z * m[7];
     out[2] = x * m[2] + y * m[5] + z * m[8];
     return out;
   }
-  function transformQuat(out, a, q) {
+  function transformQuat(out, a3, q) {
     var qx = q[0], qy = q[1], qz = q[2], qw = q[3];
-    var vx = a[0], vy = a[1], vz = a[2];
+    var vx = a3[0], vy = a3[1], vz = a3[2];
     var tx = qy * vz - qz * vy;
     var ty = qz * vx - qx * vz;
     var tz = qx * vy - qy * vx;
@@ -1709,47 +1726,47 @@ export default require => {
     out[2] = vz + qw * tz + qx * ty - qy * tx;
     return out;
   }
-  function rotateX2(out, a, b, rad) {
-    var p = [], r = [];
-    p[0] = a[0] - b[0];
-    p[1] = a[1] - b[1];
-    p[2] = a[2] - b[2];
-    r[0] = p[0];
-    r[1] = p[1] * Math.cos(rad) - p[2] * Math.sin(rad);
-    r[2] = p[1] * Math.sin(rad) + p[2] * Math.cos(rad);
-    out[0] = r[0] + b[0];
-    out[1] = r[1] + b[1];
-    out[2] = r[2] + b[2];
+  function rotateX2(out, a3, b, rad) {
+    var p = [], r2 = [];
+    p[0] = a3[0] - b[0];
+    p[1] = a3[1] - b[1];
+    p[2] = a3[2] - b[2];
+    r2[0] = p[0];
+    r2[1] = p[1] * Math.cos(rad) - p[2] * Math.sin(rad);
+    r2[2] = p[1] * Math.sin(rad) + p[2] * Math.cos(rad);
+    out[0] = r2[0] + b[0];
+    out[1] = r2[1] + b[1];
+    out[2] = r2[2] + b[2];
     return out;
   }
-  function rotateY2(out, a, b, rad) {
-    var p = [], r = [];
-    p[0] = a[0] - b[0];
-    p[1] = a[1] - b[1];
-    p[2] = a[2] - b[2];
-    r[0] = p[2] * Math.sin(rad) + p[0] * Math.cos(rad);
-    r[1] = p[1];
-    r[2] = p[2] * Math.cos(rad) - p[0] * Math.sin(rad);
-    out[0] = r[0] + b[0];
-    out[1] = r[1] + b[1];
-    out[2] = r[2] + b[2];
+  function rotateY2(out, a3, b, rad) {
+    var p = [], r2 = [];
+    p[0] = a3[0] - b[0];
+    p[1] = a3[1] - b[1];
+    p[2] = a3[2] - b[2];
+    r2[0] = p[2] * Math.sin(rad) + p[0] * Math.cos(rad);
+    r2[1] = p[1];
+    r2[2] = p[2] * Math.cos(rad) - p[0] * Math.sin(rad);
+    out[0] = r2[0] + b[0];
+    out[1] = r2[1] + b[1];
+    out[2] = r2[2] + b[2];
     return out;
   }
-  function rotateZ2(out, a, b, rad) {
-    var p = [], r = [];
-    p[0] = a[0] - b[0];
-    p[1] = a[1] - b[1];
-    p[2] = a[2] - b[2];
-    r[0] = p[0] * Math.cos(rad) - p[1] * Math.sin(rad);
-    r[1] = p[0] * Math.sin(rad) + p[1] * Math.cos(rad);
-    r[2] = p[2];
-    out[0] = r[0] + b[0];
-    out[1] = r[1] + b[1];
-    out[2] = r[2] + b[2];
+  function rotateZ2(out, a3, b, rad) {
+    var p = [], r2 = [];
+    p[0] = a3[0] - b[0];
+    p[1] = a3[1] - b[1];
+    p[2] = a3[2] - b[2];
+    r2[0] = p[0] * Math.cos(rad) - p[1] * Math.sin(rad);
+    r2[1] = p[0] * Math.sin(rad) + p[1] * Math.cos(rad);
+    r2[2] = p[2];
+    out[0] = r2[0] + b[0];
+    out[1] = r2[1] + b[1];
+    out[2] = r2[2] + b[2];
     return out;
   }
-  function angle(a, b) {
-    var ax = a[0], ay = a[1], az = a[2], bx = b[0], by = b[1], bz = b[2], mag = Math.sqrt((ax * ax + ay * ay + az * az) * (bx * bx + by * by + bz * bz)), cosine = mag && dot(a, b) / mag;
+  function angle(a3, b) {
+    var ax = a3[0], ay = a3[1], az = a3[2], bx = b[0], by = b[1], bz = b[2], mag = Math.sqrt((ax * ax + ay * ay + az * az) * (bx * bx + by * by + bz * bz)), cosine = mag && dot(a3, b) / mag;
     return Math.acos(Math.min(Math.max(cosine, -1), 1));
   }
   function zero(out) {
@@ -1758,16 +1775,16 @@ export default require => {
     out[2] = 0;
     return out;
   }
-  function str2(a) {
-    return "vec3(" + a[0] + ", " + a[1] + ", " + a[2] + ")";
+  function str2(a3) {
+    return "vec3(" + a3[0] + ", " + a3[1] + ", " + a3[2] + ")";
   }
-  function exactEquals2(a, b) {
-    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
+  function exactEquals2(a3, b) {
+    return a3[0] === b[0] && a3[1] === b[1] && a3[2] === b[2];
   }
-  function equals2(a, b) {
-    var a0 = a[0], a1 = a[1], a2 = a[2];
+  function equals2(a3, b) {
+    var a0 = a3[0], a1 = a3[1], a22 = a3[2];
     var b0 = b[0], b1 = b[1], b2 = b[2];
-    return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a2 - b2) <= EPSILON * Math.max(1, Math.abs(a2), Math.abs(b2));
+    return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a22 - b2) <= EPSILON * Math.max(1, Math.abs(a22), Math.abs(b2));
   }
   var sub2 = subtract2;
   var mul2 = multiply2;
@@ -1778,7 +1795,7 @@ export default require => {
   var sqrLen = squaredLength;
   var forEach = (function () {
     var vec = create2();
-    return function (a, stride, offset, count, fn, arg) {
+    return function (a3, stride, offset, count, fn, arg) {
       var i, l;
       if (!stride) {
         stride = 3;
@@ -1787,20 +1804,20 @@ export default require => {
         offset = 0;
       }
       if (count) {
-        l = Math.min(count * stride + offset, a.length);
+        l = Math.min(count * stride + offset, a3.length);
       } else {
-        l = a.length;
+        l = a3.length;
       }
       for (i = offset; i < l; i += stride) {
-        vec[0] = a[i];
-        vec[1] = a[i + 1];
-        vec[2] = a[i + 2];
+        vec[0] = a3[i];
+        vec[1] = a3[i + 1];
+        vec[2] = a3[i + 2];
         fn(vec, vec, arg);
-        a[i] = vec[0];
-        a[i + 1] = vec[1];
-        a[i + 2] = vec[2];
+        a3[i] = vec[0];
+        a3[i + 1] = vec[1];
+        a3[i + 2] = vec[2];
       }
-      return a;
+      return a3;
     };
   })();
   var glAnimationSymbol = Symbol.for("glAnimation");
@@ -1878,9 +1895,9 @@ export default require => {
     gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
     gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
-    const e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-    if (gl.FRAMEBUFFER_COMPLETE !== e) {
-      throw new import_base.GeneralRuntimeError(`Frame buffer object is incomplete:${e.toString()}`);
+    const e3 = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+    if (gl.FRAMEBUFFER_COMPLETE !== e3) {
+      throw new import_base.GeneralRuntimeError(`Frame buffer object is incomplete:${e3.toString()}`);
     }
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.bindTexture(gl.TEXTURE_2D, null);
@@ -1890,90 +1907,33 @@ export default require => {
       texture
     };
   }
-  function createTypeMap() {
-    const type_map2 = {};
-    function registerType(name, declaration) {
-      if (name === "prelude") {
-        type_map2["prelude"] = type_map2["prelude"] != void 0 ? type_map2["prelude"] + "\n" + declaration : declaration;
-      } else {
-        type_map2[name] = declaration;
+  var __awaiter = function (thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P ? value : new P(function (resolve) {
+        resolve(value);
+      });
+    }
+    return new (P || (P = Promise))(function (resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e3) {
+          reject(e3);
+        }
       }
-    }
-    function classDeclaration2(name) {
-      return _target => {
-        registerType("prelude", `class ${name} {}`);
-      };
-    }
-    function typeDeclaration(type, declaration = null) {
-      return target => {
-        const typeAlias = `type ${target.name} = ${type}`;
-        let variableDeclaration3 = `const ${target.name} = ${declaration === null ? type : declaration}`;
-        switch (type) {
-          case "number":
-            variableDeclaration3 = `const ${target.name} = 0`;
-            break;
-          case "string":
-            variableDeclaration3 = `const ${target.name} = ''`;
-            break;
-          case "boolean":
-            variableDeclaration3 = `const ${target.name} = false`;
-            break;
-          case "void":
-            variableDeclaration3 = "";
-            break;
+      function rejected(value) {
+        try {
+          step(generator["throw"](value));
+        } catch (e3) {
+          reject(e3);
         }
-        registerType("prelude", `${typeAlias};
-${variableDeclaration3};`);
-      };
-    }
-    function functionDeclaration2(paramTypes, returnType) {
-      return (_target, propertyKey, _descriptor) => {
-        let returnValue = "";
-        switch (returnType) {
-          case "number":
-            returnValue = "return 0";
-            break;
-          case "string":
-            returnValue = "return ''";
-            break;
-          case "boolean":
-            returnValue = "return false";
-            break;
-          case "void":
-            returnValue = "";
-            break;
-          default:
-            returnValue = `return ${returnType}`;
-            break;
-        }
-        registerType(propertyKey, `function ${propertyKey} (${paramTypes}) : ${returnType} { ${returnValue} }`);
-      };
-    }
-    function variableDeclaration2(type) {
-      return (_target, propertyKey) => {
-        registerType(propertyKey, `const ${propertyKey}: ${type} = ${type}`);
-      };
-    }
-    return {
-      classDeclaration: classDeclaration2,
-      functionDeclaration: functionDeclaration2,
-      variableDeclaration: variableDeclaration2,
-      typeDeclaration,
-      type_map: type_map2
-    };
-  }
-  var typeMapCreator = createTypeMap();
-  var {functionDeclaration, variableDeclaration, classDeclaration} = typeMapCreator;
-  var type_map = typeMapCreator.type_map;
-  var __decorate = function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc); else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return (c > 3 && r && Object.defineProperty(target, key, r), r);
+      }
+      function step(result) {
+        result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
   };
-  var __metadata = function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-  };
-  var Rune_1;
   var normalVertexShader = `
 attribute vec4 aVertexPosition;
 uniform vec4 uVertexColor;
@@ -2020,7 +1980,7 @@ void main(void) {
   gl_FragColor.a = 1.0;
 }
 `;
-  var Rune = Rune_1 = class Rune2 {
+  var Rune = class _Rune {
     constructor(vertices, colors, transformMatrix, subRunes, texture, hollusionDistance) {
       this.vertices = vertices;
       this.colors = colors;
@@ -2028,7 +1988,7 @@ void main(void) {
       this.subRunes = subRunes;
       this.texture = texture;
       this.hollusionDistance = hollusionDistance;
-      this.copy = () => new Rune_1(this.vertices, this.colors, mat4_exports.clone(this.transformMatrix), this.subRunes, this.texture, this.hollusionDistance);
+      this.copy = () => new _Rune(this.vertices, this.colors, mat4_exports.clone(this.transformMatrix), this.subRunes, this.texture, this.hollusionDistance);
       this.flatten = () => {
         const runeList = [];
         const runeTodoList = [this.copy()];
@@ -2058,76 +2018,96 @@ void main(void) {
       var _a;
       return (_a = params[name]) !== null && _a !== void 0 ? _a : defaultValue();
     };
-    return new Rune_1(paramGetter("vertices", () => new Float32Array()), paramGetter("colors", () => null), paramGetter("transformMatrix", mat4_exports.create), paramGetter("subRunes", () => []), paramGetter("texture", () => null), paramGetter("hollusionDistance", () => 0.1));
+    return new Rune(paramGetter("vertices", () => new Float32Array()), paramGetter("colors", () => null), paramGetter("transformMatrix", mat4_exports.create), paramGetter("subRunes", () => []), paramGetter("texture", () => null), paramGetter("hollusionDistance", () => 0.1));
   };
-  Rune = Rune_1 = __decorate([classDeclaration("Rune"), __metadata("design:paramtypes", [Float32Array, Object, Object, Array, Object, Number])], Rune);
-  function drawRunesToFrameBuffer(gl, runes, cameraMatrix, colorFilter, framebuffer = null, depthSwitch = false) {
-    gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
-    const shaderProgram = initShaderProgram(gl, normalVertexShader, normalFragmentShader);
-    gl.useProgram(shaderProgram);
-    if (gl === null) {
-      throw new import_base.GeneralRuntimeError("Rendering Context not initialized for drawRune.");
-    }
-    const vertexPositionPointer = gl.getAttribLocation(shaderProgram, "aVertexPosition");
-    const vertexColorPointer = gl.getUniformLocation(shaderProgram, "uVertexColor");
-    const vertexColorFilterPt = gl.getUniformLocation(shaderProgram, "uColorFilter");
-    const projectionMatrixPointer = gl.getUniformLocation(shaderProgram, "uProjectionMatrix");
-    const cameraMatrixPointer = gl.getUniformLocation(shaderProgram, "uCameraMatrix");
-    const modelViewMatrixPointer = gl.getUniformLocation(shaderProgram, "uModelViewMatrix");
-    const textureSwitchPointer = gl.getUniformLocation(shaderProgram, "uRenderWithTexture");
-    const depthSwitchPointer = gl.getUniformLocation(shaderProgram, "uRenderWithDepthColor");
-    const texturePointer = gl.getUniformLocation(shaderProgram, "uTexture");
-    gl.uniform1i(depthSwitchPointer, depthSwitch ? 1 : 0);
-    const orthoCam = mat4_exports.create();
-    mat4_exports.ortho(orthoCam, -1, 1, -1, 1, -0.5, 1.5);
-    gl.uniformMatrix4fv(projectionMatrixPointer, false, orthoCam);
-    gl.uniformMatrix4fv(cameraMatrixPointer, false, cameraMatrix);
-    gl.uniform4fv(vertexColorFilterPt, colorFilter);
-    const loadTexture = image => {
-      const texture = gl.createTexture();
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      function isPowerOf2(value) {
-        return (value & value - 1) === 0;
+  function drawRunesToFrameBuffer(gl_1, runes_1, cameraMatrix_1, colorFilter_1) {
+    return __awaiter(this, arguments, void 0, function* (gl, runes, cameraMatrix, colorFilter, framebuffer = null, depthSwitch = false) {
+      gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+      const shaderProgram = initShaderProgram(gl, normalVertexShader, normalFragmentShader);
+      gl.useProgram(shaderProgram);
+      if (gl === null) {
+        throw new import_base.GeneralRuntimeError("Rendering Context not initialized for drawRune.");
       }
-      const level = 0;
-      const internalFormat = gl.RGBA;
-      const width = 1;
-      const height = 1;
-      const border = 0;
-      const srcFormat = gl.RGBA;
-      const srcType = gl.UNSIGNED_BYTE;
-      const pixel = new Uint8Array([0, 0, 255, 255]);
-      gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border, srcFormat, srcType, pixel);
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, srcFormat, srcType, image);
-      if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
-        gl.generateMipmap(gl.TEXTURE_2D);
-      } else {
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      }
-      return texture;
-    };
-    runes.forEach(rune => {
-      const positionBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, rune.vertices, gl.STATIC_DRAW);
-      gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0);
-      gl.enableVertexAttribArray(vertexPositionPointer);
-      if (rune.texture === null) {
-        gl.uniform4fv(vertexColorPointer, rune.colors || new Float32Array([0, 0, 0, 1]));
-        gl.uniform1i(textureSwitchPointer, 0);
-      } else {
-        const texture = loadTexture(rune.texture);
-        gl.activeTexture(gl.TEXTURE0);
+      const vertexPositionPointer = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+      const vertexColorPointer = gl.getUniformLocation(shaderProgram, "uVertexColor");
+      const vertexColorFilterPt = gl.getUniformLocation(shaderProgram, "uColorFilter");
+      const projectionMatrixPointer = gl.getUniformLocation(shaderProgram, "uProjectionMatrix");
+      const cameraMatrixPointer = gl.getUniformLocation(shaderProgram, "uCameraMatrix");
+      const modelViewMatrixPointer = gl.getUniformLocation(shaderProgram, "uModelViewMatrix");
+      const textureSwitchPointer = gl.getUniformLocation(shaderProgram, "uRenderWithTexture");
+      const depthSwitchPointer = gl.getUniformLocation(shaderProgram, "uRenderWithDepthColor");
+      const texturePointer = gl.getUniformLocation(shaderProgram, "uTexture");
+      gl.uniform1i(depthSwitchPointer, depthSwitch ? 1 : 0);
+      const orthoCam = mat4_exports.create();
+      mat4_exports.ortho(orthoCam, -1, 1, -1, 1, -0.5, 1.5);
+      gl.uniformMatrix4fv(projectionMatrixPointer, false, orthoCam);
+      gl.uniformMatrix4fv(cameraMatrixPointer, false, cameraMatrix);
+      gl.uniform4fv(vertexColorFilterPt, colorFilter);
+      const loadTexture = rune => __awaiter(this, void 0, void 0, function* () {
+        if (rune.texture === null) return null;
+        const imageSource = rune.texture;
+        let image;
+        if (typeof imageSource !== "string") {
+          image = imageSource;
+        } else {
+          image = yield new Promise((resolve, reject) => {
+            const image2 = Object.assign(new Image(), {
+              crossOrigin: "anonymous",
+              src: imageSource
+            });
+            image2.onload = () => {
+              rune.texture = image2;
+              resolve(image2);
+            };
+            image2.onabort = reject;
+            image2.onerror = reject;
+          });
+        }
+        const texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.uniform1i(texturePointer, 0);
-        gl.uniform1i(textureSwitchPointer, 1);
+        function isPowerOf2(value) {
+          return (value & value - 1) === 0;
+        }
+        const level = 0;
+        const internalFormat = gl.RGBA;
+        const width = 1;
+        const height = 1;
+        const border = 0;
+        const srcFormat = gl.RGBA;
+        const srcType = gl.UNSIGNED_BYTE;
+        const pixel = new Uint8Array([0, 0, 255, 255]);
+        gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border, srcFormat, srcType, pixel);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, srcFormat, srcType, image);
+        if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+          gl.generateMipmap(gl.TEXTURE_2D);
+        } else {
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        }
+        return texture;
+      });
+      for (const rune of runes) {
+        const positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, rune.vertices, gl.STATIC_DRAW);
+        gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(vertexPositionPointer);
+        if (rune.texture === null) {
+          gl.uniform4fv(vertexColorPointer, rune.colors || new Float32Array([0, 0, 0, 1]));
+          gl.uniform1i(textureSwitchPointer, 0);
+        } else {
+          const texture = yield loadTexture(rune);
+          gl.activeTexture(gl.TEXTURE0);
+          gl.bindTexture(gl.TEXTURE_2D, texture);
+          gl.uniform1i(texturePointer, 0);
+          gl.uniform1i(textureSwitchPointer, 1);
+        }
+        gl.uniformMatrix4fv(modelViewMatrixPointer, false, rune.transformMatrix);
+        const vertexCount = rune.vertices.length / 4;
+        gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
       }
-      gl.uniformMatrix4fv(modelViewMatrixPointer, false, rune.transformMatrix);
-      const vertexCount = rune.vertices.length / 4;
-      gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
     });
   }
   var DrawnRune = class {
@@ -2183,6 +2163,16 @@ void main(void) {
     gl_FragColor.a = 1.0;
   }
   `;
+  var DrawnNormalRune = class extends DrawnRune {
+    constructor(rune) {
+      super(rune, false);
+      this.draw = canvas => __awaiter(this, void 0, void 0, function* () {
+        const gl = getWebGlFromCanvas(canvas);
+        const cameraMatrix = mat4_exports.create();
+        yield drawRunesToFrameBuffer(gl, this.rune.flatten(), cameraMatrix, new Float32Array([1, 1, 1, 1]), null, true);
+      });
+    }
+  };
   function throwIfNotRune(func_name, rune, param_name) {
     if (!(rune instanceof Rune)) {
       throw new import_rttcErrors.InvalidParameterTypeError("Rune", rune, func_name, param_name);
@@ -2302,25 +2292,25 @@ void main(void) {
     const vertexList = [];
     const colorList = [];
     const root2 = Math.sqrt(2);
-    const r = 4 / (2 + 3 * root2);
-    const scaleX = 1 / (r * (1 + root2 / 2));
+    const r2 = 4 / (2 + 3 * root2);
+    const scaleX = 1 / (r2 * (1 + root2 / 2));
     const numPoints = 100;
-    const rightCenterX = r / root2;
-    const rightCenterY = 1 - r;
+    const rightCenterX = r2 / root2;
+    const rightCenterY = 1 - r2;
     for (let i = 0; i < numPoints; i += 1) {
       const angle1 = Math.PI * (-1 / 4 + i / numPoints);
       const angle2 = Math.PI * (-1 / 4 + (i + 1) / numPoints);
-      vertexList.push((Math.cos(angle1) * r + rightCenterX) * scaleX, Math.sin(angle1) * r + rightCenterY, 0, 1);
-      vertexList.push((Math.cos(angle2) * r + rightCenterX) * scaleX, Math.sin(angle2) * r + rightCenterY, 0, 1);
+      vertexList.push((Math.cos(angle1) * r2 + rightCenterX) * scaleX, Math.sin(angle1) * r2 + rightCenterY, 0, 1);
+      vertexList.push((Math.cos(angle2) * r2 + rightCenterX) * scaleX, Math.sin(angle2) * r2 + rightCenterY, 0, 1);
       vertexList.push(0, -1, 0, 1);
     }
-    const leftCenterX = -r / root2;
-    const leftCenterY = 1 - r;
+    const leftCenterX = -r2 / root2;
+    const leftCenterY = 1 - r2;
     for (let i = 0; i <= numPoints; i += 1) {
       const angle1 = Math.PI * (1 / 4 + i / numPoints);
       const angle2 = Math.PI * (1 / 4 + (i + 1) / numPoints);
-      vertexList.push((Math.cos(angle1) * r + leftCenterX) * scaleX, Math.sin(angle1) * r + leftCenterY, 0, 1);
-      vertexList.push((Math.cos(angle2) * r + leftCenterX) * scaleX, Math.sin(angle2) * r + leftCenterY, 0, 1);
+      vertexList.push((Math.cos(angle1) * r2 + leftCenterX) * scaleX, Math.sin(angle1) * r2 + leftCenterY, 0, 1);
+      vertexList.push((Math.cos(angle2) * r2 + leftCenterX) * scaleX, Math.sin(angle2) * r2 + leftCenterY, 0, 1);
       vertexList.push(0, -1, 0, 1);
     }
     colorList.push(0, 0, 0, 1);
@@ -2386,13 +2376,32 @@ void main(void) {
       colors: new Float32Array(hexToColor2(hex))
     });
   }
-  var __decorate2 = function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc); else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return (c > 3 && r && Object.defineProperty(target, key, r), r);
-  };
-  var __metadata2 = function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+  var __awaiter2 = function (thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P ? value : new P(function (resolve) {
+        resolve(value);
+      });
+    }
+    return new (P || (P = Promise))(function (resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e3) {
+          reject(e3);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator["throw"](value));
+        } catch (e3) {
+          reject(e3);
+        }
+      }
+      function step(result) {
+        result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
   };
   function throwIfNotFraction(val, param_name, func_name) {
     (0, import_rttc.assertNumberWithinRange)(val, func_name, 0, 1, false, param_name);
@@ -2400,9 +2409,7 @@ void main(void) {
   var RuneFunctions = class _RuneFunctions {
     static from_url(imageUrl) {
       const rune = getSquare();
-      rune.texture = new Image();
-      rune.texture.crossOrigin = "anonymous";
-      rune.texture.src = imageUrl;
+      rune.texture = imageUrl;
       return rune;
     }
     static scale_independent(ratio_x, ratio_y, rune) {
@@ -2469,15 +2476,15 @@ void main(void) {
       throwIfNotRune(_RuneFunctions.stack.name, rune2, "rune2");
       return _RuneFunctions.stack_frac(0.5, rune1, rune2);
     }
-    static stackn(n, rune) {
+    static stackn(n3, rune) {
       throwIfNotRune(_RuneFunctions.stackn.name, rune);
-      (0, import_rttc.assertNumberWithinRange)(n, {
+      (0, import_rttc.assertNumberWithinRange)(n3, {
         func_name: _RuneFunctions.stackn.name
       });
-      if (n <= 1) {
+      if (n3 <= 1) {
         return rune;
       }
-      return _RuneFunctions.stack_frac(1 / n, rune, _RuneFunctions.stackn(n - 1, rune));
+      return _RuneFunctions.stack_frac(1 / n3, rune, _RuneFunctions.stackn(n3 - 1, rune));
     }
     static quarter_turn_right(rune) {
       throwIfNotRune(_RuneFunctions.quarter_turn_right.name, rune);
@@ -2518,10 +2525,10 @@ void main(void) {
       throwIfNotRune(_RuneFunctions.make_cross.name, rune);
       return _RuneFunctions.stack(_RuneFunctions.beside(_RuneFunctions.quarter_turn_right(rune), _RuneFunctions.rotate(Math.PI, rune)), _RuneFunctions.beside(rune, _RuneFunctions.rotate(Math.PI / 2, rune)));
     }
-    static repeat_pattern(n, pattern, initial) {
+    static repeat_pattern(n3, pattern, initial) {
       throwIfNotRune(_RuneFunctions.repeat_pattern.name, initial, "initial");
       (0, import_rttc.assertFunctionOfLength)(pattern, 1, _RuneFunctions.repeat_pattern.name);
-      const repeated = repeat_internal(pattern, n);
+      const repeated = repeat_internal(pattern, n3);
       return repeated(initial);
     }
     static overlay_frac(frac, rune1, rune2) {
@@ -2553,12 +2560,12 @@ void main(void) {
       throwIfNotRune(_RuneFunctions.overlay.name, rune2, "rune2");
       return _RuneFunctions.overlay_frac(0.5, rune1, rune2);
     }
-    static color(rune, r, g, b) {
+    static color(rune, r2, g, b) {
       throwIfNotRune(_RuneFunctions.color.name, rune);
-      throwIfNotFraction(r, "r", _RuneFunctions.color.name);
+      throwIfNotFraction(r2, "r", _RuneFunctions.color.name);
       throwIfNotFraction(g, "g", _RuneFunctions.color.name);
       throwIfNotFraction(b, "b", _RuneFunctions.color.name);
-      const colorVector = [r, g, b, 1];
+      const colorVector = [r2, g, b, 1];
       return Rune.of({
         colors: new Float32Array(colorVector),
         subRunes: [rune]
@@ -2576,37 +2583,6 @@ void main(void) {
   RuneFunctions.heart = getHeart();
   RuneFunctions.pentagram = getPentagram();
   RuneFunctions.ribbon = getRibbon();
-  __decorate2([variableDeclaration("Rune"), __metadata2("design:type", Rune)], RuneFunctions, "square", void 0);
-  __decorate2([variableDeclaration("Rune"), __metadata2("design:type", Rune)], RuneFunctions, "blank", void 0);
-  __decorate2([variableDeclaration("Rune"), __metadata2("design:type", Rune)], RuneFunctions, "rcross", void 0);
-  __decorate2([variableDeclaration("Rune"), __metadata2("design:type", Rune)], RuneFunctions, "sail", void 0);
-  __decorate2([variableDeclaration("Rune"), __metadata2("design:type", Rune)], RuneFunctions, "triangle", void 0);
-  __decorate2([variableDeclaration("Rune"), __metadata2("design:type", Rune)], RuneFunctions, "corner", void 0);
-  __decorate2([variableDeclaration("Rune"), __metadata2("design:type", Rune)], RuneFunctions, "nova", void 0);
-  __decorate2([variableDeclaration("Rune"), __metadata2("design:type", Rune)], RuneFunctions, "circle", void 0);
-  __decorate2([variableDeclaration("Rune"), __metadata2("design:type", Rune)], RuneFunctions, "heart", void 0);
-  __decorate2([variableDeclaration("Rune"), __metadata2("design:type", Rune)], RuneFunctions, "pentagram", void 0);
-  __decorate2([variableDeclaration("Rune"), __metadata2("design:type", Rune)], RuneFunctions, "ribbon", void 0);
-  __decorate2([functionDeclaration("imageUrl: string", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [String]), __metadata2("design:returntype", Rune)], RuneFunctions, "from_url", null);
-  __decorate2([functionDeclaration("ratio_x: number, ratio_y: number, rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Number, Number, Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "scale_independent", null);
-  __decorate2([functionDeclaration("ratio: number, rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Number, Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "scale", null);
-  __decorate2([functionDeclaration("x: number, y: number, rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Number, Number, Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "translate", null);
-  __decorate2([functionDeclaration("rad: number, rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Number, Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "rotate", null);
-  __decorate2([functionDeclaration("frac: number, rune1: Rune, rune2: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Number, Rune, Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "stack_frac", null);
-  __decorate2([functionDeclaration("rune1: Rune, rune2: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune, Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "stack", null);
-  __decorate2([functionDeclaration("n: number, rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Number, Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "stackn", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "quarter_turn_right", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "quarter_turn_left", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "turn_upside_down", null);
-  __decorate2([functionDeclaration("frac: number, rune1: Rune, rune2: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Number, Rune, Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "beside_frac", null);
-  __decorate2([functionDeclaration("rune1: Rune, rune2: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune, Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "beside", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "flip_vert", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "flip_horiz", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "make_cross", null);
-  __decorate2([functionDeclaration("n: number, pattern: (a: Rune) => Rune, initial: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Number, Function, Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "repeat_pattern", null);
-  __decorate2([functionDeclaration("frac: number, rune1: Rune, rune2: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Number, Rune, Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "overlay_frac", null);
-  __decorate2([functionDeclaration("rune1: Rune, rune2: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune, Rune]), __metadata2("design:returntype", Rune)], RuneFunctions, "overlay", null);
-  __decorate2([functionDeclaration("rune: Rune, r: number, g: number, b: number", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune, Number, Number, Number]), __metadata2("design:returntype", Rune)], RuneFunctions, "color", null);
   var RuneColours = class _RuneColours {
     static black(rune) {
       throwIfNotRune(_RuneColours.black.name, rune);
@@ -2664,10 +2640,10 @@ void main(void) {
     static colour_with_hue(rune, hue) {
       throwIfNotRune(_RuneColours.colour_with_hue.name, rune);
       (0, import_rttc.assertNumberWithinRange)(hue, _RuneColours.colour_with_hue.name, 0, void 0, false, "hue");
-      const [r, g, b] = hueToRgb(hue);
+      const [r2, g, b] = hueToRgb(hue);
       return Rune.of({
         subRunes: [rune],
-        colors: new Float32Array([r / 255, g / 255, b / 255, 1])
+        colors: new Float32Array([r2 / 255, g / 255, b / 255, 1])
       });
     }
   };
@@ -2682,23 +2658,10 @@ void main(void) {
     red: "#F44336",
     yellow: "#FFEB3B"
   };
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneColours, "black", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneColours, "blue", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneColours, "brown", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneColours, "green", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneColours, "indigo", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneColours, "red", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneColours, "pink", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneColours, "orange", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneColours, "purple", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneColours, "white", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneColours, "yellow", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune]), __metadata2("design:returntype", Rune)], RuneColours, "random_color", null);
-  __decorate2([functionDeclaration("rune: Rune", "Rune"), __metadata2("design:type", Function), __metadata2("design:paramtypes", [Rune, Number]), __metadata2("design:returntype", Rune)], RuneColours, "colour_with_hue", null);
   var DrawnAnaglyphRune = class _DrawnAnaglyphRune extends DrawnRune {
     constructor(rune) {
       super(rune, false);
-      this.draw = canvas => {
+      this.draw = canvas => __awaiter2(this, void 0, void 0, function* () {
         const gl = getWebGlFromCanvas(canvas);
         const runes = white(overlay_frac(0.999999999, blank, scale3(2.2, square))).flatten().concat(this.rune.flatten());
         const halfEyeDistance = 0.03;
@@ -2708,8 +2671,8 @@ void main(void) {
         mat4_exports.lookAt(rightCameraMatrix, vec3_exports.fromValues(halfEyeDistance, 0, 0), vec3_exports.fromValues(0, 0, -0.4), vec3_exports.fromValues(0, 1, 0));
         const leftBuffer = initFramebufferObject(gl);
         const rightBuffer = initFramebufferObject(gl);
-        drawRunesToFrameBuffer(gl, runes, leftCameraMatrix, new Float32Array([1, 0, 0, 1]), leftBuffer.framebuffer, true);
-        drawRunesToFrameBuffer(gl, runes, rightCameraMatrix, new Float32Array([0, 1, 1, 1]), rightBuffer.framebuffer, true);
+        yield drawRunesToFrameBuffer(gl, runes, leftCameraMatrix, new Float32Array([1, 0, 0, 1]), leftBuffer.framebuffer, true);
+        yield drawRunesToFrameBuffer(gl, runes, rightCameraMatrix, new Float32Array([0, 1, 1, 1]), rightBuffer.framebuffer, true);
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         const shaderProgram = initShaderProgram(gl, _DrawnAnaglyphRune.anaglyphVertexShader, _DrawnAnaglyphRune.anaglyphFragmentShader);
         gl.useProgram(shaderProgram);
@@ -2728,7 +2691,7 @@ void main(void) {
         gl.vertexAttribPointer(vertexPositionPointer, 4, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(vertexPositionPointer);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
-      };
+      });
     }
   };
   DrawnAnaglyphRune.anaglyphVertexShader = `
@@ -2756,14 +2719,14 @@ void main(void) {
   var DrawnHollusionRune = class _DrawnHollusionRune extends DrawnRune {
     constructor(rune, magnitude) {
       super(rune, true);
-      this.draw = canvas => {
+      this.draw = canvas => __awaiter2(this, void 0, void 0, function* () {
         const gl = getWebGlFromCanvas(canvas);
         const runes = white(overlay_frac(0.999999999, blank, scale3(2.2, square))).flatten().concat(this.rune.flatten());
         const xshiftMax = runes[0].hollusionDistance;
         const period = 2e3;
         const frameCount = 50;
         const frameBuffer = [];
-        const renderFrame = framePos => {
+        const renderFrame = framePos => __awaiter2(this, void 0, void 0, function* () {
           const fb = initFramebufferObject(gl);
           const cameraMatrix = mat4_exports.create();
           let xshift = framePos * (period / frameCount) % period;
@@ -2772,11 +2735,11 @@ void main(void) {
           }
           xshift = xshiftMax * (2 * (2 * xshift / period) - 1);
           mat4_exports.lookAt(cameraMatrix, vec3_exports.fromValues(xshift, 0, 0), vec3_exports.fromValues(0, 0, -0.4), vec3_exports.fromValues(0, 1, 0));
-          drawRunesToFrameBuffer(gl, runes, cameraMatrix, new Float32Array([1, 1, 1, 1]), fb.framebuffer, true);
+          yield drawRunesToFrameBuffer(gl, runes, cameraMatrix, new Float32Array([1, 1, 1, 1]), fb.framebuffer, true);
           return fb;
-        };
+        });
         for (let i = 0; i < frameCount; i += 1) {
-          frameBuffer.push(renderFrame(i));
+          frameBuffer.push(yield renderFrame(i));
         }
         const copyShaderProgram = initShaderProgram(gl, _DrawnHollusionRune.copyVertexShader, _DrawnHollusionRune.copyFragmentShader);
         gl.useProgram(copyShaderProgram);
@@ -2802,7 +2765,7 @@ void main(void) {
           gl.drawArrays(gl.TRIANGLES, 0, 6);
         }
         return render;
-      };
+      });
       this.rune.hollusionDistance = magnitude;
     }
   };
@@ -2872,6 +2835,17 @@ void main(void) {
   var turn_upside_down = RuneFunctions.turn_upside_down;
   var yellow = RuneColours.yellow;
   var white = RuneColours.white;
+  var RUNE_CHANNEL_ID = "sourceacademy-rune-channel";
+  var RUNE_WEB_ID = "rune-web";
+  var R;
+  !(function (R2) {
+    (R2[R2.CALL = 0] = "CALL", R2[R2.RETURN = 1] = "RETURN", R2[R2.RETURN_ERR = 2] = "RETURN_ERR");
+  })(R || (R = {}));
+  function n(n3) {}
+  var _;
+  !(function (_2) {
+    (_2.UNKNOWN = "__unknown", _2.INTERNAL = "__internal", _2.EVALUATOR = "__evaluator", _2.EVALUATOR_SYNTAX = "__evaluator_syntax", _2.EVALUATOR_TYPE = "__evaluator_type", _2.EVALUATOR_RUNTIME = "__evaluator_runtime");
+  })(_ || (_ = {}));
   var import_jsx_runtime6 = __require("react/jsx-runtime");
   var import_core6 = __require("@blueprintjs/core");
   var import_react3 = __require("react");
@@ -2919,13 +2893,13 @@ void main(void) {
   }
   var import_jsx_runtime2 = __require("react/jsx-runtime");
   var import_core2 = __require("@blueprintjs/core");
-  var __rest = function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-      if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  var __rest = function (s5, e3) {
+    var t3 = {};
+    for (var p in s5) if (Object.prototype.hasOwnProperty.call(s5, p) && e3.indexOf(p) < 0) t3[p] = s5[p];
+    if (s5 != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s5); i < p.length; i++) {
+      if (e3.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s5, p[i])) t3[p[i]] = s5[p[i]];
     }
-    return t;
+    return t3;
   };
   function AutoLoopSwitch(_a) {
     var {isAutoLooping} = _a, props = __rest(_a, ["isAutoLooping"]);
@@ -2953,13 +2927,13 @@ void main(void) {
   }
   var import_jsx_runtime4 = __require("react/jsx-runtime");
   var import_core4 = __require("@blueprintjs/core");
-  var __rest2 = function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-      if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+  var __rest2 = function (s5, e3) {
+    var t3 = {};
+    for (var p in s5) if (Object.prototype.hasOwnProperty.call(s5, p) && e3.indexOf(p) < 0) t3[p] = s5[p];
+    if (s5 != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s5); i < p.length; i++) {
+      if (e3.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s5, p[i])) t3[p[i]] = s5[p[i]];
     }
-    return t;
+    return t3;
   };
   function PlayButton(_a) {
     var {playingText = "Pause", playingIcon = "pause", pausedText = "Play", pausedIcon = "play", isPlaying, tooltipProps, iconProps} = _a, props = __rest2(_a, ["playingText", "playingIcon", "pausedText", "pausedIcon", "isPlaying", "tooltipProps", "iconProps"]);
@@ -3355,23 +3329,30 @@ void main(void) {
       })]
     });
   }
-  function getModuleState(debuggerContext, name) {
-    const {context: {moduleContexts}} = debuggerContext;
-    return (name in moduleContexts) ? moduleContexts[name].state : null;
-  }
-  function defineTab(tab) {
-    return tab;
-  }
+  var import_react6 = __require("react");
   var import_react5 = __toESM(__require("react"), 1);
   var import_jsx_runtime8 = __require("react/jsx-runtime");
   function HollusionCanvas({rune}) {
-    const renderFuncRef = import_react5.default.useRef(void 0);
+    const renderFuncRef = import_react5.default.useRef({
+      type: "uninitialized"
+    });
     const {setCanvas} = useAnimation({
       callback({timestamp, canvas}) {
-        if (renderFuncRef.current === void 0) {
-          renderFuncRef.current = rune.draw(canvas);
+        if (renderFuncRef.current.type === "ready") {
+          return renderFuncRef.current.renderFunc(timestamp);
         }
-        renderFuncRef.current(timestamp);
+        if (renderFuncRef.current.type === "uninitialized") {
+          renderFuncRef.current = {
+            type: "loading"
+          };
+          rune.draw(canvas).then(renderFunc => {
+            renderFuncRef.current = {
+              type: "ready",
+              renderFunc
+            };
+            renderFuncRef.current.renderFunc(timestamp);
+          });
+        }
       },
       autoStart: true
     });
@@ -3384,44 +3365,137 @@ void main(void) {
     });
   }
   var import_jsx_runtime9 = __require("react/jsx-runtime");
-  var RuneTab = ({debuggerCtx: context}) => {
-    const {drawnRunes} = getModuleState(context, "rune");
-    const runeCanvases = drawnRunes.map((rune, i) => {
-      const elemKey = i.toString();
-      if (glAnimation.isAnimation(rune)) {
-        return (0, import_jsx_runtime9.jsx)(AnimationCanvas, {
-          animation: rune
-        }, elemKey);
+  function imageFromUrl(url) {
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+    image.src = url;
+    return image;
+  }
+  function deserializeRune(serialized) {
+    return Rune.of({
+      vertices: new Float32Array(serialized.vertices),
+      colors: serialized.colors === null ? null : new Float32Array(serialized.colors),
+      transformMatrix: new Float32Array(serialized.transformMatrix),
+      subRunes: serialized.subRunes.map(deserializeRune),
+      texture: serialized.textureUrl === null ? null : imageFromUrl(serialized.textureUrl),
+      hollusionDistance: serialized.hollusionDistance
+    });
+  }
+  var SerializedRuneAnimation = class extends glAnimation {
+    constructor(message) {
+      super(message.duration, message.fps);
+      this.message = message;
+    }
+    getFrame(timestamp) {
+      if (this.message.frames.length === 0) {
+        return {
+          draw: new DrawnNormalRune(Rune.of()).draw
+        };
       }
-      if (isHollusionRune(rune)) {
-        return (0, import_jsx_runtime9.jsx)(HollusionCanvas, {
-          rune
-        }, elemKey);
-      }
-      return (0, import_jsx_runtime9.jsx)(WebGLCanvas_default, {
-        ref: r => {
-          if (r) {
-            rune.draw(r);
-          }
+      const frame = Math.min(Math.floor(timestamp * this.message.fps), this.message.frames.length - 1);
+      const rune = deserializeRune(this.message.frames[frame]);
+      const drawnRune = this.message.mode === "anaglyph" ? new DrawnAnaglyphRune(rune) : new DrawnNormalRune(rune);
+      return {
+        draw: drawnRune.draw
+      };
+    }
+  };
+  function RenderedRune({message}) {
+    const rune = (0, import_react6.useMemo)(() => deserializeRune(message.rune), [message]);
+    const drawnRune = (0, import_react6.useMemo)(() => {
+      var _a;
+      if (message.mode === "anaglyph") return new DrawnAnaglyphRune(rune);
+      if (message.mode === "hollusion") return new DrawnHollusionRune(rune, (_a = message.magnitude) != null ? _a : 0.1);
+      return new DrawnNormalRune(rune);
+    }, [message, rune]);
+    if (isHollusionRune(drawnRune)) {
+      return (0, import_jsx_runtime9.jsx)(HollusionCanvas, {
+        rune: drawnRune
+      });
+    }
+    return (0, import_jsx_runtime9.jsx)(WebGLCanvas_default, {
+      ref: canvas => {
+        if (canvas) {
+          drawnRune.draw(canvas);
         }
-      }, elemKey);
+      }
+    });
+  }
+  function RenderedAnimation({message}) {
+    const animation = (0, import_react6.useMemo)(() => new SerializedRuneAnimation(message), [message]);
+    return (0, import_jsx_runtime9.jsx)(AnimationCanvas, {
+      animation
+    });
+  }
+  function RuneTab({messages}) {
+    const runeCanvases = messages.map((message, index) => {
+      const key = index.toString();
+      if (message.type === "animation") {
+        return (0, import_jsx_runtime9.jsx)(RenderedAnimation, {
+          message
+        }, key);
+      }
+      return (0, import_jsx_runtime9.jsx)(RenderedRune, {
+        message
+      }, key);
     });
     return (0, import_jsx_runtime9.jsx)(MultiItemDisplay, {
       elements: runeCanvases
     });
-  };
-  var index_default = defineTab({
-    toSpawn(context) {
-      const moduleState = getModuleState(context, "rune");
-      return !!moduleState && moduleState.drawnRunes.length > 0;
-    },
-    body(context) {
-      return (0, import_jsx_runtime9.jsx)(RuneTab, {
-        debuggerCtx: context
+  }
+  var RUNE_TAB_ID = "rune";
+  var RuneTabPlugin = class {
+    constructor(_conduit, [runeChannel], tabService) {
+      this.id = RUNE_WEB_ID;
+      this.__listeners = new Set();
+      this.__messages = [];
+      this.__handleMessage = message => {
+        if (message.type === "request") return;
+        this.__messages = [...this.__messages, message];
+        this.__emit();
+        this.__tabService.showTab(RUNE_TAB_ID);
+      };
+      if (!runeChannel) {
+        throw new Error("Rune channel is required but was not provided.");
+      }
+      this.__runeChannel = runeChannel;
+      this.__tabService = tabService;
+      const subscribe = listener => this.subscribe(listener);
+      const getMessages = () => this.getMessages();
+      function RunePluginTab() {
+        const messages = (0, import_react6.useSyncExternalStore)(subscribe, getMessages);
+        return (0, import_react6.createElement)(RuneTab, {
+          messages
+        });
+      }
+      const tab = {
+        id: RUNE_TAB_ID,
+        iconName: "group-objects",
+        body: (0, import_react6.createElement)(RunePluginTab),
+        label: "Runes Tab",
+        disabled: false
+      };
+      this.__tabService.registerTab(tab);
+      this.__runeChannel.subscribe(this.__handleMessage);
+      this.__runeChannel.send({
+        type: "request"
       });
-    },
-    label: "Runes Tab",
-    iconName: "group-objects"
-  });
+    }
+    getMessages() {
+      return this.__messages;
+    }
+    subscribe(listener) {
+      this.__listeners.add(listener);
+      return () => this.__listeners.delete(listener);
+    }
+    destroy() {
+      this.__runeChannel.unsubscribe(this.__handleMessage);
+    }
+    __emit() {
+      this.__listeners.forEach(listener => listener());
+    }
+  };
+  RuneTabPlugin.channelAttach = [RUNE_CHANNEL_ID];
+  n(RuneTabPlugin);
   return __toCommonJS(index_exports);
 };

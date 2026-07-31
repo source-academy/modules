@@ -63,7 +63,7 @@
       },
       {
         "paramType": "regular",
-        "type": "(state: any) => void",
+        "type": "Object",
         "name": "callback"
       }
     ],
@@ -131,7 +131,7 @@
       },
       {
         "paramType": "regular",
-        "type": "(args: any[]) => any",
+        "type": "Object",
         "name": "func"
       }
     ],
@@ -159,7 +159,7 @@
       },
       {
         "paramType": "regular",
-        "type": "(args: any[]) => void",
+        "type": "Object",
         "name": "callback"
       }
     ],

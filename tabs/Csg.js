@@ -15,16 +15,16 @@ export default require => {
     writable: true,
     value
   }) : obj[key] = value;
-  var __spreadValues = (a, b) => {
-    for (var prop in b || (b = {})) if (__hasOwnProp.call(b, prop)) __defNormalProp(a, prop, b[prop]);
+  var __spreadValues = (a2, b) => {
+    for (var prop in b || (b = {})) if (__hasOwnProp.call(b, prop)) __defNormalProp(a2, prop, b[prop]);
     if (__getOwnPropSymbols) for (var prop of __getOwnPropSymbols(b)) {
-      if (__propIsEnum.call(b, prop)) __defNormalProp(a, prop, b[prop]);
+      if (__propIsEnum.call(b, prop)) __defNormalProp(a2, prop, b[prop]);
     }
-    return a;
+    return a2;
   };
-  var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
+  var __spreadProps = (a2, b) => __defProps(a2, __getOwnPropDescs(b));
   var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+    get: (a2, b) => (typeof require !== "undefined" ? require : a2)[b]
   }) : x)(function (x) {
     if (typeof require !== "undefined") return require.apply(this, arguments);
     throw Error('Dynamic require of "' + x + '" is not supported');
@@ -33,8 +33,8 @@ export default require => {
     if (err) throw err[0];
     try {
       return (fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res);
-    } catch (e) {
-      throw (err = [e], e);
+    } catch (e2) {
+      throw (err = [e2], e2);
     }
   };
   var __commonJS = (cb, mod) => function __require2() {
@@ -42,8 +42,8 @@ export default require => {
       return (mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = {
         exports: {}
       }).exports, mod), mod.exports);
-    } catch (e) {
-      throw (mod = 0, e);
+    } catch (e2) {
+      throw (mod = 0, e2);
     }
   };
   var __export = (target, all) => {
@@ -68,44 +68,1569 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
+  var __async = (__this, __arguments, generator) => {
+    return new Promise((resolve, reject) => {
+      var fulfilled = value => {
+        try {
+          step(generator.next(value));
+        } catch (e2) {
+          reject(e2);
+        }
+      };
+      var rejected = value => {
+        try {
+          step(generator.throw(value));
+        } catch (e2) {
+          reject(e2);
+        }
+      };
+      var step = x => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+      step((generator = generator.apply(__this, __arguments)).next());
+    });
+  };
   var init_define_process = __esm({
     "<define:process>"() {}
   });
+  var require_FileSaver_min = __commonJS({
+    "../../../node_modules/file-saver/dist/FileSaver.min.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      (function (a2, b) {
+        if ("function" == typeof define && define.amd) define([], b); else if ("undefined" != typeof exports) b(); else {
+          (b(), a2.FileSaver = ({
+            exports: {}
+          }).exports);
+        }
+      })(exports, function () {
+        "use strict";
+        function b(a3, b2) {
+          return ("undefined" == typeof b2 ? b2 = {
+            autoBom: false
+          } : "object" != typeof b2 && (console.warn("Deprecated: Expected third argument to be a object"), b2 = {
+            autoBom: !b2
+          }), b2.autoBom && (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i).test(a3.type) ? new Blob(["\uFEFF", a3], {
+            type: a3.type
+          }) : a3);
+        }
+        function c(a3, b2, c2) {
+          var d2 = new XMLHttpRequest();
+          (d2.open("GET", a3), d2.responseType = "blob", d2.onload = function () {
+            g(d2.response, b2, c2);
+          }, d2.onerror = function () {
+            console.error("could not download file");
+          }, d2.send());
+        }
+        function d(a3) {
+          var b2 = new XMLHttpRequest();
+          b2.open("HEAD", a3, false);
+          try {
+            b2.send();
+          } catch (a4) {}
+          return 200 <= b2.status && 299 >= b2.status;
+        }
+        function e2(a3) {
+          try {
+            a3.dispatchEvent(new MouseEvent("click"));
+          } catch (c2) {
+            var b2 = document.createEvent("MouseEvents");
+            (b2.initMouseEvent("click", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null), a3.dispatchEvent(b2));
+          }
+        }
+        var f = "object" == typeof window && window.window === window ? window : "object" == typeof self && self.self === self ? self : "object" == typeof globalThis && globalThis.global === globalThis ? globalThis : void 0, a2 = f.navigator && (/Macintosh/).test(navigator.userAgent) && (/AppleWebKit/).test(navigator.userAgent) && !(/Safari/).test(navigator.userAgent), g = f.saveAs || ("object" != typeof window || window !== f ? function () {} : ("download" in HTMLAnchorElement.prototype) && !a2 ? function (b2, g2, h2) {
+          var i = f.URL || f.webkitURL, j = document.createElement("a");
+          (g2 = g2 || b2.name || "download", j.download = g2, j.rel = "noopener", "string" == typeof b2 ? (j.href = b2, j.origin === location.origin ? e2(j) : d(j.href) ? c(b2, g2, h2) : e2(j, j.target = "_blank")) : (j.href = i.createObjectURL(b2), setTimeout(function () {
+            i.revokeObjectURL(j.href);
+          }, 4e4), setTimeout(function () {
+            e2(j);
+          }, 0)));
+        } : ("msSaveOrOpenBlob" in navigator) ? function (f2, g2, h2) {
+          if ((g2 = g2 || f2.name || "download", "string" != typeof f2)) navigator.msSaveOrOpenBlob(b(f2, h2), g2); else if (d(f2)) c(f2, g2, h2); else {
+            var i = document.createElement("a");
+            (i.href = f2, i.target = "_blank", setTimeout(function () {
+              e2(i);
+            }));
+          }
+        } : function (b2, d2, e3, g2) {
+          if ((g2 = g2 || open("", "_blank"), g2 && (g2.document.title = g2.document.body.innerText = "downloading..."), "string" == typeof b2)) return c(b2, d2, e3);
+          var h2 = "application/octet-stream" === b2.type, i = (/constructor/i).test(f.HTMLElement) || f.safari, j = (/CriOS\/[\d]+/).test(navigator.userAgent);
+          if ((j || h2 && i || a2) && "undefined" != typeof FileReader) {
+            var k = new FileReader();
+            (k.onloadend = function () {
+              var a3 = k.result;
+              (a3 = j ? a3 : a3.replace(/^data:[^;]*;/, "data:attachment/file;"), g2 ? g2.location.href = a3 : location = a3, g2 = null);
+            }, k.readAsDataURL(b2));
+          } else {
+            var l = f.URL || f.webkitURL, m = l.createObjectURL(b2);
+            (g2 ? g2.location = m : location.href = m, g2 = null, setTimeout(function () {
+              l.revokeObjectURL(m);
+            }, 4e4));
+          }
+        });
+        (f.saveAs = g.saveAs = g, "undefined" != typeof module && (module.exports = g));
+      });
+    }
+  });
+  var require_atob_browser = __commonJS({
+    "../../../node_modules/atob-lite/atob-browser.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = function _atob(str) {
+        return atob(str);
+      };
+    }
+  });
+  var require_is_base64 = __commonJS({
+    "../../../node_modules/is-base64/is-base64.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      (function (root) {
+        "use strict";
+        function isBase64(v, opts) {
+          if (v instanceof Boolean || typeof v === "boolean") {
+            return false;
+          }
+          if (!(opts instanceof Object)) {
+            opts = {};
+          }
+          if (opts.hasOwnProperty("allowBlank") && !opts.allowBlank && v === "") {
+            return false;
+          }
+          var regex = "(?:[A-Za-z0-9+\\/]{4})*(?:[A-Za-z0-9+\\/]{2}==|[A-Za-z0-9+/]{3}=)?";
+          if (opts.mime) {
+            regex = "(data:\\w+\\/[a-zA-Z\\+\\-\\.]+;base64,)?" + regex;
+          }
+          if (opts.paddingRequired === false) {
+            regex = "(?:[A-Za-z0-9+\\/]{4})*(?:[A-Za-z0-9+\\/]{2}(==)?|[A-Za-z0-9+\\/]{3}=?)?";
+          }
+          return new RegExp("^" + regex + "$", "gi").test(v);
+        }
+        if (typeof exports !== "undefined") {
+          if (typeof module !== "undefined" && module.exports) {
+            exports = module.exports = isBase64;
+          }
+          exports.isBase64 = isBase64;
+        } else if (typeof define === "function" && define.amd) {
+          define([], function () {
+            return isBase64;
+          });
+        } else {
+          root.isBase64 = isBase64;
+        }
+      })(exports);
+    }
+  });
+  var require_string_to_arraybuffer = __commonJS({
+    "../../../node_modules/string-to-arraybuffer/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var atob2 = require_atob_browser();
+      var isBase64 = require_is_base64();
+      module.exports = function stringToArrayBuffer(arg) {
+        if (typeof arg !== "string") throw Error("Argument should be a string");
+        if ((/^data\:/i).test(arg)) return decode(arg);
+        if (isBase64(arg)) arg = atob2(arg);
+        return str2ab(arg);
+      };
+      function str2ab(str) {
+        var array = new Uint8Array(str.length);
+        for (var i = 0; i < str.length; i++) {
+          array[i] = str.charCodeAt(i);
+        }
+        return array.buffer;
+      }
+      function decode(uri) {
+        uri = uri.replace(/\r?\n/g, "");
+        var firstComma = uri.indexOf(",");
+        if (-1 === firstComma || firstComma <= 4) throw new TypeError("malformed data-URI");
+        var meta = uri.substring(5, firstComma).split(";");
+        var base64 = false;
+        var charset = "US-ASCII";
+        for (var i = 0; i < meta.length; i++) {
+          if ("base64" == meta[i]) {
+            base64 = true;
+          } else if (0 == meta[i].indexOf("charset=")) {
+            charset = meta[i].substring(8);
+          }
+        }
+        var data = unescape(uri.substring(firstComma + 1));
+        if (base64) data = atob2(data);
+        var abuf = str2ab(data);
+        abuf.type = meta[0] || "text/plain";
+        abuf.charset = charset;
+        return abuf;
+      }
+    }
+  });
+  var require_dtype = __commonJS({
+    "../../../node_modules/dtype/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = function (dtype) {
+        switch (dtype) {
+          case "int8":
+            return Int8Array;
+          case "int16":
+            return Int16Array;
+          case "int32":
+            return Int32Array;
+          case "uint8":
+            return Uint8Array;
+          case "uint16":
+            return Uint16Array;
+          case "uint32":
+            return Uint32Array;
+          case "float32":
+            return Float32Array;
+          case "float64":
+            return Float64Array;
+          case "array":
+            return Array;
+          case "uint8_clamped":
+            return Uint8ClampedArray;
+        }
+      };
+    }
+  });
+  var require_flatten_vertex_data = __commonJS({
+    "../../../node_modules/flatten-vertex-data/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var dtype = require_dtype();
+      module.exports = flattenVertexData;
+      function flattenVertexData(data, output, offset) {
+        if (!data) throw new TypeError("must specify data as first parameter");
+        offset = +(offset || 0) | 0;
+        if (Array.isArray(data) && (data[0] && typeof data[0][0] === "number")) {
+          var dim = data[0].length;
+          var length = data.length * dim;
+          var i, j, k, l;
+          if (!output || typeof output === "string") {
+            output = new (dtype(output || "float32"))(length + offset);
+          }
+          var dstLength = output.length - offset;
+          if (length !== dstLength) {
+            throw new Error("source length " + length + " (" + dim + "x" + data.length + ") does not match destination length " + dstLength);
+          }
+          for ((i = 0, k = offset); i < data.length; i++) {
+            for (j = 0; j < dim; j++) {
+              output[k++] = data[i][j] === null ? NaN : data[i][j];
+            }
+          }
+        } else {
+          if (!output || typeof output === "string") {
+            var Ctor = dtype(output || "float32");
+            if (Array.isArray(data) || output === "array") {
+              output = new Ctor(data.length + offset);
+              for ((i = 0, k = offset, l = output.length); k < l; (k++, i++)) {
+                output[k] = data[i] === null ? NaN : data[i];
+              }
+            } else {
+              if (offset === 0) {
+                output = new Ctor(data);
+              } else {
+                output = new Ctor(data.length + offset);
+                output.set(data, offset);
+              }
+            }
+          } else {
+            output.set(data, offset);
+          }
+        }
+        return output;
+      }
+    }
+  });
+  var require_to_array_buffer = __commonJS({
+    "../../../node_modules/to-array-buffer/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var str2ab = require_string_to_arraybuffer();
+      var flat = require_flatten_vertex_data();
+      module.exports = function toArrayBuffer(arg) {
+        if (!arg) return null;
+        if (arg instanceof ArrayBuffer) return arg;
+        if (typeof arg === "string") {
+          return str2ab(arg);
+        }
+        if (ArrayBuffer.isView(arg)) {
+          if (arg.byteOffset) {
+            return arg.buffer.slice(arg.byteOffset, arg.byteOffset + arg.byteLength);
+          }
+          return arg.buffer;
+        }
+        if (arg.buffer || arg.data || arg._data) {
+          var result = toArrayBuffer(arg.buffer || arg.data || arg._data);
+          return result;
+        }
+        if (Array.isArray(arg)) {
+          for (var i = 0; i < arg.length; i++) {
+            if (arg[i].length != null) {
+              arg = flat(arg);
+              break;
+            }
+          }
+        }
+        var result = new Uint8Array(arg);
+        if (!result.length) return null;
+        return result.buffer;
+      };
+    }
+  });
+  var require_simple_mime = __commonJS({
+    "../../../node_modules/simple-mime/simple-mime.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var types;
+      module.exports = function setup(defaultMime) {
+        return function getMime(path) {
+          path = path.toLowerCase().trim();
+          var index = path.lastIndexOf("/");
+          if (index >= 0) {
+            path = path.substr(index + 1);
+          }
+          index = path.lastIndexOf(".");
+          if (index >= 0) {
+            path = path.substr(index + 1);
+          }
+          return types[path] || defaultMime;
+        };
+      };
+      types = {
+        "3gp": "video/3gpp",
+        a: "application/octet-stream",
+        ai: "application/postscript",
+        aif: "audio/x-aiff",
+        aiff: "audio/x-aiff",
+        asc: "application/pgp-signature",
+        asf: "video/x-ms-asf",
+        asm: "text/x-asm",
+        asx: "video/x-ms-asf",
+        atom: "application/atom+xml",
+        au: "audio/basic",
+        avi: "video/x-msvideo",
+        bat: "application/x-msdownload",
+        bin: "application/octet-stream",
+        bmp: "image/bmp",
+        bz2: "application/x-bzip2",
+        c: "text/x-csrc",
+        cab: "application/vnd.ms-cab-compressed",
+        can: "application/candor",
+        cc: "text/x-c++src",
+        chm: "application/vnd.ms-htmlhelp",
+        "class": "application/octet-stream",
+        com: "application/x-msdownload",
+        conf: "text/plain",
+        cpp: "text/x-c",
+        crt: "application/x-x509-ca-cert",
+        css: "text/css",
+        csv: "text/csv",
+        cxx: "text/x-c",
+        deb: "application/x-debian-package",
+        der: "application/x-x509-ca-cert",
+        diff: "text/x-diff",
+        djv: "image/vnd.djvu",
+        djvu: "image/vnd.djvu",
+        dll: "application/x-msdownload",
+        dmg: "application/octet-stream",
+        doc: "application/msword",
+        dot: "application/msword",
+        dtd: "application/xml-dtd",
+        dvi: "application/x-dvi",
+        ear: "application/java-archive",
+        eml: "message/rfc822",
+        eps: "application/postscript",
+        exe: "application/x-msdownload",
+        f: "text/x-fortran",
+        f77: "text/x-fortran",
+        f90: "text/x-fortran",
+        flv: "video/x-flv",
+        "for": "text/x-fortran",
+        gem: "application/octet-stream",
+        gemspec: "text/x-script.ruby",
+        gif: "image/gif",
+        gyp: "text/x-script.python",
+        gypi: "text/x-script.python",
+        gz: "application/x-gzip",
+        h: "text/x-chdr",
+        hh: "text/x-c++hdr",
+        htm: "text/html",
+        html: "text/html",
+        ico: "image/vnd.microsoft.icon",
+        ics: "text/calendar",
+        ifb: "text/calendar",
+        iso: "application/octet-stream",
+        jar: "application/java-archive",
+        java: "text/x-java-source",
+        jnlp: "application/x-java-jnlp-file",
+        jpeg: "image/jpeg",
+        jpg: "image/jpeg",
+        js: "application/javascript",
+        json: "application/json",
+        less: "text/css",
+        log: "text/plain",
+        lua: "text/x-script.lua",
+        luac: "application/x-bytecode.lua",
+        makefile: "text/x-makefile",
+        m3u: "audio/x-mpegurl",
+        m4v: "video/mp4",
+        man: "text/troff",
+        manifest: "text/cache-manifest",
+        markdown: "text/x-markdown",
+        mathml: "application/mathml+xml",
+        mbox: "application/mbox",
+        mdoc: "text/troff",
+        md: "text/x-markdown",
+        me: "text/troff",
+        mid: "audio/midi",
+        midi: "audio/midi",
+        mime: "message/rfc822",
+        mml: "application/mathml+xml",
+        mng: "video/x-mng",
+        mov: "video/quicktime",
+        mp3: "audio/mpeg",
+        mp4: "video/mp4",
+        mp4v: "video/mp4",
+        mpeg: "video/mpeg",
+        mpg: "video/mpeg",
+        ms: "text/troff",
+        msi: "application/x-msdownload",
+        odp: "application/vnd.oasis.opendocument.presentation",
+        ods: "application/vnd.oasis.opendocument.spreadsheet",
+        odt: "application/vnd.oasis.opendocument.text",
+        ogg: "application/ogg",
+        p: "text/x-pascal",
+        pas: "text/x-pascal",
+        pbm: "image/x-portable-bitmap",
+        pdf: "application/pdf",
+        pem: "application/x-x509-ca-cert",
+        pgm: "image/x-portable-graymap",
+        pgp: "application/pgp-encrypted",
+        pkg: "application/octet-stream",
+        pl: "text/x-script.perl",
+        pm: "text/x-script.perl-module",
+        png: "image/png",
+        pnm: "image/x-portable-anymap",
+        ppm: "image/x-portable-pixmap",
+        pps: "application/vnd.ms-powerpoint",
+        ppt: "application/vnd.ms-powerpoint",
+        ps: "application/postscript",
+        psd: "image/vnd.adobe.photoshop",
+        py: "text/x-script.python",
+        qt: "video/quicktime",
+        ra: "audio/x-pn-realaudio",
+        rake: "text/x-script.ruby",
+        ram: "audio/x-pn-realaudio",
+        rar: "application/x-rar-compressed",
+        rb: "text/x-script.ruby",
+        rdf: "application/rdf+xml",
+        roff: "text/troff",
+        rpm: "application/x-redhat-package-manager",
+        rss: "application/rss+xml",
+        rtf: "application/rtf",
+        ru: "text/x-script.ruby",
+        s: "text/x-asm",
+        sgm: "text/sgml",
+        sgml: "text/sgml",
+        sh: "application/x-sh",
+        sig: "application/pgp-signature",
+        snd: "audio/basic",
+        so: "application/octet-stream",
+        svg: "image/svg+xml",
+        svgz: "image/svg+xml",
+        swf: "application/x-shockwave-flash",
+        t: "text/troff",
+        tar: "application/x-tar",
+        tbz: "application/x-bzip-compressed-tar",
+        tci: "application/x-topcloud",
+        tcl: "application/x-tcl",
+        tex: "application/x-tex",
+        texi: "application/x-texinfo",
+        texinfo: "application/x-texinfo",
+        text: "text/plain",
+        tif: "image/tiff",
+        tiff: "image/tiff",
+        torrent: "application/x-bittorrent",
+        tr: "text/troff",
+        ttf: "application/x-font-ttf",
+        txt: "text/plain",
+        vcf: "text/x-vcard",
+        vcs: "text/x-vcalendar",
+        vrml: "model/vrml",
+        war: "application/java-archive",
+        wav: "audio/x-wav",
+        webapp: "application/x-web-app-manifest+json",
+        webm: "video/webm",
+        wma: "audio/x-ms-wma",
+        wmv: "video/x-ms-wmv",
+        wmx: "video/x-ms-wmx",
+        wrl: "model/vrml",
+        wsdl: "application/wsdl+xml",
+        xbm: "image/x-xbitmap",
+        xhtml: "application/xhtml+xml",
+        xls: "application/vnd.ms-excel",
+        xml: "application/xml",
+        xpm: "image/x-xpixmap",
+        xsl: "application/xml",
+        xslt: "application/xslt+xml",
+        yaml: "text/yaml",
+        yml: "text/yaml",
+        zip: "application/zip"
+      };
+    }
+  });
+  var require_is_blob = __commonJS({
+    "../../../node_modules/is-blob/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var toString = Object.prototype.toString;
+      module.exports = function (x) {
+        return x instanceof Blob || toString.call(x) === "[object Blob]";
+      };
+    }
+  });
+  var require_to_blob = __commonJS({
+    "../../../node_modules/save-file/src/to-blob.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var ab = require_to_array_buffer();
+      var getMimeType = require_simple_mime()("application/octect-stream");
+      var isBlob = require_is_blob();
+      module.exports = function toBlob(data, filename) {
+        if (!isBlob(data) && !(data instanceof File)) {
+          data = ab(data);
+          var mime = getMimeType(filename || "");
+          data = new Blob([data], {
+            type: mime
+          });
+        }
+        return data;
+      };
+    }
+  });
+  var require_browser = __commonJS({
+    "../../../node_modules/save-file/browser.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var saveAs = require_FileSaver_min().saveAs;
+      var toBlob = require_to_blob();
+      var planned = null;
+      module.exports = save2;
+      module.exports.save = save2;
+      module.exports.saveSync = saveSync;
+      function save2(data, filename) {
+        if (typeof data === "string") {
+          if (typeof filename !== "string" || filename.length > data.length) {
+            var x = filename;
+            filename = data;
+            data = x;
+          }
+        }
+        var blob = toBlob(data, filename);
+        if (planned) {
+          return planned.then(function () {
+            planned = save2(data, filename);
+            return planned;
+          });
+        } else {
+          planned = new Promise(function (ok, nok) {
+            saveAs(blob, filename);
+            window.addEventListener("focus", function resolve() {
+              planned = null;
+              window.removeEventListener("focus", resolve);
+              ok();
+            });
+          });
+          return planned;
+        }
+      }
+      function saveSync(data, filename) {
+        return saveAs(toBlob(data, filename), filename);
+      }
+    }
+  });
+  var require_abs = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/abs.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var abs = (out, vector) => {
+        out[0] = Math.abs(vector[0]);
+        out[1] = Math.abs(vector[1]);
+        out[2] = Math.abs(vector[2]);
+        return out;
+      };
+      module.exports = abs;
+    }
+  });
+  var require_add = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/add.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var add = (out, a2, b) => {
+        out[0] = a2[0] + b[0];
+        out[1] = a2[1] + b[1];
+        out[2] = a2[2] + b[2];
+        return out;
+      };
+      module.exports = add;
+    }
+  });
+  var require_dot = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/dot.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var dot = (a2, b) => a2[0] * b[0] + a2[1] * b[1] + a2[2] * b[2];
+      module.exports = dot;
+    }
+  });
+  var require_angle = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/angle.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var dot = require_dot();
+      var angle = (a2, b) => {
+        const ax = a2[0];
+        const ay = a2[1];
+        const az = a2[2];
+        const bx = b[0];
+        const by = b[1];
+        const bz = b[2];
+        const mag1 = Math.sqrt(ax * ax + ay * ay + az * az);
+        const mag2 = Math.sqrt(bx * bx + by * by + bz * bz);
+        const mag = mag1 * mag2;
+        const cosine = mag && dot(a2, b) / mag;
+        return Math.acos(Math.min(Math.max(cosine, -1), 1));
+      };
+      module.exports = angle;
+    }
+  });
+  var require_create = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/create.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = () => [0, 0, 0];
+      module.exports = create;
+    }
+  });
   var require_clone = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/clone.js"(exports, module) {
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/clone.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = require_create();
+      var clone = vector => {
+        const out = create();
+        out[0] = vector[0];
+        out[1] = vector[1];
+        out[2] = vector[2];
+        return out;
+      };
+      module.exports = clone;
+    }
+  });
+  var require_copy = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/copy.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var copy = (out, vector) => {
+        out[0] = vector[0];
+        out[1] = vector[1];
+        out[2] = vector[2];
+        return out;
+      };
+      module.exports = copy;
+    }
+  });
+  var require_cross = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/cross.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var cross = (out, a2, b) => {
+        const ax = a2[0];
+        const ay = a2[1];
+        const az = a2[2];
+        const bx = b[0];
+        const by = b[1];
+        const bz = b[2];
+        out[0] = ay * bz - az * by;
+        out[1] = az * bx - ax * bz;
+        out[2] = ax * by - ay * bx;
+        return out;
+      };
+      module.exports = cross;
+    }
+  });
+  var require_distance = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/distance.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var distance = (a2, b) => {
+        const x = b[0] - a2[0];
+        const y = b[1] - a2[1];
+        const z = b[2] - a2[2];
+        return Math.sqrt(x * x + y * y + z * z);
+      };
+      module.exports = distance;
+    }
+  });
+  var require_divide = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/divide.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var divide = (out, a2, b) => {
+        out[0] = a2[0] / b[0];
+        out[1] = a2[1] / b[1];
+        out[2] = a2[2] / b[2];
+        return out;
+      };
+      module.exports = divide;
+    }
+  });
+  var require_equals = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/equals.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var equals = (a2, b) => a2[0] === b[0] && a2[1] === b[1] && a2[2] === b[2];
+      module.exports = equals;
+    }
+  });
+  var require_fromScalar = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/fromScalar.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var fromScalar = (out, scalar) => {
+        out[0] = scalar;
+        out[1] = scalar;
+        out[2] = scalar;
+        return out;
+      };
+      module.exports = fromScalar;
+    }
+  });
+  var require_fromValues = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/fromValues.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = require_create();
+      var fromValues = (x, y, z) => {
+        const out = create();
+        out[0] = x;
+        out[1] = y;
+        out[2] = z;
+        return out;
+      };
+      module.exports = fromValues;
+    }
+  });
+  var require_fromVec2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/fromVec2.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var fromVector2 = (out, vector, z = 0) => {
+        out[0] = vector[0];
+        out[1] = vector[1];
+        out[2] = z;
+        return out;
+      };
+      module.exports = fromVector2;
+    }
+  });
+  var require_length = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/length.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var length = vector => {
+        const x = vector[0];
+        const y = vector[1];
+        const z = vector[2];
+        return Math.sqrt(x * x + y * y + z * z);
+      };
+      module.exports = length;
+    }
+  });
+  var require_lerp = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/lerp.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var lerp = (out, a2, b, t2) => {
+        out[0] = a2[0] + t2 * (b[0] - a2[0]);
+        out[1] = a2[1] + t2 * (b[1] - a2[1]);
+        out[2] = a2[2] + t2 * (b[2] - a2[2]);
+        return out;
+      };
+      module.exports = lerp;
+    }
+  });
+  var require_max = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/max.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var max = (out, a2, b) => {
+        out[0] = Math.max(a2[0], b[0]);
+        out[1] = Math.max(a2[1], b[1]);
+        out[2] = Math.max(a2[2], b[2]);
+        return out;
+      };
+      module.exports = max;
+    }
+  });
+  var require_min = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/min.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var min = (out, a2, b) => {
+        out[0] = Math.min(a2[0], b[0]);
+        out[1] = Math.min(a2[1], b[1]);
+        out[2] = Math.min(a2[2], b[2]);
+        return out;
+      };
+      module.exports = min;
+    }
+  });
+  var require_multiply = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/multiply.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var multiply = (out, a2, b) => {
+        out[0] = a2[0] * b[0];
+        out[1] = a2[1] * b[1];
+        out[2] = a2[2] * b[2];
+        return out;
+      };
+      module.exports = multiply;
+    }
+  });
+  var require_negate = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/negate.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var negate = (out, vector) => {
+        out[0] = -vector[0];
+        out[1] = -vector[1];
+        out[2] = -vector[2];
+        return out;
+      };
+      module.exports = negate;
+    }
+  });
+  var require_normalize = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/normalize.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var normalize = (out, vector) => {
+        const x = vector[0];
+        const y = vector[1];
+        const z = vector[2];
+        let len = x * x + y * y + z * z;
+        if (len > 0) {
+          len = 1 / Math.sqrt(len);
+        }
+        out[0] = x * len;
+        out[1] = y * len;
+        out[2] = z * len;
+        return out;
+      };
+      module.exports = normalize;
+    }
+  });
+  var require_orthogonal = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/orthogonal.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var abs = require_abs();
+      var create = require_create();
+      var cross = require_cross();
+      var orthogonal = (out, vector) => {
+        const bV = abs(create(), vector);
+        const b0 = 0 + (bV[0] < bV[1] && bV[0] < bV[2]);
+        const b1 = 0 + (bV[1] <= bV[0] && bV[1] < bV[2]);
+        const b2 = 0 + (bV[2] <= bV[0] && bV[2] <= bV[1]);
+        return cross(out, vector, [b0, b1, b2]);
+      };
+      module.exports = orthogonal;
+    }
+  });
+  var require_rotateX = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/rotateX.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var rotateX = (out, vector, origin, radians) => {
+        const p = [];
+        const r2 = [];
+        p[0] = vector[0] - origin[0];
+        p[1] = vector[1] - origin[1];
+        p[2] = vector[2] - origin[2];
+        r2[0] = p[0];
+        r2[1] = p[1] * Math.cos(radians) - p[2] * Math.sin(radians);
+        r2[2] = p[1] * Math.sin(radians) + p[2] * Math.cos(radians);
+        out[0] = r2[0] + origin[0];
+        out[1] = r2[1] + origin[1];
+        out[2] = r2[2] + origin[2];
+        return out;
+      };
+      module.exports = rotateX;
+    }
+  });
+  var require_rotateY = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/rotateY.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var rotateY = (out, vector, origin, radians) => {
+        const p = [];
+        const r2 = [];
+        p[0] = vector[0] - origin[0];
+        p[1] = vector[1] - origin[1];
+        p[2] = vector[2] - origin[2];
+        r2[0] = p[2] * Math.sin(radians) + p[0] * Math.cos(radians);
+        r2[1] = p[1];
+        r2[2] = p[2] * Math.cos(radians) - p[0] * Math.sin(radians);
+        out[0] = r2[0] + origin[0];
+        out[1] = r2[1] + origin[1];
+        out[2] = r2[2] + origin[2];
+        return out;
+      };
+      module.exports = rotateY;
+    }
+  });
+  var require_rotateZ = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/rotateZ.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var rotateZ = (out, vector, origin, radians) => {
+        const p = [];
+        const r2 = [];
+        p[0] = vector[0] - origin[0];
+        p[1] = vector[1] - origin[1];
+        r2[0] = p[0] * Math.cos(radians) - p[1] * Math.sin(radians);
+        r2[1] = p[0] * Math.sin(radians) + p[1] * Math.cos(radians);
+        out[0] = r2[0] + origin[0];
+        out[1] = r2[1] + origin[1];
+        out[2] = vector[2];
+        return out;
+      };
+      module.exports = rotateZ;
+    }
+  });
+  var require_scale = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/scale.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var scale = (out, vector, amount) => {
+        out[0] = vector[0] * amount;
+        out[1] = vector[1] * amount;
+        out[2] = vector[2] * amount;
+        return out;
+      };
+      module.exports = scale;
+    }
+  });
+  var require_snap = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/snap.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var snap = (out, vector, epsilon) => {
+        out[0] = Math.round(vector[0] / epsilon) * epsilon + 0;
+        out[1] = Math.round(vector[1] / epsilon) * epsilon + 0;
+        out[2] = Math.round(vector[2] / epsilon) * epsilon + 0;
+        return out;
+      };
+      module.exports = snap;
+    }
+  });
+  var require_squaredDistance = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/squaredDistance.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var squaredDistance = (a2, b) => {
+        const x = b[0] - a2[0];
+        const y = b[1] - a2[1];
+        const z = b[2] - a2[2];
+        return x * x + y * y + z * z;
+      };
+      module.exports = squaredDistance;
+    }
+  });
+  var require_squaredLength = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/squaredLength.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var squaredLength = vector => {
+        const x = vector[0];
+        const y = vector[1];
+        const z = vector[2];
+        return x * x + y * y + z * z;
+      };
+      module.exports = squaredLength;
+    }
+  });
+  var require_subtract = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/subtract.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var subtract = (out, a2, b) => {
+        out[0] = a2[0] - b[0];
+        out[1] = a2[1] - b[1];
+        out[2] = a2[2] - b[2];
+        return out;
+      };
+      module.exports = subtract;
+    }
+  });
+  var require_toString = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/toString.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var toString = vec => `[${vec[0].toFixed(7)}, ${vec[1].toFixed(7)}, ${vec[2].toFixed(7)}]`;
+      module.exports = toString;
+    }
+  });
+  var require_transform = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/transform.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var transform = (out, vector, matrix) => {
+        const x = vector[0];
+        const y = vector[1];
+        const z = vector[2];
+        let w = matrix[3] * x + matrix[7] * y + matrix[11] * z + matrix[15];
+        w = w || 1;
+        out[0] = (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12]) / w;
+        out[1] = (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13]) / w;
+        out[2] = (matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14]) / w;
+        return out;
+      };
+      module.exports = transform;
+    }
+  });
+  var require_vec3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec3/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = {
+        abs: require_abs(),
+        add: require_add(),
+        angle: require_angle(),
+        clone: require_clone(),
+        copy: require_copy(),
+        create: require_create(),
+        cross: require_cross(),
+        distance: require_distance(),
+        divide: require_divide(),
+        dot: require_dot(),
+        equals: require_equals(),
+        fromScalar: require_fromScalar(),
+        fromValues: require_fromValues(),
+        fromVec2: require_fromVec2(),
+        length: require_length(),
+        lerp: require_lerp(),
+        max: require_max(),
+        min: require_min(),
+        multiply: require_multiply(),
+        negate: require_negate(),
+        normalize: require_normalize(),
+        orthogonal: require_orthogonal(),
+        rotateX: require_rotateX(),
+        rotateY: require_rotateY(),
+        rotateZ: require_rotateZ(),
+        scale: require_scale(),
+        snap: require_snap(),
+        squaredDistance: require_squaredDistance(),
+        squaredLength: require_squaredLength(),
+        subtract: require_subtract(),
+        toString: require_toString(),
+        transform: require_transform()
+      };
+    }
+  });
+  var require_flatten = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/utils/flatten.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var flatten = arr => arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
+      module.exports = flatten;
+    }
+  });
+  var require_abs2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/abs.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var abs = (out, vector) => {
+        out[0] = Math.abs(vector[0]);
+        out[1] = Math.abs(vector[1]);
+        return out;
+      };
+      module.exports = abs;
+    }
+  });
+  var require_add2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/add.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var add = (out, a2, b) => {
+        out[0] = a2[0] + b[0];
+        out[1] = a2[1] + b[1];
+        return out;
+      };
+      module.exports = add;
+    }
+  });
+  var require_angleRadians = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/angleRadians.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var angleRadians = vector => Math.atan2(vector[1], vector[0]);
+      module.exports = angleRadians;
+    }
+  });
+  var require_angle2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/angle.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = require_angleRadians();
+    }
+  });
+  var require_angleDegrees = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/angleDegrees.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var angleRadians = require_angleRadians();
+      var angleDegrees = vector => angleRadians(vector) * 57.29577951308232;
+      module.exports = angleDegrees;
+    }
+  });
+  var require_create2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/create.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = () => [0, 0];
+      module.exports = create;
+    }
+  });
+  var require_clone2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/clone.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = require_create2();
+      var clone = vector => {
+        const out = create();
+        out[0] = vector[0];
+        out[1] = vector[1];
+        return out;
+      };
+      module.exports = clone;
+    }
+  });
+  var require_copy2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/copy.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var copy = (out, vector) => {
+        out[0] = vector[0];
+        out[1] = vector[1];
+        return out;
+      };
+      module.exports = copy;
+    }
+  });
+  var require_cross2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/cross.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var cross = (out, a2, b) => {
+        out[0] = 0;
+        out[1] = 0;
+        out[2] = a2[0] * b[1] - a2[1] * b[0];
+        return out;
+      };
+      module.exports = cross;
+    }
+  });
+  var require_distance2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/distance.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var distance = (a2, b) => {
+        const x = b[0] - a2[0];
+        const y = b[1] - a2[1];
+        return Math.sqrt(x * x + y * y);
+      };
+      module.exports = distance;
+    }
+  });
+  var require_divide2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/divide.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var divide = (out, a2, b) => {
+        out[0] = a2[0] / b[0];
+        out[1] = a2[1] / b[1];
+        return out;
+      };
+      module.exports = divide;
+    }
+  });
+  var require_dot2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/dot.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var dot = (a2, b) => a2[0] * b[0] + a2[1] * b[1];
+      module.exports = dot;
+    }
+  });
+  var require_equals2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/equals.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var equals = (a2, b) => a2[0] === b[0] && a2[1] === b[1];
+      module.exports = equals;
+    }
+  });
+  var require_constants = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/constants.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var spatialResolution = 1e5;
+      var EPS = 1e-5;
+      var NEPS = 1e-13;
+      module.exports = {
+        EPS,
+        NEPS,
+        spatialResolution
+      };
+    }
+  });
+  var require_trigonometry = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/utils/trigonometry.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var {NEPS} = require_constants();
+      var rezero = n3 => Math.abs(n3) < NEPS ? 0 : n3;
+      var sin = radians => rezero(Math.sin(radians));
+      var cos = radians => rezero(Math.cos(radians));
+      module.exports = {
+        sin,
+        cos
+      };
+    }
+  });
+  var require_fromAngleRadians = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/fromAngleRadians.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var {sin, cos} = require_trigonometry();
+      var fromAngleRadians = (out, radians) => {
+        out[0] = cos(radians);
+        out[1] = sin(radians);
+        return out;
+      };
+      module.exports = fromAngleRadians;
+    }
+  });
+  var require_fromAngleDegrees = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/fromAngleDegrees.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var fromAngleRadians = require_fromAngleRadians();
+      var fromAngleDegrees = (out, degrees) => fromAngleRadians(out, Math.PI * degrees / 180);
+      module.exports = fromAngleDegrees;
+    }
+  });
+  var require_fromScalar2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/fromScalar.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var fromScalar = (out, scalar) => {
+        out[0] = scalar;
+        out[1] = scalar;
+        return out;
+      };
+      module.exports = fromScalar;
+    }
+  });
+  var require_fromValues2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/fromValues.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = require_create2();
+      var fromValues = (x, y) => {
+        const out = create();
+        out[0] = x;
+        out[1] = y;
+        return out;
+      };
+      module.exports = fromValues;
+    }
+  });
+  var require_length2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/length.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var length = vector => Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
+      module.exports = length;
+    }
+  });
+  var require_lerp2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/lerp.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var lerp = (out, a2, b, t2) => {
+        const ax = a2[0];
+        const ay = a2[1];
+        out[0] = ax + t2 * (b[0] - ax);
+        out[1] = ay + t2 * (b[1] - ay);
+        return out;
+      };
+      module.exports = lerp;
+    }
+  });
+  var require_max2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/max.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var max = (out, a2, b) => {
+        out[0] = Math.max(a2[0], b[0]);
+        out[1] = Math.max(a2[1], b[1]);
+        return out;
+      };
+      module.exports = max;
+    }
+  });
+  var require_min2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/min.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var min = (out, a2, b) => {
+        out[0] = Math.min(a2[0], b[0]);
+        out[1] = Math.min(a2[1], b[1]);
+        return out;
+      };
+      module.exports = min;
+    }
+  });
+  var require_multiply2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/multiply.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var multiply = (out, a2, b) => {
+        out[0] = a2[0] * b[0];
+        out[1] = a2[1] * b[1];
+        return out;
+      };
+      module.exports = multiply;
+    }
+  });
+  var require_negate2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/negate.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var negate = (out, vector) => {
+        out[0] = -vector[0];
+        out[1] = -vector[1];
+        return out;
+      };
+      module.exports = negate;
+    }
+  });
+  var require_rotate = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/rotate.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var rotate2 = (out, vector, origin, radians) => {
+        const x = vector[0] - origin[0];
+        const y = vector[1] - origin[1];
+        const c = Math.cos(radians);
+        const s4 = Math.sin(radians);
+        out[0] = x * c - y * s4 + origin[0];
+        out[1] = x * s4 + y * c + origin[1];
+        return out;
+      };
+      module.exports = rotate2;
+    }
+  });
+  var require_normal = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/normal.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = require_create2();
+      var rotate2 = require_rotate();
+      var normal = (out, vector) => rotate2(out, vector, create(), Math.PI / 2);
+      module.exports = normal;
+    }
+  });
+  var require_normalize2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/normalize.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var normalize = (out, vector) => {
+        const x = vector[0];
+        const y = vector[1];
+        let len = x * x + y * y;
+        if (len > 0) {
+          len = 1 / Math.sqrt(len);
+        }
+        out[0] = x * len;
+        out[1] = y * len;
+        return out;
+      };
+      module.exports = normalize;
+    }
+  });
+  var require_scale2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/scale.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var scale = (out, vector, amount) => {
+        out[0] = vector[0] * amount;
+        out[1] = vector[1] * amount;
+        return out;
+      };
+      module.exports = scale;
+    }
+  });
+  var require_snap2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/snap.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var snap = (out, vector, epsilon) => {
+        out[0] = Math.round(vector[0] / epsilon) * epsilon + 0;
+        out[1] = Math.round(vector[1] / epsilon) * epsilon + 0;
+        return out;
+      };
+      module.exports = snap;
+    }
+  });
+  var require_squaredDistance2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/squaredDistance.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var squaredDistance = (a2, b) => {
+        const x = b[0] - a2[0];
+        const y = b[1] - a2[1];
+        return x * x + y * y;
+      };
+      module.exports = squaredDistance;
+    }
+  });
+  var require_squaredLength2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/squaredLength.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var squaredLength = vector => {
+        const x = vector[0];
+        const y = vector[1];
+        return x * x + y * y;
+      };
+      module.exports = squaredLength;
+    }
+  });
+  var require_subtract2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/subtract.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var subtract = (out, a2, b) => {
+        out[0] = a2[0] - b[0];
+        out[1] = a2[1] - b[1];
+        return out;
+      };
+      module.exports = subtract;
+    }
+  });
+  var require_toString2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/toString.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var toString = vector => `[${vector[0].toFixed(7)}, ${vector[1].toFixed(7)}]`;
+      module.exports = toString;
+    }
+  });
+  var require_transform2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/transform.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var transform = (out, vector, matrix) => {
+        const x = vector[0];
+        const y = vector[1];
+        out[0] = matrix[0] * x + matrix[4] * y + matrix[12];
+        out[1] = matrix[1] * x + matrix[5] * y + matrix[13];
+        return out;
+      };
+      module.exports = transform;
+    }
+  });
+  var require_vec2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec2/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = {
+        abs: require_abs2(),
+        add: require_add2(),
+        angle: require_angle2(),
+        angleDegrees: require_angleDegrees(),
+        angleRadians: require_angleRadians(),
+        clone: require_clone2(),
+        copy: require_copy2(),
+        create: require_create2(),
+        cross: require_cross2(),
+        distance: require_distance2(),
+        divide: require_divide2(),
+        dot: require_dot2(),
+        equals: require_equals2(),
+        fromAngleDegrees: require_fromAngleDegrees(),
+        fromAngleRadians: require_fromAngleRadians(),
+        fromScalar: require_fromScalar2(),
+        fromValues: require_fromValues2(),
+        length: require_length2(),
+        lerp: require_lerp2(),
+        max: require_max2(),
+        min: require_min2(),
+        multiply: require_multiply2(),
+        negate: require_negate2(),
+        normal: require_normal(),
+        normalize: require_normalize2(),
+        rotate: require_rotate(),
+        scale: require_scale2(),
+        snap: require_snap2(),
+        squaredDistance: require_squaredDistance2(),
+        squaredLength: require_squaredLength2(),
+        subtract: require_subtract2(),
+        toString: require_toString2(),
+        transform: require_transform2()
+      };
+    }
+  });
+  var require_clone3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom2/clone.js"(exports, module) {
       "use strict";
       init_define_process();
       var clone = geometry => Object.assign({}, geometry);
       module.exports = clone;
     }
   });
-  var require_add = __commonJS({
+  var require_add3 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/mat4/add.js"(exports, module) {
       "use strict";
       init_define_process();
-      var add = (out, a, b) => {
-        out[0] = a[0] + b[0];
-        out[1] = a[1] + b[1];
-        out[2] = a[2] + b[2];
-        out[3] = a[3] + b[3];
-        out[4] = a[4] + b[4];
-        out[5] = a[5] + b[5];
-        out[6] = a[6] + b[6];
-        out[7] = a[7] + b[7];
-        out[8] = a[8] + b[8];
-        out[9] = a[9] + b[9];
-        out[10] = a[10] + b[10];
-        out[11] = a[11] + b[11];
-        out[12] = a[12] + b[12];
-        out[13] = a[13] + b[13];
-        out[14] = a[14] + b[14];
-        out[15] = a[15] + b[15];
+      var add = (out, a2, b) => {
+        out[0] = a2[0] + b[0];
+        out[1] = a2[1] + b[1];
+        out[2] = a2[2] + b[2];
+        out[3] = a2[3] + b[3];
+        out[4] = a2[4] + b[4];
+        out[5] = a2[5] + b[5];
+        out[6] = a2[6] + b[6];
+        out[7] = a2[7] + b[7];
+        out[8] = a2[8] + b[8];
+        out[9] = a2[9] + b[9];
+        out[10] = a2[10] + b[10];
+        out[11] = a2[11] + b[11];
+        out[12] = a2[12] + b[12];
+        out[13] = a2[13] + b[13];
+        out[14] = a2[14] + b[14];
+        out[15] = a2[15] + b[15];
         return out;
       };
       module.exports = add;
     }
   });
-  var require_create = __commonJS({
+  var require_create3 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/mat4/create.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -113,11 +1638,11 @@ export default require => {
       module.exports = create;
     }
   });
-  var require_clone2 = __commonJS({
+  var require_clone4 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/mat4/clone.js"(exports, module) {
       "use strict";
       init_define_process();
-      var create = require_create();
+      var create = require_create3();
       var clone = matrix => {
         const out = create();
         out[0] = matrix[0];
@@ -141,7 +1666,7 @@ export default require => {
       module.exports = clone;
     }
   });
-  var require_copy = __commonJS({
+  var require_copy3 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/mat4/copy.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -226,40 +1751,12 @@ export default require => {
       module.exports = invert;
     }
   });
-  var require_equals = __commonJS({
+  var require_equals3 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/mat4/equals.js"(exports, module) {
       "use strict";
       init_define_process();
-      var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3] && a[4] === b[4] && a[5] === b[5] && a[6] === b[6] && a[7] === b[7] && a[8] === b[8] && a[9] === b[9] && a[10] === b[10] && a[11] === b[11] && a[12] === b[12] && a[13] === b[13] && a[14] === b[14] && a[15] === b[15];
+      var equals = (a2, b) => a2[0] === b[0] && a2[1] === b[1] && a2[2] === b[2] && a2[3] === b[3] && a2[4] === b[4] && a2[5] === b[5] && a2[6] === b[6] && a2[7] === b[7] && a2[8] === b[8] && a2[9] === b[9] && a2[10] === b[10] && a2[11] === b[11] && a2[12] === b[12] && a2[13] === b[13] && a2[14] === b[14] && a2[15] === b[15];
       module.exports = equals;
-    }
-  });
-  var require_constants = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/constants.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var spatialResolution = 1e5;
-      var EPS = 1e-5;
-      var NEPS = 1e-13;
-      module.exports = {
-        EPS,
-        NEPS,
-        spatialResolution
-      };
-    }
-  });
-  var require_trigonometry = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/utils/trigonometry.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var {NEPS} = require_constants();
-      var rezero = n => Math.abs(n) < NEPS ? 0 : n;
-      var sin = radians => rezero(Math.sin(radians));
-      var cos = radians => rezero(Math.cos(radians));
-      module.exports = {
-        sin,
-        cos
-      };
     }
   });
   var require_identity = __commonJS({
@@ -305,20 +1802,20 @@ export default require => {
         x *= len;
         y *= len;
         z *= len;
-        const s = sin(rad);
+        const s4 = sin(rad);
         const c = cos(rad);
-        const t = 1 - c;
-        out[0] = x * x * t + c;
-        out[1] = y * x * t + z * s;
-        out[2] = z * x * t - y * s;
+        const t2 = 1 - c;
+        out[0] = x * x * t2 + c;
+        out[1] = y * x * t2 + z * s4;
+        out[2] = z * x * t2 - y * s4;
         out[3] = 0;
-        out[4] = x * y * t - z * s;
-        out[5] = y * y * t + c;
-        out[6] = z * y * t + x * s;
+        out[4] = x * y * t2 - z * s4;
+        out[5] = y * y * t2 + c;
+        out[6] = z * y * t2 + x * s4;
         out[7] = 0;
-        out[8] = x * z * t + y * s;
-        out[9] = y * z * t - x * s;
-        out[10] = z * z * t + c;
+        out[8] = x * z * t2 + y * s4;
+        out[9] = y * z * t2 - x * s4;
+        out[10] = z * z * t2 + c;
         out[11] = 0;
         out[12] = 0;
         out[13] = 0;
@@ -414,11 +1911,11 @@ export default require => {
       module.exports = fromTranslation;
     }
   });
-  var require_fromValues = __commonJS({
+  var require_fromValues3 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/mat4/fromValues.js"(exports, module) {
       "use strict";
       init_define_process();
-      var create = require_create();
+      var create = require_create3();
       var fromValues = (m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) => {
         const out = create();
         out[0] = m00;
@@ -440,498 +1937,6 @@ export default require => {
         return out;
       };
       module.exports = fromValues;
-    }
-  });
-  var require_abs = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/abs.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var abs = (out, vector) => {
-        out[0] = Math.abs(vector[0]);
-        out[1] = Math.abs(vector[1]);
-        out[2] = Math.abs(vector[2]);
-        return out;
-      };
-      module.exports = abs;
-    }
-  });
-  var require_add2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/add.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var add = (out, a, b) => {
-        out[0] = a[0] + b[0];
-        out[1] = a[1] + b[1];
-        out[2] = a[2] + b[2];
-        return out;
-      };
-      module.exports = add;
-    }
-  });
-  var require_dot = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/dot.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-      module.exports = dot;
-    }
-  });
-  var require_angle = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/angle.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var dot = require_dot();
-      var angle = (a, b) => {
-        const ax = a[0];
-        const ay = a[1];
-        const az = a[2];
-        const bx = b[0];
-        const by = b[1];
-        const bz = b[2];
-        const mag1 = Math.sqrt(ax * ax + ay * ay + az * az);
-        const mag2 = Math.sqrt(bx * bx + by * by + bz * bz);
-        const mag = mag1 * mag2;
-        const cosine = mag && dot(a, b) / mag;
-        return Math.acos(Math.min(Math.max(cosine, -1), 1));
-      };
-      module.exports = angle;
-    }
-  });
-  var require_create2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/create.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = () => [0, 0, 0];
-      module.exports = create;
-    }
-  });
-  var require_clone3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/clone.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = require_create2();
-      var clone = vector => {
-        const out = create();
-        out[0] = vector[0];
-        out[1] = vector[1];
-        out[2] = vector[2];
-        return out;
-      };
-      module.exports = clone;
-    }
-  });
-  var require_copy2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/copy.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var copy = (out, vector) => {
-        out[0] = vector[0];
-        out[1] = vector[1];
-        out[2] = vector[2];
-        return out;
-      };
-      module.exports = copy;
-    }
-  });
-  var require_cross = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/cross.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var cross = (out, a, b) => {
-        const ax = a[0];
-        const ay = a[1];
-        const az = a[2];
-        const bx = b[0];
-        const by = b[1];
-        const bz = b[2];
-        out[0] = ay * bz - az * by;
-        out[1] = az * bx - ax * bz;
-        out[2] = ax * by - ay * bx;
-        return out;
-      };
-      module.exports = cross;
-    }
-  });
-  var require_distance = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/distance.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var distance = (a, b) => {
-        const x = b[0] - a[0];
-        const y = b[1] - a[1];
-        const z = b[2] - a[2];
-        return Math.sqrt(x * x + y * y + z * z);
-      };
-      module.exports = distance;
-    }
-  });
-  var require_divide = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/divide.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var divide = (out, a, b) => {
-        out[0] = a[0] / b[0];
-        out[1] = a[1] / b[1];
-        out[2] = a[2] / b[2];
-        return out;
-      };
-      module.exports = divide;
-    }
-  });
-  var require_equals2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/equals.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
-      module.exports = equals;
-    }
-  });
-  var require_fromScalar = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/fromScalar.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var fromScalar = (out, scalar) => {
-        out[0] = scalar;
-        out[1] = scalar;
-        out[2] = scalar;
-        return out;
-      };
-      module.exports = fromScalar;
-    }
-  });
-  var require_fromValues2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/fromValues.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = require_create2();
-      var fromValues = (x, y, z) => {
-        const out = create();
-        out[0] = x;
-        out[1] = y;
-        out[2] = z;
-        return out;
-      };
-      module.exports = fromValues;
-    }
-  });
-  var require_fromVec2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/fromVec2.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var fromVector2 = (out, vector, z = 0) => {
-        out[0] = vector[0];
-        out[1] = vector[1];
-        out[2] = z;
-        return out;
-      };
-      module.exports = fromVector2;
-    }
-  });
-  var require_length = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/length.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var length = vector => {
-        const x = vector[0];
-        const y = vector[1];
-        const z = vector[2];
-        return Math.sqrt(x * x + y * y + z * z);
-      };
-      module.exports = length;
-    }
-  });
-  var require_lerp = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/lerp.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var lerp = (out, a, b, t) => {
-        out[0] = a[0] + t * (b[0] - a[0]);
-        out[1] = a[1] + t * (b[1] - a[1]);
-        out[2] = a[2] + t * (b[2] - a[2]);
-        return out;
-      };
-      module.exports = lerp;
-    }
-  });
-  var require_max = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/max.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var max = (out, a, b) => {
-        out[0] = Math.max(a[0], b[0]);
-        out[1] = Math.max(a[1], b[1]);
-        out[2] = Math.max(a[2], b[2]);
-        return out;
-      };
-      module.exports = max;
-    }
-  });
-  var require_min = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/min.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var min = (out, a, b) => {
-        out[0] = Math.min(a[0], b[0]);
-        out[1] = Math.min(a[1], b[1]);
-        out[2] = Math.min(a[2], b[2]);
-        return out;
-      };
-      module.exports = min;
-    }
-  });
-  var require_multiply = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/multiply.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var multiply = (out, a, b) => {
-        out[0] = a[0] * b[0];
-        out[1] = a[1] * b[1];
-        out[2] = a[2] * b[2];
-        return out;
-      };
-      module.exports = multiply;
-    }
-  });
-  var require_negate = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/negate.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var negate = (out, vector) => {
-        out[0] = -vector[0];
-        out[1] = -vector[1];
-        out[2] = -vector[2];
-        return out;
-      };
-      module.exports = negate;
-    }
-  });
-  var require_normalize = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/normalize.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var normalize = (out, vector) => {
-        const x = vector[0];
-        const y = vector[1];
-        const z = vector[2];
-        let len = x * x + y * y + z * z;
-        if (len > 0) {
-          len = 1 / Math.sqrt(len);
-        }
-        out[0] = x * len;
-        out[1] = y * len;
-        out[2] = z * len;
-        return out;
-      };
-      module.exports = normalize;
-    }
-  });
-  var require_orthogonal = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/orthogonal.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var abs = require_abs();
-      var create = require_create2();
-      var cross = require_cross();
-      var orthogonal = (out, vector) => {
-        const bV = abs(create(), vector);
-        const b0 = 0 + (bV[0] < bV[1] && bV[0] < bV[2]);
-        const b1 = 0 + (bV[1] <= bV[0] && bV[1] < bV[2]);
-        const b2 = 0 + (bV[2] <= bV[0] && bV[2] <= bV[1]);
-        return cross(out, vector, [b0, b1, b2]);
-      };
-      module.exports = orthogonal;
-    }
-  });
-  var require_rotateX = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/rotateX.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var rotateX = (out, vector, origin, radians) => {
-        const p = [];
-        const r = [];
-        p[0] = vector[0] - origin[0];
-        p[1] = vector[1] - origin[1];
-        p[2] = vector[2] - origin[2];
-        r[0] = p[0];
-        r[1] = p[1] * Math.cos(radians) - p[2] * Math.sin(radians);
-        r[2] = p[1] * Math.sin(radians) + p[2] * Math.cos(radians);
-        out[0] = r[0] + origin[0];
-        out[1] = r[1] + origin[1];
-        out[2] = r[2] + origin[2];
-        return out;
-      };
-      module.exports = rotateX;
-    }
-  });
-  var require_rotateY = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/rotateY.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var rotateY = (out, vector, origin, radians) => {
-        const p = [];
-        const r = [];
-        p[0] = vector[0] - origin[0];
-        p[1] = vector[1] - origin[1];
-        p[2] = vector[2] - origin[2];
-        r[0] = p[2] * Math.sin(radians) + p[0] * Math.cos(radians);
-        r[1] = p[1];
-        r[2] = p[2] * Math.cos(radians) - p[0] * Math.sin(radians);
-        out[0] = r[0] + origin[0];
-        out[1] = r[1] + origin[1];
-        out[2] = r[2] + origin[2];
-        return out;
-      };
-      module.exports = rotateY;
-    }
-  });
-  var require_rotateZ = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/rotateZ.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var rotateZ = (out, vector, origin, radians) => {
-        const p = [];
-        const r = [];
-        p[0] = vector[0] - origin[0];
-        p[1] = vector[1] - origin[1];
-        r[0] = p[0] * Math.cos(radians) - p[1] * Math.sin(radians);
-        r[1] = p[0] * Math.sin(radians) + p[1] * Math.cos(radians);
-        out[0] = r[0] + origin[0];
-        out[1] = r[1] + origin[1];
-        out[2] = vector[2];
-        return out;
-      };
-      module.exports = rotateZ;
-    }
-  });
-  var require_scale = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/scale.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var scale = (out, vector, amount) => {
-        out[0] = vector[0] * amount;
-        out[1] = vector[1] * amount;
-        out[2] = vector[2] * amount;
-        return out;
-      };
-      module.exports = scale;
-    }
-  });
-  var require_snap = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/snap.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var snap = (out, vector, epsilon) => {
-        out[0] = Math.round(vector[0] / epsilon) * epsilon + 0;
-        out[1] = Math.round(vector[1] / epsilon) * epsilon + 0;
-        out[2] = Math.round(vector[2] / epsilon) * epsilon + 0;
-        return out;
-      };
-      module.exports = snap;
-    }
-  });
-  var require_squaredDistance = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/squaredDistance.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var squaredDistance = (a, b) => {
-        const x = b[0] - a[0];
-        const y = b[1] - a[1];
-        const z = b[2] - a[2];
-        return x * x + y * y + z * z;
-      };
-      module.exports = squaredDistance;
-    }
-  });
-  var require_squaredLength = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/squaredLength.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var squaredLength = vector => {
-        const x = vector[0];
-        const y = vector[1];
-        const z = vector[2];
-        return x * x + y * y + z * z;
-      };
-      module.exports = squaredLength;
-    }
-  });
-  var require_subtract = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/subtract.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var subtract = (out, a, b) => {
-        out[0] = a[0] - b[0];
-        out[1] = a[1] - b[1];
-        out[2] = a[2] - b[2];
-        return out;
-      };
-      module.exports = subtract;
-    }
-  });
-  var require_toString = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/toString.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var toString = vec => `[${vec[0].toFixed(7)}, ${vec[1].toFixed(7)}, ${vec[2].toFixed(7)}]`;
-      module.exports = toString;
-    }
-  });
-  var require_transform = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/transform.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var transform = (out, vector, matrix) => {
-        const x = vector[0];
-        const y = vector[1];
-        const z = vector[2];
-        let w = matrix[3] * x + matrix[7] * y + matrix[11] * z + matrix[15];
-        w = w || 1;
-        out[0] = (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12]) / w;
-        out[1] = (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13]) / w;
-        out[2] = (matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14]) / w;
-        return out;
-      };
-      module.exports = transform;
-    }
-  });
-  var require_vec3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec3/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = {
-        abs: require_abs(),
-        add: require_add2(),
-        angle: require_angle(),
-        clone: require_clone3(),
-        copy: require_copy2(),
-        create: require_create2(),
-        cross: require_cross(),
-        distance: require_distance(),
-        divide: require_divide(),
-        dot: require_dot(),
-        equals: require_equals2(),
-        fromScalar: require_fromScalar(),
-        fromValues: require_fromValues2(),
-        fromVec2: require_fromVec2(),
-        length: require_length(),
-        lerp: require_lerp(),
-        max: require_max(),
-        min: require_min(),
-        multiply: require_multiply(),
-        negate: require_negate(),
-        normalize: require_normalize(),
-        orthogonal: require_orthogonal(),
-        rotateX: require_rotateX(),
-        rotateY: require_rotateY(),
-        rotateZ: require_rotateZ(),
-        scale: require_scale(),
-        snap: require_snap(),
-        squaredDistance: require_squaredDistance(),
-        squaredLength: require_squaredLength(),
-        subtract: require_subtract(),
-        toString: require_toString(),
-        transform: require_transform()
-      };
     }
   });
   var require_fromVectorRotation = __commonJS({
@@ -974,7 +1979,7 @@ export default require => {
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var fromXRotation = (out, radians) => {
-        const s = sin(radians);
+        const s4 = sin(radians);
         const c = cos(radians);
         out[0] = 1;
         out[1] = 0;
@@ -982,10 +1987,10 @@ export default require => {
         out[3] = 0;
         out[4] = 0;
         out[5] = c;
-        out[6] = s;
+        out[6] = s4;
         out[7] = 0;
         out[8] = 0;
-        out[9] = -s;
+        out[9] = -s4;
         out[10] = c;
         out[11] = 0;
         out[12] = 0;
@@ -1003,17 +2008,17 @@ export default require => {
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var fromYRotation = (out, radians) => {
-        const s = sin(radians);
+        const s4 = sin(radians);
         const c = cos(radians);
         out[0] = c;
         out[1] = 0;
-        out[2] = -s;
+        out[2] = -s4;
         out[3] = 0;
         out[4] = 0;
         out[5] = 1;
         out[6] = 0;
         out[7] = 0;
-        out[8] = s;
+        out[8] = s4;
         out[9] = 0;
         out[10] = c;
         out[11] = 0;
@@ -1032,13 +2037,13 @@ export default require => {
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var fromZRotation = (out, radians) => {
-        const s = sin(radians);
+        const s4 = sin(radians);
         const c = cos(radians);
         out[0] = c;
-        out[1] = s;
+        out[1] = s4;
         out[2] = 0;
         out[3] = 0;
-        out[4] = -s;
+        out[4] = -s4;
         out[5] = c;
         out[6] = 0;
         out[7] = 0;
@@ -1113,27 +2118,27 @@ export default require => {
       module.exports = mirrorByPlane;
     }
   });
-  var require_multiply2 = __commonJS({
+  var require_multiply3 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/mat4/multiply.js"(exports, module) {
       "use strict";
       init_define_process();
-      var multiply = (out, a, b) => {
-        const a00 = a[0];
-        const a01 = a[1];
-        const a02 = a[2];
-        const a03 = a[3];
-        const a10 = a[4];
-        const a11 = a[5];
-        const a12 = a[6];
-        const a13 = a[7];
-        const a20 = a[8];
-        const a21 = a[9];
-        const a22 = a[10];
-        const a23 = a[11];
-        const a30 = a[12];
-        const a31 = a[13];
-        const a32 = a[14];
-        const a33 = a[15];
+      var multiply = (out, a2, b) => {
+        const a00 = a2[0];
+        const a01 = a2[1];
+        const a02 = a2[2];
+        const a03 = a2[3];
+        const a10 = a2[4];
+        const a11 = a2[5];
+        const a12 = a2[6];
+        const a13 = a2[7];
+        const a20 = a2[8];
+        const a21 = a2[9];
+        const a22 = a2[10];
+        const a23 = a2[11];
+        const a30 = a2[12];
+        const a31 = a2[13];
+        const a32 = a2[14];
+        const a33 = a2[15];
         let b0 = b[0];
         let b1 = b[1];
         let b2 = b[2];
@@ -1171,13 +2176,13 @@ export default require => {
       module.exports = multiply;
     }
   });
-  var require_rotate = __commonJS({
+  var require_rotate2 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/mat4/rotate.js"(exports, module) {
       "use strict";
       init_define_process();
       var {EPS} = require_constants();
       var {sin, cos} = require_trigonometry();
-      var copy = require_copy();
+      var copy = require_copy3();
       var rotate2 = (out, matrix, radians, axis) => {
         let [x, y, z] = axis;
         const lengthSquared = x * x + y * y + z * z;
@@ -1188,9 +2193,9 @@ export default require => {
         x *= len;
         y *= len;
         z *= len;
-        const s = sin(radians);
+        const s4 = sin(radians);
         const c = cos(radians);
-        const t = 1 - c;
+        const t2 = 1 - c;
         const a00 = matrix[0];
         const a01 = matrix[1];
         const a02 = matrix[2];
@@ -1203,15 +2208,15 @@ export default require => {
         const a21 = matrix[9];
         const a22 = matrix[10];
         const a23 = matrix[11];
-        const b00 = x * x * t + c;
-        const b01 = y * x * t + z * s;
-        const b02 = z * x * t - y * s;
-        const b10 = x * y * t - z * s;
-        const b11 = y * y * t + c;
-        const b12 = z * y * t + x * s;
-        const b20 = x * z * t + y * s;
-        const b21 = y * z * t - x * s;
-        const b22 = z * z * t + c;
+        const b00 = x * x * t2 + c;
+        const b01 = y * x * t2 + z * s4;
+        const b02 = z * x * t2 - y * s4;
+        const b10 = x * y * t2 - z * s4;
+        const b11 = y * y * t2 + c;
+        const b12 = z * y * t2 + x * s4;
+        const b20 = x * z * t2 + y * s4;
+        const b21 = y * z * t2 - x * s4;
+        const b22 = z * z * t2 + c;
         out[0] = a00 * b00 + a10 * b01 + a20 * b02;
         out[1] = a01 * b00 + a11 * b01 + a21 * b02;
         out[2] = a02 * b00 + a12 * b01 + a22 * b02;
@@ -1241,7 +2246,7 @@ export default require => {
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var rotateX = (out, matrix, radians) => {
-        const s = sin(radians);
+        const s4 = sin(radians);
         const c = cos(radians);
         const a10 = matrix[4];
         const a11 = matrix[5];
@@ -1261,14 +2266,14 @@ export default require => {
           out[14] = matrix[14];
           out[15] = matrix[15];
         }
-        out[4] = a10 * c + a20 * s;
-        out[5] = a11 * c + a21 * s;
-        out[6] = a12 * c + a22 * s;
-        out[7] = a13 * c + a23 * s;
-        out[8] = a20 * c - a10 * s;
-        out[9] = a21 * c - a11 * s;
-        out[10] = a22 * c - a12 * s;
-        out[11] = a23 * c - a13 * s;
+        out[4] = a10 * c + a20 * s4;
+        out[5] = a11 * c + a21 * s4;
+        out[6] = a12 * c + a22 * s4;
+        out[7] = a13 * c + a23 * s4;
+        out[8] = a20 * c - a10 * s4;
+        out[9] = a21 * c - a11 * s4;
+        out[10] = a22 * c - a12 * s4;
+        out[11] = a23 * c - a13 * s4;
         return out;
       };
       module.exports = rotateX;
@@ -1280,7 +2285,7 @@ export default require => {
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var rotateY = (out, matrix, radians) => {
-        const s = sin(radians);
+        const s4 = sin(radians);
         const c = cos(radians);
         const a00 = matrix[0];
         const a01 = matrix[1];
@@ -1300,14 +2305,14 @@ export default require => {
           out[14] = matrix[14];
           out[15] = matrix[15];
         }
-        out[0] = a00 * c - a20 * s;
-        out[1] = a01 * c - a21 * s;
-        out[2] = a02 * c - a22 * s;
-        out[3] = a03 * c - a23 * s;
-        out[8] = a00 * s + a20 * c;
-        out[9] = a01 * s + a21 * c;
-        out[10] = a02 * s + a22 * c;
-        out[11] = a03 * s + a23 * c;
+        out[0] = a00 * c - a20 * s4;
+        out[1] = a01 * c - a21 * s4;
+        out[2] = a02 * c - a22 * s4;
+        out[3] = a03 * c - a23 * s4;
+        out[8] = a00 * s4 + a20 * c;
+        out[9] = a01 * s4 + a21 * c;
+        out[10] = a02 * s4 + a22 * c;
+        out[11] = a03 * s4 + a23 * c;
         return out;
       };
       module.exports = rotateY;
@@ -1319,7 +2324,7 @@ export default require => {
       init_define_process();
       var {sin, cos} = require_trigonometry();
       var rotateZ = (out, matrix, radians) => {
-        const s = sin(radians);
+        const s4 = sin(radians);
         const c = cos(radians);
         const a00 = matrix[0];
         const a01 = matrix[1];
@@ -1339,20 +2344,20 @@ export default require => {
           out[14] = matrix[14];
           out[15] = matrix[15];
         }
-        out[0] = a00 * c + a10 * s;
-        out[1] = a01 * c + a11 * s;
-        out[2] = a02 * c + a12 * s;
-        out[3] = a03 * c + a13 * s;
-        out[4] = a10 * c - a00 * s;
-        out[5] = a11 * c - a01 * s;
-        out[6] = a12 * c - a02 * s;
-        out[7] = a13 * c - a03 * s;
+        out[0] = a00 * c + a10 * s4;
+        out[1] = a01 * c + a11 * s4;
+        out[2] = a02 * c + a12 * s4;
+        out[3] = a03 * c + a13 * s4;
+        out[4] = a10 * c - a00 * s4;
+        out[5] = a11 * c - a01 * s4;
+        out[6] = a12 * c - a02 * s4;
+        out[7] = a13 * c - a03 * s4;
         return out;
       };
       module.exports = rotateZ;
     }
   });
-  var require_scale2 = __commonJS({
+  var require_scale3 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/mat4/scale.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -1381,37 +2386,37 @@ export default require => {
       module.exports = scale;
     }
   });
-  var require_subtract2 = __commonJS({
+  var require_subtract3 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/mat4/subtract.js"(exports, module) {
       "use strict";
       init_define_process();
-      var subtract = (out, a, b) => {
-        out[0] = a[0] - b[0];
-        out[1] = a[1] - b[1];
-        out[2] = a[2] - b[2];
-        out[3] = a[3] - b[3];
-        out[4] = a[4] - b[4];
-        out[5] = a[5] - b[5];
-        out[6] = a[6] - b[6];
-        out[7] = a[7] - b[7];
-        out[8] = a[8] - b[8];
-        out[9] = a[9] - b[9];
-        out[10] = a[10] - b[10];
-        out[11] = a[11] - b[11];
-        out[12] = a[12] - b[12];
-        out[13] = a[13] - b[13];
-        out[14] = a[14] - b[14];
-        out[15] = a[15] - b[15];
+      var subtract = (out, a2, b) => {
+        out[0] = a2[0] - b[0];
+        out[1] = a2[1] - b[1];
+        out[2] = a2[2] - b[2];
+        out[3] = a2[3] - b[3];
+        out[4] = a2[4] - b[4];
+        out[5] = a2[5] - b[5];
+        out[6] = a2[6] - b[6];
+        out[7] = a2[7] - b[7];
+        out[8] = a2[8] - b[8];
+        out[9] = a2[9] - b[9];
+        out[10] = a2[10] - b[10];
+        out[11] = a2[11] - b[11];
+        out[12] = a2[12] - b[12];
+        out[13] = a2[13] - b[13];
+        out[14] = a2[14] - b[14];
+        out[15] = a2[15] - b[15];
         return out;
       };
       module.exports = subtract;
     }
   });
-  var require_toString2 = __commonJS({
+  var require_toString3 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/maths/mat4/toString.js"(exports, module) {
       "use strict";
       init_define_process();
-      var toString = mat => mat.map(n => n.toFixed(7)).toString();
+      var toString = mat => mat.map(n3 => n3.toFixed(7)).toString();
       module.exports = toString;
     }
   });
@@ -1480,17 +2485,17 @@ export default require => {
       "use strict";
       init_define_process();
       module.exports = {
-        add: require_add(),
-        clone: require_clone2(),
-        copy: require_copy(),
-        create: require_create(),
+        add: require_add3(),
+        clone: require_clone4(),
+        copy: require_copy3(),
+        create: require_create3(),
         invert: require_invert(),
-        equals: require_equals(),
+        equals: require_equals3(),
         fromRotation: require_fromRotation(),
         fromScaling: require_fromScaling(),
         fromTaitBryanRotation: require_fromTaitBryanRotation(),
         fromTranslation: require_fromTranslation(),
-        fromValues: require_fromValues(),
+        fromValues: require_fromValues3(),
         fromVectorRotation: require_fromVectorRotation(),
         fromXRotation: require_fromXRotation(),
         fromYRotation: require_fromYRotation(),
@@ -1500,1495 +2505,41 @@ export default require => {
         isOnlyTransformScale: require_isOnlyTransformScale(),
         isMirroring: require_isMirroring(),
         mirrorByPlane: require_mirrorByPlane(),
-        multiply: require_multiply2(),
-        rotate: require_rotate(),
+        multiply: require_multiply3(),
+        rotate: require_rotate2(),
         rotateX: require_rotateX2(),
         rotateY: require_rotateY2(),
         rotateZ: require_rotateZ2(),
-        scale: require_scale2(),
-        subtract: require_subtract2(),
-        toString: require_toString2(),
+        scale: require_scale3(),
+        subtract: require_subtract3(),
+        toString: require_toString3(),
         translate: require_translate()
       };
     }
   });
-  var require_create3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/create.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var mat42 = require_mat4();
-      var create = polygons => {
-        if (polygons === void 0) {
-          polygons = [];
-        }
-        return {
-          polygons,
-          transforms: mat42.create()
-        };
-      };
-      module.exports = create;
-    }
-  });
   var require_create4 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/create.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = vertices => {
-        if (vertices === void 0 || vertices.length < 3) {
-          vertices = [];
-        }
-        return {
-          vertices
-        };
-      };
-      module.exports = create;
-    }
-  });
-  var require_clone4 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/clone.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = require_create4();
-      var vec32 = require_vec3();
-      var clone = (...params) => {
-        let out;
-        let poly3;
-        if (params.length === 1) {
-          out = create();
-          poly3 = params[0];
-        } else {
-          out = params[0];
-          poly3 = params[1];
-        }
-        out.vertices = poly3.vertices.map(vec => vec32.clone(vec));
-        return out;
-      };
-      module.exports = clone;
-    }
-  });
-  var require_fromPoints = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/fromPoints.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec32 = require_vec3();
-      var create = require_create4();
-      var fromPoints = points => {
-        const vertices = points.map(point => vec32.clone(point));
-        return create(vertices);
-      };
-      module.exports = fromPoints;
-    }
-  });
-  var require_fromPointsAndPlane = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/fromPointsAndPlane.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = require_create4();
-      var fromPointsAndPlane = (vertices, plane, color = void 0) => {
-        const poly = create(vertices);
-        poly.plane = plane;
-        return color ? __spreadProps(__spreadValues({}, poly), {
-          color
-        }) : poly;
-      };
-      module.exports = fromPointsAndPlane;
-    }
-  });
-  var require_create5 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/create.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = () => [0, 0, 0, 0];
-      module.exports = create;
-    }
-  });
-  var require_clone5 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/clone.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = require_create5();
-      var clone = vector => {
-        const out = create();
-        out[0] = vector[0];
-        out[1] = vector[1];
-        out[2] = vector[2];
-        out[3] = vector[3];
-        return out;
-      };
-      module.exports = clone;
-    }
-  });
-  var require_copy3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/copy.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var copy = (out, vector) => {
-        out[0] = vector[0];
-        out[1] = vector[1];
-        out[2] = vector[2];
-        out[3] = vector[3];
-        return out;
-      };
-      module.exports = copy;
-    }
-  });
-  var require_equals3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/equals.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var equals = (a, b) => a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
-      module.exports = equals;
-    }
-  });
-  var require_flip = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/flip.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flip = (out, plane) => {
-        out[0] = -plane[0];
-        out[1] = -plane[1];
-        out[2] = -plane[2];
-        out[3] = -plane[3];
-        return out;
-      };
-      module.exports = flip;
-    }
-  });
-  var require_fromNormalAndPoint = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/fromNormalAndPoint.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec32 = require_vec3();
-      var fromNormalAndPoint = (out, normal, point) => {
-        const u = vec32.normalize(vec32.create(), normal);
-        const w = vec32.dot(point, u);
-        out[0] = u[0];
-        out[1] = u[1];
-        out[2] = u[2];
-        out[3] = w;
-        return out;
-      };
-      module.exports = fromNormalAndPoint;
-    }
-  });
-  var require_fromValues3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/fromValues.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = require_create5();
-      var fromValues = (x, y, z, w) => {
-        const out = create();
-        out[0] = x;
-        out[1] = y;
-        out[2] = z;
-        out[3] = w;
-        return out;
-      };
-      module.exports = fromValues;
-    }
-  });
-  var require_fromPoints2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/fromPoints.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec32 = require_vec3();
-      var fromPoints = (out, ...vertices) => {
-        const len = vertices.length;
-        const ba = vec32.create();
-        const ca = vec32.create();
-        const vertexNormal = index => {
-          const a = vertices[index];
-          const b = vertices[(index + 1) % len];
-          const c = vertices[(index + 2) % len];
-          vec32.subtract(ba, b, a);
-          vec32.subtract(ca, c, a);
-          vec32.cross(ba, ba, ca);
-          vec32.normalize(ba, ba);
-          return ba;
-        };
-        out[0] = 0;
-        out[1] = 0;
-        out[2] = 0;
-        if (len === 3) {
-          vec32.copy(out, vertexNormal(0));
-        } else {
-          vertices.forEach((v, i) => {
-            vec32.add(out, out, vertexNormal(i));
-          });
-          vec32.normalize(out, out);
-        }
-        out[3] = vec32.dot(out, vertices[0]);
-        return out;
-      };
-      module.exports = fromPoints;
-    }
-  });
-  var require_fromPointsRandom = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/fromPointsRandom.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var {EPS} = require_constants();
-      var vec32 = require_vec3();
-      var fromPointsRandom = (out, a, b, c) => {
-        let ba = vec32.subtract(vec32.create(), b, a);
-        let ca = vec32.subtract(vec32.create(), c, a);
-        if (vec32.length(ba) < EPS) {
-          ba = vec32.orthogonal(ba, ca);
-        }
-        if (vec32.length(ca) < EPS) {
-          ca = vec32.orthogonal(ca, ba);
-        }
-        let normal = vec32.cross(vec32.create(), ba, ca);
-        if (vec32.length(normal) < EPS) {
-          ca = vec32.orthogonal(ca, ba);
-          normal = vec32.cross(normal, ba, ca);
-        }
-        normal = vec32.normalize(normal, normal);
-        const w = vec32.dot(normal, a);
-        out[0] = normal[0];
-        out[1] = normal[1];
-        out[2] = normal[2];
-        out[3] = w;
-        return out;
-      };
-      module.exports = fromPointsRandom;
-    }
-  });
-  var require_projectionOfPoint = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/projectionOfPoint.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec32 = require_vec3();
-      var projectionOfPoint = (plane, point) => {
-        const a = point[0] * plane[0] + point[1] * plane[1] + point[2] * plane[2] - plane[3];
-        const x = point[0] - a * plane[0];
-        const y = point[1] - a * plane[1];
-        const z = point[2] - a * plane[2];
-        return vec32.fromValues(x, y, z);
-      };
-      module.exports = projectionOfPoint;
-    }
-  });
-  var require_signedDistanceToPoint = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/signedDistanceToPoint.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec32 = require_vec3();
-      var signedDistanceToPoint = (plane, point) => vec32.dot(plane, point) - plane[3];
-      module.exports = signedDistanceToPoint;
-    }
-  });
-  var require_toString3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/toString.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var toString = vec => `(${vec[0].toFixed(9)}, ${vec[1].toFixed(9)}, ${vec[2].toFixed(9)}, ${vec[3].toFixed(9)})`;
-      module.exports = toString;
-    }
-  });
-  var require_transform2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/transform.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var mat42 = require_mat4();
-      var vec32 = require_vec3();
-      var fromPoints = require_fromPoints2();
-      var flip = require_flip();
-      var transform = (out, plane, matrix) => {
-        const ismirror = mat42.isMirroring(matrix);
-        const r = vec32.orthogonal(vec32.create(), plane);
-        const u = vec32.cross(r, plane, r);
-        const v = vec32.cross(vec32.create(), plane, u);
-        let point1 = vec32.fromScalar(vec32.create(), plane[3]);
-        vec32.multiply(point1, point1, plane);
-        let point2 = vec32.add(vec32.create(), point1, u);
-        let point3 = vec32.add(vec32.create(), point1, v);
-        point1 = vec32.transform(point1, point1, matrix);
-        point2 = vec32.transform(point2, point2, matrix);
-        point3 = vec32.transform(point3, point3, matrix);
-        fromPoints(out, point1, point2, point3);
-        if (ismirror) {
-          flip(out, out);
-        }
-        return out;
-      };
-      module.exports = transform;
-    }
-  });
-  var require_plane = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/plane/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = {
-        clone: require_clone5(),
-        copy: require_copy3(),
-        create: require_create5(),
-        equals: require_equals3(),
-        flip: require_flip(),
-        fromNormalAndPoint: require_fromNormalAndPoint(),
-        fromValues: require_fromValues3(),
-        fromPoints: require_fromPoints2(),
-        fromPointsRandom: require_fromPointsRandom(),
-        projectionOfPoint: require_projectionOfPoint(),
-        signedDistanceToPoint: require_signedDistanceToPoint(),
-        toString: require_toString3(),
-        transform: require_transform2()
-      };
-    }
-  });
-  var require_invert2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/invert.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var plane = require_plane();
-      var create = require_create4();
-      var invert = polygon => {
-        const vertices = polygon.vertices.slice().reverse();
-        const inverted = create(vertices);
-        if (polygon.plane) {
-          inverted.plane = plane.flip(plane.create(), polygon.plane);
-        }
-        if (polygon.color) {
-          inverted.color = polygon.color;
-        }
-        return inverted;
-      };
-      module.exports = invert;
-    }
-  });
-  var require_isA = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/isA.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var isA = object => {
-        if (object && typeof object === "object") {
-          if (("vertices" in object)) {
-            if (Array.isArray(object.vertices)) {
-              return true;
-            }
-          }
-        }
-        return false;
-      };
-      module.exports = isA;
-    }
-  });
-  var require_isConvex = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/isConvex.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var plane = require_plane();
-      var vec32 = require_vec3();
-      var isConvex = polygon => areVerticesConvex(polygon.vertices);
-      var areVerticesConvex = vertices => {
-        const numvertices = vertices.length;
-        if (numvertices > 2) {
-          const normal = plane.fromPoints(plane.create(), ...vertices);
-          let prevprevpos = vertices[numvertices - 2];
-          let prevpos = vertices[numvertices - 1];
-          for (let i = 0; i < numvertices; i++) {
-            const pos = vertices[i];
-            if (!isConvexPoint(prevprevpos, prevpos, pos, normal)) {
-              return false;
-            }
-            prevprevpos = prevpos;
-            prevpos = pos;
-          }
-        }
-        return true;
-      };
-      var isConvexPoint = (prevpoint, point, nextpoint, normal) => {
-        const crossproduct = vec32.cross(vec32.create(), vec32.subtract(vec32.create(), point, prevpoint), vec32.subtract(vec32.create(), nextpoint, point));
-        const crossdotnormal = vec32.dot(crossproduct, normal);
-        return crossdotnormal >= 0;
-      };
-      module.exports = isConvex;
-    }
-  });
-  var require_plane2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/plane.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var mplane = require_plane();
-      var plane = polygon => {
-        if (!polygon.plane) {
-          polygon.plane = mplane.fromPoints(mplane.create(), ...polygon.vertices);
-        }
-        return polygon.plane;
-      };
-      module.exports = plane;
-    }
-  });
-  var require_measureArea = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureArea.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var plane = require_plane2();
-      var measureArea = polygon => {
-        const n = polygon.vertices.length;
-        if (n < 3) {
-          return 0;
-        }
-        const vertices = polygon.vertices;
-        const normal = plane(polygon);
-        const ax = Math.abs(normal[0]);
-        const ay = Math.abs(normal[1]);
-        const az = Math.abs(normal[2]);
-        if (ax + ay + az === 0) {
-          return 0;
-        }
-        let coord = 3;
-        if (ax > ay && ax > az) {
-          coord = 1;
-        } else if (ay > az) {
-          coord = 2;
-        }
-        let area = 0;
-        let h = 0;
-        let i = 1;
-        let j = 2;
-        switch (coord) {
-          case 1:
-            for (i = 1; i < n; i++) {
-              h = i - 1;
-              j = (i + 1) % n;
-              area += vertices[i][1] * (vertices[j][2] - vertices[h][2]);
-            }
-            area += vertices[0][1] * (vertices[1][2] - vertices[n - 1][2]);
-            area /= 2 * normal[0];
-            break;
-          case 2:
-            for (i = 1; i < n; i++) {
-              h = i - 1;
-              j = (i + 1) % n;
-              area += vertices[i][2] * (vertices[j][0] - vertices[h][0]);
-            }
-            area += vertices[0][2] * (vertices[1][0] - vertices[n - 1][0]);
-            area /= 2 * normal[1];
-            break;
-          case 3:
-          default:
-            for (i = 1; i < n; i++) {
-              h = i - 1;
-              j = (i + 1) % n;
-              area += vertices[i][0] * (vertices[j][1] - vertices[h][1]);
-            }
-            area += vertices[0][0] * (vertices[1][1] - vertices[n - 1][1]);
-            area /= 2 * normal[2];
-            break;
-        }
-        return area;
-      };
-      module.exports = measureArea;
-    }
-  });
-  var require_measureBoundingBox = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingBox.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec32 = require_vec3();
-      var measureBoundingBox2 = polygon => {
-        const vertices = polygon.vertices;
-        const numvertices = vertices.length;
-        const min = numvertices === 0 ? vec32.create() : vec32.clone(vertices[0]);
-        const max = vec32.clone(min);
-        for (let i = 1; i < numvertices; i++) {
-          vec32.min(min, min, vertices[i]);
-          vec32.max(max, max, vertices[i]);
-        }
-        return [min, max];
-      };
-      module.exports = measureBoundingBox2;
-    }
-  });
-  var require_dot2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/dot.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
-      module.exports = dot;
-    }
-  });
-  var require_fromScalar2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/fromScalar.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var fromScalar = (out, scalar) => {
-        out[0] = scalar;
-        out[1] = scalar;
-        out[2] = scalar;
-        out[3] = scalar;
-        return out;
-      };
-      module.exports = fromScalar;
-    }
-  });
-  var require_transform3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/transform.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var transform = (out, vector, matrix) => {
-        const [x, y, z, w] = vector;
-        out[0] = matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12] * w;
-        out[1] = matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13] * w;
-        out[2] = matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14] * w;
-        out[3] = matrix[3] * x + matrix[7] * y + matrix[11] * z + matrix[15] * w;
-        return out;
-      };
-      module.exports = transform;
-    }
-  });
-  var require_vec4 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec4/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = {
-        clone: require_clone5(),
-        copy: require_copy3(),
-        create: require_create5(),
-        dot: require_dot2(),
-        equals: require_equals3(),
-        fromScalar: require_fromScalar2(),
-        fromValues: require_fromValues3(),
-        toString: require_toString3(),
-        transform: require_transform3()
-      };
-    }
-  });
-  var require_measureBoundingSphere = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingSphere.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec32 = require_vec3();
-      var vec4 = require_vec4();
-      var cache = new WeakMap();
-      var measureBoundingSphere = polygon => {
-        let boundingSphere = cache.get(polygon);
-        if (boundingSphere) return boundingSphere;
-        const vertices = polygon.vertices;
-        const out = vec4.create();
-        if (vertices.length === 0) {
-          out[0] = 0;
-          out[1] = 0;
-          out[2] = 0;
-          out[3] = 0;
-          return out;
-        }
-        let minx = vertices[0];
-        let miny = minx;
-        let minz = minx;
-        let maxx = minx;
-        let maxy = minx;
-        let maxz = minx;
-        vertices.forEach(v => {
-          if (minx[0] > v[0]) minx = v;
-          if (miny[1] > v[1]) miny = v;
-          if (minz[2] > v[2]) minz = v;
-          if (maxx[0] < v[0]) maxx = v;
-          if (maxy[1] < v[1]) maxy = v;
-          if (maxz[2] < v[2]) maxz = v;
-        });
-        out[0] = (minx[0] + maxx[0]) * 0.5;
-        out[1] = (miny[1] + maxy[1]) * 0.5;
-        out[2] = (minz[2] + maxz[2]) * 0.5;
-        const x = out[0] - maxx[0];
-        const y = out[1] - maxy[1];
-        const z = out[2] - maxz[2];
-        out[3] = Math.sqrt(x * x + y * y + z * z);
-        cache.set(polygon, out);
-        return out;
-      };
-      module.exports = measureBoundingSphere;
-    }
-  });
-  var require_measureSignedVolume = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureSignedVolume.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec32 = require_vec3();
-      var measureSignedVolume = polygon => {
-        let signedVolume = 0;
-        const vertices = polygon.vertices;
-        const cross = vec32.create();
-        for (let i = 0; i < vertices.length - 2; i++) {
-          vec32.cross(cross, vertices[i + 1], vertices[i + 2]);
-          signedVolume += vec32.dot(vertices[0], cross);
-        }
-        signedVolume /= 6;
-        return signedVolume;
-      };
-      module.exports = measureSignedVolume;
-    }
-  });
-  var require_toPoints = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/toPoints.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var toPoints = polygon => polygon.vertices;
-      module.exports = toPoints;
-    }
-  });
-  var require_toString4 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/toString.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec32 = require_vec3();
-      var toString = polygon => {
-        let result = "poly3: vertices: [";
-        polygon.vertices.forEach(vertex => {
-          result += `${vec32.toString(vertex)}, `;
-        });
-        result += "]";
-        return result;
-      };
-      module.exports = toString;
-    }
-  });
-  var require_transform4 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/transform.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var mat42 = require_mat4();
-      var vec32 = require_vec3();
-      var create = require_create4();
-      var transform = (matrix, polygon) => {
-        const vertices = polygon.vertices.map(vertex => vec32.transform(vec32.create(), vertex, matrix));
-        if (mat42.isMirroring(matrix)) {
-          vertices.reverse();
-        }
-        const transformedVertices = create(vertices);
-        return polygon.color ? __spreadValues({
-          color: polygon.color
-        }, transformedVertices) : transformedVertices;
-      };
-      module.exports = transform;
-    }
-  });
-  var require_validate = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/validate.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var signedDistanceToPoint = require_signedDistanceToPoint();
-      var {NEPS} = require_constants();
-      var vec32 = require_vec3();
-      var isA = require_isA();
-      var isConvex = require_isConvex();
-      var measureArea = require_measureArea();
-      var plane = require_plane2();
-      var validate = object => {
-        if (!isA(object)) {
-          throw new Error("invalid poly3 structure");
-        }
-        if (object.vertices.length < 3) {
-          throw new Error(`poly3 not enough vertices ${object.vertices.length}`);
-        }
-        if (measureArea(object) <= 0) {
-          throw new Error("poly3 area must be greater than zero");
-        }
-        for (let i = 0; i < object.vertices.length; i++) {
-          if (vec32.equals(object.vertices[i], object.vertices[(i + 1) % object.vertices.length])) {
-            throw new Error(`poly3 duplicate vertex ${object.vertices[i]}`);
-          }
-        }
-        if (!isConvex(object)) {
-          throw new Error("poly3 must be convex");
-        }
-        object.vertices.forEach(vertex => {
-          if (!vertex.every(Number.isFinite)) {
-            throw new Error(`poly3 invalid vertex ${vertex}`);
-          }
-        });
-        if (object.vertices.length > 3) {
-          const normal = plane(object);
-          object.vertices.forEach(vertex => {
-            const dist = Math.abs(signedDistanceToPoint(normal, vertex));
-            if (dist > NEPS) {
-              throw new Error(`poly3 must be coplanar: vertex ${vertex} distance ${dist}`);
-            }
-          });
-        }
-      };
-      module.exports = validate;
-    }
-  });
-  var require_poly3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/poly3/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = {
-        clone: require_clone4(),
-        create: require_create4(),
-        fromPoints: require_fromPoints(),
-        fromPointsAndPlane: require_fromPointsAndPlane(),
-        invert: require_invert2(),
-        isA: require_isA(),
-        isConvex: require_isConvex(),
-        measureArea: require_measureArea(),
-        measureBoundingBox: require_measureBoundingBox(),
-        measureBoundingSphere: require_measureBoundingSphere(),
-        measureSignedVolume: require_measureSignedVolume(),
-        plane: require_plane2(),
-        toPoints: require_toPoints(),
-        toString: require_toString4(),
-        transform: require_transform4(),
-        validate: require_validate()
-      };
-    }
-  });
-  var require_fromPoints3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/fromPoints.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var poly3 = require_poly3();
-      var create = require_create3();
-      var fromPoints = listofpoints => {
-        if (!Array.isArray(listofpoints)) {
-          throw new Error("the given points must be an array");
-        }
-        const polygons = listofpoints.map((points, index) => {
-          const polygon = poly3.create(points);
-          return polygon;
-        });
-        const result = create(polygons);
-        return result;
-      };
-      module.exports = fromPoints;
-    }
-  });
-  var require_fromCompactBinary = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/fromCompactBinary.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var vec32 = require_vec3();
-      var mat42 = require_mat4();
-      var poly3 = require_poly3();
-      var create = require_create3();
-      var fromCompactBinary = data => {
-        if (data[0] !== 1) throw new Error("invalid compact binary data");
-        const created = create();
-        created.transforms = mat42.clone(data.slice(1, 17));
-        const numberOfVertices = data[21];
-        let ci = 22;
-        let vi = data.length - numberOfVertices * 3;
-        while (vi < data.length) {
-          const verticesPerPolygon = data[ci];
-          ci++;
-          const vertices = [];
-          for (let i = 0; i < verticesPerPolygon; i++) {
-            vertices.push(vec32.fromValues(data[vi], data[vi + 1], data[vi + 2]));
-            vi += 3;
-          }
-          created.polygons.push(poly3.create(vertices));
-        }
-        if (data[17] >= 0) {
-          created.color = [data[17], data[18], data[19], data[20]];
-        }
-        return created;
-      };
-      module.exports = fromCompactBinary;
-    }
-  });
-  var require_applyTransforms = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/applyTransforms.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var mat42 = require_mat4();
-      var poly3 = require_poly3();
-      var applyTransforms = geometry => {
-        if (mat42.isIdentity(geometry.transforms)) return geometry;
-        geometry.polygons = geometry.polygons.map(polygon => poly3.transform(geometry.transforms, polygon));
-        geometry.transforms = mat42.create();
-        return geometry;
-      };
-      module.exports = applyTransforms;
-    }
-  });
-  var require_toPolygons = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var poly3 = require_poly3();
-      var applyTransforms = require_applyTransforms();
-      var colorPoly3 = (color, object) => {
-        if (!object.color) {
-          object.color = color;
-        }
-        return object;
-      };
-      var toPolygons = (geometry, colorizePolygons = false) => {
-        const newPolygons = applyTransforms(geometry).polygons;
-        return colorizePolygons && geometry.color ? newPolygons.map(polygon => colorPoly3(geometry.color, polygon)) : newPolygons;
-      };
-      module.exports = toPolygons;
-    }
-  });
-  var require_invert3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/invert.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var poly3 = require_poly3();
-      var create = require_create3();
-      var toPolygons = require_toPolygons();
-      var invert = geometry => {
-        const polygons = toPolygons(geometry);
-        const newpolygons = polygons.map(polygon => poly3.invert(polygon));
-        return create(newpolygons);
-      };
-      module.exports = invert;
-    }
-  });
-  var require_isA2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/isA.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var isA = object => {
-        if (object && typeof object === "object") {
-          if (("polygons" in object) && ("transforms" in object)) {
-            if (Array.isArray(object.polygons) && ("length" in object.transforms)) {
-              return true;
-            }
-          }
-        }
-        return false;
-      };
-      module.exports = isA;
-    }
-  });
-  var require_toPoints2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toPoints.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var poly3 = require_poly3();
-      var toPolygons = require_toPolygons();
-      var toPoints = geometry => {
-        const polygons = toPolygons(geometry);
-        const listofpoints = polygons.map(polygon => poly3.toPoints(polygon));
-        return listofpoints;
-      };
-      module.exports = toPoints;
-    }
-  });
-  var require_toString5 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toString.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var poly3 = require_poly3();
-      var toPolygons = require_toPolygons();
-      var toString = geometry => {
-        const polygons = toPolygons(geometry);
-        let result = "geom3 (" + polygons.length + " polygons):\n";
-        polygons.forEach(polygon => {
-          result += "  " + poly3.toString(polygon) + "\n";
-        });
-        return result;
-      };
-      module.exports = toString;
-    }
-  });
-  var require_toCompactBinary = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toCompactBinary.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var poly3 = require_poly3();
-      var toCompactBinary = geometry => {
-        const polygons = geometry.polygons;
-        const transforms = geometry.transforms;
-        const numberOfPolygons = polygons.length;
-        const numberOfVertices = polygons.reduce((count, polygon) => count + polygon.vertices.length, 0);
-        let color = [-1, -1, -1, -1];
-        if (geometry.color) color = geometry.color;
-        const compacted = new Float32Array(1 + 16 + 4 + 1 + numberOfPolygons + numberOfVertices * 3);
-        compacted[0] = 1;
-        compacted[1] = transforms[0];
-        compacted[2] = transforms[1];
-        compacted[3] = transforms[2];
-        compacted[4] = transforms[3];
-        compacted[5] = transforms[4];
-        compacted[6] = transforms[5];
-        compacted[7] = transforms[6];
-        compacted[8] = transforms[7];
-        compacted[9] = transforms[8];
-        compacted[10] = transforms[9];
-        compacted[11] = transforms[10];
-        compacted[12] = transforms[11];
-        compacted[13] = transforms[12];
-        compacted[14] = transforms[13];
-        compacted[15] = transforms[14];
-        compacted[16] = transforms[15];
-        compacted[17] = color[0];
-        compacted[18] = color[1];
-        compacted[19] = color[2];
-        compacted[20] = color[3];
-        compacted[21] = numberOfVertices;
-        let ci = 22;
-        let vi = ci + numberOfPolygons;
-        polygons.forEach(polygon => {
-          const points = poly3.toPoints(polygon);
-          compacted[ci] = points.length;
-          ci++;
-          for (let i = 0; i < points.length; i++) {
-            const point = points[i];
-            compacted[vi + 0] = point[0];
-            compacted[vi + 1] = point[1];
-            compacted[vi + 2] = point[2];
-            vi += 3;
-          }
-        });
-        return compacted;
-      };
-      module.exports = toCompactBinary;
-    }
-  });
-  var require_transform5 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/transform.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var mat42 = require_mat4();
-      var transform = (matrix, geometry) => {
-        const transforms = mat42.multiply(mat42.create(), matrix, geometry.transforms);
-        return Object.assign({}, geometry, {
-          transforms
-        });
-      };
-      module.exports = transform;
-    }
-  });
-  var require_validate2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/validate.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var poly3 = require_poly3();
-      var isA = require_isA2();
-      var validate = object => {
-        if (!isA(object)) {
-          throw new Error("invalid geom3 structure");
-        }
-        object.polygons.forEach(poly3.validate);
-        validateManifold(object);
-        if (!object.transforms.every(Number.isFinite)) {
-          throw new Error(`geom3 invalid transforms ${object.transforms}`);
-        }
-      };
-      var validateManifold = object => {
-        const edgeCount = new Map();
-        object.polygons.forEach(({vertices}) => {
-          vertices.forEach((v, i) => {
-            const v1 = `${v}`;
-            const v2 = `${vertices[(i + 1) % vertices.length]}`;
-            const edge = `${v1}/${v2}`;
-            const count = edgeCount.has(edge) ? edgeCount.get(edge) : 0;
-            edgeCount.set(edge, count + 1);
-          });
-        });
-        const nonManifold = [];
-        edgeCount.forEach((count, edge) => {
-          const complementEdge = edge.split("/").reverse().join("/");
-          const complementCount = edgeCount.get(complementEdge);
-          if (count !== complementCount) {
-            nonManifold.push(edge.replace("/", " -> "));
-          }
-        });
-        if (nonManifold.length > 0) {
-          throw new Error(`non-manifold edges ${nonManifold.length}
-${nonManifold.join("\n")}`);
-        }
-      };
-      module.exports = validate;
-    }
-  });
-  var require_geom3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom3/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = {
-        clone: require_clone(),
-        create: require_create3(),
-        fromPoints: require_fromPoints3(),
-        fromCompactBinary: require_fromCompactBinary(),
-        invert: require_invert3(),
-        isA: require_isA2(),
-        toPoints: require_toPoints2(),
-        toPolygons: require_toPolygons(),
-        toString: require_toString5(),
-        toCompactBinary: require_toCompactBinary(),
-        transform: require_transform5(),
-        validate: require_validate2()
-      };
-    }
-  });
-  var require_flatten = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/utils/flatten.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = arr => arr.reduce((acc, val) => Array.isArray(val) ? acc.concat(flatten(val)) : acc.concat(val), []);
-      module.exports = flatten;
-    }
-  });
-  var require_padArrayToLength = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/utils/padArrayToLength.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var padArrayToLength = (anArray, padding, targetLength) => {
-        anArray = anArray.slice();
-        while (anArray.length < targetLength) {
-          anArray.push(padding);
-        }
-        return anArray;
-      };
-      module.exports = padArrayToLength;
-    }
-  });
-  var require_abs2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/abs.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var abs = (out, vector) => {
-        out[0] = Math.abs(vector[0]);
-        out[1] = Math.abs(vector[1]);
-        return out;
-      };
-      module.exports = abs;
-    }
-  });
-  var require_add3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/add.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var add = (out, a, b) => {
-        out[0] = a[0] + b[0];
-        out[1] = a[1] + b[1];
-        return out;
-      };
-      module.exports = add;
-    }
-  });
-  var require_angleRadians = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/angleRadians.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var angleRadians = vector => Math.atan2(vector[1], vector[0]);
-      module.exports = angleRadians;
-    }
-  });
-  var require_angle2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/angle.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = require_angleRadians();
-    }
-  });
-  var require_angleDegrees = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/angleDegrees.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var angleRadians = require_angleRadians();
-      var angleDegrees = vector => angleRadians(vector) * 57.29577951308232;
-      module.exports = angleDegrees;
-    }
-  });
-  var require_create6 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/create.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = () => [0, 0];
-      module.exports = create;
-    }
-  });
-  var require_clone6 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/clone.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = require_create6();
-      var clone = vector => {
-        const out = create();
-        out[0] = vector[0];
-        out[1] = vector[1];
-        return out;
-      };
-      module.exports = clone;
-    }
-  });
-  var require_copy4 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/copy.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var copy = (out, vector) => {
-        out[0] = vector[0];
-        out[1] = vector[1];
-        return out;
-      };
-      module.exports = copy;
-    }
-  });
-  var require_cross2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/cross.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var cross = (out, a, b) => {
-        out[0] = 0;
-        out[1] = 0;
-        out[2] = a[0] * b[1] - a[1] * b[0];
-        return out;
-      };
-      module.exports = cross;
-    }
-  });
-  var require_distance2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/distance.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var distance = (a, b) => {
-        const x = b[0] - a[0];
-        const y = b[1] - a[1];
-        return Math.sqrt(x * x + y * y);
-      };
-      module.exports = distance;
-    }
-  });
-  var require_divide2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/divide.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var divide = (out, a, b) => {
-        out[0] = a[0] / b[0];
-        out[1] = a[1] / b[1];
-        return out;
-      };
-      module.exports = divide;
-    }
-  });
-  var require_dot3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/dot.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var dot = (a, b) => a[0] * b[0] + a[1] * b[1];
-      module.exports = dot;
-    }
-  });
-  var require_equals4 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/equals.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var equals = (a, b) => a[0] === b[0] && a[1] === b[1];
-      module.exports = equals;
-    }
-  });
-  var require_fromAngleRadians = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/fromAngleRadians.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var {sin, cos} = require_trigonometry();
-      var fromAngleRadians = (out, radians) => {
-        out[0] = cos(radians);
-        out[1] = sin(radians);
-        return out;
-      };
-      module.exports = fromAngleRadians;
-    }
-  });
-  var require_fromAngleDegrees = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/fromAngleDegrees.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var fromAngleRadians = require_fromAngleRadians();
-      var fromAngleDegrees = (out, degrees) => fromAngleRadians(out, Math.PI * degrees / 180);
-      module.exports = fromAngleDegrees;
-    }
-  });
-  var require_fromScalar3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/fromScalar.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var fromScalar = (out, scalar) => {
-        out[0] = scalar;
-        out[1] = scalar;
-        return out;
-      };
-      module.exports = fromScalar;
-    }
-  });
-  var require_fromValues4 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/fromValues.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = require_create6();
-      var fromValues = (x, y) => {
-        const out = create();
-        out[0] = x;
-        out[1] = y;
-        return out;
-      };
-      module.exports = fromValues;
-    }
-  });
-  var require_length2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/length.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var length = vector => Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1]);
-      module.exports = length;
-    }
-  });
-  var require_lerp2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/lerp.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var lerp = (out, a, b, t) => {
-        const ax = a[0];
-        const ay = a[1];
-        out[0] = ax + t * (b[0] - ax);
-        out[1] = ay + t * (b[1] - ay);
-        return out;
-      };
-      module.exports = lerp;
-    }
-  });
-  var require_max2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/max.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var max = (out, a, b) => {
-        out[0] = Math.max(a[0], b[0]);
-        out[1] = Math.max(a[1], b[1]);
-        return out;
-      };
-      module.exports = max;
-    }
-  });
-  var require_min2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/min.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var min = (out, a, b) => {
-        out[0] = Math.min(a[0], b[0]);
-        out[1] = Math.min(a[1], b[1]);
-        return out;
-      };
-      module.exports = min;
-    }
-  });
-  var require_multiply3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/multiply.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var multiply = (out, a, b) => {
-        out[0] = a[0] * b[0];
-        out[1] = a[1] * b[1];
-        return out;
-      };
-      module.exports = multiply;
-    }
-  });
-  var require_negate2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/negate.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var negate = (out, vector) => {
-        out[0] = -vector[0];
-        out[1] = -vector[1];
-        return out;
-      };
-      module.exports = negate;
-    }
-  });
-  var require_rotate2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/rotate.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var rotate2 = (out, vector, origin, radians) => {
-        const x = vector[0] - origin[0];
-        const y = vector[1] - origin[1];
-        const c = Math.cos(radians);
-        const s = Math.sin(radians);
-        out[0] = x * c - y * s + origin[0];
-        out[1] = x * s + y * c + origin[1];
-        return out;
-      };
-      module.exports = rotate2;
-    }
-  });
-  var require_normal = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/normal.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var create = require_create6();
-      var rotate2 = require_rotate2();
-      var normal = (out, vector) => rotate2(out, vector, create(), Math.PI / 2);
-      module.exports = normal;
-    }
-  });
-  var require_normalize2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/normalize.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var normalize = (out, vector) => {
-        const x = vector[0];
-        const y = vector[1];
-        let len = x * x + y * y;
-        if (len > 0) {
-          len = 1 / Math.sqrt(len);
-        }
-        out[0] = x * len;
-        out[1] = y * len;
-        return out;
-      };
-      module.exports = normalize;
-    }
-  });
-  var require_scale3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/scale.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var scale = (out, vector, amount) => {
-        out[0] = vector[0] * amount;
-        out[1] = vector[1] * amount;
-        return out;
-      };
-      module.exports = scale;
-    }
-  });
-  var require_snap2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/snap.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var snap = (out, vector, epsilon) => {
-        out[0] = Math.round(vector[0] / epsilon) * epsilon + 0;
-        out[1] = Math.round(vector[1] / epsilon) * epsilon + 0;
-        return out;
-      };
-      module.exports = snap;
-    }
-  });
-  var require_squaredDistance2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/squaredDistance.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var squaredDistance = (a, b) => {
-        const x = b[0] - a[0];
-        const y = b[1] - a[1];
-        return x * x + y * y;
-      };
-      module.exports = squaredDistance;
-    }
-  });
-  var require_squaredLength2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/squaredLength.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var squaredLength = vector => {
-        const x = vector[0];
-        const y = vector[1];
-        return x * x + y * y;
-      };
-      module.exports = squaredLength;
-    }
-  });
-  var require_subtract3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/subtract.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var subtract = (out, a, b) => {
-        out[0] = a[0] - b[0];
-        out[1] = a[1] - b[1];
-        return out;
-      };
-      module.exports = subtract;
-    }
-  });
-  var require_toString6 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/toString.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var toString = vector => `[${vector[0].toFixed(7)}, ${vector[1].toFixed(7)}]`;
-      module.exports = toString;
-    }
-  });
-  var require_transform6 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/transform.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var transform = (out, vector, matrix) => {
-        const x = vector[0];
-        const y = vector[1];
-        out[0] = matrix[0] * x + matrix[4] * y + matrix[12];
-        out[1] = matrix[1] * x + matrix[5] * y + matrix[13];
-        return out;
-      };
-      module.exports = transform;
-    }
-  });
-  var require_vec2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/maths/vec2/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = {
-        abs: require_abs2(),
-        add: require_add3(),
-        angle: require_angle2(),
-        angleDegrees: require_angleDegrees(),
-        angleRadians: require_angleRadians(),
-        clone: require_clone6(),
-        copy: require_copy4(),
-        create: require_create6(),
-        cross: require_cross2(),
-        distance: require_distance2(),
-        divide: require_divide2(),
-        dot: require_dot3(),
-        equals: require_equals4(),
-        fromAngleDegrees: require_fromAngleDegrees(),
-        fromAngleRadians: require_fromAngleRadians(),
-        fromScalar: require_fromScalar3(),
-        fromValues: require_fromValues4(),
-        length: require_length2(),
-        lerp: require_lerp2(),
-        max: require_max2(),
-        min: require_min2(),
-        multiply: require_multiply3(),
-        negate: require_negate2(),
-        normal: require_normal(),
-        normalize: require_normalize2(),
-        rotate: require_rotate2(),
-        scale: require_scale3(),
-        snap: require_snap2(),
-        squaredDistance: require_squaredDistance2(),
-        squaredLength: require_squaredLength2(),
-        subtract: require_subtract3(),
-        toString: require_toString6(),
-        transform: require_transform6()
-      };
-    }
-  });
-  var require_clone7 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/geometries/geom2/clone.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var clone = geometry => Object.assign({}, geometry);
-      module.exports = clone;
-    }
-  });
-  var require_create7 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/create.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_mat4();
+      var mat4 = require_mat4();
       var create = sides => {
         if (sides === void 0) {
           sides = [];
         }
         return {
           sides,
-          transforms: mat42.create()
+          transforms: mat4.create()
         };
       };
       module.exports = create;
     }
   });
-  var require_fromPoints4 = __commonJS({
+  var require_fromPoints = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/fromPoints.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec2 = require_vec2();
-      var create = require_create7();
+      var create = require_create4();
       var fromPoints = points => {
         if (!Array.isArray(points)) {
           throw new Error("the given points must be an array");
@@ -3010,17 +2561,17 @@ ${nonManifold.join("\n")}`);
       module.exports = fromPoints;
     }
   });
-  var require_fromCompactBinary2 = __commonJS({
+  var require_fromCompactBinary = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/fromCompactBinary.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_mat4();
+      var mat4 = require_mat4();
       var vec2 = require_vec2();
-      var create = require_create7();
+      var create = require_create4();
       var fromCompactBinary = data => {
         if (data[0] !== 0) throw new Error("invalid compact binary data");
         const created = create();
-        created.transforms = mat42.clone(data.slice(1, 17));
+        created.transforms = mat4.clone(data.slice(1, 17));
         for (let i = 21; i < data.length; i += 4) {
           const point0 = vec2.fromValues(data[i + 0], data[i + 1]);
           const point1 = vec2.fromValues(data[i + 2], data[i + 3]);
@@ -3034,7 +2585,7 @@ ${nonManifold.join("\n")}`);
       module.exports = fromCompactBinary;
     }
   });
-  var require_isA3 = __commonJS({
+  var require_isA = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/isA.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -3051,20 +2602,20 @@ ${nonManifold.join("\n")}`);
       module.exports = isA;
     }
   });
-  var require_applyTransforms2 = __commonJS({
+  var require_applyTransforms = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/applyTransforms.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_mat4();
+      var mat4 = require_mat4();
       var vec2 = require_vec2();
       var applyTransforms = geometry => {
-        if (mat42.isIdentity(geometry.transforms)) return geometry;
+        if (mat4.isIdentity(geometry.transforms)) return geometry;
         geometry.sides = geometry.sides.map(side => {
           const p0 = vec2.transform(vec2.create(), side[0], geometry.transforms);
           const p1 = vec2.transform(vec2.create(), side[1], geometry.transforms);
           return [p0, p1];
         });
-        geometry.transforms = mat42.create();
+        geometry.transforms = mat4.create();
         return geometry;
       };
       module.exports = applyTransforms;
@@ -3074,7 +2625,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/toSides.js"(exports, module) {
       "use strict";
       init_define_process();
-      var applyTransforms = require_applyTransforms2();
+      var applyTransforms = require_applyTransforms();
       var toSides = geometry => applyTransforms(geometry).sides;
       module.exports = toSides;
     }
@@ -3083,7 +2634,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/reverse.js"(exports, module) {
       "use strict";
       init_define_process();
-      var create = require_create7();
+      var create = require_create4();
       var toSides = require_toSides();
       var reverse = geometry => {
         const oldsides = toSides(geometry);
@@ -3188,7 +2739,7 @@ ${nonManifold.join("\n")}`);
       module.exports = toOutlines;
     }
   });
-  var require_toPoints3 = __commonJS({
+  var require_toPoints = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/toPoints.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -3204,7 +2755,7 @@ ${nonManifold.join("\n")}`);
       module.exports = toPoints;
     }
   });
-  var require_toString7 = __commonJS({
+  var require_toString4 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/toString.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -3222,7 +2773,7 @@ ${nonManifold.join("\n")}`);
       module.exports = toString;
     }
   });
-  var require_toCompactBinary2 = __commonJS({
+  var require_toCompactBinary = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/toCompactBinary.js"(exports, module) {
       "use strict";
       init_define_process();
@@ -3267,13 +2818,13 @@ ${nonManifold.join("\n")}`);
       module.exports = toCompactBinary;
     }
   });
-  var require_transform7 = __commonJS({
+  var require_transform3 = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/transform.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_mat4();
+      var mat4 = require_mat4();
       var transform = (matrix, geometry) => {
-        const transforms = mat42.multiply(mat42.create(), matrix, geometry.transforms);
+        const transforms = mat4.multiply(mat4.create(), matrix, geometry.transforms);
         return Object.assign({}, geometry, {
           transforms
         });
@@ -3281,12 +2832,12 @@ ${nonManifold.join("\n")}`);
       module.exports = transform;
     }
   });
-  var require_validate3 = __commonJS({
+  var require_validate = __commonJS({
     "../../../node_modules/@jscad/modeling/src/geometries/geom2/validate.js"(exports, module) {
       "use strict";
       init_define_process();
       var vec2 = require_vec2();
-      var isA = require_isA3();
+      var isA = require_isA();
       var toOutlines = require_toOutlines();
       var validate = object => {
         if (!isA(object)) {
@@ -3310,15 +2861,1027 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       module.exports = {
-        clone: require_clone7(),
-        create: require_create7(),
-        fromPoints: require_fromPoints4(),
-        fromCompactBinary: require_fromCompactBinary2(),
-        isA: require_isA3(),
+        clone: require_clone3(),
+        create: require_create4(),
+        fromPoints: require_fromPoints(),
+        fromCompactBinary: require_fromCompactBinary(),
+        isA: require_isA(),
         reverse: require_reverse(),
         toOutlines: require_toOutlines(),
-        toPoints: require_toPoints3(),
+        toPoints: require_toPoints(),
         toSides: require_toSides(),
+        toString: require_toString4(),
+        toCompactBinary: require_toCompactBinary(),
+        transform: require_transform3(),
+        validate: require_validate()
+      };
+    }
+  });
+  var require_clone5 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/clone.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var clone = geometry => Object.assign({}, geometry);
+      module.exports = clone;
+    }
+  });
+  var require_create5 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/create.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var mat4 = require_mat4();
+      var create = polygons => {
+        if (polygons === void 0) {
+          polygons = [];
+        }
+        return {
+          polygons,
+          transforms: mat4.create()
+        };
+      };
+      module.exports = create;
+    }
+  });
+  var require_create6 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/create.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = vertices => {
+        if (vertices === void 0 || vertices.length < 3) {
+          vertices = [];
+        }
+        return {
+          vertices
+        };
+      };
+      module.exports = create;
+    }
+  });
+  var require_clone6 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/clone.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = require_create6();
+      var vec32 = require_vec3();
+      var clone = (...params) => {
+        let out;
+        let poly3;
+        if (params.length === 1) {
+          out = create();
+          poly3 = params[0];
+        } else {
+          out = params[0];
+          poly3 = params[1];
+        }
+        out.vertices = poly3.vertices.map(vec => vec32.clone(vec));
+        return out;
+      };
+      module.exports = clone;
+    }
+  });
+  var require_fromPoints2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/fromPoints.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec32 = require_vec3();
+      var create = require_create6();
+      var fromPoints = points => {
+        const vertices = points.map(point => vec32.clone(point));
+        return create(vertices);
+      };
+      module.exports = fromPoints;
+    }
+  });
+  var require_fromPointsAndPlane = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/fromPointsAndPlane.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = require_create6();
+      var fromPointsAndPlane = (vertices, plane, color = void 0) => {
+        const poly = create(vertices);
+        poly.plane = plane;
+        return color ? __spreadProps(__spreadValues({}, poly), {
+          color
+        }) : poly;
+      };
+      module.exports = fromPointsAndPlane;
+    }
+  });
+  var require_create7 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/create.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = () => [0, 0, 0, 0];
+      module.exports = create;
+    }
+  });
+  var require_clone7 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/clone.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = require_create7();
+      var clone = vector => {
+        const out = create();
+        out[0] = vector[0];
+        out[1] = vector[1];
+        out[2] = vector[2];
+        out[3] = vector[3];
+        return out;
+      };
+      module.exports = clone;
+    }
+  });
+  var require_copy4 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/copy.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var copy = (out, vector) => {
+        out[0] = vector[0];
+        out[1] = vector[1];
+        out[2] = vector[2];
+        out[3] = vector[3];
+        return out;
+      };
+      module.exports = copy;
+    }
+  });
+  var require_equals4 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/equals.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var equals = (a2, b) => a2[0] === b[0] && a2[1] === b[1] && a2[2] === b[2] && a2[3] === b[3];
+      module.exports = equals;
+    }
+  });
+  var require_flip = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/flip.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var flip = (out, plane) => {
+        out[0] = -plane[0];
+        out[1] = -plane[1];
+        out[2] = -plane[2];
+        out[3] = -plane[3];
+        return out;
+      };
+      module.exports = flip;
+    }
+  });
+  var require_fromNormalAndPoint = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/fromNormalAndPoint.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec32 = require_vec3();
+      var fromNormalAndPoint = (out, normal, point) => {
+        const u = vec32.normalize(vec32.create(), normal);
+        const w = vec32.dot(point, u);
+        out[0] = u[0];
+        out[1] = u[1];
+        out[2] = u[2];
+        out[3] = w;
+        return out;
+      };
+      module.exports = fromNormalAndPoint;
+    }
+  });
+  var require_fromValues4 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/fromValues.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var create = require_create7();
+      var fromValues = (x, y, z, w) => {
+        const out = create();
+        out[0] = x;
+        out[1] = y;
+        out[2] = z;
+        out[3] = w;
+        return out;
+      };
+      module.exports = fromValues;
+    }
+  });
+  var require_fromPoints3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/fromPoints.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec32 = require_vec3();
+      var fromPoints = (out, ...vertices) => {
+        const len = vertices.length;
+        const ba = vec32.create();
+        const ca = vec32.create();
+        const vertexNormal = index => {
+          const a2 = vertices[index];
+          const b = vertices[(index + 1) % len];
+          const c = vertices[(index + 2) % len];
+          vec32.subtract(ba, b, a2);
+          vec32.subtract(ca, c, a2);
+          vec32.cross(ba, ba, ca);
+          vec32.normalize(ba, ba);
+          return ba;
+        };
+        out[0] = 0;
+        out[1] = 0;
+        out[2] = 0;
+        if (len === 3) {
+          vec32.copy(out, vertexNormal(0));
+        } else {
+          vertices.forEach((v, i) => {
+            vec32.add(out, out, vertexNormal(i));
+          });
+          vec32.normalize(out, out);
+        }
+        out[3] = vec32.dot(out, vertices[0]);
+        return out;
+      };
+      module.exports = fromPoints;
+    }
+  });
+  var require_fromPointsRandom = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/fromPointsRandom.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var {EPS} = require_constants();
+      var vec32 = require_vec3();
+      var fromPointsRandom = (out, a2, b, c) => {
+        let ba = vec32.subtract(vec32.create(), b, a2);
+        let ca = vec32.subtract(vec32.create(), c, a2);
+        if (vec32.length(ba) < EPS) {
+          ba = vec32.orthogonal(ba, ca);
+        }
+        if (vec32.length(ca) < EPS) {
+          ca = vec32.orthogonal(ca, ba);
+        }
+        let normal = vec32.cross(vec32.create(), ba, ca);
+        if (vec32.length(normal) < EPS) {
+          ca = vec32.orthogonal(ca, ba);
+          normal = vec32.cross(normal, ba, ca);
+        }
+        normal = vec32.normalize(normal, normal);
+        const w = vec32.dot(normal, a2);
+        out[0] = normal[0];
+        out[1] = normal[1];
+        out[2] = normal[2];
+        out[3] = w;
+        return out;
+      };
+      module.exports = fromPointsRandom;
+    }
+  });
+  var require_projectionOfPoint = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/projectionOfPoint.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec32 = require_vec3();
+      var projectionOfPoint = (plane, point) => {
+        const a2 = point[0] * plane[0] + point[1] * plane[1] + point[2] * plane[2] - plane[3];
+        const x = point[0] - a2 * plane[0];
+        const y = point[1] - a2 * plane[1];
+        const z = point[2] - a2 * plane[2];
+        return vec32.fromValues(x, y, z);
+      };
+      module.exports = projectionOfPoint;
+    }
+  });
+  var require_signedDistanceToPoint = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/signedDistanceToPoint.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec32 = require_vec3();
+      var signedDistanceToPoint = (plane, point) => vec32.dot(plane, point) - plane[3];
+      module.exports = signedDistanceToPoint;
+    }
+  });
+  var require_toString5 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/toString.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var toString = vec => `(${vec[0].toFixed(9)}, ${vec[1].toFixed(9)}, ${vec[2].toFixed(9)}, ${vec[3].toFixed(9)})`;
+      module.exports = toString;
+    }
+  });
+  var require_transform4 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/transform.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var mat4 = require_mat4();
+      var vec32 = require_vec3();
+      var fromPoints = require_fromPoints3();
+      var flip = require_flip();
+      var transform = (out, plane, matrix) => {
+        const ismirror = mat4.isMirroring(matrix);
+        const r2 = vec32.orthogonal(vec32.create(), plane);
+        const u = vec32.cross(r2, plane, r2);
+        const v = vec32.cross(vec32.create(), plane, u);
+        let point1 = vec32.fromScalar(vec32.create(), plane[3]);
+        vec32.multiply(point1, point1, plane);
+        let point2 = vec32.add(vec32.create(), point1, u);
+        let point3 = vec32.add(vec32.create(), point1, v);
+        point1 = vec32.transform(point1, point1, matrix);
+        point2 = vec32.transform(point2, point2, matrix);
+        point3 = vec32.transform(point3, point3, matrix);
+        fromPoints(out, point1, point2, point3);
+        if (ismirror) {
+          flip(out, out);
+        }
+        return out;
+      };
+      module.exports = transform;
+    }
+  });
+  var require_plane = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/plane/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = {
+        clone: require_clone7(),
+        copy: require_copy4(),
+        create: require_create7(),
+        equals: require_equals4(),
+        flip: require_flip(),
+        fromNormalAndPoint: require_fromNormalAndPoint(),
+        fromValues: require_fromValues4(),
+        fromPoints: require_fromPoints3(),
+        fromPointsRandom: require_fromPointsRandom(),
+        projectionOfPoint: require_projectionOfPoint(),
+        signedDistanceToPoint: require_signedDistanceToPoint(),
+        toString: require_toString5(),
+        transform: require_transform4()
+      };
+    }
+  });
+  var require_invert2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/invert.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var plane = require_plane();
+      var create = require_create6();
+      var invert = polygon => {
+        const vertices = polygon.vertices.slice().reverse();
+        const inverted = create(vertices);
+        if (polygon.plane) {
+          inverted.plane = plane.flip(plane.create(), polygon.plane);
+        }
+        if (polygon.color) {
+          inverted.color = polygon.color;
+        }
+        return inverted;
+      };
+      module.exports = invert;
+    }
+  });
+  var require_isA2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/isA.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var isA = object => {
+        if (object && typeof object === "object") {
+          if (("vertices" in object)) {
+            if (Array.isArray(object.vertices)) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+      module.exports = isA;
+    }
+  });
+  var require_isConvex = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/isConvex.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var plane = require_plane();
+      var vec32 = require_vec3();
+      var isConvex = polygon => areVerticesConvex(polygon.vertices);
+      var areVerticesConvex = vertices => {
+        const numvertices = vertices.length;
+        if (numvertices > 2) {
+          const normal = plane.fromPoints(plane.create(), ...vertices);
+          let prevprevpos = vertices[numvertices - 2];
+          let prevpos = vertices[numvertices - 1];
+          for (let i = 0; i < numvertices; i++) {
+            const pos = vertices[i];
+            if (!isConvexPoint(prevprevpos, prevpos, pos, normal)) {
+              return false;
+            }
+            prevprevpos = prevpos;
+            prevpos = pos;
+          }
+        }
+        return true;
+      };
+      var isConvexPoint = (prevpoint, point, nextpoint, normal) => {
+        const crossproduct = vec32.cross(vec32.create(), vec32.subtract(vec32.create(), point, prevpoint), vec32.subtract(vec32.create(), nextpoint, point));
+        const crossdotnormal = vec32.dot(crossproduct, normal);
+        return crossdotnormal >= 0;
+      };
+      module.exports = isConvex;
+    }
+  });
+  var require_plane2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/plane.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var mplane = require_plane();
+      var plane = polygon => {
+        if (!polygon.plane) {
+          polygon.plane = mplane.fromPoints(mplane.create(), ...polygon.vertices);
+        }
+        return polygon.plane;
+      };
+      module.exports = plane;
+    }
+  });
+  var require_measureArea = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureArea.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var plane = require_plane2();
+      var measureArea = polygon => {
+        const n3 = polygon.vertices.length;
+        if (n3 < 3) {
+          return 0;
+        }
+        const vertices = polygon.vertices;
+        const normal = plane(polygon);
+        const ax = Math.abs(normal[0]);
+        const ay = Math.abs(normal[1]);
+        const az = Math.abs(normal[2]);
+        if (ax + ay + az === 0) {
+          return 0;
+        }
+        let coord = 3;
+        if (ax > ay && ax > az) {
+          coord = 1;
+        } else if (ay > az) {
+          coord = 2;
+        }
+        let area = 0;
+        let h2 = 0;
+        let i = 1;
+        let j = 2;
+        switch (coord) {
+          case 1:
+            for (i = 1; i < n3; i++) {
+              h2 = i - 1;
+              j = (i + 1) % n3;
+              area += vertices[i][1] * (vertices[j][2] - vertices[h2][2]);
+            }
+            area += vertices[0][1] * (vertices[1][2] - vertices[n3 - 1][2]);
+            area /= 2 * normal[0];
+            break;
+          case 2:
+            for (i = 1; i < n3; i++) {
+              h2 = i - 1;
+              j = (i + 1) % n3;
+              area += vertices[i][2] * (vertices[j][0] - vertices[h2][0]);
+            }
+            area += vertices[0][2] * (vertices[1][0] - vertices[n3 - 1][0]);
+            area /= 2 * normal[1];
+            break;
+          case 3:
+          default:
+            for (i = 1; i < n3; i++) {
+              h2 = i - 1;
+              j = (i + 1) % n3;
+              area += vertices[i][0] * (vertices[j][1] - vertices[h2][1]);
+            }
+            area += vertices[0][0] * (vertices[1][1] - vertices[n3 - 1][1]);
+            area /= 2 * normal[2];
+            break;
+        }
+        return area;
+      };
+      module.exports = measureArea;
+    }
+  });
+  var require_measureBoundingBox = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingBox.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec32 = require_vec3();
+      var measureBoundingBox2 = polygon => {
+        const vertices = polygon.vertices;
+        const numvertices = vertices.length;
+        const min = numvertices === 0 ? vec32.create() : vec32.clone(vertices[0]);
+        const max = vec32.clone(min);
+        for (let i = 1; i < numvertices; i++) {
+          vec32.min(min, min, vertices[i]);
+          vec32.max(max, max, vertices[i]);
+        }
+        return [min, max];
+      };
+      module.exports = measureBoundingBox2;
+    }
+  });
+  var require_dot3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/dot.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var dot = (a2, b) => a2[0] * b[0] + a2[1] * b[1] + a2[2] * b[2] + a2[3] * b[3];
+      module.exports = dot;
+    }
+  });
+  var require_fromScalar3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/fromScalar.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var fromScalar = (out, scalar) => {
+        out[0] = scalar;
+        out[1] = scalar;
+        out[2] = scalar;
+        out[3] = scalar;
+        return out;
+      };
+      module.exports = fromScalar;
+    }
+  });
+  var require_transform5 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/transform.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var transform = (out, vector, matrix) => {
+        const [x, y, z, w] = vector;
+        out[0] = matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12] * w;
+        out[1] = matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13] * w;
+        out[2] = matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14] * w;
+        out[3] = matrix[3] * x + matrix[7] * y + matrix[11] * z + matrix[15] * w;
+        return out;
+      };
+      module.exports = transform;
+    }
+  });
+  var require_vec4 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/maths/vec4/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = {
+        clone: require_clone7(),
+        copy: require_copy4(),
+        create: require_create7(),
+        dot: require_dot3(),
+        equals: require_equals4(),
+        fromScalar: require_fromScalar3(),
+        fromValues: require_fromValues4(),
+        toString: require_toString5(),
+        transform: require_transform5()
+      };
+    }
+  });
+  var require_measureBoundingSphere = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureBoundingSphere.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec32 = require_vec3();
+      var vec4 = require_vec4();
+      var cache = new WeakMap();
+      var measureBoundingSphere = polygon => {
+        let boundingSphere = cache.get(polygon);
+        if (boundingSphere) return boundingSphere;
+        const vertices = polygon.vertices;
+        const out = vec4.create();
+        if (vertices.length === 0) {
+          out[0] = 0;
+          out[1] = 0;
+          out[2] = 0;
+          out[3] = 0;
+          return out;
+        }
+        let minx = vertices[0];
+        let miny = minx;
+        let minz = minx;
+        let maxx = minx;
+        let maxy = minx;
+        let maxz = minx;
+        vertices.forEach(v => {
+          if (minx[0] > v[0]) minx = v;
+          if (miny[1] > v[1]) miny = v;
+          if (minz[2] > v[2]) minz = v;
+          if (maxx[0] < v[0]) maxx = v;
+          if (maxy[1] < v[1]) maxy = v;
+          if (maxz[2] < v[2]) maxz = v;
+        });
+        out[0] = (minx[0] + maxx[0]) * 0.5;
+        out[1] = (miny[1] + maxy[1]) * 0.5;
+        out[2] = (minz[2] + maxz[2]) * 0.5;
+        const x = out[0] - maxx[0];
+        const y = out[1] - maxy[1];
+        const z = out[2] - maxz[2];
+        out[3] = Math.sqrt(x * x + y * y + z * z);
+        cache.set(polygon, out);
+        return out;
+      };
+      module.exports = measureBoundingSphere;
+    }
+  });
+  var require_measureSignedVolume = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/measureSignedVolume.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec32 = require_vec3();
+      var measureSignedVolume = polygon => {
+        let signedVolume = 0;
+        const vertices = polygon.vertices;
+        const cross = vec32.create();
+        for (let i = 0; i < vertices.length - 2; i++) {
+          vec32.cross(cross, vertices[i + 1], vertices[i + 2]);
+          signedVolume += vec32.dot(vertices[0], cross);
+        }
+        signedVolume /= 6;
+        return signedVolume;
+      };
+      module.exports = measureSignedVolume;
+    }
+  });
+  var require_toPoints2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/toPoints.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var toPoints = polygon => polygon.vertices;
+      module.exports = toPoints;
+    }
+  });
+  var require_toString6 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/toString.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec32 = require_vec3();
+      var toString = polygon => {
+        let result = "poly3: vertices: [";
+        polygon.vertices.forEach(vertex => {
+          result += `${vec32.toString(vertex)}, `;
+        });
+        result += "]";
+        return result;
+      };
+      module.exports = toString;
+    }
+  });
+  var require_transform6 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/transform.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var mat4 = require_mat4();
+      var vec32 = require_vec3();
+      var create = require_create6();
+      var transform = (matrix, polygon) => {
+        const vertices = polygon.vertices.map(vertex => vec32.transform(vec32.create(), vertex, matrix));
+        if (mat4.isMirroring(matrix)) {
+          vertices.reverse();
+        }
+        const transformedVertices = create(vertices);
+        return polygon.color ? __spreadValues({
+          color: polygon.color
+        }, transformedVertices) : transformedVertices;
+      };
+      module.exports = transform;
+    }
+  });
+  var require_validate2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/validate.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var signedDistanceToPoint = require_signedDistanceToPoint();
+      var {NEPS} = require_constants();
+      var vec32 = require_vec3();
+      var isA = require_isA2();
+      var isConvex = require_isConvex();
+      var measureArea = require_measureArea();
+      var plane = require_plane2();
+      var validate = object => {
+        if (!isA(object)) {
+          throw new Error("invalid poly3 structure");
+        }
+        if (object.vertices.length < 3) {
+          throw new Error(`poly3 not enough vertices ${object.vertices.length}`);
+        }
+        if (measureArea(object) <= 0) {
+          throw new Error("poly3 area must be greater than zero");
+        }
+        for (let i = 0; i < object.vertices.length; i++) {
+          if (vec32.equals(object.vertices[i], object.vertices[(i + 1) % object.vertices.length])) {
+            throw new Error(`poly3 duplicate vertex ${object.vertices[i]}`);
+          }
+        }
+        if (!isConvex(object)) {
+          throw new Error("poly3 must be convex");
+        }
+        object.vertices.forEach(vertex => {
+          if (!vertex.every(Number.isFinite)) {
+            throw new Error(`poly3 invalid vertex ${vertex}`);
+          }
+        });
+        if (object.vertices.length > 3) {
+          const normal = plane(object);
+          object.vertices.forEach(vertex => {
+            const dist = Math.abs(signedDistanceToPoint(normal, vertex));
+            if (dist > NEPS) {
+              throw new Error(`poly3 must be coplanar: vertex ${vertex} distance ${dist}`);
+            }
+          });
+        }
+      };
+      module.exports = validate;
+    }
+  });
+  var require_poly3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/poly3/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = {
+        clone: require_clone6(),
+        create: require_create6(),
+        fromPoints: require_fromPoints2(),
+        fromPointsAndPlane: require_fromPointsAndPlane(),
+        invert: require_invert2(),
+        isA: require_isA2(),
+        isConvex: require_isConvex(),
+        measureArea: require_measureArea(),
+        measureBoundingBox: require_measureBoundingBox(),
+        measureBoundingSphere: require_measureBoundingSphere(),
+        measureSignedVolume: require_measureSignedVolume(),
+        plane: require_plane2(),
+        toPoints: require_toPoints2(),
+        toString: require_toString6(),
+        transform: require_transform6(),
+        validate: require_validate2()
+      };
+    }
+  });
+  var require_fromPoints4 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/fromPoints.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var poly3 = require_poly3();
+      var create = require_create5();
+      var fromPoints = listofpoints => {
+        if (!Array.isArray(listofpoints)) {
+          throw new Error("the given points must be an array");
+        }
+        const polygons = listofpoints.map((points, index) => {
+          const polygon = poly3.create(points);
+          return polygon;
+        });
+        const result = create(polygons);
+        return result;
+      };
+      module.exports = fromPoints;
+    }
+  });
+  var require_fromCompactBinary2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/fromCompactBinary.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var vec32 = require_vec3();
+      var mat4 = require_mat4();
+      var poly3 = require_poly3();
+      var create = require_create5();
+      var fromCompactBinary = data => {
+        if (data[0] !== 1) throw new Error("invalid compact binary data");
+        const created = create();
+        created.transforms = mat4.clone(data.slice(1, 17));
+        const numberOfVertices = data[21];
+        let ci = 22;
+        let vi = data.length - numberOfVertices * 3;
+        while (vi < data.length) {
+          const verticesPerPolygon = data[ci];
+          ci++;
+          const vertices = [];
+          for (let i = 0; i < verticesPerPolygon; i++) {
+            vertices.push(vec32.fromValues(data[vi], data[vi + 1], data[vi + 2]));
+            vi += 3;
+          }
+          created.polygons.push(poly3.create(vertices));
+        }
+        if (data[17] >= 0) {
+          created.color = [data[17], data[18], data[19], data[20]];
+        }
+        return created;
+      };
+      module.exports = fromCompactBinary;
+    }
+  });
+  var require_applyTransforms2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/applyTransforms.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var mat4 = require_mat4();
+      var poly3 = require_poly3();
+      var applyTransforms = geometry => {
+        if (mat4.isIdentity(geometry.transforms)) return geometry;
+        geometry.polygons = geometry.polygons.map(polygon => poly3.transform(geometry.transforms, polygon));
+        geometry.transforms = mat4.create();
+        return geometry;
+      };
+      module.exports = applyTransforms;
+    }
+  });
+  var require_toPolygons = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toPolygons.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var poly3 = require_poly3();
+      var applyTransforms = require_applyTransforms2();
+      var colorPoly3 = (color, object) => {
+        if (!object.color) {
+          object.color = color;
+        }
+        return object;
+      };
+      var toPolygons = (geometry, colorizePolygons = false) => {
+        const newPolygons = applyTransforms(geometry).polygons;
+        return colorizePolygons && geometry.color ? newPolygons.map(polygon => colorPoly3(geometry.color, polygon)) : newPolygons;
+      };
+      module.exports = toPolygons;
+    }
+  });
+  var require_invert3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/invert.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var poly3 = require_poly3();
+      var create = require_create5();
+      var toPolygons = require_toPolygons();
+      var invert = geometry => {
+        const polygons = toPolygons(geometry);
+        const newpolygons = polygons.map(polygon => poly3.invert(polygon));
+        return create(newpolygons);
+      };
+      module.exports = invert;
+    }
+  });
+  var require_isA3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/isA.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var isA = object => {
+        if (object && typeof object === "object") {
+          if (("polygons" in object) && ("transforms" in object)) {
+            if (Array.isArray(object.polygons) && ("length" in object.transforms)) {
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+      module.exports = isA;
+    }
+  });
+  var require_toPoints3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toPoints.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var poly3 = require_poly3();
+      var toPolygons = require_toPolygons();
+      var toPoints = geometry => {
+        const polygons = toPolygons(geometry);
+        const listofpoints = polygons.map(polygon => poly3.toPoints(polygon));
+        return listofpoints;
+      };
+      module.exports = toPoints;
+    }
+  });
+  var require_toString7 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toString.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var poly3 = require_poly3();
+      var toPolygons = require_toPolygons();
+      var toString = geometry => {
+        const polygons = toPolygons(geometry);
+        let result = "geom3 (" + polygons.length + " polygons):\n";
+        polygons.forEach(polygon => {
+          result += "  " + poly3.toString(polygon) + "\n";
+        });
+        return result;
+      };
+      module.exports = toString;
+    }
+  });
+  var require_toCompactBinary2 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/toCompactBinary.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var poly3 = require_poly3();
+      var toCompactBinary = geometry => {
+        const polygons = geometry.polygons;
+        const transforms = geometry.transforms;
+        const numberOfPolygons = polygons.length;
+        const numberOfVertices = polygons.reduce((count, polygon) => count + polygon.vertices.length, 0);
+        let color = [-1, -1, -1, -1];
+        if (geometry.color) color = geometry.color;
+        const compacted = new Float32Array(1 + 16 + 4 + 1 + numberOfPolygons + numberOfVertices * 3);
+        compacted[0] = 1;
+        compacted[1] = transforms[0];
+        compacted[2] = transforms[1];
+        compacted[3] = transforms[2];
+        compacted[4] = transforms[3];
+        compacted[5] = transforms[4];
+        compacted[6] = transforms[5];
+        compacted[7] = transforms[6];
+        compacted[8] = transforms[7];
+        compacted[9] = transforms[8];
+        compacted[10] = transforms[9];
+        compacted[11] = transforms[10];
+        compacted[12] = transforms[11];
+        compacted[13] = transforms[12];
+        compacted[14] = transforms[13];
+        compacted[15] = transforms[14];
+        compacted[16] = transforms[15];
+        compacted[17] = color[0];
+        compacted[18] = color[1];
+        compacted[19] = color[2];
+        compacted[20] = color[3];
+        compacted[21] = numberOfVertices;
+        let ci = 22;
+        let vi = ci + numberOfPolygons;
+        polygons.forEach(polygon => {
+          const points = poly3.toPoints(polygon);
+          compacted[ci] = points.length;
+          ci++;
+          for (let i = 0; i < points.length; i++) {
+            const point = points[i];
+            compacted[vi + 0] = point[0];
+            compacted[vi + 1] = point[1];
+            compacted[vi + 2] = point[2];
+            vi += 3;
+          }
+        });
+        return compacted;
+      };
+      module.exports = toCompactBinary;
+    }
+  });
+  var require_transform7 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/transform.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var mat4 = require_mat4();
+      var transform = (matrix, geometry) => {
+        const transforms = mat4.multiply(mat4.create(), matrix, geometry.transforms);
+        return Object.assign({}, geometry, {
+          transforms
+        });
+      };
+      module.exports = transform;
+    }
+  });
+  var require_validate3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/validate.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      var poly3 = require_poly3();
+      var isA = require_isA3();
+      var validate = object => {
+        if (!isA(object)) {
+          throw new Error("invalid geom3 structure");
+        }
+        object.polygons.forEach(poly3.validate);
+        validateManifold(object);
+        if (!object.transforms.every(Number.isFinite)) {
+          throw new Error(`geom3 invalid transforms ${object.transforms}`);
+        }
+      };
+      var validateManifold = object => {
+        const edgeCount = new Map();
+        object.polygons.forEach(({vertices}) => {
+          vertices.forEach((v, i) => {
+            const v1 = `${v}`;
+            const v2 = `${vertices[(i + 1) % vertices.length]}`;
+            const edge = `${v1}/${v2}`;
+            const count = edgeCount.has(edge) ? edgeCount.get(edge) : 0;
+            edgeCount.set(edge, count + 1);
+          });
+        });
+        const nonManifold = [];
+        edgeCount.forEach((count, edge) => {
+          const complementEdge = edge.split("/").reverse().join("/");
+          const complementCount = edgeCount.get(complementEdge);
+          if (count !== complementCount) {
+            nonManifold.push(edge.replace("/", " -> "));
+          }
+        });
+        if (nonManifold.length > 0) {
+          throw new Error(`non-manifold edges ${nonManifold.length}
+${nonManifold.join("\n")}`);
+        }
+      };
+      module.exports = validate;
+    }
+  });
+  var require_geom3 = __commonJS({
+    "../../../node_modules/@jscad/modeling/src/geometries/geom3/index.js"(exports, module) {
+      "use strict";
+      init_define_process();
+      module.exports = {
+        clone: require_clone5(),
+        create: require_create5(),
+        fromPoints: require_fromPoints4(),
+        fromCompactBinary: require_fromCompactBinary2(),
+        invert: require_invert3(),
+        isA: require_isA3(),
+        toPoints: require_toPoints3(),
+        toPolygons: require_toPolygons(),
         toString: require_toString7(),
         toCompactBinary: require_toCompactBinary2(),
         transform: require_transform7(),
@@ -3364,7 +3927,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/geometries/path2/create.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_mat4();
+      var mat4 = require_mat4();
       var create = points => {
         if (points === void 0) {
           points = [];
@@ -3372,7 +3935,7 @@ ${nonManifold.join("\n")}`);
         return {
           points,
           isClosed: false,
-          transforms: mat42.create()
+          transforms: mat4.create()
         };
       };
       module.exports = create;
@@ -3410,12 +3973,12 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/geometries/path2/applyTransforms.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_mat4();
+      var mat4 = require_mat4();
       var vec2 = require_vec2();
       var applyTransforms = geometry => {
-        if (mat42.isIdentity(geometry.transforms)) return geometry;
+        if (mat4.isIdentity(geometry.transforms)) return geometry;
         geometry.points = geometry.points.map(point => vec2.transform(vec2.create(), point, geometry.transforms));
-        geometry.transforms = mat42.create();
+        geometry.transforms = mat4.create();
         return geometry;
       };
       module.exports = applyTransforms;
@@ -3617,17 +4180,17 @@ ${nonManifold.join("\n")}`);
         const v0 = vec2.create();
         const v1 = vec2.create();
         const v3 = vec32.create();
-        const getPointForT = t => {
+        const getPointForT = t2 => {
           let tk = 1;
-          let oneMinusTNMinusK = Math.pow(1 - t, bezierOrder);
-          const invOneMinusT = t !== 1 ? 1 / (1 - t) : 1;
+          let oneMinusTNMinusK = Math.pow(1 - t2, bezierOrder);
+          const invOneMinusT = t2 !== 1 ? 1 / (1 - t2) : 1;
           const point = vec2.create();
           for (let k = 0; k <= bezierOrder; ++k) {
             if (k === bezierOrder) oneMinusTNMinusK = 1;
             const bernsteinCoefficient = binomials[k] * tk * oneMinusTNMinusK;
             const derivativePoint = vec2.scale(v0, controlPoints[k], bernsteinCoefficient);
             vec2.add(point, point, derivativePoint);
-            tk *= t;
+            tk *= t2;
             oneMinusTNMinusK *= invOneMinusT;
           }
           return point;
@@ -3636,10 +4199,10 @@ ${nonManifold.join("\n")}`);
         const newpointsT = [];
         const numsteps = bezierOrder + 1;
         for (let i = 0; i < numsteps; ++i) {
-          const t = i / (numsteps - 1);
-          const point = getPointForT(t);
+          const t2 = i / (numsteps - 1);
+          const point = getPointForT(t2);
           newpoints.push(point);
-          newpointsT.push(t);
+          newpointsT.push(t2);
         }
         let subdivideBase = 1;
         const maxangle = Math.PI * 2 / segments;
@@ -3679,14 +4242,14 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       var vec2 = require_vec2();
       var toPoints = require_toPoints4();
-      var equals = (a, b) => {
-        if (a.isClosed !== b.isClosed) {
+      var equals = (a2, b) => {
+        if (a2.isClosed !== b.isClosed) {
           return false;
         }
-        if (a.points.length !== b.points.length) {
+        if (a2.points.length !== b.points.length) {
           return false;
         }
-        const apoints = toPoints(a);
+        const apoints = toPoints(a2);
         const bpoints = toPoints(b);
         const length = apoints.length;
         let offset = 0;
@@ -3701,7 +4264,7 @@ ${nonManifold.join("\n")}`);
           if (unequal === false) {
             return true;
           }
-          if (!a.isClosed) {
+          if (!a2.isClosed) {
             return false;
           }
         } while (++offset < length);
@@ -3714,13 +4277,13 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/geometries/path2/fromCompactBinary.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_mat4();
+      var mat4 = require_mat4();
       var vec2 = require_vec2();
       var create = require_create8();
       var fromCompactBinary = data => {
         if (data[0] !== 2) throw new Error("invalid compact binary data");
         const created = create();
-        created.transforms = mat42.clone(data.slice(1, 17));
+        created.transforms = mat4.clone(data.slice(1, 17));
         created.isClosed = !!data[17];
         for (let i = 22; i < data.length; i += 2) {
           const point = vec2.fromValues(data[i], data[i + 1]);
@@ -3829,9 +4392,9 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/modeling/src/geometries/path2/transform.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_mat4();
+      var mat4 = require_mat4();
       var transform = (matrix, geometry) => {
-        const transforms = mat42.multiply(mat42.create(), matrix, geometry.transforms);
+        const transforms = mat4.multiply(mat4.create(), matrix, geometry.transforms);
         return Object.assign({}, geometry, {
           transforms
         });
@@ -3901,7 +4464,7 @@ ${nonManifold.join("\n")}`);
       var vec2 = require_vec2();
       var vec32 = require_vec3();
       var geom2 = require_geom2();
-      var geom32 = require_geom3();
+      var geom3 = require_geom3();
       var path2 = require_path2();
       var poly3 = require_poly3();
       var cache = new WeakMap();
@@ -3950,7 +4513,7 @@ ${nonManifold.join("\n")}`);
       var measureBoundingBoxOfGeom3 = geometry => {
         let boundingBox = cache.get(geometry);
         if (boundingBox) return boundingBox;
-        const polygons = geom32.toPolygons(geometry);
+        const polygons = geom3.toPolygons(geometry);
         let minpoint = vec32.create();
         if (polygons.length > 0) {
           const points = poly3.toPoints(polygons[0]);
@@ -3975,377 +4538,12 @@ ${nonManifold.join("\n")}`);
         const results = geometries.map(geometry => {
           if (path2.isA(geometry)) return measureBoundingBoxOfPath2(geometry);
           if (geom2.isA(geometry)) return measureBoundingBoxOfGeom2(geometry);
-          if (geom32.isA(geometry)) return measureBoundingBoxOfGeom3(geometry);
+          if (geom3.isA(geometry)) return measureBoundingBoxOfGeom3(geometry);
           return [[0, 0, 0], [0, 0, 0]];
         });
         return results.length === 1 ? results[0] : results;
       };
       module.exports = measureBoundingBox2;
-    }
-  });
-  var require_measureAggregateBoundingBox = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/measurements/measureAggregateBoundingBox.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var vec3min = require_min();
-      var vec3max = require_max();
-      var measureBoundingBox2 = require_measureBoundingBox2();
-      var measureAggregateBoundingBox = (...geometries) => {
-        geometries = flatten(geometries);
-        if (geometries.length === 0) throw new Error("measureAggregateBoundingBox: no geometries supplied");
-        const bounds = measureBoundingBox2(geometries);
-        if (geometries.length === 1) {
-          return bounds;
-        }
-        const result = [[Number.MAX_VALUE, Number.MAX_VALUE, Number.MAX_VALUE], [-Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE]];
-        return bounds.reduce((result2, item) => {
-          result2 = [vec3min(result2[0], result2[0], item[0]), vec3max(result2[1], result2[1], item[1])];
-          return result2;
-        }, result);
-      };
-      module.exports = measureAggregateBoundingBox;
-    }
-  });
-  var require_translate2 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/translate.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var mat42 = require_mat4();
-      var geom2 = require_geom2();
-      var geom32 = require_geom3();
-      var path2 = require_path2();
-      var translate = (offset, ...objects) => {
-        if (!Array.isArray(offset)) throw new Error("offset must be an array");
-        objects = flatten(objects);
-        if (objects.length === 0) throw new Error("wrong number of arguments");
-        offset = offset.slice();
-        while (offset.length < 3) offset.push(0);
-        const matrix = mat42.fromTranslation(mat42.create(), offset);
-        const results = objects.map(object => {
-          if (path2.isA(object)) return path2.transform(matrix, object);
-          if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom32.isA(object)) return geom32.transform(matrix, object);
-          return object;
-        });
-        return results.length === 1 ? results[0] : results;
-      };
-      var translateX = (offset, ...objects) => translate([offset, 0, 0], objects);
-      var translateY = (offset, ...objects) => translate([0, offset, 0], objects);
-      var translateZ = (offset, ...objects) => translate([0, 0, offset], objects);
-      module.exports = {
-        translate,
-        translateX,
-        translateY,
-        translateZ
-      };
-    }
-  });
-  var require_align = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/align.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var padArrayToLength = require_padArrayToLength();
-      var measureAggregateBoundingBox = require_measureAggregateBoundingBox();
-      var {translate} = require_translate2();
-      var validateOptions = options => {
-        if (!Array.isArray(options.modes) || options.modes.length > 3) throw new Error("align(): modes must be an array of length <= 3");
-        options.modes = padArrayToLength(options.modes, "none", 3);
-        if (options.modes.filter(mode => ["center", "max", "min", "none"].includes(mode)).length !== 3) throw new Error('align(): all modes must be one of "center", "max" or "min"');
-        if (!Array.isArray(options.relativeTo) || options.relativeTo.length > 3) throw new Error("align(): relativeTo must be an array of length <= 3");
-        options.relativeTo = padArrayToLength(options.relativeTo, 0, 3);
-        if (options.relativeTo.filter(alignVal => Number.isFinite(alignVal) || alignVal == null).length !== 3) throw new Error("align(): all relativeTo values must be a number, or null.");
-        if (typeof options.grouped !== "boolean") throw new Error("align(): grouped must be a boolean value.");
-        return options;
-      };
-      var populateRelativeToFromBounds = (relativeTo, modes, bounds) => {
-        for (let i = 0; i < 3; i++) {
-          if (relativeTo[i] == null) {
-            if (modes[i] === "center") {
-              relativeTo[i] = (bounds[0][i] + bounds[1][i]) / 2;
-            } else if (modes[i] === "max") {
-              relativeTo[i] = bounds[1][i];
-            } else if (modes[i] === "min") {
-              relativeTo[i] = bounds[0][i];
-            }
-          }
-        }
-        return relativeTo;
-      };
-      var alignGeometries = (geometry, modes, relativeTo) => {
-        const bounds = measureAggregateBoundingBox(geometry);
-        const translation = [0, 0, 0];
-        for (let i = 0; i < 3; i++) {
-          if (modes[i] === "center") {
-            translation[i] = relativeTo[i] - (bounds[0][i] + bounds[1][i]) / 2;
-          } else if (modes[i] === "max") {
-            translation[i] = relativeTo[i] - bounds[1][i];
-          } else if (modes[i] === "min") {
-            translation[i] = relativeTo[i] - bounds[0][i];
-          }
-        }
-        return translate(translation, geometry);
-      };
-      var align = (options, ...geometries) => {
-        const defaults = {
-          modes: ["center", "center", "min"],
-          relativeTo: [0, 0, 0],
-          grouped: false
-        };
-        options = Object.assign({}, defaults, options);
-        options = validateOptions(options);
-        let {modes, relativeTo, grouped} = options;
-        geometries = flatten(geometries);
-        if (geometries.length === 0) throw new Error("align(): No geometries were provided to act upon");
-        if (relativeTo.filter(val => val == null).length) {
-          const bounds = measureAggregateBoundingBox(geometries);
-          relativeTo = populateRelativeToFromBounds(relativeTo, modes, bounds);
-        }
-        if (grouped) {
-          geometries = alignGeometries(geometries, modes, relativeTo);
-        } else {
-          geometries = geometries.map(geometry => alignGeometries(geometry, modes, relativeTo));
-        }
-        return geometries.length === 1 ? geometries[0] : geometries;
-      };
-      module.exports = align;
-    }
-  });
-  var require_center = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/center.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var geom2 = require_geom2();
-      var geom32 = require_geom3();
-      var path2 = require_path2();
-      var measureBoundingBox2 = require_measureBoundingBox2();
-      var {translate} = require_translate2();
-      var centerGeometry = (options, object) => {
-        const defaults = {
-          axes: [true, true, true],
-          relativeTo: [0, 0, 0]
-        };
-        const {axes, relativeTo} = Object.assign({}, defaults, options);
-        const bounds = measureBoundingBox2(object);
-        const offset = [0, 0, 0];
-        if (axes[0]) offset[0] = relativeTo[0] - (bounds[0][0] + (bounds[1][0] - bounds[0][0]) / 2);
-        if (axes[1]) offset[1] = relativeTo[1] - (bounds[0][1] + (bounds[1][1] - bounds[0][1]) / 2);
-        if (axes[2]) offset[2] = relativeTo[2] - (bounds[0][2] + (bounds[1][2] - bounds[0][2]) / 2);
-        return translate(offset, object);
-      };
-      var center = (options, ...objects) => {
-        const defaults = {
-          axes: [true, true, true],
-          relativeTo: [0, 0, 0]
-        };
-        const {axes, relativeTo} = Object.assign({}, defaults, options);
-        objects = flatten(objects);
-        if (objects.length === 0) throw new Error("wrong number of arguments");
-        if (relativeTo.length !== 3) throw new Error("relativeTo must be an array of length 3");
-        options = {
-          axes,
-          relativeTo
-        };
-        const results = objects.map(object => {
-          if (path2.isA(object)) return centerGeometry(options, object);
-          if (geom2.isA(object)) return centerGeometry(options, object);
-          if (geom32.isA(object)) return centerGeometry(options, object);
-          return object;
-        });
-        return results.length === 1 ? results[0] : results;
-      };
-      var centerX = (...objects) => center({
-        axes: [true, false, false]
-      }, objects);
-      var centerY = (...objects) => center({
-        axes: [false, true, false]
-      }, objects);
-      var centerZ = (...objects) => center({
-        axes: [false, false, true]
-      }, objects);
-      module.exports = {
-        center,
-        centerX,
-        centerY,
-        centerZ
-      };
-    }
-  });
-  var require_mirror = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/mirror.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var mat42 = require_mat4();
-      var plane = require_plane();
-      var geom2 = require_geom2();
-      var geom32 = require_geom3();
-      var path2 = require_path2();
-      var mirror = (options, ...objects) => {
-        const defaults = {
-          origin: [0, 0, 0],
-          normal: [0, 0, 1]
-        };
-        const {origin, normal} = Object.assign({}, defaults, options);
-        objects = flatten(objects);
-        if (objects.length === 0) throw new Error("wrong number of arguments");
-        const planeOfMirror = plane.fromNormalAndPoint(plane.create(), normal, origin);
-        if (Number.isNaN(planeOfMirror[0])) {
-          throw new Error("the given origin and normal do not define a proper plane");
-        }
-        const matrix = mat42.mirrorByPlane(mat42.create(), planeOfMirror);
-        const results = objects.map(object => {
-          if (path2.isA(object)) return path2.transform(matrix, object);
-          if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom32.isA(object)) return geom32.transform(matrix, object);
-          return object;
-        });
-        return results.length === 1 ? results[0] : results;
-      };
-      var mirrorX = (...objects) => mirror({
-        normal: [1, 0, 0]
-      }, objects);
-      var mirrorY = (...objects) => mirror({
-        normal: [0, 1, 0]
-      }, objects);
-      var mirrorZ = (...objects) => mirror({
-        normal: [0, 0, 1]
-      }, objects);
-      module.exports = {
-        mirror,
-        mirrorX,
-        mirrorY,
-        mirrorZ
-      };
-    }
-  });
-  var require_rotate3 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/rotate.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var mat42 = require_mat4();
-      var geom2 = require_geom2();
-      var geom32 = require_geom3();
-      var path2 = require_path2();
-      var rotate2 = (angles, ...objects) => {
-        if (!Array.isArray(angles)) throw new Error("angles must be an array");
-        objects = flatten(objects);
-        if (objects.length === 0) throw new Error("wrong number of arguments");
-        angles = angles.slice();
-        while (angles.length < 3) angles.push(0);
-        const yaw = angles[2];
-        const pitch = angles[1];
-        const roll = angles[0];
-        const matrix = mat42.fromTaitBryanRotation(mat42.create(), yaw, pitch, roll);
-        const results = objects.map(object => {
-          if (path2.isA(object)) return path2.transform(matrix, object);
-          if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom32.isA(object)) return geom32.transform(matrix, object);
-          return object;
-        });
-        return results.length === 1 ? results[0] : results;
-      };
-      var rotateX = (angle, ...objects) => rotate2([angle, 0, 0], objects);
-      var rotateY = (angle, ...objects) => rotate2([0, angle, 0], objects);
-      var rotateZ = (angle, ...objects) => rotate2([0, 0, angle], objects);
-      module.exports = {
-        rotate: rotate2,
-        rotateX,
-        rotateY,
-        rotateZ
-      };
-    }
-  });
-  var require_scale4 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/scale.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var mat42 = require_mat4();
-      var geom2 = require_geom2();
-      var geom32 = require_geom3();
-      var path2 = require_path2();
-      var scale = (factors, ...objects) => {
-        if (!Array.isArray(factors)) throw new Error("factors must be an array");
-        objects = flatten(objects);
-        if (objects.length === 0) throw new Error("wrong number of arguments");
-        factors = factors.slice();
-        while (factors.length < 3) factors.push(1);
-        if (factors[0] <= 0 || factors[1] <= 0 || factors[2] <= 0) throw new Error("factors must be positive");
-        const matrix = mat42.fromScaling(mat42.create(), factors);
-        const results = objects.map(object => {
-          if (path2.isA(object)) return path2.transform(matrix, object);
-          if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom32.isA(object)) return geom32.transform(matrix, object);
-          return object;
-        });
-        return results.length === 1 ? results[0] : results;
-      };
-      var scaleX = (factor, ...objects) => scale([factor, 1, 1], objects);
-      var scaleY = (factor, ...objects) => scale([1, factor, 1], objects);
-      var scaleZ = (factor, ...objects) => scale([1, 1, factor], objects);
-      module.exports = {
-        scale,
-        scaleX,
-        scaleY,
-        scaleZ
-      };
-    }
-  });
-  var require_transform9 = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/transform.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      var flatten = require_flatten();
-      var geom2 = require_geom2();
-      var geom32 = require_geom3();
-      var path2 = require_path2();
-      var transform = (matrix, ...objects) => {
-        objects = flatten(objects);
-        if (objects.length === 0) throw new Error("wrong number of arguments");
-        const results = objects.map(object => {
-          if (path2.isA(object)) return path2.transform(matrix, object);
-          if (geom2.isA(object)) return geom2.transform(matrix, object);
-          if (geom32.isA(object)) return geom32.transform(matrix, object);
-          return object;
-        });
-        return results.length === 1 ? results[0] : results;
-      };
-      module.exports = transform;
-    }
-  });
-  var require_transforms = __commonJS({
-    "../../../node_modules/@jscad/modeling/src/operations/transforms/index.js"(exports, module) {
-      "use strict";
-      init_define_process();
-      module.exports = {
-        align: require_align(),
-        center: require_center().center,
-        centerX: require_center().centerX,
-        centerY: require_center().centerY,
-        centerZ: require_center().centerZ,
-        mirror: require_mirror().mirror,
-        mirrorX: require_mirror().mirrorX,
-        mirrorY: require_mirror().mirrorY,
-        mirrorZ: require_mirror().mirrorZ,
-        rotate: require_rotate3().rotate,
-        rotateX: require_rotate3().rotateX,
-        rotateY: require_rotate3().rotateY,
-        rotateZ: require_rotate3().rotateZ,
-        scale: require_scale4().scale,
-        scaleX: require_scale4().scaleX,
-        scaleY: require_scale4().scaleY,
-        scaleZ: require_scale4().scaleZ,
-        transform: require_transform9(),
-        translate: require_translate2().translate,
-        translateX: require_translate2().translateX,
-        translateY: require_translate2().translateY,
-        translateZ: require_translate2().translateZ
-      };
     }
   });
   var require_create9 = __commonJS({
@@ -4380,24 +4578,24 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       module.exports = clone;
-      function clone(a) {
+      function clone(a2) {
         var out = new Float32Array(16);
-        out[0] = a[0];
-        out[1] = a[1];
-        out[2] = a[2];
-        out[3] = a[3];
-        out[4] = a[4];
-        out[5] = a[5];
-        out[6] = a[6];
-        out[7] = a[7];
-        out[8] = a[8];
-        out[9] = a[9];
-        out[10] = a[10];
-        out[11] = a[11];
-        out[12] = a[12];
-        out[13] = a[13];
-        out[14] = a[14];
-        out[15] = a[15];
+        out[0] = a2[0];
+        out[1] = a2[1];
+        out[2] = a2[2];
+        out[3] = a2[3];
+        out[4] = a2[4];
+        out[5] = a2[5];
+        out[6] = a2[6];
+        out[7] = a2[7];
+        out[8] = a2[8];
+        out[9] = a2[9];
+        out[10] = a2[10];
+        out[11] = a2[11];
+        out[12] = a2[12];
+        out[13] = a2[13];
+        out[14] = a2[14];
+        out[15] = a2[15];
         return out;
       }
     }
@@ -4407,23 +4605,23 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       module.exports = copy;
-      function copy(out, a) {
-        out[0] = a[0];
-        out[1] = a[1];
-        out[2] = a[2];
-        out[3] = a[3];
-        out[4] = a[4];
-        out[5] = a[5];
-        out[6] = a[6];
-        out[7] = a[7];
-        out[8] = a[8];
-        out[9] = a[9];
-        out[10] = a[10];
-        out[11] = a[11];
-        out[12] = a[12];
-        out[13] = a[13];
-        out[14] = a[14];
-        out[15] = a[15];
+      function copy(out, a2) {
+        out[0] = a2[0];
+        out[1] = a2[1];
+        out[2] = a2[2];
+        out[3] = a2[3];
+        out[4] = a2[4];
+        out[5] = a2[5];
+        out[6] = a2[6];
+        out[7] = a2[7];
+        out[8] = a2[8];
+        out[9] = a2[9];
+        out[10] = a2[10];
+        out[11] = a2[11];
+        out[12] = a2[12];
+        out[13] = a2[13];
+        out[14] = a2[14];
+        out[15] = a2[15];
         return out;
       }
     }
@@ -4459,38 +4657,38 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       module.exports = transpose;
-      function transpose(out, a) {
-        if (out === a) {
-          var a01 = a[1], a02 = a[2], a03 = a[3], a12 = a[6], a13 = a[7], a23 = a[11];
-          out[1] = a[4];
-          out[2] = a[8];
-          out[3] = a[12];
+      function transpose(out, a2) {
+        if (out === a2) {
+          var a01 = a2[1], a02 = a2[2], a03 = a2[3], a12 = a2[6], a13 = a2[7], a23 = a2[11];
+          out[1] = a2[4];
+          out[2] = a2[8];
+          out[3] = a2[12];
           out[4] = a01;
-          out[6] = a[9];
-          out[7] = a[13];
+          out[6] = a2[9];
+          out[7] = a2[13];
           out[8] = a02;
           out[9] = a12;
-          out[11] = a[14];
+          out[11] = a2[14];
           out[12] = a03;
           out[13] = a13;
           out[14] = a23;
         } else {
-          out[0] = a[0];
-          out[1] = a[4];
-          out[2] = a[8];
-          out[3] = a[12];
-          out[4] = a[1];
-          out[5] = a[5];
-          out[6] = a[9];
-          out[7] = a[13];
-          out[8] = a[2];
-          out[9] = a[6];
-          out[10] = a[10];
-          out[11] = a[14];
-          out[12] = a[3];
-          out[13] = a[7];
-          out[14] = a[11];
-          out[15] = a[15];
+          out[0] = a2[0];
+          out[1] = a2[4];
+          out[2] = a2[8];
+          out[3] = a2[12];
+          out[4] = a2[1];
+          out[5] = a2[5];
+          out[6] = a2[9];
+          out[7] = a2[13];
+          out[8] = a2[2];
+          out[9] = a2[6];
+          out[10] = a2[10];
+          out[11] = a2[14];
+          out[12] = a2[3];
+          out[13] = a2[7];
+          out[14] = a2[11];
+          out[15] = a2[15];
         }
         return out;
       }
@@ -4501,8 +4699,8 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       module.exports = invert;
-      function invert(out, a) {
-        var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3], a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7], a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11], a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15], b00 = a00 * a11 - a01 * a10, b01 = a00 * a12 - a02 * a10, b02 = a00 * a13 - a03 * a10, b03 = a01 * a12 - a02 * a11, b04 = a01 * a13 - a03 * a11, b05 = a02 * a13 - a03 * a12, b06 = a20 * a31 - a21 * a30, b07 = a20 * a32 - a22 * a30, b08 = a20 * a33 - a23 * a30, b09 = a21 * a32 - a22 * a31, b10 = a21 * a33 - a23 * a31, b11 = a22 * a33 - a23 * a32, det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+      function invert(out, a2) {
+        var a00 = a2[0], a01 = a2[1], a02 = a2[2], a03 = a2[3], a10 = a2[4], a11 = a2[5], a12 = a2[6], a13 = a2[7], a20 = a2[8], a21 = a2[9], a22 = a2[10], a23 = a2[11], a30 = a2[12], a31 = a2[13], a32 = a2[14], a33 = a2[15], b00 = a00 * a11 - a01 * a10, b01 = a00 * a12 - a02 * a10, b02 = a00 * a13 - a03 * a10, b03 = a01 * a12 - a02 * a11, b04 = a01 * a13 - a03 * a11, b05 = a02 * a13 - a03 * a12, b06 = a20 * a31 - a21 * a30, b07 = a20 * a32 - a22 * a30, b08 = a20 * a33 - a23 * a30, b09 = a21 * a32 - a22 * a31, b10 = a21 * a33 - a23 * a31, b11 = a22 * a33 - a23 * a32, det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
         if (!det) {
           return null;
         }
@@ -4532,8 +4730,8 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       module.exports = adjoint;
-      function adjoint(out, a) {
-        var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3], a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7], a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11], a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+      function adjoint(out, a2) {
+        var a00 = a2[0], a01 = a2[1], a02 = a2[2], a03 = a2[3], a10 = a2[4], a11 = a2[5], a12 = a2[6], a13 = a2[7], a20 = a2[8], a21 = a2[9], a22 = a2[10], a23 = a2[11], a30 = a2[12], a31 = a2[13], a32 = a2[14], a33 = a2[15];
         out[0] = a11 * (a22 * a33 - a23 * a32) - a21 * (a12 * a33 - a13 * a32) + a31 * (a12 * a23 - a13 * a22);
         out[1] = -(a01 * (a22 * a33 - a23 * a32) - a21 * (a02 * a33 - a03 * a32) + a31 * (a02 * a23 - a03 * a22));
         out[2] = a01 * (a12 * a33 - a13 * a32) - a11 * (a02 * a33 - a03 * a32) + a31 * (a02 * a13 - a03 * a12);
@@ -4559,8 +4757,8 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       module.exports = determinant;
-      function determinant(a) {
-        var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3], a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7], a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11], a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15], b00 = a00 * a11 - a01 * a10, b01 = a00 * a12 - a02 * a10, b02 = a00 * a13 - a03 * a10, b03 = a01 * a12 - a02 * a11, b04 = a01 * a13 - a03 * a11, b05 = a02 * a13 - a03 * a12, b06 = a20 * a31 - a21 * a30, b07 = a20 * a32 - a22 * a30, b08 = a20 * a33 - a23 * a30, b09 = a21 * a32 - a22 * a31, b10 = a21 * a33 - a23 * a31, b11 = a22 * a33 - a23 * a32;
+      function determinant(a2) {
+        var a00 = a2[0], a01 = a2[1], a02 = a2[2], a03 = a2[3], a10 = a2[4], a11 = a2[5], a12 = a2[6], a13 = a2[7], a20 = a2[8], a21 = a2[9], a22 = a2[10], a23 = a2[11], a30 = a2[12], a31 = a2[13], a32 = a2[14], a33 = a2[15], b00 = a00 * a11 - a01 * a10, b01 = a00 * a12 - a02 * a10, b02 = a00 * a13 - a03 * a10, b03 = a01 * a12 - a02 * a11, b04 = a01 * a13 - a03 * a11, b05 = a02 * a13 - a03 * a12, b06 = a20 * a31 - a21 * a30, b07 = a20 * a32 - a22 * a30, b08 = a20 * a33 - a23 * a30, b09 = a21 * a32 - a22 * a31, b10 = a21 * a33 - a23 * a31, b11 = a22 * a33 - a23 * a32;
         return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
       }
     }
@@ -4570,8 +4768,8 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       module.exports = multiply;
-      function multiply(out, a, b) {
-        var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3], a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7], a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11], a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
+      function multiply(out, a2, b) {
+        var a00 = a2[0], a01 = a2[1], a02 = a2[2], a03 = a2[3], a10 = a2[4], a11 = a2[5], a12 = a2[6], a13 = a2[7], a20 = a2[8], a21 = a2[9], a22 = a2[10], a23 = a2[11], a30 = a2[12], a31 = a2[13], a32 = a2[14], a33 = a2[15];
         var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
         out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
         out[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
@@ -4605,31 +4803,31 @@ ${nonManifold.join("\n")}`);
       }
     }
   });
-  var require_translate3 = __commonJS({
+  var require_translate2 = __commonJS({
     "../../../node_modules/gl-mat4/translate.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = translate;
-      function translate(out, a, v) {
+      function translate(out, a2, v) {
         var x = v[0], y = v[1], z = v[2], a00, a01, a02, a03, a10, a11, a12, a13, a20, a21, a22, a23;
-        if (a === out) {
-          out[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
-          out[13] = a[1] * x + a[5] * y + a[9] * z + a[13];
-          out[14] = a[2] * x + a[6] * y + a[10] * z + a[14];
-          out[15] = a[3] * x + a[7] * y + a[11] * z + a[15];
+        if (a2 === out) {
+          out[12] = a2[0] * x + a2[4] * y + a2[8] * z + a2[12];
+          out[13] = a2[1] * x + a2[5] * y + a2[9] * z + a2[13];
+          out[14] = a2[2] * x + a2[6] * y + a2[10] * z + a2[14];
+          out[15] = a2[3] * x + a2[7] * y + a2[11] * z + a2[15];
         } else {
-          a00 = a[0];
-          a01 = a[1];
-          a02 = a[2];
-          a03 = a[3];
-          a10 = a[4];
-          a11 = a[5];
-          a12 = a[6];
-          a13 = a[7];
-          a20 = a[8];
-          a21 = a[9];
-          a22 = a[10];
-          a23 = a[11];
+          a00 = a2[0];
+          a01 = a2[1];
+          a02 = a2[2];
+          a03 = a2[3];
+          a10 = a2[4];
+          a11 = a2[5];
+          a12 = a2[6];
+          a13 = a2[7];
+          a20 = a2[8];
+          a21 = a2[9];
+          a22 = a2[10];
+          a23 = a2[11];
           out[0] = a00;
           out[1] = a01;
           out[2] = a02;
@@ -4642,49 +4840,49 @@ ${nonManifold.join("\n")}`);
           out[9] = a21;
           out[10] = a22;
           out[11] = a23;
-          out[12] = a00 * x + a10 * y + a20 * z + a[12];
-          out[13] = a01 * x + a11 * y + a21 * z + a[13];
-          out[14] = a02 * x + a12 * y + a22 * z + a[14];
-          out[15] = a03 * x + a13 * y + a23 * z + a[15];
+          out[12] = a00 * x + a10 * y + a20 * z + a2[12];
+          out[13] = a01 * x + a11 * y + a21 * z + a2[13];
+          out[14] = a02 * x + a12 * y + a22 * z + a2[14];
+          out[15] = a03 * x + a13 * y + a23 * z + a2[15];
         }
         return out;
       }
     }
   });
-  var require_scale5 = __commonJS({
+  var require_scale4 = __commonJS({
     "../../../node_modules/gl-mat4/scale.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = scale;
-      function scale(out, a, v) {
+      function scale(out, a2, v) {
         var x = v[0], y = v[1], z = v[2];
-        out[0] = a[0] * x;
-        out[1] = a[1] * x;
-        out[2] = a[2] * x;
-        out[3] = a[3] * x;
-        out[4] = a[4] * y;
-        out[5] = a[5] * y;
-        out[6] = a[6] * y;
-        out[7] = a[7] * y;
-        out[8] = a[8] * z;
-        out[9] = a[9] * z;
-        out[10] = a[10] * z;
-        out[11] = a[11] * z;
-        out[12] = a[12];
-        out[13] = a[13];
-        out[14] = a[14];
-        out[15] = a[15];
+        out[0] = a2[0] * x;
+        out[1] = a2[1] * x;
+        out[2] = a2[2] * x;
+        out[3] = a2[3] * x;
+        out[4] = a2[4] * y;
+        out[5] = a2[5] * y;
+        out[6] = a2[6] * y;
+        out[7] = a2[7] * y;
+        out[8] = a2[8] * z;
+        out[9] = a2[9] * z;
+        out[10] = a2[10] * z;
+        out[11] = a2[11] * z;
+        out[12] = a2[12];
+        out[13] = a2[13];
+        out[14] = a2[14];
+        out[15] = a2[15];
         return out;
       }
     }
   });
-  var require_rotate4 = __commonJS({
+  var require_rotate3 = __commonJS({
     "../../../node_modules/gl-mat4/rotate.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = rotate2;
-      function rotate2(out, a, rad, axis) {
-        var x = axis[0], y = axis[1], z = axis[2], len = Math.sqrt(x * x + y * y + z * z), s, c, t, a00, a01, a02, a03, a10, a11, a12, a13, a20, a21, a22, a23, b00, b01, b02, b10, b11, b12, b20, b21, b22;
+      function rotate2(out, a2, rad, axis) {
+        var x = axis[0], y = axis[1], z = axis[2], len = Math.sqrt(x * x + y * y + z * z), s4, c, t2, a00, a01, a02, a03, a10, a11, a12, a13, a20, a21, a22, a23, b00, b01, b02, b10, b11, b12, b20, b21, b22;
         if (Math.abs(len) < 1e-6) {
           return null;
         }
@@ -4692,30 +4890,30 @@ ${nonManifold.join("\n")}`);
         x *= len;
         y *= len;
         z *= len;
-        s = Math.sin(rad);
+        s4 = Math.sin(rad);
         c = Math.cos(rad);
-        t = 1 - c;
-        a00 = a[0];
-        a01 = a[1];
-        a02 = a[2];
-        a03 = a[3];
-        a10 = a[4];
-        a11 = a[5];
-        a12 = a[6];
-        a13 = a[7];
-        a20 = a[8];
-        a21 = a[9];
-        a22 = a[10];
-        a23 = a[11];
-        b00 = x * x * t + c;
-        b01 = y * x * t + z * s;
-        b02 = z * x * t - y * s;
-        b10 = x * y * t - z * s;
-        b11 = y * y * t + c;
-        b12 = z * y * t + x * s;
-        b20 = x * z * t + y * s;
-        b21 = y * z * t - x * s;
-        b22 = z * z * t + c;
+        t2 = 1 - c;
+        a00 = a2[0];
+        a01 = a2[1];
+        a02 = a2[2];
+        a03 = a2[3];
+        a10 = a2[4];
+        a11 = a2[5];
+        a12 = a2[6];
+        a13 = a2[7];
+        a20 = a2[8];
+        a21 = a2[9];
+        a22 = a2[10];
+        a23 = a2[11];
+        b00 = x * x * t2 + c;
+        b01 = y * x * t2 + z * s4;
+        b02 = z * x * t2 - y * s4;
+        b10 = x * y * t2 - z * s4;
+        b11 = y * y * t2 + c;
+        b12 = z * y * t2 + x * s4;
+        b20 = x * z * t2 + y * s4;
+        b21 = y * z * t2 - x * s4;
+        b22 = z * z * t2 + c;
         out[0] = a00 * b00 + a10 * b01 + a20 * b02;
         out[1] = a01 * b00 + a11 * b01 + a21 * b02;
         out[2] = a02 * b00 + a12 * b01 + a22 * b02;
@@ -4728,11 +4926,11 @@ ${nonManifold.join("\n")}`);
         out[9] = a01 * b20 + a11 * b21 + a21 * b22;
         out[10] = a02 * b20 + a12 * b21 + a22 * b22;
         out[11] = a03 * b20 + a13 * b21 + a23 * b22;
-        if (a !== out) {
-          out[12] = a[12];
-          out[13] = a[13];
-          out[14] = a[14];
-          out[15] = a[15];
+        if (a2 !== out) {
+          out[12] = a2[12];
+          out[13] = a2[13];
+          out[14] = a2[14];
+          out[15] = a2[15];
         }
         return out;
       }
@@ -4743,26 +4941,26 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       module.exports = rotateX;
-      function rotateX(out, a, rad) {
-        var s = Math.sin(rad), c = Math.cos(rad), a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7], a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
-        if (a !== out) {
-          out[0] = a[0];
-          out[1] = a[1];
-          out[2] = a[2];
-          out[3] = a[3];
-          out[12] = a[12];
-          out[13] = a[13];
-          out[14] = a[14];
-          out[15] = a[15];
+      function rotateX(out, a2, rad) {
+        var s4 = Math.sin(rad), c = Math.cos(rad), a10 = a2[4], a11 = a2[5], a12 = a2[6], a13 = a2[7], a20 = a2[8], a21 = a2[9], a22 = a2[10], a23 = a2[11];
+        if (a2 !== out) {
+          out[0] = a2[0];
+          out[1] = a2[1];
+          out[2] = a2[2];
+          out[3] = a2[3];
+          out[12] = a2[12];
+          out[13] = a2[13];
+          out[14] = a2[14];
+          out[15] = a2[15];
         }
-        out[4] = a10 * c + a20 * s;
-        out[5] = a11 * c + a21 * s;
-        out[6] = a12 * c + a22 * s;
-        out[7] = a13 * c + a23 * s;
-        out[8] = a20 * c - a10 * s;
-        out[9] = a21 * c - a11 * s;
-        out[10] = a22 * c - a12 * s;
-        out[11] = a23 * c - a13 * s;
+        out[4] = a10 * c + a20 * s4;
+        out[5] = a11 * c + a21 * s4;
+        out[6] = a12 * c + a22 * s4;
+        out[7] = a13 * c + a23 * s4;
+        out[8] = a20 * c - a10 * s4;
+        out[9] = a21 * c - a11 * s4;
+        out[10] = a22 * c - a12 * s4;
+        out[11] = a23 * c - a13 * s4;
         return out;
       }
     }
@@ -4772,26 +4970,26 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       module.exports = rotateY;
-      function rotateY(out, a, rad) {
-        var s = Math.sin(rad), c = Math.cos(rad), a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3], a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
-        if (a !== out) {
-          out[4] = a[4];
-          out[5] = a[5];
-          out[6] = a[6];
-          out[7] = a[7];
-          out[12] = a[12];
-          out[13] = a[13];
-          out[14] = a[14];
-          out[15] = a[15];
+      function rotateY(out, a2, rad) {
+        var s4 = Math.sin(rad), c = Math.cos(rad), a00 = a2[0], a01 = a2[1], a02 = a2[2], a03 = a2[3], a20 = a2[8], a21 = a2[9], a22 = a2[10], a23 = a2[11];
+        if (a2 !== out) {
+          out[4] = a2[4];
+          out[5] = a2[5];
+          out[6] = a2[6];
+          out[7] = a2[7];
+          out[12] = a2[12];
+          out[13] = a2[13];
+          out[14] = a2[14];
+          out[15] = a2[15];
         }
-        out[0] = a00 * c - a20 * s;
-        out[1] = a01 * c - a21 * s;
-        out[2] = a02 * c - a22 * s;
-        out[3] = a03 * c - a23 * s;
-        out[8] = a00 * s + a20 * c;
-        out[9] = a01 * s + a21 * c;
-        out[10] = a02 * s + a22 * c;
-        out[11] = a03 * s + a23 * c;
+        out[0] = a00 * c - a20 * s4;
+        out[1] = a01 * c - a21 * s4;
+        out[2] = a02 * c - a22 * s4;
+        out[3] = a03 * c - a23 * s4;
+        out[8] = a00 * s4 + a20 * c;
+        out[9] = a01 * s4 + a21 * c;
+        out[10] = a02 * s4 + a22 * c;
+        out[11] = a03 * s4 + a23 * c;
         return out;
       }
     }
@@ -4801,26 +4999,26 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       module.exports = rotateZ;
-      function rotateZ(out, a, rad) {
-        var s = Math.sin(rad), c = Math.cos(rad), a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3], a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
-        if (a !== out) {
-          out[8] = a[8];
-          out[9] = a[9];
-          out[10] = a[10];
-          out[11] = a[11];
-          out[12] = a[12];
-          out[13] = a[13];
-          out[14] = a[14];
-          out[15] = a[15];
+      function rotateZ(out, a2, rad) {
+        var s4 = Math.sin(rad), c = Math.cos(rad), a00 = a2[0], a01 = a2[1], a02 = a2[2], a03 = a2[3], a10 = a2[4], a11 = a2[5], a12 = a2[6], a13 = a2[7];
+        if (a2 !== out) {
+          out[8] = a2[8];
+          out[9] = a2[9];
+          out[10] = a2[10];
+          out[11] = a2[11];
+          out[12] = a2[12];
+          out[13] = a2[13];
+          out[14] = a2[14];
+          out[15] = a2[15];
         }
-        out[0] = a00 * c + a10 * s;
-        out[1] = a01 * c + a11 * s;
-        out[2] = a02 * c + a12 * s;
-        out[3] = a03 * c + a13 * s;
-        out[4] = a10 * c - a00 * s;
-        out[5] = a11 * c - a01 * s;
-        out[6] = a12 * c - a02 * s;
-        out[7] = a13 * c - a03 * s;
+        out[0] = a00 * c + a10 * s4;
+        out[1] = a01 * c + a11 * s4;
+        out[2] = a02 * c + a12 * s4;
+        out[3] = a03 * c + a13 * s4;
+        out[4] = a10 * c - a00 * s4;
+        out[5] = a11 * c - a01 * s4;
+        out[6] = a12 * c - a02 * s4;
+        out[7] = a13 * c - a03 * s4;
         return out;
       }
     }
@@ -4831,7 +5029,7 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       module.exports = fromRotation;
       function fromRotation(out, rad, axis) {
-        var s, c, t;
+        var s4, c, t2;
         var x = axis[0];
         var y = axis[1];
         var z = axis[2];
@@ -4843,20 +5041,20 @@ ${nonManifold.join("\n")}`);
         x *= len;
         y *= len;
         z *= len;
-        s = Math.sin(rad);
+        s4 = Math.sin(rad);
         c = Math.cos(rad);
-        t = 1 - c;
-        out[0] = x * x * t + c;
-        out[1] = y * x * t + z * s;
-        out[2] = z * x * t - y * s;
+        t2 = 1 - c;
+        out[0] = x * x * t2 + c;
+        out[1] = y * x * t2 + z * s4;
+        out[2] = z * x * t2 - y * s4;
         out[3] = 0;
-        out[4] = x * y * t - z * s;
-        out[5] = y * y * t + c;
-        out[6] = z * y * t + x * s;
+        out[4] = x * y * t2 - z * s4;
+        out[5] = y * y * t2 + c;
+        out[6] = z * y * t2 + x * s4;
         out[7] = 0;
-        out[8] = x * z * t + y * s;
-        out[9] = y * z * t - x * s;
-        out[10] = z * z * t + c;
+        out[8] = x * z * t2 + y * s4;
+        out[9] = y * z * t2 - x * s4;
+        out[10] = z * z * t2 + c;
         out[11] = 0;
         out[12] = 0;
         out[13] = 0;
@@ -4951,17 +5149,17 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       module.exports = fromXRotation;
       function fromXRotation(out, rad) {
-        var s = Math.sin(rad), c = Math.cos(rad);
+        var s4 = Math.sin(rad), c = Math.cos(rad);
         out[0] = 1;
         out[1] = 0;
         out[2] = 0;
         out[3] = 0;
         out[4] = 0;
         out[5] = c;
-        out[6] = s;
+        out[6] = s4;
         out[7] = 0;
         out[8] = 0;
-        out[9] = -s;
+        out[9] = -s4;
         out[10] = c;
         out[11] = 0;
         out[12] = 0;
@@ -4978,16 +5176,16 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       module.exports = fromYRotation;
       function fromYRotation(out, rad) {
-        var s = Math.sin(rad), c = Math.cos(rad);
+        var s4 = Math.sin(rad), c = Math.cos(rad);
         out[0] = c;
         out[1] = 0;
-        out[2] = -s;
+        out[2] = -s4;
         out[3] = 0;
         out[4] = 0;
         out[5] = 1;
         out[6] = 0;
         out[7] = 0;
-        out[8] = s;
+        out[8] = s4;
         out[9] = 0;
         out[10] = c;
         out[11] = 0;
@@ -5005,12 +5203,12 @@ ${nonManifold.join("\n")}`);
       init_define_process();
       module.exports = fromZRotation;
       function fromZRotation(out, rad) {
-        var s = Math.sin(rad), c = Math.cos(rad);
+        var s4 = Math.sin(rad), c = Math.cos(rad);
         out[0] = c;
-        out[1] = s;
+        out[1] = s4;
         out[2] = 0;
         out[3] = 0;
-        out[4] = -s;
+        out[4] = -s4;
         out[5] = c;
         out[6] = 0;
         out[7] = 0;
@@ -5232,8 +5430,8 @@ ${nonManifold.join("\n")}`);
       "use strict";
       init_define_process();
       module.exports = str;
-      function str(a) {
-        return "mat4(" + a[0] + ", " + a[1] + ", " + a[2] + ", " + a[3] + ", " + a[4] + ", " + a[5] + ", " + a[6] + ", " + a[7] + ", " + a[8] + ", " + a[9] + ", " + a[10] + ", " + a[11] + ", " + a[12] + ", " + a[13] + ", " + a[14] + ", " + a[15] + ")";
+      function str(a2) {
+        return "mat4(" + a2[0] + ", " + a2[1] + ", " + a2[2] + ", " + a2[3] + ", " + a2[4] + ", " + a2[5] + ", " + a2[6] + ", " + a2[7] + ", " + a2[8] + ", " + a2[9] + ", " + a2[10] + ", " + a2[11] + ", " + a2[12] + ", " + a2[13] + ", " + a2[14] + ", " + a2[15] + ")";
       }
     }
   });
@@ -5251,9 +5449,9 @@ ${nonManifold.join("\n")}`);
         adjoint: require_adjoint(),
         determinant: require_determinant(),
         multiply: require_multiply4(),
-        translate: require_translate3(),
-        scale: require_scale5(),
-        rotate: require_rotate4(),
+        translate: require_translate2(),
+        scale: require_scale4(),
+        rotate: require_rotate3(),
         rotateX: require_rotateX3(),
         rotateY: require_rotateY3(),
         rotateZ: require_rotateZ3(),
@@ -5278,7 +5476,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/regl-renderer/src/rendering/renderContext.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_gl_mat4();
+      var mat4 = require_gl_mat4();
       var renderWrapper = (regl, params = {}) => {
         const {fbo} = params;
         const commandParams = {
@@ -5294,11 +5492,11 @@ ${nonManifold.join("\n")}`);
             projection: (context, props) => props.camera.projection,
             camNear: (context, props) => props.camera.near,
             camFar: (context, props) => props.camera.far,
-            invertedView: (context, props) => mat42.invert([], props.camera.view),
+            invertedView: (context, props) => mat4.invert([], props.camera.view),
             lightPosition: (context, props) => props && props.rendering && props.rendering.lightPosition ? props.rendering.lightPosition : [100, 200, 100],
             lightDirection: (context, props) => props && props.rendering && props.rendering.lightDirection ? props.rendering.lightDirection : context.lightDirection || [0, 0, 0],
-            lightView: context => mat42.lookAt([], context.lightDirection, [0, 0, 0], [0, 0, 1]),
-            lightProjection: mat42.ortho([], -25, -25, -20, 20, -25, 25),
+            lightView: context => mat4.lookAt([], context.lightDirection, [0, 0, 0], [0, 0, 1]),
+            lightProjection: mat4.ortho([], -25, -25, -20, 20, -25, 25),
             lightColor: (context, props) => props && props.rendering && props.rendering.lightColor ? props.rendering.lightColor : [1, 0.8, 0],
             ambientLightAmount: (context, props) => props && props.rendering && props.rendering.ambientLightAmount ? props.rendering.ambientLightAmount : 0.3,
             diffuseLightAmount: (context, props) => props && props.rendering && props.rendering.diffuseLightAmount ? props && props.rendering && props.rendering.diffuseLightAmount : 0.89,
@@ -5336,8 +5534,8 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/regl/dist/regl.js"(exports, module) {
       "use strict";
       init_define_process();
-      (function (global, factory) {
-        typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : global.createREGL = factory();
+      (function (global2, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? module.exports = factory() : typeof define === "function" && define.amd ? define(factory) : global2.createREGL = factory();
       })(exports, function () {
         "use strict";
         var isTypedArray = function (x) {
@@ -5424,9 +5622,9 @@ ${nonManifold.join("\n")}`);
             }
           });
         }
-        function leftPad(str, n) {
+        function leftPad(str, n3) {
           str = str + "";
-          while (str.length < n) {
+          while (str.length < n3) {
             str = " " + str;
           }
           return str;
@@ -5715,18 +5913,18 @@ ${nonManifold.join("\n")}`);
         function checkTexture2D(info, mipData, limits) {
           var i;
           var w = mipData.width;
-          var h = mipData.height;
+          var h2 = mipData.height;
           var c = mipData.channels;
-          check(w > 0 && w <= limits.maxTextureSize && h > 0 && h <= limits.maxTextureSize, "invalid texture shape");
+          check(w > 0 && w <= limits.maxTextureSize && h2 > 0 && h2 <= limits.maxTextureSize, "invalid texture shape");
           if (info.wrapS !== GL_CLAMP_TO_EDGE || info.wrapT !== GL_CLAMP_TO_EDGE) {
-            check(isPow2(w) && isPow2(h), "incompatible wrap mode for texture, both width and height must be power of 2");
+            check(isPow2(w) && isPow2(h2), "incompatible wrap mode for texture, both width and height must be power of 2");
           }
           if (mipData.mipmask === 1) {
-            if (w !== 1 && h !== 1) {
+            if (w !== 1 && h2 !== 1) {
               check(info.minFilter !== GL_NEAREST_MIPMAP_NEAREST && info.minFilter !== GL_NEAREST_MIPMAP_LINEAR && info.minFilter !== GL_LINEAR_MIPMAP_NEAREST && info.minFilter !== GL_LINEAR_MIPMAP_LINEAR, "min filter requires mipmap");
             }
           } else {
-            check(isPow2(w) && isPow2(h), "texture must be a square power of 2 to support mipmapping");
+            check(isPow2(w) && isPow2(h2), "texture must be a square power of 2 to support mipmapping");
             check(mipData.mipmask === (w << 1) - 1, "missing or incomplete mipmap data");
           }
           if (mipData.type === GL_FLOAT) {
@@ -5739,7 +5937,7 @@ ${nonManifold.join("\n")}`);
           for (i = 0; i < 16; ++i) {
             if (mipimages[i]) {
               var mw = w >> i;
-              var mh = h >> i;
+              var mh = h2 >> i;
               check(mipData.mipmask & 1 << i, "missing mipmap data");
               var img = mipimages[i];
               check(img.width === mw && img.height === mh, "invalid shape for mip images");
@@ -5758,14 +5956,14 @@ ${nonManifold.join("\n")}`);
         }
         function checkTextureCube(texture, info, faces, limits) {
           var w = texture.width;
-          var h = texture.height;
+          var h2 = texture.height;
           var c = texture.channels;
-          check(w > 0 && w <= limits.maxTextureSize && h > 0 && h <= limits.maxTextureSize, "invalid texture shape");
-          check(w === h, "cube map must be square");
+          check(w > 0 && w <= limits.maxTextureSize && h2 > 0 && h2 <= limits.maxTextureSize, "invalid texture shape");
+          check(w === h2, "cube map must be square");
           check(info.wrapS === GL_CLAMP_TO_EDGE && info.wrapT === GL_CLAMP_TO_EDGE, "wrap mode not supported by cube map");
           for (var i = 0; i < faces.length; ++i) {
             var face = faces[i];
-            check(face.width === w && face.height === h, "inconsistent cube map face shape");
+            check(face.width === w && face.height === h2, "inconsistent cube map face shape");
             if (info.genMipmaps) {
               check(!face.compressed, "can not generate mipmap for compressed textures");
               check(face.mipmask === 1, "can not specify mipmaps and generate mipmaps");
@@ -5775,7 +5973,7 @@ ${nonManifold.join("\n")}`);
               var img = mipmaps[j];
               if (img) {
                 var mw = w >> j;
-                var mh = h >> j;
+                var mh = h2 >> j;
                 check(face.mipmask & 1 << j, "missing mipmap data");
                 check(img.width === mw && img.height === mh, "invalid shape for mip images");
                 check(img.format === texture.format && img.internalformat === texture.internalformat && img.type === texture.type, "incompatible type for mip image");
@@ -5930,14 +6128,14 @@ ${nonManifold.join("\n")}`);
           }
           function resize() {
             var w = window.innerWidth;
-            var h = window.innerHeight;
+            var h2 = window.innerHeight;
             if (element !== document.body) {
               var bounds = canvas.getBoundingClientRect();
               w = bounds.right - bounds.left;
-              h = bounds.bottom - bounds.top;
+              h2 = bounds.bottom - bounds.top;
             }
             canvas.width = pixelRatio * w;
-            canvas.height = pixelRatio * h;
+            canvas.height = pixelRatio * h2;
           }
           var resizeObserver;
           if (element !== document.body && typeof ResizeObserver === "function") {
@@ -5966,7 +6164,7 @@ ${nonManifold.join("\n")}`);
           function get(name) {
             try {
               return canvas.getContext(name, contextAttributes);
-            } catch (e) {
+            } catch (e2) {
               return null;
             }
           }
@@ -6095,7 +6293,7 @@ ${nonManifold.join("\n")}`);
             var ext;
             try {
               ext = extensions[name2] = gl.getExtension(name2);
-            } catch (e) {}
+            } catch (e2) {}
             return !!ext;
           }
           for (var i = 0; i < config.extensions.length; ++i) {
@@ -6118,9 +6316,9 @@ ${nonManifold.join("\n")}`);
             }
           };
         }
-        function loop(n, f) {
-          var result = Array(n);
-          for (var i = 0; i < n; ++i) {
+        function loop(n3, f) {
+          var result = Array(n3);
+          for (var i = 0; i < n3; ++i) {
             result[i] = f(i);
           }
           return result;
@@ -6141,26 +6339,26 @@ ${nonManifold.join("\n")}`);
           return 0;
         }
         function log2(v) {
-          var r, shift;
-          r = (v > 65535) << 4;
-          v >>>= r;
+          var r2, shift;
+          r2 = (v > 65535) << 4;
+          v >>>= r2;
           shift = (v > 255) << 3;
           v >>>= shift;
-          r |= shift;
+          r2 |= shift;
           shift = (v > 15) << 2;
           v >>>= shift;
-          r |= shift;
+          r2 |= shift;
           shift = (v > 3) << 1;
           v >>>= shift;
-          r |= shift;
-          return r | v >> 1;
+          r2 |= shift;
+          return r2 | v >> 1;
         }
         function createPool() {
           var bufferPool = loop(8, function () {
             return [];
           });
-          function alloc(n) {
-            var sz = nextPow16(n);
+          function alloc(n3) {
+            var sz = nextPow16(n3);
             var bin = bufferPool[log2(sz) >> 2];
             if (bin.length > 0) {
               return bin.pop();
@@ -6170,35 +6368,35 @@ ${nonManifold.join("\n")}`);
           function free(buf) {
             bufferPool[log2(buf.byteLength) >> 2].push(buf);
           }
-          function allocType(type, n) {
+          function allocType(type, n3) {
             var result = null;
             switch (type) {
               case GL_BYTE$1:
-                result = new Int8Array(alloc(n), 0, n);
+                result = new Int8Array(alloc(n3), 0, n3);
                 break;
               case GL_UNSIGNED_BYTE$2:
-                result = new Uint8Array(alloc(n), 0, n);
+                result = new Uint8Array(alloc(n3), 0, n3);
                 break;
               case GL_SHORT$1:
-                result = new Int16Array(alloc(2 * n), 0, n);
+                result = new Int16Array(alloc(2 * n3), 0, n3);
                 break;
               case GL_UNSIGNED_SHORT$1:
-                result = new Uint16Array(alloc(2 * n), 0, n);
+                result = new Uint16Array(alloc(2 * n3), 0, n3);
                 break;
               case GL_INT$1:
-                result = new Int32Array(alloc(4 * n), 0, n);
+                result = new Int32Array(alloc(4 * n3), 0, n3);
                 break;
               case GL_UNSIGNED_INT$1:
-                result = new Uint32Array(alloc(4 * n), 0, n);
+                result = new Uint32Array(alloc(4 * n3), 0, n3);
                 break;
               case GL_FLOAT$2:
-                result = new Float32Array(alloc(4 * n), 0, n);
+                result = new Float32Array(alloc(4 * n3), 0, n3);
                 break;
               default:
                 return null;
             }
-            if (result.length !== n) {
-              return result.subarray(0, n);
+            if (result.length !== n3) {
+              return result.subarray(0, n3);
             }
             return result;
           }
@@ -6374,17 +6572,17 @@ ${nonManifold.join("\n")}`);
           for (var i = level + 1; i < shape.length; ++i) {
             stride *= shape[i];
           }
-          var n = shape[level];
+          var n3 = shape[level];
           if (shape.length - level === 4) {
             var nx = shape[level + 1];
             var ny = shape[level + 2];
             var nz = shape[level + 3];
-            for (i = 0; i < n; ++i) {
+            for (i = 0; i < n3; ++i) {
               flatten3D(array[i], nx, ny, nz, out, ptr);
               ptr += stride;
             }
           } else {
-            for (i = 0; i < n; ++i) {
+            for (i = 0; i < n3; ++i) {
               flattenRec(array[i], shape, level + 1, out, ptr);
               ptr += stride;
             }
@@ -7028,8 +7226,8 @@ ${nonManifold.join("\n")}`);
               if (exp < -24) {
                 ushorts[i] = sgn;
               } else if (exp < -14) {
-                var s = -14 - exp;
-                ushorts[i] = sgn + (frac + (1 << 10) >> s);
+                var s4 = -14 - exp;
+                ushorts[i] = sgn + (frac + (1 << 10) >> s4);
               } else if (exp > 15) {
                 ushorts[i] = sgn + 31744;
               } else {
@@ -7039,8 +7237,8 @@ ${nonManifold.join("\n")}`);
           }
           return ushorts;
         }
-        function isArrayLike(s) {
-          return Array.isArray(s) || isTypedArray(s);
+        function isArrayLike(s4) {
+          return Array.isArray(s4) || isTypedArray(s4);
         }
         var isPow2$1 = function (v) {
           return !(v & v - 1) && !!v;
@@ -7194,13 +7392,13 @@ ${nonManifold.join("\n")}`);
           return arrayTypes[Object.prototype.toString.call(data)] | 0;
         }
         function convertData(result, data) {
-          var n = data.length;
+          var n3 = data.length;
           switch (result.type) {
             case GL_UNSIGNED_BYTE$5:
             case GL_UNSIGNED_SHORT$3:
             case GL_UNSIGNED_INT$3:
             case GL_FLOAT$4:
-              var converted = pool.allocType(result.type, n);
+              var converted = pool.allocType(result.type, n3);
               converted.set(data);
               result.data = converted;
               break;
@@ -7211,8 +7409,8 @@ ${nonManifold.join("\n")}`);
               check$1.raise("unsupported texture type, must specify a typed array");
           }
         }
-        function preConvert(image, n) {
-          return pool.allocType(image.type === GL_HALF_FLOAT_OES$1 ? GL_FLOAT$4 : image.type, n);
+        function preConvert(image, n3) {
+          return pool.allocType(image.type === GL_HALF_FLOAT_OES$1 ? GL_FLOAT$4 : image.type, n3);
         }
         function postConvert(image, data) {
           if (image.type === GL_HALF_FLOAT_OES$1) {
@@ -7224,12 +7422,12 @@ ${nonManifold.join("\n")}`);
         }
         function transposeData(image, array, strideX, strideY, strideC, offset) {
           var w = image.width;
-          var h = image.height;
+          var h2 = image.height;
           var c = image.channels;
-          var n = w * h * c;
-          var data = preConvert(image, n);
+          var n3 = w * h2 * c;
+          var data = preConvert(image, n3);
           var p = 0;
-          for (var i = 0; i < h; ++i) {
+          for (var i = 0; i < h2; ++i) {
             for (var j = 0; j < w; ++j) {
               for (var k = 0; k < c; ++k) {
                 data[p++] = array[strideX * j + strideY * i + strideC * k + offset];
@@ -7239,25 +7437,25 @@ ${nonManifold.join("\n")}`);
           postConvert(image, data);
         }
         function getTextureSize(format, type, width, height, isMipmap, isCube) {
-          var s;
+          var s4;
           if (typeof FORMAT_SIZES_SPECIAL[format] !== "undefined") {
-            s = FORMAT_SIZES_SPECIAL[format];
+            s4 = FORMAT_SIZES_SPECIAL[format];
           } else {
-            s = FORMAT_CHANNELS[format] * TYPE_SIZES[type];
+            s4 = FORMAT_CHANNELS[format] * TYPE_SIZES[type];
           }
           if (isCube) {
-            s *= 6;
+            s4 *= 6;
           }
           if (isMipmap) {
             var total = 0;
             var w = width;
             while (w >= 1) {
-              total += s * w * w;
+              total += s4 * w * w;
               w /= 2;
             }
             return total;
           } else {
-            return s * width * height;
+            return s4 * width * height;
           }
         }
         function createTextureSet(gl, extensions, limits, reglPoll, contextState, stats2, config) {
@@ -7451,23 +7649,23 @@ ${nonManifold.join("\n")}`);
               flags.type = textureTypes[type];
             }
             var w = flags.width;
-            var h = flags.height;
+            var h2 = flags.height;
             var c = flags.channels;
             var hasChannels = false;
             if (("shape" in options)) {
               check$1(Array.isArray(options.shape) && options.shape.length >= 2, "shape must be an array");
               w = options.shape[0];
-              h = options.shape[1];
+              h2 = options.shape[1];
               if (options.shape.length === 3) {
                 c = options.shape[2];
                 check$1(c > 0 && c <= 4, "invalid number of channels");
                 hasChannels = true;
               }
               check$1(w >= 0 && w <= limits.maxTextureSize, "invalid width");
-              check$1(h >= 0 && h <= limits.maxTextureSize, "invalid height");
+              check$1(h2 >= 0 && h2 <= limits.maxTextureSize, "invalid height");
             } else {
               if (("radius" in options)) {
-                w = h = options.radius;
+                w = h2 = options.radius;
                 check$1(w >= 0 && w <= limits.maxTextureSize, "invalid radius");
               }
               if (("width" in options)) {
@@ -7475,8 +7673,8 @@ ${nonManifold.join("\n")}`);
                 check$1(w >= 0 && w <= limits.maxTextureSize, "invalid width");
               }
               if (("height" in options)) {
-                h = options.height;
-                check$1(h >= 0 && h <= limits.maxTextureSize, "invalid height");
+                h2 = options.height;
+                check$1(h2 >= 0 && h2 <= limits.maxTextureSize, "invalid height");
               }
               if (("channels" in options)) {
                 c = options.channels;
@@ -7485,7 +7683,7 @@ ${nonManifold.join("\n")}`);
               }
             }
             flags.width = w | 0;
-            flags.height = h | 0;
+            flags.height = h2 | 0;
             flags.channels = c | 0;
             var hasFormat = false;
             if (("format" in options)) {
@@ -7623,7 +7821,7 @@ ${nonManifold.join("\n")}`);
               image.channels = 4;
             } else if (isRectArray(data)) {
               var w = image.width || data[0].length;
-              var h = image.height || data.length;
+              var h2 = image.height || data.length;
               var c = image.channels;
               if (isArrayLike(data[0][0])) {
                 c = c || data[0][0].length;
@@ -7631,16 +7829,16 @@ ${nonManifold.join("\n")}`);
                 c = c || 1;
               }
               var arrayShape2 = flattenUtils.shape(data);
-              var n = 1;
+              var n3 = 1;
               for (var dd = 0; dd < arrayShape2.length; ++dd) {
-                n *= arrayShape2[dd];
+                n3 *= arrayShape2[dd];
               }
-              var allocData = preConvert(image, n);
+              var allocData = preConvert(image, n3);
               flattenUtils.flatten(data, arrayShape2, "", allocData);
               postConvert(image, allocData);
               image.alignment = 1;
               image.width = w;
-              image.height = h;
+              image.height = h2;
               image.channels = c;
               image.format = image.internalformat = CHANNELS_FORMAT[c];
               image.needsFree = true;
@@ -7961,24 +8159,24 @@ ${nonManifold.join("\n")}`);
               }
             }
           });
-          function createTexture2D(a, b) {
+          function createTexture2D(a2, b) {
             var texture = new REGLTexture(GL_TEXTURE_2D$1);
             textureSet[texture.id] = texture;
             stats2.textureCount++;
-            function reglTexture2D(a2, b2) {
+            function reglTexture2D(a3, b2) {
               var texInfo = texture.texInfo;
               TexInfo.call(texInfo);
               var mipData = allocMipMap();
-              if (typeof a2 === "number") {
+              if (typeof a3 === "number") {
                 if (typeof b2 === "number") {
-                  parseMipMapFromShape(mipData, a2 | 0, b2 | 0);
+                  parseMipMapFromShape(mipData, a3 | 0, b2 | 0);
                 } else {
-                  parseMipMapFromShape(mipData, a2 | 0, a2 | 0);
+                  parseMipMapFromShape(mipData, a3 | 0, a3 | 0);
                 }
-              } else if (a2) {
-                check$1.type(a2, "object", "invalid arguments to regl.texture");
-                parseTexInfo(texInfo, a2);
-                parseMipMapFromObject(mipData, a2);
+              } else if (a3) {
+                check$1.type(a3, "object", "invalid arguments to regl.texture");
+                parseTexInfo(texInfo, a3);
+                parseMipMapFromObject(mipData, a3);
               } else {
                 parseMipMapFromShape(mipData, 1, 1);
               }
@@ -8031,26 +8229,26 @@ ${nonManifold.join("\n")}`);
             }
             function resize(w_, h_) {
               var w = w_ | 0;
-              var h = h_ | 0 || w;
-              if (w === texture.width && h === texture.height) {
+              var h2 = h_ | 0 || w;
+              if (w === texture.width && h2 === texture.height) {
                 return reglTexture2D;
               }
               reglTexture2D.width = texture.width = w;
-              reglTexture2D.height = texture.height = h;
+              reglTexture2D.height = texture.height = h2;
               tempBind(texture);
               for (var i = 0; texture.mipmask >> i; ++i) {
                 var _w = w >> i;
-                var _h = h >> i;
+                var _h = h2 >> i;
                 if (!_w || !_h) break;
                 gl.texImage2D(GL_TEXTURE_2D$1, i, texture.format, _w, _h, 0, texture.format, texture.type, null);
               }
               tempRestore();
               if (config.profile) {
-                texture.stats.size = getTextureSize(texture.internalformat, texture.type, w, h, false, false);
+                texture.stats.size = getTextureSize(texture.internalformat, texture.type, w, h2, false, false);
               }
               return reglTexture2D;
             }
-            reglTexture2D(a, b);
+            reglTexture2D(a2, b);
             reglTexture2D.subimage = subimage;
             reglTexture2D.resize = resize;
             reglTexture2D._reglType = "texture2d";
@@ -8076,9 +8274,9 @@ ${nonManifold.join("\n")}`);
                 faces[i] = allocMipMap();
               }
               if (typeof a02 === "number" || !a02) {
-                var s = a02 | 0 || 1;
+                var s4 = a02 | 0 || 1;
                 for (i = 0; i < 6; ++i) {
-                  parseMipMapFromShape(faces[i], s, s);
+                  parseMipMapFromShape(faces[i], s4, s4);
                 }
               } else if (typeof a02 === "object") {
                 if (a12) {
@@ -8347,57 +8545,57 @@ ${nonManifold.join("\n")}`);
             delete renderbufferSet[rb.id];
             stats2.renderbufferCount--;
           }
-          function createRenderbuffer(a, b) {
+          function createRenderbuffer(a2, b) {
             var renderbuffer = new REGLRenderbuffer(gl.createRenderbuffer());
             renderbufferSet[renderbuffer.id] = renderbuffer;
             stats2.renderbufferCount++;
-            function reglRenderbuffer(a2, b2) {
+            function reglRenderbuffer(a3, b2) {
               var w = 0;
-              var h = 0;
+              var h2 = 0;
               var format = GL_RGBA4$1;
-              if (typeof a2 === "object" && a2) {
-                var options = a2;
+              if (typeof a3 === "object" && a3) {
+                var options = a3;
                 if (("shape" in options)) {
                   var shape = options.shape;
                   check$1(Array.isArray(shape) && shape.length >= 2, "invalid renderbuffer shape");
                   w = shape[0] | 0;
-                  h = shape[1] | 0;
+                  h2 = shape[1] | 0;
                 } else {
                   if (("radius" in options)) {
-                    w = h = options.radius | 0;
+                    w = h2 = options.radius | 0;
                   }
                   if (("width" in options)) {
                     w = options.width | 0;
                   }
                   if (("height" in options)) {
-                    h = options.height | 0;
+                    h2 = options.height | 0;
                   }
                 }
                 if (("format" in options)) {
                   check$1.parameter(options.format, formatTypes, "invalid renderbuffer format");
                   format = formatTypes[options.format];
                 }
-              } else if (typeof a2 === "number") {
-                w = a2 | 0;
+              } else if (typeof a3 === "number") {
+                w = a3 | 0;
                 if (typeof b2 === "number") {
-                  h = b2 | 0;
+                  h2 = b2 | 0;
                 } else {
-                  h = w;
+                  h2 = w;
                 }
-              } else if (!a2) {
-                w = h = 1;
+              } else if (!a3) {
+                w = h2 = 1;
               } else {
                 check$1.raise("invalid arguments to renderbuffer constructor");
               }
-              check$1(w > 0 && h > 0 && w <= limits.maxRenderbufferSize && h <= limits.maxRenderbufferSize, "invalid renderbuffer size");
-              if (w === renderbuffer.width && h === renderbuffer.height && format === renderbuffer.format) {
+              check$1(w > 0 && h2 > 0 && w <= limits.maxRenderbufferSize && h2 <= limits.maxRenderbufferSize, "invalid renderbuffer size");
+              if (w === renderbuffer.width && h2 === renderbuffer.height && format === renderbuffer.format) {
                 return;
               }
               reglRenderbuffer.width = renderbuffer.width = w;
-              reglRenderbuffer.height = renderbuffer.height = h;
+              reglRenderbuffer.height = renderbuffer.height = h2;
               renderbuffer.format = format;
               gl.bindRenderbuffer(GL_RENDERBUFFER, renderbuffer.renderbuffer);
-              gl.renderbufferStorage(GL_RENDERBUFFER, format, w, h);
+              gl.renderbufferStorage(GL_RENDERBUFFER, format, w, h2);
               check$1(gl.getError() === 0, "invalid render buffer format");
               if (config.profile) {
                 renderbuffer.stats.size = getRenderbufferSize(renderbuffer.format, renderbuffer.width, renderbuffer.height);
@@ -8407,22 +8605,22 @@ ${nonManifold.join("\n")}`);
             }
             function resize(w_, h_) {
               var w = w_ | 0;
-              var h = h_ | 0 || w;
-              if (w === renderbuffer.width && h === renderbuffer.height) {
+              var h2 = h_ | 0 || w;
+              if (w === renderbuffer.width && h2 === renderbuffer.height) {
                 return reglRenderbuffer;
               }
-              check$1(w > 0 && h > 0 && w <= limits.maxRenderbufferSize && h <= limits.maxRenderbufferSize, "invalid renderbuffer size");
+              check$1(w > 0 && h2 > 0 && w <= limits.maxRenderbufferSize && h2 <= limits.maxRenderbufferSize, "invalid renderbuffer size");
               reglRenderbuffer.width = renderbuffer.width = w;
-              reglRenderbuffer.height = renderbuffer.height = h;
+              reglRenderbuffer.height = renderbuffer.height = h2;
               gl.bindRenderbuffer(GL_RENDERBUFFER, renderbuffer.renderbuffer);
-              gl.renderbufferStorage(GL_RENDERBUFFER, renderbuffer.format, w, h);
+              gl.renderbufferStorage(GL_RENDERBUFFER, renderbuffer.format, w, h2);
               check$1(gl.getError() === 0, "invalid render buffer format");
               if (config.profile) {
                 renderbuffer.stats.size = getRenderbufferSize(renderbuffer.format, renderbuffer.width, renderbuffer.height);
               }
               return reglRenderbuffer;
             }
-            reglRenderbuffer(a, b);
+            reglRenderbuffer(a2, b);
             reglRenderbuffer.resize = resize;
             reglRenderbuffer._reglType = "renderbuffer";
             reglRenderbuffer._renderbuffer = renderbuffer;
@@ -8533,16 +8731,16 @@ ${nonManifold.join("\n")}`);
             this.texture = texture;
             this.renderbuffer = renderbuffer;
             var w = 0;
-            var h = 0;
+            var h2 = 0;
             if (texture) {
               w = texture.width;
-              h = texture.height;
+              h2 = texture.height;
             } else if (renderbuffer) {
               w = renderbuffer.width;
-              h = renderbuffer.height;
+              h2 = renderbuffer.height;
             }
             this.width = w;
-            this.height = h;
+            this.height = h2;
           }
           function decRef(attachment) {
             if (attachment) {
@@ -8570,12 +8768,12 @@ ${nonManifold.join("\n")}`);
               renderbuffer.refCount += 1;
             }
           }
-          function attach(location, attachment) {
+          function attach(location2, attachment) {
             if (attachment) {
               if (attachment.texture) {
-                gl.framebufferTexture2D(GL_FRAMEBUFFER$1, location, attachment.target, attachment.texture._texture.texture, 0);
+                gl.framebufferTexture2D(GL_FRAMEBUFFER$1, location2, attachment.target, attachment.texture._texture.texture, 0);
               } else {
-                gl.framebufferRenderbuffer(GL_FRAMEBUFFER$1, location, GL_RENDERBUFFER$1, attachment.renderbuffer._renderbuffer.renderbuffer);
+                gl.framebufferRenderbuffer(GL_FRAMEBUFFER$1, location2, GL_RENDERBUFFER$1, attachment.renderbuffer._renderbuffer.renderbuffer);
               }
             }
           }
@@ -8629,15 +8827,15 @@ ${nonManifold.join("\n")}`);
           function unwrapAttachment(attachment) {
             return attachment && (attachment.texture || attachment.renderbuffer);
           }
-          function resizeAttachment(attachment, w, h) {
+          function resizeAttachment(attachment, w, h2) {
             if (attachment) {
               if (attachment.texture) {
-                attachment.texture.resize(w, h);
+                attachment.texture.resize(w, h2);
               } else if (attachment.renderbuffer) {
-                attachment.renderbuffer.resize(w, h);
+                attachment.renderbuffer.resize(w, h2);
               }
               attachment.width = w;
-              attachment.height = h;
+              attachment.height = h2;
             }
           }
           var framebufferCount = 0;
@@ -8694,7 +8892,7 @@ ${nonManifold.join("\n")}`);
           function createFBO(a0, a1) {
             var framebuffer = new REGLFramebuffer();
             stats2.framebufferCount++;
-            function reglFramebuffer(a, b) {
+            function reglFramebuffer(a2, b) {
               var i;
               check$1(framebufferState.next !== framebuffer, "can not update framebuffer which is currently in use");
               var width = 0;
@@ -8710,14 +8908,14 @@ ${nonManifold.join("\n")}`);
               var stencilBuffer = null;
               var depthStencilBuffer = null;
               var depthStencilTexture = false;
-              if (typeof a === "number") {
-                width = a | 0;
+              if (typeof a2 === "number") {
+                width = a2 | 0;
                 height = b | 0 || width;
-              } else if (!a) {
+              } else if (!a2) {
                 width = height = 1;
               } else {
-                check$1.type(a, "object", "invalid arguments for framebuffer");
-                var options = a;
+                check$1.type(a2, "object", "invalid arguments for framebuffer");
+                var options = a2;
                 if (("shape" in options)) {
                   var shape = options.shape;
                   check$1(Array.isArray(shape) && shape.length >= 2, "invalid shape for framebuffer");
@@ -8884,19 +9082,19 @@ ${nonManifold.join("\n")}`);
             function resize(w_, h_) {
               check$1(framebufferState.next !== framebuffer, "can not resize a framebuffer which is currently in use");
               var w = Math.max(w_ | 0, 1);
-              var h = Math.max(h_ | 0 || w, 1);
-              if (w === framebuffer.width && h === framebuffer.height) {
+              var h2 = Math.max(h_ | 0 || w, 1);
+              if (w === framebuffer.width && h2 === framebuffer.height) {
                 return reglFramebuffer;
               }
               var colorAttachments = framebuffer.colorAttachments;
               for (var i = 0; i < colorAttachments.length; ++i) {
-                resizeAttachment(colorAttachments[i], w, h);
+                resizeAttachment(colorAttachments[i], w, h2);
               }
-              resizeAttachment(framebuffer.depthAttachment, w, h);
-              resizeAttachment(framebuffer.stencilAttachment, w, h);
-              resizeAttachment(framebuffer.depthStencilAttachment, w, h);
+              resizeAttachment(framebuffer.depthAttachment, w, h2);
+              resizeAttachment(framebuffer.stencilAttachment, w, h2);
+              resizeAttachment(framebuffer.depthStencilAttachment, w, h2);
               framebuffer.width = reglFramebuffer.width = w;
-              framebuffer.height = reglFramebuffer.height = h;
+              framebuffer.height = reglFramebuffer.height = h2;
               updateFramebuffer(framebuffer);
               return reglFramebuffer;
             }
@@ -8918,7 +9116,7 @@ ${nonManifold.join("\n")}`);
           }
           function createCubeFBO(options) {
             var faces = Array(6);
-            function reglFramebufferCube(a) {
+            function reglFramebufferCube(a2) {
               var i;
               check$1(faces.indexOf(framebufferState.next) < 0, "can not update framebuffer which is currently in use");
               var params = {
@@ -8929,13 +9127,13 @@ ${nonManifold.join("\n")}`);
               var colorFormat = "rgba";
               var colorType = "uint8";
               var colorCount = 1;
-              if (typeof a === "number") {
-                radius = a | 0;
-              } else if (!a) {
+              if (typeof a2 === "number") {
+                radius = a2 | 0;
+              } else if (!a2) {
                 radius = 1;
               } else {
-                check$1.type(a, "object", "invalid arguments for framebuffer");
-                var options2 = a;
+                check$1.type(a2, "object", "invalid arguments for framebuffer");
+                var options2 = a2;
                 if (("shape" in options2)) {
                   var shape = options2.shape;
                   check$1(Array.isArray(shape) && shape.length >= 2, "invalid shape for framebuffer");
@@ -9459,10 +9657,10 @@ ${nonManifold.join("\n")}`);
         function wrapShaderState(gl, stringStore, stats2, config) {
           var fragShaders = {};
           var vertShaders = {};
-          function ActiveInfo(name, id, location, info) {
+          function ActiveInfo(name, id, location2, info) {
             this.name = name;
             this.id = id;
-            this.location = location;
+            this.location = location2;
             this.info = info;
           }
           function insertActiveInfo(list, info) {
@@ -9777,7 +9975,7 @@ ${nonManifold.join("\n")}`);
             var exit = block();
             var entryToString = entry.toString;
             var exitToString = exit.toString;
-            function save(object, prop) {
+            function save2(object, prop) {
               exit(object, prop, "=", entry.def(object, prop), ";");
             }
             return extend(function () {
@@ -9786,9 +9984,9 @@ ${nonManifold.join("\n")}`);
               def: entry.def,
               entry,
               exit,
-              save,
+              save: save2,
               set: function (object, prop, value) {
-                save(object, prop);
+                save2(object, prop);
                 entry(object, prop, "=", value, ";");
               },
               toString: function () {
@@ -10030,13 +10228,13 @@ ${nonManifold.join("\n")}`);
           return Array.isArray(x) || isTypedArray(x) || isNDArrayLike(x);
         }
         function sortState(state) {
-          return state.sort(function (a, b) {
-            if (a === S_VIEWPORT) {
+          return state.sort(function (a2, b) {
+            if (a2 === S_VIEWPORT) {
               return -1;
             } else if (b === S_VIEWPORT) {
               return 1;
             }
-            return a < b ? -1 : 1;
+            return a2 < b ? -1 : 1;
           });
         }
         function Declaration(thisDep, contextDep, propDep, append) {
@@ -10208,7 +10406,7 @@ ${nonManifold.join("\n")}`);
           function createREGLEnvironment() {
             var env = createEnvironment();
             var link = env.link;
-            var global = env.global;
+            var global2 = env.global;
             env.id = drawCallCounter++;
             env.batchId = "0";
             var SHARED = link(sharedState);
@@ -10216,7 +10414,7 @@ ${nonManifold.join("\n")}`);
               props: "a0"
             };
             Object.keys(sharedState).forEach(function (prop) {
-              shared[prop] = global.def(SHARED, ".", prop);
+              shared[prop] = global2.def(SHARED, ".", prop);
             });
             check$1.optional(function () {
               env.CHECK = link(check$1);
@@ -10231,13 +10429,13 @@ ${nonManifold.join("\n")}`);
             var currentVars = env.current = {};
             Object.keys(GL_VARIABLES).forEach(function (variable) {
               if (Array.isArray(currentState[variable])) {
-                nextVars[variable] = global.def(shared.next, ".", variable);
-                currentVars[variable] = global.def(shared.current, ".", variable);
+                nextVars[variable] = global2.def(shared.next, ".", variable);
+                currentVars[variable] = global2.def(shared.current, ".", variable);
               }
             });
             var constants = env.constants = {};
             Object.keys(sharedConstants).forEach(function (name) {
-              constants[name] = global.def(JSON.stringify(sharedConstants[name]));
+              constants[name] = global2.def(JSON.stringify(sharedConstants[name]));
             });
             env.invoke = function (block, x) {
               switch (x.type) {
@@ -10352,7 +10550,7 @@ ${nonManifold.join("\n")}`);
                 var isStatic2 = true;
                 var x = box.x | 0;
                 var y = box.y | 0;
-                var w, h;
+                var w, h2;
                 if (("width" in box)) {
                   w = box.width | 0;
                   check$1.command(w >= 0, "invalid " + param, env.commandStr);
@@ -10360,8 +10558,8 @@ ${nonManifold.join("\n")}`);
                   isStatic2 = false;
                 }
                 if (("height" in box)) {
-                  h = box.height | 0;
-                  check$1.command(h >= 0, "invalid " + param, env.commandStr);
+                  h2 = box.height | 0;
+                  check$1.command(h2 >= 0, "invalid " + param, env.commandStr);
                 } else {
                   isStatic2 = false;
                 }
@@ -10371,7 +10569,7 @@ ${nonManifold.join("\n")}`);
                   if (!(("width" in box))) {
                     BOX_W = scope.def(CONTEXT, ".", S_FRAMEBUFFER_WIDTH, "-", x);
                   }
-                  var BOX_H = h;
+                  var BOX_H = h2;
                   if (!(("height" in box))) {
                     BOX_H = scope.def(CONTEXT, ".", S_FRAMEBUFFER_HEIGHT, "-", y);
                   }
@@ -10548,8 +10746,8 @@ ${nonManifold.join("\n")}`);
                 var elements2 = staticOptions[S_ELEMENTS];
                 staticDraw.elements = elements2;
                 if (isBufferArgs(elements2)) {
-                  var e = staticDraw.elements = elementState.create(elements2, true);
-                  elements2 = elementState.getElements(e);
+                  var e2 = staticDraw.elements = elementState.create(elements2, true);
+                  elements2 = elementState.getElements(e2);
                   elementsActive = true;
                 } else if (elements2) {
                   elements2 = elementState.getElements(elements2);
@@ -11210,8 +11408,8 @@ ${nonManifold.join("\n")}`);
                 });
                 var BUFFER = result.buffer;
                 var TYPE = result.type;
-                block("if(", IS_BUFFER_ARGS, "(", VALUE, ")){", result.isStream, "=true;", BUFFER, "=", BUFFER_STATE, ".createStream(", GL_ARRAY_BUFFER$2, ",", VALUE, ");", TYPE, "=", BUFFER, ".dtype;", "}else{", BUFFER, "=", BUFFER_STATE, ".getBuffer(", VALUE, ");", "if(", BUFFER, "){", TYPE, "=", BUFFER, ".dtype;", '}else if("constant" in ', VALUE, "){", result.state, "=", ATTRIB_STATE_CONSTANT, ";", "if(typeof " + VALUE + '.constant === "number"){', result[CUTE_COMPONENTS[0]], "=", VALUE, ".constant;", CUTE_COMPONENTS.slice(1).map(function (n) {
-                  return result[n];
+                block("if(", IS_BUFFER_ARGS, "(", VALUE, ")){", result.isStream, "=true;", BUFFER, "=", BUFFER_STATE, ".createStream(", GL_ARRAY_BUFFER$2, ",", VALUE, ");", TYPE, "=", BUFFER, ".dtype;", "}else{", BUFFER, "=", BUFFER_STATE, ".getBuffer(", VALUE, ");", "if(", BUFFER, "){", TYPE, "=", BUFFER, ".dtype;", '}else if("constant" in ', VALUE, "){", result.state, "=", ATTRIB_STATE_CONSTANT, ";", "if(typeof " + VALUE + '.constant === "number"){', result[CUTE_COMPONENTS[0]], "=", VALUE, ".constant;", CUTE_COMPONENTS.slice(1).map(function (n3) {
+                  return result[n3];
                 }).join("="), "=0;", "}else{", CUTE_COMPONENTS.map(function (name, i) {
                   return result[name] + "=" + VALUE + ".constant.length>" + i + "?" + VALUE + ".constant[" + i + "]:0;";
                 }).join(""), "}}else{", "if(", IS_BUFFER_ARGS, "(", VALUE, ".buffer)){", BUFFER, "=", BUFFER_STATE, ".createStream(", GL_ARRAY_BUFFER$2, ",", VALUE, ".buffer);", "}else{", BUFFER, "=", BUFFER_STATE, ".getBuffer(", VALUE, ".buffer);", "}", TYPE, '="type" in ', VALUE, "?", constants.glTypes, "[", VALUE, ".type]:", BUFFER, ".dtype;", result.normalized, "=!!", VALUE, ".normalized;");
@@ -11756,11 +11954,11 @@ ${nonManifold.join("\n")}`);
                   }
                   emitCheck("Array.isArray(" + VALUE + ") && typeof " + VALUE + '[0]===" ' + type2 + '" || typeof ' + VALUE + '==="' + type2 + '"', "invalid type, expected " + type2);
                 }
-                function checkVector(n, type2, size2) {
+                function checkVector(n3, type2, size2) {
                   if (Array.isArray(VALUE)) {
-                    check$1(VALUE.length && VALUE.length % n === 0 && VALUE.length <= n * size2, "must have length of " + (size2 === 1 ? "" : "n * ") + n);
+                    check$1(VALUE.length && VALUE.length % n3 === 0 && VALUE.length <= n3 * size2, "must have length of " + (size2 === 1 ? "" : "n * ") + n3);
                   } else {
-                    emitCheck(shared.isArrayLike + "(" + VALUE + ")&&" + VALUE + ".length && " + VALUE + ".length % " + n + " === 0 && " + VALUE + ".length<=" + n * size2, "invalid vector, should have length of " + (size2 === 1 ? "" : "n * ") + n, env.commandStr);
+                    emitCheck(shared.isArrayLike + "(" + VALUE + ")&&" + VALUE + ".length && " + VALUE + ".length % " + n3 + " === 0 && " + VALUE + ".length<=" + n3 * size2, "invalid vector, should have length of " + (size2 === 1 ? "" : "n * ") + n3, env.commandStr);
                   }
                 }
                 function checkTexture(target) {
@@ -12458,15 +12656,15 @@ ${nonManifold.join("\n")}`);
                 var block = env.block();
                 block(GL, ".", func, "(");
                 if (isArrayLike(init)) {
-                  var n = init.length;
+                  var n3 = init.length;
                   NEXT = env.global.def(NEXT_STATE, ".", name);
                   CURRENT = env.global.def(CURRENT_STATE, ".", name);
-                  block(loop(n, function (i2) {
+                  block(loop(n3, function (i2) {
                     return NEXT + "[" + i2 + "]";
-                  }), ");", loop(n, function (i2) {
+                  }), ");", loop(n3, function (i2) {
                     return CURRENT + "[" + i2 + "]=" + NEXT + "[" + i2 + "];";
                   }).join(""));
-                  poll("if(", loop(n, function (i2) {
+                  poll("if(", loop(n3, function (i2) {
                     return NEXT + "[" + i2 + "]!==" + CURRENT + "[" + i2 + "]";
                   }).join("||"), "){", block, "}");
                 } else {
@@ -12545,12 +12743,12 @@ ${nonManifold.join("\n")}`);
           var queryPtr = [];
           function update() {
             var ptr, i;
-            var n = pendingQueries.length;
-            if (n === 0) {
+            var n3 = pendingQueries.length;
+            if (n3 === 0) {
               return;
             }
-            queryPtr.length = Math.max(queryPtr.length, n + 1);
-            timeSum.length = Math.max(timeSum.length, n + 1);
+            queryPtr.length = Math.max(queryPtr.length, n3 + 1);
+            timeSum.length = Math.max(timeSum.length, n3 + 1);
             timeSum[0] = 0;
             queryPtr[0] = 0;
             var queryTime = 0;
@@ -12887,7 +13085,7 @@ ${nonManifold.join("\n")}`);
           var setFBO = framebufferState.setFBO = compileProcedure({
             framebuffer: dynamic.define.call(null, DYN_PROP, "framebuffer")
           });
-          function clearImpl(_, options) {
+          function clearImpl(_2, options) {
             var clearFlags = 0;
             core.procs.poll();
             var c = options.color;
@@ -13069,8 +13267,8 @@ ${nonManifold.join("\n")}`);
               depth: 1
             });
             if (props.entities) {
-              props.entities.sort((a, b) => {
-                const aTransparent = ("transparent" in a.visuals) ? a.visuals.transparent : false;
+              props.entities.sort((a2, b) => {
+                const aTransparent = ("transparent" in a2.visuals) ? a2.visuals.transparent : false;
                 const bTransparent = ("transparent" in b.visuals) ? b.visuals.transparent : false;
                 return aTransparent === bTransparent ? 0 : aTransparent ? 1 : -1;
               }).forEach(entity => {
@@ -13106,7 +13304,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/regl-renderer/src/rendering/commands/drawGrid/index.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_gl_mat4();
+      var mat4 = require_gl_mat4();
       var makeDrawGrid = (regl, params = {}) => {
         const positions = [];
         const defaults = {
@@ -13199,7 +13397,7 @@ ${nonManifold.join("\n")}`);
           },
           count: positions.length / 3,
           uniforms: {
-            model: (context, props) => props && props.model ? props.model : mat42.identity([]),
+            model: (context, props) => props && props.model ? props.model : mat4.identity([]),
             color: (context, props) => props && props.color ? props.color : color,
             fogColor: (context, props) => props && props.color ? [props.color[0], props.color[1], props.color[2], 0] : [color[0], color[1], color[2], 0],
             fadeOut: (context, props) => props && props.fadeOut !== void 0 ? props.fadeOut : fadeOut
@@ -13263,7 +13461,7 @@ ${nonManifold.join("\n")}`);
     "../../../node_modules/@jscad/regl-renderer/src/rendering/commands/drawAxis/index.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_gl_mat4();
+      var mat4 = require_gl_mat4();
       var drawAxis = (regl, params) => {
         const defaults = {
           xColor: [1, 0, 0, 1],
@@ -13292,7 +13490,7 @@ ${nonManifold.join("\n")}`);
       gl_Position = projection * view * model * vec4(position, 1);
     }`,
           uniforms: {
-            model: (context, props) => props && props.model ? props.model : mat42.identity([]),
+            model: (context, props) => props && props.model ? props.model : mat4.identity([]),
             color: (context, props) => props.color,
             angle: (contet, props) => props.angle
           },
@@ -13306,24 +13504,24 @@ ${nonManifold.join("\n")}`);
             enable: !alwaysVisible
           }
         };
-        const xAxisModel = mat42.identity([]);
-        const yAxisModel = mat42.rotateZ(mat42.create(), mat42.identity([]), Math.PI / 2);
-        const zAxisModel = mat42.rotateY(mat42.create(), mat42.identity([]), -Math.PI / 2);
+        const xAxisModel = mat4.identity([]);
+        const yAxisModel = mat4.rotateZ(mat4.create(), mat4.identity([]), Math.PI / 2);
+        const zAxisModel = mat4.rotateY(mat4.create(), mat4.identity([]), -Math.PI / 2);
         const single = regl(commandParams);
         return props => {
           const defaults2 = {
-            model: mat42.identity([])
+            model: mat4.identity([])
           };
           props = Object.assign({}, defaults2, props);
           return single([{
             color: xColor,
-            model: mat42.multiply(mat42.create(), props.model, xAxisModel)
+            model: mat4.multiply(mat4.create(), props.model, xAxisModel)
           }, {
             color: yColor,
-            model: mat42.multiply(mat42.create(), props.model, yAxisModel)
+            model: mat4.multiply(mat4.create(), props.model, yAxisModel)
           }, {
             color: zColor,
-            model: mat42.multiply(mat42.create(), props.model, zAxisModel)
+            model: mat4.multiply(mat4.create(), props.model, zAxisModel)
           }]);
         };
       };
@@ -13479,7 +13677,7 @@ void main() {
     "../../../node_modules/@jscad/regl-renderer/src/rendering/commands/drawMesh/index.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_gl_mat4();
+      var mat4 = require_gl_mat4();
       var {meshColor} = require_renderDefaults();
       var drawMesh = (regl, params = {
         extras: {}
@@ -13497,12 +13695,12 @@ void main() {
         const hasNormals = !!(geometry.normals && geometry.normals.length > 0);
         const transparent = ("transparent" in visuals) ? visuals.transparent : false;
         const hasVertexColors = !!(useVertexColors && geometry.colors && geometry.colors.length > 0);
-        const transforms = geometry.transforms || mat42.create();
-        const flip = mat42.determinant(transforms) < 0;
+        const transforms = geometry.transforms || mat4.create();
+        const flip = mat4.determinant(transforms) < 0;
         const cullFace = dynamicCulling ? flip ? "front" : "back" : "back";
         const vert = hasVertexColors ? require_vColorShaders().vert : require_meshShaders().vert;
         const frag = hasVertexColors ? require_vColorShaders().frag : require_meshShaders().frag;
-        const modelMatrixInv = mat42.invert(mat42.create(), transforms);
+        const modelMatrixInv = mat4.invert(mat4.create(), transforms);
         let commandParams = {
           primitive: "triangles",
           vert,
@@ -13512,9 +13710,9 @@ void main() {
             ucolor: (context, props) => props && props.color ? props.color : color,
             vColorToggler: (context, props) => props && props.useVertexColors && props.useVertexColors === true ? 1 : 0,
             unormal: (context, props) => {
-              const modelViewMatrix = mat42.invert(mat42.create(), props.camera.view);
-              mat42.multiply(modelViewMatrix, modelMatrixInv, modelViewMatrix);
-              mat42.transpose(modelViewMatrix, modelViewMatrix);
+              const modelViewMatrix = mat4.invert(mat4.create(), props.camera.view);
+              mat4.multiply(modelViewMatrix, modelMatrixInv, modelViewMatrix);
+              mat4.transpose(modelViewMatrix, modelViewMatrix);
               return modelViewMatrix;
             }
           },
@@ -13702,7 +13900,7 @@ void main () {
     "../../../node_modules/@jscad/regl-renderer/src/rendering/commands/drawLines/index.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_gl_mat4();
+      var mat4 = require_gl_mat4();
       var {meshColor} = require_renderDefaults();
       var drawLines = (regl, params = {}) => {
         const defaults = {
@@ -13721,7 +13919,7 @@ void main () {
           vert,
           frag,
           uniforms: {
-            model: (context, props) => props.model || geometry.transforms || mat42.create(),
+            model: (context, props) => props.model || geometry.transforms || mat4.create(),
             ucolor: (context, props) => props && props.color ? props.color : color
           },
           attributes: {
@@ -13793,11 +13991,11 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = clone;
-      function clone(a) {
+      function clone(a2) {
         var out = new Float32Array(3);
-        out[0] = a[0];
-        out[1] = a[1];
-        out[2] = a[2];
+        out[0] = a2[0];
+        out[1] = a2[1];
+        out[2] = a2[2];
         return out;
       }
     }
@@ -13821,14 +14019,14 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = normalize;
-      function normalize(out, a) {
-        var x = a[0], y = a[1], z = a[2];
+      function normalize(out, a2) {
+        var x = a2[0], y = a2[1], z = a2[2];
         var len = x * x + y * y + z * z;
         if (len > 0) {
           len = 1 / Math.sqrt(len);
-          out[0] = a[0] * len;
-          out[1] = a[1] * len;
-          out[2] = a[2] * len;
+          out[0] = a2[0] * len;
+          out[1] = a2[1] * len;
+          out[2] = a2[2] * len;
         }
         return out;
       }
@@ -13839,8 +14037,8 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = dot;
-      function dot(a, b) {
-        return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+      function dot(a2, b) {
+        return a2[0] * b[0] + a2[1] * b[1] + a2[2] * b[2];
       }
     }
   });
@@ -13852,8 +14050,8 @@ void main () {
       var fromValues = require_fromValues5();
       var normalize = require_normalize3();
       var dot = require_dot4();
-      function angle(a, b) {
-        var tempA = fromValues(a[0], a[1], a[2]);
+      function angle(a2, b) {
+        var tempA = fromValues(a2[0], a2[1], a2[2]);
         var tempB = fromValues(b[0], b[1], b[2]);
         normalize(tempA, tempA);
         normalize(tempB, tempB);
@@ -13871,10 +14069,10 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = copy;
-      function copy(out, a) {
-        out[0] = a[0];
-        out[1] = a[1];
-        out[2] = a[2];
+      function copy(out, a2) {
+        out[0] = a2[0];
+        out[1] = a2[1];
+        out[2] = a2[2];
         return out;
       }
     }
@@ -13898,14 +14096,14 @@ void main () {
       init_define_process();
       module.exports = equals;
       var EPSILON = require_epsilon();
-      function equals(a, b) {
-        var a0 = a[0];
-        var a1 = a[1];
-        var a2 = a[2];
+      function equals(a2, b) {
+        var a0 = a2[0];
+        var a1 = a2[1];
+        var a22 = a2[2];
         var b0 = b[0];
         var b1 = b[1];
         var b2 = b[2];
-        return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a2 - b2) <= EPSILON * Math.max(1, Math.abs(a2), Math.abs(b2));
+        return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a22 - b2) <= EPSILON * Math.max(1, Math.abs(a22), Math.abs(b2));
       }
     }
   });
@@ -13914,8 +14112,8 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = exactEquals;
-      function exactEquals(a, b) {
-        return a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
+      function exactEquals(a2, b) {
+        return a2[0] === b[0] && a2[1] === b[1] && a2[2] === b[2];
       }
     }
   });
@@ -13924,10 +14122,10 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = add;
-      function add(out, a, b) {
-        out[0] = a[0] + b[0];
-        out[1] = a[1] + b[1];
-        out[2] = a[2] + b[2];
+      function add(out, a2, b) {
+        out[0] = a2[0] + b[0];
+        out[1] = a2[1] + b[1];
+        out[2] = a2[2] + b[2];
         return out;
       }
     }
@@ -13937,10 +14135,10 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = subtract;
-      function subtract(out, a, b) {
-        out[0] = a[0] - b[0];
-        out[1] = a[1] - b[1];
-        out[2] = a[2] - b[2];
+      function subtract(out, a2, b) {
+        out[0] = a2[0] - b[0];
+        out[1] = a2[1] - b[1];
+        out[2] = a2[2] - b[2];
         return out;
       }
     }
@@ -13957,10 +14155,10 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = multiply;
-      function multiply(out, a, b) {
-        out[0] = a[0] * b[0];
-        out[1] = a[1] * b[1];
-        out[2] = a[2] * b[2];
+      function multiply(out, a2, b) {
+        out[0] = a2[0] * b[0];
+        out[1] = a2[1] * b[1];
+        out[2] = a2[2] * b[2];
         return out;
       }
     }
@@ -13977,10 +14175,10 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = divide;
-      function divide(out, a, b) {
-        out[0] = a[0] / b[0];
-        out[1] = a[1] / b[1];
-        out[2] = a[2] / b[2];
+      function divide(out, a2, b) {
+        out[0] = a2[0] / b[0];
+        out[1] = a2[1] / b[1];
+        out[2] = a2[2] / b[2];
         return out;
       }
     }
@@ -13997,10 +14195,10 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = min;
-      function min(out, a, b) {
-        out[0] = Math.min(a[0], b[0]);
-        out[1] = Math.min(a[1], b[1]);
-        out[2] = Math.min(a[2], b[2]);
+      function min(out, a2, b) {
+        out[0] = Math.min(a2[0], b[0]);
+        out[1] = Math.min(a2[1], b[1]);
+        out[2] = Math.min(a2[2], b[2]);
         return out;
       }
     }
@@ -14010,10 +14208,10 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = max;
-      function max(out, a, b) {
-        out[0] = Math.max(a[0], b[0]);
-        out[1] = Math.max(a[1], b[1]);
-        out[2] = Math.max(a[2], b[2]);
+      function max(out, a2, b) {
+        out[0] = Math.max(a2[0], b[0]);
+        out[1] = Math.max(a2[1], b[1]);
+        out[2] = Math.max(a2[2], b[2]);
         return out;
       }
     }
@@ -14023,10 +14221,10 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = floor;
-      function floor(out, a) {
-        out[0] = Math.floor(a[0]);
-        out[1] = Math.floor(a[1]);
-        out[2] = Math.floor(a[2]);
+      function floor(out, a2) {
+        out[0] = Math.floor(a2[0]);
+        out[1] = Math.floor(a2[1]);
+        out[2] = Math.floor(a2[2]);
         return out;
       }
     }
@@ -14036,10 +14234,10 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = ceil;
-      function ceil(out, a) {
-        out[0] = Math.ceil(a[0]);
-        out[1] = Math.ceil(a[1]);
-        out[2] = Math.ceil(a[2]);
+      function ceil(out, a2) {
+        out[0] = Math.ceil(a2[0]);
+        out[1] = Math.ceil(a2[1]);
+        out[2] = Math.ceil(a2[2]);
         return out;
       }
     }
@@ -14049,23 +14247,23 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = round;
-      function round(out, a) {
-        out[0] = Math.round(a[0]);
-        out[1] = Math.round(a[1]);
-        out[2] = Math.round(a[2]);
+      function round(out, a2) {
+        out[0] = Math.round(a2[0]);
+        out[1] = Math.round(a2[1]);
+        out[2] = Math.round(a2[2]);
         return out;
       }
     }
   });
-  var require_scale6 = __commonJS({
+  var require_scale5 = __commonJS({
     "../../../node_modules/gl-vec3/scale.js"(exports, module) {
       "use strict";
       init_define_process();
       module.exports = scale;
-      function scale(out, a, b) {
-        out[0] = a[0] * b;
-        out[1] = a[1] * b;
-        out[2] = a[2] * b;
+      function scale(out, a2, b) {
+        out[0] = a2[0] * b;
+        out[1] = a2[1] * b;
+        out[2] = a2[2] * b;
         return out;
       }
     }
@@ -14075,10 +14273,10 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = scaleAndAdd;
-      function scaleAndAdd(out, a, b, scale) {
-        out[0] = a[0] + b[0] * scale;
-        out[1] = a[1] + b[1] * scale;
-        out[2] = a[2] + b[2] * scale;
+      function scaleAndAdd(out, a2, b, scale) {
+        out[0] = a2[0] + b[0] * scale;
+        out[1] = a2[1] + b[1] * scale;
+        out[2] = a2[2] + b[2] * scale;
         return out;
       }
     }
@@ -14088,8 +14286,8 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = distance;
-      function distance(a, b) {
-        var x = b[0] - a[0], y = b[1] - a[1], z = b[2] - a[2];
+      function distance(a2, b) {
+        var x = b[0] - a2[0], y = b[1] - a2[1], z = b[2] - a2[2];
         return Math.sqrt(x * x + y * y + z * z);
       }
     }
@@ -14106,8 +14304,8 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = squaredDistance;
-      function squaredDistance(a, b) {
-        var x = b[0] - a[0], y = b[1] - a[1], z = b[2] - a[2];
+      function squaredDistance(a2, b) {
+        var x = b[0] - a2[0], y = b[1] - a2[1], z = b[2] - a2[2];
         return x * x + y * y + z * z;
       }
     }
@@ -14124,8 +14322,8 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = length;
-      function length(a) {
-        var x = a[0], y = a[1], z = a[2];
+      function length(a2) {
+        var x = a2[0], y = a2[1], z = a2[2];
         return Math.sqrt(x * x + y * y + z * z);
       }
     }
@@ -14142,8 +14340,8 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = squaredLength;
-      function squaredLength(a) {
-        var x = a[0], y = a[1], z = a[2];
+      function squaredLength(a2) {
+        var x = a2[0], y = a2[1], z = a2[2];
         return x * x + y * y + z * z;
       }
     }
@@ -14160,10 +14358,10 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = negate;
-      function negate(out, a) {
-        out[0] = -a[0];
-        out[1] = -a[1];
-        out[2] = -a[2];
+      function negate(out, a2) {
+        out[0] = -a2[0];
+        out[1] = -a2[1];
+        out[2] = -a2[2];
         return out;
       }
     }
@@ -14173,10 +14371,10 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = inverse;
-      function inverse(out, a) {
-        out[0] = 1 / a[0];
-        out[1] = 1 / a[1];
-        out[2] = 1 / a[2];
+      function inverse(out, a2) {
+        out[0] = 1 / a2[0];
+        out[1] = 1 / a2[1];
+        out[2] = 1 / a2[2];
         return out;
       }
     }
@@ -14186,8 +14384,8 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = cross;
-      function cross(out, a, b) {
-        var ax = a[0], ay = a[1], az = a[2], bx = b[0], by = b[1], bz = b[2];
+      function cross(out, a2, b) {
+        var ax = a2[0], ay = a2[1], az = a2[2], bx = b[0], by = b[1], bz = b[2];
         out[0] = ay * bz - az * by;
         out[1] = az * bx - ax * bz;
         out[2] = ax * by - ay * bx;
@@ -14200,11 +14398,11 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = lerp;
-      function lerp(out, a, b, t) {
-        var ax = a[0], ay = a[1], az = a[2];
-        out[0] = ax + t * (b[0] - ax);
-        out[1] = ay + t * (b[1] - ay);
-        out[2] = az + t * (b[2] - az);
+      function lerp(out, a2, b, t2) {
+        var ax = a2[0], ay = a2[1], az = a2[2];
+        out[0] = ax + t2 * (b[0] - ax);
+        out[1] = ay + t2 * (b[1] - ay);
+        out[2] = az + t2 * (b[2] - az);
         return out;
       }
     }
@@ -14216,11 +14414,11 @@ void main () {
       module.exports = random;
       function random(out, scale) {
         scale = scale || 1;
-        var r = Math.random() * 2 * Math.PI;
+        var r2 = Math.random() * 2 * Math.PI;
         var z = Math.random() * 2 - 1;
         var zScale = Math.sqrt(1 - z * z) * scale;
-        out[0] = Math.cos(r) * zScale;
-        out[1] = Math.sin(r) * zScale;
+        out[0] = Math.cos(r2) * zScale;
+        out[1] = Math.sin(r2) * zScale;
         out[2] = z * scale;
         return out;
       }
@@ -14231,8 +14429,8 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = transformMat4;
-      function transformMat4(out, a, m) {
-        var x = a[0], y = a[1], z = a[2], w = m[3] * x + m[7] * y + m[11] * z + m[15];
+      function transformMat4(out, a2, m) {
+        var x = a2[0], y = a2[1], z = a2[2], w = m[3] * x + m[7] * y + m[11] * z + m[15];
         w = w || 1;
         out[0] = (m[0] * x + m[4] * y + m[8] * z + m[12]) / w;
         out[1] = (m[1] * x + m[5] * y + m[9] * z + m[13]) / w;
@@ -14246,8 +14444,8 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = transformMat3;
-      function transformMat3(out, a, m) {
-        var x = a[0], y = a[1], z = a[2];
+      function transformMat3(out, a2, m) {
+        var x = a2[0], y = a2[1], z = a2[2];
         out[0] = x * m[0] + y * m[3] + z * m[6];
         out[1] = x * m[1] + y * m[4] + z * m[7];
         out[2] = x * m[2] + y * m[5] + z * m[8];
@@ -14260,8 +14458,8 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = transformQuat;
-      function transformQuat(out, a, q) {
-        var x = a[0], y = a[1], z = a[2], qx = q[0], qy = q[1], qz = q[2], qw = q[3], ix = qw * x + qy * z - qz * y, iy = qw * y + qz * x - qx * z, iz = qw * z + qx * y - qy * x, iw = -qx * x - qy * y - qz * z;
+      function transformQuat(out, a2, q) {
+        var x = a2[0], y = a2[1], z = a2[2], qx = q[0], qy = q[1], qz = q[2], qw = q[3], ix = qw * x + qy * z - qz * y, iy = qw * y + qz * x - qx * z, iz = qw * z + qx * y - qy * x, iw = -qx * x - qy * y - qz * z;
         out[0] = ix * qw + iw * -qx + iy * -qz - iz * -qy;
         out[1] = iy * qw + iw * -qy + iz * -qx - ix * -qz;
         out[2] = iz * qw + iw * -qz + ix * -qy - iy * -qx;
@@ -14274,14 +14472,14 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = rotateX;
-      function rotateX(out, a, b, c) {
+      function rotateX(out, a2, b, c) {
         var by = b[1];
         var bz = b[2];
-        var py = a[1] - by;
-        var pz = a[2] - bz;
+        var py = a2[1] - by;
+        var pz = a2[2] - bz;
         var sc = Math.sin(c);
         var cc = Math.cos(c);
-        out[0] = a[0];
+        out[0] = a2[0];
         out[1] = by + py * cc - pz * sc;
         out[2] = bz + py * sc + pz * cc;
         return out;
@@ -14293,15 +14491,15 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = rotateY;
-      function rotateY(out, a, b, c) {
+      function rotateY(out, a2, b, c) {
         var bx = b[0];
         var bz = b[2];
-        var px = a[0] - bx;
-        var pz = a[2] - bz;
+        var px = a2[0] - bx;
+        var pz = a2[2] - bz;
         var sc = Math.sin(c);
         var cc = Math.cos(c);
         out[0] = bx + pz * sc + px * cc;
-        out[1] = a[1];
+        out[1] = a2[1];
         out[2] = bz + pz * cc - px * sc;
         return out;
       }
@@ -14312,16 +14510,16 @@ void main () {
       "use strict";
       init_define_process();
       module.exports = rotateZ;
-      function rotateZ(out, a, b, c) {
+      function rotateZ(out, a2, b, c) {
         var bx = b[0];
         var by = b[1];
-        var px = a[0] - bx;
-        var py = a[1] - by;
+        var px = a2[0] - bx;
+        var py = a2[1] - by;
         var sc = Math.sin(c);
         var cc = Math.cos(c);
         out[0] = bx + px * cc - py * sc;
         out[1] = by + px * sc + py * cc;
-        out[2] = a[2];
+        out[2] = a2[2];
         return out;
       }
     }
@@ -14332,7 +14530,7 @@ void main () {
       init_define_process();
       module.exports = forEach;
       var vec = require_create10()();
-      function forEach(a, stride, offset, count, fn, arg) {
+      function forEach(a2, stride, offset, count, fn, arg) {
         var i, l;
         if (!stride) {
           stride = 3;
@@ -14341,20 +14539,20 @@ void main () {
           offset = 0;
         }
         if (count) {
-          l = Math.min(count * stride + offset, a.length);
+          l = Math.min(count * stride + offset, a2.length);
         } else {
-          l = a.length;
+          l = a2.length;
         }
         for (i = offset; i < l; i += stride) {
-          vec[0] = a[i];
-          vec[1] = a[i + 1];
-          vec[2] = a[i + 2];
+          vec[0] = a2[i];
+          vec[1] = a2[i + 1];
+          vec[2] = a2[i + 2];
           fn(vec, vec, arg);
-          a[i] = vec[0];
-          a[i + 1] = vec[1];
-          a[i + 2] = vec[2];
+          a2[i] = vec[0];
+          a2[i + 1] = vec[1];
+          a2[i + 2] = vec[2];
         }
-        return a;
+        return a2;
       }
     }
   });
@@ -14384,7 +14582,7 @@ void main () {
         floor: require_floor(),
         ceil: require_ceil(),
         round: require_round(),
-        scale: require_scale6(),
+        scale: require_scale5(),
         scaleAndAdd: require_scaleAndAdd(),
         distance: require_distance3(),
         dist: require_dist(),
@@ -14415,12 +14613,12 @@ void main () {
     "../../../node_modules/@jscad/regl-renderer/src/cameras/perspectiveCamera.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_gl_mat4();
+      var mat4 = require_gl_mat4();
       var vec32 = require_gl_vec3();
       var cameraState = {
-        view: mat42.identity(new Float32Array(16)),
-        projection: mat42.identity(new Float32Array(16)),
-        matrix: mat42.identity(new Float32Array(16)),
+        view: mat4.identity(new Float32Array(16)),
+        projection: mat4.identity(new Float32Array(16)),
+        matrix: mat4.identity(new Float32Array(16)),
         near: 1,
         far: 18e3,
         up: [0, 0, 1],
@@ -14436,7 +14634,7 @@ void main () {
       var defaults = Object.assign({}, cameraState, cameraProps);
       var setProjection = (output, camera, input) => {
         const aspect = input.width / input.height;
-        const projection = mat42.perspective(mat42.identity([]), camera.fov, aspect, camera.near, camera.far);
+        const projection = mat4.perspective(mat4.identity([]), camera.fov, aspect, camera.near, camera.far);
         const viewport = [0, 0, input.width, input.height];
         const out = output || ({});
         out.projection = projection;
@@ -14451,7 +14649,7 @@ void main () {
         const {position, target, up} = camera;
         const offset = vec32.subtract([], position, target);
         const newPosition = vec32.add(vec32.create(), target, offset);
-        const newView = mat42.lookAt(mat42.create(), newPosition, target, up);
+        const newView = mat4.lookAt(mat4.create(), newPosition, target, up);
         const out = output || ({});
         out.position = newPosition;
         out.view = newView;
@@ -14470,11 +14668,11 @@ void main () {
     "../../../node_modules/@jscad/regl-renderer/src/cameras/orthographicCamera.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_gl_mat4();
+      var mat4 = require_gl_mat4();
       var cameraState = {
-        view: mat42.identity(new Float32Array(16)),
-        projection: mat42.identity(new Float32Array(16)),
-        matrix: mat42.identity(new Float32Array(16)),
+        view: mat4.identity(new Float32Array(16)),
+        projection: mat4.identity(new Float32Array(16)),
+        matrix: mat4.identity(new Float32Array(16)),
         near: 1,
         far: 1300,
         up: [0, 0, 1],
@@ -14497,7 +14695,7 @@ void main () {
         const right = width * multiplier;
         const bottom = -height * multiplier;
         const top = height * multiplier;
-        const projection = mat42.ortho([], left, right, bottom, top, camera.near, camera.far);
+        const projection = mat4.ortho([], left, right, bottom, top, camera.near, camera.far);
         return {
           projection,
           aspect,
@@ -14516,7 +14714,7 @@ void main () {
       "use strict";
       init_define_process();
       var vec32 = require_gl_vec3();
-      var mat42 = require_gl_mat4();
+      var mat4 = require_gl_mat4();
       var fromOrthographicToPerspective = orthographicCamera => {
         const {near, far, fov, zoom} = orthographicCamera;
         const {viewport} = orthographicCamera;
@@ -14558,7 +14756,7 @@ void main () {
         const offsetToTarget = vec32.distance(camera.position, camera.target);
         const distance = offsetToTarget;
         const position = [distance, distance, distance];
-        const view = mat42.lookAt(mat42.create(), position, camera.target, camera.up);
+        const view = mat4.lookAt(mat4.create(), position, camera.target, camera.up);
         return {
           view,
           position
@@ -14576,7 +14774,7 @@ void main () {
         };
         const offsetToTarget = vec32.distance(camera.position, camera.target);
         const position = vec32.add(vec32.create(), presets[viewName].map(x => x * offsetToTarget), camera.target);
-        const view = mat42.lookAt(mat42.create(), position, camera.target, camera.up);
+        const view = mat4.lookAt(mat4.create(), position, camera.target, camera.up);
         return {
           view,
           position
@@ -14602,7 +14800,7 @@ void main () {
     "../../../node_modules/@jscad/array-utils/src/fnNumberSort.js"(exports, module) {
       "use strict";
       init_define_process();
-      var fnNumberSort = (a, b) => a - b;
+      var fnNumberSort = (a2, b) => a2 - b;
       module.exports = fnNumberSort;
     }
   });
@@ -14811,7 +15009,7 @@ void main () {
       "use strict";
       init_define_process();
       var vec32 = require_gl_vec3();
-      var mat42 = require_gl_mat4();
+      var mat4 = require_gl_mat4();
       var {max, min, sqrt, PI, sin, cos, atan2} = Math;
       var computeBounds = require_computeBounds();
       var controlsProps = {
@@ -14880,7 +15078,7 @@ void main () {
           offset[2] = radius * sin(phi) * cos(theta);
         }
         const newPosition = vec32.add(vec32.create(), target, offset);
-        const newView = mat42.lookAt(mat42.create(), newPosition, target, up);
+        const newView = mat4.lookAt(mat4.create(), newPosition, target, up);
         const dragEffect = 1 - max(min(drag, 1), 0.01);
         const positionChanged = vec32.distance(position, newPosition) > 1e-3;
         return {
@@ -14941,8 +15139,8 @@ void main () {
       var pan2 = ({controls: controls2, camera, speed = 1}, delta) => {
         const unproject = require_camera_unproject();
         const {projection, view, viewport} = camera;
-        const combinedProjView = mat42.multiply([], projection, view);
-        const invProjView = mat42.invert([], combinedProjView);
+        const combinedProjView = mat4.multiply([], projection, view);
+        const invProjView = mat4.invert([], combinedProjView);
         const panStart = [viewport[2], viewport[3], 0];
         const panEnd = [viewport[2] - delta[0], viewport[3] + delta[1], 0];
         const unPanStart = unproject([], panStart, viewport, invProjView);
@@ -14990,7 +15188,7 @@ void main () {
           camera: {
             position: desiredState.camera.position,
             target: desiredState.camera.target,
-            projection: mat42.perspective([], camera.fov, camera.aspect, camera.near, camera.far),
+            projection: mat4.perspective([], camera.fov, camera.aspect, camera.near, camera.far),
             view: desiredState.camera.view
           },
           controls: {
@@ -15018,7 +15216,7 @@ void main () {
     "../../../node_modules/@jscad/regl-renderer/src/geometry-utils-V2/geom2ToGeometries.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_gl_mat4();
+      var mat4 = require_gl_mat4();
       var maxIndex = Math.floor(65535 / 2);
       var geom2ToGeometries = (options, solid) => {
         let {color} = options;
@@ -15054,7 +15252,7 @@ void main () {
           }
           const normals = positions.map(x => [0, 0, -1]);
           const indices = positions.map((x, i) => i);
-          const transforms = solid.transforms ? mat42.clone(solid.transforms) : mat42.create();
+          const transforms = solid.transforms ? mat4.clone(solid.transforms) : mat4.create();
           geometries.push({
             type: "2d",
             positions,
@@ -15076,13 +15274,13 @@ void main () {
       "use strict";
       init_define_process();
       var vec32 = require_gl_vec3();
-      var mat42 = require_gl_mat4();
+      var mat4 = require_gl_mat4();
       var maxIndex = 65535;
       var geom3ToGeometries = (options, solid) => {
         let {color, smoothLighting} = options;
         if (("color" in solid)) color = solid.color;
         const polygons = solid.polygons;
-        const transforms = solid.transforms ? mat42.clone(solid.transforms) : mat42.create();
+        const transforms = solid.transforms ? mat4.clone(solid.transforms) : mat4.create();
         const geometries = [];
         let setstart = 0;
         while (setstart < polygons.length) {
@@ -15159,7 +15357,7 @@ void main () {
     "../../../node_modules/@jscad/regl-renderer/src/geometry-utils-V2/path2ToGeometries.js"(exports, module) {
       "use strict";
       init_define_process();
-      var mat42 = require_gl_mat4();
+      var mat4 = require_gl_mat4();
       var maxIndex = Math.floor(65535 / 2) - 2;
       var path2ToGeometries = (options, solid) => {
         let {color} = options;
@@ -15189,7 +15387,7 @@ void main () {
           }
           const normals = positions.map(x => [0, 0, -1]);
           const indices = positions.map((x, i) => i);
-          const transforms = solid.transforms ? mat42.clone(solid.transforms) : mat42.create();
+          const transforms = solid.transforms ? mat4.clone(solid.transforms) : mat4.create();
           geometries.push({
             type: "2d",
             positions,
@@ -15289,28 +15487,247 @@ void main () {
   });
   var index_exports = {};
   __export(index_exports, {
-    default: () => index_default
+    CSG_TAB_ID: () => CSG_TAB_ID,
+    CsgTab: () => CsgTab,
+    default: () => CsgTabPlugin
   });
   init_define_process();
   init_define_process();
-  var Core = class _Core {
-    static initialize(csgModuleState) {
-      _Core.moduleState = csgModuleState;
+  var CSG_CHANNEL_ID = "sourceacademy-csg-channel";
+  var CSG_WEB_ID = "csg-web";
+  function deserializeSolid(serialized) {
+    const solid = {
+      polygons: serialized.polygons.map(polygon => {
+        const deserializedPolygon = {
+          vertices: polygon.vertices.map(vertex => [...vertex])
+        };
+        if (polygon.color !== void 0) {
+          Object.assign(deserializedPolygon, {
+            color: [...polygon.color]
+          });
+        }
+        return deserializedPolygon;
+      }),
+      transforms: [...serialized.transforms]
+    };
+    if (serialized.color !== void 0) {
+      Object.assign(solid, {
+        color: [...serialized.color]
+      });
     }
-    static getRenderGroupManager() {
-      const moduleState = _Core.moduleState;
-      return moduleState.renderGroupManager;
-    }
-    static nextComponent() {
-      const moduleState = _Core.moduleState;
-      return moduleState.nextComponent();
-    }
-  };
-  Core.moduleState = null;
+    return solid;
+  }
   init_define_process();
-  var import_geom3 = __toESM(require_geom3(), 1);
-  var import_mat4 = __toESM(require_mat4(), 1);
-  var import_transforms = __toESM(require_transforms(), 1);
+  init_define_process();
+  init_define_process();
+  var R;
+  !(function (R2) {
+    (R2[R2.CALL = 0] = "CALL", R2[R2.RETURN = 1] = "RETURN", R2[R2.RETURN_ERR = 2] = "RETURN_ERR");
+  })(R || (R = {}));
+  init_define_process();
+  init_define_process();
+  function n(n3) {}
+  init_define_process();
+  init_define_process();
+  init_define_process();
+  init_define_process();
+  init_define_process();
+  var _;
+  !(function (_2) {
+    (_2.UNKNOWN = "__unknown", _2.INTERNAL = "__internal", _2.EVALUATOR = "__evaluator", _2.EVALUATOR_SYNTAX = "__evaluator_syntax", _2.EVALUATOR_TYPE = "__evaluator_type", _2.EVALUATOR_RUNTIME = "__evaluator_runtime");
+  })(_ || (_ = {}));
+  init_define_process();
+  var O;
+  !(function (O2) {
+    (O2[O2.PROTOCOL_VERSION = 0] = "PROTOCOL_VERSION", O2[O2.PROTOCOL_MIN_VERSION = 0] = "PROTOCOL_MIN_VERSION", O2[O2.SETUP_MESSAGES_BUFFER_SIZE = 10] = "SETUP_MESSAGES_BUFFER_SIZE");
+  })(O || (O = {}));
+  init_define_process();
+  var import_jsx_runtime = __require("react/jsx-runtime");
+  var import_core = __require("@blueprintjs/core");
+  init_define_process();
+  init_define_process();
+  function clamp(value, bound1, bound2) {
+    if (bound2 == null) return Math.min(value, bound1);
+    return Math.min(Math.max(value, bound1), bound2);
+  }
+  var import_react = __require("react");
+  function MultiItemDisplay(props) {
+    const [currentStep, setCurrentStep] = (0, import_react.useState)(0);
+    function changeStep(newIndex) {
+      var _a;
+      setCurrentStep(newIndex);
+      (_a = props.onStepChange) === null || _a === void 0 ? void 0 : _a.call(props, newIndex, currentStep);
+    }
+    const [stepEditorValue, setStepEditorValue] = (0, import_react.useState)("1");
+    const [stepEditorFocused, setStepEditorFocused] = (0, import_react.useState)(false);
+    const resetStepEditor = () => setStepEditorValue((currentStep + 1).toString());
+    const elementsDigitCount = Math.floor(Math.log10(Math.max(1, props.elements.length))) + 1;
+    return (0, import_jsx_runtime.jsxs)("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignContent: "center",
+        height: "100vh"
+      },
+      children: [(0, import_jsx_runtime.jsxs)("div", {
+        style: {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "row",
+          position: "relative",
+          marginBottom: 10
+        },
+        children: [(0, import_jsx_runtime.jsx)(import_core.Button, {
+          style: {
+            position: "absolute",
+            left: 0
+          },
+          tabIndex: 0,
+          large: true,
+          outlined: true,
+          icon: "arrow-left",
+          onClick: () => {
+            changeStep(currentStep - 1);
+            setStepEditorValue(currentStep.toString());
+          },
+          disabled: currentStep === 0,
+          children: "Previous"
+        }), (0, import_jsx_runtime.jsx)("h3", {
+          className: "bp6-text-large",
+          children: (0, import_jsx_runtime.jsxs)("div", {
+            style: {
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-around"
+            },
+            children: ["Call\xA0", (0, import_jsx_runtime.jsx)("div", {
+              style: {
+                width: `${stepEditorFocused ? elementsDigitCount + 2 : elementsDigitCount}ch`
+              },
+              children: (0, import_jsx_runtime.jsx)(import_core.EditableText, {
+                value: stepEditorValue,
+                disabled: props.elements.length === 1,
+                placeholder: void 0,
+                selectAllOnFocus: true,
+                customInputAttributes: {
+                  tabIndex: 0
+                },
+                onChange: newValue => {
+                  if (newValue && !(/^[0-9]+$/u).test(newValue)) return;
+                  if (newValue.length > elementsDigitCount) return;
+                  setStepEditorValue(newValue);
+                },
+                onConfirm: value => {
+                  if (value) {
+                    const newStep = parseInt(value);
+                    const clampedStep = clamp(newStep, 1, props.elements.length);
+                    if (clampedStep - 1 !== currentStep) {
+                      changeStep(clampedStep - 1);
+                    }
+                    setStepEditorFocused(false);
+                    setStepEditorValue(clampedStep.toString());
+                    return;
+                  }
+                  resetStepEditor();
+                  setStepEditorFocused(false);
+                },
+                onCancel: () => {
+                  resetStepEditor();
+                  setStepEditorFocused(false);
+                },
+                onEdit: () => setStepEditorFocused(true)
+              })
+            }), stepEditorFocused && (0, import_jsx_runtime.jsx)(import_jsx_runtime.Fragment, {
+              children: "\xA0"
+            }), "/", props.elements.length]
+          })
+        }), (0, import_jsx_runtime.jsx)(import_core.Button, {
+          style: {
+            position: "absolute",
+            right: 0
+          },
+          large: true,
+          outlined: true,
+          icon: "arrow-right",
+          tabIndex: 0,
+          onClick: () => {
+            changeStep(currentStep + 1);
+            setStepEditorValue((currentStep + 2).toString());
+          },
+          disabled: currentStep === props.elements.length - 1,
+          children: "Next"
+        })]
+      }), (0, import_jsx_runtime.jsx)("div", {
+        style: {
+          width: "100%",
+          paddingLeft: "20px",
+          paddingRight: "20px",
+          display: "flex",
+          alignContent: "center",
+          justifyContent: "center"
+        },
+        children: props.elements[currentStep]
+      })]
+    });
+  }
+  var import_react3 = __require("react");
+  var import_save_file = __toESM(require_browser(), 1);
+  init_define_process();
+  var import_core4 = __require("@blueprintjs/core");
+  init_define_process();
+  var import_core2 = __require("@blueprintjs/core");
+  var SA_TAB_BUTTON_WIDTH = "40px";
+  var SA_TAB_ICON_SIZE = import_core2.IconSize.LARGE;
+  var BP_TAB_BUTTON_MARGIN = "20px";
+  var BP_TAB_PANEL_MARGIN = "20px";
+  var BP_CARD_BORDER_RADIUS = "2px";
+  var BP_TEXT_MARGIN = "10px";
+  var BP_TEXT_COLOR = "#FFFFFF";
+  var BP_ICON_COLOR = "#A7B6C2";
+  var ACE_GUTTER_TEXT_COLOR = "#8091A0";
+  var ACE_GUTTER_BACKGROUND_COLOR = "#34495E";
+  var CANVAS_MAX_WIDTH = "max(70vh, 30vw)";
+  var import_react2 = __require("react");
+  init_define_process();
+  var import_core3 = __require("@blueprintjs/core");
+  var import_jsx_runtime2 = __require("react/jsx-runtime");
+  function HoverControlHint(props) {
+    return (0, import_jsx_runtime2.jsx)("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        height: SA_TAB_BUTTON_WIDTH
+      },
+      children: (0, import_jsx_runtime2.jsx)(import_core3.Tooltip, {
+        content: props.tooltipText,
+        placement: "left",
+        children: (0, import_jsx_runtime2.jsx)(import_core3.Icon, {
+          icon: props.iconName,
+          size: SA_TAB_ICON_SIZE,
+          color: BP_ICON_COLOR
+        })
+      })
+    });
+  }
+  init_define_process();
+  init_define_process();
+  var import_vec3 = __toESM(require_vec3(), 1);
+  init_define_process();
+  var DEFAULT_COLOR = "#55ffaa";
+  var MAIN_TICKS = 1;
+  var SUB_TICKS = MAIN_TICKS / 4;
+  var GRID_PADDING = MAIN_TICKS;
+  var ROUND_UP_INTERVAL = MAIN_TICKS;
+  var ZOOM_TICK_SCALE = 0.1;
+  var ROTATION_SPEED = 15e-4;
+  var X_FACTOR = 1;
+  var Y_FACTOR = 0.75;
+  init_define_process();
+  var import_measureBoundingBox = __toESM(require_measureBoundingBox2(), 1);
+  var import_regl_renderer = __toESM(require_src2(), 1);
+  init_define_process();
   init_define_process();
   init_define_process();
   var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
@@ -15336,45 +15753,6 @@ void main () {
   function hexToAlphaColor(hex) {
     return colorToAlphaColor(hexToColor(hex));
   }
-  init_define_process();
-  function getModuleState(debuggerContext, name) {
-    const {context: {moduleContexts}} = debuggerContext;
-    return (name in moduleContexts) ? moduleContexts[name].state : null;
-  }
-  function defineTab(tab) {
-    return tab;
-  }
-  init_define_process();
-  var import_core4 = __require("@blueprintjs/core");
-  init_define_process();
-  init_define_process();
-  var import_vec3 = __toESM(require_vec3(), 1);
-  init_define_process();
-  var DEFAULT_COLOR = "#55ffaa";
-  var MAIN_TICKS = 1;
-  var SUB_TICKS = MAIN_TICKS / 4;
-  var GRID_PADDING = MAIN_TICKS;
-  var ROUND_UP_INTERVAL = MAIN_TICKS;
-  var ZOOM_TICK_SCALE = 0.1;
-  var ROTATION_SPEED = 15e-4;
-  var X_FACTOR = 1;
-  var Y_FACTOR = 0.75;
-  init_define_process();
-  var import_measureBoundingBox = __toESM(require_measureBoundingBox2(), 1);
-  var import_regl_renderer = __toESM(require_src2(), 1);
-  init_define_process();
-  var import_core2 = __require("@blueprintjs/core");
-  var SA_TAB_BUTTON_WIDTH = "40px";
-  var SA_TAB_ICON_SIZE = import_core2.IconSize.LARGE;
-  var BP_TAB_BUTTON_MARGIN = "20px";
-  var BP_TAB_PANEL_MARGIN = "20px";
-  var BP_CARD_BORDER_RADIUS = "2px";
-  var BP_TEXT_MARGIN = "10px";
-  var BP_TEXT_COLOR = "#FFFFFF";
-  var BP_ICON_COLOR = "#A7B6C2";
-  var ACE_GUTTER_TEXT_COLOR = "#8091A0";
-  var ACE_GUTTER_BACKGROUND_COLOR = "#34495E";
-  var CANVAS_MAX_WIDTH = "max(70vh, 30vw)";
   var {orbit} = import_regl_renderer.controls;
   function solidsToGeometryEntities(solids) {
     const options = {
@@ -15409,8 +15787,8 @@ void main () {
       this.alwaysVisible = false;
     }
   };
-  function makeExtraEntities(renderGroup, solids) {
-    const {hasGrid, hasAxis} = renderGroup;
+  function makeExtraEntities(scene, solids) {
+    const {hasGrid, hasAxis} = scene;
     if (!(hasAxis || hasGrid)) return [];
     const boundingBoxes = solids.map(solid => (0, import_measureBoundingBox.default)(solid));
     const minMaxXys = boundingBoxes.map(boundingBox => {
@@ -15429,10 +15807,10 @@ void main () {
     if (hasAxis) extraEntities.push(new AxisEntity(neatDistance));
     return extraEntities;
   }
-  function makeWrappedRendererData(renderGroup, cameraState) {
-    const solids = renderGroup.shapes.map(shape => shape.solid);
+  function makeWrappedRendererData(scene, cameraState) {
+    const {solids} = scene;
     const geometryEntities = solidsToGeometryEntities(solids);
-    const extraEntities = makeExtraEntities(renderGroup, solids);
+    const extraEntities = makeExtraEntities(scene, solids);
     const allEntities = [...geometryEntities, ...extraEntities];
     return {
       entities: allEntities,
@@ -15452,10 +15830,10 @@ void main () {
     });
   }
   function cloneCameraState() {
-    return Object.assign({}, import_regl_renderer.cameras.perspective.defaults);
+    return __spreadValues({}, import_regl_renderer.cameras.perspective.defaults);
   }
   function cloneControlsState() {
-    return Object.assign({}, import_regl_renderer.controls.orbit.defaults);
+    return __spreadValues({}, import_regl_renderer.controls.orbit.defaults);
   }
   function updateProjection(cameraState, width, height) {
     import_regl_renderer.cameras.perspective.setProjection(cameraState, cameraState, {
@@ -15516,16 +15894,6 @@ void main () {
       });
     }
   };
-  var MousePointer;
-  (function (MousePointer2) {
-    MousePointer2[MousePointer2["LEFT"] = 0] = "LEFT";
-    MousePointer2[MousePointer2["MIDDLE"] = 1] = "MIDDLE";
-    MousePointer2[MousePointer2["RIGHT"] = 2] = "RIGHT";
-    MousePointer2[MousePointer2["BACK"] = 3] = "BACK";
-    MousePointer2[MousePointer2["FORWARD"] = 4] = "FORWARD";
-    MousePointer2[MousePointer2["NONE"] = -1] = "NONE";
-    MousePointer2[MousePointer2["OTHER"] = 7050] = "OTHER";
-  })(MousePointer || (MousePointer = {}));
   var InputTracker = class {
     constructor(canvas, cameraState, geometryEntities) {
       this.canvas = canvas;
@@ -15534,7 +15902,7 @@ void main () {
       this.controlsState = cloneControlsState();
       this.zoomToFit = true;
       this.zoomTicks = 0;
-      this.heldPointer = MousePointer.NONE;
+      this.heldPointer = -1;
       this.lastX = null;
       this.lastY = null;
       this.rotateX = 0;
@@ -15549,24 +15917,24 @@ void main () {
     }
     setHeldPointer(mouseEventButton) {
       switch (mouseEventButton) {
-        case MousePointer.LEFT:
-        case MousePointer.RIGHT:
-        case MousePointer.MIDDLE:
+        case 0:
+        case 2:
+        case 1:
           this.heldPointer = mouseEventButton;
           break;
         default:
-          this.heldPointer = MousePointer.OTHER;
+          this.heldPointer = 7050;
           break;
       }
     }
     unsetHeldPointer() {
-      this.heldPointer = MousePointer.NONE;
+      this.heldPointer = -1;
     }
     shouldIgnorePointerMove() {
-      return ![MousePointer.LEFT, MousePointer.MIDDLE].includes(this.heldPointer);
+      return ![0, 1].includes(this.heldPointer);
     }
     isPointerPan(isShiftKey) {
-      return this.heldPointer === MousePointer.MIDDLE || this.heldPointer === MousePointer.LEFT && isShiftKey;
+      return this.heldPointer === 1 || this.heldPointer === 0 && isShiftKey;
     }
     unsetLastCoordinates() {
       this.lastX = null;
@@ -15679,7 +16047,7 @@ void main () {
     }
   };
   var StatefulRenderer = class {
-    constructor(canvas, renderGroup, componentNumber, loseCallback, restoreCallback) {
+    constructor(canvas, scene, componentNumber, loseCallback, restoreCallback) {
       this.canvas = canvas;
       this.componentNumber = componentNumber;
       this.loseCallback = loseCallback;
@@ -15689,7 +16057,7 @@ void main () {
       this.cameraState = cloneCameraState();
       this.cameraState.position = [1e3, 1e3, 1500];
       this.webGlListenerTracker = new ListenerTracker(canvas);
-      this.wrappedRendererData = makeWrappedRendererData(renderGroup, this.cameraState);
+      this.wrappedRendererData = makeWrappedRendererData(scene, this.cameraState);
       this.inputTracker = new InputTracker(canvas, this.cameraState, this.wrappedRendererData.geometryEntities);
     }
     addWebGlListeners() {
@@ -15744,84 +16112,59 @@ void main () {
       this.isStarted = false;
     }
   };
-  var import_react = __require("react");
-  init_define_process();
-  var import_core3 = __require("@blueprintjs/core");
-  var import_jsx_runtime = __require("react/jsx-runtime");
-  function HoverControlHint(props) {
-    return (0, import_jsx_runtime.jsx)("div", {
-      style: {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        height: SA_TAB_BUTTON_WIDTH
-      },
-      children: (0, import_jsx_runtime.jsx)(import_core3.Tooltip, {
-        content: props.tooltipText,
-        placement: "left",
-        children: (0, import_jsx_runtime.jsx)(import_core3.Icon, {
-          icon: props.iconName,
-          size: SA_TAB_ICON_SIZE,
-          color: BP_ICON_COLOR
-        })
-      })
-    });
-  }
-  var import_jsx_runtime2 = __require("react/jsx-runtime");
-  function CanvasHolder({componentNumber}) {
-    const canvasRef = (0, import_react.useRef)(null);
-    const rendererRef = (0, import_react.useRef)(null);
-    const [isContextLost, setIsContextLost] = (0, import_react.useState)(false);
-    (0, import_react.useEffect)(() => {
+  var import_jsx_runtime3 = __require("react/jsx-runtime");
+  function CanvasHolder({componentNumber, scene}) {
+    const canvasRef = (0, import_react2.useRef)(null);
+    const rendererRef = (0, import_react2.useRef)(null);
+    const [isContextLost, setIsContextLost] = (0, import_react2.useState)(false);
+    (0, import_react2.useEffect)(() => {
       console.debug(`>>> MOUNT #${componentNumber}`);
       const {current: canvas} = canvasRef;
       if (canvas === null) return;
-      const renderGroups = Core.getRenderGroupManager().getGroupsToRender();
-      const lastRenderGroup = renderGroups.at(-1);
-      rendererRef.current = new StatefulRenderer(canvas, lastRenderGroup, componentNumber, () => setIsContextLost(true), () => setIsContextLost(false));
+      rendererRef.current = new StatefulRenderer(canvas, scene, componentNumber, () => setIsContextLost(true), () => setIsContextLost(false));
       rendererRef.current.start(true);
       return () => {
         var _a;
         console.debug(`>>> UNMOUNT #${componentNumber}`);
         (_a = rendererRef.current) == null ? void 0 : _a.stop(true);
       };
-    }, [componentNumber]);
-    return (0, import_jsx_runtime2.jsxs)(import_jsx_runtime2.Fragment, {
-      children: [(0, import_jsx_runtime2.jsxs)("div", {
+    }, [componentNumber, scene]);
+    return (0, import_jsx_runtime3.jsxs)(import_jsx_runtime3.Fragment, {
+      children: [(0, import_jsx_runtime3.jsxs)("div", {
         style: {
           display: isContextLost ? "none" : "flex",
           justifyContent: "center"
         },
-        children: [(0, import_jsx_runtime2.jsxs)("div", {
+        children: [(0, import_jsx_runtime3.jsxs)("div", {
           style: {
             display: "flex",
             flexDirection: "column",
             gap: BP_TAB_BUTTON_MARGIN,
             marginRight: BP_TAB_PANEL_MARGIN
           },
-          children: [(0, import_jsx_runtime2.jsx)(HoverControlHint, {
+          children: [(0, import_jsx_runtime3.jsx)(HoverControlHint, {
             tooltipText: "Zoom in: Scroll up",
             iconName: "zoom-in"
-          }), (0, import_jsx_runtime2.jsx)(HoverControlHint, {
+          }), (0, import_jsx_runtime3.jsx)(HoverControlHint, {
             tooltipText: "Zoom out: Scroll down",
             iconName: "zoom-out"
-          }), (0, import_jsx_runtime2.jsx)(HoverControlHint, {
+          }), (0, import_jsx_runtime3.jsx)(HoverControlHint, {
             tooltipText: "Zoom to fit: Double left-click",
             iconName: "zoom-to-fit"
-          }), (0, import_jsx_runtime2.jsx)(HoverControlHint, {
+          }), (0, import_jsx_runtime3.jsx)(HoverControlHint, {
             tooltipText: "Rotate: Left-click",
             iconName: "repeat"
-          }), (0, import_jsx_runtime2.jsx)(HoverControlHint, {
+          }), (0, import_jsx_runtime3.jsx)(HoverControlHint, {
             tooltipText: "Pan: Middle-click OR shift + left-click",
             iconName: "move"
           })]
-        }), (0, import_jsx_runtime2.jsx)("div", {
+        }), (0, import_jsx_runtime3.jsx)("div", {
           style: {
             width: "100%",
             maxWidth: CANVAS_MAX_WIDTH,
             aspectRatio: "1"
           },
-          children: (0, import_jsx_runtime2.jsx)("canvas", {
+          children: (0, import_jsx_runtime3.jsx)("canvas", {
             ref: canvasRef,
             style: {
               display: "block",
@@ -15833,21 +16176,21 @@ void main () {
             height: 0
           })
         })]
-      }), (0, import_jsx_runtime2.jsxs)("div", {
+      }), (0, import_jsx_runtime3.jsxs)("div", {
         className: "bp6-dark",
         style: {
           display: isContextLost ? "block" : "none",
           textAlign: "center"
         },
-        children: [(0, import_jsx_runtime2.jsx)("h2", {
+        children: [(0, import_jsx_runtime3.jsx)("h2", {
           style: {
             margin: `0px 0px ${BP_TEXT_MARGIN} 0px`
           },
           children: "WebGL Context Lost"
-        }), (0, import_jsx_runtime2.jsx)(import_core4.Spinner, {
+        }), (0, import_jsx_runtime3.jsx)(import_core4.Spinner, {
           intent: "warning",
           size: import_core4.SpinnerSize.LARGE
-        }), (0, import_jsx_runtime2.jsx)("p", {
+        }), (0, import_jsx_runtime3.jsx)("p", {
           style: {
             margin: `${BP_TEXT_MARGIN} 0px 0px 0px`
           },
@@ -15856,21 +16199,91 @@ void main () {
       })]
     });
   }
-  var import_jsx_runtime3 = __require("react/jsx-runtime");
-  var index_default = defineTab({
-    toSpawn(debuggerContext) {
-      const moduleState = getModuleState(debuggerContext, "csg");
-      if (moduleState === null) return false;
-      Core.initialize(moduleState);
-      return Core.getRenderGroupManager().shouldRender();
-    },
-    body() {
-      return (0, import_jsx_runtime3.jsx)(CanvasHolder, {
-        componentNumber: Core.nextComponent()
+  var import_jsx_runtime4 = __require("react/jsx-runtime");
+  function RenderedCsg({message, componentNumber}) {
+    const scene = (0, import_react3.useMemo)(() => ({
+      solids: message.solids.map(deserializeSolid),
+      hasGrid: message.hasGrid,
+      hasAxis: message.hasAxis
+    }), [message]);
+    return (0, import_jsx_runtime4.jsx)(CanvasHolder, {
+      componentNumber,
+      scene
+    });
+  }
+  function CsgTab({messages}) {
+    const canvases = messages.map((message, index) => (0, import_jsx_runtime4.jsx)(RenderedCsg, {
+      message,
+      componentNumber: index + 1
+    }, index.toString()));
+    return (0, import_jsx_runtime4.jsx)(MultiItemDisplay, {
+      elements: canvases
+    });
+  }
+  var CSG_TAB_ID = "csg";
+  var CsgTabPlugin = class {
+    constructor(_conduit, [csgChannel], tabService) {
+      this.id = CSG_WEB_ID;
+      this.__listeners = new Set();
+      this.__messages = [];
+      this.__handleMessage = message => {
+        if (message.type === "request") return;
+        if (message.type === "download") {
+          this.__download(message).catch(error => {
+            console.error("CSG download failed", error);
+          });
+          return;
+        }
+        this.__messages = [...this.__messages, message];
+        this.__emit();
+        this.__tabService.showTab(CSG_TAB_ID);
+      };
+      if (!csgChannel) {
+        throw new Error("CSG channel is required but was not provided.");
+      }
+      this.__csgChannel = csgChannel;
+      this.__tabService = tabService;
+      const subscribe = listener => this.subscribe(listener);
+      const getMessages = () => this.getMessages();
+      function CsgPluginTab() {
+        const messages = (0, import_react3.useSyncExternalStore)(subscribe, getMessages);
+        return (0, import_react3.createElement)(CsgTab, {
+          messages
+        });
+      }
+      const tab = {
+        id: CSG_TAB_ID,
+        iconName: "shapes",
+        body: (0, import_react3.createElement)(CsgPluginTab),
+        label: "CSG Tab",
+        disabled: false
+      };
+      this.__tabService.registerTab(tab);
+      this.__csgChannel.subscribe(this.__handleMessage);
+      this.__csgChannel.send({
+        type: "request"
       });
-    },
-    iconName: "shapes",
-    label: "CSG Tab"
-  });
+    }
+    getMessages() {
+      return this.__messages;
+    }
+    subscribe(listener) {
+      this.__listeners.add(listener);
+      return () => this.__listeners.delete(listener);
+    }
+    destroy() {
+      this.__csgChannel.unsubscribe(this.__handleMessage);
+    }
+    __download(message) {
+      return __async(this, null, function* () {
+        yield (0, import_save_file.default)(new Blob(message.data), message.filename);
+      });
+    }
+    __emit() {
+      this.__listeners.forEach(listener => listener());
+    }
+  };
+  CsgTabPlugin.channelAttach = [CSG_CHANNEL_ID];
+  n(CsgTabPlugin);
   return __toCommonJS(index_exports);
 };

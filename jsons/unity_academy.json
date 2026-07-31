@@ -43,7 +43,7 @@
       },
       {
         "paramType": "regular",
-        "type": "(id: GameObjectIdentifier) => void",
+        "type": "Object",
         "name": "startFunction"
       }
     ],
@@ -61,7 +61,7 @@
       },
       {
         "paramType": "regular",
-        "type": "(id: GameObjectIdentifier) => void",
+        "type": "Object",
         "name": "updateFunction"
       }
     ],
@@ -729,7 +729,7 @@
       },
       {
         "paramType": "regular",
-        "type": "() => void",
+        "type": "Object",
         "name": "onClick"
       }
     ],
