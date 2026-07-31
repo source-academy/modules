@@ -75,6 +75,7 @@ function typeName(type: DataType) {
 
 function matchesType(value: AnyTypedValue, expected: DataType | undefined) {
   if (expected === undefined) return true;
+  if (expected === DataType.ANY) return true;
   if (expected === DataType.LIST) {
     return value.type === DataType.PAIR || value.type === DataType.EMPTY_LIST;
   }
@@ -448,7 +449,17 @@ export class TestDataHandler implements IInterfacableEvaluator {
     }
   }
 
-  private getPair(pair: TypedValue<DataType.PAIR>) {
+  private getPair(pair: TypedValue<DataType.PAIR>): PairEntry {
+    // Per conductor's "a pair is just an array of length 2" model, a caller may pass a value
+    // tagged DataType.ARRAY here (e.g. a tree node round-tripped back in through Python, since
+    // py-slang's pythonToModule builds every list as an ARRAY, never a PAIR chain) - the static
+    // TypedValue<DataType.PAIR> parameter type doesn't capture that, since callers like is_tree
+    // deliberately cast across the two. pair_head/pair_tail/etc. all funnel through here, so this
+    // is the one place that needs to accept either shape.
+    if ((pair as AnyTypedValue).type === DataType.ARRAY) {
+      return this.getArray(pair as unknown as TypedValue<DataType.ARRAY>) as PairEntry;
+    }
+
     const entry = this.pairMap.get(pair.value);
     if (!entry) {
       throw new Error(`Unknown pair identifier ${pair.value}.`);
