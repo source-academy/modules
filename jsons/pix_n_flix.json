@@ -1,4 +1,88 @@
 {
+  "get_pixel_value": {
+    "kind": "function",
+    "name": "get_pixel_value",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "source"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "x"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "y"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "p"
+      }
+    ],
+    "retType": "number"
+  },
+  "set_pixel_value": {
+    "kind": "function",
+    "name": "set_pixel_value",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "dest"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "x"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "y"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "p"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "v"
+      }
+    ],
+    "retType": "void"
+  },
+  "get_pixel": {
+    "kind": "function",
+    "name": "get_pixel",
+    "description": "<p>Returns a reference to the pixel at position (x, y) of the given image - the legacy\nPixel-accessor API's entry point, kept alongside get_pixel_value/set_pixel_value. Read its\ncomponents with red_of/green_of/blue_of/alpha_of, or write to it with set_rgba (only\nmeaningful when image is a destination image, e.g. a filter's dest parameter).</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "image"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "x"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "y"
+      }
+    ],
+    "retType": "unknown"
+  },
   "red_of": {
     "kind": "function",
     "name": "red_of",
@@ -6,20 +90,7 @@
     "params": [
       {
         "paramType": "regular",
-        "type": "Pixel",
-        "name": "pixel"
-      }
-    ],
-    "retType": "number"
-  },
-  "blue_of": {
-    "kind": "function",
-    "name": "blue_of",
-    "description": "<p>Returns the blue component of the given pixel.</p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "Pixel",
+        "type": "unknown",
         "name": "pixel"
       }
     ],
@@ -32,7 +103,20 @@
     "params": [
       {
         "paramType": "regular",
-        "type": "Pixel",
+        "type": "unknown",
+        "name": "pixel"
+      }
+    ],
+    "retType": "number"
+  },
+  "blue_of": {
+    "kind": "function",
+    "name": "blue_of",
+    "description": "<p>Returns the blue component of the given pixel.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "unknown",
         "name": "pixel"
       }
     ],
@@ -45,7 +129,7 @@
     "params": [
       {
         "paramType": "regular",
-        "type": "Pixel",
+        "type": "unknown",
         "name": "pixel"
       }
     ],
@@ -54,11 +138,11 @@
   "set_rgba": {
     "kind": "function",
     "name": "set_rgba",
-    "description": "<p>Assigns the given red, green, blue and alpha component values to\nthe given pixel.</p>",
+    "description": "<p>Assigns the given red, green, blue and alpha component values to the given pixel.</p>",
     "params": [
       {
         "paramType": "regular",
-        "type": "Pixel",
+        "type": "unknown",
         "name": "pixel"
       },
       {
@@ -84,33 +168,33 @@
     ],
     "retType": "void"
   },
-  "image_height": {
-    "kind": "function",
-    "name": "image_height",
-    "description": "<p>Returns the current height of the displayed images in\npixels, i.e. the number of pixels in the vertical dimension.</p>",
-    "params": [],
-    "retType": "number"
-  },
   "image_width": {
     "kind": "function",
     "name": "image_width",
-    "description": "<p>Returns the current width of the displayed images in\npixels, i.e. the number of pixels in the horizontal dimension.</p>",
+    "description": "<p>No description available</p>",
+    "params": [],
+    "retType": "number"
+  },
+  "image_height": {
+    "kind": "function",
+    "name": "image_height",
+    "description": "<p>No description available</p>",
     "params": [],
     "retType": "number"
   },
   "copy_image": {
     "kind": "function",
     "name": "copy_image",
-    "description": "<p>The default filter that just copies the source image to the\ndestination image.</p>",
+    "description": "<p>No description available</p>",
     "params": [
       {
         "paramType": "regular",
-        "type": "Pixels",
+        "type": "unknown",
         "name": "src"
       },
       {
         "paramType": "regular",
-        "type": "Pixels",
+        "type": "unknown",
         "name": "dest"
       }
     ],
@@ -119,12 +203,12 @@
   "install_filter": {
     "kind": "function",
     "name": "install_filter",
-    "description": "<p>Installs the given filter to be used to transform each source image from\nthe live camera or from a local/remote file to a destination image that\nis then displayed on screen.</p><p>A filter is a function that is applied to two\ntwo-dimensional arrays of Pixels:\nthe source image and the destination image.</p>",
+    "description": "<p>No description available</p>",
     "params": [
       {
         "paramType": "regular",
-        "type": "Filter",
-        "name": "_filter"
+        "type": "Function",
+        "name": "filter"
       }
     ],
     "retType": "void"
@@ -132,32 +216,32 @@
   "reset_filter": {
     "kind": "function",
     "name": "reset_filter",
-    "description": "<p>Resets the installed filter to the default filter.</p>",
+    "description": "<p>No description available</p>",
     "params": [],
     "retType": "void"
   },
   "compose_filter": {
     "kind": "function",
     "name": "compose_filter",
-    "description": "<p>Returns a new filter that is equivalent to applying\nfilter1 and then filter2.</p>",
+    "description": "<p>No description available</p>",
     "params": [
       {
         "paramType": "regular",
-        "type": "Filter",
+        "type": "Function",
         "name": "filter1"
       },
       {
         "paramType": "regular",
-        "type": "Filter",
+        "type": "Function",
         "name": "filter2"
       }
     ],
-    "retType": "Filter"
+    "retType": "Function"
   },
   "pause_at": {
     "kind": "function",
     "name": "pause_at",
-    "description": "<p>Pauses the video at a set time after the video starts.</p>",
+    "description": "<p>No description available</p>",
     "params": [
       {
         "paramType": "regular",
@@ -170,7 +254,7 @@
   "set_dimensions": {
     "kind": "function",
     "name": "set_dimensions",
-    "description": "<p>Sets the dimensions of the displayed images.\nNote: Only accepts width and height values within the range of 1 to 500.</p>",
+    "description": "<p>No description available</p>",
     "params": [
       {
         "paramType": "regular",
@@ -188,7 +272,7 @@
   "set_fps": {
     "kind": "function",
     "name": "set_fps",
-    "description": "<p>Sets the framerate (i.e. frames per second (FPS)) of the video.\nNote: Only accepts FPS values within the range of 2 to 30.</p>",
+    "description": "<p>No description available</p>",
     "params": [
       {
         "paramType": "regular",
@@ -201,7 +285,7 @@
   "set_volume": {
     "kind": "function",
     "name": "set_volume",
-    "description": "<p>Sets the audio volume of the local video file played.\nNote: Only accepts volume value within the range of 0 to 100.</p>",
+    "description": "<p>No description available</p>",
     "params": [
       {
         "paramType": "regular",
@@ -214,19 +298,19 @@
   "use_local_file": {
     "kind": "function",
     "name": "use_local_file",
-    "description": "<p>Sets pix_n_flix to use video or image feed from a local file\ninstead of using the default live camera feed.</p>",
+    "description": "<p>No description available</p>",
     "params": [],
     "retType": "void"
   },
   "use_image_url": {
     "kind": "function",
     "name": "use_image_url",
-    "description": "<p>Sets pix_n_flix to use the image from the given URL as the image feed\ninstead of using the default live camera feed.</p>",
+    "description": "<p>No description available</p>",
     "params": [
       {
         "paramType": "regular",
         "type": "string",
-        "name": "URL"
+        "name": "url"
       }
     ],
     "retType": "void"
@@ -234,12 +318,12 @@
   "use_video_url": {
     "kind": "function",
     "name": "use_video_url",
-    "description": "<p>Sets pix_n_flix to use the video from the given URL as the video feed\ninstead of using the default live camera feed.</p>",
+    "description": "<p>No description available</p>",
     "params": [
       {
         "paramType": "regular",
         "type": "string",
-        "name": "URL"
+        "name": "url"
       }
     ],
     "retType": "void"
@@ -247,19 +331,19 @@
   "get_video_time": {
     "kind": "function",
     "name": "get_video_time",
-    "description": "<p>Returns the elapsed time in milliseconds since the start of the video.</p>",
+    "description": "<p>No description available</p>",
     "params": [],
     "retType": "number"
   },
   "keep_aspect_ratio": {
     "kind": "function",
     "name": "keep_aspect_ratio",
-    "description": "<p>Sets pix_n_flix to preserve the aspect ratio of the video or image</p>",
+    "description": "<p>No description available</p>",
     "params": [
       {
         "paramType": "regular",
         "type": "boolean",
-        "name": "_keepAspectRatio"
+        "name": "keep"
       }
     ],
     "retType": "void"
@@ -267,7 +351,7 @@
   "set_loop_count": {
     "kind": "function",
     "name": "set_loop_count",
-    "description": "<p>Sets the number of times the video is played.\nIf the number of times the video repeats is negative, the video will loop forever.</p>",
+    "description": "<p>No description available</p>",
     "params": [
       {
         "paramType": "regular",
@@ -277,10 +361,10 @@
     ],
     "retType": "void"
   },
-  "start": {
+  "stop": {
     "kind": "function",
-    "name": "start",
-    "description": "<p>Starts processing the image or video using the installed filter.</p>",
+    "name": "stop",
+    "description": "<p>Actually stops the video feed, matching sound's stop(): tells the tab to stop its capture\nloop and release the camera (<code>$stopStreaming</code>), and lets the Run reach its terminal status\nnaturally instead of running forever (<code>__endStreaming</code> - see its doc comment). Not required\nbefore the program otherwise ends (a hard Stop click or starting another Run terminates the\nWorker outright, tearing the tab down with it regardless of pending work), but without ever\ncalling this, a program that calls install_filter and nothing else keeps the feed running\nuntil the student explicitly stops it.</p>",
     "params": [],
     "retType": "void"
   }
