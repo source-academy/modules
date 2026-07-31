@@ -4278,16 +4278,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-pix_n_flix@workspace:src/bundles/pix_n_flix"
   dependencies:
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    "@sourceacademy/modules-lib": "workspace:^"
-    "@types/react": "catalog:"
-    "@vitest/browser-playwright": "catalog:"
-    playwright: "npm:^1.55.1"
-    react: "catalog:"
-    react-dom: "catalog:"
     typescript: "catalog:"
-    vitest: "catalog:"
-    vitest-browser-react: "npm:^2.1.0"
   languageName: unknown
   linkType: soft
 
@@ -4918,8 +4911,9 @@ __metadata:
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
     "@sourceacademy/bundle-pix_n_flix": "workspace:^"
+    "@sourceacademy/common-tabs": "npm:^0.0.1"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
