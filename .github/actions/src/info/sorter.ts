@@ -28,7 +28,11 @@ export function topoSortPackages(packages: Record<string, RawPackageRecord>) {
     }
 
     for (const name of keys) {
-      if (name.startsWith('@sourceacademy')) {
+      // A dependency starting with @sourceacademy isn't necessarily a local workspace package -
+      // e.g. @sourceacademy/conductor is a real published npm package that just happens to share
+      // the org scope. Only graph it if it's an actual node in this monorepo; otherwise it has no
+      // RawPackageRecord and processRawPackages crashes reading .hasChanges off undefined.
+      if (name.startsWith('@sourceacademy') && name in packages) {
         if (!(name in indegrees)) {
           indegrees[name] = 1;
         } else {

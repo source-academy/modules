@@ -97,9 +97,9 @@ export default function HollusionCanvas({ rune }: Props) {
   const renderFuncRef = useRef<(time: number) => void>(undefined);
 
   const { setCanvas } = useAnimation({
-    callback({ timestamp, canvas }) {
+    async callback({ timestamp, canvas }) {
       if (renderFuncRef.current === undefined) {
-        renderFuncRef.current = rune.draw(canvas);
+        renderFuncRef.current = await rune.draw(canvas);
       }
       renderFuncRef.current(timestamp);
     },
@@ -244,7 +244,7 @@ type RuneAnimation = (t: number) => Rune;
 But Source doesn't have the ability to enforce this at runtime, so a cadet might accidentally return something that isn't a rune:
 
 ```ts twoslash
-// @noErrors: 2322
+// @errors: 2614 7006
 import { animate_rune, heart } from '@sourceacademy/bundle-rune';
 
 animate_rune(1, 60, t => t < 60 ? heart : 0);

@@ -105,14 +105,13 @@ Specific to error handling, thrown errors should contain a reference to the call
 ```ts twoslash
 import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import type { Wave, Sound } from '@sourceacademy/bundle-sound/types';
-import { pair } from 'js-slang/dist/stdlib/list';
 // ---cut---
 export function make_sound(wave: Wave, duration: number): Sound {
   if (duration < 0) {
     throw new GeneralRuntimeError(`${make_sound.name}: Sound duration must be greater than or equal to 0`);
   }
 
-  return pair((t: number) => (t >= duration ? 0 : wave(t)), duration);
+  return { leftWave: wave, rightWave: wave, duration };
 }
 ```
 

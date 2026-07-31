@@ -3,12 +3,11 @@
   "private": true,
   "version": "1.0.0",
   "devDependencies": {
+    "@sourceacademy/conductor": "catalog:",
     "@sourceacademy/modules-buildtools": "workspace:^",
+    "@sourceacademy/modules-testplugin": "workspace:^",
+    "js-slang": "catalog:",
     "typescript": "catalog:"
-  },
-  "dependencies": {
-    "@sourceacademy/modules-lib": "workspace:^",
-    "js-slang": "catalog:"
   },
   "type": "module",
   "scripts": {

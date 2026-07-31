@@ -585,8 +585,9 @@ export function run_callback(f: () => void) {
 You can also provide arguments:
 
 ```ts twoslash
-import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
 import { callWithoutMetadata } from '@sourceacademy/modules-lib/utilities';
+
+type Curve = (t: number) => number;
 
 export function makeNewCurve(c: Curve, numPoints: number): Curve {
   for (let i = 0; i < numPoints; i++) {
@@ -606,8 +607,9 @@ functions that are provided from the _standard library_ or from other module fun
 `callIfFuncAndRightArgs` is used when you want to provide extra metadata about where the function was defined:
 
 ```ts twoslash
-import type { Curve } from '@sourceacademy/bundle-curve/curves_webgl';
 import { callIfFuncAndRightArgs } from '@sourceacademy/modules-lib/utilities';
+
+type Curve = (t: number) => number;
 
 export function evaluateCurve(c: Curve, numPoints: number) {
   for (let i = 0; i < numPoints; i++) {
