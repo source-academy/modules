@@ -33,17 +33,14 @@ export function readChannel(buffer: ImageBuffer, x: number, y: number, p: number
 }
 
 /** Writes `value` into channel `p` (0=r,1=g,2=b,3=a) of pixel `(x,y)` in `buffer`. */
-export function writeChannel(buffer: ImageBuffer, x: number, y: number, p: number, value: number): void {
-  assertInRange(value, 0, 255, 'set_pixel_value', 'v');
+export function writeChannel(buffer: ImageBuffer, x: number, y: number, p: number, value: number, funcName: string, paramName: string): void {
+  assertInRange(value, 0, 255, funcName, paramName);
   buffer.view[(y * buffer.width + x) * 4 + p] = value;
 }
 
 /** The default filter: copies `src` to `dest` unchanged. Both buffers must be the same size. */
 export function copyImageBuffer(src: ImageBuffer, dest: ImageBuffer): void {
   if (src.width !== dest.width || src.height !== dest.height) {
-    // EvaluatorParameterTypeError is the correct, student-facing error here - the
-    // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
-    // eslint-disable-next-line @sourceacademy/throw-runtime-error
     throw new EvaluatorParameterTypeError('copy_image', 'dest', `an image of the same size as source (${src.width}x${src.height})`, `${dest.width}x${dest.height}`);
   }
   dest.view.set(src.view);

@@ -87,11 +87,41 @@ async function callFilterClosure(
   while (!step.done) step = await gen.next();
 }
 
+// A "pixel reference" (get_pixel's return value, consumed by red_of/green_of/blue_of/alpha_of/
+// set_rgba - the legacy Pixel-accessor API, kept alongside get_pixel_value/set_pixel_value for
+// backward compatibility) packs an image's opaque handle plus an (x, y) coordinate into a single
+// number, wrapped as its own DataType.OPAQUE value. Deliberately never registered via
+// evaluator.opaque_make/opaque_get (both async-only, and conductor's generic OPAQUE
+// wrap/unwrap - see py-slang's moduleInterop.ts - never validates a value's origin either way) -
+// this is what lets get_pixel and all five accessors carry genuine `.sync` twins, matching
+// get_pixel_value/set_pixel_value's own performance, with no engine or conductor changes needed.
+// Bijective as long as x < MAX_WIDTH and y < MAX_HEIGHT (already enforced by
+// assertPixelCoordinates wherever one is constructed) - callers must still check the decoded
+// imageId actually resolves to a live buffer in `__buffers` before trusting it, since a forged or
+// stale reference decodes to *some* number either way.
+const PIXEL_REF_CELL = MAX_WIDTH * MAX_HEIGHT;
+
+function packPixelRef(imageId: number, x: number, y: number): number {
+  return imageId * PIXEL_REF_CELL + y * MAX_WIDTH + x;
+}
+
+function unpackPixelRef(packed: number): { imageId: number, x: number, y: number } {
+  const imageId = Math.floor(packed / PIXEL_REF_CELL);
+  const rest = packed % PIXEL_REF_CELL;
+  return { imageId, x: rest % MAX_WIDTH, y: Math.floor(rest / MAX_WIDTH) };
+}
+
 export default class PixNFlixModulePlugin extends BaseModulePlugin {
   id = 'pix_n_flix';
   override exportedNames = [
     'get_pixel_value',
     'set_pixel_value',
+    'get_pixel',
+    'red_of',
+    'green_of',
+    'blue_of',
+    'alpha_of',
+    'set_rgba',
     'image_height',
     'image_width',
     'copy_image',
@@ -238,10 +268,26 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
   private async __getBuffer(handle: TypedValue<DataType.OPAQUE>, funcName: string): Promise<ImageBuffer> {
     const value = await this.evaluator.opaque_get(handle);
     if (!value || typeof value !== 'object' || !('view' in value)) {
-      // eslint-disable-next-line @sourceacademy/throw-runtime-error
+
       throw new EvaluatorParameterTypeError(funcName, undefined, 'an image', value);
     }
     return value as ImageBuffer;
+  }
+
+  /**
+   * Decodes a pixel reference (get_pixel's return value) and resolves it to the live buffer it
+   * points into - unlike __getBuffer, never touches evaluator.opaque_get at all, since a pixel
+   * reference is never registered there in the first place (see packPixelRef's doc comment).
+   * Throws if the decoded imageId isn't currently a registered buffer - covers both a genuinely
+   * forged/garbage OPAQUE value and a stale reference outliving the frame it was created in.
+   */
+  private __resolvePixelRef(pixel: TypedValue<DataType.OPAQUE>, funcName: string): { buffer: ImageBuffer, x: number, y: number } {
+    const { imageId, x, y } = unpackPixelRef(pixel.value);
+    const buffer = this.__buffers.get(imageId);
+    if (!buffer) {
+      throw new EvaluatorParameterTypeError(funcName, 'pixel', 'a pixel obtained via get_pixel', pixel.value);
+    }
+    return { buffer, x, y };
   }
 
   private async __handleCapturedFrame(message: CapturedFrameMessage): Promise<void> {
@@ -311,7 +357,96 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
   ): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     const buffer = await this.__getBuffer(dest, 'set_pixel_value');
     assertPixelCoordinates(buffer, x.value, y.value, p.value, 'set_pixel_value');
-    writeChannel(buffer, x.value, y.value, p.value, v.value);
+    writeChannel(buffer, x.value, y.value, p.value, v.value, 'set_pixel_value', 'v');
+    return { type: DataType.VOID, value: undefined };
+  }
+
+  /**
+   * Returns a reference to the pixel at position (x, y) of the given image - the legacy
+   * Pixel-accessor API's entry point, kept alongside get_pixel_value/set_pixel_value. Read its
+   * components with red_of/green_of/blue_of/alpha_of, or write to it with set_rgba (only
+   * meaningful when image is a destination image, e.g. a filter's dest parameter).
+   * @param image The image to get a pixel of.
+   * @param x The x coordinate of the pixel (0 is the leftmost column).
+   * @param y The y coordinate of the pixel (0 is the topmost row).
+   * @returns A reference to the pixel at (x, y) of image.
+   */
+  @moduleMethod([DataType.OPAQUE, DataType.NUMBER, DataType.NUMBER], DataType.OPAQUE)
+  async* get_pixel(
+    image: TypedValue<DataType.OPAQUE>,
+    x: TypedValue<DataType.NUMBER>,
+    y: TypedValue<DataType.NUMBER>
+  ): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
+    const buffer = await this.__getBuffer(image, 'get_pixel');
+    assertPixelCoordinates(buffer, x.value, y.value, 0, 'get_pixel');
+    return { type: DataType.OPAQUE, value: packPixelRef(image.value, x.value, y.value) } as TypedValue<DataType.OPAQUE>;
+  }
+
+  /**
+   * Returns the red component of the given pixel.
+   * @param pixel The given pixel.
+   * @returns The red component as a number between 0 and 255.
+   */
+  @moduleMethod([DataType.OPAQUE], DataType.NUMBER)
+  async* red_of(pixel: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, undefined> {
+    const { buffer, x, y } = this.__resolvePixelRef(pixel, 'red_of');
+    return { type: DataType.NUMBER, value: readChannel(buffer, x, y, 0) };
+  }
+
+  /**
+   * Returns the green component of the given pixel.
+   * @param pixel The given pixel.
+   * @returns The green component as a number between 0 and 255.
+   */
+  @moduleMethod([DataType.OPAQUE], DataType.NUMBER)
+  async* green_of(pixel: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, undefined> {
+    const { buffer, x, y } = this.__resolvePixelRef(pixel, 'green_of');
+    return { type: DataType.NUMBER, value: readChannel(buffer, x, y, 1) };
+  }
+
+  /**
+   * Returns the blue component of the given pixel.
+   * @param pixel The given pixel.
+   * @returns The blue component as a number between 0 and 255.
+   */
+  @moduleMethod([DataType.OPAQUE], DataType.NUMBER)
+  async* blue_of(pixel: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, undefined> {
+    const { buffer, x, y } = this.__resolvePixelRef(pixel, 'blue_of');
+    return { type: DataType.NUMBER, value: readChannel(buffer, x, y, 2) };
+  }
+
+  /**
+   * Returns the alpha component of the given pixel.
+   * @param pixel The given pixel.
+   * @returns The alpha component as a number between 0 and 255.
+   */
+  @moduleMethod([DataType.OPAQUE], DataType.NUMBER)
+  async* alpha_of(pixel: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, undefined> {
+    const { buffer, x, y } = this.__resolvePixelRef(pixel, 'alpha_of');
+    return { type: DataType.NUMBER, value: readChannel(buffer, x, y, 3) };
+  }
+
+  /**
+   * Assigns the given red, green, blue and alpha component values to the given pixel.
+   * @param pixel The given pixel.
+   * @param r The red component as a number between 0 and 255.
+   * @param g The green component as a number between 0 and 255.
+   * @param b The blue component as a number between 0 and 255.
+   * @param a The alpha component as a number between 0 and 255.
+   */
+  @moduleMethod([DataType.OPAQUE, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.VOID)
+  async* set_rgba(
+    pixel: TypedValue<DataType.OPAQUE>,
+    r: TypedValue<DataType.NUMBER>,
+    g: TypedValue<DataType.NUMBER>,
+    b: TypedValue<DataType.NUMBER>,
+    a: TypedValue<DataType.NUMBER>
+  ): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
+    const { buffer, x, y } = this.__resolvePixelRef(pixel, 'set_rgba');
+    writeChannel(buffer, x, y, 0, r.value, 'set_rgba', 'r');
+    writeChannel(buffer, x, y, 1, g.value, 'set_rgba', 'g');
+    writeChannel(buffer, x, y, 2, b.value, 'set_rgba', 'b');
+    writeChannel(buffer, x, y, 3, a.value, 'set_rgba', 'a');
     return { type: DataType.VOID, value: undefined };
   }
 
@@ -517,7 +652,7 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
         const buffer = this.__buffers.get(dest.value);
         if (!buffer) return undefined;
         assertPixelCoordinates(buffer, x.value, y.value, p.value, 'set_pixel_value');
-        writeChannel(buffer, x.value, y.value, p.value, v.value);
+        writeChannel(buffer, x.value, y.value, p.value, v.value, 'set_pixel_value', 'v');
         return { type: DataType.VOID, value: undefined };
       }
     });
@@ -548,6 +683,76 @@ export default class PixNFlixModulePlugin extends BaseModulePlugin {
         const destBuffer = this.__buffers.get(dest.value);
         if (!srcBuffer || !destBuffer) return undefined;
         copyImageBuffer(srcBuffer, destBuffer);
+        return { type: DataType.VOID, value: undefined };
+      }
+    });
+    // get_pixel/red_of/green_of/blue_of/alpha_of/set_rgba's `.sync` twins: unlike the buffer
+    // handles above, a pixel reference is never registered anywhere (see packPixelRef's doc
+    // comment), so there's nothing to await even in the async body - both just decode + look up
+    // __buffers directly. Returning undefined (rather than throwing) on an unresolvable
+    // reference matches the other twins' convention here, falling back to the async body's
+    // identical check, which is the one that actually throws.
+    Object.assign(PixNFlixModulePlugin.prototype.get_pixel, {
+      sync(
+        this: PixNFlixModulePlugin,
+        image: TypedValue<DataType.OPAQUE>,
+        x: TypedValue<DataType.NUMBER>,
+        y: TypedValue<DataType.NUMBER>
+      ): TypedValue<DataType.OPAQUE> | undefined {
+        const buffer = this.__buffers.get(image.value);
+        if (!buffer) return undefined;
+        assertPixelCoordinates(buffer, x.value, y.value, 0, 'get_pixel');
+        return { type: DataType.OPAQUE, value: packPixelRef(image.value, x.value, y.value) } as TypedValue<DataType.OPAQUE>;
+      }
+    });
+    Object.assign(PixNFlixModulePlugin.prototype.red_of, {
+      sync(this: PixNFlixModulePlugin, pixel: TypedValue<DataType.OPAQUE>): TypedValue<DataType.NUMBER> | undefined {
+        const { imageId, x, y } = unpackPixelRef(pixel.value);
+        const buffer = this.__buffers.get(imageId);
+        if (!buffer) return undefined;
+        return { type: DataType.NUMBER, value: readChannel(buffer, x, y, 0) };
+      }
+    });
+    Object.assign(PixNFlixModulePlugin.prototype.green_of, {
+      sync(this: PixNFlixModulePlugin, pixel: TypedValue<DataType.OPAQUE>): TypedValue<DataType.NUMBER> | undefined {
+        const { imageId, x, y } = unpackPixelRef(pixel.value);
+        const buffer = this.__buffers.get(imageId);
+        if (!buffer) return undefined;
+        return { type: DataType.NUMBER, value: readChannel(buffer, x, y, 1) };
+      }
+    });
+    Object.assign(PixNFlixModulePlugin.prototype.blue_of, {
+      sync(this: PixNFlixModulePlugin, pixel: TypedValue<DataType.OPAQUE>): TypedValue<DataType.NUMBER> | undefined {
+        const { imageId, x, y } = unpackPixelRef(pixel.value);
+        const buffer = this.__buffers.get(imageId);
+        if (!buffer) return undefined;
+        return { type: DataType.NUMBER, value: readChannel(buffer, x, y, 2) };
+      }
+    });
+    Object.assign(PixNFlixModulePlugin.prototype.alpha_of, {
+      sync(this: PixNFlixModulePlugin, pixel: TypedValue<DataType.OPAQUE>): TypedValue<DataType.NUMBER> | undefined {
+        const { imageId, x, y } = unpackPixelRef(pixel.value);
+        const buffer = this.__buffers.get(imageId);
+        if (!buffer) return undefined;
+        return { type: DataType.NUMBER, value: readChannel(buffer, x, y, 3) };
+      }
+    });
+    Object.assign(PixNFlixModulePlugin.prototype.set_rgba, {
+      sync(
+        this: PixNFlixModulePlugin,
+        pixel: TypedValue<DataType.OPAQUE>,
+        r: TypedValue<DataType.NUMBER>,
+        g: TypedValue<DataType.NUMBER>,
+        b: TypedValue<DataType.NUMBER>,
+        a: TypedValue<DataType.NUMBER>
+      ): TypedValue<DataType.VOID> | undefined {
+        const { imageId, x, y } = unpackPixelRef(pixel.value);
+        const buffer = this.__buffers.get(imageId);
+        if (!buffer) return undefined;
+        writeChannel(buffer, x, y, 0, r.value, 'set_rgba', 'r');
+        writeChannel(buffer, x, y, 1, g.value, 'set_rgba', 'g');
+        writeChannel(buffer, x, y, 2, b.value, 'set_rgba', 'b');
+        writeChannel(buffer, x, y, 3, a.value, 'set_rgba', 'a');
         return { type: DataType.VOID, value: undefined };
       }
     });

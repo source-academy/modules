@@ -38,7 +38,7 @@ describe(assertPixelCoordinates, () => {
 describe('readChannel/writeChannel', () => {
   it('round-trips a written value', () => {
     const buffer = makeImageBuffer(2, 2);
-    writeChannel(buffer, 1, 1, 2, 200);
+    writeChannel(buffer, 1, 1, 2, 200, 'set_pixel_value', 'v');
     expect(readChannel(buffer, 1, 1, 2)).toBe(200);
     // Untouched channels/pixels are unaffected.
     expect(readChannel(buffer, 1, 1, 0)).toBe(0);
@@ -47,16 +47,16 @@ describe('readChannel/writeChannel', () => {
 
   it('rejects an out-of-range value', () => {
     const buffer = makeImageBuffer(2, 2);
-    expect(() => writeChannel(buffer, 0, 0, 0, 256)).toThrow();
-    expect(() => writeChannel(buffer, 0, 0, 0, -1)).toThrow();
+    expect(() => writeChannel(buffer, 0, 0, 0, 256, 'set_pixel_value', 'v')).toThrow();
+    expect(() => writeChannel(buffer, 0, 0, 0, -1, 'set_pixel_value', 'v')).toThrow();
   });
 });
 
 describe(copyImageBuffer, () => {
   it('copies src pixel data into dest', () => {
     const src = makeImageBuffer(2, 2);
-    writeChannel(src, 0, 0, 0, 10);
-    writeChannel(src, 1, 1, 3, 42);
+    writeChannel(src, 0, 0, 0, 10, 'set_pixel_value', 'v');
+    writeChannel(src, 1, 1, 3, 42, 'set_pixel_value', 'v');
     const dest = makeImageBuffer(2, 2);
 
     copyImageBuffer(src, dest);
@@ -64,7 +64,7 @@ describe(copyImageBuffer, () => {
     expect(readChannel(dest, 0, 0, 0)).toBe(10);
     expect(readChannel(dest, 1, 1, 3)).toBe(42);
     // A copy, not a shared reference - mutating src afterward must not affect dest.
-    writeChannel(src, 0, 0, 0, 99);
+    writeChannel(src, 0, 0, 0, 99, 'set_pixel_value', 'v');
     expect(readChannel(dest, 0, 0, 0)).toBe(10);
   });
 
