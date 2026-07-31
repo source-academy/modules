@@ -6,7 +6,7 @@ permissions:
 on:
   push:
     branches:
-      - conductor-migration
+      - master
 
 jobs:
   deploy:
