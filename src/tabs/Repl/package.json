@@ -1,11 +1,12 @@
 {
   "name": "@sourceacademy/tab-Repl",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^6.0.0",
     "@sourceacademy/bundle-repl": "workspace:^",
-    "@sourceacademy/modules-lib": "workspace:^",
+    "@sourceacademy/common-tabs": "^0.0.1",
+    "@sourceacademy/conductor": "catalog:",
     "ace-builds": "^1.25.1",
     "es-toolkit": "^1.44.0",
     "react": "catalog:",
