@@ -35,8 +35,8 @@
  * @author Wang Zihan
  */
 import {
-  assertNumberWithinRange,
-  EvaluatorRuntimeError
+  EvaluatorRuntimeError,
+  assertNumberWithinRange
 } from '@sourceacademy/conductor/common';
 import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
 import { BaseModulePlugin, moduleMethod } from '@sourceacademy/conductor/module';

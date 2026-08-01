@@ -46,12 +46,10 @@ async function stringifyReplValueDepth(
       return `[${await stringifyReplValueDepth(evaluator, head, depth + 1)}, ${await stringifyReplValueDepth(evaluator, tail, depth + 1)}]`;
     }
     case DataType.ARRAY: {
-      const array = value as TypedValue<DataType.ARRAY>;
-      const length = await evaluator.array_length(array);
+      const length = await evaluator.array_length(value);
       const parts: string[] = [];
       for (let i = 0; i < length; i += 1) {
-        // eslint-disable-next-line no-await-in-loop -- each element must be resolved before the next, same as the pair case
-        parts.push(await stringifyReplValueDepth(evaluator, await evaluator.array_get(array, i), depth + 1));
+        parts.push(await stringifyReplValueDepth(evaluator, await evaluator.array_get(value, i), depth + 1));
       }
       return `[${parts.join(', ')}]`;
     }

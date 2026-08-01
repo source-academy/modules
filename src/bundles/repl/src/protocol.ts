@@ -5,7 +5,6 @@
  */
 
 export const REPL_CHANNEL_ID = 'sourceacademy-repl-channel';
-export const REPL_RUNNER_ID = 'repl-runner';
 export const REPL_WEB_ID = 'repl-web';
 export const REPL_TAB_NAME = 'Repl';
 

@@ -133,10 +133,13 @@ describe(ReplTabPlugin, () => {
     expect(channel.sent).toContainEqual({ type: 'run', code: '' });
   });
 
-  test('a set_program_text message from the bundle overwrites the program text and the cache', () => {
+  test('a set_program_text message from the bundle overwrites the program text and the cache', async () => {
     channel.emit({ type: 'set_program_text', text: 'function f() { return 1; }' });
     plugin.__runCode();
     expect(channel.sent).toContainEqual({ type: 'run', code: 'function f() { return 1; }' });
+
+    // The save is throttled (100ms), so it may not have landed synchronously.
+    await new Promise(resolve => setTimeout(resolve, 150));
     expect(localStorageMock.setItem).toHaveBeenCalledWith(
       'programmable_repl_saved_editor_code',
       'function f() { return 1; }'

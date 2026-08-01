@@ -148,9 +148,10 @@ export default class ReplTabPlugin implements IPlugin {
       case 'set_program_text':
         this.__setProgramText(message.text);
         break;
-      default:
-        // 'run'/'request' are tab -> bundle messages, never received here - ReplChannelMessage's
-        // union just describes the channel's full traffic in both directions (see protocol.ts).
+      case 'run':
+      case 'request':
+        // Tab -> bundle messages, never received here - ReplChannelMessage's union just describes
+        // the channel's full traffic in both directions (see protocol.ts).
         break;
     }
   };
@@ -203,12 +204,11 @@ function ReplView({ plugin, state }: ReplViewProps) {
   const outputDivs = state.outputs.map((entry, index): React.ReactElement => {
     if (entry.outputMethod === 'richtext') {
       const style = entry.color === '' ? FONT_MESSAGE : { ...FONT_MESSAGE, color: entry.color };
-      // eslint-disable-next-line react/no-array-index-key -- entries are only ever appended, never reordered/removed
+      // entries are only ever appended, never reordered/removed, so the index is a stable key.
       return <div key={index} style={style} dangerouslySetInnerHTML={{ __html: entry.content }} />;
     }
 
     const style = entry.color === '' ? FONT_MESSAGE : { ...FONT_MESSAGE, color: entry.color };
-    // eslint-disable-next-line react/no-array-index-key -- entries are only ever appended, never reordered/removed
     return <div key={index} style={style}>{entry.content}</div>;
   });
 
