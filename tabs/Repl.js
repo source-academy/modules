@@ -3888,7 +3888,8 @@ export default require => {
   var FONT_MESSAGE = {
     fontFamily: "Inconsolata, Consolas, monospace",
     fontSize: "16px",
-    fontWeight: "normal"
+    fontWeight: "normal",
+    whiteSpace: "pre-wrap"
   };
   function readSavedProgramText() {
     var _a;
