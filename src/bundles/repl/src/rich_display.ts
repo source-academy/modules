@@ -38,8 +38,11 @@ export function xssStringCheck(str: string): string {
  * Checks if the given string is a valid hex color identifier
  */
 export function checkColorStringValidity(htmlColor: string): boolean {
-  return /#[0-9a-f]{6}/u.test(htmlColor.toLowerCase());
+  return /^#[0-9a-f]{6}$/u.test(htmlColor.toLowerCase());
 }
+
+/** Bounds recursion on a self-referential/cyclic pair built via set_head/set_tail. */
+const MAX_STYLE_DEPTH = 64;
 
 /**
  * Recursively turns a `pair(pair(pair("text", style1), style2), style3)`-shaped Source value into
@@ -49,8 +52,13 @@ export function checkColorStringValidity(htmlColor: string): boolean {
 export async function processRichDisplayContent(
   evaluator: IDataHandler,
   value: TypedValue<DataType>,
-  func_name: string
+  func_name: string,
+  depth = 0
 ): Promise<string> {
+  if (depth > MAX_STYLE_DEPTH) {
+    throw new EvaluatorRuntimeError(`${func_name}: rich text nesting is too deep, or the value is cyclic.`);
+  }
+
   if (value.type === DataType.CONST_STRING) {
     // There MUST be a safe check on users' strings, because users may insert something that can be interpreted as executable JavaScript code when outputing rich text.
     const safeCheckResult = xssStringCheck(value.value);
@@ -103,5 +111,5 @@ export async function processRichDisplayContent(
     }
     style = namedStyle;
   }
-  return style + await processRichDisplayContent(evaluator, head, func_name);
+  return style + await processRichDisplayContent(evaluator, head, func_name, depth + 1);
 }

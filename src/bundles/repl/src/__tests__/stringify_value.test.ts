@@ -87,4 +87,19 @@ describe(stringifyReplValue, () => {
     const result = await stringifyReplValue(evaluator, pair);
     expect(result).toContain('...');
   });
+
+  test('a branching cycle (both head and tail self-referential) terminates via the shared node budget, not just the depth cap', async () => {
+    // Regression test: a depth cap alone bounds how deep any single branch goes, but PAIR
+    // recurses into BOTH head and tail - a pair whose head AND tail both point back at itself
+    // doubles the number of calls at every level, reaching up to 2^MAX_DEPTH calls before a
+    // depth-only guard would ever kick in. That must terminate quickly (a shared total-node
+    // budget, not the depth cap, is what actually stops it here), not hang the test.
+    const evaluator = new TestDataHandler();
+    const pair = await evaluator.pair_make(numberValue(0), emptyListValue());
+    await evaluator.pair_sethead(pair, pair);
+    await evaluator.pair_settail(pair, pair);
+
+    const result = await stringifyReplValue(evaluator, pair);
+    expect(result).toContain('...');
+  });
 });

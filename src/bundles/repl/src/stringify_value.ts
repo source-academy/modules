@@ -14,19 +14,30 @@
  */
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 
-/** Bounds recursion on self-referential pair/array structures. */
+/** Bounds recursion depth on self-referential pair/array structures. */
 const MAX_DEPTH = 64;
+/**
+ * Bounds total nodes visited, in addition to MAX_DEPTH - a pair whose head AND tail both cycle
+ * back (e.g. via set_head/set_tail) branches on every level, so a depth cap alone still allows up
+ * to 2^MAX_DEPTH calls before it kicks in. This budget is shared across the whole traversal (not
+ * per-branch), so a wide/cyclic structure exhausts it long before that.
+ */
+const MAX_NODES = 10_000;
+
+type Budget = { remaining: number };
 
 export async function stringifyReplValue(evaluator: IDataHandler, value: TypedValue<DataType>): Promise<string> {
-  return stringifyReplValueDepth(evaluator, value, 0);
+  return stringifyReplValueDepth(evaluator, value, 0, { remaining: MAX_NODES });
 }
 
 async function stringifyReplValueDepth(
   evaluator: IDataHandler,
   value: TypedValue<DataType>,
-  depth: number
+  depth: number,
+  budget: Budget
 ): Promise<string> {
-  if (depth > MAX_DEPTH) return '...';
+  if (depth > MAX_DEPTH || budget.remaining <= 0) return '...';
+  budget.remaining -= 1;
 
   switch (value.type) {
     case DataType.VOID:
@@ -43,13 +54,13 @@ async function stringifyReplValueDepth(
       const pair = value as TypedValue<DataType.PAIR>;
       const head = await evaluator.pair_head(pair);
       const tail = await evaluator.pair_tail(pair);
-      return `[${await stringifyReplValueDepth(evaluator, head, depth + 1)}, ${await stringifyReplValueDepth(evaluator, tail, depth + 1)}]`;
+      return `[${await stringifyReplValueDepth(evaluator, head, depth + 1, budget)}, ${await stringifyReplValueDepth(evaluator, tail, depth + 1, budget)}]`;
     }
     case DataType.ARRAY: {
       const length = await evaluator.array_length(value);
       const parts: string[] = [];
       for (let i = 0; i < length; i += 1) {
-        parts.push(await stringifyReplValueDepth(evaluator, await evaluator.array_get(value, i), depth + 1));
+        parts.push(await stringifyReplValueDepth(evaluator, await evaluator.array_get(value, i), depth + 1, budget));
       }
       return `[${parts.join(', ')}]`;
     }

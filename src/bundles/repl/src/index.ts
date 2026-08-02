@@ -82,6 +82,10 @@ export default class ReplModulePlugin extends BaseModulePlugin {
   private __evaluator: TypedValue<DataType.CLOSURE> | undefined;
   private __tabLoaded = false;
   private __tabRequested = false;
+  // Guards against two overlapping __runCode calls (e.g. a fast double-click on Run) driving the
+  // same evaluator closure concurrently - most evaluators (a tree-walking/CSE-machine interpreter)
+  // assume single-threaded, sequential calls and aren't safe to re-enter.
+  private __running = false;
 
   private readonly __editorProps = {
     backgroundImageUrl: null as string | null,
@@ -311,6 +315,12 @@ export default class ReplModulePlugin extends BaseModulePlugin {
       return;
     }
 
+    // Dropped rather than queued: the tab already lets the student fire off another Run before
+    // the last one's output has come back, and queuing would just mean an unbounded backlog of
+    // pending closure calls into a (likely non-reentrant) evaluator if that keeps happening.
+    if (this.__running) return;
+    this.__running = true;
+
     try {
       const generator = this.evaluator.closure_call_unchecked(this.__evaluator, [mString(code)]);
       let step = await generator.next();
@@ -326,6 +336,8 @@ export default class ReplModulePlugin extends BaseModulePlugin {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       this.__displayOutput({ content: message, color: COLOR_ERROR_MESSAGE, outputMethod: 'plaintext' });
+    } finally {
+      this.__running = false;
     }
   }
 }

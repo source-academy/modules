@@ -49,6 +49,13 @@ describe(checkColorStringValidity, () => {
   test('rejects a colour missing digits', () => {
     expect(checkColorStringValidity('#fff')).toBe(false);
   });
+
+  test('rejects trailing characters after the six hex digits', () => {
+    // Regression test: an unanchored regex would accept this (it *contains* a valid 6-digit hex
+    // sequence) even though the whole string isn't just a colour - see the processRichDisplayContent
+    // test below for why that mattered (attribute break-out via a crafted clrt/clrb tail).
+    expect(checkColorStringValidity('#ff0000" onmouseover="alert(1)')).toBe(false);
+  });
 });
 
 describe(processRichDisplayContent, () => {
@@ -113,6 +120,27 @@ describe(processRichDisplayContent, () => {
     const evaluator = new TestDataHandler();
     const value = await pairOf(evaluator, stringValue('Hello'), stringValue('clrt#zzzzzz'));
     await expect(processRichDisplayContent(evaluator, value, 'rich_repl_display')).rejects.toThrow(/Invalid html colour/);
+  });
+
+  test('a colour tail crafted to break out of the style attribute is rejected, not passed through', async () => {
+    // Regression test for the unanchored-regex XSS: this contains a valid #ff0000, but also a
+    // quote that would close the style="..." attribute the tab renders this into and inject an
+    // arbitrary attribute/event handler. Must be rejected outright, not merely have the extra
+    // characters silently accepted as part of the "colour".
+    const evaluator = new TestDataHandler();
+    const value = await pairOf(evaluator, stringValue('Hello'), stringValue('clrt#ff0000" onmouseover="alert(1)'));
+    await expect(processRichDisplayContent(evaluator, value, 'rich_repl_display')).rejects.toThrow(/Invalid html colour/);
+  });
+
+  test('a cyclic pair (via set_head/set_tail) is rejected instead of recursing forever', async () => {
+    const evaluator = new TestDataHandler();
+    // A two-cycle where every node has a valid style tail, so the CONST_STRING base case is never
+    // reached on its own - only a depth bound stops this.
+    const a = await pairOf(evaluator, numberValue(0), stringValue('bold'));
+    const b = await pairOf(evaluator, a, stringValue('italic'));
+    await evaluator.pair_sethead(a, b);
+
+    await expect(processRichDisplayContent(evaluator, a, 'rich_repl_display')).rejects.toThrow(/too deep|cyclic/);
   });
 
   test('nested style pairs accumulate CSS outermost-first, base text last', async () => {

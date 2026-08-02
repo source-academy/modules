@@ -40,11 +40,28 @@ const FONT_MESSAGE = {
   fontWeight: 'normal'
 };
 
+/**
+ * localStorage.getItem/setItem can throw (e.g. a SecurityError in Safari private browsing, or a
+ * quota error) - the cache is a best-effort convenience, not something that should stop the tab
+ * from constructing or break the throttled save callback.
+ */
+function readSavedProgramText(): string {
+  try {
+    return localStorage.getItem(SAVED_CODE_STORAGE_KEY) ?? '';
+  } catch {
+    return '';
+  }
+}
+
 // Module-level (not per-plugin-instance) throttle, same as the pre-Conductor implementation -
 // a fresh ReplTabPlugin is constructed every Run, but there's no reason for that to reset the
 // throttle window for a save that's purely about the browser's localStorage.
 const saveProgramText = throttle((text: string) => {
-  localStorage.setItem(SAVED_CODE_STORAGE_KEY, text);
+  try {
+    localStorage.setItem(SAVED_CODE_STORAGE_KEY, text);
+  } catch {
+    // Storage unavailable or full - the cache is best-effort.
+  }
 }, 100);
 
 interface ReplViewState {
@@ -82,7 +99,7 @@ export default class ReplTabPlugin implements IPlugin {
       backgroundImageUrl: null,
       backgroundColorAlpha: 1,
       fontSize: 17,
-      programText: localStorage.getItem(SAVED_CODE_STORAGE_KEY) ?? ''
+      programText: readSavedProgramText()
     };
 
     this.__channel.subscribe(this.__handleMessage);
@@ -116,7 +133,15 @@ export default class ReplTabPlugin implements IPlugin {
     // Called on every Run's teardown, well before the student is necessarily done reading output
     // or editing code in the tab - unregistering here would yank the tab away immediately. The
     // tab is left registered and gets replaced naturally when the next Run's ReplTabPlugin
-    // re-registers under the same id, same as sound/matrix's tabs.
+    // re-registers under the same id, same as sound/matrix's tabs. The channel subscription is
+    // not left behind, though - this discarded instance must not go on mutating its own
+    // (unrendered) state for every message the channel still happens to carry.
+    this.__channel.unsubscribe(this.__handleMessage);
+  }
+
+  /** Exposed for tests - the rendered view already reads this via useSyncExternalStore. */
+  getOutputs(): ReplOutputEntry[] {
+    return this.__state.outputs;
   }
 
   private __subscribe(listener: () => void): () => void {
@@ -201,6 +226,12 @@ function ReplView({ plugin, state }: ReplViewProps) {
     };
   }, []);
 
+  // Applied in an effect (rather than only from the AceEditor ref callback below) so a
+  // set_font_size call that arrives after the editor has mounted still reaches it.
+  useEffect(() => {
+    editorInstanceRef.current?.setOptions({ fontSize: `${state.fontSize}pt` });
+  }, [state.fontSize]);
+
   const outputDivs = state.outputs.map((entry, index): React.ReactElement => {
     if (entry.outputMethod === 'richtext') {
       const style = entry.color === '' ? FONT_MESSAGE : { ...FONT_MESSAGE, color: entry.color };
@@ -230,10 +261,7 @@ function ReplView({ plugin, state }: ReplViewProps) {
       >
         <AceEditor
           ref={e => {
-            if (e) {
-              editorInstanceRef.current = e.editor;
-              editorInstanceRef.current.setOptions({ fontSize: `${state.fontSize}pt` });
-            }
+            editorInstanceRef.current = e?.editor ?? null;
           }}
           style={{
             width: '100%',
