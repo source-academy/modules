@@ -11,20 +11,30 @@
 <li><a href="" aria-current="page">repl</a></li></ul>
 <h1>Module repl</h1></div>
 <section class="tsd-panel tsd-comment">
-<div class="tsd-comment tsd-typography"><h2 id="example-of-usage" class="tsd-anchor-link">Example of usage:<a href="#example-of-usage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<h3 id="use-with-metacircular-evaluator" class="tsd-anchor-link">Use with metacircular evaluator:<a href="#use-with-metacircular-evaluator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<pre><code class="js"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">set_evaluator</span><span class="hl-1">, </span><span class="hl-2">repl_display</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&quot;repl&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-7">const</span><span class="hl-1"> </span><span class="hl-8">primitive_functions</span><span class="hl-1"> = </span><span class="hl-4">list</span><span class="hl-1">(</span><br/><span class="hl-1">    </span><span class="hl-6">// (omitted other primitive functions)</span><br/><span class="hl-1">    </span><span class="hl-4">list</span><span class="hl-1">(</span><span class="hl-3">&quot;display&quot;</span><span class="hl-1">, </span><span class="hl-2">repl_display</span><span class="hl-1">), </span><span class="hl-6">// Here change this from &quot;display&quot; to &quot;repl_display&quot; to let the display result goes to the repl tab.</span><br/><span class="hl-1">    </span><span class="hl-6">// (omitted other primitive functions)</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-7">function</span><span class="hl-1"> </span><span class="hl-4">parse_and_evaluate</span><span class="hl-1">(</span><span class="hl-2">code</span><span class="hl-1">){</span><br/><span class="hl-1">    </span><span class="hl-6">// (your metacircular evaluator entry function)</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-4">set_evaluator</span><span class="hl-1">(</span><span class="hl-2">parse_and_evaluate</span><span class="hl-1">); </span><span class="hl-6">// This can invoke the repl with your metacircular evaluator&#39;s evaluation entry</span>
+<div class="tsd-comment tsd-typography"><p>The <code>repl</code> module lets a program build its own read-eval-print loop inside a Source Academy
+tab. The primary use is a metacircular evaluator, as in SICP Chapter 4: a program writes its own
+<code>parse_and_evaluate</code>-style function and registers it with ReplModulePlugin#set_evaluator.
+From then on, whatever the cadet types into the Repl tab's editor and runs is captured by the
+tab as a string and sent here, and this bundle calls the registered evaluator with that string.
+ReplModulePlugin#repl_display/ReplModulePlugin#rich_repl_display let the
+evaluator (or any other running code) print into the Repl tab's output area.</p>
+<h3 id="example" class="tsd-anchor-link">Example<a href="#example" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="js"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">set_evaluator</span><span class="hl-1">, </span><span class="hl-2">repl_display</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&quot;repl&quot;</span><span class="hl-1">;</span><br/><br/><span class="hl-7">function</span><span class="hl-1"> </span><span class="hl-4">parse_and_evaluate</span><span class="hl-1">(</span><span class="hl-2">code</span><span class="hl-1">) {</span><br/><span class="hl-1">  </span><span class="hl-6">// ...your metacircular evaluator&#39;s entry point...</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-4">set_evaluator</span><span class="hl-1">(</span><span class="hl-2">parse_and_evaluate</span><span class="hl-1">);</span>
 </code><button type="button">Copy</button></pre>
 
-<h3 id="use-with-source-academys-builtin-js-slang" class="tsd-anchor-link">Use with Source Academy's builtin js-slang<a href="#use-with-source-academys-builtin-js-slang" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<pre><code class="js"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">set_evaluator</span><span class="hl-1">, </span><span class="hl-2">default_js_slang</span><span class="hl-1">, </span><span class="hl-2">repl_display</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&quot;repl&quot;</span><span class="hl-1">;  </span><span class="hl-6">// Here you also need to import &quot;repl_display&quot; along with &quot;set_evaluator&quot; and &quot;default_js_slang&quot;.</span><br/><br/><span class="hl-4">set_evaluator</span><span class="hl-1">(</span><span class="hl-2">default_js_slang</span><span class="hl-1">); </span><span class="hl-6">// This can invoke the repl with Source Academy&#39;s builtin js-slang evaluation entry</span>
-</code><button type="button">Copy</button></pre>
-
-<p>(Note that you can't directly call &quot;default_js_slang&quot; in your own code. It should only be used as the parameter of &quot;set_evaluator&quot;)</p>
-<h3 id="customize-editor-appearance" class="tsd-anchor-link">Customize Editor Appearance<a href="#customize-editor-appearance" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<pre><code class="js"><span class="hl-0">import</span><span class="hl-1"> { </span><span class="hl-2">set_background_image</span><span class="hl-1">, </span><span class="hl-2">set_font_size</span><span class="hl-1"> } </span><span class="hl-0">from</span><span class="hl-1"> </span><span class="hl-3">&quot;repl&quot;</span><span class="hl-1">;</span><br/><span class="hl-4">set_background_image</span><span class="hl-1">(</span><span class="hl-3">&quot;https://www.some_image_website.xyz/your_favorite_image.png&quot;</span><span class="hl-1">);  </span><span class="hl-6">// Set the background image of the editor in repl tab</span><br/><span class="hl-4">set_font_size</span><span class="hl-1">(</span><span class="hl-5">20.5</span><span class="hl-1">);  </span><span class="hl-6">// Set the font size of the editor in repl tab</span>
-</code><button type="button">Copy</button></pre>
-
+<p>ReplModulePlugin#default_js_slang, which pre-Conductor let a program skip writing its
+own evaluator by running Repl input directly through the real Source interpreter, is not
+supported here. It worked by importing <code>createContext</code>/<code>runInContext</code> from <code>js-slang</code> and
+reusing the enclosing program's chapter/variant/externalSymbols. Under Conductor, <code>js-slang*</code>
+imports are only ever resolved for the legacy (pre-Conductor) module pipeline: buildtools marks
+them <code>external</code> (<code>external: ['js-slang*']</code> in <code>modules-buildtools/src/build/modules/commons.ts</code>)
+on the assumption that the legacy loader supplies them as runtime globals - true for legacy
+bundles, but nothing registers that global for a Conductor bundle's Worker (the <code>csg</code> bundle hit
+the same &quot;resolves to <code>undefined</code> at runtime&quot; problem with
+<code>GeneralRuntimeError</code>/<code>assertNumberWithinRange</code>; see the NOTE in <code>csg/src/functions.ts</code>).
+<code>default_js_slang</code> is kept as an exported symbol, so <code>set_evaluator(default_js_slang)</code> still
+type-checks and runs, but it now throws a clear error explaining that a program-supplied
+evaluator is required.</p>
 </div>
 <div class="tsd-comment tsd-typography">
 <div class="tsd-tag-author">
@@ -41,11 +51,7 @@
 <div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
 <details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h3>On This Page</h3></summary>
-<div class="tsd-accordion-details"><a href="#example-of-usage"><span>Example of usage:</span></a>
-<ul>
-<li><a href="#use-with-metacircular-evaluator"><span>Use with metacircular evaluator:</span></a></li>
-<li><a href="#use-with-source-academys-builtin-js-slang"><span>Use with <wbr/>Source <wbr/>Academy&#39;s builtin js-<wbr/>slang</span></a></li>
-<li><a href="#customize-editor-appearance"><span>Customize <wbr/>Editor <wbr/>Appearance</span></a></li></ul>
+<div class="tsd-accordion-details"><a href="#example"><span>Example</span></a>
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Main"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Main</summary>
 <div><a href="#set_evaluator"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Function"><use href="../assets/icons.svg#icon-64"></use></svg><span>set_<wbr/>evaluator</span></a><a href="#repl_display"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Function"><use href="../assets/icons.svg#icon-64"></use></svg><span>repl_<wbr/>display</span></a><a href="#rich_repl_display"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Function"><use href="../assets/icons.svg#icon-64"></use></svg><span>rich_<wbr/>repl_<wbr/>display</span></a><a href="#set_background_image"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Function"><use href="../assets/icons.svg#icon-64"></use></svg><span>set_<wbr/>background_<wbr/>image</span></a><a href="#set_font_size"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Function"><use href="../assets/icons.svg#icon-64"></use></svg><span>set_<wbr/>font_<wbr/>size</span></a><a href="#set_program_text"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Function"><use href="../assets/icons.svg#icon-64"></use></svg><span>set_<wbr/>program_<wbr/>text</span></a><a href="#default_js_slang"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Function"><use href="../assets/icons.svg#icon-64"></use></svg><span>default_<wbr/>js_<wbr/>slang</span></a></div></details></div></details></div>
 <div class="site-menu">

@@ -15,16 +15,16 @@ export default require => {
     writable: true,
     value
   }) : obj[key] = value;
-  var __spreadValues = (a, b) => {
-    for (var prop in b || (b = {})) if (__hasOwnProp.call(b, prop)) __defNormalProp(a, prop, b[prop]);
+  var __spreadValues = (a2, b) => {
+    for (var prop in b || (b = {})) if (__hasOwnProp.call(b, prop)) __defNormalProp(a2, prop, b[prop]);
     if (__getOwnPropSymbols) for (var prop of __getOwnPropSymbols(b)) {
-      if (__propIsEnum.call(b, prop)) __defNormalProp(a, prop, b[prop]);
+      if (__propIsEnum.call(b, prop)) __defNormalProp(a2, prop, b[prop]);
     }
-    return a;
+    return a2;
   };
-  var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
+  var __spreadProps = (a2, b) => __defProps(a2, __getOwnPropDescs(b));
   var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+    get: (a2, b) => (typeof require !== "undefined" ? require : a2)[b]
   }) : x)(function (x) {
     if (typeof require !== "undefined") return require.apply(this, arguments);
     throw Error('Dynamic require of "' + x + '" is not supported');
@@ -33,8 +33,8 @@ export default require => {
     if (err) throw err[0];
     try {
       return (fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res);
-    } catch (e) {
-      throw (err = [e], e);
+    } catch (e2) {
+      throw (err = [e2], e2);
     }
   };
   var __commonJS = (cb, mod) => function __require2() {
@@ -42,8 +42,8 @@ export default require => {
       return (mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = {
         exports: {}
       }).exports, mod), mod.exports);
-    } catch (e) {
-      throw (mod = 0, e);
+    } catch (e2) {
+      throw (mod = 0, e2);
     }
   };
   var __export = (target, all) => {
@@ -242,9 +242,9 @@ export default require => {
               }, {
                 regex: /\$\{[\dA-Z_a-z]+/,
                 onMatch: function (str, state, stack) {
-                  var t = TabstopToken(str.substr(1));
-                  stack.unshift(t[0]);
-                  return t;
+                  var t2 = TabstopToken(str.substr(1));
+                  stack.unshift(t2[0]);
+                  return t2;
                 },
                 next: "snippetVar"
               }, {
@@ -546,15 +546,15 @@ export default require => {
           };
           SnippetManager2.prototype.findMatchingSnippet = function (snippetList, before, after) {
             for (var i = snippetList.length; i--; ) {
-              var s = snippetList[i];
-              if (s.startRe && !s.startRe.test(before)) continue;
-              if (s.endRe && !s.endRe.test(after)) continue;
-              if (!s.startRe && !s.endRe) continue;
-              s.matchBefore = s.startRe ? s.startRe.exec(before) : [""];
-              s.matchAfter = s.endRe ? s.endRe.exec(after) : [""];
-              s.replaceBefore = s.triggerRe ? s.triggerRe.exec(before)[0] : "";
-              s.replaceAfter = s.endTriggerRe ? s.endTriggerRe.exec(after)[0] : "";
-              return s;
+              var s4 = snippetList[i];
+              if (s4.startRe && !s4.startRe.test(before)) continue;
+              if (s4.endRe && !s4.endRe.test(after)) continue;
+              if (!s4.startRe && !s4.endRe) continue;
+              s4.matchBefore = s4.startRe ? s4.startRe.exec(before) : [""];
+              s4.matchAfter = s4.endRe ? s4.endRe.exec(after) : [""];
+              s4.replaceBefore = s4.triggerRe ? s4.triggerRe.exec(before)[0] : "";
+              s4.replaceAfter = s4.endTriggerRe ? s4.endTriggerRe.exec(after)[0] : "";
+              return s4;
             }
           };
           SnippetManager2.prototype.register = function (snippets, scope) {
@@ -578,31 +578,31 @@ export default require => {
               }
               return new RegExp(re);
             }
-            function addSnippet(s) {
-              if (!s.scope) s.scope = scope || "_";
-              scope = s.scope;
+            function addSnippet(s4) {
+              if (!s4.scope) s4.scope = scope || "_";
+              scope = s4.scope;
               if (!snippetMap[scope]) {
                 snippetMap[scope] = [];
                 snippetNameMap[scope] = {};
               }
               var map = snippetNameMap[scope];
-              if (s.name) {
-                var old = map[s.name];
+              if (s4.name) {
+                var old = map[s4.name];
                 if (old) self.unregister(old);
-                map[s.name] = s;
+                map[s4.name] = s4;
               }
-              snippetMap[scope].push(s);
-              if (s.prefix) s.tabTrigger = s.prefix;
-              if (!s.content && s.body) s.content = Array.isArray(s.body) ? s.body.join("\n") : s.body;
-              if (s.tabTrigger && !s.trigger) {
-                if (!s.guard && (/^\w/).test(s.tabTrigger)) s.guard = "\\b";
-                s.trigger = lang.escapeRegExp(s.tabTrigger);
+              snippetMap[scope].push(s4);
+              if (s4.prefix) s4.tabTrigger = s4.prefix;
+              if (!s4.content && s4.body) s4.content = Array.isArray(s4.body) ? s4.body.join("\n") : s4.body;
+              if (s4.tabTrigger && !s4.trigger) {
+                if (!s4.guard && (/^\w/).test(s4.tabTrigger)) s4.guard = "\\b";
+                s4.trigger = lang.escapeRegExp(s4.tabTrigger);
               }
-              if (!s.trigger && !s.guard && !s.endTrigger && !s.endGuard) return;
-              s.startRe = guardedRegexp(s.trigger, s.guard, true);
-              s.triggerRe = new RegExp(s.trigger);
-              s.endRe = guardedRegexp(s.endTrigger, s.endGuard, true);
-              s.endTriggerRe = new RegExp(s.endTrigger);
+              if (!s4.trigger && !s4.guard && !s4.endTrigger && !s4.endGuard) return;
+              s4.startRe = guardedRegexp(s4.trigger, s4.guard, true);
+              s4.triggerRe = new RegExp(s4.trigger);
+              s4.endRe = guardedRegexp(s4.endTrigger, s4.endGuard, true);
+              s4.endTriggerRe = new RegExp(s4.endTrigger);
             }
             if (Array.isArray(snippets)) {
               snippets.forEach(addSnippet);
@@ -618,12 +618,12 @@ export default require => {
           SnippetManager2.prototype.unregister = function (snippets, scope) {
             var snippetMap = this.snippetMap;
             var snippetNameMap = this.snippetNameMap;
-            function removeSnippet(s) {
-              var nameMap = snippetNameMap[s.scope || scope];
-              if (nameMap && nameMap[s.name]) {
-                delete nameMap[s.name];
-                var map = snippetMap[s.scope || scope];
-                var i = map && map.indexOf(s);
+            function removeSnippet(s4) {
+              var nameMap = snippetNameMap[s4.scope || scope];
+              if (nameMap && nameMap[s4.name]) {
+                delete nameMap[s4.name];
+                var map = snippetMap[s4.scope || scope];
+                var i = map && map.indexOf(s4);
                 if (i >= 0) map.splice(i, 1);
               }
             }
@@ -639,7 +639,7 @@ export default require => {
                 try {
                   snippet = JSON.parse(m[1]);
                   list.push(snippet);
-                } catch (e) {}
+                } catch (e2) {}
               }
               if (m[4]) {
                 snippet.content = m[4].replace(/^\t/gm, "");
@@ -710,8 +710,8 @@ export default require => {
             var i12 = tokens.indexOf(p2, i2 + 1);
             if (i12 === -1) return;
             var value2 = tokens.slice(i2 + 1, i12);
-            var isNested = value2.some(function (t) {
-              return typeof t === "object";
+            var isNested = value2.some(function (t2) {
+              return typeof t2 === "object";
             });
             if (isNested && !ts2.value) {
               ts2.value = value2;
@@ -761,19 +761,19 @@ export default require => {
           }
           var row = 0, column = 0;
           var text = "";
-          tokens.forEach(function (t) {
-            if (typeof t === "string") {
-              var lines = t.split("\n");
+          tokens.forEach(function (t2) {
+            if (typeof t2 === "string") {
+              var lines = t2.split("\n");
               if (lines.length > 1) {
                 column = lines[lines.length - 1].length;
                 row += lines.length - 1;
-              } else column += t.length;
-              text += t;
-            } else if (t) {
-              if (!t.start) t.start = {
+              } else column += t2.length;
+              text += t2;
+            } else if (t2) {
+              if (!t2.start) t2.start = {
                 row,
                 column
-              }; else t.end = {
+              }; else t2.end = {
                 row,
                 column
               };
@@ -861,8 +861,8 @@ export default require => {
             }
             this.$inChange = false;
           };
-          TabstopManager2.prototype.onAfterExec = function (e) {
-            if (e.command && !e.command.readOnly) this.updateLinkedFields();
+          TabstopManager2.prototype.onAfterExec = function (e2) {
+            if (e2.command && !e2.command.readOnly) this.updateLinkedFields();
           };
           TabstopManager2.prototype.onChangeSelection = function () {
             if (!this.editor) return;
@@ -1090,11 +1090,11 @@ export default require => {
             popup.setHighlightActiveLine(false);
             popup.session.highlight("");
             popup.session.$searchHighlight.clazz = "ace_highlight-marker";
-            popup.on("mousedown", function (e) {
-              var pos = e.getDocumentPosition();
+            popup.on("mousedown", function (e2) {
+              var pos = e2.getDocumentPosition();
               popup.selection.moveToPosition(pos);
               selectionMarker.start.row = selectionMarker.end.row = pos.row;
-              e.stop();
+              e2.stop();
             });
             var lastMouseEvent;
             var hoverMarker = new Range(-1, 0, -1, Infinity);
@@ -1109,15 +1109,15 @@ export default require => {
               }
             };
             popup.setSelectOnHover(false);
-            popup.on("mousemove", function (e) {
+            popup.on("mousemove", function (e2) {
               if (!lastMouseEvent) {
-                lastMouseEvent = e;
+                lastMouseEvent = e2;
                 return;
               }
-              if (lastMouseEvent.x == e.x && lastMouseEvent.y == e.y) {
+              if (lastMouseEvent.x == e2.x && lastMouseEvent.y == e2.y) {
                 return;
               }
-              lastMouseEvent = e;
+              lastMouseEvent = e2;
               lastMouseEvent.scrollTop = popup.renderer.scrollTop;
               popup.isMouseOver = true;
               var row = lastMouseEvent.getDocumentPosition().row;
@@ -1135,9 +1135,9 @@ export default require => {
               }
             });
             popup.renderer.on("afterRender", function () {
-              var t = popup.renderer.$textLayer;
-              for (var row = t.config.firstRow, l = t.config.lastRow; row <= l; row++) {
-                var popupRowElement = t.element.childNodes[row - t.config.firstRow];
+              var t2 = popup.renderer.$textLayer;
+              for (var row = t2.config.firstRow, l = t2.config.lastRow; row <= l; row++) {
+                var popupRowElement = t2.element.childNodes[row - t2.config.firstRow];
                 popupRowElement.setAttribute("role", optionAriaRole);
                 popupRowElement.setAttribute("aria-roledescription", nls("autocomplete.popup.item.aria-roledescription", "item"));
                 popupRowElement.setAttribute("aria-setsize", popup.data.length);
@@ -1156,8 +1156,8 @@ export default require => {
             });
             popup.renderer.on("afterRender", function () {
               var row = popup.getRow();
-              var t = popup.renderer.$textLayer;
-              var selected = t.element.childNodes[row - t.config.firstRow];
+              var t2 = popup.renderer.$textLayer;
+              var selected = t2.element.childNodes[row - t2.config.firstRow];
               var el2 = document.activeElement;
               if (selected !== popup.selectedNode && popup.selectedNode) {
                 dom.removeCssClass(popup.selectedNode, "ace_selected");
@@ -1170,7 +1170,7 @@ export default require => {
                 var ariaId = getAriaId(row);
                 dom.addCssClass(selected, "ace_selected");
                 selected.id = ariaId;
-                t.element.setAttribute("aria-activedescendant", ariaId);
+                t2.element.setAttribute("aria-activedescendant", ariaId);
                 el2.setAttribute("aria-activedescendant", ariaId);
                 selected.setAttribute(ariaActiveState, "true");
               }
@@ -1411,8 +1411,8 @@ export default require => {
               this.popup = this.editor.completer.popup;
               this.popup.renderer.on("afterRender", (function () {
                 var row = this.popup.getRow();
-                var t = this.popup.renderer.$textLayer;
-                var selected = t.element.childNodes[row - t.config.firstRow];
+                var t2 = this.popup.renderer.$textLayer;
+                var selected = t2.element.childNodes[row - t2.config.firstRow];
                 if (selected) {
                   var idString = "doc-tooltip ";
                   for (var lineIndex = 0; lineIndex < this._lines.length; lineIndex++) {
@@ -1573,7 +1573,7 @@ export default require => {
         var config = require2("./config");
         var event = require2("./lib/event");
         var preventParentScroll = require2("./lib/scroll").preventParentScroll;
-        var destroyCompleter = function (e, editor) {
+        var destroyCompleter = function (e2, editor) {
           editor.completer && editor.completer.destroy();
         };
         var Autocomplete = (function () {
@@ -1623,9 +1623,9 @@ export default require => {
           });
           Autocomplete2.prototype.$init = function () {
             this.popup = new AcePopup(this.parentNode || document.body || document.documentElement);
-            this.popup.on("click", (function (e) {
+            this.popup.on("click", (function (e2) {
               this.insertMatch();
-              e.stop();
+              e2.stop();
             }).bind(this));
             this.popup.focus = this.editor.focus.bind(this.editor);
             this.popup.on("show", this.$onPopupShow.bind(this));
@@ -1828,29 +1828,29 @@ export default require => {
             this.completionProvider = this.completions = this.base = null;
             this.unObserveLayoutChanges();
           };
-          Autocomplete2.prototype.changeListener = function (e) {
+          Autocomplete2.prototype.changeListener = function (e2) {
             var cursor = this.editor.selection.lead;
             if (cursor.row != this.base.row || cursor.column < this.base.column) {
               this.detach();
             }
             if (this.activated) this.changeTimer.schedule(); else this.detach();
           };
-          Autocomplete2.prototype.blurListener = function (e) {
+          Autocomplete2.prototype.blurListener = function (e2) {
             var el = document.activeElement;
             var text = this.editor.textInput.getElement();
-            var fromTooltip = e.relatedTarget && this.tooltipNode && this.tooltipNode.contains(e.relatedTarget);
+            var fromTooltip = e2.relatedTarget && this.tooltipNode && this.tooltipNode.contains(e2.relatedTarget);
             var container = this.popup && this.popup.container;
-            if (el != text && el.parentNode != container && !fromTooltip && el != this.tooltipNode && e.relatedTarget != text) {
+            if (el != text && el.parentNode != container && !fromTooltip && el != this.tooltipNode && e2.relatedTarget != text) {
               this.detach();
             }
           };
-          Autocomplete2.prototype.mousedownListener = function (e) {
+          Autocomplete2.prototype.mousedownListener = function (e2) {
             this.detach();
           };
-          Autocomplete2.prototype.mousewheelListener = function (e) {
+          Autocomplete2.prototype.mousewheelListener = function (e2) {
             if (this.popup && !this.popup.isMouseOver) this.detach();
           };
-          Autocomplete2.prototype.mouseOutListener = function (e) {
+          Autocomplete2.prototype.mouseOutListener = function (e2) {
             if (this.popup.isOpen) this.$updatePopupPosition();
           };
           Autocomplete2.prototype.goTo = function (where) {
@@ -2049,15 +2049,15 @@ export default require => {
             this.tooltipNode = null;
             if (el.parentNode) el.parentNode.removeChild(el);
           };
-          Autocomplete2.prototype.onTooltipClick = function (e) {
-            var a = e.target;
-            while (a && a != this.tooltipNode) {
-              if (a.nodeName == "A" && a.href) {
-                a.rel = "noreferrer";
-                a.target = "_blank";
+          Autocomplete2.prototype.onTooltipClick = function (e2) {
+            var a2 = e2.target;
+            while (a2 && a2 != this.tooltipNode) {
+              if (a2.nodeName == "A" && a2.href) {
+                a2.rel = "noreferrer";
+                a2.target = "_blank";
                 break;
               }
-              a = a.parentNode;
+              a2 = a2.parentNode;
             }
           };
           Autocomplete2.prototype.destroy = function () {
@@ -2286,8 +2286,8 @@ export default require => {
             if (str.length > this.filterText && str.lastIndexOf(this.filterText, 0) === 0) var matches = this.filtered; else var matches = this.all;
             this.filterText = str;
             matches = this.filterCompletions(matches, this.filterText);
-            matches = matches.sort(function (a, b) {
-              return b.exactMatch - a.exactMatch || b.$score - a.$score || (a.caption || a.value).localeCompare(b.caption || b.value);
+            matches = matches.sort(function (a2, b) {
+              return b.exactMatch - a2.exactMatch || b.$score - a2.$score || (a2.caption || a2.value).localeCompare(b.caption || b.value);
             });
             var prev = null;
             matches = matches.filter(function (item) {
@@ -2363,8 +2363,8 @@ export default require => {
               return marker.range.contains(pos.row, pos.column);
             });
           };
-          MarkerGroup2.prototype.markersComparator = function (a, b) {
-            return a.range.start.row - b.range.start.row;
+          MarkerGroup2.prototype.markersComparator = function (a2, b) {
+            return a2.range.start.row - b.range.start.row;
           };
           MarkerGroup2.prototype.setMarkers = function (markers) {
             this.markers = markers.sort(this.markersComparator).slice(0, this.MAX_MARKERS);
@@ -2482,9 +2482,9 @@ export default require => {
         };
         var transformSnippetTooltip = function (str) {
           var record = {};
-          return str.replace(/\${(\d+)(:(.*?))?}/g, function (_, p1, p2, p3) {
+          return str.replace(/\${(\d+)(:(.*?))?}/g, function (_2, p1, p2, p3) {
             return record[p1] = p3 || "";
-          }).replace(/\$(\d+?)/g, function (_, p1) {
+          }).replace(/\$(\d+?)/g, function (_2, p1) {
             return record[p1];
           });
         };
@@ -2498,13 +2498,13 @@ export default require => {
             scopes.forEach(function (scope) {
               var snippets = snippetMap[scope] || [];
               for (var i = snippets.length; i--; ) {
-                var s = snippets[i];
-                var caption = s.name || s.tabTrigger;
+                var s4 = snippets[i];
+                var caption = s4.name || s4.tabTrigger;
                 if (!caption) continue;
                 completions.push({
                   caption,
-                  snippet: s.content,
-                  meta: s.tabTrigger && !s.name ? s.tabTrigger + "\u21E5 " : "snippet",
+                  snippet: s4.content,
+                  meta: s4.tabTrigger && !s4.name ? s4.tabTrigger + "\u21E5 " : "snippet",
                   completerId: snippetCompleter.id
                 });
               }
@@ -2536,7 +2536,7 @@ export default require => {
           },
           bindKey: "Tab"
         };
-        var onChangeMode = function (e, editor) {
+        var onChangeMode = function (e2, editor) {
           loadSnippetsForMode(editor.session.$mode);
         };
         var loadSnippetsForMode = function (mode) {
@@ -2562,18 +2562,18 @@ export default require => {
             }
           });
         };
-        var doLiveAutocomplete = function (e) {
-          var editor = e.editor;
+        var doLiveAutocomplete = function (e2) {
+          var editor = e2.editor;
           var hasCompleter = editor.completer && editor.completer.activated;
-          if (e.command.name === "backspace") {
+          if (e2.command.name === "backspace") {
             if (hasCompleter && !util.getCompletionPrefix(editor)) editor.completer.detach();
-          } else if (e.command.name === "insertstring" && !hasCompleter) {
-            lastExecEvent = e;
-            var delay = e.editor.$liveAutocompletionDelay;
+          } else if (e2.command.name === "insertstring" && !hasCompleter) {
+            lastExecEvent = e2;
+            var delay = e2.editor.$liveAutocompletionDelay;
             if (delay) {
               liveAutocompleteTimer.delay(delay);
             } else {
-              showLiveAutocomplete(e);
+              showLiveAutocomplete(e2);
             }
           }
         };
@@ -2581,10 +2581,10 @@ export default require => {
         var liveAutocompleteTimer = lang.delayedCall(function () {
           showLiveAutocomplete(lastExecEvent);
         }, 0);
-        var showLiveAutocomplete = function (e) {
-          var editor = e.editor;
+        var showLiveAutocomplete = function (e2) {
+          var editor = e2.editor;
           var prefix = util.getCompletionPrefix(editor);
-          var previousChar = e.args;
+          var previousChar = e2.args;
           var triggerAutocomplete = util.triggerAutocomplete(editor, previousChar);
           if (prefix && prefix.length >= editor.$liveAutocompletionThreshold || triggerAutocomplete) {
             var completer = Autocomplete.for(editor);
@@ -3761,25 +3761,38 @@ export default require => {
   });
   var index_exports = {};
   __export(index_exports, {
-    default: () => index_default
+    REPL_TAB_ID: () => REPL_TAB_ID,
+    default: () => ReplTabPlugin
   });
   init_define_process();
   var import_core = __require("@blueprintjs/core");
   init_define_process();
-  var FONT_MESSAGE = {
-    fontFamily: "Inconsolata, Consolas, monospace",
-    fontSize: "16px",
-    fontWeight: "normal"
-  };
-  var MINIMUM_EDITOR_HEIGHT = 40;
+  var REPL_CHANNEL_ID = "sourceacademy-repl-channel";
+  var REPL_WEB_ID = "repl-web";
   init_define_process();
-  function getModuleState(debuggerContext, name) {
-    const {context: {moduleContexts}} = debuggerContext;
-    return (name in moduleContexts) ? moduleContexts[name].state : null;
-  }
-  function defineTab(tab) {
-    return tab;
-  }
+  init_define_process();
+  init_define_process();
+  var R;
+  !(function (R2) {
+    (R2[R2.CALL = 0] = "CALL", R2[R2.RETURN = 1] = "RETURN", R2[R2.RETURN_ERR = 2] = "RETURN_ERR");
+  })(R || (R = {}));
+  init_define_process();
+  init_define_process();
+  function n(n3) {}
+  init_define_process();
+  init_define_process();
+  init_define_process();
+  init_define_process();
+  init_define_process();
+  var _;
+  !(function (_2) {
+    (_2.UNKNOWN = "__unknown", _2.INTERNAL = "__internal", _2.EVALUATOR = "__evaluator", _2.EVALUATOR_SYNTAX = "__evaluator_syntax", _2.EVALUATOR_TYPE = "__evaluator_type", _2.EVALUATOR_RUNTIME = "__evaluator_runtime");
+  })(_ || (_ = {}));
+  init_define_process();
+  var O;
+  !(function (O2) {
+    (O2[O2.PROTOCOL_VERSION = 0] = "PROTOCOL_VERSION", O2[O2.PROTOCOL_MIN_VERSION = 0] = "PROTOCOL_MIN_VERSION", O2[O2.SETUP_MESSAGES_BUFFER_SIZE = 10] = "SETUP_MESSAGES_BUFFER_SIZE");
+  })(O || (O = {}));
   init_define_process();
   init_define_process();
   function debounce(func, debounceMs, {signal, edges} = {}) {
@@ -3861,171 +3874,231 @@ export default require => {
     throttled.flush = debounced.flush;
     return throttled;
   }
-  var import_react = __toESM(__require("react"), 1);
+  var import_react = __require("react");
   var import_react_ace = __toESM(__require("react-ace"), 1);
   var import_ext_language_tools = __toESM(require_ext_language_tools(), 1);
   var import_mode_javascript = __toESM(require_mode_javascript(), 1);
   var import_theme_twilight = __toESM(require_theme_twilight(), 1);
   var import_jsx_runtime = __require("react/jsx-runtime");
+  var REPL_TAB_ID = "repl";
   var BOX_PADDING_VALUE = 4;
-  var updateSavedCode = throttle(code => {
-    localStorage.setItem("programmable_repl_saved_editor_code", code);
+  var DEFAULT_EDITOR_HEIGHT = 375;
+  var MINIMUM_EDITOR_HEIGHT = 40;
+  var SAVED_CODE_STORAGE_KEY = "programmable_repl_saved_editor_code";
+  var FONT_MESSAGE = {
+    fontFamily: "Inconsolata, Consolas, monospace",
+    fontSize: "16px",
+    fontWeight: "normal"
+  };
+  function readSavedProgramText() {
+    var _a;
+    try {
+      return (_a = localStorage.getItem(SAVED_CODE_STORAGE_KEY)) != null ? _a : "";
+    } catch (e2) {
+      return "";
+    }
+  }
+  var saveProgramText = throttle(text => {
+    try {
+      localStorage.setItem(SAVED_CODE_STORAGE_KEY, text);
+    } catch (e2) {}
   }, 100);
-  var ProgrammableReplGUI = class extends import_react.default.Component {
-    constructor(data) {
-      var _a;
-      super(data);
-      this.dragBarOnMouseDown = e => {
-        e.preventDefault();
-        this.setState({
-          isDraggingDragBar: true
-        });
-      };
-      this.onMouseMove = e => {
-        var _a;
-        if (this.state.isDraggingDragBar && this.editorAreaRect) {
-          const height = Math.max(e.clientY - this.editorAreaRect.top - BOX_PADDING_VALUE * 2, MINIMUM_EDITOR_HEIGHT);
-          this.replInstance.editorHeight = height;
-          this.setState({
-            editorHeight: height
-          });
-          (_a = this.editorInstance) == null ? void 0 : _a.resize();
+  var ReplTabPlugin = class {
+    constructor(_conduit, [channel], tabService) {
+      this.id = REPL_WEB_ID;
+      this.__listeners = new Set();
+      this.__handleMessage = message => {
+        switch (message.type) {
+          case "output":
+            this.__setState({
+              outputs: [...this.__state.outputs, message.entry]
+            });
+            break;
+          case "editor_props":
+            this.__setState({
+              backgroundImageUrl: message.backgroundImageUrl,
+              backgroundColorAlpha: message.backgroundColorAlpha,
+              fontSize: message.fontSize
+            });
+            break;
+          case "set_program_text":
+            this.__setProgramText(message.text);
+            break;
+          case "run":
+          case "request":
+            break;
         }
       };
-      this.onMouseUp = () => {
-        this.setState({
-          isDraggingDragBar: false
-        });
-      };
-      this.onCodeChanged = newCode => {
-        this.setState({
-          editorText: newCode
-        });
-        updateSavedCode(newCode);
-      };
-      this.evalContext = data.context.context;
-      this.replInstance = getModuleState(data.context, "repl");
-      this.replInstance.tabRerenderer = () => this.setState({});
-      this.replInstance.updateUserCode = this.onCodeChanged;
-      let initialText;
-      if (this.replInstance.defaultCode) {
-        initialText = this.replInstance.defaultCode;
-        localStorage.setItem("programmable_repl_saved_editor_code", initialText);
-      } else {
-        initialText = (_a = localStorage.getItem("programmable_repl_saved_editor_code")) != null ? _a : "";
+      if (!channel) {
+        throw new Error("Repl channel is required but was not provided.");
       }
-      this.state = {
-        editorHeight: this.replInstance.editorHeight,
-        isDraggingDragBar: false,
-        editorText: initialText
+      this.__tabService = tabService;
+      this.__channel = channel;
+      this.__state = {
+        outputs: [],
+        backgroundImageUrl: null,
+        backgroundColorAlpha: 1,
+        fontSize: 17,
+        programText: readSavedProgramText()
       };
-    }
-    componentDidMount() {
-      document.addEventListener("mousemove", this.onMouseMove);
-      document.addEventListener("mouseup", this.onMouseUp);
-    }
-    componentWillUnmount() {
-      document.removeEventListener("mousemove", this.onMouseMove);
-      document.removeEventListener("mouseup", this.onMouseUp);
-    }
-    render() {
-      const {editorHeight, editorText} = this.state;
-      const outputDivs = this.replInstance.outputStrings.map(str => {
-        if (str.outputMethod === "richtext") {
-          if (str.color === "") {
-            return (0, import_jsx_runtime.jsx)("div", {
-              style: FONT_MESSAGE,
-              dangerouslySetInnerHTML: {
-                __html: str.content
-              }
-            });
-          } else {
-            return (0, import_jsx_runtime.jsx)("div", {
-              style: __spreadProps(__spreadValues({}, FONT_MESSAGE), {
-                color: str.color
-              }),
-              dangerouslySetInnerHTML: {
-                __html: str.content
-              }
-            });
-          }
-        }
-        if (str.color === "") return (0, import_jsx_runtime.jsx)("div", {
-          style: FONT_MESSAGE,
-          children: str.content
-        });
-        return (0, import_jsx_runtime.jsx)("div", {
-          style: __spreadValues(__spreadValues({}, FONT_MESSAGE), {
-            color: str.color
-          }),
-          children: str.content
-        });
+      this.__channel.subscribe(this.__handleMessage);
+      this.__channel.send({
+        type: "request"
       });
-      return (0, import_jsx_runtime.jsxs)("div", {
-        children: [(0, import_jsx_runtime.jsx)(import_core.Button, {
-          className: "programmable-repl-button",
-          icon: "play",
-          active: true,
-          onClick: () => this.replInstance.runCode(editorText, this.evalContext),
-          text: "Run"
-        }), (0, import_jsx_runtime.jsx)("div", {
-          ref: e => {
-            this.editorAreaRect = e == null ? void 0 : e.getBoundingClientRect();
-          },
-          style: {
-            padding: `${BOX_PADDING_VALUE}px`,
-            border: "2px solid #6f8194"
-          },
-          children: (0, import_jsx_runtime.jsx)(import_react_ace.default, {
-            ref: e => {
-              if (e) {
-                this.editorInstance = e.editor;
-                this.editorInstance.setOptions({
-                  fontSize: `${this.replInstance.customizedEditorProps.fontSize}pt`
-                });
-              }
-            },
-            style: __spreadValues({
-              width: "100%",
-              height: `${editorHeight}px`
-            }, this.replInstance.customizedEditorProps.backgroundImageUrl !== null && ({
-              backgroundImage: `url(${this.replInstance.customizedEditorProps.backgroundImageUrl})`,
-              backgroundColor: `rgba(20, 20, 20, ${this.replInstance.customizedEditorProps.backgroundColorAlpha})`,
-              backgroundSize: "100%",
-              backgroundRepeat: "no-repeat"
-            })),
-            mode: "javascript",
-            theme: "twilight",
-            onChange: this.onCodeChanged,
-            value: editorText
-          })
-        }), (0, import_jsx_runtime.jsx)("div", {
-          onMouseDown: this.dragBarOnMouseDown,
-          style: {
-            cursor: "row-resize",
-            height: "8px"
-          }
-        }), (0, import_jsx_runtime.jsx)("div", {
-          style: {
-            padding: `${BOX_PADDING_VALUE}px`,
-            border: "2px solid #6f8194"
-          },
-          children: (0, import_jsx_runtime.jsx)("div", {
-            id: "output_strings",
-            children: outputDivs
-          })
-        })]
+      const subscribe = listener => this.__subscribe(listener);
+      const getState = () => this.__state;
+      const plugin = this;
+      function ReplPluginTab() {
+        const state = (0, import_react.useSyncExternalStore)(subscribe, getState);
+        return (0, import_react.createElement)(ReplView, {
+          plugin,
+          state
+        });
+      }
+      const tab = {
+        id: REPL_TAB_ID,
+        iconName: "code",
+        body: (0, import_react.createElement)(ReplPluginTab),
+        label: "Programmable Repl Tab",
+        disabled: false
+      };
+      this.__tabService.registerTab(tab);
+      this.__tabService.showTab(REPL_TAB_ID);
+    }
+    destroy() {
+      this.__channel.unsubscribe(this.__handleMessage);
+    }
+    getOutputs() {
+      return this.__state.outputs;
+    }
+    __subscribe(listener) {
+      this.__listeners.add(listener);
+      return () => this.__listeners.delete(listener);
+    }
+    __emit() {
+      this.__listeners.forEach(listener => listener());
+    }
+    __setState(patch) {
+      this.__state = __spreadValues(__spreadValues({}, this.__state), patch);
+      this.__emit();
+    }
+    __setProgramText(text) {
+      this.__setState({
+        programText: text
+      });
+      saveProgramText(text);
+    }
+    __runCode() {
+      this.__channel.send({
+        type: "run",
+        code: this.__state.programText
       });
     }
   };
-  var index_default = defineTab({
-    body(context) {
-      return (0, import_jsx_runtime.jsx)(ProgrammableReplGUI, {
-        context
+  ReplTabPlugin.channelAttach = [REPL_CHANNEL_ID];
+  n(ReplTabPlugin);
+  function ReplView({plugin, state}) {
+    const [editorHeight, setEditorHeight] = (0, import_react.useState)(DEFAULT_EDITOR_HEIGHT);
+    const editorAreaRef = (0, import_react.useRef)(null);
+    const editorInstanceRef = (0, import_react.useRef)(null);
+    const isDraggingRef = (0, import_react.useRef)(false);
+    (0, import_react.useEffect)(() => {
+      const onMouseMove = e2 => {
+        var _a;
+        if (!isDraggingRef.current || !editorAreaRef.current) return;
+        const rect = editorAreaRef.current.getBoundingClientRect();
+        const height = Math.max(e2.clientY - rect.top - BOX_PADDING_VALUE * 2, MINIMUM_EDITOR_HEIGHT);
+        setEditorHeight(height);
+        (_a = editorInstanceRef.current) == null ? void 0 : _a.resize();
+      };
+      const onMouseUp = () => {
+        isDraggingRef.current = false;
+      };
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+      return () => {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      };
+    }, []);
+    (0, import_react.useEffect)(() => {
+      var _a;
+      (_a = editorInstanceRef.current) == null ? void 0 : _a.setOptions({
+        fontSize: `${state.fontSize}px`
       });
-    },
-    label: "Programmable Repl Tab",
-    iconName: "code"
-  });
+    }, [state.fontSize]);
+    const outputDivs = state.outputs.map((entry, index) => {
+      if (entry.outputMethod === "richtext") {
+        const style2 = entry.color === "" ? FONT_MESSAGE : __spreadProps(__spreadValues({}, FONT_MESSAGE), {
+          color: entry.color
+        });
+        return (0, import_jsx_runtime.jsx)("div", {
+          style: style2,
+          dangerouslySetInnerHTML: {
+            __html: entry.content
+          }
+        }, index);
+      }
+      const style = entry.color === "" ? FONT_MESSAGE : __spreadProps(__spreadValues({}, FONT_MESSAGE), {
+        color: entry.color
+      });
+      return (0, import_jsx_runtime.jsx)("div", {
+        style,
+        children: entry.content
+      }, index);
+    });
+    return (0, import_jsx_runtime.jsxs)("div", {
+      children: [(0, import_jsx_runtime.jsx)(import_core.Button, {
+        className: "programmable-repl-button",
+        icon: "play",
+        active: true,
+        onClick: () => plugin.__runCode(),
+        text: "Run"
+      }), (0, import_jsx_runtime.jsx)("div", {
+        ref: editorAreaRef,
+        style: {
+          padding: `${BOX_PADDING_VALUE}px`,
+          border: "2px solid #6f8194"
+        },
+        children: (0, import_jsx_runtime.jsx)(import_react_ace.default, {
+          ref: e2 => {
+            var _a;
+            editorInstanceRef.current = (_a = e2 == null ? void 0 : e2.editor) != null ? _a : null;
+          },
+          style: __spreadValues({
+            width: "100%",
+            height: `${editorHeight}px`
+          }, state.backgroundImageUrl !== null && ({
+            backgroundImage: `url(${state.backgroundImageUrl})`,
+            backgroundColor: `rgba(20, 20, 20, ${state.backgroundColorAlpha})`,
+            backgroundSize: "100%",
+            backgroundRepeat: "no-repeat"
+          })),
+          mode: "javascript",
+          theme: "twilight",
+          onChange: text => plugin.__setProgramText(text),
+          value: state.programText
+        })
+      }), (0, import_jsx_runtime.jsx)("div", {
+        onMouseDown: e2 => {
+          e2.preventDefault();
+          isDraggingRef.current = true;
+        },
+        style: {
+          cursor: "row-resize",
+          height: "8px"
+        }
+      }), (0, import_jsx_runtime.jsx)("div", {
+        style: {
+          padding: `${BOX_PADDING_VALUE}px`,
+          border: "2px solid #6f8194"
+        },
+        children: (0, import_jsx_runtime.jsx)("div", {
+          id: "output_strings",
+          children: outputDivs
+        })
+      })]
+    });
+  }
   return __toCommonJS(index_exports);
 };
