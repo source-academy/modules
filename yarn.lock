@@ -4316,9 +4316,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-repl@workspace:src/bundles/repl"
   dependencies:
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    "@sourceacademy/modules-lib": "workspace:^"
-    js-slang: "catalog:"
+    "@sourceacademy/modules-testplugin": "workspace:^"
     typescript: "catalog:"
   languageName: unknown
   linkType: soft
@@ -4960,8 +4960,9 @@ __metadata:
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
     "@sourceacademy/bundle-repl": "workspace:^"
+    "@sourceacademy/common-tabs": "npm:^0.0.1"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "catalog:"
     ace-builds: "npm:^1.25.1"
     es-toolkit: "npm:^1.44.0"
