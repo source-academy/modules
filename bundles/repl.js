@@ -490,6 +490,7 @@ export default require => {
       return __asyncGenerator(this, null, function* () {
         yield new __await(this.evaluator.closure_arity_assert(evalFunc, 1));
         this.__evaluator = evalFunc;
+        this.__loadReplTab();
         return y();
       });
     }
