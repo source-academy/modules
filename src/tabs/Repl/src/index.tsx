@@ -227,9 +227,11 @@ function ReplView({ plugin, state }: ReplViewProps) {
   }, []);
 
   // Applied in an effect (rather than only from the AceEditor ref callback below) so a
-  // set_font_size call that arrives after the editor has mounted still reaches it.
+  // set_font_size call that arrives after the editor has mounted still reaches it. Uses px, not
+  // pt, to actually match set_font_size's own @param doc ("font_size_px") and parameter name -
+  // the pre-Conductor implementation applied pt here despite documenting/naming it as pixels.
   useEffect(() => {
-    editorInstanceRef.current?.setOptions({ fontSize: `${state.fontSize}pt` });
+    editorInstanceRef.current?.setOptions({ fontSize: `${state.fontSize}px` });
   }, [state.fontSize]);
 
   const outputDivs = state.outputs.map((entry, index): React.ReactElement => {

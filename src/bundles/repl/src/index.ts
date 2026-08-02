@@ -245,6 +245,7 @@ export default class ReplModulePlugin extends BaseModulePlugin {
   async* set_program_text(text: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     const message: ReplSetProgramTextMessage = { type: 'set_program_text', text: text.value };
     this.__latestProgramText = message;
+    this.__loadReplTab();
     if (this.__tabRequested) {
       this.__replChannel.send(message);
     }
@@ -262,7 +263,13 @@ export default class ReplModulePlugin extends BaseModulePlugin {
     throw new EvaluatorRuntimeError(`${this.default_js_slang.name}: running Repl input directly through the Source interpreter is not supported by this module. Write your own evaluator function and register it with set_evaluator instead.`);
   }
 
-  /** Loads the host-side tab, lazily - the first time anything is displayed. */
+  /**
+   * Loads the host-side tab, lazily - the first time anything is displayed, or the editor is
+   * customized (background image, font size, program text). Called from every function that
+   * gives the student a reason to actually look at the tab, not just the ones that produce
+   * output - a program whose only interaction with this module is e.g. set_program_text (to
+   * pre-populate starter code) still needs the tab to actually open.
+   */
   private __loadReplTab(): void {
     if (this.__tabLoaded || this.__tabLoader === undefined) return;
 
@@ -290,6 +297,7 @@ export default class ReplModulePlugin extends BaseModulePlugin {
   private __displayEditorProps(): void {
     const message: ReplEditorPropsMessage = { type: 'editor_props', ...this.__editorProps };
     this.__latestEditorProps = message;
+    this.__loadReplTab();
     if (this.__tabRequested) {
       this.__replChannel.send(message);
     }
