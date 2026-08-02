@@ -252,9 +252,9 @@ export default require => {
       };
       const tab = {
         id: MATRIX_TAB_ID,
-        iconName: "music",
+        iconName: "grid-view",
         body: (0, import_react.createElement)(MatrixPluginTab),
-        label: "Tone Matrix",
+        label: "Matrix",
         disabled: false
       };
       this.__tabService.registerTab(tab);
