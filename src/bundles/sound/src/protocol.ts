@@ -38,6 +38,14 @@ export interface SoundTabRpc {
   notifyConstructing(): Promise<void>;
   /** Stops any sound currently playing. */
   $stopPlayback(): void;
+  /**
+   * Adds a new entry to the tab's list of play bars (one per `play_in_tab()` call, stacked
+   * vertically), each with its own native start/pause/scrub controls - unlike `playSamples`, this
+   * never plays anything automatically. `wavDataUri` is a self-contained `data:audio/wav;base64,...`
+   * URI (encoded module-side - WAV encoding is pure computation, no AudioContext needed) that the
+   * tab hands straight to a native `<audio>` element. Resolves once the entry has been added.
+   */
+  addPlayerToTab(wavDataUri: string): Promise<void>;
   /** Starts recording from the previously-granted microphone; resolves once recording has actually started. */
   startRecording(): Promise<void>;
   /** Stops the current recording and resolves with the decoded PCM buffer(s). */
