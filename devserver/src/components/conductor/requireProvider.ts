@@ -1,7 +1,5 @@
 import * as bpcore from '@blueprintjs/core';
 import * as bpicons from '@blueprintjs/icons';
-import jsslangDist, * as jsSlang from 'js-slang';
-import * as baseErrors from 'js-slang/dist/errors/base';
 import React from 'react';
 import JSXRuntime from 'react/jsx-runtime';
 import ReactDOM from 'react-dom';
@@ -13,9 +11,6 @@ export const requireProvider = (x: string) => {
     'react-dom': ReactDOM,
     '@blueprintjs/core': bpcore,
     '@blueprintjs/icons': bpicons,
-    'js-slang': jsSlang,
-    'js-slang/dist': jsslangDist,
-    'js-slang/dist/errors/base': baseErrors
   };
 
   if (!(x in exports)) throw new Error(`Dynamic require of ${x} is not supported`);

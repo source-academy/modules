@@ -15,9 +15,9 @@
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "eslint": "^9.35.0",
-    "typescript": "^6.0.2",
-    "vitest": "4.1.4"
+    "eslint": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "scripts": {
     "build": "tsc --project ./tsconfig.prod.json",

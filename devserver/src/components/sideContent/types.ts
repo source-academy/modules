@@ -1,11 +1,5 @@
 import type { IconName } from '@blueprintjs/icons';
-import type { Context } from 'js-slang';
 import type React from 'react';
-import type { requireProvider } from './importers/requireProvider';
-
-export type DebuggerContext = {
-  context: Context;
-};
 
 /**
  * @property label A string that will appear as the tooltip.
@@ -23,19 +17,10 @@ export type DebuggerContext = {
  * corresponding tab label will still be rendered on hover, but the
  * tab will be greyed out and cannot be selected. Default value: false.
  */
-export type SideContentTab = {
+export interface SideContentTab {
   label: string;
   iconName: IconName;
   body: React.ReactElement | null;
   id?: string;
   disabled?: boolean;
 };
-
-export type ModuleSideContent = {
-  label: string;
-  iconName: IconName;
-  toSpawn?: (context: DebuggerContext) => boolean;
-  body: (context: DebuggerContext) => React.ReactElement;
-};
-
-export type RawTab = (provider: ReturnType<typeof requireProvider>, react: typeof React) => Promise<{ default: ModuleSideContent }>;

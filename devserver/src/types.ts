@@ -1,4 +1,4 @@
-import type { SourceError } from 'js-slang/dist/errors/base';
+import type { ConductorError } from '@sourceacademy/conductor/common';
 
 /**
  * An output while the program is still being run in the interpreter. As a
@@ -40,7 +40,7 @@ export type ResultOutput = {
  */
 export type ErrorOutput = {
   type: 'errors';
-  errors: SourceError[];
+  errors: ConductorError[];
   consoleLogs: string[];
 };
 

@@ -1,4 +1,5 @@
 import { Classes, Intent, OverlayToaster, type ToastProps } from '@blueprintjs/core';
+import { RunnerStatus } from '@sourceacademy/conductor/types';
 import languageDir from '@sourceacademy/language-directory/dist/directory.json' with { type: 'json' };
 import type { IEvaluatorDefinition, ILanguageDefinition } from '@sourceacademy/language-directory/dist/types';
 import { getEvaluatorDefinition, getLanguageDefinition } from '@sourceacademy/language-directory/dist/util';
@@ -77,7 +78,7 @@ async function prepareConductor(
   conductor.hostPlugin.receiveError = error => {
     finishCallback({
       type: 'errors',
-      errors: [error as any],
+      errors: [error],
       consoleLogs: consoleOutputRef.current,
     });
   };
@@ -203,12 +204,38 @@ export default function Playground() {
   }
 
   function resetEditor() {
-    localStorage.removeItem('editorValue');
-    editorRef.current?.getModel()?.setValue('');
+    let defaultValue = '';
+    if (languageDef) {
+      if (evaluatorId !== null) {
+        const evaluator = getEvaluatorDefinition(languageDef, evaluatorId)!;
+        defaultValue = evaluator.defaultProgram ?? '';
+      }
+    }
+    editorRef.current?.getModel()?.setValue(defaultValue);
+    localStorage.setItem('editorValue', defaultValue);
   }
 
   const [selectedTabId, setSelectedTabId] = React.useState('test');
   const dynamicTabs = React.useSyncExternalStore(sideContentManager.subscribe, () => sideContentManager.getTabs());
+
+  function getEvalTooltip(): string {
+    if (languageId === null) return 'Select a language first';
+    if (evaluatorId === null) return 'Select an evaluator first';
+
+    switch (conductor) {
+      case 'not-loaded':
+        return 'Select an evaluator first';
+      case 'loading':
+        return 'Loading conductor...';
+      case 'error':
+        return 'Failed to load conductor';
+      default: {
+        if (conductor.hostPlugin.isStatusActive(RunnerStatus.RUNNING)) return 'Evaluator is running...';
+        if (conductor.hostPlugin.isStatusActive(RunnerStatus.ERROR)) return 'Evaluator encountered an error';
+        return 'Evaluate the program';
+      }
+    }
+  }
 
   const workspaceProps: WorkspaceProps = {
     controlBarProps: {
@@ -216,20 +243,8 @@ export default function Playground() {
         <ControlBarRunButton
           key="eval"
           handleEditorEval={evalCode}
-          disabled={typeof conductor === 'string' || replOutput?.type === 'running'}
-          tooltip={
-            replOutput?.type === 'running'
-              ? 'Currently evaluating...'
-              : languageId === null
-                ? 'Select a language first'
-                : evaluatorId === null || conductor === 'not-loaded'
-                  ? 'Select an evaluator first'
-                  : conductor === 'loading'
-                    ? 'Loading conductor...'
-                    : conductor === 'error'
-                      ? 'Failed to load conductor'
-                      : undefined
-          }
+          disabled={typeof conductor === 'string' || !conductor.hostPlugin.isStatusActive(RunnerStatus.EVAL_READY)}
+          tooltip={getEvalTooltip()}
         />,
         <ControlBarClearButton
           onClick={resetEditor}

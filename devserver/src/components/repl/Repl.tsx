@@ -1,5 +1,5 @@
 import { Card, Pre } from '@blueprintjs/core';
-import { parseError } from 'js-slang';
+import type { ConductorError } from '@sourceacademy/conductor/common';
 import React from 'react';
 
 import type { InterpreterOutput } from '../../types';
@@ -8,13 +8,8 @@ type OutputProps = {
   output: InterpreterOutput;
 };
 
-function safeParseErrors(errors: any[]) {
-  const notSafeToParse = errors.find(each => !('explain' in each));
-
-  if (notSafeToParse) {
-    return errors.map(err => err.toString()).join('\n');
-  }
-  return parseError(errors);
+function safeParseErrors(errors: ConductorError[]) {
+  return errors.map(({ message }) => message).join('');
 }
 
 const Output: React.FC<OutputProps> = (props: OutputProps) => {

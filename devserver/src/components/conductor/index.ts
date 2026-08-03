@@ -1,7 +1,7 @@
 import { Conduit, type IConduit } from '@sourceacademy/conductor/conduit';
 import { BrowserHostPlugin } from './BrowserHostPlugin';
 import { DeferredConductorTabService } from './DeferredTabService';
-import { ModuleLoaderWebPlugin } from './ModuleLoaderPlugin';
+import { ModuleLoaderPlugin } from './ModuleLoaderPlugin';
 import { importAndRegisterWebPlugin } from './importExternalWebPlugin';
 
 export interface PreparedConductor {
@@ -10,7 +10,7 @@ export interface PreparedConductor {
   hostPlugin: BrowserHostPlugin;
   conduit: IConduit;
   tabService: DeferredConductorTabService;
-  moduleLoaderPlugin: ModuleLoaderWebPlugin;
+  moduleLoaderPlugin: ModuleLoaderPlugin;
 };
 
 export function createConductor(
@@ -20,7 +20,7 @@ export function createConductor(
 ): {
   hostPlugin: BrowserHostPlugin;
   conduit: IConduit;
-  moduleLoaderPlugin: ModuleLoaderWebPlugin;
+  moduleLoaderPlugin: ModuleLoaderPlugin;
 } {
   const worker = new Worker(evaluatorPath);
   const conduit = new Conduit(worker, true);
@@ -33,7 +33,7 @@ export function createConductor(
   // shared page-wide and gets overwritten by every new conductor - including a warm spare prepared
   // in the background while this one is still actively running a script) so callers always resolve
   // modules against *this* conductor's own instance, not whichever one was constructed most recently.
-  const moduleLoaderPlugin = hostPlugin.registerPlugin(ModuleLoaderWebPlugin);
+  const moduleLoaderPlugin = hostPlugin.registerPlugin(ModuleLoaderPlugin);
   return { hostPlugin, conduit, moduleLoaderPlugin };
 }
 
@@ -41,18 +41,19 @@ async function loadWebPlugin(
   hostPlugin: BrowserHostPlugin | undefined,
   pluginId: string,
   tabService: DeferredConductorTabService,
-  moduleLoaderPlugin: ModuleLoaderWebPlugin,
+  moduleLoaderPlugin: ModuleLoaderPlugin,
 ): Promise<void> {
   if (!hostPlugin) {
     return;
   }
-  const url = await resolveWebPluginUrl(pluginId, moduleLoaderPlugin);
+  const url = moduleLoaderPlugin.getModuleTabLocation(pluginId);
   if (!url) {
     console.warn(
       `Conductor: no web resolution for plugin "${pluginId}" (is directory.plugin.url set?)`,
     );
     return;
   }
+
   try {
     // The plugin is constructed with this conductor's ITabService (third constructor arg), so any
     // side-content tab it exposes registers into that service. The tab is buffered there and only

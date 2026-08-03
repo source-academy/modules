@@ -4,6 +4,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always"
   },
+  "editor.tabSize": 2,
   "[javascript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
@@ -18,13 +19,11 @@
   },
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features",
-    "editor.detectIndentation": false,
-    "editor.tabSize": 2
+    "editor.detectIndentation": false
   },
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features",
-    "editor.detectIndentation": false,
-    "editor.tabSize": 2
+    "editor.detectIndentation": false
   },
   "json.schemas": [
     {
@@ -66,8 +65,5 @@
     "typescriptreact",
     "yml",
     "yaml"
-  ],
-  "vue.server.includeLanguages": [
-    "vue"
   ]
 }

@@ -1,16 +1,19 @@
+import pathlib from 'path';
 import {
   CHANNEL_ID,
   ModuleLoaderMessageType,
-  WEB_ID,
   type ModuleLoaderMessage,
 } from '@sourceacademy/common-module-loader';
-
 import {
   checkIsPluginClass,
   type IChannel,
   type IConduit,
   type IPlugin,
 } from '@sourceacademy/conductor/conduit';
+import manifest from '../../../../build/modules.json' with { type: 'json' };
+
+const bundlesDir = '../../../../src/bundles';
+const tabsDir = '../../../../src/tabs';
 
 type ModuleDirectoryBundle = {
   tabs: string[];
@@ -18,31 +21,32 @@ type ModuleDirectoryBundle = {
 
 type ModuleDirectory = Record<string, ModuleDirectoryBundle>;
 
-export class ModuleLoaderWebPlugin implements IPlugin {
-  readonly id: string = WEB_ID;
+export class ModuleLoaderPlugin implements IPlugin {
+  readonly id = 'bruh';
   static readonly channelAttach = [CHANNEL_ID];
-  private readonly __moduleRequestChannel: IChannel<ModuleLoaderMessage>;
+  static instance: ModuleLoaderPlugin | null = null;
 
-  static instance: ModuleLoaderWebPlugin | null = null;
-  private moduleDirectoryURL: string | null = null;
-  private moduleDirectory: ModuleDirectory | null = null;
+  private readonly moduleDirectory: ModuleDirectory = manifest;
+  private readonly __moduleRequestChannel: IChannel<ModuleLoaderMessage>;
 
   constructor(
     _conduit: IConduit,
     [moduleRequestChannel]: IChannel<any>[],
   ) {
     this.__moduleRequestChannel = moduleRequestChannel;
-    ModuleLoaderWebPlugin.instance = this;
+    ModuleLoaderPlugin.instance = this;
 
     this.__moduleRequestChannel.subscribe(message => {
       if (message.type !== ModuleLoaderMessageType.REQUEST_MODULE) return;
-      if (this.moduleDirectory === null || this.moduleDirectoryURL === null) {
-        return this.__moduleRequestChannel.send({
-          type: ModuleLoaderMessageType.MODULE_ERROR,
-          moduleName: message.moduleName,
-          error: 'Module directory not loaded yet',
-        });
-      }
+
+      // if (this.moduleDirectory === null) {
+      //   return this.__moduleRequestChannel.send({
+      //     type: ModuleLoaderMessageType.MODULE_ERROR,
+      //     moduleName: message.moduleName,
+      //     error: 'Module directory not loaded yet',
+      //   });
+      // }
+
       if (!Object.hasOwnProperty.call(this.moduleDirectory, message.moduleName)) {
         return this.__moduleRequestChannel.send({
           type: ModuleLoaderMessageType.MODULE_ERROR,
@@ -50,6 +54,7 @@ export class ModuleLoaderWebPlugin implements IPlugin {
           error: `Module not found: ${message.moduleName}`,
         });
       }
+
       if (!/^[a-zA-Z0-9_-]+$/.test(message.moduleName)) {
         return this.__moduleRequestChannel.send({
           type: ModuleLoaderMessageType.MODULE_ERROR,
@@ -57,50 +62,27 @@ export class ModuleLoaderWebPlugin implements IPlugin {
           error: `Invalid module name: ${message.moduleName}`,
         });
       }
-      const moduleBaseUrl = this.moduleDirectoryURL.slice(
-        0,
-        this.moduleDirectoryURL.lastIndexOf('/') + 1,
-      );
+
       return this.__moduleRequestChannel.send({
         type: ModuleLoaderMessageType.MODULE_RESPONSE,
         moduleName: message.moduleName,
-        moduleURL: moduleBaseUrl + 'bundles/' + message.moduleName + '.js',
+        moduleURL: pathlib.posix.join(bundlesDir, message.moduleName, 'src/index.ts'),
         tabs: this.moduleDirectory[message.moduleName].tabs,
       });
     });
   }
 
-  async onModuleDirectoryURLChange(newURL: string): Promise<void> {
-    if (newURL === this.moduleDirectoryURL && this.moduleDirectory) {
-      return;
-    }
-    this.moduleDirectoryURL = newURL;
-    this.moduleDirectory = null;
-    await fetch(newURL)
-      .then(response => response.json())
-      .then(data => {
-        this.moduleDirectory = data;
-      })
-      .catch(error => {
-        console.error('Failed to load module directory:', error);
-      });
-  }
-
   getModuleTabLocation(tabName: string): string | null {
-    if (!this.moduleDirectory || !this.moduleDirectoryURL) {
+    if (!this.moduleDirectory) {
       return null;
     }
     for (const moduleName in this.moduleDirectory) {
       if (this.moduleDirectory[moduleName].tabs.includes(tabName)) {
-        const moduleBaseUrl = this.moduleDirectoryURL.slice(
-          0,
-          this.moduleDirectoryURL.lastIndexOf('/') + 1,
-        );
-        return moduleBaseUrl + 'tabs/' + tabName + '.js';
+        return pathlib.posix.join(tabsDir, tabName, 'src/index.tsx');
       }
     }
     return null;
   }
 }
 
-checkIsPluginClass(ModuleLoaderWebPlugin);
+checkIsPluginClass(ModuleLoaderPlugin);

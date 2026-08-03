@@ -1,5 +1,6 @@
 import { loader } from '@monaco-editor/react';
 import * as monaco from 'monaco-editor';
+import { registerSchemeLanguage } from './schemeMonarch';
 
 export const SOURCE_MONACO_THEME = 'source';
 
@@ -90,6 +91,8 @@ const sourceTheme: monaco.editor.IStandaloneThemeData = {
 
 monaco.editor.defineTheme(SOURCE_MONACO_THEME, sourceTheme);
 monaco.editor.setTheme(SOURCE_MONACO_THEME);
+
+registerSchemeLanguage();
 
 monaco.typescript.javascriptDefaults.setEagerModelSync(true);
 monaco.typescript.javascriptDefaults.setCompilerOptions({
