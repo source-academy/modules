@@ -263,6 +263,16 @@ describe('Sequential playback queue functions', () => {
       expect(wavDataUri).toMatch(/^data:audio\/wav;base64,/);
     });
 
+    it('notifies the tab before sampling starts, like play(), so a long sample shows as constructing rather than stalled', async () => {
+      const sound = funcs.sine_sound(440, 0.01);
+      await drain(funcs.play_in_tab(sound));
+
+      expect(io.notifyConstructing).toHaveBeenCalledOnce();
+      const notifyOrder = io.notifyConstructing.mock.invocationCallOrder[0];
+      const addPlayerOrder = io.addPlayerToTab.mock.invocationCallOrder[0];
+      expect(notifyOrder).toBeLessThan(addPlayerOrder);
+    });
+
     test('repeated play_in_tab() calls each add their own player', async () => {
       const sound = funcs.sine_sound(440, 0.01);
       await drain(funcs.play_in_tab(sound));

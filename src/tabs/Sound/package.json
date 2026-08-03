@@ -13,7 +13,11 @@
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/react": "catalog:",
-    "typescript": "catalog:"
+    "@vitest/browser-playwright": "catalog:",
+    "playwright": "^1.55.1",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "vitest-browser-react": "^2.1.0"
   },
   "scripts": {
     "build": "buildtools build tab .",

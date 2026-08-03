@@ -557,6 +557,19 @@ export async function* play_wave(wave: Wave, duration: number): AsyncGenerator<v
   return yield* play(make_sound(wave, duration));
 }
 
+/** Shared argument validation for play()/play_in_tab(): both accept a Sound and reject the same way. */
+function assertPlayableSound(func_name: string, sound: unknown): asserts sound is Sound {
+  if (!is_sound(sound)) {
+    // EvaluatorParameterTypeError is the correct, student-facing error here - the
+    // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
+    // eslint-disable-next-line @sourceacademy/throw-runtime-error
+    throw new EvaluatorParameterTypeError(func_name, 'sound', 'a Sound', sound);
+  }
+  if (sound.duration < 0) {
+    throw new EvaluatorRuntimeError(`${func_name}: duration of sound is negative`);
+  }
+}
+
 /**
  * Plays the given left/right Waves using the computer's sound device, for the duration given in
  * seconds.
@@ -584,18 +597,8 @@ export async function* play_waves(left_wave: Wave, right_wave: Wave, duration: n
  * @example play(sine_sound(440, 5));
  */
 export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined> {
-  if (!is_sound(sound)) {
-    // EvaluatorParameterTypeError is the correct, student-facing error here - the
-    // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
-    // eslint-disable-next-line @sourceacademy/throw-runtime-error
-    throw new EvaluatorParameterTypeError(play.name, 'sound', 'a Sound', sound);
-  }
-
-  const { duration } = sound;
-  if (duration < 0) {
-    throw new EvaluatorRuntimeError(`${play.name}: duration of sound is negative`);
-  }
-  if (duration === 0) {
+  assertPlayableSound(play.name, sound);
+  if (sound.duration === 0) {
     return sound;
   }
 
@@ -632,21 +635,15 @@ export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined
  * @example play_in_tab(sine_sound(440, 5));
  */
 export async function* play_in_tab(sound: Sound): AsyncGenerator<void, Sound, undefined> {
-  if (!is_sound(sound)) {
-    // EvaluatorParameterTypeError is the correct, student-facing error here - the
-    // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
-    // eslint-disable-next-line @sourceacademy/throw-runtime-error
-    throw new EvaluatorParameterTypeError(play_in_tab.name, 'sound', 'a Sound', sound);
-  }
-
-  const { duration } = sound;
-  if (duration < 0) {
-    throw new EvaluatorRuntimeError(`${play_in_tab.name}: duration of sound is negative`);
-  }
-  if (duration === 0) {
+  assertPlayableSound(play_in_tab.name, sound);
+  if (sound.duration === 0) {
     return sound;
   }
 
+  // Sampling can take a while for a long Sound - tell the tab now so it shows "Constructing…"
+  // instead of looking stalled until the bar just appears, matching play()'s notifyConstructing()
+  // call. addPlayerToTab() below is the corresponding "done" signal, matching playSamples().
+  await io().notifyConstructing();
   const { left: leftSamples, right: rightSamples } = yield* sampleSound(sound);
   await io().addPlayerToTab(encodeWavDataUri(leftSamples, rightSamples, FS));
   return sound;

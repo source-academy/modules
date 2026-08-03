@@ -1,7 +1,8 @@
 import type { ITabService, Tab } from '@sourceacademy/common-tabs';
 import type { IChannel } from '@sourceacademy/conductor/conduit';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import SoundTabPlugin, { SOUND_TAB_ID } from '..';
+import { cleanup, render } from 'vitest-browser-react';
+import SoundTabPlugin, { PlayerBarsView, SOUND_TAB_ID } from '..';
 
 class MockChannel<T> implements IChannel<T> {
   readonly name = 'mock-sound-channel';
@@ -107,6 +108,59 @@ function createMockMediaRecorder() {
   };
   return recorder;
 }
+
+describe(PlayerBarsView, () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  test('renders nothing when there are no players', async () => {
+    const screen = await render(<PlayerBarsView players={[]} />);
+    expect(screen.container.querySelector('#sound-player-bars')).toBeNull();
+  });
+
+  test('renders one labeled, native audio control per player, stacked vertically in call order', async () => {
+    const players = [
+      { id: 0, dataUri: 'data:audio/wav;base64,AAAA' },
+      { id: 1, dataUri: 'data:audio/wav;base64,BBBB' },
+      { id: 2, dataUri: 'data:audio/wav;base64,CCCC' }
+    ];
+    const screen = await render(<PlayerBarsView players={players} />);
+
+    const audioElements = screen.container.querySelectorAll('audio');
+    expect(audioElements).toHaveLength(3);
+    // In DOM (and therefore visual) order, not just present somewhere - matches the issue's
+    // "multiple bars arranged vertically" requirement, in the order play_in_tab() was called.
+    expect([...audioElements].map(audio => audio.src)).toEqual([
+      'data:audio/wav;base64,AAAA',
+      'data:audio/wav;base64,BBBB',
+      'data:audio/wav;base64,CCCC'
+    ]);
+
+    for (const [index, audio] of audioElements.entries()) {
+      // Each control is associated with its own visible "Sound N" label for assistive tech, not
+      // just visually adjacent to it.
+      const labelId = audio.getAttribute('aria-labelledby');
+      expect(labelId).not.toBeNull();
+      expect(screen.container.querySelector(`#${labelId}`)?.textContent).toBe(`Sound ${index + 1}`);
+    }
+  });
+
+  test('a later render with more players adds new bars below the existing ones, without disturbing them', async () => {
+    const first = [{ id: 0, dataUri: 'data:audio/wav;base64,AAAA' }];
+    const screen = await render(<PlayerBarsView players={first} />);
+    expect(screen.container.querySelectorAll('audio')).toHaveLength(1);
+
+    const second = [...first, { id: 1, dataUri: 'data:audio/wav;base64,BBBB' }];
+    await screen.rerender(<PlayerBarsView players={second} />);
+
+    const audioElements = screen.container.querySelectorAll('audio');
+    expect([...audioElements].map(audio => audio.src)).toEqual([
+      'data:audio/wav;base64,AAAA',
+      'data:audio/wav;base64,BBBB'
+    ]);
+  });
+});
 
 describe(SoundTabPlugin, () => {
   let channel: MockChannel<any>;
@@ -342,6 +396,17 @@ describe(SoundTabPlugin, () => {
       expect(players.at(-1)?.dataUri).toBe(`data:audio/wav;base64,entry-${total - 1}`);
       // The oldest entries are the ones dropped, not ones from the middle.
       expect(players.some(player => player.dataUri === 'data:audio/wav;base64,entry-0')).toBe(false);
+    });
+
+    test('closes out the matching notifyConstructing() call, like playSamples() does for play()', async () => {
+      // Regression test: play_in_tab() calls notifyConstructing() before sampling a long Sound, so
+      // the tab should show 'constructing' status until addPlayerToTab() (its equivalent of
+      // playSamples()) actually arrives - not stay stuck there forever.
+      void plugin.notifyConstructing();
+      expect(plugin.getStatus()).toBe('constructing');
+
+      await plugin.addPlayerToTab('data:audio/wav;base64,AAAA');
+      expect(plugin.getStatus()).toBe('idle');
     });
   });
 

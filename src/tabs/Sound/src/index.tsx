@@ -63,7 +63,7 @@ function SoundStatusView({ status, micGranted }: { status: Status, micGranted: b
   );
 }
 
-interface PlayerBarEntry {
+export interface PlayerBarEntry {
   id: number;
   dataUri: string;
 }
@@ -72,8 +72,10 @@ interface PlayerBarEntry {
  * Renders one play bar per `play_in_tab()` call, stacked vertically in call order - each bar is a
  * native `<audio controls>` element (start/pause/scrub for free from the browser), so multiple
  * calls can be compared/replayed independently of each other and of `play()`/`play_wave()`.
+ * Exported (rather than kept module-private, like `SoundStatusView`) so it can be rendered
+ * directly in tests, without needing to drive it through the full plugin/RPC wiring.
  */
-function PlayerBarsView({ players }: { players: PlayerBarEntry[] }) {
+export function PlayerBarsView({ players }: { players: PlayerBarEntry[] }) {
   if (players.length === 0) {
     return null;
   }
@@ -265,12 +267,16 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
    * its native controls.
    */
   async addPlayerToTab(wavDataUri: string): Promise<void> {
+    // Matches playSamples(): play_in_tab() calls notifyConstructing() before sampling (which can
+    // take a while for a long Sound), and this is the corresponding call that arrives once
+    // sampling has actually finished - its status contribution ends here, same as playSamples().
+    this.__constructingCount = Math.max(0, this.__constructingCount - 1);
     const players = [...this.__players, { id: this.__nextPlayerId, dataUri: wavDataUri }];
     this.__players = players.length > MAX_PLAYER_BARS
       ? players.slice(players.length - MAX_PLAYER_BARS)
       : players;
     this.__nextPlayerId += 1;
-    this.__emit();
+    this.__updatePlaybackStatus();
   }
 
   private async __playOne(left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>, sampleRate: number): Promise<void> {
