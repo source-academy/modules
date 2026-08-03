@@ -29,6 +29,13 @@ function constantWave(value: number): Wave {
   };
 }
 
+function countedWave(value: number, calls: { count: number }): Wave {
+  return async function* () {
+    calls.count += 1;
+    return value;
+  };
+}
+
 async function sampleAt(wave: Wave, t: number): Promise<number> {
   return drain(wave(t));
 }
@@ -374,6 +381,17 @@ describe(funcs.pan, () => {
     expect(await sampleAt(funcs.get_left_wave(panned), 0)).toBeCloseTo(0.5);
     expect(await sampleAt(funcs.get_right_wave(panned), 0)).toBeCloseTo(0.5);
   });
+
+  it('samples the squashed source wave once per timestamp when played', async () => {
+    const calls = { count: 0 };
+    const duration = 5 / funcs.FS;
+    const expectedSamples = Math.ceil(funcs.FS * duration);
+    const sound = funcs.make_sound(countedWave(1, calls), duration);
+
+    await drain(funcs.play(funcs.pan(0)(sound)));
+
+    expect(calls.count).toBe(expectedSamples);
+  });
 });
 
 describe(funcs.pan_mod, () => {
@@ -383,6 +401,20 @@ describe(funcs.pan_mod, () => {
     const panned = funcs.pan_mod(modulator)(sound);
     expect(await sampleAt(funcs.get_left_wave(panned), 0)).toBeCloseTo(0);
     expect(await sampleAt(funcs.get_right_wave(panned), 0)).toBeCloseTo(1);
+  });
+
+  it('samples the source and modulator waves once per timestamp when played', async () => {
+    const sourceCalls = { count: 0 };
+    const modulatorCalls = { count: 0 };
+    const duration = 5 / funcs.FS;
+    const expectedSamples = Math.ceil(funcs.FS * duration);
+    const sound = funcs.make_sound(countedWave(1, sourceCalls), duration);
+    const modulator = funcs.make_sound(countedWave(0.25, modulatorCalls), duration);
+
+    await drain(funcs.play(funcs.pan_mod(modulator)(sound)));
+
+    expect(sourceCalls.count).toBe(expectedSamples);
+    expect(modulatorCalls.count).toBe(expectedSamples);
   });
 });
 

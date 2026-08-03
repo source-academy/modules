@@ -34,7 +34,7 @@ import { midi_note_to_frequency } from '@sourceacademy/bundle-midi/functions';
 import { EvaluatorParameterTypeError, EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import { delay } from 'es-toolkit/promise';
 import type { SoundTabRpc } from './protocol';
-import type { Sound, SoundProducer, SoundTransformer, SyncWave, Wave } from './types';
+import type { Sound, SoundProducer, SoundSampler, SoundTransformer, StereoSamples, SyncWave, Wave } from './types';
 
 export const FS: number = 44100; // Output sample rate
 const fourier_expansion_level: number = 5;
@@ -58,11 +58,17 @@ interface BundleGlobalVars {
    * the mic picking up whatever's playing through the speakers.
    */
   activePlayCount: number;
+  /**
+   * True from the moment record()/record_for() accepts a request until that request either fails
+   * before starting or stopRecording() has settled.
+   */
+  recordingInProgress: boolean;
 }
 
 export const globalVars: BundleGlobalVars = {
   micPermissionGranted: null,
-  activePlayCount: 0
+  activePlayCount: 0,
+  recordingInProgress: false
 };
 
 /**
@@ -72,6 +78,7 @@ export const globalVars: BundleGlobalVars = {
  * on that count itself.
  */
 let playGeneration = 0;
+let recordingGeneration = 0;
 
 let soundIO: SoundTabRpc | undefined;
 
@@ -286,19 +293,36 @@ async function* sampleWave(wave: Wave, duration: number): AsyncGenerator<void, F
     // The fast path: no generator allocation, no Promise, no microtask per sample - see
     // `Wave.sync`'s doc in types.ts. Falls back to the yield*-driven path (which threads a
     // student-supplied wave's steps up to the CSE machine) the moment `sync` is unset.
-    let temp = sync ? sync(i / FS) : yield* wave(i / FS);
-    if (temp > 1) {
-      temp = 1;
-    } else if (temp < -1) {
-      temp = -1;
-    }
-    if (temp === 0 && Math.abs(temp - prev_value) > 0.01) {
-      temp = prev_value * 0.999;
-    }
+    const temp = smoothSample(sync ? sync(i / FS) : yield* wave(i / FS), prev_value);
     channel[i] = temp;
     prev_value = temp;
   }
   return channel;
+}
+
+function smoothSample(sample: number, previousSample: number): number {
+  let temp = sample;
+  if (temp > 1) {
+    temp = 1;
+  } else if (temp < -1) {
+    temp = -1;
+  }
+  if (temp === 0 && Math.abs(temp - previousSample) > 0.01) {
+    temp = previousSample * 0.999;
+  }
+  return temp;
+}
+
+async function* sampleSound(sound: Sound): AsyncGenerator<void, StereoSamples, undefined> {
+  if (sound.sampleChannels) {
+    return yield* sound.sampleChannels(sound.duration);
+  }
+
+  const left = yield* sampleWave(sound.leftWave, sound.duration);
+  return {
+    left,
+    right: sound.rightWave === sound.leftWave ? left : yield* sampleWave(sound.rightWave, sound.duration)
+  };
 }
 
 /** Builds a Wave that linearly interpolates between recorded PCM samples. */
@@ -354,6 +378,25 @@ function assertMicPermission(func_name: string): void {
   }
 }
 
+function reserveRecording(func_name: string): number {
+  if (globalVars.activePlayCount > 0) {
+    throw new EvaluatorRuntimeError(`${func_name}: Cannot record while another sound is playing!`);
+  }
+  if (globalVars.recordingInProgress) {
+    throw new EvaluatorRuntimeError(`${func_name}: Cannot record while another recording is in progress!`);
+  }
+  assertMicPermission(func_name);
+  globalVars.recordingInProgress = true;
+  recordingGeneration += 1;
+  return recordingGeneration;
+}
+
+function releaseRecording(generation: number): void {
+  if (recordingGeneration === generation) {
+    globalVars.recordingInProgress = false;
+  }
+}
+
 /**
  * Records a sound until the returned stop function is called. Takes a buffer duration (in
  * seconds) as argument, and returns a nullary stop function. Calling the stop function returns a
@@ -375,10 +418,7 @@ function assertMicPermission(func_name: string): void {
  */
 export function record(buffer: number): () => () => Promise<Sound> {
   validateDuration('record', buffer);
-  if (globalVars.activePlayCount > 0) {
-    throw new EvaluatorRuntimeError(`${record.name}: Cannot record while another sound is playing!`);
-  }
-  assertMicPermission('record');
+  const generation = reserveRecording(record.name);
 
   const started = (async () => {
     await delay(pre_recording_signal_pause_ms + buffer * 1000);
@@ -386,13 +426,22 @@ export function record(buffer: number): () => () => Promise<Sound> {
     await delay(recording_signal_ms);
     await io().startRecording();
   })();
+  let recordingDone: Promise<Sound> | undefined;
+  void started.catch(() => {
+    if (!recordingDone) {
+      releaseRecording(generation);
+    }
+  });
 
   return () => {
-    const recordingDone: Promise<Sound> = started
-      .then(() => io().stopRecording())
-      .then(({ left, right, sampleRate }) => samplesToSound(left, right, sampleRate));
-    void play_recording_signal();
-    return () => recordingDone;
+    if (!recordingDone) {
+      recordingDone = started
+        .then(() => io().stopRecording())
+        .then(({ left, right, sampleRate }) => samplesToSound(left, right, sampleRate))
+        .finally(() => releaseRecording(generation));
+      void play_recording_signal();
+    }
+    return () => recordingDone!;
   };
 }
 
@@ -420,23 +469,24 @@ export function record(buffer: number): () => () => Promise<Sound> {
 export function record_for(duration: number, buffer: number): () => Promise<Sound> {
   validateDuration('record_for', duration);
   validateDuration('record_for', buffer);
-  if (globalVars.activePlayCount > 0) {
-    throw new EvaluatorRuntimeError(`${record_for.name}: Cannot record while another sound is playing!`);
-  }
-  assertMicPermission('record_for');
+  const generation = reserveRecording(record_for.name);
 
   // order of events for record_for:
   // pre-recording-signal pause | recording signal |
   // pre-recording pause | recording | recording signal
   const recordingDone: Promise<Sound> = (async () => {
-    await delay(pre_recording_signal_pause_ms);
-    await play_recording_signal();
-    await delay(recording_signal_ms + buffer * 1000);
-    await io().startRecording();
-    await delay(duration * 1000);
-    const { left, right, sampleRate } = await io().stopRecording();
-    void play_recording_signal();
-    return samplesToSound(left, right, sampleRate);
+    try {
+      await delay(pre_recording_signal_pause_ms);
+      await play_recording_signal();
+      await delay(recording_signal_ms + buffer * 1000);
+      await io().startRecording();
+      await delay(duration * 1000);
+      const { left, right, sampleRate } = await io().stopRecording();
+      void play_recording_signal();
+      return samplesToSound(left, right, sampleRate);
+    } finally {
+      releaseRecording(generation);
+    }
   })();
 
   return () => recordingDone;
@@ -502,9 +552,7 @@ export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined
   // rather than looking stalled during what can be a noticeable wait for longer sounds. Awaited
   // (not fire-and-forget) so this can't race the tab's own (possibly still in-progress) loading.
   await io().notifyConstructing();
-  const leftSamples = yield* sampleWave(sound.leftWave, duration);
-  // Mono sounds have leftWave === rightWave: sample once instead of twice.
-  const rightSamples = sound.rightWave === sound.leftWave ? leftSamples : yield* sampleWave(sound.rightWave, duration);
+  const { left: leftSamples, right: rightSamples } = yield* sampleSound(sound);
   globalVars.activePlayCount += 1;
   const generation = playGeneration;
   // Fire-and-forget from the caller's perspective (matching the original's non-blocking
@@ -883,6 +931,18 @@ function gainWave(wave: Wave, gain: number): Wave {
   };
 }
 
+function make_stereo_sound_with_sampler(
+  left_wave: Wave,
+  right_wave: Wave,
+  duration: number,
+  sampleChannels: SoundSampler
+): Sound {
+  return {
+    ...make_stereo_sound(left_wave, right_wave, duration),
+    sampleChannels
+  };
+}
+
 /**
  * Centers a Sound by averaging its left and right channels, resulting in an effectively mono
  * Sound (both channels are the same, averaged, wave).
@@ -917,17 +977,59 @@ export function pan(amount: number): SoundTransformer {
   const clamped = Math.max(-1, Math.min(1, amount));
   return sound => {
     const { leftWave: wave, duration } = squash(sound);
-    return make_stereo_sound(
+    return make_stereo_sound_with_sampler(
       gainWave(wave, (1 - clamped) / 2),
       gainWave(wave, (1 + clamped) / 2),
-      duration
+      duration,
+      duration => samplePannedChannels(wave, duration, clamped)
     );
   };
+}
+
+async function* samplePannedChannels(
+  wave: Wave,
+  duration: number,
+  amount: number
+): AsyncGenerator<void, StereoSamples, undefined> {
+  const length = Math.ceil(FS * duration);
+  const left = new Float32Array(length);
+  const right = new Float32Array(length);
+  const leftGain = (1 - amount) / 2;
+  const rightGain = (1 + amount) / 2;
+  let prevLeft = 0;
+  let prevRight = 0;
+  const sync = wave.sync;
+
+  for (let i = 0; i < length; i += 1) {
+    const t = i / FS;
+    const sample = sync ? sync(t) : yield* wave(t);
+    const leftSample = smoothSample(leftGain * sample, prevLeft);
+    const rightSample = smoothSample(rightGain * sample, prevRight);
+    left[i] = leftSample;
+    right[i] = rightSample;
+    prevLeft = leftSample;
+    prevRight = rightSample;
+  }
+
+  return { left, right };
 }
 
 /** Modulates the pan amount at time `t` using `modulator`'s two channels, clamped to [-1, 1]. */
 function panModAmountWave(modulator: Sound): Wave {
   const { leftWave, rightWave } = modulator;
+  if (leftWave === rightWave) {
+    if (leftWave.sync) {
+      const sync = leftWave.sync;
+      return syncWave(t => {
+        const output = sync(t);
+        return Math.max(-1, Math.min(1, output + output));
+      });
+    }
+    return async function* (t: number) {
+      const output = yield* leftWave(t);
+      return Math.max(-1, Math.min(1, output + output));
+    };
+  }
   if (leftWave.sync && rightWave.sync) {
     const leftSync = leftWave.sync;
     const rightSync = rightWave.sync;
@@ -953,22 +1055,52 @@ export function pan_mod(modulator: Sound): SoundTransformer {
     if (amountWave.sync && wave.sync) {
       const amountSync = amountWave.sync;
       const sync = wave.sync;
-      return make_stereo_sound(
+      return make_stereo_sound_with_sampler(
         syncWave(t => ((1 - amountSync(t)) / 2) * sync(t)),
         syncWave(t => ((1 + amountSync(t)) / 2) * sync(t)),
-        duration
+        duration,
+        duration => samplePanModChannels(wave, amountWave, duration)
       );
     }
-    return make_stereo_sound(
+    return make_stereo_sound_with_sampler(
       async function* (t: number) {
         return ((1 - (yield* amountWave(t))) / 2) * (yield* wave(t));
       },
       async function* (t: number) {
         return ((1 + (yield* amountWave(t))) / 2) * (yield* wave(t));
       },
-      duration
+      duration,
+      duration => samplePanModChannels(wave, amountWave, duration)
     );
   };
+}
+
+async function* samplePanModChannels(
+  wave: Wave,
+  amountWave: Wave,
+  duration: number
+): AsyncGenerator<void, StereoSamples, undefined> {
+  const length = Math.ceil(FS * duration);
+  const left = new Float32Array(length);
+  const right = new Float32Array(length);
+  let prevLeft = 0;
+  let prevRight = 0;
+  const amountSync = amountWave.sync;
+  const waveSync = wave.sync;
+
+  for (let i = 0; i < length; i += 1) {
+    const t = i / FS;
+    const amount = amountSync ? amountSync(t) : yield* amountWave(t);
+    const sample = waveSync ? waveSync(t) : yield* wave(t);
+    const leftSample = smoothSample(((1 - amount) / 2) * sample, prevLeft);
+    const rightSample = smoothSample(((1 + amount) / 2) * sample, prevRight);
+    left[i] = leftSample;
+    right[i] = rightSample;
+    prevLeft = leftSample;
+    prevRight = rightSample;
+  }
+
+  return { left, right };
 }
 
 // ---------------------------------------------

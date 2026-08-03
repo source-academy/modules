@@ -9,6 +9,7 @@ beforeEach(() => {
   funcs.setSoundIO(io);
   funcs.globalVars.micPermissionGranted = null;
   funcs.globalVars.activePlayCount = 0;
+  funcs.globalVars.recordingInProgress = false;
 });
 
 describe(funcs.init_record, () => {
@@ -70,6 +71,20 @@ describe('Recording functions', () => {
       expect(() => funcs.record(1)).toThrowError('record: Cannot record while another sound is playing!');
     });
 
+    test('reserves recording state synchronously before startRecording fires', async () => {
+      vi.useRealTimers();
+      await funcs.init_record();
+      vi.useFakeTimers();
+
+      funcs.record(1);
+
+      expect(() => funcs.record(1)).toThrowError('record: Cannot record while another recording is in progress!');
+      expect(() => funcs.record_for(1, 1)).toThrowError(
+        'record_for: Cannot record while another recording is in progress!'
+      );
+      expect(io.startRecording).not.toHaveBeenCalled();
+    });
+
     test(`${funcs.record.name} works`, async () => {
       vi.useRealTimers();
       await funcs.init_record();
@@ -94,6 +109,28 @@ describe('Recording functions', () => {
       expect(funcs.get_duration(sound)).toBeCloseTo(samples.length / sampleRate);
       // A mono mic (left === right, same Float32Array) produces a Sound with left=right automatically.
       expect(funcs.get_left_wave(sound)).toBe(funcs.get_right_wave(sound));
+      expect(funcs.globalVars.recordingInProgress).toBe(false);
+    });
+
+    test('stop is idempotent and only stops the recording once', async () => {
+      vi.useRealTimers();
+      await funcs.init_record();
+      vi.useFakeTimers();
+
+      const samples = new Float32Array([0]);
+      io.stopRecording.mockResolvedValue({ left: samples, right: samples, sampleRate: 8000 });
+
+      const stop = funcs.record(0);
+      await vi.advanceTimersByTimeAsync(300);
+
+      const soundPromise0 = stop();
+      const soundPromise1 = stop();
+      await vi.advanceTimersByTimeAsync(0);
+
+      expect(io.stopRecording).toHaveBeenCalledOnce();
+      expect(soundPromise0()).toBe(soundPromise1());
+      await expect(soundPromise0()).resolves.toBeDefined();
+      expect(funcs.globalVars.recordingInProgress).toBe(false);
     });
 
     test('the sound promise resolves only once processing has actually finished, not immediately', async () => {
@@ -120,6 +157,69 @@ describe('Recording functions', () => {
       resolveStopRecording!({ left: samples, right: samples, sampleRate: 8000 });
       await expect(sound).resolves.toBeDefined();
       expect(resolved).toBe(true);
+    });
+
+    test('releases recording state if stopRecording rejects', async () => {
+      vi.useRealTimers();
+      await funcs.init_record();
+      vi.useFakeTimers();
+
+      io.stopRecording.mockRejectedValueOnce(new Error('stop failed'));
+
+      const stop = funcs.record(0);
+      await vi.advanceTimersByTimeAsync(300);
+
+      const soundPromise = stop();
+      const recording = soundPromise();
+      void recording.catch(() => undefined);
+      await vi.advanceTimersByTimeAsync(0);
+
+      await expect(recording).rejects.toThrow('stop failed');
+      expect(funcs.globalVars.recordingInProgress).toBe(false);
+    });
+
+    test('releases recording state if startRecording rejects before stop is called', async () => {
+      vi.useRealTimers();
+      await funcs.init_record();
+      vi.useFakeTimers();
+
+      io.startRecording.mockRejectedValueOnce(new Error('start failed'));
+
+      funcs.record(0);
+      await vi.advanceTimersByTimeAsync(300);
+
+      expect(io.startRecording).toHaveBeenCalledOnce();
+      expect(io.stopRecording).not.toHaveBeenCalled();
+      expect(funcs.globalVars.recordingInProgress).toBe(false);
+    });
+
+    test('a stale stop after a failed start cannot release a newer recording', async () => {
+      vi.useRealTimers();
+      await funcs.init_record();
+      vi.useFakeTimers();
+
+      io.startRecording.mockRejectedValueOnce(new Error('start failed'));
+
+      const staleStop = funcs.record(0);
+      await vi.advanceTimersByTimeAsync(300);
+
+      expect(funcs.globalVars.recordingInProgress).toBe(false);
+
+      const samples = new Float32Array([0]);
+      io.stopRecording.mockResolvedValue({ left: samples, right: samples, sampleRate: 8000 });
+      const currentStop = funcs.record(0);
+
+      const staleSoundPromise = staleStop();
+      await expect(staleSoundPromise()).rejects.toThrow('start failed');
+
+      expect(funcs.globalVars.recordingInProgress).toBe(true);
+
+      await vi.advanceTimersByTimeAsync(300);
+      const currentSoundPromise = currentStop();
+      await vi.advanceTimersByTimeAsync(0);
+
+      await expect(currentSoundPromise()).resolves.toBeDefined();
+      expect(funcs.globalVars.recordingInProgress).toBe(false);
     });
 
     test('a genuinely stereo input device produces a Sound with different left/right channels', async () => {
@@ -152,6 +252,20 @@ describe('Recording functions', () => {
       expect(() => funcs.record_for(1, 1)).toThrowError('record_for: Cannot record while another sound is playing!');
     });
 
+    test('reserves recording state synchronously before startRecording fires', async () => {
+      vi.useRealTimers();
+      await funcs.init_record();
+      vi.useFakeTimers();
+
+      funcs.record_for(1, 1);
+
+      expect(() => funcs.record(1)).toThrowError('record: Cannot record while another recording is in progress!');
+      expect(() => funcs.record_for(1, 1)).toThrowError(
+        'record_for: Cannot record while another recording is in progress!'
+      );
+      expect(io.startRecording).not.toHaveBeenCalled();
+    });
+
     test(`${funcs.record_for.name} works`, async () => {
       vi.useRealTimers();
       await funcs.init_record();
@@ -170,6 +284,28 @@ describe('Recording functions', () => {
 
       const sound = await promise();
       expect(funcs.get_duration(sound)).toBeCloseTo(samples.length / sampleRate);
+      expect(funcs.globalVars.recordingInProgress).toBe(false);
+    });
+
+    test('the returned promise is idempotent and releases recording state if stopRecording rejects', async () => {
+      vi.useRealTimers();
+      await funcs.init_record();
+      vi.useFakeTimers();
+
+      io.stopRecording.mockRejectedValueOnce(new Error('stop failed'));
+
+      const soundPromise = funcs.record_for(1, 0);
+      const recording0 = soundPromise();
+      const recording1 = soundPromise();
+      expect(recording0).toBe(recording1);
+      void recording0.catch(() => undefined);
+
+      await vi.advanceTimersByTimeAsync(1300);
+
+      expect(io.startRecording).toHaveBeenCalledOnce();
+      expect(io.stopRecording).toHaveBeenCalledOnce();
+      await expect(recording0).rejects.toThrow('stop failed');
+      expect(funcs.globalVars.recordingInProgress).toBe(false);
     });
   });
 });
