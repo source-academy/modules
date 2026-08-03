@@ -630,13 +630,16 @@ export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined
  * Adds the given Sound to the sound tab as a play bar with its own start/pause/scrub controls,
  * rather than playing it immediately - unlike play(), nothing is heard until the cadet presses
  * play in the tab. Each call adds a new bar (stacked below any earlier ones), so playing several
- * Sounds this way lets the cadet compare/replay each one independently, on their own schedule.
- * Returns (without waiting for the cadet to interact with the bar) once it has been added.
+ * Sounds this way lets the cadet compare/replay each one independently, on their own schedule. A
+ * zero-duration Sound (a valid neutral element for consecutively()/simultaneously(), not an error)
+ * gets a "zero duration sound" placeholder entry instead of a play bar, since there's nothing to
+ * play. Returns (without waiting for the cadet to interact with the bar) once it has been added.
  * @example play_in_tab(sine_sound(440, 5));
  */
 export async function* play_in_tab(sound: Sound): AsyncGenerator<void, Sound, undefined> {
   assertPlayableSound(play_in_tab.name, sound);
   if (sound.duration === 0) {
+    await io().addZeroDurationPlayerToTab();
     return sound;
   }
 

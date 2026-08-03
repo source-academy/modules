@@ -7,6 +7,7 @@ export interface MockSoundTabRpc extends SoundTabRpc {
   notifyConstructing: Mock<() => Promise<void>>;
   $stopPlayback: Mock<() => void>;
   addPlayerToTab: Mock<(wavDataUri: string) => Promise<void>>;
+  addZeroDurationPlayerToTab: Mock<() => Promise<void>>;
   startRecording: Mock<() => Promise<void>>;
   stopRecording: Mock<() => Promise<RecordedSamples>>;
 }
@@ -23,6 +24,7 @@ export function mockSoundTabRpc(): MockSoundTabRpc {
     notifyConstructing: vi.fn().mockResolvedValue(undefined),
     $stopPlayback: vi.fn(),
     addPlayerToTab: vi.fn().mockResolvedValue(undefined),
+    addZeroDurationPlayerToTab: vi.fn().mockResolvedValue(undefined),
     startRecording: vi.fn().mockResolvedValue(undefined),
     stopRecording: vi.fn().mockResolvedValue({ left: emptySamples, right: emptySamples, sampleRate: 44100 })
   };

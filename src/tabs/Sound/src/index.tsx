@@ -63,15 +63,15 @@ function SoundStatusView({ status, micGranted }: { status: Status, micGranted: b
   );
 }
 
-export interface PlayerBarEntry {
-  id: number;
-  dataUri: string;
-}
+export type PlayerBarEntry =
+  | { id: number, kind: 'audio', dataUri: string }
+  | { id: number, kind: 'zero-duration' };
 
 /**
- * Renders one play bar per `play_in_tab()` call, stacked vertically in call order - each bar is a
- * native `<audio controls>` element (start/pause/scrub for free from the browser), so multiple
- * calls can be compared/replayed independently of each other and of `play()`/`play_wave()`.
+ * Renders one play bar per `play_in_tab()` call, stacked vertically in call order - a normal entry
+ * is a native `<audio controls>` element (start/pause/scrub for free from the browser), so multiple
+ * calls can be compared/replayed independently of each other and of `play()`/`play_wave()`. A
+ * zero-duration Sound has nothing to play, so its entry is a plain placeholder line instead.
  * Exported (rather than kept module-private, like `SoundStatusView`) so it can be rendered
  * directly in tests, without needing to drive it through the full plugin/RPC wiring.
  */
@@ -86,12 +86,16 @@ export function PlayerBarsView({ players }: { players: PlayerBarEntry[] }) {
           <p id={`sound-player-label-${player.id}`} style={{ margin: '0 0 0.25em 0' }}>
             {`Sound ${index + 1}`}
           </p>
-          <audio
-            src={player.dataUri}
-            controls
-            style={{ width: '100%' }}
-            aria-labelledby={`sound-player-label-${player.id}`}
-          />
+          {player.kind === 'audio' ? (
+            <audio
+              src={player.dataUri}
+              controls
+              style={{ width: '100%' }}
+              aria-labelledby={`sound-player-label-${player.id}`}
+            />
+          ) : (
+            <p style={{ margin: 0, fontStyle: 'italic' }}>zero duration sound</p>
+          )}
         </div>
       ))}
     </div>
@@ -271,12 +275,30 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
     // take a while for a long Sound), and this is the corresponding call that arrives once
     // sampling has actually finished - its status contribution ends here, same as playSamples().
     this.__constructingCount = Math.max(0, this.__constructingCount - 1);
-    const players = [...this.__players, { id: this.__nextPlayerId, dataUri: wavDataUri }];
+    this.__pushPlayer({ id: this.__nextPlayerId, kind: 'audio', dataUri: wavDataUri });
+    this.__updatePlaybackStatus();
+  }
+
+  /**
+   * Adds a play_in_tab() entry for a zero-duration Sound - a placeholder line, since there's
+   * nothing to sample or play. Deliberately a separate method from addPlayerToTab() rather than a
+   * variant of it: no sampling happens for a zero-duration Sound, so play_in_tab() never calls
+   * notifyConstructing() for one either, and this must not decrement __constructingCount on its
+   * behalf - doing so here would incorrectly cancel out an unrelated, still-in-flight
+   * notifyConstructing() from a genuinely concurrent play_in_tab() call on a real Sound.
+   */
+  async addZeroDurationPlayerToTab(): Promise<void> {
+    this.__pushPlayer({ id: this.__nextPlayerId, kind: 'zero-duration' });
+    this.__updatePlaybackStatus();
+  }
+
+  /** Shared append-with-cap logic behind addPlayerToTab()/addZeroDurationPlayerToTab(). */
+  private __pushPlayer(entry: PlayerBarEntry): void {
+    const players = [...this.__players, entry];
     this.__players = players.length > MAX_PLAYER_BARS
       ? players.slice(players.length - MAX_PLAYER_BARS)
       : players;
     this.__nextPlayerId += 1;
-    this.__updatePlaybackStatus();
   }
 
   private async __playOne(left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>, sampleRate: number): Promise<void> {

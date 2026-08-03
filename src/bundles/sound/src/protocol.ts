@@ -46,6 +46,15 @@ export interface SoundTabRpc {
    * tab hands straight to a native `<audio>` element. Resolves once the entry has been added.
    */
   addPlayerToTab(wavDataUri: string): Promise<void>;
+  /**
+   * Adds a placeholder entry (no audio control - a Sound with no samples has nothing to play) to
+   * the tab's list of play bars for a `play_in_tab()` call on a zero-duration Sound, taking the
+   * same call-order position a normal entry would. Unlike `addPlayerToTab`, no sampling happens
+   * for a zero-duration Sound, so there's no matching `notifyConstructing()` call to close out
+   * here - a separate method from `addPlayerToTab` specifically so this doesn't touch that
+   * bookkeeping.
+   */
+  addZeroDurationPlayerToTab(): Promise<void>;
   /** Starts recording from the previously-granted microphone; resolves once recording has actually started. */
   startRecording(): Promise<void>;
   /** Stops the current recording and resolves with the decoded PCM buffer(s). */

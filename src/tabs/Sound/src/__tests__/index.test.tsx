@@ -2,7 +2,7 @@ import type { ITabService, Tab } from '@sourceacademy/common-tabs';
 import type { IChannel } from '@sourceacademy/conductor/conduit';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { cleanup, render } from 'vitest-browser-react';
-import SoundTabPlugin, { PlayerBarsView, SOUND_TAB_ID } from '..';
+import SoundTabPlugin, { PlayerBarsView, SOUND_TAB_ID, type PlayerBarEntry } from '..';
 
 class MockChannel<T> implements IChannel<T> {
   readonly name = 'mock-sound-channel';
@@ -120,10 +120,10 @@ describe(PlayerBarsView, () => {
   });
 
   test('renders one labeled, native audio control per player, stacked vertically in call order', async () => {
-    const players = [
-      { id: 0, dataUri: 'data:audio/wav;base64,AAAA' },
-      { id: 1, dataUri: 'data:audio/wav;base64,BBBB' },
-      { id: 2, dataUri: 'data:audio/wav;base64,CCCC' }
+    const players: PlayerBarEntry[] = [
+      { id: 0, kind: 'audio', dataUri: 'data:audio/wav;base64,AAAA' },
+      { id: 1, kind: 'audio', dataUri: 'data:audio/wav;base64,BBBB' },
+      { id: 2, kind: 'audio', dataUri: 'data:audio/wav;base64,CCCC' }
     ];
     const screen = await render(<PlayerBarsView players={players} />);
 
@@ -147,11 +147,11 @@ describe(PlayerBarsView, () => {
   });
 
   test('a later render with more players adds new bars below the existing ones, without disturbing them', async () => {
-    const first = [{ id: 0, dataUri: 'data:audio/wav;base64,AAAA' }];
+    const first: PlayerBarEntry[] = [{ id: 0, kind: 'audio', dataUri: 'data:audio/wav;base64,AAAA' }];
     const screen = await render(<PlayerBarsView players={first} />);
     expect(screen.container.querySelectorAll('audio')).toHaveLength(1);
 
-    const second = [...first, { id: 1, dataUri: 'data:audio/wav;base64,BBBB' }];
+    const second: PlayerBarEntry[] = [...first, { id: 1, kind: 'audio', dataUri: 'data:audio/wav;base64,BBBB' }];
     await screen.rerender(<PlayerBarsView players={second} />);
 
     const audioElements = screen.container.querySelectorAll('audio');
@@ -159,6 +159,25 @@ describe(PlayerBarsView, () => {
       'data:audio/wav;base64,AAAA',
       'data:audio/wav;base64,BBBB'
     ]);
+  });
+
+  test('renders a "zero duration sound" placeholder instead of an audio control for a zero-duration entry', async () => {
+    const players: PlayerBarEntry[] = [
+      { id: 0, kind: 'audio', dataUri: 'data:audio/wav;base64,AAAA' },
+      { id: 1, kind: 'zero-duration' },
+      { id: 2, kind: 'audio', dataUri: 'data:audio/wav;base64,CCCC' }
+    ];
+    const screen = await render(<PlayerBarsView players={players} />);
+
+    // Only the two audio entries get an <audio> control - the zero-duration one, with nothing to
+    // play, does not.
+    expect(screen.container.querySelectorAll('audio')).toHaveLength(2);
+    await expect.element(screen.getByText('zero duration sound')).toBeInTheDocument();
+
+    // Still takes its place in call order, with the same "Sound N" numbering scheme as the others,
+    // rather than being skipped or renumbering what comes after it.
+    const labels = [...screen.container.querySelectorAll('p[id^="sound-player-label-"]')].map(label => label.textContent);
+    expect(labels).toEqual(['Sound 1', 'Sound 2', 'Sound 3']);
   });
 });
 
@@ -392,10 +411,11 @@ describe(SoundTabPlugin, () => {
 
       const players = plugin.getPlayers();
       expect(players.length).toBeLessThan(total);
+      const dataUris = players.map(player => (player.kind === 'audio' ? player.dataUri : undefined));
       // The most recent entry is always kept, regardless of the cap.
-      expect(players.at(-1)?.dataUri).toBe(`data:audio/wav;base64,entry-${total - 1}`);
+      expect(dataUris.at(-1)).toBe(`data:audio/wav;base64,entry-${total - 1}`);
       // The oldest entries are the ones dropped, not ones from the middle.
-      expect(players.some(player => player.dataUri === 'data:audio/wav;base64,entry-0')).toBe(false);
+      expect(dataUris).not.toContain('data:audio/wav;base64,entry-0');
     });
 
     test('closes out the matching notifyConstructing() call, like playSamples() does for play()', async () => {
@@ -407,6 +427,36 @@ describe(SoundTabPlugin, () => {
 
       await plugin.addPlayerToTab('data:audio/wav;base64,AAAA');
       expect(plugin.getStatus()).toBe('idle');
+    });
+  });
+
+  describe('addZeroDurationPlayerToTab', () => {
+    test('adds a zero-duration entry, taking its place in call order alongside audio entries', async () => {
+      await plugin.addPlayerToTab('data:audio/wav;base64,AAAA');
+      await plugin.addZeroDurationPlayerToTab();
+      await plugin.addPlayerToTab('data:audio/wav;base64,CCCC');
+
+      const players = plugin.getPlayers();
+      expect(players.map(player => player.kind)).toEqual(['audio', 'zero-duration', 'audio']);
+    });
+
+    test('notifies subscribers so a rendered player list can pick up the new entry', async () => {
+      const listener = vi.fn();
+      plugin.subscribe(listener);
+      await plugin.addZeroDurationPlayerToTab();
+      expect(listener).toHaveBeenCalled();
+    });
+
+    test('does not touch __constructingCount - unlike addPlayerToTab(), there is no matching notifyConstructing() call to close out', async () => {
+      // Regression test: a zero-duration Sound is never sampled, so play_in_tab() never calls
+      // notifyConstructing() for one - addZeroDurationPlayerToTab() must not decrement that count
+      // regardless, or it could wrongly cancel out an unrelated, still-in-flight
+      // notifyConstructing() from a genuinely concurrent play_in_tab() call on a real Sound.
+      void plugin.notifyConstructing(); // an unrelated, concurrent play_in_tab() call is sampling
+      expect(plugin.getStatus()).toBe('constructing');
+
+      await plugin.addZeroDurationPlayerToTab();
+      expect(plugin.getStatus()).toBe('constructing');
     });
   });
 

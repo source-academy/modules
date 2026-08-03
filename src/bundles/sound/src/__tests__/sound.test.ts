@@ -240,10 +240,19 @@ describe('Sequential playback queue functions', () => {
       await expect(drain(funcs.play_in_tab(sound))).rejects.toThrow('play_in_tab: duration of sound is negative');
     });
 
-    it('Should not error when duration is zero, and does not add a player', async () => {
+    it('Should not error when duration is zero: a zero-duration Sound is a valid neutral element, not an error', async () => {
       const sound = funcs.make_sound(constantWave(0), 0);
       await expect(drain(funcs.play_in_tab(sound))).resolves.toBe(sound);
+    });
+
+    it('adds a zero-duration placeholder entry instead of an audio player, and skips sampling entirely', async () => {
+      const sound = funcs.make_sound(constantWave(0), 0);
+      await drain(funcs.play_in_tab(sound));
+
+      expect(io.addZeroDurationPlayerToTab).toHaveBeenCalledOnce();
       expect(io.addPlayerToTab).not.toHaveBeenCalled();
+      // There's nothing to sample for a zero-duration Sound, so no "constructing" status either.
+      expect(io.notifyConstructing).not.toHaveBeenCalled();
     });
 
     it('Should throw error when given not a sound', async () => {
