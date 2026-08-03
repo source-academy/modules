@@ -139,6 +139,11 @@ export default class ReplModulePlugin extends BaseModulePlugin {
   async* set_evaluator(evalFunc: TypedValue<DataType.CLOSURE>): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     await this.evaluator.closure_arity_assert(evalFunc, 1);
     this.__evaluator = evalFunc;
+    // Registering an evaluator is the one prerequisite the module's own documented minimal usage
+    // (see the module doc comment above) treats as enough to start using the Repl tab - without
+    // this, a program whose only interaction with the module is set_evaluator() never opens the
+    // tab at all, since nothing else would ever call __loadReplTab() first.
+    this.__loadReplTab();
     return mVoid();
   }
 
@@ -264,11 +269,12 @@ export default class ReplModulePlugin extends BaseModulePlugin {
   }
 
   /**
-   * Loads the host-side tab, lazily - the first time anything is displayed, or the editor is
-   * customized (background image, font size, program text). Called from every function that
-   * gives the student a reason to actually look at the tab, not just the ones that produce
-   * output - a program whose only interaction with this module is e.g. set_program_text (to
-   * pre-populate starter code) still needs the tab to actually open.
+   * Loads the host-side tab, lazily - the first time anything is displayed, the editor is
+   * customized (background image, font size, program text), or an evaluator is registered.
+   * Called from every function that gives the student a reason to actually look at the tab, not
+   * just the ones that produce output - a program whose only interaction with this module is
+   * e.g. set_evaluator (per the module's own documented minimal usage above) or set_program_text
+   * (to pre-populate starter code) still needs the tab to actually open.
    */
   private __loadReplTab(): void {
     if (this.__tabLoaded || this.__tabLoader === undefined) return;

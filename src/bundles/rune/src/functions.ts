@@ -1,5 +1,5 @@
 import { repeat_internal } from '@sourceacademy/bundle-repeat/functions';
-import { assertFunctionOfLength, assertNumberWithinRange, hueToRgb } from '@sourceacademy/modules-lib/utilities';
+import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/conductor/common';
 import { clamp, sample } from 'es-toolkit';
 import { mat4, vec3 } from 'gl-matrix';
 import {
@@ -22,6 +22,7 @@ import {
   getSquare,
   getTriangle,
   hexToColor,
+  hueToRgb,
   throwIfNotRune
 } from './runes_ops';
 import {
@@ -86,8 +87,8 @@ export class RuneFunctions {
     rune: Rune
   ): Rune {
     throwIfNotRune(RuneFunctions.scale_independent.name, rune);
-    assertNumberWithinRange(ratio_x, { func_name: RuneFunctions.scale_independent.name, param_name: 'ratio_x', integer: false });
-    assertNumberWithinRange(ratio_y, { func_name: RuneFunctions.scale_independent.name, param_name: 'ratio_y', integer: false });
+    assertNumberWithinRange(ratio_x, RuneFunctions.scale_independent.name, undefined, undefined, false, 'ratio_x');
+    assertNumberWithinRange(ratio_y, RuneFunctions.scale_independent.name, undefined, undefined, false, 'ratio_y');
 
     const scaleVec = vec3.fromValues(ratio_x, ratio_y, 1);
     const scaleMat = mat4.create();
@@ -154,9 +155,7 @@ export class RuneFunctions {
   static stackn(n: number, rune: Rune): Rune {
     throwIfNotRune(RuneFunctions.stackn.name, rune);
 
-    assertNumberWithinRange(n, {
-      func_name: RuneFunctions.stackn.name
-    });
+    assertNumberWithinRange(n, RuneFunctions.stackn.name);
 
     if (n <= 1) {
       return rune;
@@ -223,7 +222,7 @@ export class RuneFunctions {
   ): Rune {
     throwIfNotRune(RuneFunctions.repeat_pattern.name, initial, 'initial');
     assertFunctionOfLength(pattern, 1, RuneFunctions.repeat_pattern.name);
-    const repeated = repeat_internal(pattern, n);
+    const repeated = repeat_internal<Rune>(pattern, n);
     return repeated(initial);
   }
 

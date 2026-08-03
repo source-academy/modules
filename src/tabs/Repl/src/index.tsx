@@ -37,7 +37,11 @@ const SAVED_CODE_STORAGE_KEY = 'programmable_repl_saved_editor_code';
 const FONT_MESSAGE = {
   fontFamily: 'Inconsolata, Consolas, monospace',
   fontSize: '16px',
-  fontWeight: 'normal'
+  fontWeight: 'normal',
+  // Output content can contain literal newlines (e.g. from set_program_text/repl_display); without
+  // this, the default `white-space: normal` collapses them the same as any other whitespace, so a
+  // multi-line display would flatten onto a single line (#871).
+  whiteSpace: 'pre-wrap'
 };
 
 /**
