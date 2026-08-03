@@ -1,13 +1,11 @@
 {
   "name": "@sourceacademy/bundle-repl",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
-  "dependencies": {
-    "@sourceacademy/modules-lib": "workspace:^",
-    "js-slang": "catalog:"
-  },
   "devDependencies": {
+    "@sourceacademy/conductor": "catalog:",
     "@sourceacademy/modules-buildtools": "workspace:^",
+    "@sourceacademy/modules-testplugin": "workspace:^",
     "typescript": "catalog:"
   },
   "type": "module",

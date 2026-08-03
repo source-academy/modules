@@ -1040,25 +1040,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@blueprintjs/icons@npm:^6.0.0":
-  version: 6.9.1
-  resolution: "@blueprintjs/icons@npm:6.9.1"
-  dependencies:
-    change-case: "npm:^4.1.2"
-    classnames: "npm:^2.3.1"
-    tslib: "npm:~2.6.2"
-  peerDependencies:
-    "@types/react": 18
-    react: 18
-    react-dom: 18
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-  checksum: 10c0/5958a5168065adddf46590a8d5862f45a26715ee983af14cd9f82277e45131b75d9949f7c5c0876bc3836ddf9ed43fdc8d97530f6c9579498485ea9d8fde9030
-  languageName: node
-  linkType: hard
-
-"@blueprintjs/icons@npm:^6.13.0":
+"@blueprintjs/icons@npm:^6.0.0, @blueprintjs/icons@npm:^6.13.0":
   version: 6.13.0
   resolution: "@blueprintjs/icons@npm:6.13.0"
   dependencies:
@@ -2840,6 +2822,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jscad/modeling@npm:2.13.0":
+  version: 2.13.0
+  resolution: "@jscad/modeling@npm:2.13.0"
+  checksum: 10c0/f45ea30a5b6297d45f28eb269caf8739c99a003fc5f9d20734b75b2f34df68cf05566fdf74817ed3f0ba8625f3c6c1c4452fc99867bef6373041c9807361a5a8
+  languageName: node
+  linkType: hard
+
 "@jscad/modeling@npm:2.9.6":
   version: 2.9.6
   resolution: "@jscad/modeling@npm:2.9.6"
@@ -2867,13 +2856,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jscad/stl-serializer@npm:2.1.11":
-  version: 2.1.11
-  resolution: "@jscad/stl-serializer@npm:2.1.11"
+"@jscad/stl-serializer@npm:2.1.23":
+  version: 2.1.23
+  resolution: "@jscad/stl-serializer@npm:2.1.23"
   dependencies:
     "@jscad/array-utils": "npm:2.1.4"
-    "@jscad/modeling": "npm:2.9.6"
-  checksum: 10c0/6835b58077a20e74a05a300c9d0cf1fe3b8879cccd64fe64b1626e12d1aa261866c11c173d1020a4125ef9d1a0aee0c803401010ee9e9dbb2c9137c65e2c95b8
+    "@jscad/modeling": "npm:2.13.0"
+  checksum: 10c0/702a0962d0888b1b45512568b312cc46f02763055ef3e0c9cfe5c8ee691076547f20e4508d4ab4eb39daca65da9066473712b76d7e93668f6c0150cba84ea69a
   languageName: node
   linkType: hard
 
@@ -4268,7 +4257,7 @@ __metadata:
   resolution: "@sourceacademy/bundle-csg@workspace:src/bundles/csg"
   dependencies:
     "@jscad/modeling": "patch:@jscad/modeling@npm%3A2.9.6#~/.yarn/patches/@jscad-modeling-npm-2.9.6-71e6aa3a91.patch"
-    "@jscad/stl-serializer": "npm:2.1.11"
+    "@jscad/stl-serializer": "npm:2.1.23"
     "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
@@ -4341,10 +4330,10 @@ __metadata:
   dependencies:
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    "@types/plotly.js": "npm:^2.35.4"
+    "@types/plotly.js": "npm:^3.0.0"
     "@types/three": "npm:^0.185.0"
     nbody: "npm:^0.2.0"
-    plotly.js-dist: "npm:^2.17.1"
+    plotly.js-dist: "npm:^3.0.0"
     three: "npm:^0.185.0"
     typescript: "catalog:"
   languageName: unknown
@@ -4377,16 +4366,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-pix_n_flix@workspace:src/bundles/pix_n_flix"
   dependencies:
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    "@sourceacademy/modules-lib": "workspace:^"
-    "@types/react": "catalog:"
-    "@vitest/browser-playwright": "catalog:"
-    playwright: "catalog:"
-    react: "catalog:"
-    react-dom: "catalog:"
     typescript: "catalog:"
-    vitest: "catalog:"
-    vitest-browser-react: "npm:^2.1.0"
   languageName: unknown
   linkType: soft
 
@@ -4422,9 +4404,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-repl@workspace:src/bundles/repl"
   dependencies:
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    "@sourceacademy/modules-lib": "workspace:^"
-    js-slang: "catalog:"
+    "@sourceacademy/modules-testplugin": "workspace:^"
     typescript: "catalog:"
   languageName: unknown
   linkType: soft
@@ -4985,11 +4967,11 @@ __metadata:
     "@sourceacademy/bundle-nbody": "workspace:^"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
-    "@types/plotly.js": "npm:^2.35.4"
+    "@types/plotly.js": "npm:^3.0.0"
     "@types/react": "catalog:"
     "@types/three": "npm:^0.185.0"
     nbody: "npm:^0.2.0"
-    plotly.js-dist: "npm:^2.17.1"
+    plotly.js-dist: "npm:^3.0.0"
     react: "catalog:"
     react-dom: "catalog:"
     three: "npm:^0.185.0"
@@ -5034,8 +5016,9 @@ __metadata:
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
     "@sourceacademy/bundle-pix_n_flix": "workspace:^"
+    "@sourceacademy/common-tabs": "npm:^0.0.1"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "catalog:"
     react: "catalog:"
     react-dom: "catalog:"
@@ -5082,8 +5065,9 @@ __metadata:
   dependencies:
     "@blueprintjs/core": "npm:^6.0.0"
     "@sourceacademy/bundle-repl": "workspace:^"
+    "@sourceacademy/common-tabs": "npm:^0.0.1"
+    "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
-    "@sourceacademy/modules-lib": "workspace:^"
     "@types/react": "catalog:"
     ace-builds: "npm:^1.25.1"
     es-toolkit: "npm:^1.44.0"
@@ -5931,13 +5915,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/plotly.js@npm:^2.35.4":
-  version: 2.35.14
-  resolution: "@types/plotly.js@npm:2.35.14"
-  checksum: 10c0/219fe2b49dfc47ba63dec63c2f6144de092da48065e2885c5d9276f992a760f49fb6733677f0f9b0255a2122cc3544a71671ae8f786dea04e34fc0668779864b
-  languageName: node
-  linkType: hard
-
 "@types/plotly.js@npm:^3.0.0":
   version: 3.0.10
   resolution: "@types/plotly.js@npm:3.0.10"
@@ -6193,7 +6170,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/types@npm:8.63.0, @typescript-eslint/types@npm:^8.56.0, @typescript-eslint/types@npm:^8.59.4":
+"@typescript-eslint/types@npm:8.63.0":
   version: 8.63.0
   resolution: "@typescript-eslint/types@npm:8.63.0"
   checksum: 10c0/270bd2b2affdc173dd7e9e1bf1419a6f7a2fa8ff1fca5c613da88f6e44c433a1412887e513d24233a4a6112bdc3439d3e4cadc4f492eb1a6dc2a377495a38836
@@ -6204,6 +6181,20 @@ __metadata:
   version: 8.65.0
   resolution: "@typescript-eslint/types@npm:8.65.0"
   checksum: 10c0/919b6d96111ea26f09c6cb1121fbba915147761be3fbf9c4de5b200faa2891087ebdcfd2f4a1f27a4c6153daeefc7448147c651a074b3ec70440f3f8c1092a81
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/types@npm:^8.56.0":
+  version: 8.58.2
+  resolution: "@typescript-eslint/types@npm:8.58.2"
+  checksum: 10c0/6707c1a2ec921b9ae441b35d9cb4e0af11673a67e332a366e3033f1d558ff5db4f39021872c207fb361841670e9ffcc4981f19eb21e4495a3a031d02015637a7
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/types@npm:^8.59.4":
+  version: 8.62.1
+  resolution: "@typescript-eslint/types@npm:8.62.1"
+  checksum: 10c0/dfa1c9ef016c867a57d3fbef89f7968f3135d8d4621de1a8d2818258f79ed61f26fb6a3381ef27dde0a880817bfd5883f642f03a027dc127d771007022d1d880
   languageName: node
   linkType: hard
 
@@ -16645,14 +16636,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"picomatch@npm:^4.0.2, picomatch@npm:^4.0.3, picomatch@npm:^4.0.4":
-  version: 4.0.4
-  resolution: "picomatch@npm:4.0.4"
-  checksum: 10c0/e2c6023372cc7b5764719a5ffb9da0f8e781212fa7ca4bd0562db929df8e117460f00dff3cb7509dacfc06b86de924b247f504d0ce1806a37fac4633081466b0
-  languageName: node
-  linkType: hard
-
-"picomatch@npm:^4.0.5":
+"picomatch@npm:^4.0.2, picomatch@npm:^4.0.3, picomatch@npm:^4.0.4, picomatch@npm:^4.0.5":
   version: 4.0.5
   resolution: "picomatch@npm:4.0.5"
   checksum: 10c0/947bc6b6e1ff1e6c5aaf95b107a0839d12802f4f7b867663f67d47accba939ca1cb582cf99dfc30438efa1c4648ac5990967e783e8929c36b03e8440704ef1bd
@@ -16707,13 +16691,6 @@ __metadata:
   bin:
     playwright: cli.js
   checksum: 10c0/cea1bc4d2a64ec3ef683891606774029da7b8a8036ed98332565cec2f8e89549ca1fab9a89fbfba4e08e27e0d7e7d148031e965af66d5ff97bb3c34058cfcad0
-  languageName: node
-  linkType: hard
-
-"plotly.js-dist@npm:^2.17.1":
-  version: 2.35.3
-  resolution: "plotly.js-dist@npm:2.35.3"
-  checksum: 10c0/cbdcfaaf72244e22a4311408f7bbad43e4462bc8dc5c7ea831f3dee3a2dc09bae6e390fc1eca92cc2b29f4cbae9507749b52fb3d7000a4115c666b6295e81a84
   languageName: node
   linkType: hard
 

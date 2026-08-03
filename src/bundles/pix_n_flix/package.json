@@ -4,21 +4,13 @@
   "private": true,
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
-    "@types/react": "catalog:",
-    "@vitest/browser-playwright": "catalog:",
-    "playwright": "catalog:",
-    "react": "catalog:",
-    "react-dom": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "catalog:",
-    "vitest-browser-react": "^2.1.0"
+    "typescript": "catalog:"
   },
   "dependencies": {
-    "@sourceacademy/modules-lib": "workspace:^"
+    "@sourceacademy/conductor": "catalog:"
   },
   "type": "module",
   "exports": {
-    "./start": null,
     ".": "./dist/index.js",
     "./*": "./dist/*.js"
   },
