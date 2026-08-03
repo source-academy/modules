@@ -44,6 +44,13 @@ function serializeTexture(texture: Rune['texture']): string | null {
   return texture.src;
 }
 
+function imageFromUrl(url: string): HTMLImageElement {
+  const image = new Image();
+  image.crossOrigin = 'anonymous';
+  image.src = url;
+  return image;
+}
+
 export function serializeRune(rune: Rune): SerializedRune {
   return {
     vertices: Array.from(rune.vertices),
@@ -53,4 +60,15 @@ export function serializeRune(rune: Rune): SerializedRune {
     textureUrl: serializeTexture(rune.texture),
     hollusionDistance: rune.hollusionDistance
   };
+}
+
+export function deserializeRune(serialized: SerializedRune): Rune {
+  return Rune.of({
+    vertices: new Float32Array(serialized.vertices),
+    colors: serialized.colors === null ? null : new Float32Array(serialized.colors),
+    transformMatrix: new Float32Array(serialized.transformMatrix) as Rune['transformMatrix'],
+    subRunes: serialized.subRunes.map(deserializeRune),
+    texture: serialized.textureUrl === null ? null : imageFromUrl(serialized.textureUrl),
+    hollusionDistance: serialized.hollusionDistance
+  });
 }

@@ -2,7 +2,7 @@
  * This file contains the module's private functions that handles various webgl operations.
  */
 
-import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
+import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 
 export type FrameBufferWithTexture = {
   framebuffer: WebGLFramebuffer;
@@ -25,14 +25,14 @@ function loadShader(
 ): WebGLShader {
   const shader = gl.createShader(type);
   if (!shader) {
-    throw new GeneralRuntimeError('WebGLShader not available.');
+    throw new EvaluatorRuntimeError('WebGLShader not available.');
   }
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
   const compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
   if (!compiled) {
     const compilationLog = gl.getShaderInfoLog(shader);
-    throw new GeneralRuntimeError(`Shader compilation failed: ${compilationLog}`);
+    throw new EvaluatorRuntimeError(`Shader compilation failed: ${compilationLog}`);
   }
   return shader;
 }
@@ -54,7 +54,7 @@ export function initShaderProgram(
   const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
   const shaderProgram = gl.createProgram();
   if (!shaderProgram) {
-    throw new GeneralRuntimeError('Unable to initialize the shader program.');
+    throw new EvaluatorRuntimeError('Unable to initialize the shader program.');
   }
   gl.attachShader(shaderProgram, vertexShader);
   gl.attachShader(shaderProgram, fragmentShader);
@@ -70,7 +70,7 @@ export function initShaderProgram(
 export function getWebGlFromCanvas(canvas: HTMLCanvasElement): WebGLRenderingContext {
   const gl: WebGLRenderingContext | null = canvas.getContext('webgl');
   if (!gl) {
-    throw new GeneralRuntimeError('Unable to initialize WebGL.');
+    throw new EvaluatorRuntimeError('Unable to initialize WebGL.');
   }
   gl.clearColor(1.0, 1.0, 1.0, 1.0); // Set clear color to white, fully opaque
   gl.enable(gl.DEPTH_TEST); // Enable depth testing
@@ -88,13 +88,13 @@ export function initFramebufferObject(gl: WebGLRenderingContext): FrameBufferWit
   // create a framebuffer object
   const framebuffer = gl.createFramebuffer();
   if (!framebuffer) {
-    throw new GeneralRuntimeError('Failed to create frame buffer object');
+    throw new EvaluatorRuntimeError('Failed to create frame buffer object');
   }
 
   // create a texture object and set its size and parameters
   const texture = gl.createTexture();
   if (!texture) {
-    throw new GeneralRuntimeError('Failed to create texture object');
+    throw new EvaluatorRuntimeError('Failed to create texture object');
   }
   gl.bindTexture(gl.TEXTURE_2D, texture);
   gl.texImage2D(
@@ -113,7 +113,7 @@ export function initFramebufferObject(gl: WebGLRenderingContext): FrameBufferWit
   // create a renderbuffer for depth buffer
   const depthBuffer = gl.createRenderbuffer();
   if (!depthBuffer) {
-    throw new GeneralRuntimeError('Failed to create renderbuffer object');
+    throw new EvaluatorRuntimeError('Failed to create renderbuffer object');
   }
 
   // bind renderbuffer object to target and set size
@@ -145,7 +145,7 @@ export function initFramebufferObject(gl: WebGLRenderingContext): FrameBufferWit
   // check whether the framebuffer is configured correctly
   const e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
   if (gl.FRAMEBUFFER_COMPLETE !== e) {
-    throw new GeneralRuntimeError(`Frame buffer object is incomplete:${e.toString()}`);
+    throw new EvaluatorRuntimeError(`Frame buffer object is incomplete:${e.toString()}`);
   }
 
   // Unbind the buffer object

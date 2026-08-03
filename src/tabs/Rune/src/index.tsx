@@ -2,9 +2,9 @@ import { DrawnAnaglyphRune, DrawnHollusionRune, isHollusionRune } from '@sourcea
 import {
   RUNE_CHANNEL_ID,
   RUNE_WEB_ID,
+  deserializeRune,
   type RuneChannelMessage,
-  type RuneDisplayMessage,
-  type SerializedRune
+  type RuneDisplayMessage
 } from '@sourceacademy/bundle-rune/protocol';
 import { DrawnNormalRune, Rune } from '@sourceacademy/bundle-rune/rune';
 import type { ITabService, Tab } from '@sourceacademy/common-tabs';
@@ -18,28 +18,9 @@ import AnimationCanvas from '@sourceacademy/modules-lib/tabs/AnimationCanvas';
 import MultiItemDisplay from '@sourceacademy/modules-lib/tabs/MultiItemDisplay/index';
 import WebGLCanvas from '@sourceacademy/modules-lib/tabs/WebGLCanvas';
 import { glAnimation, type AnimFrame } from '@sourceacademy/modules-lib/types';
-import type { mat4 } from 'gl-matrix';
 import { createElement, useMemo, useSyncExternalStore } from 'react';
 
 import HollusionCanvas from './hollusion_canvas';
-
-function imageFromUrl(url: string): HTMLImageElement {
-  const image = new Image();
-  image.crossOrigin = 'anonymous';
-  image.src = url;
-  return image;
-}
-
-function deserializeRune(serialized: SerializedRune): Rune {
-  return Rune.of({
-    vertices: new Float32Array(serialized.vertices),
-    colors: serialized.colors === null ? null : new Float32Array(serialized.colors),
-    transformMatrix: new Float32Array(serialized.transformMatrix) as unknown as mat4,
-    subRunes: serialized.subRunes.map(deserializeRune),
-    texture: serialized.textureUrl === null ? null : imageFromUrl(serialized.textureUrl),
-    hollusionDistance: serialized.hollusionDistance
-  });
-}
 
 class SerializedRuneAnimation extends glAnimation {
   constructor(private readonly message: Extract<RuneDisplayMessage, { type: 'animation' }>) {
