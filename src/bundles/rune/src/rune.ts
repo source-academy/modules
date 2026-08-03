@@ -1,4 +1,4 @@
-import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
+import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import { glAnimation, type AnimFrame, type ReplResult } from '@sourceacademy/modules-lib/types';
 import { mat4 } from 'gl-matrix';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
@@ -170,7 +170,7 @@ export async function drawRunesToFrameBuffer(
   );
   gl.useProgram(shaderProgram);
   if (gl === null) {
-    throw new GeneralRuntimeError('Rendering Context not initialized for drawRune.');
+    throw new EvaluatorRuntimeError('Rendering Context not initialized for drawRune.');
   }
 
   // create pointers to the data-entries of the shader program
