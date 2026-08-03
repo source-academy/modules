@@ -2989,10 +2989,12 @@ void main(void) {
       this.__displayed = [];
       this.__initialised = false;
       this.__tabLoaded = false;
+      this.__tabRequested = false;
       this.__runeChannel = runeChannel;
       this.__tabLoader = tabLoader;
       this.__runeChannel.subscribe(message => {
         if (message.type === "request") {
+          this.__tabRequested = true;
           this.__displayed.forEach(displayedMessage => this.__runeChannel.send(displayedMessage));
         }
       });
@@ -3016,17 +3018,17 @@ void main(void) {
       });
     }
     __loadRuneTab() {
-      if (this.__tabLoaded || this.__tabLoader === void 0) return true;
+      if (this.__tabLoaded || this.__tabLoader === void 0) return;
       const tabName = this.__tabLoader.tabs.find(tab => tab === RUNE_TAB_NAME);
-      if (tabName === void 0) return true;
+      if (tabName === void 0) return;
       this.__tabLoader.loadTab(tabName);
       this.__tabLoaded = true;
-      return false;
     }
     __display(message) {
       return __async(this, null, function* () {
         this.__displayed.push(message);
-        if (this.__loadRuneTab()) {
+        this.__loadRuneTab();
+        if (this.__tabRequested) {
           this.__runeChannel.send(message);
         }
       });
