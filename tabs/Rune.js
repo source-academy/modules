@@ -5,8 +5,14 @@ export default require => {
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __defNormalProp = (obj, key, value) => (key in obj) ? __defProp(obj, key, {
+    enumerable: true,
+    configurable: true,
+    writable: true,
+    value
+  }) : obj[key] = value;
   var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-    get: (a3, b) => (typeof require !== "undefined" ? require : a3)[b]
+    get: (a4, b) => (typeof require !== "undefined" ? require : a4)[b]
   }) : x)(function (x) {
     if (typeof require !== "undefined") return require.apply(this, arguments);
     throw Error('Dynamic require of "' + x + '" is not supported');
@@ -33,20 +39,117 @@ export default require => {
   var __toCommonJS = mod => __copyProps(__defProp({}, "__esModule", {
     value: true
   }), mod);
+  var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   var index_exports = {};
   __export(index_exports, {
     RUNE_TAB_ID: () => RUNE_TAB_ID,
     RuneTab: () => RuneTab,
     default: () => RuneTabPlugin
   });
+  var _;
+  !(function (_2) {
+    (_2.UNKNOWN = "__unknown", _2.INTERNAL = "__internal", _2.EVALUATOR = "__evaluator", _2.EVALUATOR_SYNTAX = "__evaluator_syntax", _2.EVALUATOR_TYPE = "__evaluator_type", _2.EVALUATOR_RUNTIME = "__evaluator_runtime");
+  })(_ || (_ = {}));
+  var o = class extends Error {
+    constructor(r3) {
+      super(r3);
+      __publicField(this, "name", "ConductorError");
+      __publicField(this, "errorType", _.UNKNOWN);
+    }
+  };
+  var s = class extends o {
+    constructor(r3, o3, s7, e6) {
+      super(`${void 0 !== o3 ? `${e6 ? e6 + ":" : ""}${o3}${void 0 !== s7 ? ":" + s7 : ""}: ` : ""}${r3}`);
+      __publicField(this, "name", "EvaluatorError");
+      __publicField(this, "errorType", _.EVALUATOR);
+      __publicField(this, "rawMessage");
+      __publicField(this, "line");
+      __publicField(this, "column");
+      __publicField(this, "fileName");
+      (this.rawMessage = r3, this.line = o3, this.column = s7, this.fileName = e6);
+    }
+  };
+  function e(r3) {
+    const t5 = (function (r4) {
+      var _a;
+      if ("string" == typeof r4) return JSON.stringify(r4);
+      if ("number" == typeof r4 || "boolean" == typeof r4) return String(r4);
+      if (null === r4) return "null";
+      if (void 0 === r4) return "undefined";
+      if ("bigint" == typeof r4) return `${r4}n`;
+      if ("symbol" == typeof r4) return r4.toString();
+      if ("function" == typeof r4) return r4.name ? `function ${r4.name}` : "anonymous function";
+      try {
+        return (_a = JSON.stringify(r4)) != null ? _a : Object.prototype.toString.call(r4);
+      } catch (e6) {
+        try {
+          return String(r4);
+        } catch (e7) {
+          return Object.prototype.toString.call(r4);
+        }
+      }
+    })(r3);
+    return t5.length > 100 ? `${t5.slice(0, 100)}...` : t5;
+  }
+  var n = class extends s {
+    constructor(r3, t5, n4, o3, u3, a4, i) {
+      super(`${r3}: Expected ${n4}${t5 ? ` for ${t5}` : ""}, got ${e(o3)}.`, u3, a4, i);
+      __publicField(this, "name", "EvaluatorParameterTypeError");
+      __publicField(this, "errorType", _.EVALUATOR_TYPE);
+      __publicField(this, "funcName");
+      __publicField(this, "paramName");
+      __publicField(this, "expected");
+      __publicField(this, "actual");
+      (this.funcName = r3, this.paramName = t5, this.expected = n4, this.actual = o3);
+    }
+  };
+  var o2 = class extends n {
+    constructor(r3, t5, e6, n4, o3, u3, a4) {
+      super(e6, n4, "number" == typeof r3 ? `function with ${r3} parameter${1 === r3 ? "" : "s"}` : r3, t5, o3, u3, a4);
+      __publicField(this, "name", "EvaluatorCallbackError");
+    }
+  };
+  var u = class extends n {
+    constructor(r3, t5, e6, n4, o3, u3, a4) {
+      super(e6, n4, (function (r4) {
+        if ("string" == typeof r4) return r4;
+        const {min: t6, max: e7, integer: n5 = true} = r4, o4 = n5 ? "integer" : "number";
+        return void 0 !== t6 && void 0 !== e7 ? `${o4} \u2208 [${t6}, ${e7}]` : void 0 !== t6 ? `${o4} \u2265 ${t6}` : void 0 !== e7 ? `${o4} \u2264 ${e7}` : o4;
+      })(t5), r3, o3, u3, a4);
+      __publicField(this, "name", "EvaluatorNumberRangeError");
+    }
+  };
+  var e2 = class extends s {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "name", "EvaluatorRuntimeError");
+      __publicField(this, "errorType", _.EVALUATOR_RUNTIME);
+    }
+  };
+  function f(r3, o3) {
+    return "function" == typeof r3 && r3.length === o3;
+  }
+  function a(r3, t5, n4, e6, i) {
+    if (!f(r3, t5)) throw new o2(e6 != null ? e6 : t5, r3, n4, i);
+  }
+  function p(r3, o3, t5, n4 = true) {
+    return "number" == typeof r3 && !Number.isNaN(r3) && (!(n4 && !Number.isInteger(r3)) && (!(void 0 !== o3 && r3 < o3) && !(void 0 !== t5 && r3 > t5)));
+  }
+  function l(o3, t5, n4, e6, i = true, u3) {
+    if (!p(o3, n4, e6, i)) throw new u(o3, {
+      min: n4,
+      max: e6,
+      integer: i
+    }, t5, u3);
+  }
   var E;
   !(function (E2) {
     (E2[E2.VOID = 0] = "VOID", E2[E2.BOOLEAN = 1] = "BOOLEAN", E2[E2.NUMBER = 2] = "NUMBER", E2[E2.CONST_STRING = 3] = "CONST_STRING", E2[E2.EMPTY_LIST = 4] = "EMPTY_LIST", E2[E2.PAIR = 5] = "PAIR", E2[E2.ARRAY = 6] = "ARRAY", E2[E2.CLOSURE = 7] = "CLOSURE", E2[E2.OPAQUE = 8] = "OPAQUE", E2[E2.LIST = 9] = "LIST", E2[E2.ANY = 10] = "ANY", E2[E2.INTEGER = 11] = "INTEGER");
   })(E || (E = {}));
-  var a;
-  !(function (a3) {
-    (a3[a3.HELLO = 0] = "HELLO", a3[a3.ABORT = 1] = "ABORT", a3[a3.ENTRY = 2] = "ENTRY");
-  })(a || (a = {}));
+  var a2;
+  !(function (a4) {
+    (a4[a4.HELLO = 0] = "HELLO", a4[a4.ABORT = 1] = "ABORT", a4[a4.ENTRY = 2] = "ENTRY");
+  })(a2 || (a2 = {}));
   var O;
   !(function (O2) {
     (O2[O2.PROTOCOL_VERSION = 0] = "PROTOCOL_VERSION", O2[O2.PROTOCOL_MIN_VERSION = 0] = "PROTOCOL_MIN_VERSION", O2[O2.SETUP_MESSAGES_BUFFER_SIZE = 10] = "SETUP_MESSAGES_BUFFER_SIZE");
@@ -55,46 +158,12 @@ export default require => {
   !(function (N2) {
     (N2[N2.ONLINE = 0] = "ONLINE", N2[N2.EVAL_READY = 1] = "EVAL_READY", N2[N2.RUNNING = 2] = "RUNNING", N2[N2.WAITING = 3] = "WAITING", N2[N2.BREAKPOINT = 4] = "BREAKPOINT", N2[N2.STOPPED = 5] = "STOPPED", N2[N2.ERROR = 6] = "ERROR");
   })(N || (N = {}));
-  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
-  var import_base = __require("js-slang/dist/errors/base");
-  var import_rttc = __require("js-slang/dist/utils/rttc");
-  var import_operators = __require("js-slang/dist/utils/operators");
-  function hexToColor(hex, func_name) {
-    func_name = func_name !== null && func_name !== void 0 ? func_name : hexToColor.name;
-    if (typeof hex !== "string") {
-      throw new import_rttcErrors.InvalidParameterTypeError("string", hex, func_name);
-    }
-    const regex = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/igu;
-    const groups = regex.exec(hex);
-    if (!groups) {
-      throw new import_base.GeneralRuntimeError(`${func_name}: Invalid color hex string: ${hex}`);
-    }
-    ;
-    return [parseInt(groups[1], 16) / 255, parseInt(groups[2], 16) / 255, parseInt(groups[3], 16) / 255];
+  function callUnaryFunction(f2, x) {
+    return f2(x);
   }
-  function hueToRgb(hue) {
-    const h2 = (hue % 1 + 1) % 1;
-    const i = Math.floor(h2 * 6);
-    const f = h2 * 6 - i;
-    const q = 1 - f;
-    switch (i) {
-      case 0:
-        return [255, Math.floor(f * 255), 0];
-      case 1:
-        return [Math.floor(q * 255), 255, 0];
-      case 2:
-        return [0, 255, Math.floor(f * 255)];
-      case 3:
-        return [0, Math.floor(q * 255), 255];
-      case 4:
-        return [Math.floor(f * 255), 0, 255];
-      default:
-        return [255, 0, Math.floor(q * 255)];
-    }
-  }
-  function repeat_internal(f, n3) {
-    const func = x => (0, import_operators.callWithoutMetadata)(f, x);
-    return n3 === 0 ? x => x : x => func(repeat_internal(func, n3 - 1)(x));
+  function repeat_internal(f2, n4) {
+    const func = x => callUnaryFunction(f2, x);
+    return n4 === 0 ? x => x : x => func(repeat_internal(func, n4 - 1)(x));
   }
   function sample(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -106,9 +175,9 @@ export default require => {
   var EPSILON = 1e-6;
   var ARRAY_TYPE = typeof Float32Array !== "undefined" ? Float32Array : Array;
   var RANDOM = Math.random;
-  function round(a3) {
-    if (a3 >= 0) return Math.round(a3);
-    return a3 % 0.5 === 0 ? Math.floor(a3) : Math.round(a3);
+  function round(a4) {
+    if (a4 >= 0) return Math.round(a4);
+    return a4 % 0.5 === 0 ? Math.floor(a4) : Math.round(a4);
   }
   var degree = Math.PI / 180;
   var radian = 180 / Math.PI;
@@ -189,43 +258,43 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function clone(a3) {
+  function clone(a4) {
     var out = new ARRAY_TYPE(16);
-    out[0] = a3[0];
-    out[1] = a3[1];
-    out[2] = a3[2];
-    out[3] = a3[3];
-    out[4] = a3[4];
-    out[5] = a3[5];
-    out[6] = a3[6];
-    out[7] = a3[7];
-    out[8] = a3[8];
-    out[9] = a3[9];
-    out[10] = a3[10];
-    out[11] = a3[11];
-    out[12] = a3[12];
-    out[13] = a3[13];
-    out[14] = a3[14];
-    out[15] = a3[15];
+    out[0] = a4[0];
+    out[1] = a4[1];
+    out[2] = a4[2];
+    out[3] = a4[3];
+    out[4] = a4[4];
+    out[5] = a4[5];
+    out[6] = a4[6];
+    out[7] = a4[7];
+    out[8] = a4[8];
+    out[9] = a4[9];
+    out[10] = a4[10];
+    out[11] = a4[11];
+    out[12] = a4[12];
+    out[13] = a4[13];
+    out[14] = a4[14];
+    out[15] = a4[15];
     return out;
   }
-  function copy(out, a3) {
-    out[0] = a3[0];
-    out[1] = a3[1];
-    out[2] = a3[2];
-    out[3] = a3[3];
-    out[4] = a3[4];
-    out[5] = a3[5];
-    out[6] = a3[6];
-    out[7] = a3[7];
-    out[8] = a3[8];
-    out[9] = a3[9];
-    out[10] = a3[10];
-    out[11] = a3[11];
-    out[12] = a3[12];
-    out[13] = a3[13];
-    out[14] = a3[14];
-    out[15] = a3[15];
+  function copy(out, a4) {
+    out[0] = a4[0];
+    out[1] = a4[1];
+    out[2] = a4[2];
+    out[3] = a4[3];
+    out[4] = a4[4];
+    out[5] = a4[5];
+    out[6] = a4[6];
+    out[7] = a4[7];
+    out[8] = a4[8];
+    out[9] = a4[9];
+    out[10] = a4[10];
+    out[11] = a4[11];
+    out[12] = a4[12];
+    out[13] = a4[13];
+    out[14] = a4[14];
+    out[15] = a4[15];
     return out;
   }
   function fromValues(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
@@ -286,48 +355,48 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function transpose(out, a3) {
-    if (out === a3) {
-      var a01 = a3[1], a02 = a3[2], a03 = a3[3];
-      var a12 = a3[6], a13 = a3[7];
-      var a23 = a3[11];
-      out[1] = a3[4];
-      out[2] = a3[8];
-      out[3] = a3[12];
+  function transpose(out, a4) {
+    if (out === a4) {
+      var a01 = a4[1], a02 = a4[2], a03 = a4[3];
+      var a12 = a4[6], a13 = a4[7];
+      var a23 = a4[11];
+      out[1] = a4[4];
+      out[2] = a4[8];
+      out[3] = a4[12];
       out[4] = a01;
-      out[6] = a3[9];
-      out[7] = a3[13];
+      out[6] = a4[9];
+      out[7] = a4[13];
       out[8] = a02;
       out[9] = a12;
-      out[11] = a3[14];
+      out[11] = a4[14];
       out[12] = a03;
       out[13] = a13;
       out[14] = a23;
     } else {
-      out[0] = a3[0];
-      out[1] = a3[4];
-      out[2] = a3[8];
-      out[3] = a3[12];
-      out[4] = a3[1];
-      out[5] = a3[5];
-      out[6] = a3[9];
-      out[7] = a3[13];
-      out[8] = a3[2];
-      out[9] = a3[6];
-      out[10] = a3[10];
-      out[11] = a3[14];
-      out[12] = a3[3];
-      out[13] = a3[7];
-      out[14] = a3[11];
-      out[15] = a3[15];
+      out[0] = a4[0];
+      out[1] = a4[4];
+      out[2] = a4[8];
+      out[3] = a4[12];
+      out[4] = a4[1];
+      out[5] = a4[5];
+      out[6] = a4[9];
+      out[7] = a4[13];
+      out[8] = a4[2];
+      out[9] = a4[6];
+      out[10] = a4[10];
+      out[11] = a4[14];
+      out[12] = a4[3];
+      out[13] = a4[7];
+      out[14] = a4[11];
+      out[15] = a4[15];
     }
     return out;
   }
-  function invert(out, a3) {
-    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
-    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
-    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
-    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
+  function invert(out, a4) {
+    var a00 = a4[0], a01 = a4[1], a02 = a4[2], a03 = a4[3];
+    var a10 = a4[4], a11 = a4[5], a12 = a4[6], a13 = a4[7];
+    var a20 = a4[8], a21 = a4[9], a22 = a4[10], a23 = a4[11];
+    var a30 = a4[12], a31 = a4[13], a32 = a4[14], a33 = a4[15];
     var b00 = a00 * a11 - a01 * a10;
     var b01 = a00 * a12 - a02 * a10;
     var b02 = a00 * a13 - a03 * a10;
@@ -363,11 +432,11 @@ export default require => {
     out[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
     return out;
   }
-  function adjoint(out, a3) {
-    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
-    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
-    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
-    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
+  function adjoint(out, a4) {
+    var a00 = a4[0], a01 = a4[1], a02 = a4[2], a03 = a4[3];
+    var a10 = a4[4], a11 = a4[5], a12 = a4[6], a13 = a4[7];
+    var a20 = a4[8], a21 = a4[9], a22 = a4[10], a23 = a4[11];
+    var a30 = a4[12], a31 = a4[13], a32 = a4[14], a33 = a4[15];
     var b00 = a00 * a11 - a01 * a10;
     var b01 = a00 * a12 - a02 * a10;
     var b02 = a00 * a13 - a03 * a10;
@@ -398,11 +467,11 @@ export default require => {
     out[15] = a20 * b03 - a21 * b01 + a22 * b00;
     return out;
   }
-  function determinant(a3) {
-    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
-    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
-    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
-    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
+  function determinant(a4) {
+    var a00 = a4[0], a01 = a4[1], a02 = a4[2], a03 = a4[3];
+    var a10 = a4[4], a11 = a4[5], a12 = a4[6], a13 = a4[7];
+    var a20 = a4[8], a21 = a4[9], a22 = a4[10], a23 = a4[11];
+    var a30 = a4[12], a31 = a4[13], a32 = a4[14], a33 = a4[15];
     var b0 = a00 * a11 - a01 * a10;
     var b1 = a00 * a12 - a02 * a10;
     var b2 = a01 * a12 - a02 * a11;
@@ -415,11 +484,11 @@ export default require => {
     var b9 = a30 * b2 - a31 * b1 + a32 * b0;
     return a13 * b6 - a03 * b7 + a33 * b8 - a23 * b9;
   }
-  function multiply(out, a3, b) {
-    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
-    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
-    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
-    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
+  function multiply(out, a4, b) {
+    var a00 = a4[0], a01 = a4[1], a02 = a4[2], a03 = a4[3];
+    var a10 = a4[4], a11 = a4[5], a12 = a4[6], a13 = a4[7];
+    var a20 = a4[8], a21 = a4[9], a22 = a4[10], a23 = a4[11];
+    var a30 = a4[12], a31 = a4[13], a32 = a4[14], a33 = a4[15];
     var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
     out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
     out[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
@@ -451,29 +520,29 @@ export default require => {
     out[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
     return out;
   }
-  function translate(out, a3, v) {
+  function translate(out, a4, v) {
     var x = v[0], y = v[1], z = v[2];
     var a00, a01, a02, a03;
     var a10, a11, a12, a13;
     var a20, a21, a22, a23;
-    if (a3 === out) {
-      out[12] = a3[0] * x + a3[4] * y + a3[8] * z + a3[12];
-      out[13] = a3[1] * x + a3[5] * y + a3[9] * z + a3[13];
-      out[14] = a3[2] * x + a3[6] * y + a3[10] * z + a3[14];
-      out[15] = a3[3] * x + a3[7] * y + a3[11] * z + a3[15];
+    if (a4 === out) {
+      out[12] = a4[0] * x + a4[4] * y + a4[8] * z + a4[12];
+      out[13] = a4[1] * x + a4[5] * y + a4[9] * z + a4[13];
+      out[14] = a4[2] * x + a4[6] * y + a4[10] * z + a4[14];
+      out[15] = a4[3] * x + a4[7] * y + a4[11] * z + a4[15];
     } else {
-      a00 = a3[0];
-      a01 = a3[1];
-      a02 = a3[2];
-      a03 = a3[3];
-      a10 = a3[4];
-      a11 = a3[5];
-      a12 = a3[6];
-      a13 = a3[7];
-      a20 = a3[8];
-      a21 = a3[9];
-      a22 = a3[10];
-      a23 = a3[11];
+      a00 = a4[0];
+      a01 = a4[1];
+      a02 = a4[2];
+      a03 = a4[3];
+      a10 = a4[4];
+      a11 = a4[5];
+      a12 = a4[6];
+      a13 = a4[7];
+      a20 = a4[8];
+      a21 = a4[9];
+      a22 = a4[10];
+      a23 = a4[11];
       out[0] = a00;
       out[1] = a01;
       out[2] = a02;
@@ -486,37 +555,37 @@ export default require => {
       out[9] = a21;
       out[10] = a22;
       out[11] = a23;
-      out[12] = a00 * x + a10 * y + a20 * z + a3[12];
-      out[13] = a01 * x + a11 * y + a21 * z + a3[13];
-      out[14] = a02 * x + a12 * y + a22 * z + a3[14];
-      out[15] = a03 * x + a13 * y + a23 * z + a3[15];
+      out[12] = a00 * x + a10 * y + a20 * z + a4[12];
+      out[13] = a01 * x + a11 * y + a21 * z + a4[13];
+      out[14] = a02 * x + a12 * y + a22 * z + a4[14];
+      out[15] = a03 * x + a13 * y + a23 * z + a4[15];
     }
     return out;
   }
-  function scale(out, a3, v) {
+  function scale(out, a4, v) {
     var x = v[0], y = v[1], z = v[2];
-    out[0] = a3[0] * x;
-    out[1] = a3[1] * x;
-    out[2] = a3[2] * x;
-    out[3] = a3[3] * x;
-    out[4] = a3[4] * y;
-    out[5] = a3[5] * y;
-    out[6] = a3[6] * y;
-    out[7] = a3[7] * y;
-    out[8] = a3[8] * z;
-    out[9] = a3[9] * z;
-    out[10] = a3[10] * z;
-    out[11] = a3[11] * z;
-    out[12] = a3[12];
-    out[13] = a3[13];
-    out[14] = a3[14];
-    out[15] = a3[15];
+    out[0] = a4[0] * x;
+    out[1] = a4[1] * x;
+    out[2] = a4[2] * x;
+    out[3] = a4[3] * x;
+    out[4] = a4[4] * y;
+    out[5] = a4[5] * y;
+    out[6] = a4[6] * y;
+    out[7] = a4[7] * y;
+    out[8] = a4[8] * z;
+    out[9] = a4[9] * z;
+    out[10] = a4[10] * z;
+    out[11] = a4[11] * z;
+    out[12] = a4[12];
+    out[13] = a4[13];
+    out[14] = a4[14];
+    out[15] = a4[15];
     return out;
   }
-  function rotate(out, a3, rad, axis) {
+  function rotate(out, a4, rad, axis) {
     var x = axis[0], y = axis[1], z = axis[2];
     var len2 = Math.sqrt(x * x + y * y + z * z);
-    var s5, c, t3;
+    var s7, c2, t5;
     var a00, a01, a02, a03;
     var a10, a11, a12, a13;
     var a20, a21, a22, a23;
@@ -530,30 +599,30 @@ export default require => {
     x *= len2;
     y *= len2;
     z *= len2;
-    s5 = Math.sin(rad);
-    c = Math.cos(rad);
-    t3 = 1 - c;
-    a00 = a3[0];
-    a01 = a3[1];
-    a02 = a3[2];
-    a03 = a3[3];
-    a10 = a3[4];
-    a11 = a3[5];
-    a12 = a3[6];
-    a13 = a3[7];
-    a20 = a3[8];
-    a21 = a3[9];
-    a22 = a3[10];
-    a23 = a3[11];
-    b00 = x * x * t3 + c;
-    b01 = y * x * t3 + z * s5;
-    b02 = z * x * t3 - y * s5;
-    b10 = x * y * t3 - z * s5;
-    b11 = y * y * t3 + c;
-    b12 = z * y * t3 + x * s5;
-    b20 = x * z * t3 + y * s5;
-    b21 = y * z * t3 - x * s5;
-    b22 = z * z * t3 + c;
+    s7 = Math.sin(rad);
+    c2 = Math.cos(rad);
+    t5 = 1 - c2;
+    a00 = a4[0];
+    a01 = a4[1];
+    a02 = a4[2];
+    a03 = a4[3];
+    a10 = a4[4];
+    a11 = a4[5];
+    a12 = a4[6];
+    a13 = a4[7];
+    a20 = a4[8];
+    a21 = a4[9];
+    a22 = a4[10];
+    a23 = a4[11];
+    b00 = x * x * t5 + c2;
+    b01 = y * x * t5 + z * s7;
+    b02 = z * x * t5 - y * s7;
+    b10 = x * y * t5 - z * s7;
+    b11 = y * y * t5 + c2;
+    b12 = z * y * t5 + x * s7;
+    b20 = x * z * t5 + y * s7;
+    b21 = y * z * t5 - x * s7;
+    b22 = z * z * t5 + c2;
     out[0] = a00 * b00 + a10 * b01 + a20 * b02;
     out[1] = a01 * b00 + a11 * b01 + a21 * b02;
     out[2] = a02 * b00 + a12 * b01 + a22 * b02;
@@ -566,105 +635,105 @@ export default require => {
     out[9] = a01 * b20 + a11 * b21 + a21 * b22;
     out[10] = a02 * b20 + a12 * b21 + a22 * b22;
     out[11] = a03 * b20 + a13 * b21 + a23 * b22;
-    if (a3 !== out) {
-      out[12] = a3[12];
-      out[13] = a3[13];
-      out[14] = a3[14];
-      out[15] = a3[15];
+    if (a4 !== out) {
+      out[12] = a4[12];
+      out[13] = a4[13];
+      out[14] = a4[14];
+      out[15] = a4[15];
     }
     return out;
   }
-  function rotateX(out, a3, rad) {
-    var s5 = Math.sin(rad);
-    var c = Math.cos(rad);
-    var a10 = a3[4];
-    var a11 = a3[5];
-    var a12 = a3[6];
-    var a13 = a3[7];
-    var a20 = a3[8];
-    var a21 = a3[9];
-    var a22 = a3[10];
-    var a23 = a3[11];
-    if (a3 !== out) {
-      out[0] = a3[0];
-      out[1] = a3[1];
-      out[2] = a3[2];
-      out[3] = a3[3];
-      out[12] = a3[12];
-      out[13] = a3[13];
-      out[14] = a3[14];
-      out[15] = a3[15];
+  function rotateX(out, a4, rad) {
+    var s7 = Math.sin(rad);
+    var c2 = Math.cos(rad);
+    var a10 = a4[4];
+    var a11 = a4[5];
+    var a12 = a4[6];
+    var a13 = a4[7];
+    var a20 = a4[8];
+    var a21 = a4[9];
+    var a22 = a4[10];
+    var a23 = a4[11];
+    if (a4 !== out) {
+      out[0] = a4[0];
+      out[1] = a4[1];
+      out[2] = a4[2];
+      out[3] = a4[3];
+      out[12] = a4[12];
+      out[13] = a4[13];
+      out[14] = a4[14];
+      out[15] = a4[15];
     }
-    out[4] = a10 * c + a20 * s5;
-    out[5] = a11 * c + a21 * s5;
-    out[6] = a12 * c + a22 * s5;
-    out[7] = a13 * c + a23 * s5;
-    out[8] = a20 * c - a10 * s5;
-    out[9] = a21 * c - a11 * s5;
-    out[10] = a22 * c - a12 * s5;
-    out[11] = a23 * c - a13 * s5;
+    out[4] = a10 * c2 + a20 * s7;
+    out[5] = a11 * c2 + a21 * s7;
+    out[6] = a12 * c2 + a22 * s7;
+    out[7] = a13 * c2 + a23 * s7;
+    out[8] = a20 * c2 - a10 * s7;
+    out[9] = a21 * c2 - a11 * s7;
+    out[10] = a22 * c2 - a12 * s7;
+    out[11] = a23 * c2 - a13 * s7;
     return out;
   }
-  function rotateY(out, a3, rad) {
-    var s5 = Math.sin(rad);
-    var c = Math.cos(rad);
-    var a00 = a3[0];
-    var a01 = a3[1];
-    var a02 = a3[2];
-    var a03 = a3[3];
-    var a20 = a3[8];
-    var a21 = a3[9];
-    var a22 = a3[10];
-    var a23 = a3[11];
-    if (a3 !== out) {
-      out[4] = a3[4];
-      out[5] = a3[5];
-      out[6] = a3[6];
-      out[7] = a3[7];
-      out[12] = a3[12];
-      out[13] = a3[13];
-      out[14] = a3[14];
-      out[15] = a3[15];
+  function rotateY(out, a4, rad) {
+    var s7 = Math.sin(rad);
+    var c2 = Math.cos(rad);
+    var a00 = a4[0];
+    var a01 = a4[1];
+    var a02 = a4[2];
+    var a03 = a4[3];
+    var a20 = a4[8];
+    var a21 = a4[9];
+    var a22 = a4[10];
+    var a23 = a4[11];
+    if (a4 !== out) {
+      out[4] = a4[4];
+      out[5] = a4[5];
+      out[6] = a4[6];
+      out[7] = a4[7];
+      out[12] = a4[12];
+      out[13] = a4[13];
+      out[14] = a4[14];
+      out[15] = a4[15];
     }
-    out[0] = a00 * c - a20 * s5;
-    out[1] = a01 * c - a21 * s5;
-    out[2] = a02 * c - a22 * s5;
-    out[3] = a03 * c - a23 * s5;
-    out[8] = a00 * s5 + a20 * c;
-    out[9] = a01 * s5 + a21 * c;
-    out[10] = a02 * s5 + a22 * c;
-    out[11] = a03 * s5 + a23 * c;
+    out[0] = a00 * c2 - a20 * s7;
+    out[1] = a01 * c2 - a21 * s7;
+    out[2] = a02 * c2 - a22 * s7;
+    out[3] = a03 * c2 - a23 * s7;
+    out[8] = a00 * s7 + a20 * c2;
+    out[9] = a01 * s7 + a21 * c2;
+    out[10] = a02 * s7 + a22 * c2;
+    out[11] = a03 * s7 + a23 * c2;
     return out;
   }
-  function rotateZ(out, a3, rad) {
-    var s5 = Math.sin(rad);
-    var c = Math.cos(rad);
-    var a00 = a3[0];
-    var a01 = a3[1];
-    var a02 = a3[2];
-    var a03 = a3[3];
-    var a10 = a3[4];
-    var a11 = a3[5];
-    var a12 = a3[6];
-    var a13 = a3[7];
-    if (a3 !== out) {
-      out[8] = a3[8];
-      out[9] = a3[9];
-      out[10] = a3[10];
-      out[11] = a3[11];
-      out[12] = a3[12];
-      out[13] = a3[13];
-      out[14] = a3[14];
-      out[15] = a3[15];
+  function rotateZ(out, a4, rad) {
+    var s7 = Math.sin(rad);
+    var c2 = Math.cos(rad);
+    var a00 = a4[0];
+    var a01 = a4[1];
+    var a02 = a4[2];
+    var a03 = a4[3];
+    var a10 = a4[4];
+    var a11 = a4[5];
+    var a12 = a4[6];
+    var a13 = a4[7];
+    if (a4 !== out) {
+      out[8] = a4[8];
+      out[9] = a4[9];
+      out[10] = a4[10];
+      out[11] = a4[11];
+      out[12] = a4[12];
+      out[13] = a4[13];
+      out[14] = a4[14];
+      out[15] = a4[15];
     }
-    out[0] = a00 * c + a10 * s5;
-    out[1] = a01 * c + a11 * s5;
-    out[2] = a02 * c + a12 * s5;
-    out[3] = a03 * c + a13 * s5;
-    out[4] = a10 * c - a00 * s5;
-    out[5] = a11 * c - a01 * s5;
-    out[6] = a12 * c - a02 * s5;
-    out[7] = a13 * c - a03 * s5;
+    out[0] = a00 * c2 + a10 * s7;
+    out[1] = a01 * c2 + a11 * s7;
+    out[2] = a02 * c2 + a12 * s7;
+    out[3] = a03 * c2 + a13 * s7;
+    out[4] = a10 * c2 - a00 * s7;
+    out[5] = a11 * c2 - a01 * s7;
+    out[6] = a12 * c2 - a02 * s7;
+    out[7] = a13 * c2 - a03 * s7;
     return out;
   }
   function fromTranslation(out, v) {
@@ -708,7 +777,7 @@ export default require => {
   function fromRotation(out, rad, axis) {
     var x = axis[0], y = axis[1], z = axis[2];
     var len2 = Math.sqrt(x * x + y * y + z * z);
-    var s5, c, t3;
+    var s7, c2, t5;
     if (len2 < EPSILON) {
       return null;
     }
@@ -716,20 +785,20 @@ export default require => {
     x *= len2;
     y *= len2;
     z *= len2;
-    s5 = Math.sin(rad);
-    c = Math.cos(rad);
-    t3 = 1 - c;
-    out[0] = x * x * t3 + c;
-    out[1] = y * x * t3 + z * s5;
-    out[2] = z * x * t3 - y * s5;
+    s7 = Math.sin(rad);
+    c2 = Math.cos(rad);
+    t5 = 1 - c2;
+    out[0] = x * x * t5 + c2;
+    out[1] = y * x * t5 + z * s7;
+    out[2] = z * x * t5 - y * s7;
     out[3] = 0;
-    out[4] = x * y * t3 - z * s5;
-    out[5] = y * y * t3 + c;
-    out[6] = z * y * t3 + x * s5;
+    out[4] = x * y * t5 - z * s7;
+    out[5] = y * y * t5 + c2;
+    out[6] = z * y * t5 + x * s7;
     out[7] = 0;
-    out[8] = x * z * t3 + y * s5;
-    out[9] = y * z * t3 - x * s5;
-    out[10] = z * z * t3 + c;
+    out[8] = x * z * t5 + y * s7;
+    out[9] = y * z * t5 - x * s7;
+    out[10] = z * z * t5 + c2;
     out[11] = 0;
     out[12] = 0;
     out[13] = 0;
@@ -738,19 +807,19 @@ export default require => {
     return out;
   }
   function fromXRotation(out, rad) {
-    var s5 = Math.sin(rad);
-    var c = Math.cos(rad);
+    var s7 = Math.sin(rad);
+    var c2 = Math.cos(rad);
     out[0] = 1;
     out[1] = 0;
     out[2] = 0;
     out[3] = 0;
     out[4] = 0;
-    out[5] = c;
-    out[6] = s5;
+    out[5] = c2;
+    out[6] = s7;
     out[7] = 0;
     out[8] = 0;
-    out[9] = -s5;
-    out[10] = c;
+    out[9] = -s7;
+    out[10] = c2;
     out[11] = 0;
     out[12] = 0;
     out[13] = 0;
@@ -759,19 +828,19 @@ export default require => {
     return out;
   }
   function fromYRotation(out, rad) {
-    var s5 = Math.sin(rad);
-    var c = Math.cos(rad);
-    out[0] = c;
+    var s7 = Math.sin(rad);
+    var c2 = Math.cos(rad);
+    out[0] = c2;
     out[1] = 0;
-    out[2] = -s5;
+    out[2] = -s7;
     out[3] = 0;
     out[4] = 0;
     out[5] = 1;
     out[6] = 0;
     out[7] = 0;
-    out[8] = s5;
+    out[8] = s7;
     out[9] = 0;
-    out[10] = c;
+    out[10] = c2;
     out[11] = 0;
     out[12] = 0;
     out[13] = 0;
@@ -780,14 +849,14 @@ export default require => {
     return out;
   }
   function fromZRotation(out, rad) {
-    var s5 = Math.sin(rad);
-    var c = Math.cos(rad);
-    out[0] = c;
-    out[1] = s5;
+    var s7 = Math.sin(rad);
+    var c2 = Math.cos(rad);
+    out[0] = c2;
+    out[1] = s7;
     out[2] = 0;
     out[3] = 0;
-    out[4] = -s5;
-    out[5] = c;
+    out[4] = -s7;
+    out[5] = c2;
     out[6] = 0;
     out[7] = 0;
     out[8] = 0;
@@ -832,9 +901,9 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function fromQuat2(out, a3) {
+  function fromQuat2(out, a4) {
     var translation = new ARRAY_TYPE(3);
-    var bx = -a3[0], by = -a3[1], bz = -a3[2], bw = a3[3], ax = a3[4], ay = a3[5], az = a3[6], aw = a3[7];
+    var bx = -a4[0], by = -a4[1], bz = -a4[2], bw = a4[3], ax = a4[4], ay = a4[5], az = a4[6], aw = a4[7];
     var magnitude = bx * bx + by * by + bz * bz + bw * bw;
     if (magnitude > 0) {
       translation[0] = (ax * bw + aw * bx + ay * bz - az * by) * 2 / magnitude;
@@ -845,7 +914,7 @@ export default require => {
       translation[1] = (ay * bw + aw * by + az * bx - ax * bz) * 2;
       translation[2] = (az * bw + aw * bz + ax * by - ay * bx) * 2;
     }
-    fromRotationTranslation(out, a3, translation);
+    fromRotationTranslation(out, a4, translation);
     return out;
   }
   function getTranslation(out, mat) {
@@ -970,7 +1039,7 @@ export default require => {
     }
     return out_r;
   }
-  function fromRotationTranslationScale(out, q, v, s5) {
+  function fromRotationTranslationScale(out, q, v, s7) {
     var x = q[0], y = q[1], z = q[2], w = q[3];
     var x2 = x + x;
     var y2 = y + y;
@@ -984,9 +1053,9 @@ export default require => {
     var wx = w * x2;
     var wy = w * y2;
     var wz = w * z2;
-    var sx = s5[0];
-    var sy = s5[1];
-    var sz = s5[2];
+    var sx = s7[0];
+    var sy = s7[1];
+    var sz = s7[2];
     out[0] = (1 - (yy + zz)) * sx;
     out[1] = (xy + wz) * sx;
     out[2] = (xz - wy) * sx;
@@ -1005,7 +1074,7 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function fromRotationTranslationScaleOrigin(out, q, v, s5, o2) {
+  function fromRotationTranslationScaleOrigin(out, q, v, s7, o3) {
     var x = q[0], y = q[1], z = q[2], w = q[3];
     var x2 = x + x;
     var y2 = y + y;
@@ -1019,12 +1088,12 @@ export default require => {
     var wx = w * x2;
     var wy = w * y2;
     var wz = w * z2;
-    var sx = s5[0];
-    var sy = s5[1];
-    var sz = s5[2];
-    var ox = o2[0];
-    var oy = o2[1];
-    var oz = o2[2];
+    var sx = s7[0];
+    var sy = s7[1];
+    var sz = s7[2];
+    var ox = o3[0];
+    var oy = o3[1];
+    var oz = o3[2];
     var out0 = (1 - (yy + zz)) * sx;
     var out1 = (xy + wz) * sx;
     var out2 = (xz - wy) * sx;
@@ -1107,13 +1176,13 @@ export default require => {
     return out;
   }
   function perspectiveNO(out, fovy, aspect, near, far) {
-    var f = 1 / Math.tan(fovy / 2);
-    out[0] = f / aspect;
+    var f2 = 1 / Math.tan(fovy / 2);
+    out[0] = f2 / aspect;
     out[1] = 0;
     out[2] = 0;
     out[3] = 0;
     out[4] = 0;
-    out[5] = f;
+    out[5] = f2;
     out[6] = 0;
     out[7] = 0;
     out[8] = 0;
@@ -1134,13 +1203,13 @@ export default require => {
   }
   var perspective = perspectiveNO;
   function perspectiveZO(out, fovy, aspect, near, far) {
-    var f = 1 / Math.tan(fovy / 2);
-    out[0] = f / aspect;
+    var f2 = 1 / Math.tan(fovy / 2);
+    out[0] = f2 / aspect;
     out[1] = 0;
     out[2] = 0;
     out[3] = 0;
     out[4] = 0;
-    out[5] = f;
+    out[5] = f2;
     out[6] = 0;
     out[7] = 0;
     out[8] = 0;
@@ -1332,101 +1401,101 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function str(a3) {
-    return "mat4(" + a3[0] + ", " + a3[1] + ", " + a3[2] + ", " + a3[3] + ", " + a3[4] + ", " + a3[5] + ", " + a3[6] + ", " + a3[7] + ", " + a3[8] + ", " + a3[9] + ", " + a3[10] + ", " + a3[11] + ", " + a3[12] + ", " + a3[13] + ", " + a3[14] + ", " + a3[15] + ")";
+  function str(a4) {
+    return "mat4(" + a4[0] + ", " + a4[1] + ", " + a4[2] + ", " + a4[3] + ", " + a4[4] + ", " + a4[5] + ", " + a4[6] + ", " + a4[7] + ", " + a4[8] + ", " + a4[9] + ", " + a4[10] + ", " + a4[11] + ", " + a4[12] + ", " + a4[13] + ", " + a4[14] + ", " + a4[15] + ")";
   }
-  function frob(a3) {
-    return Math.sqrt(a3[0] * a3[0] + a3[1] * a3[1] + a3[2] * a3[2] + a3[3] * a3[3] + a3[4] * a3[4] + a3[5] * a3[5] + a3[6] * a3[6] + a3[7] * a3[7] + a3[8] * a3[8] + a3[9] * a3[9] + a3[10] * a3[10] + a3[11] * a3[11] + a3[12] * a3[12] + a3[13] * a3[13] + a3[14] * a3[14] + a3[15] * a3[15]);
+  function frob(a4) {
+    return Math.sqrt(a4[0] * a4[0] + a4[1] * a4[1] + a4[2] * a4[2] + a4[3] * a4[3] + a4[4] * a4[4] + a4[5] * a4[5] + a4[6] * a4[6] + a4[7] * a4[7] + a4[8] * a4[8] + a4[9] * a4[9] + a4[10] * a4[10] + a4[11] * a4[11] + a4[12] * a4[12] + a4[13] * a4[13] + a4[14] * a4[14] + a4[15] * a4[15]);
   }
-  function add(out, a3, b) {
-    out[0] = a3[0] + b[0];
-    out[1] = a3[1] + b[1];
-    out[2] = a3[2] + b[2];
-    out[3] = a3[3] + b[3];
-    out[4] = a3[4] + b[4];
-    out[5] = a3[5] + b[5];
-    out[6] = a3[6] + b[6];
-    out[7] = a3[7] + b[7];
-    out[8] = a3[8] + b[8];
-    out[9] = a3[9] + b[9];
-    out[10] = a3[10] + b[10];
-    out[11] = a3[11] + b[11];
-    out[12] = a3[12] + b[12];
-    out[13] = a3[13] + b[13];
-    out[14] = a3[14] + b[14];
-    out[15] = a3[15] + b[15];
+  function add(out, a4, b) {
+    out[0] = a4[0] + b[0];
+    out[1] = a4[1] + b[1];
+    out[2] = a4[2] + b[2];
+    out[3] = a4[3] + b[3];
+    out[4] = a4[4] + b[4];
+    out[5] = a4[5] + b[5];
+    out[6] = a4[6] + b[6];
+    out[7] = a4[7] + b[7];
+    out[8] = a4[8] + b[8];
+    out[9] = a4[9] + b[9];
+    out[10] = a4[10] + b[10];
+    out[11] = a4[11] + b[11];
+    out[12] = a4[12] + b[12];
+    out[13] = a4[13] + b[13];
+    out[14] = a4[14] + b[14];
+    out[15] = a4[15] + b[15];
     return out;
   }
-  function subtract(out, a3, b) {
-    out[0] = a3[0] - b[0];
-    out[1] = a3[1] - b[1];
-    out[2] = a3[2] - b[2];
-    out[3] = a3[3] - b[3];
-    out[4] = a3[4] - b[4];
-    out[5] = a3[5] - b[5];
-    out[6] = a3[6] - b[6];
-    out[7] = a3[7] - b[7];
-    out[8] = a3[8] - b[8];
-    out[9] = a3[9] - b[9];
-    out[10] = a3[10] - b[10];
-    out[11] = a3[11] - b[11];
-    out[12] = a3[12] - b[12];
-    out[13] = a3[13] - b[13];
-    out[14] = a3[14] - b[14];
-    out[15] = a3[15] - b[15];
+  function subtract(out, a4, b) {
+    out[0] = a4[0] - b[0];
+    out[1] = a4[1] - b[1];
+    out[2] = a4[2] - b[2];
+    out[3] = a4[3] - b[3];
+    out[4] = a4[4] - b[4];
+    out[5] = a4[5] - b[5];
+    out[6] = a4[6] - b[6];
+    out[7] = a4[7] - b[7];
+    out[8] = a4[8] - b[8];
+    out[9] = a4[9] - b[9];
+    out[10] = a4[10] - b[10];
+    out[11] = a4[11] - b[11];
+    out[12] = a4[12] - b[12];
+    out[13] = a4[13] - b[13];
+    out[14] = a4[14] - b[14];
+    out[15] = a4[15] - b[15];
     return out;
   }
-  function multiplyScalar(out, a3, b) {
-    out[0] = a3[0] * b;
-    out[1] = a3[1] * b;
-    out[2] = a3[2] * b;
-    out[3] = a3[3] * b;
-    out[4] = a3[4] * b;
-    out[5] = a3[5] * b;
-    out[6] = a3[6] * b;
-    out[7] = a3[7] * b;
-    out[8] = a3[8] * b;
-    out[9] = a3[9] * b;
-    out[10] = a3[10] * b;
-    out[11] = a3[11] * b;
-    out[12] = a3[12] * b;
-    out[13] = a3[13] * b;
-    out[14] = a3[14] * b;
-    out[15] = a3[15] * b;
+  function multiplyScalar(out, a4, b) {
+    out[0] = a4[0] * b;
+    out[1] = a4[1] * b;
+    out[2] = a4[2] * b;
+    out[3] = a4[3] * b;
+    out[4] = a4[4] * b;
+    out[5] = a4[5] * b;
+    out[6] = a4[6] * b;
+    out[7] = a4[7] * b;
+    out[8] = a4[8] * b;
+    out[9] = a4[9] * b;
+    out[10] = a4[10] * b;
+    out[11] = a4[11] * b;
+    out[12] = a4[12] * b;
+    out[13] = a4[13] * b;
+    out[14] = a4[14] * b;
+    out[15] = a4[15] * b;
     return out;
   }
-  function multiplyScalarAndAdd(out, a3, b, scale4) {
-    out[0] = a3[0] + b[0] * scale4;
-    out[1] = a3[1] + b[1] * scale4;
-    out[2] = a3[2] + b[2] * scale4;
-    out[3] = a3[3] + b[3] * scale4;
-    out[4] = a3[4] + b[4] * scale4;
-    out[5] = a3[5] + b[5] * scale4;
-    out[6] = a3[6] + b[6] * scale4;
-    out[7] = a3[7] + b[7] * scale4;
-    out[8] = a3[8] + b[8] * scale4;
-    out[9] = a3[9] + b[9] * scale4;
-    out[10] = a3[10] + b[10] * scale4;
-    out[11] = a3[11] + b[11] * scale4;
-    out[12] = a3[12] + b[12] * scale4;
-    out[13] = a3[13] + b[13] * scale4;
-    out[14] = a3[14] + b[14] * scale4;
-    out[15] = a3[15] + b[15] * scale4;
+  function multiplyScalarAndAdd(out, a4, b, scale4) {
+    out[0] = a4[0] + b[0] * scale4;
+    out[1] = a4[1] + b[1] * scale4;
+    out[2] = a4[2] + b[2] * scale4;
+    out[3] = a4[3] + b[3] * scale4;
+    out[4] = a4[4] + b[4] * scale4;
+    out[5] = a4[5] + b[5] * scale4;
+    out[6] = a4[6] + b[6] * scale4;
+    out[7] = a4[7] + b[7] * scale4;
+    out[8] = a4[8] + b[8] * scale4;
+    out[9] = a4[9] + b[9] * scale4;
+    out[10] = a4[10] + b[10] * scale4;
+    out[11] = a4[11] + b[11] * scale4;
+    out[12] = a4[12] + b[12] * scale4;
+    out[13] = a4[13] + b[13] * scale4;
+    out[14] = a4[14] + b[14] * scale4;
+    out[15] = a4[15] + b[15] * scale4;
     return out;
   }
-  function exactEquals(a3, b) {
-    return a3[0] === b[0] && a3[1] === b[1] && a3[2] === b[2] && a3[3] === b[3] && a3[4] === b[4] && a3[5] === b[5] && a3[6] === b[6] && a3[7] === b[7] && a3[8] === b[8] && a3[9] === b[9] && a3[10] === b[10] && a3[11] === b[11] && a3[12] === b[12] && a3[13] === b[13] && a3[14] === b[14] && a3[15] === b[15];
+  function exactEquals(a4, b) {
+    return a4[0] === b[0] && a4[1] === b[1] && a4[2] === b[2] && a4[3] === b[3] && a4[4] === b[4] && a4[5] === b[5] && a4[6] === b[6] && a4[7] === b[7] && a4[8] === b[8] && a4[9] === b[9] && a4[10] === b[10] && a4[11] === b[11] && a4[12] === b[12] && a4[13] === b[13] && a4[14] === b[14] && a4[15] === b[15];
   }
-  function equals(a3, b) {
-    var a0 = a3[0], a1 = a3[1], a22 = a3[2], a32 = a3[3];
-    var a4 = a3[4], a5 = a3[5], a6 = a3[6], a7 = a3[7];
-    var a8 = a3[8], a9 = a3[9], a10 = a3[10], a11 = a3[11];
-    var a12 = a3[12], a13 = a3[13], a14 = a3[14], a15 = a3[15];
+  function equals(a4, b) {
+    var a0 = a4[0], a1 = a4[1], a22 = a4[2], a32 = a4[3];
+    var a42 = a4[4], a5 = a4[5], a6 = a4[6], a7 = a4[7];
+    var a8 = a4[8], a9 = a4[9], a10 = a4[10], a11 = a4[11];
+    var a12 = a4[12], a13 = a4[13], a14 = a4[14], a15 = a4[15];
     var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
     var b4 = b[4], b5 = b[5], b6 = b[6], b7 = b[7];
     var b8 = b[8], b9 = b[9], b10 = b[10], b11 = b[11];
     var b12 = b[12], b13 = b[13], b14 = b[14], b15 = b[15];
-    return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a22 - b2) <= EPSILON * Math.max(1, Math.abs(a22), Math.abs(b2)) && Math.abs(a32 - b3) <= EPSILON * Math.max(1, Math.abs(a32), Math.abs(b3)) && Math.abs(a4 - b4) <= EPSILON * Math.max(1, Math.abs(a4), Math.abs(b4)) && Math.abs(a5 - b5) <= EPSILON * Math.max(1, Math.abs(a5), Math.abs(b5)) && Math.abs(a6 - b6) <= EPSILON * Math.max(1, Math.abs(a6), Math.abs(b6)) && Math.abs(a7 - b7) <= EPSILON * Math.max(1, Math.abs(a7), Math.abs(b7)) && Math.abs(a8 - b8) <= EPSILON * Math.max(1, Math.abs(a8), Math.abs(b8)) && Math.abs(a9 - b9) <= EPSILON * Math.max(1, Math.abs(a9), Math.abs(b9)) && Math.abs(a10 - b10) <= EPSILON * Math.max(1, Math.abs(a10), Math.abs(b10)) && Math.abs(a11 - b11) <= EPSILON * Math.max(1, Math.abs(a11), Math.abs(b11)) && Math.abs(a12 - b12) <= EPSILON * Math.max(1, Math.abs(a12), Math.abs(b12)) && Math.abs(a13 - b13) <= EPSILON * Math.max(1, Math.abs(a13), Math.abs(b13)) && Math.abs(a14 - b14) <= EPSILON * Math.max(1, Math.abs(a14), Math.abs(b14)) && Math.abs(a15 - b15) <= EPSILON * Math.max(1, Math.abs(a15), Math.abs(b15));
+    return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a22 - b2) <= EPSILON * Math.max(1, Math.abs(a22), Math.abs(b2)) && Math.abs(a32 - b3) <= EPSILON * Math.max(1, Math.abs(a32), Math.abs(b3)) && Math.abs(a42 - b4) <= EPSILON * Math.max(1, Math.abs(a42), Math.abs(b4)) && Math.abs(a5 - b5) <= EPSILON * Math.max(1, Math.abs(a5), Math.abs(b5)) && Math.abs(a6 - b6) <= EPSILON * Math.max(1, Math.abs(a6), Math.abs(b6)) && Math.abs(a7 - b7) <= EPSILON * Math.max(1, Math.abs(a7), Math.abs(b7)) && Math.abs(a8 - b8) <= EPSILON * Math.max(1, Math.abs(a8), Math.abs(b8)) && Math.abs(a9 - b9) <= EPSILON * Math.max(1, Math.abs(a9), Math.abs(b9)) && Math.abs(a10 - b10) <= EPSILON * Math.max(1, Math.abs(a10), Math.abs(b10)) && Math.abs(a11 - b11) <= EPSILON * Math.max(1, Math.abs(a11), Math.abs(b11)) && Math.abs(a12 - b12) <= EPSILON * Math.max(1, Math.abs(a12), Math.abs(b12)) && Math.abs(a13 - b13) <= EPSILON * Math.max(1, Math.abs(a13), Math.abs(b13)) && Math.abs(a14 - b14) <= EPSILON * Math.max(1, Math.abs(a14), Math.abs(b14)) && Math.abs(a15 - b15) <= EPSILON * Math.max(1, Math.abs(a15), Math.abs(b15));
   }
   var mul = multiply;
   var sub = subtract;
@@ -1491,17 +1560,17 @@ export default require => {
     }
     return out;
   }
-  function clone2(a3) {
+  function clone2(a4) {
     var out = new ARRAY_TYPE(3);
-    out[0] = a3[0];
-    out[1] = a3[1];
-    out[2] = a3[2];
+    out[0] = a4[0];
+    out[1] = a4[1];
+    out[2] = a4[2];
     return out;
   }
-  function length(a3) {
-    var x = a3[0];
-    var y = a3[1];
-    var z = a3[2];
+  function length(a4) {
+    var x = a4[0];
+    var y = a4[1];
+    var z = a4[2];
     return Math.sqrt(x * x + y * y + z * z);
   }
   function fromValues2(x, y, z) {
@@ -1511,10 +1580,10 @@ export default require => {
     out[2] = z;
     return out;
   }
-  function copy2(out, a3) {
-    out[0] = a3[0];
-    out[1] = a3[1];
-    out[2] = a3[2];
+  function copy2(out, a4) {
+    out[0] = a4[0];
+    out[1] = a4[1];
+    out[2] = a4[2];
     return out;
   }
   function set2(out, x, y, z) {
@@ -1523,198 +1592,198 @@ export default require => {
     out[2] = z;
     return out;
   }
-  function add2(out, a3, b) {
-    out[0] = a3[0] + b[0];
-    out[1] = a3[1] + b[1];
-    out[2] = a3[2] + b[2];
+  function add2(out, a4, b) {
+    out[0] = a4[0] + b[0];
+    out[1] = a4[1] + b[1];
+    out[2] = a4[2] + b[2];
     return out;
   }
-  function subtract2(out, a3, b) {
-    out[0] = a3[0] - b[0];
-    out[1] = a3[1] - b[1];
-    out[2] = a3[2] - b[2];
+  function subtract2(out, a4, b) {
+    out[0] = a4[0] - b[0];
+    out[1] = a4[1] - b[1];
+    out[2] = a4[2] - b[2];
     return out;
   }
-  function multiply2(out, a3, b) {
-    out[0] = a3[0] * b[0];
-    out[1] = a3[1] * b[1];
-    out[2] = a3[2] * b[2];
+  function multiply2(out, a4, b) {
+    out[0] = a4[0] * b[0];
+    out[1] = a4[1] * b[1];
+    out[2] = a4[2] * b[2];
     return out;
   }
-  function divide(out, a3, b) {
-    out[0] = a3[0] / b[0];
-    out[1] = a3[1] / b[1];
-    out[2] = a3[2] / b[2];
+  function divide(out, a4, b) {
+    out[0] = a4[0] / b[0];
+    out[1] = a4[1] / b[1];
+    out[2] = a4[2] / b[2];
     return out;
   }
-  function ceil(out, a3) {
-    out[0] = Math.ceil(a3[0]);
-    out[1] = Math.ceil(a3[1]);
-    out[2] = Math.ceil(a3[2]);
+  function ceil(out, a4) {
+    out[0] = Math.ceil(a4[0]);
+    out[1] = Math.ceil(a4[1]);
+    out[2] = Math.ceil(a4[2]);
     return out;
   }
-  function floor(out, a3) {
-    out[0] = Math.floor(a3[0]);
-    out[1] = Math.floor(a3[1]);
-    out[2] = Math.floor(a3[2]);
+  function floor(out, a4) {
+    out[0] = Math.floor(a4[0]);
+    out[1] = Math.floor(a4[1]);
+    out[2] = Math.floor(a4[2]);
     return out;
   }
-  function min(out, a3, b) {
-    out[0] = Math.min(a3[0], b[0]);
-    out[1] = Math.min(a3[1], b[1]);
-    out[2] = Math.min(a3[2], b[2]);
+  function min(out, a4, b) {
+    out[0] = Math.min(a4[0], b[0]);
+    out[1] = Math.min(a4[1], b[1]);
+    out[2] = Math.min(a4[2], b[2]);
     return out;
   }
-  function max(out, a3, b) {
-    out[0] = Math.max(a3[0], b[0]);
-    out[1] = Math.max(a3[1], b[1]);
-    out[2] = Math.max(a3[2], b[2]);
+  function max(out, a4, b) {
+    out[0] = Math.max(a4[0], b[0]);
+    out[1] = Math.max(a4[1], b[1]);
+    out[2] = Math.max(a4[2], b[2]);
     return out;
   }
-  function round2(out, a3) {
-    out[0] = round(a3[0]);
-    out[1] = round(a3[1]);
-    out[2] = round(a3[2]);
+  function round2(out, a4) {
+    out[0] = round(a4[0]);
+    out[1] = round(a4[1]);
+    out[2] = round(a4[2]);
     return out;
   }
-  function scale2(out, a3, b) {
-    out[0] = a3[0] * b;
-    out[1] = a3[1] * b;
-    out[2] = a3[2] * b;
+  function scale2(out, a4, b) {
+    out[0] = a4[0] * b;
+    out[1] = a4[1] * b;
+    out[2] = a4[2] * b;
     return out;
   }
-  function scaleAndAdd(out, a3, b, scale4) {
-    out[0] = a3[0] + b[0] * scale4;
-    out[1] = a3[1] + b[1] * scale4;
-    out[2] = a3[2] + b[2] * scale4;
+  function scaleAndAdd(out, a4, b, scale4) {
+    out[0] = a4[0] + b[0] * scale4;
+    out[1] = a4[1] + b[1] * scale4;
+    out[2] = a4[2] + b[2] * scale4;
     return out;
   }
-  function distance(a3, b) {
-    var x = b[0] - a3[0];
-    var y = b[1] - a3[1];
-    var z = b[2] - a3[2];
+  function distance(a4, b) {
+    var x = b[0] - a4[0];
+    var y = b[1] - a4[1];
+    var z = b[2] - a4[2];
     return Math.sqrt(x * x + y * y + z * z);
   }
-  function squaredDistance(a3, b) {
-    var x = b[0] - a3[0];
-    var y = b[1] - a3[1];
-    var z = b[2] - a3[2];
+  function squaredDistance(a4, b) {
+    var x = b[0] - a4[0];
+    var y = b[1] - a4[1];
+    var z = b[2] - a4[2];
     return x * x + y * y + z * z;
   }
-  function squaredLength(a3) {
-    var x = a3[0];
-    var y = a3[1];
-    var z = a3[2];
+  function squaredLength(a4) {
+    var x = a4[0];
+    var y = a4[1];
+    var z = a4[2];
     return x * x + y * y + z * z;
   }
-  function negate(out, a3) {
-    out[0] = -a3[0];
-    out[1] = -a3[1];
-    out[2] = -a3[2];
+  function negate(out, a4) {
+    out[0] = -a4[0];
+    out[1] = -a4[1];
+    out[2] = -a4[2];
     return out;
   }
-  function inverse(out, a3) {
-    out[0] = 1 / a3[0];
-    out[1] = 1 / a3[1];
-    out[2] = 1 / a3[2];
+  function inverse(out, a4) {
+    out[0] = 1 / a4[0];
+    out[1] = 1 / a4[1];
+    out[2] = 1 / a4[2];
     return out;
   }
-  function normalize(out, a3) {
-    var x = a3[0];
-    var y = a3[1];
-    var z = a3[2];
+  function normalize(out, a4) {
+    var x = a4[0];
+    var y = a4[1];
+    var z = a4[2];
     var len2 = x * x + y * y + z * z;
     if (len2 > 0) {
       len2 = 1 / Math.sqrt(len2);
     }
-    out[0] = a3[0] * len2;
-    out[1] = a3[1] * len2;
-    out[2] = a3[2] * len2;
+    out[0] = a4[0] * len2;
+    out[1] = a4[1] * len2;
+    out[2] = a4[2] * len2;
     return out;
   }
-  function dot(a3, b) {
-    return a3[0] * b[0] + a3[1] * b[1] + a3[2] * b[2];
+  function dot(a4, b) {
+    return a4[0] * b[0] + a4[1] * b[1] + a4[2] * b[2];
   }
-  function cross(out, a3, b) {
-    var ax = a3[0], ay = a3[1], az = a3[2];
+  function cross(out, a4, b) {
+    var ax = a4[0], ay = a4[1], az = a4[2];
     var bx = b[0], by = b[1], bz = b[2];
     out[0] = ay * bz - az * by;
     out[1] = az * bx - ax * bz;
     out[2] = ax * by - ay * bx;
     return out;
   }
-  function lerp(out, a3, b, t3) {
-    var ax = a3[0];
-    var ay = a3[1];
-    var az = a3[2];
-    out[0] = ax + t3 * (b[0] - ax);
-    out[1] = ay + t3 * (b[1] - ay);
-    out[2] = az + t3 * (b[2] - az);
+  function lerp(out, a4, b, t5) {
+    var ax = a4[0];
+    var ay = a4[1];
+    var az = a4[2];
+    out[0] = ax + t5 * (b[0] - ax);
+    out[1] = ay + t5 * (b[1] - ay);
+    out[2] = az + t5 * (b[2] - az);
     return out;
   }
-  function slerp(out, a3, b, t3) {
-    var angle2 = Math.acos(Math.min(Math.max(dot(a3, b), -1), 1));
+  function slerp(out, a4, b, t5) {
+    var angle2 = Math.acos(Math.min(Math.max(dot(a4, b), -1), 1));
     var sinTotal = Math.sin(angle2);
-    var ratioA = Math.sin((1 - t3) * angle2) / sinTotal;
-    var ratioB = Math.sin(t3 * angle2) / sinTotal;
-    out[0] = ratioA * a3[0] + ratioB * b[0];
-    out[1] = ratioA * a3[1] + ratioB * b[1];
-    out[2] = ratioA * a3[2] + ratioB * b[2];
+    var ratioA = Math.sin((1 - t5) * angle2) / sinTotal;
+    var ratioB = Math.sin(t5 * angle2) / sinTotal;
+    out[0] = ratioA * a4[0] + ratioB * b[0];
+    out[1] = ratioA * a4[1] + ratioB * b[1];
+    out[2] = ratioA * a4[2] + ratioB * b[2];
     return out;
   }
-  function hermite(out, a3, b, c, d, t3) {
-    var factorTimes2 = t3 * t3;
-    var factor1 = factorTimes2 * (2 * t3 - 3) + 1;
-    var factor2 = factorTimes2 * (t3 - 2) + t3;
-    var factor3 = factorTimes2 * (t3 - 1);
-    var factor4 = factorTimes2 * (3 - 2 * t3);
-    out[0] = a3[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
-    out[1] = a3[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
-    out[2] = a3[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
+  function hermite(out, a4, b, c2, d2, t5) {
+    var factorTimes2 = t5 * t5;
+    var factor1 = factorTimes2 * (2 * t5 - 3) + 1;
+    var factor2 = factorTimes2 * (t5 - 2) + t5;
+    var factor3 = factorTimes2 * (t5 - 1);
+    var factor4 = factorTimes2 * (3 - 2 * t5);
+    out[0] = a4[0] * factor1 + b[0] * factor2 + c2[0] * factor3 + d2[0] * factor4;
+    out[1] = a4[1] * factor1 + b[1] * factor2 + c2[1] * factor3 + d2[1] * factor4;
+    out[2] = a4[2] * factor1 + b[2] * factor2 + c2[2] * factor3 + d2[2] * factor4;
     return out;
   }
-  function bezier(out, a3, b, c, d, t3) {
-    var inverseFactor = 1 - t3;
+  function bezier(out, a4, b, c2, d2, t5) {
+    var inverseFactor = 1 - t5;
     var inverseFactorTimesTwo = inverseFactor * inverseFactor;
-    var factorTimes2 = t3 * t3;
+    var factorTimes2 = t5 * t5;
     var factor1 = inverseFactorTimesTwo * inverseFactor;
-    var factor2 = 3 * t3 * inverseFactorTimesTwo;
+    var factor2 = 3 * t5 * inverseFactorTimesTwo;
     var factor3 = 3 * factorTimes2 * inverseFactor;
-    var factor4 = factorTimes2 * t3;
-    out[0] = a3[0] * factor1 + b[0] * factor2 + c[0] * factor3 + d[0] * factor4;
-    out[1] = a3[1] * factor1 + b[1] * factor2 + c[1] * factor3 + d[1] * factor4;
-    out[2] = a3[2] * factor1 + b[2] * factor2 + c[2] * factor3 + d[2] * factor4;
+    var factor4 = factorTimes2 * t5;
+    out[0] = a4[0] * factor1 + b[0] * factor2 + c2[0] * factor3 + d2[0] * factor4;
+    out[1] = a4[1] * factor1 + b[1] * factor2 + c2[1] * factor3 + d2[1] * factor4;
+    out[2] = a4[2] * factor1 + b[2] * factor2 + c2[2] * factor3 + d2[2] * factor4;
     return out;
   }
   function random(out, scale4) {
     scale4 = scale4 === void 0 ? 1 : scale4;
-    var r2 = RANDOM() * 2 * Math.PI;
+    var r3 = RANDOM() * 2 * Math.PI;
     var z = RANDOM() * 2 - 1;
     var zScale = Math.sqrt(1 - z * z) * scale4;
-    out[0] = Math.cos(r2) * zScale;
-    out[1] = Math.sin(r2) * zScale;
+    out[0] = Math.cos(r3) * zScale;
+    out[1] = Math.sin(r3) * zScale;
     out[2] = z * scale4;
     return out;
   }
-  function transformMat4(out, a3, m) {
-    var x = a3[0], y = a3[1], z = a3[2];
-    var w = m[3] * x + m[7] * y + m[11] * z + m[15];
+  function transformMat4(out, a4, m2) {
+    var x = a4[0], y = a4[1], z = a4[2];
+    var w = m2[3] * x + m2[7] * y + m2[11] * z + m2[15];
     w = w || 1;
-    out[0] = (m[0] * x + m[4] * y + m[8] * z + m[12]) / w;
-    out[1] = (m[1] * x + m[5] * y + m[9] * z + m[13]) / w;
-    out[2] = (m[2] * x + m[6] * y + m[10] * z + m[14]) / w;
+    out[0] = (m2[0] * x + m2[4] * y + m2[8] * z + m2[12]) / w;
+    out[1] = (m2[1] * x + m2[5] * y + m2[9] * z + m2[13]) / w;
+    out[2] = (m2[2] * x + m2[6] * y + m2[10] * z + m2[14]) / w;
     return out;
   }
-  function transformMat3(out, a3, m) {
-    var x = a3[0], y = a3[1], z = a3[2];
-    out[0] = x * m[0] + y * m[3] + z * m[6];
-    out[1] = x * m[1] + y * m[4] + z * m[7];
-    out[2] = x * m[2] + y * m[5] + z * m[8];
+  function transformMat3(out, a4, m2) {
+    var x = a4[0], y = a4[1], z = a4[2];
+    out[0] = x * m2[0] + y * m2[3] + z * m2[6];
+    out[1] = x * m2[1] + y * m2[4] + z * m2[7];
+    out[2] = x * m2[2] + y * m2[5] + z * m2[8];
     return out;
   }
-  function transformQuat(out, a3, q) {
+  function transformQuat(out, a4, q) {
     var qx = q[0], qy = q[1], qz = q[2], qw = q[3];
-    var vx = a3[0], vy = a3[1], vz = a3[2];
+    var vx = a4[0], vy = a4[1], vz = a4[2];
     var tx = qy * vz - qz * vy;
     var ty = qz * vx - qx * vz;
     var tz = qx * vy - qy * vx;
@@ -1726,47 +1795,47 @@ export default require => {
     out[2] = vz + qw * tz + qx * ty - qy * tx;
     return out;
   }
-  function rotateX2(out, a3, b, rad) {
-    var p = [], r2 = [];
-    p[0] = a3[0] - b[0];
-    p[1] = a3[1] - b[1];
-    p[2] = a3[2] - b[2];
-    r2[0] = p[0];
-    r2[1] = p[1] * Math.cos(rad) - p[2] * Math.sin(rad);
-    r2[2] = p[1] * Math.sin(rad) + p[2] * Math.cos(rad);
-    out[0] = r2[0] + b[0];
-    out[1] = r2[1] + b[1];
-    out[2] = r2[2] + b[2];
+  function rotateX2(out, a4, b, rad) {
+    var p2 = [], r3 = [];
+    p2[0] = a4[0] - b[0];
+    p2[1] = a4[1] - b[1];
+    p2[2] = a4[2] - b[2];
+    r3[0] = p2[0];
+    r3[1] = p2[1] * Math.cos(rad) - p2[2] * Math.sin(rad);
+    r3[2] = p2[1] * Math.sin(rad) + p2[2] * Math.cos(rad);
+    out[0] = r3[0] + b[0];
+    out[1] = r3[1] + b[1];
+    out[2] = r3[2] + b[2];
     return out;
   }
-  function rotateY2(out, a3, b, rad) {
-    var p = [], r2 = [];
-    p[0] = a3[0] - b[0];
-    p[1] = a3[1] - b[1];
-    p[2] = a3[2] - b[2];
-    r2[0] = p[2] * Math.sin(rad) + p[0] * Math.cos(rad);
-    r2[1] = p[1];
-    r2[2] = p[2] * Math.cos(rad) - p[0] * Math.sin(rad);
-    out[0] = r2[0] + b[0];
-    out[1] = r2[1] + b[1];
-    out[2] = r2[2] + b[2];
+  function rotateY2(out, a4, b, rad) {
+    var p2 = [], r3 = [];
+    p2[0] = a4[0] - b[0];
+    p2[1] = a4[1] - b[1];
+    p2[2] = a4[2] - b[2];
+    r3[0] = p2[2] * Math.sin(rad) + p2[0] * Math.cos(rad);
+    r3[1] = p2[1];
+    r3[2] = p2[2] * Math.cos(rad) - p2[0] * Math.sin(rad);
+    out[0] = r3[0] + b[0];
+    out[1] = r3[1] + b[1];
+    out[2] = r3[2] + b[2];
     return out;
   }
-  function rotateZ2(out, a3, b, rad) {
-    var p = [], r2 = [];
-    p[0] = a3[0] - b[0];
-    p[1] = a3[1] - b[1];
-    p[2] = a3[2] - b[2];
-    r2[0] = p[0] * Math.cos(rad) - p[1] * Math.sin(rad);
-    r2[1] = p[0] * Math.sin(rad) + p[1] * Math.cos(rad);
-    r2[2] = p[2];
-    out[0] = r2[0] + b[0];
-    out[1] = r2[1] + b[1];
-    out[2] = r2[2] + b[2];
+  function rotateZ2(out, a4, b, rad) {
+    var p2 = [], r3 = [];
+    p2[0] = a4[0] - b[0];
+    p2[1] = a4[1] - b[1];
+    p2[2] = a4[2] - b[2];
+    r3[0] = p2[0] * Math.cos(rad) - p2[1] * Math.sin(rad);
+    r3[1] = p2[0] * Math.sin(rad) + p2[1] * Math.cos(rad);
+    r3[2] = p2[2];
+    out[0] = r3[0] + b[0];
+    out[1] = r3[1] + b[1];
+    out[2] = r3[2] + b[2];
     return out;
   }
-  function angle(a3, b) {
-    var ax = a3[0], ay = a3[1], az = a3[2], bx = b[0], by = b[1], bz = b[2], mag = Math.sqrt((ax * ax + ay * ay + az * az) * (bx * bx + by * by + bz * bz)), cosine = mag && dot(a3, b) / mag;
+  function angle(a4, b) {
+    var ax = a4[0], ay = a4[1], az = a4[2], bx = b[0], by = b[1], bz = b[2], mag = Math.sqrt((ax * ax + ay * ay + az * az) * (bx * bx + by * by + bz * bz)), cosine = mag && dot(a4, b) / mag;
     return Math.acos(Math.min(Math.max(cosine, -1), 1));
   }
   function zero(out) {
@@ -1775,14 +1844,14 @@ export default require => {
     out[2] = 0;
     return out;
   }
-  function str2(a3) {
-    return "vec3(" + a3[0] + ", " + a3[1] + ", " + a3[2] + ")";
+  function str2(a4) {
+    return "vec3(" + a4[0] + ", " + a4[1] + ", " + a4[2] + ")";
   }
-  function exactEquals2(a3, b) {
-    return a3[0] === b[0] && a3[1] === b[1] && a3[2] === b[2];
+  function exactEquals2(a4, b) {
+    return a4[0] === b[0] && a4[1] === b[1] && a4[2] === b[2];
   }
-  function equals2(a3, b) {
-    var a0 = a3[0], a1 = a3[1], a22 = a3[2];
+  function equals2(a4, b) {
+    var a0 = a4[0], a1 = a4[1], a22 = a4[2];
     var b0 = b[0], b1 = b[1], b2 = b[2];
     return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a22 - b2) <= EPSILON * Math.max(1, Math.abs(a22), Math.abs(b2));
   }
@@ -1795,8 +1864,8 @@ export default require => {
   var sqrLen = squaredLength;
   var forEach = (function () {
     var vec = create2();
-    return function (a3, stride, offset, count, fn, arg) {
-      var i, l;
+    return function (a4, stride, offset, count, fn, arg) {
+      var i, l2;
       if (!stride) {
         stride = 3;
       }
@@ -1804,20 +1873,20 @@ export default require => {
         offset = 0;
       }
       if (count) {
-        l = Math.min(count * stride + offset, a3.length);
+        l2 = Math.min(count * stride + offset, a4.length);
       } else {
-        l = a3.length;
+        l2 = a4.length;
       }
-      for (i = offset; i < l; i += stride) {
-        vec[0] = a3[i];
-        vec[1] = a3[i + 1];
-        vec[2] = a3[i + 2];
+      for (i = offset; i < l2; i += stride) {
+        vec[0] = a4[i];
+        vec[1] = a4[i + 1];
+        vec[2] = a4[i + 2];
         fn(vec, vec, arg);
-        a3[i] = vec[0];
-        a3[i + 1] = vec[1];
-        a3[i + 2] = vec[2];
+        a4[i] = vec[0];
+        a4[i + 1] = vec[1];
+        a4[i + 2] = vec[2];
       }
-      return a3;
+      return a4;
     };
   })();
   var glAnimationSymbol = Symbol.for("glAnimation");
@@ -1840,14 +1909,14 @@ export default require => {
   function loadShader(gl, type, source) {
     const shader = gl.createShader(type);
     if (!shader) {
-      throw new import_base.GeneralRuntimeError("WebGLShader not available.");
+      throw new e2("WebGLShader not available.");
     }
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
     const compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
     if (!compiled) {
       const compilationLog = gl.getShaderInfoLog(shader);
-      throw new import_base.GeneralRuntimeError(`Shader compilation failed: ${compilationLog}`);
+      throw new e2(`Shader compilation failed: ${compilationLog}`);
     }
     return shader;
   }
@@ -1856,7 +1925,7 @@ export default require => {
     const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
     const shaderProgram = gl.createProgram();
     if (!shaderProgram) {
-      throw new import_base.GeneralRuntimeError("Unable to initialize the shader program.");
+      throw new e2("Unable to initialize the shader program.");
     }
     gl.attachShader(shaderProgram, vertexShader);
     gl.attachShader(shaderProgram, fragmentShader);
@@ -1866,7 +1935,7 @@ export default require => {
   function getWebGlFromCanvas(canvas) {
     const gl = canvas.getContext("webgl");
     if (!gl) {
-      throw new import_base.GeneralRuntimeError("Unable to initialize WebGL.");
+      throw new e2("Unable to initialize WebGL.");
     }
     gl.clearColor(1, 1, 1, 1);
     gl.enable(gl.DEPTH_TEST);
@@ -1877,27 +1946,27 @@ export default require => {
   function initFramebufferObject(gl) {
     const framebuffer = gl.createFramebuffer();
     if (!framebuffer) {
-      throw new import_base.GeneralRuntimeError("Failed to create frame buffer object");
+      throw new e2("Failed to create frame buffer object");
     }
     const texture = gl.createTexture();
     if (!texture) {
-      throw new import_base.GeneralRuntimeError("Failed to create texture object");
+      throw new e2("Failed to create texture object");
     }
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.drawingBufferWidth, gl.drawingBufferHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     const depthBuffer = gl.createRenderbuffer();
     if (!depthBuffer) {
-      throw new import_base.GeneralRuntimeError("Failed to create renderbuffer object");
+      throw new e2("Failed to create renderbuffer object");
     }
     gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
     gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, gl.drawingBufferWidth, gl.drawingBufferHeight);
     gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
     gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
-    const e3 = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-    if (gl.FRAMEBUFFER_COMPLETE !== e3) {
-      throw new import_base.GeneralRuntimeError(`Frame buffer object is incomplete:${e3.toString()}`);
+    const e6 = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+    if (gl.FRAMEBUFFER_COMPLETE !== e6) {
+      throw new e2(`Frame buffer object is incomplete:${e6.toString()}`);
     }
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.bindTexture(gl.TEXTURE_2D, null);
@@ -1917,15 +1986,15 @@ export default require => {
       function fulfilled(value) {
         try {
           step(generator.next(value));
-        } catch (e3) {
-          reject(e3);
+        } catch (e6) {
+          reject(e6);
         }
       }
       function rejected(value) {
         try {
           step(generator["throw"](value));
-        } catch (e3) {
-          reject(e3);
+        } catch (e6) {
+          reject(e6);
         }
       }
       function step(result) {
@@ -2026,7 +2095,7 @@ void main(void) {
       const shaderProgram = initShaderProgram(gl, normalVertexShader, normalFragmentShader);
       gl.useProgram(shaderProgram);
       if (gl === null) {
-        throw new import_base.GeneralRuntimeError("Rendering Context not initialized for drawRune.");
+        throw new e2("Rendering Context not initialized for drawRune.");
       }
       const vertexPositionPointer = gl.getAttribLocation(shaderProgram, "aVertexPosition");
       const vertexColorPointer = gl.getUniformLocation(shaderProgram, "uVertexColor");
@@ -2175,7 +2244,7 @@ void main(void) {
   };
   function throwIfNotRune(func_name, rune, param_name) {
     if (!(rune instanceof Rune)) {
-      throw new import_rttcErrors.InvalidParameterTypeError("Rune", rune, func_name, param_name);
+      throw new n(func_name, param_name, "Rune", rune);
     }
   }
   function getSquare() {
@@ -2292,25 +2361,25 @@ void main(void) {
     const vertexList = [];
     const colorList = [];
     const root2 = Math.sqrt(2);
-    const r2 = 4 / (2 + 3 * root2);
-    const scaleX = 1 / (r2 * (1 + root2 / 2));
+    const r3 = 4 / (2 + 3 * root2);
+    const scaleX = 1 / (r3 * (1 + root2 / 2));
     const numPoints = 100;
-    const rightCenterX = r2 / root2;
-    const rightCenterY = 1 - r2;
+    const rightCenterX = r3 / root2;
+    const rightCenterY = 1 - r3;
     for (let i = 0; i < numPoints; i += 1) {
       const angle1 = Math.PI * (-1 / 4 + i / numPoints);
       const angle2 = Math.PI * (-1 / 4 + (i + 1) / numPoints);
-      vertexList.push((Math.cos(angle1) * r2 + rightCenterX) * scaleX, Math.sin(angle1) * r2 + rightCenterY, 0, 1);
-      vertexList.push((Math.cos(angle2) * r2 + rightCenterX) * scaleX, Math.sin(angle2) * r2 + rightCenterY, 0, 1);
+      vertexList.push((Math.cos(angle1) * r3 + rightCenterX) * scaleX, Math.sin(angle1) * r3 + rightCenterY, 0, 1);
+      vertexList.push((Math.cos(angle2) * r3 + rightCenterX) * scaleX, Math.sin(angle2) * r3 + rightCenterY, 0, 1);
       vertexList.push(0, -1, 0, 1);
     }
-    const leftCenterX = -r2 / root2;
-    const leftCenterY = 1 - r2;
+    const leftCenterX = -r3 / root2;
+    const leftCenterY = 1 - r3;
     for (let i = 0; i <= numPoints; i += 1) {
       const angle1 = Math.PI * (1 / 4 + i / numPoints);
       const angle2 = Math.PI * (1 / 4 + (i + 1) / numPoints);
-      vertexList.push((Math.cos(angle1) * r2 + leftCenterX) * scaleX, Math.sin(angle1) * r2 + leftCenterY, 0, 1);
-      vertexList.push((Math.cos(angle2) * r2 + leftCenterX) * scaleX, Math.sin(angle2) * r2 + leftCenterY, 0, 1);
+      vertexList.push((Math.cos(angle1) * r3 + leftCenterX) * scaleX, Math.sin(angle1) * r3 + leftCenterY, 0, 1);
+      vertexList.push((Math.cos(angle2) * r3 + leftCenterX) * scaleX, Math.sin(angle2) * r3 + leftCenterY, 0, 1);
       vertexList.push(0, -1, 0, 1);
     }
     colorList.push(0, 0, 0, 1);
@@ -2365,15 +2434,41 @@ void main(void) {
       colors: new Float32Array(colorList)
     });
   }
-  function hexToColor2(hex) {
-    const result = hexToColor(hex);
-    return [...result, 1];
+  function hexToColor(hex) {
+    if (typeof hex !== "string") {
+      throw new n(hexToColor.name, void 0, "string", hex);
+    }
+    const groups = (/^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/iu).exec(hex);
+    if (!groups) {
+      throw new e2(`${hexToColor.name}: Invalid color hex string: ${hex}`);
+    }
+    return [parseInt(groups[1], 16) / 255, parseInt(groups[2], 16) / 255, parseInt(groups[3], 16) / 255, 1];
+  }
+  function hueToRgb(hue) {
+    const h2 = (hue % 1 + 1) % 1;
+    const i = Math.floor(h2 * 6);
+    const f2 = h2 * 6 - i;
+    const q = 1 - f2;
+    switch (i) {
+      case 0:
+        return [255, Math.floor(f2 * 255), 0];
+      case 1:
+        return [Math.floor(q * 255), 255, 0];
+      case 2:
+        return [0, 255, Math.floor(f2 * 255)];
+      case 3:
+        return [0, Math.floor(q * 255), 255];
+      case 4:
+        return [Math.floor(f2 * 255), 0, 255];
+      default:
+        return [255, 0, Math.floor(q * 255)];
+    }
   }
   function addColorFromHex(rune, hex) {
     throwIfNotRune(addColorFromHex.name, rune);
     return Rune.of({
       subRunes: [rune],
-      colors: new Float32Array(hexToColor2(hex))
+      colors: new Float32Array(hexToColor(hex))
     });
   }
   var __awaiter2 = function (thisArg, _arguments, P, generator) {
@@ -2386,15 +2481,15 @@ void main(void) {
       function fulfilled(value) {
         try {
           step(generator.next(value));
-        } catch (e3) {
-          reject(e3);
+        } catch (e6) {
+          reject(e6);
         }
       }
       function rejected(value) {
         try {
           step(generator["throw"](value));
-        } catch (e3) {
-          reject(e3);
+        } catch (e6) {
+          reject(e6);
         }
       }
       function step(result) {
@@ -2404,7 +2499,7 @@ void main(void) {
     });
   };
   function throwIfNotFraction(val, param_name, func_name) {
-    (0, import_rttc.assertNumberWithinRange)(val, func_name, 0, 1, false, param_name);
+    l(val, func_name, 0, 1, false, param_name);
   }
   var RuneFunctions = class _RuneFunctions {
     static from_url(imageUrl) {
@@ -2414,16 +2509,8 @@ void main(void) {
     }
     static scale_independent(ratio_x, ratio_y, rune) {
       throwIfNotRune(_RuneFunctions.scale_independent.name, rune);
-      (0, import_rttc.assertNumberWithinRange)(ratio_x, {
-        func_name: _RuneFunctions.scale_independent.name,
-        param_name: "ratio_x",
-        integer: false
-      });
-      (0, import_rttc.assertNumberWithinRange)(ratio_y, {
-        func_name: _RuneFunctions.scale_independent.name,
-        param_name: "ratio_y",
-        integer: false
-      });
+      l(ratio_x, _RuneFunctions.scale_independent.name, void 0, void 0, false, "ratio_x");
+      l(ratio_y, _RuneFunctions.scale_independent.name, void 0, void 0, false, "ratio_y");
       const scaleVec = vec3_exports.fromValues(ratio_x, ratio_y, 1);
       const scaleMat = mat4_exports.create();
       mat4_exports.scale(scaleMat, scaleMat, scaleVec);
@@ -2476,15 +2563,13 @@ void main(void) {
       throwIfNotRune(_RuneFunctions.stack.name, rune2, "rune2");
       return _RuneFunctions.stack_frac(0.5, rune1, rune2);
     }
-    static stackn(n3, rune) {
+    static stackn(n4, rune) {
       throwIfNotRune(_RuneFunctions.stackn.name, rune);
-      (0, import_rttc.assertNumberWithinRange)(n3, {
-        func_name: _RuneFunctions.stackn.name
-      });
-      if (n3 <= 1) {
+      l(n4, _RuneFunctions.stackn.name);
+      if (n4 <= 1) {
         return rune;
       }
-      return _RuneFunctions.stack_frac(1 / n3, rune, _RuneFunctions.stackn(n3 - 1, rune));
+      return _RuneFunctions.stack_frac(1 / n4, rune, _RuneFunctions.stackn(n4 - 1, rune));
     }
     static quarter_turn_right(rune) {
       throwIfNotRune(_RuneFunctions.quarter_turn_right.name, rune);
@@ -2525,10 +2610,10 @@ void main(void) {
       throwIfNotRune(_RuneFunctions.make_cross.name, rune);
       return _RuneFunctions.stack(_RuneFunctions.beside(_RuneFunctions.quarter_turn_right(rune), _RuneFunctions.rotate(Math.PI, rune)), _RuneFunctions.beside(rune, _RuneFunctions.rotate(Math.PI / 2, rune)));
     }
-    static repeat_pattern(n3, pattern, initial) {
+    static repeat_pattern(n4, pattern, initial) {
       throwIfNotRune(_RuneFunctions.repeat_pattern.name, initial, "initial");
-      (0, import_rttc.assertFunctionOfLength)(pattern, 1, _RuneFunctions.repeat_pattern.name);
-      const repeated = repeat_internal(pattern, n3);
+      a(pattern, 1, _RuneFunctions.repeat_pattern.name);
+      const repeated = repeat_internal(pattern, n4);
       return repeated(initial);
     }
     static overlay_frac(frac, rune1, rune2) {
@@ -2560,12 +2645,12 @@ void main(void) {
       throwIfNotRune(_RuneFunctions.overlay.name, rune2, "rune2");
       return _RuneFunctions.overlay_frac(0.5, rune1, rune2);
     }
-    static color(rune, r2, g, b) {
+    static color(rune, r3, g, b) {
       throwIfNotRune(_RuneFunctions.color.name, rune);
-      throwIfNotFraction(r2, "r", _RuneFunctions.color.name);
+      throwIfNotFraction(r3, "r", _RuneFunctions.color.name);
       throwIfNotFraction(g, "g", _RuneFunctions.color.name);
       throwIfNotFraction(b, "b", _RuneFunctions.color.name);
-      const colorVector = [r2, g, b, 1];
+      const colorVector = [r3, g, b, 1];
       return Rune.of({
         colors: new Float32Array(colorVector),
         subRunes: [rune]
@@ -2631,7 +2716,7 @@ void main(void) {
     static random_color(rune) {
       throwIfNotRune(_RuneColours.random_color.name, rune);
       const colorVal = sample(Object.values(_RuneColours.colours));
-      const randomColor = hexToColor2(colorVal);
+      const randomColor = hexToColor(colorVal);
       return Rune.of({
         colors: new Float32Array(randomColor),
         subRunes: [rune]
@@ -2639,11 +2724,11 @@ void main(void) {
     }
     static colour_with_hue(rune, hue) {
       throwIfNotRune(_RuneColours.colour_with_hue.name, rune);
-      (0, import_rttc.assertNumberWithinRange)(hue, _RuneColours.colour_with_hue.name, 0, void 0, false, "hue");
-      const [r2, g, b] = hueToRgb(hue);
+      l(hue, _RuneColours.colour_with_hue.name, 0, void 0, false, "hue");
+      const [r3, g, b] = hueToRgb(hue);
       return Rune.of({
         subRunes: [rune],
-        colors: new Float32Array([r2 / 255, g / 255, b / 255, 1])
+        colors: new Float32Array([r3 / 255, g / 255, b / 255, 1])
       });
     }
   };
@@ -2841,11 +2926,7 @@ void main(void) {
   !(function (R2) {
     (R2[R2.CALL = 0] = "CALL", R2[R2.RETURN = 1] = "RETURN", R2[R2.RETURN_ERR = 2] = "RETURN_ERR");
   })(R || (R = {}));
-  function n(n3) {}
-  var _;
-  !(function (_2) {
-    (_2.UNKNOWN = "__unknown", _2.INTERNAL = "__internal", _2.EVALUATOR = "__evaluator", _2.EVALUATOR_SYNTAX = "__evaluator_syntax", _2.EVALUATOR_TYPE = "__evaluator_type", _2.EVALUATOR_RUNTIME = "__evaluator_runtime");
-  })(_ || (_ = {}));
+  function n2(n4) {}
   var import_jsx_runtime6 = __require("react/jsx-runtime");
   var import_core6 = __require("@blueprintjs/core");
   var import_react3 = __require("react");
@@ -2893,13 +2974,13 @@ void main(void) {
   }
   var import_jsx_runtime2 = __require("react/jsx-runtime");
   var import_core2 = __require("@blueprintjs/core");
-  var __rest = function (s5, e3) {
-    var t3 = {};
-    for (var p in s5) if (Object.prototype.hasOwnProperty.call(s5, p) && e3.indexOf(p) < 0) t3[p] = s5[p];
-    if (s5 != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s5); i < p.length; i++) {
-      if (e3.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s5, p[i])) t3[p[i]] = s5[p[i]];
+  var __rest = function (s7, e6) {
+    var t5 = {};
+    for (var p2 in s7) if (Object.prototype.hasOwnProperty.call(s7, p2) && e6.indexOf(p2) < 0) t5[p2] = s7[p2];
+    if (s7 != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p2 = Object.getOwnPropertySymbols(s7); i < p2.length; i++) {
+      if (e6.indexOf(p2[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s7, p2[i])) t5[p2[i]] = s7[p2[i]];
     }
-    return t3;
+    return t5;
   };
   function AutoLoopSwitch(_a) {
     var {isAutoLooping} = _a, props = __rest(_a, ["isAutoLooping"]);
@@ -2927,13 +3008,13 @@ void main(void) {
   }
   var import_jsx_runtime4 = __require("react/jsx-runtime");
   var import_core4 = __require("@blueprintjs/core");
-  var __rest2 = function (s5, e3) {
-    var t3 = {};
-    for (var p in s5) if (Object.prototype.hasOwnProperty.call(s5, p) && e3.indexOf(p) < 0) t3[p] = s5[p];
-    if (s5 != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s5); i < p.length; i++) {
-      if (e3.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s5, p[i])) t3[p[i]] = s5[p[i]];
+  var __rest2 = function (s7, e6) {
+    var t5 = {};
+    for (var p2 in s7) if (Object.prototype.hasOwnProperty.call(s7, p2) && e6.indexOf(p2) < 0) t5[p2] = s7[p2];
+    if (s7 != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p2 = Object.getOwnPropertySymbols(s7); i < p2.length; i++) {
+      if (e6.indexOf(p2[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s7, p2[i])) t5[p2[i]] = s7[p2[i]];
     }
-    return t3;
+    return t5;
   };
   function PlayButton(_a) {
     var {playingText = "Pause", playingIcon = "pause", pausedText = "Play", pausedIcon = "play", isPlaying, tooltipProps, iconProps} = _a, props = __rest2(_a, ["playingText", "playingIcon", "pausedText", "pausedIcon", "isPlaying", "tooltipProps", "iconProps"]);
@@ -3496,6 +3577,6 @@ void main(void) {
     }
   };
   RuneTabPlugin.channelAttach = [RUNE_CHANNEL_ID];
-  n(RuneTabPlugin);
+  n2(RuneTabPlugin);
   return __toCommonJS(index_exports);
 };

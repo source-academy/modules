@@ -18,12 +18,6 @@ export default require => {
     value,
     configurable: true
   });
-  var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-    get: (a2, b) => (typeof require !== "undefined" ? require : a2)[b]
-  }) : x)(function (x) {
-    if (typeof require !== "undefined") return require.apply(this, arguments);
-    throw Error('Dynamic require of "' + x + '" is not supported');
-  });
   var __export = (target, all) => {
     for (var name in all) __defProp(target, name, {
       get: all[name],
@@ -56,14 +50,14 @@ export default require => {
   });
   var __decoratorMetadata = (array, target) => __defNormalProp(target, __knownSymbol("metadata"), array[3]);
   var __runInitializers = (array, flags, self, value) => {
-    for (var i = 0, fns = array[flags >> 1], n2 = fns && fns.length; i < n2; i++) flags & 1 ? fns[i].call(self) : value = fns[i].call(self, value);
+    for (var i = 0, fns = array[flags >> 1], n3 = fns && fns.length; i < n3; i++) flags & 1 ? fns[i].call(self) : value = fns[i].call(self, value);
     return value;
   };
   var __decorateElement = (array, flags, name, decorators, target, extra) => {
-    var fn, it, done, ctx, access, k = flags & 7, s3 = !!(flags & 8), p = !!(flags & 16);
-    var j = k > 3 ? array.length + 1 : k ? s3 ? 1 : 2 : 0, key = __decoratorStrings[k + 5];
+    var fn, it, done, ctx, access, k = flags & 7, s5 = !!(flags & 8), p2 = !!(flags & 16);
+    var j = k > 3 ? array.length + 1 : k ? s5 ? 1 : 2 : 0, key = __decoratorStrings[k + 5];
     var initializers = k > 3 && (array[j - 1] = []), extraInitializers = array[j] || (array[j] = []);
-    var desc = k && (!p && !s3 && (target = target.prototype), k < 5 && (k > 3 || !p) && __getOwnPropDesc(k < 4 ? target : {
+    var desc = k && (!p2 && !s5 && (target = target.prototype), k < 5 && (k > 3 || !p2) && __getOwnPropDesc(k < 4 ? target : {
       get [name]() {
         return __privateGet(this, extra);
       },
@@ -71,23 +65,23 @@ export default require => {
         return __privateSet(this, extra, x);
       }
     }, name));
-    k ? p && k < 4 && __name(extra, (k > 2 ? "set " : k > 1 ? "get " : "") + name) : __name(target, name);
+    k ? p2 && k < 4 && __name(extra, (k > 2 ? "set " : k > 1 ? "get " : "") + name) : __name(target, name);
     for (var i = decorators.length - 1; i >= 0; i--) {
       ctx = __decoratorContext(k, name, done = {}, array[3], extraInitializers);
       if (k) {
-        (ctx.static = s3, ctx.private = p, access = ctx.access = {
-          has: p ? x => __privateIn(target, x) : x => (name in x)
+        (ctx.static = s5, ctx.private = p2, access = ctx.access = {
+          has: p2 ? x => __privateIn(target, x) : x => (name in x)
         });
-        if (k ^ 3) access.get = p ? x => (k ^ 1 ? __privateGet : __privateMethod)(x, target, k ^ 4 ? extra : desc.get) : x => x[name];
-        if (k > 2) access.set = p ? (x, y) => __privateSet(x, target, y, k ^ 4 ? extra : desc.set) : (x, y) => x[name] = y;
+        if (k ^ 3) access.get = p2 ? x => (k ^ 1 ? __privateGet : __privateMethod)(x, target, k ^ 4 ? extra : desc.get) : x => x[name];
+        if (k > 2) access.set = p2 ? (x, y) => __privateSet(x, target, y, k ^ 4 ? extra : desc.set) : (x, y) => x[name] = y;
       }
-      (it = (0, decorators[i])(k ? k < 4 ? p ? extra : desc[key] : k > 4 ? void 0 : {
+      (it = (0, decorators[i])(k ? k < 4 ? p2 ? extra : desc[key] : k > 4 ? void 0 : {
         get: desc.get,
         set: desc.set
       } : target, ctx), done._ = 1);
-      if (k ^ 4 || it === void 0) __expectFn(it) && (k > 4 ? initializers.unshift(it) : k ? p ? extra = it : desc[key] = it : target = it); else if (typeof it !== "object" || it === null) __typeError("Object expected"); else (__expectFn(fn = it.get) && (desc.get = fn), __expectFn(fn = it.set) && (desc.set = fn), __expectFn(fn = it.init) && initializers.unshift(fn));
+      if (k ^ 4 || it === void 0) __expectFn(it) && (k > 4 ? initializers.unshift(it) : k ? p2 ? extra = it : desc[key] = it : target = it); else if (typeof it !== "object" || it === null) __typeError("Object expected"); else (__expectFn(fn = it.get) && (desc.get = fn), __expectFn(fn = it.set) && (desc.set = fn), __expectFn(fn = it.init) && initializers.unshift(fn));
     }
-    return (k || __decoratorMetadata(array, target), desc && __defProp(target, name, desc), p ? k ^ 4 ? extra : desc : target);
+    return (k || __decoratorMetadata(array, target), desc && __defProp(target, name, desc), p2 ? k ^ 4 ? extra : desc : target);
   };
   var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
   var __accessCheck = (obj, member, msg) => member.has(obj) || __typeError("Cannot " + msg);
@@ -100,15 +94,15 @@ export default require => {
       var fulfilled = value => {
         try {
           step(generator.next(value));
-        } catch (e2) {
-          reject(e2);
+        } catch (e5) {
+          reject(e5);
         }
       };
       var rejected = value => {
         try {
           step(generator.throw(value));
-        } catch (e2) {
-          reject(e2);
+        } catch (e5) {
+          reject(e5);
         }
       };
       var step = x => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
@@ -129,9 +123,9 @@ export default require => {
         } : y, yes, no) : yes({
           value: y,
           done
-        })).catch(e2 => resume("throw", e2, yes, no));
-      } catch (e2) {
-        no(e2);
+        })).catch(e5 => resume("throw", e5, yes, no));
+      } catch (e5) {
+        no(e5);
       }
     }, method = (k, call, wait, clear) => it[k] = x => (call = new Promise((yes, no, run) => (run = () => resume(k, x, yes, no), q ? q.then(run) : run())), clear = () => q === wait && (q = 0), q = wait = call.then(clear, clear), call), q, it = {};
     return (generator = generator.apply(__this, __arguments), it[__knownSymbol("asyncIterator")] = () => it, method("next"), method("throw"), method("return"), it);
@@ -168,13 +162,13 @@ export default require => {
   __export(index_exports, {
     default: () => RepeatModulePlugin
   });
-  function n(n2, r) {
-    const t2 = {
-      args: n2,
-      returnType: r
+  function n(n3, r2) {
+    const t4 = {
+      args: n3,
+      returnType: r2
     };
-    return function (n3, r2) {
-      n3.signature = t2;
+    return function (n4, r3) {
+      n4.signature = t4;
     };
   }
   var _;
@@ -182,15 +176,15 @@ export default require => {
     (_2.UNKNOWN = "__unknown", _2.INTERNAL = "__internal", _2.EVALUATOR = "__evaluator", _2.EVALUATOR_SYNTAX = "__evaluator_syntax", _2.EVALUATOR_TYPE = "__evaluator_type", _2.EVALUATOR_RUNTIME = "__evaluator_runtime");
   })(_ || (_ = {}));
   var o = class extends Error {
-    constructor(r) {
-      super(r);
+    constructor(r2) {
+      super(r2);
       __publicField(this, "name", "ConductorError");
       __publicField(this, "errorType", _.UNKNOWN);
     }
   };
   var s = class extends o {
-    constructor(r) {
-      super(r);
+    constructor(r2) {
+      super(r2);
       __publicField(this, "name", "ConductorInternalError");
       __publicField(this, "errorType", _.INTERNAL);
     }
@@ -204,24 +198,24 @@ export default require => {
     (O2[O2.PROTOCOL_VERSION = 0] = "PROTOCOL_VERSION", O2[O2.PROTOCOL_MIN_VERSION = 0] = "PROTOCOL_MIN_VERSION", O2[O2.SETUP_MESSAGES_BUFFER_SIZE = 10] = "SETUP_MESSAGES_BUFFER_SIZE");
   })(O || (O = {}));
   var o2 = class {
-    constructor(t2, o3, s3) {
+    constructor(t4, o4, s5) {
       __publicField(this, "exports", []);
       __publicField(this, "exportedNames", []);
       __publicField(this, "evaluator");
-      this.evaluator = s3;
+      this.evaluator = s5;
     }
     initialise() {
       return __async(this, null, function* () {
-        for (const o3 of this.exportedNames) {
-          const s3 = this[o3];
-          if (!s3.signature || "function" != typeof s3 || "string" != typeof o3) throw new s(`'${String(o3)}' is not an exportable method`);
-          const r = s3.bind(this);
-          (r.signature = s3.signature, s3.sync && (r.sync = s3.sync.bind(this)));
-          const i = yield this.evaluator.closure_make(s3.signature, r);
+        for (const o4 of this.exportedNames) {
+          const s5 = this[o4];
+          if (!s5.signature || "function" != typeof s5 || "string" != typeof o4) throw new s(`'${String(o4)}' is not an exportable method`);
+          const r2 = s5.bind(this);
+          (r2.signature = s5.signature, s5.sync && (r2.sync = s5.sync.bind(this)));
+          const i = yield this.evaluator.closure_make(s5.signature, r2);
           this.exports.push({
-            symbol: o3,
+            symbol: o4,
             value: i,
-            signature: s3.signature
+            signature: s5.signature
           });
         }
       });
@@ -233,21 +227,36 @@ export default require => {
     (E2[E2.VOID = 0] = "VOID", E2[E2.BOOLEAN = 1] = "BOOLEAN", E2[E2.NUMBER = 2] = "NUMBER", E2[E2.CONST_STRING = 3] = "CONST_STRING", E2[E2.EMPTY_LIST = 4] = "EMPTY_LIST", E2[E2.PAIR = 5] = "PAIR", E2[E2.ARRAY = 6] = "ARRAY", E2[E2.CLOSURE = 7] = "CLOSURE", E2[E2.OPAQUE = 8] = "OPAQUE", E2[E2.LIST = 9] = "LIST", E2[E2.ANY = 10] = "ANY", E2[E2.INTEGER = 11] = "INTEGER");
   })(E || (E = {}));
   var a;
-  !(function (a2) {
-    (a2[a2.HELLO = 0] = "HELLO", a2[a2.ABORT = 1] = "ABORT", a2[a2.ENTRY = 2] = "ENTRY");
+  !(function (a3) {
+    (a3[a3.HELLO = 0] = "HELLO", a3[a3.ABORT = 1] = "ABORT", a3[a3.ENTRY = 2] = "ENTRY");
   })(a || (a = {}));
   var N;
   !(function (N2) {
     (N2[N2.ONLINE = 0] = "ONLINE", N2[N2.EVAL_READY = 1] = "EVAL_READY", N2[N2.RUNNING = 2] = "RUNNING", N2[N2.WAITING = 3] = "WAITING", N2[N2.BREAKPOINT = 4] = "BREAKPOINT", N2[N2.STOPPED = 5] = "STOPPED", N2[N2.ERROR = 6] = "ERROR");
   })(N || (N = {}));
-  var import_rttcErrors = __require("js-slang/dist/errors/rttcErrors");
-  var import_base = __require("js-slang/dist/errors/base");
-  var import_rttc = __require("js-slang/dist/utils/rttc");
-  var import_operators = __require("js-slang/dist/utils/operators");
-  function repeat(evaluator, func, n2) {
+  var s3 = class extends o {
+    constructor(r2, o4, s5, e5) {
+      super(`${void 0 !== o4 ? `${e5 ? e5 + ":" : ""}${o4}${void 0 !== s5 ? ":" + s5 : ""}: ` : ""}${r2}`);
+      __publicField(this, "name", "EvaluatorError");
+      __publicField(this, "errorType", _.EVALUATOR);
+      __publicField(this, "rawMessage");
+      __publicField(this, "line");
+      __publicField(this, "column");
+      __publicField(this, "fileName");
+      (this.rawMessage = r2, this.line = o4, this.column = s5, this.fileName = e5);
+    }
+  };
+  var e2 = class extends s3 {
+    constructor() {
+      super(...arguments);
+      __publicField(this, "name", "EvaluatorRuntimeError");
+      __publicField(this, "errorType", _.EVALUATOR_RUNTIME);
+    }
+  };
+  function repeat(evaluator, func, n3) {
     return __asyncGenerator(this, null, function* () {
-      if (!Number.isInteger(n2.value) || n2.value < 0) {
-        throw new import_base.GeneralRuntimeError(`repeat: Expected integer \u2265 0, got ${n2.value}.`);
+      if (!Number.isInteger(n3.value) || n3.value < 0) {
+        throw new e2(`repeat: Expected integer \u2265 0, got ${n3.value}.`);
       }
       function identity(x) {
         return __asyncGenerator(this, null, function* () {
@@ -258,7 +267,7 @@ export default require => {
         return __asyncGenerator(this, null, function* () {
           const recursiveFunc = yield* __yieldStar(repeat(evaluator, func, {
             type: E.NUMBER,
-            value: n2.value - 1
+            value: n3.value - 1
           }));
           return yield* __yieldStar(evaluator.closure_call_unchecked(func, [yield* __yieldStar(evaluator.closure_call_unchecked(recursiveFunc, [x]))]));
         });
@@ -267,7 +276,7 @@ export default require => {
         name: "function",
         args: [E.VOID],
         returnType: E.VOID
-      }, n2.value === 0 ? identity : composition));
+      }, n3.value === 0 ? identity : composition));
     });
   }
   function twice(evaluator, func) {
@@ -294,9 +303,9 @@ export default require => {
       this.id = "repeat";
       this.exportedNames = ["repeat", "twice", "thrice"];
     }
-    repeat(func, n2) {
+    repeat(func, n3) {
       return __asyncGenerator(this, null, function* () {
-        return yield* __yieldStar(repeat(this.evaluator, func, n2));
+        return yield* __yieldStar(repeat(this.evaluator, func, n3));
       });
     }
     twice(func) {
