@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import pathlib from 'path';
 import { uniq } from 'es-toolkit';
 import { validate } from 'jsonschema';
-import { tabsDir } from './getGitRoot.js';
+import { docsVisibleBundlesPath, tabsDir } from './getGitRoot.js';
 import manifestSchema from './manifest.schema.json' with { type: 'json' };
 import type { BundleManifest, InputAsset, ResolvedBundle, ResolvedTab, ResultType } from './types.js';
 import { filterAsync, isNodeError, mapAsync } from './utils.js';
@@ -266,6 +266,34 @@ export async function resolveAllBundles(bundleDir: string): Promise<ResolveAllBu
     severity: 'success',
     bundles: combinedManifests
   };
+}
+
+/**
+ * Filters `bundles` down to only the ones listed in `conductor-modules.json` at the root of the
+ * repository - a manually maintained allowlist of bundles that have been migrated to Conductor
+ * and are ready for students to see on the documentation site. Bundles left out (because they
+ * haven't been migrated yet, and so don't actually work in the current Source Academy frontend)
+ * are silently excluded from the generated docs, rather than confusing students with pages for
+ * modules they can't use.
+ *
+ * This only affects what the documentation site shows - it's unrelated to `build/modules.json`
+ * (built by `buildManifest`), which is the separate manifest the Source Academy frontend/js-slang
+ * uses to determine which modules actually exist and can be loaded in the IDE.
+ *
+ * Throws if the allowlist names a bundle that doesn't exist in `bundles` - almost certainly a typo
+ * in a file that's hand-edited, so failing loudly here is far more useful than silently omitting
+ * whatever was misspelled.
+ */
+export async function filterDocsVisibleBundles(bundles: Record<string, ResolvedBundle>): Promise<Record<string, ResolvedBundle>> {
+  const raw = await fs.readFile(docsVisibleBundlesPath, 'utf-8');
+  const visibleNames = JSON.parse(raw) as string[];
+
+  const unknownNames = visibleNames.filter(name => !(name in bundles));
+  if (unknownNames.length > 0) {
+    throw new Error(`conductor-modules.json lists unknown bundle(s): ${unknownNames.join(', ')}`);
+  }
+
+  return Object.fromEntries(visibleNames.map(name => [name, bundles[name]]));
 }
 
 /**
