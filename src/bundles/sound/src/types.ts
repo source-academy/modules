@@ -27,6 +27,13 @@ export type Wave = {
   readonly sync?: SyncWave;
 };
 
+export interface StereoSamples {
+  left: Float32Array<ArrayBuffer>;
+  right: Float32Array<ArrayBuffer>;
+}
+
+export type SoundSampler = (duration: number) => AsyncGenerator<void, StereoSamples, undefined>;
+
 /**
  * A Sound is always stereo internally: `[[left_wave, right_wave], duration]`, where duration is
  * the length of the sound in seconds. "Mono" isn't a separate type - it's just the common case,
@@ -40,6 +47,7 @@ export interface Sound {
   leftWave: Wave;
   rightWave: Wave;
   duration: number;
+  sampleChannels?: SoundSampler;
 }
 
 export type SoundProducer = (freq: number, duration: number) => Sound;
