@@ -1,16 +1,43 @@
+import { Channel } from '@sourceacademy/conductor/conduit';
 import { DataType } from '@sourceacademy/conductor/types';
 import { stringify } from 'js-slang/dist/utils/stringify';
 import { describe, expect, it, test, vi } from 'vitest';
 import RuneModulePlugin from '..';
 import * as funcs from '../functions';
-import { RUNE_TAB_NAME } from '../protocol';
+import { RUNE_CHANNEL_ID, RUNE_TAB_NAME, type RuneChannelMessage } from '../protocol';
 import type { Rune } from '../rune';
+
+function makeChannelEvaluator() {
+  const store: unknown[] = [];
+  return {
+    hasDataInterface: true as const,
+    closure_make: vi.fn(async (sig, func, dependsOn) => ({
+      type: DataType.CLOSURE,
+      value: { sig, dependsOn, func }
+    })),
+    opaque_make: vi.fn(async value => {
+      store.push(value);
+      return {
+        type: DataType.OPAQUE,
+        value: store.length - 1
+      };
+    }),
+    opaque_get: vi.fn(async (value: { value: number }) => store[value.value])
+  };
+}
+
+function waitForChannelMessages() {
+  return new Promise(resolve => setTimeout(resolve, 50));
+}
 
 function createRunePlugin(tabs: string[] = []) {
   const sentMessages: unknown[] = [];
+  let subscriber: (message: RuneChannelMessage) => void = () => {};
   const channel = {
     send: vi.fn(message => sentMessages.push(message)),
-    subscribe: vi.fn(),
+    subscribe: vi.fn((newSubscriber: (message: RuneChannelMessage) => void) => {
+      subscriber = newSubscriber;
+    }),
     unsubscribe: vi.fn(),
     close: vi.fn(),
     name: 'rune-test-channel'
@@ -38,13 +65,14 @@ function createRunePlugin(tabs: string[] = []) {
     evaluator,
     plugin,
     sentMessages,
-    tabLoader
+    tabLoader,
+    requestTab: () => subscriber({ type: 'request' })
   };
 }
 
 describe(RuneModulePlugin, () => {
   test('exported methods stay bound when called by a Conductor closure', async () => {
-    const { evaluator, plugin, sentMessages } = createRunePlugin();
+    const { evaluator, plugin, sentMessages, requestTab } = createRunePlugin();
 
     await plugin.initialise();
 
@@ -54,6 +82,7 @@ describe(RuneModulePlugin, () => {
     };
     const runeValue = await evaluator.opaque_make(funcs.blank);
     const result = await closureObject.func.call(closureObject, runeValue).next();
+    requestTab();
 
     expect(result.done).toBe(true);
     expect(sentMessages).toHaveLength(1);
@@ -68,6 +97,35 @@ describe(RuneModulePlugin, () => {
       }
     });
     expect('draw' in (sentMessages[0] as any).rune).toBe(false);
+  });
+
+  test('replays displays made before the tab request once and in order', async () => {
+    const { port1, port2 } = new MessageChannel();
+    const runnerChannel = new Channel<RuneChannelMessage>(RUNE_CHANNEL_ID, port1);
+    const webChannel = new Channel<RuneChannelMessage>(RUNE_CHANNEL_ID, port2);
+    const tabLoader = {
+      tabs: ['Rune'],
+      loadTab: vi.fn()
+    };
+    const evaluator = makeChannelEvaluator();
+    const plugin = new RuneModulePlugin({} as any, [runnerChannel] as any, evaluator as any, tabLoader);
+
+    await plugin.initialise();
+
+    const square = plugin.exports.find(each => each.symbol === 'square')!.value as any;
+    const circle = plugin.exports.find(each => each.symbol === 'circle')!.value as any;
+    await plugin.show(square).next();
+    await plugin.anaglyph(circle).next();
+
+    await waitForChannelMessages();
+    const received: RuneChannelMessage[] = [];
+    webChannel.subscribe(message => received.push(message));
+    webChannel.send({ type: 'request' });
+    await waitForChannelMessages();
+
+    const renders = received.filter(message => message.type === 'render');
+    expect(tabLoader.loadTab).toHaveBeenCalledExactlyOnceWith('Rune');
+    expect(renders.map(render => render.mode)).toEqual(['normal', 'anaglyph']);
   });
 
   test('initialise only exports primitive runes once', async () => {

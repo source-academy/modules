@@ -82,6 +82,7 @@ export default class RuneModulePlugin extends BaseModulePlugin {
   private readonly __displayed: RuneDisplayMessage[] = [];
   private __initialised = false;
   private __tabLoaded = false;
+  private __tabRequested = false;
 
   /**
    * Rune with the shape of a blank square
@@ -194,6 +195,7 @@ export default class RuneModulePlugin extends BaseModulePlugin {
     this.__tabLoader = tabLoader;
     this.__runeChannel.subscribe(message => {
       if (message.type === 'request') {
+        this.__tabRequested = true;
         this.__displayed.forEach(displayedMessage => this.__runeChannel.send(displayedMessage));
       }
     });
@@ -219,22 +221,21 @@ export default class RuneModulePlugin extends BaseModulePlugin {
 
   /**
    * Loads the host-side tab
-   * @returns Whether the tab was already loaded
    */
-  private __loadRuneTab(): boolean {
-    if (this.__tabLoaded || this.__tabLoader === undefined) return true;
+  private __loadRuneTab(): void {
+    if (this.__tabLoaded || this.__tabLoader === undefined) return;
 
     const tabName = this.__tabLoader.tabs.find(tab => tab === RUNE_TAB_NAME);
-    if (tabName === undefined) return true;
+    if (tabName === undefined) return;
 
     this.__tabLoader.loadTab(tabName);
     this.__tabLoaded = true;
-    return false;
   }
 
   private async __display(message: RuneDisplayMessage): Promise<void> {
     this.__displayed.push(message);
-    if (this.__loadRuneTab()) {
+    this.__loadRuneTab();
+    if (this.__tabRequested) {
       this.__runeChannel.send(message);
     }
   }
