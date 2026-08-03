@@ -7,16 +7,17 @@
  * @module rune
  * @author Hou Ruomu
  */
+import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
 import { BaseModulePlugin } from '@sourceacademy/conductor/module';
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 
 import { attachModuleMethod } from '@sourceacademy/modules-lib/conductor/methods';
-import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import * as funcs from './functions';
 import {
   RUNE_CHANNEL_ID,
+  RUNE_TAB_NAME,
   serializeRune,
   type RuneAnimationMessage,
   type RuneChannelMessage,
@@ -79,6 +80,7 @@ export default class RuneModulePlugin extends BaseModulePlugin {
   private readonly __runeChannel: IChannel<RuneChannelMessage>;
   private readonly __tabLoader: RuneTabLoader | undefined;
   private readonly __displayed: RuneDisplayMessage[] = [];
+  private __initialised = false;
   private __tabLoaded = false;
   private __tabRequested = false;
 
@@ -183,11 +185,11 @@ export default class RuneModulePlugin extends BaseModulePlugin {
     evaluator: IInterfacableEvaluator,
     tabLoader: RuneTabLoader
   ) {
-    super(conduit, [runeChannel], evaluator);
-
     if (!runeChannel) {
-      throw new GeneralRuntimeError('Rune channel is required but was not provided.');
+      throw new EvaluatorRuntimeError('Rune channel is required but was not provided.');
     }
+
+    super(conduit, [runeChannel], evaluator);
 
     this.__runeChannel = runeChannel as IChannel<RuneChannelMessage>;
     this.__tabLoader = tabLoader;
@@ -200,6 +202,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
   }
 
   override async initialise() {
+    if (this.__initialised) return;
+    this.__initialised = true;
+
     await super.initialise();
     for (const name in funcs.RuneFunctions) {
       const value = funcs.RuneFunctions[name as keyof typeof funcs.RuneFunctions];
@@ -220,7 +225,7 @@ export default class RuneModulePlugin extends BaseModulePlugin {
   private __loadRuneTab(): void {
     if (this.__tabLoaded || this.__tabLoader === undefined) return;
 
-    const tabName = this.__tabLoader.tabs[0];
+    const tabName = this.__tabLoader.tabs.find(tab => tab === RUNE_TAB_NAME);
     if (tabName === undefined) return;
 
     this.__tabLoader.loadTab(tabName);

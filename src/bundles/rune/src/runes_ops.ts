@@ -1,8 +1,7 @@
 /**
  * This file contains the bundle's private functions for runes.
  */
-import { InvalidParameterTypeError } from '@sourceacademy/modules-lib/errors';
-import { hexToColor as hexToColorUtil } from '@sourceacademy/modules-lib/utilities';
+import { EvaluatorParameterTypeError, EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import { Rune } from './rune';
 
 // =============================================================================
@@ -10,7 +9,7 @@ import { Rune } from './rune';
 // =============================================================================
 export function throwIfNotRune(func_name: string, rune: unknown, param_name?: string): asserts rune is Rune {
   if (!(rune instanceof Rune)) {
-    throw new InvalidParameterTypeError('Rune', rune, func_name, param_name);
+    throw new EvaluatorParameterTypeError(func_name, param_name, 'Rune', rune);
   }
 }
 
@@ -329,8 +328,38 @@ export function getRibbon() {
 // colorPalette is used in generateFlattenedRuneList to generate a random color
 
 export function hexToColor(hex: string): number[] {
-  const result = hexToColorUtil(hex);
-  return [ ...result, 1];
+  if (typeof hex !== 'string') {
+    throw new EvaluatorParameterTypeError(hexToColor.name, undefined, 'string', hex);
+  }
+
+  const groups = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/iu.exec(hex);
+
+  if (!groups) {
+    throw new EvaluatorRuntimeError(`${hexToColor.name}: Invalid color hex string: ${hex}`);
+  }
+
+  return [
+    parseInt(groups[1], 16) / 0xff,
+    parseInt(groups[2], 16) / 0xff,
+    parseInt(groups[3], 16) / 0xff,
+    1
+  ];
+}
+
+export function hueToRgb(hue: number): [r: number, g: number, b: number] {
+  const h = (hue % 1 + 1) % 1;
+  const i = Math.floor(h * 6);
+  const f = h * 6 - i;
+  const q = 1 - f;
+
+  switch (i) {
+    case 0: return [255, Math.floor(f * 255), 0];
+    case 1: return [Math.floor(q * 255), 255, 0];
+    case 2: return [0, 255, Math.floor(f * 255)];
+    case 3: return [0, Math.floor(q * 255), 255];
+    case 4: return [Math.floor(f * 255), 0, 255];
+    default: return [255, 0, Math.floor(q * 255)];
+  }
 }
 
 export function addColorFromHex(rune: Rune, hex: string) {
