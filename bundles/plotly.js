@@ -342,6 +342,33 @@ export default require => {
   !(function (N2) {
     (N2[N2.ONLINE = 0] = "ONLINE", N2[N2.EVAL_READY = 1] = "EVAL_READY", N2[N2.RUNNING = 2] = "RUNNING", N2[N2.WAITING = 3] = "WAITING", N2[N2.BREAKPOINT = 4] = "BREAKPOINT", N2[N2.STOPPED = 5] = "STOPPED", N2[N2.ERROR = 6] = "ERROR");
   })(N || (N = {}));
+  var soundSamplerCache = new WeakMap();
+  function rememberSoundSampler(evaluator, sound, leftClosure, rightClosure) {
+    if (!sound.sampleChannels) return;
+    let byLeftClosure = soundSamplerCache.get(evaluator);
+    if (!byLeftClosure) {
+      byLeftClosure = new Map();
+      soundSamplerCache.set(evaluator, byLeftClosure);
+    }
+    let byRightClosure = byLeftClosure.get(leftClosure.value);
+    if (!byRightClosure) {
+      byRightClosure = new Map();
+      byLeftClosure.set(leftClosure.value, byRightClosure);
+    }
+    let byDuration = byRightClosure.get(rightClosure.value);
+    if (!byDuration) {
+      byDuration = new Map();
+      byRightClosure.set(rightClosure.value, byDuration);
+    }
+    byDuration.set(sound.duration, sound.sampleChannels);
+  }
+  function restoreSoundSampler(evaluator, sound, leftClosure, rightClosure) {
+    var _a, _b, _c;
+    const sampleChannels = (_c = (_b = (_a = soundSamplerCache.get(evaluator)) === null || _a === void 0 ? void 0 : _a.get(leftClosure.value)) === null || _b === void 0 ? void 0 : _b.get(rightClosure.value)) === null || _c === void 0 ? void 0 : _c.get(sound.duration);
+    return sampleChannels ? Object.assign(Object.assign({}, sound), {
+      sampleChannels
+    }) : sound;
+  }
   var Accidental;
   (function (Accidental2) {
     Accidental2["SHARP"] = "#";
@@ -625,19 +652,35 @@ export default require => {
       let prev_value = 0;
       const sync = wave.sync;
       for (let i = 0; i < length; i += 1) {
-        let temp = sync ? sync(i / FS) : yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(wave(i / FS)))));
-        if (temp > 1) {
-          temp = 1;
-        } else if (temp < -1) {
-          temp = -1;
-        }
-        if (temp === 0 && Math.abs(temp - prev_value) > 0.01) {
-          temp = prev_value * 0.999;
-        }
+        const temp = smoothSample(sync ? sync(i / FS) : yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(wave(i / FS))))), prev_value);
         channel[i] = temp;
         prev_value = temp;
       }
       return yield __await2(channel);
+    });
+  }
+  function smoothSample(sample, previousSample) {
+    let temp = sample;
+    if (temp > 1) {
+      temp = 1;
+    } else if (temp < -1) {
+      temp = -1;
+    }
+    if (temp === 0 && Math.abs(temp - previousSample) > 0.01) {
+      temp = previousSample * 0.999;
+    }
+    return temp;
+  }
+  function sampleSound(sound) {
+    return __asyncGenerator2(this, arguments, function* sampleSound_1() {
+      if (sound.sampleChannels) {
+        return yield __await2(yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(sound.sampleChannels(sound.duration))))));
+      }
+      const left = yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(sampleWave(sound.leftWave, sound.duration)))));
+      return yield __await2({
+        left,
+        right: sound.rightWave === sound.leftWave ? left : yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(sampleWave(sound.rightWave, sound.duration)))))
+      });
     });
   }
   function interpolatedWave(samples, sampleRate) {
@@ -743,8 +786,7 @@ to obtain permission to use microphone.`);
         return yield __await2(sound);
       }
       yield __await2(io().notifyConstructing());
-      const leftSamples = yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(sampleWave(sound.leftWave, duration)))));
-      const rightSamples = sound.rightWave === sound.leftWave ? leftSamples : yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(sampleWave(sound.rightWave, duration)))));
+      const {left: leftSamples, right: rightSamples} = yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(sampleSound(sound)))));
       globalVars.activePlayCount += 1;
       const generation = playGeneration;
       void (() => __awaiter(this, void 0, void 0, function* () {
@@ -971,6 +1013,11 @@ to obtain permission to use microphone.`);
       });
     };
   }
+  function make_stereo_sound_with_sampler(left_wave, right_wave, duration, sampleChannels) {
+    return Object.assign(Object.assign({}, make_stereo_sound(left_wave, right_wave, duration)), {
+      sampleChannels
+    });
+  }
   function squash(sound) {
     const {leftWave, rightWave, duration} = sound;
     let averaged;
@@ -993,11 +1040,52 @@ to obtain permission to use microphone.`);
     const clamped = Math.max(-1, Math.min(1, amount));
     return sound => {
       const {leftWave: wave, duration} = squash(sound);
-      return make_stereo_sound(gainWave(wave, (1 - clamped) / 2), gainWave(wave, (1 + clamped) / 2), duration);
+      return make_stereo_sound_with_sampler(gainWave(wave, (1 - clamped) / 2), gainWave(wave, (1 + clamped) / 2), duration, duration2 => samplePannedChannels(wave, duration2, clamped));
     };
+  }
+  function samplePannedChannels(wave, duration, amount) {
+    return __asyncGenerator2(this, arguments, function* samplePannedChannels_1() {
+      const length = Math.ceil(FS * duration);
+      const left = new Float32Array(length);
+      const right = new Float32Array(length);
+      const leftGain = (1 - amount) / 2;
+      const rightGain = (1 + amount) / 2;
+      let prevLeft = 0;
+      let prevRight = 0;
+      const sync = wave.sync;
+      for (let i = 0; i < length; i += 1) {
+        const t5 = i / FS;
+        const sample = sync ? sync(t5) : yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(wave(t5)))));
+        const leftSample = smoothSample(leftGain * sample, prevLeft);
+        const rightSample = smoothSample(rightGain * sample, prevRight);
+        left[i] = leftSample;
+        right[i] = rightSample;
+        prevLeft = leftSample;
+        prevRight = rightSample;
+      }
+      return yield __await2({
+        left,
+        right
+      });
+    });
   }
   function panModAmountWave(modulator) {
     const {leftWave, rightWave} = modulator;
+    if (leftWave === rightWave) {
+      if (leftWave.sync) {
+        const sync = leftWave.sync;
+        return syncWave(t5 => {
+          const output = sync(t5);
+          return Math.max(-1, Math.min(1, output + output));
+        });
+      }
+      return function (t5) {
+        return __asyncGenerator2(this, arguments, function* () {
+          const output = yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(leftWave(t5)))));
+          return yield __await2(Math.max(-1, Math.min(1, output + output)));
+        });
+      };
+    }
     if (leftWave.sync && rightWave.sync) {
       const leftSync = leftWave.sync;
       const rightSync = rightWave.sync;
@@ -1017,9 +1105,9 @@ to obtain permission to use microphone.`);
       if (amountWave.sync && wave.sync) {
         const amountSync = amountWave.sync;
         const sync = wave.sync;
-        return make_stereo_sound(syncWave(t5 => (1 - amountSync(t5)) / 2 * sync(t5)), syncWave(t5 => (1 + amountSync(t5)) / 2 * sync(t5)), duration);
+        return make_stereo_sound_with_sampler(syncWave(t5 => (1 - amountSync(t5)) / 2 * sync(t5)), syncWave(t5 => (1 + amountSync(t5)) / 2 * sync(t5)), duration, duration2 => samplePanModChannels(wave, amountWave, duration2));
       }
-      return make_stereo_sound(function (t5) {
+      return make_stereo_sound_with_sampler(function (t5) {
         return __asyncGenerator2(this, arguments, function* () {
           return yield __await2((1 - (yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(amountWave(t5))))))) / 2 * (yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(wave(t5)))))));
         });
@@ -1027,8 +1115,34 @@ to obtain permission to use microphone.`);
         return __asyncGenerator2(this, arguments, function* () {
           return yield __await2((1 + (yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(amountWave(t5))))))) / 2 * (yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(wave(t5)))))));
         });
-      }, duration);
+      }, duration, duration2 => samplePanModChannels(wave, amountWave, duration2));
     };
+  }
+  function samplePanModChannels(wave, amountWave, duration) {
+    return __asyncGenerator2(this, arguments, function* samplePanModChannels_1() {
+      const length = Math.ceil(FS * duration);
+      const left = new Float32Array(length);
+      const right = new Float32Array(length);
+      let prevLeft = 0;
+      let prevRight = 0;
+      const amountSync = amountWave.sync;
+      const waveSync = wave.sync;
+      for (let i = 0; i < length; i += 1) {
+        const t5 = i / FS;
+        const amount = amountSync ? amountSync(t5) : yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(amountWave(t5)))));
+        const sample = waveSync ? waveSync(t5) : yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(wave(t5)))));
+        const leftSample = smoothSample((1 - amount) / 2 * sample, prevLeft);
+        const rightSample = smoothSample((1 + amount) / 2 * sample, prevRight);
+        left[i] = leftSample;
+        right[i] = rightSample;
+        prevLeft = leftSample;
+        prevRight = rightSample;
+      }
+      return yield __await2({
+        left,
+        right
+      });
+    });
   }
   function bell(note, duration) {
     return stacking_adsr(square_sound, midi_note_to_frequency(note), duration, [adsrTransformer(0, 0.6, 0, 0.05), adsrTransformer(0, 0.6618, 0, 0.05), adsrTransformer(0, 0.7618, 0, 0.05), adsrTransformer(0, 0.9071, 0, 0.05)]);
@@ -1291,6 +1405,7 @@ to obtain permission to use microphone.`);
     return __awaiter2(this, void 0, void 0, function* () {
       const leftClosure = yield waveToConductorClosure(evaluator, sound.leftWave);
       const rightClosure = sound.rightWave === sound.leftWave ? leftClosure : yield waveToConductorClosure(evaluator, sound.rightWave);
+      rememberSoundSampler(evaluator, sound, leftClosure, rightClosure);
       const wavesPair = yield evaluator.pair_make(leftClosure, rightClosure);
       return evaluator.pair_make(wavesPair, {
         type: E.NUMBER,
@@ -1338,11 +1453,11 @@ to obtain permission to use microphone.`);
       }
       const leftWave = closureToWave(evaluator, leftTv);
       const rightWave = leftTv.value === rightTv.value ? leftWave : closureToWave(evaluator, rightTv);
-      return {
+      return restoreSoundSampler(evaluator, {
         leftWave,
         rightWave,
         duration: durationTv.value
-      };
+      }, leftTv, rightTv);
     });
   }
   function conductorListToSounds(evaluator, value) {
