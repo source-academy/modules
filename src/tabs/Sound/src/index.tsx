@@ -7,6 +7,11 @@ type Status = 'idle' | 'constructing' | 'playing' | 'recording';
 
 export const SOUND_TAB_ID = 'sound';
 
+// A loop calling play_in_tab() many times in one Run would otherwise grow __players (each entry
+// holding a full base64 WAV data URI plus a rendered <audio> element) without bound for the life
+// of that Run. Capped to the most recent entries instead.
+const MAX_PLAYER_BARS = 50;
+
 const STATUS_COLORS: Record<Status, string> = {
   idle: '#8A9BA8',
   constructing: '#B08D00',
@@ -76,10 +81,15 @@ function PlayerBarsView({ players }: { players: PlayerBarEntry[] }) {
     <div id="sound-player-bars">
       {players.map((player, index) => (
         <div key={player.id} style={{ marginTop: '0.5em' }}>
-          <p style={{ margin: '0 0 0.25em 0' }}>
+          <p id={`sound-player-label-${player.id}`} style={{ margin: '0 0 0.25em 0' }}>
             {`Sound ${index + 1}`}
           </p>
-          <audio src={player.dataUri} controls style={{ width: '100%' }} />
+          <audio
+            src={player.dataUri}
+            controls
+            style={{ width: '100%' }}
+            aria-labelledby={`sound-player-label-${player.id}`}
+          />
         </div>
       ))}
     </div>
@@ -180,6 +190,10 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
     return this.__status;
   }
 
+  getPlayers(): readonly PlayerBarEntry[] {
+    return this.__players;
+  }
+
   destroy(): void {
     // Called on every Run's teardown (the conductor is terminated as soon as the program
     // finishes evaluating), but sound's play() is intentionally fire-and-forget - a Run can
@@ -251,7 +265,10 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
    * its native controls.
    */
   async addPlayerToTab(wavDataUri: string): Promise<void> {
-    this.__players = [...this.__players, { id: this.__nextPlayerId, dataUri: wavDataUri }];
+    const players = [...this.__players, { id: this.__nextPlayerId, dataUri: wavDataUri }];
+    this.__players = players.length > MAX_PLAYER_BARS
+      ? players.slice(players.length - MAX_PLAYER_BARS)
+      : players;
     this.__nextPlayerId += 1;
     this.__emit();
   }
@@ -355,7 +372,10 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
   }
 
   private __ensureAudioContext(): AudioContext {
-    if (!this.__audioContext) {
+    // destroy() closes the context once nothing is pending (see __maybeFinalizeDestroy) but
+    // doesn't reset this field - a closed context is unusable, so treat it the same as absent
+    // rather than handing back a context that every subsequent call on it will reject.
+    if (!this.__audioContext || this.__audioContext.state === 'closed') {
       this.__audioContext = new AudioContext();
     }
     return this.__audioContext;

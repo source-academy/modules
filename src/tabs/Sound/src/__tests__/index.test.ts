@@ -62,11 +62,13 @@ function createMockAudioContext() {
   // A fresh source per createBufferSource() call - `bufferSource` tracks the most recently created
   // one, for tests that only ever have one source in play at a time to assert on.
   let bufferSource = makeMockBufferSource();
-
-  return {
+  const context = {
     get bufferSource() {
       return bufferSource;
     },
+    // Mirrors the real AudioContext: starts 'running', flips to 'closed' once close() settles -
+    // __ensureAudioContext() is expected to treat a closed context as unusable, not reuse it.
+    state: 'running' as AudioContextState,
     destination: {},
     createBuffer: vi.fn((_channels: number, length: number, sampleRate: number) => ({
       length,
@@ -83,8 +85,11 @@ function createMockAudioContext() {
       getChannelData: () => new Float32Array([0, 1, -1, 0]),
       sampleRate: 8000
     }),
-    close: vi.fn().mockResolvedValue(undefined)
+    close: vi.fn(async () => {
+      context.state = 'closed';
+    })
   };
+  return context;
 }
 
 function createMockMediaRecorder() {
@@ -111,6 +116,7 @@ describe(SoundTabPlugin, () => {
   let mockMediaRecorder: ReturnType<typeof createMockMediaRecorder>;
   let mockStream: MediaStream;
   let getUserMedia: ReturnType<typeof vi.fn>;
+  let audioContextConstructor: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     mockAudioContext = createMockAudioContext();
@@ -118,7 +124,10 @@ describe(SoundTabPlugin, () => {
     mockStream = {} as MediaStream;
     getUserMedia = vi.fn().mockResolvedValue(mockStream);
 
-    vi.stubGlobal('AudioContext', function (this: unknown) { return mockAudioContext; });
+    // A spy (not just a stub) so tests can assert on how many times a fresh AudioContext was
+    // actually constructed - always returns the current mockAudioContext, regardless of call count.
+    audioContextConstructor = vi.fn(function (this: unknown) { return mockAudioContext; });
+    vi.stubGlobal('AudioContext', audioContextConstructor);
     vi.stubGlobal('MediaRecorder', function (this: unknown) { return mockMediaRecorder; });
     vi.stubGlobal('navigator', { mediaDevices: { getUserMedia } });
 
@@ -186,6 +195,22 @@ describe(SoundTabPlugin, () => {
     // Now both have actually finished.
     expect(mockAudioContext.close).toHaveBeenCalledOnce();
     expect(mockAudioContext.createBufferSource).toHaveBeenCalledTimes(2);
+  });
+
+  test('a later playSamples() after destroy() has closed the AudioContext gets a fresh one instead of reusing the closed one', async () => {
+    // Regression test: destroy() closes the AudioContext but never resets the field pointing at
+    // it. Without checking .state, __ensureAudioContext() would hand back the same, now-unusable
+    // closed context to whatever playSamples() call is still in flight (e.g. one whose sampling
+    // was still running when the Run ended).
+    const samples = new Float32Array([0]);
+    await plugin.playSamples(samples, samples, 8000);
+    expect(audioContextConstructor).toHaveBeenCalledOnce();
+
+    plugin.destroy();
+    expect(mockAudioContext.state).toBe('closed');
+
+    await expect(plugin.playSamples(samples, samples, 8000)).resolves.toBeUndefined();
+    expect(audioContextConstructor).toHaveBeenCalledTimes(2);
   });
 
   describe('requestMicPermission', () => {
@@ -300,6 +325,23 @@ describe(SoundTabPlugin, () => {
       plugin.subscribe(listener);
       await plugin.addPlayerToTab('data:audio/wav;base64,AAAA');
       expect(listener).toHaveBeenCalled();
+    });
+
+    test('caps the player list to the most recent entries instead of growing without bound', async () => {
+      // Regression test: a loop calling play_in_tab() many times in one Run must not accumulate
+      // an ever-growing list of full WAV data URIs and rendered <audio> elements for the tab's
+      // lifetime - only the most recent entries are kept.
+      const total = 55;
+      for (let i = 0; i < total; i += 1) {
+        await plugin.addPlayerToTab(`data:audio/wav;base64,entry-${i}`);
+      }
+
+      const players = plugin.getPlayers();
+      expect(players.length).toBeLessThan(total);
+      // The most recent entry is always kept, regardless of the cap.
+      expect(players.at(-1)?.dataUri).toBe(`data:audio/wav;base64,entry-${total - 1}`);
+      // The oldest entries are the ones dropped, not ones from the middle.
+      expect(players.some(player => player.dataUri === 'data:audio/wav;base64,entry-0')).toBe(false);
     });
   });
 
