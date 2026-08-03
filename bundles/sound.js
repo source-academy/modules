@@ -472,9 +472,11 @@ export default require => {
   var pre_recording_signal_pause_ms = 200;
   var globalVars = {
     micPermissionGranted: null,
-    activePlayCount: 0
+    activePlayCount: 0,
+    recordingInProgress: false
   };
   var playGeneration = 0;
+  var recordingGeneration = 0;
   var soundIO;
   function setSoundIO(bridge) {
     soundIO = bridge;
@@ -668,40 +670,63 @@ Re-start browser and call init_record();
 to obtain permission to use microphone.`);
     }
   }
+  function reserveRecording(func_name) {
+    if (globalVars.activePlayCount > 0) {
+      throw new e2(`${func_name}: Cannot record while another sound is playing!`);
+    }
+    if (globalVars.recordingInProgress) {
+      throw new e2(`${func_name}: Cannot record while another recording is in progress!`);
+    }
+    assertMicPermission(func_name);
+    globalVars.recordingInProgress = true;
+    recordingGeneration += 1;
+    return recordingGeneration;
+  }
+  function releaseRecording(generation) {
+    if (recordingGeneration === generation) {
+      globalVars.recordingInProgress = false;
+    }
+  }
   function record(buffer) {
     validateDuration("record", buffer);
-    if (globalVars.activePlayCount > 0) {
-      throw new e2(`${record.name}: Cannot record while another sound is playing!`);
-    }
-    assertMicPermission("record");
+    const generation = reserveRecording(record.name);
     const started = (() => __async(null, null, function* () {
       yield delay(pre_recording_signal_pause_ms + buffer * 1e3);
       yield play_recording_signal();
       yield delay(recording_signal_ms);
       yield io().startRecording();
     }))();
+    let recordingDone;
+    void started.catch(() => {
+      if (!recordingDone) {
+        releaseRecording(generation);
+      }
+    });
     return () => {
-      const recordingDone = started.then(() => io().stopRecording()).then(({left, right, sampleRate}) => samplesToSound(left, right, sampleRate));
-      void play_recording_signal();
+      if (!recordingDone) {
+        recordingDone = started.then(() => io().stopRecording()).then(({left, right, sampleRate}) => samplesToSound(left, right, sampleRate)).finally(() => releaseRecording(generation));
+        void play_recording_signal();
+      }
       return () => recordingDone;
     };
   }
   function record_for(duration, buffer) {
     validateDuration("record_for", duration);
     validateDuration("record_for", buffer);
-    if (globalVars.activePlayCount > 0) {
-      throw new e2(`${record_for.name}: Cannot record while another sound is playing!`);
-    }
-    assertMicPermission("record_for");
+    const generation = reserveRecording(record_for.name);
     const recordingDone = (() => __async(null, null, function* () {
-      yield delay(pre_recording_signal_pause_ms);
-      yield play_recording_signal();
-      yield delay(recording_signal_ms + buffer * 1e3);
-      yield io().startRecording();
-      yield delay(duration * 1e3);
-      const {left, right, sampleRate} = yield io().stopRecording();
-      void play_recording_signal();
-      return samplesToSound(left, right, sampleRate);
+      try {
+        yield delay(pre_recording_signal_pause_ms);
+        yield play_recording_signal();
+        yield delay(recording_signal_ms + buffer * 1e3);
+        yield io().startRecording();
+        yield delay(duration * 1e3);
+        const {left, right, sampleRate} = yield io().stopRecording();
+        void play_recording_signal();
+        return samplesToSound(left, right, sampleRate);
+      } finally {
+        releaseRecording(generation);
+      }
     }))();
     return () => recordingDone;
   }
