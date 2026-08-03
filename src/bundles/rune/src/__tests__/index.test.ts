@@ -3,34 +3,48 @@ import { stringify } from 'js-slang/dist/utils/stringify';
 import { describe, expect, it, test, vi } from 'vitest';
 import RuneModulePlugin from '..';
 import * as funcs from '../functions';
+import { RUNE_TAB_NAME } from '../protocol';
 import type { Rune } from '../rune';
+
+function createRunePlugin(tabs: string[] = []) {
+  const sentMessages: unknown[] = [];
+  const channel = {
+    send: vi.fn(message => sentMessages.push(message)),
+    subscribe: vi.fn(),
+    unsubscribe: vi.fn(),
+    close: vi.fn(),
+    name: 'rune-test-channel'
+  };
+  const evaluator = {
+    hasDataInterface: true,
+    closure_make: vi.fn(async (sig, func, dependsOn) => ({
+      type: DataType.CLOSURE,
+      value: { sig, dependsOn, func }
+    })),
+    opaque_make: vi.fn(async value => ({
+      type: DataType.OPAQUE,
+      value
+    })),
+    opaque_get: vi.fn(async value => value.value)
+  };
+  const tabLoader = {
+    tabs,
+    loadTab: vi.fn()
+  };
+  const plugin = new RuneModulePlugin({} as any, [channel] as any, evaluator as any, tabLoader);
+
+  return {
+    channel,
+    evaluator,
+    plugin,
+    sentMessages,
+    tabLoader
+  };
+}
 
 describe(RuneModulePlugin, () => {
   test('exported methods stay bound when called by a Conductor closure', async () => {
-    const sentMessages: unknown[] = [];
-    const channel = {
-      send: vi.fn(message => sentMessages.push(message)),
-      subscribe: vi.fn(),
-      unsubscribe: vi.fn(),
-      close: vi.fn(),
-      name: 'rune-test-channel'
-    };
-    const evaluator = {
-      hasDataInterface: true,
-      closure_make: vi.fn(async (sig, func, dependsOn) => ({
-        type: DataType.CLOSURE,
-        value: { sig, dependsOn, func }
-      })),
-      opaque_make: vi.fn(async value => ({
-        type: DataType.OPAQUE,
-        value
-      })),
-      opaque_get: vi.fn(async value => value.value)
-    };
-    const plugin = new RuneModulePlugin({} as any, [channel] as any, evaluator as any, {
-      tabs: [],
-      loadTab: vi.fn()
-    });
+    const { evaluator, plugin, sentMessages } = createRunePlugin();
 
     await plugin.initialise();
 
@@ -54,6 +68,34 @@ describe(RuneModulePlugin, () => {
       }
     });
     expect('draw' in (sentMessages[0] as any).rune).toBe(false);
+  });
+
+  test('initialise only exports primitive runes once', async () => {
+    const { evaluator, plugin } = createRunePlugin();
+
+    await plugin.initialise();
+
+    const exportedSymbols = plugin.exports.map(each => each.symbol);
+    const exportedValues = plugin.exports.map(each => each.value);
+    const closureMakeCalls = evaluator.closure_make.mock.calls.length;
+    const opaqueMakeCalls = evaluator.opaque_make.mock.calls.length;
+
+    await plugin.initialise();
+
+    expect(plugin.exports.map(each => each.symbol)).toEqual(exportedSymbols);
+    expect(plugin.exports.map(each => each.value)).toEqual(exportedValues);
+    expect(evaluator.closure_make).toHaveBeenCalledTimes(closureMakeCalls);
+    expect(evaluator.opaque_make).toHaveBeenCalledTimes(opaqueMakeCalls);
+  });
+
+  test('loads the rune tab by name', async () => {
+    const { evaluator, plugin, tabLoader } = createRunePlugin(['Other Tab', RUNE_TAB_NAME]);
+    const runeValue = await evaluator.opaque_make(funcs.blank) as any;
+
+    const result = await plugin.show(runeValue).next();
+
+    expect(result.done).toBe(true);
+    expect(tabLoader.loadTab).toHaveBeenCalledExactlyOnceWith(RUNE_TAB_NAME);
   });
 });
 
