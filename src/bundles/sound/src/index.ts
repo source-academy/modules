@@ -36,6 +36,7 @@ import { BaseModulePlugin, moduleMethod } from '@sourceacademy/conductor/module'
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 
+import { rememberSoundSampler, restoreSoundSampler } from './conductorAdapters';
 import {
   adsr as adsr_func,
   bell as bell_func,
@@ -238,6 +239,7 @@ async function soundToConductor(evaluator: IDataHandler, sound: Sound): Promise<
   const rightClosure = sound.rightWave === sound.leftWave
     ? leftClosure
     : await waveToConductorClosure(evaluator, sound.rightWave);
+  rememberSoundSampler(evaluator, sound, leftClosure, rightClosure);
   const wavesPair = await evaluator.pair_make(leftClosure, rightClosure);
   return evaluator.pair_make(wavesPair, { type: DataType.NUMBER, value: sound.duration });
 }
@@ -300,7 +302,12 @@ export async function conductorToSound(evaluator: IDataHandler, value: TypedValu
   // id - if it's the same id, this is a mono Sound and should stay that way (same Wave reference)
   // rather than getting two distinct-but-identical wrappers around it.
   const rightWave = leftTv.value === rightTv.value ? leftWave : closureToWave(evaluator, rightTv);
-  return { leftWave, rightWave, duration: durationTv.value };
+  return restoreSoundSampler(
+    evaluator,
+    { leftWave, rightWave, duration: durationTv.value },
+    leftTv,
+    rightTv
+  );
 }
 
 /** Walks a Conductor LIST of Sounds (either shape - see `readListElements`) into a plain array. */
