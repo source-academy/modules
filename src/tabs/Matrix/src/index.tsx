@@ -120,9 +120,9 @@ export default class MatrixTabPlugin implements IPlugin, MatrixTabRpc {
 
     const tab = {
       id: MATRIX_TAB_ID,
-      iconName: 'music',
+      iconName: 'grid-view',
       body: createElement(MatrixPluginTab),
-      label: 'Tone Matrix',
+      label: 'Matrix',
       disabled: false
     } satisfies Tab;
 
