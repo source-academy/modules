@@ -2922,6 +2922,22 @@ void main(void) {
   var white = RuneColours.white;
   var RUNE_CHANNEL_ID = "sourceacademy-rune-channel";
   var RUNE_WEB_ID = "rune-web";
+  function imageFromUrl(url) {
+    const image = new Image();
+    image.crossOrigin = "anonymous";
+    image.src = url;
+    return image;
+  }
+  function deserializeRune(serialized) {
+    return Rune.of({
+      vertices: new Float32Array(serialized.vertices),
+      colors: serialized.colors === null ? null : new Float32Array(serialized.colors),
+      transformMatrix: new Float32Array(serialized.transformMatrix),
+      subRunes: serialized.subRunes.map(deserializeRune),
+      texture: serialized.textureUrl === null ? null : imageFromUrl(serialized.textureUrl),
+      hollusionDistance: serialized.hollusionDistance
+    });
+  }
   var R;
   !(function (R2) {
     (R2[R2.CALL = 0] = "CALL", R2[R2.RETURN = 1] = "RETURN", R2[R2.RETURN_ERR = 2] = "RETURN_ERR");
@@ -3446,22 +3462,6 @@ void main(void) {
     });
   }
   var import_jsx_runtime9 = __require("react/jsx-runtime");
-  function imageFromUrl(url) {
-    const image = new Image();
-    image.crossOrigin = "anonymous";
-    image.src = url;
-    return image;
-  }
-  function deserializeRune(serialized) {
-    return Rune.of({
-      vertices: new Float32Array(serialized.vertices),
-      colors: serialized.colors === null ? null : new Float32Array(serialized.colors),
-      transformMatrix: new Float32Array(serialized.transformMatrix),
-      subRunes: serialized.subRunes.map(deserializeRune),
-      texture: serialized.textureUrl === null ? null : imageFromUrl(serialized.textureUrl),
-      hollusionDistance: serialized.hollusionDistance
-    });
-  }
   var SerializedRuneAnimation = class extends glAnimation {
     constructor(message) {
       super(message.duration, message.fps);

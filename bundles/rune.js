@@ -2962,6 +2962,7 @@ void main(void) {
   var yellow = RuneColours.yellow;
   var white = RuneColours.white;
   var RUNE_CHANNEL_ID = "sourceacademy-rune-channel";
+  var RUNE_TAB_NAME = "Rune";
   function serializeTexture(texture) {
     if (texture === null) return null;
     if (typeof texture === "string") return texture;
@@ -2979,14 +2980,15 @@ void main(void) {
   }
   var _RuneModulePlugin = class _RuneModulePlugin extends o3 {
     constructor(conduit, [runeChannel], evaluator, tabLoader) {
+      if (!runeChannel) {
+        throw new e2("Rune channel is required but was not provided.");
+      }
       super(conduit, [runeChannel], evaluator);
       this.id = "rune";
       this.exportedNames = ["anaglyph", "animate_anaglyph", "animate_rune", "beside", "beside_frac", "black", "blue", "brown", "color", "colour_with_hue", "flip_horiz", "flip_vert", "from_url", "green", "hollusion", "hollusion_magnitude", "indigo", "make_cross", "orange", "overlay", "overlay_frac", "pink", "purple", "quarter_turn_left", "quarter_turn_right", "random_color", "red", "repeat_pattern", "rotate", "scale", "scale_independent", "show", "stack", "stack_frac", "stackn", "translate", "turn_upside_down", "white", "yellow"];
       this.__displayed = [];
+      this.__initialised = false;
       this.__tabLoaded = false;
-      if (!runeChannel) {
-        throw new e2("Rune channel is required but was not provided.");
-      }
       this.__runeChannel = runeChannel;
       this.__tabLoader = tabLoader;
       this.__runeChannel.subscribe(message => {
@@ -2997,6 +2999,8 @@ void main(void) {
     }
     initialise() {
       return __async(this, null, function* () {
+        if (this.__initialised) return;
+        this.__initialised = true;
         yield __superGet(_RuneModulePlugin.prototype, this, "initialise").call(this);
         for (const name in RuneFunctions) {
           const value = RuneFunctions[name];
@@ -3013,7 +3017,7 @@ void main(void) {
     }
     __loadRuneTab() {
       if (this.__tabLoaded || this.__tabLoader === void 0) return true;
-      const tabName = this.__tabLoader.tabs[0];
+      const tabName = this.__tabLoader.tabs.find(tab => tab === RUNE_TAB_NAME);
       if (tabName === void 0) return true;
       this.__tabLoader.loadTab(tabName);
       this.__tabLoaded = true;
