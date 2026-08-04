@@ -1,7 +1,8 @@
 import type { ITabService, Tab } from '@sourceacademy/common-tabs';
 import type { IChannel } from '@sourceacademy/conductor/conduit';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import SoundTabPlugin, { SOUND_TAB_ID } from '..';
+import { cleanup, render } from 'vitest-browser-react';
+import SoundTabPlugin, { PlayerBarsView, SOUND_TAB_ID, type PlayerBarEntry } from '..';
 
 class MockChannel<T> implements IChannel<T> {
   readonly name = 'mock-sound-channel';
@@ -62,11 +63,13 @@ function createMockAudioContext() {
   // A fresh source per createBufferSource() call - `bufferSource` tracks the most recently created
   // one, for tests that only ever have one source in play at a time to assert on.
   let bufferSource = makeMockBufferSource();
-
-  return {
+  const context = {
     get bufferSource() {
       return bufferSource;
     },
+    // Mirrors the real AudioContext: starts 'running', flips to 'closed' once close() settles -
+    // __ensureAudioContext() is expected to treat a closed context as unusable, not reuse it.
+    state: 'running' as AudioContextState,
     destination: {},
     createBuffer: vi.fn((_channels: number, length: number, sampleRate: number) => ({
       length,
@@ -83,8 +86,11 @@ function createMockAudioContext() {
       getChannelData: () => new Float32Array([0, 1, -1, 0]),
       sampleRate: 8000
     }),
-    close: vi.fn().mockResolvedValue(undefined)
+    close: vi.fn(async () => {
+      context.state = 'closed';
+    })
   };
+  return context;
 }
 
 function createMockMediaRecorder() {
@@ -103,6 +109,78 @@ function createMockMediaRecorder() {
   return recorder;
 }
 
+describe(PlayerBarsView, () => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  test('renders nothing when there are no players', async () => {
+    const screen = await render(<PlayerBarsView players={[]} />);
+    expect(screen.container.querySelector('#sound-player-bars')).toBeNull();
+  });
+
+  test('renders one labeled, native audio control per player, stacked vertically in call order', async () => {
+    const players: PlayerBarEntry[] = [
+      { id: 0, kind: 'audio', dataUri: 'data:audio/wav;base64,AAAA' },
+      { id: 1, kind: 'audio', dataUri: 'data:audio/wav;base64,BBBB' },
+      { id: 2, kind: 'audio', dataUri: 'data:audio/wav;base64,CCCC' }
+    ];
+    const screen = await render(<PlayerBarsView players={players} />);
+
+    const audioElements = screen.container.querySelectorAll('audio');
+    expect(audioElements).toHaveLength(3);
+    // In DOM (and therefore visual) order, not just present somewhere - matches the issue's
+    // "multiple bars arranged vertically" requirement, in the order play_in_tab() was called.
+    expect([...audioElements].map(audio => audio.src)).toEqual([
+      'data:audio/wav;base64,AAAA',
+      'data:audio/wav;base64,BBBB',
+      'data:audio/wav;base64,CCCC'
+    ]);
+
+    for (const [index, audio] of audioElements.entries()) {
+      // Each control is associated with its own visible "Sound N" label for assistive tech, not
+      // just visually adjacent to it.
+      const labelId = audio.getAttribute('aria-labelledby');
+      expect(labelId).not.toBeNull();
+      expect(screen.container.querySelector(`#${labelId}`)?.textContent).toBe(`Sound ${index + 1}`);
+    }
+  });
+
+  test('a later render with more players adds new bars below the existing ones, without disturbing them', async () => {
+    const first: PlayerBarEntry[] = [{ id: 0, kind: 'audio', dataUri: 'data:audio/wav;base64,AAAA' }];
+    const screen = await render(<PlayerBarsView players={first} />);
+    expect(screen.container.querySelectorAll('audio')).toHaveLength(1);
+
+    const second: PlayerBarEntry[] = [...first, { id: 1, kind: 'audio', dataUri: 'data:audio/wav;base64,BBBB' }];
+    await screen.rerender(<PlayerBarsView players={second} />);
+
+    const audioElements = screen.container.querySelectorAll('audio');
+    expect([...audioElements].map(audio => audio.src)).toEqual([
+      'data:audio/wav;base64,AAAA',
+      'data:audio/wav;base64,BBBB'
+    ]);
+  });
+
+  test('renders a "zero duration sound" placeholder instead of an audio control for a zero-duration entry', async () => {
+    const players: PlayerBarEntry[] = [
+      { id: 0, kind: 'audio', dataUri: 'data:audio/wav;base64,AAAA' },
+      { id: 1, kind: 'zero-duration' },
+      { id: 2, kind: 'audio', dataUri: 'data:audio/wav;base64,CCCC' }
+    ];
+    const screen = await render(<PlayerBarsView players={players} />);
+
+    // Only the two audio entries get an <audio> control - the zero-duration one, with nothing to
+    // play, does not.
+    expect(screen.container.querySelectorAll('audio')).toHaveLength(2);
+    await expect.element(screen.getByText('zero duration sound')).toBeInTheDocument();
+
+    // Still takes its place in call order, with the same "Sound N" numbering scheme as the others,
+    // rather than being skipped or renumbering what comes after it.
+    const labels = [...screen.container.querySelectorAll('p[id^="sound-player-label-"]')].map(label => label.textContent);
+    expect(labels).toEqual(['Sound 1', 'Sound 2', 'Sound 3']);
+  });
+});
+
 describe(SoundTabPlugin, () => {
   let channel: MockChannel<any>;
   let tabService: MockTabService;
@@ -111,6 +189,7 @@ describe(SoundTabPlugin, () => {
   let mockMediaRecorder: ReturnType<typeof createMockMediaRecorder>;
   let mockStream: MediaStream;
   let getUserMedia: ReturnType<typeof vi.fn>;
+  let audioContextConstructor: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     mockAudioContext = createMockAudioContext();
@@ -118,7 +197,10 @@ describe(SoundTabPlugin, () => {
     mockStream = {} as MediaStream;
     getUserMedia = vi.fn().mockResolvedValue(mockStream);
 
-    vi.stubGlobal('AudioContext', function (this: unknown) { return mockAudioContext; });
+    // A spy (not just a stub) so tests can assert on how many times a fresh AudioContext was
+    // actually constructed - always returns the current mockAudioContext, regardless of call count.
+    audioContextConstructor = vi.fn(function (this: unknown) { return mockAudioContext; });
+    vi.stubGlobal('AudioContext', audioContextConstructor);
     vi.stubGlobal('MediaRecorder', function (this: unknown) { return mockMediaRecorder; });
     vi.stubGlobal('navigator', { mediaDevices: { getUserMedia } });
 
@@ -164,26 +246,44 @@ describe(SoundTabPlugin, () => {
     expect(mockAudioContext.close).toHaveBeenCalledOnce();
   });
 
-  test('destroy does not close the AudioContext while a later sound is still queued behind the one that just finished', async () => {
-    // Regression test: __activeSources hits 0 momentarily between the first sound ending and the
-    // second (still queued) one starting, since the queue drains asynchronously. Closing the
-    // AudioContext at that instant - rather than waiting for the whole queue to drain - used to
-    // silently kill every sound still waiting its turn behind the one that just finished.
+  test('destroy does not close the AudioContext while a second, still-playing concurrent sound is going', async () => {
+    // Regression test: two overlapping playSamples() calls each hold the AudioContext open until
+    // both are actually done, not just the first one to finish.
     const samples = new Float32Array([0]);
     const first = plugin.playSamples(samples, samples, 8000);
-    const second = plugin.playSamples(samples, samples, 8000); // queued behind the first
+    // A one-tick gap so the two sounds' mocked 'ended' events don't land in the very same
+    // microtask batch, giving the intermediate "first done, second still going" state below an
+    // actual chance to be observed rather than both finishing together.
+    await Promise.resolve();
+    const second = plugin.playSamples(samples, samples, 8000); // overlaps the first, not queued
 
     plugin.destroy();
     expect(mockAudioContext.close).not.toHaveBeenCalled();
 
     await first;
-    // The first sound finished, but the second is still queued - must not close yet.
+    // The first sound finished, but the second (started concurrently) is still playing.
     expect(mockAudioContext.close).not.toHaveBeenCalled();
 
     await second;
-    // Now the whole queue has actually drained.
+    // Now both have actually finished.
     expect(mockAudioContext.close).toHaveBeenCalledOnce();
     expect(mockAudioContext.createBufferSource).toHaveBeenCalledTimes(2);
+  });
+
+  test('a later playSamples() after destroy() has closed the AudioContext gets a fresh one instead of reusing the closed one', async () => {
+    // Regression test: destroy() closes the AudioContext but never resets the field pointing at
+    // it. Without checking .state, __ensureAudioContext() would hand back the same, now-unusable
+    // closed context to whatever playSamples() call is still in flight (e.g. one whose sampling
+    // was still running when the Run ended).
+    const samples = new Float32Array([0]);
+    await plugin.playSamples(samples, samples, 8000);
+    expect(audioContextConstructor).toHaveBeenCalledOnce();
+
+    plugin.destroy();
+    expect(mockAudioContext.state).toBe('closed');
+
+    await expect(plugin.playSamples(samples, samples, 8000)).resolves.toBeUndefined();
+    expect(audioContextConstructor).toHaveBeenCalledTimes(2);
   });
 
   describe('requestMicPermission', () => {
@@ -207,34 +307,21 @@ describe(SoundTabPlugin, () => {
       expect(mockAudioContext.bufferSource.start).toHaveBeenCalledOnce();
     });
 
-    test('repeated/looped calls queue: the second does not start until the first finishes', async () => {
+    test('repeated/looped calls overlap: the second starts immediately, without waiting for the first to finish', async () => {
       const samples = new Float32Array([0]);
       const first = plugin.playSamples(samples, samples, 8000);
-      const second = plugin.playSamples(samples, samples, 8000);
-
-      // playSamples() now goes through the host's own queue (even for the first call): one
-      // microtask tick is enough for the first call's turn to start (source created + start()
-      // called), but not enough for its mocked start()'s own queued onended to have fired yet -
-      // unlike a full setTimeout(0) flush, which would race straight past this intermediate state.
-      await Promise.resolve();
       const firstSource = mockAudioContext.bufferSource;
-
-      // The second call is queued behind the first, not started concurrently - only one source
-      // has been created so far.
-      expect(mockAudioContext.createBufferSource).toHaveBeenCalledTimes(1);
-      expect(firstSource.start).toHaveBeenCalledOnce();
-
-      await first;
-      await new Promise(resolve => setTimeout(resolve, 0));
-
-      // Now that the first has finished, the second's turn has arrived: its own source was
-      // created and started.
+      const second = plugin.playSamples(samples, samples, 8000);
       const secondSource = mockAudioContext.bufferSource;
+
+      // Both sources were created and started synchronously, before either has had any chance to
+      // finish - no queueing.
       expect(secondSource).not.toBe(firstSource);
       expect(mockAudioContext.createBufferSource).toHaveBeenCalledTimes(2);
+      expect(firstSource.start).toHaveBeenCalledOnce();
       expect(secondSource.start).toHaveBeenCalledOnce();
 
-      await second;
+      await Promise.all([first, second]);
     });
 
     test('an earlier sound finishing does not clobber a later sound\'s still-in-flight constructing status', async () => {
@@ -245,10 +332,14 @@ describe(SoundTabPlugin, () => {
       // still-active 'constructing' status.
       const samples = new Float32Array([0]);
       const first = plugin.playSamples(samples, samples, 8000);
-      await Promise.resolve(); // let the first sound actually start playing
+      // playSamples() starts the source and updates status synchronously - no await needed for
+      // that to already be reflected.
       expect(plugin.getStatus()).toBe('playing');
 
-      await plugin.notifyConstructing(); // a second, unrelated sound starts sampling
+      // Called synchronously, without yielding control back to the microtask queue in between, so
+      // the first sound's own (mocked, microtask-scheduled) completion can't have run yet - this
+      // is what actually exercises the "still in flight" scenario being tested.
+      void plugin.notifyConstructing(); // a second, unrelated sound starts sampling
       expect(plugin.getStatus()).toBe('playing'); // first sound is still audibly playing
 
       await first;
@@ -276,22 +367,96 @@ describe(SoundTabPlugin, () => {
       await playing;
     });
 
-    test('cancels anything still queued (not yet started) instead of letting it play after stop', async () => {
+    test('stops every currently-playing source when several are playing concurrently', async () => {
       const samples = new Float32Array([0]);
       const first = plugin.playSamples(samples, samples, 8000);
-      const second = plugin.playSamples(samples, samples, 8000); // queued behind the first
-      await Promise.resolve();
       const firstSource = mockAudioContext.bufferSource;
+      const second = plugin.playSamples(samples, samples, 8000);
+      const secondSource = mockAudioContext.bufferSource;
 
       plugin.$stopPlayback();
       expect(firstSource.stop).toHaveBeenCalledOnce();
+      expect(secondSource.stop).toHaveBeenCalledOnce();
 
       await Promise.all([first, second]);
-      await new Promise(resolve => setTimeout(resolve, 0));
+    });
+  });
 
-      // The queued second call never got its own source created/started - it recognised itself
-      // as stale (stop() moved past its generation) once its turn arrived.
-      expect(mockAudioContext.createBufferSource).toHaveBeenCalledTimes(1);
+  describe('addPlayerToTab', () => {
+    test('resolves without throwing', async () => {
+      await expect(plugin.addPlayerToTab('data:audio/wav;base64,AAAA')).resolves.toBeUndefined();
+    });
+
+    test('does not touch the AudioContext or activeSources - it only adds a UI entry', async () => {
+      await plugin.addPlayerToTab('data:audio/wav;base64,AAAA');
+      expect(mockAudioContext.createBufferSource).not.toHaveBeenCalled();
+      expect(mockAudioContext.createBuffer).not.toHaveBeenCalled();
+    });
+
+    test('notifies subscribers so a rendered player list can pick up the new entry', async () => {
+      const listener = vi.fn();
+      plugin.subscribe(listener);
+      await plugin.addPlayerToTab('data:audio/wav;base64,AAAA');
+      expect(listener).toHaveBeenCalled();
+    });
+
+    test('caps the player list to the most recent entries instead of growing without bound', async () => {
+      // Regression test: a loop calling play_in_tab() many times in one Run must not accumulate
+      // an ever-growing list of full WAV data URIs and rendered <audio> elements for the tab's
+      // lifetime - only the most recent entries are kept.
+      const total = 55;
+      for (let i = 0; i < total; i += 1) {
+        await plugin.addPlayerToTab(`data:audio/wav;base64,entry-${i}`);
+      }
+
+      const players = plugin.getPlayers();
+      expect(players.length).toBeLessThan(total);
+      const dataUris = players.map(player => (player.kind === 'audio' ? player.dataUri : undefined));
+      // The most recent entry is always kept, regardless of the cap.
+      expect(dataUris.at(-1)).toBe(`data:audio/wav;base64,entry-${total - 1}`);
+      // The oldest entries are the ones dropped, not ones from the middle.
+      expect(dataUris).not.toContain('data:audio/wav;base64,entry-0');
+    });
+
+    test('closes out the matching notifyConstructing() call, like playSamples() does for play()', async () => {
+      // Regression test: play_in_tab() calls notifyConstructing() before sampling a long Sound, so
+      // the tab should show 'constructing' status until addPlayerToTab() (its equivalent of
+      // playSamples()) actually arrives - not stay stuck there forever.
+      void plugin.notifyConstructing();
+      expect(plugin.getStatus()).toBe('constructing');
+
+      await plugin.addPlayerToTab('data:audio/wav;base64,AAAA');
+      expect(plugin.getStatus()).toBe('idle');
+    });
+  });
+
+  describe('addZeroDurationPlayerToTab', () => {
+    test('adds a zero-duration entry, taking its place in call order alongside audio entries', async () => {
+      await plugin.addPlayerToTab('data:audio/wav;base64,AAAA');
+      await plugin.addZeroDurationPlayerToTab();
+      await plugin.addPlayerToTab('data:audio/wav;base64,CCCC');
+
+      const players = plugin.getPlayers();
+      expect(players.map(player => player.kind)).toEqual(['audio', 'zero-duration', 'audio']);
+    });
+
+    test('notifies subscribers so a rendered player list can pick up the new entry', async () => {
+      const listener = vi.fn();
+      plugin.subscribe(listener);
+      await plugin.addZeroDurationPlayerToTab();
+      expect(listener).toHaveBeenCalled();
+    });
+
+    test('does not touch __constructingCount - unlike addPlayerToTab(), there is no matching notifyConstructing() call to close out', async () => {
+      // Regression test: a zero-duration Sound is never sampled, so play_in_tab() never calls
+      // notifyConstructing() for one - addZeroDurationPlayerToTab() must not decrement that count
+      // regardless, or it could wrongly cancel out an unrelated, still-in-flight
+      // notifyConstructing() from a genuinely concurrent play_in_tab() call on a real Sound.
+      void plugin.notifyConstructing(); // an unrelated, concurrent play_in_tab() call is sampling
+      expect(plugin.getStatus()).toBe('constructing');
+
+      await plugin.addZeroDurationPlayerToTab();
+      expect(plugin.getStatus()).toBe('constructing');
     });
   });
 

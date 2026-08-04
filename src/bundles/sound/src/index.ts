@@ -57,6 +57,7 @@ import {
   phase_mod as phase_mod_func,
   piano as piano_func,
   play as play_func,
+  play_in_tab as play_in_tab_func,
   play_wave as play_wave_func,
   play_waves as play_waves_func,
   record as record_func,
@@ -372,6 +373,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     'phase_mod',
     'piano',
     'play',
+    'play_in_tab',
     'play_wave',
     'play_waves',
     'record',
@@ -555,6 +557,14 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     this.__ensureTabLoaded();
     const internal = await conductorToSound(this.evaluator, sound);
     const result = yield* play_func(internal);
+    return soundToConductor(this.evaluator, result);
+  }
+
+  @moduleMethod([DataType.PAIR], DataType.PAIR)
+  async* play_in_tab(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
+    this.__ensureTabLoaded();
+    const internal = await conductorToSound(this.evaluator, sound);
+    const result = yield* play_in_tab_func(internal);
     return soundToConductor(this.evaluator, result);
   }
 

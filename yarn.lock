@@ -5022,9 +5022,13 @@ __metadata:
     "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/react": "catalog:"
+    "@vitest/browser-playwright": "catalog:"
+    playwright: "npm:^1.55.1"
     react: "catalog:"
     react-dom: "catalog:"
     typescript: "catalog:"
+    vitest: "catalog:"
+    vitest-browser-react: "npm:^2.1.0"
   languageName: unknown
   linkType: soft
 

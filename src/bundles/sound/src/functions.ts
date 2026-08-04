@@ -53,9 +53,9 @@ interface BundleGlobalVars {
   micPermissionGranted: boolean | null;
   /**
    * Number of play()s currently sampling and/or actually playing through the host - repeated or
-   * looped play() calls stack (play concurrently) rather than erroring, so this is a count rather
-   * than a single flag. record()/record_for() still refuse to start while this is nonzero, to avoid
-   * the mic picking up whatever's playing through the speakers.
+   * looped play() calls overlap (play concurrently) rather than erroring or queueing, so this is a
+   * count rather than a single flag. record()/record_for() still refuse to start while this is
+   * nonzero, to avoid the mic picking up whatever's playing through the speakers.
    */
   activePlayCount: number;
   /**
@@ -300,6 +300,60 @@ async function* sampleWave(wave: Wave, duration: number): AsyncGenerator<void, F
   return channel;
 }
 
+/**
+ * Encodes stereo PCM samples (each in `[-1, 1]`) as a 16-bit stereo WAV file, returned as a
+ * self-contained `data:audio/wav;base64,...` URI - suitable for a native `<audio>` element without
+ * any further host-side decoding. Pure computation (no AudioContext), so this can run right here
+ * rather than needing a round trip to the tab, unlike actual playback.
+ */
+function encodeWavDataUri(left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>, sampleRate: number): string {
+  const numChannels = 2;
+  const bytesPerSample = 2;
+  const blockAlign = numChannels * bytesPerSample;
+  const dataSize = left.length * blockAlign;
+  const buffer = new ArrayBuffer(44 + dataSize);
+  const view = new DataView(buffer);
+
+  function writeString(offset: number, value: string): void {
+    for (let i = 0; i < value.length; i += 1) {
+      view.setUint8(offset + i, value.charCodeAt(i));
+    }
+  }
+  function writeSample(offset: number, value: number): void {
+    const clamped = Math.max(-1, Math.min(1, value));
+    view.setInt16(offset, clamped < 0 ? clamped * 0x8000 : clamped * 0x7fff, true);
+  }
+
+  writeString(0, 'RIFF');
+  view.setUint32(4, 36 + dataSize, true);
+  writeString(8, 'WAVE');
+  writeString(12, 'fmt ');
+  view.setUint32(16, 16, true); // fmt chunk size (PCM)
+  view.setUint16(20, 1, true); // PCM format
+  view.setUint16(22, numChannels, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * blockAlign, true); // byte rate
+  view.setUint16(32, blockAlign, true);
+  view.setUint16(34, bytesPerSample * 8, true); // bits per sample
+  writeString(36, 'data');
+  view.setUint32(40, dataSize, true);
+
+  let offset = 44;
+  for (let i = 0; i < left.length; i += 1) {
+    writeSample(offset, left[i]);
+    writeSample(offset + 2, right[i]);
+    offset += blockAlign;
+  }
+
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  const chunkSize = 0x8000; // avoid a call stack overflow from spreading a huge array at once
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+  }
+  return `data:audio/wav;base64,${btoa(binary)}`;
+}
+
 function smoothSample(sample: number, previousSample: number): number {
   let temp = sample;
   if (temp > 1) {
@@ -503,6 +557,19 @@ export async function* play_wave(wave: Wave, duration: number): AsyncGenerator<v
   return yield* play(make_sound(wave, duration));
 }
 
+/** Shared argument validation for play()/play_in_tab(): both accept a Sound and reject the same way. */
+function assertPlayableSound(func_name: string, sound: unknown): asserts sound is Sound {
+  if (!is_sound(sound)) {
+    // EvaluatorParameterTypeError is the correct, student-facing error here - the
+    // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
+    // eslint-disable-next-line @sourceacademy/throw-runtime-error
+    throw new EvaluatorParameterTypeError(func_name, 'sound', 'a Sound', sound);
+  }
+  if (sound.duration < 0) {
+    throw new EvaluatorRuntimeError(`${func_name}: duration of sound is negative`);
+  }
+}
+
 /**
  * Plays the given left/right Waves using the computer's sound device, for the duration given in
  * seconds.
@@ -516,34 +583,22 @@ export async function* play_waves(left_wave: Wave, right_wave: Wave, duration: n
 }
 
 /**
- * Plays the given Sound using the computer's sound device, queued after any Sounds that are
- * currently playing or already queued - like consecutively, but built up call-by-call rather than
- * pre-combined into one Sound, so repeated/looped play() calls play one after another instead of
- * overlapping. Returns (without waiting for playback to finish) once the sound has been queued,
- * matching the original module's fire-and-forget behaviour.
+ * Plays the given Sound using the computer's sound device, as soon as it has finished sampling -
+ * concurrently with any Sound(s) already playing, rather than erroring or queueing behind them, so
+ * repeated/looped play() calls overlap and are mixed together (like `simultaneously`, but built up
+ * call-by-call rather than pre-combined into one Sound). Returns (without waiting for playback to
+ * finish) once the sound has been dispatched to the host, matching the original module's
+ * fire-and-forget behaviour.
  *
- * The actual queueing (so playback doesn't overlap) happens on the host side (see
- * `SoundTabPlugin.playSamples`), not here - this Run's evaluator Worker is terminated as soon as
- * the program finishes, which can happen well before a sound that's still queued behind another
- * gets its turn. Deferring the RPC call itself until then would silently drop it. Instead, every
- * play() dispatches its playSamples() call immediately once sampling finishes, so the message is
- * always sent before the Worker can be torn down; only the host, which outlives the Worker, needs
- * to actually sequence playback.
+ * The RPC call is dispatched immediately once sampling finishes (see `SoundTabPlugin.playSamples`)
+ * rather than being queued here - this Run's evaluator Worker is terminated as soon as the program
+ * finishes, which can happen well before a still-queued call would ever get to fire. Deferring the
+ * RPC call itself until then would silently drop it.
  * @example play(sine_sound(440, 5));
  */
 export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined> {
-  if (!is_sound(sound)) {
-    // EvaluatorParameterTypeError is the correct, student-facing error here - the
-    // throw-runtime-error rule doesn't yet recognise Conductor's own error types.
-    // eslint-disable-next-line @sourceacademy/throw-runtime-error
-    throw new EvaluatorParameterTypeError(play.name, 'sound', 'a Sound', sound);
-  }
-
-  const { duration } = sound;
-  if (duration < 0) {
-    throw new EvaluatorRuntimeError(`${play.name}: duration of sound is negative`);
-  }
-  if (duration === 0) {
+  assertPlayableSound(play.name, sound);
+  if (sound.duration === 0) {
     return sound;
   }
 
@@ -568,6 +623,32 @@ export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined
       }
     }
   })();
+  return sound;
+}
+
+/**
+ * Adds the given Sound to the sound tab as a play bar with its own start/pause/scrub controls,
+ * rather than playing it immediately - unlike play(), nothing is heard until the cadet presses
+ * play in the tab. Each call adds a new bar (stacked below any earlier ones), so playing several
+ * Sounds this way lets the cadet compare/replay each one independently, on their own schedule. A
+ * zero-duration Sound (a valid neutral element for consecutively()/simultaneously(), not an error)
+ * gets a "zero duration sound" placeholder entry instead of a play bar, since there's nothing to
+ * play. Returns (without waiting for the cadet to interact with the bar) once it has been added.
+ * @example play_in_tab(sine_sound(440, 5));
+ */
+export async function* play_in_tab(sound: Sound): AsyncGenerator<void, Sound, undefined> {
+  assertPlayableSound(play_in_tab.name, sound);
+  if (sound.duration === 0) {
+    await io().addZeroDurationPlayerToTab();
+    return sound;
+  }
+
+  // Sampling can take a while for a long Sound - tell the tab now so it shows "Constructing…"
+  // instead of looking stalled until the bar just appears, matching play()'s notifyConstructing()
+  // call. addPlayerToTab() below is the corresponding "done" signal, matching playSamples().
+  await io().notifyConstructing();
+  const { left: leftSamples, right: rightSamples } = yield* sampleSound(sound);
+  await io().addPlayerToTab(encodeWavDataUri(leftSamples, rightSamples, FS));
   return sound;
 }
 
