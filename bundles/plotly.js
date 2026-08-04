@@ -661,6 +661,49 @@ export default require => {
       return yield __await2(channel);
     });
   }
+  function encodeWavDataUri(left, right, sampleRate) {
+    const numChannels = 2;
+    const bytesPerSample = 2;
+    const blockAlign = numChannels * bytesPerSample;
+    const dataSize = left.length * blockAlign;
+    const buffer = new ArrayBuffer(44 + dataSize);
+    const view = new DataView(buffer);
+    function writeString(offset2, value) {
+      for (let i = 0; i < value.length; i += 1) {
+        view.setUint8(offset2 + i, value.charCodeAt(i));
+      }
+    }
+    function writeSample(offset2, value) {
+      const clamped = Math.max(-1, Math.min(1, value));
+      view.setInt16(offset2, clamped < 0 ? clamped * 32768 : clamped * 32767, true);
+    }
+    writeString(0, "RIFF");
+    view.setUint32(4, 36 + dataSize, true);
+    writeString(8, "WAVE");
+    writeString(12, "fmt ");
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, numChannels, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * blockAlign, true);
+    view.setUint16(32, blockAlign, true);
+    view.setUint16(34, bytesPerSample * 8, true);
+    writeString(36, "data");
+    view.setUint32(40, dataSize, true);
+    let offset = 44;
+    for (let i = 0; i < left.length; i += 1) {
+      writeSample(offset, left[i]);
+      writeSample(offset + 2, right[i]);
+      offset += blockAlign;
+    }
+    const bytes = new Uint8Array(buffer);
+    let binary = "";
+    const chunkSize = 32768;
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+    }
+    return `data:audio/wav;base64,${btoa(binary)}`;
+  }
   function smoothSample(sample, previousSample) {
     let temp = sample;
     if (temp > 1) {
@@ -790,6 +833,14 @@ to obtain permission to use microphone.`);
       return yield __await2(yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(play(make_sound(wave, duration)))))));
     });
   }
+  function assertPlayableSound(func_name, sound) {
+    if (!is_sound(sound)) {
+      throw new n(func_name, "sound", "a Sound", sound);
+    }
+    if (sound.duration < 0) {
+      throw new e2(`${func_name}: duration of sound is negative`);
+    }
+  }
   function play_waves(left_wave, right_wave, duration) {
     return __asyncGenerator2(this, arguments, function* play_waves_1() {
       validateDuration("play_waves", duration);
@@ -800,14 +851,8 @@ to obtain permission to use microphone.`);
   }
   function play(sound) {
     return __asyncGenerator2(this, arguments, function* play_1() {
-      if (!is_sound(sound)) {
-        throw new n(play.name, "sound", "a Sound", sound);
-      }
-      const {duration} = sound;
-      if (duration < 0) {
-        throw new e2(`${play.name}: duration of sound is negative`);
-      }
-      if (duration === 0) {
+      assertPlayableSound(play.name, sound);
+      if (sound.duration === 0) {
         return yield __await2(sound);
       }
       yield __await2(io().notifyConstructing());
@@ -823,6 +868,19 @@ to obtain permission to use microphone.`);
           }
         }
       }))();
+      return yield __await2(sound);
+    });
+  }
+  function play_in_tab(sound) {
+    return __asyncGenerator2(this, arguments, function* play_in_tab_1() {
+      assertPlayableSound(play_in_tab.name, sound);
+      if (sound.duration === 0) {
+        yield __await2(io().addZeroDurationPlayerToTab());
+        return yield __await2(sound);
+      }
+      yield __await2(io().notifyConstructing());
+      const {left: leftSamples, right: rightSamples} = yield __await2(yield* __yieldStar(__asyncDelegator(__asyncValues(sampleSound(sound)))));
+      yield __await2(io().addPlayerToTab(encodeWavDataUri(leftSamples, rightSamples, FS)));
       return yield __await2(sound);
     });
   }
@@ -1537,6 +1595,7 @@ to obtain permission to use microphone.`);
     let _play_wave_decorators;
     let _play_waves_decorators;
     let _play_decorators;
+    let _play_in_tab_decorators;
     let _stop_decorators;
     let _noise_wave_decorators;
     let _noise_sound_decorators;
@@ -1570,7 +1629,7 @@ to obtain permission to use microphone.`);
         }
         super(conduit, [soundChannel], evaluator);
         this.id = (__runInitializers(this, _instanceExtraInitializers), "sound");
-        this.exportedNames = ["adsr", "bell", "cello", "consecutively", "get_duration", "get_left_wave", "get_right_wave", "get_wave", "init_record", "is_sound", "make_sound", "make_stereo_sound", "noise_sound", "noise_wave", "pan", "pan_mod", "phase_mod", "piano", "play", "play_wave", "play_waves", "record", "record_for", "sawtooth_sound", "sawtooth_wave", "silence_sound", "silence_wave", "simultaneously", "sine_sound", "sine_wave", "square_sound", "square_wave", "squash", "stacking_adsr", "stop", "triangle_sound", "triangle_wave", "trombone", "violin"];
+        this.exportedNames = ["adsr", "bell", "cello", "consecutively", "get_duration", "get_left_wave", "get_right_wave", "get_wave", "init_record", "is_sound", "make_sound", "make_stereo_sound", "noise_sound", "noise_wave", "pan", "pan_mod", "phase_mod", "piano", "play", "play_in_tab", "play_wave", "play_waves", "record", "record_for", "sawtooth_sound", "sawtooth_wave", "silence_sound", "silence_wave", "simultaneously", "sine_sound", "sine_wave", "square_sound", "square_wave", "squash", "stacking_adsr", "stop", "triangle_sound", "triangle_wave", "trombone", "violin"];
         this.__tabLoaded = false;
         this.__tabLoader = tabLoader;
         setSoundIO(s4(soundChannel, {}));
@@ -1694,6 +1753,14 @@ to obtain permission to use microphone.`);
           this.__ensureTabLoaded();
           const internal = yield __await3(conductorToSound(this.evaluator, sound));
           const result = yield __await3(yield* __yieldStar(__asyncDelegator2(__asyncValues2(play(internal)))));
+          return yield __await3(soundToConductor(this.evaluator, result));
+        });
+      }
+      play_in_tab(sound) {
+        return __asyncGenerator3(this, arguments, function* play_in_tab_1() {
+          this.__ensureTabLoaded();
+          const internal = yield __await3(conductorToSound(this.evaluator, sound));
+          const result = yield __await3(yield* __yieldStar(__asyncDelegator2(__asyncValues2(play_in_tab(internal)))));
           return yield __await3(soundToConductor(this.evaluator, result));
         });
       }
@@ -1877,6 +1944,7 @@ to obtain permission to use microphone.`);
       _play_wave_decorators = [n4([E.CLOSURE, E.NUMBER], E.PAIR)];
       _play_waves_decorators = [n4([E.CLOSURE, E.CLOSURE, E.NUMBER], E.PAIR)];
       _play_decorators = [n4([E.PAIR], E.PAIR)];
+      _play_in_tab_decorators = [n4([E.PAIR], E.PAIR)];
       _stop_decorators = [n4([], E.VOID)];
       _noise_wave_decorators = [n4([], E.CLOSURE)];
       _noise_sound_decorators = [n4([E.NUMBER], E.PAIR)];
@@ -2043,6 +2111,17 @@ to obtain permission to use microphone.`);
         access: {
           has: obj => ("play" in obj),
           get: obj => obj.play
+        },
+        metadata: _metadata
+      }, null, _instanceExtraInitializers);
+      __esDecorate(_a, null, _play_in_tab_decorators, {
+        kind: "method",
+        name: "play_in_tab",
+        static: false,
+        private: false,
+        access: {
+          has: obj => ("play_in_tab" in obj),
+          get: obj => obj.play_in_tab
         },
         metadata: _metadata
       }, null, _instanceExtraInitializers);

@@ -56,6 +56,7 @@ export default require => {
   };
   var index_exports = {};
   __export(index_exports, {
+    PlayerBarsView: () => PlayerBarsView,
     SOUND_TAB_ID: () => SOUND_TAB_ID,
     default: () => SoundTabPlugin
   });
@@ -154,6 +155,7 @@ export default require => {
   var import_react = __require("react");
   var import_jsx_runtime = __require("react/jsx-runtime");
   var SOUND_TAB_ID = "sound";
+  var MAX_PLAYER_BARS = 50;
   var STATUS_COLORS = {
     idle: "#8A9BA8",
     constructing: "#B08D00",
@@ -195,6 +197,39 @@ export default require => {
       })]
     });
   }
+  function PlayerBarsView({players}) {
+    if (players.length === 0) {
+      return null;
+    }
+    return (0, import_jsx_runtime.jsx)("div", {
+      id: "sound-player-bars",
+      children: players.map((player, index) => (0, import_jsx_runtime.jsxs)("div", {
+        style: {
+          marginTop: "0.5em"
+        },
+        children: [(0, import_jsx_runtime.jsx)("p", {
+          id: `sound-player-label-${player.id}`,
+          style: {
+            margin: "0 0 0.25em 0"
+          },
+          children: `Sound ${index + 1}`
+        }), player.kind === "audio" ? (0, import_jsx_runtime.jsx)("audio", {
+          src: player.dataUri,
+          controls: true,
+          style: {
+            width: "100%"
+          },
+          "aria-labelledby": `sound-player-label-${player.id}`
+        }) : (0, import_jsx_runtime.jsx)("p", {
+          style: {
+            margin: 0,
+            fontStyle: "italic"
+          },
+          children: "zero duration sound"
+        })]
+      }, player.id))
+    });
+  }
   var SoundTabPlugin = class {
     constructor(_conduit, [soundChannel], tabService) {
       this.id = SOUND_WEB_ID;
@@ -204,8 +239,8 @@ export default require => {
       this.__status = "idle";
       this.__micGranted = null;
       this.__destroyed = false;
-      this.__playbackQueue = Promise.resolve();
-      this.__stopGeneration = 0;
+      this.__players = [];
+      this.__nextPlayerId = 0;
       this.__constructingCount = 0;
       this.__pendingPlaybackCount = 0;
       if (!soundChannel) {
@@ -216,13 +251,19 @@ export default require => {
       const subscribe = listener => this.subscribe(listener);
       const getStatus = () => this.__status;
       const getMicGranted = () => this.__micGranted;
+      const getPlayers = () => this.__players;
       function SoundPluginTab() {
         const status = (0, import_react.useSyncExternalStore)(subscribe, getStatus);
         const micGranted = (0, import_react.useSyncExternalStore)(subscribe, getMicGranted);
-        return (0, import_react.createElement)(SoundStatusView, {
+        const players = (0, import_react.useSyncExternalStore)(subscribe, getPlayers);
+        return (0, import_react.createElement)("div", null, [(0, import_react.createElement)(SoundStatusView, {
           status,
-          micGranted
-        });
+          micGranted,
+          key: "status"
+        }), (0, import_react.createElement)(PlayerBarsView, {
+          players,
+          key: "players"
+        })]);
       }
       const tab = {
         id: SOUND_TAB_ID,
@@ -240,6 +281,9 @@ export default require => {
     }
     getStatus() {
       return this.__status;
+    }
+    getPlayers() {
+      return this.__players;
     }
     destroy() {
       var _a, _b;
@@ -280,18 +324,32 @@ export default require => {
     playSamples(left, right, sampleRate) {
       this.__constructingCount = Math.max(0, this.__constructingCount - 1);
       this.__pendingPlaybackCount++;
-      const generation = this.__stopGeneration;
-      const myTurn = this.__playbackQueue.then(() => {
-        if (generation !== this.__stopGeneration) {
-          this.__pendingPlaybackCount = Math.max(0, this.__pendingPlaybackCount - 1);
-          this.__maybeFinalizeDestroy();
-          return;
-        }
-        return this.__playOne(left, right, sampleRate);
+      return this.__playOne(left, right, sampleRate);
+    }
+    addPlayerToTab(wavDataUri) {
+      return __async(this, null, function* () {
+        this.__constructingCount = Math.max(0, this.__constructingCount - 1);
+        this.__pushPlayer({
+          id: this.__nextPlayerId,
+          kind: "audio",
+          dataUri: wavDataUri
+        });
+        this.__updatePlaybackStatus();
       });
-      this.__playbackQueue = myTurn.catch(() => {});
-      this.__updatePlaybackStatus();
-      return myTurn;
+    }
+    addZeroDurationPlayerToTab() {
+      return __async(this, null, function* () {
+        this.__pushPlayer({
+          id: this.__nextPlayerId,
+          kind: "zero-duration"
+        });
+        this.__updatePlaybackStatus();
+      });
+    }
+    __pushPlayer(entry) {
+      const players = [...this.__players, entry];
+      this.__players = players.length > MAX_PLAYER_BARS ? players.slice(players.length - MAX_PLAYER_BARS) : players;
+      this.__nextPlayerId += 1;
     }
     __playOne(left, right, sampleRate) {
       return __async(this, null, function* () {
@@ -315,7 +373,6 @@ export default require => {
       });
     }
     $stopPlayback() {
-      this.__stopGeneration++;
       for (const source of this.__activeSources) {
         source.stop();
       }
@@ -379,7 +436,7 @@ export default require => {
       });
     }
     __ensureAudioContext() {
-      if (!this.__audioContext) {
+      if (!this.__audioContext || this.__audioContext.state === "closed") {
         this.__audioContext = new AudioContext();
       }
       return this.__audioContext;

@@ -210,6 +210,19 @@
     ],
     "retType": "Pair"
   },
+  "play_in_tab": {
+    "kind": "function",
+    "name": "play_in_tab",
+    "description": "<p>No description available</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "Pair",
+        "name": "sound"
+      }
+    ],
+    "retType": "Pair"
+  },
   "stop": {
     "kind": "function",
     "name": "stop",
