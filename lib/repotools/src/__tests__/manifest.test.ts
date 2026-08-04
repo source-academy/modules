@@ -4,6 +4,7 @@ import pathlib from 'path';
 import { describe, expect, it as baseIt, test, vi } from 'vitest';
 import { bundlesDir, tabsDir } from '../getGitRoot.js';
 import * as manifest from '../manifest.js';
+import type { ResolvedBundle } from '../types.js';
 
 const bundle0Path = pathlib.join(bundlesDir, 'test0');
 
@@ -400,5 +401,33 @@ describe(manifest.resolveAllTabs, () => {
       directory: tab1Path,
       name: 'tab1'
     });
+  });
+});
+
+describe(manifest.filterDocsVisibleBundles, () => {
+  const bundles: Record<string, ResolvedBundle> = {
+    test0: { type: 'bundle', name: 'test0', manifest: {}, directory: bundle0Path },
+    test1: { type: 'bundle', name: 'test1', manifest: {}, directory: pathlib.join(bundlesDir, 'test1') }
+  };
+
+  test('keeps only the bundles listed in conductor-modules.json', async () => {
+    mockedReadFile.mockResolvedValueOnce(JSON.stringify(['test0']));
+
+    await expect(manifest.filterDocsVisibleBundles(bundles)).resolves.toEqual({
+      test0: bundles.test0
+    });
+  });
+
+  test('an empty allowlist hides every bundle', async () => {
+    mockedReadFile.mockResolvedValueOnce(JSON.stringify([]));
+
+    await expect(manifest.filterDocsVisibleBundles(bundles)).resolves.toEqual({});
+  });
+
+  test('throws when the allowlist names a bundle that doesn\'t exist - almost certainly a typo', async () => {
+    mockedReadFile.mockResolvedValueOnce(JSON.stringify(['test0', 'nonexistent']));
+
+    await expect(manifest.filterDocsVisibleBundles(bundles))
+      .rejects.toThrow('conductor-modules.json lists unknown bundle(s): nonexistent');
   });
 });
