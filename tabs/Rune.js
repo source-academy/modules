@@ -12,7 +12,7 @@ export default require => {
     value
   }) : obj[key] = value;
   var __require = (x => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-    get: (a4, b) => (typeof require !== "undefined" ? require : a4)[b]
+    get: (a3, b) => (typeof require !== "undefined" ? require : a3)[b]
   }) : x)(function (x) {
     if (typeof require !== "undefined") return require.apply(this, arguments);
     throw Error('Dynamic require of "' + x + '" is not supported');
@@ -58,19 +58,19 @@ export default require => {
     }
   };
   var s = class extends o {
-    constructor(r3, o3, s7, e6) {
-      super(`${void 0 !== o3 ? `${e6 ? e6 + ":" : ""}${o3}${void 0 !== s7 ? ":" + s7 : ""}: ` : ""}${r3}`);
+    constructor(r3, o3, s6, e5) {
+      super(`${void 0 !== o3 ? `${e5 ? e5 + ":" : ""}${o3}${void 0 !== s6 ? ":" + s6 : ""}: ` : ""}${r3}`);
       __publicField(this, "name", "EvaluatorError");
       __publicField(this, "errorType", _.EVALUATOR);
       __publicField(this, "rawMessage");
       __publicField(this, "line");
       __publicField(this, "column");
       __publicField(this, "fileName");
-      (this.rawMessage = r3, this.line = o3, this.column = s7, this.fileName = e6);
+      (this.rawMessage = r3, this.line = o3, this.column = s6, this.fileName = e5);
     }
   };
   function e(r3) {
-    const t5 = (function (r4) {
+    const t4 = (function (r4) {
       var _a;
       if ("string" == typeof r4) return JSON.stringify(r4);
       if ("number" == typeof r4 || "boolean" == typeof r4) return String(r4);
@@ -81,41 +81,35 @@ export default require => {
       if ("function" == typeof r4) return r4.name ? `function ${r4.name}` : "anonymous function";
       try {
         return (_a = JSON.stringify(r4)) != null ? _a : Object.prototype.toString.call(r4);
-      } catch (e6) {
+      } catch (e5) {
         try {
           return String(r4);
-        } catch (e7) {
+        } catch (e6) {
           return Object.prototype.toString.call(r4);
         }
       }
     })(r3);
-    return t5.length > 100 ? `${t5.slice(0, 100)}...` : t5;
+    return t4.length > 100 ? `${t4.slice(0, 100)}...` : t4;
   }
   var n = class extends s {
-    constructor(r3, t5, n4, o3, u3, a4, i) {
-      super(`${r3}: Expected ${n4}${t5 ? ` for ${t5}` : ""}, got ${e(o3)}.`, u3, a4, i);
+    constructor(r3, t4, n4, o3, u3, a3, i) {
+      super(`${r3}: Expected ${n4}${t4 ? ` for ${t4}` : ""}, got ${e(o3)}.`, u3, a3, i);
       __publicField(this, "name", "EvaluatorParameterTypeError");
       __publicField(this, "errorType", _.EVALUATOR_TYPE);
       __publicField(this, "funcName");
       __publicField(this, "paramName");
       __publicField(this, "expected");
       __publicField(this, "actual");
-      (this.funcName = r3, this.paramName = t5, this.expected = n4, this.actual = o3);
-    }
-  };
-  var o2 = class extends n {
-    constructor(r3, t5, e6, n4, o3, u3, a4) {
-      super(e6, n4, "number" == typeof r3 ? `function with ${r3} parameter${1 === r3 ? "" : "s"}` : r3, t5, o3, u3, a4);
-      __publicField(this, "name", "EvaluatorCallbackError");
+      (this.funcName = r3, this.paramName = t4, this.expected = n4, this.actual = o3);
     }
   };
   var u = class extends n {
-    constructor(r3, t5, e6, n4, o3, u3, a4) {
-      super(e6, n4, (function (r4) {
+    constructor(r3, t4, e5, n4, o3, u3, a3) {
+      super(e5, n4, (function (r4) {
         if ("string" == typeof r4) return r4;
-        const {min: t6, max: e7, integer: n5 = true} = r4, o4 = n5 ? "integer" : "number";
-        return void 0 !== t6 && void 0 !== e7 ? `${o4} \u2208 [${t6}, ${e7}]` : void 0 !== t6 ? `${o4} \u2265 ${t6}` : void 0 !== e7 ? `${o4} \u2264 ${e7}` : o4;
-      })(t5), r3, o3, u3, a4);
+        const {min: t5, max: e6, integer: n5 = true} = r4, o4 = n5 ? "integer" : "number";
+        return void 0 !== t5 && void 0 !== e6 ? `${o4} \u2208 [${t5}, ${e6}]` : void 0 !== t5 ? `${o4} \u2265 ${t5}` : void 0 !== e6 ? `${o4} \u2264 ${e6}` : o4;
+      })(t4), r3, o3, u3, a3);
       __publicField(this, "name", "EvaluatorNumberRangeError");
     }
   };
@@ -126,44 +120,15 @@ export default require => {
       __publicField(this, "errorType", _.EVALUATOR_RUNTIME);
     }
   };
-  function f(r3, o3) {
-    return "function" == typeof r3 && r3.length === o3;
+  function p(r3, o3, t4, n4 = true) {
+    return "number" == typeof r3 && !Number.isNaN(r3) && (!(n4 && !Number.isInteger(r3)) && (!(void 0 !== o3 && r3 < o3) && !(void 0 !== t4 && r3 > t4)));
   }
-  function a(r3, t5, n4, e6, i) {
-    if (!f(r3, t5)) throw new o2(e6 != null ? e6 : t5, r3, n4, i);
-  }
-  function p(r3, o3, t5, n4 = true) {
-    return "number" == typeof r3 && !Number.isNaN(r3) && (!(n4 && !Number.isInteger(r3)) && (!(void 0 !== o3 && r3 < o3) && !(void 0 !== t5 && r3 > t5)));
-  }
-  function l(o3, t5, n4, e6, i = true, u3) {
-    if (!p(o3, n4, e6, i)) throw new u(o3, {
+  function l(o3, t4, n4, e5, i = true, u3) {
+    if (!p(o3, n4, e5, i)) throw new u(o3, {
       min: n4,
-      max: e6,
+      max: e5,
       integer: i
-    }, t5, u3);
-  }
-  var E;
-  !(function (E2) {
-    (E2[E2.VOID = 0] = "VOID", E2[E2.BOOLEAN = 1] = "BOOLEAN", E2[E2.NUMBER = 2] = "NUMBER", E2[E2.CONST_STRING = 3] = "CONST_STRING", E2[E2.EMPTY_LIST = 4] = "EMPTY_LIST", E2[E2.PAIR = 5] = "PAIR", E2[E2.ARRAY = 6] = "ARRAY", E2[E2.CLOSURE = 7] = "CLOSURE", E2[E2.OPAQUE = 8] = "OPAQUE", E2[E2.LIST = 9] = "LIST", E2[E2.ANY = 10] = "ANY", E2[E2.INTEGER = 11] = "INTEGER");
-  })(E || (E = {}));
-  var a2;
-  !(function (a4) {
-    (a4[a4.HELLO = 0] = "HELLO", a4[a4.ABORT = 1] = "ABORT", a4[a4.ENTRY = 2] = "ENTRY");
-  })(a2 || (a2 = {}));
-  var O;
-  !(function (O2) {
-    (O2[O2.PROTOCOL_VERSION = 0] = "PROTOCOL_VERSION", O2[O2.PROTOCOL_MIN_VERSION = 0] = "PROTOCOL_MIN_VERSION", O2[O2.SETUP_MESSAGES_BUFFER_SIZE = 10] = "SETUP_MESSAGES_BUFFER_SIZE");
-  })(O || (O = {}));
-  var N;
-  !(function (N2) {
-    (N2[N2.ONLINE = 0] = "ONLINE", N2[N2.EVAL_READY = 1] = "EVAL_READY", N2[N2.RUNNING = 2] = "RUNNING", N2[N2.WAITING = 3] = "WAITING", N2[N2.BREAKPOINT = 4] = "BREAKPOINT", N2[N2.STOPPED = 5] = "STOPPED", N2[N2.ERROR = 6] = "ERROR");
-  })(N || (N = {}));
-  function callUnaryFunction(f2, x) {
-    return f2(x);
-  }
-  function repeat_internal(f2, n4) {
-    const func = x => callUnaryFunction(f2, x);
-    return n4 === 0 ? x => x : x => func(repeat_internal(func, n4 - 1)(x));
+    }, t4, u3);
   }
   function sample(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -175,9 +140,9 @@ export default require => {
   var EPSILON = 1e-6;
   var ARRAY_TYPE = typeof Float32Array !== "undefined" ? Float32Array : Array;
   var RANDOM = Math.random;
-  function round(a4) {
-    if (a4 >= 0) return Math.round(a4);
-    return a4 % 0.5 === 0 ? Math.floor(a4) : Math.round(a4);
+  function round(a3) {
+    if (a3 >= 0) return Math.round(a3);
+    return a3 % 0.5 === 0 ? Math.floor(a3) : Math.round(a3);
   }
   var degree = Math.PI / 180;
   var radian = 180 / Math.PI;
@@ -258,43 +223,43 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function clone(a4) {
+  function clone(a3) {
     var out = new ARRAY_TYPE(16);
-    out[0] = a4[0];
-    out[1] = a4[1];
-    out[2] = a4[2];
-    out[3] = a4[3];
-    out[4] = a4[4];
-    out[5] = a4[5];
-    out[6] = a4[6];
-    out[7] = a4[7];
-    out[8] = a4[8];
-    out[9] = a4[9];
-    out[10] = a4[10];
-    out[11] = a4[11];
-    out[12] = a4[12];
-    out[13] = a4[13];
-    out[14] = a4[14];
-    out[15] = a4[15];
+    out[0] = a3[0];
+    out[1] = a3[1];
+    out[2] = a3[2];
+    out[3] = a3[3];
+    out[4] = a3[4];
+    out[5] = a3[5];
+    out[6] = a3[6];
+    out[7] = a3[7];
+    out[8] = a3[8];
+    out[9] = a3[9];
+    out[10] = a3[10];
+    out[11] = a3[11];
+    out[12] = a3[12];
+    out[13] = a3[13];
+    out[14] = a3[14];
+    out[15] = a3[15];
     return out;
   }
-  function copy(out, a4) {
-    out[0] = a4[0];
-    out[1] = a4[1];
-    out[2] = a4[2];
-    out[3] = a4[3];
-    out[4] = a4[4];
-    out[5] = a4[5];
-    out[6] = a4[6];
-    out[7] = a4[7];
-    out[8] = a4[8];
-    out[9] = a4[9];
-    out[10] = a4[10];
-    out[11] = a4[11];
-    out[12] = a4[12];
-    out[13] = a4[13];
-    out[14] = a4[14];
-    out[15] = a4[15];
+  function copy(out, a3) {
+    out[0] = a3[0];
+    out[1] = a3[1];
+    out[2] = a3[2];
+    out[3] = a3[3];
+    out[4] = a3[4];
+    out[5] = a3[5];
+    out[6] = a3[6];
+    out[7] = a3[7];
+    out[8] = a3[8];
+    out[9] = a3[9];
+    out[10] = a3[10];
+    out[11] = a3[11];
+    out[12] = a3[12];
+    out[13] = a3[13];
+    out[14] = a3[14];
+    out[15] = a3[15];
     return out;
   }
   function fromValues(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33) {
@@ -355,48 +320,48 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function transpose(out, a4) {
-    if (out === a4) {
-      var a01 = a4[1], a02 = a4[2], a03 = a4[3];
-      var a12 = a4[6], a13 = a4[7];
-      var a23 = a4[11];
-      out[1] = a4[4];
-      out[2] = a4[8];
-      out[3] = a4[12];
+  function transpose(out, a3) {
+    if (out === a3) {
+      var a01 = a3[1], a02 = a3[2], a03 = a3[3];
+      var a12 = a3[6], a13 = a3[7];
+      var a23 = a3[11];
+      out[1] = a3[4];
+      out[2] = a3[8];
+      out[3] = a3[12];
       out[4] = a01;
-      out[6] = a4[9];
-      out[7] = a4[13];
+      out[6] = a3[9];
+      out[7] = a3[13];
       out[8] = a02;
       out[9] = a12;
-      out[11] = a4[14];
+      out[11] = a3[14];
       out[12] = a03;
       out[13] = a13;
       out[14] = a23;
     } else {
-      out[0] = a4[0];
-      out[1] = a4[4];
-      out[2] = a4[8];
-      out[3] = a4[12];
-      out[4] = a4[1];
-      out[5] = a4[5];
-      out[6] = a4[9];
-      out[7] = a4[13];
-      out[8] = a4[2];
-      out[9] = a4[6];
-      out[10] = a4[10];
-      out[11] = a4[14];
-      out[12] = a4[3];
-      out[13] = a4[7];
-      out[14] = a4[11];
-      out[15] = a4[15];
+      out[0] = a3[0];
+      out[1] = a3[4];
+      out[2] = a3[8];
+      out[3] = a3[12];
+      out[4] = a3[1];
+      out[5] = a3[5];
+      out[6] = a3[9];
+      out[7] = a3[13];
+      out[8] = a3[2];
+      out[9] = a3[6];
+      out[10] = a3[10];
+      out[11] = a3[14];
+      out[12] = a3[3];
+      out[13] = a3[7];
+      out[14] = a3[11];
+      out[15] = a3[15];
     }
     return out;
   }
-  function invert(out, a4) {
-    var a00 = a4[0], a01 = a4[1], a02 = a4[2], a03 = a4[3];
-    var a10 = a4[4], a11 = a4[5], a12 = a4[6], a13 = a4[7];
-    var a20 = a4[8], a21 = a4[9], a22 = a4[10], a23 = a4[11];
-    var a30 = a4[12], a31 = a4[13], a32 = a4[14], a33 = a4[15];
+  function invert(out, a3) {
+    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
+    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
+    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
+    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
     var b00 = a00 * a11 - a01 * a10;
     var b01 = a00 * a12 - a02 * a10;
     var b02 = a00 * a13 - a03 * a10;
@@ -432,11 +397,11 @@ export default require => {
     out[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
     return out;
   }
-  function adjoint(out, a4) {
-    var a00 = a4[0], a01 = a4[1], a02 = a4[2], a03 = a4[3];
-    var a10 = a4[4], a11 = a4[5], a12 = a4[6], a13 = a4[7];
-    var a20 = a4[8], a21 = a4[9], a22 = a4[10], a23 = a4[11];
-    var a30 = a4[12], a31 = a4[13], a32 = a4[14], a33 = a4[15];
+  function adjoint(out, a3) {
+    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
+    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
+    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
+    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
     var b00 = a00 * a11 - a01 * a10;
     var b01 = a00 * a12 - a02 * a10;
     var b02 = a00 * a13 - a03 * a10;
@@ -467,11 +432,11 @@ export default require => {
     out[15] = a20 * b03 - a21 * b01 + a22 * b00;
     return out;
   }
-  function determinant(a4) {
-    var a00 = a4[0], a01 = a4[1], a02 = a4[2], a03 = a4[3];
-    var a10 = a4[4], a11 = a4[5], a12 = a4[6], a13 = a4[7];
-    var a20 = a4[8], a21 = a4[9], a22 = a4[10], a23 = a4[11];
-    var a30 = a4[12], a31 = a4[13], a32 = a4[14], a33 = a4[15];
+  function determinant(a3) {
+    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
+    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
+    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
+    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
     var b0 = a00 * a11 - a01 * a10;
     var b1 = a00 * a12 - a02 * a10;
     var b2 = a01 * a12 - a02 * a11;
@@ -484,11 +449,11 @@ export default require => {
     var b9 = a30 * b2 - a31 * b1 + a32 * b0;
     return a13 * b6 - a03 * b7 + a33 * b8 - a23 * b9;
   }
-  function multiply(out, a4, b) {
-    var a00 = a4[0], a01 = a4[1], a02 = a4[2], a03 = a4[3];
-    var a10 = a4[4], a11 = a4[5], a12 = a4[6], a13 = a4[7];
-    var a20 = a4[8], a21 = a4[9], a22 = a4[10], a23 = a4[11];
-    var a30 = a4[12], a31 = a4[13], a32 = a4[14], a33 = a4[15];
+  function multiply(out, a3, b) {
+    var a00 = a3[0], a01 = a3[1], a02 = a3[2], a03 = a3[3];
+    var a10 = a3[4], a11 = a3[5], a12 = a3[6], a13 = a3[7];
+    var a20 = a3[8], a21 = a3[9], a22 = a3[10], a23 = a3[11];
+    var a30 = a3[12], a31 = a3[13], a32 = a3[14], a33 = a3[15];
     var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
     out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
     out[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
@@ -520,29 +485,29 @@ export default require => {
     out[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
     return out;
   }
-  function translate(out, a4, v) {
+  function translate(out, a3, v) {
     var x = v[0], y = v[1], z = v[2];
     var a00, a01, a02, a03;
     var a10, a11, a12, a13;
     var a20, a21, a22, a23;
-    if (a4 === out) {
-      out[12] = a4[0] * x + a4[4] * y + a4[8] * z + a4[12];
-      out[13] = a4[1] * x + a4[5] * y + a4[9] * z + a4[13];
-      out[14] = a4[2] * x + a4[6] * y + a4[10] * z + a4[14];
-      out[15] = a4[3] * x + a4[7] * y + a4[11] * z + a4[15];
+    if (a3 === out) {
+      out[12] = a3[0] * x + a3[4] * y + a3[8] * z + a3[12];
+      out[13] = a3[1] * x + a3[5] * y + a3[9] * z + a3[13];
+      out[14] = a3[2] * x + a3[6] * y + a3[10] * z + a3[14];
+      out[15] = a3[3] * x + a3[7] * y + a3[11] * z + a3[15];
     } else {
-      a00 = a4[0];
-      a01 = a4[1];
-      a02 = a4[2];
-      a03 = a4[3];
-      a10 = a4[4];
-      a11 = a4[5];
-      a12 = a4[6];
-      a13 = a4[7];
-      a20 = a4[8];
-      a21 = a4[9];
-      a22 = a4[10];
-      a23 = a4[11];
+      a00 = a3[0];
+      a01 = a3[1];
+      a02 = a3[2];
+      a03 = a3[3];
+      a10 = a3[4];
+      a11 = a3[5];
+      a12 = a3[6];
+      a13 = a3[7];
+      a20 = a3[8];
+      a21 = a3[9];
+      a22 = a3[10];
+      a23 = a3[11];
       out[0] = a00;
       out[1] = a01;
       out[2] = a02;
@@ -555,37 +520,37 @@ export default require => {
       out[9] = a21;
       out[10] = a22;
       out[11] = a23;
-      out[12] = a00 * x + a10 * y + a20 * z + a4[12];
-      out[13] = a01 * x + a11 * y + a21 * z + a4[13];
-      out[14] = a02 * x + a12 * y + a22 * z + a4[14];
-      out[15] = a03 * x + a13 * y + a23 * z + a4[15];
+      out[12] = a00 * x + a10 * y + a20 * z + a3[12];
+      out[13] = a01 * x + a11 * y + a21 * z + a3[13];
+      out[14] = a02 * x + a12 * y + a22 * z + a3[14];
+      out[15] = a03 * x + a13 * y + a23 * z + a3[15];
     }
     return out;
   }
-  function scale(out, a4, v) {
+  function scale(out, a3, v) {
     var x = v[0], y = v[1], z = v[2];
-    out[0] = a4[0] * x;
-    out[1] = a4[1] * x;
-    out[2] = a4[2] * x;
-    out[3] = a4[3] * x;
-    out[4] = a4[4] * y;
-    out[5] = a4[5] * y;
-    out[6] = a4[6] * y;
-    out[7] = a4[7] * y;
-    out[8] = a4[8] * z;
-    out[9] = a4[9] * z;
-    out[10] = a4[10] * z;
-    out[11] = a4[11] * z;
-    out[12] = a4[12];
-    out[13] = a4[13];
-    out[14] = a4[14];
-    out[15] = a4[15];
+    out[0] = a3[0] * x;
+    out[1] = a3[1] * x;
+    out[2] = a3[2] * x;
+    out[3] = a3[3] * x;
+    out[4] = a3[4] * y;
+    out[5] = a3[5] * y;
+    out[6] = a3[6] * y;
+    out[7] = a3[7] * y;
+    out[8] = a3[8] * z;
+    out[9] = a3[9] * z;
+    out[10] = a3[10] * z;
+    out[11] = a3[11] * z;
+    out[12] = a3[12];
+    out[13] = a3[13];
+    out[14] = a3[14];
+    out[15] = a3[15];
     return out;
   }
-  function rotate(out, a4, rad, axis) {
+  function rotate(out, a3, rad, axis) {
     var x = axis[0], y = axis[1], z = axis[2];
     var len2 = Math.sqrt(x * x + y * y + z * z);
-    var s7, c2, t5;
+    var s6, c2, t4;
     var a00, a01, a02, a03;
     var a10, a11, a12, a13;
     var a20, a21, a22, a23;
@@ -599,30 +564,30 @@ export default require => {
     x *= len2;
     y *= len2;
     z *= len2;
-    s7 = Math.sin(rad);
+    s6 = Math.sin(rad);
     c2 = Math.cos(rad);
-    t5 = 1 - c2;
-    a00 = a4[0];
-    a01 = a4[1];
-    a02 = a4[2];
-    a03 = a4[3];
-    a10 = a4[4];
-    a11 = a4[5];
-    a12 = a4[6];
-    a13 = a4[7];
-    a20 = a4[8];
-    a21 = a4[9];
-    a22 = a4[10];
-    a23 = a4[11];
-    b00 = x * x * t5 + c2;
-    b01 = y * x * t5 + z * s7;
-    b02 = z * x * t5 - y * s7;
-    b10 = x * y * t5 - z * s7;
-    b11 = y * y * t5 + c2;
-    b12 = z * y * t5 + x * s7;
-    b20 = x * z * t5 + y * s7;
-    b21 = y * z * t5 - x * s7;
-    b22 = z * z * t5 + c2;
+    t4 = 1 - c2;
+    a00 = a3[0];
+    a01 = a3[1];
+    a02 = a3[2];
+    a03 = a3[3];
+    a10 = a3[4];
+    a11 = a3[5];
+    a12 = a3[6];
+    a13 = a3[7];
+    a20 = a3[8];
+    a21 = a3[9];
+    a22 = a3[10];
+    a23 = a3[11];
+    b00 = x * x * t4 + c2;
+    b01 = y * x * t4 + z * s6;
+    b02 = z * x * t4 - y * s6;
+    b10 = x * y * t4 - z * s6;
+    b11 = y * y * t4 + c2;
+    b12 = z * y * t4 + x * s6;
+    b20 = x * z * t4 + y * s6;
+    b21 = y * z * t4 - x * s6;
+    b22 = z * z * t4 + c2;
     out[0] = a00 * b00 + a10 * b01 + a20 * b02;
     out[1] = a01 * b00 + a11 * b01 + a21 * b02;
     out[2] = a02 * b00 + a12 * b01 + a22 * b02;
@@ -635,105 +600,105 @@ export default require => {
     out[9] = a01 * b20 + a11 * b21 + a21 * b22;
     out[10] = a02 * b20 + a12 * b21 + a22 * b22;
     out[11] = a03 * b20 + a13 * b21 + a23 * b22;
-    if (a4 !== out) {
-      out[12] = a4[12];
-      out[13] = a4[13];
-      out[14] = a4[14];
-      out[15] = a4[15];
+    if (a3 !== out) {
+      out[12] = a3[12];
+      out[13] = a3[13];
+      out[14] = a3[14];
+      out[15] = a3[15];
     }
     return out;
   }
-  function rotateX(out, a4, rad) {
-    var s7 = Math.sin(rad);
+  function rotateX(out, a3, rad) {
+    var s6 = Math.sin(rad);
     var c2 = Math.cos(rad);
-    var a10 = a4[4];
-    var a11 = a4[5];
-    var a12 = a4[6];
-    var a13 = a4[7];
-    var a20 = a4[8];
-    var a21 = a4[9];
-    var a22 = a4[10];
-    var a23 = a4[11];
-    if (a4 !== out) {
-      out[0] = a4[0];
-      out[1] = a4[1];
-      out[2] = a4[2];
-      out[3] = a4[3];
-      out[12] = a4[12];
-      out[13] = a4[13];
-      out[14] = a4[14];
-      out[15] = a4[15];
+    var a10 = a3[4];
+    var a11 = a3[5];
+    var a12 = a3[6];
+    var a13 = a3[7];
+    var a20 = a3[8];
+    var a21 = a3[9];
+    var a22 = a3[10];
+    var a23 = a3[11];
+    if (a3 !== out) {
+      out[0] = a3[0];
+      out[1] = a3[1];
+      out[2] = a3[2];
+      out[3] = a3[3];
+      out[12] = a3[12];
+      out[13] = a3[13];
+      out[14] = a3[14];
+      out[15] = a3[15];
     }
-    out[4] = a10 * c2 + a20 * s7;
-    out[5] = a11 * c2 + a21 * s7;
-    out[6] = a12 * c2 + a22 * s7;
-    out[7] = a13 * c2 + a23 * s7;
-    out[8] = a20 * c2 - a10 * s7;
-    out[9] = a21 * c2 - a11 * s7;
-    out[10] = a22 * c2 - a12 * s7;
-    out[11] = a23 * c2 - a13 * s7;
+    out[4] = a10 * c2 + a20 * s6;
+    out[5] = a11 * c2 + a21 * s6;
+    out[6] = a12 * c2 + a22 * s6;
+    out[7] = a13 * c2 + a23 * s6;
+    out[8] = a20 * c2 - a10 * s6;
+    out[9] = a21 * c2 - a11 * s6;
+    out[10] = a22 * c2 - a12 * s6;
+    out[11] = a23 * c2 - a13 * s6;
     return out;
   }
-  function rotateY(out, a4, rad) {
-    var s7 = Math.sin(rad);
+  function rotateY(out, a3, rad) {
+    var s6 = Math.sin(rad);
     var c2 = Math.cos(rad);
-    var a00 = a4[0];
-    var a01 = a4[1];
-    var a02 = a4[2];
-    var a03 = a4[3];
-    var a20 = a4[8];
-    var a21 = a4[9];
-    var a22 = a4[10];
-    var a23 = a4[11];
-    if (a4 !== out) {
-      out[4] = a4[4];
-      out[5] = a4[5];
-      out[6] = a4[6];
-      out[7] = a4[7];
-      out[12] = a4[12];
-      out[13] = a4[13];
-      out[14] = a4[14];
-      out[15] = a4[15];
+    var a00 = a3[0];
+    var a01 = a3[1];
+    var a02 = a3[2];
+    var a03 = a3[3];
+    var a20 = a3[8];
+    var a21 = a3[9];
+    var a22 = a3[10];
+    var a23 = a3[11];
+    if (a3 !== out) {
+      out[4] = a3[4];
+      out[5] = a3[5];
+      out[6] = a3[6];
+      out[7] = a3[7];
+      out[12] = a3[12];
+      out[13] = a3[13];
+      out[14] = a3[14];
+      out[15] = a3[15];
     }
-    out[0] = a00 * c2 - a20 * s7;
-    out[1] = a01 * c2 - a21 * s7;
-    out[2] = a02 * c2 - a22 * s7;
-    out[3] = a03 * c2 - a23 * s7;
-    out[8] = a00 * s7 + a20 * c2;
-    out[9] = a01 * s7 + a21 * c2;
-    out[10] = a02 * s7 + a22 * c2;
-    out[11] = a03 * s7 + a23 * c2;
+    out[0] = a00 * c2 - a20 * s6;
+    out[1] = a01 * c2 - a21 * s6;
+    out[2] = a02 * c2 - a22 * s6;
+    out[3] = a03 * c2 - a23 * s6;
+    out[8] = a00 * s6 + a20 * c2;
+    out[9] = a01 * s6 + a21 * c2;
+    out[10] = a02 * s6 + a22 * c2;
+    out[11] = a03 * s6 + a23 * c2;
     return out;
   }
-  function rotateZ(out, a4, rad) {
-    var s7 = Math.sin(rad);
+  function rotateZ(out, a3, rad) {
+    var s6 = Math.sin(rad);
     var c2 = Math.cos(rad);
-    var a00 = a4[0];
-    var a01 = a4[1];
-    var a02 = a4[2];
-    var a03 = a4[3];
-    var a10 = a4[4];
-    var a11 = a4[5];
-    var a12 = a4[6];
-    var a13 = a4[7];
-    if (a4 !== out) {
-      out[8] = a4[8];
-      out[9] = a4[9];
-      out[10] = a4[10];
-      out[11] = a4[11];
-      out[12] = a4[12];
-      out[13] = a4[13];
-      out[14] = a4[14];
-      out[15] = a4[15];
+    var a00 = a3[0];
+    var a01 = a3[1];
+    var a02 = a3[2];
+    var a03 = a3[3];
+    var a10 = a3[4];
+    var a11 = a3[5];
+    var a12 = a3[6];
+    var a13 = a3[7];
+    if (a3 !== out) {
+      out[8] = a3[8];
+      out[9] = a3[9];
+      out[10] = a3[10];
+      out[11] = a3[11];
+      out[12] = a3[12];
+      out[13] = a3[13];
+      out[14] = a3[14];
+      out[15] = a3[15];
     }
-    out[0] = a00 * c2 + a10 * s7;
-    out[1] = a01 * c2 + a11 * s7;
-    out[2] = a02 * c2 + a12 * s7;
-    out[3] = a03 * c2 + a13 * s7;
-    out[4] = a10 * c2 - a00 * s7;
-    out[5] = a11 * c2 - a01 * s7;
-    out[6] = a12 * c2 - a02 * s7;
-    out[7] = a13 * c2 - a03 * s7;
+    out[0] = a00 * c2 + a10 * s6;
+    out[1] = a01 * c2 + a11 * s6;
+    out[2] = a02 * c2 + a12 * s6;
+    out[3] = a03 * c2 + a13 * s6;
+    out[4] = a10 * c2 - a00 * s6;
+    out[5] = a11 * c2 - a01 * s6;
+    out[6] = a12 * c2 - a02 * s6;
+    out[7] = a13 * c2 - a03 * s6;
     return out;
   }
   function fromTranslation(out, v) {
@@ -777,7 +742,7 @@ export default require => {
   function fromRotation(out, rad, axis) {
     var x = axis[0], y = axis[1], z = axis[2];
     var len2 = Math.sqrt(x * x + y * y + z * z);
-    var s7, c2, t5;
+    var s6, c2, t4;
     if (len2 < EPSILON) {
       return null;
     }
@@ -785,20 +750,20 @@ export default require => {
     x *= len2;
     y *= len2;
     z *= len2;
-    s7 = Math.sin(rad);
+    s6 = Math.sin(rad);
     c2 = Math.cos(rad);
-    t5 = 1 - c2;
-    out[0] = x * x * t5 + c2;
-    out[1] = y * x * t5 + z * s7;
-    out[2] = z * x * t5 - y * s7;
+    t4 = 1 - c2;
+    out[0] = x * x * t4 + c2;
+    out[1] = y * x * t4 + z * s6;
+    out[2] = z * x * t4 - y * s6;
     out[3] = 0;
-    out[4] = x * y * t5 - z * s7;
-    out[5] = y * y * t5 + c2;
-    out[6] = z * y * t5 + x * s7;
+    out[4] = x * y * t4 - z * s6;
+    out[5] = y * y * t4 + c2;
+    out[6] = z * y * t4 + x * s6;
     out[7] = 0;
-    out[8] = x * z * t5 + y * s7;
-    out[9] = y * z * t5 - x * s7;
-    out[10] = z * z * t5 + c2;
+    out[8] = x * z * t4 + y * s6;
+    out[9] = y * z * t4 - x * s6;
+    out[10] = z * z * t4 + c2;
     out[11] = 0;
     out[12] = 0;
     out[13] = 0;
@@ -807,7 +772,7 @@ export default require => {
     return out;
   }
   function fromXRotation(out, rad) {
-    var s7 = Math.sin(rad);
+    var s6 = Math.sin(rad);
     var c2 = Math.cos(rad);
     out[0] = 1;
     out[1] = 0;
@@ -815,10 +780,10 @@ export default require => {
     out[3] = 0;
     out[4] = 0;
     out[5] = c2;
-    out[6] = s7;
+    out[6] = s6;
     out[7] = 0;
     out[8] = 0;
-    out[9] = -s7;
+    out[9] = -s6;
     out[10] = c2;
     out[11] = 0;
     out[12] = 0;
@@ -828,17 +793,17 @@ export default require => {
     return out;
   }
   function fromYRotation(out, rad) {
-    var s7 = Math.sin(rad);
+    var s6 = Math.sin(rad);
     var c2 = Math.cos(rad);
     out[0] = c2;
     out[1] = 0;
-    out[2] = -s7;
+    out[2] = -s6;
     out[3] = 0;
     out[4] = 0;
     out[5] = 1;
     out[6] = 0;
     out[7] = 0;
-    out[8] = s7;
+    out[8] = s6;
     out[9] = 0;
     out[10] = c2;
     out[11] = 0;
@@ -849,13 +814,13 @@ export default require => {
     return out;
   }
   function fromZRotation(out, rad) {
-    var s7 = Math.sin(rad);
+    var s6 = Math.sin(rad);
     var c2 = Math.cos(rad);
     out[0] = c2;
-    out[1] = s7;
+    out[1] = s6;
     out[2] = 0;
     out[3] = 0;
-    out[4] = -s7;
+    out[4] = -s6;
     out[5] = c2;
     out[6] = 0;
     out[7] = 0;
@@ -901,9 +866,9 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function fromQuat2(out, a4) {
+  function fromQuat2(out, a3) {
     var translation = new ARRAY_TYPE(3);
-    var bx = -a4[0], by = -a4[1], bz = -a4[2], bw = a4[3], ax = a4[4], ay = a4[5], az = a4[6], aw = a4[7];
+    var bx = -a3[0], by = -a3[1], bz = -a3[2], bw = a3[3], ax = a3[4], ay = a3[5], az = a3[6], aw = a3[7];
     var magnitude = bx * bx + by * by + bz * bz + bw * bw;
     if (magnitude > 0) {
       translation[0] = (ax * bw + aw * bx + ay * bz - az * by) * 2 / magnitude;
@@ -914,7 +879,7 @@ export default require => {
       translation[1] = (ay * bw + aw * by + az * bx - ax * bz) * 2;
       translation[2] = (az * bw + aw * bz + ax * by - ay * bx) * 2;
     }
-    fromRotationTranslation(out, a4, translation);
+    fromRotationTranslation(out, a3, translation);
     return out;
   }
   function getTranslation(out, mat) {
@@ -1039,7 +1004,7 @@ export default require => {
     }
     return out_r;
   }
-  function fromRotationTranslationScale(out, q, v, s7) {
+  function fromRotationTranslationScale(out, q, v, s6) {
     var x = q[0], y = q[1], z = q[2], w = q[3];
     var x2 = x + x;
     var y2 = y + y;
@@ -1053,9 +1018,9 @@ export default require => {
     var wx = w * x2;
     var wy = w * y2;
     var wz = w * z2;
-    var sx = s7[0];
-    var sy = s7[1];
-    var sz = s7[2];
+    var sx = s6[0];
+    var sy = s6[1];
+    var sz = s6[2];
     out[0] = (1 - (yy + zz)) * sx;
     out[1] = (xy + wz) * sx;
     out[2] = (xz - wy) * sx;
@@ -1074,7 +1039,7 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function fromRotationTranslationScaleOrigin(out, q, v, s7, o3) {
+  function fromRotationTranslationScaleOrigin(out, q, v, s6, o3) {
     var x = q[0], y = q[1], z = q[2], w = q[3];
     var x2 = x + x;
     var y2 = y + y;
@@ -1088,9 +1053,9 @@ export default require => {
     var wx = w * x2;
     var wy = w * y2;
     var wz = w * z2;
-    var sx = s7[0];
-    var sy = s7[1];
-    var sz = s7[2];
+    var sx = s6[0];
+    var sy = s6[1];
+    var sz = s6[2];
     var ox = o3[0];
     var oy = o3[1];
     var oz = o3[2];
@@ -1401,101 +1366,101 @@ export default require => {
     out[15] = 1;
     return out;
   }
-  function str(a4) {
-    return "mat4(" + a4[0] + ", " + a4[1] + ", " + a4[2] + ", " + a4[3] + ", " + a4[4] + ", " + a4[5] + ", " + a4[6] + ", " + a4[7] + ", " + a4[8] + ", " + a4[9] + ", " + a4[10] + ", " + a4[11] + ", " + a4[12] + ", " + a4[13] + ", " + a4[14] + ", " + a4[15] + ")";
+  function str(a3) {
+    return "mat4(" + a3[0] + ", " + a3[1] + ", " + a3[2] + ", " + a3[3] + ", " + a3[4] + ", " + a3[5] + ", " + a3[6] + ", " + a3[7] + ", " + a3[8] + ", " + a3[9] + ", " + a3[10] + ", " + a3[11] + ", " + a3[12] + ", " + a3[13] + ", " + a3[14] + ", " + a3[15] + ")";
   }
-  function frob(a4) {
-    return Math.sqrt(a4[0] * a4[0] + a4[1] * a4[1] + a4[2] * a4[2] + a4[3] * a4[3] + a4[4] * a4[4] + a4[5] * a4[5] + a4[6] * a4[6] + a4[7] * a4[7] + a4[8] * a4[8] + a4[9] * a4[9] + a4[10] * a4[10] + a4[11] * a4[11] + a4[12] * a4[12] + a4[13] * a4[13] + a4[14] * a4[14] + a4[15] * a4[15]);
+  function frob(a3) {
+    return Math.sqrt(a3[0] * a3[0] + a3[1] * a3[1] + a3[2] * a3[2] + a3[3] * a3[3] + a3[4] * a3[4] + a3[5] * a3[5] + a3[6] * a3[6] + a3[7] * a3[7] + a3[8] * a3[8] + a3[9] * a3[9] + a3[10] * a3[10] + a3[11] * a3[11] + a3[12] * a3[12] + a3[13] * a3[13] + a3[14] * a3[14] + a3[15] * a3[15]);
   }
-  function add(out, a4, b) {
-    out[0] = a4[0] + b[0];
-    out[1] = a4[1] + b[1];
-    out[2] = a4[2] + b[2];
-    out[3] = a4[3] + b[3];
-    out[4] = a4[4] + b[4];
-    out[5] = a4[5] + b[5];
-    out[6] = a4[6] + b[6];
-    out[7] = a4[7] + b[7];
-    out[8] = a4[8] + b[8];
-    out[9] = a4[9] + b[9];
-    out[10] = a4[10] + b[10];
-    out[11] = a4[11] + b[11];
-    out[12] = a4[12] + b[12];
-    out[13] = a4[13] + b[13];
-    out[14] = a4[14] + b[14];
-    out[15] = a4[15] + b[15];
+  function add(out, a3, b) {
+    out[0] = a3[0] + b[0];
+    out[1] = a3[1] + b[1];
+    out[2] = a3[2] + b[2];
+    out[3] = a3[3] + b[3];
+    out[4] = a3[4] + b[4];
+    out[5] = a3[5] + b[5];
+    out[6] = a3[6] + b[6];
+    out[7] = a3[7] + b[7];
+    out[8] = a3[8] + b[8];
+    out[9] = a3[9] + b[9];
+    out[10] = a3[10] + b[10];
+    out[11] = a3[11] + b[11];
+    out[12] = a3[12] + b[12];
+    out[13] = a3[13] + b[13];
+    out[14] = a3[14] + b[14];
+    out[15] = a3[15] + b[15];
     return out;
   }
-  function subtract(out, a4, b) {
-    out[0] = a4[0] - b[0];
-    out[1] = a4[1] - b[1];
-    out[2] = a4[2] - b[2];
-    out[3] = a4[3] - b[3];
-    out[4] = a4[4] - b[4];
-    out[5] = a4[5] - b[5];
-    out[6] = a4[6] - b[6];
-    out[7] = a4[7] - b[7];
-    out[8] = a4[8] - b[8];
-    out[9] = a4[9] - b[9];
-    out[10] = a4[10] - b[10];
-    out[11] = a4[11] - b[11];
-    out[12] = a4[12] - b[12];
-    out[13] = a4[13] - b[13];
-    out[14] = a4[14] - b[14];
-    out[15] = a4[15] - b[15];
+  function subtract(out, a3, b) {
+    out[0] = a3[0] - b[0];
+    out[1] = a3[1] - b[1];
+    out[2] = a3[2] - b[2];
+    out[3] = a3[3] - b[3];
+    out[4] = a3[4] - b[4];
+    out[5] = a3[5] - b[5];
+    out[6] = a3[6] - b[6];
+    out[7] = a3[7] - b[7];
+    out[8] = a3[8] - b[8];
+    out[9] = a3[9] - b[9];
+    out[10] = a3[10] - b[10];
+    out[11] = a3[11] - b[11];
+    out[12] = a3[12] - b[12];
+    out[13] = a3[13] - b[13];
+    out[14] = a3[14] - b[14];
+    out[15] = a3[15] - b[15];
     return out;
   }
-  function multiplyScalar(out, a4, b) {
-    out[0] = a4[0] * b;
-    out[1] = a4[1] * b;
-    out[2] = a4[2] * b;
-    out[3] = a4[3] * b;
-    out[4] = a4[4] * b;
-    out[5] = a4[5] * b;
-    out[6] = a4[6] * b;
-    out[7] = a4[7] * b;
-    out[8] = a4[8] * b;
-    out[9] = a4[9] * b;
-    out[10] = a4[10] * b;
-    out[11] = a4[11] * b;
-    out[12] = a4[12] * b;
-    out[13] = a4[13] * b;
-    out[14] = a4[14] * b;
-    out[15] = a4[15] * b;
+  function multiplyScalar(out, a3, b) {
+    out[0] = a3[0] * b;
+    out[1] = a3[1] * b;
+    out[2] = a3[2] * b;
+    out[3] = a3[3] * b;
+    out[4] = a3[4] * b;
+    out[5] = a3[5] * b;
+    out[6] = a3[6] * b;
+    out[7] = a3[7] * b;
+    out[8] = a3[8] * b;
+    out[9] = a3[9] * b;
+    out[10] = a3[10] * b;
+    out[11] = a3[11] * b;
+    out[12] = a3[12] * b;
+    out[13] = a3[13] * b;
+    out[14] = a3[14] * b;
+    out[15] = a3[15] * b;
     return out;
   }
-  function multiplyScalarAndAdd(out, a4, b, scale4) {
-    out[0] = a4[0] + b[0] * scale4;
-    out[1] = a4[1] + b[1] * scale4;
-    out[2] = a4[2] + b[2] * scale4;
-    out[3] = a4[3] + b[3] * scale4;
-    out[4] = a4[4] + b[4] * scale4;
-    out[5] = a4[5] + b[5] * scale4;
-    out[6] = a4[6] + b[6] * scale4;
-    out[7] = a4[7] + b[7] * scale4;
-    out[8] = a4[8] + b[8] * scale4;
-    out[9] = a4[9] + b[9] * scale4;
-    out[10] = a4[10] + b[10] * scale4;
-    out[11] = a4[11] + b[11] * scale4;
-    out[12] = a4[12] + b[12] * scale4;
-    out[13] = a4[13] + b[13] * scale4;
-    out[14] = a4[14] + b[14] * scale4;
-    out[15] = a4[15] + b[15] * scale4;
+  function multiplyScalarAndAdd(out, a3, b, scale4) {
+    out[0] = a3[0] + b[0] * scale4;
+    out[1] = a3[1] + b[1] * scale4;
+    out[2] = a3[2] + b[2] * scale4;
+    out[3] = a3[3] + b[3] * scale4;
+    out[4] = a3[4] + b[4] * scale4;
+    out[5] = a3[5] + b[5] * scale4;
+    out[6] = a3[6] + b[6] * scale4;
+    out[7] = a3[7] + b[7] * scale4;
+    out[8] = a3[8] + b[8] * scale4;
+    out[9] = a3[9] + b[9] * scale4;
+    out[10] = a3[10] + b[10] * scale4;
+    out[11] = a3[11] + b[11] * scale4;
+    out[12] = a3[12] + b[12] * scale4;
+    out[13] = a3[13] + b[13] * scale4;
+    out[14] = a3[14] + b[14] * scale4;
+    out[15] = a3[15] + b[15] * scale4;
     return out;
   }
-  function exactEquals(a4, b) {
-    return a4[0] === b[0] && a4[1] === b[1] && a4[2] === b[2] && a4[3] === b[3] && a4[4] === b[4] && a4[5] === b[5] && a4[6] === b[6] && a4[7] === b[7] && a4[8] === b[8] && a4[9] === b[9] && a4[10] === b[10] && a4[11] === b[11] && a4[12] === b[12] && a4[13] === b[13] && a4[14] === b[14] && a4[15] === b[15];
+  function exactEquals(a3, b) {
+    return a3[0] === b[0] && a3[1] === b[1] && a3[2] === b[2] && a3[3] === b[3] && a3[4] === b[4] && a3[5] === b[5] && a3[6] === b[6] && a3[7] === b[7] && a3[8] === b[8] && a3[9] === b[9] && a3[10] === b[10] && a3[11] === b[11] && a3[12] === b[12] && a3[13] === b[13] && a3[14] === b[14] && a3[15] === b[15];
   }
-  function equals(a4, b) {
-    var a0 = a4[0], a1 = a4[1], a22 = a4[2], a32 = a4[3];
-    var a42 = a4[4], a5 = a4[5], a6 = a4[6], a7 = a4[7];
-    var a8 = a4[8], a9 = a4[9], a10 = a4[10], a11 = a4[11];
-    var a12 = a4[12], a13 = a4[13], a14 = a4[14], a15 = a4[15];
+  function equals(a3, b) {
+    var a0 = a3[0], a1 = a3[1], a22 = a3[2], a32 = a3[3];
+    var a4 = a3[4], a5 = a3[5], a6 = a3[6], a7 = a3[7];
+    var a8 = a3[8], a9 = a3[9], a10 = a3[10], a11 = a3[11];
+    var a12 = a3[12], a13 = a3[13], a14 = a3[14], a15 = a3[15];
     var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
     var b4 = b[4], b5 = b[5], b6 = b[6], b7 = b[7];
     var b8 = b[8], b9 = b[9], b10 = b[10], b11 = b[11];
     var b12 = b[12], b13 = b[13], b14 = b[14], b15 = b[15];
-    return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a22 - b2) <= EPSILON * Math.max(1, Math.abs(a22), Math.abs(b2)) && Math.abs(a32 - b3) <= EPSILON * Math.max(1, Math.abs(a32), Math.abs(b3)) && Math.abs(a42 - b4) <= EPSILON * Math.max(1, Math.abs(a42), Math.abs(b4)) && Math.abs(a5 - b5) <= EPSILON * Math.max(1, Math.abs(a5), Math.abs(b5)) && Math.abs(a6 - b6) <= EPSILON * Math.max(1, Math.abs(a6), Math.abs(b6)) && Math.abs(a7 - b7) <= EPSILON * Math.max(1, Math.abs(a7), Math.abs(b7)) && Math.abs(a8 - b8) <= EPSILON * Math.max(1, Math.abs(a8), Math.abs(b8)) && Math.abs(a9 - b9) <= EPSILON * Math.max(1, Math.abs(a9), Math.abs(b9)) && Math.abs(a10 - b10) <= EPSILON * Math.max(1, Math.abs(a10), Math.abs(b10)) && Math.abs(a11 - b11) <= EPSILON * Math.max(1, Math.abs(a11), Math.abs(b11)) && Math.abs(a12 - b12) <= EPSILON * Math.max(1, Math.abs(a12), Math.abs(b12)) && Math.abs(a13 - b13) <= EPSILON * Math.max(1, Math.abs(a13), Math.abs(b13)) && Math.abs(a14 - b14) <= EPSILON * Math.max(1, Math.abs(a14), Math.abs(b14)) && Math.abs(a15 - b15) <= EPSILON * Math.max(1, Math.abs(a15), Math.abs(b15));
+    return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a22 - b2) <= EPSILON * Math.max(1, Math.abs(a22), Math.abs(b2)) && Math.abs(a32 - b3) <= EPSILON * Math.max(1, Math.abs(a32), Math.abs(b3)) && Math.abs(a4 - b4) <= EPSILON * Math.max(1, Math.abs(a4), Math.abs(b4)) && Math.abs(a5 - b5) <= EPSILON * Math.max(1, Math.abs(a5), Math.abs(b5)) && Math.abs(a6 - b6) <= EPSILON * Math.max(1, Math.abs(a6), Math.abs(b6)) && Math.abs(a7 - b7) <= EPSILON * Math.max(1, Math.abs(a7), Math.abs(b7)) && Math.abs(a8 - b8) <= EPSILON * Math.max(1, Math.abs(a8), Math.abs(b8)) && Math.abs(a9 - b9) <= EPSILON * Math.max(1, Math.abs(a9), Math.abs(b9)) && Math.abs(a10 - b10) <= EPSILON * Math.max(1, Math.abs(a10), Math.abs(b10)) && Math.abs(a11 - b11) <= EPSILON * Math.max(1, Math.abs(a11), Math.abs(b11)) && Math.abs(a12 - b12) <= EPSILON * Math.max(1, Math.abs(a12), Math.abs(b12)) && Math.abs(a13 - b13) <= EPSILON * Math.max(1, Math.abs(a13), Math.abs(b13)) && Math.abs(a14 - b14) <= EPSILON * Math.max(1, Math.abs(a14), Math.abs(b14)) && Math.abs(a15 - b15) <= EPSILON * Math.max(1, Math.abs(a15), Math.abs(b15));
   }
   var mul = multiply;
   var sub = subtract;
@@ -1560,17 +1525,17 @@ export default require => {
     }
     return out;
   }
-  function clone2(a4) {
+  function clone2(a3) {
     var out = new ARRAY_TYPE(3);
-    out[0] = a4[0];
-    out[1] = a4[1];
-    out[2] = a4[2];
+    out[0] = a3[0];
+    out[1] = a3[1];
+    out[2] = a3[2];
     return out;
   }
-  function length(a4) {
-    var x = a4[0];
-    var y = a4[1];
-    var z = a4[2];
+  function length(a3) {
+    var x = a3[0];
+    var y = a3[1];
+    var z = a3[2];
     return Math.sqrt(x * x + y * y + z * z);
   }
   function fromValues2(x, y, z) {
@@ -1580,10 +1545,10 @@ export default require => {
     out[2] = z;
     return out;
   }
-  function copy2(out, a4) {
-    out[0] = a4[0];
-    out[1] = a4[1];
-    out[2] = a4[2];
+  function copy2(out, a3) {
+    out[0] = a3[0];
+    out[1] = a3[1];
+    out[2] = a3[2];
     return out;
   }
   function set2(out, x, y, z) {
@@ -1592,167 +1557,167 @@ export default require => {
     out[2] = z;
     return out;
   }
-  function add2(out, a4, b) {
-    out[0] = a4[0] + b[0];
-    out[1] = a4[1] + b[1];
-    out[2] = a4[2] + b[2];
+  function add2(out, a3, b) {
+    out[0] = a3[0] + b[0];
+    out[1] = a3[1] + b[1];
+    out[2] = a3[2] + b[2];
     return out;
   }
-  function subtract2(out, a4, b) {
-    out[0] = a4[0] - b[0];
-    out[1] = a4[1] - b[1];
-    out[2] = a4[2] - b[2];
+  function subtract2(out, a3, b) {
+    out[0] = a3[0] - b[0];
+    out[1] = a3[1] - b[1];
+    out[2] = a3[2] - b[2];
     return out;
   }
-  function multiply2(out, a4, b) {
-    out[0] = a4[0] * b[0];
-    out[1] = a4[1] * b[1];
-    out[2] = a4[2] * b[2];
+  function multiply2(out, a3, b) {
+    out[0] = a3[0] * b[0];
+    out[1] = a3[1] * b[1];
+    out[2] = a3[2] * b[2];
     return out;
   }
-  function divide(out, a4, b) {
-    out[0] = a4[0] / b[0];
-    out[1] = a4[1] / b[1];
-    out[2] = a4[2] / b[2];
+  function divide(out, a3, b) {
+    out[0] = a3[0] / b[0];
+    out[1] = a3[1] / b[1];
+    out[2] = a3[2] / b[2];
     return out;
   }
-  function ceil(out, a4) {
-    out[0] = Math.ceil(a4[0]);
-    out[1] = Math.ceil(a4[1]);
-    out[2] = Math.ceil(a4[2]);
+  function ceil(out, a3) {
+    out[0] = Math.ceil(a3[0]);
+    out[1] = Math.ceil(a3[1]);
+    out[2] = Math.ceil(a3[2]);
     return out;
   }
-  function floor(out, a4) {
-    out[0] = Math.floor(a4[0]);
-    out[1] = Math.floor(a4[1]);
-    out[2] = Math.floor(a4[2]);
+  function floor(out, a3) {
+    out[0] = Math.floor(a3[0]);
+    out[1] = Math.floor(a3[1]);
+    out[2] = Math.floor(a3[2]);
     return out;
   }
-  function min(out, a4, b) {
-    out[0] = Math.min(a4[0], b[0]);
-    out[1] = Math.min(a4[1], b[1]);
-    out[2] = Math.min(a4[2], b[2]);
+  function min(out, a3, b) {
+    out[0] = Math.min(a3[0], b[0]);
+    out[1] = Math.min(a3[1], b[1]);
+    out[2] = Math.min(a3[2], b[2]);
     return out;
   }
-  function max(out, a4, b) {
-    out[0] = Math.max(a4[0], b[0]);
-    out[1] = Math.max(a4[1], b[1]);
-    out[2] = Math.max(a4[2], b[2]);
+  function max(out, a3, b) {
+    out[0] = Math.max(a3[0], b[0]);
+    out[1] = Math.max(a3[1], b[1]);
+    out[2] = Math.max(a3[2], b[2]);
     return out;
   }
-  function round2(out, a4) {
-    out[0] = round(a4[0]);
-    out[1] = round(a4[1]);
-    out[2] = round(a4[2]);
+  function round2(out, a3) {
+    out[0] = round(a3[0]);
+    out[1] = round(a3[1]);
+    out[2] = round(a3[2]);
     return out;
   }
-  function scale2(out, a4, b) {
-    out[0] = a4[0] * b;
-    out[1] = a4[1] * b;
-    out[2] = a4[2] * b;
+  function scale2(out, a3, b) {
+    out[0] = a3[0] * b;
+    out[1] = a3[1] * b;
+    out[2] = a3[2] * b;
     return out;
   }
-  function scaleAndAdd(out, a4, b, scale4) {
-    out[0] = a4[0] + b[0] * scale4;
-    out[1] = a4[1] + b[1] * scale4;
-    out[2] = a4[2] + b[2] * scale4;
+  function scaleAndAdd(out, a3, b, scale4) {
+    out[0] = a3[0] + b[0] * scale4;
+    out[1] = a3[1] + b[1] * scale4;
+    out[2] = a3[2] + b[2] * scale4;
     return out;
   }
-  function distance(a4, b) {
-    var x = b[0] - a4[0];
-    var y = b[1] - a4[1];
-    var z = b[2] - a4[2];
+  function distance(a3, b) {
+    var x = b[0] - a3[0];
+    var y = b[1] - a3[1];
+    var z = b[2] - a3[2];
     return Math.sqrt(x * x + y * y + z * z);
   }
-  function squaredDistance(a4, b) {
-    var x = b[0] - a4[0];
-    var y = b[1] - a4[1];
-    var z = b[2] - a4[2];
+  function squaredDistance(a3, b) {
+    var x = b[0] - a3[0];
+    var y = b[1] - a3[1];
+    var z = b[2] - a3[2];
     return x * x + y * y + z * z;
   }
-  function squaredLength(a4) {
-    var x = a4[0];
-    var y = a4[1];
-    var z = a4[2];
+  function squaredLength(a3) {
+    var x = a3[0];
+    var y = a3[1];
+    var z = a3[2];
     return x * x + y * y + z * z;
   }
-  function negate(out, a4) {
-    out[0] = -a4[0];
-    out[1] = -a4[1];
-    out[2] = -a4[2];
+  function negate(out, a3) {
+    out[0] = -a3[0];
+    out[1] = -a3[1];
+    out[2] = -a3[2];
     return out;
   }
-  function inverse(out, a4) {
-    out[0] = 1 / a4[0];
-    out[1] = 1 / a4[1];
-    out[2] = 1 / a4[2];
+  function inverse(out, a3) {
+    out[0] = 1 / a3[0];
+    out[1] = 1 / a3[1];
+    out[2] = 1 / a3[2];
     return out;
   }
-  function normalize(out, a4) {
-    var x = a4[0];
-    var y = a4[1];
-    var z = a4[2];
+  function normalize(out, a3) {
+    var x = a3[0];
+    var y = a3[1];
+    var z = a3[2];
     var len2 = x * x + y * y + z * z;
     if (len2 > 0) {
       len2 = 1 / Math.sqrt(len2);
     }
-    out[0] = a4[0] * len2;
-    out[1] = a4[1] * len2;
-    out[2] = a4[2] * len2;
+    out[0] = a3[0] * len2;
+    out[1] = a3[1] * len2;
+    out[2] = a3[2] * len2;
     return out;
   }
-  function dot(a4, b) {
-    return a4[0] * b[0] + a4[1] * b[1] + a4[2] * b[2];
+  function dot(a3, b) {
+    return a3[0] * b[0] + a3[1] * b[1] + a3[2] * b[2];
   }
-  function cross(out, a4, b) {
-    var ax = a4[0], ay = a4[1], az = a4[2];
+  function cross(out, a3, b) {
+    var ax = a3[0], ay = a3[1], az = a3[2];
     var bx = b[0], by = b[1], bz = b[2];
     out[0] = ay * bz - az * by;
     out[1] = az * bx - ax * bz;
     out[2] = ax * by - ay * bx;
     return out;
   }
-  function lerp(out, a4, b, t5) {
-    var ax = a4[0];
-    var ay = a4[1];
-    var az = a4[2];
-    out[0] = ax + t5 * (b[0] - ax);
-    out[1] = ay + t5 * (b[1] - ay);
-    out[2] = az + t5 * (b[2] - az);
+  function lerp(out, a3, b, t4) {
+    var ax = a3[0];
+    var ay = a3[1];
+    var az = a3[2];
+    out[0] = ax + t4 * (b[0] - ax);
+    out[1] = ay + t4 * (b[1] - ay);
+    out[2] = az + t4 * (b[2] - az);
     return out;
   }
-  function slerp(out, a4, b, t5) {
-    var angle2 = Math.acos(Math.min(Math.max(dot(a4, b), -1), 1));
+  function slerp(out, a3, b, t4) {
+    var angle2 = Math.acos(Math.min(Math.max(dot(a3, b), -1), 1));
     var sinTotal = Math.sin(angle2);
-    var ratioA = Math.sin((1 - t5) * angle2) / sinTotal;
-    var ratioB = Math.sin(t5 * angle2) / sinTotal;
-    out[0] = ratioA * a4[0] + ratioB * b[0];
-    out[1] = ratioA * a4[1] + ratioB * b[1];
-    out[2] = ratioA * a4[2] + ratioB * b[2];
+    var ratioA = Math.sin((1 - t4) * angle2) / sinTotal;
+    var ratioB = Math.sin(t4 * angle2) / sinTotal;
+    out[0] = ratioA * a3[0] + ratioB * b[0];
+    out[1] = ratioA * a3[1] + ratioB * b[1];
+    out[2] = ratioA * a3[2] + ratioB * b[2];
     return out;
   }
-  function hermite(out, a4, b, c2, d2, t5) {
-    var factorTimes2 = t5 * t5;
-    var factor1 = factorTimes2 * (2 * t5 - 3) + 1;
-    var factor2 = factorTimes2 * (t5 - 2) + t5;
-    var factor3 = factorTimes2 * (t5 - 1);
-    var factor4 = factorTimes2 * (3 - 2 * t5);
-    out[0] = a4[0] * factor1 + b[0] * factor2 + c2[0] * factor3 + d2[0] * factor4;
-    out[1] = a4[1] * factor1 + b[1] * factor2 + c2[1] * factor3 + d2[1] * factor4;
-    out[2] = a4[2] * factor1 + b[2] * factor2 + c2[2] * factor3 + d2[2] * factor4;
+  function hermite(out, a3, b, c2, d2, t4) {
+    var factorTimes2 = t4 * t4;
+    var factor1 = factorTimes2 * (2 * t4 - 3) + 1;
+    var factor2 = factorTimes2 * (t4 - 2) + t4;
+    var factor3 = factorTimes2 * (t4 - 1);
+    var factor4 = factorTimes2 * (3 - 2 * t4);
+    out[0] = a3[0] * factor1 + b[0] * factor2 + c2[0] * factor3 + d2[0] * factor4;
+    out[1] = a3[1] * factor1 + b[1] * factor2 + c2[1] * factor3 + d2[1] * factor4;
+    out[2] = a3[2] * factor1 + b[2] * factor2 + c2[2] * factor3 + d2[2] * factor4;
     return out;
   }
-  function bezier(out, a4, b, c2, d2, t5) {
-    var inverseFactor = 1 - t5;
+  function bezier(out, a3, b, c2, d2, t4) {
+    var inverseFactor = 1 - t4;
     var inverseFactorTimesTwo = inverseFactor * inverseFactor;
-    var factorTimes2 = t5 * t5;
+    var factorTimes2 = t4 * t4;
     var factor1 = inverseFactorTimesTwo * inverseFactor;
-    var factor2 = 3 * t5 * inverseFactorTimesTwo;
+    var factor2 = 3 * t4 * inverseFactorTimesTwo;
     var factor3 = 3 * factorTimes2 * inverseFactor;
-    var factor4 = factorTimes2 * t5;
-    out[0] = a4[0] * factor1 + b[0] * factor2 + c2[0] * factor3 + d2[0] * factor4;
-    out[1] = a4[1] * factor1 + b[1] * factor2 + c2[1] * factor3 + d2[1] * factor4;
-    out[2] = a4[2] * factor1 + b[2] * factor2 + c2[2] * factor3 + d2[2] * factor4;
+    var factor4 = factorTimes2 * t4;
+    out[0] = a3[0] * factor1 + b[0] * factor2 + c2[0] * factor3 + d2[0] * factor4;
+    out[1] = a3[1] * factor1 + b[1] * factor2 + c2[1] * factor3 + d2[1] * factor4;
+    out[2] = a3[2] * factor1 + b[2] * factor2 + c2[2] * factor3 + d2[2] * factor4;
     return out;
   }
   function random(out, scale4) {
@@ -1765,8 +1730,8 @@ export default require => {
     out[2] = z * scale4;
     return out;
   }
-  function transformMat4(out, a4, m2) {
-    var x = a4[0], y = a4[1], z = a4[2];
+  function transformMat4(out, a3, m2) {
+    var x = a3[0], y = a3[1], z = a3[2];
     var w = m2[3] * x + m2[7] * y + m2[11] * z + m2[15];
     w = w || 1;
     out[0] = (m2[0] * x + m2[4] * y + m2[8] * z + m2[12]) / w;
@@ -1774,16 +1739,16 @@ export default require => {
     out[2] = (m2[2] * x + m2[6] * y + m2[10] * z + m2[14]) / w;
     return out;
   }
-  function transformMat3(out, a4, m2) {
-    var x = a4[0], y = a4[1], z = a4[2];
+  function transformMat3(out, a3, m2) {
+    var x = a3[0], y = a3[1], z = a3[2];
     out[0] = x * m2[0] + y * m2[3] + z * m2[6];
     out[1] = x * m2[1] + y * m2[4] + z * m2[7];
     out[2] = x * m2[2] + y * m2[5] + z * m2[8];
     return out;
   }
-  function transformQuat(out, a4, q) {
+  function transformQuat(out, a3, q) {
     var qx = q[0], qy = q[1], qz = q[2], qw = q[3];
-    var vx = a4[0], vy = a4[1], vz = a4[2];
+    var vx = a3[0], vy = a3[1], vz = a3[2];
     var tx = qy * vz - qz * vy;
     var ty = qz * vx - qx * vz;
     var tz = qx * vy - qy * vx;
@@ -1795,11 +1760,11 @@ export default require => {
     out[2] = vz + qw * tz + qx * ty - qy * tx;
     return out;
   }
-  function rotateX2(out, a4, b, rad) {
+  function rotateX2(out, a3, b, rad) {
     var p2 = [], r3 = [];
-    p2[0] = a4[0] - b[0];
-    p2[1] = a4[1] - b[1];
-    p2[2] = a4[2] - b[2];
+    p2[0] = a3[0] - b[0];
+    p2[1] = a3[1] - b[1];
+    p2[2] = a3[2] - b[2];
     r3[0] = p2[0];
     r3[1] = p2[1] * Math.cos(rad) - p2[2] * Math.sin(rad);
     r3[2] = p2[1] * Math.sin(rad) + p2[2] * Math.cos(rad);
@@ -1808,11 +1773,11 @@ export default require => {
     out[2] = r3[2] + b[2];
     return out;
   }
-  function rotateY2(out, a4, b, rad) {
+  function rotateY2(out, a3, b, rad) {
     var p2 = [], r3 = [];
-    p2[0] = a4[0] - b[0];
-    p2[1] = a4[1] - b[1];
-    p2[2] = a4[2] - b[2];
+    p2[0] = a3[0] - b[0];
+    p2[1] = a3[1] - b[1];
+    p2[2] = a3[2] - b[2];
     r3[0] = p2[2] * Math.sin(rad) + p2[0] * Math.cos(rad);
     r3[1] = p2[1];
     r3[2] = p2[2] * Math.cos(rad) - p2[0] * Math.sin(rad);
@@ -1821,11 +1786,11 @@ export default require => {
     out[2] = r3[2] + b[2];
     return out;
   }
-  function rotateZ2(out, a4, b, rad) {
+  function rotateZ2(out, a3, b, rad) {
     var p2 = [], r3 = [];
-    p2[0] = a4[0] - b[0];
-    p2[1] = a4[1] - b[1];
-    p2[2] = a4[2] - b[2];
+    p2[0] = a3[0] - b[0];
+    p2[1] = a3[1] - b[1];
+    p2[2] = a3[2] - b[2];
     r3[0] = p2[0] * Math.cos(rad) - p2[1] * Math.sin(rad);
     r3[1] = p2[0] * Math.sin(rad) + p2[1] * Math.cos(rad);
     r3[2] = p2[2];
@@ -1834,8 +1799,8 @@ export default require => {
     out[2] = r3[2] + b[2];
     return out;
   }
-  function angle(a4, b) {
-    var ax = a4[0], ay = a4[1], az = a4[2], bx = b[0], by = b[1], bz = b[2], mag = Math.sqrt((ax * ax + ay * ay + az * az) * (bx * bx + by * by + bz * bz)), cosine = mag && dot(a4, b) / mag;
+  function angle(a3, b) {
+    var ax = a3[0], ay = a3[1], az = a3[2], bx = b[0], by = b[1], bz = b[2], mag = Math.sqrt((ax * ax + ay * ay + az * az) * (bx * bx + by * by + bz * bz)), cosine = mag && dot(a3, b) / mag;
     return Math.acos(Math.min(Math.max(cosine, -1), 1));
   }
   function zero(out) {
@@ -1844,14 +1809,14 @@ export default require => {
     out[2] = 0;
     return out;
   }
-  function str2(a4) {
-    return "vec3(" + a4[0] + ", " + a4[1] + ", " + a4[2] + ")";
+  function str2(a3) {
+    return "vec3(" + a3[0] + ", " + a3[1] + ", " + a3[2] + ")";
   }
-  function exactEquals2(a4, b) {
-    return a4[0] === b[0] && a4[1] === b[1] && a4[2] === b[2];
+  function exactEquals2(a3, b) {
+    return a3[0] === b[0] && a3[1] === b[1] && a3[2] === b[2];
   }
-  function equals2(a4, b) {
-    var a0 = a4[0], a1 = a4[1], a22 = a4[2];
+  function equals2(a3, b) {
+    var a0 = a3[0], a1 = a3[1], a22 = a3[2];
     var b0 = b[0], b1 = b[1], b2 = b[2];
     return Math.abs(a0 - b0) <= EPSILON * Math.max(1, Math.abs(a0), Math.abs(b0)) && Math.abs(a1 - b1) <= EPSILON * Math.max(1, Math.abs(a1), Math.abs(b1)) && Math.abs(a22 - b2) <= EPSILON * Math.max(1, Math.abs(a22), Math.abs(b2));
   }
@@ -1864,7 +1829,7 @@ export default require => {
   var sqrLen = squaredLength;
   var forEach = (function () {
     var vec = create2();
-    return function (a4, stride, offset, count, fn, arg) {
+    return function (a3, stride, offset, count, fn, arg) {
       var i, l2;
       if (!stride) {
         stride = 3;
@@ -1873,20 +1838,20 @@ export default require => {
         offset = 0;
       }
       if (count) {
-        l2 = Math.min(count * stride + offset, a4.length);
+        l2 = Math.min(count * stride + offset, a3.length);
       } else {
-        l2 = a4.length;
+        l2 = a3.length;
       }
       for (i = offset; i < l2; i += stride) {
-        vec[0] = a4[i];
-        vec[1] = a4[i + 1];
-        vec[2] = a4[i + 2];
+        vec[0] = a3[i];
+        vec[1] = a3[i + 1];
+        vec[2] = a3[i + 2];
         fn(vec, vec, arg);
-        a4[i] = vec[0];
-        a4[i + 1] = vec[1];
-        a4[i + 2] = vec[2];
+        a3[i] = vec[0];
+        a3[i + 1] = vec[1];
+        a3[i + 2] = vec[2];
       }
-      return a4;
+      return a3;
     };
   })();
   var glAnimationSymbol = Symbol.for("glAnimation");
@@ -1964,9 +1929,9 @@ export default require => {
     gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
     gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
-    const e6 = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-    if (gl.FRAMEBUFFER_COMPLETE !== e6) {
-      throw new e2(`Frame buffer object is incomplete:${e6.toString()}`);
+    const e5 = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+    if (gl.FRAMEBUFFER_COMPLETE !== e5) {
+      throw new e2(`Frame buffer object is incomplete:${e5.toString()}`);
     }
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.bindTexture(gl.TEXTURE_2D, null);
@@ -1986,15 +1951,15 @@ export default require => {
       function fulfilled(value) {
         try {
           step(generator.next(value));
-        } catch (e6) {
-          reject(e6);
+        } catch (e5) {
+          reject(e5);
         }
       }
       function rejected(value) {
         try {
           step(generator["throw"](value));
-        } catch (e6) {
-          reject(e6);
+        } catch (e5) {
+          reject(e5);
         }
       }
       function step(result) {
@@ -2481,15 +2446,15 @@ void main(void) {
       function fulfilled(value) {
         try {
           step(generator.next(value));
-        } catch (e6) {
-          reject(e6);
+        } catch (e5) {
+          reject(e5);
         }
       }
       function rejected(value) {
         try {
           step(generator["throw"](value));
-        } catch (e6) {
-          reject(e6);
+        } catch (e5) {
+          reject(e5);
         }
       }
       function step(result) {
@@ -2609,12 +2574,6 @@ void main(void) {
     static make_cross(rune) {
       throwIfNotRune(_RuneFunctions.make_cross.name, rune);
       return _RuneFunctions.stack(_RuneFunctions.beside(_RuneFunctions.quarter_turn_right(rune), _RuneFunctions.rotate(Math.PI, rune)), _RuneFunctions.beside(rune, _RuneFunctions.rotate(Math.PI / 2, rune)));
-    }
-    static repeat_pattern(n4, pattern, initial) {
-      throwIfNotRune(_RuneFunctions.repeat_pattern.name, initial, "initial");
-      a(pattern, 1, _RuneFunctions.repeat_pattern.name);
-      const repeated = repeat_internal(pattern, n4);
-      return repeated(initial);
     }
     static overlay_frac(frac, rune1, rune2) {
       throwIfNotRune(_RuneFunctions.overlay_frac.name, rune1, "rune1");
@@ -2905,7 +2864,6 @@ void main(void) {
   var random_color = RuneColours.random_color;
   var rcross = RuneFunctions.rcross;
   var red = RuneColours.red;
-  var repeat_pattern = RuneFunctions.repeat_pattern;
   var ribbon = RuneFunctions.ribbon;
   var rotate2 = RuneFunctions.rotate;
   var sail = RuneFunctions.sail;
@@ -2943,6 +2901,10 @@ void main(void) {
     (R2[R2.CALL = 0] = "CALL", R2[R2.RETURN = 1] = "RETURN", R2[R2.RETURN_ERR = 2] = "RETURN_ERR");
   })(R || (R = {}));
   function n2(n4) {}
+  var O;
+  !(function (O2) {
+    (O2[O2.PROTOCOL_VERSION = 0] = "PROTOCOL_VERSION", O2[O2.PROTOCOL_MIN_VERSION = 0] = "PROTOCOL_MIN_VERSION", O2[O2.SETUP_MESSAGES_BUFFER_SIZE = 10] = "SETUP_MESSAGES_BUFFER_SIZE");
+  })(O || (O = {}));
   var import_jsx_runtime6 = __require("react/jsx-runtime");
   var import_core6 = __require("@blueprintjs/core");
   var import_react3 = __require("react");
@@ -2990,13 +2952,13 @@ void main(void) {
   }
   var import_jsx_runtime2 = __require("react/jsx-runtime");
   var import_core2 = __require("@blueprintjs/core");
-  var __rest = function (s7, e6) {
-    var t5 = {};
-    for (var p2 in s7) if (Object.prototype.hasOwnProperty.call(s7, p2) && e6.indexOf(p2) < 0) t5[p2] = s7[p2];
-    if (s7 != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p2 = Object.getOwnPropertySymbols(s7); i < p2.length; i++) {
-      if (e6.indexOf(p2[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s7, p2[i])) t5[p2[i]] = s7[p2[i]];
+  var __rest = function (s6, e5) {
+    var t4 = {};
+    for (var p2 in s6) if (Object.prototype.hasOwnProperty.call(s6, p2) && e5.indexOf(p2) < 0) t4[p2] = s6[p2];
+    if (s6 != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p2 = Object.getOwnPropertySymbols(s6); i < p2.length; i++) {
+      if (e5.indexOf(p2[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s6, p2[i])) t4[p2[i]] = s6[p2[i]];
     }
-    return t5;
+    return t4;
   };
   function AutoLoopSwitch(_a) {
     var {isAutoLooping} = _a, props = __rest(_a, ["isAutoLooping"]);
@@ -3024,13 +2986,13 @@ void main(void) {
   }
   var import_jsx_runtime4 = __require("react/jsx-runtime");
   var import_core4 = __require("@blueprintjs/core");
-  var __rest2 = function (s7, e6) {
-    var t5 = {};
-    for (var p2 in s7) if (Object.prototype.hasOwnProperty.call(s7, p2) && e6.indexOf(p2) < 0) t5[p2] = s7[p2];
-    if (s7 != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p2 = Object.getOwnPropertySymbols(s7); i < p2.length; i++) {
-      if (e6.indexOf(p2[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s7, p2[i])) t5[p2[i]] = s7[p2[i]];
+  var __rest2 = function (s6, e5) {
+    var t4 = {};
+    for (var p2 in s6) if (Object.prototype.hasOwnProperty.call(s6, p2) && e5.indexOf(p2) < 0) t4[p2] = s6[p2];
+    if (s6 != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p2 = Object.getOwnPropertySymbols(s6); i < p2.length; i++) {
+      if (e5.indexOf(p2[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s6, p2[i])) t4[p2[i]] = s6[p2[i]];
     }
-    return t5;
+    return t4;
   };
   function PlayButton(_a) {
     var {playingText = "Pause", playingIcon = "pause", pausedText = "Play", pausedIcon = "play", isPlaying, tooltipProps, iconProps} = _a, props = __rest2(_a, ["playingText", "playingIcon", "pausedText", "pausedIcon", "isPlaying", "tooltipProps", "iconProps"]);

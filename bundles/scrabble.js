@@ -154,6 +154,10 @@ export default require => {
     initialise() {
       return __async(this, null, function* () {
         yield __superGet(_ScrabbleModulePlugin.prototype, this, "initialise").call(this);
+        this.scrabble_words = scrabble_words;
+        this.scrabble_letters = scrabble_letters;
+        this.scrabble_words_tiny = scrabble_words_tiny;
+        this.scrabble_letters_tiny = scrabble_letters_tiny;
         const [words, letters, wordsTiny, lettersTiny] = yield Promise.all([makeStringArray(this.evaluator, scrabble_words), makeLetterArray(this.evaluator, scrabble_letters), makeStringArray(this.evaluator, scrabble_words_tiny), makeLetterArray(this.evaluator, scrabble_letters_tiny)]);
         this.exports.push({
           symbol: "scrabble_words",

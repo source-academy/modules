@@ -441,29 +441,6 @@
     ],
     "retType": "Rune"
   },
-  "repeat_pattern": {
-    "kind": "function",
-    "name": "repeat_pattern",
-    "description": "<p>Applies a given function n times to an initial value</p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "number",
-        "name": "n"
-      },
-      {
-        "paramType": "regular",
-        "type": "(Rune) => Rune",
-        "name": "pattern"
-      },
-      {
-        "paramType": "regular",
-        "type": "Rune",
-        "name": "initial"
-      }
-    ],
-    "retType": "Rune"
-  },
   "overlay_frac": {
     "kind": "function",
     "name": "overlay_frac",

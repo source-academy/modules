@@ -184,12 +184,6 @@ export default require => {
       (this.funcName = r2, this.paramName = t4, this.expected = n3, this.actual = o4);
     }
   };
-  var o2 = class extends n {
-    constructor(r2, t4, e5, n3, o4, u3, a3) {
-      super(e5, n3, "number" == typeof r2 ? `function with ${r2} parameter${1 === r2 ? "" : "s"}` : r2, t4, o4, u3, a3);
-      __publicField(this, "name", "EvaluatorCallbackError");
-    }
-  };
   var u = class extends n {
     constructor(r2, t4, e5, n3, o4, u3, a3) {
       super(e5, n3, (function (r3) {
@@ -207,12 +201,6 @@ export default require => {
       __publicField(this, "errorType", _.EVALUATOR_RUNTIME);
     }
   };
-  function f(r2, o4) {
-    return "function" == typeof r2 && r2.length === o4;
-  }
-  function a(r2, t4, n3, e5, i) {
-    if (!f(r2, t4)) throw new o2(e5 != null ? e5 : t4, r2, n3, i);
-  }
   function p(r2, o4, t4, n3 = true) {
     return "number" == typeof r2 && !Number.isNaN(r2) && (!(n3 && !Number.isInteger(r2)) && (!(void 0 !== o4 && r2 < o4) && !(void 0 !== t4 && r2 > t4)));
   }
@@ -277,13 +265,6 @@ export default require => {
       args,
       returnType
     };
-  }
-  function callUnaryFunction(f2, x) {
-    return f2(x);
-  }
-  function repeat_internal(f2, n3) {
-    const func = x => callUnaryFunction(f2, x);
-    return n3 === 0 ? x => x : x => func(repeat_internal(func, n3 - 1)(x));
   }
   function sample(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -2650,12 +2631,6 @@ void main(void) {
       throwIfNotRune(_RuneFunctions.make_cross.name, rune);
       return _RuneFunctions.stack(_RuneFunctions.beside(_RuneFunctions.quarter_turn_right(rune), _RuneFunctions.rotate(Math.PI, rune)), _RuneFunctions.beside(rune, _RuneFunctions.rotate(Math.PI / 2, rune)));
     }
-    static repeat_pattern(n3, pattern, initial) {
-      throwIfNotRune(_RuneFunctions.repeat_pattern.name, initial, "initial");
-      a(pattern, 1, _RuneFunctions.repeat_pattern.name);
-      const repeated = repeat_internal(pattern, n3);
-      return repeated(initial);
-    }
     static overlay_frac(frac, rune1, rune2) {
       throwIfNotRune(_RuneFunctions.overlay_frac.name, rune1, "rune1");
       throwIfNotRune(_RuneFunctions.overlay_frac.name, rune2, "rune2");
@@ -2946,7 +2921,6 @@ void main(void) {
   var random_color = RuneColours.random_color;
   var rcross = RuneFunctions.rcross;
   var red = RuneColours.red;
-  var repeat_pattern = RuneFunctions.repeat_pattern;
   var ribbon = RuneFunctions.ribbon;
   var rotate2 = RuneFunctions.rotate;
   var sail = RuneFunctions.sail;
@@ -2985,7 +2959,7 @@ void main(void) {
       }
       super(conduit, [runeChannel], evaluator);
       this.id = "rune";
-      this.exportedNames = ["anaglyph", "animate_anaglyph", "animate_rune", "beside", "beside_frac", "black", "blue", "brown", "color", "colour_with_hue", "flip_horiz", "flip_vert", "from_url", "green", "hollusion", "hollusion_magnitude", "indigo", "make_cross", "orange", "overlay", "overlay_frac", "pink", "purple", "quarter_turn_left", "quarter_turn_right", "random_color", "red", "repeat_pattern", "rotate", "scale", "scale_independent", "show", "stack", "stack_frac", "stackn", "translate", "turn_upside_down", "white", "yellow"];
+      this.exportedNames = ["anaglyph", "animate_anaglyph", "animate_rune", "beside", "beside_frac", "black", "blue", "brown", "color", "colour_with_hue", "flip_horiz", "flip_vert", "from_url", "green", "hollusion", "hollusion_magnitude", "indigo", "make_cross", "orange", "overlay", "overlay_frac", "pink", "purple", "quarter_turn_left", "quarter_turn_right", "random_color", "red", "rotate", "scale", "scale_independent", "show", "stack", "stack_frac", "stackn", "translate", "turn_upside_down", "white", "yellow"];
       this.__displayed = [];
       this.__initialised = false;
       this.__tabLoaded = false;
@@ -3228,16 +3202,6 @@ void main(void) {
         return yield new __await(this.__callUnaryRune(rune, make_cross.name, make_cross));
       });
     }
-    repeat_pattern(n3, pattern, initial) {
-      return __asyncGenerator(this, null, function* () {
-        let current = initial;
-        for (let i = 0; i < n3.value; i += 1) {
-          current = yield* __yieldStar(this.evaluator.closure_call_unchecked(pattern, [current]));
-          yield new __await(this.__getRune(current, repeat_pattern.name));
-        }
-        return current;
-      });
-    }
     overlay_frac(frac, rune1, rune2) {
       return __asyncGenerator(this, null, function* () {
         return yield new __await(this.__makeRune(overlay_frac(frac.value, yield new __await(this.__getRune(rune1, overlay_frac.name)), yield new __await(this.__getRune(rune2, overlay_frac.name)))));
@@ -3348,7 +3312,6 @@ void main(void) {
   attachModuleMethod(RuneModulePlugin, "quarter_turn_right", [E.OPAQUE], E.OPAQUE);
   attachModuleMethod(RuneModulePlugin, "random_color", [E.OPAQUE], E.OPAQUE);
   attachModuleMethod(RuneModulePlugin, "red", [E.OPAQUE], E.OPAQUE);
-  attachModuleMethod(RuneModulePlugin, "repeat_pattern", [E.NUMBER, E.CLOSURE, E.OPAQUE], E.OPAQUE);
   attachModuleMethod(RuneModulePlugin, "rotate", [E.NUMBER, E.OPAQUE], E.OPAQUE);
   attachModuleMethod(RuneModulePlugin, "scale", [E.NUMBER, E.OPAQUE], E.OPAQUE);
   attachModuleMethod(RuneModulePlugin, "scale_independent", [E.NUMBER, E.NUMBER, E.OPAQUE], E.OPAQUE);

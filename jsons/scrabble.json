@@ -1,1 +1,26 @@
-{}
+{
+  "scrabble_words": {
+    "kind": "variable",
+    "name": "scrabble_words",
+    "description": "<p>An array of strings, each representing an allowed word in Scrabble.</p>",
+    "type": "string[]"
+  },
+  "scrabble_letters": {
+    "kind": "variable",
+    "name": "scrabble_letters",
+    "description": "<p>An array of arrays of strings. Each array of strings represents an\nallowed word in Scrabble and contains the letters of that word as\nsingle-character strings in the order in which the letters appear\nin the word.</p>",
+    "type": "string[][]"
+  },
+  "scrabble_words_tiny": {
+    "kind": "variable",
+    "name": "scrabble_words_tiny",
+    "description": "<p>A smaller sample of <code>scrabble_words</code>, containing every 100th word.</p>",
+    "type": "string[]"
+  },
+  "scrabble_letters_tiny": {
+    "kind": "variable",
+    "name": "scrabble_letters_tiny",
+    "description": "<p>A smaller sample of <code>scrabble_letters</code>, corresponding to <code>scrabble_words_tiny</code>.</p>",
+    "type": "string[][]"
+  }
+}

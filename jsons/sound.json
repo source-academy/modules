@@ -1,17 +1,4 @@
 {
-  "conductorToSound": {
-    "kind": "function",
-    "name": "conductorToSound",
-    "description": "<p>Unwraps a Conductor PAIR/ARRAY (or throws) into the internal Sound representation.</p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "unknown",
-        "name": "value"
-      }
-    ],
-    "retType": "Promise<Sound>"
-  },
   "make_sound": {
     "kind": "function",
     "name": "make_sound",
