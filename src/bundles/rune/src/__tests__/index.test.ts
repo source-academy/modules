@@ -244,25 +244,6 @@ describe(funcs.stackn, () => {
   });
 });
 
-describe(funcs.repeat_pattern, () => {
-  it('simply returns if n <= 0', () => {
-    const mockPattern = vi.fn(x => x);
-    expect(funcs.repeat_pattern(0, mockPattern, funcs.blank)).toBe(funcs.blank);
-    expect(mockPattern).not.toHaveBeenCalled();
-  });
-
-  it('works', () => {
-    const mockPattern = vi.fn(x => x);
-    expect(funcs.repeat_pattern(5, mockPattern, funcs.blank)).toBe(funcs.blank);
-    expect(mockPattern).toHaveBeenCalledTimes(5);
-  });
-
-  it('throws if initial is not a rune', () => {
-    expect(() => funcs.repeat_pattern(5, x => x, 0 as any))
-      .toThrow('repeat_pattern: Expected Rune for initial, got 0.');
-  });
-});
-
 describe(funcs.overlay_frac, () => {
   it('throws when argument is not rune', () => {
     expect(() => funcs.overlay_frac(0, 0 as any, funcs.heart)).toThrow('overlay_frac: Expected Rune for rune1, got 0.');

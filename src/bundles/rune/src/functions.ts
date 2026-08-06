@@ -1,5 +1,4 @@
-import { repeat_internal } from '@sourceacademy/bundle-repeat/functions';
-import { assertFunctionOfLength, assertNumberWithinRange } from '@sourceacademy/conductor/common';
+import { assertNumberWithinRange } from '@sourceacademy/conductor/common';
 import { clamp, sample } from 'es-toolkit';
 import { mat4, vec3 } from 'gl-matrix';
 import {
@@ -213,17 +212,6 @@ export class RuneFunctions {
       RuneFunctions.beside(RuneFunctions.quarter_turn_right(rune), RuneFunctions.rotate(Math.PI, rune)),
       RuneFunctions.beside(rune, RuneFunctions.rotate(Math.PI / 2, rune))
     );
-  }
-
-  static repeat_pattern(
-    n: number,
-    pattern: (a: Rune) => Rune,
-    initial: Rune
-  ): Rune {
-    throwIfNotRune(RuneFunctions.repeat_pattern.name, initial, 'initial');
-    assertFunctionOfLength(pattern, 1, RuneFunctions.repeat_pattern.name);
-    const repeated = repeat_internal<Rune>(pattern, n);
-    return repeated(initial);
   }
 
   // =============================================================================
@@ -671,8 +659,6 @@ export const random_color = RuneColours.random_color;
 export const rcross = RuneFunctions.rcross;
 
 export const red = RuneColours.red;
-
-export const repeat_pattern = RuneFunctions.repeat_pattern;
 
 export const ribbon = RuneFunctions.ribbon;
 
