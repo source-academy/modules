@@ -4299,7 +4299,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/bundle-repeat@workspace:^, @sourceacademy/bundle-repeat@workspace:src/bundles/repeat":
+"@sourceacademy/bundle-repeat@workspace:src/bundles/repeat":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-repeat@workspace:src/bundles/repeat"
   dependencies:
@@ -4342,7 +4342,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-rune@workspace:src/bundles/rune"
   dependencies:
-    "@sourceacademy/bundle-repeat": "workspace:^"
     "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"

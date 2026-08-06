@@ -281,7 +281,10 @@ async function readListElements(evaluator: IDataHandler, value: TypedValue<DataT
   return elements;
 }
 
-/** Unwraps a Conductor PAIR/ARRAY (or throws) into the internal Sound representation. */
+/**
+ * Unwraps a Conductor PAIR/ARRAY (or throws) into the internal Sound representation.
+ * @internal
+ */
 export async function conductorToSound(evaluator: IDataHandler, value: TypedValue<DataType>): Promise<Sound> {
   const invalidMessage = 'Expected a Sound (a pair of (pair of left/right waves) and duration)';
   if (!value || !isPairLike(value)) {
