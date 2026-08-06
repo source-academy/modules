@@ -126,6 +126,11 @@ export function initTypedocForHtml(bundles: Record<string, ResolvedBundle>, logL
     entryPointStrategy: 'merge',
     favicon: pathlib.join(import.meta.dirname, 'favicon.ico'),
     readme: pathlib.join(import.meta.dirname, 'docsreadme.md'),
+    // TypeDoc's own default omits Python entirely, so ```py fences in docsreadme.md
+    // (and in any future doc comment) would silently render as plain, unhighlighted
+    // text - see source-academy/modules landing page issue about missing Python
+    // highlighting.
+    highlightLanguages: [...td.OptionDefaults.highlightLanguages, 'python'],
     navigation: {
       includeCategories: true
     }
