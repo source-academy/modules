@@ -401,7 +401,7 @@ export class DrawnAnaglyphRune extends DrawnRune {
     super(rune, false);
   }
 
-  public draw = async (canvas: HTMLCanvasElement) => {
+  public draw = async (canvas: HTMLCanvasElement | OffscreenCanvas) => {
     const gl = getWebGlFromCanvas(canvas);
 
     // before draw the runes to framebuffer, we need to first draw a white background to cover the transparent places
@@ -509,7 +509,7 @@ export class DrawnHollusionRune extends DrawnRune {
     }
     `;
 
-  public draw = async (canvas: HTMLCanvasElement) => {
+  public draw = async (canvas: HTMLCanvasElement | OffscreenCanvas) => {
     const gl = getWebGlFromCanvas(canvas);
 
     const runes = white(overlay_frac(0.999999999, blank, scale(2.2, square)))

@@ -1,7 +1,8 @@
 import { Channel } from '@sourceacademy/conductor/conduit';
 import { DataType } from '@sourceacademy/conductor/types';
+import { RENDER_THUMBNAIL_SYMBOL } from '@sourceacademy/modules-lib/conductor/thumbnail';
 import { stringify } from 'js-slang/dist/utils/stringify';
-import { describe, expect, it, test, vi } from 'vitest';
+import { afterEach, describe, expect, it, test, vi } from 'vitest';
 import RuneModulePlugin from '..';
 import * as funcs from '../functions';
 import { RUNE_CHANNEL_ID, RUNE_TAB_NAME, type RuneChannelMessage } from '../protocol';
@@ -154,6 +155,58 @@ describe(RuneModulePlugin, () => {
 
     expect(result.done).toBe(true);
     expect(tabLoader.loadTab).toHaveBeenCalledExactlyOnceWith(RUNE_TAB_NAME);
+  });
+});
+
+describe('stepper thumbnail hook', () => {
+  const originalOffscreenCanvas = (globalThis as any).OffscreenCanvas;
+
+  afterEach(() => {
+    if (originalOffscreenCanvas === undefined) {
+      delete (globalThis as any).OffscreenCanvas;
+    } else {
+      (globalThis as any).OffscreenCanvas = originalOffscreenCanvas;
+    }
+  });
+
+  test('is not attached when OffscreenCanvas is unavailable in this realm', async () => {
+    delete (globalThis as any).OffscreenCanvas;
+    const { plugin } = createRunePlugin();
+
+    await plugin.initialise();
+
+    const blank = plugin.exports.find(each => each.symbol === 'blank')!.value.value as unknown as Rune;
+    expect(RENDER_THUMBNAIL_SYMBOL in (blank as any)).toBe(false);
+  });
+
+  test('is attached as a non-enumerable hook when OffscreenCanvas is available', async () => {
+    (globalThis as any).OffscreenCanvas = class {};
+    const { plugin } = createRunePlugin();
+
+    await plugin.initialise();
+
+    const blank = plugin.exports.find(each => each.symbol === 'blank')!.value.value as unknown as Rune;
+    const hook = (blank as any)[RENDER_THUMBNAIL_SYMBOL];
+
+    expect(typeof hook).toBe('function');
+    expect(Object.getOwnPropertySymbols(blank)).toContain(RENDER_THUMBNAIL_SYMBOL);
+    expect(Object.prototype.propertyIsEnumerable.call(blank, RENDER_THUMBNAIL_SYMBOL)).toBe(false);
+  });
+
+  test('a rendering failure resolves to undefined rather than throwing', async () => {
+    (globalThis as any).OffscreenCanvas = class {
+      getContext() {
+        throw new Error('no webgl in this fake environment');
+      }
+    };
+    const { plugin } = createRunePlugin();
+
+    await plugin.initialise();
+
+    const blank = plugin.exports.find(each => each.symbol === 'blank')!.value.value as unknown as Rune;
+    const hook = (blank as any)[RENDER_THUMBNAIL_SYMBOL] as () => Promise<string | undefined>;
+
+    await expect(hook()).resolves.toBeUndefined();
   });
 });
 
