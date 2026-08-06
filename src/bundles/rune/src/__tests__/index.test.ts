@@ -167,6 +167,17 @@ describe('stepper thumbnail hook', () => {
     } else {
       (globalThis as any).OffscreenCanvas = originalOffscreenCanvas;
     }
+
+    // plugin.initialise() attaches the hook directly onto the shared,
+    // module-level RuneFunctions singletons (not a per-test copy) - strip it
+    // back off so a test run here can't leak a hook into unrelated tests
+    // that assume a clean Rune instance, regardless of execution order.
+    for (const name in funcs.RuneFunctions) {
+      const value = funcs.RuneFunctions[name as keyof typeof funcs.RuneFunctions];
+      if (value && typeof value === 'object') {
+        delete (value as any)[RENDER_THUMBNAIL_SYMBOL];
+      }
+    }
   });
 
   test('is not attached when OffscreenCanvas is unavailable in this realm', async () => {

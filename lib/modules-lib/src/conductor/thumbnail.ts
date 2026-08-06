@@ -12,11 +12,13 @@
  * });
  * ```
  *
- * The hook must return (or resolve to) a data URL string, must never throw,
- * and should simply be omitted when rendering isn't possible in the current
- * realm - a consumer (e.g. a stepper) that doesn't find this key falls back
- * to a plain placeholder, so there is no wrong answer here beyond attaching
- * a hook that throws.
+ * The hook must never throw. It resolves to a data URL string, or to
+ * `undefined` if a render attempt fails at call time - callers must handle
+ * both. It should simply be omitted (not attached at all) when rendering
+ * isn't possible in the current realm - a consumer (e.g. a stepper) that
+ * doesn't find this key, or gets `undefined` back from it, falls back to a
+ * plain placeholder, so there is no wrong answer here beyond attaching a
+ * hook that throws.
  *
  * `Symbol.for` (a global-registry symbol) is used deliberately so that
  * modules and consumers in different packages/repos share the same key

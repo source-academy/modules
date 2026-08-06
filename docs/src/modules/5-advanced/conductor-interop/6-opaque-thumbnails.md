@@ -16,7 +16,7 @@ Rather than a module-level registry, or a new Python-callable export, a module t
 import { RENDER_THUMBNAIL_SYMBOL } from '@sourceacademy/modules-lib/conductor/thumbnail';
 
 Object.defineProperty(value, RENDER_THUMBNAIL_SYMBOL, {
-  value: () => renderToDataUrl(value),   // () => Promise<string>
+  value: () => renderToDataUrl(value),   // () => Promise<string | undefined>
   enumerable: false,
   configurable: true
 });
@@ -31,8 +31,8 @@ Object.defineProperty(value, RENDER_THUMBNAIL_SYMBOL, {
 
 ### The contract
 
-- **Signature:** `() => Promise<string>`, resolving to a data URL (e.g. `data:image/png;base64,...`).
-- **Attach only when actually renderable, never throw.** If rendering isn't possible in the current realm (see below), simply don't attach the property at all - a consumer that doesn't find the key falls back to a generic placeholder (ideally the value's constructor name, e.g. `<Rune>`, obtainable for free via `v?.constructor?.name` on the same `opaque_get` payload). If the hook *is* attached but a render attempt fails at call time, resolve to `undefined` rather than rejecting - a broken thumbnail must never surface as a runtime error to cadet code.
+- **Signature:** `() => Promise<string | undefined>`. Resolves to a data URL (e.g. `data:image/png;base64,...`) on success, or to `undefined` if a render attempt fails at call time - consumers must handle both, never assume the result is always a valid string.
+- **Attach only when actually renderable, never throw.** If rendering isn't possible in the current realm (see below), simply don't attach the property at all - a consumer that doesn't find the key falls back to a generic placeholder (ideally the value's constructor name, e.g. `<Rune>`, obtainable for free via `v?.constructor?.name` on the same `opaque_get` payload). If the hook *is* attached but a render attempt fails at call time, resolve to `undefined` rather than rejecting - a broken thumbnail must never surface as a runtime error to cadet code, and a consumer that gets `undefined` back should fall back to the same placeholder it'd use for a missing hook.
 - **Mutate the value in place, don't wrap or copy it.** Whatever object shape `opaque_make` receives (e.g. `rune`'s `Rune` class instances) very likely has other code checking `value instanceof SomeClass` on round-trips through `opaque_get` - a spread copy or wrapper object would silently break those checks. `Object.defineProperty(value, ..., { enumerable: false })` on the original object avoids that, and keeps the hook out of `for...in`/`Object.keys`/hand-written serialization that reads named fields explicitly.
 
 ## No DOM canvas in the render realm
