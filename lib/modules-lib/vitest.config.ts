@@ -13,7 +13,11 @@ export default mergeConfig(
         '@blueprintjs/core',
         '@blueprintjs/icons',
         'vitest-browser-react',
+        'js-slang/dist/errors/base',
+        'js-slang/dist/errors/rttcErrors',
         'js-slang/dist/errors/runtimeSourceError',
+        'js-slang/dist/utils/operators',
+        'js-slang/dist/utils/rttc',
         'js-slang/dist/utils/stringify'
       ]
     },

@@ -1,4 +1,5 @@
 import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
+import { RENDER_THUMBNAIL_SYMBOL } from '@sourceacademy/modules-lib/conductor/thumbnail';
 import { glAnimation, type AnimFrame, type ReplResult } from '@sourceacademy/modules-lib/types';
 import { mat4 } from 'gl-matrix';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
@@ -422,7 +423,7 @@ export abstract class DrawnRune implements ReplResult {
 
   public toReplString = () => '<Rune>';
 
-  public abstract draw: (canvas: HTMLCanvasElement) => Promise<unknown>;
+  public abstract draw: (canvas: HTMLCanvasElement | OffscreenCanvas) => Promise<unknown>;
 }
 
 export class DrawnNormalRune extends DrawnRune {
@@ -430,7 +431,7 @@ export class DrawnNormalRune extends DrawnRune {
     super(rune, false);
   }
 
-  public draw = async (canvas: HTMLCanvasElement) => {
+  public draw = async (canvas: HTMLCanvasElement | OffscreenCanvas) => {
     const gl = getWebGlFromCanvas(canvas);
 
     // prepare camera projection array
@@ -446,6 +447,76 @@ export class DrawnNormalRune extends DrawnRune {
       true
     );
   };
+}
+
+/**
+ * Pixel width/height of the square PNG thumbnail rendered for the stepper
+ * hook below. Chosen to sit close to the stepper's own text scale (~1-2
+ * lines at its 16px monospace font) rather than the tab's full 512x512
+ * render size - deliberately a single named constant so it's a one-line
+ * change to retune.
+ */
+export const THUMBNAIL_SIZE = 32;
+
+/**
+ * The module plugin runs in the evaluator's realm, which has no `document`/
+ * `HTMLCanvasElement` (it's a Web Worker, not the main thread) - so
+ * `OffscreenCanvas` is the only available rendering surface, and it isn't
+ * universally supported. Checked fresh on every call: it's a trivial global
+ * lookup, and caching it would only complicate testing for no real benefit.
+ */
+function isThumbnailRenderingSupported(): boolean {
+  return typeof OffscreenCanvas !== 'undefined';
+}
+
+function readBlobAsDataUrl(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
+/**
+ * Renders a Rune to a small PNG data URL, for the stepper thumbnail hook.
+ * Reuses `DrawnNormalRune`'s existing draw path unchanged (same shaders,
+ * same square ortho projection), just targeting an `OffscreenCanvas`
+ * instead of a mounted DOM canvas. Never throws - any failure (including
+ * `OffscreenCanvas` being unsupported) resolves to `undefined`, so a bad
+ * thumbnail render can never surface as a runtime error to student code.
+ */
+async function renderRuneThumbnail(rune: Rune): Promise<string | undefined> {
+  if (!isThumbnailRenderingSupported()) return undefined;
+  try {
+    const canvas = new OffscreenCanvas(THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+    await new DrawnNormalRune(rune).draw(canvas);
+    const blob = await canvas.convertToBlob({ type: 'image/png' });
+    return await readBlobAsDataUrl(blob);
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Attaches the stepper-thumbnail render hook (see `RENDER_THUMBNAIL_SYMBOL`)
+ * to a Rune instance, if thumbnail rendering is possible in this realm.
+ * Mutates `rune` in place rather than returning a copy - every later
+ * transform round-trips the value back through `opaque_get` and checks
+ * `instanceof Rune`, so a wrapper/copy would silently break those checks.
+ * The attached property is non-enumerable so it stays invisible to
+ * `for...in`/`Object.keys`/`serializeRune` (which already only reads named
+ * fields, but this keeps things tidy regardless).
+ */
+export function attachThumbnailHook(rune: Rune): Rune {
+  if (isThumbnailRenderingSupported()) {
+    Object.defineProperty(rune, RENDER_THUMBNAIL_SYMBOL, {
+      value: () => renderRuneThumbnail(rune),
+      enumerable: false,
+      configurable: true
+    });
+  }
+  return rune;
 }
 
 /** A function that takes in a timestamp and returns a Rune */
