@@ -52,6 +52,8 @@ export default class ScrabbleModulePlugin extends BaseModulePlugin {
     super(conduit, channels, evaluator);
   }
 
+  private __initialised = false;
+
   /**
    * An array of strings, each representing an allowed word in Scrabble.
    *
@@ -96,6 +98,13 @@ export default class ScrabbleModulePlugin extends BaseModulePlugin {
   // indexable arrays instead of DataType.OPAQUE, matching the policy that Python lists/JS arrays
   // should be the only built-in data structure modules hand back.
   override async initialise() {
+    // A second call would otherwise rebuild all four Conductor arrays (~246ms
+    // of array_set calls for ~173,000 words) and re-push every export onto
+    // `exports` again - super.initialise() isn't idempotent either, so the
+    // guard has to cover it too.
+    if (this.__initialised) return;
+    this.__initialised = true;
+
     await super.initialise();
     this.scrabble_words = scrabble_words;
     this.scrabble_letters = scrabble_letters;
