@@ -2147,6 +2147,29 @@ void main(void) {
     return new _Rune(paramGetter("vertices", () => new Float32Array()), paramGetter("colors", () => null), paramGetter("transformMatrix", mat4_exports.create), paramGetter("subRunes", () => []), paramGetter("texture", () => null), paramGetter("hollusionDistance", () => 0.1));
   };
   var Rune = _Rune;
+  function waitForImageToLoad(image) {
+    if (image.complete) {
+      return image.naturalWidth === 0 ? Promise.reject(new e2(`Rune: failed to load texture image at ${image.src}`)) : Promise.resolve(image);
+    }
+    return new Promise((resolve, reject) => {
+      function cleanup() {
+        image.removeEventListener("load", onLoad);
+        image.removeEventListener("error", onError);
+        image.removeEventListener("abort", onError);
+      }
+      function onLoad() {
+        cleanup();
+        resolve(image);
+      }
+      function onError() {
+        cleanup();
+        reject(new e2(`Rune: failed to load texture image at ${image.src}`));
+      }
+      image.addEventListener("load", onLoad);
+      image.addEventListener("error", onError);
+      image.addEventListener("abort", onError);
+    });
+  }
   function drawRunesToFrameBuffer(gl, runes, cameraMatrix, colorFilter, framebuffer = null, depthSwitch = false) {
     return __async(this, null, function* () {
       gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
@@ -2173,23 +2196,12 @@ void main(void) {
       const loadTexture = rune => __async(null, null, function* () {
         if (rune.texture === null) return null;
         const imageSource = rune.texture;
-        let image;
-        if (typeof imageSource !== "string") {
-          image = imageSource;
-        } else {
-          image = yield new Promise((resolve, reject) => {
-            const image2 = Object.assign(new Image(), {
-              crossOrigin: "anonymous",
-              src: imageSource
-            });
-            image2.onload = () => {
-              rune.texture = image2;
-              resolve(image2);
-            };
-            image2.onabort = reject;
-            image2.onerror = reject;
-          });
-        }
+        const image = typeof imageSource === "string" ? Object.assign(new Image(), {
+          crossOrigin: "anonymous",
+          src: imageSource
+        }) : imageSource;
+        yield waitForImageToLoad(image);
+        rune.texture = image;
         const texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, texture);
         function isPowerOf2(value) {
