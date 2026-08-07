@@ -1990,6 +1990,7 @@ export default require => {
       return a3;
     };
   })();
+  var RENDER_THUMBNAIL_SYMBOL = Symbol.for("source-academy.stepper.renderThumbnail");
   function loadShader(gl, type, source) {
     const shader = gl.createShader(type);
     if (!shader) {
@@ -2302,6 +2303,53 @@ void main(void) {
     gl_FragColor.a = 1.0;
   }
   `;
+  var DrawnNormalRune = class extends DrawnRune {
+    constructor(rune) {
+      super(rune, false);
+      this.draw = canvas => __async(this, null, function* () {
+        const gl = getWebGlFromCanvas(canvas);
+        const cameraMatrix = mat4_exports.create();
+        yield drawRunesToFrameBuffer(gl, this.rune.flatten(), cameraMatrix, new Float32Array([1, 1, 1, 1]), null, true);
+      });
+    }
+  };
+  var THUMBNAIL_SIZE = 32;
+  function isThumbnailRenderingSupported() {
+    return typeof OffscreenCanvas !== "undefined";
+  }
+  function readBlobAsDataUrl(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(blob);
+    });
+  }
+  function renderRuneThumbnail(rune) {
+    return __async(this, null, function* () {
+      if (!isThumbnailRenderingSupported()) return void 0;
+      try {
+        const canvas = new OffscreenCanvas(THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+        yield new DrawnNormalRune(rune).draw(canvas);
+        const blob = yield canvas.convertToBlob({
+          type: "image/png"
+        });
+        return yield readBlobAsDataUrl(blob);
+      } catch (e5) {
+        return void 0;
+      }
+    });
+  }
+  function attachThumbnailHook(rune) {
+    if (isThumbnailRenderingSupported()) {
+      Object.defineProperty(rune, RENDER_THUMBNAIL_SYMBOL, {
+        value: () => renderRuneThumbnail(rune),
+        enumerable: false,
+        configurable: true
+      });
+    }
+    return rune;
+  }
   function throwIfNotRune(func_name, rune, param_name) {
     if (!(rune instanceof Rune)) {
       throw new n(func_name, param_name, "Rune", rune);
@@ -3028,7 +3076,7 @@ void main(void) {
     }
     __makeRune(rune) {
       return __async(this, null, function* () {
-        return yield this.evaluator.opaque_make(rune, true);
+        return yield this.evaluator.opaque_make(attachThumbnailHook(rune), true);
       });
     }
     __callUnaryRune(arg, funcName, operation) {
