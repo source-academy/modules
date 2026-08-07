@@ -148,6 +148,46 @@ export class Rune {
 }
 
 /**
+ * Resolves once `image` has actually finished loading. `rune.texture` can
+ * arrive as an `HTMLImageElement` whose fetch/decode is still in flight -
+ * `deserializeRune` (protocol.ts) constructs one and hands it over without
+ * waiting, since deserialization itself is synchronous. Using such an image
+ * for `texImage2D` before it's ready silently leaves the 1x1 placeholder
+ * pixel as the visible texture (see
+ * https://github.com/source-academy/modules/issues/891) - hence this wait,
+ * regardless of whether the image was just-created or handed in already
+ * loading.
+ */
+function waitForImageToLoad(image: HTMLImageElement): Promise<HTMLImageElement> {
+  if (image.complete) {
+    return image.naturalWidth === 0
+      ? Promise.reject(new EvaluatorRuntimeError(`Rune: failed to load texture image at ${image.src}`))
+      : Promise.resolve(image);
+  }
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    // Uses addEventListener/removeEventListener rather than the onload/
+    // onerror/onabort properties so a caller-supplied image (e.g. via
+    // `Rune.of`) keeps whatever handlers it already had.
+    function cleanup() {
+      image.removeEventListener('load', onLoad);
+      image.removeEventListener('error', onError);
+      image.removeEventListener('abort', onError);
+    }
+    function onLoad() {
+      cleanup();
+      resolve(image);
+    }
+    function onError() {
+      cleanup();
+      reject(new EvaluatorRuntimeError(`Rune: failed to load texture image at ${image.src}`));
+    }
+    image.addEventListener('load', onLoad);
+    image.addEventListener('error', onError);
+    image.addEventListener('abort', onError);
+  });
+}
+
+/**
  * Draws the list of runes with the prepared WebGLRenderingContext, with each rune overlapping each other onto a given framebuffer. if the framebuffer is null, draw to the default canvas.
  *
  * @param gl a prepared WebGLRenderingContext with shader program linked
@@ -230,23 +270,11 @@ export async function drawRunesToFrameBuffer(
   const loadTexture = async (rune: Rune): Promise<WebGLTexture | null> => {
     if (rune.texture === null) return null;
     const imageSource = rune.texture;
-    let image: HTMLImageElement;
-    if (typeof imageSource !== 'string') {
-      image = imageSource;
-    } else {
-      image = await new Promise<HTMLImageElement>((resolve, reject) => {
-        const image = Object.assign(new Image(), {
-          crossOrigin: 'anonymous',
-          src: imageSource
-        });
-        image.onload = () => {
-          rune.texture = image;
-          resolve(image);
-        };
-        image.onabort = reject;
-        image.onerror = reject;
-      });
-    }
+    const image = typeof imageSource === 'string'
+      ? Object.assign(new Image(), { crossOrigin: 'anonymous', src: imageSource })
+      : imageSource;
+    await waitForImageToLoad(image);
+    rune.texture = image;
 
     const texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
