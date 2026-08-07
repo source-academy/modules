@@ -21,7 +21,7 @@
     "@sourceacademy/markdown-plugin-directory-tree": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
     "js-slang": "catalog:",
-    "mermaid": "^11.10.0",
+    "mermaid": "^11.16.1",
     "vitepress": "^1.6.4",
     "vitepress-plugin-group-icons": "^1.7.5",
     "vitepress-plugin-mermaid": "^2.0.17",
