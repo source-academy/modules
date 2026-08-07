@@ -24,7 +24,7 @@ import {
   type RuneDisplayMessage,
   type RuneRenderMessage
 } from './protocol';
-import { Rune } from './rune';
+import { Rune, attachThumbnailHook } from './rune';
 import { throwIfNotRune } from './runes_ops';
 
 type RuneTabLoader = {
@@ -249,7 +249,7 @@ export default class RuneModulePlugin extends BaseModulePlugin {
   }
 
   private async __makeRune(rune: Rune): Promise<TypedValue<DataType.OPAQUE>> {
-    return await this.evaluator.opaque_make(rune, true);
+    return await this.evaluator.opaque_make(attachThumbnailHook(rune), true);
   }
 
   private async __callUnaryRune(

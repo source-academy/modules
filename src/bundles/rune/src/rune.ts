@@ -1,4 +1,5 @@
 import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
+import { RENDER_THUMBNAIL_SYMBOL } from '@sourceacademy/modules-lib/conductor/thumbnail';
 import { glAnimation, type AnimFrame, type ReplResult } from '@sourceacademy/modules-lib/types';
 import { mat4 } from 'gl-matrix';
 import { getWebGlFromCanvas, initShaderProgram } from './runes_webgl';
@@ -147,6 +148,46 @@ export class Rune {
 }
 
 /**
+ * Resolves once `image` has actually finished loading. `rune.texture` can
+ * arrive as an `HTMLImageElement` whose fetch/decode is still in flight -
+ * `deserializeRune` (protocol.ts) constructs one and hands it over without
+ * waiting, since deserialization itself is synchronous. Using such an image
+ * for `texImage2D` before it's ready silently leaves the 1x1 placeholder
+ * pixel as the visible texture (see
+ * https://github.com/source-academy/modules/issues/891) - hence this wait,
+ * regardless of whether the image was just-created or handed in already
+ * loading.
+ */
+function waitForImageToLoad(image: HTMLImageElement): Promise<HTMLImageElement> {
+  if (image.complete) {
+    return image.naturalWidth === 0
+      ? Promise.reject(new EvaluatorRuntimeError(`Rune: failed to load texture image at ${image.src}`))
+      : Promise.resolve(image);
+  }
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    // Uses addEventListener/removeEventListener rather than the onload/
+    // onerror/onabort properties so a caller-supplied image (e.g. via
+    // `Rune.of`) keeps whatever handlers it already had.
+    function cleanup() {
+      image.removeEventListener('load', onLoad);
+      image.removeEventListener('error', onError);
+      image.removeEventListener('abort', onError);
+    }
+    function onLoad() {
+      cleanup();
+      resolve(image);
+    }
+    function onError() {
+      cleanup();
+      reject(new EvaluatorRuntimeError(`Rune: failed to load texture image at ${image.src}`));
+    }
+    image.addEventListener('load', onLoad);
+    image.addEventListener('error', onError);
+    image.addEventListener('abort', onError);
+  });
+}
+
+/**
  * Draws the list of runes with the prepared WebGLRenderingContext, with each rune overlapping each other onto a given framebuffer. if the framebuffer is null, draw to the default canvas.
  *
  * @param gl a prepared WebGLRenderingContext with shader program linked
@@ -229,23 +270,11 @@ export async function drawRunesToFrameBuffer(
   const loadTexture = async (rune: Rune): Promise<WebGLTexture | null> => {
     if (rune.texture === null) return null;
     const imageSource = rune.texture;
-    let image: HTMLImageElement;
-    if (typeof imageSource !== 'string') {
-      image = imageSource;
-    } else {
-      image = await new Promise<HTMLImageElement>((resolve, reject) => {
-        const image = Object.assign(new Image(), {
-          crossOrigin: 'anonymous',
-          src: imageSource
-        });
-        image.onload = () => {
-          rune.texture = image;
-          resolve(image);
-        };
-        image.onabort = reject;
-        image.onerror = reject;
-      });
-    }
+    const image = typeof imageSource === 'string'
+      ? Object.assign(new Image(), { crossOrigin: 'anonymous', src: imageSource })
+      : imageSource;
+    await waitForImageToLoad(image);
+    rune.texture = image;
 
     const texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -394,7 +423,7 @@ export abstract class DrawnRune implements ReplResult {
 
   public toReplString = () => '<Rune>';
 
-  public abstract draw: (canvas: HTMLCanvasElement) => Promise<unknown>;
+  public abstract draw: (canvas: HTMLCanvasElement | OffscreenCanvas) => Promise<unknown>;
 }
 
 export class DrawnNormalRune extends DrawnRune {
@@ -402,7 +431,7 @@ export class DrawnNormalRune extends DrawnRune {
     super(rune, false);
   }
 
-  public draw = async (canvas: HTMLCanvasElement) => {
+  public draw = async (canvas: HTMLCanvasElement | OffscreenCanvas) => {
     const gl = getWebGlFromCanvas(canvas);
 
     // prepare camera projection array
@@ -418,6 +447,76 @@ export class DrawnNormalRune extends DrawnRune {
       true
     );
   };
+}
+
+/**
+ * Pixel width/height of the square PNG thumbnail rendered for the stepper
+ * hook below. Chosen to sit close to the stepper's own text scale (~1-2
+ * lines at its 16px monospace font) rather than the tab's full 512x512
+ * render size - deliberately a single named constant so it's a one-line
+ * change to retune.
+ */
+export const THUMBNAIL_SIZE = 32;
+
+/**
+ * The module plugin runs in the evaluator's realm, which has no `document`/
+ * `HTMLCanvasElement` (it's a Web Worker, not the main thread) - so
+ * `OffscreenCanvas` is the only available rendering surface, and it isn't
+ * universally supported. Checked fresh on every call: it's a trivial global
+ * lookup, and caching it would only complicate testing for no real benefit.
+ */
+function isThumbnailRenderingSupported(): boolean {
+  return typeof OffscreenCanvas !== 'undefined';
+}
+
+function readBlobAsDataUrl(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
+/**
+ * Renders a Rune to a small PNG data URL, for the stepper thumbnail hook.
+ * Reuses `DrawnNormalRune`'s existing draw path unchanged (same shaders,
+ * same square ortho projection), just targeting an `OffscreenCanvas`
+ * instead of a mounted DOM canvas. Never throws - any failure (including
+ * `OffscreenCanvas` being unsupported) resolves to `undefined`, so a bad
+ * thumbnail render can never surface as a runtime error to student code.
+ */
+async function renderRuneThumbnail(rune: Rune): Promise<string | undefined> {
+  if (!isThumbnailRenderingSupported()) return undefined;
+  try {
+    const canvas = new OffscreenCanvas(THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+    await new DrawnNormalRune(rune).draw(canvas);
+    const blob = await canvas.convertToBlob({ type: 'image/png' });
+    return await readBlobAsDataUrl(blob);
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Attaches the stepper-thumbnail render hook (see `RENDER_THUMBNAIL_SYMBOL`)
+ * to a Rune instance, if thumbnail rendering is possible in this realm.
+ * Mutates `rune` in place rather than returning a copy - every later
+ * transform round-trips the value back through `opaque_get` and checks
+ * `instanceof Rune`, so a wrapper/copy would silently break those checks.
+ * The attached property is non-enumerable so it stays invisible to
+ * `for...in`/`Object.keys`/`serializeRune` (which already only reads named
+ * fields, but this keeps things tidy regardless).
+ */
+export function attachThumbnailHook(rune: Rune): Rune {
+  if (isThumbnailRenderingSupported()) {
+    Object.defineProperty(rune, RENDER_THUMBNAIL_SYMBOL, {
+      value: () => renderRuneThumbnail(rune),
+      enumerable: false,
+      configurable: true
+    });
+  }
+  return rune;
 }
 
 /** A function that takes in a timestamp and returns a Rune */

@@ -63,11 +63,13 @@ export function initShaderProgram(
 }
 
 /**
- * Get a WebGLRenderingContext from Canvas input
+ * Get a WebGLRenderingContext from Canvas input. Accepts an `OffscreenCanvas`
+ * too, so the same draw code path works both for a real, mounted DOM canvas
+ * (the Rune tab) and for headless thumbnail rendering (no DOM available).
  * @param canvas WebGLRenderingContext
  * @returns
  */
-export function getWebGlFromCanvas(canvas: HTMLCanvasElement): WebGLRenderingContext {
+export function getWebGlFromCanvas(canvas: HTMLCanvasElement | OffscreenCanvas): WebGLRenderingContext {
   const gl: WebGLRenderingContext | null = canvas.getContext('webgl');
   if (!gl) {
     throw new EvaluatorRuntimeError('Unable to initialize WebGL.');
