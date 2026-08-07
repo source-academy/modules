@@ -75,17 +75,17 @@ describe(drawRunesToFrameBuffer, () => {
   test('waits for an already in-flight texture image to finish loading before uploading it (issue #891)', async () => {
     // Mirrors what `deserializeRune` (protocol.ts) hands to the draw path:
     // an `HTMLImageElement` whose fetch/decode may still be in progress.
-    let onload: (() => void) | undefined;
+    let loadListener: (() => void) | undefined;
     const fakeImage = {
       complete: false,
       naturalWidth: 0,
       width: 2,
       height: 2,
       src: 'https://example.com/paw.png',
-      set onload(handler: () => void) { onload = handler; },
-      get onload() { return onload as () => void; },
-      onerror: null,
-      onabort: null
+      addEventListener: vi.fn((event: string, listener: () => void) => {
+        if (event === 'load') loadListener = listener;
+      }),
+      removeEventListener: vi.fn()
     } as unknown as HTMLImageElement;
 
     const events: string[] = [];
@@ -107,7 +107,7 @@ describe(drawRunesToFrameBuffer, () => {
 
     (fakeImage as { complete: boolean }).complete = true;
     (fakeImage as { naturalWidth: number }).naturalWidth = 2;
-    onload!();
+    loadListener!();
 
     await drawPromise;
 

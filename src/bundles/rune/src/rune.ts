@@ -164,9 +164,25 @@ function waitForImageToLoad(image: HTMLImageElement): Promise<HTMLImageElement> 
       : Promise.resolve(image);
   }
   return new Promise<HTMLImageElement>((resolve, reject) => {
-    image.onload = () => resolve(image);
-    image.onabort = reject;
-    image.onerror = reject;
+    // Uses addEventListener/removeEventListener rather than the onload/
+    // onerror/onabort properties so a caller-supplied image (e.g. via
+    // `Rune.of`) keeps whatever handlers it already had.
+    function cleanup() {
+      image.removeEventListener('load', onLoad);
+      image.removeEventListener('error', onError);
+      image.removeEventListener('abort', onError);
+    }
+    function onLoad() {
+      cleanup();
+      resolve(image);
+    }
+    function onError() {
+      cleanup();
+      reject(new EvaluatorRuntimeError(`Rune: failed to load texture image at ${image.src}`));
+    }
+    image.addEventListener('load', onLoad);
+    image.addEventListener('error', onError);
+    image.addEventListener('abort', onError);
   });
 }
 
