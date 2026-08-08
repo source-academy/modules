@@ -274,8 +274,8 @@ export default require => {
       }
       return yield new __await(evaluator.closure_make({
         name: "function",
-        args: [E.VOID],
-        returnType: E.VOID
+        args: [E.ANY],
+        returnType: E.ANY
       }, n3.value === 0 ? identity : composition));
     });
   }
