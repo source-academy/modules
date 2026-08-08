@@ -150,9 +150,12 @@ export default require => {
       super(conduit, channels, evaluator);
       this.id = "scrabble";
       this.exportedNames = [];
+      this.__initialised = false;
     }
     initialise() {
       return __async(this, null, function* () {
+        if (this.__initialised) return;
+        this.__initialised = true;
         yield __superGet(_ScrabbleModulePlugin.prototype, this, "initialise").call(this);
         this.scrabble_words = scrabble_words;
         this.scrabble_letters = scrabble_letters;
