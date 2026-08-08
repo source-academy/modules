@@ -53,8 +53,8 @@ export async function* repeat(evaluator: IDataHandler, func: TypedValue<DataType
   return await evaluator.closure_make(
     {
       name: 'function',
-      args: [DataType.VOID] as const,
-      returnType: DataType.VOID
+      args: [DataType.ANY] as const,
+      returnType: DataType.ANY
     },
     n.value === 0 ? identity : composition
   );
