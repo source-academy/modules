@@ -17,6 +17,29 @@
     ],
     "retType": "Function"
   },
+  "repeat_apply": {
+    "kind": "function",
+    "name": "repeat_apply",
+    "description": "<p>Applies the specified function to a value n times, threading the result of each\napplication into the next.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "Function",
+        "name": "func"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "n"
+      },
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "x"
+      }
+    ],
+    "retType": "unknown"
+  },
   "twice": {
     "kind": "function",
     "name": "twice",

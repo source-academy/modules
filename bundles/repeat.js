@@ -253,6 +253,18 @@ export default require => {
       __publicField(this, "errorType", _.EVALUATOR_RUNTIME);
     }
   };
+  function repeat_apply(evaluator, func, n3, x) {
+    return __asyncGenerator(this, null, function* () {
+      if (!Number.isInteger(n3.value) || n3.value < 0) {
+        throw new e2(`repeat_apply: Expected integer \u2265 0, got ${n3.value}.`);
+      }
+      let current = x;
+      for (let i = 0; i < n3.value; i += 1) {
+        current = yield* __yieldStar(evaluator.closure_call_unchecked(func, [current]));
+      }
+      return current;
+    });
+  }
   function repeat(evaluator, func, n3) {
     return __asyncGenerator(this, null, function* () {
       if (!Number.isInteger(n3.value) || n3.value < 0) {
@@ -295,17 +307,22 @@ export default require => {
       }));
     });
   }
-  var _thrice_dec, _twice_dec, _repeat_dec, _a, _init;
-  var RepeatModulePlugin = class extends (_a = o2, _repeat_dec = [n([E.CLOSURE, E.NUMBER], E.CLOSURE)], _twice_dec = [n([E.CLOSURE], E.CLOSURE)], _thrice_dec = [n([E.CLOSURE], E.CLOSURE)], _a) {
+  var _thrice_dec, _twice_dec, _repeat_apply_dec, _repeat_dec, _a, _init;
+  var RepeatModulePlugin = class extends (_a = o2, _repeat_dec = [n([E.CLOSURE, E.NUMBER], E.CLOSURE)], _repeat_apply_dec = [n([E.CLOSURE, E.NUMBER, E.ANY], E.ANY)], _twice_dec = [n([E.CLOSURE], E.CLOSURE)], _thrice_dec = [n([E.CLOSURE], E.CLOSURE)], _a) {
     constructor(conduit, channels, evaluator) {
       super(conduit, channels, evaluator);
       __runInitializers(_init, 5, this);
       this.id = "repeat";
-      this.exportedNames = ["repeat", "twice", "thrice"];
+      this.exportedNames = ["repeat", "repeat_apply", "twice", "thrice"];
     }
     repeat(func, n3) {
       return __asyncGenerator(this, null, function* () {
         return yield* __yieldStar(repeat(this.evaluator, func, n3));
+      });
+    }
+    repeat_apply(func, n3, x) {
+      return __asyncGenerator(this, null, function* () {
+        return yield* __yieldStar(repeat_apply(this.evaluator, func, n3, x));
       });
     }
     twice(func) {
@@ -321,6 +338,7 @@ export default require => {
   };
   _init = __decoratorStart(_a);
   __decorateElement(_init, 1, "repeat", _repeat_dec, RepeatModulePlugin);
+  __decorateElement(_init, 1, "repeat_apply", _repeat_apply_dec, RepeatModulePlugin);
   __decorateElement(_init, 1, "twice", _twice_dec, RepeatModulePlugin);
   __decorateElement(_init, 1, "thrice", _thrice_dec, RepeatModulePlugin);
   __decoratorMetadata(_init, RepeatModulePlugin);
