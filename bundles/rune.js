@@ -2313,7 +2313,7 @@ void main(void) {
       });
     }
   };
-  var THUMBNAIL_SIZE = 32;
+  var THUMBNAIL_SIZE = 80;
   function isThumbnailRenderingSupported() {
     return typeof OffscreenCanvas !== "undefined";
   }
