@@ -456,7 +456,7 @@ export class DrawnNormalRune extends DrawnRune {
  * render size - deliberately a single named constant so it's a one-line
  * change to retune.
  */
-export const THUMBNAIL_SIZE = 32;
+export const THUMBNAIL_SIZE = 80;
 
 /**
  * The module plugin runs in the evaluator's realm, which has no `document`/
