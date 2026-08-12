@@ -10,11 +10,11 @@ import { BaseModulePlugin, moduleMethod } from '@sourceacademy/conductor/module'
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 
-import { repeat as repeat_func, thrice as thrice_func, twice as twice_func } from './functions';
+import { repeat as repeat_func, repeat_apply as repeat_apply_func, thrice as thrice_func, twice as twice_func } from './functions';
 
 export default class RepeatModulePlugin extends BaseModulePlugin {
   id = 'repeat';
-  override exportedNames = ['repeat', 'twice', 'thrice'] as const;
+  override exportedNames = ['repeat', 'repeat_apply', 'twice', 'thrice'] as const;
   static override channelAttach = [];
   constructor(conduit: IConduit, channels: IChannel<any>[], evaluator: IInterfacableEvaluator) {
     super(conduit, channels, evaluator);
@@ -34,6 +34,23 @@ export default class RepeatModulePlugin extends BaseModulePlugin {
   @moduleMethod([DataType.CLOSURE, DataType.NUMBER], DataType.CLOSURE)
   async* repeat(func: TypedValue<DataType.CLOSURE>, n: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, unknown> {
     return yield* repeat_func(this.evaluator, func, n);
+  }
+
+  /**
+   * Applies the specified function to a value n times, threading the result of each
+   * application into the next.
+   * @example
+   * ```
+   * repeat_apply(x => x + 2, 5, 0); // Returns 10
+   * ```
+   * @param func the function to be applied
+   * @param n the number of times to apply the function
+   * @param x the initial value
+   * @returns the result of applying func to x n times
+   */
+  @moduleMethod([DataType.CLOSURE, DataType.NUMBER, DataType.ANY], DataType.ANY)
+  async* repeat_apply(func: TypedValue<DataType.CLOSURE>, n: TypedValue<DataType.NUMBER>, x: TypedValue<DataType>): AsyncGenerator<void, TypedValue<DataType>, undefined> {
+    return yield* repeat_apply_func(this.evaluator, func, n, x);
   }
 
   /**
