@@ -30,6 +30,22 @@ export function repeat_internal<T>(f: UnaryFunction<T>, n: number): UnaryFunctio
 }
 
 /**
+ * Applies the specified closure to a value n times, threading the result of each
+ * application into the next.
+ */
+export async function* repeat_apply(evaluator: IDataHandler, func: TypedValue<DataType.CLOSURE>, n: TypedValue<DataType.NUMBER>, x: TypedValue<DataType>): AsyncGenerator<void, TypedValue<DataType>, undefined> {
+  if (!Number.isInteger(n.value) || n.value < 0) {
+    throw new EvaluatorRuntimeError(`repeat_apply: Expected integer ≥ 0, got ${n.value}.`);
+  }
+
+  let current = x;
+  for (let i = 0; i < n.value; i += 1) {
+    current = yield* evaluator.closure_call_unchecked(func, [current]);
+  }
+  return current;
+}
+
+/**
  * Returns a new closure which when applied to an argument, has the same effect
  * as applying the specified closure to the same argument n times.
  */
