@@ -29,6 +29,13 @@ function constantWave(value: number): Wave {
   };
 }
 
+function countedWave(value: number, calls: { count: number }): Wave {
+  return async function* () {
+    calls.count += 1;
+    return value;
+  };
+}
+
 async function sampleAt(wave: Wave, t: number): Promise<number> {
   return drain(wave(t));
 }
@@ -226,6 +233,63 @@ describe('Sequential playback queue functions', () => {
     });
   });
 
+  describe(funcs.play_in_tab, () => {
+    it('Should error gracefully when duration is negative', async () => {
+      const wave = constantWave(0);
+      const sound: Sound = { leftWave: wave, rightWave: wave, duration: -1 };
+      await expect(drain(funcs.play_in_tab(sound))).rejects.toThrow('play_in_tab: duration of sound is negative');
+    });
+
+    it('Should not error when duration is zero: a zero-duration Sound is a valid neutral element, not an error', async () => {
+      const sound = funcs.make_sound(constantWave(0), 0);
+      await expect(drain(funcs.play_in_tab(sound))).resolves.toBe(sound);
+    });
+
+    it('adds a zero-duration placeholder entry instead of an audio player, and skips sampling entirely', async () => {
+      const sound = funcs.make_sound(constantWave(0), 0);
+      await drain(funcs.play_in_tab(sound));
+
+      expect(io.addZeroDurationPlayerToTab).toHaveBeenCalledOnce();
+      expect(io.addPlayerToTab).not.toHaveBeenCalled();
+      // There's nothing to sample for a zero-duration Sound, so no "constructing" status either.
+      expect(io.notifyConstructing).not.toHaveBeenCalled();
+    });
+
+    it('Should throw error when given not a sound', async () => {
+      await expect(drain(funcs.play_in_tab(0 as any))).rejects.toThrow('play_in_tab: Expected a Sound for sound, got 0.');
+    });
+
+    it('adds a WAV data URI player to the tab instead of playing immediately', async () => {
+      const sound = funcs.sine_sound(440, 0.01);
+      await expect(drain(funcs.play_in_tab(sound))).resolves.toBe(sound);
+
+      expect(io.addPlayerToTab).toHaveBeenCalledOnce();
+      expect(io.playSamples).not.toHaveBeenCalled();
+      // play_in_tab() never dispatches playback itself, so it must not affect activePlayCount.
+      expect(funcs.globalVars.activePlayCount).toBe(0);
+
+      const [wavDataUri] = io.addPlayerToTab.mock.calls[0];
+      expect(wavDataUri).toMatch(/^data:audio\/wav;base64,/);
+    });
+
+    it('notifies the tab before sampling starts, like play(), so a long sample shows as constructing rather than stalled', async () => {
+      const sound = funcs.sine_sound(440, 0.01);
+      await drain(funcs.play_in_tab(sound));
+
+      expect(io.notifyConstructing).toHaveBeenCalledOnce();
+      const notifyOrder = io.notifyConstructing.mock.invocationCallOrder[0];
+      const addPlayerOrder = io.addPlayerToTab.mock.invocationCallOrder[0];
+      expect(notifyOrder).toBeLessThan(addPlayerOrder);
+    });
+
+    test('repeated play_in_tab() calls each add their own player', async () => {
+      const sound = funcs.sine_sound(440, 0.01);
+      await drain(funcs.play_in_tab(sound));
+      await drain(funcs.play_in_tab(sound));
+      expect(io.addPlayerToTab).toHaveBeenCalledTimes(2);
+    });
+  });
+
   describe(funcs.stop, () => {
     test('Calling stop without ever calling any playback functions should not throw an error', () => {
       expect(funcs.stop).not.toThrowError();
@@ -374,6 +438,17 @@ describe(funcs.pan, () => {
     expect(await sampleAt(funcs.get_left_wave(panned), 0)).toBeCloseTo(0.5);
     expect(await sampleAt(funcs.get_right_wave(panned), 0)).toBeCloseTo(0.5);
   });
+
+  it('samples the squashed source wave once per timestamp when played', async () => {
+    const calls = { count: 0 };
+    const duration = 5 / funcs.FS;
+    const expectedSamples = Math.ceil(funcs.FS * duration);
+    const sound = funcs.make_sound(countedWave(1, calls), duration);
+
+    await drain(funcs.play(funcs.pan(0)(sound)));
+
+    expect(calls.count).toBe(expectedSamples);
+  });
 });
 
 describe(funcs.pan_mod, () => {
@@ -383,6 +458,20 @@ describe(funcs.pan_mod, () => {
     const panned = funcs.pan_mod(modulator)(sound);
     expect(await sampleAt(funcs.get_left_wave(panned), 0)).toBeCloseTo(0);
     expect(await sampleAt(funcs.get_right_wave(panned), 0)).toBeCloseTo(1);
+  });
+
+  it('samples the source and modulator waves once per timestamp when played', async () => {
+    const sourceCalls = { count: 0 };
+    const modulatorCalls = { count: 0 };
+    const duration = 5 / funcs.FS;
+    const expectedSamples = Math.ceil(funcs.FS * duration);
+    const sound = funcs.make_sound(countedWave(1, sourceCalls), duration);
+    const modulator = funcs.make_sound(countedWave(0.25, modulatorCalls), duration);
+
+    await drain(funcs.play(funcs.pan_mod(modulator)(sound)));
+
+    expect(sourceCalls.count).toBe(expectedSamples);
+    expect(modulatorCalls.count).toBe(expectedSamples);
   });
 });
 

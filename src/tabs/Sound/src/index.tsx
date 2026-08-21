@@ -7,6 +7,11 @@ type Status = 'idle' | 'constructing' | 'playing' | 'recording';
 
 export const SOUND_TAB_ID = 'sound';
 
+// A loop calling play_in_tab() many times in one Run would otherwise grow __players (each entry
+// holding a full base64 WAV data URI plus a rendered <audio> element) without bound for the life
+// of that Run. Capped to the most recent entries instead.
+const MAX_PLAYER_BARS = 50;
+
 const STATUS_COLORS: Record<Status, string> = {
   idle: '#8A9BA8',
   constructing: '#B08D00',
@@ -58,6 +63,45 @@ function SoundStatusView({ status, micGranted }: { status: Status, micGranted: b
   );
 }
 
+export type PlayerBarEntry =
+  | { id: number, kind: 'audio', dataUri: string }
+  | { id: number, kind: 'zero-duration' };
+
+/**
+ * Renders one play bar per `play_in_tab()` call, stacked vertically in call order - a normal entry
+ * is a native `<audio controls>` element (start/pause/scrub for free from the browser), so multiple
+ * calls can be compared/replayed independently of each other and of `play()`/`play_wave()`. A
+ * zero-duration Sound has nothing to play, so its entry is a plain placeholder line instead.
+ * Exported (rather than kept module-private, like `SoundStatusView`) so it can be rendered
+ * directly in tests, without needing to drive it through the full plugin/RPC wiring.
+ */
+export function PlayerBarsView({ players }: { players: PlayerBarEntry[] }) {
+  if (players.length === 0) {
+    return null;
+  }
+  return (
+    <div id="sound-player-bars">
+      {players.map((player, index) => (
+        <div key={player.id} style={{ marginTop: '0.5em' }}>
+          <p id={`sound-player-label-${player.id}`} style={{ margin: '0 0 0.25em 0' }}>
+            {`Sound ${index + 1}`}
+          </p>
+          {player.kind === 'audio' ? (
+            <audio
+              src={player.dataUri}
+              controls
+              style={{ width: '100%' }}
+              aria-labelledby={`sound-player-label-${player.id}`}
+            />
+          ) : (
+            <p style={{ margin: 0, fontStyle: 'italic' }}>zero duration sound</p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /**
  * Host-side (browser main thread) counterpart of `SoundModulePlugin` (in the sound bundle),
  * implementing `SoundTabRpc` - actual AudioContext/MediaRecorder access only works here, not
@@ -73,9 +117,9 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
   private readonly __listeners = new Set<() => void>();
 
   private __audioContext: AudioContext | undefined;
-  // Repeated/looped play() calls queue to play one after another rather than overlapping, so in
-  // practice at most one of these is active at a time - but tracked as a set (rather than a single
-  // field) regardless, so stop()/status stay correct even if that ever changes.
+  // Repeated/looped play() calls now overlap (play concurrently) rather than queueing, so more
+  // than one of these can genuinely be active at once - tracked as a set so stop()/status stay
+  // correct regardless of how many are in flight simultaneously.
   private readonly __activeSources = new Set<AudioBufferSourceNode>();
   private __mediaStream: MediaStream | undefined;
   private __mediaRecorder: MediaRecorder | undefined;
@@ -85,32 +129,25 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
   private __micGranted: boolean | null = null;
   private __destroyed = false;
 
-  // The sound module's evaluator Worker is terminated as soon as the program finishes running,
-  // which happens well before playback (dispatched fire-and-forget by play()) has actually
-  // finished - so sequencing playback can no longer be the Worker's job (see functions.ts' play()).
-  // This tab outlives the Worker, so it owns the queue instead: each playSamples() call only
-  // starts once whatever's ahead of it in __playbackQueue has finished.
-  private __playbackQueue: Promise<void> = Promise.resolve();
-  // Bumped by $stopPlayback(), so anything still queued (not yet actually playing) at that point
-  // recognises itself as stale and skips its turn instead of starting after a stop().
-  private __stopGeneration = 0;
+  // One entry per play_in_tab() call, in call order - rendered as a vertically-stacked list of
+  // native <audio controls> play bars (see PlayerBarsView), independent of play()/stop().
+  private __players: PlayerBarEntry[] = [];
+  private __nextPlayerId = 0;
 
   // Number of notifyConstructing() calls not yet matched by their corresponding playSamples()
   // call arriving. Sampling (which happens between the two, entirely in the Worker) can take a
-  // while for an expensive Sound, during which some earlier, independently-queued sound already
-  // in __activeSources can finish and would otherwise reset status to 'idle' - clobbering the
+  // while for an expensive Sound, during which some earlier, independently-dispatched sound
+  // already in __activeSources can finish and would otherwise reset status to 'idle' - clobbering the
   // 'constructing' status just set for the sound that's still being sampled. Tracking this
   // alongside __activeSources and recomputing status from both together (see
   // __updatePlaybackStatus) avoids that race instead of letting whichever event fires last win.
   private __constructingCount = 0;
 
-  // Number of playSamples() calls accepted but not yet fully finished playing - covers both
-  // whatever's currently in __activeSources AND whatever's still waiting its turn in
-  // __playbackQueue. __activeSources alone hits 0 momentarily between one sound ending and the
-  // next queued one actually starting (the queue drains asynchronously, not synchronously), which
-  // - if destroy() already ran - used to be misread as "everything is done" and closed the
-  // AudioContext mid-queue, silently killing every sound still waiting behind the one that just
-  // finished. See __maybeFinalizeDestroy.
+  // Number of playSamples() calls accepted but not yet fully finished playing. Tracked separately
+  // from __activeSources.size (rather than just reading that directly) so a premature destroy()
+  // can't mistake "the last active source just ended, but its completion handler hasn't run yet"
+  // for "everything is done" and close the AudioContext out from under a source that's still
+  // finishing up. See __maybeFinalizeDestroy.
   private __pendingPlaybackCount = 0;
 
   constructor(_conduit: IConduit, [soundChannel]: IChannel<any>[], tabService: ITabService) {
@@ -124,10 +161,15 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
     const subscribe = (listener: () => void) => this.subscribe(listener);
     const getStatus = () => this.__status;
     const getMicGranted = () => this.__micGranted;
+    const getPlayers = () => this.__players;
     function SoundPluginTab() {
       const status = useSyncExternalStore(subscribe, getStatus);
       const micGranted = useSyncExternalStore(subscribe, getMicGranted);
-      return createElement(SoundStatusView, { status, micGranted });
+      const players = useSyncExternalStore(subscribe, getPlayers);
+      return createElement('div', null, [
+        createElement(SoundStatusView, { status, micGranted, key: 'status' }),
+        createElement(PlayerBarsView, { players, key: 'players' })
+      ]);
     }
 
     const tab = {
@@ -154,15 +196,19 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
     return this.__status;
   }
 
+  getPlayers(): readonly PlayerBarEntry[] {
+    return this.__players;
+  }
+
   destroy(): void {
     // Called on every Run's teardown (the conductor is terminated as soon as the program
     // finishes evaluating), but sound's play() is intentionally fire-and-forget - a Run can
     // finish, and this conductor be terminated, well before audio dispatched via play() has
     // actually started or finished playing. Stopping active sources here would silence audio
     // right as playback begins. The mic, on the other hand, should always be released promptly.
-    // The AudioContext is only closed once whatever's still playing (or still queued) finishes
-    // naturally - see playSamples()'s completion handling below - or immediately here if nothing
-    // is playing. The tab itself is intentionally left registered (showing 'idle' once playback
+    // The AudioContext is only closed once whatever's still playing finishes naturally - see
+    // playSamples()'s completion handling below - or immediately here if nothing is playing. The
+    // tab itself is intentionally left registered (showing 'idle' once playback
     // drains) rather than unregistered: it's replaced naturally when the next Run's
     // SoundTabPlugin re-registers under the same id, and removing it here previously left the
     // student on a blank tab strip the moment playback finished.
@@ -173,11 +219,12 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
   }
 
   /**
-   * Closes the AudioContext once destroy() has run AND nothing - playing or still queued - is
-   * left. Must be checked against __pendingPlaybackCount, not __activeSources.size: the latter is
-   * 0 both when everything is truly finished and momentarily between any one sound ending and the
-   * next queued one starting, and closing the context in that second case would break every sound
-   * still waiting its turn.
+   * Closes the AudioContext once destroy() has run AND nothing is still playing. Must be checked
+   * against __pendingPlaybackCount, not __activeSources.size: $stopPlayback() clears
+   * __activeSources synchronously, but each stopped source's own __playOne() only finishes
+   * (decrementing __pendingPlaybackCount) once its 'ended' event actually fires, one tick later -
+   * closing the AudioContext in that gap would pull it out from under a source that's still in the
+   * middle of stopping.
    */
   private __maybeFinalizeDestroy(): void {
     if (this.__destroyed && this.__pendingPlaybackCount === 0) {
@@ -207,27 +254,51 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
 
   playSamples(left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>, sampleRate: number): Promise<void> {
     // The matching notifyConstructing() call for this sound is done - its own status contribution
-    // ends here, whether this call plays immediately or is still queued behind another.
+    // ends here, whether or not anything else is already playing.
     this.__constructingCount = Math.max(0, this.__constructingCount - 1);
     // Counted from acceptance through to actually finishing playback (not just while active), so a
-    // premature destroy() can't mistake "nothing playing this instant" for "nothing left at all"
-    // while this call is still waiting its turn - see __maybeFinalizeDestroy.
+    // premature destroy() can't mistake "nothing playing this instant" for "nothing left at all" -
+    // see __maybeFinalizeDestroy.
     this.__pendingPlaybackCount++;
-    const generation = this.__stopGeneration;
-    const myTurn: Promise<void> = this.__playbackQueue.then(() => {
-      // $stopPlayback() happened while this call was still queued behind another: skip playing it
-      // entirely rather than starting late, after the student already asked for playback to stop.
-      if (generation !== this.__stopGeneration) {
-        this.__pendingPlaybackCount = Math.max(0, this.__pendingPlaybackCount - 1);
-        this.__maybeFinalizeDestroy();
-        return;
-      }
-      return this.__playOne(left, right, sampleRate);
-    });
-    // A rejected/skipped turn must not break the chain for whatever's queued after it.
-    this.__playbackQueue = myTurn.catch(() => {});
+    // Starts immediately, overlapping whatever else is already in __activeSources - repeated/
+    // looped play() calls are meant to play concurrently, not one after another.
+    return this.__playOne(left, right, sampleRate);
+  }
+
+  /**
+   * Adds a play_in_tab() entry to the tab's list of play bars. Purely additive bookkeeping - no
+   * AudioContext/playback involved, since a play bar only actually plays once the cadet presses
+   * its native controls.
+   */
+  async addPlayerToTab(wavDataUri: string): Promise<void> {
+    // Matches playSamples(): play_in_tab() calls notifyConstructing() before sampling (which can
+    // take a while for a long Sound), and this is the corresponding call that arrives once
+    // sampling has actually finished - its status contribution ends here, same as playSamples().
+    this.__constructingCount = Math.max(0, this.__constructingCount - 1);
+    this.__pushPlayer({ id: this.__nextPlayerId, kind: 'audio', dataUri: wavDataUri });
     this.__updatePlaybackStatus();
-    return myTurn;
+  }
+
+  /**
+   * Adds a play_in_tab() entry for a zero-duration Sound - a placeholder line, since there's
+   * nothing to sample or play. Deliberately a separate method from addPlayerToTab() rather than a
+   * variant of it: no sampling happens for a zero-duration Sound, so play_in_tab() never calls
+   * notifyConstructing() for one either, and this must not decrement __constructingCount on its
+   * behalf - doing so here would incorrectly cancel out an unrelated, still-in-flight
+   * notifyConstructing() from a genuinely concurrent play_in_tab() call on a real Sound.
+   */
+  async addZeroDurationPlayerToTab(): Promise<void> {
+    this.__pushPlayer({ id: this.__nextPlayerId, kind: 'zero-duration' });
+    this.__updatePlaybackStatus();
+  }
+
+  /** Shared append-with-cap logic behind addPlayerToTab()/addZeroDurationPlayerToTab(). */
+  private __pushPlayer(entry: PlayerBarEntry): void {
+    const players = [...this.__players, entry];
+    this.__players = players.length > MAX_PLAYER_BARS
+      ? players.slice(players.length - MAX_PLAYER_BARS)
+      : players;
+    this.__nextPlayerId += 1;
   }
 
   private async __playOne(left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>, sampleRate: number): Promise<void> {
@@ -257,7 +328,6 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
   }
 
   $stopPlayback(): void {
-    this.__stopGeneration++;
     for (const source of this.__activeSources) {
       source.stop();
     }
@@ -269,9 +339,9 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
    * Recomputes status from the combined playback/constructing state instead of unconditionally
    * setting it, so whichever of notifyConstructing()/playSamples()/a source finishing happens to
    * fire last can't clobber a status that's still accurate for something else in flight - e.g. an
-   * earlier, independently-queued sound finishing (dropping __activeSources to 0) while a later
-   * sound is still being sampled (__constructingCount > 0) must stay 'constructing', not revert to
-   * 'idle'.
+   * earlier, independently-dispatched sound finishing (dropping __activeSources to 0) while a
+   * later sound is still being sampled (__constructingCount > 0) must stay 'constructing', not
+   * revert to 'idle'.
    */
   private __updatePlaybackStatus(): void {
     if (this.__activeSources.size > 0) {
@@ -330,7 +400,10 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
   }
 
   private __ensureAudioContext(): AudioContext {
-    if (!this.__audioContext) {
+    // destroy() closes the context once nothing is pending (see __maybeFinalizeDestroy) but
+    // doesn't reset this field - a closed context is unusable, so treat it the same as absent
+    // rather than handing back a context that every subsequent call on it will reject.
+    if (!this.__audioContext || this.__audioContext.state === 'closed') {
       this.__audioContext = new AudioContext();
     }
     return this.__audioContext;

@@ -43,3 +43,9 @@ export const outDir = pathlib.join(gitRoot, 'build');
  * Path to the `vitest.config.ts` file at the root of the repository.
  */
 export const rootVitestConfigPath = pathlib.join(gitRoot, 'vitest.config.ts');
+
+/**
+ * Path to the manually maintained allowlist of bundles shown on the documentation site - see
+ * {@link filterDocsVisibleBundles} in `manifest.ts`.
+ */
+export const docsVisibleBundlesPath = pathlib.join(gitRoot, 'conductor-modules.json');

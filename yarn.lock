@@ -4387,7 +4387,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sourceacademy/bundle-repeat@workspace:^, @sourceacademy/bundle-repeat@workspace:src/bundles/repeat":
+"@sourceacademy/bundle-repeat@workspace:src/bundles/repeat":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-repeat@workspace:src/bundles/repeat"
   dependencies:
@@ -4430,7 +4430,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-rune@workspace:src/bundles/rune"
   dependencies:
-    "@sourceacademy/bundle-repeat": "workspace:^"
     "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
@@ -4679,7 +4678,7 @@ __metadata:
     "@types/node": "npm:^24.0.0"
     cspell: "npm:^10.0.0"
     js-slang: "catalog:"
-    mermaid: "npm:^11.10.0"
+    mermaid: "npm:^11.16.1"
     typescript: "catalog:"
     vitepress: "npm:^1.6.4"
     vitepress-plugin-group-icons: "npm:^1.7.5"
@@ -5127,9 +5126,13 @@ __metadata:
     "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@types/react": "catalog:"
+    "@vitest/browser-playwright": "catalog:"
+    playwright: "npm:^1.55.1"
     react: "catalog:"
     react-dom: "catalog:"
     typescript: "catalog:"
+    vitest: "catalog:"
+    vitest-browser-react: "npm:^2.1.0"
   languageName: unknown
   linkType: soft
 
@@ -13514,18 +13517,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-yaml@npm:^4.1.0":
-  version: 4.1.1
-  resolution: "js-yaml@npm:4.1.1"
-  dependencies:
-    argparse: "npm:^2.0.1"
-  bin:
-    js-yaml: bin/js-yaml.js
-  checksum: 10c0/561c7d7088c40a9bb53cc75becbfb1df6ae49b34b5e6e5a81744b14ae8667ec564ad2527709d1a6e7d5e5fa6d483aa0f373a50ad98d42fde368ec4a190d4fae7
-  languageName: node
-  linkType: hard
-
-"js-yaml@npm:^4.1.1, js-yaml@npm:^4.3.0":
+"js-yaml@npm:^4.1.0, js-yaml@npm:^4.1.1, js-yaml@npm:^4.3.0":
   version: 4.3.0
   resolution: "js-yaml@npm:4.3.0"
   dependencies:
@@ -14691,9 +14683,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mermaid@npm:^11.10.0":
-  version: 11.16.0
-  resolution: "mermaid@npm:11.16.0"
+"mermaid@npm:^11.16.1":
+  version: 11.16.1
+  resolution: "mermaid@npm:11.16.1"
   dependencies:
     "@braintree/sanitize-url": "npm:^7.1.2"
     "@iconify/utils": "npm:^3.0.2"
@@ -14716,7 +14708,7 @@ __metadata:
     stylis: "npm:^4.3.6"
     ts-dedent: "npm:^2.2.0"
     uuid: "npm:^11.1.0 || ^12 || ^13 || ^14.0.0"
-  checksum: 10c0/a14f9bc9db7f1dea65b0d6c0b920236d12ad2812f2a1b11c8b39b3dfb3c22bfce39c77f6a69493203b85880d8008d345c539efe7ae6a31d3dad512833ccfb517
+  checksum: 10c0/a905627d5ad372914bf7c67cb9e491d50f248d3a8458e4ec920033f5ce7387bf419423909ed71d88f54a035ec42987746d64a46055bd2b2a4dc1bc4ceed38c44
   languageName: node
   linkType: hard
 

@@ -1,36 +1,79 @@
+import { Channel } from '@sourceacademy/conductor/conduit';
 import { DataType } from '@sourceacademy/conductor/types';
+import { RENDER_THUMBNAIL_SYMBOL } from '@sourceacademy/modules-lib/conductor/thumbnail';
 import { stringify } from 'js-slang/dist/utils/stringify';
-import { describe, expect, it, test, vi } from 'vitest';
+import { afterEach, describe, expect, it, test, vi } from 'vitest';
 import RuneModulePlugin from '..';
 import * as funcs from '../functions';
+import { RUNE_CHANNEL_ID, RUNE_TAB_NAME, type RuneChannelMessage } from '../protocol';
 import type { Rune } from '../rune';
+
+function makeChannelEvaluator() {
+  const store: unknown[] = [];
+  return {
+    hasDataInterface: true as const,
+    closure_make: vi.fn(async (sig, func, dependsOn) => ({
+      type: DataType.CLOSURE,
+      value: { sig, dependsOn, func }
+    })),
+    opaque_make: vi.fn(async value => {
+      store.push(value);
+      return {
+        type: DataType.OPAQUE,
+        value: store.length - 1
+      };
+    }),
+    opaque_get: vi.fn(async (value: { value: number }) => store[value.value])
+  };
+}
+
+function waitForChannelMessages() {
+  return new Promise(resolve => setTimeout(resolve, 50));
+}
+
+function createRunePlugin(tabs: string[] = []) {
+  const sentMessages: unknown[] = [];
+  let subscriber: (message: RuneChannelMessage) => void = () => {};
+  const channel = {
+    send: vi.fn(message => sentMessages.push(message)),
+    subscribe: vi.fn((newSubscriber: (message: RuneChannelMessage) => void) => {
+      subscriber = newSubscriber;
+    }),
+    unsubscribe: vi.fn(),
+    close: vi.fn(),
+    name: 'rune-test-channel'
+  };
+  const evaluator = {
+    hasDataInterface: true,
+    closure_make: vi.fn(async (sig, func, dependsOn) => ({
+      type: DataType.CLOSURE,
+      value: { sig, dependsOn, func }
+    })),
+    opaque_make: vi.fn(async value => ({
+      type: DataType.OPAQUE,
+      value
+    })),
+    opaque_get: vi.fn(async value => value.value)
+  };
+  const tabLoader = {
+    tabs,
+    loadTab: vi.fn()
+  };
+  const plugin = new RuneModulePlugin({} as any, [channel] as any, evaluator as any, tabLoader);
+
+  return {
+    channel,
+    evaluator,
+    plugin,
+    sentMessages,
+    tabLoader,
+    requestTab: () => subscriber({ type: 'request' })
+  };
+}
 
 describe(RuneModulePlugin, () => {
   test('exported methods stay bound when called by a Conductor closure', async () => {
-    const sentMessages: unknown[] = [];
-    const channel = {
-      send: vi.fn(message => sentMessages.push(message)),
-      subscribe: vi.fn(),
-      unsubscribe: vi.fn(),
-      close: vi.fn(),
-      name: 'rune-test-channel'
-    };
-    const evaluator = {
-      hasDataInterface: true,
-      closure_make: vi.fn(async (sig, func, dependsOn) => ({
-        type: DataType.CLOSURE,
-        value: { sig, dependsOn, func }
-      })),
-      opaque_make: vi.fn(async value => ({
-        type: DataType.OPAQUE,
-        value
-      })),
-      opaque_get: vi.fn(async value => value.value)
-    };
-    const plugin = new RuneModulePlugin({} as any, [channel] as any, evaluator as any, {
-      tabs: [],
-      loadTab: vi.fn()
-    });
+    const { evaluator, plugin, sentMessages, requestTab } = createRunePlugin();
 
     await plugin.initialise();
 
@@ -40,6 +83,7 @@ describe(RuneModulePlugin, () => {
     };
     const runeValue = await evaluator.opaque_make(funcs.blank);
     const result = await closureObject.func.call(closureObject, runeValue).next();
+    requestTab();
 
     expect(result.done).toBe(true);
     expect(sentMessages).toHaveLength(1);
@@ -54,6 +98,126 @@ describe(RuneModulePlugin, () => {
       }
     });
     expect('draw' in (sentMessages[0] as any).rune).toBe(false);
+  });
+
+  test('replays displays made before the tab request once and in order', async () => {
+    const { port1, port2 } = new MessageChannel();
+    const runnerChannel = new Channel<RuneChannelMessage>(RUNE_CHANNEL_ID, port1);
+    const webChannel = new Channel<RuneChannelMessage>(RUNE_CHANNEL_ID, port2);
+    const tabLoader = {
+      tabs: ['Rune'],
+      loadTab: vi.fn()
+    };
+    const evaluator = makeChannelEvaluator();
+    const plugin = new RuneModulePlugin({} as any, [runnerChannel] as any, evaluator as any, tabLoader);
+
+    await plugin.initialise();
+
+    const square = plugin.exports.find(each => each.symbol === 'square')!.value as any;
+    const circle = plugin.exports.find(each => each.symbol === 'circle')!.value as any;
+    await plugin.show(square).next();
+    await plugin.anaglyph(circle).next();
+
+    await waitForChannelMessages();
+    const received: RuneChannelMessage[] = [];
+    webChannel.subscribe(message => received.push(message));
+    webChannel.send({ type: 'request' });
+    await waitForChannelMessages();
+
+    const renders = received.filter(message => message.type === 'render');
+    expect(tabLoader.loadTab).toHaveBeenCalledExactlyOnceWith('Rune');
+    expect(renders.map(render => render.mode)).toEqual(['normal', 'anaglyph']);
+  });
+
+  test('initialise only exports primitive runes once', async () => {
+    const { evaluator, plugin } = createRunePlugin();
+
+    await plugin.initialise();
+
+    const exportedSymbols = plugin.exports.map(each => each.symbol);
+    const exportedValues = plugin.exports.map(each => each.value);
+    const closureMakeCalls = evaluator.closure_make.mock.calls.length;
+    const opaqueMakeCalls = evaluator.opaque_make.mock.calls.length;
+
+    await plugin.initialise();
+
+    expect(plugin.exports.map(each => each.symbol)).toEqual(exportedSymbols);
+    expect(plugin.exports.map(each => each.value)).toEqual(exportedValues);
+    expect(evaluator.closure_make).toHaveBeenCalledTimes(closureMakeCalls);
+    expect(evaluator.opaque_make).toHaveBeenCalledTimes(opaqueMakeCalls);
+  });
+
+  test('loads the rune tab by name', async () => {
+    const { evaluator, plugin, tabLoader } = createRunePlugin(['Other Tab', RUNE_TAB_NAME]);
+    const runeValue = await evaluator.opaque_make(funcs.blank) as any;
+
+    const result = await plugin.show(runeValue).next();
+
+    expect(result.done).toBe(true);
+    expect(tabLoader.loadTab).toHaveBeenCalledExactlyOnceWith(RUNE_TAB_NAME);
+  });
+});
+
+describe('stepper thumbnail hook', () => {
+  const originalOffscreenCanvas = (globalThis as any).OffscreenCanvas;
+
+  afterEach(() => {
+    if (originalOffscreenCanvas === undefined) {
+      delete (globalThis as any).OffscreenCanvas;
+    } else {
+      (globalThis as any).OffscreenCanvas = originalOffscreenCanvas;
+    }
+
+    // plugin.initialise() attaches the hook directly onto the shared,
+    // module-level RuneFunctions singletons (not a per-test copy) - strip it
+    // back off so a test run here can't leak a hook into unrelated tests
+    // that assume a clean Rune instance, regardless of execution order.
+    for (const name in funcs.RuneFunctions) {
+      const value = funcs.RuneFunctions[name as keyof typeof funcs.RuneFunctions];
+      if (value && typeof value === 'object') {
+        delete (value as any)[RENDER_THUMBNAIL_SYMBOL];
+      }
+    }
+  });
+
+  test('is not attached when OffscreenCanvas is unavailable in this realm', async () => {
+    delete (globalThis as any).OffscreenCanvas;
+    const { plugin } = createRunePlugin();
+
+    await plugin.initialise();
+
+    const blank = plugin.exports.find(each => each.symbol === 'blank')!.value.value as unknown as Rune;
+    expect(RENDER_THUMBNAIL_SYMBOL in (blank as any)).toBe(false);
+  });
+
+  test('is attached as a non-enumerable hook when OffscreenCanvas is available', async () => {
+    (globalThis as any).OffscreenCanvas = class {};
+    const { plugin } = createRunePlugin();
+
+    await plugin.initialise();
+
+    const blank = plugin.exports.find(each => each.symbol === 'blank')!.value.value as unknown as Rune;
+    const hook = (blank as any)[RENDER_THUMBNAIL_SYMBOL];
+
+    expect(typeof hook).toBe('function');
+    expect(Object.getOwnPropertySymbols(blank)).toContain(RENDER_THUMBNAIL_SYMBOL);
+    expect(Object.prototype.propertyIsEnumerable.call(blank, RENDER_THUMBNAIL_SYMBOL)).toBe(false);
+  });
+
+  test('a rendering failure resolves to undefined rather than throwing', async () => {
+    (globalThis as any).OffscreenCanvas = class {
+      getContext() {
+        throw new Error('no webgl in this fake environment');
+      }
+    };
+    const { plugin } = createRunePlugin();
+
+    await plugin.initialise();
+
+    const blank = plugin.exports.find(each => each.symbol === 'blank')!.value.value as unknown as Rune;
+    const hook = (blank as any)[RENDER_THUMBNAIL_SYMBOL] as () => Promise<string | undefined>;
+
+    await expect(hook()).resolves.toBeUndefined();
   });
 });
 
@@ -141,25 +305,6 @@ describe(funcs.stackn, () => {
   it('calls stack_frac appropriately', () => {
     funcs.stackn(5, funcs.heart);
     expect(funcs.RuneFunctions.stack_frac).toHaveBeenCalledTimes(4);
-  });
-});
-
-describe(funcs.repeat_pattern, () => {
-  it('simply returns if n <= 0', () => {
-    const mockPattern = vi.fn(x => x);
-    expect(funcs.repeat_pattern(0, mockPattern, funcs.blank)).toBe(funcs.blank);
-    expect(mockPattern).not.toHaveBeenCalled();
-  });
-
-  it('works', () => {
-    const mockPattern = vi.fn(x => x);
-    expect(funcs.repeat_pattern(5, mockPattern, funcs.blank)).toBe(funcs.blank);
-    expect(mockPattern).toHaveBeenCalledTimes(5);
-  });
-
-  it('throws if initial is not a rune', () => {
-    expect(() => funcs.repeat_pattern(5, x => x, 0 as any))
-      .toThrow('repeat_pattern: Expected Rune for initial, got 0.');
   });
 });
 

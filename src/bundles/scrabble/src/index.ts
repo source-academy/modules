@@ -52,6 +52,43 @@ export default class ScrabbleModulePlugin extends BaseModulePlugin {
     super(conduit, channels, evaluator);
   }
 
+  private __initialised = false;
+
+  /**
+   * An array of strings, each representing an allowed word in Scrabble.
+   *
+   * @category Data
+   * @publicType string[]
+   */
+  scrabble_words!: string[];
+
+  /**
+   * An array of arrays of strings. Each array of strings represents an
+   * allowed word in Scrabble and contains the letters of that word as
+   * single-character strings in the order in which the letters appear
+   * in the word.
+   *
+   * @category Data
+   * @publicType string[][]
+   */
+  scrabble_letters!: string[][];
+
+  /**
+   * A smaller sample of `scrabble_words`, containing every 100th word.
+   *
+   * @category Data
+   * @publicType string[]
+   */
+  scrabble_words_tiny!: string[];
+
+  /**
+   * A smaller sample of `scrabble_letters`, corresponding to `scrabble_words_tiny`.
+   *
+   * @category Data
+   * @publicType string[][]
+   */
+  scrabble_letters_tiny!: string[][];
+
   // All four exports are static data, not closures, so there's nothing for the default
   // exportedNames/@moduleMethod machinery to pick up. array_make has no bulk constructor (one
   // array_set call per element), which looked prohibitive for 172,820 words on paper - measured
@@ -61,7 +98,19 @@ export default class ScrabbleModulePlugin extends BaseModulePlugin {
   // indexable arrays instead of DataType.OPAQUE, matching the policy that Python lists/JS arrays
   // should be the only built-in data structure modules hand back.
   override async initialise() {
+    // A second call would otherwise rebuild all four Conductor arrays (~246ms
+    // of array_set calls for ~173,000 words) and re-push every export onto
+    // `exports` again - super.initialise() isn't idempotent either, so the
+    // guard has to cover it too.
+    if (this.__initialised) return;
+    this.__initialised = true;
+
     await super.initialise();
+    this.scrabble_words = scrabble_words;
+    this.scrabble_letters = scrabble_letters;
+    this.scrabble_words_tiny = scrabble_words_tiny;
+    this.scrabble_letters_tiny = scrabble_letters_tiny;
+
     const [words, letters, wordsTiny, lettersTiny] = await Promise.all([
       makeStringArray(this.evaluator, scrabble_words),
       makeLetterArray(this.evaluator, scrabble_letters),

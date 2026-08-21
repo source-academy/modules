@@ -25,3 +25,5 @@ Two more exist in practice and are worth naming even though they weren't part of
 
 > [!NOTE] Complex numbers
 > Complex numbers are explicitly **not** supported crossing a module boundary. This is really an aside specific to Python — of the languages Conductor currently supports, only Python has complex numbers as a primitive at all.
+
+An opaque value that's genuinely visual (a `rune` scene graph, say) can optionally carry its own stepper-thumbnail renderer, invisible to the evaluator and to cadet code — see [Stepper thumbnails for opaque values](./6-opaque-thumbnails).

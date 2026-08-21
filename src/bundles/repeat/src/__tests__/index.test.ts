@@ -7,7 +7,7 @@ import {
   runAsyncGenerator
 } from '@sourceacademy/modules-testplugin';
 import { describe, expect, it } from 'vitest';
-import { repeat, thrice, twice } from '../functions';
+import { repeat, repeat_apply, thrice, twice } from '../functions';
 
 async function makePlusOne(handler: TestDataHandler) {
   return closureFromFunction(
@@ -76,5 +76,38 @@ describe(repeat, () => {
 
     await expect(runAsyncGenerator(repeat(handler, plusOne, numberValue(1.5))))
       .rejects.toThrow('repeat: Expected integer ≥ 0, got 1.5.');
+  });
+});
+
+describe(repeat_apply, () => {
+  it('applies a closure to a value n times', async () => {
+    const handler = new TestDataHandler();
+    const plusOne = await makePlusOne(handler);
+    const result = await runAsyncGenerator(
+      repeat_apply(handler, plusOne, numberValue(5), numberValue(0))
+    );
+
+    expect(result.value).toEqual(5);
+  });
+
+  it('returns x unchanged when n = 0', async () => {
+    const handler = new TestDataHandler();
+    const plusOne = await makePlusOne(handler);
+    const result = await runAsyncGenerator(
+      repeat_apply(handler, plusOne, numberValue(0), numberValue(5))
+    );
+
+    expect(result.value).toEqual(5);
+  });
+
+  it('throws an error when provided a negative or non-integer n', async () => {
+    const handler = new TestDataHandler();
+    const plusOne = await makePlusOne(handler);
+
+    await expect(runAsyncGenerator(repeat_apply(handler, plusOne, numberValue(-1), numberValue(0))))
+      .rejects.toThrow('repeat_apply: Expected integer ≥ 0, got -1.');
+
+    await expect(runAsyncGenerator(repeat_apply(handler, plusOne, numberValue(1.5), numberValue(0))))
+      .rejects.toThrow('repeat_apply: Expected integer ≥ 0, got 1.5.');
   });
 });

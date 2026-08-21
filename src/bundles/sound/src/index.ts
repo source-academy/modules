@@ -36,6 +36,7 @@ import { BaseModulePlugin, moduleMethod } from '@sourceacademy/conductor/module'
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 
+import { rememberSoundSampler, restoreSoundSampler } from './conductorAdapters';
 import {
   adsr as adsr_func,
   bell as bell_func,
@@ -56,6 +57,7 @@ import {
   phase_mod as phase_mod_func,
   piano as piano_func,
   play as play_func,
+  play_in_tab as play_in_tab_func,
   play_wave as play_wave_func,
   play_waves as play_waves_func,
   record as record_func,
@@ -237,6 +239,7 @@ async function soundToConductor(evaluator: IDataHandler, sound: Sound): Promise<
   const rightClosure = sound.rightWave === sound.leftWave
     ? leftClosure
     : await waveToConductorClosure(evaluator, sound.rightWave);
+  rememberSoundSampler(evaluator, sound, leftClosure, rightClosure);
   const wavesPair = await evaluator.pair_make(leftClosure, rightClosure);
   return evaluator.pair_make(wavesPair, { type: DataType.NUMBER, value: sound.duration });
 }
@@ -278,7 +281,10 @@ async function readListElements(evaluator: IDataHandler, value: TypedValue<DataT
   return elements;
 }
 
-/** Unwraps a Conductor PAIR/ARRAY (or throws) into the internal Sound representation. */
+/**
+ * Unwraps a Conductor PAIR/ARRAY (or throws) into the internal Sound representation.
+ * @internal
+ */
 export async function conductorToSound(evaluator: IDataHandler, value: TypedValue<DataType>): Promise<Sound> {
   const invalidMessage = 'Expected a Sound (a pair of (pair of left/right waves) and duration)';
   if (!value || !isPairLike(value)) {
@@ -299,7 +305,12 @@ export async function conductorToSound(evaluator: IDataHandler, value: TypedValu
   // id - if it's the same id, this is a mono Sound and should stay that way (same Wave reference)
   // rather than getting two distinct-but-identical wrappers around it.
   const rightWave = leftTv.value === rightTv.value ? leftWave : closureToWave(evaluator, rightTv);
-  return { leftWave, rightWave, duration: durationTv.value };
+  return restoreSoundSampler(
+    evaluator,
+    { leftWave, rightWave, duration: durationTv.value },
+    leftTv,
+    rightTv
+  );
 }
 
 /** Walks a Conductor LIST of Sounds (either shape - see `readListElements`) into a plain array. */
@@ -365,6 +376,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     'phase_mod',
     'piano',
     'play',
+    'play_in_tab',
     'play_wave',
     'play_waves',
     'record',
@@ -548,6 +560,14 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     this.__ensureTabLoaded();
     const internal = await conductorToSound(this.evaluator, sound);
     const result = yield* play_func(internal);
+    return soundToConductor(this.evaluator, result);
+  }
+
+  @moduleMethod([DataType.PAIR], DataType.PAIR)
+  async* play_in_tab(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
+    this.__ensureTabLoaded();
+    const internal = await conductorToSound(this.evaluator, sound);
+    const result = yield* play_in_tab_func(internal);
     return soundToConductor(this.evaluator, result);
   }
 

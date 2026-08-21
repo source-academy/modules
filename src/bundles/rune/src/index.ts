@@ -7,23 +7,24 @@
  * @module rune
  * @author Hou Ruomu
  */
+import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import type { IChannel, IConduit } from '@sourceacademy/conductor/conduit';
 import { BaseModulePlugin } from '@sourceacademy/conductor/module';
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 
 import { attachModuleMethod } from '@sourceacademy/modules-lib/conductor/methods';
-import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import * as funcs from './functions';
 import {
   RUNE_CHANNEL_ID,
+  RUNE_TAB_NAME,
   serializeRune,
   type RuneAnimationMessage,
   type RuneChannelMessage,
   type RuneDisplayMessage,
   type RuneRenderMessage
 } from './protocol';
-import { Rune } from './rune';
+import { Rune, attachThumbnailHook } from './rune';
 import { throwIfNotRune } from './runes_ops';
 
 type RuneTabLoader = {
@@ -62,7 +63,6 @@ export default class RuneModulePlugin extends BaseModulePlugin {
     'quarter_turn_right',
     'random_color',
     'red',
-    'repeat_pattern',
     'rotate',
     'scale',
     'scale_independent',
@@ -79,7 +79,9 @@ export default class RuneModulePlugin extends BaseModulePlugin {
   private readonly __runeChannel: IChannel<RuneChannelMessage>;
   private readonly __tabLoader: RuneTabLoader | undefined;
   private readonly __displayed: RuneDisplayMessage[] = [];
+  private __initialised = false;
   private __tabLoaded = false;
+  private __tabRequested = false;
 
   /**
    * Rune with the shape of a blank square
@@ -182,22 +184,26 @@ export default class RuneModulePlugin extends BaseModulePlugin {
     evaluator: IInterfacableEvaluator,
     tabLoader: RuneTabLoader
   ) {
-    super(conduit, [runeChannel], evaluator);
-
     if (!runeChannel) {
-      throw new GeneralRuntimeError('Rune channel is required but was not provided.');
+      throw new EvaluatorRuntimeError('Rune channel is required but was not provided.');
     }
+
+    super(conduit, [runeChannel], evaluator);
 
     this.__runeChannel = runeChannel as IChannel<RuneChannelMessage>;
     this.__tabLoader = tabLoader;
     this.__runeChannel.subscribe(message => {
       if (message.type === 'request') {
+        this.__tabRequested = true;
         this.__displayed.forEach(displayedMessage => this.__runeChannel.send(displayedMessage));
       }
     });
   }
 
   override async initialise() {
+    if (this.__initialised) return;
+    this.__initialised = true;
+
     await super.initialise();
     for (const name in funcs.RuneFunctions) {
       const value = funcs.RuneFunctions[name as keyof typeof funcs.RuneFunctions];
@@ -214,22 +220,21 @@ export default class RuneModulePlugin extends BaseModulePlugin {
 
   /**
    * Loads the host-side tab
-   * @returns Whether the tab was already loaded
    */
-  private __loadRuneTab(): boolean {
-    if (this.__tabLoaded || this.__tabLoader === undefined) return true;
+  private __loadRuneTab(): void {
+    if (this.__tabLoaded || this.__tabLoader === undefined) return;
 
-    const tabName = this.__tabLoader.tabs[0];
-    if (tabName === undefined) return true;
+    const tabName = this.__tabLoader.tabs.find(tab => tab === RUNE_TAB_NAME);
+    if (tabName === undefined) return;
 
     this.__tabLoader.loadTab(tabName);
     this.__tabLoaded = true;
-    return false;
   }
 
   private async __display(message: RuneDisplayMessage): Promise<void> {
     this.__displayed.push(message);
-    if (this.__loadRuneTab()) {
+    this.__loadRuneTab();
+    if (this.__tabRequested) {
       this.__runeChannel.send(message);
     }
   }
@@ -244,7 +249,7 @@ export default class RuneModulePlugin extends BaseModulePlugin {
   }
 
   private async __makeRune(rune: Rune): Promise<TypedValue<DataType.OPAQUE>> {
-    return await this.evaluator.opaque_make(rune, true);
+    return await this.evaluator.opaque_make(attachThumbnailHook(rune), true);
   }
 
   private async __callUnaryRune(
@@ -739,36 +744,6 @@ export default class RuneModulePlugin extends BaseModulePlugin {
   }
 
   /**
-   * Applies a given function n times to an initial value
-   * @param n - A non-negative integer
-   * @param pattern - Unary function from Rune to Rune
-   * @param initial - The initial Rune
-   * @returns - Result of n times application of pattern to initial:
-   * pattern(pattern(...pattern(pattern(initial))...))
-   * @function
-   *
-   * @category Main
-   * @publicType pattern: (Rune) => Rune
-   * @publicType initial: Rune
-   * @publicReturnType Rune
-   */
-  async* repeat_pattern(
-    n: TypedValue<DataType.NUMBER>,
-    pattern: TypedValue<DataType.CLOSURE>,
-    initial: TypedValue<DataType.OPAQUE>
-  ): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
-    let current = initial;
-    for (let i = 0; i < n.value; i += 1) {
-      current = yield* this.evaluator.closure_call_unchecked(
-        pattern as TypedValue<DataType.CLOSURE, DataType.OPAQUE>,
-        [current]
-      );
-      await this.__getRune(current, funcs.repeat_pattern.name);
-    }
-    return current;
-  }
-
-  /**
    * The depth range of the z-axis of a rune is [0,-1], this function gives a [0, -frac] of the depth range to rune1 and the rest to rune2.
    * @param frac - Fraction between 0 and 1 (inclusive)
    * @param rune1 - Given Rune
@@ -1057,7 +1032,6 @@ attachModuleMethod(RuneModulePlugin, 'quarter_turn_left', [DataType.OPAQUE], Dat
 attachModuleMethod(RuneModulePlugin, 'quarter_turn_right', [DataType.OPAQUE], DataType.OPAQUE);
 attachModuleMethod(RuneModulePlugin, 'random_color', [DataType.OPAQUE], DataType.OPAQUE);
 attachModuleMethod(RuneModulePlugin, 'red', [DataType.OPAQUE], DataType.OPAQUE);
-attachModuleMethod(RuneModulePlugin, 'repeat_pattern', [DataType.NUMBER, DataType.CLOSURE, DataType.OPAQUE], DataType.OPAQUE);
 attachModuleMethod(RuneModulePlugin, 'rotate', [DataType.NUMBER, DataType.OPAQUE], DataType.OPAQUE);
 attachModuleMethod(RuneModulePlugin, 'scale', [DataType.NUMBER, DataType.OPAQUE], DataType.OPAQUE);
 attachModuleMethod(RuneModulePlugin, 'scale_independent', [DataType.NUMBER, DataType.NUMBER, DataType.OPAQUE], DataType.OPAQUE);
