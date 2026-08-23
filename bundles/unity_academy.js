@@ -43568,9 +43568,9 @@ export default require => {
       if ((0, import_react6.isValidElement)(icon)) {
         const mergedClassName = (0, import_classnames2.default)(icon.props.className, className, classes_exports.intentClass(intent));
         if (isBlueprintIconElement(icon)) {
-          const iconElementProps = {
+          const iconElementProps = __spreadProps(__spreadValues({}, removeNonHTMLProps(htmlProps)), {
             className: mergedClassName
-          };
+          });
           const resolvedSize = (_c = icon.props.size) != null ? _c : props.size;
           if (resolvedSize != null) {
             iconElementProps.size = resolvedSize;
