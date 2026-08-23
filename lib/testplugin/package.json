@@ -17,7 +17,7 @@
     "@sourceacademy/modules-buildtools": "workspace:^",
     "eslint": "^9.35.0",
     "typescript": "^6.0.2",
-    "vitest": "4.1.4"
+    "vitest": "4.1.11"
   },
   "scripts": {
     "build": "tsc --project ./tsconfig.prod.json",
