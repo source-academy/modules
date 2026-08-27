@@ -895,18 +895,6 @@ function adsrWave(
 }
 
 /**
- * Returns an envelope: a function from Sound to Sound. When the adsr envelope is applied to a
- * Sound, it returns a new Sound with its amplitude modified according to parameters, applied to
- * each channel independently. The relative amplitude increases from 0 to 1 linearly over the
- * attack proportion, then decreases from 1 to sustain level over the decay proportion, and
- * remains at that level until the release proportion when it decays back to 0.
- * @param attack_ratio proportion of Sound in attack phase
- * @param decay_ratio proportion of Sound decay phase
- * @param sustain_level sustain level between 0 and 1
- * @param release_ratio proportion of Sound in release phase
- * @example adsr(0.2, 0.3, 0.3, 0.1)(sound);
- */
-/**
  * The actual envelope-shaping logic behind adsr(), without the student-facing parameter
  * validation. Used both by the public adsr() (validated) and directly by this file's own
  * instrument definitions (piano/violin/cello/trombone/bell), whose envelope values were tuned once
@@ -933,6 +921,18 @@ function adsrTransformer(
   };
 }
 
+/**
+ * Returns an envelope: a function from Sound to Sound. When the adsr envelope is applied to a
+ * Sound, it returns a new Sound with its amplitude modified according to parameters, applied to
+ * each channel independently. The relative amplitude increases from 0 to 1 linearly over the
+ * attack proportion, then decreases from 1 to sustain level over the decay proportion, and
+ * remains at that level until the release proportion when it decays back to 0.
+ * @param attack_ratio proportion of Sound in attack phase
+ * @param decay_ratio proportion of Sound decay phase
+ * @param sustain_level sustain level between 0 and 1
+ * @param release_ratio proportion of Sound in release phase
+ * @example adsr(0.2, 0.3, 0.3, 0.1)(sound);
+ */
 export function adsr(
   attack_ratio: number,
   decay_ratio: number,
