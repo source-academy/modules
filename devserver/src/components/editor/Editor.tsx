@@ -25,8 +25,8 @@ type DispatchProps = {
 
 export type EditorStateProps = {
   newCursorPosition?: Position;
-  editorValue: string
-  handleEditorValueChange: (newCode: string) => void
+  editorValue: string;
+  handleEditorValueChange: (newCode: string) => void;
 };
 
 export type EditorProps = DispatchProps & EditorStateProps;

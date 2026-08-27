@@ -1,22 +1,24 @@
-import { Classes, Intent, OverlayToaster, type ToastProps } from '@blueprintjs/core';
+import { Button, Classes, Intent, OverlayToaster, Popover, Tooltip, type ToastProps } from '@blueprintjs/core';
 import classNames from 'classnames';
+import { throttle } from 'es-toolkit';
 import { SourceDocumentation, getNames, runInContext, type Context } from 'js-slang';
-
 // Importing this straight from js-slang doesn't work for whatever reason
 import createContext from 'js-slang/dist/createContext';
-
-import { Chapter, Variant } from 'js-slang/dist/types';
+import { Chapter, Variant } from 'js-slang/dist/langs';
+import { ModuleInternalError } from 'js-slang/dist/modules/errors';
 import { stringify } from 'js-slang/dist/utils/stringify';
-import React, { useCallback } from 'react';
+import React from 'react';
 import mockModuleContext from '../mockModuleContext';
 import type { InterpreterOutput } from '../types';
+import SettingsPopup from './SettingsPopup';
 import Workspace, { type WorkspaceProps } from './Workspace';
 import { ControlBarClearButton } from './controlBar/ControlBarClearButton';
 import { ControlBarRefreshButton } from './controlBar/ControlBarRefreshButton';
 import { ControlBarRunButton } from './controlBar/ControlBarRunButton';
 import testTabContent from './sideContent/TestTab';
+import { getBundleLoader, loadDynamicTabs } from './sideContent/importers';
+import { getBundleDocsUsingVite, getModulesManifest } from './sideContent/importers/importers';
 import type { SideContentTab } from './sideContent/types';
-import { getDynamicTabs } from './sideContent/utils';
 
 const refreshSuccessToast: ToastProps = {
   intent: Intent.SUCCESS,
@@ -33,66 +35,84 @@ const evalSuccessToast: ToastProps = {
   message: 'Code evaluated successfully!'
 };
 
-const createContextHelper = () => {
-  const tempContext = createContext(Chapter.SOURCE_4, Variant.DEFAULT);
+const createContextHelper = (onConsoleLog: (arg: string) => void) => {
+  const tempContext = createContext(Chapter.SOURCE_4, Variant.DEFAULT, {}, [], undefined, {
+    rawDisplay(value: any, str: string | undefined) {
+      const valueStr = typeof value === 'string' ? value : stringify(value);
+      if (str !== undefined) {
+        onConsoleLog(`${valueStr} ${str}`);
+      } else {
+        onConsoleLog(valueStr);
+      }
+    },
+  } as any);
   return tempContext;
 };
 
+const updateEditorLocalStorageValue = throttle((newValue: string) => {
+  localStorage.setItem('editorValue', newValue);
+}, 100);
+
 const Playground: React.FC = () => {
+  const consoleLogs = React.useRef<string[]>([]);
+
+  const [useCompiled, setUseCompiled] = React.useState(!!localStorage.getItem('useCompiled'));
   const [dynamicTabs, setDynamicTabs] = React.useState<SideContentTab[]>([]);
   const [selectedTabId, setSelectedTab] = React.useState(testTabContent.id);
-  const [codeContext, setCodeContext] = React.useState<Context>(createContextHelper());
+  const [codeContext, setCodeContext] = React.useState<Context>(createContextHelper(str => consoleLogs.current.push(str)));
   const [editorValue, setEditorValue] = React.useState(localStorage.getItem('editorValue') ?? '');
   const [replOutput, setReplOutput] = React.useState<InterpreterOutput | null>(null);
   const [alerts, setAlerts] = React.useState<string[]>([]);
 
   const toaster = React.useRef<OverlayToaster>(null);
 
+  const manifestImporter = getModulesManifest;
+  const docsImporter = getBundleDocsUsingVite;
+
   const showToast = (props: ToastProps) => {
     if (toaster.current) {
       toaster.current.show({
         ...props,
-        timeout: 1500
+        timeout: 15000
       });
     }
   };
 
-  const getAutoComplete = useCallback((row: number, col: number, callback: any) => {
-    getNames(editorValue, row, col, codeContext)
-      .then(([editorNames, displaySuggestions]) => {
-        if (!displaySuggestions) {
-          callback();
-          return;
-        }
+  const getAutoComplete = async (row: number, col: number, callback: any) => {
+    const [editorNames, displaySuggestions] = await getNames(editorValue, row, col, codeContext, { manifestImporter, docsImporter });
+    if (!displaySuggestions) {
+      callback();
+      return;
+    }
 
-        const editorSuggestions = editorNames.map((editorName: any) => ({
-          ...editorName,
-          caption: editorName.name,
-          value: editorName.name,
-          score: editorName.score ? editorName.score + 1000 : 1000,
-          name: undefined
-        }));
+    const editorSuggestions = editorNames.map((editorName: any) => ({
+      ...editorName,
+      caption: editorName.name,
+      value: editorName.name,
+      score: editorName.score ? editorName.score + 1000 : 1000,
+      name: undefined
+    }));
 
-        const builtins: Record<string, any> = SourceDocumentation.builtins[Chapter.SOURCE_4];
-        const builtinSuggestions = Object.entries(builtins)
-          .map(([builtin, thing]) => ({
-            ...thing,
-            caption: builtin,
-            value: builtin,
-            score: 100,
-            name: builtin,
-            docHTML: thing.description
-          }));
+    const builtins: Record<string, any> = SourceDocumentation.builtins[Chapter.SOURCE_4];
+    const builtinSuggestions = Object.entries(builtins)
+      .map(([builtin, thing]) => ({
+        ...thing,
+        caption: builtin,
+        value: builtin,
+        score: 100,
+        name: builtin,
+        docHTML: thing.description
+      }));
 
-        callback(null, [
-          ...builtinSuggestions,
-          ...editorSuggestions
-        ]);
-      });
-  }, [editorValue, codeContext]);
+    callback(null, [
+      ...builtinSuggestions,
+      ...editorSuggestions
+    ]);
+  };
 
-  const loadTabs = () => getDynamicTabs(codeContext)
-    .then((tabs) => {
+  const loadTabs = async () => {
+    try {
+      const tabs = await loadDynamicTabs(codeContext, useCompiled);
       setDynamicTabs(tabs);
 
       const newIds = tabs.map(({ id }) => id);
@@ -102,45 +122,62 @@ const Playground: React.FC = () => {
         setSelectedTab(testTabContent.id);
       }
       setAlerts(newIds);
-    })
-    .catch((error) => {
+    } catch (error) {
       showToast(errorToast);
       console.log(error);
-    });
+    }
+  };
 
-  const evalCode = () => {
+  const evalCode = async () => {
     codeContext.errors = [];
     codeContext.moduleContexts = mockModuleContext.moduleContexts = {};
+    consoleLogs.current = [];
 
-    runInContext(editorValue, codeContext)
-      .then((result) => {
-        if (codeContext.errors.length > 0) {
-          showToast(errorToast);
-        } else {
-          loadTabs()
-            .then(() => showToast(evalSuccessToast));
+    const result = await runInContext(editorValue, codeContext, {
+      importOptions: {
+        allowUndefinedImports: true,
+        loadTabs: false,
+        sourceBundleImporter: getBundleLoader(useCompiled),
+        docsImporter,
+        resolverOptions: {
+          manifestImporter
         }
+      }
+    });
 
-        // TODO: Add support for console.log?
-        if (result.status === 'finished') {
-          setReplOutput({
-            type: 'result',
-            // code: editorValue,
-            consoleLogs: [],
-            value: stringify(result.value)
-          });
-        } else if (result.status === 'error') {
-          setReplOutput({
-            type: 'errors',
-            errors: codeContext.errors,
-            consoleLogs: []
-          });
+    if (codeContext.errors.length > 0) {
+      showToast(errorToast);
+    } else {
+      loadTabs()
+        .then(() => showToast(evalSuccessToast));
+    }
+
+    if (result.status === 'finished') {
+      setReplOutput({
+        type: 'result',
+        // code: editorValue,
+        consoleLogs: consoleLogs.current,
+        value: stringify(result.value)
+      });
+    } else if (result.status === 'error') {
+      codeContext.errors.forEach(error => {
+        if (error instanceof ModuleInternalError) {
+          console.error(error.error);
         }
       });
+
+      setReplOutput({
+        type: 'errors',
+        errors: codeContext.errors,
+        consoleLogs: consoleLogs.current
+      });
+    }
   };
 
   const resetEditor = () => {
-    setCodeContext(createContextHelper());
+    setCodeContext(createContextHelper(str => consoleLogs.current.push(str)));
+    consoleLogs.current = [];
+
     setEditorValue('');
     localStorage.setItem('editorValue', '');
     setDynamicTabs([]);
@@ -157,6 +194,25 @@ const Playground: React.FC = () => {
   const workspaceProps: WorkspaceProps = {
     controlBarProps: {
       editorButtons: [
+        <Popover
+          key='settings'
+          interactionKind='click'
+          placement="right"
+          content={<SettingsPopup
+            useCompiled={useCompiled}
+            onUseCompiledChange={value => {
+              setUseCompiled(value);
+              localStorage.setItem('useCompiled', value ? 'true' : '');
+            }}
+          />}
+          renderTarget={({ isOpen: _isOpen, ...targetProps }) => (
+            <Tooltip content="Settings">
+              <Button
+                {...targetProps}
+                icon='settings' />
+            </Tooltip>
+          )}
+        />,
         <ControlBarRunButton handleEditorEval={evalCode} key="eval" />,
         <ControlBarClearButton onClick={resetEditor}
           key="clear"
@@ -174,13 +230,13 @@ const Playground: React.FC = () => {
     handleEditorEval: evalCode,
     handleEditorValueChange(newValue) {
       setEditorValue(newValue);
-      localStorage.setItem('editorValue', newValue);
+      updateEditorLocalStorageValue(newValue);
     },
     editorValue,
     sideContentProps: {
       dynamicTabs: [testTabContent, ...dynamicTabs],
       selectedTabId,
-      onChange: useCallback((newId: string) => {
+      onChange: React.useCallback((newId: string) => {
         setSelectedTab(newId);
         setAlerts(alerts.filter((id) => id !== newId));
       }, [alerts]),

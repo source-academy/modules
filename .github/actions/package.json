@@ -1,0 +1,25 @@
+{
+  "name": "@sourceacademy/modules-github-actions",
+  "description": "Github Actions for the modules repository",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@sourceacademy/modules-repotools": "workspace:^",
+    "@types/node": "^24.0.0",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@actions/artifact": "^6.0.0",
+    "@actions/core": "^3.0.0",
+    "@actions/exec": "^3.0.0",
+    "es-toolkit": "^1.44.0",
+    "snyk-nodejs-lockfile-parser": "^2.4.2"
+  },
+  "scripts": {
+    "build": "node ./build.js",
+    "postinstall": "yarn build",
+    "test": "vitest run",
+    "tsc": "tsc --project ./tsconfig.json"
+  }
+}

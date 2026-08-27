@@ -1,8 +1,9 @@
-import { Button, ButtonGroup } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { ButtonGroup } from '@blueprintjs/core';
+import PlayButton from '@sourceacademy/modules-lib/tabs/PlayButton';
+import { defineTab } from '@sourceacademy/modules-lib/tabs/utils';
+import type { DebuggerContext } from '@sourceacademy/modules-lib/types';
 import Phaser from 'phaser';
 import React from 'react';
-import type { DebuggerContext } from '../../typings/type_helpers';
 
 /**
  * Game display tab for user-created games made with the Arcade2D module.
@@ -16,9 +17,7 @@ import type { DebuggerContext } from '../../typings/type_helpers';
  * React Component props for the Tab.
  */
 type Props = {
-  children?: never;
-  className?: never;
-  context?: any;
+  debuggerCtx: DebuggerContext;
 };
 
 /**
@@ -29,79 +28,63 @@ type GameState = {
 };
 
 /**
- * React component state for the UI buttons.
- */
-type UiState = {
-  isPaused: boolean;
-};
-
-/**
  * React component props for the UI buttons.
  */
 type UiProps = {
-  children?: never;
-  className?: never;
-  context?: any;
+  context?: DebuggerContext;
   onClick: (b: boolean) => void;
 };
 
 /**
  * Component for UI buttons within tab e.g play/pause.
  */
-class A2dUiButtons extends React.Component<UiProps, UiState> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isPaused: false
-    };
-  }
+function A2dUiButtons(props: UiProps) {
+  const [isPaused, setIsPaused] = React.useState(false);
 
-  toggleGamePause(): void {
-    const currentState = this.state.isPaused;
-    this.props.onClick(!currentState);
-    this.setState({ isPaused: !currentState });
-  }
+  const toggleGamePause = () => {
+    props.onClick(!isPaused);
+    setIsPaused(!isPaused);
+  };
 
-  public render() {
-    return (
-      <ButtonGroup>
-        <Button
-          className="a2d-play-toggle-button"
-          icon={this.state.isPaused ? IconNames.PLAY : IconNames.PAUSE}
-          active={false}
-          onClick={() => this.toggleGamePause()}
-          text={this.state.isPaused ? 'Resume Game' : 'Pause Game'}
-        />
-      </ButtonGroup>
-    );
-  }
+  return <ButtonGroup>
+    <PlayButton
+      className="a2d-play-toggle-button"
+      isPlaying={!isPaused}
+      playingIcon='play'
+      pausedIcon='pause'
+      playingText='Pause Game'
+      pausedText='Resume Game'
+      active={false}
+      onClick={toggleGamePause}
+    />
+  </ButtonGroup>;
 }
 
 /**
  * The main React Component of the Tab.
  */
 class GameTab extends React.Component<Props, GameState> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = {
       game: undefined
     };
   }
 
-  componentDidMount() {
+  override componentDidMount() {
     // Only mount the component when the Arcade2D tab is active
     if (document.querySelector('[id="bp4-tab-panel_side-content-tabs_Arcade2D Tab"]')?.ariaHidden === 'true') {
       return;
     }
 
     // Config will exist since it is checked in toSpawn
-    const config = this.props.context.result?.value?.gameConfig;
+    const config = this.props.debuggerCtx.result?.value?.gameConfig;
     this.setState({
       game: new Phaser.Game(config)
     });
   }
 
-  shouldComponentUpdate() {
+  override shouldComponentUpdate() {
     // Component itself is a wrapper & should not update - Phaser handles the game updates
     return false;
   }
@@ -117,14 +100,14 @@ class GameTab extends React.Component<Props, GameState> {
     }
   }
 
-  componentWillUnmount(): void {
+  override componentWillUnmount(): void {
     this.state.game?.sound.stopAll();
 
     // Prevents multiple update loops being run at the same time
     this.state.game?.destroy(false, false);
   }
 
-  public render() {
+  public override render() {
     return (
       <div
         id="a2d-tab"
@@ -142,39 +125,15 @@ class GameTab extends React.Component<Props, GameState> {
   }
 }
 
-export default {
-  /**
-   * This function will be called to determine if the component will be
-   * rendered. Currently spawns when there is a stored game config, or if
-   * the string in the REPL is "[Arcade2D]".
-   * context.result.value is the return value from the playground code.
-   * @param {DebuggerContext} context
-   * @returns {boolean}
-   */
-  toSpawn(context: DebuggerContext) {
+export default defineTab({
+  toSpawn(context) {
     const config = context.result?.value?.gameConfig;
     if (config) {
       return true;
     }
     return false;
   },
-
-  /**
-   * This function will be called to render the module tab in the side contents
-   * on Source Academy frontend.
-   * @param {DebuggerContext} context
-   */
-  body: (context: DebuggerContext) => <GameTab context={context} />,
-
-  /**
-   * The Tab's icon tooltip in the side contents on Source Academy frontend.
-   */
+  body: context => <GameTab debuggerCtx={context} />,
   label: 'Arcade2D Tab',
-
-  /**
-   * BlueprintJS IconName element's name, used to render the icon which will be
-   * displayed in the side contents panel.
-   * @see https://blueprintjs.com/docs/#icons
-   */
-  iconName: IconNames.SHAPES
-};
+  iconName: 'shapes'
+});

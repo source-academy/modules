@@ -1,0 +1,47 @@
+{
+  "name": "@sourceacademy/modules-devserver",
+  "description": "Lightweight React server powered by Vite for rapid development and testing of Source Academy Bundles and Tabs",
+  "readme": "./README.md",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "devserver": "./bin.js"
+  },
+  "dependencies": {
+    "@blueprintjs/core": "^6.0.0",
+    "@commander-js/extra-typings": "^15.0.0",
+    "@sourceacademy/modules-lib": "workspace:^",
+    "@vitejs/plugin-react": "^6.0.3",
+    "ace-builds": "^1.25.1",
+    "classnames": "^2.3.1",
+    "commander": "^15.0.0",
+    "es-toolkit": "^1.44.0",
+    "js-slang": "catalog:",
+    "re-resizable": "^6.9.11",
+    "react": "catalog:",
+    "react-ace": "^14.0.0",
+    "react-dom": "catalog:",
+    "vite": "^8.1.0",
+    "vite-plugin-node-polyfills": "^0.28.0"
+  },
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
+    "eslint": "^9.35.0",
+    "playwright": "^1.55.1",
+    "sass": "^1.85.0",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "vitest-browser-react": "^2.1.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "lint": "eslint src",
+    "postinstall": "playwright install --with-deps",
+    "test": "buildtools test --project .",
+    "tsc": "tsc --project ./tsconfig.json"
+  }
+}

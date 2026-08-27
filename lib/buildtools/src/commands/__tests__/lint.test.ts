@@ -1,0 +1,188 @@
+import { Command } from '@commander-js/extra-typings';
+import * as manifest from '@sourceacademy/modules-repotools/manifest';
+import { ESLint } from 'eslint';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { concurrencyOption, getLintCommand } from '../prebuild.js';
+import { getCommandRunner } from './testingUtils.js';
+
+const lintFilesMock = vi.hoisted(() => vi.fn());
+
+vi.mock(import('@sourceacademy/modules-repotools/getGitRoot'), async importOriginal => ({
+  ...await importOriginal(),
+  gitRoot: '/'
+}));
+
+const mockedResolveEither = vi.spyOn(manifest, 'resolveEitherBundleOrTab');
+
+vi.mock(import('eslint'), async importActual => {
+  const actualEslint = await importActual();
+  return {
+    ...actualEslint,
+    ESLint: class {
+      public fix: boolean;
+
+      constructor({ fix }: { fix: boolean }) {
+        this.fix = fix;
+      }
+
+      static outputFixes = vi.fn(() => Promise.resolve());
+      lintFiles = lintFilesMock;
+      loadFormatter = () => Promise.resolve({
+        format: () => Promise.resolve('')
+      });
+    } as any
+  };
+});
+
+const runCommand = getCommandRunner(getLintCommand);
+describe('Test Lint Command', () => {
+  beforeEach(() => {
+    mockedResolveEither.mockResolvedValueOnce({
+      severity: 'success',
+      asset: {
+        type: 'bundle',
+        directory: '',
+        manifest: {},
+        name: 'test0'
+      }
+    });
+  });
+
+  test('Fatal errors without --fix cause errors', async () => {
+    lintFilesMock.mockResolvedValueOnce([{
+      fatalErrorCount: 1
+    }]);
+
+    await expect(runCommand()).commandExit();
+  });
+
+  test('Fatal errors with --fix cause errors', async () => {
+    lintFilesMock.mockResolvedValueOnce([{
+      fatalErrorCount: 1
+    }]);
+
+    await expect(runCommand('--fix')).commandExit();
+    expect(ESLint.outputFixes).toHaveBeenCalledTimes(1);
+  });
+
+  test('Non fatal errors without --fix cause errors', async () => {
+    lintFilesMock.mockResolvedValueOnce([{
+      errorCount: 1
+    }]);
+
+    await expect(runCommand()).commandExit();
+  });
+
+  test('Non fatal errors with --fix does not call process.exit', async () => {
+    lintFilesMock.mockResolvedValueOnce([{
+      errorCount: 1
+    }]);
+
+    await expect(runCommand('--fix')).commandSuccess();
+    expect(ESLint.outputFixes).toHaveBeenCalledTimes(1);
+  });
+
+  test.skipIf(!!process.env.CI)('Warnings outside of ci mode should not error out', async () => {
+    lintFilesMock.mockResolvedValueOnce([{
+      warningCount: 1,
+      fixableWarningCount: 0
+    }]);
+
+    await expect(runCommand()).commandSuccess();
+  });
+
+  test('Warnings in ci mode should error out', async () => {
+    lintFilesMock.mockResolvedValueOnce([{
+      warningCount: 1,
+      fixableWarningCount: 0
+    }]);
+
+    await expect(runCommand('--ci')).commandExit();
+  });
+
+  test.skipIf(!!process.env.CI)('Fixable Warnings outside of ci mode should not error out', async () => {
+    lintFilesMock.mockResolvedValueOnce([{
+      warningCount: 1,
+      fixableWarningCount: 1
+    }]);
+
+    await expect(runCommand()).commandSuccess();
+  });
+
+  test('Fixable Warnings with --fix do not errors out', async () => {
+    lintFilesMock.mockResolvedValueOnce([{
+      warningCount: 1,
+      fixableWarningCount: 1
+    }]);
+
+    await expect(runCommand('--fix')).commandSuccess();
+    expect(ESLint.outputFixes).toHaveBeenCalledTimes(1);
+  });
+
+  test('Fixable Warnings with --fix and --ci do not error out', async () => {
+    lintFilesMock.mockResolvedValueOnce([{
+      warningCount: 1,
+      fixableWarningCount: 1
+    }]);
+
+    await expect(runCommand('--fix', '--ci')).commandSuccess();
+    expect(ESLint.outputFixes).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('Test Lint command directory resolution', () => {
+  test('Lint command resolving a tab', async () => {
+    mockedResolveEither.mockResolvedValueOnce({
+      severity: 'success',
+      asset: {
+        type: 'tab',
+        directory: '',
+        entryPoint: '',
+        name: 'tab0'
+      }
+    });
+    lintFilesMock.mockResolvedValueOnce([{ warningCount: 0 }]);
+    await expect(runCommand()).commandSuccess();
+  });
+
+  test('Lint command resolving neither', async () => {
+    mockedResolveEither.mockResolvedValueOnce({
+      severity: 'error',
+      errors: [],
+    });
+
+    await expect(runCommand()).commandExit();
+    expect(lintFilesMock).not.toHaveBeenCalled();
+  });
+});
+
+describe('Test concurrency option', () => {
+  const runOption = (...args: string[]) => new Promise<ESLint.Options['concurrency']>((resolve, reject) => {
+    new Command()
+      .addOption(concurrencyOption)
+      .exitOverride(reject)
+      .configureOutput({
+        writeErr: () => {}
+      })
+      .action(({ concurrency }) => resolve(concurrency))
+      .parse(args, { from: 'user' });
+  });
+
+  test('number for option uses that number', () => {
+    return expect(runOption('--concurrency', '3')).resolves.toEqual(3);
+  });
+
+  test('off returns \'off\'', () => {
+    return expect(runOption('--concurrency', 'off')).resolves.toEqual('off');
+  });
+
+  test('auto returns \'auto\'', () => {
+    return expect(runOption('--concurrency', 'auto')).resolves.toEqual('auto');
+  });
+
+  test('unknown option throws error', () => {
+    return expect(runOption('--concurrency', 'unknown'))
+      .rejects
+      .toThrowError('Expected auto, off or a number, got unknown');
+  });
+});

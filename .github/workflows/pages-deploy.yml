@@ -10,30 +10,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           submodules: recursive
 
       - name: Enable Corepack
         run: corepack enable
-      
+
       - name: Use Node.js 💻
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version-file: .node-version
           cache: yarn
-      
+
       - name: Install Dependencies 📦
         run: yarn install --immutable
-          
+
       - name: Build Modules 🔧
-        run: yarn build --tsc --lint
-      
+        run: yarn workspaces foreach -ptW --from "./src/{bundles,tabs}/*" run build
+
+      - name: Build Manifest
+        run: yarn buildtools manifest
+
+      - name: Build All Docs
+        run: yarn build:docs
+
       - name: include java json
         run: cp -r src/java build
 
       - name: Deploy 🚀
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }} 
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build # The folder the action should deploy.

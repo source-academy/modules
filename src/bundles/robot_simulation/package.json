@@ -1,0 +1,40 @@
+{
+  "name": "@sourceacademy/bundle-robot_simulation",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^",
+    "es-toolkit": "^1.44.0",
+    "js-slang": "catalog:",
+    "three": "^0.185.0"
+  },
+  "devDependencies": {
+    "@dimforge/rapier3d-compat": "^0.11.2",
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "@types/three": "^0.185.0",
+    "typescript": "catalog:"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js",
+    "./controllers": "./dist/controllers/index.js",
+    "./engine": "./dist/engine/index.js"
+  },
+  "scripts": {
+    "build": "buildtools build bundle .",
+    "test": "buildtools test --project .",
+    "tsc": "buildtools tsc .",
+    "lint": "buildtools lint .",
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
+  },
+  "scripts-info": {
+    "build": "Compiles the given bundle to the output directory",
+    "lint": "Runs ESlint on the code in the bundle",
+    "serve": "Starts the modules server",
+    "test": "Runs unit tests defined for the bundle",
+    "tsc": "Runs the Typescript compiler and produces the library version of the bundle"
+  }
+}

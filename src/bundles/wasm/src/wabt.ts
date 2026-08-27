@@ -1,0 +1,24 @@
+import { objectToLinkedList } from 'source-academy-utils';
+import { compile } from 'source-academy-wabt';
+
+/**
+ * Compile a (hopefully valid) WebAssembly Text module to binary.
+ * @param program program to compile
+ * @returns an array of 8-bit unsigned integers.
+ */
+// @ts-expect-error Not sure how to fix this but
+export const wcompile = (program: string) => Array.from(compile(program));
+
+/**
+ * Run a compiled WebAssembly Binary Buffer.
+ * @param buffer an array of 8-bit unsigned integers to run
+ * @returns a linked list of exports that the relevant WebAssembly Module exports
+ */
+export const wrun = (buffer: number[] | Uint8Array) => {
+  const exps = new WebAssembly.Instance(
+    new WebAssembly.Module(
+      new Uint8Array(buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer))
+    )
+  ).exports;
+  return objectToLinkedList(exps);
+};

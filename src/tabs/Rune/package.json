@@ -1,0 +1,40 @@
+{
+  "name": "@sourceacademy/tab-Rune",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@blueprintjs/icons": "^6.0.0",
+    "@sourceacademy/bundle-rune": "workspace:^",
+    "@sourceacademy/common-tabs": "^0.0.1",
+    "@sourceacademy/conductor": "catalog:",
+    "@sourceacademy/modules-lib": "workspace:^",
+    "es-toolkit": "^1.44.0",
+    "gl-matrix": "^3.4.4",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "@types/react": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
+    "playwright": "^1.55.1",
+    "typescript": "catalog:",
+    "vitest": "catalog:",
+    "vitest-browser-react": "^2.1.0"
+  },
+  "scripts": {
+    "build": "buildtools build tab .",
+    "lint": "buildtools lint .",
+    "test": "buildtools test --project .",
+    "tsc": "buildtools tsc .",
+    "serve": "yarn buildtools serve"
+  },
+  "type": "module",
+  "scripts-info": {
+    "build": "Compiles the given tab to the output directory",
+    "lint": "Runs ESlint on the code in the tab",
+    "serve": "Starts the modules server",
+    "test": "Runs unit tests defined for the tab",
+    "tsc": "Runs the Typescript compiler"
+  }
+}

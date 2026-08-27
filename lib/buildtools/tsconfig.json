@@ -1,0 +1,14 @@
+// buildtools tsconfig
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext"
+  },
+  "extends": "../tsconfig.json",
+  "include": ["./src", "vitest.setup.ts", "vitest.d.ts"],
+  "exclude": [
+    "dist",
+    "../__test_mocks__"
+  ]
+}

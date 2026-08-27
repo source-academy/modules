@@ -1,0 +1,21 @@
+{
+  "extends": "../tsconfig.json",
+  "include": [
+    "./src"
+  ],
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "experimentalDecorators": false,
+    "emitDecoratorMetadata": false
+  },
+  "typedocOptions": {
+    "name": "sound",
+    "externalSymbolLinkMappings": {
+      "@sourceacademy/bundle-midi": {
+        "MIDINote": "#",
+        "NoteWithOctave": "#"
+      }
+    }
+  }
+}

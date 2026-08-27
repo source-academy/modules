@@ -1,0 +1,35 @@
+{
+  "name": "@sourceacademy/bundle-unittest",
+  "version": "1.0.1",
+  "private": true,
+  "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^",
+    "es-toolkit": "^1.44.0",
+    "js-slang": "catalog:"
+  },
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "typescript": "catalog:"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
+  },
+  "scripts": {
+    "build": "buildtools build bundle .",
+    "test": "buildtools test --project .",
+    "tsc": "buildtools tsc .",
+    "lint": "buildtools lint .",
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
+  },
+  "scripts-info": {
+    "build": "Compiles the given bundle to the output directory",
+    "lint": "Runs ESlint on the code in the bundle",
+    "serve": "Starts the modules server",
+    "test": "Runs unit tests defined for the bundle",
+    "tsc": "Runs the Typescript compiler and produces the library version of the bundle"
+  }
+}

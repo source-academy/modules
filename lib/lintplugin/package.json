@@ -1,0 +1,53 @@
+{
+  "name": "@sourceacademy/lint-plugin",
+  "version": "1.1.0",
+  "readme": "./README.md",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./formatter": "./dist/formatter.js"
+  },
+  "dependencies": {
+    "eslint": "^9.35.0"
+  },
+  "peerDependencies": {
+    "@eslint/markdown": "^7.0.0 || ^8.0.3",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@vitest/eslint-plugin": "*",
+    "eslint": ">=9",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsdoc": "^62.0.0 || ^63.0.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^7.0.0",
+    "globals": "^17.0.0",
+    "typescript-eslint": "^8.58.0"
+  },
+  "devDependencies": {
+    "@eslint/markdown": "^8.0.3",
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "@sourceacademy/modules-lib": "workspace:^",
+    "@sourceacademy/modules-repotools": "workspace:^",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/rule-tester": "^8.65.0",
+    "@typescript-eslint/utils": "^8.65.0",
+    "@vitest/eslint-plugin": "catalog:",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsdoc": "^63.0.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "globals": "^17.0.0",
+    "js-slang": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "^8.65.0"
+  },
+  "scripts": {
+    "build": "node ./build.js",
+    "lint": "eslint src",
+    "postinstall": "yarn build",
+    "tsc": "tsc --project ./tsconfig.json",
+    "test": "buildtools test --project ."
+  }
+}

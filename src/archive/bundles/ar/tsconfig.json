@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "outDir": "./dist"
+  },
+  "extends": "../tsconfig.json",
+  "include": [
+    "./src"
+  ],
+  "typedocOptions": {
+    "name": "ar"
+  }
+}

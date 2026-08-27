@@ -1,0 +1,142 @@
+/* [Imports] */
+import { Spinner, SpinnerSize } from '@blueprintjs/core';
+import {
+  BP_CARD_BORDER_RADIUS,
+  BP_TAB_BUTTON_MARGIN,
+  BP_TAB_PANEL_MARGIN,
+  BP_TEXT_MARGIN,
+  CANVAS_MAX_WIDTH
+} from '@sourceacademy/modules-lib/tabs/css_constants';
+import { useEffect, useRef, useState } from 'react';
+import HoverControlHint from './hover_control_hint';
+import StatefulRenderer from './stateful_renderer';
+import type { CanvasHolderProps } from './types';
+
+export default function CanvasHolder({ componentNumber, scene }: CanvasHolderProps) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const rendererRef = useRef<StatefulRenderer | null>(null);
+
+  const [isContextLost, setIsContextLost] = useState(false);
+
+  useEffect(() => {
+    console.debug(`>>> MOUNT #${componentNumber}`);
+
+    const { current: canvas } = canvasRef;
+    if (canvas === null) return;
+
+    rendererRef.current = new StatefulRenderer(
+      canvas,
+      scene,
+      componentNumber,
+      () => setIsContextLost(true),
+      () => setIsContextLost(false),
+    );
+    rendererRef.current.start(true);
+
+    return () => {
+      console.debug(`>>> UNMOUNT #${componentNumber}`);
+      rendererRef.current?.stop(true);
+    };
+  }, [componentNumber, scene]);
+
+  return <>
+    <div
+      style={{
+        display: isContextLost ? 'none' : 'flex',
+        // Centre content when sidebar is wider than it
+        justifyContent: 'center'
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: BP_TAB_BUTTON_MARGIN,
+
+          marginRight: BP_TAB_PANEL_MARGIN
+        }}
+      >
+        <HoverControlHint
+          tooltipText="Zoom in: Scroll up"
+          iconName='zoom-in'
+        />
+        <HoverControlHint
+          tooltipText="Zoom out: Scroll down"
+          iconName='zoom-out'
+        />
+        <HoverControlHint
+          tooltipText="Zoom to fit: Double left-click"
+          iconName='zoom-to-fit'
+        />
+        <HoverControlHint
+          tooltipText="Rotate: Left-click"
+          iconName='repeat'
+        />
+        <HoverControlHint
+          tooltipText="Pan: Middle-click OR shift + left-click"
+          iconName='move'
+        />
+      </div>
+
+      <div
+        style={{
+          // Expand to take as much space as possible, otherwise this will
+          // have no height
+          width: '100%',
+          // Prevent canvas from becoming too large when the sidebar is
+          // wide, which would require lots of scrolling or never fit
+          // entirely on screen. Tall but skinny sidebar maxes width at 70vh
+          // (eg portrait mobile view). Short but wide maxes width at 30vw
+          // (eg wide desktop view)
+          maxWidth: CANVAS_MAX_WIDTH,
+          // Force square aspect ratio, otherwise this will have no height
+          aspectRatio: '1'
+        }}
+      >
+        <canvas
+          ref={canvasRef}
+          style={{
+            // Inline element would try to align to text baseline, with
+            // space below for descender. This prevents that
+            display: 'block',
+
+            width: '100%',
+            height: '100%',
+
+            borderRadius: BP_CARD_BORDER_RADIUS
+          }}
+          // These get set on the fly by the dynamic resizer in
+          // StatefulRenderer's InputTracker
+          width={0}
+          height={0}
+        />
+      </div>
+    </div>
+    <div
+      // Explicit dark theme as mobile view switches to dark text with light
+      // spinner
+      className="bp6-dark"
+      style={{
+        display: isContextLost ? 'block' : 'none',
+
+        textAlign: 'center'
+      }}
+    >
+      <h2
+        style={{
+          margin: `0px 0px ${BP_TEXT_MARGIN} 0px`
+        }}
+      >
+        WebGL Context Lost
+      </h2>
+      <Spinner intent="warning" size={SpinnerSize.LARGE} />
+      <p
+        style={{
+          margin: `${BP_TEXT_MARGIN} 0px 0px 0px`
+        }}
+      >
+        Your GPU is probably busy. Waiting for browser to re-establish connection...
+      </p>
+    </div>
+  </>;
+}

@@ -1,0 +1,19 @@
+name: Load Artifacts for Dev Server
+description: This action is mainly intended for loading all of the compiled assets
+
+inputs:
+  load-tabs:
+    required: false
+    default: 'false'
+
+  load-bundles:
+    required: false
+    default: 'false'
+
+  load-manifest:
+    required: false
+    default: 'false'
+
+runs:
+  using: node24
+  main: ../../dist/load.js

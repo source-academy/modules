@@ -1,0 +1,13 @@
+// modules-lib with tests
+{
+  "compilerOptions": {
+    "noEmit": true,
+  },
+  "extends": [
+    "../tsconfig.json",
+    "../../src/tabs/tsconfig.json"
+  ],
+  "include": [
+    "./src"
+  ]
+}

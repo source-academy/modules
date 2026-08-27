@@ -1,0 +1,40 @@
+{
+  "name": "@sourceacademy/bundle-curve",
+  "version": "1.1.0",
+  "private": true,
+  "dependencies": {
+    "@sourceacademy/conductor": "catalog:",
+    "@sourceacademy/modules-lib": "workspace:^",
+    "es-toolkit": "^1.44.0",
+    "gl-matrix": "^3.3.0"
+  },
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "@sourceacademy/modules-testplugin": "workspace:^",
+    "typescript": "catalog:"
+  },
+  "type": "module",
+  "exports": {
+    "./dist/drawers": null,
+    "./drawers": null,
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
+  },
+  "scripts": {
+    "build": "buildtools build bundle .",
+    "lint": "buildtools lint .",
+    "prepare": "yarn tsc",
+    "test": "buildtools test --project .",
+    "tsc": "buildtools tsc .",
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
+  },
+  "scripts-info": {
+    "build": "Compiles the given bundle to the output directory",
+    "lint": "Runs ESlint on the code in the bundle",
+    "serve": "Starts the modules server",
+    "test": "Runs unit tests defined for the bundle",
+    "tsc": "Runs the Typescript compiler and produces the library version of the bundle"
+  }
+}

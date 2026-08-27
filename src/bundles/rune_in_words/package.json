@@ -1,0 +1,33 @@
+{
+  "name": "@sourceacademy/bundle-rune_in_words",
+  "version": "1.0.1",
+  "private": true,
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "typescript": "catalog:"
+  },
+  "dependencies": {
+    "@sourceacademy/modules-lib": "workspace:^"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*.js"
+  },
+  "scripts": {
+    "tsc": "buildtools tsc .",
+    "build": "buildtools build bundle .",
+    "lint": "buildtools lint .",
+    "test": "buildtools test --project .",
+    "postinstall": "yarn compile",
+    "serve": "yarn buildtools serve",
+    "compile": "buildtools compile"
+  },
+  "scripts-info": {
+    "build": "Compiles the given bundle to the output directory",
+    "lint": "Runs ESlint on the code in the bundle",
+    "serve": "Starts the modules server",
+    "test": "Runs unit tests defined for the bundle",
+    "tsc": "Runs the Typescript compiler and produces the library version of the bundle"
+  }
+}

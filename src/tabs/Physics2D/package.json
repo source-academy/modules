@@ -1,0 +1,33 @@
+{
+  "name": "@sourceacademy/tab-Physics2D",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@blueprintjs/core": "^6.0.0",
+    "@box2d/debug-draw": "^0.10.0",
+    "@sourceacademy/bundle-physics_2d": "workspace:^",
+    "@sourceacademy/modules-lib": "workspace:^",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@sourceacademy/modules-buildtools": "workspace:^",
+    "@types/react": "catalog:",
+    "typescript": "catalog:"
+  },
+  "scripts": {
+    "build": "buildtools build tab .",
+    "lint": "buildtools lint .",
+    "tsc": "buildtools tsc .",
+    "test": "buildtools test --project .",
+    "serve": "yarn buildtools serve"
+  },
+  "type": "module",
+  "scripts-info": {
+    "build": "Compiles the given tab to the output directory",
+    "lint": "Runs ESlint on the code in the tab",
+    "serve": "Starts the modules server",
+    "test": "Runs unit tests defined for the tab",
+    "tsc": "Runs the Typescript compiler"
+  }
+}

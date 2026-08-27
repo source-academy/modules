@@ -1,0 +1,63 @@
+name: Initialize Environment
+description: Checks out code and installs Yarn
+
+branding:
+  icon: play
+  color: green
+
+inputs:
+  package-name:
+    required: false
+    default: ''
+    description: Name of the workspace/package you're initializing
+
+  install-deps:
+    required: false
+    default: true
+    description: "Should dependencies be installed? (default: true)"
+
+  playwright:
+    required: false
+    default: false
+    description: Should run the Playwright installation command
+
+  shell:
+    required: false
+    default: bash
+    description: What shell to use
+
+runs:
+  using: composite
+  steps:
+    - name: Enable Corepack
+      if: ${{ inputs.shell != 'pwsh' }}
+      run: corepack enable
+      shell: bash
+
+    - name: Enable Corepack (Powershell)
+      if: ${{ inputs.shell == 'pwsh' }}
+      run: |
+        npm uninstall -g yarn
+        corepack enable
+      shell: pwsh
+
+    - name: Use Node.js 💻
+      uses: actions/setup-node@v6
+      with:
+        node-version-file: .node-version
+        cache: yarn
+
+    - name: Install Dependencies (Focused)
+      if: inputs.package-name != '' && inputs.install-deps == 'true'
+      run: yarn workspaces focus ${{ inputs.package-name }}
+      shell: ${{ inputs.shell }}
+
+    - name: Install Dependencies (General)
+      if: inputs.package-name == '' && inputs.install-deps == 'true'
+      run: yarn install --immutable
+      shell: ${{ inputs.shell }}
+
+    - name: Install Playwright
+      if: inputs.playwright == 'true' && inputs.install-deps == 'true'
+      run: yarn workspaces foreach -A --include ${{ inputs.package-name }} run playwright install chromium --with-deps --only-shell
+      shell: ${{ inputs.shell }}

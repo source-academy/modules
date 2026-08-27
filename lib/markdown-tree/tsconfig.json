@@ -1,0 +1,9 @@
+// Markdown-Tree plugin tsconfig
+{
+  "extends": [
+    "../tsconfig.json"
+  ],
+  "include": [
+    "./src"
+  ]
+}

@@ -1,0 +1,15 @@
+// Bundles tsconfig
+{
+  "compilerOptions": {
+    "declaration": true,
+    "paths": {
+      "js-slang/context": [
+        "./context.d.ts"
+      ],
+      "plotly.js-dist": [
+        "../../node_modules/@types/plotly.js/index.d.ts"
+      ]
+    }
+  },
+  "extends": "../tsconfig.json"
+}

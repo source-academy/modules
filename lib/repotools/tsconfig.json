@@ -1,0 +1,9 @@
+// Repotools regular tsconfig
+{
+  "extends": ["../tsconfig.json"],
+  "include": ["./src"],
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext"
+  }
+}

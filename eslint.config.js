@@ -1,67 +1,88 @@
 // @ts-check
+// TODO Split configuration when it becomes possible in ESLint V10
 
 import js from '@eslint/js';
+import markdown from '@eslint/markdown';
+import saLintPlugin from '@sourceacademy/lint-plugin';
 import stylePlugin from '@stylistic/eslint-plugin';
+import vitestPlugin from '@vitest/eslint-plugin';
+import { defineConfig } from 'eslint/config';
 import * as importPlugin from 'eslint-plugin-import';
-import jestPlugin from 'eslint-plugin-jest';
+import jsdocPlugin, { getJsdocProcessorPlugin } from 'eslint-plugin-jsdoc';
+import * as mdx from 'eslint-plugin-mdx';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import ymlPlugin from 'eslint-plugin-yml';
 import globals from 'globals';
-
+import * as jsonParser from 'jsonc-eslint-parser';
 import tseslint from 'typescript-eslint';
-
-import typeImportsPlugin from './scripts/dist/typeimports.js';
 
 const todoTreeKeywordsWarning = ['TODO', 'TODOS', 'TODO WIP', 'FIXME', 'WIP'];
 const todoTreeKeywordsAll = [...todoTreeKeywordsWarning, 'NOTE', 'NOTES', 'LIST'];
 
-export default tseslint.config(
+export default defineConfig(
   {
-    // global ignores
+    name: 'Global Ignores',
     ignores: [
+      '**/coverage',
       '**/*.snap',
+      '**/*.d.ts',
+      '**/dist/**',
+      '**/dist.*js',
+      '.yarn',
       'build/**',
-      'scripts/**/templates/templates/**',
-      'scripts/src/build/docs/__tests__/test_mocks/**',
-      'scripts/dist',
-      'src/**/samples/**'
+      'docs/.vitepress/cache',
+      '**/node_modules',
+      'lib/buildtools/bin',
+      'lib/buildtools/src/build/__test_mocks__',
+      'lib/vitest-reporter/build',
+      'src/archive/**',
+      'src/**/samples/**',
+      'src/bundles/scrabble/src/words.json', // Don't lint this because its way too big
+      'src/java/**',
+      'package-lock.json' // Just in case someone accidentally creates one
     ]
   },
-  js.configs.recommended,
+  // #region markdown
   {
-    // Global JS Rules
+    name: 'Markdown Files',
+    extends: [markdown.configs.recommended],
+    files: ['**/*.md'],
+    ignores: [
+      // These are generated via Typedoc, we don't have to lint them
+      'docs/src/lib/modules-lib/**/*.md',
+    ],
+    processor: mdx.createRemarkProcessor({
+      lintCodeBlocks: true,
+      ignoreRemarkConfig: true
+    }),
+    language: 'markdown/gfm',
     languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.es2022
-      }
+      frontmatter: 'yaml'
     },
+    plugins: { markdown },
+    rules: {
+      'markdown/no-missing-label-refs': 'off', // was error
+      'markdown/no-multiple-h1': 'off',        // was error
+      'markdown/require-alt-text': 'off',      // was error
+    }
+  },
+  // #endregion markdown
+  {
+    name: 'Stylistic Rules (Excluding Markdown)',
+    // We exclude markdown because the markdown code processor doesn't support
+    // some rules
+    ignores: ['**/*.md'],
     plugins: {
-      import: importPlugin,
       '@stylistic': stylePlugin,
     },
     rules: {
-      'import/no-duplicates': ['warn', { 'prefer-inline': false }],
-      'import/order': [
-        'warn',
-        {
-          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
-          alphabetize: {
-            order: 'asc',
-            orderImportKind: 'asc'
-          },
-        }
-      ],
-
-      '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
       '@stylistic/eol-last': 'warn',
       '@stylistic/indent': ['warn', 2, { SwitchCase: 1 }],
-      '@stylistic/no-mixed-spaces-and-tabs': 'warn',
-      '@stylistic/no-multi-spaces': 'warn',
       '@stylistic/no-multiple-empty-lines': ['warn', { max: 1, maxEOF: 0 }],
+      '@stylistic/no-multi-spaces': ['warn', { ignoreEOLComments: true }],
+      '@stylistic/no-tabs': 'error',
       '@stylistic/no-trailing-spaces': 'warn',
-      '@stylistic/quotes': ['warn', 'single', { avoidEscape: true }],
-      '@stylistic/semi': ['warn', 'always'],
       '@stylistic/spaced-comment': [
         'warn',
         'always',
@@ -69,82 +90,411 @@ export default tseslint.config(
       ],
     }
   },
-  ...tseslint.configs.recommended,
   {
-    // Global typescript rules
-    files: ['**/*.ts*'],
+    name: 'YML Files',
+    extends: [ymlPlugin.configs['flat/recommended']],
+    files: ['**/*.yml', '**/*.yaml'],
+    plugins: {
+      yml: ymlPlugin
+    },
+    rules: {
+      'yml/indent': 'warn',
+      'yml/no-tab-indent': 'error',
+
+      // based on https://ota-meshi.github.io/eslint-plugin-yml/rules/spaced-comment.html
+      '@stylistic/spaced-comment': 'off',
+      'yml/spaced-comment': 'warn'
+    }
+  },
+  {
+    name: 'JSON Files',
+    files: ['**/*.json'],
     languageOptions: {
-      parser: tseslint.parser
+      parser: jsonParser,
+      parserOptions: {
+        // Use JSONC so that comments in JSON files don't get treated as
+        // syntax errors
+        jsonSyntax: 'jsonc'
+      }
+    }
+  },
+  {
+    extends: [js.configs.recommended],
+    name: 'Global JS/TS Stylistic Rules',
+    plugins: {
+      jsdoc: jsdocPlugin,
+      jsdocExamples: getJsdocProcessorPlugin({
+        parser: tseslint.parser,
+        // Only lint markdown code blocks
+        exampleCodeRegex: /^[\s*]*```(?:[jt]s\s)?([\s\S]*)```\s*/
+      })
+    },
+    ignores: ['./lib/typedoc-plugin/src/__tests__/sample.ts'],
+    processor: 'jsdocExamples/examples',
+    files: [
+      '**/*.{js,cjs,mjs}',
+      '**/*.{ts,cts,tsx}',
+    ],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.es2020
+      }
+    },
+    rules: {
+      'jsdoc/check-alignment': 'warn',
+      'jsdoc/no-blank-blocks': 'warn',
+      'jsdoc/no-multi-asterisks': ['warn', { allowWhitespace: true }],
+      'jsdoc/require-asterisk-prefix': 'warn',
+
+      'object-shorthand': ['warn', 'properties'],
+
+      '@stylistic/arrow-spacing': 'warn',
+      '@stylistic/block-spacing': 'warn',
+      '@stylistic/brace-style': ['warn', '1tbs', { allowSingleLine: true }],
+      '@stylistic/function-call-spacing': ['warn', 'never'],
+      '@stylistic/function-paren-newline': ['warn', 'multiline-arguments'],
+      '@stylistic/implicit-arrow-linebreak': ['error', 'beside'],
+      '@stylistic/keyword-spacing': 'warn',
+      '@stylistic/member-delimiter-style': [
+        'warn',
+        {
+          multiline: {
+            delimiter: 'semi',
+            requireLast: true
+          },
+          singleline: {
+            delimiter: 'comma',
+            requireLast: false
+          }
+        }
+      ],
+      '@stylistic/no-extra-parens': ['warn', 'all', {
+        ignoreJSX: 'all',
+        ignoredNodes: ['ArrowFunctionExpression[body.type=ConditionalExpression]'],
+        nestedBinaryExpressions: false,
+      }],
+      '@stylistic/nonblock-statement-body-position': ['error', 'beside'],
+      '@stylistic/object-curly-newline': ['warn', {
+        ImportDeclaration: { multiline: true },
+      }],
+      '@stylistic/object-curly-spacing': ['warn', 'always'],
+      '@stylistic/quotes': ['warn', 'single', { avoidEscape: true }],
+      '@stylistic/semi': ['warn', 'always'],
+      '@stylistic/space-before-blocks': 'warn',
+      '@stylistic/space-before-function-paren': ['warn', {
+        anonymous: 'always',
+        asyncArrow: 'always',
+        named: 'never'
+      }],
+      '@stylistic/template-curly-spacing': 'warn'
+    }
+  },
+  {
+    name: 'Code blocks within Markdown files',
+    files: ['**/*.md/**/*.{js,ts,tsx}'],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        experimentalDecorators: true,
+        ecmaFeatures: {
+          impliedStrict: true,
+        }
+      }
+    },
+    rules: {
+      // The Markdown parser automatically trims trailing
+      // newlines from code blocks.
+      '@stylistic/eol-last': 'off',
+      '@stylistic/no-multiple-empty-lines': 'off',
+
+      // In code snippets and examples, these rules are often
+      // counterproductive to clarity and brevity.
+      'no-dupe-keys': 'off',
+      'no-redeclare': 'off',
+      'no-undef': 'off',
+      'no-unreachable': 'off',
+      'no-unused-expressions': 'off',
+      'no-unused-vars': 'off',
+      'no-useless-catch': 'off',
+      'padded-blocks': 'off',
+      'react/jsx-no-undef': 'off',
+
+      // Adding a "use strict" directive at the top of every
+      // code block is tedious and distracting. The config
+      // opts into strict mode parsing without the directive.
+      strict: 'off',
+
+      // The processor will not receive a Unicode Byte Order
+      // Mark from the Markdown parser.
+      'unicode-bom': 'off',
+    }
+  },
+  {
+    name: 'Global JS/TS Functional Rules',
+    files: [
+      '**/*.{js,cjs,mjs}',
+      '**/*.{ts,cts,tsx}',
+    ],
+    // Markdown virtual files are ignored because these 'functional' rules
+    // aren't required for them
+    ignores: ['**/*.md/**/*.{js,ts,tsx}'],
+    plugins: {
+      import: importPlugin,
+      jsdoc: jsdocPlugin,
+      '@sourceacademy': saLintPlugin
+    },
+    rules: {
+      'jsdoc/check-param-names': ['error', {
+        checkDestructured: false,
+        disableMissingParamChecks: true
+      }],
+      'jsdoc/check-tag-names': ['error', {
+        // NOTE: Not all Typedoc supported tags are present here. Feel free to add any other
+        // Typedoc supported tags to this list
+        definedTags: [
+          'category',
+          'categoryDescription',
+          'defaultValue',
+          'hidden',
+          'title',
+          'publicType',
+          'publicReturnType'
+        ],
+        inlineTags: ['link', 'see'],
+      }],
+      'jsdoc/empty-tags': ['error', {
+        tags: ['defaultValue', 'hidden']
+      }],
+
+      'import/extensions': ['error', { css: 'always', json: 'always' }],
+      'import/first': 'warn',
+      'import/newline-after-import': 'warn',
+      // This rule is very time intensive.
+      // 'import/no-cycle': 'error',
+      'import/no-duplicates': ['warn', { 'prefer-inline': false }],
+      'import/no-useless-path-segments': 'error',
+      'import/order': [
+        'warn',
+        {
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+          named: {
+            import: true,
+            types: 'types-last'
+          },
+          alphabetize: {
+            order: 'asc',
+            orderImportKind: 'asc'
+          },
+        }
+      ],
+
+      'no-empty': ['error', { allowEmptyCatch: true }],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'commander',
+              message: 'Import from @commander-js/extra-typings instead'
+            },
+            {
+              name: 'lodash',
+              message: 'Use es-toolkit instead'
+            }
+          ]
+        }
+      ],
+      'prefer-const': ['warn', { destructuring: 'all' }],
+      'require-yield': 'off',
+
+      '@sourceacademy/default-import-name': ['warn', { path: 'pathlib' }],
+      '@sourceacademy/no-barrel-imports': ['error', ['lodash']],
+      '@sourceacademy/region-comment': 'error',
+    }
+  },
+
+  // #region typescript
+  {
+    extends: tseslint.configs.recommended,
+    name: 'Global Typescript Rules',
+    files: ['**/*.{ts,cts,tsx}'],
+    ignores: [
+      // Markdown virtual files need to be ignored because the type-aware rules
+      // don't work with them
+      '**/*.md/**/*.{ts,tsx}',
+    ],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        // Prevent the parser from going any higher in the directory tree
+        // to find a tsconfig
+        tsconfigRootDir: import.meta.dirname,
+        projectService: true,
+        // project: true
+      }
     },
     plugins: {
       '@typescript-eslint': tseslint.plugin,
-      'typeImports': typeImportsPlugin
     },
     rules: {
       'no-unused-vars': 'off', // Use the typescript eslint rule instead
 
-      '@typescript-eslint/ban-types': 'off', // Was 'error'
+      'import/no-unresolved': [
+        // disable in the CI since we don't install packages so all node packages
+        // become unresolvable
+        process.env.CI ? 'off' : 'error',
+        { ignore: ['js-slang/context', '^virtual:.+$'] }
+      ],
+
+      'jsdoc/no-types': 'warn',
+
+      '@stylistic/type-annotation-spacing': ['warn', { overrides: { colon: { before: false, after: true } } }],
+
+      '@typescript-eslint/ban-ts-comment': 'error',
+      '@typescript-eslint/consistent-type-assertions': ['warn', { assertionStyle: 'as' }],
       '@typescript-eslint/no-duplicate-type-constituents': 'off', // Was 'error'
       '@typescript-eslint/no-explicit-any': 'off', // Was 'error'
+      '@typescript-eslint/no-import-type-side-effects': 'error',
       '@typescript-eslint/no-redundant-type-constituents': 'off', // Was 'error'
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
-      '@typescript-eslint/prefer-ts-expect-error': 'warn',
-      '@typescript-eslint/sort-type-constituents': 'warn',
 
-      'typeImports/collate-type-imports': 'warn'
+      // This rule doesn't seem to fail locally but fails on the CI
+      '@typescript-eslint/no-unnecessary-type-assertion': process.env.CI ? 'off' : 'error',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Was 'error'
+
+      // This rule doesn't seem to fail locally but fails on the CI
+      '@typescript-eslint/only-throw-error': process.env.CI ? 'off' : 'error',
+    },
+    settings: {
+      'import/resolver': {
+        typescript: true,
+        node: true
+      }
     }
   },
+  // #endregion typescript
   {
-    // global for TSX files
+    name: 'Global for TSX Files',
     files: ['**/*.tsx'],
+    ignores: ['**/*.md/**/*.tsx'],
     plugins: {
+      // @ts-expect-error React hooks plugin wrong type
       'react-hooks': reactHooksPlugin,
       'react': reactPlugin
     },
-    rules: {
-      'react-hooks/rules-of-hooks': 'error',
-
-      '@stylistic/jsx-equals-spacing': ['warn', 'never'],
-      '@stylistic/jsx-indent': ['warn', 2],
-      '@stylistic/jsx-indent-props': ['warn', 2],
-      '@stylistic/jsx-props-no-multi-spaces': 'warn',
-    }
-  },
-  {
-    // Rules for bundles and tabs
-    files: ['src/**/*.ts*'],
+    extends: [
+      reactPlugin.configs.flat.recommended,
+      reactPlugin.configs.flat['jsx-runtime'],
+    ],
     languageOptions: {
-      globals: globals.browser,
       parserOptions: {
-        project: './src/tsconfig.json'
+        ecmaFeatures: { jsx: true }
       }
     },
     rules: {
-      'prefer-const': 'warn', // Was 'error'
+      'react-hooks/rules-of-hooks': 'error',
+      'react/jsx-key': 'off', // was 'error'
+      'react/prefer-stateless-function': 'warn',
+      'react/prop-types': 'off', // was 'error'
+
+      '@stylistic/jsx-equals-spacing': ['warn', 'never'],
+      '@stylistic/jsx-indent-props': ['warn', 2],
+      '@stylistic/jsx-self-closing-comp': 'warn',
+    },
+    settings: {
+      react: {
+        version: 'detect'
+      }
+    }
+  },
+  {
+    name: 'Rules for bundles and tabs',
+    files: [
+      'src/bundles/**/*.ts*',
+      'src/tabs/**/*.ts*',
+    ],
+    languageOptions: {
+      globals: globals.browser,
+    },
+    rules: {
+      'func-style': ['warn', 'declaration', {
+        allowArrowFunctions: true,
+        overrides: {
+          namedExports: 'declaration'
+        }
+      }],
+
+      'import/extensions': 'off',
+
+      'no-restricted-imports': ['error', {
+        name: 'assert',
+        message: 'Please use the assert from js-slang instead'
+      }],
 
       '@typescript-eslint/no-empty-object-type': ['error', {
         allowInterfaces: 'with-single-extends',
         allowWithName: '(?:Props)|(?:State)$'
       }],
       '@typescript-eslint/no-namespace': 'off', // Was 'error'
-      '@typescript-eslint/no-var-requires': 'warn', // Was 'error'
       '@typescript-eslint/no-unsafe-function-type': 'off',
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
     },
   },
   {
-    // Rules for scripts
-    files: ['scripts/**/*.ts'],
-    ignores: ['scripts/src/templates/templates/**/*.ts*'],
-    languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {
-        project: './scripts/tsconfig.json'
-      }
-    },
+    name: 'Rules for bundles',
+    files: ['src/bundles/**/*.ts*'],
+    ignores: ['src/bundles/**/__tests__/*.ts*'],
     rules: {
-      'import/extensions': ['error', 'never', { json: 'always' }],
+      // Rule doesn't work properly on CI
+      '@sourceacademy/throw-runtime-error': process.env.CI ? 'off' : ['error', {
+        // Conductor's own protocol-level errors, unrelated to js-slang's RuntimeSourceError
+        ignoredNames: ['EvaluatorTypeError', 'EvaluatorRuntimeError', 'EvaluatorParameterTypeError']
+      }]
+    }
+  },
+  {
+    name: 'Rules specifically for bundle entrypoints',
+    files: ['src/bundles/*/src/index.ts'],
+
+    rules: {
+      // rule ref: https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-file-overview.md#readme
+      'jsdoc/require-file-overview': ['error', {
+        tags: {
+          module: {
+            mustExist: true,
+            preventDuplicates: true,
+            initialCommentsOnly: true
+          }
+        }
+      }]
+    }
+  },
+  {
+    name: 'Rules for tabs',
+    files: ['src/tabs/**/*.ts*'],
+    ignores: ['src/tabs/**/__tests__/*.ts*'],
+    rules: {
+      '@sourceacademy/instanceof-check': 'error'
+    }
+  },
+  {
+    name: 'Rules specifically for tab entrypoints',
+    files: [
+      'src/tabs/*/index.tsx',
+      'src/tabs/*/src/index.tsx',
+    ],
+    rules: {
+      '@sourceacademy/tab-type': 'error'
+    }
+  },
+  {
+    name: 'Rules for modules libraries',
+    files: ['lib/**/*.{ts,cts}'],
+    ignores: ['**/*.md/**/*.ts'],
+    rules: {
+      'func-style': 'off',
       'no-constant-condition': 'off', // Was 'error',
+      'no-fallthrough': 'off',
 
       '@stylistic/arrow-parens': ['warn', 'as-needed'],
 
@@ -152,40 +502,89 @@ export default tseslint.config(
       '@typescript-eslint/require-await': 'error',
       '@typescript-eslint/return-await': ['error', 'in-try-catch']
     },
-    settings: {
-      'import/internal-regex': '^@src/',
-    },
   },
   {
-    // Rules for devserver,
+    name: 'Rules for Dev Server',
     files: ['devserver/**/*.ts*'],
     ignores: ['dist'],
     languageOptions: {
       parserOptions: {
-        project: './devserver/tsconfig.json'
+        globals: {
+          ...globals.browser,
+          ...globals.node
+        },
       },
-      globals: {
-        ...globals.browser,
-        ...globals.node
-      }
-    },
+    }
   },
   {
-    // Rules for tests
-    ...jestPlugin.configs['flat/recommended'],
+    name: 'Rules for tests',
+    extends: [vitestPlugin.configs.recommended],
+    plugins: {
+      vitest: vitestPlugin,
+    },
     files: [
       '**/__tests__/**/*.ts*',
       '**/__mocks__/**/*.ts*',
-      '**/jest.setup.ts'
+      '**/vitest.*.ts',
     ],
     rules: {
-      ...jestPlugin.configs['flat/recommended'].rules,
-      'jest/expect-expect': ['error', { assertFunctionNames: ['expect*'] }],
-      'jest/no-alias-methods': 'off',
-      'jest/no-conditional-expect': 'off',
-      'jest/no-export': 'off',
-      'jest/require-top-level-describe': 'off',
-      'jest/valid-describe-callback': 'off'
+      'no-empty-pattern': 'off', // vitest requires certain things to be destructured using an object pattern
+
+      // Change to avoid conflicting with snapshots
+      '@stylistic/quotes': [
+        'warn',
+        'single',
+        {
+          avoidEscape: true,
+          allowTemplateLiterals: 'always'
+        }
+      ],
+
+      'vitest/expect-expect': ['error', {
+        assertFunctionNames: ['expect*'],
+      }],
+      'vitest/hoisted-apis-on-top': 'error',
+      'vitest/no-alias-methods': 'off', // was 'error'
+      'vitest/no-conditional-expect': 'off', // was 'error'
+      'vitest/no-disabled-tests': 'off', // was 'warn'
+      'vitest/no-focused-tests': ['warn', { fixable: false }],
+      'vitest/no-standalone-expect': 'off', // was 'error'
+      'vitest/prefer-describe-function-title': 'warn',
+      'vitest/prefer-import-in-mock': 'warn',
+      'vitest/require-top-level-describe': 'off', // was 'error'
+      'vitest/valid-describe-callback': 'off', // was 'error'
+      'vitest/valid-expect-in-promise': 'error',
+      'vitest/valid-title': ['error', { ignoreTypeOfDescribeName: true }],
+
+      'import/extensions': ['error', 'never', {
+        config: 'ignore',
+        json: 'always'
+      }]
+    }
+  },
+  {
+    name: 'Rules specifically for files that interact with Node only',
+    files: [
+      'lib/buildtools/**/*.ts',
+      'lib/repotools/**/*.ts',
+      'lib/vitest-reporter/**/*.ts',
+      '.github/actions/**/*.ts',
+      '**/vitest.config.{js,ts}'
+    ],
+    ignores: ['**/*.md/**/*.ts'],
+    rules: {
+      'import/extensions': ['error', 'ignorePackages', {
+        ts: 'never',
+        cts: 'never',
+        json: 'always'
+      }],
+    }
+  },
+  {
+    name: 'Rules for commonjs files',
+    files: ['**/*.{cjs,cts}'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off', // Was 'error'
     }
   }
 );
