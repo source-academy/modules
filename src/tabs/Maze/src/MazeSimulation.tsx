@@ -1,6 +1,6 @@
+import { run_tests } from '@sourceacademy/bundle-maze/helpers/tests';
+import type { Area, Action, BorderConfig, Robot, Maze } from '@sourceacademy/bundle-maze/types';
 import React, { useEffect, useRef, useState } from 'react';
-import { run_tests } from '../../bundles/maze/helpers/tests';
-import type { Area, Action, BorderConfig, Robot, Maze } from '../../bundles/maze/types';
 
 /**
  * Calculate the acute angle between 2 angles

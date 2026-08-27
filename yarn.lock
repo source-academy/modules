@@ -4224,6 +4224,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@sourceacademy/bundle-maze@workspace:^, @sourceacademy/bundle-maze@workspace:src/bundles/maze":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/bundle-maze@workspace:src/bundles/maze"
+  dependencies:
+    "@sourceacademy/conductor": "catalog:"
+    "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-testplugin": "workspace:^"
+    js-slang: "catalog:"
+    typescript: "catalog:"
+  languageName: unknown
+  linkType: soft
+
 "@sourceacademy/bundle-midi@workspace:^, @sourceacademy/bundle-midi@workspace:src/bundles/midi":
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-midi@workspace:src/bundles/midi"
@@ -4850,6 +4862,20 @@ __metadata:
     react-dom: "catalog:"
     typescript: "catalog:"
     vitest: "catalog:"
+  languageName: unknown
+  linkType: soft
+
+"@sourceacademy/tab-Maze@workspace:src/tabs/Maze":
+  version: 0.0.0-use.local
+  resolution: "@sourceacademy/tab-Maze@workspace:src/tabs/Maze"
+  dependencies:
+    "@sourceacademy/bundle-maze": "workspace:^"
+    "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
+    "@types/react": "catalog:"
+    react: "catalog:"
+    react-dom: "catalog:"
+    typescript: "catalog:"
   languageName: unknown
   linkType: soft
 
