@@ -99,7 +99,7 @@ export default require => {
     if (!(proto === null || proto === Object.prototype || Object.getPrototypeOf(proto) === null)) return false;
     return Object.prototype.toString.call(value) === "[object Object]";
   }
-  function isEqualsSameValueZero(value, other) {
+  function eq(value, other) {
     return value === other || Number.isNaN(value) && Number.isNaN(other);
   }
   function isEqualWith(a, b, areValuesEqual) {
@@ -135,7 +135,7 @@ export default require => {
       case stringTag:
         return a.toString() === b.toString();
       case numberTag:
-        return isEqualsSameValueZero(a.valueOf(), b.valueOf());
+        return eq(a.valueOf(), b.valueOf());
       case booleanTag:
       case dateTag:
       case symbolTag:

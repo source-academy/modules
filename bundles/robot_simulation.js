@@ -661,6 +661,9 @@ export default require => {
       return this.explanation;
     }
   };
+  function isMergeableValue(value) {
+    return isPlainObject2(value) || Array.isArray(value);
+  }
   function merge2(target, source) {
     const sourceKeys = Object.keys(source);
     for (let i2 = 0; i2 < sourceKeys.length; i2++) {
@@ -671,9 +674,6 @@ export default require => {
       if (isMergeableValue(sourceValue) && isMergeableValue(targetValue)) target[key] = merge2(targetValue, sourceValue); else if (Array.isArray(sourceValue)) target[key] = merge2([], sourceValue); else if (isPlainObject2(sourceValue)) target[key] = merge2({}, sourceValue); else if (targetValue === void 0 || sourceValue !== void 0) target[key] = sourceValue;
     }
     return target;
-  }
-  function isMergeableValue(value) {
-    return isPlainObject2(value) || Array.isArray(value);
   }
   var import_interpreter = __require("js-slang/dist/cse-machine/interpreter");
   var import_langs = __require("js-slang/dist/langs");
