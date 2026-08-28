@@ -13438,13 +13438,13 @@ __metadata:
   linkType: hard
 
 "jsonc-eslint-parser@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "jsonc-eslint-parser@npm:3.1.0"
+  version: 3.3.0
+  resolution: "jsonc-eslint-parser@npm:3.3.0"
   dependencies:
     acorn: "npm:^8.5.0"
     eslint-visitor-keys: "npm:^5.0.0"
-    semver: "npm:^7.3.5"
-  checksum: 10c0/9af0aa3abf946f306ce823ccde33ab7d91cf215e1af26d33b2f65e9e230552bfa40aa93859b91aabf96738c66357a598cc7b2275ba99839ef4afd84edda3b11e
+    verkit: "npm:^0.3.2"
+  checksum: 10c0/705c3ddd3deb7e586ce45a26398a815c18a21a13b0d3d21ceb2493d31f7c814ea260594f42eaa72e2c2588ed35999a6dc8406a03b9e4ece60294bba7b5d68db0
   languageName: node
   linkType: hard
 
@@ -19834,6 +19834,13 @@ __metadata:
   version: 5.0.1
   resolution: "validate-npm-package-name@npm:5.0.1"
   checksum: 10c0/903e738f7387404bb72f7ac34e45d7010c877abd2803dc2d614612527927a40a6d024420033132e667b1bade94544b8a1f65c9431a4eb30d0ce0d80093cd1f74
+  languageName: node
+  linkType: hard
+
+"verkit@npm:^0.3.2":
+  version: 0.3.2
+  resolution: "verkit@npm:0.3.2"
+  checksum: 10c0/2533d9cc4ee6514d7f0d07b035c56a1f3eedd3ec5c3a5b3df38af1f2e9412799476c250f51d034562ddeb36dea72d4530f840e7b80759bd9a527f31cc9aa54e7
   languageName: node
   linkType: hard
 
