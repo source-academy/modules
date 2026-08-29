@@ -571,8 +571,8 @@ export default class SoundModulePlugin extends BaseModulePlugin {
   }
 
   /**
-   * Records a sound of a given duration. Returns a Sound promise. Uses however many channels the
-   * input device actually has, same as `record`.
+   * Records a sound of a given duration. Uses however many channels the input device actually
+   * has, same as `record`.
    *
    * How the function behaves in detail:
    * 1. `record_for` is called.
@@ -589,6 +589,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
    * ```
    * @param duration duration in seconds
    * @param buffer pause before recording, in seconds
+   * @returns a Sound promise
    */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE)
   async* record_for(
@@ -634,9 +635,10 @@ export default class SoundModulePlugin extends BaseModulePlugin {
   /**
    * Plays the given Sound using the computer's sound device, as soon as it has finished sampling -
    * concurrently with any Sound(s) already playing, so repeated/looped play() calls overlap and
-   * are mixed together rather than erroring or queueing behind each other. Returns (without
-   * waiting for playback to finish) once the sound has been dispatched.
+   * are mixed together rather than erroring or queueing behind each other.
    * @example play(sine_sound(440, 5));
+   * @returns the given Sound, without waiting for playback to finish - once the sound has been
+   * dispatched
    */
   @moduleMethod([DataType.PAIR], DataType.PAIR)
   async* play(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
@@ -650,9 +652,10 @@ export default class SoundModulePlugin extends BaseModulePlugin {
    * Adds the given Sound to the sound tab as a play bar with its own start/pause/scrub controls,
    * rather than playing it immediately - unlike play(), nothing is heard until you press play in
    * the tab. Each call adds a new bar (stacked below any earlier ones), so playing several Sounds
-   * this way lets you compare/replay each one independently, on its own schedule. Returns (without
-   * waiting for you to interact with the bar) once it has been added.
+   * this way lets you compare/replay each one independently, on its own schedule.
    * @example play_in_tab(sine_sound(440, 5));
+   * @returns the given Sound, without waiting for you to interact with the bar - once it has been
+   * added
    */
   @moduleMethod([DataType.PAIR], DataType.PAIR)
   async* play_in_tab(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
@@ -780,9 +783,8 @@ export default class SoundModulePlugin extends BaseModulePlugin {
   }
 
   /**
-   * Returns an envelope: a function from Sound to Sound. When the adsr envelope is applied to a
-   * Sound, it returns a new Sound with its amplitude modified according to parameters, applied to
-   * each channel independently. The relative amplitude increases from 0 to 1 linearly over the
+   * Applies an ADSR envelope to a Sound, modifying its amplitude according to parameters, applied
+   * to each channel independently. The relative amplitude increases from 0 to 1 linearly over the
    * attack proportion, then decreases from 1 to sustain level over the decay proportion, and
    * remains at that level until the release proportion when it decays back to 0.
    * @param attack_ratio proportion of Sound in attack phase
@@ -790,6 +792,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
    * @param sustain_level sustain level between 0 and 1
    * @param release_ratio proportion of Sound in release phase
    * @example adsr(0.2, 0.3, 0.3, 0.1)(sound);
+   * @returns an envelope: a function from Sound to Sound
    */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE)
   async* adsr(
@@ -803,16 +806,17 @@ export default class SoundModulePlugin extends BaseModulePlugin {
   }
 
   /**
-   * Returns a Sound that results from applying a list of envelopes to a given wave form. The wave
-   * form is a Sound generator that takes a frequency and a duration as arguments and produces a
-   * Sound with the given frequency and duration. Each envelope is applied to a harmonic: the first
-   * harmonic has the given frequency, the second has twice the frequency, the third three times the
-   * frequency etc. The harmonics are then layered simultaneously to produce the resulting Sound.
+   * Applies a list of envelopes to a given wave form. The wave form is a Sound generator that
+   * takes a frequency and a duration as arguments and produces a Sound with the given frequency
+   * and duration. Each envelope is applied to a harmonic: the first harmonic has the given
+   * frequency, the second has twice the frequency, the third three times the frequency etc. The
+   * harmonics are then layered simultaneously to produce the resulting Sound.
    * @param waveform function from (frequency, duration) to Sound
    * @param base_frequency frequency of the first harmonic
    * @param duration duration of the produced Sound, in seconds
    * @param envelopes list of envelopes, which are functions from Sound to Sound
    * @example stacking_adsr(sine_sound, 300, 5, list(adsr(0.1, 0.3, 0.2, 0.5), adsr(0.2, 0.5, 0.6, 0.1), adsr(0.3, 0.1, 0.7, 0.3)));
+   * @returns the resulting Sound
    */
   @moduleMethod([DataType.CLOSURE, DataType.NUMBER, DataType.NUMBER, DataType.LIST], DataType.PAIR)
   async* stacking_adsr(
@@ -851,7 +855,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
   }
 
   /**
-   * Returns a Sound transformer which uses its argument to modulate the phase of a (carrier) sine
+   * Builds a Sound transformer which uses its argument to modulate the phase of a (carrier) sine
    * wave of given frequency and duration with a given Sound, applied to each channel independently
    * (using that channel's own wave as the modulator). Modulating with a low frequency Sound results
    * in a vibrato effect. Modulating with a Sound with frequencies comparable to the sine wave
@@ -860,6 +864,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
    * @param duration the duration of the output Sound
    * @param amount the amount of modulation to apply to the carrier sine wave
    * @example phase_mod(440, 5, 1)(sine_sound(220, 5));
+   * @returns a Sound transformer that applies the phase modulation to a given Sound
    */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE)
   async* phase_mod(
@@ -884,7 +889,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
   }
 
   /**
-   * Returns a Sound Transformer that pans a sound based on the pan amount. The input sound is
+   * Builds a Sound Transformer that pans a sound based on the pan amount. The input sound is
    * first squashed to mono. An amount of `-1` is a hard left pan, `0` is balanced, `1` is hard
    * right pan.
    * @param amount the pan amount, from -1 to 1
@@ -896,7 +901,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
   }
 
   /**
-   * Returns a Sound Transformer that uses a Sound to pan another Sound. The modulator's two
+   * Builds a Sound Transformer that uses a Sound to pan another Sound. The modulator's two
    * channels are summed and clamped to `[-1, 1]` to compute the pan amount at each point in time.
    * `-1` is a hard left pan, `0` is balanced, `1` is hard right pan.
    * @param modulator the Sound used to modulate the pan of another sound
@@ -908,7 +913,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return transformerToConductor(this.evaluator, pan_mod_func(internal));
   }
 
-  /** Returns a Sound reminiscent of a bell, playing a given note for a given duration. */
+  /** Makes a Sound reminiscent of a bell, playing a given note for a given duration. */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* bell(
     note: TypedValue<DataType.NUMBER>,
@@ -917,7 +922,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, bell_func(note.value, duration.value));
   }
 
-  /** Returns a Sound reminiscent of a cello, playing a given note for a given duration. */
+  /** Makes a Sound reminiscent of a cello, playing a given note for a given duration. */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* cello(
     note: TypedValue<DataType.NUMBER>,
@@ -926,7 +931,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, cello_func(note.value, duration.value));
   }
 
-  /** Returns a Sound reminiscent of a piano, playing a given note for a given duration. */
+  /** Makes a Sound reminiscent of a piano, playing a given note for a given duration. */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* piano(
     note: TypedValue<DataType.NUMBER>,
@@ -935,7 +940,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, piano_func(note.value, duration.value));
   }
 
-  /** Returns a Sound reminiscent of a trombone, playing a given note for a given duration. */
+  /** Makes a Sound reminiscent of a trombone, playing a given note for a given duration. */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* trombone(
     note: TypedValue<DataType.NUMBER>,
@@ -944,7 +949,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, trombone_func(note.value, duration.value));
   }
 
-  /** Returns a Sound reminiscent of a violin, playing a given note for a given duration. */
+  /** Makes a Sound reminiscent of a violin, playing a given note for a given duration. */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* violin(
     note: TypedValue<DataType.NUMBER>,
