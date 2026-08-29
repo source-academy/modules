@@ -448,6 +448,12 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     this.__tabLoaded = true;
   }
 
+  /**
+   * Makes a Sound with given wave function and duration, using the same wave for both channels.
+   * The wave function is a function: number -> number that takes in a non-negative input time and
+   * returns an amplitude between -1 and 1.
+   * @example make_sound(t => math_sin(2 * math_PI * 440 * t), 5);
+   */
   @moduleMethod([DataType.CLOSURE, DataType.NUMBER], DataType.PAIR)
   async* make_sound(
     wave: TypedValue<DataType.CLOSURE>,
@@ -456,6 +462,12 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, make_sound_func(closureToWave(this.evaluator, wave), duration.value));
   }
 
+  /**
+   * Makes a stereo Sound with given left/right wave functions and duration. Each wave function is
+   * a function: number -> number that takes in a non-negative input time and returns an amplitude
+   * between -1 and 1.
+   * @example make_stereo_sound(t => math_sin(2 * math_PI * 440 * t), t => math_sin(2 * math_PI * 300 * t), 5);
+   */
   @moduleMethod([DataType.CLOSURE, DataType.CLOSURE, DataType.NUMBER], DataType.PAIR)
   async* make_stereo_sound(
     left_wave: TypedValue<DataType.CLOSURE>,
@@ -468,24 +480,33 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     );
   }
 
+  /**
+   * Accesses the wave function of a given Sound. Meaningful for any Sound built via `make_sound`
+   * (where the left and right wave functions have the same behavior) - for a Sound built via
+   * `make_stereo_sound` with channels that don't, this returns the left channel; use
+   * `get_left_wave`/`get_right_wave` to be explicit about which channel you mean.
+   */
   @moduleMethod([DataType.PAIR], DataType.CLOSURE)
   async* get_wave(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const internal = await conductorToSound(this.evaluator, sound);
     return waveToConductorClosure(this.evaluator, get_wave_func(internal));
   }
 
+  /** Accesses the left channel's wave function of a given Sound. */
   @moduleMethod([DataType.PAIR], DataType.CLOSURE)
   async* get_left_wave(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const internal = await conductorToSound(this.evaluator, sound);
     return waveToConductorClosure(this.evaluator, get_left_wave_func(internal));
   }
 
+  /** Accesses the right channel's wave function of a given Sound. */
   @moduleMethod([DataType.PAIR], DataType.CLOSURE)
   async* get_right_wave(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const internal = await conductorToSound(this.evaluator, sound);
     return waveToConductorClosure(this.evaluator, get_right_wave_func(internal));
   }
 
+  /** Accesses the duration of a given Sound. */
   @moduleMethod([DataType.PAIR], DataType.NUMBER)
   async* get_duration(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, undefined> {
     const internal = await conductorToSound(this.evaluator, sound);
@@ -494,6 +515,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
 
   // DataType.ANY, not a fixed type: is_sound is a predicate that must accept a value of any
   // Conductor DataType (not just PAIR/ARRAY) and answer false rather than throw.
+  /** Checks if the argument is a Sound. */
   @moduleMethod([DataType.ANY], DataType.BOOLEAN)
   async* is_sound(value?: TypedValue<DataType>): AsyncGenerator<void, TypedValue<DataType.BOOLEAN>, undefined> {
     if (!value || !isPairLike(value)) {
@@ -507,12 +529,36 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     }
   }
 
+  /**
+   * Initialize recording by obtaining permission to use the default device microphone. Waits for
+   * you to actually respond to the permission prompt before returning, so a script can safely call
+   * record()/record_for() right on the next line without racing the permission grant.
+   * @returns string describing the outcome: "permission granted" or "permission denied"
+   */
   @moduleMethod([], DataType.CONST_STRING)
   async* init_record(): AsyncGenerator<void, TypedValue<DataType.CONST_STRING>, undefined> {
     this.__ensureTabLoaded();
     return { type: DataType.CONST_STRING, value: await init_record_func() };
   }
 
+  /**
+   * Records a sound until the returned stop function is called. Takes a buffer duration (in
+   * seconds) as argument, and returns a nullary stop function. Calling the stop function returns a
+   * Sound promise (a nullary function that waits for the recording to finish processing before
+   * returning the recorded Sound - so evaluation genuinely pauses there rather than needing to be
+   * called again later). The recorded Sound uses however many channels the input device actually
+   * has - a mono microphone (by far the most common case) produces a Sound whose left and right
+   * wave functions have the same behavior.
+   * @example
+   * ```
+   * init_record();
+   * const stop = record(0.5); // record after 0.5 seconds.
+   * const promise = stop();   // stop recording and get sound promise
+   * const sound = promise();  // waits for processing to finish, then retrieves the recorded Sound
+   * play(sound);              // and do whatever with it
+   * ```
+   * @param buffer pause before recording, in seconds
+   */
   @moduleMethod([DataType.NUMBER], DataType.CLOSURE)
   async* record(buffer: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     this.__ensureTabLoaded();
@@ -524,6 +570,27 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     });
   }
 
+  /**
+   * Records a sound of a given duration. Uses however many channels the input device actually
+   * has, same as `record`.
+   *
+   * How the function behaves in detail:
+   * 1. `record_for` is called.
+   * 2. The function waits for the given buffer duration.
+   * 3. The recording signal is played.
+   * 4. Recording begins when the recording signal finishes.
+   * 5. The recording signal plays to signal the end after the given duration.
+   * @example
+   * ```
+   * init_record();
+   * const promise = record_for(2, 0.5); // begin recording after 0.5s for 2s
+   * const sound = promise();            // waits for it to finish, then retrieves the recorded Sound
+   * play(sound);                        // and do whatever with it
+   * ```
+   * @param duration duration in seconds
+   * @param buffer pause before recording, in seconds
+   * @returns a Sound promise
+   */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE)
   async* record_for(
     duration: TypedValue<DataType.NUMBER>,
@@ -534,6 +601,11 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundPromiseToConductor(this.evaluator, soundPromise);
   }
 
+  /**
+   * Plays the given Wave using the computer's sound device, for the duration given in seconds, on
+   * both channels.
+   * @example play_wave(t => math_sin(t * 3000), 5);
+   */
   @moduleMethod([DataType.CLOSURE, DataType.NUMBER], DataType.PAIR)
   async* play_wave(
     wave: TypedValue<DataType.CLOSURE>,
@@ -544,6 +616,11 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, result);
   }
 
+  /**
+   * Plays the given left/right Waves using the computer's sound device, for the duration given in
+   * seconds.
+   * @example play_waves(t => math_sin(t * 3000), t => math_sin(t * 6000), 5);
+   */
   @moduleMethod([DataType.CLOSURE, DataType.CLOSURE, DataType.NUMBER], DataType.PAIR)
   async* play_waves(
     left_wave: TypedValue<DataType.CLOSURE>,
@@ -555,6 +632,14 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, result);
   }
 
+  /**
+   * Plays the given Sound using the computer's sound device, as soon as it has finished sampling -
+   * concurrently with any Sound(s) already playing, so repeated/looped play() calls overlap and
+   * are mixed together rather than erroring or queueing behind each other.
+   * @example play(sine_sound(440, 5));
+   * @returns the given Sound, without waiting for playback to finish - once the sound has been
+   * dispatched
+   */
   @moduleMethod([DataType.PAIR], DataType.PAIR)
   async* play(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
     this.__ensureTabLoaded();
@@ -563,6 +648,15 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, result);
   }
 
+  /**
+   * Adds the given Sound to the sound tab as a play bar with its own start/pause/scrub controls,
+   * rather than playing it immediately - unlike play(), nothing is heard until you press play in
+   * the tab. Each call adds a new bar (stacked below any earlier ones), so playing several Sounds
+   * this way lets you compare/replay each one independently, on its own schedule.
+   * @example play_in_tab(sine_sound(440, 5));
+   * @returns the given Sound, without waiting for you to interact with the bar - once it has been
+   * added
+   */
   @moduleMethod([DataType.PAIR], DataType.PAIR)
   async* play_in_tab(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
     this.__ensureTabLoaded();
@@ -571,6 +665,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, result);
   }
 
+  /** Stops all currently playing sounds, and cancels any that were queued behind them. */
   @moduleMethod([], DataType.VOID)
   async* stop(): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     this.__ensureTabLoaded();
@@ -578,31 +673,37 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return { type: DataType.VOID, value: undefined };
   }
 
+  /** A wave that is a random value at each sample (44100 samples per second). */
   @moduleMethod([], DataType.CLOSURE)
   async* noise_wave(): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return waveToConductorClosure(this.evaluator, noise_wave_func());
   }
 
+  /** Makes noise: a random wave sampled 44100 times per second, for the given duration. */
   @moduleMethod([DataType.NUMBER], DataType.PAIR)
   async* noise_sound(duration: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
     return soundToConductor(this.evaluator, noise_sound_func(duration.value));
   }
 
+  /** A wave that is always 0. */
   @moduleMethod([], DataType.CLOSURE)
   async* silence_wave(): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return waveToConductorClosure(this.evaluator, silence_wave_func());
   }
 
+  /** Makes a silence Sound with given duration. */
   @moduleMethod([DataType.NUMBER], DataType.PAIR)
   async* silence_sound(duration: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
     return soundToConductor(this.evaluator, silence_sound_func(duration.value));
   }
 
+  /** A sine wave of the given frequency. */
   @moduleMethod([DataType.NUMBER], DataType.CLOSURE)
   async* sine_wave(freq: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return waveToConductorClosure(this.evaluator, sine_wave_func(freq.value));
   }
 
+  /** Makes a sine wave Sound with given frequency and duration. */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* sine_sound(
     freq: TypedValue<DataType.NUMBER>,
@@ -611,11 +712,13 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, sine_sound_func(freq.value, duration.value));
   }
 
+  /** A square wave of the given frequency, approximated via a Fourier expansion. */
   @moduleMethod([DataType.NUMBER], DataType.CLOSURE)
   async* square_wave(freq: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return waveToConductorClosure(this.evaluator, square_wave_func(freq.value));
   }
 
+  /** Makes a square wave Sound with given frequency and duration. */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* square_sound(
     freq: TypedValue<DataType.NUMBER>,
@@ -624,11 +727,13 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, square_sound_func(freq.value, duration.value));
   }
 
+  /** A triangle wave of the given frequency, approximated via a Fourier expansion. */
   @moduleMethod([DataType.NUMBER], DataType.CLOSURE)
   async* triangle_wave(freq: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return waveToConductorClosure(this.evaluator, triangle_wave_func(freq.value));
   }
 
+  /** Makes a triangle wave Sound with given frequency and duration. */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* triangle_sound(
     freq: TypedValue<DataType.NUMBER>,
@@ -637,11 +742,13 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, triangle_sound_func(freq.value, duration.value));
   }
 
+  /** A sawtooth wave of the given frequency, approximated via a Fourier expansion. */
   @moduleMethod([DataType.NUMBER], DataType.CLOSURE)
   async* sawtooth_wave(freq: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return waveToConductorClosure(this.evaluator, sawtooth_wave_func(freq.value));
   }
 
+  /** Makes a sawtooth wave Sound with given frequency and duration. */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* sawtooth_sound(
     freq: TypedValue<DataType.NUMBER>,
@@ -650,18 +757,43 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, sawtooth_sound_func(freq.value, duration.value));
   }
 
+  /**
+   * Makes a new Sound by combining the sounds in a given list where the second Sound is appended
+   * to the end of the first Sound, the third Sound is appended to the end of the second Sound, and
+   * so on. The effect is that the Sounds in the list are joined end-to-end.
+   * @example consecutively(list(sine_sound(200, 2), sine_sound(400, 3)));
+   */
   @moduleMethod([DataType.LIST], DataType.PAIR)
   async* consecutively(sounds: TypedValue<DataType.LIST>): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
     const internalSounds = await conductorListToSounds(this.evaluator, sounds);
     return soundToConductor(this.evaluator, consecutively_func(internalSounds));
   }
 
+  /**
+   * Makes a new Sound by combining the Sounds in a given list. In the result sound, the component
+   * sounds overlap such that they start at the beginning of the result sound. To achieve this, the
+   * amplitudes of the component sounds are added together and then divided by the length of the
+   * list.
+   * @example simultaneously(list(sine_sound(200, 2), sine_sound(400, 3)));
+   */
   @moduleMethod([DataType.LIST], DataType.PAIR)
   async* simultaneously(sounds: TypedValue<DataType.LIST>): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
     const internalSounds = await conductorListToSounds(this.evaluator, sounds);
     return soundToConductor(this.evaluator, simultaneously_func(internalSounds));
   }
 
+  /**
+   * Applies an ADSR envelope to a Sound, modifying its amplitude according to parameters, applied
+   * to each channel independently. The relative amplitude increases from 0 to 1 linearly over the
+   * attack proportion, then decreases from 1 to sustain level over the decay proportion, and
+   * remains at that level until the release proportion when it decays back to 0.
+   * @param attack_ratio proportion of Sound in attack phase
+   * @param decay_ratio proportion of Sound decay phase
+   * @param sustain_level sustain level between 0 and 1
+   * @param release_ratio proportion of Sound in release phase
+   * @example adsr(0.2, 0.3, 0.3, 0.1)(sound);
+   * @returns an envelope: a function from Sound to Sound
+   */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE)
   async* adsr(
     attack_ratio: TypedValue<DataType.NUMBER>,
@@ -673,6 +805,19 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return transformerToConductor(this.evaluator, transformer);
   }
 
+  /**
+   * Applies a list of envelopes to a given wave form. The wave form is a Sound generator that
+   * takes a frequency and a duration as arguments and produces a Sound with the given frequency
+   * and duration. Each envelope is applied to a harmonic: the first harmonic has the given
+   * frequency, the second has twice the frequency, the third three times the frequency etc. The
+   * harmonics are then layered simultaneously to produce the resulting Sound.
+   * @param waveform function from (frequency, duration) to Sound
+   * @param base_frequency frequency of the first harmonic
+   * @param duration duration of the produced Sound, in seconds
+   * @param envelopes list of envelopes, which are functions from Sound to Sound
+   * @example stacking_adsr(sine_sound, 300, 5, list(adsr(0.1, 0.3, 0.2, 0.5), adsr(0.2, 0.5, 0.6, 0.1), adsr(0.3, 0.1, 0.7, 0.3)));
+   * @returns the resulting Sound
+   */
   @moduleMethod([DataType.CLOSURE, DataType.NUMBER, DataType.NUMBER, DataType.LIST], DataType.PAIR)
   async* stacking_adsr(
     waveform: TypedValue<DataType.CLOSURE>,
@@ -709,6 +854,18 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(evaluator, simultaneously_func(harmonics));
   }
 
+  /**
+   * Builds a Sound transformer which uses its argument to modulate the phase of a (carrier) sine
+   * wave of given frequency and duration with a given Sound, applied to each channel independently
+   * (using that channel's own wave as the modulator). Modulating with a low frequency Sound results
+   * in a vibrato effect. Modulating with a Sound with frequencies comparable to the sine wave
+   * frequency results in more complex wave forms.
+   * @param freq the frequency of the sine wave to be modulated
+   * @param duration the duration of the output Sound
+   * @param amount the amount of modulation to apply to the carrier sine wave
+   * @example phase_mod(440, 5, 1)(sine_sound(220, 5));
+   * @returns a Sound transformer that applies the phase modulation to a given Sound
+   */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.CLOSURE)
   async* phase_mod(
     freq: TypedValue<DataType.NUMBER>,
@@ -719,23 +876,44 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return transformerToConductor(this.evaluator, transformer);
   }
 
+  /**
+   * Centers a Sound by averaging its left and right channels, resulting in an effectively mono
+   * Sound (both channels are the same, averaged, wave).
+   * @param sound the sound to be squashed
+   * @returns a new Sound with the left and right channels averaged
+   */
   @moduleMethod([DataType.PAIR], DataType.PAIR)
   async* squash(sound: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
     const internal = await conductorToSound(this.evaluator, sound);
     return soundToConductor(this.evaluator, squash_func(internal));
   }
 
+  /**
+   * Builds a Sound Transformer that pans a sound based on the pan amount. The input sound is
+   * first squashed to mono. An amount of `-1` is a hard left pan, `0` is balanced, `1` is hard
+   * right pan.
+   * @param amount the pan amount, from -1 to 1
+   * @returns a Sound Transformer that pans a Sound
+   */
   @moduleMethod([DataType.NUMBER], DataType.CLOSURE)
   async* pan(amount: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     return transformerToConductor(this.evaluator, pan_func(amount.value));
   }
 
+  /**
+   * Builds a Sound Transformer that uses a Sound to pan another Sound. The modulator's two
+   * channels are summed and clamped to `[-1, 1]` to compute the pan amount at each point in time.
+   * `-1` is a hard left pan, `0` is balanced, `1` is hard right pan.
+   * @param modulator the Sound used to modulate the pan of another sound
+   * @returns a Sound Transformer that pans a Sound
+   */
   @moduleMethod([DataType.PAIR], DataType.CLOSURE)
   async* pan_mod(modulator: TypedValue<DataType.PAIR>): AsyncGenerator<void, TypedValue<DataType.CLOSURE>, undefined> {
     const internal = await conductorToSound(this.evaluator, modulator);
     return transformerToConductor(this.evaluator, pan_mod_func(internal));
   }
 
+  /** Makes a Sound reminiscent of a bell, playing a given note for a given duration. */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* bell(
     note: TypedValue<DataType.NUMBER>,
@@ -744,6 +922,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, bell_func(note.value, duration.value));
   }
 
+  /** Makes a Sound reminiscent of a cello, playing a given note for a given duration. */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* cello(
     note: TypedValue<DataType.NUMBER>,
@@ -752,6 +931,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, cello_func(note.value, duration.value));
   }
 
+  /** Makes a Sound reminiscent of a piano, playing a given note for a given duration. */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* piano(
     note: TypedValue<DataType.NUMBER>,
@@ -760,6 +940,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, piano_func(note.value, duration.value));
   }
 
+  /** Makes a Sound reminiscent of a trombone, playing a given note for a given duration. */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* trombone(
     note: TypedValue<DataType.NUMBER>,
@@ -768,6 +949,7 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     return soundToConductor(this.evaluator, trombone_func(note.value, duration.value));
   }
 
+  /** Makes a Sound reminiscent of a violin, playing a given note for a given duration. */
   @moduleMethod([DataType.NUMBER, DataType.NUMBER], DataType.PAIR)
   async* violin(
     note: TypedValue<DataType.NUMBER>,
