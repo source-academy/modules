@@ -15593,8 +15593,8 @@ export default require => {
                 var args = [];
                 for (var i = 1; i < arguments.length; i++) args.push(arguments[i]);
                 var doError = type === "error";
-                var events = this._events;
-                if (events !== void 0) doError = doError && events.error === void 0; else if (!doError) return false;
+                var events2 = this._events;
+                if (events2 !== void 0) doError = doError && events2.error === void 0; else if (!doError) return false;
                 if (doError) {
                   var er;
                   if (args.length > 0) er = args[0];
@@ -15605,7 +15605,7 @@ export default require => {
                   err.context = er;
                   throw err;
                 }
-                var handler = events[type];
+                var handler = events2[type];
                 if (handler === void 0) return false;
                 if (typeof handler === "function") {
                   ReflectApply(handler, this, args);
@@ -15618,26 +15618,26 @@ export default require => {
               };
               function _addListener(target, type, listener, prepend) {
                 var m;
-                var events;
+                var events2;
                 var existing;
                 checkListener(listener);
-                events = target._events;
-                if (events === void 0) {
-                  events = target._events = Object.create(null);
+                events2 = target._events;
+                if (events2 === void 0) {
+                  events2 = target._events = Object.create(null);
                   target._eventsCount = 0;
                 } else {
-                  if (events.newListener !== void 0) {
+                  if (events2.newListener !== void 0) {
                     target.emit("newListener", type, listener.listener ? listener.listener : listener);
-                    events = target._events;
+                    events2 = target._events;
                   }
-                  existing = events[type];
+                  existing = events2[type];
                 }
                 if (existing === void 0) {
-                  existing = events[type] = listener;
+                  existing = events2[type] = listener;
                   ++target._eventsCount;
                 } else {
                   if (typeof existing === "function") {
-                    existing = events[type] = prepend ? [listener, existing] : [existing, listener];
+                    existing = events2[type] = prepend ? [listener, existing] : [existing, listener];
                   } else if (prepend) {
                     existing.unshift(listener);
                   } else {
@@ -15695,16 +15695,16 @@ export default require => {
                 return this;
               };
               EventEmitter.prototype.removeListener = function removeListener(type, listener) {
-                var list, events, position, i, originalListener;
+                var list, events2, position, i, originalListener;
                 checkListener(listener);
-                events = this._events;
-                if (events === void 0) return this;
-                list = events[type];
+                events2 = this._events;
+                if (events2 === void 0) return this;
+                list = events2[type];
                 if (list === void 0) return this;
                 if (list === listener || list.listener === listener) {
                   if (--this._eventsCount === 0) this._events = Object.create(null); else {
-                    delete events[type];
-                    if (events.removeListener) this.emit("removeListener", type, list.listener || listener);
+                    delete events2[type];
+                    if (events2.removeListener) this.emit("removeListener", type, list.listener || listener);
                   }
                 } else if (typeof list !== "function") {
                   position = -1;
@@ -15719,27 +15719,27 @@ export default require => {
                   if (position === 0) list.shift(); else {
                     spliceOne(list, position);
                   }
-                  if (list.length === 1) events[type] = list[0];
-                  if (events.removeListener !== void 0) this.emit("removeListener", type, originalListener || listener);
+                  if (list.length === 1) events2[type] = list[0];
+                  if (events2.removeListener !== void 0) this.emit("removeListener", type, originalListener || listener);
                 }
                 return this;
               };
               EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
               EventEmitter.prototype.removeAllListeners = function removeAllListeners(type) {
-                var listeners, events, i;
-                events = this._events;
-                if (events === void 0) return this;
-                if (events.removeListener === void 0) {
+                var listeners, events2, i;
+                events2 = this._events;
+                if (events2 === void 0) return this;
+                if (events2.removeListener === void 0) {
                   if (arguments.length === 0) {
                     this._events = Object.create(null);
                     this._eventsCount = 0;
-                  } else if (events[type] !== void 0) {
-                    if (--this._eventsCount === 0) this._events = Object.create(null); else delete events[type];
+                  } else if (events2[type] !== void 0) {
+                    if (--this._eventsCount === 0) this._events = Object.create(null); else delete events2[type];
                   }
                   return this;
                 }
                 if (arguments.length === 0) {
-                  var keys = Object.keys(events);
+                  var keys = Object.keys(events2);
                   var key;
                   for (i = 0; i < keys.length; ++i) {
                     key = keys[i];
@@ -15751,7 +15751,7 @@ export default require => {
                   this._eventsCount = 0;
                   return this;
                 }
-                listeners = events[type];
+                listeners = events2[type];
                 if (typeof listeners === "function") {
                   this.removeListener(type, listeners);
                 } else if (listeners !== void 0) {
@@ -15762,9 +15762,9 @@ export default require => {
                 return this;
               };
               function _listeners(target, type, unwrap) {
-                var events = target._events;
-                if (events === void 0) return [];
-                var evlistener = events[type];
+                var events2 = target._events;
+                if (events2 === void 0) return [];
+                var evlistener = events2[type];
                 if (evlistener === void 0) return [];
                 if (typeof evlistener === "function") return unwrap ? [evlistener.listener || evlistener] : [evlistener];
                 return unwrap ? unwrapListeners(evlistener) : arrayClone(evlistener, evlistener.length);
@@ -15784,9 +15784,9 @@ export default require => {
               };
               EventEmitter.prototype.listenerCount = listenerCount;
               function listenerCount(type) {
-                var events = this._events;
-                if (events !== void 0) {
-                  var evlistener = events[type];
+                var events2 = this._events;
+                if (events2 !== void 0) {
+                  var evlistener = events2[type];
                   if (typeof evlistener === "function") {
                     return 1;
                   } else if (evlistener !== void 0) {
@@ -93997,26 +93997,26 @@ export default require => {
                     function monotoneTriangulate(points, edges) {
                       var numPoints = points.length;
                       var numEdges = edges.length;
-                      var events = [];
+                      var events2 = [];
                       for (var i = 0; i < numPoints; ++i) {
-                        events.push(new Event(points[i], null, EVENT_POINT, i));
+                        events2.push(new Event(points[i], null, EVENT_POINT, i));
                       }
                       for (var i = 0; i < numEdges; ++i) {
                         var e2 = edges[i];
                         var a2 = points[e2[0]];
                         var b = points[e2[1]];
                         if (a2[0] < b[0]) {
-                          events.push(new Event(a2, b, EVENT_START, i), new Event(b, a2, EVENT_END, i));
+                          events2.push(new Event(a2, b, EVENT_START, i), new Event(b, a2, EVENT_END, i));
                         } else if (a2[0] > b[0]) {
-                          events.push(new Event(b, a2, EVENT_START, i), new Event(a2, b, EVENT_END, i));
+                          events2.push(new Event(b, a2, EVENT_START, i), new Event(a2, b, EVENT_END, i));
                         }
                       }
-                      events.sort(compareEvent);
-                      var minX = events[0].a[0] - (1 + Math.abs(events[0].a[0])) * Math.pow(2, -52);
+                      events2.sort(compareEvent);
+                      var minX = events2[0].a[0] - (1 + Math.abs(events2[0].a[0])) * Math.pow(2, -52);
                       var hull = [new PartialHull([minX, 1], [minX, 0], -1, [], [], [], [])];
                       var cells = [];
-                      for (var i = 0, numEvents = events.length; i < numEvents; ++i) {
-                        var event = events[i];
+                      for (var i = 0, numEvents = events2.length; i < numEvents; ++i) {
+                        var event = events2[i];
                         var type = event.type;
                         if (type === EVENT_POINT) {
                           addPoint(cells, hull, points, event.a, event.idx);
@@ -116221,14 +116221,14 @@ export default require => {
                     function createSlabDecomposition(segments) {
                       var numSegments = segments.length;
                       var numEvents = 2 * numSegments;
-                      var events = new Array(numEvents);
+                      var events2 = new Array(numEvents);
                       for (var i = 0; i < numSegments; ++i) {
                         var s4 = segments[i];
                         var f = s4[0][0] < s4[1][0];
-                        events[2 * i] = new Event(s4[0][0], s4, f, i);
-                        events[2 * i + 1] = new Event(s4[1][0], s4, !f, i);
+                        events2[2 * i] = new Event(s4[0][0], s4, f, i);
+                        events2[2 * i + 1] = new Event(s4[1][0], s4, !f, i);
                       }
-                      events.sort(function (a2, b) {
+                      events2.sort(function (a2, b) {
                         var d = a2.x - b.x;
                         if (d) {
                           return d;
@@ -116245,10 +116245,10 @@ export default require => {
                       var horizontal = [];
                       var lastX = -Infinity;
                       for (var i = 0; i < numEvents; ) {
-                        var x = events[i].x;
+                        var x = events2[i].x;
                         var horiz = [];
                         while (i < numEvents) {
-                          var e2 = events[i];
+                          var e2 = events2[i];
                           if (e2.x !== x) {
                             break;
                           }
@@ -253789,17 +253789,103 @@ uniform ${i3} ${a3} u_${s32};
   init_define_process();
   init_define_process();
   var import_react2 = __toESM(__require("react"), 1);
-  var eventNames = ["AfterExport", "AfterPlot", "Animated", "AnimatingFrame", "AnimationInterrupted", "AutoSize", "BeforeExport", "BeforeHover", "ButtonClicked", "Click", "ClickAnnotation", "ClickAnywhere", "Deselect", "DoubleClick", "Framework", "Hover", "HoverAnywhere", "LegendClick", "LegendDoubleClick", "Relayout", "Relayouting", "Restyle", "Redraw", "Selected", "Selecting", "SliderChange", "SliderEnd", "SliderStart", "SunburstClick", "Transitioning", "TransitionInterrupted", "Unhover", "WebGlContextLost"];
-  var updateEvents = ["plotly_restyle", "plotly_redraw", "plotly_relayout", "plotly_relayouting", "plotly_doubleclick", "plotly_animated", "plotly_sunburstclick"];
+  var events = [{
+    name: "AfterExport"
+  }, {
+    name: "AfterPlot"
+  }, {
+    name: "Animated",
+    triggersUpdate: true
+  }, {
+    name: "Animating"
+  }, {
+    name: "AnimatingFrame"
+  }, {
+    name: "AnimationInterrupted"
+  }, {
+    name: "AutoSize"
+  }, {
+    name: "BeforeExport"
+  }, {
+    name: "BeforeHover"
+  }, {
+    name: "BeforePlot"
+  }, {
+    name: "ButtonClicked"
+  }, {
+    name: "Click"
+  }, {
+    name: "ClickAnnotation"
+  }, {
+    name: "Deselect"
+  }, {
+    name: "DoubleClick",
+    triggersUpdate: true
+  }, {
+    name: "Framework"
+  }, {
+    name: "Hover"
+  }, {
+    name: "IcicleClick"
+  }, {
+    name: "LegendClick"
+  }, {
+    name: "LegendDoubleClick"
+  }, {
+    name: "LegendTitleClick"
+  }, {
+    name: "LegendTitleDoubleClick"
+  }, {
+    name: "Relayout",
+    triggersUpdate: true
+  }, {
+    name: "Relayouting",
+    triggersUpdate: true
+  }, {
+    name: "Restyle",
+    triggersUpdate: true
+  }, {
+    name: "Redraw",
+    triggersUpdate: true
+  }, {
+    name: "Selected"
+  }, {
+    name: "Selecting"
+  }, {
+    name: "SliderChange"
+  }, {
+    name: "SliderEnd"
+  }, {
+    name: "SliderStart"
+  }, {
+    name: "SunburstClick"
+  }, {
+    name: "Transitioned"
+  }, {
+    name: "Transitioning"
+  }, {
+    name: "TransitionInterrupted"
+  }, {
+    name: "TreemapClick"
+  }, {
+    name: "Unhover"
+  }, {
+    name: "WebGlContextLost"
+  }];
+  function getPlotlyEventName(eventName) {
+    return "plotly_" + eventName.toLowerCase();
+  }
+  function getPropName(eventName) {
+    return "on" + eventName;
+  }
+  var eventNames = events.map(event => event.name);
+  var updateEvents = events.filter(event => event.triggersUpdate).map(event => getPlotlyEventName(event.name));
   var isBrowser = typeof window !== "undefined";
   var DEFAULT_DATA = Object.freeze([]);
   var DEFAULT_STYLE = Object.freeze({
     position: "relative",
     display: "inline-block"
   });
-  function getPlotlyEventName(eventName) {
-    return "plotly_" + eventName.toLowerCase();
-  }
   function plotComponentFactory(Plotly2) {
     return (0, import_react2.forwardRef)(function PlotlyComponent(_a, forwardedRef) {
       var _b = _a, {data = DEFAULT_DATA, layout, config, frames, revision, onInitialized, onUpdate, onPurge, onError, debug = false, style = DEFAULT_STYLE, className, useResizeHandler = false, divId} = _b, eventProps = __objRest(_b, ["data", "layout", "config", "frames", "revision", "onInitialized", "onUpdate", "onPurge", "onError", "debug", "style", "className", "useResizeHandler", "divId"]);
@@ -253960,7 +254046,7 @@ uniform ${i3} ${a3} u_${s32};
       }
       function syncEventHandlers() {
         eventNames.forEach(eventName => {
-          const prop = eventProps["on" + eventName];
+          const prop = eventProps[getPropName(eventName)];
           const handler = handlersRef.current[eventName];
           const hasHandler = Boolean(handler);
           if (prop && !hasHandler) {
