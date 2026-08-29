@@ -2,7 +2,7 @@
   "make_sound": {
     "kind": "function",
     "name": "make_sound",
-    "description": "<p>No description available</p>",
+    "description": "<p>Makes a Sound with given wave function and duration, using the same wave for both channels.\nThe wave function is a function: number -&gt; number that takes in a non-negative input time and\nreturns an amplitude between -1 and 1.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -20,7 +20,7 @@
   "make_stereo_sound": {
     "kind": "function",
     "name": "make_stereo_sound",
-    "description": "<p>No description available</p>",
+    "description": "<p>Makes a stereo Sound with given left/right wave functions and duration. Each wave function is\na function: number -&gt; number that takes in a non-negative input time and returns an amplitude\nbetween -1 and 1.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -43,7 +43,7 @@
   "get_wave": {
     "kind": "function",
     "name": "get_wave",
-    "description": "<p>No description available</p>",
+    "description": "<p>Accesses the wave function of a given Sound. Meaningful for any Sound built via <code>make_sound</code>\n(where the left and right wave functions have the same behavior) - for a Sound built via\n<code>make_stereo_sound</code> with channels that don't, this returns the left channel; use\n<code>get_left_wave</code>/<code>get_right_wave</code> to be explicit about which channel you mean.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -56,7 +56,7 @@
   "get_left_wave": {
     "kind": "function",
     "name": "get_left_wave",
-    "description": "<p>No description available</p>",
+    "description": "<p>Accesses the left channel's wave function of a given Sound.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -69,7 +69,7 @@
   "get_right_wave": {
     "kind": "function",
     "name": "get_right_wave",
-    "description": "<p>No description available</p>",
+    "description": "<p>Accesses the right channel's wave function of a given Sound.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -82,7 +82,7 @@
   "get_duration": {
     "kind": "function",
     "name": "get_duration",
-    "description": "<p>No description available</p>",
+    "description": "<p>Accesses the duration of a given Sound.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -95,7 +95,7 @@
   "is_sound": {
     "kind": "function",
     "name": "is_sound",
-    "description": "<p>No description available</p>",
+    "description": "<p>Checks if the argument is a Sound.</p>",
     "params": [
       {
         "paramType": "optional",
@@ -108,14 +108,14 @@
   "init_record": {
     "kind": "function",
     "name": "init_record",
-    "description": "<p>No description available</p>",
+    "description": "<p>Initialize recording by obtaining permission to use the default device microphone. Waits for\nyou to actually respond to the permission prompt before returning, so a script can safely call\nrecord()/record_for() right on the next line without racing the permission grant.</p>",
     "params": [],
     "retType": "string"
   },
   "record": {
     "kind": "function",
     "name": "record",
-    "description": "<p>No description available</p>",
+    "description": "<p>Records a sound until the returned stop function is called. Takes a buffer duration (in\nseconds) as argument, and returns a nullary stop function. Calling the stop function returns a\nSound promise (a nullary function that waits for the recording to finish processing before\nreturning the recorded Sound - so evaluation genuinely pauses there rather than needing to be\ncalled again later). The recorded Sound uses however many channels the input device actually\nhas - a mono microphone (by far the most common case) produces a Sound whose left and right\nwave functions have the same behavior.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -128,7 +128,7 @@
   "record_for": {
     "kind": "function",
     "name": "record_for",
-    "description": "<p>No description available</p>",
+    "description": "<p>Records a sound of a given duration. Uses however many channels the input device actually\nhas, same as <code>record</code>.</p><p>How the function behaves in detail:</p><ol start=\"1\"><li><code>record_for</code> is called.</li><li>The function waits for the given buffer duration.</li><li>The recording signal is played.</li><li>Recording begins when the recording signal finishes.</li><li>The recording signal plays to signal the end after the given duration.</li></ol>",
     "params": [
       {
         "paramType": "regular",
@@ -146,7 +146,7 @@
   "play_wave": {
     "kind": "function",
     "name": "play_wave",
-    "description": "<p>No description available</p>",
+    "description": "<p>Plays the given Wave using the computer's sound device, for the duration given in seconds, on\nboth channels.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -164,7 +164,7 @@
   "play_waves": {
     "kind": "function",
     "name": "play_waves",
-    "description": "<p>No description available</p>",
+    "description": "<p>Plays the given left/right Waves using the computer's sound device, for the duration given in\nseconds.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -187,7 +187,7 @@
   "play": {
     "kind": "function",
     "name": "play",
-    "description": "<p>No description available</p>",
+    "description": "<p>Plays the given Sound using the computer's sound device, as soon as it has finished sampling -\nconcurrently with any Sound(s) already playing, so repeated/looped play() calls overlap and\nare mixed together rather than erroring or queueing behind each other.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -200,7 +200,7 @@
   "play_in_tab": {
     "kind": "function",
     "name": "play_in_tab",
-    "description": "<p>No description available</p>",
+    "description": "<p>Adds the given Sound to the sound tab as a play bar with its own start/pause/scrub controls,\nrather than playing it immediately - unlike play(), nothing is heard until you press play in\nthe tab. Each call adds a new bar (stacked below any earlier ones), so playing several Sounds\nthis way lets you compare/replay each one independently, on its own schedule.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -213,21 +213,21 @@
   "stop": {
     "kind": "function",
     "name": "stop",
-    "description": "<p>No description available</p>",
+    "description": "<p>Stops all currently playing sounds, and cancels any that were queued behind them.</p>",
     "params": [],
     "retType": "void"
   },
   "noise_wave": {
     "kind": "function",
     "name": "noise_wave",
-    "description": "<p>No description available</p>",
+    "description": "<p>A wave that is a random value at each sample (44100 samples per second).</p>",
     "params": [],
     "retType": "Function"
   },
   "noise_sound": {
     "kind": "function",
     "name": "noise_sound",
-    "description": "<p>No description available</p>",
+    "description": "<p>Makes noise: a random wave sampled 44100 times per second, for the given duration.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -240,14 +240,14 @@
   "silence_wave": {
     "kind": "function",
     "name": "silence_wave",
-    "description": "<p>No description available</p>",
+    "description": "<p>A wave that is always 0.</p>",
     "params": [],
     "retType": "Function"
   },
   "silence_sound": {
     "kind": "function",
     "name": "silence_sound",
-    "description": "<p>No description available</p>",
+    "description": "<p>Makes a silence Sound with given duration.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -260,7 +260,7 @@
   "sine_wave": {
     "kind": "function",
     "name": "sine_wave",
-    "description": "<p>No description available</p>",
+    "description": "<p>A sine wave of the given frequency.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -273,7 +273,7 @@
   "sine_sound": {
     "kind": "function",
     "name": "sine_sound",
-    "description": "<p>No description available</p>",
+    "description": "<p>Makes a sine wave Sound with given frequency and duration.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -291,7 +291,7 @@
   "square_wave": {
     "kind": "function",
     "name": "square_wave",
-    "description": "<p>No description available</p>",
+    "description": "<p>A square wave of the given frequency, approximated via a Fourier expansion.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -304,7 +304,7 @@
   "square_sound": {
     "kind": "function",
     "name": "square_sound",
-    "description": "<p>No description available</p>",
+    "description": "<p>Makes a square wave Sound with given frequency and duration.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -322,7 +322,7 @@
   "triangle_wave": {
     "kind": "function",
     "name": "triangle_wave",
-    "description": "<p>No description available</p>",
+    "description": "<p>A triangle wave of the given frequency, approximated via a Fourier expansion.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -335,7 +335,7 @@
   "triangle_sound": {
     "kind": "function",
     "name": "triangle_sound",
-    "description": "<p>No description available</p>",
+    "description": "<p>Makes a triangle wave Sound with given frequency and duration.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -353,7 +353,7 @@
   "sawtooth_wave": {
     "kind": "function",
     "name": "sawtooth_wave",
-    "description": "<p>No description available</p>",
+    "description": "<p>A sawtooth wave of the given frequency, approximated via a Fourier expansion.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -366,7 +366,7 @@
   "sawtooth_sound": {
     "kind": "function",
     "name": "sawtooth_sound",
-    "description": "<p>No description available</p>",
+    "description": "<p>Makes a sawtooth wave Sound with given frequency and duration.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -384,7 +384,7 @@
   "consecutively": {
     "kind": "function",
     "name": "consecutively",
-    "description": "<p>No description available</p>",
+    "description": "<p>Makes a new Sound by combining the sounds in a given list where the second Sound is appended\nto the end of the first Sound, the third Sound is appended to the end of the second Sound, and\nso on. The effect is that the Sounds in the list are joined end-to-end.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -397,7 +397,7 @@
   "simultaneously": {
     "kind": "function",
     "name": "simultaneously",
-    "description": "<p>No description available</p>",
+    "description": "<p>Makes a new Sound by combining the Sounds in a given list. In the result sound, the component\nsounds overlap such that they start at the beginning of the result sound. To achieve this, the\namplitudes of the component sounds are added together and then divided by the length of the\nlist.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -410,7 +410,7 @@
   "adsr": {
     "kind": "function",
     "name": "adsr",
-    "description": "<p>No description available</p>",
+    "description": "<p>Applies an ADSR envelope to a Sound, modifying its amplitude according to parameters, applied\nto each channel independently. The relative amplitude increases from 0 to 1 linearly over the\nattack proportion, then decreases from 1 to sustain level over the decay proportion, and\nremains at that level until the release proportion when it decays back to 0.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -438,7 +438,7 @@
   "stacking_adsr": {
     "kind": "function",
     "name": "stacking_adsr",
-    "description": "<p>No description available</p>",
+    "description": "<p>Applies a list of envelopes to a given wave form. The wave form is a Sound generator that\ntakes a frequency and a duration as arguments and produces a Sound with the given frequency\nand duration. Each envelope is applied to a harmonic: the first harmonic has the given\nfrequency, the second has twice the frequency, the third three times the frequency etc. The\nharmonics are then layered simultaneously to produce the resulting Sound.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -466,7 +466,7 @@
   "phase_mod": {
     "kind": "function",
     "name": "phase_mod",
-    "description": "<p>No description available</p>",
+    "description": "<p>Builds a Sound transformer which uses its argument to modulate the phase of a (carrier) sine\nwave of given frequency and duration with a given Sound, applied to each channel independently\n(using that channel's own wave as the modulator). Modulating with a low frequency Sound results\nin a vibrato effect. Modulating with a Sound with frequencies comparable to the sine wave\nfrequency results in more complex wave forms.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -489,7 +489,7 @@
   "squash": {
     "kind": "function",
     "name": "squash",
-    "description": "<p>No description available</p>",
+    "description": "<p>Centers a Sound by averaging its left and right channels, resulting in an effectively mono\nSound (both channels are the same, averaged, wave).</p>",
     "params": [
       {
         "paramType": "regular",
@@ -502,7 +502,7 @@
   "pan": {
     "kind": "function",
     "name": "pan",
-    "description": "<p>No description available</p>",
+    "description": "<p>Builds a Sound Transformer that pans a sound based on the pan amount. The input sound is\nfirst squashed to mono. An amount of <code>-1</code> is a hard left pan, <code>0</code> is balanced, <code>1</code> is hard\nright pan.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -515,7 +515,7 @@
   "pan_mod": {
     "kind": "function",
     "name": "pan_mod",
-    "description": "<p>No description available</p>",
+    "description": "<p>Builds a Sound Transformer that uses a Sound to pan another Sound. The modulator's two\nchannels are summed and clamped to <code>[-1, 1]</code> to compute the pan amount at each point in time.\n<code>-1</code> is a hard left pan, <code>0</code> is balanced, <code>1</code> is hard right pan.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -528,7 +528,7 @@
   "bell": {
     "kind": "function",
     "name": "bell",
-    "description": "<p>No description available</p>",
+    "description": "<p>Makes a Sound reminiscent of a bell, playing a given note for a given duration.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -546,7 +546,7 @@
   "cello": {
     "kind": "function",
     "name": "cello",
-    "description": "<p>No description available</p>",
+    "description": "<p>Makes a Sound reminiscent of a cello, playing a given note for a given duration.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -564,7 +564,7 @@
   "piano": {
     "kind": "function",
     "name": "piano",
-    "description": "<p>No description available</p>",
+    "description": "<p>Makes a Sound reminiscent of a piano, playing a given note for a given duration.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -582,7 +582,7 @@
   "trombone": {
     "kind": "function",
     "name": "trombone",
-    "description": "<p>No description available</p>",
+    "description": "<p>Makes a Sound reminiscent of a trombone, playing a given note for a given duration.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -600,7 +600,7 @@
   "violin": {
     "kind": "function",
     "name": "violin",
-    "description": "<p>No description available</p>",
+    "description": "<p>Makes a Sound reminiscent of a violin, playing a given note for a given duration.</p>",
     "params": [
       {
         "paramType": "regular",

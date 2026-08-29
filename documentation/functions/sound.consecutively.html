@@ -16,11 +16,21 @@
 <li class="">
 <div class="tsd-signature tsd-anchor-link" id="consecutively"><span class="tsd-kind-call-signature">consecutively</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">sounds</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Pair</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Pair</span><a href="#consecutively" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
 <div class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Makes a new Sound by combining the sounds in a given list where the second Sound is appended
+to the end of the first Sound, the third Sound is appended to the end of the second Sound, and
+so on. The effect is that the Sounds in the list are joined end-to-end.</p>
+</div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li><span><span class="tsd-kind-parameter">sounds</span>: <span class="tsd-signature-type">Pair</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">null</span></span></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Pair</span></h4></div></li></ul></section></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Pair</span></h4>
+<div class="tsd-comment tsd-typography">
+<div class="tsd-tag-example">
+<h4 class="tsd-anchor-link" id="example">Example<a href="#example" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><pre><code class="ts"><span class="hl-4">consecutively</span><span class="hl-1">(</span><span class="hl-4">list</span><span class="hl-1">(</span><span class="hl-4">sine_sound</span><span class="hl-1">(</span><span class="hl-5">200</span><span class="hl-1">, </span><span class="hl-5">2</span><span class="hl-1">), </span><span class="hl-4">sine_sound</span><span class="hl-1">(</span><span class="hl-5">400</span><span class="hl-1">, </span><span class="hl-5">3</span><span class="hl-1">)));</span>
+</code><button type="button">Copy</button></pre>
+
+</div></div></div></li></ul></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
