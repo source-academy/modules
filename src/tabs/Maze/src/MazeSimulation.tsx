@@ -118,9 +118,6 @@ const drawAll = (
   drawRobot(ctx, robot);
 };
 
-// The speed to move at
-const ANIMATION_SPEED: number = 2;
-
 /**
  * React Component props for the Tab.
  */
@@ -134,6 +131,7 @@ const MazeSimulation: React.FC<MapProps> = ({
     width,
     height,
     border,
+    animationSpeed,
     robot: { radius: robotSize },
     areas,
     actionLog,
@@ -218,7 +216,7 @@ const MazeSimulation: React.FC<MapProps> = ({
           );
 
           // If distance to target point is small
-          if (distance <= ANIMATION_SPEED) {
+          if (distance <= animationSpeed) {
             // Snap to the target point
             robot.current.x = target.x;
             robot.current.y = target.y;
@@ -229,8 +227,8 @@ const MazeSimulation: React.FC<MapProps> = ({
           }
 
           // Move the robot towards the target
-          robot.current.x += (dx / distance) * ANIMATION_SPEED;
-          robot.current.y += (dy / distance) * ANIMATION_SPEED;
+          robot.current.x += (dx / distance) * animationSpeed;
+          robot.current.y += (dy / distance) * animationSpeed;
           break;
         } case 'rotate':
           // If rotation is close to target rotation

@@ -57,6 +57,7 @@ export interface Maze {
   width: number;
   height: number;
   border: BorderConfig;
+  animationSpeed: number;
   robot: Robot;
   areas: Area[];
   areaLog: Area[];

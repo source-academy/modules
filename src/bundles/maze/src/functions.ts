@@ -23,6 +23,7 @@ const state: Maze = {
   width: 500,
   height: 500,
   border: {},
+  animationSpeed: 2,
   robot: { x: 250, y: 250, rotation: 0, radius: 15 },
   areas: [],
   areaLog: [],
@@ -105,6 +106,20 @@ export function set_border_width(
   if (state.isInit) throw new GeneralRuntimeError('May not use initialization functions after initialization is complete!');
 
   state.border.width = width;
+}
+
+/**
+ * Set the speed at which the robot animates its movement
+ *
+ * @param speed of the robot's animation
+ */
+export function set_animation_speed(
+  speed: number
+) {
+  // Init functions should not run after initialization
+  if (state.isInit) throw new GeneralRuntimeError('May not use initialization functions after initialization is complete!');
+
+  state.animationSpeed = speed;
 }
 
 /**
