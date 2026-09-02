@@ -2,20 +2,20 @@ import type { Area, Point } from '../types';
 
 // A line segment between p1 and p2
 interface LineSegment {
-  p1: Point
-  p2: Point
+  p1: Point;
+  p2: Point;
 }
 
 // A ray from origin towards target
 interface Ray {
-  origin: Point
-  target: Point
+  origin: Point;
+  target: Point;
 }
 
 // A collision between a ray and an area
 export interface Collision {
-  distance: number
-  area: Area
+  distance: number;
+  area: Area;
 }
 
 /**
@@ -29,8 +29,8 @@ export interface Collision {
 function getIntersection(
   { origin, target }: Ray,
   { p1, p2 }: LineSegment
-) : number {
-  const denom: number = ((target.x - origin.x)*(p2.y - p1.y)-(target.y - origin.y)*(p2.x - p1.x));
+): number {
+  const denom: number = (target.x - origin.x)*(p2.y - p1.y)-(target.y - origin.y)*(p2.x - p1.x);
 
   // If lines are collinear or parallel
   if (denom === 0) return Infinity;
@@ -57,7 +57,7 @@ function getIntersection(
 export function raycast(
   ray: Ray,
   area: Area
-) : Collision | null {
+): Collision | null {
   const { vertices } = area;
 
   // Store the minimum distance
@@ -66,8 +66,8 @@ export function raycast(
   for (let i = 0; i < vertices.length; i++) {
     // Border line segment
     const border: LineSegment = {
-      p1: {x: vertices[i].x, y: vertices[i].y},
-      p2: {x: vertices[(i + 1) % vertices.length].x, y: vertices[(i + 1) % vertices.length].y}
+      p1: { x: vertices[i].x, y: vertices[i].y },
+      p2: { x: vertices[(i + 1) % vertices.length].x, y: vertices[(i + 1) % vertices.length].y }
     };
 
     // Compute the minimum distance
@@ -79,7 +79,7 @@ export function raycast(
 
   // Return null if no collision
   return distance < Infinity
-    ? {distance, area}
+    ? { distance, area }
     : null;
 }
 
@@ -93,13 +93,13 @@ export function raycast(
 export function is_within_area(
   point: Point,
   area: Area
-) : boolean {
+): boolean {
   const { vertices } = area;
 
   // Cast a ray to the right of the point
   const ray = {
     origin: point,
-    target: {x: point.x + 1, y: point.y + 0}
+    target: { x: point.x + 1, y: point.y + 0 }
   };
 
   // Count the intersections
@@ -108,8 +108,8 @@ export function is_within_area(
   for (let i = 0; i < vertices.length; i++) {
     // Border line segment
     const border: LineSegment = {
-      p1: {x: vertices[i].x, y: vertices[i].y},
-      p2: {x: vertices[(i + 1) % vertices.length].x, y: vertices[(i + 1) % vertices.length].y}
+      p1: { x: vertices[i].x, y: vertices[i].y },
+      p2: { x: vertices[(i + 1) % vertices.length].x, y: vertices[(i + 1) % vertices.length].y }
     };
 
     // Increment intersections if the ray intersects the border

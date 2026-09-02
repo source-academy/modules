@@ -1,5 +1,5 @@
 import { run_tests } from '@sourceacademy/bundle-maze/helpers/tests';
-import type { Area, Action, BorderConfig, Robot, Maze } from '@sourceacademy/bundle-maze/types';
+import type { Action, Area, BorderConfig, Maze, Robot } from '@sourceacademy/bundle-maze/types';
 import React, { useEffect, useRef, useState } from 'react';
 
 /**
@@ -119,22 +119,22 @@ const drawAll = (
 };
 
 // The speed to move at
-const ANIMATION_SPEED : number = 2;
+const ANIMATION_SPEED: number = 2;
 
 /**
  * React Component props for the Tab.
  */
 interface MapProps {
-  state: Maze,
+  state: Maze;
 }
 
-const MazeSimulation : React.FC<MapProps> = ({
+const MazeSimulation: React.FC<MapProps> = ({
   state: {
     hasCollided,
     width,
     height,
     border,
-    robot: {radius: robotSize},
+    robot: { radius: robotSize },
     areas,
     actionLog,
     areaLog,
@@ -156,7 +156,7 @@ const MazeSimulation : React.FC<MapProps> = ({
   const currentAction = useRef<number>(1);
 
   // Store robot status
-  const robot = useRef<Robot>({x: 0, y: 0, rotation: 0, radius: 1});
+  const robot = useRef<Robot>({ x: 0, y: 0, rotation: 0, radius: 1 });
 
   // Ensure canvas is preloaded correctly
   useEffect(() => {
@@ -172,7 +172,7 @@ const MazeSimulation : React.FC<MapProps> = ({
     currentAction.current = 1;
 
     // Reset robot position if action log has actions
-    if (actionLog.length > 0) robot.current = Object.assign({}, {radius: robotSize}, actionLog[0].position);
+    if (actionLog.length > 0) robot.current = Object.assign({}, { radius: robotSize }, actionLog[0].position);
 
     // Update canvas dimensions
     canvas.width = width;
@@ -207,14 +207,15 @@ const MazeSimulation : React.FC<MapProps> = ({
       // Get current action
       const { type, position: target }: Action = actionLog[currentAction.current];
 
-      switch(type) {
+      switch (type) {
         case 'move': {
           // Calculate the distance to target point
           const dx = target.x - robot.current.x;
           const dy = target.y - robot.current.y;
           const distance = Math.sqrt(
             (target.x - robot.current.x) ** 2 +
-            (target.y - robot.current.y) ** 2);
+            (target.y - robot.current.y) ** 2
+          );
 
           // If distance to target point is small
           if (distance <= ANIMATION_SPEED) {
@@ -256,7 +257,7 @@ const MazeSimulation : React.FC<MapProps> = ({
           animationPauseUntil.current = Date.now() + 500;
           break;
         case 'begin':
-          robot.current = Object.assign({}, {radius: robot.current.radius}, target);
+          robot.current = Object.assign({}, { radius: robot.current.radius }, target);
       }
 
       drawAll(ctx, width, height, border, areas, robot.current);
@@ -273,15 +274,15 @@ const MazeSimulation : React.FC<MapProps> = ({
       <div>
 
         {animationStatus === 0
-          ? <button onClick={() => {setAnimationStatus(1);}}>Start</button>
+          ? <button onClick={() => { setAnimationStatus(1); }}>Start</button>
           : animationStatus === 1
-            ? <button onClick={() => {setAnimationStatus(2);}}>Pause</button>
+            ? <button onClick={() => { setAnimationStatus(2); }}>Pause</button>
             : animationStatus === 2
-              ? <button onClick={() => {setAnimationStatus(1);}}>Resume</button>
-              : <button onClick={() => {setAnimationStatus(0);}}>Reset</button>}
-        {animationStatus === 3 && <span style={{marginLeft: '5px'}}>{!hasCollided && run_tests({tests, areaLog}) ? 'Success! 🎉' : message}</span>}
+              ? <button onClick={() => { setAnimationStatus(1); }}>Resume</button>
+              : <button onClick={() => { setAnimationStatus(0); }}>Reset</button>}
+        {animationStatus === 3 && <span style={{ marginLeft: '5px' }}>{!hasCollided && run_tests({ tests, areaLog }) ? 'Success! 🎉' : message}</span>}
       </div>
-      <div style={{display: 'flex', justifyContent: 'center'}}>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
         <canvas ref={canvasRef}/>
       </div>
     </>

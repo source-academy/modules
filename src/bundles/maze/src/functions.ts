@@ -1,3 +1,4 @@
+import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import context from 'js-slang/context';
 // import {
 //   head,
@@ -8,11 +9,11 @@ import context from 'js-slang/context';
 import { areaEquals, is_within_area, raycast, type Collision } from './helpers/areas';
 import { run_tests } from './helpers/tests';
 import type {
-  Point, PointWithRotation, Robot,
-  Action,
-  AreaFlags, Area,
-  AreaTest,
-  Maze
+  Area,
+  AreaFlags,
+  Maze,
+  Point,
+  PointWithRotation, Robot
 } from './types';
 
 // Default state before initialisation
@@ -55,7 +56,7 @@ export function init(
   rotation: number
 ) {
   // Init functions should not run after initialization
-  if (state.isInit) throw new Error('May not use initialization functions after initialization is complete!');
+  if (state.isInit) throw new GeneralRuntimeError('May not use initialization functions after initialization is complete!');
 
   const robot: Robot = {
     x: posX,
@@ -72,7 +73,7 @@ export function init(
   state.robot = robot;
 
   // Update the action log with the robot's starting position
-  state.actionLog = [{type: 'begin', position: Object.assign({}, robot)}];
+  state.actionLog = [{ type: 'begin', position: Object.assign({}, robot) }];
 
   // Update the success message
   state.message = 'Please run this in the assessments tab!';
@@ -81,13 +82,13 @@ export function init(
 /**
  * Set the color of the map border
  *
- * @param {string} color of the border (in any CSS-accepted format)
+ * @param color of the border (in any CSS-accepted format)
  */
 export function set_border_color(
   color: string
 ) {
   // Init functions should not run after initialization
-  if (state.isInit) throw new Error('May not use initialization functions after initialization is complete!');
+  if (state.isInit) throw new GeneralRuntimeError('May not use initialization functions after initialization is complete!');
 
   state.border.color = color;
 }
@@ -95,13 +96,13 @@ export function set_border_color(
 /**
  * Set the width of the map border
  *
- * @param {number} width of the border
+ * @param width of the border
  */
 export function set_border_width(
   width: number
 ) {
   // Init functions should not run after initialization
-  if (state.isInit) throw new Error('May not use initialization functions after initialization is complete!');
+  if (state.isInit) throw new GeneralRuntimeError('May not use initialization functions after initialization is complete!');
 
   state.border.width = width;
 }
@@ -119,7 +120,7 @@ export function create_area(
   flags: [key: string, value: any][]
 ) {
   // Init functions should not run after initialization
-  if (state.isInit) throw new Error('May not use initialization functions after initialization is complete!');
+  if (state.isInit) throw new GeneralRuntimeError('May not use initialization functions after initialization is complete!');
 
   // Store vertices as Point array
   const parsedVertices: Point[] = vertices.map(v => ({ x: v[0], y: v[1] }));
@@ -154,7 +155,7 @@ export function create_rect_area(
   flags: [key: string, value: any][]
 ) {
   // Init functions should not run after initialization
-  if (state.isInit) throw new Error('May not use initialization functions after initialization is complete!');
+  if (state.isInit) throw new GeneralRuntimeError('May not use initialization functions after initialization is complete!');
 
   create_area([
     [x, y],
@@ -173,7 +174,7 @@ export function create_obstacle(
   vertices: [x: number, y: number][]
 ) {
   // Init functions should not run after initialization
-  if (state.isInit) throw new Error('May not use initialization functions after initialization is complete!');
+  if (state.isInit) throw new GeneralRuntimeError('May not use initialization functions after initialization is complete!');
 
   create_area(vertices, true, []);
 }
@@ -193,7 +194,7 @@ export function create_rect_obstacle(
   height: number
 ) {
   // Init functions should not run after initialization
-  if (state.isInit) throw new Error('May not use initialization functions after initialization is complete!');
+  if (state.isInit) throw new GeneralRuntimeError('May not use initialization functions after initialization is complete!');
 
   create_rect_area(x, y, width, height, true, []);
 }
@@ -216,14 +217,14 @@ export function should_enter_colors(
 
       return coloredAreas.length === colors.length && coloredAreas.every(({ flags: { color } }, i) => color === colors[i]); // Check if each area has the expected color
     }
-  } as AreaTest);
+  });
 }
 
 /**
  * Inform the simulator that the initialisation phase is complete
  */
 export function complete_init() {
-  if (state.actionLog.length === 0) throw new Error('May not complete initialization without first running init()');
+  if (state.actionLog.length === 0) throw new GeneralRuntimeError('May not complete initialization without first running init()');
 
   state.isInit = true;
 }
@@ -237,7 +238,7 @@ export function complete_init() {
  *
  * @returns the distance to the closest obstacle, or infinity (if robot is out of bounds)
  */
-export function get_distance() : number {
+export function get_distance(): number {
   // Check for all obstacles in the robot's path (including bounds)
   const obstacleCollisions: Collision[] = robot_raycast((area: Area) => area.isObstacle);
 
@@ -251,7 +252,7 @@ const SENSOR_RANGE: number = 15;
 /**
  * Check if there is an obstacle within a predefined distance from the robot
  */
-export function sense_obstacle() : boolean {
+export function sense_obstacle(): boolean {
   return get_distance() < SENSOR_RANGE;
 }
 
@@ -260,7 +261,7 @@ export function sense_obstacle() : boolean {
  *
  * @returns the color of the area under the robot
  */
-export function get_color() : string {
+export function get_color(): string {
   return getRobotFlags().color;
 }
 
@@ -312,7 +313,7 @@ export function move_forward(
 }
 
 // The distance from a wall a move_forward_to_wall() command will stop
-const SAFE_DISTANCE_FROM_WALL : number = 10;
+const SAFE_DISTANCE_FROM_WALL: number = 10;
 
 /**
  * Move the robot forward to within a predefined distance of the wall
@@ -371,7 +372,7 @@ export function turn_right() {
  *
  * @returns if all tests pass
  */
-export function run_all_tests() : boolean {
+export function run_all_tests(): boolean {
   return !state.hasCollided && run_tests(state);
 }
 
@@ -390,7 +391,7 @@ export function run_all_tests() : boolean {
  *
  * @returns the active robot
  */
-function getRobot() : Robot {
+function getRobot(): Robot {
   return state.robot;
 }
 
@@ -399,15 +400,15 @@ function getRobot() : Robot {
  *
  * @returns the bounds of the active map
  */
-function getBounds() : Point[] {
+function getBounds(): Point[] {
   // Get active map
   const { width, height } = state;
 
   return [
-    {x: 0, y: 0},
-    {x: width, y: 0},
-    {x: width, y: height},
-    {x: 0, y: height}
+    { x: 0, y: 0 },
+    { x: width, y: 0 },
+    { x: width, y: height },
+    { x: 0, y: height }
   ];
 }
 
@@ -418,10 +419,10 @@ function getBounds() : Point[] {
  */
 function getPositionWithRotation(): PointWithRotation {
   // Get the robot
-  const {x, y, rotation} = getRobot();
+  const { x, y, rotation } = getRobot();
 
   // Parse the robot
-  return {x, y, rotation};
+  return { x, y, rotation };
 }
 
 // ======================== //
@@ -437,12 +438,12 @@ function getPositionWithRotation(): PointWithRotation {
  */
 function robot_raycast(
   filter: (area: Area) => boolean = () => true
-) : Collision[] {
+): Collision[] {
   return state.areas
     .filter(filter) // Apply filter
     .map(area => robot_raycast_area(area)) // Raycast each area on the map
     .concat([
-      robot_raycast_area({vertices: getBounds(), isObstacle: true, flags: {}}) // Raycast map bounds as well
+      robot_raycast_area({ vertices: getBounds(), isObstacle: true, flags: {} }) // Raycast map bounds as well
     ])
     .filter(col => col !== null) // Remove null collisions
     .sort((a, b) => a.distance - b.distance); // Sort by distance
@@ -457,7 +458,7 @@ function robot_raycast(
  */
 function robot_raycast_area(
   area: Area
-) : Collision | null {
+): Collision | null {
   // Get the robot
   const robot = getRobot();
 
@@ -472,8 +473,7 @@ function robot_raycast_area(
 
   // Raycast 3 times, one for each source
   const collisions: Collision[] = raycast_sources
-    .map(source => raycast(
-      {origin: source, target: {x: dx + source.x, y: dy + source.y}}, area))
+    .map(source => raycast({ origin: source, target: { x: dx + source.x, y: dy + source.y } }, area))
     .filter(col => col !== null);
 
   // Return null if no intersection
@@ -489,7 +489,7 @@ function robot_raycast_area(
  */
 function area_of_point(
   point: Point
-) : Area | null {
+): Area | null {
   // Return the first area the point is within
   for (const area of state.areas) {
     if (is_within_area(point, area)) return area;
@@ -513,7 +513,7 @@ function logAction(
   type: 'begin' | 'move' | 'rotate' | 'sensor',
   position: PointWithRotation
 ) {
-  state.actionLog.push({type, position} as Action);
+  state.actionLog.push({ type, position });
 }
 
 /**
@@ -547,8 +547,7 @@ function logArea(
  * @param areas the full array being filtered
  * @returns if the current area is not a duplicate of the previous area
  */
-const filterAdjacentDuplicateAreas = (area : Area, i : number, areas: Area[]) : boolean =>
-  i === 0 // First one is always correct
+const filterAdjacentDuplicateAreas = (area: Area, i: number, areas: Area[]): boolean => i === 0 // First one is always correct
   || !areaEquals(area, areas[i - 1]); // Otherwise check for equality against previous area
 
 /**
@@ -561,9 +560,9 @@ const filterAdjacentDuplicateAreas = (area : Area, i : number, areas: Area[]) : 
 function getFlags(
   x: number,
   y: number
-) : AreaFlags {
+): AreaFlags {
   // Find the area containing the point
-  const area: Area | null = area_of_point({x, y});
+  const area: Area | null = area_of_point({ x, y });
 
   return area === null ? {} : area.flags;
 }
@@ -573,7 +572,7 @@ function getFlags(
  *
  * @returns the flags of the robot's area
  */
-function getRobotFlags() : AreaFlags {
+function getRobotFlags(): AreaFlags {
   // Get the robot
   const robot = getRobot();
 

@@ -4230,6 +4230,7 @@ __metadata:
   dependencies:
     "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
+    "@sourceacademy/modules-lib": "workspace:^"
     "@sourceacademy/modules-testplugin": "workspace:^"
     js-slang: "catalog:"
     typescript: "catalog:"

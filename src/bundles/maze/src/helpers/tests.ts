@@ -9,9 +9,9 @@ export function run_tests({
   areaLog,
   tests
 }: {
-  areaLog: Area[],
-  tests: Test[]
-}) : boolean {
+  areaLog: Area[];
+  tests: Test[];
+}): boolean {
   // Run each test in order
   for (const test of tests) {
     // Can replace with a switch statement when more success conditions appear
