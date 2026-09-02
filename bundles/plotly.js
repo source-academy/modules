@@ -369,6 +369,19 @@ export default require => {
       sampleChannels
     }) : sound;
   }
+  var soundRecordCache = new WeakMap();
+  function rememberSoundRecord(evaluator, pairId, record2) {
+    let records = soundRecordCache.get(evaluator);
+    if (!records) {
+      records = new Map();
+      soundRecordCache.set(evaluator, records);
+    }
+    records.set(pairId, record2);
+  }
+  function lookupSoundRecord(evaluator, pairId) {
+    var _a;
+    return (_a = soundRecordCache.get(evaluator)) === null || _a === void 0 ? void 0 : _a.get(pairId);
+  }
   var Accidental;
   (function (Accidental2) {
     Accidental2["SHARP"] = "#";
@@ -1490,10 +1503,16 @@ to obtain permission to use microphone.`);
       const rightClosure = sound.rightWave === sound.leftWave ? leftClosure : yield waveToConductorClosure(evaluator, sound.rightWave);
       rememberSoundSampler(evaluator, sound, leftClosure, rightClosure);
       const wavesPair = yield evaluator.pair_make(leftClosure, rightClosure);
-      return evaluator.pair_make(wavesPair, {
+      const outer = yield evaluator.pair_make(wavesPair, {
         type: E.NUMBER,
         value: sound.duration
       });
+      rememberSoundRecord(evaluator, outer.value, {
+        leftClosure,
+        rightClosure,
+        duration: sound.duration
+      });
+      return outer;
     });
   }
   function isPairLike(value) {
@@ -2417,7 +2436,39 @@ to obtain permission to use microphone.`);
         writable: true,
         value: _metadata
       });
-    })(), _a.channelAttach = [SOUND_CHANNEL_ID], _a);
+    })(), _a.channelAttach = [SOUND_CHANNEL_ID], (() => {
+      Object.assign(_a.prototype.get_wave, {
+        sync(sound) {
+          var _b;
+          if (!isPairLike(sound)) return void 0;
+          return (_b = lookupSoundRecord(this.evaluator, sound.value)) === null || _b === void 0 ? void 0 : _b.leftClosure;
+        }
+      });
+      Object.assign(_a.prototype.get_left_wave, {
+        sync(sound) {
+          var _b;
+          if (!isPairLike(sound)) return void 0;
+          return (_b = lookupSoundRecord(this.evaluator, sound.value)) === null || _b === void 0 ? void 0 : _b.leftClosure;
+        }
+      });
+      Object.assign(_a.prototype.get_right_wave, {
+        sync(sound) {
+          var _b;
+          if (!isPairLike(sound)) return void 0;
+          return (_b = lookupSoundRecord(this.evaluator, sound.value)) === null || _b === void 0 ? void 0 : _b.rightClosure;
+        }
+      });
+      Object.assign(_a.prototype.get_duration, {
+        sync(sound) {
+          if (!isPairLike(sound)) return void 0;
+          const record2 = lookupSoundRecord(this.evaluator, sound.value);
+          return record2 ? {
+            type: E.NUMBER,
+            value: record2.duration
+          } : void 0;
+        }
+      });
+    })(), _a);
   })();
   function attachModuleMethod(clss, methodName, args, returnType) {
     const method = clss.prototype[methodName];

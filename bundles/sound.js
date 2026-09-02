@@ -425,6 +425,19 @@ export default require => {
       sampleChannels
     }) : sound;
   }
+  var soundRecordCache = new WeakMap();
+  function rememberSoundRecord(evaluator, pairId, record2) {
+    let records = soundRecordCache.get(evaluator);
+    if (!records) {
+      records = new Map();
+      soundRecordCache.set(evaluator, records);
+    }
+    records.set(pairId, record2);
+  }
+  function lookupSoundRecord(evaluator, pairId) {
+    var _a2;
+    return (_a2 = soundRecordCache.get(evaluator)) == null ? void 0 : _a2.get(pairId);
+  }
   var Accidental;
   (function (Accidental2) {
     Accidental2["SHARP"] = "#";
@@ -1287,10 +1300,16 @@ to obtain permission to use microphone.`);
       const rightClosure = sound.rightWave === sound.leftWave ? leftClosure : yield waveToConductorClosure(evaluator, sound.rightWave);
       rememberSoundSampler(evaluator, sound, leftClosure, rightClosure);
       const wavesPair = yield evaluator.pair_make(leftClosure, rightClosure);
-      return evaluator.pair_make(wavesPair, {
+      const outer = yield evaluator.pair_make(wavesPair, {
         type: E.NUMBER,
         value: sound.duration
       });
+      rememberSoundRecord(evaluator, outer.value, {
+        leftClosure,
+        rightClosure,
+        duration: sound.duration
+      });
+      return outer;
     });
   }
   function isPairLike(value) {
@@ -1376,7 +1395,7 @@ to obtain permission to use microphone.`);
     });
   }
   var _violin_dec, _trombone_dec, _piano_dec, _cello_dec, _bell_dec, _pan_mod_dec, _pan_dec, _squash_dec, _phase_mod_dec, _stacking_adsr_dec, _adsr_dec, _simultaneously_dec, _consecutively_dec, _sawtooth_sound_dec, _sawtooth_wave_dec, _triangle_sound_dec, _triangle_wave_dec, _square_sound_dec, _square_wave_dec, _sine_sound_dec, _sine_wave_dec, _silence_sound_dec, _silence_wave_dec, _noise_sound_dec, _noise_wave_dec, _stop_dec, _play_in_tab_dec, _play_dec, _play_waves_dec, _play_wave_dec, _record_for_dec, _record_dec, _init_record_dec, _is_sound_dec, _get_duration_dec, _get_right_wave_dec, _get_left_wave_dec, _get_wave_dec, _make_stereo_sound_dec, _make_sound_dec, _a, _init;
-  var SoundModulePlugin = class extends (_a = o3, _make_sound_dec = [n4([E.CLOSURE, E.NUMBER], E.PAIR)], _make_stereo_sound_dec = [n4([E.CLOSURE, E.CLOSURE, E.NUMBER], E.PAIR)], _get_wave_dec = [n4([E.PAIR], E.CLOSURE)], _get_left_wave_dec = [n4([E.PAIR], E.CLOSURE)], _get_right_wave_dec = [n4([E.PAIR], E.CLOSURE)], _get_duration_dec = [n4([E.PAIR], E.NUMBER)], _is_sound_dec = [n4([E.ANY], E.BOOLEAN)], _init_record_dec = [n4([], E.CONST_STRING)], _record_dec = [n4([E.NUMBER], E.CLOSURE)], _record_for_dec = [n4([E.NUMBER, E.NUMBER], E.CLOSURE)], _play_wave_dec = [n4([E.CLOSURE, E.NUMBER], E.PAIR)], _play_waves_dec = [n4([E.CLOSURE, E.CLOSURE, E.NUMBER], E.PAIR)], _play_dec = [n4([E.PAIR], E.PAIR)], _play_in_tab_dec = [n4([E.PAIR], E.PAIR)], _stop_dec = [n4([], E.VOID)], _noise_wave_dec = [n4([], E.CLOSURE)], _noise_sound_dec = [n4([E.NUMBER], E.PAIR)], _silence_wave_dec = [n4([], E.CLOSURE)], _silence_sound_dec = [n4([E.NUMBER], E.PAIR)], _sine_wave_dec = [n4([E.NUMBER], E.CLOSURE)], _sine_sound_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _square_wave_dec = [n4([E.NUMBER], E.CLOSURE)], _square_sound_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _triangle_wave_dec = [n4([E.NUMBER], E.CLOSURE)], _triangle_sound_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _sawtooth_wave_dec = [n4([E.NUMBER], E.CLOSURE)], _sawtooth_sound_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _consecutively_dec = [n4([E.LIST], E.PAIR)], _simultaneously_dec = [n4([E.LIST], E.PAIR)], _adsr_dec = [n4([E.NUMBER, E.NUMBER, E.NUMBER, E.NUMBER], E.CLOSURE)], _stacking_adsr_dec = [n4([E.CLOSURE, E.NUMBER, E.NUMBER, E.LIST], E.PAIR)], _phase_mod_dec = [n4([E.NUMBER, E.NUMBER, E.NUMBER], E.CLOSURE)], _squash_dec = [n4([E.PAIR], E.PAIR)], _pan_dec = [n4([E.NUMBER], E.CLOSURE)], _pan_mod_dec = [n4([E.PAIR], E.CLOSURE)], _bell_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _cello_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _piano_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _trombone_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _violin_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _a) {
+  var _SoundModulePlugin = class _SoundModulePlugin extends (_a = o3, _make_sound_dec = [n4([E.CLOSURE, E.NUMBER], E.PAIR)], _make_stereo_sound_dec = [n4([E.CLOSURE, E.CLOSURE, E.NUMBER], E.PAIR)], _get_wave_dec = [n4([E.PAIR], E.CLOSURE)], _get_left_wave_dec = [n4([E.PAIR], E.CLOSURE)], _get_right_wave_dec = [n4([E.PAIR], E.CLOSURE)], _get_duration_dec = [n4([E.PAIR], E.NUMBER)], _is_sound_dec = [n4([E.ANY], E.BOOLEAN)], _init_record_dec = [n4([], E.CONST_STRING)], _record_dec = [n4([E.NUMBER], E.CLOSURE)], _record_for_dec = [n4([E.NUMBER, E.NUMBER], E.CLOSURE)], _play_wave_dec = [n4([E.CLOSURE, E.NUMBER], E.PAIR)], _play_waves_dec = [n4([E.CLOSURE, E.CLOSURE, E.NUMBER], E.PAIR)], _play_dec = [n4([E.PAIR], E.PAIR)], _play_in_tab_dec = [n4([E.PAIR], E.PAIR)], _stop_dec = [n4([], E.VOID)], _noise_wave_dec = [n4([], E.CLOSURE)], _noise_sound_dec = [n4([E.NUMBER], E.PAIR)], _silence_wave_dec = [n4([], E.CLOSURE)], _silence_sound_dec = [n4([E.NUMBER], E.PAIR)], _sine_wave_dec = [n4([E.NUMBER], E.CLOSURE)], _sine_sound_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _square_wave_dec = [n4([E.NUMBER], E.CLOSURE)], _square_sound_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _triangle_wave_dec = [n4([E.NUMBER], E.CLOSURE)], _triangle_sound_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _sawtooth_wave_dec = [n4([E.NUMBER], E.CLOSURE)], _sawtooth_sound_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _consecutively_dec = [n4([E.LIST], E.PAIR)], _simultaneously_dec = [n4([E.LIST], E.PAIR)], _adsr_dec = [n4([E.NUMBER, E.NUMBER, E.NUMBER, E.NUMBER], E.CLOSURE)], _stacking_adsr_dec = [n4([E.CLOSURE, E.NUMBER, E.NUMBER, E.LIST], E.PAIR)], _phase_mod_dec = [n4([E.NUMBER, E.NUMBER, E.NUMBER], E.CLOSURE)], _squash_dec = [n4([E.PAIR], E.PAIR)], _pan_dec = [n4([E.NUMBER], E.CLOSURE)], _pan_mod_dec = [n4([E.PAIR], E.CLOSURE)], _bell_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _cello_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _piano_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _trombone_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _violin_dec = [n4([E.NUMBER, E.NUMBER], E.PAIR)], _a) {
     constructor(conduit, [soundChannel], evaluator, tabLoader) {
       if (!soundChannel) {
         throw new Error("Sound channel is required but was not provided.");
@@ -1686,47 +1705,79 @@ to obtain permission to use microphone.`);
     }
   };
   _init = __decoratorStart(_a);
-  __decorateElement(_init, 1, "make_sound", _make_sound_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "make_stereo_sound", _make_stereo_sound_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "get_wave", _get_wave_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "get_left_wave", _get_left_wave_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "get_right_wave", _get_right_wave_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "get_duration", _get_duration_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "is_sound", _is_sound_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "init_record", _init_record_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "record", _record_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "record_for", _record_for_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "play_wave", _play_wave_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "play_waves", _play_waves_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "play", _play_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "play_in_tab", _play_in_tab_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "stop", _stop_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "noise_wave", _noise_wave_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "noise_sound", _noise_sound_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "silence_wave", _silence_wave_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "silence_sound", _silence_sound_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "sine_wave", _sine_wave_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "sine_sound", _sine_sound_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "square_wave", _square_wave_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "square_sound", _square_sound_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "triangle_wave", _triangle_wave_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "triangle_sound", _triangle_sound_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "sawtooth_wave", _sawtooth_wave_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "sawtooth_sound", _sawtooth_sound_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "consecutively", _consecutively_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "simultaneously", _simultaneously_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "adsr", _adsr_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "stacking_adsr", _stacking_adsr_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "phase_mod", _phase_mod_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "squash", _squash_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "pan", _pan_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "pan_mod", _pan_mod_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "bell", _bell_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "cello", _cello_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "piano", _piano_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "trombone", _trombone_dec, SoundModulePlugin);
-  __decorateElement(_init, 1, "violin", _violin_dec, SoundModulePlugin);
-  __decoratorMetadata(_init, SoundModulePlugin);
-  SoundModulePlugin.channelAttach = [SOUND_CHANNEL_ID];
+  __decorateElement(_init, 1, "make_sound", _make_sound_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "make_stereo_sound", _make_stereo_sound_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "get_wave", _get_wave_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "get_left_wave", _get_left_wave_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "get_right_wave", _get_right_wave_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "get_duration", _get_duration_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "is_sound", _is_sound_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "init_record", _init_record_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "record", _record_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "record_for", _record_for_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "play_wave", _play_wave_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "play_waves", _play_waves_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "play", _play_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "play_in_tab", _play_in_tab_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "stop", _stop_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "noise_wave", _noise_wave_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "noise_sound", _noise_sound_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "silence_wave", _silence_wave_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "silence_sound", _silence_sound_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "sine_wave", _sine_wave_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "sine_sound", _sine_sound_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "square_wave", _square_wave_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "square_sound", _square_sound_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "triangle_wave", _triangle_wave_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "triangle_sound", _triangle_sound_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "sawtooth_wave", _sawtooth_wave_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "sawtooth_sound", _sawtooth_sound_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "consecutively", _consecutively_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "simultaneously", _simultaneously_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "adsr", _adsr_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "stacking_adsr", _stacking_adsr_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "phase_mod", _phase_mod_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "squash", _squash_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "pan", _pan_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "pan_mod", _pan_mod_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "bell", _bell_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "cello", _cello_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "piano", _piano_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "trombone", _trombone_dec, _SoundModulePlugin);
+  __decorateElement(_init, 1, "violin", _violin_dec, _SoundModulePlugin);
+  __decoratorMetadata(_init, _SoundModulePlugin);
+  _SoundModulePlugin.channelAttach = [SOUND_CHANNEL_ID];
+  Object.assign(_SoundModulePlugin.prototype.get_wave, {
+    sync(sound) {
+      var _a2;
+      if (!isPairLike(sound)) return void 0;
+      return (_a2 = lookupSoundRecord(this.evaluator, sound.value)) == null ? void 0 : _a2.leftClosure;
+    }
+  });
+  Object.assign(_SoundModulePlugin.prototype.get_left_wave, {
+    sync(sound) {
+      var _a2;
+      if (!isPairLike(sound)) return void 0;
+      return (_a2 = lookupSoundRecord(this.evaluator, sound.value)) == null ? void 0 : _a2.leftClosure;
+    }
+  });
+  Object.assign(_SoundModulePlugin.prototype.get_right_wave, {
+    sync(sound) {
+      var _a2;
+      if (!isPairLike(sound)) return void 0;
+      return (_a2 = lookupSoundRecord(this.evaluator, sound.value)) == null ? void 0 : _a2.rightClosure;
+    }
+  });
+  Object.assign(_SoundModulePlugin.prototype.get_duration, {
+    sync(sound) {
+      if (!isPairLike(sound)) return void 0;
+      const record2 = lookupSoundRecord(this.evaluator, sound.value);
+      return record2 ? {
+        type: E.NUMBER,
+        value: record2.duration
+      } : void 0;
+    }
+  });
+  var SoundModulePlugin = _SoundModulePlugin;
   return __toCommonJS(index_exports);
 };
