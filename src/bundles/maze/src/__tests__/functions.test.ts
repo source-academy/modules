@@ -32,4 +32,28 @@ describe('set_animation_speed', () => {
       'May not use initialization functions after initialization is complete!'
     );
   });
+
+  it('throws when speed is 0', async () => {
+    const funcs = await import('../functions');
+    funcs.init(500, 500, 0, 0, 0);
+    expect(() => funcs.set_animation_speed(0)).toThrow(
+      'Animation speed must be a finite number greater than 0!'
+    );
+  });
+
+  it('throws when speed is negative', async () => {
+    const funcs = await import('../functions');
+    funcs.init(500, 500, 0, 0, 0);
+    expect(() => funcs.set_animation_speed(-5)).toThrow(
+      'Animation speed must be a finite number greater than 0!'
+    );
+  });
+
+  it('throws when speed is NaN', async () => {
+    const funcs = await import('../functions');
+    funcs.init(500, 500, 0, 0, 0);
+    expect(() => funcs.set_animation_speed(NaN)).toThrow(
+      'Animation speed must be a finite number greater than 0!'
+    );
+  });
 });

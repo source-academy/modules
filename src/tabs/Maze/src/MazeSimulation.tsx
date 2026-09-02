@@ -230,9 +230,13 @@ const MazeSimulation: React.FC<MapProps> = ({
           robot.current.x += (dx / distance) * animationSpeed;
           robot.current.y += (dy / distance) * animationSpeed;
           break;
-        } case 'rotate':
+        } case 'rotate': {
+          // Scale rotation with animationSpeed; 0.05 rad/unit keeps the default
+          // animationSpeed of 2 producing the previous hardcoded 0.1 rad/tick
+          const rotationStep = animationSpeed * 0.05;
+
           // If rotation is close to target rotation
-          if (Math.abs((target.rotation - robot.current.rotation) % (2 * Math.PI)) < 0.1) {
+          if (Math.abs((target.rotation - robot.current.rotation) % (2 * Math.PI)) < rotationStep) {
             // Snap to the target point
             robot.current.rotation = target.rotation;
 
@@ -241,7 +245,7 @@ const MazeSimulation: React.FC<MapProps> = ({
             break;
           }
 
-          robot.current.rotation += smallestAngle(target.rotation, robot.current.rotation) > 0 ? 0.1 : -0.1;
+          robot.current.rotation += smallestAngle(target.rotation, robot.current.rotation) > 0 ? rotationStep : -rotationStep;
 
           if (robot.current.rotation > Math.PI) {
             robot.current.rotation -= 2 * Math.PI;
@@ -251,6 +255,7 @@ const MazeSimulation: React.FC<MapProps> = ({
             robot.current.rotation += 2 * Math.PI;
           }
           break;
+        }
         case 'sensor':
           animationPauseUntil.current = Date.now() + 500;
           break;

@@ -119,6 +119,8 @@ export function set_animation_speed(
   // Init functions should not run after initialization
   if (state.isInit) throw new GeneralRuntimeError('May not use initialization functions after initialization is complete!');
 
+  if (!Number.isFinite(speed) || speed <= 0) throw new GeneralRuntimeError('Animation speed must be a finite number greater than 0!');
+
   state.animationSpeed = speed;
 }
 
