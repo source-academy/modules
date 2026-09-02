@@ -38,17 +38,14 @@ export interface Area {
   flags: AreaFlags;
 }
 
-// A test for the student to pass
-export interface Test {
-  type: string;
-  test: Function;
-}
-
 // A test testing an area
-export interface AreaTest extends Test {
+export interface AreaTest {
   type: 'area';
   test: (areas: Area[]) => boolean;
 }
+
+// A test for the student to pass
+export type Test = AreaTest; // | SomeOtherTest in future
 
 // The main maze state
 export interface Maze {
