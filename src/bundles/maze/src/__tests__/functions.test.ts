@@ -1,6 +1,9 @@
+import type { Context } from 'js-slang';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const mockContext = { moduleContexts: { maze: {} as { state?: any } } };
+const mockContext = {
+  moduleContexts: { maze: {} as { state?: any } }
+} as unknown as Context;
 vi.mock(import('js-slang/context'), () => ({ default: mockContext }));
 
 describe('set_animation_speed', () => {
