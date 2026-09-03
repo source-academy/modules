@@ -77,8 +77,8 @@ export class World extends TypedEventTarget<WorldEventMap> {
 
   private setState(newState: WorldState) {
     if (this.state !== newState) {
-      this.dispatchEvent('worldStateChange', new Event('worldStateChange'));
       this.state = newState;
+      this.dispatchEvent('worldStateChange', new Event('worldStateChange'));
     }
   }
 
