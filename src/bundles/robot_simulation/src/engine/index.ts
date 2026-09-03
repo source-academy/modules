@@ -1,8 +1,12 @@
 export { World } from './World';
 export { Physics } from './Physics';
-export { Renderer } from './Render/Renderer';
+export { SceneRegistry } from './Render/SceneRegistry';
 export { Timer, type FrameTimingInfo } from './Core/Timer';
+export { RobotConsole } from './Core/RobotConsole';
 export { ControllerGroup, type Controller, ControllerMap } from './Core/Controller';
 export { Entity } from './Entity/Entity';
 export * as EntityFactory from './Entity/EntityFactory';
 export * as MeshFactory from './Render/helpers/MeshFactory';
+export { getCamera, type CameraOptions } from './Render/helpers/Camera';
+export { loadGLTF } from './Render/helpers/GLTF';
+export { createScene } from './Render/helpers/Scene';

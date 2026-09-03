@@ -3,18 +3,17 @@ import { describe, expect, it, vi } from 'vitest';
 import { Program } from '../Program';
 
 /**
- * Exercises the Python-flavoured path end-to-end (real py-slang CSE machine, not mocked),
- * proving that Program's async pump actually drives py-slang's async generator correctly across
- * several simulated physics ticks. Complements Program.test.ts, which only exercises the
- * pre-existing (mocked) synchronous js-slang path.
+ * Exercises the Python path end-to-end (real py-slang CSE machine, not mocked), proving that
+ * Program's async pump actually drives py-slang's async generator correctly across several
+ * simulated physics ticks. Complements Program.test.ts, which only exercises the mocked path.
  */
-describe('Program (python path)', () => {
+describe('Program (real py-slang CSE machine)', () => {
   it('steps a Python program to completion across several fixedUpdate ticks', async () => {
     const pyContext = new PyContext();
-    const program = new Program('x = 1\nx = x + 1\ny = x * 3\n', { stepsPerTick: 3 }, 'python', pyContext);
+    const program = new Program('x = 1\nx = x + 1\ny = x * 3\n', { stepsPerTick: 3 }, pyContext);
 
     program.start();
-    expect(program.pyIterator).not.toBeNull();
+    expect(program.iterator).not.toBeNull();
 
     // Drain the program across several ticks the way World's physics-tick loop would, waiting
     // a macrotask between ticks so each tick's fire-and-forget async pump gets a chance to
@@ -29,20 +28,18 @@ describe('Program (python path)', () => {
 
     // The global environment should now hold the final bindings.
     const globalEnv = pyContext.runtime.environments[0];
-    expect(globalEnv.head['x']).toEqual({ type: 'bigint', value: 2n });
-    expect(globalEnv.head['y']).toEqual({ type: 'bigint', value: 6n });
+    expect(globalEnv.head['x']).toEqual({ type: 'bigint', value: BigInt(2) });
+    expect(globalEnv.head['y']).toEqual({ type: 'bigint', value: BigInt(6) });
   });
 
-  it('throws GeneralRuntimeError when constructed with language "python" but no pyContext', () => {
-    expect(() => new Program('x = 1', undefined, 'python', null)).toThrow(
-      'pyContext is required when language is "python"'
-    );
+  it('throws GeneralRuntimeError when constructed without a pyContext', () => {
+    expect(() => new Program('x = 1')).toThrow('pyContext is required');
   });
 
   it('surfaces a Python evaluation error on the next tick without throwing synchronously', async () => {
     const pyContext = new PyContext();
     // Name error: `z` is never defined.
-    const program = new Program('print(z)', { stepsPerTick: 5 }, 'python', pyContext);
+    const program = new Program('print(z)', { stepsPerTick: 5 }, pyContext);
     vi.spyOn(console, 'error').mockImplementation(vi.fn());
 
     program.start();

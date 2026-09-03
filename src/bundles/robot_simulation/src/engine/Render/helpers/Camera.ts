@@ -1,4 +1,4 @@
-import { InternalRuntimeError } from '@sourceacademy/modules-lib/errors';
+import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import * as THREE from 'three';
 
 type OrthographicCameraOptions = {
@@ -42,7 +42,7 @@ export function getCamera(cameraOptions: CameraOptions): THREE.Camera {
     }
     default: {
       // @ts-expect-error Ignore the never
-      throw new InternalRuntimeError(`Unknown camera type: ${cameraOptions.type}`);
+      throw new EvaluatorRuntimeError(`Unknown camera type: ${cameraOptions.type}`);
     }
   }
 }
