@@ -33,6 +33,7 @@ export {
   createPaper,
   createFloor,
   createCSE,
+  createPythonCSE,
   addControllerToWorld,
   createRobotConsole,
   saveToContext,

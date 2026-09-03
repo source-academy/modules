@@ -10,6 +10,7 @@ import {
   type DefaultEv3,
 } from './controllers/ev3/ev3/default/ev3';
 import { Program } from './controllers/program/Program';
+import { createRobotPythonContext } from './controllers/program/pythonRuntime';
 import { Physics, Renderer, Timer, World, type Controller } from './engine';
 
 import { RobotConsole } from './engine/Core/RobotConsole';
@@ -423,6 +424,52 @@ export function createCSE() {
 }
 
 /**
+ * Creates a CSE machine as a Program Object, running **Python** instead of Source.
+ *
+ * This is the Python counterpart of {@link createCSE}. Where `createCSE` re-runs the surrounding
+ * Source program (`context.unTypecheckedCode[0]`) as the robot's control program, this takes the
+ * control program as an explicit string of Python and evaluates it with
+ * [py-slang](https://github.com/source-academy/py-slang)'s CSE machine, stepped in lockstep with
+ * the physics tick exactly the same way — so `ev3_pause`, motor commands and sensor reads all
+ * happen in simulated time rather than instantaneously.
+ *
+ * The Python program can call the whole `ev3_*` API directly by name; no `import` is needed (and
+ * none is possible — see pythonRuntime.ts for why). `print(...)` goes to the simulation's Robot
+ * Console panel.
+ *
+ * The returned Program object is designed to be added to the world using {@link addControllerToWorld}.
+ *
+ * **This is a Controller function and should be called within {@link init_simulation}.**
+ *
+ * @param code The robot's control program, written in Python (SICPy §4).
+ * @returns Program
+ *
+ * @example
+ * ```
+ * init_simulation(() => {
+ *   const physics = createPhysics();
+ *   const renderer = createRenderer();
+ *   const world = createWorld(physics, renderer, createTimer(), createRobotConsole());
+ *   const ev3 = createEv3(physics, renderer);
+ *   saveToContext('world', world);
+ *   saveToContext('ev3', ev3);
+ *   addControllerToWorld(ev3, world);
+ *   addControllerToWorld(createFloor(physics, renderer), world);
+ *   addControllerToWorld(createPythonCSE(
+ *     "ev3_runToRelativePosition(ev3_motorA(), 1080, 200)\n" +
+ *     "ev3_runToRelativePosition(ev3_motorB(), 1080, 200)\n"
+ *   ), world);
+ *   return world;
+ * });
+ * ```
+ *
+ * @category Controller
+ */
+export function createPythonCSE(code: string) {
+  return new Program(code, undefined, 'python', createRobotPythonContext());
+}
+
+/**
  * Add a controller to the world.
  *
  * The controller is a unit of computation modelled after Unity's MonoBehaviour. It is used to
@@ -490,6 +537,35 @@ export function createEv3(physics: Physics, renderer: Renderer): DefaultEv3 {
 }
 
 /**
+ * Unwraps a value handed back by a Source callback that this bundle called itself.
+ *
+ * js-slang's CSE machine represents a Source closure to native (module) code through
+ * `closureToJS` (js-slang/dist/cse-machine/closure.js): calling it spins up a nested CSE machine,
+ * drains it, and returns `stash.peek()`. As of js-slang 1.0.94 the value left on that stash is
+ * the machine's internal tail-call envelope - `{ isTail: false, value: <the real value> }` - not
+ * the value itself, so a module that calls a user-supplied callback and then uses the result gets
+ * the envelope. For `init_simulation` that surfaced as `TypeError: world.init is not a function`,
+ * i.e. `robot_simulation` failing on its very first call in the real frontend regardless of what
+ * the user's program does.
+ *
+ * That's an upstream js-slang bug (the envelope should be unwrapped before it escapes into native
+ * code), but it has to be tolerated here for the module to work at all against the shipped
+ * js-slang. The check is deliberately shape-based and non-destructive: once js-slang unwraps on
+ * its own side, a real `World` falls straight through this function unchanged.
+ */
+function unwrapCallbackResult<T>(value: unknown): T {
+  if (
+    value !== null
+    && typeof value === 'object'
+    && 'isTail' in value
+    && 'value' in value
+  ) {
+    return (value as { value: T }).value;
+  }
+  return value as T;
+}
+
+/**
  * Initialize the simulation world. This function is to be called before the robot code.
  * This function is used to describe the simulation environment and the controllers.
  *
@@ -506,7 +582,7 @@ export function init_simulation(worldFactory: () => World) {
   if (storedWorld !== undefined) {
     return;
   }
-  const world = worldFactory();
+  const world = unwrapCallbackResult<World>(worldFactory());
   world.init();
   interrupt();
 }
