@@ -81,6 +81,7 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     'addControllerToWorld',
     'saveToContext',
     'init_simulation',
+    'init_default_simulation',
     'ev3_motorA',
     'ev3_motorB',
     'ev3_motorC',
@@ -384,6 +385,68 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     return { type: DataType.VOID, value: undefined };
   }
 
+  /**
+   * The boilerplate-free alternative to `init_simulation`: builds default physics, a default
+   * world, a default floor and a default EV3 (the same defaults `createPhysics`/`createFloor`/
+   * `createEv3` use), wires `control_code` up as the robot's Python control program, and starts
+   * the simulation - all in one call.
+   *
+   * This exists because a true "prepend" split - where the instructor's scene setup runs
+   * invisibly ahead of the student's own code, and the student never calls a setup function or
+   * wraps their control code in a string at all - is not reachable at this module's level today:
+   * Conductor's frontend already concatenates `${prepend}\n${studentCode}` into one source string
+   * before it ever reaches an evaluator (see evalEditorSaga's Conductor branch in
+   * source-academy/frontend), and `PyCseEvaluator.evaluateChunk(chunk: string)` (py-slang) only
+   * ever receives that single opaque string - there is no delimiter, chunk boundary, or line
+   * count forwarded into the evaluator or exposed to a running module that would let
+   * `robot_simulation` tell "instructor-authored setup" and "student code" apart at runtime. The
+   * `lineOffset`/`preludeLineOffset` value the frontend does track lives only in its own saga, for
+   * shifting reported error line numbers back after the fact - it is never sent over the wire.
+   * Reaching the real Joel-faithful split would need new plumbing above this module (e.g.
+   * evaluateChunk taking a structured `{ prepend, studentCode }` instead of one string, and
+   * GenericDataHandler/IDataHandler exposing the boundary to a module) - out of scope here.
+   *
+   * For a customised World (non-default physics/gravity, extra walls or paper, a control program
+   * written in Source/Scheme instead of Python), use `createPhysics`/`createWorld`/`createWall`/
+   * `createPaper`/`createPythonCSE`/`addControllerToWorld`/`saveToContext`/`init_simulation`
+   * directly instead, exactly as before.
+   *
+   * @param control_code The robot's control program, written in Python (SICPy §4).
+   */
+  async* init_default_simulation(
+    control_code: TypedValue<DataType.CONST_STRING>
+  ): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
+    if (this.__state.world !== undefined) {
+      return { type: DataType.VOID, value: undefined };
+    }
+    this.__ensureTabLoaded();
+
+    const physics = new Physics({ gravity: { x: 0, y: -9.81, z: 0 }, timestep: 1 / 20 });
+    const world = new World(physics, new Timer(), new RobotConsole());
+    const floor = this.__createCuboid(
+      physics,
+      { x: 0, y: -0.5, z: 0 },
+      { width: 20, length: 20, height: 1 },
+      1,
+      'white',
+      'fixed'
+    );
+    const ev3 = createDefaultEv3(physics, this.__sceneRegistry, ev3Config);
+    const pyContext = createRobotPythonContext(this.__ev3Fns, () => this.__getWorldFromContext());
+    const program = new Program(control_code.value, undefined, pyContext);
+
+    world.addController(floor, ev3, program);
+
+    this.__state.world = world;
+    this.__state.ev3 = ev3;
+
+    this.__hookWorld(world);
+    await world.init();
+    world.start();
+
+    return { type: DataType.VOID, value: undefined };
+  }
+
   // [EV3]
 
   async* ev3_motorA(): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
@@ -459,6 +522,7 @@ attachModuleMethod(RobotSimulationModulePlugin, 'createPythonCSE', [DataType.CON
 attachModuleMethod(RobotSimulationModulePlugin, 'addControllerToWorld', [DataType.OPAQUE, DataType.OPAQUE], DataType.VOID);
 attachModuleMethod(RobotSimulationModulePlugin, 'saveToContext', [DataType.CONST_STRING, DataType.OPAQUE], DataType.VOID);
 attachModuleMethod(RobotSimulationModulePlugin, 'init_simulation', [DataType.CLOSURE], DataType.VOID);
+attachModuleMethod(RobotSimulationModulePlugin, 'init_default_simulation', [DataType.CONST_STRING], DataType.VOID);
 attachModuleMethod(RobotSimulationModulePlugin, 'ev3_motorA', [], DataType.OPAQUE);
 attachModuleMethod(RobotSimulationModulePlugin, 'ev3_motorB', [], DataType.OPAQUE);
 attachModuleMethod(RobotSimulationModulePlugin, 'ev3_motorC', [], DataType.OPAQUE);
