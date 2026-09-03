@@ -1,5 +1,5 @@
 import { sceneConfig } from '@sourceacademy/bundle-robot_simulation/config';
-import { MeshFactory, getCamera, loadGLTF } from '@sourceacademy/bundle-robot_simulation/engine';
+import { DEFAULT_LOOK_AT, MeshFactory, getCamera, loadGLTF } from '@sourceacademy/bundle-robot_simulation/engine';
 import {
   ROBOT_SIMULATION_CONTROL_CHANNEL_ID,
   ROBOT_SIMULATION_STATE_CHANNEL_ID,
@@ -26,6 +26,25 @@ interface ViewState {
 }
 
 const MAX_LOGS = 200;
+
+/**
+ * Where the viewer's last camera position/orbit target is remembered across a reload or a
+ * re-run of the program - see `__saveCameraView`/`__loadCameraView`. Keyed in `localStorage`,
+ * which is per-browser, not per-program-run - exactly "did the person looking at this tab move
+ * the camera" state, same category as "which tab is open", not simulation state.
+ */
+const CAMERA_VIEW_STORAGE_KEY = 'robot_simulation:camera-view';
+
+type StoredCameraView = {
+  position: [number, number, number];
+  target: [number, number, number];
+};
+
+function isStoredCameraView(value: unknown): value is StoredCameraView {
+  const isVec3 = (v: unknown): v is [number, number, number] => Array.isArray(v) && v.length === 3 && v.every(n => typeof n === 'number' && Number.isFinite(n));
+  return typeof value === 'object' && value !== null
+    && isVec3((value as StoredCameraView).position) && isVec3((value as StoredCameraView).target);
+}
 
 /**
  * Host-side (browser main thread) counterpart of `RobotSimulationModulePlugin` (in the
@@ -66,6 +85,17 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
    * placeholder `Object3D` added immediately (so transform updates never have nowhere to go) -
     the actual loaded model is added as its child once `loadGLTF` resolves. */
   private readonly __entities = new Map<number, THREE.Object3D>();
+
+  /** ids of every 'gltf'-kind entity seen so far - the EV3's chassis mesh (Mesh.ts) and its wheels
+   * (Motor.ts/Wheel.ts) are the *only* things this bundle ever spawns as 'gltf' (everything else -
+   * `createCuboid`/`createWall`/`createFloor`, `createPaper` - is 'cuboid'/'paper'), so this set is
+   * exactly "the EV3, as a set of parts" with no extra bookkeeping needed to tell it apart from
+   * other scene content. Used by {@link __focusOnEv3} ("F to focus", Unity/Blender-style).
+   */
+  private readonly __ev3EntityIds = new Set<number>();
+
+  private __keydownListener: ((e: KeyboardEvent) => void) | undefined;
+  private __controlsEndListener: (() => void) | undefined;
 
   private __state: ViewState = {
     worldState: 'unintialized',
@@ -174,6 +204,7 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
     const holder = new THREE.Object3D();
     this.__scene.add(holder);
     this.__entities.set(id, holder);
+    this.__ev3EntityIds.add(id);
     loadGLTF(descriptor.url, descriptor.dimension)
       .then(data => holder.add(data.scene))
       .catch(error => console.warn('robot_simulation tab: failed to load GLTF asset:', descriptor.url, error));
@@ -196,6 +227,41 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
     this.__renderer.setSize(sceneConfig.width, sceneConfig.height);
     this.__renderer.setPixelRatio(window.devicePixelRatio * 1.5);
     this.__controls = new OrbitControls(this.__camera, this.__renderer.domElement);
+    // Orbiting needs a target, not just a camera position - without this the controls' own
+    // `update()` (called every render frame in __tick) would silently re-point the camera back at
+    // the world origin (their default target) on the very first frame, undoing getCamera()'s own
+    // "look at the EV3's spawn point" default.
+    this.__controls.target.copy(DEFAULT_LOOK_AT);
+    this.__controls.enableDamping = true;
+    this.__controls.dampingFactor = 0.1;
+    this.__controls.zoomSpeed = 0.6;
+
+    // A view the viewer already set up (by dragging/zooming, or F-focusing) survives a reload or
+    // a re-run of the program instead of snapping back to getCamera()'s default every time - see
+    // `__loadCameraView`/`__saveCameraView`. Only overrides the (camera, controls.target) pair
+    // just set above if something was actually saved.
+    this.__loadCameraView();
+    this.__controls.update();
+
+    // "F to focus" (Unity/Blender-style): only wired to this canvas, not the page, and only fires
+    // while the canvas itself has focus - a plain keydown on `window` would steal every "f"
+    // keystroke typed anywhere else in the app (e.g. the code editor). `tabIndex` on the canvas
+    // (set in RobotSimulationView_) is what makes it focusable/receive keyboard events at all.
+    this.__keydownListener = (e: KeyboardEvent) => {
+      if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        this.__focusOnEv3();
+        this.__saveCameraView();
+      }
+    };
+    canvas.addEventListener('keydown', this.__keydownListener);
+
+    // Persist on 'end' (fired once per drag/zoom/pan gesture), not 'change' (fired continuously
+    // mid-gesture, dozens of times a second) - plenty responsive for "remember where I left the
+    // camera" without hammering localStorage on every frame of a drag.
+    this.__controlsEndListener = () => this.__saveCameraView();
+    this.__controls.addEventListener('end', this.__controlsEndListener);
+
     this.__requestId = window.requestAnimationFrame(this.__tick);
   }
 
@@ -204,9 +270,92 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
       window.cancelAnimationFrame(this.__requestId);
       this.__requestId = undefined;
     }
+    if (this.__keydownListener) {
+      this.__renderer?.domElement.removeEventListener('keydown', this.__keydownListener);
+      this.__keydownListener = undefined;
+    }
+    if (this.__controlsEndListener) {
+      this.__controls?.removeEventListener('end', this.__controlsEndListener);
+      this.__controlsEndListener = undefined;
+    }
     this.__controls?.dispose();
     this.__controls = undefined;
     this.__renderer = undefined;
+  }
+
+  /**
+   * Persists the current camera position + orbit target to `localStorage`, keyed per-browser (not
+   * per-program-run) - see {@link CAMERA_VIEW_STORAGE_KEY}. Best-effort: a private-browsing tab or
+   * a full storage quota throws on `setItem`, which just means the view doesn't stick - not worth
+   * failing the render loop over.
+   */
+  private __saveCameraView(): void {
+    if (!this.__controls) return;
+    try {
+      const view: StoredCameraView = {
+        position: this.__camera.position.toArray(),
+        target: this.__controls.target.toArray(),
+      };
+      window.localStorage.setItem(CAMERA_VIEW_STORAGE_KEY, JSON.stringify(view));
+    } catch {
+      // See doc comment - not fatal.
+    }
+  }
+
+  /**
+   * Counterpart to {@link __saveCameraView} - applies a previously-saved view, if any, to the
+   * current camera/controls. Leaves both at whatever `getCamera()`'s default already put them at
+   * if nothing was saved yet, or if what's stored doesn't parse as a valid view (e.g. an older
+   * format from a previous version of this tab).
+   */
+  private __loadCameraView(): void {
+    if (!this.__controls) return;
+    try {
+      const raw = window.localStorage.getItem(CAMERA_VIEW_STORAGE_KEY);
+      if (!raw) return;
+      const parsed: unknown = JSON.parse(raw);
+      if (!isStoredCameraView(parsed)) return;
+      this.__camera.position.fromArray(parsed.position);
+      this.__controls.target.fromArray(parsed.target);
+    } catch {
+      // Corrupt/inaccessible storage - fall back to whatever's already set (the default view).
+    }
+  }
+
+  /** Unity/Blender-style "F to focus selected", hardcoded to "selected" = the EV3 (the only thing
+   * a robot_simulation scene ever really has to look at - see `__ev3EntityIds`'s doc comment for
+   * why picking it out from arbitrary other scene content, e.g. walls/paper, needs no extra
+   * bookkeeping). Recenters `OrbitControls.target` on the EV3's current (live, physics-driven)
+   * position and pulls the camera to a distance based on its actual on-screen bounding box,
+   * preserving whatever orbit angle/direction the viewer had already set up rather than resetting
+   * it to some fixed "front" view.
+   */
+  private __focusOnEv3(): void {
+    if (this.__ev3EntityIds.size === 0 || !this.__controls) return;
+
+    const box = new THREE.Box3();
+    let any = false;
+    for (const id of this.__ev3EntityIds) {
+      const node = this.__entities.get(id);
+      if (!node) continue;
+      box.expandByObject(node);
+      any = true;
+    }
+    if (!any || box.isEmpty()) return;
+
+    const center = box.getCenter(new THREE.Vector3());
+    const radius = Math.max(box.getSize(new THREE.Vector3()).length() / 2, 0.05);
+    // ~2.2x the bounding radius keeps the whole robot comfortably inside the frame with a little
+    // margin, rather than filling it edge-to-edge.
+    const distance = radius * 2.2;
+
+    const direction = this.__camera.position.clone().sub(this.__controls.target);
+    if (direction.lengthSq() === 0) direction.set(0, 0.35, -0.4);
+    direction.normalize().multiplyScalar(distance);
+
+    this.__controls.target.copy(center);
+    this.__camera.position.copy(center).add(direction);
+    this.__controls.update();
   }
 
   private __tick = (): void => {
@@ -244,7 +393,10 @@ function RobotSimulationView_({ state, canvasRef }: { state: ViewState, canvasRe
           boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.2)',
         }}
       >
-        <canvas ref={canvasRef} width={sceneConfig.width} height={sceneConfig.height} />
+        <canvas ref={canvasRef} tabIndex={0} width={sceneConfig.width} height={sceneConfig.height} style={{ outline: 'none' }} />
+      </div>
+      <div style={{ display: 'flex', gap: '1rem', fontFamily: 'monospace', fontSize: 12, color: '#8a97a3' }}>
+        <div>Drag to orbit, scroll to zoom, click the view then press F to focus the robot</div>
       </div>
       <div style={{ display: 'flex', gap: '1rem', fontFamily: 'monospace', fontSize: 12 }}>
         <div>World: {state.worldState}</div>

@@ -7,6 +7,6 @@ export { ControllerGroup, type Controller, ControllerMap } from './Core/Controll
 export { Entity } from './Entity/Entity';
 export * as EntityFactory from './Entity/EntityFactory';
 export * as MeshFactory from './Render/helpers/MeshFactory';
-export { getCamera, type CameraOptions } from './Render/helpers/Camera';
+export { DEFAULT_LOOK_AT, getCamera, type CameraOptions } from './Render/helpers/Camera';
 export { loadGLTF } from './Render/helpers/GLTF';
 export { createScene } from './Render/helpers/Scene';
