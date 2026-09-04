@@ -118,10 +118,30 @@ describe(RobotSimulationModulePlugin, () => {
           stringValue('red.png'), numberValue(1), numberValue(1), numberValue(0), numberValue(1), numberValue(0)
         )
       );
+      await runAsyncGenerator(
+        (plugin as any).add_color_patch(
+          stringValue('red'), numberValue(0), numberValue(1), numberValue(0.5), numberValue(0.5)
+        )
+      );
 
-      // Both controllers were added live (start() already fired) rather than only queued for a
-      // future worldStart that already happened.
-      expect(world.controllers.controllers.length).toBe(controllersBefore + 2);
+      // All three controllers were added live (start() already fired) rather than only queued for
+      // a future worldStart that already happened.
+      expect(world.controllers.controllers.length).toBe(controllersBefore + 3);
+    });
+
+    test('add_color_patch registers a real physics collider with its color, unlike add_paper', async () => {
+      const { plugin } = makePlugin();
+      await runAsyncGenerator((plugin as any).init_default_simulation());
+
+      const registerColorSpy = vi.spyOn((plugin as any).__state.world.physics, 'registerColor');
+
+      await runAsyncGenerator(
+        (plugin as any).add_color_patch(
+          stringValue('#ff0000'), numberValue(0), numberValue(1), numberValue(0.5), numberValue(0.5)
+        )
+      );
+
+      expect(registerColorSpy).toHaveBeenCalledWith(expect.anything(), '#ff0000');
     });
   });
 

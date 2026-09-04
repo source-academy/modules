@@ -91,6 +91,7 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     'init_default_simulation',
     'add_wall',
     'add_paper',
+    'add_color_patch',
     'run_robot_code',
     'ev3_motorA',
     'ev3_motorB',
@@ -562,7 +563,9 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
   /**
    * Adds a visual (non-collidable - see Paper.ts's doc comment) floor overlay to the
    * already-initialised default world - a friendly wrapper over `createPaper`/
-   * `addControllerToWorld` for the same reason as `add_wall`.
+   * `addControllerToWorld` for the same reason as `add_wall`. Purely decorative: because it has no
+   * physics collider, the color sensor's raycast (see ColorSensor.ts) cannot detect it - use
+   * `add_color_patch` instead for a floor marking the robot needs to actually sense.
    * @param url An image URL to texture the overlay with.
    * @param width Overlay width, in metres.
    * @param height Overlay height, in metres.
@@ -587,6 +590,44 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
       rotation: (rotation.value * Math.PI) / 180,
     });
     world.addLiveController(paper);
+    return { type: DataType.VOID, value: undefined };
+  }
+
+  /**
+   * Adds a thin, solid, fixed color patch flush with the floor to the already-initialised default
+   * world - unlike `add_paper` (a purely visual overlay with no physics collider), this one *has* a
+   * collider, so `ev3_colorSensor`'s downward raycast actually detects it (see ColorSensor.ts's doc
+   * comment on why `add_paper` alone can't be sensed). Use this for any floor marking the robot's
+   * control program needs to react to; use `add_paper` instead for purely decorative markings, or
+   * when many overlapping/finely-detailed images matter more than sensing them.
+   * @param color Any CSS color string.
+   * @param x X position, in metres.
+   * @param y Y position, in metres (a floor-plane coordinate, not vertical).
+   * @param width Patch width, in metres.
+   * @param length Patch length, in metres.
+   * @category Scene Setup
+   */
+  async* add_color_patch(
+    color: TypedValue<DataType.CONST_STRING>,
+    x: TypedValue<DataType.NUMBER>,
+    y: TypedValue<DataType.NUMBER>,
+    width: TypedValue<DataType.NUMBER>,
+    length: TypedValue<DataType.NUMBER>
+  ): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
+    const world = this.__getWorldFromContext();
+    // A hair above the floor's own top surface (floor is centered at y=-0.5 with height=1, so its
+    // top face is at y=0) - thin enough to look flush, but tall enough that the sensor's downward
+    // raycast hits this patch, not the floor underneath it (mirrors Paper's own y=0.001 for the
+    // same reason - see Paper.ts's start()).
+    const patch = this.__createCuboid(
+      world.physics,
+      { x: x.value, y: 0.001, z: y.value },
+      { width: width.value, length: length.value, height: 0.01 },
+      1,
+      color.value,
+      'fixed'
+    );
+    world.addLiveController(patch);
     return { type: DataType.VOID, value: undefined };
   }
 
@@ -762,6 +803,7 @@ attachModuleMethod(RobotSimulationModulePlugin, 'init_simulation', [DataType.CLO
 attachModuleMethod(RobotSimulationModulePlugin, 'init_default_simulation', [], DataType.VOID);
 attachModuleMethod(RobotSimulationModulePlugin, 'add_wall', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.VOID);
 attachModuleMethod(RobotSimulationModulePlugin, 'add_paper', [DataType.CONST_STRING, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.VOID);
+attachModuleMethod(RobotSimulationModulePlugin, 'add_color_patch', [DataType.CONST_STRING, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.VOID);
 attachModuleMethod(RobotSimulationModulePlugin, 'run_robot_code', [DataType.CONST_STRING], DataType.VOID);
 attachModuleMethod(RobotSimulationModulePlugin, 'ev3_motorA', [], DataType.OPAQUE);
 attachModuleMethod(RobotSimulationModulePlugin, 'ev3_motorB', [], DataType.OPAQUE);
