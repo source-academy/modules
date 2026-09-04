@@ -235,6 +235,13 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
 
   // [Configuration]
 
+  /**
+   * Creates a physics world with custom gravity and timestep - use `createPhysics` instead for the
+   * usual Earth-like defaults.
+   * @param gravity Downward acceleration, in m/s².
+   * @param timestep Simulated seconds advanced per physics step.
+   * @category Scene Setup
+   */
   async* createCustomPhysics(
     gravity: TypedValue<DataType.NUMBER>,
     timestep: TypedValue<DataType.NUMBER>
@@ -243,19 +250,31 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     return await this.evaluator.opaque_make(physics, true);
   }
 
+  /** Creates a physics world with Earth-like gravity and a default timestep.
+   * @category Scene Setup */
   async* createPhysics(): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     const physics = new Physics({ gravity: { x: 0, y: -9.81, z: 0 }, timestep: 1 / 20 });
     return await this.evaluator.opaque_make(physics, true);
   }
 
+  /** Creates a timer, used by `createWorld` to track simulated time.
+   * @category Scene Setup */
   async* createTimer(): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.evaluator.opaque_make(new Timer(), true);
   }
 
+  /** Creates a Robot Console (the panel the EV3's `print()` output/errors go to), used by
+   * `createWorld`.
+   * @category Scene Setup */
   async* createRobotConsole(): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.evaluator.opaque_make(new RobotConsole(), true);
   }
 
+  /**
+   * Creates the simulation World from the pieces `createPhysics`/`createTimer`/`createRobotConsole`
+   * built - the object `init_simulation`'s callback must return.
+   * @category Scene Setup
+   */
   async* createWorld(
     physics: TypedValue<DataType.OPAQUE>,
     timer: TypedValue<DataType.OPAQUE>,
@@ -269,6 +288,21 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     return await this.evaluator.opaque_make(world, true);
   }
 
+  /**
+   * Creates a solid box in the scene - the general-purpose building block `createFloor`/`createWall`
+   * are thin presets of.
+   * @param physics The physics world to add the box to.
+   * @param position_x X position, in metres.
+   * @param position_y Y (vertical) position, in metres.
+   * @param position_z Z position, in metres.
+   * @param width Box width, in metres.
+   * @param length Box length, in metres.
+   * @param height Box height, in metres.
+   * @param mass Box mass, in kg (ignored for a `"fixed"` body).
+   * @param color Any CSS color string.
+   * @param bodyType `"fixed"` (immovable) or `"dynamic"` (affected by physics).
+   * @category Scene Setup
+   */
   async* createCuboid(
     physics: TypedValue<DataType.OPAQUE>,
     position_x: TypedValue<DataType.NUMBER>,
@@ -292,6 +326,9 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     return await this.evaluator.opaque_make(cuboid, true);
   }
 
+  /** Creates the default 20x20m white floor.
+   * @param physics The physics world to add the floor to.
+   * @category Scene Setup */
   async* createFloor(physics: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     const floor = this.__createCuboid(
       await this.__getOpaque<Physics>(physics),
@@ -304,6 +341,19 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     return await this.evaluator.opaque_make(floor, true);
   }
 
+  /**
+   * Creates a fixed yellow wall - for a customised `World` built with `createWorld`/`init_simulation`
+   * rather than `init_default_simulation`. Use `add_wall` instead once the default simulation is
+   * already running.
+   * @param physics The physics world to add the wall to.
+   * @param x X position, in metres.
+   * @param y Y position, in metres (note: not vertical - this is a floor-plane coordinate, matching
+   * `add_wall`).
+   * @param width Wall width, in metres.
+   * @param length Wall length, in metres.
+   * @param height Wall height, in metres.
+   * @category Scene Setup
+   */
   async* createWall(
     physics: TypedValue<DataType.OPAQUE>,
     x: TypedValue<DataType.NUMBER>,
@@ -323,6 +373,19 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     return await this.evaluator.opaque_make(wall, true);
   }
 
+  /**
+   * Creates a visual (non-collidable) floor overlay, e.g. a colored patch for a color sensor demo -
+   * for a customised `World` built with `createWorld`/`init_simulation` rather than
+   * `init_default_simulation`. Use `add_paper` instead once the default simulation is already
+   * running.
+   * @param url An image URL to texture the overlay with.
+   * @param width Overlay width, in metres.
+   * @param height Overlay height, in metres.
+   * @param x X position, in metres.
+   * @param y Y position, in metres.
+   * @param rotation Rotation, in degrees.
+   * @category Scene Setup
+   */
   async* createPaper(
     url: TypedValue<DataType.CONST_STRING>,
     width: TypedValue<DataType.NUMBER>,
@@ -340,6 +403,9 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     return await this.evaluator.opaque_make(paper, true);
   }
 
+  /** Creates the EV3 robot with its default chassis/motors/sensors.
+   * @param physics The physics world to spawn the EV3 into.
+   * @category Scene Setup */
   async* createEv3(physics: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     const ev3 = createDefaultEv3(await this.__getOpaque<Physics>(physics), this.__sceneRegistry, ev3Config);
     return await this.evaluator.opaque_make(ev3, true);
@@ -351,6 +417,7 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
    * pythonRuntime.ts). `print(...)` goes to the simulation's Robot Console panel.
    *
    * @param code The robot's control program, written in Python (SICPy §4).
+   * @category Control Program
    */
   async* createPythonCSE(code: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     const pyContext = createRobotPythonContext(this.__ev3Fns, () => this.__getWorldFromContext());
@@ -358,6 +425,9 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     return await this.evaluator.opaque_make(program, true);
   }
 
+  /** Adds a controller (e.g. from `createFloor`/`createWall`/`createEv3`/`createPythonCSE`) to a
+   * World built with `createWorld`.
+   * @category Scene Setup */
   async* addControllerToWorld(
     controller: TypedValue<DataType.OPAQUE>,
     world: TypedValue<DataType.OPAQUE>
@@ -367,6 +437,9 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     return { type: DataType.VOID, value: undefined };
   }
 
+  /** Saves a value (e.g. the World or EV3) under `key` so the `ev3_*` API can find it later - the
+   * `world`/`ev3` keys specifically are what `init_simulation` needs a custom setup to have saved.
+   * @category Scene Setup */
   async* saveToContext(
     key: TypedValue<DataType.CONST_STRING>,
     value: TypedValue<DataType.OPAQUE>
@@ -382,6 +455,9 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
    * for the tab to be opened first (the tab has no way to signal the module at all besides the
    * exported functions student code calls - see protocol.ts), so the simulation is "live" from
    * the moment `init_simulation` returns, whether or not anyone has the tab open to watch it yet.
+   *
+   * For the common case (no customisation needed), use `init_default_simulation` instead.
+   * @category Scene Setup
    */
   async* init_simulation(
     worldFactory: TypedValue<DataType.CLOSURE>
@@ -418,6 +494,7 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
    * Source/Scheme instead of Python), use `createPhysics`/`createWorld`/`createWall`/
    * `createPaper`/`createPythonCSE`/`addControllerToWorld`/`saveToContext`/`init_simulation`
    * directly instead, exactly as before.
+   * @category Scene Setup
    */
   async* init_default_simulation(): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     if (this.__state.world !== undefined) {
@@ -455,6 +532,12 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
    * that doesn't need `physics`/`world` opaque handles, since `init_default_simulation` already
    * owns both. Uses `World.addLiveController` rather than `addController` because the world is
    * already running by the time a student calls this from the setup pane.
+   * @param x X position, in metres.
+   * @param y Y position, in metres (a floor-plane coordinate, not vertical).
+   * @param width Wall width, in metres.
+   * @param length Wall length, in metres.
+   * @param height Wall height, in metres.
+   * @category Scene Setup
    */
   async* add_wall(
     x: TypedValue<DataType.NUMBER>,
@@ -480,6 +563,13 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
    * Adds a visual (non-collidable - see Paper.ts's doc comment) floor overlay to the
    * already-initialised default world - a friendly wrapper over `createPaper`/
    * `addControllerToWorld` for the same reason as `add_wall`.
+   * @param url An image URL to texture the overlay with.
+   * @param width Overlay width, in metres.
+   * @param height Overlay height, in metres.
+   * @param x X position, in metres.
+   * @param y Y position, in metres.
+   * @param rotation Rotation, in degrees.
+   * @category Scene Setup
    */
   async* add_paper(
     url: TypedValue<DataType.CONST_STRING>,
@@ -527,6 +617,8 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
    * tab's own embedded editor instead (`$runReplCode` in protocol.ts) - same effect as this
    * function, just triggered from inside the tab that's already showing the 3D view, so there's
    * nothing to focus/switch away from in the first place.
+   * @param code The robot's control program, written in Python (SICPy §4).
+   * @category Control Program
    */
   async* run_robot_code(
     code: TypedValue<DataType.CONST_STRING>
@@ -562,22 +654,39 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
 
   // [EV3]
 
+  /** The EV3's left-front motor. Same API on both the setup program and any robot control program
+   * (a Python string/REPL run/embedded-editor run) - see the module doc comment.
+   * @category EV3 */
   async* ev3_motorA(): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.evaluator.opaque_make(this.__ev3Fns.ev3_motorA(), true);
   }
 
+  /** The EV3's right-front motor.
+   * @category EV3 */
   async* ev3_motorB(): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.evaluator.opaque_make(this.__ev3Fns.ev3_motorB(), true);
   }
 
+  /** The EV3's left-rear motor.
+   * @category EV3 */
   async* ev3_motorC(): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.evaluator.opaque_make(this.__ev3Fns.ev3_motorC(), true);
   }
 
+  /** The EV3's right-rear motor.
+   * @category EV3 */
   async* ev3_motorD(): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.evaluator.opaque_make(this.__ev3Fns.ev3_motorD(), true);
   }
 
+  /**
+   * Rotates a motor by `position` degrees relative to its current position, at `speed`.
+   * @param motor A motor from `ev3_motorA`/`ev3_motorB`/`ev3_motorC`/`ev3_motorD`.
+   * @param position Degrees of wheel rotation, relative to the motor's current position (e.g.
+   * `1080` is 3 full turns).
+   * @param speed How fast to turn - larger is faster.
+   * @category EV3
+   */
   async* ev3_runToRelativePosition(
     motor: TypedValue<DataType.OPAQUE>,
     position: TypedValue<DataType.NUMBER>,
@@ -587,31 +696,46 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     return { type: DataType.VOID, value: undefined };
   }
 
+  /** Pauses the robot's control program for `duration` milliseconds, without blocking the rest of
+   * the simulation.
+   * @category EV3 */
   async* ev3_pause(duration: TypedValue<DataType.NUMBER>): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     this.__ev3Fns.ev3_pause(duration.value);
     return { type: DataType.VOID, value: undefined };
   }
 
+  /** The EV3's color sensor.
+   * @category EV3 */
   async* ev3_colorSensor(): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.evaluator.opaque_make(this.__ev3Fns.ev3_colorSensor(), true);
   }
 
+  /** The color sensor's current red reading (0-255).
+   * @category EV3 */
   async* ev3_colorSensorRed(colorSensor: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, undefined> {
     return { type: DataType.NUMBER, value: this.__ev3Fns.ev3_colorSensorRed(await this.__getOpaque<ColorSensor>(colorSensor)) };
   }
 
+  /** The color sensor's current green reading (0-255).
+   * @category EV3 */
   async* ev3_colorSensorGreen(colorSensor: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, undefined> {
     return { type: DataType.NUMBER, value: this.__ev3Fns.ev3_colorSensorGreen(await this.__getOpaque<ColorSensor>(colorSensor)) };
   }
 
+  /** The color sensor's current blue reading (0-255).
+   * @category EV3 */
   async* ev3_colorSensorBlue(colorSensor: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, undefined> {
     return { type: DataType.NUMBER, value: this.__ev3Fns.ev3_colorSensorBlue(await this.__getOpaque<ColorSensor>(colorSensor)) };
   }
 
+  /** The EV3's ultrasonic (distance) sensor.
+   * @category EV3 */
   async* ev3_ultrasonicSensor(): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     return await this.evaluator.opaque_make(this.__ev3Fns.ev3_ultrasonicSensor(), true);
   }
 
+  /** The ultrasonic sensor's current distance reading, in cm.
+   * @category EV3 */
   async* ev3_ultrasonicSensorDistance(sensor: TypedValue<DataType.OPAQUE>): AsyncGenerator<void, TypedValue<DataType.NUMBER>, undefined> {
     return { type: DataType.NUMBER, value: this.__ev3Fns.ev3_ultrasonicSensorDistance(await this.__getOpaque<UltrasonicSensor>(sensor)) };
   }
