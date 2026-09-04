@@ -86,3 +86,22 @@ export interface RobotSimulationTabRpc {
     on the 3D view to watch it, without having to switch tabs manually. */
   $focusTab(): void;
 }
+
+/**
+ * Tab -> module operations, over the same {@link ROBOT_SIMULATION_CONTROL_CHANNEL_ID} `makeRpc`
+ * pairing as {@link RobotSimulationTabRpc} (`makeRpc` is bidirectional over one channel - each side
+ * supplies its own implementation and gets a caller for the other's). Exists for the RobotSimulation
+ * tab's own embedded mini-editor (see the tab's doc comment) - a from-scratch, minimal alternative
+ * to routing through the separate `repl` module/tab, which the frontend's side-content host only
+ * ever shows one of at a time (see `showTab`'s "don't yank the student's focus" guard in
+ * `SideContentManager`) - two *tabs* can't be on screen together, but a `Tab`'s own `body` can
+ * render whatever a plugin wants, including its own split "3D view + code editor" layout in one.
+ */
+export interface RobotSimulationModuleRpc {
+  /** Same effect as `run_robot_code` (see index.ts) - runs `code` as the robot's control program
+   * against the shared REPL `pyContext`, replacing whatever the previous run left ticking. Silently
+   * a no-op (logged, not thrown - there is no caller/evaluator boundary here to catch or display a
+   * throw) if no World exists yet (the embedded editor's Run button was clicked before the main
+    program set one up). */
+  $runReplCode(code: string): void;
+}

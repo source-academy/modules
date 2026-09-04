@@ -60,6 +60,7 @@ import {
   ROBOT_SIMULATION_CONTROL_CHANNEL_ID,
   ROBOT_SIMULATION_STATE_CHANNEL_ID,
   ROBOT_SIMULATION_TAB_NAME,
+  type RobotSimulationModuleRpc,
   type RobotSimulationTabRpc,
   type StateChannelMessage,
 } from './protocol';
@@ -128,7 +129,19 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     super(conduit, [controlChannel, stateChannel], evaluator);
 
     this.__tabLoader = tabLoader;
-    this.__tabRpc = makeRpc<Record<string, never>, RobotSimulationTabRpc>(controlChannel, {});
+    this.__tabRpc = makeRpc<RobotSimulationModuleRpc, RobotSimulationTabRpc>(controlChannel, {
+      $runReplCode: code => {
+        try {
+          this.__runReplCode(code);
+        } catch (error) {
+          // No live World yet (e.g. the embedded editor's Run button was clicked before the main
+          // program ran) - there is no evaluator/caller boundary here to surface this to, unlike
+          // run_robot_code's own throw (see its doc comment). The World-state readout already
+          // shown in this same tab makes "nothing is running yet" obvious without one.
+          console.warn('robot_simulation: could not run code from the RobotSimulation tab\'s embedded editor', error);
+        }
+      },
+    });
     this.__stateChannel = stateChannel as IChannel<StateChannelMessage>;
     this.__sceneRegistry.setSpawnListener(message => this.__stateChannel.send(message));
     this.__ev3Fns = createEv3Functions({
@@ -505,19 +518,32 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
    * Requires `init_default_simulation`/`init_simulation` to have already been called - there must
    * be a live World for the robot code to act on.
    *
-   * On success, brings the RobotSimulation tab to the front (`$focusTab`) - a student driving the
-   * robot from the `repl` tab wants to watch it, not keep looking at the editor they just ran code
-   * from. Only reached once every synchronous precondition above has passed, so a call that fails
-   * before this point (no World yet) leaves the `repl` tab showing its own error message instead
-   * of yanking focus away from it. A *runtime* error in the robot code itself (a Python exception
-   * partway through, which - see `Program.fixedUpdate`'s doc comment - only ever surfaces several
-   * physics ticks later) still ends up shown exactly where this just switched to: the RobotSimulation
-   * tab's own Robot Console (routed via `robotConsoleStreams`/`World.step`'s catch), not the `repl`
-   * tab.
+   * Also calls `$focusTab` on success, asking the RobotSimulation tab to bring itself to the
+   * front - but the frontend's side-content host only actually honours that the *first* time any
+   * tab is shown in a session (see `SideContentManager.showTab`'s "don't yank the student away from
+   * wherever they navigated" guard), so in practice this rarely does anything once the student has
+   * looked at any tab at all. A student who wants the 3D view and the code they're driving the
+   * robot with on screen *together*, without fighting that guard, should use the RobotSimulation
+   * tab's own embedded editor instead (`$runReplCode` in protocol.ts) - same effect as this
+   * function, just triggered from inside the tab that's already showing the 3D view, so there's
+   * nothing to focus/switch away from in the first place.
    */
   async* run_robot_code(
     code: TypedValue<DataType.CONST_STRING>
   ): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
+    this.__runReplCode(code.value);
+    return { type: DataType.VOID, value: undefined };
+  }
+
+  /**
+   * Shared by `run_robot_code` (the `repl`-module hook, above) and `$runReplCode` (the
+   * RobotSimulation tab's own embedded mini-editor - see protocol.ts's doc comment on
+   * `RobotSimulationModuleRpc`) - same effect either way, just reached from two different callers.
+   * Throws (via `__getWorldFromContext`) if no World exists yet; `run_robot_code` lets that
+   * propagate (repl displays it as an error), while the `$runReplCode` RPC handler catches and logs
+   * it instead, since there is no evaluator/caller boundary there to surface a throw to.
+   */
+  private __runReplCode(code: string): void {
     const world = this.__getWorldFromContext();
 
     if (this.__state.replPyContext === undefined) {
@@ -527,13 +553,11 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
 
     (this.__state.replProgram as Program | undefined)?.stop();
 
-    const program = new Program(code.value, undefined, pyContext);
+    const program = new Program(code, undefined, pyContext);
     world.addLiveController(program);
     this.__state.replProgram = program;
 
     this.__tabRpc.$focusTab();
-
-    return { type: DataType.VOID, value: undefined };
   }
 
   // [EV3]

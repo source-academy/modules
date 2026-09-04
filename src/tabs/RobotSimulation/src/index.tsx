@@ -4,16 +4,21 @@ import {
   ROBOT_SIMULATION_CONTROL_CHANNEL_ID,
   ROBOT_SIMULATION_STATE_CHANNEL_ID,
   type EntityDescriptor,
+  type RobotSimulationModuleRpc,
   type RobotSimulationTabRpc,
   type SensorSnapshot,
   type StateChannelMessage,
   type WorldStateName,
 } from '@sourceacademy/bundle-robot_simulation/protocol';
 import type { ITabService, Tab } from '@sourceacademy/common-tabs';
-import { checkIsPluginClass, makeRpc, type IChannel, type IConduit, type IPlugin } from '@sourceacademy/conductor/conduit';
-import { createElement, useEffect, useRef, useSyncExternalStore } from 'react';
+import { checkIsPluginClass, makeRpc, type IChannel, type IConduit, type IPlugin, type Remote } from '@sourceacademy/conductor/conduit';
+import { createElement, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import AceEditor from 'react-ace';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+import 'ace-builds/src-noconflict/mode-python';
+import 'ace-builds/src-noconflict/theme-twilight';
 
 export const ROBOT_SIMULATION_TAB_ID = 'robot_simulation';
 
@@ -34,6 +39,15 @@ const MAX_LOGS = 200;
  * the camera" state, same category as "which tab is open", not simulation state.
  */
 const CAMERA_VIEW_STORAGE_KEY = 'robot_simulation:camera-view';
+
+/** Keyed like {@link CAMERA_VIEW_STORAGE_KEY} - per-browser, not per-program-run, so whatever the
+  student was iterating on survives a reload/re-run. See `EmbeddedReplEditor`. */
+const EMBEDDED_EDITOR_CODE_STORAGE_KEY = 'robot_simulation:embedded-editor-code';
+const EMBEDDED_EDITOR_PLACEHOLDER = `left = ev3_motorA()
+right = ev3_motorB()
+ev3_runToRelativePosition(left, 1080, 500)
+ev3_runToRelativePosition(right, 1080, 500)
+`;
 
 type StoredCameraView = {
   position: [number, number, number];
@@ -94,6 +108,10 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
    */
   private readonly __ev3EntityIds = new Set<number>();
 
+  /** Calls into the module - only `$runReplCode` for now, see protocol.ts's doc comment on
+    `RobotSimulationModuleRpc`. Used by the embedded mini-editor's Run button. */
+  private readonly __moduleRpc: Remote<RobotSimulationModuleRpc>;
+
   private __keydownListener: ((e: KeyboardEvent) => void) | undefined;
   private __controlsEndListener: (() => void) | undefined;
   /**
@@ -122,7 +140,7 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
     this.__tabService = tabService;
     this.__stateChannel = stateChannel as IChannel<StateChannelMessage>;
 
-    makeRpc<RobotSimulationTabRpc, Record<string, never>>(controlChannel, this);
+    this.__moduleRpc = makeRpc<RobotSimulationTabRpc, RobotSimulationModuleRpc>(controlChannel, this);
 
     const light = new THREE.PointLight(0xffffff, 1);
     light.position.set(0, 1, 0);
@@ -154,7 +172,7 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
         return () => plugin.__detachCanvas();
       }, []);
 
-      return createElement(RobotSimulationView_, { state, canvasRef });
+      return createElement(RobotSimulationView_, { state, canvasRef, onRunCode: code => plugin.__runReplCode(code) });
     }
 
     const tab = {
@@ -428,59 +446,134 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
   $focusTab(): void {
     this.__tabService.showTab(ROBOT_SIMULATION_TAB_ID);
   }
+
+  /**
+   * Called by the embedded mini-editor's Run button (see `RobotSimulationView_`) - sends the
+   * student's typed code to the module's `$runReplCode` (same effect as `run_robot_code`/the
+   * `repl` module's Run button, just from an editor that lives right next to the 3D view instead of
+   * a separate tab - see protocol.ts's doc comment on `RobotSimulationModuleRpc` for why this
+   * exists at all). Fire-and-forget: there's no return value to wait on, and any problem running
+   * the code shows up in this same tab's own Robot Console (routed via `$consoleLog`) rather than
+    coming back through this call.
+   */
+  __runReplCode(code: string): void {
+    this.__moduleRpc.$runReplCode(code);
+  }
 }
 checkIsPluginClass(RobotSimulationTabPlugin);
 
-function RobotSimulationView_({ state, canvasRef }: { state: ViewState, canvasRef: React.RefObject<HTMLCanvasElement | null> }) {
+function RobotSimulationView_({
+  state,
+  canvasRef,
+  onRunCode,
+}: {
+  state: ViewState,
+  canvasRef: React.RefObject<HTMLCanvasElement | null>,
+  onRunCode: (code: string) => void,
+}) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-      <div
-        style={{
-          width: sceneConfig.width,
-          height: sceneConfig.height,
-          borderRadius: 3,
-          overflow: 'hidden',
-          boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.2)',
-        }}
-      >
-        <canvas ref={canvasRef} tabIndex={0} width={sceneConfig.width} height={sceneConfig.height} style={{ outline: 'none' }} />
-      </div>
-      <div style={{ display: 'flex', gap: '1rem', fontFamily: 'monospace', fontSize: 12, color: '#8a97a3' }}>
-        <div>Drag to orbit, scroll to zoom, click the view then press F to focus the robot</div>
-      </div>
-      <div style={{ display: 'flex', gap: '1rem', fontFamily: 'monospace', fontSize: 12 }}>
-        <div>World: {state.worldState}</div>
-        {state.sensors && (
-          <>
-            <div>Left motor: {state.sensors.leftMotorVelocity.toFixed(2)}</div>
-            <div>Right motor: {state.sensors.rightMotorVelocity.toFixed(2)}</div>
-            <div>
-              Color: rgb({state.sensors.colorSensor.r.toFixed(0)}, {state.sensors.colorSensor.g.toFixed(0)}, {state.sensors.colorSensor.b.toFixed(0)})
-            </div>
-            <div>Ultrasonic: {state.sensors.ultrasonicDistanceCm.toFixed(1)} cm</div>
-          </>
-        )}
-      </div>
-      <div
-        style={{
-          width: sceneConfig.width,
-          height: 150,
-          overflowY: 'auto',
-          backgroundColor: '#1a2530',
-          color: '#fff',
-          fontFamily: 'monospace',
-          fontSize: 12,
-          padding: '0.5rem',
-          borderRadius: 3,
-        }}
-      >
-        {state.logs.map((log, index) => (
+    <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', flex: '0 0 auto' }}>
+        <div
+          style={{
+            width: sceneConfig.width,
+            height: sceneConfig.height,
+            borderRadius: 3,
+            overflow: 'hidden',
+            boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.2)',
+          }}
+        >
+          <canvas ref={canvasRef} tabIndex={0} width={sceneConfig.width} height={sceneConfig.height} style={{ outline: 'none' }} />
+        </div>
+        <div style={{ display: 'flex', gap: '1rem', fontFamily: 'monospace', fontSize: 12, color: '#8a97a3' }}>
+          <div>Drag to orbit, scroll to zoom, click the view then press F to focus the robot</div>
+        </div>
+        <div style={{ display: 'flex', gap: '1rem', fontFamily: 'monospace', fontSize: 12 }}>
+          <div>World: {state.worldState}</div>
+          {state.sensors && (
+            <>
+              <div>Left motor: {state.sensors.leftMotorVelocity.toFixed(2)}</div>
+              <div>Right motor: {state.sensors.rightMotorVelocity.toFixed(2)}</div>
+              <div>
+                Color: rgb({state.sensors.colorSensor.r.toFixed(0)}, {state.sensors.colorSensor.g.toFixed(0)}, {state.sensors.colorSensor.b.toFixed(0)})
+              </div>
+              <div>Ultrasonic: {state.sensors.ultrasonicDistanceCm.toFixed(1)} cm</div>
+            </>
+          )}
+        </div>
+        <div
+          style={{
+            width: sceneConfig.width,
+            height: 150,
+            overflowY: 'auto',
+            backgroundColor: '#1a2530',
+            color: '#fff',
+            fontFamily: 'monospace',
+            fontSize: 12,
+            padding: '0.5rem',
+            borderRadius: 3,
+          }}
+        >
+          {state.logs.map((log, index) => (
 
-          <div key={index} style={{ color: log.level === 'error' ? '#ff6b6b' : undefined }}>
-            {log.message}
-          </div>
-        ))}
+            <div key={index} style={{ color: log.level === 'error' ? '#ff6b6b' : undefined }}>
+              {log.message}
+            </div>
+          ))}
+        </div>
       </div>
+      <EmbeddedReplEditor onRunCode={onRunCode} height={sceneConfig.height + 150 + 24 * 2 + 16} />
+    </div>
+  );
+}
+
+/**
+ * A minimal code editor + Run button living right next to the 3D view, in the same tab - see
+ * protocol.ts's doc comment on `RobotSimulationModuleRpc` for why this exists instead of just
+ * telling students to use the separate `repl` module/tab: the frontend's side-content host only
+ * ever shows one tab at a time and won't switch focus away from wherever the student already is
+ * (`SideContentManager.showTab`'s guard), so two *tabs* can never actually sit side by side - this
+ * puts both halves (3D view, robot code) in one tab's own body instead, where there's no tab
+ * switching involved at all. Deliberately not a full copy of the `repl` tab's own editor (rich
+ * output history, background image, custom font size, `set_program_text` support, ...) - just
+ * enough to type and run code, since output already has a home in this same tab's Robot Console.
+ */
+function EmbeddedReplEditor({ onRunCode, height }: { onRunCode: (code: string) => void, height: number }) {
+  const [code, setCode] = useState(() => {
+    try {
+      return window.localStorage.getItem(EMBEDDED_EDITOR_CODE_STORAGE_KEY) ?? EMBEDDED_EDITOR_PLACEHOLDER;
+    } catch {
+      return EMBEDDED_EDITOR_PLACEHOLDER;
+    }
+  });
+
+  const handleChange = (value: string) => {
+    setCode(value);
+    try {
+      window.localStorage.setItem(EMBEDDED_EDITOR_CODE_STORAGE_KEY, value);
+    } catch {
+      // Private-browsing tab or a full storage quota - the code just won't survive a reload, not
+      // worth failing the editor over (mirrors __saveCameraView's same best-effort tradeoff).
+    }
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', flex: '1 1 260px', minWidth: 260 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+        <button type="button" onClick={() => onRunCode(code)}>▶ Run</button>
+        <span style={{ fontFamily: 'monospace', fontSize: 12, color: '#8a97a3' }}>drives the robot straight away, no tab switch needed</span>
+      </div>
+      <AceEditor
+        mode="python"
+        theme="twilight"
+        value={code}
+        onChange={handleChange}
+        name="robot_simulation-embedded-editor"
+        width="100%"
+        height={`${height}px`}
+        fontSize={14}
+        setOptions={{ useWorker: false, tabSize: 4 }}
+      />
     </div>
   );
 }
