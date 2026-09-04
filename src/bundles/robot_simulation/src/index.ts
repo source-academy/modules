@@ -504,6 +504,16 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
    *
    * Requires `init_default_simulation`/`init_simulation` to have already been called - there must
    * be a live World for the robot code to act on.
+   *
+   * On success, brings the RobotSimulation tab to the front (`$focusTab`) - a student driving the
+   * robot from the `repl` tab wants to watch it, not keep looking at the editor they just ran code
+   * from. Only reached once every synchronous precondition above has passed, so a call that fails
+   * before this point (no World yet) leaves the `repl` tab showing its own error message instead
+   * of yanking focus away from it. A *runtime* error in the robot code itself (a Python exception
+   * partway through, which - see `Program.fixedUpdate`'s doc comment - only ever surfaces several
+   * physics ticks later) still ends up shown exactly where this just switched to: the RobotSimulation
+   * tab's own Robot Console (routed via `robotConsoleStreams`/`World.step`'s catch), not the `repl`
+   * tab.
    */
   async* run_robot_code(
     code: TypedValue<DataType.CONST_STRING>
@@ -520,6 +530,8 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     const program = new Program(code.value, undefined, pyContext);
     world.addLiveController(program);
     this.__state.replProgram = program;
+
+    this.__tabRpc.$focusTab();
 
     return { type: DataType.VOID, value: undefined };
   }

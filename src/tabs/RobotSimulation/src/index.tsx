@@ -96,6 +96,11 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
 
   private __keydownListener: ((e: KeyboardEvent) => void) | undefined;
   private __controlsEndListener: (() => void) | undefined;
+  /** True once either a saved view was loaded or the EV3 has been auto-focused - either way, the
+   * viewer already has a deliberate view, so `__applySnapshot` shouldn't keep re-focusing on every
+   * subsequent snapshot (which would fight `OrbitControls` while the viewer is mid-drag). See
+    `__attachCanvas`/`__applySnapshot`. */
+  private __hasDeliberateView = false;
 
   private __state: ViewState = {
     worldState: 'unintialized',
@@ -219,6 +224,18 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
       node.position.set(view[offset + 1], view[offset + 2], view[offset + 3]);
       node.quaternion.set(view[offset + 4], view[offset + 5], view[offset + 6], view[offset + 7]);
     }
+
+    // The EV3's spawn position isn't known until its first transform snapshot lands (it's created
+    // at the origin - see __spawnEntity's placeholder), so "default to the F-focused view" can only
+    // happen here, on the first snapshot that actually contains it - not at canvas-attach time,
+    // when __focusOnEv3 would find an empty/zero-size bounding box and no-op. Skipped once the
+    // viewer already has a deliberate view (a saved one, or a manual F-focus/drag already happened
+    // this session), so this never fights `OrbitControls` mid-interaction - see
+    // `__hasDeliberateView`'s doc comment.
+    if (!this.__hasDeliberateView && this.__ev3EntityIds.size > 0 && this.__controls) {
+      this.__hasDeliberateView = true;
+      this.__focusOnEv3();
+    }
   }
 
   private __attachCanvas(canvas: HTMLCanvasElement): void {
@@ -240,7 +257,7 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
     // a re-run of the program instead of snapping back to getCamera()'s default every time - see
     // `__loadCameraView`/`__saveCameraView`. Only overrides the (camera, controls.target) pair
     // just set above if something was actually saved.
-    this.__loadCameraView();
+    this.__hasDeliberateView = this.__loadCameraView();
     this.__controls.update();
 
     // "F to focus" (Unity/Blender-style): only wired to this canvas, not the page, and only fires
@@ -308,17 +325,19 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
    * if nothing was saved yet, or if what's stored doesn't parse as a valid view (e.g. an older
    * format from a previous version of this tab).
    */
-  private __loadCameraView(): void {
-    if (!this.__controls) return;
+  private __loadCameraView(): boolean {
+    if (!this.__controls) return false;
     try {
       const raw = window.localStorage.getItem(CAMERA_VIEW_STORAGE_KEY);
-      if (!raw) return;
+      if (!raw) return false;
       const parsed: unknown = JSON.parse(raw);
-      if (!isStoredCameraView(parsed)) return;
+      if (!isStoredCameraView(parsed)) return false;
       this.__camera.position.fromArray(parsed.position);
       this.__controls.target.fromArray(parsed.target);
+      return true;
     } catch {
       // Corrupt/inaccessible storage - fall back to whatever's already set (the default view).
+      return false;
     }
   }
 
@@ -377,6 +396,10 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
 
   $sensorSnapshot(snapshot: SensorSnapshot): void {
     this.__setState({ sensors: snapshot });
+  }
+
+  $focusTab(): void {
+    this.__tabService.showTab(ROBOT_SIMULATION_TAB_ID);
   }
 }
 checkIsPluginClass(RobotSimulationTabPlugin);

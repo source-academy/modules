@@ -144,6 +144,13 @@ export default class ReplModulePlugin extends BaseModulePlugin {
     // this, a program whose only interaction with the module is set_evaluator() never opens the
     // tab at all, since nothing else would ever call __loadReplTab() first.
     this.__loadReplTab();
+    // Explicit, not just a side effect of the tab's own constructor already calling showTab once:
+    // a program that calls set_evaluator() again later (or whose module import order put another
+    // tab-opening call after this one) still ends up back on the Repl tab, since that's what
+    // set_evaluator succeeding means for the student - "go use the Repl now". Dropped if nothing's
+    // subscribed yet (the very first call, mid-tab-bootstrap) - harmless, since the tab's own
+    // constructor already calls showTab unconditionally once it exists.
+    this.__replChannel.send({ type: 'focus' });
     return mVoid();
   }
 

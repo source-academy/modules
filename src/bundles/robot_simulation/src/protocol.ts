@@ -81,4 +81,8 @@ export interface RobotSimulationTabRpc {
   $consoleLog(message: string, level: 'error' | 'source'): void;
   $worldStateChanged(state: WorldStateName): void;
   $sensorSnapshot(snapshot: SensorSnapshot): void;
+  /** Brings the RobotSimulation tab to the front - sent once `run_robot_code` successfully hands a
+   * fresh run to the physics loop, so a student driving the robot from the `repl` tab lands back
+    on the 3D view to watch it, without having to switch tabs manually. */
+  $focusTab(): void;
 }
