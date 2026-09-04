@@ -96,11 +96,18 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
 
   private __keydownListener: ((e: KeyboardEvent) => void) | undefined;
   private __controlsEndListener: (() => void) | undefined;
-  /** True once either a saved view was loaded or the EV3 has been auto-focused - either way, the
-   * viewer already has a deliberate view, so `__applySnapshot` shouldn't keep re-focusing on every
-   * subsequent snapshot (which would fight `OrbitControls` while the viewer is mid-drag). See
-    `__attachCanvas`/`__applySnapshot`. */
-  private __hasDeliberateView = false;
+  /**
+   * Whether the default auto-focus (see `__applySnapshot`) should stay suppressed for the
+   * *current* World - true once it has already fired for this run, or once a saved view exists
+   * (re-checked fresh from `localStorage` on every `$worldStateChanged('loading')`, i.e. every Run
+   * - not just cached from the tab's initial attach - so a manual drag/F-focus made *during* an
+   * earlier run still suppresses auto-focus on a later re-run of the program, matching
+   * `__loadCameraView`/`__saveCameraView`'s existing "the viewer's view survives a re-run" intent).
+   * Reset to that same "does a saved view exist" check (not unconditionally to `false`) so a fresh
+   * run still frames whatever the new World actually spawned, unless the viewer already has a view
+    they set up themselves.
+   */
+  private __suppressAutoFocus = false;
 
   private __state: ViewState = {
     worldState: 'unintialized',
@@ -228,12 +235,11 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
     // The EV3's spawn position isn't known until its first transform snapshot lands (it's created
     // at the origin - see __spawnEntity's placeholder), so "default to the F-focused view" can only
     // happen here, on the first snapshot that actually contains it - not at canvas-attach time,
-    // when __focusOnEv3 would find an empty/zero-size bounding box and no-op. Skipped once the
-    // viewer already has a deliberate view (a saved one, or a manual F-focus/drag already happened
-    // this session), so this never fights `OrbitControls` mid-interaction - see
-    // `__hasDeliberateView`'s doc comment.
-    if (!this.__hasDeliberateView && this.__ev3EntityIds.size > 0 && this.__controls) {
-      this.__hasDeliberateView = true;
+    // when __focusOnEv3 would find an empty/zero-size bounding box and no-op. Skipped once already
+    // suppressed for this run (a saved view, or this having already fired) - see
+    // `__suppressAutoFocus`'s doc comment.
+    if (!this.__suppressAutoFocus && this.__ev3EntityIds.size > 0 && this.__controls) {
+      this.__suppressAutoFocus = true;
       this.__focusOnEv3();
     }
   }
@@ -257,7 +263,7 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
     // a re-run of the program instead of snapping back to getCamera()'s default every time - see
     // `__loadCameraView`/`__saveCameraView`. Only overrides the (camera, controls.target) pair
     // just set above if something was actually saved.
-    this.__hasDeliberateView = this.__loadCameraView();
+    this.__suppressAutoFocus = this.__loadCameraView();
     this.__controls.update();
 
     // "F to focus" (Unity/Blender-style): only wired to this canvas, not the page, and only fires
@@ -341,6 +347,18 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
     }
   }
 
+  /** Existence check only (no camera mutation) - unlike `__loadCameraView`, safe to call any time,
+   * including before `__controls` exists. See `__suppressAutoFocus`'s doc comment for why this is
+    re-checked fresh on every Run rather than cached once. */
+  private __hasSavedCameraView(): boolean {
+    try {
+      const raw = window.localStorage.getItem(CAMERA_VIEW_STORAGE_KEY);
+      return raw !== null && isStoredCameraView(JSON.parse(raw));
+    } catch {
+      return false;
+    }
+  }
+
   /** Unity/Blender-style "F to focus selected", hardcoded to "selected" = the EV3 (the only thing
    * a robot_simulation scene ever really has to look at - see `__ev3EntityIds`'s doc comment for
    * why picking it out from arbitrary other scene content, e.g. walls/paper, needs no extra
@@ -392,6 +410,15 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
 
   $worldStateChanged(state: WorldStateName): void {
     this.__setState({ worldState: state });
+    // 'loading' fires exactly once per Run (World.init(), right at the start of a fresh World's
+    // lifecycle - see World.ts), before any entity-spawned/state-snapshot message for it can
+    // arrive - the right moment to decide whether *this* run gets a default auto-focus, without
+    // racing the snapshots that would otherwise immediately re-suppress it. See
+    // `__suppressAutoFocus`'s doc comment for why this re-checks localStorage instead of just
+    // resetting to `false`.
+    if (state === 'loading') {
+      this.__suppressAutoFocus = this.__hasSavedCameraView();
+    }
   }
 
   $sensorSnapshot(snapshot: SensorSnapshot): void {
