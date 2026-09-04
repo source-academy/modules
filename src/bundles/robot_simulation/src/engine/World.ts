@@ -68,6 +68,23 @@ export class World extends TypedEventTarget<WorldEventMap> {
     });
   }
 
+  /**
+   * Adds controllers to a world that has already started (state is 'ready'/'running'/'error') -
+   * `addController`'s `start()` hookup only fires on the `worldStart` event, which for a live
+   * world already happened once inside `init()`, so a controller added afterwards would never get
+   * its `start()` called and would throw the first time it ticks (e.g. `Program.fixedUpdate`'s
+   * "Program not started"). Used by `run_robot_code` to add a fresh `Program` controller each time
+   * the REPL tab's registered evaluator runs, without restarting the whole world.
+   */
+  addLiveController(...controllers: Controller[]) {
+    this.addController(...controllers);
+    if (this.state !== 'unintialized' && this.state !== 'loading') {
+      controllers.forEach((controller) => {
+        controller.start?.();
+      });
+    }
+  }
+
   async init() {
     this.setState('loading');
     await this.physics.start();

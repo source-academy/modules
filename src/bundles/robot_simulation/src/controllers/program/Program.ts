@@ -50,6 +50,13 @@ export class Program implements Controller {
    * stashed here and re-thrown from the *next* `fixedUpdate` call instead, so it still surfaces
     to (and is convertible by) the same call site a synchronous evaluator would throw from. */
   private pendingError: unknown = null;
+  /** Set by `stop()` when a newer REPL run replaces this one - see `run_robot_code` (index.ts).
+   * Prevents this Program from pumping its (now-superseded) generator any further; several
+   * `Program`s can share one `pyContext` across REPL re-runs (that's how variables persist between
+   * runs), and `runPythonECEvaluator` reassigns `context.control`/`context.stash` at the *start* of
+   * a run, so an old Program still ticking after a new one has started would corrupt the new run's
+   * state. */
+  private isStopped = false;
   isPaused: boolean;
   callbackHandler = new CallbackHandler();
   name: string;
@@ -78,6 +85,10 @@ export class Program implements Controller {
     }, pauseDuration);
   }
 
+  stop() {
+    this.isStopped = true;
+  }
+
   start() {
     this.iterator = runPythonECEvaluator(this.code, this.pyContext, {
       stepLimit: -1,
@@ -92,7 +103,7 @@ export class Program implements Controller {
    * still-in-flight `await`s.
    */
   fixedUpdate() {
-    if (this.isPaused) {
+    if (this.isStopped || this.isPaused) {
       return;
     }
 

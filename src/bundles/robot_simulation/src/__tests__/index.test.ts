@@ -1,6 +1,6 @@
 import rapier from '@dimforge/rapier3d-compat';
 import { DataType } from '@sourceacademy/conductor/types';
-import { TestDataHandler, runAsyncGenerator, stringValue } from '@sourceacademy/modules-testplugin';
+import { TestDataHandler, numberValue, runAsyncGenerator, stringValue } from '@sourceacademy/modules-testplugin';
 import { describe, expect, test, vi } from 'vitest';
 import RobotSimulationModulePlugin from '..';
 
@@ -76,9 +76,7 @@ describe(RobotSimulationModulePlugin, () => {
     test('builds a default world, loads the tab, and starts the simulation from one call', async () => {
       const { plugin, tabLoader } = makePlugin();
 
-      const result = await runAsyncGenerator(
-        (plugin as any).init_default_simulation(stringValue('ev3_pause(1)\n'))
-      );
+      const result = await runAsyncGenerator((plugin as any).init_default_simulation());
 
       expect(result).toStrictEqual({ type: DataType.VOID, value: undefined });
       expect(tabLoader.loadTab).toHaveBeenCalledWith('RobotSimulation');
@@ -87,18 +85,71 @@ describe(RobotSimulationModulePlugin, () => {
     test('is idempotent - a second call is a no-op once a world already exists', async () => {
       const { plugin, controlChannel } = makePlugin();
 
-      await runAsyncGenerator((plugin as any).init_default_simulation(stringValue('ev3_pause(1)\n')));
+      await runAsyncGenerator((plugin as any).init_default_simulation());
       const callsAfterFirst = controlChannel.send.mock.calls.length;
-      await runAsyncGenerator((plugin as any).init_default_simulation(stringValue('ev3_pause(2)\n')));
+      await runAsyncGenerator((plugin as any).init_default_simulation());
 
       // No new world was built (and hence no new worldStateChanged RPC was queued) the second time.
       expect(controlChannel.send.mock.calls.length).toBe(callsAfterFirst);
     });
 
-    test('declares a single CONST_STRING parameter', () => {
+    test('declares no parameters', () => {
       const { signature } = (RobotSimulationModulePlugin.prototype as any).init_default_simulation;
-      expect(signature.args).toStrictEqual([DataType.CONST_STRING]);
+      expect(signature.args).toStrictEqual([]);
       expect(signature.returnType).toBe(DataType.VOID);
+    });
+  });
+
+  describe('add_wall / add_paper', () => {
+    test('add a controller to the already-running default world without needing physics/world handles', async () => {
+      const { plugin } = makePlugin();
+      await runAsyncGenerator((plugin as any).init_default_simulation());
+
+      const world = (plugin as any).__state.world;
+      const controllersBefore = world.controllers.controllers.length;
+
+      await runAsyncGenerator(
+        (plugin as any).add_wall(
+          numberValue(0), numberValue(3), numberValue(2), numberValue(0.2), numberValue(1)
+        )
+      );
+      await runAsyncGenerator(
+        (plugin as any).add_paper(
+          stringValue('red.png'), numberValue(1), numberValue(1), numberValue(0), numberValue(1), numberValue(0)
+        )
+      );
+
+      // Both controllers were added live (start() already fired) rather than only queued for a
+      // future worldStart that already happened.
+      expect(world.controllers.controllers.length).toBe(controllersBefore + 2);
+    });
+  });
+
+  describe('run_robot_code', () => {
+    test('drives the shared robot Python context across repeated calls, sharing state between runs', async () => {
+      const { plugin } = makePlugin();
+      await runAsyncGenerator((plugin as any).init_default_simulation());
+
+      await runAsyncGenerator((plugin as any).run_robot_code(stringValue('x = 1')));
+      const firstProgram = (plugin as any).__state.replProgram;
+
+      await runAsyncGenerator((plugin as any).run_robot_code(stringValue('y = x + 1')));
+      const secondProgram = (plugin as any).__state.replProgram;
+
+      // A fresh Program per call...
+      expect(secondProgram).not.toBe(firstProgram);
+      // ...but the first one is stopped so it can't keep pumping the shared pyContext.
+      expect((firstProgram as any).isStopped).toBe(true);
+      // ...and both runs share the same pyContext, so `y = x + 1` could resolve `x` at all
+      // (analyzePython would have thrown a NameError otherwise - see evaluate.ts).
+      expect((plugin as any).__state.replPyContext).toBeDefined();
+    });
+
+    test('throws if the world has not been initialised yet', async () => {
+      const { plugin } = makePlugin();
+      await expect(
+        runAsyncGenerator((plugin as any).run_robot_code(stringValue('ev3_pause(1)')))
+      ).rejects.toThrow();
     });
   });
 });

@@ -13,12 +13,18 @@
  * physics tick over a dedicated channel, mirroring pix_n_flix's frame channel - see protocol.ts
  * and SceneRegistry's doc comment for the full design.
  *
- * `from robot_simulation import ...` still only works for the *setup* program, not the robot's
- * own control program string passed to `createPythonCSE`: that string is evaluated by a private,
- * hand-built py-slang `Context` (see controllers/program/pythonRuntime.ts) stepped in lockstep
- * with the physics tick, entirely separate from Conductor's own evaluator/module-loading
- * machinery - there is no `ModuleLoaderRunnerPlugin` inside that shadow context for an `import` to
- * resolve through. The `ev3_*` API is available to it directly by name instead (no import).
+ * `from robot_simulation import ...` still only works for the *setup* program, not the robot's own
+ * control program: whether that code arrives as a string literal (`createPythonCSE`) or from the
+ * `repl` tab (`run_robot_code`), it's evaluated by a private, hand-built py-slang `Context` (see
+ * controllers/program/pythonRuntime.ts) stepped in lockstep with the physics tick, entirely
+ * separate from Conductor's own evaluator/module-loading machinery - there is no
+ * `ModuleLoaderRunnerPlugin` inside that shadow context for an `import` to resolve through. The
+ * `ev3_*` API is available to it directly by name instead (no import).
+ *
+ * The recommended student-facing shape is: `init_default_simulation()` + `add_wall`/`add_paper`
+ * calls in the main pane (one-time scene setup), then `set_evaluator(run_robot_code)` (from the
+ * `repl` module) to hand the robot's own code to a separate, rerunnable REPL tab - see
+ * `run_robot_code`'s doc comment.
  *
  * @module robot_simulation
  * @author Joel Chan
@@ -82,6 +88,9 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     'saveToContext',
     'init_simulation',
     'init_default_simulation',
+    'add_wall',
+    'add_paper',
+    'run_robot_code',
     'ev3_motorA',
     'ev3_motorB',
     'ev3_motorC',
@@ -388,34 +397,16 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
   /**
    * The boilerplate-free alternative to `init_simulation`: builds default physics, a default
    * world, a default floor and a default EV3 (the same defaults `createPhysics`/`createFloor`/
-   * `createEv3` use), wires `control_code` up as the robot's Python control program, and starts
-   * the simulation - all in one call.
+   * `createEv3` use), and starts the simulation - all in one call. Takes no control program: pair
+   * this with `run_robot_code`/the `repl` module (see that method's doc comment) to drive the EV3
+   * from a separate, rerunnable REPL tab instead of a control-code string baked into setup.
    *
-   * This exists because a true "prepend" split - where the instructor's scene setup runs
-   * invisibly ahead of the student's own code, and the student never calls a setup function or
-   * wraps their control code in a string at all - is not reachable at this module's level today:
-   * Conductor's frontend already concatenates `${prepend}\n${studentCode}` into one source string
-   * before it ever reaches an evaluator (see evalEditorSaga's Conductor branch in
-   * source-academy/frontend), and `PyCseEvaluator.evaluateChunk(chunk: string)` (py-slang) only
-   * ever receives that single opaque string - there is no delimiter, chunk boundary, or line
-   * count forwarded into the evaluator or exposed to a running module that would let
-   * `robot_simulation` tell "instructor-authored setup" and "student code" apart at runtime. The
-   * `lineOffset`/`preludeLineOffset` value the frontend does track lives only in its own saga, for
-   * shifting reported error line numbers back after the fact - it is never sent over the wire.
-   * Reaching the real Joel-faithful split would need new plumbing above this module (e.g.
-   * evaluateChunk taking a structured `{ prepend, studentCode }` instead of one string, and
-   * GenericDataHandler/IDataHandler exposing the boundary to a module) - out of scope here.
-   *
-   * For a customised World (non-default physics/gravity, extra walls or paper, a control program
-   * written in Source/Scheme instead of Python), use `createPhysics`/`createWorld`/`createWall`/
+   * For a customised World (non-default physics/gravity, a control program written in
+   * Source/Scheme instead of Python), use `createPhysics`/`createWorld`/`createWall`/
    * `createPaper`/`createPythonCSE`/`addControllerToWorld`/`saveToContext`/`init_simulation`
    * directly instead, exactly as before.
-   *
-   * @param control_code The robot's control program, written in Python (SICPy §4).
    */
-  async* init_default_simulation(
-    control_code: TypedValue<DataType.CONST_STRING>
-  ): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
+  async* init_default_simulation(): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
     if (this.__state.world !== undefined) {
       return { type: DataType.VOID, value: undefined };
     }
@@ -432,10 +423,8 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
       'fixed'
     );
     const ev3 = createDefaultEv3(physics, this.__sceneRegistry, ev3Config);
-    const pyContext = createRobotPythonContext(this.__ev3Fns, () => this.__getWorldFromContext());
-    const program = new Program(control_code.value, undefined, pyContext);
 
-    world.addController(floor, ev3, program);
+    world.addController(floor, ev3);
 
     this.__state.world = world;
     this.__state.ev3 = ev3;
@@ -443,6 +432,94 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     this.__hookWorld(world);
     await world.init();
     world.start();
+
+    return { type: DataType.VOID, value: undefined };
+  }
+
+  /**
+   * Adds a fixed yellow wall to the already-initialised default world (`init_default_simulation`
+   * must have been called first) - a friendly wrapper over `createWall`/`addControllerToWorld`
+   * that doesn't need `physics`/`world` opaque handles, since `init_default_simulation` already
+   * owns both. Uses `World.addLiveController` rather than `addController` because the world is
+   * already running by the time a student calls this from the setup pane.
+   */
+  async* add_wall(
+    x: TypedValue<DataType.NUMBER>,
+    y: TypedValue<DataType.NUMBER>,
+    width: TypedValue<DataType.NUMBER>,
+    length: TypedValue<DataType.NUMBER>,
+    height: TypedValue<DataType.NUMBER>
+  ): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
+    const world = this.__getWorldFromContext();
+    const wall = this.__createCuboid(
+      world.physics,
+      { x: x.value, y: height.value / 2, z: y.value },
+      { width: width.value, length: length.value, height: height.value },
+      1,
+      'yellow',
+      'fixed'
+    );
+    world.addLiveController(wall);
+    return { type: DataType.VOID, value: undefined };
+  }
+
+  /**
+   * Adds a visual (non-collidable - see Paper.ts's doc comment) floor overlay to the
+   * already-initialised default world - a friendly wrapper over `createPaper`/
+   * `addControllerToWorld` for the same reason as `add_wall`.
+   */
+  async* add_paper(
+    url: TypedValue<DataType.CONST_STRING>,
+    width: TypedValue<DataType.NUMBER>,
+    height: TypedValue<DataType.NUMBER>,
+    x: TypedValue<DataType.NUMBER>,
+    y: TypedValue<DataType.NUMBER>,
+    rotation: TypedValue<DataType.NUMBER>
+  ): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
+    const world = this.__getWorldFromContext();
+    const paper = new Paper(this.__sceneRegistry, {
+      url: url.value,
+      dimension: { width: width.value, height: height.value },
+      position: { x: x.value, y: y.value },
+      rotation: (rotation.value * Math.PI) / 180,
+    });
+    world.addLiveController(paper);
+    return { type: DataType.VOID, value: undefined };
+  }
+
+  /**
+   * The `repl`-module hook: pass this function itself to `repl`'s `set_evaluator`, and the `repl`
+   * tab it opens will call it with whatever the student typed there each time they hit Run -
+   * `code` is exactly what `createPythonCSE`/`init_default_simulation`'s old `control_code`
+   * argument used to be, just supplied interactively instead of baked into the setup program.
+   *
+   * Each call adds a fresh `Program` controller (via `World.addLiveController`, since the world is
+   * already running by this point) rather than editing one in place, but all calls share one
+   * `pyContext` (lazily created on the first call, cached in `__state`) - `runPythonECEvaluator`
+   * re-analyzes each run against that same context's global environment (see evaluate.ts), so
+   * variables and function defs a student's REPL code creates in one run are still visible in the
+   * next, the way a REPL is expected to behave. The previous run's `Program` is `stop()`'d first so
+   * it can't keep pumping its now-superseded generator against the same shared `pyContext` (see
+   * `Program.stop`'s doc comment).
+   *
+   * Requires `init_default_simulation`/`init_simulation` to have already been called - there must
+   * be a live World for the robot code to act on.
+   */
+  async* run_robot_code(
+    code: TypedValue<DataType.CONST_STRING>
+  ): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
+    const world = this.__getWorldFromContext();
+
+    if (this.__state.replPyContext === undefined) {
+      this.__state.replPyContext = createRobotPythonContext(this.__ev3Fns, () => this.__getWorldFromContext());
+    }
+    const pyContext = this.__state.replPyContext as ReturnType<typeof createRobotPythonContext>;
+
+    (this.__state.replProgram as Program | undefined)?.stop();
+
+    const program = new Program(code.value, undefined, pyContext);
+    world.addLiveController(program);
+    this.__state.replProgram = program;
 
     return { type: DataType.VOID, value: undefined };
   }
@@ -522,7 +599,10 @@ attachModuleMethod(RobotSimulationModulePlugin, 'createPythonCSE', [DataType.CON
 attachModuleMethod(RobotSimulationModulePlugin, 'addControllerToWorld', [DataType.OPAQUE, DataType.OPAQUE], DataType.VOID);
 attachModuleMethod(RobotSimulationModulePlugin, 'saveToContext', [DataType.CONST_STRING, DataType.OPAQUE], DataType.VOID);
 attachModuleMethod(RobotSimulationModulePlugin, 'init_simulation', [DataType.CLOSURE], DataType.VOID);
-attachModuleMethod(RobotSimulationModulePlugin, 'init_default_simulation', [DataType.CONST_STRING], DataType.VOID);
+attachModuleMethod(RobotSimulationModulePlugin, 'init_default_simulation', [], DataType.VOID);
+attachModuleMethod(RobotSimulationModulePlugin, 'add_wall', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.VOID);
+attachModuleMethod(RobotSimulationModulePlugin, 'add_paper', [DataType.CONST_STRING, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.VOID);
+attachModuleMethod(RobotSimulationModulePlugin, 'run_robot_code', [DataType.CONST_STRING], DataType.VOID);
 attachModuleMethod(RobotSimulationModulePlugin, 'ev3_motorA', [], DataType.OPAQUE);
 attachModuleMethod(RobotSimulationModulePlugin, 'ev3_motorB', [], DataType.OPAQUE);
 attachModuleMethod(RobotSimulationModulePlugin, 'ev3_motorC', [], DataType.OPAQUE);
