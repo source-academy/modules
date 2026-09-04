@@ -44,12 +44,30 @@ export function createEv3Functions(deps: {
   return {
     /**
      * Pauses for a period of time.
+     *
+     * Every `run_robot_code`/`$runReplCode` call (each REPL/embedded-editor Run) adds a fresh
+     * `Program` controller rather than replacing one in place - see `Program`'s doc comment - so
+     * a World that has had more than one control-program run can have several `Program`s in
+     * `world.controllers.controllers` at once, all sharing the same `name`
+     * (`program_controller_identifier`). Only the *last* one added is actually still running (the
+     * others are `stop()`'d - see `Program.isStopped`'s doc comment); searching from the end for
+     * the first non-stopped match is what makes this find the program THIS call is actually
+     * running in, rather than whichever `Program` happened to be created first (which - since a
+     * stopped `Program`'s own `pause()` has no observable effect, its `fixedUpdate` already
+     * unconditionally no-ops - would otherwise make ev3_pause() silently do nothing on every
+     * control-program run after the first).
      * @param duration The time to wait, in milliseconds.
      */
     ev3_pause(duration: number): void {
       const world = getWorld();
-      const program = world.controllers.controllers.find((controller) => controller.name === program_controller_identifier) as Program;
-      program.pause(duration);
+      const controllers = world.controllers.controllers;
+      for (let i = controllers.length - 1; i >= 0; i--) {
+        const controller = controllers[i];
+        if (controller.name === program_controller_identifier && !(controller as Program).isStopped) {
+          (controller as Program).pause(duration);
+          return;
+        }
+      }
     },
 
     /** Gets the motor connected to port A. */

@@ -171,5 +171,33 @@ describe(RobotSimulationModulePlugin, () => {
         runAsyncGenerator((plugin as any).run_robot_code(stringValue('ev3_pause(1)')))
       ).rejects.toThrow();
     });
+
+    test('ev3_pause() pauses the currently-running Program, not a stale one from an earlier run', async () => {
+      const { plugin } = makePlugin();
+      await runAsyncGenerator((plugin as any).init_default_simulation());
+
+      // First run: a Program that finishes immediately and is left behind, stopped, in
+      // world.controllers.controllers - exactly what a real student's first REPL/embedded-editor
+      // Run leaves behind once they move on to a second one.
+      await runAsyncGenerator((plugin as any).run_robot_code(stringValue('x = 1')));
+      const firstProgram = (plugin as any).__state.replProgram;
+
+      // Second run calls ev3_pause() itself - if ev3_pause found the *first* Program with a
+      // matching name (the bug this guards against), it would pause a dead, already-stopped
+      // Program that no longer affects anything, leaving this run's own isPaused false forever.
+      await runAsyncGenerator((plugin as any).run_robot_code(stringValue('ev3_pause(1000000)')));
+      const secondProgram = (plugin as any).__state.replProgram;
+
+      // Drive the second run's Python code far enough to actually execute the ev3_pause() call
+      // (mirrors Program.python.test.ts's own real-py-slang pump pattern).
+      for (let tick = 0; tick < 10; tick++) {
+        secondProgram.fixedUpdate();
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise(resolve => setTimeout(resolve, 0));
+      }
+
+      expect(secondProgram.isPaused).toBe(true);
+      expect(firstProgram.isPaused).toBe(false);
+    });
   });
 });

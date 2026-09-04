@@ -55,8 +55,9 @@ export class Program implements Controller {
    * `Program`s can share one `pyContext` across REPL re-runs (that's how variables persist between
    * runs), and `runPythonECEvaluator` reassigns `context.control`/`context.stash` at the *start* of
    * a run, so an old Program still ticking after a new one has started would corrupt the new run's
-   * state. */
-  private isStopped = false;
+   * state. Public (not private) so `ev3_pause` (ev3_functions.ts) can tell old, superseded `Program`
+   * controllers apart from the one actually driving the current run - see its doc comment. */
+  isStopped = false;
   isPaused: boolean;
   callbackHandler = new CallbackHandler();
   name: string;
