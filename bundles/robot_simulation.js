@@ -607,14 +607,13 @@ export default require => {
     return result;
   }
   function mergeWithDeep(target, source, merge3, stack) {
-    var _a;
     if (isPrimitive(target)) target = Object(target);
     if (source == null || typeof source !== "object") return target;
     if (stack.has(source)) return clone(stack.get(source));
     stack.set(source, target);
     if (Array.isArray(source)) {
       source = source.slice();
-      for (let i2 = 0; i2 < source.length; i2++) source[i2] = (_a = source[i2]) != null ? _a : void 0;
+      for (let i2 = 0; i2 < source.length; i2++) if (!((i2 in source))) source[i2] = void 0;
     }
     const sourceKeys = [...Object.keys(source), ...getSymbols(source)];
     for (let i2 = 0; i2 < sourceKeys.length; i2++) {
