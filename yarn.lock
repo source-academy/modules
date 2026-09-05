@@ -1056,6 +1056,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@box2d/core@npm:^0.11.0":
+  version: 0.11.0
+  resolution: "@box2d/core@npm:0.11.0"
+  checksum: 10c0/69563dc93543ae0ac6877dfcc8268c2e5b58e909d4eb6ee04138a90d42a1a9f3453a59d0c51673bbec532d8de5946ea386e4c6a7c0d00309ef7860db6b505a26
+  languageName: node
+  linkType: hard
+
 "@box2d/debug-draw@npm:^0.10.0":
   version: 0.10.0
   resolution: "@box2d/debug-draw@npm:0.10.0"
@@ -4247,7 +4254,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sourceacademy/bundle-physics_2d@workspace:src/bundles/physics_2d"
   dependencies:
-    "@box2d/core": "npm:^0.10.0"
+    "@box2d/core": "npm:^0.11.0"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
     typescript: "catalog:"
