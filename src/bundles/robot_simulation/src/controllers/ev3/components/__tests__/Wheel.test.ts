@@ -1,20 +1,12 @@
 import * as THREE from 'three';
 import { describe, expect, it as baseIt, vi } from 'vitest';
-import type { Physics, Renderer } from '../../../../engine';
+import type { Physics } from '../../../../engine';
 import type { ChassisWrapper } from '../Chassis';
 import { Wheel, type WheelConfig } from '../Wheel';
-
-vi.mock(import('../../../../engine/Render/debug/DebugArrow'), () => ({
-  DebugArrow: class {
-    getMesh = vi.fn().mockReturnValue({});
-    update = vi.fn();
-  },
-} as any));
 
 describe(Wheel, () => {
   const it = baseIt
     .extend('mockPhysics', { castRay: vi.fn() } as unknown as Physics)
-    .extend('mockRenderer', { add: vi.fn() } as unknown as Renderer)
     .extend('mockChassisWrapper', {
       getEntity: vi.fn().mockReturnValue({
         worldTranslation: vi.fn().mockImplementation(() => new THREE.Vector3()),
@@ -37,19 +29,15 @@ describe(Wheel, () => {
     } as WheelConfig)
     .extend(
       'wheel',
-      ({ mockChassisWrapper, mockPhysics, mockRenderer, mockConfig }) => new Wheel(mockChassisWrapper, mockPhysics, mockRenderer, mockConfig)
+      ({ mockChassisWrapper, mockPhysics, mockConfig }) => new Wheel(mockChassisWrapper, mockPhysics, mockConfig)
     );
-
-  it('should initialize with a debug arrow if debug is true', ({ wheel, mockRenderer }) => {
-    expect(wheel.arrowHelper).toBeDefined();
-    expect(mockRenderer.add).toHaveBeenCalled();
-  });
 
   it('should correctly calculate physics interactions in fixedUpdate', ({ mockPhysics, wheel, mockChassisWrapper, mockConfig }) => {
     const timingInfo = { timestep: 16 }; // 16 ms timestep
     const mockResult = {
       distance: 0.3,
       normal: new THREE.Vector3(0, 1, 0),
+      collider: {} as any,
     };
     vi.mocked(mockPhysics.castRay).mockReturnValue(mockResult);
 
@@ -62,7 +50,6 @@ describe(Wheel, () => {
       expect.anything()
     );
     expect(mockChassisWrapper.getEntity().applyImpulse).toHaveBeenCalled();
-    expect(wheel.arrowHelper.update).toHaveBeenCalled();
   });
 
   it('should handle null result from castRay indicating no ground contact', ({ mockPhysics, mockChassisWrapper, wheel }) => {
@@ -79,6 +66,7 @@ describe(Wheel, () => {
     const mockResult = {
       distance: 0,
       normal: new THREE.Vector3(0, 0, 0),
+      collider: {} as any,
     };
     vi.mocked(mockPhysics.castRay).mockReturnValue(mockResult);
 

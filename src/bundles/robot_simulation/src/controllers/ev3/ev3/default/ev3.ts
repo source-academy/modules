@@ -1,4 +1,5 @@
-import { ControllerMap, type Physics, type Renderer } from '../../../../engine';
+import { ControllerMap, type Physics } from '../../../../engine';
+import type { SceneRegistry } from '../../../../engine/Render/SceneRegistry';
 
 import { ChassisWrapper } from '../../components/Chassis';
 import { Mesh } from '../../components/Mesh';
@@ -20,11 +21,11 @@ export type DefaultEv3 = ControllerMap<DefaultEv3Controller>;
 
 export const createDefaultEv3 = (
   physics: Physics,
-  render: Renderer,
+  registry: SceneRegistry,
   config: Ev3Config,
 ): DefaultEv3 => {
-  const chassis = new ChassisWrapper(physics, render, config.chassis);
-  const mesh = new Mesh(chassis, render, config.mesh);
+  const chassis = new ChassisWrapper(physics, config.chassis);
+  const mesh = new Mesh(chassis, registry, config.mesh);
 
   const wheelControllers = wheelNames.reduce((acc, name) => {
     const displacement = config.wheels.displacements[name];
@@ -32,7 +33,7 @@ export const createDefaultEv3 = (
       ...config.wheels.config,
       displacement,
     };
-    const wheel = new Wheel(chassis, physics, render, wheelConfig);
+    const wheel = new Wheel(chassis, physics, wheelConfig);
     return {
       ...acc,
       [name]: wheel,
@@ -46,7 +47,7 @@ export const createDefaultEv3 = (
       ...config.motors.config,
       displacement,
     };
-    const motor = new Motor(chassis, physics, render, motorConfig);
+    const motor = new Motor(chassis, physics, registry, motorConfig);
     return {
       ...acc,
       [name]: motor,
@@ -54,12 +55,11 @@ export const createDefaultEv3 = (
   }, {} as MotorControllers);
 
   // Sensors
-  const colorSensor = new ColorSensor(chassis, render, config.colorSensor);
+  const colorSensor = new ColorSensor(chassis, physics, config.colorSensor);
 
   const ultrasonicSensor = new UltrasonicSensor(
     chassis,
     physics,
-    render,
     config.ultrasonicSensor,
   );
 
