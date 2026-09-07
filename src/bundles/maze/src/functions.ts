@@ -1,10 +1,5 @@
 import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
 import context from 'js-slang/context';
-// import {
-//   head,
-//   tail,
-//   type List
-// } from 'js-slang/dist/stdlib/list';
 
 import { areaEquals, is_within_area, raycast, type Collision } from './helpers/areas';
 import { run_tests } from './helpers/tests';
@@ -143,7 +138,7 @@ export function create_area(
   const parsedVertices: Point[] = vertices.map(v => ({ x: v[0], y: v[1] }));
 
   // Store flags as an object
-  const parsedFlags = flags.reduce((acc, f) => ({ ...acc, [f[0]]: f[1] }), {});
+  const parsedFlags: AreaFlags = Object.fromEntries(flags);
 
   // Store the new area
   state.areas.push({
@@ -227,9 +222,9 @@ export function should_enter_colors(
 ) {
   state.tests.push({
     type: 'area',
-    test: (areas: Area[]) => {
+    test: (areas) => {
       const coloredAreas = areas
-        .filter((area: Area) => colors.includes(area.flags.color)) // Filter relevant colors
+        .filter((area) => colors.includes(area.flags.color)) // Filter relevant colors
         .filter(filterAdjacentDuplicateAreas); // Filter adjacent duplicates
 
       return coloredAreas.length === colors.length && coloredAreas.every(({ flags: { color } }, i) => color === colors[i]); // Check if each area has the expected color
