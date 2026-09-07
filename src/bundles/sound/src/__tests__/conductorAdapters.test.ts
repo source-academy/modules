@@ -1,6 +1,6 @@
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 import { describe, expect, test } from 'vitest';
-import { rememberSoundSampler, restoreSoundSampler } from '../conductorAdapters';
+import { lookupSoundRecord, rememberSoundRecord, rememberSoundSampler, restoreSoundSampler } from '../conductorAdapters';
 import type { Sound, SoundSampler, Wave } from '../types';
 
 function closure(id: number): TypedValue<DataType.CLOSURE> {
@@ -45,5 +45,24 @@ describe('Sound sampler Conductor metadata', () => {
       .toBeUndefined();
     expect(restoreSoundSampler({} as IDataHandler, decodedSound(1), closure(11), closure(12)).sampleChannels)
       .toBeUndefined();
+  });
+});
+
+describe('Sound record cache (get_wave/get_left_wave/get_right_wave/get_duration .sync twins)', () => {
+  test('round-trips a record for the same evaluator and pair id', () => {
+    const evaluator = {} as IDataHandler;
+    const record = { leftClosure: closure(11), rightClosure: closure(12), duration: 5 };
+    rememberSoundRecord(evaluator, 100, record);
+
+    expect(lookupSoundRecord(evaluator, 100)).toEqual(record);
+  });
+
+  test('does not leak to another pair id or evaluator', () => {
+    const evaluator = {} as IDataHandler;
+    const record = { leftClosure: closure(11), rightClosure: closure(12), duration: 5 };
+    rememberSoundRecord(evaluator, 100, record);
+
+    expect(lookupSoundRecord(evaluator, 101)).toBeUndefined();
+    expect(lookupSoundRecord({} as IDataHandler, 100)).toBeUndefined();
   });
 });

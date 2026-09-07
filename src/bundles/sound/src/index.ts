@@ -36,7 +36,7 @@ import { BaseModulePlugin, moduleMethod } from '@sourceacademy/conductor/module'
 import type { IInterfacableEvaluator } from '@sourceacademy/conductor/runner';
 import { DataType, type IDataHandler, type TypedValue } from '@sourceacademy/conductor/types';
 
-import { rememberSoundSampler, restoreSoundSampler } from './conductorAdapters';
+import { lookupSoundRecord, rememberSoundRecord, rememberSoundSampler, restoreSoundSampler } from './conductorAdapters';
 import {
   adsr as adsr_func,
   bell as bell_func,
@@ -241,7 +241,9 @@ async function soundToConductor(evaluator: IDataHandler, sound: Sound): Promise<
     : await waveToConductorClosure(evaluator, sound.rightWave);
   rememberSoundSampler(evaluator, sound, leftClosure, rightClosure);
   const wavesPair = await evaluator.pair_make(leftClosure, rightClosure);
-  return evaluator.pair_make(wavesPair, { type: DataType.NUMBER, value: sound.duration });
+  const outer = await evaluator.pair_make(wavesPair, { type: DataType.NUMBER, value: sound.duration });
+  rememberSoundRecord(evaluator, outer.value, { leftClosure, rightClosure, duration: sound.duration });
+  return outer;
 }
 
 /**
@@ -253,7 +255,7 @@ async function soundToConductor(evaluator: IDataHandler, sound: Sound): Promise<
  * length. Both are equally valid; `pair_head`/`pair_tail` already read either shape identically
  * (py-slang's own `GenericDataHandler` bridge).
  */
-function isPairLike(value: TypedValue<DataType>): boolean {
+function isPairLike(value: TypedValue<DataType>): value is TypedValue<DataType.PAIR> | TypedValue<DataType.ARRAY> {
   return value.type === DataType.PAIR || value.type === DataType.ARRAY;
 }
 
@@ -956,5 +958,38 @@ export default class SoundModulePlugin extends BaseModulePlugin {
     duration: TypedValue<DataType.NUMBER>
   ): AsyncGenerator<void, TypedValue<DataType.PAIR>, undefined> {
     return soundToConductor(this.evaluator, violin_func(note.value, duration.value));
+  }
+
+  static {
+    // get_wave/get_left_wave/get_right_wave/get_duration's `.sync` twins, mirroring pix_n_flix's
+    // get_pixel_value/image_width/etc. - see conductorAdapters.ts's soundRecordCache doc comment
+    // for what this is keyed by and why it's needed. Declining (returning undefined) for a Sound
+    // the cache has no record of - e.g. one hand-assembled from bare pairs rather than built via
+    // this module's own constructors/combinators - falls back to the always-correct async body.
+    Object.assign(SoundModulePlugin.prototype.get_wave, {
+      sync(this: SoundModulePlugin, sound: TypedValue<DataType.PAIR>): TypedValue<DataType.CLOSURE> | undefined {
+        if (!isPairLike(sound)) return undefined;
+        return lookupSoundRecord(this.evaluator, sound.value)?.leftClosure;
+      }
+    });
+    Object.assign(SoundModulePlugin.prototype.get_left_wave, {
+      sync(this: SoundModulePlugin, sound: TypedValue<DataType.PAIR>): TypedValue<DataType.CLOSURE> | undefined {
+        if (!isPairLike(sound)) return undefined;
+        return lookupSoundRecord(this.evaluator, sound.value)?.leftClosure;
+      }
+    });
+    Object.assign(SoundModulePlugin.prototype.get_right_wave, {
+      sync(this: SoundModulePlugin, sound: TypedValue<DataType.PAIR>): TypedValue<DataType.CLOSURE> | undefined {
+        if (!isPairLike(sound)) return undefined;
+        return lookupSoundRecord(this.evaluator, sound.value)?.rightClosure;
+      }
+    });
+    Object.assign(SoundModulePlugin.prototype.get_duration, {
+      sync(this: SoundModulePlugin, sound: TypedValue<DataType.PAIR>): TypedValue<DataType.NUMBER> | undefined {
+        if (!isPairLike(sound)) return undefined;
+        const record = lookupSoundRecord(this.evaluator, sound.value);
+        return record ? { type: DataType.NUMBER, value: record.duration } : undefined;
+      }
+    });
   }
 }
