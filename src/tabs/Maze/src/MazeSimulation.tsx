@@ -251,7 +251,7 @@ const MazeSimulation: React.FC<MapProps> = ({
             robot.current.rotation -= 2 * Math.PI;
           }
 
-          if (robot.current.rotation < Math.PI) {
+          if (robot.current.rotation < -Math.PI) {
             robot.current.rotation += 2 * Math.PI;
           }
           break;
@@ -286,7 +286,7 @@ const MazeSimulation: React.FC<MapProps> = ({
         {animationStatus === 3 && <span style={{ marginLeft: '5px' }}>{!hasCollided && run_tests({ tests, areaLog }) ? 'Success! 🎉' : message}</span>}
       </div>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <canvas ref={canvasRef}/>
+        <canvas ref={canvasRef} />
       </div>
     </>
   );

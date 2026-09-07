@@ -313,6 +313,8 @@ export function move_forward(
 
       // Update state to reflect that the robot has collided with an obstacle
       state.hasCollided = true;
+
+      break;
     }
   }
 
@@ -480,7 +482,7 @@ function robot_raycast_area(
   const raycast_sources: Point[] = [-1, 0, 1]
     .map(mult => ({
       x: robot.x + mult * robot.radius * dy,
-      y: robot.y + mult * robot.radius * dx
+      y: robot.y - mult * robot.radius * dx
     }));
 
   // Raycast 3 times, one for each source

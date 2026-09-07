@@ -96,28 +96,22 @@ export function is_within_area(
 ): boolean {
   const { vertices } = area;
 
-  // Cast a ray to the right of the point
-  const ray = {
-    origin: point,
-    target: { x: point.x + 1, y: point.y + 0 }
-  };
+  // Even-odd ray casting (PNPOLY), which handles rays passing exactly
+  // through a vertex or along a horizontal edge without double-counting
+  // or missing intersections
+  let inside = false;
 
-  // Count the intersections
-  let intersections = 0;
+  for (let i = 0, j = vertices.length - 1; i < vertices.length; j = i++) {
+    const vi = vertices[i];
+    const vj = vertices[j];
 
-  for (let i = 0; i < vertices.length; i++) {
-    // Border line segment
-    const border: LineSegment = {
-      p1: { x: vertices[i].x, y: vertices[i].y },
-      p2: { x: vertices[(i + 1) % vertices.length].x, y: vertices[(i + 1) % vertices.length].y }
-    };
+    const intersects = (vi.y > point.y) !== (vj.y > point.y)
+      && point.x < ((vj.x - vi.x) * (point.y - vi.y)) / (vj.y - vi.y) + vi.x;
 
-    // Increment intersections if the ray intersects the border
-    if (getIntersection(ray, border) < Infinity) intersections++;
+    if (intersects) inside = !inside;
   }
 
-  // Even => Outside; Odd => Inside
-  return intersections % 2 === 1;
+  return inside;
 }
 
 /**
