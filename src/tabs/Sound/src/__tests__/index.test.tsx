@@ -70,6 +70,9 @@ function createMockAudioContext() {
     // Mirrors the real AudioContext: starts 'running', flips to 'closed' once close() settles -
     // __ensureAudioContext() is expected to treat a closed context as unusable, not reuse it.
     state: 'running' as AudioContextState,
+    // The streaming scheduler reads currentTime to place each chunk on the audio clock; a fixed 0
+    // is enough for these tests (which assert scheduling happened, not exact timings).
+    currentTime: 0,
     destination: {},
     createBuffer: vi.fn((_channels: number, length: number, sampleRate: number) => ({
       length,
@@ -107,6 +110,23 @@ function createMockMediaRecorder() {
     })
   };
   return recorder;
+}
+
+/**
+ * Drives a whole play() stream through the tab as functions.ts's play() does: open the stream, send
+ * its (single, here) chunk, then end it. Returns the endStream promise, which resolves once the tab
+ * reports the stream has finished playing.
+ */
+function playStream(
+  plugin: SoundTabPlugin,
+  left: Float32Array<ArrayBuffer>,
+  right: Float32Array<ArrayBuffer>,
+  sampleRate: number,
+  streamId: number
+): Promise<void> {
+  plugin.$startStream(streamId, sampleRate);
+  plugin.$sendChunk(streamId, left, right);
+  return plugin.endStream(streamId);
 }
 
 describe(PlayerBarsView, () => {
@@ -227,10 +247,10 @@ describe(SoundTabPlugin, () => {
   });
 
   test('destroy closes the AudioContext immediately when nothing is playing', async () => {
-    // AudioContext is only created lazily, on first use - exercise playSamples() first so one
-    // actually exists to be closed.
+    // AudioContext is only created lazily, on first use - play a stream first so one actually
+    // exists to be closed.
     const samples = new Float32Array([0]);
-    await plugin.playSamples(samples, samples, 8000);
+    await playStream(plugin, samples, samples, 8000, 1);
 
     plugin.destroy();
     expect(mockAudioContext.close).toHaveBeenCalledOnce();
@@ -238,7 +258,7 @@ describe(SoundTabPlugin, () => {
 
   test('destroy defers closing the AudioContext until in-flight playback finishes', async () => {
     const samples = new Float32Array([0]);
-    const playing = plugin.playSamples(samples, samples, 8000);
+    const playing = playStream(plugin, samples, samples, 8000, 1);
     plugin.destroy();
     expect(mockAudioContext.close).not.toHaveBeenCalled();
 
@@ -246,43 +266,45 @@ describe(SoundTabPlugin, () => {
     expect(mockAudioContext.close).toHaveBeenCalledOnce();
   });
 
-  test('destroy does not close the AudioContext while a second, still-playing concurrent sound is going', async () => {
-    // Regression test: two overlapping playSamples() calls each hold the AudioContext open until
-    // both are actually done, not just the first one to finish.
+  test('destroy does not close the AudioContext until every open stream has finished', async () => {
+    // Regression test: two overlapping streams each hold the AudioContext open until both are
+    // actually done, not just the first one to finish. Chunks are sent (so both streams have a
+    // scheduled source) but endStream is withheld, so each stream stays "pending" independently of
+    // its mocked source's own 'ended' - it's endStream that finally settles each one.
     const samples = new Float32Array([0]);
-    const first = plugin.playSamples(samples, samples, 8000);
-    // A one-tick gap so the two sounds' mocked 'ended' events don't land in the very same
-    // microtask batch, giving the intermediate "first done, second still going" state below an
-    // actual chance to be observed rather than both finishing together.
-    await Promise.resolve();
-    const second = plugin.playSamples(samples, samples, 8000); // overlaps the first, not queued
+    plugin.$startStream(1, 8000);
+    plugin.$sendChunk(1, samples, samples);
+    plugin.$startStream(2, 8000);
+    plugin.$sendChunk(2, samples, samples);
+    // Let the mocked sources' 'ended' events fire; the streams still aren't done (no endStream yet).
+    await new Promise(resolve => setTimeout(resolve, 0));
 
     plugin.destroy();
     expect(mockAudioContext.close).not.toHaveBeenCalled();
+    expect(mockAudioContext.createBufferSource).toHaveBeenCalledTimes(2);
 
-    await first;
-    // The first sound finished, but the second (started concurrently) is still playing.
+    await plugin.endStream(1);
+    // The first stream finished, but the second (started concurrently) is still open.
     expect(mockAudioContext.close).not.toHaveBeenCalled();
 
-    await second;
+    await plugin.endStream(2);
     // Now both have actually finished.
     expect(mockAudioContext.close).toHaveBeenCalledOnce();
-    expect(mockAudioContext.createBufferSource).toHaveBeenCalledTimes(2);
   });
 
-  test('a later playSamples() after destroy() has closed the AudioContext gets a fresh one instead of reusing the closed one', async () => {
+  test('a later stream after destroy() has closed the AudioContext gets a fresh one instead of reusing the closed one', async () => {
     // Regression test: destroy() closes the AudioContext but never resets the field pointing at
     // it. Without checking .state, __ensureAudioContext() would hand back the same, now-unusable
-    // closed context to whatever playSamples() call is still in flight (e.g. one whose sampling
-    // was still running when the Run ended).
+    // closed context to a later stream (e.g. one whose sampling was still running when the Run
+    // ended).
     const samples = new Float32Array([0]);
-    await plugin.playSamples(samples, samples, 8000);
+    await playStream(plugin, samples, samples, 8000, 1);
     expect(audioContextConstructor).toHaveBeenCalledOnce();
 
     plugin.destroy();
     expect(mockAudioContext.state).toBe('closed');
 
-    await expect(plugin.playSamples(samples, samples, 8000)).resolves.toBeUndefined();
+    await expect(playStream(plugin, samples, samples, 8000, 2)).resolves.toBeUndefined();
     expect(audioContextConstructor).toHaveBeenCalledTimes(2);
   });
 
@@ -297,21 +319,34 @@ describe(SoundTabPlugin, () => {
     });
   });
 
-  describe('playSamples', () => {
-    test('plays a 2-channel buffer through the AudioContext and resolves once playback ends', async () => {
+  describe('playback streams', () => {
+    test('plays a streamed 2-channel chunk through the AudioContext and resolves once playback ends', async () => {
       const left = new Float32Array([0, 0.5, -0.5, 0]);
       const right = new Float32Array([0, -0.5, 0.5, 0]);
-      await plugin.playSamples(left, right, 8000);
+      await playStream(plugin, left, right, 8000, 1);
 
       expect(mockAudioContext.createBuffer).toHaveBeenCalledWith(2, left.length, 8000);
       expect(mockAudioContext.bufferSource.start).toHaveBeenCalledOnce();
     });
 
-    test('repeated/looped calls overlap: the second starts immediately, without waiting for the first to finish', async () => {
+    test('a chunk is scheduled to start as soon as it arrives, without waiting for endStream', () => {
       const samples = new Float32Array([0]);
-      const first = plugin.playSamples(samples, samples, 8000);
+      plugin.$startStream(1, 8000);
+      plugin.$sendChunk(1, samples, samples);
+      // The source is created and started synchronously on the chunk arriving - playback begins
+      // before sampling has even finished (endStream not called yet).
+      expect(mockAudioContext.createBufferSource).toHaveBeenCalledOnce();
+      expect(mockAudioContext.bufferSource.start).toHaveBeenCalledOnce();
+      expect(plugin.getStatus()).toBe('playing');
+    });
+
+    test('concurrent streams overlap: a second stream\'s chunk starts without waiting for the first to finish', async () => {
+      const samples = new Float32Array([0]);
+      plugin.$startStream(1, 8000);
+      plugin.$sendChunk(1, samples, samples);
       const firstSource = mockAudioContext.bufferSource;
-      const second = plugin.playSamples(samples, samples, 8000);
+      plugin.$startStream(2, 8000);
+      plugin.$sendChunk(2, samples, samples);
       const secondSource = mockAudioContext.bufferSource;
 
       // Both sources were created and started synchronously, before either has had any chance to
@@ -321,64 +356,80 @@ describe(SoundTabPlugin, () => {
       expect(firstSource.start).toHaveBeenCalledOnce();
       expect(secondSource.start).toHaveBeenCalledOnce();
 
-      await Promise.all([first, second]);
+      await Promise.all([plugin.endStream(1), plugin.endStream(2)]);
     });
 
-    test('an earlier sound finishing does not clobber a later sound\'s still-in-flight constructing status', async () => {
-      // Regression test: notifyConstructing() (sampling can take a while for an expensive Sound,
-      // entirely in the Worker) and playSamples() are independent RPC calls. Sampling for a second
-      // sound can still be in progress when a first, already-dispatched sound finishes playing -
-      // that completion must not reset status to 'idle' out from under the second sound's
+    test('a chunk of a stream that was never opened (or already stopped) is dropped', () => {
+      const samples = new Float32Array([0]);
+      // No $startStream for id 99 - a late/stray chunk must not touch the AudioContext.
+      plugin.$sendChunk(99, samples, samples);
+      expect(mockAudioContext.createBufferSource).not.toHaveBeenCalled();
+    });
+
+    test('an earlier stream finishing does not clobber a later sound\'s still-in-flight constructing status', async () => {
+      // Regression test: notifyConstructing() (the first chunk of an expensive Sound can take a
+      // while to sample, in the Worker) and the stream's chunks are independent messages. A first,
+      // already-playing stream can finish while a second sound is still being sampled (no chunk
+      // yet) - that completion must not reset status to 'idle' out from under the second sound's
       // still-active 'constructing' status.
       const samples = new Float32Array([0]);
-      const first = plugin.playSamples(samples, samples, 8000);
-      // playSamples() starts the source and updates status synchronously - no await needed for
-      // that to already be reflected.
+      const first = playStream(plugin, samples, samples, 8000, 1);
+      // The chunk starts the source and updates status synchronously - no await needed.
       expect(plugin.getStatus()).toBe('playing');
 
       // Called synchronously, without yielding control back to the microtask queue in between, so
-      // the first sound's own (mocked, microtask-scheduled) completion can't have run yet - this
-      // is what actually exercises the "still in flight" scenario being tested.
+      // the first stream's own (mocked, microtask-scheduled) completion can't have run yet.
       void plugin.notifyConstructing(); // a second, unrelated sound starts sampling
-      expect(plugin.getStatus()).toBe('playing'); // first sound is still audibly playing
+      expect(plugin.getStatus()).toBe('playing'); // first stream is still audibly playing
 
       await first;
       await new Promise(resolve => setTimeout(resolve, 0));
-      // The first sound finished, but the second is still being sampled (its playSamples() call
-      // hasn't arrived yet) - status must reflect that, not revert to idle.
+      // The first stream finished, but the second is still being sampled (no chunk has arrived
+      // yet) - status must reflect that, not revert to idle.
       expect(plugin.getStatus()).toBe('constructing');
 
-      void plugin.playSamples(samples, samples, 8000); // the second sound's sampling finishes
-      await Promise.resolve();
+      plugin.$startStream(2, 8000); // the second sound's first chunk finally arrives
+      plugin.$sendChunk(2, samples, samples);
+      // Asserted synchronously, before the mocked source's immediate 'ended' fires: the second
+      // sound is now the one audibly playing.
       expect(plugin.getStatus()).toBe('playing');
     });
   });
 
   describe('$stopPlayback', () => {
-    test('stops the currently playing source', async () => {
+    test('stops the currently playing source', () => {
       const samples = new Float32Array([0]);
-      const playing = plugin.playSamples(samples, samples, 8000);
-      // One tick: enough for playback to actually start, not enough for it to have finished on
-      // its own (see the queueing test above for why a full setTimeout(0) flush would be too much).
-      await Promise.resolve();
+      plugin.$startStream(1, 8000);
+      plugin.$sendChunk(1, samples, samples);
+      const source = mockAudioContext.bufferSource;
 
       plugin.$stopPlayback();
-      expect(mockAudioContext.bufferSource.stop).toHaveBeenCalledOnce();
-      await playing;
+      expect(source.stop).toHaveBeenCalledOnce();
     });
 
-    test('stops every currently-playing source when several are playing concurrently', async () => {
+    test('stops every currently-playing source when several streams are playing concurrently', () => {
       const samples = new Float32Array([0]);
-      const first = plugin.playSamples(samples, samples, 8000);
+      plugin.$startStream(1, 8000);
+      plugin.$sendChunk(1, samples, samples);
       const firstSource = mockAudioContext.bufferSource;
-      const second = plugin.playSamples(samples, samples, 8000);
+      plugin.$startStream(2, 8000);
+      plugin.$sendChunk(2, samples, samples);
       const secondSource = mockAudioContext.bufferSource;
 
       plugin.$stopPlayback();
       expect(firstSource.stop).toHaveBeenCalledOnce();
       expect(secondSource.stop).toHaveBeenCalledOnce();
+    });
 
-      await Promise.all([first, second]);
+    test('resolves a pending endStream once its stream is stopped', async () => {
+      const samples = new Float32Array([0]);
+      plugin.$startStream(1, 8000);
+      plugin.$sendChunk(1, samples, samples);
+      // endStream would normally resolve when playback finishes; stopping should resolve it too,
+      // so the module's activePlayCount bookkeeping doesn't hang.
+      const ending = plugin.endStream(1);
+      plugin.$stopPlayback();
+      await expect(ending).resolves.toBeUndefined();
     });
   });
 

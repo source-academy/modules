@@ -37,6 +37,8 @@ import type { SoundTabRpc } from './protocol';
 import type { Sound, SoundProducer, SoundSampler, SoundTransformer, StereoSamples, SyncWave, Wave } from './types';
 
 export const FS: number = 44100; // Output sample rate
+/** frames per streamed PCM chunk, ~93 ms at 44.1 kHz */
+const STREAM_CHUNK_FRAMES = 4096;
 const fourier_expansion_level: number = 5;
 /** duration of recording signal in milliseconds */
 const recording_signal_ms = 100;
@@ -79,6 +81,9 @@ export const globalVars: BundleGlobalVars = {
  */
 let playGeneration = 0;
 let recordingGeneration = 0;
+
+/** Monotonic id handed to the tab so it can tell concurrent/overlapping play() streams apart. */
+let nextStreamId = 0;
 
 let soundIO: SoundTabRpc | undefined;
 
@@ -379,6 +384,56 @@ async function* sampleSound(sound: Sound): AsyncGenerator<void, StereoSamples, u
   };
 }
 
+/** Receives one PCM chunk, `left === right` (same array) for a mono chunk. */
+type ChunkSink = (left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>) => void;
+
+/**
+ * Samples `sound` and hands it to `sink` in `chunkFrames`-sized PCM chunks as it fills, so playback
+ * can begin after the first chunk instead of after the whole Sound. Output is sample-for-sample
+ * identical to sampling in one go: each channel's `smoothSample` state carries across chunk
+ * boundaries. A mono Sound (leftWave === rightWave) is sampled once, sharing one array for both
+ * channels. A Sound with a custom `sampleChannels` sampler (pan/pan_mod) is sampled in full first
+ * then sliced, ensuring correct behaviour but without the incremental-startup benefit.
+ */
+async function* streamSoundChunks(
+  sound: Sound,
+  chunkFrames: number,
+  sink: ChunkSink
+): AsyncGenerator<void, void, undefined> {
+  if (sound.sampleChannels) {
+    const { left, right } = yield* sound.sampleChannels(sound.duration);
+    const mono = right === left;
+    for (let offset = 0; offset < left.length; offset += chunkFrames) {
+      const leftChunk = left.slice(offset, offset + chunkFrames);
+      sink(leftChunk, mono ? leftChunk : right.slice(offset, offset + chunkFrames));
+    }
+    return;
+  }
+
+  const { leftWave, rightWave, duration } = sound;
+  const mono = leftWave === rightWave;
+  const length = Math.ceil(FS * duration);
+  const leftSync = leftWave.sync;
+  const rightSync = rightWave.sync;
+  let prevLeft = 0;
+  let prevRight = 0;
+  for (let offset = 0; offset < length; offset += chunkFrames) {
+    const size = Math.min(chunkFrames, length - offset);
+    const left = new Float32Array(size);
+    const right = mono ? left : new Float32Array(size);
+    for (let j = 0; j < size; j += 1) {
+      const t = (offset + j) / FS;
+      prevLeft = smoothSample(leftSync ? leftSync(t) : yield* leftWave(t), prevLeft);
+      left[j] = prevLeft;
+      if (!mono) {
+        prevRight = smoothSample(rightSync ? rightSync(t) : yield* rightWave(t), prevRight);
+        right[j] = prevRight;
+      }
+    }
+    sink(left, right);
+  }
+}
+
 /** Builds a Wave that linearly interpolates between recorded PCM samples. */
 function interpolatedWave(samples: Float32Array<ArrayBuffer>, sampleRate: number): Wave {
   return syncWave(t => {
@@ -584,18 +639,18 @@ export async function* play_waves(left_wave: Wave, right_wave: Wave, duration: n
 }
 
 /**
- * Plays the given Sound using the computer's sound device, as soon as it has finished sampling -
- * concurrently with any Sound(s) already playing, rather than erroring or queueing behind them, so
- * repeated/looped play() calls overlap and are mixed together (like `simultaneously`, but built up
- * call-by-call rather than pre-combined into one Sound).
+ * Plays the given Sound using the computer's sound device, as soon as it has finished the first 
+ * sample chunk, streaming it to the host, with subsequent sample chunks following. The samples 
+ * will be played concurrently with any Sound(s) already playing, rather than erroring or queueing 
+ * behind them, so repeated/looped play() calls overlap and are mixed together (like `simultaneously`, 
+ * but built up call-by-call rather than pre-combined into one Sound).
  *
- * The RPC call is dispatched immediately once sampling finishes (see `SoundTabPlugin.playSamples`)
- * rather than being queued here - this Run's evaluator Worker is terminated as soon as the program
- * finishes, which can happen well before a still-queued call would ever get to fire. Deferring the
- * RPC call itself until then would silently drop it.
+ * Chunks are dispatched as they're sampled rather than queued here - this Run's evaluator Worker is
+ * terminated as soon as the program finishes, which can happen well before a still-queued dispatch
+ * would ever fire, silently dropping it.
  * @example play(sine_sound(440, 5));
- * @returns the given Sound, without waiting for playback to finish - once the sound has been
- * dispatched to the host, matching the original module's fire-and-forget behaviour
+ * @returns the given Sound, once the first chunk has been dispatched to the host - without waiting
+ * for playback to finish, matching the original module's fire-and-forget behaviour
  */
 export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined> {
   assertPlayableSound(play.name, sound);
@@ -603,27 +658,31 @@ export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined
     return sound;
   }
 
-  // Sampling the whole duration into a buffer happens before playback can start at all, and takes
-  // time proportional to duration - tell the tab now so it can show that as distinct from idle,
-  // rather than looking stalled during what can be a noticeable wait for longer sounds. Awaited
+  // Sampling the first chunk still takes a small moment before playback can start - tell the tab
+  // now so it can show "constructing" as distinct from idle rather than looking stalled. Awaited
   // (not fire-and-forget) so this can't race the tab's own (possibly still in-progress) loading.
   await io().notifyConstructing();
-  const { left: leftSamples, right: rightSamples } = yield* sampleSound(sound);
+  const streamId = nextStreamId;
+  nextStreamId += 1;
   globalVars.activePlayCount += 1;
   const generation = playGeneration;
-  // Fire-and-forget from the caller's perspective (matching the original's non-blocking
-  // semantics) - the script continues without waiting for this to settle.
-  void (async () => {
-    try {
-      await io().playSamples(leftSamples, rightSamples, FS);
-    } finally {
-      // If stop() happened in the meantime, `generation` is stale: stop() already reset the count
-      // to 0, and by now a new, unrelated play() may have started and be relying on it itself.
+  io().$startStream(streamId, FS);
+
+  try {
+    yield* streamSoundChunks(sound, STREAM_CHUNK_FRAMES, (left, right) => {
+      io().$sendChunk(streamId, left, right);
+    });
+  } finally {
+    // Signal end-of-input whether sampling finished or threw partway (chunks that did reach the tab
+    // still play out). endStream resolves once playback actually finishes, so the count reflects
+    // audible playback, not just "done sampling". If stop() happened in between, `generation` is
+    // stale (as stop() already reset the count, and a newer play() may now rely on it) and skipped.
+    void io().endStream(streamId).finally(() => {
       if (generation === playGeneration) {
         globalVars.activePlayCount = Math.max(0, globalVars.activePlayCount - 1);
       }
-    }
-  })();
+    });
+  }
   return sound;
 }
 
@@ -646,9 +705,11 @@ export async function* play_in_tab(sound: Sound): AsyncGenerator<void, Sound, un
     return sound;
   }
 
-  // Sampling can take a while for a long Sound - tell the tab now so it shows "Constructing…"
-  // instead of looking stalled until the bar just appears, matching play()'s notifyConstructing()
-  // call. addPlayerToTab() below is the corresponding "done" signal, matching playSamples().
+  // Sampling left here for legacy reasons - now with sound streaming, the sampling process should 
+  // be a lot faster. This tells the tab now so it shows "Constructing…" instead of looking stalled 
+  // until the bar just appears, matching play()'s notifyConstructing() call. addPlayerToTab() below
+  // is the corresponding "done" signal. However, play_in_tab renders a whole WAV player at once, so 
+  // unlike play() it doesn't stream.
   await io().notifyConstructing();
   const { left: leftSamples, right: rightSamples } = yield* sampleSound(sound);
   await io().addPlayerToTab(encodeWavDataUri(leftSamples, rightSamples, FS));

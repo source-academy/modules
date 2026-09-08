@@ -3,7 +3,9 @@ import type { RecordedSamples, SoundTabRpc } from '../protocol';
 
 export interface MockSoundTabRpc extends SoundTabRpc {
   requestMicPermission: Mock<() => Promise<boolean>>;
-  playSamples: Mock<(left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>, sampleRate: number) => Promise<void>>;
+  $startStream: Mock<(streamId: number, sampleRate: number) => void>;
+  $sendChunk: Mock<(streamId: number, left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>) => void>;
+  endStream: Mock<(streamId: number) => Promise<void>>;
   notifyConstructing: Mock<() => Promise<void>>;
   $stopPlayback: Mock<() => void>;
   addPlayerToTab: Mock<(wavDataUri: string) => Promise<void>>;
@@ -20,7 +22,9 @@ export function mockSoundTabRpc(): MockSoundTabRpc {
   const emptySamples = new Float32Array(0);
   return {
     requestMicPermission: vi.fn().mockResolvedValue(true),
-    playSamples: vi.fn().mockResolvedValue(undefined),
+    $startStream: vi.fn(),
+    $sendChunk: vi.fn(),
+    endStream: vi.fn().mockResolvedValue(undefined),
     notifyConstructing: vi.fn().mockResolvedValue(undefined),
     $stopPlayback: vi.fn(),
     addPlayerToTab: vi.fn().mockResolvedValue(undefined),

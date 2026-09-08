@@ -122,33 +122,35 @@ describe('Sequential playback queue functions', () => {
       await expect(drain(funcs.play(0 as any))).rejects.toThrow('play: Expected a Sound for sound, got 0.');
     });
 
-    test('repeated/looped play() calls each dispatch playSamples() immediately, independently of each other', async () => {
-      io.playSamples.mockReturnValue(new Promise(() => {})); // never resolves on its own
+    test('repeated/looped play() calls each open their own stream immediately, independently of each other', async () => {
+      io.endStream.mockReturnValue(new Promise(() => { })); // never finishes playing on its own
 
       const sound = funcs.silence_sound(10);
       await expect(drain(funcs.play(sound))).resolves.toBe(sound);
       await expect(drain(funcs.play(sound))).resolves.toBe(sound);
 
-      // Sequencing so playback doesn't overlap is the host's job now (see
-      // SoundTabPlugin.playSamples) - this Run's Worker can be torn down as soon as the program
-      // finishes, well before a call that waited its turn here would ever get to fire, so play()
-      // dispatches every call's RPC as soon as it's sampled instead of queueing locally.
-      expect(io.playSamples).toHaveBeenCalledTimes(2);
+      // Sequencing so playback doesn't overlap is the host's job now (each stream mixes concurrently
+      // on the tab) - this Run's Worker can be torn down as soon as the program finishes, well
+      // before a call that waited its turn here would ever get to fire, so play() opens every call's
+      // stream immediately instead of queueing locally.
+      expect(io.$startStream).toHaveBeenCalledTimes(2);
+      // Each call is expected to have its own stream id.
+      expect(io.$startStream.mock.calls[0][0]).not.toBe(io.$startStream.mock.calls[1][0]);
       expect(funcs.globalVars.activePlayCount).toBe(2);
     });
 
-    test('activePlayCount drops by one as each dispatched play() actually finishes, independently', async () => {
+    test('activePlayCount drops by one as each stream actually finishes playing, independently', async () => {
       let resolveFirst: () => void;
       let resolveSecond: () => void;
-      io.playSamples.mockReturnValueOnce(new Promise<void>(resolve => { resolveFirst = resolve; }));
-      io.playSamples.mockReturnValueOnce(new Promise<void>(resolve => { resolveSecond = resolve; }));
+      io.endStream.mockReturnValueOnce(new Promise<void>(resolve => { resolveFirst = resolve; }));
+      io.endStream.mockReturnValueOnce(new Promise<void>(resolve => { resolveSecond = resolve; }));
 
       await drain(funcs.play(funcs.silence_sound(10)));
       await drain(funcs.play(funcs.silence_sound(10)));
-      expect(io.playSamples).toHaveBeenCalledTimes(2); // both dispatched already
+      expect(io.endStream).toHaveBeenCalledTimes(2); // both streams' inputs finished already
       expect(funcs.globalVars.activePlayCount).toBe(2);
 
-      resolveSecond!(); // the second one finishes first - order no longer matters
+      resolveSecond!(); // the second one finishes playing first - order no longer matters
       await new Promise(resolve => setTimeout(resolve, 0));
       expect(funcs.globalVars.activePlayCount).toBe(1);
 
@@ -157,16 +159,19 @@ describe('Sequential playback queue functions', () => {
       expect(funcs.globalVars.activePlayCount).toBe(0);
     });
 
-    test('a mono Sound is only sampled once (left and right samples are the same array)', async () => {
+    test('a mono Sound is streamed as chunks whose left and right are the same array', async () => {
       await drain(funcs.play(funcs.sine_sound(440, 0.01)));
-      expect(io.playSamples).toHaveBeenCalledOnce();
-      const [left, right] = io.playSamples.mock.calls[0];
-      expect(left).toBe(right);
+      expect(io.$sendChunk).toHaveBeenCalled();
+      // for mono sounds: every chunk hands the same Float32Array for both channels, so the tab (like the rest
+      // of the pipeline) only samples/copies it once.
+      for (const [, left, right] of io.$sendChunk.mock.calls) {
+        expect(left).toBe(right);
+      }
     });
 
-    test('a stale playSamples completion after stop() cannot decrement a newer play()\'s count', async () => {
+    test('a stale endStream completion after stop() cannot decrement a newer play()\'s count', async () => {
       let resolveA: () => void;
-      io.playSamples.mockReturnValueOnce(new Promise<void>(resolve => {
+      io.endStream.mockReturnValueOnce(new Promise<void>(resolve => {
         resolveA = resolve;
       }));
       await drain(funcs.play(funcs.silence_sound(10)));
@@ -175,23 +180,23 @@ describe('Sequential playback queue functions', () => {
       funcs.stop();
       expect(funcs.globalVars.activePlayCount).toBe(0);
 
-      io.playSamples.mockReturnValueOnce(new Promise(() => {})); // B's playback still in progress
+      io.endStream.mockReturnValueOnce(new Promise(() => { })); // B's playback still in progress
       await drain(funcs.play(funcs.silence_sound(10)));
       expect(funcs.globalVars.activePlayCount).toBe(1); // B's own count, unrelated to A
-      expect(io.playSamples).toHaveBeenCalledTimes(2); // A and B each dispatched independently
+      expect(io.$startStream).toHaveBeenCalledTimes(2); // A and B each opened a stream independently
 
       resolveA!(); // A's late completion arrives, well after stop()
       await new Promise(resolve => setTimeout(resolve, 0));
       // A's completion is stale (post-stop()) and doesn't touch the count, which still reflects
-      // only B (whose own playSamples() call never resolves in this test).
+      // only B (whose own endStream() call never resolves in this test).
       expect(funcs.globalVars.activePlayCount).toBe(1);
     });
 
-    test('a genuinely stereo Sound samples each channel separately', async () => {
+    test('a genuinely stereo Sound streams distinct left/right chunks', async () => {
       const sound = funcs.make_stereo_sound(constantWave(1), constantWave(-1), 0.01);
       await drain(funcs.play(sound));
-      expect(io.playSamples).toHaveBeenCalledOnce();
-      const [left, right] = io.playSamples.mock.calls[0];
+      expect(io.$sendChunk).toHaveBeenCalled();
+      const [, left, right] = io.$sendChunk.mock.calls[0];
       expect(left).not.toBe(right);
       expect(left[0]).toEqual(1);
       expect(right[0]).toEqual(-1);
@@ -214,12 +219,12 @@ describe('Sequential playback queue functions', () => {
         .rejects.toThrow('play_wave: Expected a wave for wave, got true.');
     });
 
-    test('repeated play_wave() calls each dispatch immediately, independently of each other', async () => {
-      io.playSamples.mockReturnValue(new Promise(() => {})); // never resolves on its own
+    test('repeated play_wave() calls each open their own stream immediately, independently of each other', async () => {
+      io.endStream.mockReturnValue(new Promise(() => { })); // never finishes playing on its own
       const wave = constantWave(0);
       await expect(drain(funcs.play_wave(wave, 10))).resolves.not.toBeUndefined();
       await expect(drain(funcs.play_wave(wave, 10))).resolves.not.toBeUndefined();
-      expect(io.playSamples).toHaveBeenCalledTimes(2);
+      expect(io.$startStream).toHaveBeenCalledTimes(2);
       expect(funcs.globalVars.activePlayCount).toBe(2);
     });
   });
@@ -227,7 +232,7 @@ describe('Sequential playback queue functions', () => {
   describe(funcs.play_waves, () => {
     it('plays given distinct left/right waves', async () => {
       await drain(funcs.play_waves(constantWave(1), constantWave(-1), 0.01));
-      const [left, right] = io.playSamples.mock.calls.at(-1)!;
+      const [, left, right] = io.$sendChunk.mock.calls.at(-1)!;
       expect(left[0]).toEqual(1);
       expect(right[0]).toEqual(-1);
     });
@@ -264,7 +269,7 @@ describe('Sequential playback queue functions', () => {
       await expect(drain(funcs.play_in_tab(sound))).resolves.toBe(sound);
 
       expect(io.addPlayerToTab).toHaveBeenCalledOnce();
-      expect(io.playSamples).not.toHaveBeenCalled();
+      expect(io.$startStream).not.toHaveBeenCalled(); // play_in_tab() never opens a playback stream
       // play_in_tab() never dispatches playback itself, so it must not affect activePlayCount.
       expect(funcs.globalVars.activePlayCount).toBe(0);
 

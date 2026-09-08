@@ -24,24 +24,40 @@ export interface RecordedSamples {
 export interface SoundTabRpc {
   /** Prompts for microphone access via getUserMedia; resolves once the user has responded. */
   requestMicPermission(): Promise<boolean>;
-  /** Plays two PCM buffers through the tab's (2-channel) AudioContext; resolves once playback completes. */
-  playSamples(left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>, sampleRate: number): Promise<void>;
   /**
-   * Notifies the tab that `play()` has started sampling a Wave into a PCM buffer - a duration-
-   * proportional step that happens entirely before `playSamples` is called, so the tab has no other
-   * way to know playback is imminent rather than stalled. A normal (acknowledged) call rather than
-   * fire-and-forget: the tab may still be loading (registerTab/showTab haven't necessarily happened
-   * yet) when play() starts, and there's no other signal for "the host has finished loading the
-   * tab" - awaiting the reply is what guarantees the status is actually visible before sampling
-   * begins, rather than racing a message against the tab's own construction.
+   * Opens a playback stream: the tab prepares to receive PCM chunks (via `$sendChunk`) and play them
+   * back-to-back as they arrive, so audio starts after the first chunk rather than the whole Sound.
+   * `streamId` identifies the stream for its lifetime; concurrent `play()` calls each open their own
+   * and are mixed together. Fire-and-forget; the channel preserves order with the following calls.
+   */
+  $startStream(streamId: number, sampleRate: number): void;
+  /**
+   * Appends one PCM chunk to an open stream, scheduled immediately on the tab's AudioContext clock.
+   * `left`/`right` are the same Float32Array (by reference) for a mono Sound. Fire-and-forget; the
+   * chunks must arrive in order (the channel preserves send order).
+   */
+  $sendChunk(streamId: number, left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>): void;
+  /**
+   * Signals that no more chunks will be sent for `streamId` (sampling finished, or errored partway -
+   * chunks that did arrive still play out). Unlike the two calls above this is acknowledged: it
+   * resolves once the stream has actually finished *playing*, so the module can keep `activePlayCount`
+   * accurate (recording refuses while a sound is still audibly playing).
+   */
+  endStream(streamId: number): Promise<void>;
+  /**
+   * Notifies the tab that `play()`/`play_in_tab()` has started sampling a Wave - the step between
+   * here and the first `$sendChunk`/`addPlayerToTab` - so it can show "constructing" rather than
+   * looking stalled while the first chunk is sampled. Acknowledged, not fire-and-forget: the tab may
+   * still be loading (registerTab/showTab may not have happened) when play() starts, so awaiting the
+   * reply is what guarantees the status is visible rather than racing the tab's own construction.
    */
   notifyConstructing(): Promise<void>;
   /** Stops any sound currently playing. */
   $stopPlayback(): void;
   /**
    * Adds a new entry to the tab's list of play bars (one per `play_in_tab()` call, stacked
-   * vertically), each with its own native start/pause/scrub controls - unlike `playSamples`, this
-   * never plays anything automatically. `wavDataUri` is a self-contained `data:audio/wav;base64,...`
+   * vertically), each with its own native start/pause/scrub controls - unlike a playback stream,
+   * this never plays anything automatically. `wavDataUri` is a self-contained `data:audio/wav;base64,...`
    * URI (encoded module-side - WAV encoding is pure computation, no AudioContext needed) that the
    * tab hands straight to a native `<audio>` element. Resolves once the entry has been added.
    */
