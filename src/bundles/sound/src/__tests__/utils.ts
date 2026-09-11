@@ -3,7 +3,7 @@ import type { RecordedSamples, SoundTabRpc } from '../protocol';
 
 export interface MockSoundTabRpc extends SoundTabRpc {
   requestMicPermission: Mock<() => Promise<boolean>>;
-  $startStream: Mock<(streamId: number, sampleRate: number) => void>;
+  $startStream: Mock<(streamId: number, sampleRate: number, totalFrames: number) => void>;
   $sendChunk: Mock<(streamId: number, left: Float32Array<ArrayBuffer>, right: Float32Array<ArrayBuffer>) => void>;
   endStream: Mock<(streamId: number) => Promise<void>>;
   notifyConstructing: Mock<() => Promise<void>>;

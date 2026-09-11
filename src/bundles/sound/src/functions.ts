@@ -666,7 +666,8 @@ export async function* play(sound: Sound): AsyncGenerator<void, Sound, undefined
   nextStreamId += 1;
   globalVars.activePlayCount += 1;
   const generation = playGeneration;
-  io().$startStream(streamId, FS);
+  const totalFrames = sound.sampleChannels ? 0 : Math.ceil(FS * sound.duration);
+  io().$startStream(streamId, FS, totalFrames);
 
   try {
     yield* streamSoundChunks(sound, STREAM_CHUNK_FRAMES, (left, right) => {

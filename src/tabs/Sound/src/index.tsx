@@ -12,10 +12,14 @@ export const SOUND_TAB_ID = 'sound';
 // of that Run. Capped to the most recent entries instead.
 const MAX_PLAYER_BARS = 50;
 
-// How far ahead of `currentTime` a stream's first chunk is scheduled. This cushion time absorbs
-// jitter in chunks arriving over the Worker→main-thread channel so they schedule gaplessly instead
-// of landing in the past - the fixed startup latency that is the price of streaming.
-const STREAM_PREROLL_SEC = 0.5;
+// Minimum time for adaptive preroll to wait before playback of streamed chunks to allow enough time
+// for sample chunks to be generated.
+const STREAM_PREROLL_MIN_SEC = 0.5;
+// Upper bound on the adaptive preroll, capping worst-case startup latency for a slower sound function
+// (past which playback may underrun rather than making the listener wait indefinitely).
+const STREAM_PREROLL_MAX_SEC = 5;
+// Headroom on the adaptive estimate, since the first chunk can be cheaper to sample than later ones.
+const STREAM_PREROLL_MULTIPLIER = 1.25;
 
 /**
  * Per-stream playback bookkeeping for the look-ahead scheduler. One entry exists per in-flight
@@ -23,6 +27,10 @@ const STREAM_PREROLL_SEC = 0.5;
  */
 interface StreamState {
   sampleRate: number;
+  /** Expected total frames (for sizing the adaptive preroll), or 0 when it shouldn't be adapted. */
+  totalFrames: number;
+  /** `performance.now()` when the stream opened, used to time the first chunk's arrival. */
+  openedAt: number;
   /** AudioContext-clock time at which the next chunk should start. Advanced by each chunk's length. */
   nextStartTime: number;
   /** False until the first chunk arrives (and playback actually begins). */
@@ -275,7 +283,26 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
     this.__updatePlaybackStatus();
   }
 
-  $startStream(streamId: number, sampleRate: number): void {
+  /**
+   * Preroll for stream's first chunk, initially baseline, raised when the first chunk took longer to
+   * sample than it will take to play, signalling that sampling can't keep pace with realtime, and 
+   * that later chunks would underrun without a head start. `chunkFrames` is the first chunk's length.
+   */
+  private __streamPreroll(state: StreamState, chunkFrames: number): number {
+    if (state.totalFrames === 0 || chunkFrames === 0) {
+      // no timing provided or only 1 chunk; use default minimum preroll delay.
+      return STREAM_PREROLL_MIN_SEC;
+    }
+    const chunkDuration = chunkFrames / state.sampleRate;
+    const firstChunkSec = (performance.now() - state.openedAt) / 1000;
+    const remainingChunks = Math.max(0, Math.ceil(state.totalFrames / chunkFrames) - 1);
+    // Each remaining chunk arrives ~firstChunkSec apart but is consumed only chunkDuration apart; that
+    // shortfall accumulates, and playback must not catch the producer before the last chunk lands.
+    const estimate = remainingChunks * (firstChunkSec - chunkDuration) * STREAM_PREROLL_MULTIPLIER;
+    return Math.min(STREAM_PREROLL_MAX_SEC, Math.max(STREAM_PREROLL_MIN_SEC, estimate));
+  }
+
+  $startStream(streamId: number, sampleRate: number, totalFrames: number): void {
     // Counted from open until playback finishes (not just while a source is active), so a premature
     // destroy() can't mistake "nothing playing right now" for "nothing left" - see
     // __maybeFinalizeDestroy. The notifyConstructing() count closes only when the first chunk plays
@@ -283,6 +310,8 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
     this.__pendingPlaybackCount++;
     this.__streams.set(streamId, {
       sampleRate,
+      totalFrames,
+      openedAt: performance.now(),
       nextStartTime: 0,
       started: false,
       inputEnded: false,
@@ -297,15 +326,15 @@ export default class SoundTabPlugin implements IPlugin, SoundTabRpc {
       return;
     }
     const audioContext = this.__ensureAudioContext();
+    const frames = left.length;
 
     if (!state.started) {
       state.started = true;
       // The stream's notifyConstructing() contribution ends the moment real playback begins.
       this.__constructingCount = Math.max(0, this.__constructingCount - 1);
-      state.nextStartTime = audioContext.currentTime + STREAM_PREROLL_SEC;
+      state.nextStartTime = audioContext.currentTime + this.__streamPreroll(state, frames);
     }
 
-    const frames = left.length;
     const buffer = audioContext.createBuffer(2, frames, state.sampleRate);
     buffer.copyToChannel(left, 0);
     buffer.copyToChannel(right, 1);

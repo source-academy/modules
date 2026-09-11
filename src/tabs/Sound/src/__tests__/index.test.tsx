@@ -124,7 +124,7 @@ function playStream(
   sampleRate: number,
   streamId: number
 ): Promise<void> {
-  plugin.$startStream(streamId, sampleRate);
+  plugin.$startStream(streamId, sampleRate, left.length);
   plugin.$sendChunk(streamId, left, right);
   return plugin.endStream(streamId);
 }
@@ -272,9 +272,9 @@ describe(SoundTabPlugin, () => {
     // scheduled source) but endStream is withheld, so each stream stays "pending" independently of
     // its mocked source's own 'ended' - it's endStream that finally settles each one.
     const samples = new Float32Array([0]);
-    plugin.$startStream(1, 8000);
+    plugin.$startStream(1, 8000, samples.length);
     plugin.$sendChunk(1, samples, samples);
-    plugin.$startStream(2, 8000);
+    plugin.$startStream(2, 8000, samples.length);
     plugin.$sendChunk(2, samples, samples);
     // Let the mocked sources' 'ended' events fire; the streams still aren't done (no endStream yet).
     await new Promise(resolve => setTimeout(resolve, 0));
@@ -331,7 +331,7 @@ describe(SoundTabPlugin, () => {
 
     test('a chunk is scheduled to start as soon as it arrives, without waiting for endStream', () => {
       const samples = new Float32Array([0]);
-      plugin.$startStream(1, 8000);
+      plugin.$startStream(1, 8000, samples.length);
       plugin.$sendChunk(1, samples, samples);
       // The source is created and started synchronously on the chunk arriving - playback begins
       // before sampling has even finished (endStream not called yet).
@@ -342,10 +342,10 @@ describe(SoundTabPlugin, () => {
 
     test('concurrent streams overlap: a second stream\'s chunk starts without waiting for the first to finish', async () => {
       const samples = new Float32Array([0]);
-      plugin.$startStream(1, 8000);
+      plugin.$startStream(1, 8000, samples.length);
       plugin.$sendChunk(1, samples, samples);
       const firstSource = mockAudioContext.bufferSource;
-      plugin.$startStream(2, 8000);
+      plugin.$startStream(2, 8000, samples.length);
       plugin.$sendChunk(2, samples, samples);
       const secondSource = mockAudioContext.bufferSource;
 
@@ -388,7 +388,7 @@ describe(SoundTabPlugin, () => {
       // yet) - status must reflect that, not revert to idle.
       expect(plugin.getStatus()).toBe('constructing');
 
-      plugin.$startStream(2, 8000); // the second sound's first chunk finally arrives
+      plugin.$startStream(2, 8000, samples.length); // the second sound's first chunk finally arrives
       plugin.$sendChunk(2, samples, samples);
       // Asserted synchronously, before the mocked source's immediate 'ended' fires: the second
       // sound is now the one audibly playing.
@@ -399,7 +399,7 @@ describe(SoundTabPlugin, () => {
   describe('$stopPlayback', () => {
     test('stops the currently playing source', () => {
       const samples = new Float32Array([0]);
-      plugin.$startStream(1, 8000);
+      plugin.$startStream(1, 8000, samples.length);
       plugin.$sendChunk(1, samples, samples);
       const source = mockAudioContext.bufferSource;
 
@@ -409,10 +409,10 @@ describe(SoundTabPlugin, () => {
 
     test('stops every currently-playing source when several streams are playing concurrently', () => {
       const samples = new Float32Array([0]);
-      plugin.$startStream(1, 8000);
+      plugin.$startStream(1, 8000, samples.length);
       plugin.$sendChunk(1, samples, samples);
       const firstSource = mockAudioContext.bufferSource;
-      plugin.$startStream(2, 8000);
+      plugin.$startStream(2, 8000, samples.length);
       plugin.$sendChunk(2, samples, samples);
       const secondSource = mockAudioContext.bufferSource;
 
@@ -423,7 +423,7 @@ describe(SoundTabPlugin, () => {
 
     test('resolves a pending endStream once its stream is stopped', async () => {
       const samples = new Float32Array([0]);
-      plugin.$startStream(1, 8000);
+      plugin.$startStream(1, 8000, samples.length);
       plugin.$sendChunk(1, samples, samples);
       // endStream would normally resolve when playback finishes; stopping should resolve it too,
       // so the module's activePlayCount bookkeeping doesn't hang.

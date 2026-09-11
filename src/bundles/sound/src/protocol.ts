@@ -28,9 +28,11 @@ export interface SoundTabRpc {
    * Opens a playback stream: the tab prepares to receive PCM chunks (via `$sendChunk`) and play them
    * back-to-back as they arrive, so audio starts after the first chunk rather than the whole Sound.
    * `streamId` identifies the stream for its lifetime; concurrent `play()` calls each open their own
-   * and are mixed together. Fire-and-forget; the channel preserves order with the following calls.
+   * and are mixed together. `totalFrames` is the stream's expected length, used to size an adaptive
+   * preroll from how long the first chunk took to arrive, (set to 0 to disable and use default preroll).
+   * Fire-and-forget; the channel preserves order with later calls.
    */
-  $startStream(streamId: number, sampleRate: number): void;
+  $startStream(streamId: number, sampleRate: number, totalFrames: number): void;
   /**
    * Appends one PCM chunk to an open stream, scheduled immediately on the tab's AudioContext clock.
    * `left`/`right` are the same Float32Array (by reference) for a mono Sound. Fire-and-forget; the
