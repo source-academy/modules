@@ -16290,10 +16290,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"qsu@npm:^1.17.0":
-  version: 1.17.0
-  resolution: "qsu@npm:1.17.0"
-  checksum: 10c0/44b41c855acd7f623c0d3ba14371d68d2d78c45173d6b0014cfd59368e6ef18554120a7bec5c585c5c495fd37def902862204842abb1dafd3619b75f97d46aef
+"qsu@npm:^1.18.0":
+  version: 1.18.0
+  resolution: "qsu@npm:1.18.0"
+  checksum: 10c0/f353e1027da2007721f76c805cc94c6e32eaae593cfc3c31207e34d5e22ce0d206fef44484f659abe078e1c884125c5e4a369f71f7531f104af142097474a253
   languageName: node
   linkType: hard
 
@@ -19655,13 +19655,13 @@ __metadata:
   linkType: hard
 
 "vitepress-sidebar@npm:^1.33.1":
-  version: 1.39.0
-  resolution: "vitepress-sidebar@npm:1.39.0"
+  version: 1.40.0
+  resolution: "vitepress-sidebar@npm:1.40.0"
   dependencies:
     glob: "npm:^13.0.6"
     gray-matter: "npm:^4.0.3"
-    qsu: "npm:^1.17.0"
-  checksum: 10c0/667c3ead47020f70a34c4997fa11df1b5bb4154ca559560012a64c5f2d5ec2bcd0291945fa14bc76fb52b6c4c89bed46f6f33db565ddf2eb4b58efbbc0d0eba2
+    qsu: "npm:^1.18.0"
+  checksum: 10c0/cbd1e74c08479a26238818c7a511d3cd9230786730e686dc0eda3cb51c16ed57e3004c633717d18c33aa16e49c7a0669a12874790466ee9ac25a99dd16256067
   languageName: node
   linkType: hard
 
