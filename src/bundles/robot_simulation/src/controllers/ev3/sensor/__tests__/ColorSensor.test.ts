@@ -1,36 +1,21 @@
 import * as THREE from 'three';
 import { describe, expect, it as baseIt, vi } from 'vitest';
-import type { Renderer } from '../../../../engine';
+import type { Physics } from '../../../../engine';
 import type { ChassisWrapper } from '../../components/Chassis';
 import { ColorSensor, type ColorSensorConfig } from '../ColorSensor';
-
-vi.mock(import('../../../../engine'), () => ({
-  Renderer: vi.fn(class {
-    scene = vi.fn();
-    render = vi.fn();
-    getElement = vi.fn(() => document.createElement('canvas'));
-  }),
-}) as any);
-
-vi.mock(import('../../../../engine/Render/helpers/Camera'), () => ({
-  getCamera: vi.fn().mockImplementation(() => {
-    return new THREE.PerspectiveCamera();
-  }),
-}));
 
 describe(ColorSensor, () => {
   const it = baseIt
     .extend('mockChassisWrapper', {
       getEntity: vi.fn(() => ({
         worldTranslation: vi.fn().mockReturnValue(new THREE.Vector3()),
+        getCollider: vi.fn().mockReturnValue({}),
       })),
     } as unknown as ChassisWrapper)
-    .extend('mockRenderer', {
-      add: vi.fn(),
-      scene: vi.fn(),
-      render: vi.fn(),
-      getElement: vi.fn(() => document.createElement('canvas')),
-    } as unknown as Renderer)
+    .extend('mockPhysics', {
+      castRay: vi.fn(),
+      getColor: vi.fn(),
+    } as unknown as Physics)
     .extend('mockConfig', {
       tickRateInSeconds: 0.1,
       displacement: {
@@ -42,49 +27,45 @@ describe(ColorSensor, () => {
         height: 16,
         width: 16,
       },
-      camera: {
-        type: 'perspective',
-        aspect: 1,
-        fov: 10,
-        near: 0.01,
-        far: 1,
-      },
+      camera: {},
       debug: true,
     } as ColorSensorConfig)
     .extend(
       'sensor',
-      ({ mockChassisWrapper, mockRenderer, mockConfig }) => new ColorSensor(mockChassisWrapper, mockRenderer, mockConfig)
+      ({ mockChassisWrapper, mockPhysics, mockConfig }) => new ColorSensor(mockChassisWrapper, mockPhysics, mockConfig)
     );
 
-  it.beforeEach(() => {
-    const mockCtx = {
-      getImageData: vi.fn(() => ({
-        data: new Uint8ClampedArray([255, 255, 255, 255]),
-      })),
-      putImageData: vi.fn(),
-      drawImage: vi.fn(),
-      fillRect: vi.fn(),
-      clearRect: vi.fn(),
-      canvas: {},
-    };
-
-    HTMLCanvasElement.prototype.getContext = vi
-      .fn()
-      .mockImplementation((_) => {
-        return mockCtx;
-      });
+  it('should default to white before the first sensed tick', ({ sensor }) => {
+    expect(sensor.sense()).toEqual({ r: 255, g: 255, b: 255 });
   });
 
-  it('should initialize correctly', ({ sensor, mockRenderer }) => {
-    expect(sensor).toBeDefined();
-    expect(mockRenderer.add).toHaveBeenCalled();
-  });
-
-  it('should update color only after accumulating sufficient time', ({ sensor, mockRenderer }) => {
+  it('should not update color until accumulating sufficient time', ({ sensor, mockPhysics }) => {
     const timingInfo = { timestep: 50 };
     sensor.fixedUpdate(timingInfo as any);
-    expect(mockRenderer.render).not.toHaveBeenCalled();
+    expect(mockPhysics.castRay).not.toHaveBeenCalled();
+  });
+
+  it('should sample the raycast-hit surface color once enough time accumulates', ({ sensor, mockPhysics }) => {
+    vi.mocked(mockPhysics.castRay).mockReturnValue({ distance: 0.1, normal: { x: 0, y: 1, z: 0 }, collider: {} as any });
+    vi.mocked(mockPhysics.getColor).mockReturnValue('#ff0000');
+
+    const timingInfo = { timestep: 200 };
     sensor.fixedUpdate(timingInfo as any);
+
+    expect(mockPhysics.castRay).toHaveBeenCalled();
+    const result = sensor.sense();
+    expect(result.r).toBeCloseTo(255);
+    expect(result.g).toBeCloseTo(0);
+    expect(result.b).toBeCloseTo(0);
+  });
+
+  it('should fall back to white when the raycast hits nothing', ({ sensor, mockPhysics }) => {
+    vi.mocked(mockPhysics.castRay).mockReturnValue(null);
+
+    const timingInfo = { timestep: 200 };
+    sensor.fixedUpdate(timingInfo as any);
+
+    expect(sensor.sense()).toEqual({ r: 255, g: 255, b: 255 });
   });
 
   it('should give correct response for sense', ({ sensor }) => {

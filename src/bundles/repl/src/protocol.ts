@@ -39,7 +39,15 @@ export type ReplSetProgramTextMessage = {
   text: string;
 };
 
-export type ReplDisplayMessage = ReplOutputMessage | ReplEditorPropsMessage | ReplSetProgramTextMessage;
+/** Bundle -> tab: bring this tab to the front - sent once `set_evaluator` registers successfully,
+ * so a program that just finished wiring up the Repl (per the module's documented usage: setup in
+ * the main pane, then `set_evaluator` as its last step) lands the student on the Repl tab next,
+  rather than leaving them on the editor they just ran. */
+export type ReplFocusMessage = {
+  type: 'focus';
+};
+
+export type ReplDisplayMessage = ReplOutputMessage | ReplEditorPropsMessage | ReplSetProgramTextMessage | ReplFocusMessage;
 
 /** Tab -> bundle: run this code through whatever evaluator was registered via set_evaluator. */
 export type ReplRunMessage = {

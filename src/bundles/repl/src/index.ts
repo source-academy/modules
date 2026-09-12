@@ -82,6 +82,11 @@ export default class ReplModulePlugin extends BaseModulePlugin {
   private __evaluator: TypedValue<DataType.CLOSURE> | undefined;
   private __tabLoaded = false;
   private __tabRequested = false;
+  // Set by set_evaluator() when the Repl tab hasn't connected yet (loadTab() just kicked off an
+  // async, cross-thread tab bootstrap - see the 'request' handler below) - the focus send that
+  // would otherwise race that bootstrap is deferred until the tab's own 'request' arrives,
+  // guaranteeing it's actually subscribed by then instead of silently dropping the message.
+  private __focusOnConnect = false;
   // Guards against two overlapping __runCode calls (e.g. a fast double-click on Run) driving the
   // same evaluator closure concurrently - most evaluators (a tree-walking/CSE-machine interpreter)
   // assume single-threaded, sequential calls and aren't safe to re-enter.
@@ -115,6 +120,14 @@ export default class ReplModulePlugin extends BaseModulePlugin {
         this.__outputHistory.forEach(entry => this.__replChannel.send(entry));
         if (this.__latestEditorProps) this.__replChannel.send(this.__latestEditorProps);
         if (this.__latestProgramText) this.__replChannel.send(this.__latestProgramText);
+        // A 'request' only ever arrives once the tab's own channel subscription is already live
+        // (it's sent right after subscribing - see the Repl tab's constructor), so replying with
+        // 'focus' here can never race the bootstrap the way sending it directly from
+        // set_evaluator() could.
+        if (this.__focusOnConnect) {
+          this.__focusOnConnect = false;
+          this.__replChannel.send({ type: 'focus' });
+        }
         return;
       }
 
@@ -144,6 +157,18 @@ export default class ReplModulePlugin extends BaseModulePlugin {
     // this, a program whose only interaction with the module is set_evaluator() never opens the
     // tab at all, since nothing else would ever call __loadReplTab() first.
     this.__loadReplTab();
+    // Explicit, not just a side effect of the tab's own constructor already calling showTab once:
+    // a program that calls set_evaluator() again later (or whose module import order put another
+    // tab-opening call after this one) still ends up back on the Repl tab, since that's what
+    // set_evaluator succeeding means for the student - "go use the Repl now". If the tab has
+    // already connected (__tabRequested), send it directly; otherwise loadTab() just kicked off an
+    // async bootstrap the tab hasn't caught up with yet, so defer to the 'request' handler above,
+    // which can send it without racing that bootstrap.
+    if (this.__tabRequested) {
+      this.__replChannel.send({ type: 'focus' });
+    } else {
+      this.__focusOnConnect = true;
+    }
     return mVoid();
   }
 

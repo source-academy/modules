@@ -1,9 +1,8 @@
 import type * as THREE from 'three';
-import type { Controller, Physics, Renderer } from '../../../engine';
+import type { Controller, Physics } from '../../../engine';
 import { vec3 } from '../../../engine/Math/Convert';
 import type { SimpleVector } from '../../../engine/Math/Vector';
 import type { PhysicsTimingInfo } from '../../../engine/Physics';
-import { DebugArrow } from '../../../engine/Render/debug/DebugArrow';
 import { NumberPidController } from '../feedback_control/PidController';
 import type { ChassisWrapper } from './Chassis';
 
@@ -19,26 +18,24 @@ export type WheelConfig = {
   debug: boolean;
 };
 
+/** The pre-migration debug arrow (visualising the suspension force) is dropped along with all
+  other DOM-touching debug helpers - see Chassis.ts's doc comment. */
 export class Wheel implements Controller {
   chassisWrapper: ChassisWrapper;
   physics: Physics;
-  render: Renderer;
   config: WheelConfig;
 
   pid: NumberPidController;
   displacementVector: THREE.Vector3;
   downVector: THREE.Vector3;
-  arrowHelper: DebugArrow;
 
   constructor(
     chassisWrapper: ChassisWrapper,
     physics: Physics,
-    render: Renderer,
     config: WheelConfig,
   ) {
     this.chassisWrapper = chassisWrapper;
     this.physics = physics;
-    this.render = render;
     this.displacementVector = vec3(config.displacement);
     this.config = config;
 
@@ -48,10 +45,6 @@ export class Wheel implements Controller {
       y: -1,
       z: 0,
     });
-
-    // Debug arrow.
-    this.arrowHelper = new DebugArrow({ debug: config.debug });
-    render.add(this.arrowHelper.getMesh());
   }
 
   fixedUpdate(timingInfo: PhysicsTimingInfo): void {
@@ -92,8 +85,5 @@ export class Wheel implements Controller {
       .multiplyScalar((error * chassis.getMass() * timingInfo.timestep) / 1000);
 
     chassis.applyImpulse(force, globalDisplacement);
-
-    // Debug arrow.
-    this.arrowHelper.update(globalDisplacement, force.clone(), force.length() * 1000);
   }
 }

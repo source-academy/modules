@@ -1,11 +1,10 @@
-import type * as THREE from 'three';
-import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import type { Controller, Physics, Renderer } from '../../../engine';
+import * as THREE from 'three';
+import type { Controller, Physics } from '../../../engine';
 import { CallbackHandler } from '../../../engine/Core/CallbackHandler';
 import { vec3 } from '../../../engine/Math/Convert';
 import type { Dimension, SimpleVector } from '../../../engine/Math/Vector';
 import type { PhysicsTimingInfo } from '../../../engine/Physics';
-import { loadGLTF } from '../../../engine/Render/helpers/GLTF';
+import type { SceneRegistry } from '../../../engine/Render/SceneRegistry';
 import { VectorPidController } from '../feedback_control/PidController';
 import type { ChassisWrapper } from './Chassis';
 
@@ -26,11 +25,14 @@ export type MotorConfig = {
 /**
  * This represents the motor of the robot and is responsible for moving the robot. It is also
  * responsible for the visual representation of the wheel and the friction.
+ *
+ * As with Mesh.ts, the wheel's GLTF asset is loaded by the tab, not here - `registry.add` only
+ * allocates the transform handle this class keeps positioned/rotated every tick.
  */
 export class Motor implements Controller {
   chassisWrapper: ChassisWrapper;
   physics: Physics;
-  render: Renderer;
+  registry: SceneRegistry;
   displacementVector: THREE.Vector3;
   config: MotorConfig;
 
@@ -41,17 +43,17 @@ export class Motor implements Controller {
   callbackHandler = new CallbackHandler();
   wheelSide: WheelSide;
 
-  mesh: GLTF | null = null;
+  mesh: THREE.Object3D | null = null;
 
   constructor(
     chassisWrapper: ChassisWrapper,
     physics: Physics,
-    render: Renderer,
+    registry: SceneRegistry,
     config: MotorConfig,
   ) {
     this.chassisWrapper = chassisWrapper;
     this.physics = physics;
-    this.render = render;
+    this.registry = registry;
     this.displacementVector = vec3(config.displacement);
     this.config = config;
 
@@ -69,9 +71,13 @@ export class Motor implements Controller {
     }, (distance / speed) * 1000);
   }
 
-  async start(): Promise<void> {
-    this.mesh = await loadGLTF(this.config.mesh.url, this.config.mesh.dimension);
-    this.render.add(this.mesh.scene);
+  start(): void {
+    this.mesh = this.registry.add({
+      kind: 'gltf',
+      url: this.config.mesh.url,
+      dimension: this.config.mesh.dimension,
+      offsetY: 0,
+    });
   }
 
   fixedUpdate(timingInfo: PhysicsTimingInfo): void {
@@ -123,19 +129,19 @@ export class Motor implements Controller {
 
     // If mesh is loaded, update its position and orientation
     if (this.mesh) {
-      this.mesh.scene.position.copy(wheelPosition);
-      this.mesh.scene.quaternion.copy(chassisEntity.getRotation());
+      this.mesh.position.copy(wheelPosition);
+      this.mesh.quaternion.copy(chassisEntity.getRotation());
 
       // Calculate rotation adjustment based on motor velocity and frame duration
       const radiansPerFrame = 2 * (this.motorVelocity / this.config.mesh.dimension.height) * timingInfo.frameDuration / 1000;
 
       // Apply rotation changes to simulate wheel turning
       this.meshRotation += radiansPerFrame;
-      this.mesh.scene.rotateX(this.meshRotation);
+      this.mesh.rotateX(this.meshRotation);
 
       // If the wheel is on the left side, flip it to face the correct direction
       if (this.wheelSide === 'left') {
-        this.mesh.scene.rotateZ(Math.PI);
+        this.mesh.rotateZ(Math.PI);
       }
     }
   }

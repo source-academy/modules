@@ -128,7 +128,13 @@ function convertAst(parsed: es.Program): ConvertAstResult {
  * Write the compiled output from ESBuild to the file system after performing AST transformation
  */
 export async function outputBundleOrTab({ text }: OutputFile, input: InputAsset, outDir: string): Promise<BuildResult> {
-  const parsed = parse(text, { ecmaVersion: 6 }) as es.Program;
+  // ecmaVersion bumped from 6 -> 2020: this is a purely mechanical AST-surgery pass (lifting the
+  // esbuild IIFE into an ExportDefaultDeclaration in convertAst below), not a target/syntax-lowering
+  // control — that's esbuild's own separate `target: 'es6'` option. ES6/acorn's parser can't parse
+  // BigInt literals (`0n`, added ES2020), which now show up here because py-slang (linked in for
+  // Python-flavoured bundles like robot_simulation) represents Python's arbitrary-precision ints as
+  // native BigInt at runtime and isn't in the esbuild `external` list the way 'js-slang*' is.
+  const parsed = parse(text, { ecmaVersion: 2020 }) as es.Program;
 
   const astResult = convertAst(parsed);
   if (astResult.severity === 'error') {
@@ -181,7 +187,7 @@ export function builderPlugin(input: InputAsset, outDir: string): ESBuildPlugin 
 
       onEnd(result => {
         const [{ text }] = result.outputFiles!;
-        const parsed = parse(text, { ecmaVersion: 6 }) as es.Program;
+        const parsed = parse(text, { ecmaVersion: 2020 }) as es.Program;
         const astResult = convertAst(parsed);
         if (astResult.severity === 'success') {
           generate(astResult.output, { output: writeStream });

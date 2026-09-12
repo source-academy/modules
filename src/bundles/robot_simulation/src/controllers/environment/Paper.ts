@@ -1,6 +1,5 @@
-import * as THREE from 'three';
-
-import type { Renderer } from '../../engine';
+import type * as THREE from 'three';
+import type { SceneRegistry } from '../../engine/Render/SceneRegistry';
 
 export type PaperConfig = {
   url: string;
@@ -12,27 +11,28 @@ export type PaperConfig = {
   rotation: number;
 };
 
+/**
+ * A purely visual overlay - unlike Cuboid, it has no physics collider, so (like before this
+ * migration) it is invisible to raycasts, including the color sensor's - see ColorSensor.ts's doc
+ * comment for the known follow-up this implies.
+ */
 export class Paper {
-  render: Renderer;
   config: PaperConfig;
-  paper: THREE.Mesh;
+  handle: THREE.Object3D;
 
-  constructor(render: Renderer, config: PaperConfig) {
-    this.render = render;
+  constructor(registry: SceneRegistry, config: PaperConfig) {
     this.config = config;
-
-    const plane = new THREE.PlaneGeometry(this.config.dimension.width, this.config.dimension.height); // Creating a 1x1 plane for the carpet
-    this.paper = new THREE.Mesh(plane);
+    this.handle = registry.add({
+      kind: 'paper',
+      width: config.dimension.width,
+      height: config.dimension.height,
+      url: config.url,
+    });
   }
 
-  async start() {
-    const texture = new THREE.TextureLoader()
-      .load(this.config.url);
-    const material = new THREE.MeshStandardMaterial({ map: texture });
-    this.paper.position.set(this.config.position.x, 0.001, this.config.position.y);
-    this.paper.rotation.x = -Math.PI / 2;
-    this.paper.rotation.z = this.config.rotation;
-    this.paper.material = material;
-    this.render.add(this.paper);
+  start() {
+    this.handle.position.set(this.config.position.x, 0.001, this.config.position.y);
+    this.handle.rotation.x = -Math.PI / 2;
+    this.handle.rotation.z = this.config.rotation;
   }
 }

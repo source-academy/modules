@@ -4,7 +4,6 @@ import { TypedEventTarget } from './Core/Events';
 import type { RobotConsole } from './Core/RobotConsole';
 import type { Timer } from './Core/Timer';
 import { TimeStampedEvent, type Physics } from './Physics';
-import type { Renderer } from './Render/Renderer';
 
 export const worldStates = [
   'unintialized',
@@ -22,24 +21,26 @@ type WorldEventMap = {
   afterRender: TimeStampedEvent;
 };
 
+/** Ticks the world loop at roughly the display refresh rate `requestAnimationFrame` used to
+ * drive it at. A worker has no `window`/`requestAnimationFrame` (see World's doc history in
+ * PR #947) - a plain interval is the direct, low-risk substitute: physics itself still steps at
+ * its own configured timestep via Physics's accumulator (see Physics.ts), this just sets how
+  often that accumulator gets a chance to drain. */
+const TICK_INTERVAL_MS = 1000 / 60;
+
 export class World extends TypedEventTarget<WorldEventMap> {
   state: WorldState;
   physics: Physics;
-  render: Renderer;
   timer: Timer;
   robotConsole: RobotConsole;
   controllers: ControllerGroup;
 
-  constructor(
-    physics: Physics,
-    render: Renderer,
-    timer: Timer,
-    robotConsole: RobotConsole
-  ) {
+  private intervalId: ReturnType<typeof setInterval> | null = null;
+
+  constructor(physics: Physics, timer: Timer, robotConsole: RobotConsole) {
     super();
     this.state = 'unintialized';
     this.physics = physics;
-    this.render = render;
     this.timer = timer;
     this.controllers = new ControllerGroup();
     this.robotConsole = robotConsole;
@@ -67,6 +68,23 @@ export class World extends TypedEventTarget<WorldEventMap> {
     });
   }
 
+  /**
+   * Adds controllers to a world that has already started (state is 'ready'/'running'/'error') -
+   * `addController`'s `start()` hookup only fires on the `worldStart` event, which for a live
+   * world already happened once inside `init()`, so a controller added afterwards would never get
+   * its `start()` called and would throw the first time it ticks (e.g. `Program.fixedUpdate`'s
+   * "Program not started"). Used by `run_robot_code` to add a fresh `Program` controller each time
+   * the REPL tab's registered evaluator runs, without restarting the whole world.
+   */
+  addLiveController(...controllers: Controller[]) {
+    this.addController(...controllers);
+    if (this.state !== 'unintialized' && this.state !== 'loading') {
+      controllers.forEach((controller) => {
+        controller.start?.();
+      });
+    }
+  }
+
   async init() {
     this.setState('loading');
     await this.physics.start();
@@ -76,20 +94,28 @@ export class World extends TypedEventTarget<WorldEventMap> {
 
   private setState(newState: WorldState) {
     if (this.state !== newState) {
-      this.dispatchEvent('worldStateChange', new Event('worldStateChange'));
       this.state = newState;
+      this.dispatchEvent('worldStateChange', new Event('worldStateChange'));
     }
   }
 
   pause() {
     this.setState('ready');
     this.timer.pause();
+    this.stopInterval();
   }
 
   start() {
     if (this.state === 'ready') {
       this.setState('running');
-      window.requestAnimationFrame(this.step.bind(this));
+      this.intervalId ??= setInterval(() => this.step(performance.now()), TICK_INTERVAL_MS);
+    }
+  }
+
+  private stopInterval() {
+    if (this.intervalId !== null) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
     }
   }
 
@@ -99,20 +125,14 @@ export class World extends TypedEventTarget<WorldEventMap> {
 
       const physicsTimingInfo = this.physics.step(frameTimingInfo);
 
-      // Update render
       this.dispatchEvent(
         'beforeRender',
         new TimeStampedEvent('beforeRender', physicsTimingInfo)
       );
-      this.render.step(frameTimingInfo);
       this.dispatchEvent(
         'afterRender',
         new TimeStampedEvent('afterRender', physicsTimingInfo)
       );
-
-      if (this.state === 'running') {
-        window.requestAnimationFrame(this.step.bind(this));
-      }
     } catch (e) {
       console.log('Error caught', e);
       if (e instanceof Error) {
@@ -124,6 +144,7 @@ export class World extends TypedEventTarget<WorldEventMap> {
         this.robotConsole.log('An error occurred', 'error');
       }
       this.setState('error');
+      this.stopInterval();
     }
   }
 }
