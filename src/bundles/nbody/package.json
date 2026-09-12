@@ -6,7 +6,7 @@
     "@sourceacademy/modules-lib": "workspace:^",
     "nbody": "^0.2.0",
     "plotly.js-dist": "^3.0.0",
-    "three": "^0.185.0"
+    "three": "^0.186.0"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
