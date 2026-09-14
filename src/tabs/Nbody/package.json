@@ -10,13 +10,13 @@
     "plotly.js-dist": "^3.0.0",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "three": "^0.185.0"
+    "three": "^0.186.0"
   },
   "devDependencies": {
     "@sourceacademy/modules-buildtools": "workspace:^",
     "@types/plotly.js": "^3.0.0",
     "@types/react": "catalog:",
-    "@types/three": "^0.185.0",
+    "@types/three": "^0.186.0",
     "typescript": "catalog:"
   },
   "scripts": {
