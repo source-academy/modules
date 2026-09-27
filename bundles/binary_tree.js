@@ -309,7 +309,7 @@ export default require => {
   function entry(evaluator, t5) {
     return __async(this, null, function* () {
       const tree = yield assertNonEmptyTree(evaluator, t5, entry.name);
-      return yield evaluator.pair_head(tree);
+      return evaluator.pair_head(tree);
     });
   }
   function left_branch(evaluator, t5) {
@@ -328,7 +328,7 @@ export default require => {
     });
   }
   var _right_branch_dec, _left_branch_dec, _entry_dec, _is_empty_tree_dec, _is_tree_dec, _make_tree_dec, _make_empty_tree_dec, _a, _init;
-  var BinaryTreeModulePlugin = class extends (_a = o3, _make_empty_tree_dec = [n2([], E.EMPTY_LIST)], _make_tree_dec = [n2([E.OPAQUE, E.LIST, E.LIST], E.PAIR)], _is_tree_dec = [n2([E.ANY], E.BOOLEAN)], _is_empty_tree_dec = [n2([E.ANY], E.BOOLEAN)], _entry_dec = [n2([E.LIST], E.OPAQUE)], _left_branch_dec = [n2([E.LIST], E.LIST)], _right_branch_dec = [n2([E.LIST], E.LIST)], _a) {
+  var BinaryTreeModulePlugin = class extends (_a = o3, _make_empty_tree_dec = [n2([], E.EMPTY_LIST)], _make_tree_dec = [n2([E.ANY, E.LIST, E.LIST], E.PAIR)], _is_tree_dec = [n2([E.ANY], E.BOOLEAN)], _is_empty_tree_dec = [n2([E.ANY], E.BOOLEAN)], _entry_dec = [n2([E.LIST], E.ANY)], _left_branch_dec = [n2([E.LIST], E.LIST)], _right_branch_dec = [n2([E.LIST], E.LIST)], _a) {
     constructor() {
       super(...arguments);
       __runInitializers(_init, 5, this);
