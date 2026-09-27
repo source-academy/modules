@@ -15,6 +15,19 @@ async function rawTree(
   );
 }
 
+async function flatTree(
+  handler: TestDataHandler,
+  value: number,
+  left: TypedValue<DataType>,
+  right: TypedValue<DataType>
+) {
+  const tree = await handler.array_make(DataType.ANY, 3, emptyListValue());
+  await handler.array_set(tree, 0, numberValue(value));
+  await handler.array_set(tree, 1, left);
+  await handler.array_set(tree, 2, right);
+  return tree;
+}
+
 describe(funcs.is_tree, () => {
   it('returns false when argument is not a list', async () => {
     const handler = new TestDataHandler();
@@ -59,24 +72,30 @@ describe(funcs.is_tree, () => {
     await expect(funcs.is_tree(handler, tree)).resolves.toEqual(true);
   });
 
-  it('returns true for a tree round-tripped back in as DataType.ARRAY, not just DataType.PAIR', async () => {
-    // Per py-slang: pythonToModule now builds every Python list as a flat DataType.ARRAY, never a
-    // DataType.PAIR chain - so a tree round-tripped out to Python (via moduleToPython) and passed
-    // back into e.g. entry()/left_branch() arrives tagged ARRAY, not PAIR. is_tree (and
-    // assertNonEmptyTree) must accept either shape - this is the regression test for that.
+  it('returns true for a tree passed back in as a flat 3-element DataType.ARRAY', async () => {
+    // py-slang and js-slang both flatten a proper list into one ARRAY when a program passes it to a
+    // module, so a tree that make_tree returned comes back as [entry, left, right], not as a PAIR chain.
     const handler = new TestDataHandler();
-    const rightPair = await handler.array_make(DataType.ANY, 2, emptyListValue());
-    await handler.array_set(rightPair, 0, emptyListValue());
-    await handler.array_set(rightPair, 1, emptyListValue());
-    const leftPair = await handler.array_make(DataType.ANY, 2, emptyListValue());
-    await handler.array_set(leftPair, 0, emptyListValue());
-    await handler.array_set(leftPair, 1, rightPair);
-    const tree = await handler.array_make(DataType.ANY, 2, emptyListValue());
-    await handler.array_set(tree, 0, numberValue(0));
-    await handler.array_set(tree, 1, leftPair);
+    const leaf = await flatTree(handler, 4, emptyListValue(), emptyListValue());
+    const tree = await flatTree(handler, 5, leaf, emptyListValue());
 
+    await expect(funcs.is_tree(handler, leaf)).resolves.toEqual(true);
     await expect(funcs.is_tree(handler, tree)).resolves.toEqual(true);
-    expect(await funcs.entry(handler, tree)).toEqual(numberValue(0));
+  });
+
+  it('returns false for a DataType.ARRAY that does not have exactly 3 elements', async () => {
+    const handler = new TestDataHandler();
+    const two = await handler.array_make(DataType.ANY, 2, emptyListValue());
+    const four = await handler.array_make(DataType.ANY, 4, emptyListValue());
+
+    await expect(funcs.is_tree(handler, two)).resolves.toEqual(false);
+    await expect(funcs.is_tree(handler, four)).resolves.toEqual(false);
+  });
+
+  it('returns false for a flat DataType.ARRAY whose branches are not trees', async () => {
+    const handler = new TestDataHandler();
+    const tree = await flatTree(handler, 0, numberValue(1), emptyListValue());
+    await expect(funcs.is_tree(handler, tree)).resolves.toEqual(false);
   });
 });
 
@@ -93,6 +112,18 @@ describe(funcs.make_tree, () => {
     await expect(
       funcs.make_tree(handler, numberValue(0), funcs.make_empty_tree(), numberValue(0) as unknown as TypedValue<DataType.LIST>)
     ).rejects.toThrowError('make_tree expects binary tree for right');
+  });
+
+  it('accepts a branch passed back in as a flat 3-element DataType.ARRAY', async () => {
+    // Regression: make_tree(5, make_tree(4, None, None), None) failed with
+    // "make_tree expects binary tree for left (expected binary tree, got ARRAY)".
+    const handler = new TestDataHandler();
+    const leaf = await flatTree(handler, 4, emptyListValue(), emptyListValue());
+    const tree = await funcs.make_tree(handler, numberValue(5), leaf as unknown as TypedValue<DataType.LIST>, funcs.make_empty_tree());
+
+    await expect(funcs.entry(handler, tree)).resolves.toEqual(numberValue(5));
+    const left = await funcs.left_branch(handler, tree);
+    await expect(funcs.entry(handler, left)).resolves.toEqual(numberValue(4));
   });
 });
 
@@ -166,6 +197,19 @@ describe(funcs.left_branch, () => {
 
     const leftTree = await funcs.left_branch(handler, tree);
     expect(await funcs.entry(handler, leftTree)).toEqual(numberValue(1));
+  });
+});
+
+describe('accessors on a flat DataType.ARRAY tree', () => {
+  it('read entry, left_branch and right_branch by position', async () => {
+    const handler = new TestDataHandler();
+    const left = await flatTree(handler, 1, emptyListValue(), emptyListValue());
+    const right = await flatTree(handler, 2, emptyListValue(), emptyListValue());
+    const tree = await flatTree(handler, 0, left, right);
+
+    await expect(funcs.entry(handler, tree)).resolves.toEqual(numberValue(0));
+    await expect(funcs.left_branch(handler, tree)).resolves.toBe(left);
+    await expect(funcs.right_branch(handler, tree)).resolves.toBe(right);
   });
 });
 

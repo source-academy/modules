@@ -61,34 +61,44 @@ export async function make_tree(
 export async function is_tree(evaluator: IDataHandler, value: TypedValue<DataType>): Promise<boolean> {
   if (!value) return false;
   if (value.type === DataType.EMPTY_LIST) return true;
-  // A tree node is a pair - per conductor's "a pair is just an array of length 2" model, that may
-  // arrive tagged DataType.PAIR (built directly by make_tree) or DataType.ARRAY (round-tripped
-  // back in through a Python list, since py-slang's pythonToModule builds every list as an ARRAY
-  // now, not a PAIR chain). pair_head/pair_tail already read either shape the same way.
-  if (!isPairLike(value)) return false;
 
-  const rest = await evaluator.pair_tail(value as TypedValue<DataType.PAIR>);
-  if (!isPairLike(rest)) return false;
+  const node = await readTreeNode(evaluator, value);
+  if (!node) return false;
 
-  const left = await evaluator.pair_head(rest as TypedValue<DataType.PAIR>);
-  if (!await is_tree(evaluator, left)) return false;
-
-  const rightRest = await evaluator.pair_tail(rest as TypedValue<DataType.PAIR>);
-  if (!isPairLike(rightRest)) return false;
-
-  const right = await evaluator.pair_head(rightRest as TypedValue<DataType.PAIR>);
-  if (!await is_tree(evaluator, right)) return false;
-
-  const tail = await evaluator.pair_tail(rightRest as TypedValue<DataType.PAIR>);
-  return tail.type === DataType.EMPTY_LIST;
+  const [, left, right] = node;
+  return await is_tree(evaluator, left) && await is_tree(evaluator, right);
 }
 
-/** A pair is just an array of length 2 (no distinct "pair" representation) - a tree node may be
- * tagged either DataType.PAIR (built directly by make_tree's own pair_make calls) or
- * DataType.ARRAY (round-tripped back in through Python, since pythonToModule builds every list as
- * an ARRAY now). Both are equally valid; pair_head/pair_tail read either the same way. */
-function isPairLike(value: TypedValue<DataType>): boolean {
-  return value.type === DataType.PAIR || value.type === DataType.ARRAY;
+/**
+ * Reads a non-empty tree node, the list `[entry, left, right]`, into its three elements, or returns
+ * `undefined` if the value is not a list of exactly three elements. The branches themselves are not
+ * checked.
+ *
+ * A node built by make_tree is a chain of DataType.PAIRs. The same node passed back into this module
+ * from a program arrives as a flat 3-element DataType.ARRAY instead: py-slang and js-slang both
+ * flatten a proper list into one ARRAY on the way in. Walking that ARRAY with pair_head/pair_tail
+ * would read its elements 0 and 1 as head and tail, so an ARRAY is read by index instead.
+ */
+async function readTreeNode(
+  evaluator: IDataHandler,
+  value: TypedValue<DataType>
+): Promise<[TypedValue<DataType>, TypedValue<DataType>, TypedValue<DataType>] | undefined> {
+  const elements: TypedValue<DataType>[] = [];
+  if (value.type === DataType.ARRAY) {
+    const length = await evaluator.array_length(value);
+    if (length !== 3) return undefined;
+    for (let i = 0; i < length; i += 1) {
+      elements.push(await evaluator.array_get(value, i));
+    }
+  } else {
+    let current: TypedValue<DataType> = value;
+    while (current.type === DataType.PAIR && elements.length < 4) {
+      elements.push(await evaluator.pair_head(current));
+      current = await evaluator.pair_tail(current);
+    }
+    if (current.type !== DataType.EMPTY_LIST || elements.length !== 3) return undefined;
+  }
+  return elements as [TypedValue<DataType>, TypedValue<DataType>, TypedValue<DataType>];
 }
 
 /**
@@ -110,19 +120,16 @@ async function assertNonEmptyTree(
   evaluator: IDataHandler,
   value: TypedValue<DataType>,
   funcName: string
-): Promise<NonEmptyBinaryTree> {
+): Promise<[TypedValue<DataType>, TypedValue<DataType>, TypedValue<DataType>]> {
   if (!value || !await is_tree(evaluator, value)) {
     throw new EvaluatorTypeError(`${funcName} expects binary tree`, 'binary tree', value ? DataType[value.type] : 'undefined');
   }
 
-  if (!isPairLike(value)) {
+  const node = await readTreeNode(evaluator, value);
+  if (!node) {
     throw new EvaluatorRuntimeError(`${funcName} received an empty binary tree!`);
   }
-
-  // NonEmptyBinaryTree is declared DataType.PAIR, but the runtime value may genuinely be
-  // DataType.ARRAY (round-tripped back in through Python) - pair_head/pair_tail read either the
-  // same way (see isPairLike's doc comment), so this is a safe, documented cast, not a lie.
-  return value as NonEmptyBinaryTree;
+  return node;
 }
 
 /**
@@ -137,8 +144,8 @@ async function assertNonEmptyTree(
  * @returns Value
  */
 export async function entry(evaluator: IDataHandler, t: TypedValue<DataType>): Promise<TypedValue<DataType>> {
-  const tree = await assertNonEmptyTree(evaluator, t, entry.name);
-  return evaluator.pair_head(tree);
+  const [value] = await assertNonEmptyTree(evaluator, t, entry.name);
+  return value;
 }
 
 /**
@@ -153,9 +160,8 @@ export async function entry(evaluator: IDataHandler, t: TypedValue<DataType>): P
  * @returns BinaryTree
  */
 export async function left_branch(evaluator: IDataHandler, t: TypedValue<DataType>): Promise<BinaryTree> {
-  const tree = await assertNonEmptyTree(evaluator, t, left_branch.name);
-  const rest = await evaluator.pair_tail(tree);
-  return (await evaluator.pair_head(rest as TypedValue<DataType.PAIR>)) as BinaryTree;
+  const [, left] = await assertNonEmptyTree(evaluator, t, left_branch.name);
+  return left as BinaryTree;
 }
 
 /**
@@ -170,8 +176,6 @@ export async function left_branch(evaluator: IDataHandler, t: TypedValue<DataTyp
  * @returns BinaryTree
  */
 export async function right_branch(evaluator: IDataHandler, t: TypedValue<DataType>): Promise<BinaryTree> {
-  const tree = await assertNonEmptyTree(evaluator, t, right_branch.name);
-  const rest = await evaluator.pair_tail(tree);
-  const rightRest = await evaluator.pair_tail(rest as TypedValue<DataType.PAIR>);
-  return (await evaluator.pair_head(rightRest as TypedValue<DataType.PAIR>)) as BinaryTree;
+  const [, , right] = await assertNonEmptyTree(evaluator, t, right_branch.name);
+  return right as BinaryTree;
 }
