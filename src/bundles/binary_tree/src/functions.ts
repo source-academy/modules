@@ -31,8 +31,8 @@ export function make_empty_tree(): EmptyBinaryTree {
 export async function make_tree(
   evaluator: IDataHandler,
   value: TypedValue<DataType>,
-  left: TypedValue<DataType>,
-  right: TypedValue<DataType>
+  left: BinaryTree,
+  right: BinaryTree
 ): Promise<NonEmptyBinaryTree> {
   if (!await is_tree(evaluator, left)) {
     throw new EvaluatorTypeError(`${make_tree.name} expects binary tree for left`, 'binary tree', DataType[left.type]);

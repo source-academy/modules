@@ -40,14 +40,13 @@ export default class BinaryTreeModulePlugin extends BaseModulePlugin {
     return make_empty_tree_func();
   }
 
-  // DataType.ANY throughout: the entry may be any value (a number is not an OPAQUE handle), and
-  // the branches may arrive as DataType.ARRAY (round-tripped through Python), which a LIST check
-  // would reject - make_tree_func validates the branches itself with is_tree.
-  @moduleMethod([DataType.ANY, DataType.ANY, DataType.ANY], DataType.PAIR)
+  // The entry is DataType.ANY, not OPAQUE: it may be any value, and a number or string is not an
+  // OPAQUE handle.
+  @moduleMethod([DataType.ANY, DataType.LIST, DataType.LIST], DataType.PAIR)
   async* make_tree(
     value: TypedValue<DataType.ANY>,
-    left: TypedValue<DataType.ANY>,
-    right: TypedValue<DataType.ANY>
+    left: TypedValue<DataType.LIST>,
+    right: TypedValue<DataType.LIST>
   ): AsyncGenerator<void, TypedValue<DataType.PAIR>, unknown> {
     return await make_tree_func(this.evaluator, value, left, right);
   }
@@ -67,20 +66,18 @@ export default class BinaryTreeModulePlugin extends BaseModulePlugin {
     return { type: DataType.BOOLEAN, value: is_empty_tree_func(value) };
   }
 
-  // DataType.ANY for the same reasons as make_tree: the tree may arrive as DataType.ARRAY, and the
-  // entry it returns may be any value.
-  @moduleMethod([DataType.ANY], DataType.ANY)
-  async* entry(t: TypedValue<DataType.ANY>): AsyncGenerator<void, TypedValue<DataType.ANY>, unknown> {
+  @moduleMethod([DataType.LIST], DataType.ANY)
+  async* entry(t: TypedValue<DataType.LIST>): AsyncGenerator<void, TypedValue<DataType.ANY>, unknown> {
     return await entry_func(this.evaluator, t);
   }
 
-  @moduleMethod([DataType.ANY], DataType.LIST)
-  async* left_branch(t: TypedValue<DataType.ANY>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
+  @moduleMethod([DataType.LIST], DataType.LIST)
+  async* left_branch(t: TypedValue<DataType.LIST>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
     return await left_branch_func(this.evaluator, t);
   }
 
-  @moduleMethod([DataType.ANY], DataType.LIST)
-  async* right_branch(t: TypedValue<DataType.ANY>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
+  @moduleMethod([DataType.LIST], DataType.LIST)
+  async* right_branch(t: TypedValue<DataType.LIST>): AsyncGenerator<void, TypedValue<DataType.LIST>, unknown> {
     return await right_branch_func(this.evaluator, t);
   }
 }
