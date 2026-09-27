@@ -30,9 +30,9 @@ export function make_empty_tree(): EmptyBinaryTree {
  */
 export async function make_tree(
   evaluator: IDataHandler,
-  value: TypedValue<DataType.OPAQUE>,
-  left: BinaryTree,
-  right: BinaryTree
+  value: TypedValue<DataType>,
+  left: TypedValue<DataType>,
+  right: TypedValue<DataType>
 ): Promise<NonEmptyBinaryTree> {
   if (!await is_tree(evaluator, left)) {
     throw new EvaluatorTypeError(`${make_tree.name} expects binary tree for left`, 'binary tree', DataType[left.type]);
@@ -136,9 +136,9 @@ async function assertNonEmptyTree(
  * @param t BinaryTree to be accessed
  * @returns Value
  */
-export async function entry(evaluator: IDataHandler, t: TypedValue<DataType>): Promise<TypedValue<DataType.OPAQUE>> {
+export async function entry(evaluator: IDataHandler, t: TypedValue<DataType>): Promise<TypedValue<DataType>> {
   const tree = await assertNonEmptyTree(evaluator, t, entry.name);
-  return (await evaluator.pair_head(tree)) as TypedValue<DataType.OPAQUE>;
+  return evaluator.pair_head(tree);
 }
 
 /**

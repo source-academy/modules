@@ -3,10 +3,6 @@ import { TestDataHandler, emptyListValue, numberValue } from '@sourceacademy/mod
 import { describe, expect, it } from 'vitest';
 import * as funcs from '../functions';
 
-async function opaqueNumber(handler: TestDataHandler, value: number) {
-  return handler.opaque_make(value);
-}
-
 async function rawTree(
   handler: TestDataHandler,
   value: number,
@@ -14,7 +10,7 @@ async function rawTree(
   right: TypedValue<DataType>
 ) {
   return handler.pair_make(
-    await opaqueNumber(handler, value),
+    numberValue(value),
     await handler.pair_make(left, await handler.pair_make(right, emptyListValue()))
   );
 }
@@ -57,7 +53,7 @@ describe(funcs.is_tree, () => {
     const rightLeaf = await rawTree(handler, 1, emptyListValue(), emptyListValue());
     const rightSubtree = await handler.pair_make(rightLeaf, emptyListValue());
     const tree = await handler.pair_make(
-      await opaqueNumber(handler, 0),
+      numberValue(0),
       await handler.pair_make(leftLeaf, rightSubtree)
     );
     await expect(funcs.is_tree(handler, tree)).resolves.toEqual(true);
@@ -76,11 +72,11 @@ describe(funcs.is_tree, () => {
     await handler.array_set(leftPair, 0, emptyListValue());
     await handler.array_set(leftPair, 1, rightPair);
     const tree = await handler.array_make(DataType.ANY, 2, emptyListValue());
-    await handler.array_set(tree, 0, await opaqueNumber(handler, 0));
+    await handler.array_set(tree, 0, numberValue(0));
     await handler.array_set(tree, 1, leftPair);
 
     await expect(funcs.is_tree(handler, tree)).resolves.toEqual(true);
-    await expect(handler.opaque_get(await funcs.entry(handler, tree))).resolves.toEqual(0);
+    expect(await funcs.entry(handler, tree)).toEqual(numberValue(0));
   });
 });
 
@@ -88,14 +84,14 @@ describe(funcs.make_tree, () => {
   it('throws when left is not a tree', async () => {
     const handler = new TestDataHandler();
     await expect(
-      funcs.make_tree(handler, await opaqueNumber(handler, 0), numberValue(0) as unknown as TypedValue<DataType.LIST>, funcs.make_empty_tree())
+      funcs.make_tree(handler, numberValue(0), numberValue(0), funcs.make_empty_tree())
     ).rejects.toThrowError('make_tree expects binary tree for left');
   });
 
   it('throws when right is not a tree', async () => {
     const handler = new TestDataHandler();
     await expect(
-      funcs.make_tree(handler, await opaqueNumber(handler, 0), funcs.make_empty_tree(), numberValue(0) as unknown as TypedValue<DataType.LIST>)
+      funcs.make_tree(handler, numberValue(0), funcs.make_empty_tree(), numberValue(0))
     ).rejects.toThrowError('make_tree expects binary tree for right');
   });
 });
@@ -117,12 +113,12 @@ describe(funcs.entry, () => {
     const handler = new TestDataHandler();
     const tree = await funcs.make_tree(
       handler,
-      await opaqueNumber(handler, 0),
+      numberValue(0),
       funcs.make_empty_tree(),
       funcs.make_empty_tree()
     );
     const result = await funcs.entry(handler, tree);
-    await expect(handler.opaque_get(result)).resolves.toEqual(0);
+    expect(result).toEqual(numberValue(0));
   });
 });
 
@@ -143,7 +139,7 @@ describe(funcs.left_branch, () => {
     const handler = new TestDataHandler();
     const tree = await funcs.make_tree(
       handler,
-      await opaqueNumber(handler, 0),
+      numberValue(0),
       funcs.make_empty_tree(),
       funcs.make_empty_tree()
     );
@@ -155,21 +151,21 @@ describe(funcs.left_branch, () => {
     const handler = new TestDataHandler();
     const innerTree = await funcs.make_tree(
       handler,
-      await opaqueNumber(handler, 1),
+      numberValue(1),
       funcs.make_empty_tree(),
       funcs.make_empty_tree()
     );
     const tree = await funcs.make_tree(
       handler,
-      await opaqueNumber(handler, 0),
+      numberValue(0),
       innerTree,
       funcs.make_empty_tree()
     );
 
-    await expect(handler.opaque_get(await funcs.entry(handler, tree))).resolves.toEqual(0);
+    expect(await funcs.entry(handler, tree)).toEqual(numberValue(0));
 
     const leftTree = await funcs.left_branch(handler, tree);
-    await expect(handler.opaque_get(await funcs.entry(handler, leftTree))).resolves.toEqual(1);
+    expect(await funcs.entry(handler, leftTree)).toEqual(numberValue(1));
   });
 });
 
@@ -192,7 +188,7 @@ describe(funcs.right_branch, () => {
     const handler = new TestDataHandler();
     const tree = await funcs.make_tree(
       handler,
-      await opaqueNumber(handler, 0),
+      numberValue(0),
       funcs.make_empty_tree(),
       funcs.make_empty_tree()
     );
@@ -204,21 +200,21 @@ describe(funcs.right_branch, () => {
     const handler = new TestDataHandler();
     const leftTree = await funcs.make_tree(
       handler,
-      await opaqueNumber(handler, 1),
+      numberValue(1),
       funcs.make_empty_tree(),
       funcs.make_empty_tree()
     );
     const rightTree = await funcs.make_tree(
       handler,
-      await opaqueNumber(handler, 2),
+      numberValue(2),
       funcs.make_empty_tree(),
       funcs.make_empty_tree()
     );
-    const tree = await funcs.make_tree(handler, await opaqueNumber(handler, 0), leftTree, rightTree);
+    const tree = await funcs.make_tree(handler, numberValue(0), leftTree, rightTree);
 
-    await expect(handler.opaque_get(await funcs.entry(handler, tree))).resolves.toEqual(0);
+    expect(await funcs.entry(handler, tree)).toEqual(numberValue(0));
 
     const right = await funcs.right_branch(handler, tree);
-    await expect(handler.opaque_get(await funcs.entry(handler, right))).resolves.toEqual(2);
+    expect(await funcs.entry(handler, right)).toEqual(numberValue(2));
   });
 });
