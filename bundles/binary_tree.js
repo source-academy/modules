@@ -276,21 +276,31 @@ export default require => {
     return __async(this, null, function* () {
       if (!value) return false;
       if (value.type === E.EMPTY_LIST) return true;
-      if (!isPairLike(value)) return false;
-      const rest = yield evaluator.pair_tail(value);
-      if (!isPairLike(rest)) return false;
-      const left = yield evaluator.pair_head(rest);
-      if (!(yield is_tree(evaluator, left))) return false;
-      const rightRest = yield evaluator.pair_tail(rest);
-      if (!isPairLike(rightRest)) return false;
-      const right = yield evaluator.pair_head(rightRest);
-      if (!(yield is_tree(evaluator, right))) return false;
-      const tail = yield evaluator.pair_tail(rightRest);
-      return tail.type === E.EMPTY_LIST;
+      const node = yield readTreeNode(evaluator, value);
+      if (!node) return false;
+      const [, left, right] = node;
+      return (yield is_tree(evaluator, left)) && (yield is_tree(evaluator, right));
     });
   }
-  function isPairLike(value) {
-    return value.type === E.PAIR || value.type === E.ARRAY;
+  function readTreeNode(evaluator, value) {
+    return __async(this, null, function* () {
+      const elements = [];
+      if (value.type === E.ARRAY) {
+        const length = yield evaluator.array_length(value);
+        if (length !== 3) return void 0;
+        for (let i = 0; i < length; i += 1) {
+          elements.push(yield evaluator.array_get(value, i));
+        }
+      } else {
+        let current = value;
+        while (current.type === E.PAIR && elements.length < 4) {
+          elements.push(yield evaluator.pair_head(current));
+          current = yield evaluator.pair_tail(current);
+        }
+        if (current.type !== E.EMPTY_LIST || elements.length !== 3) return void 0;
+      }
+      return elements;
+    });
   }
   function is_empty_tree(value) {
     return (value == null ? void 0 : value.type) === E.EMPTY_LIST;
@@ -300,31 +310,29 @@ export default require => {
       if (!value || !(yield is_tree(evaluator, value))) {
         throw new s3(`${funcName} expects binary tree`, "binary tree", value ? E[value.type] : "undefined");
       }
-      if (!isPairLike(value)) {
+      const node = yield readTreeNode(evaluator, value);
+      if (!node) {
         throw new e(`${funcName} received an empty binary tree!`);
       }
-      return value;
+      return node;
     });
   }
   function entry(evaluator, t5) {
     return __async(this, null, function* () {
-      const tree = yield assertNonEmptyTree(evaluator, t5, entry.name);
-      return evaluator.pair_head(tree);
+      const [value] = yield assertNonEmptyTree(evaluator, t5, entry.name);
+      return value;
     });
   }
   function left_branch(evaluator, t5) {
     return __async(this, null, function* () {
-      const tree = yield assertNonEmptyTree(evaluator, t5, left_branch.name);
-      const rest = yield evaluator.pair_tail(tree);
-      return yield evaluator.pair_head(rest);
+      const [, left] = yield assertNonEmptyTree(evaluator, t5, left_branch.name);
+      return left;
     });
   }
   function right_branch(evaluator, t5) {
     return __async(this, null, function* () {
-      const tree = yield assertNonEmptyTree(evaluator, t5, right_branch.name);
-      const rest = yield evaluator.pair_tail(tree);
-      const rightRest = yield evaluator.pair_tail(rest);
-      return yield evaluator.pair_head(rightRest);
+      const [, , right] = yield assertNonEmptyTree(evaluator, t5, right_branch.name);
+      return right;
     });
   }
   var _right_branch_dec, _left_branch_dec, _entry_dec, _is_empty_tree_dec, _is_tree_dec, _make_tree_dec, _make_empty_tree_dec, _a, _init;
