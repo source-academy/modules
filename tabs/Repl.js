@@ -3925,6 +3925,9 @@ export default require => {
           case "set_program_text":
             this.__setProgramText(message.text);
             break;
+          case "focus":
+            this.__tabService.showTab(REPL_TAB_ID);
+            break;
           case "run":
           case "request":
             break;

@@ -463,6 +463,7 @@ export default require => {
       this.__evaluator = void 0;
       this.__tabLoaded = false;
       this.__tabRequested = false;
+      this.__focusOnConnect = false;
       this.__running = false;
       this.__editorProps = {
         backgroundImageUrl: null,
@@ -477,6 +478,12 @@ export default require => {
           this.__outputHistory.forEach(entry => this.__replChannel.send(entry));
           if (this.__latestEditorProps) this.__replChannel.send(this.__latestEditorProps);
           if (this.__latestProgramText) this.__replChannel.send(this.__latestProgramText);
+          if (this.__focusOnConnect) {
+            this.__focusOnConnect = false;
+            this.__replChannel.send({
+              type: "focus"
+            });
+          }
           return;
         }
         if (message.type === "run") {
@@ -491,6 +498,13 @@ export default require => {
         yield new __await(this.evaluator.closure_arity_assert(evalFunc, 1));
         this.__evaluator = evalFunc;
         this.__loadReplTab();
+        if (this.__tabRequested) {
+          this.__replChannel.send({
+            type: "focus"
+          });
+        } else {
+          this.__focusOnConnect = true;
+        }
         return y();
       });
     }

@@ -1,138 +1,8 @@
 {
-  "ev3_motorA": {
-    "kind": "function",
-    "name": "ev3_motorA",
-    "description": "<p>Gets the motor connected to port A.</p>",
-    "params": [],
-    "retType": "MotorFunctionReturnType"
-  },
-  "ev3_motorB": {
-    "kind": "function",
-    "name": "ev3_motorB",
-    "description": "<p>Gets the motor connected to port B.</p>",
-    "params": [],
-    "retType": "MotorFunctionReturnType"
-  },
-  "ev3_motorC": {
-    "kind": "function",
-    "name": "ev3_motorC",
-    "description": "<p>Gets the motor connected to port C.</p>",
-    "params": [],
-    "retType": "MotorFunctionReturnType"
-  },
-  "ev3_motorD": {
-    "kind": "function",
-    "name": "ev3_motorD",
-    "description": "<p>Gets the motor connected to port D.</p>",
-    "params": [],
-    "retType": "MotorFunctionReturnType"
-  },
-  "ev3_runToRelativePosition": {
-    "kind": "function",
-    "name": "ev3_runToRelativePosition",
-    "description": "<p>Causes the motor to rotate until the position reaches ev3_motorGetPosition() + position with the given speed.\nNote: this works by sending instructions to the motors.\nThis will return almost immediately, without waiting for the motor to reach the given absolute position.\nIf you wish to wait, use ev3_pause.</p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "MotorFunctionReturnType",
-        "name": "motor"
-      },
-      {
-        "paramType": "regular",
-        "type": "number",
-        "name": "position"
-      },
-      {
-        "paramType": "regular",
-        "type": "number",
-        "name": "speed"
-      }
-    ],
-    "retType": "void"
-  },
-  "ev3_colorSensorRed": {
-    "kind": "function",
-    "name": "ev3_colorSensorRed",
-    "description": "<p>Gets the amount of red seen by the colour sensor.</p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "ColorSensor",
-        "name": "colorSensor"
-      }
-    ],
-    "retType": "number"
-  },
-  "ev3_colorSensorGreen": {
-    "kind": "function",
-    "name": "ev3_colorSensorGreen",
-    "description": "<p>Gets the amount of green seen by the colour sensor.</p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "ColorSensor",
-        "name": "colorSensor"
-      }
-    ],
-    "retType": "number"
-  },
-  "ev3_pause": {
-    "kind": "function",
-    "name": "ev3_pause",
-    "description": "<p>Pauses for a period of time.</p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "number",
-        "name": "duration"
-      }
-    ],
-    "retType": "void"
-  },
-  "ev3_colorSensor": {
-    "kind": "function",
-    "name": "ev3_colorSensor",
-    "description": "<p>Gets the colour sensor connected any of ports 1, 2, 3 or 4.</p>",
-    "params": [],
-    "retType": "ColorSensor"
-  },
-  "ev3_colorSensorBlue": {
-    "kind": "function",
-    "name": "ev3_colorSensorBlue",
-    "description": "<p>Gets the amount of blue seen by the colour sensor.</p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "ColorSensor",
-        "name": "colorSensor"
-      }
-    ],
-    "retType": "number"
-  },
-  "ev3_ultrasonicSensor": {
-    "kind": "function",
-    "name": "ev3_ultrasonicSensor",
-    "description": "<p>Gets the ultrasonic sensor connected any of ports 1, 2, 3 or 4.</p>",
-    "params": [],
-    "retType": "UltrasonicSensor"
-  },
-  "ev3_ultrasonicSensorDistance": {
-    "kind": "function",
-    "name": "ev3_ultrasonicSensorDistance",
-    "description": "<p>Gets the distance read by the ultrasonic sensor in centimeters.</p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "UltrasonicSensor",
-        "name": "ultraSonicSensor"
-      }
-    ],
-    "retType": "number"
-  },
   "createCustomPhysics": {
     "kind": "function",
     "name": "createCustomPhysics",
-    "description": "<p>Create a physics engine with the provided gravity and timestep. A physics engine\nwith default gravity and timestep can be created using createPhysics.</p><p>The returned Physics object is designed to be passed into createWorld.</p><p><strong>This is a configuration function and should be called within init_simulation.</strong></p>",
+    "description": "<p>Creates a physics world with custom gravity and timestep - use <code>createPhysics</code> instead for the\nusual Earth-like defaults.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -145,49 +15,61 @@
         "name": "timestep"
       }
     ],
-    "retType": "Physics"
+    "retType": "unknown"
   },
   "createPhysics": {
     "kind": "function",
     "name": "createPhysics",
-    "description": "<p>Create a physics engine with default gravity and timestep. Default gravity is -9.81 and timestep is 1/20.\nA custom physics engine can be created using createCustomPhysics.</p><p>The returned Physics object is designed to be passed into createWorld.</p><p><strong>This is a configuration function and should be called within init_simulation.</strong></p>",
+    "description": "<p>Creates a physics world with Earth-like gravity and a default timestep.</p>",
     "params": [],
-    "retType": "Physics"
+    "retType": "unknown"
   },
-  "createRenderer": {
+  "createTimer": {
     "kind": "function",
-    "name": "createRenderer",
-    "description": "<p>Creates a renderer for the simulation.</p><p>The returned Renderer object is designed to be passed into createWorld.</p><p><strong>This is a configuration function and should be called within init_simulation.</strong></p>",
+    "name": "createTimer",
+    "description": "<p>Creates a timer, used by <code>createWorld</code> to track simulated time.</p>",
     "params": [],
-    "retType": "Renderer"
+    "retType": "unknown"
   },
-  "init_simulation": {
+  "createRobotConsole": {
     "kind": "function",
-    "name": "init_simulation",
-    "description": "<p>Initialize the simulation world. This function is to be called before the robot code.\nThis function is used to describe the simulation environment and the controllers.</p><p>The callback function takes in no parameters and returns a world created by createWorld.\nThe world should be configured with the physics, renderer, timer and console.\nThe controllers should be added to the world using addControllerToWorld.\nThe world should be saved to the context using saveToContext.</p>",
+    "name": "createRobotConsole",
+    "description": "<p>Creates a Robot Console (the panel the EV3's <code>print()</code> output/errors go to), used by\n<code>createWorld</code>.</p>",
+    "params": [],
+    "retType": "unknown"
+  },
+  "createWorld": {
+    "kind": "function",
+    "name": "createWorld",
+    "description": "<p>Creates the simulation World from the pieces <code>createPhysics</code>/<code>createTimer</code>/<code>createRobotConsole</code>\nbuilt - the object <code>init_simulation</code>'s callback must return.</p>",
     "params": [
       {
         "paramType": "regular",
-        "type": "Object",
-        "name": "worldFactory"
-      }
-    ],
-    "retType": "void"
-  },
-  "createCuboid": {
-    "kind": "function",
-    "name": "createCuboid",
-    "description": "<p>Creates a cuboid. joel-todo: The dynamic version wont work</p><p>This function is used to create the floor and wall controllers.</p><p>The returned Cuboid object is designed to be added to the world using addControllerToWorld.</p><p><strong>This is a Controller function and should be called within init_simulation.</strong></p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "Physics",
+        "type": "unknown",
         "name": "physics"
       },
       {
         "paramType": "regular",
-        "type": "Renderer",
-        "name": "renderer"
+        "type": "unknown",
+        "name": "timer"
+      },
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "robotConsole"
+      }
+    ],
+    "retType": "unknown"
+  },
+  "createCuboid": {
+    "kind": "function",
+    "name": "createCuboid",
+    "description": "<p>Creates a solid box in the scene - the general-purpose building block <code>createFloor</code>/<code>createWall</code>\nare thin presets of.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "physics"
       },
       {
         "paramType": "regular",
@@ -226,7 +108,7 @@
       },
       {
         "paramType": "regular",
-        "type": "string | number",
+        "type": "string",
         "name": "color"
       },
       {
@@ -235,57 +117,30 @@
         "name": "bodyType"
       }
     ],
-    "retType": "Cuboid"
+    "retType": "unknown"
   },
-  "createTimer": {
+  "createFloor": {
     "kind": "function",
-    "name": "createTimer",
-    "description": "<p>Creates a Timer for the simulation.</p><p>The returned Timer object is designed to be passed into createWorld.</p><p><strong>This is a configuration function and should be called within init_simulation.</strong></p>",
-    "params": [],
-    "retType": "Timer"
-  },
-  "createWorld": {
-    "kind": "function",
-    "name": "createWorld",
-    "description": "<p>Creates a custom world with the provided physics, renderer, timer and console .</p><p>A world is responsible for managing the physics, rendering, timing and console of the simulation.\nIt also manages the controllers that are added to the world, ensuring that the appropriate functions\nare called at the correct time.</p><p>The returned World object is designed to be returned by the init_simulation callback.</p><p>You can add controllers to the world using addControllerToWorld.</p><p><strong>This is a configuration function and should be called within init_simulation.</strong></p>",
+    "name": "createFloor",
+    "description": "<p>Creates the default 20x20m white floor.</p>",
     "params": [
       {
         "paramType": "regular",
-        "type": "Physics",
+        "type": "unknown",
         "name": "physics"
-      },
-      {
-        "paramType": "regular",
-        "type": "Renderer",
-        "name": "renderer"
-      },
-      {
-        "paramType": "regular",
-        "type": "Timer",
-        "name": "timer"
-      },
-      {
-        "paramType": "regular",
-        "type": "RobotConsole",
-        "name": "robotConsole"
       }
     ],
-    "retType": "World"
+    "retType": "unknown"
   },
   "createWall": {
     "kind": "function",
     "name": "createWall",
-    "description": "<p>Creates a wall. This function is a wrapper around createCuboid.</p><p>The returned Cuboid object is designed to be added to the world using addControllerToWorld.</p><p><strong>This is a Controller function and should be called within init_simulation.</strong></p>",
+    "description": "<p>Creates a fixed yellow wall - for a customised <code>World</code> built with <code>createWorld</code>/<code>init_simulation</code>\nrather than <code>init_default_simulation</code>. Use <code>add_wall</code> instead once the default simulation is\nalready running.</p>",
     "params": [
       {
         "paramType": "regular",
-        "type": "Physics",
+        "type": "unknown",
         "name": "physics"
-      },
-      {
-        "paramType": "regular",
-        "type": "Renderer",
-        "name": "renderer"
       },
       {
         "paramType": "regular",
@@ -313,36 +168,13 @@
         "name": "height"
       }
     ],
-    "retType": "Cuboid"
-  },
-  "createEv3": {
-    "kind": "function",
-    "name": "createEv3",
-    "description": "<p>Create an EV3.</p><p>The resulting EV3 should be saved to the context using saveToContext.</p><p>The returned EV3 object is designed to be added to the world using addControllerToWorld.</p><p><strong>This is a Controller function and should be called within init_simulation.</strong></p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "Physics",
-        "name": "physics"
-      },
-      {
-        "paramType": "regular",
-        "type": "Renderer",
-        "name": "renderer"
-      }
-    ],
-    "retType": "DefaultEv3"
+    "retType": "unknown"
   },
   "createPaper": {
     "kind": "function",
     "name": "createPaper",
-    "description": "<p>Creates a paper on the floor.</p><p>The returned Paper object is designed to be added to the world using addControllerToWorld.</p><p> <strong>This is a Controller function and should be called within init_simulation.</strong></p>",
+    "description": "<p>Creates a visual (non-collidable) floor overlay, e.g. a colored patch for a color sensor demo -\nfor a customised <code>World</code> built with <code>createWorld</code>/<code>init_simulation</code> rather than\n<code>init_default_simulation</code>. Use <code>add_paper</code> instead once the default simulation is already\nrunning.</p>",
     "params": [
-      {
-        "paramType": "regular",
-        "type": "Renderer",
-        "name": "render"
-      },
       {
         "paramType": "regular",
         "type": "string",
@@ -374,62 +206,56 @@
         "name": "rotation"
       }
     ],
-    "retType": "Paper"
+    "retType": "unknown"
   },
-  "createFloor": {
+  "createEv3": {
     "kind": "function",
-    "name": "createFloor",
-    "description": "<p>Create a floor. This function is a wrapper around createCuboid.</p><p>The returned Cuboid object is designed to be added to the world using addControllerToWorld.</p><p><strong>This is a Controller function and should be called within init_simulation.</strong></p>",
+    "name": "createEv3",
+    "description": "<p>Creates the EV3 robot with its default chassis/motors/sensors.</p>",
     "params": [
       {
         "paramType": "regular",
-        "type": "Physics",
+        "type": "unknown",
         "name": "physics"
-      },
-      {
-        "paramType": "regular",
-        "type": "Renderer",
-        "name": "renderer"
       }
     ],
-    "retType": "Cuboid"
+    "retType": "unknown"
   },
-  "createCSE": {
+  "createPythonCSE": {
     "kind": "function",
-    "name": "createCSE",
-    "description": "<p>Creates a CSE machine as a Program Object. The CSE machine is used to evaluate the code written\nby the user. The execution of the code will be automatically synchronized with the simulation\nto ensure that the code is executed at the correct time.</p><p>The returned Program object is designed to be added to the world using addControllerToWorld.</p><p><strong>This is a Controller function and should be called within init_simulation.</strong></p>",
-    "params": [],
-    "retType": "Program"
+    "name": "createPythonCSE",
+    "description": "<p>Creates a CSE machine as a Program Object, running Python. The Python program can call the\nwhole <code>ev3_*</code> API directly by name; no <code>import</code> is needed (and none is possible - see\npythonRuntime.ts). <code>print(...)</code> goes to the simulation's Robot Console panel.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "code"
+      }
+    ],
+    "retType": "unknown"
   },
   "addControllerToWorld": {
     "kind": "function",
     "name": "addControllerToWorld",
-    "description": "<p>Add a controller to the world.</p><p>The controller is a unit of computation modelled after Unity's MonoBehaviour. It is used to\nencapsulate the logic of the simulation. Controllers can be used to create robots, sensors,\nactuators, and other objects in the simulation.</p><p>The controller should be added to the world using this function in order for the simulation to\naccess the controller's logic.</p><p><em>*This is a Utility function and should be called within init_simulation.</em></p>",
+    "description": "<p>Adds a controller (e.g. from <code>createFloor</code>/<code>createWall</code>/<code>createEv3</code>/<code>createPythonCSE</code>) to a\nWorld built with <code>createWorld</code>.</p>",
     "params": [
       {
         "paramType": "regular",
-        "type": "Controller",
+        "type": "unknown",
         "name": "controller"
       },
       {
         "paramType": "regular",
-        "type": "World",
+        "type": "unknown",
         "name": "world"
       }
     ],
     "retType": "void"
   },
-  "createRobotConsole": {
-    "kind": "function",
-    "name": "createRobotConsole",
-    "description": "<p>Creates a RobotConsole for the simulation.</p><p>The RobotConsole is used to display messages and errors to the user. The console\nmessages can be seen in the console tab of the simulator.</p><p>The returned RobotConsole object is designed to be passed into createWorld.</p><p><strong>This is a configuration function and should be called within init_simulation.</strong></p>",
-    "params": [],
-    "retType": "RobotConsole"
-  },
   "saveToContext": {
     "kind": "function",
     "name": "saveToContext",
-    "description": "<p>Save a value to the context.</p><p>There are 2 important values to be saved. The world and the ev3.\nThe world needs to be saved in order for the simulation to access the physics, renderer, timer and console.\nThe ev3 needs to be saved in order for the \"ev3_\" functions to access the EV3</p>",
+    "description": "<p>Saves a value (e.g. the World or EV3) under <code>key</code> so the <code>ev3_*</code> API can find it later - the\n<code>world</code>/<code>ev3</code> keys specifically are what <code>init_simulation</code> needs a custom setup to have saved.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -438,10 +264,277 @@
       },
       {
         "paramType": "regular",
-        "type": "any",
+        "type": "unknown",
         "name": "value"
       }
     ],
     "retType": "void"
+  },
+  "init_simulation": {
+    "kind": "function",
+    "name": "init_simulation",
+    "description": "<p>Initialize the simulation world. The callback takes no parameters and returns a world created\nby <code>createWorld</code> (with controllers already added via <code>addControllerToWorld</code>). Physics starts\nrunning as soon as <code>init()</code> resolves - unlike the pre-migration version, this no longer waits\nfor the tab to be opened first (the tab has no way to signal the module at all besides the\nexported functions student code calls - see protocol.ts), so the simulation is \"live\" from\nthe moment <code>init_simulation</code> returns, whether or not anyone has the tab open to watch it yet.</p><p>For the common case (no customisation needed), use <code>init_default_simulation</code> instead.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "Function",
+        "name": "worldFactory"
+      }
+    ],
+    "retType": "void"
+  },
+  "init_default_simulation": {
+    "kind": "function",
+    "name": "init_default_simulation",
+    "description": "<p>The boilerplate-free alternative to <code>init_simulation</code>: builds default physics, a default\nworld, a default floor and a default EV3 (the same defaults <code>createPhysics</code>/<code>createFloor</code>/\n<code>createEv3</code> use), and starts the simulation - all in one call. Takes no control program: pair\nthis with <code>run_robot_code</code>/the <code>repl</code> module (see that method's doc comment) to drive the EV3\nfrom a separate, rerunnable REPL tab instead of a control-code string baked into setup.</p><p>For a customised World (non-default physics/gravity, a control program written in\nSource/Scheme instead of Python), use <code>createPhysics</code>/<code>createWorld</code>/<code>createWall</code>/\n<code>createPaper</code>/<code>createPythonCSE</code>/<code>addControllerToWorld</code>/<code>saveToContext</code>/<code>init_simulation</code>\ndirectly instead, exactly as before.</p>",
+    "params": [],
+    "retType": "void"
+  },
+  "add_wall": {
+    "kind": "function",
+    "name": "add_wall",
+    "description": "<p>Adds a fixed yellow wall to the already-initialised default world (<code>init_default_simulation</code>\nmust have been called first) - a friendly wrapper over <code>createWall</code>/<code>addControllerToWorld</code>\nthat doesn't need <code>physics</code>/<code>world</code> opaque handles, since <code>init_default_simulation</code> already\nowns both. Uses <code>World.addLiveController</code> rather than <code>addController</code> because the world is\nalready running by the time a student calls this from the setup pane.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "x"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "y"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "width"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "length"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "height"
+      }
+    ],
+    "retType": "void"
+  },
+  "add_paper": {
+    "kind": "function",
+    "name": "add_paper",
+    "description": "<p>Adds a visual (non-collidable - see Paper.ts's doc comment) floor overlay to the\nalready-initialised default world - a friendly wrapper over <code>createPaper</code>/\n<code>addControllerToWorld</code> for the same reason as <code>add_wall</code>. Purely decorative: because it has no\nphysics collider, the color sensor's raycast (see ColorSensor.ts) cannot detect it - use\n<code>add_color_patch</code> instead for a floor marking the robot needs to actually sense.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "url"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "width"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "height"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "x"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "y"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "rotation"
+      }
+    ],
+    "retType": "void"
+  },
+  "add_color_patch": {
+    "kind": "function",
+    "name": "add_color_patch",
+    "description": "<p>Adds a thin, solid, fixed color patch flush with the floor to the already-initialised default\nworld - unlike <code>add_paper</code> (a purely visual overlay with no physics collider), this one <em>has</em> a\ncollider, so <code>ev3_colorSensor</code>'s downward raycast actually detects it (see ColorSensor.ts's doc\ncomment on why <code>add_paper</code> alone can't be sensed). Use this for any floor marking the robot's\ncontrol program needs to react to; use <code>add_paper</code> instead for purely decorative markings, or\nwhen many overlapping/finely-detailed images matter more than sensing them.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "color"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "x"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "y"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "width"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "length"
+      }
+    ],
+    "retType": "void"
+  },
+  "run_robot_code": {
+    "kind": "function",
+    "name": "run_robot_code",
+    "description": "<p>The <code>repl</code>-module hook: pass this function itself to <code>repl</code>'s <code>set_evaluator</code>, and the <code>repl</code>\ntab it opens will call it with whatever the student typed there each time they hit Run -\n<code>code</code> is exactly what <code>createPythonCSE</code>/<code>init_default_simulation</code>'s old <code>control_code</code>\nargument used to be, just supplied interactively instead of baked into the setup program.</p><p>Each call adds a fresh <code>Program</code> controller (via <code>World.addLiveController</code>, since the world is\nalready running by this point) rather than editing one in place, but all calls share one\n<code>pyContext</code> (lazily created on the first call, cached in <code>__state</code>) - <code>runPythonECEvaluator</code>\nre-analyzes each run against that same context's global environment (see evaluate.ts), so\nvariables and function defs a student's REPL code creates in one run are still visible in the\nnext, the way a REPL is expected to behave. The previous run's <code>Program</code> is <code>stop()</code>'d first so\nit can't keep pumping its now-superseded generator against the same shared <code>pyContext</code> (see\n<code>Program.stop</code>'s doc comment).</p><p>Requires <code>init_default_simulation</code>/<code>init_simulation</code> to have already been called - there must\nbe a live World for the robot code to act on.</p><p>Also calls <code>$focusTab</code> on success, asking the RobotSimulation tab to bring itself to the\nfront - but the frontend's side-content host only actually honours that the <em>first</em> time any\ntab is shown in a session (see <code>SideContentManager.showTab</code>'s \"don't yank the student away from\nwherever they navigated\" guard), so in practice this rarely does anything once the student has\nlooked at any tab at all. A student who wants the 3D view and the code they're driving the\nrobot with on screen <em>together</em>, without fighting that guard, should use the RobotSimulation\ntab's own embedded editor instead (<code>$runReplCode</code> in protocol.ts) - same effect as this\nfunction, just triggered from inside the tab that's already showing the 3D view, so there's\nnothing to focus/switch away from in the first place.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "string",
+        "name": "code"
+      }
+    ],
+    "retType": "void"
+  },
+  "ev3_motorA": {
+    "kind": "function",
+    "name": "ev3_motorA",
+    "description": "<p>The EV3's left-front motor. Same API on both the setup program and any robot control program\n(a Python string/REPL run/embedded-editor run) - see the module doc comment.</p>",
+    "params": [],
+    "retType": "unknown"
+  },
+  "ev3_motorB": {
+    "kind": "function",
+    "name": "ev3_motorB",
+    "description": "<p>The EV3's right-front motor.</p>",
+    "params": [],
+    "retType": "unknown"
+  },
+  "ev3_motorC": {
+    "kind": "function",
+    "name": "ev3_motorC",
+    "description": "<p>The EV3's left-rear motor.</p>",
+    "params": [],
+    "retType": "unknown"
+  },
+  "ev3_motorD": {
+    "kind": "function",
+    "name": "ev3_motorD",
+    "description": "<p>The EV3's right-rear motor.</p>",
+    "params": [],
+    "retType": "unknown"
+  },
+  "ev3_runToRelativePosition": {
+    "kind": "function",
+    "name": "ev3_runToRelativePosition",
+    "description": "<p>Rotates a motor by <code>position</code> degrees relative to its current position, at <code>speed</code>.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "motor"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "position"
+      },
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "speed"
+      }
+    ],
+    "retType": "void"
+  },
+  "ev3_pause": {
+    "kind": "function",
+    "name": "ev3_pause",
+    "description": "<p>Pauses the robot's control program for <code>duration</code> milliseconds, without blocking the rest of\nthe simulation.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "number",
+        "name": "duration"
+      }
+    ],
+    "retType": "void"
+  },
+  "ev3_colorSensor": {
+    "kind": "function",
+    "name": "ev3_colorSensor",
+    "description": "<p>The EV3's color sensor.</p>",
+    "params": [],
+    "retType": "unknown"
+  },
+  "ev3_colorSensorRed": {
+    "kind": "function",
+    "name": "ev3_colorSensorRed",
+    "description": "<p>The color sensor's current red reading (0-255).</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "colorSensor"
+      }
+    ],
+    "retType": "number"
+  },
+  "ev3_colorSensorGreen": {
+    "kind": "function",
+    "name": "ev3_colorSensorGreen",
+    "description": "<p>The color sensor's current green reading (0-255).</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "colorSensor"
+      }
+    ],
+    "retType": "number"
+  },
+  "ev3_colorSensorBlue": {
+    "kind": "function",
+    "name": "ev3_colorSensorBlue",
+    "description": "<p>The color sensor's current blue reading (0-255).</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "colorSensor"
+      }
+    ],
+    "retType": "number"
+  },
+  "ev3_ultrasonicSensor": {
+    "kind": "function",
+    "name": "ev3_ultrasonicSensor",
+    "description": "<p>The EV3's ultrasonic (distance) sensor.</p>",
+    "params": [],
+    "retType": "unknown"
+  },
+  "ev3_ultrasonicSensorDistance": {
+    "kind": "function",
+    "name": "ev3_ultrasonicSensorDistance",
+    "description": "<p>The ultrasonic sensor's current distance reading, in cm.</p>",
+    "params": [
+      {
+        "paramType": "regular",
+        "type": "unknown",
+        "name": "sensor"
+      }
+    ],
+    "retType": "number"
   }
 }
