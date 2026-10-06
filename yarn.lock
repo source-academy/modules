@@ -4315,6 +4315,7 @@ __metadata:
     "@sourceacademy/conductor": "catalog:"
     "@sourceacademy/modules-buildtools": "workspace:^"
     "@sourceacademy/modules-lib": "workspace:^"
+    "@sourceacademy/modules-testplugin": "workspace:^"
     "@sourceacademy/py-slang": "npm:^1.1.0"
     "@types/three": "npm:^0.186.0"
     es-toolkit: "npm:^1.44.0"

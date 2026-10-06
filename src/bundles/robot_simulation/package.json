@@ -13,6 +13,7 @@
   "devDependencies": {
     "@dimforge/rapier3d-compat": "^0.11.2",
     "@sourceacademy/modules-buildtools": "workspace:^",
+    "@sourceacademy/modules-testplugin": "workspace:^",
     "@types/three": "^0.186.0",
     "typescript": "catalog:"
   },
