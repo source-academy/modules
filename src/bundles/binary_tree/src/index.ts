@@ -40,9 +40,11 @@ export default class BinaryTreeModulePlugin extends BaseModulePlugin {
     return make_empty_tree_func();
   }
 
-  @moduleMethod([DataType.OPAQUE, DataType.LIST, DataType.LIST], DataType.PAIR)
+  // The entry is DataType.ANY, not OPAQUE: it may be any value, and a number or string is not an
+  // OPAQUE handle.
+  @moduleMethod([DataType.ANY, DataType.LIST, DataType.LIST], DataType.PAIR)
   async* make_tree(
-    value: TypedValue<DataType.OPAQUE>,
+    value: TypedValue<DataType.ANY>,
     left: TypedValue<DataType.LIST>,
     right: TypedValue<DataType.LIST>
   ): AsyncGenerator<void, TypedValue<DataType.PAIR>, unknown> {
@@ -64,8 +66,8 @@ export default class BinaryTreeModulePlugin extends BaseModulePlugin {
     return { type: DataType.BOOLEAN, value: is_empty_tree_func(value) };
   }
 
-  @moduleMethod([DataType.LIST], DataType.OPAQUE)
-  async* entry(t: TypedValue<DataType.LIST>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, unknown> {
+  @moduleMethod([DataType.LIST], DataType.ANY)
+  async* entry(t: TypedValue<DataType.LIST>): AsyncGenerator<void, TypedValue<DataType.ANY>, unknown> {
     return await entry_func(this.evaluator, t);
   }
 
