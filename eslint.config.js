@@ -447,8 +447,14 @@ export default defineConfig(
     rules: {
       // Rule doesn't work properly on CI
       '@sourceacademy/throw-runtime-error': process.env.CI ? 'off' : ['error', {
-        // Conductor's own protocol-level errors, unrelated to js-slang's RuntimeSourceError
-        ignoredNames: ['EvaluatorTypeError', 'EvaluatorRuntimeError', 'EvaluatorParameterTypeError']
+        // Conductor's own protocol-level errors, unrelated to js-slang's RuntimeSourceError.
+        // ProgramError (robot_simulation) is the same idea for a bundle-internal error that never
+        // crosses the evaluator boundary at all (caught within the same bundle - see
+        // World.step()'s catch block in src/bundles/robot_simulation) - it used to satisfy this
+        // rule by genuinely extending js-slang's RuntimeSourceError, which pulled a real
+        // `require('js-slang/dist/errors/base')` into that bundle's build output even though
+        // robot_simulation no longer runs under js-slang (see ProgramError's own doc comment).
+        ignoredNames: ['EvaluatorTypeError', 'EvaluatorRuntimeError', 'EvaluatorParameterTypeError', 'ProgramError']
       }]
     }
   },

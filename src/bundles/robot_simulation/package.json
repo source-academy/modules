@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@sourceacademy/conductor": "catalog:",
     "@sourceacademy/modules-lib": "workspace:^",
+    "@sourceacademy/py-slang": "^1.1.0",
     "es-toolkit": "^1.44.0",
     "js-slang": "catalog:",
     "three": "^0.186.0"
@@ -11,6 +13,7 @@
   "devDependencies": {
     "@dimforge/rapier3d-compat": "^0.11.2",
     "@sourceacademy/modules-buildtools": "workspace:^",
+    "@sourceacademy/modules-testplugin": "workspace:^",
     "@types/three": "^0.186.0",
     "typescript": "catalog:"
   },

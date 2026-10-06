@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { ControllerMap, Physics, Renderer } from '../../../../../engine';
+import { ControllerMap, Physics } from '../../../../../engine';
+import type { SceneRegistry } from '../../../../../engine/Render/SceneRegistry';
 import { ChassisWrapper } from '../../../components/Chassis';
 import { Mesh } from '../../../components/Mesh';
 import { Motor } from '../../../components/Motor';
@@ -19,7 +20,6 @@ vi.mock(import('../../../sensor/UltrasonicSensor'), () => ({ UltrasonicSensor: v
 vi.mock(import('../../../../../engine'), () => {
   return {
     Physics: vi.fn(),
-    Renderer: vi.fn(),
     ControllerMap: vi.fn(class {
       add = vi.fn();
     })
@@ -28,18 +28,18 @@ vi.mock(import('../../../../../engine'), () => {
 
 describe(createDefaultEv3, () => {
   const mockPhysics = new Physics({ gravity:{ x:0, y:-1, z:0 }, timestep: 0.01 });
-  const mockRenderer = vi.fn() as unknown as Renderer;
-  const mockConfig =ev3Config;
+  const mockRegistry = vi.fn() as unknown as SceneRegistry;
+  const mockConfig = ev3Config;
 
   it('should correctly create all components and return a controller map', () => {
-    createDefaultEv3(mockPhysics, mockRenderer, mockConfig);
+    createDefaultEv3(mockPhysics, mockRegistry, mockConfig);
 
-    expect(ChassisWrapper).toHaveBeenCalledWith(mockPhysics, mockRenderer, mockConfig.chassis);
-    expect(Mesh).toHaveBeenCalledWith(expect.any(ChassisWrapper), mockRenderer, mockConfig.mesh);
+    expect(ChassisWrapper).toHaveBeenCalledWith(mockPhysics, mockConfig.chassis);
+    expect(Mesh).toHaveBeenCalledWith(expect.any(ChassisWrapper), mockRegistry, mockConfig.mesh);
     expect(Wheel).toHaveBeenCalledTimes(4);
     expect(Motor).toHaveBeenCalledTimes(2);
-    expect(ColorSensor).toHaveBeenCalledWith(expect.any(ChassisWrapper), mockRenderer, mockConfig.colorSensor);
-    expect(UltrasonicSensor).toHaveBeenCalledWith(expect.any(ChassisWrapper), mockPhysics, mockRenderer, mockConfig.ultrasonicSensor);
+    expect(ColorSensor).toHaveBeenCalledWith(expect.any(ChassisWrapper), mockPhysics, mockConfig.colorSensor);
+    expect(UltrasonicSensor).toHaveBeenCalledWith(expect.any(ChassisWrapper), mockPhysics, mockConfig.ultrasonicSensor);
 
     expect(ControllerMap).toHaveBeenCalled();
   });

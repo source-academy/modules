@@ -1,17 +1,12 @@
 import * as THREE from 'three';
 
-import {
-  EntityFactory,
-  MeshFactory,
-  type Physics,
-  type Renderer,
-} from '../../engine';
+import { EntityFactory, type Physics } from '../../engine';
 import type {
   EntityCuboidOptions,
   RigidBodyType,
 } from '../../engine/Entity/EntityFactory';
 import type { Dimension, SimpleVector } from '../../engine/Math/Vector';
-import type { RenderCuboidOptions } from '../../engine/Render/helpers/MeshFactory';
+import type { SceneRegistry } from '../../engine/Render/SceneRegistry';
 
 export type CuboidConfig = {
   position: SimpleVector;
@@ -28,28 +23,27 @@ const noRotation = {
   w: 1,
 };
 
+/** `THREE.Color` accepts numbers/named strings/hex strings; the tab only ever gets a plain hex
+  string over the wire (a `THREE.Color` instance itself isn't cheaply serializable). */
+function toHexColor(color: number | string): string {
+  return `#${new THREE.Color(color).getHexString()}`;
+}
+
 export class Cuboid {
   physics: Physics;
-  render: Renderer;
   config: CuboidConfig;
 
-  constructor(physics: Physics, renderer: Renderer, config: CuboidConfig) {
+  constructor(physics: Physics, registry: SceneRegistry, config: CuboidConfig) {
     this.physics = physics;
-    this.render = renderer;
     this.config = config;
 
-    const renderCuboidOption: RenderCuboidOptions = {
-      orientation: {
-        position: config.position,
-        rotation: noRotation,
-      },
+    const handle = registry.add({
+      kind: 'cuboid',
       dimension: config.dimension,
-      color: new THREE.Color(config.color),
-      debug: false,
-    };
-
-    const mesh = MeshFactory.addCuboid(renderCuboidOption);
-    this.render.add(mesh);
+      color: toHexColor(config.color),
+    });
+    handle.position.copy(config.position);
+    handle.quaternion.copy(noRotation);
   }
 
   start() {
@@ -63,6 +57,7 @@ export class Cuboid {
       type: this.config.type,
     };
 
-    EntityFactory.addCuboid(this.physics, entityCuboidOption);
+    const entity = EntityFactory.addCuboid(this.physics, entityCuboidOption);
+    this.physics.registerColor(entity.getCollider(), toHexColor(this.config.color));
   }
 }

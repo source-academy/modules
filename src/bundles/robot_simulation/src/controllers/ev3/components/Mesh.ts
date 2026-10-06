@@ -1,10 +1,9 @@
 import * as THREE from 'three';
 
-import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import type { Controller, Renderer } from '../../../engine';
+import type { Controller } from '../../../engine';
 import type { Dimension, SimpleQuaternion, SimpleVector } from '../../../engine/Math/Vector';
 import type { PhysicsTimingInfo } from '../../../engine/Physics';
-import { loadGLTF } from '../../../engine/Render/helpers/GLTF';
+import type { SceneRegistry } from '../../../engine/Render/SceneRegistry';
 import type { ChassisWrapper } from './Chassis';
 
 export type MeshConfig = {
@@ -16,27 +15,32 @@ export type MeshConfig = {
 /**
  * This represents the mesh of the robot. In reality, the mesh could be part of the chassis,
  * but for the sake of clarity it is split into its own controller.
+ *
+ * The GLTF itself is no longer loaded here (worker code can't reach the network/DOM APIs
+ * `GLTFLoader` needs the same way it always could as ordinary main-thread code) - `registry.add`
+ * only allocates a transform handle and tells the tab, over the state channel, to load and
+ * position the real model. See SceneRegistry's doc comment.
  */
 export class Mesh implements Controller {
   chassisWrapper: ChassisWrapper;
-  render: Renderer;
+  registry: SceneRegistry;
   config: MeshConfig;
   offset: SimpleVector;
 
-  mesh: GLTF | null = null;
+  mesh: THREE.Object3D | null = null;
 
-  previousTranslation: SimpleVector | null= null;
+  previousTranslation: SimpleVector | null = null;
   previousRotation: SimpleQuaternion | null = null;
   currentTranslation: SimpleVector;
   currentRotation: SimpleQuaternion;
 
   constructor(
     chassisWrapper: ChassisWrapper,
-    render: Renderer,
+    registry: SceneRegistry,
     config: MeshConfig,
   ) {
     this.chassisWrapper = chassisWrapper;
-    this.render = render;
+    this.registry = registry;
     this.config = config;
     this.offset = {
       x: this.config?.offset?.x || 0,
@@ -44,13 +48,16 @@ export class Mesh implements Controller {
       z: this.config?.offset?.z || 0,
     };
     this.currentTranslation = this.chassisWrapper.config.orientation.position;
-    this.currentRotation = new THREE.Quaternion(0,0,0,1);
+    this.currentRotation = new THREE.Quaternion(0, 0, 0, 1);
   }
 
-  async start(): Promise<void> {
-    this.mesh = await loadGLTF(this.config.url, this.config.dimension);
-
-    this.render.add(this.mesh.scene);
+  start(): void {
+    this.mesh = this.registry.add({
+      kind: 'gltf',
+      url: this.config.url,
+      dimension: this.config.dimension,
+      offsetY: this.offset.y,
+    });
   }
 
   fixedUpdate(): void {
@@ -73,7 +80,7 @@ export class Mesh implements Controller {
     estimatedTranslation.y -= this.offset.y / 2;
     estimatedTranslation.z -= this.offset.z / 2;
 
-    this.mesh?.scene.position.copy(estimatedTranslation);
-    this.mesh?.scene.quaternion.copy(estimatedRotation);
+    this.mesh?.position.copy(estimatedTranslation);
+    this.mesh?.quaternion.copy(estimatedRotation);
   }
 }

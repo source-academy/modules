@@ -1,32 +1,12 @@
 import * as THREE from 'three';
 import { describe, expect, it as baseIt, vi } from 'vitest';
-import { Physics, Renderer } from '../../../../engine';
-import { loadGLTF } from '../../../../engine/Render/helpers/GLTF';
+import type { Physics } from '../../../../engine';
+import type { SceneRegistry } from '../../../../engine/Render/SceneRegistry';
 import { ev3Config } from '../../ev3/default/config';
 import { ChassisWrapper } from '../Chassis';
 import { Motor, type MotorConfig } from '../Motor';
 
-vi.mock(import('../../../../engine/Render/helpers/GLTF'), () => ({
-  loadGLTF: vi.fn().mockResolvedValue({
-    scene: {
-      position: {
-        copy: vi.fn(),
-      },
-      quaternion: {
-        copy: vi.fn(),
-      },
-      rotateX: vi.fn(),
-      rotateZ: vi.fn()
-    }
-  }),
-}));
-
-vi.mock(import('../../../../engine'), () => ({
-  Physics: vi.fn(),
-  Renderer: vi.fn().mockImplementation(() => ({
-    add: vi.fn(),
-  })),
-}) as any);
+vi.mock(import('../../../../engine/Entity/EntityFactory'));
 
 vi.mock(import('../Chassis'), () => ({
   ChassisWrapper: vi.fn(class {
@@ -36,7 +16,7 @@ vi.mock(import('../Chassis'), () => ({
       worldTranslation: vi.fn().mockReturnValue(new THREE.Vector3()),
       applyImpulse: vi.fn(),
       getMass: vi.fn().mockReturnValue(1),
-      getRotation: vi.fn(),
+      getRotation: vi.fn().mockReturnValue(new THREE.Quaternion()),
     });
   }),
 } as any));
@@ -44,7 +24,7 @@ vi.mock(import('../Chassis'), () => ({
 describe(Motor, () => {
   const it = baseIt
     .extend('mockPhysics', { applyImpulse: vi.fn() } as unknown as Physics)
-    .extend('mockRenderer', { add: vi.fn() } as unknown as Renderer)
+    .extend('mockRegistry', { add: vi.fn().mockReturnValue(new THREE.Object3D()) } as unknown as SceneRegistry)
     .extend('mockConfig', {
       displacement: { x: 1, y: 0, z: 0 },
       pid: {
@@ -57,20 +37,21 @@ describe(Motor, () => {
         dimension: { height: 1, width: 1, depth: 1 },
       },
     } as unknown as MotorConfig)
-    // @ts-expect-error Ignore ev3config errors
-    .extend('mockChassisWrapper', ({ mockPhysics, mockRenderer }) => new ChassisWrapper(mockPhysics, mockRenderer, ev3Config.motors[0]))
+    .extend('mockChassisWrapper', ({ mockPhysics }) => new ChassisWrapper(mockPhysics, ev3Config.chassis))
     .extend(
       'motor',
-      ({ mockChassisWrapper, mockConfig, mockPhysics, mockRenderer }) => new Motor(mockChassisWrapper, mockPhysics, mockRenderer, mockConfig )
+      ({ mockChassisWrapper, mockConfig, mockPhysics, mockRegistry }) => new Motor(mockChassisWrapper, mockPhysics, mockRegistry, mockConfig)
     );
 
-  it('should initialize correctly and load the mesh', async ({ motor, mockConfig, mockRenderer }) => {
-    await motor.start();
-    expect(loadGLTF).toHaveBeenCalledWith(
-      mockConfig.mesh.url,
-      mockConfig.mesh.dimension
-    );
-    expect(mockRenderer.add).toHaveBeenCalled();
+  it('should register a transform handle and load the mesh', ({ motor, mockConfig, mockRegistry }) => {
+    motor.start();
+    expect(mockRegistry.add).toHaveBeenCalledWith({
+      kind: 'gltf',
+      url: mockConfig.mesh.url,
+      dimension: mockConfig.mesh.dimension,
+      offsetY: 0,
+    });
+    expect(motor.mesh).toBeInstanceOf(THREE.Object3D);
   });
 
   it('sets motor velocity and schedules stop with distance', ({ motor }) => {
@@ -83,19 +64,22 @@ describe(Motor, () => {
     expect(mockChassisWrapper.getEntity().applyImpulse).toHaveBeenCalled();
   });
 
-  it('updates mesh', async ({ motor }) => {
-    await motor.start();
+  it('updates mesh', ({ motor }) => {
+    motor.start();
+    const positionCopy = vi.spyOn(motor.mesh!.position, 'copy');
+    const quaternionCopy = vi.spyOn(motor.mesh!.quaternion, 'copy');
     motor.update({ frameDuration: 1 } as any);
 
-    expect(motor.mesh!.scene.position.copy).toBeCalled();
-    expect(motor.mesh!.scene.quaternion.copy).toBeCalled();
+    expect(positionCopy).toBeCalled();
+    expect(quaternionCopy).toBeCalled();
   });
 
-  it('rotates the mesh if on the left side', async ({ motor }) => {
+  it('rotates the mesh if on the left side', ({ motor }) => {
     motor.wheelSide = 'left';
-    await motor.start();
+    motor.start();
+    const rotateZ = vi.spyOn(motor.mesh!, 'rotateZ');
     motor.update({ frameDuration: 1 } as any);
 
-    expect(motor.mesh!.scene.rotateZ).toHaveBeenCalledOnce();
+    expect(rotateZ).toHaveBeenCalledOnce();
   });
 });

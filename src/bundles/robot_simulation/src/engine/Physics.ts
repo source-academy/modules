@@ -1,5 +1,5 @@
 import rapier from '@dimforge/rapier3d-compat';
-import { GeneralRuntimeError } from '@sourceacademy/modules-lib/errors';
+import { EvaluatorRuntimeError } from '@sourceacademy/conductor/common';
 import type * as THREE from 'three';
 
 import { TypedEventTarget } from './Core/Events';
@@ -49,12 +49,29 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
   configuration: PhysicsConfig;
   internals: PhysicsInternals;
 
+  /**
+   * Surface colors keyed by rapier collider handle - populated by Cuboid when it registers a
+   * physical surface (see Cuboid.ts). Lets the (now raycast-based, worker-safe) ColorSensor
+   * answer "what color is directly below the sensor" without any GPU rendering - see
+   * ColorSensor.ts's doc comment for why the pre-migration camera-render approach couldn't move
+   * into the worker unchanged.
+   */
+  private readonly colliderColors = new Map<number, string>();
+
   constructor(configuration: PhysicsConfig) {
     super();
     this.configuration = configuration;
     this.RAPIER = rapier;
 
     this.internals = { initialized: false };
+  }
+
+  registerColor(collider: rapier.Collider, color: string): void {
+    this.colliderColors.set(collider.handle, color);
+  }
+
+  getColor(collider: rapier.Collider): string | undefined {
+    return this.colliderColors.get(collider.handle);
   }
 
   async start() {
@@ -75,7 +92,7 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
 
   createRigidBody(rigidBodyDesc: rapier.RigidBodyDesc): rapier.RigidBody {
     if (this.internals.initialized === false) {
-      throw new GeneralRuntimeError("Physics engine hasn't been initialized yet");
+      throw new EvaluatorRuntimeError("Physics engine hasn't been initialized yet");
     }
 
     return this.internals.world.createRigidBody(rigidBodyDesc);
@@ -86,7 +103,7 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
     rigidBody: rapier.RigidBody,
   ): rapier.Collider {
     if (this.internals.initialized === false) {
-      throw new GeneralRuntimeError("Physics engine hasn't been initialized yet");
+      throw new EvaluatorRuntimeError("Physics engine hasn't been initialized yet");
     }
     return this.internals.world.createCollider(colliderDesc, rigidBody);
   }
@@ -99,9 +116,10 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
   ): {
     distance: number;
     normal: SimpleVector;
+    collider: rapier.Collider;
   } | null {
     if (this.internals.initialized === false) {
-      throw new GeneralRuntimeError("Physics engine hasn't been initialized yet");
+      throw new EvaluatorRuntimeError("Physics engine hasn't been initialized yet");
     }
 
     const ray = new this.RAPIER.Ray(globalPosition, globalDirection);
@@ -125,12 +143,13 @@ export class Physics extends TypedEventTarget<PhysicsEventMap> {
     return {
       distance: result.toi,
       normal: result.normal,
+      collider: result.collider,
     };
   }
 
   step(timing: FrameTimingInfo): PhysicsTimingInfo {
     if (this.internals.initialized === false) {
-      throw new GeneralRuntimeError("Physics engine hasn't been initialized yet");
+      throw new EvaluatorRuntimeError("Physics engine hasn't been initialized yet");
     }
 
     const maxFrameTime = 0.05;

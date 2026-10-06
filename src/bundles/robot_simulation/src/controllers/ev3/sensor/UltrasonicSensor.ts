@@ -1,8 +1,6 @@
-import * as THREE from 'three';
 import { vec3 } from '../../../engine/Math/Convert';
 import type { SimpleVector } from '../../../engine/Math/Vector';
 import type { Physics } from '../../../engine/Physics';
-import type { Renderer } from '../../../engine/Render/Renderer';
 import type { ChassisWrapper } from '../components/Chassis';
 import type { Sensor } from './types';
 
@@ -12,33 +10,26 @@ export type UltrasonicSensorConfig = {
   debug: boolean;
 };
 
+/** The pre-migration debug arrow is dropped - see Chassis.ts's doc comment. Sensing itself
+  (a physics raycast) was already worker-safe and is unchanged. */
 export class UltrasonicSensor implements Sensor<number> {
   chassisWrapper: ChassisWrapper;
   physics: Physics;
-  displacement: THREE.Vector3;
-  direction: THREE.Vector3;
+  displacement: ReturnType<typeof vec3>;
+  direction: ReturnType<typeof vec3>;
   distanceSensed: number = 0;
-  render: Renderer;
   config: UltrasonicSensorConfig;
-  debugArrow: THREE.ArrowHelper;
 
   constructor(
     chassis: ChassisWrapper,
     physics: Physics,
-    render: Renderer,
     config: UltrasonicSensorConfig,
   ) {
     this.chassisWrapper = chassis;
     this.physics = physics;
-    this.render = render;
     this.displacement = vec3(config.displacement);
     this.direction = vec3(config.direction);
     this.config = config;
-
-    // Debug arrow
-    this.debugArrow = new THREE.ArrowHelper();
-    this.debugArrow.visible = false;
-    this.render.add(this.debugArrow);
   }
 
   sense(): number {
@@ -58,12 +49,6 @@ export class UltrasonicSensor implements Sensor<number> {
         .getCollider(),
     );
 
-    if (this.config.debug) {
-      this.debugArrow.visible = true;
-      this.debugArrow.position.copy(globalDisplacement);
-      this.debugArrow.setDirection(globalDirection.normalize());
-    }
-
     if (result === null) {
       return;
     }
@@ -72,5 +57,4 @@ export class UltrasonicSensor implements Sensor<number> {
 
     this.distanceSensed = wheelDistance;
   }
-
 }
