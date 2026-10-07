@@ -207,9 +207,8 @@ describe(RobotSimulationModulePlugin, () => {
       expect(stateChannel.send).toHaveBeenCalledWith({ kind: 'editor-code', code: 'x = 1' });
     });
 
-    test('replays the latest program text to a tab that connects afterwards', async () => {
+    test('replays the program text to a tab that connects afterwards', async () => {
       const { plugin, stateChannel } = makePlugin();
-      await runAsyncGenerator((plugin as any).createPythonCSE(stringValue('x = 1')));
       await runAsyncGenerator((plugin as any).createPythonCSE(stringValue('x = 2')));
       stateChannel.send.mockClear();
 
@@ -229,6 +228,15 @@ describe(RobotSimulationModulePlugin, () => {
       (plugin as any).__runReplCode('y = 1');
 
       expect(program.isStopped).toBe(true);
+    });
+
+    test('rejects a second call, since a robot runs one program at a time', async () => {
+      const { plugin, stateChannel } = makePlugin();
+      await runAsyncGenerator((plugin as any).createPythonCSE(stringValue('x = 1')));
+      stateChannel.send.mockClear();
+
+      await expect(runAsyncGenerator((plugin as any).createPythonCSE(stringValue('x = 2')))).rejects.toThrow();
+      expect(stateChannel.send).not.toHaveBeenCalled();
     });
 
     test('sends nothing before createPythonCSE is called', () => {

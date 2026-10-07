@@ -115,7 +115,7 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
   /** The latest control program text `createPythonCSE` was given, replayed to a tab that connects
     after setup ran - see EditorCodeMessage. */
   private __editorCode: string | undefined;
-  /** The `Program` `createPythonCSE` made, if any - stopped by `__runReplCode` so that running code
+  /** The one `Program` `createPythonCSE` may make - stopped by `__runReplCode` so that running code
     from the tab's editor replaces it rather than driving the robot alongside it. */
   private __setupProgram: Program | undefined;
 
@@ -425,6 +425,9 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
    * whole `ev3_*` API directly by name; no `import` is needed (and none is possible - see
    * pythonRuntime.ts). `print(...)` goes to the simulation's Robot Console panel.
    *
+   * A robot runs one program at a time, so this may only be called once per simulation - a second
+   * call throws rather than leaving two programs driving the same motors.
+   *
    * Also shows `code` in the RobotSimulation tab's embedded editor (overwriting whatever it held),
    * so the editor shows what is running. Running code from that editor afterwards replaces this
    * program.
@@ -433,6 +436,9 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
    * @category Control Program
    */
   async* createPythonCSE(code: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
+    if (this.__setupProgram !== undefined) {
+      throw new EvaluatorRuntimeError('createPythonCSE: a robot runs one program at a time, so it can only be called once per simulation');
+    }
     const pyContext = createRobotPythonContext(this.__ev3Fns, () => this.__getWorldFromContext());
     const program = new Program(code.value, undefined, pyContext);
     this.__setupProgram = program;
