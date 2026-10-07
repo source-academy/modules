@@ -165,7 +165,7 @@ describe(RobotSimulationModulePlugin, () => {
       expect((plugin as any).__state.replPyContext).toBeDefined();
     });
 
-    test('throws if the world has not been initialised yet', async () => {
+    test('throws if the world has not been initialised yet', () => {
       const { plugin } = makePlugin();
       expect(() => (plugin as any).__runReplCode('ev3_pause(1)')).toThrow();
     });
