@@ -200,4 +200,46 @@ describe(RobotSimulationModulePlugin, () => {
       expect(firstProgram.isPaused).toBe(false);
     });
   });
+
+  describe('createPythonCSE', () => {
+    test('sends the control program text to the tab so its editor shows what is running', async () => {
+      const { plugin, stateChannel } = makePlugin();
+      await runAsyncGenerator((plugin as any).createPythonCSE(stringValue('x = 1')));
+
+      expect(stateChannel.send).toHaveBeenCalledWith({ kind: 'editor-code', code: 'x = 1' });
+    });
+
+    test('replays the latest program text to a tab that connects afterwards', async () => {
+      const { plugin, stateChannel } = makePlugin();
+      await runAsyncGenerator((plugin as any).createPythonCSE(stringValue('x = 1')));
+      await runAsyncGenerator((plugin as any).createPythonCSE(stringValue('x = 2')));
+      stateChannel.send.mockClear();
+
+      const onMessage = stateChannel.subscribe.mock.calls[0][0];
+      onMessage({ kind: 'request-replay' });
+
+      expect(stateChannel.send).toHaveBeenCalledWith({ kind: 'editor-code', code: 'x = 2' });
+    });
+
+    test('running code from the tab afterwards replaces the program it made', async () => {
+      const { plugin } = makePlugin();
+      await runAsyncGenerator((plugin as any).init_default_simulation());
+      await runAsyncGenerator((plugin as any).createPythonCSE(stringValue('x = 1')));
+      const program = (plugin as any).__setupProgram;
+      expect(program.isStopped).toBe(false);
+
+      await runAsyncGenerator((plugin as any).run_robot_code(stringValue('y = 1')));
+
+      expect(program.isStopped).toBe(true);
+    });
+
+    test('sends nothing before createPythonCSE is called', () => {
+      const { stateChannel } = makePlugin();
+      const onMessage = stateChannel.subscribe.mock.calls[0][0];
+      stateChannel.send.mockClear();
+      onMessage({ kind: 'request-replay' });
+
+      expect(stateChannel.send).not.toHaveBeenCalledWith(expect.objectContaining({ kind: 'editor-code' }));
+    });
+  });
 });

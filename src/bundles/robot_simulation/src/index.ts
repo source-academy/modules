@@ -113,6 +113,12 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
   private readonly __sceneRegistry = new SceneRegistry();
   private readonly __ev3Fns: Ev3Functions;
   private __tabLoaded = false;
+  /** The latest control program text `createPythonCSE` was given, replayed to a tab that connects
+    after setup ran - see EditorCodeMessage. */
+  private __editorCode: string | undefined;
+  /** The `Program` `createPythonCSE` made, if any - stopped by `__runReplCode` so that running code
+    from the tab's editor replaces it rather than driving the robot alongside it. */
+  private __setupProgram: Program | undefined;
 
   /** What `saveToContext`/the `ev3_*` API read/write - one plugin instance per run, so this
     replaces the pre-migration `context.moduleContexts.robot_simulation.state`. */
@@ -155,6 +161,9 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     this.__stateChannel.subscribe(message => {
       if (message.kind === 'request-replay') {
         this.__sceneRegistry.replaySpawns();
+        if (this.__editorCode !== undefined) {
+          this.__stateChannel.send({ kind: 'editor-code', code: this.__editorCode });
+        }
       }
     });
   }
@@ -417,12 +426,19 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
    * whole `ev3_*` API directly by name; no `import` is needed (and none is possible - see
    * pythonRuntime.ts). `print(...)` goes to the simulation's Robot Console panel.
    *
+   * Also shows `code` in the RobotSimulation tab's embedded editor (overwriting whatever it held),
+   * so the editor shows what is running. Running code from that editor afterwards replaces this
+   * program.
+   *
    * @param code The robot's control program, written in Python (SICPy §4).
    * @category Control Program
    */
   async* createPythonCSE(code: TypedValue<DataType.CONST_STRING>): AsyncGenerator<void, TypedValue<DataType.OPAQUE>, undefined> {
     const pyContext = createRobotPythonContext(this.__ev3Fns, () => this.__getWorldFromContext());
     const program = new Program(code.value, undefined, pyContext);
+    this.__setupProgram = program;
+    this.__editorCode = code.value;
+    this.__stateChannel.send({ kind: 'editor-code', code: code.value });
     return await this.evaluator.opaque_make(program, true);
   }
 
@@ -685,6 +701,7 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     const pyContext = this.__state.replPyContext as ReturnType<typeof createRobotPythonContext>;
 
     (this.__state.replProgram as Program | undefined)?.stop();
+    this.__setupProgram?.stop();
 
     const program = new Program(code, undefined, pyContext);
     world.addLiveController(program);

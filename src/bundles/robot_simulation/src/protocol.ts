@@ -55,13 +55,24 @@ export interface StateSnapshotMessage {
   buffer: ArrayBuffer;
 }
 
+/**
+ * Module -> tab: the source text of the robot's control program, sent by `createPythonCSE` so the
+ * tab's embedded editor shows what is actually running. Overwrites whatever the editor held
+ * (including text it restored from `localStorage`). The module remembers the latest one and
+ * replays it on `request-replay`, like entity spawns, for a tab that connects after setup ran.
+ */
+export interface EditorCodeMessage {
+  kind: 'editor-code';
+  code: string;
+}
+
 /** Tab -> module: replay every entity spawned so far (a tab that just mounted / reconnected),
   mirrors csg/rune's `{ type: 'request' }`. */
 export interface RequestReplayMessage {
   kind: 'request-replay';
 }
 
-export type StateChannelMessage = EntitySpawnedMessage | StateSnapshotMessage | RequestReplayMessage;
+export type StateChannelMessage = EntitySpawnedMessage | StateSnapshotMessage | EditorCodeMessage | RequestReplayMessage;
 
 export type WorldStateName = 'unintialized' | 'loading' | 'ready' | 'running' | 'error';
 
