@@ -15,16 +15,16 @@
  *
  * `from robot_simulation import ...` still only works for the *setup* program, not the robot's own
  * control program: whether that code arrives as a string literal (`createPythonCSE`) or from the
- * `repl` tab (`run_robot_code`), it's evaluated by a private, hand-built py-slang `Context` (see
+ * RobotSimulation tab's embedded editor, it's evaluated by a private, hand-built py-slang `Context` (see
  * controllers/program/pythonRuntime.ts) stepped in lockstep with the physics tick, entirely
  * separate from Conductor's own evaluator/module-loading machinery - there is no
  * `ModuleLoaderRunnerPlugin` inside that shadow context for an `import` to resolve through. The
  * `ev3_*` API is available to it directly by name instead (no import).
  *
- * The recommended student-facing shape is: `init_default_simulation()` + `add_wall`/`add_paper`
- * calls in the main pane (one-time scene setup), then `set_evaluator(run_robot_code)` (from the
- * `repl` module) to hand the robot's own code to a separate, rerunnable REPL tab - see
- * `run_robot_code`'s doc comment.
+ * The robot's own code can be supplied two ways: `addControllerToWorld(createPythonCSE(code), world)`
+ * in a setup built with `init_simulation` (the code runs as soon as the simulation starts, and is
+ * shown in the tab's embedded editor), or typed into that embedded editor and run with its Run
+ * button - the way to go after `init_default_simulation()`, which takes no control program.
  *
  * @module robot_simulation
  * @author Joel Chan
@@ -92,7 +92,6 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     'add_wall',
     'add_paper',
     'add_color_patch',
-    'run_robot_code',
     'ev3_motorA',
     'ev3_motorB',
     'ev3_motorC',
@@ -142,9 +141,9 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
           this.__runReplCode(code);
         } catch (error) {
           // No live World yet (e.g. the embedded editor's Run button was clicked before the main
-          // program ran) - there is no evaluator/caller boundary here to surface this to, unlike
-          // run_robot_code's own throw (see its doc comment). The World-state readout already
-          // shown in this same tab makes "nothing is running yet" obvious without one.
+          // program ran) - there is no evaluator/caller boundary here to surface this to. The
+          // World-state readout already shown in this same tab makes "nothing is running yet"
+          // obvious without one.
           console.warn('robot_simulation: could not run code from the RobotSimulation tab\'s embedded editor', error);
         }
       },
@@ -503,9 +502,9 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
   /**
    * The boilerplate-free alternative to `init_simulation`: builds default physics, a default
    * world, a default floor and a default EV3 (the same defaults `createPhysics`/`createFloor`/
-   * `createEv3` use), and starts the simulation - all in one call. Takes no control program: pair
-   * this with `run_robot_code`/the `repl` module (see that method's doc comment) to drive the EV3
-   * from a separate, rerunnable REPL tab instead of a control-code string baked into setup.
+   * `createEv3` use), and starts the simulation - all in one call. Takes no control program: drive
+   * the EV3 by typing code into the RobotSimulation tab's embedded editor and pressing Run, instead
+   * of a control-code string baked into setup.
    *
    * For a customised World (non-default physics/gravity, a control program written in
    * Source/Scheme instead of Python), use `createPhysics`/`createWorld`/`createWall`/
@@ -648,49 +647,19 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
   }
 
   /**
-   * The `repl`-module hook: pass this function itself to `repl`'s `set_evaluator`, and the `repl`
-   * tab it opens will call it with whatever the student typed there each time they hit Run -
-   * `code` is exactly what `createPythonCSE`/`init_default_simulation`'s old `control_code`
-   * argument used to be, just supplied interactively instead of baked into the setup program.
+   * Runs `code` as the robot's control program - the `$runReplCode` handler (the RobotSimulation
+   * tab's own embedded mini-editor - see protocol.ts's doc comment on `RobotSimulationModuleRpc`).
    *
    * Each call adds a fresh `Program` controller (via `World.addLiveController`, since the world is
    * already running by this point) rather than editing one in place, but all calls share one
    * `pyContext` (lazily created on the first call, cached in `__state`) - `runPythonECEvaluator`
    * re-analyzes each run against that same context's global environment (see evaluate.ts), so
-   * variables and function defs a student's REPL code creates in one run are still visible in the
-   * next, the way a REPL is expected to behave. The previous run's `Program` is `stop()`'d first so
-   * it can't keep pumping its now-superseded generator against the same shared `pyContext` (see
-   * `Program.stop`'s doc comment).
+   * variables and function defs one run creates are still visible in the next, the way a REPL is
+   * expected to behave. The previous run's `Program`, and the one `createPythonCSE` made, are
+   * `stop()`'d first so they can't keep driving the robot (see `Program.stop`'s doc comment).
    *
-   * Requires `init_default_simulation`/`init_simulation` to have already been called - there must
-   * be a live World for the robot code to act on.
-   *
-   * Also calls `$focusTab` on success, asking the RobotSimulation tab to bring itself to the
-   * front - but the frontend's side-content host only actually honours that the *first* time any
-   * tab is shown in a session (see `SideContentManager.showTab`'s "don't yank the student away from
-   * wherever they navigated" guard), so in practice this rarely does anything once the student has
-   * looked at any tab at all. A student who wants the 3D view and the code they're driving the
-   * robot with on screen *together*, without fighting that guard, should use the RobotSimulation
-   * tab's own embedded editor instead (`$runReplCode` in protocol.ts) - same effect as this
-   * function, just triggered from inside the tab that's already showing the 3D view, so there's
-   * nothing to focus/switch away from in the first place.
-   * @param code The robot's control program, written in Python (SICPy §4).
-   * @category Control Program
-   */
-  async* run_robot_code(
-    code: TypedValue<DataType.CONST_STRING>
-  ): AsyncGenerator<void, TypedValue<DataType.VOID>, undefined> {
-    this.__runReplCode(code.value);
-    return { type: DataType.VOID, value: undefined };
-  }
-
-  /**
-   * Shared by `run_robot_code` (the `repl`-module hook, above) and `$runReplCode` (the
-   * RobotSimulation tab's own embedded mini-editor - see protocol.ts's doc comment on
-   * `RobotSimulationModuleRpc`) - same effect either way, just reached from two different callers.
-   * Throws (via `__getWorldFromContext`) if no World exists yet; `run_robot_code` lets that
-   * propagate (repl displays it as an error), while the `$runReplCode` RPC handler catches and logs
-   * it instead, since there is no evaluator/caller boundary there to surface a throw to.
+   * Throws (via `__getWorldFromContext`) if no World exists yet; the `$runReplCode` RPC handler
+   * catches and logs it, since there is no evaluator/caller boundary there to surface a throw to.
    */
   private __runReplCode(code: string): void {
     const world = this.__getWorldFromContext();
@@ -706,8 +675,6 @@ export default class RobotSimulationModulePlugin extends BaseModulePlugin {
     const program = new Program(code, undefined, pyContext);
     world.addLiveController(program);
     this.__state.replProgram = program;
-
-    this.__tabRpc.$focusTab();
   }
 
   // [EV3]
@@ -821,7 +788,6 @@ attachModuleMethod(RobotSimulationModulePlugin, 'init_default_simulation', [], D
 attachModuleMethod(RobotSimulationModulePlugin, 'add_wall', [DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.VOID);
 attachModuleMethod(RobotSimulationModulePlugin, 'add_paper', [DataType.CONST_STRING, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.VOID);
 attachModuleMethod(RobotSimulationModulePlugin, 'add_color_patch', [DataType.CONST_STRING, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER, DataType.NUMBER], DataType.VOID);
-attachModuleMethod(RobotSimulationModulePlugin, 'run_robot_code', [DataType.CONST_STRING], DataType.VOID);
 attachModuleMethod(RobotSimulationModulePlugin, 'ev3_motorA', [], DataType.OPAQUE);
 attachModuleMethod(RobotSimulationModulePlugin, 'ev3_motorB', [], DataType.OPAQUE);
 attachModuleMethod(RobotSimulationModulePlugin, 'ev3_motorC', [], DataType.OPAQUE);

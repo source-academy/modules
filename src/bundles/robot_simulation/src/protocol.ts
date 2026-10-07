@@ -92,10 +92,6 @@ export interface RobotSimulationTabRpc {
   $consoleLog(message: string, level: 'error' | 'source'): void;
   $worldStateChanged(state: WorldStateName): void;
   $sensorSnapshot(snapshot: SensorSnapshot): void;
-  /** Brings the RobotSimulation tab to the front - sent once `run_robot_code` successfully hands a
-   * fresh run to the physics loop, so a student driving the robot from the `repl` tab lands back
-    on the 3D view to watch it, without having to switch tabs manually. */
-  $focusTab(): void;
 }
 
 /**
@@ -109,8 +105,8 @@ export interface RobotSimulationTabRpc {
  * render whatever a plugin wants, including its own split "3D view + code editor" layout in one.
  */
 export interface RobotSimulationModuleRpc {
-  /** Same effect as `run_robot_code` (see index.ts) - runs `code` as the robot's control program
-   * against the shared REPL `pyContext`, replacing whatever the previous run left ticking. Silently
+  /** Runs `code` as the robot's control program against the shared REPL `pyContext`, replacing
+   * whatever the previous run (or the `createPythonCSE` program) left ticking. Silently
    * a no-op (logged, not thrown - there is no caller/evaluator boundary here to catch or display a
    * throw) if no World exists yet (the embedded editor's Run button was clicked before the main
     program set one up). */

@@ -145,15 +145,15 @@ describe(RobotSimulationModulePlugin, () => {
     });
   });
 
-  describe('run_robot_code', () => {
+  describe('running code from the tab ($runReplCode)', () => {
     test('drives the shared robot Python context across repeated calls, sharing state between runs', async () => {
       const { plugin } = makePlugin();
       await runAsyncGenerator((plugin as any).init_default_simulation());
 
-      await runAsyncGenerator((plugin as any).run_robot_code(stringValue('x = 1')));
+      (plugin as any).__runReplCode('x = 1');
       const firstProgram = (plugin as any).__state.replProgram;
 
-      await runAsyncGenerator((plugin as any).run_robot_code(stringValue('y = x + 1')));
+      (plugin as any).__runReplCode('y = x + 1');
       const secondProgram = (plugin as any).__state.replProgram;
 
       // A fresh Program per call...
@@ -167,9 +167,7 @@ describe(RobotSimulationModulePlugin, () => {
 
     test('throws if the world has not been initialised yet', async () => {
       const { plugin } = makePlugin();
-      await expect(
-        runAsyncGenerator((plugin as any).run_robot_code(stringValue('ev3_pause(1)')))
-      ).rejects.toThrow();
+      expect(() => (plugin as any).__runReplCode('ev3_pause(1)')).toThrow();
     });
 
     test('ev3_pause() pauses the currently-running Program, not a stale one from an earlier run', async () => {
@@ -179,13 +177,13 @@ describe(RobotSimulationModulePlugin, () => {
       // First run: a Program that finishes immediately and is left behind, stopped, in
       // world.controllers.controllers - exactly what a real student's first REPL/embedded-editor
       // Run leaves behind once they move on to a second one.
-      await runAsyncGenerator((plugin as any).run_robot_code(stringValue('x = 1')));
+      (plugin as any).__runReplCode('x = 1');
       const firstProgram = (plugin as any).__state.replProgram;
 
       // Second run calls ev3_pause() itself - if ev3_pause found the *first* Program with a
       // matching name (the bug this guards against), it would pause a dead, already-stopped
       // Program that no longer affects anything, leaving this run's own isPaused false forever.
-      await runAsyncGenerator((plugin as any).run_robot_code(stringValue('ev3_pause(1000000)')));
+      (plugin as any).__runReplCode('ev3_pause(1000000)');
       const secondProgram = (plugin as any).__state.replProgram;
 
       // Drive the second run's Python code far enough to actually execute the ev3_pause() call
@@ -228,7 +226,7 @@ describe(RobotSimulationModulePlugin, () => {
       const program = (plugin as any).__setupProgram;
       expect(program.isStopped).toBe(false);
 
-      await runAsyncGenerator((plugin as any).run_robot_code(stringValue('y = 1')));
+      (plugin as any).__runReplCode('y = 1');
 
       expect(program.isStopped).toBe(true);
     });

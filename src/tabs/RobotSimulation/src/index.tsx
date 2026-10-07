@@ -465,16 +465,10 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
     this.__setState({ sensors: snapshot });
   }
 
-  $focusTab(): void {
-    this.__tabService.showTab(ROBOT_SIMULATION_TAB_ID);
-  }
-
   /**
    * Called by the embedded mini-editor's Run button (see `RobotSimulationView_`) - sends the
-   * student's typed code to the module's `$runReplCode` (same effect as `run_robot_code`/the
-   * `repl` module's Run button, just from an editor that lives right next to the 3D view instead of
-   * a separate tab - see protocol.ts's doc comment on `RobotSimulationModuleRpc` for why this
-   * exists at all). Fire-and-forget: there's no return value to wait on, and any problem running
+   * student's typed code to the module's `$runReplCode` (see protocol.ts's doc comment on
+   * `RobotSimulationModuleRpc` for why the editor lives right next to the 3D view). Fire-and-forget: there's no return value to wait on, and any problem running
    * the code shows up in this same tab's own Robot Console (routed via `$consoleLog`) rather than
     coming back through this call.
    */
