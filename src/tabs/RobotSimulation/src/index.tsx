@@ -28,6 +28,11 @@ interface ViewState {
   worldState: WorldStateName;
   sensors: SensorSnapshot | undefined;
   logs: readonly LogEntry[];
+  /**
+   * Control-program text pushed by the module (`createPythonCSE`); `version` bumps on every push
+   * so the embedded editor can tell a repeat of identical text from no update.
+   */
+  presetCode: { code: string, version: number } | undefined;
 }
 
 const MAX_LOGS = 200;
@@ -131,6 +136,7 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
     worldState: 'unintialized',
     sensors: undefined,
     logs: [],
+    presetCode: undefined,
   };
 
   constructor(_conduit: IConduit, [controlChannel, stateChannel]: IChannel<any>[], tabService: ITabService) {
@@ -153,6 +159,8 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
         this.__spawnEntity(message.id, message.descriptor);
       } else if (message.kind === 'state-snapshot') {
         this.__applySnapshot(message.buffer);
+      } else if (message.kind === 'editor-code') {
+        this.__presetEditorCode(message.code);
       }
     });
     // A tab that mounts after the module has already spawned entities needs the backlog replayed
@@ -203,6 +211,20 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
   private __setState(patch: Partial<ViewState>): void {
     this.__state = { ...this.__state, ...patch };
     this.__emit();
+  }
+
+  /**
+   * The module's control program overwrites whatever the embedded editor held, including text
+   * it would restore from `localStorage` - so the cache is written here, not only by the editor,
+   * in case the editor has not mounted yet.
+   */
+  private __presetEditorCode(code: string): void {
+    try {
+      window.localStorage.setItem(EMBEDDED_EDITOR_CODE_STORAGE_KEY, code);
+    } catch {
+      // Best-effort, like the editor's own saves.
+    }
+    this.__setState({ presetCode: { code, version: (this.__state.presetCode?.version ?? 0) + 1 } });
   }
 
   private __spawnEntity(id: number, descriptor: EntityDescriptor): void {
@@ -443,16 +465,10 @@ export default class RobotSimulationTabPlugin implements IPlugin, RobotSimulatio
     this.__setState({ sensors: snapshot });
   }
 
-  $focusTab(): void {
-    this.__tabService.showTab(ROBOT_SIMULATION_TAB_ID);
-  }
-
   /**
    * Called by the embedded mini-editor's Run button (see `RobotSimulationView_`) - sends the
-   * student's typed code to the module's `$runReplCode` (same effect as `run_robot_code`/the
-   * `repl` module's Run button, just from an editor that lives right next to the 3D view instead of
-   * a separate tab - see protocol.ts's doc comment on `RobotSimulationModuleRpc` for why this
-   * exists at all). Fire-and-forget: there's no return value to wait on, and any problem running
+   * student's typed code to the module's `$runReplCode` (see protocol.ts's doc comment on
+   * `RobotSimulationModuleRpc` for why the editor lives right next to the 3D view). Fire-and-forget: there's no return value to wait on, and any problem running
    * the code shows up in this same tab's own Robot Console (routed via `$consoleLog`) rather than
     coming back through this call.
    */
@@ -522,7 +538,7 @@ function RobotSimulationView_({
           ))}
         </div>
       </div>
-      <EmbeddedReplEditor onRunCode={onRunCode} height={sceneConfig.height + 150 + 24 * 2 + 16} />
+      <EmbeddedReplEditor onRunCode={onRunCode} preset={state.presetCode} height={sceneConfig.height + 150 + 24 * 2 + 16} />
     </div>
   );
 }
@@ -538,7 +554,11 @@ function RobotSimulationView_({
  * output history, background image, custom font size, `set_program_text` support, ...) - just
  * enough to type and run code, since output already has a home in this same tab's Robot Console.
  */
-function EmbeddedReplEditor({ onRunCode, height }: { onRunCode: (code: string) => void, height: number }) {
+function EmbeddedReplEditor({ onRunCode, preset, height }: {
+  onRunCode: (code: string) => void;
+  preset: ViewState['presetCode'];
+  height: number;
+}) {
   const [code, setCode] = useState(() => {
     try {
       return window.localStorage.getItem(EMBEDDED_EDITOR_CODE_STORAGE_KEY) ?? EMBEDDED_EDITOR_PLACEHOLDER;
@@ -546,6 +566,10 @@ function EmbeddedReplEditor({ onRunCode, height }: { onRunCode: (code: string) =
       return EMBEDDED_EDITOR_PLACEHOLDER;
     }
   });
+
+  useEffect(() => {
+    if (preset !== undefined) setCode(preset.code);
+  }, [preset]);
 
   const handleChange = (value: string) => {
     setCode(value);

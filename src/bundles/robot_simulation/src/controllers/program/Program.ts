@@ -50,7 +50,7 @@ export class Program implements Controller {
    * stashed here and re-thrown from the *next* `fixedUpdate` call instead, so it still surfaces
     to (and is convertible by) the same call site a synchronous evaluator would throw from. */
   private pendingError: unknown = null;
-  /** Set by `stop()` when a newer REPL run replaces this one - see `run_robot_code` (index.ts).
+  /** Set by `stop()` when a newer REPL run replaces this one - see `__runReplCode` (index.ts).
    * Prevents this Program from pumping its (now-superseded) generator any further; several
    * `Program`s can share one `pyContext` across REPL re-runs (that's how variables persist between
    * runs), and `runPythonECEvaluator` reassigns `context.control`/`context.stash` at the *start* of

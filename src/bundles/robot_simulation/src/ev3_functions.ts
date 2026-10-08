@@ -45,7 +45,7 @@ export function createEv3Functions(deps: {
     /**
      * Pauses for a period of time.
      *
-     * Every `run_robot_code`/`$runReplCode` call (each REPL/embedded-editor Run) adds a fresh
+     * Every `$runReplCode` call (each REPL/embedded-editor Run) adds a fresh
      * `Program` controller rather than replacing one in place - see `Program`'s doc comment - so
      * a World that has had more than one control-program run can have several `Program`s in
      * `world.controllers.controllers` at once, all sharing the same `name`

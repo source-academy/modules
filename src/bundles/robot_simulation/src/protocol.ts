@@ -55,13 +55,24 @@ export interface StateSnapshotMessage {
   buffer: ArrayBuffer;
 }
 
+/**
+ * Module -> tab: the source text of the robot's control program, sent by `createPythonCSE` so the
+ * tab's embedded editor shows what is actually running. Overwrites whatever the editor held
+ * (including text it restored from `localStorage`). The module remembers the latest one and
+ * replays it on `request-replay`, like entity spawns, for a tab that connects after setup ran.
+ */
+export interface EditorCodeMessage {
+  kind: 'editor-code';
+  code: string;
+}
+
 /** Tab -> module: replay every entity spawned so far (a tab that just mounted / reconnected),
   mirrors csg/rune's `{ type: 'request' }`. */
 export interface RequestReplayMessage {
   kind: 'request-replay';
 }
 
-export type StateChannelMessage = EntitySpawnedMessage | StateSnapshotMessage | RequestReplayMessage;
+export type StateChannelMessage = EntitySpawnedMessage | StateSnapshotMessage | EditorCodeMessage | RequestReplayMessage;
 
 export type WorldStateName = 'unintialized' | 'loading' | 'ready' | 'running' | 'error';
 
@@ -81,10 +92,6 @@ export interface RobotSimulationTabRpc {
   $consoleLog(message: string, level: 'error' | 'source'): void;
   $worldStateChanged(state: WorldStateName): void;
   $sensorSnapshot(snapshot: SensorSnapshot): void;
-  /** Brings the RobotSimulation tab to the front - sent once `run_robot_code` successfully hands a
-   * fresh run to the physics loop, so a student driving the robot from the `repl` tab lands back
-    on the 3D view to watch it, without having to switch tabs manually. */
-  $focusTab(): void;
 }
 
 /**
@@ -98,8 +105,8 @@ export interface RobotSimulationTabRpc {
  * render whatever a plugin wants, including its own split "3D view + code editor" layout in one.
  */
 export interface RobotSimulationModuleRpc {
-  /** Same effect as `run_robot_code` (see index.ts) - runs `code` as the robot's control program
-   * against the shared REPL `pyContext`, replacing whatever the previous run left ticking. Silently
+  /** Runs `code` as the robot's control program against the shared REPL `pyContext`, replacing
+   * whatever the previous run (or the `createPythonCSE` program) left ticking. Silently
    * a no-op (logged, not thrown - there is no caller/evaluator boundary here to catch or display a
    * throw) if no World exists yet (the embedded editor's Run button was clicked before the main
     program set one up). */
