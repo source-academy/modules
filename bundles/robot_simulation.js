@@ -36585,7 +36585,7 @@ def stream_ref(s, n):
       }
       super(conduit, [controlChannel, stateChannel], evaluator);
       this.id = "robot_simulation";
-      this.exportedNames = ["createCustomPhysics", "createPhysics", "createTimer", "createRobotConsole", "createWorld", "createCuboid", "createFloor", "createWall", "createPaper", "createEv3", "createPythonCSE", "addControllerToWorld", "saveToContext", "init_simulation", "init_default_simulation", "add_wall", "add_paper", "add_color_patch", "run_robot_code", "ev3_motorA", "ev3_motorB", "ev3_motorC", "ev3_motorD", "ev3_runToRelativePosition", "ev3_pause", "ev3_colorSensor", "ev3_colorSensorRed", "ev3_colorSensorGreen", "ev3_colorSensorBlue", "ev3_ultrasonicSensor", "ev3_ultrasonicSensorDistance"];
+      this.exportedNames = ["createCustomPhysics", "createPhysics", "createTimer", "createRobotConsole", "createWorld", "createCuboid", "createFloor", "createWall", "createPaper", "createEv3", "createPythonCSE", "addControllerToWorld", "saveToContext", "init_simulation", "init_default_simulation", "add_wall", "add_paper", "add_color_patch", "ev3_motorA", "ev3_motorB", "ev3_motorC", "ev3_motorD", "ev3_runToRelativePosition", "ev3_pause", "ev3_colorSensor", "ev3_colorSensorRed", "ev3_colorSensorGreen", "ev3_colorSensorBlue", "ev3_ultrasonicSensor", "ev3_ultrasonicSensorDistance"];
       this.__sceneRegistry = new SceneRegistry();
       this.__tabLoaded = false;
       this.__state = {};
@@ -36608,6 +36608,12 @@ def stream_ref(s, n):
       this.__stateChannel.subscribe(message => {
         if (message.kind === "request-replay") {
           this.__sceneRegistry.replaySpawns();
+          if (this.__editorCode !== void 0) {
+            this.__stateChannel.send({
+              kind: "editor-code",
+              code: this.__editorCode
+            });
+          }
         }
       });
     }
@@ -36783,8 +36789,17 @@ def stream_ref(s, n):
     }
     createPythonCSE(code) {
       return __asyncGenerator(this, null, function* () {
+        if (this.__setupProgram !== void 0) {
+          throw new e2("createPythonCSE: a robot runs one program at a time, so it can only be called once per simulation");
+        }
         const pyContext = createRobotPythonContext(this.__ev3Fns, () => this.__getWorldFromContext());
         const program = new Program(code.value, void 0, pyContext);
+        this.__setupProgram = program;
+        this.__editorCode = code.value;
+        this.__stateChannel.send({
+          kind: "editor-code",
+          code: code.value
+        });
         return yield new __await(this.evaluator.opaque_make(program, true));
       });
     }
@@ -36930,27 +36945,18 @@ def stream_ref(s, n):
         };
       });
     }
-    run_robot_code(code) {
-      return __asyncGenerator(this, null, function* () {
-        this.__runReplCode(code.value);
-        return {
-          type: E.VOID,
-          value: void 0
-        };
-      });
-    }
     __runReplCode(code) {
-      var _a;
+      var _a, _b;
       const world = this.__getWorldFromContext();
       if (this.__state.replPyContext === void 0) {
         this.__state.replPyContext = createRobotPythonContext(this.__ev3Fns, () => this.__getWorldFromContext());
       }
       const pyContext = this.__state.replPyContext;
       (_a = this.__state.replProgram) == null ? void 0 : _a.stop();
+      (_b = this.__setupProgram) == null ? void 0 : _b.stop();
       const program = new Program(code, void 0, pyContext);
       world.addLiveController(program);
       this.__state.replProgram = program;
-      this.__tabRpc.$focusTab();
     }
     ev3_motorA() {
       return __asyncGenerator(this, null, function* () {
@@ -37052,7 +37058,6 @@ def stream_ref(s, n):
   attachModuleMethod(RobotSimulationModulePlugin, "add_wall", [E.NUMBER, E.NUMBER, E.NUMBER, E.NUMBER, E.NUMBER], E.VOID);
   attachModuleMethod(RobotSimulationModulePlugin, "add_paper", [E.CONST_STRING, E.NUMBER, E.NUMBER, E.NUMBER, E.NUMBER, E.NUMBER], E.VOID);
   attachModuleMethod(RobotSimulationModulePlugin, "add_color_patch", [E.CONST_STRING, E.NUMBER, E.NUMBER, E.NUMBER, E.NUMBER], E.VOID);
-  attachModuleMethod(RobotSimulationModulePlugin, "run_robot_code", [E.CONST_STRING], E.VOID);
   attachModuleMethod(RobotSimulationModulePlugin, "ev3_motorA", [], E.OPAQUE);
   attachModuleMethod(RobotSimulationModulePlugin, "ev3_motorB", [], E.OPAQUE);
   attachModuleMethod(RobotSimulationModulePlugin, "ev3_motorC", [], E.OPAQUE);

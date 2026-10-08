@@ -19,6 +19,11 @@
 <div class="tsd-comment tsd-typography"><p>Creates a CSE machine as a Program Object, running Python. The Python program can call the
 whole <code>ev3_*</code> API directly by name; no <code>import</code> is needed (and none is possible - see
 pythonRuntime.ts). <code>print(...)</code> goes to the simulation's Robot Console panel.</p>
+<p>A robot runs one program at a time, so this may only be called once per simulation - a second
+call throws rather than leaving two programs driving the same motors.</p>
+<p>Also shows <code>code</code> in the RobotSimulation tab's embedded editor (overwriting whatever it held),
+so the editor shows what is running. Running code from that editor afterwards replaces this
+program.</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>

@@ -224,7 +224,7 @@
   "createPythonCSE": {
     "kind": "function",
     "name": "createPythonCSE",
-    "description": "<p>Creates a CSE machine as a Program Object, running Python. The Python program can call the\nwhole <code>ev3_*</code> API directly by name; no <code>import</code> is needed (and none is possible - see\npythonRuntime.ts). <code>print(...)</code> goes to the simulation's Robot Console panel.</p>",
+    "description": "<p>Creates a CSE machine as a Program Object, running Python. The Python program can call the\nwhole <code>ev3_*</code> API directly by name; no <code>import</code> is needed (and none is possible - see\npythonRuntime.ts). <code>print(...)</code> goes to the simulation's Robot Console panel.</p><p>A robot runs one program at a time, so this may only be called once per simulation - a second\ncall throws rather than leaving two programs driving the same motors.</p><p>Also shows <code>code</code> in the RobotSimulation tab's embedded editor (overwriting whatever it held),\nso the editor shows what is running. Running code from that editor afterwards replaces this\nprogram.</p>",
     "params": [
       {
         "paramType": "regular",
@@ -286,7 +286,7 @@
   "init_default_simulation": {
     "kind": "function",
     "name": "init_default_simulation",
-    "description": "<p>The boilerplate-free alternative to <code>init_simulation</code>: builds default physics, a default\nworld, a default floor and a default EV3 (the same defaults <code>createPhysics</code>/<code>createFloor</code>/\n<code>createEv3</code> use), and starts the simulation - all in one call. Takes no control program: pair\nthis with <code>run_robot_code</code>/the <code>repl</code> module (see that method's doc comment) to drive the EV3\nfrom a separate, rerunnable REPL tab instead of a control-code string baked into setup.</p><p>For a customised World (non-default physics/gravity, a control program written in\nSource/Scheme instead of Python), use <code>createPhysics</code>/<code>createWorld</code>/<code>createWall</code>/\n<code>createPaper</code>/<code>createPythonCSE</code>/<code>addControllerToWorld</code>/<code>saveToContext</code>/<code>init_simulation</code>\ndirectly instead, exactly as before.</p>",
+    "description": "<p>The boilerplate-free alternative to <code>init_simulation</code>: builds default physics, a default\nworld, a default floor and a default EV3 (the same defaults <code>createPhysics</code>/<code>createFloor</code>/\n<code>createEv3</code> use), and starts the simulation - all in one call. Takes no control program: drive\nthe EV3 by typing code into the RobotSimulation tab's embedded editor and pressing Run, instead\nof a control-code string baked into setup.</p><p>For a customised World (non-default physics/gravity, a control program written in\nSource/Scheme instead of Python), use <code>createPhysics</code>/<code>createWorld</code>/<code>createWall</code>/\n<code>createPaper</code>/<code>createPythonCSE</code>/<code>addControllerToWorld</code>/<code>saveToContext</code>/<code>init_simulation</code>\ndirectly instead, exactly as before.</p>",
     "params": [],
     "retType": "void"
   },
@@ -390,19 +390,6 @@
         "paramType": "regular",
         "type": "number",
         "name": "length"
-      }
-    ],
-    "retType": "void"
-  },
-  "run_robot_code": {
-    "kind": "function",
-    "name": "run_robot_code",
-    "description": "<p>The <code>repl</code>-module hook: pass this function itself to <code>repl</code>'s <code>set_evaluator</code>, and the <code>repl</code>\ntab it opens will call it with whatever the student typed there each time they hit Run -\n<code>code</code> is exactly what <code>createPythonCSE</code>/<code>init_default_simulation</code>'s old <code>control_code</code>\nargument used to be, just supplied interactively instead of baked into the setup program.</p><p>Each call adds a fresh <code>Program</code> controller (via <code>World.addLiveController</code>, since the world is\nalready running by this point) rather than editing one in place, but all calls share one\n<code>pyContext</code> (lazily created on the first call, cached in <code>__state</code>) - <code>runPythonECEvaluator</code>\nre-analyzes each run against that same context's global environment (see evaluate.ts), so\nvariables and function defs a student's REPL code creates in one run are still visible in the\nnext, the way a REPL is expected to behave. The previous run's <code>Program</code> is <code>stop()</code>'d first so\nit can't keep pumping its now-superseded generator against the same shared <code>pyContext</code> (see\n<code>Program.stop</code>'s doc comment).</p><p>Requires <code>init_default_simulation</code>/<code>init_simulation</code> to have already been called - there must\nbe a live World for the robot code to act on.</p><p>Also calls <code>$focusTab</code> on success, asking the RobotSimulation tab to bring itself to the\nfront - but the frontend's side-content host only actually honours that the <em>first</em> time any\ntab is shown in a session (see <code>SideContentManager.showTab</code>'s \"don't yank the student away from\nwherever they navigated\" guard), so in practice this rarely does anything once the student has\nlooked at any tab at all. A student who wants the 3D view and the code they're driving the\nrobot with on screen <em>together</em>, without fighting that guard, should use the RobotSimulation\ntab's own embedded editor instead (<code>$runReplCode</code> in protocol.ts) - same effect as this\nfunction, just triggered from inside the tab that's already showing the 3D view, so there's\nnothing to focus/switch away from in the first place.</p>",
-    "params": [
-      {
-        "paramType": "regular",
-        "type": "string",
-        "name": "code"
       }
     ],
     "retType": "void"

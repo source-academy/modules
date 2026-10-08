@@ -26817,7 +26817,8 @@ ev3_runToRelativePosition(right, 1080, 500)
       this.__state = {
         worldState: "unintialized",
         sensors: void 0,
-        logs: []
+        logs: [],
+        presetCode: void 0
       };
       this.__tick = () => {
         var _a, _b;
@@ -26841,6 +26842,8 @@ ev3_runToRelativePosition(right, 1080, 500)
           this.__spawnEntity(message.id, message.descriptor);
         } else if (message.kind === "state-snapshot") {
           this.__applySnapshot(message.buffer);
+        } else if (message.kind === "editor-code") {
+          this.__presetEditorCode(message.code);
         }
       });
       this.__stateChannel.send({
@@ -26885,6 +26888,18 @@ ev3_runToRelativePosition(right, 1080, 500)
     __setState(patch) {
       this.__state = __spreadValues(__spreadValues({}, this.__state), patch);
       this.__emit();
+    }
+    __presetEditorCode(code) {
+      var _a, _b;
+      try {
+        window.localStorage.setItem(EMBEDDED_EDITOR_CODE_STORAGE_KEY, code);
+      } catch (e5) {}
+      this.__setState({
+        presetCode: {
+          code,
+          version: ((_b = (_a = this.__state.presetCode) == null ? void 0 : _a.version) != null ? _b : 0) + 1
+        }
+      });
     }
     __spawnEntity(id, descriptor) {
       if (this.__entities.has(id)) return;
@@ -27062,9 +27077,6 @@ ev3_runToRelativePosition(right, 1080, 500)
         sensors: snapshot
       });
     }
-    $focusTab() {
-      this.__tabService.showTab(ROBOT_SIMULATION_TAB_ID);
-    }
     __runReplCode(code) {
       this.__moduleRpc.$runReplCode(code);
     }
@@ -27154,11 +27166,12 @@ ev3_runToRelativePosition(right, 1080, 500)
         })]
       }), (0, import_jsx_runtime.jsx)(EmbeddedReplEditor, {
         onRunCode,
+        preset: state.presetCode,
         height: sceneConfig.height + 150 + 24 * 2 + 16
       })]
     });
   }
-  function EmbeddedReplEditor({onRunCode, height}) {
+  function EmbeddedReplEditor({onRunCode, preset, height}) {
     const [code, setCode] = (0, import_react.useState)(() => {
       var _a;
       try {
@@ -27167,6 +27180,9 @@ ev3_runToRelativePosition(right, 1080, 500)
         return EMBEDDED_EDITOR_PLACEHOLDER;
       }
     });
+    (0, import_react.useEffect)(() => {
+      if (preset !== void 0) setCode(preset.code);
+    }, [preset]);
     const handleChange = value => {
       setCode(value);
       try {
