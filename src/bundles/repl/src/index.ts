@@ -54,7 +54,7 @@ import {
   type ReplSetProgramTextMessage
 } from './protocol';
 import { processRichDisplayContent } from './rich_display';
-import { stringifyReplValue } from './stringify_value';
+import { hasNothingToDisplay, stringifyReplValue } from './stringify_value';
 
 type ReplTabLoader = {
   tabs: string[];
@@ -368,10 +368,15 @@ export default class ReplModulePlugin extends BaseModulePlugin {
       }
       const result = step.value;
 
-      const content = result.type === DataType.CONST_STRING
-        ? result.value
-        : await stringifyReplValue(this.evaluator, result);
-      this.__displayOutput({ content, color: COLOR_RUN_CODE_RESULT, outputMethod: 'plaintext' });
+      // An evaluator without a result (a Python function that returns None crosses the boundary
+      // as EMPTY_LIST, see #877) has nothing to echo; showing it as text would print a stray
+      // "null" after everything the evaluator displayed itself.
+      if (!hasNothingToDisplay(result)) {
+        const content = result.type === DataType.CONST_STRING
+          ? result.value
+          : await stringifyReplValue(this.evaluator, result);
+        this.__displayOutput({ content, color: COLOR_RUN_CODE_RESULT, outputMethod: 'plaintext' });
+      }
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       this.__displayOutput({ content: message, color: COLOR_ERROR_MESSAGE, outputMethod: 'plaintext' });
