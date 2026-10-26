@@ -1,7 +1,7 @@
 import { DataType, type TypedValue } from '@sourceacademy/conductor/types';
 import { TestDataHandler, booleanValue, emptyListValue, numberValue, stringValue, voidValue } from '@sourceacademy/modules-testplugin';
 import { describe, expect, test } from 'vitest';
-import { stringifyReplValue } from '../stringify_value';
+import { hasNothingToDisplay, stringifyReplValue } from '../stringify_value';
 
 describe(stringifyReplValue, () => {
   test('VOID stringifies as "undefined"', async () => {
@@ -101,5 +101,20 @@ describe(stringifyReplValue, () => {
 
     const result = await stringifyReplValue(evaluator, pair);
     expect(result).toContain('...');
+  });
+});
+
+describe(hasNothingToDisplay, () => {
+  test('VOID and EMPTY_LIST (a Python None) have nothing to display', () => {
+    expect(hasNothingToDisplay(voidValue())).toBe(true);
+    expect(hasNothingToDisplay(emptyListValue())).toBe(true);
+  });
+
+  test.each([
+    ['BOOLEAN', booleanValue(false)],
+    ['NUMBER', numberValue(0)],
+    ['CONST_STRING', stringValue('')]
+  ])('a %s value is displayed, even when falsy', (_, value) => {
+    expect(hasNothingToDisplay(value)).toBe(false);
   });
 });

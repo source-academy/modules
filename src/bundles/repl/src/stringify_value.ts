@@ -26,6 +26,17 @@ const MAX_NODES = 10_000;
 
 type Budget = { remaining: number };
 
+/**
+ * Whether an evaluator's result is "no value" and the Repl tab should show nothing for the run,
+ * like Python's REPL does for `None`. A Python `None` crosses the Conductor boundary as
+ * DataType.EMPTY_LIST (it has no type of its own - see issue #877), and a function without a
+ * result as DataType.VOID; rendering either as text would show a bare `null` or `undefined` after
+ * every run of an evaluator that, say, displays its own output.
+ */
+export function hasNothingToDisplay(value: TypedValue<DataType>): boolean {
+  return value.type === DataType.VOID || value.type === DataType.EMPTY_LIST;
+}
+
 export async function stringifyReplValue(evaluator: IDataHandler, value: TypedValue<DataType>): Promise<string> {
   return stringifyReplValueDepth(evaluator, value, 0, { remaining: MAX_NODES });
 }
