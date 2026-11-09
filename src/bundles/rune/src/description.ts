@@ -1,21 +1,23 @@
 import { DESCRIPTION_VERSION, fn, fun, opaque, type ModuleDescription } from '@sourceacademy/modules-lib/description';
 
 const Rune = opaque('Rune');
+const AnimatedRune = opaque('AnimatedRune');
 
 /**
  * The types of the functions and shapes that the `rune` module exports, for typed languages (#996, #997).
- * `show`, `anaglyph`, `hollusion`, `hollusion_magnitude`, `animate_rune` and `animate_anaglyph` are defined
+ * An animation (`animate_rune`, `animate_anaglyph`) is an `AnimatedRune`, not a `Rune`: no rune function takes one
+ * (the plugin's `@publicReturnType`s say which). `show`, `anaglyph`, `hollusion`, `hollusion_magnitude`, `animate_rune` and `animate_anaglyph` are defined
  * on the plugin, and the shapes are exported when the plugin is initialised, so this is the list of what
  * `plugin.exports` has then (checked in `description.test.ts`).
  */
 export const description: ModuleDescription = {
   version: DESCRIPTION_VERSION,
   module: 'rune',
-  opaqueTypes: ['Rune'],
+  opaqueTypes: ['Rune', 'AnimatedRune'],
   functions: [
     fn('anaglyph', [['rune', Rune]], Rune),
-    fn('animate_anaglyph', [['duration', 'number'], ['fps', 'number'], ['func', fun(['number'], Rune)]], Rune),
-    fn('animate_rune', [['duration', 'number'], ['fps', 'number'], ['func', fun(['number'], Rune)]], Rune),
+    fn('animate_anaglyph', [['duration', 'number'], ['fps', 'number'], ['func', fun(['number'], Rune)]], AnimatedRune),
+    fn('animate_rune', [['duration', 'number'], ['fps', 'number'], ['func', fun(['number'], Rune)]], AnimatedRune),
     fn('beside', [['rune1', Rune], ['rune2', Rune]], Rune),
     fn('beside_frac', [['frac', 'number'], ['rune1', Rune], ['rune2', Rune]], Rune),
     fn('black', [['rune', Rune]], Rune),
