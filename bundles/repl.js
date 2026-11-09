@@ -398,6 +398,9 @@ export default require => {
   }
   var MAX_DEPTH = 64;
   var MAX_NODES = 1e4;
+  function hasNothingToDisplay(value) {
+    return value.type === E.VOID || value.type === E.EMPTY_LIST;
+  }
   function stringifyReplValue(evaluator, value) {
     return __async(this, null, function* () {
       return stringifyReplValueDepth(evaluator, value, 0, {
@@ -618,12 +621,14 @@ export default require => {
             step = yield generator.next();
           }
           const result = step.value;
-          const content = result.type === E.CONST_STRING ? result.value : yield stringifyReplValue(this.evaluator, result);
-          this.__displayOutput({
-            content,
-            color: COLOR_RUN_CODE_RESULT,
-            outputMethod: "plaintext"
-          });
+          if (!hasNothingToDisplay(result)) {
+            const content = result.type === E.CONST_STRING ? result.value : yield stringifyReplValue(this.evaluator, result);
+            this.__displayOutput({
+              content,
+              color: COLOR_RUN_CODE_RESULT,
+              outputMethod: "plaintext"
+            });
+          }
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
           this.__displayOutput({
