@@ -4,7 +4,7 @@ outline: [2, 3]
 # Handling Abstractions
 
 Source supports several primitive objects like numbers and strings. Slightly more complex primitives do also exist like lists and arrays. Your bundle may wish to introduce its own set of primitives, such as
-`Sound` and `Wave` (from the `sound` bundle) or `BodyCentreTransformation` (from the `nbody` bundle).
+`Sound` and `Wave` (from the `sound` bundle) or `BodyCentreTransformation` (from the archived `nbody` bundle).
 
 The important thing to note is that as far as Javascript is concerned, these types are composed of other
 primitive and non primitive objects (`Wave`s are `(t: number) => number` while `BodyCentreTransformation` is a class).

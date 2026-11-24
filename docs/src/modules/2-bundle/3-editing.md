@@ -125,10 +125,10 @@ export function new_foo() {}
 > The only things you should be exporting from the entry point of your bundle are functions and constants. You
 > should not be exporting any type related values like classes, enums, type aliases or interfaces.
 
-## Module Contexts
+## Sending data to a tab
 
-Module contexts are a way for bundles to send information between bundles and tabs. Refer to [this](../5-advanced/context) section for
-instructions on how to use them.
+A bundle is a Conductor plugin, so it sends data to its tab through a Conductor channel, not through a shared context object. The `rune` bundle is an
+example: see its `src/index.ts` and `src/protocol.ts`, and the tab that receives the messages in `src/tabs/Rune`.
 
 ## Common Modules Library
 

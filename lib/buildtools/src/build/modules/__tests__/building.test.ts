@@ -53,24 +53,12 @@ test('build bundle', async () => {
   // Trim the export default
   const trimmed = data.slice('export default'.length);
   const provider = vi.fn((p: string) => {
-    if (p === 'js-slang/context') {
-      return {
-        moduleContexts: {
-          test0: {
-            state: {
-              data: 'foo'
-            }
-          }
-        }
-      };
-    }
-
     throw new Error(`Dynamic require of ${p} is not supported!`);
   });
 
   const bundle = eval(trimmed)(provider);
 
-  expect(provider).toHaveBeenCalledTimes(1);
+  expect(provider).not.toHaveBeenCalled();
   expect(bundle.test_function2()).toEqual('foo');
 });
 

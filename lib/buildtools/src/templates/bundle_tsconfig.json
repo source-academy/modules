@@ -3,6 +3,9 @@
   "include": ["./src"],
   "typedocOptions": {},
   "compilerOptions": {
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "experimentalDecorators": false,
+    "emitDecoratorMetadata": false
   }
 }

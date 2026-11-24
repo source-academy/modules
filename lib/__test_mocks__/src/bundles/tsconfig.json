@@ -31,9 +31,6 @@
     /* *** TEMPORARILY ADDED UNTIL ALL MODULES HAVE BEEN REFACTORED!!!!!!!!!!! *** */
     "noImplicitAny": false,
     "verbatimModuleSyntax": true,
-    "paths": {
-      "js-slang/context": ["./context.d.ts"]
-    },
     "ignoreDeprecations": "5.0"
   },
   /* Specifies an array of filenames or patterns to include in the program. These filenames are resolved relative to the directory containing the tsconfig.json file. */

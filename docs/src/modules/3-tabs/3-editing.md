@@ -277,7 +277,7 @@ This isn't necessary, but it will provide you type information without you havin
 
 ## Working with Module Contexts from within Tabs
 
-Refer to [this](../5-advanced/context) about using module contexts.
+A tab receives its data from its bundle through a Conductor channel. See `src/tabs/Rune` for an example, and the matching bundle `src/bundles/rune`.
 
 ## Quick FAQs
 

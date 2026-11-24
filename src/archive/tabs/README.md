@@ -12,5 +12,41 @@
       <td><code>AugmentedReality</code></td>
       <td>03/03/2026</td>
     </tr>
+    <tr>
+      <td><code>ArcadeTwod</code></td>
+      <td>24/11/2026</td>
+    </tr>
+    <tr>
+      <td><code>CopyGc</code></td>
+      <td>24/11/2026</td>
+    </tr>
+    <tr>
+      <td><code>Game</code></td>
+      <td>24/11/2026</td>
+    </tr>
+    <tr>
+      <td><code>MarkSweep</code></td>
+      <td>24/11/2026</td>
+    </tr>
+    <tr>
+      <td><code>Nbody</code></td>
+      <td>24/11/2026</td>
+    </tr>
+    <tr>
+      <td><code>Painter</code></td>
+      <td>24/11/2026</td>
+    </tr>
+    <tr>
+      <td><code>Physics2D</code></td>
+      <td>24/11/2026</td>
+    </tr>
+    <tr>
+      <td><code>Unittest</code></td>
+      <td>24/11/2026</td>
+    </tr>
+    <tr>
+      <td><code>UnityAcademy</code></td>
+      <td>24/11/2026</td>
+    </tr>
   </tbody>
 </table>

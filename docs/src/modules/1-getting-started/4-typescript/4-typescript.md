@@ -327,11 +327,11 @@ The `mqtt` dependency however, is specified as such in `package.json`:
 The helpful comment below the import explains the discrepancy. Without further configuration, we find that Typescript is unable to find the types for the `mqtt/dist/mqtt` package:
 ![](./mqtt-types.png)
 
-`tsconfig` does provide a way for you to tell Typescript where to look for types: using either the `paths` or `types` field. The `tsconfig` for the `communication` bundle looks like this:
+`tsconfig` does provide a way for you to tell Typescript where to look for types: using either the `paths` or `types` field. The `tsconfig` for the `communication` bundle (now in `src/archive`) looks like this:
 
-<<< ../../../../../src/bundles/communication/tsconfig.json
+<<< ../../../../../src/archive/bundles/communication/tsconfig.json
 
 The `paths` compiler option has been set to tell Typescript where to find the types for `mqtt/dist/mqtt`. Because of the way `tsconfig.json` file inheritance works, if you override a configuration option in a child `tsconfig`,
-you'll need to specify the options from the parent configuration again (hence the `js-slang/context` path).
+you'll need to specify the options from the parent configuration again.
 
 In other words, if you need to modify `tsconfig.json`, make sure to include the corresponding options inherited from the parent `tsconfig.json`.

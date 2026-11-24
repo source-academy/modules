@@ -41,7 +41,11 @@ export async function addNew(bundlesDir: string, rl: Interface) {
     name: `@sourceacademy/bundle-${moduleName}`,
     private: true,
     version: '1.0.0',
+    dependencies: {
+      '@sourceacademy/modules-lib': 'workspace:^'
+    },
     devDependencies: {
+      '@sourceacademy/conductor': 'catalog:',
       '@sourceacademy/modules-buildtools': 'workspace:^',
       typescript: typescriptVersion,
     },
@@ -51,7 +55,9 @@ export async function addNew(bundlesDir: string, rl: Interface) {
       lint: 'buildtools lint .',
       serve: 'yarn buildtools serve',
       test: 'buildtools test --project .',
-      tsc: 'tsc --project ./tsconfig.json',
+      tsc: 'buildtools tsc .',
+      postinstall: 'yarn compile',
+      compile: 'buildtools compile',
     },
     exports: {
       '.': './dist/index.js',

@@ -86,7 +86,6 @@ ensures that you are using the same implementations as those being used by `js-s
 Note that not every export from `js-slang` is currently supported. Below is the list of paths you can import from:
 
 - `js-slang`
-- `js-slang/context`
 - `js-slang/dist/stdlib`
 - `js-slang/dist/types`
 - `js-slang/dist/utils/assert`

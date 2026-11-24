@@ -2,7 +2,7 @@ import pathlib from 'path';
 import { endBuildPlugin } from '@sourceacademy/modules-repotools/builder';
 import type { BuildResult, ResolvedBundle, ResolvedTab } from '@sourceacademy/modules-repotools/types';
 import * as esbuild from 'esbuild';
-import { builderPlugin, commonEsbuildOptions, getContextPlugin, outputBundleOrTab } from './commons.js';
+import { builderPlugin, commonEsbuildOptions, outputBundleOrTab } from './commons.js';
 
 /**
  * Use ESBuild to compile a single bundle and write its output to the
@@ -15,8 +15,7 @@ export async function buildBundle(outDir: string, bundle: ResolvedBundle, watch:
     ...commonEsbuildOptions,
     entryPoints: [pathlib.join(bundle.directory, 'src', 'index.ts')],
     tsconfig: pathlib.join(bundle.directory, 'tsconfig.json'),
-    outfile: pathlib.join(outDir, 'bundles', `${bundle.name}.js`),
-    plugins: [getContextPlugin(bundle)]
+    outfile: pathlib.join(outDir, 'bundles', `${bundle.name}.js`)
   } satisfies esbuild.BuildOptions;
 
   if (watch) {
@@ -53,15 +52,17 @@ export async function buildTab(outDir: string, tab: ResolvedTab, watch: boolean)
       '@blueprintjs/*'
     ],
     tsconfig: pathlib.join(tab.directory, 'tsconfig.json'),
-    outfile: pathlib.join(outDir, 'tabs', `${tab.name}.js`),
-    plugins: [getContextPlugin(tab)],
+    outfile: pathlib.join(outDir, 'tabs', `${tab.name}.js`)
   } satisfies esbuild.BuildOptions;
 
   if (watch) {
-    tabOptions.plugins.push(builderPlugin(tab, outDir));
-    tabOptions.plugins.push(endBuildPlugin);
-
-    const buildContext = await esbuild.context(tabOptions);
+    const buildContext = await esbuild.context({
+      ...tabOptions,
+      plugins: [
+        builderPlugin(tab, outDir),
+        endBuildPlugin
+      ]
+    });
     return buildContext.watch();
   } else {
     const { outputFiles: [result] } = await esbuild.build(tabOptions);

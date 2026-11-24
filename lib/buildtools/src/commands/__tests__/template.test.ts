@@ -127,7 +127,10 @@ describe('Test adding new module', () => {
           "name": "new_module"
         },
         "compilerOptions": {
-          "outDir": "./dist"
+          "outDir": "./dist",
+          "rootDir": "./src",
+          "experimentalDecorators": false,
+          "emitDecoratorMetadata": false
         }
       }
       "
