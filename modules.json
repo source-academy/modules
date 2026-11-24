@@ -1,23 +1,7 @@
 {
-  "arcade_2d": {
-    "tabs": [
-      "ArcadeTwod"
-    ],
-    "version": "1.0.1"
-  },
   "binary_tree": {
     "tabs": [],
     "version": "1.0.0"
-  },
-  "communication": {
-    "tabs": [],
-    "version": "1.0.0"
-  },
-  "copy_gc": {
-    "tabs": [
-      "CopyGc"
-    ],
-    "version": "2.0.0"
   },
   "csg": {
     "tabs": [
@@ -31,18 +15,6 @@
     ],
     "version": "1.1.0"
   },
-  "game": {
-    "tabs": [
-      "Game"
-    ],
-    "version": "1.0.1"
-  },
-  "mark_sweep": {
-    "tabs": [
-      "MarkSweep"
-    ],
-    "version": "2.0.0"
-  },
   "matrix": {
     "tabs": [
       "Matrix"
@@ -51,24 +23,6 @@
   },
   "midi": {
     "tabs": [],
-    "version": "1.0.0"
-  },
-  "nbody": {
-    "tabs": [
-      "Nbody"
-    ],
-    "version": "1.0.0"
-  },
-  "painter": {
-    "tabs": [
-      "Painter"
-    ],
-    "version": "1.0.0"
-  },
-  "physics_2d": {
-    "tabs": [
-      "Physics2D"
-    ],
     "version": "1.0.0"
   },
   "pix_n_flix": {
@@ -107,10 +61,6 @@
     ],
     "version": "1.0.0"
   },
-  "rune_in_words": {
-    "tabs": [],
-    "version": "1.0.1"
-  },
   "scrabble": {
     "tabs": [],
     "version": "1.0.0"
@@ -120,21 +70,5 @@
       "Sound"
     ],
     "version": "1.1.0"
-  },
-  "unittest": {
-    "tabs": [
-      "Unittest"
-    ],
-    "version": "1.0.1"
-  },
-  "unity_academy": {
-    "tabs": [
-      "UnityAcademy"
-    ],
-    "version": "1.0.0"
-  },
-  "wasm": {
-    "tabs": [],
-    "version": "1.0.0"
   }
 }
