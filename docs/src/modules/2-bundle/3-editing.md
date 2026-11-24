@@ -125,10 +125,18 @@ export function new_foo() {}
 > The only things you should be exporting from the entry point of your bundle are functions and constants. You
 > should not be exporting any type related values like classes, enums, type aliases or interfaces.
 
-## Module Contexts
+## Sending data to a tab
 
-Module contexts are a way for bundles to send information between bundles and tabs. Refer to [this](../5-advanced/context) section for
-instructions on how to use them.
+A bundle is a Conductor plugin, so it sends data to its tab through a Conductor channel. The `rune` bundle is an example: see its `src/index.ts` and
+`src/protocol.ts`, and the tab that receives the messages in `src/tabs/Rune`.
+
+> [!NOTE] History: the module context
+>
+> Older bundles did this differently. Before Conductor, a bundle ran inside the same Javascript environment as `js-slang`, and `js-slang` handed every bundle a
+> shared "context" object (imported from `js-slang/context`). A bundle stored its state in that object, and its tab read the state back out of it. This only
+> works when the bundle and the tab can reach the same object in memory, which is not the case when the program runs in a separate worker, as it does under
+> Conductor. You will still meet `js-slang/context` and `moduleContexts` in old code, in the repository history and in the bundles in `src/archive`, but new
+> bundles should not use them.
 
 ## Common Modules Library
 

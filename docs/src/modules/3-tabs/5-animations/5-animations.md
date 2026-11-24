@@ -8,26 +8,6 @@ example would be the hollusion rune from the `rune` bundle:
   </img>
 </p>
 
-A more complicated example with the `physics_2d` bundle that also displays stats about its simulation:
-
-```js
-import { make_ground, set_gravity, make_vector, add_circle_object, update_world } from 'physics_2d';
-
-// Run this code at sourceacademy.org to see the tab in action!
-const gravity = make_vector(0, -9.8);
-set_gravity(gravity);
-
-make_ground(0, 1);
-
-const pos = make_vector(0, 100);
-const velc = make_vector(0, 0);
-add_circle_object(pos, 0, velc, 10, false);
-
-for (let i = 0; i < 10; i = i + 1) {
-  update_world(1/60);
-}
-```
-
 ## `glAnimation`
 
 `glAnimations` are a way of representing animations that rely on WebGL. To create your own `glAnimation`, you simply

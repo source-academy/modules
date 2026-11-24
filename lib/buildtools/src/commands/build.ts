@@ -1,6 +1,6 @@
 import { Command } from '@commander-js/extra-typings';
 import { bundlesDir, outDir } from '@sourceacademy/modules-repotools/getGitRoot';
-import { filterDocsVisibleBundles, resolveAllBundles, resolveEitherBundleOrTab, resolveSingleBundle, resolveSingleTab } from '@sourceacademy/modules-repotools/manifest';
+import { resolveAllBundles, resolveEitherBundleOrTab, resolveSingleBundle, resolveSingleTab } from '@sourceacademy/modules-repotools/manifest';
 import chalk from 'chalk';
 import { buildAll } from '../build/all.js';
 import { buildHtml, buildSingleBundleDocs } from '../build/docs/index.js';
@@ -140,8 +140,7 @@ export const getBuildHtmlCommand = () => new Command('html')
       cmdUtils.logCommandErrorAndExit(resolveResult);
     }
 
-    const visibleBundles = await filterDocsVisibleBundles(resolveResult.bundles);
-    const htmlResult = await buildHtml(visibleBundles, outDir, logLevel);
+    const htmlResult = await buildHtml(resolveResult.bundles, outDir, logLevel);
     console.log(formatResult(htmlResult, 'html'));
     cmdUtils.processResult(htmlResult, false);
   });

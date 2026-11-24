@@ -78,7 +78,7 @@ children:
 Especially when your bundle intentionally breaks conventions or rules, or when you need to do
 something unconventional, you should leave comments in your source code detailing why.
 
-In the example below, the `communication` bundle uses the `mqtt` bundle but doesn't use its main
+In the example below, a bundle that uses the `mqtt` package doesn't use its main
 export. The comment explains why the alternate import is being used.
 
 ```ts

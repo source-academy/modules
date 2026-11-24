@@ -126,13 +126,6 @@ This is what is finally written to the output folders.
 Consumers of this compiled version of bundles and tabs can retrieve the IIFE by using the default export.  When bundles and tabs are loaded, the IIFE is called with a function that simulates the `require()` function
 in CommonJS to provide the dependencies marked as external (that have to be provided at runtime).
 
-## `js-slang/context`
-
-`js-slang/context` is an import provided at runtime by `js-slang` that returns the context in use for evaluation. It is not an actual import that's available
-at compile time, which means that typings have to be provided for it.
-
-This is achieved using a Typescript declaration file.
-
 ## Summary of Build Process
 
 ```mermaid

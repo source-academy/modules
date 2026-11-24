@@ -80,6 +80,9 @@ describe('Test adding new module', () => {
 
   test('successfully adding a new module', async () => {
     mockedAskQuestion.mockResolvedValueOnce('new_module');
+    vi.spyOn(fs, 'readFile').mockResolvedValueOnce(
+      '/** @module module_name */\nexport default class ModuleNamePlugin {\n  id = \'module_name\';\n}\n'
+    );
     await runCommand();
 
     expectCall(
@@ -97,12 +100,13 @@ describe('Test adding new module', () => {
       ]
     );
 
-    expect(fs.writeFile).toHaveBeenCalledTimes(3);
+    expect(fs.writeFile).toHaveBeenCalledTimes(4);
 
     const [
       [packagePath, rawPackage],
       [manifestPath, rawManifest],
-      [tsconfigPath, rawTsconfig]
+      [tsconfigPath, rawTsconfig],
+      [indexPath, rawIndex]
     ] = vi.mocked(fs.writeFile).mock.calls;
 
     expect(packagePath).toMatchPath(pathlib.join(bundleDest, 'package.json'));
@@ -127,11 +131,18 @@ describe('Test adding new module', () => {
           "name": "new_module"
         },
         "compilerOptions": {
-          "outDir": "./dist"
+          "outDir": "./dist",
+          "rootDir": "./src",
+          "experimentalDecorators": false,
+          "emitDecoratorMetadata": false
         }
       }
       "
     `);
+
+    // The plugin takes the name of the module, not the placeholder of the template
+    expect(indexPath).toMatchPath(pathlib.join(bundleDest, 'src', 'index.ts'));
+    expect(rawIndex).toEqual('/** @module new_module */\nexport default class NewModulePlugin {\n  id = \'new_module\';\n}\n');
   });
 });
 

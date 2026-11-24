@@ -41,7 +41,11 @@ export async function addNew(bundlesDir: string, rl: Interface) {
     name: `@sourceacademy/bundle-${moduleName}`,
     private: true,
     version: '1.0.0',
+    dependencies: {
+      '@sourceacademy/modules-lib': 'workspace:^'
+    },
     devDependencies: {
+      '@sourceacademy/conductor': 'catalog:',
       '@sourceacademy/modules-buildtools': 'workspace:^',
       typescript: typescriptVersion,
     },
@@ -51,7 +55,9 @@ export async function addNew(bundlesDir: string, rl: Interface) {
       lint: 'buildtools lint .',
       serve: 'yarn buildtools serve',
       test: 'buildtools test --project .',
-      tsc: 'tsc --project ./tsconfig.json',
+      tsc: 'buildtools tsc .',
+      postinstall: 'yarn compile',
+      compile: 'buildtools compile',
     },
     exports: {
       '.': './dist/index.js',
@@ -67,10 +73,18 @@ export async function addNew(bundlesDir: string, rl: Interface) {
     tabs: []
   };
 
+  // The template names its plugin after a placeholder: the plugin's id must be the name of the module
+  const indexPath = pathlib.join(bundleDestination, 'src', 'index.ts');
+  const className = moduleName.split('_').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join('') + 'Plugin';
+  const indexSource = (await fs.readFile(indexPath, 'utf-8'))
+    .replaceAll('ModuleNamePlugin', className)
+    .replaceAll('module_name', moduleName);
+
   await Promise.all([
     fs.writeFile(pathlib.join(bundleDestination, 'package.json'), JSON.stringify(packageJson, null, 2) + '\n'),
     fs.writeFile(pathlib.join(bundleDestination, 'manifest.json'), JSON.stringify(bundleManifest, null, 2) + '\n'),
     fs.writeFile(pathlib.join(bundleDestination, 'tsconfig.json'), `// ${moduleName} tsconfig\n${JSON.stringify(sampleTsconfig, null, 2)}\n`),
+    fs.writeFile(indexPath, indexSource),
   ]);
 
   success(`Bundle for module ${moduleName} created at ${bundleDestination}.`);
