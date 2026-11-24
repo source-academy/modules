@@ -8,7 +8,13 @@ import pathlib from 'path';
  */
 function rawGetGitRoot() {
   return new Promise<string>((resolve, reject) => {
-    execFile('git', ['rev-parse', '--show-toplevel'], (err, stdout, stderr) => {
+    // When run from a git hook, git sets GIT_DIR (and friends), which makes rev-parse
+    // report the current directory instead of the repository root
+    const env = { ...process.env };
+    delete env.GIT_DIR;
+    delete env.GIT_WORK_TREE;
+    delete env.GIT_INDEX_FILE;
+    execFile('git', ['rev-parse', '--show-toplevel'], { env }, (err, stdout, stderr) => {
       const possibleError = err || stderr;
       if (possibleError) {
         reject(possibleError);
