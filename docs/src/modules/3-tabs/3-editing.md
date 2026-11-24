@@ -275,7 +275,7 @@ export default defineTab({
 
 This isn't necessary, but it will provide you type information without you having to import each type separately from the library.
 
-## Working with Module Contexts from within Tabs
+## Receiving Data from the Bundle
 
 A tab receives its data from its bundle through a Conductor channel. See `src/tabs/Rune` for an example, and the matching bundle `src/bundles/rune`.
 

@@ -11,13 +11,6 @@ export function test_function(_param0: string) {
   return 0;
 }
 
-/**
- * @internal
- */
-export function test_function2() {
-  return 'foo';
-}
-
 export function is_number(x: unknown): x is number {
   return typeof x === 'number';
 }

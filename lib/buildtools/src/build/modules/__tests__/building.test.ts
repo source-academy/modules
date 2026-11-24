@@ -59,7 +59,7 @@ test('build bundle', async () => {
   const bundle = eval(trimmed)(provider);
 
   expect(provider).not.toHaveBeenCalled();
-  expect(bundle.test_function2()).toEqual('foo');
+  expect(bundle.test_function('param')).toEqual(0);
 });
 
 test('build tab', async () => {

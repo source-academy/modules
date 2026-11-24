@@ -12,8 +12,3 @@ The modules manifest is located at `build/modules.json`. It is not intended to b
 
 The manifest is generated automatically during build time, but if you want to regenerate the manifest, you can use `yarn buildtools manifest` from the root of
 the repository to regenerate the manifest.
-
-## Documentation site
-
-Every bundle in `src/bundles` is a Conductor bundle and has a page on the [documentation site](https://source-academy.github.io/modules/documentation/).
-Bundles that have not been migrated to Conductor are in `src/archive`: they are not built, and have no documentation page.
