@@ -17,6 +17,11 @@
         "/^@blueprintjs.*/"
       ],
       "groupName": "blueprintjs"
+    },
+    {
+      "description": "Node is one version for every repository, decided on the documentation site (Node.js version); the types follow it.",
+      "matchPackageNames": ["@types/node"],
+      "allowedVersions": "<25"
     }
   ]
 }
