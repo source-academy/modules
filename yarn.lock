@@ -17033,14 +17033,14 @@ __metadata:
   linkType: hard
 
 "typedoc-plugin-frontmatter@npm:^1.3.0":
-  version: 1.3.2
-  resolution: "typedoc-plugin-frontmatter@npm:1.3.2"
+  version: 1.3.3
+  resolution: "typedoc-plugin-frontmatter@npm:1.3.3"
   dependencies:
     yaml: "npm:^2.8.1"
   peerDependencies:
     typedoc: 0.28.x
     typedoc-plugin-markdown: ">=4.11.0"
-  checksum: 10c0/bac29b42489bc2c55e0ac10a1c519813d737a7ac86e3fe42c0e3a72ebcc65c2a1e20eb344cdc004b135eaeae27c4de174bf093b003df57a94b28c8b337ed2973
+  checksum: 10c0/818e21fa8cc006a695a6d3db8845723c5502996a9fd61ba409108bddbf0458f6c6b867b61e57e4a95949bbc72d7ea0c036565a29b73a3d5a328fc37b70f3c879
   languageName: node
   linkType: hard
 
