@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^6.0.0",
-    "@box2d/debug-draw": "^0.10.0",
+    "@box2d/debug-draw": "^0.11.0",
     "@sourceacademy/bundle-physics_2d": "workspace:^",
     "@sourceacademy/modules-lib": "workspace:^",
     "react": "catalog:",
