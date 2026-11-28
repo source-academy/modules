@@ -1,6 +1,6 @@
 # Source Academy Modules Repository
 
-Needs Node 24 (the version in `.node-version`; see the [Node.js version](https://github.com/source-academy/documentation/blob/main/app/docs/developers/node-version.md) page).
+Needs Node 24 (the version in `.node-version`; see the [Node.js version](https://docs.sourceacademy.org/developer/node-version) page).
 
 ![License](https://img.shields.io/badge/License-Apache%202.0-brightgreen) [![pages-build-deployment](https://github.com/source-academy/modules/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/source-academy/modules/actions/workflows/pages/pages-build-deployment)
 
