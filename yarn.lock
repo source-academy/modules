@@ -15960,8 +15960,8 @@ __metadata:
   linkType: hard
 
 "snyk-nodejs-lockfile-parser@npm:^2.4.2":
-  version: 2.10.4
-  resolution: "snyk-nodejs-lockfile-parser@npm:2.10.4"
+  version: 2.10.9
+  resolution: "snyk-nodejs-lockfile-parser@npm:2.10.9"
   dependencies:
     "@snyk/dep-graph": "npm:^2.12.0"
     "@snyk/error-catalog-nodejs-public": "npm:^5.82.1"
@@ -15983,7 +15983,7 @@ __metadata:
     uuid: "npm:^11.1.1"
   bin:
     parse-nodejs-lockfile: bin/index.js
-  checksum: 10c0/e04196f9f266e173066d5c2f58408e88452d6e32a8f7cbd08a2de42767a92e45c040a65eabf50d2c45c9c0c24724d569b3393e5ddf12ca1f312bf209dd0a11ed
+  checksum: 10c0/ce72fc6280057f6db5e7e2892332e5d9336bd73ebfeb84abeb6cf285e1e89a0de9558cd36fefb6a3b776a4060a40c92ca303776a459206bad86e15448803da4f
   languageName: node
   linkType: hard
 
